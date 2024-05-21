@@ -1,66 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CEB604B3
-	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 09:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B6D6BFA3
+	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 09:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284211; cv=none; b=ctpmpykQKFiqWUEwz112yGh4anlCDKD5qnPKBSUneP5bWlE1yHUyqIN39IP34JkVilPoVTQsMNpwObUOZiVEAKfKG1ao8Jd/MIlX0md7QhpQ8r5fiBZI7DeBMgTWVoIFp14Yi7DQNJYsDu7otQ6aHJ35GcwyMhxLJKejJG0hUyo=
+	t=1716284230; cv=none; b=qhN9lfQNduzsHgFiKOBPvg4O7fd/Wj9cdGOzeLhyFGzKQvo2EcDvvcnuHIaydlW9wIxJy2MWgO8vl7l6j8u57YH5sJqOnptqRpzG5j8MUSdOP3S0srWUnbDRCTGMpNOfWHI1PC8L1yIYqNIiRvQvT8DMx5/QYUFmyxWxEXa6Ngo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716284211; c=relaxed/simple;
-	bh=nZV4Bdhi0UXpPrlCugfS65h5i2WJHqRguxSZO2cZnFQ=;
+	s=arc-20240116; t=1716284230; c=relaxed/simple;
+	bh=EIhGfotOYdYa2iBGbP/HKMth3jhQUp1iLB4EZoG2ENY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EIHDJBi8CO3uO1iRQ/6s5SCxkmwrPXO4+rFUFF0cINN4bECefzgeqvvdLAUTLLheiM4d6Cb8CcZ8+9YWUfVTCPh9l00L4PLfHMs+qzi0IDk5+2EI6xk4rEXVuzlHGeBpl+LTHJDdLi+f6CxkgXrnXiCnyuYcmuB4VH9HluL2VKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AtcVK6ac; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=RI/LsvxEPnGaJXJ3qugV7+IzEdo6K//8PQBVc1J+NP61Vhvwpaqr8Pd7SxvQJR7HE1EXbmSqZKpzUPjskQLuLHjTsHWJ0mpHjG4sLalLQQLHEjzf+dKwoEhjU4dXcuhlUo7jxZfZnt4kqufxxbDs5dOqQJIaU4U0sGWWLOWkehk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xhjf48Iz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AtcVK6ac"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xhjf48Iz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716284208;
+	s=mimecast20190719; t=1716284228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8TotQymrkTXKJP2dbOeE/8/7QYh8IcgEOhwgpcYLit4=;
-	b=AtcVK6acyWSr4WAJnFmdAy1VXy09BlYXUyorN0a6kEMk0FMfea29EXyvah/jB4GKVkjV2g
-	+ai5j+siwQKEJtgq38IGtSwzhsi+VEw41MmJWOnShdkMonRuNbeCoLYLfwmlLaNAp/u53n
-	8NyQgsjsgdR6k7zNJhYHtw4gOzaY5Wg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=rDFlJpNTjiUekAo5FWMGJemrvpMD/p0F/vFU1Y8pBs0=;
+	b=Xhjf48IzYS7mEvQtXi308fwssi4WRDFaTRc3rD4EDlV8amqyFlRpVue+15iwiZ8l8QY5NQ
+	Zlxx7AFeZFD/WSgDB9Lm2AJJRNR1XYXiMl9GCUMxAJ4seBsagVG35aLkcY96OMbEPiF9YY
+	NzwY1CMESTO3L6zaKKe/cULiycjrrhg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-LuY2iZMCNmi2IXQmmUswfQ-1; Tue, 21 May 2024 05:36:45 -0400
-X-MC-Unique: LuY2iZMCNmi2IXQmmUswfQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-351d77e63fdso2711397f8f.3
-        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 02:36:45 -0700 (PDT)
+ us-mta-661-B3e839G7MIiDqYXN0Y4hgA-1; Tue, 21 May 2024 05:37:06 -0400
+X-MC-Unique: B3e839G7MIiDqYXN0Y4hgA-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34db1830d7cso5668862f8f.1
+        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 02:37:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716284204; x=1716889004;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8TotQymrkTXKJP2dbOeE/8/7QYh8IcgEOhwgpcYLit4=;
-        b=VB57S31yk2hGQw1IA+e9zU1CPWN7y2BxpCHwFxJ4FC5cSm4Pnf9QyOaG5lHjl430CA
-         iEKzSUgXiXLe9gXFNbg3Bv+PtE3L1hPOyq5++05pkp36N39Mq9Y0DHwGdmktiwOTodZI
-         4tkpPdJ18v7Nv/+8ik9zBwGMUZMXi1IGgpndlZekNKoujXrSeYSHKINZ5dhmrsWXV4i8
-         dGZ4qqCHK7y9DkIouKsFHMKNG16ATmJG6JvzacVZgQZvDEP+ixGAqlDS1ZIyouPA9/cg
-         FuSkGkMH761j9TvkCJeHSnach7H/pHlsMx6tIRd4TtDhPBKjgatDL1/C5J4roPy9zxc8
-         A6/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXGuTN7kgo5L0ODWpoaLpRJCm62w0zHrdEuXCEFvwQwRyBMd2ID6BJcIhhDWz5GRM0qnnJCxEqa322FIr9/b0WW8Xcs1y+bBp4f
-X-Gm-Message-State: AOJu0YwgfqfrbWRGOxbJRW7p6/6AzP+FkjEwbQAC2BC6RlyqaVKVPXBq
-	tI4BOpvaQ1bua8ZvWpivHjnoLizDCO0xQSRDnmMvnvzmOjsdvpQL5Nnp0hErQyDMKAiUHKeU5VS
-	gOokhYvBYrkXrvDjDf9DRslm1DCjEY/2qAXYp7VRrS4MV9GTeWfxQZCTrSA==
-X-Received: by 2002:adf:f590:0:b0:34c:b86a:794c with SMTP id ffacd0b85a97d-3504a96b845mr29768830f8f.70.1716284204298;
-        Tue, 21 May 2024 02:36:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkrfOPTQeHBK0L612NDmEfoV6h/sGmyVuwJjpTZyriwnIAr0c/urZ2Tu2jhH0ROmfzvFkapg==
-X-Received: by 2002:adf:f590:0:b0:34c:b86a:794c with SMTP id ffacd0b85a97d-3504a96b845mr29768805f8f.70.1716284203881;
-        Tue, 21 May 2024 02:36:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716284225; x=1716889025;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDFlJpNTjiUekAo5FWMGJemrvpMD/p0F/vFU1Y8pBs0=;
+        b=s+g+9f7VZyvSXfBIA0QHVTAW1A4fOSmd1vAfmF7MjscwdkhNEfGRNPp+xA4k5JlMGr
+         bMSBGsbKQJzMaZA0xnC/V1sHy/URazfxxoC5w5EaJF8uVUt6tEFBcxjbF6x85cgCFvm8
+         GmrOCyznUOkRRtATwVUn+hpMaSH1yqosGsriMaDCiy5QG9Yb0oTJ11ugDIha7CqEVIat
+         XNzoNsPT3OTMO9ZWx+IddhAEK30V3gSh2vB5Oz8ihWbum0RrY8zprmUO9B0gBWJ4H9ni
+         Y49s+Fu4mO/oGe9fGpN2MYLuUZ6qWtIr79gcSSVE33hpsxxVg8bklYznCOIyA4FjfCmr
+         BaWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSC+oNCjxqHbIvbqbfnbVMCnr4mV32zBTkqZhU15Tn24SchjwncKXvmQ3gknuIJVQcr13XuBYh8LcSmFPQDvQrSaFOJQtm+tOQ
+X-Gm-Message-State: AOJu0YyxveLnQQlLzBQvBkIwQbRF9w5Q2+8YT1B5TJGJPMABry8XlETo
+	Ts2gK1B8TQ45z37Yx+n0bKvWaVq9IOEXUCeQt3aPKp/xSA1ASlnxuTE6WudNYb1Tno15Rv5fP9u
+	X1oBvgaOuA5S2NfjF7pggTIml2qIU4XKl0Ij/obNqkPO9XIFxc5F8VYDY/A==
+X-Received: by 2002:a05:6000:e50:b0:34a:6fac:6dab with SMTP id ffacd0b85a97d-354b8dfddc1mr7273232f8f.12.1716284224915;
+        Tue, 21 May 2024 02:37:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZHbSrxCuT/wa8crEuH3CPQzv1FNo859SSRyP6VjZBMZLItGlJKgLbp9PLk0pfe2Z3u4lI4Q==
+X-Received: by 2002:a05:6000:e50:b0:34a:6fac:6dab with SMTP id ffacd0b85a97d-354b8dfddc1mr7273204f8f.12.1716284224572;
+        Tue, 21 May 2024 02:37:04 -0700 (PDT)
 Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bd09sm31289718f8f.14.2024.05.21.02.36.43
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351d3bdad9bsm14849747f8f.46.2024.05.21.02.37.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 02:36:43 -0700 (PDT)
-Message-ID: <4650b888-d90f-40e3-8c53-c9949e539959@redhat.com>
-Date: Tue, 21 May 2024 11:36:42 +0200
+        Tue, 21 May 2024 02:37:04 -0700 (PDT)
+Message-ID: <2401d1fb-33cb-49b0-8bd7-594ff3e5ae91@redhat.com>
+Date: Tue, 21 May 2024 11:37:03 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,7 +68,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] mm: Refactor update_mmu_tlb()
+Subject: Re: [PATCH v3 3/3] mm: Use update_mmu_tlb_range() to simplify code
 To: Bang Li <libang.li@antgroup.com>, akpm@linux-foundation.org,
  chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
  palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
@@ -76,7 +76,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
  ryan.roberts@arm.com, ioworker0@gmail.com, libang.linux@gmail.com
 References: <20240518074914.52170-1-libang.li@antgroup.com>
- <20240518074914.52170-3-libang.li@antgroup.com>
+ <20240518074914.52170-4-libang.li@antgroup.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -123,7 +123,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240518074914.52170-3-libang.li@antgroup.com>
+In-Reply-To: <20240518074914.52170-4-libang.li@antgroup.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -131,29 +131,35 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 18.05.24 09:49, Bang Li wrote:
-> Remove update_mmu_tlb() from those architectures and define
-> generically via update_mmu_tlb_range(), removing the ability
-> for arches to override it.
-
-I'd suggest something like
-
-"mm: implement update_mmu_tlb() using update_mmu_tlb_range()
-
-Let's make update_mmu_tlb() simply a generic wrapper around 
-update_mmu_tlb_range(). Only the latter can now be overridden by the 
-architecture. We can now remove __HAVE_ARCH_UPDATE_MMU_TLB as well.
-"
-
-[...]
-
-> +#ifndef update_mmu_tlb_range
-> +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
-> +				unsigned long address, pte_t *ptep, unsigned int nr)
-> +{
-> +}
-> +#endif
-
-With that in patch #1
+> Let us simplify the code by update_mmu_tlb_range().
+> 
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
+> ---
+>   mm/memory.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index eea6e4984eae..2d53e29cf76e 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4421,7 +4421,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>   	vm_fault_t ret = 0;
+>   	int nr_pages = 1;
+>   	pte_t entry;
+> -	int i;
+>   
+>   	/* File mapping without ->vm_ops ? */
+>   	if (vma->vm_flags & VM_SHARED)
+> @@ -4491,8 +4490,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>   		update_mmu_tlb(vma, addr, vmf->pte);
+>   		goto release;
+>   	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+> -		for (i = 0; i < nr_pages; i++)
+> -			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
+> +		update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+>   		goto release;
+>   	}
+>   
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
