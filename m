@@ -1,75 +1,129 @@
-Received: from out0-216.mail.aliyun.com (out0-216.mail.aliyun.com [140.205.0.216])
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4565326296
-	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 15:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315E1EB40
+	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 20:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716306740; cv=none; b=H048jRCcuyf/En1V7GFpAuAdeUgD7Nngol4lJyW6C96WlxLimYVzm2w3sT27TWtM6KHefrLfrAT6VbL4wcgtORNojh4VTCN8VnY7wW/Yw4ywfi39OXDB7anoW886I9jvVIvGvoHWvlYVGPbq9pXbridHVHIpkk4st1yymiKTaFk=
+	t=1716322341; cv=none; b=MEiYOri3t80omb02LeHw/JOne6lM7mljeySezTiWIqvFobfpmduAr63AyNMNasPXvcDjzgsaAGo2W4omg7XzhPWHkuaaFhm9yqXYrDcVkrBqri5A0wqJhluE51eNOc/pXVLF8BR/F/sHr1FJjAae9v/Zv31T+LpMZDAjNWLM9SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716306740; c=relaxed/simple;
-	bh=hhAiEHhq/+IVLuhBoxRZN0I/2XRvsWbz5OZ17hmIP3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mwb5BF0oh5y2AlKqyHs4QZWvzWayRwyEgLj/ZFlTYG3V4+7o09Yp53jHGDTyv2ZaVoJK/0pI+B78W2MCW5S0zRO4LgITOopbmfpUqfkDV3N4rOhTeaW0ARVrv8KycoLi0WgWwwfSHvWB1dbjeWjCnF+9F0u7CjppmitqXKc3RRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=L//SGsE5; arc=none smtp.client-ip=140.205.0.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1716322341; c=relaxed/simple;
+	bh=/3RYxDMoRE6zF4QXwHWBpSH29hM6c2SjbD5QDOOo7E0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c+4sB9C2hZ5tcXZVJhMhmMUQSgAUKmz0XyWHSOtgFk2On1Pt0dfqaM5DE3CoqXrKPuJUhZyX+2xmovwo8dfU8fiCK5okrwNQmBCCy1QC9QmtpfKWofqJPG9DFzW9WEPlt7VLAhsLSdv1rEljwCMB7om1InyTcaozLz9VxFjK33E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=4LTogLoG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=brJx1+nr; arc=none smtp.client-ip=64.147.123.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="L//SGsE5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1716306729; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BsUOCl1wZm20I4sMYgfdQkLnm5pLpgfzJ1P84WVKH8k=;
-	b=L//SGsE5VDAlF5RD5xeq22SCzYkPZ9dwRKo654bI1EGaLT8pmSPP1pruzenn4lMbugVilLs7hPq8ZieF6MWwfJSQJnn19rMELfSXIUvuDOis0WQiGZ6GyQ/5vwpd730jLHPA4mXoRyb7BbYY6VyFicEfWYRwwqiEKr4jQBq5O4Q=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033055230028;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---.XjOK41._1716305793;
-Received: from 30.236.49.195(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XjOK41._1716305793)
-          by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 23:36:35 +0800
-Message-ID: <e2646fa8-5f34-4114-b3b4-a6f2ea17d811@antgroup.com>
-Date: Tue, 21 May 2024 23:36:32 +0800
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="4LTogLoG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="brJx1+nr"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfout.west.internal (Postfix) with ESMTP id E1A461C000B6;
+	Tue, 21 May 2024 16:12:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 21 May 2024 16:12:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1716322337; x=1716408737; bh=CK
+	d/Bt9HXJciJ5UZehDW04kyPnJ5NZPt6aGBwwwY28Y=; b=4LTogLoG6xWs7a85Yi
+	wknjS0laHoy6z3HD/fBA0XrHVpipkSUUH+vV7I1NQte/X7KnFkg4XWfFnFx1zudr
+	TIR22pFi2fHOol988mk033/iqrlMqVEpy59LTpLPZOBqhnClE7qYTMRQhD4QZnbQ
+	DW6uhrqdugAxEAQ2baEzwBHQr+VvlmCMiwOo99WoviSTvUoKVQJ1xEZq5Qajc7D1
+	tHkXIVayDq9L2T91Bd0LWgOEzSpb1kt2ELCkJx0E8KH0ilasmeW13iJnDDe1LUVV
+	l9ZXQ6RUbwhI93pephTS87loqPwevrAhh+YiVDefGzetj4Fb4tnqLXaDtXsyYZ6k
+	UMbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1716322337; x=1716408737; bh=CKd/Bt9HXJciJ
+	5UZehDW04kyPnJ5NZPt6aGBwwwY28Y=; b=brJx1+nr2Zjydf+8QOJyhdYZQmrGT
+	NPBNDRvY7kv4bAWW1Dw9PjBrqAX3qpYjwoUfFSsQVwEkVXfVM/oPMmALtAZuXGM/
+	zgoJ4WoLa0IBr6YieJ6y809TpXvycfvFiijGq2KoWbW+l8k7pJigFrlrDiE1lsRU
+	I1QT5g8HYgd8Ys/w3YIl/AyODhJ+wEdvRaqrYVkS4juf7m20Cn5UhfHYEpFAka7a
+	+2ZQ++F1/2m7X1KLTu4b/DPfY4u61KkGAsm77yduSwwa0N72eMMpsucj4ATEtDRB
+	IKj5rCCHcjJx2F1wTJo95fEyY8Bp7vfF7r2VV/poerBjV+3CiREZcb4/Q==
+X-ME-Sender: <xms:IQBNZiattS9qKDp2h6WTlibmV-kLkeJgQkCw1BVNNGfLDjhfsyDs5Q>
+    <xme:IQBNZlb56GTr-ypDhH_Bl-4pkalUEF-em-LUiaqyhdy1zolZQNyWISLx75Ba9W5rk
+    QHMqB7p9LIuaGvZabM>
+X-ME-Received: <xmr:IQBNZs_F3a08OD_mGYBJC2qz5ualvmnffPdREDTVcNbh7dLx5ErbMyY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeivddgudegfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpedufffffffhueehvefhgfelveekueegteefgeeiieejheefkeeh
+    keevudevieegueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:IQBNZkqf3Ghh3JHk0-4dTamksdsmEZPvpb6wXJ-18J6sAKUMzTT4QA>
+    <xmx:IQBNZtoSiB2SKHdyna0v2DXa6K0zgOn-vsTKoDpfAR-kS_dgteaL-w>
+    <xmx:IQBNZiR_vsEAB8oa9j_it52YEVbcNDjiOOHlBc8FiiJHQCPjobD0kQ>
+    <xmx:IQBNZtoLJITOxgmtbEFkXnozVss16dfRS3nWTpGq8S44ECeEXwce8g>
+    <xmx:IQBNZuenIOkWhP6je5SHfQTdwbFzubSqsiTyvoqaAV_lS1mx_EiKh8jI>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 21 May 2024 16:12:16 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/4] LoongArch: Bootloader interface fixes
+Date: Tue, 21 May 2024 21:12:11 +0100
+Message-Id: <20240521-loongarch-booting-fixes-v1-0-659c201c0370@flygoat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] mm: Add update_mmu_tlb_range()
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
- chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
- palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- ryan.roberts@arm.com, ioworker0@gmail.com, libang.linux@gmail.com
-References: <20240518074914.52170-1-libang.li@antgroup.com>
- <20240518074914.52170-2-libang.li@antgroup.com>
- <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
-Content-Language: en-US
-From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABsATWYC/x3LQQqAIBBA0avErBtIzYKuEi3MJhsIJzQiiO6et
+ Hx8/gOZElOGoXog0cWZJRaougK/uRgIeSkG3ei2sVrhLhKDS37DWeTkGHDlmzKariNlqPfOWij
+ 3kegPZR6n9/0AJP7hYGkAAAA=
+To: Huacai Chen <chenhuacai@kernel.org>, 
+ Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=975;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=/3RYxDMoRE6zF4QXwHWBpSH29hM6c2SjbD5QDOOo7E0=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhjRfBgWLQj0mCcl1F4UT85fMCb/xek7otu8x+7dd0f1eG
+ H3IM35jRykLgxgXg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAEzk83eGX8ydN54rhD2QvtV0
+ 46mEv2Kl/I8bLsJ3Cgo2Fc27lP74YxIjw5TWv9POVL3XmezL9fvdnwvPQuyNJdyNbpyNfbbNeuq
+ Om7wA
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Hi David,
+Hi all,
 
-Thanks for you review!
+This series fixed some issues on bootloader - kernel
+interface.
 
-On 2024/5/21 17:32, David Hildenbrand wrote:
-> On 18.05.24 09:49, Bang Li wrote:
->> Added update_mmu_tlb_range(), we can batch update tlb of an
->> address range.
->>
->> Signed-off-by: Bang Li <libang.li@antgroup.com>
->> ---
-> 
-> The generic variant that is a NOP from patch #2 should go into this 
-> patch as well.
+The first two fixed booting with devicetree, the last two
+enhanced kernel's tolerance on different bootloader implementation.
 
-Good point. Thanks for pointing this out.
+Please review.
 
-Thanks,
-Bang
+Thanks
 
-> 
-> Apart from that LGTM
-> 
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+Jiaxun Yang (4):
+      LoongArch: Fix built-in DTB detection
+      LoongArch: smp: Add all CPUs enabled by fdt to NUMA node 0
+      LoongArch: Fix entry point in image header
+      LoongArch: Clear higher address bits in JUMP_VIRT_ADDR
+
+ arch/loongarch/include/asm/stackframe.h | 4 +++-
+ arch/loongarch/kernel/head.S            | 2 +-
+ arch/loongarch/kernel/setup.c           | 6 ++++--
+ arch/loongarch/kernel/smp.c             | 5 ++++-
+ 4 files changed, 12 insertions(+), 5 deletions(-)
+---
+base-commit: 124cfbcd6d185d4f50be02d5f5afe61578916773
+change-id: 20240521-loongarch-booting-fixes-366e13e7ca55
+
+Best regards,
+-- 
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+
