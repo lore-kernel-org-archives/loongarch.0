@@ -1,32 +1,32 @@
-Received: from out187-22.us.a.mail.aliyun.com (out187-22.us.a.mail.aliyun.com [47.90.187.22])
+Received: from out0-216.mail.aliyun.com (out0-216.mail.aliyun.com [140.205.0.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE418145355
-	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 15:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4565326296
+	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 15:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305834; cv=none; b=dred2bQ4+3xddIXeU62GS7uorRihpH8WodaZrFhAgTu/FLgTqhbUtfhzYbludCrLRjkRtMW0faCOzkc1WLKaQPkXf5KUe/Q3Cu97X4luOQ9ia2yNhxCVgiIK62XdcIsAM5zRKiN+3Z3uJsr2VZBL4XbiB+PcnWsEUooNEoFg63I=
+	t=1716306740; cv=none; b=H048jRCcuyf/En1V7GFpAuAdeUgD7Nngol4lJyW6C96WlxLimYVzm2w3sT27TWtM6KHefrLfrAT6VbL4wcgtORNojh4VTCN8VnY7wW/Yw4ywfi39OXDB7anoW886I9jvVIvGvoHWvlYVGPbq9pXbridHVHIpkk4st1yymiKTaFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305834; c=relaxed/simple;
-	bh=7cMYQjWrFB8NyPN7IxbC0FNw72IWwl12mZnaAWXxAHU=;
+	s=arc-20240116; t=1716306740; c=relaxed/simple;
+	bh=hhAiEHhq/+IVLuhBoxRZN0I/2XRvsWbz5OZ17hmIP3E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R5Gfi99HlNB4olB5/N+TUDQmjdzayGbXXWfOtVaF2HeNJnVH1R8mgbhEVWh4HkQotUCU+4C8l00GSkLKWw2FswDHJlCwpz4K+Ql/dSFsO80+FNlX+yqB3BRkMY48GHGt5SVWooKXmmc8tAlKe5/0IyJpvb/oMntPxs2/VR5ExBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=1PDxK98a; arc=none smtp.client-ip=47.90.187.22
+	 In-Reply-To:Content-Type; b=Mwb5BF0oh5y2AlKqyHs4QZWvzWayRwyEgLj/ZFlTYG3V4+7o09Yp53jHGDTyv2ZaVoJK/0pI+B78W2MCW5S0zRO4LgITOopbmfpUqfkDV3N4rOhTeaW0ARVrv8KycoLi0WgWwwfSHvWB1dbjeWjCnF+9F0u7CjppmitqXKc3RRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=L//SGsE5; arc=none smtp.client-ip=140.205.0.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="1PDxK98a"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="L//SGsE5"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1716305815; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=0F8utKmHBsqT5aaZ1shtTgjkR7zRzQ1wD7Atj7HfE5s=;
-	b=1PDxK98ajQsWd/viW0gggAq08f+ifUj2FceeJqLSs6nXi9MYzV7VPNV2Xk9K12oxMUybl/GA+3vakqhG03qn7nKdVet9x3d0hHzLCDRhuWiC6UUebIWMacK+eYVsAJPFBDajnhr0FHKUcbAuLKmkt0cFS3VN1292lk/1uyNsYPU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033038033188;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---.XjOK43f_1716305812;
-Received: from 30.236.49.195(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XjOK43f_1716305812)
+	t=1716306729; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=BsUOCl1wZm20I4sMYgfdQkLnm5pLpgfzJ1P84WVKH8k=;
+	b=L//SGsE5VDAlF5RD5xeq22SCzYkPZ9dwRKo654bI1EGaLT8pmSPP1pruzenn4lMbugVilLs7hPq8ZieF6MWwfJSQJnn19rMELfSXIUvuDOis0WQiGZ6GyQ/5vwpd730jLHPA4mXoRyb7BbYY6VyFicEfWYRwwqiEKr4jQBq5O4Q=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033055230028;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---.XjOK41._1716305793;
+Received: from 30.236.49.195(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XjOK41._1716305793)
           by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 23:36:53 +0800
-Message-ID: <7d00705a-8a6b-48a5-8aba-7e789c536e2e@antgroup.com>
-Date: Tue, 21 May 2024 23:36:51 +0800
+          Tue, 21 May 2024 23:36:35 +0800
+Message-ID: <e2646fa8-5f34-4114-b3b4-a6f2ea17d811@antgroup.com>
+Date: Tue, 21 May 2024 23:36:32 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,7 +34,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] mm: Refactor update_mmu_tlb()
+Subject: Re: [PATCH v3 1/3] mm: Add update_mmu_tlb_range()
 To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
  chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
  palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
@@ -42,50 +42,34 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
  ryan.roberts@arm.com, ioworker0@gmail.com, libang.linux@gmail.com
 References: <20240518074914.52170-1-libang.li@antgroup.com>
- <20240518074914.52170-3-libang.li@antgroup.com>
- <4650b888-d90f-40e3-8c53-c9949e539959@redhat.com>
+ <20240518074914.52170-2-libang.li@antgroup.com>
+ <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
 Content-Language: en-US
 From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <4650b888-d90f-40e3-8c53-c9949e539959@redhat.com>
+In-Reply-To: <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi David,
 
 Thanks for you review!
 
-On 2024/5/21 17:36, David Hildenbrand wrote:
+On 2024/5/21 17:32, David Hildenbrand wrote:
 > On 18.05.24 09:49, Bang Li wrote:
->> Remove update_mmu_tlb() from those architectures and define
->> generically via update_mmu_tlb_range(), removing the ability
->> for arches to override it.
+>> Added update_mmu_tlb_range(), we can batch update tlb of an
+>> address range.
+>>
+>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>> ---
 > 
-> I'd suggest something like
-> 
-> "mm: implement update_mmu_tlb() using update_mmu_tlb_range()
-> 
-> Let's make update_mmu_tlb() simply a generic wrapper around 
-> update_mmu_tlb_range(). Only the latter can now be overridden by the 
-> architecture. We can now remove __HAVE_ARCH_UPDATE_MMU_TLB as well.
-> "
+> The generic variant that is a NOP from patch #2 should go into this 
+> patch as well.
 
-Agree! Thank you for your suggestion, I will modify it in the next version
+Good point. Thanks for pointing this out.
 
-> 
-> [...]
-> 
->> +#ifndef update_mmu_tlb_range
->> +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
->> +                unsigned long address, pte_t *ptep, unsigned int nr)
->> +{
->> +}
->> +#endif
-> 
-> With that in patch #1
-
-Thanks again.
+Thanks,
 Bang
 
 > 
-> Acked-by: David Hildenbrand <david@redhat.com>
+> Apart from that LGTM
 > 
