@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661643B1A1
-	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 09:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CEB604B3
+	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 09:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716283962; cv=none; b=XnP93O3gwDbIpWD6cCESL5FkNO0IPXgZ6Fp3uWYochT28uhsp/Jl0uR+owpFnU3euKNUh+4YriRzz6mrWoc+nHPl7nAssiACYNZSoAl/FZNPA6hBFKLPKAI13s9863uR1oSV0TYjYu6DqziiVKRG6E3woVRKba6HXBV4pIHue0E=
+	t=1716284211; cv=none; b=ctpmpykQKFiqWUEwz112yGh4anlCDKD5qnPKBSUneP5bWlE1yHUyqIN39IP34JkVilPoVTQsMNpwObUOZiVEAKfKG1ao8Jd/MIlX0md7QhpQ8r5fiBZI7DeBMgTWVoIFp14Yi7DQNJYsDu7otQ6aHJ35GcwyMhxLJKejJG0hUyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716283962; c=relaxed/simple;
-	bh=bN4vaIRu51h6A1Yf2L1aSTPlYQCcmlxwch8Sur/hDhw=;
+	s=arc-20240116; t=1716284211; c=relaxed/simple;
+	bh=nZV4Bdhi0UXpPrlCugfS65h5i2WJHqRguxSZO2cZnFQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frBzTy9JKgOxp8fqXEok4GMOIWP5cq+p217cT5S+YWonac5Suusqo7GrXhJDCxKqPug2a8ammv/5jZd5hom5n4Wa3sCIoL1ntKU1pm11t0M9lDdZQ/41pISHs3WU4VDIew9kJqcXhZgRFA08kgROE3NxhGQkeIHA95JsMC/Rp1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H19XJn45; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=EIHDJBi8CO3uO1iRQ/6s5SCxkmwrPXO4+rFUFF0cINN4bECefzgeqvvdLAUTLLheiM4d6Cb8CcZ8+9YWUfVTCPh9l00L4PLfHMs+qzi0IDk5+2EI6xk4rEXVuzlHGeBpl+LTHJDdLi+f6CxkgXrnXiCnyuYcmuB4VH9HluL2VKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AtcVK6ac; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H19XJn45"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AtcVK6ac"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716283958;
+	s=mimecast20190719; t=1716284208;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NgC+KGcweDDcr4JLHi/PzXQgTCMQUUTRDzH5SvelxrE=;
-	b=H19XJn45bHiNG5szMVx84ZIcNu/knEe1t+W8V+WwlAOm0ib6UW49nNI9TOaaMvRhfXTZoR
-	K924xFQoe54rbvouY14fNE1vM1juZ7d/hCp5Xi/Q2BMiibWtGZoQFnx+wGq+/RFxm/SCm4
-	yiB2ZDG43P+VXZsTauxD4nPS1y51Peg=
+	bh=8TotQymrkTXKJP2dbOeE/8/7QYh8IcgEOhwgpcYLit4=;
+	b=AtcVK6acyWSr4WAJnFmdAy1VXy09BlYXUyorN0a6kEMk0FMfea29EXyvah/jB4GKVkjV2g
+	+ai5j+siwQKEJtgq38IGtSwzhsi+VEw41MmJWOnShdkMonRuNbeCoLYLfwmlLaNAp/u53n
+	8NyQgsjsgdR6k7zNJhYHtw4gOzaY5Wg=
 Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
  [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-152-Y-5dBRySNzSOT05-ga4jLQ-1; Tue, 21 May 2024 05:32:33 -0400
-X-MC-Unique: Y-5dBRySNzSOT05-ga4jLQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-351bf7f7f73so5257910f8f.0
-        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 02:32:31 -0700 (PDT)
+ us-mta-168-LuY2iZMCNmi2IXQmmUswfQ-1; Tue, 21 May 2024 05:36:45 -0400
+X-MC-Unique: LuY2iZMCNmi2IXQmmUswfQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-351d77e63fdso2711397f8f.3
+        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 02:36:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716283950; x=1716888750;
+        d=1e100.net; s=20230601; t=1716284204; x=1716889004;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=NgC+KGcweDDcr4JLHi/PzXQgTCMQUUTRDzH5SvelxrE=;
-        b=OwTpKoiHYJfky7BbWwoPk0Dci0OPVmFpcaXSmxX/ny5ftZ914p1Vrnu3yGwDln5WGB
-         Sc6Isy3/qGOGZGVABaPw4JlZ8BNVlSFjdwMcT568rnv2kd7dSoswo17mWQlN5k0YUqDP
-         xOXqZ2VFXhs+ObavQwScy4e7l3TBtRuNGN3eRZruQUSlQIaedrHOuotWbEaq9r6wteyW
-         aJBYtEkWSslzyICJ04U42/whXjN9VCG9La/OlawYA5ryfhMvJq+pEh2EkRZwk3VATg7r
-         LEhp+6gR0Esp8y0JiDA53fX95agEcXS2jI0YMRrOP5GaMiRV1B2lkJyJm+IjSyDiWb/m
-         DmPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrip+ereA4zgecTnPefVWJRtwinlaW7LjgPiNXN31l47bjtPgRetwVH775Ok+7uffEBsi1YpZFr007v8PAXn6y+FhOlZ5fZln8
-X-Gm-Message-State: AOJu0YynRaUwdxORYOb+hAhjRi4k4Mil9gNkyPALMaXputxt76udSsCz
-	ORQh6dRp86OfChTM7yAUcgcIe6G9UeJE9sxWSVLsphYPDckwRphttHTs2Fqpu1qThgPrZk3xhzT
-	7M0d+NKyqZ1Dq8675brQ4oHX84rUBcBaT69imXLeLRiqGMfHNXksvnLK/MA==
-X-Received: by 2002:a05:6000:114c:b0:34c:6299:bafc with SMTP id ffacd0b85a97d-3504a737d01mr33574518f8f.38.1716283950349;
-        Tue, 21 May 2024 02:32:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyUxF9SoVw3UmwONjtRAczmWjeT+U7MWKDeejzA0Vu1r12YQWrfapSjwjoQ76VIJEwjj219A==
-X-Received: by 2002:a05:6000:114c:b0:34c:6299:bafc with SMTP id ffacd0b85a97d-3504a737d01mr33574492f8f.38.1716283949935;
-        Tue, 21 May 2024 02:32:29 -0700 (PDT)
+        bh=8TotQymrkTXKJP2dbOeE/8/7QYh8IcgEOhwgpcYLit4=;
+        b=VB57S31yk2hGQw1IA+e9zU1CPWN7y2BxpCHwFxJ4FC5cSm4Pnf9QyOaG5lHjl430CA
+         iEKzSUgXiXLe9gXFNbg3Bv+PtE3L1hPOyq5++05pkp36N39Mq9Y0DHwGdmktiwOTodZI
+         4tkpPdJ18v7Nv/+8ik9zBwGMUZMXi1IGgpndlZekNKoujXrSeYSHKINZ5dhmrsWXV4i8
+         dGZ4qqCHK7y9DkIouKsFHMKNG16ATmJG6JvzacVZgQZvDEP+ixGAqlDS1ZIyouPA9/cg
+         FuSkGkMH761j9TvkCJeHSnach7H/pHlsMx6tIRd4TtDhPBKjgatDL1/C5J4roPy9zxc8
+         A6/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXGuTN7kgo5L0ODWpoaLpRJCm62w0zHrdEuXCEFvwQwRyBMd2ID6BJcIhhDWz5GRM0qnnJCxEqa322FIr9/b0WW8Xcs1y+bBp4f
+X-Gm-Message-State: AOJu0YwgfqfrbWRGOxbJRW7p6/6AzP+FkjEwbQAC2BC6RlyqaVKVPXBq
+	tI4BOpvaQ1bua8ZvWpivHjnoLizDCO0xQSRDnmMvnvzmOjsdvpQL5Nnp0hErQyDMKAiUHKeU5VS
+	gOokhYvBYrkXrvDjDf9DRslm1DCjEY/2qAXYp7VRrS4MV9GTeWfxQZCTrSA==
+X-Received: by 2002:adf:f590:0:b0:34c:b86a:794c with SMTP id ffacd0b85a97d-3504a96b845mr29768830f8f.70.1716284204298;
+        Tue, 21 May 2024 02:36:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkrfOPTQeHBK0L612NDmEfoV6h/sGmyVuwJjpTZyriwnIAr0c/urZ2Tu2jhH0ROmfzvFkapg==
+X-Received: by 2002:adf:f590:0:b0:34c:b86a:794c with SMTP id ffacd0b85a97d-3504a96b845mr29768805f8f.70.1716284203881;
+        Tue, 21 May 2024 02:36:43 -0700 (PDT)
 Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351d3bdad9bsm14835749f8f.46.2024.05.21.02.32.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bd09sm31289718f8f.14.2024.05.21.02.36.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 02:32:29 -0700 (PDT)
-Message-ID: <b356b558-d327-4bbc-9290-4e296877d145@redhat.com>
-Date: Tue, 21 May 2024 11:32:28 +0200
+        Tue, 21 May 2024 02:36:43 -0700 (PDT)
+Message-ID: <4650b888-d90f-40e3-8c53-c9949e539959@redhat.com>
+Date: Tue, 21 May 2024 11:36:42 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,7 +68,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] mm: Add update_mmu_tlb_range()
+Subject: Re: [PATCH v3 2/3] mm: Refactor update_mmu_tlb()
 To: Bang Li <libang.li@antgroup.com>, akpm@linux-foundation.org,
  chenhuacai@kernel.org, tsbogend@alpha.franken.de, paul.walmsley@sifive.com,
  palmer@dabbelt.com, chris@zankel.net, jcmvbkbc@gmail.com
@@ -76,7 +76,7 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
  ryan.roberts@arm.com, ioworker0@gmail.com, libang.linux@gmail.com
 References: <20240518074914.52170-1-libang.li@antgroup.com>
- <20240518074914.52170-2-libang.li@antgroup.com>
+ <20240518074914.52170-3-libang.li@antgroup.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -123,7 +123,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240518074914.52170-2-libang.li@antgroup.com>
+In-Reply-To: <20240518074914.52170-3-libang.li@antgroup.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -131,16 +131,31 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 18.05.24 09:49, Bang Li wrote:
-> Added update_mmu_tlb_range(), we can batch update tlb of an
-> address range.
-> 
-> Signed-off-by: Bang Li <libang.li@antgroup.com>
-> ---
+> Remove update_mmu_tlb() from those architectures and define
+> generically via update_mmu_tlb_range(), removing the ability
+> for arches to override it.
 
-The generic variant that is a NOP from patch #2 should go into this 
-patch as well.
+I'd suggest something like
 
-Apart from that LGTM
+"mm: implement update_mmu_tlb() using update_mmu_tlb_range()
+
+Let's make update_mmu_tlb() simply a generic wrapper around 
+update_mmu_tlb_range(). Only the latter can now be overridden by the 
+architecture. We can now remove __HAVE_ARCH_UPDATE_MMU_TLB as well.
+"
+
+[...]
+
+> +#ifndef update_mmu_tlb_range
+> +static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
+> +				unsigned long address, pte_t *ptep, unsigned int nr)
+> +{
+> +}
+> +#endif
+
+With that in patch #1
+
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
