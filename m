@@ -1,144 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from out187-6.us.a.mail.aliyun.com (out187-6.us.a.mail.aliyun.com [47.90.187.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAD929CA;
-	Wed, 22 May 2024 06:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB5B29CA
+	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 06:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716358566; cv=none; b=MOX5HdR9BbgRuWR2MtqartFy+s8VIEzG1FT32iqriWjPNK4TlI1/2pu+ilvsekhbL8wr1dVtlK+0vpQX6KOCLWOpv9aBVADqAdEaCUiAxhlp2a1tDnzWiL8VwcPXiqx8wsucpW/O/mu+IRvIyuPIMxPEQbYlonSyw3Ydyu6Opq4=
+	t=1716358737; cv=none; b=c2RM1B6qm3WyuMO2dYZ1+JDWHNlOsrPyzaAU+9Sp5yM95Ry7vgJIw44wz6p197+L9DCL9rn2aW8DJ1yP/z9GaBaNIWLr/1Z4FnyWfbBfDlTbQxSd9z+iSWmo2hpXGosGGOQgAvWeOvmvmMZmoaOYFr9BWp9gIaZ9zWO7gLUZEoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716358566; c=relaxed/simple;
-	bh=bAI2wltaiLvKpldNLmwJZda6OtxNcsGjBpSXqrdzk40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNAfwmN7N/j2K07iBy2ZQB28sG294jKzXrDfZlKg5SAXsI1xit7yIe1DRCnndWUmUlS2g8F01G8c+KisD7Qesqq7/922TTOKi49wFNu0SDhMdXc+xZCtKe7Z634nWvl3cbHibyP565aEBwkG4ciXSvdx7VxOHNZ0IeoyrtyilmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DM52PygH; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716358737; c=relaxed/simple;
+	bh=TRiPUs3sOqcR2Uebg5ICahKspfvDNX9Au3ncj/hVLOg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bgI6cdGCXV0TCs+8xmh9D0F/fq2TznSECwd5fZxZOlPTFrn//D1taGf4T+Hgg5ClzLR93E/HOiyMG1CvyGB9crRJ8A9M/6H3PLqsAkwCod+QR9+fS6BNEax1JiXzIuMxgVQB6v5KAm5u5QkMEotFuJYAIlEVb82ebDtqmi77IdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=UXzkEceQ; arc=none smtp.client-ip=47.90.187.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DM52PygH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716358564; x=1747894564;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bAI2wltaiLvKpldNLmwJZda6OtxNcsGjBpSXqrdzk40=;
-  b=DM52PygH/ovZmX4RUphdmwtmNEKnEVi2rKQ7H65hEYxzInWjzG1P7OCT
-   yGFfViSxAUtvd57iOomTxihBBtL51asP5hRqEoFUfN2ORFUH/GsPeTJt6
-   UDSj50pRi0hq7KGqZl6pT/7i3l0LYouSMD+Dm5RiFzoLkams5L2UPrlSP
-   ZSNgGlgSKeag14TSMkGSeLtzCRovj8HSbuyIFvbnqXCBp9h33dNQCIGSE
-   OHplC97T5RrezWXa+noS9ut5rIeNsZvKDunWYIgAvWE1w0bpibb3oZVIp
-   CX9phi5T5uc2TgEvaRV7Roeq0eoNPf+DKOZaZuY149P3Ha3b2mqLfwzDf
-   Q==;
-X-CSE-ConnectionGUID: gQHtFYvFSJmQa66bnux4sg==
-X-CSE-MsgGUID: p7p3q4YISLqHAde6QeFNtQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12529465"
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="12529465"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 23:16:03 -0700
-X-CSE-ConnectionGUID: kx/bK4ONSrGeWpdf16IfMg==
-X-CSE-MsgGUID: +ABB6sSGRnaJeR7aC5AHIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="33291027"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 21 May 2024 23:16:00 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s9fGY-00016P-0A;
-	Wed, 22 May 2024 06:15:58 +0000
-Date: Wed, 22 May 2024 14:15:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Juergen Gross <jgross@suse.com>,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] LoongArch: KVM: Add steal time support in kvm side
-Message-ID: <202405221317.LCtBJH1F-lkp@intel.com>
-References: <20240521024556.419436-2-maobibo@loongson.cn>
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="UXzkEceQ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1716358718; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=50gKTtI5/VbfrYUWsIwxZn0QXyXPTk7AsRcof412llE=;
+	b=UXzkEceQlO5kFYU96hSxbqXFF/EgrhsGphphPfYGBYeB2E92lNXuNJKfxXjCYY781OtIBbhokokD44ZySPgLRYq/GWLJ4EurqULUm3aihPIwpAFfdn4mkv9EaC6mDn1LHKz5RxzplYRzIS8qSgA5uN2Z89xKnWCR8zDZRgmguLY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068161075;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.Xjzgxvc_1716358399;
+Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.Xjzgxvc_1716358399)
+          by smtp.aliyun-inc.com;
+          Wed, 22 May 2024 14:13:20 +0800
+From: "Bang Li" <libang.li@antgroup.com>
+To: akpm@linux-foundation.org,
+	chenhuacai@kernel.org,
+	tsbogend@alpha.franken.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	chris@zankel.net,
+	jcmvbkbc@gmail.com
+Cc:  <linux-kernel@vger.kernel.org>,
+   <linux-mm@kvack.org>,
+   <loongarch@lists.linux.dev>,
+   <linux-riscv@lists.infradead.org>,
+   <david@redhat.com>,
+   <ryan.roberts@arm.com>,
+   <ioworker0@gmail.com>,
+   <libang.linux@gmail.com>,
+  "Bang Li" <libang.li@antgroup.com>
+Subject: [PATCH v4 0/3] Add update_mmu_tlb_range() to simplify code
+Date: Wed, 22 May 2024 14:12:01 +0800
+Message-Id: <20240522061204.117421-1-libang.li@antgroup.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521024556.419436-2-maobibo@loongson.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Bibo,
+This series of commits mainly adds the update_mmu_tlb_range() to
+batch update tlb in an address range and implement update_mmu_tlb()
+using update_mmu_tlb_range().
 
-kernel test robot noticed the following build errors:
+After the commit 19eaf44954df ("mm: thp: support allocation of anonymous
+multi-size THP"), We may need to batch update tlb of a certain address
+range by calling update_mmu_tlb() in a loop. Using the
+update_mmu_tlb_range(), we can simplify the code and possibly reduce the
+execution of some unnecessary code in some architectures.
 
-[auto build test ERROR on 3c999d1ae3c75991902a1a7dad0cb62c2a3008b4]
+Thanks,
+Bang
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-steal-time-support-in-kvm-side/20240521-104902
-base:   3c999d1ae3c75991902a1a7dad0cb62c2a3008b4
-patch link:    https://lore.kernel.org/r/20240521024556.419436-2-maobibo%40loongson.cn
-patch subject: [PATCH v3 1/2] LoongArch: KVM: Add steal time support in kvm side
-config: loongarch-randconfig-r051-20240522 (https://download.01.org/0day-ci/archive/20240522/202405221317.LCtBJH1F-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240522/202405221317.LCtBJH1F-lkp@intel.com/reproduce)
+Changes since v3 [3]:
+ - Add acked-by from David Hildenbrand (patch #2 and patch #3) - thanks!
+ - Add reviewed-by from Lance Yang (patch #3) - thanks!
+ - Move the general architecture update_mmu_tlb_range() from patch #2 to
+   patch #1 (per David)
+ - Update patch #2 commit log (per David)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405221317.LCtBJH1F-lkp@intel.com/
+Changes since v2 [2]:
+ - Use generic architecture to implement update_mmu_tlb() (per Ryan)
 
-All errors (new ones prefixed by >>):
+Changes since v1 [1]:
+ - Add __HAVE_ARCH_UPDATE_MMU_TLB_RANGE macro (per Lance Yang)
 
-   arch/loongarch/kvm/exit.c: In function 'kvm_save_notify':
->> arch/loongarch/kvm/exit.c:711:63: error: 'struct sched_info' has no member named 'run_delay'
-     711 |                 vcpu->arch.st.last_steal = current->sched_info.run_delay;
-         |                                                               ^
---
-   arch/loongarch/kvm/vcpu.c: In function 'kvm_update_stolen_time':
->> arch/loongarch/kvm/vcpu.c:67:37: error: 'struct sched_info' has no member named 'run_delay'
-      67 |         steal += current->sched_info.run_delay -
-         |                                     ^
-   arch/loongarch/kvm/vcpu.c:69:55: error: 'struct sched_info' has no member named 'run_delay'
-      69 |         vcpu->arch.st.last_steal = current->sched_info.run_delay;
-         |                                                       ^
-   arch/loongarch/kvm/vcpu.c: In function 'kvm_loongarch_pvtime_set_attr':
-   arch/loongarch/kvm/vcpu.c:138:63: error: 'struct sched_info' has no member named 'run_delay'
-     138 |                 vcpu->arch.st.last_steal = current->sched_info.run_delay;
-         |                                                               ^
+[1] https://lore.kernel.org/linux-mm/20240429103346.59115-1-libang.li@antgroup.com/
+[2] https://lore.kernel.org/linux-mm/20240506155120.83105-1-libang.li@antgroup.com/
+[3] https://lore.kernel.org/linux-mm/20240518074914.52170-1-libang.li@antgroup.com/
 
+Bang Li (3):
+  mm: Add update_mmu_tlb_range()
+  mm: implement update_mmu_tlb() using update_mmu_tlb_range()
+  mm: Use update_mmu_tlb_range() to simplify code
 
-vim +711 arch/loongarch/kvm/exit.c
-
-   692	
-   693	static long kvm_save_notify(struct kvm_vcpu *vcpu)
-   694	{
-   695		unsigned long id, data;
-   696	
-   697		id   = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
-   698		data = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
-   699		switch (id) {
-   700		case KVM_FEATURE_STEAL_TIME:
-   701			if (!kvm_pvtime_supported())
-   702				return KVM_HCALL_INVALID_CODE;
-   703	
-   704			if (data & ~(KVM_STEAL_PHYS_MASK | KVM_STEAL_PHYS_VALID))
-   705				return KVM_HCALL_INVALID_PARAMETER;
-   706	
-   707			vcpu->arch.st.guest_addr = data;
-   708			if (!(data & KVM_STEAL_PHYS_VALID))
-   709				break;
-   710	
- > 711			vcpu->arch.st.last_steal = current->sched_info.run_delay;
-   712			kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
-   713			break;
-   714		default:
-   715			break;
-   716		};
-   717	
-   718		return 0;
-   719	};
-   720	
+ arch/loongarch/include/asm/pgtable.h |  4 ++--
+ arch/mips/include/asm/pgtable.h      |  4 ++--
+ arch/riscv/include/asm/pgtable.h     |  4 ++--
+ arch/xtensa/include/asm/pgtable.h    |  6 +++---
+ arch/xtensa/mm/tlb.c                 |  6 +++---
+ include/linux/pgtable.h              | 11 ++++++++---
+ mm/memory.c                          |  4 +---
+ 7 files changed, 21 insertions(+), 18 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.19.1.6.gb485710b
+
