@@ -1,105 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B715A76048;
-	Wed, 22 May 2024 17:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C811422B8
+	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 17:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716399170; cv=none; b=q7ozyMAJqO5X3IzwcvN3gD4HChQQagR9/FfOzIsGYE9J9aDiu5cHbENwJYPU8tMoSyMMbEBhWEuEL9GdXux1llUWawv8BZfIWYGDkOXHDaZi2Jd+0XuTDz3lxWAlJur3jdSzeBA1HYTTkSkG9351svK+M2Pp01PU+yGCnLk1Kgs=
+	t=1716399323; cv=none; b=jbsSF9YXls6kHwDm7dykQT0xIEoLaOcCvcUmf+W808NNI1gcH2BX8Zt0CvxVHkyu8sy/x40uJzW0Wopdk8dZWsoRvi/+KE5ws7Z9flVpnnmE7DbJSwp2DcUDR7fdjncQakWm3DPnD7HCrj32jVcsaJahyvOlWwXsN0xvJR9h3UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716399170; c=relaxed/simple;
-	bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DJfhIvb6JcJ59leuTgR6ebcrW0fWdKtNvd5+pixDQkJvsAmfClh0BMftQDsOqj5aNCO+lQkipq5RCDFJVnJZKvMw15JUu1cmmqBKDfAtQWr93GOSChaYXaz3F2nY6W8PPomX0bNE3vjFZcLsbyK6sfYfOkebhmLg+WbsaDxvDBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y47fhWjY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716399323; c=relaxed/simple;
+	bh=h4xDjoVBbGCwsS9xKPDSs0gCw1+IXJwG83x1dxLD/vE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dNMo4hDKQHORzql0eFbZQP5XwGAUVw61GDpoZGl0JLfdokho5VO5OQcEBZERlGpA5ShsfRitbBOCxJ0Xg6s/fKPW+URGzsksi7yON6tNgHxl4uUG5H+qH3KkeXA8Lx3hHz9DQtcZbEDL3NmEPOBCn+v7qKQyXeMpYwchjrqmD5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=MrqjjrY2; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y47fhWjY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7FBC2BBFC;
-	Wed, 22 May 2024 17:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716399170;
-	bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Y47fhWjYcGcX+hOXTvI/thAGXgpXSJkTNj/raoRIYCzHfYHB0cm8nftecIKyahIjl
-	 Q4aZMLVXBy+W/wAXMACXGJcNlJE9tnqGrnX9CEn3+FsT3RfYR7lHA7DeSRc+QCFKY6
-	 qPEeOvszF4EwoIto7zwVqmRwaKRVcIGVW+Bk8BgD36RD892XLlH/uHaSp6g/5GCJUI
-	 2hBukG52w9lh3MSvOIBjqjCBN9KU1qz9i5se9iqFs8SPvPKDxvQlg6675DysWrBDYV
-	 WvBUkze66kt6+i0jHAo78VPkSOyPGn/i7t0TESMlrvksdlaZRAvkefo1+PkBxvFHej
-	 hFvTTnR93Ap3A==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 22 May 2024 10:32:43 -0700
-Subject: [PATCH] efi/libstub: zboot.lds: Discard .discard sections
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="MrqjjrY2"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f6911d16b4so1900721b3a.3
+        for <loongarch@lists.linux.dev>; Wed, 22 May 2024 10:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1716399322; x=1717004122; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jtcwHXQhuywjWtHL8fvX3LFZZ/ytDiic4eCWATEojeU=;
+        b=MrqjjrY2F2xkE5GAaxu/DSQItBoqu/mS/Zsmrkjwrlehw4gjyUdd1jwwIAS7vq+HPr
+         1IhSgAq5SEPSX//39tMcbXeFRqaFqIzaZqjwK3BC6sncK43IUCHVMU1iEDuIi5g8knxp
+         9Tbx6l7maeeXop5lxeABrlKrSCNWSyqItAkjl+wXDxwD34Ig093k5q8f6X6NC6RjRNmt
+         X/qd64a9eMO3UTP6tfJCgl/6zT3qgUAi2c8B+ssWR65kZknHKFU0u1dQmJA+TeywoqzX
+         RnmHr5UGogsD5y02sifPFbn7OL07GsBgNdVBIh7V4VaN8bQIEy+Nj9W1z+VsWXIxH2hk
+         lGfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716399322; x=1717004122;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jtcwHXQhuywjWtHL8fvX3LFZZ/ytDiic4eCWATEojeU=;
+        b=hAudhYwFZqaWcxLcCnafMdXfQ47e0FM8sqd4wpYvntX94o8JZipgj4bgTWeoeYjZHo
+         bNOkdaw79zvjWpNIlcJfjPRTs8YZ8dDnptoIqF/deuk02t45X+45uL//Kcd+WHG3Q8Vd
+         CbYKfzydxhzfXgpY7uPnCQEkODmzZS7Ek9czAcSdYUFh9Vt1L9MQtRpQ4bguCm2pqaoQ
+         CqRUalIyrbfTu0vhC01ZSp6qXplbQAW4aT9elt0kt1hoEqCYVPkDbJvhDr8OO39lbMiv
+         UUXn9EUCp2cWlX6g0089tgFsgGMv7bQCieexGxPP0kK3n71EjYa+nuf8CxOC+PkY9h0J
+         CHVw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7+GL7jcO/AXuveUrtf3TWNLjfqd/uBsOvKp4BCBa99GaWAU6kBBbcK1iZOdLFZBV90aODUw512aLD0wBtMdQH16EIkx6HVmZ1
+X-Gm-Message-State: AOJu0Yxw3yMNdnuV6RpcJuiVNzOkkn+KY7v6KoFdma9Pk/4u8LMfib5O
+	ZJLoe0i77Rz0TfV8RczXFo012lv+Zfe53mFvJkiQApjPwrofjcvc1bS4EeJvQYc=
+X-Google-Smtp-Source: AGHT+IFnVExZ9w4FLsmZMki4aPDFIr85cfle6enyYjYsVAi4+pfoOCqX9NTQeS826YOJ4cg7meMOkA==
+X-Received: by 2002:a05:6a00:3cc7:b0:6f3:ecdc:220e with SMTP id d2e1a72fcca58-6f6d617a507mr3058370b3a.24.1716399321714;
+        Wed, 22 May 2024 10:35:21 -0700 (PDT)
+Received: from sunil-laptop ([106.51.188.31])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a9d976sm22673408b3a.89.2024.05.22.10.35.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 10:35:21 -0700 (PDT)
+Date: Wed, 22 May 2024 23:05:03 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Haibo Xu <haibo1.xu@intel.com>
+Cc: arnd@arndb.de, xiaobo55x@gmail.com, ajones@ventanamicro.com,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Zong Li <zong.li@sifive.com>,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Evan Green <evan@rivosinc.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ard Biesheuvel <ardb@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v3 5/6] ACPI: NUMA: change the ACPI_NUMA to a hidden
+ option
+Message-ID: <Zk4sxy4a5gy6ZfdJ@sunil-laptop>
+References: <cover.1713778236.git.haibo1.xu@intel.com>
+ <5c3a005a67096010cf3c465f8e3362651763fe3b.1713778236.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240522-efi-zboot-lds-add-discard-sections-to-discard-v1-1-6b415efa0f85@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADosTmYC/z2NQQqDQAxFryJZN2CDFuxVShfjJFMDxSmToYji3
- Q0uXL4P7/0NTIqKwbPZoMhfTfPscL81EKcwfwSVnYFa6tqeCCUprmPOFb9sGJiR1WIojCaxum1
- Y87X1SWgYU0f8CODNX3F/Of9e730/AL0j0wl/AAAA
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-efi@vger.kernel.org, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
- patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1966; i=nathan@kernel.org;
- h=from:subject:message-id; bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDGl+Oo4Oxd7SElMMTAu1Lm6fLL6M/+cp31+Llh65fP3Gy
- 4u7j+0W6ShlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATeXKT4Q9H3JdL7xP8nLr+
- bQ+r07/4Idp7zpSFZ3rXaNZs35OXKnCf4X/2GW+e06zO+rcVgn482DjpxNxVRy0/aKXkvJPQWyq
- sKMEOAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c3a005a67096010cf3c465f8e3362651763fe3b.1713778236.git.haibo1.xu@intel.com>
 
-When building ARCH=loongarch defconfig + CONFIG_UNWINDER_ORC=y using
-LLVM, there is a warning from ld.lld when linking the EFI zboot image
-due to the use of unreachable() in number() in vsprintf.c:
+On Wed, Apr 24, 2024 at 01:46:25PM +0800, Haibo Xu wrote:
+> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
+> would do the same thing, so change it to a hidden option and the
+> select statements except for the X86_64_ACPI_NUMA can also go away.
+> 
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
+> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> ---
+>  arch/arm64/Kconfig        | 1 -
+>  arch/loongarch/Kconfig    | 1 -
+>  drivers/acpi/numa/Kconfig | 5 +----
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 7b11c98b3e84..c6c667898da6 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1439,7 +1439,6 @@ config HOTPLUG_CPU
+>  config NUMA
+>  	bool "NUMA Memory Allocation and Scheduler Support"
+>  	select GENERIC_ARCH_NUMA
+> -	select ACPI_NUMA if ACPI
+>  	select OF_NUMA
+>  	select HAVE_SETUP_PER_CPU_AREA
+>  	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index a5f300ec6f28..29d574a5c34c 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -465,7 +465,6 @@ config NR_CPUS
+>  config NUMA
+>  	bool "NUMA Support"
+>  	select SMP
+> -	select ACPI_NUMA if ACPI
+>  	help
+>  	  Say Y to compile the kernel with NUMA (Non-Uniform Memory Access)
+>  	  support.  This option improves performance on systems with more
+> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
+> index 849c2bd820b9..f33194d1e43f 100644
+> --- a/drivers/acpi/numa/Kconfig
+> +++ b/drivers/acpi/numa/Kconfig
+> @@ -1,9 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config ACPI_NUMA
+> -	bool "NUMA support"
+> -	depends on NUMA
+> -	depends on (X86 || ARM64 || LOONGARCH)
+> -	default y if ARM64
+> +	def_bool NUMA && !X86
+>  
+LGTM.
 
-  ld.lld: warning: drivers/firmware/efi/libstub/lib.a(vsprintf.stub.o):(.discard.unreachable+0x0): has non-ABS relocation R_LARCH_32_PCREL against symbol ''
-
-If the compiler cannot eliminate the default case for any reason, the
-.discard.unreachable section will remain in the final binary but the
-entire point of any section prefixed with .discard is that it is only
-used at compile time, so it can be discarded via /DISCARD/ in a linker
-script. The asm-generic vmlinux.lds.h includes .discard and .discard.*
-in the COMMON_DISCARDS macro but that is not used for zboot.lds, as it
-is not a kernel image linker script.
-
-Add .discard and .discard.* to /DISCARD/ in zboot.lds, so that any
-sections meant to be discarded at link time are not included in the
-final zboot image. This issue is not specific to LoongArch, it is just
-the first architecture to select CONFIG_OBJTOOL, which defines
-annotate_unreachable() as an asm statement to add the
-.discard.unreachable section, and use the EFI stub.
-
-Closes: https://github.com/ClangBuiltLinux/linux/issues/2023
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- drivers/firmware/efi/libstub/zboot.lds | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
-index ac8c0ef85158..af2c82f7bd90 100644
---- a/drivers/firmware/efi/libstub/zboot.lds
-+++ b/drivers/firmware/efi/libstub/zboot.lds
-@@ -41,6 +41,7 @@ SECTIONS
- 	}
- 
- 	/DISCARD/ : {
-+		*(.discard .discard.*)
- 		*(.modinfo .init.modinfo)
- 	}
- }
-
----
-base-commit: 15aa8fb852f995dd234a57f12dfb989044968bb6
-change-id: 20240522-efi-zboot-lds-add-discard-sections-to-discard-5fe29bf42d6a
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
