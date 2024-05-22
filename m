@@ -1,112 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A54A7F483
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 08:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BA6AB9;
+	Wed, 22 May 2024 14:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716365293; cv=none; b=PrLQdPCScf1kgggKV738k9opTkwzFYojGtoxxpAcIr8NLTbefXRXcAcUZPBEu5/tHzcdAPPrXGDQREEZxBEj+ALkNmvXhfFolBxkZbxigUALBqXEOeXADm+TGE07xkyiYiSJznu9offi8HwZWvGsDdDtEwM84/3Ke5JJzQyEBco=
+	t=1716386718; cv=none; b=OdJG4E9tizSeHNjeAZ+NBZy6VXH6b/2xfUZZjIRUk6PxJe7RCrAp2pbxUL+Dyotmngi8FZnKfS4b+vUBSBSqZNgcJRYCL8/jEpNs2WL9TH84zFGU1ilpF1PB1w1p+IiC1p9hZx5ISi/djrCPi2RoMlSuOnDDXNEMffuf56g1r7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716365293; c=relaxed/simple;
-	bh=XsVorddufHJHW9jCOTtwIqAeudeLJX7nT1NbKFEuzSk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jfCU2W4aeL5Un6WU6Q7aSscHbRDfx+kNPCGiQehEy01vl69opQEMGswV2dwiza7CoigwQcU9dNMrpsdUXhMlIbYkYcrZBxifMDAS16ymA3n9hpYBgm7WjA+NusrTaf8HH/0sLnQpyzPAfJtIA7GoTTZha9s37jdeoRzFZsdZWu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ub7dQRRY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ub7dQRRY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDFB0C4AF14
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 08:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716365293;
-	bh=XsVorddufHJHW9jCOTtwIqAeudeLJX7nT1NbKFEuzSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ub7dQRRYmgvGQIXOKkzcALnqKjdM+kZsOun7dJb4WOMFCtRCQ6V0yqAVNS+H+zhHw
-	 xkU1tyazOtIdw3SzINSIjctScF0rx5MEFgSwgiWSZtLfFhX4rhkY4oLAJBWlVUdwJh
-	 kQ1lvutc25IUT12jL0ca6Q/8hjIkbXin+2EkNxTdqNObXC0E0T/0xU4YEbk0PAn8OS
-	 isDDEVKBw5YBZtGcW94r7rF2qi+X28SIkuwWXgeXyV11s7cPFUEB+p9f6o5tR9+sg2
-	 OlvSMsAX/GNRfNsLzO7ZtAcRvL/w36Cz7rL66F3R/GHCa9Z6RpACM7XOxGPXNQQ0OF
-	 rgtZ3Zlm6+BQQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e538a264e0so84380911fa.1
-        for <loongarch@lists.linux.dev>; Wed, 22 May 2024 01:08:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2Ha60S0l6sJpO5tYHcqNEB23f/6lAOLYqOZjjhJSK9neUO7vramoXBbrFNbIYbur1q4yziBtbe3oaQVGn90ngsyWbTa//MfS7
-X-Gm-Message-State: AOJu0YwnPjzpUyK50tIatLCxXjhSPVwbZfGJm8NX82qyJvbBehjjQYyq
-	ucH/OQwCxm9wUaZMUVbZX24+Kc4lmAgZuMrqZPYJvLbjOFOiCN0YwffgAmNkawN1tIj4fZV1keR
-	kvA17DoyiBRc9YCFqYaZO07wbaRw=
-X-Google-Smtp-Source: AGHT+IFAwGmgLyWddo6GG2KC4+9FOm3Fivw6BZNWf4Z82XgHm/o2gbsmxHaMbRAHB6CWe4Pb1CXzQJ+VgCtRrBSM6SM=
-X-Received: by 2002:ac2:4884:0:b0:524:34ad:ba7d with SMTP id
- 2adb3069b0e04-526c0a68f31mr1201735e87.42.1716365291354; Wed, 22 May 2024
- 01:08:11 -0700 (PDT)
+	s=arc-20240116; t=1716386718; c=relaxed/simple;
+	bh=8e71njZJWwY8ETmCINBrNexR+jgS6wvIDFiP1CyeUi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5PfghoIIjUqDKCmHIpAKK7qPWYDcvmkgetvu1oHxDg/tRvS+ltX6+vvydqDo1qGyBr/FtWs4Oj5oSCO5Ng6l0PrSzrOwSj23BWtqgB+cW2wG9LeVoBLLa7qcn3jEh8mpQ8Oho8Byv7Z8mMKpk8wud7iezupC+9RRGb1g6RFxnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3C9C2BBFC;
+	Wed, 22 May 2024 14:05:14 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.10
+Date: Wed, 22 May 2024 22:05:04 +0800
+Message-ID: <20240522140504.4071402-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240522-loongarch-booting-fixes-v2-0-727edb96e548@flygoat.com> <20240522-loongarch-booting-fixes-v2-2-727edb96e548@flygoat.com>
-In-Reply-To: <20240522-loongarch-booting-fixes-v2-2-727edb96e548@flygoat.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 22 May 2024 16:07:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4r=2LbOBsM8oas=ewXGA+4Z=Y==iSgZfsdSk7GHOrieA@mail.gmail.com>
-Message-ID: <CAAhV-H4r=2LbOBsM8oas=ewXGA+4Z=Y==iSgZfsdSk7GHOrieA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] LoongArch: smp: Add all CPUs enabled by fdt to
- NUMA node 0
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Jiaxun,
+The following changes since commit a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6:
 
-On Wed, May 22, 2024 at 2:30=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
-m> wrote:
->
-> NUMA enabled kernel on FDT based machine fails to boot
-> because CPUs are all in NUMA_NO_NODE and mm subsystem
-> won't accept that.
->
-> Fix by adding them to default NUMA node for now.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 88d4d957edc7 ("LoongArch: Add FDT booting support from efi system =
-table")
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/loongarch/kernel/smp.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 0dfe2388ef41..866757b76ecb 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -273,7 +273,6 @@ static void __init fdt_smp_setup(void)
->
->                 if (cpuid =3D=3D loongson_sysconf.boot_cpu_id) {
->                         cpu =3D 0;
-> -                       numa_add_cpu(cpu);
->                 } else {
->                         cpu =3D cpumask_next_zero(-1, cpu_present_mask);
->                 }
-> @@ -283,6 +282,10 @@ static void __init fdt_smp_setup(void)
->                 set_cpu_present(cpu, true);
->                 __cpu_number_map[cpuid] =3D cpu;
->                 __cpu_logical_map[cpu] =3D cpuid;
-> +
-> +               early_numa_add_cpu(cpu, 0);
-> +               set_cpuid_to_node(cpuid, 0);
-> +               numa_add_cpu(cpu);
-What's wrong exactly? Real machine has no problem here, and at least
-numa_add_cpu() should not be called for non-zero cpu so early, because
-it need per-cpu area be setup. I guess the root cause is that there is
-something wrong and "cpuid =3D=3D loongson_sysconf.boot_cpu_id" is
-skipped.
+  Linux 6.9 (2024-05-12 14:12:29 -0700)
 
-Huacai
+are available in the Git repository at:
 
->         }
->
->         loongson_sysconf.nr_cpus =3D num_processors;
->
-> --
-> 2.43.0
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
+
+for you to fetch changes up to 9cc1df421f00453afdcaf78b105d8e7fd03cce78:
+
+  LoongArch: Update Loongson-3 default config file (2024-05-19 22:18:56 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.10
+
+1, Select some options in Kconfig;
+2, Give a chance to build with !CONFIG_SMP;
+3, Switch to use built-in rustc target;
+4, Add new supported device nodes to dts;
+5, Some bug fixes and other small changes;
+6, Update the default config file.
+
+Note: There is a conflict in arch/loongarch/kernel/irq.c, but can be
+simply fixed by dropping the modification in this file (because that
+section is removed by the kvm tree).
+
+----------------------------------------------------------------
+Binbin Zhou (3):
+      LoongArch: dts: Remove "disabled" state of clock controller node
+      LoongArch: dts: Add new supported device nodes to Loongson-2K0500
+      LoongArch: dts: Add new supported device nodes to Loongson-2K2000
+
+Huacai Chen (4):
+      LoongArch: Select ARCH_WANT_DEFAULT_BPF_JIT
+      LoongArch: Select THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+      LoongArch: Fix callchain parse error with kernel tracepoint events again
+      LoongArch: Update Loongson-3 default config file
+
+Tiezhu Yang (1):
+      LoongArch: Give a chance to build with !CONFIG_SMP
+
+WANG Rui (1):
+      LoongArch: rust: Switch to use built-in rustc target
+
+Xi Ruoyao (2):
+      LoongArch: Select ARCH_HAS_FAST_MULTIPLIER
+      LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+
+ arch/loongarch/Kconfig                          |  6 +-
+ arch/loongarch/Makefile                         |  2 +-
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi    | 86 ++++++++++++++++++++++++-
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts |  4 --
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi    |  1 -
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi    | 49 ++++++++++++--
+ arch/loongarch/configs/loongson3_defconfig      | 24 +++++++
+ arch/loongarch/include/asm/acpi.h               |  1 +
+ arch/loongarch/include/asm/asm-prototypes.h     |  6 ++
+ arch/loongarch/include/asm/perf_event.h         |  3 +-
+ arch/loongarch/include/asm/smp.h                |  6 ++
+ arch/loongarch/kernel/irq.c                     |  2 +
+ arch/loongarch/kernel/machine_kexec.c           |  2 +-
+ arch/loongarch/lib/Makefile                     |  2 +
+ arch/loongarch/lib/tishift.S                    | 56 ++++++++++++++++
+ arch/loongarch/mm/tlbex.S                       |  9 ++-
+ arch/loongarch/power/suspend.c                  |  4 +-
+ rust/Makefile                                   |  2 +-
+ scripts/Makefile                                |  2 +-
+ scripts/generate_rust_target.rs                 |  7 +-
+ 20 files changed, 245 insertions(+), 29 deletions(-)
+ create mode 100644 arch/loongarch/lib/tishift.S
