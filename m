@@ -1,126 +1,97 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194122940B
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 01:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF78915C0;
+	Wed, 22 May 2024 02:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716342031; cv=none; b=CTb7lNoTVqfgOKeNjEAO0FErhCEZIojfWIrZ/aTC2IpNU1tv6WWZOG4gmBQNwX/JMS1bDt7NlNkYYaBGO9BvH6i1Z5Rzmlf1rZ91IurW4OH+7AC2WDw1jlHN6+0agLuRjmxCgGJkGpWm0ZySk6G7DJkIE3Sf0Pq6Eeq7eKvZvg8=
+	t=1716344869; cv=none; b=cK3SOd54Eg2Ce4VLFCkLo8s+BzNlOMRAuH4dtwthhSzrKSgsDJXN8xCLJbe9Z7udthstKgrsUZQ3orcdl4VU5uxtG6MeBIU5phedpt6T3iAerQtZxkwK0cfsgj7kGECVi9W5ztLIhA1EINeCltgdrf3YbsRPtyAHEoEc4V33pE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716342031; c=relaxed/simple;
-	bh=FJaY5ZXsWt+iV/k6HY2WFFz74BTaJg/mMtL9qyrhSP8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oC7EjaMxTCy/jdbFiLyjGLpYXJu+wszCbGCtCHKHes+TSgR4LR/0WGa8sPpAAotePRQuRgZBmmkS7sNp3vsfY4gmEnOXuLacYSSA+Va1BVdxaAOVLQXtECPVJ8QOwaFHrqNvIEAXHJv+AlhwoIXddvEtPhrk30zwCcmCxYcjkIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4HURiaVR; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1716344869; c=relaxed/simple;
+	bh=zv1bDCgDyK66NAyyXA3qwyVKDI4Dj0TjLmGIr7Tt64o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAGqhCU6PaFFl9rzZASadptlAUIH5Iu/KxmXS64qD0rnTRPAUZ1dePpgPjQ5/byTXYL0vS0Ssklrnl0hNMu2JlKHHEeOQ6vjFMowZcS827c5CPPhbl27r4rKbU24lPB2p6KgIMLUgN6T5K4+cQ7d5b2xAUVg8EKDmaxSbCWuydY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lYTrk8eK; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4HURiaVR"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61510f72bb3so257962537b3.0
-        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 18:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716342027; x=1716946827; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=N3tcdNqgpk0g0Qawt6D2SIU8FL4Y9j5vsBcc8xUlRY4=;
-        b=4HURiaVRwEFFSkZ05HhmnwfqImTUD652VFl5uIW9EdEY7qEhBuJy/uMNUP/Nh7oKyg
-         6Kdj5SdaS0fMc+OVDnbBbeM3JGbj1+DkwXotdYjankZWYN8tvaGetHe6wTShuS32b0bV
-         B65Orj6iCSzc4eUWrjkeKae70ulXwZMxTGy6kTtBvIW3o7VmnYeOo0P3j3BAtmcdaE/Q
-         x1aaFXeku8YtCtydLflGHDuehF7Bk6bAhLLqlEaYybk3UVXNeYTMj3C3ZVUboTQnBuUN
-         HfDE0VrxaWLLANREzhpJy9S/maANXp0Tgn1AG8VgBeVuiuJPgUGHxG4c7mRIFCqDrN6i
-         RB1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716342027; x=1716946827;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N3tcdNqgpk0g0Qawt6D2SIU8FL4Y9j5vsBcc8xUlRY4=;
-        b=AWRbJ2wkfZgwSInXmYtYX+xgA0bl9ciee97eNlL+MiTPj+steBqV/Hj6cqVn/E/Y7S
-         9WboP04vTreEoGDfhTGME5WEWMwIZ8ZwU2GIr8hxYKkAKFl1h2aSfh2Wvpo8PoxnWLNg
-         GSZ7+KWf2AE5KNozsohvtnuchwnrToM9n2Ainlmgf/YtxDgZ0iHzRgh8CcL1I60OeqHt
-         lbjOH4gbx9MvEn/Z89aDsIvve62E40dOpLwWns69HXeC7Oh6FnaXaYZD9Rcq1s01P/RE
-         jeffz4enTxEDz7TxHStWUgWUiwyWHtT/nMsem7EcsafQjGDTsYOE2OWCTkSb/eIFiwMj
-         QySw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwtJdCnqbti9UC9QVg9tgZ+vUB3Q7ZkOgTe/0RKZBS7UaYA9+Ebg/eMWTql0VHfrC9UvTKBc7hW7ngmRqjRqjpsUbj75FsOxT8
-X-Gm-Message-State: AOJu0YwX35GqpimvoOQ0dkpfFJrUJgigTVn808c8bIwJjlA9fRJLqNvv
-	W8rvKlTiPiKijFaf44w65xfu7tqYg7jWPptZrfXkSY6dLB9aPKPXX0jNYYtZaWS2nyNT2PV8kFk
-	3Ng==
-X-Google-Smtp-Source: AGHT+IFL81/qwy5rtkuJ10qcaRdu2JQbneM9E+pjVdbps1/0e/VA4O7XiaE6CliC0DQxJV6ImSRXVMyGgXw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:4984:0:b0:61b:e6d8:1c01 with SMTP id
- 00721157ae682-627e487fd2emr1914977b3.10.1716342027243; Tue, 21 May 2024
- 18:40:27 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 21 May 2024 18:40:13 -0700
-In-Reply-To: <20240522014013.1672962-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lYTrk8eK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716344867; x=1747880867;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zv1bDCgDyK66NAyyXA3qwyVKDI4Dj0TjLmGIr7Tt64o=;
+  b=lYTrk8eKeLtf80E21RKOHmaD7A+opYgD5RwJD4Rwv+WjGta5kdprMAIR
+   H3JWtIE+G0k7PQnjWeGFlwXeOtG5dKJ6MW93NXW2YPz8KhbQ5Pcc+v2RG
+   ao3PnlfC4j0DdgD/9hSr4fxlRXoq5pAEfbSHYnH7FkItK1JcuVzmEgH0y
+   6f7HMrgEJWapWBelsqoTmndLMRXyt1RISDMS6tg6u4jbEwoQqCZvC2MG7
+   xG5q5ReFDrkmhUBuCTbsSQ6LrMLB2zbNdepqZhsC5ZKh+qAUsZeykcYPC
+   dC8E4bXpy3iDO0QswD5ynhIkHzqlpqkCBakobQK5nK2Tq7Q/UhugshGAS
+   A==;
+X-CSE-ConnectionGUID: 9sj72GMES/yPio9s3M2EgQ==
+X-CSE-MsgGUID: cT4yFYDZTnyzze/9ZetsQA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="16401382"
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="16401382"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 19:27:46 -0700
+X-CSE-ConnectionGUID: U4Z1vXzYTO6PdadMS/6+jQ==
+X-CSE-MsgGUID: KPgYSKr4TyeyHIP7REqcFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="33107201"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 21 May 2024 19:27:43 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s9bhb-0000xN-2q;
+	Wed, 22 May 2024 02:27:40 +0000
+Date: Wed, 22 May 2024 10:26:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, Juergen Gross <jgross@suse.com>,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] LoongArch: Add steal time support in guest side
+Message-ID: <202405221028.QrCEdMNQ-lkp@intel.com>
+References: <20240521024556.419436-3-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240522014013.1672962-1-seanjc@google.com>
-X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
-Message-ID: <20240522014013.1672962-7-seanjc@google.com>
-Subject: [PATCH v2 6/6] KVM: x86: Drop now-superflous setting of
- l1tf_flush_l1d in vcpu_run()
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521024556.419436-3-maobibo@loongson.cn>
 
-Now that KVM unconditionally sets l1tf_flush_l1d in kvm_arch_vcpu_load(),
-drop the redundant store from vcpu_run().  The flag is cleared only when
-VM-Enter is imminent, deep below vcpu_run(), i.e. barring a KVM bug, it's
-impossible for l1tf_flush_l1d to be cleared between loading the vCPU and
-calling vcpu_run().
+Hi Bibo,
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/vmx/vmx.c | 7 ++++---
- arch/x86/kvm/x86.c     | 1 -
- 2 files changed, 4 insertions(+), 4 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index da2f95385a12..552b6a9887a5 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6672,9 +6672,10 @@ static noinstr void vmx_l1d_flush(struct kvm_vcpu *vcpu)
- 		bool flush_l1d;
- 
- 		/*
--		 * Clear the per-vcpu flush bit, it gets set again
--		 * either from vcpu_run() or from one of the unsafe
--		 * VMEXIT handlers.
-+		 * Clear the per-vcpu flush bit, it gets set again if the vCPU
-+		 * is reloaded, i.e. if the vCPU is scheduled out or if KVM
-+		 * exits to userspace, or if KVM reaches one of the unsafe
-+		 * VMEXIT handlers, e.g. if KVM calls into the emulator.
- 		 */
- 		flush_l1d = vcpu->arch.l1tf_flush_l1d;
- 		vcpu->arch.l1tf_flush_l1d = false;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 60fea297f91f..86ae7392cc59 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -11264,7 +11264,6 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 	int r;
- 
- 	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
--	vcpu->arch.l1tf_flush_l1d = true;
- 
- 	for (;;) {
- 		/*
+[auto build test WARNING on 3c999d1ae3c75991902a1a7dad0cb62c2a3008b4]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-steal-time-support-in-kvm-side/20240521-104902
+base:   3c999d1ae3c75991902a1a7dad0cb62c2a3008b4
+patch link:    https://lore.kernel.org/r/20240521024556.419436-3-maobibo%40loongson.cn
+patch subject: [PATCH v3 2/2] LoongArch: Add steal time support in guest side
+config: loongarch-kismet-CONFIG_PARAVIRT-CONFIG_PARAVIRT_TIME_ACCOUNTING-0-0 (https://download.01.org/0day-ci/archive/20240522/202405221028.QrCEdMNQ-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240522/202405221028.QrCEdMNQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405221028.QrCEdMNQ-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for PARAVIRT when selected by PARAVIRT_TIME_ACCOUNTING
+   
+
 -- 
-2.45.0.215.g3402c0e53f-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
