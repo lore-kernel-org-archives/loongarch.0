@@ -1,134 +1,133 @@
-Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B501149E0E
-	for <loongarch@lists.linux.dev>; Tue, 21 May 2024 20:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713394C84
+	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 01:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716322348; cv=none; b=kTInMvnbwr/tuh5n77HzpwIWyzKo6UNZwSO8kLzjppjXOavVfXjIn+58r/n6wEHLcuHBVE1l2t35VNQGi0g9krqzdWNgxPerLvvpU1ACkfbt8MJU8tIFeDOJkryyX6TgplLLT76MHVckZu7Y+pqb7Xi2mYFHfoflr9Y2MPglFZQ=
+	t=1716342018; cv=none; b=upJuvP9tjhIOaJQzZXZuwUr9mi/glilLS/wb/lvsjG4vVBg+6qoMY67PAvXq0Ch3CqZp8GcwWSRqd+sA5QiMTIhpEnAHdCQfeB5C8C6CI8r4aQDhiu5wo65PjyxfnMn3tWOEA4+chfLtXvgqktRidlym6yMY27rDz9yFUnV4rRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716322348; c=relaxed/simple;
-	bh=FjNRPnFXbgaDrJzH0dco7+80Dl+FmT6vR06xWJ6y13Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GiYULizsEVWuUWjawiH5FUj4ZShG0q97KL69McvaCFHc4Lr4BQgfAnKtbmsODOcAR+xoOrHTIFPfLVAxbGwDBVnrz/QqrX2h1h4tNnrksXP3d13zpr4Hs/eJC7fdhUPHqmjVV10lPTskYHmMlQbS4TGm/yRiFhCvzwSIlGcYPvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=rqud1A2n; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ir7RCShl; arc=none smtp.client-ip=64.147.123.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1716342018; c=relaxed/simple;
+	bh=U8u9ZX67H1rnYv/prrk0VhN0vNHEl9qh4LwcmqvwAWs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fsqBkV1D+Zd5IM1HCZNoaKA2CNGvgymg8Mxr3sRiQprCP5hzJwGHmgrUjaUdXdmDOUwZQ1YMMHtQ41l8mus4aONwd4TcwNr6lqiO2nc6HkOuR7nQ4GloKr0uuSxM+kOa3ycYPtlN+ayPGZU7sRYssdtdZXEGQYcQ8ybXJfW5cqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jwmVoW8E; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rqud1A2n";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ir7RCShl"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 750F118000E9;
-	Tue, 21 May 2024 16:12:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 21 May 2024 16:12:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1716322346;
-	 x=1716408746; bh=xQxZPFfX2OVgytqkFfLnTy1ZbYhV4pTBmatqarQFr7k=; b=
-	rqud1A2nWSH9uuDCNCmku1HFki18hETLjMeCI1dW34g5ZQSHD8j15jp8yxs3c6Aj
-	FmsOtK0XvlN/zs15Ro77Vd7tzIRg7jFKTPj5GQA4acRw5UViTohDKNSgX5HmqDX0
-	CK3jmiScRCSdd3DSi+taYTumFvGvg5LFGUuCh77ADD+G6onBFJKuS08JlgkUwzm8
-	D0WRV5GnDp7ntaTeR+KEDvu6CTyHEisV+SisVB/tmjYYY4ao6xegha8kJ2eKN/fm
-	M1jvN5lCu2P7v1ImlZIsLIPhO9r9RGzxJL+BN1UIqXWGNFmoh6J70YnIoSdm3yRr
-	Ea6T9yAIPJiSG97t8fmFXg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716322346; x=
-	1716408746; bh=xQxZPFfX2OVgytqkFfLnTy1ZbYhV4pTBmatqarQFr7k=; b=i
-	r7RCShlND6VEzAcQ7iNiNEmXYZQ0prAgVAjFjqf6M98PMJ+GmdLP0Rybr2dfvv8w
-	VLjokAmd4YODrQzv0uXfnMwPqNN2Ur5tsClBSw55X5XpVUI2xUFtN1rKJpC8CNh3
-	ftwWBN7aQh6b0CqEBK7oJLAnQ7GWay6OsbTO7WM0LhwnzNMYgldhQ6lvST/7ewfc
-	LpP0ydefodivAfzP8REY1qnjtmUHuCJHJhDQOfw9Fe5L9+TDh9oghZSC46TfzRWj
-	gwcavZuGiDoSh86k4+9DAL5/opyL0C7okHvk5n6bofPLCKQvkA8cnjQZxdgXl1TU
-	KPm/ltRxsRS13pT34mRQw==
-X-ME-Sender: <xms:KQBNZq5X8VwVbUuSRGfI9vBBEOYIfpFj4zElREL9HtaG3jpft-QO8Q>
-    <xme:KQBNZj7F5mfYyV3BqnC31kT3mZz7vZJE79n8qu2rhDLUA-X7Y71jejELUbXnOTAXE
-    vTB08xgzaGNV2lWO_0>
-X-ME-Received: <xmr:KQBNZpcHACOTXa3ZpBZyzKI1XDq6eqWAUQP_XUG9N5IOExHnmrT6uUU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeivddgudeggecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhi
-    rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
-    enucggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleffkeegudeghfdtuddugefh
-    ueevgeffgedukeejleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:KQBNZnJR7CMjoVylyXqrqlIby5FzBMJf8NOuPJqN9AGmEeQFvpl1DQ>
-    <xmx:KQBNZuLdJsrtPyM5UXFQ_HyLUPphUjHtGMOAxrfiZcWHqjKNU1Fgkg>
-    <xmx:KQBNZowhJAeO2TkS8ZpSDt_9UK_OUfSNEjvqTC6rOX0sYKMqSY_0JQ>
-    <xmx:KQBNZiKiM0h7agUCiEk-xIxmq9i0YxrutO-5sVzY3p4YVoYn3z0PWQ>
-    <xmx:KgBNZm8EPCIJtlNP76q_yYYl456l6T0YC-W1c3Zb81jRcJeECnr61I4L>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 21 May 2024 16:12:24 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Tue, 21 May 2024 21:12:15 +0100
-Subject: [PATCH 4/4] LoongArch: Clear higher address bits in JUMP_VIRT_ADDR
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwmVoW8E"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dee902341c0so15031561276.3
+        for <loongarch@lists.linux.dev>; Tue, 21 May 2024 18:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716342016; x=1716946816; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zcj+niLGOsOBGFG/wxz5ssr64Z9mR+IM9s4JveywwVo=;
+        b=jwmVoW8EA0tV6NLmsFFc6C+Yx/JcqaiwTaZZWCXqNi0Iycn5RDNt5K6SDZw7kNj6zU
+         DDJa4h+fzjo7M+smzEjFr9k2ycb+nwDYw9HHGnZQBvp8TkxTZ/p4ej+GZc8UhYZpsZ9c
+         BmLKMAh+8I0FpCYnvfSl9Lb/k8o/NlgCrfOOANzLE7k6YrqdRhZqwppQ6apKWhMa40TY
+         YJdT2ao+tqDPoy2AqJRsooF5majxbsGobbb84qFIyUzg97mWS+5qpZvAwtYcDxGaQTt9
+         1HvyUtcwYldkjtkcqoDGqj1cNNav2CTsNLq4JmeFX1jzZGmdHY57/lBQEhJHJ9EULdrQ
+         8wDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716342016; x=1716946816;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zcj+niLGOsOBGFG/wxz5ssr64Z9mR+IM9s4JveywwVo=;
+        b=CVekqAran1JWjbqCUolpAhCDcdJFTM/Uxh6xyVKPuv5FXpJCaCyi4klppVxJzCh1uo
+         BZ6U3QbWHHAOOcd6gS/9Q+Xt5qzJ8ikIW6Z4OXvgIlQpyGBo1hsZQ6XUZbW6QiYsTpKP
+         XPJQSZQu+yxinrWtrgYfM2XmE4Ws9OQNTPmsvttlVF2jbDogFjfmYVrydyx7n8oOxdWC
+         jga05qXLJBITQyCbddPVopwhq7HHWMpuFT/E7YTcB3/3qdIX4nE/36eIIKBevwJHzOHm
+         aNPJ7pqY+zOdwmW6nbuawCfURiUKPushcW06dXN042auh76cck5SNqh3Ff0IZ30c5UTP
+         ZaLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuSAUmR0tceWwLFtH9p0Dy3+E/A8MUR6/g3vwyGSwOwkBVEp1QIc/l/NE78nfm0ROLviIp+chi1mIxaUPG55VUk/1ixiF0d1Tz
+X-Gm-Message-State: AOJu0Yy6yLAtTner8FR616qjHaQi8/yrvYaq1MVvg9fr9zKEp4TmB4X3
+	tQ8b3amO145knnUurN2VDUP2PY44Hc/fG4b1APKY7GqTTFbg15WSQrZakRF3Qx9QRcKyUzI41Sm
+	nnA==
+X-Google-Smtp-Source: AGHT+IF8tl2Sd1O1Adb/DEG65NrlAsoUAahexLMaCbbpQeSeG4ZOBg+4u/hLB5lJUUIzwhVDdo9qeU1encA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:20c1:b0:de5:3003:4b64 with SMTP id
+ 3f1490d57ef6-df4e0a80c05mr82582276.1.1716342016391; Tue, 21 May 2024 18:40:16
+ -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 21 May 2024 18:40:07 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-loongarch-booting-fixes-v1-4-659c201c0370@flygoat.com>
-References: <20240521-loongarch-booting-fixes-v1-0-659c201c0370@flygoat.com>
-In-Reply-To: <20240521-loongarch-booting-fixes-v1-0-659c201c0370@flygoat.com>
-To: Huacai Chen <chenhuacai@kernel.org>, 
- Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1180;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=FjNRPnFXbgaDrJzH0dco7+80Dl+FmT6vR06xWJ6y13Y=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhjRfBgUvdseI+vuPSpnrN2aeNWnTVn1wsHxxxYnM1dbzE
- 1fnmt/uKGVhEONikBVTZAkRUOrb0HhxwfUHWX9g5rAygQxh4OIUgInUVTIyLFzQtodjisrCV38X
- XrLjm+U2bcGVzIKTJ6pTDxSbVxTH1jP8r5xq9GT3iZYL3mWzrkUlKFtniim3nk/peJohc/fdVP+
- jzAA=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
+Message-ID: <20240522014013.1672962-1-seanjc@google.com>
+Subject: [PATCH v2 0/6] KVM: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In JUMP_VIRT_ADDR we are performing an or calculation on
-address value directly from pcaddi.
+Drop kvm_arch_sched_in() and instead add and use kvm_vcpu.scheduled_out
+to communicate to kvm_arch_vcpu_load() that the vCPU is being scheduling
+back in.
 
-This will only work if we are currently running from direct
-translation addresses or firmware's DMW is configured exactly
-same as kernel. Still, we should not rely on such assumption.
+While fiddling with an idea for optimizing state management on AMD CPUs,
+I wanted to skip re-saving certain host state when a vCPU is scheduled back
+in, as the state (theoretically) shouldn't change for the task while it's
+scheduled out.  Actually doing that was annoying and unnecessarily brittle
+due to having a separate API for the kvm_sched_in() case (the state save
+needed to be in kvm_arch_vcpu_load() for the common path).
 
-Fix by clearing higher bits in address comes from pcaddi,
-so we can get real physcal address before applying or
-operator.
+The other motivation for this is to avoid yet another arch hook, and more
+arbitrary ordering, if there's a future need to hook kvm_sched_out() (we've
+come close on the x86 side several times).  E.g. kvm_arch_vcpu_put() can
+simply check kvm_vcpu.scheduled_out if it needs to something specific for
+the vCPU being scheduled out.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/loongarch/include/asm/stackframe.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v2:
+ - Add scheduled_out flag instead of passing a bool to kvm_arch_vcpu_load().
+   [Oliver]
+ - Tack on patches to clean up x86's setting of l1tf_flush_l1d in
+   kvm_arch_sched_load() (the code looked slightly less weird when the flag
+   was being set by kvm_arch_sched_in()).
 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 45b507a7b06f..a325d20a4503 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -42,8 +42,10 @@
- 	.macro JUMP_VIRT_ADDR temp1 temp2
- 	li.d	\temp1, CACHE_BASE
- 	pcaddi	\temp2, 0
-+	PTR_SLL \temp2, \temp2, (BITS_PER_LONG - DMW_PABITS)
-+	PTR_SRL \temp2, \temp2, (BITS_PER_LONG - DMW_PABITS)
- 	or	\temp1, \temp1, \temp2
--	jirl	zero, \temp1, 0xc
-+	jirl	zero, \temp1, 0x14
- 	.endm
- 
- 	.macro BACKUP_T0T1
+v1: https://lore.kernel.org/all/20240430193157.419425-1-seanjc@google.com
 
+Sean Christopherson (6):
+  KVM: Add a flag to track if a loaded vCPU is scheduled out
+  KVM: VMX: Move PLE grow/shrink helpers above vmx_vcpu_load()
+  KVM: x86: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
+  KVM: Delete the now unused kvm_arch_sched_in()
+  KVM: x86: Unconditionally set l1tf_flush_l1d during vCPU load
+  KVM: x86: Drop now-superflous setting of l1tf_flush_l1d in vcpu_run()
+
+ arch/arm64/include/asm/kvm_host.h     |  1 -
+ arch/loongarch/include/asm/kvm_host.h |  1 -
+ arch/mips/include/asm/kvm_host.h      |  1 -
+ arch/powerpc/include/asm/kvm_host.h   |  1 -
+ arch/riscv/include/asm/kvm_host.h     |  1 -
+ arch/s390/include/asm/kvm_host.h      |  1 -
+ arch/x86/include/asm/kvm-x86-ops.h    |  1 -
+ arch/x86/include/asm/kvm_host.h       |  2 -
+ arch/x86/kvm/pmu.c                    |  6 +-
+ arch/x86/kvm/svm/svm.c                | 11 +---
+ arch/x86/kvm/vmx/main.c               |  2 -
+ arch/x86/kvm/vmx/vmx.c                | 80 +++++++++++++--------------
+ arch/x86/kvm/vmx/x86_ops.h            |  1 -
+ arch/x86/kvm/x86.c                    | 22 +++-----
+ include/linux/kvm_host.h              |  3 +-
+ virt/kvm/kvm_main.c                   |  5 +-
+ 16 files changed, 59 insertions(+), 80 deletions(-)
+
+
+base-commit: 4aad0b1893a141f114ba40ed509066f3c9bc24b0
 -- 
-2.43.0
+2.45.0.215.g3402c0e53f-goog
 
