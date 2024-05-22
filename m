@@ -1,133 +1,88 @@
-Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC0F1482F9
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 22:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5F014C581;
+	Wed, 22 May 2024 23:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716415352; cv=none; b=WgKiE++3hQfhNjpTc2Uld+7OMIOtypUoASyVq53eY3tZvoHMdymh7T7uuKg8ariS6Nbvj0H3XWOHmH99rpHJgK19tpRgqnwtZzQ1erQHeXny+ahD/5D4/FEbTE8QWt3XJEO9whEKZ29SOy/DTRjsyeRwh7kfxzbZWyt+4Xge164=
+	t=1716420744; cv=none; b=UdXdcaML+V+eK3Is/Cbw96Pz2+Hc9upxJuoDFtPtjhFLSjG/ZPKgLQsewdrd+8iT6QX/kJAz+SrP6GrZMG0fEN4uj8Eu2IwRyzLwxFJbPRrdhhpOBY1YUwiZQ0MuN+pLkRtOTe0SyAr0/507c+GPtgt7Mk0U5zHelQhngOW45m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716415352; c=relaxed/simple;
-	bh=7fdJBdzIPfqGGEwtcL8/d/uM5agRxxUtdOfdCs2glQQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y9XHesWADTT/Ese8Le5S5dF27uO4pxY4zHBqT71yjtYOChEow73HI/eU5vRJRZwwcgJXr9gwkEXANTYUFc+H5q8XsOAtt1H0cTlf6OmoVJG1F2IHP/dH0K4UZ1Fs7DvU0EXil0tJDJmV1oSsqmTtvg4Gf+kRkMoON4xHmksrXuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=cWtGFMvU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iBB34r8X; arc=none smtp.client-ip=64.147.123.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1716420744; c=relaxed/simple;
+	bh=DMZ8A416rj3K/WIir9WPtL3TV/SPPZCOPyqRSy00irs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=OxHVW9lM2Yt5bz9x4L02eC1ccJiBtxcydZSrHa5p2cTGXeiQ+7tOrPoFyfnWZ4gKJySwKE7Atisn8bVKeqR+Ey6QojgTZKmU0FwhzJiKhLxgsgGsJ2Jpl0HkeOH18rxCp4Fy3MyBi+S6OyJ4JzlxnPa9H9qXAUuKwEURXkj3KhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnrWrKxA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="cWtGFMvU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iBB34r8X"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 40575180012F;
-	Wed, 22 May 2024 18:02:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 22 May 2024 18:02:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1716415349;
-	 x=1716501749; bh=eohBkNeC9goPP1VCyGzG57xJ91PgPdvWRQbAuvbCQlw=; b=
-	cWtGFMvU/1fsBfnOLQYfE1/RRhrbnG9lwDpP2nTUTSSIzlj2FzrWs8a+2ngN+mIF
-	1ul5L+xMrMJUite9KxIC8Ei8SldhSzIbyK09UbFP4HGA10k9EURyr+QthvuVsGYL
-	Bp6vPm9gZ6Le7p+q6KU5wA0vnv5XD6+065k40+5OIQqRuwK7YJqGfwks7IM7Lr83
-	QkJAhVYtxcKTiosng9LjhVN90jtCf2EyciiCcJ7g/V6NDCMARgZY+UOs+o/rNzDT
-	iCN5nyUrqLiE3QoqsCdecC685+odFUeSqRl9Rsu2nVWIFJ0dYe+5yctTdp1CJvt9
-	lbqkNdNS+oO0aWhHIEnZqA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716415349; x=
-	1716501749; bh=eohBkNeC9goPP1VCyGzG57xJ91PgPdvWRQbAuvbCQlw=; b=i
-	BB34r8XRZUoTLMyUy2w3h6zzY8B2MyyX6gaQTRKhGO8/X7x3nBaCYpAY65NtilTg
-	VJH7SJiIFfFOZUwmvjFbNeWGFUvK+OicAoxoFlhEavONJTIeEeGXet5cgCNlCx/p
-	XQwIUN1pV069s49kSfymbPA6zyUQTgkox/KRjVnoz/9Xf2YBC33lilPeCSxqyRNY
-	aD+SoG2jakd6tUwcha1WcEGqP2KRFvKfahN3JdiIxKDX4Y4yRkjMekVZaEAJTneZ
-	o6pSs8xzhCnNtpPdC0b0jr+dcBqYgJPZWt3Hz1iWrcfCTc2kJxZ6zXIpcvYXs741
-	5Nl3iYmMG3OTErg0QrnCg==
-X-ME-Sender: <xms:dWtOZvdnZicuVsDe8T0eLpf3old_WET7EC7jkfjkXoeNjas2DTyL8A>
-    <xme:dWtOZlNKrBk92rXMBTtrulp_jmPu0SLEIJtW0dsO_R_uZGW9whhMgIuVgTBzBErZp
-    JZZTzq-jR--klC5Ygk>
-X-ME-Received: <xmr:dWtOZoiPBi9p4o2tcdH0PEkDX4BQE0mh8IPkV3Zwp2sruWPYSnHkr_g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeihedgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeflihgr
-    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
-    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:dWtOZg-5AnFNO4JL5UXWFhQnyprk-pO-SKAANAacZ0UfhMLSQnSagQ>
-    <xmx:dWtOZrsJhGgHWu9kyfVW-z5L6-l1o2FL2O-ze6l7o_kus_Tqbs9zHQ>
-    <xmx:dWtOZvHCQMTjX0APRNO40rNHdcnNSpfyUN04ENGArONqcpz1GAm3rg>
-    <xmx:dWtOZiMYgeV89GtThfawqerNGuMLUsWVB7dBcv9IEaoLOhqDn4jeYQ>
-    <xmx:dWtOZvi4KTXrMfaFWvx9ebcStTjaMqo9RwznBjm0Uk5bcxvyQL5FG6zh>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 22 May 2024 18:02:28 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Wed, 22 May 2024 23:02:20 +0100
-Subject: [PATCH v3 4/4] LoongArch: Override higher address bits in
- JUMP_VIRT_ADDR
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnrWrKxA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A476C32782;
+	Wed, 22 May 2024 23:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716420743;
+	bh=DMZ8A416rj3K/WIir9WPtL3TV/SPPZCOPyqRSy00irs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nnrWrKxAo9mkqq71SM15auqRvSuvMo1cwsc6uvNC0KmIf+8W+IFcGygA3Eo10mVeF
+	 G2s+yrZMHPymUXLo+nLgP9UO7ySUEsYIr50vVERehi9hXlgnqcVX15e5hUtoNM1MCz
+	 KdnJ408xiD+Wl9pXpBy3F6o9nfLEvLRX7/+b2odzWwlKArAQUij/s2m/3Jjh97LXPg
+	 F8nJXMua61Qqa3D8YshT5wUFNBblfy5aUQ+sDx/fnkyS8EUbkRV5Kgi4KlL/y5Jmh6
+	 7bCukgmu47qPQMBbXvCJyTY00enK+zaAd4j5um3XBgM7w9fHKYmb4gx7qdCy7Br/vb
+	 fDCO7Xn+t58qw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7625CC43638;
+	Wed, 22 May 2024 23:32:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240522-loongarch-booting-fixes-v3-4-25e77a8fc86e@flygoat.com>
-References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
-In-Reply-To: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
-To: Huacai Chen <chenhuacai@kernel.org>, 
- Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1077;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=7fdJBdzIPfqGGEwtcL8/d/uM5agRxxUtdOfdCs2glQQ=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhjS/7JzH9+Mblh89VqzPGryVL6GvdHpx3L/l74O2WUpn8
- l5e+Kuyo5SFQYyLQVZMkSVEQKlvQ+PFBdcfZP2BmcPKBDKEgYtTACZylZGRobckVX7HaWZ9/R1T
- xa+/aO3u2JHWv5pNKPa+5+nbVvF1/Az/HaqOcHWFnP5vk/umifX3Hsl0oaBvzOc90uc/zrlht3U
- BLwA=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] kprobe/ftrace: bail out if ftrace was killed
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171642074348.9409.15455041633304152397.git-patchwork-notify@kernel.org>
+Date: Wed, 22 May 2024 23:32:23 +0000
+References: <20240501162956.229427-1-stephen.s.brennan@oracle.com>
+In-Reply-To: <20240501162956.229427-1-stephen.s.brennan@oracle.com>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: linux-riscv@lists.infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mark.rutland@arm.com, guoren@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, James.Bottomley@HansenPartnership.com, deller@gmx.de,
+ mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
 
-In JUMP_VIRT_ADDR we are performing an or calculation on
-address value directly from pcaddi.
+Hello:
 
-This will only work if we are currently running from direct
-1:1 mapping addresses or firmware's DMW is configured exactly
-same as kernel. Still, we should not rely on such assumption.
+This patch was applied to riscv/linux.git (fixes)
+by Masami Hiramatsu (Google) <mhiramat@kernel.org>:
 
-Fix by overriding higher bits in address comes from pcaddi,
-so we can get rid of or operator.
+On Wed,  1 May 2024 09:29:56 -0700 you wrote:
+> If an error happens in ftrace, ftrace_kill() will prevent disarming
+> kprobes. Eventually, the ftrace_ops associated with the kprobes will be
+> freed, yet the kprobes will still be active, and when triggered, they
+> will use the freed memory, likely resulting in a page fault and panic.
+> 
+> This behavior can be reproduced quite easily, by creating a kprobe and
+> then triggering a ftrace_kill(). For simplicity, we can simulate an
+> ftrace error with a kernel module like [1]:
+> 
+> [...]
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-v2: Overriding address with bstrins
----
- arch/loongarch/include/asm/stackframe.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the summary with links:
+  - [v3] kprobe/ftrace: bail out if ftrace was killed
+    https://git.kernel.org/riscv/c/1a7d0890dd4a
 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 45b507a7b06f..51dec8b17d16 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -42,7 +42,7 @@
- 	.macro JUMP_VIRT_ADDR temp1 temp2
- 	li.d	\temp1, CACHE_BASE
- 	pcaddi	\temp2, 0
--	or	\temp1, \temp1, \temp2
-+	bstrins.d	\temp1, \temp2, (DMW_PABITS - 1), 0
- 	jirl	zero, \temp1, 0xc
- 	.endm
- 
-
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
