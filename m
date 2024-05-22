@@ -1,130 +1,111 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73D21422D6
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 17:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949001422DA;
+	Wed, 22 May 2024 17:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716399393; cv=none; b=M8xrIEiw/DYsQXbMFg4sMUrE5/v+sij+yMQ35sgHIs2RDcllTqFHjtHJqhNNNRvwq/g0XCIm3w6Q+N8nihIb0rL/pXvuRa1K3m2K/5mejMdmavLIDfMpO4BEmIV0QfOWAxO0HC9viKTPUM1ARBfSbD6ov8W9s5+xosPSF0TncVw=
+	t=1716399458; cv=none; b=UO0wIHGMfJKEJOHvTO+Hxo05usNcP/QBmTsptilY7dioO3n1ZkzGa1xQP5laNQuVIhwtVrzT0iyXGlE4Zwj+qh0x84Kz424MMZO0weGhfATmqb97QBQgIdK3YV8rtQC9k2Bxbo/XIDMBYzdo0g8JxcnRAJgTLxfezUnCHNhOIGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716399393; c=relaxed/simple;
-	bh=Y48rB+eqfN+F9yAGBd3CkyYTUauUSy/FAiGo3hsm9gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bo355MdF6XsUM/tupP5XG6AUXgdpwguo7UB0YatF+EN/6yIkpVUW1tJeGX4V0htDbLVadOpK3w68KJMMGGk7WAhvSsSQVZX1nU/86PJC5fynrD5DuBeZX3FQQ9ZAW5baI8QTckJu3toqZkHZXgmVB4fuBsBDwBLFTpco60rjvsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JTXFMfTs; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1716399458; c=relaxed/simple;
+	bh=INBHA3bI3vCMfeir9qL60G3mFBmSUpGFnM+cd8pQn40=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=As/bUqEJ4EGIFXHEON2ruW9nn9QGFIFj2xJy3YwWDkP4jpzJ+zrPdUohJusCpkjT3/tXge13tXVuhhVAAsFFC2INu8uEtGl3jL+cCo/ybLI/jCehG2dJzK5TE9NOCiWoSqLuHbLPWJWOUfLZ/h0GW2o/KxWfd17Oq2qTpjDrRDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nowz4AjP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JTXFMfTs"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f693306b7cso2043786b3a.1
-        for <loongarch@lists.linux.dev>; Wed, 22 May 2024 10:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1716399391; x=1717004191; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fDl/ZkDPbSW3xCzUR/DuRNxJiVwY9Xt5ThAS5ddvXhg=;
-        b=JTXFMfTsElwMfwk7wmTEmJZQPq+cN9O9F5bpZkiDBEKSYW9NUi81pEVeOOeLmM5+u7
-         VDTBETbGoPbojdq5A+odJkzMevUofqenJPPnuq3lP/bcQUery3sBXjOQEw393NGXOygo
-         GOFarCQSGoMvJB4Aseov/Ujul69ArKSPZIUQwgUpf6Tiun9g/hNaDWOabKurAp6EHdIK
-         uK4nMMzb5tXkjzpzby5cqM8gCDbxOzscU/wQZza0yeB4jGU8dKl/7SjOl90RE2iHe5TP
-         E4cyMQiwzR+ougyJXiqlX+Fv4JEYy4NymHYBuJkXmjcVLpzIDjQUVkG1/5YNVF+upHnh
-         NPjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716399391; x=1717004191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fDl/ZkDPbSW3xCzUR/DuRNxJiVwY9Xt5ThAS5ddvXhg=;
-        b=M30s0F3hxefB2Ocm8Coite4ge46ofPfl+ixnKxZSSdFOQXHxwmjwKV2XMEh6HtS1rk
-         6NqS115VwJEfxph+cOujrmHTLpLDVlmxXBNlb1Vsec7uuieODlJFyk9+4vLFwX81WRYv
-         VmCrmv1UIt5fkOenXn5knduAoZCnWE7kb9/ofFdEka39FGw3+ze3EYg2raOps11k4oXg
-         b9dzF+cYuJgPCawGO5/771cY9an4oKxO5gmeB5OTIYEiYMG5Gt1blQY5eFz729dYSxN0
-         8xmWILZd6YQt1JfCFwCZPSAg658mXO42wk0YGiqoEjjh0wqAtPPVNbEFJArAYBhlajUq
-         Mkfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXt/X5Ez+YoY9U2pyC5QpRDghmBnkc7vzELPG6CaolLIvE6Oc2uIW7zcCQX0YtTX+62O/oILfo5gOc+KZJ1NXMq4+I+W79//Rt
-X-Gm-Message-State: AOJu0YxW0uqmOGvfct73UBml9LKMBOz5uCpPg1HOuCkFH7+xOhqjnBA9
-	mQRWRjz878CWUBzCTaxaM0sM3c/yNNP6quO5mjsNhq4+Ls+hfhe6rhD/a3NO1Zo=
-X-Google-Smtp-Source: AGHT+IE/Z1uXsIhp0DCO9v3F7b1s/kf5KJKCU5p/KxlUXSDW4uxdWvE53WL9qx0kDHx4AoziD5mkTw==
-X-Received: by 2002:a05:6a20:258e:b0:1ac:8824:156f with SMTP id adf61e73a8af0-1b1f88a30a9mr3119543637.33.1716399391193;
-        Wed, 22 May 2024 10:36:31 -0700 (PDT)
-Received: from sunil-laptop ([106.51.188.31])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ae0fc9sm22689883b3a.132.2024.05.22.10.36.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 10:36:30 -0700 (PDT)
-Date: Wed, 22 May 2024 23:06:13 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: arnd@arndb.de, xiaobo55x@gmail.com, ajones@ventanamicro.com,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Guo Ren <guoren@kernel.org>, Greentime Hu <greentime.hu@sifive.com>,
-	Baoquan He <bhe@redhat.com>, Charlie Jenkins <charlie@rivosinc.com>,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
-	Chen Jiahao <chenjiahao16@huawei.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Evan Green <evan@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
-	Tony Luck <tony.luck@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v3 6/6] ACPI: NUMA: replace pr_info with pr_debug in
- arch_acpi_numa_init
-Message-ID: <Zk4tDa0UPL3Xo/0H@sunil-laptop>
-References: <cover.1713778236.git.haibo1.xu@intel.com>
- <70870d88a26f50677eb31ac72bd8c343f428e5b6.1713778236.git.haibo1.xu@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nowz4AjP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD3CC32789;
+	Wed, 22 May 2024 17:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716399458;
+	bh=INBHA3bI3vCMfeir9qL60G3mFBmSUpGFnM+cd8pQn40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nowz4AjPKh4J5uHYZtL39AXtz5n0MY0sDDKRbujY0MdlSYYSP5EICeq5e3mVe9RJf
+	 k3dTGzjg4KTi7wwzzWN5+2tM040hWgKrC5TTU9XjkKtplFeiZx1e05mSJyezUcVh9Q
+	 veTQ0YMTgFstByO+yP+YCoAfQY5HELCJFIWuTl+t72T6qLgQug+LLty4sQfmfaBU/j
+	 rNAfFjZ3vzLcEsM3gtdrOV2yMk+lqRW3f/aSO5lxsBRxHQRgNiETrvbgEVvP1vBGlv
+	 IFiZvEf+ZMFlAXNxz3zEoTs/LihelfxuYpGaju0es2XMkJBkJw5wp/uG7oSDioV/MD
+	 zeSvrYU2eIGxg==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e576057c56so62330021fa.3;
+        Wed, 22 May 2024 10:37:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX8IJbZq81qhirtJE2IP0cmis6hXiTPYXsgAEekVVOG2FiFsotXFFHXhaHQ8GLx74d2Yg/e5atan+ceZCQJVBGN1E5U8Sk4ot4XdCQhhNe2DIwXuBOAKvaldjGx2qevvOM6W3Y/JbgKKwyE1uVrsF382GohKGwJq9U=
+X-Gm-Message-State: AOJu0YzGOkmlorBNLocbkDnzELZ8KoVpTrPRNEFDk5ZFw0kdnU4JsjBq
+	7Lq3Fv+VmZ13nrTclQfeGmoSOQ41Po6VzoNiQU37otGdnY5DZeryWSh6/SWDowOw9S0ZhFwoPO1
+	+ZTahyHalcQgBWzPWTTSpiqYn/qQ=
+X-Google-Smtp-Source: AGHT+IEWRiF1CdpdViUGf00ZGZBrVc0BULdw9lD78Wn2v4SoT9QgUivX5gdbLStUJcs+nFqN5irhqOJSiw0oo0/4Ygc=
+X-Received: by 2002:a2e:a312:0:b0:2e9:5011:f6ca with SMTP id
+ 38308e7fff4ca-2e95011f72fmr4024551fa.33.1716399456541; Wed, 22 May 2024
+ 10:37:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70870d88a26f50677eb31ac72bd8c343f428e5b6.1713778236.git.haibo1.xu@intel.com>
+References: <20240522-efi-zboot-lds-add-discard-sections-to-discard-v1-1-6b415efa0f85@kernel.org>
+In-Reply-To: <20240522-efi-zboot-lds-add-discard-sections-to-discard-v1-1-6b415efa0f85@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 22 May 2024 19:37:25 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG-Ck3y1STD9GeS6gyqUgOL6ch3jjCtdZjN_w+LScOzpw@mail.gmail.com>
+Message-ID: <CAMj1kXG-Ck3y1STD9GeS6gyqUgOL6ch3jjCtdZjN_w+LScOzpw@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: zboot.lds: Discard .discard sections
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, 
+	loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 24, 2024 at 01:46:26PM +0800, Haibo Xu wrote:
-> There are lots of ACPI enabled systems that aren't NUMA and If the
-> firmware didn't provide the SRAT/SLIT, then there will be a message
-> "Failed to initialise from firmware" from arch_acpi_numa_init() which
-> adding noise to the boot on all of those kind of systems. Replace the
-> pr_info with pr_debug in arch_acpi_numa_init() to avoid it.
-> 
-> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+On Wed, 22 May 2024 at 19:32, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> When building ARCH=loongarch defconfig + CONFIG_UNWINDER_ORC=y using
+> LLVM, there is a warning from ld.lld when linking the EFI zboot image
+> due to the use of unreachable() in number() in vsprintf.c:
+>
+>   ld.lld: warning: drivers/firmware/efi/libstub/lib.a(vsprintf.stub.o):(.discard.unreachable+0x0): has non-ABS relocation R_LARCH_32_PCREL against symbol ''
+>
+> If the compiler cannot eliminate the default case for any reason, the
+> .discard.unreachable section will remain in the final binary but the
+> entire point of any section prefixed with .discard is that it is only
+> used at compile time, so it can be discarded via /DISCARD/ in a linker
+> script. The asm-generic vmlinux.lds.h includes .discard and .discard.*
+> in the COMMON_DISCARDS macro but that is not used for zboot.lds, as it
+> is not a kernel image linker script.
+>
+> Add .discard and .discard.* to /DISCARD/ in zboot.lds, so that any
+> sections meant to be discarded at link time are not included in the
+> final zboot image. This issue is not specific to LoongArch, it is just
+> the first architecture to select CONFIG_OBJTOOL, which defines
+> annotate_unreachable() as an asm statement to add the
+> .discard.unreachable section, and use the EFI stub.
+>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2023
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+
+Thanks, I'll take this as a fix.
+
+
 > ---
->  drivers/base/arch_numa.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-> index 5b59d133b6af..555aee3ee8e7 100644
-> --- a/drivers/base/arch_numa.c
-> +++ b/drivers/base/arch_numa.c
-> @@ -445,7 +445,7 @@ static int __init arch_acpi_numa_init(void)
->  
->  	ret = acpi_numa_init();
->  	if (ret) {
-> -		pr_info("Failed to initialise from firmware\n");
-> +		pr_debug("Failed to initialise from firmware\n");
->  		return ret;
->  	}
->  
-LGTM. Thanks.
-
-Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+>  drivers/firmware/efi/libstub/zboot.lds | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
+> index ac8c0ef85158..af2c82f7bd90 100644
+> --- a/drivers/firmware/efi/libstub/zboot.lds
+> +++ b/drivers/firmware/efi/libstub/zboot.lds
+> @@ -41,6 +41,7 @@ SECTIONS
+>         }
+>
+>         /DISCARD/ : {
+> +               *(.discard .discard.*)
+>                 *(.modinfo .init.modinfo)
+>         }
+>  }
+>
+> ---
+> base-commit: 15aa8fb852f995dd234a57f12dfb989044968bb6
+> change-id: 20240522-efi-zboot-lds-add-discard-sections-to-discard-5fe29bf42d6a
+>
+> Best regards,
+> --
+> Nathan Chancellor <nathan@kernel.org>
+>
