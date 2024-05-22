@@ -1,118 +1,105 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D723B2B9C3
-	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 15:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B715A76048;
+	Wed, 22 May 2024 17:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716390982; cv=none; b=gSUE+USqctqHvLOI2pGe01tFVlb3EN4I2evs/7sxjL617wN5QxFpz8+rBpTB/z+D++Vux9jBSPnlDA47aqvcGvrAHxWgWyQtw3ghlu3otYg9WxU2vQNLKfTOn9qwpU0kwSH1G08wvqn9dM6Fat9UgKrQpmnQmfwzDMuVMwLIRdw=
+	t=1716399170; cv=none; b=q7ozyMAJqO5X3IzwcvN3gD4HChQQagR9/FfOzIsGYE9J9aDiu5cHbENwJYPU8tMoSyMMbEBhWEuEL9GdXux1llUWawv8BZfIWYGDkOXHDaZi2Jd+0XuTDz3lxWAlJur3jdSzeBA1HYTTkSkG9351svK+M2Pp01PU+yGCnLk1Kgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716390982; c=relaxed/simple;
-	bh=LBsuxRIt25iSTct1CaOFF4pb8q9+nLplzWcPNkULdk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5YhSkKWqejiee7ekEq0w6WzHFDzfu3lzmJKx11i1PMD9gzUzIslBqv2onzQ7A7gB/842jXc0Jrib0LSDUMWv1ABPeZLJLENWGpikZtIWQ4n/QB05S6Gie5oO66LG1qYEREiTU93ei6MGy9usbrgdt9/zP2b2cMmXgTVc/eZ+Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MR8HfGt/; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716399170; c=relaxed/simple;
+	bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DJfhIvb6JcJ59leuTgR6ebcrW0fWdKtNvd5+pixDQkJvsAmfClh0BMftQDsOqj5aNCO+lQkipq5RCDFJVnJZKvMw15JUu1cmmqBKDfAtQWr93GOSChaYXaz3F2nY6W8PPomX0bNE3vjFZcLsbyK6sfYfOkebhmLg+WbsaDxvDBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y47fhWjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MR8HfGt/"
-X-Envelope-To: seanjc@google.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716390977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qPx5VBeAtVusPub5h8jjoS2Zp/k7LiSDo3T23EUz3Cc=;
-	b=MR8HfGt/7NWj1OeZKFuwxnVF9+ndS7xCoaOY+r1JI2bWBzf2MynLiEMDjC1DrcozAH8hei
-	TUnFiYL5Pyj+E10/+shwWi4h/9LVvu0Mc6mkr1yRH6n++3msAFiuDQVzo86zkrGkaVb0hH
-	6NbyKC1AGLafKPP8z0hv7d6a9IuqBaQ=
-X-Envelope-To: maz@kernel.org
-X-Envelope-To: zhaotianrui@loongson.cn
-X-Envelope-To: maobibo@loongson.cn
-X-Envelope-To: chenhuacai@kernel.org
-X-Envelope-To: mpe@ellerman.id.au
-X-Envelope-To: anup@brainfault.org
-X-Envelope-To: paul.walmsley@sifive.com
-X-Envelope-To: palmer@dabbelt.com
-X-Envelope-To: aou@eecs.berkeley.edu
-X-Envelope-To: borntraeger@linux.ibm.com
-X-Envelope-To: frankja@linux.ibm.com
-X-Envelope-To: imbrenda@linux.ibm.com
-X-Envelope-To: pbonzini@redhat.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: kvmarm@lists.linux.dev
-X-Envelope-To: kvm@vger.kernel.org
-X-Envelope-To: loongarch@lists.linux.dev
-X-Envelope-To: linux-mips@vger.kernel.org
-X-Envelope-To: linuxppc-dev@lists.ozlabs.org
-X-Envelope-To: kvm-riscv@lists.infradead.org
-X-Envelope-To: linux-riscv@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Wed, 22 May 2024 08:16:07 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] KVM: Add a flag to track if a loaded vCPU is
- scheduled out
-Message-ID: <Zk4MN49212SaW1_z@linux.dev>
-References: <20240522014013.1672962-1-seanjc@google.com>
- <20240522014013.1672962-2-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y47fhWjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7FBC2BBFC;
+	Wed, 22 May 2024 17:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716399170;
+	bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Y47fhWjYcGcX+hOXTvI/thAGXgpXSJkTNj/raoRIYCzHfYHB0cm8nftecIKyahIjl
+	 Q4aZMLVXBy+W/wAXMACXGJcNlJE9tnqGrnX9CEn3+FsT3RfYR7lHA7DeSRc+QCFKY6
+	 qPEeOvszF4EwoIto7zwVqmRwaKRVcIGVW+Bk8BgD36RD892XLlH/uHaSp6g/5GCJUI
+	 2hBukG52w9lh3MSvOIBjqjCBN9KU1qz9i5se9iqFs8SPvPKDxvQlg6675DysWrBDYV
+	 WvBUkze66kt6+i0jHAo78VPkSOyPGn/i7t0TESMlrvksdlaZRAvkefo1+PkBxvFHej
+	 hFvTTnR93Ap3A==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 22 May 2024 10:32:43 -0700
+Subject: [PATCH] efi/libstub: zboot.lds: Discard .discard sections
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522014013.1672962-2-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240522-efi-zboot-lds-add-discard-sections-to-discard-v1-1-6b415efa0f85@kernel.org>
+X-B4-Tracking: v=1; b=H4sIADosTmYC/z2NQQqDQAxFryJZN2CDFuxVShfjJFMDxSmToYji3
+ Q0uXL4P7/0NTIqKwbPZoMhfTfPscL81EKcwfwSVnYFa6tqeCCUprmPOFb9sGJiR1WIojCaxum1
+ Y87X1SWgYU0f8CODNX3F/Of9e730/AL0j0wl/AAAA
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ linux-efi@vger.kernel.org, loongarch@lists.linux.dev, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1966; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=/PN55//MytV2k126282ue9+p5v4Xkeov6iPQTSuOE0I=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDGl+Oo4Oxd7SElMMTAu1Lm6fLL6M/+cp31+Llh65fP3Gy
+ 4u7j+0W6ShlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATeXKT4Q9H3JdL7xP8nLr+
+ bQ+r07/4Idp7zpSFZ3rXaNZs35OXKnCf4X/2GW+e06zO+rcVgn482DjpxNxVRy0/aKXkvJPQWyq
+ sKMEOAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, May 21, 2024 at 06:40:08PM -0700, Sean Christopherson wrote:
-> Add a kvm_vcpu.scheduled_out flag to track if a vCPU is in the process of
-> being scheduled out (vCPU put path), or if the vCPU is being reloaded
-> after being scheduled out (vCPU load path).  In the short term, this will
-> allow dropping kvm_arch_sched_in(), as arch code can query scheduled_out
-> during kvm_arch_vcpu_load().
-> 
-> Longer term, scheduled_out opens up other potential optimizations, without
-> creating subtle/brittle dependencies.  E.g. it allows KVM to keep guest
-> state (that is managed via kvm_arch_vcpu_{load,put}()) loaded across
-> kvm_sched_{out,in}(), if KVM knows the state isn't accessed by the host
-> kernel.  Forcing arch code to coordinate between kvm_arch_sched_{in,out}()
-> and kvm_arch_vcpu_{load,put}() is awkward, not reusable, and relies on the
-> exact ordering of calls into arch code.
-> 
-> Adding scheduled_out also obviates the need for a kvm_arch_sched_out()
-> hook, e.g. if arch code needs to do something novel when putting vCPU
-> state.
-> 
-> And even if KVM never uses scheduled_out for anything beyond dropping
-> kvm_arch_sched_in(), just being able to remove all of the arch stubs makes
-> it worth adding the flag.
-> 
-> Link: https://lore.kernel.org/all/20240430224431.490139-1-seanjc@google.com
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+When building ARCH=loongarch defconfig + CONFIG_UNWINDER_ORC=y using
+LLVM, there is a warning from ld.lld when linking the EFI zboot image
+due to the use of unreachable() in number() in vsprintf.c:
 
-Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+  ld.lld: warning: drivers/firmware/efi/libstub/lib.a(vsprintf.stub.o):(.discard.unreachable+0x0): has non-ABS relocation R_LARCH_32_PCREL against symbol ''
 
+If the compiler cannot eliminate the default case for any reason, the
+.discard.unreachable section will remain in the final binary but the
+entire point of any section prefixed with .discard is that it is only
+used at compile time, so it can be discarded via /DISCARD/ in a linker
+script. The asm-generic vmlinux.lds.h includes .discard and .discard.*
+in the COMMON_DISCARDS macro but that is not used for zboot.lds, as it
+is not a kernel image linker script.
+
+Add .discard and .discard.* to /DISCARD/ in zboot.lds, so that any
+sections meant to be discarded at link time are not included in the
+final zboot image. This issue is not specific to LoongArch, it is just
+the first architecture to select CONFIG_OBJTOOL, which defines
+annotate_unreachable() as an asm statement to add the
+.discard.unreachable section, and use the EFI stub.
+
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2023
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/firmware/efi/libstub/zboot.lds | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
+index ac8c0ef85158..af2c82f7bd90 100644
+--- a/drivers/firmware/efi/libstub/zboot.lds
++++ b/drivers/firmware/efi/libstub/zboot.lds
+@@ -41,6 +41,7 @@ SECTIONS
+ 	}
+ 
+ 	/DISCARD/ : {
++		*(.discard .discard.*)
+ 		*(.modinfo .init.modinfo)
+ 	}
+ }
+
+---
+base-commit: 15aa8fb852f995dd234a57f12dfb989044968bb6
+change-id: 20240522-efi-zboot-lds-add-discard-sections-to-discard-5fe29bf42d6a
+
+Best regards,
 -- 
-Thanks,
-Oliver
+Nathan Chancellor <nathan@kernel.org>
+
