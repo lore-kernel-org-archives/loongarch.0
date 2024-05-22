@@ -1,108 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BA6AB9;
-	Wed, 22 May 2024 14:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D723B2B9C3
+	for <loongarch@lists.linux.dev>; Wed, 22 May 2024 15:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386718; cv=none; b=OdJG4E9tizSeHNjeAZ+NBZy6VXH6b/2xfUZZjIRUk6PxJe7RCrAp2pbxUL+Dyotmngi8FZnKfS4b+vUBSBSqZNgcJRYCL8/jEpNs2WL9TH84zFGU1ilpF1PB1w1p+IiC1p9hZx5ISi/djrCPi2RoMlSuOnDDXNEMffuf56g1r7k=
+	t=1716390982; cv=none; b=gSUE+USqctqHvLOI2pGe01tFVlb3EN4I2evs/7sxjL617wN5QxFpz8+rBpTB/z+D++Vux9jBSPnlDA47aqvcGvrAHxWgWyQtw3ghlu3otYg9WxU2vQNLKfTOn9qwpU0kwSH1G08wvqn9dM6Fat9UgKrQpmnQmfwzDMuVMwLIRdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386718; c=relaxed/simple;
-	bh=8e71njZJWwY8ETmCINBrNexR+jgS6wvIDFiP1CyeUi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5PfghoIIjUqDKCmHIpAKK7qPWYDcvmkgetvu1oHxDg/tRvS+ltX6+vvydqDo1qGyBr/FtWs4Oj5oSCO5Ng6l0PrSzrOwSj23BWtqgB+cW2wG9LeVoBLLa7qcn3jEh8mpQ8Oho8Byv7Z8mMKpk8wud7iezupC+9RRGb1g6RFxnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3C9C2BBFC;
-	Wed, 22 May 2024 14:05:14 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.10
-Date: Wed, 22 May 2024 22:05:04 +0800
-Message-ID: <20240522140504.4071402-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1716390982; c=relaxed/simple;
+	bh=LBsuxRIt25iSTct1CaOFF4pb8q9+nLplzWcPNkULdk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5YhSkKWqejiee7ekEq0w6WzHFDzfu3lzmJKx11i1PMD9gzUzIslBqv2onzQ7A7gB/842jXc0Jrib0LSDUMWv1ABPeZLJLENWGpikZtIWQ4n/QB05S6Gie5oO66LG1qYEREiTU93ei6MGy9usbrgdt9/zP2b2cMmXgTVc/eZ+Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MR8HfGt/; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MR8HfGt/"
+X-Envelope-To: seanjc@google.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716390977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qPx5VBeAtVusPub5h8jjoS2Zp/k7LiSDo3T23EUz3Cc=;
+	b=MR8HfGt/7NWj1OeZKFuwxnVF9+ndS7xCoaOY+r1JI2bWBzf2MynLiEMDjC1DrcozAH8hei
+	TUnFiYL5Pyj+E10/+shwWi4h/9LVvu0Mc6mkr1yRH6n++3msAFiuDQVzo86zkrGkaVb0hH
+	6NbyKC1AGLafKPP8z0hv7d6a9IuqBaQ=
+X-Envelope-To: maz@kernel.org
+X-Envelope-To: zhaotianrui@loongson.cn
+X-Envelope-To: maobibo@loongson.cn
+X-Envelope-To: chenhuacai@kernel.org
+X-Envelope-To: mpe@ellerman.id.au
+X-Envelope-To: anup@brainfault.org
+X-Envelope-To: paul.walmsley@sifive.com
+X-Envelope-To: palmer@dabbelt.com
+X-Envelope-To: aou@eecs.berkeley.edu
+X-Envelope-To: borntraeger@linux.ibm.com
+X-Envelope-To: frankja@linux.ibm.com
+X-Envelope-To: imbrenda@linux.ibm.com
+X-Envelope-To: pbonzini@redhat.com
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: kvmarm@lists.linux.dev
+X-Envelope-To: kvm@vger.kernel.org
+X-Envelope-To: loongarch@lists.linux.dev
+X-Envelope-To: linux-mips@vger.kernel.org
+X-Envelope-To: linuxppc-dev@lists.ozlabs.org
+X-Envelope-To: kvm-riscv@lists.infradead.org
+X-Envelope-To: linux-riscv@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Date: Wed, 22 May 2024 08:16:07 -0700
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] KVM: Add a flag to track if a loaded vCPU is
+ scheduled out
+Message-ID: <Zk4MN49212SaW1_z@linux.dev>
+References: <20240522014013.1672962-1-seanjc@google.com>
+ <20240522014013.1672962-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522014013.1672962-2-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-The following changes since commit a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6:
+On Tue, May 21, 2024 at 06:40:08PM -0700, Sean Christopherson wrote:
+> Add a kvm_vcpu.scheduled_out flag to track if a vCPU is in the process of
+> being scheduled out (vCPU put path), or if the vCPU is being reloaded
+> after being scheduled out (vCPU load path).  In the short term, this will
+> allow dropping kvm_arch_sched_in(), as arch code can query scheduled_out
+> during kvm_arch_vcpu_load().
+> 
+> Longer term, scheduled_out opens up other potential optimizations, without
+> creating subtle/brittle dependencies.  E.g. it allows KVM to keep guest
+> state (that is managed via kvm_arch_vcpu_{load,put}()) loaded across
+> kvm_sched_{out,in}(), if KVM knows the state isn't accessed by the host
+> kernel.  Forcing arch code to coordinate between kvm_arch_sched_{in,out}()
+> and kvm_arch_vcpu_{load,put}() is awkward, not reusable, and relies on the
+> exact ordering of calls into arch code.
+> 
+> Adding scheduled_out also obviates the need for a kvm_arch_sched_out()
+> hook, e.g. if arch code needs to do something novel when putting vCPU
+> state.
+> 
+> And even if KVM never uses scheduled_out for anything beyond dropping
+> kvm_arch_sched_in(), just being able to remove all of the arch stubs makes
+> it worth adding the flag.
+> 
+> Link: https://lore.kernel.org/all/20240430224431.490139-1-seanjc@google.com
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-  Linux 6.9 (2024-05-12 14:12:29 -0700)
+Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
-
-for you to fetch changes up to 9cc1df421f00453afdcaf78b105d8e7fd03cce78:
-
-  LoongArch: Update Loongson-3 default config file (2024-05-19 22:18:56 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.10
-
-1, Select some options in Kconfig;
-2, Give a chance to build with !CONFIG_SMP;
-3, Switch to use built-in rustc target;
-4, Add new supported device nodes to dts;
-5, Some bug fixes and other small changes;
-6, Update the default config file.
-
-Note: There is a conflict in arch/loongarch/kernel/irq.c, but can be
-simply fixed by dropping the modification in this file (because that
-section is removed by the kvm tree).
-
-----------------------------------------------------------------
-Binbin Zhou (3):
-      LoongArch: dts: Remove "disabled" state of clock controller node
-      LoongArch: dts: Add new supported device nodes to Loongson-2K0500
-      LoongArch: dts: Add new supported device nodes to Loongson-2K2000
-
-Huacai Chen (4):
-      LoongArch: Select ARCH_WANT_DEFAULT_BPF_JIT
-      LoongArch: Select THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
-      LoongArch: Fix callchain parse error with kernel tracepoint events again
-      LoongArch: Update Loongson-3 default config file
-
-Tiezhu Yang (1):
-      LoongArch: Give a chance to build with !CONFIG_SMP
-
-WANG Rui (1):
-      LoongArch: rust: Switch to use built-in rustc target
-
-Xi Ruoyao (2):
-      LoongArch: Select ARCH_HAS_FAST_MULTIPLIER
-      LoongArch: Select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-
- arch/loongarch/Kconfig                          |  6 +-
- arch/loongarch/Makefile                         |  2 +-
- arch/loongarch/boot/dts/loongson-2k0500.dtsi    | 86 ++++++++++++++++++++++++-
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts |  4 --
- arch/loongarch/boot/dts/loongson-2k1000.dtsi    |  1 -
- arch/loongarch/boot/dts/loongson-2k2000.dtsi    | 49 ++++++++++++--
- arch/loongarch/configs/loongson3_defconfig      | 24 +++++++
- arch/loongarch/include/asm/acpi.h               |  1 +
- arch/loongarch/include/asm/asm-prototypes.h     |  6 ++
- arch/loongarch/include/asm/perf_event.h         |  3 +-
- arch/loongarch/include/asm/smp.h                |  6 ++
- arch/loongarch/kernel/irq.c                     |  2 +
- arch/loongarch/kernel/machine_kexec.c           |  2 +-
- arch/loongarch/lib/Makefile                     |  2 +
- arch/loongarch/lib/tishift.S                    | 56 ++++++++++++++++
- arch/loongarch/mm/tlbex.S                       |  9 ++-
- arch/loongarch/power/suspend.c                  |  4 +-
- rust/Makefile                                   |  2 +-
- scripts/Makefile                                |  2 +-
- scripts/generate_rust_target.rs                 |  7 +-
- 20 files changed, 245 insertions(+), 29 deletions(-)
- create mode 100644 arch/loongarch/lib/tishift.S
+-- 
+Thanks,
+Oliver
