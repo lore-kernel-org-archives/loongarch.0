@@ -1,124 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916962599;
-	Thu, 23 May 2024 02:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA7187EF
+	for <loongarch@lists.linux.dev>; Thu, 23 May 2024 03:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716430810; cv=none; b=arNRC4jGs0repzopMRkeIUfcItFNKQ6HnqOcqf9BlG27K1vokop/bCgz4JZwfTn/2eudwg6eFBF8FVTR9aknO121tpXHgdsU4mBKqGJGBk454g0O/9x+ekeldxvzYhnkDEwi7kBUIyyxbOBWg2jJfpPhFaIAZhVOYxrxqr8Y75k=
+	t=1716433834; cv=none; b=n41CHKJKWeOOLCsKHfLOVedWff74m5+0c1WXyS6f3bw9fNYiTqvkJ8ZcCTNIHkVfrDqOfHoWaU0BBr9/ljd+GJOKVLaPmmZPBvSyiFdd/wd7UvSzugoccWzJL8CwS7ymjPT9MiDNUbmwnyz8WhSjqICy6u5+p7D/IsXfBQxMfpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716430810; c=relaxed/simple;
-	bh=8YLExkAWvQwUkYKlsfDf7mOtmV2KT3rc2IEA2TsqMH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fRrmwNs68H3/k6REyvZ/LTPhP1P0aj6AC0X+5CSeLU5i5y1fE3mFr9Yjada/pasvZv2bbZ4jIzNNgBallwTnnbqyg3Avrvc0rk8SayTNKyzcGnLvdkUFXuS1MuEDLIqVcOTGG02IVsXQngzg7mk1eOW7tTZtzjxk8TwT1HSdSBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqBFRquf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqBFRquf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DA3DC4AF07;
-	Thu, 23 May 2024 02:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716430810;
-	bh=8YLExkAWvQwUkYKlsfDf7mOtmV2KT3rc2IEA2TsqMH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gqBFRqufnpH8uQ3ANXM7tJnCEYf7MZhnBPqa0I9s+8duks+Pgg8Lq45rpWJvHofqT
-	 6cXwsEu9xcykJq3I/gzNjiy4Q5/x+vCC2CeBzWsx9hJzWXwogmtCRzizI2gkFV7aa5
-	 4PdWYlEz6vllaCO1SuaSZOuU2Oih781BaPZzQCp16dUOO8r+Zk8hH/UnZm6qIuubYG
-	 T7EIyR4CLy72Vk4AU/dOH0tmvsiKE+R+vp/oLfS3cllSIfvUx1Ttndd14G9QJc4Gda
-	 Bzs+FihojeP4LIFB2dEBEWglO0f5RxajQ/+fmTdHSbRtp9De1AC33qIO53Hk3tV0FA
-	 DvNVwhK3UnrIw==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a5a2d0d8644so955863766b.1;
-        Wed, 22 May 2024 19:20:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXRi6Dziicx+vKxaWjXiQR24EmtGoQ9Za+bss3hAQ+TcL6/7IAANawEeFgFhS8nu00vcZPDzToWtrBUbF/bMNLVkcdgH779XCAVeOMYN16HroKrNLOzfasqqTAlkzUQe5PYClkEI1uEkVr2GhCcluguCIFR2rtZjJ0=
-X-Gm-Message-State: AOJu0YwajrH3jkVchLbheWvHZAAFFv+9SQwhYAFFjXhZrquW4azmCmBr
-	6yhWrj31bheMTa108qoQpwJnAJPUV/RWAgB2XS+tnseXsmhwXPJd/rH98+rV3DWD+0I3CEbA12R
-	SWMgZ3tU1nnx1m2ZANJ6ftm4XPnI=
-X-Google-Smtp-Source: AGHT+IHFFAFNdm2thGmpgTjZWOG+fuvJCmT7/ZlPl55Y9DTWh7mQqEWjHeMPJmZvWGHQXLSxyYiaQAE8rvH+ytx+Hb8=
-X-Received: by 2002:a17:906:4152:b0:a59:d44c:9bc with SMTP id
- a640c23a62f3a-a622814def4mr264319766b.66.1716430808794; Wed, 22 May 2024
- 19:20:08 -0700 (PDT)
+	s=arc-20240116; t=1716433834; c=relaxed/simple;
+	bh=hnPXkXovhQtuBN4lgW8sVpDTOhYEjimUzHMOPsPomuk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=R38eCmkWMUXIwhiMimko5MQ0/MOQnOuxF3mlNk//W7sXyVHnIpygFztYFIMHI4RehONip57AF+OAxJHE+uyWze2TBc74FBT/zq3ZTvrxtQCxmZ3YTrz7sjJ7P7CP0tR2saR+8pd/dqh4bUVZqz2F5LQIgNmOG/rKSQU6EWCfEP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dxuuqfs05mVOQCAA--.6007S3;
+	Thu, 23 May 2024 11:10:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNMWfs05mCEQGAA--.6973S3;
+	Thu, 23 May 2024 11:10:23 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/4] LoongArch: KVM: Add HW Binary Translation extension support
+Date: Thu, 23 May 2024 11:10:20 +0800
+Message-Id: <20240523031023.709347-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240523031023.709347-1-maobibo@loongson.cn>
+References: <20240523031023.709347-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240522-efi-zboot-lds-add-discard-sections-to-discard-v1-1-6b415efa0f85@kernel.org>
- <CAMj1kXG-Ck3y1STD9GeS6gyqUgOL6ch3jjCtdZjN_w+LScOzpw@mail.gmail.com>
-In-Reply-To: <CAMj1kXG-Ck3y1STD9GeS6gyqUgOL6ch3jjCtdZjN_w+LScOzpw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 May 2024 10:19:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4EOV8cMPpO_=O4rnCNKcMwVa_NeeoA9w8unC5nJU5LzQ@mail.gmail.com>
-Message-ID: <CAAhV-H4EOV8cMPpO_=O4rnCNKcMwVa_NeeoA9w8unC5nJU5LzQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: zboot.lds: Discard .discard sections
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxNMWfs05mCEQGAA--.6973S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Loongson Binary Translation (LBT) is used to accelerate binary translation,
+which contains 4 scratch registers (scr0 to scr3), x86/ARM eflags (eflags)
+and x87 fpu stack pointer (ftop).
 
-On Thu, May 23, 2024 at 1:37=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
->
-> On Wed, 22 May 2024 at 19:32, Nathan Chancellor <nathan@kernel.org> wrote=
-:
-> >
-> > When building ARCH=3Dloongarch defconfig + CONFIG_UNWINDER_ORC=3Dy usin=
-g
-> > LLVM, there is a warning from ld.lld when linking the EFI zboot image
-> > due to the use of unreachable() in number() in vsprintf.c:
-> >
-> >   ld.lld: warning: drivers/firmware/efi/libstub/lib.a(vsprintf.stub.o):=
-(.discard.unreachable+0x0): has non-ABS relocation R_LARCH_32_PCREL against=
- symbol ''
-> >
-> > If the compiler cannot eliminate the default case for any reason, the
-> > .discard.unreachable section will remain in the final binary but the
-> > entire point of any section prefixed with .discard is that it is only
-> > used at compile time, so it can be discarded via /DISCARD/ in a linker
-> > script. The asm-generic vmlinux.lds.h includes .discard and .discard.*
-> > in the COMMON_DISCARDS macro but that is not used for zboot.lds, as it
-> > is not a kernel image linker script.
-> >
-> > Add .discard and .discard.* to /DISCARD/ in zboot.lds, so that any
-> > sections meant to be discarded at link time are not included in the
-> > final zboot image. This issue is not specific to LoongArch, it is just
-> > the first architecture to select CONFIG_OBJTOOL, which defines
-> > annotate_unreachable() as an asm statement to add the
-> > .discard.unreachable section, and use the EFI stub.
-> >
-> > Closes: https://github.com/ClangBuiltLinux/linux/issues/2023
-> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
->
-> Thanks, I'll take this as a fix.
->
->
-> > ---
-> >  drivers/firmware/efi/libstub/zboot.lds | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/=
-efi/libstub/zboot.lds
-> > index ac8c0ef85158..af2c82f7bd90 100644
-> > --- a/drivers/firmware/efi/libstub/zboot.lds
-> > +++ b/drivers/firmware/efi/libstub/zboot.lds
-> > @@ -41,6 +41,7 @@ SECTIONS
-> >         }
-> >
-> >         /DISCARD/ : {
-> > +               *(.discard .discard.*)
-> >                 *(.modinfo .init.modinfo)
-> >         }
-> >  }
-> >
-> > ---
-> > base-commit: 15aa8fb852f995dd234a57f12dfb989044968bb6
-> > change-id: 20240522-efi-zboot-lds-add-discard-sections-to-discard-5fe29=
-bf42d6a
-> >
-> > Best regards,
-> > --
-> > Nathan Chancellor <nathan@kernel.org>
-> >
+Like FPU extension, here late enabling method is used for LBT. LBT context
+is saved/restored on vcpu context switch path.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h |  8 ++++
+ arch/loongarch/include/asm/kvm_vcpu.h | 10 +++++
+ arch/loongarch/kvm/exit.c             |  9 ++++
+ arch/loongarch/kvm/vcpu.c             | 59 ++++++++++++++++++++++++++-
+ 4 files changed, 85 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 2eb2f7572023..88023ab59486 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -133,6 +133,7 @@ enum emulation_result {
+ #define KVM_LARCH_LASX		(0x1 << 2)
+ #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
++#define KVM_LARCH_LBT		(0x1 << 5)
+ 
+ struct kvm_vcpu_arch {
+ 	/*
+@@ -166,6 +167,7 @@ struct kvm_vcpu_arch {
+ 
+ 	/* FPU state */
+ 	struct loongarch_fpu fpu FPU_ALIGN;
++	struct loongarch_lbt lbt;
+ 
+ 	/* CSR state */
+ 	struct loongarch_csrs *csr;
+@@ -235,6 +237,12 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
+ 	return arch->cpucfg[2] & CPUCFG2_LASX;
+ }
+ 
++static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
++{
++	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT
++					| CPUCFG2_MIPSBT);
++}
++
+ /* Debug: dump vcpu state */
+ int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index d7e51300a89f..ec46009be29b 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -75,6 +75,16 @@ static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
+ static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
+ #endif
+ 
++#ifdef CONFIG_CPU_HAS_LBT
++int kvm_own_lbt(struct kvm_vcpu *vcpu);
++#else
++static inline int kvm_own_lbt(struct kvm_vcpu *vcpu) { return -EINVAL; }
++static inline void kvm_lose_lbt(struct kvm_vcpu *vcpu) { }
++static inline void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu,
++					unsigned long fcsr) { }
++static inline void kvm_check_fcsr(struct kvm_vcpu *vcpu) { }
++#endif
++
+ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
+ void kvm_reset_timer(struct kvm_vcpu *vcpu);
+ void kvm_save_timer(struct kvm_vcpu *vcpu);
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index e2abd97fb13f..e1bd81d27fd8 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -835,6 +835,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+ 	return ret;
+ }
+ 
++static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
++{
++	if (kvm_own_lbt(vcpu))
++		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
++
++	return RESUME_GUEST;
++}
++
+ /*
+  * LoongArch KVM callback handling for unimplemented guest exiting
+  */
+@@ -867,6 +875,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
+ 	[EXCCODE_LASXDIS]		= kvm_handle_lasx_disabled,
+ 	[EXCCODE_GSPR]			= kvm_handle_gspr,
+ 	[EXCCODE_HVC]			= kvm_handle_hypercall,
++	[EXCCODE_BTDIS]			= kvm_handle_lbt_disabled,
+ };
+ 
+ int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 382796f1d3e6..8f80d1a2dcbb 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -6,6 +6,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/entry-kvm.h>
+ #include <asm/fpu.h>
++#include <asm/lbt.h>
+ #include <asm/loongarch.h>
+ #include <asm/setup.h>
+ #include <asm/time.h>
+@@ -952,12 +953,64 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_CPU_HAS_LBT
++int kvm_own_lbt(struct kvm_vcpu *vcpu)
++{
++	if (!kvm_guest_has_lbt(&vcpu->arch))
++		return -EINVAL;
++
++	preempt_disable();
++	set_csr_euen(CSR_EUEN_LBTEN);
++
++	_restore_lbt(&vcpu->arch.lbt);
++	vcpu->arch.aux_inuse |= KVM_LARCH_LBT;
++	preempt_enable();
++	return 0;
++}
++
++static void kvm_lose_lbt(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
++	if (vcpu->arch.aux_inuse & KVM_LARCH_LBT) {
++		_save_lbt(&vcpu->arch.lbt);
++		clear_csr_euen(CSR_EUEN_LBTEN);
++		vcpu->arch.aux_inuse &= ~KVM_LARCH_LBT;
++	}
++	preempt_enable();
++}
++
++static void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu, unsigned long fcsr)
++{
++	/*
++	 * if TM is enabled, top register save/restore will
++	 * cause lbt exception, here enable lbt in advance
++	 */
++	if (fcsr & FPU_CSR_TM)
++		kvm_own_lbt(vcpu);
++}
++
++static void kvm_check_fcsr(struct kvm_vcpu *vcpu)
++{
++	unsigned long fcsr;
++
++	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU)
++		if (!(vcpu->arch.aux_inuse & KVM_LARCH_LBT)) {
++			fcsr = read_fcsr(LOONGARCH_FCSR0);
++			kvm_enable_lbt_fpu(vcpu, fcsr);
++		}
++}
++#endif
++
+ /* Enable FPU and restore context */
+ void kvm_own_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	preempt_disable();
+ 
+-	/* Enable FPU */
++	/*
++	 * Enable FPU for guest
++	 * We set FR and FRE according to guest context
++	 */
++	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
+ 	set_csr_euen(CSR_EUEN_FPEN);
+ 
+ 	kvm_restore_fpu(&vcpu->arch.fpu);
+@@ -977,6 +1030,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+ 	preempt_disable();
+ 
+ 	/* Enable LSX for guest */
++	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
+ 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
+ 	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+ 	case KVM_LARCH_FPU:
+@@ -1011,6 +1065,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
+ 
+ 	preempt_disable();
+ 
++	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
+ 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
+ 	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
+ 	case KVM_LARCH_LSX:
+@@ -1042,6 +1097,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	preempt_disable();
+ 
++	kvm_check_fcsr(vcpu);
+ 	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
+ 		kvm_save_lasx(&vcpu->arch.fpu);
+ 		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
+@@ -1064,6 +1120,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 		/* Disable FPU */
+ 		clear_csr_euen(CSR_EUEN_FPEN);
+ 	}
++	kvm_lose_lbt(vcpu);
+ 
+ 	preempt_enable();
+ }
+-- 
+2.39.3
+
