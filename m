@@ -1,61 +1,61 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C09B85C6C
-	for <loongarch@lists.linux.dev>; Fri, 24 May 2024 13:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F3F12C47B
+	for <loongarch@lists.linux.dev>; Fri, 24 May 2024 13:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716558205; cv=none; b=WsZEfCxmOQaJtMXcYx67u6nlxs/4rMSY4cR5OioR4xy2JXk06B7SSDBB8iDW4EgkuH97xADH7n4yevVSemO/kEx7D4/epkZReZHEkxUN1rzbUpmemi6AoM5GUxA4Qlw3roxcIYB6OW1HhpJSY139VpboygkN3YIeT60vgOw5K7U=
+	t=1716558801; cv=none; b=benk/FACCZmpAJWbYpCb9oKbCPVj1zR0K3SgW6Mpqwib2FaajCQkuUb9oIf0rulma5KjHXNMGZY7eMM4uzoLLzGXOJDp/bvmRfOh0uV0UEH/VwYIR2nbebmeshoRj3a/dIvW+Nr2eUBCpwdME+PP8jHQVJQmzIa8Pxq4nrouOWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716558205; c=relaxed/simple;
-	bh=4fg+g+15lUvITv1DL7MxCA+mRiWs9ZIVv1H2yv35hJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwaF0CpQi7QdNvvUIs5/LGmMBDg7+3Ey9YUD5UxQnXtpo/77euzx2XSzq0hsBP7v0lrSs6sMPgBsplnrx1hWwSeSoqnT/pjhR0MOOR8/pr+3NxjqY/ZNtqIW0h/ZwxdPwRZs/ton5hEOXGchiklgBWwzhgezsSsa20byYUxZJI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLbN58sF; arc=none smtp.client-ip=209.85.215.173
+	s=arc-20240116; t=1716558801; c=relaxed/simple;
+	bh=mV+N6Vuao2DF+3LDDtNXzl30dnyKutNjJGhqc6i6P+I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fOnciumaCGEk2ta+/waDbTfbNpn3Eggg+u57TsfHWyDFnr2dtEnuIG5RDV62EJYxDyzWOnfeYBm2aXc2jm7jc9MvvhoQxFaCCJgonrc3Oy8yq1V9Uf/f/pDZORvPE4Xe5BNtUbwziKPp7W5CEf+NjIzX4qBIz6gwC7cCoa91Omc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Olr/I6uK; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLbN58sF"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-681a4422f49so647380a12.2
-        for <loongarch@lists.linux.dev>; Fri, 24 May 2024 06:43:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Olr/I6uK"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f850ff30c0so1506301b3a.0
+        for <loongarch@lists.linux.dev>; Fri, 24 May 2024 06:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716558203; x=1717163003; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=0yupO8dUYCF+0G9tTYKlxkVq1DaGE31KehgEMMUSJG4=;
-        b=GLbN58sFVlzkyCYNp/rFXaCV3UK2oI7fGaD40Tgm32gt88xKfIptgE2g3BTOIl0EZu
-         Nyoqv5UKOfDjTdnOWXNPxdZIZQWKDQ0l5tZTHniVgdmXw3ru23mg9+niynVWl/h8BIi3
-         6v/d6tkjKlSADRm7FFtyGCBeAXjUVjWLj3NAP9YVCox7elcpCBFU7Cs9CeggGdiGacwE
-         Wl0PuwyeSqi9kGQqmsGG6y65bJSOWIRtHKd03MlSlWqjaexW0qp5GwFvfBgGGJXa5dHr
-         6ngZqc9KV9lO2RH39ydEo2r/eEDJbJjB9UJFQn9L4H2COEHfJ2xqwWYdXZoBQdlQmvts
-         prog==
+        d=gmail.com; s=20230601; t=1716558799; x=1717163599; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=b0/TSFREZaBctG5vlYD0Hmuh0/DxJ4bPlmcsHcY/PdU=;
+        b=Olr/I6uKv8QOC66/OEbTuc38HLxZVB96mHvkg0HbUrhOjDpwoZLU6hDqkDXtL8GH93
+         RgkIQlN01+WScJskWa5yG7ltNxSWjCdn0A2T5MIZ03a5sGDSKfdHFbeKeIL8lB+vwPFK
+         ywZIzJyA0j4XsLa2fTCZMAuxujhHYjQFuzA5+9r96OBVSG6TTj9zEr7Mr56kPMAOhsHf
+         xyhq0wEwmO3K4D7yE8xRgitFyQXkdNuitSxOBJRVkQ0LmEKDy1i7g5v7mS6WIHOoNlX8
+         vQFrjlB6QVVSdGJEhggF3QyBJxe2WFP7oVs2rgc/uhjdjD3cQr5KjjIuPVkZbmV6YPwo
+         tJTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716558203; x=1717163003;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1716558799; x=1717163599;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0yupO8dUYCF+0G9tTYKlxkVq1DaGE31KehgEMMUSJG4=;
-        b=gwVfRUzkojz9iiBbHhDWHew1S1ScntgDslbYdgChbQgQKn08bqUsN4MdXFMz7JiT3V
-         TQD41uD2AhJ/swEaoTX9aVcUIZM40HZ8fFwDTrmkJRZfsWhUE//EsWeTrCyHyS+shIGG
-         h6XwqgFUnaxBEBIj+34pTuh+SyJ9UHhklTixuJS4bZnrZsPjO0ILft8n45gsa+T5EnWe
-         mVUq5ehtFbKrm9A3KDm7KKdGdJkF0a0VVOW0R7O41PLVjijHUz/KaTp8F3ClMap6VfsV
-         CPdYdQwNb4kw7MWQT/q7ApYGdPvTgYaekOfJtsaeegP70soKZ3WCU8C+MDlHsg6esX86
-         HSKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZJTB/bGIOAdRBaX2Fy7+/XZxspPlQCj4ZdzAy/+eUskk0NAbLFZFZ8LfSPlbR5sX/Dol80a0wy5eKb494BmeH/SnlBVaV8Wzw
-X-Gm-Message-State: AOJu0Ywj7FU3mpVCy6tIt2F2+/0E10D9vngLAsGL6jadGPv93mLX4q0q
-	U8hgeBmpOL4b5M8+K0sF/0hrKqR8ZBuOcWexSWG/VSK5lCvqJmMn
-X-Google-Smtp-Source: AGHT+IFP+60RswKtT3v6VqYC0kcSrnoN8GHpqIEwAiQOpkJYbmvZ32zTc+S4LaqCEySlMq+zyLYErA==
-X-Received: by 2002:a17:90a:43c5:b0:2be:b2:c7fa with SMTP id 98e67ed59e1d1-2bf5e94444cmr2298605a91.6.1716558203317;
-        Fri, 24 May 2024 06:43:23 -0700 (PDT)
+        bh=b0/TSFREZaBctG5vlYD0Hmuh0/DxJ4bPlmcsHcY/PdU=;
+        b=Q+KVEDpz8r1y8WbTPQbUNf8niEMNQwMWgirweiUSqVlyr2VmzRyI6yd5KXJG7ucbjS
+         q1r/HwDDQpomMo09SPNXEhEl3Hdgf7cyjyKxzHwqwi1cLAsRcc6HAnf0cXK8SyVJFHYR
+         zk0LgkPVT4mcEtImw9BxiRCswt7Ef/eTqK5yIh6hV1ggAEEGDP6tfgLk2OTGs28dPDDq
+         Y4pp8cd6lNX0KjlsgEs3SRf0qytphAk5bpd+DrhCGZpUVl0KX46hcTFgpk7+PwbSUtlt
+         RzIxQb79s51EoOTZ8U4YL6L4ygdZFsTAb0rGjPuqiEXwRjbHQWQsvFGcO3t7WExwNtwD
+         MpaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwTtETBJW2LAGVkKNBDoxeo+QtTVYnzg1dHRV3LwPPB1qfOVAFuVJ+Ds/KhuORfGk/bMM6A6QHeau5LGR3Tdkb5wpEHExquWsx
+X-Gm-Message-State: AOJu0Yx54y7ioIVIJ0F3Vrs9zcfCPYwKziDWJN0YYVLkGrSmo6/8Ohd5
+	Lm3HTWaSj9U9fq4UOgH5NINH/TnlQ9hxKqO7/ndtb4JslHrMY0O+deur2Q==
+X-Google-Smtp-Source: AGHT+IH3aQaFlbwWMDNIYwkEtj6N6w858o4MAHD4uUjiZfFfdXxaGquXuXeOwr68wYrmKImdEsesTw==
+X-Received: by 2002:a05:6a21:99a4:b0:1a9:c4ca:dc74 with SMTP id adf61e73a8af0-1b212ce1f54mr3260189637.5.1716558799320;
+        Fri, 24 May 2024 06:53:19 -0700 (PDT)
 Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9ef08b5sm3278876a91.14.2024.05.24.06.43.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc057e52sm1127383b3a.57.2024.05.24.06.53.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 06:43:22 -0700 (PDT)
+        Fri, 24 May 2024 06:53:18 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1e088782-418d-41e2-843f-b3d6cd3ab4f7@roeck-us.net>
-Date: Fri, 24 May 2024 06:43:20 -0700
+Message-ID: <91f8b384-9a6a-4435-9f9a-7a65a7c62bf2@roeck-us.net>
+Date: Fri, 24 May 2024 06:53:16 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,6 +64,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+From: Guenter Roeck <linux@roeck-us.net>
 To: Alex Deucher <alexdeucher@gmail.com>
 Cc: Samuel Holland <samuel.holland@sifive.com>,
  Andrew Morton <akpm@linux-foundation.org>,
@@ -77,8 +78,8 @@ References: <20240329072441.591471-1-samuel.holland@sifive.com>
  <eeffaec3-df63-4e55-ab7a-064a65c00efa@roeck-us.net>
  <CADnq5_NmKyTBbE6=V+XdEKStnjcyYSHyHqdkgBen4UhPnVKimQ@mail.gmail.com>
  <CADnq5_Ndzw5Gre=yyPKyFNX5yFWjTCMg2xqrn6tEj6h8t-nAYg@mail.gmail.com>
+ <1e088782-418d-41e2-843f-b3d6cd3ab4f7@roeck-us.net>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
  RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
@@ -122,46 +123,52 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CADnq5_Ndzw5Gre=yyPKyFNX5yFWjTCMg2xqrn6tEj6h8t-nAYg@mail.gmail.com>
+In-Reply-To: <1e088782-418d-41e2-843f-b3d6cd3ab4f7@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/24/24 06:18, Alex Deucher wrote:
-> On Fri, May 24, 2024 at 9:17 AM Alex Deucher <alexdeucher@gmail.com> wrote:
->>
->> On Fri, May 24, 2024 at 5:16 AM Guenter Roeck <linux@roeck-us.net> wrote:
+On 5/24/24 06:43, Guenter Roeck wrote:
+> On 5/24/24 06:18, Alex Deucher wrote:
+>> On Fri, May 24, 2024 at 9:17 AM Alex Deucher <alexdeucher@gmail.com> wrote:
 >>>
->>> Hi,
->>>
->>> On Fri, Mar 29, 2024 at 12:18:28AM -0700, Samuel Holland wrote:
->>>> Now that all previously-supported architectures select
->>>> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
->>>> of the existing list of architectures. It can also take advantage of the
->>>> common kernel-mode FPU API and method of adjusting CFLAGS.
+>>> On Fri, May 24, 2024 at 5:16 AM Guenter Roeck <linux@roeck-us.net> wrote:
 >>>>
->>>> Acked-by: Alex Deucher <alexander.deucher@amd.com>
->>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+>>>> Hi,
+>>>>
+>>>> On Fri, Mar 29, 2024 at 12:18:28AM -0700, Samuel Holland wrote:
+>>>>> Now that all previously-supported architectures select
+>>>>> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
+>>>>> of the existing list of architectures. It can also take advantage of the
+>>>>> common kernel-mode FPU API and method of adjusting CFLAGS.
+>>>>>
+>>>>> Acked-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+>>>>
+>>>> With this patch in the mainline kernel, I get the following build error
+>>>> when trying to build powerpc:ppc32_allmodconfig.
+>>>>
+>>>> powerpc64-linux-ld: drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o uses hard float, drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_helpers.o uses soft float
+>>>> powerpc64-linux-ld: failed to merge target specific data of file drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o
+>>>>
+>>>> [ repeated many times ]
+>>>>
+>>>> The problem is no longer seen after reverting this patch.
 >>>
->>> With this patch in the mainline kernel, I get the following build error
->>> when trying to build powerpc:ppc32_allmodconfig.
+>>> Should be fixed with this patch:
+>>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/5f56be33f33dd1d50b9433f842c879a20dc00f5b
+>>> Will pull it into my -fixes branch.
 >>>
->>> powerpc64-linux-ld: drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o uses hard float, drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_helpers.o uses soft float
->>> powerpc64-linux-ld: failed to merge target specific data of file drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o
->>>
->>> [ repeated many times ]
->>>
->>> The problem is no longer seen after reverting this patch.
 >>
->> Should be fixed with this patch:
->> https://gitlab.freedesktop.org/agd5f/linux/-/commit/5f56be33f33dd1d50b9433f842c879a20dc00f5b
->> Will pull it into my -fixes branch.
+>> Nevermind, this is something else.
 >>
 > 
-> Nevermind, this is something else.
+> Yes, CONFIG_DRM_AMD_DC_FP is enabled in that configuration.
 > 
 
-Yes, CONFIG_DRM_AMD_DC_FP is enabled in that configuration.
+Also, the above patch does not apply upstream; the endif is already in
+the correct place in the upstream kernel (though the commit introducing
+it adds a blank line at the end of the file)
 
 Guenter
 
