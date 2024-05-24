@@ -1,174 +1,118 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F3F12C47B
-	for <loongarch@lists.linux.dev>; Fri, 24 May 2024 13:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A1186255
+	for <loongarch@lists.linux.dev>; Fri, 24 May 2024 14:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716558801; cv=none; b=benk/FACCZmpAJWbYpCb9oKbCPVj1zR0K3SgW6Mpqwib2FaajCQkuUb9oIf0rulma5KjHXNMGZY7eMM4uzoLLzGXOJDp/bvmRfOh0uV0UEH/VwYIR2nbebmeshoRj3a/dIvW+Nr2eUBCpwdME+PP8jHQVJQmzIa8Pxq4nrouOWI=
+	t=1716559322; cv=none; b=E2Yc8EKHtoAwSIjvse4O9v4uVOTLtvtu++qBWuP8katfizBlNfl2A72lVSSW57g0E6V9l1BlXkDisTEJxVH9k7AU2crVnLzbQXktbCD43wOppSZ9903GLpFL9A5WM8WTf7NaygJxmRPHmd6DPP3NSn61WOQzhW5BFncx7XYfs3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716558801; c=relaxed/simple;
-	bh=mV+N6Vuao2DF+3LDDtNXzl30dnyKutNjJGhqc6i6P+I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fOnciumaCGEk2ta+/waDbTfbNpn3Eggg+u57TsfHWyDFnr2dtEnuIG5RDV62EJYxDyzWOnfeYBm2aXc2jm7jc9MvvhoQxFaCCJgonrc3Oy8yq1V9Uf/f/pDZORvPE4Xe5BNtUbwziKPp7W5CEf+NjIzX4qBIz6gwC7cCoa91Omc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Olr/I6uK; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Olr/I6uK"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f850ff30c0so1506301b3a.0
-        for <loongarch@lists.linux.dev>; Fri, 24 May 2024 06:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716558799; x=1717163599; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=b0/TSFREZaBctG5vlYD0Hmuh0/DxJ4bPlmcsHcY/PdU=;
-        b=Olr/I6uKv8QOC66/OEbTuc38HLxZVB96mHvkg0HbUrhOjDpwoZLU6hDqkDXtL8GH93
-         RgkIQlN01+WScJskWa5yG7ltNxSWjCdn0A2T5MIZ03a5sGDSKfdHFbeKeIL8lB+vwPFK
-         ywZIzJyA0j4XsLa2fTCZMAuxujhHYjQFuzA5+9r96OBVSG6TTj9zEr7Mr56kPMAOhsHf
-         xyhq0wEwmO3K4D7yE8xRgitFyQXkdNuitSxOBJRVkQ0LmEKDy1i7g5v7mS6WIHOoNlX8
-         vQFrjlB6QVVSdGJEhggF3QyBJxe2WFP7oVs2rgc/uhjdjD3cQr5KjjIuPVkZbmV6YPwo
-         tJTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716558799; x=1717163599;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b0/TSFREZaBctG5vlYD0Hmuh0/DxJ4bPlmcsHcY/PdU=;
-        b=Q+KVEDpz8r1y8WbTPQbUNf8niEMNQwMWgirweiUSqVlyr2VmzRyI6yd5KXJG7ucbjS
-         q1r/HwDDQpomMo09SPNXEhEl3Hdgf7cyjyKxzHwqwi1cLAsRcc6HAnf0cXK8SyVJFHYR
-         zk0LgkPVT4mcEtImw9BxiRCswt7Ef/eTqK5yIh6hV1ggAEEGDP6tfgLk2OTGs28dPDDq
-         Y4pp8cd6lNX0KjlsgEs3SRf0qytphAk5bpd+DrhCGZpUVl0KX46hcTFgpk7+PwbSUtlt
-         RzIxQb79s51EoOTZ8U4YL6L4ygdZFsTAb0rGjPuqiEXwRjbHQWQsvFGcO3t7WExwNtwD
-         MpaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwTtETBJW2LAGVkKNBDoxeo+QtTVYnzg1dHRV3LwPPB1qfOVAFuVJ+Ds/KhuORfGk/bMM6A6QHeau5LGR3Tdkb5wpEHExquWsx
-X-Gm-Message-State: AOJu0Yx54y7ioIVIJ0F3Vrs9zcfCPYwKziDWJN0YYVLkGrSmo6/8Ohd5
-	Lm3HTWaSj9U9fq4UOgH5NINH/TnlQ9hxKqO7/ndtb4JslHrMY0O+deur2Q==
-X-Google-Smtp-Source: AGHT+IH3aQaFlbwWMDNIYwkEtj6N6w858o4MAHD4uUjiZfFfdXxaGquXuXeOwr68wYrmKImdEsesTw==
-X-Received: by 2002:a05:6a21:99a4:b0:1a9:c4ca:dc74 with SMTP id adf61e73a8af0-1b212ce1f54mr3260189637.5.1716558799320;
-        Fri, 24 May 2024 06:53:19 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fc057e52sm1127383b3a.57.2024.05.24.06.53.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 May 2024 06:53:18 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <91f8b384-9a6a-4435-9f9a-7a65a7c62bf2@roeck-us.net>
-Date: Fri, 24 May 2024 06:53:16 -0700
+	s=arc-20240116; t=1716559322; c=relaxed/simple;
+	bh=NY5DZo2keldw1Tp/cmGYN8DjxzuoD7v9MPhLqsijU0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=trlf52vMfnKBVpqQ0Iv3F2yf11g5K9bSIGvcTSwEcUPudRKxMupCqUq8fbNljQc56bOxevRlWC3eKLM0v6o4nnJruqGN+b7nE2rL1U476VYtT0KG4y42Bs+jTv5NlmUGSCbC1bJHTLLIOF9cqHOF0tOo1WfjbPartldhzggACcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sAVUI-0001KR-2V; Fri, 24 May 2024 16:01:38 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sAVUC-002nnD-Qc; Fri, 24 May 2024 16:01:32 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sAVUC-00BNeg-2L;
+	Fri, 24 May 2024 16:01:32 +0200
+Date: Fri, 24 May 2024 16:01:32 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <aqcpf2tjt4iywxc7vgddkzaxtotlua2mnnpfsivpwobrc64neo@gylq5sl6sahk>
+References: <cover.1713164810.git.zhoubinbin@loongson.cn>
+ <c89917023b49fff70bc89ddb66be7da4e0fe67ef.1713164810.git.zhoubinbin@loongson.cn>
+ <t3efvxh4d2xvjh4pfrdnho6mwonwm6spjer72ww3wiqx2v3a2x@52ufzsdhc44i>
+ <CAMpQs4KyX3A-Bxyp7+evBT5Umb03OvpV0VtqrNjAnZPYZ_dNQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-From: Guenter Roeck <linux@roeck-us.net>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
- <20240329072441.591471-14-samuel.holland@sifive.com>
- <eeffaec3-df63-4e55-ab7a-064a65c00efa@roeck-us.net>
- <CADnq5_NmKyTBbE6=V+XdEKStnjcyYSHyHqdkgBen4UhPnVKimQ@mail.gmail.com>
- <CADnq5_Ndzw5Gre=yyPKyFNX5yFWjTCMg2xqrn6tEj6h8t-nAYg@mail.gmail.com>
- <1e088782-418d-41e2-843f-b3d6cd3ab4f7@roeck-us.net>
-Content-Language: en-US
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <1e088782-418d-41e2-843f-b3d6cd3ab4f7@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m6qvlzhmbrdzg3ms"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4KyX3A-Bxyp7+evBT5Umb03OvpV0VtqrNjAnZPYZ_dNQw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: loongarch@lists.linux.dev
 
-On 5/24/24 06:43, Guenter Roeck wrote:
-> On 5/24/24 06:18, Alex Deucher wrote:
->> On Fri, May 24, 2024 at 9:17 AM Alex Deucher <alexdeucher@gmail.com> wrote:
->>>
->>> On Fri, May 24, 2024 at 5:16 AM Guenter Roeck <linux@roeck-us.net> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On Fri, Mar 29, 2024 at 12:18:28AM -0700, Samuel Holland wrote:
->>>>> Now that all previously-supported architectures select
->>>>> ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
->>>>> of the existing list of architectures. It can also take advantage of the
->>>>> common kernel-mode FPU API and method of adjusting CFLAGS.
->>>>>
->>>>> Acked-by: Alex Deucher <alexander.deucher@amd.com>
->>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
->>>>
->>>> With this patch in the mainline kernel, I get the following build error
->>>> when trying to build powerpc:ppc32_allmodconfig.
->>>>
->>>> powerpc64-linux-ld: drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o uses hard float, drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_helpers.o uses soft float
->>>> powerpc64-linux-ld: failed to merge target specific data of file drivers/gpu/drm/amd/amdgpu/../display/dc/dml/display_mode_lib.o
->>>>
->>>> [ repeated many times ]
->>>>
->>>> The problem is no longer seen after reverting this patch.
->>>
->>> Should be fixed with this patch:
->>> https://gitlab.freedesktop.org/agd5f/linux/-/commit/5f56be33f33dd1d50b9433f842c879a20dc00f5b
->>> Will pull it into my -fixes branch.
->>>
->>
->> Nevermind, this is something else.
->>
-> 
-> Yes, CONFIG_DRM_AMD_DC_FP is enabled in that configuration.
-> 
 
-Also, the above patch does not apply upstream; the endif is already in
-the correct place in the upstream kernel (though the commit introducing
-it adds a blank line at the end of the file)
+--m6qvlzhmbrdzg3ms
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+Hello Binbin,
 
+On Fri, May 24, 2024 at 02:29:35PM +0600, Binbin Zhou wrote:
+> > > +     ddata->duty =3D pwm_loongson_readl(ddata, PWM_DUTY);
+> > > +     ddata->period =3D pwm_loongson_readl(ddata, PWM_PERIOD);
+> >
+> > The rounding looks wrong. Did you test with PWM_DEBUG enabled?
+> >
+> > I think the value assigned to ddata->period and the other members isn't
+> > used. Unless I'm mistaken, please drop the assignment.
+> >
+>=20
+> The period, duty and ctrl are prepared for PM. I plan to put these
+> three parameters separately into the pwm_loongson_context structure. I
+> think it will look clearer:
+>=20
+> struct pwm_loongson_context {
+>         u32 ctrl;
+>         u32 duty;
+>         u32 period;
+> };
+
+But .suspend() reads the value from the registers and rewrites these
+three members itself, too. So the write in .apply() is unused and can be
+dropped.
+
+The suggestion to put this in a struct is nice. I'd call it something
+with "suspend" though, maybe "pwm_loongson_suspend_store"?
+=20
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--m6qvlzhmbrdzg3ms
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZQnbsACgkQj4D7WH0S
+/k52zwf/Q2TCGQKtD2L4IwNcg0/uwjW65m8tsFTF7ir7jcOQySLXwPbZ5efUrLu2
+mKQT0Inkk1oGzdv9RT3nBBmCKl39FrH5ErFDJY924irw52NxosBwYSRHJAdH10xl
+Mbs44d9JGJNqK0sxHvC9JSmz0xq1ymUgT02bDgPnM7n+scA4Ne3LQlc2vRLRAxjT
+FDdUP3c56RbpNzTNxcVBI/WG/elYX35t6OL9rdQIuH7sfQYDxaNVXhRmqRUVRyB3
+MyXUPZqlik3bwZKr8BIU6swR5bw4wpq1Cl3bxrStGF3gFxA6lA2bUkOuOym6V1x4
+sAOrHYtDJ4Gi9jAInQMT3bNfRHzeeA==
+=cm1l
+-----END PGP SIGNATURE-----
+
+--m6qvlzhmbrdzg3ms--
