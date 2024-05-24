@@ -1,322 +1,577 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5456E615;
-	Fri, 24 May 2024 07:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1412883C
+	for <loongarch@lists.linux.dev>; Fri, 24 May 2024 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716536306; cv=none; b=EJtYGhfUYL5ZRXdsTy+c3RAbflCLwtmltpGfqXYlR8Awyrc40OeLp4dPiTqztscMPC4AafHsc6ErigGlCMALoTTKWHgwrwWJOsiI2A4PPt5yOYD04jXyBtvzqABpIsbASREQ/FSyPe7Z0SRLf3mW8DHpL5YOCHYfkCpwMI/EhyI=
+	t=1716539391; cv=none; b=ZvoicGfXDDXYZGHaNoAC6M53pfCTj4FjOn09exNNJd7vZ8etbOCuuLoFUDiwAOqcAMfuKbsW9cYYyA49aLrhr3OVfFj+fykakFgRVF1tEGIwtzSck6zTa2bRKkLV4kzfcxtRC9wg6MNdervXLpBs2p5E+B7xHPA5WEIYNeLDuPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716536306; c=relaxed/simple;
-	bh=P4S+dNcHYnfYJmNly4QLN7+vGJFStlg4TJNdtPEEaYk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OdZfHwCMnAjkvPpFAIU2RAnbpfjyiRUKHuA32+WYCuFnkOvQ9SpOn3ctkHb/0NDsF4EZ43HFry35aGpxKHAUYQeJ/xO5o7Q1QXrBx2wvY7Omcr5rvFCDCwub7MosqGl/iwNu3dtMnzLDwcVOJDvwce8vvPzVvfV3GRvMlQepCkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Dxvq7nQ1Bm3ksDAA--.3296S3;
-	Fri, 24 May 2024 15:38:15 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZcXlQ1BmScUHAA--.10650S4;
-	Fri, 24 May 2024 15:38:14 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Juergen Gross <jgross@suse.com>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH v4 2/2] LoongArch: Add steal time support in guest side
-Date: Fri, 24 May 2024 15:38:12 +0800
-Message-Id: <20240524073812.731032-3-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240524073812.731032-1-maobibo@loongson.cn>
-References: <20240524073812.731032-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1716539391; c=relaxed/simple;
+	bh=4hA31vtpsaNvcfAhS+q95vc1AsSGRuyl0izOM9TkIqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iBopeDZvuAgoI3pUVHpvBns38PgSw6Ybkh67CUVCAFkzhigaXeTNcMxyzjJOcdRVKdr7Z9gpQaJ+/nh2Q7D7SS1QA2+m+yzxgW9URc2bDysyhzsGjPVkAzXURJ1eS55WUKUwUUi/mXOzQPMtgGVqQVh4yNeEC2ekgBY4u1ph7Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEwAcW+C; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEwAcW+C"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-62a083d7ee9so5445927b3.2
+        for <loongarch@lists.linux.dev>; Fri, 24 May 2024 01:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716539389; x=1717144189; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WH3Fys/j3aklEmn45PjuAQUjyf4/TFQKqnoFYRFAo0k=;
+        b=EEwAcW+CzL/ErhUq2GPaXSao71PNJqmOKBuNpKJqVtDIPQmXvxxYSA8xTEl2+W2XCY
+         Wr0QCgW555k6dG2y8+++NifsNrvAhd3jxAj+xQmzX9mTRAjcxFdKtjuAYHz+FIGBwIp6
+         jdJUcseMCajeYBFB/uof3/7W2silIdaZqhOxpndkjEJUunZ2MEh5eCnF3N8j/JCgtTop
+         pgmbBLGIDwGjxdEiWY+oKmaQnzDkhYSGyTtMt9FqGxpL62tE0UuDdnVqX74weNv2R6Vx
+         ABLJKCGHpAOTBv/LWWaYwi1qCkE6PT79IDcgHhZKLM1skJIqNmJj+DQY/SCOGwRnDcY9
+         ubDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716539389; x=1717144189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WH3Fys/j3aklEmn45PjuAQUjyf4/TFQKqnoFYRFAo0k=;
+        b=mDzpZBluQ8S414PbFIQDIvAjTQeKsrlGTL44RLqGniLP7Ho12mn7SIHutf434/ZWKM
+         Eqpj30Q8xuIr2gErm67qKUdBWYTfP38IqlsH1jnMOTYFGyO581I0/fVZKaSk7jQJnp3e
+         DrZ70OJ/7lV9G3b9o+DAWCDH5B9zHn2drjiEqhKbtETW5Rz3uaFSVQw+tb5deHnhx3ng
+         EotXK4XO6H6gI1xQfFQHxZY2HVDjagrVit2bQhDa/0Bl/2s+iTfA1W8Wu9sU72vguhZ6
+         OZEMqnZMGrFup78XzNTj2r8ACdG+CdQhhk3tKXLDa7k3N8MKVrW6rRpFBZW70d3AZ5iF
+         2Krw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXPSgZm2j2Aom4WFSwlMWOQnNfxevclhsvdNaxc/27ml2NmuTHF27x132jZqgY9aErucoafVBG1Js7yUohXDDJFW3YJLLp4bt0
+X-Gm-Message-State: AOJu0YzYJZ98l1ueaJmU8dr0Zm5Ju+AezW9n+QbQv+MDOTzHad6w8gFx
+	HU+LBZpqDAa1903QLkbJPR/8uUUCXvW0QmPuzNz0Nzne+/C5idBwwPLpJ/7ccoUTfi7MipDLnkM
+	0fwxgvrxFxak3Zjzfh2rglTxlvo8=
+X-Google-Smtp-Source: AGHT+IGheiRqB6HWj77luLhirWJyawY2o8T2dTrGT8ZU7I/j9Z7RflsykCkKsK4ZvYx8zBWo3R7pn2i7vQIJXeho6xY=
+X-Received: by 2002:a0d:ea47:0:b0:620:2753:96b8 with SMTP id
+ 00721157ae682-62a08df7f15mr19585687b3.12.1716539388653; Fri, 24 May 2024
+ 01:29:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxZcXlQ1BmScUHAA--.10650S4
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <cover.1713164810.git.zhoubinbin@loongson.cn> <c89917023b49fff70bc89ddb66be7da4e0fe67ef.1713164810.git.zhoubinbin@loongson.cn>
+ <t3efvxh4d2xvjh4pfrdnho6mwonwm6spjer72ww3wiqx2v3a2x@52ufzsdhc44i>
+In-Reply-To: <t3efvxh4d2xvjh4pfrdnho6mwonwm6spjer72ww3wiqx2v3a2x@52ufzsdhc44i>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 24 May 2024 14:29:35 +0600
+Message-ID: <CAMpQs4KyX3A-Bxyp7+evBT5Umb03OvpV0VtqrNjAnZPYZ_dNQw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Percpu struct kvm_steal_time is added here, its size is 64 bytes and
-also defined as 64 bytes, so that the whole structure is in one physical
-page.
+Hi Uwe:
 
-When vcpu is onlined, function pv_enable_steal_time() is called. This
-function will pass guest physical address of struct kvm_steal_time and
-tells hypervisor to enable steal time. When vcpu is offline, physical
-address is set as 0 and tells hypervisor to disable steal time.
+Thanks for your detailed review.
 
-Here is output of vmstat on guest when there is workload on both host
-and guest. It shows steal time stat information.
+On Thu, May 23, 2024 at 10:31=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> sorry for taking so long to get back to your patch. reviewing new
+> drivers is quite time consuming which makes me often fail to review in a
+> timely manner.
+>
+> On Tue, Apr 16, 2024 at 09:55:15AM +0800, Binbin Zhou wrote:
+> > This commit adds a generic PWM framework driver for the PWM controller
+> > found on Loongson family chips.
+> >
+> > Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  MAINTAINERS                |   1 +
+> >  drivers/pwm/Kconfig        |  10 ++
+> >  drivers/pwm/Makefile       |   1 +
+> >  drivers/pwm/pwm-loongson.c | 298 +++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 310 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-loongson.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ecef2744726d..d32da7c77f0e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12756,6 +12756,7 @@ M:    Binbin Zhou <zhoubinbin@loongson.cn>
+> >  L:   linux-pwm@vger.kernel.org
+> >  S:   Maintained
+> >  F:   Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+> > +F:   drivers/pwm/pwm-loongson.c
+> >
+> >  LOONGSON-2 SOC SERIES CLOCK DRIVER
+> >  M:   Yinbo Zhu <zhuyinbo@loongson.cn>
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index 4b956d661755..bb163c65e5ae 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -324,6 +324,16 @@ config PWM_KEEMBAY
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called pwm-keembay.
+> >
+> > +config PWM_LOONGSON
+> > +     tristate "Loongson PWM support"
+> > +     depends on MACH_LOONGSON64
+>
+> Something with || COMPILE_TEST would be nice.
 
-procs -----------memory---------- -----io---- -system-- ------cpu-----
- r  b   swpd   free  inact active   bi    bo   in   cs us sy id wa st
-15  1      0 7583616 184112  72208    20    0  162   52 31  6 43  0 20
-17  0      0 7583616 184704  72192    0     0 6318 6885  5 60  8  5 22
-16  0      0 7583616 185392  72144    0     0 1766 1081  0 49  0  1 50
-16  0      0 7583616 184816  72304    0     0 6300 6166  4 62 12  2 20
-18  0      0 7583632 184480  72240    0     0 2814 1754  2 58  4  1 35
+OK..
+>
+> > +     help
+> > +       Generic PWM framework driver for Loongson family.
+> > +       It can be found on Loongson-2K series cpu and Loongson LS7A bri=
+dge chips.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called pwm-loongson.
+> > +
+> >  config PWM_LP3943
+> >       tristate "TI/National Semiconductor LP3943 PWM support"
+> >       depends on MFD_LP3943
+> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > index c5ec9e168ee7..bffa49500277 100644
+> > --- a/drivers/pwm/Makefile
+> > +++ b/drivers/pwm/Makefile
+> > @@ -28,6 +28,7 @@ obj-$(CONFIG_PWM_INTEL_LGM) +=3D pwm-intel-lgm.o
+> >  obj-$(CONFIG_PWM_IQS620A)    +=3D pwm-iqs620a.o
+> >  obj-$(CONFIG_PWM_JZ4740)     +=3D pwm-jz4740.o
+> >  obj-$(CONFIG_PWM_KEEMBAY)    +=3D pwm-keembay.o
+> > +obj-$(CONFIG_PWM_LOONGSON)   +=3D pwm-loongson.o
+> >  obj-$(CONFIG_PWM_LP3943)     +=3D pwm-lp3943.o
+> >  obj-$(CONFIG_PWM_LPC18XX_SCT)        +=3D pwm-lpc18xx-sct.o
+> >  obj-$(CONFIG_PWM_LPC32XX)    +=3D pwm-lpc32xx.o
+> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+> > new file mode 100644
+> > index 000000000000..5ac79a69acd3
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-loongson.c
+> > @@ -0,0 +1,298 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Loongson PWM driver
+> > + *
+> > + * Author: Juxin Gao <gaojuxin@loongson.cn>
+> > + * Further cleanup and restructuring by:
+> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
+> > + *
+> > + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
+>
+> A paragraph about the hardware capabilities here please. Please answer
+> the following questions:
+>
+>  - How does the hardware behave on disable? (Does it complete the
+>    currently running period? Is the output still driven then? If yes,
+>    which level?)
+>
+>  - How does the hardware behave on configuration changes? (Does it
+>    complete the currently running period? Are there some glitches
+>    expected (like driving an output corresponding to the old period
+>    length but the new duty_cycle or similar).
+>
+>  - Are there any restrictions like: Cannot do 100% relative duty (or
+>    0%)?
+>
+> Stick to the format used in most other drivers such that
+>
+>         sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/pwm-loongson.c
+>
+> emits the requested info.
+>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- .../admin-guide/kernel-parameters.txt         |   2 +-
- arch/loongarch/Kconfig                        |  11 ++
- arch/loongarch/include/asm/paravirt.h         |   5 +
- arch/loongarch/kernel/paravirt.c              | 133 ++++++++++++++++++
- arch/loongarch/kernel/time.c                  |   2 +
- 5 files changed, 152 insertions(+), 1 deletion(-)
+OK, I will add it.
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/units.h>
+> > +
+> > +/* Loongson PWM registers */
+> > +#define PWM_DUTY     0x4 /* Low Pulse Buffer Register */
+> > +#define PWM_PERIOD   0x8 /* Pulse Period Buffer Register */
+> > +#define PWM_CTRL     0xc /* Control Register */
+>
+> Please use a driver specific prefix for these defines. PWM_DUTY is quite
+> generic otherwise.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ef25e06ec08c..3435eaab392b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4057,7 +4057,7 @@
- 			prediction) vulnerability. System may allow data
- 			leaks with this option.
- 
--	no-steal-acc	[X86,PV_OPS,ARM64,PPC/PSERIES,RISCV,EARLY] Disable
-+	no-steal-acc	[X86,PV_OPS,ARM64,PPC/PSERIES,RISCV,LOONGARCH,EARLY] Disable
- 			paravirtualized steal time accounting. steal time is
- 			computed, but won't influence scheduler behaviour
- 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 4bda59525a13..a1c4b0080039 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -641,6 +641,17 @@ config PARAVIRT
- 	  over full virtualization.  However, when run without a hypervisor
- 	  the kernel is theoretically slower and slightly larger.
- 
-+config PARAVIRT_TIME_ACCOUNTING
-+	bool "Paravirtual steal time accounting"
-+	select PARAVIRT
-+	help
-+	  Select this option to enable fine granularity task steal time
-+	  accounting. Time spent executing other tasks in parallel with
-+	  the current vCPU is discounted from the vCPU power. To account for
-+	  that, there can be a small performance impact.
-+
-+	  If in doubt, say N here.
-+
- endmenu
- 
- config ARCH_SELECT_MEMORY_MODEL
-diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-index 0965710f47f2..dddec49671ae 100644
---- a/arch/loongarch/include/asm/paravirt.h
-+++ b/arch/loongarch/include/asm/paravirt.h
-@@ -18,6 +18,7 @@ static inline u64 paravirt_steal_clock(int cpu)
- }
- 
- int __init pv_ipi_init(void);
-+int __init pv_time_init(void);
- 
- #else
- 
-@@ -26,5 +27,9 @@ static inline int pv_ipi_init(void)
- 	return 0;
- }
- 
-+static inline int pv_time_init(void)
-+{
-+	return 0;
-+}
- #endif // CONFIG_PARAVIRT
- #endif
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-index 1633ed4f692f..68f3cd75862a 100644
---- a/arch/loongarch/kernel/paravirt.c
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -4,11 +4,14 @@
- #include <linux/interrupt.h>
- #include <linux/jump_label.h>
- #include <linux/kvm_para.h>
-+#include <linux/reboot.h>
- #include <linux/static_call.h>
- #include <asm/paravirt.h>
- 
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
-+static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-+static int has_steal_clock;
- 
- static u64 native_steal_clock(int cpu)
- {
-@@ -17,6 +20,57 @@ static u64 native_steal_clock(int cpu)
- 
- DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
- 
-+static bool steal_acc = true;
-+static int __init parse_no_stealacc(char *arg)
-+{
-+	steal_acc = false;
-+	return 0;
-+}
-+early_param("no-steal-acc", parse_no_stealacc);
-+
-+static u64 para_steal_clock(int cpu)
-+{
-+	u64 steal;
-+	struct kvm_steal_time *src;
-+	int version;
-+
-+	src = &per_cpu(steal_time, cpu);
-+	do {
-+
-+		version = src->version;
-+		/* Make sure that the version is read before the steal */
-+		virt_rmb();
-+		steal = src->steal;
-+		/* Make sure that the steal is read before the next version */
-+		virt_rmb();
-+
-+	} while ((version & 1) || (version != src->version));
-+	return steal;
-+}
-+
-+static int pv_enable_steal_time(void)
-+{
-+	int cpu = smp_processor_id();
-+	struct kvm_steal_time *st;
-+	unsigned long addr;
-+
-+	if (!has_steal_clock)
-+		return -EPERM;
-+
-+	st = &per_cpu(steal_time, cpu);
-+	addr = per_cpu_ptr_to_phys(st);
-+
-+	/* The whole structure kvm_steal_time should be one page */
-+	if (PFN_DOWN(addr) != PFN_DOWN(addr + sizeof(*st))) {
-+		pr_warn("Illegal PV steal time addr %lx\n", addr);
-+		return -EFAULT;
-+	}
-+
-+	addr |= KVM_STEAL_PHYS_VALID;
-+	kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_TIME, addr);
-+	return 0;
-+}
-+
- #ifdef CONFIG_SMP
- static void pv_send_ipi_single(int cpu, unsigned int action)
- {
-@@ -112,6 +166,32 @@ static void pv_init_ipi(void)
- 	if (r < 0)
- 		panic("SWI0 IRQ request failed\n");
- }
-+
-+static void pv_disable_steal_time(void)
-+{
-+	if (has_steal_clock)
-+		kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_TIME, 0);
-+}
-+
-+static int pv_time_cpu_online(unsigned int cpu)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	pv_enable_steal_time();
-+	local_irq_restore(flags);
-+	return 0;
-+}
-+
-+static int pv_time_cpu_down_prepare(unsigned int cpu)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	pv_disable_steal_time();
-+	local_irq_restore(flags);
-+	return 0;
-+}
- #endif
- 
- static bool kvm_para_available(void)
-@@ -149,3 +229,56 @@ int __init pv_ipi_init(void)
- 
- 	return 0;
- }
-+
-+static void pv_cpu_reboot(void *unused)
-+{
-+	pv_disable_steal_time();
-+}
-+
-+static int pv_reboot_notify(struct notifier_block *nb, unsigned long code,
-+		void *unused)
-+{
-+	on_each_cpu(pv_cpu_reboot, NULL, 1);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block pv_reboot_nb = {
-+	.notifier_call  = pv_reboot_notify,
-+};
-+
-+int __init pv_time_init(void)
-+{
-+	int feature;
-+
-+	if (!cpu_has_hypervisor)
-+		return 0;
-+	if (!kvm_para_available())
-+		return 0;
-+
-+	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
-+	if (!(feature & KVM_FEATURE_STEAL_TIME))
-+		return 0;
-+
-+	has_steal_clock = 1;
-+	if (pv_enable_steal_time()) {
-+		has_steal_clock = 0;
-+		return 0;
-+	}
-+
-+	register_reboot_notifier(&pv_reboot_nb);
-+	static_call_update(pv_steal_clock, para_steal_clock);
-+	static_key_slow_inc(&paravirt_steal_enabled);
-+#ifdef CONFIG_PARAVIRT_TIME_ACCOUNTING
-+	if (steal_acc)
-+		static_key_slow_inc(&paravirt_steal_rq_enabled);
-+#endif
-+
-+#ifdef CONFIG_SMP
-+	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+			"loongarch/pvi_time:online",
-+			pv_time_cpu_online, pv_time_cpu_down_prepare) < 0)
-+		pr_err("Failed to install cpu hotplug callbacks\n");
-+#endif
-+	pr_info("Using stolen time PV\n");
-+	return 0;
-+}
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index fd5354f9be7c..46d7d40c87e3 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -15,6 +15,7 @@
- 
- #include <asm/cpu-features.h>
- #include <asm/loongarch.h>
-+#include <asm/paravirt.h>
- #include <asm/time.h>
- 
- u64 cpu_clock_freq;
-@@ -214,4 +215,5 @@ void __init time_init(void)
- 
- 	constant_clockevent_init();
- 	constant_clocksource_init();
-+	pv_time_init();
- }
--- 
-2.39.3
+OK, I will rename these defines as LOONGSON_*.
+>
+> > +
+> > +/* Control register bits */
+> > +#define PWM_CTRL_EN  BIT(0)  /* Counter Enable Bit */
+> > +#define PWM_CTRL_OE  BIT(3)  /* Pulse Output Enable Control Bit, Valid=
+ Low */
+> > +#define PWM_CTRL_SINGLE      BIT(4)  /* Single Pulse Control Bit */
+> > +#define PWM_CTRL_INTE        BIT(5)  /* Interrupt Enable Bit */
+> > +#define PWM_CTRL_INT BIT(6)  /* Interrupt Bit */
+> > +#define PWM_CTRL_RST BIT(7)  /* Counter Reset Bit */
+> > +#define PWM_CTRL_CAPTE       BIT(8)  /* Measurement Pulse Enable Bit *=
+/
+> > +#define PWM_CTRL_INVERT      BIT(9)  /* Output flip-flop Enable Bit */
+> > +#define PWM_CTRL_DZONE       BIT(10) /* Anti-dead Zone Enable Bit */
+> > +
+> > +#define PWM_FREQ_STD       (50 * HZ_PER_KHZ)
+> > +
+> > +struct pwm_loongson_ddata {
+> > +     struct pwm_chip chip;
+> > +     struct clk      *clk;
+> > +     void __iomem    *base;
+> > +     /* The following for PM */
+> > +     u32             ctrl;
+> > +     u32             duty;
+> > +     u32             period;
+>
+> This needs updating to cope for commit 05947224ff46 ("pwm: Ensure that
+> pwm_chips are allocated using pwmchip_alloc()")
+>
+> Also I'm not a fan of aligning the member names. If you feel strong
+> about it, keep it as is, however.
+>
 
+Yes, I have refactored this part based on commit 05947224ff46 ("pwm:
+Ensure that pwm_chips are allocated using pwmchip_alloc()").
+> > +};
+> > +
+> > +static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct =
+pwm_chip *chip)
+> > +{
+> > +     return container_of(chip, struct pwm_loongson_ddata, chip);
+> > +}
+> > +
+> > +static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata,=
+ u64 offset)
+>
+> I don't know about the calling convention on loongson, but I'd expect
+> offset to be an unsigned int only, given that (I guess) only PWM_CTRL
+> and friends are passed here.
+>
+
+Emm...
+Actually, unsigned int should be enough.
+> > +{
+> > +     return readl(ddata->base + offset);
+> > +}
+> > +
+> > +static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddat=
+a,
+> > +                                    u32 val, u64 offset)
+> > +{
+> > +     writel(val, ddata->base + offset);
+> > +}
+> > +
+> > +static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm=
+_device *pwm,
+> > +                                  enum pwm_polarity polarity)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u16 val;
+> > +
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +
+> > +     if (polarity =3D=3D PWM_POLARITY_INVERSED)
+> > +             /* Duty cycle defines LOW period of PWM */
+> > +             val |=3D PWM_CTRL_INVERT;
+> > +     else
+> > +             /* Duty cycle defines HIGH period of PWM */
+> > +             val &=3D ~PWM_CTRL_INVERT;
+> > +
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_dev=
+ice *pwm)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 val;
+> > +
+> > +     if (pwm->state.polarity =3D=3D PWM_POLARITY_NORMAL)
+> > +             pwm_loongson_writel(ddata, ddata->period, PWM_DUTY);
+> > +     else if (pwm->state.polarity =3D=3D PWM_POLARITY_INVERSED)
+> > +             pwm_loongson_writel(ddata, 0, PWM_DUTY);
+> > +
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     val &=3D ~PWM_CTRL_EN;
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+>
+> Technically it's not needed to configure the duty. A consumer who
+> expects a certain behaviour is supposed to not disable the PWM.
+>
+
+Emm, this is really not necessary.
+> > +}
+> > +
+> > +static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_devic=
+e *pwm)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 val;
+> > +
+> > +     pwm_loongson_writel(ddata, ddata->duty, PWM_DUTY);
+> > +     pwm_loongson_writel(ddata, ddata->period, PWM_PERIOD);
+>
+> pwm_loongson_enable() is called from pwm_loongson_apply() and PWM_DUTY an=
+d
+> PWM_PERIOD were already written there. So please either only write it
+> once, or add a code comment about why writing twice is needed.
+>
+
+Sorry, it's my fault. I will keep these regs written only once.
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     val |=3D PWM_CTRL_EN;
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static u32 pwm_loongson_set_config(struct pwm_loongson_ddata *ddata, i=
+nt ns,
+> > +                                u64 clk_rate, u64 offset)
+> > +{
+> > +     u32 val;
+> > +     u64 c;
+> > +
+> > +     c =3D clk_rate * ns;
+>
+> That migth overflow?!
+>
+> > +     do_div(c, NSEC_PER_SEC);
+> > +     val =3D c < 1 ? 1 : c;
+>
+> That smells fishy. If a period (or duty_cycle) is requested that is too
+> small to be implemented, let .apply() return -EINVAL.
+>
+
+In fact, I'm going to rewrite this part, drop the
+pwm_loongson_set_config(), and calulate the duty and period in
+pwm_loongson_config(), something like:
+
+        /* duty =3D duty_ns * ddata->clk_rate / NSEC_PER_SEC */
+        ctx.duty =3D mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER=
+_SEC);
+        pwm_loongson_writel(ddata, ctx.duty, LOONGSON_PWM_REG_DUTY);
+
+        /* period =3D period_ns * ddata->clk_rate / NSEC_PER_SEC */
+        ctx.period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate,
+NSEC_PER_SEC);
+        pwm_loongson_writel(ddata, ctx.period, LOONGSON_PWM_REG_PERIOD);
+
+
+> > +     pwm_loongson_writel(ddata, val, offset);
+> > +
+> > +     return val;
+> > +}
+> > +
+> > +static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > +                            int duty_ns, int period_ns)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     struct device *dev =3D chip->dev;
+> > +     u64 clk_rate;
+> > +
+> > +     if (duty_ns > NANOHZ_PER_HZ || period_ns > NANOHZ_PER_HZ)
+> > +             return -ERANGE;
+>
+> Nope, that's wrong. Please configure the biggest possible period not
+> bigger than the requested period. So something like:
+>
+>         period_ns =3D min(period_ns, NANOHZ_PER_HZ);
+>
+> ; ditto for duty_cycle.
+
+OK.. I will do it in .apply().
+>
+> > +     clk_rate =3D has_acpi_companion(dev) ? PWM_FREQ_STD : clk_get_rat=
+e(ddata->clk);
+> > +
+> > +     ddata->duty =3D pwm_loongson_set_config(ddata, duty_ns, clk_rate,=
+ PWM_DUTY);
+> > +     ddata->period =3D pwm_loongson_set_config(ddata, period_ns, clk_r=
+ate, PWM_PERIOD);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > +                           const struct pwm_state *state)
+> > +{
+> > +     int err;
+> > +     bool enabled =3D pwm->state.enabled;
+> > +
+> > +     if (state->polarity !=3D pwm->state.polarity) {
+> > +             if (enabled) {
+> > +                     pwm_loongson_disable(chip, pwm);
+> > +                     enabled =3D false;
+> > +             }
+> > +
+> > +             err =3D pwm_loongson_set_polarity(chip, pwm, state->polar=
+ity);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (!state->enabled) {
+> > +             if (enabled)
+> > +                     pwm_loongson_disable(chip, pwm);
+> > +             return 0;
+> > +     }
+> > +
+> > +     err =3D pwm_loongson_config(chip, pwm, state->duty_cycle, state->=
+period);
+>
+> state->duty_cycle is an u64, however it's truncated to an int here.
+>
+
+OK, I will fix it.
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     if (!enabled)
+> > +             err =3D pwm_loongson_enable(chip, pwm);
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_de=
+vice *pwm,
+> > +                               struct pwm_state *state)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 period, duty, ctrl;
+> > +     u64 ns;
+> > +
+> > +     ctrl =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     state->polarity =3D (ctrl & PWM_CTRL_INVERT) ? PWM_POLARITY_INVER=
+SED : PWM_POLARITY_NORMAL;
+> > +     state->enabled =3D (ctrl & PWM_CTRL_EN) ? true : false;
+> > +
+> > +     duty =3D pwm_loongson_readl(ddata, PWM_DUTY);
+> > +     ns =3D duty * NSEC_PER_SEC;
+> > +     state->duty_cycle =3D do_div(ns, duty);
+> > +
+> > +     period =3D pwm_loongson_readl(ddata, PWM_PERIOD);
+> > +     ns =3D period * NSEC_PER_SEC;
+> > +     state->period =3D do_div(ns, period);
+> > +
+> > +     ddata->ctrl =3D ctrl;
+> > +     ddata->duty =3D pwm_loongson_readl(ddata, PWM_DUTY);
+> > +     ddata->period =3D pwm_loongson_readl(ddata, PWM_PERIOD);
+>
+> The rounding looks wrong. Did you test with PWM_DEBUG enabled?
+>
+> I think the value assigned to ddata->period and the other members isn't
+> used. Unless I'm mistaken, please drop the assignment.
+>
+
+The period, duty and ctrl are prepared for PM. I plan to put these
+three parameters separately into the pwm_loongson_context structure. I
+think it will look clearer:
+
+struct pwm_loongson_context {
+        u32 ctrl;
+        u32 duty;
+        u32 period;
+};
+
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct pwm_ops pwm_loongson_ops =3D {
+> > +     .apply =3D pwm_loongson_apply,
+> > +     .get_state =3D pwm_loongson_get_state,
+> > +};
+> > +
+> > +static int pwm_loongson_probe(struct platform_device *pdev)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata;
+> > +     struct device *dev =3D &pdev->dev;
+> > +
+> > +     ddata =3D devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+> > +     if (!ddata)
+> > +             return -ENOMEM;
+> > +
+> > +     ddata->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(ddata->base))
+> > +             return PTR_ERR(ddata->base);
+> > +
+> > +     if (!has_acpi_companion(dev)) {
+> > +             ddata->clk =3D devm_clk_get_enabled(dev, NULL);
+> > +             if (IS_ERR(ddata->clk))
+> > +                     return PTR_ERR(ddata->clk);
+>
+> error message with dev_err_probe() please.
+
+OK, I will do it.
+>
+> > +     }
+> > +
+> > +     ddata->chip.dev =3D dev;
+> > +     ddata->chip.ops =3D &pwm_loongson_ops;
+> > +     ddata->chip.npwm =3D 1;
+> > +     platform_set_drvdata(pdev, ddata);
+>
+> The effect of platform_set_drvdata is used in .suspend below, however
+> there you use dev_get_drvdata on &pdev->dev. For symmetry I suggest to
+> use dev_set_drvdata(dev, ddata) here.
+>
+> > +     return devm_pwmchip_add(dev, &ddata->chip);
+>
+> error message iwth dev_err_probe() please (if it fails).
+
+OK, I will add it.
+>
+> > +}
+> > +
+> > [...]
+> > +static struct platform_driver pwm_loongson_driver =3D {
+> > +     .probe  =3D pwm_loongson_probe,
+> > +     .driver =3D {
+> > +             .name   =3D "loongson-pwm",
+> > +             .pm     =3D pm_ptr(&pwm_loongson_pm_ops),
+> > +             .of_match_table   =3D pwm_loongson_of_ids,
+> > +             .acpi_match_table =3D pwm_loongson_acpi_ids,
+>
+> This alignment looks really ugly. Please use a single space before the
+> =3D. (Or if you must, properly align the =3D.)
+>
+OK., I will keep  a single space before the =3D.
+
+Thanks.
+Binbin
+> > +     },
+> > +};
+> > +module_platform_driver(pwm_loongson_driver);
+> > +
+> > +MODULE_DESCRIPTION("Loongson PWM driver");
+> > +MODULE_AUTHOR("Loongson Technology Corporation Limited.");
+> > +MODULE_LICENSE("GPL");
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
