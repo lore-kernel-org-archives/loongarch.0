@@ -1,432 +1,159 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0013F39FC1
-	for <loongarch@lists.linux.dev>; Mon, 27 May 2024 07:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA6C5FDA5
+	for <loongarch@lists.linux.dev>; Mon, 27 May 2024 08:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796304; cv=none; b=u15zb2SGHK/amdqse/beoAgokengmMuwjJ8IoJd4h/7GIZ4IEu54WrwjiLbi6HxE7xQ88kRae64hQ3xb0H/MTbnP+6YtU29nrR2JIC2j8AvhYnEwhZ9H5kqd8tvxX3+sbhudqwRBl/wVrYWKhUvXL3D8duTNzr6y94x0XkHB2+Q=
+	t=1716798109; cv=none; b=E4ymGOyKeFcW+xFjpdwisQgXlbmCbOC6CW9pK0mRIuHcXw6sM7+m3b1RNbtY7SvySlLzHMLL2rhBWyfTz1BCkWIf96tiLHAqIacSJGVdcQ99f9l27rR0s+XU4o3SNOE//cjJFmaJc3GMYyxEg0kI7x+VyNwXx7a8771nYuaN9Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796304; c=relaxed/simple;
-	bh=tJD2Mk58Y6/polML2f5n9KrEa9eMfPI9xrhqIENSJZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aZNSvrTy1EQhtJ7yufqJhzbmUQ9THpa/aVsGWgEOIh7VRLpjOC2k8IvswMRyCNjHC+4cTU9BCcCXDPivDvCh1ulEjbLu0XlTPBT70H988GPBp4SLsJ4U5fdoHVk+kHRL5Yw8L+Yl/WELfQ1bvSZG/BG2rrRlCyEhs21ZkM6XTnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.112.247])
-	by gateway (Coremail) with SMTP id _____8DxDeuKO1Rmnh8AAA--.432S3;
-	Mon, 27 May 2024 15:51:38 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.247])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBMWCO1RmyeMKAA--.17909S4;
-	Mon, 27 May 2024 15:51:38 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
-Date: Mon, 27 May 2024 15:51:12 +0800
-Message-ID: <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1716795485.git.zhoubinbin@loongson.cn>
-References: <cover.1716795485.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1716798109; c=relaxed/simple;
+	bh=VUoipgzKELAh07Yxw3K4MnePp0QyvFWZ+vCKCEYjJ/A=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Cuq8cV/lqa1TegjStI5EabsQeGv6y5K9Md4IcPvdTQargh3GfAHpZLIdhSeoXu0yED9zBqoN2JnQyohL2l+Nn/ZEfmA6hSItpXqyQ8AH6GVlU1e87VDX9+3ls6n9z1NQ36LNY/QfvsNWEoqFc/vo9eJOCqH5XnwDJ21vzqVkcX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:c993:5573:f894:7353])
+	by laurent.telenet-ops.be with bizsmtp
+	id U8Ma2C00B2nC7mg018Ma4k; Mon, 27 May 2024 10:21:40 +0200
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sBVbq-00C8pf-Cj;
+	Mon, 27 May 2024 10:21:34 +0200
+Date: Mon, 27 May 2024 10:21:34 +0200 (CEST)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-kernel@vger.kernel.org
+cc: sparclinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+    freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+    mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+    linux-um@lists.infradead.org, bpf@vger.kernel.org, 
+    loongarch@lists.linux.dev, linux-parisc@vger.kernel.org
+Subject: Re: Build regressions/improvements in v6.10-rc1
+In-Reply-To: <20240527075047.4004654-1-geert@linux-m68k.org>
+Message-ID: <5483dbca-9826-4d15-8d4-cacce091666c@linux-m68k.org>
+References: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com> <20240527075047.4004654-1-geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxBMWCO1RmyeMKAA--.17909S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWfJFy5tF1xCry3AFyfWrW3urX_yoWkZr1UpF
-	95A34YgryayrWqkws8ZFZ5urn8Za4fZasrJFWfCw1UCr9rt3y8Zwn5KF97Gw42yrn5Gr1I
-	vFZ5CrW5CF4DGFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+Content-Type: multipart/mixed; boundary="8323329-1442935893-1716798094=:2884583"
 
-This commit adds a generic PWM framework driver for the PWM controller
-found on Loongson family chips.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS                |   1 +
- drivers/pwm/Kconfig        |  12 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-loongson.c | 295 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 309 insertions(+)
- create mode 100644 drivers/pwm/pwm-loongson.c
+--8323329-1442935893-1716798094=:2884583
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 811a7a0dab84..224f684e5e48 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12997,6 +12997,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-pwm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-+F:	drivers/pwm/pwm-loongson.c
- 
- LOONGSON-2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 1dd7921194f5..4ba5453ee1f5 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -320,6 +320,18 @@ config PWM_KEEMBAY
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-keembay.
- 
-+config PWM_LOONGSON
-+	tristate "Loongson PWM support"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on COMMON_CLK
-+	help
-+	  Generic PWM framework driver for Loongson family.
-+	  It can be found on Loongson-2K series cpus and Loongson LS7A
-+	  bridge chips.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-loongson.
-+
- config PWM_LP3943
- 	tristate "TI/National Semiconductor LP3943 PWM support"
- 	depends on MFD_LP3943
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 90913519f11a..032d73327509 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
-+obj-$(CONFIG_PWM_LOONGSON)	+= pwm-loongson.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
- obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
- obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
-diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-new file mode 100644
-index 000000000000..814cca4dc0f0
---- /dev/null
-+++ b/drivers/pwm/pwm-loongson.c
-@@ -0,0 +1,295 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Loongson PWM driver
-+ *
-+ * Author: Juxin Gao <gaojuxin@loongson.cn>
-+ * Further cleanup and restructuring by:
-+ *         Binbin Zhou <zhoubinbin@loongson.cn>
-+ *
-+ * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-+ *
-+ * Limitations:
-+ * - The buffer register value should be written before the CTRL register.
-+ * - When disabled the output is driven to 0 independent of the configured
-+ *   polarity.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/units.h>
-+
-+/* Loongson PWM registers */
-+#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
-+#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
-+#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
-+
-+/* Control register bits */
-+#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
-+#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
-+#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
-+#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
-+#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
-+#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
-+#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
-+#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
-+#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
-+
-+#define LOONGSON_PWM_FREQ_STD		(50 * HZ_PER_KHZ)
-+
-+struct pwm_loongson_suspend_store {
-+	u32 ctrl;
-+	u32 duty;
-+	u32 period;
-+};
-+
-+struct pwm_loongson_ddata {
-+	struct clk *clk;
-+	void __iomem *base;
-+	u64 clk_rate;
-+	struct pwm_loongson_suspend_store lss;
-+};
-+
-+static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata, u32 offset)
-+{
-+	return readl(ddata->base + offset);
-+}
-+
-+static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddata,
-+				       u32 val, u32 offset)
-+{
-+	writel(val, ddata->base + offset);
-+}
-+
-+static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-+				     enum pwm_polarity polarity)
-+{
-+	u16 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+
-+	if (polarity == PWM_POLARITY_INVERSED)
-+		/* Duty cycle defines LOW period of PWM */
-+		val |= LOONGSON_PWM_CTRL_INVERT;
-+	else
-+		/* Duty cycle defines HIGH period of PWM */
-+		val &= ~LOONGSON_PWM_CTRL_INVERT;
-+
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val &= ~LOONGSON_PWM_CTRL_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+}
-+
-+static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val |= LOONGSON_PWM_CTRL_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       u64 duty_ns, u64 period_ns)
-+{
-+	u32 duty, period;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	/* duty = duty_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	duty = mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
-+
-+	/* period = period_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	int ret;
-+	u64 period, duty_cycle;
-+	bool enabled = pwm->state.enabled;
-+
-+	period = min(state->period, NANOHZ_PER_HZ);
-+	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
-+
-+	if (state->polarity != pwm->state.polarity) {
-+		if (enabled) {
-+			pwm_loongson_disable(chip, pwm);
-+			enabled = false;
-+		}
-+
-+		ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			pwm_loongson_disable(chip, pwm);
-+		return 0;
-+	}
-+
-+	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
-+	if (ret)
-+		return ret;
-+
-+	if (!enabled)
-+		ret = pwm_loongson_enable(chip, pwm);
-+
-+	return ret;
-+}
-+
-+static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	u32 duty, period, ctrl;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	/* duty_cycle = ddata->duty * NSEC_PER_SEC / ddata->clk_rate */
-+	duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-+	state->duty_cycle = mul_u64_u64_div_u64(duty, NSEC_PER_SEC, ddata->clk_rate);
-+
-+	/* period = ddata->period * NSEC_PER_SEC / ddata->clk_rate */
-+	period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-+	state->period = mul_u64_u64_div_u64(period, NSEC_PER_SEC, ddata->clk_rate);
-+
-+	ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	state->polarity = (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POLARITY_INVERSED :
-+			  PWM_POLARITY_NORMAL;
-+	state->enabled = (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_loongson_ops = {
-+	.apply = pwm_loongson_apply,
-+	.get_state = pwm_loongson_get_state,
-+};
-+
-+static int pwm_loongson_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct pwm_chip *chip;
-+	struct pwm_loongson_ddata *ddata;
-+	struct device *dev = &pdev->dev;
-+
-+	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	ddata = to_pwm_loongson_ddata(chip);
-+
-+	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ddata->base))
-+		return PTR_ERR(ddata->base);
-+
-+	if (!has_acpi_companion(dev)) {
-+		ddata->clk = devm_clk_get_enabled(dev, NULL);
-+		if (IS_ERR(ddata->clk))
-+			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+					     "failed to get pwm clock\n");
-+		ddata->clk_rate = clk_get_rate(ddata->clk);
-+	} else {
-+		ddata->clk_rate = LOONGSON_PWM_FREQ_STD;
-+	}
-+
-+	chip->ops = &pwm_loongson_ops;
-+	dev_set_drvdata(dev, chip);
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret < 0) {
-+		clk_disable_unprepare(ddata->clk);
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_suspend(struct device *dev)
-+{
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	ddata->lss.ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	ddata->lss.duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-+	ddata->lss.period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-+
-+	clk_disable_unprepare(ddata->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_resume(struct device *dev)
-+{
-+	int ret;
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	ret = clk_prepare_enable(ddata->clk);
-+	if (ret)
-+		return ret;
-+
-+	pwm_loongson_writel(ddata, ddata->lss.ctrl, LOONGSON_PWM_REG_CTRL);
-+	pwm_loongson_writel(ddata, ddata->lss.duty, LOONGSON_PWM_REG_DUTY);
-+	pwm_loongson_writel(ddata, ddata->lss.period, LOONGSON_PWM_REG_PERIOD);
-+
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(pwm_loongson_pm_ops, pwm_loongson_suspend,
-+				pwm_loongson_resume);
-+
-+static const struct of_device_id pwm_loongson_of_ids[] = {
-+	{ .compatible = "loongson,ls7a-pwm" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, pwm_loongson_of_ids);
-+
-+static const struct acpi_device_id pwm_loongson_acpi_ids[] = {
-+	{ "LOON0006" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, pwm_loongson_acpi_ids);
-+
-+static struct platform_driver pwm_loongson_driver = {
-+	.probe = pwm_loongson_probe,
-+	.driver = {
-+		.name = "loongson-pwm",
-+		.pm = pm_ptr(&pwm_loongson_pm_ops),
-+		.of_match_table = pwm_loongson_of_ids,
-+		.acpi_match_table = pwm_loongson_acpi_ids,
-+	},
-+};
-+module_platform_driver(pwm_loongson_driver);
-+
-+MODULE_DESCRIPTION("Loongson PWM driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited.");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+On Mon, 27 May 2024, Geert Uytterhoeven wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v6.10-rc1[1] compared to v6.9[2].
+>
+> Summarized:
+>  - build errors: +27/-20
+>  - build warnings: +3/-1601
+>
+> Happy fixing! ;-)
+>
+> Thanks to the linux-next team for providing the build service.
+>
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0/ (all 138 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6/ (all 138 configs)
+>
+>
+> *** ERRORS ***
+>
+> 27 error regressions:
+>  + /kisskb/src/arch/sparc/prom/p1275.c: error: no previous prototype for 'prom_cif_init' [-Werror=missing-prototypes]:  => 52:6
 
+sparc64-gcc13/sparc64-allmodconfig (seen before)
+
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20.c: error: the frame size of 2192 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5118:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20v2.c: error: the frame size of 2280 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5234:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c: error: the frame size of 2096 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5188:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c: error: the frame size of 2184 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3049:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c: error: the frame size of 2264 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3274:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_mode_vba_314.c: error: the frame size of 2232 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3296:1
+>  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_rq_dlg_calc_314.c: error: the frame size of 2080 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 1646:1
+
+powerpc-gcc5/ppc32_allmodconfig
+
+>  + /kisskb/src/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c: error: unknown option after '#pragma GCC diagnostic' kind [-Werror=pragmas]:  => 16:9
+>  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h: error: 'gen7_9_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 1438:19
+>  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h: error: 'gen7_9_0_sptp_clusters' defined but not used [-Werror=unused-variable]:  => 1188:43
+
+arm64-gcc5/arm64-allmodconfig
+powerpc-gcc5/powerpc-all{mod,yes}config
+powerpc-gcc5/ppc32_allmodconfig
+powerpc-gcc5/ppc64_book3e_allmodconfig
+powerpc-gcc5/ppc64le_allmodconfig
+sparc64-gcc5/sparc64-allmodconfig
+
+Looks like #pragma "-Wunused-const-variable" is not supported by gcc-5
+
+>  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' accessing 4294967240 or more bytes at offsets 0 and 56 overlaps 6442450833 bytes at offset -2147483593 [-Werror=restrict]:  => 298:17
+>  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' accessing 4294967264 or more bytes at offsets 0 and 32 overlaps 6442450881 bytes at offset -2147483617 [-Werror=restrict]:  => 161:9
+
+parisc-gcc13/generic-32bit_defconfig
+parisc-gcc13/parisc-{def,allmod}config
+
+>  + /kisskb/src/include/linux/kern_levels.h: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'unsigned int' [-Werror=format=]:  => 5:18, 5:25
+
+mips-gcc{8,13}/mips-allmodconfig
+parisc-gcc13/parisc-allmodconfig
+powerpc-gcc{5,13}/ppc32_allmodconfig
+sparc64-gcc{5,13}/sparc-allmodconfig
+xtensa-gcc13/xtensa-allmodconfig
+
+drivers/scsi/mpi3mr/mpi3mr_transport.c: In function 'mpi3mr_sas_port_add':
+drivers/scsi/mpi3mr/mpi3mr_transport.c:1367:62: note: format string is defined here
+     ioc_warn(mrioc, "skipping port %u, max allowed value is %lu\n",
+                                                             ~~^
+                                                             %u
+
+>  + /kisskb/src/kernel/bpf/verifier.c: error: ‘pcpu_hot’ undeclared (first use in this function):  => 20317:85
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64_hi_lo’ [-Werror=missing-prototypes]:  => 163:5
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64_lo_hi’ [-Werror=missing-prototypes]:  => 156:5
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64be_hi_lo’ [-Werror=missing-prototypes]:  => 178:5
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64be_lo_hi’ [-Werror=missing-prototypes]:  => 170:5
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64_hi_lo’ [-Werror=missing-prototypes]:  => 272:6
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64_lo_hi’ [-Werror=missing-prototypes]:  => 264:6
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64be_hi_lo’ [-Werror=missing-prototypes]:  => 288:6
+>  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64be_lo_hi’ [-Werror=missing-prototypes]:  => 280:6
+
+um-x86_64-gcc12/um-all{mod,yes}config
+
+>  + {standard input}: Error: displacement to undefined symbol .L137 overflows 8-bit field :  => 1105, 1031
+>  + {standard input}: Error: displacement to undefined symbol .L158 overflows 8-bit field :  => 1110
+>  + {standard input}: Error: unknown pseudo-op: `.al':  => 1270
+>  + {standard input}: Error: unknown pseudo-op: `.siz':  => 1273
+
+sh4-gcc13/sh-all{mod,yes}config (SH ICE crickets)
+
+> 3 warning regressions:
+>  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: warning: 'memcpy' accessing 4294967240 or more bytes at offsets 0 and 56 overlaps 6442450833 bytes at offset -2147483593 [-Wrestrict]:  => 298:17
+>  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: warning: 'memcpy' accessing 4294967264 or more bytes at offsets 0 and 32 overlaps 6442450881 bytes at offset -2147483617 [-Wrestrict]:  => 161:9
+
+parisc-gcc13/generic-32bit_defconfig
+parisc-gcc13/parisc-{def,allmod}config
+
+>  + {standard input}: Warning: setting incorrect section attributes for .rodata..c_jump_table:  => 10174
+
+loongarch-gcc13/loongson3_defconfig
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
+--8323329-1442935893-1716798094=:2884583--
