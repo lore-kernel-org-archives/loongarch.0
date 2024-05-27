@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5862B282F4
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C568628370
 	for <loongarch@lists.linux.dev>; Mon, 27 May 2024 07:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796015; cv=none; b=uW8UOivVFVx5jExK6tSU3ezAAz6iyVE0gIJj5lvkP649dfN16HNwv2aVQZrcGeeRrEmBwB87/R9mwkRN0nNkJs61fvZUbf6H5n8PpjhieZI8ti2lYKVzdXcp1fDyO8Nxt1R6q7VUTWd7+/2f1QFz6V9zPOJ9zI5mf3/Sw1FoDDw=
+	t=1716796015; cv=none; b=f3pjI39kHFWTANadTPDvjmmKfB/KL1T2vmiS3t43syNa6AM4UeNt0vKiaKxCnB8hXN/lMN261O0K8RdDATZ5hJHyj6eYgmZA+Ze5Obqne99YfPLOrHH3q/wpcy4O4GagUBzHJC88oU9ujgDyDPIcihXOl+876I3GIw+qIvh/2M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716796015; c=relaxed/simple;
-	bh=yl0YeOCAMuOOnYJpsOb36BCTJQvxRUa3gHgD445SpJI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pOswU2W1YBd0SUFx/sBXdarly+b6fDNJ0BpWnxTZTKeFDkNBOoixmDsD1+1pwaIl+CT/QYluIe9ocRQ58YvbkxZKcX9Dkv9YBJxcsrJz5OQhRJnFSqTZrZcVw5xwJFg721J21PKPR9kweBHlB3EnT69qP48zmjPXTxicGTLPIf8=
+	bh=uRPYeu1g//OQLx04rdY+78NfsbRwAUuTxvQddEsoBHs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VBxBXI9e5p8Nw9HYIVU5Cxou3esUaDcUkvfDEOZtXT7AW+56i50pA78+7TQsvHRjGfeMjoiRGPy1cwCvOPvWvfQUDTSG3HnNgVUXSGILpwzzf4A0cwMTW0Yt0fUeIgHD+HvV4J9+s2zI4X4F330dCfsW3tzt2LCyStqxroUUBA4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxL_BmOlRmtx4AAA--.618S3;
+	by gateway (Coremail) with SMTP id _____8Cx_eplOlRmqh4AAA--.435S3;
 	Mon, 27 May 2024 15:46:46 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTcdlOlRmHuIKAA--.28594S5;
-	Mon, 27 May 2024 15:46:46 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTcdlOlRmHuIKAA--.28594S2;
+	Mon, 27 May 2024 15:46:45 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -25,12 +24,10 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/4] LoongArch: KVM: Add vm migration support for LBT registers
-Date: Mon, 27 May 2024 15:46:43 +0800
-Message-Id: <20240527074644.836699-4-maobibo@loongson.cn>
+Subject: [PATCH v3 0/4] LoongArch: KVM: Add Binary Translation extension support
+Date: Mon, 27 May 2024 15:46:40 +0800
+Message-Id: <20240527074644.836699-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240527074644.836699-1-maobibo@loongson.cn>
-References: <20240527074644.836699-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,132 +35,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTcdlOlRmHuIKAA--.28594S5
+X-CM-TRANSID:AQAAf8AxTcdlOlRmHuIKAA--.28594S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Every vcpu has separate LBT registers. And there are four scr registers,
-one flags and ftop register for LBT extension. When VM migrates, VMM
-needs to get LBT registers for every vcpu.
+Loongson Binary Translation (LBT) is used to accelerate binary
+translation, which contains 4 scratch registers (scr0 to scr3), x86/ARM
+eflags (eflags) and x87 fpu stack pointer (ftop).
 
-Here macro KVM_REG_LOONGARCH_LBT is added for new vcpu lbt register type,
-the following macro is added to get/put LBT registers.
-  KVM_REG_LOONGARCH_LBT_SCR0
-  KVM_REG_LOONGARCH_LBT_SCR1
-  KVM_REG_LOONGARCH_LBT_SCR2
-  KVM_REG_LOONGARCH_LBT_SCR3
-  KVM_REG_LOONGARCH_LBT_EFLAGS
-  KVM_REG_LOONGARCH_LBT_FTOP
+Like FPU extension, here late enabling method is used for LBT. LBT context
+is saved/restored on vcpu context switch path.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Also this patch set BT capability detection, and BT register get/set
+interface for userspace vmm, so that vm supports migration with BT
+extension.
+
 ---
- arch/loongarch/include/uapi/asm/kvm.h |  9 +++++
- arch/loongarch/kvm/vcpu.c             | 56 +++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
+v2 ... v3:
+  1. Split KVM_LOONGARCH_VM_FEAT_LBT capability checking into three
+sub-features, KVM_LOONGARCH_VM_FEAT_X86BT/KVM_LOONGARCH_VM_FEAT_ARMBT
+and KVM_LOONGARCH_VM_FEAT_MIPSBT. Return success only if host supports
+the sub-feature.
 
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index ddc5cab0ffd0..656aa6a723a6 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -64,6 +64,7 @@ struct kvm_fpu {
- #define KVM_REG_LOONGARCH_KVM		(KVM_REG_LOONGARCH | 0x20000ULL)
- #define KVM_REG_LOONGARCH_FPSIMD	(KVM_REG_LOONGARCH | 0x30000ULL)
- #define KVM_REG_LOONGARCH_CPUCFG	(KVM_REG_LOONGARCH | 0x40000ULL)
-+#define KVM_REG_LOONGARCH_LBT		(KVM_REG_LOONGARCH | 0x50000ULL)
- #define KVM_REG_LOONGARCH_MASK		(KVM_REG_LOONGARCH | 0x70000ULL)
- #define KVM_CSR_IDX_MASK		0x7fff
- #define KVM_CPUCFG_IDX_MASK		0x7fff
-@@ -77,6 +78,14 @@ struct kvm_fpu {
- /* Debugging: Special instruction for software breakpoint */
- #define KVM_REG_LOONGARCH_DEBUG_INST	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 3)
- 
-+/* LBT registers */
-+#define KVM_REG_LOONGARCH_LBT_SCR0	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 1)
-+#define KVM_REG_LOONGARCH_LBT_SCR1	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 2)
-+#define KVM_REG_LOONGARCH_LBT_SCR2	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 3)
-+#define KVM_REG_LOONGARCH_LBT_SCR3	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 4)
-+#define KVM_REG_LOONGARCH_LBT_EFLAGS	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 5)
-+#define KVM_REG_LOONGARCH_LBT_FTOP	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 6)
-+
- #define LOONGARCH_REG_SHIFT		3
- #define LOONGARCH_REG_64(TYPE, REG)	(TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
- #define KVM_IOC_CSRID(REG)		LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index c32aff8e261e..3783151fde32 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -636,6 +636,34 @@ static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
- 			break;
- 		}
- 		break;
-+	case KVM_REG_LOONGARCH_LBT:
-+		if (!kvm_guest_has_lbt(&vcpu->arch))
-+			return -ENXIO;
-+
-+		switch (reg->id) {
-+		case KVM_REG_LOONGARCH_LBT_SCR0:
-+			*v = vcpu->arch.lbt.scr0;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR1:
-+			*v = vcpu->arch.lbt.scr1;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR2:
-+			*v = vcpu->arch.lbt.scr2;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR3:
-+			*v = vcpu->arch.lbt.scr3;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_EFLAGS:
-+			*v = vcpu->arch.lbt.eflags;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_FTOP:
-+			*v = vcpu->arch.fpu.ftop;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-@@ -702,6 +730,34 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
- 			break;
- 		}
- 		break;
-+	case KVM_REG_LOONGARCH_LBT:
-+		if (!kvm_guest_has_lbt(&vcpu->arch))
-+			return -ENXIO;
-+
-+		switch (reg->id) {
-+		case KVM_REG_LOONGARCH_LBT_SCR0:
-+			vcpu->arch.lbt.scr0 = v;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR1:
-+			vcpu->arch.lbt.scr1 = v;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR2:
-+			vcpu->arch.lbt.scr2 = v;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_SCR3:
-+			vcpu->arch.lbt.scr3 = v;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_EFLAGS:
-+			vcpu->arch.lbt.eflags = v;
-+			break;
-+		case KVM_REG_LOONGARCH_LBT_FTOP:
-+			vcpu->arch.fpu.ftop = v;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
+v1 ... v2:
+  1. With LBT register read or write interface to userpace, replace
+device attr method with KVM_GET_ONE_REG method, since lbt register is
+vcpu register and can be added in kvm_reg_list in future.
+  2. Add vm device attr ctrl marcro KVM_LOONGARCH_VM_FEAT_CTRL, it is
+used to get supported LBT feature before vm or vcpu is created.
+---
+
+Bibo Mao (4):
+  LoongArch: KVM: Add HW Binary Translation extension support
+  LoongArch: KVM: Add LBT feature detection with cpucfg
+  LoongArch: KVM: Add vm migration support for LBT registers
+  LoongArch: KVM: Add VM LBT feature detection support
+
+ arch/loongarch/include/asm/kvm_host.h |   8 ++
+ arch/loongarch/include/asm/kvm_vcpu.h |  10 +++
+ arch/loongarch/include/uapi/asm/kvm.h |  15 ++++
+ arch/loongarch/kvm/exit.c             |   9 ++
+ arch/loongarch/kvm/vcpu.c             | 121 +++++++++++++++++++++++++-
+ arch/loongarch/kvm/vm.c               |  44 +++++++++-
+ 6 files changed, 205 insertions(+), 2 deletions(-)
+
+
+base-commit: 29c73fc794c83505066ee6db893b2a83ac5fac63
 -- 
 2.39.3
 
