@@ -1,159 +1,107 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA6C5FDA5
-	for <loongarch@lists.linux.dev>; Mon, 27 May 2024 08:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D62174EFC
+	for <loongarch@lists.linux.dev>; Tue, 28 May 2024 19:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716798109; cv=none; b=E4ymGOyKeFcW+xFjpdwisQgXlbmCbOC6CW9pK0mRIuHcXw6sM7+m3b1RNbtY7SvySlLzHMLL2rhBWyfTz1BCkWIf96tiLHAqIacSJGVdcQ99f9l27rR0s+XU4o3SNOE//cjJFmaJc3GMYyxEg0kI7x+VyNwXx7a8771nYuaN9Ow=
+	t=1716923775; cv=none; b=IgvCYUsn9TGk6wMFrxt3sm+YgLJOe1rZBQbVfo5dvYMPJ4qhNax1su0BMdz6ir5rVKoegSRM6O3XIeJBrKSjTLD3NWtNtwjcUw40XyY+IdMxxSPgFCeJtgDIMtpC269OPHkwD7w9nd4H/7Na3cpQYPO2L7NZIKdYVn5Lm5HOY6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716798109; c=relaxed/simple;
-	bh=VUoipgzKELAh07Yxw3K4MnePp0QyvFWZ+vCKCEYjJ/A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cuq8cV/lqa1TegjStI5EabsQeGv6y5K9Md4IcPvdTQargh3GfAHpZLIdhSeoXu0yED9zBqoN2JnQyohL2l+Nn/ZEfmA6hSItpXqyQ8AH6GVlU1e87VDX9+3ls6n9z1NQ36LNY/QfvsNWEoqFc/vo9eJOCqH5XnwDJ21vzqVkcX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:c993:5573:f894:7353])
-	by laurent.telenet-ops.be with bizsmtp
-	id U8Ma2C00B2nC7mg018Ma4k; Mon, 27 May 2024 10:21:40 +0200
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sBVbq-00C8pf-Cj;
-	Mon, 27 May 2024 10:21:34 +0200
-Date: Mon, 27 May 2024 10:21:34 +0200 (CEST)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: linux-kernel@vger.kernel.org
-cc: sparclinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-    freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-    mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-    linux-um@lists.infradead.org, bpf@vger.kernel.org, 
-    loongarch@lists.linux.dev, linux-parisc@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.10-rc1
-In-Reply-To: <20240527075047.4004654-1-geert@linux-m68k.org>
-Message-ID: <5483dbca-9826-4d15-8d4-cacce091666c@linux-m68k.org>
-References: <CAHk-=wjQv_CSPzhjOMoOjGO3FmuHe5hzm6Ds69zZSFPa4PeuCA@mail.gmail.com> <20240527075047.4004654-1-geert@linux-m68k.org>
+	s=arc-20240116; t=1716923775; c=relaxed/simple;
+	bh=ag7+h70RDNCub6CI9FhMvv9doD/tLeJlJWjTiOiUnAE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Mzn8QAst0DgPIr0YSMwqqGnbp4dt8rcNGDKS/4ScrraPq4OIv/jgjQmVGfZhD6WoBXrGs1lpjrnZoqUlb2o6CKM6mlGw/vqoL5ptUZhR0tSPLTHJtgJMgCTdmcp1mUFtLrUUtO+LEoJtoid/eSzkb1pchclPHM3DpaYKn6XUjBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gG9tTlJE; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gG9tTlJE"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df789a425d3so1931622276.2
+        for <loongarch@lists.linux.dev>; Tue, 28 May 2024 12:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716923773; x=1717528573; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aN1FoCckBsPH3nlr2F+fxU8+3rgvDDBf83ZZTupmDzY=;
+        b=gG9tTlJErS+oT2HDHWYgold3kB/o6Y+H+3tA/Vo8X2ZYgopcNs2QWDw0PTzLlRa1pK
+         u9NUIZ3IRKqjFliwRkJTEDJYOaZgve1G44nwbM8DvHNe6Mi/1t+vmXr9ra+9l11YNOpR
+         nzCXq8J+cs1BHPVE2kUWAuC3Prsu5DhOTOjAHJHKnjflLaLD7NLzJROC+tZRf8YAAB2k
+         DlG/TXGQWSkqRCwjZM9vdZ0Nb8P6P4jQcuf4AJWDOPT9sljZIXmwNONmEDUs98gJ/y9s
+         BPhlTO3x7pzU9VOKH+gvUXyq4JOxEN96Trr+FHmpmYOL8dAKeVJ/0OmK1Qz5qd8NYe0N
+         RZkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716923773; x=1717528573;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aN1FoCckBsPH3nlr2F+fxU8+3rgvDDBf83ZZTupmDzY=;
+        b=RG7ihv9JhtQRhDRi5Fi6SP6ogrPvF/0sYOPlirk1NYt8OO1/vONlN8g+OCdhGsNyl+
+         0N7We9EAbkwBkHfJALWuwEdp4dTtjJ8DhIkcbAguW7XIMyY4KdVNynjWtdexfH8lojeQ
+         ITJ4UDCsWHpTLjNWCNGKlTZYB1rEkolwhTOupu+cvu2DPsgxJ6Ks1EyZm4iNca1zW/3O
+         f4+WHNXybhd+lspRztLox4nlTJj4fVxTfVeJLa0H8GU1YkUDy4xQ8UaB2YP9bkYPQalY
+         c391uX/6OlXPhx17YKarpf21zrx8i2pb9MXtb/ptngRktclD1exOVPsjMsNYSJwn/xLS
+         5BEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrTw5qcaYGPd6D5rQIVuEVO1M8YnWws1+HkKBODz+RDR2NgG3VdOFYeMq4nb8wk1hv5HSyBHfsztzwFICHy2HgNjfH3HKzaiVD
+X-Gm-Message-State: AOJu0YxG/Rg75a2cTlhp11iq4NaHVd29WWA2f/iSFmCjr7kwpDfbsSBv
+	xTPhf9O+KWj4lTlKTKSeiYSl2vTfx7roO3WlDwypXXjjNgHHO75nmF+m/Rqf3qEdqbzLVE52ez7
+	6uA==
+X-Google-Smtp-Source: AGHT+IEYffSoUdZ4cg7KX8v+KoP4uvokISlIeu5qUtxtXAQ85EyWGJZei7jVgr6jZvnufr8gfWsoMUgR1K8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:10c3:b0:df7:943d:f935 with SMTP id
+ 3f1490d57ef6-df7943e55a0mr788014276.2.1716923773190; Tue, 28 May 2024
+ 12:16:13 -0700 (PDT)
+Date: Tue, 28 May 2024 12:16:11 -0700
+In-Reply-To: <c77f3931-31b2-4695-bd74-c69cba9b96c1@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1442935893-1716798094=:2884583"
+Mime-Version: 1.0
+References: <20240522014013.1672962-1-seanjc@google.com> <20240522014013.1672962-4-seanjc@google.com>
+ <c77f3931-31b2-4695-bd74-c69cba9b96c1@intel.com>
+Message-ID: <ZlYte16cvQpPGHkx@google.com>
+Subject: Re: [PATCH v2 3/6] KVM: x86: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, May 24, 2024, Kai Huang wrote:
+> > @@ -1548,6 +1548,9 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >   	struct vcpu_svm *svm = to_svm(vcpu);
+> >   	struct svm_cpu_data *sd = per_cpu_ptr(&svm_data, cpu);
+> > +	if (vcpu->scheduled_out && !kvm_pause_in_guest(vcpu->kvm))
+> > +		shrink_ple_window(vcpu);
+> > +
+> 
+> [...]
+> 
+> > @@ -1517,6 +1517,9 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >   {
+> >   	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > +	if (vcpu->scheduled_out && !kvm_pause_in_guest(vcpu->kvm))
+> > +		shrink_ple_window(vcpu);
+> > +
+> 
+> Nit:  Perhaps we need a kvm_x86_ops::shrink_ple_window()?  :-)
 
---8323329-1442935893-1716798094=:2884583
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Heh, that duplicate code annoys me too.  The problem is the "old" window value
+comes from the VMCS/VMCB, so either we'd end up with multiple kvm_x86_ops, or
+we'd only be able to consolidate the scheduled_out + kvm_pause_in_guest() code,
+which isn't all that interesting.
 
-On Mon, 27 May 2024, Geert Uytterhoeven wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v6.10-rc1[1] compared to v6.9[2].
->
-> Summarized:
->  - build errors: +27/-20
->  - build warnings: +3/-1601
->
-> Happy fixing! ;-)
->
-> Thanks to the linux-next team for providing the build service.
->
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0/ (all 138 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6/ (all 138 configs)
->
->
-> *** ERRORS ***
->
-> 27 error regressions:
->  + /kisskb/src/arch/sparc/prom/p1275.c: error: no previous prototype for 'prom_cif_init' [-Werror=missing-prototypes]:  => 52:6
-
-sparc64-gcc13/sparc64-allmodconfig (seen before)
-
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20.c: error: the frame size of 2192 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5118:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_mode_vba_20v2.c: error: the frame size of 2280 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5234:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c: error: the frame size of 2096 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 5188:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c: error: the frame size of 2184 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3049:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c: error: the frame size of 2264 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3274:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_mode_vba_314.c: error: the frame size of 2232 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3296:1
->  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_rq_dlg_calc_314.c: error: the frame size of 2080 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 1646:1
-
-powerpc-gcc5/ppc32_allmodconfig
-
->  + /kisskb/src/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c: error: unknown option after '#pragma GCC diagnostic' kind [-Werror=pragmas]:  => 16:9
->  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h: error: 'gen7_9_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 1438:19
->  + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_9_0_snapshot.h: error: 'gen7_9_0_sptp_clusters' defined but not used [-Werror=unused-variable]:  => 1188:43
-
-arm64-gcc5/arm64-allmodconfig
-powerpc-gcc5/powerpc-all{mod,yes}config
-powerpc-gcc5/ppc32_allmodconfig
-powerpc-gcc5/ppc64_book3e_allmodconfig
-powerpc-gcc5/ppc64le_allmodconfig
-sparc64-gcc5/sparc64-allmodconfig
-
-Looks like #pragma "-Wunused-const-variable" is not supported by gcc-5
-
->  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' accessing 4294967240 or more bytes at offsets 0 and 56 overlaps 6442450833 bytes at offset -2147483593 [-Werror=restrict]:  => 298:17
->  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' accessing 4294967264 or more bytes at offsets 0 and 32 overlaps 6442450881 bytes at offset -2147483617 [-Werror=restrict]:  => 161:9
-
-parisc-gcc13/generic-32bit_defconfig
-parisc-gcc13/parisc-{def,allmod}config
-
->  + /kisskb/src/include/linux/kern_levels.h: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'unsigned int' [-Werror=format=]:  => 5:18, 5:25
-
-mips-gcc{8,13}/mips-allmodconfig
-parisc-gcc13/parisc-allmodconfig
-powerpc-gcc{5,13}/ppc32_allmodconfig
-sparc64-gcc{5,13}/sparc-allmodconfig
-xtensa-gcc13/xtensa-allmodconfig
-
-drivers/scsi/mpi3mr/mpi3mr_transport.c: In function 'mpi3mr_sas_port_add':
-drivers/scsi/mpi3mr/mpi3mr_transport.c:1367:62: note: format string is defined here
-     ioc_warn(mrioc, "skipping port %u, max allowed value is %lu\n",
-                                                             ~~^
-                                                             %u
-
->  + /kisskb/src/kernel/bpf/verifier.c: error: ‘pcpu_hot’ undeclared (first use in this function):  => 20317:85
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64_hi_lo’ [-Werror=missing-prototypes]:  => 163:5
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64_lo_hi’ [-Werror=missing-prototypes]:  => 156:5
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64be_hi_lo’ [-Werror=missing-prototypes]:  => 178:5
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘ioread64be_lo_hi’ [-Werror=missing-prototypes]:  => 170:5
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64_hi_lo’ [-Werror=missing-prototypes]:  => 272:6
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64_lo_hi’ [-Werror=missing-prototypes]:  => 264:6
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64be_hi_lo’ [-Werror=missing-prototypes]:  => 288:6
->  + /kisskb/src/lib/iomap.c: error: no previous prototype for ‘iowrite64be_lo_hi’ [-Werror=missing-prototypes]:  => 280:6
-
-um-x86_64-gcc12/um-all{mod,yes}config
-
->  + {standard input}: Error: displacement to undefined symbol .L137 overflows 8-bit field :  => 1105, 1031
->  + {standard input}: Error: displacement to undefined symbol .L158 overflows 8-bit field :  => 1110
->  + {standard input}: Error: unknown pseudo-op: `.al':  => 1270
->  + {standard input}: Error: unknown pseudo-op: `.siz':  => 1273
-
-sh4-gcc13/sh-all{mod,yes}config (SH ICE crickets)
-
-> 3 warning regressions:
->  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: warning: 'memcpy' accessing 4294967240 or more bytes at offsets 0 and 56 overlaps 6442450833 bytes at offset -2147483593 [-Wrestrict]:  => 298:17
->  + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: warning: 'memcpy' accessing 4294967264 or more bytes at offsets 0 and 32 overlaps 6442450881 bytes at offset -2147483617 [-Wrestrict]:  => 161:9
-
-parisc-gcc13/generic-32bit_defconfig
-parisc-gcc13/parisc-{def,allmod}config
-
->  + {standard input}: Warning: setting incorrect section attributes for .rodata..c_jump_table:  => 10174
-
-loongarch-gcc13/loongson3_defconfig
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
---8323329-1442935893-1716798094=:2884583--
+Aha!  Actually, VMX already open codes the functionality provided by VCPU_EXREG_*,
+e.g. has vmx->ple_window_dirty.  If we add VCPU_EXREG_PLE_WINDOW, then the info
+get be made available to common x86 code without having to add new hooks.  And
+that would also allow moving the guts of handle_pause()/pause_interception() to
+common code, i.e. will also allow deduplicating the "grow" side of things.
