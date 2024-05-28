@@ -1,107 +1,103 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D62174EFC
-	for <loongarch@lists.linux.dev>; Tue, 28 May 2024 19:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043AB178CC5
+	for <loongarch@lists.linux.dev>; Tue, 28 May 2024 19:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716923775; cv=none; b=IgvCYUsn9TGk6wMFrxt3sm+YgLJOe1rZBQbVfo5dvYMPJ4qhNax1su0BMdz6ir5rVKoegSRM6O3XIeJBrKSjTLD3NWtNtwjcUw40XyY+IdMxxSPgFCeJtgDIMtpC269OPHkwD7w9nd4H/7Na3cpQYPO2L7NZIKdYVn5Lm5HOY6I=
+	t=1716925828; cv=none; b=SpsurDewTgQzRJn37ngcajDt61CyrN+OqJaLAtujCK51VBQAgWTKOuCTZ5oRwe/KFBzktaq4OkusBrpe6mmZCkvEpo1Pj4ujaNxR8Z2u0bwBter210j02ul26iJKrPj1+7voB/ut7hJsp49D0G/B9760XE+f8x9PtJ4JAQtlT5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716923775; c=relaxed/simple;
-	bh=ag7+h70RDNCub6CI9FhMvv9doD/tLeJlJWjTiOiUnAE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Mzn8QAst0DgPIr0YSMwqqGnbp4dt8rcNGDKS/4ScrraPq4OIv/jgjQmVGfZhD6WoBXrGs1lpjrnZoqUlb2o6CKM6mlGw/vqoL5ptUZhR0tSPLTHJtgJMgCTdmcp1mUFtLrUUtO+LEoJtoid/eSzkb1pchclPHM3DpaYKn6XUjBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gG9tTlJE; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1716925828; c=relaxed/simple;
+	bh=tzPr8Eb09GFk0ZuPoJgIJk0k4J+0i2WeMWKnh37deOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvXdYNvd0u8UrKjxbOpzT7CT55R5Hb1tpDnJPgU0nNyZP3hah76bINAchUgzamaPinCRkUB4+ScUwFOYJ++nkGzjvWhIHxm9Kuf5G16N8RoruVYqGhxiOfUYtiN0bUY89Utuvq6Jj7Si1RysI1KkCHj1coyTGXma3WM5h/euY20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PhrJ6Yuv; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gG9tTlJE"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df789a425d3so1931622276.2
-        for <loongarch@lists.linux.dev>; Tue, 28 May 2024 12:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhrJ6Yuv"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f082d92864so9408605ad.1
+        for <loongarch@lists.linux.dev>; Tue, 28 May 2024 12:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716923773; x=1717528573; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aN1FoCckBsPH3nlr2F+fxU8+3rgvDDBf83ZZTupmDzY=;
-        b=gG9tTlJErS+oT2HDHWYgold3kB/o6Y+H+3tA/Vo8X2ZYgopcNs2QWDw0PTzLlRa1pK
-         u9NUIZ3IRKqjFliwRkJTEDJYOaZgve1G44nwbM8DvHNe6Mi/1t+vmXr9ra+9l11YNOpR
-         nzCXq8J+cs1BHPVE2kUWAuC3Prsu5DhOTOjAHJHKnjflLaLD7NLzJROC+tZRf8YAAB2k
-         DlG/TXGQWSkqRCwjZM9vdZ0Nb8P6P4jQcuf4AJWDOPT9sljZIXmwNONmEDUs98gJ/y9s
-         BPhlTO3x7pzU9VOKH+gvUXyq4JOxEN96Trr+FHmpmYOL8dAKeVJ/0OmK1Qz5qd8NYe0N
-         RZkQ==
+        d=gmail.com; s=20230601; t=1716925826; x=1717530626; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iyW9e/v1pIEwAb5TemR0VWnnWzP07vqRLcWckuomv4o=;
+        b=PhrJ6Yuv7BxTktDwITHpMd0pYTBax+Clz5Bo4bweGEyC3b/W7HoQsUTSLnJ/18mpEH
+         8niSo9hO2x3t6RkjcPKwHgTn/KfMMk4JfcT3wr1ENn77n4pSgx539IGMTGrTyiPgMlre
+         CjEHCHbMjfc5eGpwB+RZ1ZnS37hxUTDnANc/m0uiuM3mAfZQShm6N6+84qB/k4r6CpNp
+         2Z5T/guPlrCIfrhHa9cIeziXJ/zWpwcyxHHBIRi5UK64xudC+HHAg1lSjj1fQl8IICRS
+         jIWE6+e4V8Iza3G6THFhFwHEg9UI7iW15bEmfVK6/JBfEAetDv4nAnma2MuR9I4xEiVo
+         iGbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716923773; x=1717528573;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aN1FoCckBsPH3nlr2F+fxU8+3rgvDDBf83ZZTupmDzY=;
-        b=RG7ihv9JhtQRhDRi5Fi6SP6ogrPvF/0sYOPlirk1NYt8OO1/vONlN8g+OCdhGsNyl+
-         0N7We9EAbkwBkHfJALWuwEdp4dTtjJ8DhIkcbAguW7XIMyY4KdVNynjWtdexfH8lojeQ
-         ITJ4UDCsWHpTLjNWCNGKlTZYB1rEkolwhTOupu+cvu2DPsgxJ6Ks1EyZm4iNca1zW/3O
-         f4+WHNXybhd+lspRztLox4nlTJj4fVxTfVeJLa0H8GU1YkUDy4xQ8UaB2YP9bkYPQalY
-         c391uX/6OlXPhx17YKarpf21zrx8i2pb9MXtb/ptngRktclD1exOVPsjMsNYSJwn/xLS
-         5BEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrTw5qcaYGPd6D5rQIVuEVO1M8YnWws1+HkKBODz+RDR2NgG3VdOFYeMq4nb8wk1hv5HSyBHfsztzwFICHy2HgNjfH3HKzaiVD
-X-Gm-Message-State: AOJu0YxG/Rg75a2cTlhp11iq4NaHVd29WWA2f/iSFmCjr7kwpDfbsSBv
-	xTPhf9O+KWj4lTlKTKSeiYSl2vTfx7roO3WlDwypXXjjNgHHO75nmF+m/Rqf3qEdqbzLVE52ez7
-	6uA==
-X-Google-Smtp-Source: AGHT+IEYffSoUdZ4cg7KX8v+KoP4uvokISlIeu5qUtxtXAQ85EyWGJZei7jVgr6jZvnufr8gfWsoMUgR1K8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:10c3:b0:df7:943d:f935 with SMTP id
- 3f1490d57ef6-df7943e55a0mr788014276.2.1716923773190; Tue, 28 May 2024
- 12:16:13 -0700 (PDT)
-Date: Tue, 28 May 2024 12:16:11 -0700
-In-Reply-To: <c77f3931-31b2-4695-bd74-c69cba9b96c1@intel.com>
+        d=1e100.net; s=20230601; t=1716925826; x=1717530626;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iyW9e/v1pIEwAb5TemR0VWnnWzP07vqRLcWckuomv4o=;
+        b=CXNo0dh77D9HwbbcvUAT2RPpv2kqLYINZfm2FAK+TMGr6QbwEj6SiucO3FJfSARSgx
+         nwWwSQSijTvSGzAiDkhg6rRIUHysfCzOV702MY+6yDnz0EA4FAlCZNK0HcA/1dwHhYJU
+         JR6RFQ7dhBEY3hT8VM0ivUsLxEFeqbOLKSYWEOR0XdYS4EldO0GQellxXZnlDkiYm6/U
+         3gcAl4dfmPZuNeXigSxnoeDcqqmh6duKDDJmsm3UKik2mA9RQXsABHErssZQi2trrK9l
+         DPcaQNx8iFmBGVVCCuKCkgvnztA6G3JFykrTiU6I13kqotbIJPIs8dhhbyF2k8GUv+74
+         CPzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU20QQlAi7WXeC2irXILczMg9nhMRQhv881dyMsFXbrRZnaYHF1ESg3kxD/xJWEX86ws1W7ypAUfV0tTGrk/a8GXygiZdU55h4C
+X-Gm-Message-State: AOJu0YxSwz2UiSPx8+JeVbMoBbjBAqtNIBvY9HDu2ZJpSNjwGAccosdZ
+	zNFkXEouIN3RMNUvLQcbuH+m7YvVNDUYHWHm9cLD7+FaimKrKFl/PqaEyQ==
+X-Google-Smtp-Source: AGHT+IGw4SdnHhtTCMWG5plm8ThvQxcjGIK2gtMTBqE0gfnAiAicAjMoHbRr+nsl7bXf+IFydB+54w==
+X-Received: by 2002:a17:902:6504:b0:1f4:9468:38b0 with SMTP id d9443c01a7336-1f4946839e6mr58247165ad.61.1716925826097;
+        Tue, 28 May 2024 12:50:26 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f481d5a77bsm52568295ad.298.2024.05.28.12.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 12:50:25 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 28 May 2024 09:50:24 -1000
+From: Tejun Heo <tj@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: cgroups@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [tj-cgroup:for-next] BUILD REGRESSION
+ a8d55ff5f3acf52e6380976fb5d0a9172032dcb0
+Message-ID: <ZlY1gDDPi_mNrwJ1@slm.duckdns.org>
+References: <202405271606.DYMCKs25-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240522014013.1672962-1-seanjc@google.com> <20240522014013.1672962-4-seanjc@google.com>
- <c77f3931-31b2-4695-bd74-c69cba9b96c1@intel.com>
-Message-ID: <ZlYte16cvQpPGHkx@google.com>
-Subject: Re: [PATCH v2 3/6] KVM: x86: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202405271606.DYMCKs25-lkp@intel.com>
 
-On Fri, May 24, 2024, Kai Huang wrote:
-> > @@ -1548,6 +1548,9 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >   	struct vcpu_svm *svm = to_svm(vcpu);
-> >   	struct svm_cpu_data *sd = per_cpu_ptr(&svm_data, cpu);
-> > +	if (vcpu->scheduled_out && !kvm_pause_in_guest(vcpu->kvm))
-> > +		shrink_ple_window(vcpu);
-> > +
-> 
-> [...]
-> 
-> > @@ -1517,6 +1517,9 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >   {
-> >   	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > +	if (vcpu->scheduled_out && !kvm_pause_in_guest(vcpu->kvm))
-> > +		shrink_ple_window(vcpu);
-> > +
-> 
-> Nit:  Perhaps we need a kvm_x86_ops::shrink_ple_window()?  :-)
+(cc'ing loongarch folks)
 
-Heh, that duplicate code annoys me too.  The problem is the "old" window value
-comes from the VMCS/VMCB, so either we'd end up with multiple kvm_x86_ops, or
-we'd only be able to consolidate the scheduled_out + kvm_pause_in_guest() code,
-which isn't all that interesting.
+On Mon, May 27, 2024 at 04:14:10PM +0800, kernel test robot wrote:
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+> branch HEAD: a8d55ff5f3acf52e6380976fb5d0a9172032dcb0  kernel/cgroup: cleanup cgroup_base_files when fail to add cgroup_psi_files
+> 
+> Error/Warning reports:
+> 
+> https://lore.kernel.org/oe-kbuild-all/202405270728.d1SabzhU-lkp@intel.com
+> 
+> Error/Warning: (recently discovered and may have been fixed)
+> 
+> kernel/cgroup/pids.o: warning: objtool: __jump_table+0x0: special: can't find orig instruction
+> 
+> Error/Warning ids grouped by kconfigs:
+> 
+> gcc_recent_errors
+> `-- loongarch-defconfig
+>     `-- kernel-cgroup-pids.o:warning:objtool:__jump_table:special:can-t-find-orig-instruction
 
-Aha!  Actually, VMX already open codes the functionality provided by VCPU_EXREG_*,
-e.g. has vmx->ple_window_dirty.  If we add VCPU_EXREG_PLE_WINDOW, then the info
-get be made available to common x86 code without having to add new hooks.  And
-that would also allow moving the guts of handle_pause()/pause_interception() to
-common code, i.e. will also allow deduplicating the "grow" side of things.
+I don't know what to make of this build warning. I can't reproduce the
+problem on x86 and the referenced commit doesn't have anything special. It
+*looks* like it could be something specific to loongarch. Can you guys
+please take a look?
+
+Thanks.
+
+-- 
+tejun
