@@ -1,166 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895D139588;
-	Wed, 29 May 2024 18:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C751CD31
+	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 21:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717007341; cv=none; b=OqoovyEAHloB/PA01q1vSTNYByb2GcrlGKFRzGd+nVWGTDFXvqxdnNr826vU26wNIdJnMm1H+GIzrXJ9PaKmG9AO7PLM7PpEiozYfInLJUW2fbWo1EUi6MrkFJWWCVdgwwc/hofs71eJFIpsue58+5lNijXDG2JoWdM6aqQqswQ=
+	t=1717016643; cv=none; b=fmjXldL5sBfF+3L26OT2o3BOYcKxeqfHXUzkWe65qWlW+OExOAb8L6v1LGsTjJCfP/UwcRcAeqbw3cMBtGlKg2dh+fRRn8Z01xV4s+TjI9lrzX6+aWJuMkhB/xHbjdn7nF1dsWNBVEHyNFkPVa7AZkBvlna4ZH1ujl91nvnbJRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717007341; c=relaxed/simple;
-	bh=F+taAuGNZhYoMVVTU7lLtx1SfJK0lEHssiup5OjbRwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poWNIdkMcU/yUyadDcvrE4H72IWejS6PuNAyviFT87LO28DogZyb5QquVTFeb4h4SqnIBZB56W04BOCn38cZBTI6fr2LRG60NKw9rC5yawMxjYbrzkD+WfDAezdbpnQRXoz5HeoxjO62bzNaU67aFz8lrlyI+99GgnCc1zWNCBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJXnETLB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717016643; c=relaxed/simple;
+	bh=BCBSe826+nKw2daLQ4TIlXiD2I054RSipXGDwuLppXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=egTcnN1UqHFtNdpncIU8I8EhkATSJhoSqvPOl400kLGxA8qrKy3sKAS24/XsKDEMpBJxnE/jW2MmEjHDzBBb/7tB+2ZnoGTQZKX20kL0/Y+eX9MTAs3xoWIgMSP2OlQG+srnEHSGAbDFdZ1TsiNX0XGwRYH9GtW2Z9+9OSA7M8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rkdt4o8L; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJXnETLB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98A3C113CC;
-	Wed, 29 May 2024 18:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717007341;
-	bh=F+taAuGNZhYoMVVTU7lLtx1SfJK0lEHssiup5OjbRwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJXnETLB0f223e8W2RsjVYjIMqr7bToNJyCmyAB7OTW0Iicuh+rYG+KqGLCO7ayAa
-	 5Zjo3ibnNU2XwEc8OSrrpR+1TAEW1ZAKLXmVnd7TwUVt+pkO/C7yQit4ADtk1by60H
-	 18N9HLeNgZt14M20HKEBHZXu0bPKDdCnhjCZWpkCqd+Ag4TPBIn7/Mv5/bwJC5PQCh
-	 VBT/OnOdiSVlRL7tTRDbSpnUUoY0jGfrW3YsMZPt1mmZKjBvj+ukeeS4wMX0qXYyEc
-	 v9Zo2t6/fE7gXSOVGqjADcEXaVQ08aKhfDUg/zief3WxpW+mv7LHka2D7m4VfgEWE9
-	 lc2xnfVCwm4dg==
-Date: Wed, 29 May 2024 11:28:59 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/4] LoongArch: Fix entry point in image header
-Message-ID: <20240529182859.GA3994034@thelio-3990X>
-References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
- <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rkdt4o8L"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-420107286ecso21635e9.0
+        for <loongarch@lists.linux.dev>; Wed, 29 May 2024 14:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717016640; x=1717621440; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BCBSe826+nKw2daLQ4TIlXiD2I054RSipXGDwuLppXE=;
+        b=Rkdt4o8LfwzPBlUNRA5smYlonui9uqXjjBf17LOAEVfWJdEQojPJsMVbS4m3ajA0Ht
+         a/rFMZ8jxdKyWumGKgZQvq/vcqe+BzXwMyp/Xn/Sm5JKE5Uo83UpmE2Mptip2H9fxESm
+         p4tPnByEn+A61wFXTCEEwOHkj6UTbUGbvpAq+3CgkP+4TMQKg/K9O90F9MbDrVUbhDS2
+         OHHCoHdUbH8Mma03kexZuT3v1S10airPX1bxLsVe24HBdJ8RZTd0Tz8HVOOdzDQCBKlo
+         yQIYkUQohEl7YUjAkiLq/SOPh5MxrH8ncXgmWR5nmTdvFx2vqm0+p0xQzgyC2yWcne0e
+         YTmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717016640; x=1717621440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BCBSe826+nKw2daLQ4TIlXiD2I054RSipXGDwuLppXE=;
+        b=oMEL/zs5eTywQuGZyf4vknvGvKiq8E6LErWpmbkDr+99I7PIQ0iP9My/4RSyqiJ2WZ
+         CZ2GmVosyPC5qqBTjk/ulsJ2y5DtCmxozD4ZO0wWRFjws6kqHdHUIjhVvp9Cy12bbdzJ
+         nti/zoYjoutWy7OByvMKsUDaVjLqHlfmZwAKD7jOS/gSrDc+pmDT8qrdOJqfdjPhAzoL
+         y0yukoqnMnsCcbqA4uxeMoJqlr7LRAkEAT8rJsp4qu/SHYm5ftn09PzjkGWQo9D/W0R4
+         GDEuefr5G1ccJ745s0FPIDOtG3KlyCh8UMJGtC6pMrvtKwlXkPDzj+CSlOUY54KXgQ7b
+         O9Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXOnQYKbZ7F9/ebymALVVmkjgE1dR4DRMG+8rK1B39WE61fImfUSoRtzwduCcW1umKtRqywbxxC6ht3iEAPFz23VVU+D7PITeKP
+X-Gm-Message-State: AOJu0YxbDarJ9ruTz9NkzXHEH2uDLDLXE0TWbFWr3TtKfmu/HpPGJ0C2
+	OvBP/cxFOV2WtOyAqRXnebjNWzrdKEAuNHW2UP9cBQMCCi99HFIqzxLMYmXT3FpZ6viNHzgAYb5
+	zo4mP9EmwNhB5NyrfsNzwct3ngrIespR/vpFw
+X-Google-Smtp-Source: AGHT+IHwVBgFo5das5shZb/z5hgC8KCkV+Jkj5w99z9LyfmWhmSM4ldtkdm2dxotNGGlvICz4N/Nu5ZLrwoOjjiw7Io=
+X-Received: by 2002:a05:600c:3b85:b0:41b:4c6a:de7a with SMTP id
+ 5b1f17b1804b1-42127ec7dbdmr148185e9.3.1717016639372; Wed, 29 May 2024
+ 14:03:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
+References: <20240529180510.2295118-1-jthoughton@google.com> <20240529180510.2295118-3-jthoughton@google.com>
+In-Reply-To: <20240529180510.2295118-3-jthoughton@google.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Wed, 29 May 2024 15:03:21 -0600
+Message-ID: <CAOUHufYFHKLwt1PWp2uS6g174GZYRZURWJAmdUWs5eaKmhEeyQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] mm: multi-gen LRU: Have secondary MMUs participate
+ in aging
+To: James Houghton <jthoughton@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Ankit Agrawal <ankita@nvidia.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Sean Christopherson <seanjc@google.com>, 
+	Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jiaxun,
+On Wed, May 29, 2024 at 12:05=E2=80=AFPM James Houghton <jthoughton@google.=
+com> wrote:
+>
+> Secondary MMUs are currently consulted for access/age information at
+> eviction time, but before then, we don't get accurate age information.
+> That is, pages that are mostly accessed through a secondary MMU (like
+> guest memory, used by KVM) will always just proceed down to the oldest
+> generation, and then at eviction time, if KVM reports the page to be
+> young, the page will be activated/promoted back to the youngest
+> generation.
 
-On Wed, May 22, 2024 at 11:02:19PM +0100, Jiaxun Yang wrote:
-> Currently kernel entry in head.S is in DMW address range,
-> firmware is instructed to jump to this address after loading
-> the image.
-> 
-> However kernel should not make any assumption on firmware's
-> DMW setting, thus the entry point should be a physical address
-> falls into direct translation region.
-> 
-> Fix by converting entry address to physical and amend entry
-> calculation logic in libstub accordingly.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> v2: Fix efistub
-> v3: Move calculation to linker script
-> ---
->  arch/loongarch/kernel/head.S             | 2 +-
->  arch/loongarch/kernel/vmlinux.lds.S      | 2 ++
->  drivers/firmware/efi/libstub/loongarch.c | 2 +-
->  3 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index c4f7de2e2805..2cdc1ea808d9 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -22,7 +22,7 @@
->  _head:
->  	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
->  	.org	0x8
-> -	.dword	kernel_entry		/* Kernel entry point */
-> +	.dword	_kernel_entry_phys	/* Kernel entry point (physical address) */
->  	.dword	_kernel_asize		/* Kernel image effective size */
->  	.quad	PHYS_LINK_KADDR		/* Kernel image load offset from start of RAM */
->  	.org	0x38			/* 0x20 ~ 0x37 reserved */
-> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> index e8e97dbf9ca4..c6f89e51257a 100644
-> --- a/arch/loongarch/kernel/vmlinux.lds.S
-> +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> @@ -6,6 +6,7 @@
->  
->  #define PAGE_SIZE _PAGE_SIZE
->  #define RO_EXCEPTION_TABLE_ALIGN	4
-> +#define TO_PHYS_MASK			0x000fffffffffffff /* 48-bit */
->  
->  /*
->   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
-> @@ -142,6 +143,7 @@ SECTIONS
->  
->  #ifdef CONFIG_EFI_STUB
->  	/* header symbols */
-> +	_kernel_entry_phys = kernel_entry & TO_PHYS_MASK;
->  	_kernel_asize = _end - _text;
->  	_kernel_fsize = _edata - _text;
->  	_kernel_vsize = _end - __initdata_begin;
-> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
-> index 684c9354637c..60c145121393 100644
-> --- a/drivers/firmware/efi/libstub/loongarch.c
-> +++ b/drivers/firmware/efi/libstub/loongarch.c
-> @@ -41,7 +41,7 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
->  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
->  		efi_loaded_image_t *image)
->  {
-> -	return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS + kernel_addr;
-> +	return *(unsigned long *)(kernel_addr + 8) - TO_PHYS(VMLINUX_LOAD_ADDRESS) + kernel_addr;
->  }
->  
->  efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
-> 
-> -- 
-> 2.43.0
-> 
+Correct, and as I explained offline, this is the only reasonable
+behavior if we can't locklessly walk secondary MMUs.
 
-This patch is now in -next as commit 75461304ee4e ("LoongArch: Fix entry
-point in kernel image header"). I just bisected a build failure that I
-see when building with LLVM (either 18 or 19) to this change.
+Just for the record, the (crude) analogy I used was:
+Imagine a large room with many bills ($1, $5, $10, ...) on the floor,
+but you are only allowed to pick up 10 of them (and put them in your
+pocket). A smart move would be to survey the room *first and then*
+pick up the largest ones. But if you are carrying a 500 lbs backpack,
+you would just want to pick up whichever that's in front of you rather
+than walk the entire room.
 
-$ make -skj"$(nproc)" ARCH=loongarch LLVM=1 defconfig vmlinux
-...
-kallsyms failure: relative symbol value 0x9000000000200000 out of range in relative mode
-make[4]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
-...
+MGLRU should only scan (or lookaround) secondary MMUs if it can be
+done lockless. Otherwise, it should just fall back to the existing
+approach, which existed in previous versions but is removed in this
+version.
 
-Does kallsyms need some adjustment for this?
+> Do not do look around if there is a secondary MMU we have to interact
+> with.
+>
+> The added feature bit (0x8), if disabled, will make MGLRU behave as if
+> there are no secondary MMUs subscribed to MMU notifiers except at
+> eviction time.
+>
+> Suggested-by: Yu Zhao <yuzhao@google.com>
+> Signed-off-by: James Houghton <jthoughton@google.com>
 
-Cheers,
-Nathan
+This is not what I suggested, and it would have been done in the first
+place if it hadn't regressed the non-lockless case.
 
-# bad: [9d99040b1bc8dbf385a8aa535e9efcdf94466e19] Add linux-next specific files for 20240529
-# good: [e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc] Merge tag 'tpmdd-next-6.10-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd
-git bisect start '9d99040b1bc8dbf385a8aa535e9efcdf94466e19' 'e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc'
-# bad: [270c6bb9d5e8448b74950f23ff2a192faaf10428] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git
-git bisect bad 270c6bb9d5e8448b74950f23ff2a192faaf10428
-# good: [c38b067bf2ab58d93590a50cbc06c992fe00447e] Merge branch 'ti-next' of git://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
-git bisect good c38b067bf2ab58d93590a50cbc06c992fe00447e
-# bad: [6bcfb2dcf8b00c0b4cef68ac026c71dae3c25070] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
-git bisect bad 6bcfb2dcf8b00c0b4cef68ac026c71dae3c25070
-# good: [2ca0cd490407a728a9aa57b9538f3ca8b287a089] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
-git bisect good 2ca0cd490407a728a9aa57b9538f3ca8b287a089
-# good: [f3760c80d06a838495185c0fe341c043e6495142] Merge branch 'rework/write-atomic' into for-next
-git bisect good f3760c80d06a838495185c0fe341c043e6495142
-# good: [b9fc9904efcaea8470f0d4cd0691f1295add9381] Merge branch 'vfs.module.description' into vfs.all
-git bisect good b9fc9904efcaea8470f0d4cd0691f1295add9381
-# good: [88dbb5f3c068ba8944e97235ccfdc5fbd6c7d577] Merge branch '9p-next' of git://github.com/martinetd/linux
-git bisect good 88dbb5f3c068ba8944e97235ccfdc5fbd6c7d577
-# bad: [b4660cd50cb1e5821532e34dbc7f47cb155ba57b] Merge branch 'next' of git://git.monstr.eu/linux-2.6-microblaze.git
-git bisect bad b4660cd50cb1e5821532e34dbc7f47cb155ba57b
-# bad: [c768fc96978cd0f74dd297d58720cb984a7f6341] LoongArch: Override higher address bits in JUMP_VIRT_ADDR
-git bisect bad c768fc96978cd0f74dd297d58720cb984a7f6341
-# good: [2624e739c2e9abe5f6cc9acc37f9752f0055fb5f] LoongArch: Add all CPUs enabled by fdt to NUMA node 0
-git bisect good 2624e739c2e9abe5f6cc9acc37f9752f0055fb5f
-# bad: [75461304ee4e7e2cb282265a6a89c35b81282d19] LoongArch: Fix entry point in kernel image header
-git bisect bad 75461304ee4e7e2cb282265a6a89c35b81282d19
-# first bad commit: [75461304ee4e7e2cb282265a6a89c35b81282d19] LoongArch: Fix entry point in kernel image header
+NAK.
