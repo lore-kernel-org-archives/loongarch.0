@@ -1,100 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BC428F3
-	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 01:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECDDD3399A
+	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 06:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716947687; cv=none; b=p3if6rUaCRaU746q6PFc4a64Vg64ehWbT/1Dfg5l+bZfHrAH2zWHZzwQgFcy59G7qk8tAFAzeNxXHgURgC0o5OCi5SmS6IIatOYeXnSioSLpqb4RNHPq6ZhoYQRfqsHZWwM+qf8XhIKPgMhaUrkf6LMGjqJOAB215MTFF72MbUA=
+	t=1716964334; cv=none; b=crq0Nx937peN+wjtfRzKPSVidvg59RavZPcQjrlnlKPUhHWKvZULLKqsVPSU63U5+F7s3PzpxjEHdSRm34umrXsYw8oSDn7bh3nqKindA+lvwdz+18M+rFJ3AbogFXmnhCzChzQMEe4N88H/XVAl9ASeyybSfD52TCUlbBikXes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716947687; c=relaxed/simple;
-	bh=nonYj+5J+55UvG2PRdGpmNDgp1YIF/NT96nwHobE7pc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=An3tXjrozc0CrubgIuvJnfVnFpLSO+G+92fmEOMaCdkN4d0ujRCBY42wLw7WY+j23vkwBvH/Jxtf+H8tjNZqqzUbFfv6lPmNYI95hU8/NaX/FMaD99jtNK9fDK3rrMWbGT/LopykAiIlUWDWRhNB8dkLSg1OIfyiwwZ5S2Tsf9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9K8Jyq9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9K8Jyq9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAB5C4AF08
-	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 01:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716947686;
-	bh=nonYj+5J+55UvG2PRdGpmNDgp1YIF/NT96nwHobE7pc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q9K8Jyq9YHSOVA7FFykKxnb2vvqQf7dp6vG27H7/vd9ZAVIe+/xOdqPVbxiYnYq8H
-	 R12b4OLvufamcm5ekJjScnERCDv+MrmZ1apTZLYcPdQKuI0Jk2TNDKeA/Byw0+5/l2
-	 S+8NRXCw/jIaYKkpMvW3PNvbdGKfo//mVMi7dDXqEXi+Lbu7829LhSKiuDWALog+zz
-	 MFIChBfAbrUKUpLDWTJMNnBJov24wZvHrcV0t8aNfJQAKEMZuZrGrR+XLJ3bnMm5r+
-	 MdoGCSm9lRT6cutdir8WLZUyxCyrUOXJSYUd6e01p/FX5NGgZyk2aJS7GCcDr/PI6I
-	 Xb9nk/yAMtvCg==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5a89787ea4so159641366b.2
-        for <loongarch@lists.linux.dev>; Tue, 28 May 2024 18:54:46 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yxu/Yd0kU9SyXRyXYdY6BC5dt4LkXo3DB/G9r4A5PWU44zZwlYR
-	wkEy79szzcaW8mAz7N8WduQ+IgttoiLx4ABbSdtK1DvxUSMKuqzdokOY/HuscRjbCbQXBHFGd1d
-	S9jIb4ItOsEguXL0iosZ+UErDLrc=
-X-Google-Smtp-Source: AGHT+IHmW06yTOBMHq2zdJgFsebrCjzVaYydR+yPBubQSuwPx2P0iebesriTc5GKPauWomrFT94WD+JzV0gJ7a0bL8o=
-X-Received: by 2002:a17:906:5801:b0:a59:aa68:99a0 with SMTP id
- a640c23a62f3a-a62642e92a0mr818025766b.18.1716947685181; Tue, 28 May 2024
- 18:54:45 -0700 (PDT)
+	s=arc-20240116; t=1716964334; c=relaxed/simple;
+	bh=Xs98dxPvN8E+SI+7xNtVW3wrO5Cb9Zr5Ix8c8yFymWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qruc2qdaEt2dNCoAhNdqBmS5Wj5gDQVjcVMxDWQA/XuuivrlG27UXCjTUUCyxqgCwyxtLYBG+CV02HhMiqxGXAr2B+arIr6oN2SUjJGTlbeLS7vOdKiIeErJ9RirWyMKvW4HXzz47Y+7DA5PnQw0bVidZLw69tz15mHw7xNRRKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bx7erpy1ZmfAMBAA--.4356S3;
+	Wed, 29 May 2024 14:32:09 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNMXoy1ZmY6YMAA--.22585S2;
+	Wed, 29 May 2024 14:32:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	rafael@kernel.org
+Cc: loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] LoongArch: Remove CONFIG_ACPI_TABLE_UPGRADE in platform_init()
+Date: Wed, 29 May 2024 14:32:06 +0800
+Message-ID: <20240529063206.30421-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240529013019.15235-1-lihui@loongson.cn>
-In-Reply-To: <20240529013019.15235-1-lihui@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 May 2024 09:54:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H544FpqOpVZ_J--dmHRcT=7YNL2aavwTDnE1fQQ6HK_qQ@mail.gmail.com>
-Message-ID: <CAAhV-H544FpqOpVZ_J--dmHRcT=7YNL2aavwTDnE1fQQ6HK_qQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] LoongArch: ptrace: Fix some watchpoint function
-To: Hui Li <lihui@loongson.cn>, diasyzhang@tencent.com, 
-	Jinyang He <hejinyang@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxNMXoy1ZmY6YMAA--.22585S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7urW7uw1xXFy8GFW3AF1rKrX_yoW8XFyxpr
+	1Fyr4kKr45u3s7GFyUA3s5ur98trnFk34xXFWjkryrC3Z8Wr18XF4qgF9rZF1Fqw48Kw4I
+	v3WftF1agFW0kwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
 
-Hi, Qing and Jinyang,
+acpi_table_upgrade() and acpi_boot_table_init() are defined as
+empty function under !CONFIG_ACPI_TABLE_UPGRADE and !CONFIG_ACPI
+in include/linux/acpi.h, there are no implicit declaration errors
+with various configs.
 
-Could you please help to review this patchset?
+As Huacai suggested, CONFIG_ACPI_TABLE_UPGRADE is ugly and not
+necessary here, just remove it. At the same time, just keep
+CONFIG_ACPI to prevent build error and give a signal to tell
+us the code is ACPI-specific, and also put acpi_table_upgrade()
+under CONFIG_ACPI.
 
-And Binbin,
+  #ifdef CONFIG_ACPI_TABLE_UPGRADE
+  void acpi_table_upgrade(void);
+  #else
+  static inline void acpi_table_upgrade(void) { }
+  #endif
 
-Could you please help to test kgdb with this patchset?
+  #ifdef	CONFIG_ACPI
+  ...
+  void acpi_boot_table_init (void);
+  ...
+  #else	/* !CONFIG_ACPI */
+  ...
+  static inline void acpi_boot_table_init(void)
+  {
+  }
+  ...
+  #endif	/* !CONFIG_ACPI */
 
-Thank you,
-Huacai
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/setup.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index ea6d5db6c878..08a077e4efd7 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -353,10 +353,8 @@ void __init platform_init(void)
+ 	arch_reserve_vmcore();
+ 	arch_reserve_crashkernel();
+ 
+-#ifdef CONFIG_ACPI_TABLE_UPGRADE
+-	acpi_table_upgrade();
+-#endif
+ #ifdef CONFIG_ACPI
++	acpi_table_upgrade();
+ 	acpi_gbl_use_default_register_widths = false;
+ 	acpi_boot_table_init();
+ #endif
+-- 
+2.42.0
 
-On Wed, May 29, 2024 at 9:30=E2=80=AFAM Hui Li <lihui@loongson.cn> wrote:
->
-> LoongArch defines hardware watchpoint functions for fetch and load/store
-> operations. After the software configures the watchpoints for fetch and
-> load/store, the processor hardware will monitor the access addresses of
-> the fetch and load/store operations and trigger a watchpoint exception
-> when the watchpoint setting conditions are met.
->
-> Fix some hardware watchpoint issues on user-space and kernel interface.
->
-> All changes are made according to the LoongArch Reference Manual:
-> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html=
-#control-and-status-registers-related-to-watchpoints
->
-> Testing for this series can use this gdb patch:
-> https://sourceware.org/pipermail/gdb-patches/2024-May/209371.html
->
->
-> Hui Li (3):
->   LoongArch: ptrace: Fix watchpoint setting error
->   LoongArch: Trigger user-space watchpoints correctly
->   LoongArch: Fix multiple hardware watchpoint issues
->
->  arch/loongarch/include/asm/hw_breakpoint.h |  2 +-
->  arch/loongarch/kernel/hw_breakpoint.c      | 82 +++++++++++-----------
->  arch/loongarch/kernel/ptrace.c             | 48 +++++++------
->  3 files changed, 71 insertions(+), 61 deletions(-)
->
-> --
-> 2.38.1
->
->
