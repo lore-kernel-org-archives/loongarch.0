@@ -1,30 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362FB45000
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362C733D1
 	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 01:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716946236; cv=none; b=S+/n3sBAB5a1E829G4cx3Y7iT6zi4m5oNkvenOZqz45oC8rNeXvH/2Q4Srf0A4h66JiqCAE7R8JBlijlUuXnJoKUx2yKgI6/cCY05Q73TZ2srnKrAOoqFz6Khg0G5TbKJ+L4YbSrWbFTNHMSk68cHNeFzDjn4zrFg+cP5/yFECA=
+	t=1716946237; cv=none; b=d9veSgNY4eFvDfA98yf1DjVSSAOedkGLG4/HiZKPQQ5cJ55myjyOAYcTL+SXAkNjMK0XlRnu/Oz5HvKx9BLcsySIo/Gcq6xujsTyR6H4QVUkdiDbg3Y3qRDp8LdQ/WAzQl6XK/oyW48UpdN6fIhvKDWY5EK4k363udQJ/DsIQvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716946236; c=relaxed/simple;
-	bh=nKeaxvgNMriPPMsxwBnxWrBlViJ8Cq0Mt0VPr9E812g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TWx929H4A79X2rOQuCO8cXHuKgrXU+B9sZVb9rJI8bIwCf6te+G/h+JqPCjppjI5w96k0tg8ZnIKYMlTcQZVtVPkJPn25cLBpmoyosqtNZVDeadlyWNCqtK1eUrQkEaFUhV6oWAaDTCtBuySaUT++RJl/RzZh49bLO0p6vD/I/o=
+	s=arc-20240116; t=1716946237; c=relaxed/simple;
+	bh=PxSQlLE8IGonCe5oFNnpy/+ru2KHI7lSTHCL3X5LMK4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YYWaU2urTc/xkIU2Xth6DEbMZpVQdqybneOhtN5IVXEMl7KUWJCp2ExtXiDaqUHdyxYuKnmTNOWxThrtgNdzudxivbLU1IHciyPoUduyVJr0YL7J1E/8fFf1bXPH7Y/YMn+A1sF09QaCNdxEFkrJOm0m74cRG0hpVx9raERRVoA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxrOowhVZmTO0AAA--.3895S3;
-	Wed, 29 May 2024 09:30:25 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxHusyhVZmUu0AAA--.3928S3;
+	Wed, 29 May 2024 09:30:26 +0800 (CST)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusYrhVZm5nEMAA--.32890S2;
-	Wed, 29 May 2024 09:30:20 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusYrhVZm5nEMAA--.32890S4;
+	Wed, 29 May 2024 09:30:26 +0800 (CST)
 From: Hui Li <lihui@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 0/3] LoongArch: ptrace: Fix some watchpoint function
-Date: Wed, 29 May 2024 09:30:16 +0800
-Message-Id: <20240529013019.15235-1-lihui@loongson.cn>
+Subject: [PATCH 2/3] LoongArch: Trigger user-space watchpoints correctly
+Date: Wed, 29 May 2024 09:30:18 +0800
+Message-Id: <20240529013019.15235-3-lihui@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240529013019.15235-1-lihui@loongson.cn>
+References: <20240529013019.15235-1-lihui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,51 +35,157 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxusYrhVZm5nEMAA--.32890S2
+X-CM-TRANSID:AQAAf8DxusYrhVZm5nEMAA--.32890S4
 X-CM-SenderInfo: 5olk3xo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtr1UCr48WFW3XrW8try3KFX_yoWkKFc_uF
-	WfAayDGw1kWFy5tan0qr1fArWFka1xWFnYkF1vqrsFqwn5Jr93GrsxWwsIvr1Iqay8XrZ8
-	Jr4rtrs3ZwnI9osvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqE5I8CrVACY4xI64kE6c02F40Ex7xfMIIYY7kG6xAYrbIjqfuFe4nvWSU5
-	nxnvy29KBjDU0xBIdaVrnRJUUUkmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zV
-	CF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY
-	1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20x
-	vEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I
-	8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj
-	6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYY7kG6xAYrw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUyzpB
-	DUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoWxXryUGr15CFy7Jw1xJw45twc_yoWrWr4xpF
+	W3Cr95tr4DJFWUWwnxtw48Cry5GwnF939ruwn5G34Ykws8WrW5Kr10krWqqF45Cw1Sq34F
+	vwn0kw18KFWUZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
+	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYO7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
+	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0
+	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2
+	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8V
+	C2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv
+	7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIccxYrVCFb4
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5_C
+	zJUUUUU==
 
-LoongArch defines hardware watchpoint functions for fetch and load/store
-operations. After the software configures the watchpoints for fetch and
-load/store, the processor hardware will monitor the access addresses of
-the fetch and load/store operations and trigger a watchpoint exception
-when the watchpoint setting conditions are met.
+In the current code, gdb can successfully set the watchpoint through
+ptrace interface, But watchpoint will not be triggered.
 
-Fix some hardware watchpoint issues on user-space and kernel interface.
+When debugging the following code using gdb,
 
-All changes are made according to the LoongArch Reference Manual:
+lihui@bogon:~$ cat test.c
+  #include <stdio.h>
+  int a = 0;
+  int main()
+  {
+    printf("start test\n");
+    a = 1;
+    printf("a = %d\n", a);
+    printf("end test\n");
+    return 0;
+  }
+lihui@bogon:~$ gcc -g test.c -o test
+lihui@bogon:~$ gdb test
+...
+(gdb) start
+...
+Temporary breakpoint 1, main () at test.c:5
+5        printf("start test\n");
+(gdb) watch a
+Hardware watchpoint 2: a
+(gdb) c
+Continuing.
+start test
+a = 1
+end test
+[Inferior 1 (process 1154) exited normally]
+
+No watchpoints were triggered, the root causes are:
+
+1. The kernel uses perf_event and hw_breakpoint framework to control
+   watchpoint. But the perf_event corresponding to watchpoint is not
+   enabled, it needs to be enabled according to watchpoint control register.
+
+2. The global enable control for all watchpoints is the WE bit of CSR.CRMD,
+   and hardware sets the value to 0 when an exception is triggered. When
+   the ERTN instruction is executed to return, the hardware restores the
+   value of the PWE field of CSR.PRMD here. So, before a thread containing
+   watchpoints be scheduled, the PWE field of CSR.PRMD needs to be set to 1.
+
+Modify the relevant code to solve the above problem. Enable the watchpoints in
+the user-space thread.
+
+All changes according to the LoongArch Reference Manual:
 https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
+https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#basic-control-and-status-registers
 
-Testing for this series can use this gdb patch:
-https://sourceware.org/pipermail/gdb-patches/2024-May/209371.html
+with this patch:
 
+lihui@bogon:~$ gdb test
+...
+(gdb) start
+...
+Temporary breakpoint 1, main () at test.c:5
+5        printf("start test\n");
+(gdb) watch a
+Hardware watchpoint 2: a
+(gdb) c
+Continuing.
+start test
 
-Hui Li (3):
-  LoongArch: ptrace: Fix watchpoint setting error
-  LoongArch: Trigger user-space watchpoints correctly
-  LoongArch: Fix multiple hardware watchpoint issues
+Hardware watchpoint 2: a
 
- arch/loongarch/include/asm/hw_breakpoint.h |  2 +-
- arch/loongarch/kernel/hw_breakpoint.c      | 82 +++++++++++-----------
- arch/loongarch/kernel/ptrace.c             | 48 +++++++------
- 3 files changed, 71 insertions(+), 61 deletions(-)
+Old value = 0
+New value = 1
+main () at test.c:7
+7        printf("a = %d\n", a);
+(gdb) c
+Continuing.
+a = 1
+end test
 
+Signed-off-by: Hui Li <lihui@loongson.cn>
+---
+ arch/loongarch/kernel/hw_breakpoint.c |  4 +++-
+ arch/loongarch/kernel/ptrace.c        | 16 +++++++++++++---
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+index 2d311aff91af..01cd0b051225 100644
+--- a/arch/loongarch/kernel/hw_breakpoint.c
++++ b/arch/loongarch/kernel/hw_breakpoint.c
+@@ -517,7 +517,9 @@ void hw_breakpoint_thread_switch(struct task_struct *next)
+ 		if (!((regs->csr_era ^ addr) & ~mask))
+ 			csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
+ 		regs->csr_prmd |= CSR_PRMD_PWE;
+-	} else {
++	} else if (test_tsk_thread_flag(next, TIF_LOAD_WATCH))
++                regs->csr_prmd |= CSR_PRMD_PWE;
++	else {
+ 		/* Update breakpoints */
+ 		update_bp_registers(regs, 1, 0);
+ 		/* Update watchpoints */
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index 16b756c6049b..328510bf60e1 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -589,6 +589,8 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type,
+ 	struct perf_event *bp;
+ 	struct perf_event_attr attr;
+ 	struct arch_hw_breakpoint_ctrl ctrl;
++        struct thread_info *ti = task_thread_info(tsk);
++        int hbp_enable = uctrl & CTRL_PLV_ENABLE;
+ 
+ 	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+ 	if (IS_ERR(bp))
+@@ -608,9 +610,17 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type,
+ 		return -EINVAL;
+ 	}
+ 
+-	err = ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr);
+-	if (err)
+-		return err;
++       if (hbp_enable == CTRL_PLV_ENABLE) {
++		err = ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr);
++		if (err)
++			return err;
++		attr.disabled = 0;
++		set_ti_thread_flag(ti, TIF_LOAD_WATCH);
++	}
++	else {
++		attr.disabled = 1;
++		clear_ti_thread_flag(ti, TIF_LOAD_WATCH);
++	}
+ 
+ 	return modify_user_hw_breakpoint(bp, &attr);
+ }
 -- 
 2.38.1
 
