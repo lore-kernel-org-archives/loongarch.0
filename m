@@ -1,108 +1,118 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECDDD3399A
-	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 06:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD7317F370
+	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 08:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716964334; cv=none; b=crq0Nx937peN+wjtfRzKPSVidvg59RavZPcQjrlnlKPUhHWKvZULLKqsVPSU63U5+F7s3PzpxjEHdSRm34umrXsYw8oSDn7bh3nqKindA+lvwdz+18M+rFJ3AbogFXmnhCzChzQMEe4N88H/XVAl9ASeyybSfD52TCUlbBikXes=
+	t=1716972583; cv=none; b=gMfLGGtBC/1MOsIjbivoTPUUWOUFY9BUIqLw5QIEBqKu+j+3SFnrws8WhZlMwAf5z1vakWj2sXwK6UzekedPsyBW0ZAsVL8xbXtH2whUf9MCsAX5Rlf1yCCioR3RlsvvmWL0AxZ0jt6JbfBGpp6IhUm/tpbGAp2W7w5sogzeUdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716964334; c=relaxed/simple;
-	bh=Xs98dxPvN8E+SI+7xNtVW3wrO5Cb9Zr5Ix8c8yFymWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qruc2qdaEt2dNCoAhNdqBmS5Wj5gDQVjcVMxDWQA/XuuivrlG27UXCjTUUCyxqgCwyxtLYBG+CV02HhMiqxGXAr2B+arIr6oN2SUjJGTlbeLS7vOdKiIeErJ9RirWyMKvW4HXzz47Y+7DA5PnQw0bVidZLw69tz15mHw7xNRRKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx7erpy1ZmfAMBAA--.4356S3;
-	Wed, 29 May 2024 14:32:09 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNMXoy1ZmY6YMAA--.22585S2;
-	Wed, 29 May 2024 14:32:08 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	rafael@kernel.org
-Cc: loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] LoongArch: Remove CONFIG_ACPI_TABLE_UPGRADE in platform_init()
-Date: Wed, 29 May 2024 14:32:06 +0800
-Message-ID: <20240529063206.30421-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1716972583; c=relaxed/simple;
+	bh=oXs1Lc37Mxk8x9catadbvHDsc/E6WhT/Inpb76eDDHo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWpj71PNnYZZkNeNdbi/KIwYrzIum0C1TkWZ0PDXNeHHJEvFq/x7c6j/gDnUHJN7ni7H5PBXKJ4R+quUOL7sPMOenkn/2rrr/NLr6ElVJs8cim7AKFCmT9qRxyJXEGGn8H6oJtBdvU2nvkI9syid40YcwcNp4rTTETHEzf9FiF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZ3vFxff; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZ3vFxff"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031E5C32786
+	for <loongarch@lists.linux.dev>; Wed, 29 May 2024 08:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716972583;
+	bh=oXs1Lc37Mxk8x9catadbvHDsc/E6WhT/Inpb76eDDHo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XZ3vFxffA1yGqcEdQk4ksMu6nQIFKdwGwVfeExHsTs8FTcbMKZs7uCiJt9RQMQu7v
+	 B/GYua/Y/vlLCX78hxvhSEti9MJyqwp/A0Ak0GyXUEIzwm30+kuK/lsZ4MADJo5Npf
+	 Nk85BaDFgBE85jKDLH98D7BFzp9C+4z9AFH3vUh9PO6GasRUwZ8XlL9xYnU8DJQJ7v
+	 qJsFUtoZNSWfG9BtJBn2T1jj+urRSfgpfPrVPDYjDRy0TASqJ4+ShlEEbhO1cZnbn/
+	 XuEKEUcYNez7FCte/zlXg9W91w2G8Qlvy+eIB4q2vMGCci54KsMYeNHWThEjeAorOw
+	 hI7ya43NzEa0g==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a626776cc50so191618566b.3
+        for <loongarch@lists.linux.dev>; Wed, 29 May 2024 01:49:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVadbrPEOkDwjsQ/z4yJvvgbuztPjkbqqJJJrlwHTmEp2yErEHyxfDczSTDbjBZK2zjOSARRyMaAJ3hC2tH1mpXexA8m1iI3Ozv
+X-Gm-Message-State: AOJu0YxbBWeqkh1xwB5jwBeVYFl2zyA42S3qNXp21wTxEkUETFQy6QKh
+	o4zUheNkOLStN3Ihp0WRkTRrK8kUWWY1p/XFU4dnkhqNA/KVEL2uDqMDxtoZBWHJIFABHfrV2DU
+	FpiijWok+d87YXfADxCkL6Jk5g4w=
+X-Google-Smtp-Source: AGHT+IEa9zFQw77QTbSE85f4ZyWRnsf3NbfS/MlK2CGqwVDmeIh8FNXu0ZQntETEW1GOD+3THytyK/iwTIaOVlCe30Y=
+X-Received: by 2002:a17:906:55ce:b0:a59:c3dd:db2a with SMTP id
+ a640c23a62f3a-a62641aaf08mr896630366b.11.1716972581608; Wed, 29 May 2024
+ 01:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxNMXoy1ZmY6YMAA--.22585S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urW7uw1xXFy8GFW3AF1rKrX_yoW8XFyxpr
-	1Fyr4kKr45u3s7GFyUA3s5ur98trnFk34xXFWjkryrC3Z8Wr18XF4qgF9rZF1Fqw48Kw4I
-	v3WftF1agFW0kwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
+References: <20240529063206.30421-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20240529063206.30421-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 29 May 2024 16:49:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4db5C4vw9XT+kB3baMXbGNJC86Aq81p5Wic90LD3QSgQ@mail.gmail.com>
+Message-ID: <CAAhV-H4db5C4vw9XT+kB3baMXbGNJC86Aq81p5Wic90LD3QSgQ@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: Remove CONFIG_ACPI_TABLE_UPGRADE in platform_init()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: rafael@kernel.org, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-acpi_table_upgrade() and acpi_boot_table_init() are defined as
-empty function under !CONFIG_ACPI_TABLE_UPGRADE and !CONFIG_ACPI
-in include/linux/acpi.h, there are no implicit declaration errors
-with various configs.
+Applied, thank you.
 
-As Huacai suggested, CONFIG_ACPI_TABLE_UPGRADE is ugly and not
-necessary here, just remove it. At the same time, just keep
-CONFIG_ACPI to prevent build error and give a signal to tell
-us the code is ACPI-specific, and also put acpi_table_upgrade()
-under CONFIG_ACPI.
+Huacai
 
-  #ifdef CONFIG_ACPI_TABLE_UPGRADE
-  void acpi_table_upgrade(void);
-  #else
-  static inline void acpi_table_upgrade(void) { }
-  #endif
-
-  #ifdef	CONFIG_ACPI
-  ...
-  void acpi_boot_table_init (void);
-  ...
-  #else	/* !CONFIG_ACPI */
-  ...
-  static inline void acpi_boot_table_init(void)
-  {
-  }
-  ...
-  #endif	/* !CONFIG_ACPI */
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index ea6d5db6c878..08a077e4efd7 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -353,10 +353,8 @@ void __init platform_init(void)
- 	arch_reserve_vmcore();
- 	arch_reserve_crashkernel();
- 
--#ifdef CONFIG_ACPI_TABLE_UPGRADE
--	acpi_table_upgrade();
--#endif
- #ifdef CONFIG_ACPI
-+	acpi_table_upgrade();
- 	acpi_gbl_use_default_register_widths = false;
- 	acpi_boot_table_init();
- #endif
--- 
-2.42.0
-
+On Wed, May 29, 2024 at 2:32=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> acpi_table_upgrade() and acpi_boot_table_init() are defined as
+> empty function under !CONFIG_ACPI_TABLE_UPGRADE and !CONFIG_ACPI
+> in include/linux/acpi.h, there are no implicit declaration errors
+> with various configs.
+>
+> As Huacai suggested, CONFIG_ACPI_TABLE_UPGRADE is ugly and not
+> necessary here, just remove it. At the same time, just keep
+> CONFIG_ACPI to prevent build error and give a signal to tell
+> us the code is ACPI-specific, and also put acpi_table_upgrade()
+> under CONFIG_ACPI.
+>
+>   #ifdef CONFIG_ACPI_TABLE_UPGRADE
+>   void acpi_table_upgrade(void);
+>   #else
+>   static inline void acpi_table_upgrade(void) { }
+>   #endif
+>
+>   #ifdef        CONFIG_ACPI
+>   ...
+>   void acpi_boot_table_init (void);
+>   ...
+>   #else /* !CONFIG_ACPI */
+>   ...
+>   static inline void acpi_boot_table_init(void)
+>   {
+>   }
+>   ...
+>   #endif        /* !CONFIG_ACPI */
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/kernel/setup.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index ea6d5db6c878..08a077e4efd7 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -353,10 +353,8 @@ void __init platform_init(void)
+>         arch_reserve_vmcore();
+>         arch_reserve_crashkernel();
+>
+> -#ifdef CONFIG_ACPI_TABLE_UPGRADE
+> -       acpi_table_upgrade();
+> -#endif
+>  #ifdef CONFIG_ACPI
+> +       acpi_table_upgrade();
+>         acpi_gbl_use_default_register_widths =3D false;
+>         acpi_boot_table_init();
+>  #endif
+> --
+> 2.42.0
+>
