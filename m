@@ -1,101 +1,97 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5DD18399A
-	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 10:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5DF17B418
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 10:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717063566; cv=none; b=JGs9AU+t8jLlNeoPIQ7V3hgkOsMRDcCHnq/wthBHOxgsrQIr08BV5y2dZ4PUFNZ6d5K/NnKVFgwpIpyqmM0hjcwCZXg1mginyV1iSsZJ5k97PhYDH9f5/Kxj+OBCaHYjOq7oAHQW2Nk8I1RNu793/Ydgcsq03jtqDiBjO6QZExU=
+	t=1717065686; cv=none; b=lTKzS5ER6AQi7dyh8eVpC6pfhe7iYYGKznZ52rxhJPf+93c6wtq+OoKUArtD0xB332FB0YUITIo4s0CewmWV81Whcy9i+YLyAhg1NgjtBvdDuLTTp/LyTpB2xW6zaQ1OS73ETWWXV0bMjiGW9oYEpLGgdjzibNFEwuN8trIrSjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717063566; c=relaxed/simple;
-	bh=P8D54ok9cu6zOkpePcZy8AUJjwmh3AO9JwlkXPHfqEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/O9EWYx52v1dRztpekamVpgs1DFQ3Y+7GfXqmcVd/0+sVaVpMZB7jFT4PgCioLrtisnHEximC6Kqp1C+oYya0xzuXlvj9L6DxYga1T8v1TLfTo8mPryMaCbML1mGky5g+QZMci0w5fgtI55m1V9K5V/v65KX8EBEC7uLUwJ+iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=lbWREGlk; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	s=arc-20240116; t=1717065686; c=relaxed/simple;
+	bh=PoXLd/saRGX0CFC9ilNw4jmQaclo+pP1tMe3ZlJmqsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PSd0RCW/V+9jFXxe9LFl5Bn0PRjG0MLNSJpKUYwl4Gb9akMWJqx3eOGFqD5VXBjIauH4g82AND7lT99chcE2HIoqaApNpw8j9uJABbF21TXDHzMdo3Ds7vCNS/RXzCUjq1whlPzR+qt+cQIv0HcHVs5/FnwR++5JVFatl2Zaqa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V31vltqg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="lbWREGlk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1717063562; bh=P8D54ok9cu6zOkpePcZy8AUJjwmh3AO9JwlkXPHfqEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lbWREGlk5GiSkfmpcriEcHBf6Tn3CssE33q54ngE6AIhtMmYix7k4RywNLNddmt1C
-	 66ltCd61fcVdH6FnTimj99g6BVeUFP+B4CC0AB6Tdnfivk7CALIprN/JQx/JqMu4Fp
-	 VfptFL9AJhKSJF3tmOzqxxDlB5SI1V2ZNNb565vA=
-Date: Thu, 30 May 2024 12:06:01 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] LoongArch: Fix built-in DTB detection
-Message-ID: <e1321725-ee7e-4716-ad45-634803fca5ff@t-8ch.de>
-References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
- <20240522-loongarch-booting-fixes-v3-1-25e77a8fc86e@flygoat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V31vltqg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998FBC32789
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 10:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717065686;
+	bh=PoXLd/saRGX0CFC9ilNw4jmQaclo+pP1tMe3ZlJmqsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V31vltqgi+C+T2bxRbmCUtqgV4YjrmOlm9GH+DG0YfbvRKIQjwRrTEqlDmp5+icf8
+	 l7T4OFJJb5CuS33UbTVdeRxRbplo8n5PvrNOr++dYVdttm4n52i/Vt3SzjD993dMyE
+	 tNnz+DbNIHZtwxQ1k0LbKMnO50jJ3IR0DrBFAsvOMH2ge/J54X6NBWT/+6d1XRYSOg
+	 1VkLT0tGY+jTASTcjiMXwfOsXRj0LZRbCVLzZ1pSC4y+cyDVbNJOPCFokL901ezqIi
+	 zHipGN/ooJM1Ylhfvt5JFqk6+8Jlx8Hgv9K3L8unhqSFZmVVq4GaKIJORfN6gtY+1w
+	 mtmEOqDh+xnug==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a5dcb5a0db4so62519066b.2
+        for <loongarch@lists.linux.dev>; Thu, 30 May 2024 03:41:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmrKHFCc9iMWc/H6v8XjnbWaebZ8nL0YL3tjWhZGWMWDPPP7jKYELiZ2j26dk4X9Uul/46db6hBkPKV+3Cntv74LFu7qnlktz+
+X-Gm-Message-State: AOJu0YyKovLndD1hjIWHa7cXtbRYAGRACGQXD9sREJ400eRFV9DC9pP/
+	6J7an4eD+zk0SDDj/h6iHErJUpCenDzCR7LVFCxGdbqu4HFhoLRQp3TYuZxfOCan0LQmjFzgMYX
+	YaSIXD+E1nV10o8YyMDA4a9TaTtw=
+X-Google-Smtp-Source: AGHT+IHA7kD5wmQm9SW6UKOcFzhH68w3EPz5XTex9XkYIXHJol0yy8AyvYYkuXpH4xODWkst4xhRalCPUs1dE4ij4pI=
+X-Received: by 2002:a17:906:fb0c:b0:a59:ef75:5382 with SMTP id
+ a640c23a62f3a-a65e8f6f478mr108011966b.43.1717065685141; Thu, 30 May 2024
+ 03:41:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522-loongarch-booting-fixes-v3-1-25e77a8fc86e@flygoat.com>
+References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
+ <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
+ <CAHirt9hbzVxcKzwnSF_5jpwma+kr-WJHBQjc47ojB95Ph9SnqA@mail.gmail.com> <173627fe-3370-413b-8f9c-50c65892cef9@app.fastmail.com>
+In-Reply-To: <173627fe-3370-413b-8f9c-50c65892cef9@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 30 May 2024 18:41:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4tftt3zu-BzpKvZ5vGz3rN4-rkO5uc=h3_T7JJMH4-MA@mail.gmail.com>
+Message-ID: <CAAhV-H4tftt3zu-BzpKvZ5vGz3rN4-rkO5uc=h3_T7JJMH4-MA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] LoongArch: Fix entry point in image header
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WANG Rui <wangrui@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-05-22 23:02:17+0000, Jiaxun Yang wrote:
-> fdt_check_header(__dtb_start) will always success because kernel
-> provided a dummy dtb, and by coincidence __dtb_start clashed with
-> entry of this dummy dtb. The consequence is fdt passed from
-> firmware will never be taken.
-> 
-> Fix by trying to utilise __dtb_start only when CONFIG_BUILTIN_DTB
-> is enabled.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 7b937cc243e5 ("of: Create of_root if no dtb provided by firmware")
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> v3: Better reasoning in commit message, thanks Binbin and Huacai!
-> ---
->  arch/loongarch/kernel/setup.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> index 60e0fe97f61a..ea6d5db6c878 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -275,16 +275,18 @@ static void __init arch_reserve_crashkernel(void)
->  static void __init fdt_setup(void)
->  {
->  #ifdef CONFIG_OF_EARLY_FLATTREE
-> -	void *fdt_pointer;
-> +	void *fdt_pointer = NULL;
->  
->  	/* ACPI-based systems do not require parsing fdt */
->  	if (acpi_os_get_root_pointer())
->  		return;
->  
-> +#ifdef CONFIG_BUILTIN_DTB
->  	/* Prefer to use built-in dtb, checking its legality first. */
->  	if (!fdt_check_header(__dtb_start))
->  		fdt_pointer = __dtb_start;
-> -	else
-> +#endif
-> +	if (!fdt_pointer)
->  		fdt_pointer = efi_fdt_pointer(); /* Fallback to firmware dtb */
+On Thu, May 30, 2024 at 5:50=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+>
+>
+> =E5=9C=A82024=E5=B9=B45=E6=9C=8830=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8A=
+=E5=8D=886:01=EF=BC=8CWANG Rui=E5=86=99=E9=81=93=EF=BC=9A
+> [...]
+> >>  /*
+> >>   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
+> >> @@ -142,6 +143,7 @@ SECTIONS
+> >>
+> >>  #ifdef CONFIG_EFI_STUB
+> >>         /* header symbols */
+> >> +       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
+> >
+> >  -       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
+> >  +       _kernel_entry_phys =3D ABSOLUTE(kernel_entry & TO_PHYS_MASK);
+> >
+>
+> Thanks Rui!
+>
+> Huacai, do you mind committing this fix?
+I will update this patch in my tree, you needn't do anything.
 
-Prefer to use non-ifdef logic:
+Huacai
 
-	if (IS_ENABLED(CONFIG_BUILTIN_DTB) && !fdt_check_header(__dtb_start))
-  		fdt_pointer = __dtb_start;
-
-This is shorter, easier to read and will prevent bitrot.
-The code will be typechecked but then optimized away, so no
-runtime overhead exists.
-
->  
->  	if (!fdt_pointer || fdt_check_header(fdt_pointer))
-> 
-> -- 
-> 2.43.0
-> 
+>
+> Thanks
+> [...]
+> >>
+> >>
+> >
+> > - Rui
+>
+> --
+> - Jiaxun
