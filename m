@@ -1,111 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4317C239
-	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4246417C208
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717080422; cv=none; b=fDoEVu3dxQkNvM0JMf2EDR2HXwPau5M//1L4yyPcdNvW8bZ44RdPOUOAWIMaFFRdIIOPLJQn5ggjkCwuRwiiUXIQqCMUULUeL2rG5gtinOnfAR5Y6ZtDiHkkKbDr6o8rtKe7mudjeXpkQLPGEUkkT0DwiRMmGTaWQonZ5ZCE4k0=
+	t=1717080567; cv=none; b=JUGvwv0bB2eCey7YzFJ1SWJ3zaLQ56wZT70kC8sxyjEuyejJQC70SWZWthERzENy+uEtBpdHxpnIe9WSjg8xGFLdtZVD2nyqxvG7U5gLGEZjjRAcsvrEYtucDydYPKIY6iuP6Vxbl/nApxsUhclVJIA5m+nNMS85LTrXxCJHfvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717080422; c=relaxed/simple;
-	bh=PKGD7n9IHlCmuoHyMmsNI3hO3fv1iDnzWTZNDrREJw8=;
+	s=arc-20240116; t=1717080567; c=relaxed/simple;
+	bh=wwtJRjKMn2slhYPeALJabtNJMZHMmNFS65oYl0ixA5Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fgi0EoIBfpBGrMM1zZXais9utKG6dPliybnshEeIrPmD8VNo7+/jrBLFnknX+T2mwot2t+vO8pmxJ24VyC6et/6l4tygbFluq3OQ0nnb9cy3Tr2u5a2hDhTBuohPxZVkJrohvDlS++9SZEeaBzK5O/6Ck/IjgavKE69xSES+K/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYQ+PDl8; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=iz8XYnGJZE56Lb8iyPA38rVkrS+B7/NOvV+C2Il4XbrpEV2Onk2u/fpq0iT6rvOZpWBHs7qNDCx3IXrfSEVBeMC2vWBmj6TcdzX+inmuM6poxxSe0ashxcSGcSrtlkiUifo/eTGBuWA358vtrbbW0EPJb5ESnmcupcFs2r6OVjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvovkK8k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYQ+PDl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107DAC4AF07
-	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:47:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvovkK8k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E84ADC4AF09
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717080422;
-	bh=PKGD7n9IHlCmuoHyMmsNI3hO3fv1iDnzWTZNDrREJw8=;
+	s=k20201202; t=1717080566;
+	bh=wwtJRjKMn2slhYPeALJabtNJMZHMmNFS65oYl0ixA5Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NYQ+PDl8PjsPJ6T3kXrSirK19nblB/O2P9nGNWClObJICQ6ZucZVQ9K8FiDjhRO12
-	 IU73UPIFQSxBODUkmv4rqfQanr8/ctuSbOMtbGiuvnoYNfq4FkzzDDBuztEPmnbvoG
-	 bST0CFkRpEnl5f8mopf7iXK9PdsdOvWKW4OYjo2yEftklLu5GKY+N8lPQlTmtZemtm
-	 p7js5w8tPExTFiqZh9rzE1Futac3gF+Pg4TnNv7W5cqElpzMDTq6baNxQRCgaxZf1l
-	 nTON2DpvvF/xEfs5rxcFYFBtD6ktPhKHrNMbCCcr/10yoi9lGCAJz0l0Fp7J5F7eDE
-	 pQVKHzNox4HnA==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a62614b9ae1so118557966b.0
-        for <loongarch@lists.linux.dev>; Thu, 30 May 2024 07:47:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV5AgkumF8St9o0hKozAmujyoCFN/KULvrJ0HJIRhFC0oPRTkZpNTLMGB3wOIXtd+3bQp2pP7cMGTmgC0MruwZBkkeEbiWKnUYj
-X-Gm-Message-State: AOJu0YxYbTycDnf/APKUx9bvUSkge7y6NGe6rO7KOVNReHIy+Ir/Y6pI
-	Su2WghLbdx7/7JDsK18uRlQRSOerq9qzUgSLFN56OQAYT5gWan7BLt01LAGoDI2tQlnEDd6c9c7
-	r3No4WUvzqhUeIV0X/YyDBrCFwKc=
-X-Google-Smtp-Source: AGHT+IENmn6mtzTr1APrCtX5mi2KjfYAkYH8yBjU8IgbS1wGLME84pJdqa9AB/cpTTqoXMZn1W5nvwPnDcPfqsJqOjU=
-X-Received: by 2002:a17:906:b49:b0:a63:3170:14ae with SMTP id
- a640c23a62f3a-a65e8e321eemr164026966b.9.1717080420648; Thu, 30 May 2024
- 07:47:00 -0700 (PDT)
+	b=HvovkK8k20SzEg2YC30XUIcx5DwkzfCmENgeU/PRMKsS5mS8d+8ESkOAcY0R3DUO5
+	 bnQ5Tb2BIBR5U1s6KE7HsZJ2csiwkGORNeHmu9ndaZgcpwUdJPvBBGRSvd0vYcraWF
+	 snnWgvcDddNVYqSGdeBNglASlIBQoT9Lxa662Vo9JWldTkwihOPuHSjvfl+L1DvlOJ
+	 ZfOBGRdpnPvMFMByFvWzO6o9St8fUMHfqwXkCXCZCpr+xLSb9f5YudMiJ7f0q0pyEG
+	 6iuz9wDqTZWrhZv6HRROr5QDTlfWhSKZByOw+H+cc8sQD+NTfMbxCPjdvb7sA4GQXE
+	 d0fyo2X7tFENg==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52b79447c58so1381969e87.1
+        for <loongarch@lists.linux.dev>; Thu, 30 May 2024 07:49:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWbyknmhxCiFJttQxRO1GEivR14gopXkfNLzTrVsH9N72Yk0Zd8lHlLTlrd4cNpABRxY4iHdOi7ldTwHLR5E5VhsuoTs7TpRsI3
+X-Gm-Message-State: AOJu0YyhiORVLLsIBhzvcqddSZgL4XoQk6cB4phwwrz8tcX5KWNw86Nt
+	/Hb3Ve7vaJ9qypApQKyOA8bJNDPCXW9aFHKm/8rN8u/sXcZExWWbYi6cFZOXKaklyz3E0FOFzmF
+	Tm706BL4N1LCwce4shBHs0+NmvaU=
+X-Google-Smtp-Source: AGHT+IEFbO7hCM8ignUOyU2tTcs7HiHvR3sHXqvQXQMLlxZdRFHMlmmonXFYocj9Y5VwLAJsY827gITXCm29TWhIeR4=
+X-Received: by 2002:a19:6404:0:b0:52a:7d01:84cd with SMTP id
+ 2adb3069b0e04-52b7d437e3dmr2178953e87.30.1717080565312; Thu, 30 May 2024
+ 07:49:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202405271606.DYMCKs25-lkp@intel.com> <ZlY1gDDPi_mNrwJ1@slm.duckdns.org>
- <0eed02905b2b4554b429b080a7c88b35c9bba30b.camel@xry111.site>
-In-Reply-To: <0eed02905b2b4554b429b080a7c88b35c9bba30b.camel@xry111.site>
+References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
+ <20240522-loongarch-booting-fixes-v3-1-25e77a8fc86e@flygoat.com> <e1321725-ee7e-4716-ad45-634803fca5ff@t-8ch.de>
+In-Reply-To: <e1321725-ee7e-4716-ad45-634803fca5ff@t-8ch.de>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 30 May 2024 22:46:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5ZbDZ12VbXo1+kHHLjxGO-=DvHU9mchg3e9RH1zGCZWA@mail.gmail.com>
-Message-ID: <CAAhV-H5ZbDZ12VbXo1+kHHLjxGO-=DvHU9mchg3e9RH1zGCZWA@mail.gmail.com>
-Subject: Re: [tj-cgroup:for-next] BUILD REGRESSION a8d55ff5f3acf52e6380976fb5d0a9172032dcb0
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Tejun Heo <tj@kernel.org>, kernel test robot <lkp@intel.com>, cgroups@vger.kernel.org, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Date: Thu, 30 May 2024 22:49:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H78dNJVgL5mrSwRJF8jT0bV9znO=hx_EgsvKePWtac24g@mail.gmail.com>
+Message-ID: <CAAhV-H78dNJVgL5mrSwRJF8jT0bV9znO=hx_EgsvKePWtac24g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] LoongArch: Fix built-in DTB detection
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 8:28=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+Hi, Thomas,
+
+On Thu, May 30, 2024 at 6:06=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
+.de> wrote:
 >
-> On Tue, 2024-05-28 at 09:50 -1000, Tejun Heo wrote:
-> > (cc'ing loongarch folks)
+> On 2024-05-22 23:02:17+0000, Jiaxun Yang wrote:
+> > fdt_check_header(__dtb_start) will always success because kernel
+> > provided a dummy dtb, and by coincidence __dtb_start clashed with
+> > entry of this dummy dtb. The consequence is fdt passed from
+> > firmware will never be taken.
 > >
-> > On Mon, May 27, 2024 at 04:14:10PM +0800, kernel test robot wrote:
-> > > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgrou=
-p.git for-next
-> > > branch HEAD: a8d55ff5f3acf52e6380976fb5d0a9172032dcb0  kernel/cgroup:=
- cleanup cgroup_base_files when fail to add cgroup_psi_files
-> > >
-> > > Error/Warning reports:
-> > >
-> > > https://lore.kernel.org/oe-kbuild-all/202405270728.d1SabzhU-lkp@intel=
-.com
-> > >
-> > > Error/Warning: (recently discovered and may have been fixed)
-> > >
-> > > kernel/cgroup/pids.o: warning: objtool: __jump_table+0x0: special: ca=
-n't find orig instruction
-> > >
-> > > Error/Warning ids grouped by kconfigs:
-> > >
-> > > gcc_recent_errors
-> > > `-- loongarch-defconfig
-> > >     `-- kernel-cgroup-pids.o:warning:objtool:__jump_table:special:can=
--t-find-orig-instruction
+> > Fix by trying to utilise __dtb_start only when CONFIG_BUILTIN_DTB
+> > is enabled.
 > >
-> > I don't know what to make of this build warning. I can't reproduce the
-> > problem on x86 and the referenced commit doesn't have anything special.=
- It
-> > *looks* like it could be something specific to loongarch. Can you guys
-> > please take a look?
+> > Cc: stable@vger.kernel.org
+> > Fixes: 7b937cc243e5 ("of: Create of_root if no dtb provided by firmware=
+")
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > ---
+> > v3: Better reasoning in commit message, thanks Binbin and Huacai!
+> > ---
+> >  arch/loongarch/kernel/setup.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setu=
+p.c
+> > index 60e0fe97f61a..ea6d5db6c878 100644
+> > --- a/arch/loongarch/kernel/setup.c
+> > +++ b/arch/loongarch/kernel/setup.c
+> > @@ -275,16 +275,18 @@ static void __init arch_reserve_crashkernel(void)
+> >  static void __init fdt_setup(void)
+> >  {
+> >  #ifdef CONFIG_OF_EARLY_FLATTREE
+> > -     void *fdt_pointer;
+> > +     void *fdt_pointer =3D NULL;
+> >
+> >       /* ACPI-based systems do not require parsing fdt */
+> >       if (acpi_os_get_root_pointer())
+> >               return;
+> >
+> > +#ifdef CONFIG_BUILTIN_DTB
+> >       /* Prefer to use built-in dtb, checking its legality first. */
+> >       if (!fdt_check_header(__dtb_start))
+> >               fdt_pointer =3D __dtb_start;
+> > -     else
+> > +#endif
+> > +     if (!fdt_pointer)
+> >               fdt_pointer =3D efi_fdt_pointer(); /* Fallback to firmwar=
+e dtb */
 >
-> For now on LoongArch objtool does not work well with jump tables.  We
-> already have:
+> Prefer to use non-ifdef logic:
 >
-> ifdef CONFIG_OBJTOOL
-> KBUILD_CFLAGS           +=3D -fno-jump-tables
-> endif
+>         if (IS_ENABLED(CONFIG_BUILTIN_DTB) && !fdt_check_header(__dtb_sta=
+rt))
+>                 fdt_pointer =3D __dtb_start;
 >
-> So why this doesn't stop GCC from producing a jump table?
-We cannot produce this warning, but currently objtool indeed cannot
-work with -jump-table, and we are investigate to solve it, which may
-take some time.
+> This is shorter, easier to read and will prevent bitrot.
+> The code will be typechecked but then optimized away, so no
+> runtime overhead exists.
+Good suggestion, I will take it.
 
 Huacai
 >
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
->
+> >
+> >       if (!fdt_pointer || fdt_check_header(fdt_pointer))
+> >
+> > --
+> > 2.43.0
+> >
