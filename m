@@ -1,134 +1,111 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D4B16F0E8
-	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 11:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4317C239
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717068478; cv=none; b=SBJZZkblDM0t/6FV93OLDAY98SR1WSNRp16ClpITDXg9XaCooN6T9IjoGdi9dhNrTl0CYGsUUo7bxAjjY9ITPaUhMvgqzjqe093TspzUnaiNst2TSV55rD+JrJwogbNhlCEfkGMbWKseLyZT7syC34znoNjFh6kxmA5gub0bpDE=
+	t=1717080422; cv=none; b=fDoEVu3dxQkNvM0JMf2EDR2HXwPau5M//1L4yyPcdNvW8bZ44RdPOUOAWIMaFFRdIIOPLJQn5ggjkCwuRwiiUXIQqCMUULUeL2rG5gtinOnfAR5Y6ZtDiHkkKbDr6o8rtKe7mudjeXpkQLPGEUkkT0DwiRMmGTaWQonZ5ZCE4k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717068478; c=relaxed/simple;
-	bh=QKCYv/9pkeewZS0wdLDjidR9iHNKpRPbnM/6kemvOTo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WxXhFvMtMjgVSzLpEp6TKhWoHVAJaB06pdJAhbGEJ9zqqfLQNc2QwR9nX3j4IXcpoKixFqCttojsYf0cuLYJ5q0pjYELEFSiIuRWNcpk8vpMWVlrtLF1h0L2vk7igPSIdiTnqmxZxx2fLTzJtXhfIIhQcLUB0wtBuPdqBk22Csk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=FpZS537T; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1717080422; c=relaxed/simple;
+	bh=PKGD7n9IHlCmuoHyMmsNI3hO3fv1iDnzWTZNDrREJw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fgi0EoIBfpBGrMM1zZXais9utKG6dPliybnshEeIrPmD8VNo7+/jrBLFnknX+T2mwot2t+vO8pmxJ24VyC6et/6l4tygbFluq3OQ0nnb9cy3Tr2u5a2hDhTBuohPxZVkJrohvDlS++9SZEeaBzK5O/6Ck/IjgavKE69xSES+K/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYQ+PDl8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="FpZS537T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717068464;
-	bh=QKCYv/9pkeewZS0wdLDjidR9iHNKpRPbnM/6kemvOTo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FpZS537T3yPjs0iXwLB6GlRYL0cdPMhC1/wShIU0j7i47Zz9Tq4aKnr7A8nrfwGme
-	 9lzOUhjVJGLOLZqyiXFOMnX8rKmDEv+3qt3eMOkee7hOiQVhkl2PN7zQ51r+NWqHBV
-	 R1iDpMCyTvvksWQ0oQYf3mlL90Er9AtaOI0Fdkps=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 998376770C;
-	Thu, 30 May 2024 07:27:34 -0400 (EDT)
-Message-ID: <19dd3ba543ee3796afd4ee75daea199f56f32bcb.camel@xry111.site>
-Subject: Re: [PATCH 2/6] loongarch: defconfig: drop RT_GROUP_SCHED=y
-From: Xi Ruoyao <xry111@xry111.site>
-To: Celeste Liu <coelacanthushex@gmail.com>, Heinrich Schuchardt
- <heinrich.schuchardt@canonical.com>, Anup Patel <anup@brainfault.org>, Guo
- Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>,  Vladimir Kondratiev
- <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT
- <gregory.clement@bootlin.com>,  =?ISO-8859-1?Q?Th=E9o?= Lebrun
- <theo.lebrun@bootlin.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
- Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim
- <svenjoac@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
- <dalias@libc.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, Russell King <linux@armlinux.org.uk>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Tony
- Lindgren <tony@atomide.com>,  Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, 
- Mykola Lysenko <mykolal@fb.com>, linux-riscv@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
-  linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>, 
- Icenowy Zheng
-	 <uwu@icenowy.me>
-Date: Thu, 30 May 2024 19:27:32 +0800
-In-Reply-To: <20240530111947.549474-10-CoelacanthusHex@gmail.com>
-References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
-	 <20240530111947.549474-10-CoelacanthusHex@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYQ+PDl8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107DAC4AF07
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 14:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717080422;
+	bh=PKGD7n9IHlCmuoHyMmsNI3hO3fv1iDnzWTZNDrREJw8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NYQ+PDl8PjsPJ6T3kXrSirK19nblB/O2P9nGNWClObJICQ6ZucZVQ9K8FiDjhRO12
+	 IU73UPIFQSxBODUkmv4rqfQanr8/ctuSbOMtbGiuvnoYNfq4FkzzDDBuztEPmnbvoG
+	 bST0CFkRpEnl5f8mopf7iXK9PdsdOvWKW4OYjo2yEftklLu5GKY+N8lPQlTmtZemtm
+	 p7js5w8tPExTFiqZh9rzE1Futac3gF+Pg4TnNv7W5cqElpzMDTq6baNxQRCgaxZf1l
+	 nTON2DpvvF/xEfs5rxcFYFBtD6ktPhKHrNMbCCcr/10yoi9lGCAJz0l0Fp7J5F7eDE
+	 pQVKHzNox4HnA==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a62614b9ae1so118557966b.0
+        for <loongarch@lists.linux.dev>; Thu, 30 May 2024 07:47:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV5AgkumF8St9o0hKozAmujyoCFN/KULvrJ0HJIRhFC0oPRTkZpNTLMGB3wOIXtd+3bQp2pP7cMGTmgC0MruwZBkkeEbiWKnUYj
+X-Gm-Message-State: AOJu0YxYbTycDnf/APKUx9bvUSkge7y6NGe6rO7KOVNReHIy+Ir/Y6pI
+	Su2WghLbdx7/7JDsK18uRlQRSOerq9qzUgSLFN56OQAYT5gWan7BLt01LAGoDI2tQlnEDd6c9c7
+	r3No4WUvzqhUeIV0X/YyDBrCFwKc=
+X-Google-Smtp-Source: AGHT+IENmn6mtzTr1APrCtX5mi2KjfYAkYH8yBjU8IgbS1wGLME84pJdqa9AB/cpTTqoXMZn1W5nvwPnDcPfqsJqOjU=
+X-Received: by 2002:a17:906:b49:b0:a63:3170:14ae with SMTP id
+ a640c23a62f3a-a65e8e321eemr164026966b.9.1717080420648; Thu, 30 May 2024
+ 07:47:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <202405271606.DYMCKs25-lkp@intel.com> <ZlY1gDDPi_mNrwJ1@slm.duckdns.org>
+ <0eed02905b2b4554b429b080a7c88b35c9bba30b.camel@xry111.site>
+In-Reply-To: <0eed02905b2b4554b429b080a7c88b35c9bba30b.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 30 May 2024 22:46:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ZbDZ12VbXo1+kHHLjxGO-=DvHU9mchg3e9RH1zGCZWA@mail.gmail.com>
+Message-ID: <CAAhV-H5ZbDZ12VbXo1+kHHLjxGO-=DvHU9mchg3e9RH1zGCZWA@mail.gmail.com>
+Subject: Re: [tj-cgroup:for-next] BUILD REGRESSION a8d55ff5f3acf52e6380976fb5d0a9172032dcb0
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Tejun Heo <tj@kernel.org>, kernel test robot <lkp@intel.com>, cgroups@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-05-30 at 19:19 +0800, Celeste Liu wrote:
-> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarch=
-y it
-> needs an RT budget assigned, otherwise the processes in it will not be ab=
-le to
-> get RT at all. The problem with RT group scheduling is that it requires t=
-he
-> budget assigned but there's no way we could assign a default budget, sinc=
-e the
-> values to assign are both upper and lower time limits, are absolute, and =
-need to
-> be sum up to < 1 for each individal cgroup. That means we cannot really c=
-ome up
-> with values that would work by default in the general case.[1]
->=20
-> For cgroup v2, it's almost unusable as well. If it turned on, the cpu con=
-troller
-> can only be enabled when all RT processes are in the root cgroup. But it =
-will
-> lose the benefits of cgroup v2 if all RT process were placed in the same =
-cgroup.
->=20
-> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn=
-'t
-> support it.[2]
->=20
-> [1]: https://bugzilla.redhat.com/show_bug.cgi?id=3D1229700
-> [2]: https://github.com/systemd/systemd/issues/13781#issuecomment-5491643=
-83
->=20
-> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+On Wed, May 29, 2024 at 8:28=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> On Tue, 2024-05-28 at 09:50 -1000, Tejun Heo wrote:
+> > (cc'ing loongarch folks)
+> >
+> > On Mon, May 27, 2024 at 04:14:10PM +0800, kernel test robot wrote:
+> > > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgrou=
+p.git for-next
+> > > branch HEAD: a8d55ff5f3acf52e6380976fb5d0a9172032dcb0  kernel/cgroup:=
+ cleanup cgroup_base_files when fail to add cgroup_psi_files
+> > >
+> > > Error/Warning reports:
+> > >
+> > > https://lore.kernel.org/oe-kbuild-all/202405270728.d1SabzhU-lkp@intel=
+.com
+> > >
+> > > Error/Warning: (recently discovered and may have been fixed)
+> > >
+> > > kernel/cgroup/pids.o: warning: objtool: __jump_table+0x0: special: ca=
+n't find orig instruction
+> > >
+> > > Error/Warning ids grouped by kconfigs:
+> > >
+> > > gcc_recent_errors
+> > > `-- loongarch-defconfig
+> > >     `-- kernel-cgroup-pids.o:warning:objtool:__jump_table:special:can=
+-t-find-orig-instruction
+> >
+> > I don't know what to make of this build warning. I can't reproduce the
+> > problem on x86 and the referenced commit doesn't have anything special.=
+ It
+> > *looks* like it could be something specific to loongarch. Can you guys
+> > please take a look?
+>
+> For now on LoongArch objtool does not work well with jump tables.  We
+> already have:
+>
+> ifdef CONFIG_OBJTOOL
+> KBUILD_CFLAGS           +=3D -fno-jump-tables
+> endif
+>
+> So why this doesn't stop GCC from producing a jump table?
+We cannot produce this warning, but currently objtool indeed cannot
+work with -jump-table, and we are investigate to solve it, which may
+take some time.
 
-As a distro maintainer who had once been bitten by this option:
-
-Reviewed-by: Xi Ruoyao <xry111@xry111.site>
-
-> ---
-> =C2=A0arch/loongarch/configs/loongson3_defconfig | 1 -
-> =C2=A01 file changed, 1 deletion(-)
->=20
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
-configs/loongson3_defconfig
-> index b4252c357c8e..4d93adb3f1a2 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -23,7 +23,6 @@ CONFIG_NUMA_BALANCING=3Dy
-> =C2=A0CONFIG_MEMCG=3Dy
-> =C2=A0CONFIG_BLK_CGROUP=3Dy
-> =C2=A0CONFIG_CFS_BANDWIDTH=3Dy
-> -CONFIG_RT_GROUP_SCHED=3Dy
-> =C2=A0CONFIG_CGROUP_PIDS=3Dy
-> =C2=A0CONFIG_CGROUP_RDMA=3Dy
-> =C2=A0CONFIG_CGROUP_FREEZER=3Dy
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
+>
