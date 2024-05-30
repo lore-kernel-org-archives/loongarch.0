@@ -1,122 +1,101 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E377D18396D
-	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 09:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5DD18399A
+	for <loongarch@lists.linux.dev>; Thu, 30 May 2024 10:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717062650; cv=none; b=UTrHvMgC1sntKlwPxKqh+UjYuZ+nWrzE/3wnJu5tWPHwxL99i1NXqhquJ74KI5jyfWXyKjeqdWgtuTJQKv9P37z7HAy4qjjlqxGUcDMkcD2Ars1Zyh8t4W/mQqKlAtn2+wREUU+RHZYkOvXHPFFw7RwRqWb6uFT/Yyjvx4uLcTE=
+	t=1717063566; cv=none; b=JGs9AU+t8jLlNeoPIQ7V3hgkOsMRDcCHnq/wthBHOxgsrQIr08BV5y2dZ4PUFNZ6d5K/NnKVFgwpIpyqmM0hjcwCZXg1mginyV1iSsZJ5k97PhYDH9f5/Kxj+OBCaHYjOq7oAHQW2Nk8I1RNu793/Ydgcsq03jtqDiBjO6QZExU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717062650; c=relaxed/simple;
-	bh=TYAa6LrsH4ZpL/6JA7vVWCjcf2hW1D1GbSww//UmSu8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=BLQBdAyMqT7iYB6hW9pMbFze4Ct9hMEII2dyY67LD0M5FZzK0BU29QcZGvn9X1/LamTpwRe5J/FYLpo9MZmAyJ2Iu0onBy7euqtNAmSPI911n8cCuBE7NH86cEupPlgqHuE8SauuwLKg1Iipzhza+teoUbT9p/vfFYiN7xyQtSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=IHVWIpq+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g9HeyhDu; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1717063566; c=relaxed/simple;
+	bh=P8D54ok9cu6zOkpePcZy8AUJjwmh3AO9JwlkXPHfqEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m/O9EWYx52v1dRztpekamVpgs1DFQ3Y+7GfXqmcVd/0+sVaVpMZB7jFT4PgCioLrtisnHEximC6Kqp1C+oYya0xzuXlvj9L6DxYga1T8v1TLfTo8mPryMaCbML1mGky5g+QZMci0w5fgtI55m1V9K5V/v65KX8EBEC7uLUwJ+iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=lbWREGlk; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="IHVWIpq+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g9HeyhDu"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id F092D1800124;
-	Thu, 30 May 2024 05:50:47 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 30 May 2024 05:50:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1717062647;
-	 x=1717149047; bh=EoCF9CEsDQuWFBvfe+ol3H4MmAOovrJ/lqBuRsL+qrY=; b=
-	IHVWIpq+4MC3JbXynRj67WVI5IDA6ZfPq2aA2lOFyyc/zeO5Q0j0PbzhR9FIgn4U
-	NsCPgYvFnRF66lA9CNOqYXirnBUdC3fl1yBxMdHN+bRO61kogSv1aEO4t6KFwVh2
-	KItd2Q7h4SEM0qAMkZ5yB+e34zSYBVksl3PD/be6T1sCfOEILWcVCQr0FbS7q94P
-	7r5K9vjLxrMszQmuuwPlOPqHZUm2BaWPTx0L+N4Lcx0DFxKQhHmZ6VjtIPqeLeLf
-	gS2wzVbPX809PKl9vm1+cAxY4N/NUQP3x7WSfGqaeyqRPpudA3OrhTV5BvWz4yrH
-	Jt+BbJQZo8ivtK0VnB8T+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717062647; x=
-	1717149047; bh=EoCF9CEsDQuWFBvfe+ol3H4MmAOovrJ/lqBuRsL+qrY=; b=g
-	9HeyhDuhRnwF4cqgc9xluXiTWjS4yRJ8jIbJTwp8mcBrub6ysbVpZEANthgymuFc
-	/t/y4sq4uexrNQed+DnaA9lTsgr6V+AW9FG0bplSlYlhsjFDpQSVSG/Hd9ReQa6Y
-	VhKdOI9n9WOuzNUuRV0MaXkTainj8FScAW4El/C2UIbw0Uv3DD0qfY6ZvCHUIhX3
-	NY1qXqr8Ds8w7TwKlwmi8NUtLAfzLGfmyPVu+6t+WUKjPsGh3ch6LmFuvzIORwvU
-	8KRZApTEYbSunoVlH5IzV3HOF93NZ8Wy7KYbTLA9HGjno9fUMGDjgRjoZ6jelc7a
-	EZybXeykhg3EdrwH0T8HQ==
-X-ME-Sender: <xms:90tYZlu7qQGD3oqWeWfLbvTiXMaM6f71qDrrrtRKBqixvZp4CazHfg>
-    <xme:90tYZuejch2GzeXAJVKm4NF8ngwAzuNYe42KXBCTcP0lMFebpQTh4e8574gJW9EzV
-    NlyBYVOXsDKDhUpov4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgedgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:90tYZoyrZesAnpVcCjeKkSPpwiRuufK5eZ8LE0Ch5rWbknTgm0lr0w>
-    <xmx:90tYZsM-XWT2lBvcUEn-VsCcf2CXnYoayg5-_Rk1PQiDIPkgqGXFgg>
-    <xmx:90tYZl-vHrTufnERdg9BSRoiIv3j4VVn5SU4WpgC3kDFpG_d9MTTeQ>
-    <xmx:90tYZsWhGtHvBQnw3vtbS-KgXzKXI-RScbEZS2pxiyXgFgJDHRARqA>
-    <xmx:90tYZonkFlVI5r00elI4uWDNsyt_KNay1xBPJ-PLjJYG062D9aKLrFTj>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 5723E36A0076; Thu, 30 May 2024 05:50:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="lbWREGlk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1717063562; bh=P8D54ok9cu6zOkpePcZy8AUJjwmh3AO9JwlkXPHfqEM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lbWREGlk5GiSkfmpcriEcHBf6Tn3CssE33q54ngE6AIhtMmYix7k4RywNLNddmt1C
+	 66ltCd61fcVdH6FnTimj99g6BVeUFP+B4CC0AB6Tdnfivk7CALIprN/JQx/JqMu4Fp
+	 VfptFL9AJhKSJF3tmOzqxxDlB5SI1V2ZNNb565vA=
+Date: Thu, 30 May 2024 12:06:01 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, 
+	Binbin Zhou <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] LoongArch: Fix built-in DTB detection
+Message-ID: <e1321725-ee7e-4716-ad45-634803fca5ff@t-8ch.de>
+References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
+ <20240522-loongarch-booting-fixes-v3-1-25e77a8fc86e@flygoat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <173627fe-3370-413b-8f9c-50c65892cef9@app.fastmail.com>
-In-Reply-To: 
- <CAHirt9hbzVxcKzwnSF_5jpwma+kr-WJHBQjc47ojB95Ph9SnqA@mail.gmail.com>
-References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com>
- <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
- <CAHirt9hbzVxcKzwnSF_5jpwma+kr-WJHBQjc47ojB95Ph9SnqA@mail.gmail.com>
-Date: Thu, 30 May 2024 10:50:28 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "WANG Rui" <wangrui@loongson.cn>
-Cc: "Huacai Chen" <chenhuacai@kernel.org>,
- "Binbin Zhou" <zhoubinbin@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] LoongArch: Fix entry point in image header
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522-loongarch-booting-fixes-v3-1-25e77a8fc86e@flygoat.com>
 
+On 2024-05-22 23:02:17+0000, Jiaxun Yang wrote:
+> fdt_check_header(__dtb_start) will always success because kernel
+> provided a dummy dtb, and by coincidence __dtb_start clashed with
+> entry of this dummy dtb. The consequence is fdt passed from
+> firmware will never be taken.
+> 
+> Fix by trying to utilise __dtb_start only when CONFIG_BUILTIN_DTB
+> is enabled.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 7b937cc243e5 ("of: Create of_root if no dtb provided by firmware")
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> v3: Better reasoning in commit message, thanks Binbin and Huacai!
+> ---
+>  arch/loongarch/kernel/setup.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index 60e0fe97f61a..ea6d5db6c878 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -275,16 +275,18 @@ static void __init arch_reserve_crashkernel(void)
+>  static void __init fdt_setup(void)
+>  {
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+> -	void *fdt_pointer;
+> +	void *fdt_pointer = NULL;
+>  
+>  	/* ACPI-based systems do not require parsing fdt */
+>  	if (acpi_os_get_root_pointer())
+>  		return;
+>  
+> +#ifdef CONFIG_BUILTIN_DTB
+>  	/* Prefer to use built-in dtb, checking its legality first. */
+>  	if (!fdt_check_header(__dtb_start))
+>  		fdt_pointer = __dtb_start;
+> -	else
+> +#endif
+> +	if (!fdt_pointer)
+>  		fdt_pointer = efi_fdt_pointer(); /* Fallback to firmware dtb */
 
+Prefer to use non-ifdef logic:
 
-=E5=9C=A82024=E5=B9=B45=E6=9C=8830=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8A=E5=
-=8D=886:01=EF=BC=8CWANG Rui=E5=86=99=E9=81=93=EF=BC=9A
-[...]
->>  /*
->>   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
->> @@ -142,6 +143,7 @@ SECTIONS
->>
->>  #ifdef CONFIG_EFI_STUB
->>         /* header symbols */
->> +       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
->
->  -       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
->  +       _kernel_entry_phys =3D ABSOLUTE(kernel_entry & TO_PHYS_MASK);
->
+	if (IS_ENABLED(CONFIG_BUILTIN_DTB) && !fdt_check_header(__dtb_start))
+  		fdt_pointer = __dtb_start;
 
-Thanks Rui!
+This is shorter, easier to read and will prevent bitrot.
+The code will be typechecked but then optimized away, so no
+runtime overhead exists.
 
-Huacai, do you mind committing this fix?
-
-Thanks
-[...]
->>
->>
->
-> - Rui
-
---=20
-- Jiaxun
+>  
+>  	if (!fdt_pointer || fdt_check_header(fdt_pointer))
+> 
+> -- 
+> 2.43.0
+> 
