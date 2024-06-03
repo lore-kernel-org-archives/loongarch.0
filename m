@@ -1,63 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14177E8;
-	Mon,  3 Jun 2024 16:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5462513B791
+	for <loongarch@lists.linux.dev>; Mon,  3 Jun 2024 22:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717432595; cv=none; b=R9V+f3QqgLiTFt9D9H1vrgg2QX/qLHgojIf7BQ94bKFXnlyQ71fBmVfPNCq+4+AUzZ1Qu/bjfD/ndmprrqQjof6NhDxe4gpR2BJnPL1lSbC6DRgfYJ3d8H8DkUI9AMz4GAMvpxnu4V2wvZ8cUKL2TCiR+J5CteGJMFtTqTXIYPc=
+	t=1717454799; cv=none; b=KR3b05S1PkraEju30i1NqF8r2v9V6BFphkCNBCdLg1zswoR7dVA1y+UtMT0Haq39EU15rmRYdaVcNl+jtevz2IbaYDBW4uAR0PSBNnHoKWAWOCakeDzp97RNZNKl6TF38HcY5VgWLh4Q+lwIkw/ySiMEpRGIv0Su7QSv7TgGx/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717432595; c=relaxed/simple;
-	bh=cN/du6aSTMzl08k/VN4ACbbSNT3SAGtqX9W9ddPQnOA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JPQghilZiRMLo+hu0tA6rEeTqp5IQhzqxLE29oyzCEjlqjciB1YOwWKpU7+ZUZ7vXeD4ij1CvYjo6rIti1/tR8HxQqTF3jGj5SjFdsZBDgPnMYmoLDIzIZTbp4VT/cWZ1D069WpJ32bTybX3hTy9mI8vWM6dGWW3+gffRy9c0I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9prRXjT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717454799; c=relaxed/simple;
+	bh=0SDC8BkbIu6webNUXhyFkkBsSVcdj+Sq6u/l89WhDUU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JrKeRcdDK/tX7jHWU2MS250TyZuaWDDGjXEsTe9xK7RgROJgEJIOtNR7qLgBlQr0Ft2XsSWS24K8pqOdWGTITPNFdQJeYSQrvU5AXLFUNnpz4Pjxdl3O967lu8k4X542axF288cH0o7WL9PfnlB8Tg6Dy3u9FEayJozTacovsjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qVhVdeRC; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9prRXjT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5CB0C2BD10;
-	Mon,  3 Jun 2024 16:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717432594;
-	bh=cN/du6aSTMzl08k/VN4ACbbSNT3SAGtqX9W9ddPQnOA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=H9prRXjTwRB4t0rTRXWtNQ/LJYad5Il01DSQ/k+r+DbW+sD7jk/Rse/PR79q2X+c+
-	 9WpAcb8MdSA8xDpoZcdD2kq0sAfqchOi0TmChTzXKYbMNapCs8uku0Bwy/Sgffgsl9
-	 sVGr130KH0Pi72SXrrcFICxFmDRcRCg862rKCLzEBaWerrTKHu92tEiN2tuGU4Roo6
-	 CMpWMiNN+fpvhSjK/I0arMboAXMjDzO97rUnwr9a9iSj/5qSeuLOO5vDkFLD/Z1ndk
-	 uJMMmN2aMYC7KDjehLO8CCmswy+35gko4XFNQ7d0R0o8FaUxwxC+Q+h/KZLOfdDiGu
-	 2FYsuoJaSajWg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AC8B8C4361C;
-	Mon,  3 Jun 2024 16:36:34 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.10-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240603143158.2625704-1-chenhuacai@loongson.cn>
-References: <20240603143158.2625704-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20240603143158.2625704-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-1
-X-PR-Tracked-Commit-Id: eb36e520f4f1b690fd776f15cbac452f82ff7bfa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f06ce441457d4abc4d76be7acba26868a2d02b1c
-Message-Id: <171743259469.18580.3203876992620951432.pr-tracker-bot@kernel.org>
-Date: Mon, 03 Jun 2024 16:36:34 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qVhVdeRC"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-43fe3289fc5so50551cf.1
+        for <loongarch@lists.linux.dev>; Mon, 03 Jun 2024 15:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717454796; x=1718059596; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zwApvMmCxi6kRvhFpeZNrHVjs/fSYi202Vq8O0y7Pvc=;
+        b=qVhVdeRCulbSABKl8NrD/egxQbXDyqGNlv3hafxYyMgNdv6C4H+Awu49g5I1izDfXS
+         ThzyexBd7To/iFp2ZJVac8j1VzE9eJpdygjg1NaBnk+4WnMhHLk/0vZLztKXCtAAINlc
+         iycEEsqPXwyAARB31UMCbccOTvGAIuTbhdE4OMNz3faAFRKpofoSd1F0/yk1XmLCBpUC
+         z+GDIig5PF+wi7T6jf+rEKOAS0LqMU2/60PeW6iZYvcg+xovPPWiTXpuSMu24SNreyyr
+         te6vl7BJowTyP2pUuBjISVm2mtZmonBhHOvJMZMiNpJQL0/h4oQygPc2XyhO+LuxctCx
+         L06A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717454796; x=1718059596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zwApvMmCxi6kRvhFpeZNrHVjs/fSYi202Vq8O0y7Pvc=;
+        b=n8ugIjmA+54cBHQQ/fuv0/e8B8Widnkaxxvlxbf5SW5UkWrmyGod50m4cCAMpAi35B
+         Kbcy0QgO1vS7B4Jd59m482ZEzKsW3RDEnOsfPfmP7lNv2Q78bt0QMac5o9LZ4uqx07dr
+         d4u1OIglVy0tstsscrEHosltzUxxZwn+CgNJB9JgYWXbCh9Q0dgNp6bkYbKf/37vViC0
+         QEqTSaUuXWCuiDkOnsroukLsS/m5SeQnXc5sn366CTLW49ko3QLBx/95EwG+M2V9UuMP
+         qLz7DaaEi6se8AVVT9yyIYxebjYYEqmrTUeaeJVLtq3R/fLBXTYDmAYXr2TNmYTTdLUA
+         nOTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoShf7RCKaFryUpGmVG8kbM9Cuyky2VoegTFQXIfqM7XQcrGsWeZOJiOobYFJK7IJ++bYKvcfJEYmJL5oYOH+yhG3t390cx5R2
+X-Gm-Message-State: AOJu0YzKSERTOmK+8QivtOGoTYSRD/GCcuFso2CZ3l7SYYOAh9pmtKfK
+	QRr3JEths7cwSQQzz2lC7ngd+Hy/nqI8nm4DcQsTCHtwafHjk9Tv9oNbfAslfXSLDJUF/n3Axs1
+	wLl8HhY+eynO7cCkkvL7LzMenSBSLnGn4hAm3
+X-Google-Smtp-Source: AGHT+IFNqO3Eeca3fb/gjbGejzk9epZFQKuRMTX94UERp2ub7SAJHzg0ElHPjQ2U8grOlDfvsiNhgYwFk5rOK4wQGMU=
+X-Received: by 2002:a05:622a:59ce:b0:43f:ff89:dfb9 with SMTP id
+ d75a77b69052e-4401bd281f4mr1732131cf.6.1717454795966; Mon, 03 Jun 2024
+ 15:46:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20240529180510.2295118-1-jthoughton@google.com>
+ <20240529180510.2295118-3-jthoughton@google.com> <CAOUHufYFHKLwt1PWp2uS6g174GZYRZURWJAmdUWs5eaKmhEeyQ@mail.gmail.com>
+ <ZlelW93_T6P-ZuSZ@google.com> <CAOUHufZdEpY6ra73SMHA33DegKxKaUM=Os7A7aDBFND6NkbUmQ@mail.gmail.com>
+ <Zley-u_dOlZ-S-a6@google.com> <CADrL8HXHWg_MkApYQTngzmN21NEGNWC6KzJDw_Lm63JHJkR=5A@mail.gmail.com>
+ <CAOUHufZq6DwpStzHtjG+TOiHaQ6FFbkTfHMCe8Yy0n_M9MKdqw@mail.gmail.com>
+In-Reply-To: <CAOUHufZq6DwpStzHtjG+TOiHaQ6FFbkTfHMCe8Yy0n_M9MKdqw@mail.gmail.com>
+From: James Houghton <jthoughton@google.com>
+Date: Mon, 3 Jun 2024 15:45:59 -0700
+Message-ID: <CADrL8HW44Hx_Ejx_6+FVKt1V17PdgT6rw+sNtKzumqc9UCVDfA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] mm: multi-gen LRU: Have secondary MMUs participate
+ in aging
+To: Yu Zhao <yuzhao@google.com>
+Cc: Sean Christopherson <seanjc@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Ankit Agrawal <ankita@nvidia.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, James Morse <james.morse@arm.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Mon,  3 Jun 2024 22:31:57 +0800:
+On Thu, May 30, 2024 at 11:06=E2=80=AFPM Yu Zhao <yuzhao@google.com> wrote:
+>
+> On Wed, May 29, 2024 at 7:08=E2=80=AFPM James Houghton <jthoughton@google=
+.com> wrote:
+> >
+> > Hi Yu, Sean,
+> >
+> > Perhaps I "simplified" this bit of the series a little bit too much.
+> > Being able to opportunistically do aging with KVM (even without
+> > setting the Kconfig) is valuable.
+> >
+> > IIUC, we have the following possibilities:
+> > - v4: aging with KVM is done if the new Kconfig is set.
+> > - v3: aging with KVM is always done.
+>
+> This is not true -- in v3, MGLRU only scans secondary MMUs if it can
+> be done locklessly on x86. It uses a bitmap to imply this requirement.
+>
+> > - v2: aging with KVM is done when the architecture reports that it can
+> > probably be done locklessly, set at KVM MMU init time.
+>
+> Not really -- it's only done if it can be done locklessly on both x86 and=
+ arm64.
+>
+> > - Another possibility?: aging with KVM is only done exactly when it
+> > can be done locklessly (i.e., mmu_notifier_test/clear_young() called
+> > such that it will not grab any locks).
+>
+> This is exactly the case for v2.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-1
+Thanks for clarifying; sorry for getting this wrong.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f06ce441457d4abc4d76be7acba26868a2d02b1c
+>
+> > I like the v4 approach because:
+> > 1. We can choose whether or not to do aging with KVM no matter what
+> > architecture we're using (without requiring userspace be aware to
+> > disable the feature at runtime with sysfs to avoid regressing
+> > performance if they don't care about proactive reclaim).
+> > 2. If we check the new feature bit (0x8) in sysfs, we can know for
+> > sure if aging is meant to be working or not. The selftest changes I
+> > made won't work properly unless there is a way to be sure that aging
+> > is working with KVM.
+>
+> I'm not convinced, but it doesn't mean your point of view is invalid.
+> If you fully understand the implications of your design choice and
+> document them, I will not object.
+>
+> All optimizations in v2 were measured step by step. Even that bitmap,
+> which might be considered overengineered, brought a readily
+> measuarable 4% improvement in memcached throughput on Altra Max
+> swapping to Optane:
+>
+> Using the bitmap (64 KVM PTEs for each call)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50
+> Latency     p99 Latency   p99.9 Latency       KB/sec
+> -------------------------------------------------------------------------=
+---------------------------------------------------
+> Sets            0.00          ---          ---             ---
+>     ---             ---             ---         0.00
+> Gets      1012801.92    431436.92     14965.11         0.06246
+> 0.04700         0.16700         4.31900     39635.83
+> Waits           0.00          ---          ---             ---
+>     ---             ---             ---          ---
+> Totals    1012801.92    431436.92     14965.11         0.06246
+> 0.04700         0.16700         4.31900     39635.83
+>
+>
+> Not using the bitmap (1 KVM PTEs for each call)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Type         Ops/sec     Hits/sec   Misses/sec    Avg. Latency     p50
+> Latency     p99 Latency   p99.9 Latency       KB/sec
+> -------------------------------------------------------------------------=
+---------------------------------------------------
+> Sets            0.00          ---          ---             ---
+>     ---             ---             ---         0.00
+> Gets       968210.02    412443.85     14303.89         0.06517
+> 0.04700         0.15900         7.42300     37890.74
+> Waits           0.00          ---          ---             ---
+>     ---             ---             ---          ---
+> Totals     968210.02    412443.85     14303.89         0.06517
+> 0.04700         0.15900         7.42300     37890.74
+>
+>
+> FlameGraphs with bitmap (1.svg) and without bitmap (2.svg) attached.
+>
+> What I don't think is acceptable is simplifying those optimizations
+> out without documenting your justifications (I would even call it a
+> design change, rather than simplification, from v3 to v4).
 
-Thank you!
+I'll put back something similar to what you had before (like a
+test_clear_young() with a "fast" parameter instead of "bitmap"). I
+like the idea of having a new mmu notifier, like
+fast_test_clear_young(), while leaving test_young() and clear_young()
+unchanged (where "fast" means "prioritize speed over accuracy"). It
+seems a little more straightforward that way.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+>
+> > For look-around at eviction time:
+> > - v4: done if the main mm PTE was young and no MMU notifiers are subscr=
+ibed.
+> > - v2/v3: done if the main mm PTE was young or (the SPTE was young and
+> > the MMU notifier was lockless/fast).
+>
+> The host and secondary MMUs are two *independent* cases, IMO:
+> 1. lookaround the host MMU if the PTE mapping the folio under reclaim is =
+young.
+> 2. lookaround the secondary MMU if it can be done locklessly.
+>
+> So the v2/v3 behavior sounds a lot more reasonable to me.
+
+I'll restore the v2/v3 behavior. I initially removed it because,
+without batching, we (mostly) lose the spatial locality that, IIUC,
+look-around is designed to exploit.
+
+>
+> Also a nit -- don't use 'else' in the following case (should_look_around(=
+)):
+>
+>   if (foo)
+>     return bar;
+>   else
+>     do_something();
+
+Oh, yes, sorry. I wrote and rewrote should_look_around() quite a few
+times while trying to figure out what made sense in a no-batching
+series. I'll fix this.
+
+>
+> > I made this logic change as part of removing batching.
+> >
+> > I'd really appreciate guidance on what the correct thing to do is.
+> >
+> > In my mind, what would work great is: by default, do aging exactly
+> > when KVM can do it locklessly, and then have a Kconfig to always have
+> > MGLRU to do aging with KVM if a user really cares about proactive
+> > reclaim (when the feature bit is set). The selftest can check the
+> > Kconfig + feature bit to know for sure if aging will be done.
+>
+> I still don't see how that Kconfig helps. Or why the new static branch
+> isn't enough?
+
+Without a special Kconfig, the feature bit just tells us that aging
+with KVM is possible, not that it will necessarily be done. For the
+self-test, it'd be good to know exactly when aging is being done or
+not, so having a Kconfig like LRU_GEN_ALWAYS_WALK_SECONDARY_MMU would
+help make the self-test set the right expectations for aging.
+
+The Kconfig would also allow a user to know that, no matter what,
+we're going to get correct age data for VMs, even if, say, we're using
+the shadow MMU. This is somewhat important for me/Google Cloud. Is
+that reasonable? Maybe there's a better solution.
