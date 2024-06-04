@@ -1,117 +1,108 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0631DA2F;
-	Tue,  4 Jun 2024 05:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDEB12B17A;
+	Tue,  4 Jun 2024 09:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717479073; cv=none; b=i6lpibqLtcxSbY97L1ob5ed4A9CxF8EjMkzRKWedbpEoJKtm+EnQhid96PrW/WqLc5ApBXvXf6bqXk6ZYBU8k6AihYCt3gM4npxZaW0jbyXltRBNyajH1sGGhTFgf5PRY/6C0fsioe8e3Em1M7uJHlkQ6WNMJTDy1fKLlMjOyB0=
+	t=1717494291; cv=none; b=kJIpNHjV7vB0WGGZfTugw+q2XDZoQAw8rYL72foyQn/hjVOIqsZPNu3kKqowMmgSrvao+1aNx6gQma34kvLrUehB4Hu5dY9nP++pWx+6x9PIAdVSQjxFE/SS1nZnqvfk8Zp1xtggMXP7e901v27BfOT31sCzH6bvrYpYr8nGEiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717479073; c=relaxed/simple;
-	bh=0zbgKfvHTJ/R5q9ClkCPrLlxGR7Xha84YTV21PicIHU=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=ZWHe68pMGRDYozgTrOapz1GSDqXxVxZ0Swr9QLGW+tt+8fVqVEJlnBP/ISNbkvyCyGNyXnHQvigmhRbAceKGO0cSI1c7LPOuKlStZEhDUAhmprtHCmpfLupSCEHpWh+fVw8KaxnmHjOMS7Ug56VS2NktRixakhLvtiqYbYDdvrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xwBj6eUm; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1717494291; c=relaxed/simple;
+	bh=+4OmtJ3U6XFFuxF3jlPU+uwvQfJQ0socmXs/VYgoIWM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MhNfxbXMgRDrSyRsQrzIo3xZRMFESe7iO41nZfewA7K08FMxqryrR1DLVg9gF1eALTveY06PmyBwV+z1p9IkY2T2Tf77GqbwroOwdRbLU3uF2QiE96dsQ34uk5UXD1WGESzUKkA6N7lRPWZ9ULlyAZHBQDoKnZTvsavjGIOfJcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rF/x5dc+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xwBj6eUm"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717479063; h=Message-ID:Subject:Date:From:To;
-	bh=on7QTAt93h/XfHQ169rkXSG1LnUtTKMC4HJvTpbfWk8=;
-	b=xwBj6eUmISzY/cCWvrcWSesA9aH1/VQIx+5WzhIPuHuPA7nvKnlYAE5XIUn3KPoQVmcKH6cNfSm2hCq8ezWFXFAljhgNc5+k8rwWFA5nZ7Sv0+BnfaFgfmIi0RYQGwMtQbHpIYK1Ix706pKpidt0HMudvpD5L9YK7D8xpINJn1s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0W7poCxp_1717479060;
-Received: from localhost(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W7poCxp_1717479060)
-          by smtp.aliyun-inc.com;
-          Tue, 04 Jun 2024 13:31:01 +0800
-Message-ID: <1717478006.038663-1-hengqi@linux.alibaba.com>
-Subject: Re: [PATCH net-next v14 3/5] ethtool: provide customized dim profile management
-Date: Tue, 4 Jun 2024 13:13:26 +0800
-From: Heng Qi <hengqi@linux.alibaba.com>
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev,
- Huacai Chen <chenhuacai@loongson.cn>,
- Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Guo Ren <guoren@kernel.org>,
- loongarch@lists.linux.dev,
- Jakub Kicinski <kuba@kernel.org>,
- "David S . Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>,
- Jason Wang <jasowang@redhat.com>,
- "Michael S . Tsirkin" <mst@redhat.com>,
- Brett Creeley <bcreeley@amd.com>,
- Ratheesh Kannoth <rkannoth@marvell.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Tal Gilboa <talgi@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Jiri Pirko <jiri@resnulli.us>,
- Paul Greenwalt <paul.greenwalt@intel.com>,
- Ahmed Zaki <ahmed.zaki@intel.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Andrew Lunn <andrew@lunn.ch>,
- justinstitt@google.com,
- donald.hunter@gmail.com,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Dragos Tatulea <dtatulea@nvidia.com>,
- Rahul Rameshbabu <rrameshbabu@nvidia.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- netdev@vger.kernel.org,
- virtualization@lists.linux.dev
-References: <20240603154727.31998-1-hengqi@linux.alibaba.com>
- <20240603154727.31998-4-hengqi@linux.alibaba.com>
- <202406040645.6z95FW1f-lkp@intel.com>
-In-Reply-To: <202406040645.6z95FW1f-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rF/x5dc+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C9CCC4AF08;
+	Tue,  4 Jun 2024 09:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717494290;
+	bh=+4OmtJ3U6XFFuxF3jlPU+uwvQfJQ0socmXs/VYgoIWM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rF/x5dc+C88HaDirU07m1hy1gH5WkL+PZiAqqPLSfSz1DcOS7OP9AunMjbUp1zJKY
+	 Hp8/fAW5iLMEYSc7T43ClWqBr4iXQ2/aYTmm3weJBoHAXHw0nJD8Co0+ihq7YPoObV
+	 KOQ0mJtQMsONZ7QiYJ46upJfdiZM0Hfm2wULDfZO8t8fZ6qdvNid/nwDj6jp5wa0jR
+	 d15fuABegmcn9+LDB4UoqjrFi07UjL/5tk6Z4CJhUoTDHhDn3fTwPljd1HeZsxK7vy
+	 TfycRFly5i8L96XniDrW4BuVhUt7jfNNzyjXCa3rgs+Udzj28vhK8rE1g08IMsdVDT
+	 W6pWR+MwKmoyw==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a68ca4d6545so456744666b.0;
+        Tue, 04 Jun 2024 02:44:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVdS5VRU8JBYVcwjsU0FnM6RthSNY8DL8KGvGeJKsC72vvQSFRSky9LsIBK4YIm/GPz9veay7kRkSpBXG0OadW61RWm2xJt++o96uUtwd3Uu74OuCXnTaKPmqHVa8y7dLNIs+04dsF2Jg==
+X-Gm-Message-State: AOJu0YyE1/8UJCbBJQES+xhNKgqB9skAQULS0ftZcwhh5KJ7XwFLEUcj
+	FiKQQEr4/94OxG5SACPFucwza2LFLX08dGRzr2K9VaVrbXB7eQV4ZR24Jlrk61F/MzTaXyzcKRz
+	IiFbtICmQG3V8SmN6/sL6gyQIk/8=
+X-Google-Smtp-Source: AGHT+IHbocEQwR4Hr5RlJYKbDPGDBsDvn/4EQ7iPApoyeQTNpSe1BqB8yI7P5cbmGqh8BFExJbsrxv9bn4bF7Nj0Ho4=
+X-Received: by 2002:a17:906:3893:b0:a68:c0b8:cfad with SMTP id
+ a640c23a62f3a-a695456496emr139364166b.35.1717494289217; Tue, 04 Jun 2024
+ 02:44:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <202405300545.mVqyyvyr-lkp@intel.com> <87ttiamkf4.fsf@jogness.linutronix.de>
+ <Zl5m1ZlVmGKitAof@yujie-X299>
+In-Reply-To: <Zl5m1ZlVmGKitAof@yujie-X299>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 4 Jun 2024 17:44:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5uxxxZA6VALSrBPEeq=ro3aou=B2+PE9wEiyxVa+L2VQ@mail.gmail.com>
+Message-ID: <CAAhV-H5uxxxZA6VALSrBPEeq=ro3aou=B2+PE9wEiyxVa+L2VQ@mail.gmail.com>
+Subject: Re: [rt-devel:linux-6.10.y-rt-rebase 63/93] kernel/printk/printk.o:
+ warning: objtool: __jump_table+0x0: special: can't find orig instruction
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, John Ogness <john.ogness@linutronix.de>, 
+	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 4 Jun 2024 07:00:35 +0800, kernel test robot <lkp@intel.com> wrote:
-> Hi Heng,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on net-next/main]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Heng-Qi/linux-dim-move-useful-macros-to-h-file/20240603-235834
-> base:   net-next/main
-> patch link:    https://lore.kernel.org/r/20240603154727.31998-4-hengqi%40linux.alibaba.com
-> patch subject: [PATCH net-next v14 3/5] ethtool: provide customized dim profile management
-> config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240604/202406040645.6z95FW1f-lkp@intel.com/config)
-> compiler: loongarch64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406040645.6z95FW1f-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202406040645.6z95FW1f-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> net/ethtool/coalesce.o: warning: objtool: unexpected relocation symbol type in .rela.discard.reachable
+On Tue, Jun 4, 2024 at 9:07=E2=80=AFAM Yujie Liu <yujie.liu@intel.com> wrot=
+e:
+>
+> + Loongarch folks
+>
+> Hi Huacai and Xuerui,
+>
+> Could you please help take a look at this case? Thanks.
+We are attempting to solve this problem, please wait some time.
 
+Huacai
 
-I'm not sure if this seems to be related to the update of loongarch[1]?
-didn't find this warning on other architectures such as arm/openrisc/x86.
-
-+Cc:
-loongarch@lists.linux.dev, Guo Ren <guoren@kernel.org>,
-Xuerui Wang <kernel@xen0n.name>,
-Jiaxun Yang <jiaxun.yang@flygoat.com>,
-Huacai Chen <chenhuacai@loongson.cn>
-
-[1] https://lore.kernel.org/all/20240322135619.1423490-1-chenhuacai@loongson.cn/
-
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+>
+> On Mon, Jun 03, 2024 at 11:48:55AM +0206, John Ogness wrote:
+> > On 2024-05-30, kernel test robot <lkp@intel.com> wrote:
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-d=
+evel.git linux-6.10.y-rt-rebase
+> > > head:   6d20efa57a896036453f4b061ae22601ef61b494
+> > > commit: 127f3e5b794bd6fa90d4649318dd898455efa6d7 [63/93] printk: Prov=
+ide threadprintk boot argument
+> > > config: loongarch-defconfig (https://download.01.org/0day-ci/archive/=
+20240530/202405300545.mVqyyvyr-lkp@intel.com/config)
+> > > compiler: loongarch64-linux-gcc (GCC) 13.2.0
+> > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/a=
+rchive/20240530/202405300545.mVqyyvyr-lkp@intel.com/reproduce)
+> > >
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
+version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202405300545.mVqyyvyr=
+-lkp@intel.com/
+> > >
+> > > All warnings (new ones prefixed by >>):
+> > >
+> > >>> kernel/printk/printk.o: warning: objtool: __jump_table+0x0: special=
+: can't find orig instruction
+> > > --
+> > >>> kernel/printk/nbcon.o: warning: objtool: __jump_table+0x0: special:=
+ can't find orig instruction
+> >
+> > On loongarch, it looks like all users of the jump_table are causing thi=
+s
+> > warning. I will assume this is something that needs to be fixed at the
+> > arch level (either in the kernel or the compiler).
+> >
+> > John Ogness
+> >
