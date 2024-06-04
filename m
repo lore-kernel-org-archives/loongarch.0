@@ -1,115 +1,91 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7479BE7F;
-	Tue,  4 Jun 2024 12:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64845145FEA
+	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 12:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717503002; cv=none; b=giS2wb93+SbFUCMJaqBZUvBydBpHE1TUn5WplKQVPSuwPkM3pwak/GxGbFZ7u/tO7Gmly/V5eZeMuHJXdj2bTQzo+UcCBZM60L7XEkmmt7qUUyFvbmhlyXz05ordpCNWkVTe07Qkxy863lXZ903yPAM+7Ah/ElXPsyAaUKM1l5k=
+	t=1717503308; cv=none; b=lThzWcchvGOmWWsOVtHVEEJqpcTLK5xBJrWl3DBlSDGTaoKwFIiXoWAgqGPfDFzNxFURSTZ0KEYqoDvQsiFebKkwN/GIzf6495UCcrsmD4JQx9BirH4YeQ4YLzTU/z00AAOPpBKLLNv1AbRhT9V6lwemapLPPidWRL1jt+cMBgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717503002; c=relaxed/simple;
-	bh=YcEGrL6uJBPqEoeQ6exmprTcgJvrRPGruJXJpdyf8s0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Pb8PSJ9uDpBC3XpHVNqU7AHANltFLv76cpYLsVzMbKT8Ezt61xJ7kTR7qgnpsmbu4MZqdI7hejWiaWTN+Rzj1KM7zqrO9CtuSvHBGmcXOCCXWhpd7qADox8NXOi/OtehKF9RSIfBl+MLEXZlW3Lu2TLlrRPvdkKksh/dNaiXsx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ctzN1/nJ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ctzN1/nJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717502997;
-	bh=YcEGrL6uJBPqEoeQ6exmprTcgJvrRPGruJXJpdyf8s0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ctzN1/nJ2TXszqGZgZC1ecIGDY7ocdyJxI6dq2DwXhYl7+IefZpyKOUH2aIU9jdSm
-	 Qc4GxKHCozxWc5A1smK8jcHNzNviNY0AdnBUF7D2MnIO2vlMFu8Gu5pl8c0f8XTs/x
-	 mJochk7cWsWujvE+ih6nG12toIQl/TuduzmRuxlE=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3BC5E66D5B;
-	Tue,  4 Jun 2024 08:09:55 -0400 (EDT)
-Message-ID: <37bc814cf0229b498f455c5d85e9bf72041bb199.camel@xry111.site>
-Subject: Re: [rt-devel:linux-6.10.y-rt-rebase 63/93] kernel/printk/printk.o:
- warning: objtool: __jump_table+0x0: special: can't find orig instruction
-From: Xi Ruoyao <xry111@xry111.site>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Tiezhu Yang
-	 <yangtiezhu@loongson.cn>
-Cc: Yujie Liu <yujie.liu@intel.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, John Ogness <john.ogness@linutronix.de>,
- kernel test robot <lkp@intel.com>,  oe-kbuild-all@lists.linux.dev,
- loongarch@lists.linux.dev
-Date: Tue, 04 Jun 2024 20:09:53 +0800
-In-Reply-To: <20240604100343.0ZkQ9UcU@linutronix.de>
-References: <202405300545.mVqyyvyr-lkp@intel.com>
-	 <87ttiamkf4.fsf@jogness.linutronix.de> <Zl5m1ZlVmGKitAof@yujie-X299>
-	 <8690e36c-5fce-5f87-be9b-edc30248167f@loongson.cn>
-	 <20240604100343.0ZkQ9UcU@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1717503308; c=relaxed/simple;
+	bh=WFVQjWH0ZoiMDGK+S3K+zIY7KmR/jPZqZ71uWqigK70=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OkWJ8D2dCTzAei2kEOgVnKCngINxm/jhOsWb6JH5WYDUvnn5ec+JB3ll2oF9G4zc9tpKbLyHHWtA3jXxeFvyP82YOhbVvfG6kXvtvpk6hhKorzjZxz0jKssMszpVBbiZY2BPElWPa9VuSgz9D4rdIc3BKzRU95mQO/yHDnb/BJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxSupGBV9mX2EDAA--.14544S3;
+	Tue, 04 Jun 2024 20:15:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMdGBV9mFzkUAA--.50896S2;
+	Tue, 04 Jun 2024 20:15:02 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Discard dirty page tracking on readonly memslot
+Date: Tue,  4 Jun 2024 20:15:02 +0800
+Message-Id: <20240604121502.1985410-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxDMdGBV9mFzkUAA--.50896S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, 2024-06-04 at 12:03 +0200, Sebastian Andrzej Siewior wrote:
-> On 2024-06-04 17:49:35 [+0800], Tiezhu Yang wrote:
-> > Like this:
-> >=20
-> > diff --git a/arch/loongarch/configs/loongson3_defconfig
-> > b/arch/loongarch/configs/loongson3_defconfig
-> > index b4252c357c8e..0eb14e9259c2 100644
-> > --- a/arch/loongarch/configs/loongson3_defconfig
-> > +++ b/arch/loongarch/configs/loongson3_defconfig
-> > @@ -983,4 +983,3 @@ CONFIG_DEBUG_FS=3Dy
-> > =C2=A0CONFIG_SCHEDSTATS=3Dy
-> > =C2=A0# CONFIG_DEBUG_PREEMPT is not set
-> > =C2=A0# CONFIG_FTRACE is not set
-> > -CONFIG_UNWINDER_ORC=3Dy
->=20
-> If ORC/objtool is broken on loongarch, shouldn't you disable it then or
-> mask at least via
->=20
-> diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
-> index 98d60630c3d4b..2bce03b8f8309 100644
-> --- a/arch/loongarch/Kconfig.debug
-> +++ b/arch/loongarch/Kconfig.debug
-> @@ -28,6 +28,7 @@ config UNWINDER_PROLOGUE
-> =C2=A0
-> =C2=A0config UNWINDER_ORC
-> =C2=A0	bool "ORC unwinder"
-> +	depends on BROKEN
-> =C2=A0	select OBJTOOL
-> =C2=A0	help
-> =C2=A0	=C2=A0 This option enables the ORC (Oops Rewind Capability) unwind=
-er for
->=20
-> instead? Removing it from defconfig makes it still available to to
-> randconfig.
+For readonly memslot such as UEFI bios or UEFI var space, guest can
+not write this memory space directly. So it is not necessary to track
+dirty pages for readonly memslot. Here there is such optimization
+in function kvm_arch_commit_memory_region().
 
-I agree but...
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/mmu.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index e38139c576ee..4706aa948a5f 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -143,7 +143,7 @@ config LOONGARCH
-        select HAVE_LIVEPATCH
-        select HAVE_MOD_ARCH_SPECIFIC
-        select HAVE_NMI
--       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS
-+       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && BROKEN
-        select HAVE_PCI
-        select HAVE_PERF_EVENTS
-        select HAVE_PERF_REGS
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 98883aa23ab8..ec8c43aad724 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -444,6 +444,17 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				   enum kvm_mr_change change)
+ {
+ 	int needs_flush;
++	u32 old_flags = old ? old->flags : 0;
++	u32 new_flags = new ? new->flags : 0;
++	bool log_dirty_pages = new_flags & KVM_MEM_LOG_DIRTY_PAGES;
++
++	/* only track memslot flags changed */
++	if (change != KVM_MR_FLAGS_ONLY)
++		return;
++
++	/* Discard dirty page tracking on readonly memslot */
++	if ((old_flags & new_flags) & KVM_MEM_READONLY)
++		return;
+ 
+ 	/*
+ 	 * If dirty page logging is enabled, write protect all pages in the slot
+@@ -454,9 +465,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	 * MOVE/DELETE:	The old mappings will already have been cleaned up by
+ 	 *		kvm_arch_flush_shadow_memslot()
+ 	 */
+-	if (change == KVM_MR_FLAGS_ONLY &&
+-	    (!(old->flags & KVM_MEM_LOG_DIRTY_PAGES) &&
+-	     new->flags & KVM_MEM_LOG_DIRTY_PAGES)) {
++	if (!(old_flags & KVM_MEM_LOG_DIRTY_PAGES) && log_dirty_pages) {
+ 		spin_lock(&kvm->mmu_lock);
+ 		/* Write protect GPA page table entries */
+ 		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
 
-should be better?  It looks like everything depending on objtool is
-broken, not only ORC.
+base-commit: 2ab79514109578fc4b6df90633d500cf281eb689
+-- 
+2.39.3
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
