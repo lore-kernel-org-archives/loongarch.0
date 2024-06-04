@@ -1,106 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8771846D
-	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 14:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0AE8BF7;
+	Tue,  4 Jun 2024 15:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513038; cv=none; b=oVU/CMit3wTd0SBO5etdRenYcJu6Ptv1riX/Tr+qPHfvlhfjz3uesRZuvnBAipdluDFj5hBq4QeyjYGWwSTDEkRiytBnKxWLZBrqxsgk0Wr9ZSs4tstiNbojTxtxqA/a7+KbHnEe8zA5zB8SUE38gBV2XWWVZk/WKQWZzn8JQ2E=
+	t=1717513707; cv=none; b=unjaYFK7b1v/usL/sb3y5vpDIYOtgGJaonMFH1ojIkd/awOUwCvOtnf4tRoSHbJcwFg1ktIdquK01IyLJGepg+nCI1acyudC6ipxHy1G3Ltv5R/eaVm3GqWmHEcrBzEdhZgCyU/2dScL7qI9aDnx+JVrTnQTXN87/hsZlvsWCgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513038; c=relaxed/simple;
-	bh=Prc229CixKADL7r01Yfc9cHrwltTAJ/Gc5KJY4hP6nk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FIx0SHZhk2a1XJDEDVhfZPncB7LdBrH3DF/gBue6Rs7273Jj0T/IbDPI+U+ccCze60IwWzZRTA+tHM2mn+K7WdqFacfK0t57DpPMto6I68lYyzvYQQ6ZJfelb5sUCvMDx/4CwNCruDh6K25Zk4wwMXgUOmy6XswC8UhJW05c7WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPyubfwH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717513707; c=relaxed/simple;
+	bh=l+dy70sDHZRUGv472okJcpGybgCB3YYbbShGSa334AE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JA85ERFM1s3Kf1thmhDJfp3uRC1VRnPHfRw1zWLBbZZ0bxS8gjsDAxgmbmzfUut1Cq1ZbiqnMg2MPHOHzXjIxx2Y/mAhyOkYoT/vHlsAWbmTgkD99DP0a8Nlq3mlyK93NrzAImdEPFAAzs5dDexUIbVMEXe2NVppbQDUfL1VQuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=XPkOJh9F; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPyubfwH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1E2C32786
-	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 14:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717513038;
-	bh=Prc229CixKADL7r01Yfc9cHrwltTAJ/Gc5KJY4hP6nk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GPyubfwHpOshcn9woxjTA8pVIYNzr4+MA9DsWohWeqJwxCj6CdeLb8/NCsc4+rU/z
-	 pdN20XEWaCc8xT9sRgp/A0HLFVtZST/lrxsu/ZHPcssg1M2zT6a+Pxs7IFCecs60wJ
-	 XyFojn91BfU0KOSqCwI2uzWiHmnjiejW67EjOdJ8zGx0c5jE7VqCECK4gMoxhBx36b
-	 m3RYsdDF+JxeQBg6DADVw1/Gf9b0J2nmBKb9csG54LwMScMk7QbOUjSSl4w0tGCguG
-	 LPGt3wzYVoXOodTE70wH01vU+0U8JtmqrYNOU7PFtTbin7DCFKrokcXcUmAdIHl45G
-	 HypO0WzI0yjWQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57a20ccafc6so5233666a12.2
-        for <loongarch@lists.linux.dev>; Tue, 04 Jun 2024 07:57:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVxoT8F5uYykbuqSX0UnEbc7Z64ceX/Q/mb3byggj5ayV1yq1yKqjuplfJsDC+71PEW6kssFXuy/HY6AP4R03WUXp59rbk7IGgG
-X-Gm-Message-State: AOJu0Yx1DAY35k3qKKFt6VFIBk69LEH2EZun9Xc0yRGk0Z5H5YGwcqQV
-	0c7LFM74VjAHUDg3iN5rN4UOonxoRuqhnRARMI7Jb1cK3P1k5IBjQ3i6VVSCqNkaTJASChV3o3r
-	+BGZQJI/Wn4e5DQvWvwQIa6EEKt8=
-X-Google-Smtp-Source: AGHT+IFI8QP1aHzAaEgzn6Yxg5h6Mz9ZFEuDthtMFRKRH3AuaG3MxPpYeNODMvyHqxzRyF9UIP4Zso0m/Gr29N8anZY=
-X-Received: by 2002:a17:906:37d2:b0:a68:c14d:2686 with SMTP id
- a640c23a62f3a-a68c14d26ccmr576013066b.25.1717513037225; Tue, 04 Jun 2024
- 07:57:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="XPkOJh9F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1717513694;
+	bh=l+dy70sDHZRUGv472okJcpGybgCB3YYbbShGSa334AE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XPkOJh9FSsEt9Ma5ALXJ5TT5tCLPOIr96QoVoqvptlVowV6iJLvqTrhl90/q6GFm5
+	 L8lEH66gDtHyMSfNJ2ve+1co7mb+cDXLP6cpEvmA9sJSg8Y++koepPSf1lA4WFG4T4
+	 JnOafEoX1iQEpSgb07q3Sqiwnm6Z2JKhbWwJWKCQ=
+Received: from stargazer.. (unknown [IPv6:240e:457:1110:1471:fd75:6c0d:bd6f:6068])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 1C37E67245;
+	Tue,  4 Jun 2024 11:08:00 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Youling Tang <tangyouling@kylinos.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	mengqinggang@loongson.cn,
+	cailulu@loongson.cn,
+	wanglei@loongson.cn,
+	luweining@loongson.cn,
+	Yujie Liu <yujie.liu@intel.com>,
+	Heng Qi <hengqi@linux.alibaba.com>,
+	Tejun Heo <tj@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+Date: Tue,  4 Jun 2024 23:07:41 +0800
+Message-ID: <20240604150741.30252-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240529111947.1549556-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20240529111947.1549556-1-zhanghongchen@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Jun 2024 22:57:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5KD8BPzZYjpj5s4iSjOfJr+Q9hCV1nQn6fsUXPU8sriA@mail.gmail.com>
-Message-ID: <CAAhV-H5KD8BPzZYjpj5s4iSjOfJr+Q9hCV1nQn6fsUXPU8sriA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: use local_pci_probe when best selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Hongchen,
+GAS <= 2.41 does not support generating R_LARCH_{32,64}_PCREL for
+"label - ." and it generates R_LARCH_{ADD,SUB}{32,64} pairs instead.
+objtool cannot handle R_LARCH_{ADD,SUB}{32,64} pair in __jump_table
+(static key implementation) and etc. so it will produce some warnings.
+This is causing the kernel CI systems to complain everywhere.
 
-On Wed, May 29, 2024 at 7:19=E2=80=AFPM Hongchen Zhang
-<zhanghongchen@loongson.cn> wrote:
-The title should be better like this:
-PCI: Use local_pci_probe() when best selected CPU is offline
+For GAS we can check if -mthin-add-sub option is available to know if
+R_LARCH_{32,64}_PCREL are supported.
 
->
-> When the best selected cpu is offline, work_on_cpu will stuck
-> forever. Therefore, in this case, we should call
-> local_pci_probe instead of work_on_cpu.
+For Clang, we require Clang >= 18 and Clang >= 17 already supports
+R_LARCH_{32,64}_PCREL, so we can always assume Clang is fine for
+objtool.
 
-It is better to reword like this:
+Note that __jump_table is not generated by the compiler so
+-fno-jump-table is completely irrelevant for this issue.
 
-When the best selected CPU is offline, work_on_cpu() will stuck forever.
-This can be happen if a node is online while all its CPUs are offline
-(we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), Therefore=
-,
-in this case, we should call local_pci_probe() instead of work_on_cpu().
+Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+Closes: https://lore.kernel.org/loongarch/Zl5m1ZlVmGKitAof@yujie-X299/
+Closes: https://lore.kernel.org/loongarch/ZlY1gDDPi_mNrwJ1@slm.duckdns.org/
+Closes: https://lore.kernel.org/loongarch/1717478006.038663-1-hengqi@linux.alibaba.com/
+Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=816029e06768
+Link: https://github.com/llvm/llvm-project/commit/42cb3c6346fc
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/Kconfig       | 5 ++++-
+ arch/loongarch/Kconfig.debug | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Huacai
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index e38139c576ee..e461a6c59f15 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -143,7 +143,7 @@ config LOONGARCH
+ 	select HAVE_LIVEPATCH
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+-	select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS
++	select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB
+ 	select HAVE_PCI
+ 	select HAVE_PERF_EVENTS
+ 	select HAVE_PERF_REGS
+@@ -273,6 +273,9 @@ config AS_HAS_LBT_EXTENSION
+ config AS_HAS_LVZ_EXTENSION
+ 	def_bool $(as-instr,hvcl 0)
+ 
++config AS_HAS_THIN_ADD_SUB
++	def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || CC_IS_CLANG
++
+ menu "Kernel type and options"
+ 
+ source "kernel/Kconfig.hz"
+diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
+index 98d60630c3d4..8b2ce5b5d43e 100644
+--- a/arch/loongarch/Kconfig.debug
++++ b/arch/loongarch/Kconfig.debug
+@@ -28,6 +28,7 @@ config UNWINDER_PROLOGUE
+ 
+ config UNWINDER_ORC
+ 	bool "ORC unwinder"
++	depends on HAVE_OBJTOOL
+ 	select OBJTOOL
+ 	help
+ 	  This option enables the ORC (Oops Rewind Capability) unwinder for
+-- 
+2.45.2
 
->
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
->  drivers/pci/pci-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17f..32a99828e6a3 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
-uct pci_dev *dev,
->                 free_cpumask_var(wq_domain_mask);
->         }
->
-> -       if (cpu < nr_cpu_ids)
-> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->                 error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
->         else
->                 error =3D local_pci_probe(&ddi);
-> --
-> 2.33.0
->
->
