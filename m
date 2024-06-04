@@ -1,91 +1,172 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64845145FEA
-	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 12:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460A31474BF
+	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 12:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717503308; cv=none; b=lThzWcchvGOmWWsOVtHVEEJqpcTLK5xBJrWl3DBlSDGTaoKwFIiXoWAgqGPfDFzNxFURSTZ0KEYqoDvQsiFebKkwN/GIzf6495UCcrsmD4JQx9BirH4YeQ4YLzTU/z00AAOPpBKLLNv1AbRhT9V6lwemapLPPidWRL1jt+cMBgI=
+	t=1717505422; cv=none; b=hZv3RE7a5FJaz32iTC4/WE3rSRqQ1do7oBeSrWr2bkpQ28Hd0ft37ObiMq3yM4DKbwYJNwmUuI3r+zrdjcXnhUWCqFCaI7EdwrfGJbwrB0takiTKO0R8vjBf30ES0krz+QdRlNI0OqguhmglvX5EasPpEg9HrAS10v3Zc9kcn+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717503308; c=relaxed/simple;
-	bh=WFVQjWH0ZoiMDGK+S3K+zIY7KmR/jPZqZ71uWqigK70=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OkWJ8D2dCTzAei2kEOgVnKCngINxm/jhOsWb6JH5WYDUvnn5ec+JB3ll2oF9G4zc9tpKbLyHHWtA3jXxeFvyP82YOhbVvfG6kXvtvpk6hhKorzjZxz0jKssMszpVBbiZY2BPElWPa9VuSgz9D4rdIc3BKzRU95mQO/yHDnb/BJM=
+	s=arc-20240116; t=1717505422; c=relaxed/simple;
+	bh=oTyWyoQ6DV2/i77kbwUYPK5JR9US69MX44FaIuO5w3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Xwo+he2LE0nWGOLSA3nHgCoEtL4ZqB2kPWEdd0pDxxo6wYrA7CYYrBcWyo5oxGWD86GXpfl0gkerY49c3RVCqtmRoaiuElWvy1JkUl/3amXVJfpd/8wQvZ0uE6nlzUdkNNsZ49qsgX/dO9+KrHeqb5Dwi4907NDhMbUaWM/Jiu4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxSupGBV9mX2EDAA--.14544S3;
-	Tue, 04 Jun 2024 20:15:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMdGBV9mFzkUAA--.50896S2;
-	Tue, 04 Jun 2024 20:15:02 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Discard dirty page tracking on readonly memslot
-Date: Tue,  4 Jun 2024 20:15:02 +0800
-Message-Id: <20240604121502.1985410-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8Cxe+qJDV9moWMDAA--.14446S3;
+	Tue, 04 Jun 2024 20:50:17 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxssSIDV9mxEEUAA--.39592S2;
+	Tue, 04 Jun 2024 20:50:16 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	siyanteng@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH V1 1/2] docs: Add advanced extended IRQ model description
+Date: Tue,  4 Jun 2024 20:50:15 +0800
+Message-Id: <20240604125015.18678-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxDMdGBV9mFzkUAA--.50896S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-CM-TRANSID:AQAAf8DxssSIDV9mxEEUAA--.39592S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9vb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0E04IjxsIE14AKx2xKxw
+	AqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8I
+	cVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjc
+	xG0xvY0x0EwIxGrwAKzVC20s0267AEwI8IwI0ExsIj0wCF04k20xvY0x0EwIxGrwCFx2Iq
+	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+	1j6r18MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
+	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
+	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
+	GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
 
-For readonly memslot such as UEFI bios or UEFI var space, guest can
-not write this memory space directly. So it is not necessary to track
-dirty pages for readonly memslot. Here there is such optimization
-in function kvm_arch_commit_memory_region().
+From 3C6000, Loongarch began to support advanced extended
+interrupt mode, in which each CPU has an independent interrupt
+vector number.This will enhance the architecture's ability
+to support modern devices
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- arch/loongarch/kvm/mmu.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+ 2 files changed, 67 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 98883aa23ab8..ec8c43aad724 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -444,6 +444,17 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   enum kvm_mr_change change)
- {
- 	int needs_flush;
-+	u32 old_flags = old ? old->flags : 0;
-+	u32 new_flags = new ? new->flags : 0;
-+	bool log_dirty_pages = new_flags & KVM_MEM_LOG_DIRTY_PAGES;
-+
-+	/* only track memslot flags changed */
-+	if (change != KVM_MR_FLAGS_ONLY)
-+		return;
-+
-+	/* Discard dirty page tracking on readonly memslot */
-+	if ((old_flags & new_flags) & KVM_MEM_READONLY)
-+		return;
+diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+index 7988f4192363..4fb24077b23b 100644
+--- a/Documentation/arch/loongarch/irq-chip-model.rst
++++ b/Documentation/arch/loongarch/irq-chip-model.rst
+@@ -85,6 +85,39 @@ to CPUINTC directly::
+     | Devices |
+     +---------+
  
- 	/*
- 	 * If dirty page logging is enabled, write protect all pages in the slot
-@@ -454,9 +465,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 * MOVE/DELETE:	The old mappings will already have been cleaned up by
- 	 *		kvm_arch_flush_shadow_memslot()
- 	 */
--	if (change == KVM_MR_FLAGS_ONLY &&
--	    (!(old->flags & KVM_MEM_LOG_DIRTY_PAGES) &&
--	     new->flags & KVM_MEM_LOG_DIRTY_PAGES)) {
-+	if (!(old_flags & KVM_MEM_LOG_DIRTY_PAGES) && log_dirty_pages) {
- 		spin_lock(&kvm->mmu_lock);
- 		/* Write protect GPA page table entries */
- 		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
-
-base-commit: 2ab79514109578fc4b6df90633d500cf281eb689
++Advanced Extended IRQ model
++===========================
++
++In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
++to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
++and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
++by EIOINTC, and then go to CPUINTC directly::
++
++ +-----+     +--------------------------+     +-------+
++ | IPI | --> |           CPUINTC        | <-- | Timer |
++ +-----+     +--------------------------+     +-------+
++              ^        ^             ^
++              |        |             |
++      +--------+  +---------+ +---------+     +-------+
++      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
++      +--------+  +---------+ +---------+     +-------+
++           ^            ^
++           |            |
++         +---------+  +---------+
++         |   MSI   |  | PCH-PIC |
++         +---------+  +---------+
++            ^          ^       ^
++            |          |       |
++    +---------+ +---------+ +---------+
++    | Devices | | PCH-LPC | | Devices |
++    +---------+ +---------+ +---------+
++                     ^
++                     |
++                +---------+
++                | Devices |
++                +---------+
++
++
+ ACPI-related definitions
+ ========================
+ 
+diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+index f1e9ab18206c..cadf38589059 100644
+--- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
++++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+@@ -9,9 +9,8 @@
+ LoongArch的IRQ芯片模型（层级关系）
+ ==================================
+ 
+-目前，基于LoongArch的处理器（如龙芯3A5000）只能与LS7A芯片组配合工作。LoongArch计算机
+-中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、LIOINTC（
+-Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
++LoongArch计算机中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、
++LIOINTC（Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
+ HTVECINTC（Hyper-Transport Vector Interrupt Controller）、PCH-PIC（LS7A芯片组的主中
+ 断控制器）、PCH-LPC（LS7A芯片组的LPC中断控制器）和PCH-MSI（MSI中断控制器）。
+ 
+@@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
+     | Devices |
+     +---------+
+ 
++高级扩展IRQ模型
++=======================
++
++在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
++CPU串口（UARTs）中断发送到LIOINTC，MSI中断发送到AVEC，而后通过AVEC送达CPUINTC，而
++其他所有设备的中断则分别发送到所连接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直
++接到达CPUINTC::
++
++ +-----+     +--------------------------+     +-------+
++ | IPI | --> |           CPUINTC        | <-- | Timer |
++ +-----+     +--------------------------+     +-------+
++              ^        ^             ^
++              |        |             |
++      +--------+  +---------+ +---------+     +-------+
++      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
++      +--------+  +---------+ +---------+     +-------+
++              ^        ^
++              |        |
++      +---------+  +-------------+
++      |   MSI   |  |   PCH-PIC   |
++      +---------+  +-------------+
++            ^          ^       ^
++            |          |       |
++    +---------+ +---------+ +---------+
++    | Devices | | PCH-LPC | | Devices |
++    +---------+ +---------+ +---------+
++                     ^
++                     |
++                +---------+
++                | Devices |
++                +---------+
++
+ ACPI相关的定义
+ ==============
+ 
 -- 
-2.39.3
+2.20.1
 
