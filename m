@@ -1,124 +1,141 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C45D30B;
-	Tue,  4 Jun 2024 15:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7139146D78
+	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 22:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717514270; cv=none; b=kuUFcta0OVvLLkvszI9IMhNzn3r2RRYpQONd4TLBm2FHXcLI+P68dCm2M/z49mXFM2gJKfuZT5svYLBqiPd7jA5ycaNiRO3GWWzLPNG3GJDyq+HpOrqoliNY0i5UoJxj8m7x5+qxEL9/MiphEEptwWM637DB8SemSk1UvVh751Y=
+	t=1717539659; cv=none; b=YYP1xMZ5hNz3a5rYkJW3ARGg3tBdMfdWfxnsGDpzWPpOCYKUo1FCSO8e3AeR2AXaf+z2POOKpaMeJVW7kc834Uq0mw6KR+gYZzQ2a2/tie0/a0ygCb1v6IW78UvGdq+Kwimftwl6fV18J8MbXfPwa9MJncPUitauKb7You/5LTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717514270; c=relaxed/simple;
-	bh=Egks3/WNwy9LYtfT6ZUNZZhj71JaiUQKLwCKNh/fJ10=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bt3Fq+PSg8QduCywbgRmBhhhf7HbKl1NWGD0kFi+75aFTe0ZSArWyOgqJjd/1Ksg9Kc52SR8hjZaSjvrIkE9s322T07sYrexQLZpCHGN6MXq9Ml+I2sm4TCdHu9/XXhJ9z4TNoQBEJBSY9EbuPDt61AYuYi/ojh4xTqkJgv+FOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=XU/4/7Si; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1717539659; c=relaxed/simple;
+	bh=PEwtsHuB5I4aiO3jiKouMVnFQZ+bv8RQ/fbI3oGiDcE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N/S56oATL2Nqahp1ACSeQC/x6C8zFh5BCCzGnt3aEj4BgvUKwfmP91DuKsg9BanonWfL+kZo5trzBuLVOOe9PNAmuOg1iDmR3hqyeTqI1IUl0d6eZk5/4fVWmXIjPuq5yHT7NrcqwNqDeWDkt+CZ0fNx12oxfc3Bp820xPFBnEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pUeRih3D; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="XU/4/7Si"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717514268;
-	bh=Egks3/WNwy9LYtfT6ZUNZZhj71JaiUQKLwCKNh/fJ10=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XU/4/7Sig+nr0Hm7SLVDqTkZ/pvvOaR9G0Af8cClrEEw6LjCigBSmfttKCTsORaz+
-	 dORY/j2bFGpVJLeHKIJvNP3sZdkpVePt2vrbPJTnSv7gdxfJ4qF9YYDzT4D2xYJGPH
-	 9pPz22YKO1EWbZLveRrOZorDo6BfMxULdCTFnkLo=
-Received: from [IPv6:240e:457:1110:1471:fd75:6c0d:bd6f:6068] (unknown [IPv6:240e:457:1110:1471:fd75:6c0d:bd6f:6068])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B458467263;
-	Tue,  4 Jun 2024 11:17:42 -0400 (EDT)
-Message-ID: <3faeda8f8ce4eb6356c16151dc3970b583b709c4.camel@xry111.site>
-Subject: Re: [rt-devel:linux-6.10.y-rt-rebase 63/93] kernel/printk/printk.o:
- warning: objtool: __jump_table+0x0: special: can't find orig instruction
-From: Xi Ruoyao <xry111@xry111.site>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Tiezhu Yang
-	 <yangtiezhu@loongson.cn>
-Cc: Yujie Liu <yujie.liu@intel.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, John Ogness <john.ogness@linutronix.de>,
- kernel test robot <lkp@intel.com>,  oe-kbuild-all@lists.linux.dev,
- loongarch@lists.linux.dev
-Date: Tue, 04 Jun 2024 23:17:37 +0800
-In-Reply-To: <37bc814cf0229b498f455c5d85e9bf72041bb199.camel@xry111.site>
-References: <202405300545.mVqyyvyr-lkp@intel.com>
-	 <87ttiamkf4.fsf@jogness.linutronix.de> <Zl5m1ZlVmGKitAof@yujie-X299>
-	 <8690e36c-5fce-5f87-be9b-edc30248167f@loongson.cn>
-	 <20240604100343.0ZkQ9UcU@linutronix.de>
-	 <37bc814cf0229b498f455c5d85e9bf72041bb199.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pUeRih3D"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-44024f5271dso49781cf.1
+        for <loongarch@lists.linux.dev>; Tue, 04 Jun 2024 15:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717539657; x=1718144457; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AIBmj4SOCWbNZTcEJ36wTOG253WABX8+/zZKq57PG38=;
+        b=pUeRih3Dq96NUD3SN3NFXdePi2ewzeFynOBQ6nl/PngZizGXspPYpOCVBgZTqATIQ2
+         8LxjCCyN2CpGgv9z9jTjygzLkm14pvfFkBESV9iAE1IByPdzrwyHIPE1sp7LW0ZTsK6R
+         Gl1hfy46BicfgRi2xsdyMMJGQjqD9wJOvc92xN+qry/yNpk9H8qbvR+d/m8+ftS+2GQd
+         IGEQww+otlqf4TTqX/MgYvSA7LSdVfvs87k1t5ftRRFtVRwZduPiD8MAjh3RSf+gMn1P
+         XHY7vkU3hherzPDtgPDzBHtbO2JADPi2O2dplEkLndHskhIICxiOS48s9lHDqVdE1NVR
+         jH1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717539657; x=1718144457;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AIBmj4SOCWbNZTcEJ36wTOG253WABX8+/zZKq57PG38=;
+        b=W6eCYWwRe/poEqmHvmQpecXw82bMHeTrVgD0USUT5tTcwDOYOTuwZqJZkMq71WG0fa
+         pz9rTsqmh1jqVqsrMewVOOKn9h977Cfuc5haK/3ApJB93wkHVKfOpmECwCckmSo3vxm5
+         Tjr/A+WwzSgFUIBygi+iLM6fTY7UtTnDjkUi7EFvthMnpCRfVWEj5StR4mMK8/NEJLcH
+         CvShay0QW6uVpw+kwSSKE2KkQRvkszpDIZp/r+AYoqf3lIL/sUJP5ZOSkZMkAnzq/CKj
+         QBOcCycHlAFtd74uCQ00SwD8w9B/f+QcOzzcHWmp3h/am8r1jVCdbFqvDYV9/DcYltoh
+         f2hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbHdCFDGSR8tCEa4EPtvuoOrtch0KEiO0t2H/ke+PF+2aniVlL6dJ3wXUvsRdazPk/LZU4+Gy0oW++6O0VmqjytWT+L6h+lpvZ
+X-Gm-Message-State: AOJu0YyR6g+QCzRuMXc6FmM9gcyFCi6UyEb8wMCT2QfB2bRut7krx4FG
+	KXfTDYQ6V3EoJogwihPKocTRCNB4p1Ns6YHzOztfzCOzfd5SFVw3ASgwUNeHEu/LDkGlxKK/Qlq
+	0daxS4HzcMk7c7tG6QFuIgyd6iJKxbyXKGx88
+X-Google-Smtp-Source: AGHT+IFqQR6wV0ldEWSB61hJVaO5R3FbfhfGJ/jL2Y1RO1QFt4uPcpp04yR87XJA3WIv/pXl4si2o71lLJw9aUuCxfc=
+X-Received: by 2002:a05:622a:5a98:b0:43d:dc3b:518c with SMTP id
+ d75a77b69052e-4402ce13c55mr332451cf.11.1717539656344; Tue, 04 Jun 2024
+ 15:20:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240529180510.2295118-1-jthoughton@google.com>
+ <20240529180510.2295118-7-jthoughton@google.com> <Zlog5Yk_Pjq0jQhC@linux.dev> <Zloicw4IU8_-V5Ns@linux.dev>
+In-Reply-To: <Zloicw4IU8_-V5Ns@linux.dev>
+From: James Houghton <jthoughton@google.com>
+Date: Tue, 4 Jun 2024 15:20:20 -0700
+Message-ID: <CADrL8HV4SZ9BEQg1j3ojG-v5umL_d3sa4e1k2vMQCMmBEgeFpQ@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] KVM: arm64: Relax locking for kvm_test_age_gfn and kvm_age_gfn
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Ankit Agrawal <ankita@nvidia.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Sean Christopherson <seanjc@google.com>, Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-06-04 at 20:09 +0800, Xi Ruoyao wrote:
-> On Tue, 2024-06-04 at 12:03 +0200, Sebastian Andrzej Siewior wrote:
-> > On 2024-06-04 17:49:35 [+0800], Tiezhu Yang wrote:
-> > > Like this:
-> > >=20
-> > > diff --git a/arch/loongarch/configs/loongson3_defconfig
-> > > b/arch/loongarch/configs/loongson3_defconfig
-> > > index b4252c357c8e..0eb14e9259c2 100644
-> > > --- a/arch/loongarch/configs/loongson3_defconfig
-> > > +++ b/arch/loongarch/configs/loongson3_defconfig
-> > > @@ -983,4 +983,3 @@ CONFIG_DEBUG_FS=3Dy
-> > > =C2=A0CONFIG_SCHEDSTATS=3Dy
-> > > =C2=A0# CONFIG_DEBUG_PREEMPT is not set
-> > > =C2=A0# CONFIG_FTRACE is not set
-> > > -CONFIG_UNWINDER_ORC=3Dy
-> >=20
-> > If ORC/objtool is broken on loongarch, shouldn't you disable it then or
-> > mask at least via
-> >=20
-> > diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debu=
-g
-> > index 98d60630c3d4b..2bce03b8f8309 100644
-> > --- a/arch/loongarch/Kconfig.debug
-> > +++ b/arch/loongarch/Kconfig.debug
-> > @@ -28,6 +28,7 @@ config UNWINDER_PROLOGUE
-> > =C2=A0
-> > =C2=A0config UNWINDER_ORC
-> > =C2=A0	bool "ORC unwinder"
-> > +	depends on BROKEN
-> > =C2=A0	select OBJTOOL
-> > =C2=A0	help
-> > =C2=A0	=C2=A0 This option enables the ORC (Oops Rewind Capability) unwi=
-nder for
-> >=20
-> > instead? Removing it from defconfig makes it still available to to
-> > randconfig.
->=20
-> I agree but...
->=20
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index e38139c576ee..4706aa948a5f 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -143,7 +143,7 @@ config LOONGARCH
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_LIVEPATCH
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_MOD_ARCH_SPECIFIC
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_NMI
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_OBJTOOL if AS_HAS_EXPLI=
-CIT_RELOCS
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_OBJTOOL if AS_HAS_EXPLI=
-CIT_RELOCS && BROKEN
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_PCI
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_PERF_EVENTS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select HAVE_PERF_REGS
->=20
-> should be better?=C2=A0 It looks like everything depending on objtool is
-> broken, not only ORC.
+On Fri, May 31, 2024 at 12:18=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
+ev> wrote:
+>
+> On Fri, May 31, 2024 at 12:11:33PM -0700, Oliver Upton wrote:
+> > On Wed, May 29, 2024 at 06:05:09PM +0000, James Houghton wrote:
+> >
+> > [...]
+> >
+> > > diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtabl=
+e.c
+> > > index 9e2bbee77491..eabb07c66a07 100644
+> > > --- a/arch/arm64/kvm/hyp/pgtable.c
+> > > +++ b/arch/arm64/kvm/hyp/pgtable.c
+> > > @@ -1319,10 +1319,8 @@ static int stage2_age_walker(const struct kvm_=
+pgtable_visit_ctx *ctx,
+> > >     data->young =3D true;
+> > >
+> > >     /*
+> > > -    * stage2_age_walker() is always called while holding the MMU loc=
+k for
+> > > -    * write, so this will always succeed. Nonetheless, this delibera=
+tely
+> > > -    * follows the race detection pattern of the other stage-2 walker=
+s in
+> > > -    * case the locking mechanics of the MMU notifiers is ever change=
+d.
+> > > +    * This walk may not be exclusive; the PTE is permitted to change
+> > > +    * from under us.
+> > >      */
+> > >     if (data->mkold && !stage2_try_set_pte(ctx, new))
+> > >             return -EAGAIN;
+> >
+> > It is probably worth mentioning that if there was a race to update the
+> > PTE then the GFN is most likely young, so failing to clear AF probably
+> > isn't even consequential.
 
-No longer needed, I've root-caused the issue:
-https://lore.kernel.org/loongarch/20240604150741.30252-1-xry111@xry111.site=
-/
+Thanks Oliver.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>
+> Oh, and the WARN_ON() in kvm_pgtable_stage2_test_clear_young() is bogus
+> now. Maybe demote it to:
+>
+>   r =3D kvm_pgtable_walk(...);
+>   WARN_ON_ONCE(r && r !=3D -EAGAIN);
+
+Oh, indeed, thank you. Just to make sure -- does it make sense to
+retry the cmpxchg if it fails? For example, the way I have it now for
+x86[1], we retry the cmpxchg if the spte is still a leaf, otherwise we
+move on to the next one having done nothing. Does something like that
+make sense for arm64?
+
+[1]: https://lore.kernel.org/linux-mm/20240529180510.2295118-6-jthoughton@g=
+oogle.com/
