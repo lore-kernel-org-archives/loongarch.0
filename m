@@ -1,134 +1,118 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8D614B061
-	for <loongarch@lists.linux.dev>; Tue,  4 Jun 2024 23:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5140D61FC1
+	for <loongarch@lists.linux.dev>; Wed,  5 Jun 2024 01:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717544220; cv=none; b=WHWzg3puaeYD4BewVmwo/u6D+K5I+GlZxlWbOXLBWA1JIrJf2Kq63FCqymgBqDfpWzBFC/udALl8lLA9FXUylm7rsK8J5jBXh2vqb3HxlUXL+hWqgZVSobjNUhm2VydBO2WMtw0Ol1w85TeQCDaDm4R2NG9XCgx9YWIv9Jyygsc=
+	t=1717551715; cv=none; b=aQApi1eIbCvG3i+42zU3XfNXidHLnj9fb/OK68diPxWXpcr/OCgc+0uPjE8yaCSwoP8vpNhka6KNpLH9hZMjFyG8660G0M8QgCrh3qb3AcPr4Frgrx2FkvAH0orwSp3nUeA5OmvPVtBYyryEXn9GuVw+wo0qO9MtW6tXJimQ46w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717544220; c=relaxed/simple;
-	bh=qmv+9P9Yb6Ks0sGqgE9BZpW8i9Nv7p16qdK82LX6Qiw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PaVT1PODo9XaJuCTdPtmw9YYOXZsVgUZzPey1cDi+XlGKmQsCIF7MWs0YB91IDqToOuvt0a6wEwGqwhg7JFb0P4GjQLtUkcBT4gkkEn7+EzouuFdsgr9cg9DePMIeANirdvuT7Vj5G6sGbeBGzYa6+lEA0vzd5DF8Q5D50dpdaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x7gl4+44; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x7gl4+44"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a080977a5so106942497b3.0
-        for <loongarch@lists.linux.dev>; Tue, 04 Jun 2024 16:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717544218; x=1718149018; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p6cRhpzsCNepMdsrfgI93QBKDGHo0p9E5+86VMMwQfk=;
-        b=x7gl4+44v2jLleWAqkb6gtxhxxUGqb+xHBB8V/LJ0OKyv3ACqGUG7w1TRjNwDyBKya
-         ZVlYhmRIY7k9FNBAJy2lNKzLY4OtcRa2+LlSZZ0shx5lcB8XSYB9vme27PuazSpT6uRC
-         16oKfBCzD0whu4xQEsFwsC75F4Cp4ANXiBFr5iUAxJ4VU2DTr6o2XKqxeuAmEzIUm6sT
-         MRuSeITUQu/R28o03UJFj1LG2IH3SWhLBSHcu79KKESUDVOZoS47501UdOUdfignxBKC
-         Zq69GtfiO9e/r+4Im6LhfoZow3Ie9nte8+Qx67A1KfT2JxEYTIaz5I2XjrpBcQH1pe0z
-         /l7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717544218; x=1718149018;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=p6cRhpzsCNepMdsrfgI93QBKDGHo0p9E5+86VMMwQfk=;
-        b=c4uapI4W+Z3vfpW/3jvAuj3pBBThiJdpxQp9PAHntIsENALbVAH+eoaTwXcCMIm7hR
-         SH+AMpkhUj+0ZEMEq0R9rBsi7c2+8qtBw1Me/0WsoL3fr0ZZiRqiIkisMzRFTaEwqwvI
-         HhUHLDPFB/rceKC4Siv5FGQox6/RZQ2O4Ow2f7nHizW491xAw39KHAZxpzmvErisRjQE
-         aVyYKypmIxul2//LZDUcxXG4gaSfP0F7QCLvSzI5gL+mgCXchgBpos6ckhbbfawoCOZj
-         EyKeZNXPdVfqvXqpOYcNC/hkYoGGO22rRV8aBO3gQy1T153McE50pGrCLkBhCk5fAxW2
-         gPVA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0wxIsoMNzCcBKj3/wwKjd+wd3UWki4KTdGNZAJUezjFA1fS9tRUINWsFjUWzCCf8RXzGxsT5j8/q3sOlK1PlAKQsT0ETk91XJ
-X-Gm-Message-State: AOJu0Ywq+vmTQwz6vWLKBtWWNpbfIVzsVYSmWuOQXLdjqMSPQRhYfqfI
-	0+JwcDcfDx/KuG89IfqVLKUf3DqZidDazUWJ3ubo7K5uJMgdsb4akJhQMdxTilAYf+bF7s7fZV9
-	pbQ==
-X-Google-Smtp-Source: AGHT+IGvDf74cxgWq1gEKNpKx7itTcK7riRR46b0a169PbO8HQdl4CdVTPFkPhLbD8V/0e9PxPNrLdgSGrY=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1142:b0:df7:9ac4:f1b2 with SMTP id
- 3f1490d57ef6-dfacac478ebmr240926276.5.1717544218030; Tue, 04 Jun 2024
- 16:36:58 -0700 (PDT)
-Date: Tue, 4 Jun 2024 16:36:56 -0700
-In-Reply-To: <Zl-cjHVKaQ0iQE5d@linux.dev>
+	s=arc-20240116; t=1717551715; c=relaxed/simple;
+	bh=exuOLswyfPVZSQG8VHRSc5T6M/j1+LWAe960fq8wyu0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WNryek4BSvOtDF4fvjiXOouBvBGilqcJXHhtU2l5r0L3FIsht05r5EMYV3JoMzYTWCLFRzx/jWam/Z7gVi8C7HbaXWhp11/HWGgUxcAl42CasfePTaMzgWgiKecqizSPe/AxiNmUIrg3w41dP6Hpwd66sJ44uHYZoUxaSyto3gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.207.111.194])
+	by gateway (Coremail) with SMTP id _____8BxLutewl9mc5oDAA--.15399S3;
+	Wed, 05 Jun 2024 09:41:50 +0800 (CST)
+Received: from [10.180.13.176] (unknown [111.207.111.194])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxmsZbwl9mOAAVAA--.52410S3;
+	Wed, 05 Jun 2024 09:41:48 +0800 (CST)
+Subject: Re: [PATCH] PCI: use local_pci_probe when best selected cpu is
+ offline
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Huacai Chen
+ <chenhuacai@loongson.cn>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ stable@vger.kernel.org
+References: <20240529111947.1549556-1-zhanghongchen@loongson.cn>
+ <CAAhV-H5KD8BPzZYjpj5s4iSjOfJr+Q9hCV1nQn6fsUXPU8sriA@mail.gmail.com>
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+Message-ID: <9d5918ae-35ee-3221-19ba-e8e78e11bda3@loongson.cn>
+Date: Wed, 5 Jun 2024 09:41:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240529180510.2295118-1-jthoughton@google.com>
- <20240529180510.2295118-7-jthoughton@google.com> <Zlog5Yk_Pjq0jQhC@linux.dev>
- <Zloicw4IU8_-V5Ns@linux.dev> <CADrL8HV4SZ9BEQg1j3ojG-v5umL_d3sa4e1k2vMQCMmBEgeFpQ@mail.gmail.com>
- <Zl-cjHVKaQ0iQE5d@linux.dev>
-Message-ID: <Zl-lGLv5PbEUYspD@google.com>
-Subject: Re: [PATCH v4 6/7] KVM: arm64: Relax locking for kvm_test_age_gfn and kvm_age_gfn
-From: Sean Christopherson <seanjc@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Houghton <jthoughton@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Ankit Agrawal <ankita@nvidia.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, James Morse <james.morse@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shaoqin Huang <shahuang@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5KD8BPzZYjpj5s4iSjOfJr+Q9hCV1nQn6fsUXPU8sriA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxmsZbwl9mOAAVAA--.52410S3
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQASB2ZecxMHOgBcst
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw1DAF15ZF17Cr1kXFW5Jwc_yoW8WFyUpF
+	ZxJayvkr40qF1UG3sIq3W5ZFyY9anrJF929392kw15ZF9xAr1Iqa17tFZ8Wr18GrWkZr1I
+	v3W7XryDWFWUurgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Tue, Jun 04, 2024, Oliver Upton wrote:
-> On Tue, Jun 04, 2024 at 03:20:20PM -0700, James Houghton wrote:
-> > On Fri, May 31, 2024 at 12:18=E2=80=AFPM Oliver Upton <oliver.upton@lin=
-ux.dev> wrote:
-> > >
-> > > On Fri, May 31, 2024 at 12:11:33PM -0700, Oliver Upton wrote:
-> > > > On Wed, May 29, 2024 at 06:05:09PM +0000, James Houghton wrote:
-> > > Oh, and the WARN_ON() in kvm_pgtable_stage2_test_clear_young() is bog=
-us
-> > > now. Maybe demote it to:
-> > >
-> > >   r =3D kvm_pgtable_walk(...);
-> > >   WARN_ON_ONCE(r && r !=3D -EAGAIN);
-> >=20
-> > Oh, indeed, thank you. Just to make sure -- does it make sense to
-> > retry the cmpxchg if it fails? For example, the way I have it now for
-> > x86[1], we retry the cmpxchg if the spte is still a leaf, otherwise we
-> > move on to the next one having done nothing. Does something like that
-> > make sense for arm64?
->=20
-> At least for arm64 I do not see a need for retry. The only possible
-> races are:
->=20
->  - A stage-2 fault handler establishing / adjusting the mapping for the
->    GFN. If the guest is directly accessing the GFN in question, what's
->    the point of wiping out AF?
->=20
->    Even when returning -EAGAIN we've already primed stage2_age_data::youn=
-g,
->    so we report the correct state back to the primary MMU.
->=20
->  - Another kvm_age_gfn() trying to age the same GFN. I haven't even
->    looked to see if this is possible from the primary MMU POV, but in
->    theory one of the calls will win the race and clear AF.
->=20
-> Given Yu's concerns about making pending writers wait, we should take
-> every opportunity to bail on the walk.
+On 2024/6/4 下午10:57, Huacai Chen wrote:
+> Hi, Hongchen,
+> 
+> On Wed, May 29, 2024 at 7:19 PM Hongchen Zhang
+> <zhanghongchen@loongson.cn> wrote:
+> The title should be better like this:
+> PCI: Use local_pci_probe() when best selected CPU is offline
+> 
+>>
+>> When the best selected cpu is offline, work_on_cpu will stuck
+>> forever. Therefore, in this case, we should call
+>> local_pci_probe instead of work_on_cpu.
+> 
+> It is better to reword like this:
+> 
+> When the best selected CPU is offline, work_on_cpu() will stuck forever.
+> This can be happen if a node is online while all its CPUs are offline
+> (we can use "maxcpus=1" without "nr_cpus=1" to reproduce it), Therefore,
+> in this case, we should call local_pci_probe() instead of work_on_cpu().
+> 
+OK, Let me modify the log and send V2.
+> Huacai
+> 
+>>
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+>> ---
+>>   drivers/pci/pci-driver.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>> index af2996d0d17f..32a99828e6a3 100644
+>> --- a/drivers/pci/pci-driver.c
+>> +++ b/drivers/pci/pci-driver.c
+>> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>>                  free_cpumask_var(wq_domain_mask);
+>>          }
+>>
+>> -       if (cpu < nr_cpu_ids)
+>> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
+>>                  error = work_on_cpu(cpu, local_pci_probe, &ddi);
+>>          else
+>>                  error = local_pci_probe(&ddi);
+>> --
+>> 2.33.0
+>>
+>>
 
-+1.  The x86 path that retries is, for all intents and purposes, limited to=
- Intel
-CPUs that don't support EPT A/D bits, i.e. to pre-HSW CPUs.  I wouldn't mak=
-e any
-decisions based on that code.
+
+-- 
+Best Regards
+Hongchen Zhang
+
