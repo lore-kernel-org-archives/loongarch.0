@@ -1,119 +1,81 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5B8C07;
-	Wed,  5 Jun 2024 05:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E144A2941B;
+	Wed,  5 Jun 2024 05:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717565127; cv=none; b=H/HYyqsdRgu+s4p+fjdHxwMuEH4pvjsvSZroUdDxsDHiv5TcCyh2SIEXmh3K6LHyKu/166qZKocEiI4hSp/V65hvLX2II6b2pWb/k6ZrZtZnQs4Yn7K0PZldYmebBV5PmAHX1IdquBlG8CVQ86S5tHdr39p7/QjqWfofAUPYpPE=
+	t=1717566212; cv=none; b=DaJpcw0w2ShZVvMMeGxutHMn47wQzjISUvnkqx1WsODFK9K0QTugJImq86TUEHbCqRn5APd53RHUdU0jQg+FnCw/Q3wuMFe17u2HnLSVrTu6+LrLijv3pvvF3xgM9UlFmJm4XzEeQwRI7WLu20NGbOU/ma4dvOhT7UIOwCwxHeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717565127; c=relaxed/simple;
-	bh=VRuDfJneumWnl369xh8UUhc6D/Qt40FIaMU22iAgxc0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=idkt+Iax6JCCuFNzFPgxHJnYeaoJJ+Th6LEL9cbmF+vvFIcdTKfbFon9zIKgdQ/kVWQnMCE7RpZiFpqNFrXFg5s9EsZ6EOkKOLfbtdURQrUNuWHC7CxqunjfT0IrwM05U5aso6q6JI0L14nv0i4RnVVE47Xia62Hxv3fUWVmRfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=C1kOPM9Z; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1717566212; c=relaxed/simple;
+	bh=dtX8g48MWq+k12U7A9BZ9A3hLXeoqnuptOtFwcRXT6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ltY+nv1/Y7LvoN9jKkAakNibZ01Gq1m9kf/1oXDlj5AwOKUyHlSdhkgeeNFmtz5OXv9eb5nn/PwbjblMGtRhIeCLzmD7srL6mk00JOautXwgsys01YGHuTpSGsCj7ZF3rgLMeZvgI1Zc6VvlVaujP9F7nla1K+UCkjHSKFXajv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUfICDbx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="C1kOPM9Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717565124;
-	bh=VRuDfJneumWnl369xh8UUhc6D/Qt40FIaMU22iAgxc0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=C1kOPM9Z5lr9YuVFxHURS2J57RGfScgiMrME9zt+1RJ3Xqg1jQfOV+6gSWGKPWxEk
-	 6BlroFjj4595fz0U8oOvwozQlXpUuqnb6pttzKHhFaU+xF2DPl2bYzBmQvRKqMNTIb
-	 JlmzQq8nHX+ZC2+JHWosDYzVnw2SgenSRHFER68I=
-Received: from [IPv6:240e:358:111d:4300:dc73:854d:832e:6] (unknown [IPv6:240e:358:111d:4300:dc73:854d:832e:6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A600866FAC;
-	Wed,  5 Jun 2024 01:25:14 -0400 (EDT)
-Message-ID: <f72abf3b624107361ec4de0fe72be3bf4a3da539.camel@xry111.site>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUfICDbx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4184FC32781;
+	Wed,  5 Jun 2024 05:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717566211;
+	bh=dtX8g48MWq+k12U7A9BZ9A3hLXeoqnuptOtFwcRXT6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OUfICDbxSMPfhIg2kmdAwBk1CHPhpsculazhaKZoVMAv2CgV8lTH0Bq2HTUUG6q6s
+	 AahgCYeqzzXtPBTMmyuO5QePPEn6iNIh3Udg4VxK8k6QDawoYtxWj9Oc/KSRlPNZa2
+	 FFeN8oOumPN15S8/BkppG830Jlk0E/uqaJmhmFZOygOi9WVufuumMTgWorITSz7Xpb
+	 6z5YfGspWfKsamln5VOr6axbMSVhOG/8S1C8ZH9OVv3lE7/OWQLOP+OpiN+3tsF6ME
+	 hIKgJLwubMQS6qPVxAHrl8r+txckmkBqQpOD7jQmW36DzSqyvN5XzfYbUJE/hmVV/X
+	 923v5iGU/B+wg==
+Date: Tue, 4 Jun 2024 22:43:28 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Youling Tang <tangyouling@kylinos.cn>,
+	Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn,
+	luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>,
+	Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
 Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
  unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
- Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>, Jinyang He
- <hejinyang@loongson.cn>,  loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn, 
- luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>, Heng Qi
- <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
-Date: Wed, 05 Jun 2024 13:25:10 +0800
-In-Reply-To: <CAAhV-H74=aQqMe3Bh5xn1VQCrcK7eHk1baKj1L+74=o=-8V_6g@mail.gmail.com>
+Message-ID: <20240605054328.GA279426@thelio-3990X>
 References: <20240604150741.30252-1-xry111@xry111.site>
-	 <CAAhV-H7CF5wUSj5qfSs-+YTUrB2R9STO7LLu7LG2RpsYE719Og@mail.gmail.com>
-	 <80c92f7d283444e493ba1236cf228a5deca6c32d.camel@xry111.site>
-	 <CAAhV-H74=aQqMe3Bh5xn1VQCrcK7eHk1baKj1L+74=o=-8V_6g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604150741.30252-1-xry111@xry111.site>
 
-On Wed, 2024-06-05 at 13:21 +0800, Huacai Chen wrote:
-> On Wed, Jun 5, 2024 at 12:38=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
-ote:
-> >=20
-> > On Wed, 2024-06-05 at 09:52 +0800, Huacai Chen wrote:
-> > > Hi, Ruoyao,
-> > >=20
-> > > On Tue, Jun 4, 2024 at 11:08=E2=80=AFPM Xi Ruoyao <xry111@xry111.site=
-> wrote:
-> > > >=20
-> > > > GAS <=3D 2.41 does not support generating R_LARCH_{32,64}_PCREL for
-> > > > "label - ." and it generates R_LARCH_{ADD,SUB}{32,64} pairs instead=
-.
-> > > > objtool cannot handle R_LARCH_{ADD,SUB}{32,64} pair in __jump_table
-> > > > (static key implementation) and etc. so it will produce some warnin=
-gs.
-> > > > This is causing the kernel CI systems to complain everywhere.
-> > > >=20
-> > > > For GAS we can check if -mthin-add-sub option is available to know =
-if
-> > > > R_LARCH_{32,64}_PCREL are supported.
-> > > I think we should give a chance to toolchains without the
-> > > -mthin-add-sub option, so I hope Tiezhu can resubmit this patch to
-> > > solve this problem.
-> > > https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-y=
-angtiezhu@loongson.cn/
-> >=20
-> > It only handles .discard.{un,}reachable but not __jump_table.
-> > __jump_table is our main issue here.=C2=A0 And I don't see a quick way =
-to
-> > make -mno-thin-add-sub work for __jump_table because we really need to
-> > resolve the relocation for __jump_table instead of simply skipping it.
-> =C2=A0__jump_table is disabled now, so we can only solve=C2=A0 -mno-thin-=
-add-sub
-> at present, and the next step is __jump_table.
+On Tue, Jun 04, 2024 at 11:07:41PM +0800, Xi Ruoyao wrote:
+> GAS <= 2.41 does not support generating R_LARCH_{32,64}_PCREL for
+> "label - ." and it generates R_LARCH_{ADD,SUB}{32,64} pairs instead.
+> objtool cannot handle R_LARCH_{ADD,SUB}{32,64} pair in __jump_table
+> (static key implementation) and etc. so it will produce some warnings.
+> This is causing the kernel CI systems to complain everywhere.
+> 
+> For GAS we can check if -mthin-add-sub option is available to know if
+> R_LARCH_{32,64}_PCREL are supported.
+> 
+> For Clang, we require Clang >= 18 and Clang >= 17 already supports
+> R_LARCH_{32,64}_PCREL, so we can always assume Clang is fine for
+> objtool.
 
-No, -fno-jump-table does not disable __jump_table.  __jump_table is from
-static key implementation in arch/loongarch/include/asm/jump_label.h,
-not generated by the compiler.
+For what it's worth, I have noticed some warnings with clang that I
+don't see with GCC but I only filed an issue on our GitHub and never
+followed up on the mailing list, so sorry about that.
 
-And the problem of __jump_table is exact with -mno-thin-add-sub.  It
-reads:
+https://github.com/ClangBuiltLinux/linux/issues/2024
 
-#define JUMP_TABLE_ENTRY                \
-     ".pushsection  __jump_table, \"aw\"    \n\t"   \
-     ".align    3           \n\t"   \
-     ".long     1b - ., %l[l_yes] - .   \n\t"   \
-     ".quad     %0 - .          \n\t"   \
-     ".popsection               \n\t"
+Might be tangential to this patch though but I felt it was worth
+mentioning.
 
-The "1b - ." and "%0 - ." things produce different relocs with -mno-
-thin-add-sub and -mthin-add-sub.  The objtool can only handle the relocs
-from -mthin-add-sub here.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Cheers,
+Nathan
