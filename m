@@ -1,148 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4818C5490F;
-	Wed,  5 Jun 2024 01:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D118D61FD0;
+	Wed,  5 Jun 2024 02:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717552356; cv=none; b=TloAmOL/hVgbq7icH5T3scxSFNo75QV87SePx3aRV+pivvCCs1W5SqyPPCuvp34opU7b/uS95aWNAkujqHQBNQUD35moszuM7Wr7FrQmMj9+dmkRITHHW4XIOwT1qEZL1OGcaUKYDI3SCtZXlUrnM0mnOwMLetVJusq/zqVgFvg=
+	t=1717553204; cv=none; b=GQij1lUJCzEB88AA5UaIiQzNOPYT32NOby+KZHVSKjx6/4dDHE9JSuSkOSDdOKonbpOfRYrHzkB26Tjbbvln9r++PCMVzZBqtV6To/g6geGrlz5LJF06AV1+AMDXIvIi1bAUfrFBCjXOOTcOE/zoSBkfe0Z2GEXwlAqBmbmMKTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717552356; c=relaxed/simple;
-	bh=CxC5Siz2EwYJkmy2c6bMNSLW4Zz2VgkST85W+vaTB8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pZV30Sjk9dsd5RplWLXULCfsnMllwzWkmaMuaWID2t1HzlibWWC5jWIykGfCL4aFHjnrXdAAcdzCtW3RSv16RnNYoi7W0agPSIPS2g6HeK4HsGLkTrikA7goTCpM+ALyJsSCd39ogEy+eezAbO1xHwXfwm6SJfcP3ZFAnAsRZjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVd3Fof0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717553204; c=relaxed/simple;
+	bh=ReFUp7pweTh2zzhDpxSwTrxIMDTmjvQ8dRKlAIkhyPY=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=PZV71v73c7YMjNddZtMBUgnhQXPjR80ueMQxUXDKSOXhODf0zzynohvRxVr0RkS7iAP5+ja7N0VzJKTTtKD+lAKJHFKayM6FRA3kYJg+t3NCYTcrBtDuzTaEwV41jAWgkBqn5dW2P0iNzwyPTGoEsIzlzr1uzDBayZ3XDizB6WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oVrrSsqq; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVd3Fof0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0CD6C4AF09;
-	Wed,  5 Jun 2024 01:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717552355;
-	bh=CxC5Siz2EwYJkmy2c6bMNSLW4Zz2VgkST85W+vaTB8E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QVd3Fof0Xov4zp76ezEnn0K2GY3wdzLSXY71H1dbjZMarfp/BCTClLq7ak0gEfRZP
-	 8CgebLxnH+m7g//Qb0UWEQZ2J0W9qwUwj6HPqcmnZ35r9Ai5IQyzVfYeoSDSs38hgi
-	 FWLrKAi0Gw5T0xGXNbVpYrOFPOZ+7wAeFaZW0wwBIuaOrLn2Q5+fEqB3+gzO1FlFr8
-	 4krdExcNYpCCeQ9bjHOxqDSw7LxSn9wLAGHdiM5HdwOFukUTsujMCA48Bv4w6TVucM
-	 hWKyMMHr4mb2JO7825Y1aTJ0HYAAjgX2xvu7ZSXYUTG5+97kbcUo3/q7IMeTp0m7aL
-	 tmSGAjUXkVNHg==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a033c2e9fso8138385a12.2;
-        Tue, 04 Jun 2024 18:52:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVAqHBegvQDov7Tk/0yYF/PqkLB044W6mEssQvNs43u8aZVqCttipBwvRuLe+Gax4y0gqMjMPsS84E6XE2xIjFSbAkMQlIqZVlUjbiIvbDiPBdHtkbfTvF8F2pvPXSGZA==
-X-Gm-Message-State: AOJu0YwUOKai97NY7ZnEfE0gP4EzGHIMiNvcopvAZaFjj/ux99TBAM0U
-	KZonw8QSgX9hQVH2vUMW8DgN0d8b8f6GtGZG4UZT1dGeyp6s2gF69jz5Chxovk3HeUFaSu9mdYl
-	qWFpdLoRPxE5/hUIMbYlrD7yDeuc=
-X-Google-Smtp-Source: AGHT+IE4b3yf9p6USfzE9jEmzB05l3qegRhZxUBpf9jHqVZRyyTocqNF4Zexjq4STbS6DsrUhMoeURbUpZCcnUD1BDQ=
-X-Received: by 2002:a17:906:700f:b0:a62:c238:b229 with SMTP id
- a640c23a62f3a-a69a002b89amr76766666b.74.1717552354325; Tue, 04 Jun 2024
- 18:52:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oVrrSsqq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1717553192; h=Message-ID:Subject:Date:From:To;
+	bh=+hLssxSftTAbTK2MPi0VtFqUyURlszSjmWyA2r06aas=;
+	b=oVrrSsqqdu8KbJx3rdGORmvX7f9YjcNZiOlZ1I7xsBw9jtaYvEDMfRqBRZ6Nuc4VbRJjoaK08T81yaq0NBHtn4X7KNtYK0w6+F4Y4YY86b5LvCYueq8ZoUZO0fW+llUpMO89N47dxrgEGVaVzpeuGWMPBqoHfCMi75Kv151x624=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W7sYmF-_1717553191;
+Received: from localhost(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W7sYmF-_1717553191)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Jun 2024 10:06:32 +0800
+Message-ID: <1717553058.033336-2-hengqi@linux.alibaba.com>
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+Date: Wed, 5 Jun 2024 10:04:18 +0800
+From: Heng Qi <hengqi@linux.alibaba.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,
+ Youling Tang <tangyouling@kylinos.cn>,
+ Jinyang He <hejinyang@loongson.cn>,
+ loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev,
+ mengqinggang@loongson.cn,
+ cailulu@loongson.cn,
+ wanglei@loongson.cn,
+ luweining@loongson.cn,
+ Yujie Liu <yujie.liu@intel.com>,
+ Tejun Heo <tj@kernel.org>,
+ Xi Ruoyao <xry111@xry111.site>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20240604150741.30252-1-xry111@xry111.site>
+In-Reply-To: <20240604150741.30252-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20240604150741.30252-1-xry111@xry111.site>
-In-Reply-To: <20240604150741.30252-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 5 Jun 2024 09:52:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7CF5wUSj5qfSs-+YTUrB2R9STO7LLu7LG2RpsYE719Og@mail.gmail.com>
-Message-ID: <CAAhV-H7CF5wUSj5qfSs-+YTUrB2R9STO7LLu7LG2RpsYE719Og@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
- unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Youling Tang <tangyouling@kylinos.cn>, Jinyang He <hejinyang@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn, 
-	luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>, 
-	Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Ruoyao,
-
-On Tue, Jun 4, 2024 at 11:08=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> GAS <=3D 2.41 does not support generating R_LARCH_{32,64}_PCREL for
+On Tue,  4 Jun 2024 23:07:41 +0800, Xi Ruoyao <xry111@xry111.site> wrote:
+> GAS <= 2.41 does not support generating R_LARCH_{32,64}_PCREL for
 > "label - ." and it generates R_LARCH_{ADD,SUB}{32,64} pairs instead.
 > objtool cannot handle R_LARCH_{ADD,SUB}{32,64} pair in __jump_table
 > (static key implementation) and etc. so it will produce some warnings.
 > This is causing the kernel CI systems to complain everywhere.
->
+> 
 > For GAS we can check if -mthin-add-sub option is available to know if
 > R_LARCH_{32,64}_PCREL are supported.
-I think we should give a chance to toolchains without the
--mthin-add-sub option, so I hope Tiezhu can resubmit this patch to
-solve this problem.
-https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-yangtie=
-zhu@loongson.cn/
-
-Huacai
-
->
-> For Clang, we require Clang >=3D 18 and Clang >=3D 17 already supports
+> 
+> For Clang, we require Clang >= 18 and Clang >= 17 already supports
 > R_LARCH_{32,64}_PCREL, so we can always assume Clang is fine for
 > objtool.
->
+> 
 > Note that __jump_table is not generated by the compiler so
 > -fno-jump-table is completely irrelevant for this issue.
->
+> 
+
+Hi Xi Ruoyao,
+
+I want to know does this patch fix the following warning:
+https://lore.kernel.org/all/202406040645.6z95FW1f-lkp@intel.com/ ?
+
+Thanks.
+
 > Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
 > Closes: https://lore.kernel.org/loongarch/Zl5m1ZlVmGKitAof@yujie-X299/
-> Closes: https://lore.kernel.org/loongarch/ZlY1gDDPi_mNrwJ1@slm.duckdns.or=
-g/
-> Closes: https://lore.kernel.org/loongarch/1717478006.038663-1-hengqi@linu=
-x.alibaba.com/
-> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=
-=3D816029e06768
+> Closes: https://lore.kernel.org/loongarch/ZlY1gDDPi_mNrwJ1@slm.duckdns.org/
+> Closes: https://lore.kernel.org/loongarch/1717478006.038663-1-hengqi@linux.alibaba.com/
+> Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=816029e06768
 > Link: https://github.com/llvm/llvm-project/commit/42cb3c6346fc
 > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
 >  arch/loongarch/Kconfig       | 5 ++++-
 >  arch/loongarch/Kconfig.debug | 1 +
 >  2 files changed, 5 insertions(+), 1 deletion(-)
->
+> 
 > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
 > index e38139c576ee..e461a6c59f15 100644
 > --- a/arch/loongarch/Kconfig
 > +++ b/arch/loongarch/Kconfig
 > @@ -143,7 +143,7 @@ config LOONGARCH
->         select HAVE_LIVEPATCH
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
-> -       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS
-> +       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_=
-SUB
->         select HAVE_PCI
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
+>  	select HAVE_LIVEPATCH
+>  	select HAVE_MOD_ARCH_SPECIFIC
+>  	select HAVE_NMI
+> -	select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS
+> +	select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB
+>  	select HAVE_PCI
+>  	select HAVE_PERF_EVENTS
+>  	select HAVE_PERF_REGS
 > @@ -273,6 +273,9 @@ config AS_HAS_LBT_EXTENSION
 >  config AS_HAS_LVZ_EXTENSION
->         def_bool $(as-instr,hvcl 0)
->
+>  	def_bool $(as-instr,hvcl 0)
+>  
 > +config AS_HAS_THIN_ADD_SUB
-> +       def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || CC_IS_CLANG
+> +	def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || CC_IS_CLANG
 > +
 >  menu "Kernel type and options"
->
+>  
 >  source "kernel/Kconfig.hz"
 > diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
 > index 98d60630c3d4..8b2ce5b5d43e 100644
 > --- a/arch/loongarch/Kconfig.debug
 > +++ b/arch/loongarch/Kconfig.debug
 > @@ -28,6 +28,7 @@ config UNWINDER_PROLOGUE
->
+>  
 >  config UNWINDER_ORC
->         bool "ORC unwinder"
-> +       depends on HAVE_OBJTOOL
->         select OBJTOOL
->         help
->           This option enables the ORC (Oops Rewind Capability) unwinder f=
-or
-> --
+>  	bool "ORC unwinder"
+> +	depends on HAVE_OBJTOOL
+>  	select OBJTOOL
+>  	help
+>  	  This option enables the ORC (Oops Rewind Capability) unwinder for
+> -- 
 > 2.45.2
->
+> 
