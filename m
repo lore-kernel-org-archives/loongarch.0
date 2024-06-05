@@ -1,130 +1,88 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05F63D969;
-	Wed,  5 Jun 2024 02:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CCB61FCC;
+	Wed,  5 Jun 2024 04:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717553802; cv=none; b=YhGA2S+/6Z6+yZlJAeIpKlgnP9U+TGAw4C38Xg1QsXVR03g1GrUORd5/m9pqOsdlA3ox8z1Ruw95K+1tsBPIpGmTvP9eC/6kftlQjFtDH5gSLo82scIzBc/nxCaCyerZtToyTPrzQotzf6Xj5XAuAuyD3GHNb1XlGXZXYDCE97w=
+	t=1717562299; cv=none; b=XaEROXq+pr2egx9kDg77MqhDDYqPLajCZsarukU0k10IBQ25PbAzMr7Xz8bh6HdBNJelK5UI3DmMYDSu32NHdai/sgmkrOFRImWr6a7glEobad5fSZCKA8O2/wTcFwtCbW+5cH28j2DIBhpfHhI7ZvgRSMhbMnjhADJn33ClEnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717553802; c=relaxed/simple;
-	bh=189mdYsXxsccLCMxzEslQckd9F6l5Pkg+vVbG5gSlLA=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=XrYFV+8BT6sP4m1cYXnLraDx2ja51cInYTT67y5wWDQMY/NuKu+YVONvDXBLNrVj7QCjD/Ort9cM/KBE+FCwOyp0wPpKn+vb6JcwqcmgJwZzVxdwXN+MtanTyVxdWdnYJ96tASEZBdOUQURThDguNMhAjgDKCowDw5UCdOoveBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j79yVPXf; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1717562299; c=relaxed/simple;
+	bh=Cg3KFkgg0IOfj7ddIb/8BLHSkMNVj+t8SMEFfpN9xSo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e2+ezYlCbCgpKAEiYdbP/ytnAxSpP45mgIPs4yKR/e82w95j3XFGO3XFNbIyu7XPk2qSV9Qj2oi1XBH729Rvo82hOULxxHIQR8iotuNRBFCYeh0vvmcwJHyHs8fiBTjv93Yi7PIo1VVvyhmcZq6sZ7e/d7a0qRYlQmkQ5xjSNhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=lLF9US43; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j79yVPXf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717553796; h=Message-ID:Subject:Date:From:To;
-	bh=ddRm+B+lk3X4PjmjFxIaCezOgjOl1Nl1gTwxZc1qjRA=;
-	b=j79yVPXfHu37R2L1pkNHDpvRPvy05xjkawJ4A1MlSxKz+T3hDs9iFuHR9UN7SH7nmIAM+Si9aTk9ZzmYMT45JOusKM328hcj/myW3K/upPWtSjDxkpsK79zNQTLh6ByvSpW/ds0DiUC7WFTjycQz9lvZIYr2WGZEl1rAQIPSHW0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0W7sUjyI_1717553793;
-Received: from localhost(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W7sUjyI_1717553793)
-          by smtp.aliyun-inc.com;
-          Wed, 05 Jun 2024 10:16:34 +0800
-Message-ID: <1717553610.6275685-4-hengqi@linux.alibaba.com>
-Subject: Re: [PATCH net-next v14 3/5] ethtool: provide customized dim profile management
-Date: Wed, 5 Jun 2024 10:13:30 +0800
-From: Heng Qi <hengqi@linux.alibaba.com>
-To: Heng Qi <hengqi@linux.alibaba.com>
-Cc: oe-kbuild-all@lists.linux.dev,
- Huacai Chen <chenhuacai@loongson.cn>,
- Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Guo Ren <guoren@kernel.org>,
- loongarch@lists.linux.dev,
- Jakub Kicinski <kuba@kernel.org>,
- "David S . Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>,
- Jason Wang <jasowang@redhat.com>,
- "Michael S . Tsirkin" <mst@redhat.com>,
- Brett Creeley <bcreeley@amd.com>,
- Ratheesh Kannoth <rkannoth@marvell.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Tal Gilboa <talgi@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Jiri Pirko <jiri@resnulli.us>,
- Paul Greenwalt <paul.greenwalt@intel.com>,
- Ahmed Zaki <ahmed.zaki@intel.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Andrew Lunn <andrew@lunn.ch>,
- justinstitt@google.com,
- donald.hunter@gmail.com,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Dragos Tatulea <dtatulea@nvidia.com>,
- Rahul Rameshbabu <rrameshbabu@nvidia.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- netdev@vger.kernel.org,
- virtualization@lists.linux.dev,
- kernel test robot <lkp@intel.com>
-References: <20240603154727.31998-1-hengqi@linux.alibaba.com>
- <20240603154727.31998-4-hengqi@linux.alibaba.com>
- <202406040645.6z95FW1f-lkp@intel.com>
- <1717478006.038663-1-hengqi@linux.alibaba.com>
-In-Reply-To: <1717478006.038663-1-hengqi@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="lLF9US43"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1717562296;
+	bh=Cg3KFkgg0IOfj7ddIb/8BLHSkMNVj+t8SMEFfpN9xSo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lLF9US43fGzsWKCKi2derrneysNWJHXUzil7jf7k3wR19Jh6BFhqX1sJkglC9byhd
+	 kog37QTcTxO6+SJiE28UCAfgwKdt/iuNKziV+jwMrCWv2dOacARrF/R0Mrz+2aOZsz
+	 QnG2mYB+n2uzm+tz49E1cJWh24YNrC7ac6Y+vkdQ=
+Received: from [IPv6:240e:358:111d:4300:dc73:854d:832e:6] (unknown [IPv6:240e:358:111d:4300:dc73:854d:832e:6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0793666A81;
+	Wed,  5 Jun 2024 00:38:07 -0400 (EDT)
+Message-ID: <80c92f7d283444e493ba1236cf228a5deca6c32d.camel@xry111.site>
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
+ unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+ Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>, Jinyang He
+ <hejinyang@loongson.cn>,  loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn, 
+ luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>, Heng Qi
+ <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
+Date: Wed, 05 Jun 2024 12:38:03 +0800
+In-Reply-To: <CAAhV-H7CF5wUSj5qfSs-+YTUrB2R9STO7LLu7LG2RpsYE719Og@mail.gmail.com>
+References: <20240604150741.30252-1-xry111@xry111.site>
+	 <CAAhV-H7CF5wUSj5qfSs-+YTUrB2R9STO7LLu7LG2RpsYE719Og@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 
-On Tue, 4 Jun 2024 13:13:26 +0800, Heng Qi <hengqi@linux.alibaba.com> wrote:
-> On Tue, 4 Jun 2024 07:00:35 +0800, kernel test robot <lkp@intel.com> wrote:
-> > Hi Heng,
-> > 
-> > kernel test robot noticed the following build warnings:
-> > 
-> > [auto build test WARNING on net-next/main]
-> > 
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Heng-Qi/linux-dim-move-useful-macros-to-h-file/20240603-235834
-> > base:   net-next/main
-> > patch link:    https://lore.kernel.org/r/20240603154727.31998-4-hengqi%40linux.alibaba.com
-> > patch subject: [PATCH net-next v14 3/5] ethtool: provide customized dim profile management
-> > config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240604/202406040645.6z95FW1f-lkp@intel.com/config)
-> > compiler: loongarch64-linux-gcc (GCC) 13.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406040645.6z95FW1f-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202406040645.6z95FW1f-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> > >> net/ethtool/coalesce.o: warning: objtool: unexpected relocation symbol type in .rela.discard.reachable
-> 
-> 
-> I'm not sure if this seems to be related to the update of loongarch[1]?
-> didn't find this warning on other architectures such as arm/openrisc/x86.
+On Wed, 2024-06-05 at 09:52 +0800, Huacai Chen wrote:
+> Hi, Ruoyao,
+>=20
+> On Tue, Jun 4, 2024 at 11:08=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+ote:
+> >=20
+> > GAS <=3D 2.41 does not support generating R_LARCH_{32,64}_PCREL for
+> > "label - ." and it generates R_LARCH_{ADD,SUB}{32,64} pairs instead.
+> > objtool cannot handle R_LARCH_{ADD,SUB}{32,64} pair in __jump_table
+> > (static key implementation) and etc. so it will produce some warnings.
+> > This is causing the kernel CI systems to complain everywhere.
+> >=20
+> > For GAS we can check if -mthin-add-sub option is available to know if
+> > R_LARCH_{32,64}_PCREL are supported.
+> I think we should give a chance to toolchains without the
+> -mthin-add-sub option, so I hope Tiezhu can resubmit this patch to
+> solve this problem.
+> https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-yangt=
+iezhu@loongson.cn/
 
-I noticed that the loongarch community has submitted a fix[1], and after applying
-the fix, the robot no longer reports the warning. So the warning is specific
-to the loongarch architecture.
+It only handles .discard.{un,}reachable but not __jump_table.=20
+__jump_table is our main issue here.  And I don't see a quick way to
+make -mno-thin-add-sub work for __jump_table because we really need to
+resolve the relocation for __jump_table instead of simply skipping it.
 
-[1] https://lore.kernel.org/all/20240604150741.30252-1-xry111@xry111.site/
-
-Thanks.
-
-> 
-> +Cc:
-> loongarch@lists.linux.dev, Guo Ren <guoren@kernel.org>,
-> Xuerui Wang <kernel@xen0n.name>,
-> Jiaxun Yang <jiaxun.yang@flygoat.com>,
-> Huacai Chen <chenhuacai@loongson.cn>
-> 
-> [1] https://lore.kernel.org/all/20240322135619.1423490-1-chenhuacai@loongson.cn/
-> 
-> > 
-> > -- 
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-> 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
