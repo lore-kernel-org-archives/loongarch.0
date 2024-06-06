@@ -1,192 +1,168 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885A6DF44
-	for <loongarch@lists.linux.dev>; Thu,  6 Jun 2024 07:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F3C19539A
+	for <loongarch@lists.linux.dev>; Thu,  6 Jun 2024 11:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717660137; cv=none; b=pGAK5ZY4Mba0nw6TcbVdbIh06HGWFyr/LykcATK4wzbmOV7dEISzpM/6aommfxUM1o+pCEpGsX1+w6SzwGbUNs0YSn76sFItz5kTIcVKl+jJy+XsD8A2iZOY+C/PiLItcENM5N2KZqntfDbtULj3pXzMXVKblQE3SQ4PZ+n7Ws4=
+	t=1717673186; cv=none; b=Br+A2saRUKVgCQzotsge4/5Qfwzhyl8X7t3V3CcliMa1MNJZA4Uq0DOs59IThR3+AUcRtksER7tpwdr45HcHJ02bKurP5rn3vYqWp1+HCrbrRJU+LrhV4Nxetbv2Rszr8w7YyYpyQ2fxlJ5R05N11N3z0tByPq+KJ/NhxWETuWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717660137; c=relaxed/simple;
-	bh=vvKAQj9A9a25UiDJC3KL5MSzdfTdK8owek4RnM6UtrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M7Y2vRKA1kg0khKERNqhkBQvjaDHPuxvyCqsY7LmLaznoY5dxPq9kZ0y7gmFMZCFdjqsmF+7QNt3SVuM18OjGS3JQU6VwezMDRVW30iMEH63yTZfWG1ECiBR4MdBndQ9uQ202wvGClVnyCF64mWH4jPHdjAdMth8YS7Y/GBvoDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxvOrkaWFmAiAEAA--.17407S3;
-	Thu, 06 Jun 2024 15:48:52 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8TjaWFmGaIWAA--.45782S2;
-	Thu, 06 Jun 2024 15:48:51 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add feature passing from user space
-Date: Thu,  6 Jun 2024 15:48:50 +0800
-Message-Id: <20240606074850.2651896-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1717673186; c=relaxed/simple;
+	bh=I8eXEpEHYSS55mlqLSfygn5zlOeg8Bj8Bwky7Y1Nbrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EkWuvuP3RBqXEiJ0cFXb8KLSgcBqwCBQkLrLQTZu05i4pBgmJ+Sz5O6TPobsGcnbjcKcemHGE9o+rdWgOml6AJpjEqzm11MqwZx1AUfyC/DO+s2A6rpjXmaSO1gvkgi8Q32zVAsi4hkFjRVYmpKQDj/1iURYkQEYSjSFp+u3438=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=XO4TPrtj; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="XO4TPrtj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1717672811; bh=I8eXEpEHYSS55mlqLSfygn5zlOeg8Bj8Bwky7Y1Nbrw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XO4TPrtjuDeNDFtuGW0qyMyddDdy90rW98a4gM2MLl5ynzT8L3JcC/7jc8MSHN207
+	 Eh5ylgeMaWqmoFtrAkwvCQYZ9wMktoNGJlOP0VfdQnhpqnkil3Sxs2SEmIs25DjT8S
+	 Pzt6lsOi+C0S9CD9aj/joRq06QdadcJqsDlfTPlE=
+Received: from [IPV6:240e:46c:8500:3a6c:c01f:bf1e:942:ff23] (unknown [IPv6:240e:46c:8500:3a6c:c01f:bf1e:942:ff23])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A1ABF60096;
+	Thu,  6 Jun 2024 19:20:10 +0800 (CST)
+Message-ID: <9bb552c8-fe86-43dc-9c4e-0b95c99fb25c@xen0n.name>
+Date: Thu, 6 Jun 2024 19:20:10 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axw8TjaWFmGaIWAA--.45782S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: KVM: Add feature passing from user space
+To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240606074850.2651896-1-maobibo@loongson.cn>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20240606074850.2651896-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
-kvm kernel mode only. Some features are defined in user space VMM,
-however KVM module does not know. Here interface is added to update
-register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is valid.
+Hi,
 
-Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
-FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
-to 256 VCPUs rather than 4 CPUs like real hw.
+On 6/6/24 15:48, Bibo Mao wrote:
+> Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
+> kvm kernel mode only. Some features are defined in user space VMM,
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h  |  4 +++
- arch/loongarch/include/asm/loongarch.h |  5 ++++
- arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
- arch/loongarch/kvm/exit.c              |  1 +
- arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
- 5 files changed, 44 insertions(+), 4 deletions(-)
+"come from kernel side only. But currently KVM is not aware of 
+user-space VMM features which makes it hard to employ optimizations that 
+are both (1) specific to the VM use case and (2) requiring cooperation 
+from user space."
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 88023ab59486..8fa50d757247 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -135,6 +135,9 @@ enum emulation_result {
- #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
- #define KVM_LARCH_LBT		(0x1 << 5)
- 
-+#define KVM_LOONGARCH_USR_FEAT_MASK			\
-+	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
-+
- struct kvm_vcpu_arch {
- 	/*
- 	 * Switch pointer-to-function type to unsigned long
-@@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
- 		u64 last_steal;
- 		struct gfn_to_hva_cache cache;
- 	} st;
-+	unsigned int usr_features;
- };
- 
- static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 7a4633ef284b..4d9837512c19 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -167,9 +167,14 @@
- 
- #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
- #define  KVM_SIGNATURE			"KVM\0"
-+/*
-+ * BIT 24 - 31 is features configurable by user space vmm
-+ */
- #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
- #define  KVM_FEATURE_IPI		BIT(1)
- #define  KVM_FEATURE_STEAL_TIME		BIT(2)
-+/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
-+#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-index ed12e509815c..dd141259de48 100644
---- a/arch/loongarch/include/uapi/asm/kvm.h
-+++ b/arch/loongarch/include/uapi/asm/kvm.h
-@@ -99,6 +99,8 @@ struct kvm_fpu {
- 
- /* Device Control API on vcpu fd */
- #define KVM_LOONGARCH_VCPU_CPUCFG	0
-+/* For CPUCFG_KVM_FEATURE register */
-+#define  KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI	24
- #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
- #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
- 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index e1bd81d27fd8..ab2dcc76784a 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -53,6 +53,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
- 		ret = KVM_FEATURE_IPI;
- 		if (sched_info_on())
- 			ret |= KVM_FEATURE_STEAL_TIME;
-+		ret |= vcpu->arch.usr_features;
- 		vcpu->arch.gprs[rd] = ret;
- 		break;
- 	default:
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 3783151fde32..26f2b22b6a62 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -832,6 +832,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
- 	switch (attr->attr) {
- 	case 2:
- 		return 0;
-+	case CPUCFG_KVM_FEATURE:
-+		return 0;
- 	default:
- 		return -ENXIO;
- 	}
-@@ -865,9 +867,18 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
- 	uint64_t val;
- 	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
- 
--	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
--	if (ret)
--		return ret;
-+	switch (attr->attr) {
-+	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
-+		ret = _kvm_get_cpucfg_mask(attr->attr, &val);
-+		if (ret)
-+			return ret;
-+		break;
-+	case CPUCFG_KVM_FEATURE:
-+		val = vcpu->arch.usr_features & KVM_LOONGARCH_USR_FEAT_MASK;
-+		break;
-+	default:
-+		return -ENXIO;
-+	}
- 
- 	put_user(val, uaddr);
- 
-@@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
- static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
- 					 struct kvm_device_attr *attr)
- {
--	return -ENXIO;
-+	u64 __user *user = (u64 __user *)attr->addr;
-+	u64 val, valid_flags;
-+
-+	switch (attr->attr) {
-+	case CPUCFG_KVM_FEATURE:
-+		if (get_user(val, user))
-+			return -EFAULT;
-+
-+		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
-+		if (val & ~valid_flags)
-+			return -EINVAL;
-+
-+		vcpu->arch.usr_features |= val;
-+		return 0;
-+
-+	default:
-+		return -ENXIO;
-+	}
- }
- 
- static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+> however KVM module does not know. Here interface is added to update
+> register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is valid.
+> 
+> Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
+> FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
+> to 256 VCPUs rather than 4 CPUs like real hw.
 
-base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+"A new feature bit ... is added which can be set from user space. 
+FEAT_... indicates that the VM EXTIOI can route interrupts to 256 vCPUs, 
+rather than 4 like with real HW."
+
+(Am I right in paraphrasing the "EXTIOI" part?)
+
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_host.h  |  4 +++
+>   arch/loongarch/include/asm/loongarch.h |  5 ++++
+>   arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
+>   arch/loongarch/kvm/exit.c              |  1 +
+>   arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
+>   5 files changed, 44 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 88023ab59486..8fa50d757247 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -135,6 +135,9 @@ enum emulation_result {
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+>   #define KVM_LARCH_LBT		(0x1 << 5)
+>   
+> +#define KVM_LOONGARCH_USR_FEAT_MASK			\
+> +	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
+> +
+>   struct kvm_vcpu_arch {
+>   	/*
+>   	 * Switch pointer-to-function type to unsigned long
+> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
+>   		u64 last_steal;
+>   		struct gfn_to_hva_cache cache;
+>   	} st;
+> +	unsigned int usr_features;
+>   };
+>   
+>   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index 7a4633ef284b..4d9837512c19 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -167,9 +167,14 @@
+>   
+>   #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
+>   #define  KVM_SIGNATURE			"KVM\0"
+> +/*
+> + * BIT 24 - 31 is features configurable by user space vmm
+> + */
+>   #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+>   #define  KVM_FEATURE_IPI		BIT(1)
+>   #define  KVM_FEATURE_STEAL_TIME		BIT(2)
+> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
+> +#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
+>   
+>   #ifndef __ASSEMBLY__
+>   
+
+What about assigning a new CPUCFG leaf ID for separating the two kinds 
+of feature flags very cleanly?
+
+> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+>   static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>   					 struct kvm_device_attr *attr)
+>   {
+> -	return -ENXIO;
+> +	u64 __user *user = (u64 __user *)attr->addr;
+> +	u64 val, valid_flags;
+> +
+> +	switch (attr->attr) {
+> +	case CPUCFG_KVM_FEATURE:
+> +		if (get_user(val, user))
+> +			return -EFAULT;
+> +
+> +		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
+> +		if (val & ~valid_flags)
+> +			return -EINVAL;
+> +
+> +		vcpu->arch.usr_features |= val;
+
+Isn't this usage of "|=" instead of "=" implying that the feature bits 
+could not get disabled after being enabled earlier, for whatever reason?
+
+> +		return 0;
+> +
+> +	default:
+> +		return -ENXIO;
+> +	}
+>   }
+>   
+>   static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+> 
+> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+
 -- 
-2.39.3
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
