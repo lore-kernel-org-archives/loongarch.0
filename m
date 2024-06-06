@@ -1,172 +1,192 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F9114AB8;
-	Thu,  6 Jun 2024 02:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885A6DF44
+	for <loongarch@lists.linux.dev>; Thu,  6 Jun 2024 07:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717639816; cv=none; b=L+l/WwY4lMq1yuH6PvC0DbSXVMhZeW5LXZo7M9CQYS4uV91tgEwzXKCGTTAraGGj6kdxCYKhGyUz0+6+UtpOSViXkxl/NMXz6GySEwMEXgjMVDUi06MWtpJUYVKgvV0rEhZkLr0wE6rQMgjxmUwLqQezKF5AE7Gc5m6AjPyr9G0=
+	t=1717660137; cv=none; b=pGAK5ZY4Mba0nw6TcbVdbIh06HGWFyr/LykcATK4wzbmOV7dEISzpM/6aommfxUM1o+pCEpGsX1+w6SzwGbUNs0YSn76sFItz5kTIcVKl+jJy+XsD8A2iZOY+C/PiLItcENM5N2KZqntfDbtULj3pXzMXVKblQE3SQ4PZ+n7Ws4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717639816; c=relaxed/simple;
-	bh=Z0CYkHleD15nnISvbRfPMD7qgij7i9JhEyEYYx5DE2E=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=IDY8i4xXS7jOEuAHdalpYDGMvVlNaiabDcU1CYKFcQ7b1YJW0st/5IE6jDUoYGoiiwKILaufk4lYGxqYSq4a4w6VIc/KTk1m87zGqJPMMOWSaKV2EfPsFB0Nsra7MF2BAFNribD4G9ZrCrxSV1uUmv1CJYYgLdhxRuPVJdXoXh0=
+	s=arc-20240116; t=1717660137; c=relaxed/simple;
+	bh=vvKAQj9A9a25UiDJC3KL5MSzdfTdK8owek4RnM6UtrM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M7Y2vRKA1kg0khKERNqhkBQvjaDHPuxvyCqsY7LmLaznoY5dxPq9kZ0y7gmFMZCFdjqsmF+7QNt3SVuM18OjGS3JQU6VwezMDRVW30iMEH63yTZfWG1ECiBR4MdBndQ9uQ202wvGClVnyCF64mWH4jPHdjAdMth8YS7Y/GBvoDo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8DxzOqDGmFmkQwEAA--.17302S3;
-	Thu, 06 Jun 2024 10:10:11 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8R9GmFmaV4WAA--.45165S3;
-	Thu, 06 Jun 2024 10:10:10 +0800 (CST)
-Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
- unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-To: Xi Ruoyao <xry111@xry111.site>, Nathan Chancellor <nathan@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Tiezhu Yang <yangtiezhu@loongson.cn>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn,
- luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>,
- Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
-References: <20240604150741.30252-1-xry111@xry111.site>
- <20240605054328.GA279426@thelio-3990X>
- <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
- <20240605062548.GF279426@thelio-3990X>
- <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
- <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
- <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
- <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
- <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
-Date: Thu, 6 Jun 2024 10:10:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxvOrkaWFmAiAEAA--.17407S3;
+	Thu, 06 Jun 2024 15:48:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8TjaWFmGaIWAA--.45782S2;
+	Thu, 06 Jun 2024 15:48:51 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add feature passing from user space
+Date: Thu,  6 Jun 2024 15:48:50 +0800
+Message-Id: <20240606074850.2651896-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Axw8R9GmFmaV4WAA--.45165S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFW3Aw17Xw4rur43XrWftFc_yoW5ur43pF
-	y8Jr1UJryUJr18Jr1UJr4UXryUJr1UJw1UJr1rJF1UJr1UJr1jqF17Xr1j9r18Xr4kJr1U
-	tr4UJr1Uury5JrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2-VyUUUUU
+X-CM-TRANSID:AQAAf8Axw8TjaWFmGaIWAA--.45782S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On 2024-06-06 03:05, Xi Ruoyao wrote:
+Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
+kvm kernel mode only. Some features are defined in user space VMM,
+however KVM module does not know. Here interface is added to update
+register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is valid.
 
-> On Wed, 2024-06-05 at 23:47 +0800, Jinyang He wrote:
->> In our 419 repo this func has been renamed arch_update_insn_state (, now it
->> should be arch_update_cfi_state) and give some actions to deal with the
->> frame pointer case. If we support it we may deal with some case but for
->> clang...
->>
->> .global test
->> .type test,@function
->> test:
->>
->> addi.d  $sp,$sp,-448
->> st.d    $ra,$sp,440
->> st.d    $fp,$sp,432
->> addi.d  $fp,$sp,448
->>
->> # do something  <- not change $sp
-> This is simplified.  In the real code $sp is changed, something like:
->
-> bstrins.d $sp, $zero, 5, 0
->
-> $fp is needed to allow restoring $sp after realigning $sp for some local
-> over-aligned variables, as demonstrated by this example:
->
-> struct x { _Alignas(64) char buf[128]; };
->
-> void f(struct x *p);
-> void g()
-> {
-> 	struct x x = { .buf = "1145141919810" };
-> 	f(&x);
-> }
->
-> GCC does not align $sp, it produces the aligned address for x from an
-> unaligned $sp instead:
->
-> addi.d $a0, $sp, 63
-> srli.d $a0, $a0, 6
-> slli.d $a0, $a0, 6
->
-> thus there's no need to use $fp.
->
-> /* snip */
->
->> <- restore regs from non-cfa ?
->>           ld.d    $ra, $sp, 8                     # 8-byte Folded Reload
-> /* snip */
->
->> Maybe Clang have anything wrong?
-> I don't think we must restore regs based on $fp just because CFA is
-> based on $fp.
+Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
+FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
+to 256 VCPUs rather than 4 CPUs like real hw.
 
-You are right.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h  |  4 +++
+ arch/loongarch/include/asm/loongarch.h |  5 ++++
+ arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
+ arch/loongarch/kvm/exit.c              |  1 +
+ arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
+ 5 files changed, 44 insertions(+), 4 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 88023ab59486..8fa50d757247 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -135,6 +135,9 @@ enum emulation_result {
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+ #define KVM_LARCH_LBT		(0x1 << 5)
+ 
++#define KVM_LOONGARCH_USR_FEAT_MASK			\
++	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
++
+ struct kvm_vcpu_arch {
+ 	/*
+ 	 * Switch pointer-to-function type to unsigned long
+@@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		struct gfn_to_hva_cache cache;
+ 	} st;
++	unsigned int usr_features;
+ };
+ 
+ static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 7a4633ef284b..4d9837512c19 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -167,9 +167,14 @@
+ 
+ #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
+ #define  KVM_SIGNATURE			"KVM\0"
++/*
++ * BIT 24 - 31 is features configurable by user space vmm
++ */
+ #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+ #define  KVM_FEATURE_IPI		BIT(1)
+ #define  KVM_FEATURE_STEAL_TIME		BIT(2)
++/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
++#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
+ 
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index ed12e509815c..dd141259de48 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -99,6 +99,8 @@ struct kvm_fpu {
+ 
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
++/* For CPUCFG_KVM_FEATURE register */
++#define  KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI	24
+ #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
+ #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
+ 
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index e1bd81d27fd8..ab2dcc76784a 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -53,6 +53,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+ 		ret = KVM_FEATURE_IPI;
+ 		if (sched_info_on())
+ 			ret |= KVM_FEATURE_STEAL_TIME;
++		ret |= vcpu->arch.usr_features;
+ 		vcpu->arch.gprs[rd] = ret;
+ 		break;
+ 	default:
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 3783151fde32..26f2b22b6a62 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -832,6 +832,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+ 	switch (attr->attr) {
+ 	case 2:
+ 		return 0;
++	case CPUCFG_KVM_FEATURE:
++		return 0;
+ 	default:
+ 		return -ENXIO;
+ 	}
+@@ -865,9 +867,18 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+ 	uint64_t val;
+ 	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+ 
+-	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+-	if (ret)
+-		return ret;
++	switch (attr->attr) {
++	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
++		ret = _kvm_get_cpucfg_mask(attr->attr, &val);
++		if (ret)
++			return ret;
++		break;
++	case CPUCFG_KVM_FEATURE:
++		val = vcpu->arch.usr_features & KVM_LOONGARCH_USR_FEAT_MASK;
++		break;
++	default:
++		return -ENXIO;
++	}
+ 
+ 	put_user(val, uaddr);
+ 
+@@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+ 					 struct kvm_device_attr *attr)
+ {
+-	return -ENXIO;
++	u64 __user *user = (u64 __user *)attr->addr;
++	u64 val, valid_flags;
++
++	switch (attr->attr) {
++	case CPUCFG_KVM_FEATURE:
++		if (get_user(val, user))
++			return -EFAULT;
++
++		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
++		if (val & ~valid_flags)
++			return -EINVAL;
++
++		vcpu->arch.usr_features |= val;
++		return 0;
++
++	default:
++		return -ENXIO;
++	}
+ }
+ 
+ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
 
-> The .cfi directives only provides *one* possible way to
-> restore the regs.
-What I just confused is that there is no ".cfi_*"
-in the eplogue by clang, which may cause wrong backtrace if gdb set
-
-breakpoint there and backtrace. (But this is out of this topic.)
-
-
-
-> This way is convenient to the unwinder, but not
-> necessarily convenient to the CPU thus the real instruction sequence can
-> use a different way.  They only need to be "equivalent", not necessarily
-> "exactly same."
->
-> Also note that .cfi_* directives are completely irrelevant for objtool.
-> THe objtool synthesizes the ORC unwind info from the machine
-> instructions, not the DWARF unwind info coded with .cfi_*.
-> The entire point of ORC is avoiding DWARF.  It's even named ORC because
-> ORC and DWARF are sworn enemies in some tales.
-Yes.
-The yestorday attachment has something wrong.
-Enmmmm.... (It seems I'm careless.) diff is,
-
-                 switch (op->src.type) {
-                 case OP_SRC_ADD:
-                         if (op->dest.reg == CFI_SP && op->src.reg == 
-CFI_SP) {
--                               /* addi.d sp, sp, imm */
--                               cfi->stack_size -= op->src.offset;
--                               if (cfa->base == CFI_SP)
-                                 /* addi.d sp, sp, imm */
-                                 cfi->stack_size -= op->src.offset;
-                                 if (cfa->base == CFI_SP)
-
-Or you can get the tmp fix by [1].
-
-[1]: 
-https://github.com/MQ-mengqing/linux/commit/c1f7df3eb2a2bb7a1c10c2aa6e0e3d585b457352
+base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+-- 
+2.39.3
 
