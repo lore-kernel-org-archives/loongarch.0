@@ -1,35 +1,50 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F28642045
-	for <loongarch@lists.linux.dev>; Fri,  7 Jun 2024 06:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B5B3B782;
+	Fri,  7 Jun 2024 07:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717741917; cv=none; b=dBHaRMEs6VFiJ3WoDWHduWaxU0nHAiVCymwdoOasqUwMVBmIumA46OEBZ5YnjJvRSPtgxEgVk/WCmCKUUFDbJ7dAmY30OT0pv1bfD/lh7MKjB6x+xsr96U3x4FW5WNLYW3NZE+zwjOtRSZMBmuYONZTmAvt3hwyCsSty5+hKbEs=
+	t=1717744492; cv=none; b=Rg6uVuHFunp2ZqNj07mBI4D8sr4ALZT0I+RqrxuDFOoSqGHFymMH6e+2BFI3HiKnE8KPDZEJZWm94/BtSJCn5M+filKgEF+baNvjXgt1TvDXyRz53Cy3ARFilZoQX26HHJ6wUeTmGu40Fji9mZH/53OrPh/Ve2249HGK1rBiKU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717741917; c=relaxed/simple;
-	bh=QDHzOLTAdeWI3TAuBU5P2DHGh7lul8I2Bjthzgv3HLc=;
+	s=arc-20240116; t=1717744492; c=relaxed/simple;
+	bh=noukMO3+jRs+9c7owGXF7Wluq9C2LqsXKD62IPTB79w=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V3lwNDUjAsjEgSsrh+T572A2vxS1foDDGm5lmK8YJwOIAbTo3mB+AUyupSEt4p/mdxE9oJypuGUCjKEOhcbAdMHlIBfmzwGXJphoHKI98D0tp9Vsd0tZZUViZB4OGDH58iPmffZcC21WgOpyyUFhXenDcJnQEzAOnpq1kA/hPPc=
+	 In-Reply-To:Content-Type; b=NGiZvNUJEjsuVAosMD8hUoznftwp6q1kHlYyouX72oGtvSl8fZLIJ44Jwz43nN46lArGgDzaUMKeF+X+pkp5GDTtSjBmB+/yvpxHB+1XgTNH6PTXQ53W22uSiEuPo0yEt54Q9GF98xUeUC0fPPW849UEUsMWM5yJOdlHOX1MrYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxHutRqWJmKIcEAA--.19028S3;
-	Fri, 07 Jun 2024 14:31:46 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxVcVOqWJmV94XAA--.48551S3;
-	Fri, 07 Jun 2024 14:31:44 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add feature passing from user space
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240606074850.2651896-1-maobibo@loongson.cn>
- <9bb552c8-fe86-43dc-9c4e-0b95c99fb25c@xen0n.name>
- <2774b010-8033-2167-474a-cb1b29b27d2b@loongson.cn>
- <ca286a23-f22b-092c-20d0-6ab20fd0883f@loongson.cn>
- <CAAhV-H4R7GO33jggAHsq0A6qLejdhnht5eBLs3OSasCkcYwJmQ@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <fb5a5fb6-5c40-7d18-bb8d-2da3747480ff@loongson.cn>
-Date: Fri, 7 Jun 2024 14:31:41 +0800
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Cx_epms2Jm8YgEAA--.18998S3;
+	Fri, 07 Jun 2024 15:14:46 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxnsdhs2JmmOkXAA--.60131S3;
+	Fri, 07 Jun 2024 15:14:44 +0800 (CST)
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
+ unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+To: Xi Ruoyao <xry111@xry111.site>, Nathan Chancellor <nathan@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Youling Tang <tangyouling@kylinos.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn,
+ luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>,
+ Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
+References: <20240604150741.30252-1-xry111@xry111.site>
+ <20240605054328.GA279426@thelio-3990X>
+ <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
+ <20240605062548.GF279426@thelio-3990X>
+ <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
+ <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
+ <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
+ <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
+ <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
+ <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
+ <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn>
+Date: Fri, 7 Jun 2024 15:14:41 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -38,197 +53,106 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4R7GO33jggAHsq0A6qLejdhnht5eBLs3OSasCkcYwJmQ@mail.gmail.com>
+In-Reply-To: <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxVcVOqWJmV94XAA--.48551S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ww47Jry3Jw1kCw45GF47ZFc_yoW7tw4Dpr
-	yjyFs8GF4UJryxCw1vq3s8Wrnxtr4xGr1IgF17t3yUAFn09F17Jr18KFyDCF95Jw18X3WI
-	qF15ta43ZFyYv3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Bxnsdhs2JmmOkXAA--.60131S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZrWDZF1xWFy3GF15AF15Jrc_yoW5uF4rpr
+	4rGr4UJryUJr18Ar1Utr1UWryUJr1UJw1UJr4DJFyUJr1UGryjqF1UXr4j9r18Jr4kJw1j
+	vr1UJryUZFyDJFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7XTm
-	DUUUU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUU
+	UU=
 
 
+On 2024-06-07 13:42, Xi Ruoyao wrote:
+> On Thu, 2024-06-06 at 10:10 +0800, Jinyang He wrote:
+>> What I just confused is that there is no ".cfi_*"
+>> in the eplogue by clang, which may cause wrong backtrace if gdb set
+>>
+>> breakpoint there and backtrace. (But this is out of this topic.)
+> I don't think it'll cause wrong backtrace.  The real assemble code has
+> restored the registers and missing .cfi_restore will just make unwinder
+> restore them again.  There are redundant works but not breakages.
 
-On 2024/6/7 上午11:58, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> 
-> On Thu, Jun 6, 2024 at 8:05 PM maobibo <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2024/6/6 下午7:54, maobibo wrote:
->>> Xuerui,
->>>
->>> Thanks for your reviewing.
->>> I reply inline.
->>>
->>> On 2024/6/6 下午7:20, WANG Xuerui wrote:
->>>> Hi,
->>>>
->>>> On 6/6/24 15:48, Bibo Mao wrote:
->>>>> Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
->>>>> kvm kernel mode only. Some features are defined in user space VMM,
->>>>
->>>> "come from kernel side only. But currently KVM is not aware of
->>>> user-space VMM features which makes it hard to employ optimizations
->>>> that are both (1) specific to the VM use case and (2) requiring
->>>> cooperation from user space."
->>> Will modify in next version.
->>>>
->>>>> however KVM module does not know. Here interface is added to update
->>>>> register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is valid.
->>>>>
->>>>> Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
->>>>> FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
->>>>> to 256 VCPUs rather than 4 CPUs like real hw.
->>>>
->>>> "A new feature bit ... is added which can be set from user space.
->>>> FEAT_... indicates that the VM EXTIOI can route interrupts to 256
->>>> vCPUs, rather than 4 like with real HW."
->>> will modify in next version.
->>>
->>>>
->>>> (Am I right in paraphrasing the "EXTIOI" part?)
->>>>
->>>>>
->>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>>> ---
->>>>>    arch/loongarch/include/asm/kvm_host.h  |  4 +++
->>>>>    arch/loongarch/include/asm/loongarch.h |  5 ++++
->>>>>    arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
->>>>>    arch/loongarch/kvm/exit.c              |  1 +
->>>>>    arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
->>>>>    5 files changed, 44 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h
->>>>> b/arch/loongarch/include/asm/kvm_host.h
->>>>> index 88023ab59486..8fa50d757247 100644
->>>>> --- a/arch/loongarch/include/asm/kvm_host.h
->>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
->>>>> @@ -135,6 +135,9 @@ enum emulation_result {
->>>>>    #define KVM_LARCH_HWCSR_USABLE    (0x1 << 4)
->>>>>    #define KVM_LARCH_LBT        (0x1 << 5)
->>>>> +#define KVM_LOONGARCH_USR_FEAT_MASK            \
->>>>> +    BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
->>>>> +
->>>>>    struct kvm_vcpu_arch {
->>>>>        /*
->>>>>         * Switch pointer-to-function type to unsigned long
->>>>> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
->>>>>            u64 last_steal;
->>>>>            struct gfn_to_hva_cache cache;
->>>>>        } st;
->>>>> +    unsigned int usr_features;
->>>>>    };
->>>>>    static inline unsigned long readl_sw_gcsr(struct loongarch_csrs
->>>>> *csr, int reg)
->>>>> diff --git a/arch/loongarch/include/asm/loongarch.h
->>>>> b/arch/loongarch/include/asm/loongarch.h
->>>>> index 7a4633ef284b..4d9837512c19 100644
->>>>> --- a/arch/loongarch/include/asm/loongarch.h
->>>>> +++ b/arch/loongarch/include/asm/loongarch.h
->>>>> @@ -167,9 +167,14 @@
->>>>>    #define CPUCFG_KVM_SIG            (CPUCFG_KVM_BASE + 0)
->>>>>    #define  KVM_SIGNATURE            "KVM\0"
->>>>> +/*
->>>>> + * BIT 24 - 31 is features configurable by user space vmm
->>>>> + */
->>>>>    #define CPUCFG_KVM_FEATURE        (CPUCFG_KVM_BASE + 4)
->>>>>    #define  KVM_FEATURE_IPI        BIT(1)
->>>>>    #define  KVM_FEATURE_STEAL_TIME        BIT(2)
->>>>> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
->>>>> +#define  KVM_FEATURE_VIRT_EXTIOI    BIT(24)
->>>>>    #ifndef __ASSEMBLY__
->>>>
->>>> What about assigning a new CPUCFG leaf ID for separating the two kinds
->>>> of feature flags very cleanly?
->>> For compatible issue like new kernel on old KVM host, to add a new
->>> CPUCFG leaf ID, a new feature need be defined on existing
->>> CPUCFG_KVM_FEATURE register. Such as:
->>>      #define  KVM_FEATURE_EXTEND_CPUCFG        BIT(3)
->>>
->>> VM need check feature KVM_FEATURE_EXTEND_CPUCFG at first, and then read
->>> the new CPUCFG leaf ID if feature EXTEND_CPUCFG is enabled.
->>>
->>> That maybe makes it complicated since feature bit is enough now.
->> The default return value is zero with old kvm host, it is possible to
->> use a new CPUCFG leaf ID. Both methods are ok for me.
->>
->> Huacai,
->> What is your optnion about this?
-> I don't think we need a new leaf, but is this feature detection
-> duplicated with EXTIOI_VIRT_FEATURES here?
-> https://lore.kernel.org/lkml/871q5a2lo8.ffs@tglx/T/#t
-It is for compatible consideration. The result is unknown on old 
-hypervisor if new kernel accesses newly added IOCSR register 
-EXTIOI_VIRT_FEATURES.
+$ cat hello.c:
+extern void __attribute__((noinline)) foo() {}
+int main() {
+   foo();
+   return (int)(long)__builtin_frame_address(0);
+}
+$ clang hello.c -S -g -o hello.s -O0 -fPIC
+$ cat hello.s:
+[...]
+         addi.d  $sp, $sp, -32
+         .cfi_def_cfa_offset 32
+         st.d    $ra, $sp, 24                    # 8-byte Folded Spill
+         st.d    $fp, $sp, 16                    # 8-byte Folded Spill
+         .cfi_offset 1, -8
+         .cfi_offset 22, -16
+         addi.d  $fp, $sp, 32
+         .cfi_def_cfa 22, 0
+         move    $a0, $zero
+         st.w    $a0, $fp, -20
+.Ltmp2:
+         .loc    0 3 3 prologue_end              # hello.c:3:3
+         bl      %plt(foo)
+         .loc    0 4 21                          # hello.c:4:21
+         move    $a0, $fp
+         .loc    0 4 3 is_stmt 0                 # hello.c:4:3
+         addi.w  $a0, $a0, 0
+         ld.d    $fp, $sp, 16                    # 8-byte Folded Reload
+<use gdb and set break ponint there>
+         ld.d    $ra, $sp, 24                    # 8-byte Folded Reload
+         .loc    0 4 3 epilogue_begin            # hello.c:4:3
+         addi.d  $sp, $sp, 32
+         ret
+[...]
 
-For cpucfg instruction it is returns zero if it is not supported, 
-however there is no such spec for iocsr read or write instruction.
+So how unwinder do if we <use gdb and set break ponint there>? I think
+if we not give ".cfi_restore 22" or others info, it will consider
+   1) the $ra is in cfa-8
+   2) the cfa is $fp
+So it will get $ra by $ra = *(long*)($fp-8). So it may unwind failed
+because $fp has been restored and not the CFA now.
 
-Regards
-Bibo
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>>
->>>>> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct
->>>>> kvm_vcpu *vcpu,
->>>>>    static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
->>>>>                         struct kvm_device_attr *attr)
->>>>>    {
->>>>> -    return -ENXIO;
->>>>> +    u64 __user *user = (u64 __user *)attr->addr;
->>>>> +    u64 val, valid_flags;
->>>>> +
->>>>> +    switch (attr->attr) {
->>>>> +    case CPUCFG_KVM_FEATURE:
->>>>> +        if (get_user(val, user))
->>>>> +            return -EFAULT;
->>>>> +
->>>>> +        valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
->>>>> +        if (val & ~valid_flags)
->>>>> +            return -EINVAL;
->>>>> +
->>>>> +        vcpu->arch.usr_features |= val;
->>>>
->>>> Isn't this usage of "|=" instead of "=" implying that the feature bits
->>>> could not get disabled after being enabled earlier, for whatever reason?
->>> yes, "=" is better. Will modify in next version.
->>>
->>> Regards
->>> Bibo Mao
->>>>
->>>>> +        return 0;
->>>>> +
->>>>> +    default:
->>>>> +        return -ENXIO;
->>>>> +    }
->>>>>    }
->>>>>    static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
->>>>>
->>>>> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
->>>>
->>>
->>
->>
+> For objtool the main difference seems a thing explained in
+> https://maskray.me/blog/2020-11-08-stack-unwinding by Fangrui:
+>
+>     Note: on RISC-V and LoongArch, the stack slot for the previous frame
+>     pointer is stored at fp[-2] instead of fp[0]. See [Consider
+>     standardising which stack slot fp points
+>     to](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/18)
+>     for the RISC-V discussion.
+
+In most cases the $fp is saved at cfa-16. But for va args, something
+becomes different at LoongArch (I do not know the case of riscv), the
+$fp isn't saved at cfa-16. (e.g. printk?)
+
+> So perhaps we just need to code a constant named "PREV_BP_OFFSET"
+Can you give some detail?
+>   or
+> something in arch/ and use it in update_cfi_state() instead of fully re-
+> implement the entire function?
+
+I feel that the update_cfi_state should be arch specific. I believe
+that some logic can be reused, but each arch may have its own logic.
+
+
+Thanks,
+Jinyang
 
