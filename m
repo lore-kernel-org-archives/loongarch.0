@@ -1,219 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9587BC125
-	for <loongarch@lists.linux.dev>; Fri,  7 Jun 2024 03:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905151BC4E;
+	Fri,  7 Jun 2024 05:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717732734; cv=none; b=XY/OYHOo2D28vKAYHwHdOGd3nJrE3p92P1lOtboHIil8n4kn9ZsL6elS5eZWzFgLyBp9LXVWZCZJ97d5tGHwuKqP/B5EtMuhUciAH0Plm+5K8eyIXJX8ZZJf6w/iEu/iQu5PC0bZuSHfpeunqWuFA8aPvgr7GJwbbabuhAieEvg=
+	t=1717738994; cv=none; b=KRCOC8HaJVVbdCOKZ/uaQNQQpQXAQcdRKDCw6v46bmENdPCzSkYLUU4cO0LklUIgahTqoM0vZkHuTt4feXRJH8Wg7AltauLCqrXWBYMZwrHQKFCxzfrDYGAcoccISetM/HHLaXc49Yo9dVjOOPQjq7oKhsIYKYrJHJoczMF24bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717732734; c=relaxed/simple;
-	bh=KGiP6ThPJ35VDSsCfPxzFa7jhXRjGboxQEacwO1xoYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ouj6ifMObdvPrir2Ptc2vpOiaT9CvCpoS/HAaujlSxhjFCOojwKC/VVjTMQ7TryqcdlB2D8DFIESOhR9nEVbaUMPnklzLbrf6GAwP9qSW3NQmmxhCTFU80F2gm7/tsxfy/JuFWT70fg5+g0enPpJxkFybgJ3YmIqYXkav1PFrfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hB0q8tIN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717738994; c=relaxed/simple;
+	bh=L90KvPb0Tm3KLZRT4+hpjIxgY+M3OEtcQDcEh/vAzxk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YMsvaG9vrK7MXnforOc1+kGSzMarPNS6WO9njmwmowzb6R3fGht5N8X+3m5pzbSTAw7xQ6Qgxw+BsRl0dL14F5vVzSZMrlaWszXJgc3ZHzPDiTfLMKLlN6/N3jsqCKBaVDx+EqP0Zj51Ig/j+yeiBGhSCbZJESeedvc0CEJBnkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=WM59gHdA; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hB0q8tIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F30DC32786
-	for <loongarch@lists.linux.dev>; Fri,  7 Jun 2024 03:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717732734;
-	bh=KGiP6ThPJ35VDSsCfPxzFa7jhXRjGboxQEacwO1xoYE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hB0q8tINgfwOQ1XDjImYI149Tcev1Mbj65QyDm3SG7Ih11fBvPweIzdJ3DlE5NjcZ
-	 hEsM2kLiBTI3g5X9kh6rFNTkrd1VmutZQ5QVSoWWx68eIeWGbvrT1j9S7grznCr6US
-	 mF3ukEwx0rZ50u4Q2kycxnvBHAaw5+tIAnJWfKdFO75hV8d5C7E13fp/92Ga5gkT/V
-	 HMKuUkHAOhBtnMikeJg8wqkc9z5T1HhTSiG4DiIplxiim68X9Ya46XVEdgzL+RSesJ
-	 YBGWOG4iCunYCkmIO9ccQtjqKNAOFwVo7sGMMpHnolxqschN4qsleGGGvfyZdgm6Yx
-	 mjYjyDG+OJMRw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6c828238dcso151596266b.0
-        for <loongarch@lists.linux.dev>; Thu, 06 Jun 2024 20:58:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVwp1N/FCSjyPIxA/i4hSyWdXPDQQxmb8SdEijG8sVnaTblU/Ax8PaM6O2iXWsFi3ywX2VYuq25qj5+TLFpn9U3kF84CoFvRixt
-X-Gm-Message-State: AOJu0YzuATVZYJLWNlu4yb/f0PY7gk9u1A02UzYY/I10X2dXjb9otx/I
-	Q4301fTIvJSBoDp6Q5wCC0DSkRRHmkAzUKmc4T//fW4noruFaHqdzgw6Kz5GtcrzoOYjPzDgaLY
-	RiCM0UKX1A0XKsWaIPhQNHfTIpmA=
-X-Google-Smtp-Source: AGHT+IHbeMs8l/ThwyG8wYss4Fl8a3e+yvPzz9N/025J2Pg7mooTgedX6RqOok+ITV/Qz5bnFz5iWEvQzETuVjTNaSE=
-X-Received: by 2002:a17:907:7e91:b0:a69:906c:9005 with SMTP id
- a640c23a62f3a-a6cdb0f5393mr104738866b.57.1717732732752; Thu, 06 Jun 2024
- 20:58:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="WM59gHdA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1717738977;
+	bh=L90KvPb0Tm3KLZRT4+hpjIxgY+M3OEtcQDcEh/vAzxk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=WM59gHdAAZ5b+Abw4UPENNb4iCodOsByf7TjH/w4eFjZu2zgDipbXips76zQBQznE
+	 elgqXYrmLYJzQbENUcPJosaEgXJmQcJBTKcfew7xOhbuqiBxVDAzzxj0a33pH3Osie
+	 8DGt8y8622rDzYcdkHf0m2NxmnGqOHlwvc84WycM=
+Received: from [IPv6:240e:358:11b5:b400:dc73:854d:832e:6] (unknown [IPv6:240e:358:11b5:b400:dc73:854d:832e:6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 6A30166A5B;
+	Fri,  7 Jun 2024 01:42:48 -0400 (EDT)
+Message-ID: <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
+ unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+From: Xi Ruoyao <xry111@xry111.site>
+To: Jinyang He <hejinyang@loongson.cn>, Nathan Chancellor
+ <nathan@kernel.org>,  Peter Zijlstra <peterz@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>,
+ loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, mengqinggang@loongson.cn,  cailulu@loongson.cn,
+ wanglei@loongson.cn, luweining@loongson.cn, Yujie Liu
+ <yujie.liu@intel.com>, Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo
+ <tj@kernel.org>
+Date: Fri, 07 Jun 2024 13:42:41 +0800
+In-Reply-To: <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
+References: <20240604150741.30252-1-xry111@xry111.site>
+	 <20240605054328.GA279426@thelio-3990X>
+	 <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
+	 <20240605062548.GF279426@thelio-3990X>
+	 <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
+	 <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
+	 <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
+	 <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
+	 <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
+	 <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240606074850.2651896-1-maobibo@loongson.cn> <9bb552c8-fe86-43dc-9c4e-0b95c99fb25c@xen0n.name>
- <2774b010-8033-2167-474a-cb1b29b27d2b@loongson.cn> <ca286a23-f22b-092c-20d0-6ab20fd0883f@loongson.cn>
-In-Reply-To: <ca286a23-f22b-092c-20d0-6ab20fd0883f@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 7 Jun 2024 11:58:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4R7GO33jggAHsq0A6qLejdhnht5eBLs3OSasCkcYwJmQ@mail.gmail.com>
-Message-ID: <CAAhV-H4R7GO33jggAHsq0A6qLejdhnht5eBLs3OSasCkcYwJmQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Add feature passing from user space
-To: maobibo <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
+On Thu, 2024-06-06 at 10:10 +0800, Jinyang He wrote:
+> What I just confused is that there is no ".cfi_*"
+> in the eplogue by clang, which may cause wrong backtrace if gdb set
+>=20
+> breakpoint there and backtrace. (But this is out of this topic.)
 
+I don't think it'll cause wrong backtrace.  The real assemble code has
+restored the registers and missing .cfi_restore will just make unwinder
+restore them again.  There are redundant works but not breakages.
 
-On Thu, Jun 6, 2024 at 8:05=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote:
->
->
->
-> On 2024/6/6 =E4=B8=8B=E5=8D=887:54, maobibo wrote:
-> > Xuerui,
-> >
-> > Thanks for your reviewing.
-> > I reply inline.
-> >
-> > On 2024/6/6 =E4=B8=8B=E5=8D=887:20, WANG Xuerui wrote:
-> >> Hi,
-> >>
-> >> On 6/6/24 15:48, Bibo Mao wrote:
-> >>> Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
-> >>> kvm kernel mode only. Some features are defined in user space VMM,
-> >>
-> >> "come from kernel side only. But currently KVM is not aware of
-> >> user-space VMM features which makes it hard to employ optimizations
-> >> that are both (1) specific to the VM use case and (2) requiring
-> >> cooperation from user space."
-> > Will modify in next version.
-> >>
-> >>> however KVM module does not know. Here interface is added to update
-> >>> register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is vali=
-d.
-> >>>
-> >>> Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
-> >>> FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
-> >>> to 256 VCPUs rather than 4 CPUs like real hw.
-> >>
-> >> "A new feature bit ... is added which can be set from user space.
-> >> FEAT_... indicates that the VM EXTIOI can route interrupts to 256
-> >> vCPUs, rather than 4 like with real HW."
-> > will modify in next version.
-> >
-> >>
-> >> (Am I right in paraphrasing the "EXTIOI" part?)
-> >>
-> >>>
-> >>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>> ---
-> >>>   arch/loongarch/include/asm/kvm_host.h  |  4 +++
-> >>>   arch/loongarch/include/asm/loongarch.h |  5 ++++
-> >>>   arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
-> >>>   arch/loongarch/kvm/exit.c              |  1 +
-> >>>   arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++=
----
-> >>>   5 files changed, 44 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/arch/loongarch/include/asm/kvm_host.h
-> >>> b/arch/loongarch/include/asm/kvm_host.h
-> >>> index 88023ab59486..8fa50d757247 100644
-> >>> --- a/arch/loongarch/include/asm/kvm_host.h
-> >>> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >>> @@ -135,6 +135,9 @@ enum emulation_result {
-> >>>   #define KVM_LARCH_HWCSR_USABLE    (0x1 << 4)
-> >>>   #define KVM_LARCH_LBT        (0x1 << 5)
-> >>> +#define KVM_LOONGARCH_USR_FEAT_MASK            \
-> >>> +    BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
-> >>> +
-> >>>   struct kvm_vcpu_arch {
-> >>>       /*
-> >>>        * Switch pointer-to-function type to unsigned long
-> >>> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
-> >>>           u64 last_steal;
-> >>>           struct gfn_to_hva_cache cache;
-> >>>       } st;
-> >>> +    unsigned int usr_features;
-> >>>   };
-> >>>   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs
-> >>> *csr, int reg)
-> >>> diff --git a/arch/loongarch/include/asm/loongarch.h
-> >>> b/arch/loongarch/include/asm/loongarch.h
-> >>> index 7a4633ef284b..4d9837512c19 100644
-> >>> --- a/arch/loongarch/include/asm/loongarch.h
-> >>> +++ b/arch/loongarch/include/asm/loongarch.h
-> >>> @@ -167,9 +167,14 @@
-> >>>   #define CPUCFG_KVM_SIG            (CPUCFG_KVM_BASE + 0)
-> >>>   #define  KVM_SIGNATURE            "KVM\0"
-> >>> +/*
-> >>> + * BIT 24 - 31 is features configurable by user space vmm
-> >>> + */
-> >>>   #define CPUCFG_KVM_FEATURE        (CPUCFG_KVM_BASE + 4)
-> >>>   #define  KVM_FEATURE_IPI        BIT(1)
-> >>>   #define  KVM_FEATURE_STEAL_TIME        BIT(2)
-> >>> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
-> >>> +#define  KVM_FEATURE_VIRT_EXTIOI    BIT(24)
-> >>>   #ifndef __ASSEMBLY__
-> >>
-> >> What about assigning a new CPUCFG leaf ID for separating the two kinds
-> >> of feature flags very cleanly?
-> > For compatible issue like new kernel on old KVM host, to add a new
-> > CPUCFG leaf ID, a new feature need be defined on existing
-> > CPUCFG_KVM_FEATURE register. Such as:
-> >     #define  KVM_FEATURE_EXTEND_CPUCFG        BIT(3)
-> >
-> > VM need check feature KVM_FEATURE_EXTEND_CPUCFG at first, and then read
-> > the new CPUCFG leaf ID if feature EXTEND_CPUCFG is enabled.
-> >
-> > That maybe makes it complicated since feature bit is enough now.
-> The default return value is zero with old kvm host, it is possible to
-> use a new CPUCFG leaf ID. Both methods are ok for me.
->
-> Huacai,
-> What is your optnion about this?
-I don't think we need a new leaf, but is this feature detection
-duplicated with EXTIOI_VIRT_FEATURES here?
-https://lore.kernel.org/lkml/871q5a2lo8.ffs@tglx/T/#t
+For objtool the main difference seems a thing explained in
+https://maskray.me/blog/2020-11-08-stack-unwinding by Fangrui:
 
-Huacai
+   Note: on RISC-V and LoongArch, the stack slot for the previous frame
+   pointer is stored at fp[-2] instead of fp[0]. See [Consider
+   standardising which stack slot fp points
+   to](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/18)
+   for the RISC-V discussion.
 
->
-> Regards
-> Bibo Mao
-> >>
-> >>> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct
-> >>> kvm_vcpu *vcpu,
-> >>>   static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
-> >>>                        struct kvm_device_attr *attr)
-> >>>   {
-> >>> -    return -ENXIO;
-> >>> +    u64 __user *user =3D (u64 __user *)attr->addr;
-> >>> +    u64 val, valid_flags;
-> >>> +
-> >>> +    switch (attr->attr) {
-> >>> +    case CPUCFG_KVM_FEATURE:
-> >>> +        if (get_user(val, user))
-> >>> +            return -EFAULT;
-> >>> +
-> >>> +        valid_flags =3D KVM_LOONGARCH_USR_FEAT_MASK;
-> >>> +        if (val & ~valid_flags)
-> >>> +            return -EINVAL;
-> >>> +
-> >>> +        vcpu->arch.usr_features |=3D val;
-> >>
-> >> Isn't this usage of "|=3D" instead of "=3D" implying that the feature =
-bits
-> >> could not get disabled after being enabled earlier, for whatever reaso=
-n?
-> > yes, "=3D" is better. Will modify in next version.
-> >
-> > Regards
-> > Bibo Mao
-> >>
-> >>> +        return 0;
-> >>> +
-> >>> +    default:
-> >>> +        return -ENXIO;
-> >>> +    }
-> >>>   }
-> >>>   static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
-> >>>
-> >>> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
-> >>
-> >
->
->
+So perhaps we just need to code a constant named "PREV_BP_OFFSET" or
+something in arch/ and use it in update_cfi_state() instead of fully re-
+implement the entire function?
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
