@@ -1,112 +1,164 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7E315B0F3;
-	Fri,  7 Jun 2024 08:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72652BA42;
+	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717748968; cv=none; b=vEaVO+Pj4ATWi7t6sfsl2raJOBvdnuC+VijTaS4zA6tXLjI3iQ5MNENZK18jasLlKh4Alc2kftwkIV3lwIHnrRc1bXo2VHk2Z5K8gI9L2WczAHmOWfZajlERIjdpa31pY6PSw119L6kJqj7GebY3Zn6ZIQF1sJtvr4yA+8x0DFc=
+	t=1718075843; cv=none; b=Kc+0nl1+YoKblT/IzKsCvRc8BgehVt0B2Rt7j5N7IJt5AhQ9yUvL17rPKf/Q8S9szgPUHykZSR1C/5rhMBrT/4SCk/UI2Z8Gx1GqTlZiHAD8ghx3k9UrKfhV2RP46JvypqbsoehZozjByPoHynY9ztHb1adZlCGiFb326EZ0WLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717748968; c=relaxed/simple;
-	bh=aK10eVoy1pHPzRBaMWuJDogzvbBebhllculFYvTNhSk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QZac+go+Bn6CO7RF/BFQ5feXcNMuiqIrb61YD6cmSKmT5c0fsnQ9EIgzhD1OTfePqPZquvnIjkpOjzQ9to3pfRTIBpGU/WXELzZhvGnxBps/RMQ4hfwv0nbm0N8j2we0cwr2AXOH5tjyajqAcZPCaKqwfotsrrDF6IgiF68NQy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MHI9wAYF; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MHI9wAYF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717748954;
-	bh=aK10eVoy1pHPzRBaMWuJDogzvbBebhllculFYvTNhSk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MHI9wAYFhtYurtAizVkehIHAmwceOkFYntOBS7R63hOUkb1teR2c/+603lWI4bevD
-	 RZDCTUB1xIGLwYx0xEqV7cLsfKATMUsDTzbYxeJf2S929RFhEZs1sysIK6CKsxwti8
-	 jCyoVTysq/k2e41RpmIF0+lfXv0iohfCf9AEUX8s=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 359A76709A;
-	Fri,  7 Jun 2024 04:29:11 -0400 (EDT)
-Message-ID: <329dac82e09dfc75e77ae93ebbeacdec1dc9ff7f.camel@xry111.site>
-Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
- unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Nathan Chancellor
- <nathan@kernel.org>,  Peter Zijlstra <peterz@infradead.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Tiezhu Yang <yangtiezhu@loongson.cn>, Nick Desaulniers
- <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>,
- loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, mengqinggang@loongson.cn,  cailulu@loongson.cn,
- wanglei@loongson.cn, luweining@loongson.cn, Yujie Liu
- <yujie.liu@intel.com>, Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo
- <tj@kernel.org>
-Date: Fri, 07 Jun 2024 16:29:09 +0800
-In-Reply-To: <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn>
-References: <20240604150741.30252-1-xry111@xry111.site>
-	 <20240605054328.GA279426@thelio-3990X>
-	 <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
-	 <20240605062548.GF279426@thelio-3990X>
-	 <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
-	 <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
-	 <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
-	 <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
-	 <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
-	 <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
-	 <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
-	 <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1718075843; c=relaxed/simple;
+	bh=jTg1jp0c8Fovh+0yRZbaZ+CIe7vWhQquUeeZ4ruU8q0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ZvIFT0FOgklKnRqDfUinTQ2okqfU6E78DrWCqmjPEUzSWjJAY9EI67EqsLQAjPJyDO2xyVvzo2i9NBbTPAXoRUjPmAOXeXVgXlaVbjh7uS72Vb4A4lsz5Csr67JEvSycs2BAbhhzsBBVVEZ7aOepB3cWFo7AxATnTJPHPPZScqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B51C2BBFC;
+	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sGs0v-00000001Jgi-42JD;
+	Mon, 10 Jun 2024 23:17:37 -0400
+Message-ID: <20240611031737.821995106@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 10 Jun 2024 23:09:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Guo Ren <guoren@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH 1/2] function_graph: Fix up ftrace_graph_ret_addr()
+References: <20240611030934.162955582@goodmis.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, 2024-06-07 at 15:14 +0800, Jinyang He wrote:
-> > =C2=A0=C2=A0=C2=A0=C2=A0 Note: on RISC-V and LoongArch, the stack slot =
-for the previous frame
-> > =C2=A0=C2=A0=C2=A0=C2=A0 pointer is stored at fp[-2] instead of fp[0]. =
-See [Consider
-> > =C2=A0=C2=A0=C2=A0=C2=A0 standardising which stack slot fp points
-> > =C2=A0=C2=A0=C2=A0=C2=A0 to](https://github.com/riscv-non-isa/riscv-elf=
--psabi-doc/issues/18)
-> > =C2=A0=C2=A0=C2=A0=C2=A0 for the RISC-V discussion.
->=20
-> In most cases the $fp is saved at cfa-16. But for va args, something
-> becomes different at LoongArch (I do not know the case of riscv), the
-> $fp isn't saved at cfa-16. (e.g. printk?)
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Oops indeed.  Even with a very simple case:
+Yang Li sent a patch to fix the kerneldoc of ftrace_graph_ret_addr().
+While reviewing it, I realized that the comments in the entire function
+header needed a rewrite. When doing that, I realized that @idx parameter
+was being ignored. Every time this was called by the unwinder, it would
+start the loop at the top of the shadow stack and look for the matching
+stack pointer. When it found it, it would return it. When the unwinder
+asked for the next function, it would search from the beginning again.
 
-int sum(int a, int b) {
-	return a + b;
-}
+In reality, it should start from where it left off. That was the reason
+for the @idx parameter in the first place. The first time the unwinder
+calls this function, the @idx pointer would contain zero. That would mean
+to start from the top of the stack. The function was supposed to update
+the @idx with the index where it found the return address, so that the
+next time the unwinder calls this function it doesn't have to search
+through the previous addresses it found (making it O(n^2)!).
 
-with -fno-omit-frame-pointer we get:
+This speeds up the unwinder's use of ftrace_graph_ret_addr() by an order
+of magnitude.
 
-sum:
-	addi.d	$r3,$r3,-16
-	st.d	$r22,$r3,8
-	addi.d	$r22,$r3,16
-	ld.d	$r22,$r3,8
-	add.w	$r4,$r4,$r5
-	addi.d	$r3,$r3,16
-	jr	$r1
+Link: https://lore.kernel.org/linux-trace-kernel/20240610181746.656e3759@gandalf.local.home/
 
-So for leaf functions (where we don't save $ra) $fp is saved at cfa-8.
+Reported-by: Yang Li <yang.lee@linux.alibaba.com>
+Fixes: 7aa1eaef9f428 ("function_graph: Allow multiple users to attach to function graph")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-> I feel that the update_cfi_state should be arch specific. I believe
-> that some logic can be reused, but each arch may have its own logic.
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 63d0c2f84ce1..91f1eef256af 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -870,18 +870,24 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ }
+ 
+ /**
+- * ftrace_graph_ret_addr - convert a potentially modified stack return address
+- *			   to its original value
++ * ftrace_graph_ret_addr - return the original value of the return address
++ * @task: The task the unwinder is being executed on
++ * @idx: An initialized pointer to the next stack index to use
++ * @ret: The current return address (likely pointing to return_handler)
++ * @retp: The address on the stack of the current return location
+  *
+  * This function can be called by stack unwinding code to convert a found stack
+- * return address ('ret') to its original value, in case the function graph
++ * return address (@ret) to its original value, in case the function graph
+  * tracer has modified it to be 'return_to_handler'.  If the address hasn't
+- * been modified, the unchanged value of 'ret' is returned.
++ * been modified, the unchanged value of @ret is returned.
+  *
+- * 'idx' is a state variable which should be initialized by the caller to zero
+- * before the first call.
++ * @idx holds the last index used to know where to start from. It should be
++ * initialized to zero for the first iteration as that will mean to start
++ * at the top of the shadow stack. If the location is found, this pointer
++ * will be assigned that location so that if called again, it will continue
++ * where it left off.
+  *
+- * 'retp' is a pointer to the return address on the stack.  It's ignored if
++ * @retp is a pointer to the return address on the stack.  It's ignored if
+  * the arch doesn't have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR defined.
+  */
+ #ifdef HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+@@ -895,6 +901,10 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 	if (ret != return_handler)
+ 		return ret;
+ 
++	if (!idx)
++		return ret;
++
++	i = *idx ? : task->curr_ret_stack;
+ 	while (i > 0) {
+ 		ret_stack = get_ret_stack(current, i, &i);
+ 		if (!ret_stack)
+@@ -908,8 +918,10 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 		 * Thus we will continue to find real return address.
+ 		 */
+ 		if (ret_stack->retp == retp &&
+-		    ret_stack->ret != return_handler)
++		    ret_stack->ret != return_handler) {
++			*idx = i;
+ 			return ret_stack->ret;
++		}
+ 	}
+ 
+ 	return ret;
+-- 
+2.43.0
 
-I agree it now.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
