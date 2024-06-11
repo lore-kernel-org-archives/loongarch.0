@@ -1,34 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C39B517B4E7
-	for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 11:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74B0317C9E7
+	for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 12:37:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106587; cv=none; b=YXSHoyqTYJNi90zY1Yn8xmxmpj5F47W/+AlPwfIVc0931OPW6olpwZHSE7OhN9RSXMdB8yER7Xmlva9JWEeqG4iy5UB1r9zv2nPtpSvGd5Xu9wMy45KfxgrILlISFXQkcQrxZZVnPyY4Ep24m/ZBpDPkq6jgzm+n4tXlWmA7R1c=
+	t=1718109427; cv=none; b=E+TjinHOQluJJHWMH5Ib3TibZeoj3t02YuqPsLokVv91EI2pxCjcq2JikR07OiY16uZPpWgNTPjtCPpHRc4w2Qxqqil+Us0sRtfRqFDzDIcyUpZrK9mLBFWseT16ZlQxfqd/XZ+JVGJej63FlOnOh6he2yu+6zHRIq+3CGiiwaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106587; c=relaxed/simple;
-	bh=n10iwKfxRCvi76p1Tj2T6pOSgIaURlmFqBmXQXkUkcA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dhBtC+hAawooD0vC326NmD5iFeqyaC9uiGOKHBBUBXcWsFrzi7b8crHO7o0EUN71gaCK+7Gt4AKcA4tZ/OUONzoTfdpzlzM1JAh4kzxB3Z2wO4LxpY4e0lh5mG7VmmaU3f4mdutwyKrhNNiAh9dPAHJTbd3IquMUNReEDQVACt0=
+	s=arc-20240116; t=1718109427; c=relaxed/simple;
+	bh=W3niG9pveGQkC1wI+QYJLAZEL6kdE6v7StUuiuMY8hI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d6ElNzb6bJvi7GLf88atwRvRPaC1IIUSBOZcqm53DInBK5cGP1392U1t89qL2+bTmMdoLkN54Mk4NzzZO26lLY72cKstxuXTa7TAC0SZOzWhDx1TauRma/e9FXyyelQH9FdjpmRjzLWgx4NVNBj4bJYui5tVQyiMvt7lWx54/Us=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxvOrXOWhmZ6YFAA--.22999S3;
-	Tue, 11 Jun 2024 19:49:43 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjsfTOWhmnfcbAA--.2891S3;
-	Tue, 11 Jun 2024 19:49:42 +0800 (CST)
-From: Hui Li <lihui@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: [PATCH v2 1/3] LoongArch: ptrace: Fix watchpoint setting error
-Date: Tue, 11 Jun 2024 19:49:37 +0800
-Message-Id: <20240611114939.23586-2-lihui@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240611114939.23586-1-lihui@loongson.cn>
-References: <20240611114939.23586-1-lihui@loongson.cn>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxnOroRGhmQqkFAA--.23011S3;
+	Tue, 11 Jun 2024 20:36:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTcfoRGhmmgEcAA--.3657S2;
+	Tue, 11 Jun 2024 20:36:56 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: Implement feature passing from user space
+Date: Tue, 11 Jun 2024 20:36:55 +0800
+Message-Id: <20240611123655.4169939-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,208 +35,166 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxjsfTOWhmnfcbAA--.2891S3
-X-CM-SenderInfo: 5olk3xo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WrWUuw1kGw18Cw4UXFWxZrc_yoW7uF1xpr
-	y7ur95trWUGw17Ganxtws8uw45Ga9rurW2vFy5t3yakr98WryfWw1Fkr9rXFWYk348G34F
-	va4Fg3Wa9a1UCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jYSoJUUUUU=
+X-CM-TRANSID:AQAAf8AxTcfoRGhmmgEcAA--.3657S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-In the current code, when debugging the following code using gdb,
-"invalid argument ..." message will be displayed.
+Currently features defined in cpucfg CPUCFG_KVM_FEATURE come from
+kvm kernel mode only. However KVM is not aware of user-space VMM
+features which makes it hard to employ optimizations. Here interface
+is added to update register CPUCFG_KVM_FEATURE from user space,
+only bit 24 - 31 is valid, so that VM can detect features implemented
+in user-space VMM.
 
-lihui@bogon:~$ cat test.c
-  #include <stdio.h>
-  int a = 0;
-  int main()
-  {
-	a = 1;
-	return 0;
-  }
-lihui@bogon:~$ gcc -g test.c -o test
-lihui@bogon:~$ gdb test
-...
-(gdb) watch a
-Hardware watchpoint 1: a
-(gdb) r
-...
-Invalid argument setting hardware debug registers
+A new feature bit KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added which
+can be set from user space. This feature indicates that the virt EXTIOI
+can route interrupts to 256 vCPUs, rather than 4 vCPUs like with real HW.
 
-It mainly includes the two types of issues.
-
-1. Some incorrect judgment condition existed in user_watch_state
-   argument parsing, causing -EINVAL to be returned.
-
-When setting up a watchpoint, gdb uses the ptrace interface,
-ptrace(PTRACE_SETREGSET, tid, NT_LOONGARCH_HW_WATCH, (void *) &iov)).
-Register values in user_watch_state as follows:
-
-  addr[0] = 0x0, mask[0] = 0x0, ctrl[0] = 0x0
-  addr[1] = 0x0, mask[1] = 0x0, ctrl[1] = 0x0
-  addr[2] = 0x0, mask[2] = 0x0, ctrl[2] = 0x0
-  addr[3] = 0x0, mask[3] = 0x0, ctrl[3] = 0x0
-  addr[4] = 0x0, mask[4] = 0x0, ctrl[4] = 0x0
-  addr[5] = 0x0, mask[5] = 0x0, ctrl[5] = 0x0
-  addr[6] = 0x0, mask[6] = 0x0, ctrl[6] = 0x0
-  addr[7] = 0x12000803c, mask[7] = 0x0, ctrl[7] = 0x610
-
-In arch_bp_generic_fields(), return -EINVAL when ctrl.len is
-LOONGARCH_BREAKPOINT_LEN_8(0b00). Delete incorrect judgment here.
-
-In ptrace_hbp_fill_attr_ctrl(), when note_type is NT_LOONGARCH_HW_WATCH
-and ctrl[0] == 0x0, if ((type & HW_BREAKPOINT_RW) != type) will return
--EINVAL. Here, ctrl.type should be set based on note_type, and unnecessary
-judgments can be removed.
-
-2. The watchpoint argument was not set correctly due to unnecessary
-   offset and alignment_mask.
-
-Modify ptrace_hbp_fill_attr_ctrl() and hw_breakpoint_arch_parse(). Ensure
-the watchpont argument is set correctly.
-
-All changes according to the LoongArch Reference Manual:
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
-
-Signed-off-by: Hui Li <lihui@loongson.cn>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/hw_breakpoint.h |  2 +-
- arch/loongarch/kernel/hw_breakpoint.c      | 20 ++++----------
- arch/loongarch/kernel/ptrace.c             | 32 ++++++++++------------
- 3 files changed, 21 insertions(+), 33 deletions(-)
+v1 ... v2:
+  1. Update changelog suggested by WangXuerui.
+  2. Fix typo issue in function kvm_loongarch_cpucfg_set_attr(), usr_features
+should be assigned directly, also suggested by WangXueRui.
+---
+ arch/loongarch/include/asm/kvm_host.h  |  4 +++
+ arch/loongarch/include/asm/loongarch.h |  5 ++++
+ arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
+ arch/loongarch/kvm/exit.c              |  1 +
+ arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
+ 5 files changed, 44 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/include/asm/hw_breakpoint.h
-index 21447fb1efc7..a8ce580f4fc6 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -101,7 +101,7 @@ struct perf_event;
- struct perf_event_attr;
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 88023ab59486..8fa50d757247 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -135,6 +135,9 @@ enum emulation_result {
+ #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+ #define KVM_LARCH_LBT		(0x1 << 5)
  
- extern int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
--				  int *gen_len, int *gen_type, int *offset);
-+				  int *gen_len, int *gen_type);
- extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
- extern int hw_breakpoint_arch_parse(struct perf_event *bp,
- 				    const struct perf_event_attr *attr,
-diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
-index fc55c4de2a11..2d311aff91af 100644
---- a/arch/loongarch/kernel/hw_breakpoint.c
-+++ b/arch/loongarch/kernel/hw_breakpoint.c
-@@ -283,7 +283,7 @@ int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw)
-  * to generic breakpoint descriptions.
-  */
- int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
--			   int *gen_len, int *gen_type, int *offset)
-+			   int *gen_len, int *gen_type)
- {
- 	/* Type */
- 	switch (ctrl.type) {
-@@ -303,11 +303,6 @@ int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
- 		return -EINVAL;
- 	}
- 
--	if (!ctrl.len)
--		return -EINVAL;
--
--	*offset = __ffs(ctrl.len);
--
- 	/* Len */
- 	switch (ctrl.len) {
- 	case LOONGARCH_BREAKPOINT_LEN_1:
-@@ -386,22 +381,17 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 			     struct arch_hw_breakpoint *hw)
- {
- 	int ret;
--	u64 alignment_mask, offset;
-+	u64 alignment_mask;
- 
- 	/* Build the arch_hw_breakpoint. */
- 	ret = arch_build_bp_info(bp, attr, hw);
- 	if (ret)
- 		return ret;
- 
--	if (hw->ctrl.type != LOONGARCH_BREAKPOINT_EXECUTE)
--		alignment_mask = 0x7;
--	else
-+	if (hw->ctrl.type == LOONGARCH_BREAKPOINT_EXECUTE) {
- 		alignment_mask = 0x3;
--	offset = hw->address & alignment_mask;
--
--	hw->address &= ~alignment_mask;
--	hw->ctrl.len <<= offset;
--
-+		hw->address &= ~alignment_mask;
-+	}
- 	return 0;
- }
- 
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index c114c5ef1332..16b756c6049b 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -494,28 +494,14 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
- 				     struct arch_hw_breakpoint_ctrl ctrl,
- 				     struct perf_event_attr *attr)
- {
--	int err, len, type, offset;
-+	int err, len, type;
- 
--	err = arch_bp_generic_fields(ctrl, &len, &type, &offset);
-+	err = arch_bp_generic_fields(ctrl, &len, &type);
- 	if (err)
- 		return err;
- 
--	switch (note_type) {
--	case NT_LOONGARCH_HW_BREAK:
--		if ((type & HW_BREAKPOINT_X) != type)
--			return -EINVAL;
--		break;
--	case NT_LOONGARCH_HW_WATCH:
--		if ((type & HW_BREAKPOINT_RW) != type)
--			return -EINVAL;
--		break;
--	default:
--		return -EINVAL;
--	}
--
- 	attr->bp_len	= len;
- 	attr->bp_type	= type;
--	attr->bp_addr	+= offset;
- 
- 	return 0;
- }
-@@ -609,7 +595,19 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type,
- 		return PTR_ERR(bp);
- 
- 	attr = bp->attr;
--	decode_ctrl_reg(uctrl, &ctrl);
++#define KVM_LOONGARCH_USR_FEAT_MASK			\
++	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
 +
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		ctrl.type = LOONGARCH_BREAKPOINT_EXECUTE;
-+		ctrl.len = LOONGARCH_BREAKPOINT_LEN_4;
+ struct kvm_vcpu_arch {
+ 	/*
+ 	 * Switch pointer-to-function type to unsigned long
+@@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		struct gfn_to_hva_cache cache;
+ 	} st;
++	unsigned int usr_features;
+ };
+ 
+ static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 7a4633ef284b..4d9837512c19 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -167,9 +167,14 @@
+ 
+ #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
+ #define  KVM_SIGNATURE			"KVM\0"
++/*
++ * BIT 24 - 31 is features configurable by user space vmm
++ */
+ #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+ #define  KVM_FEATURE_IPI		BIT(1)
+ #define  KVM_FEATURE_STEAL_TIME		BIT(2)
++/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
++#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
+ 
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index ed12e509815c..dd141259de48 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -99,6 +99,8 @@ struct kvm_fpu {
+ 
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
++/* For CPUCFG_KVM_FEATURE register */
++#define  KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI	24
+ #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
+ #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
+ 
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index e1bd81d27fd8..ab2dcc76784a 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -53,6 +53,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+ 		ret = KVM_FEATURE_IPI;
+ 		if (sched_info_on())
+ 			ret |= KVM_FEATURE_STEAL_TIME;
++		ret |= vcpu->arch.usr_features;
+ 		vcpu->arch.gprs[rd] = ret;
+ 		break;
+ 	default:
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 3783151fde32..4a06a9e96e4e 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -832,6 +832,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+ 	switch (attr->attr) {
+ 	case 2:
+ 		return 0;
++	case CPUCFG_KVM_FEATURE:
++		return 0;
+ 	default:
+ 		return -ENXIO;
+ 	}
+@@ -865,9 +867,18 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+ 	uint64_t val;
+ 	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+ 
+-	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+-	if (ret)
+-		return ret;
++	switch (attr->attr) {
++	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
++		ret = _kvm_get_cpucfg_mask(attr->attr, &val);
++		if (ret)
++			return ret;
 +		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		decode_ctrl_reg(uctrl, &ctrl);
++	case CPUCFG_KVM_FEATURE:
++		val = vcpu->arch.usr_features & KVM_LOONGARCH_USR_FEAT_MASK;
 +		break;
 +	default:
-+		return -EINVAL;
++		return -ENXIO;
 +	}
+ 
+ 	put_user(val, uaddr);
+ 
+@@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+ 					 struct kvm_device_attr *attr)
+ {
+-	return -ENXIO;
++	u64 __user *user = (u64 __user *)attr->addr;
++	u64 val, valid_flags;
 +
- 	err = ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr);
- 	if (err)
- 		return err;
++	switch (attr->attr) {
++	case CPUCFG_KVM_FEATURE:
++		if (get_user(val, user))
++			return -EFAULT;
++
++		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
++		if (val & ~valid_flags)
++			return -EINVAL;
++
++		vcpu->arch.usr_features = val;
++		return 0;
++
++	default:
++		return -ENXIO;
++	}
+ }
+ 
+ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+
+base-commit: 2df0193e62cf887f373995fb8a91068562784adc
 -- 
-2.38.1
+2.39.3
 
