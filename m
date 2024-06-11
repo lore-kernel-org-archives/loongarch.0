@@ -1,97 +1,103 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F022AE8C
-	for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 03:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1FA174EEB;
+	Tue, 11 Jun 2024 08:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718077575; cv=none; b=KKyV2HXDBacRPuLlFcYwNgX/ia8eYG98WkC+dJVfF27PcVbjjmNo8cgHMuKGDCsZ/rxEdVZ9cLnAe9jj+aIP05xfJ6tyq6/qoAGj6atbOez8UTi2ijRIRuE5kAzcf8wMBcwtsnkuXi455L71gYAWbe87OBXAPgi8n/ZC8xikeCo=
+	t=1718095831; cv=none; b=hftt5o8OoXxG0wRv+b4a2GsF8RMjDSgffuOyscDRNOrUGtLBm30S80K26QiLZjxKcIFTcOCs5+tuRWvRFCmxpMfJlmcmteY0noWb82bpOg05qAMzhGe/VdV2tLS3IyS89CPmOUmsHeS0+yZWNbmevkns0tPIVXlSjYFrhW1osz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718077575; c=relaxed/simple;
-	bh=0BH+fAS9ZOA6hr0JSTRf8Cs4cB23bbOhM+PVeB1ZOAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rVWo3yoCfmMuXKCRQhJG8Bm4X/1I+oZ2ibyTLqAe6GP0IOwFmBvjIpRuG4mClJqCJQQhuqLvoGnPqmTFcazqMK+8oB6QisMps4coGHDxNqNsJBeMc7lM8xj7EXDF0mSioGuYJHZJcsgH6Z6faKugv/dTAmGD0/2jOS3pZkrPdBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Ax3eqCyGdmwI0FAA--.22744S3;
-	Tue, 11 Jun 2024 11:46:10 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBMWCyGdme5sbAA--.57783S2;
-	Tue, 11 Jun 2024 11:46:10 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Mark page accessed and dirty with mmu_lock
-Date: Tue, 11 Jun 2024 11:46:09 +0800
-Message-Id: <20240611034609.3442344-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1718095831; c=relaxed/simple;
+	bh=Tz0c5VcTfHJlV2uX+Q+nERoAMIrZpPDtHjcTjqCCVNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQRRWfFz6L6s0kLyXKc9BmOMdc47vbR+qybGa8fJTsQbdvLRzy7RxSXmVwswpODEt94iXHqHqRFdD2IOd+00usbny3R70LO5Gflv8ldR2vzTLN5QMj63v563YOSiO3dlfi8CdqENGjh0e5ir2xN/b8/j24WvDh7M6brRmsT2CLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sGxBT-0000Ne-00; Tue, 11 Jun 2024 10:48:51 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 023C9C0120; Tue, 11 Jun 2024 10:41:16 +0200 (CEST)
+Date: Tue, 11 Jun 2024 10:41:16 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Celeste Liu <coelacanthushex@gmail.com>
+Cc: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+	Anup Patel <anup@brainfault.org>, Guo Ren <guoren@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+	Sven Joachim <svenjoac@gmx.de>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mykola Lysenko <mykolal@fb.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-tegra@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lennart Poettering <lennart@poettering.net>,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: Re: [PATCH 3/6] mips: defconfig: drop RT_GROUP_SCHED=y from
+ generic/db1xxx/eyeq5
+Message-ID: <ZmgNrOr1nalSTeja@alpha.franken.de>
+References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
+ <20240530111947.549474-11-CoelacanthusHex@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxBMWCyGdme5sbAA--.57783S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240530111947.549474-11-CoelacanthusHex@gmail.com>
 
-Function kvm_set_pfn_accessed() is somewhat complicated, originally
-we want to reduce coverity range of mmu_lock, so move function
-kvm_set_pfn_accessed() and kvm_set_pfn_dirty() out of mmu_lock.
+On Thu, May 30, 2024 at 07:19:51PM +0800, Celeste Liu wrote:
+> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+> needs an RT budget assigned, otherwise the processes in it will not be able to
+> get RT at all. The problem with RT group scheduling is that it requires the
+> budget assigned but there's no way we could assign a default budget, since the
+> values to assign are both upper and lower time limits, are absolute, and need to
+> be sum up to < 1 for each individal cgroup. That means we cannot really come up
+> with values that would work by default in the general case.[1]
+> 
+> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
+> can only be enabled when all RT processes are in the root cgroup. But it will
+> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
+> 
+> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
+> support it.[2]
+> 
+> [1]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
+> [2]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
+> 
+> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+> ---
+>  arch/mips/configs/db1xxx_defconfig  | 1 -
+>  arch/mips/configs/eyeq5_defconfig   | 1 -
+>  arch/mips/configs/generic_defconfig | 1 -
+>  3 files changed, 3 deletions(-)
 
-However with migration test where vm has some workload, there is no
-response when VM finishes migration. When mmu_lock is released, pfn page
-may be replaced with other pages, it is unreasonable to set old replaced
-pfn page with accessed or dirty.
+applied to mips-next.
 
-Here move function kvm_set_pfn_accessed() and kvm_set_pfn_dirty() with
-mmu_lock held, VM works after many times of migrations.
+Thomas.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/mmu.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
-
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index ec8c43aad724..91998e95db87 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -591,21 +591,14 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
- 	if (changed) {
- 		kvm_set_pte(ptep, new);
- 		pfn = kvm_pte_pfn(new);
--	}
--	spin_unlock(&kvm->mmu_lock);
--
--	/*
--	 * Fixme: pfn may be freed after mmu_lock
--	 * kvm_try_get_pfn(pfn)/kvm_release_pfn pair to prevent this?
--	 */
--	if (kvm_pte_young(changed))
--		kvm_set_pfn_accessed(pfn);
-+		if (kvm_pte_young(changed))
-+			kvm_set_pfn_accessed(pfn);
- 
--	if (kvm_pte_dirty(changed)) {
--		mark_page_dirty(kvm, gfn);
--		kvm_set_pfn_dirty(pfn);
-+		if (kvm_pte_dirty(changed)) {
-+			mark_page_dirty(kvm, gfn);
-+			kvm_set_pfn_dirty(pfn);
-+		}
- 	}
--	return ret;
- out:
- 	spin_unlock(&kvm->mmu_lock);
- 	return ret;
-
-base-commit: 2df0193e62cf887f373995fb8a91068562784adc
 -- 
-2.39.3
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
