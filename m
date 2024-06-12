@@ -1,109 +1,247 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9838D17C9
-	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 01:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9C02E414
+	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 04:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155130; cv=none; b=OPoP/NoyOyksG32JsRlT9i+B0l0vDKXO63/upYHtpf/b8v4pWfZsgNX6JIAizBQ7ZqdiKByK6CEZ1hnHPvo1Bc3z5UAs/jxkVX3MyF+JMVvKkodC769PHNG7Ni3qJ8hb1+ydmnA2m7IUJEj/RoRUSaUMlpCINolRfavfb5FJ0JE=
+	t=1718167149; cv=none; b=WwTkhTDQ2rSWww/5GTqf6lr0aPscONLBkifSefi+5r2VsOS83NV6uy6HhZvaVBCjZP/8Uqs6SaLEYMIqY9WLLb1xtbleeVwR2OUKFLrj/2pcXZ3ppzayEw/cXGePiZ8MCJUnmIFFVPpDPGZ48zCWEV7WQI6YULRuq1C/N4SWHJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718155130; c=relaxed/simple;
-	bh=NRQ5vxw0MkZ7yLnvDJPYGw9jB/h83t9zD3AKH0/y8IA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HGlxpZu1wyDWF+s9r6dljviYOp0E85+3O5HYQaMXZFRZdPAuqorO2KjkEYkiKOM3ONkAVcsCrUehIQ2KjWb2Y72s3rSm+sxC+bDc6v+wMfHeNENjeLRu65W+HuTueoV7cYG2t8hbRlFvrKV7gzsLXNQyomUSDOy32Rd9MEgwKPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m/Zqi2+k; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718167149; c=relaxed/simple;
+	bh=QBnNWQoBfhrqdIiv9FnohE3ypcjo8iq9gggp690uSNs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U8V/WKbeq9mSjxnPfbhs80U29DfeTRlcUaYJYI+LpcvW25mKL1H8HzDyC41+OR7PriZR309szNw+OpLZ7wPPNuwFrk6/2YwXhiTBj9RsbyeLETJieykca8zikaVBBgxZ2HVh1KuEnPKzCfYmrqMrcFMcmEE6aOTAKcmvNBplxbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naSsGulj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m/Zqi2+k"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1f6810e43e0so3092805ad.0
-        for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 18:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718155128; x=1718759928; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gH/VrRThVAqNqdnAJ8qqfFFTLj74e8FaAJgriK6mdbo=;
-        b=m/Zqi2+k7bLHuSlQ32NNPNLilxaves0nt2M8c5YAI0k15st7SzrQ2CukHedQvzsATE
-         rE0P54E8k43sHSaD2vvvnfYo/DfDdAUL4Mps6m5t9SknqNEY5HW/HH3VYCfuoG4wTaAx
-         f/XARRU2O2kUoBtLoGOjBPm9J5AnZwCut9DU//67DF1wC9/JU4a/6UIQb0VppUP0TAhF
-         UzTOqxmVQYF3fq6CsBJHUayTWk5RFGCX6cXlggWQLK4WmT5DSNhuHD3hdMd9cUCyYOze
-         XgjluVSrjavccHYBYQC1fn17sklyMhk7tYOlcmDj458/x/tY57HeD0haF3/Fm4sddYXx
-         zuCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718155128; x=1718759928;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gH/VrRThVAqNqdnAJ8qqfFFTLj74e8FaAJgriK6mdbo=;
-        b=FKbvWvuF3zZ37Mzdyso+FE3CsEa/OERl1VqiccX3BL9J8//R69kbPkVc7e9sx/vzW2
-         qvhibUrk19/Fy9f7/6gW7kHjGPq2nzd/kO/ab0Yb01sIRT3vzFTVwIdzcuVTp7TUJss2
-         oJZWdbcR4omKypL38kr12+8U2Ai5Jpp4nJ64RTEJoq1D0ayS0igb/cGYwF2jupbAOv5T
-         1Cumlh2SQTY8KqvaEjDFGGxm3L+UADN/wu07OyLUuSrz4yfhoh4+bIbxcXFXLzn5ksnL
-         DnAulVZPYkZvxrYNrbSZWfaBuLtdYDcnevAqLc3IWesIImY5aJmLO/fcRX0OomU8LoxI
-         tkSw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+8V1Upq6/uCXmGL/5R+JCs5LTv5T9sp1KU2Ytj2BEqLlOLBajm60ZdGWVOxfEIeQLlugh2nGXSAB8Km+OwzC5edRRsnAwCK3H
-X-Gm-Message-State: AOJu0YyIq1ZhSYmggOiX92y7X2ZWLfwlNc+pyQFKa/UcJTV2PwcHLAdx
-	HRCot51pvzRm+obpGkTlzS0KnQ9X56TWNCIJ81cghoiQEAAzeA05xvi7/xgHYsixCHqHIbFPCqg
-	DGw==
-X-Google-Smtp-Source: AGHT+IFA7Nf2gM73IakGhMLgjpKn7tnJ0y7JJoAyUgWaeTxteQw7ecnDkGCPi06xyYh6rqY8tUOLbz5+Rl4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:ce82:b0:1f7:516:4235 with SMTP id
- d9443c01a7336-1f83b1af087mr431195ad.6.1718155127840; Tue, 11 Jun 2024
- 18:18:47 -0700 (PDT)
-Date: Tue, 11 Jun 2024 18:18:27 -0700
-In-Reply-To: <20240522014013.1672962-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naSsGulj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A47C4AF48
+	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 04:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718167149;
+	bh=QBnNWQoBfhrqdIiv9FnohE3ypcjo8iq9gggp690uSNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=naSsGuljjfpSCpKFkDuJQ7Lpk3PSFt0GtJUUPFWSw6/P0g22ts0wu6kZHPnZI+cgo
+	 AcTS/ItBrZBH+O7Wo5qCIzZBYDNhEd2Tk8nFcXt7XDAsZorIAIWm/Sq84pCX9AC3LJ
+	 s6pSIqLbp+6sDJQuOhzrnbAWyzucj/+PQN2IQCOx8Y3wn1cmxG/9AoTeY20pSSWEG3
+	 YIqy2FL5ZT2xMuXQiP5qaSPEDIOG117Znj62tRogBQu4Z+gDWwPBN6CfPvs8CCPGu5
+	 vZ8TWcADAV1lrqQZ1DtJxTQj9VIzwmsuP+uX/9mnGOMuB3JJR6nKfwwbL4hd7rkLEA
+	 oX4k/GZoIgyxg==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6269885572so84599366b.1
+        for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 21:39:08 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyF9LVzC20Efbh5sh8bl0HpLC2QBnfRH1XbpRsY4Y/dy5w8C5CC
+	zO0wnehJIYSvDW1PMn7alPG8ZMTqM7hX+gljffSNWUmC1GTQYLTq8DDH1gv4vfQdgxgTMpql3EQ
+	NwAYpNpVBkHHvFmi8Jw9gE4ZvC6Y=
+X-Google-Smtp-Source: AGHT+IFahumydduoPyO1r4l4bIXaV6Dxwli4/NC3ifDbHfZortWfdLVzpkQtkwOHHi2dzUBs3L7z8ll8C1+IflE7vis=
+X-Received: by 2002:a17:906:cc82:b0:a6f:11f8:c220 with SMTP id
+ a640c23a62f3a-a6f4680068cmr49889666b.15.1718167147439; Tue, 11 Jun 2024
+ 21:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240522014013.1672962-1-seanjc@google.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <171813751765.307375.7908491276602596005.b4-ty@google.com>
-Subject: Re: [PATCH v2 0/6] KVM: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240611114939.23586-1-lihui@loongson.cn> <20240611114939.23586-3-lihui@loongson.cn>
+In-Reply-To: <20240611114939.23586-3-lihui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 12 Jun 2024 12:38:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6XxYmrJZ-hxJqdj5H547nOoV1VgUhqCRMdrM5h-ZPGtQ@mail.gmail.com>
+Message-ID: <CAAhV-H6XxYmrJZ-hxJqdj5H547nOoV1VgUhqCRMdrM5h-ZPGtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] LoongArch: Trigger user-space watchpoints correctly
+To: Hui Li <lihui@loongson.cn>
+Cc: loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn, 
+	Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 May 2024 18:40:07 -0700, Sean Christopherson wrote:
-> Drop kvm_arch_sched_in() and instead add and use kvm_vcpu.scheduled_out
-> to communicate to kvm_arch_vcpu_load() that the vCPU is being scheduling
-> back in.
-> 
-> While fiddling with an idea for optimizing state management on AMD CPUs,
-> I wanted to skip re-saving certain host state when a vCPU is scheduled back
-> in, as the state (theoretically) shouldn't change for the task while it's
-> scheduled out.  Actually doing that was annoying and unnecessarily brittle
-> due to having a separate API for the kvm_sched_in() case (the state save
-> needed to be in kvm_arch_vcpu_load() for the common path).
-> 
-> [...]
+Hi, Hui,
 
-Applied to kvm-x86 generic, thanks!
 
-[1/6] KVM: Add a flag to track if a loaded vCPU is scheduled out
-      https://github.com/kvm-x86/linux/commit/d1ae567fb8b5
-[2/6] KVM: VMX: Move PLE grow/shrink helpers above vmx_vcpu_load()
-      https://github.com/kvm-x86/linux/commit/5d9c07febb86
-[3/6] KVM: x86: Fold kvm_arch_sched_in() into kvm_arch_vcpu_load()
-      https://github.com/kvm-x86/linux/commit/8fbb696a8f53
-[4/6] KVM: Delete the now unused kvm_arch_sched_in()
-      https://github.com/kvm-x86/linux/commit/2a27c4314007
-[5/6] KVM: x86: Unconditionally set l1tf_flush_l1d during vCPU load
-      https://github.com/kvm-x86/linux/commit/ef2e18ef3750
-[6/6] KVM: x86: Drop now-superflous setting of l1tf_flush_l1d in vcpu_run()
-      https://github.com/kvm-x86/linux/commit/3dee3b187499
+On Tue, Jun 11, 2024 at 7:49=E2=80=AFPM Hui Li <lihui@loongson.cn> wrote:
+>
+> In the current code, gdb can set the watchpoint successfully through
+> ptrace interface, but watchpoint will not be triggered.
+>
+> When debugging the following code using gdb.
+>
+> lihui@bogon:~$ cat test.c
+>   #include <stdio.h>
+>   int a =3D 0;
+>   int main()
+>   {
+>         a =3D 1;
+>         printf("a =3D %d\n", a);
+>         return 0;
+>   }
+> lihui@bogon:~$ gcc -g test.c -o test
+> lihui@bogon:~$ gdb test
+> ...
+> (gdb) watch a
+> ...
+> (gdb) r
+> ...
+> a =3D 1
+> [Inferior 1 (process 4650) exited normally]
+>
+> No watchpoints were triggered, the root causes are:
+>
+> 1. The kernel uses perf_event and hw_breakpoint framework to control
+>    watchpoint. But the perf_event corresponding to watchpoint is not
+>    enabled, so it needs to be enabled according to MWPnCFG3.PLV3. And
+>    a judgment is added in ptrace_hbp_set_addr() to ensure that kernel
+>    space cannot be monitored in user mode.
+>
+> 2. The global enable control for all watchpoints is the WE bit of
+>    CSR.CRMD, and hardware sets the value to 0 when an exception is
+>    triggered. When the ERTN instruction is executed to return, the
+>    hardware restores the value of the PWE field of CSR.PRMD here.
+>    So, before a thread containing watchpoints be scheduled, the PWE
+>    field of CSR.PRMD needs to be set to 1. Add this modification in
+>    hw_breakpoint_control().
+>
+> All changes according to the LoongArch Reference Manual:
+> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html=
+#control-and-status-registers-related-to-watchpoints
+> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html=
+#basic-control-and-status-registers
+>
+> with this patch:
+>
+> lihui@bogon:~$ gdb test
+> ...
+> (gdb) watch a
+> Hardware watchpoint 1: a
+> (gdb) r
+> ...
+> Hardware watchpoint 1: a
+>
+> Old value =3D 0
+> New value =3D 1
+> main () at test.c:6
+> 6               printf("a =3D %d\n", a);
+> (gdb) c
+> Continuing.
+> a =3D 1
+> [Inferior 1 (process 775) exited normally]
+>
+> Signed-off-by: Hui Li <lihui@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/hw_breakpoint.h |  1 +
+>  arch/loongarch/kernel/hw_breakpoint.c      |  9 +++++++++
+>  arch/loongarch/kernel/ptrace.c             | 16 +++++++++++++---
+>  3 files changed, 23 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/=
+include/asm/hw_breakpoint.h
+> index a8ce580f4fc6..16016e4384d8 100644
+> --- a/arch/loongarch/include/asm/hw_breakpoint.h
+> +++ b/arch/loongarch/include/asm/hw_breakpoint.h
+> @@ -75,6 +75,7 @@ do {                                                   =
+       \
+>  #define CSR_MWPC_NUM           0x3f
+>
+>  #define CTRL_PLV_ENABLE                0x1e
+> +#define CTRL_PLV3_ENABLE       0x10
+>
+>  #define MWPnCFG3_LoadEn                8
+>  #define MWPnCFG3_StoreEn       9
+> diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kerne=
+l/hw_breakpoint.c
+> index 2d311aff91af..f9e8ed49cfdc 100644
+> --- a/arch/loongarch/kernel/hw_breakpoint.c
+> +++ b/arch/loongarch/kernel/hw_breakpoint.c
+> @@ -178,6 +178,11 @@ static int hw_breakpoint_control(struct perf_event *=
+bp,
+>         int i, max_slots, enable;
+>         struct perf_event **slots;
+>         struct arch_hw_breakpoint *info =3D counter_arch_bp(bp);
+> +       struct pt_regs *regs;
+> +
+> +       /*  Whether bp belongs to a task. */
+> +       if (bp->hw.target)
+> +               regs =3D task_pt_regs(bp->hw.target);
+>
+>         if (info->ctrl.type =3D=3D LOONGARCH_BREAKPOINT_EXECUTE) {
+>                 /* Breakpoint */
+> @@ -211,6 +216,8 @@ static int hw_breakpoint_control(struct perf_event *b=
+p,
+>                 }
+>                 enable =3D csr_read64(LOONGARCH_CSR_CRMD);
+>                 csr_write64(CSR_CRMD_WE | enable, LOONGARCH_CSR_CRMD);
+> +               if (bp->hw.target)
+> +                       regs->csr_prmd |=3D CSR_PRMD_PWE;
+>                 break;
+>         case HW_BREAKPOINT_UNINSTALL:
+>                 /* Reset the FWPnCFG/MWPnCFG 1~4 register. */
+> @@ -222,6 +229,8 @@ static int hw_breakpoint_control(struct perf_event *b=
+p,
+>                 write_wb_reg(CSR_CFG_CTRL, i, 1, 0);
+>                 write_wb_reg(CSR_CFG_ASID, i, 0, 0);
+>                 write_wb_reg(CSR_CFG_ASID, i, 1, 0);
+> +               if (bp->hw.target)
+> +                       regs->csr_prmd &=3D ~CSR_PRMD_PWE;
+>                 break;
+>         }
+>
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrac=
+e.c
+> index 16b756c6049b..4566059bd0a2 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -589,6 +589,7 @@ static int ptrace_hbp_set_ctrl(unsigned int note_type=
+,
+>         struct perf_event *bp;
+>         struct perf_event_attr attr;
+>         struct arch_hw_breakpoint_ctrl ctrl;
+> +       int hbp_enable =3D uctrl & CTRL_PLV_ENABLE;
+>
+>         bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+>         if (IS_ERR(bp))
+> @@ -608,9 +609,14 @@ static int ptrace_hbp_set_ctrl(unsigned int note_typ=
+e,
+>                 return -EINVAL;
+>         }
+>
+> -       err =3D ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr);
+> -       if (err)
+> -               return err;
+> +       if (hbp_enable =3D=3D CTRL_PLV3_ENABLE) {
+After some thinking, It seems reasonable to set a user address be
+watched at any PLVs (but of course user programs cannot watch a kernel
+address), so the best condition here may be:
+if (hbp_enable & CTRL_PLV_ENABLE)
 
---
-https://github.com/kvm-x86/linux/tree/next
+And  in Patch-3, we should set the same PLVs exactly the same as user reque=
+sts.
+
+> +               err =3D ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr)=
+;
+> +               if (err)
+> +                       return err;
+> +               attr.disabled =3D 0;
+> +       } else {
+> +               attr.disabled =3D 1;
+> +       }
+>
+>         return modify_user_hw_breakpoint(bp, &attr);
+>  }
+> @@ -641,6 +647,10 @@ static int ptrace_hbp_set_addr(unsigned int note_typ=
+e,
+>         struct perf_event *bp;
+>         struct perf_event_attr attr;
+>
+> +       /* Kernel-space address cannot be monitored by user-space */
+> +       if ((addr & XKPRANGE) =3D=3D XKPRANGE)
+> +               return -EINVAL;
+XKVRANGE addresses are also kernel address, so here you can use:
+if ((unsigned long)addr >=3D XKPRANGE)
+
+Huacai
+
+> +
+>         bp =3D ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
+>         if (IS_ERR(bp))
+>                 return PTR_ERR(bp);
+> --
+> 2.38.1
+>
