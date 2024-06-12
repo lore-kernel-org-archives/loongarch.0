@@ -1,104 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5DA23769
-	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56E9167D8C;
+	Wed, 12 Jun 2024 06:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718167929; cv=none; b=BpQ3eU1ukxvK/D46qOGkVLfjKFpMIQYtqHk8Qa7hA/f6XnUK4HlhZMsEftFB5D5D2l5poIZRQX+Pgp+tvOOp0pY9NOL4n65eFzBsEbHumfRzJsZCRjZNGysphVwaElNKgHxjGetmsoYGS8V1tAHKoixLY1OuNMO0Mqigv4Ymjas=
+	t=1718174545; cv=none; b=S9SLLHNY9TtpoZPA1RfNoW5w4lOJl0TvnlX2nxxHhSZbl8zZ1inrra29F+YY6h4Fwtng1i3s+ja2H1q88gCGUOU/yjC3xyyiqDoW/ce2ADhkPGGGm9hDkjejKuxMN3e82WhdvxEwoOQvxBlGD1gBXbp8sr2pVFDdGoTQPzpI6y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718167929; c=relaxed/simple;
-	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bjBoLY0NUyfMrDVKwX7c2DXtw14htIl6vVw/2ob0/RhFfgS9S/zfWxcJgmoJnJtNKAZQpaM+nY/vzJ4kBpvHfSPHZnS+2+uoqxnLh9Dbxum6nDzyv/Ik6X0wtSEv8XpoCYrKqH0AgQkqHukJCmAxdCz9bYoRXizKnKl0mrX8sfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7IRrFqw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7IRrFqw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027FAC4AF1A
-	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 04:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718167929;
-	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=V7IRrFqw0vhujpKJDtVvKy/JReetTM2vUKY8lFwSBdLERP26LrljRT7sIUxnryLMS
-	 PtF5NJONsUCKOD1fAsIa07+ST83Cw1LR99MSbvtuFbPK4lBbG3JY4YqfUXxfX98CON
-	 imTXIpJEjCIu8HJXvIk7XWPm7J3oM3t9UA4aGwk132kot/ZP9XqCjmnK1nfWO7UTAI
-	 zBMozZl8qxcKbh6Sa118tdpYL4owEzcMy0wHunJIlycHt4It1q7l7VuGBSOgaNfjTa
-	 Q3jDUa4tAwbTZMI1R0cmwU0lLBqotdjxi+J8j+Qf2baFEJvhnNQi5gpLvgZhRD6Zsa
-	 2fJj7kXXsTfbQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso325621366b.3
-        for <loongarch@lists.linux.dev>; Tue, 11 Jun 2024 21:52:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVuY8vy4rDFaVA0WCGuqt+3GGllBUNlGrkeygu9C2HergxBLqXj6PVVEzv1edY1Q2kdY2d+jlTv6Jfuq436j/dOK0E1nF0E+2dO
-X-Gm-Message-State: AOJu0YwZr2s4m5dMl8RM/mc2+3h1axFIK3tP9mM8L9IUUi+r/Zm2Fz7C
-	Iy0dk+3igqHwtubr8fAUcXqIEfu3Wp9t4loejWV4Vchr4uRYfZwRS9/v2aVESePugdjotBztk2y
-	6IpQlkQODIbsImVC2H64U2SdfM8c=
-X-Google-Smtp-Source: AGHT+IHFivSjvIbnYSVPMTEzbltjhXBgE/Sw7akDiWaje007gDxL4ef1RyuKjpql8Ck29Kk5g0Vq1mt95AktB7YQxqw=
-X-Received: by 2002:a17:906:489:b0:a6e:7e1f:2eae with SMTP id
- a640c23a62f3a-a6f4800b167mr32026166b.74.1718167927547; Tue, 11 Jun 2024
- 21:52:07 -0700 (PDT)
+	s=arc-20240116; t=1718174545; c=relaxed/simple;
+	bh=RcAPvdzHOGsOEcRiAfdTxAtZg7Z6FWjeH51tsxct3yY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkxBOiMej6a3Nj1uNMymo1xxH9fky3kY1zengstKt1dSZ44yvMFkwUHWfiepkHN1YSDLz+EKnlqPFB0KMTw5Dj/0Theb4D0nulhC3v5EsDOsSpnfonpMed7QiWaF6d9NPJOUkKNFjzEX1G+PaKA7Nv6ES5goq0zW2CjaifCF2u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 268D9C32786;
+	Wed, 12 Jun 2024 06:42:22 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 0/2] LoongArch: Add Loongson-3 CPUFreq driver support
+Date: Wed, 12 Jun 2024 14:42:03 +0800
+Message-ID: <20240612064205.2041548-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 12 Jun 2024 12:51:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
-Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: use local_pci_probe when best selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Hongchen,
+This series add architectural preparation and CPUFreq driver for
+Loongson-3 (based on LoongArch).
 
-It seems you forgot to update the title which I have pointed out. :)
+Some of LoongArch processors support DVFS, their IOCSR.FEATURES has
+IOCSRF_FREQSCALE set. And they has a micro-core in the package called
+SMC (System Management Controller) to scale frequency, voltage, etc.
 
-And Bjorn,
+Huacai Chen(2):
+ LoongArch: Add architectural preparation for CPUFreq.
+ cpufreq: Add Loongson-3 CPUFreq driver support.
 
-Could you please take some time to review this patch? Thank you.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+2.27.0
 
-Huacai
-
-On Wed, Jun 5, 2024 at 3:54=E2=80=AFPM Hongchen Zhang <zhanghongchen@loongs=
-on.cn> wrote:
->
-> When the best selected CPU is offline, work_on_cpu() will stuck forever.
-> This can be happen if a node is online while all its CPUs are offline
-> (we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), Therefo=
-re,
-> in this case, we should call local_pci_probe() instead of work_on_cpu().
->
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
-> v1 -> v2 Added the method to reproduce this issue
-> ---
->  drivers/pci/pci-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17f..32a99828e6a3 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
-uct pci_dev *dev,
->                 free_cpumask_var(wq_domain_mask);
->         }
->
-> -       if (cpu < nr_cpu_ids)
-> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->                 error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
->         else
->                 error =3D local_pci_probe(&ddi);
-> --
-> 2.33.0
->
->
