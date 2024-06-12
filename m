@@ -1,35 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C049169376;
-	Wed, 12 Jun 2024 06:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD181369BF;
+	Wed, 12 Jun 2024 07:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175223; cv=none; b=cIry5AATkHW6zHvCz7kIOUH8phg2zbnRgFD41n38C9JjQEszSxMFxUo9GDqK4PXxBkv2D3QpfFFb13nTEtIgfTYMODm9Pk9K7RS7sePc7eGn1cyF8VdvYCToJSH4opF58P6eJDuEwAlSlviSQ0VtEJMdhetCCZRHlQapLQ2gvb8=
+	t=1718175683; cv=none; b=M//QqlU3NvU4RnS7gZiVYrPIhdAjjNVUYj38dTyfS6uXi+ImIahzdhP6JbO2rWv/PS1zy3fXTG0FpwlA9ELY7p2JgLLLePv1DSdhLfyQEtx95rag+HJyxrec5UX6aPR4malz8J90YAEGpHpyBjwbV/oqXx/tEBcrwSaxika/YFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175223; c=relaxed/simple;
-	bh=hiCdjT7POcrsS7iqSGVKiD1ma4BKsH9HOhCpk4IO1tM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UyYKdUTWMXOjZoMdUkZdHcdr+UKftKunmhNfpeRqZ5npU0whdE/OuhNVPsmlaxqxS04izHi+Tr/3TegfFnjc+Ger2FJHzDAHgQZqt+sAnPeYNNV3qx5yKRyGLLY8Ly4LDTkvPIJn/WwpZxIFdo1l+VkvaGBG5C6h3g7qEVMfdKY=
+	s=arc-20240116; t=1718175683; c=relaxed/simple;
+	bh=byg081w8LScES6hyDS+Ae58c0/R6FGaUJ4LIR59/D+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dxgDeNHi9JKztiGi43I9xX8IxWlT0z/QFYpn0UqJTKgvZ+t7t7FHkHSLTYUrKEZGofmT+c2x1K5jtBm2lnOXCJlBH6D5awGlINLhHcMDI+6vcgcKZnOtCma0BgCQWh3sqdYBLUnSfrvfuvqExgTHvDnYFwPJgOUIZwDnZct3m5g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38ED2C4AF51;
-	Wed, 12 Jun 2024 06:53:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5E1C3277B;
+	Wed, 12 Jun 2024 07:01:21 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
 Cc: loongarch@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Jianmin Lv <lvjianmin@loongson.cn>,
+	linux-kernel@vger.kernel.org,
 	Xuefeng Li <lixuefeng@loongson.cn>,
 	Huacai Chen <chenhuacai@gmail.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	stable@vger.kernel.org,
-	Sheng Wu <wusheng@loongson.cn>
-Subject: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
-Date: Wed, 12 Jun 2024 14:53:15 +0800
-Message-ID: <20240612065315.2048110-1-chenhuacai@loongson.cn>
+	Tianli Xiong <xiongtianli@loongson.cn>
+Subject: [PATCH] irqchip/loongson-liointc: Set different ISRs for different cores
+Date: Wed, 12 Jun 2024 15:01:06 +0800
+Message-ID: <20240612070106.2060334-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -39,41 +35,40 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-LS7A chipset can be used as a downstream bridge which connected to a
-high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as the
-upward port. We should always enable MSI caps of this port, otherwise
-downstream devices cannot use MSI.
+In the liointc hardware, there are different ISRs for different cores.
+We always use core#0's ISR before but has no problem, it is because the
+interrupts are routed to core#0 by default. If we change the routing,
+we should set correct ISRs for different cores.
 
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Sheng Wu <wusheng@loongson.cn>
+Signed-off-by: Tianli Xiong <xiongtianli@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/irqchip/irq-loongson-liointc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 8b34ccff073a..ffc581605834 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_HDMI, loongson_pci_pin_quirk);
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index e4b33aed1c97..7c4fe7ab4b83 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -28,7 +28,7 @@
  
-+static void loongson_pci_msi_quirk(struct pci_dev *dev)
-+{
-+	u16 val, class = dev->class >> 8;
-+
-+	if (class == PCI_CLASS_BRIDGE_HOST) {
-+		pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &val);
-+		val |= PCI_MSI_FLAGS_ENABLE;
-+		pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, val);
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
+ #define LIOINTC_INTC_CHIP_START	0x20
+ 
+-#define LIOINTC_REG_INTC_STATUS	(LIOINTC_INTC_CHIP_START + 0x20)
++#define LIOINTC_REG_INTC_STATUS(core)	(LIOINTC_INTC_CHIP_START + 0x20 + (core) * 8)
+ #define LIOINTC_REG_INTC_EN_STATUS	(LIOINTC_INTC_CHIP_START + 0x04)
+ #define LIOINTC_REG_INTC_ENABLE	(LIOINTC_INTC_CHIP_START + 0x08)
+ #define LIOINTC_REG_INTC_DISABLE	(LIOINTC_INTC_CHIP_START + 0x0c)
+@@ -217,7 +217,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
+ 		goto out_free_priv;
+ 
+ 	for (i = 0; i < LIOINTC_NUM_CORES; i++)
+-		priv->core_isr[i] = base + LIOINTC_REG_INTC_STATUS;
++		priv->core_isr[i] = base + LIOINTC_REG_INTC_STATUS(i);
+ 
+ 	for (i = 0; i < LIOINTC_NUM_PARENT; i++)
+ 		priv->handler[i].parent_int_map = parent_int_map[i];
 -- 
 2.43.0
 
