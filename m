@@ -1,74 +1,215 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD181369BF;
-	Wed, 12 Jun 2024 07:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0045B1FB
+	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 07:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175683; cv=none; b=M//QqlU3NvU4RnS7gZiVYrPIhdAjjNVUYj38dTyfS6uXi+ImIahzdhP6JbO2rWv/PS1zy3fXTG0FpwlA9ELY7p2JgLLLePv1DSdhLfyQEtx95rag+HJyxrec5UX6aPR4malz8J90YAEGpHpyBjwbV/oqXx/tEBcrwSaxika/YFU=
+	t=1718176590; cv=none; b=jw29j+0cQKJlJgxxVdnar0r3B8aa/V8I1DgvWFVTVYrG24VzbEVorWFiLARreLFFEa2sDQcTjHfBMvsFy35FK9pXoX9l0M0DuKHlLpbPltcwu9cpMhc2w+sTOB4jHMUH5J970RMcNMhfbl4kFSDvHb2jvJaBtiMqfUHRFAeasTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175683; c=relaxed/simple;
-	bh=byg081w8LScES6hyDS+Ae58c0/R6FGaUJ4LIR59/D+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dxgDeNHi9JKztiGi43I9xX8IxWlT0z/QFYpn0UqJTKgvZ+t7t7FHkHSLTYUrKEZGofmT+c2x1K5jtBm2lnOXCJlBH6D5awGlINLhHcMDI+6vcgcKZnOtCma0BgCQWh3sqdYBLUnSfrvfuvqExgTHvDnYFwPJgOUIZwDnZct3m5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5E1C3277B;
-	Wed, 12 Jun 2024 07:01:21 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Tianli Xiong <xiongtianli@loongson.cn>
-Subject: [PATCH] irqchip/loongson-liointc: Set different ISRs for different cores
-Date: Wed, 12 Jun 2024 15:01:06 +0800
-Message-ID: <20240612070106.2060334-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718176590; c=relaxed/simple;
+	bh=QCzJfT4L5WEPzzEaVyLWPwHcQFBrPimMK0vS8lZHEU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CCybNVJ0DQItLID7TEPf1uhbegXTq3HTJa0tfd92IRrPluz7BIzmhDLJwWtJ+sqIquypsQqemkPx1VXszFZFbO+jpsaY4CTiTMz57bQPrMG6Ut1jj+CISBhVaGULwiEgLFST1fGQt98ZMYvrn+q0g2L8G56Cf3plj03rxds7Te4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NX/WqQcs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NX/WqQcs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4C96C4AF50
+	for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 07:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718176589;
+	bh=QCzJfT4L5WEPzzEaVyLWPwHcQFBrPimMK0vS8lZHEU0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NX/WqQcsiMpcxRh22NWefcxfcyRvVmsiI/5CW05evHeQ4nhZuAEj4zWQgxzzw4ypX
+	 O97WyMfWvHuNKQ+qI4H7lVBjpx4+sh3f4hYcvCIxqVbd/kSRrcFRngSONAJmfwLN3W
+	 j8BYYKdj9RfO6x5hXg+9Q2JbZWkI2RJd/z4s0rJeosINNFSX16cVvJbpVsXp9qQLn+
+	 NEq07toZ1thpvYQ1Ckp582sCOTi/upJAJuaLEHNTzhz18ZWMh1gGL2tfhko9ypHNcW
+	 GDO4/eJsA02ce+EsVvCNsiRk88pSKlvtSsJKdjiC+Y/lRNzeFo692pc+ZonvOgouD3
+	 v32V0YOyliOnw==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6f1dc06298so235607966b.1
+        for <loongarch@lists.linux.dev>; Wed, 12 Jun 2024 00:16:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKpJ9CKCIwB09SyMvhbWqRRW8NeCMlqvMxiUMwfCr6iciHhoMWD88vVmevWxao6gBCGB/uW3HJBnunTmVLv41rCNrVtpPhTxuh
+X-Gm-Message-State: AOJu0YyAVBujp/ca/jJGsSgEhbo7+h/jZszrupTJlDbbJEEhFvB3ocsU
+	PoUYVDds2UyZXxb9i6LLPxNIici9MylAGTmaUWUnvgrO8YJdVlS/OYvaljVrDmWcstU6kVUXV6S
+	QQTw0JU+W4ePKsGypl56FWi81tyY=
+X-Google-Smtp-Source: AGHT+IF/WPIgoWfe8gKw39gmVo4YfRd0wByy17LJSyVT/aHMWfynrQAAjcIijApw1r/NwOprprwjPjlqDZfHpAhnVmo=
+X-Received: by 2002:a17:907:6d1f:b0:a6f:4971:7d0d with SMTP id
+ a640c23a62f3a-a6f49717e05mr50006166b.55.1718176588211; Wed, 12 Jun 2024
+ 00:16:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240604125015.18678-1-zhangtianyang@loongson.cn>
+In-Reply-To: <20240604125015.18678-1-zhangtianyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 12 Jun 2024 15:15:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H704OFWf87v4TaEzNDRPOXZYPMTgZnuWtvbE4CzPjYH3g@mail.gmail.com>
+Message-ID: <CAAhV-H704OFWf87v4TaEzNDRPOXZYPMTgZnuWtvbE4CzPjYH3g@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] docs: Add advanced extended IRQ model description
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn, 
+	loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the liointc hardware, there are different ISRs for different cores.
-We always use core#0's ISR before but has no problem, it is because the
-interrupts are routed to core#0 by default. If we change the routing,
-we should set correct ISRs for different cores.
+Hi, Tianyang,
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tianli Xiong <xiongtianli@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/irqchip/irq-loongson-liointc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Jun 4, 2024 at 8:50=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
+on.cn> wrote:
+>
+> From 3C6000, Loongarch began to support advanced extended
+> interrupt mode, in which each CPU has an independent interrupt
+> vector number.This will enhance the architecture's ability
+> to support modern devices
+>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+>  .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+>  2 files changed, 67 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentat=
+ion/arch/loongarch/irq-chip-model.rst
+> index 7988f4192363..4fb24077b23b 100644
+> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+> @@ -85,6 +85,39 @@ to CPUINTC directly::
+>      | Devices |
+>      +---------+
+>
+> +Advanced Extended IRQ model
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +
+> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer inter=
+rupt go
+> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts =
+go to AVEC,
+> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC a=
+nd gathered
+> +by EIOINTC, and then go to CPUINTC directly::
+> +
+> + +-----+     +--------------------------+     +-------+
+> + | IPI | --> |           CPUINTC        | <-- | Timer |
+> + +-----+     +--------------------------+     +-------+
+> +              ^        ^             ^
+> +              |        |             |
+> +      +--------+  +---------+ +---------+     +-------+
+> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+> +      +--------+  +---------+ +---------+     +-------+
+> +           ^            ^
+> +           |            |
+> +         +---------+  +---------+
+> +         |   MSI   |  | PCH-PIC |
+> +         +---------+  +---------+
+Please change MSI to PCH-MSI, because it is called pch-msi the both
+the in driver name and in other figures of this document.
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index e4b33aed1c97..7c4fe7ab4b83 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -28,7 +28,7 @@
- 
- #define LIOINTC_INTC_CHIP_START	0x20
- 
--#define LIOINTC_REG_INTC_STATUS	(LIOINTC_INTC_CHIP_START + 0x20)
-+#define LIOINTC_REG_INTC_STATUS(core)	(LIOINTC_INTC_CHIP_START + 0x20 + (core) * 8)
- #define LIOINTC_REG_INTC_EN_STATUS	(LIOINTC_INTC_CHIP_START + 0x04)
- #define LIOINTC_REG_INTC_ENABLE	(LIOINTC_INTC_CHIP_START + 0x08)
- #define LIOINTC_REG_INTC_DISABLE	(LIOINTC_INTC_CHIP_START + 0x0c)
-@@ -217,7 +217,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
- 		goto out_free_priv;
- 
- 	for (i = 0; i < LIOINTC_NUM_CORES; i++)
--		priv->core_isr[i] = base + LIOINTC_REG_INTC_STATUS;
-+		priv->core_isr[i] = base + LIOINTC_REG_INTC_STATUS(i);
- 
- 	for (i = 0; i < LIOINTC_NUM_PARENT; i++)
- 		priv->handler[i].parent_int_map = parent_int_map[i];
--- 
-2.43.0
+Huacai
 
+> +            ^          ^       ^
+> +            |          |       |
+> +    +---------+ +---------+ +---------+
+> +    | Devices | | PCH-LPC | | Devices |
+> +    +---------+ +---------+ +---------+
+> +                     ^
+> +                     |
+> +                +---------+
+> +                | Devices |
+> +                +---------+
+> +
+> +
+>  ACPI-related definitions
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-mod=
+el.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> index f1e9ab18206c..cadf38589059 100644
+> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+> @@ -9,9 +9,8 @@
+>  LoongArch=E7=9A=84IRQ=E8=8A=AF=E7=89=87=E6=A8=A1=E5=9E=8B=EF=BC=88=E5=B1=
+=82=E7=BA=A7=E5=85=B3=E7=B3=BB=EF=BC=89
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> -=E7=9B=AE=E5=89=8D=EF=BC=8C=E5=9F=BA=E4=BA=8ELoongArch=E7=9A=84=E5=A4=84=
+=E7=90=86=E5=99=A8=EF=BC=88=E5=A6=82=E9=BE=99=E8=8A=AF3A5000=EF=BC=89=E5=8F=
+=AA=E8=83=BD=E4=B8=8ELS7A=E8=8A=AF=E7=89=87=E7=BB=84=E9=85=8D=E5=90=88=E5=
+=B7=A5=E4=BD=9C=E3=80=82LoongArch=E8=AE=A1=E7=AE=97=E6=9C=BA
+> -=E4=B8=AD=E7=9A=84=E4=B8=AD=E6=96=AD=E6=8E=A7=E5=88=B6=E5=99=A8=EF=BC=88=
+=E5=8D=B3IRQ=E8=8A=AF=E7=89=87=EF=BC=89=E5=8C=85=E6=8B=ACCPUINTC=EF=BC=88CP=
+U Core Interrupt Controller=EF=BC=89=E3=80=81LIOINTC=EF=BC=88
+> -Legacy I/O Interrupt Controller=EF=BC=89=E3=80=81EIOINTC=EF=BC=88Extende=
+d I/O Interrupt Controller=EF=BC=89=E3=80=81
+> +LoongArch=E8=AE=A1=E7=AE=97=E6=9C=BA=E4=B8=AD=E7=9A=84=E4=B8=AD=E6=96=AD=
+=E6=8E=A7=E5=88=B6=E5=99=A8=EF=BC=88=E5=8D=B3IRQ=E8=8A=AF=E7=89=87=EF=BC=89=
+=E5=8C=85=E6=8B=ACCPUINTC=EF=BC=88CPU Core Interrupt Controller=EF=BC=89=E3=
+=80=81
+> +LIOINTC=EF=BC=88Legacy I/O Interrupt Controller=EF=BC=89=E3=80=81EIOINTC=
+=EF=BC=88Extended I/O Interrupt Controller=EF=BC=89=E3=80=81
+>  HTVECINTC=EF=BC=88Hyper-Transport Vector Interrupt Controller=EF=BC=89=
+=E3=80=81PCH-PIC=EF=BC=88LS7A=E8=8A=AF=E7=89=87=E7=BB=84=E7=9A=84=E4=B8=BB=
+=E4=B8=AD
+>  =E6=96=AD=E6=8E=A7=E5=88=B6=E5=99=A8=EF=BC=89=E3=80=81PCH-LPC=EF=BC=88LS=
+7A=E8=8A=AF=E7=89=87=E7=BB=84=E7=9A=84LPC=E4=B8=AD=E6=96=AD=E6=8E=A7=E5=88=
+=B6=E5=99=A8=EF=BC=89=E5=92=8CPCH-MSI=EF=BC=88MSI=E4=B8=AD=E6=96=AD=E6=8E=
+=A7=E5=88=B6=E5=99=A8=EF=BC=89=E3=80=82
+>
+> @@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI=EF=BC=8C=E7=84=B6=E5=90=8E=E8=A2=ABEIO=
+INTC=E7=BB=9F=E4=B8=80=E6=94=B6=E9=9B=86=EF=BC=8C=E5=86=8D=E7=9B=B4=E6=8E=
+=A5=E5=88=B0=E8=BE=BECPUINTC::
+>      | Devices |
+>      +---------+
+>
+> +=E9=AB=98=E7=BA=A7=E6=89=A9=E5=B1=95IRQ=E6=A8=A1=E5=9E=8B
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +=E5=9C=A8=E8=BF=99=E7=A7=8D=E6=A8=A1=E5=9E=8B=E9=87=8C=E9=9D=A2=EF=BC=8C=
+IPI=EF=BC=88Inter-Processor Interrupt=EF=BC=89=E5=92=8CCPU=E6=9C=AC=E5=9C=
+=B0=E6=97=B6=E9=92=9F=E4=B8=AD=E6=96=AD=E7=9B=B4=E6=8E=A5=E5=8F=91=E9=80=81=
+=E5=88=B0CPUINTC=EF=BC=8C
+> +CPU=E4=B8=B2=E5=8F=A3=EF=BC=88UARTs=EF=BC=89=E4=B8=AD=E6=96=AD=E5=8F=91=
+=E9=80=81=E5=88=B0LIOINTC=EF=BC=8CMSI=E4=B8=AD=E6=96=AD=E5=8F=91=E9=80=81=
+=E5=88=B0AVEC=EF=BC=8C=E8=80=8C=E5=90=8E=E9=80=9A=E8=BF=87AVEC=E9=80=81=E8=
+=BE=BECPUINTC=EF=BC=8C=E8=80=8C
+> +=E5=85=B6=E4=BB=96=E6=89=80=E6=9C=89=E8=AE=BE=E5=A4=87=E7=9A=84=E4=B8=AD=
+=E6=96=AD=E5=88=99=E5=88=86=E5=88=AB=E5=8F=91=E9=80=81=E5=88=B0=E6=89=80=E8=
+=BF=9E=E6=8E=A5=E7=9A=84PCH-PIC/PCH-LPC=EF=BC=8C=E7=84=B6=E5=90=8E=E7=94=B1=
+EIOINTC=E7=BB=9F=E4=B8=80=E6=94=B6=E9=9B=86=EF=BC=8C=E5=86=8D=E7=9B=B4
+> +=E6=8E=A5=E5=88=B0=E8=BE=BECPUINTC::
+> +
+> + +-----+     +--------------------------+     +-------+
+> + | IPI | --> |           CPUINTC        | <-- | Timer |
+> + +-----+     +--------------------------+     +-------+
+> +              ^        ^             ^
+> +              |        |             |
+> +      +--------+  +---------+ +---------+     +-------+
+> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+> +      +--------+  +---------+ +---------+     +-------+
+> +              ^        ^
+> +              |        |
+> +      +---------+  +-------------+
+> +      |   MSI   |  |   PCH-PIC   |
+> +      +---------+  +-------------+
+> +            ^          ^       ^
+> +            |          |       |
+> +    +---------+ +---------+ +---------+
+> +    | Devices | | PCH-LPC | | Devices |
+> +    +---------+ +---------+ +---------+
+> +                     ^
+> +                     |
+> +                +---------+
+> +                | Devices |
+> +                +---------+
+> +
+>  ACPI=E7=9B=B8=E5=85=B3=E7=9A=84=E5=AE=9A=E4=B9=89
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> --
+> 2.20.1
+>
