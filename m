@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B955126AE4
-	for <loongarch@lists.linux.dev>; Thu, 13 Jun 2024 08:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D91C84A2E
+	for <loongarch@lists.linux.dev>; Thu, 13 Jun 2024 08:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267832; cv=none; b=Gn26OU1DwXKrxW2he0Lm9/oxBaiz2lLvzALi/1IoF3MH7mYNfoexz+9HQD3nZEfaWOMJ3+biy0BTr1R6YomDCnia65V1eakpcux9mK3eyuJTnnC7dnI/8N87anibAmO1a37sSlkU+fNvJSEFszpi5dBWmI/fb6wplEqo1XJVi0I=
+	t=1718267850; cv=none; b=YMjgHFZumNEJy2OMG3j1uZdaUKeSPuUF5n6sfezS1cl9a0DzG683eZ2ntaZqwjHt6nWFhmeZKg2IvRWzQoDhR+I66IF1AD0P+bRbL774/T0p084zBIjJ1ha8aF1d8B54T8vhp1sIyAawGqyUhwULcZ7HIAHIHT8ARiNVdb8Xp68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267832; c=relaxed/simple;
-	bh=SaRkpFjoaclCx1YKomHNzFUcpLG013FKO00vTLvw6fg=;
+	s=arc-20240116; t=1718267850; c=relaxed/simple;
+	bh=N5aRoQ5a+tTTGwEUeHzYzKK2fG6O4xqUyQUF3EVDF0I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WQM7jLyF4D9i1vMFyTbhto6avreNoHSqt0RwAbfw/PFMi+28nuhfpD21N5JFxcIFSRXkRzoFpWAFXQlT/pn+Evh+ahD2EU3NGGXSBs2EFpEfcOD+5H+P3hm+sVCjwgrnT5JJhCS2dJmJMJFBKPluKw7evuchIvPIsKtQi5GWn4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5RZK2x2; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=utXgVXnd2YUBzUpg49xP31Jjx0q5RXKl4fVYn/goR1k5syL7yDNOrCRRRxHOkKX57Fd6LTXxHmS1HqtZ+y8ws6nyjLiveuG5WqZSsc/c40mFZHt2/ZXybQXnXvvMImLAD5GcFXe+2QtK0x9Feyf6cC7Ar0lkrBF7NI1d1WXK1GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=neI5qqYc; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5RZK2x2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="neI5qqYc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718267831; x=1749803831;
+  t=1718267850; x=1749803850;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SaRkpFjoaclCx1YKomHNzFUcpLG013FKO00vTLvw6fg=;
-  b=M5RZK2x2PRCWZ0dQyxiDvbEl2JP4acgLYoFNtcYi9xx2xhPgPqoJBQLZ
-   AZsHmCj9GBTdS6+N8V/KSGaMPIADWuWEWSW3kqElhNAWxnbuRXCxTnImy
-   gHp0qYS5lY+PuO4ZR9fDD+xti1VnepGtWO7ESHEsD6sPN56Cla9+ZIBnH
-   OSqniyFKCuWwPZK6+egyz77YKqywoHKN4pmZLP/BcP8rVJeG5tLAV7pGK
-   orbLT6kzVIvn/AGhRt8aHnWqJr1As8SEJPMCXjswp0swZW1OXTF24I2Tx
-   Um9ukHFViwOSZ5wKHzvMTm6VdQGyHYwWPxk4Zv3ABIs66X71azA471XDO
-   g==;
-X-CSE-ConnectionGUID: Zt1McZUrQ++bkjQcX+VN9Q==
-X-CSE-MsgGUID: R0gNB7xxTwCuc6Kwofs+aA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25749163"
+  bh=N5aRoQ5a+tTTGwEUeHzYzKK2fG6O4xqUyQUF3EVDF0I=;
+  b=neI5qqYcucQg+BOfZ/68MCYY3LVcFZ19iTu6lrepfmAcPC1AdC3z4qfl
+   /AoSgfj2OAvANzqV5axXZKj0BwQ6/AtyheqLGYYo9YaQQVaVYEXRkFLaX
+   QR7CnI+QYmyjwMr/yEftvzUbjl7jlJTZ+frfcaNgBJhaKQaWQzqF2sZUg
+   rSnZRmfSfhdzAO3vPNQd6PJJBu5xexpfuHbb3ROavN+twSGVIf9fiyx4R
+   J6kxZYLYqp31D3rEiBcyo7rAJAGBwlvwQII7mrqEhXHfm29XhooIhQn5V
+   luqI3SbHqA1tnaO5v+wbgHPuCvIMsZnRFZatWM8ab2l+7ZEwKATWY9sAM
+   w==;
+X-CSE-ConnectionGUID: zcIt9ZzwRm6Ngjj5yKPY1A==
+X-CSE-MsgGUID: t86tlr5NQdaxHNHzuhBb0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25749229"
 X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="25749163"
+   d="scan'208";a="25749229"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:37:10 -0700
-X-CSE-ConnectionGUID: pGAZOKfuR1K929rsczf0QA==
-X-CSE-MsgGUID: wl+rYQFQQuqkHmvs9SoygA==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:37:28 -0700
+X-CSE-ConnectionGUID: xEtIyw0CTh+EBzaSslP7dg==
+X-CSE-MsgGUID: puLY93RPS1CngwiVDwzSwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40033730"
+   d="scan'208";a="40033803"
 Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
-  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:36:59 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:37:19 -0700
 From: Haibo Xu <haibo1.xu@intel.com>
 To: sunilvl@ventanamicro.com,
 	arnd@arndb.de
@@ -61,26 +61,25 @@ Cc: xiaobo55x@gmail.com,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Conor Dooley <conor.dooley@microchip.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
 	Baoquan He <bhe@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
 	Sami Tolvanen <samitolvanen@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
 	Zong Li <zong.li@sifive.com>,
 	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
 	Samuel Holland <samuel.holland@sifive.com>,
 	Chen Jiahao <chenjiahao16@huawei.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
 	James Morse <james.morse@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
 	Zhao Ke <ke.zhao@shingroup.cn>,
 	Andy Chiu <andy.chiu@sifive.com>,
 	Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Tony Luck <tony.luck@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Robert Richter <rrichter@amd.com>,
 	Yuntao Wang <ytcoode@gmail.com>,
@@ -90,9 +89,9 @@ Cc: xiaobo55x@gmail.com,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH v4 2/4] ACPI: NUMA: Add handler for SRAT RINTC affinity structure
-Date: Thu, 13 Jun 2024 16:54:34 +0800
-Message-Id: <e076514d78d92f104a5f2d8c82b8921f6aa26fdd.1718268003.git.haibo1.xu@intel.com>
+Subject: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
+Date: Thu, 13 Jun 2024 16:54:35 +0800
+Message-Id: <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1718268003.git.haibo1.xu@intel.com>
 References: <cover.1718268003.git.haibo1.xu@intel.com>
@@ -104,78 +103,59 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add RINTC affinity structure handler during parsing SRAT table.
+x86/arm64/loongarch would select ACPI_NUMA by default and riscv
+would do the same thing, so change it to a hidden option and the
+select statements except for the X86_64_ACPI_NUMA can also go away.
 
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
 Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
 Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- drivers/acpi/numa/srat.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ arch/arm64/Kconfig        | 1 -
+ arch/loongarch/Kconfig    | 1 -
+ drivers/acpi/numa/Kconfig | 5 +----
+ 3 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index e3f26e71637a..44f91f2c6c5d 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -167,6 +167,19 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 		}
- 	}
- 	break;
-+
-+	case ACPI_SRAT_TYPE_RINTC_AFFINITY:
-+		{
-+			struct acpi_srat_rintc_affinity *p =
-+			    (struct acpi_srat_rintc_affinity *)header;
-+			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
-+				 p->acpi_processor_uid,
-+				 p->proximity_domain,
-+				 (p->flags & ACPI_SRAT_RINTC_ENABLED) ?
-+				 "enabled" : "disabled");
-+		}
-+		break;
-+
- 	default:
- 		pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
- 			header->type);
-@@ -450,6 +463,21 @@ acpi_parse_gi_affinity(union acpi_subtable_headers *header,
- }
- #endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 5d91259ee7b5..5079ad4e21a5 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1484,7 +1484,6 @@ config HOTPLUG_CPU
+ config NUMA
+ 	bool "NUMA Memory Allocation and Scheduler Support"
+ 	select GENERIC_ARCH_NUMA
+-	select ACPI_NUMA if ACPI
+ 	select OF_NUMA
+ 	select HAVE_SETUP_PER_CPU_AREA
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index e38139c576ee..8d9e06e4ad84 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -470,7 +470,6 @@ config NR_CPUS
+ config NUMA
+ 	bool "NUMA Support"
+ 	select SMP
+-	select ACPI_NUMA if ACPI
+ 	help
+ 	  Say Y to compile the kernel with NUMA (Non-Uniform Memory Access)
+ 	  support.  This option improves performance on systems with more
+diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
+index 849c2bd820b9..f33194d1e43f 100644
+--- a/drivers/acpi/numa/Kconfig
++++ b/drivers/acpi/numa/Kconfig
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config ACPI_NUMA
+-	bool "NUMA support"
+-	depends on NUMA
+-	depends on (X86 || ARM64 || LOONGARCH)
+-	default y if ARM64
++	def_bool NUMA && !X86
  
-+static int __init
-+acpi_parse_rintc_affinity(union acpi_subtable_headers *header,
-+			  const unsigned long end)
-+{
-+	struct acpi_srat_rintc_affinity *rintc_affinity;
-+
-+	rintc_affinity = (struct acpi_srat_rintc_affinity *)header;
-+	acpi_table_print_srat_entry(&header->common);
-+
-+	/* let architecture-dependent part to do it */
-+	acpi_numa_rintc_affinity_init(rintc_affinity);
-+
-+	return 0;
-+}
-+
- static int __init acpi_parse_srat(struct acpi_table_header *table)
- {
- 	struct acpi_table_srat *srat = (struct acpi_table_srat *)table;
-@@ -485,7 +513,7 @@ int __init acpi_numa_init(void)
- 
- 	/* SRAT: System Resource Affinity Table */
- 	if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
--		struct acpi_subtable_proc srat_proc[4];
-+		struct acpi_subtable_proc srat_proc[5];
- 
- 		memset(srat_proc, 0, sizeof(srat_proc));
- 		srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
-@@ -496,6 +524,8 @@ int __init acpi_numa_init(void)
- 		srat_proc[2].handler = acpi_parse_gicc_affinity;
- 		srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
- 		srat_proc[3].handler = acpi_parse_gi_affinity;
-+		srat_proc[4].id = ACPI_SRAT_TYPE_RINTC_AFFINITY;
-+		srat_proc[4].handler = acpi_parse_rintc_affinity;
- 
- 		acpi_table_parse_entries_array(ACPI_SIG_SRAT,
- 					sizeof(struct acpi_table_srat),
+ config ACPI_HMAT
+ 	bool "ACPI Heterogeneous Memory Attribute Table Support"
 -- 
 2.34.1
 
