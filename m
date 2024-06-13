@@ -1,39 +1,97 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A7413C9D8
-	for <loongarch@lists.linux.dev>; Thu, 13 Jun 2024 07:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B2B13E8BF
+	for <loongarch@lists.linux.dev>; Thu, 13 Jun 2024 08:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718264593; cv=none; b=n9V6sGvDg5BiiIMVmjtEXMrpjKyLqQimETo9dO7NK6PzovJAq25ZJT8eUI/wDufChEaWRCdqLzw6lk3rFkexoPwgDlWDmsMgeq1zzFck7K6S8BFrz5ETOaV3+JPZAi/o3+MKkKiFXxnh+mNgmsFonV5mPeTvDcl3UjQqSNddxfs=
+	t=1718267793; cv=none; b=eGFj1M3Bx+jLSumlJYICIr2zozLiRvOtBp4B3zTWFGupSPMUyuXJrd3miQ/Zg+06ziwAk+NULFG3uEeF6ceABOxABtbUyr9gFP2XlEkRAPd9WXigLiQHKNEvH2ZtHZ+usb1dvD+U3IT3Ufm/o+ixcjKlOdb1YOZ2Gmfp0YzdZJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718264593; c=relaxed/simple;
-	bh=YehfgFC2fciO3pRMzakftx9BA51/qmvAe+pwvzKRskQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pa2SA5Y1PBbr+AOifQM6QO5HbvJH+esc1tYQ6F7mmS/TzNgqkFobcMYYx4TEzfHgkGIHn8wFJOdC8MYSkx86u4MP1bRmYQ26Z2sA6ArmrzLE6EyPMcrM12mI0bO0iCIftjKhogjww+HIUPrqOrqjEmlRvA6sb3634j0N68jICFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.180.133.93])
-	by gateway (Coremail) with SMTP id _____8DxDesLo2pmDm0GAA--.25922S3;
-	Thu, 13 Jun 2024 15:43:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.133.93])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusYKo2pmd2AeAA--.9308S2;
-	Thu, 13 Jun 2024 15:43:06 +0800 (CST)
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-To: Markus Elfring <Markus.Elfring@web.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Nitesh Narayan Lal <nitesh@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1718267793; c=relaxed/simple;
+	bh=3ovCB/zXsuebWe0Yz4yc+d18kQMuEVZClgl8PA7HD5o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m9iAM+OMqQ/D5twr0Qzaj+MZkIs1d03c1Zo8XZpcvhg/qTZuigYQjHqJki5SBP6nwHFbBN+GgrSKfpToXyCzEI+4Zlg0BLXPXiELv/0ZWNRlPXc/jwL31YxBHOqviANpTVu+Cq5qrvDy7VOqk2bmiN6FddkFlHPnd7m9EHA2UE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhCFEV+9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhCFEV+9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718267792; x=1749803792;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3ovCB/zXsuebWe0Yz4yc+d18kQMuEVZClgl8PA7HD5o=;
+  b=FhCFEV+9C2vyZt+iZPkMZKiob11F3RAFl7pHIZajmilVXbH+oYFUN8PH
+   f6gAYlvGllyWUqaWZQXG7bytEkLF4k15UhnAGfE0TJ2fx1ykiXGxgg9nP
+   ltR4PNvd2y4kKR6PHepzS4wpdIufmlokOQmap+Sa9Bl+6GvrBnjIS4XSt
+   8guTawXdY1rsAfEX3L5mRhdOL0dJYe3HY0NDYb5C9DAkLBKVmeQ9sodAS
+   0h7KoFdfnEuWyUnwKfJA2g1j6iOyVl6eC70pglV6qdZZcm+8BPPIwxI0q
+   PWqCo12/5+OAlpFxGj5dENR7/Kv/Y9uZxPIXrCg9vYOvyFAlZvfZtjMdB
+   Q==;
+X-CSE-ConnectionGUID: PPnQ22QZSteGGYIiiXOrWg==
+X-CSE-MsgGUID: yaAem6ZlSja0KRKFAoI3FQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="15037732"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="15037732"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:36:31 -0700
+X-CSE-ConnectionGUID: Qv+liwW3RqmG1+jP0AhpCA==
+X-CSE-MsgGUID: nvdTq6xyRMCMcg4RPM/Zeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40033609"
+Received: from unknown (HELO haibo-OptiPlex-7090.sh.intel.com) ([10.239.159.132])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Jun 2024 01:36:21 -0700
+From: Haibo Xu <haibo1.xu@intel.com>
+To: sunilvl@ventanamicro.com,
+	arnd@arndb.de
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Baoquan He <bhe@redhat.com>,
+	Evan Green <evan@rivosinc.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Robert Richter <rrichter@amd.com>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	stable@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when selected cpu is offline
-Date: Thu, 13 Jun 2024 15:42:58 +0800
-Message-Id: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
-X-Mailer: git-send-email 2.33.0
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH v4 0/4] Add ACPI NUMA support for RISC-V
+Date: Thu, 13 Jun 2024 16:54:32 +0800
+Message-Id: <cover.1718268003.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,58 +99,94 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxusYKo2pmd2AeAA--.9308S2
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAHB2ZqUJQEggACsN
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF1DKryktr1ktw1rJrWfXrc_yoW8Gr1fpF
-	ZrG34Skr4kJF4UG3Wqqay8uFyFganrJa429a1xCwnxZFZxAF10y3Z7ArW3Jr1UWrWkZr1a
-	v3WDAryUGFWUArbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
-@cpu is a offline cpu would cause system stuck forever.
+This patch series enable RISC-V ACPI NUMA support which was based on
+the recently approved ACPI ECR[1].
 
-This can be happen if a node is online while all its CPUs are
-offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
+Patch 1/4 add RISC-V specific acpi_numa.c file to parse NUMA information
+from SRAT and SLIT ACPI tables.
+Patch 2/4 add the common SRAT RINTC affinity structure handler.
+Patch 3/4 change the ACPI_NUMA to a hidden option since it would be selected
+by default on all supported platform.
+Patch 4/4 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
+potential boot noise on ACPI platforms that are not NUMA.
 
-So, in the above case, let pci_call_probe() call local_pci_probe()
-instead of work_on_cpu() when the best selected cpu is offline.
+Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
 
-Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping CPUs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+[1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/view?usp=sharing
+
+Testing:
+Since the ACPI AIA/PLIC support patch set is still under upstream review,
+hence it is tested using the poll based HVC SBI console and RAM disk.
+1) Build latest Qemu with the following patch backported
+   https://github.com/vlsunil/qemu/commit/42bd4eeefd5d4410a68f02d54fee406d8a1269b0
+
+2) Build latest EDK-II
+   https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
+
+3) Build Linux with the following configs enabled
+   CONFIG_RISCV_SBI_V01=y
+   CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+   CONFIG_NONPORTABLE=y
+   CONFIG_HVC_RISCV_SBI=y
+   CONFIG_NUMA=y
+   CONFIG_ACPI_NUMA=y
+
+4) Build buildroot rootfs.cpio
+
+5) Launch the Qemu machine
+   qemu-system-riscv64 -nographic \
+   -machine virt,pflash0=pflash0,pflash1=pflash1 -smp 4 -m 8G \
+   -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+   -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+   -object memory-backend-ram,size=4G,id=m0 \
+   -object memory-backend-ram,size=4G,id=m1 \
+   -numa node,memdev=m0,cpus=0-1,nodeid=0 \
+   -numa node,memdev=m1,cpus=2-3,nodeid=1 \
+   -numa dist,src=0,dst=1,val=30 \
+   -kernel linux/arch/riscv/boot/Image \
+   -initrd buildroot/output/images/rootfs.cpio \
+   -append "root=/dev/ram ro console=hvc0 earlycon=sbi"
+
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0x17fffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x180000000-0x27fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x17fe3bc40-0x17fe3cfff]
+[    0.000000] NUMA: NODE_DATA [mem 0x27fff4c40-0x27fff5fff]
+...
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x0 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 0 -> HARTID 0x1 -> Node 0
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x2 -> Node 1
+[    0.000000] ACPI: NUMA: SRAT: PXM 1 -> HARTID 0x3 -> Node 1
+
 ---
-v2 -> v3: Modify commit message according to Markus's suggestion
-v1 -> v2: Add a method to reproduce the problem
----
- drivers/pci/pci-driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v3
+  - Rebase to linux-riscv/for-next(Linux 6.10-rc1)
+  - Remove original patch 1/6 since it had been merged through
+    ACPICA pull(commit fe1c408d50604f)
+  - Remove original patch 4/6 since the related changes was
+    introduced in commit 3a785e19f43267
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index af2996d0d17f..32a99828e6a3 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
- 		free_cpumask_var(wq_domain_mask);
- 	}
- 
--	if (cpu < nr_cpu_ids)
-+	if ((cpu < nr_cpu_ids) && cpu_online(cpu))
- 		error = work_on_cpu(cpu, local_pci_probe, &ddi);
- 	else
- 		error = local_pci_probe(&ddi);
+Haibo Xu (4):
+  ACPI: RISCV: Add NUMA support based on SRAT and SLIT
+  ACPI: NUMA: Add handler for SRAT RINTC affinity structure
+  ACPI: NUMA: change the ACPI_NUMA to a hidden option
+  ACPI: NUMA: replace pr_info with pr_debug in arch_acpi_numa_init
+
+ arch/arm64/Kconfig            |   1 -
+ arch/loongarch/Kconfig        |   1 -
+ arch/riscv/include/asm/acpi.h |  15 +++-
+ arch/riscv/kernel/Makefile    |   1 +
+ arch/riscv/kernel/acpi.c      |   5 --
+ arch/riscv/kernel/acpi_numa.c | 131 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/setup.c     |   4 +-
+ arch/riscv/kernel/smpboot.c   |   2 -
+ drivers/acpi/numa/Kconfig     |   5 +-
+ drivers/acpi/numa/srat.c      |  32 ++++++++-
+ drivers/base/arch_numa.c      |   2 +-
+ include/linux/acpi.h          |   6 ++
+ 12 files changed, 187 insertions(+), 18 deletions(-)
+ create mode 100644 arch/riscv/kernel/acpi_numa.c
+
 -- 
-2.33.0
+2.34.1
 
