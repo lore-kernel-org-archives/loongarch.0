@@ -1,172 +1,169 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F8B137C20
-	for <loongarch@lists.linux.dev>; Fri, 14 Jun 2024 02:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08719D8B7;
+	Fri, 14 Jun 2024 17:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718333098; cv=none; b=jfoc+DUEC3KVENrVGLlJuHn7vryPoI8uSQ7xC7gxA806PFlumuHvAUARIllWl6DbvsvmDfXEcDw84qoqgOtFChBSDjW6Y4p8nF2gkbLdjbO4zDEW63+ykesSVXzjnXcMI+u4o/mr7Ab23j3dloq5dnMwLaKSY3fdFNzoDefXLLo=
+	t=1718387306; cv=none; b=HwUh4M0pMmjOKJrEZwmUMqE4axqvk1r9ray8eT7UXgHDdTW/niPi9AYteOZKDZtIRh4kF0pt+2YiNZ0OpRDYpHuYgFezDlLjJ/7tECbfriWG0ZHFdzTZk5Na2UkdDNyfN2xMz5UJWbSBxA2Sj/gN133MxPd4AjreT3qcNLjGHqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718333098; c=relaxed/simple;
-	bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=lLb0AIiguhoM7oHMLrfFymY6YyFFM++TRdGoDmI5OHhwAJnMXHgN0AZ0DxK2thhJKUpyGEuUchIsGg8osC1p15xVEM/8PJfLH04FDlz4JRhdAMcpvm+bq7EEOimkmw4XJdGTQna8vzWFIoo4gXxB1KFMwgfZJGhtiMAQ/76yJyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=JvoDMu8G; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qtefudHW; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718387306; c=relaxed/simple;
+	bh=kdioDkX1AS0ZacOm577/Bq/Mk3c/jw5avXaWrRVP09I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gkfeyz7tLsZ3AIQT+UdmN91B/PwZxiQirpioFnezjvwKyvZVNBrC73v+OVRtz0A+mL9KjzAR4ZIqmLwlrPHDWCwXo2+E7u93ieKMRKDgVcI48YOfrahYEh66lJsxcvC19682m65+eTnypX7m6w6Cm22LanPTMXM8s9gCG38Qfsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRzKMURf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JvoDMu8G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qtefudHW"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 8CE1013801A4;
-	Thu, 13 Jun 2024 22:44:56 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 13 Jun 2024 22:44:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1718333096;
-	 x=1718419496; bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=; b=
-	JvoDMu8GtVyp/R7dzBMEhsJaWn3rMv3yGKSDsQgoC6JYmqsVf92GxAs9qnrgt5h9
-	VW9YbiNmkCV2aX8alm6YUmmMoueg/A7epiVr1dX64dwYU9cF8fNJTMcoxmpX+YeQ
-	8QghXkxTGa79NXx73/4+Ch5n2PDhy/LkyZKwDX/J37sYxBqBTmnV33ZaqjhBgUYN
-	W4UBysPQTeyYqc0OZ517U20coAKhUBztawapEs3gJEBAj+MTFagqov5f0cWdGxu0
-	Aag6RjR4aDvJCxdYsr9bDw08Mb6cVAO+ESCbT2Z/IGkSQi6pUnaMtT+++QGQb9NR
-	IKRlj4lhI+mWf8D3CDcqnw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718333096; x=
-	1718419496; bh=DGZI5mG40FnyaDB0BC1fbYrQ9V/VYVQVkIVUveeQsQI=; b=q
-	tefudHW7BEfc2lKY1jot8DKvoh/aWDHpoooOZ6nLjPh5Kp9dOPkAXIT7yl2BNqj8
-	r9cf5XMeFyPYGjtzDtKmb6EfA6piN4wyKWIXLezFOUxVgZ6RhPYN4lCIJsoukR+y
-	rsLUbIUrmtMVT4enAJmKBwBqR36XKWewROK7r1GusvAghyrOpQ45tXYT7Um1KyGg
-	6SFqW2GvkjY9o7Lci2mxne9/49EpndNNsu5xdb1DI4dhBwXJL5wMylz8EArUBcNZ
-	dHB0b67YxHzEtivCh2W93ezpFj9PyPF9SwvL4Ud1Eb26fBe5WDpPI5LIp13f8t7O
-	kKMrD63HeIOifT5wAlmzA==
-X-ME-Sender: <xms:p65rZkaoNjTqCbbZ3Sug1tiOFOnXeuTgcmAdY3epW_qAnyVkYN1L6A>
-    <xme:p65rZval8nKRirZVmf_Qt_8PNyI9FjIWNyFWt0s1vPMkbMbk3V2XmWeVb20_cq8Xf
-    TZETmVH9_c_qXq7cnA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedukedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpeeivdefffdvgfegfeehjeelteevheehkeefvdffhfej
-    tdejvdeuhedtgfekudelleenucffohhmrghinhepuhgvfhhirdhorhhgnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghn
-    ghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:p65rZu8FlDxiVciJ_zDD0QoyOPXA0n-lXt01u8LwwJcSTG5SYPPOCQ>
-    <xmx:p65rZuqsksdVJS75a0FmCS5YppWoVR09e58MJKIfE_Tm_8sA3d88ow>
-    <xmx:p65rZvqfyVAbXQGGN7MQ9inGhime7gp38GsvuowIMNIjb9NNiTn_Zg>
-    <xmx:p65rZsRV8lIXX0pusjCTQW-eBGT4ZddX9GDNlbhdHMDzs6i9x0GW3w>
-    <xmx:qK5rZgCqWFyz6uaU_fkMXgz11HdQCElhJoY5FVPoouK_ceiyJUIieaFy>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 676B736A0074; Thu, 13 Jun 2024 22:44:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRzKMURf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C01FC2BD10;
+	Fri, 14 Jun 2024 17:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718387306;
+	bh=kdioDkX1AS0ZacOm577/Bq/Mk3c/jw5avXaWrRVP09I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nRzKMURfx3699Ers/mBC17k9lC7l2PTU25jHIqx/w3EIokujRe01eXxCYnOeDJnsB
+	 yN2QslLeldA8xblLL50UetOwnLisGXVgtBrE54guc/Cj6SYqUafcez4HgHjxmfOCUn
+	 YkNqGwT8H4dd61l1NxGmPDnM73l6AdB1QCas/5D0VtqRESu0MY9kA7fLmrFm52ZPLb
+	 F6lFoUmQfhGtgV4x/xlU9zUz3ZOBcPW9LLGG74qkXF0ddzpbZ6BTcBxF4DHx84fGAp
+	 csYpCcMKe9J8q1DB+7EzjNBUrDgGKLS6eUhZxMwSUVzOYwIpALfl4CV8ca4NlyfexP
+	 qvcVV5z0kGXhQ==
+Date: Fri, 14 Jun 2024 10:48:22 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
+Subject: Re: [PATCHv8 bpf-next 3/9] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <20240614174822.GA1185149@thelio-3990X>
+References: <20240611112158.40795-1-jolsa@kernel.org>
+ <20240611112158.40795-4-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <b291e5fb-bf3a-4129-96a0-99182e11f506@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H5C0rn-bY11FxoGANX+hEFrrbpj095ZAEbjC0ksQGuWpA@mail.gmail.com>
-References: <20240613-loongarch64-sleep-v1-0-a245232af5e4@flygoat.com>
- <20240613-loongarch64-sleep-v1-2-a245232af5e4@flygoat.com>
- <CAAhV-H7VKGMAH10S4sOZLkbgkUSMAYzpYt-dL83S0Vg286PsaQ@mail.gmail.com>
- <f9a0d11e-53c7-4a15-a7b3-209da8bcf52d@app.fastmail.com>
- <CAAhV-H5C0rn-bY11FxoGANX+hEFrrbpj095ZAEbjC0ksQGuWpA@mail.gmail.com>
-Date: Fri, 14 Jun 2024 03:44:36 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>, "Xuerui Wang" <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] LoongArch: Fix ACPI standard register based S3 support
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611112158.40795-4-jolsa@kernel.org>
 
+Hi Jiri,
 
+On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
+> Adding uretprobe syscall instead of trap to speed up return probe.
+...
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 2c83ba776fc7..2816e65729ac 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1474,11 +1474,20 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+>  	return ret;
+>  }
+>  
+> +void * __weak arch_uprobe_trampoline(unsigned long *psize)
+> +{
+> +	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=883:32=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Fri, Jun 14, 2024 at 10:25=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flyg=
-oat.com> wrote:
->>
->>
->>
->> =E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=
-=E5=8D=883:11=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> > Hi, Jiaxun,
->> >
->> > On Fri, Jun 14, 2024 at 12:41=E2=80=AFAM Jiaxun Yang <jiaxun.yang@f=
-lygoat.com> wrote:
->> >>
->> >> Most LoongArch 64 machines are using custom "SADR" ACPI extension
->> >> to perform ACPI S3 sleep. However the standard ACPI way to perform
->> >> sleep is to write a value to ACPI PM1/SLEEP_CTL register, and this
->> >> is never supported properly in kernel.
->> > Maybe our hardware is insane so we need "SADR", if so, this patch m=
-ay
->> > break real hardware. What's your opinion, Jianmin?
->>
->> I understand why your hardware need SADR. Most systems DDR self-refre=
-sh
->> mode needs to be setup by firmware.
-> _S3 is also a firmware method, why we can't use it to setup self-refre=
-sh?
+This change as commit ff474a78cef5 ("uprobe: Add uretprobe syscall to
+speed up return probe") in -next causes the following build error for
+ARCH=loongarch allmodconfig:
 
-That's the problem from ACPI spec. As per ACPI spec _S3 method only tells
-you what should you write into PM1 or SLEEP_CTL register, it will NOT pe=
-rform
-actual task to enter sleeping. (See 16.1.3.1 [1])
+  In file included from include/linux/uprobes.h:49,
+                   from include/linux/mm_types.h:16,
+                   from include/linux/mmzone.h:22,
+                   from include/linux/gfp.h:7,
+                   from include/linux/xarray.h:16,
+                   from include/linux/list_lru.h:14,
+                   from include/linux/fs.h:13,
+                   from include/linux/highmem.h:5,
+                   from kernel/events/uprobes.c:13:
+  kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
+  arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
+     12 | #define UPROBE_SWBP_INSN        larch_insn_gen_break(BRK_UPROBE_BP)
+        |                                 ^~~~~~~~~~~~~~~~~~~~
+  kernel/events/uprobes.c:1479:39: note: in expansion of macro 'UPROBE_SWBP_INSN'
+   1479 |         static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+        |                                       ^~~~~~~~~~~~~~~~
 
-On existing LoongArch hardware _S3 method is only used to mark presence =
-of S3
-state. This is violating ACPI spec, but I guess we must live with it.
+> +	*psize = UPROBE_SWBP_INSN_SIZE;
+> +	return &insn;
+> +}
+> +
+>  static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  {
+>  	struct mm_struct *mm = current->mm;
+> -	uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+> +	unsigned long insns_size;
+>  	struct xol_area *area;
+> +	void *insns;
+>  
+>  	area = kmalloc(sizeof(*area), GFP_KERNEL);
+>  	if (unlikely(!area))
+> @@ -1502,7 +1511,8 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  	/* Reserve the 1st slot for get_trampoline_vaddr() */
+>  	set_bit(0, area->bitmap);
+>  	atomic_set(&area->slot_count, 1);
+> -	arch_uprobe_copy_ixol(area->pages[0], 0, &insn, UPROBE_SWBP_INSN_SIZE);
+> +	insns = arch_uprobe_trampoline(&insns_size);
+> +	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
+>  
+>  	if (!xol_add_vma(mm, area))
+>  		return area;
+> @@ -1827,7 +1837,7 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
+>   *
+>   * Returns -1 in case the xol_area is not allocated.
+>   */
+> -static unsigned long get_trampoline_vaddr(void)
+> +unsigned long uprobe_get_trampoline_vaddr(void)
+>  {
+>  	struct xol_area *area;
+>  	unsigned long trampoline_vaddr = -1;
+> @@ -1878,7 +1888,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+>  	if (!ri)
+>  		return;
+>  
+> -	trampoline_vaddr = get_trampoline_vaddr();
+> +	trampoline_vaddr = uprobe_get_trampoline_vaddr();
+>  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
+>  	if (orig_ret_vaddr == -1)
+>  		goto fail;
+> @@ -2123,7 +2133,7 @@ static struct return_instance *find_next_ret_chain(struct return_instance *ri)
+>  	return ri;
+>  }
+>  
+> -static void handle_trampoline(struct pt_regs *regs)
+> +void uprobe_handle_trampoline(struct pt_regs *regs)
+>  {
+>  	struct uprobe_task *utask;
+>  	struct return_instance *ri, *next;
+> @@ -2187,8 +2197,8 @@ static void handle_swbp(struct pt_regs *regs)
+>  	int is_swbp;
+>  
+>  	bp_vaddr = uprobe_get_swbp_addr(regs);
+> -	if (bp_vaddr == get_trampoline_vaddr())
+> -		return handle_trampoline(regs);
+> +	if (bp_vaddr == uprobe_get_trampoline_vaddr())
+> +		return uprobe_handle_trampoline(regs);
+>  
+>  	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+>  	if (!uprobe) {
+> -- 
+> 2.45.1
+> 
 
-Furthermore, on Loongson hardware you have to disable access to DDR memo=
-ry
-to access DDR controller's configuration registers. Which means self-ref=
-resh
-code must run from BIOS ROM.
-
-[1]: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/16_Waking_and_Sleepin=
-g/sleeping-states.html
-
-Thanks
-- Jiaxun
-
->
-> Huacai
->
->>
->> There is no chance that it may break real hardware. When firmware sup=
-plied
->> SADR it will always use SADR. The fallback only happens when _S3 meth=
-od exist
->> but no SADR supplied, which won't happen on real hardware.
->>
->> For QEMU we don't have stub firmware but standard compliant SEEP_CTL =
-is
->> sufficient for entering sleep mode, thus we need this fallback path.
->>
->> Thanks
->>
->> >
->> > Huacai
->> >
->> >>
->>
->> --
->> - Jiaxun
->>
-
---=20
-- Jiaxun
+Cheers,
+Nathan
