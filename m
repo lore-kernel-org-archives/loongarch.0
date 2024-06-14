@@ -1,34 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08719D8B7;
-	Fri, 14 Jun 2024 17:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C077146A8E
+	for <loongarch@lists.linux.dev>; Fri, 14 Jun 2024 19:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718387306; cv=none; b=HwUh4M0pMmjOKJrEZwmUMqE4axqvk1r9ray8eT7UXgHDdTW/niPi9AYteOZKDZtIRh4kF0pt+2YiNZ0OpRDYpHuYgFezDlLjJ/7tECbfriWG0ZHFdzTZk5Na2UkdDNyfN2xMz5UJWbSBxA2Sj/gN133MxPd4AjreT3qcNLjGHqA=
+	t=1718393227; cv=none; b=pcIutXsDJ3aie3xyfKCEevxdXhk4/zlnuLuMqCmYwJD+UmHkJGpzMVQvgpfphuqrN6sIMgPHLvgkgojiNyO0byJrzYgnZZzaFJR+RSG0SEaFVnE0IGv3bpsdBARgpAIV3xVjm+TwUvBx18v2DrCYZpx9ftz6KSPZuECkCdd3Kr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718387306; c=relaxed/simple;
-	bh=kdioDkX1AS0ZacOm577/Bq/Mk3c/jw5avXaWrRVP09I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gkfeyz7tLsZ3AIQT+UdmN91B/PwZxiQirpioFnezjvwKyvZVNBrC73v+OVRtz0A+mL9KjzAR4ZIqmLwlrPHDWCwXo2+E7u93ieKMRKDgVcI48YOfrahYEh66lJsxcvC19682m65+eTnypX7m6w6Cm22LanPTMXM8s9gCG38Qfsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRzKMURf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718393227; c=relaxed/simple;
+	bh=35nCSzvM8kCj1i7vnYnO/mrxOdXV2sc3Q/F9sfkJAOc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihRyv5O+Almroh9eAy1DxVchkH/yT58lDzQGaoX0ccURt8n2RWynivhPhCPM8DutckIPIFLu5M4Sd/1IS92woEwWteAV7dgyApxlAgUYPxOz3ord+5xcGrj4uZ7Ve0pLYJ3uLFXlJ4yzIJcOfW0A/4TPgrVp/GWVThBnONn/RZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3lO3l8m; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRzKMURf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C01FC2BD10;
-	Fri, 14 Jun 2024 17:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718387306;
-	bh=kdioDkX1AS0ZacOm577/Bq/Mk3c/jw5avXaWrRVP09I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nRzKMURfx3699Ers/mBC17k9lC7l2PTU25jHIqx/w3EIokujRe01eXxCYnOeDJnsB
-	 yN2QslLeldA8xblLL50UetOwnLisGXVgtBrE54guc/Cj6SYqUafcez4HgHjxmfOCUn
-	 YkNqGwT8H4dd61l1NxGmPDnM73l6AdB1QCas/5D0VtqRESu0MY9kA7fLmrFm52ZPLb
-	 F6lFoUmQfhGtgV4x/xlU9zUz3ZOBcPW9LLGG74qkXF0ddzpbZ6BTcBxF4DHx84fGAp
-	 csYpCcMKe9J8q1DB+7EzjNBUrDgGKLS6eUhZxMwSUVzOYwIpALfl4CV8ca4NlyfexP
-	 qvcVV5z0kGXhQ==
-Date: Fri, 14 Jun 2024 10:48:22 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3lO3l8m"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57ca578ce8dso3005868a12.2
+        for <loongarch@lists.linux.dev>; Fri, 14 Jun 2024 12:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718393224; x=1718998024; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N/f45cUWEGs5NCDhyksDKpsG/5a7jeEGEkHeXxZvwig=;
+        b=P3lO3l8m4ODI7dLNzhIw6SAiO3mYEJG3jRN59dlkFXlZb5yUEGF0OV/zHuGrEKvjgZ
+         fIwC4qB5AnKHu8n8zgk7qUDQEMIPXnTQDm4FbaAP9oIrFgT5Q0etmWAoUfLoYQE0LlUV
+         e7Gg+9mnilr5vLR1SFR7AH4P5+Y6J1hhJndawAJthx8+yuJ4ArawnVsYZeKx5nCVlFXf
+         IYD8W5Ibq8JZ4xqVrqc0gqSTgmdnGGM6yE2Z9ARCh1mrJHddF5aWshx3VV2dqR90+1r0
+         XBNDqu5m6ULTeUq/TDFOrF+pGxyiPr530lbK+e4DZjD6meHBPUAmkBdAyb/F3vKmQyRh
+         EeuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718393224; x=1718998024;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N/f45cUWEGs5NCDhyksDKpsG/5a7jeEGEkHeXxZvwig=;
+        b=HxcHtkLDWcLQ+vr7DY1xfvJ+UWaY0LlPRZNd59sWQYjE5dTHrWzJvl5NVK4NG2yYc8
+         p/zNJV7s3ZVyfARgCHLDx/fp+n0lflLj48d0YXAeVd58B2blNy/deF9I9yzkvylNhzak
+         VS3r+O/8KkTRWnRHy11RftUYpWJPYOx4kaWr6U1tzSjrCtDsmVIni5dI7G15hFaolq15
+         DqKHlpjQA9Jb6MHm5m3bUBWs2Go+svHZis0F6+RvOg75PGiSiJahz5AzJnftDSz2fjX+
+         SK72+IoyzHRvS1mjJ9jZe7lGnvZOVsATRxx5W3kZiSAT4qms23tmaeapys9gJG4xt+HG
+         zAHw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3T4A6uv0wJ4bUROaGQeiKHuTlKkP3IHfRtXSOPKUxUJgQOzI4/Gl5jQRWxEP1nSNygNt3E3barKtOegoYq0ifXxGCHWVFeL0B
+X-Gm-Message-State: AOJu0YxjOTcnb0xrDGBkA41uqeh0HD9YOZ5GHmlRj6FJykwsJMQ4V4JE
+	wRakpTojMkEakRMfHb0HkBiIBjdLcz5FmknQ8n+mCAm3CgpaJINr
+X-Google-Smtp-Source: AGHT+IE5P2ppWpL73Yodf7MQMfk0pnKefj/Rj7aJgWIatWunL9deqlc5gXv5FoQ7KDjv22ttI6eDEw==
+X-Received: by 2002:a05:6402:520d:b0:57c:c166:ba6 with SMTP id 4fb4d7f45d1cf-57cc1660fc5mr2433523a12.19.1718393223504;
+        Fri, 14 Jun 2024 12:27:03 -0700 (PDT)
+Received: from krava (85-193-35-172.rib.o2.cz. [85.193.35.172])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72cdfc4sm2607662a12.19.2024.06.14.12.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 12:27:03 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 14 Jun 2024 21:26:59 +0200
+To: Nathan Chancellor <nathan@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Oleg Nesterov <oleg@redhat.com>,
@@ -48,9 +74,10 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
 Subject: Re: [PATCHv8 bpf-next 3/9] uprobe: Add uretprobe syscall to speed up
  return probe
-Message-ID: <20240614174822.GA1185149@thelio-3990X>
+Message-ID: <ZmyZgzqsowkGyqmH@krava>
 References: <20240611112158.40795-1-jolsa@kernel.org>
  <20240611112158.40795-4-jolsa@kernel.org>
+ <20240614174822.GA1185149@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -59,111 +86,65 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240611112158.40795-4-jolsa@kernel.org>
+In-Reply-To: <20240614174822.GA1185149@thelio-3990X>
 
-Hi Jiri,
-
-On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
-> Adding uretprobe syscall instead of trap to speed up return probe.
-...
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2c83ba776fc7..2816e65729ac 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1474,11 +1474,20 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
->  	return ret;
->  }
->  
-> +void * __weak arch_uprobe_trampoline(unsigned long *psize)
-> +{
-> +	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-
-This change as commit ff474a78cef5 ("uprobe: Add uretprobe syscall to
-speed up return probe") in -next causes the following build error for
-ARCH=loongarch allmodconfig:
-
-  In file included from include/linux/uprobes.h:49,
-                   from include/linux/mm_types.h:16,
-                   from include/linux/mmzone.h:22,
-                   from include/linux/gfp.h:7,
-                   from include/linux/xarray.h:16,
-                   from include/linux/list_lru.h:14,
-                   from include/linux/fs.h:13,
-                   from include/linux/highmem.h:5,
-                   from kernel/events/uprobes.c:13:
-  kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
-  arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
-     12 | #define UPROBE_SWBP_INSN        larch_insn_gen_break(BRK_UPROBE_BP)
-        |                                 ^~~~~~~~~~~~~~~~~~~~
-  kernel/events/uprobes.c:1479:39: note: in expansion of macro 'UPROBE_SWBP_INSN'
-   1479 |         static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-        |                                       ^~~~~~~~~~~~~~~~
-
-> +	*psize = UPROBE_SWBP_INSN_SIZE;
-> +	return &insn;
-> +}
-> +
->  static struct xol_area *__create_xol_area(unsigned long vaddr)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-> +	unsigned long insns_size;
->  	struct xol_area *area;
-> +	void *insns;
->  
->  	area = kmalloc(sizeof(*area), GFP_KERNEL);
->  	if (unlikely(!area))
-> @@ -1502,7 +1511,8 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  	/* Reserve the 1st slot for get_trampoline_vaddr() */
->  	set_bit(0, area->bitmap);
->  	atomic_set(&area->slot_count, 1);
-> -	arch_uprobe_copy_ixol(area->pages[0], 0, &insn, UPROBE_SWBP_INSN_SIZE);
-> +	insns = arch_uprobe_trampoline(&insns_size);
-> +	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
->  
->  	if (!xol_add_vma(mm, area))
->  		return area;
-> @@ -1827,7 +1837,7 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
->   *
->   * Returns -1 in case the xol_area is not allocated.
->   */
-> -static unsigned long get_trampoline_vaddr(void)
-> +unsigned long uprobe_get_trampoline_vaddr(void)
->  {
->  	struct xol_area *area;
->  	unsigned long trampoline_vaddr = -1;
-> @@ -1878,7 +1888,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
->  	if (!ri)
->  		return;
->  
-> -	trampoline_vaddr = get_trampoline_vaddr();
-> +	trampoline_vaddr = uprobe_get_trampoline_vaddr();
->  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
->  	if (orig_ret_vaddr == -1)
->  		goto fail;
-> @@ -2123,7 +2133,7 @@ static struct return_instance *find_next_ret_chain(struct return_instance *ri)
->  	return ri;
->  }
->  
-> -static void handle_trampoline(struct pt_regs *regs)
-> +void uprobe_handle_trampoline(struct pt_regs *regs)
->  {
->  	struct uprobe_task *utask;
->  	struct return_instance *ri, *next;
-> @@ -2187,8 +2197,8 @@ static void handle_swbp(struct pt_regs *regs)
->  	int is_swbp;
->  
->  	bp_vaddr = uprobe_get_swbp_addr(regs);
-> -	if (bp_vaddr == get_trampoline_vaddr())
-> -		return handle_trampoline(regs);
-> +	if (bp_vaddr == uprobe_get_trampoline_vaddr())
-> +		return uprobe_handle_trampoline(regs);
->  
->  	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
->  	if (!uprobe) {
-> -- 
-> 2.45.1
+On Fri, Jun 14, 2024 at 10:48:22AM -0700, Nathan Chancellor wrote:
+> Hi Jiri,
 > 
+> On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
+> > Adding uretprobe syscall instead of trap to speed up return probe.
+> ...
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 2c83ba776fc7..2816e65729ac 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1474,11 +1474,20 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+> >  	return ret;
+> >  }
+> >  
+> > +void * __weak arch_uprobe_trampoline(unsigned long *psize)
+> > +{
+> > +	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+> 
+> This change as commit ff474a78cef5 ("uprobe: Add uretprobe syscall to
+> speed up return probe") in -next causes the following build error for
+> ARCH=loongarch allmodconfig:
+> 
+>   In file included from include/linux/uprobes.h:49,
+>                    from include/linux/mm_types.h:16,
+>                    from include/linux/mmzone.h:22,
+>                    from include/linux/gfp.h:7,
+>                    from include/linux/xarray.h:16,
+>                    from include/linux/list_lru.h:14,
+>                    from include/linux/fs.h:13,
+>                    from include/linux/highmem.h:5,
+>                    from kernel/events/uprobes.c:13:
+>   kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
+>   arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
+>      12 | #define UPROBE_SWBP_INSN        larch_insn_gen_break(BRK_UPROBE_BP)
+>         |                                 ^~~~~~~~~~~~~~~~~~~~
+>   kernel/events/uprobes.c:1479:39: note: in expansion of macro 'UPROBE_SWBP_INSN'
+>    1479 |         static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
 
-Cheers,
-Nathan
+reproduced, could you please try the change below
+
+thanks,
+jirka
+
+
+---
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 2816e65729ac..6986bd993702 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1476,8 +1476,9 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 
+ void * __weak arch_uprobe_trampoline(unsigned long *psize)
+ {
+-	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
++	static uprobe_opcode_t insn;
+ 
++	insn = insn ?: UPROBE_SWBP_INSN;
+ 	*psize = UPROBE_SWBP_INSN_SIZE;
+ 	return &insn;
+ }
