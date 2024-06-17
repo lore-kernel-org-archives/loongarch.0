@@ -1,132 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6670F1AD9FE;
-	Mon, 17 Jun 2024 13:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CAF19A2A5
+	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 13:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630525; cv=none; b=N5QqyPtXt0Q3yYV3xE2bKx4xVHd+pRPvNzKWkSPn7Xohlru4vxKZMOlvnE959aSGTL1hJxjZMoIJzP7bzYm5DuYodfMHe6viM67ZoUhStgwL3V7iOo6GhSt5XI5L+WnT8tBkTCZOYbFRJ7RlFONRJFfX7laXJ6tkNEL5XqsTuwE=
+	t=1718631275; cv=none; b=tPvVpOTQAHuG+K+bEnUVQctqVUtWv02gSKSy8rtgzv9aDSXK0k8jQdymegz9j7eX1zTYAl2Y79g5RzzrMWudZm4XWrv0RMglfDhuEbl7QAgP6noTIrYTnZd731nVWxJNNymeayIWIXo+Q3XnnvJjTISNzHfMl0t0osm0wzx3dJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718630525; c=relaxed/simple;
-	bh=YmjootAgKlT4AUdnARxUqy73v9hCZ0Uej/RVPrjCcqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qxsMvXpP8y4K2neoTK6cK6+zgeOQ1tIitcC2THzsWTV6q3zZi1sCg57OlvcHatXX33EkLow6SyxSE0dh2DOxNwcDxk60Bw5L6WANEGuUhpN0sv374wl2GzPoTiJlRG7EpM/nH0dB405uOuti9ZVkV8TjCnihZgrpUErt7m06I/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+M8cqw9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718631275; c=relaxed/simple;
+	bh=B1S93Pq7+AlrwtbOQxIsMo+PTww/86FdurCQFQ0V7WI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGdqu0uJTOlbMIVCiVahKBBPKcoB3zm3kMuW44k8tOiokDstz8mjjznPnflTEgnm6+DIljeuBa0MTsChBPtA+Q78jBm2B7MpYmr/6DC0pmAN97P7tqqWMpxyhC9lWUeVFTra4KQlbNUKgVgjoHsnUexlV2d3Bw63Bqa/Nw0tL2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LvmY7TyH; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+M8cqw9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84BDC4AF1C;
-	Mon, 17 Jun 2024 13:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718630525;
-	bh=YmjootAgKlT4AUdnARxUqy73v9hCZ0Uej/RVPrjCcqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s+M8cqw9LG2oZoXGCu+Q4ZbIOdGhCbSlh00LHUKzzt5vfzt2M7tMozAMxgMCnwUyc
-	 Y12frsWyASEc7Z0yOc87bgFpyOITpOJy5wVmkG5RdYJ3o/BUFqOeVlwB3zpSzNxzKa
-	 EpS4WLRm7Hh4DmUID6K9dRFQGzGxAhJJZcvVXyhI/l1fgHnAtJPythkcV4Zy6PKGkM
-	 3+3pckq+Ij7O5EpEWRBhjLMWcbbuYPzUEU7/XcWPIgY+yzzWYOQSGfn8wPuxAglI6i
-	 Rmkp6y2+cwo2OQ7QWHtZ1MceVnzA6cePZuc9SGIDOGEqjCmtS6k8ahnOzWxHI+r9XI
-	 ZUQrtU8iHoQmQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	chenhuacai@kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.9 31/44] LoongArch: Fix GMAC's phy-mode definitions in dts
-Date: Mon, 17 Jun 2024 09:19:44 -0400
-Message-ID: <20240617132046.2587008-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
-References: <20240617132046.2587008-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvmY7TyH"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c8342af5eso4632774e87.3
+        for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 06:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718631271; x=1719236071; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
+        b=LvmY7TyHZafN9Y56MQ8WW5Tq5j47Z8tr1cpHEGFDwP9+R14DFgML7WpC8PmTSkRSDl
+         a/vcDtfKKggrP2YfopDsWFUauoSNMn1Pq79MDav+O5GwRXJIkr6C7vAhB7oesmnlaA6h
+         pQ/4Zc6L7Npv+PT6w+CguC7lig6L35nPsipvnibfe+ByIXx7ks4YshTWCzj6/uefaxk/
+         AFZqz6iyyBST5vLewnfWDeiDpjspnThX9613mBxZOrCduKCuf7Ot8PbYIvqjaSWCzfxH
+         1ozzrssfsbgi6e1+3tjIyUM7upEzKwIXvd3uJFTt+ryB17R+sSBJZudo1wZDtolMZoZc
+         vO5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718631271; x=1719236071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
+        b=jTdmcUOwZCq3RMSJFWCDBmAD7Oho8qMdo5wieYDAxcGLZvAvKn/asjaLDBnNioxkMa
+         4Kd7zxqXGGMOZvio8hzvKfv9iF92f6fVJhYbYF0gD5gEVOBaBjv1ac77HudRhFebDNgG
+         Rnp/qXtDfZkzlQ7466k6oaryPq5cvfT/r4un1I12KB/lHtBaA+BkSDvwMcKFbHTAn+ZI
+         ESn5Rz1HvLTmT0UwlAQGbYWCko6Tkw5MlKzgszdCl1iJIAFhwcs72xkkrrbvDwGVL1dA
+         oofgJfMd8DcsuIVZVJ5L86jvQ9nAJSRpNnQYaKoirGF8aeiyBdilegYOyaBEB6bD+lZk
+         kW5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWPsEzlH+9N73NorqIohhZZTy4zU0r37zQN2dfwXy07QNmQTGQJ3aitdGMpZd5VSXo3jRIeb1vjRYeL5cD3zOkqfA3EHUd1lg8L
+X-Gm-Message-State: AOJu0Yx1qpp81j57Gk0V20HR4KhJCp94q+bj6YVM2bcjLblm2uR3noc+
+	pVgQfAaY4y3DFEQ6OGTRFfdg6SFW2SNOu9kFzrwfc6Yb1e7/N0FAaGpiedoeE9us2MM2kzX3TMA
+	4zNsf8iMApFeSyHF4uc+9MyOPE1M=
+X-Google-Smtp-Source: AGHT+IGxoq/R66V25JVO/HBkhcEl96wxiJMXgGXl/k0tPpvsH4sU61K9F58Kdy+baOZ9nLjumpg95HzDP25Dn6D6uvU=
+X-Received: by 2002:ac2:5551:0:b0:52c:893c:6c2c with SMTP id
+ 2adb3069b0e04-52ca6e6e205mr5569411e87.40.1718631270478; Mon, 17 Jun 2024
+ 06:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.5
-Content-Transfer-Encoding: 8bit
+References: <cover.1718268003.git.haibo1.xu@intel.com> <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
+In-Reply-To: <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
+From: Haibo Xu <xiaobo55x@gmail.com>
+Date: Mon, 17 Jun 2024 21:34:18 +0800
+Message-ID: <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
+To: Haibo Xu <haibo1.xu@intel.com>
+Cc: sunilvl@ventanamicro.com, arnd@arndb.de, ajones@ventanamicro.com, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Chen Jiahao <chenjiahao16@huawei.com>, James Morse <james.morse@arm.com>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Zhao Ke <ke.zhao@shingroup.cn>, 
+	Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+@Catalin Marinas @Huacai Chen
 
-[ Upstream commit eb36e520f4f1b690fd776f15cbac452f82ff7bfa ]
+Could you please have a look at this patch for the ACPI_NUMA config on
+ARM64 and LOONGARCH respectively.
 
-The GMAC of Loongson chips cannot insert the correct 1.5-2ns delay. So
-we need the PHY to insert internal delays for both transmit and receive
-data lines from/to the PHY device. Fix this by changing the "phy-mode"
-from "rgmii" to "rgmii-id" in dts.
+Thanks!
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k2000-ref.dts | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-index 8aefb0c126722..a34734a6c3ce8 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-@@ -44,14 +44,14 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x0>;
- };
- 
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x1>;
- };
- 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-index ed4d324340411..aaf41b565805a 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-@@ -43,7 +43,7 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy0>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-@@ -58,7 +58,7 @@ phy0: ethernet-phy@0 {
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy1>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-index 74b99bd234cc3..ea9e6985d0e9f 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-@@ -92,7 +92,7 @@ phy1: ethernet-phy@1 {
- &gmac2 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy2>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
--- 
-2.43.0
-
+On Thu, Jun 13, 2024 at 4:37=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> wrot=
+e:
+>
+> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
+> would do the same thing, so change it to a hidden option and the
+> select statements except for the X86_64_ACPI_NUMA can also go away.
+>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
+> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/arm64/Kconfig        | 1 -
+>  arch/loongarch/Kconfig    | 1 -
+>  drivers/acpi/numa/Kconfig | 5 +----
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 5d91259ee7b5..5079ad4e21a5 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1484,7 +1484,6 @@ config HOTPLUG_CPU
+>  config NUMA
+>         bool "NUMA Memory Allocation and Scheduler Support"
+>         select GENERIC_ARCH_NUMA
+> -       select ACPI_NUMA if ACPI
+>         select OF_NUMA
+>         select HAVE_SETUP_PER_CPU_AREA
+>         select NEED_PER_CPU_EMBED_FIRST_CHUNK
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index e38139c576ee..8d9e06e4ad84 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -470,7 +470,6 @@ config NR_CPUS
+>  config NUMA
+>         bool "NUMA Support"
+>         select SMP
+> -       select ACPI_NUMA if ACPI
+>         help
+>           Say Y to compile the kernel with NUMA (Non-Uniform Memory Acces=
+s)
+>           support.  This option improves performance on systems with more
+> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
+> index 849c2bd820b9..f33194d1e43f 100644
+> --- a/drivers/acpi/numa/Kconfig
+> +++ b/drivers/acpi/numa/Kconfig
+> @@ -1,9 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config ACPI_NUMA
+> -       bool "NUMA support"
+> -       depends on NUMA
+> -       depends on (X86 || ARM64 || LOONGARCH)
+> -       default y if ARM64
+> +       def_bool NUMA && !X86
+>
+>  config ACPI_HMAT
+>         bool "ACPI Heterogeneous Memory Attribute Table Support"
+> --
+> 2.34.1
+>
