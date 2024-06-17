@@ -1,156 +1,120 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CAF19A2A5
-	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 13:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B17319884D;
+	Mon, 17 Jun 2024 13:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631275; cv=none; b=tPvVpOTQAHuG+K+bEnUVQctqVUtWv02gSKSy8rtgzv9aDSXK0k8jQdymegz9j7eX1zTYAl2Y79g5RzzrMWudZm4XWrv0RMglfDhuEbl7QAgP6noTIrYTnZd731nVWxJNNymeayIWIXo+Q3XnnvJjTISNzHfMl0t0osm0wzx3dJE=
+	t=1718631504; cv=none; b=DthjxFGlvcBGnGFQTsyWOO/6jFfek+LpHgXTNpZECzvvci2yPcPG/P70GNofW+ID8rKi36zuQqctLZt9K0T+Xw7Z7dzgleB3rc2J5jQKzrun992oPWujOpo5BqVbpLkVEvQxBC4yKDnBAVeKC64FkLhWsIF6LInhkcLFXjsVM5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631275; c=relaxed/simple;
-	bh=B1S93Pq7+AlrwtbOQxIsMo+PTww/86FdurCQFQ0V7WI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NGdqu0uJTOlbMIVCiVahKBBPKcoB3zm3kMuW44k8tOiokDstz8mjjznPnflTEgnm6+DIljeuBa0MTsChBPtA+Q78jBm2B7MpYmr/6DC0pmAN97P7tqqWMpxyhC9lWUeVFTra4KQlbNUKgVgjoHsnUexlV2d3Bw63Bqa/Nw0tL2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LvmY7TyH; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718631504; c=relaxed/simple;
+	bh=akWFXFL9APSeZUybdYwbaKWZJ+YSl23R6WS8xUNuMz4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NkZkdBzpyc90bOfTj+gHW2141xYoIvHZULn3wID6n20IL0oz3AbK/VZa2fl5sb/60pBwO3stH0E2UE4Hc+bSPdTQKEBzRpftBm3iUOt0VaDRs+1RDXR4GKl2Tpjk6cANOfwndbz2rl+pd0KnjsBxXCYfwJtjh8WxuQ8Bb9dmhZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U+3Yx4vN; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvmY7TyH"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c8342af5eso4632774e87.3
-        for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 06:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718631271; x=1719236071; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
-        b=LvmY7TyHZafN9Y56MQ8WW5Tq5j47Z8tr1cpHEGFDwP9+R14DFgML7WpC8PmTSkRSDl
-         a/vcDtfKKggrP2YfopDsWFUauoSNMn1Pq79MDav+O5GwRXJIkr6C7vAhB7oesmnlaA6h
-         pQ/4Zc6L7Npv+PT6w+CguC7lig6L35nPsipvnibfe+ByIXx7ks4YshTWCzj6/uefaxk/
-         AFZqz6iyyBST5vLewnfWDeiDpjspnThX9613mBxZOrCduKCuf7Ot8PbYIvqjaSWCzfxH
-         1ozzrssfsbgi6e1+3tjIyUM7upEzKwIXvd3uJFTt+ryB17R+sSBJZudo1wZDtolMZoZc
-         vO5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718631271; x=1719236071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xlh1MuJTyolH8Bza5fsBuYqZhmwiMHDDS1wFAKMhcW4=;
-        b=jTdmcUOwZCq3RMSJFWCDBmAD7Oho8qMdo5wieYDAxcGLZvAvKn/asjaLDBnNioxkMa
-         4Kd7zxqXGGMOZvio8hzvKfv9iF92f6fVJhYbYF0gD5gEVOBaBjv1ac77HudRhFebDNgG
-         Rnp/qXtDfZkzlQ7466k6oaryPq5cvfT/r4un1I12KB/lHtBaA+BkSDvwMcKFbHTAn+ZI
-         ESn5Rz1HvLTmT0UwlAQGbYWCko6Tkw5MlKzgszdCl1iJIAFhwcs72xkkrrbvDwGVL1dA
-         oofgJfMd8DcsuIVZVJ5L86jvQ9nAJSRpNnQYaKoirGF8aeiyBdilegYOyaBEB6bD+lZk
-         kW5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWPsEzlH+9N73NorqIohhZZTy4zU0r37zQN2dfwXy07QNmQTGQJ3aitdGMpZd5VSXo3jRIeb1vjRYeL5cD3zOkqfA3EHUd1lg8L
-X-Gm-Message-State: AOJu0Yx1qpp81j57Gk0V20HR4KhJCp94q+bj6YVM2bcjLblm2uR3noc+
-	pVgQfAaY4y3DFEQ6OGTRFfdg6SFW2SNOu9kFzrwfc6Yb1e7/N0FAaGpiedoeE9us2MM2kzX3TMA
-	4zNsf8iMApFeSyHF4uc+9MyOPE1M=
-X-Google-Smtp-Source: AGHT+IGxoq/R66V25JVO/HBkhcEl96wxiJMXgGXl/k0tPpvsH4sU61K9F58Kdy+baOZ9nLjumpg95HzDP25Dn6D6uvU=
-X-Received: by 2002:ac2:5551:0:b0:52c:893c:6c2c with SMTP id
- 2adb3069b0e04-52ca6e6e205mr5569411e87.40.1718631270478; Mon, 17 Jun 2024
- 06:34:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U+3Yx4vN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1718631496;
+	bh=akWFXFL9APSeZUybdYwbaKWZJ+YSl23R6WS8xUNuMz4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U+3Yx4vNAiPitIxm1W3qEsYpkCOC/D0rM4UzLSFkheUmCZ0efYVicNfA8w8l14WGx
+	 ZTJB4/Ecew6fjurxAgwvnX5+Ee1AByQjroNY9Jz0NY0Hf8sqFuZV3f0W7DOGLr0Dzu
+	 8YQ20DhF2cA1vtYDSa4dP/QbH4weuk2FPW8NlVRA=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id C2D1566A19;
+	Mon, 17 Jun 2024 09:38:10 -0400 (EDT)
+Message-ID: <6e14e41b728437743fddebf78f7981ea15f6b8a8.camel@xry111.site>
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
+ unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, chenglulu <chenglulu@loongson.cn>
+Cc: Jinyang He <hejinyang@loongson.cn>, Nathan Chancellor
+ <nathan@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, WANG Xuerui
+ <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>,  Nick
+ Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,  Youling Tang
+ <tangyouling@kylinos.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org,  llvm@lists.linux.dev,
+ mengqinggang@loongson.cn, cailulu@loongson.cn,  wanglei@loongson.cn,
+ luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>,  Heng Qi
+ <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
+Date: Mon, 17 Jun 2024 21:38:08 +0800
+In-Reply-To: <CAAhV-H6j0WgN6QpHBYcdprdWBpcQq4ObYK5YcE=TVsDNxGFEtA@mail.gmail.com>
+References: <20240604150741.30252-1-xry111@xry111.site>
+	 <20240605054328.GA279426@thelio-3990X>
+	 <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
+	 <20240605062548.GF279426@thelio-3990X>
+	 <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
+	 <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
+	 <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
+	 <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
+	 <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
+	 <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
+	 <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
+	 <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn>
+	 <329dac82e09dfc75e77ae93ebbeacdec1dc9ff7f.camel@xry111.site>
+	 <CAAhV-H5Wz=U4kbX+tXt1qoCr6RaEDkzZXV7B=tgU_8o+X-NtVQ@mail.gmail.com>
+	 <a97cd0f2e2cac10253d6b5cdd0ace3db3b220535.camel@xry111.site>
+	 <CAAhV-H7hhh3Jes0jMrg82+KJCa7GQZW=F9bDtktFh=eazMDX9w@mail.gmail.com>
+	 <12099e6fb7ba377f3dcf6686e0b37200b9818708.camel@xry111.site>
+	 <CAAhV-H6j0WgN6QpHBYcdprdWBpcQq4ObYK5YcE=TVsDNxGFEtA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1718268003.git.haibo1.xu@intel.com> <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
-In-Reply-To: <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Mon, 17 Jun 2024 21:34:18 +0800
-Message-ID: <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: sunilvl@ventanamicro.com, arnd@arndb.de, ajones@ventanamicro.com, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Chen Jiahao <chenjiahao16@huawei.com>, James Morse <james.morse@arm.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Zhao Ke <ke.zhao@shingroup.cn>, 
-	Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-@Catalin Marinas @Huacai Chen
+On Mon, 2024-06-17 at 21:11 +0800, Huacai Chen wrote:
 
-Could you please have a look at this patch for the ACPI_NUMA config on
-ARM64 and LOONGARCH respectively.
 
-Thanks!
 
-On Thu, Jun 13, 2024 at 4:37=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> wrot=
-e:
->
-> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> would do the same thing, so change it to a hidden option and the
-> select statements except for the X86_64_ACPI_NUMA can also go away.
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-> ---
->  arch/arm64/Kconfig        | 1 -
->  arch/loongarch/Kconfig    | 1 -
->  drivers/acpi/numa/Kconfig | 5 +----
->  3 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 5d91259ee7b5..5079ad4e21a5 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1484,7 +1484,6 @@ config HOTPLUG_CPU
->  config NUMA
->         bool "NUMA Memory Allocation and Scheduler Support"
->         select GENERIC_ARCH_NUMA
-> -       select ACPI_NUMA if ACPI
->         select OF_NUMA
->         select HAVE_SETUP_PER_CPU_AREA
->         select NEED_PER_CPU_EMBED_FIRST_CHUNK
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index e38139c576ee..8d9e06e4ad84 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -470,7 +470,6 @@ config NR_CPUS
->  config NUMA
->         bool "NUMA Support"
->         select SMP
-> -       select ACPI_NUMA if ACPI
->         help
->           Say Y to compile the kernel with NUMA (Non-Uniform Memory Acces=
-s)
->           support.  This option improves performance on systems with more
-> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> index 849c2bd820b9..f33194d1e43f 100644
-> --- a/drivers/acpi/numa/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -1,9 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  config ACPI_NUMA
-> -       bool "NUMA support"
-> -       depends on NUMA
-> -       depends on (X86 || ARM64 || LOONGARCH)
-> -       default y if ARM64
-> +       def_bool NUMA && !X86
->
->  config ACPI_HMAT
->         bool "ACPI Heterogeneous Memory Attribute Table Support"
-> --
-> 2.34.1
->
+> > select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB &&=
+ !CC_IS_CLANG && !RUST
+> Maybe we needn't consider RUST here?
+
+Rustc does use $fp that objtool cannot handle as at now.  It can be
+demonstrated with an over-aligned type, similar to Clang:
+
+$ cat t.rs
+#[repr(C, align(64))]
+struct X(i32);
+
+extern { fn f(x: &X) -> i64; }
+
+#[no_mangle]
+fn g() -> i64 {
+    let x =3D X(114514);
+    unsafe {f(&x)}
+}
+$ rustc t.rs --emit=3Dasm --crate-type=3Dstaticlib -O
+$ grep fp t.s
+	st.d	$fp, $sp, 112
+	addi.d	$fp, $sp, 128
+	addi.d	$sp, $fp, -128
+	ld.d	$fp, $sp, 112
+
+The kernel uses rust-bindgen to generate some .rs file from C headers.=20
+And __attribute__((aligned(x))) is directly translated to
+repr(align(x)).  As __attribute__((aligned(x))) is very common in the
+kernel I expect objtool will fail to handle some object code from rustc.
+
+> And can we think AS_HAS_THIN_ADD_SUB always imply
+> AS_HAS_EXPLICIT_RELOCS here?
+
+Maybe, AFAIK there's no assembler using thin add-sub but not explicit
+relocs.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
