@@ -1,130 +1,230 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D24198A02;
-	Mon, 17 Jun 2024 13:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93FB19B5A8
+	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 13:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632065; cv=none; b=Sfw3RTsz03KUXiADdorXpxrsn4jcezoi7zXa8S8Y70OH77nZguJdYRsejWNWfT5/L/hbXKy2zeeyvAGu6qMkdg5OT5riLDzrLlj2FvSJ3QKvbb9WvDIhwrrQqKaUaX2jhZX1zYGKCt9nTWxJWNYzjiI6NovESuA7Xqw09/kRmf4=
+	t=1718632162; cv=none; b=a+NBkb9Xa1C5v/Ga6AjiVDCwosyMzF+EYIep20hK5p+lnhjS7C5RnBYuV1iNGgobcO1ESslweHUPviHFjVovMtMxhbw506CUCvQcXqAL13dygl1ShU49/s7ESBIlXrC0Z7lkfP8CKzooVQFIHaE8nRKw3HI7NFh7GQCVOkObK+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632065; c=relaxed/simple;
-	bh=wWRAYn7Ii42QuGior+4MVW+laPzt0BX582bjd0B8LQ4=;
+	s=arc-20240116; t=1718632162; c=relaxed/simple;
+	bh=HqF4isRv+ArtpWG9OQ68NdMlDfuDGfF02uZsD8+0IVE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BTy2K/TS3z71QJnBPJaVsePD7lgS6S+2Rc5ZxdCJ8z08RL+QlO0rdjGmfWvXDmj9retB9rNvXkY1it3KPkH28i5t8nFFwvmsMG9XkFApITXG5isCzSO9NEJ2wnd9uRp/YmJoFlUiI9DmW7JlcBInzSbOLNQTuAUqySRj04YnZ1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFbR6L+k; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BjNG7hQYrO22epMyG4d9sxqjT6au+t4M61DkoO+hg3q0JOBD+04J9cUl3EZdOqwthplFME5uQH2I172uaKu1GiXs9N+Rm12KYHIG/NKibjvUlwkTkyvz1jCwwv/vE1nwrhFHKqhfWYEpKdjbhitw1gQghAOjcVsK13RdMDeD4ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuQmpaIV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFbR6L+k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80AFC4AF1C;
-	Mon, 17 Jun 2024 13:47:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuQmpaIV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900A9C2BD10
+	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 13:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718632064;
-	bh=wWRAYn7Ii42QuGior+4MVW+laPzt0BX582bjd0B8LQ4=;
+	s=k20201202; t=1718632161;
+	bh=HqF4isRv+ArtpWG9OQ68NdMlDfuDGfF02uZsD8+0IVE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UFbR6L+kwM9z40/S3ZRcr6bcwMsns9uH30KIG8J9kTSaAXHuNddMj01eKvLcW6q3P
-	 93844GiNhFakKVL3DfXVKaUPgg94oo59tSzwFtbu8UQDlRFhD0pt+k5kUR8hAjZItV
-	 agQzomqoK4UhSkgdP45QJQ9F6bEvgR+pR1weKpvHhFjQdfCUUk6Fjlo9p4sg62Qg5u
-	 z4dIl/oxg8daPTIESuXahpWBHDRuUloXGi68TXysU7Md6vtWHGOrOUqtwcp2m/rfN2
-	 WP079IsU19cWF1u7tU6Dm6HAYC/AWdpwfpLlnTQZkWW+3Nhu9PnMAmd7ep6rWxykg/
-	 OX06Ui/wKjR9w==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6ef64b092cso530559766b.1;
-        Mon, 17 Jun 2024 06:47:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXsLABtnO5biA+40i13GF6xMbVTwIdDXDGAzywcMeboSorsTBzSkwP2VjtghHy2ahWSOeispg5jH6dHfx/ekHDgLp17zOgEpJMFguVVyX8XtM1VKzfI8y9tt9D/jM05rg==
-X-Gm-Message-State: AOJu0YzI7d0/MXbjcJMZOB8WGR8iOdbGTDxSjYaB5UAWPbfxmgmYPfTf
-	5igqnKm3BZRq4bP3/JuCLoRamS5kqBA4J8dJOz1mCqNtCns/8z4ftHltqLfEUBHI4zN0REWMYni
-	EU/dAnnIos95mio68zK4+4IxW5Ag=
-X-Google-Smtp-Source: AGHT+IGu4spCnAR/gUgmgSjmW1JeI1VT2iAP/gZA99vnR6EUnwq6gHVnN3HyeQeD7JIrz+fqo/6hp8phZxj26Lckue8=
-X-Received: by 2002:a17:907:a581:b0:a6f:76db:7c60 with SMTP id
- a640c23a62f3a-a6f76db8412mr504637266b.24.1718632063231; Mon, 17 Jun 2024
- 06:47:43 -0700 (PDT)
+	b=VuQmpaIVwaTyg5OMoP0pXhm0Vy2VX5swQY3VSPwDmrB7xDsKCFLgvpDV/3Lw27RZ4
+	 e5SOTu6v1+a7qE5TE9HA1zXI2OzlcTbVyKM/dg9HwOo4+Q7zZQ9M05aGoherz45OUN
+	 9ef4Q0ITItGlOkZhA6Za3x52dkBHzC84fHWlwmq7Tp7kgc5xRZwx00P0bipnxd4bC9
+	 kv6rQu+ea2ZKi9I/J+MzKmYpHyUEJoTuLUbKfwgIVgyV4p2YqG5ANC0RgaE5Ld/MS9
+	 vQyh3ySFaQj00hpGiYTVbPFXSD4Es4C4RRm4k5dsX9ftdjSFmax8RKlmJsmuLZ2Fuy
+	 qLwWTOcjtFicg==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c60b13a56so5199239a12.0
+        for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 06:49:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU74mUYtlK5kYNFH2bIhOLiXuQPUSFNOi0U3/mfgIU458tFVDbzTs03HMeItVPbV81lsUgPyrDA8e+LSmhJ8LqikvVrMiZJmhLO
+X-Gm-Message-State: AOJu0YwTsY9CDtr70wgFyVz0pVv1qTsdHqR4SDNWV4fbQ/mLnFkt25Ro
+	N9naDnAEm8OT/FpfPYvAkhVDzrJmzQJQmdCXV1EoLCVMvIJ+AIPy2+4qXoYAELToyFOkDQ6JdKy
+	5DkVnR8sBATycSLVrOCwMCylMKuE=
+X-Google-Smtp-Source: AGHT+IF/bQhrXZWDIcE6nt9iGYTRSapLq5kG6SVBui7JWuoMT5hDRYJsYe2vSL3kzufUGoaIlUNzXzhM4BKP0uETtpE=
+X-Received: by 2002:a50:955c:0:b0:579:cf9d:d6a with SMTP id
+ 4fb4d7f45d1cf-57cbd67dc3cmr5392873a12.20.1718632160011; Mon, 17 Jun 2024
+ 06:49:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240604150741.30252-1-xry111@xry111.site> <20240605054328.GA279426@thelio-3990X>
- <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
- <20240605062548.GF279426@thelio-3990X> <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
- <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
- <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
- <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn> <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
- <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn> <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
- <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn> <329dac82e09dfc75e77ae93ebbeacdec1dc9ff7f.camel@xry111.site>
- <CAAhV-H5Wz=U4kbX+tXt1qoCr6RaEDkzZXV7B=tgU_8o+X-NtVQ@mail.gmail.com>
- <a97cd0f2e2cac10253d6b5cdd0ace3db3b220535.camel@xry111.site>
- <CAAhV-H7hhh3Jes0jMrg82+KJCa7GQZW=F9bDtktFh=eazMDX9w@mail.gmail.com>
- <12099e6fb7ba377f3dcf6686e0b37200b9818708.camel@xry111.site>
- <CAAhV-H6j0WgN6QpHBYcdprdWBpcQq4ObYK5YcE=TVsDNxGFEtA@mail.gmail.com> <6e14e41b728437743fddebf78f7981ea15f6b8a8.camel@xry111.site>
-In-Reply-To: <6e14e41b728437743fddebf78f7981ea15f6b8a8.camel@xry111.site>
+References: <20240613-loongarch64-sleep-v1-0-a245232af5e4@flygoat.com>
+ <20240613-loongarch64-sleep-v1-1-a245232af5e4@flygoat.com>
+ <CAAhV-H7TqgJiR9z9jEOpv34kijONLVu5Bv2PChjUWxhMKU_Zvw@mail.gmail.com> <3e3d6ee8-a758-4d99-be77-89b26b0ab591@app.fastmail.com>
+In-Reply-To: <3e3d6ee8-a758-4d99-be77-89b26b0ab591@app.fastmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 17 Jun 2024 21:47:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5jLb1E87n=FcbmbH1ZXiEsxnNgLvxWUtCV9vFeaNW1ng@mail.gmail.com>
-Message-ID: <CAAhV-H5jLb1E87n=FcbmbH1ZXiEsxnNgLvxWUtCV9vFeaNW1ng@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
- unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: chenglulu <chenglulu@loongson.cn>, Jinyang He <hejinyang@loongson.cn>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn, 
-	luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>, 
-	Heng Qi <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
+Date: Mon, 17 Jun 2024 21:49:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H54ORMNCQpJahPiSdrrUita7V1-08jZsERF9K+q=B-fGg@mail.gmail.com>
+Message-ID: <CAAhV-H54ORMNCQpJahPiSdrrUita7V1-08jZsERF9K+q=B-fGg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: Initialise unused Direct Map Windows
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 17, 2024 at 9:38=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On Mon, 2024-06-17 at 21:11 +0800, Huacai Chen wrote:
+On Fri, Jun 14, 2024 at 10:18=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.c=
+om> wrote:
 >
 >
 >
-> > > select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB =
-&& !CC_IS_CLANG && !RUST
-> > Maybe we needn't consider RUST here?
+> =E5=9C=A82024=E5=B9=B46=E6=9C=8814=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=
+=E5=8D=883:13=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi, Jiaxun,
+> >
+> > On Fri, Jun 14, 2024 at 12:41=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygo=
+at.com> wrote:
+> >>
+> >> DMW 2 & 3 are unused by kernel, however firmware may leave
+> >> garbage in them and interfere kernel's address mapping.
+> >>
+> >> Clear them as necessary.
+> > I think the current status is as expected, we don't want kernel access
+> > to non-8000 and non-9000 addresses. And low-end chips may have only
+> > two DMWs.
 >
-> Rustc does use $fp that objtool cannot handle as at now.  It can be
-> demonstrated with an over-aligned type, similar to Clang:
->
-> $ cat t.rs
-> #[repr(C, align(64))]
-> struct X(i32);
->
-> extern { fn f(x: &X) -> i64; }
->
-> #[no_mangle]
-> fn g() -> i64 {
->     let x =3D X(114514);
->     unsafe {f(&x)}
-> }
-> $ rustc t.rs --emit=3Dasm --crate-type=3Dstaticlib -O
-> $ grep fp t.s
->         st.d    $fp, $sp, 112
->         addi.d  $fp, $sp, 128
->         addi.d  $sp, $fp, -128
->         ld.d    $fp, $sp, 112
->
-> The kernel uses rust-bindgen to generate some .rs file from C headers.
-> And __attribute__((aligned(x))) is directly translated to
-> repr(align(x)).  As __attribute__((aligned(x))) is very common in the
-> kernel I expect objtool will fail to handle some object code from rustc.
-My meaning is: the build robot doesn't enable RUST now (maybe I'm
-wrong), and this problem will surely be fixed in future, so we can
-make the condition as simple as possible.
+> I see, I'll remove U-Boot's dependency to DMW 2 and 3 then.
+I was told that DMW2&3 are probably exist (but cannot used for
+instruction fetch), so I applied this patch and implement DMW-based
+ioremap_wc().
+
+https://github.com/chenhuacai/linux/commit/fa9f4109bf19a19736877d01e3e35297=
+56a96095
+
 
 Huacai
 
 >
-> > And can we think AS_HAS_THIN_ADD_SUB always imply
-> > AS_HAS_EXPLICIT_RELOCS here?
+> Thanks
+> - Jiaxun
 >
-> Maybe, AFAIK there's no assembler using thin add-sub but not explicit
-> relocs.
+> >
+> > Huacai
+> >
+> >
+> > Huacai
+> >
+> >>
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> ---
+> >>  arch/loongarch/include/asm/loongarch.h   |  4 ++++
+> >>  arch/loongarch/include/asm/stackframe.h  | 11 +++++++++++
+> >>  arch/loongarch/kernel/head.S             | 12 ++----------
+> >>  arch/loongarch/power/suspend_asm.S       |  6 +-----
+> >>  drivers/firmware/efi/libstub/loongarch.c |  2 ++
+> >>  5 files changed, 20 insertions(+), 15 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
+nclude/asm/loongarch.h
+> >> index eb09adda54b7..3720096efcf9 100644
+> >> --- a/arch/loongarch/include/asm/loongarch.h
+> >> +++ b/arch/loongarch/include/asm/loongarch.h
+> >> @@ -889,6 +889,10 @@
+> >>  #define CSR_DMW1_BASE          (CSR_DMW1_VSEG << DMW_PABITS)
+> >>  #define CSR_DMW1_INIT          (CSR_DMW1_BASE | CSR_DMW1_MAT | CSR_DM=
+W1_PLV0)
+> >>
+> >> +/* Direct Map window 2/3 - unused */
+> >> +#define CSR_DMW2_INIT          0
+> >> +#define CSR_DMW3_INIT          0
+> >> +
+> >>  /* Performance Counter registers */
+> >>  #define LOONGARCH_CSR_PERFCTRL0                0x200   /* 32 perf eve=
+nt 0 config */
+> >>  #define LOONGARCH_CSR_PERFCNTR0                0x201   /* 64 perf eve=
+nt 0 count value */
+> >> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/=
+include/asm/stackframe.h
+> >> index d9eafd3ee3d1..10c5dcf56bc7 100644
+> >> --- a/arch/loongarch/include/asm/stackframe.h
+> >> +++ b/arch/loongarch/include/asm/stackframe.h
+> >> @@ -38,6 +38,17 @@
+> >>         cfi_restore \reg \offset \docfi
+> >>         .endm
+> >>
+> >> +       .macro SETUP_DMWS temp1
+> >> +       li.d    \temp1, CSR_DMW0_INIT
+> >> +       csrwr   \temp1, LOONGARCH_CSR_DMWIN0
+> >> +       li.d    \temp1, CSR_DMW1_INIT
+> >> +       csrwr   \temp1, LOONGARCH_CSR_DMWIN1
+> >> +       li.d    \temp1, CSR_DMW2_INIT
+> >> +       csrwr   \temp1, LOONGARCH_CSR_DMWIN2
+> >> +       li.d    \temp1, CSR_DMW3_INIT
+> >> +       csrwr   \temp1, LOONGARCH_CSR_DMWIN3
+> >> +       .endm
+> >> +
+> >>  /* Jump to the runtime virtual address. */
+> >>         .macro JUMP_VIRT_ADDR temp1 temp2
+> >>         li.d    \temp1, CACHE_BASE
+> >> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head=
+.S
+> >> index 4677ea8fa8e9..1a71fc09bfd6 100644
+> >> --- a/arch/loongarch/kernel/head.S
+> >> +++ b/arch/loongarch/kernel/head.S
+> >> @@ -44,11 +44,7 @@ SYM_DATA(kernel_fsize, .long _kernel_fsize);
+> >>  SYM_CODE_START(kernel_entry)                   # kernel entry point
+> >>
+> >>         /* Config direct window and set PG */
+> >> -       li.d            t0, CSR_DMW0_INIT       # UC, PLV0, 0x8000 xxx=
+x xxxx xxxx
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN0
+> >> -       li.d            t0, CSR_DMW1_INIT       # CA, PLV0, 0x9000 xxx=
+x xxxx xxxx
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN1
+> >> -
+> >> +       SETUP_DMWS      t0
+> >>         JUMP_VIRT_ADDR  t0, t1
+> >>
+> >>         /* Enable PG */
+> >> @@ -124,11 +120,7 @@ SYM_CODE_END(kernel_entry)
+> >>   * function after setting up the stack and tp registers.
+> >>   */
+> >>  SYM_CODE_START(smpboot_entry)
+> >> -       li.d            t0, CSR_DMW0_INIT       # UC, PLV0
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN0
+> >> -       li.d            t0, CSR_DMW1_INIT       # CA, PLV0
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN1
+> >> -
+> >> +       SETUP_DMWS      t0
+> >>         JUMP_VIRT_ADDR  t0, t1
+> >>
+> >>  #ifdef CONFIG_PAGE_SIZE_4KB
+> >> diff --git a/arch/loongarch/power/suspend_asm.S b/arch/loongarch/power=
+/suspend_asm.S
+> >> index e2fc3b4e31f0..6fdd74eb219b 100644
+> >> --- a/arch/loongarch/power/suspend_asm.S
+> >> +++ b/arch/loongarch/power/suspend_asm.S
+> >> @@ -73,11 +73,7 @@ SYM_FUNC_START(loongarch_suspend_enter)
+> >>          * Reload all of the registers and return.
+> >>          */
+> >>  SYM_INNER_LABEL(loongarch_wakeup_start, SYM_L_GLOBAL)
+> >> -       li.d            t0, CSR_DMW0_INIT       # UC, PLV0
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN0
+> >> -       li.d            t0, CSR_DMW1_INIT       # CA, PLV0
+> >> -       csrwr           t0, LOONGARCH_CSR_DMWIN1
+> >> -
+> >> +       SETUP_DMWS      t0
+> >>         JUMP_VIRT_ADDR  t0, t1
+> >>
+> >>         /* Enable PG */
+> >> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmwa=
+re/efi/libstub/loongarch.c
+> >> index d0ef93551c44..3782d0a187d1 100644
+> >> --- a/drivers/firmware/efi/libstub/loongarch.c
+> >> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> >> @@ -74,6 +74,8 @@ efi_status_t efi_boot_kernel(void *handle, efi_loade=
+d_image_t *image,
+> >>         /* Config Direct Mapping */
+> >>         csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
+> >>         csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
+> >> +       csr_write64(CSR_DMW2_INIT, LOONGARCH_CSR_DMWIN2);
+> >> +       csr_write64(CSR_DMW3_INIT, LOONGARCH_CSR_DMWIN3);
+> >>
+> >>         real_kernel_entry =3D (void *)kernel_entry_address(kernel_addr=
+, image);
+> >>
+> >>
+> >> --
+> >> 2.43.0
+> >>
+> >>
 >
 > --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+> - Jiaxun
 >
