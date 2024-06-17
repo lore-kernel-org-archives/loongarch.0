@@ -1,120 +1,303 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B17319884D;
-	Mon, 17 Jun 2024 13:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631504; cv=none; b=DthjxFGlvcBGnGFQTsyWOO/6jFfek+LpHgXTNpZECzvvci2yPcPG/P70GNofW+ID8rKi36zuQqctLZt9K0T+Xw7Z7dzgleB3rc2J5jQKzrun992oPWujOpo5BqVbpLkVEvQxBC4yKDnBAVeKC64FkLhWsIF6LInhkcLFXjsVM5E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631504; c=relaxed/simple;
-	bh=akWFXFL9APSeZUybdYwbaKWZJ+YSl23R6WS8xUNuMz4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CA4198838
+	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 13:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718631802; cv=pass; b=WBVtSfE6zrLwqgF04toTl9DO+pvVvS4WX2FBbuXeia212aV3r5mEUkWTR+Ky90LTyBmiYuyTcoTxtpH44qzoiciMZUCqrfcWnvSvA1qG/VXgKy4mnmfUEJi2K3oOMcKAwB8vlMpZyK9GAM64iTISu7+5PM7jEmWOZ4SSov0bYTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718631802; c=relaxed/simple;
+	bh=c1E9WBMtpBHWD0CIJK7m5aHMGnrQFnw/g0UX/IVKAuk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NkZkdBzpyc90bOfTj+gHW2141xYoIvHZULn3wID6n20IL0oz3AbK/VZa2fl5sb/60pBwO3stH0E2UE4Hc+bSPdTQKEBzRpftBm3iUOt0VaDRs+1RDXR4GKl2Tpjk6cANOfwndbz2rl+pd0KnjsBxXCYfwJtjh8WxuQ8Bb9dmhZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U+3Yx4vN; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	 Content-Type:MIME-Version; b=c+DNrHoWNurq2B6S79S/zw8EZyjBBarq51FAi2+kE6p5jmEecFRMDgCIuSHJI+rXUyoPPpGwhEssJHLAQXNy/5deDP4I0MjlB0Y3b+IlSCH6ZFQIqn1t5+7XzGKtqJQENUea3/qFBHPuY67uOnzVaULuPf5cdlK9Rad7NerxXME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=MhZhQSod; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U+3Yx4vN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1718631496;
-	bh=akWFXFL9APSeZUybdYwbaKWZJ+YSl23R6WS8xUNuMz4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=U+3Yx4vNAiPitIxm1W3qEsYpkCOC/D0rM4UzLSFkheUmCZ0efYVicNfA8w8l14WGx
-	 ZTJB4/Ecew6fjurxAgwvnX5+Ee1AByQjroNY9Jz0NY0Hf8sqFuZV3f0W7DOGLr0Dzu
-	 8YQ20DhF2cA1vtYDSa4dP/QbH4weuk2FPW8NlVRA=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C2D1566A19;
-	Mon, 17 Jun 2024 09:38:10 -0400 (EDT)
-Message-ID: <6e14e41b728437743fddebf78f7981ea15f6b8a8.camel@xry111.site>
-Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
- unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, chenglulu <chenglulu@loongson.cn>
-Cc: Jinyang He <hejinyang@loongson.cn>, Nathan Chancellor
- <nathan@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, WANG Xuerui
- <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>,  Nick
- Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>,  Youling Tang
- <tangyouling@kylinos.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org,  llvm@lists.linux.dev,
- mengqinggang@loongson.cn, cailulu@loongson.cn,  wanglei@loongson.cn,
- luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>,  Heng Qi
- <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
-Date: Mon, 17 Jun 2024 21:38:08 +0800
-In-Reply-To: <CAAhV-H6j0WgN6QpHBYcdprdWBpcQq4ObYK5YcE=TVsDNxGFEtA@mail.gmail.com>
-References: <20240604150741.30252-1-xry111@xry111.site>
-	 <20240605054328.GA279426@thelio-3990X>
-	 <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
-	 <20240605062548.GF279426@thelio-3990X>
-	 <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
-	 <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
-	 <ada035690e446909c3cdbf9a43a92def96020615.camel@xry111.site>
-	 <82b7e6ea-c2cb-6364-ebe9-bff928028408@loongson.cn>
-	 <1c132209a612e2e8953f0b458fc01853120db9a9.camel@xry111.site>
-	 <2bf11cd2-8449-acda-f5ad-659c38cb018e@loongson.cn>
-	 <96a2e8a80c06772b64fcbdba42e1dae2d68a53a7.camel@xry111.site>
-	 <2bd6ae20-ec56-c1a2-c5dd-e8c978a376d3@loongson.cn>
-	 <329dac82e09dfc75e77ae93ebbeacdec1dc9ff7f.camel@xry111.site>
-	 <CAAhV-H5Wz=U4kbX+tXt1qoCr6RaEDkzZXV7B=tgU_8o+X-NtVQ@mail.gmail.com>
-	 <a97cd0f2e2cac10253d6b5cdd0ace3db3b220535.camel@xry111.site>
-	 <CAAhV-H7hhh3Jes0jMrg82+KJCa7GQZW=F9bDtktFh=eazMDX9w@mail.gmail.com>
-	 <12099e6fb7ba377f3dcf6686e0b37200b9818708.camel@xry111.site>
-	 <CAAhV-H6j0WgN6QpHBYcdprdWBpcQq4ObYK5YcE=TVsDNxGFEtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="MhZhQSod"
+ARC-Seal: i=1; a=rsa-sha256; t=1718631796; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Hokgeck+Y8PouhlrlJ4mIrhR0wChdzLv1Tn3iKLa2QeUgeI/3ij+hqsQFiEStPjWqBFsT+LZRD/r5ubZpGFN9WG4OMHnAGWZqLeWcSaJecefvTBgyEHcDdivgMGctiqYCP5j2baOA3hIEau4SPngxRUkgGuztxEzJ6APxDexfG4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1718631796; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=c1E9WBMtpBHWD0CIJK7m5aHMGnrQFnw/g0UX/IVKAuk=; 
+	b=YWPfDz34xWwrGHwqJEkIi8FN4QENpZj8WRDrU9j9O3HaFsVc2liixk8GaZX70QhhMAyQwiZNgPZ4AtgE3acfIRH6EyFLtOKUNrbGxWG+ikq8SPmLwEadiVSeBHehvi3wg4OPi+WsGEgXowxLzNYxZV2J37xDZGFE0LkTAbmu+v0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1718631796;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=c1E9WBMtpBHWD0CIJK7m5aHMGnrQFnw/g0UX/IVKAuk=;
+	b=MhZhQSodKoduTW+7fwvyLqLSoTySqeH1oNRkj2hDaMwXVYxzW1eiPy+wd21sforu
+	CqT5Svuevqs8B0ZqG+D8nemWSjGEsieCLyE7YPXUA0rWDWczBuyl3xriRzIBLzIs5ax
+	MtgiM2uVGrA2qMOVd4/3orR8nw/QExLcGr8FFsoFWNOzRuQrhpbHlYMZD1+TDXPIQux
+	6q3plFohBTVAAlzAWxxHCbYHfboTIt1fv3+LyuQN+Qb0DZbHTq58oMGPNT+0ox/T5vx
+	TlT+23b79pAx+wr1fSebwce4u5hCV2sZHxJQkR9NBXV4gpxCvmFPhC8Ulh+jTG0LQL8
+	O2sufHV9ZA==
+Received: by mx.zohomail.com with SMTPS id 1718631794981796.3743031204694;
+	Mon, 17 Jun 2024 06:43:14 -0700 (PDT)
+Message-ID: <e88d4722fa3bbd7104b140debdd85cb212628944.camel@icenowy.me>
+Subject: Re: [PATCH 1/2] drm/amdgpu: make duplicated EOP packet for GFX7/8
+ have real content
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Alex
+ Deucher <alexander.deucher@amd.com>, Pan Xinhui <Xinhui.Pan@amd.com>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pierre-Eric
+ Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Date: Mon, 17 Jun 2024 21:43:08 +0800
+In-Reply-To: <09fbcd1f-c7b1-47e3-9146-17f8189978a8@amd.com>
+References: <20240617105846.1516006-1-uwu@icenowy.me>
+	 <20240617105846.1516006-2-uwu@icenowy.me>
+	 <88337509-3ad7-47aa-b70f-5294f7f1e486@amd.com>
+	 <b4ebdbce2f44c06806a650e72b1b6eb9a16dffe6.camel@icenowy.me>
+	 <09fbcd1f-c7b1-47e3-9146-17f8189978a8@amd.com>
+Organization: Anthon Open-Source Community
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-ZohoMailClient: External
 
-On Mon, 2024-06-17 at 21:11 +0800, Huacai Chen wrote:
+=E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 15:09 +0200=EF=BC=
+=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> Am 17.06.24 um 15:03 schrieb Icenowy Zheng:
+> > =E5=9C=A8 2024-06-17=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 14:35 +0200=EF=
+=BC=8CChristian K=C3=B6nig=E5=86=99=E9=81=93=EF=BC=9A
+> > > Am 17.06.24 um 12:58 schrieb Icenowy Zheng:
+> > > > The duplication of EOP packets for GFX7/8, with the former one
+> > > > have
+> > > > seq-1 written and the latter one have seq written, seems to
+> > > > confuse
+> > > > some
+> > > > hardware platform (e.g. Loongson 7A series PCIe controllers).
+> > > >=20
+> > > > Make the content of the duplicated EOP packet the same with the
+> > > > real
+> > > > one, only masking any possible interrupts.
+> > > Well completely NAK to that, exactly that disables the
+> > > workaround.
+> > >=20
+> > > The CPU needs to see two different values written here.
+> > Why do the CPU need to see two different values here? Only the
+> > second
+> > packet will raise an interrupt before and after applying this
+> > patch,
+> > and the first packet's result should just be overriden on ordinary
+> > platforms. The CPU won't see the first one, until it's polling for
+> > the
+> > address for a very short interval, so short that the GPU CP
+> > couldn't
+> > execute 2 commands.
+>=20
+> Yes exactly that. We need to make two writes, one with the old value=20
+> (seq - 1) and a second with the real value (seq).
+>=20
+> Otherwise it is possible that a polling CPU would see the sequence=20
+> before the second EOP is issued with results in incoherent view of
+> memory.
 
+In this case shouldn't we write seq-1 before any work, and then write
+seq after work, like what is done in Mesa?
 
+As what I see, Mesa uses another command buffer to emit a
+EVENT_WRITE_EOP writing 0, and commit this command buffer before the
+real command buffer.
 
-> > select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB &&=
- !CC_IS_CLANG && !RUST
-> Maybe we needn't consider RUST here?
+>=20
+> > Or do you mean the GPU needs to see two different values being
+> > written,
+> > or they will be merged into only one write request?
+> >=20
+> > Please give out more information about this workaround, otherwise
+> > the
+> > GPU hang problem on Loongson platforms will persist.
+>=20
+> Well if Loongson can't handle two consecutive write operations to the
+> same address with different values then you have a massive platform
+> bug.
 
-Rustc does use $fp that objtool cannot handle as at now.  It can be
-demonstrated with an over-aligned type, similar to Clang:
+I think the issue is triggered when two consecutive write operations
+and one IRQ is present, which is exactly the case of this function.
 
-$ cat t.rs
-#[repr(C, align(64))]
-struct X(i32);
+>=20
+> That is something which can happen all the time throughout the
+> operation.
+>=20
+> Regards,
+> Christian.
+>=20
+> >=20
+> > > Regards,
+> > > Christian.
+> > >=20
+> > > > Fixes: bf26da927a1c ("drm/amdgpu: add cache flush workaround to
+> > > > gfx8 emit_fence")
+> > > > Fixes: a2e73f56fa62 ("drm/amdgpu: Add support for CIK parts")
+> > > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> > > > ---
+> > > > =C2=A0=C2=A0 drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 12 +++++------=
+-
+> > > > =C2=A0=C2=A0 drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 12 ++++-------=
+-
+> > > > =C2=A0=C2=A0 2 files changed, 9 insertions(+), 15 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> > > > index 541dbd70d8c75..778f27f1a34fe 100644
+> > > > --- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> > > > +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+> > > > @@ -2117,9 +2117,8 @@ static void
+> > > > gfx_v7_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64
+> > > > addr,
+> > > > =C2=A0=C2=A0 {
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool write64b=
+it =3D flags & AMDGPU_FENCE_FLAG_64BIT;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool int_sel =
+=3D flags & AMDGPU_FENCE_FLAG_INT;
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Workaround for cache =
+flush problems. First send a
+> > > > dummy
+> > > > EOP
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * event down the pipe w=
+ith seq one below.
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Workaround for cache =
+flush problems, send EOP twice.
+> > > > */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring,
+> > > > PACKET3(PACKET3_EVENT_WRITE_EOP,
+> > > > 4));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (EOP_TCL1_ACTION_EN |
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EOP_TC_ACTION_EN =
+|
+> > > > @@ -2127,11 +2126,10 @@ static void
+> > > > gfx_v7_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64
+> > > > addr,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EVENT_INDEX(5)));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, addr & 0xfffffffc);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (upper_32_bits(addr) & 0xffff)
+> > > > |
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0DATA_SEL(1) | INT_SEL(0));
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+lower_32_bits(seq - 1));
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+upper_32_bits(seq - 1));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0DATA_SEL(write64bit ? 2 : 1) |
+> > > > INT_SEL(0));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+lower_32_bits(seq));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+upper_32_bits(seq));
+> > > > =C2=A0=C2=A0=20
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Then send the real EO=
+P event down the pipe. */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring,
+> > > > PACKET3(PACKET3_EVENT_WRITE_EOP,
+> > > > 4));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (EOP_TCL1_ACTION_EN |
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EOP_TC_ACTION_EN =
+|
+> > > > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> > > > index 2f0e72caee1af..39a7d60f1fd69 100644
+> > > > --- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> > > > +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> > > > @@ -6153,9 +6153,7 @@ static void
+> > > > gfx_v8_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64
+> > > > addr,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool write64b=
+it =3D flags & AMDGPU_FENCE_FLAG_64BIT;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool int_sel =
+=3D flags & AMDGPU_FENCE_FLAG_INT;
+> > > > =C2=A0=C2=A0=20
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Workaround for cache =
+flush problems. First send a
+> > > > dummy
+> > > > EOP
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * event down the pipe w=
+ith seq one below.
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Workaround for cache =
+flush problems, send EOP twice.
+> > > > */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring,
+> > > > PACKET3(PACKET3_EVENT_WRITE_EOP,
+> > > > 4));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (EOP_TCL1_ACTION_EN |
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EOP_TC_ACTION_EN =
+|
+> > > > @@ -6164,12 +6162,10 @@ static void
+> > > > gfx_v8_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64
+> > > > addr,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EVENT_INDEX(5)));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, addr & 0xfffffffc);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (upper_32_bits(addr) & 0xffff)
+> > > > |
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0DATA_SEL(1) | INT_SEL(0));
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+lower_32_bits(seq - 1));
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+upper_32_bits(seq - 1));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 DATA_SEL(write64bit ? 2 : 1) |
+> > > > INT_SEL(0));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+lower_32_bits(seq));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_write(ring, =
+upper_32_bits(seq));
+> > > > =C2=A0=C2=A0=20
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Then send the real EO=
+P event down the pipe:
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * EVENT_WRITE_EOP - flu=
+sh caches, send int */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring,
+> > > > PACKET3(PACKET3_EVENT_WRITE_EOP,
+> > > > 4));
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amdgpu_ring_w=
+rite(ring, (EOP_TCL1_ACTION_EN |
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EOP_TC_ACTION_EN =
+|
+>=20
 
-extern { fn f(x: &X) -> i64; }
-
-#[no_mangle]
-fn g() -> i64 {
-    let x =3D X(114514);
-    unsafe {f(&x)}
-}
-$ rustc t.rs --emit=3Dasm --crate-type=3Dstaticlib -O
-$ grep fp t.s
-	st.d	$fp, $sp, 112
-	addi.d	$fp, $sp, 128
-	addi.d	$sp, $fp, -128
-	ld.d	$fp, $sp, 112
-
-The kernel uses rust-bindgen to generate some .rs file from C headers.=20
-And __attribute__((aligned(x))) is directly translated to
-repr(align(x)).  As __attribute__((aligned(x))) is very common in the
-kernel I expect objtool will fail to handle some object code from rustc.
-
-> And can we think AS_HAS_THIN_ADD_SUB always imply
-> AS_HAS_EXPLICIT_RELOCS here?
-
-Maybe, AFAIK there's no assembler using thin add-sub but not explicit
-relocs.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
