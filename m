@@ -1,129 +1,82 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C52139FFB
-	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 06:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718607222; cv=none; b=Uf93jI0CDLX507gwPBxkeV+NqjOm0w1t/fBkXOLsSYTYamaYC550xo1l/Bm8OFjvl23cNiksgFb0tiF1JtlTySEyYIEeJJPEIMczIDd+LwjCEmkQAIxHzh7fQXvQLvn++LAqBwC36/qcB5e3AeDCBch55FPRHl1ZXruSnf4tZ4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718607222; c=relaxed/simple;
-	bh=HMhxQrMvqhxThBZMHTW2DHWQNufej71aVz9xF7xevoY=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=fIQoSuXelITMLN8vshF2AGBIieJM9/rmeUeqiIghb0hRC+BlYNjg0yTmA5+YU4wfagK/89I55kkm1vT8ZqdphnMLmXndb3FetOkdZWU9GkQify4mgefP19Yk5bYTOCLnzQlIUj8S0IbMAo1ulNclfM8Lw08RjGYhk8MnkLB2yI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RAK1/bkL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fIiiLBFG; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894965025E
+	for <loongarch@lists.linux.dev>; Mon, 17 Jun 2024 10:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718621950; cv=pass; b=IoGNCYVnny6gcSdd8U7XUq/FFxhwSyN77E07k/NHjGi2fiKfKhaMCVNxnNdbpwcaaidjnOtXRSACx6Dam5VR5Dn8MkEtwoFz4j6YteTh07NfT5zNJbp9r1ijnGrUCspvUkZj1WZ1pNmpcMw4/zlJFzTvfy2vWPTCY+Gcifiv/pc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718621950; c=relaxed/simple;
+	bh=XairXL6336cO2ADQJcpKT06x0AoJbC+Ijt3sC/Ms+QI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZKuL+kjNwJ3h0ittaxszx3npCaU29xvyTledzNyomt9RI8VIxdBSrDGGhq6hEbUKSN+30WspPSLLp0bN3aSZlt9jcggedfwgZgPwczCJfoHjA+pEtZTUPIgejE8co0+4wELtnk+NytFH6O9Wug6lo8LLGZtHD6iPJg1WPy+0B3g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=CpqG31sy; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RAK1/bkL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fIiiLBFG"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id C6C841C00063;
-	Mon, 17 Jun 2024 02:53:39 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 17 Jun 2024 02:53:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1718607219;
-	 x=1718693619; bh=GSghH2pGRZY52mc9Nnpt/iaApIrYJkTOUDPXGN87ZU0=; b=
-	RAK1/bkLXXdzhoxtzur2KOZgv1xIcdw7UM0NkLGD4DoqnrAny11zDCzbj9LgtfZ/
-	N9W53tLZd/1oaG+/x1nEjcgIp11PBemwv0eUEIkHQsgVRTRCSqH0FElTiVVwsDQo
-	TOKxG42ulgjspEGeGBD0W3WWbp3Ev4lJsp47db5GOnF/DWkLJ9HfPT3A2QjmCJXH
-	b7MQc30Q5n6BJwy7+lTkfocnH1frV9NAUJiVv3ruutsN5xI9oqUYoIy2HVxUDz4r
-	gwEF4VwealGgBNROSQhLGKhQdOStMGQRp9iZveaxSBRFhscLdqoKLQL+XlIw68Rx
-	vm0CcalxFRA6Uv6OBYRBcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718607219; x=
-	1718693619; bh=GSghH2pGRZY52mc9Nnpt/iaApIrYJkTOUDPXGN87ZU0=; b=f
-	IiiLBFGhZS483HDigcAvBs7UqE3myYVnxVe0RE4jk/YwKsWCgaTqGN2U6zqwOi5O
-	CqYhGtijE3LUmAYIAAQodOhRyLbpFJnAMp42aiWXOEi7CcCttpL8TB7pv1qy3QRP
-	EhPP/IC/ciRpeJczGWeQK45+JlMvZsEf+a4Pif2Aq9Nl9gJeqjjrHreeO8+Sr1Bk
-	DxcZ8pVWbIYMNpZqOrXz4O0cWWKak10mw5b/jYGKv1d/CWY52rSvI5zTW18etzJW
-	sVOkt8NAoSDZagqFDBji/pD+5Bh6Pa3uo+EXi7tcZ/HqpENNpxgBEcCGJPFEgcpw
-	tKdUzA8Cv/wVG4KrRxCEg==
-X-ME-Sender: <xms:cd1vZv8HRk5x7oZzuWR4fCr_rzNvsR5meCOAV2f78VS_fV5mEXEK8w>
-    <xme:cd1vZrudCgjJJYD4-KjGjm9B9L1BcUu4VkqBHwwyXvfvUGGDE9ayaI8E3AUPsZ12f
-    HhaGeIfkDlwCgIOhmg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgedgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeeuuedujeehgedvvddvjefgkeekudegffeuiedukefgieeivdefjeehvefh
-    heduteenucffohhmrghinhepshgvrghrtghhfhhogidrohhrghenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:cd1vZtCC_3_-mUKmHnnZmEIGsVyA-4D88iPYGxl9AfV60NKuX4ffLw>
-    <xmx:cd1vZrf-9EvkBAtAqBXfFrm3GWaz6W2Js3Ft9RYoO-5UCfHBd0HwUg>
-    <xmx:cd1vZkOiIDN4FUkZYySZcq6Z8kyyQgXEn94oE0hpK39yiBfx9eEmUA>
-    <xmx:cd1vZtnkV0eqVfpX0CWZFEj0mATNwXpcZcPAQ-vaAkkS0zLqzApRDA>
-    <xmx:c91vZtnfBB5Bfsia32vJMRD6-SdXefEoHHJ5TqWN-l6WLzfmo6flsq3a>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 97BECB6008D; Mon, 17 Jun 2024 02:53:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="CpqG31sy"
+ARC-Seal: i=1; a=rsa-sha256; t=1718621943; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=oHaER6uPIKsyeIAcWHi1RHRYgbHQRsphk+c4CK1G6GBPK8kfPHC8QUyeNQXw7DsYV2EmmeGj8vmEsPCei9i1IR3L8vmtWeb+CHC7bvOHspHI/T/lB6ao9LefvAvE5D94QRefC1qSXrp3d5B3WV4z6ItnVJGGWmN9CETSIXcz358=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1718621943; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=u+O1n/OB/Q+PPfTIjJ9hQgiheZf7bi7XElMSkoNsqp8=; 
+	b=HOK9MPLV0sv9c78gp5wUOoZSzelXcFeIxJtko4T7bTdmpUBs4/JWgIPshMMFGO8khOtLC3jiyYvfnOvV92DyA7luRanjfO6FA2mlon2xNaF7A3pO3UZsQOy3MZm16bEl/WkUN+S6YTSzwwwy973Hyc0su6Y8CtX80p7aYYsNLv8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1718621943;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=u+O1n/OB/Q+PPfTIjJ9hQgiheZf7bi7XElMSkoNsqp8=;
+	b=CpqG31sy0BhHhRCSPviAS5RKgs35pjOqDiVH7RXl29eMLj6O9QRcKbjoWm1e/c0w
+	uxyw12IhvFPu0qBetTrtQOuZ1H7MoKQ2Q/k/socq2dI4QgpRwSYVHKBH+jdIjrkqWvq
+	lEpExaHI78AWlJrFMpMLwtnNfu19jdc5F/9zd1+YrpEJV2fKWGPSFZFRCq/Nql87njY
+	Lu4z4oFiq9hRdsIJ6LEwg1Vaue7ryjar21/eOp5vC4l88JGFLqPAhLfNwY0ag3SOonc
+	wuA2nxuLWN9crJsHVD6s19ZSFVgnFhEDea7CUdyBiWKhKqS1thQWHyV7lGt3lxl+svl
+	LrfheKPjNw==
+Received: by mx.zohomail.com with SMTPS id 1718621940916892.2587924932478;
+	Mon, 17 Jun 2024 03:59:00 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Pan Xinhui <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH 0/2] Fixes of AMD GFX7/8 hang on Loongson platforms
+Date: Mon, 17 Jun 2024 18:58:44 +0800
+Message-ID: <20240617105846.1516006-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <b783ee7b-1d27-4793-91cc-ff9d3f4f2103@app.fastmail.com>
-In-Reply-To: <c2b1ca127504e519c04a36179ba6c486f2ec0a08.camel@xry111.site>
-References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
- <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com>
- <CAAhV-H5kn2xPLqgop0iOyg-tc5kAYcuNo3cd+f3yCdkN=cJDug@mail.gmail.com>
- <fcdeb993-37d6-42e0-8737-3be41413f03d@app.fastmail.com>
- <CAAhV-H4s_utEOtFDwjPTqxnMWTVjWhmS7bEVRX+t8HK5QDA8Vg@mail.gmail.com>
- <a21a0878-021e-4990-a59d-b10f204a018b@app.fastmail.com>
- <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
- <cdef45d36d0e71da5f0534b3783b81c82405bda3.camel@xry111.site>
- <CAAhV-H4R_HJAB0baqUgA8ucbwWNVN4sc9EV91zAk9Ch302_7zg@mail.gmail.com>
- <56ace686-d4b4-4b4c-a8a6-af06ec0d48f2@app.fastmail.com>
- <08ff168afc09fd108ec489a3c9360d4e704fa7dc.camel@xry111.site>
- <a70e8b062fc422e351fe2369b9979a623fa05dfa.camel@xry111.site>
- <4fd0531d-e8f8-4a4c-9136-50fcc31ba5f2@app.fastmail.com>
- <c2b1ca127504e519c04a36179ba6c486f2ec0a08.camel@xry111.site>
-Date: Mon, 17 Jun 2024 08:53:15 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Xi Ruoyao" <xry111@xry111.site>, "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Huacai Chen" <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Mon, Jun 17, 2024, at 08:45, Xi Ruoyao wrote:
-> On Mon, 2024-06-17 at 08:35 +0200, Arnd Bergmann wrote:
->> On Sat, Jun 15, 2024, at 15:12, Xi Ruoyao wrote:
->> > On Sat, 2024-06-15 at 20:12 +0800, Xi Ruoyao wrote:
->> > >=20
->> > > [Firefox]:
->> > > https://searchfox.org/mozilla-central/source/security/sandbox/linu
->> > > x/SandboxFilter.cpp#364
->> >=20
->> > Just spent some brain cycles to make a quick hack adding a new statx
->> > flag.=C2=A0 Patch attached.
->> >=20
->>=20
->> Thanks for the prototype. I agree that this is not a good API
->
-> What is particular bad with it?  Maybe we can improve before annoying
-> VFS guys :).
+This patchset tries to fix some workaround code in amdgpu/radeon driver,
+that makes Loongson 3A+7A platform suffering from GPU crashes.
 
-I can't come up with anything better either, the problem I
-see is mainly that the man page has to explain both AT_EMPTY_PATH
-and AT_FORCE_EMPTY_PATH, which are very similar for compatibility
-reasons only. We would clearly not design a new interface to have
-both, but we can't change existing behavior either.
+Icenowy Zheng (2):
+  drm/amdgpu: make duplicated EOP packet for GFX7/8 have real content
+  drm/radeon: repeat the same EOP packet for EOP workaround on CIK
 
-       Arnd
+ drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 12 +++++-------
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 12 ++++--------
+ drivers/gpu/drm/radeon/cik.c          |  7 ++-----
+ 3 files changed, 11 insertions(+), 20 deletions(-)
+
+-- 
+2.45.1
+
