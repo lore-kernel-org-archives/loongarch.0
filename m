@@ -1,95 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292213C806
-	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 14:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8754D6BFB0;
+	Tue, 18 Jun 2024 15:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722507; cv=none; b=eSS8SR6AR2iRZuzEhMYvr+XiKHhuIroA5hjNv8A9AySw1mk8U/Rq2PSWGEiLW1Vqw5GKYypb1uU1s4kZxbMz9azRo+SnRszHMX5+cv5xepeFhROSq7dxCgOkYumKT9pYLKvhGrQnNQ+RYWG/fO+ABQndP4igbY9tVjMTlGbmJZE=
+	t=1718723911; cv=none; b=UR3e7Fnzns5C+6WF5YiSSL9A28B1/0yI0pPZsm48wz96rFiWwgHBe0vKRyey5tLNGL8L6OmqXaEcBui2mtF19NIJgaQYNW5T9b/pNWGesT/t62yM3rVKSlQl8fBPAou/gf4itt2L/5TyHsEq/GB+d11Omyawnr3ct8p/qfudbfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722507; c=relaxed/simple;
-	bh=4N2mkqWw4oVDZXaqiKIREnReDpxgfXGU4iX5l5GVKA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gYPcN/h/wpiVR22senpd2rPQgGFiOdnnWtrkv1CpvKiepC7guQsiHf3vVMLlZIByhREhAutCDJ+/7BVAkkJKy3CZnhwNeh42jK4GXYyDMdu5FFOc4IIH+XpUzCO3uBrr3UcBebRevwXrEi22RMGCEvnEE6ynVEMaRYFu97uh+rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxs0alx0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718723911; c=relaxed/simple;
+	bh=oD3IpixnZRA6VJNpe277ZbDs/y+e0fqqwZSUwflrg8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcH6gQODt6yxEn88uwALwqG1HrRiqP9hENjRUGQ2oUf88crquWLg1RNZNiDXZ6sNSs/89npQJhxCa7AjQvmWqTdEAqhW5cyCJyAOtI8Xo9K4T2yLZihTxyK1CgcIuHlGor6tIQfV5sFxIyTg/Kv2KVjLzC+Uf93RKqW3Oxm4ZKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArDhdieG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxs0alx0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCBBC4AF1D
-	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 14:55:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArDhdieG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8937C3277B;
+	Tue, 18 Jun 2024 15:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718722506;
-	bh=4N2mkqWw4oVDZXaqiKIREnReDpxgfXGU4iX5l5GVKA8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lxs0alx0YtToRHCm6zAsalV7YBw/LX1s6CBqu8/+6OPIq/1oH5hkEKrK4KrN88ej7
-	 vZNA2DbVrBIiYXJ/4W7TbAs07nglBd6sFQSIbi/JVUwZ+0dtdiIEqeYTBgrgPu7PKn
-	 H5gVdtoB7M23x6a8LVLM62zM60fhvB7X1y/2iD7IN5W+b2Mj3adjCPOpEdgFfbRkOp
-	 aXcmduqfHSlbzdWqZi8Gy/OSjc9Q6GzfHrvJ1HFW1nRLm4jbDPXqemb1j0yPKE+VBz
-	 CGmeZiSQWWFiOtg6qylODPcpEJvvG2FsWOKL5JyIeWzB8hDIH+CH/mP/yPsdbtR67V
-	 aseB6qvfMj9EA==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f253a06caso662143766b.1
-        for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 07:55:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVScDqd98feaIpqHohNA7oBnFmp/EtCoLQ5cAS90kfv95paEzdjk9U1CA3ai+pdWp8ny9d6WOPI+AjuexiyM8ErcGo0yU8C7GFO
-X-Gm-Message-State: AOJu0Yztb2zF/OgjNBNuvyM5tYuI7IhPcsPWo35trXxkbZZ7ruUVARSL
-	26BT55rHABtIjospvTgTtVU/GnIjyZFkGuSq9vlatpWRtNHWZPgpS5kYraD+fcMIM/W+Y8ripTP
-	qKxGHPgnRtQX+ghKbMUR+8hFOFCs=
-X-Google-Smtp-Source: AGHT+IGxiXPbEMxpPDDWWILuim67EpiBCnDI9u/o2oiytHGesfTPI2v7VbQSw8eWzbi1QtTSUhamNG2ED8uuyyDDYq0=
-X-Received: by 2002:a17:906:fc01:b0:a6f:2e80:6e04 with SMTP id
- a640c23a62f3a-a6f60d3775emr972581966b.19.1718722505332; Tue, 18 Jun 2024
- 07:55:05 -0700 (PDT)
+	s=k20201202; t=1718723911;
+	bh=oD3IpixnZRA6VJNpe277ZbDs/y+e0fqqwZSUwflrg8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArDhdieGvgt/FJJG8gyMkxVPlgmkx9RZYaYFNEIljcOTSvBFowjbLwZi+jv/YEC+T
+	 dLKKXodefJKbY9Cr2AhIbCzmim7GSlkUbjc5mei8D6pNFRJTo7Qlf05gQqzY/LXbhd
+	 KSLFGHaD76TIq8faXQHQsuLY/MAeaI0tU8Eg6TOWEHmtoXqRKF+7Sl+tN2k8bLaCJ5
+	 1ViZiZRdGEb0i4hrWKJQb6v8cs18JOgsQcMLm2lDrDa6CfjevnfSECX9QNvvvpK1s+
+	 Zdb5Io5eizzadhl/rUCwq+2E+Pq6toSbc5B6rXa479OV/UIbcaI/ibPedPM3r598Qm
+	 Y5uYAwxiDZJ8w==
+Date: Tue, 18 Jun 2024 16:18:20 +0100
+From: Will Deacon <will@kernel.org>
+To: Haibo Xu <xiaobo55x@gmail.com>
+Cc: Haibo Xu <haibo1.xu@intel.com>, sunilvl@ventanamicro.com, arnd@arndb.de,
+	ajones@ventanamicro.com, Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Charlie Jenkins <charlie@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Zong Li <zong.li@sifive.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chen Jiahao <chenjiahao16@huawei.com>,
+	James Morse <james.morse@arm.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Zhao Ke <ke.zhao@shingroup.cn>, Andy Chiu <andy.chiu@sifive.com>,
+	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Tony Luck <tony.luck@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden
+ option
+Message-ID: <20240618151820.GA2354@willie-the-truck>
+References: <cover.1718268003.git.haibo1.xu@intel.com>
+ <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
+ <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240618010013.66332-1-yang.lee@linux.alibaba.com> <2812c8ae-62c2-1ac5-087d-202891a513b6@loongson.cn>
-In-Reply-To: <2812c8ae-62c2-1ac5-087d-202891a513b6@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Jun 2024 22:54:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6ALi1cvt6MB8cXP2QNg77P84vWP4kthaZLyQJURMBv8w@mail.gmail.com>
-Message-ID: <CAAhV-H6ALi1cvt6MB8cXP2QNg77P84vWP4kthaZLyQJURMBv8w@mail.gmail.com>
-Subject: Re: [PATCH -next] LoongArch: KVM: Remove unneeded semicolon
-To: maobibo <maobibo@loongson.cn>
-Cc: Yang Li <yang.lee@linux.alibaba.com>, zhaotianrui@loongson.cn, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Abaci Robot <abaci@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Queued, thanks.
-
-Huacai
-
-On Tue, Jun 18, 2024 at 10:06=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2024/6/18 =E4=B8=8A=E5=8D=889:00, Yang Li wrote:
-> > ./arch/loongarch/kvm/exit.c:764:2-3: Unneeded semicolon
+On Mon, Jun 17, 2024 at 09:34:18PM +0800, Haibo Xu wrote:
+> @Catalin Marinas @Huacai Chen
+> 
+> Could you please have a look at this patch for the ACPI_NUMA config on
+> ARM64 and LOONGARCH respectively.
+> 
+> Thanks!
+> 
+> On Thu, Jun 13, 2024 at 4:37 PM Haibo Xu <haibo1.xu@intel.com> wrote:
 > >
-> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> > Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9343
-> > Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> > x86/arm64/loongarch would select ACPI_NUMA by default and riscv
+> > would do the same thing, so change it to a hidden option and the
+> > select statements except for the X86_64_ACPI_NUMA can also go away.
+> >
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
+> > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> > Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
 > > ---
-> >   arch/loongarch/kvm/exit.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> > index c86e099af5ca..a68573e091c0 100644
-> > --- a/arch/loongarch/kvm/exit.c
-> > +++ b/arch/loongarch/kvm/exit.c
-> > @@ -761,7 +761,7 @@ static void kvm_handle_service(struct kvm_vcpu *vcp=
-u)
-> >       default:
-> >               ret =3D KVM_HCALL_INVALID_CODE;
-> >               break;
-> > -     };
-> > +     }
-> >
-> >       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, ret);
-> >   }
-> >
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
->
->
+> >  arch/arm64/Kconfig        | 1 -
+> >  arch/loongarch/Kconfig    | 1 -
+> >  drivers/acpi/numa/Kconfig | 5 +----
+> >  3 files changed, 1 insertion(+), 6 deletions(-)
+
+This looks fine from an arm64 perspective:
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
