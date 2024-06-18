@@ -1,89 +1,95 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62871AAC4
-	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 02:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8AE16DC29
+	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 07:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718676394; cv=none; b=ZLM2a1jyB+zbNIgh9g/h1hpC3Wj53SwN8ElKtzoB2Q8rfCwOTLaPhmb3ycz9PqkfEPNmvLE1RCQeYn5gNdby0elDmi9CHvXy6zn+dZ1bHZ6cUjfJgZ+Scd1xpL+wuucs8pT3Q/xEmbKvjcY8FaHHPAWNNxYGQbF72i0JmEckYUI=
+	t=1718696590; cv=none; b=m2mqYLkx1YWhEJVS04rN1DdW7094BUairmkuFMgolOsjsCJvPKf0/Ko1Zn8SwYt2CDA0WA5JpI5JgnyOTI89gBHarnbQqomMnrcoMk6XH4Pz5prMusD5nB/FvWq2Uvl2GwrEdIdQdSv9mo0i5bmU8oExdOOZQpLWjjbxxtQev+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718676394; c=relaxed/simple;
-	bh=VYCCYlKWXeUhSxO6sMCybR/FclqdgxrQaf06urbyiRA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AFUyIHIJ+vYt3NO+lBTFcNgFDnc7cYCKJorWfRZ2vUmKQU7iuyuf4OypcCHON6aezuPUop+J14vplkKQs3tDd5efrT5XtPsxyHvIXX44OC2x3OefGPiihMwxKvakw+HLnmslCYR2/G22rh9V+uQ2Yxo12Dc/+7Rc7BYJuyhJU9U=
+	s=arc-20240116; t=1718696590; c=relaxed/simple;
+	bh=kzBLLz+7PCDO3BLXgyUgBCio7EzSS2BfQSLMAbmNnOY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g1RKuPBx7YrslOuIoenjuY4mC/wZxO6rhAIG1zEG6oxRMJP4tGlXguHp47rgDNtOeb0gmIZFavTyEBO8VHgNZ2zskkuqb+RRHITLPvE+YGNfc6E0sHysGUwh078tv/Js5X45QF5vGDVTCM3luqMkmhgbIVGFoL8zlQFJsrodv4Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxSuqk63BmS8gHAA--.31410S3;
-	Tue, 18 Jun 2024 10:06:28 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhsWf63BmXq8mAA--.17247S3;
-	Tue, 18 Jun 2024 10:06:26 +0800 (CST)
-Subject: Re: [PATCH -next] LoongArch: KVM: Remove unneeded semicolon
-To: Yang Li <yang.lee@linux.alibaba.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-References: <20240618010013.66332-1-yang.lee@linux.alibaba.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <2812c8ae-62c2-1ac5-087d-202891a513b6@loongson.cn>
-Date: Tue, 18 Jun 2024 10:06:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxcPCJOnFmotYHAA--.31628S3;
+	Tue, 18 Jun 2024 15:43:06 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTceIOnFmqBMnAA--.29300S2;
+	Tue, 18 Jun 2024 15:43:04 +0800 (CST)
+From: Hui Li <lihui@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	Jinyang He <hejinyang@loongson.cn>
+Subject: [PATCH v3 0/3] LoongArch: ptrace: Fix some watchpoint function
+Date: Tue, 18 Jun 2024 15:43:00 +0800
+Message-Id: <20240618074303.17869-1-lihui@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240618010013.66332-1-yang.lee@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxhsWf63BmXq8mAA--.17247S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruF4xKr1rGr4xKF18uFy3GFX_yoW3KFg_uF
-	WxJw4I9rZ5Jay8u3Wjgw4rGa4rXw1kJFZYvFyUZr1fGan8JrWrZrZYgas5Aw1vqrW7CFZx
-	AaykX3Z8Cw1jvosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+X-CM-TRANSID:AQAAf8AxTceIOnFmqBMnAA--.29300S2
+X-CM-SenderInfo: 5olk3xo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ary5XFW8Cr1UuF4DuF17Jwc_yoW8Ar1fpF
+	WSkFnxKr4DKrW3Zwsagw17uF13W3Z7GrWUWa13K34Yyw1q93WF9w40yrWDZa47C34fGw1F
+	vr18Ww1093Wq9acCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1q2_UUUUU=
 
+LoongArch defines hardware watchpoint functions for fetch and load/store
+operations. After the software configures the watchpoints for fetch and
+load/store, the processor hardware will monitor the access addresses of
+the fetch and load/store operations and trigger a watchpoint exception
+when the watchpoint setting conditions are met.
 
+Fix some hardware watchpoint issues on user-space and kernel interface.
 
-On 2024/6/18 上午9:00, Yang Li wrote:
-> ./arch/loongarch/kvm/exit.c:764:2-3: Unneeded semicolon
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9343
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->   arch/loongarch/kvm/exit.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index c86e099af5ca..a68573e091c0 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -761,7 +761,7 @@ static void kvm_handle_service(struct kvm_vcpu *vcpu)
->   	default:
->   		ret = KVM_HCALL_INVALID_CODE;
->   		break;
-> -	};
-> +	}
->   
->   	kvm_write_reg(vcpu, LOONGARCH_GPR_A0, ret);
->   }
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+All changes are made according to the LoongArch Reference Manual:
+https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
+
+Testing for this series can use this gdb patch:
+https://sourceware.org/pipermail/gdb-patches/2024-June/209856.html
+
+Changes v1 -> v2:
+Suggested by Jinyang and Huacai:
+- Modify the commit message.
+- Modify the privilege level judgment in ptrace_hbp_set_ctrl() and
+  move the settings of regs->csr_prmd to hw_breakpoint_control().
+- Add judgment in ptrace_hbp_set_addr() to ensure that kernel-space
+  address cannot be monitored in user mode.
+
+Changes v2 -> v3:
+Suggested by Huacai:
+- Modify address and privilege level judgment.
+- Modify privilege level settings.
+- Make minor changes to the commit message.
+
+Hui Li (3):
+  LoongArch: ptrace: Fix watchpoint setting error
+  LoongArch: Trigger user-space watchpoints correctly
+  LoongArch: Fix multiple hardware watchpoint issues
+
+ arch/loongarch/include/asm/hw_breakpoint.h |  4 +-
+ arch/loongarch/kernel/hw_breakpoint.c      | 96 +++++++++++++---------
+ arch/loongarch/kernel/ptrace.c             | 48 ++++++-----
+ 3 files changed, 86 insertions(+), 62 deletions(-)
+
+-- 
+2.38.1
 
