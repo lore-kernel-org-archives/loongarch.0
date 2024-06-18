@@ -1,132 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174A715CD49;
-	Tue, 18 Jun 2024 12:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292213C806
+	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 14:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714249; cv=none; b=ejtxGhi6eQv46UgzTo9yP4N+/WbdtDD429PJj2pjK9VGfYUW9x1aTb/7/GUev6vgrFSpw2GypRorGlZbJFoa2meIctvz09blNafOpocTyT48g8FGy8H1HI/EA/nEGtxvuVwIzqvZ4CE5OXYHsq7k0XGzJBIOVnXehQf0DjF6G48=
+	t=1718722507; cv=none; b=eSS8SR6AR2iRZuzEhMYvr+XiKHhuIroA5hjNv8A9AySw1mk8U/Rq2PSWGEiLW1Vqw5GKYypb1uU1s4kZxbMz9azRo+SnRszHMX5+cv5xepeFhROSq7dxCgOkYumKT9pYLKvhGrQnNQ+RYWG/fO+ABQndP4igbY9tVjMTlGbmJZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714249; c=relaxed/simple;
-	bh=YmjootAgKlT4AUdnARxUqy73v9hCZ0Uej/RVPrjCcqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nQrZ7wt+vqlFAVF322RveFIknSt1iHVQIiLe5PCPa4TkOkbmOdMhlLq68FmfsJw4hpng2h7CflUL8Ecj6tybEX7eRJgINPyiUyjORxOSH9PcxUq/0sS25mqymGNtv8Pzwm5u8gBt+XFNtxOXltjiYBAFMBeI6jc9uDDhekUbzho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQo9RbKC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718722507; c=relaxed/simple;
+	bh=4N2mkqWw4oVDZXaqiKIREnReDpxgfXGU4iX5l5GVKA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gYPcN/h/wpiVR22senpd2rPQgGFiOdnnWtrkv1CpvKiepC7guQsiHf3vVMLlZIByhREhAutCDJ+/7BVAkkJKy3CZnhwNeh42jK4GXYyDMdu5FFOc4IIH+XpUzCO3uBrr3UcBebRevwXrEi22RMGCEvnEE6ynVEMaRYFu97uh+rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxs0alx0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQo9RbKC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8202EC4AF1D;
-	Tue, 18 Jun 2024 12:37:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxs0alx0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCBBC4AF1D
+	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 14:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714248;
-	bh=YmjootAgKlT4AUdnARxUqy73v9hCZ0Uej/RVPrjCcqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KQo9RbKCg2KShCcMqiYFKKoIujxAyaHUz8j33qvnJIkUhLAVulz/3I8wRrFG1JYk1
-	 DJyI2RZgRYCuJm27wlswXTAmAeoXzO6L/tAuzzVFsdHNvfEx8dlbq9yfsr9D8z/KzJ
-	 F8GCkbPKvwWQJ0c9ozGnXcoSG2ou3IytW7//Pwc5ibq5bCOOvLpplIBKY56ete9Mum
-	 +5gyfeGBZful7RTlw91CbA+Rsc7doDnwQJfCPW02pCsUaCI30DkT05L0M9xlBKHcNm
-	 5TpJtn6J0Q542ev/lWswmyuyz1AUZQiPiYHlchuJAMcn0jnD8Eh8+tSj27XOhvBB57
-	 i/ROyiO6J0TxA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	chenhuacai@kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.9 31/44] LoongArch: Fix GMAC's phy-mode definitions in dts
-Date: Tue, 18 Jun 2024 08:35:12 -0400
-Message-ID: <20240618123611.3301370-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618123611.3301370-1-sashal@kernel.org>
-References: <20240618123611.3301370-1-sashal@kernel.org>
+	s=k20201202; t=1718722506;
+	bh=4N2mkqWw4oVDZXaqiKIREnReDpxgfXGU4iX5l5GVKA8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lxs0alx0YtToRHCm6zAsalV7YBw/LX1s6CBqu8/+6OPIq/1oH5hkEKrK4KrN88ej7
+	 vZNA2DbVrBIiYXJ/4W7TbAs07nglBd6sFQSIbi/JVUwZ+0dtdiIEqeYTBgrgPu7PKn
+	 H5gVdtoB7M23x6a8LVLM62zM60fhvB7X1y/2iD7IN5W+b2Mj3adjCPOpEdgFfbRkOp
+	 aXcmduqfHSlbzdWqZi8Gy/OSjc9Q6GzfHrvJ1HFW1nRLm4jbDPXqemb1j0yPKE+VBz
+	 CGmeZiSQWWFiOtg6qylODPcpEJvvG2FsWOKL5JyIeWzB8hDIH+CH/mP/yPsdbtR67V
+	 aseB6qvfMj9EA==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f253a06caso662143766b.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 07:55:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVScDqd98feaIpqHohNA7oBnFmp/EtCoLQ5cAS90kfv95paEzdjk9U1CA3ai+pdWp8ny9d6WOPI+AjuexiyM8ErcGo0yU8C7GFO
+X-Gm-Message-State: AOJu0Yztb2zF/OgjNBNuvyM5tYuI7IhPcsPWo35trXxkbZZ7ruUVARSL
+	26BT55rHABtIjospvTgTtVU/GnIjyZFkGuSq9vlatpWRtNHWZPgpS5kYraD+fcMIM/W+Y8ripTP
+	qKxGHPgnRtQX+ghKbMUR+8hFOFCs=
+X-Google-Smtp-Source: AGHT+IGxiXPbEMxpPDDWWILuim67EpiBCnDI9u/o2oiytHGesfTPI2v7VbQSw8eWzbi1QtTSUhamNG2ED8uuyyDDYq0=
+X-Received: by 2002:a17:906:fc01:b0:a6f:2e80:6e04 with SMTP id
+ a640c23a62f3a-a6f60d3775emr972581966b.19.1718722505332; Tue, 18 Jun 2024
+ 07:55:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.5
-Content-Transfer-Encoding: 8bit
+References: <20240618010013.66332-1-yang.lee@linux.alibaba.com> <2812c8ae-62c2-1ac5-087d-202891a513b6@loongson.cn>
+In-Reply-To: <2812c8ae-62c2-1ac5-087d-202891a513b6@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 18 Jun 2024 22:54:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ALi1cvt6MB8cXP2QNg77P84vWP4kthaZLyQJURMBv8w@mail.gmail.com>
+Message-ID: <CAAhV-H6ALi1cvt6MB8cXP2QNg77P84vWP4kthaZLyQJURMBv8w@mail.gmail.com>
+Subject: Re: [PATCH -next] LoongArch: KVM: Remove unneeded semicolon
+To: maobibo <maobibo@loongson.cn>
+Cc: Yang Li <yang.lee@linux.alibaba.com>, zhaotianrui@loongson.cn, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+Queued, thanks.
 
-[ Upstream commit eb36e520f4f1b690fd776f15cbac452f82ff7bfa ]
+Huacai
 
-The GMAC of Loongson chips cannot insert the correct 1.5-2ns delay. So
-we need the PHY to insert internal delays for both transmit and receive
-data lines from/to the PHY device. Fix this by changing the "phy-mode"
-from "rgmii" to "rgmii-id" in dts.
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/boot/dts/loongson-2k0500-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts | 4 ++--
- arch/loongarch/boot/dts/loongson-2k2000-ref.dts | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-index 8aefb0c126722..a34734a6c3ce8 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0500-ref.dts
-@@ -44,14 +44,14 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x0>;
- };
- 
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	bus_id = <0x1>;
- };
- 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-index ed4d324340411..aaf41b565805a 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-@@ -43,7 +43,7 @@ linux,cma {
- &gmac0 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy0>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-@@ -58,7 +58,7 @@ phy0: ethernet-phy@0 {
- &gmac1 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy1>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-index 74b99bd234cc3..ea9e6985d0e9f 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k2000-ref.dts
-@@ -92,7 +92,7 @@ phy1: ethernet-phy@1 {
- &gmac2 {
- 	status = "okay";
- 
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&phy2>;
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
--- 
-2.43.0
-
+On Tue, Jun 18, 2024 at 10:06=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2024/6/18 =E4=B8=8A=E5=8D=889:00, Yang Li wrote:
+> > ./arch/loongarch/kvm/exit.c:764:2-3: Unneeded semicolon
+> >
+> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> > Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9343
+> > Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> > ---
+> >   arch/loongarch/kvm/exit.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> > index c86e099af5ca..a68573e091c0 100644
+> > --- a/arch/loongarch/kvm/exit.c
+> > +++ b/arch/loongarch/kvm/exit.c
+> > @@ -761,7 +761,7 @@ static void kvm_handle_service(struct kvm_vcpu *vcp=
+u)
+> >       default:
+> >               ret =3D KVM_HCALL_INVALID_CODE;
+> >               break;
+> > -     };
+> > +     }
+> >
+> >       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, ret);
+> >   }
+> >
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>
+>
