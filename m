@@ -1,29 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705F91A2540;
-	Tue, 18 Jun 2024 08:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C73C13A272;
+	Tue, 18 Jun 2024 08:16:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718698525; cv=none; b=AqJB6abXMy+gwYKJCFy/j84Ut3MbT2gCdTmJGUBP3paii5FVySelJNBmffhG3iZBcmCoujDjMy4XjnQbr3wxtQ7cTJvJa2sbtAwkdeLnXR2kucXQkxlfbmBYUst4uFGPJlg4QVW5qEg+vm1ERU4EfFBayYYU5owhyrfsgbpnAbU=
+	t=1718698610; cv=none; b=kLr/r5LkuukWsZG8bDE5nx+zd28dtB7OwE1ltuD60mhtDSNfPTumxl7W6pYhUuq5gSb+lkWv6qEmXazSVgBayH44OlzyIGCrEfSmhffn7D/+ZLTPMnJ4ZRyTl1tL9K8OemGGRROMebaIQcaSRiV5N4Xtp24d45dpeI6BZvBc2Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718698525; c=relaxed/simple;
-	bh=CQtrWxPxVUIrfgeVQ6RJSUNsuqxOv8q8LFvAUYW9PCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PjASnvf0dDkxTMA1/xikj5bkhvS8DyUNurjgUJRruw68243NXykdXtodpd2OZFNRkxalUpWMoYlWSXKDTyVJESvMo6oAIHt4TQqcz8AUcCgDdbND45IweI6EmXyEP+XXfeODD33yrn9GqkDnHNHXzZlkummRVkI1IeNzi0uh2z8=
+	s=arc-20240116; t=1718698610; c=relaxed/simple;
+	bh=QkCmAAUod9n4KGAifdFH23eiokidB9zlzC26O9n+bgQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jQnTqJX8TmTHVlk2WgIcNXVXe9Aq/x0EVL9NW4HKAVQ6ID0GOW0FKhLwLKK3clcAXUl8ieaoj+yij7vbLpZKdxah4w0KnhTcFqKkYzyLhHr13sFNMvbFfNBmf8imQKPhVbTjk3utdAsWJqN8N++TgIuXwhbyKz4a0t3+/t+3Odw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464D7C3277B;
-	Tue, 18 Jun 2024 08:15:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C61C3277B;
+	Tue, 18 Jun 2024 08:16:47 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
 	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] irqchip/loongson-eiointc: Use early_cpu_to_node() instead of cpu_to_node()
-Date: Tue, 18 Jun 2024 16:15:07 +0800
-Message-ID: <20240618081507.3996921-1-chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Always enumerate MADT and setup logical-physical CPU mapping
+Date: Tue, 18 Jun 2024 16:16:30 +0800
+Message-ID: <20240618081630.3997018-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -33,37 +35,134 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When we use "nr_cpus=n" to hard limit the CPU number, cpu_to_node() is
-not usable because it can only applied on "possible" CPUs. On the other
-hand, early_cpu_to_node() can be always used instead.
+Some drivers want to use cpu_logical_map(), early_cpu_to_node() and some
+other CPU mapping APIs, even if we use "nr_cpus=1" to hard limit the CPU
+number. This is strongly required for the multi-bridges machines.
+
+Currently, we stop parsing the MADT if the nr_cpus limit is reached, but
+to achieve the above goal we should always enumerate the MADT table and
+setup logical-physical CPU mapping whether there is a nr_cpus limit.
+
+Rework the MADT enumeration:
+
+1. Define a flag "cpu_enumerated" to distinguish the first enumeration
+   (cpu_enumerated=0) and the physical hotplug case (cpu_enumerated=1)
+   for set_processor_mask().
+
+2. If cpu_enumerated=0, stop parsing only when NR_CPUS limit is reached,
+   so we can setup logical-physical CPU mapping; if cpu_enumerated=1,
+   stop parsing when nr_cpu_ids limit is reached, so we can avoid some
+   runtime bugs. Once logical-physical CPU mapping is setup, we will let
+   cpu_enumerated=1.
+
+3. Use find_first_zero_bit() instead of cpumask_next_zero() to find the
+   next zero bit (free logical CPU id) in the cpu_present_mask, because
+   cpumask_next_zero() will stop at nr_cpu_ids.
+
+4. Only touch cpu_possible_mask if cpu_enumerated=0, this is in order to
+   avoid some potential crashes, because cpu_possible_mask is marked as
+   __ro_after_init.
+
+5. In prefill_possible_map(), clear cpu_present_mask bits greater than
+   nr_cpu_ids, in order to avoid a CPU be "present" but not "possible".
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/kernel/acpi.c  | 22 ++++++++++++++++------
+ arch/loongarch/kernel/setup.c |  4 +++-
+ arch/loongarch/kernel/smp.c   |  7 +++----
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index c7ddebf312ad..8ba9082c1796 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -339,7 +339,7 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 	int node;
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 5cf59c617126..929a497c987e 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -57,15 +57,22 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ 		return ioremap_cache(phys, size);
+ }
  
- 	if (cpu_has_flatmode)
--		node = cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
-+		node = early_cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
++static int cpu_enumerated = 0;
++
+ #ifdef CONFIG_SMP
+ static int set_processor_mask(u32 id, u32 flags)
+ {
+-
++	int nr_cpus;
+ 	int cpu, cpuid = id;
+ 
+-	if (num_processors >= nr_cpu_ids) {
+-		pr_warn(PREFIX "nr_cpus/possible_cpus limit of %i reached."
+-			" processor 0x%x ignored.\n", nr_cpu_ids, cpuid);
++	if (!cpu_enumerated)
++		nr_cpus = NR_CPUS;
++	else
++		nr_cpus = nr_cpu_ids;
++
++	if (num_processors >= nr_cpus) {
++		pr_warn(PREFIX "nr_cpus limit of %i reached."
++			" processor 0x%x ignored.\n", nr_cpus, cpuid);
+ 
+ 		return -ENODEV;
+ 
+@@ -73,11 +80,13 @@ static int set_processor_mask(u32 id, u32 flags)
+ 	if (cpuid == loongson_sysconf.boot_cpu_id)
+ 		cpu = 0;
  	else
- 		node = eiointc_priv[nr_pics - 1]->node;
+-		cpu = cpumask_next_zero(-1, cpu_present_mask);
++		cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
++
++	if (!cpu_enumerated)
++		set_cpu_possible(cpu, true);
  
-@@ -431,7 +431,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 		goto out_free_handle;
+ 	if (flags & ACPI_MADT_ENABLED) {
+ 		num_processors++;
+-		set_cpu_possible(cpu, true);
+ 		set_cpu_present(cpu, true);
+ 		__cpu_number_map[cpuid] = cpu;
+ 		__cpu_logical_map[cpu] = cpuid;
+@@ -138,6 +147,7 @@ static void __init acpi_process_madt(void)
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
+ 			acpi_parse_eio_master, MAX_IO_PICS);
  
- 	if (cpu_has_flatmode)
--		node = cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
-+		node = early_cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
- 	else
- 		node = acpi_eiointc->node;
- 	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
++	cpu_enumerated = 1;
+ 	loongson_sysconf.nr_cpus = num_processors;
+ }
+ 
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 3d048f1be143..0f0740f0be27 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -576,8 +576,10 @@ static void __init prefill_possible_map(void)
+ 
+ 	for (i = 0; i < possible; i++)
+ 		set_cpu_possible(i, true);
+-	for (; i < NR_CPUS; i++)
++	for (; i < NR_CPUS; i++) {
++		set_cpu_present(i, false);
+ 		set_cpu_possible(i, false);
++	}
+ 
+ 	set_nr_cpu_ids(possible);
+ }
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 1436d2465939..03b2b7669cf5 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -271,11 +271,10 @@ static void __init fdt_smp_setup(void)
+ 		if (cpuid >= nr_cpu_ids)
+ 			continue;
+ 
+-		if (cpuid == loongson_sysconf.boot_cpu_id) {
++		if (cpuid == loongson_sysconf.boot_cpu_id)
+ 			cpu = 0;
+-		} else {
+-			cpu = cpumask_next_zero(-1, cpu_present_mask);
+-		}
++		else
++			cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
+ 
+ 		num_processors++;
+ 		set_cpu_possible(cpu, true);
 -- 
 2.43.0
 
