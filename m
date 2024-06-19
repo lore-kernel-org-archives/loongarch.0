@@ -1,126 +1,131 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37E26112
-	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 01:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5904A1C;
+	Wed, 19 Jun 2024 02:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718759890; cv=none; b=lolIdBm8fwgw6kn/EnWJlPLwvR7pg5PFSQUF9rMYHQEGGsIdTVCxEswf04uAWbti1Su4l0PN6HwVn8SLgne0uyw0QuRu+cfDhrJZAWuqXWSzwEjizlmy3F6qKprHhp0HYJnGxgir8Cr1dwZOFQPE0oRQzi1jade0rZ99H/5CPpw=
+	t=1718763100; cv=none; b=erFPvd/KPOWjG9THZz+TNziLVhBJOu47INtxAYJrtidonMjemlSSE41SowWQipxxa4LKcXntZ112IE3yf67HauKCNRbwKVSENnViCJqGXN8lFLVE1jIQPS+zl+oKSGQ6RVbNzrV6df3hHf9J3TdyalQp41rqAblq+m8kCCFQ4T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718759890; c=relaxed/simple;
-	bh=OM+FRXFB6DpgW4Mn/lTWBgeE0bTKzqdd4rxakX3c1ho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BfEii238pGtnEBzz2cp6Ik+vJoLnuGPt8dgUVvB3qChOmakWMhKbxrblFPJ2qZGTEYLKObGE+Oyz7SOBZt4v53SJ3XgkH1g47WW+/XHixEIvWdy6EyCHIeJNAb8QZ5kPga1Qk6da/8nDVjZ8iInRM+03CVk0EY6e/eU+TFTEtSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1wLUEeh; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718763100; c=relaxed/simple;
+	bh=j56+G078g+1WkfSwbJaWUkMO607hyeFCjys8K7/8XbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7YUmDC325Fbu8iiU+LDk2EXjMOzgo3Lz2/cEAhX2Fqc+32hb0CQBzPXYBnNoZ43VFmbegx5tKUcz53So7CtTP3D8eM8E4VodISCS5J7Qj2UtAwI0wLHzW45ETvNQTzjRkHquyw9sxOUVk5BMYFX8mfhUSxH6Cw9tM8YlCVsUuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXvdh2Ye; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1wLUEeh"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso100941931fa.1
-        for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 18:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718759887; x=1719364687; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ey5yiVQA8LBP/6zYkNpIcrvI4fFdl2/Q3IQajczTvLM=;
-        b=S1wLUEehzirVZL9YIuNXuzHUeDcGCOs70djkeFX82+2tSKw2TqVDNlram14/T5A4/R
-         3PlyBNdvn17fHQsyCZw0BybcRJMsM5nxj2OSgee1eZyZpn7D2djelb8+bGoceimv7asS
-         +TtDbUfkYrSSwkn5WVEo5g1ONAPxztiRLlHbEh1ULWvg9z9mjQGFymMGSEjsMFU1i9SK
-         0tYUfsLDiT6RA/aTmfdE+ah+LzPCYeU5wcT+ujJ3TploKWoHVZ8dpON2sjSKjlHh/vN+
-         LBA3X+0MImpTAvejSU1jGfmWeIOaP5XqNB6WqQrDGbSrWN8C+TDIs87EREanb7PexvsH
-         eGJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718759887; x=1719364687;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ey5yiVQA8LBP/6zYkNpIcrvI4fFdl2/Q3IQajczTvLM=;
-        b=vgYylT22sbs1yvgBFjeiUHSfP9A+vfVLA/S3i4dHAaoNDPyqlYl9RUKuzsvKzGSXwZ
-         nxpnZNoXa6NxFHMbzEBwgJAYw4Wv29EG+3r08neiVPv5vYhj6IaSSGimbffEUvbkEN/B
-         aSz6cqSDSa3u0CTcdSKe1HeruWyULpAdG0MjK6knt1DHbUXlRSqQA0bgcPDRLmpjGjGN
-         Zbk3Whzu7vCOeWrw3pN6z4fScckJOTWHi/I7dAGMDY0af7bLYXfxgPfIkdrpoBK9FvLl
-         g2OjQWddx60KU9iJrh6yYO6En1t+2y8hXUjNhxd5W3WfMwnFPtUHqowxcJvFklN2MhhO
-         ks1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW/1sjraiTGOzdjkZsJ4STX6biVoqtMZoJMH4jaj5XPqc8N7XekgQNIjNtLHFo4yjxLjD2YtpAGWlY/jWUN4F139bDtldIcL1Jf
-X-Gm-Message-State: AOJu0Yz1zLGXqDuvhLHqmoC40gQ/hFNSo6Pp0gaPedSxI62mKqhJhZh0
-	RM8HMWwrfBnZljTt1P4bHtc2qN17+lgZL3UrpvaiUu6o51eLDK5I0PWvLzBtReMR4TpdiJa+7Pf
-	FrL2U9B5eBNMW9jNHn6xc8tEprYY=
-X-Google-Smtp-Source: AGHT+IFiTPEbVFgx6S7H+uJNwNOLjAFLVL5/Vnh5jjNpcZV25rpymoEhI57ECx4iXoR1vGPAbIVLdQm2Xan1iCOIji0=
-X-Received: by 2002:a2e:9f02:0:b0:2ea:ec52:f594 with SMTP id
- 38308e7fff4ca-2ec3ced1896mr8494161fa.29.1718759886352; Tue, 18 Jun 2024
- 18:18:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXvdh2Ye"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718763099; x=1750299099;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=j56+G078g+1WkfSwbJaWUkMO607hyeFCjys8K7/8XbE=;
+  b=RXvdh2YeDQSsIKPvL0jNduPjVZ7EKLHjIYbcT7SbLROYqaSZegvkJ4Il
+   BsQPXPiErnWagWAuXlye5+m6MD4fXXrKe3gorSedMKS5OSKNBjTilHjSf
+   G1HTldIIKCmQQ7r1SPufg9itgWLrwtad+V6ZeiYiI809hgJbjWTZWxmiI
+   LId7TVlYSxkMF8hheBy41pv4zWfDfYCNzBUcAl1XeNZ0ZWMkbMOlaZBO4
+   uYzju4r3rV63cpKLLurhYUKM14L5AJnRcjBDZN+4f5vYUZbLXearBhEXC
+   DiK/aD8c91giTqGPxQbA/npzPf1pypTO8qbkmV3EfFdfcZ5SFum/tyXOH
+   g==;
+X-CSE-ConnectionGUID: YGuSEzEKRRKBarlj1c+tXQ==
+X-CSE-MsgGUID: gUv9t8PeQkeuKn7mfXJOKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19552186"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="19552186"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 19:11:38 -0700
+X-CSE-ConnectionGUID: OztFEzKCSnKAGWDYpVC3bw==
+X-CSE-MsgGUID: uN/KhuHdQ5q70JWD0Kekgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="46184050"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 18 Jun 2024 19:11:36 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJknO-0006AG-0U;
+	Wed, 19 Jun 2024 02:11:34 +0000
+Date: Wed, 19 Jun 2024 10:10:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huacai Chen <chenhuacai@loongson.cn>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+Message-ID: <202406190940.wW8qmA6Q-lkp@intel.com>
+References: <20240618081507.3996921-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1718268003.git.haibo1.xu@intel.com> <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
- <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com> <20240618151820.GA2354@willie-the-truck>
-In-Reply-To: <20240618151820.GA2354@willie-the-truck>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Wed, 19 Jun 2024 09:17:54 +0800
-Message-ID: <CAJve8o=-bZhQS289jwxG=Aq2BOXk5OzdgPKT=nFE9yw_HYYnQQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
-To: Will Deacon <will@kernel.org>
-Cc: Haibo Xu <haibo1.xu@intel.com>, sunilvl@ventanamicro.com, arnd@arndb.de, 
-	ajones@ventanamicro.com, Catalin Marinas <catalin.marinas@arm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Chen Jiahao <chenjiahao16@huawei.com>, James Morse <james.morse@arm.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Zhao Ke <ke.zhao@shingroup.cn>, 
-	Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618081507.3996921-1-chenhuacai@loongson.cn>
 
-On Tue, Jun 18, 2024 at 11:18=E2=80=AFPM Will Deacon <will@kernel.org> wrot=
-e:
->
-> On Mon, Jun 17, 2024 at 09:34:18PM +0800, Haibo Xu wrote:
-> > @Catalin Marinas @Huacai Chen
-> >
-> > Could you please have a look at this patch for the ACPI_NUMA config on
-> > ARM64 and LOONGARCH respectively.
-> >
-> > Thanks!
-> >
-> > On Thu, Jun 13, 2024 at 4:37=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> =
-wrote:
-> > >
-> > > x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> > > would do the same thing, so change it to a hidden option and the
-> > > select statements except for the X86_64_ACPI_NUMA can also go away.
-> > >
-> > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > > Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> > > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> > > Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
-> > > ---
-> > >  arch/arm64/Kconfig        | 1 -
-> > >  arch/loongarch/Kconfig    | 1 -
-> > >  drivers/acpi/numa/Kconfig | 5 +----
-> > >  3 files changed, 1 insertion(+), 6 deletions(-)
->
-> This looks fine from an arm64 perspective:
->
-> Acked-by: Will Deacon <will@kernel.org>
->
+Hi Huacai,
 
-Thank you, Will!
+kernel test robot noticed the following build errors:
 
-> Will
+[auto build test ERROR on tip/irq/core]
+[also build test ERROR on linus/master v6.10-rc4 next-20240618]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/irqchip-loongson-eiointc-Use-early_cpu_to_node-instead-of-cpu_to_node/20240618-183129
+base:   tip/irq/core
+patch link:    https://lore.kernel.org/r/20240618081507.3996921-1-chenhuacai%40loongson.cn
+patch subject: [PATCH] irqchip/loongson-eiointc: Use early_cpu_to_node() instead of cpu_to_node()
+config: loongarch-alldefconfig (https://download.01.org/0day-ci/archive/20240619/202406190940.wW8qmA6Q-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240619/202406190940.wW8qmA6Q-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406190940.wW8qmA6Q-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/irqchip/irq-loongson-eiointc.c: In function 'pch_msi_parse_madt':
+>> drivers/irqchip/irq-loongson-eiointc.c:342:24: error: implicit declaration of function 'early_cpu_to_node'; did you mean 'early_pfn_to_nid'? [-Werror=implicit-function-declaration]
+     342 |                 node = early_cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
+         |                        ^~~~~~~~~~~~~~~~~
+         |                        early_pfn_to_nid
+   cc1: some warnings being treated as errors
+
+
+vim +342 drivers/irqchip/irq-loongson-eiointc.c
+
+   333	
+   334	static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+   335						const unsigned long end)
+   336	{
+   337		struct irq_domain *parent;
+   338		struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+   339		int node;
+   340	
+   341		if (cpu_has_flatmode)
+ > 342			node = early_cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
+   343		else
+   344			node = eiointc_priv[nr_pics - 1]->node;
+   345	
+   346		parent = acpi_get_vec_parent(node, msi_group);
+   347	
+   348		if (parent)
+   349			return pch_msi_acpi_init(parent, pchmsi_entry);
+   350	
+   351		return 0;
+   352	}
+   353	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
