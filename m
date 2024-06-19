@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C1578C68
-	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 08:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C56578C73
+	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 08:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718784593; cv=none; b=V6oOG7akx8chr3RaSBcjymLe2ckQvMwHvYGMHP+hAtBCrb7bZCi3Sr+YnSREhvdknPIdrAFaTYeQQAwnlQbuylRViB16h58V0qkkR2HJYsdXuzskA8kF1hqjmaaZunzfVTQtW6sD1YZMewER2Hhf9lyJl6O+14Mt+rQcE9BWPlY=
+	t=1718784594; cv=none; b=hnpZsBZnz7eGpsQmqzhp89F/2GJIc5P9CFP6+yHYw41x+D8jhFcviU1ITliOZ67z4jHdI0s3dQ/MmvDFped4n+a8UrjSndt/ugWH+jWEcs8l/idOO0i5V2OMwbI80N8lW1AKkyLOAjRLGAEnTBY84SMkrisJt4qYY7GRuViuruw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718784593; c=relaxed/simple;
-	bh=Dj4caGZD85XgIzLrQI5RAXgZ3XwkUwK6rN5stW+Ojfw=;
+	s=arc-20240116; t=1718784594; c=relaxed/simple;
+	bh=VRGsuynlLOX3I/Mr6W6BKVr5Su0ws2ApaNc7yn8Faz8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UvY9w6/4Hrt8ilwMZAvRVG6ELK74FJPjdllAX+VFPICE6xAPdWSwvTOE5vG0zjaenp1AvrVegF0yiK6L7hl/aqZ4zXtXHoctj0AHlT8nB1lmKF1Rz3s+TJbFDXhkSRtLlUOb8NHWIFo3a594YaoKwLSudR2ejdjMo3rxPn2JyvA=
+	 MIME-Version; b=G04T89Zec4IPoR2lH8YzKgXPdiH+GZTOv3yAsr79OJsqzNbK9NEiPIExRSwpNKvurHZkV0sNyHBsP/Fr9QmXWc3r79z3mYtDf3Ho5rxyRYj5q1qdT2zleiyHPD5AkztT6RhNyNJavodj6Oe01aGl4aL5pHf3UyPamdjF0GV9jH4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Dx2OlHknJm+S4IAA--.20385S3;
-	Wed, 19 Jun 2024 16:09:43 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxa+pGknJm5i4IAA--.32957S3;
+	Wed, 19 Jun 2024 16:09:42 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjsdEknJmFeMoAA--.32907S8;
-	Wed, 19 Jun 2024 16:09:43 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjsdEknJmFeMoAA--.32907S4;
+	Wed, 19 Jun 2024 16:09:41 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -26,9 +26,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] LoongArch: KVM: Mark page accessed and dirty with page ref added
-Date: Wed, 19 Jun 2024 16:09:40 +0800
-Message-Id: <20240619080940.2690756-7-maobibo@loongson.cn>
+Subject: [PATCH v2 2/6] LoongArch: KVM: Select huge page only if secondary mmu supports it
+Date: Wed, 19 Jun 2024 16:09:36 +0800
+Message-Id: <20240619080940.2690756-3-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240619080940.2690756-1-maobibo@loongson.cn>
 References: <20240619080940.2690756-1-maobibo@loongson.cn>
@@ -39,81 +39,69 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxjsdEknJmFeMoAA--.32907S8
+X-CM-TRANSID:AQAAf8AxjsdEknJmFeMoAA--.32907S4
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Function kvm_map_page_fast() is fast path of secondary mmu page fault
-flow, pfn is parsed from secondary mmu page table walker. However
-the corresponding page reference is not added, it is dangerious to
-access page out of mmu_lock.
-
-Here page ref is added inside mmu_lock, function kvm_set_pfn_accessed()
-and kvm_set_pfn_dirty() is called with page ref added, so that the
-page will not be freed by others.
-
-Also kvm_set_pfn_accessed() is removed here since it is called in
-the following function kvm_release_pfn_clean().
+Currently page level selection about secondary mmu depends on memory
+slot and page level about host mmu. There will be problem if page level
+of secondary mmu is zero already. So page level selection should depend
+on the following three conditions.
+ 1. Memslot is aligned for huge page and vm is not migrating.
+ 2. Page level of host mmu is huge page also.
+ 3. Page level of secondary mmu is suituable for huge page, it cannot
+be normal page since it is not supported to merge normal pages into
+huge page now.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/mmu.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ arch/loongarch/include/asm/kvm_mmu.h |  2 +-
+ arch/loongarch/kvm/mmu.c             | 16 +++++++++++++---
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/kvm_mmu.h b/arch/loongarch/include/asm/kvm_mmu.h
+index 099bafc6f797..d06ae0e0dde5 100644
+--- a/arch/loongarch/include/asm/kvm_mmu.h
++++ b/arch/loongarch/include/asm/kvm_mmu.h
+@@ -55,7 +55,7 @@ static inline void kvm_set_pte(kvm_pte_t *ptep, kvm_pte_t val)
+ static inline int kvm_pte_write(kvm_pte_t pte) { return pte & _PAGE_WRITE; }
+ static inline int kvm_pte_dirty(kvm_pte_t pte) { return pte & _PAGE_DIRTY; }
+ static inline int kvm_pte_young(kvm_pte_t pte) { return pte & _PAGE_ACCESSED; }
+-static inline int kvm_pte_huge(kvm_pte_t pte) { return pte & _PAGE_HUGE; }
++static inline int kvm_pte_huge(kvm_pte_t pte)  { return !!(pte & _PAGE_HUGE); }
+ 
+ static inline kvm_pte_t kvm_pte_mkyoung(kvm_pte_t pte)
+ {
 diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 3b862f3a72cb..5a820a81fd97 100644
+index 9e39d28fec35..c6351d13ca1b 100644
 --- a/arch/loongarch/kvm/mmu.c
 +++ b/arch/loongarch/kvm/mmu.c
-@@ -557,6 +557,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
- 	gfn_t gfn = gpa >> PAGE_SHIFT;
- 	struct kvm *kvm = vcpu->kvm;
- 	struct kvm_memory_slot *slot;
-+	struct page *page;
+@@ -858,10 +858,20 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
  
- 	spin_lock(&kvm->mmu_lock);
- 
-@@ -599,19 +600,22 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
- 	if (changed) {
- 		kvm_set_pte(ptep, new);
- 		pfn = kvm_pte_pfn(new);
-+		page = kvm_pfn_to_refcounted_page(pfn);
-+		if (page)
-+			get_page(page);
- 	}
- 	spin_unlock(&kvm->mmu_lock);
- 
--	/*
--	 * Fixme: pfn may be freed after mmu_lock
--	 * kvm_try_get_pfn(pfn)/kvm_release_pfn pair to prevent this?
--	 */
--	if (kvm_pte_young(changed))
--		kvm_set_pfn_accessed(pfn);
-+	if (changed) {
-+		if (kvm_pte_young(changed))
-+			kvm_set_pfn_accessed(pfn);
- 
--	if (kvm_pte_dirty(changed)) {
--		mark_page_dirty(kvm, gfn);
--		kvm_set_pfn_dirty(pfn);
-+		if (kvm_pte_dirty(changed)) {
-+			mark_page_dirty(kvm, gfn);
-+			kvm_set_pfn_dirty(pfn);
+ 	/* Disable dirty logging on HugePages */
+ 	level = 0;
+-	if (!fault_supports_huge_mapping(memslot, hva, write)) {
+-		level = 0;
+-	} else {
++	if (fault_supports_huge_mapping(memslot, hva, write)) {
++		/* Check page level about host mmu*/
+ 		level = host_pfn_mapping_level(kvm, gfn, memslot);
++		if (level == 1) {
++			/*
++			 * Check page level about secondary mmu
++			 * Disable hugepage if it is normal page on
++			 * secondary mmu already
++			 */
++			ptep = kvm_populate_gpa(kvm, NULL, gpa, 0);
++			if (ptep && !kvm_pte_huge(*ptep))
++				level = 0;
 +		}
-+		if (page)
-+			put_page(page);
- 	}
- 	return ret;
- out:
-@@ -920,7 +924,6 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
- 		kvm_set_pfn_dirty(pfn);
- 	}
- 
--	kvm_set_pfn_accessed(pfn);
- 	kvm_release_pfn_clean(pfn);
- out:
- 	srcu_read_unlock(&kvm->srcu, srcu_idx);
++
+ 		if (level == 1) {
+ 			gfn = gfn & ~(PTRS_PER_PTE - 1);
+ 			pfn = pfn & ~(PTRS_PER_PTE - 1);
 -- 
 2.39.3
 
