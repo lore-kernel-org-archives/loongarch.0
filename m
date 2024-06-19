@@ -1,110 +1,126 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76169178377
-	for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 21:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37E26112
+	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 01:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718746906; cv=none; b=DJ86lmc2PobpAFSAORWu3LE4fY+H6Rlhhx2z1+4QKXO1elmPA3NYOi7xS7NPISoPIs3DRFkVl7T5QaIGiOBpFsaWGIz0djiD2KNp7cqRm93QfgLvqj6SBWUpCsyXgBVLCmyYz5PTrWgkdJH009QumnEjubZ8l+E7tjvFI1RO+xs=
+	t=1718759890; cv=none; b=lolIdBm8fwgw6kn/EnWJlPLwvR7pg5PFSQUF9rMYHQEGGsIdTVCxEswf04uAWbti1Su4l0PN6HwVn8SLgne0uyw0QuRu+cfDhrJZAWuqXWSzwEjizlmy3F6qKprHhp0HYJnGxgir8Cr1dwZOFQPE0oRQzi1jade0rZ99H/5CPpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718746906; c=relaxed/simple;
-	bh=43VvnWy8bJ3u6vF+ooepWW/K9kvnbb1owJCIeyrqbls=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tDkyMqY418PeV9w9gqTztrWgjqOPZezEDNjkvc4WKxBuXJtPwhVNbk+hfXt8NcXzcKqkPJJsXw2vdXbYCctEsdCYvF/1WxGe+hfy4aU8r/oJKjoxWBGM5iiLqNOQjBoY8pMPcZ4cd5qYAjQ2yRpTfvjHMQnhJXCMNl9H24K0mPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PNAF6SvK; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718759890; c=relaxed/simple;
+	bh=OM+FRXFB6DpgW4Mn/lTWBgeE0bTKzqdd4rxakX3c1ho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BfEii238pGtnEBzz2cp6Ik+vJoLnuGPt8dgUVvB3qChOmakWMhKbxrblFPJ2qZGTEYLKObGE+Oyz7SOBZt4v53SJ3XgkH1g47WW+/XHixEIvWdy6EyCHIeJNAb8QZ5kPga1Qk6da/8nDVjZ8iInRM+03CVk0EY6e/eU+TFTEtSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1wLUEeh; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PNAF6SvK"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62fd1655e12so128271047b3.1
-        for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 14:41:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1wLUEeh"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso100941931fa.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Jun 2024 18:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718746904; x=1719351704; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hTMwIVse9Tqfg6lD3BDUhww1E0hJCsQTGAtbBvKYeBQ=;
-        b=PNAF6SvKq2wRWQT/Q/axkJFSz0UfyYqp2vodJzV0r/uC+ex3+5f00t4ibUq/TNb60K
-         54UEYlm8LTgzGWTiI0pZD6ytIWHA6XdHVSB32vOsoE1ZQBpVQE1p2tos6yEqnaqwJ7MW
-         Ukq8g3/nmJ7LIHR48+JIqo4JokIt2ri/hSrnnPmagr65lpiypMs0xyHPTrjAfXZxpMgc
-         t1qLci4iu4gr6zvJeGC5i5u4UtNzPuurMOCdxdGk00c7lQ3mcb49Blda+5Vm1P9DDExG
-         JcnEWQ2mSo3lnpFN6F39r9C+EeL2b/XusuKCpZljX1IF5fi6K6vBj/4bpyWBXyoo5FBA
-         1n4A==
+        d=gmail.com; s=20230601; t=1718759887; x=1719364687; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ey5yiVQA8LBP/6zYkNpIcrvI4fFdl2/Q3IQajczTvLM=;
+        b=S1wLUEehzirVZL9YIuNXuzHUeDcGCOs70djkeFX82+2tSKw2TqVDNlram14/T5A4/R
+         3PlyBNdvn17fHQsyCZw0BybcRJMsM5nxj2OSgee1eZyZpn7D2djelb8+bGoceimv7asS
+         +TtDbUfkYrSSwkn5WVEo5g1ONAPxztiRLlHbEh1ULWvg9z9mjQGFymMGSEjsMFU1i9SK
+         0tYUfsLDiT6RA/aTmfdE+ah+LzPCYeU5wcT+ujJ3TploKWoHVZ8dpON2sjSKjlHh/vN+
+         LBA3X+0MImpTAvejSU1jGfmWeIOaP5XqNB6WqQrDGbSrWN8C+TDIs87EREanb7PexvsH
+         eGJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718746904; x=1719351704;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hTMwIVse9Tqfg6lD3BDUhww1E0hJCsQTGAtbBvKYeBQ=;
-        b=fI2AChUCtmWEbPePijQTGKP1zGvSt9a46ctvm0EShe1l3y81HMzlGznCISBjzF3PbW
-         p02Ws/awQFhOly9GOMc3siERyVWIlOJ62ZLalG8L2HilfA7cUTA/cUl4ao6Yyk/zIipk
-         jJ/17Q8xc0bXSBhLOONO5hEU4pVYMGbwYUPtR3nL1bj7oRgstNfZnDEjvLxw1mhyDmpR
-         3x1Q6ryjBzQcbwdQC4uh+slfqM9LhXFa0UNIBHXQ2yjHYXa6p75Gc0XZtYNFpDxFU844
-         UbxQsf76lHA4D/sHhLPbCOVPcTntLh16XHZYyyXPyQT+mTbgc4rDAzXc/hZF2QIel/w/
-         znGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvzhH8hHHZLRefIi1vD54x/37qdCuwwOh//NUQZHNza13LHPmQqz3cCXQ4eGT+Z5reWP98MPCuFPIATfsx3CITuG2OKPKjY79Z
-X-Gm-Message-State: AOJu0Yz3vAnhY2GZtYZd/5UhBfnkImCfP9zpyDX0I3rBIG6zVZEtKB+8
-	eMPZXl2g7W+d+JMegzio+p4oXkyqE4bihYwGUfArX7YTeWEy7GalPXXtKTLDgo1ynUsUhegnv/e
-	ZZg==
-X-Google-Smtp-Source: AGHT+IEl94B6cPOfd/EKE0+8juuGqXNbimkkhvSQIWkIC7nhtL6RuCNxJoDH3on4HivHNvWvDQFbNJTKAmY=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1003:b0:e02:bd4f:def2 with SMTP id
- 3f1490d57ef6-e02be20b2ccmr339129276.11.1718746904451; Tue, 18 Jun 2024
- 14:41:44 -0700 (PDT)
-Date: Tue, 18 Jun 2024 14:41:24 -0700
-In-Reply-To: <20240503181734.1467938-1-dmatlack@google.com>
+        d=1e100.net; s=20230601; t=1718759887; x=1719364687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ey5yiVQA8LBP/6zYkNpIcrvI4fFdl2/Q3IQajczTvLM=;
+        b=vgYylT22sbs1yvgBFjeiUHSfP9A+vfVLA/S3i4dHAaoNDPyqlYl9RUKuzsvKzGSXwZ
+         nxpnZNoXa6NxFHMbzEBwgJAYw4Wv29EG+3r08neiVPv5vYhj6IaSSGimbffEUvbkEN/B
+         aSz6cqSDSa3u0CTcdSKe1HeruWyULpAdG0MjK6knt1DHbUXlRSqQA0bgcPDRLmpjGjGN
+         Zbk3Whzu7vCOeWrw3pN6z4fScckJOTWHi/I7dAGMDY0af7bLYXfxgPfIkdrpoBK9FvLl
+         g2OjQWddx60KU9iJrh6yYO6En1t+2y8hXUjNhxd5W3WfMwnFPtUHqowxcJvFklN2MhhO
+         ks1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW/1sjraiTGOzdjkZsJ4STX6biVoqtMZoJMH4jaj5XPqc8N7XekgQNIjNtLHFo4yjxLjD2YtpAGWlY/jWUN4F139bDtldIcL1Jf
+X-Gm-Message-State: AOJu0Yz1zLGXqDuvhLHqmoC40gQ/hFNSo6Pp0gaPedSxI62mKqhJhZh0
+	RM8HMWwrfBnZljTt1P4bHtc2qN17+lgZL3UrpvaiUu6o51eLDK5I0PWvLzBtReMR4TpdiJa+7Pf
+	FrL2U9B5eBNMW9jNHn6xc8tEprYY=
+X-Google-Smtp-Source: AGHT+IFiTPEbVFgx6S7H+uJNwNOLjAFLVL5/Vnh5jjNpcZV25rpymoEhI57ECx4iXoR1vGPAbIVLdQm2Xan1iCOIji0=
+X-Received: by 2002:a2e:9f02:0:b0:2ea:ec52:f594 with SMTP id
+ 38308e7fff4ca-2ec3ced1896mr8494161fa.29.1718759886352; Tue, 18 Jun 2024
+ 18:18:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240503181734.1467938-1-dmatlack@google.com>
-X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Message-ID: <171874683295.1901599.10170158200177384059.b4-ty@google.com>
-Subject: Re: [PATCH v3 0/3] KVM: Set vcpu->preempted/ready iff scheduled out
- while running
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	David Matlack <dmatlack@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <cover.1718268003.git.haibo1.xu@intel.com> <f1f96377b8ecd6e3183f28abf5c9ac21cb9855ea.1718268003.git.haibo1.xu@intel.com>
+ <CAJve8o=8thBhU3NyTaS6sE9rQ1VR_Qf4O8FkAxpmp1q8P-6VaQ@mail.gmail.com> <20240618151820.GA2354@willie-the-truck>
+In-Reply-To: <20240618151820.GA2354@willie-the-truck>
+From: Haibo Xu <xiaobo55x@gmail.com>
+Date: Wed, 19 Jun 2024 09:17:54 +0800
+Message-ID: <CAJve8o=-bZhQS289jwxG=Aq2BOXk5OzdgPKT=nFE9yw_HYYnQQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] ACPI: NUMA: change the ACPI_NUMA to a hidden option
+To: Will Deacon <will@kernel.org>
+Cc: Haibo Xu <haibo1.xu@intel.com>, sunilvl@ventanamicro.com, arnd@arndb.de, 
+	ajones@ventanamicro.com, Catalin Marinas <catalin.marinas@arm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Chen Jiahao <chenjiahao16@huawei.com>, James Morse <james.morse@arm.com>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Zhao Ke <ke.zhao@shingroup.cn>, 
+	Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 03 May 2024 11:17:31 -0700, David Matlack wrote:
-> This series changes KVM to mark a vCPU as preempted/ready if-and-only-if
-> it's scheduled out while running. i.e. Do not mark a vCPU
-> preempted/ready if it's scheduled out during a non-KVM_RUN ioctl() or
-> when userspace is doing KVM_RUN with immediate_exit=true.
-> 
-> This is a logical extension of commit 54aa83c90198 ("KVM: x86: do not
-> set st->preempted when going back to user space"), which  stopped
-> marking a vCPU as preempted when returning to userspace. But if userspace
-> invokes a KVM vCPU ioctl() that gets preempted, the vCPU will be marked
-> preempted/ready. This is arguably incorrect behavior since the vCPU was
-> not actually preempted while the guest was running, it was preempted
-> while doing something on behalf of userspace.
-> 
-> [...]
+On Tue, Jun 18, 2024 at 11:18=E2=80=AFPM Will Deacon <will@kernel.org> wrot=
+e:
+>
+> On Mon, Jun 17, 2024 at 09:34:18PM +0800, Haibo Xu wrote:
+> > @Catalin Marinas @Huacai Chen
+> >
+> > Could you please have a look at this patch for the ACPI_NUMA config on
+> > ARM64 and LOONGARCH respectively.
+> >
+> > Thanks!
+> >
+> > On Thu, Jun 13, 2024 at 4:37=E2=80=AFPM Haibo Xu <haibo1.xu@intel.com> =
+wrote:
+> > >
+> > > x86/arm64/loongarch would select ACPI_NUMA by default and riscv
+> > > would do the same thing, so change it to a hidden option and the
+> > > select statements except for the X86_64_ACPI_NUMA can also go away.
+> > >
+> > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
+> > > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> > > Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+> > > ---
+> > >  arch/arm64/Kconfig        | 1 -
+> > >  arch/loongarch/Kconfig    | 1 -
+> > >  drivers/acpi/numa/Kconfig | 5 +----
+> > >  3 files changed, 1 insertion(+), 6 deletions(-)
+>
+> This looks fine from an arm64 perspective:
+>
+> Acked-by: Will Deacon <will@kernel.org>
+>
 
-Applied to kvm-x86 generic, with minor changelog tweaks (me thinks you've been
-away from upstream too long ;-) ).  Thanks!
+Thank you, Will!
 
-[1/3] KVM: Introduce vcpu->wants_to_run
-      https://github.com/kvm-x86/linux/commit/a6816314af57
-[2/3] KVM: Ensure new code that references immediate_exit gets extra scrutiny
-      https://github.com/kvm-x86/linux/commit/4b23e0c199b2
-[3/3] KVM: Mark a vCPU as preempted/ready iff it's scheduled out while running
-      https://github.com/kvm-x86/linux/commit/118964562969
-
---
-https://github.com/kvm-x86/linux/tree/next
+> Will
