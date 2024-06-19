@@ -1,91 +1,134 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7663763FD
-	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 08:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE23E78C6F
+	for <loongarch@lists.linux.dev>; Wed, 19 Jun 2024 08:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718784675; cv=none; b=UqfDNsg22E2rlpMrQnJ7R+OVIvjdOTXKUbnEDc6pvjemL71dLaDAQn/rN0LR2pwDutHpkcXqfO05waelU7C3O6xDcWiExn47B8BfxsQUlFBpbnQzer5tlvDa220xdoR4gd+bJKWn+JTwV1tC/RpYXJQ/vBW/NvE3eKnblh6b5Oo=
+	t=1718784706; cv=none; b=VodKQUgj5E2FaQxXzdlRHuusv8YkT2i6eIbxCTH7dpV7jXnr4kxgozHZhKFoK2Cbn363V/pudVPYCMhhF5vD8F5FyQ8ic6VgaWwbGtO++T+d8hiTKFjgiuSsjhHEIzM/8o02hTgtiSct5BEHQBp6ArdRqwodUQig72ma6hzWPkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718784675; c=relaxed/simple;
-	bh=z9uXT3mjp7dVxjD9jHEieTpNwIbwtbk+ig9PZbKnsfg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WTEDxHWyyllG+xF0ojqMF7LRisWRi28HnK4oQITtgZHZIirJjbuLvEyzxFlvEeLWQyoYiYWKyVwTS2fOZaU+JT8usvvcvzUm3IlErEbLqSDirIYbFT/cX1a2VAz6kMAchsR+HflbO/5FhLpsPGR8nP7FfqFJcaeqkcrIke5v6X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxDetHknJm9S4IAA--.32857S3;
-	Wed, 19 Jun 2024 16:09:43 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjsdEknJmFeMoAA--.32907S7;
-	Wed, 19 Jun 2024 16:09:42 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Sean Christopherson <seanjc@google.com>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] LoongArch: KVM: Add dirty bitmap initially all set support
-Date: Wed, 19 Jun 2024 16:09:39 +0800
-Message-Id: <20240619080940.2690756-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240619080940.2690756-1-maobibo@loongson.cn>
-References: <20240619080940.2690756-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1718784706; c=relaxed/simple;
+	bh=4SIlKV9xWC8OiXcIVxQ0T6S3AYpJoIlOmn9UTDWDXPg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NieVMYyLUX/wuxTDT6hxhQrxAna6dtj3obbW6ioFB/Q7ECSyR+tsF9B/IUyec9DP3XJWXzJImzOLM4Nfj94+jQ1rVvf5anjuKLyp4bijWvFSJ/5maAE+itQm0pPtDzf6oeCLpxd9ppWsQzapcRmGnkZ0KO5b0IHdu3hqZBrLP+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W3x6B2f2tz6JB5T;
+	Wed, 19 Jun 2024 16:06:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 32FD9140B63;
+	Wed, 19 Jun 2024 16:11:40 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 19 Jun
+ 2024 09:11:39 +0100
+Date: Wed, 19 Jun 2024 09:11:37 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, "Catalin
+ Marinas" <catalin.marinas@arm.com>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>
+CC: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, <loongarch@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, "Miguel Luis" <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, "Salil Mehta" <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin
+ Shan <gshan@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: Re: [PATCH v10 13/19] irqchip/gic-v3: Don't return errors from
+ gic_acpi_match_gicc()
+Message-ID: <20240619091122.00003a9e@huawei.com>
+In-Reply-To: <20240529133446.28446-14-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+	<20240529133446.28446-14-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxjsdEknJmFeMoAA--.32907S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add KVM_DIRTY_LOG_INITIALLY_SET support on LoongArch system, this
-feature comes from other architectures like x86 and arm64.
+On Wed, 29 May 2024 14:34:40 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h | 3 +++
- arch/loongarch/kvm/mmu.c              | 7 +++++++
- 2 files changed, 10 insertions(+)
+> From: James Morse <james.morse@arm.com>
+> 
+> gic_acpi_match_gicc() is only called via gic_acpi_count_gicr_regions().
+> It should only count the number of enabled redistributors, but it
+> also tries to sanity check the GICC entry, currently returning an
+> error if the Enabled bit is set, but the gicr_base_address is zero.
+> 
+> Adding support for the online-capable bit to the sanity check will
+> complicate it, for no benefit. The existing check implicitly depends on
+> gic_acpi_count_gicr_regions() previous failing to find any GICR regions
+> (as it is valid to have gicr_base_address of zero if the redistributors
+> are described via a GICR entry).
+> 
+> Instead of complicating the check, remove it. Failures that happen at
+> this point cause the irqchip not to register, meaning no irqs can be
+> requested. The kernel grinds to a panic() pretty quickly.
+> 
+> Without the check, MADT tables that exhibit this problem are still
+> caught by gic_populate_rdist(), which helpfully also prints what went
+> wrong:
+> | CPU4: mpidr 100 has no re-distributor!
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Sorry. I managed not to pick up Marc's RB form v8 and this patch is unchanged.
+https://lore.kernel.org/all/87jzkktaui.wl-maz@kernel.org/
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 32c4948f534f..309ce329b747 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -37,6 +37,9 @@
- #define KVM_GUESTDBG_VALID_MASK		\
- 	(KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP | KVM_GUESTDBG_SINGLESTEP)
- 
-+#define KVM_DIRTY_LOG_MANUAL_CAPS	\
-+	(KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | KVM_DIRTY_LOG_INITIALLY_SET)
-+
- struct kvm_vm_stat {
- 	struct kvm_vm_stat_generic generic;
- 	u64 pages;
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index 7f04edfbe428..3b862f3a72cb 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -467,6 +467,13 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 *		kvm_arch_flush_shadow_memslot()
- 	 */
- 	if (!(old_flags & KVM_MEM_LOG_DIRTY_PAGES) && log_dirty_pages) {
-+		/*
-+		 * Initially-all-set does not require write protecting any page
-+		 * because they're all assumed to be dirty.
-+		 */
-+		if (kvm_dirty_log_manual_protect_and_init_set(kvm))
-+			return;
-+
- 		spin_lock(&kvm->mmu_lock);
- 		/* Write protect GPA page table entries */
- 		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
--- 
-2.39.3
+Hopefully whoever picks this up is using tooling (b4 or similar) that will get it from
+here.
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+So just patch 14 waiting for Marc to take another glance.
+
+
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 13 ++-----------
+>  1 file changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 6fb276504bcc..10af15f93d4d 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -2415,19 +2415,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+>  	 * If GICC is enabled and has valid gicr base address, then it means
+>  	 * GICR base is presented via GICC
+>  	 */
+> -	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address) {
+> +	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
+>  		acpi_data.enabled_rdists++;
+> -		return 0;
+> -	}
+>  
+> -	/*
+> -	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+> -	 * should not treat as errors, skip the entry instead of probe fail.
+> -	 */
+> -	if (!acpi_gicc_is_usable(gicc))
+> -		return 0;
+> -
+> -	return -ENODEV;
+> +	return 0;
+>  }
+>  
+>  static int __init gic_acpi_count_gicr_regions(void)
 
