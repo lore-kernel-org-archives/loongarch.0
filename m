@@ -1,131 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A82140395;
-	Wed, 19 Jun 2024 12:11:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC8D17545;
+	Thu, 20 Jun 2024 02:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799111; cv=none; b=ZUqxiUsE96JXGymCuQJgMao4B1V8UXMfsYrZUcffuy9pbn0Bu3FVL3oxRdjcgE4bMaJ44kWU3Wu5t+Eco+TcIJF+aJbYraw3YB00LOWXOvCIZd8gW/pVXMKcp8d4dXML61YbyUgDXkS/w1XGhlCHR8JvaQwYaqHQYFVylZD39X0=
+	t=1718849209; cv=none; b=vBBZCe5WnSortgJETZVFVI98OQ/y79EaV/78iN/aY9Z3VK6o+jqQSW1JgnE4NYS4OeMqCBbwFJYYKlnJU6S1USF5DS2hMHdWnv9yoOJQXN+lTqcJxEecJl/TPZPJjXdH14mK06yQI5xa5+F8vbWtKQHKPXiblTTW6wKPCboPOVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799111; c=relaxed/simple;
-	bh=8UC3dd/xs1eHvnpkbzMHjvpFYyuJFdFAOtxj21nX+eg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qM27il8YBG3mV9MFQfqE8WilpmDWbuE1FfdchPlmcXOtpkfmBE2Le7+CgX1bESUddxdbUn/2R3tgqv2uStoeWApGvPldIzLxn13LLJNMTm0NcF8q9ioipaeiT0VtjY16U1q8ZHLXGDEK+Xx8QgUoU86HahA/0aqWFnA4scSZ6k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sc38HwOX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sc38HwOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778F7C4AF1D;
-	Wed, 19 Jun 2024 12:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718799110;
-	bh=8UC3dd/xs1eHvnpkbzMHjvpFYyuJFdFAOtxj21nX+eg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sc38HwOXXA8zwNu1EdxnZfwAfuSgOQAgHP98hrVE8/M1bYDhPzGiO2utokmcGPh1O
-	 tUL7KmeG5lBnM5WSk8yS/X47u3Dd3UmY2teYTP7QE3Vb8AptBUIXiCRPVRJ7AjS6Zr
-	 LNs4+n7wK0e8Id0QAB6MiwNXdtY0v7B/ymqcOPu6+hrsUidSmxxRKPEpwQB/vcNMr8
-	 Yb9jHJs98KH+8M5/8tRuph9lP666N3CpqYfCuiejh8sdyMsx5eQyh5hnnuVRaQHMOd
-	 JpcDIKnRshkSsCf6s4mO7+BYH6mXPLaKKeY3HVgG37cdfWuK0Yz4VLu2NXh2TS5d9F
-	 MKgqmi0zKCfdg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sJuAG-005RXt-4M;
-	Wed, 19 Jun 2024 13:11:48 +0100
-Date: Wed, 19 Jun 2024 13:11:47 +0100
-Message-ID: <867celjfng.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Will Deacon <will@kernel.org>,
-	"Catalin\
- Marinas" <catalin.marinas@arm.com>,
-	<linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	<loongarch@lists.linux.dev>,
-	<x86@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	"Rafael J . Wysocki"
-	<rafael@kernel.org>,
-	"Miguel Luis" <miguel.luis@oracle.com>,
-	James Morse
-	<james.morse@arm.com>,
-	"Salil Mehta" <salil.mehta@huawei.com>,
-	Jean-Philippe
- Brucker <jean-philippe@linaro.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Gavin
- Shan <gshan@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov
-	<bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	<justin.he@arm.com>,
-	<jianyong.wu@arm.com>,
-	Karl Heubaum
-	<karl.heubaum@oracle.com>
-Subject: Re: [PATCH v10 00/19] ACPI/arm64: add support for virtual cpu hotplug
-In-Reply-To: <20240613112511.00006331@huawei.com>
-References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
-	<20240613112511.00006331@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1718849209; c=relaxed/simple;
+	bh=gjPfHHfLjQy9AwbXRDW2GB3BsjVAgrap36/ydCt4du0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=messSGOYMdTHm7a03684eIp59TGlVWy2O47gdVlQd6vpUN70f4C2brIjdFrj8Skki3xy90DHTRP+8r9OD2S2pY7qMQT5rZnyIgH2sxMW37q8/2JdirS1coEmPp5+piXwItQBOdNFLGOM6fIE4VGjUORCTVdrZ5Ns90WO79SXd4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F67EC2BBFC;
+	Thu, 20 Jun 2024 02:06:47 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node() instead of cpu_to_node()
+Date: Thu, 20 Jun 2024 10:06:25 +0800
+Message-ID: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: Jonathan.Cameron@Huawei.com, will@kernel.org, catalin.marinas@arm.com, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, mark.rutland@arm.com, tglx@linutronix.de, peterz@infradead.org, loongarch@lists.linux.dev, x86@kernel.org, linux@armlinux.org.uk, rafael@kernel.org, miguel.luis@oracle.com, james.morse@arm.com, salil.mehta@huawei.com, jean-philippe@linaro.org, guohanjun@huawei.com, gshan@redhat.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, justin.he@arm.com, jianyong.wu@arm.com, karl.heubaum@oracle.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Jun 2024 11:25:27 +0100,
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> On Wed, 29 May 2024 14:34:27 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> 
-> > v10:
-> > - Make acpi_processor_set_per_cpu() return 0 / error rather than bool
-> >   to simplify error handling at the call sites.
-> >   (Thanks to both Rafael and Gavin who commented on this)
-> > - Gather tags.
-> > - Rebase on v6.10-rc1
-> > 
-> > The approach to the GICv3 changes stablized very late in the 6.10 cycle.
-> > Subject to Marc taking a final look at those, I think we are now
-> > in a good state wrt to those and the ACPI parts. The remaining code
-> > that hasn't received review tags from the relevant maintainers
-> > is the arm64 specific arch_register_cpu().  Given I think this will go
-> > through the arm64 tree, hopefully they have just been waiting for
-> > everything else to be ready.
-> 
-> Marc, Will, Catalin,
-> 
-> Any comments on this series?  We definitely want to finally land this
-> in 6.11!
-> 
-> Marc, in practice I think you already gave feedback on the the GICv3
-> changes in here as part of the discussions in the earlier version threads,
-> but if you have time for a final glance through it would be much appreciated.
-> Thanks for all your earlier help on this btw.
+When we use "nr_cpus=n" to hard limit the CPU number, cpu_to_node() is
+not usable because it can only applied on "possible" CPUs. On the other
+hand, early_cpu_to_node() can be always used instead.
 
-I've had a quick look and the GICv3 parts look OK to me (you should
-now have by tags for both patches).
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Fix build for !NUMA.
 
-Thanks,
+ drivers/irqchip/irq-loongson-eiointc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-	M.
-
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index c7ddebf312ad..0b486fe6dc57 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -7,6 +7,7 @@
+ 
+ #define pr_fmt(fmt) "eiointc: " fmt
+ 
++#include <asm/numa.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -339,7 +340,7 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+ 	int node;
+ 
+ 	if (cpu_has_flatmode)
+-		node = cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
++		node = early_cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
+ 	else
+ 		node = eiointc_priv[nr_pics - 1]->node;
+ 
+@@ -431,7 +432,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 		goto out_free_handle;
+ 
+ 	if (cpu_has_flatmode)
+-		node = cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
++		node = early_cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
+ 	else
+ 		node = acpi_eiointc->node;
+ 	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
 -- 
-Without deviation from the norm, progress is not possible.
+2.43.0
+
