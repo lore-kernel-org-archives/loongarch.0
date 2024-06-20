@@ -1,89 +1,57 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32841D52C
-	for <loongarch@lists.linux.dev>; Thu, 20 Jun 2024 03:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F451AC45D
+	for <loongarch@lists.linux.dev>; Thu, 20 Jun 2024 12:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718854558; cv=none; b=GZfs+MRCEtZhFvzJEuLmh1djRLfO/DZoBusSeCDuPKVoEY0kVglbnUqPfML7lEcTOw00kvJtYfxJoJf9HdvT2uOALQYTL0crQV3f0n7He/k0FXpO3RmNIIM3kqW8MKIJwb/eCPsmo1gHLKX/7SvcPCXWNEFsE3DNfbkeH4+tSmA=
+	t=1718887849; cv=none; b=OyB05LQM2VJnkhboAdnyD/DsL0qoy6OJX3rpLyKj0FINpj9MnfwMS+gCy/mQSgnF0ohVLgniGqro/sdxyuQHidLqHwvmfeam8ljgo3nXWg+4WoClBPw5D6SJxwbYKutrMpTHzbS2lBmzRrnuM1Wle8DokjGZOO0oQHXGnwM+njo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718854558; c=relaxed/simple;
-	bh=pxEJn23nT6+sqxNt5VIguQ2SC4vykVQraEA5VugQ+mQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vqh4QWxPoF9YMHYNQ2bUTC6e8vizkwndbfR2TUMu6d8KByHhGwFR9xVolsi2lTQRGUfcLXSGTVD79qFiZ1NTBS4LyowOXY8cEStnbo0wXdE186mCiQjJ2zOsjQ+5wGb9k8+21iKB2iXCGbAvOyhjZWtv0vri+jf6jF1icw0b++A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bx3+uZo3NmSGkIAA--.18062S3;
-	Thu, 20 Jun 2024 11:35:53 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx78eYo3Nm6ugpAA--.35757S2;
-	Thu, 20 Jun 2024 11:35:53 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Sync pending interrupt when getting ESTAT from user mode
-Date: Thu, 20 Jun 2024 11:35:52 +0800
-Message-Id: <20240620033552.2739845-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1718887849; c=relaxed/simple;
+	bh=BmOXLgEXDNK3XzYgemEnaUei+aYuQImVVsZC8ih6laM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eJtDsKlX27TxGpZRG7nOCaoho2A8QlhmKkMkBPPI3DFffBZzAqsBIaLs7MUQDk51eOfEj0QAwco8cgVbbOBDMY5llc+01oVZSSyINWCq2eHW/T5tbkVyqq49ngBNk8kED21t/+E7tphAng1VY2qb9+lokkeJmLN1dybwQrGBcRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W4gMM5BHnz4wcJ;
+	Thu, 20 Jun 2024 22:50:39 +1000 (AEST)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Anup Patel <anup@brainfault.org>, Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, Paul Walmsley <paul.walmsley@sifive.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Théo Lebrun <theo.lebrun@bootlin.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim <svenjoac@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom internal kernel review list <b
+ cm-kernel-feedback-list@broadcom.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Mykola Lysenko <mykolal@fb.com>, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, Celeste Liu <coelacanthushex@gmail.com>
+Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>, Icenowy Zheng <uwu@icenowy.me>, Celeste Liu <CoelacanthusHex@gmail.com>
+In-Reply-To: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
+References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
+Subject: Re: (subset) [PATCH 0/6] defconfig: drop RT_GROUP_SCHED=y
+Message-Id: <171888775124.806750.6633317613524015778.b4-ty@ellerman.id.au>
+Date: Thu, 20 Jun 2024 22:49:11 +1000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx78eYo3Nm6ugpAA--.35757S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Currently interrupt is posted and cleared with async mode, and it is saved
-in SW state vcpu::arch::irq_pending and vcpu::arch::irq_clear. When vcpu
-is ready to run, interrupt is synced to ESTAT CSR register from SW state
-vcpu::arch::irq_pending at guest entrance.
+On Thu, 30 May 2024 19:19:48 +0800, Celeste Liu wrote:
+> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+> needs an RT budget assigned, otherwise the processes in it will not be able to
+> get RT at all. The problem with RT group scheduling is that it requires the
+> budget assigned but there's no way we could assign a default budget, since the
+> values to assign are both upper and lower time limits, are absolute, and need to
+> be sum up to < 1 for each individal cgroup. That means we cannot really come up
+> with values that would work by default in the general case.[1]
+> 
+> [...]
 
-During VM migration stage, vcpu is put into stopped state, however
-pending interrupt is not synced to ESTAT CSR register. So there will be
-interrupt lost when VCPU is stopped and migrated to other host machines.
+Patch 4 applied to powerpc/next.
 
-Here when ESTAT CSR register is read from VMM user mode, pending
-interrupt is synced to ESTAT also. So that VMM can get correct pending
-interrupt.
+[4/6] powerpc: defconfig: drop RT_GROUP_SCHED=y from ppc6xx_defconfig
+      https://git.kernel.org/powerpc/c/2bac6caee94e25f59ee47e2d365d7e07465089ba
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index b747bd8bc037..81622cd055af 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -371,9 +371,18 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
- 		return -EINVAL;
- 
- 	if (id == LOONGARCH_CSR_ESTAT) {
-+		preempt_disable();
-+		vcpu_load(vcpu);
-+		/*
-+		 * Sync pending interrupt into estat so that interrupt
-+		 * remains during migration stage
-+		 */
-+		kvm_deliver_intr(vcpu);
- 		/* ESTAT IP0~IP7 get from GINTC */
- 		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
- 		*val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) | (gintc << 2);
-+		vcpu_put(vcpu);
-+		preempt_enable();
- 		return 0;
- 	}
- 
-
-base-commit: 92e5605a199efbaee59fb19e15d6cc2103a04ec2
--- 
-2.39.3
-
+cheers
