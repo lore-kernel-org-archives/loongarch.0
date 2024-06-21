@@ -1,53 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013B617B43E
-	for <loongarch@lists.linux.dev>; Fri, 21 Jun 2024 18:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45A116C6BE
+	for <loongarch@lists.linux.dev>; Fri, 21 Jun 2024 20:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718995222; cv=none; b=hm3ow/9+TCAGAaoVvFPRnSIiN7pru6Pf20lNfILDB5GJ3/uCwxlhdKfxRaY8A5wDEt32tWKxpgFLtLmR8q9YdoksjZZkm3C+dB5sD3wqj8dRy6a5n1znDTF6JoaA/gf2oChWvFPPjlp9GYqrzmsG+RFOL9O2+79bWsB2jnG2lYY=
+	t=1719002570; cv=none; b=pYr+1iKB1ZQJx/FD1SxISC26BkERg66PxATLiGfO+tgitPHvNQgunn+YuZJggCX+fnjLN4beaoay8nxYY09NWMa3wb+1bPAJnNdwKdQL2OKp/V3JZ0/ny3Y5h0vFZaRhGEOYb2AjcqBQO5dzQUaxqZpkLyohDPZiW9p6UNomFEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718995222; c=relaxed/simple;
-	bh=kVkfeZyHUj69SoWVDqqVjTUP9SejBG/wsfbPMuTeoeQ=;
+	s=arc-20240116; t=1719002570; c=relaxed/simple;
+	bh=2zggeFh0OFFhjF/ZVVgSwqdri3EwcBuEJPRN9jlHWu4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Sscd5fwtrLQdu9EklXRNdI07IY29p2jdYMBR6h4GJuiLu+/S3PWrQSmq+YS8mNldCflLsNUJC93D7ThhvJaJAkijX9a/9vRR+mwInbTHoPk5RGsrC3X59fiGDal0NN579g7KqG1cGS7mQ7facPsELEZS9l3lyY7h4EfgQr34MDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dz70knYH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v74VARbF; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=CXAgLIyZB9UO0vmCubRhgk0M/BazvGLDaJ3H+q8E3rG7MlOASyuAa4eE4SHydWpQPgS1t8wtb09fJXwRnNccS9Oh/ZjvgtgMa7VXbWkyEdDmux8T6fSkaPbr8mGbdiOswp6A/prR2AgrzQqJ/b2ulm6HNEy5BbDPU/UfR5wtWP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELnJX1g+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NPDl8OIk; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dz70knYH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v74VARbF"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELnJX1g+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NPDl8OIk"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718995218;
+	s=2020; t=1719002567;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=t8oL0HVT+pepGRoZ/t/HRR9+/cVmQREcSm1WoUChEDM=;
-	b=dz70knYH5ZZh+XdoBqh2v3zLwuSZDvomDJEPzqJfK1q13ts4l+ofk4kmLVJplmXM8fCedu
-	FuzAqg5F3Fo5dtQsHbfy559XvEB1+6dndfpoz9JILCMirWmRAQgk/dUHP5VyIibAmF+e06
-	ebBYe1FwuPpxoyjReb1ebs0FqqlGsX4w3LuEYxqvI+y15sYrjxT8KyfMYdnqDwy51fPxX9
-	B5XNj5ykhMyC/6fyt8J6yNI2Af2VbN9KGLMI1eESgKOqod8YRgjk30uqG1yUvvJp2MoC66
-	c7BNW587ksNiYAxKoYLbSToqxAsxFqPVvqUmsiL1mjVLphXEU4Zcc3ZOwQZs5Q==
+	bh=02A7gZd5M4ugoSZa49BAv+WJOyqZDtqOn+LC+bMhtQ4=;
+	b=ELnJX1g+PITl8T7cwEOHyBqQOmhlVqW2HIrRycdn0GNYX1J+z+9XukHDo5KByyBLdHgSIG
+	OH4qnwLuPt2pqM9aC5yqR6OD0h1iEWMGpibOfe5MsPOH8BMit4pUCjFlzecEZ06GDrb9qW
+	QSL9AJifqNcB4KAK+r1HCtnudnEmO9DtBAmpzHO3tZMYJMhcYd0TDQLmiHhGlCl89tGRvk
+	H0qyTMBLVeie5mm6Qtx42TcCxB0BXe4RzitHupoQgTP0VADe5XA4hbamubBEUq0oYZ40s4
+	a0DOAZ1zJEOhoN4rH7KLBhJDeUpzTessVPucLrTfsQXd28cohzSrqwttfiD7QA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718995218;
+	s=2020e; t=1719002567;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=t8oL0HVT+pepGRoZ/t/HRR9+/cVmQREcSm1WoUChEDM=;
-	b=v74VARbFXunQIVQadu4FBPBTChxVuZG4e6v+KDHBqvcte0bHRZ29hNzgUWw9sx9tApYIC2
-	S8nenCY1VG8zGbAw==
+	bh=02A7gZd5M4ugoSZa49BAv+WJOyqZDtqOn+LC+bMhtQ4=;
+	b=NPDl8OIkFluIvRunTCQI4wl6r623bolgx1GrbRpQbRwVlQjByCdHSo4Sp/0LOimxHxNLK0
+	RsaY3NTkL68ZWrBQ==
 To: Huacai Chen <chenhuacai@loongson.cn>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Xuefeng Li
  <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- stable@vger.kernel.org, Tianli Xiong <xiongtianli@loongson.cn>
-Subject: Re: [PATCH] irqchip/loongson-liointc: Set different ISRs for
- different cores
-In-Reply-To: <20240612070106.2060334-1-chenhuacai@loongson.cn>
-References: <20240612070106.2060334-1-chenhuacai@loongson.cn>
-Date: Fri, 21 Jun 2024 20:40:17 +0200
-Message-ID: <87y16ym966.ffs@tglx>
+ <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+In-Reply-To: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+Date: Fri, 21 Jun 2024 22:42:46 +0200
+Message-ID: <87msnem3i1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,30 +55,23 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Wed, Jun 12 2024 at 15:01, Huacai Chen wrote:
-> In the liointc hardware, there are different ISRs for different cores.
+On Thu, Jun 20 2024 at 10:06, Huacai Chen wrote:
+> When we use "nr_cpus=n" to hard limit the CPU number, cpu_to_node() is
+> not usable because it can only applied on "possible" CPUs. On the other
+> hand, early_cpu_to_node() can be always used instead.
 
-I have no idea what ISR means in that context. Can you please spell it
-out with proper words so that people not familiar with the details can
-understand it?
+We use nothing...
 
-> We always use core#0's ISR before but has no problem, it is because the
-> interrupts are routed to core#0 by default. If we change the routing,
-> we should set correct ISRs for different cores.
+Aside of that you fail to explain what the problem is (i.e. the
+malfunction) and why using early_cpu_to_node() is fixing it.
 
-We do nothing. The code does.
+>  #define pr_fmt(fmt) "eiointc: " fmt
+>  
+> +#include <asm/numa.h>
 
-See https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+asm includes come after the linux includes.
 
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Tianli Xiong <xiongtianli@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-
-This Signed-off-by chain is wrong. If Tianli is the author then this
-needs a From: Tianli in the changelog. If you developed it together then
-this lacks a Co-developed-by tag.
-
-See Documentation/process/
+>  #include <linux/cpuhotplug.h>
 
 Thanks,
 
