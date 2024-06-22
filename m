@@ -1,111 +1,113 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17242152517
-	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 11:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62D4C8A
+	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 11:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719054300; cv=none; b=nl+eJ5cDKcXfG2r62sgPeEJ9Y4ugQsGs17uvDJ+FIfJZONh369PMqB3lGhyXbcINfkkCZoIvj2JMwP7RxY0ocTz9ywWhR6rtUK98qNtaDLkzk/UWcrUFp8dINjbFuLH9+BqoXepVlyapvwgbTKH2LMO64LHhn9UWYxXJ/7hIFK4=
+	t=1719055455; cv=none; b=mMcJYtqlRmbF3263l5wDZ71kTPPNjieHHE15qljNG3NInhXPQc4a0bYR0bdFEPGdqlJPERki2bWQcdGjN9q0gfqzLtSWRDJ4bsX9By46C42WtYj9eooPvWlDHmWTGR4rCzeDhJqjyqJgWWv9LjsGXWL8XorVN+Ds/sMO0hGZl20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719054300; c=relaxed/simple;
-	bh=NZNcXXX7oZ4Ic/I2g+QIbYzMDnjzRrmXaFWI7JJSPG4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Au1wCTJRwRYGtbV2Twg7bsPW1yKnZo4iqCJLo69khYkfa+sfxQpUlNl+TBXDukem8fvmPt8zllc3K5/QQB6KJekNOHGisyPhE4WGkbGcO+Djyh0dM0lpzda9QaVRMCxhVilLDH1WS4c+LqOkBJh4H9IboMng5haVGHv6i5J0boI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=AnxmN8BL; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1719055455; c=relaxed/simple;
+	bh=XczZR1S8ZzwxLPnjy3oktjL68CvtruQEAnv/yw/vx1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t+Zra0KYtCw//PA184CsrgUNcS1qbfLrvjL46yCdcnPCOu6jxQ9zyGsih2qr7XTcr3GjAiwk7PGQTfcOGjCxDdbfUCihb8+zrfoIUJtpGKVnJdWfjddwee2q44oqlrc8r/rgoEWXveXtBRzjZ56ak2iK0WyeYBhhG7faFT+zQGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnexfrnZ; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="AnxmN8BL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719054298;
-	bh=NZNcXXX7oZ4Ic/I2g+QIbYzMDnjzRrmXaFWI7JJSPG4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AnxmN8BLmGsC/BO6Wk1w9jqw9fwm2EOqH4jG687DXDIT8f6HAPiLUMKIdpgvsgvpi
-	 67YDoXyVqIo/mgPva/eSD+KVIOTX5ealwvluRoHkSGg7i93PhmfZtY+LMAgDkb+tsR
-	 3jqvPbVAI8NQOCyBVLyFLeSEj8pcGsP48oalN3Fc=
-Received: from [192.168.124.13] (unknown [113.200.174.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D8FA467190;
-	Sat, 22 Jun 2024 07:04:55 -0400 (EDT)
-Message-ID: <8c14c943ee0a5619bdc272adbdd76a61809b73b6.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, 
- loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng
- Li <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
- stable@vger.kernel.org
-Date: Sat, 22 Jun 2024 19:04:52 +0800
-In-Reply-To: <CAAhV-H4HaAnKJFnDpfUY6qdEtoKPxLSgHgU8isMryrab=cq6pA@mail.gmail.com>
-References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
-	 <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com>
-	 <CAAhV-H5kn2xPLqgop0iOyg-tc5kAYcuNo3cd+f3yCdkN=cJDug@mail.gmail.com>
-	 <fcdeb993-37d6-42e0-8737-3be41413f03d@app.fastmail.com>
-	 <CAAhV-H4s_utEOtFDwjPTqxnMWTVjWhmS7bEVRX+t8HK5QDA8Vg@mail.gmail.com>
-	 <a21a0878-021e-4990-a59d-b10f204a018b@app.fastmail.com>
-	 <CAAhV-H7OR5tkbjj-BPLStneXFr=1DUaFvvh8+a5Bk_jhCAP25Q@mail.gmail.com>
-	 <cdef45d36d0e71da5f0534b3783b81c82405bda3.camel@xry111.site>
-	 <CAAhV-H4R_HJAB0baqUgA8ucbwWNVN4sc9EV91zAk9Ch302_7zg@mail.gmail.com>
-	 <56ace686-d4b4-4b4c-a8a6-af06ec0d48f2@app.fastmail.com>
-	 <08ff168afc09fd108ec489a3c9360d4e704fa7dc.camel@xry111.site>
-	 <a70e8b062fc422e351fe2369b9979a623fa05dfa.camel@xry111.site>
-	 <4fd0531d-e8f8-4a4c-9136-50fcc31ba5f2@app.fastmail.com>
-	 <c2b1ca127504e519c04a36179ba6c486f2ec0a08.camel@xry111.site>
-	 <CAAhV-H4HaAnKJFnDpfUY6qdEtoKPxLSgHgU8isMryrab=cq6pA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnexfrnZ"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6f0e153eddso350986166b.0
+        for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 04:24:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719055452; x=1719660252; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=83J6bYCjzPDrL4GISkhSjjehJb5GWsoBmA7ZxJY3FUc=;
+        b=RnexfrnZPP+i6NiVU+rQt/uZiHO8cIvHXUL8dEKS4fY7Zy1ZCeMoblG+8xZ8/cykIg
+         wNYIeE/fGaaeNEPEV3NaNcbdGnS370jM3wWOJB/dxQx+/9JxeSIw8lB8wwxNT1xVb2Eq
+         HRzCle3A/6snke2iqvxheKPGCYGk6MHrCMT82hiJxyZFVBxeFISFbeuwZHFgs02IrKoP
+         gpwAkoGu0mt2mrjlJmsfby7R3jWNiJ97OU+6V+Ygxu9vJex8009uSAM/TOdez6OO7+Xw
+         mALwpjBMkS4kSUvtxutp7e0MslLIQlLSAATVR/vAYwtyIyG8TYmeLhMwIJo2O8ZV5+Ct
+         hN4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719055452; x=1719660252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=83J6bYCjzPDrL4GISkhSjjehJb5GWsoBmA7ZxJY3FUc=;
+        b=lVqeCdlIt5L5oLs3Ow40nnKtrYv28KEpuDAV0eo5I9KD13PQ/qqvNkN86uh06twDgV
+         ethaeCZOC7+4+8+QW4XKd1qeuFvZTR6iGGKitEz/3vxx1huHJlSSfhF8iFe8/nXucnty
+         OfBZJqbDdEvuAbDMHRsUnml/0Ql26Njvx0muPvEmWuPONFbtLAaT5gMl2uqJ0IpXWx9O
+         UX55JcBnenIMASJFcyxhZBg+VcfnWixVcRJ1RbpNXZ7OGe/3qu8x2/bpalUD0/NI9xdO
+         LJSmTSNV1boMlxXE9RgPb/XhfwsRanNojIkFUDDTQIbyprR9LyyU5jL+4ul8E9x/97WV
+         ZEaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU6Y34YeKuGisFNOc2qlJZwJPlLcU3cV4KllGcmPWbKghDgTpFpCnmQEN89ygATuUigdUMm6D9DDLIX5mxmHeF4sTX7lTiTn6v
+X-Gm-Message-State: AOJu0YwQzwgNDY2iT8hEzL1q+l2suBDtNTJn6OERmWXmf/7jE+uneArK
+	66scjvhkLQXNRtEWy/C3m9dnUMeCtfqak7vt0XIfQXAb7O2pgk/oeqIotm5a8i/SvIRRBQFzTWo
+	fvAlxM9BUSIUNdm75AyezLYZUNfQ=
+X-Google-Smtp-Source: AGHT+IE/sh7/DstBLL1Mzt0UJOMiXW/wEaf/vpKw+eRSACu0bNwFz/0qtVahwNV3rhK2Rs6oypIxybf80gb8Kv/TpQQ=
+X-Received: by 2002:a17:907:118a:b0:a6f:7d7e:ab0e with SMTP id
+ a640c23a62f3a-a715f94a6a8mr46634166b.27.1719055451338; Sat, 22 Jun 2024
+ 04:24:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+ <87msnem3i1.ffs@tglx> <CAAhV-H5TNnf+EMEtKmXk+Q9KXSZpW+9vd-7qqXDifsKfny+v=g@mail.gmail.com>
+ <87pls9z3g0.ffs@tglx>
+In-Reply-To: <87pls9z3g0.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sat, 22 Jun 2024 19:23:59 +0800
+Message-ID: <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
+Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2024-06-22 at 15:45 +0800, Huacai Chen wrote:
-> Hi, Ruoyao,
->=20
-> On Mon, Jun 17, 2024 at 2:45=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
-ote:
-> >=20
-> > On Mon, 2024-06-17 at 08:35 +0200, Arnd Bergmann wrote:
-> > > On Sat, Jun 15, 2024, at 15:12, Xi Ruoyao wrote:
-> > > > On Sat, 2024-06-15 at 20:12 +0800, Xi Ruoyao wrote:
-> > > > >=20
-> > > > > [Firefox]:
-> > > > > https://searchfox.org/mozilla-central/source/security/sandbox/lin=
-u
-> > > > > x/SandboxFilter.cpp#364
-> > > >=20
-> > > > Just spent some brain cycles to make a quick hack adding a new stat=
-x
-> > > > flag.=C2=A0 Patch attached.
-> > > >=20
-> > >=20
-> > > Thanks for the prototype. I agree that this is not a good API
-> >=20
-> > What is particular bad with it?=C2=A0 Maybe we can improve before annoy=
-ing
-> > VFS guys :).
-> >=20
-> > > but that it would address the issue and I am fine with merging
-> > > something like this if you can convince the VFS maintainers.
-> >=20
-> > Before that I'd like someone to purpose a better name.=C2=A0 I really d=
-islike
-> > "AT_FORCE_EMPTY_PATH" but I cannot come up with something better.
-> Any updates? Have you submitted this patch? I hope we can end up at 6.11.=
- :)
+Hi, Thomas,
 
-https://lore.kernel.org/linux-fsdevel/20240622105621.7922-1-xry111@xry111.s=
-ite/
+On Sat, Jun 22, 2024 at 6:17=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> Huacai!
+>
+> On Sat, Jun 22 2024 at 10:49, Huacai Chen wrote:
+> > On Sat, Jun 22, 2024 at 4:42=E2=80=AFAM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >>
+> >> On Thu, Jun 20 2024 at 10:06, Huacai Chen wrote:
+> >> > When we use "nr_cpus=3Dn" to hard limit the CPU number, cpu_to_node(=
+) is
+> >> > not usable because it can only applied on "possible" CPUs. On the ot=
+her
+> >> > hand, early_cpu_to_node() can be always used instead.
+> > cpu_to_node() depends on per-cpu area, and per-cpu area is only usable
+> > for "possible" CPUs.
+>
+> When nr_cpus=3Dn is on the command line then what needs to access
+> something for CPUs which are not possible to come ever online?
+>
+> That does not make sense because it's exactly the same situation when
+> you compile a kernel with NR_CPU=3D8 and boot it on a system with 16
+> CPUs. Then early_cpu_to_node() does not give you anything either.
+>
+> So what's the technical problem you are trying to solve?
+Frankly, there are some drawbacks on our hardware. On a dual-bridge
+machine, there are two eiointc instances. Even if nr_cpus limits the
+"possible" CPUs, we still hope the eiointc driver can initialize
+correctly, otherwise the machine cannot boot.
 
+Huacai
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>
+> Thanks,
+>
+>         tglx
