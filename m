@@ -1,113 +1,63 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62D4C8A
-	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 11:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E64316FF4A;
+	Sat, 22 Jun 2024 15:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719055455; cv=none; b=mMcJYtqlRmbF3263l5wDZ71kTPPNjieHHE15qljNG3NInhXPQc4a0bYR0bdFEPGdqlJPERki2bWQcdGjN9q0gfqzLtSWRDJ4bsX9By46C42WtYj9eooPvWlDHmWTGR4rCzeDhJqjyqJgWWv9LjsGXWL8XorVN+Ds/sMO0hGZl20=
+	t=1719069672; cv=none; b=lN9N6COG4YDqZyaC0FnaGRT5b8ZJUkVUOEETMY+Svrau0/o6gtLEuVri9WZIIkJIV2mElcTdAA1BA12GoVF22Lm9XojkmywGACSvddi4daPyn9hoOPz5Ezay/fOhJlh/SzAVUIWY+iP+VLzWeK4ZIMehorlRmKsVr91uIWLaQMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719055455; c=relaxed/simple;
-	bh=XczZR1S8ZzwxLPnjy3oktjL68CvtruQEAnv/yw/vx1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t+Zra0KYtCw//PA184CsrgUNcS1qbfLrvjL46yCdcnPCOu6jxQ9zyGsih2qr7XTcr3GjAiwk7PGQTfcOGjCxDdbfUCihb8+zrfoIUJtpGKVnJdWfjddwee2q44oqlrc8r/rgoEWXveXtBRzjZ56ak2iK0WyeYBhhG7faFT+zQGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnexfrnZ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719069672; c=relaxed/simple;
+	bh=ig4B8urytXNJAD4nlBpdcNFAnbL+q4t3qP1BQdXlWG0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LSIeyEV2FdSoSFYIoCbkwfG0BKBJ9/OTH5889aJBEdCvifcRTiDW8vK6i/pvZeYmb9OZ+zpS9SBG8crzZsd0yciwBpOhAjKQ+uMuVm4GziicFlnJw/jPXMdD0CV557C5hF9fpJc88noENmVOlXQqWZYmFeoF/a/yCfttd68PohI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5HdS9RC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnexfrnZ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6f0e153eddso350986166b.0
-        for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 04:24:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719055452; x=1719660252; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=83J6bYCjzPDrL4GISkhSjjehJb5GWsoBmA7ZxJY3FUc=;
-        b=RnexfrnZPP+i6NiVU+rQt/uZiHO8cIvHXUL8dEKS4fY7Zy1ZCeMoblG+8xZ8/cykIg
-         wNYIeE/fGaaeNEPEV3NaNcbdGnS370jM3wWOJB/dxQx+/9JxeSIw8lB8wwxNT1xVb2Eq
-         HRzCle3A/6snke2iqvxheKPGCYGk6MHrCMT82hiJxyZFVBxeFISFbeuwZHFgs02IrKoP
-         gpwAkoGu0mt2mrjlJmsfby7R3jWNiJ97OU+6V+Ygxu9vJex8009uSAM/TOdez6OO7+Xw
-         mALwpjBMkS4kSUvtxutp7e0MslLIQlLSAATVR/vAYwtyIyG8TYmeLhMwIJo2O8ZV5+Ct
-         hN4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719055452; x=1719660252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=83J6bYCjzPDrL4GISkhSjjehJb5GWsoBmA7ZxJY3FUc=;
-        b=lVqeCdlIt5L5oLs3Ow40nnKtrYv28KEpuDAV0eo5I9KD13PQ/qqvNkN86uh06twDgV
-         ethaeCZOC7+4+8+QW4XKd1qeuFvZTR6iGGKitEz/3vxx1huHJlSSfhF8iFe8/nXucnty
-         OfBZJqbDdEvuAbDMHRsUnml/0Ql26Njvx0muPvEmWuPONFbtLAaT5gMl2uqJ0IpXWx9O
-         UX55JcBnenIMASJFcyxhZBg+VcfnWixVcRJ1RbpNXZ7OGe/3qu8x2/bpalUD0/NI9xdO
-         LJSmTSNV1boMlxXE9RgPb/XhfwsRanNojIkFUDDTQIbyprR9LyyU5jL+4ul8E9x/97WV
-         ZEaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU6Y34YeKuGisFNOc2qlJZwJPlLcU3cV4KllGcmPWbKghDgTpFpCnmQEN89ygATuUigdUMm6D9DDLIX5mxmHeF4sTX7lTiTn6v
-X-Gm-Message-State: AOJu0YwQzwgNDY2iT8hEzL1q+l2suBDtNTJn6OERmWXmf/7jE+uneArK
-	66scjvhkLQXNRtEWy/C3m9dnUMeCtfqak7vt0XIfQXAb7O2pgk/oeqIotm5a8i/SvIRRBQFzTWo
-	fvAlxM9BUSIUNdm75AyezLYZUNfQ=
-X-Google-Smtp-Source: AGHT+IE/sh7/DstBLL1Mzt0UJOMiXW/wEaf/vpKw+eRSACu0bNwFz/0qtVahwNV3rhK2Rs6oypIxybf80gb8Kv/TpQQ=
-X-Received: by 2002:a17:907:118a:b0:a6f:7d7e:ab0e with SMTP id
- a640c23a62f3a-a715f94a6a8mr46634166b.27.1719055451338; Sat, 22 Jun 2024
- 04:24:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5HdS9RC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BC54C3277B;
+	Sat, 22 Jun 2024 15:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719069672;
+	bh=ig4B8urytXNJAD4nlBpdcNFAnbL+q4t3qP1BQdXlWG0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=N5HdS9RC9axy8t+gvymsbcmRH+HuFFFL9Cuid/fH0NpcIOpud7fTTjlYXRceCp3KM
+	 B2L56YietEDZXYSNAwjVSXRExbUfQ7e7z94pp/vG51SSZsYY/Dt7i294lMIFQpyJiY
+	 DJM5I5f1ChMvlqmFFwyoXY/NjsPJlcF8n2qWdLUEm9tkLAKjvlf1pchbn5/uLWGwNp
+	 921J7iI+lDEbHEQnNfDQIGQXuGcbv1yvXY5MfKeN/T4hW28AW8NYvwv7wvKnQWluTk
+	 JiBg3ORDO8lEoNUJMIyuXgSkmPyec/CQdGcZJO3ofSL0cahXcomPCauZtEiJWd7vO1
+	 X0TGuBpioz22Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3E32E7C4C8;
+	Sat, 22 Jun 2024 15:21:11 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.10-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240622073206.1578052-1-chenhuacai@loongson.cn>
+References: <20240622073206.1578052-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240622073206.1578052-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-2
+X-PR-Tracked-Commit-Id: d0a1c07739e1b7f74683fe061545669156d102f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d4ba3313e84dfcdeb92a13434a2d02aad5e973e1
+Message-Id: <171906967199.9703.9586579152126681197.pr-tracker-bot@kernel.org>
+Date: Sat, 22 Jun 2024 15:21:11 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
- <87msnem3i1.ffs@tglx> <CAAhV-H5TNnf+EMEtKmXk+Q9KXSZpW+9vd-7qqXDifsKfny+v=g@mail.gmail.com>
- <87pls9z3g0.ffs@tglx>
-In-Reply-To: <87pls9z3g0.ffs@tglx>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Sat, 22 Jun 2024 19:23:59 +0800
-Message-ID: <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
-Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
- instead of cpu_to_node()
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Thomas,
+The pull request you sent on Sat, 22 Jun 2024 15:32:06 +0800:
 
-On Sat, Jun 22, 2024 at 6:17=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> Huacai!
->
-> On Sat, Jun 22 2024 at 10:49, Huacai Chen wrote:
-> > On Sat, Jun 22, 2024 at 4:42=E2=80=AFAM Thomas Gleixner <tglx@linutroni=
-x.de> wrote:
-> >>
-> >> On Thu, Jun 20 2024 at 10:06, Huacai Chen wrote:
-> >> > When we use "nr_cpus=3Dn" to hard limit the CPU number, cpu_to_node(=
-) is
-> >> > not usable because it can only applied on "possible" CPUs. On the ot=
-her
-> >> > hand, early_cpu_to_node() can be always used instead.
-> > cpu_to_node() depends on per-cpu area, and per-cpu area is only usable
-> > for "possible" CPUs.
->
-> When nr_cpus=3Dn is on the command line then what needs to access
-> something for CPUs which are not possible to come ever online?
->
-> That does not make sense because it's exactly the same situation when
-> you compile a kernel with NR_CPU=3D8 and boot it on a system with 16
-> CPUs. Then early_cpu_to_node() does not give you anything either.
->
-> So what's the technical problem you are trying to solve?
-Frankly, there are some drawbacks on our hardware. On a dual-bridge
-machine, there are two eiointc instances. Even if nr_cpus limits the
-"possible" CPUs, we still hope the eiointc driver can initialize
-correctly, otherwise the machine cannot boot.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-2
 
-Huacai
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d4ba3313e84dfcdeb92a13434a2d02aad5e973e1
 
->
-> Thanks,
->
->         tglx
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
