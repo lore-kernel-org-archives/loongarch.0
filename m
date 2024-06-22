@@ -1,146 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C174273FE
-	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 05:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296735382;
+	Sat, 22 Jun 2024 07:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719033687; cv=none; b=CrY+QA/lu3rIniN2pAkn/0C6/LIoiS/obRzMU55dyIIUWO7/sYWawf2kX0IgxV/0NoivYXisfIEUEKeq/9dh0MXF2v7n//EUJ8yP2FWlRkOB4Fl2JMCKdNND4Y3RKo2/g0kwgyRY6j9wolQvpqCCTiy9cCC4UNmLHR0HxS7MzWE=
+	t=1719041548; cv=none; b=aBtjx/Jr/WfNkdBE1apZJVswsyJ5GEjvFo8jvxDK5P7arbabghh3GF3zMs9gF6Lrjbz6ig1aU04ooubdAdHEfCw1UMhI0OOV7cOdEempjl1u9weQXQC4SxOwjh7c8c1FZ9ovYK/PCydZwNP0aiIeKE2qnLVyF53Qx9HLAhJ1pJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719033687; c=relaxed/simple;
-	bh=Q0VuO5tTOKXDKNo7+IgH2wC09h14zRKOZ2+TsHaNCgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ex1STxqZpzawIegZdAormAzd/Nf71KOEu/3+5LttHhUTU5p1TdWnvop4f/IblvOS2Y7i4kZsF2fvpJSJIh9AttNcAC/2axXc8w7Raj6h2JT75eHnhcRIJUoJ1S1lsnhFuUDQiID2qKY1eujX1CJtRKSgidqtxbT5eUtj6fi/NIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZVFZ9Xi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZVFZ9Xi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5A8C4AF0B
-	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 05:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719033686;
-	bh=Q0VuO5tTOKXDKNo7+IgH2wC09h14zRKOZ2+TsHaNCgw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GZVFZ9XikXhuxltJOPDtH0vO/L/IVyKOGrYCkT+WhcICGqaPn/3COH7Tx4scQqQQo
-	 BR1YfeiX62uMRUroHxS9dnjjV7L5Jq7KmsRXYMJJX3Hep73bMcjvS3umnVrfVBmcL/
-	 /io4Djo8YCaB5Gv891WQHimCPvZq8uqral/TXDcpZrSfsCXU55rB15RjXZ3M3b0fVY
-	 0TOKnJ5LLmxP4J/wrKCaATs0Pa5TIKdc165QNUDxQkxEjP9/R26NmoKePx3B8UuM3E
-	 fGoQSfFcYiBo5U6b3gaoK5wD6VDgsgw8zelDnAExOEJBKCc7VfAvQMLkxIOFdp47eL
-	 E1P21VT6AhHEw==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6fdd947967so43195266b.2
-        for <loongarch@lists.linux.dev>; Fri, 21 Jun 2024 22:21:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWEil597EYGcr61CV2aRQkIHAYRD0Ius2Awj3WXkYC4UF8TSzWI5yZm40aQBZE4/QYOjAbh2DqRjafygUKOtsu2ORdXxGArt6hB
-X-Gm-Message-State: AOJu0Yw1DfFpozHz4lSYJemWEhK5FEmWHVS4bfID84mCKi8F9oUDWMQP
-	1Ix+B9xz/B8Ac9NA++hAd7KqDfZw0KpGqx/VObrhMdUsZfQOKNb7zj+DjfVH9aOR9AOlGVh8n/N
-	u7S6Skj8lv+VovBpb8xakTsHsfcA=
-X-Google-Smtp-Source: AGHT+IGt5KwkvmQpsoKCZE3/q/74MmGnFYUWXDgjhLBZ2ap7A6QpoRFr6yrlvgHStb7oErMA8RTUb8o39/GuhQIL9zM=
-X-Received: by 2002:a17:907:a0d5:b0:a6f:4ba4:c389 with SMTP id
- a640c23a62f3a-a6fab609e3cmr917747966b.16.1719033685412; Fri, 21 Jun 2024
- 22:21:25 -0700 (PDT)
+	s=arc-20240116; t=1719041548; c=relaxed/simple;
+	bh=nkKrH/UaCcQ/yaHBB23khAOAQ3R2ktX5uAP7Vt0xAzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rCrnM6J81MTWH01UdEjDMg+RROcr1i1OKC4kw7ItkSkqAwDpem3Ayr+8FHZTGjpGy4Qsw5EsiJTkpf3/oFNRGEfb9ZbHPI/ZDQbqql9as40gQgq/MbmuPGGua0/fbHY+uw4oRjnDGr+UmqzfWkdxnFaO4IrJujDfYXryQkHsk5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2519BC32781;
+	Sat, 22 Jun 2024 07:32:24 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.10-rc5
+Date: Sat, 22 Jun 2024 15:32:06 +0800
+Message-ID: <20240622073206.1578052-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240619080940.2690756-1-maobibo@loongson.cn> <20240619080940.2690756-7-maobibo@loongson.cn>
-In-Reply-To: <20240619080940.2690756-7-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 22 Jun 2024 13:21:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4YHBMG=YYatmmUKBm==53czOdrOoze3a_+CTNXF52N2g@mail.gmail.com>
-Message-ID: <CAAhV-H4YHBMG=YYatmmUKBm==53czOdrOoze3a_+CTNXF52N2g@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] LoongArch: KVM: Mark page accessed and dirty with
- page ref added
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Bibo,
+The following changes since commit 6ba59ff4227927d3a8530fc2973b80e94b54d58f:
 
-What is the relationship between this patch and the below one?
-https://lore.kernel.org/loongarch/20240611034609.3442344-1-maobibo@loongson=
-.cn/T/#u
+  Linux 6.10-rc4 (2024-06-16 13:40:16 -0700)
 
+are available in the Git repository at:
 
-Huacai
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-2
 
-On Wed, Jun 19, 2024 at 4:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Function kvm_map_page_fast() is fast path of secondary mmu page fault
-> flow, pfn is parsed from secondary mmu page table walker. However
-> the corresponding page reference is not added, it is dangerious to
-> access page out of mmu_lock.
->
-> Here page ref is added inside mmu_lock, function kvm_set_pfn_accessed()
-> and kvm_set_pfn_dirty() is called with page ref added, so that the
-> page will not be freed by others.
->
-> Also kvm_set_pfn_accessed() is removed here since it is called in
-> the following function kvm_release_pfn_clean().
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/mmu.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index 3b862f3a72cb..5a820a81fd97 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -557,6 +557,7 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, u=
-nsigned long gpa, bool writ
->         gfn_t gfn =3D gpa >> PAGE_SHIFT;
->         struct kvm *kvm =3D vcpu->kvm;
->         struct kvm_memory_slot *slot;
-> +       struct page *page;
->
->         spin_lock(&kvm->mmu_lock);
->
-> @@ -599,19 +600,22 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu,=
- unsigned long gpa, bool writ
->         if (changed) {
->                 kvm_set_pte(ptep, new);
->                 pfn =3D kvm_pte_pfn(new);
-> +               page =3D kvm_pfn_to_refcounted_page(pfn);
-> +               if (page)
-> +                       get_page(page);
->         }
->         spin_unlock(&kvm->mmu_lock);
->
-> -       /*
-> -        * Fixme: pfn may be freed after mmu_lock
-> -        * kvm_try_get_pfn(pfn)/kvm_release_pfn pair to prevent this?
-> -        */
-> -       if (kvm_pte_young(changed))
-> -               kvm_set_pfn_accessed(pfn);
-> +       if (changed) {
-> +               if (kvm_pte_young(changed))
-> +                       kvm_set_pfn_accessed(pfn);
->
-> -       if (kvm_pte_dirty(changed)) {
-> -               mark_page_dirty(kvm, gfn);
-> -               kvm_set_pfn_dirty(pfn);
-> +               if (kvm_pte_dirty(changed)) {
-> +                       mark_page_dirty(kvm, gfn);
-> +                       kvm_set_pfn_dirty(pfn);
-> +               }
-> +               if (page)
-> +                       put_page(page);
->         }
->         return ret;
->  out:
-> @@ -920,7 +924,6 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsign=
-ed long gpa, bool write)
->                 kvm_set_pfn_dirty(pfn);
->         }
->
-> -       kvm_set_pfn_accessed(pfn);
->         kvm_release_pfn_clean(pfn);
->  out:
->         srcu_read_unlock(&kvm->srcu, srcu_idx);
-> --
-> 2.39.3
->
+for you to fetch changes up to d0a1c07739e1b7f74683fe061545669156d102f2:
+
+  LoongArch: KVM: Remove an unneeded semicolon (2024-06-21 10:18:40 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.10-rc5
+
+Some hw breakpoint fixes, an objtool build warnging fix, and a trivial cleanup.
+----------------------------------------------------------------
+Hui Li (3):
+      LoongArch: Fix watchpoint setting error
+      LoongArch: Trigger user-space watchpoints correctly
+      LoongArch: Fix multiple hardware watchpoint issues
+
+Xi Ruoyao (1):
+      LoongArch: Only allow OBJTOOL & ORC unwinder if toolchain supports -mthin-add-sub
+
+Yang Li (1):
+      LoongArch: KVM: Remove an unneeded semicolon
+
+ arch/loongarch/Kconfig                     |  5 +-
+ arch/loongarch/Kconfig.debug               |  1 +
+ arch/loongarch/include/asm/hw_breakpoint.h |  4 +-
+ arch/loongarch/kernel/hw_breakpoint.c      | 96 +++++++++++++++++-------------
+ arch/loongarch/kernel/ptrace.c             | 47 ++++++++-------
+ arch/loongarch/kvm/exit.c                  |  2 +-
+ 6 files changed, 91 insertions(+), 64 deletions(-)
