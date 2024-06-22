@@ -1,63 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E64316FF4A;
-	Sat, 22 Jun 2024 15:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7841554765
+	for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 21:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719069672; cv=none; b=lN9N6COG4YDqZyaC0FnaGRT5b8ZJUkVUOEETMY+Svrau0/o6gtLEuVri9WZIIkJIV2mElcTdAA1BA12GoVF22Lm9XojkmywGACSvddi4daPyn9hoOPz5Ezay/fOhJlh/SzAVUIWY+iP+VLzWeK4ZIMehorlRmKsVr91uIWLaQMw=
+	t=1719091295; cv=none; b=Hv8QlEOUs7qfOlkWyRZyvTSR1Ghi1tIdoiL9wr160QJeSsoSTRS5/OFihieke0T8ObRWCxo8LRCFGQXrr2yNkjNyKFOWkstVgwiAgB/BCqSex1+kfqV0yjyS6ofqT7KSKmHDJINmyYpQ2I0oW/MSTyjFQGyhdrFGZJwISJSb8ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719069672; c=relaxed/simple;
-	bh=ig4B8urytXNJAD4nlBpdcNFAnbL+q4t3qP1BQdXlWG0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LSIeyEV2FdSoSFYIoCbkwfG0BKBJ9/OTH5889aJBEdCvifcRTiDW8vK6i/pvZeYmb9OZ+zpS9SBG8crzZsd0yciwBpOhAjKQ+uMuVm4GziicFlnJw/jPXMdD0CV557C5hF9fpJc88noENmVOlXQqWZYmFeoF/a/yCfttd68PohI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5HdS9RC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719091295; c=relaxed/simple;
+	bh=EHxmzrUN/A73frTQagvw4dP1WhU1NGaVPpCc4+gsYAc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Y+QYJVKqRwRwxLnNFrs5/ZXzVqWtjRLCidQpjn/pwVeCEliIbJh/fAUSCs9DwZy8l6She86ZOpfP7MVGmasuIZDZv/QMpHXvq7sBLGj1k4Od/jdGiWrx4tOi5PdPJfKCRDs9i+7nLgz0YVNQVtfMcDtn3HEv62iEJNJIpObrOt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lhAnRcmv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RUI416Xc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5HdS9RC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BC54C3277B;
-	Sat, 22 Jun 2024 15:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719069672;
-	bh=ig4B8urytXNJAD4nlBpdcNFAnbL+q4t3qP1BQdXlWG0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=N5HdS9RC9axy8t+gvymsbcmRH+HuFFFL9Cuid/fH0NpcIOpud7fTTjlYXRceCp3KM
-	 B2L56YietEDZXYSNAwjVSXRExbUfQ7e7z94pp/vG51SSZsYY/Dt7i294lMIFQpyJiY
-	 DJM5I5f1ChMvlqmFFwyoXY/NjsPJlcF8n2qWdLUEm9tkLAKjvlf1pchbn5/uLWGwNp
-	 921J7iI+lDEbHEQnNfDQIGQXuGcbv1yvXY5MfKeN/T4hW28AW8NYvwv7wvKnQWluTk
-	 JiBg3ORDO8lEoNUJMIyuXgSkmPyec/CQdGcZJO3ofSL0cahXcomPCauZtEiJWd7vO1
-	 X0TGuBpioz22Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3E32E7C4C8;
-	Sat, 22 Jun 2024 15:21:11 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.10-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240622073206.1578052-1-chenhuacai@loongson.cn>
-References: <20240622073206.1578052-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240622073206.1578052-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-2
-X-PR-Tracked-Commit-Id: d0a1c07739e1b7f74683fe061545669156d102f2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d4ba3313e84dfcdeb92a13434a2d02aad5e973e1
-Message-Id: <171906967199.9703.9586579152126681197.pr-tracker-bot@kernel.org>
-Date: Sat, 22 Jun 2024 15:21:11 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lhAnRcmv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RUI416Xc"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719091285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cK0peedHHtHTedjCU+iox2hw8klvuHZB6LWN/BOo6NU=;
+	b=lhAnRcmv8notJ4xn6XR3VIWyHV9sQoGQM+W4ULQS/TT8wepwj5+3In7dqeMCVuzUwck3BZ
+	L5WopjkXETHpnExz/ruyiA38x+/4rI5TKL1L5eODmcSrlnWAMFNbnHax3xxTJHvvfUoA/J
+	MfzV9vF6vQeb19lHlWYkh2XBZMolNL1z2R7PL4Z90pv/mEsQYxeCYqM4zNJyadb3nGSoHz
+	eaOwWWqF2p/e7AjS8Gs++ldxJ5fY5qLvVlj1F+br/eVfoRbXiwC4Aqil0KM+lyBOEJwjnh
+	xNGXRwHdeyRw89j3z6XIrmJmXUknX8maXTsnZmEry0aUTIf2PvrdAoCcxZh90Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719091285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cK0peedHHtHTedjCU+iox2hw8klvuHZB6LWN/BOo6NU=;
+	b=RUI416Xc28PiIL5XhT9HWKSfnKhzo7/u7Xcd/mJnq/y+6JuV1pWUmDhaNBJo4IlqSzvgMG
+	+RbBYA1VXQbSzMAg==
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, Jiaxun
+ Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+In-Reply-To: <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
+References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+ <87msnem3i1.ffs@tglx>
+ <CAAhV-H5TNnf+EMEtKmXk+Q9KXSZpW+9vd-7qqXDifsKfny+v=g@mail.gmail.com>
+ <87pls9z3g0.ffs@tglx>
+ <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
+Date: Sat, 22 Jun 2024 23:21:25 +0200
+Message-ID: <87jzigznai.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Sat, 22 Jun 2024 15:32:06 +0800:
+Huacai!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.10-2
+On Sat, Jun 22 2024 at 19:23, Huacai Chen wrote:
+> On Sat, Jun 22, 2024 at 6:17=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> That does not make sense because it's exactly the same situation when
+>> you compile a kernel with NR_CPU=3D8 and boot it on a system with 16
+>> CPUs. Then early_cpu_to_node() does not give you anything either.
+>>
+>> So what's the technical problem you are trying to solve?
+>
+> Frankly, there are some drawbacks on our hardware. On a dual-bridge
+> machine, there are two eiointc instances. Even if nr_cpus limits the
+> "possible" CPUs, we still hope the eiointc driver can initialize
+> correctly, otherwise the machine cannot boot.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d4ba3313e84dfcdeb92a13434a2d02aad5e973e1
+Hope does not help with technical limitations :)
 
-Thank you!
+So if CONFIG_NR_CPUS is not big enough to map the second node, then the
+machine can't boot.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+If nr_cpus limits it then early_cpu_to_node() because that mapping is
+only limited by CONFIG_NR_CPUS.
+
+Right?
+
+If so, then please explain all of this properly in the change log.
+
+Thanks,
+
+        tglx
+
+
