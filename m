@@ -1,137 +1,119 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C684D63B
-	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 01:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238E8F44
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 02:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719105740; cv=none; b=iDkRuvNqeJTbOV51Olk9z4mcXdblwLkp3UWu38YtUFm2MOGgHNCEB6KK4+Dvlk9Vvo3yjdgATKRPnmUP35tzS6ykogdUUW843YE1HlDJKLvQOJ0Lyrv8HfbExJpQ9VVQs3l6en1fH2RhIPr+sfppR3uHDMTVkol2FnfbNP/D4Vk=
+	t=1719111358; cv=none; b=W3zsDKp5SEvhGuA0LzdeCvLIUBwNIY4rh/1a5YHYb8kgNcQORj+81MQVbvtuDdgz7Y2PLg94IWq//UXjXNCHfrANqSTM9G3gn0FcAJGiyTy4yhiftznEpHfcJWTfY+qYDzz6lJT3HTHlwSBuEYzppvJLAlFLJRF8MpIrKE2NFho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719105740; c=relaxed/simple;
-	bh=zJrCU0HMltCUz/Z9hg1i/O0kuqVa0crvZfJ+FwzyTvc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Nt/m7mS11VrgTGG4TTIWxETS4Ay9/SrpGhpPJt5wF0lvIW3BLrU/w+y35Wxg3YaCJsLLzxA/lOZ0VuGVwe4fpybg9i4mX+SMqQLcls7Bd9RKbHuxJJVW1vuW9KBuco4Kyn2fEXEPDs/2UcwQpn9WtIuLrT7qfM+QbJxMDPhOmKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=P/uiCNBi; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1719111358; c=relaxed/simple;
+	bh=kk0dfKY/ENx9zMKY0Wwe7kBZPbykdaRiDaEX5FNLjfw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YAR0HCYupK2ZYllpJR/868/4KXIh2gtqnFipp3cWtd99ONwvpuu0DI56DXJsoo7zi8rXZGTkK/zPUV+uXapNKvMudiVyaA1VecCgowetL7qbUtB/hDF2TXrV7olaEfupIh6iJAFg6NJouQ6SeXmACTK//vMbB8OrtvlTMAESC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1j5dpeZ; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="P/uiCNBi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719105736;
-	bh=zJrCU0HMltCUz/Z9hg1i/O0kuqVa0crvZfJ+FwzyTvc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=P/uiCNBi6YzryE+9xTnBKptRIEphr8teb84fMs4WQ28aBLNd97EZVVGWWyTxT90bz
-	 SNwu7ZkSZroOZ+S7q7QAs6xYsw35VevULWKC+1yDJ4NVhHr469iK+ygdME8GdrPzJT
-	 CAdrf0c0MiqmlvZ2cRvrL+CbDGFXwnbxwKFozgNw=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 05AC6677E3;
-	Sat, 22 Jun 2024 21:22:13 -0400 (EDT)
-Message-ID: <9d1512b57683a68a7176ae8221562657fb0231a3.camel@xry111.site>
-Subject: Re: [PATCH] vfs: Add AT_EMPTY_PATH_NOCHECK as unchecked
- AT_EMPTY_PATH
-From: Xi Ruoyao <xry111@xry111.site>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner
-	 <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara
-	 <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	 <mhiramat@kernel.org>, Alejandro Colomar <alx@kernel.org>, Arnd Bergmann
-	 <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Icenowy Zheng
-	 <uwu@icenowy.me>, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Sun, 23 Jun 2024 09:22:12 +0800
-In-Reply-To: <CAGudoHFofUZ0Nb9UtV=Q3uQ0K+JnBHPrgLxNYuj7nSLF-=ue8g@mail.gmail.com>
-References: <20240622105621.7922-1-xry111@xry111.site>
-	 <kslf3yc7wnwhxzv5cejaqf52bdr6yxqaqphtjl7d4iaph23y6v@ssyq7vrdwx56>
-	 <CAHk-=wgj6h97Ro6oQcOq5YTG0JcKRLN0CtXgYCW_Ci6OSzL5NA@mail.gmail.com>
-	 <eeb7e9895aca92fa5a8d11d9f37b283428185278.camel@xry111.site>
-	 <CAGudoHFofUZ0Nb9UtV=Q3uQ0K+JnBHPrgLxNYuj7nSLF-=ue8g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1j5dpeZ"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a724cd0e9c2so2738966b.3
+        for <loongarch@lists.linux.dev>; Sat, 22 Jun 2024 19:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719111356; x=1719716156; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d+dNGdqvPyMhPucHTr5/gO5LwLxeQdkY1pTtydDZXYM=;
+        b=l1j5dpeZtuBzDY9R+ZAmUizUK60oQhT6x0LIeZ/WWslBW71LNFLNw+5f8YQPu5gtki
+         fgpsgurcWahmAV0xQITJuiJDdLZhrMXMp7LNuM56+nrJfFVf+PBk7jh72WEkXmUy2C6w
+         gvlVWcjljNcvt18NUWqCxZNkvShar69pvmE69u9fevHag74jsL64dZ4VBb4pykGjkioc
+         UJT9+j/Obt95DCiNiRpaFLuW3WiN8XHCdTY34tRfpT+7CJrm1xxFDN/SSWO8MNOy81Xn
+         nFzAMxPNz6X9W6vLDkbu2OV7eWEjkdTBRLQis6h8rCCKOBvZW8uivJbvjd4emEHAfT2A
+         gt2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719111356; x=1719716156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d+dNGdqvPyMhPucHTr5/gO5LwLxeQdkY1pTtydDZXYM=;
+        b=ZIM1lDG6iYY7/7ZYlUW6BmV87k4TKd3xPchH6mCVi7SKzbe2LnMscUFlncwxtM0Sdo
+         jyNY2pn+gEfizeCvg5PE68dC9EwVgFN41nYPzBNHwr9vAwQemsrAsNq8A4smcLKIflx8
+         8sBcJ51WhWWB5fJ+muDShSFnRGF3l6CVUKVQAvr72thcwWJeK4Tv9OwhGp+VxjsgykdR
+         qz5iyZVgNkzENJ3/F2HUTs23W7u1nXqUsMYfS1mLX/26ICZS1c3CUKFckdBF9jL8RhrV
+         TyCpmM6doM6Ror4ofxtuepLswba8NdT2EuKM31iVpH4CogPuRZokop4EV+VwUHMeWIGs
+         X6zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPmmNIuCk+dVLmLpKjitqhAtOFqoj93MjUcXSbzG0vSpEAqcwdVsTtrNJNJdBFczjuGzT4GozJHkGN26spzN9+z3ZXMeFqGFQL
+X-Gm-Message-State: AOJu0YzzgZl5upM509Dch26DqmNTxrrq/hcKcjlwRLLN7HQFoZ6M/iQC
+	wdG+4y6Q+MMqP6CrgeN8BvVuwAN79r0lbzi/c1wQLBexoI467AeMsk0rbQipaCzu7Ou5FHDqWUF
+	cEaJLXAI66qKjdYZMVmH/tl0NFjg=
+X-Google-Smtp-Source: AGHT+IEKf/HkETPEeYzE1trwKs/NC1T9SkiEZfGUqAoH7CdTHB7ab/SUVkf5pHuQJagpNs0bWjagrPmp2+e8SiSEWys=
+X-Received: by 2002:a17:907:168b:b0:a66:c338:65cc with SMTP id
+ a640c23a62f3a-a7245b8f006mr63395366b.19.1719111355198; Sat, 22 Jun 2024
+ 19:55:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240620020625.3851354-1-chenhuacai@loongson.cn>
+ <87msnem3i1.ffs@tglx> <CAAhV-H5TNnf+EMEtKmXk+Q9KXSZpW+9vd-7qqXDifsKfny+v=g@mail.gmail.com>
+ <87pls9z3g0.ffs@tglx> <CAAhV-H7noyrYJzyVML8y1gHPiB6qZzXy7j5L_AqjxwLZW2J06A@mail.gmail.com>
+ <87jzigznai.ffs@tglx>
+In-Reply-To: <87jzigznai.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sun, 23 Jun 2024 10:55:43 +0800
+Message-ID: <CAAhV-H6u-5EHATP3O=23SM7mMw3-xqOwn22YE4vWtj=GFELC+A@mail.gmail.com>
+Subject: Re: [PATCH V2] irqchip/loongson-eiointc: Use early_cpu_to_node()
+ instead of cpu_to_node()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2024-06-23 at 03:07 +0200, Mateusz Guzik wrote:
-> On Sun, Jun 23, 2024 at 2:59=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wr=
-ote:
-> >=20
-> > On Sat, 2024-06-22 at 15:41 -0700, Linus Torvalds wrote:
-> >=20
-> > > I do think that we should make AT_EMPTY_PATH with a NULL path
-> > > "JustWork(tm)", because the stupid "look if the pathname is empty" is
-> > > horrible.
-> > >=20
-> > > But moving that check into getname() is *NOT* the right answer,
-> > > because by the time you get to getname(), you have already lost.
-> >=20
-> > Oops.=C2=A0 I'll try to get around of getname() too...
-> >=20
-> > > So the short-cut in vfs_fstatat() to never get a pathname is
-> > > disgusting - people should have used 'fstat()' - but it's _important_
-> > > disgusting.
-> >=20
-> > The problem is we don't have fstat() for LoongArch, and it'll be
-> > unusable on all 32-bit arch after 2037.
-> >=20
-> > And Arnd hates the idea adding fstat() for LoongArch because there woul=
-d
-> > be one more 32-bit arch broken in 2037.
-> >=20
-> > Or should we just add something like "fstat_2037()"?
-> >=20
->=20
-> In that case fstat is out of the question, but no problem.
->=20
-> It was suggested to make AT_EMPTY_PATH + NULL pathname do the right
-> thing and have the syscalls short-circuit as needed.
->=20
-> for statx it would look like this (except you are going to have
-> implement do_statx_by_fd):
->=20
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 16aa1f5ceec4..0afe72b320cc 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -710,6 +710,9 @@ SYSCALL_DEFINE5(statx,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct filename *name;
->=20
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (flags =3D=3D AT_EMPTY_PATH && f=
-ilename =3D=3D NULL)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return do_statx_by_fd(...);
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 name =3D getname_flags(filenam=
-e, getname_statx_lookup_flags(flags));
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D do_statx(dfd, name, fl=
-ags, mask, buffer);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 putname(name);
->=20
-> and so on
->=20
-> Personally I would prefer if fstatx was added instead, fwiw most
-> massaging in the area will be the same regardless.
+Hi, Thomas,
 
-I do agree.  But if we do it *now* would it be "breaking the userspace"
-if some stupid program relies on fstatx() to return some error when the
-path is NULL?  The "stupid programs" may just exist in the wild...
+On Sun, Jun 23, 2024 at 5:21=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> Huacai!
+>
+> On Sat, Jun 22 2024 at 19:23, Huacai Chen wrote:
+> > On Sat, Jun 22, 2024 at 6:17=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >> That does not make sense because it's exactly the same situation when
+> >> you compile a kernel with NR_CPU=3D8 and boot it on a system with 16
+> >> CPUs. Then early_cpu_to_node() does not give you anything either.
+> >>
+> >> So what's the technical problem you are trying to solve?
+> >
+> > Frankly, there are some drawbacks on our hardware. On a dual-bridge
+> > machine, there are two eiointc instances. Even if nr_cpus limits the
+> > "possible" CPUs, we still hope the eiointc driver can initialize
+> > correctly, otherwise the machine cannot boot.
+>
+> Hope does not help with technical limitations :)
+>
+> So if CONFIG_NR_CPUS is not big enough to map the second node, then the
+> machine can't boot.
+>
+> If nr_cpus limits it then early_cpu_to_node() because that mapping is
+> only limited by CONFIG_NR_CPUS.
+Yes, if NR_CPUS is not big enough, then we have no solution.
 
-I remember recently we have to pretend pidfd is stupid to please some
-stupid programs...
+>
+> Right?
+>
+> If so, then please explain all of this properly in the change log.
+OK, I will explain in detail.
 
-https://lore.kernel.org/all/20240521-girlanden-zehnfach-1bff7eb9218c@braune=
-r/
+Huacai
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>
+> Thanks,
+>
+>         tglx
+>
+>
