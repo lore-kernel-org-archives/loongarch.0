@@ -1,93 +1,211 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34EF2F3E;
-	Sun, 23 Jun 2024 03:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E65945014
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 07:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719114082; cv=none; b=QkP4755NZxqfbqFPfQE9AT1lmPwfOlSfT/AvGgSkRPwig6HX8XMXQlhTDxPxKLyewNNkEEJlV8lB3dZzCQ1Sk1SpPoWQgifzUaCseVLvK9k8nlhofc2Sbo1iB9S5QH5ATokG/5uktTaj2d9x7/9tFJocsg7i0kR3SMIEMRJm4RU=
+	t=1719129280; cv=none; b=Rn14AzdQOnYrYH7bV3cIXSyOGLpf1RY+sRMelYE724Hx3S/G8pBfOKBMxGisg4lQa1ECgPHCJ8E5tllMzmcuX+ChW/tqTwHkPO7UInJWF3g62woUWZHBLABRWE4qiZo2o0aYJ0xrJtRQqsV5zc8HgclECBdR/RaUe7/bn27C1Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719114082; c=relaxed/simple;
-	bh=wwxbHMTslLNaJbTC0v2mbU96VpNhAPZTzN9K/je0QQ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VJbM+aVPb9qcCEibUQai94T5lXxOUYhz+ZlN0VSkB2SVpDJ8dDL+XX9uCbTn+g8wPhJkIa3PMjs2TMQ9rdoiLRQRZU7bp1fGny4a28qMMj0ItXoT0UYb1htZDGXcuP5MTfPiKuiFFv84fHjAAYfbDe64H1nTKMTKixrXH47+EbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE8AC2BD10;
-	Sun, 23 Jun 2024 03:41:20 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V4] irqchip/loongson-eiointc: Use early_cpu_to_node() instead of cpu_to_node()
-Date: Sun, 23 Jun 2024 11:41:13 +0800
-Message-ID: <20240623034113.1808727-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1719129280; c=relaxed/simple;
+	bh=ThHtxcaKKJwtVm2xy20agXL0ZX0dERp9fOWFUzR3UYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KinioCwlc6IyDdeS4/OxS41RCb+zGavjGSHItwIUUmpoeIjWEye4UNPw+4mFI+BPrA9FnSk4peYoupov0W4eeAvgALYc938HpI6fwTzTajfXhD4DeKSOUVAatl9NTpi7fWxMBsSdyhs91rsXwpvus60QWvDhY6WRKs4FEUFW9Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjzVTtlN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjzVTtlN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 166B4C32786
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 07:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719129280;
+	bh=ThHtxcaKKJwtVm2xy20agXL0ZX0dERp9fOWFUzR3UYE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fjzVTtlNvcqEcEWoI7PTcgEaP05YEThGRVzHIK+T6emDKWo8EkJMekvfW1cPoYFya
+	 vjydGf3Sd/2ZstS/C+7waFpTNrcI9NLsxjhQ/TfsKeFgC11WZshIyQBblMP/omiNzQ
+	 XZ5jTNGITRb+QC4fg8u65nSUzvtELaA43wyItCiOVr6+i/5J23dUZeR0MwIyZGcbW6
+	 I/U23FwBgitUtHKhx0SEPU9vAwQP1de4tYhKcpNpOQ4PQHJ8F+Ab7J4041O3kIEhlg
+	 Fl00t73NSaZwRKFIycU5UqHxhqKk1V01IFCH9J7Bw6IshO9DGUYqpImBcL0fYHBm07
+	 7PWIUpGJ8oJHQ==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a724b3a32d2so22216566b.2
+        for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 00:54:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXCNHB8+12p240SerrUzd1G1HzsydEkruavk7z2OUI3kBGCWCF1ezbljVi6SZkRIrKurHU3HzE3z1+AbpBHLjndAYQ1vhk2wFsL
+X-Gm-Message-State: AOJu0Yw1IqAOzvQWWRnxe/647pMBemBPFZfk65OL1/n/3T9hvZnKXXhW
+	kkZZU48ddFeQp0MXBRr7zK8Mxk65YGO3lxmzLunOpsH0JQIks89gwmr6XURjWhmIo6zEfibSdKj
+	W5l3Q2liHuPx01WIhPFdwoX0fru0=
+X-Google-Smtp-Source: AGHT+IGdC1A4u0QMdJ5YUs7riJv01FR+EPkPDRGgR5UUavmgBTFDjQAr6hX4Lj47/t24hlDFWdbZw/JP6EbumzLYr88=
+X-Received: by 2002:a17:906:81b:b0:a6f:cf64:a5d9 with SMTP id
+ a640c23a62f3a-a7245c483a1mr76829066b.49.1719129278558; Sun, 23 Jun 2024
+ 00:54:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240619080940.2690756-1-maobibo@loongson.cn> <20240619080940.2690756-2-maobibo@loongson.cn>
+In-Reply-To: <20240619080940.2690756-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 23 Jun 2024 15:54:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7zF7zDZQ0tHtZndTmWDteaV=nAwXL3Q1P2zcJssVt7tA@mail.gmail.com>
+Message-ID: <CAAhV-H7zF7zDZQ0tHtZndTmWDteaV=nAwXL3Q1P2zcJssVt7tA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] LoongArch: KVM: Delay secondary mmu tlb flush
+ until guest entry
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When we use "nr_cpus=n" to hard limit the CPU number, cpu_to_node() is
-not usable for CPUs exceeding the limit. Because cpu_to_node() depends
-on the per-cpu area, and the per-cpu area is only applied on "possible"
-CPUs. On the other hand, early_cpu_to_node() is always usable because it
-uses plain arrays to record the cpu-node mapping, and the architectural
-code ensures those arrays are correctly initialized. So here we can use
-early_cpu_to_node() instead.
+Hi, Bibo,
 
-This change is mainly needed on multi-bridge machines. On these machines
-there are multiple eiointc instances, each instance should get its NUMA
-node correctly.
+On Wed, Jun 19, 2024 at 4:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> If there is page fault for secondary mmu, there needs tlb flush
+What does "secondary mmu" in this context mean? Maybe "guest mmu"?
 
-Note: we make this change for kdump and some other special usages where
-"nr_cpus=n" is needed. However, if CONFIG_NR_CPUS is not big enough to
-map all the nodes connect I/O bridges, then the machine can't boot still.
+Huacai
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Fix build for !NUMA.
-V3: Adjust header file order and update commit messages.
-V4: Update commit messages again.
-
- drivers/irqchip/irq-loongson-eiointc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index c7ddebf312ad..b1f2080be2be 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -15,6 +15,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/kernel.h>
- #include <linux/syscore_ops.h>
-+#include <asm/numa.h>
- 
- #define EIOINTC_REG_NODEMAP	0x14a0
- #define EIOINTC_REG_IPMAP	0x14c0
-@@ -339,7 +340,7 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 	int node;
- 
- 	if (cpu_has_flatmode)
--		node = cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
-+		node = early_cpu_to_node(eiointc_priv[nr_pics - 1]->node * CORES_PER_EIO_NODE);
- 	else
- 		node = eiointc_priv[nr_pics - 1]->node;
- 
-@@ -431,7 +432,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 		goto out_free_handle;
- 
- 	if (cpu_has_flatmode)
--		node = cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
-+		node = early_cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
- 	else
- 		node = acpi_eiointc->node;
- 	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
--- 
-2.43.0
-
+> operation indexed with fault gpa address and VMID. VMID is stored
+> at register CSR_GSTAT and will be reload or recalculated during
+> guest entry.
+>
+> Currently CSR_GSTAT is not saved and restored during vcpu context
+> switch, it is recalculated during guest entry. So CSR_GSTAT is in
+> effect only when vcpu runs in guest mode, however it may be not in
+> effected if vcpu exits to host mode, since register CSR_GSTAT may
+> be stale, it maybe records VMID of last scheduled vcpu, rather than
+> current vcpu.
+>
+> Function kvm_flush_tlb_gpa() should be called with its real VMID,
+> here move it to guest entrance. Also arch specific request id
+> KVM_REQ_TLB_FLUSH_GPA is added to flush tlb, and it can be optimized
+> if VMID is updated, since all guest tlb entries will be invalid if
+> VMID is updated.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_host.h |  2 ++
+>  arch/loongarch/kvm/main.c             |  1 +
+>  arch/loongarch/kvm/mmu.c              |  4 ++--
+>  arch/loongarch/kvm/tlb.c              |  5 +----
+>  arch/loongarch/kvm/vcpu.c             | 18 ++++++++++++++++++
+>  5 files changed, 24 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index c87b6ea0ec47..32c4948f534f 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -30,6 +30,7 @@
+>  #define KVM_PRIVATE_MEM_SLOTS          0
+>
+>  #define KVM_HALT_POLL_NS_DEFAULT       500000
+> +#define KVM_REQ_TLB_FLUSH_GPA          KVM_ARCH_REQ(0)
+>
+>  #define KVM_GUESTDBG_SW_BP_MASK                \
+>         (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+> @@ -190,6 +191,7 @@ struct kvm_vcpu_arch {
+>
+>         /* vcpu's vpid */
+>         u64 vpid;
+> +       gpa_t flush_gpa;
+>
+>         /* Frequency of stable timer in Hz */
+>         u64 timer_mhz;
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 86a2f2d0cb27..844736b99d38 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -242,6 +242,7 @@ void kvm_check_vpid(struct kvm_vcpu *vcpu)
+>                 kvm_update_vpid(vcpu, cpu);
+>                 trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+>                 vcpu->cpu =3D cpu;
+> +               kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>         }
+>
+>         /* Restore GSTAT(0x50).vpid */
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 98883aa23ab8..9e39d28fec35 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -908,8 +908,8 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsign=
+ed long gpa, bool write)
+>                 return ret;
+>
+>         /* Invalidate this entry in the TLB */
+> -       kvm_flush_tlb_gpa(vcpu, gpa);
+> -
+> +       vcpu->arch.flush_gpa =3D gpa;
+> +       kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>         return 0;
+>  }
+>
+> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+> index 02535df6b51f..ebdbe9264e9c 100644
+> --- a/arch/loongarch/kvm/tlb.c
+> +++ b/arch/loongarch/kvm/tlb.c
+> @@ -23,10 +23,7 @@ void kvm_flush_tlb_all(void)
+>
+>  void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+>  {
+> -       unsigned long flags;
+> -
+> -       local_irq_save(flags);
+> +       lockdep_assert_irqs_disabled();
+>         gpa &=3D (PAGE_MASK << 1);
+>         invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+> -       local_irq_restore(flags);
+>  }
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 9e8030d45129..b747bd8bc037 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -51,6 +51,16 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
+>         return RESUME_GUEST;
+>  }
+>
+> +static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
+> +{
+> +       lockdep_assert_irqs_disabled();
+> +       if (kvm_check_request(KVM_REQ_TLB_FLUSH_GPA, vcpu))
+> +               if (vcpu->arch.flush_gpa !=3D INVALID_GPA) {
+> +                       kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
+> +                       vcpu->arch.flush_gpa =3D INVALID_GPA;
+> +               }
+> +}
+> +
+>  /*
+>   * Check and handle pending signal and vCPU requests etc
+>   * Run with irq enabled and preempt enabled
+> @@ -101,6 +111,13 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu=
+)
+>                 /* Make sure the vcpu mode has been written */
+>                 smp_store_mb(vcpu->mode, IN_GUEST_MODE);
+>                 kvm_check_vpid(vcpu);
+> +
+> +               /*
+> +                * Called after function kvm_check_vpid()
+> +                * Since it updates csr_gstat used by kvm_flush_tlb_gpa()=
+,
+> +                * also it may clear KVM_REQ_TLB_FLUSH_GPA pending bit
+> +                */
+> +               kvm_late_check_requests(vcpu);
+>                 vcpu->arch.host_eentry =3D csr_read64(LOONGARCH_CSR_EENTR=
+Y);
+>                 /* Clear KVM_LARCH_SWCSR_LATEST as CSR will change when e=
+nter guest */
+>                 vcpu->arch.aux_inuse &=3D ~KVM_LARCH_SWCSR_LATEST;
+> @@ -994,6 +1011,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>         struct loongarch_csrs *csr;
+>
+>         vcpu->arch.vpid =3D 0;
+> +       vcpu->arch.flush_gpa =3D INVALID_GPA;
+>
+>         hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_A=
+BS_PINNED);
+>         vcpu->arch.swtimer.function =3D kvm_swtimer_wakeup;
+> --
+> 2.39.3
+>
