@@ -1,168 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CF586645
-	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2BBB664
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719137672; cv=none; b=eMq8H8xv2xJrTdNponKq7tQCxrynPLblfQmLAsmI53sX4OCd4dhPvKAbcb+6LT2D/d/7UIkFHkcq41T1C64iHn9oqFKuCm2udilzmpdeosPv5p8BBEXpFu0Z/IbdtlAKSXOwFnFKVKSJ6+98Q0yeF6IkEqCsupAzjJQRFpgeMLg=
+	t=1719137919; cv=none; b=IL7MWAczWVLLaDCIDp1mjNdGfJUEv+k7M+SU+aK0ii4cIV1hlZc5Vm1u6nxjO6JV0rh457Ft0dWpZexL601IBP3lOnJNQJRI3yzZTpDwBavV5sQgjvupT39k7p/XZagmycikID5sbNdduzHLzxXYy39PmRMeL9RgdRBa0hu9Lxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719137672; c=relaxed/simple;
-	bh=BZlC/ZevG7rNZB+An/8lQl1qYs2YQHp78gl2A6TVgss=;
+	s=arc-20240116; t=1719137919; c=relaxed/simple;
+	bh=YvSVXJdBQKWUuhk9Qus9TV4AhCWxwK8gs3Y89XMznTI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QGmKOWJ6D7ntGNjluNajYkxrFKmkIMuA6nJcPGWxH+QlxCf+l1jr6GRmzvkeqUZGyY4rgiH8itHv55P6wUF8SBnojxIOuYh5/lYUvJ5dOUcE4TaJU0T+vZDTLfsiQF8nC9YwxxXVU2jaVt4or0v4yD79esxKMDP0kX+dZqqd3dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yeax3TV8; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BqpbSFx4X5HgWX1koD8RthkxycYXyCycHS0tl2hQjSAGkTsPlFQE6OK7fYZGr6nQPoyWr9b6i8JKeVieJFPfpFNHPIyh0YwGh/NDShddiRLDIMFsS8cQNXOlB3HlrQORqNNXPHqWbNt+ZaBSTQHSnCRzN9eg6AuMd2Gfpd9qN9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpp7I21V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yeax3TV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20D3C32786
-	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:14:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpp7I21V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F254C2BD10
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719137672;
-	bh=BZlC/ZevG7rNZB+An/8lQl1qYs2YQHp78gl2A6TVgss=;
+	s=k20201202; t=1719137919;
+	bh=YvSVXJdBQKWUuhk9Qus9TV4AhCWxwK8gs3Y89XMznTI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Yeax3TV85qsXBTAp84fR8Se2MlNyPLGpoGlpL2ValOuuPWxiu4d4pxZr4fCZBSFuo
-	 57C/138HqoHv/3p9QngbY7bmnQoG7qtR+3IyUM+nsVY/MXpEwRivsY/rh/QK6SS5gz
-	 NULmhedM03sTKnrxjQzIuH/VG+mKnKvozuoY1r8apQljpCJba8d1ROY/sImC3vKegR
-	 ShO0FeoM92fD5ajp0ZRx5tzH3ZH+kC8A/yMuRzRJf8Llxxu5zdjkiLn5zSUH58VHTI
-	 94jxd5NVFQoZ5ciZEsFeWNgRJOaXrrb1dkjvCgfzVrMbpwtGjbne3MBFOV0rs/UtRH
-	 +Dvake5szy2GQ==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so422169266b.2
-        for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 03:14:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXBGP9WaEH8683jNh61dJfFbrC8qZrLteWStRhciDUSD3j8AYoeM524uXvRwBkmaFeKevYCqcaVAu5rgWU9FCJ42Q7s4GvfGMWF
-X-Gm-Message-State: AOJu0YwI3BjFHLKs/pNqm/TPlIlMTZg2kWkAjXRy/tVLXM+D2b0+cSoL
-	bKCOhbsurv9Si06AFlPTcVcxlqxJTebGfiwuFTea8xxwhGb2PzOXBcoRQqURtDwrkbku8ROkbX6
-	KlfGk0iRn3OyeiFCiKmZAGFlVhK8=
-X-Google-Smtp-Source: AGHT+IFwRyIcVSZvyXuz/Y5ENfaFoKjmeiBwqiYsSvIY+pVoBRHNwxCJKvllX7B4eNayMPzNqbM8OHgJEYlbks1+9Q4=
-X-Received: by 2002:a17:907:d509:b0:a6f:27e6:8892 with SMTP id
- a640c23a62f3a-a7245dc9697mr132487866b.60.1719137670505; Sun, 23 Jun 2024
- 03:14:30 -0700 (PDT)
+	b=gpp7I21Vk/LF2bkbXohHJUXdbaUjuIKA26Vck4ESRK2TDVtOdLDWtqN8mxPcxfGxb
+	 gzAbsiscGjZSSGHBtaf2Q0aiH3l2caAEOGXNoIkGOmm4XGxtsElE4uKgKRJpWjVTiT
+	 lvej8KYHB+Y0YGYPYUnivy8OElXkxPfTYsRoYfyvYKt7llKfW85lQNZHFZdvH3wLEY
+	 b0G9twTcDqWZBIvib9qv/iUV0oUMhEvUh8ALp38+9KpterAMFwxojOlhkZF6eCY+xk
+	 VfpWxBuoG8JY8YhNaSQrKKignxrrWu2mIn3X3yceHbI3ziIma6QYh1kJJ0Y9Hua8hb
+	 hQE9zy1xtU9AQ==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so422383666b.2
+        for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 03:18:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDnPVAtwYW849ycrFZq5v2aeBXQ+/DpDUy3BiRBHvzRIEmQY3mBk5+v0CQSUU8NjA4a1aLftuJKpPm3PnEP+pI5j6XgaRTCvK4
+X-Gm-Message-State: AOJu0Yw/u5pVBRBLq8OngLMU9nOhlVk++qW1jh6Q7hnNsGHoy4VlGNe7
+	VIqqHAJqCsNEUZZNe5eiWm6EbrWEbSyCMCykP7kMmR9adNQoMZYNFLMIR1c4NXd1EOtjoim0yrI
+	5GLSD6yV0Irg3aweXkZBR+N76RI0=
+X-Google-Smtp-Source: AGHT+IETl9tcGslgNmKwUQFdKXbdPsmbNWyuSxrrYzFXcGEQW2pW/t5Kw9wATH526H1HJQU6acmvH1WEciSIgB/l4d8=
+X-Received: by 2002:a17:906:a8d:b0:a6e:fccc:e4a with SMTP id
+ a640c23a62f3a-a7245b4a3c3mr96498966b.0.1719137917974; Sun, 23 Jun 2024
+ 03:18:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240527074644.836699-1-maobibo@loongson.cn> <20240527074644.836699-5-maobibo@loongson.cn>
-In-Reply-To: <20240527074644.836699-5-maobibo@loongson.cn>
+References: <20240619080940.2690756-1-maobibo@loongson.cn> <20240619080940.2690756-5-maobibo@loongson.cn>
+In-Reply-To: <20240619080940.2690756-5-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 23 Jun 2024 18:14:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7wdMH=fdGhtxcJ9zY+H-PKT2q0rgrsEPm+LhBgCqNsjQ@mail.gmail.com>
-Message-ID: <CAAhV-H7wdMH=fdGhtxcJ9zY+H-PKT2q0rgrsEPm+LhBgCqNsjQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] LoongArch: KVM: Add VM LBT feature detection support
+Date: Sun, 23 Jun 2024 18:18:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H74raJ9eEWEHr=aN6LhVvNUyP6TLEDH006M6AnoE8tkPg@mail.gmail.com>
+Message-ID: <CAAhV-H74raJ9eEWEHr=aN6LhVvNUyP6TLEDH006M6AnoE8tkPg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] LoongArch: KVM: Add memory barrier before update
+ pmd entry
 To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi, Bibo,
 
-On Mon, May 27, 2024 at 3:46=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+On Wed, Jun 19, 2024 at 4:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
 e:
 >
-> Before virt machine or vcpu is created, vmm need check supported
-> features from KVM. Here ioctl command KVM_HAS_DEVICE_ATTR is added
-> for VM, and macro KVM_LOONGARCH_VM_FEAT_CTRL is added to check
-> supported feature.
+> When updating pmd entry such as allocating new pmd page or splitting
+> huge page into normal page, it is necessary to firstly update all pte
+> entries, and then update pmd entry.
 >
-> Three sub-features relative with LBT are added, in later any new
-> feature can be added if it is used for vmm. The sub-features is
->  KVM_LOONGARCH_VM_FEAT_X86BT
->  KVM_LOONGARCH_VM_FEAT_ARMBT
->  KVM_LOONGARCH_VM_FEAT_MIPSBT
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
->  arch/loongarch/kvm/vm.c               | 44 ++++++++++++++++++++++++++-
->  2 files changed, 49 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/inclu=
-de/uapi/asm/kvm.h
-> index 656aa6a723a6..ed12e509815c 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> @@ -91,6 +91,12 @@ struct kvm_fpu {
->  #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOONGARC=
-H_CSR, REG)
->  #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOONGARC=
-H_CPUCFG, REG)
->
-> +/* Device Control API on vm fd */
-> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
-> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
-> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
-> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
-I think LBT should be vcpu features rather than vm features, which is
-the same like CPUCFG and FP/SIMD.
-
-Moreover, this patch can be merged to the 2nd one.
+> It is weak order with LoongArch system, there will be problem if other
+> vcpus sees pmd update firstly however pte is not updated. Here smp_wmb()
+> is added to assure this.
+Memory barriers should be in pairs in most cases. That means you may
+lose smp_rmb() in another place.
 
 Huacai
 
-> +
->  /* Device Control API on vcpu fd */
->  #define KVM_LOONGARCH_VCPU_CPUCFG      0
->  #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 6b2e4f66ad26..09e05108c68b 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long=
- ext)
->         return r;
->  }
 >
-> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_at=
-tr *attr)
-> +{
-> +       switch (attr->attr) {
-> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
-> +               if (cpu_has_lbt_x86)
-> +                       return 0;
-> +               return -ENXIO;
-> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
-> +               if (cpu_has_lbt_arm)
-> +                       return 0;
-> +               return -ENXIO;
-> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
-> +               if (cpu_has_lbt_mips)
-> +                       return 0;
-> +               return -ENXIO;
-> +       default:
-> +               return -ENXIO;
-> +       }
-> +}
-> +
-> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *attr=
-)
-> +{
-> +       switch (attr->group) {
-> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
-> +               return kvm_vm_feature_has_attr(kvm, attr);
-> +       default:
-> +               return -ENXIO;
-> +       }
-> +}
-> +
->  int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned lo=
-ng arg)
->  {
-> -       return -ENOIOCTLCMD;
-> +       struct kvm *kvm =3D filp->private_data;
-> +       void __user *argp =3D (void __user *)arg;
-> +       struct kvm_device_attr attr;
-> +
-> +       switch (ioctl) {
-> +       case KVM_HAS_DEVICE_ATTR:
-> +               if (copy_from_user(&attr, argp, sizeof(attr)))
-> +                       return -EFAULT;
-> +
-> +               return kvm_vm_has_attr(kvm, &attr);
-> +       default:
-> +               return -EINVAL;
-> +       }
->  }
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/kvm/mmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 1690828bd44b..7f04edfbe428 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -163,6 +163,7 @@ static kvm_pte_t *kvm_populate_gpa(struct kvm *kvm,
+>
+>                         child =3D kvm_mmu_memory_cache_alloc(cache);
+>                         _kvm_pte_init(child, ctx.invalid_ptes[ctx.level -=
+ 1]);
+> +                       smp_wmb(); /* make pte visible before pmd */
+>                         kvm_set_pte(entry, __pa(child));
+>                 } else if (kvm_pte_huge(*entry)) {
+>                         return entry;
+> @@ -746,6 +747,7 @@ static kvm_pte_t *kvm_split_huge(struct kvm_vcpu *vcp=
+u, kvm_pte_t *ptep, gfn_t g
+>                 val +=3D PAGE_SIZE;
+>         }
+>
+> +       smp_wmb();
+>         /* The later kvm_flush_tlb_gpa() will flush hugepage tlb */
+>         kvm_set_pte(ptep, __pa(child));
+>
 > --
 > 2.39.3
 >
