@@ -1,107 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2BBB664
-	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E079355C1A
+	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 12:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719137919; cv=none; b=IL7MWAczWVLLaDCIDp1mjNdGfJUEv+k7M+SU+aK0ii4cIV1hlZc5Vm1u6nxjO6JV0rh457Ft0dWpZexL601IBP3lOnJNQJRI3yzZTpDwBavV5sQgjvupT39k7p/XZagmycikID5sbNdduzHLzxXYy39PmRMeL9RgdRBa0hu9Lxk=
+	t=1719144311; cv=none; b=dLLhGNUKw5cGy59yGSoegyXvJRieIfeuk/+i7sfx4P9hWlyCpD2tcUkj/oj12vnbk124vNEwwPpx2xurzXpKbpab4tlYEYGaB825Evdd+kMtUnq50lxAuhD3Dqov4/7Pq2mUQJ9BKHfM+T94ogz02f8G4UUMCyul0plkQXMBW2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719137919; c=relaxed/simple;
-	bh=YvSVXJdBQKWUuhk9Qus9TV4AhCWxwK8gs3Y89XMznTI=;
+	s=arc-20240116; t=1719144311; c=relaxed/simple;
+	bh=x0eu6FzDbqlmTCln+0TmPTvoiebXfz9YLshcASu2zFE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BqpbSFx4X5HgWX1koD8RthkxycYXyCycHS0tl2hQjSAGkTsPlFQE6OK7fYZGr6nQPoyWr9b6i8JKeVieJFPfpFNHPIyh0YwGh/NDShddiRLDIMFsS8cQNXOlB3HlrQORqNNXPHqWbNt+ZaBSTQHSnCRzN9eg6AuMd2Gfpd9qN9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpp7I21V; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ey7Pv2S3Huc0kxAgIgIQf2ZJSoIrEa4HWp9oLV/k5W9OljK6QF5Xp3ZQ2BU08OKEznjx6d5cqP+R9quuGpk5pCzl9N9379flRv/iye+0n3lmf1OYxpZBboZQuNPuNoqrl4NGKlxwJzAf3/SQWLO/U+vNgnkBLITjfTjKrKwtAX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlSyYlrr; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpp7I21V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F254C2BD10
-	for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 10:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719137919;
-	bh=YvSVXJdBQKWUuhk9Qus9TV4AhCWxwK8gs3Y89XMznTI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gpp7I21Vk/LF2bkbXohHJUXdbaUjuIKA26Vck4ESRK2TDVtOdLDWtqN8mxPcxfGxb
-	 gzAbsiscGjZSSGHBtaf2Q0aiH3l2caAEOGXNoIkGOmm4XGxtsElE4uKgKRJpWjVTiT
-	 lvej8KYHB+Y0YGYPYUnivy8OElXkxPfTYsRoYfyvYKt7llKfW85lQNZHFZdvH3wLEY
-	 b0G9twTcDqWZBIvib9qv/iUV0oUMhEvUh8ALp38+9KpterAMFwxojOlhkZF6eCY+xk
-	 VfpWxBuoG8JY8YhNaSQrKKignxrrWu2mIn3X3yceHbI3ziIma6QYh1kJJ0Y9Hua8hb
-	 hQE9zy1xtU9AQ==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so422383666b.2
-        for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 03:18:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDnPVAtwYW849ycrFZq5v2aeBXQ+/DpDUy3BiRBHvzRIEmQY3mBk5+v0CQSUU8NjA4a1aLftuJKpPm3PnEP+pI5j6XgaRTCvK4
-X-Gm-Message-State: AOJu0Yw/u5pVBRBLq8OngLMU9nOhlVk++qW1jh6Q7hnNsGHoy4VlGNe7
-	VIqqHAJqCsNEUZZNe5eiWm6EbrWEbSyCMCykP7kMmR9adNQoMZYNFLMIR1c4NXd1EOtjoim0yrI
-	5GLSD6yV0Irg3aweXkZBR+N76RI0=
-X-Google-Smtp-Source: AGHT+IETl9tcGslgNmKwUQFdKXbdPsmbNWyuSxrrYzFXcGEQW2pW/t5Kw9wATH526H1HJQU6acmvH1WEciSIgB/l4d8=
-X-Received: by 2002:a17:906:a8d:b0:a6e:fccc:e4a with SMTP id
- a640c23a62f3a-a7245b4a3c3mr96498966b.0.1719137917974; Sun, 23 Jun 2024
- 03:18:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlSyYlrr"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d044aa5beso3750334a12.2
+        for <loongarch@lists.linux.dev>; Sun, 23 Jun 2024 05:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719144308; x=1719749108; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v+9HDK5irEOHKoyqqTJ0d+J1J6qDyFAy5UodcdX0Ris=;
+        b=QlSyYlrr74cdOmi+rLG1Z+p2XUqn0g60tslBmdgdTEThEH2U2dX7s7lUAKpWEln/eu
+         kc0KqK5fyPbT+pZCsySs1zlUnmKcsmScXyqE/Xmm4gjr07p2l9vE29U+XpAzBf+OQlF3
+         Mm/iXlF85beqJyWm9ol7/kNxAYru9hF43VWe1H+TXcKRXt4NPh8FW3FF7M7m0n5hMef7
+         DHYyrFq+xT86f7MCoxTnpKhxQX1HqVP60V5v/rMqKbjTU1tYKGtHwqygXcZnerFf8DGW
+         JAbmIuj8l2Uu3Gj+EOwZ2nf/UKOpjhq0jty91hg5IXz+Nqo6W2G6r22BDsOdAB702XNB
+         hEZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719144308; x=1719749108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v+9HDK5irEOHKoyqqTJ0d+J1J6qDyFAy5UodcdX0Ris=;
+        b=vKjIDjUKIw6/AquhdsBl8ULE5YmO/UlGOg2XbrJwmO5X+vuhqggFFnRTO70wp2ci+1
+         lCnymEkwRELFWb04RujBeTZxlqr/XdOESb9QXBzvbe3LNfzJNOCeAyFccEM7EdSd/VK1
+         kp18vtf3XrGj1eja9tIggAzEYKbj+sQ1zGp3HBSZU11NjYKt7e88gYIHHljdqh+aEHlv
+         kOH1tuAkMXFiHqPIVt5tDvPqRlfu3wNkLKR6IneNuXD+ftrWX0d5ued8FViKXgBHmdrw
+         9OoL4k0cHaUEDZVtFVgd4I8nFh0jSCqJiH9v7SE8heOy8pMtEnC7F7VlPjgn52CLu4R8
+         9kkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSdxRjvwkjAipcJ148Ql5O2BprksTJ8ulMCJrY+A0rZnJZ72hPpPgwc3FCdCJZu7wVEr9tSWYgZ0RbzgWZd3ueFCUrW1atQgm3
+X-Gm-Message-State: AOJu0YyNuw0dglFz08P+39wOOdtL2y+sIcvMSoFYi8dDyV2D4Wigk/er
+	Feiu5rz84brzkoO62ZLsZlz7QI1t/bcFTmPJO1KNFO21UeamtCEKQ6C98yKGz3Klq7y0vwnrI+Q
+	iqigusDGldLE/7aIWrYU3KLOv65I=
+X-Google-Smtp-Source: AGHT+IFnMUqp7z8qfKjLX2GW9CbGe8fI9/rJ6aZbm+NwS/Y0v7CD9JEwChA4DcxpDHqQwuxtifZ4PvJaigG3mMmzT9w=
+X-Received: by 2002:aa7:d393:0:b0:57d:5600:2c94 with SMTP id
+ 4fb4d7f45d1cf-57d56003448mr135481a12.0.1719144308088; Sun, 23 Jun 2024
+ 05:05:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240619080940.2690756-1-maobibo@loongson.cn> <20240619080940.2690756-5-maobibo@loongson.cn>
-In-Reply-To: <20240619080940.2690756-5-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 23 Jun 2024 18:18:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H74raJ9eEWEHr=aN6LhVvNUyP6TLEDH006M6AnoE8tkPg@mail.gmail.com>
-Message-ID: <CAAhV-H74raJ9eEWEHr=aN6LhVvNUyP6TLEDH006M6AnoE8tkPg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] LoongArch: KVM: Add memory barrier before update
- pmd entry
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20240622105621.7922-1-xry111@xry111.site> <kslf3yc7wnwhxzv5cejaqf52bdr6yxqaqphtjl7d4iaph23y6v@ssyq7vrdwx56>
+ <CAHk-=wgj6h97Ro6oQcOq5YTG0JcKRLN0CtXgYCW_Ci6OSzL5NA@mail.gmail.com>
+ <eeb7e9895aca92fa5a8d11d9f37b283428185278.camel@xry111.site>
+ <CAGudoHFofUZ0Nb9UtV=Q3uQ0K+JnBHPrgLxNYuj7nSLF-=ue8g@mail.gmail.com> <9d1512b57683a68a7176ae8221562657fb0231a3.camel@xry111.site>
+In-Reply-To: <9d1512b57683a68a7176ae8221562657fb0231a3.camel@xry111.site>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sun, 23 Jun 2024 14:04:54 +0200
+Message-ID: <CAGudoHGsumzEukjQg=TxQgzjBcZ4a+TsdNVtFp4dpaSw6BzaSA@mail.gmail.com>
+Subject: Re: [PATCH] vfs: Add AT_EMPTY_PATH_NOCHECK as unchecked AT_EMPTY_PATH
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alejandro Colomar <alx@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Icenowy Zheng <uwu@icenowy.me>, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
-
-On Wed, Jun 19, 2024 at 4:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+On Sun, Jun 23, 2024 at 3:22=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
 e:
 >
-> When updating pmd entry such as allocating new pmd page or splitting
-> huge page into normal page, it is necessary to firstly update all pte
-> entries, and then update pmd entry.
+> On Sun, 2024-06-23 at 03:07 +0200, Mateusz Guzik wrote:
+> > On Sun, Jun 23, 2024 at 2:59=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> =
+wrote:
+> > >
+> > > On Sat, 2024-06-22 at 15:41 -0700, Linus Torvalds wrote:
+> > >
+> > > > I do think that we should make AT_EMPTY_PATH with a NULL path
+> > > > "JustWork(tm)", because the stupid "look if the pathname is empty" =
+is
+> > > > horrible.
+> > > >
+> > > > But moving that check into getname() is *NOT* the right answer,
+> > > > because by the time you get to getname(), you have already lost.
+> > >
+> > > Oops.  I'll try to get around of getname() too...
+> > >
+> > > > So the short-cut in vfs_fstatat() to never get a pathname is
+> > > > disgusting - people should have used 'fstat()' - but it's _importan=
+t_
+> > > > disgusting.
+> > >
+> > > The problem is we don't have fstat() for LoongArch, and it'll be
+> > > unusable on all 32-bit arch after 2037.
+> > >
+> > > And Arnd hates the idea adding fstat() for LoongArch because there wo=
+uld
+> > > be one more 32-bit arch broken in 2037.
+> > >
+> > > Or should we just add something like "fstat_2037()"?
+> > >
+> >
+> > In that case fstat is out of the question, but no problem.
+> >
+> > It was suggested to make AT_EMPTY_PATH + NULL pathname do the right
+> > thing and have the syscalls short-circuit as needed.
+> >
+> > for statx it would look like this (except you are going to have
+> > implement do_statx_by_fd):
+> >
+> > diff --git a/fs/stat.c b/fs/stat.c
+> > index 16aa1f5ceec4..0afe72b320cc 100644
+> > --- a/fs/stat.c
+> > +++ b/fs/stat.c
+> > @@ -710,6 +710,9 @@ SYSCALL_DEFINE5(statx,
+> >         int ret;
+> >         struct filename *name;
+> >
+> > +       if (flags =3D=3D AT_EMPTY_PATH && filename =3D=3D NULL)
+> > +               return do_statx_by_fd(...);
+> > +
+> >         name =3D getname_flags(filename, getname_statx_lookup_flags(fla=
+gs));
+> >         ret =3D do_statx(dfd, name, flags, mask, buffer);
+> >         putname(name);
+> >
+> > and so on
+> >
+> > Personally I would prefer if fstatx was added instead, fwiw most
+> > massaging in the area will be the same regardless.
 >
-> It is weak order with LoongArch system, there will be problem if other
-> vcpus sees pmd update firstly however pte is not updated. Here smp_wmb()
-> is added to assure this.
-Memory barriers should be in pairs in most cases. That means you may
-lose smp_rmb() in another place.
+> I do agree.  But if we do it *now* would it be "breaking the userspace"
+> if some stupid program relies on fstatx() to return some error when the
+> path is NULL?  The "stupid programs" may just exist in the wild...
+>
 
-Huacai
+You mean statx? fstatx would not accept a path to begin with.
 
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/mmu.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> index 1690828bd44b..7f04edfbe428 100644
-> --- a/arch/loongarch/kvm/mmu.c
-> +++ b/arch/loongarch/kvm/mmu.c
-> @@ -163,6 +163,7 @@ static kvm_pte_t *kvm_populate_gpa(struct kvm *kvm,
->
->                         child =3D kvm_mmu_memory_cache_alloc(cache);
->                         _kvm_pte_init(child, ctx.invalid_ptes[ctx.level -=
- 1]);
-> +                       smp_wmb(); /* make pte visible before pmd */
->                         kvm_set_pte(entry, __pa(child));
->                 } else if (kvm_pte_huge(*entry)) {
->                         return entry;
-> @@ -746,6 +747,7 @@ static kvm_pte_t *kvm_split_huge(struct kvm_vcpu *vcp=
-u, kvm_pte_t *ptep, gfn_t g
->                 val +=3D PAGE_SIZE;
->         }
->
-> +       smp_wmb();
->         /* The later kvm_flush_tlb_gpa() will flush hugepage tlb */
->         kvm_set_pte(ptep, __pa(child));
->
-> --
-> 2.39.3
->
+Worry about some code breaking is why I suggested a dedicated flag
+(AT_NO_PATH) myself in case fstatx is a no-go.
+
+I am not convinced messing with AT_* flags is justified to begin with.
+Any syscall which does not have a fd-only variant and is found to be
+routinely used with AT_EMPTY_PATH should get one instead.
+
+As far as I know that's only stat(due to a perf bug in glibc, now
+fixed) and increasingly statx.
+
+Suppose AT_EMPTY_PATH + NULL are to land and stat + statx get the
+treatment. What about all the other syscalls? Sorting all that out is
+quite a big of churn which is probably not worth it. But then there is
+a feature gap in that they EFAULT for this pair while the stat* ones
+don't and that's bound to raise confusion. Then one could add the
+check in the bowels of path lookup in similar way you do did to
+maintain the same behavior (but without per-syscall churn) and a big
+fat warning that anyone getting there often needs to get patched with
+short-circuiting the entire thing. So I think that's either a lot of
+churn or nasty additions.
+
+Regardless, as noted above, either making fstatx a thing or
+short-circuiting mostly the same patching has to be done for
+statx-related stuff.
+
+However, this is not my call to make.
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
