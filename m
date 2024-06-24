@@ -1,86 +1,239 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E2A4400
-	for <loongarch@lists.linux.dev>; Mon, 24 Jun 2024 02:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363234683
+	for <loongarch@lists.linux.dev>; Mon, 24 Jun 2024 02:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719196002; cv=none; b=Gjgn67rOrSdTpja5iCyzLlvm1GxjX1kIrZ1YiocMnuHr1xXq+4ivj9hFOufPaBK7LTaDOATwCI1J1gkV6/wRm2ULzydNX+11FfXNEaLuocKtTOaDnyVNpW673FzE8oMrSu1tO3YVvJIN9Rtd1knHiOMnj0ATATBmLZII/BcnO/U=
+	t=1719196516; cv=none; b=UbQd3XMFpDoq+3vOuINqOT8SdD93tJtZv9ncyfp96N7GMEmidSD+QAnraUpjywo/K7IqEfFtnvB02wPZUEHAImNz9aduA4Fw3D/irGhzXj6b7nXGOoM4qOPmhpuaMVdfAZWKnw6KCXhMaIF6CrhbPl2bK3UK/j5t0f2rNyvQfO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719196002; c=relaxed/simple;
-	bh=VF6ss1E9xCanAEWNpbP5BdN9LJRvLeanmOYgYq+Fq4U=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QoqZTo4hK28DvqVX/SYobJf1rE1rkfUzYdLhEQujNecIUCBkBRY8r13fYoEx2pvl9MQye3wZAdRrrV6VxDHRnsMjbULEPSc0zgqI2Tj7VrffJWTustLTmvWtUinOb6KJGaEkyW5LfC1zwohvIDYnIgzmk01P8Tj/WWbwFi6IWOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W6sDP5dnlzxTFc;
-	Mon, 24 Jun 2024 10:22:13 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 043F718007C;
-	Mon, 24 Jun 2024 10:26:31 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 24 Jun 2024 10:26:29 +0800
-Subject: Re: [PATCH v4 0/4] Add ACPI NUMA support for RISC-V
-To: Haibo Xu <haibo1.xu@intel.com>, <sunilvl@ventanamicro.com>,
-	<arnd@arndb.de>
-CC: <xiaobo55x@gmail.com>, <ajones@ventanamicro.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Conor
- Dooley <conor.dooley@microchip.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Charlie Jenkins <charlie@rivosinc.com>, Baoquan
- He <bhe@redhat.com>, Evan Green <evan@rivosinc.com>,
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Zong Li
-	<zong.li@sifive.com>, Sami Tolvanen <samitolvanen@google.com>, Alexandre
- Ghiti <alexghiti@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>,
-	Chen Jiahao <chenjiahao16@huawei.com>, "Russell King (Oracle)"
-	<rmk+kernel@armlinux.org.uk>, Jisheng Zhang <jszhang@kernel.org>, James Morse
-	<james.morse@arm.com>, Andy Chiu <andy.chiu@sifive.com>, Marc Zyngier
-	<maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Tony Luck
-	<tony.luck@intel.com>, Ard Biesheuvel <ardb@kernel.org>, Dan Williams
-	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Robert Richter
-	<rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <linux-acpi@vger.kernel.org>
-References: <cover.1718268003.git.haibo1.xu@intel.com>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <d9c996b8-fe36-1b69-331a-94eb2547cc0f@huawei.com>
-Date: Mon, 24 Jun 2024 10:26:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1719196516; c=relaxed/simple;
+	bh=xoVds/qOHtFoyFcjhS6vbRZROf44bkXXy57L3K3vBM0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZEN1KePOZ5qg7CIGNtBcY7OTXY85nCVTPMHf3TxCoxf8Gx1tBckIYYfXjOTFyhg+O23296DFG43WH0iI2kN1H9Gb1gSGVua+3PsXQyt4j1bJSOq3S3w9bCncbp7L8vUShMd4n+16QoppCkiF9xS2egmG+ajh4YsdFoLfXUl9HkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxHutf23hmLmYJAA--.37923S3;
+	Mon, 24 Jun 2024 10:35:11 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqsZc23hmWpYuAA--.45425S3;
+	Mon, 24 Jun 2024 10:35:10 +0800 (CST)
+Subject: Re: [PATCH v2 1/6] LoongArch: KVM: Delay secondary mmu tlb flush
+ until guest entry
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240619080940.2690756-1-maobibo@loongson.cn>
+ <20240619080940.2690756-2-maobibo@loongson.cn>
+ <CAAhV-H7zF7zDZQ0tHtZndTmWDteaV=nAwXL3Q1P2zcJssVt7tA@mail.gmail.com>
+ <5df4d756-d261-2629-a938-c9bfdb9d2534@loongson.cn>
+ <CAAhV-H7m7b-yQLOCo9B0mGkBLMp9Xfpe6evJs33pmWvKykDKqw@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <40772a8d-e541-2f72-3c47-c2595172c3b6@loongson.cn>
+Date: Mon, 24 Jun 2024 10:35:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <cover.1718268003.git.haibo1.xu@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+In-Reply-To: <CAAhV-H7m7b-yQLOCo9B0mGkBLMp9Xfpe6evJs33pmWvKykDKqw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxqsZc23hmWpYuAA--.45425S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtFWxKr1xuF4kJFWUKryxtFc_yoWxXF4xpr
+	97uF1DCw48WryfJ342qwnYqrsFqrWkKr1xZFy7tFyFyr1qqFnrGr48CrWDuFyrJw1rCF1I
+	qFyrtr13uFW5twbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P5
+	r7UUUUU==
 
-On 2024/6/13 16:54, Haibo Xu wrote:
-> This patch series enable RISC-V ACPI NUMA support which was based on
-> the recently approved ACPI ECR[1].
+
+
+On 2024/6/24 上午9:58, Huacai Chen wrote:
+> On Mon, Jun 24, 2024 at 9:23 AM maobibo <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/6/23 下午3:54, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Jun 19, 2024 at 4:09 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> If there is page fault for secondary mmu, there needs tlb flush
+>>> What does "secondary mmu" in this context mean? Maybe "guest mmu"?
+>> "secondary mmu" following x86 concepts, the weblink is:
+>>      https://lwn.net/Articles/977945/
+>>
+>> It is called stage-2 mmu on ARM64 also. "guest mmu" cannot represent
+>> whether it is gva to gpa, or gpa to hpa, or gva to hpa directly.
+> Then it is better to explain "what is secondary mmu" in the commit
+> message when it appears at the first time.
+Sure, will do in next patch.
+
+Regards
+Bibo Mao
 > 
-> Patch 1/4 add RISC-V specific acpi_numa.c file to parse NUMA information
-> from SRAT and SLIT ACPI tables.
-> Patch 2/4 add the common SRAT RINTC affinity structure handler.
-> Patch 3/4 change the ACPI_NUMA to a hidden option since it would be selected
-> by default on all supported platform.
-> Patch 4/4 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
-> potential boot noise on ACPI platforms that are not NUMA.
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>> operation indexed with fault gpa address and VMID. VMID is stored
+>>>> at register CSR_GSTAT and will be reload or recalculated during
+>>>> guest entry.
+>>>>
+>>>> Currently CSR_GSTAT is not saved and restored during vcpu context
+>>>> switch, it is recalculated during guest entry. So CSR_GSTAT is in
+>>>> effect only when vcpu runs in guest mode, however it may be not in
+>>>> effected if vcpu exits to host mode, since register CSR_GSTAT may
+>>>> be stale, it maybe records VMID of last scheduled vcpu, rather than
+>>>> current vcpu.
+>>>>
+>>>> Function kvm_flush_tlb_gpa() should be called with its real VMID,
+>>>> here move it to guest entrance. Also arch specific request id
+>>>> KVM_REQ_TLB_FLUSH_GPA is added to flush tlb, and it can be optimized
+>>>> if VMID is updated, since all guest tlb entries will be invalid if
+>>>> VMID is updated.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_host.h |  2 ++
+>>>>    arch/loongarch/kvm/main.c             |  1 +
+>>>>    arch/loongarch/kvm/mmu.c              |  4 ++--
+>>>>    arch/loongarch/kvm/tlb.c              |  5 +----
+>>>>    arch/loongarch/kvm/vcpu.c             | 18 ++++++++++++++++++
+>>>>    5 files changed, 24 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>> index c87b6ea0ec47..32c4948f534f 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>> @@ -30,6 +30,7 @@
+>>>>    #define KVM_PRIVATE_MEM_SLOTS          0
+>>>>
+>>>>    #define KVM_HALT_POLL_NS_DEFAULT       500000
+>>>> +#define KVM_REQ_TLB_FLUSH_GPA          KVM_ARCH_REQ(0)
+>>>>
+>>>>    #define KVM_GUESTDBG_SW_BP_MASK                \
+>>>>           (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+>>>> @@ -190,6 +191,7 @@ struct kvm_vcpu_arch {
+>>>>
+>>>>           /* vcpu's vpid */
+>>>>           u64 vpid;
+>>>> +       gpa_t flush_gpa;
+>>>>
+>>>>           /* Frequency of stable timer in Hz */
+>>>>           u64 timer_mhz;
+>>>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>>>> index 86a2f2d0cb27..844736b99d38 100644
+>>>> --- a/arch/loongarch/kvm/main.c
+>>>> +++ b/arch/loongarch/kvm/main.c
+>>>> @@ -242,6 +242,7 @@ void kvm_check_vpid(struct kvm_vcpu *vcpu)
+>>>>                   kvm_update_vpid(vcpu, cpu);
+>>>>                   trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+>>>>                   vcpu->cpu = cpu;
+>>>> +               kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>>>>           }
+>>>>
+>>>>           /* Restore GSTAT(0x50).vpid */
+>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+>>>> index 98883aa23ab8..9e39d28fec35 100644
+>>>> --- a/arch/loongarch/kvm/mmu.c
+>>>> +++ b/arch/loongarch/kvm/mmu.c
+>>>> @@ -908,8 +908,8 @@ int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>>>>                   return ret;
+>>>>
+>>>>           /* Invalidate this entry in the TLB */
+>>>> -       kvm_flush_tlb_gpa(vcpu, gpa);
+>>>> -
+>>>> +       vcpu->arch.flush_gpa = gpa;
+>>>> +       kvm_make_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+>>>> index 02535df6b51f..ebdbe9264e9c 100644
+>>>> --- a/arch/loongarch/kvm/tlb.c
+>>>> +++ b/arch/loongarch/kvm/tlb.c
+>>>> @@ -23,10 +23,7 @@ void kvm_flush_tlb_all(void)
+>>>>
+>>>>    void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+>>>>    {
+>>>> -       unsigned long flags;
+>>>> -
+>>>> -       local_irq_save(flags);
+>>>> +       lockdep_assert_irqs_disabled();
+>>>>           gpa &= (PAGE_MASK << 1);
+>>>>           invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+>>>> -       local_irq_restore(flags);
+>>>>    }
+>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>> index 9e8030d45129..b747bd8bc037 100644
+>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>> @@ -51,6 +51,16 @@ static int kvm_check_requests(struct kvm_vcpu *vcpu)
+>>>>           return RESUME_GUEST;
+>>>>    }
+>>>>
+>>>> +static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +       lockdep_assert_irqs_disabled();
+>>>> +       if (kvm_check_request(KVM_REQ_TLB_FLUSH_GPA, vcpu))
+>>>> +               if (vcpu->arch.flush_gpa != INVALID_GPA) {
+>>>> +                       kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
+>>>> +                       vcpu->arch.flush_gpa = INVALID_GPA;
+>>>> +               }
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * Check and handle pending signal and vCPU requests etc
+>>>>     * Run with irq enabled and preempt enabled
+>>>> @@ -101,6 +111,13 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+>>>>                   /* Make sure the vcpu mode has been written */
+>>>>                   smp_store_mb(vcpu->mode, IN_GUEST_MODE);
+>>>>                   kvm_check_vpid(vcpu);
+>>>> +
+>>>> +               /*
+>>>> +                * Called after function kvm_check_vpid()
+>>>> +                * Since it updates csr_gstat used by kvm_flush_tlb_gpa(),
+>>>> +                * also it may clear KVM_REQ_TLB_FLUSH_GPA pending bit
+>>>> +                */
+>>>> +               kvm_late_check_requests(vcpu);
+>>>>                   vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
+>>>>                   /* Clear KVM_LARCH_SWCSR_LATEST as CSR will change when enter guest */
+>>>>                   vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
+>>>> @@ -994,6 +1011,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>>>>           struct loongarch_csrs *csr;
+>>>>
+>>>>           vcpu->arch.vpid = 0;
+>>>> +       vcpu->arch.flush_gpa = INVALID_GPA;
+>>>>
+>>>>           hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
+>>>>           vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
+>>
 
-Looks good to me,
-
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
