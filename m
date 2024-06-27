@@ -1,139 +1,154 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8109C7BB14
-	for <loongarch@lists.linux.dev>; Thu, 27 Jun 2024 08:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6AD193099
+	for <loongarch@lists.linux.dev>; Thu, 27 Jun 2024 13:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719477296; cv=none; b=lyJ8gzONcljGPWJhfqFVYRNC0Nd3DLUbwdO5fDibzdCIbggAr5E1/sgURieB9dqRjSb3SZrUCN8O2VqyOsOIDOMBSJkWkfKR+QMcZkRC6CcKiev5NZFyX65YMQM2jgvozEp6yzaiw+ow91hH7jPoCz1rzgygleSgxrJ/WYs6/i4=
+	t=1719495863; cv=none; b=rUtfSa6ElqPxvJ8P7Cb/+5743DrSWsuAWnUrb3Aq0IG0y8inHQdSFrxoek4un0KK8yX8GkaLBUKt3utwVRLsJo8Vs7VXwMyOJS4hvlyj0Sd/5Oa2OYu0gzLukkiDu8k2uWmusHIu7GKcsN64aQIyi0lbm/1qG1XBXK+v00CXY5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719477296; c=relaxed/simple;
-	bh=jaHYq9qHI0Bww45jO0JOW2KKMuvYkD8u1X20gL+6tFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CqMhivQUP8FFBNdjYGXBxGYn0ehx6yZnS55eTFd90qZsmJuh7jHkB8CYX/Gl9ANhvnahNYFeh3oXSK1UY0KTnDTgMtzJwN5+e0N9mIapsV1uN2vdusYEElhrUIKKeS2v0IDVbsS48R/t4udd9bJttyPt85z1MMz9SSHwbdf1wgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BJGoc350; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719495863; c=relaxed/simple;
+	bh=Ul6G/nJq1NqsvPPUxn1ztVYbl+D8KaF4w3zcLhTazvM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rnr+8tG7qp/0n4IJjKcKGnD0FeINUh0t1XtSfIbvgX5ccG1RgUoHrN+Bt1k/npMlg54RLBvRyvE6JCPOMHIuDS75nD4kOSfZZiRtk3ydmkEOaXTL6i5mZUma6j38B7dfohbBaVpRPtkT3Pvr0W+itm2DzWYu4msrcIMJ/1qtlng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ea2xCysQ; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BJGoc350"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52cdea1387eso5378955e87.0
-        for <loongarch@lists.linux.dev>; Thu, 27 Jun 2024 01:34:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ea2xCysQ"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57d1d614049so1937562a12.1
+        for <loongarch@lists.linux.dev>; Thu, 27 Jun 2024 06:44:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719477292; x=1720082092; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaHYq9qHI0Bww45jO0JOW2KKMuvYkD8u1X20gL+6tFY=;
-        b=BJGoc3502XS/biBu5Wg2Qm0Zy5jjVMDFImE11mHq+lJ0FkM6P8gHe2ZYyO4HJ1Ozj4
-         uy6cH7x3oE3QHjtiN9PySoUN6sUEWRC9Y26Vzv/z5ZjGCL4kzsOxIcX6IURcxqZ07LdX
-         4VwU2uTOSJyqp3InWiN9bixRTL4xRZrE27J9whViUkSBUrVm1HJJDhlovHlZXXNbhrQx
-         QJPVkeDLT5qyUOJTfrz1ghwYEOsYdmcOcywEeLgtCpineejTrdN32t3rNLal44BqACZS
-         u3pzYiJZrSF5i5nKzownPQQMu9R/YlyP382DygFWtYbpi56qilo4ZBhjkF71Bd3xcYPf
-         Xvxw==
+        d=gmail.com; s=20230601; t=1719495860; x=1720100660; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+z2OIiBoWk61ptokEVO+KMQtz628M7t7de8HsxCdEX4=;
+        b=Ea2xCysQmN19E3t9yq2CvtZ1jUKUeB2f1W4SeM1a3g3XgSXPTAmmzc7o3VeUWymLa6
+         fP0crgDWFgB5NHO8I5FNrTqN1tj6TFULvLRs5JaQboD5M1qjo2HlG5/bAeRTHJNryG71
+         vSjEZ+iC94HwbBcSTjS7XPBBtUNPcTS3eAWQcXWguJ9ES1eaAHFr3fwvgJyHbZKiS3U+
+         YJOnfHtPyjgncmD+PV0ywcs4SXT1AgZywzHR36daACVtPf+e9HdAmEFJf/WkUOD4gj/g
+         hABKgdGKupMgjG6bMyoaT75gCfWUAhuUEUh5P0dpsfiarnAacUkjOrUmbWHNamDjl2id
+         VopA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719477292; x=1720082092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jaHYq9qHI0Bww45jO0JOW2KKMuvYkD8u1X20gL+6tFY=;
-        b=gbFfJWilxcZANV58yUD/GirRI5X7XdSwMoUn11wkjMf3q1I0tc+IhScHcIftK3tQJv
-         cG/GrcAvyfKD2fYs8FLpWshloLXHNQzguxIHRO7t/+nKwT2bdUCephvmjQ1QMTtvSvuY
-         MSqbjhVa+ldlsuJmiG9nGQjOTPSIyB52nNW2AZeiIVBu189DcGrJM6U/wtUplGsp9sd/
-         tmIlnq93nqZWx+m0vC7coZTpmqr768sWDsEP7aUnYw1Eh0wNEB45IrUZxgk0C7npVrhH
-         /wBsmWpIAROX1+4adhl5gUQ871w+Y3teVDOnrp1FuhEo5pRi6PP9I9kZJQMBMw4GZYW8
-         EM5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHHJY+s41dGTfNOifKgol31cvYwFyW5yPCS+nijmfykuvnP4s+k0c0d8A757ry8U0+dIPiuKxAC/VAnZYEMcoo0fCEM7c40mXE
-X-Gm-Message-State: AOJu0YzlUPXutFpfcDmfr/tVUoZxDdsf6XQhsPhtL8Y0FlTeEs5s4qvU
-	gVQaIFzKt9El9pEOm1PXqeGW/9/dhfwL47z43nSQ4QVjzxY6rQMTG5zdghQ68AAeKIVaSEHNlpJ
-	9i9NOkZHvjyjGaX17I+t8FIdsnzBoEmaCgeb/
-X-Google-Smtp-Source: AGHT+IHlfk5WkDZhxtSr6xoYbVkipq/AGMIGI9Dxm9ats0II6c5lJlSMjq4hKwrgepsNKkozKV3mIVOymMLBYvUkPo4=
-X-Received: by 2002:a05:6512:203b:b0:52c:df55:e112 with SMTP id
- 2adb3069b0e04-52ce1832119mr6963173e87.6.1719477291466; Thu, 27 Jun 2024
- 01:34:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719495860; x=1720100660;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+z2OIiBoWk61ptokEVO+KMQtz628M7t7de8HsxCdEX4=;
+        b=OaWRlT3Ifn+Z8RziaKozo69T1DWFJKqrW+220vN/juEZ6YKJpxeDZ0MtMB3IrLs5IX
+         S1qXcBVXsmuupDz552mriwwfyyniTM7Hyl2kqxg4O/zoJM81nFf/Y0VqJBYJRbiOwlhy
+         b0+/TPUBz9qW6Qr4U6+AGMYga838OEfRhpLwtfO8q1iYIXC470A00Wi/VcudQfxFlDsK
+         uYJDPnVlJTr2C/edK2QepuikCq3+n89HfBGCdCeIkhUtBkRugdRmFglJCEfbokBdUhOF
+         8fJ93mb/duzt/W4ujZ5qu+5o/A5UjUBvXvzCMPRnsdIyZzB2SIADmq5Em/P50lRAyqdi
+         g+6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVoapLMTKkGEFqLvWE6OTtMhJASssM+qMpYjytKBRBRGVljmX0/WO94KosbeA8XsjYHoldSNCD2xCINJkQgXPtHuSXk9lubQjQ/
+X-Gm-Message-State: AOJu0YwBAbd+gkMtAu5jlaUQd0bAS3XJmVoisvQObWuPobvbRuDy8ajq
+	EgfRakUXbEKAjPSXTdHLXODY4IwljBNtqpeWaDm+QKJMrxmwiZfq
+X-Google-Smtp-Source: AGHT+IEGZJ8GU/lUTDP7HIhY+S/dmDAgLYptgqhK+X5p8UjuwE0YVnPKygAdrtwn11XNkTNIchFk2w==
+X-Received: by 2002:a50:f604:0:b0:57c:ad11:e759 with SMTP id 4fb4d7f45d1cf-57d4bdbe905mr11369584a12.28.1719495860340;
+        Thu, 27 Jun 2024 06:44:20 -0700 (PDT)
+Received: from krava (net-93-147-243-244.cust.vodafonedsl.it. [93.147.243.244])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d16bae13sm896890a12.43.2024.06.27.06.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 06:44:19 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 27 Jun 2024 15:44:16 +0200
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] uprobe: Do not use UPROBE_SWBP_INSN as static initializer
+Message-ID: <Zn1ssLPeMj-On_uT@krava>
+References: <20240618194306.1577022-1-jolsa@kernel.org>
+ <CAEf4BzbN4Li2iesQm28ZYEV2nXsLre8_qknmvkSy510EV7h=SA@mail.gmail.com>
+ <20240620193846.GA7165@redhat.com>
+ <CAEf4BzaqgbjPfxKmzF-M7nzGroOwKikA0BM7Tnw7dKzKS+x9ZQ@mail.gmail.com>
+ <20240621120149.GB12521@redhat.com>
+ <ZnV9hvOP5388YJtw@krava>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
- <20240621-tracepoint-v3-1-9e44eeea2b85@google.com> <ZnrtuaUByT70tJY5@boqun-archlinux>
-In-Reply-To: <ZnrtuaUByT70tJY5@boqun-archlinux>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 27 Jun 2024 10:34:39 +0200
-Message-ID: <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: add static_key_false
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
-	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZnV9hvOP5388YJtw@krava>
 
-On Tue, Jun 25, 2024 at 6:18=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> Hi Alice,
->
-> On Fri, Jun 21, 2024 at 10:35:26AM +0000, Alice Ryhl wrote:
-> > Add just enough support for static key so that we can use it from
-> > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > deprecated, so we add the same functionality to Rust.
-> >
-> > It is not possible to use the existing C implementation of
-> > arch_static_branch because it passes the argument `key` to inline
-> > assembly as an 'i' parameter, so any attempt to add a C helper for this
-> > function will fail to compile because the value of `key` must be known
-> > at compile-time.
-> >
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->
-> [Add linux-arch, and related arch maintainers Cced]
->
-> Since inline asms are touched here, please consider copying linux-arch
-> and arch maintainers next time ;-)
+On Fri, Jun 21, 2024 at 03:17:58PM +0200, Jiri Olsa wrote:
+> On Fri, Jun 21, 2024 at 02:01:50PM +0200, Oleg Nesterov wrote:
+> > On 06/20, Andrii Nakryiko wrote:
+> > >
+> > > On Thu, Jun 20, 2024 at 12:40 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > >
+> > > > But I can't understand what does it do, it calls emit_break() and
+> > > > git grep -w emit_break finds nothing.
+> > > >
+> > >
+> > > It's DEF_EMIT_REG0I15_FORMAT(break, break_op) in
+> > > arch/loongarch/include/asm/inst.h
+> > >
+> > > A bunch of macro magic, but in the end it produces some constant
+> > > value, of course.
+> > 
+> > I see, thanks!
+> > 
+> > Then perhaps something like below?
+> 
+> lgtm, added loong arch list/folks
 
-Will do.
+ping
 
-> For x86_64 and arm64 bits:
->
-> Acked-by: Boqun Feng <boqun.feng@gmail.com>
->
-> One thing though, we should split the arch-specific impls into different
-> files, for example: rust/kernel/arch/arm64.rs or rust/arch/arm64.rs.
-> That'll be easier for arch maintainers to watch the Rust changes related
-> to a particular architecture.
+Oleg, do you want to send formal patch?
 
-Is that how you would prefer to name these files? You don't want
-static_key somewhere in the filename?
+thanks,
+jirka
 
-> Another thought is that, could you implement an arch_static_branch!()
-> (instead of _static_key_false!()) and use it for static_key_false!()
-> similar to what we have in C? The benefit is that at least for myself
-> it'll be easier to compare the implementation between C and Rust.
-
-I can try to include that.
-
-Alice
+> 
+> for context:
+>   https://lore.kernel.org/bpf/20240614174822.GA1185149@thelio-3990X/
+> 
+> thanks,
+> jirka
+> 
+> > 
+> > Oleg.
+> > 
+> > 
+> > --- x/arch/loongarch/include/asm/uprobes.h
+> > +++ x/arch/loongarch/include/asm/uprobes.h
+> > @@ -9,7 +9,7 @@ typedef u32 uprobe_opcode_t;
+> >  #define MAX_UINSN_BYTES		8
+> >  #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
+> >  
+> > -#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
+> > +#define UPROBE_SWBP_INSN	(uprobe_opcode_t)(BRK_UPROBE_BP | (break_op << 15))
+> >  #define UPROBE_SWBP_INSN_SIZE	LOONGARCH_INSN_SIZE
+> >  
+> >  #define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
+> > --- x/arch/loongarch/kernel/uprobes.c
+> > +++ x/arch/loongarch/kernel/uprobes.c
+> > @@ -7,6 +7,13 @@
+> >  
+> >  #define UPROBE_TRAP_NR	UINT_MAX
+> >  
+> > +static __init int __ck_insn(void)
+> > +{
+> > +	BUG_ON(UPROBE_SWBP_INSN != larch_insn_gen_break(BRK_UPROBE_BP));
+> > +	return 0;
+> > +}
+> > +late_initcall(__ck_insn);
+> > +
+> >  int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
+> >  			     struct mm_struct *mm, unsigned long addr)
+> >  {
+> > 
