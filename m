@@ -1,109 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5C819ADA4
-	for <loongarch@lists.linux.dev>; Thu, 27 Jun 2024 17:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971002139DB;
+	Fri, 28 Jun 2024 04:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509997; cv=none; b=AF1oU1qVYY9khDIzwUt40OeRlwpERUSO3Uv+J5EKexfxRwb4tDVLIkasA2NVVNQfYyyzhwq0Y5Kpgmcz18vP5ByACMnzfih2+7Q1nKU+n9XGpYVW0KgC2cKWPNi6tfbvKz2C85v1uDoa2jfabu6t6hkywCz3+VGwz2pSAFlzZ9M=
+	t=1719549037; cv=none; b=mkNG0oa2oi0grxYa+ov99FbS3jghtCbrDEu/NQV51ta2WFVA44u3yXzHEd8roYsFnaqPI1NNA8h1bSSZM4nGBvkNjIw2ageJCI0mTSMx4SzzZ4yHFo5UPSL5cpQG1pIk9997xWjPmQajIa8g20XrAnDruf4M41Q12Owj6hwzaqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509997; c=relaxed/simple;
-	bh=M1Pr/ccqxR64Qy5pX519WkVfLnUUaSq7Qjbum1LSRes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M89iYqDuLEEY8inZ6xqcaVvCODR51ZuV3OyZhmToafhxW/OqLgYvUB0ZxSymr6QQbb4OkFPju0QMcgfdCzub5pwPoReP0sol/zEdP9KvKpmCsIFiOv9C9INskI/xY4go3kViTmTItPTcCF9O1+NQZP/CZaNW+9bc5SK+TYZJwHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhJRMLWw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719549037; c=relaxed/simple;
+	bh=vQckPhpKqiMAKzoCbF5rVgOEtJBMfOEiLX2FgCp4+Yo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Vx/LJSUu2oMjgwI77MeTKJgJDM9vc3bQDnE3b+4Kjj2TVrttLEOAegFwpLAvNN0xHy+AtZtRtds56uK3Q7d7WkOj+j4sSRgQ2enU5XJnUxSBtVdnpfzpmX+kvlgdsTzdimjj9rDQhDiX/PTVTVMhYeABieTf+XunK8hkYmwCOYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/HsRWj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhJRMLWw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719509995;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=34BYMyGoC6lX3CxmLrEw2DjPDGR7811PFr+ZC7aQ/ZU=;
-	b=QhJRMLWwDkPAkaXX4hncyOaXrk3ciz4MUWM9ju6gkKQjKvQocAE0vItkzUR0ctbjH6d9nf
-	gOEXIp5Krz4VH6hB9sSiZGEqtLgR4w7a1dMBJpzLEmhZeTIpLrswdH1KcU2EKH9Nj6pAnE
-	VgqtyVhtvknkWYm1zTUTruBm5B+clA4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-sTRvXhL3ML203UbvsHfRAA-1; Thu,
- 27 Jun 2024 13:39:49 -0400
-X-MC-Unique: sTRvXhL3ML203UbvsHfRAA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D9E2195608A;
-	Thu, 27 Jun 2024 17:39:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5297819560AA;
-	Thu, 27 Jun 2024 17:39:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Jun 2024 19:38:12 +0200 (CEST)
-Date: Thu, 27 Jun 2024 19:38:06 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/HsRWj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4B1C116B1;
+	Fri, 28 Jun 2024 04:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719549037;
+	bh=vQckPhpKqiMAKzoCbF5rVgOEtJBMfOEiLX2FgCp4+Yo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E/HsRWj7Q0RlDBrb3+r2vtZk5iO+q7ciURaFaXEhlnqKxqmitsgBmrfX7I4eVXNPv
+	 vPU5A9vn5Ds1FxKfbkZZm//yHG1BtwoWIQc8poqIUXaRD18Ks/BwmAdqfwVey1qR4K
+	 /G19cllxyneBX1OyBVwli+k5pMaGNA3kDb9AkUgS3h7CMiBoVhSdfK3bXjVpY5OJ1v
+	 WKLwVdFyS2KqVLHha93pXoiI1qsu/CLGRIMJJwRR9UK32RYne1K/t0uq4cz7UrUV4c
+	 KmMUZgu7n3bLBlRRY5J1rcYn/PLzs61Jki2FZoL0bBYbgAlt/qq7q1t6jxuBig0php
+	 jQopWswJrLQDA==
+Date: Fri, 28 Jun 2024 13:30:33 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, loongarch@lists.linux.dev
 Subject: Re: [PATCH] LoongArch: uprobes: make
  UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN constant
-Message-ID: <20240627173806.GC21813@redhat.com>
+Message-Id: <20240628133033.c9f1856455058f9bb97db6a7@kernel.org>
+In-Reply-To: <20240627173806.GC21813@redhat.com>
 References: <20240618194306.1577022-1-jolsa@kernel.org>
- <20240627160255.GA25374@redhat.com>
- <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
+	<20240627160255.GA25374@redhat.com>
+	<CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
+	<20240627173806.GC21813@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 06/27, Andrii Nakryiko wrote:
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+On Thu, 27 Jun 2024 19:38:06 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-Thanks!
-
-> > --- a/arch/loongarch/kernel/uprobes.c
-> > +++ b/arch/loongarch/kernel/uprobes.c
-> > @@ -7,6 +7,14 @@
+> On 06/27, Andrii Nakryiko wrote:
 > >
-> >  #define UPROBE_TRAP_NR UINT_MAX
+> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> Thanks!
+> 
+> > > --- a/arch/loongarch/kernel/uprobes.c
+> > > +++ b/arch/loongarch/kernel/uprobes.c
+> > > @@ -7,6 +7,14 @@
+> > >
+> > >  #define UPROBE_TRAP_NR UINT_MAX
+> > >
+> > > +static __init int check_emit_break(void)
+> > > +{
+> > > +       BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
+> > > +       BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
+> > > +       return 0;
+> > > +}
+> > > +arch_initcall(check_emit_break);
+> > > +
 > >
-> > +static __init int check_emit_break(void)
-> > +{
-> > +       BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
-> > +       BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
-> > +       return 0;
-> > +}
-> > +arch_initcall(check_emit_break);
-> > +
->
-> I wouldn't even bother with this, but whatever.
+> > I wouldn't even bother with this, but whatever.
+> 
+> Agreed, this looks a bit ugly. I did this only because I can not test
+> this (hopefully trivial) patch and the maintainers didn't reply.
+> 
+> If LoongArch boots at least once with this change, this run-time check
+> can be removed.
+> 
+> And just in case... I didn't dare to make a more "generic" change, but
+> perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
+> same way for micro-optimization. In this case __emit_break() should be
+> probably moved into arch/loongarch/include/asm/inst.h.
 
-Agreed, this looks a bit ugly. I did this only because I can not test
-this (hopefully trivial) patch and the maintainers didn't reply.
+That idea sounds good to me too. If it is good to loongarch maintainers,
+(e.g. breakpoint instruction is stable), it is better to define in
+asm/insn.h.
 
-If LoongArch boots at least once with this change, this run-time check
-can be removed.
+Thank you,
 
-And just in case... I didn't dare to make a more "generic" change, but
-perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
-same way for micro-optimization. In this case __emit_break() should be
-probably moved into arch/loongarch/include/asm/inst.h.
+> 
+> Oleg.
+> 
+> 
 
-Oleg.
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
