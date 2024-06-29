@@ -1,118 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B18815253B;
-	Fri, 28 Jun 2024 17:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46B342ABA
+	for <loongarch@lists.linux.dev>; Sat, 29 Jun 2024 12:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719597399; cv=none; b=Af22rg3dW6eqT0hnSs8A4eez5iLFqpxuBjF4FSfgPLIxJag83nvTsLCZF4l7AcVA0a30tRr4N9kqbZPvTVnjBpF9kJ4j35DgAGNdTpkprjaeU0YYF4HslikjLJPpsZjzJoYjvQ4/zITU3ho66fs6YY0bzvs/jDrlTve2ruDOgAk=
+	t=1719665294; cv=none; b=t6vDgHNElXA2qVPFMBc5iKbSM+2/kOuQQvWC71u1OnAquNfmMC21ysd9wPGGmfNduyWQHdn64pQbDm57z9HhTn9B9hmq54XG78wLe/tnTef+OE/EzYYMFxFt3x3od3t6P9nVF/Q7dCrQ+suFgnLMUF8pTPQZW8Zg9G2wvglXB08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719597399; c=relaxed/simple;
-	bh=oYS7jmYESQRNo05AqB51F3nXEy6uK/Kv0yx6spSKe/o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Aq7n43jp/31Fjqz7YX1+eij7oNbVxTwbSGkpgiQj6vRbXaJxknUzd6rujOORRwUWrTLfaWU4GbY3gEhpKlcvSxxGmWsEKs6EsA6FDBpVqvDZuRR/7UJ7rz4F7JTQmIMdRaF7U9RiS9HOktj23D6ead7gEBDeV2LW+SG6TNpNEZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8572C116B1;
-	Fri, 28 Jun 2024 17:56:33 +0000 (UTC)
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	loongarch@lists.linux.dev,
-	x86@kernel.org,
-	Russell King <linux@armlinux.org.uk>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	James Morse <james.morse@arm.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linuxarm@huawei.com,
-	justin.he@arm.com,
-	jianyong.wu@arm.com
-Subject: Re: [PATCH v10 00/19] ACPI/arm64: add support for virtual cpu hotplug
-Date: Fri, 28 Jun 2024 18:56:31 +0100
-Message-Id: <171959723432.44645.7883276197359651212.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
-References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1719665294; c=relaxed/simple;
+	bh=eksxv3soLqwNNaIwyq6qM/uW+C8SEtvfywK/NPtrcUY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Jd/Q33samNtdKkvXu1Pws4ORv+G51tiltnnj5rOKz9KGa0iN1N6xH53IhE4umk4QLID22OmzFILDurdXNaDguToUCp6MWc3GaatmKZ2AeunOsRUH02bg/V1WOOmyPPfLBKHdYpHqXoBxczqwxCaqIwrke4MoWqEDm0BN+p5A7T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.122.216])
+	by gateway (Coremail) with SMTP id _____8DxyLmAAoBmCG8LAA--.1002S3;
+	Sat, 29 Jun 2024 20:48:00 +0800 (CST)
+Received: from [192.168.0.109] (unknown [36.44.122.216])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx68Z+AoBmIVk1AA--.59448S3;
+	Sat, 29 Jun 2024 20:48:00 +0800 (CST)
+Message-ID: <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
+Date: Sat, 29 Jun 2024 20:48:02 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+To: oleg@redhat.com
+Cc: andrii.nakryiko@gmail.com, andrii@kernel.org, bpf@vger.kernel.org,
+ chenhuacai@kernel.org, jolsa@kernel.org, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, mhiramat@kernel.org, nathan@kernel.org,
+ rostedt@goodmis.org, yangtiezhu@loongson.cn
+References: <20240627173806.GC21813@redhat.com>
+Subject: Re: [PATCH] LoongArch: uprobes: make
+ UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN constant
+Content-Language: en-US
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <20240627173806.GC21813@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cx68Z+AoBmIVk1AA--.59448S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyxGF48CFyxuw18trWUGFX_yoW3Kwc_uw
+	sxCay8J348Cr40qFn2y3s3Zw4DWF4xWFW5Xr97Zwn7J34UK3WDZ3yFgrn7Za4rKF40gFsI
+	9FZ0qa48Zr1avosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Wed, 29 May 2024 14:34:27 +0100, Jonathan Cameron wrote:
-> v10:
-> - Make acpi_processor_set_per_cpu() return 0 / error rather than bool
->   to simplify error handling at the call sites.
->   (Thanks to both Rafael and Gavin who commented on this)
-> - Gather tags.
-> - Rebase on v6.10-rc1
-> 
-> [...]
+On Thu, 27 Jun 2024 19:38:06 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-Applied to arm64 (for-next/vcpu-hotplug), thanks! If nothing falls
-apart, it should end up in mainline for 6.11.
+...
 
-Thomas, the GICv3 patches have been acked by Marc but they are missing
-your ack. If you want it added, I can refresh the series in the next day
-or so, otherwise the branch should remain stable. Thanks.
+ > > > +arch_initcall(check_emit_break);
+ > > > +
+ > >
+ > > I wouldn't even bother with this, but whatever.
+ >
+ > Agreed, this looks a bit ugly. I did this only because I can not test
+ > this (hopefully trivial) patch and the maintainers didn't reply.
 
-[01/19] ACPI: processor: Simplify initial onlining to use same path for cold and hotplug
-        https://git.kernel.org/arm64/c/c1385c1f0ba3
-[02/19] cpu: Do not warn on arch_register_cpu() returning -EPROBE_DEFER
-        https://git.kernel.org/arm64/c/d830ef3ac569
-[03/19] ACPI: processor: Drop duplicated check on _STA (enabled + present)
-        https://git.kernel.org/arm64/c/157080f03c7a
-[04/19] ACPI: processor: Return an error if acpi_processor_get_info() fails in processor_add()
-        https://git.kernel.org/arm64/c/fadf231f0a06
-[05/19] ACPI: processor: Fix memory leaks in error paths of processor_add()
-        https://git.kernel.org/arm64/c/47ec9b417ed9
-[06/19] ACPI: processor: Move checks and availability of acpi_processor earlier
-        https://git.kernel.org/arm64/c/cd9239660b8c
-[07/19] ACPI: processor: Add acpi_get_processor_handle() helper
-        https://git.kernel.org/arm64/c/36b921637e90
-[08/19] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
-        https://git.kernel.org/arm64/c/b398a91decd9
-[09/19] ACPI: scan: switch to flags for acpi_scan_check_and_detach()
-        https://git.kernel.org/arm64/c/1859a671bdb9
-[10/19] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
-        https://git.kernel.org/arm64/c/3b9d0a78aeda
-[11/19] arm64: acpi: Move get_cpu_for_acpi_id() to a header
-        https://git.kernel.org/arm64/c/8d34b6f17b9a
-[12/19] arm64: acpi: Harden get_cpu_for_acpi_id() against missing CPU entry
-        https://git.kernel.org/arm64/c/2488444274c7
-[13/19] irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
-        https://git.kernel.org/arm64/c/fa2dabe57220
-[14/19] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
-        https://git.kernel.org/arm64/c/d633da5d3ab1
-[15/19] arm64: psci: Ignore DENIED CPUs
-        https://git.kernel.org/arm64/c/643e12da4a49
-[16/19] arm64: arch_register_cpu() variant to check if an ACPI handle is now available.
-        https://git.kernel.org/arm64/c/eba4675008a6
-[17/19] arm64: Kconfig: Enable hotplug CPU on arm64 if ACPI_PROCESSOR is enabled.
-        https://git.kernel.org/arm64/c/9d0873892f4d
-[18/19] arm64: document virtual CPU hotplug's expectations
-        https://git.kernel.org/arm64/c/828ce929d1c3
-[19/19] cpumask: Add enabled cpumask for present CPUs that can be brought online
-        https://git.kernel.org/arm64/c/4e1a7df45480
+The LoongArch maintainer Huacai told me offline to reply this thread today.
 
--- 
-Catalin
+ > If LoongArch boots at least once with this change, this run-time check
+ > can be removed.
+
+I will test it next Monday.
+
+ > And just in case... I didn't dare to make a more "generic" change, but
+ > perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
+ > same way for micro-optimization. In this case __emit_break() should be
+ > probably moved into arch/loongarch/include/asm/inst.h.
+
+Yeah. I think so too.
+
+Thanks,
+Tiezhu
 
