@@ -1,88 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885E62C1AC
-	for <loongarch@lists.linux.dev>; Sun, 30 Jun 2024 06:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7FF374CC;
+	Sun, 30 Jun 2024 09:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719729068; cv=none; b=OZfJC7V5wLfO9LiHCvAe4ykTyDxceIPWeLTfE33z2Gn2kASGzbHIiGw8YyLR4PTxdUSVOAfobWTjHA3H4rhfD4eKIIveyt0TYsLoeVO1bU2EN4zGPAmpaq0v67c+sTfi7L2aGtqeJRFfbZcA0XQ3btDcpQOxVIMfoS6xO2lcb9E=
+	t=1719739617; cv=none; b=geAzICeLsyc53ZT08j4Q6pX2O57iUHNaoFhRfrCY1BSOxKJikVjFeUt0tjWU7Ug/C6SNFjgIK37wyUi3tQ5jvmJ7a9gKl3PqK5Wh/fA1xOTJHyrQBkHcDhR1wswSt4QCIlK0uCem/s2AGVKQkB+HFN7zMrAHCBekKZ7fH2Q3BaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719729068; c=relaxed/simple;
-	bh=nFsORew67a/rZmPX+lXujxGMRL3SU/JD61ZaOMlF6oY=;
+	s=arc-20240116; t=1719739617; c=relaxed/simple;
+	bh=G6kjI9e67vuphJpJZBPzCIb8jDjF9XA4lesDH05PDMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egvHkaQl2ZMbXmeJ91CAbnVVELzlpVFeUGTokl1hiULJHZJtx6SEODIZHXHJLe9wMH7NW3nkZnDwCAiJ67/F00pP2vR6qkNc35k8x2ljKm6GmgpbBE0U5cKhOLtHE8Y2H8waRf8xUEhMLQqr6ExOYgTy/5Pajp2otWk0pL7v7Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SCfrM/x1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SCfrM/x1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719729065;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UrQLQYs/c1TN4fMfLr0qEglsctNmbRE0xMqs8gdbCqs=;
-	b=SCfrM/x1eqVolJMhZDEIgjSXOG8pj42ssueDTLby+8O/1Wi2NNVjG1B5XZjVrHDOc+upro
-	DcHj+0npB4EUIDgW+2Xv1JXD8stJkb7ierq8l8RZJaDIic8W+3DQfonPgW7ig8epcxa3cK
-	87nOeNipoUW3AKo5E8Vnog3mPej5rmQ=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-j6yIIMv6NYm2wG_F9dmPjw-1; Sun,
- 30 Jun 2024 02:31:00 -0400
-X-MC-Unique: j6yIIMv6NYm2wG_F9dmPjw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19AF619560A2;
-	Sun, 30 Jun 2024 06:30:58 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.11])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C87301955E80;
-	Sun, 30 Jun 2024 06:30:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 30 Jun 2024 08:29:22 +0200 (CEST)
-Date: Sun, 30 Jun 2024 08:29:16 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, andrii.nakryiko@gmail.com,
-	andrii@kernel.org, bpf@vger.kernel.org, jolsa@kernel.org,
-	kernel@xen0n.name, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	mhiramat@kernel.org, nathan@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break()
- constant
-Message-ID: <20240630062916.GA11898@redhat.com>
-References: <20240627173806.GC21813@redhat.com>
- <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
- <20240629133747.GA4504@redhat.com>
- <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
- <20240629150313.GB4504@redhat.com>
- <CAAhV-H4HtRkn1i9pxBojEmzWPysqq=mScoP6PYzZ6v29v2WYoQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bav5FaD2DEsOMkBBzK3j0HoaPXAChmYZrKyOFrIZCT2uTD5gWr0NKHA57S6CuivqKl+snptIFGWR9jwSvYuQ7xnBLRSst9DXzOU8iInmmExeZPIMKxkafCaLuwNd8ciJtVTHXtcc3hDdl5EssIdtiKAQBhKW/WPJpapROK0l6Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88924C2BD10;
+	Sun, 30 Jun 2024 09:26:52 +0000 (UTC)
+Date: Sun, 30 Jun 2024 10:26:50 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	x86@kernel.org, Russell King <linux@armlinux.org.uk>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	James Morse <james.morse@arm.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Hanjun Guo <guohanjun@huawei.com>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
+	justin.he@arm.com, jianyong.wu@arm.com
+Subject: Re: [PATCH v10 17/19] arm64: Kconfig: Enable hotplug CPU on arm64 if
+ ACPI_PROCESSOR is enabled.
+Message-ID: <ZoEk2mfQkIhLuh-8@arm.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+ <20240529133446.28446-18-Jonathan.Cameron@huawei.com>
+ <47a261e0-006d-4c64-9c9b-bc73797b8d6b@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H4HtRkn1i9pxBojEmzWPysqq=mScoP6PYzZ6v29v2WYoQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <47a261e0-006d-4c64-9c9b-bc73797b8d6b@redhat.com>
 
-On 06/30, Huacai Chen wrote:
->
-> > +static __init int check_emit_break(void)
-> > +{
-> > +       BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
-> > +       BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
-> > +       return 0;
-> > +}
-> > +arch_initcall(check_emit_break);
-> Do you mind if I remove the runtime checking after Tiezhu tests the correctness?
+Hi Gavin,
 
-Sure, please remove, thanks.
+On Sun, Jun 30, 2024 at 10:39:04AM +1000, Gavin Shan wrote:
+> On 5/29/24 11:34 PM, Jonathan Cameron wrote:
+> > In order to move arch_register_cpu() to be called via the same path
+> > for initially present CPUs described by ACPI and hotplugged CPUs
+> > ACPI_HOTPLUG_CPU needs to be enabled.
+> > 
+> > The protection against invalid IDs in acpi_map_cpu() is needed as
+> > at least one production BIOS is in the wild which reports entries
+> > in DSDT (with no _STA method, so assumed enabled and present)
+> > that don't match MADT.
+> > 
+> > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> > Reviewed-by: Gavin Shan <gshan@redhat.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >   arch/arm64/Kconfig       |  1 +
+> >   arch/arm64/kernel/acpi.c | 22 ++++++++++++++++++++++
+> >   2 files changed, 23 insertions(+)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 5d91259ee7b5..e8f2ef2312db 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -5,6 +5,7 @@ config ARM64
+> >   	select ACPI_CCA_REQUIRED if ACPI
+> >   	select ACPI_GENERIC_GSI if ACPI
+> >   	select ACPI_GTDT if ACPI
+> > +	select ACPI_HOTPLUG_CPU if ACPI_PROCESSOR
+> 
+> ACPI_HOTPLUG_CPU depends on (ACPI_PROCESSOR && HOTPLUG_CPU). It needs to be:
+> 
+> 	select ACPI_HOTPLUG_CPU if ACPI_PROCESSOR && HOTPLUG_CPU
+> 
+> Otherwise, we can have compiling error with the following configurations.
+> 
+> CONFIG_ACPI_PROCESSOR=y
+> CONFIG_HOTPLUG_CPU=n
+> CONFIG_ACPI_HOTPLUG_CPU=y
+> 
+> arch/arm64/kernel/smp.c: In function ‘arch_unregister_cpu’:
+> arch/arm64/kernel/smp.c:563:9: error: implicit declaration of function ‘unregister_cpu’; did you mean ‘register_cpu’? [-Werror=implicit-function-declaration]
+>   563 |         unregister_cpu(c);
+>       |         ^~~~~~~~~~~~~~
+>       |         register_cpu
 
-Oleg.
+Ah, I thought that in addition to the warning for unmet dependencies,
+kbuild would also leave the option off. I need to add SUSPEND=n and
+HIBERNATE=n to my build scripts.
 
+The fix matches what x86 does, so I'm ok with it.
+
+> Since the series has been queued to Catalin's "for-next/vcpu-hotplug" branch, I
+> guess the easiest way would be to fix it in place with Catalin's help.
+
+I wasn't planning to rebase the branch unless there's something major.
+Since the doesn't happen with defconfig, it's doesn't affect bisection
+that much, so my preference would be for a fix on top of this branch
+(and with a Fixes: tag since the branch is stable).
+
+Thanks.
+
+-- 
+Catalin
