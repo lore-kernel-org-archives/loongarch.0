@@ -1,104 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4657B1339B1
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 15:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAE416D9A2;
+	Mon,  1 Jul 2024 16:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846101; cv=none; b=qLABresbZJZIi7LWUfZJwcoc7iwn9jArQHp3FZ5eodCs7OXKVM3rqHELj4wKiZ9PTb5nj4/7Lh4sr/ythEnsaEnk+Uwz6Vw9P6pe/kBGkIMnCUG3ZqrclNivUJYvrdVSugCivYEjVjwdrFKqKDLefHAMySdnD591EwJezZ/WLz4=
+	t=1719850452; cv=none; b=onFWayZ1iTpHN554N6tkcidHE1g7hy8BZH7D4YC7crZMItapzzBqPm49HFA4fVngrKls2Wfh/iNynXQQb5PHNKLD1p4JzzVhGpnwMukcVneWFszQyQvNKRt7PFnZ/tSk/F1CqWHoXVU99lzVsL8i/ptCqK7curLfcId0fB+Sv2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846101; c=relaxed/simple;
-	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NrlPsPkb21l1L7XkUXLvsV6jehEdPRs093eZdtNqhG35xSfk5Wc/OJnwdRmY634x+4fwtB2R7c6uQ8LsDmgFWK6oSE2Lb5zEtiaQjNljD+yNT9GW80T0lg0mJVtzU91F2LhD2RqD3tTdOZEvWsya13uFDa2jIyI23o7YQ0diGTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9pfBf7e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719850452; c=relaxed/simple;
+	bh=+AQ7sBFYdyhgp+x+WWlZYAcTpu3FvubStwSJ9uOtJNI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Y8eNWLZVsnjKYejV9vcSQLzA0Md+wTaZC8KTgMGi1d+46unJahBosacyZovikb8885aC69J00HGgRxYWFuHnP+jGnChJo5/PfSHY3RR7dWd0GcSnKXpL0bfbvyBZn4Af6mUTb18/3qQ/IdALtkrf74tf7pzWnFn8u+kMeXmMnls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gzzjMM58; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9pfBf7e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65ABC116B1
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 15:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719846100;
-	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g9pfBf7efUi9e/c0GSwVYF9ttsxcRzBpNpMuy28e9g/uSsFq2IuIg8n8cl+5t3kyN
-	 n/Zf8mcKsPiMVww1tWLfvmuMBkq3p/OgvPRX8whNppFqlgFNHvLRsV3t/JZDM8hdm8
-	 2cYShh72GnPbJqiLC5DiesO6yHNdso3SrfYrBDmUo3rR90nX/qzAiy5isuiw481zzK
-	 MCLbtACTpHFs3AUlcEhyB34gGXUmA6uakyhI2l2AkvWInkpW+E9rqA5DT/itLuS9Yp
-	 mTgUtLQNRaHzhLr3G1IloCf9JPHJKk+qZqmMfNEdOQrLUGcqS1nIIke4DyZC6jAzLb
-	 b8TUid0CUaBmQ==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7523f0870cso168777866b.3
-        for <loongarch@lists.linux.dev>; Mon, 01 Jul 2024 08:01:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXA45XLFqLAwqgEZg3L6VRfkO5GiyWQgNx5clMrNXgSlnGEz3APMJnxDjJ9AifZZyzZTWwBh6nwmxsbkTiurqGcEUrGeSawckkj
-X-Gm-Message-State: AOJu0Yx4bsFsXgU1Xykgp8Eb7e0DFQ8Hct7brZ2P3D2rd6jU051lMlNE
-	WK8HfIZvPjrtuprLcUMHiSnQLoalV6lPvWrJLN4vDrXhkP27erKei5H/FwImmfrJDFmAhQsE2d0
-	yCKpmt75j+QgXAle0pxHw7+aGqdk=
-X-Google-Smtp-Source: AGHT+IH9cvBZlZ9SVpr1fbztwtyHo/IWmpwga95XhMPugjWfjFCA0EEYNnDOD02gQFtrn7M18jzGcoZrhDNm4C9nHBs=
-X-Received: by 2002:a17:907:a0c9:b0:a6f:bc02:a008 with SMTP id
- a640c23a62f3a-a7514402354mr459434866b.4.1719846099486; Mon, 01 Jul 2024
- 08:01:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzzjMM58"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso31472911fa.2;
+        Mon, 01 Jul 2024 09:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719850449; x=1720455249; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N9eJvY3noQUZfbyZhFkyxOik2OAqPtae0XwqIwzXsH8=;
+        b=gzzjMM58ho7iek6GBUcUXpzhmit7naBu6877AqLq942gE5d777v38JsXyBOSe/6tYR
+         /nEtN70y7xxuTF8/ywuilfvJtJeQy4BoDU8mvYYe4CkI8WFOHS0dqE8NAdrwL6HpMIf/
+         k44IcTQ2dbojR9gfR6Hx1Bx633/pFzHUGPyNIzZyFQKnCBCdmes+cVh8M0hTKAaPMIso
+         q2yIwMfXUPuwWGHCrvNBZjGs67lPxFjbiW6/h+kR5WzMwOEb9gGaQSPuac826f/GwO+f
+         mQQ8lqgQ40slfM/EFtFzmnRqwie7ldqTotGz5Blcz64EyWjTyjjHb6nDFVj4Hysj/PjM
+         9MSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719850449; x=1720455249;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N9eJvY3noQUZfbyZhFkyxOik2OAqPtae0XwqIwzXsH8=;
+        b=kEFIEEZKxzrtOSafwPETZ4Yti9PIy0W6kVa0N9YuC1Te7d0Oi+amrsoPmOrcD6s8wa
+         J6O0yx7daEFkFImeRLpZH61tD2JyX0zMvflHPF2DOexyWEr/vIQ6hsGwA2XRv/QJ8fUl
+         C1flAr9bVDwJYnxxpv8duRRyN4SwCiyoXx+ZD0ap6XSWGdiDkwmrhqQMyPiYGWkkdNG6
+         5pBaahpfX8esEMPabBnr6thcilVN1qZAkR26ltIG3zHvjHHdwqLy3Xcwt6nq45SnQctN
+         OLgJPJAon7pzczw1VQZQvccj+evWcLn5UB8ygAMLw1uzki2ThXutJPhWQ3HXmvdAmGjS
+         ZTdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVK07gbC0LT9ALo/DjmFlm9/vkw23oKE+aCJubAVk9xHlAVy7fkOJiGKGdys0bIg+TxLsJ0xUpsX+aqmJfsZ5cSn5R5eCdBHT5bgqFOZotAj+UyBFrFi32yaOypsPet
+X-Gm-Message-State: AOJu0Ywdk7no3YG+GHqSG6BoYtJsD6SiqpLiTHMkp+sgDvOV3WS5lT9O
+	egQ0Jbx8x26HsJrcMPJ/hXhVdfyD4yVrCCsio0pzIdMt4q52MxzQCWTBpkI/
+X-Google-Smtp-Source: AGHT+IHHz/OamA1Ukx5sIFBlK+L0AmnL9jrrDHysPJKMb3Xyg4pOUjtzhB1j4PXHUjwphZM6xFX6sw==
+X-Received: by 2002:a2e:8558:0:b0:2ec:5382:2703 with SMTP id 38308e7fff4ca-2ee5e6f6972mr34830361fa.53.1719850448585;
+        Mon, 01 Jul 2024 09:14:08 -0700 (PDT)
+Received: from [192.168.1.105] ([178.176.75.203])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee516803aesm14192571fa.79.2024.07.01.09.14.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 09:14:07 -0700 (PDT)
+Subject: Re: [PATCH 2/9] mtd: add mtd_is_master helper
+To: Marco Felsch <m.felsch@pengutronix.de>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>,
+ Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Tony Lindgren <tony@atomide.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, imx@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-tegra@vger.kernel.org, openbmc@lists.ozlabs.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
+ <20240701-b4-v6-10-topic-usbc-tcpci-v1-2-3fd5f4a193cc@pengutronix.de>
+From: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <b97bf565-bef5-fbc7-63c5-f174880ad9ab@gmail.com>
+Date: Mon, 1 Jul 2024 19:14:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240627173806.GC21813@redhat.com> <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
- <20240629133747.GA4504@redhat.com> <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
- <20240629150313.GB4504@redhat.com> <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
-In-Reply-To: <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Jul 2024 23:01:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
-Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break() constant
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Oleg Nesterov <oleg@redhat.com>, andrii.nakryiko@gmail.com, andrii@kernel.org, 
-	bpf@vger.kernel.org, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, mhiramat@kernel.org, nathan@kernel.org, 
-	rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240701-b4-v6-10-topic-usbc-tcpci-v1-2-3fd5f4a193cc@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 1, 2024 at 2:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> On 06/29/2024 11:03 PM, Oleg Nesterov wrote:
-> > LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
-> > arch_uprobe_trampoline() which uses it to initialize a static variable.
-> >
-> > Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
-> > the current users of larch_insn_gen_break() to use it.
-> >
-> > The patch adds check_emit_break() into kprobes.c and uprobes.c to test
-> > this change. They can be removed if LoongArch boots at least once, but
-> > otoh these 2 __init functions will be discarded by free_initmem().
-> >
-> > Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return =
-probe")
-> > Reported-by: Nathan Chancellor <nathan@kernel.org>
-> > Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-399=
-0X/
-> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
-> Tested on LoongArch machine with Loongson-3A5000 and Loongson-3A6000
-> CPU, based on 6.10-rc3,
->
-> KPROBE_BP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_BP)
-> KPROBE_SSTEPBP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
-> UPROBE_SWBP_INSN  =3D=3D larch_insn_gen_break(BRK_UPROBE_BP)
-> UPROBE_XOLBP_INSN =3D=3D larch_insn_gen_break(BRK_UPROBE_XOLBP)
->
-> The two functions check_emit_break() can be removed in
-> arch/loongarch/kernel/kprobes.c and arch/loongarch/kernel/uprobes.c
->
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Queued, thanks.
+On 7/1/24 4:53 PM, Marco Felsch wrote:
 
-Huacai
->
-> Thanks,
-> Tiezhu
->
->
+> Provide a simple helper to make it easy to detect an master mtd device.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  include/linux/mtd/mtd.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> index 8d10d9d2e830..bf3fc2ea7230 100644
+> --- a/include/linux/mtd/mtd.h
+> +++ b/include/linux/mtd/mtd.h
+> @@ -408,6 +408,11 @@ static inline struct mtd_info *mtd_get_master(struct mtd_info *mtd)
+>  	return mtd;
+>  }
+>  
+> +static inline bool mtd_is_master(struct mtd_info *mtd)
+> +{
+> +	return mtd->parent ? false : true;
+
+   Perhaps:
+
+	return !mtd->parent;
+
+[...]
+
+MBR, Sergey
