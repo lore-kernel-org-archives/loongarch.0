@@ -1,73 +1,227 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CF763B9
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 06:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3980D143C43
+	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719816409; cv=none; b=UftfrrgHdttaIHOMdprZ07ur7tvN4fTJ8gwW+6/kcTgHmpCKN18GFf4oyfednE2ZrJ5Hjfml+XVXzrAin4WHV4MgTyxNGEAFEcZzcMlse3oSBBQyBDKwiaDo9kPhistJf+AMxP98NWl4HOYKleOVozh7BV15wbOW1LQGXpiQJoQ=
+	t=1719829629; cv=none; b=C3/0bLkeQGkP+E6DEVTUpa/WjJIOrKtl6WEf/8IhLYMGjE7WIL4gkfP+4cigptBVrA3hcnaPUWjaltrAek8xOTHUbkS066NtWoitRPKWqYyqZG3x/Se8YHOFak3wFYY3Npe/0aq3Tw2eezOsat55M6ZFscijDHIYi5AibexVeWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719816409; c=relaxed/simple;
-	bh=n5oSrhzkGLmSOnZqyv/PKViHhQvhuo5nrc+g8If0Rsg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EX4FXu+4pHCi1lln6VSfTW4+0I+NYX4SPatQPR/N6jbF+4b5/67HtOHbqsGQ153DFiI1c2eNT6ma3J2/yh1klGirZEJOX8rkHRZiSgzoUGCzPSHvmIM92O4z94L8Aq53xLYqqvX72X1o4iquZQzMKySxOEs/mk/0dD3ZleFlNPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=YfUWN96b; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1719829629; c=relaxed/simple;
+	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j0ueEXFrjNxhG3F60PuonYrwPjBLU23WbtSUnYFCnw8cUZq9mRbKaZYUHhRDrOwEVHQU2Hf/td8JpK6HmfroSbOXFK6Zoidg+gDaa2U2sqva5zH4U3o9A+jAw/AUqwojpof0tTqiFfVnW7BBWw3iVqGdfVBlJgvNzbR1QMKT0Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD5cT/W4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="YfUWN96b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719816399;
-	bh=n5oSrhzkGLmSOnZqyv/PKViHhQvhuo5nrc+g8If0Rsg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YfUWN96bQi0fB/y4UM63sm3uMEX/uQty7+LWwQ6f6zcajCwDRcVWZslPwzL7TfqMt
-	 O8Ia3QaXwQqmmC+kJWYkx2oYmehT29DB/qZ2YByYj7bSxYspwVROtL5Tti3bDx6loS
-	 Qcryhc8bqoeoFHMAr8QPFLa+R7qJqFeRBTxSx2nw=
-Received: from [IPv6:240e:358:1119:1300:dc73:854d:832e:2] (unknown [IPv6:240e:358:1119:1300:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 1009266D10;
-	Mon,  1 Jul 2024 02:46:33 -0400 (EDT)
-Message-ID: <15391b83d96ddf9bfaf48c154e5d43e05d565623.camel@xry111.site>
-Subject: Re: [PATCH 0/2] statx NULL path support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Christoph Hellwig <hch@infradead.org>, Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	io-uring@vger.kernel.org, axboe@kernel.dk, torvalds@linux-foundation.org, 
-	loongarch@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 01 Jul 2024 14:46:27 +0800
-In-Reply-To: <ZoIywaObDsx7SVw9@infradead.org>
-References: <20240625110029.606032-1-mjguzik@gmail.com>
-	 <ZoIywaObDsx7SVw9@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD5cT/W4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C015C4AF15
+	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719829629;
+	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AD5cT/W4h116AQNwUQkblKnYYn3Nnr494DhkhpVdtXYAkmHIwpahbfe5WL+SAK1uU
+	 sQLL+zSTuIn4KiKKdXJexLhVkbuL9ImBQNGBKYb29uOxjtmEJMtk5wf1sXyCaGKsBu
+	 U7i0ladzzbL/nYAJ0NwEwCwcq7csruoEAFfef8QIYqRsvOL+uUhOSD3CCkdmOMdL74
+	 7Cc5qy4lZaDvmn6YknzWYBz9Qq88XT+Gn/Bzsj3s11ezq9J/g/o2tMZjqDVQ70aZSB
+	 XO9M/r/pPs8LBS/k2xyU388E4PhybqjM292VcIOkjmsKR1E8fpU1Xwy999M1KDiEFt
+	 zqysGTHZtHWPA==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a724a8097deso329688066b.1
+        for <loongarch@lists.linux.dev>; Mon, 01 Jul 2024 03:27:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWIMyjAvjlFhsiiXyRTA++YT4OoUpQsye/QFolRZbifk/BzTvJK49HQWVALIdvPj0NyWDH6nK/nPF7z6sXuPw5IXG9zR2QOXF7s
+X-Gm-Message-State: AOJu0Ywxymp6ZdEYEEje+XqCfOliAkHnXUL5qowd0DV2gOGg7uoAWWXO
+	wM4lPmZbwNLl8UMvtgYFygSrcf5Z32dTJE+CKBOrZ352owQPf+tdwvFmM2q9+cGt7p/KvZ6s3jr
+	a9gofA7F25PFnSeJA/qUmnBTF3OU=
+X-Google-Smtp-Source: AGHT+IHGZZCbQwYQWDz7MHph9rhLp1XsHpW9ufuafTw/vti9tqr3X02n6kFZJcNGEpVMl2xkauTKpW7VaW5Rzdmikc8=
+X-Received: by 2002:a17:906:1246:b0:a72:7f22:5f9e with SMTP id
+ a640c23a62f3a-a751447bd08mr264808066b.57.1719829627601; Mon, 01 Jul 2024
+ 03:27:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240626063239.3722175-1-maobibo@loongson.cn> <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com> <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+In-Reply-To: <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Jul 2024 18:26:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: maobibo <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2024-06-30 at 21:38 -0700, Christoph Hellwig wrote:
-> Maybe it's time and declarate the idea to deprecate stat a failure
-> and we just add it back to the new generic ABI syscalls?
+On Mon, Jul 1, 2024 at 9:27=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote:
+>
+>
+> Huacai,
+>
+> On 2024/6/30 =E4=B8=8A=E5=8D=8810:07, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Wed, Jun 26, 2024 at 2:32=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> Two kinds of LBT feature detection are added here, one is VCPU
+> >> feature, the other is VM feature. VCPU feature dection can only
+> >> work with VCPU thread itself, and requires VCPU thread is created
+> >> already. So LBT feature detection for VM is added also, it can
+> >> be done even if VM is not created, and also can be done by any
+> >> thread besides VCPU threads.
+> >>
+> >> Loongson Binary Translation (LBT) feature is defined in register
+> >> cpucfg2. Here LBT capability detection for VCPU is added.
+> >>
+> >> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and macro
+> >> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported feature. And
+> >> three sub-features relative with LBT are added as following:
+> >>   KVM_LOONGARCH_VM_FEAT_X86BT
+> >>   KVM_LOONGARCH_VM_FEAT_ARMBT
+> >>   KVM_LOONGARCH_VM_FEAT_MIPSBT
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+> >>   arch/loongarch/kvm/vcpu.c             |  6 ++++
+> >>   arch/loongarch/kvm/vm.c               | 44 +++++++++++++++++++++++++=
++-
+> >>   3 files changed, 55 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/in=
+clude/uapi/asm/kvm.h
+> >> index ddc5cab0ffd0..c40f7d9ffe13 100644
+> >> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> >> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> >> @@ -82,6 +82,12 @@ struct kvm_fpu {
+> >>   #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOON=
+GARCH_CSR, REG)
+> >>   #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOON=
+GARCH_CPUCFG, REG)
+> >>
+> >> +/* Device Control API on vm fd */
+> >> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
+> >> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
+> >> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
+> >> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
+> >> +
+> >>   /* Device Control API on vcpu fd */
+> >>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
+> >>   #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+> > If you insist that LBT should be a vm feature, then I suggest the
+> > above two also be vm features. Though this is an UAPI change, but
+> > CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been released. We
+> > have a chance to change it now.
+>
+> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every vcpu
+> has is own different gpa address.
+Then leave this as a vm feature.
 
-> The idea to get rid of layers of backwards compatibility was a good one
-> and mostly succeeded, but having to deal with not only remapping
-> the structure but also the empty path issues sounds like it is worth
-> to just add these pretty trivial system calls back and make everyones
-> life easier?
+>
+> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We cannot break
+> the API even if it is 6.10-rc1, VMM has already used this. Else there is
+> uapi breaking now, still will be in future if we cannot control this.
+UAPI changing before the first release is allowed, which means, we can
+change this before the 6.10-final, but cannot change it after
+6.10-final.
 
-Maybe but we'll need to make time_t 64-bit.  I.e. adding stat_time64,
-fstat_time64, and fstatat_time64.  Or maybe just redesign a new syscall
-which is a improved statx with empty path issue and remapping issue
-solved.  (With statx itself it seems impossible to solve the remapping
-issue...)
+>
+> How about adding new extra features capability for VM such as?
+> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
+> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
+They should be similar as LBT, if LBT is vcpu feature, they should
+also be vcpu features; if LBT is vm feature, they should also be vm
+features.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
+
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> >> index 233d28d0e928..9734b4d8db05 100644
+> >> --- a/arch/loongarch/kvm/vcpu.c
+> >> +++ b/arch/loongarch/kvm/vcpu.c
+> >> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+> >>                          *v |=3D CPUCFG2_LSX;
+> >>                  if (cpu_has_lasx)
+> >>                          *v |=3D CPUCFG2_LASX;
+> >> +               if (cpu_has_lbt_x86)
+> >> +                       *v |=3D CPUCFG2_X86BT;
+> >> +               if (cpu_has_lbt_arm)
+> >> +                       *v |=3D CPUCFG2_ARMBT;
+> >> +               if (cpu_has_lbt_mips)
+> >> +                       *v |=3D CPUCFG2_MIPSBT;
+> >>
+> >>                  return 0;
+> >>          case LOONGARCH_CPUCFG3:
+> >> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> >> index 6b2e4f66ad26..09e05108c68b 100644
+> >> --- a/arch/loongarch/kvm/vm.c
+> >> +++ b/arch/loongarch/kvm/vm.c
+> >> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
+ong ext)
+> >>          return r;
+> >>   }
+> >>
+> >> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device=
+_attr *attr)
+> >> +{
+> >> +       switch (attr->attr) {
+> >> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
+> >> +               if (cpu_has_lbt_x86)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
+> >> +               if (cpu_has_lbt_arm)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
+> >> +               if (cpu_has_lbt_mips)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       default:
+> >> +               return -ENXIO;
+> >> +       }
+> >> +}
+> >> +
+> >> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *a=
+ttr)
+> >> +{
+> >> +       switch (attr->group) {
+> >> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
+> >> +               return kvm_vm_feature_has_attr(kvm, attr);
+> >> +       default:
+> >> +               return -ENXIO;
+> >> +       }
+> >> +}
+> >> +
+> >>   int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigne=
+d long arg)
+> >>   {
+> >> -       return -ENOIOCTLCMD;
+> >> +       struct kvm *kvm =3D filp->private_data;
+> >> +       void __user *argp =3D (void __user *)arg;
+> >> +       struct kvm_device_attr attr;
+> >> +
+> >> +       switch (ioctl) {
+> >> +       case KVM_HAS_DEVICE_ATTR:
+> >> +               if (copy_from_user(&attr, argp, sizeof(attr)))
+> >> +                       return -EFAULT;
+> >> +
+> >> +               return kvm_vm_has_attr(kvm, &attr);
+> >> +       default:
+> >> +               return -EINVAL;
+> >> +       }
+> >>   }
+> >> --
+> >> 2.39.3
+> >>
+>
