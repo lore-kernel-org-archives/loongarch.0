@@ -1,123 +1,99 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A68D36127
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 05:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71303381AA
+	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 06:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719813144; cv=none; b=YreY3ppi5dQ2G52nWtSVWJmVSYH6gE99Nd6M2Pz/J3uy801XKiEbhggpU/qUW4q7ZE+IgcUZ5F/RbuHEpt4gWn1DPNieGCRfdoHGrjNXD59l2vAdcZJnYJDg/FMkEr6aqD2mX9VlAb7K3BuP67mV4el49dkprVX9f0FZKIpPzu8=
+	t=1719814973; cv=none; b=p0EA/vwfhux8HgwKpX2oy99T2nOnNFeZSR8DCXxaAeWY5Nd68mC5FdsIdYiK7+KsmnUApUms+3vgCuJCEq1RPfbDM6UzYyfyXv3EkQP61ztSCvCVKK/LFEX8YMKnr4yoey80N4B7XTFOjksSR7qm3ROH+YSrbyRYVb9J+1KYnlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719813144; c=relaxed/simple;
-	bh=vZGko0eoNLnj84zRoOPdlydINGSPQ6fYtJo/KDahuY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CtodYbvv8J1IvYScItmT/kXVhlPt866k1KRNak48GKqzdigLxoAqRXE8oceQtnplqojFyanLXZIu5UTGKiRiyBquvWABmD3KREBt3Ks0Z8QJq4DBok/ftREFRApAl46R885NJot3dpmO7UCSCPYTl6MUpAQd+i9JPvBTzK++rgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Cv6McS5R; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Cv6McS5R"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6f8edde24b3so1743905a34.2
-        for <loongarch@lists.linux.dev>; Sun, 30 Jun 2024 22:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1719813141; x=1720417941; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKMU8DKIWEClgPDBnmDjtT7Ao2B1dNYMjzwF2iFrrjI=;
-        b=Cv6McS5R7zKIigLwFy27unWjJy6Mok8GozunXHFQyoLJL7bLWUFbMU/+MOIuWggYsS
-         BuRaTcVhyiWzhgIig2ieFIcJ2ZtUwBXFzlpZuDuG8tV9zWtL8eFJidGXZzp/OZTsZJFb
-         CzwgOD8f4vuufgVhy3DIvQs6P42lDmmwmwMpDLuCv9go30COT3HdGyoJgA0AwR6YIW0R
-         s0vMUdugrmEWCz2eDEvT/fM8bCW1rNG2/0OkSqUGXZaBWgio1pL7fj1LpPlvR8fHi3Lv
-         I0GrIkzoionzPQfLQDBQfblLdPU4+FSPqjFASSPvzh4gXSIUYXqWe6iiYOf8M1Ncg9O8
-         I4VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719813141; x=1720417941;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aKMU8DKIWEClgPDBnmDjtT7Ao2B1dNYMjzwF2iFrrjI=;
-        b=TyChpxIqO0o2ucbmWLog5WIoHI6u7qennv2TTzjRMV+84yPM5eo33IzH/5+2WHmaYd
-         mf1/ddO9XUQxk/LN3H1oSaZfldhl1qNtYzkHq1C9zOwLP7AdV5uXjROqnnTNp/Ano6Kf
-         kEzjVz4DP/Y87LcJLCLsNvAWvbnjwlk2fRXDkcQivOBxPbOc2ph6KT2RHj8m4tiOJRCo
-         fRK7tgsYWYbB5tEUper3cKhfnRADG1oKNFPD9slomRs1bQA9zrYXLgAoWY/ztKhYtcQN
-         bklgSal7IQw/bYBRFrrLyHr7NXsn/NHin1x/Sh3OWX6FN5IYoHrGUf0/mNZWrMnhreNn
-         BWUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZbGKJ74BvIOUbLFTJd9KBN4wIqQajhFwzlRmTcVOukTP7MH473pYqIQnejgGFx52p9p2D9GSwe2/Btv8no1tJhw075JeoEDcZ
-X-Gm-Message-State: AOJu0YxOtBzuAkioXnGVbRnIYGky5qSsTuqv+fVNYXakKH0WzH1hUdb/
-	5dkOghW5cRWiKomkzQzP8/J6avIh4XxICx5QGKTmIeO6d7CFvyRZQx0jhaNajj4=
-X-Google-Smtp-Source: AGHT+IGm7YJAgZMyphMx4GQMzsUKLII+YHeZwD23+Ey+akRFhATjAn/ybArgYnMmQp/igw9JEjVJmw==
-X-Received: by 2002:a05:6830:903:b0:702:1d8:4d08 with SMTP id 46e09a7af769-702076a4d47mr8000813a34.35.1719813141012;
-        Sun, 30 Jun 2024 22:52:21 -0700 (PDT)
-Received: from sunil-laptop ([106.51.187.237])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-701f7a9b2d9sm1167621a34.6.2024.06.30.22.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 22:52:20 -0700 (PDT)
-Date: Mon, 1 Jul 2024 11:22:03 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Haibo Xu <haibo1.xu@intel.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: arnd@arndb.de, xiaobo55x@gmail.com, ajones@ventanamicro.com,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Charlie Jenkins <charlie@rivosinc.com>, Baoquan He <bhe@redhat.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Chen Jiahao <chenjiahao16@huawei.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	James Morse <james.morse@arm.com>, Andy Chiu <andy.chiu@sifive.com>,
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Tony Luck <tony.luck@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Robert Richter <rrichter@amd.com>, Yuntao Wang <ytcoode@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Add ACPI NUMA support for RISC-V
-Message-ID: <ZoJEA85utEK6u36t@sunil-laptop>
-References: <cover.1718268003.git.haibo1.xu@intel.com>
+	s=arc-20240116; t=1719814973; c=relaxed/simple;
+	bh=vodbmlWePU0fqHsCtlWb2D6JH4N4gZ0QSc01Jd4e3VY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=r6lxDOxqY9VohflqiOJl7PkNIAr7T1pHfZ4uphHZrBSVzDhbkUJdlcG2ItyYZYZiFxU/019YVMmbbLH6KlWFD9KOmEg8QaIKB5bs9FwRAqsIh00EPnXBJTuunK65uLoglgWIhc3JE1/zLdXsb66jUWqF5vNhnVqBvKrsYnRoKEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxvOo4S4JmL88LAA--.44821S3;
+	Mon, 01 Jul 2024 14:22:48 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMQ2S4Jmriw3AA--.26764S3;
+	Mon, 01 Jul 2024 14:22:47 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break()
+ constant
+To: Oleg Nesterov <oleg@redhat.com>, Huacai Chen <chenhuacai@kernel.org>
+References: <20240627173806.GC21813@redhat.com>
+ <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
+ <20240629133747.GA4504@redhat.com>
+ <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
+ <20240629150313.GB4504@redhat.com>
+Cc: andrii.nakryiko@gmail.com, andrii@kernel.org, bpf@vger.kernel.org,
+ jolsa@kernel.org, kernel@xen0n.name, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ mhiramat@kernel.org, nathan@kernel.org, rostedt@goodmis.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
+Date: Mon, 1 Jul 2024 14:22:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1718268003.git.haibo1.xu@intel.com>
+In-Reply-To: <20240629150313.GB4504@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxMMQ2S4Jmriw3AA--.26764S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ww17tF13Kr43Kr4rZr1DurX_yoW8Xry8pa
+	nFyr43urs8J3ykJryDXw15ZFyxAw4kGw42grsIy3y5Gay5XwnxGFy8Wr47JryYvryrKay8
+	ta1vg3y2qa4UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
+	DUUUU
 
-On Thu, Jun 13, 2024 at 04:54:32PM +0800, Haibo Xu wrote:
-> This patch series enable RISC-V ACPI NUMA support which was based on
-> the recently approved ACPI ECR[1].
-> 
-> Patch 1/4 add RISC-V specific acpi_numa.c file to parse NUMA information
-> from SRAT and SLIT ACPI tables.
-> Patch 2/4 add the common SRAT RINTC affinity structure handler.
-> Patch 3/4 change the ACPI_NUMA to a hidden option since it would be selected
-> by default on all supported platform.
-> Patch 4/4 replace pr_info with pr_debug in arch_acpi_numa_init() to avoid
-> potential boot noise on ACPI platforms that are not NUMA.
-> 
-> Based-on: https://github.com/linux-riscv/linux-riscv/tree/for-next
-> 
-> [1] https://drive.google.com/file/d/1YTdDx2IPm5IeZjAW932EYU-tUtgS08tX/view?usp=sharing
+On 06/29/2024 11:03 PM, Oleg Nesterov wrote:
+> LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
+> arch_uprobe_trampoline() which uses it to initialize a static variable.
+>
+> Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
+> the current users of larch_insn_gen_break() to use it.
+>
+> The patch adds check_emit_break() into kprobes.c and uprobes.c to test
+> this change. They can be removed if LoongArch boots at least once, but
+> otoh these 2 __init functions will be discarded by free_initmem().
+>
+> Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-3990X/
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-Hi Palmer,
+Tested on LoongArch machine with Loongson-3A5000 and Loongson-3A6000
+CPU, based on 6.10-rc3,
 
-Can this series be taken for -next?
+KPROBE_BP_INSN == larch_insn_gen_break(BRK_KPROBE_BP)
+KPROBE_SSTEPBP_INSN == larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+UPROBE_SWBP_INSN  == larch_insn_gen_break(BRK_UPROBE_BP)
+UPROBE_XOLBP_INSN == larch_insn_gen_break(BRK_UPROBE_XOLBP)
+
+The two functions check_emit_break() can be removed in
+arch/loongarch/kernel/kprobes.c and arch/loongarch/kernel/uprobes.c
+
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
 Thanks,
-Sunil
+Tiezhu
+
