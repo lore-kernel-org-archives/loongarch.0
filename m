@@ -1,227 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3980D143C43
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798DA14AD35
+	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 11:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719829629; cv=none; b=C3/0bLkeQGkP+E6DEVTUpa/WjJIOrKtl6WEf/8IhLYMGjE7WIL4gkfP+4cigptBVrA3hcnaPUWjaltrAek8xOTHUbkS066NtWoitRPKWqYyqZG3x/Se8YHOFak3wFYY3Npe/0aq3Tw2eezOsat55M6ZFscijDHIYi5AibexVeWo=
+	t=1719835176; cv=none; b=I6stQIWbPa8tvQlmaEryUCafs5hIBUDydTLvNzblwt1DASGZAsRFL0swsxiguZxOWoA7zY+5raPkVrDyBO2x+bbvb0T84hh7AbvaAfmfBihK7qQbRSwQ9G/ZZRQ9T4dwkUiyDtsjxDjDXUNZq/KO5cgu8KlmrCgxaXEaeRq00/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719829629; c=relaxed/simple;
-	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0ueEXFrjNxhG3F60PuonYrwPjBLU23WbtSUnYFCnw8cUZq9mRbKaZYUHhRDrOwEVHQU2Hf/td8JpK6HmfroSbOXFK6Zoidg+gDaa2U2sqva5zH4U3o9A+jAw/AUqwojpof0tTqiFfVnW7BBWw3iVqGdfVBlJgvNzbR1QMKT0Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD5cT/W4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719835176; c=relaxed/simple;
+	bh=0ku05XJrAjTZTejqmaVQxaIEziireIHvW6LnDpuxlec=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=AY0PW+fHn+wsUAFyJ2XJ7zvHj2BexQSsYSwpsdok/y/MpYZ4EcoZPMQU6JfRYH7SCe2sjGVWgV4KJbQye8RURTItLWwk9vZG1pra98jpZp6c+hnHHd9EXGt7qlWKBGMsRKdjC01tY7jX7cnL4FRYqdfr8ZEr9uzL2l3S16yuPwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VC66qgtq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pXCT8ZF7; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD5cT/W4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C015C4AF15
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719829629;
-	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AD5cT/W4h116AQNwUQkblKnYYn3Nnr494DhkhpVdtXYAkmHIwpahbfe5WL+SAK1uU
-	 sQLL+zSTuIn4KiKKdXJexLhVkbuL9ImBQNGBKYb29uOxjtmEJMtk5wf1sXyCaGKsBu
-	 U7i0ladzzbL/nYAJ0NwEwCwcq7csruoEAFfef8QIYqRsvOL+uUhOSD3CCkdmOMdL74
-	 7Cc5qy4lZaDvmn6YknzWYBz9Qq88XT+Gn/Bzsj3s11ezq9J/g/o2tMZjqDVQ70aZSB
-	 XO9M/r/pPs8LBS/k2xyU388E4PhybqjM292VcIOkjmsKR1E8fpU1Xwy999M1KDiEFt
-	 zqysGTHZtHWPA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a724a8097deso329688066b.1
-        for <loongarch@lists.linux.dev>; Mon, 01 Jul 2024 03:27:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIMyjAvjlFhsiiXyRTA++YT4OoUpQsye/QFolRZbifk/BzTvJK49HQWVALIdvPj0NyWDH6nK/nPF7z6sXuPw5IXG9zR2QOXF7s
-X-Gm-Message-State: AOJu0Ywxymp6ZdEYEEje+XqCfOliAkHnXUL5qowd0DV2gOGg7uoAWWXO
-	wM4lPmZbwNLl8UMvtgYFygSrcf5Z32dTJE+CKBOrZ352owQPf+tdwvFmM2q9+cGt7p/KvZ6s3jr
-	a9gofA7F25PFnSeJA/qUmnBTF3OU=
-X-Google-Smtp-Source: AGHT+IHGZZCbQwYQWDz7MHph9rhLp1XsHpW9ufuafTw/vti9tqr3X02n6kFZJcNGEpVMl2xkauTKpW7VaW5Rzdmikc8=
-X-Received: by 2002:a17:906:1246:b0:a72:7f22:5f9e with SMTP id
- a640c23a62f3a-a751447bd08mr264808066b.57.1719829627601; Mon, 01 Jul 2024
- 03:27:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VC66qgtq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pXCT8ZF7"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id A13A211401FA;
+	Mon,  1 Jul 2024 07:59:34 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 01 Jul 2024 07:59:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1719835174;
+	 x=1719921574; bh=3pqX5jXkyZwQM2k8YThla4nhvHoVmaxSyoEecqI36uo=; b=
+	VC66qgtqdG7LsO8I8ky+Ow6RnM72z/T/P9hFSisalIKxoC+s7mMlhwIk949lBwzo
+	gjer10Q060g4z6PVOux0cYv65fJW1XbvYkSBTsn6Ahji63YzCsoG89liw6Cmm7S1
+	C8TPzthfzFhJg0YyE9YXZWzREZ8IQai/MpJfMSQ8n70RF8yVpoVBUSaoUCcODAmT
+	nIQw12/Q4SSjN2lIuI5LEpFePPw9KXlQT0/KljFT1YwofwhhcwzpPz8owaF0gnXG
+	wPZGHa78hI12ZMQiOi5LRJJD9IkblQgG9UWURYw+YScpq0RSAh4PysH1UufZeVgX
+	JjcA6HcURbJLp1bqeuAN+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719835174; x=
+	1719921574; bh=3pqX5jXkyZwQM2k8YThla4nhvHoVmaxSyoEecqI36uo=; b=p
+	XCT8ZF7nFeaNlv5oLGXxNzvIrIysC8liKEXqVh/izOHe6r/jyFCbxmP/1Qqdt/MY
+	JCuZQMQLHiPrGVbpTBw0ng73OUZ6m0YJ7mJuKGaqzLqzhvqn2+1ZN6q3hibFpD4w
+	YuucA1kQUfSSk71wSa/+NMRCzd/CF/067pdJ1EoUtBK/aI6YitZAmoGP5WpMHrdU
+	f40jbYLzTe38iSR2brVQT+amt+hPsKpg9tipVR0l9lwGF9Ytcs5YL5mwVJdQwZec
+	EpKTDyje2i+zxvr18Sb6EIXpCsjyynxMXCRuC5vsqc5jIJsOHhNdt2ibstNWE8IA
+	hkhacZeD4fcrt86wQSYQA==
+X-ME-Sender: <xms:JZqCZsxcJE6FkhmOhZHd60Sz4T-1KYZNMPNXoZBrw8VIYTh3jKhKBw>
+    <xme:JZqCZgTn4KyprCTX4Vk75aLRQ2iHLnnAjHnQtAP1KfoN3AxpreIWJKjWkMRD1CBH7
+    uqEQTPiAdOGEbNXdG0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudefgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
+    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:JZqCZuVMYBIkXDD6oqFUlgu0zfkT6NuqzYHPRTGV-E1jCOquhBiKTg>
+    <xmx:JZqCZqjnFRZ0Lq5R_gmXB84igaHpPBscWooKrLDpOkjRwc1b7kS3cw>
+    <xmx:JZqCZuBWmJCkkLCr9xwq5G2VUaTAAkNNYwQpIUuGY2zDqWpc5iDU9Q>
+    <xmx:JZqCZrLZUEbVnk0OoDZPYzwfP9wuAah9JriHZoGlC0GoqY80MFvePg>
+    <xmx:JpqCZvK8eB-kPZWbt1OPrao0nZt_7tAwaeT78MbUZezNbhdLaLolBCi_>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 9D034B6008D; Mon,  1 Jul 2024 07:59:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240626063239.3722175-1-maobibo@loongson.cn> <20240626063239.3722175-3-maobibo@loongson.cn>
- <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com> <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
-In-Reply-To: <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Jul 2024 18:26:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
-Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
-To: maobibo <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
+In-Reply-To: <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+References: <20240625110029.606032-1-mjguzik@gmail.com>
+ <20240625110029.606032-3-mjguzik@gmail.com>
+ <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+ <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+ <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
+ <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+Date: Mon, 01 Jul 2024 13:59:12 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Xi Ruoyao" <xry111@xry111.site>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Mateusz Guzik" <mjguzik@gmail.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ io-uring@vger.kernel.org, "Jens Axboe" <axboe@kernel.dk>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>, loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 1, 2024 at 9:27=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote:
+On Sun, Jun 30, 2024, at 04:39, Xi Ruoyao wrote:
+> On Sun, 2024-06-30 at 09:40 +0800, Huacai Chen wrote:
+>> >=20
+>> > Yes, both Linus and Christian hates introducing a new AT_ flag for
+>> > this.
+>> >=20
+>> > This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) behave
+>> > like
+>> > statx(fd, "", AT_EMPTY_PATH, ...) instead.=C2=A0 NULL avoids the
+>> > performance
+>> > issue and it's also audit-able by seccomp BPF.
+>> To be honest, I still want to restore __ARCH_WANT_NEW_STAT. Because
+>> even if statx() becomes audit-able, it is still blacklisted now.
 >
+> Then patch the sandbox to allow it.
 >
-> Huacai,
->
-> On 2024/6/30 =E4=B8=8A=E5=8D=8810:07, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Wed, Jun 26, 2024 at 2:32=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> Two kinds of LBT feature detection are added here, one is VCPU
-> >> feature, the other is VM feature. VCPU feature dection can only
-> >> work with VCPU thread itself, and requires VCPU thread is created
-> >> already. So LBT feature detection for VM is added also, it can
-> >> be done even if VM is not created, and also can be done by any
-> >> thread besides VCPU threads.
-> >>
-> >> Loongson Binary Translation (LBT) feature is defined in register
-> >> cpucfg2. Here LBT capability detection for VCPU is added.
-> >>
-> >> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and macro
-> >> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported feature. And
-> >> three sub-features relative with LBT are added as following:
-> >>   KVM_LOONGARCH_VM_FEAT_X86BT
-> >>   KVM_LOONGARCH_VM_FEAT_ARMBT
-> >>   KVM_LOONGARCH_VM_FEAT_MIPSBT
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
-> >>   arch/loongarch/kvm/vcpu.c             |  6 ++++
-> >>   arch/loongarch/kvm/vm.c               | 44 +++++++++++++++++++++++++=
-+-
-> >>   3 files changed, 55 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/in=
-clude/uapi/asm/kvm.h
-> >> index ddc5cab0ffd0..c40f7d9ffe13 100644
-> >> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> >> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> >> @@ -82,6 +82,12 @@ struct kvm_fpu {
-> >>   #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOON=
-GARCH_CSR, REG)
-> >>   #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOON=
-GARCH_CPUCFG, REG)
-> >>
-> >> +/* Device Control API on vm fd */
-> >> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
-> >> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
-> >> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
-> >> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
-> >> +
-> >>   /* Device Control API on vcpu fd */
-> >>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
-> >>   #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
-> > If you insist that LBT should be a vm feature, then I suggest the
-> > above two also be vm features. Though this is an UAPI change, but
-> > CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been released. We
-> > have a chance to change it now.
->
-> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every vcpu
-> has is own different gpa address.
-Then leave this as a vm feature.
+> The sandbox **must** be patched anyway or it'll be broken on all 32-bit
+> systems after 2037.  [Unless they'll unsupport all 32-bit systems befo=
+re
+> 2037.]
 
->
-> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We cannot break
-> the API even if it is 6.10-rc1, VMM has already used this. Else there is
-> uapi breaking now, still will be in future if we cannot control this.
-UAPI changing before the first release is allowed, which means, we can
-change this before the 6.10-final, but cannot change it after
-6.10-final.
+More importantly, the sandbox won't be able to support any 32-bit
+targets that support running after 2037, regardless of how long
+the sandbox supports them: if you turn off COMPAT_32BIT_TIME today
+in order to be sure those don't get called by accident, the
+fallback is immediately broken.
 
->
-> How about adding new extra features capability for VM such as?
-> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
-> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
-They should be similar as LBT, if LBT is vcpu feature, they should
-also be vcpu features; if LBT is vm feature, they should also be vm
-features.
-
-Huacai
-
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> >> index 233d28d0e928..9734b4d8db05 100644
-> >> --- a/arch/loongarch/kvm/vcpu.c
-> >> +++ b/arch/loongarch/kvm/vcpu.c
-> >> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
-> >>                          *v |=3D CPUCFG2_LSX;
-> >>                  if (cpu_has_lasx)
-> >>                          *v |=3D CPUCFG2_LASX;
-> >> +               if (cpu_has_lbt_x86)
-> >> +                       *v |=3D CPUCFG2_X86BT;
-> >> +               if (cpu_has_lbt_arm)
-> >> +                       *v |=3D CPUCFG2_ARMBT;
-> >> +               if (cpu_has_lbt_mips)
-> >> +                       *v |=3D CPUCFG2_MIPSBT;
-> >>
-> >>                  return 0;
-> >>          case LOONGARCH_CPUCFG3:
-> >> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> >> index 6b2e4f66ad26..09e05108c68b 100644
-> >> --- a/arch/loongarch/kvm/vm.c
-> >> +++ b/arch/loongarch/kvm/vm.c
-> >> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
-ong ext)
-> >>          return r;
-> >>   }
-> >>
-> >> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device=
-_attr *attr)
-> >> +{
-> >> +       switch (attr->attr) {
-> >> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
-> >> +               if (cpu_has_lbt_x86)
-> >> +                       return 0;
-> >> +               return -ENXIO;
-> >> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
-> >> +               if (cpu_has_lbt_arm)
-> >> +                       return 0;
-> >> +               return -ENXIO;
-> >> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
-> >> +               if (cpu_has_lbt_mips)
-> >> +                       return 0;
-> >> +               return -ENXIO;
-> >> +       default:
-> >> +               return -ENXIO;
-> >> +       }
-> >> +}
-> >> +
-> >> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *a=
-ttr)
-> >> +{
-> >> +       switch (attr->group) {
-> >> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
-> >> +               return kvm_vm_feature_has_attr(kvm, attr);
-> >> +       default:
-> >> +               return -ENXIO;
-> >> +       }
-> >> +}
-> >> +
-> >>   int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigne=
-d long arg)
-> >>   {
-> >> -       return -ENOIOCTLCMD;
-> >> +       struct kvm *kvm =3D filp->private_data;
-> >> +       void __user *argp =3D (void __user *)arg;
-> >> +       struct kvm_device_attr attr;
-> >> +
-> >> +       switch (ioctl) {
-> >> +       case KVM_HAS_DEVICE_ATTR:
-> >> +               if (copy_from_user(&attr, argp, sizeof(attr)))
-> >> +                       return -EFAULT;
-> >> +
-> >> +               return kvm_vm_has_attr(kvm, &attr);
-> >> +       default:
-> >> +               return -EINVAL;
-> >> +       }
-> >>   }
-> >> --
-> >> 2.39.3
-> >>
->
+      Arnd
