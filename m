@@ -1,26 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9222094
-	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 13:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBE21494CE
+	for <loongarch@lists.linux.dev>; Mon,  1 Jul 2024 13:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719842095; cv=none; b=Z3dz/xDt870y+hr1Fhgc1phJLcYUSGveG6yHX7v40BG4enfOiii/3XfHMVm5yTkGCW+Wfcc07uuVbkGYdCTiVHqNTVpTnlrczNVzSuGfJwGYyfpqCXFh38z1Hxu5mOLoXpLjkpVg+L+xAHQkkNWyC5sulL+YcIAO3ZkOwfU/Bvo=
+	t=1719842096; cv=none; b=Zx/24tZt1ibBVvzQR1oLLkoq9yjyn91c8yJqY30J3b7erubumeiZNwKvX35B+uEw1eRaoy4MiYBzuVogPtXBwfBIftGu1/dpWzDUNUQ4sGzrIgbcaDxi5AzF3nr/tH45nOw953feOlLYRkdeVe2RPgAAzMWThPPFFlxrZkcDueM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719842095; c=relaxed/simple;
-	bh=mGAuCZgA2CcqrjhV6CHTOjJSYcLUjnH7A7J5jQMNJG0=;
+	s=arc-20240116; t=1719842096; c=relaxed/simple;
+	bh=eGXy1OFvj3SosF7bnlGCLhzounuJ5ghZkNJ65LsPcFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gnXFJcyp5zhxQnqkHCB4mBhOsZVnuEAhGuItdwVrv5wXQacrryXwEFZVtYk7clruNQ6jFFuGaxyJngVepWdNqCf3V4KHAZnpcOYAsTUneHG6LTzW4SKrBpQMSGp2TKtTu14FSjX2GbxChoZ1XBLMIxGbemkX0F6UEHVwpi7Y15c=
+	 In-Reply-To:To:Cc; b=GA2PyKCPccG7XZNaXF3NaLeqTFWLSXOaqIGWKQJbVUbjbnIgnK1RVpL+rZXNxd5ONn2ObWnwPfaChR5Vt6ZhH4eXMokUzViiGtTqOOGvwTtwRkJOBjy3WZIbpUTzS6iKCN+P+5IWfbnxayAYZQ4oqqJXtd/LfxfshXA98aqIuOc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1sOHTX-0001LY-6i; Mon, 01 Jul 2024 15:53:47 +0200
+	id 1sOHTX-0001LY-MS; Mon, 01 Jul 2024 15:53:47 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Mon, 01 Jul 2024 15:53:41 +0200
-Subject: [PATCH 2/9] mtd: add mtd_is_master helper
+Date: Mon, 01 Jul 2024 15:53:45 +0200
+Subject: [PATCH 6/9] powerpc: convert to MTD_EEPROM_AT24
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-2-3fd5f4a193cc@pengutronix.de>
+Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-6-3fd5f4a193cc@pengutronix.de>
 References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 In-Reply-To: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 To: Miquel Raynal <miquel.raynal@bootlin.com>, 
@@ -70,29 +70,83 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: loongarch@lists.linux.dev
 
-Provide a simple helper to make it easy to detect an master mtd device.
+The EEPROM_AT24 Kconfig symbol is marked as deprecated. Make use of the
+new Kconfig symbol to select the I2C EEPROM driver support.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- include/linux/mtd/mtd.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/configs/44x/warp_defconfig | 2 +-
+ arch/powerpc/configs/mpc512x_defconfig  | 2 +-
+ arch/powerpc/configs/mpc5200_defconfig  | 2 +-
+ arch/powerpc/configs/ppc6xx_defconfig   | 2 +-
+ arch/powerpc/configs/skiroot_defconfig  | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 8d10d9d2e830..bf3fc2ea7230 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -408,6 +408,11 @@ static inline struct mtd_info *mtd_get_master(struct mtd_info *mtd)
- 	return mtd;
- }
- 
-+static inline bool mtd_is_master(struct mtd_info *mtd)
-+{
-+	return mtd->parent ? false : true;
-+}
-+
- static inline u64 mtd_get_master_ofs(struct mtd_info *mtd, u64 ofs)
- {
- 	while (mtd->parent) {
+diff --git a/arch/powerpc/configs/44x/warp_defconfig b/arch/powerpc/configs/44x/warp_defconfig
+index 20891c413149..d8cab860c9d9 100644
+--- a/arch/powerpc/configs/44x/warp_defconfig
++++ b/arch/powerpc/configs/44x/warp_defconfig
+@@ -36,7 +36,7 @@ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_NDFC=y
+ CONFIG_MTD_UBI=y
+ CONFIG_BLK_DEV_RAM=y
+-CONFIG_EEPROM_AT24=y
++CONFIG_MTD_EEPROM_AT24=y
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_SCSI_SPI_ATTRS=y
+diff --git a/arch/powerpc/configs/mpc512x_defconfig b/arch/powerpc/configs/mpc512x_defconfig
+index d24457bc5791..0a919a76cfb8 100644
+--- a/arch/powerpc/configs/mpc512x_defconfig
++++ b/arch/powerpc/configs/mpc512x_defconfig
+@@ -46,7 +46,7 @@ CONFIG_MTD_UBI=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_COUNT=1
+ CONFIG_BLK_DEV_RAM_SIZE=8192
+-CONFIG_EEPROM_AT24=y
++CONFIG_MTD_EEPROM_AT24=y
+ CONFIG_EEPROM_AT25=y
+ CONFIG_SCSI=y
+ # CONFIG_SCSI_PROC_FS is not set
+diff --git a/arch/powerpc/configs/mpc5200_defconfig b/arch/powerpc/configs/mpc5200_defconfig
+index c0fe5e76604a..8142836ef61a 100644
+--- a/arch/powerpc/configs/mpc5200_defconfig
++++ b/arch/powerpc/configs/mpc5200_defconfig
+@@ -38,7 +38,7 @@ CONFIG_MTD_UBI=m
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_SIZE=32768
+-CONFIG_EEPROM_AT24=y
++CONFIG_MTD_EEPROM_AT24=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_SG=y
+ CONFIG_ATA=y
+diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
+index 66c7b28d7450..5bca729a57c2 100644
+--- a/arch/powerpc/configs/ppc6xx_defconfig
++++ b/arch/powerpc/configs/ppc6xx_defconfig
+@@ -318,7 +318,7 @@ CONFIG_CDROM_PKTCDVD=m
+ CONFIG_VIRTIO_BLK=m
+ CONFIG_ENCLOSURE_SERVICES=m
+ CONFIG_SENSORS_TSL2550=m
+-CONFIG_EEPROM_AT24=m
++CONFIG_MTD_EEPROM_AT24=m
+ CONFIG_EEPROM_LEGACY=m
+ CONFIG_EEPROM_MAX6875=m
+ CONFIG_EEPROM_93CX6=m
+diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
+index 9d44e6630908..e9be7f217cea 100644
+--- a/arch/powerpc/configs/skiroot_defconfig
++++ b/arch/powerpc/configs/skiroot_defconfig
+@@ -77,7 +77,7 @@ CONFIG_BLK_DEV_RAM_SIZE=65536
+ CONFIG_VIRTIO_BLK=m
+ CONFIG_BLK_DEV_NVME=m
+ CONFIG_NVME_MULTIPATH=y
+-CONFIG_EEPROM_AT24=m
++CONFIG_MTD_EEPROM_AT24=m
+ # CONFIG_CXL is not set
+ # CONFIG_OCXL is not set
+ CONFIG_BLK_DEV_SD=m
 
 -- 
 2.39.2
