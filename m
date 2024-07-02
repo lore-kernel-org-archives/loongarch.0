@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225221BB695;
-	Tue,  2 Jul 2024 15:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108C41BA89E;
+	Tue,  2 Jul 2024 15:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719933298; cv=none; b=ew6k8+FbWZDVetd7c/nY6jV09YKJmqDz4LU43CMsLCS9nLrDmc9U4ygQMqwjd8KHxqsO+VGsuFIEsy+XC9vumClZScMOFQjKNfcQgL315QkDbk2oJAmP3T0q6XuKiDLsoRYKbYs+FNplipzYJC+7bL3bfQ52wCF7StsGd6DOU0E=
+	t=1719934087; cv=none; b=HXbDZHZmZgtr7OsCpD6Wax3mf0Vf2jfYpSDKG/beihgNQb43fx9k99y8sJagYBw1vtFRb/Mzs7d3Nq89hj28AiulWYznHFWW1MNzU72Asu8Kg9qtI6nxJPInI8+zCuBxKacU0bp2+1jNMX3iM2aPxUeAzviIX1iSFWd1zZTPaTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719933298; c=relaxed/simple;
-	bh=xmfELzaz5LamrVXLrAIMck3j6UTUdJZCP384C33Ma6A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q241KxsQditALYYTgpfjJfUDYEOnReuTZZUtUGJYq9Yatl5uWzCi8ooIpgylNfFthY+YDMc4pRhdfllqkrBCxOGcSqzhlGceKT3YWoVw0bBGSBUqRrzp9NM783lmy1Pj/ST6COYLGsNCoTjvF8x3pKybJnx4mu37QR0/EjQn3+0=
+	s=arc-20240116; t=1719934087; c=relaxed/simple;
+	bh=pDeHVRV9Y0UmQbfvePSna4sC2ujf3+Vy3QX1aGdopPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VE7RGtYtuv/nmsl4F336BJqlZyGdi3tU4RW+EvmlG+FTqW7lZSoWuCr0/3j9RA6tkFnDgxRLeTj65GjuTjY8YJHEUWK5synIsbpHG0unGCC8ydqp1TUukEA2kfdkjz0VwlewXdk5HvQxb9mtd1TNWt9tP07gKa2pa5UbqT/Ne3A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4626CC116B1;
-	Tue,  2 Jul 2024 15:14:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036FDC116B1;
+	Tue,  2 Jul 2024 15:28:03 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add ARCH_HAS_DEBUG_VM_PGTABLE support
-Date: Tue,  2 Jul 2024 23:14:46 +0800
-Message-ID: <20240702151446.1161159-1-chenhuacai@loongson.cn>
+Subject: [PATCH V2 0/2] LoongArch: Add Loongson-3 CPUFreq driver support
+Date: Tue,  2 Jul 2024 23:27:35 +0800
+Message-ID: <20240702152737.1184244-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -35,41 +35,25 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add ARCH_HAS_DEBUG_VM_PGTABLE selection in Kconfig, in order to make
-corresponding vm debug features usable on LoongArch. Also update the
-corresponding arch-support.txt document.
+This series add architectural preparation and CPUFreq driver for
+Loongson-3 (based on LoongArch).
+
+Some of LoongArch processors support DVFS, their IOCSR.FEATURES has
+IOCSRF_FREQSCALE set. And they has a micro-core in the package called
+SMC (System Management Controller) to scale frequency, voltage, etc.
+
+V1 -> V2:
+1, Use module_platform_driver() instead of module_init()/module_exit();
+2, Move the lock protection into do_service_request();
+3, Add light-weight hotplug support with help of online()/offline() callbacks;
+4, Simplify loongson3_freq_data by removing cur_cpu_freq;
+5, Remove unneeded cpu_online() checking.
+
+Huacai Chen(2):
+ LoongArch: Add architectural preparation for CPUFreq.
+ cpufreq: Add Loongson-3 CPUFreq driver support.
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- Documentation/features/debug/debug-vm-pgtable/arch-support.txt | 2 +-
- arch/loongarch/Kconfig                                         | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-index bbf029f095cb..156687a7436d 100644
---- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-+++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-@@ -12,7 +12,7 @@
-     |       arm64: |  ok  |
-     |        csky: | TODO |
-     |     hexagon: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: | TODO |
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d8ca8b1b01f3..e346b5b0a5ca 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -16,6 +16,7 @@ config LOONGARCH
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
- 	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_CURRENT_STACK_POINTER
-+	select ARCH_HAS_DEBUG_VM_PGTABLE
- 	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KCOV
--- 
-2.43.0
+2.27.0
 
