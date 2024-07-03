@@ -1,675 +1,421 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E8C1EB27
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 14:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0217BB3E
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 15:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720017481; cv=none; b=JvbIjeOfXWcouirScXVG99oYd0LQxR2Im4FlmbtnJr6jrTfdqBM3Nu2KQXWhRnZCgT8TvjMmYi9sphK3Ls1Dfpg5IRmVbs3s+5f3sf1BOkTuFSTlGIWYnBEa1yF44JZ+pjuYlehyhgzp+en+D9ub6FJPPS9oS2tkZ3ftyZCMedI=
+	t=1720020974; cv=none; b=n56+J0TbCZFTWs8BMBoJGEpv8IlEnNtPPWSITvJ2hqSRadV3c4XCXeGpnJoyTJiH0UsxnoxYJUw4DG0cxVlPknT8v4GqsgA3rJTpKWiaB61u+vxNYwIIt+xiAu5lU6LhSQFbsZxhtLeGzoxoK32wfsrU7TouwkzsGPVhjYkVxeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720017481; c=relaxed/simple;
-	bh=9fQrsdABjkrH4cRRS6+W8rK2EpChjZXbqbmbLXoomlo=;
+	s=arc-20240116; t=1720020974; c=relaxed/simple;
+	bh=6Gtk2qmlvnHp9KMxnwj1XVHDyicmeOgvQjFp0LL0ejA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WG56tM4bat45vvUNKQFr5ugprcHosR3z/yeXzVxjzGPTMfd80ry7ITOJLjyKHH8cWmFyY1Yg+NQ8xWdsjMqK0iFQBpj2weA8F6E1ZuMiabxn43u5jLorGSMcesJm9s8Rm5hiCYRdY4I7zl7mkbmtLiZya1T0Qts0hL59lbcRhew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJvLXLjl; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=RzqyCve+dyzqVp/ClSM2SGzsXUDjeb7nY0nCoziteIQ4BiGj4M/fjx+z7KRPYqCPmwRyakiV+MilPuCF9P3sXqmnssmJrTeHie5aU2N3EGtbGHfU353h0E34LnIE1suiCjIySJ/0PXM+pl7x+SfODHXKWIymiYqoP9bRFmFpLfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K60MVa0k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJvLXLjl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1940C4AF0C
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 14:38:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K60MVa0k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A65BC32781
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 15:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720017481;
-	bh=9fQrsdABjkrH4cRRS6+W8rK2EpChjZXbqbmbLXoomlo=;
+	s=k20201202; t=1720020973;
+	bh=6Gtk2qmlvnHp9KMxnwj1XVHDyicmeOgvQjFp0LL0ejA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rJvLXLjlR2VeAc5ircXQ1egRYwvc2ZvWnP2rs3ebB5w6iszNS6RrHlPINLS/B8IfA
-	 D3q42UNXevKZ+eJ7s3BbYaV7gOXBEVHZC/XTqVRu4nrY5lhiy9bbfn9vB6r5TYu6gi
-	 2zEoz/yaU3GfQJzvTdr7OLu64ZghXW/FrAwX+bH6P2fbcq/zkALL8hQb9HgecnBkmP
-	 NzAV1W1WyJD7RxmdQKi/++S/4dxwfYGyiw58N3ep1/FYPoLy+ihFGLEJVhgMivFnjh
-	 S4xUbxSO5LjDSnfF+G2JpXDVD7Ly4hA7GpzYr7KbBPKceDiVqK//qM0cgrthbd+Cd0
-	 T3BBAxPRn4frA==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so635110766b.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 07:38:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVz4ePVEnhPsmg1qdkLQUN+Vhg+kIEqsoP6wJ3IJ2VfFaBo8m7Z8WMkxq4bVcgEvvOnX43sGNbLph9tCMNKKPG0fTQUo8SMniH4
-X-Gm-Message-State: AOJu0YxqiwAjHUQSVmK4vVtsPzHd0PKiFH8Rnle+u7JzQIBKnD1ITbRy
-	cLMH/5iF2T/ANxDpgoM7+6AUYRTjJm5KsQZRzvhC2mKLMSwtCCS2MtdE32Lo/EFePWmu99dHX2V
-	eViDWY7GyVhrGfRXgxg46/W4QC/Q=
-X-Google-Smtp-Source: AGHT+IE50KLf3lFNcX0ULPBaHHXUH0kvHS5HaRTgxw3Pa1cLetXWbvf5gxw5XjU8VDIHmFCAjsJixPQvrJAlKzQk10s=
-X-Received: by 2002:a17:906:27c9:b0:a6f:6ae6:8ae8 with SMTP id
- a640c23a62f3a-a751445fa34mr766551966b.74.1720017479233; Wed, 03 Jul 2024
- 07:37:59 -0700 (PDT)
+	b=K60MVa0kZY00XMlIuG10BVsw1fvAbTLA1wI+dQs+QzjsGEhrRe4c7rQL/dAzH7q1d
+	 hikH/o3k80UY5h3G3DebaqbFk7V9IUDiiqbnlJYGn7VZCkqX1v70Z1PsO4iRBjs9IR
+	 ZybZXoueEOXfmXUxBT0VJKng7htFcwnRn9gNTOvOi4kDzjCIDJ0Ak0CeBqkY0g1S0A
+	 GHSTLCmVtrHwDv6YNGkesSSzD6cN1GnAYaxgqdcx4XmcS1PifuXYs273mm2jlFTo3q
+	 HBO8gLjbPqjjw2HieZYfYnVTiLVdAVDMqxIuX/mpaFFqjArXaOA3PxQaWPWmApy+7c
+	 M2NJYXDS7o+dg==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso561699266b.0
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 08:36:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+Xd+sAQ4JV+9LlSP9lH+2aS0GwS/0ueUKbgfxeM5FyBfRq9gFcF2X7ubGM6egKPgrSmK2G/tYhKiafKX3eSsBONvtNKmhDhHf
+X-Gm-Message-State: AOJu0Yxr2cOyNgjqfUDk2lOcEnAzZGRqNsheKgCkX9Zws7joQ1gJlNp5
+	SZw9sAkgPLvm55mqyhlR0pnDSksDb0kKlJt4Ox4buf+ILc4ykPAMm2tgP44D82X0NKZBK2R526g
+	wVBoKp1dnwwdpg7UDgs3L72cUlEA=
+X-Google-Smtp-Source: AGHT+IGBP9VnY+dtMQOjnre/0HuapAdJpD8X6TeD7LjqJIsTbgs1N59f9yhR7WGs8+ALojmcrIYwMU3rz0R6m+PlUXE=
+X-Received: by 2002:a17:906:a416:b0:a72:b4d6:ec6c with SMTP id
+ a640c23a62f3a-a7514422b00mr608793366b.33.1720020972129; Wed, 03 Jul 2024
+ 08:36:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240702152737.1184244-1-chenhuacai@loongson.cn>
- <20240702152737.1184244-3-chenhuacai@loongson.cn> <20240703101850.dtck223pleiiwfxp@vireshk-i7>
-In-Reply-To: <20240703101850.dtck223pleiiwfxp@vireshk-i7>
+References: <20240626063239.3722175-1-maobibo@loongson.cn> <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
+ <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn> <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+ <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn> <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
+ <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn> <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
+ <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn> <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+ <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn> <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
+ <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
+In-Reply-To: <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 3 Jul 2024 22:37:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H74HJr0=8g0GtHj=zZH5nJijRpc90zLLRY_sXJfKFVtHA@mail.gmail.com>
-Message-ID: <CAAhV-H74HJr0=8g0GtHj=zZH5nJijRpc90zLLRY_sXJfKFVtHA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>
+Date: Wed, 3 Jul 2024 23:35:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+Message-ID: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: maobibo <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Viresh,
-
-On Wed, Jul 3, 2024 at 6:18=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.or=
-g> wrote:
+On Wed, Jul 3, 2024 at 11:15=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
+:
 >
-> On 02-07-24, 23:27, Huacai Chen wrote:
-> > Some of LoongArch processors (Loongson-3 series) support DVFS, their
-> > IOCSR.FEATURES has IOCSRF_FREQSCALE set. And they has a micro-core in
-> > the package called SMC (System Management Controller), which can be
-> > used to detect temperature, control fans, scale frequency and voltage,
-> > etc.
+>
+>
+> On 2024/7/2 =E4=B8=8B=E5=8D=8811:43, Huacai Chen wrote:
+> > On Tue, Jul 2, 2024 at 4:42=E2=80=AFPM maobibo <maobibo@loongson.cn> wr=
+ote:
+> >>
+> >>
+> >>
+> >> On 2024/7/2 =E4=B8=8B=E5=8D=883:28, Huacai Chen wrote:
+> >>> On Tue, Jul 2, 2024 at 12:13=E2=80=AFPM maobibo <maobibo@loongson.cn>=
+ wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2024/7/2 =E4=B8=8A=E5=8D=8810:34, Huacai Chen wrote:
+> >>>>> On Tue, Jul 2, 2024 at 10:25=E2=80=AFAM maobibo <maobibo@loongson.c=
+n> wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> On 2024/7/2 =E4=B8=8A=E5=8D=889:59, Huacai Chen wrote:
+> >>>>>>> On Tue, Jul 2, 2024 at 9:51=E2=80=AFAM maobibo <maobibo@loongson.=
+cn> wrote:
+> >>>>>>>>
+> >>>>>>>> Huacai,
+> >>>>>>>>
+> >>>>>>>> On 2024/7/1 =E4=B8=8B=E5=8D=886:26, Huacai Chen wrote:
+> >>>>>>>>> On Mon, Jul 1, 2024 at 9:27=E2=80=AFAM maobibo <maobibo@loongso=
+n.cn> wrote:
+> >>>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> Huacai,
+> >>>>>>>>>>
+> >>>>>>>>>> On 2024/6/30 =E4=B8=8A=E5=8D=8810:07, Huacai Chen wrote:
+> >>>>>>>>>>> Hi, Bibo,
+> >>>>>>>>>>>
+> >>>>>>>>>>> On Wed, Jun 26, 2024 at 2:32=E2=80=AFPM Bibo Mao <maobibo@loo=
+ngson.cn> wrote:
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Two kinds of LBT feature detection are added here, one is VC=
+PU
+> >>>>>>>>>>>> feature, the other is VM feature. VCPU feature dection can o=
+nly
+> >>>>>>>>>>>> work with VCPU thread itself, and requires VCPU thread is cr=
+eated
+> >>>>>>>>>>>> already. So LBT feature detection for VM is added also, it c=
+an
+> >>>>>>>>>>>> be done even if VM is not created, and also can be done by a=
+ny
+> >>>>>>>>>>>> thread besides VCPU threads.
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Loongson Binary Translation (LBT) feature is defined in regi=
+ster
+> >>>>>>>>>>>> cpucfg2. Here LBT capability detection for VCPU is added.
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and =
+macro
+> >>>>>>>>>>>> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported featu=
+re. And
+> >>>>>>>>>>>> three sub-features relative with LBT are added as following:
+> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_X86BT
+> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_ARMBT
+> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_MIPSBT
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>>>>>>>>>> ---
+> >>>>>>>>>>>>        arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+> >>>>>>>>>>>>        arch/loongarch/kvm/vcpu.c             |  6 ++++
+> >>>>>>>>>>>>        arch/loongarch/kvm/vm.c               | 44 ++++++++++=
+++++++++++++++++-
+> >>>>>>>>>>>>        3 files changed, 55 insertions(+), 1 deletion(-)
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/lo=
+ongarch/include/uapi/asm/kvm.h
+> >>>>>>>>>>>> index ddc5cab0ffd0..c40f7d9ffe13 100644
+> >>>>>>>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> >>>>>>>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> >>>>>>>>>>>> @@ -82,6 +82,12 @@ struct kvm_fpu {
+> >>>>>>>>>>>>        #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_=
+64(KVM_REG_LOONGARCH_CSR, REG)
+> >>>>>>>>>>>>        #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_=
+64(KVM_REG_LOONGARCH_CPUCFG, REG)
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> +/* Device Control API on vm fd */
+> >>>>>>>>>>>> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
+> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
+> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
+> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
+> >>>>>>>>>>>> +
+> >>>>>>>>>>>>        /* Device Control API on vcpu fd */
+> >>>>>>>>>>>>        #define KVM_LOONGARCH_VCPU_CPUCFG      0
+> >>>>>>>>>>>>        #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+> >>>>>>>>>>> If you insist that LBT should be a vm feature, then I suggest=
+ the
+> >>>>>>>>>>> above two also be vm features. Though this is an UAPI change,=
+ but
+> >>>>>>>>>>> CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been rel=
+eased. We
+> >>>>>>>>>>> have a chance to change it now.
+> >>>>>>>>>>
+> >>>>>>>>>> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every=
+ vcpu
+> >>>>>>>>>> has is own different gpa address.
+> >>>>>>>>> Then leave this as a vm feature.
+> >>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We ca=
+nnot break
+> >>>>>>>>>> the API even if it is 6.10-rc1, VMM has already used this. Els=
+e there is
+> >>>>>>>>>> uapi breaking now, still will be in future if we cannot contro=
+l this.
+> >>>>>>>>> UAPI changing before the first release is allowed, which means,=
+ we can
+> >>>>>>>>> change this before the 6.10-final, but cannot change it after
+> >>>>>>>>> 6.10-final.
+> >>>>>>>> Now QEMU has already synced uapi to its own directory, also I ne=
+ver hear
+> >>>>>>>> about this, with my experience with uapi change, there is only n=
+ewly
+> >>>>>>>> added or removed deprecated years ago.
+> >>>>>>>>
+> >>>>>>>> Is there any documentation about UAPI change rules?
+> >>>>>>> No document, but learn from my more than 10 years upstream experi=
+ence.
+> >>>>>> Can you show me an example about with your rich upstream experienc=
+e?
+> >>>>> A simple example,
+> >>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c revert
+> >>>>> 1dccdba084897443d116508a8ed71e0ac8a0 and it changes UAPI.
+> >>>>> 1dccdba084897443d116508a8ed71e0ac8a0 is upstream in 6.9-rc1, and
+> >>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c can revert the behavior before
+> >>>>> 6.9-final, but not after that.
+> >>>>>
+> >>>>> Before the first release, the code status is treated as "unstable",=
+ so
+> >>>>> revert, modify is allowed. But after the first release, even if an
+> >>>>> "error" should also be treated as a "bad feature".
+> >>>> Huacai,
+> >>>>
+> >>>> Thanks for showing the example.
+> >>>>
+> >>>> For this issue, Can we adding new uapi and mark the old as deprecate=
+d?
+> >>>> so that it can be removed after years.
+> >>> Unnecessary, just remove the old one. Deprecation is for the usage
+> >>> after the first release.
+> >>>
+> >>>>
+> >>>> For me, it is too frequent to revert the old uapi, it is not bug and
+> >>>> only that we have better method now. Also QEMU has synchronized the =
+uapi
+> >>>> to its directory already.
+> >>> QEMU also hasn't been released after synchronizing the uapi, so it is
+> >>> OK to remove the old api now.
+> >> No, I will not do such thing. It is just a joke to revert the uapi.
+> >>
+> >> So just create new world and old world on Loongarch system again?
+> > Again, code status before the first release is *unstable*, that status
+> > is not enough to be a "world".
 > >
-> > The Loongson-3 CPUFreq driver is very simple now, it communicate with
-> > SMC, get DVFS info, set target frequency from CPUFreq core, and so on.
-> >
-> > There is a command list to interact with SMC, widely-used commands in
-> > the CPUFreq driver include:
-> >
-> > CMD_GET_VERSION: Get SMC firmware version.
-> >
-> > CMD_GET_FEATURE: Get enabled SMC features.
-> >
-> > CMD_SET_FEATURE: Enable SMC features, such as basic DVFS, BOOST.
-> >
-> > CMD_GET_FREQ_LEVEL_NUM: Get the number of normal frequency levels.
-> >
-> > CMD_GET_FREQ_BOOST_NUM: Get the number of boost frequency levels.
-> >
-> > CMD_GET_FREQ_LEVEL_INFO: Get the detail info of a frequency level.
-> >
-> > CMD_GET_FREQ_INFO: Get the current frequency.
-> >
-> > CMD_SET_FREQ_INFO: Set the target frequency.
-> >
-> > In future we will add automatic frequency scaling, which is similar to
-> > Intel's HWP (HardWare P-State).
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  MAINTAINERS                         |   1 +
-> >  drivers/cpufreq/Kconfig             |  12 +
-> >  drivers/cpufreq/Makefile            |   1 +
-> >  drivers/cpufreq/loongson3_cpufreq.c | 399 ++++++++++++++++++++++++++++
-> >  4 files changed, 413 insertions(+)
-> >  create mode 100644 drivers/cpufreq/loongson3_cpufreq.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index cd2ca0c3158e..2af33319f1ff 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12968,6 +12968,7 @@ F:    Documentation/arch/loongarch/
-> >  F:   Documentation/translations/zh_CN/arch/loongarch/
-> >  F:   arch/loongarch/
-> >  F:   drivers/*/*loongarch*
-> > +F:   drivers/cpufreq/loongson3_cpufreq.c
-> >
-> >  LOONGSON GPIO DRIVER
-> >  M:   Yinbo Zhu <zhuyinbo@loongson.cn>
-> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-> > index 94e55c40970a..10cda6f2fe1d 100644
-> > --- a/drivers/cpufreq/Kconfig
-> > +++ b/drivers/cpufreq/Kconfig
-> > @@ -262,6 +262,18 @@ config LOONGSON2_CPUFREQ
-> >         If in doubt, say N.
-> >  endif
-> >
-> > +if LOONGARCH
-> > +config LOONGSON3_CPUFREQ
-> > +     tristate "Loongson3 CPUFreq Driver"
-> > +     help
-> > +       This option adds a CPUFreq driver for Loongson processors which
-> > +       support software configurable cpu frequency.
-> > +
-> > +       Loongson-3 family processors support this feature.
-> > +
-> > +       If in doubt, say N.
-> > +endif
-> > +
-> >  if SPARC64
-> >  config SPARC_US3_CPUFREQ
-> >       tristate "UltraSPARC-III CPU Frequency driver"
-> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> > index 8d141c71b016..0f184031dd12 100644
-> > --- a/drivers/cpufreq/Makefile
-> > +++ b/drivers/cpufreq/Makefile
-> > @@ -103,6 +103,7 @@ obj-$(CONFIG_POWERNV_CPUFREQ)             +=3D powe=
-rnv-cpufreq.o
-> >  # Other platform drivers
-> >  obj-$(CONFIG_BMIPS_CPUFREQ)          +=3D bmips-cpufreq.o
-> >  obj-$(CONFIG_LOONGSON2_CPUFREQ)              +=3D loongson2_cpufreq.o
-> > +obj-$(CONFIG_LOONGSON3_CPUFREQ)              +=3D loongson3_cpufreq.o
-> >  obj-$(CONFIG_SH_CPU_FREQ)            +=3D sh-cpufreq.o
-> >  obj-$(CONFIG_SPARC_US2E_CPUFREQ)     +=3D sparc-us2e-cpufreq.o
-> >  obj-$(CONFIG_SPARC_US3_CPUFREQ)              +=3D sparc-us3-cpufreq.o
-> > diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loon=
-gson3_cpufreq.c
-> > new file mode 100644
-> > index 000000000000..6d7da2238542
-> > --- /dev/null
-> > +++ b/drivers/cpufreq/loongson3_cpufreq.c
-> > @@ -0,0 +1,399 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * CPUFreq driver for the loongson-3 processors
+> > It's your responsibility to make a good design at the beginning, but
+> > you fail to do that. Fortunately we are before the first release;
+> > unfortunately you don't want to do that.
+> Yes, this is flaw at the beginning, however it can works and new abi can
+> be added.
 >
-> A full stop at the end please.
-OK, thanks.
+> If there is no serious bug and it is synced to QEMU already, I am not
+> willing to revert uabi. Different projects have its own schedule plan,
+> that is one reason. The most important reason may be that different
+> peoples have different ways handling these issues.
+In another thread I found that Jiaxun said he has a solution to make
+LBT be a vcpu feature and still works well. However, that may take
+some time and is too late for 6.11.
 
->
-> > + *
-> > + * All revisions of Loongson-3 processor support this feature.
->
-> What do you mean by `feature` here ?
-Means "cpu_has_freqscale", will modify in next version.
+But we have another choice now: just remove the UAPI and vm.c parts in
+this series, let the LBT main parts be upstream in 6.11, and then
+solve other problems after 6.11. Even if Jiaxun's solution isn't
+usable, we can still use this old vm feature solution then.
 
->
-> > + *
-> > + * Author: Huacai Chen <chenhuacai@loongson.cn>
-> > + * Copyright (C) 2020-2024 Loongson Technology Corporation Limited
->
-> Can't really use 2020 here. We are adding the driver for the first
-> time in 2024 only.
-OK, thanks.
-
->
-> > + */
-> > +#include <linux/delay.h>
-> > +#include <linux/module.h>
-> > +#include <linux/cpufreq.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/units.h>
->
-> Please keep them in alphabetical order.  And you are missing few other
-> headers (which are getting included indirectly for now). Like for
-> mutex. Please cross check all types you are using and include their
-> headers directly.
-OK, thanks.
-
->
-> > +
-> > +#include <asm/idle.h>
-> > +#include <asm/loongarch.h>
-> > +#include <asm/loongson.h>
-> > +
-> > +/* Message */
-> > +union smc_message {
-> > +     u32 value;
-> > +     struct {
-> > +             u32 id          : 4;
-> > +             u32 info        : 4;
-> > +             u32 val         : 16;
-> > +             u32 cmd         : 6;
-> > +             u32 extra       : 1;
-> > +             u32 complete    : 1;
-> > +     };
-> > +};
-> > +
-> > +/* Command return values */
-> > +#define CMD_OK                               0  /* No error */
-> > +#define CMD_ERROR                    1  /* Regular error */
-> > +#define CMD_NOCMD                    2  /* Command does not support */
-> > +#define CMD_INVAL                    3  /* Invalid Parameter */
-> > +
-> > +/* Version commands */
-> > +/*
-> > + * CMD_GET_VERSION - Get interface version
-> > + * Input: none
-> > + * Output: version
-> > + */
-> > +#define CMD_GET_VERSION                      0x1
-> > +
-> > +/* Feature commands */
-> > +/*
-> > + * CMD_GET_FEATURE - Get feature state
-> > + * Input: feature ID
-> > + * Output: feature flag
-> > + */
-> > +#define CMD_GET_FEATURE                      0x2
-> > +
-> > +/*
-> > + * CMD_SET_FEATURE - Set feature state
-> > + * Input: feature ID, feature flag
-> > + * output: none
-> > + */
-> > +#define CMD_SET_FEATURE                      0x3
-> > +
-> > +/* Feature IDs */
-> > +#define FEATURE_SENSOR                       0
-> > +#define FEATURE_FAN                  1
-> > +#define FEATURE_DVFS                 2
-> > +
-> > +/* Sensor feature flags */
-> > +#define FEATURE_SENSOR_ENABLE                BIT(0)
-> > +#define FEATURE_SENSOR_SAMPLE                BIT(1)
-> > +
-> > +/* Fan feature flags */
-> > +#define FEATURE_FAN_ENABLE           BIT(0)
-> > +#define FEATURE_FAN_AUTO             BIT(1)
-> > +
-> > +/* DVFS feature flags */
-> > +#define FEATURE_DVFS_ENABLE          BIT(0)
-> > +#define FEATURE_DVFS_BOOST           BIT(1)
-> > +#define FEATURE_DVFS_AUTO            BIT(2)
-> > +#define FEATURE_DVFS_SINGLE_BOOST    BIT(3)
-> > +
-> > +/* Sensor commands */
-> > +/*
-> > + * CMD_GET_SENSOR_NUM - Get number of sensors
-> > + * Input: none
-> > + * Output: number
-> > + */
-> > +#define CMD_GET_SENSOR_NUM           0x4
-> > +
-> > +/*
-> > + * CMD_GET_SENSOR_STATUS - Get sensor status
-> > + * Input: sensor ID, type
-> > + * Output: sensor status
-> > + */
-> > +#define CMD_GET_SENSOR_STATUS                0x5
-> > +
-> > +/* Sensor types */
-> > +#define SENSOR_INFO_TYPE             0
-> > +#define SENSOR_INFO_TYPE_TEMP                1
-> > +
-> > +/* Fan commands */
-> > +/*
-> > + * CMD_GET_FAN_NUM - Get number of fans
-> > + * Input: none
-> > + * Output: number
-> > + */
-> > +#define CMD_GET_FAN_NUM                      0x6
-> > +
-> > +/*
-> > + * CMD_GET_FAN_INFO - Get fan status
-> > + * Input: fan ID, type
-> > + * Output: fan info
-> > + */
-> > +#define CMD_GET_FAN_INFO             0x7
-> > +
-> > +/*
-> > + * CMD_SET_FAN_INFO - Set fan status
-> > + * Input: fan ID, type, value
-> > + * Output: none
-> > + */
-> > +#define CMD_SET_FAN_INFO             0x8
-> > +
-> > +/* Fan types */
-> > +#define FAN_INFO_TYPE_LEVEL          0
-> > +
-> > +/* DVFS commands */
-> > +/*
-> > + * CMD_GET_FREQ_LEVEL_NUM - Get number of freq levels
-> > + * Input: CPU ID
-> > + * Output: number
-> > + */
-> > +#define CMD_GET_FREQ_LEVEL_NUM               0x9
-> > +
-> > +/*
-> > + * CMD_GET_FREQ_BOOST_LEVEL - Get number of boost levels
-> > + * Input: CPU ID
-> > + * Output: number
-> > + */
-> > +#define CMD_GET_FREQ_BOOST_LEVEL     0x10
-> > +
-> > +/*
-> > + * CMD_GET_FREQ_LEVEL_INFO - Get freq level info
-> > + * Input: CPU ID, level ID
-> > + * Output: level info
-> > + */
-> > +#define CMD_GET_FREQ_LEVEL_INFO              0x11
-> > +
-> > +/*
-> > + * CMD_GET_FREQ_INFO - Get freq info
-> > + * Input: CPU ID, type
-> > + * Output: freq info
-> > + */
-> > +#define CMD_GET_FREQ_INFO            0x12
-> > +
-> > +/*
-> > + * CMD_SET_FREQ_INFO - Set freq info
-> > + * Input: CPU ID, type, value
-> > + * Output: none
-> > + */
-> > +#define CMD_SET_FREQ_INFO            0x13
-> > +
-> > +/* Freq types */
-> > +#define FREQ_INFO_TYPE_FREQ          0
-> > +#define FREQ_INFO_TYPE_LEVEL         1
-> > +
-> > +#define FREQ_MAX_LEVEL                       (16 + 1)
-> > +
-> > +enum freq {
-> > +     FREQ_LEV0, /* Reserved */
-> > +     FREQ_LEV1, FREQ_LEV2, FREQ_LEV3, FREQ_LEV4,
-> > +     FREQ_LEV5, FREQ_LEV6, FREQ_LEV7, FREQ_LEV8,
-> > +     FREQ_LEV9, FREQ_LEV10, FREQ_LEV11, FREQ_LEV12,
-> > +     FREQ_LEV13, FREQ_LEV14, FREQ_LEV15, FREQ_LEV16,
-> > +     FREQ_RESV
-> > +};
-> > +
-> > +static struct mutex cpufreq_mutex[MAX_PACKAGES];
-> > +static struct cpufreq_driver loongson3_cpufreq_driver;
-> > +static DEFINE_PER_CPU(struct cpufreq_frequency_table *, freq_table);
-> > +
-> > +static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 va=
-l, u32 extra)
-> > +{
-> > +     int retries;
-> > +     unsigned int cpu =3D smp_processor_id();
-> > +     unsigned int package =3D cpu_data[cpu].package;
-> > +     union smc_message msg, last;
-> > +
-> > +     mutex_lock(&cpufreq_mutex[package]);
-> > +
-> > +     last.value =3D iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
-> > +     if (!last.complete) {
-> > +             mutex_unlock(&cpufreq_mutex[package]);
-> > +             return -EPERM;
-> > +     }
-> > +
-> > +     msg.id          =3D id;
-> > +     msg.info        =3D info;
-> > +     msg.cmd         =3D cmd;
-> > +     msg.val         =3D val;
-> > +     msg.extra       =3D extra;
-> > +     msg.complete    =3D 0;
-> > +
-> > +     iocsr_write32(msg.value, LOONGARCH_IOCSR_SMCMBX);
-> > +     iocsr_write32(iocsr_read32(LOONGARCH_IOCSR_MISC_FUNC) | IOCSR_MIS=
-C_FUNC_SOFT_INT,
-> > +                   LOONGARCH_IOCSR_MISC_FUNC);
-> > +
-> > +     for (retries =3D 0; retries < 10000; retries++) {
-> > +             msg.value =3D iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
-> > +             if (msg.complete)
-> > +                     break;
-> > +
-> > +             usleep_range(8, 12);
-> > +     }
-> > +
-> > +     if (!msg.complete || msg.cmd !=3D CMD_OK) {
-> > +             mutex_unlock(&cpufreq_mutex[package]);
-> > +             return -EPERM;
-> > +     }
-> > +
-> > +     mutex_unlock(&cpufreq_mutex[package]);
-> > +
-> > +     return msg.val;
->
-> Thanks, this looks much better now.
->
-> > +}
-> > +
-> > +static unsigned int loongson3_cpufreq_get(unsigned int cpu)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ=
-_INFO, 0, 0);
-> > +
-> > +     return ret * KILO;
-> > +}
-> > +
-> > +static int loongson3_cpufreq_set(struct cpufreq_policy *policy, int fr=
-eq_level)
-> > +{
-> > +     return do_service_request(cpu_data[policy->cpu].core, FREQ_INFO_T=
-YPE_LEVEL, CMD_SET_FREQ_INFO, freq_level, 0);
-> > +}
-> > +
-> > +/*
-> > + * Here we notify other drivers of the proposed change and the final c=
-hange.
->
-> What do you mean by other drivers here ? I would just drop the
-> comment.
-OK, it will be dropped.
-
->
-> > + */
-> > +static int loongson3_cpufreq_target(struct cpufreq_policy *policy, uns=
-igned int index)
-> > +{
-> > +     /* setting the cpu frequency */
->
-> The obvious comments can be dropped.
-OK, it will be dropped.
-
->
-> > +     return loongson3_cpufreq_set(policy, index);
->
-> Why use a separate function for calling do_service_request() ? Just
-> open code it here.
-Hmm, there is a loongson3_cpufreq_get() function, so I make a
-loongson3_cpufreq_set() function, too.
-
->
-> > +}
-> > +
-> > +static int loongson3_cpufreq_get_freq_table(int cpu)
->
-> If you want to simplify the naming a bit, you can just call all
-> internal routines without `loongson3_cpufreq_` prefix. Just
-> create_freq_table() would be appropriate here.
-OK, I will rename this function.
-
->
-> For all routines passed to core, via the cpufreq_driver pointers, you
-> can keep using the prefix.
->
-> > +{
-> > +     int i, ret, boost_level, max_level, freq_level;
-> > +     struct cpufreq_frequency_table *table;
-> > +
-> > +     if (per_cpu(freq_table, cpu))
-> > +             return 0;
-> > +
-> > +     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_LEVEL_NUM, 0, 0);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +     max_level =3D ret;
-> > +
-> > +     ret =3D do_service_request(cpu, 0, CMD_GET_FREQ_BOOST_LEVEL, 0, 0=
-);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +     boost_level =3D ret;
-> > +
-> > +     freq_level =3D min(max_level, FREQ_MAX_LEVEL);
-> > +     table =3D kzalloc(sizeof(struct cpufreq_frequency_table) * (freq_=
-level + 1), GFP_KERNEL);
->
-> devm_kcalloc(pdev, ...) instead ?
-I remember you told me this in V1, but devm_kalloc() needs a pdev
-instance, which doesn't exist here, so I keep kzalloc().
-
->
-> sizeof(*table) instead.
-OK, thanks.
-
->
-> Also please run `scripts/checkpatch.pl --strict` on your patches to
-> find out general formatting issues.
-OK, I will run checkpatch.pl.
-
->
-> > +     if (!table)
-> > +             return -ENOMEM;
-> > +
-> > +     for (i =3D 0; i < freq_level; i++) {
-> > +             ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_=
-GET_FREQ_LEVEL_INFO, i, 0);
-> > +             if (ret < 0) {
-> > +                     kfree(table);
-> > +                     return ret;
-> > +             }
-> > +
-> > +             table[i].frequency =3D ret * KILO;
->
-> > +             table[i].driver_data =3D FREQ_LEV0 + i;
->
-> I don't think you are using this, you don't have to fill it at all.
-OK, I will drop it.
-
->
-> > +             table[i].flags =3D (i >=3D boost_level) ? CPUFREQ_BOOST_F=
-REQ : 0;
-> > +     }
-> > +
-> > +     table[freq_level].frequency =3D CPUFREQ_TABLE_END;
-> > +     table[freq_level].driver_data =3D FREQ_RESV;
-> > +     table[freq_level].flags =3D 0;
-> > +
-> > +     per_cpu(freq_table, cpu) =3D table;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int loongson3_cpufreq_cpu_init(struct cpufreq_policy *policy)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret =3D loongson3_cpufreq_get_freq_table(policy->cpu);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     policy->cur =3D loongson3_cpufreq_get(policy->cpu);
->
-> cpufreq core does this during initialization. The drivers don't need
-> to do it.
-OK, I will drop it.
-
->
-> > +     policy->cpuinfo.transition_latency =3D 10000;
-> > +     policy->freq_table =3D per_cpu(freq_table, policy->cpu);
-> > +     cpumask_copy(policy->cpus, topology_sibling_cpumask(policy->cpu))=
-;
-> > +
-> > +     if (policy_has_boost_freq(policy)) {
-> > +             ret =3D cpufreq_enable_boost_support();
-> > +             if (ret < 0) {
-> > +                     pr_warn("cpufreq: Failed to enable boost: %d\n", =
-ret);
-> > +                     return ret;
-> > +             }
-> > +             loongson3_cpufreq_driver.boost_enabled =3D true;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int loongson3_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-> > +{
-> > +     kfree(policy->freq_table);
-> > +     return 0;
-> > +}
-> > +
-> > +static int loongson3_cpufreq_cpu_online(struct cpufreq_policy *policy)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static int loongson3_cpufreq_cpu_offline(struct cpufreq_policy *policy=
-)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static struct cpufreq_driver loongson3_cpufreq_driver =3D {
-> > +     .name =3D "loongson3",
-> > +     .flags =3D CPUFREQ_CONST_LOOPS,
-> > +     .init =3D loongson3_cpufreq_cpu_init,
-> > +     .exit =3D loongson3_cpufreq_cpu_exit,
-> > +     .online =3D loongson3_cpufreq_cpu_online,
-> > +     .offline =3D loongson3_cpufreq_cpu_offline,
-> > +     .verify =3D cpufreq_generic_frequency_table_verify,
-> > +     .target_index =3D loongson3_cpufreq_target,
-> > +     .get =3D loongson3_cpufreq_get,
-> > +     .attr =3D cpufreq_generic_attr,
-> > +};
-> > +
-> > +static int configure_cpufreq_info(void)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret =3D do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
-> > +     if (ret <=3D 0)
-> > +             return -EPERM;
-> > +
-> > +     return do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE, FEATU=
-RE_DVFS_ENABLE | FEATURE_DVFS_BOOST, 0);
-> > +}
-> > +
-> > +static int loongson3_cpufreq_probe(struct platform_device *pdev)
-> > +{
-> > +     int i, ret;
-> > +
-> > +     ret =3D configure_cpufreq_info();
->
-> Maybe just open code the function here.. It is just two function calls
-> which are quite straight forward.
-OK, thanks.
-
->
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     for (i =3D 0; i < MAX_PACKAGES; i++)
-> > +             mutex_init(&cpufreq_mutex[i]);
->
-> This must be initialized before calling configure_cpufreq_info() as
-> you end up using them there.
-OK, thanks.
 
 Huacai
 >
-> > +     ret =3D cpufreq_register_driver(&loongson3_cpufreq_driver);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     pr_info("cpufreq: Loongson-3 CPU frequency driver.\n");
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void loongson3_cpufreq_remove(struct platform_device *pdev)
-> > +{
-> > +     cpufreq_unregister_driver(&loongson3_cpufreq_driver);
-> > +}
-> > +
-> > +static struct platform_device_id cpufreq_id_table[] =3D {
-> > +     { "loongson3_cpufreq", },
-> > +     { /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(platform, cpufreq_id_table);
-> > +
-> > +static struct platform_driver loongson3_platform_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "loongson3_cpufreq",
-> > +     },
-> > +     .id_table =3D cpufreq_id_table,
-> > +     .probe =3D loongson3_cpufreq_probe,
-> > +     .remove_new =3D loongson3_cpufreq_remove,
-> > +};
-> > +module_platform_driver(loongson3_platform_driver);
-> > +
-> > +MODULE_AUTHOR("Huacai Chen <chenhuacai@loongson.cn>");
-> > +MODULE_DESCRIPTION("CPUFreq driver for Loongson-3 processors");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.43.0
+> Regards
+> Bibo, Mao
+> >
+> >
+> > Huacai
+> >
+> >>
+> >> Regards
+> >> Bibo, Mao
+> >>
+> >>>
+> >>> Huacai
+> >>>
+> >>>>
+> >>>> Regards
+> >>>> Bibo, Mao
+> >>>>>
+> >>>>> Huacai
+> >>>>>
+> >>>>>
+> >>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> How about adding new extra features capability for VM such as?
+> >>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
+> >>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
+> >>>>>>>>> They should be similar as LBT, if LBT is vcpu feature, they sho=
+uld
+> >>>>>>>>> also be vcpu features; if LBT is vm feature, they should also b=
+e vm
+> >>>>>>>>> features.
+> >>>>>>>> On other architectures, with function kvm_vm_ioctl_check_extensi=
+on()
+> >>>>>>>>         KVM_CAP_XSAVE2/KVM_CAP_PMU_CAPABILITY on x86
+> >>>>>>>>         KVM_CAP_ARM_PMU_V3/KVM_CAP_ARM_SVE on arm64
+> >>>>>>>> These features are all cpu features, at the same time they are V=
+M features.
+> >>>>>>>>
+> >>>>>>>> If they are cpu features, how does VMM detect validity of these =
+features
+> >>>>>>>> passing from command line? After all VCPUs are created and send =
+bootup
+> >>>>>>>> command to these VCPUs? That is too late, VMM main thread is eas=
+y to
+> >>>>>>>> detect feature validity if they are VM features also.
+> >>>>>>>>
+> >>>>>>>> To be honest, I am not familiar with KVM still, only get further
+> >>>>>>>> understanding after actual problems solving. Welcome to give com=
+ments,
+> >>>>>>>> however please read more backgroud if you insist on, else there =
+will be
+> >>>>>>>> endless argument again.
+> >>>>>>> I just say CPUCFG/LSX/LASX and LBT should be in the same class, I
+> >>>>>>> haven't insisted on whether they should be vcpu features or vm
+> >>>>>>> features.
+> >>>>>> It is reasonable if LSX/LASX/LBT should be in the same class, sinc=
+e
+> >>>>>> there is feature options such as lsx=3Don/off,lasx=3Don/off,lbt=3D=
+on/off.
+> >>>>>>
+> >>>>>> What is the usage about CPUCFG capability used for VM feature? It =
+is not
+> >>>>>> a detailed feature, it is only feature-set indicator like cpuid.
+> >>>>>>
+> >>>>>> Regards
+> >>>>>> Bibo Mao
+> >>>>>>>
+> >>>>>>> Huacai
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>> Regards
+> >>>>>>>> Bibo, Mao
+> >>>>>>>>>
+> >>>>>>>>> Huacai
+> >>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> Regards
+> >>>>>>>>>> Bibo Mao
+> >>>>>>>>>>>
+> >>>>>>>>>>> Huacai
+> >>>>>>>>>>>
+> >>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/=
+vcpu.c
+> >>>>>>>>>>>> index 233d28d0e928..9734b4d8db05 100644
+> >>>>>>>>>>>> --- a/arch/loongarch/kvm/vcpu.c
+> >>>>>>>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+> >>>>>>>>>>>> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id,=
+ u64 *v)
+> >>>>>>>>>>>>                               *v |=3D CPUCFG2_LSX;
+> >>>>>>>>>>>>                       if (cpu_has_lasx)
+> >>>>>>>>>>>>                               *v |=3D CPUCFG2_LASX;
+> >>>>>>>>>>>> +               if (cpu_has_lbt_x86)
+> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_X86BT;
+> >>>>>>>>>>>> +               if (cpu_has_lbt_arm)
+> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_ARMBT;
+> >>>>>>>>>>>> +               if (cpu_has_lbt_mips)
+> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_MIPSBT;
+> >>>>>>>>>>>>
+> >>>>>>>>>>>>                       return 0;
+> >>>>>>>>>>>>               case LOONGARCH_CPUCFG3:
+> >>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm=
+.c
+> >>>>>>>>>>>> index 6b2e4f66ad26..09e05108c68b 100644
+> >>>>>>>>>>>> --- a/arch/loongarch/kvm/vm.c
+> >>>>>>>>>>>> +++ b/arch/loongarch/kvm/vm.c
+> >>>>>>>>>>>> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct k=
+vm *kvm, long ext)
+> >>>>>>>>>>>>               return r;
+> >>>>>>>>>>>>        }
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct =
+kvm_device_attr *attr)
+> >>>>>>>>>>>> +{
+> >>>>>>>>>>>> +       switch (attr->attr) {
+> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
+> >>>>>>>>>>>> +               if (cpu_has_lbt_x86)
+> >>>>>>>>>>>> +                       return 0;
+> >>>>>>>>>>>> +               return -ENXIO;
+> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
+> >>>>>>>>>>>> +               if (cpu_has_lbt_arm)
+> >>>>>>>>>>>> +                       return 0;
+> >>>>>>>>>>>> +               return -ENXIO;
+> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
+> >>>>>>>>>>>> +               if (cpu_has_lbt_mips)
+> >>>>>>>>>>>> +                       return 0;
+> >>>>>>>>>>>> +               return -ENXIO;
+> >>>>>>>>>>>> +       default:
+> >>>>>>>>>>>> +               return -ENXIO;
+> >>>>>>>>>>>> +       }
+> >>>>>>>>>>>> +}
+> >>>>>>>>>>>> +
+> >>>>>>>>>>>> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_devi=
+ce_attr *attr)
+> >>>>>>>>>>>> +{
+> >>>>>>>>>>>> +       switch (attr->group) {
+> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
+> >>>>>>>>>>>> +               return kvm_vm_feature_has_attr(kvm, attr);
+> >>>>>>>>>>>> +       default:
+> >>>>>>>>>>>> +               return -ENXIO;
+> >>>>>>>>>>>> +       }
+> >>>>>>>>>>>> +}
+> >>>>>>>>>>>> +
+> >>>>>>>>>>>>        int kvm_arch_vm_ioctl(struct file *filp, unsigned int=
+ ioctl, unsigned long arg)
+> >>>>>>>>>>>>        {
+> >>>>>>>>>>>> -       return -ENOIOCTLCMD;
+> >>>>>>>>>>>> +       struct kvm *kvm =3D filp->private_data;
+> >>>>>>>>>>>> +       void __user *argp =3D (void __user *)arg;
+> >>>>>>>>>>>> +       struct kvm_device_attr attr;
+> >>>>>>>>>>>> +
+> >>>>>>>>>>>> +       switch (ioctl) {
+> >>>>>>>>>>>> +       case KVM_HAS_DEVICE_ATTR:
+> >>>>>>>>>>>> +               if (copy_from_user(&attr, argp, sizeof(attr)=
+))
+> >>>>>>>>>>>> +                       return -EFAULT;
+> >>>>>>>>>>>> +
+> >>>>>>>>>>>> +               return kvm_vm_has_attr(kvm, &attr);
+> >>>>>>>>>>>> +       default:
+> >>>>>>>>>>>> +               return -EINVAL;
+> >>>>>>>>>>>> +       }
+> >>>>>>>>>>>>        }
+> >>>>>>>>>>>> --
+> >>>>>>>>>>>> 2.39.3
+> >>>>>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>
+> >>>>>>
+> >>>>
+> >>
 >
-> --
-> viresh
+>
