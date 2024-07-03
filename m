@@ -1,61 +1,61 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495841862BE
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 17:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484131849E0
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 17:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720028456; cv=none; b=fZ922AlCm688L5XnB3+uOglVU1S6LWPOSX6HyEGLh7lEGxiFXem1zBvI1T2qm5MoQvDyMx/w8Yv0OoBRFxuzW/gevWzwiYz1LTy1DA3Me+nz99polwxZeDEKiE4XFz7inucgBenDxaixy63XEA4gs7+w1CqDEBg4Uj7L4dmJrfU=
+	t=1720029315; cv=none; b=WjM8kMiXGDLBmsR5eEXzWFT0JQE79qGBuXObOvl0eiaIC9i08clFRaOjMTufCyfmvkWJFp2pv0K2u2/WogVhAuag4kwTpbXbIRqS/lIWfX9utosN6LkZLu8KyK2T1+E30O7hWhIxI49fDKegT5YqzEtdD8kad65QU8fe2dNC0tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720028456; c=relaxed/simple;
-	bh=OmJgZmMNMA+vqsqmuMadaQXQgXYtB0kLJuTl566s2uI=;
+	s=arc-20240116; t=1720029315; c=relaxed/simple;
+	bh=7f1Jw4HvKMPAz77zJdFLUyAdloZi7jiFu3rAdtPOMZE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F14/771q07sACr6IAmcIEf/4QPLb4lUD6JwJlPiNGX36cXzgKx/+zVYK7A4Otq+YjzRSctDwLLqMCvoMfJ5j/W7DFENbRP8CBOiwdZMvlXRJP05Omjc52nxGJOAfqC8be4TqAXN2cCLH926sD8FY1Y08qeXWIfF23SSdkv2xg50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IPDmiJ3W; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=PGIKwG9vOBDS4xVepjwkBvLS+rJA5jiK3RLTN9auge06HPHZWgEofGOF4Hx7sjpmCA1soB91bm8KniJG27p3k43DmxySlHAaxdBcDxcs24IMhxZkplfOVNx1mXRJcV97BAPHGqN/r+OhT8mdek2PRD2JJNE/mGwgqC0LkD79/s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hWVFavjk; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IPDmiJ3W"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so63908461fa.0
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 10:40:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hWVFavjk"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a724b3a32d2so672040666b.2
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 10:55:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720028452; x=1720633252; darn=lists.linux.dev;
+        d=linux-foundation.org; s=google; t=1720029311; x=1720634111; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kNRq2xwEntheuQ6TeaPDnSkqCd5DNGo6bKIeeb/W6x4=;
-        b=IPDmiJ3Wp/+basuT83ONlCFfqZa3BhPK+8XpZ8KHcfQ+tPQweFNaNFvDLCBdFUY3Pp
-         fziu9f3hC2HgmoyJI+6uBhkn8hevSNp3I+la/Qd4XHUtDhiHtw5lqDkzMXyo6a7HwH7y
-         myaBPpeEqjuIFFhOBCs1Z+MLndPcF0SVEjv9Y=
+        bh=jBLAgZolniuYLkImL+HV9eymQn/u6hu6ZNMnsLo1ncg=;
+        b=hWVFavjkZ/E6+QLcj+WQB8orlOTPwHgkSIDWgrn0i4WIEy58wuD0kr7Qi36PZyM1k4
+         eCn2slNZsIr5VY6ZkrlYw74COalD20fqt6NDGcxCoySvFYgl/nxWUPDwgVQ078rqfBrb
+         ymKm6WvaDYuyVO0/minZ//WgaXBI8Th/FmeOo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720028452; x=1720633252;
+        d=1e100.net; s=20230601; t=1720029311; x=1720634111;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kNRq2xwEntheuQ6TeaPDnSkqCd5DNGo6bKIeeb/W6x4=;
-        b=W656T+UvZDOfy7kYKonw0F4e+8w81nairNvsJFYc1toYKzoqMBlvZ/jAYZqk1H9IPj
-         Va1qlp3c3ivD2FLiGkqfGsFjUyNgDMdlIVp/1g4yOa+skEuUCz/ICt5hi/T2kdg2uBxy
-         xz7g0sOcqInCn4jetLnhxhOYsK5a2a4ZeXFT74JMj61an4rI4qk9svgnEg9TloD8ik45
-         1LgvqC7xjQWvvsD+it7SY+sVLYvCjka+iM421AgbcYInrbt4X4AHu9dnfWAcViJ3q/OX
-         RobFUTAlXT1FFDX3aKIQdjHrA5XoUQWVZS1PWttndf/BK1pVmMDZi5e0T/8RyVe0W3jd
-         +USg==
-X-Forwarded-Encrypted: i=1; AJvYcCXu41kNrXfpP3zVJfuzY5XtwSOc6FT4OVaVUoNuXcL142iLsCnu+TIeNhbC/3IoNFm35WHTlfD7Ka6gQuqI0fMWPfMVrag8n4s1
-X-Gm-Message-State: AOJu0Yx7cpcK+pLgBDq+v/cebfWDxmTbYaBwZWcjChNtP4Ia/FBtup8c
-	H8XFGG2d/AcTFM1wKnNTEvXnjL5hW4DeE87rWhjI73QDTe48Vl6pP68eBJgRAdGs1dnkrSNjWmu
-	7IHY+BQ==
-X-Google-Smtp-Source: AGHT+IGXRVN9UA1qI8E2anthTirMaFHsrVy/R/OWKevQm2M2nxEJ8b23f+SnXJKRz0ftpTI5XSsgIw==
-X-Received: by 2002:a2e:a989:0:b0:2ec:54ec:1741 with SMTP id 38308e7fff4ca-2ee5e36d166mr99421971fa.18.1720028452244;
-        Wed, 03 Jul 2024 10:40:52 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee8842b920sm1576651fa.39.2024.07.03.10.40.51
+        bh=jBLAgZolniuYLkImL+HV9eymQn/u6hu6ZNMnsLo1ncg=;
+        b=TQRl5au5K/1yE+gV/J+BuCj4f0o4D4LxUhJHvE8rU+7lwohR3JkE0IUXFDG4Je+0MF
+         NJHV0Qy6VnLmho0Qr37NMpOe54SNwqKrITHzotgE4wDoi++bnV1HObOdBGRrWh/IHgGS
+         2N5WbhsgIlcDQIK6WVXhLm4F5284pQhdQIyseb5qX7uBHWRq5uaskRs4aAzOsQgeZeCj
+         3X1zlY85+2KwkkQ+OH8Jg580n05DguI6cy0Oyc0WkPcocMHG2t47STsmgLEv5MMZQppu
+         G3Hc45y5LtKXU8TGDqK1JwKEpnGDG0Wa0nglSuZBK1iGeP71tQqyracuDZQA2NHeJvdI
+         yMGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRSAdJciUAoxOonXaFNwU53rsr88zTwhVCnL3C66n6RFqyv8B4rICNFhBws4vOZOeR1simot3pKaCNzLjJOSiNTOUFlmABNTND
+X-Gm-Message-State: AOJu0YyDaNvgNwFnCiUAYjneYBrC5HKgbjeT6nCG5fuFpdyrh+iLmZAw
+	dmzZMHOE8/bTusijOuynn4++nqbzmdkMnf2fZvimqvKGJdxwB766sBpTB/DsNMKCiC+pFm+A7Lb
+	U/soYDw==
+X-Google-Smtp-Source: AGHT+IG3U0B/NldFyiCvsCLhDu1Q/KG/MN+R2arTCE72NZwIq+qgS6cku8JB8TebF8GOH+QZNhUJkg==
+X-Received: by 2002:a17:907:2cc2:b0:a6f:bc02:9ff3 with SMTP id a640c23a62f3a-a75144630bcmr970304166b.15.1720029311497;
+        Wed, 03 Jul 2024 10:55:11 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065735sm532403566b.135.2024.07.03.10.55.09
         for <loongarch@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 10:40:51 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52e99060b41so937809e87.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 10:40:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXePzV/JgdBXuVHV/aw/nCBLBL1c5v4uhchNr9MtUX5+QnSt17UCudDrdVbE14O4Z1xiHaBKpJ0I2tqgEYPquvyEkE0g2yKT+us
-X-Received: by 2002:a05:6512:ac6:b0:52c:d90d:d482 with SMTP id
- 2adb3069b0e04-52e827459a3mr8256135e87.66.1720028450692; Wed, 03 Jul 2024
- 10:40:50 -0700 (PDT)
+        Wed, 03 Jul 2024 10:55:10 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a77b4387302so4094166b.1
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 10:55:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVF8eqfoiTrgeC8PtWrr5+Jz4NuK4LdmDTKM43ASew+mFDbBKmzcN7TheMSSvo4wcjHDoG1Ey8XFr8LvjscwWTObSpqqUfpcOLT
+X-Received: by 2002:a17:906:7d2:b0:a72:4b31:13b5 with SMTP id
+ a640c23a62f3a-a75144f61a2mr779219566b.54.1720029309600; Wed, 03 Jul 2024
+ 10:55:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -71,12 +71,13 @@ References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3
  <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com> <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
  <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
  <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
- <CAHk-=wif5KJEdvZZfTVX=WjOOK7OqoPwYng6n-uu=VeYUpZysQ@mail.gmail.com> <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
-In-Reply-To: <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site>
+ <CAHk-=wif5KJEdvZZfTVX=WjOOK7OqoPwYng6n-uu=VeYUpZysQ@mail.gmail.com>
+ <b60a61b8c9171a6106d50346ecd7fba1cfc4dcb0.camel@xry111.site> <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jul 2024 10:40:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
-Message-ID: <CAHk-=wjH3F1jTVfADgo0tAnYStuaUZLvz+1NkmtM-TqiuubWcw@mail.gmail.com>
+Date: Wed, 3 Jul 2024 10:54:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wii3qyMW+Ni=S6=cV=ddoWTX+qEkO6Ooxe0Ef2_rvo+kg@mail.gmail.com>
+Message-ID: <CAHk-=wii3qyMW+Ni=S6=cV=ddoWTX+qEkO6Ooxe0Ef2_rvo+kg@mail.gmail.com>
 Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
 To: Xi Ruoyao <xry111@xry111.site>
 Cc: Christian Brauner <brauner@kernel.org>, libc-alpha@sourceware.org, 
@@ -87,20 +88,21 @@ Cc: Christian Brauner <brauner@kernel.org>, libc-alpha@sourceware.org,
 	Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 3 Jul 2024 at 10:30, Xi Ruoyao <xry111@xry111.site> wrote:
+On Wed, 3 Jul 2024 at 10:40, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> struct stat64 {
->
-> // ...
->
->     int     st_atime;   /* Time of last access.  */
+> Oh wow. Shows just *how* long ago that was - and how long ago I looked
+> at 32-bit code. Because clearly, I was wrong.
 
-Oh wow. Shows just *how* long ago that was - and how long ago I looked
-at 32-bit code. Because clearly, I was wrong.
+Ok, so clearly any *new* 32-bit architecture should use 'struct statx'
+as 'struct stat', and at least avoid the conversion pain.
 
-I guess it shows how nobody actually cares about 32-bit any more, at
-least in the 2037 sense.
+Of course, if using <asm-generic/stat.h> like loongarch does, that is
+very much not what happens. You get those old models with just 'long'.
 
-The point stands, though - statx isn't a replacement for existing binaries.
+So any architecture that didn't do that 'stat == statx' and has
+binaries with old stat models should just continue to have them.
+
+It's not like we can get rid of the kernel side code for that all _anyway_.
 
              Linus
