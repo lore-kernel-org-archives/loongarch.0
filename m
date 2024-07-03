@@ -1,142 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C5E2C879
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 07:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6324113B5B6;
+	Wed,  3 Jul 2024 08:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719992568; cv=none; b=aPBH/hSKbZJQuyec+HYnkh5F2oTwXvXzL73lYhj8UE3ekb8XmKqWblWXqVNC2iTCWSL22aDZswn0+q7nRh3/2ZWpQO7ou/OdeNqDcxlrXXyobdNlCj9sd+P/ASE+g98Ty2VdYw05Swg2TgWti9hUCzqftiHJhQ4dyi2KLw43bmc=
+	t=1719996366; cv=none; b=LcUF0Vmto2h0rtB/E2HfYtbRhGMdMIr8+7UYGs7G7nUwwfkg50e9p9EJg9aTPdPX1m5gwjK8uJKTMDkP9/f6wNIxtazuV/N9WmefSy6r2QJyV7/zYQ4ti1Zie6RHoRPnPsO5CHHwXuclsvlnLKGRAQ4W6PIKgXTDD9lmpIsv1KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719992568; c=relaxed/simple;
-	bh=d7wO73FMzmNUnkXQK7veItmN8OK22DyDbCyHBBaKR9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RrxKZzwXzY1xijrzjvcY8k2GQE2U9Bu8CoCWKFbVBAhvDCs04kdILk8Hzo9TvFJ+IiunFzoRcOc9MYjhcj6Gb0InW4f9yWbtV54uEfPZMYS1vHpvqUrv5CiUePgflfUrUp4O6dg8E3hQTGfVzfg84e/YH2nQZRA0p9ardcPdgW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sn787ysy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719996366; c=relaxed/simple;
+	bh=8tTWBbIfp4RYs5ggHus8UpXXenBA9tpsSLsvXgNGsZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DDZab4N8U4S2dPIlys643h6hvQ87nXQTElAr9w7cdTuwVbk2VwALwgujvX1TLaeXDl8AvNgcq76VFiV42xjvC8OMFSevC/X2J+vaT3v01YbdjojS2L0E3E0BIR4rqgdDMBkOPLqt2HDC2rstcEBCiDuTVbTwNIFP4IRzVHUs9ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kE8GJLEk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sn787ysy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C66C2BD10
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 07:42:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kE8GJLEk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B96C32781;
+	Wed,  3 Jul 2024 08:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719992567;
-	bh=d7wO73FMzmNUnkXQK7veItmN8OK22DyDbCyHBBaKR9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sn787ysyg+fy2gk9vd38gSTE9XZoiXdcUQ83uSUyBjhO+qJk+vUNsuIlTtRpdhuj6
-	 cegwjX51eh3bpf6QFlsgIlLMcedl6y/udnkY971NlqJbLmVNOEAmQqx8BkdUtYsQ/n
-	 DbYDBuoX5n/xxKbXm7PnNx1QohiHQDdXZX0zOcL1Oc+RBIvj30LfTXgGlaCzIP9tcT
-	 KJGGKTmX9A4ESxexzS7JE5mnWSH4zUyQxQPpkz6QoSyJ+HtncXQ4p0HK4mRfRu38cT
-	 fPPl6JrAxUGr6rn594HI/2sXbFiqmMRjJe2SNg+D8YKKHiqV0Zc1kN2m+cpnAJAtpR
-	 aSEZWKV2Y4xKA==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-58bac81f39bso2048327a12.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 00:42:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWW1713ja3T6C3fUm5KTDECnaEdCgkxqIkSATiyEkgP1h9EtqLBEQGLnsBRiG9yfDjA0W9nsRaGpe7dptAMxc6uoCmTEOux2Ql/
-X-Gm-Message-State: AOJu0Yxgq8akebmiBXw9ThymkF5gJbfNGaEJ2P1TEKNBQxBITl5D7uoH
-	BZzhfMhW+v5X4nu8a6ajHCJR+6cb9K8helrOBExdzdkChtsIKSO8Sfk5zUGEc+YfQ1+lsxOEKEI
-	V98CqzbgMqp70Mqf8CgvmH4RVdkw=
-X-Google-Smtp-Source: AGHT+IG7z1ijrDHEG8xdMvbUQ+K+sy3FSfHCIPsQRvUgfxkc+1nRLMzeAYnpn0+NqfyMLJBfczDO5uruzkeQ0HbD4hE=
-X-Received: by 2002:a17:907:970e:b0:a72:6ff6:b91a with SMTP id
- a640c23a62f3a-a751447b21dmr821270266b.51.1719992566477; Wed, 03 Jul 2024
- 00:42:46 -0700 (PDT)
+	s=k20201202; t=1719996366;
+	bh=8tTWBbIfp4RYs5ggHus8UpXXenBA9tpsSLsvXgNGsZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kE8GJLEkwyiU5152Sq7Jpo1DYYerGfjeXJWRpgzMb4/alcXywnbLHoRK5OgfNpXvi
+	 G1xd8DjWipYSfC+3LxEwSUc1cCUzxfB19fZ3FU81vf6Er1duJ1jVyH17rj1jnfILpg
+	 K9AAQMcJK8FC0I+iU7VodNwBvzCmvo3ircRgo9nmU3c6UlDocCEJJkF7Sjxu8ck6pn
+	 e8M2XE6lcSogOTBmKiIbfHPlxrUbZdhQz48DyLvUmgSxnvyeZ6jS18za2WiRyPVXKj
+	 NX2md3uunssvvPgsUMnm/SyXSTnr/AN0bVLlUsjWVtRZ6ga12XfLXH7QGgNq2FTLw8
+	 PL3o3v+43P/6Q==
+Date: Wed, 3 Jul 2024 10:45:57 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
+	Mateusz Guzik <mjguzik@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, loongarch@lists.linux.dev
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+Message-ID: <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
+References: <20240625110029.606032-1-mjguzik@gmail.com>
+ <20240625110029.606032-3-mjguzik@gmail.com>
+ <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+ <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+ <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
+ <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+ <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
+ <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
+ <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1716795485.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1716795485.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 3 Jul 2024 15:42:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H793mKPRyng6VFxS5=sXofvTAFX3t-h2MPCVs+9boe_NA@mail.gmail.com>
-Message-ID: <CAAhV-H793mKPRyng6VFxS5=sXofvTAFX3t-h2MPCVs+9boe_NA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pwm: Introduce pwm driver for the Loongson family chips
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, loongson-kernel@lists.loongnix.cn, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
 
-For the whole series,
+On Tue, Jul 02, 2024 at 07:06:53PM GMT, Arnd Bergmann wrote:
+> On Tue, Jul 2, 2024, at 17:36, Huacai Chen wrote:
+> > On Mon, Jul 1, 2024 at 7:59 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >> On Sun, Jun 30, 2024, at 04:39, Xi Ruoyao wrote:
+> >> > On Sun, 2024-06-30 at 09:40 +0800, Huacai Chen wrote:
+> >> >> >
+> >> >> > Yes, both Linus and Christian hates introducing a new AT_ flag for
+> >> >> > this.
+> >> >> >
+> >> >> > This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) behave
+> >> >> > like
+> >> >> > statx(fd, "", AT_EMPTY_PATH, ...) instead.  NULL avoids the
+> >> >> > performance
+> >> >> > issue and it's also audit-able by seccomp BPF.
+> >> >> To be honest, I still want to restore __ARCH_WANT_NEW_STAT. Because
+> >> >> even if statx() becomes audit-able, it is still blacklisted now.
+> >> >
+> >> > Then patch the sandbox to allow it.
+> >> >
+> >> > The sandbox **must** be patched anyway or it'll be broken on all 32-bit
+> >> > systems after 2037.  [Unless they'll unsupport all 32-bit systems before
+> >> > 2037.]
+> >>
+> >> More importantly, the sandbox won't be able to support any 32-bit
+> >> targets that support running after 2037, regardless of how long
+> >> the sandbox supports them: if you turn off COMPAT_32BIT_TIME today
+> >> in order to be sure those don't get called by accident, the
+> >> fallback is immediately broken.
+> > Would you mind if I restore newstat for LoongArch64 even if this patch exist?
+> 
+> I still prefer not add newstat back: it's easier to
+> get applications to correctly implement the statx() code
+> path if there are more architectures that only have that.
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+I agree.
 
-On Mon, May 27, 2024 at 3:51=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patchset introduce a generic PWM framework driver for Loongson famil=
-y.
-> Each PWM has one pulse width output signal and one pulse input signal to =
-be measured.
->
-> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
-.
->
-> Thanks.
->
-> -------
-> V4:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Addressed Uwe's review comments, thanks.
->    - Make use of devm_pwmchip_alloc() function;
->    - Add Limitations description;
->    - Add LOONGSON_ prefix for Loongson pwm register defines;
->    - Keep regs written only once;
->    - Rewrite duty/period calculation;
->    - Add dev_err_probe() in .probe();
->    - Put the parameters used by PM into a separate
->      structure(pwm_loongson_suspend_store);
->    - Fix some code style.
->
-> Link to V3:
-> https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongso=
-n.cn/
->
-> V3:
-> patch (1/2):
->  - Add Reviewed-by tag from Krzysztof, thanks.
-> patch (2/2):
->  - Several code stlye adjustments, such as line breaks.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
->
-> v2:
-> - Remove the dts-related patches and update dts at once after all
-> relevant drivers are complete.
-> patch (1/2):
->  - The dt-binding filename should match compatible, rename it as
->    loongson,ls7a-pwm.yaml;
->  - Update binding description;
->  - Add description for each pwm cell;
->  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
-y.
->
-> Link to v1:
-> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
-n.cn/
->
-> Binbin Zhou (2):
->   dt-bindings: pwm: Add Loongson PWM controller
->   pwm: Add Loongson PWM controller support
->
->  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
->  MAINTAINERS                                   |   7 +
->  drivers/pwm/Kconfig                           |  12 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-loongson.c                    | 295 ++++++++++++++++++
->  5 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
-wm.yaml
->  create mode 100644 drivers/pwm/pwm-loongson.c
->
-> --
-> 2.43.0
->
->
+We've now added AT_EMPTY_PATH support with NULL names because we want to
+allow that generically. But I clearly remember that this was requested
+to make statx() work with these sandboxes. So the kernel has done its
+part. Now it's for the sandbox to allow statx() with NULL paths and
+AT_EMPTY_PATH but certainly not for the kernel to start reenabling old
+system calls.
