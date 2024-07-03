@@ -1,421 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0217BB3E
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 15:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70297282E1
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 16:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720020974; cv=none; b=n56+J0TbCZFTWs8BMBoJGEpv8IlEnNtPPWSITvJ2hqSRadV3c4XCXeGpnJoyTJiH0UsxnoxYJUw4DG0cxVlPknT8v4GqsgA3rJTpKWiaB61u+vxNYwIIt+xiAu5lU6LhSQFbsZxhtLeGzoxoK32wfsrU7TouwkzsGPVhjYkVxeg=
+	t=1720024321; cv=none; b=VUbcs9+cs9Q9bGA+C1MukWHUHFj7I4/0fmf0BnqVleHW9rL/lsGXjRE58jbt0eah7T8DBj6nfC3fVdR8A/ifqgmP3L7+z/2mpmLEc+8ZuEf4hk6b3wRgCQ/kAbI0MjdHWfnfmoAx9a1PuoDpvUnZZkUBU7vc465o/vJ+KLgv3og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720020974; c=relaxed/simple;
-	bh=6Gtk2qmlvnHp9KMxnwj1XVHDyicmeOgvQjFp0LL0ejA=;
+	s=arc-20240116; t=1720024321; c=relaxed/simple;
+	bh=aX/dntK47yBZoBKXBogHtsXyVUj/EEsdEqcWuVR2MNY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RzqyCve+dyzqVp/ClSM2SGzsXUDjeb7nY0nCoziteIQ4BiGj4M/fjx+z7KRPYqCPmwRyakiV+MilPuCF9P3sXqmnssmJrTeHie5aU2N3EGtbGHfU353h0E34LnIE1suiCjIySJ/0PXM+pl7x+SfODHXKWIymiYqoP9bRFmFpLfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K60MVa0k; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=H9RaOecy94uXdyKZAyLcnlznH5bw7m25XICLWq7SGUtgxToLV7OVHASUpKDcAsB/de1mYk9xNX/4nWwck3T7IrD6cheWzZRm5Uo67Cst3KB299eX7rgfEjxYEvLvFhnGCSVvJzXdv5h4Dgj1RzixdZTTv+Uft7/AZlx11kgOU6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WIZuZOmR; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K60MVa0k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A65BC32781
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 15:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720020973;
-	bh=6Gtk2qmlvnHp9KMxnwj1XVHDyicmeOgvQjFp0LL0ejA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=K60MVa0kZY00XMlIuG10BVsw1fvAbTLA1wI+dQs+QzjsGEhrRe4c7rQL/dAzH7q1d
-	 hikH/o3k80UY5h3G3DebaqbFk7V9IUDiiqbnlJYGn7VZCkqX1v70Z1PsO4iRBjs9IR
-	 ZybZXoueEOXfmXUxBT0VJKng7htFcwnRn9gNTOvOi4kDzjCIDJ0Ak0CeBqkY0g1S0A
-	 GHSTLCmVtrHwDv6YNGkesSSzD6cN1GnAYaxgqdcx4XmcS1PifuXYs273mm2jlFTo3q
-	 HBO8gLjbPqjjw2HieZYfYnVTiLVdAVDMqxIuX/mpaFFqjArXaOA3PxQaWPWmApy+7c
-	 M2NJYXDS7o+dg==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso561699266b.0
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 08:36:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+Xd+sAQ4JV+9LlSP9lH+2aS0GwS/0ueUKbgfxeM5FyBfRq9gFcF2X7ubGM6egKPgrSmK2G/tYhKiafKX3eSsBONvtNKmhDhHf
-X-Gm-Message-State: AOJu0Yxr2cOyNgjqfUDk2lOcEnAzZGRqNsheKgCkX9Zws7joQ1gJlNp5
-	SZw9sAkgPLvm55mqyhlR0pnDSksDb0kKlJt4Ox4buf+ILc4ykPAMm2tgP44D82X0NKZBK2R526g
-	wVBoKp1dnwwdpg7UDgs3L72cUlEA=
-X-Google-Smtp-Source: AGHT+IGBP9VnY+dtMQOjnre/0HuapAdJpD8X6TeD7LjqJIsTbgs1N59f9yhR7WGs8+ALojmcrIYwMU3rz0R6m+PlUXE=
-X-Received: by 2002:a17:906:a416:b0:a72:b4d6:ec6c with SMTP id
- a640c23a62f3a-a7514422b00mr608793366b.33.1720020972129; Wed, 03 Jul 2024
- 08:36:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WIZuZOmR"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso690595566b.1
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 09:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1720024317; x=1720629117; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iyado1sFM+cGedSAqHu7B/wZSU2t+kg2eHyPGnCfXa8=;
+        b=WIZuZOmR2j0/PzpjyPgbE9D7cGZClFyo1UpLEGJVhR7F3BIUMAtYBOy0DzS2BU+gPv
+         UBwdpUgRMPk5U7UtXsZ+HADy2FR4r9tCg+MH2ahpp0p292ASbeuHhYmIjBFFecs5ozYo
+         sNAdyHXBvEgKzYfnNRWefrbOWbx2uyjOUY+Bo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720024317; x=1720629117;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iyado1sFM+cGedSAqHu7B/wZSU2t+kg2eHyPGnCfXa8=;
+        b=pN0c0vVoyjovhJ5X5DYR2k2mwe0HRBbkX7yEzCLseVW/myqWnE7UUXxBsguk/w/ram
+         LdvO9jyUbZhSQ0zFnHSsmrR/fS4Wvxmvf9VDotXOTpJjIUDbW+fUTVG+i0cvp4dmwmmz
+         IuNoCXSvacmtTIeMQE+ix/Hc4e834DLBK52XiB+85AxDh3j7qyRr18r3tjI8MNCrZcb/
+         f2eU6l/vZ3XbnuHqISsG2EN1UBKjBxwvVbWb/oP2sjcIntYawOrzqqqAAHbSw5HFFO0P
+         CRtFvGi/sqVzM/L9uDPkMdEVvyJpoUg5KpMBdqUk9ERF4d6zTJI75ozWdLAVdLbk8e07
+         KqHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZjrrVfHVCRdykjAjxAM02t9pgC+l+W4mTUDi5bxlM+yix52LYLBuDVd3zBu5vnCdMXx6eA+A0RYPpCGwaZoiPSh7vklnmSV+C
+X-Gm-Message-State: AOJu0Yyeg7h71VRjlkR9NIbI5WHnuVKHNEyY1v28mfEoNXEbl5PCE79E
+	cE/2BiEspKR8MaqKPe5AupqV14+glyJQ3rMUEIjd8YzatcvUuI0cGlc28/aT51hWZyuUx03mYzN
+	4KgGejg==
+X-Google-Smtp-Source: AGHT+IFB1hcSA+QUU1RzFUD+vy+N/Ozw8yBXY5WarH9/lFAnHOFhsTx+xanhqRA4oF5UoiTkzwzAtA==
+X-Received: by 2002:a17:906:fcd6:b0:a72:6055:7886 with SMTP id a640c23a62f3a-a751440e887mr692904666b.24.1720024317641;
+        Wed, 03 Jul 2024 09:31:57 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf5a585sm522071166b.52.2024.07.03.09.31.56
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jul 2024 09:31:56 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so2756833a12.1
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 09:31:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU89eO3U2bGMro9gIIF0zYll97NxNiPfVgqDQGQh4j/xSs/bG7/k0ahix+Vmnfx6dE4K1Vv03e35uUwMOxDPZBiQU8P05aY8HuI
+X-Received: by 2002:a17:907:368a:b0:a75:3f38:e0a4 with SMTP id
+ a640c23a62f3a-a753f38e1a0mr459327066b.47.1720024316186; Wed, 03 Jul 2024
+ 09:31:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240626063239.3722175-1-maobibo@loongson.cn> <20240626063239.3722175-3-maobibo@loongson.cn>
- <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
- <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn> <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
- <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn> <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
- <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn> <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
- <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn> <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
- <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn> <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
- <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
-In-Reply-To: <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 3 Jul 2024 23:35:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
-Message-ID: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
-To: maobibo <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3-mjguzik@gmail.com>
+ <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+ <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+ <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
+ <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+ <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com> <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
+ <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com> <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
+In-Reply-To: <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 3 Jul 2024 09:31:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
+Message-ID: <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+To: Christian Brauner <brauner@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
+	Mateusz Guzik <mjguzik@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 3, 2024 at 11:15=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
-:
+On Wed, 3 Jul 2024 at 01:46, Christian Brauner <brauner@kernel.org> wrote:
 >
->
->
-> On 2024/7/2 =E4=B8=8B=E5=8D=8811:43, Huacai Chen wrote:
-> > On Tue, Jul 2, 2024 at 4:42=E2=80=AFPM maobibo <maobibo@loongson.cn> wr=
-ote:
-> >>
-> >>
-> >>
-> >> On 2024/7/2 =E4=B8=8B=E5=8D=883:28, Huacai Chen wrote:
-> >>> On Tue, Jul 2, 2024 at 12:13=E2=80=AFPM maobibo <maobibo@loongson.cn>=
- wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2024/7/2 =E4=B8=8A=E5=8D=8810:34, Huacai Chen wrote:
-> >>>>> On Tue, Jul 2, 2024 at 10:25=E2=80=AFAM maobibo <maobibo@loongson.c=
-n> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2024/7/2 =E4=B8=8A=E5=8D=889:59, Huacai Chen wrote:
-> >>>>>>> On Tue, Jul 2, 2024 at 9:51=E2=80=AFAM maobibo <maobibo@loongson.=
-cn> wrote:
-> >>>>>>>>
-> >>>>>>>> Huacai,
-> >>>>>>>>
-> >>>>>>>> On 2024/7/1 =E4=B8=8B=E5=8D=886:26, Huacai Chen wrote:
-> >>>>>>>>> On Mon, Jul 1, 2024 at 9:27=E2=80=AFAM maobibo <maobibo@loongso=
-n.cn> wrote:
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Huacai,
-> >>>>>>>>>>
-> >>>>>>>>>> On 2024/6/30 =E4=B8=8A=E5=8D=8810:07, Huacai Chen wrote:
-> >>>>>>>>>>> Hi, Bibo,
-> >>>>>>>>>>>
-> >>>>>>>>>>> On Wed, Jun 26, 2024 at 2:32=E2=80=AFPM Bibo Mao <maobibo@loo=
-ngson.cn> wrote:
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> Two kinds of LBT feature detection are added here, one is VC=
-PU
-> >>>>>>>>>>>> feature, the other is VM feature. VCPU feature dection can o=
-nly
-> >>>>>>>>>>>> work with VCPU thread itself, and requires VCPU thread is cr=
-eated
-> >>>>>>>>>>>> already. So LBT feature detection for VM is added also, it c=
-an
-> >>>>>>>>>>>> be done even if VM is not created, and also can be done by a=
-ny
-> >>>>>>>>>>>> thread besides VCPU threads.
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> Loongson Binary Translation (LBT) feature is defined in regi=
-ster
-> >>>>>>>>>>>> cpucfg2. Here LBT capability detection for VCPU is added.
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and =
-macro
-> >>>>>>>>>>>> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported featu=
-re. And
-> >>>>>>>>>>>> three sub-features relative with LBT are added as following:
-> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_X86BT
-> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_ARMBT
-> >>>>>>>>>>>>        KVM_LOONGARCH_VM_FEAT_MIPSBT
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>>>>>>> ---
-> >>>>>>>>>>>>        arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
-> >>>>>>>>>>>>        arch/loongarch/kvm/vcpu.c             |  6 ++++
-> >>>>>>>>>>>>        arch/loongarch/kvm/vm.c               | 44 ++++++++++=
-++++++++++++++++-
-> >>>>>>>>>>>>        3 files changed, 55 insertions(+), 1 deletion(-)
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/lo=
-ongarch/include/uapi/asm/kvm.h
-> >>>>>>>>>>>> index ddc5cab0ffd0..c40f7d9ffe13 100644
-> >>>>>>>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> >>>>>>>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> >>>>>>>>>>>> @@ -82,6 +82,12 @@ struct kvm_fpu {
-> >>>>>>>>>>>>        #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_=
-64(KVM_REG_LOONGARCH_CSR, REG)
-> >>>>>>>>>>>>        #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_=
-64(KVM_REG_LOONGARCH_CPUCFG, REG)
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> +/* Device Control API on vm fd */
-> >>>>>>>>>>>> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
-> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
-> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
-> >>>>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
-> >>>>>>>>>>>> +
-> >>>>>>>>>>>>        /* Device Control API on vcpu fd */
-> >>>>>>>>>>>>        #define KVM_LOONGARCH_VCPU_CPUCFG      0
-> >>>>>>>>>>>>        #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
-> >>>>>>>>>>> If you insist that LBT should be a vm feature, then I suggest=
- the
-> >>>>>>>>>>> above two also be vm features. Though this is an UAPI change,=
- but
-> >>>>>>>>>>> CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been rel=
-eased. We
-> >>>>>>>>>>> have a chance to change it now.
-> >>>>>>>>>>
-> >>>>>>>>>> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every=
- vcpu
-> >>>>>>>>>> has is own different gpa address.
-> >>>>>>>>> Then leave this as a vm feature.
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We ca=
-nnot break
-> >>>>>>>>>> the API even if it is 6.10-rc1, VMM has already used this. Els=
-e there is
-> >>>>>>>>>> uapi breaking now, still will be in future if we cannot contro=
-l this.
-> >>>>>>>>> UAPI changing before the first release is allowed, which means,=
- we can
-> >>>>>>>>> change this before the 6.10-final, but cannot change it after
-> >>>>>>>>> 6.10-final.
-> >>>>>>>> Now QEMU has already synced uapi to its own directory, also I ne=
-ver hear
-> >>>>>>>> about this, with my experience with uapi change, there is only n=
-ewly
-> >>>>>>>> added or removed deprecated years ago.
-> >>>>>>>>
-> >>>>>>>> Is there any documentation about UAPI change rules?
-> >>>>>>> No document, but learn from my more than 10 years upstream experi=
-ence.
-> >>>>>> Can you show me an example about with your rich upstream experienc=
-e?
-> >>>>> A simple example,
-> >>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c revert
-> >>>>> 1dccdba084897443d116508a8ed71e0ac8a0 and it changes UAPI.
-> >>>>> 1dccdba084897443d116508a8ed71e0ac8a0 is upstream in 6.9-rc1, and
-> >>>>> e877d705704d7c8fe17b6b5ebdfdb14b84c can revert the behavior before
-> >>>>> 6.9-final, but not after that.
-> >>>>>
-> >>>>> Before the first release, the code status is treated as "unstable",=
- so
-> >>>>> revert, modify is allowed. But after the first release, even if an
-> >>>>> "error" should also be treated as a "bad feature".
-> >>>> Huacai,
-> >>>>
-> >>>> Thanks for showing the example.
-> >>>>
-> >>>> For this issue, Can we adding new uapi and mark the old as deprecate=
-d?
-> >>>> so that it can be removed after years.
-> >>> Unnecessary, just remove the old one. Deprecation is for the usage
-> >>> after the first release.
-> >>>
-> >>>>
-> >>>> For me, it is too frequent to revert the old uapi, it is not bug and
-> >>>> only that we have better method now. Also QEMU has synchronized the =
-uapi
-> >>>> to its directory already.
-> >>> QEMU also hasn't been released after synchronizing the uapi, so it is
-> >>> OK to remove the old api now.
-> >> No, I will not do such thing. It is just a joke to revert the uapi.
-> >>
-> >> So just create new world and old world on Loongarch system again?
-> > Again, code status before the first release is *unstable*, that status
-> > is not enough to be a "world".
-> >
-> > It's your responsibility to make a good design at the beginning, but
-> > you fail to do that. Fortunately we are before the first release;
-> > unfortunately you don't want to do that.
-> Yes, this is flaw at the beginning, however it can works and new abi can
-> be added.
->
-> If there is no serious bug and it is synced to QEMU already, I am not
-> willing to revert uabi. Different projects have its own schedule plan,
-> that is one reason. The most important reason may be that different
-> peoples have different ways handling these issues.
-In another thread I found that Jiaxun said he has a solution to make
-LBT be a vcpu feature and still works well. However, that may take
-some time and is too late for 6.11.
+> We've now added AT_EMPTY_PATH support with NULL names because we want to
+> allow that generically. But I clearly remember that this was requested
+> to make statx() work with these sandboxes. So the kernel has done its
+> part. Now it's for the sandbox to allow statx() with NULL paths and
+> AT_EMPTY_PATH but certainly not for the kernel to start reenabling old
+> system calls.
 
-But we have another choice now: just remove the UAPI and vm.c parts in
-this series, let the LBT main parts be upstream in 6.11, and then
-solve other problems after 6.11. Even if Jiaxun's solution isn't
-usable, we can still use this old vm feature solution then.
+Those old system calls are still used.
 
+Just enable them.
 
-Huacai
->
-> Regards
-> Bibo, Mao
-> >
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo, Mao
-> >>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo, Mao
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>
-> >>>>>>>
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> How about adding new extra features capability for VM such as?
-> >>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
-> >>>>>>>>>> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
-> >>>>>>>>> They should be similar as LBT, if LBT is vcpu feature, they sho=
-uld
-> >>>>>>>>> also be vcpu features; if LBT is vm feature, they should also b=
-e vm
-> >>>>>>>>> features.
-> >>>>>>>> On other architectures, with function kvm_vm_ioctl_check_extensi=
-on()
-> >>>>>>>>         KVM_CAP_XSAVE2/KVM_CAP_PMU_CAPABILITY on x86
-> >>>>>>>>         KVM_CAP_ARM_PMU_V3/KVM_CAP_ARM_SVE on arm64
-> >>>>>>>> These features are all cpu features, at the same time they are V=
-M features.
-> >>>>>>>>
-> >>>>>>>> If they are cpu features, how does VMM detect validity of these =
-features
-> >>>>>>>> passing from command line? After all VCPUs are created and send =
-bootup
-> >>>>>>>> command to these VCPUs? That is too late, VMM main thread is eas=
-y to
-> >>>>>>>> detect feature validity if they are VM features also.
-> >>>>>>>>
-> >>>>>>>> To be honest, I am not familiar with KVM still, only get further
-> >>>>>>>> understanding after actual problems solving. Welcome to give com=
-ments,
-> >>>>>>>> however please read more backgroud if you insist on, else there =
-will be
-> >>>>>>>> endless argument again.
-> >>>>>>> I just say CPUCFG/LSX/LASX and LBT should be in the same class, I
-> >>>>>>> haven't insisted on whether they should be vcpu features or vm
-> >>>>>>> features.
-> >>>>>> It is reasonable if LSX/LASX/LBT should be in the same class, sinc=
-e
-> >>>>>> there is feature options such as lsx=3Don/off,lasx=3Don/off,lbt=3D=
-on/off.
-> >>>>>>
-> >>>>>> What is the usage about CPUCFG capability used for VM feature? It =
-is not
-> >>>>>> a detailed feature, it is only feature-set indicator like cpuid.
-> >>>>>>
-> >>>>>> Regards
-> >>>>>> Bibo Mao
-> >>>>>>>
-> >>>>>>> Huacai
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Regards
-> >>>>>>>> Bibo, Mao
-> >>>>>>>>>
-> >>>>>>>>> Huacai
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Regards
-> >>>>>>>>>> Bibo Mao
-> >>>>>>>>>>>
-> >>>>>>>>>>> Huacai
-> >>>>>>>>>>>
-> >>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/=
-vcpu.c
-> >>>>>>>>>>>> index 233d28d0e928..9734b4d8db05 100644
-> >>>>>>>>>>>> --- a/arch/loongarch/kvm/vcpu.c
-> >>>>>>>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
-> >>>>>>>>>>>> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id,=
- u64 *v)
-> >>>>>>>>>>>>                               *v |=3D CPUCFG2_LSX;
-> >>>>>>>>>>>>                       if (cpu_has_lasx)
-> >>>>>>>>>>>>                               *v |=3D CPUCFG2_LASX;
-> >>>>>>>>>>>> +               if (cpu_has_lbt_x86)
-> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_X86BT;
-> >>>>>>>>>>>> +               if (cpu_has_lbt_arm)
-> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_ARMBT;
-> >>>>>>>>>>>> +               if (cpu_has_lbt_mips)
-> >>>>>>>>>>>> +                       *v |=3D CPUCFG2_MIPSBT;
-> >>>>>>>>>>>>
-> >>>>>>>>>>>>                       return 0;
-> >>>>>>>>>>>>               case LOONGARCH_CPUCFG3:
-> >>>>>>>>>>>> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm=
-.c
-> >>>>>>>>>>>> index 6b2e4f66ad26..09e05108c68b 100644
-> >>>>>>>>>>>> --- a/arch/loongarch/kvm/vm.c
-> >>>>>>>>>>>> +++ b/arch/loongarch/kvm/vm.c
-> >>>>>>>>>>>> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct k=
-vm *kvm, long ext)
-> >>>>>>>>>>>>               return r;
-> >>>>>>>>>>>>        }
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct =
-kvm_device_attr *attr)
-> >>>>>>>>>>>> +{
-> >>>>>>>>>>>> +       switch (attr->attr) {
-> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
-> >>>>>>>>>>>> +               if (cpu_has_lbt_x86)
-> >>>>>>>>>>>> +                       return 0;
-> >>>>>>>>>>>> +               return -ENXIO;
-> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
-> >>>>>>>>>>>> +               if (cpu_has_lbt_arm)
-> >>>>>>>>>>>> +                       return 0;
-> >>>>>>>>>>>> +               return -ENXIO;
-> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
-> >>>>>>>>>>>> +               if (cpu_has_lbt_mips)
-> >>>>>>>>>>>> +                       return 0;
-> >>>>>>>>>>>> +               return -ENXIO;
-> >>>>>>>>>>>> +       default:
-> >>>>>>>>>>>> +               return -ENXIO;
-> >>>>>>>>>>>> +       }
-> >>>>>>>>>>>> +}
-> >>>>>>>>>>>> +
-> >>>>>>>>>>>> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_devi=
-ce_attr *attr)
-> >>>>>>>>>>>> +{
-> >>>>>>>>>>>> +       switch (attr->group) {
-> >>>>>>>>>>>> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
-> >>>>>>>>>>>> +               return kvm_vm_feature_has_attr(kvm, attr);
-> >>>>>>>>>>>> +       default:
-> >>>>>>>>>>>> +               return -ENXIO;
-> >>>>>>>>>>>> +       }
-> >>>>>>>>>>>> +}
-> >>>>>>>>>>>> +
-> >>>>>>>>>>>>        int kvm_arch_vm_ioctl(struct file *filp, unsigned int=
- ioctl, unsigned long arg)
-> >>>>>>>>>>>>        {
-> >>>>>>>>>>>> -       return -ENOIOCTLCMD;
-> >>>>>>>>>>>> +       struct kvm *kvm =3D filp->private_data;
-> >>>>>>>>>>>> +       void __user *argp =3D (void __user *)arg;
-> >>>>>>>>>>>> +       struct kvm_device_attr attr;
-> >>>>>>>>>>>> +
-> >>>>>>>>>>>> +       switch (ioctl) {
-> >>>>>>>>>>>> +       case KVM_HAS_DEVICE_ATTR:
-> >>>>>>>>>>>> +               if (copy_from_user(&attr, argp, sizeof(attr)=
-))
-> >>>>>>>>>>>> +                       return -EFAULT;
-> >>>>>>>>>>>> +
-> >>>>>>>>>>>> +               return kvm_vm_has_attr(kvm, &attr);
-> >>>>>>>>>>>> +       default:
-> >>>>>>>>>>>> +               return -EINVAL;
-> >>>>>>>>>>>> +       }
-> >>>>>>>>>>>>        }
-> >>>>>>>>>>>> --
-> >>>>>>>>>>>> 2.39.3
-> >>>>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>
-> >>>>>>
-> >>>>
-> >>
->
->
+statx isn't the promised land. Existing applications matter. And there
+is absolutely nothing wrong with plain old 'stat' (well, we call it
+"newstat" in the kernel for historical reasons) on 64-bit
+architectures.
+
+Honestly, 'statx' is disgusting. I don't understand why anybody pushes
+that thing that nobody actually uses or cares about.
+
+                Linus
