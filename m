@@ -1,106 +1,127 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70297282E1
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 16:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A731836F0
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 16:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720024321; cv=none; b=VUbcs9+cs9Q9bGA+C1MukWHUHFj7I4/0fmf0BnqVleHW9rL/lsGXjRE58jbt0eah7T8DBj6nfC3fVdR8A/ifqgmP3L7+z/2mpmLEc+8ZuEf4hk6b3wRgCQ/kAbI0MjdHWfnfmoAx9a1PuoDpvUnZZkUBU7vc465o/vJ+KLgv3og=
+	t=1720025693; cv=none; b=mcd+HOc6RXeYVku8xnSHTcpUCdl4k4JMZCOm1eMmuzVAYknT0rIjXS3EFQLeAxWwCBFcnoRgALFu3YKvx4U6TJ5Xu8LQai6ctu8s0kg5q7Lja/m8tfEVvDQLvc3aoZUN5laS2BdnILYpocNpuqVERXFHqDvo2NDc6QErt3At+0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720024321; c=relaxed/simple;
-	bh=aX/dntK47yBZoBKXBogHtsXyVUj/EEsdEqcWuVR2MNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H9RaOecy94uXdyKZAyLcnlznH5bw7m25XICLWq7SGUtgxToLV7OVHASUpKDcAsB/de1mYk9xNX/4nWwck3T7IrD6cheWzZRm5Uo67Cst3KB299eX7rgfEjxYEvLvFhnGCSVvJzXdv5h4Dgj1RzixdZTTv+Uft7/AZlx11kgOU6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WIZuZOmR; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720025693; c=relaxed/simple;
+	bh=ytPD61FrFhwUADWR7wdjMAPmOxv/bqXPWvtuuRwDlvs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SBu3w02XZJCGFhqXs5N4tuZcG/T49bPBNNod2U5aRYwn9NtfVAmLRVjzKgKetMqY9M3FB8Hku/PasxnxvlRknx0T3BfolTXB2fBm5ideXaM8bIOvt2uk4QQpZwST0n1yEEKdqbluBmelOFtPUP2RuTGiNqP+YMsB4jFKjbMLcqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=b6bNx6+a; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WIZuZOmR"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso690595566b.1
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 09:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720024317; x=1720629117; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyado1sFM+cGedSAqHu7B/wZSU2t+kg2eHyPGnCfXa8=;
-        b=WIZuZOmR2j0/PzpjyPgbE9D7cGZClFyo1UpLEGJVhR7F3BIUMAtYBOy0DzS2BU+gPv
-         UBwdpUgRMPk5U7UtXsZ+HADy2FR4r9tCg+MH2ahpp0p292ASbeuHhYmIjBFFecs5ozYo
-         sNAdyHXBvEgKzYfnNRWefrbOWbx2uyjOUY+Bo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720024317; x=1720629117;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iyado1sFM+cGedSAqHu7B/wZSU2t+kg2eHyPGnCfXa8=;
-        b=pN0c0vVoyjovhJ5X5DYR2k2mwe0HRBbkX7yEzCLseVW/myqWnE7UUXxBsguk/w/ram
-         LdvO9jyUbZhSQ0zFnHSsmrR/fS4Wvxmvf9VDotXOTpJjIUDbW+fUTVG+i0cvp4dmwmmz
-         IuNoCXSvacmtTIeMQE+ix/Hc4e834DLBK52XiB+85AxDh3j7qyRr18r3tjI8MNCrZcb/
-         f2eU6l/vZ3XbnuHqISsG2EN1UBKjBxwvVbWb/oP2sjcIntYawOrzqqqAAHbSw5HFFO0P
-         CRtFvGi/sqVzM/L9uDPkMdEVvyJpoUg5KpMBdqUk9ERF4d6zTJI75ozWdLAVdLbk8e07
-         KqHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZjrrVfHVCRdykjAjxAM02t9pgC+l+W4mTUDi5bxlM+yix52LYLBuDVd3zBu5vnCdMXx6eA+A0RYPpCGwaZoiPSh7vklnmSV+C
-X-Gm-Message-State: AOJu0Yyeg7h71VRjlkR9NIbI5WHnuVKHNEyY1v28mfEoNXEbl5PCE79E
-	cE/2BiEspKR8MaqKPe5AupqV14+glyJQ3rMUEIjd8YzatcvUuI0cGlc28/aT51hWZyuUx03mYzN
-	4KgGejg==
-X-Google-Smtp-Source: AGHT+IFB1hcSA+QUU1RzFUD+vy+N/Ozw8yBXY5WarH9/lFAnHOFhsTx+xanhqRA4oF5UoiTkzwzAtA==
-X-Received: by 2002:a17:906:fcd6:b0:a72:6055:7886 with SMTP id a640c23a62f3a-a751440e887mr692904666b.24.1720024317641;
-        Wed, 03 Jul 2024 09:31:57 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf5a585sm522071166b.52.2024.07.03.09.31.56
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 09:31:56 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so2756833a12.1
-        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 09:31:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU89eO3U2bGMro9gIIF0zYll97NxNiPfVgqDQGQh4j/xSs/bG7/k0ahix+Vmnfx6dE4K1Vv03e35uUwMOxDPZBiQU8P05aY8HuI
-X-Received: by 2002:a17:907:368a:b0:a75:3f38:e0a4 with SMTP id
- a640c23a62f3a-a753f38e1a0mr459327066b.47.1720024316186; Wed, 03 Jul 2024
- 09:31:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="b6bNx6+a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1720025690;
+	bh=ytPD61FrFhwUADWR7wdjMAPmOxv/bqXPWvtuuRwDlvs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=b6bNx6+awULwq7oXzBgaNpvxIuB3ezmNqIpxqTLdXA6b0z3tnu8olBFYfPG/dD4ZS
+	 tpvsPOwpvgqvZFgxK9OCZxUkvfPF8rXmYtObTlvGoCIopnY4Shv02773MIffF+ETXH
+	 gditMPVnkQjKiSrGa732UKDyPF/ACCI4azoLLRJI=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 5A0F61A409D;
+	Wed,  3 Jul 2024 12:54:47 -0400 (EDT)
+Message-ID: <8b6d59ffc9baa57fee0f9fa97e72121fd88cf0e4.camel@xry111.site>
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner
+	 <brauner@kernel.org>
+Cc: libc-alpha@sourceware.org, "Andreas K. Huettel" <dilfridge@gentoo.org>, 
+ Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, Mateusz
+ Guzik <mjguzik@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan
+ Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org,  io-uring@vger.kernel.org, Jens Axboe
+ <axboe@kernel.dk>,  loongarch@lists.linux.dev
+Date: Thu, 04 Jul 2024 00:54:45 +0800
+In-Reply-To: <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
+References: <20240625110029.606032-1-mjguzik@gmail.com>
+	 <20240625110029.606032-3-mjguzik@gmail.com>
+	 <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+	 <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+	 <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
+	 <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
+	 <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
+	 <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
+	 <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
+	 <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
+	 <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3-mjguzik@gmail.com>
- <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
- <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
- <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
- <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
- <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com> <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
- <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com> <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
-In-Reply-To: <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jul 2024 09:31:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
-Message-ID: <CAHk-=wi0ejJ=PCZfCmMKvsFmzvVzAYYt1K9vtwke4=arfHiAdg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Christian Brauner <brauner@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
-	Mateusz Guzik <mjguzik@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 3 Jul 2024 at 01:46, Christian Brauner <brauner@kernel.org> wrote:
->
-> We've now added AT_EMPTY_PATH support with NULL names because we want to
-> allow that generically. But I clearly remember that this was requested
-> to make statx() work with these sandboxes. So the kernel has done its
-> part. Now it's for the sandbox to allow statx() with NULL paths and
-> AT_EMPTY_PATH but certainly not for the kernel to start reenabling old
-> system calls.
+On Wed, 2024-07-03 at 09:31 -0700, Linus Torvalds wrote:
+> On Wed, 3 Jul 2024 at 01:46, Christian Brauner <brauner@kernel.org>
+> wrote:
+> >=20
+> > We've now added AT_EMPTY_PATH support with NULL names because we
+> > want to
+> > allow that generically. But I clearly remember that this was
+> > requested
+> > to make statx() work with these sandboxes. So the kernel has done
+> > its
+> > part. Now it's for the sandbox to allow statx() with NULL paths and
+> > AT_EMPTY_PATH but certainly not for the kernel to start reenabling
+> > old
+> > system calls.
+>=20
+> Those old system calls are still used.
+>=20
+> Just enable them.
+>=20
+> statx isn't the promised land. Existing applications matter. And there
+> is absolutely nothing wrong with plain old 'stat' (well, we call it
+> "newstat" in the kernel for historical reasons) on 64-bit
+> architectures.
+>=20
+> Honestly, 'statx' is disgusting. I don't understand why anybody pushes
+> that thing that nobody actually uses or cares about.
 
-Those old system calls are still used.
+Hmm why it was added in the first place then?  Why not just NAK it?  If
+someone tries to add a "seccomp sandbox" into my project I'll
+immediately NAK it anyway :).
 
-Just enable them.
+And should we add stat_time64, fstat_time64, and fstatat_time64 to stop
+using statx on 32-bit platforms too as it's disgusting?
 
-statx isn't the promised land. Existing applications matter. And there
-is absolutely nothing wrong with plain old 'stat' (well, we call it
-"newstat" in the kernel for historical reasons) on 64-bit
-architectures.
+Also some bad news: Glibc has this:
 
-Honestly, 'statx' is disgusting. I don't understand why anybody pushes
-that thing that nobody actually uses or cares about.
+#if (__WORDSIZE =3D=3D 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE =3D=3D 32)) \
+    || defined STAT_HAS_TIME32 \
+    || (!defined __NR_newfstatat && !defined __NR_fstatat64)
+# define FSTATAT_USE_STATX 1
+#else
+# define FSTATAT_USE_STATX 0
+#endif
 
-                Linus
+So if a LoongArch Glibc is built with Linux kernel headers >=3D 6.11,
+it'll use fstatat **even configured --with-kernel=3D5.19** and fail to run
+on Linux kernel <=3D 6.10.  This will immediately blow up building Linux
+From Scratch on a host distro with an "old" kernel.
+
+<sarcasm>Alright, some Google project matters but Glibc does not matter
+because it uses a disgusting syscall in the first place.</sarcasm>
+
+We have to add some __ASSUME_blah_blah here now.
+
+To make things worse Glibc 2.40 is being frozen today :(.  Copying to
+libc-alpha and the RM.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
