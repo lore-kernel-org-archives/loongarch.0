@@ -1,172 +1,636 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEBF140E22
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 10:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0897139590
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 10:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720001263; cv=none; b=Z+zaRmKGtxu0c9hL1jeA6mzA+kdrmJmGonGfJPA5SddfsU8HwffFC367EK2avlyWnExALZH/yMMAKIiPlAGOwltYtEzonWllHuvFSW8ambARUH8BjKsYDZqsuWtzZMcTN+UTI20wleeo+NNSUUwXFrgvDc+fuL5Q++Vs1oTEV+U=
+	t=1720001935; cv=none; b=I3wDuqTPCealzLNNRONUxcD8UIrdTixgg+Cb78K7iF1olhsDrxdfovYU7gFAXG/TjA1bHzIVKql/V8ib7gODgxxtzHb4RwpbrA7HC1IikrFgPWEx3FjxKPw3qeKS/mF6WmaKBTz0EaCTx5PZepGliUjV5XT8I2G56XsXcddrp9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720001263; c=relaxed/simple;
-	bh=7UlRlKdygRNW81tvq9O33mJTHGWQhr7TMDY7lvxWSss=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O3WNFmpheTzDTfMk21hhTBokh7W4jaeUZBrK6ruhusnL9Tuju2HANh74y33wLbohP3UIFVG4txLlYpme6ABIyq3kYMdElYP5s44SQGAKbw2IZytiGMGfEIsRJ2xlaW6Vq6BoC4tU+CdqGJ75AjzT3C1S7wdq53pDi26EKOMC+Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Tk9vJapg; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1720001935; c=relaxed/simple;
+	bh=1BRxzCBctOyS3X4Tiksjd16ELjUs53AI5nxvo9UTsWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0bT8WvSEkdi6DBhLR64kHYTPVA+tPWENIc3nXbhHPsR7vsW9ds+tYFeWnYXqImOkK8eOubqfOXzoH1T6P+Dc3+mlv3mONjxRYV4nr2dawqS7Yho2x6Pi0gBzECEJD5DAklwMgpICFr1gjp8L9I63Ey/563/pvnKb3biTQY70Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nRNgpk6f; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Tk9vJapg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1720001254;
-	bh=7UlRlKdygRNW81tvq9O33mJTHGWQhr7TMDY7lvxWSss=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Tk9vJapgRxntpsBHFDGKhfQ45A48E7GRfvSsx8EzZRPkZx25sjEzTz4GgaAu+6rHC
-	 pH0VjHxqnK2ky0RFv9T2Uq7jCcutwFpbpdbSxlf7BCknq71q6QaYVSgn41z2sqfuVK
-	 haU6BIyc9pQ7BSmu09jzeTD8IBn76zwcigS3y0+E=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B6A7B6760C;
-	Wed,  3 Jul 2024 06:07:31 -0400 (EDT)
-Message-ID: <8b4cfe608a23100fee4b227a2610ab662d51d810.camel@xry111.site>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, Christian Brauner
- <brauner@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-kernel@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, Linus Torvalds
- <torvalds@linux-foundation.org>,  loongarch@lists.linux.dev
-Date: Wed, 03 Jul 2024 18:07:29 +0800
-In-Reply-To: <CAAhV-H73GpnD4hTGXDdWYBmo+Hs=088tSaVum69=4UyhZoKtOw@mail.gmail.com>
-References: <20240625110029.606032-1-mjguzik@gmail.com>
-	 <20240625110029.606032-3-mjguzik@gmail.com>
-	 <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
-	 <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
-	 <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
-	 <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
-	 <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com>
-	 <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
-	 <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
-	 <20240703-bergwacht-sitzung-ef4f2e63cd70@brauner>
-	 <CAAhV-H73GpnD4hTGXDdWYBmo+Hs=088tSaVum69=4UyhZoKtOw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nRNgpk6f"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fab03d2f23so39946165ad.0
+        for <loongarch@lists.linux.dev>; Wed, 03 Jul 2024 03:18:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720001933; x=1720606733; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hdinxnkWP6EaaM3lF/TL5UpIWG0AtYiRqRNtIRJ/QlE=;
+        b=nRNgpk6fC534NlhVDnqNOC7mVP62ydRicpK7sw/R4VdrD8v808CzECDiOT7r4gf3rJ
+         +XBFxuUTGAXDGXg1ylLcSzMSS0dEMLawDheJKNbc8t8kluTU4KKBapy8Y3WSU2u27Pk2
+         V/XAmSta4f16c3st9059CnlOj8VkxWqAVKVoPGfhJkaG2V0x5rEaCwS5aOKaOfzVUJJg
+         rUmDEfC9bAD+UNyhYa3oSEAEYNdpA9xblpJYdxG1+UfnR0H3vLfKHvhIQvjxvz6HVVRI
+         SjBdPOd8XcMEYkUMHarqzph8xQyx2qX39bH0qYqvzMwZQr0Is+P42xcmiRK79gaZfAyC
+         TIGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720001933; x=1720606733;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hdinxnkWP6EaaM3lF/TL5UpIWG0AtYiRqRNtIRJ/QlE=;
+        b=CxaNbugJz6ri2sjYIGHkvBMSE3hC52Pfv7dV/y1vB8piTfOTV3n1LeZqhBTeHrStYd
+         SLsSwYsQejHCekRE0VPTA72lm++OVVFM+YZ65D4pCkn/7XA44pzx/fIl8WP5WpCDHH3W
+         JAyMJ0UVsTnnUmsdW0tnylvcZpfZdrg9jmqh/cdWGctEGSqnyAGfkt/T99nQRF3NRGEb
+         7kLZWdX5+jpZkzHQI1li9eqLiD9Bh4HKUFyf2v49MnnvvuNlw/XLJyLY7RlvZ2cLWGWy
+         T5hQNiNXUQd9bb7J3VWBRtVKTf/uSXirJSqf3hm8SJH3JOWLu4ZzEm9y0TbGsvs1qwpd
+         U31Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXVHwfN7UhufGxJtVyN347wNdGUXeKmee/AvftRi/FjyeroI8oyzkTn7Rulyz5lOV6eV7hECKZ2X/AQW5iFAfnXt7/2sMkMWIQW
+X-Gm-Message-State: AOJu0Yx7XH7BvfS0yDEgCGZM+UrMXUNa9aaJXtkUzhNLkCnmOZlSIPrt
+	MrPkSF5f9n5ImqMUgPlyt0MPi037sK6CdaiuJDy3uMjUzNhvoMWXbAjCDQv/lEI=
+X-Google-Smtp-Source: AGHT+IEkvL6f83UIL9GGwApdi16O6qSPCG+QyrM1BJf1QQF5ni3fqWJtXbJ3+3UN9bH0t2KUK8Cq8g==
+X-Received: by 2002:a17:902:ec8c:b0:1f7:1ae1:cd7a with SMTP id d9443c01a7336-1fadbd11ab6mr91657855ad.62.1720001932917;
+        Wed, 03 Jul 2024 03:18:52 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac159686csm99852705ad.266.2024.07.03.03.18.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 03:18:52 -0700 (PDT)
+Date: Wed, 3 Jul 2024 15:48:50 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: Re: [PATCH V2 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
+Message-ID: <20240703101850.dtck223pleiiwfxp@vireshk-i7>
+References: <20240702152737.1184244-1-chenhuacai@loongson.cn>
+ <20240702152737.1184244-3-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240702152737.1184244-3-chenhuacai@loongson.cn>
 
-On Wed, 2024-07-03 at 17:35 +0800, Huacai Chen wrote:
-> Hi, Christian,
->=20
-> On Wed, Jul 3, 2024 at 4:46=E2=80=AFPM Christian Brauner <brauner@kernel.=
-org> wrote:
-> >=20
-> > On Tue, Jul 02, 2024 at 07:06:53PM GMT, Arnd Bergmann wrote:
-> > > On Tue, Jul 2, 2024, at 17:36, Huacai Chen wrote:
-> > > > On Mon, Jul 1, 2024 at 7:59=E2=80=AFPM Arnd Bergmann <arnd@arndb.de=
-> wrote:
-> > > > > On Sun, Jun 30, 2024, at 04:39, Xi Ruoyao wrote:
-> > > > > > On Sun, 2024-06-30 at 09:40 +0800, Huacai Chen wrote:
-> > > > > > > >=20
-> > > > > > > > Yes, both Linus and Christian hates introducing a new AT_ f=
-lag for
-> > > > > > > > this.
-> > > > > > > >=20
-> > > > > > > > This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) b=
-ehave
-> > > > > > > > like
-> > > > > > > > statx(fd, "", AT_EMPTY_PATH, ...) instead.=C2=A0 NULL avoid=
-s the
-> > > > > > > > performance
-> > > > > > > > issue and it's also audit-able by seccomp BPF.
-> > > > > > > To be honest, I still want to restore __ARCH_WANT_NEW_STAT. B=
-ecause
-> > > > > > > even if statx() becomes audit-able, it is still blacklisted n=
-ow.
-> > > > > >=20
-> > > > > > Then patch the sandbox to allow it.
-> > > > > >=20
-> > > > > > The sandbox **must** be patched anyway or it'll be broken on al=
-l 32-bit
-> > > > > > systems after 2037.=C2=A0 [Unless they'll unsupport all 32-bit =
-systems before
-> > > > > > 2037.]
-> > > > >=20
-> > > > > More importantly, the sandbox won't be able to support any 32-bit
-> > > > > targets that support running after 2037, regardless of how long
-> > > > > the sandbox supports them: if you turn off COMPAT_32BIT_TIME toda=
-y
-> > > > > in order to be sure those don't get called by accident, the
-> > > > > fallback is immediately broken.
-> > > > Would you mind if I restore newstat for LoongArch64 even if this pa=
-tch exist?
-> > >=20
-> > > I still prefer not add newstat back: it's easier to
-> > > get applications to correctly implement the statx() code
-> > > path if there are more architectures that only have that.
-> >=20
-> > I agree.
-> >=20
-> > We've now added AT_EMPTY_PATH support with NULL names because we want t=
-o
-> > allow that generically. But I clearly remember that this was requested
-> > to make statx() work with these sandboxes. So the kernel has done its
-> > part. Now it's for the sandbox to allow statx() with NULL paths and
-> > AT_EMPTY_PATH but certainly not for the kernel to start reenabling old
-> > system calls.
-> Linux distributions don't use latest applications, so they still need
-> an out-of-tree kernel patch to restore newstat. Of course they can
-> also patch their applications, but patching the kernel is
-> significantly easier.
->=20
-> So in my opinion LoongArch has completed its task to drive statx()
-> improvement
+On 02-07-24, 23:27, Huacai Chen wrote:
+> Some of LoongArch processors (Loongson-3 series) support DVFS, their
+> IOCSR.FEATURES has IOCSRF_FREQSCALE set. And they has a micro-core in
+> the package called SMC (System Management Controller), which can be
+> used to detect temperature, control fans, scale frequency and voltage,
+> etc.
+> 
+> The Loongson-3 CPUFreq driver is very simple now, it communicate with
+> SMC, get DVFS info, set target frequency from CPUFreq core, and so on.
+> 
+> There is a command list to interact with SMC, widely-used commands in
+> the CPUFreq driver include:
+> 
+> CMD_GET_VERSION: Get SMC firmware version.
+> 
+> CMD_GET_FEATURE: Get enabled SMC features.
+> 
+> CMD_SET_FEATURE: Enable SMC features, such as basic DVFS, BOOST.
+> 
+> CMD_GET_FREQ_LEVEL_NUM: Get the number of normal frequency levels.
+> 
+> CMD_GET_FREQ_BOOST_NUM: Get the number of boost frequency levels.
+> 
+> CMD_GET_FREQ_LEVEL_INFO: Get the detail info of a frequency level.
+> 
+> CMD_GET_FREQ_INFO: Get the current frequency.
+> 
+> CMD_SET_FREQ_INFO: Set the target frequency.
+> 
+> In future we will add automatic frequency scaling, which is similar to
+> Intel's HWP (HardWare P-State).
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  MAINTAINERS                         |   1 +
+>  drivers/cpufreq/Kconfig             |  12 +
+>  drivers/cpufreq/Makefile            |   1 +
+>  drivers/cpufreq/loongson3_cpufreq.c | 399 ++++++++++++++++++++++++++++
+>  4 files changed, 413 insertions(+)
+>  create mode 100644 drivers/cpufreq/loongson3_cpufreq.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cd2ca0c3158e..2af33319f1ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12968,6 +12968,7 @@ F:	Documentation/arch/loongarch/
+>  F:	Documentation/translations/zh_CN/arch/loongarch/
+>  F:	arch/loongarch/
+>  F:	drivers/*/*loongarch*
+> +F:	drivers/cpufreq/loongson3_cpufreq.c
+>  
+>  LOONGSON GPIO DRIVER
+>  M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> index 94e55c40970a..10cda6f2fe1d 100644
+> --- a/drivers/cpufreq/Kconfig
+> +++ b/drivers/cpufreq/Kconfig
+> @@ -262,6 +262,18 @@ config LOONGSON2_CPUFREQ
+>  	  If in doubt, say N.
+>  endif
+>  
+> +if LOONGARCH
+> +config LOONGSON3_CPUFREQ
+> +	tristate "Loongson3 CPUFreq Driver"
+> +	help
+> +	  This option adds a CPUFreq driver for Loongson processors which
+> +	  support software configurable cpu frequency.
+> +
+> +	  Loongson-3 family processors support this feature.
+> +
+> +	  If in doubt, say N.
+> +endif
+> +
+>  if SPARC64
+>  config SPARC_US3_CPUFREQ
+>  	tristate "UltraSPARC-III CPU Frequency driver"
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 8d141c71b016..0f184031dd12 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -103,6 +103,7 @@ obj-$(CONFIG_POWERNV_CPUFREQ)		+= powernv-cpufreq.o
+>  # Other platform drivers
+>  obj-$(CONFIG_BMIPS_CPUFREQ)		+= bmips-cpufreq.o
+>  obj-$(CONFIG_LOONGSON2_CPUFREQ)		+= loongson2_cpufreq.o
+> +obj-$(CONFIG_LOONGSON3_CPUFREQ)		+= loongson3_cpufreq.o
+>  obj-$(CONFIG_SH_CPU_FREQ)		+= sh-cpufreq.o
+>  obj-$(CONFIG_SPARC_US2E_CPUFREQ)	+= sparc-us2e-cpufreq.o
+>  obj-$(CONFIG_SPARC_US3_CPUFREQ)		+= sparc-us3-cpufreq.o
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+> new file mode 100644
+> index 000000000000..6d7da2238542
+> --- /dev/null
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -0,0 +1,399 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * CPUFreq driver for the loongson-3 processors
 
-It'll only be finished once the apps are adapted, or they'll stop to
-work after 2037 anyway.
+A full stop at the end please.
 
-I've informed Firefox at
-https://bugzilla.mozilla.org/show_bug.cgi?id=3D1673771.  For Google
-products I guess someone else will have to do (I'm really unfamiliar
-with their things, and they often block my proxy server despite I've
-never used the proxy to attack them).
+> + *
+> + * All revisions of Loongson-3 processor support this feature.
 
-> now restoring newstat is a double-insurance for compatibility.
+What do you mean by `feature` here ?
 
-It may also introduce incompatibility: consider a seccomp sandbox which
-does not handle fstat on LoongArch because __NR_fstat is not defined in
-the UAPI header.  Now the kernel is updated to provide fstat the sandbox
-will be broken: a blocklist sandbox will fail to block fstat and leave a
-security hole; a whitelist sandbox will fail to allow fstat and blow up
-the app if some runtime library is updated to "take the advantage" of
-fstat.
+> + *
+> + * Author: Huacai Chen <chenhuacai@loongson.cn>
+> + * Copyright (C) 2020-2024 Loongson Technology Corporation Limited
 
-My preference (most preferable to least preferable):
+Can't really use 2020 here. We are adding the driver for the first
+time in 2024 only.
 
-1. Not to add them back at all.  Just let the downstream to patch the
-kernel if they must support a broken userspace.
-2. Add them back with a configurable option (depending on CONFIG_EXPERT:
-the distros are already enabling this anyway), make them documented
-clearly as only intended to support a broken userspace and removable in
-the future.
-3. Add it back only for 64-bit.  Add a #if **now** for ruling it out for
-32-bit despite we don't have 32-bit support, to make it clear we'll not
-flatter broken userspace anymore when we make the 32-bit port.
-<rant>4. Remove seccomp.  Personally I really wish to put this on the
-top.</rant>
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/units.h>
 
-BTW has anyone tried to use Landlock for those browser sandboxes
-instead?
+Please keep them in alphabetical order.  And you are missing few other
+headers (which are getting included indirectly for now). Like for
+mutex. Please cross check all types you are using and include their
+headers directly.
 
+> +
+> +#include <asm/idle.h>
+> +#include <asm/loongarch.h>
+> +#include <asm/loongson.h>
+> +
+> +/* Message */
+> +union smc_message {
+> +	u32 value;
+> +	struct {
+> +		u32 id		: 4;
+> +		u32 info	: 4;
+> +		u32 val		: 16;
+> +		u32 cmd		: 6;
+> +		u32 extra	: 1;
+> +		u32 complete	: 1;
+> +	};
+> +};
+> +
+> +/* Command return values */
+> +#define CMD_OK				0  /* No error */
+> +#define CMD_ERROR			1  /* Regular error */
+> +#define CMD_NOCMD			2  /* Command does not support */
+> +#define CMD_INVAL			3  /* Invalid Parameter */
+> +
+> +/* Version commands */
+> +/*
+> + * CMD_GET_VERSION - Get interface version
+> + * Input: none
+> + * Output: version
+> + */
+> +#define CMD_GET_VERSION			0x1
+> +
+> +/* Feature commands */
+> +/*
+> + * CMD_GET_FEATURE - Get feature state
+> + * Input: feature ID
+> + * Output: feature flag
+> + */
+> +#define CMD_GET_FEATURE			0x2
+> +
+> +/*
+> + * CMD_SET_FEATURE - Set feature state
+> + * Input: feature ID, feature flag
+> + * output: none
+> + */
+> +#define CMD_SET_FEATURE			0x3
+> +
+> +/* Feature IDs */
+> +#define FEATURE_SENSOR			0
+> +#define FEATURE_FAN			1
+> +#define FEATURE_DVFS			2
+> +
+> +/* Sensor feature flags */
+> +#define FEATURE_SENSOR_ENABLE		BIT(0)
+> +#define FEATURE_SENSOR_SAMPLE		BIT(1)
+> +
+> +/* Fan feature flags */
+> +#define FEATURE_FAN_ENABLE		BIT(0)
+> +#define FEATURE_FAN_AUTO		BIT(1)
+> +
+> +/* DVFS feature flags */
+> +#define FEATURE_DVFS_ENABLE		BIT(0)
+> +#define FEATURE_DVFS_BOOST		BIT(1)
+> +#define FEATURE_DVFS_AUTO		BIT(2)
+> +#define FEATURE_DVFS_SINGLE_BOOST	BIT(3)
+> +
+> +/* Sensor commands */
+> +/*
+> + * CMD_GET_SENSOR_NUM - Get number of sensors
+> + * Input: none
+> + * Output: number
+> + */
+> +#define CMD_GET_SENSOR_NUM		0x4
+> +
+> +/*
+> + * CMD_GET_SENSOR_STATUS - Get sensor status
+> + * Input: sensor ID, type
+> + * Output: sensor status
+> + */
+> +#define CMD_GET_SENSOR_STATUS		0x5
+> +
+> +/* Sensor types */
+> +#define SENSOR_INFO_TYPE		0
+> +#define SENSOR_INFO_TYPE_TEMP		1
+> +
+> +/* Fan commands */
+> +/*
+> + * CMD_GET_FAN_NUM - Get number of fans
+> + * Input: none
+> + * Output: number
+> + */
+> +#define CMD_GET_FAN_NUM			0x6
+> +
+> +/*
+> + * CMD_GET_FAN_INFO - Get fan status
+> + * Input: fan ID, type
+> + * Output: fan info
+> + */
+> +#define CMD_GET_FAN_INFO		0x7
+> +
+> +/*
+> + * CMD_SET_FAN_INFO - Set fan status
+> + * Input: fan ID, type, value
+> + * Output: none
+> + */
+> +#define CMD_SET_FAN_INFO		0x8
+> +
+> +/* Fan types */
+> +#define FAN_INFO_TYPE_LEVEL		0
+> +
+> +/* DVFS commands */
+> +/*
+> + * CMD_GET_FREQ_LEVEL_NUM - Get number of freq levels
+> + * Input: CPU ID
+> + * Output: number
+> + */
+> +#define CMD_GET_FREQ_LEVEL_NUM		0x9
+> +
+> +/*
+> + * CMD_GET_FREQ_BOOST_LEVEL - Get number of boost levels
+> + * Input: CPU ID
+> + * Output: number
+> + */
+> +#define CMD_GET_FREQ_BOOST_LEVEL	0x10
+> +
+> +/*
+> + * CMD_GET_FREQ_LEVEL_INFO - Get freq level info
+> + * Input: CPU ID, level ID
+> + * Output: level info
+> + */
+> +#define CMD_GET_FREQ_LEVEL_INFO		0x11
+> +
+> +/*
+> + * CMD_GET_FREQ_INFO - Get freq info
+> + * Input: CPU ID, type
+> + * Output: freq info
+> + */
+> +#define CMD_GET_FREQ_INFO		0x12
+> +
+> +/*
+> + * CMD_SET_FREQ_INFO - Set freq info
+> + * Input: CPU ID, type, value
+> + * Output: none
+> + */
+> +#define CMD_SET_FREQ_INFO		0x13
+> +
+> +/* Freq types */
+> +#define FREQ_INFO_TYPE_FREQ		0
+> +#define FREQ_INFO_TYPE_LEVEL		1
+> +
+> +#define FREQ_MAX_LEVEL			(16 + 1)
+> +
+> +enum freq {
+> +	FREQ_LEV0, /* Reserved */
+> +	FREQ_LEV1, FREQ_LEV2, FREQ_LEV3, FREQ_LEV4,
+> +	FREQ_LEV5, FREQ_LEV6, FREQ_LEV7, FREQ_LEV8,
+> +	FREQ_LEV9, FREQ_LEV10, FREQ_LEV11, FREQ_LEV12,
+> +	FREQ_LEV13, FREQ_LEV14, FREQ_LEV15, FREQ_LEV16,
+> +	FREQ_RESV
+> +};
+> +
+> +static struct mutex cpufreq_mutex[MAX_PACKAGES];
+> +static struct cpufreq_driver loongson3_cpufreq_driver;
+> +static DEFINE_PER_CPU(struct cpufreq_frequency_table *, freq_table);
+> +
+> +static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
+> +{
+> +	int retries;
+> +	unsigned int cpu = smp_processor_id();
+> +	unsigned int package = cpu_data[cpu].package;
+> +	union smc_message msg, last;
+> +
+> +	mutex_lock(&cpufreq_mutex[package]);
+> +
+> +	last.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
+> +	if (!last.complete) {
+> +		mutex_unlock(&cpufreq_mutex[package]);
+> +		return -EPERM;
+> +	}
+> +
+> +	msg.id		= id;
+> +	msg.info	= info;
+> +	msg.cmd		= cmd;
+> +	msg.val		= val;
+> +	msg.extra	= extra;
+> +	msg.complete	= 0;
+> +
+> +	iocsr_write32(msg.value, LOONGARCH_IOCSR_SMCMBX);
+> +	iocsr_write32(iocsr_read32(LOONGARCH_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
+> +		      LOONGARCH_IOCSR_MISC_FUNC);
+> +
+> +	for (retries = 0; retries < 10000; retries++) {
+> +		msg.value = iocsr_read32(LOONGARCH_IOCSR_SMCMBX);
+> +		if (msg.complete)
+> +			break;
+> +
+> +		usleep_range(8, 12);
+> +	}
+> +
+> +	if (!msg.complete || msg.cmd != CMD_OK) {
+> +		mutex_unlock(&cpufreq_mutex[package]);
+> +		return -EPERM;
+> +	}
+> +
+> +	mutex_unlock(&cpufreq_mutex[package]);
+> +
+> +	return msg.val;
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thanks, this looks much better now.
+
+> +}
+> +
+> +static unsigned int loongson3_cpufreq_get(unsigned int cpu)
+> +{
+> +	int ret;
+> +
+> +	ret = do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ_INFO, 0, 0);
+> +
+> +	return ret * KILO;
+> +}
+> +
+> +static int loongson3_cpufreq_set(struct cpufreq_policy *policy, int freq_level)
+> +{
+> +	return do_service_request(cpu_data[policy->cpu].core, FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO, freq_level, 0);
+> +}
+> +
+> +/*
+> + * Here we notify other drivers of the proposed change and the final change.
+
+What do you mean by other drivers here ? I would just drop the
+comment.
+
+> + */
+> +static int loongson3_cpufreq_target(struct cpufreq_policy *policy, unsigned int index)
+> +{
+> +	/* setting the cpu frequency */
+
+The obvious comments can be dropped.
+
+> +	return loongson3_cpufreq_set(policy, index);
+
+Why use a separate function for calling do_service_request() ? Just
+open code it here.
+
+> +}
+> +
+> +static int loongson3_cpufreq_get_freq_table(int cpu)
+
+If you want to simplify the naming a bit, you can just call all
+internal routines without `loongson3_cpufreq_` prefix. Just
+create_freq_table() would be appropriate here.
+
+For all routines passed to core, via the cpufreq_driver pointers, you
+can keep using the prefix.
+
+> +{
+> +	int i, ret, boost_level, max_level, freq_level;
+> +	struct cpufreq_frequency_table *table;
+> +
+> +	if (per_cpu(freq_table, cpu))
+> +		return 0;
+> +
+> +	ret = do_service_request(cpu, 0, CMD_GET_FREQ_LEVEL_NUM, 0, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +	max_level = ret;
+> +
+> +	ret = do_service_request(cpu, 0, CMD_GET_FREQ_BOOST_LEVEL, 0, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +	boost_level = ret;
+> +
+> +	freq_level = min(max_level, FREQ_MAX_LEVEL);
+> +	table = kzalloc(sizeof(struct cpufreq_frequency_table) * (freq_level + 1), GFP_KERNEL);
+
+devm_kcalloc(pdev, ...) instead ?
+
+sizeof(*table) instead.
+
+Also please run `scripts/checkpatch.pl --strict` on your patches to
+find out general formatting issues.
+
+> +	if (!table)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < freq_level; i++) {
+> +		ret = do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ_LEVEL_INFO, i, 0);
+> +		if (ret < 0) {
+> +			kfree(table);
+> +			return ret;
+> +		}
+> +
+> +		table[i].frequency = ret * KILO;
+
+> +		table[i].driver_data = FREQ_LEV0 + i;
+
+I don't think you are using this, you don't have to fill it at all.
+
+> +		table[i].flags = (i >= boost_level) ? CPUFREQ_BOOST_FREQ : 0;
+> +	}
+> +
+> +	table[freq_level].frequency = CPUFREQ_TABLE_END;
+> +	table[freq_level].driver_data = FREQ_RESV;
+> +	table[freq_level].flags = 0;
+> +
+> +	per_cpu(freq_table, cpu) = table;
+> +
+> +	return 0;
+> +}
+> +
+> +static int loongson3_cpufreq_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +	int ret;
+> +
+> +	ret = loongson3_cpufreq_get_freq_table(policy->cpu);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	policy->cur = loongson3_cpufreq_get(policy->cpu);
+
+cpufreq core does this during initialization. The drivers don't need
+to do it.
+
+> +	policy->cpuinfo.transition_latency = 10000;
+> +	policy->freq_table = per_cpu(freq_table, policy->cpu);
+> +	cpumask_copy(policy->cpus, topology_sibling_cpumask(policy->cpu));
+> +
+> +	if (policy_has_boost_freq(policy)) {
+> +		ret = cpufreq_enable_boost_support();
+> +		if (ret < 0) {
+> +			pr_warn("cpufreq: Failed to enable boost: %d\n", ret);
+> +			return ret;
+> +		}
+> +		loongson3_cpufreq_driver.boost_enabled = true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int loongson3_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+> +{
+> +	kfree(policy->freq_table);
+> +	return 0;
+> +}
+> +
+> +static int loongson3_cpufreq_cpu_online(struct cpufreq_policy *policy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int loongson3_cpufreq_cpu_offline(struct cpufreq_policy *policy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static struct cpufreq_driver loongson3_cpufreq_driver = {
+> +	.name = "loongson3",
+> +	.flags = CPUFREQ_CONST_LOOPS,
+> +	.init = loongson3_cpufreq_cpu_init,
+> +	.exit = loongson3_cpufreq_cpu_exit,
+> +	.online = loongson3_cpufreq_cpu_online,
+> +	.offline = loongson3_cpufreq_cpu_offline,
+> +	.verify = cpufreq_generic_frequency_table_verify,
+> +	.target_index = loongson3_cpufreq_target,
+> +	.get = loongson3_cpufreq_get,
+> +	.attr = cpufreq_generic_attr,
+> +};
+> +
+> +static int configure_cpufreq_info(void)
+> +{
+> +	int ret;
+> +
+> +	ret = do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
+> +	if (ret <= 0)
+> +		return -EPERM;
+> +
+> +	return do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE, FEATURE_DVFS_ENABLE | FEATURE_DVFS_BOOST, 0);
+> +}
+> +
+> +static int loongson3_cpufreq_probe(struct platform_device *pdev)
+> +{
+> +	int i, ret;
+> +
+> +	ret = configure_cpufreq_info();
+
+Maybe just open code the function here.. It is just two function calls
+which are quite straight forward.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < MAX_PACKAGES; i++)
+> +		mutex_init(&cpufreq_mutex[i]);
+
+This must be initialized before calling configure_cpufreq_info() as
+you end up using them there.
+
+> +	ret = cpufreq_register_driver(&loongson3_cpufreq_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pr_info("cpufreq: Loongson-3 CPU frequency driver.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void loongson3_cpufreq_remove(struct platform_device *pdev)
+> +{
+> +	cpufreq_unregister_driver(&loongson3_cpufreq_driver);
+> +}
+> +
+> +static struct platform_device_id cpufreq_id_table[] = {
+> +	{ "loongson3_cpufreq", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, cpufreq_id_table);
+> +
+> +static struct platform_driver loongson3_platform_driver = {
+> +	.driver = {
+> +		.name = "loongson3_cpufreq",
+> +	},
+> +	.id_table = cpufreq_id_table,
+> +	.probe = loongson3_cpufreq_probe,
+> +	.remove_new = loongson3_cpufreq_remove,
+> +};
+> +module_platform_driver(loongson3_platform_driver);
+> +
+> +MODULE_AUTHOR("Huacai Chen <chenhuacai@loongson.cn>");
+> +MODULE_DESCRIPTION("CPUFreq driver for Loongson-3 processors");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.43.0
+
+-- 
+viresh
