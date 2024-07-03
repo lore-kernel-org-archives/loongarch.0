@@ -1,116 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8360617C96
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 04:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6DF282FA
+	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 05:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719981020; cv=none; b=ViwAzOhVyH9D7Sqxs+RN7cktEM6b4kfGYz14zpYHDZZy+YKtv2TnZxqtFYH3OxubArgzjsFbFaelEzSz36SVU0D6ROPegzeHaeU2eyVpMyk99f/pfy4vZ94OIxqGfKPIN3D/1Ct/hY4osxNrDdHsDG3dkuRzA6AgFN/ybaDcL8A=
+	t=1719983268; cv=none; b=tNSAT7dkG2LzNP08OauOH95yJejVKFNth4PFWvGXQ+jWStcX4DnuOnPwtOFE3NJmqIDuozFUprqqDM6ey9HraPs0nCBWuub3SlfU6V1QuL04FhQAXOO/sRm+K6c70QGCgVvSI7z5+N5eKJAeMpQXZChOiQL8lGoIPmlcxcQv5wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719981020; c=relaxed/simple;
-	bh=2GKTIpADWW0/pDL96WDokG2gG49SMgT/xmRpLpMnRDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ECccSkASobapAZtIXuOBz8tWp+oZ/lvGezlX6QCCdfGQX3+tjOUIe7P+Wps6RwTdNqE9pBPGon2ypMe7x4S35wG6UoxVmeHECXgidyObQZvUdU19HrmckOutPYkCVscUNxpVI2VJr/+ybo1CvtDK3gk/x3zWA59cakomM/shT+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CayMUGTL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719983268; c=relaxed/simple;
+	bh=6MD/DRLdYQPovJzVd5/MvYLNcpmbtl4BuogSMuQPXHA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=de0i/+IsOdXXUgnSj1UlLsFKaQBgqso7YO6QIjrbmPLft3jeOIgT5J/B/lUvQrIQs4dTqbvW06eByA5XOuavfPZzzMoIYUBULS8m3U9NEZEaIH1VRRUHNPIPLuuRRTgUFrDOIjZ1Y4URI6LXbEMZKagsuxbHsJUtfYotIfkMX2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=HaJxDqud; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Hh5dS5O8; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CayMUGTL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353D5C4AF12
-	for <loongarch@lists.linux.dev>; Wed,  3 Jul 2024 04:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719981020;
-	bh=2GKTIpADWW0/pDL96WDokG2gG49SMgT/xmRpLpMnRDY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CayMUGTLU1i1ROVcvt5KpmQQwruF+enT8ZTnXHZtajN3U5UmZgqpXr7WDzAuRtAZt
-	 uP2GU6OpTGGO6GHAU+5sIlPvMBxf6tFX3J5UOsoM52UZDddtc3Jeqw+OeZl4U2ierS
-	 c6CGmHATYvDK+XX2nXe2ef4wa00z/pUr4C6OCj0d8WqDpR8MK69Ou23/XYMaLNvEM7
-	 GoH5RWJF/rDcLLFWQZvhBCcbUSxgQusTPOglHJlHsP1kIFmr7fNPDt1LpWoI/g0jfF
-	 jGxY/NvBhZroRaVCg4VBOt3KgMK9r7dux0ZzI86aWoU1xyR5Er6rlFoVTPVegs/Nnf
-	 fmOsYxCeuQEgA==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58bac81f40bso1845600a12.1
-        for <loongarch@lists.linux.dev>; Tue, 02 Jul 2024 21:30:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUzFgI7vOEQeFXJmUgv4u6ijv2tv08ck7/WvxHre8z6iKw1l3xiKxwV3X4GnkGEhLwAP7USUHUY+0IfpP/eSSixdydBnWuzbILk
-X-Gm-Message-State: AOJu0YwqbgjH+fI+sz87i6jgW2L+KWnHxQ+f/WUazEzvS/XWT6QZ4P9e
-	5XK4E8XF7zf70kkWRRDueKAHt/QMK1u4LYI/UkMKhlfjJ30GTL0Cfun2sZU+CwqFjNRSMPnhu6m
-	FRF50TMALMPKVDIj+q/x2GIePKeQ=
-X-Google-Smtp-Source: AGHT+IFeHMEPJPUo7fR+P58Lug7AIm6CszZI8bK6+5jFh43ov7CVbuKnr6u7wq/pWCfOZMagNaZ95cTwMd8UQq17QmU=
-X-Received: by 2002:a17:906:fccc:b0:a72:548a:6f42 with SMTP id
- a640c23a62f3a-a751445451dmr664805266b.18.1719981018671; Tue, 02 Jul 2024
- 21:30:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HaJxDqud";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hh5dS5O8"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id C2F021140184;
+	Wed,  3 Jul 2024 01:07:44 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Wed, 03 Jul 2024 01:07:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1719983264;
+	 x=1720069664; bh=zEgmw8gCyzGHEfnIbZbtI1k6cSxuGg4UDUHDyWAu3Ps=; b=
+	HaJxDqudNr/T8caD5M0KSaDMX0H3lOUv0g0dNLEOo/mLyHB1JHSMraFtQ4GuA2+t
+	SXULuj3VN3D/c5TKePIusHQEO3miNp/Z83OWZUy1/l7UQvsFANI4QegN/Iq41O5l
+	F1jvtLM7E+BX0kKmmwXXiCQ+fZBQeU5fJpE0q89k7ZJOIlQM8Dkp2/DxaAwl5xgZ
+	x4awCCPGwALEl1VRV3jUHd967c+rVPRig0H1LgsU60O+UB8zizVYf/NQRLb/Ugg1
+	Ye5fuhua0z70x9pt67QKHCkHDKwRvVqxXUYl0KWkZP5Ded5PIZDoZFKZXRfbvWPC
+	v960PtbyTHrRor9aXNJwag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719983264; x=
+	1720069664; bh=zEgmw8gCyzGHEfnIbZbtI1k6cSxuGg4UDUHDyWAu3Ps=; b=H
+	h5dS5O8kixKLLbwRCEEhLFBf8C0zCx8Tnn1SB4WRDZ1TpV83T0MiTm8HQY0GzCCm
+	3njbiLIs2hxbVFAmKVzOqMULAhW36XpodoajG+LITvHeEU/HccUSbUM6Z80/F38p
+	3P0zAEUJjtEE5gthCPZw/rnOEj86N9oxBobySYCBDt2NcMCNJMmd2Ekwv99y+idp
+	W5hvzwTdWi9JE12GdJqLUV9yVi2wFXYGQRoIs2oRXXu+5ZkamLu/SIOR8KKKhGCH
+	WIfqVBWpOvpXhx2+zFiMKO51ZBqKx+Gr/s2aynoNAllrYXDnmOL3nmVsyRUuaz5p
+	nx0qbMtDebYSZ0jZthS9g==
+X-ME-Sender: <xms:ntyEZqRMMvpvsBvito3QueMEZFoeoX_WitziIws06yN_pqtIpXjZ_w>
+    <xme:ntyEZvwVbN-wKbPmK34H762i4q-G9gkTXA47kOrUZuWXX3LQ2mKowvb7owYbEAh_d
+    fkkzyEJYuDDU96Z3hM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeigdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:ntyEZn0cdgC4pM3btS0_ERSWN9MO5iHCf6ElMTHi9OxclZl2gF-7PA>
+    <xmx:ntyEZmDbAT4PztRfg4ADGSWi9MVe9BBva-NGN_n-5f4wnvSCMBQT_g>
+    <xmx:ntyEZjhspsoTFevQZ3dOmED1qBgAbe9JmsdaLr62KJm6bjsBNsWpMA>
+    <xmx:ntyEZioAnaJX_GM6PSyszOvboj-ge3gwvSNQ-CryR_gCFbq1RftrnQ>
+    <xmx:oNyEZjgXN_tr-7ocoFv0LjdXQ4bd76DcebGWJzVogpc7ygjryeNG8V1O>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id AC5D336A0074; Wed,  3 Jul 2024 01:07:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240625110029.606032-1-mjguzik@gmail.com> <20240625110029.606032-3-mjguzik@gmail.com>
- <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
- <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
- <CAAhV-H7iKyQBvV+J9T1ekxh9OF8h=F9zp_QMyuhFBrFXGHHmTg@mail.gmail.com>
- <30907b42d5eee6d71f40b9fc3d32ae31406fe899.camel@xry111.site>
- <1b5d0840-766b-4c3b-8579-3c2c892c4d74@app.fastmail.com> <CAAhV-H4Z_BCWRJoCOh4Cei3eFCn_wvFWxA7AzWfNxYtNqUwBPA@mail.gmail.com>
- <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
-In-Reply-To: <8f2d356d-9cd6-4b06-8e20-941e187cab43@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 3 Jul 2024 12:30:06 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5n-6AjPuMj6sH0T2uSy97LMy3qkimUT13S2Fi-p-6Nug@mail.gmail.com>
-Message-ID: <CAAhV-H5n-6AjPuMj6sH0T2uSy97LMy3qkimUT13S2Fi-p-6Nug@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Xi Ruoyao <xry111@xry111.site>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <a012763d-d1d4-4e70-b8fc-173b8a915af9@app.fastmail.com>
+In-Reply-To: <20240702151415.1160566-1-chenhuacai@loongson.cn>
+References: <20240702151415.1160566-1-chenhuacai@loongson.cn>
+Date: Wed, 03 Jul 2024 13:07:20 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Huacai Chen" <chenhuacai@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, "Xuefeng Li" <lixuefeng@loongson.cn>,
+ "Guo Ren" <guoren@kernel.org>, "Xuerui Wang" <kernel@xen0n.name>,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] LoongArch: Use correct API to map cmdline in relocate_kernel()
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 3, 2024 at 1:07=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Jul 2, 2024, at 17:36, Huacai Chen wrote:
-> > On Mon, Jul 1, 2024 at 7:59=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wr=
-ote:
-> >> On Sun, Jun 30, 2024, at 04:39, Xi Ruoyao wrote:
-> >> > On Sun, 2024-06-30 at 09:40 +0800, Huacai Chen wrote:
-> >> >> >
-> >> >> > Yes, both Linus and Christian hates introducing a new AT_ flag fo=
-r
-> >> >> > this.
-> >> >> >
-> >> >> > This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) behave
-> >> >> > like
-> >> >> > statx(fd, "", AT_EMPTY_PATH, ...) instead.  NULL avoids the
-> >> >> > performance
-> >> >> > issue and it's also audit-able by seccomp BPF.
-> >> >> To be honest, I still want to restore __ARCH_WANT_NEW_STAT. Because
-> >> >> even if statx() becomes audit-able, it is still blacklisted now.
-> >> >
-> >> > Then patch the sandbox to allow it.
-> >> >
-> >> > The sandbox **must** be patched anyway or it'll be broken on all 32-=
-bit
-> >> > systems after 2037.  [Unless they'll unsupport all 32-bit systems be=
-fore
-> >> > 2037.]
-> >>
-> >> More importantly, the sandbox won't be able to support any 32-bit
-> >> targets that support running after 2037, regardless of how long
-> >> the sandbox supports them: if you turn off COMPAT_32BIT_TIME today
-> >> in order to be sure those don't get called by accident, the
-> >> fallback is immediately broken.
-> > Would you mind if I restore newstat for LoongArch64 even if this patch =
-exist?
->
-> I still prefer not add newstat back: it's easier to
-> get applications to correctly implement the statx() code
-> path if there are more architectures that only have that.
-Yes, we need statx-only architecures to improve statx(), and so this
-patch got upstream. But I'm considering bidirectional compatibility,
-which means the kernel should work with future patched and existing
-un-patched sandboxes. So I think now is the correct time to add
-newstat back for LoongArch --- statx() has been improved, and existing
-applications want to work on LoongArch.
 
-Huacai
 
+=E5=9C=A82024=E5=B9=B47=E6=9C=882=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
+=8D=8811:14=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
+> fw_arg1 is in memory space rather than I/O space, so we should use
+> early_memremap_ro() instead of early_ioremap() to map the cmdline.
+> Moreover, we should unmap it after using.
 >
->        Arnd
+> Suggested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+Thanks for correcting that.
+
+> ---
+>  arch/loongarch/kernel/relocate.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/=
+relocate.c
+> index 1acfa704c8d0..0eddd4a66b87 100644
+> --- a/arch/loongarch/kernel/relocate.c
+> +++ b/arch/loongarch/kernel/relocate.c
+> @@ -13,6 +13,7 @@
+>  #include <asm/bootinfo.h>
+>  #include <asm/early_ioremap.h>
+>  #include <asm/inst.h>
+> +#include <asm/io.h>
+>  #include <asm/sections.h>
+>  #include <asm/setup.h>
+>=20
+> @@ -170,7 +171,7 @@ unsigned long __init relocate_kernel(void)
+>  	unsigned long kernel_length;
+>  	unsigned long random_offset =3D 0;
+>  	void *location_new =3D _text; /* Default to original kernel start */
+> -	char *cmdline =3D early_ioremap(fw_arg1, COMMAND_LINE_SIZE); /* Boot=20
+> command line is passed in fw_arg1 */
+> +	char *cmdline =3D early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE); /*=20
+> Boot command line is passed in fw_arg1 */
+>=20
+>  	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+>=20
+> @@ -182,6 +183,7 @@ unsigned long __init relocate_kernel(void)
+>  		random_offset =3D (unsigned long)location_new - (unsigned long)(_te=
+xt);
+>  #endif
+>  	reloc_offset =3D (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
+> +	early_memunmap(cmdline, COMMAND_LINE_SIZE);
+>=20
+>  	if (random_offset) {
+>  		kernel_length =3D (long)(_end) - (long)(_text);
+> --=20
+> 2.43.0
+
+--=20
+- Jiaxun
