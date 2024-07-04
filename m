@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73AF14C83
-	for <loongarch@lists.linux.dev>; Thu,  4 Jul 2024 01:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE102366
+	for <loongarch@lists.linux.dev>; Thu,  4 Jul 2024 01:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720056275; cv=none; b=egrMbXJAdf2d3IXbnEQ0Rz4TThJANf+BNBU6lDBXJEDAoXaCnunRspQOpDRi/IdepFNrYUz546Xba/qulWWkshPxn23F9IJo3oYwrwtT/6Me3NfyJJodES24GBdkUygtm1M+opFGvnjzLmlrZpUatVU/lobpMjvKCB3Tzetoxvc=
+	t=1720056926; cv=none; b=k4RmKc/wpZmVo+bzA/Khp3LKpL14X2AxXA15Jh8BhIxfiJkqJYCbLPP2cDMDQr/ZoTUPQ/3b77EBQ/5qY+uEjjodtm/DGZDCJsX7qfGisttwphXz+fZPY+IrpBYrrjBQjQnYjzHS4+hgYEudZgpWSz+pTsQKxt1V1G3tgg+9U1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720056275; c=relaxed/simple;
-	bh=GU+TvkUVrTgWGtAhwcUyRQA50B33D/7lGv9sRiHYabU=;
+	s=arc-20240116; t=1720056926; c=relaxed/simple;
+	bh=v8JDP/y+svxQCeMNKr2msyz9U+PXhhOmwZZ7hsE94fE=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=E92qWUExIaBugmIMk1bxi55g6rXAINth46UsWQUHfZu7Df/wYrVgGhxzKHTKM/eLmwAOQ5nZS8wwcL6rtuOTXPhgOg0Xw4JxngpneCl7C3YxtkIup9vFFrWrd39xPqR/75p1RKFrwzauuToyQfviHXpKeP/JgvP4FbWSRz30POI=
+	 In-Reply-To:Content-Type; b=JCXaenJfHFF9uAN6FfZ2CeyooJkHO235ME+UYL81XpBscIAYpXjJctDyNk001roEd9ql7/bkyhblwPoWZ0UUXo3mb3VJOEdfuLNJkXGkricj/Q8xZGDx27ldzoxZqqcR9f++C2fqtDffV7vjFGCmthi0U4AydynzcbMiuRUESkI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxDOvL+YVmtMIAAA--.2278S3;
-	Thu, 04 Jul 2024 09:24:27 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxL_FZ_IVmQcMAAA--.2770S3;
+	Thu, 04 Jul 2024 09:35:21 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMfJ+YVmOm86AA--.4554S3;
-	Thu, 04 Jul 2024 09:24:27 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxosRW_IVmH3Q6AA--.59732S3;
+	Thu, 04 Jul 2024 09:35:20 +0800 (CST)
 Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
@@ -38,8 +38,8 @@ References: <20240626063239.3722175-1-maobibo@loongson.cn>
  <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
  <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
 From: maobibo <maobibo@loongson.cn>
-Message-ID: <aac97476-0a3a-657d-9340-c129bc710791@loongson.cn>
-Date: Thu, 4 Jul 2024 09:24:25 +0800
+Message-ID: <bdcc9ec4-31a8-1438-25c0-be8ba7f49ed0@loongson.cn>
+Date: Thu, 4 Jul 2024 09:35:18 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -52,25 +52,25 @@ In-Reply-To: <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxDMfJ+YVmOm86AA--.4554S3
+X-CM-TRANSID:AQAAf8CxosRW_IVmH3Q6AA--.59732S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3ZF17KF4fAF1kWryxuFy3GFX_yoW8Gry8Go
-	W5Jr1xJr18Jr1UAF1UJ34DJr1UJw1UJr1UJryUJr15Jr1Utw1UAr1UJr1UJF47Jr1UGryU
-	JryUJr1UAF17Jr1Ul-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
+X-Coremail-Antispam: 1Uk129KBj9fXoW3ZF17KF4fAF1kWryxuFy3GFX_yoW8Gr45Ko
+	W5Jr1xJr18Jr1UAF1UJ34DJr1UJw1UGr1UJryUJr15Jr1Utw1UAr1UJr1UJF43Jr1UGryU
+	JryUJr1UAFy7JF1Ul-sFpf9Il3svdjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf
 	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY27kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	UjIYCTnIWjp_UUUOb7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
 	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
 	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJU
-	UUUU=
+	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
 
 
@@ -218,27 +218,22 @@ On 2024/7/3 下午11:35, Huacai Chen wrote:
 > In another thread I found that Jiaxun said he has a solution to make
 > LBT be a vcpu feature and still works well. However, that may take
 > some time and is too late for 6.11.
-
-It is welcome if Jiaxun provide patch for host machine type, I have no 
-time give any feedback with suggestion of Jianxun now.
-
 > 
 > But we have another choice now: just remove the UAPI and vm.c parts in
 > this series, let the LBT main parts be upstream in 6.11, and then
 > solve other problems after 6.11. Even if Jiaxun's solution isn't
 > usable, we can still use this old vm feature solution then.
 
-There is not useul if only LBT main part goes upstream. VMM cannot use 
-LBT if control part is not merged.
+I am sure it is best if it is VM feature for LBT feature detection, 
+LSX/LASX feature detection uses CPU feature, we can improve it later.
 
- From another side, what do you like to do? Reviewing patch of others 
-and give comments whatever grammar spelling or useful suggestions, or 
-Writing patch which needs much efforts rather than somethings like 
-feature configuration, BSP drivers.
+For host cpu type or migration feature detection, I have no idea now, 
+also I do not think it will be big issue for me, I will do it with 
+scheduled time. Of source, welcome Jiaxun and you to implement host cpu 
+type or migration feature detection.
 
 Regards
 Bibo Mao
-
 > 
 > 
 > Huacai
