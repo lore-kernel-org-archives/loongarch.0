@@ -1,91 +1,277 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0265B1A00EE
-	for <loongarch@lists.linux.dev>; Thu,  4 Jul 2024 07:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFFE1A070D;
+	Thu,  4 Jul 2024 14:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720079324; cv=none; b=gE3mNUtNNqSObvC24LXPkkbvxwDSgLFOvuZta1PpPSYHT4LUXGvxuM9E97dowWTO9yJswHXEg9+FQWQ30AaXvlw4TmO7+pAyXdeTQF5aFFLgZDTiPRILWf/UijQ0Vmjk3l4e6PaxhO1PGohDTezisiGTgfHQ+b9jUEJwemBPMpY=
+	t=1720103800; cv=none; b=PdZqArbGRzdHkS0qPPKRcO27EOiCbN1tFwGreqWOXqUrUcua+tG0EBFYxo4fhkiYPyKag2KaCv5AImH79wysqIoPRUggF+QIMpcQWEnN8pIlfe+ANkTNFoTkCXyMP/6FHrHMDn2DAglOM+JP3TpBCr9o1cZu2js9D5uRrxc1chY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720079324; c=relaxed/simple;
-	bh=4uRnWDBv1UfRpH57XzEtOTniVSipc3ghYR5WXxJ2mWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpXn6GjamrAewuhOUFJJjn2naI+5pd0zae7wSCSljP/98VHfUMySX+4RFkSHH3VfOtcfvwiNOYVcqjxEAdEIQghgcAAIdxFWIXWgBG0mEAWlZ2F7HvL3G9q99yzCOtHU1viXpZYxu2J2vIBdp+ILDNlHgcu8bdDDToyOK7dh8rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eivws8+e; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720103800; c=relaxed/simple;
+	bh=d8RBLuH5Pasj8CitSVF748rHET+zfK2JgBl1Bace8pc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eNCI2vHEfIjUii3f4YO46Gioa2eU8GLvLfgr53k2kYu7geoCBXxnVMfzGNYHVS4CaVbdQTy+oAzLu6ToXyRDvY7LF2T57wxUrq4GbKdSgFivzTZ155vXXI/32qBC5XfzyKYdiHvsc0IjsWFMqKL1Nm363rLjuZ43zeRILzecEN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHzAGzTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eivws8+e"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d55e2e032dso233266b6e.3
-        for <loongarch@lists.linux.dev>; Thu, 04 Jul 2024 00:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720079322; x=1720684122; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pWnn67dS9Y/zsDt+wd6xJaG7sYvUiWiKDh8I/p6oVR0=;
-        b=eivws8+esWvWYGFHk6onh8/3aK5yfGLc5+LIpjPgniWES+uu2kCvM42MzRmYzm55k+
-         XG5UbA1LS2fI1up3H8seEDtBT9Pj9PM7QIV/VCsKLLyUOKh5IESoQUmdFYY1syZshcn+
-         mmFIsZZzQNRc3J1aUxWaxt0muRU1nNMFh33FWC+bF8SYnQiZ9gQIWY0p/dhXuPqaTQMD
-         dvf7E2SPDiN5pdR8GymuUuDgJyEAJmzXSndzZhFSNxmULQ8NUdEbkrkfOe+jrKLg+VY1
-         x6h+GlJkh3vHNnm/cmu8KemVHbOV6NgWR6Utp4sRf/VRjU0Wvca4Pcc6xVF2HHOjZ+1n
-         2I5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720079322; x=1720684122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pWnn67dS9Y/zsDt+wd6xJaG7sYvUiWiKDh8I/p6oVR0=;
-        b=xJsf1PcI1QDbaTL6I35dP0oHKUklLdrLmFfqTqIwgY9zE/1ivDpRWQvK30QLU89W+u
-         LW0bro7pQSTVmTJKKof1lKWYI9FAfuzgjzKWcIO7BEe12Al85NK6V4ucI90D5ZFxcEJ9
-         NkwAIt1px6QnxK/WuEc7j32RYYxc96dNFD4QJA4YYUoaSmj63NzIB55/HxaJQWMz+eQ/
-         OIN7IpQRcRxjGYzYxmuWavQUAQWcXSYmZYUumDajAAJjnZ6If2g03TKlZq+QWCbGo0M7
-         0K/pkpkkYOeRxP5Ht8rOm7Y/k4uMQa7Pae7f3pB2ebMaSz9hbTJZKygSp7oFBPMDrNZC
-         7INQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkbTlBbCLu/bDJB+wSvTu+6IVzJVOk/1g2lgNj8xRveoP3Zbq3GjU8j+6h7ZbQYx9XGhke5tCzjj+EuPm/dy634j8z+QvbeUAF
-X-Gm-Message-State: AOJu0Ywc9SeGrRjPyBLzsf5pQ+6++zZ3C++FRbcZL6UukLuRAEQ7jmwL
-	JUZbcn6XXsJ2lkZK0geUed0dsrhUUeGaBks6nw/mrBJPD6G1y2rmCzO0ZYDBxHM=
-X-Google-Smtp-Source: AGHT+IG+/k3hB6mC74yudiI0NAU7cypsceC+qk0xYaI1l1jTz+jeizKu61E+H+7sjtNqQfkXVGLPwQ==
-X-Received: by 2002:a05:6808:201e:b0:3d6:2c71:ca0 with SMTP id 5614622812f47-3d914da93ecmr916919b6e.42.1720079322063;
-        Thu, 04 Jul 2024 00:48:42 -0700 (PDT)
-Received: from localhost ([122.172.82.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044af3bbsm11626597b3a.159.2024.07.04.00.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 00:48:41 -0700 (PDT)
-Date: Thu, 4 Jul 2024 13:18:39 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH V2 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
-Message-ID: <20240704074839.eg2enuj5xtsl7bif@vireshk-i7>
-References: <20240702152737.1184244-1-chenhuacai@loongson.cn>
- <20240702152737.1184244-3-chenhuacai@loongson.cn>
- <20240703101850.dtck223pleiiwfxp@vireshk-i7>
- <CAAhV-H74HJr0=8g0GtHj=zZH5nJijRpc90zLLRY_sXJfKFVtHA@mail.gmail.com>
- <20240704031532.5bkh4nr7d3vcvzwq@vireshk-i7>
- <CAAhV-H4HbZ02BdtE47gVyZGdNKj4QWzMSuZgHR6d9RHE36Nv=A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHzAGzTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF67AC3277B;
+	Thu,  4 Jul 2024 14:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720103800;
+	bh=d8RBLuH5Pasj8CitSVF748rHET+zfK2JgBl1Bace8pc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uHzAGzTpE6j/WOHutILRZlCBD4yqe5shQQueAfrC5t1s6TFO1ajW9YIWCw1o1lmYv
+	 SUG2wZ76xEdTpMTZa7IAh0GltSJmZhhBIVOIfb3HNYppr3Vk3ShI3HM6aeEAPLmGPp
+	 wI6fZGozAJ1Ev68n0SKPmJaXe5Ia2+Urut3mFTwJf1VvyQM5E/1NOu2ekNGOtxBqlQ
+	 u32o6+mrKKgaE/0aUSYvObtokELefUljjL3BA1YWVRS4Ask1PJUMb/XTzm3+OFdA5u
+	 oF/cIqfR7xQ7XqHLH77Q2oBQrbv2ng0HGvWY2mTK5MypuAlDqGVau/J2cekYXrgyaH
+	 uwiay5ttQDWMw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-arch@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-openrisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 00/17] arch: convert everything to syscall.tbl
+Date: Thu,  4 Jul 2024 16:35:54 +0200
+Message-Id: <20240704143611.2979589-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H4HbZ02BdtE47gVyZGdNKj4QWzMSuZgHR6d9RHE36Nv=A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 04-07-24, 15:37, Huacai Chen wrote:
-> OK, I have learned that devm_kzalloc() allocated memory will be
-> automatically freed at driver dettach.
-> But I have another question: can the "kfree(table)" after
-> do_service_request() fail be removed?  Because I think in this case
-> the probe will fail, then no driver detach happens.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Yes that will be taken care of.
+There are eight architectures using include/uapi/asm-generic/unistd.h,
+which is still in an old format and not easily parsed by scripts.
+In addition, arm64 uses the old format for the 32-bit arm compat syscalls,
+despite them using the modern syscall.tbl format for the native calls.
+
+As part of a larger cleanup, this converts all of them to use the new
+format with a shared file. I was planning to post this earlier, but ended
+up fixing up any system calls that have mismatched calling conventions
+between kernel and userspace first, as that seemed more important.
+
+I originally tried adding the same arch/*/kernel/syscalls/Makefile as used
+on the other architectures, but ended up simplifying this in the process
+to use a single set of Makefile rules in scripts/Makefile.asm-headers,
+which in turn requires a few cleanups to arch/*/include/asm/Kbuild files.
+
+Another prerequisite included in here is to make sys_clone3 get provided
+on all architectures, though it remains broken and returns -ENOSYS on
+hexagon, nios2, sh and sparc. To preserve the compile-time warning,
+I added an explicit #warning for those that are marked broken.
+
+Once we have the new table format in place everywhere, additional
+improvements I have planned will be much easier, including:
+
+ - generating machine-readable syscall API descriptions for each
+   syscall on each architecture
+
+ - type checking to ensure that the in-kernel prototype matches
+   what userspace tools see
+
+ - unifying the last common bits of all tables so that new syscalls
+   only need to get added in one place
+
+ - generate human-readable wrappers for native and compat syscalls
+   on all architectures to replace the SYSCALL_DEFINEx() macros.
+
+       Arnd
+
+Arnd Bergmann (17):
+  syscalls: add generic scripts/syscall.tbl
+  csky: drop asm/gpio.h wrapper
+  um: don't generate asm/bpf_perf_event.h
+  loongarch: avoid generating extra header files
+  kbuild: verify asm-generic header list
+  kbuild: add syscall table generation to scripts/Makefile.asm-headers
+  clone3: drop __ARCH_WANT_SYS_CLONE3 macro
+  arc: convert to generic syscall table
+  arm64: convert unistd_32.h to syscall.tbl format
+  arm64: generate 64-bit syscall.tbl
+  arm64: rework compat syscall macros
+  csky: convert to generic syscall table
+  hexagon: use new system call table
+  loongarch: convert to generic syscall table
+  nios2: convert to generic syscall table
+  openrisc: convert to generic syscall table
+  riscv: convert to generic syscall table
+
+ Makefile                                      |   2 +-
+ arch/alpha/include/asm/unistd.h               |   1 +
+ arch/arc/include/asm/Kbuild                   |   2 +
+ arch/arc/include/asm/unistd.h                 |  14 +
+ arch/arc/include/uapi/asm/Kbuild              |   2 +
+ arch/arc/include/uapi/asm/unistd.h            |  44 +-
+ arch/arc/kernel/Makefile.syscalls             |   3 +
+ arch/arc/kernel/sys.c                         |   5 +-
+ arch/arm/include/asm/unistd.h                 |   1 -
+ arch/arm64/include/asm/Kbuild                 |   8 +
+ arch/arm64/include/asm/seccomp.h              |  13 +-
+ arch/arm64/include/asm/unistd.h               |  22 +-
+ arch/arm64/include/asm/unistd32.h             | 939 +-----------------
+ .../include/asm/vdso/compat_gettimeofday.h    |  12 +-
+ arch/arm64/include/uapi/asm/Kbuild            |   1 +
+ arch/arm64/include/uapi/asm/unistd.h          |  25 +-
+ arch/arm64/kernel/Makefile.syscalls           |   6 +
+ arch/arm64/kernel/signal32.c                  |   2 +-
+ arch/arm64/kernel/sigreturn32.S               |  18 +-
+ arch/arm64/kernel/sys.c                       |   6 +-
+ arch/arm64/kernel/sys32.c                     |  17 +-
+ arch/arm64/kernel/syscall.c                   |   3 +-
+ arch/arm64/tools/Makefile                     |   6 +-
+ arch/arm64/tools/syscall_32.tbl               | 476 +++++++++
+ arch/arm64/tools/syscall_64.tbl               |   1 +
+ arch/csky/include/asm/Kbuild                  |   3 +-
+ arch/csky/include/asm/unistd.h                |   3 +
+ arch/csky/include/uapi/asm/Kbuild             |   2 +
+ arch/csky/include/uapi/asm/unistd.h           |  15 +-
+ arch/csky/kernel/Makefile.syscalls            |   4 +
+ arch/csky/kernel/syscall_table.c              |   4 +-
+ arch/hexagon/include/asm/Kbuild               |   2 +
+ arch/hexagon/include/asm/unistd.h             |  10 +
+ arch/hexagon/include/uapi/asm/Kbuild          |   2 +
+ arch/hexagon/include/uapi/asm/unistd.h        |  13 +-
+ arch/hexagon/kernel/Makefile.syscalls         |   3 +
+ arch/hexagon/kernel/syscalltab.c              |   8 +-
+ arch/loongarch/include/asm/Kbuild             |  17 +-
+ arch/loongarch/include/asm/unistd.h           |   2 +
+ arch/loongarch/include/uapi/asm/Kbuild        |   2 +
+ arch/loongarch/include/uapi/asm/unistd.h      |   4 +-
+ arch/loongarch/kernel/Makefile.syscalls       |   4 +
+ arch/loongarch/kernel/syscall.c               |   3 +-
+ arch/m68k/include/asm/unistd.h                |   1 -
+ arch/microblaze/include/asm/unistd.h          |   2 +
+ arch/mips/include/asm/unistd.h                |   1 -
+ arch/nios2/include/asm/Kbuild                 |   2 +
+ arch/nios2/include/asm/unistd.h               |  10 +
+ arch/nios2/include/uapi/asm/Kbuild            |   2 +
+ arch/nios2/include/uapi/asm/unistd.h          |  14 +-
+ arch/nios2/kernel/Makefile.syscalls           |   3 +
+ arch/nios2/kernel/syscall_table.c             |   6 +-
+ arch/openrisc/include/asm/Kbuild              |   2 +
+ arch/openrisc/include/asm/syscalls.h          |   4 -
+ arch/openrisc/include/asm/unistd.h            |   8 +
+ arch/openrisc/include/uapi/asm/Kbuild         |   2 +
+ arch/openrisc/include/uapi/asm/unistd.h       |  15 +-
+ arch/openrisc/kernel/Makefile.syscalls        |   3 +
+ arch/openrisc/kernel/sys_call_table.c         |   9 +-
+ arch/parisc/include/asm/unistd.h              |   1 -
+ arch/powerpc/include/asm/unistd.h             |   1 -
+ arch/riscv/include/asm/Kbuild                 |   3 +
+ arch/riscv/include/asm/syscall_table.h        |   7 +
+ arch/riscv/include/asm/unistd.h               |  13 +-
+ arch/riscv/include/uapi/asm/Kbuild            |   2 +
+ arch/riscv/include/uapi/asm/unistd.h          |  41 +-
+ arch/riscv/kernel/Makefile.syscalls           |   4 +
+ arch/riscv/kernel/compat_syscall_table.c      |   6 +-
+ arch/riscv/kernel/syscall_table.c             |   6 +-
+ arch/s390/include/asm/unistd.h                |   1 -
+ arch/sh/include/asm/unistd.h                  |   2 +
+ arch/sparc/include/asm/unistd.h               |   2 +
+ arch/um/include/asm/Kbuild                    |   1 -
+ arch/um/include/asm/bpf_perf_event.h          |   3 +
+ arch/x86/include/asm/unistd.h                 |   1 -
+ arch/xtensa/include/asm/unistd.h              |   1 -
+ include/asm-generic/Kbuild                    |   1 -
+ include/uapi/asm-generic/unistd.h             |   4 -
+ kernel/fork.c                                 |   8 +-
+ kernel/sys_ni.c                               |   2 -
+ scripts/Makefile.asm-generic                  |  58 --
+ scripts/Makefile.asm-headers                  |  98 ++
+ scripts/syscall.tbl                           | 404 ++++++++
+ tools/arch/arm64/include/uapi/asm/unistd.h    |   1 -
+ .../arch/loongarch/include/uapi/asm/unistd.h  |   1 -
+ tools/include/uapi/asm-generic/unistd.h       |   4 -
+ 86 files changed, 1219 insertions(+), 1271 deletions(-)
+ create mode 100644 arch/arc/include/asm/unistd.h
+ create mode 100644 arch/arc/kernel/Makefile.syscalls
+ create mode 100644 arch/arm64/kernel/Makefile.syscalls
+ create mode 100644 arch/arm64/tools/syscall_32.tbl
+ create mode 120000 arch/arm64/tools/syscall_64.tbl
+ create mode 100644 arch/csky/kernel/Makefile.syscalls
+ create mode 100644 arch/hexagon/include/asm/unistd.h
+ create mode 100644 arch/hexagon/kernel/Makefile.syscalls
+ create mode 100644 arch/loongarch/kernel/Makefile.syscalls
+ create mode 100644 arch/nios2/include/asm/unistd.h
+ create mode 100644 arch/nios2/kernel/Makefile.syscalls
+ create mode 100644 arch/openrisc/include/asm/unistd.h
+ create mode 100644 arch/openrisc/kernel/Makefile.syscalls
+ create mode 100644 arch/riscv/include/asm/syscall_table.h
+ create mode 100644 arch/riscv/kernel/Makefile.syscalls
+ create mode 100644 arch/um/include/asm/bpf_perf_event.h
+ delete mode 100644 scripts/Makefile.asm-generic
+ create mode 100644 scripts/Makefile.asm-headers
+ create mode 100644 scripts/syscall.tbl
 
 -- 
-viresh
+2.39.2
+
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Vineet Gupta <vgupta@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Brian Cain <bcain@quicinc.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-arch@vger.kernel.org
