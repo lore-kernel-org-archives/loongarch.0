@@ -1,37 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F61A1448EF
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 02:56:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E2F28E8
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 02:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720148191; cv=none; b=STdj1GpcZ+uzs8mmXb27CP2eFHhQa0du9IGq7S2/6RKvTa1+4eNVbTbKBq68Gloz9jF6DhPpgOU+kTBZ1YEAykqeUJ3b/XuPFSVZzlcOFVGyeBV9ObuTY0RC4fF3oCd5u7ejy6vmWhKE4cVMM6YeFrtO7xDGI52HsiQV75a77jI=
+	t=1720148248; cv=none; b=ZlS2lqn2koc6Re+wbNHDxC05vB0qjnFmYhnjAPMUEtNVn2Jn5ycRYz3WbJ12YSm+F76PTu+RVqlO/le8NJlEtm8pJ+6qNBSI9VNic2NKXYebGCQFbmmgQpOb4aNBTOkqP/sP0xbBbT4pnIPYAGk8kkfQSKDTWwBPz29IO48OXbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720148191; c=relaxed/simple;
-	bh=YylNxF37f0DRD5NJH36i/MtOFN8oFQ9OiCy97hBX+h0=;
+	s=arc-20240116; t=1720148248; c=relaxed/simple;
+	bh=qxwhKcg0SI6q8BGfM7Z4xJwJo021dapPukYpNncCTxk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L1gR7j0A3AVcAxBvfn29Bmrc+o4k5tRneIHVHdFcZCuLC+GSX3/b/dDyXxmVxcynM/EmVFhXlJg/kDgl84HhWWZT2AguukYGHFcfx4tKVw0sT05FNRCEtOcRuQkUsHe6kX3cGIDzCrOFS851oHdSj7gvBSU+qvkIBoz1tfylwxM=
+	 MIME-Version; b=Z3UlgSRZ/XgHj8KFMDGeu9uN2xtTDxWNSMgWF9E0Lvui7Yvt7BJydmUHo8gQDWcxd+em1gzd70tBcDtK8PVkeRbb7VFm5ULXsRyIFtyGyZ3bjM5MlQC1pQcejzHWnEuxMlWzZk75ZK2D8ktRNcGOdvr9XD0FrZpo0J5Dg5V18IQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cx_vDaYIdmDCUBAA--.3829S3;
-	Fri, 05 Jul 2024 10:56:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxbPDWYIdm7iQBAA--.3498S3;
+	Fri, 05 Jul 2024 10:56:22 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S13;
-	Fri, 05 Jul 2024 10:56:25 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S7;
+	Fri, 05 Jul 2024 10:56:20 +0800 (CST)
 From: Xianglai Li <lixianglai@loongson.cn>
 To: linux-kernel@vger.kernel.org
-Cc: Bibo Mao <maobibo@loongson.cn>,
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Min Zhou <zhoumin@loongson.cn>,
 	Paolo Bonzini <pbonzini@redhat.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Xianglai li <lixianglai@loongson.cn>
-Subject: [PATCH 11/11] LoongArch: KVM: Add irqfd support
-Date: Fri,  5 Jul 2024 10:38:54 +0800
-Message-Id: <20240705023854.1005258-12-lixianglai@loongson.cn>
+Subject: [PATCH 05/11] LoongArch: KVM: Add EXTIOI device support
+Date: Fri,  5 Jul 2024 10:38:48 +0800
+Message-Id: <20240705023854.1005258-6-lixianglai@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20240705023854.1005258-1-lixianglai@loongson.cn>
 References: <20240705023854.1005258-1-lixianglai@loongson.cn>
@@ -42,16 +42,17 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S13
+X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S7
 X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Enable the KVM_IRQ_ROUTING KVM_IRQCHIP KVM_MSI configuration item,
-increase the KVM_CAP_IRQCHIP capability, and implement the query
-interface of the kernel irqchip.
+Added device model for EXTIOI interrupt controller,
+implemented basic create destroy interface,
+and registered device model to kvm device table.
 
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
 ---
 Cc: Bibo Mao <maobibo@loongson.cn> 
@@ -64,226 +65,285 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name> 
 Cc: Xianglai li <lixianglai@loongson.cn> 
 
- arch/loongarch/kvm/Kconfig        |  3 ++
- arch/loongarch/kvm/Makefile       |  1 +
- arch/loongarch/kvm/intc/pch_pic.c | 28 ++++++++++
- arch/loongarch/kvm/irqfd.c        | 87 +++++++++++++++++++++++++++++++
- arch/loongarch/kvm/vm.c           | 19 ++++++-
- 5 files changed, 137 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/kvm/irqfd.c
+ arch/loongarch/include/asm/kvm_extioi.h |  78 +++++++++++++++++
+ arch/loongarch/include/asm/kvm_host.h   |   2 +
+ arch/loongarch/kvm/Makefile             |   1 +
+ arch/loongarch/kvm/intc/extioi.c        | 111 ++++++++++++++++++++++++
+ arch/loongarch/kvm/main.c               |   6 +-
+ include/uapi/linux/kvm.h                |   2 +
+ 6 files changed, 199 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_extioi.h
+ create mode 100644 arch/loongarch/kvm/intc/extioi.c
 
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-index c4ef2b4d9797..c2ef17055995 100644
---- a/arch/loongarch/kvm/Kconfig
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -29,6 +29,9 @@ config KVM
- 	select KVM_MMIO
- 	select HAVE_KVM_READONLY_MEM
- 	select KVM_XFER_TO_GUEST_WORK
-+	select HAVE_KVM_IRQ_ROUTING
-+	select HAVE_KVM_IRQCHIP
-+	select HAVE_KVM_MSI
- 	help
- 	  Support hosting virtualized guest machines using
- 	  hardware virtualization extensions. You will need
+diff --git a/arch/loongarch/include/asm/kvm_extioi.h b/arch/loongarch/include/asm/kvm_extioi.h
+new file mode 100644
+index 000000000000..48a117b2be5d
+--- /dev/null
++++ b/arch/loongarch/include/asm/kvm_extioi.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2024 Loongson Technology Corporation Limited
++ */
++
++#ifndef LOONGARCH_EXTIOI_H
++#define LOONGARCH_EXTIOI_H
++
++#include <kvm/iodev.h>
++
++#define EXTIOI_IRQS			256
++#define EXTIOI_ROUTE_MAX_VCPUS		256
++#define EXTIOI_IRQS_U8_NUMS		(EXTIOI_IRQS / 8)
++#define EXTIOI_IRQS_U32_NUMS		(EXTIOI_IRQS_U8_NUMS / 4)
++#define EXTIOI_IRQS_U64_NUMS		(EXTIOI_IRQS_U32_NUMS / 2)
++/* map to ipnum per 32 irqs */
++#define EXTIOI_IRQS_NODETYPE_COUNT	16
++
++#define EXTIOI_BASE			0x1400
++#define EXTIOI_SIZE			0x900
++
++#define LS3A_INTC_IP			8
++
++struct loongarch_extioi {
++	spinlock_t lock;
++	struct kvm *kvm;
++	struct kvm_io_device device;
++	/* hardware state */
++	union nodetype {
++		u64 reg_u64[EXTIOI_IRQS_NODETYPE_COUNT / 4];
++		u32 reg_u32[EXTIOI_IRQS_NODETYPE_COUNT / 2];
++		uint16_t reg_u16[EXTIOI_IRQS_NODETYPE_COUNT];
++		u8 reg_u8[EXTIOI_IRQS_NODETYPE_COUNT * 2];
++	} nodetype;
++
++	/* one bit shows the state of one irq */
++	union bounce {
++		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
++		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
++		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
++	} bounce;
++
++	union isr {
++		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
++		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
++		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
++	} isr;
++	union coreisr {
++		u64 reg_u64[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U64_NUMS];
++		u32 reg_u32[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U32_NUMS];
++		u8 reg_u8[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U8_NUMS];
++	} coreisr;
++	union enable {
++		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
++		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
++		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
++	} enable;
++
++	/* use one byte to config ipmap for 32 irqs at once */
++	union ipmap {
++		u64 reg_u64;
++		u32 reg_u32[EXTIOI_IRQS_U32_NUMS / 4];
++		u8 reg_u8[EXTIOI_IRQS_U8_NUMS / 4];
++	} ipmap;
++	/* use one byte to config coremap for one irq */
++	union coremap {
++		u64 reg_u64[EXTIOI_IRQS / 8];
++		u32 reg_u32[EXTIOI_IRQS / 4];
++		u8 reg_u8[EXTIOI_IRQS];
++	} coremap;
++
++	DECLARE_BITMAP(sw_coreisr[EXTIOI_ROUTE_MAX_VCPUS][LS3A_INTC_IP], EXTIOI_IRQS);
++	uint8_t  sw_coremap[EXTIOI_IRQS];
++};
++
++void extioi_set_irq(struct loongarch_extioi *s, int irq, int level);
++int kvm_loongarch_register_extioi_device(void);
++#endif /* LOONGARCH_EXTIOI_H */
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index b28487975336..0e4e46e06420 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -20,6 +20,7 @@
+ #include <asm/kvm_mmu.h>
+ #include <asm/loongarch.h>
+ #include <asm/kvm_ipi.h>
++#include <asm/kvm_extioi.h>
+ 
+ /* Loongarch KVM register ids */
+ #define KVM_GET_IOC_CSR_IDX(id)		((id & KVM_CSR_IDX_MASK) >> LOONGARCH_REG_SHIFT)
+@@ -111,6 +112,7 @@ struct kvm_arch {
+ 	s64 time_offset;
+ 	struct kvm_context __percpu *vmcs;
+ 	struct loongarch_ipi *ipi;
++	struct loongarch_extioi *extioi;
+ };
+ 
+ #define CSR_MAX_NUMS		0x800
 diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-index 165ecb4d408f..619ab4969458 100644
+index 36c3009fe89c..a481952e3855 100644
 --- a/arch/loongarch/kvm/Makefile
 +++ b/arch/loongarch/kvm/Makefile
-@@ -21,5 +21,6 @@ kvm-y += vm.o
+@@ -19,5 +19,6 @@ kvm-y += tlb.o
+ kvm-y += vcpu.o
+ kvm-y += vm.o
  kvm-y += intc/ipi.o
- kvm-y += intc/extioi.o
- kvm-y += intc/pch_pic.o
-+kvm-y += irqfd.o
++kvm-y += intc/extioi.o
  
  CFLAGS_exit.o	+= $(call cc-option,-Wno-override-init,)
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index abb7bab84f2d..e18e27992978 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -449,6 +449,29 @@ static int kvm_loongarch_pch_pic_set_attr(struct kvm_device *dev,
- 	return ret;
- }
- 
-+static int kvm_setup_default_irq_routing(struct kvm *kvm)
-+{
-+	struct kvm_irq_routing_entry *entries;
-+
-+	u32 nr = KVM_IRQCHIP_NUM_PINS;
-+	int i, ret;
-+
-+	entries = kcalloc(nr, sizeof(*entries), GFP_KERNEL);
-+	if (!entries)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nr; i++) {
-+		entries[i].gsi = i;
-+		entries[i].type = KVM_IRQ_ROUTING_IRQCHIP;
-+		entries[i].u.irqchip.irqchip = 0;
-+		entries[i].u.irqchip.pin = i;
-+	}
-+	ret = kvm_set_irq_routing(kvm, entries, nr, 0);
-+	kfree(entries);
-+
-+	return 0;
-+}
-+
- static void kvm_loongarch_pch_pic_destroy(struct kvm_device *dev)
- {
- 	struct kvm *kvm;
-@@ -474,6 +497,7 @@ static void kvm_loongarch_pch_pic_destroy(struct kvm_device *dev)
- 
- static int kvm_loongarch_pch_pic_create(struct kvm_device *dev, u32 type)
- {
-+	int ret;
- 	struct loongarch_pch_pic *s;
- 	struct kvm *kvm = dev->kvm;
- 
-@@ -481,6 +505,10 @@ static int kvm_loongarch_pch_pic_create(struct kvm_device *dev, u32 type)
- 	if (kvm->arch.pch_pic)
- 		return -EINVAL;
- 
-+	ret = kvm_setup_default_irq_routing(kvm);
-+	if (ret)
-+		return -ENOMEM;
-+
- 	s = kzalloc(sizeof(struct loongarch_pch_pic), GFP_KERNEL);
- 	if (!s)
- 		return -ENOMEM;
-diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
+diff --git a/arch/loongarch/kvm/intc/extioi.c b/arch/loongarch/kvm/intc/extioi.c
 new file mode 100644
-index 000000000000..bf67f329ebc9
+index 000000000000..2f1b93e95f97
 --- /dev/null
-+++ b/arch/loongarch/kvm/irqfd.c
-@@ -0,0 +1,87 @@
++++ b/arch/loongarch/kvm/intc/extioi.c
+@@ -0,0 +1,111 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2024 Loongson Technology Corporation Limited
 + */
 +
-+#include <linux/kvm_host.h>
-+#include <trace/events/kvm.h>
-+#include <asm/kvm_pch_pic.h>
++#include <asm/kvm_extioi.h>
++#include <asm/kvm_vcpu.h>
++#include <linux/count_zeros.h>
 +
-+static int kvm_set_ioapic_irq(struct kvm_kernel_irq_routing_entry *e,
-+					struct kvm *kvm, int irq_source_id,
-+					int level, bool line_status)
++static int kvm_loongarch_extioi_write(struct kvm_vcpu *vcpu,
++				struct kvm_io_device *dev,
++				gpa_t addr, int len, const void *val)
 +{
-+	/* ioapic pin (0 ~ 64) <---> gsi(0 ~ 64) */
-+	pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, level);
-+
 +	return 0;
 +}
 +
-+/*
-+ * kvm_set_routing_entry: populate a kvm routing entry
-+ * from a user routing entry
-+ *
-+ * @kvm: the VM this entry is applied to
-+ * @e: kvm kernel routing entry handle
-+ * @ue: user api routing entry handle
-+ * return 0 on success, -EINVAL on errors.
-+ */
-+int kvm_set_routing_entry(struct kvm *kvm,
-+			struct kvm_kernel_irq_routing_entry *e,
-+			const struct kvm_irq_routing_entry *ue)
++static int kvm_loongarch_extioi_read(struct kvm_vcpu *vcpu,
++				struct kvm_io_device *dev,
++				gpa_t addr, int len, void *val)
 +{
-+	int r = -EINVAL;
-+
-+	switch (ue->type) {
-+	case KVM_IRQ_ROUTING_IRQCHIP:
-+		e->set = kvm_set_ioapic_irq;
-+
-+		e->irqchip.irqchip = ue->u.irqchip.irqchip;
-+		e->irqchip.pin = ue->u.irqchip.pin;
-+
-+		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS)
-+			goto out;
-+		break;
-+	case KVM_IRQ_ROUTING_MSI:
-+		e->set = kvm_set_msi;
-+		e->msi.address_lo = ue->u.msi.address_lo;
-+		e->msi.address_hi = ue->u.msi.address_hi;
-+		e->msi.data = ue->u.msi.data;
-+		break;
-+	default:
-+		goto out;
-+	}
-+	r = 0;
-+out:
-+	return r;
-+}
-+
-+int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
-+		struct kvm *kvm, int irq_source_id,
-+		int level, bool line_status)
-+{
-+	if (e->type == KVM_IRQ_ROUTING_MSI) {
-+		pch_msi_set_irq(kvm, e->msi.data, 1);
-+		return 0;
-+	}
-+
-+	return -EWOULDBLOCK;
-+}
-+
-+/**
-+ * kvm_set_msi: inject the MSI corresponding to the
-+ * MSI routing entry
-+ *
-+ * This is the entry point for irqfd MSI injection
-+ * and userspace MSI injection.
-+ */
-+int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
-+		struct kvm *kvm, int irq_source_id,
-+		int level, bool line_status)
-+{
-+	if (!level)
-+		return -1;
-+
-+	pch_msi_set_irq(kvm, e->msi.data, level);
 +	return 0;
 +}
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index decfe11be46b..72ea4bb9f912 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -71,6 +71,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	int r;
- 
- 	switch (ext) {
-+	case KVM_CAP_IRQCHIP:
- 	case KVM_CAP_ONE_REG:
- 	case KVM_CAP_ENABLE_CAP:
- 	case KVM_CAP_READONLY_MEM:
-@@ -103,7 +104,18 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 
- int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- {
--	return -ENOIOCTLCMD;
-+	int r;
 +
-+	switch (ioctl) {
-+	case KVM_CREATE_IRQCHIP: {
-+		r = 1;
-+		break;
-+	}
-+	default:
-+		r = -ENOIOCTLCMD;
-+	}
++static const struct kvm_io_device_ops kvm_loongarch_extioi_ops = {
++	.read	= kvm_loongarch_extioi_read,
++	.write	= kvm_loongarch_extioi_write,
++};
 +
-+	return r;
- }
- 
- int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *data,
-@@ -137,3 +149,8 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *data,
- 
- 	return ret;
- }
-+
-+bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
++static int kvm_loongarch_extioi_get_attr(struct kvm_device *dev,
++				struct kvm_device_attr *attr)
 +{
-+	return (bool)((!!kvm->arch.extioi) && (!!kvm->arch.pch_pic));
++	return 0;
 +}
++
++static int kvm_loongarch_extioi_set_attr(struct kvm_device *dev,
++				struct kvm_device_attr *attr)
++{
++	return 0;
++}
++
++static void kvm_loongarch_extioi_destroy(struct kvm_device *dev)
++{
++	struct kvm *kvm;
++	struct loongarch_extioi *extioi;
++	struct kvm_io_device *device;
++
++	if (!dev)
++		return;
++
++	kvm = dev->kvm;
++	if (!kvm)
++		return;
++
++	extioi = kvm->arch.extioi;
++	if (!extioi)
++		return;
++
++	device = &extioi->device;
++	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
++	kfree(extioi);
++}
++
++static int kvm_loongarch_extioi_create(struct kvm_device *dev, u32 type)
++{
++	int ret;
++	struct loongarch_extioi *s;
++	struct kvm_io_device *device;
++	struct kvm *kvm = dev->kvm;
++
++	/* extioi has been created */
++	if (kvm->arch.extioi)
++		return -EINVAL;
++
++	s = kzalloc(sizeof(struct loongarch_extioi), GFP_KERNEL);
++	if (!s)
++		return -ENOMEM;
++	spin_lock_init(&s->lock);
++	s->kvm = kvm;
++
++	/*
++	 * Initialize IOCSR device
++	 */
++	device = &s->device;
++	kvm_iodevice_init(device, &kvm_loongarch_extioi_ops);
++	mutex_lock(&kvm->slots_lock);
++	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, EXTIOI_BASE, EXTIOI_SIZE, device);
++	mutex_unlock(&kvm->slots_lock);
++	if (ret < 0) {
++		kfree(s);
++		return -EFAULT;
++	}
++
++	kvm->arch.extioi = s;
++
++	kvm_info("create extioi device successfully\n");
++	return 0;
++}
++
++static struct kvm_device_ops kvm_loongarch_extioi_dev_ops = {
++	.name = "kvm-loongarch-extioi",
++	.create = kvm_loongarch_extioi_create,
++	.destroy = kvm_loongarch_extioi_destroy,
++	.set_attr = kvm_loongarch_extioi_set_attr,
++	.get_attr = kvm_loongarch_extioi_get_attr,
++};
++
++int kvm_loongarch_register_extioi_device(void)
++{
++	return kvm_register_device_ops(&kvm_loongarch_extioi_dev_ops,
++					KVM_DEV_TYPE_LA_EXTIOI);
++}
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 36efc7b38f83..b5da4341006a 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -9,6 +9,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/cpufeature.h>
+ #include <asm/kvm_csr.h>
++#include <asm/kvm_extioi.h>
+ #include "trace.h"
+ 
+ unsigned long vpid_mask;
+@@ -372,7 +373,10 @@ static int kvm_loongarch_env_init(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	return 0;
++	/* Register loongarch extioi interrupt controller interface. */
++	ret = kvm_loongarch_register_extioi_device();
++
++	return ret;
+ }
+ 
+ static void kvm_loongarch_env_exit(void)
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 341fc9d5f3ec..607895ea450f 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1144,6 +1144,8 @@ enum kvm_device_type {
+ #define KVM_DEV_TYPE_RISCV_AIA		KVM_DEV_TYPE_RISCV_AIA
+ 	KVM_DEV_TYPE_LA_IPI,
+ #define KVM_DEV_TYPE_LA_IPI		KVM_DEV_TYPE_LA_IPI
++	KVM_DEV_TYPE_LA_EXTIOI,
++#define KVM_DEV_TYPE_LA_EXTIOI		KVM_DEV_TYPE_LA_EXTIOI
+ 
+ 	KVM_DEV_TYPE_MAX,
+ 
 -- 
 2.39.1
 
