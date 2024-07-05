@@ -1,245 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AB113BAE4
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 07:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6579A1459F8
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 08:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720164858; cv=none; b=XIUggb48LVyThUOBrQzhtHYoMvOg9mZZWacpINGdcSES/GhEbsXrVNZ3HPEenbeR5uwhhrmQ6iJM0yeBfBA4/G0RvBqBbR4wkleWnaDckl3BMCjmA36SE5wctSjEw2FBAmdV1d7uk4hA7bVusASm9r4GmSvBzSv98P/Gv5c9R+g=
+	t=1720167192; cv=none; b=KjlXQFkCT4lc+W/HHYYsGeLiCfxRZz95o5YSZ+k5gIT3D7dTfsuq9NGTy82tIW9CiPrpayfH7+InooWAGjO/k9ixQaoYSirNi3lxUJm3ZmiWttgkNl3JlNz7P3BwUmNqGimKRMjyICcCC2ahw7WAygV1KY0UlYXLmadDOQxYo5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720164858; c=relaxed/simple;
-	bh=BHfl/H4utgDSGPe89jxXBrs1DUBNrzQD0UaGIZfZ8uo=;
+	s=arc-20240116; t=1720167192; c=relaxed/simple;
+	bh=r8RsOl90vUmFb3iH2mDrRyejM11RkeHxvGCGNnKIo5U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RDjhDLwxUHgW4vrIjP338pXDpbPML4OlDLWfyXJE8/M+VxJOHtvka6WO1x3duawMQjsAkCKhwzb4U8Msf9itpp8AGo+PbzmnNCSuQXq4cKptxwiairZA3DiTBmClZdXw2ZlogC370tniEeL3tdKwFrvzuiy45zuPJqzlkAs9HUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrJSJj86; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrJSJj86"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE93C4AF0A
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 07:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720164858;
-	bh=BHfl/H4utgDSGPe89jxXBrs1DUBNrzQD0UaGIZfZ8uo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qrJSJj86DXIXqU3H+Fn1N4QOEOKsAeINpffJcSISKHCpdMMfSWRahBJOVmLEnJCKF
-	 wsHGqsWV+84SjF3zlApPnnLPWIitk3wVO1/2HBXd+mh/nYFBSObmASUu33hOMXGKxw
-	 9sKSEFTL6opqS7boDiTqs9jE1qvUUUZCHiwN472GHgibQjM4Yh1gf1IN73oUXLwn4u
-	 xueWn1dxeNnrI8g5EjYQV8EPqJ0h9cUpgTRDX5kwWGdOCfG/uzOzKpAEbnsIg1wP3e
-	 123V2Vv/RjqeqQpOqwvfP6cC7ueBVbo2N2/BerbllpEwu+lCcxjVn0/BQFCn8x2XQS
-	 R1ytyVTqXeX9g==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a77c25beae1so115416266b.2
-        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 00:34:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXxedCk14l/4Jfi9QfXOLH6gIvz0sBnArak1vdQNuYWHymUB9w5u1v4eD+DMsechCarOk2qdXUVct/jPk7mzt6hbS4UdkxgbcQY
-X-Gm-Message-State: AOJu0Yx/ahSnG5h7/6XJGsv8Gb73Z16u0fyrbSB1pcYM7STCm4iF05sJ
-	C8Ab4xltZhCgk78NnYTAr5JujrwA+SRJMgmGxjFP25NT9DHypTstGygdrMRoj+mWkz+M9SN3403
-	QYSDOXmlpItLOJlCk1qNBUpJh3Y4=
-X-Google-Smtp-Source: AGHT+IF/eBN0vyUo4OIC8k707QcyExW5K/WQzeKGFnL7+LV0rs6bWLrkRRkYsYPzaUUzV5DmXoLsqXJ3YjHCJTD+tiw=
-X-Received: by 2002:a17:906:e1b:b0:a72:48dd:46a4 with SMTP id
- a640c23a62f3a-a77b9ddd4b9mr228152166b.0.1720164856482; Fri, 05 Jul 2024
- 00:34:16 -0700 (PDT)
+	 To:Cc:Content-Type; b=Q/QOQYtF88k4XGaLfAFm+N91bWDo82cXqN1sjuQn7X/CPN8JfKCBlL5HIVnvK3HItOtFyegsQqv6EAsYsfblgGOtlGLqjVFBNvwjBCWqN7U36UzEvRjtZelO5fN4tMIz5YXJvx1unFKYS/cxLZb2G+W5dLLE9/ZV/KWJ7BTG5xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6504101cfd6so12313517b3.3
+        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 01:13:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720167189; x=1720771989;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ipFWrtbP2pnadKQDEjq7tVSKBPDnD8noGTMoh58siUs=;
+        b=Rm7LHd3cqxJ7Zu0Y8PGUjsL/1TqRNbHbagExw4MxNWk+UbT1J5mhi2VcKsQQhJv9Gb
+         27cOXI6DJUYYm5fSJdVlXKSWGewwELWXXDMjgKK3rmNG2cUa+uos2lIhoMdnXcjWanoi
+         zLYyOUCJcm2ypnK5PtbpFOL9XUpDvTjXOXgMLLJKwus/z79UKcwjNsotSiCoOJyb1H1g
+         RSH9xEHRiu+cZP/0lvZ0t2+6MDtFSP9NmOGiLxoj2KquqI8XKv9jnKjS3CegFoJQNAcY
+         sesqXAOkGQ77cBACIzXCJCQ6J2WA37wbRf+ngWHysylWLbhcNvKoASKw5v4pdxHECKJ4
+         bAWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgwIb4CxLW763thz9PsUx+9LO2TsQxADbsA5WyfylxyBfQfGnBSFRdLljkndpgdNTX2SyD2tk24PmEyYOE1orz9LC8J7CHQ8y8
+X-Gm-Message-State: AOJu0YwJ3s3PEWqw9clNY81oJOLKlaWqnmMoM/ZIOee1sedVn2tEB+uI
+	u0vGrdq4bpe6Xw3sWfvqoIsC5Bx+uEeIoWZnSMB8qfe5QjBseN0mILRff+xA
+X-Google-Smtp-Source: AGHT+IEdmzyjCxGmrDd3HBiUoMFjT0PExDnWrFJ5YHiNrnd+NmE4SEiGXaPorc2ixZWQCbeQi3IAmw==
+X-Received: by 2002:a05:690c:6801:b0:64a:8767:b069 with SMTP id 00721157ae682-652d61e9e30mr44577807b3.3.1720167189150;
+        Fri, 05 Jul 2024 01:13:09 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9c4fdb83sm27409467b3.143.2024.07.05.01.13.08
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 01:13:08 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-650866942aeso13016277b3.0
+        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 01:13:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWhVIgrevfjT7Xm3Bm8t6Lw+HSectyTrkrHxyQmLqOBQ+iQ6GOT1rMi9shDs1KXk51U5adWOQYQSMUUhpJnRPNrGUqKf6YWslQf
+X-Received: by 2002:a81:431f:0:b0:633:8b49:f97c with SMTP id
+ 00721157ae682-652d842fd27mr38728927b3.37.1720167188020; Fri, 05 Jul 2024
+ 01:13:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240705060650.243497-1-chenhuacai@loongson.cn>
- <20240705060650.243497-3-chenhuacai@loongson.cn> <20240705071313.ddl6geg72t4n7j3s@vireshk-i7>
-In-Reply-To: <20240705071313.ddl6geg72t4n7j3s@vireshk-i7>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 5 Jul 2024 15:34:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5q5hv2sA7EAm1D1nmbG-VGPzc4kpTnHMDSFuFiTKEH7A@mail.gmail.com>
-Message-ID: <CAAhV-H5q5hv2sA7EAm1D1nmbG-VGPzc4kpTnHMDSFuFiTKEH7A@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>
+References: <20240704143611.2979589-1-arnd@kernel.org> <20240704143611.2979589-8-arnd@kernel.org>
+In-Reply-To: <20240704143611.2979589-8-arnd@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 5 Jul 2024 10:12:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV-JtJWixt8J45rhZbpb7S90EDhp=x5iGGBhmUZyyQSnw@mail.gmail.com>
+Message-ID: <CAMuHMdV-JtJWixt8J45rhZbpb7S90EDhp=x5iGGBhmUZyyQSnw@mail.gmail.com>
+Subject: Re: [PATCH 07/17] clone3: drop __ARCH_WANT_SYS_CLONE3 macro
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Christian Brauner <brauner@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Viresh,
+On Thu, Jul 4, 2024 at 4:38=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wrot=
+e:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When clone3() was introduced, it was not obvious how each architecture
+> deals with setting up the stack and keeping the register contents in
+> a fork()-like system call, so this was left for the architecture
+> maintainers to implement, with __ARCH_WANT_SYS_CLONE3 defined by those
+> that already implement it.
+>
+> Five years later, we still have a few architectures left that are missing
+> clone3(), and the macro keeps getting in the way as it's fundamentally
+> different from all the other __ARCH_WANT_SYS_* macros that are meant
+> to provide backwards-compatibility with applications using older
+> syscalls that are no longer provided by default.
+>
+> Address this by reversing the polarity of the macro, adding an
+> __ARCH_BROKEN_SYS_CLONE3 macro to all architectures that don't
+> already provide the syscall, and remove __ARCH_WANT_SYS_CLONE3
+> from all the other ones.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On Fri, Jul 5, 2024 at 3:13=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.or=
-g> wrote:
->
-> On 05-07-24, 14:06, Huacai Chen wrote:
-> > Some of LoongArch processors (Loongson-3 series) support DVFS, their
-> > IOCSR.FEATURES has IOCSRF_FREQSCALE set. And they has a micro-core in
-> > the package called SMC (System Management Controller), which can be
-> > used to detect temperature, control fans, scale frequency and voltage,
-> > etc.
-> >
-> > The Loongson-3 CPUFreq driver is very simple now, it communicate with
-> > SMC, get DVFS info, set target frequency from CPUFreq core, and so on.
-> >
-> > There is a command list to interact with SMC, widely-used commands in
-> > the CPUFreq driver include:
-> >
-> > CMD_GET_VERSION: Get SMC firmware version.
-> >
-> > CMD_GET_FEATURE: Get enabled SMC features.
-> >
-> > CMD_SET_FEATURE: Enable SMC features, such as basic DVFS, BOOST.
-> >
-> > CMD_GET_FREQ_LEVEL_NUM: Get the number of all frequency levels.
-> >
-> > CMD_GET_FREQ_BOOST_LEVEL: Get the first boost frequency level.
-> >
-> > CMD_GET_FREQ_LEVEL_INFO: Get the detail info of a frequency level.
-> >
-> > CMD_GET_FREQ_INFO: Get the current frequency.
-> >
-> > CMD_SET_FREQ_INFO: Set the target frequency.
-> >
-> > In future we will add automatic frequency scaling, which is similar to
-> > Intel's HWP (HardWare P-State).
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  MAINTAINERS                         |   1 +
-> >  drivers/cpufreq/Kconfig             |  12 +
-> >  drivers/cpufreq/Makefile            |   1 +
-> >  drivers/cpufreq/loongson3_cpufreq.c | 395 ++++++++++++++++++++++++++++
-> >  4 files changed, 409 insertions(+)
-> >  create mode 100644 drivers/cpufreq/loongson3_cpufreq.c
->
-> I have made some changes while applying, can you please test these ?
-Thank you for your effort.
+>  arch/m68k/include/asm/unistd.h                 | 1 -
 
-It seems except changing mutex_init to devm_mutex_init, all other
-changes are line breaks? If so, I think additional tests are
-unnecessary. :)
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-But now long lines (> 80 columns) are accepted by checkpatch.pl. Even
-with --strict, only > 100 columns are warned.
+Gr{oetje,eeting}s,
 
-Especially for the change in loongson3_cpufreq_cpu_exit(), there is
-only 82 columns and I think that line can keep as the original state.
-And if possible, I also want the devm_kzalloc() line keep as original.
+                        Geert
 
-Others are OK.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Huacai
-
->
-> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongs=
-on3_cpufreq.c
-> index a530e4a56b78..cd3efdeeddd9 100644
-> --- a/drivers/cpufreq/loongson3_cpufreq.c
-> +++ b/drivers/cpufreq/loongson3_cpufreq.c
-> @@ -31,10 +31,10 @@ union smc_message {
->  };
->
->  /* Command return values */
-> -#define CMD_OK                         0  /* No error */
-> -#define CMD_ERROR                      1  /* Regular error */
-> -#define CMD_NOCMD                      2  /* Command does not support */
-> -#define CMD_INVAL                      3  /* Invalid Parameter */
-> +#define CMD_OK                         0 /* No error */
-> +#define CMD_ERROR                      1 /* Regular error */
-> +#define CMD_NOCMD                      2 /* Command does not support */
-> +#define CMD_INVAL                      3 /* Invalid Parameter */
->
->  /* Version commands */
->  /*
-> @@ -173,7 +173,8 @@ static struct mutex cpufreq_mutex[MAX_PACKAGES];
->  static struct cpufreq_driver loongson3_cpufreq_driver;
->  static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
->
-> -static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val,=
- u32 extra)
-> +static inline int
-> +do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
->  {
->         int retries;
->         unsigned int cpu =3D smp_processor_id();
-> @@ -226,11 +227,13 @@ static unsigned int loongson3_cpufreq_get(unsigned =
-int cpu)
->         return ret * KILO;
->  }
->
-> -static int loongson3_cpufreq_target(struct cpufreq_policy *policy, unsig=
-ned int index)
-> +static int
-> +loongson3_cpufreq_target(struct cpufreq_policy *policy, unsigned int ind=
-ex)
->  {
->         int ret;
->
-> -       ret =3D do_service_request(cpu_data[policy->cpu].core, FREQ_INFO_=
-TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0);
-> +       ret =3D do_service_request(cpu_data[policy->cpu].core,
-> +                       FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0=
-);
->
->         return (ret >=3D 0) ? 0 : ret;
->  }
-> @@ -255,14 +258,16 @@ static int configure_freq_table(int cpu)
->         boost_level =3D ret;
->
->         freq_level =3D min(max_level, FREQ_MAX_LEVEL);
-> -       data =3D devm_kzalloc(&pdev->dev, struct_size(data, table, freq_l=
-evel + 1), GFP_KERNEL);
-> +       data =3D devm_kzalloc(&pdev->dev, struct_size(data, table, freq_l=
-evel + 1),
-> +                           GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
->
->         data->def_freq_level =3D boost_level - 1;
->
->         for (i =3D 0; i < freq_level; i++) {
-> -               ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_=
-GET_FREQ_LEVEL_INFO, i, 0);
-> +               ret =3D do_service_request(cpu, FREQ_INFO_TYPE_FREQ,
-> +                                        CMD_GET_FREQ_LEVEL_INFO, i, 0);
->                 if (ret < 0) {
->                         devm_kfree(&pdev->dev, data);
->                         return ret;
-> @@ -290,6 +295,7 @@ static int loongson3_cpufreq_cpu_init(struct cpufreq_=
-policy *policy)
->
->         policy->cpuinfo.transition_latency =3D 10000;
->         policy->freq_table =3D per_cpu(freq_data, cpu)->table;
-> +
->         policy->suspend_freq =3D policy->freq_table[per_cpu(freq_data, cp=
-u)->def_freq_level].frequency;
->         cpumask_copy(policy->cpus, topology_sibling_cpumask(cpu));
->
-> @@ -314,7 +320,8 @@ static int loongson3_cpufreq_cpu_exit(struct cpufreq_=
-policy *policy)
->  {
->         int cpu =3D policy->cpu;
->
-> -       loongson3_cpufreq_target(policy, per_cpu(freq_data, cpu)->def_fre=
-q_level);
-> +       loongson3_cpufreq_target(policy, per_cpu(freq_data,
-> +                                cpu)->def_freq_level);
->
->         return 0;
->  }
-> @@ -348,13 +355,14 @@ static int loongson3_cpufreq_probe(struct platform_=
-device *pdev)
->         int i, ret;
->
->         for (i =3D 0; i < MAX_PACKAGES; i++)
-> -               mutex_init(&cpufreq_mutex[i]);
-> +               devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
->
->         ret =3D do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
->         if (ret <=3D 0)
->                 return -EPERM;
->
-> -       ret =3D  do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE, FEA=
-TURE_DVFS_ENABLE | FEATURE_DVFS_BOOST, 0);
-> +       ret =3D do_service_request(FEATURE_DVFS, 0, CMD_SET_FEATURE,
-> +                                FEATURE_DVFS_ENABLE | FEATURE_DVFS_BOOST=
-, 0);
->         if (ret < 0)
->                 return -EPERM;
->
->
-> --
-> viresh
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
