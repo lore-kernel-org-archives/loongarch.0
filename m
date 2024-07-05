@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 484691CD02
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 02:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C61F45000
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 02:56:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720148184; cv=none; b=PwG3iUfSbd56HRCV65WQVa2MC5ZKkgsLYaRVQpehR+9ilZEk2nak6x+3pz8jIF3FIWrEzSjc7PfbB3Eb+nQJ+UZDimEXN1ia3cUXeS9/eKFgWmm2Mv+2sgmDbO1RE+0wmn3vRILkSB8maxdXpRY6VHy9zAEoNL0gNnxOO438BNg=
+	t=1720148186; cv=none; b=bfovvWX5ZvUeUV0dO88k7hrGP7Btf2lSU5jpmjIRnWt1fBfLL55WHaa85T7by6cZI1mxaAw11xZ+Y2FWceZbFVeZuZwGk0BxsmFi3jsU7greF4YxtZkczFtTPKR7+lnOLm3fw3ZHwn/81VwpZhJfTt0IwbqR9nIn6ktjacYr4js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720148184; c=relaxed/simple;
-	bh=U0P//SqNF9OExLbh19WZFP2bNdwtMJq2USmqM1NYx/g=;
+	s=arc-20240116; t=1720148186; c=relaxed/simple;
+	bh=/j9uWvl0fpK2RC+meqAj9BTLxLyQwoB2y3VKrRCFwng=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gx+sXE5GecZueSsBalXErPIlFg/jqVoVMUyDhuSHvjFAohPmKj0h8oy2krGVlAtcgrEQYpcaJQLCJuatR8PVzBd36voie/XW1WVLvnmmehfSjVK8JZX0RvbrP2i4OFrOyz87jZN68u/SbKlx04c2DIeOKIGGTav6ixgeT9ZmqLg=
+	 MIME-Version; b=cY5g1U8bHTVjx5sIrrbSDoO6OXonzLIcuHW6N2fQu5EsoQCUk2g7i8VjGvRF6bORmiFMibMJx9c+MHfAV7wBe7yIub/2WnKlUAXPVRzZZx4P9t9NG5AWT27GvPBRyjTNvJpUXe08uPNuermbEdubhrrtdfL6TN8pw+btguMoQN4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxPOvTYIdm3yQBAA--.3449S3;
-	Fri, 05 Jul 2024 10:56:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx_vDWYIdm9CQBAA--.3825S3;
+	Fri, 05 Jul 2024 10:56:22 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S4;
-	Fri, 05 Jul 2024 10:56:18 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S8;
+	Fri, 05 Jul 2024 10:56:22 +0800 (CST)
 From: Xianglai Li <lixianglai@loongson.cn>
 To: linux-kernel@vger.kernel.org
 Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
@@ -29,9 +29,9 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Xianglai li <lixianglai@loongson.cn>
-Subject: [PATCH 02/11] LoongArch: KVM: Add IPI device support
-Date: Fri,  5 Jul 2024 10:38:45 +0800
-Message-Id: <20240705023854.1005258-3-lixianglai@loongson.cn>
+Subject: [PATCH 06/11] LoongArch: KVM: Add EXTIOI read and write functions
+Date: Fri,  5 Jul 2024 10:38:49 +0800
+Message-Id: <20240705023854.1005258-7-lixianglai@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20240705023854.1005258-1-lixianglai@loongson.cn>
 References: <20240705023854.1005258-1-lixianglai@loongson.cn>
@@ -42,15 +42,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S4
+X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S8
 X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Added device model for IPI interrupt controller,
-implemented basic create destroy interface,
-and registered device model to kvm device table.
+Implementation of EXTIOI interrupt controller address
+space read and write function simulation.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
@@ -65,315 +64,652 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name> 
 Cc: Xianglai li <lixianglai@loongson.cn> 
 
- arch/loongarch/include/asm/kvm_host.h |   4 +
- arch/loongarch/include/asm/kvm_ipi.h  |  36 ++++++
- arch/loongarch/kvm/Makefile           |   1 +
- arch/loongarch/kvm/intc/ipi.c         | 155 ++++++++++++++++++++++++++
- arch/loongarch/kvm/main.c             |   7 +-
- arch/loongarch/kvm/vcpu.c             |   3 +
- include/uapi/linux/kvm.h              |   4 +
- 7 files changed, 209 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
- create mode 100644 arch/loongarch/kvm/intc/ipi.c
+ arch/loongarch/include/asm/kvm_extioi.h |  17 +
+ arch/loongarch/include/asm/kvm_host.h   |   2 +
+ arch/loongarch/kvm/intc/extioi.c        | 577 +++++++++++++++++++++++-
+ 3 files changed, 594 insertions(+), 2 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/kvm_extioi.h b/arch/loongarch/include/asm/kvm_extioi.h
+index 48a117b2be5d..d2af039a7d6f 100644
+--- a/arch/loongarch/include/asm/kvm_extioi.h
++++ b/arch/loongarch/include/asm/kvm_extioi.h
+@@ -19,8 +19,25 @@
+ #define EXTIOI_BASE			0x1400
+ #define EXTIOI_SIZE			0x900
+ 
++#define EXTIOI_NODETYPE_START		0xa0
++#define EXTIOI_NODETYPE_END		0xbf
++#define EXTIOI_IPMAP_START		0xc0
++#define EXTIOI_IPMAP_END		0xc7
++#define EXTIOI_ENABLE_START		0x200
++#define EXTIOI_ENABLE_END		0x21f
++#define EXTIOI_BOUNCE_START		0x280
++#define EXTIOI_BOUNCE_END		0x29f
++#define EXTIOI_ISR_START		0x300
++#define EXTIOI_ISR_END			0x31f
++#define EXTIOI_COREISR_START		0x400
++#define EXTIOI_COREISR_END		0x71f
++#define EXTIOI_COREMAP_START		0x800
++#define EXTIOI_COREMAP_END		0x8ff
++
+ #define LS3A_INTC_IP			8
+ 
++#define EXTIOI_SW_COREMAP_FLAG		(1 << 0)
++
+ struct loongarch_extioi {
+ 	spinlock_t lock;
+ 	struct kvm *kvm;
 diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index c87b6ea0ec47..4f6ccc688c1b 100644
+index 0e4e46e06420..5c2adebd16b2 100644
 --- a/arch/loongarch/include/asm/kvm_host.h
 +++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -19,6 +19,7 @@
- #include <asm/inst.h>
- #include <asm/kvm_mmu.h>
- #include <asm/loongarch.h>
-+#include <asm/kvm_ipi.h>
- 
- /* Loongarch KVM register ids */
- #define KVM_GET_IOC_CSR_IDX(id)		((id & KVM_CSR_IDX_MASK) >> LOONGARCH_REG_SHIFT)
-@@ -107,6 +108,7 @@ struct kvm_arch {
- 
- 	s64 time_offset;
- 	struct kvm_context __percpu *vmcs;
-+	struct loongarch_ipi *ipi;
+@@ -44,6 +44,8 @@ struct kvm_vm_stat {
+ 	u64 hugepages;
+ 	u64 ipi_read_exits;
+ 	u64 ipi_write_exits;
++	u64 extioi_read_exits;
++	u64 extioi_write_exits;
  };
  
- #define CSR_MAX_NUMS		0x800
-@@ -199,6 +201,8 @@ struct kvm_vcpu_arch {
- 	int last_sched_cpu;
- 	/* mp state */
- 	struct kvm_mp_state mp_state;
-+	/* ipi state */
-+	struct ipi_state ipi_state;
- 	/* cpucfg */
- 	u32 cpucfg[KVM_MAX_CPUCFG_REGS];
- };
-diff --git a/arch/loongarch/include/asm/kvm_ipi.h b/arch/loongarch/include/asm/kvm_ipi.h
-new file mode 100644
-index 000000000000..875a93008802
---- /dev/null
-+++ b/arch/loongarch/include/asm/kvm_ipi.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef __LS3A_KVM_IPI_H
-+#define __LS3A_KVM_IPI_H
-+
-+#include <kvm/iodev.h>
-+
-+#define LARCH_INT_IPI			12
-+
-+struct loongarch_ipi {
-+	spinlock_t lock;
-+	struct kvm *kvm;
-+	struct kvm_io_device device;
-+	struct kvm_io_device mail_dev;
-+};
-+
-+struct ipi_state {
-+	spinlock_t lock;
-+	uint32_t status;
-+	uint32_t en;
-+	uint32_t set;
-+	uint32_t clear;
-+	uint64_t buf[4];
-+};
-+
-+#define SMP_MAILBOX			0x1000
-+#define KVM_IOCSR_IPI_ADDR_SIZE		0x48
-+
-+#define MAIL_SEND_ADDR			(SMP_MAILBOX + IOCSR_MAIL_SEND)
-+#define KVM_IOCSR_MAIL_ADDR_SIZE	0x118
-+
-+int kvm_loongarch_register_ipi_device(void);
-+#endif
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-index b2f4cbe01ae8..36c3009fe89c 100644
---- a/arch/loongarch/kvm/Makefile
-+++ b/arch/loongarch/kvm/Makefile
-@@ -18,5 +18,6 @@ kvm-y += timer.o
- kvm-y += tlb.o
- kvm-y += vcpu.o
- kvm-y += vm.o
-+kvm-y += intc/ipi.o
+ struct kvm_vcpu_stat {
+diff --git a/arch/loongarch/kvm/intc/extioi.c b/arch/loongarch/kvm/intc/extioi.c
+index 2f1b93e95f97..dd18b7a7599a 100644
+--- a/arch/loongarch/kvm/intc/extioi.c
++++ b/arch/loongarch/kvm/intc/extioi.c
+@@ -7,18 +7,591 @@
+ #include <asm/kvm_vcpu.h>
+ #include <linux/count_zeros.h>
  
- CFLAGS_exit.o	+= $(call cc-option,-Wno-override-init,)
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-new file mode 100644
-index 000000000000..a9dc0aaec502
---- /dev/null
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
++#define loongarch_ext_irq_lock(s, flags)	spin_lock_irqsave(&s->lock, flags)
++#define loongarch_ext_irq_unlock(s, flags)	spin_unlock_irqrestore(&s->lock, flags)
 +
-+#include <linux/kvm_host.h>
-+#include <asm/kvm_ipi.h>
-+#include <asm/kvm_vcpu.h>
-+
-+static int kvm_loongarch_ipi_write(struct kvm_vcpu *vcpu,
-+			struct kvm_io_device *dev,
-+			gpa_t addr, int len, const void *val)
++static void extioi_update_irq(struct loongarch_extioi *s, int irq, int level)
 +{
-+	return 0;
-+}
++	int ipnum, cpu, found, irq_index, irq_mask;
++	struct kvm_interrupt vcpu_irq;
++	struct kvm_vcpu *vcpu;
 +
-+static int kvm_loongarch_ipi_read(struct kvm_vcpu *vcpu,
-+			struct kvm_io_device *dev,
-+			gpa_t addr, int len, void *val)
-+{
-+	return 0;
-+}
++	ipnum = s->ipmap.reg_u8[irq / 32];
++	ipnum = count_trailing_zeros(ipnum);
++	ipnum = (ipnum >= 0 && ipnum < 4) ? ipnum : 0;
 +
-+static int kvm_loongarch_mail_write(struct kvm_vcpu *vcpu,
-+			struct kvm_io_device *dev,
-+			gpa_t addr, int len, const void *val)
-+{
-+	return 0;
-+}
++	cpu = s->sw_coremap[irq];
++	vcpu = kvm_get_vcpu(s->kvm, cpu);
++	irq_index = irq / 32;
++	/* length of accessing core isr is 4 bytes */
++	irq_mask = 1 << (irq & 0x1f);
 +
-+static const struct kvm_io_device_ops kvm_loongarch_ipi_ops = {
-+	.read	= kvm_loongarch_ipi_read,
-+	.write	= kvm_loongarch_ipi_write,
-+};
++	if (level) {
++		/* if not enable return false */
++		if (((s->enable.reg_u32[irq_index]) & irq_mask) == 0)
++			return;
++		s->coreisr.reg_u32[cpu][irq_index] |= irq_mask;
++		found = find_first_bit(s->sw_coreisr[cpu][ipnum], EXTIOI_IRQS);
++		set_bit(irq, s->sw_coreisr[cpu][ipnum]);
++	} else {
++		s->coreisr.reg_u32[cpu][irq_index] &= ~irq_mask;
++		clear_bit(irq, s->sw_coreisr[cpu][ipnum]);
++		found = find_first_bit(s->sw_coreisr[cpu][ipnum], EXTIOI_IRQS);
++	}
 +
-+static const struct kvm_io_device_ops kvm_loongarch_mail_ops = {
-+	.write	= kvm_loongarch_mail_write,
-+};
-+
-+static int kvm_loongarch_ipi_get_attr(struct kvm_device *dev,
-+			struct kvm_device_attr *attr)
-+{
-+	return 0;
-+}
-+
-+static int kvm_loongarch_ipi_set_attr(struct kvm_device *dev,
-+			struct kvm_device_attr *attr)
-+{
-+	return 0;
-+}
-+
-+static void kvm_loongarch_ipi_destroy(struct kvm_device *dev)
-+{
-+	struct kvm *kvm;
-+	struct loongarch_ipi *ipi;
-+	struct kvm_io_device *device;
-+
-+	if (!dev)
++	if (found < EXTIOI_IRQS)
++		/* other irq is handling, need not update parent irq level */
 +		return;
 +
-+	kvm = dev->kvm;
-+	if (!kvm)
-+		return;
-+
-+	ipi = kvm->arch.ipi;
-+	if (!ipi)
-+		return;
-+
-+	device = &ipi->device;
-+	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-+
-+	device = &ipi->mail_dev;
-+	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-+
-+	kfree(ipi);
++	vcpu_irq.irq = level ? INT_HWI0 + ipnum : -(INT_HWI0 + ipnum);
++	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
 +}
 +
-+static int kvm_loongarch_ipi_create(struct kvm_device *dev, u32 type)
++void extioi_set_irq(struct loongarch_extioi *s, int irq, int level)
 +{
-+	struct kvm *kvm;
-+	struct loongarch_ipi *s;
-+	unsigned long addr;
-+	struct kvm_io_device *device;
-+	int ret;
++	unsigned long *isr = (unsigned long *)s->isr.reg_u8;
++	unsigned long flags;
 +
-+	kvm_info("begin create loongarch ipi in kvm ...\n");
-+	if (!dev) {
-+		kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	kvm = dev->kvm;
-+	if (kvm->arch.ipi) {
-+		kvm_err("%s: loongarch ipi has been created!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	s = kzalloc(sizeof(struct loongarch_ipi), GFP_KERNEL);
-+	if (!s)
-+		return -ENOMEM;
-+	spin_lock_init(&s->lock);
-+	s->kvm = kvm;
-+
-+	/*
-+	 * Initialize IOCSR device
-+	 */
-+	device = &s->device;
-+	kvm_iodevice_init(device, &kvm_loongarch_ipi_ops);
-+	addr = SMP_MAILBOX;
-+	mutex_lock(&kvm->slots_lock);
-+	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, addr,
-+			KVM_IOCSR_IPI_ADDR_SIZE, device);
-+	mutex_unlock(&kvm->slots_lock);
-+	if (ret < 0) {
-+		kvm_err("%s: initialize IOCSR dev failed, ret = %d\n", __func__, ret);
-+		goto err;
-+	}
-+
-+	device = &s->mail_dev;
-+	kvm_iodevice_init(device, &kvm_loongarch_mail_ops);
-+	addr = MAIL_SEND_ADDR;
-+	mutex_lock(&kvm->slots_lock);
-+	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, addr,
-+			KVM_IOCSR_MAIL_ADDR_SIZE, device);
-+	mutex_unlock(&kvm->slots_lock);
-+	if (ret < 0) {
-+		device = &s->device;
-+		kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-+		kvm_err("%s: initialize mail box dev failed, ret = %d\n", __func__, ret);
-+		goto err;
-+	}
-+
-+	kvm->arch.ipi = s;
-+	kvm_info("create loongarch ipi in kvm done!\n");
-+
-+	return 0;
-+
-+err:
-+	kfree(s);
-+	return -EFAULT;
++	level ? set_bit(irq, isr) : clear_bit(irq, isr);
++	if (!level)
++		return;
++	loongarch_ext_irq_lock(s, flags);
++	extioi_update_irq(s, irq, level);
++	loongarch_ext_irq_unlock(s, flags);
 +}
 +
-+static struct kvm_device_ops kvm_loongarch_ipi_dev_ops = {
-+	.name = "kvm-loongarch-ipi",
-+	.create = kvm_loongarch_ipi_create,
-+	.destroy = kvm_loongarch_ipi_destroy,
-+	.set_attr = kvm_loongarch_ipi_set_attr,
-+	.get_attr = kvm_loongarch_ipi_get_attr,
-+};
-+
-+int kvm_loongarch_register_ipi_device(void)
++static inline void extioi_enable_irq(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
++				int index, u8 mask, int level)
 +{
-+	return kvm_register_device_ops(&kvm_loongarch_ipi_dev_ops,
-+					KVM_DEV_TYPE_LA_IPI);
++	u8 val;
++	int irq;
++
++	val = mask & s->isr.reg_u8[index];
++	irq = ffs(val);
++	while (irq != 0) {
++		/*
++		 * enable bit change from 0 to 1,
++		 * need to update irq by pending bits
++		 */
++		extioi_update_irq(s, irq - 1 + index * 8, level);
++		val &= ~(1 << (irq - 1));
++		irq = ffs(val);
++	}
 +}
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 86a2f2d0cb27..36efc7b38f83 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -312,7 +312,7 @@ void kvm_arch_hardware_disable(void)
- 
- static int kvm_loongarch_env_init(void)
++
++static int loongarch_extioi_writeb(struct kvm_vcpu *vcpu,
++				struct loongarch_extioi *s,
++				gpa_t addr, int len, const void *val)
++{
++	int index, irq, ret = 0;
++	u8 data, old_data, cpu;
++	u8 coreisr, old_coreisr;
++	gpa_t offset;
++
++	data = *(u8 *)val;
++	offset = addr - EXTIOI_BASE;
++
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = (offset - EXTIOI_NODETYPE_START);
++		s->nodetype.reg_u8[index] = data;
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		/*
++		 * ipmap cannot be set at runtime, can be set only at the beginning
++		 * of intr driver, need not update upper irq level
++		 */
++		index = (offset - EXTIOI_IPMAP_START);
++		s->ipmap.reg_u8[index] = data;
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = (offset - EXTIOI_ENABLE_START);
++		old_data = s->enable.reg_u8[index];
++		s->enable.reg_u8[index] = data;
++		/*
++		 * 1: enable irq.
++		 * update irq when isr is set.
++		 */
++		data = s->enable.reg_u8[index] & ~old_data & s->isr.reg_u8[index];
++		extioi_enable_irq(vcpu, s, index, data, 1);
++		/*
++		 * 0: disable irq.
++		 * update irq when isr is set.
++		 */
++		data = ~s->enable.reg_u8[index] & old_data & s->isr.reg_u8[index];
++		extioi_enable_irq(vcpu, s, index, data, 0);
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		/* do not emulate hw bounced irq routing */
++		index = offset - EXTIOI_BOUNCE_START;
++		s->bounce.reg_u8[index] = data;
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = (offset - EXTIOI_COREISR_START);
++		/* using attrs to get current cpu index */
++		cpu = vcpu->vcpu_id;
++		coreisr = data;
++		old_coreisr = s->coreisr.reg_u8[cpu][index];
++		/* write 1 to clear interrupt */
++		s->coreisr.reg_u8[cpu][index] = old_coreisr & ~coreisr;
++		coreisr &= old_coreisr;
++		irq = ffs(coreisr);
++		while (irq != 0) {
++			extioi_update_irq(s, irq - 1 + index * 8, 0);
++			coreisr &= ~(1 << (irq - 1));
++			irq = ffs(coreisr);
++		}
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		irq = offset - EXTIOI_COREMAP_START;
++		index = irq;
++		s->coremap.reg_u8[index] = data;
++
++		cpu = data & 0xff;
++		cpu = ffs(cpu) - 1;
++		cpu = (cpu >= 4) ? 0 : cpu;
++
++		if (s->sw_coremap[irq] == cpu)
++			break;
++
++		if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
++			/*
++			 * lower irq at old cpu and raise irq at new cpu
++			 */
++			extioi_update_irq(s, irq, 0);
++			s->sw_coremap[irq] = cpu;
++			extioi_update_irq(s, irq, 1);
++		} else
++			s->sw_coremap[irq] = cpu;
++
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int loongarch_extioi_writew(struct kvm_vcpu *vcpu,
++				struct loongarch_extioi *s,
++				gpa_t addr, int len, const void *val)
++{
++	int i, index, irq, ret = 0;
++	u8 cpu;
++	u32 data, old_data;
++	u32 coreisr, old_coreisr;
++	gpa_t offset;
++
++	data = *(u32 *)val;
++	offset = addr - EXTIOI_BASE;
++
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = (offset - EXTIOI_NODETYPE_START) >> 2;
++		s->nodetype.reg_u32[index] = data;
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		/*
++		 * ipmap cannot be set at runtime, can be set only at the beginning
++		 * of intr driver, need not update upper irq level
++		 */
++		index = (offset - EXTIOI_IPMAP_START) >> 2;
++		s->ipmap.reg_u32[index] = data;
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = (offset - EXTIOI_ENABLE_START) >> 2;
++		old_data = s->enable.reg_u32[index];
++		s->enable.reg_u32[index] = data;
++		/*
++		 * 1: enable irq.
++		 * update irq when isr is set.
++		 */
++		data = s->enable.reg_u32[index] & ~old_data & s->isr.reg_u32[index];
++		index = index << 2;
++		for (i = 0; i < sizeof(data); i++) {
++			u8 mask = (data >> (i * 8)) & 0xff;
++
++			extioi_enable_irq(vcpu, s, index + i, mask, 1);
++		}
++		/*
++		 * 0: disable irq.
++		 * update irq when isr is set.
++		 */
++		data = ~s->enable.reg_u32[index] & old_data & s->isr.reg_u32[index];
++		for (i = 0; i < sizeof(data); i++) {
++			u8 mask = (data >> (i * 8)) & 0xff;
++
++			extioi_enable_irq(vcpu, s, index, mask, 0);
++		}
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		/* do not emulate hw bounced irq routing */
++		index = (offset - EXTIOI_BOUNCE_START) >> 2;
++		s->bounce.reg_u32[index] = data;
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = (offset - EXTIOI_COREISR_START) >> 2;
++		/* using attrs to get current cpu index */
++		cpu = vcpu->vcpu_id;
++		coreisr = data;
++		old_coreisr = s->coreisr.reg_u32[cpu][index];
++		/* write 1 to clear interrupt */
++		s->coreisr.reg_u32[cpu][index] = old_coreisr & ~coreisr;
++		coreisr &= old_coreisr;
++		irq = ffs(coreisr);
++		while (irq != 0) {
++			extioi_update_irq(s, irq - 1 + index * 32, 0);
++			coreisr &= ~(1 << (irq - 1));
++			irq = ffs(coreisr);
++		}
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		irq = offset - EXTIOI_COREMAP_START;
++		index = irq >> 2;
++
++		s->coremap.reg_u32[index] = data;
++
++		for (i = 0; i < sizeof(data); i++) {
++			cpu = data & 0xff;
++			cpu = ffs(cpu) - 1;
++			cpu = (cpu >= 4) ? 0 : cpu;
++			data = data >> 8;
++
++			if (s->sw_coremap[irq + i] == cpu)
++				continue;
++
++			if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
++				/*
++				 * lower irq at old cpu and raise irq at new cpu
++				 */
++				extioi_update_irq(s, irq + i, 0);
++				s->sw_coremap[irq + i] = cpu;
++				extioi_update_irq(s, irq + i, 1);
++			} else
++				s->sw_coremap[irq + i] = cpu;
++		}
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int loongarch_extioi_writel(struct kvm_vcpu *vcpu,
++				struct loongarch_extioi *s,
++				gpa_t addr, int len, const void *val)
++{
++	int i, index, irq, bits, ret = 0;
++	u8 cpu;
++	u64 data, old_data;
++	u64 coreisr, old_coreisr;
++	gpa_t offset;
++
++	data = *(u64 *)val;
++	offset = addr - EXTIOI_BASE;
++
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = (offset - EXTIOI_NODETYPE_START) >> 3;
++		s->nodetype.reg_u64[index] = data;
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		/*
++		 * ipmap cannot be set at runtime, can be set only at the beginning
++		 * of intr driver, need not update upper irq level
++		 */
++		index = (offset - EXTIOI_IPMAP_START) >> 3;
++		s->ipmap.reg_u64 = data;
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = (offset - EXTIOI_ENABLE_START) >> 3;
++		old_data = s->enable.reg_u64[index];
++		s->enable.reg_u64[index] = data;
++		/*
++		 * 1: enable irq.
++		 * update irq when isr is set.
++		 */
++		data = s->enable.reg_u64[index] & ~old_data & s->isr.reg_u64[index];
++		index = index << 3;
++		for (i = 0; i < sizeof(data); i++) {
++			u8 mask = (data >> (i * 8)) & 0xff;
++
++			extioi_enable_irq(vcpu, s, index + i, mask, 1);
++		}
++		/*
++		 * 0: disable irq.
++		 * update irq when isr is set.
++		 */
++		data = ~s->enable.reg_u64[index] & old_data & s->isr.reg_u64[index];
++		for (i = 0; i < sizeof(data); i++) {
++			u8 mask = (data >> (i * 8)) & 0xff;
++
++			extioi_enable_irq(vcpu, s, index, mask, 0);
++		}
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		/* do not emulate hw bounced irq routing */
++		index = (offset - EXTIOI_BOUNCE_START) >> 3;
++		s->bounce.reg_u64[index] = data;
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = (offset - EXTIOI_COREISR_START) >> 3;
++		/* using attrs to get current cpu index */
++		cpu = vcpu->vcpu_id;
++		coreisr = data;
++		old_coreisr = s->coreisr.reg_u64[cpu][index];
++		/* write 1 to clear interrupt */
++		s->coreisr.reg_u64[cpu][index] = old_coreisr & ~coreisr;
++		coreisr &= old_coreisr;
++
++		bits = sizeof(u64) * 8;
++		irq = find_first_bit((void *)&coreisr, bits);
++		while (irq < bits) {
++			extioi_update_irq(s, irq + index * bits, 0);
++			bitmap_clear((void *)&coreisr, irq, 1);
++			irq = find_first_bit((void *)&coreisr, bits);
++		}
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		irq = offset - EXTIOI_COREMAP_START;
++		index = irq >> 3;
++
++		s->coremap.reg_u64[index] = data;
++
++		for (i = 0; i < sizeof(data); i++) {
++			cpu = data & 0xff;
++			cpu = ffs(cpu) - 1;
++			cpu = (cpu >= 4) ? 0 : cpu;
++			data = data >> 8;
++
++			if (s->sw_coremap[irq + i] == cpu)
++				continue;
++
++			if (test_bit(irq, (unsigned long *)s->isr.reg_u8)) {
++				/*
++				 * lower irq at old cpu and raise irq at new cpu
++				 */
++				extioi_update_irq(s, irq + i, 0);
++				s->sw_coremap[irq + i] = cpu;
++				extioi_update_irq(s, irq + i, 1);
++			} else
++				s->sw_coremap[irq + i] = cpu;
++		}
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
+ static int kvm_loongarch_extioi_write(struct kvm_vcpu *vcpu,
+ 				struct kvm_io_device *dev,
+ 				gpa_t addr, int len, const void *val)
  {
--	int cpu, order;
-+	int cpu, order, ret;
- 	void *addr;
- 	struct kvm_context *context;
- 
-@@ -367,6 +367,11 @@ static int kvm_loongarch_env_init(void)
- 
- 	kvm_init_gcsr_flag();
- 
-+	/* Register loongarch ipi interrupt controller interface. */
-+	ret = kvm_loongarch_register_ipi_device();
-+	if (ret)
-+		return ret;
+-	return 0;
++	int ret;
++	struct loongarch_extioi *extioi = vcpu->kvm->arch.extioi;
++	unsigned long flags;
 +
- 	return 0;
++	if (!extioi) {
++		kvm_err("%s: extioi irqchip not valid!\n", __func__);
++		return -EINVAL;
++	}
++
++	vcpu->kvm->stat.extioi_write_exits++;
++	loongarch_ext_irq_lock(extioi, flags);
++
++	switch (len) {
++	case 1:
++		ret = loongarch_extioi_writeb(vcpu, extioi, addr, len, val);
++		break;
++	case 4:
++		ret = loongarch_extioi_writew(vcpu, extioi, addr, len, val);
++		break;
++	case 8:
++		ret = loongarch_extioi_writel(vcpu, extioi, addr, len, val);
++		break;
++	default:
++		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
++						__func__, addr, len);
++	}
++
++	loongarch_ext_irq_unlock(extioi, flags);
++
++
++	return ret;
++}
++
++static int loongarch_extioi_readb(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
++				gpa_t addr, int len, void *val)
++{
++	int index, ret = 0;
++	gpa_t offset;
++	u64 data;
++
++	offset = addr - EXTIOI_BASE;
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = offset - EXTIOI_NODETYPE_START;
++		data = s->nodetype.reg_u8[index];
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		index = offset - EXTIOI_IPMAP_START;
++		data = s->ipmap.reg_u8[index];
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = offset - EXTIOI_ENABLE_START;
++		data = s->enable.reg_u8[index];
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		index = offset - EXTIOI_BOUNCE_START;
++		data = s->bounce.reg_u8[index];
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = offset - EXTIOI_COREISR_START;
++		data = s->coreisr.reg_u8[vcpu->vcpu_id][index];
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		index = offset - EXTIOI_COREMAP_START;
++		data = s->coremap.reg_u8[index];
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	*(u8 *)val = data;
++
++	return ret;
++}
++
++static int loongarch_extioi_readw(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
++				gpa_t addr, int len, void *val)
++{
++	int index, ret = 0;
++	gpa_t offset;
++	u64 data;
++
++	offset = addr - EXTIOI_BASE;
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = (offset - EXTIOI_NODETYPE_START) >> 2;
++		data = s->nodetype.reg_u32[index];
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		index = (offset - EXTIOI_IPMAP_START) >> 2;
++		data = s->ipmap.reg_u32[index];
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = (offset - EXTIOI_ENABLE_START) >> 2;
++		data = s->enable.reg_u32[index];
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		index = (offset - EXTIOI_BOUNCE_START) >> 2;
++		data = s->bounce.reg_u32[index];
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = (offset - EXTIOI_COREISR_START) >> 2;
++		data = s->coreisr.reg_u32[vcpu->vcpu_id][index];
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		index = (offset - EXTIOI_COREMAP_START) >> 2;
++		data = s->coremap.reg_u32[index];
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	*(u32 *)val = data;
++
++	return ret;
++}
++
++static int loongarch_extioi_readl(struct kvm_vcpu *vcpu, struct loongarch_extioi *s,
++				gpa_t addr, int len, void *val)
++{
++	int index, ret = 0;
++	gpa_t offset;
++	u64 data;
++
++	offset = addr - EXTIOI_BASE;
++	switch (offset) {
++	case EXTIOI_NODETYPE_START ... EXTIOI_NODETYPE_END:
++		index = (offset - EXTIOI_NODETYPE_START) >> 3;
++		data = s->nodetype.reg_u64[index];
++		break;
++	case EXTIOI_IPMAP_START ... EXTIOI_IPMAP_END:
++		index = (offset - EXTIOI_IPMAP_START) >> 3;
++		data = s->ipmap.reg_u64;
++		break;
++	case EXTIOI_ENABLE_START ... EXTIOI_ENABLE_END:
++		index = (offset - EXTIOI_ENABLE_START) >> 3;
++		data = s->enable.reg_u64[index];
++		break;
++	case EXTIOI_BOUNCE_START ... EXTIOI_BOUNCE_END:
++		index = (offset - EXTIOI_BOUNCE_START) >> 3;
++		data = s->bounce.reg_u64[index];
++		break;
++	case EXTIOI_COREISR_START ... EXTIOI_COREISR_END:
++		/* length of accessing core isr is 8 bytes */
++		index = (offset - EXTIOI_COREISR_START) >> 3;
++		data = s->coreisr.reg_u64[vcpu->vcpu_id][index];
++		break;
++	case EXTIOI_COREMAP_START ... EXTIOI_COREMAP_END:
++		index = (offset - EXTIOI_COREMAP_START) >> 3;
++		data = s->coremap.reg_u64[index];
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	*(u64 *)val = data;
++
++	return ret;
  }
  
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 9e8030d45129..1d369b92a84d 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1013,6 +1013,9 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	/* Init */
- 	vcpu->arch.last_sched_cpu = -1;
+ static int kvm_loongarch_extioi_read(struct kvm_vcpu *vcpu,
+ 				struct kvm_io_device *dev,
+ 				gpa_t addr, int len, void *val)
+ {
+-	return 0;
++	int ret;
++	struct loongarch_extioi *extioi = vcpu->kvm->arch.extioi;
++	unsigned long flags;
++
++	if (!extioi) {
++		kvm_err("%s: extioi irqchip not valid!\n", __func__);
++		return -EINVAL;
++	}
++
++	vcpu->kvm->stat.extioi_read_exits++;
++	loongarch_ext_irq_lock(extioi, flags);
++
++	switch (len) {
++	case 1:
++		ret = loongarch_extioi_readb(vcpu, extioi, addr, len, val);
++		break;
++	case 4:
++		ret = loongarch_extioi_readw(vcpu, extioi, addr, len, val);
++		break;
++	case 8:
++		ret = loongarch_extioi_readl(vcpu, extioi, addr, len, val);
++		break;
++	default:
++		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
++						__func__, addr, len);
++	}
++
++	loongarch_ext_irq_unlock(extioi, flags);
++
++	return ret;
+ }
  
-+	/* Init ipi_state lock */
-+	spin_lock_init(&vcpu->arch.ipi_state.lock);
-+
- 	/*
- 	 * Initialize guest register state to valid architectural reset state.
- 	 */
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index d03842abae57..341fc9d5f3ec 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1142,7 +1142,11 @@ enum kvm_device_type {
- #define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
- 	KVM_DEV_TYPE_RISCV_AIA,
- #define KVM_DEV_TYPE_RISCV_AIA		KVM_DEV_TYPE_RISCV_AIA
-+	KVM_DEV_TYPE_LA_IPI,
-+#define KVM_DEV_TYPE_LA_IPI		KVM_DEV_TYPE_LA_IPI
-+
- 	KVM_DEV_TYPE_MAX,
-+
- };
- 
- struct kvm_vfio_spapr_tce {
+ static const struct kvm_io_device_ops kvm_loongarch_extioi_ops = {
 -- 
 2.39.1
 
