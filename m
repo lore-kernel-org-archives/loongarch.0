@@ -1,122 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2F6137C2A
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 09:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B0B1482F8
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 09:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720172042; cv=none; b=FOxUrFVU22uLv7EJYwY8CmGk1pE+5e5n5MtvDA24QAKFOqNRZFZzgwTK9ehhoF2mrDfejNO5L46etlvPll4/Xc8cG0D5H9DgZfGBjJiVTTIt+z6LzYwVR5Kd040G1QYvp/biZGe79Uq/J5WaKpBqHdOX24d3qjnskQVjfr4ch1k=
+	t=1720172369; cv=none; b=WGTBlFZmTHB9Bfrhz6S37+wL0GiayTTJGOOybXV6eUHdi0kSzUwsSCgOM3uX02PXvtDKJl3OWt3ltCEGxQaAkg2Y1HZQqaVIbjVq63JY1oet+KJGqs5bJJ32AnfAzjybyItw37iEdNLYIUpqZSxLBISxY2e4GBKL9SUryalWbX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720172042; c=relaxed/simple;
-	bh=//R3KJ2TmEUALF2xuwB2dmF10o7ZvOnc4OH75BUi3nA=;
+	s=arc-20240116; t=1720172369; c=relaxed/simple;
+	bh=pG2iZew8BLoCLMgYkV5SQ5t13qWkIIgiwTqcSRCT2JI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NuYMBOFYFe+Xz8oEWQgKqNh/EcDx3xbU8kAM8bIXjdkJX9gOoLfLLZRrTwQSQv+KChMRAVypaeRTvU6L6k9bTvKP9D/ynG/oEfZfvYUdy7xizvg8p5n9N+FfWtamuLbmKNNG4O/H0aTN+mnwvzoFUYHbwsDu6sV0Q9e/nBoBrig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6rLgX99; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=tXrw5rsoO/pm4EfhgaFYSfmNcVqcauZIHXRBK76AdoQOklSJz5+KTxSqBfS2L0UOZkuoGvGsG9YotOpN1uiB0tmsndzv84HiFT4E0BothmnJ/ZSEjU2OJlEMQH/NHK0lCy0xinYLgxIL0wpjJRURZzUqZ8YOpPxSqgn5ha5LSKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TlrgpoFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6rLgX99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F4B5C4AF0D
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 09:34:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlrgpoFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88650C4AF0B
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 09:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720172042;
-	bh=//R3KJ2TmEUALF2xuwB2dmF10o7ZvOnc4OH75BUi3nA=;
+	s=k20201202; t=1720172369;
+	bh=pG2iZew8BLoCLMgYkV5SQ5t13qWkIIgiwTqcSRCT2JI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P6rLgX99HiBLWg81cA1IJQWfn1CzGaskGIxlxDIjwiZsBxaSXYsKV7zmUHipLEqC5
-	 V9lRTIeVyZVzUIgF33Z9vpN2oLoE3j/GzVAKhiDMoIkLU6hTU+qxIkEZnp4H2kQnDM
-	 VI9WIHsc9JCiv+XQRhHUhBm1IZdVOYmfomT8ga9bdB+LcWuP3IPJHGdO/GFfR1eleC
-	 zXCcgA5pp2AIv+FIpaGoj61m8oo2JmbjQLYFvQprwnp3yrBjjCokh8EyOaZsXJICAB
-	 nHlXvdvXpUnXl8oFnQ6dFSJmkMbKhzEHxbIXLepIzDDWwqSVgUqPtaLoO4Kq8mETzN
-	 rmdaBR7CMtjXw==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cc30eaf0aso947555a12.2
-        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 02:34:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW3+NGC2+i4lq5iR021zHn1ity6rezUNS3AJpT5TLkif0xggszEwLnDNZxcDOJ0fSE0vlvqe8iM3OECj4yz1JVVOn4wp7/fJdVU
-X-Gm-Message-State: AOJu0YxsV6EKX6U8VYwW/XQ2ISwCXnqNOO49qYSejlhrdKermaULJMuH
-	kxs1eNGXzllZIrvLyG9UWzWkQXunGIOibkq0Rb90GS5QOO5F4OpsqO/Egq65Wr+VWURqLqUmZI6
-	CzFxth5aRd5a540saNHyAUCpowIY=
-X-Google-Smtp-Source: AGHT+IFb2JnXJEpZ/8ZNLh3sUIwAnpsOHgPBjHuN17UBwVrsYs5tsKVu3GpfDIgPIRcizOeSQcGzoENl7XHq7IPf16s=
-X-Received: by 2002:a05:6402:4312:b0:58f:44fa:a2b9 with SMTP id
- 4fb4d7f45d1cf-58f44faa6c8mr1770485a12.16.1720172040928; Fri, 05 Jul 2024
- 02:34:00 -0700 (PDT)
+	b=TlrgpoFGtEANa/tyeVVmeZh7KPuf58wSpMeu1HZTNb/hDFV+qrjmI1w8HjDYhd2x5
+	 lLww6ZjfYOtf4Sesd1tN6aq6SJJ/5VYMAFrUBU9CqSU96BNXLOJjhXFSZPcU/t09vU
+	 TaLTCAsBandIb8Z8fM5I/8NHNjv2PYlNppTLAzJJsn9lfACJBALL5tdr1NsBF5H5Xw
+	 xm+fjN9GoWJhBy8iaV3mKZRr2swtrpcMeTh6sAh4Bc1jkSQJVOF1bfU0kKwVrzP4cO
+	 4696K4vfb0UFYUEc7itIfTH7ZNv1HaAUt2qCgj5iGA7MbfuGQ6ljmVk4+6NUrVuyMd
+	 UUZLUUs7Nn0wg==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7523f0870cso161865666b.3
+        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 02:39:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV9BSqNi7kJXzjIkE7FLFFRaF+mA8bkgnbuKaDyujAupmubXkBepxZNsbWffRPpTjmS3Um4rFU59QfAGyhtsCIpYxM+xjhIWLVa
+X-Gm-Message-State: AOJu0YwHCO7t9DruaMj56KtHTwR7ew2JHx0+65FBGDpOO+hN4bGMm9Tx
+	Ir22pKPdBx3wxHkpACG7BdQcCPUESj0J4VS7taF2ZKJp67qPeeqeu4+CMZSIuwO1+/VsJE2mUtP
+	iUwXYqLy3CFbiTyswODBm6mmQM6I=
+X-Google-Smtp-Source: AGHT+IGL5/nRdBaRnjAc6hNM4qTxVNWhnC7RJ1yHTPd4zyWU2S4tZK8PG5rZJM8LlP5+D5brsO/eDw3r4Ctg0J67X4c=
+X-Received: by 2002:a17:907:7e89:b0:a72:5d75:6337 with SMTP id
+ a640c23a62f3a-a77ba706ad2mr284326466b.53.1720172368186; Fri, 05 Jul 2024
+ 02:39:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240624071422.3473789-1-maobibo@loongson.cn>
-In-Reply-To: <20240624071422.3473789-1-maobibo@loongson.cn>
+References: <20240613003217.129303-1-jiaqingtong97@gmail.com> <7fcf7b1a-187e-5573-a9f1-336871106af1@loongson.cn>
+In-Reply-To: <7fcf7b1a-187e-5573-a9f1-336871106af1@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 5 Jul 2024 17:33:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4FSKo2+go0aW_4-a06q2FA4cNL_ksSNZoKzd=r+TSykw@mail.gmail.com>
-Message-ID: <CAAhV-H4FSKo2+go0aW_4-a06q2FA4cNL_ksSNZoKzd=r+TSykw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] LoongArch: KVM: VM migration enhancement
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Rui <wangrui@loongson.cn>
+Date: Fri, 5 Jul 2024 17:39:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6mGZ-JZ3z9BhK5FAJ43sRdsh-FtLkxCc-FPw1AJTZe9g@mail.gmail.com>
+Message-ID: <CAAhV-H6mGZ-JZ3z9BhK5FAJ43sRdsh-FtLkxCc-FPw1AJTZe9g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: always make pte yong in page map's fast path
+To: maobibo <maobibo@loongson.cn>
+Cc: jiaqingtong97@gmail.com, zhaotianrui@loongson.cn, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Series applied, thanks.
+Applied, thanks.
 
 Huacai
 
-On Mon, Jun 24, 2024 at 3:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> This patchset is to solve VM migration issues, the first six patches are
-> mmu relative, the last patch is relative with vcpu interrupt status.
->
-> It fixes potential issue about tlb flush of secondary mmu and huge page
-> selection etc. Also it hardens LoongArch kvm mmu module.
->
-> With this patchset, VM successfully migrates on my 3C5000 Dual-Way
-> machine with 32 cores.
->  1. Pass to migrate when unixbench workload runs with 32 vcpus, for
-> some unixbench testcases there is much IPI sending.
->  2. Pass to migrate with kernel compiling with 8 vcpus in VM
->  3. Fail to migrate with kernel compiling with 32 vcpus in VM, since
-> there is to much memory writing operation, also there will be file
-> system inode inconsistent error after migration.
->
-> ---
-> v2 ... v3:
->  1. Merge patch 7 into this patchset since it is relative with VM
-> migration bugfix.
->  2. Sync pending interrupt when getting ESTAT register, SW ESTAT
-> register is read after vcpu_put().
->  3. Add notation about smp_wmb() when update pmd entry, to elimate
-> checkpatch warning.
->  4. Remove unnecessary modification about function kvm_pte_huge()
-> in patch 2.
->  5. Add notation about secondary mmu tlb since it is firstly used here.
->
-> v1 ... v2:
->  1. Combine seperate patches into one patchset, all are relative with
-> migration.
->  2. Mark page accessed without mmu_lock still, however with page ref
-> added
-> ---
-> Bibo Mao (7):
->   LoongArch: KVM: Delay secondary mmu tlb flush until guest entry
->   LoongArch: KVM: Select huge page only if secondary mmu supports it
->   LoongArch: KVM: Discard dirty page tracking on readonly memslot
->   LoongArch: KVM: Add memory barrier before update pmd entry
->   LoongArch: KVM: Add dirty bitmap initially all set support
->   LoongArch: KVM: Mark page accessed and dirty with page ref added
->   LoongArch: KVM: Sync pending interrupt when getting ESTAT from user
->     mode
->
->  arch/loongarch/include/asm/kvm_host.h |  5 ++
->  arch/loongarch/include/asm/kvm_mmu.h  |  2 +-
->  arch/loongarch/kvm/main.c             |  1 +
->  arch/loongarch/kvm/mmu.c              | 67 ++++++++++++++++++++-------
->  arch/loongarch/kvm/tlb.c              |  5 +-
->  arch/loongarch/kvm/vcpu.c             | 29 ++++++++++++
->  6 files changed, 86 insertions(+), 23 deletions(-)
+On Thu, Jun 13, 2024 at 9:45=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
+:
 >
 >
-> base-commit: 50736169ecc8387247fe6a00932852ce7b057083
-> --
-> 2.39.3
 >
+> On 2024/6/13 =E4=B8=8A=E5=8D=888:32, jiaqingtong97@gmail.com wrote:
+> > From: Jia Qingtong <jiaqingtong97@gmail.com>
+> >
+> > It seems redundant to check if pte is yong before the call to
+> > kvm_pte_mkyoung in kvm_map_page_fast.
+> > Just remove the check.
+> >
+> > Signed-off-by: Jia Qingtong <jiaqingtong97@gmail.com>
+> > ---
+> >   arch/loongarch/kvm/mmu.c | 6 ++----
+> >   1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> > index 98883aa23ab8..a46befcf85dc 100644
+> > --- a/arch/loongarch/kvm/mmu.c
+> > +++ b/arch/loongarch/kvm/mmu.c
+> > @@ -551,10 +551,8 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu=
+, unsigned long gpa, bool writ
+> >       }
+> >
+> >       /* Track access to pages marked old */
+> > -     new =3D *ptep;
+> > -     if (!kvm_pte_young(new))
+> > -             new =3D kvm_pte_mkyoung(new);
+> > -             /* call kvm_set_pfn_accessed() after unlock */
+> > +     new =3D kvm_pte_mkyoung(*ptep);
+> > +     /* call kvm_set_pfn_accessed() after unlock */
+> Sorry, please ignore my previous comments.
+> It is to modify local variable, rather than update pte entry.
+>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>
+> >
+> >       if (write && !kvm_pte_dirty(new)) {
+> >               if (!kvm_pte_write(new)) {
+> >
+> > base-commit: eb36e520f4f1b690fd776f15cbac452f82ff7bfa
+> >
 >
