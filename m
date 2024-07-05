@@ -1,349 +1,192 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E2F28E8
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 02:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F161B963
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 03:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720148248; cv=none; b=ZlS2lqn2koc6Re+wbNHDxC05vB0qjnFmYhnjAPMUEtNVn2Jn5ycRYz3WbJ12YSm+F76PTu+RVqlO/le8NJlEtm8pJ+6qNBSI9VNic2NKXYebGCQFbmmgQpOb4aNBTOkqP/sP0xbBbT4pnIPYAGk8kkfQSKDTWwBPz29IO48OXbk=
+	t=1720149574; cv=none; b=Zgz5FehLWrgmh0mjhu5rLdoiILIluwxuu8AfbSfmCD4kitdOFm498rWkPsWa6l6E6ej+xL2mAX9U6YZM0nYCMyZLSs9dPlIeZikL1ZYs5Tvu3oqmtmnghDCzunF9BEzryct7Gd9LQsHB6+UNWVk5n5Qc8DifwQabghCWrm2/OTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720148248; c=relaxed/simple;
-	bh=qxwhKcg0SI6q8BGfM7Z4xJwJo021dapPukYpNncCTxk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z3UlgSRZ/XgHj8KFMDGeu9uN2xtTDxWNSMgWF9E0Lvui7Yvt7BJydmUHo8gQDWcxd+em1gzd70tBcDtK8PVkeRbb7VFm5ULXsRyIFtyGyZ3bjM5MlQC1pQcejzHWnEuxMlWzZk75ZK2D8ktRNcGOdvr9XD0FrZpo0J5Dg5V18IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxbPDWYIdm7iQBAA--.3498S3;
-	Fri, 05 Jul 2024 10:56:22 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWcbRYIdm3tE7AA--.7292S7;
-	Fri, 05 Jul 2024 10:56:20 +0800 (CST)
-From: Xianglai Li <lixianglai@loongson.cn>
-To: linux-kernel@vger.kernel.org
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Min Zhou <zhoumin@loongson.cn>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Xianglai li <lixianglai@loongson.cn>
-Subject: [PATCH 05/11] LoongArch: KVM: Add EXTIOI device support
-Date: Fri,  5 Jul 2024 10:38:48 +0800
-Message-Id: <20240705023854.1005258-6-lixianglai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240705023854.1005258-1-lixianglai@loongson.cn>
-References: <20240705023854.1005258-1-lixianglai@loongson.cn>
+	s=arc-20240116; t=1720149574; c=relaxed/simple;
+	bh=+wTwNpg8TcTjbHythgWMvLOXcf15T1T2vdbdDsv15Eo=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=WwVe0hy2fIef7yv9Hyw6+PgjYiHk463KCH8jrUp/DLC1krjrjoD14ygmHP3Bh1y/Mc0SeEJeGNliflxU1DP82FlYp31rdZrdrFB2dPlcAmipRsOuQwVq4wi04guRoBWFHeQhEc7d02qI4pzYkx70bQR0Gy3LBd9iuIcmzMFORVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=hsALHIgm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sQBACcDF; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hsALHIgm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sQBACcDF"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id E3F7A1140212;
+	Thu,  4 Jul 2024 23:19:31 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Thu, 04 Jul 2024 23:19:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1720149571;
+	 x=1720235971; bh=YpqySUb+a4hGbNyz/m8SXRAbP72Db2DhOeFYdzoNiIk=; b=
+	hsALHIgmuWtvnCQ1d3Sgnrf2znx2l0XG2RRxjuRWL8QeNDh7KQBR7q5DL/ly/nyv
+	no+XmfmyhCUS7Qz7m+wwisWK4LFhXj0OXwmBV6Sg+W77dZuk3qaMSVUSOc/d/wWc
+	cSyF77EdDWYlxmVfVI4/iYn3M6sszZgP5lNUrOTgmdvBPr+qJlYMNb0uCOSkgrR9
+	A+1X7rCquuiHFoet6SqIfeAgzagS61z+0+D0/GDDfUfS2fscPlliz5tX8LLDAUhr
+	YdlrPfZPVaJBoK7Bh9LWbyVmgydii2jSsIYXvoKLaIyF9xnwNnnwtFU3e7+Zf2AJ
+	TyoKH0heJedK9Iwr/D833A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720149571; x=
+	1720235971; bh=YpqySUb+a4hGbNyz/m8SXRAbP72Db2DhOeFYdzoNiIk=; b=s
+	QBACcDFZUAU+vOChb6LlDVPhM6xr9y4QOEZo4IuOpp1FAV+IP+2kPQuzfO1d4x8Z
+	3ps7rB4RkmjFfRnpLROvteBxZieBH+PK0mKVooJc8aquQsWU9OT25RPQe64Dk5qM
+	22sNoi+f8zJQoDjvXhkysHxR1t/efsV+OmPskaCoYHGtBesEteVp7ewtIwEyBHE4
+	rpPJSlPmpUHBS69nSEpCvDqdBEERxKxXPl5siQcEZzpVKkAQgSxeLxtPK4Idm/0A
+	6p+siXLb77CnZ9bnl2Ub1OgzdSTiQQSRIoT+Oy3aD9S09j3kXxDlukMHW4xVdVJ+
+	LHXDsrzoKoJMWm3VC7SkQ==
+X-ME-Sender: <xms:QmaHZoIfeq3ppTADQcJm2SzZeqv63xLcz2mZQMkeZeZfpUAPrcbKzw>
+    <xme:QmaHZoJSHKWPICYHoR5u3n1ySZ_7diOdqSDuqjNG4kfD1nD9IlnSZNVLHxAiw0mj2
+    yL4yFjC02M_apknTaA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtgdeilecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:QmaHZotFaIIlbINwjLculLxVZUEQHn0SlHY3XOpqW7JU8mbtJxGnuw>
+    <xmx:QmaHZlbq5x-UoajqeF0gLUDLvYmXfBv6KEXsDqQO_wDCM3R_p4Yk6A>
+    <xmx:QmaHZvbO08lN3d_6jobNEvFTNx7IydaOiq2oAn-Tk1gvT3JI7mHhfw>
+    <xmx:QmaHZhC_ztpfqxkMJ2NUqtqO0ouaNJDLtY6DKgi2wBzuCPg7UX38SQ>
+    <xmx:Q2aHZkNplrJKCKsO_YYDBjgsjBLr99yY1fsmTFM6xpknu8VxjaQajd3R>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 8993336A0074; Thu,  4 Jul 2024 23:19:30 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxWcbRYIdm3tE7AA--.7292S7
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Message-Id: <01eb9efd-ca7a-4d4c-a29d-cfc2f6cfbb86@app.fastmail.com>
+In-Reply-To: <554b10e8-a7ab-424a-f987-ea679859a220@loongson.cn>
+References: <20240626063239.3722175-1-maobibo@loongson.cn>
+ <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
+ <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+ <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+ <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn>
+ <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
+ <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn>
+ <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
+ <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn>
+ <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+ <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn>
+ <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
+ <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
+ <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+ <bdcc9ec4-31a8-1438-25c0-be8ba7f49ed0@loongson.cn>
+ <ecb6df72-543c-4458-ba27-0ef8340c1eb3@flygoat.com>
+ <554b10e8-a7ab-424a-f987-ea679859a220@loongson.cn>
+Date: Fri, 05 Jul 2024 11:19:09 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Tianrui Zhao" <zhaotianrui@loongson.cn>,
+ "Xuerui Wang" <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Added device model for EXTIOI interrupt controller,
-implemented basic create destroy interface,
-and registered device model to kvm device table.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
----
-Cc: Bibo Mao <maobibo@loongson.cn> 
-Cc: Huacai Chen <chenhuacai@kernel.org> 
-Cc: kvm@vger.kernel.org 
-Cc: loongarch@lists.linux.dev 
-Cc: Min Zhou <zhoumin@loongson.cn> 
-Cc: Paolo Bonzini <pbonzini@redhat.com> 
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn> 
-Cc: WANG Xuerui <kernel@xen0n.name> 
-Cc: Xianglai li <lixianglai@loongson.cn> 
 
- arch/loongarch/include/asm/kvm_extioi.h |  78 +++++++++++++++++
- arch/loongarch/include/asm/kvm_host.h   |   2 +
- arch/loongarch/kvm/Makefile             |   1 +
- arch/loongarch/kvm/intc/extioi.c        | 111 ++++++++++++++++++++++++
- arch/loongarch/kvm/main.c               |   6 +-
- include/uapi/linux/kvm.h                |   2 +
- 6 files changed, 199 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/include/asm/kvm_extioi.h
- create mode 100644 arch/loongarch/kvm/intc/extioi.c
+=E5=9C=A82024=E5=B9=B47=E6=9C=885=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8A=E5=
+=8D=889:21=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
+[...]
+>> for you.
+> On the other hand, can you list benefits or disadvantage of approaches=20
+> on different architecture?
 
-diff --git a/arch/loongarch/include/asm/kvm_extioi.h b/arch/loongarch/include/asm/kvm_extioi.h
-new file mode 100644
-index 000000000000..48a117b2be5d
---- /dev/null
-+++ b/arch/loongarch/include/asm/kvm_extioi.h
-@@ -0,0 +1,78 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef LOONGARCH_EXTIOI_H
-+#define LOONGARCH_EXTIOI_H
-+
-+#include <kvm/iodev.h>
-+
-+#define EXTIOI_IRQS			256
-+#define EXTIOI_ROUTE_MAX_VCPUS		256
-+#define EXTIOI_IRQS_U8_NUMS		(EXTIOI_IRQS / 8)
-+#define EXTIOI_IRQS_U32_NUMS		(EXTIOI_IRQS_U8_NUMS / 4)
-+#define EXTIOI_IRQS_U64_NUMS		(EXTIOI_IRQS_U32_NUMS / 2)
-+/* map to ipnum per 32 irqs */
-+#define EXTIOI_IRQS_NODETYPE_COUNT	16
-+
-+#define EXTIOI_BASE			0x1400
-+#define EXTIOI_SIZE			0x900
-+
-+#define LS3A_INTC_IP			8
-+
-+struct loongarch_extioi {
-+	spinlock_t lock;
-+	struct kvm *kvm;
-+	struct kvm_io_device device;
-+	/* hardware state */
-+	union nodetype {
-+		u64 reg_u64[EXTIOI_IRQS_NODETYPE_COUNT / 4];
-+		u32 reg_u32[EXTIOI_IRQS_NODETYPE_COUNT / 2];
-+		uint16_t reg_u16[EXTIOI_IRQS_NODETYPE_COUNT];
-+		u8 reg_u8[EXTIOI_IRQS_NODETYPE_COUNT * 2];
-+	} nodetype;
-+
-+	/* one bit shows the state of one irq */
-+	union bounce {
-+		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-+		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-+		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-+	} bounce;
-+
-+	union isr {
-+		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-+		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-+		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-+	} isr;
-+	union coreisr {
-+		u64 reg_u64[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U64_NUMS];
-+		u32 reg_u32[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U32_NUMS];
-+		u8 reg_u8[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U8_NUMS];
-+	} coreisr;
-+	union enable {
-+		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-+		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-+		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-+	} enable;
-+
-+	/* use one byte to config ipmap for 32 irqs at once */
-+	union ipmap {
-+		u64 reg_u64;
-+		u32 reg_u32[EXTIOI_IRQS_U32_NUMS / 4];
-+		u8 reg_u8[EXTIOI_IRQS_U8_NUMS / 4];
-+	} ipmap;
-+	/* use one byte to config coremap for one irq */
-+	union coremap {
-+		u64 reg_u64[EXTIOI_IRQS / 8];
-+		u32 reg_u32[EXTIOI_IRQS / 4];
-+		u8 reg_u8[EXTIOI_IRQS];
-+	} coremap;
-+
-+	DECLARE_BITMAP(sw_coreisr[EXTIOI_ROUTE_MAX_VCPUS][LS3A_INTC_IP], EXTIOI_IRQS);
-+	uint8_t  sw_coremap[EXTIOI_IRQS];
-+};
-+
-+void extioi_set_irq(struct loongarch_extioi *s, int irq, int level);
-+int kvm_loongarch_register_extioi_device(void);
-+#endif /* LOONGARCH_EXTIOI_H */
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index b28487975336..0e4e46e06420 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -20,6 +20,7 @@
- #include <asm/kvm_mmu.h>
- #include <asm/loongarch.h>
- #include <asm/kvm_ipi.h>
-+#include <asm/kvm_extioi.h>
- 
- /* Loongarch KVM register ids */
- #define KVM_GET_IOC_CSR_IDX(id)		((id & KVM_CSR_IDX_MASK) >> LOONGARCH_REG_SHIFT)
-@@ -111,6 +112,7 @@ struct kvm_arch {
- 	s64 time_offset;
- 	struct kvm_context __percpu *vmcs;
- 	struct loongarch_ipi *ipi;
-+	struct loongarch_extioi *extioi;
- };
- 
- #define CSR_MAX_NUMS		0x800
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-index 36c3009fe89c..a481952e3855 100644
---- a/arch/loongarch/kvm/Makefile
-+++ b/arch/loongarch/kvm/Makefile
-@@ -19,5 +19,6 @@ kvm-y += tlb.o
- kvm-y += vcpu.o
- kvm-y += vm.o
- kvm-y += intc/ipi.o
-+kvm-y += intc/extioi.o
- 
- CFLAGS_exit.o	+= $(call cc-option,-Wno-override-init,)
-diff --git a/arch/loongarch/kvm/intc/extioi.c b/arch/loongarch/kvm/intc/extioi.c
-new file mode 100644
-index 000000000000..2f1b93e95f97
---- /dev/null
-+++ b/arch/loongarch/kvm/intc/extioi.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
-+
-+#include <asm/kvm_extioi.h>
-+#include <asm/kvm_vcpu.h>
-+#include <linux/count_zeros.h>
-+
-+static int kvm_loongarch_extioi_write(struct kvm_vcpu *vcpu,
-+				struct kvm_io_device *dev,
-+				gpa_t addr, int len, const void *val)
-+{
-+	return 0;
-+}
-+
-+static int kvm_loongarch_extioi_read(struct kvm_vcpu *vcpu,
-+				struct kvm_io_device *dev,
-+				gpa_t addr, int len, void *val)
-+{
-+	return 0;
-+}
-+
-+static const struct kvm_io_device_ops kvm_loongarch_extioi_ops = {
-+	.read	= kvm_loongarch_extioi_read,
-+	.write	= kvm_loongarch_extioi_write,
-+};
-+
-+static int kvm_loongarch_extioi_get_attr(struct kvm_device *dev,
-+				struct kvm_device_attr *attr)
-+{
-+	return 0;
-+}
-+
-+static int kvm_loongarch_extioi_set_attr(struct kvm_device *dev,
-+				struct kvm_device_attr *attr)
-+{
-+	return 0;
-+}
-+
-+static void kvm_loongarch_extioi_destroy(struct kvm_device *dev)
-+{
-+	struct kvm *kvm;
-+	struct loongarch_extioi *extioi;
-+	struct kvm_io_device *device;
-+
-+	if (!dev)
-+		return;
-+
-+	kvm = dev->kvm;
-+	if (!kvm)
-+		return;
-+
-+	extioi = kvm->arch.extioi;
-+	if (!extioi)
-+		return;
-+
-+	device = &extioi->device;
-+	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-+	kfree(extioi);
-+}
-+
-+static int kvm_loongarch_extioi_create(struct kvm_device *dev, u32 type)
-+{
-+	int ret;
-+	struct loongarch_extioi *s;
-+	struct kvm_io_device *device;
-+	struct kvm *kvm = dev->kvm;
-+
-+	/* extioi has been created */
-+	if (kvm->arch.extioi)
-+		return -EINVAL;
-+
-+	s = kzalloc(sizeof(struct loongarch_extioi), GFP_KERNEL);
-+	if (!s)
-+		return -ENOMEM;
-+	spin_lock_init(&s->lock);
-+	s->kvm = kvm;
-+
-+	/*
-+	 * Initialize IOCSR device
-+	 */
-+	device = &s->device;
-+	kvm_iodevice_init(device, &kvm_loongarch_extioi_ops);
-+	mutex_lock(&kvm->slots_lock);
-+	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, EXTIOI_BASE, EXTIOI_SIZE, device);
-+	mutex_unlock(&kvm->slots_lock);
-+	if (ret < 0) {
-+		kfree(s);
-+		return -EFAULT;
-+	}
-+
-+	kvm->arch.extioi = s;
-+
-+	kvm_info("create extioi device successfully\n");
-+	return 0;
-+}
-+
-+static struct kvm_device_ops kvm_loongarch_extioi_dev_ops = {
-+	.name = "kvm-loongarch-extioi",
-+	.create = kvm_loongarch_extioi_create,
-+	.destroy = kvm_loongarch_extioi_destroy,
-+	.set_attr = kvm_loongarch_extioi_set_attr,
-+	.get_attr = kvm_loongarch_extioi_get_attr,
-+};
-+
-+int kvm_loongarch_register_extioi_device(void)
-+{
-+	return kvm_register_device_ops(&kvm_loongarch_extioi_dev_ops,
-+					KVM_DEV_TYPE_LA_EXTIOI);
-+}
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 36efc7b38f83..b5da4341006a 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -9,6 +9,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cpufeature.h>
- #include <asm/kvm_csr.h>
-+#include <asm/kvm_extioi.h>
- #include "trace.h"
- 
- unsigned long vpid_mask;
-@@ -372,7 +373,10 @@ static int kvm_loongarch_env_init(void)
- 	if (ret)
- 		return ret;
- 
--	return 0;
-+	/* Register loongarch extioi interrupt controller interface. */
-+	ret = kvm_loongarch_register_extioi_device();
-+
-+	return ret;
- }
- 
- static void kvm_loongarch_env_exit(void)
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 341fc9d5f3ec..607895ea450f 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1144,6 +1144,8 @@ enum kvm_device_type {
- #define KVM_DEV_TYPE_RISCV_AIA		KVM_DEV_TYPE_RISCV_AIA
- 	KVM_DEV_TYPE_LA_IPI,
- #define KVM_DEV_TYPE_LA_IPI		KVM_DEV_TYPE_LA_IPI
-+	KVM_DEV_TYPE_LA_EXTIOI,
-+#define KVM_DEV_TYPE_LA_EXTIOI		KVM_DEV_TYPE_LA_EXTIOI
- 
- 	KVM_DEV_TYPE_MAX,
- 
--- 
-2.39.1
+So the obvious benefit of scratch vCPU would be maintaining consistency =
+and simpleness
+for UAPI.
 
+It can also maximum code reuse probabilities in other user space hypervi=
+sor projects.
+
+Also, it can benefit a potential asymmetrical system. I understand that =
+it won't appear
+in near future, but we should always be prepared, especially in UAPI des=
+ign.
+
+>
+> Or you post patch about host cpu support, I list its disadvantage. Or =
+I=20
+> post patch about host cpu support with scheduled time, then we talk=20
+> about it. Is that fair for you?
+
+I'm not committed to development work, I can try, but I can't promise.
+
+Regarding the fairness, IMO that's not how community works. If you obser=
+ve reviewing
+process happening all the place, it's always about addressing other's co=
+ncern.
+
+Still, it's up to maintainers to decide what's reasonable, I'm just tryi=
+ng to help.
+
+>
+> It is unfair that you list some approaches and let others spend time t=
+o=20
+> do, else you are my top boss :)
+
+I mean, I'm just trying to make some progress here. I saw you have some =
+disagreement
+with Huacai.
+
+I know QEMU side implementation better than Huacai, so I'm trying to pro=
+pose a solution
+that would address Huacai's concern and may work for you.
+
+>>=20
+>> I understand you may have some plans in your mind, please elaborate s=
+o=20
+>> we can smash
+>> them together. That's how community work.
+>>=20
+>>>
+>>> For host cpu type or migration feature detection, I have no idea now=
+,=20
+>>> also I do not think it will be big issue for me, I will do it with=20
+>>> scheduled time. Of source, welcome Jiaxun and you to implement host=20
+>>> cpu type or migration feature detection.
+>>=20
+>> My concern is if you allow CPU features to have "auto" property you a=
+re=20
+>> risking create
+>> inconsistency among migration.=C2=A0Once you've done that it's pretty=
+ hard to=20
+>> get rid of it.
+>>=20
+>> Please check how RISC-V dealing with CPU features at QMP side.We are =
+working on
+>>=20
+>> I'm not meant to hinder your development work, but we should always=20
+>> think ahead.
+> Yes, it is potential issue and we will solve it. Another potential iss=
+ue=20
+> is that PV features may different on host, you cannot disable PV=20
+> features directly.  The best way is that you post patch about it, then=20
+> we can talk about together, else it may be kindly reminder, also may b=
+e=20
+> waste of time, everyone is busy working for boss :)
+
+Sigh, so you meant you submitted something known to be problematic?
+
+--=20
+- Jiaxun
