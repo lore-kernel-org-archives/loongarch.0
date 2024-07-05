@@ -1,144 +1,174 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9116D33DD
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 01:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2E0ECF
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 01:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720142486; cv=none; b=W3tXOOXUzT7gCDT56XMSg6LgBubJ/z8tn12hruoalpJKm2aU8y7n5siLUDiOQ6ke3FBEnU/om/BFtw7hLHWeS67twHi91VLFkJ/D2JHKZAZ30+B50tXj6kPUellQPnVh1FQaAa50n5IAT05j2SbnlJ/63azZCDgnH1s0JG/togA=
+	t=1720143715; cv=none; b=ki20Lym2k/a0LdJlQaKSPkgCWF1Yl+VXeqQwZ+tAzT8CM6TC3ZJIkdE2IfQTujK6UvsF0re2SJ41fpnlu0o2RcouPjVFCL6d6pL7uFyoEGh+3ppM9pSBJNp2dwafL010irfhdjkApbrVK9QuP6O0GfDGAW/ex1GAWA/JTnxh+c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720142486; c=relaxed/simple;
-	bh=5X/6jbJu4QtfpBJLnuys4Wu3vTFIuA7T4od907taK24=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=F3ESlz9Ga2gu0D80nIRBrn605ozIPCKTgUzoC/Bxhw4hDtvscWsyA6zY5MiJuAe9uXaxyIW0MMdxdtxXEVX1RJlSK56uAfamV4HvrFgEk05wltKPTZGE7LdivUQ9DiK3xqR/PwBZOADxGtvrdPXUzOIt7wm1KyQ/FjFk66YQmdA=
+	s=arc-20240116; t=1720143715; c=relaxed/simple;
+	bh=W9sjv8d6kmkNuqYduzOoNs3ODRPG9F3zv56JdhCF8vc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=T3ULyCTQ86iWr64qwI1XLfIVK30dX/p8F72bCnapqZbW7KNXi88OiG7fa/nC4P/Xzq2ErM1nE6cENVW3Ysueg78a+xp612ROQpzcut6uXSQ+hnzPkzaytxANiymld+SyRBy5ewpFJeZqEHgniLlNQLpuWo52fDD1hb3zMjCxDl0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxH_GRSodm2R8BAA--.3851S3;
-	Fri, 05 Jul 2024 09:21:21 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMWOSodmQbw7AA--.62450S3;
-	Fri, 05 Jul 2024 09:21:20 +0800 (CST)
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240626063239.3722175-1-maobibo@loongson.cn>
- <20240626063239.3722175-3-maobibo@loongson.cn>
- <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com>
- <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
- <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
- <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn>
- <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
- <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn>
- <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
- <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn>
- <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
- <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn>
- <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
- <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
- <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
- <bdcc9ec4-31a8-1438-25c0-be8ba7f49ed0@loongson.cn>
- <ecb6df72-543c-4458-ba27-0ef8340c1eb3@flygoat.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <554b10e8-a7ab-424a-f987-ea679859a220@loongson.cn>
-Date: Fri, 5 Jul 2024 09:21:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8Cx7+tdT4dm2iABAA--.3417S3;
+	Fri, 05 Jul 2024 09:41:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx28ZcT4dm_cA7AA--.7061S2;
+	Fri, 05 Jul 2024 09:41:49 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	siyanteng@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH 1/2] docs: Add advanced extended IRQ model description
+Date: Fri,  5 Jul 2024 09:41:44 +0800
+Message-Id: <20240705014144.14750-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ecb6df72-543c-4458-ba27-0ef8340c1eb3@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxJMWOSodmQbw7AA--.62450S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kry8ZF4rWFy8Ww1UZw1xtFc_yoW8KFy3pa
-	yFka1S9F4DAr48AwnrAw4xWw4Skw4rta13Jrn8GryDJ398Xry2vr92kayruF9rCr1Sg34j
-	vF42y3sakFZ8ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:AQAAf8Bx28ZcT4dm_cA7AA--.7061S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFy8Gr17WryfWr4xXrW3twc_yoWrZryDpr
+	ZxCryIqF18Gry5Xr17Jr18Wr13G3Z3J3WDtF1xtry8Xr1kAr1Utr1UtrykJFy7G34rAF1j
+	qFyrJw1UJw1UJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2eT5DUUUU
 
+From 3C6000, Loongarch began to support advanced extended
+interrupt mode, in which each CPU has an independent interrupt
+vector number.This will enhance the architecture's ability
+to support modern devices
 
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+ 2 files changed, 67 insertions(+), 3 deletions(-)
 
-On 2024/7/5 上午3:44, Jiaxun Yang wrote:
-> 
-> 
-> On 2024/7/4 09:35, maobibo wrote:
->> In another thread I found that Jiaxun said he has a solution to make
->>> LBT be a vcpu feature and still works well. However, that may take
->>> some time and is too late for 6.11.
->>>
->>> But we have another choice now: just remove the UAPI and vm.c parts in
->>> this series, let the LBT main parts be upstream in 6.11, and then
->>> solve other problems after 6.11. Even if Jiaxun's solution isn't
->>> usable, we can still use this old vm feature solution then.
-> 
-> IMO this is the best approach to make some progress.
-> 
->>
->> I am sure it is best if it is VM feature for LBT feature detection, 
->> LSX/LASX feature detection uses CPU feature, we can improve it later.
-> 
-> Please justify the reason, we should always be serious on UAPI design 
-> choices.
-> I don't really understand why the approach worked so well on Arm & 
-> RISC-V is not working
-> for you.
-On the other hand, can you list benefits or disadvantage of approaches 
-on different architecture?
-
-Or you post patch about host cpu support, I list its disadvantage. Or I 
-post patch about host cpu support with scheduled time, then we talk 
-about it. Is that fair for you?
-
-It is unfair that you list some approaches and let others spend time to 
-do, else you are my top boss :)
-> 
-> I understand you may have some plans in your mind, please elaborate so 
-> we can smash
-> them together. That's how community work.
-> 
->>
->> For host cpu type or migration feature detection, I have no idea now, 
->> also I do not think it will be big issue for me, I will do it with 
->> scheduled time. Of source, welcome Jiaxun and you to implement host 
->> cpu type or migration feature detection.
-> 
-> My concern is if you allow CPU features to have "auto" property you are 
-> risking create
-> inconsistency among migration. Once you've done that it's pretty hard to 
-> get rid of it.
-> 
-> Please check how RISC-V dealing with CPU features at QMP side.
-> 
-> I'm not meant to hinder your development work, but we should always 
-> think ahead.
-Yes, it is potential issue and we will solve it. Another potential issue 
-is that PV features may different on host, you cannot disable PV 
-features directly.  The best way is that you post patch about it, then 
-we can talk about together, else it may be kindly reminder, also may be 
-waste of time, everyone is busy working for boss :)
-
-Regards
-Bibo Mao
-> 
-> Thanks
-> - Jiaxun
->>
+diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+index 7988f4192363..369df16b48d0 100644
+--- a/Documentation/arch/loongarch/irq-chip-model.rst
++++ b/Documentation/arch/loongarch/irq-chip-model.rst
+@@ -85,6 +85,39 @@ to CPUINTC directly::
+     | Devices |
+     +---------+
+ 
++Advanced Extended IRQ model
++===========================
++
++In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
++to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
++and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
++by EIOINTC, and then go to CPUINTC directly::
++
++ +-----+     +--------------------------+     +-------+
++ | IPI | --> |           CPUINTC        | <-- | Timer |
++ +-----+     +--------------------------+     +-------+
++              ^        ^             ^
++              |        |             |
++      +--------+  +---------+ +---------+     +-------+
++      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
++      +--------+  +---------+ +---------+     +-------+
++           ^            ^
++           |            |
++         +---------+  +---------+
++         | PCH-MSI |  | PCH-PIC |
++         +---------+  +---------+
++            ^          ^       ^
++            |          |       |
++    +---------+ +---------+ +---------+
++    | Devices | | PCH-LPC | | Devices |
++    +---------+ +---------+ +---------+
++                     ^
++                     |
++                +---------+
++                | Devices |
++                +---------+
++
++
+ ACPI-related definitions
+ ========================
+ 
+diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+index f1e9ab18206c..15965e191cd1 100644
+--- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
++++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+@@ -9,9 +9,8 @@
+ LoongArch的IRQ芯片模型（层级关系）
+ ==================================
+ 
+-目前，基于LoongArch的处理器（如龙芯3A5000）只能与LS7A芯片组配合工作。LoongArch计算机
+-中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、LIOINTC（
+-Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
++LoongArch计算机中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、
++LIOINTC（Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
+ HTVECINTC（Hyper-Transport Vector Interrupt Controller）、PCH-PIC（LS7A芯片组的主中
+ 断控制器）、PCH-LPC（LS7A芯片组的LPC中断控制器）和PCH-MSI（MSI中断控制器）。
+ 
+@@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
+     | Devices |
+     +---------+
+ 
++高级扩展IRQ模型
++=======================
++
++在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
++CPU串口（UARTs）中断发送到LIOINTC，MSI中断发送到AVEC，而后通过AVEC送达CPUINTC，而
++其他所有设备的中断则分别发送到所连接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直
++接到达CPUINTC::
++
++ +-----+     +--------------------------+     +-------+
++ | IPI | --> |           CPUINTC        | <-- | Timer |
++ +-----+     +--------------------------+     +-------+
++              ^        ^             ^
++              |        |             |
++      +--------+  +---------+ +---------+     +-------+
++      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
++      +--------+  +---------+ +---------+     +-------+
++              ^        ^
++              |        |
++      +---------+  +-------------+
++      | PCH-MSI |  |   PCH-PIC   |
++      +---------+  +-------------+
++            ^          ^       ^
++            |          |       |
++    +---------+ +---------+ +---------+
++    | Devices | | PCH-LPC | | Devices |
++    +---------+ +---------+ +---------+
++                     ^
++                     |
++                +---------+
++                | Devices |
++                +---------+
++
+ ACPI相关的定义
+ ==============
+ 
+-- 
+2.20.1
 
