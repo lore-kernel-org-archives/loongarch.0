@@ -1,146 +1,235 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4C3143875
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 12:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91B01459F7
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 23:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720182396; cv=none; b=BfZlvJIXYy0nDuySYl7cEKyoDeOFyW/1ox2Xg+d5JoximEHHwBrp2rqLD32J8UytnDBZqatIfu5n/q3UdYxJhyK/Ak4eadJiTcP5Vmhqoc3qFxfwBCPFmvHXcawRVXvZSzvl2oEAJ9gumPLO34ypuBzXKcK4HdFRvBzT1igkpOw=
+	t=1720221970; cv=none; b=ksknAa4A2YqFEVp/PcUVRbtkngKqJlOnRbPJOzUHG7JDG5kaOBWYA5O85FO3FvJYwTHe4aj5s9QNdDYFfC2OZfzrFQFvHda2GP2wRUpnV+0OaLUNEvxqzEbs6GRPUTnczUsmakZH2jKutGNYnoSK2Cb88vMpB600o8RiakyFngY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720182396; c=relaxed/simple;
-	bh=4cGnOhuIoomBwrD24hVQFlP9MtQb5SmqGxpFHWYkwpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F3A0UsSUijnUXfsbgotUcjLdLSzsg8awn6HvdOKSpXXe/yO6GTdqcT3jsfhTOnqyI7WcZlBxVDBm6UpsNmA/XEqaOV7faxEKKJfVNKBWe03QM04yiY9Bd6LdtGlwUfwLUurzUMFiLTE7GGG/ptj7EYOK4eb9+rm8v5Qof3Jvnqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MbNH/85Z; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1720221970; c=relaxed/simple;
+	bh=3gMAndsUvgabh9qev+8EmCJaTlEII5ryUC+FGczY84o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lIc9mU2XLSLuDTiVYKX1S1yBL1DWrIRIPOVQwhi0AbiiW2VjTWPKHDnGG0Zt/GhNr3PomoC6BGFBJahXOqmDkVZ4VZFQB153Hia1b/AjWH8gWb2IQESEq2eBp0/SxdQ9reScpP1m6Vp3x28Rd/AFkSRF0pmWJmTTAAs7n/1JBgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tMiAq0uc; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MbNH/85Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1720182391;
-	bh=aZeNuP2pelRkI3CSCXzaDUpVS59Y3c8MYTsNt4sB4jk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MbNH/85ZZAmLzPqUmW/KoPjNcWSQUJa5m1sHj4DwaD/Ggp9suzqFFsesZCl9i0j5X
-	 JVbctaMNgLWgMP/bGFHZqDnj1IIW7hvpR/uRbno/OxJjv1QanWSpH6FOaOZijgz61I
-	 Zol9kCM1ZW6mji0n8O+R1b+o7ClH1Hw814x1Io/hCwfnpz69tRzqI7rZiXaVALAkYH
-	 T3sq1bsZYZYctf/nMILRfaHpInxI0sVxnTAUiuwQNJmPn/d69H+rS8STQtquhj6Rls
-	 OlFggb8LXFVlFRXHsXFhyjRXI1cYJKQCr2Kg8lNrw5PZ+p+UV/XRyjr/zyRRxJicY0
-	 Im6zX8yemoKDQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WFt6K6cs3z4wbh;
-	Fri,  5 Jul 2024 22:26:17 +1000 (AEST)
-Date: Fri, 5 Jul 2024 22:26:16 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Masahiro
- Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>, Vineet Gupta <vgupta@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren
- <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Dinh Nguyen
- <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson
- <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Rich Felker
- <dalias@libc.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Christian Brauner
- <brauner@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-openrisc@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 03/17] um: don't generate asm/bpf_perf_event.h
-Message-ID: <20240705222616.017b1593@canb.auug.org.au>
-In-Reply-To: <20240704143611.2979589-4-arnd@kernel.org>
-References: <20240704143611.2979589-1-arnd@kernel.org>
-	<20240704143611.2979589-4-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tMiAq0uc"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so3638959a12.1
+        for <loongarch@lists.linux.dev>; Fri, 05 Jul 2024 16:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720221966; x=1720826766; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4FIGyFLoN5cw68zfKfOk7jOzbeIQ4UpGai4sSTRJq1M=;
+        b=tMiAq0ucAwUkZFRxYHfRLrUcMG6AGM1vY4jNcCK4X99ljoVtZv/1lO1bjVCsgLOBiS
+         7atZQSYcNPLLL8vN5VyBp7hrpz9MxlAkxqpyAk7Enmt5QFQ9gz2HljboZcrw8ItrPjfC
+         EAaZ48xaNUSKJpuMUeFCQvCF1zaYaNcYoMysZAC2Zy3mwz/qA4bBYW1GJmSVKuHc8Ddd
+         y6vFS4KkjqGm8RMfMAOxfmofSd3haG5/5VDS5VDHDZZh2OzMTcgxMxRpzfTrGrzLpe19
+         A7PRSXfBjhPzu7EETW/gW4QTMhDdTF/g7d6L9yT5/7aLDgW7vyqgYLnsJBqb0U7k/h2O
+         r0Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720221966; x=1720826766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4FIGyFLoN5cw68zfKfOk7jOzbeIQ4UpGai4sSTRJq1M=;
+        b=NuNMP/tSR5yoWDPXJwGXzgt9eSRS3HqhmxOOOlUqfnECd1NWW4BtGoJ4cwxz1htYWU
+         ndKRmiiDbljTHX2Za5Ashx8gumjCL8neR0a6DuMQhuB6Jq1mfvmhLkAa/LPw2QNSiz5R
+         pJmxMC+jOd4XhkbxLNMNa6Tn+9LHsLWsD9UKo+nRYBEfDE51ZP+rcJUY4O1RQuWpPj3x
+         QS/FueoHS2U+XvFJHdj99y5EdbWzU16D9Ksx/6WCL4XQp6OlY6NIVb8bp6a8TMalIyOU
+         aTHVXWa3JSpvoStZnWlbocjf0yIZeauBZqh92KTzixj2x1kwOopfajlj/4FEKDh+2cKx
+         uXQA==
+X-Forwarded-Encrypted: i=1; AJvYcCU046da7Bh1KcYwKR0l0KjhoA5pKNaU2aYpyG8faD2jvP9Pc4kUbfk/asgcWKlR4AmyzxtTsEU/0GPt24o/QjsLDqgttnYwFTg6
+X-Gm-Message-State: AOJu0YzuBNqyGn6SIIx6o2lDVXY/1aYHFYyKdx/EhsY41FMzEmomKFVj
+	hNsupNHr4toWssyh6tpwV9F0QbCqC1BjZXLj7daKTcXHia2424zx6rzJsZ0p3JM=
+X-Google-Smtp-Source: AGHT+IFg+5A1xjo41b4Ew2aKc+k+EzcATPIJ3+HMQghpCnt6pAjcGISfM1fIKkVdIzfPnRvqY87VSw==
+X-Received: by 2002:a05:6402:234c:b0:57d:3e48:165d with SMTP id 4fb4d7f45d1cf-58e7a74e11dmr4508736a12.4.1720221965757;
+        Fri, 05 Jul 2024 16:26:05 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:5898:1844:403c:d2d6])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58d242037afsm3768133a12.51.2024.07.05.16.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 16:26:05 -0700 (PDT)
+Date: Sat, 6 Jul 2024 01:26:03 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <b2lyte7dtrdxxoj4rwwrxbt5myc3td7v3psus7h36qc7dp3thh@czfp25bferl4>
+References: <cover.1716795485.git.zhoubinbin@loongson.cn>
+ <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IAaJheb.p6.1G=gRNPNGj_e";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3levmdfnv3vsobbm"
+Content-Disposition: inline
+In-Reply-To: <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
 
---Sig_/IAaJheb.p6.1G=gRNPNGj_e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd,
+--3levmdfnv3vsobbm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu,  4 Jul 2024 16:35:57 +0200 Arnd Bergmann <arnd@kernel.org> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> If we start validating the existence of the asm-generic side of
-> generated headers, this one causes a warning:
->=20
-> make[3]: *** No rule to make target 'arch/um/include/generated/asm/bpf_pe=
-rf_event.h', needed by 'all'.  Stop.
->=20
-> The problem is that the asm-generic header only exists for the uapi
-> variant, but arch/um has no uapi headers and instead uses the x86
-> userspace API.
->=20
-> Add a custom file with an explicit redirect to avoid this.
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/um/include/asm/Kbuild           | 1 -
->  arch/um/include/asm/bpf_perf_event.h | 3 +++
->  2 files changed, 3 insertions(+), 1 deletion(-)
->  create mode 100644 arch/um/include/asm/bpf_perf_event.h
->=20
-> diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
-> index 6fe34779291a..6c583040537c 100644
-> --- a/arch/um/include/asm/Kbuild
-> +++ b/arch/um/include/asm/Kbuild
-> @@ -1,5 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -generic-y +=3D bpf_perf_event.h
->  generic-y +=3D bug.h
->  generic-y +=3D compat.h
->  generic-y +=3D current.h
-> diff --git a/arch/um/include/asm/bpf_perf_event.h b/arch/um/include/asm/b=
-pf_perf_event.h
-> new file mode 100644
-> index 000000000000..0a30420c83de
-> --- /dev/null
-> +++ b/arch/um/include/asm/bpf_perf_event.h
-> @@ -0,0 +1,3 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+Hello,
+
+On Mon, May 27, 2024 at 03:51:12PM +0800, Binbin Zhou wrote:
+> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      const struct pwm_state *state)
+> +{
+> +	int ret;
+> +	u64 period, duty_cycle;
+> +	bool enabled = pwm->state.enabled;
 > +
-> +#include <asm-generic/bpf_perf_event.h>
+> +	period = min(state->period, NANOHZ_PER_HZ);
+> +	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
+> +
+> +	if (state->polarity != pwm->state.polarity) {
+> +		if (enabled) {
+> +			pwm_loongson_disable(chip, pwm);
+> +			enabled = false;
+> +		}
+> +
+> +		ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (!state->enabled) {
+> +		if (enabled)
+> +			pwm_loongson_disable(chip, pwm);
+> +		return 0;
+> +	}
 
-Just wondering if that file should have some explanatory comment in it
-to prevent it being cleaned up in a few years ... or at least to
-explain why it causes the above error when removed.
+Given that the configured polarity isn't relevant for a disabled PWM, I
+suggest to swap these two if blocks. However then you have to be a bit
+more careful for the polarity check because otherwise the following
+series of commands yields wrong results:
 
---=20
-Cheers,
-Stephen Rothwell
+	pwm_apply_might_sleep(pwm, {.duty_cycle = D, .period = P, .polarity = PWM_POLARITY_NORMAL, .enabled = true});
+	pwm_apply_might_sleep(pwm, {.duty_cycle = D, .period = P, .polarity = PWM_POLARITY_INVERSED, .enabled = false});
+	pwm_apply_might_sleep(pwm, {.duty_cycle = D, .period = P, .polarity = PWM_POLARITY_INVERSED, .enabled = true});
 
---Sig_/IAaJheb.p6.1G=gRNPNGj_e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!enabled)
+> +		ret = pwm_loongson_enable(chip, pwm);
+> +
+> +	return ret;
+> +}
+> +
+> +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				  struct pwm_state *state)
+> +{
+> +	u32 duty, period, ctrl;
+> +	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
+> +
+> +	/* duty_cycle = ddata->duty * NSEC_PER_SEC / ddata->clk_rate */
+> +	duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> +	state->duty_cycle = mul_u64_u64_div_u64(duty, NSEC_PER_SEC, ddata->clk_rate);
+> +
+> +	/* period = ddata->period * NSEC_PER_SEC / ddata->clk_rate */
+> +	period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+> +	state->period = mul_u64_u64_div_u64(period, NSEC_PER_SEC, ddata->clk_rate);
+> +
+> +	ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
+> +	state->polarity = (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POLARITY_INVERSED :
+> +			  PWM_POLARITY_NORMAL;
+> +	state->enabled = (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
+> +
+> +	return 0;
+
+You didn't test extensively with PWM_DEBUG enabled, right? You need to
+round up the divisions here otherwise you get strange rounding results:
+
+Consider ddata->clk_rate = 1594323. When a state with .period = 20000 is
+applied, LOONGSON_PWM_REG_PERIOD is assigned 31.
+Calling .get_state() in this situation gives .period = 19443. Reapplying
+.period = 19443 results in LOONGSON_PWM_REG_PERIOD := 30. Iterating this
+further yields:
+
+ - .period = 18816
+ - LOONGSON_PWM_REG_PERIOD := 29
+ - .period = 18189
+ - LOONGSON_PWM_REG_PERIOD := 28
+ - ...
+
+> +}
+> +
+> +static const struct pwm_ops pwm_loongson_ops = {
+> +	.apply = pwm_loongson_apply,
+> +	.get_state = pwm_loongson_get_state,
+> +};
+> +
+> +static int pwm_loongson_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct pwm_chip *chip;
+> +	struct pwm_loongson_ddata *ddata;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	ddata = to_pwm_loongson_ddata(chip);
+> +
+> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->base))
+> +		return PTR_ERR(ddata->base);
+> +
+> +	if (!has_acpi_companion(dev)) {
+> +		ddata->clk = devm_clk_get_enabled(dev, NULL);
+> +		if (IS_ERR(ddata->clk))
+> +			return dev_err_probe(dev, PTR_ERR(ddata->clk),
+> +					     "failed to get pwm clock\n");
+> +		ddata->clk_rate = clk_get_rate(ddata->clk);
+> +	} else {
+> +		ddata->clk_rate = LOONGSON_PWM_FREQ_STD;
+> +	}
+> +
+> +	chip->ops = &pwm_loongson_ops;
+> +	dev_set_drvdata(dev, chip);
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret < 0) {
+> +		clk_disable_unprepare(ddata->clk);
+
+This is wrong. You aquired the clk using devm_clk_get_enabled(), so you
+don't need (and must not) care for disable.
+
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+> +	}
+> +
+> +	return 0;
+> +}
+
+Best regards
+Uwe
+
+--3levmdfnv3vsobbm
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaH5mgACgkQAVBC80lX
-0GxvyAgAnvriHKpdKWTfcYd3ec6OiQntfWfgTjPlWVORKO3a85cAPDy3acHNxKoW
-6Bfh4LWjBSmmqSTbP6rIFpInGlZedDil+cHdDALd7D/dBOCwUJkG1oB7aY7A1HkA
-hPQhv7pLSbZkhJ3M0TurrRsFbO9QR1RFnxIxPRPy4gEkjPGnLJ0H1gqh11s5irVU
-WGCviIF/qU3Xkj6DjtzAS1lY7y0BGec3kvR02WhKHvoh7SJrquU5M1i5qzLpuw82
-0xowL25d77AbRzea52VD6Sv2H614Q8hfDtDQB6rTGdz6Bo7Pu6F50S3NfYe0Uu5y
-zmTMyLek7tdd4FU+Gs4HcQFuJNsSeQ==
-=SXsw
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaIgQgACgkQj4D7WH0S
+/k5DmAgAgy9+bQt6LKhD22GPl2c+8gLHZtUHK+moqqjXgshYlaNilsgaj4Uc1fPD
+FQys3BoRj6KRIumOZ3DHeXzeJFUxvykf4+DlSglb5irhXw6sJsSLr9IsSQpIxuLR
+RKmozBhHrmlfuKsRADcUB+3taW8WQVacDqqMCKG4uH9+iKOif8o2+f5RE2xs7AZL
+p9lChxf/UCxULkPwqUEYPsUncgH1/87ozGT9NfUSYQqXR+jJKvermAeMFj3AGeDd
+3ThB5rP2WOYSMcvLbazL5PhTcrvo4nlxMPSelZf+fzDA2H6XBpBwF3pfVgKwR3SE
+FGZ6cq0bx8AobIhqzJ5HE9ylf0hlNw==
+=NAGs
 -----END PGP SIGNATURE-----
 
---Sig_/IAaJheb.p6.1G=gRNPNGj_e--
+--3levmdfnv3vsobbm--
