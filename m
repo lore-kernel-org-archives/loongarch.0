@@ -1,27 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8100F1B806
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 03:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726492F52
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 04:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720151173; cv=none; b=jLCtYSnDqiRNLg+o+sYJGJJxU7fK/A225Pt9fLHq8DOffV/KBgKiJdE/GYzx1ViyP4kFQqRP2SaehLvOPV3cCYj3QBVHusdBs2OwhvNIw9rqRj8BH8ab8aAxMuuQHwxKVJC2+t2RE+eF/0sEJw97e8YfiS6dHOzY2sMT4Htnd2U=
+	t=1720152612; cv=none; b=cF04iKT9XqUPg+Hn0XPl2XdWgyS0oAYd7FjarDS42HAdPY19w8m6l0qC6Z9MI4BbL4/fVOQky6WEnD8NIO3JixwIIF/w2CnSihGGmWcfzSFjofjMqO8X7N8BHiaRuGHJnAeMm3Gs3Ecy5vXerZD4OlqUP/0TuSshdliZIvKl/eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720151173; c=relaxed/simple;
-	bh=+KePI4SgVpf5w87VPQS36mWxSnuO1LS3nkAD9zxGCQk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=h/+ICP6OosYkghzNVrydsHCpFTUK6c0eECPobCguL9IkOvtp37oMnRj1MBf8eSPBdKkvq+Uo8N5jVHTJTgKGYvMJ9zkFlngEIFL1525r23TSwgST2ccZCjrbRpsRlmWjjj6xlNuaUAZOgCl9sQx4VkqDlEmoNIG3itI8CKqIPe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxDvGAbIdmticBAA--.3714S3;
-	Fri, 05 Jul 2024 11:46:09 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axjsd9bIdmy947AA--.7396S3;
-	Fri, 05 Jul 2024 11:46:08 +0800 (CST)
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xuerui Wang <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1720152612; c=relaxed/simple;
+	bh=Zjg9lyUX2x0vprFRKyAabsUjt1z+kMCC1wKEBOt66ZM=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=lEIMIxJzb9HbpHtzbY1D8OIl34qHBUzCJjQnl4r5wfGRmZ4XbzReAX9MuMlEojpWBGS79GlzTEPbx3WQ22H7QxA8wi8u0W9zDDwRF1XarpmCTqWCZ4BgKMe+dgAY1zqGCPuMUBA46o2kourp327vdw0gPzXXk62vS0lS1L6Lync=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=r0RC1yST; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VjC7ZCKX; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="r0RC1yST";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VjC7ZCKX"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 9B16E1140237;
+	Fri,  5 Jul 2024 00:10:10 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Fri, 05 Jul 2024 00:10:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1720152610;
+	 x=1720239010; bh=WT8jpXAd58+z774U5N+k5xZn+Ya/pi+ya2IVvs4MEJg=; b=
+	r0RC1ySTij1VxOQnDEUEsf9tfFvaIOV4cK/k4fMEF4k0UwKR2nLsXHHaf0B5Ai2O
+	KZv3gy7NZBPTXdNanbNLCzZn1rKUoVmZkIKd1bzM5SdV3A4h/PT272zkYtLCYfhG
+	37g/LVBgDIrw0INhoV4Z6yGV6Y/otlXTsUHZVDQ1MH9ngdLtpMwS/AGXCLoPcMSI
+	FmiShBy4fGJb3545QpOYydof7T0rEFAsJGJiR16oOsmMMpsO1s7/qiLZiQX4K96b
+	/f8kEb40oA07LfH2I2JNDvCZR5HNc8Clfs7VJPG6NmjcrZwF3K7Jk8tHO6XK4oA5
+	E9FL26AuIDTuX08kvlLEMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720152610; x=
+	1720239010; bh=WT8jpXAd58+z774U5N+k5xZn+Ya/pi+ya2IVvs4MEJg=; b=V
+	jC7ZCKXp41hZFKcJ2iYckJ/Zk0RyHwGQgBAsJp/GvNKHb57XCn6VrpiStF384X+0
+	QcP0BSttCQ/NVGEa4TaYhJphMtzmDVDzPDHiRJDE8FEW/Pf2KpuH+hddNoWi9A7t
+	7gDrDiVNpZ52WSKBwgei6royt1OJEZpMvY/sJmmJhrxd1fSZn+ywi8+DkAx3TfJv
+	BnK2rmbwBSBZPJT7CycUzQjDoBCb/HJFYUu03+tc2aqSu7Rl2QhwkC3D6DF+/emU
+	JOcqz3edQbAc4DBzxSrw/oHf47gLzO8zpN0yw5J1QI+u5F1iB317Zk1QqwfyZk7A
+	Xe4kkR7Xc88P7HZH04MwQ==
+X-ME-Sender: <xms:IXKHZj_Hq74hy7UfYccLUy6xTXCw8UfqeldFa8sntlhlQf93ycvz2Q>
+    <xme:IXKHZvuLMByh3TLU9WL_HP2b-cb8_um6_WTnmGw5QpFvh_tqlQmxgWSTw_733Z_3Y
+    1agMEqK2lwEoT9Rktc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtgdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:IXKHZhB0M0ulNtvKIEA_JgzTqiwAROOzkdoTcss6qfrLDPUT6yO9dw>
+    <xmx:IXKHZvc20mK7SAGoh8Bgahm4PrRTD7wZyyeFSi-M_hYW4bYA-kzznQ>
+    <xmx:IXKHZoMV2wpKdnXbXFH0Zteg39wmqa8EXruxndcw-i49bvgBWO7xmw>
+    <xmx:IXKHZhl3RmRUuoJFY5uvi6TpNDUvAu0NlHYGI2kViBc8116RSl0n4Q>
+    <xmx:InKHZkB6JVX0D7b8W2xEVCqzd-0BnoxJ98AzuZvtgKdZKA6mR0yjcA1N>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C461A36A0074; Fri,  5 Jul 2024 00:10:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Message-Id: <4cfc5292-6f1a-4409-b229-2433e18f012f@app.fastmail.com>
+In-Reply-To: <9316cde1-26d0-54d5-43c3-1284288c685f@loongson.cn>
 References: <20240626063239.3722175-1-maobibo@loongson.cn>
  <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
  <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
@@ -39,145 +92,113 @@ References: <20240626063239.3722175-1-maobibo@loongson.cn>
  <ecb6df72-543c-4458-ba27-0ef8340c1eb3@flygoat.com>
  <554b10e8-a7ab-424a-f987-ea679859a220@loongson.cn>
  <01eb9efd-ca7a-4d4c-a29d-cfc2f6cfbb86@app.fastmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <9316cde1-26d0-54d5-43c3-1284288c685f@loongson.cn>
-Date: Fri, 5 Jul 2024 11:46:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <01eb9efd-ca7a-4d4c-a29d-cfc2f6cfbb86@app.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axjsd9bIdmy947AA--.7396S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXF4fWr47Xr1rZrWfAFy7Jwc_yoWrGrW7pa
-	y5KF4akFWktryxA3y0va1xWr1Sy3y0vr43Xrn5GryDJrs8Ga47JF12ka1Fka4DGr48W34I
-	vFsrtr9a9FyDZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOeOJUUU
-	UU=
+ <9316cde1-26d0-54d5-43c3-1284288c685f@loongson.cn>
+Date: Fri, 05 Jul 2024 12:09:49 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Tianrui Zhao" <zhaotianrui@loongson.cn>,
+ "Xuerui Wang" <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 2024/7/5 上午11:19, Jiaxun Yang wrote:
-> 
-> 
-> 在2024年7月5日七月 上午9:21，maobibo写道：
-> [...]
->>> for you.
->> On the other hand, can you list benefits or disadvantage of approaches
->> on different architecture?
-> 
-> So the obvious benefit of scratch vCPU would be maintaining consistency and simpleness
-> for UAPI.
-I do not find the simpleness, for the same feature function, both VM 
-feature and CPU feature is define as follows.  Do you think it is for 
-simple :)
+=E5=9C=A82024=E5=B9=B47=E6=9C=885=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8A=E5=
+=8D=8811:46=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
+> On 2024/7/5 =E4=B8=8A=E5=8D=8811:19, Jiaxun Yang wrote:
+>>=20
+>>=20
+>> =E5=9C=A82024=E5=B9=B47=E6=9C=885=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8A=
+=E5=8D=889:21=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
+>> [...]
+>>>> for you.
+>>> On the other hand, can you list benefits or disadvantage of approach=
+es
+>>> on different architecture?
+>>=20
+>> So the obvious benefit of scratch vCPU would be maintaining consisten=
+cy and simpleness
+>> for UAPI.
+> I do not find the simpleness, for the same feature function, both VM=20
+> feature and CPU feature is define as follows.  Do you think it is for=20
+> simple :)
 
-VM CAPBILITY:
-     KVM_CAP_ARM_PTRAUTH_ADDRESS
-     KVM_CAP_ARM_PTRAUTH_GENERIC
-     KVM_CAP_ARM_EL1_32BIT
-     KVM_CAP_ARM_PMU_V3
-     KVM_CAP_ARM_SVE
-     KVM_CAP_ARM_PSCI
-     KVM_CAP_ARM_PSCI_0_2
+So they made a mistake here :-(
 
-CPU:
-     KVM_ARM_VCPU_POWER_OFF
-     KVM_ARM_VCPU_EL1_32BIT
-     KVM_ARM_VCPU_PSCI_0_2
-     KVM_ARM_VCPU_PMU_V3
-     KVM_ARM_VCPU_SVE
-     KVM_ARM_VCPU_PTRAUTH_ADDRESS
-     KVM_ARM_VCPU_PTRAUTH_GENERIC
-     KVM_ARM_VCPU_HAS_EL2
+We don't even need vCPU flag, just probing CPUCFG bits is sufficient.
 
-Also why scratch vcpu is created and tested on host cpu type rather than 
-other cpu type?  It wastes much time for host cpu type to detect capability.
-> 
-> It can also maximum code reuse probabilities in other user space hypervisor projects.
-> 
-> Also, it can benefit a potential asymmetrical system. I understand that it won't appear
-> in near future, but we should always be prepared, especially in UAPI design.
-If for potential asymmetrical system, however there is only one scratch 
-vcpu. is that right? how does only one scratch vcpu detect ASMP 
-capability, and it is not bind to physical cpu to detect ASMP capability.
+Note that in Arm's case, some CPU features have system dependencies, tha=
+t's why
+they need to be entitled twice.
 
-In generic big.little is HMP rather than ASMP, are you agree.
+For us, we don't have such burden.
 
-> 
->>
->> Or you post patch about host cpu support, I list its disadvantage. Or I
->> post patch about host cpu support with scheduled time, then we talk
->> about it. Is that fair for you?
-> 
-> I'm not committed to development work, I can try, but I can't promise.
-> 
-> Regarding the fairness, IMO that's not how community works. If you observe reviewing
-> process happening all the place, it's always about addressing other's concern.
-> 
-> Still, it's up to maintainers to decide what's reasonable, I'm just trying to help.
-yes I agree. I and Tianrui are maintainer also, we write all the kvm 
-loongarch code. We are familiar with it from the beginning.
+If Arm doesn't set a good example here, please check RISC-V's CONFIG reg=
+ on dealing
+ISA extensions. We don't even need such register because our CPUCFG can =
+perfectly
+describe ISA status.
 
-Regards
-Bibo Mao
-> 
->>
->> It is unfair that you list some approaches and let others spend time to
->> do, else you are my top boss :)
-> 
-> I mean, I'm just trying to make some progress here. I saw you have some disagreement
-> with Huacai.
-> 
-> I know QEMU side implementation better than Huacai, so I'm trying to propose a solution
-> that would address Huacai's concern and may work for you.
-> 
->>>
->>> I understand you may have some plans in your mind, please elaborate so
->>> we can smash
->>> them together. That's how community work.
->>>
->>>>
->>>> For host cpu type or migration feature detection, I have no idea now,
->>>> also I do not think it will be big issue for me, I will do it with
->>>> scheduled time. Of source, welcome Jiaxun and you to implement host
->>>> cpu type or migration feature detection.
->>>
->>> My concern is if you allow CPU features to have "auto" property you are
->>> risking create
->>> inconsistency among migration. Once you've done that it's pretty hard to
->>> get rid of it.
->>>
->>> Please check how RISC-V dealing with CPU features at QMP side.We are working on
->>>
->>> I'm not meant to hinder your development work, but we should always
->>> think ahead.
->> Yes, it is potential issue and we will solve it. Another potential issue
->> is that PV features may different on host, you cannot disable PV
->> features directly.  The best way is that you post patch about it, then
->> we can talk about together, else it may be kindly reminder, also may be
->> waste of time, everyone is busy working for boss :)
-> 
-> Sigh, so you meant you submitted something known to be problematic?
-> 
+>
+> VM CAPBILITY:
+>      KVM_CAP_ARM_PTRAUTH_ADDRESS
+>      KVM_CAP_ARM_PTRAUTH_GENERIC
+>      KVM_CAP_ARM_EL1_32BIT
+>      KVM_CAP_ARM_PMU_V3
+>      KVM_CAP_ARM_SVE
+>      KVM_CAP_ARM_PSCI
+>      KVM_CAP_ARM_PSCI_0_2
+>
+> CPU:
+>      KVM_ARM_VCPU_POWER_OFF
+>      KVM_ARM_VCPU_EL1_32BIT
+>      KVM_ARM_VCPU_PSCI_0_2
+>      KVM_ARM_VCPU_PMU_V3
+>      KVM_ARM_VCPU_SVE
+>      KVM_ARM_VCPU_PTRAUTH_ADDRESS
+>      KVM_ARM_VCPU_PTRAUTH_GENERIC
+>      KVM_ARM_VCPU_HAS_EL2
+>
+> Also why scratch vcpu is created and tested on host cpu type rather th=
+an=20
+> other cpu type?  It wastes much time for host cpu type to detect capab=
+ility.
 
+To maximize supported features, on Arm there is KVM_ARM_VCPU_INIT ioctl.
+For us that's unnecessary, our kernel does not need to be aware of CPU t=
+ype,
+only CPUCFG bits are necessary. RISC-V is following the same convention.
+
+>>=20
+>> It can also maximum code reuse probabilities in other user space hype=
+rvisor projects.
+>>=20
+>> Also, it can benefit a potential asymmetrical system. I understand th=
+at it won't appear
+>> in near future, but we should always be prepared, especially in UAPI =
+design.
+> If for potential asymmetrical system, however there is only one scratc=
+h=20
+> vcpu. is that right? how does only one scratch vcpu detect ASMP=20
+> capability, and it is not bind to physical cpu to detect ASMP capabili=
+ty.
+>
+> In generic big.little is HMP rather than ASMP, are you agree.
+
+So I was talking about emulating asymmetrical guest. Each guest CPU shou=
+ld have
+it's own copy of properties. That's the lesson learnt.
+
+[...]
+
+Anyway I'm just trying to help out here, feel free to go ahead without t=
+aking my advice.
+
+I've seen so many pitfalls on all other arches and I don't want them to =
+repeat on LoongArch.
+But sometimes people only learn from mistakes.
+
+--=20
+- Jiaxun
