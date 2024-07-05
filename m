@@ -1,279 +1,183 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09E873469
-	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 03:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8100F1B806
+	for <loongarch@lists.linux.dev>; Fri,  5 Jul 2024 03:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720150194; cv=none; b=M5AeJU2GvfzujeRWbFQaVQxSILf0P1YeQzKDnF67lq9u8FPj/MIybQNl9iAS0VqVUT/knGnC5QjYJUbCXDBNTRq18jFizw3GbgOPoKzGjoabIrrEBo2zlz3nZU4LvXpLZJf2+6R9rMtSMWZPJWvjiS8Qr0K18+zzuHOkfAqkK38=
+	t=1720151173; cv=none; b=jLCtYSnDqiRNLg+o+sYJGJJxU7fK/A225Pt9fLHq8DOffV/KBgKiJdE/GYzx1ViyP4kFQqRP2SaehLvOPV3cCYj3QBVHusdBs2OwhvNIw9rqRj8BH8ab8aAxMuuQHwxKVJC2+t2RE+eF/0sEJw97e8YfiS6dHOzY2sMT4Htnd2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720150194; c=relaxed/simple;
-	bh=D2mqxCRzQvs1HI/FO9ROzuiLua0L8frnlc80PUjQ/tM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LbB7svla8E8QOzPwclNqC5cxDEzRF28PuaZ246n5wci4REsmrftprXCJzcaEe5HzcYWxQYLAnh7WgQSnFPq75pb6n68p5zvMFGiLwtjnSqiZHojKnCc6k1Aknf22Gmn0kmdRhRR/uJoBoLH+vN0Uuudn3+eYZeflXdytW4I24Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=QDkKCy5f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FLzJmZu3; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="QDkKCy5f";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FLzJmZu3"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.nyi.internal (Postfix) with ESMTP id E81B11380289;
-	Thu,  4 Jul 2024 23:29:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 04 Jul 2024 23:29:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1720150191;
-	 x=1720236591; bh=HeqE0UK1T7UO6X2hOhXYyZrlSpcrQ0WC48brT+ZdXlU=; b=
-	QDkKCy5foSyTpYtIC9cKQ/4EZsUmrlc2MxXvKhcNRHIbxSOOLBbwG1HF0c9AmnVS
-	Y65gx7kDysi/HjIhw5jugKMOEhnfGNxa6zHehxXgsPSpYCbr8+1XO8wINvtmUx0I
-	bjY9gemW6Z6ZJ6W0UyQZSt7dNqHmlprNJwepRH6AEBIFAfXsCHZlaZ2bims4FtwE
-	DFsArGjiYF666FKnyGJG0nXTYwXpTucHWrzs0SGinLCSpCFDggmVXgf3pBBOlHLo
-	hAuMLl0PVFiUMPiRcFu4vCTJY0FDUa0PkyN9aCVKJkihVZAYU2zUuWAqi/5AmYYe
-	LL130km7vI4yCb+lHTQ/Gw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720150191; x=
-	1720236591; bh=HeqE0UK1T7UO6X2hOhXYyZrlSpcrQ0WC48brT+ZdXlU=; b=F
-	LzJmZu3birrPfDLIt4i4aHaEZJih1wSD52Ez9+oOQxYBJXWqJEFOL48kGhTO1Jl2
-	gH922ZPKpbIiSidYeP7TvR1vxQGV1HMadfbtIIHTzsAmhcpQRexV5zmK05EpOFUu
-	d4SsKHd1KYZC0sgFju0po1a9aGW2aRJdslBmC67f/XAD3CiZJX3sbbwUHned7TSX
-	4OrbLtNFo8GS2qGOh5+GK8uxlVhwdnABKrOKFKG9hBE/J+9AfKbeiAH9zis09Ab/
-	s0/1AWunIk674WuQzteCvBQkSL3uQ2Of1p5odo400h45TFwhiqhp0/E8r7Czf46C
-	ieXdyDDnmxRXU6HoFUlFQ==
-X-ME-Sender: <xms:r2iHZt5soISnsXh83uRfXbY5fL69NIgn_IgUB1aUVaRA7qBTCPnM_w>
-    <xme:r2iHZq7qu8KSuwrBI2aC3dTopkq9AaXbO3G6lmtShrZa0ozQAfRb41vuX35uyredR
-    U01JaRjP8ceB652vAg>
-X-ME-Received: <xmr:r2iHZkeYo_I3VNrTfy-7WSxJ71CSRNv26-5pWQZ34JhB4DaTB_U-w_hDIcyE0yt0Pg4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtgdejtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpefgveeikefhgedufffggeduleejveehgfdvjeeivdeitdeiffel
-    jefgvddvudetvdenucffohhmrghinhephhgvrggurdhssgenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhih
-    ghhorghtrdgtohhm
-X-ME-Proxy: <xmx:r2iHZmIMz4Lp32SRyfWeiCFbxws4_BPDScQkwEyB38j-GFbtxL18vg>
-    <xmx:r2iHZhIW5Fkkx0rAx9PYWqp6dHy2717vp0Pn4cebyNmRc_0KUM94IQ>
-    <xmx:r2iHZvwtcKeizCJXAXq4AuiI9_Ax1Cbk0QPCfrMDgNtbVC1T8KcJ7g>
-    <xmx:r2iHZtKNAXPXcLqEuF54LQdJeCwQINIYPCkF9FFZruG4f4dnQu9EYg>
-    <xmx:r2iHZmp8zXJk1EZ-3kzyIs9zDdigxEs-jJxGIkS87LoZsKnLAC8IG7j7>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 4 Jul 2024 23:29:49 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Fri, 05 Jul 2024 11:29:39 +0800
-Subject: [PATCH 3/3] LoongArch: SMP: Implement parallel CPU bring up
+	s=arc-20240116; t=1720151173; c=relaxed/simple;
+	bh=+KePI4SgVpf5w87VPQS36mWxSnuO1LS3nkAD9zxGCQk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=h/+ICP6OosYkghzNVrydsHCpFTUK6c0eECPobCguL9IkOvtp37oMnRj1MBf8eSPBdKkvq+Uo8N5jVHTJTgKGYvMJ9zkFlngEIFL1525r23TSwgST2ccZCjrbRpsRlmWjjj6xlNuaUAZOgCl9sQx4VkqDlEmoNIG3itI8CKqIPe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxDvGAbIdmticBAA--.3714S3;
+	Fri, 05 Jul 2024 11:46:09 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axjsd9bIdmy947AA--.7396S3;
+	Fri, 05 Jul 2024 11:46:08 +0800 (CST)
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xuerui Wang <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240626063239.3722175-1-maobibo@loongson.cn>
+ <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+ <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+ <9c7d242e-660b-8d39-b69e-201fd0a4bfbf@loongson.cn>
+ <CAAhV-H4wwrYyMYpL1u5Z3sFp6EeW4eWhGbBv0Jn9XYJGXgwLfg@mail.gmail.com>
+ <059d66e4-dd5d-0091-01d9-11aaba9297bd@loongson.cn>
+ <CAAhV-H41B3_dLgTQGwT-DRDbb=qt44A_M08-RcKfJuxOTfm3nw@mail.gmail.com>
+ <7e6a1dbc-779a-4669-4541-c5952c9bdf24@loongson.cn>
+ <CAAhV-H7jY8p8eY4rVLcMvVky9ZQTyZkA+0UsW2JkbKYtWvjmZg@mail.gmail.com>
+ <81dded06-ad03-9aed-3f07-cf19c5538723@loongson.cn>
+ <CAAhV-H520i-2N0DUPO=RJxtU8Sn+eofQAy7_e+rRsnNdgv8DTQ@mail.gmail.com>
+ <0e28596c-3fe9-b716-b193-200b9b1d5516@loongson.cn>
+ <CAAhV-H6vgb1D53zHoe=BJD1crB9jcdZy7RM-G0YY0UD+ubDi4g@mail.gmail.com>
+ <bdcc9ec4-31a8-1438-25c0-be8ba7f49ed0@loongson.cn>
+ <ecb6df72-543c-4458-ba27-0ef8340c1eb3@flygoat.com>
+ <554b10e8-a7ab-424a-f987-ea679859a220@loongson.cn>
+ <01eb9efd-ca7a-4d4c-a29d-cfc2f6cfbb86@app.fastmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <9316cde1-26d0-54d5-43c3-1284288c685f@loongson.cn>
+Date: Fri, 5 Jul 2024 11:46:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240705-loongarch-hotplug-v1-3-67d9c4709aa9@flygoat.com>
-References: <20240705-loongarch-hotplug-v1-0-67d9c4709aa9@flygoat.com>
-In-Reply-To: <20240705-loongarch-hotplug-v1-0-67d9c4709aa9@flygoat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5856;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=D2mqxCRzQvs1HI/FO9ROzuiLua0L8frnlc80PUjQ/tM=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrT2jCWW/yKfLjLlCDzgyqokFXDnbdHDUtEJf2wPJq74K
- Zc/K4mzo5SFQYyLQVZMkSVEQKlvQ+PFBdcfZP2BmcPKBDKEgYtTACayZCEjw62JnVlnbl9d/+mE
- 3E6nKZoLOGZX32OYIlJyPnv3hbb+07MZGU7v8l5ouXbFB9GDVf6KMhrlpipmAk4eR8IztjO+/P5
- FmxUA
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+In-Reply-To: <01eb9efd-ca7a-4d4c-a29d-cfc2f6cfbb86@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axjsd9bIdmy947AA--.7396S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXF4fWr47Xr1rZrWfAFy7Jwc_yoWrGrW7pa
+	y5KF4akFWktryxA3y0va1xWr1Sy3y0vr43Xrn5GryDJrs8Ga47JF12ka1Fka4DGr48W34I
+	vFsrtr9a9FyDZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOeOJUUU
+	UU=
 
-Implement parallel CPU bring up for LoongArch to reduce
-boot time consumption on bring up CPUs.
 
-On my Loongson-3A5000 ~120ms boot time improvement is observed.
 
-tp, sp register values are passed by MBUF now to avoid racing
-cpuboot_data global struct.
+On 2024/7/5 上午11:19, Jiaxun Yang wrote:
+> 
+> 
+> 在2024年7月5日七月 上午9:21，maobibo写道：
+> [...]
+>>> for you.
+>> On the other hand, can you list benefits or disadvantage of approaches
+>> on different architecture?
+> 
+> So the obvious benefit of scratch vCPU would be maintaining consistency and simpleness
+> for UAPI.
+I do not find the simpleness, for the same feature function, both VM 
+feature and CPU feature is define as follows.  Do you think it is for 
+simple :)
 
-cpu_running completion is handled by HOTPLUG_CORE_SYNC_FULL.
+VM CAPBILITY:
+     KVM_CAP_ARM_PTRAUTH_ADDRESS
+     KVM_CAP_ARM_PTRAUTH_GENERIC
+     KVM_CAP_ARM_EL1_32BIT
+     KVM_CAP_ARM_PMU_V3
+     KVM_CAP_ARM_SVE
+     KVM_CAP_ARM_PSCI
+     KVM_CAP_ARM_PSCI_0_2
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/smp.h    |  6 ------
- arch/loongarch/kernel/asm-offsets.c | 10 ----------
- arch/loongarch/kernel/head.S        |  7 ++++---
- arch/loongarch/kernel/smp.c         | 35 +++++++----------------------------
- 5 files changed, 12 insertions(+), 47 deletions(-)
+CPU:
+     KVM_ARM_VCPU_POWER_OFF
+     KVM_ARM_VCPU_EL1_32BIT
+     KVM_ARM_VCPU_PSCI_0_2
+     KVM_ARM_VCPU_PMU_V3
+     KVM_ARM_VCPU_SVE
+     KVM_ARM_VCPU_PTRAUTH_ADDRESS
+     KVM_ARM_VCPU_PTRAUTH_GENERIC
+     KVM_ARM_VCPU_HAS_EL2
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ddc042895d01..656435c1dbd5 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -162,6 +162,7 @@ config LOONGARCH
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_TIF_NOHZ
- 	select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
-+	select HOTPLUG_PARALLEL if SMP
- 	select IRQ_FORCED_THREADING
- 	select IRQ_LOONGARCH_CPU
- 	select LOCK_MM_AND_FIND_VMA
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 50db503f44e3..f6953cb16492 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -75,12 +75,6 @@ extern int __cpu_logical_map[NR_CPUS];
- #define SMP_CALL_FUNCTION	BIT(ACTION_CALL_FUNCTION)
- #define SMP_IRQ_WORK		BIT(ACTION_IRQ_WORK)
- 
--struct secondary_data {
--	unsigned long stack;
--	unsigned long thread_info;
--};
--extern struct secondary_data cpuboot_data;
--
- extern asmlinkage void smpboot_entry(void);
- extern asmlinkage void start_secondary(void);
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bee9f7a3108f..598498f47a4c 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -257,16 +257,6 @@ static void __used output_signal_defines(void)
- 	BLANK();
- }
- 
--#ifdef CONFIG_SMP
--static void __used output_smpboot_defines(void)
--{
--	COMMENT("Linux smp cpu boot offsets.");
--	OFFSET(CPU_BOOT_STACK, secondary_data, stack);
--	OFFSET(CPU_BOOT_TINFO, secondary_data, thread_info);
--	BLANK();
--}
--#endif
--
- #ifdef CONFIG_HIBERNATION
- static void __used output_pbe_defines(void)
- {
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index fdb831dc64df..8dd8fb450f46 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -136,9 +136,10 @@ SYM_CODE_START(smpboot_entry)
- 	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
- 	csrwr		t0, LOONGARCH_CSR_EUEN
- 
--	la.pcrel	t0, cpuboot_data
--	ld.d		sp, t0, CPU_BOOT_STACK
--	ld.d		tp, t0, CPU_BOOT_TINFO
-+	li.w		t0, LOONGARCH_IOCSR_MBUF1
-+	iocsrrd.d	sp, t0
-+	li.w		t0, LOONGARCH_IOCSR_MBUF2
-+	iocsrrd.d	tp, t0
- 
- 	bl		start_secondary
- 	ASM_BUG()
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index ca405ab86aae..ca6a95a0280d 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -48,10 +48,6 @@ EXPORT_SYMBOL(cpu_sibling_map);
- /* Representing the core map of multi-core chips of each logical CPU */
- cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(cpu_core_map);
--
--static DECLARE_COMPLETION(cpu_starting);
--static DECLARE_COMPLETION(cpu_running);
--
- /*
-  * A logcal cpu mask containing only one VPE per core to
-  * reduce the number of IPIs on large MT systems.
-@@ -65,7 +61,6 @@ static cpumask_t cpu_sibling_setup_map;
- /* representing cpus for which core maps can be computed */
- static cpumask_t cpu_core_setup_map;
- 
--struct secondary_data cpuboot_data;
- static DEFINE_PER_CPU(int, cpu_state);
- 
- static const char *ipi_types[NR_IPI] __tracepoint_string = {
-@@ -340,14 +335,16 @@ void __init loongson_prepare_cpus(unsigned int max_cpus)
-  */
- void loongson_boot_secondary(int cpu, struct task_struct *idle)
- {
--	unsigned long entry;
-+	unsigned long entry, stack, thread_info;
- 
- 	pr_info("Booting CPU#%d...\n", cpu);
- 
- 	entry = __pa_symbol((unsigned long)&smpboot_entry);
--	cpuboot_data.stack = (unsigned long)__KSTK_TOS(idle);
--	cpuboot_data.thread_info = (unsigned long)task_thread_info(idle);
-+	stack = (unsigned long)__KSTK_TOS(idle);
-+	thread_info = (unsigned long)task_thread_info(idle);
- 
-+	csr_mail_send(thread_info, cpu_logical_map(cpu), 2);
-+	csr_mail_send(stack, cpu_logical_map(cpu), 1);
- 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
- 
- 	loongson_send_ipi_single(cpu, ACTION_BOOT_CPU);
-@@ -525,20 +522,10 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- #endif
- }
- 
--int __cpu_up(unsigned int cpu, struct task_struct *tidle)
-+int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct *tidle)
- {
- 	loongson_boot_secondary(cpu, tidle);
- 
--	/* Wait for CPU to start and be ready to sync counters */
--	if (!wait_for_completion_timeout(&cpu_starting,
--					 msecs_to_jiffies(5000))) {
--		pr_crit("CPU%u: failed to start\n", cpu);
--		return -EIO;
--	}
--
--	/* Wait for CPU to finish startup & mark itself online before return */
--	wait_for_completion(&cpu_running);
--
- 	return 0;
- }
- 
-@@ -561,22 +548,14 @@ asmlinkage void start_secondary(void)
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
- 
-+	cpuhp_ap_sync_alive();
- 	notify_cpu_starting(cpu);
- 
--	/* Notify boot CPU that we're starting */
--	complete(&cpu_starting);
--
- 	/* The CPU is running, now mark it online */
- 	set_cpu_online(cpu, true);
- 
- 	calculate_cpu_foreign_map();
- 
--	/*
--	 * Notify boot CPU that we're up & online and it can safely return
--	 * from __cpu_up()
--	 */
--	complete(&cpu_running);
--
- 	/*
- 	 * irq will be enabled in loongson_smp_finish(), enabling it too
- 	 * early is dangerous.
+Also why scratch vcpu is created and tested on host cpu type rather than 
+other cpu type?  It wastes much time for host cpu type to detect capability.
+> 
+> It can also maximum code reuse probabilities in other user space hypervisor projects.
+> 
+> Also, it can benefit a potential asymmetrical system. I understand that it won't appear
+> in near future, but we should always be prepared, especially in UAPI design.
+If for potential asymmetrical system, however there is only one scratch 
+vcpu. is that right? how does only one scratch vcpu detect ASMP 
+capability, and it is not bind to physical cpu to detect ASMP capability.
 
--- 
-2.45.2
+In generic big.little is HMP rather than ASMP, are you agree.
+
+> 
+>>
+>> Or you post patch about host cpu support, I list its disadvantage. Or I
+>> post patch about host cpu support with scheduled time, then we talk
+>> about it. Is that fair for you?
+> 
+> I'm not committed to development work, I can try, but I can't promise.
+> 
+> Regarding the fairness, IMO that's not how community works. If you observe reviewing
+> process happening all the place, it's always about addressing other's concern.
+> 
+> Still, it's up to maintainers to decide what's reasonable, I'm just trying to help.
+yes I agree. I and Tianrui are maintainer also, we write all the kvm 
+loongarch code. We are familiar with it from the beginning.
+
+Regards
+Bibo Mao
+> 
+>>
+>> It is unfair that you list some approaches and let others spend time to
+>> do, else you are my top boss :)
+> 
+> I mean, I'm just trying to make some progress here. I saw you have some disagreement
+> with Huacai.
+> 
+> I know QEMU side implementation better than Huacai, so I'm trying to propose a solution
+> that would address Huacai's concern and may work for you.
+> 
+>>>
+>>> I understand you may have some plans in your mind, please elaborate so
+>>> we can smash
+>>> them together. That's how community work.
+>>>
+>>>>
+>>>> For host cpu type or migration feature detection, I have no idea now,
+>>>> also I do not think it will be big issue for me, I will do it with
+>>>> scheduled time. Of source, welcome Jiaxun and you to implement host
+>>>> cpu type or migration feature detection.
+>>>
+>>> My concern is if you allow CPU features to have "auto" property you are
+>>> risking create
+>>> inconsistency among migration. Once you've done that it's pretty hard to
+>>> get rid of it.
+>>>
+>>> Please check how RISC-V dealing with CPU features at QMP side.We are working on
+>>>
+>>> I'm not meant to hinder your development work, but we should always
+>>> think ahead.
+>> Yes, it is potential issue and we will solve it. Another potential issue
+>> is that PV features may different on host, you cannot disable PV
+>> features directly.  The best way is that you post patch about it, then
+>> we can talk about together, else it may be kindly reminder, also may be
+>> waste of time, everyone is busy working for boss :)
+> 
+> Sigh, so you meant you submitted something known to be problematic?
+> 
 
