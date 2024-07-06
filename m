@@ -1,100 +1,277 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC3229CA;
-	Sat,  6 Jul 2024 14:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EB460275
+	for <loongarch@lists.linux.dev>; Sat,  6 Jul 2024 15:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720277230; cv=none; b=V5F5dIQg2qyfyBlUclEMMWNNZbZh/ryBOYYGDO/EpQv5oNX7xwaYLRhkzy4kTQuupV581403M6gt2quFNtNwWuSpW/cLNZauenORfVouNDk9CowTIxEmz2vrNLx37oLDO8QuO644f5HNHFeBjomzEa+x5PJMfTvWd9pktqIwjVY=
+	t=1720279512; cv=none; b=cKZUFwtfsoZZivu4e0rXe+oxwENmMCtvVLQIeluNKvg/cpw/uYHGw4j9TsZbkhhtrhicmrWWAeH7CCzY97aNjN6/YrqUit9SV45nsRpvpdjCtqNmSmAueh+IVpN8xY/keoIGqRyVCbqezV6YIPBEiZMak/RRb/53VtVik5vgbUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720277230; c=relaxed/simple;
-	bh=6ZA2YmJ9hyk9M1Xu80OoaScP500Lyoc/mjOR70ZnFyM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VxiOKCnyVtxLUnidXzcbsg7AnWJt7/5c/W31PVn6v3oaqaxKl8fQW/i3pEtgExP5PEahUWfE+hX997YXoG5UDN7ymBRgB117TKnqnNWAGIS+W7Bbp8NTZq2ue2g5N0aMuyGrTUmxzhgihZMrPIi3IZ4thSRDw4/Kl9LYYOVm0zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EAJe+rPc; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1720279512; c=relaxed/simple;
+	bh=MMjpgBOos9366GDTm1UOWVsWsj4zBPMgnBONKbFX28Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtDGZ4ctQcwgFgGVPEw2Vt/b+kqlLlSxYamGkl1AV71nZtzlzCePK/A9/+eFZLTknG2AElcx/vWEauXfJSQy7jjSON8/It1n6daTkQ4wrsnPe+2T+mK8I/CyqPx/F547b0KYXb80K7NbBlqCMp45k0IzJ3S35zuEWHvqrTnhBq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wpPB+mDO; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EAJe+rPc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1720277227;
-	bh=6ZA2YmJ9hyk9M1Xu80OoaScP500Lyoc/mjOR70ZnFyM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EAJe+rPcvmqWZbNtrlXJo29XFiO+mKUDVaU8fNC9GQeSV2H7UOZzOcLDPBJ0L5irJ
-	 nYkSoxRVeooUoXQc6/Kq2I4WFq4AgG/FKPfGaahkgXjjQ9UOCnag/I6xX+aIFNspdM
-	 IVlAqieApyKN815JOBiKuYQOZJ5jUSmZmBhNDV/k=
-Received: from [IPv6:240e:358:11fb:d500:dc73:854d:832e:5] (unknown [IPv6:240e:358:11fb:d500:dc73:854d:832e:5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 594E9664FA;
-	Sat,  6 Jul 2024 10:46:58 -0400 (EDT)
-Message-ID: <1f1453927318478bf5404ad9e2b692b9e5630221.camel@xry111.site>
-Subject: Re: [PATCH 2/2] LoongArch: Add support for relocating the kernel
- with RELR relocation
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
- Youling Tang <tangyouling@kylinos.cn>, Tiezhu Yang
- <yangtiezhu@loongson.cn>, Fangrui Song <maskray@google.com>,  Nathan
- Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
-  loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Date: Sat, 06 Jul 2024 22:46:50 +0800
-In-Reply-To: <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
-References: <20240706073858.161035-1-xry111@xry111.site>
-	 <20240706073858.161035-2-xry111@xry111.site>
-	 <CAAhV-H6K7SXtXpv9Udo8md0sdn+40TGPTCdSPeM1HmbJqrhboQ@mail.gmail.com>
-	 <cb3c2038b97689371226c467befdbf9e13113744.camel@xry111.site>
-	 <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wpPB+mDO"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58b447c513aso2928497a12.2
+        for <loongarch@lists.linux.dev>; Sat, 06 Jul 2024 08:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720279508; x=1720884308; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
+        b=wpPB+mDOpIKc53PrPg7qW8aGHEe3jahRzqrCJ+63om1cPxiZln0Lms80BchJYBfEYF
+         EqPDTvwWHaRQBZtGHD/8pgvpOSdxKzMN34kt4SOtaU8cDICDFmtqJsy5awcsu9Y9t1y8
+         dSrLz8tpcd/Xqq5xzi42ixEMEKXfFNVYCR+5LaijRTuh8mN9/tpilIs+U/bFQryXde5U
+         1rdgtjef4RSIUD7seLommmKLALM+ZJ6BuRV2meraP7gHtdqZYgjdyEFMoWdxleGdHkyw
+         xmWIriSBu10zWxbm0kQZvfsoEn3okFhNTOFxdPAwzaHkxTMDHXWxFLj8UgUmOD1okOXc
+         n1xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720279508; x=1720884308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
+        b=lyj6Qc2r3qq73uyEreCM/DGNnZyToSiSY99LHjTnmuVEQnpnA71vH8GlqoToWOfIFS
+         6SChOcJupJbokpsXcYwcfepDz61RYIAYu4LdzNm4cnT/h6LIjBNNnYblNUThqlKOy0zK
+         5Yvc628M1p6O8CdYb0+H6tM/7O5NGfUOHoZEE1vCHM8TLup3YhMj8nRDT+b2lVrtXuxy
+         dAUqF87wQqmxLjY4qvaZDvk14NZ/HjwHXqCQjoqJ0EdN+PTuZY+mKieWwvfuGE+aJc80
+         4kiE219vzIK38n25M4z453gOJFKFpLL2/rHls6jLyoBjGhEUjIh0uhDqk3oMPESNgWN4
+         H8vg==
+X-Forwarded-Encrypted: i=1; AJvYcCU49wq+L5FXUHWMbRpqZwVDdpoF3/oBYnsHEYo8N+2aTyWlIybhqAHTp/CkHH5X7C78jNFID3oDD/CyXdb1l7UjZ5w4pAuWeIRl
+X-Gm-Message-State: AOJu0Yyg0TCTMd5T2gA1GBlu7mznecHp2s6JrgG2OCEsqCAa9b61YJRz
+	tTPs669r9tG93OvHz9jHqcg9obLxb64Hau3nkevfyvKU4aVmYYLx1ot2HyVAemM=
+X-Google-Smtp-Source: AGHT+IEnWqknQxLnJEpexUB0z6PrbG+3ja7xvUWGsdML6+Dfe1thhIKgJ7dK9+/TLjN2rT5ex8eOVQ==
+X-Received: by 2002:a05:6402:612:b0:58b:abc6:9cec with SMTP id 4fb4d7f45d1cf-58e5cd15312mr3739642a12.40.1720279507998;
+        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861324fe5dsm10895092a12.36.2024.07.06.08.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
+Date: Sat, 6 Jul 2024 17:25:05 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <2mrfd5qe742zxz4mxd64jiwiebuvqnlxo5ezbikk77f6eh6rnw@ebc3uxneij5m>
+References: <cover.1716795485.git.zhoubinbin@loongson.cn>
+ <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
+ <b2lyte7dtrdxxoj4rwwrxbt5myc3td7v3psus7h36qc7dp3thh@czfp25bferl4>
+ <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6grgdfuogy5smzhk"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
 
-On Sat, 2024-07-06 at 21:49 +0800, Huacai Chen wrote:
-> On Sat, Jul 6, 2024 at 6:34=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
-> >=20
-> > On Sat, 2024-07-06 at 18:29 +0800, Huacai Chen wrote:
-> >=20
-> > /* snip */
-> >=20
-> > > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > > > index ddc042895d01..03b3ef5edd24 100644
-> > > > --- a/arch/loongarch/Kconfig
-> > > > +++ b/arch/loongarch/Kconfig
-> > > > @@ -607,6 +607,7 @@ config
-> > > > ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> > > >=20
-> > > > =C2=A0config RELOCATABLE
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool "Relocatable kernel=
-"
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select ARCH_HAS_RELR
-> > > Why is this selection under RELOCATABLE? I know ARM64 is the same,
-> > > but
-> > > why?
-> >=20
-> > Because if we just select it in CONFIG_LOONGARCH instead of
-> > CONFIG_RELOCATABLE, the users who have disabled CONFIG_RELOCATABLE
-> > will
-> > still see the entry for RELR in their configuration interface.=C2=A0 An=
-d
-> > they'll ask "hey what's this for?=C2=A0 Why my kernel needs relocation?=
-"
-> RELR is not a similar conception to RELA, it is only used for
-> relocatable kernel?
 
-It replaces R_LARCH_RELATIVE relocs in RELA (basically represent the
-same info in a much more compact form).  For non-relocatable kernel both
-RELR and RELA shouldn't exist.
+--6grgdfuogy5smzhk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Hello Binbin,
+
+On Sat, Jul 06, 2024 at 03:08:30PM +0600, Binbin Zhou wrote:
+> Hi Uwe:
+>=20
+> Thanks for your reply.
+>=20
+> On Sat, Jul 6, 2024 at 5:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@baylibre.com> wrote:
+> >
+> > Hello,
+> >
+> > On Mon, May 27, 2024 at 03:51:12PM +0800, Binbin Zhou wrote:
+> > > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm,
+> > > +                           const struct pwm_state *state)
+> > > +{
+> > > +     int ret;
+> > > +     u64 period, duty_cycle;
+> > > +     bool enabled =3D pwm->state.enabled;
+> > > +
+> > > +     period =3D min(state->period, NANOHZ_PER_HZ);
+> > > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
+> > > +
+> > > +     if (state->polarity !=3D pwm->state.polarity) {
+> > > +             if (enabled) {
+> > > +                     pwm_loongson_disable(chip, pwm);
+> > > +                     enabled =3D false;
+> > > +             }
+> > > +
+> > > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->pol=
+arity);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +     }
+> > > +
+> > > +     if (!state->enabled) {
+> > > +             if (enabled)
+> > > +                     pwm_loongson_disable(chip, pwm);
+> > > +             return 0;
+> > > +     }
+> >
+> > Given that the configured polarity isn't relevant for a disabled PWM, I
+> > suggest to swap these two if blocks. However then you have to be a bit
+> > more careful for the polarity check because otherwise the following
+> > series of commands yields wrong results:
+> >
+> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
+polarity =3D PWM_POLARITY_NORMAL, .enabled =3D true});
+> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
+polarity =3D PWM_POLARITY_INVERSED, .enabled =3D false});
+> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
+polarity =3D PWM_POLARITY_INVERSED, .enabled =3D true});
+> >
+>=20
+> Yes, we'd better make sure pwm is enabled first.
+> I will swap the two if blocks.
+>=20
+> > > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     if (!enabled)
+> > > +             ret =3D pwm_loongson_enable(chip, pwm);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_=
+device *pwm,
+> > > +                               struct pwm_state *state)
+> > > +{
+> > > +     u32 duty, period, ctrl;
+> > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip=
+);
+> > > +
+> > > +     /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate =
+*/
+> > > +     duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> > > +     state->duty_cycle =3D mul_u64_u64_div_u64(duty, NSEC_PER_SEC, d=
+data->clk_rate);
+> > > +
+> > > +     /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
+> > > +     period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+> > > +     state->period =3D mul_u64_u64_div_u64(period, NSEC_PER_SEC, dda=
+ta->clk_rate);
+> > > +
+> > > +     ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
+> > > +     state->polarity =3D (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POL=
+ARITY_INVERSED :
+> > > +                       PWM_POLARITY_NORMAL;
+> > > +     state->enabled =3D (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
+> > > +
+> > > +     return 0;
+> >
+> > You didn't test extensively with PWM_DEBUG enabled, right? You need to
+> > round up the divisions here otherwise you get strange rounding results:
+> >
+> > Consider ddata->clk_rate =3D 1594323. When a state with .period =3D 200=
+00 is
+> > applied, LOONGSON_PWM_REG_PERIOD is assigned 31.
+> > Calling .get_state() in this situation gives .period =3D 19443. Reapply=
+ing
+> > .period =3D 19443 results in LOONGSON_PWM_REG_PERIOD :=3D 30. Iterating=
+ this
+> > further yields:
+> >
+> >  - .period =3D 18816
+> >  - LOONGSON_PWM_REG_PERIOD :=3D 29
+> >  - .period =3D 18189
+> >  - LOONGSON_PWM_REG_PERIOD :=3D 28
+> >  - ...
+> >
+> Yes, I'm very sorry I didn't do extensive testing with PWM_DEBUG enabled.
+> Here I do need to use DIV64_U64_ROUND_UP().
+>=20
+> Below:
+>=20
+>         /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate */
+>         duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+>         state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)duty *
+> NSEC_PER_SEC, ddata->clk_rate);
+>=20
+>         /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
+>         period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+>         state->period =3D DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC,
+> ddata->clk_rate);
+>=20
+>=20
+> I'd also like to ask which tests I still need to do to make sure the
+> driver is more complete?
+
+There is no official lower limit on tests. But the goal is that your
+driver behaves correctly and some of the typical errors can be catched
+by enabling PWM_DEBUG and then doing the following tests for sensible
+values of A and B:
+
+	# Sequence of increasing periods
+	for period in A ... B:
+		configure 0/period
+
+	# Sequence of decreasing periods
+	for period in A ... B:
+		configure 0/(B + A - period)
+
+	for period in some set:
+		# Sequence of increasing duty length
+		for duty_cycle in 0 ... period:
+			configure duty_cycle/period
+
+		# Sequence of decreasing duty length
+		for duty_cycle in 0 ... period:
+			configure (period - duty_cycle)/period
+
+That should give you a good coverage.
+
+The idea of extensive testing on your side is also: Review capacities
+are a scarce resource and you suffer from that because it takes some
+patience between you sending a patch and a maintainer coming around to
+review it. If your code is well tested, there is less for the
+maintainers to find and so I save time because there are less revisions
+and they mature quicker. The direct consequence for you and the others
+waiting for my attention should be obvious. (This also means: If you
+look into other's patch submissions and point out the things you already
+learned to them, you also save maintainer time and so might get their
+attention earlier yourself.)
+
+I'm working on a bigger change for the pwm subsystem. One of the results
+will be a new userspace API. I intend to create a test program that does
+the above tests, so in the foreseeable future testing should get easier.
+(In return writing a lowlevel driver will become a bit harder, as the
+requirements for precision increase.)
+
+Best regards
+Uwe
+
+--6grgdfuogy5smzhk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaJYc4ACgkQj4D7WH0S
+/k5GjAf/T5cnZCbZWPmsKHJi6Yk0Kx4vG6/4qPLHyqW6p9SD659LCAGHwkP9cVPc
+rf5WvR5J0ZNwt0JHR+6C3QSp29HYmzCOTPWMVKK3E/bSUGygVqHtQGFkRa8I8g3F
+XqKAJD96fUMGzE+lPA8L0XxLez0Bez8rKpwjm70CkIw1fAeSZvS7sDj9xT8qTQAF
+qnTRQZNRdUvNhesBxRnEO279ER8wO78FMlo31LTWWoP3aBMVGnjdy/l3xqUUQIbC
+Z83cnxp4Zmor8vTCsscHs9v6Xm5mG5q3yLZYRQNxOyvZ98eJ83rFoZXyHscLJb5v
+2YZztNZrch2uKGnT1AMimKotTYoJAA==
+=JU6c
+-----END PGP SIGNATURE-----
+
+--6grgdfuogy5smzhk--
