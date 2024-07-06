@@ -1,94 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8422F71B3A;
-	Sat,  6 Jul 2024 13:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC3229CA;
+	Sat,  6 Jul 2024 14:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720273791; cv=none; b=F1z2jGshGhXROv5vgwi4sMC388iVPWINAsq+H9uKgKVTlQ18YGI6sH8eWnFun0fMJXLXLwwDFbYCcDntBh7SNN1mn+9zyMS0LAbSHKN4RYV6rZ75QJ0nGpTAjelaJM3+TqJSuIPRhSdB3ZhN7M9CG6fxzUc9bfCgAhMgclCx1c4=
+	t=1720277230; cv=none; b=V5F5dIQg2qyfyBlUclEMMWNNZbZh/ryBOYYGDO/EpQv5oNX7xwaYLRhkzy4kTQuupV581403M6gt2quFNtNwWuSpW/cLNZauenORfVouNDk9CowTIxEmz2vrNLx37oLDO8QuO644f5HNHFeBjomzEa+x5PJMfTvWd9pktqIwjVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720273791; c=relaxed/simple;
-	bh=WwtWGqd3b7WM+nXM9jFiZlnjseqVlB8/RHiBNoQSNnU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IKX36ZAk2Zrw0as2Cu3Qq1Upu1z9lc31TZUyaMV5q9Bm3jEH6qaluk9HVA0lpwS2QOk3NR/FnEHAwrMTwLdTdV9oOB4XNRPn49hYkDUiIYuEJsHEX9TylwP5AbfTXKuaIJAAK4rbKx8XCnYvgoA/Q0paPRLCnB/vVq5dKV3RSEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQ6n1yW3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720277230; c=relaxed/simple;
+	bh=6ZA2YmJ9hyk9M1Xu80OoaScP500Lyoc/mjOR70ZnFyM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VxiOKCnyVtxLUnidXzcbsg7AnWJt7/5c/W31PVn6v3oaqaxKl8fQW/i3pEtgExP5PEahUWfE+hX997YXoG5UDN7ymBRgB117TKnqnNWAGIS+W7Bbp8NTZq2ue2g5N0aMuyGrTUmxzhgihZMrPIi3IZ4thSRDw4/Kl9LYYOVm0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EAJe+rPc; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQ6n1yW3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC173C4AF0E;
-	Sat,  6 Jul 2024 13:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720273791;
-	bh=WwtWGqd3b7WM+nXM9jFiZlnjseqVlB8/RHiBNoQSNnU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aQ6n1yW3LQvL8IMo2Spw+LlgLy92sXGml39aALacI8i/6Vky0GOkjxnyJBscWF8+y
-	 glmNIUJukT3vRXDxDmLVw3A527OI8+zyWkQRWI407+lhxy2An21OWI4EKdaMEGauQ2
-	 8IfAtP8NOaV9xKpcAoABq7Geh/rvREYyudTI/6jB35qJW8asDyNQ6L09q5sgHRz6dG
-	 N8FYENwzK16gzkPmAPm+lhBtPceXl595GChXjL2L7nLcd2qckLh4aYdOSoyMOSjQnc
-	 CxKmohqJFiY1ynCpypaCqa/dyaD8IpU1lIs4djD6ItHvuEOe1/kvhCXyKtsD5hKivv
-	 ae3ZHLE/2BNEg==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so2968838a12.1;
-        Sat, 06 Jul 2024 06:49:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPgwtgea4/R+DlskhMVhafPOwd+ssLEx4xHKu/p14pVXKQ99RBqoDUfnU5OG5wuHo/u2qjaYphwBj2o1sJcXJ5nCUsNu5rc7sdDGAFw3RqjRDFMu+289vx8IssJ1sVaw==
-X-Gm-Message-State: AOJu0Yy3m7+FAgEWPgNj7W/KlZuXMbGaCdsbW0gUqSF90jk2FKY6KNNo
-	JCnsEJsI9W3z0WBrXKAi1xbJYBIrQp7mgysLhgapi4DnGQ/pbGV+IQnKbBxCuSM/o8v12YhmWQN
-	tsXjEc+ZYrgFgOX5POf1XSOAddyA=
-X-Google-Smtp-Source: AGHT+IESGgckyWRKHZbg0sq8z9FEAOZ/7LM0DfdCM/NpkuRRuuAsW+3xXiTKLmrRqbU3XT7zJUed4tVMreQO5TRl/aA=
-X-Received: by 2002:a17:906:aed1:b0:a77:b01b:f949 with SMTP id
- a640c23a62f3a-a77ba48cfc6mr558366566b.35.1720273789487; Sat, 06 Jul 2024
- 06:49:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EAJe+rPc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1720277227;
+	bh=6ZA2YmJ9hyk9M1Xu80OoaScP500Lyoc/mjOR70ZnFyM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EAJe+rPcvmqWZbNtrlXJo29XFiO+mKUDVaU8fNC9GQeSV2H7UOZzOcLDPBJ0L5irJ
+	 nYkSoxRVeooUoXQc6/Kq2I4WFq4AgG/FKPfGaahkgXjjQ9UOCnag/I6xX+aIFNspdM
+	 IVlAqieApyKN815JOBiKuYQOZJ5jUSmZmBhNDV/k=
+Received: from [IPv6:240e:358:11fb:d500:dc73:854d:832e:5] (unknown [IPv6:240e:358:11fb:d500:dc73:854d:832e:5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 594E9664FA;
+	Sat,  6 Jul 2024 10:46:58 -0400 (EDT)
+Message-ID: <1f1453927318478bf5404ad9e2b692b9e5630221.camel@xry111.site>
+Subject: Re: [PATCH 2/2] LoongArch: Add support for relocating the kernel
+ with RELR relocation
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
+ Youling Tang <tangyouling@kylinos.cn>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, Fangrui Song <maskray@google.com>,  Nathan
+ Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
+  loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+Date: Sat, 06 Jul 2024 22:46:50 +0800
+In-Reply-To: <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
+References: <20240706073858.161035-1-xry111@xry111.site>
+	 <20240706073858.161035-2-xry111@xry111.site>
+	 <CAAhV-H6K7SXtXpv9Udo8md0sdn+40TGPTCdSPeM1HmbJqrhboQ@mail.gmail.com>
+	 <cb3c2038b97689371226c467befdbf9e13113744.camel@xry111.site>
+	 <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240706073858.161035-1-xry111@xry111.site> <20240706073858.161035-2-xry111@xry111.site>
- <CAAhV-H6K7SXtXpv9Udo8md0sdn+40TGPTCdSPeM1HmbJqrhboQ@mail.gmail.com> <cb3c2038b97689371226c467befdbf9e13113744.camel@xry111.site>
-In-Reply-To: <cb3c2038b97689371226c467befdbf9e13113744.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 6 Jul 2024 21:49:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
-Message-ID: <CAAhV-H4CQMmrLRv=vi8N63p2NXbdozpDakJLia8soFvVohCbqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: Add support for relocating the kernel with
- RELR relocation
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
-	Youling Tang <tangyouling@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Fangrui Song <maskray@google.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 6, 2024 at 6:34=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
-:
->
-> On Sat, 2024-07-06 at 18:29 +0800, Huacai Chen wrote:
->
-> /* snip */
->
-> > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > > index ddc042895d01..03b3ef5edd24 100644
-> > > --- a/arch/loongarch/Kconfig
-> > > +++ b/arch/loongarch/Kconfig
-> > > @@ -607,6 +607,7 @@ config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> > >
-> > >  config RELOCATABLE
-> > >         bool "Relocatable kernel"
-> > > +       select ARCH_HAS_RELR
-> > Why is this selection under RELOCATABLE? I know ARM64 is the same, but
-> > why?
->
-> Because if we just select it in CONFIG_LOONGARCH instead of
-> CONFIG_RELOCATABLE, the users who have disabled CONFIG_RELOCATABLE will
-> still see the entry for RELR in their configuration interface.  And
-> they'll ask "hey what's this for?  Why my kernel needs relocation?"
-RELR is not a similar conception to RELA, it is only used for
-relocatable kernel?
+On Sat, 2024-07-06 at 21:49 +0800, Huacai Chen wrote:
+> On Sat, Jul 6, 2024 at 6:34=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
+te:
+> >=20
+> > On Sat, 2024-07-06 at 18:29 +0800, Huacai Chen wrote:
+> >=20
+> > /* snip */
+> >=20
+> > > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > > > index ddc042895d01..03b3ef5edd24 100644
+> > > > --- a/arch/loongarch/Kconfig
+> > > > +++ b/arch/loongarch/Kconfig
+> > > > @@ -607,6 +607,7 @@ config
+> > > > ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> > > >=20
+> > > > =C2=A0config RELOCATABLE
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool "Relocatable kernel=
+"
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 select ARCH_HAS_RELR
+> > > Why is this selection under RELOCATABLE? I know ARM64 is the same,
+> > > but
+> > > why?
+> >=20
+> > Because if we just select it in CONFIG_LOONGARCH instead of
+> > CONFIG_RELOCATABLE, the users who have disabled CONFIG_RELOCATABLE
+> > will
+> > still see the entry for RELR in their configuration interface.=C2=A0 An=
+d
+> > they'll ask "hey what's this for?=C2=A0 Why my kernel needs relocation?=
+"
+> RELR is not a similar conception to RELA, it is only used for
+> relocatable kernel?
 
-Huacai
+It replaces R_LARCH_RELATIVE relocs in RELA (basically represent the
+same info in a much more compact form).  For non-relocatable kernel both
+RELR and RELA shouldn't exist.
 
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
