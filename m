@@ -1,34 +1,35 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A255128DCC;
-	Sat,  6 Jul 2024 07:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E97D22309;
+	Sat,  6 Jul 2024 07:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720251579; cv=none; b=FHxCoM+9Y3F3OjVmF7jv8Nf7f3U8UsclelzDfBhVINJvTgjOM4fkrPVcGX0i7aSVliJDPL/6hBT9R6UIWyuhiUSWJCfVyhz2omNXI4+kgltZGq9GcVrb5ny9fZzzLoLpeBGaeT/kN0u4N5pSNn8mT4IVjcw6eklZNxvcLID96Y0=
+	t=1720251582; cv=none; b=m1T14A3nh9ZTR4XzWDhHHFleUCrUagJTOOApvri6jEFeDnhrl/PLMA9Ndfk6jgPmuJPBAOQEZiZbxMa0AoycOXKt/ZW7eUFb58YuQjianE4ciLMi3SXhoAmQ0Cz0ktqdgWebfYKzbta47brTlqmrSuGnGl44XS0EQtwuiGPoqmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720251579; c=relaxed/simple;
-	bh=N4/m+0jGHRB86snyK/T2jGaCvfmvKZViPfJsuSYxi7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CPVpwwOzUcAa2IRXFSyUq4KKy900BbYi3bkY73UG+J0qZ0Wg29CwuDpb3thd93U5lWh/iztlUhpZe3qerM+66W5KDCcEyPE8CSU/KQbjRwDLh7fmMLpcUQJgxTfTCoDO4nAcusBaOVhP43OzqDllgLsEpbohVpps0LTOUQ5zhj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=b6WX5LNN; arc=none smtp.client-ip=89.208.246.23
+	s=arc-20240116; t=1720251582; c=relaxed/simple;
+	bh=MvAhHD0mCFd5HZCn7eaIcksLlpWJk6ZfkvX77KevoqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TaMlTDNNqXlTorLbh75XahyjgeY8hVIqz7fs01EVt3J5YGp+4oQ/clORLUqkRYdJbcXQUtQXpllGcJGJvwGrtt9gYgwx2V1/suTcRnU/GVzCcGGZeMn3ao+/We7rGJuyNrOc4dK5Fj3k51N9jsVce44jFeGI7naLgTjhZwFkFmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=PU7FsXvS; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="b6WX5LNN"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="PU7FsXvS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1720251575;
-	bh=N4/m+0jGHRB86snyK/T2jGaCvfmvKZViPfJsuSYxi7I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=b6WX5LNN8du7D3Rrd6R93aeLuG5YFcsL5639i61K3spvEniJo05Sy16bkiYrRcG38
-	 Bro3mlwgnrP6hQpdp6u//ZsS6PvBfvsJxP0fEeFQCIepBtx8+dwNI6hW9XMwL9cN1b
-	 rohZGQoRGEb8gcuN+TBb5g2DHl25bP5Hs4y0S31c=
+	s=default; t=1720251580;
+	bh=MvAhHD0mCFd5HZCn7eaIcksLlpWJk6ZfkvX77KevoqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PU7FsXvSa73P3jBx11/rXs5xlAqHGkfOzWv+fP8AACXxeqbQREvwfuhPB63zd6HKb
+	 vHYQjJ31XQUtItkh2frJwIGG8cRo+xlqYDIzho2wc955dWUJB6CbYUt3AZIwdT51DL
+	 Ty5HsNGWA1waap/XklxtSF09HwNEqcvJlir6FTwA=
 Received: from stargazer.. (unknown [IPv6:240e:358:11fb:d500:dc73:854d:832e:4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 2C4F81A411C;
-	Sat,  6 Jul 2024 03:39:28 -0400 (EDT)
+	by xry111.site (Postfix) with ESMTPSA id CC6011A411D;
+	Sat,  6 Jul 2024 03:39:35 -0400 (EDT)
 From: Xi Ruoyao <xry111@xry111.site>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
@@ -42,10 +43,12 @@ Cc: Jinyang He <hejinyang@loongson.cn>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 1/2] LoongArch: Remove a redundant checking in relocator
-Date: Sat,  6 Jul 2024 15:38:57 +0800
-Message-ID: <20240706073858.161035-1-xry111@xry111.site>
+Subject: [PATCH 2/2] LoongArch: Add support for relocating the kernel with RELR relocation
+Date: Sat,  6 Jul 2024 15:38:58 +0800
+Message-ID: <20240706073858.161035-2-xry111@xry111.site>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240706073858.161035-1-xry111@xry111.site>
+References: <20240706073858.161035-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,29 +57,131 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With our linker script "relocated_addr >= VMLINUX_LOAD_ADDRESS" should
-be always true.
+RELR as a relocation packing format for relative relocations for
+reducing the size of relative relocation records.  In a position
+independent executable there are often many relative relocation
+records, and our vmlinux is a PIE.
 
+The LLD linker (since 17.0.0) and the BFD linker (since 2.43) supports
+packing the relocations in the RELR format for LoongArch, with the flag
+-z pack-relative-relocs.
+
+Commits 5cf896fb6be3
+("arm64: Add support for relocating the kernel with RELR relocations")
+and ccb2d173b983
+("Makefile: use -z pack-relative-relocs") have already added the
+framework to use RELR.  We just need to wire it up and process the RELR
+relocation records in relocate_relative() in addition to the RELA
+relocation records.
+
+A ".p2align 3" directive is added to la_abs macro or the BFD linker
+cannot pack the relocation records against the .la_abs section (the
+". = ALIGN(8);" directive in vmlinux.lds.S is too late in the linking
+process).
+
+With defconfig and CONFIG_RELR vmlinux.efi is 2.1 MiB (6%) smaller, and
+vmlinuz.efi (using gzip compression) is 384 KiB (2.8%) smaller.
+
+Link: https://groups.google.com/d/topic/generic-abi/bX460iggiKg
+Link: https://reviews.llvm.org/D138135#4531389
+Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d89ecf33ab6d
 Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/kernel/relocate.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/loongarch/Kconfig                |  1 +
+ arch/loongarch/include/asm/asmmacro.h |  1 +
+ arch/loongarch/include/asm/setup.h    |  5 +++++
+ arch/loongarch/kernel/relocate.c      | 18 ++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S   |  8 ++++++++
+ 5 files changed, 33 insertions(+)
 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ddc042895d01..03b3ef5edd24 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -607,6 +607,7 @@ config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ 
+ config RELOCATABLE
+ 	bool "Relocatable kernel"
++	select ARCH_HAS_RELR
+ 	help
+ 	  This builds the kernel as a Position Independent Executable (PIE),
+ 	  which retains all relocation metadata required, so as to relocate
+diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
+index 655db7d7a427..8d7f501b0a12 100644
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -609,6 +609,7 @@
+ 	lu32i.d	\reg, 0
+ 	lu52i.d	\reg, \reg, 0
+ 	.pushsection ".la_abs", "aw", %progbits
++	.p2align 3
+ 	.dword	766b
+ 	.dword	\sym
+ 	.popsection
+diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
+index ee52fb1e9963..3c2fb16b11b6 100644
+--- a/arch/loongarch/include/asm/setup.h
++++ b/arch/loongarch/include/asm/setup.h
+@@ -34,6 +34,11 @@ extern long __la_abs_end;
+ extern long __rela_dyn_begin;
+ extern long __rela_dyn_end;
+ 
++#ifdef CONFIG_RELR
++extern long __relr_dyn_begin;
++extern long __relr_dyn_end;
++#endif
++
+ extern unsigned long __init relocate_kernel(void);
+ 
+ #endif
 diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index 1acfa704c8d0..69d73dc7326a 100644
+index 69d73dc7326a..6abb9c91b255 100644
 --- a/arch/loongarch/kernel/relocate.c
 +++ b/arch/loongarch/kernel/relocate.c
-@@ -34,9 +34,7 @@ static inline void __init relocate_relative(void)
- 		if (rela->r_info != R_LARCH_RELATIVE)
- 			continue;
- 
--		if (relocated_addr >= VMLINUX_LOAD_ADDRESS)
--			relocated_addr = (Elf64_Addr)RELOCATED(relocated_addr);
--
-+		relocated_addr = (Elf64_Addr)RELOCATED(relocated_addr);
+@@ -37,6 +37,24 @@ static inline void __init relocate_relative(void)
+ 		relocated_addr = (Elf64_Addr)RELOCATED(relocated_addr);
  		*(Elf64_Addr *)RELOCATED(addr) = relocated_addr;
  	}
++
++#ifdef CONFIG_RELR
++	u64 *relr = (u64 *)&__relr_dyn_begin;
++	u64 *relr_end = (u64 *)&__relr_dyn_end;
++	u64 *addr = NULL;
++
++	for ( ; relr < relr_end; relr++) {
++		if ((*relr & 1) == 0) {
++			addr = (u64 *)(*relr + reloc_offset);
++			*addr++ += reloc_offset;
++		} else {
++			for (u64 *p = addr, r = *relr >> 1; r; p++, r >>= 1)
++				if (r & 1)
++					*p += reloc_offset;
++			addr += 63;
++		}
++	}
++#endif
  }
+ 
+ static inline void __init relocate_absolute(long random_offset)
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index 3c7595342730..08ea921cdec1 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -113,6 +113,14 @@ SECTIONS
+ 		__rela_dyn_end = .;
+ 	}
+ 
++#ifdef CONFIG_RELR
++	.relr.dyn : ALIGN(8) {
++		__relr_dyn_begin = .;
++		 *(.relr.dyn)
++		__relr_dyn_end = .;
++	}
++#endif
++
+ 	.data.rel : { *(.data.rel*) }
+ 
+ #ifdef CONFIG_RELOCATABLE
 -- 
 2.45.2
 
