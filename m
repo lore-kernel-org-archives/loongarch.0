@@ -1,277 +1,123 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EB460275
-	for <loongarch@lists.linux.dev>; Sat,  6 Jul 2024 15:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96165227
+	for <loongarch@lists.linux.dev>; Sun,  7 Jul 2024 07:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720279512; cv=none; b=cKZUFwtfsoZZivu4e0rXe+oxwENmMCtvVLQIeluNKvg/cpw/uYHGw4j9TsZbkhhtrhicmrWWAeH7CCzY97aNjN6/YrqUit9SV45nsRpvpdjCtqNmSmAueh+IVpN8xY/keoIGqRyVCbqezV6YIPBEiZMak/RRb/53VtVik5vgbUQ=
+	t=1720337729; cv=none; b=HpXO5+NC/NQgzJE+kvQHd+wjtYF5ZFeN72imU1+W9F/t5zhefmcrICJ/lxldkCYneS3cpwJHrEmbhnn8V8JBltYFLghs+shk1m5NDgthsMcC4btHhrfl8nosAViwqGwWuolMH8/Xa6SpXCXXf8tqu6NYr4H0XrCPbN8SMmnk3xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720279512; c=relaxed/simple;
-	bh=MMjpgBOos9366GDTm1UOWVsWsj4zBPMgnBONKbFX28Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtDGZ4ctQcwgFgGVPEw2Vt/b+kqlLlSxYamGkl1AV71nZtzlzCePK/A9/+eFZLTknG2AElcx/vWEauXfJSQy7jjSON8/It1n6daTkQ4wrsnPe+2T+mK8I/CyqPx/F547b0KYXb80K7NbBlqCMp45k0IzJ3S35zuEWHvqrTnhBq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wpPB+mDO; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wpPB+mDO"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58b447c513aso2928497a12.2
-        for <loongarch@lists.linux.dev>; Sat, 06 Jul 2024 08:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720279508; x=1720884308; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
-        b=wpPB+mDOpIKc53PrPg7qW8aGHEe3jahRzqrCJ+63om1cPxiZln0Lms80BchJYBfEYF
-         EqPDTvwWHaRQBZtGHD/8pgvpOSdxKzMN34kt4SOtaU8cDICDFmtqJsy5awcsu9Y9t1y8
-         dSrLz8tpcd/Xqq5xzi42ixEMEKXfFNVYCR+5LaijRTuh8mN9/tpilIs+U/bFQryXde5U
-         1rdgtjef4RSIUD7seLommmKLALM+ZJ6BuRV2meraP7gHtdqZYgjdyEFMoWdxleGdHkyw
-         xmWIriSBu10zWxbm0kQZvfsoEn3okFhNTOFxdPAwzaHkxTMDHXWxFLj8UgUmOD1okOXc
-         n1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720279508; x=1720884308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
-        b=lyj6Qc2r3qq73uyEreCM/DGNnZyToSiSY99LHjTnmuVEQnpnA71vH8GlqoToWOfIFS
-         6SChOcJupJbokpsXcYwcfepDz61RYIAYu4LdzNm4cnT/h6LIjBNNnYblNUThqlKOy0zK
-         5Yvc628M1p6O8CdYb0+H6tM/7O5NGfUOHoZEE1vCHM8TLup3YhMj8nRDT+b2lVrtXuxy
-         dAUqF87wQqmxLjY4qvaZDvk14NZ/HjwHXqCQjoqJ0EdN+PTuZY+mKieWwvfuGE+aJc80
-         4kiE219vzIK38n25M4z453gOJFKFpLL2/rHls6jLyoBjGhEUjIh0uhDqk3oMPESNgWN4
-         H8vg==
-X-Forwarded-Encrypted: i=1; AJvYcCU49wq+L5FXUHWMbRpqZwVDdpoF3/oBYnsHEYo8N+2aTyWlIybhqAHTp/CkHH5X7C78jNFID3oDD/CyXdb1l7UjZ5w4pAuWeIRl
-X-Gm-Message-State: AOJu0Yyg0TCTMd5T2gA1GBlu7mznecHp2s6JrgG2OCEsqCAa9b61YJRz
-	tTPs669r9tG93OvHz9jHqcg9obLxb64Hau3nkevfyvKU4aVmYYLx1ot2HyVAemM=
-X-Google-Smtp-Source: AGHT+IEnWqknQxLnJEpexUB0z6PrbG+3ja7xvUWGsdML6+Dfe1thhIKgJ7dK9+/TLjN2rT5ex8eOVQ==
-X-Received: by 2002:a05:6402:612:b0:58b:abc6:9cec with SMTP id 4fb4d7f45d1cf-58e5cd15312mr3739642a12.40.1720279507998;
-        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861324fe5dsm10895092a12.36.2024.07.06.08.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
-Date: Sat, 6 Jul 2024 17:25:05 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
-Message-ID: <2mrfd5qe742zxz4mxd64jiwiebuvqnlxo5ezbikk77f6eh6rnw@ebc3uxneij5m>
-References: <cover.1716795485.git.zhoubinbin@loongson.cn>
- <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
- <b2lyte7dtrdxxoj4rwwrxbt5myc3td7v3psus7h36qc7dp3thh@czfp25bferl4>
- <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
+	s=arc-20240116; t=1720337729; c=relaxed/simple;
+	bh=SdMTMEyAxrDIFF9Na+K5TW8VSz8xAY0Kf2QaI/yF0XU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VtSWEKIU8Sl3CamH4DmXhFt9OTISjPTXyUARtpER8SQq4WZA2FsXg6nscXGlARFvdhxqlxn0Apv7dpiux5HONf5iAR5+72oqIUBbJa/6brnPZflz9WOqM3mXyV8kOAWEbhum43G8cHAVr6m27EWRuVBOK3fN/2qVWRbfixkeSOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtpip3t1720337660tkacxpm
+X-QQ-Originating-IP: xEPDphvktVF415/GqFjUMqm3UtXJmiJdfibU97Nz69Q=
+Received: from [IPV6:240e:36c:d19:e900:dfc1:d0 ( [255.153.174.1])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 07 Jul 2024 15:34:15 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8694329200217638920
+Message-ID: <B7E3B29557B78CB1+afadbaa6-987e-4db4-96b5-4e4d5465c37b@uniontech.com>
+Date: Sun, 7 Jul 2024 15:34:15 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6grgdfuogy5smzhk"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
+ account with bpf_jit_binary_lock_ro()" for linux-6.6.37
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, sashal@kernel.org, ast@kernel.org,
+ keescook@chromium.org, linux-hardening@vger.kernel.org,
+ christophe.leroy@csgroup.eu, catalin.marinas@arm.com, song@kernel.org,
+ puranjay12@gmail.com, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, yonghong.song@linux.dev, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ illusionist.neo@gmail.com, linux@armlinux.org.uk, bpf@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
+ johan.almbladh@anyfinetworks.com, paulburton@kernel.org,
+ tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, deller@gmx.de,
+ linux-parisc@vger.kernel.org, iii@linux.ibm.com, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, linux-s390@vger.kernel.org, davem@davemloft.net,
+ sparclinux@vger.kernel.org, kuba@kernel.org, hawk@kernel.org,
+ netdev@vger.kernel.org, dsahern@kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, guanwentao@uniontech.com, baimingcong@uniontech.com
+References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
+ <2024070631-unrivaled-fever-8548@gregkh>
+From: WangYuli <wangyuli@uniontech.com>
+Content-Language: en-US
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <2024070631-unrivaled-fever-8548@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
 
---6grgdfuogy5smzhk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2024/7/6 17:30, Greg KH wrote:
+> This makes it sound like you are reverting this because of a build
+> error, which is not the case here, right?  Isn't this because of the
+> powerpc issue reported here:
+> 	https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
+> ?
 
-Hello Binbin,
+No, it only occurs on ARM64 architecture. The reason is that before 
+being modified, the function
 
-On Sat, Jul 06, 2024 at 03:08:30PM +0600, Binbin Zhou wrote:
-> Hi Uwe:
->=20
-> Thanks for your reply.
->=20
-> On Sat, Jul 6, 2024 at 5:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> >
-> > Hello,
-> >
-> > On Mon, May 27, 2024 at 03:51:12PM +0800, Binbin Zhou wrote:
-> > > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> > > +                           const struct pwm_state *state)
-> > > +{
-> > > +     int ret;
-> > > +     u64 period, duty_cycle;
-> > > +     bool enabled =3D pwm->state.enabled;
-> > > +
-> > > +     period =3D min(state->period, NANOHZ_PER_HZ);
-> > > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
-> > > +
-> > > +     if (state->polarity !=3D pwm->state.polarity) {
-> > > +             if (enabled) {
-> > > +                     pwm_loongson_disable(chip, pwm);
-> > > +                     enabled =3D false;
-> > > +             }
-> > > +
-> > > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->pol=
-arity);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +     }
-> > > +
-> > > +     if (!state->enabled) {
-> > > +             if (enabled)
-> > > +                     pwm_loongson_disable(chip, pwm);
-> > > +             return 0;
-> > > +     }
-> >
-> > Given that the configured polarity isn't relevant for a disabled PWM, I
-> > suggest to swap these two if blocks. However then you have to be a bit
-> > more careful for the polarity check because otherwise the following
-> > series of commands yields wrong results:
-> >
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_NORMAL, .enabled =3D true});
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_INVERSED, .enabled =3D false});
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_INVERSED, .enabled =3D true});
-> >
->=20
-> Yes, we'd better make sure pwm is enabled first.
-> I will swap the two if blocks.
->=20
-> > > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (!enabled)
-> > > +             ret =3D pwm_loongson_enable(chip, pwm);
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_=
-device *pwm,
-> > > +                               struct pwm_state *state)
-> > > +{
-> > > +     u32 duty, period, ctrl;
-> > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip=
-);
-> > > +
-> > > +     /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate =
-*/
-> > > +     duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-> > > +     state->duty_cycle =3D mul_u64_u64_div_u64(duty, NSEC_PER_SEC, d=
-data->clk_rate);
-> > > +
-> > > +     /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
-> > > +     period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-> > > +     state->period =3D mul_u64_u64_div_u64(period, NSEC_PER_SEC, dda=
-ta->clk_rate);
-> > > +
-> > > +     ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-> > > +     state->polarity =3D (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POL=
-ARITY_INVERSED :
-> > > +                       PWM_POLARITY_NORMAL;
-> > > +     state->enabled =3D (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
-> > > +
-> > > +     return 0;
-> >
-> > You didn't test extensively with PWM_DEBUG enabled, right? You need to
-> > round up the divisions here otherwise you get strange rounding results:
-> >
-> > Consider ddata->clk_rate =3D 1594323. When a state with .period =3D 200=
-00 is
-> > applied, LOONGSON_PWM_REG_PERIOD is assigned 31.
-> > Calling .get_state() in this situation gives .period =3D 19443. Reapply=
-ing
-> > .period =3D 19443 results in LOONGSON_PWM_REG_PERIOD :=3D 30. Iterating=
- this
-> > further yields:
-> >
-> >  - .period =3D 18816
-> >  - LOONGSON_PWM_REG_PERIOD :=3D 29
-> >  - .period =3D 18189
-> >  - LOONGSON_PWM_REG_PERIOD :=3D 28
-> >  - ...
-> >
-> Yes, I'm very sorry I didn't do extensive testing with PWM_DEBUG enabled.
-> Here I do need to use DIV64_U64_ROUND_UP().
->=20
-> Below:
->=20
->         /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate */
->         duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
->         state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)duty *
-> NSEC_PER_SEC, ddata->clk_rate);
->=20
->         /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
->         period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
->         state->period =3D DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC,
-> ddata->clk_rate);
->=20
->=20
-> I'd also like to ask which tests I still need to do to make sure the
-> driver is more complete?
+bpf_jit_binary_lock_ro() in arch/arm64/net/bpf_jit_comp.c +1651
 
-There is no official lower limit on tests. But the goal is that your
-driver behaves correctly and some of the typical errors can be catched
-by enabling PWM_DEBUG and then doing the following tests for sensible
-values of A and B:
+was introduced with __must_check, which is defined as 
+__attribute__((__warn_unused_result__)).
 
-	# Sequence of increasing periods
-	for period in A ... B:
-		configure 0/period
 
-	# Sequence of decreasing periods
-	for period in A ... B:
-		configure 0/(B + A - period)
+However, at this point, calling bpf_jit_binary_lock_ro(header) 
+coincidentally results in an unused-result
 
-	for period in some set:
-		# Sequence of increasing duty length
-		for duty_cycle in 0 ... period:
-			configure duty_cycle/period
+warning.
 
-		# Sequence of decreasing duty length
-		for duty_cycle in 0 ... period:
-			configure (period - duty_cycle)/period
+> If not, why not just backport the single missing arm64 commit,
 
-That should give you a good coverage.
+Upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory 
+management") is part of
 
-The idea of extensive testing on your side is also: Review capacities
-are a scarce resource and you suffer from that because it takes some
-patience between you sending a patch and a maintainer coming around to
-review it. If your code is well tested, there is less for the
-maintainers to find and so I save time because there are less revisions
-and they mature quicker. The direct consequence for you and the others
-waiting for my attention should be obvious. (This also means: If you
-look into other's patch submissions and point out the things you already
-learned to them, you also save maintainer time and so might get their
-attention earlier yourself.)
+a larger change that involves multiple commits. It's not an isolated commit.
 
-I'm working on a bigger change for the pwm subsystem. One of the results
-will be a new userspace API. I intend to create a test program that does
-the above tests, so in the foreseeable future testing should get easier.
-(In return writing a lowlevel driver will become a bit harder, as the
-requirements for precision increase.)
 
-Best regards
-Uwe
+We could certainly backport all of them to solve this problem, but it's 
+not the simplest solution.
 
---6grgdfuogy5smzhk
-Content-Type: application/pgp-signature; name="signature.asc"
+> and why
+> didn't this show up in testing?
 
------BEGIN PGP SIGNATURE-----
+Thanks for the tip.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaJYc4ACgkQj4D7WH0S
-/k5GjAf/T5cnZCbZWPmsKHJi6Yk0Kx4vG6/4qPLHyqW6p9SD659LCAGHwkP9cVPc
-rf5WvR5J0ZNwt0JHR+6C3QSp29HYmzCOTPWMVKK3E/bSUGygVqHtQGFkRa8I8g3F
-XqKAJD96fUMGzE+lPA8L0XxLez0Bez8rKpwjm70CkIw1fAeSZvS7sDj9xT8qTQAF
-qnTRQZNRdUvNhesBxRnEO279ER8wO78FMlo31LTWWoP3aBMVGnjdy/l3xqUUQIbC
-Z83cnxp4Zmor8vTCsscHs9v6Xm5mG5q3yLZYRQNxOyvZ98eJ83rFoZXyHscLJb5v
-2YZztNZrch2uKGnT1AMimKotTYoJAA==
-=JU6c
------END PGP SIGNATURE-----
+I'll be sure to keep a closer eye on the stable kernel testing phase in 
+the future and hopefully catch any
 
---6grgdfuogy5smzhk--
+problems more timely.
+
+> confused,
+>
+> greg k-h
+>
+Sincerely
+-- 
+WangYuli <wangyuli@uniontech.com>
