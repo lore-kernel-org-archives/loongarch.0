@@ -1,143 +1,273 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5143810953;
-	Mon,  8 Jul 2024 06:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0D0433DF
+	for <loongarch@lists.linux.dev>; Mon,  8 Jul 2024 08:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720421096; cv=none; b=fVXogCAEkf9ms/hAXj2iwOKto66oFmBM2nEc0+aQyPt+BismBzLiLpKAeUlCmdYMou/Pcb+Pxvp1bb80dTi3GiibSeQMoCl6XXiKdzF+SpWSJ2sPaup9ss1t1eEyNbUtwq7Rs7rpiMrjbUU7M2N7qHy1zG6w4L3MrRZb7rM7HJE=
+	t=1720425756; cv=none; b=Hb5ZHi5hAMlsdDfQHkZxfjpHmNTdDKLoMtNeLXvYveLCS1Z7ccCZT1RDXQCcHdFne7bpvSYVdjFuNi3AfCS1t6SlSQJJTUbLjlnxv7v8lW8tXq3A+b2c+3yH7AloT1U37pWIsl4b73eg4C8WkO38FdiuTfHfnVf5cWWCaqBQB08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720421096; c=relaxed/simple;
-	bh=EqDlk82dE7XS0/JGyUAUcCtCsFHxwVbAJvsEIiMzMrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cYndvOhQxosYeybSe9YkIWd+v9HPEeV67u5gdo9C9xgwyTu/fQcmRVVMb6MBGL167DMiTfJg2OpB9QJYRJ0ncyiM5WO5YS3WJQxQ3LBKpDn12vag/haXYf4jtwbFFdra8ooqjRqX/ygpHychzPyqovH/Nt27DpMwl/9uyiUiL5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PzOy6Z2W; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720425756; c=relaxed/simple;
+	bh=Smn35D3Urq1dL6eArlH9BksmlutF3HaujZCbhRCwPYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IeIn+DH3j/KRPTAmVpd/hXOxHW7UszGxomnl3ehW/LFko+H74AjmkxmZPzl1RUEp2uq8qxfRCc6WQ2xv3fNUMRW8CHusAr4ZuMKlbrREdm6H3cjRK/dpGjJNUFXDjprWI/59bgrgZTwjNqXTp5UNBAw/PuwjXaLzBmXt5LjRhgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FuyhR8Xr; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PzOy6Z2W"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 817CBE0006;
-	Mon,  8 Jul 2024 06:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720421086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kN45r2MzRBKAE4raZ17kWauJPTnIek3N3oaVcC2BO/g=;
-	b=PzOy6Z2WDoUDIURvXSdTtpzbHX3JQqR2TwTpbeUTnfB6vX3dNcZ37ATxjxBqYPJmXyybOW
-	/cSvPuilXVhZeR7B2dXURK6eJ39WhH4IRmB3cgvultxkXbdYRWIJAVPOSzfOAYpJjJ6yjj
-	T4otuw7FybtaZrQhYLIzqq3zUvj4Jc9ZhqWNxjCSwxjRvmd7Z4M+rCx4VXtxp9PGAb8E1q
-	oZ1dnF7ScZhNf1MbVD05qQH3qQWLfMAQwFkOz4wVja8KUEs30B2F3BIx4guMRdC+Ulvnk+
-	YXsH623cgVPmDlxftJRPmEBJAk7rpJRwu3UnaQOHOTk3BC9lbm01fchVhlirnQ==
-Date: Mon, 8 Jul 2024 08:44:40 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Tudor Ambarus
- <tudor.ambarus@linaro.org>, Marco Felsch <m.felsch@pengutronix.de>, Richard
- Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>,
- Joel Stanley <joel@jms.id.au>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
- <magnus.damm@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
- Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, Michael
- Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- imx@lists.linux.dev, linux-omap@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
- openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
-Message-ID: <20240708084440.70186564@xps-13>
-In-Reply-To: <20240702-mighty-brilliant-eel-b0d9fa@houat>
-References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
-	<20240701-b4-v6-10-topic-usbc-tcpci-v1-4-3fd5f4a193cc@pengutronix.de>
-	<07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
-	<mafs0ikxnykpr.fsf@kernel.org>
-	<20240702-congenial-vigilant-boar-aeae44@houat>
-	<mafs0ed8byj5z.fsf@kernel.org>
-	<20240702-mighty-brilliant-eel-b0d9fa@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuyhR8Xr"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-651815069f8so37912857b3.1
+        for <loongarch@lists.linux.dev>; Mon, 08 Jul 2024 01:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720425754; x=1721030554; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wnUJXLI7onPeWNT8Sri44kaKBGSVFl++mRtuBP0oMGc=;
+        b=FuyhR8XrtLN2vnPGAVJNouy2+ekZqoCxh9cJWTV3qK4Tufr0/fzxXLmfJ/3iPXYYhS
+         HO0oowSlQwNREolD8+pD8tk9yR/Qc8Sd+o8qHkHOgCIBvtD0X0toi43Q9p/ov1ECRfdv
+         iVVzAyEekvUvqFQ9yhn4GX4Gcyw8xaDZ9a+cS19VSOod1EHh671lGwhYuhJ92ximunE5
+         Ck8jatp1kRJBVCt2Ir++hff0FmElGqWbSDDU+DRLGqwJ37aJPOFLh39ndldc1myjumDl
+         gJGZwCzCg9UgFoqIgpQPPMOLGy9iUekWMfOJZRB7jhgjc0EVRvg1rLJGMaJ/g6B1nX4d
+         PsaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720425754; x=1721030554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wnUJXLI7onPeWNT8Sri44kaKBGSVFl++mRtuBP0oMGc=;
+        b=HP1WzVMKHPQpLlmqjatljwG2rgMwGHB1tYRcwK4f3SUyw7PvEkC9iJEQLyAfzApZyN
+         A8334TfWMr9fEMCPDabraeXcvkUyq2l70i7+Qpm2zDMcpsKnKOULXI/xTnYD9uooJUE9
+         SN2Wyb1lLW1B2h7qeBtqioQMPlkquFPEflWmVjGTv6XwgF0iiNejam9K4YDcvDE7Lkrg
+         BoVTWmoeibaXe8ALr/9wCnnlFiUOHNbEHlPDseDHVUcV/zyZwJ4C0yDCb4dC4vlMYwuK
+         8ZlOTudGaHC2iM0Atu7c/XW2FLdxQ8CUXja9LheBxaJ+pd/Ou7Mo4rYwupdJLUXdOjhG
+         icJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtMvRINP+aapqWVOWc43+4LC4fr/vp470nFcHJkjOYb3OCUTqgxg+LMSrDmNaVcIgUM3LU/HVp3RSgowkYKn2DPt9T2CO8FDtA
+X-Gm-Message-State: AOJu0Yy3XTJ7Uj9fhoqtYqqpJ4P7QFEOBVrJQaBkGaYSWpbr/Moh+F/M
+	0B3uaRcJLKydtURcnrAxfuOBohsvXc9dHCXI+zyCQl55O3vvmE6CfNEuVpKdcUT5JazIyEQapOJ
+	2THWppR33GiD6vCVymv7p6PeLNaY=
+X-Google-Smtp-Source: AGHT+IHfSZZgZbF8fKQiw2cru844TM/1c4izl/IQt3n/HD30lRfRxTDxWk1M0trVUDtLTmcxkIh8/Vg/yzKTFU9oU8s=
+X-Received: by 2002:a81:b65d:0:b0:61a:e979:427e with SMTP id
+ 00721157ae682-652f6317d13mr67350957b3.11.1720425753615; Mon, 08 Jul 2024
+ 01:02:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <cover.1716795485.git.zhoubinbin@loongson.cn> <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
+ <b2lyte7dtrdxxoj4rwwrxbt5myc3td7v3psus7h36qc7dp3thh@czfp25bferl4>
+ <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com> <2mrfd5qe742zxz4mxd64jiwiebuvqnlxo5ezbikk77f6eh6rnw@ebc3uxneij5m>
+In-Reply-To: <2mrfd5qe742zxz4mxd64jiwiebuvqnlxo5ezbikk77f6eh6rnw@ebc3uxneij5m>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 8 Jul 2024 14:02:20 +0600
+Message-ID: <CAMpQs4JXy4dP6O3cnYmuSq+cb0BazfoncDOxUBe09qY-XB0Qjw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi,
+Hi Uwe:
 
-> > >> >> Port the current misc/eeprom/at24.c driver to the MTD framework s=
-ince
-> > >> >> EEPROMs are memory-technology devices and the framework already s=
-upports =20
-> > >> >
-> > >> > I was under the impression that MTD devices are tightly coupled by=
- erase
-> > >> > blocks. But then we see MTD_NO_ERASE, so what are MTD devices afte=
-r all? =20
-> > >>=20
-> > >> I was curious as well so I did some digging.
-> > >>  =20
-> > [...] =20
-> > >>=20
-> > >> I also found a thread from 2013 by Maxime Ripard (+Cc) suggesting ad=
-ding
-> > >> EEPROMs to MTD [1]. The main purpose would have been unifying the EE=
-PROM
-> > >> drivers under a single interface. I am not sure what came of it thou=
-gh,
-> > >> since I can't find any patches that followed up with the proposal. =
-=20
+On Sat, Jul 6, 2024 at 9:25=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> Hello Binbin,
+>
+> On Sat, Jul 06, 2024 at 03:08:30PM +0600, Binbin Zhou wrote:
+> > Hi Uwe:
+> >
+> > Thanks for your reply.
+> >
+> > On Sat, Jul 6, 2024 at 5:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@baylibre.com> wrote:
 > > >
-> > > That discussion led to drivers/nvmem after I started to work on
-> > > some early prototype, and Srinivas took over that work. =20
-> >=20
-> > So would you say it is better for EEPROM drivers to use nvmem instead of
-> > moving under MTD? =20
->=20
-> I thought so at the time, but that was more than 10y ago, and I have
-> followed neither nvmem nor MTD since so I don't really have an opinion
-> there.
->=20
-> It looks like drivers/misc/eeprom/at24.c has support for nvmem though,
-> and MTD can be used as an nvmem provider too, so it's not clear to me
-> why we would want to create yet another variant.
->=20
-> But again, you shouldn't really ask me in the first place :)
->=20
-> I'm sure Miquel, Srinivas, and surely others, are much more relevant to
-> answer that question.
+> > > Hello,
+> > >
+> > > On Mon, May 27, 2024 at 03:51:12PM +0800, Binbin Zhou wrote:
+> > > > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_de=
+vice *pwm,
+> > > > +                           const struct pwm_state *state)
+> > > > +{
+> > > > +     int ret;
+> > > > +     u64 period, duty_cycle;
+> > > > +     bool enabled =3D pwm->state.enabled;
+> > > > +
+> > > > +     period =3D min(state->period, NANOHZ_PER_HZ);
+> > > > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
+> > > > +
+> > > > +     if (state->polarity !=3D pwm->state.polarity) {
+> > > > +             if (enabled) {
+> > > > +                     pwm_loongson_disable(chip, pwm);
+> > > > +                     enabled =3D false;
+> > > > +             }
+> > > > +
+> > > > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->p=
+olarity);
+> > > > +             if (ret)
+> > > > +                     return ret;
+> > > > +     }
+> > > > +
+> > > > +     if (!state->enabled) {
+> > > > +             if (enabled)
+> > > > +                     pwm_loongson_disable(chip, pwm);
+> > > > +             return 0;
+> > > > +     }
+> > >
+> > > Given that the configured polarity isn't relevant for a disabled PWM,=
+ I
+> > > suggest to swap these two if blocks. However then you have to be a bi=
+t
+> > > more careful for the polarity check because otherwise the following
+> > > series of commands yields wrong results:
+> > >
+> > >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P,=
+ .polarity =3D PWM_POLARITY_NORMAL, .enabled =3D true});
+> > >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P,=
+ .polarity =3D PWM_POLARITY_INVERSED, .enabled =3D false});
+> > >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P,=
+ .polarity =3D PWM_POLARITY_INVERSED, .enabled =3D true});
+> > >
+> >
+> > Yes, we'd better make sure pwm is enabled first.
+> > I will swap the two if blocks.
+> >
+> > > > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     if (!enabled)
+> > > > +             ret =3D pwm_loongson_enable(chip, pwm);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pw=
+m_device *pwm,
+> > > > +                               struct pwm_state *state)
+> > > > +{
+> > > > +     u32 duty, period, ctrl;
+> > > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(ch=
+ip);
+> > > > +
+> > > > +     /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rat=
+e */
+> > > > +     duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> > > > +     state->duty_cycle =3D mul_u64_u64_div_u64(duty, NSEC_PER_SEC,=
+ ddata->clk_rate);
+> > > > +
+> > > > +     /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate =
+*/
+> > > > +     period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD)=
+;
+> > > > +     state->period =3D mul_u64_u64_div_u64(period, NSEC_PER_SEC, d=
+data->clk_rate);
+> > > > +
+> > > > +     ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
+> > > > +     state->polarity =3D (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_P=
+OLARITY_INVERSED :
+> > > > +                       PWM_POLARITY_NORMAL;
+> > > > +     state->enabled =3D (ctrl & LOONGSON_PWM_CTRL_EN) ? true : fal=
+se;
+> > > > +
+> > > > +     return 0;
+> > >
+> > > You didn't test extensively with PWM_DEBUG enabled, right? You need t=
+o
+> > > round up the divisions here otherwise you get strange rounding result=
+s:
+> > >
+> > > Consider ddata->clk_rate =3D 1594323. When a state with .period =3D 2=
+0000 is
+> > > applied, LOONGSON_PWM_REG_PERIOD is assigned 31.
+> > > Calling .get_state() in this situation gives .period =3D 19443. Reapp=
+lying
+> > > .period =3D 19443 results in LOONGSON_PWM_REG_PERIOD :=3D 30. Iterati=
+ng this
+> > > further yields:
+> > >
+> > >  - .period =3D 18816
+> > >  - LOONGSON_PWM_REG_PERIOD :=3D 29
+> > >  - .period =3D 18189
+> > >  - LOONGSON_PWM_REG_PERIOD :=3D 28
+> > >  - ...
+> > >
+> > Yes, I'm very sorry I didn't do extensive testing with PWM_DEBUG enable=
+d.
+> > Here I do need to use DIV64_U64_ROUND_UP().
+> >
+> > Below:
+> >
+> >         /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate =
+*/
+> >         duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> >         state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)duty *
+> > NSEC_PER_SEC, ddata->clk_rate);
+> >
+> >         /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
+> >         period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+> >         state->period =3D DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC=
+,
+> > ddata->clk_rate);
+> >
+> >
+> > I'd also like to ask which tests I still need to do to make sure the
+> > driver is more complete?
+>
+> There is no official lower limit on tests. But the goal is that your
+> driver behaves correctly and some of the typical errors can be catched
+> by enabling PWM_DEBUG and then doing the following tests for sensible
+> values of A and B:
+>
+>         # Sequence of increasing periods
+>         for period in A ... B:
+>                 configure 0/period
+>
+>         # Sequence of decreasing periods
+>         for period in A ... B:
+>                 configure 0/(B + A - period)
+>
+>         for period in some set:
+>                 # Sequence of increasing duty length
+>                 for duty_cycle in 0 ... period:
+>                         configure duty_cycle/period
+>
+>                 # Sequence of decreasing duty length
+>                 for duty_cycle in 0 ... period:
+>                         configure (period - duty_cycle)/period
+>
+> That should give you a good coverage.
 
-More relevant, I doubt, but just a feeling: EEPROMs have their own
-subsystem now, NVMEM, which, as Maxime said, was initially written for
-that very specific case. EEPROMs don't have the complexity of MTD
-devices, and thus pulling the whole MTD subsystem just for getting
-partitions seems counter intuitive to me. You can definitely "split"
-EEPROM devices with NVMEM as well anyway.
+Thanks for your advice.
+I would use this approach to test extensively, trying to make sure
+there are no typical errors.
 
-Overall I think the idea of getting rid of these misc/ drivers is goes
-into the right direction, but registering directly into NVMEM makes
-more sense IMO.
-
-Thanks,
-Miqu=C3=A8l
+Thanks.
+Binbin
+>
+> The idea of extensive testing on your side is also: Review capacities
+> are a scarce resource and you suffer from that because it takes some
+> patience between you sending a patch and a maintainer coming around to
+> review it. If your code is well tested, there is less for the
+> maintainers to find and so I save time because there are less revisions
+> and they mature quicker. The direct consequence for you and the others
+> waiting for my attention should be obvious. (This also means: If you
+> look into other's patch submissions and point out the things you already
+> learned to them, you also save maintainer time and so might get their
+> attention earlier yourself.)
+>
+> I'm working on a bigger change for the pwm subsystem. One of the results
+> will be a new userspace API. I intend to create a test program that does
+> the above tests, so in the foreseeable future testing should get easier.
+> (In return writing a lowlevel driver will become a bit harder, as the
+> requirements for precision increase.)
+>
+> Best regards
+> Uwe
