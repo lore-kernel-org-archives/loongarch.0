@@ -1,98 +1,118 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F2484A4E
-	for <loongarch@lists.linux.dev>; Mon,  8 Jul 2024 17:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20FC1509B0
+	for <loongarch@lists.linux.dev>; Mon,  8 Jul 2024 23:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720461194; cv=none; b=Z2walehPvaFr0uA/wQaUMLr7QC3/5j5cGlhzPU+hAdfrqpN4cXmWCNMZtF/rprOWEpR8jyLe8DrOglAnGkwUt2GAiKPUMuRNOBqU9uCt8pHWGn1PkmOckcfMsnIgKGMu2r3iOeXfxBqLIWo1KXykCUOrYKnIsiMhtLQC8pBW9Y0=
+	t=1720482545; cv=none; b=aIWtzS6QGbSJuOhkUlXiv+RwF3rWyCDoroIJyIKXxa4zLzSCDtK00MB68FKBUeKzz5d6bZ2kW4UP9uDs3EWHh67AKVryTkQ5s6zgvrdJAH6VOaVg79UeSvhPri7BRLOZRKgZ3RevCHLs2cLBNI8Q5R+TNRlqrCdFZzxWykZaFQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720461194; c=relaxed/simple;
-	bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IoN9BHCvy/PO7nnqKEi3trdLBqxRb+TYoy9cMjvoapiT0p5uW+xLUuPMHCkAB0zJKwbmjvVpQjnMxLOkrESn9cglYr4WB/CPId4Dqi0gIABBGpFd4CjyYrvN8mUux4LHAwWAacDUpmugQLn4q196y6mvQHU9SrrnNDh3W9t+6zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NequMmsW; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NequMmsW"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52e9f788e7bso4472952e87.0
-        for <loongarch@lists.linux.dev>; Mon, 08 Jul 2024 10:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720461192; x=1721065992; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
-        b=NequMmsW8H4REkSLjBBn8Q/GEu8gwgsU4HVJNkfCiHCuCqi81Iz01VtzvMOJWio0rF
-         FtKE9Z2vvk+wQZJrSRDWJVH/haWgb3u1n0CIFVufgx+lNWZRpbW6j6xlGTPpgHq1YjPH
-         Mh9OBqcn/LVxjvS/+F4FYXGpJOXJCValTUXu1FiJrdh1XWuWEp7m30/BczN+NYIuFvzL
-         Qo02jhVgjW2xc8hF8gWHrZ3axXQudfFBs8XORrQ4v9MnIFywyxWi14Qn3jO25lwOC4Qf
-         LNzfBK21EaJ6gpJs6hP7k6d1tPY/ZuVpUni08fEMqtfehxgQH5SfiN5CiynQQVlCQg5/
-         moAw==
+	s=arc-20240116; t=1720482545; c=relaxed/simple;
+	bh=585OTXLduml4b44q7SgXj9FJO/8XEJO2jUdcjWdYPno=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=TyTndczY1w8IkTS5XXHf07UIaQP2Ibkc2ElLOtg5McG/Q7EL5bq//fMfvtFE7MPqitbezOzlVI+gWMtRWR2i8zzTrg1g0VGBpchYyXI9HXdsWHmiEyTjPHMu71fFsZpAPM2K15lM2N70EbV53MgtyQcz4CfXG9Y4INmiCUXXMjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c9a10728abso2433421a91.0
+        for <loongarch@lists.linux.dev>; Mon, 08 Jul 2024 16:49:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720461192; x=1721065992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iOLaAKGVBNBu76WR45/Ccdjddni/NIVquIog/WJvECg=;
-        b=jofjW5l02DGo2fzHefCiUJbv0kJFhsIpFp4hRi6zp4FXCQYSoHAeIP37t0SxchafsA
-         yAhQAWpGAWGxUvU72uw+/DYxdOOXTbwpmp/4iDuNc6KHeuofNlctR+1MbAMzi5txrkIe
-         r3bY2dEVYMnL4TT8I/ir/9pQu2dqMJtmctHWZ2YeI2oDCxCGVJOv1iSt+7GxuNbtfqON
-         bIJWlpwjYbu8hJkd0LJn1TdQBq0r/rYLU+47yFVqjzEZYnzarUpGD509/ftyuoVtE0Zb
-         oPl9Ixz/ZQm47gmDej1lyKw4rpcX0czHePYX8VmeGgFN4HXu3q1yoqTnyggIefHpNfie
-         SvIA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7sYMp08nt6qe9mWddQTQ2lsWqT4mJ71iWgALz4oVgEVM1GhEturW2QESZpa2Zo6ZO+Kj/1cOuyNqhqToBIWlFAs2Ylgx924/3
-X-Gm-Message-State: AOJu0YxzU0nQ7Qjs8MTYEnsjAx8LmIZEgx7E1XaXfgIAdBgUrqvNQubk
-	EZ9YT1Pmc6X3ePEBjH3pNBBW/kz+GJsXvQJoybE+E8EW98dDKnabjH+IkcAeeJrKKuN+UI+uAFv
-	udY0fdTr7lV0CD+tDl+ov3wbmI8A=
-X-Google-Smtp-Source: AGHT+IG6OxwJnPlRecfs0gLI9tl8froTvbIEsUoz11AIQoqRN2W4OAbu0Ma5H0uhfPLdp3GnATqEA7zPVA+NU+bUB6o=
-X-Received: by 2002:a05:6512:6d3:b0:52e:a008:8f41 with SMTP id
- 2adb3069b0e04-52eb99916damr62580e87.25.1720461191362; Mon, 08 Jul 2024
- 10:53:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720482543; x=1721087343;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTCvURDHt1Ehhy2ogJ4G2eNRAbN+TU2XGb1d5J/SBYc=;
+        b=gm6DcoF3NnM4p10Ibcgg05AzQNa2HKz/GRP1jNg+fk4Pikp/7Makvq171hqUhcoEoe
+         i6wfEo5FMx+8w+rH73yjJPCZ/JBZiQds7KyD0YTEsF/i5JA4dQxIrlPPnWeRs7TzNS7Y
+         G+UdWUJ60TcNglpp27P/YkpCQ5JvuCnI2IHpVBomn9jK76MULCE0E+yW+lBpw7UZ8V9M
+         z6OZ3VGFfBvluDQa3brh3QVimGYvwX0M//Np5deU6McHe46RPh6vXyEp1DhCnyF4Ikrr
+         XVAatlJqUg2QPFAPX01zIa1yKSlRoC4yrJd8gNVGaEiRoIhMg7CwUSHteiI9iSHWJ2L0
+         30DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOEkPMD4mYKJJ+QtXTzgqLROMj+lOxEelaUwPTrUhiM2hOlDcilOCG12ig31hHlPOceNcjuLTJnLzAm68X+MP6rM50zVge/Lah
+X-Gm-Message-State: AOJu0YxKBF7facGsF36Z4+mJnMNIyZnuHEonRLcupmYKDyTWGJB45a7U
+	mNb0ygOtwKCjizE9wNPPHzO1IEiD/sKhebM3p6jb/zMKimrskoiSwKpNMO8K9x8=
+X-Google-Smtp-Source: AGHT+IF2sRCcp1Qt2ncA7/dcBS7eQVYhbuVP4CESqTDlDqz8AWSIBYQ0ftySS6HXoODFEfyN2bXeTQ==
+X-Received: by 2002:a17:90a:a10d:b0:2c4:dfa6:df00 with SMTP id 98e67ed59e1d1-2ca35be0661mr981011a91.8.1720482542878;
+        Mon, 08 Jul 2024 16:49:02 -0700 (PDT)
+Received: from localhost (97-126-77-189.tukw.qwest.net. [97.126.77.189])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ca344c399csm596679a91.5.2024.07.08.16.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 16:49:02 -0700 (PDT)
+From: Kevin Hilman <khilman@kernel.org>
+To: Celeste Liu <coelacanthushex@gmail.com>, Heinrich Schuchardt
+ <heinrich.schuchardt@canonical.com>, Anup Patel <anup@brainfault.org>, Guo
+ Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Vladimir Kondratiev
+ <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT
+ <gregory.clement@bootlin.com>, =?utf-8?Q?Th=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim
+ <svenjoac@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich
+ Felker <dalias@libc.org>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, Russell King <linux@armlinux.org.uk>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Tony
+ Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+ Mykola Lysenko <mykolal@fb.com>, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-tegra@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-sh@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>,
+ Icenowy Zheng <uwu@icenowy.me>, Celeste Liu <CoelacanthusHex@gmail.com>
+Subject: Re: [PATCH 6/6] arm: defconfig: drop RT_GROUP_SCHED=y from
+ bcm2855/tegra/omap2plus
+In-Reply-To: <20240530111947.549474-14-CoelacanthusHex@gmail.com>
+References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
+ <20240530111947.549474-14-CoelacanthusHex@gmail.com>
+Date: Mon, 08 Jul 2024 16:49:01 -0700
+Message-ID: <7hv81f78cy.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240703110624.1301830-1-wangrui@loongson.cn>
-In-Reply-To: <20240703110624.1301830-1-wangrui@loongson.cn>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 8 Jul 2024 19:52:44 +0200
-Message-ID: <CANiq72m35W=8V77Rcu7MKw29EXEFq102tOL_Myyx1UvMuJYUBA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: rust: Use rustc option -Zdirect-access-external-data
-To: WANG Rui <wangrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Xi Ruoyao <xry111@xry111.site>, Xuefeng Li <lixuefeng@loongson.cn>, loongarch@lists.linux.dev, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jul 3, 2024 at 1:24=E2=80=AFPM WANG Rui <wangrui@loongson.cn> wrote=
-:
+Celeste Liu <coelacanthushex@gmail.com> writes:
+
+> Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
+> with systemd") said it's because of recommendation from systemd. But
+> systemd changed their recommendation later.[1]
 >
-> -Zdirect-access-external-data is a new Rust compiler option added
-> in Rust 1.78, which we use to optimize the access of external data
-> in the Linux kernel's Rust code. This patch modifies the Rust code
-> in vmlinux to directly access externa data, using PC-REL instead of
-> GOT. However, Rust code whithin modules is constrained by the PC-REL
-> addressing range and is explicitly set to use an indirect method.
+> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+> needs an RT budget assigned, otherwise the processes in it will not be able to
+> get RT at all. The problem with RT group scheduling is that it requires the
+> budget assigned but there's no way we could assign a default budget, since the
+> values to assign are both upper and lower time limits, are absolute, and need to
+> be sum up to < 1 for each individal cgroup. That means we cannot really come up
+> with values that would work by default in the general case.[2]
 >
-> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
+> can only be enabled when all RT processes are in the root cgroup. But it will
+> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
+>
+> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
+> support it.
+>
+> [1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1be321c31d5299f69f
+> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
+>
+> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+> ---
+>  arch/arm/configs/bcm2835_defconfig   | 1 -
+>  arch/arm/configs/omap2plus_defconfig | 1 -
+>  arch/arm/configs/tegra_defconfig     | 1 -
 
-I have created a tracking issue for this in
-https://github.com/rust-lang/rust/issues/127488 since there was only
-the MCP, I hope that helps.
+For omap2plus_defconfig:
 
-I also added it to our #2 list of unstable features -- please feel
-free to ping me in the future if you add others that you will need in
-the kernel, I am happy to add the entry even before you send the patch
-to the kernel in order to track things (in fact, even if it is not
-implemented we can still track it in the other lists).
+Acked-by: Kevin Hilman <khilman@baylibre.com>
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-
-Cheers,
-Miguel
