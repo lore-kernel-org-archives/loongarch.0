@@ -1,209 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CED81DA2F;
-	Tue,  9 Jul 2024 09:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F070154BE0
+	for <loongarch@lists.linux.dev>; Tue,  9 Jul 2024 09:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720516560; cv=none; b=o46AuTjU/Oh2+A7B8xHMywvUTEh6lIxPcf6buc8eA1b+UWAgk3i94jb7bL0SvHuviHiq+q4yg2LTkw58Zrf4jOiEjgELNURKxioXlXegFK9Z/24bGlZXv7W3c2qx5YvvtqaFcWr3Qb+OwM5Hf8lCEjW/tfA+wyNSXd0kPEC9KxM=
+	t=1720516984; cv=none; b=jaoONwe8GRi9Y2zgXbDWlx+SoZQiNVIkXNesELLUtbZeZ1XKCAj0Otkg8GUCYyxjsPPECwwM40OBTDI7z+R2BOF6ZODxLCNxau0lRsofK1JNZoF1DZmBuIGJp9MetIwjk1WnngNZuuXqRKblTlncj0A5nrWrY7PcTaMSFbHUAr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720516560; c=relaxed/simple;
-	bh=hK2QUQoSLsKZsz2jegmGiISGgACqpgV+13IffX5u+qA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hpmhwe9C7pKFype5pMQ3KhGNl+0+F0MqfREeyOD+KduE8idQ3v7UnEEBpGkJ/USUsh04/IenZrDxOqkXoPr6jB97EVzTP+1kG/SjO4XwoJMB6AqYUVIFhw/YflpcyOJ1qKZZrUZTlzAFBELz3L0fNJTaiN/L5CyzI8xVS1G/wk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b5CS9d8E; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b5CS9d8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E023C3277B;
-	Tue,  9 Jul 2024 09:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720516560;
-	bh=hK2QUQoSLsKZsz2jegmGiISGgACqpgV+13IffX5u+qA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b5CS9d8EmjYuSh4Oeec2RjoRUGGvRd0pLtlX6LmRJt4hCd5HbYeEb7JcMhMOETUiL
-	 nJGOijZI7omuHyu+1Qf35faihpB0P+eHXoiC/u41ezJKQHr3qA2gW9sxBtTIXizM63
-	 z1FgzWNtkl38ekbRw1GjxAc4UY7Jz4/WW8/AIhfs=
-Date: Tue, 9 Jul 2024 11:15:57 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
-Cc: WangYuli <wangyuli@uniontech.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"song@kernel.org" <song@kernel.org>,
-	"puranjay12@gmail.com" <puranjay12@gmail.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"martin.lau@linux.dev" <martin.lau@linux.dev>,
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"kpsingh@kernel.org" <kpsingh@kernel.org>,
-	"sdf@google.com" <sdf@google.com>,
-	"haoluo@google.com" <haoluo@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"illusionist.neo@gmail.com" <illusionist.neo@gmail.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"kernel@xen0n.name" <kernel@xen0n.name>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"johan.almbladh@anyfinetworks.com" <johan.almbladh@anyfinetworks.com>,
-	"paulburton@kernel.org" <paulburton@kernel.org>,
-	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"deller@gmx.de" <deller@gmx.de>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"iii@linux.ibm.com" <iii@linux.ibm.com>,
-	"hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"gor@linux.ibm.com" <gor@linux.ibm.com>,
-	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
-	"svens@linux.ibm.com" <svens@linux.ibm.com>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"hawk@kernel.org" <hawk@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"dsahern@kernel.org" <dsahern@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"guanwentao@uniontech.com" <guanwentao@uniontech.com>,
-	"baimingcong@uniontech.com" <baimingcong@uniontech.com>
-Subject: Re: [PATCH] Revert "bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()" for linux-6.6.37
-Message-ID: <2024070908-glade-granny-1137@gregkh>
-References: <5A29E00D83AB84E3+20240706031101.637601-1-wangyuli@uniontech.com>
- <2024070631-unrivaled-fever-8548@gregkh>
- <B7E3B29557B78CB1+afadbaa6-987e-4db4-96b5-4e4d5465c37b@uniontech.com>
- <2024070815-udder-charging-7f75@gregkh>
- <a1dac525-4e6d-4d28-87ee-63723abbafad@cs-soprasteria.com>
+	s=arc-20240116; t=1720516984; c=relaxed/simple;
+	bh=Mg/A831yLmDsApgW71u2EDNhhGRIX5UWXSlgAY7Jyvo=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FcrhehYen3CEUA7s78Cd6gmmS+wqHUjttfMbbTk02p9N3zTq1koZ9aucsRly8oP7E8yekvLUZKvyec9ZYYUkGwObB6CMYbQd27iB+a1SwdLkFP/gMDlqjOUMuVS14fEsHQ0VTO2cESE+6REJCNw7LhV8SXybnBCsEt4us4J37OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx7+tyAY1mrlwCAA--.7078S3;
+	Tue, 09 Jul 2024 17:22:58 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusZwAY1mitJAAA--.18510S3;
+	Tue, 09 Jul 2024 17:22:58 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KVM: Implement feature passing from user
+ space
+From: maobibo <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240611123655.4169939-1-maobibo@loongson.cn>
+Message-ID: <5b568152-7912-c613-588e-7b2bf1491ee5@loongson.cn>
+Date: Tue, 9 Jul 2024 17:22:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20240611123655.4169939-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a1dac525-4e6d-4d28-87ee-63723abbafad@cs-soprasteria.com>
+X-CM-TRANSID:AQAAf8DxusZwAY1mitJAAA--.18510S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Aw1UGrWfKw4rWry3ArykXrc_yoW7Cr4kpF
+	y7AFn5Gr4rKryfCw1ktws8ur47XFs7Gr129Fy2g3y5AF4j9r18Jr1kKrZrXFy5Jw48Z3WI
+	qF1Fkwn0va1qvwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jn
+	UUUUUUUU=
 
-On Mon, Jul 08, 2024 at 03:12:55PM +0000, LEROY Christophe wrote:
-> 
-> 
-> Le 08/07/2024 à 14:36, Greg KH a écrit :
-> > On Sun, Jul 07, 2024 at 03:34:15PM +0800, WangYuli wrote:
-> >>
-> >> On 2024/7/6 17:30, Greg KH wrote:
-> >>> This makes it sound like you are reverting this because of a build
-> >>> error, which is not the case here, right?  Isn't this because of the
-> >>> powerpc issue reported here:
-> >>>     https://lore.kernel.org/r/20240705203413.wbv2nw3747vjeibk@altlinux.org
-> >>> ?
-> >>
-> >> No, it only occurs on ARM64 architecture. The reason is that before being
-> >> modified, the function
-> >>
-> >> bpf_jit_binary_lock_ro() in arch/arm64/net/bpf_jit_comp.c +1651
-> >>
-> >> was introduced with __must_check, which is defined as
-> >> __attribute__((__warn_unused_result__)).
-> >>
-> >>
-> >> However, at this point, calling bpf_jit_binary_lock_ro(header)
-> >> coincidentally results in an unused-result
-> >>
-> >> warning.
-> >
-> > Ok, thanks, but why is no one else seeing this in their testing?
-> 
-> Probably the configs used by robots do not activate BPF JIT ?
-> 
-> >
-> >>> If not, why not just backport the single missing arm64 commit,
-> >>
-> >> Upstream commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory
-> >> management") is part of
-> >>
-> >> a larger change that involves multiple commits. It's not an isolated commit.
-> >>
-> >>
-> >> We could certainly backport all of them to solve this problem, buthas it's not
-> >> the simplest solution.
-> >
-> > reverting the change feels wrong in that you will still have the bug
-> > present that it was trying to solve, right?  If so, can you then provide
-> > a working version?
-> 
-> Indeed, by reverting the change you "punish" all architectures because
-> arm64 hasn't properly been backported, is it fair ?
-> 
-> In fact, when I implemented commit e60adf513275 ("bpf: Take return from
-> set_memory_rox() into account with bpf_jit_binary_lock_ro()"), we had
-> the following users for function bpf_jit_binary_lock_ro() :
-> 
-> $ git grep bpf_jit_binary_lock_ro e60adf513275~
-> e60adf513275~:arch/arm/net/bpf_jit_32.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:arch/loongarch/net/bpf_jit.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:arch/mips/net/bpf_jit_comp.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:arch/parisc/net/bpf_jit_core.c:
-> bpf_jit_binary_lock_ro(jit_data->header);
-> e60adf513275~:arch/s390/net/bpf_jit_comp.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:arch/sparc/net/bpf_jit_comp_64.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:arch/x86/net/bpf_jit_comp32.c:
-> bpf_jit_binary_lock_ro(header);
-> e60adf513275~:include/linux/filter.h:static inline void
-> bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-> 
-> But when commit 08f6c05feb1d ("bpf: Take return from set_memory_rox()
-> into account with bpf_jit_binary_lock_ro()") was applied, we had one
-> more user which is arm64:
-> 
-> $ git grep bpf_jit_binary_lock_ro 08f6c05feb1d~
-> 08f6c05feb1d~:arch/arm/net/bpf_jit_32.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/arm64/net/bpf_jit_comp.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/loongarch/net/bpf_jit.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/mips/net/bpf_jit_comp.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/parisc/net/bpf_jit_core.c:
-> bpf_jit_binary_lock_ro(jit_data->header);
-> 08f6c05feb1d~:arch/s390/net/bpf_jit_comp.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/sparc/net/bpf_jit_comp_64.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:arch/x86/net/bpf_jit_comp32.c:
-> bpf_jit_binary_lock_ro(header);
-> 08f6c05feb1d~:include/linux/filter.h:static inline void
-> bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-> 
-> Therefore, commit 08f6c05feb1d should have included a backport for arm64.
-> 
-> So yes, I agree with Greg, the correct fix should be to backport to
-> ARM64 the changes done on other architectures in order to properly
-> handle return of set_memory_rox() in bpf_jit_binary_lock_ro().
+Gently ping.
 
-Ok, but it looks like due to this series, the powerpc tree is crashing
-at the first bpf load, so something went wrong.  Let me go revert these
-4 patches for now, and then I will be glad to queue them up if you can
-provide a working series for all arches.
+On 2024/6/11 ä¸‹åˆ8:36, Bibo Mao wrote:
+> Currently features defined in cpucfg CPUCFG_KVM_FEATURE come from
+> kvm kernel mode only. However KVM is not aware of user-space VMM
+> features which makes it hard to employ optimizations. Here interface
+> is added to update register CPUCFG_KVM_FEATURE from user space,
+> only bit 24 - 31 is valid, so that VM can detect features implemented
+> in user-space VMM.
+> 
+> A new feature bit KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added which
+> can be set from user space. This feature indicates that the virt EXTIOI
+> can route interrupts to 256 vCPUs, rather than 4 vCPUs like with real HW.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>    1. Update changelog suggested by WangXuerui.
+>    2. Fix typo issue in function kvm_loongarch_cpucfg_set_attr(), usr_features
+> should be assigned directly, also suggested by WangXueRui.
+> ---
+>   arch/loongarch/include/asm/kvm_host.h  |  4 +++
+>   arch/loongarch/include/asm/loongarch.h |  5 ++++
+>   arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
+>   arch/loongarch/kvm/exit.c              |  1 +
+>   arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
+>   5 files changed, 44 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 88023ab59486..8fa50d757247 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -135,6 +135,9 @@ enum emulation_result {
+>   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
+>   #define KVM_LARCH_LBT		(0x1 << 5)
+>   
+> +#define KVM_LOONGARCH_USR_FEAT_MASK			\
+> +	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
+> +
+>   struct kvm_vcpu_arch {
+>   	/*
+>   	 * Switch pointer-to-function type to unsigned long
+> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
+>   		u64 last_steal;
+>   		struct gfn_to_hva_cache cache;
+>   	} st;
+> +	unsigned int usr_features;
+>   };
+>   
+>   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index 7a4633ef284b..4d9837512c19 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -167,9 +167,14 @@
+>   
+>   #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
+>   #define  KVM_SIGNATURE			"KVM\0"
+> +/*
+> + * BIT 24 - 31 is features configurable by user space vmm
+> + */
+>   #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+>   #define  KVM_FEATURE_IPI		BIT(1)
+>   #define  KVM_FEATURE_STEAL_TIME		BIT(2)
+> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
+> +#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+> index ed12e509815c..dd141259de48 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -99,6 +99,8 @@ struct kvm_fpu {
+>   
+>   /* Device Control API on vcpu fd */
+>   #define KVM_LOONGARCH_VCPU_CPUCFG	0
+> +/* For CPUCFG_KVM_FEATURE register */
+> +#define  KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI	24
+>   #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
+>   #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
+>   
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index e1bd81d27fd8..ab2dcc76784a 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -53,6 +53,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+>   		ret = KVM_FEATURE_IPI;
+>   		if (sched_info_on())
+>   			ret |= KVM_FEATURE_STEAL_TIME;
+> +		ret |= vcpu->arch.usr_features;
+>   		vcpu->arch.gprs[rd] = ret;
+>   		break;
+>   	default:
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 3783151fde32..4a06a9e96e4e 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -832,6 +832,8 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+>   	switch (attr->attr) {
+>   	case 2:
+>   		return 0;
+> +	case CPUCFG_KVM_FEATURE:
+> +		return 0;
+>   	default:
+>   		return -ENXIO;
+>   	}
+> @@ -865,9 +867,18 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+>   	uint64_t val;
+>   	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+>   
+> -	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+> -	if (ret)
+> -		return ret;
+> +	switch (attr->attr) {
+> +	case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
+> +		ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case CPUCFG_KVM_FEATURE:
+> +		val = vcpu->arch.usr_features & KVM_LOONGARCH_USR_FEAT_MASK;
+> +		break;
+> +	default:
+> +		return -ENXIO;
+> +	}
+>   
+>   	put_user(val, uaddr);
+>   
+> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+>   static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+>   					 struct kvm_device_attr *attr)
+>   {
+> -	return -ENXIO;
+> +	u64 __user *user = (u64 __user *)attr->addr;
+> +	u64 val, valid_flags;
+> +
+> +	switch (attr->attr) {
+> +	case CPUCFG_KVM_FEATURE:
+> +		if (get_user(val, user))
+> +			return -EFAULT;
+> +
+> +		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
+> +		if (val & ~valid_flags)
+> +			return -EINVAL;
+> +
+> +		vcpu->arch.usr_features = val;
+> +		return 0;
+> +
+> +	default:
+> +		return -ENXIO;
+> +	}
+>   }
+>   
+>   static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+> 
+> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+> 
 
-thanks,
-
-greg k-h
