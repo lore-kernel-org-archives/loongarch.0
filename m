@@ -1,154 +1,180 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD3A15A843
-	for <loongarch@lists.linux.dev>; Tue,  9 Jul 2024 12:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693DD15886B;
+	Tue,  9 Jul 2024 17:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720529152; cv=none; b=cj2qM80qOnkNvhs9BffQBPgsliIP8RvuRiU4LYD9TmdF3g2DDEnSu8C3Tj7jy9GtL3Iub1Q0pc8snL9ZNjAQ23oNN7CITv+im3HgInmD5NuLNXjSc7EzrIQdTg/OU1b8D4eVW7i3YLV4GXBMaXzjf1/lvTi94Rt3KMopkMA6Clw=
+	t=1720545833; cv=none; b=JpJEbAieb4WUe/sHbm0cM9pj9yuhbLDmB8QxZYoLfbRyQ6t1OU6JfleiTrKi37mgf7rWx9gfAmUp41yJuK9vZnUhXEqLcjHHwCAeZL1ctTsGdj3f6w9q+6xoBN3M+BidczbsRis42yKhvUal85+J+7+vzpgzPeMc6sQY4FWQL0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720529152; c=relaxed/simple;
-	bh=O9QjD7xyf7LdxqfElfMDNMZgFewgPFqt+hOvv1SP8XI=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OtY/plGUApt6O/OeZFvTDUJHmHgx2Navn5u8nhPYzfYCoZaSOGfyPP/D4SQ3v8hYi//OZvdtMiU2PgYxVJQiSDEddfS7ltEWKVlLApEq+j3OyLMdpBptNDXThZComdjiFhBCa3l9j/ilOoKB1t53D66NH8O5f+yUzMR+Jjvs8FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lk9zInG7; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720545833; c=relaxed/simple;
+	bh=6JR7YL5dHcTXqmUfNm6ulP4+0whK4Ux4ulJpM4dDEes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s3hRGI+CI1m2r6LbbtBUWWLOTCD4CuJ1UcY+PtykKp7oRPtYtr5GtJMl3f4ASGTuhbZmTimuDqw9i3chCjF5fhNmCUFLmcx71pp3YZsw1wrt6NUkoZMMBMQmEqhmx1sB+Pog/BzQdFqVKPe2mCMH0wo6x+Z6w1uxNHo0vXyyBFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwPgrXPW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk9zInG7"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-1fb3037b47dso32823695ad.2
-        for <loongarch@lists.linux.dev>; Tue, 09 Jul 2024 05:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720529151; x=1721133951; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PTkMABYzGdhSQd9C4loTDYzycJLf8ODZaPM06fmE3pI=;
-        b=Lk9zInG7I64D6YmsG6FChB5RY9ThTDBVLM9KQFcKTOZr9wIBVk3qAR0iM9FBQabnWv
-         WdBNnyyVHJgxqxN/CHWR6BmJMzHUY4I5rm2Om/6zuAMzNN/UHP7iBWKRPBybmiwMJZQv
-         uDLY9iqKqTCz+TKApwX1NdlosHXZ3zjYMuMVaglnTHXVXP+2u9js61dHPHPI5EU4umBb
-         Ag/IMT0A+ClGt3sbX4z3x8QLQCCxsL8x7ic/V1RwuFWSIQPBi72TnH9CLN5MYd4z/xRP
-         p7wncHqzD9j9ACCS1AlLUVdQDYycBN7Uqf3gFvEo1Z9EroqpzfaY/aNLRCqgYcfvDUex
-         6MRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720529151; x=1721133951;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PTkMABYzGdhSQd9C4loTDYzycJLf8ODZaPM06fmE3pI=;
-        b=T6ajl5C8tk9vv3+1JEkvS42d0BdD8DBFstewW3+G4CrT/fzIX9MYn8t9ll08vejHPT
-         re0BhjsBYIPG3/PUXLUnPelpSOGs8UBBpsmsXuquwhooax3wDuFGcx/T78ia+dG2+mv+
-         8hxYcOgHkJL2QSY5SaVkjvbrr5egRa/wwcJcq8DK8aFwMK+G3SLmRoHyfgPp5rB9+tE8
-         69j0Z8LvG5dV08PgbnHDnwYDI8Seux76Svo34I/QZf6dcR2rtkAMiPYR92YuVb3km8MS
-         rexvWeTxvf0u0SeYgt9bOJhB9lTLfNdu35KJgL9kD/Ml3w7pFeiJwXU8eV4+4b7GoRyo
-         hIwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlwtpDKGNuWRBNyn7Fyhg06j7fn2FGRIQdPZCI/HJACjEpr+AlrdCeecn91U7XSTXXwwHVdfRO/qkUKJ1pNjn33sp/B+1LXW4G
-X-Gm-Message-State: AOJu0YyllCDTYqzVS0LC8IWGIgpc3N4cjUqFeOlZFR3bTu4Mz9b++nxI
-	hm67EzyjfimS4ufKTmJxT4KeXPAYp3Ipnu52jnV8SqHEWyRHEJos
-X-Google-Smtp-Source: AGHT+IFOaJNRaCw0x5duAR8ySF29N2zLhsw5jMvf8ySrYnWHRx3vmy5Ah54KY0oG4A60mrkmNodEQw==
-X-Received: by 2002:a05:6a20:734b:b0:1be:caf6:66e5 with SMTP id adf61e73a8af0-1c29820d407mr2618980637.6.1720529150564;
-        Tue, 09 Jul 2024 05:45:50 -0700 (PDT)
-Received: from [127.0.0.1] ([103.156.242.195])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6acf9a3sm15241475ad.255.2024.07.09.05.45.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 05:45:49 -0700 (PDT)
-From: Celeste Liu <coelacanthushex@gmail.com>
-X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-Message-ID: <44535d2d-c95d-4673-b845-032669cf7abf@gmail.com>
-Date: Tue, 9 Jul 2024 20:45:38 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwPgrXPW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73D9C3277B;
+	Tue,  9 Jul 2024 17:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720545832;
+	bh=6JR7YL5dHcTXqmUfNm6ulP4+0whK4Ux4ulJpM4dDEes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AwPgrXPW3JfSlpe46zAqPpRmk67PjUPgvKmiUQjJg6uvcyMPVWuu5e5QNiuViEwTY
+	 umK0995F6a5PS1q171iZzBn7MkFAbMR1M49fRNmmou84XeBTnLTh7hjQxPCMhNugP0
+	 VbWdKqpGAMDyQn0ta/D/sfOmUqKMGKYNLbk3Z5s2olmuPoFKKEMbXb0G/0xHKg7MjA
+	 SlOvh+HlJkvcRSSYEnGJDIeXCK6ZAL4UTk/eUKUIPXZT1L5reo8onxjdpCvcVwXHSs
+	 qIn1Z9HZ6XXUHbOYbnpCKH5HWbVMfRyEEKGUip6ynNrB/i17jwY0/ougN9eXr4Vgun
+	 sPm1+k6XgCKXg==
+Date: Tue, 9 Jul 2024 18:23:42 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Dinh Nguyen <dinguyen@kernel.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Aishwarya.TCV@arm.com, Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 10/17] arm64: generate 64-bit syscall.tbl
+Message-ID: <c8c882ad-d508-40b7-9af5-b2a2ddf777c1@sirena.org.uk>
+References: <20240704143611.2979589-1-arnd@kernel.org>
+ <20240704143611.2979589-11-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2855/tegra/omap2plus
-To: Stefan Wahren <wahrenst@gmx.net>, Kevin Hilman <khilman@kernel.org>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>,
- Icenowy Zheng <uwu@icenowy.me>, =?UTF-8?Q?Th=C3=A9o_Lebrun?=
- <theo.lebrun@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim
- <svenjoac@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Anup Patel <anup@brainfault.org>, Nicholas Piggin <npiggin@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Rich Felker <dalias@libc.org>,
- Russell King <linux@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>,
- Guo Ren <guoren@kernel.org>, linux-tegra@vger.kernel.org,
- Thierry Reding <thierry.reding@gmail.com>, linux-riscv@lists.infradead.org,
- Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
- linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev,
- Mykola Lysenko <mykolal@fb.com>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Paul Walmsley <paul.walmsley@sifive.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- linux-rpi-kernel@lists.infradead.org, WANG Xuerui <kernel@xen0n.name>
-References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
- <20240530111947.549474-14-CoelacanthusHex@gmail.com>
- <7hv81f78cy.fsf@baylibre.com> <6b7cfe69-4f72-490f-8e86-5343bd244a2d@gmx.net>
-Content-Language: en-GB-large
-In-Reply-To: <6b7cfe69-4f72-490f-8e86-5343bd244a2d@gmx.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Qf0YYqoW3KQMZ1o1"
+Content-Disposition: inline
+In-Reply-To: <20240704143611.2979589-11-arnd@kernel.org>
+X-Cookie: Your step will soil many countries.
 
 
-On 2024-07-09 20:26, Stefan Wahren wrote:
-> Hi Celeste,
-> 
-> there is a typo in the subject line
-> 
-> s/bcm2855/bcm2835
+--Qf0YYqoW3KQMZ1o1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will be included in next version.
+On Thu, Jul 04, 2024 at 04:36:04PM +0200, Arnd Bergmann wrote:
 
-> 
-> Am 09.07.24 um 01:49 schrieb Kevin Hilman:
->> Celeste Liu <coelacanthushex@gmail.com> writes:
->>
->>> Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
->>> with systemd") said it's because of recommendation from systemd. But
->>> systemd changed their recommendation later.[1]
->>>
->>> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
->>> needs an RT budget assigned, otherwise the processes in it will not be able to
->>> get RT at all. The problem with RT group scheduling is that it requires the
->>> budget assigned but there's no way we could assign a default budget, since the
->>> values to assign are both upper and lower time limits, are absolute, and need to
->>> be sum up to < 1 for each individal cgroup. That means we cannot really come up
->>> with values that would work by default in the general case.[2]
->>>
->>> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
->>> can only be enabled when all RT processes are in the root cgroup. But it will
->>> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
->>>
->>> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
->>> support it.
->>>
->>> [1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1be321c31d5299f69f
->>> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
->>>
->>> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
->>> ---
->>>   arch/arm/configs/bcm2835_defconfig   | 1 -
->>>   arch/arm/configs/omap2plus_defconfig | 1 -
->>>   arch/arm/configs/tegra_defconfig     | 1 -
->> For omap2plus_defconfig:
->>
->> Acked-by: Kevin Hilman <khilman@baylibre.com>
->>
->>
-> For bcm2835_defconfig:
-> 
-> Tested-by: Stefan Wahren <wahrenst@gmx.net>
+>  #define __ARCH_WANT_SYS_CLONE
+> +#define __ARCH_WANT_NEW_STAT
+> =20
+> -#ifndef __COMPAT_SYSCALL_NR
+> -#include <uapi/asm/unistd.h>
+> -#endif
+> +#include <asm/unistd_64.h>
 
+It looks like this is causing widespread build breakage in kselftest in
+-next for arm64, there are *many* errors in the form:
+
+In file included from test_signals_utils.c:14:
+/build/stage/build-work/usr/include/asm/unistd.h:2:10: fatal error: unistd_=
+64.h: No such file or directory
+    2 | #include <unistd_64.h>
+      |          ^~~~~~~~~~~~~
+
+which obviously looks like it's tied to the above but I've not fully
+understood the patch/series yet.  Build log at:
+
+   https://builds.sirena.org.uk/82d01fe6ee52086035b201cfa1410a3b04384257/ar=
+m64/defconfig/build.log
+
+A bisect appears to confirm that it's this commit, which is in -next as
+6e4a077c0b607c674536908c5b68f1c31e4e26ec.
+
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [82d01fe6ee52086035b201cfa1410a3b04384257] Add linux-next specific f=
+iles for 20240709
+git bisect bad 82d01fe6ee52086035b201cfa1410a3b04384257
+# status: waiting for good commit(s), bad commit known
+# good: [037206cd4cb43d535453723140fde1bcde0b296e] Merge branch 'for-linux-=
+next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
+git bisect good 037206cd4cb43d535453723140fde1bcde0b296e
+# bad: [2ae3e655fc40f1b6620194b90dcf9a4515257918] Merge branch 'master' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+git bisect bad 2ae3e655fc40f1b6620194b90dcf9a4515257918
+# bad: [4f2a367612d46dff2068582feadfbdd8e1c0443f] Merge branch 'fs-next' of=
+ linux-next
+git bisect bad 4f2a367612d46dff2068582feadfbdd8e1c0443f
+# bad: [d3da7ed72840f3660f90966490adfd499d96ea8f] Merge branch 'for-next' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git
+git bisect bad d3da7ed72840f3660f90966490adfd499d96ea8f
+# good: [6355edbb3dfe322f0748b1eb3987973a568bbb42] Merge tag 'v6.11-rockchi=
+p-dts64-2' of https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-r=
+ockchip into soc/dt
+git bisect good 6355edbb3dfe322f0748b1eb3987973a568bbb42
+# good: [2073cda629a47f2ebe2afcd3cb8b3000d5cd13d1] mm: optimization on page=
+ allocation when CMA enabled
+git bisect good 2073cda629a47f2ebe2afcd3cb8b3000d5cd13d1
+# good: [91a2b5b12867f77dc68d2d15ec7381e6e43820cb] Merge branch 'perf-tools=
+-next' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git
+git bisect good 91a2b5b12867f77dc68d2d15ec7381e6e43820cb
+# bad: [b8c38a39b6ee44b02ee563b60439f417fec441ad] Merge branch 'for-next/pe=
+rf' of git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git
+git bisect bad b8c38a39b6ee44b02ee563b60439f417fec441ad
+# good: [c100216635e922f43d9e783da918a749995350ca] Merge branch 'for-next/v=
+cpu-hotplug' into for-next/core
+git bisect good c100216635e922f43d9e783da918a749995350ca
+# bad: [fafb823fc82dfb746cc9043b1573c4b29ef1d52a] Merge branch 'for-next' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/rmk/linux.git
+git bisect bad fafb823fc82dfb746cc9043b1573c4b29ef1d52a
+# bad: [8d46f9dd06378e346a562c75bc2a260a03abe807] csky: convert to generic =
+syscall table
+git bisect bad 8d46f9dd06378e346a562c75bc2a260a03abe807
+# good: [57029ba74296a4dafe35f147e88d56d8ae7b69da] kbuild: add syscall tabl=
+e generation to scripts/Makefile.asm-headers
+git bisect good 57029ba74296a4dafe35f147e88d56d8ae7b69da
+# good: [ea0130bf3c45f276b1f9e005eeb255a80a10358b] arm64: convert unistd_32=
+=2Eh to syscall.tbl format
+git bisect good ea0130bf3c45f276b1f9e005eeb255a80a10358b
+# bad: [b2595bdb3eb3fe24137d0bd07a51bc622f068a81] arm64: rework compat sysc=
+all macros
+git bisect bad b2595bdb3eb3fe24137d0bd07a51bc622f068a81
+# bad: [6e4a077c0b607c674536908c5b68f1c31e4e26ec] arm64: generate 64-bit sy=
+scall.tbl
+git bisect bad 6e4a077c0b607c674536908c5b68f1c31e4e26ec
+# first bad commit: [6e4a077c0b607c674536908c5b68f1c31e4e26ec] arm64: gener=
+ate 64-bit syscall.tbl
+
+--Qf0YYqoW3KQMZ1o1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaNch4ACgkQJNaLcl1U
+h9D3rQf8CZ9gPfX054uMomNs1xS6dBXwr9es5isGNpgMC9ccGAhNPLutJvRWDgKW
+pl3YBDyLIoQHGQtB/r9DIQuPQg0xF5ZI80itka6yRvmgnCcTovgdRGgBc9Z549Dl
+epxlzSquqEILa8rpTPxywHpu8pFGCNaQhZ/e5shUH1gOWDaOE8WU7jI2MDRD9sLa
+I5OD24mUtFHH1kpgNBJRESf4bYcVgM7EYm9spMdd0lb8zjIIUqTJiUKyInyKTNIt
+qEAIsEdOMoMTi/9FPetku+lxZQgd78juowTgoODixlanZuEnMqVPQYpeX2UZegOe
+cpcjrctAmtncTMv6mtWg5YwE3OQSNA==
+=WV1l
+-----END PGP SIGNATURE-----
+
+--Qf0YYqoW3KQMZ1o1--
