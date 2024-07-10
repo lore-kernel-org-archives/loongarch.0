@@ -1,157 +1,120 @@
-Received: from flow2-smtp.messagingengine.com (flow2-smtp.messagingengine.com [103.168.172.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67FF19344F;
-	Wed, 10 Jul 2024 14:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60381194135
+	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 15:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620391; cv=none; b=oVkrnHfATG7StPK/uYc4DDM7Bo3V3RmE1CUaUHX3EGMTgJcwKaxOATNokq71n12HkolHaId7ZA3LVCc6f7oGbtdL0P69SB1GmtWhsx6vtfNPbrTXLZQiQF9RKRzDVhGTH2GHa8wUeHa8d7IyfNyv8ae2nGNq6XK1nV7hYUfZwoU=
+	t=1720626714; cv=none; b=fqOjSrXs5kydpYYVzyWffI3oYlckge0LJDW1DELPY/K6Jner4439/W75vRENXLE8DlC+zuElbpC5eq0uYZJG2D+nMlNWgpFbzLpJjV5fggus7eUD4r7GAfpxK/QSDyBdLPJuxfvLvid6h7By+FRqbi2gLzXxTOitqiqPkZObCAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720620391; c=relaxed/simple;
-	bh=MLXBuqKlLfNGgq9/cmxPtB7IYgDifqCjYyvR42wX/UQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=oFYEf/GhLqBkYrQTCfUC4wwYyYJobGKSgdk8dBO7Q0s9Z/n8S4rlnms+Qpbo1fb3Z50GhgbZP19+SLpDRm0OEA2BKJ4TyD2xKe9ydMn6DIYlkaeZVJO8ea8FsdTABpU39ES5v7oDCYEoHG6IrFNqnmZvz8WyyO+bX/Th/hrhESQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=b1QSu0yR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l/UJxZbD; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720626714; c=relaxed/simple;
+	bh=Yd7wN4MEwb/4Ych5ZfYI8ZDswiwmmeax1EQOB34ZhJk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OV6NMkMByKFIPNVh782CbD/9pkAG6o1Eji9yibVCkSNyc/cT0+7iObukijC+U44XRvhvzzBRruiA6ftwbeHWXGqAonLHNrBeZHnJos9O/tE06OqVaaaiRDfYe9wpOJLfuZ5hBh+r2KehSIDuiTIPrSbelcmtvQiSo6lPX++yVTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nrY2OV1f; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="b1QSu0yR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l/UJxZbD"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id B9B1820041E;
-	Wed, 10 Jul 2024 10:06:28 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 10 Jul 2024 10:06:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1720620388;
-	 x=1720627588; bh=FPzIeyUoxgy/zsvmREOhCT66sbHOjXoV3rwrfvjo/oM=; b=
-	b1QSu0yRwxmUk4T9e11CNmCLrSiiiDvCTM+p6gNGgF4NyrNSLVIOHkUZBUOxpgxl
-	d9vXjGnvw1RIRFEnGbndv/NcsmA2GLHmGzS5rJQPxTUIVRHIc5YsWzN3YlDlG8/w
-	vwY2PFDGlan7ERoJa/sElHU/md+4c0p5HPfL6l9s8ZmMuKw48t/vLeQtyNT7xGQA
-	08JzF7ADIoyXkY9zBh7hy27GqOe5iBkl5T6KQBAg4I7sSnV3Bx0wxfh4IffSCDrD
-	EIVAL8hHH2Si9T8S7nGauN4LncCjezn9OQ+3j17vNfQLsEMR2BpYb0oenTLEqeam
-	BkMUq/IWBWnOKLgWug2rTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720620388; x=
-	1720627588; bh=FPzIeyUoxgy/zsvmREOhCT66sbHOjXoV3rwrfvjo/oM=; b=l
-	/UJxZbDwRbte/g2yuSkS7yviFUoG8LxQcRmLaiOWFtKAn6XFD9z5i8BhgFiwj0y8
-	29JjOMIc2w4FtrW9IR6h2qT2CtX2uPI+r/FHtrpLoTkSoPbJe3J1cehcgwZANS3t
-	XYMJKq7TPb5u/bjrOem4WITUkAc4LfU2b5bDaz8AwaT3QByZ35D8ZMjHSS1yi35y
-	36/dyXCkN+nwX8HvtBeT3ddkLpikQS8EZ4XXcTy6LBfF5l17hW9zP7dZMzOmMwhD
-	XVJREG2So1zHmWfmY5D9lvTGvCqcKkIECCEfL0l0Epvm0v8FzfUmUtTmU/hw+Ez6
-	qJJNz78tvzr+wlzfmgwog==
-X-ME-Sender: <xms:YZWOZnV51EQeUhqFAlZ7tF76IbGPDn0AZ7wRftLLqANLQ8M0Tit2-g>
-    <xme:YZWOZvnwaOkIlW8JDpVJ4uVPdX-o79KWjlklZpPYf1atbq30ICIdwRgOUhrJ5p-D2
-    Q0py9B8mmaXogLqMVM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedvgdduvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:YZWOZjaoGrXUw2M4_1y1ixokbMZsjZ3j3fcIkHhdLxC9KxWjE7s4BQ>
-    <xmx:YZWOZiWPJTo6_33m1wPp7E5VWb0uw6xuIw-rKVLCCKI-iKqUbc-UEw>
-    <xmx:YZWOZhn1-MjLOZ3xu0SsbEEBMly36iOA_myUgrsipjQv0pKFdaMeCQ>
-    <xmx:YZWOZvdtJ2DdefwHMUz8i_IkZzQem-fWQbBtb87UMDnBEk3or4GmNA>
-    <xmx:ZJWOZilNKpqeyxqgV0ZboZyCiXV66jXIKgbBPX_yaK6wioTafD0Okj0c>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 213BBB6008F; Wed, 10 Jul 2024 10:06:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nrY2OV1f"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fb3b398923so32924025ad.2
+        for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 08:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720626713; x=1721231513; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2S/Ws8T8aRzTnaLMwEZxjsu7iN6mSUkQ05y/iw/B/rc=;
+        b=nrY2OV1f4B1QrhCC4yfz+AAoyCQbsGoMdvUysaL/4eSab2vMnj0mWIwljviUfsHxao
+         4L4+oYe58RODhfjxnV6AxmNHASreVc9dlLG5N7r7ZTHg8XbzKU7z1L+CpsnvKAcjKjYT
+         SmCcTRReyX7j452THMaOjDIyXebivsKBbTTjYlgj4Zf/HNTrR+AfG7AdRy7Sq9xUyoZA
+         ES3rTh2KlfG6sx22HxfZlDtWP2iNZLs8LTdcXkLGAqU2Q0ShTlVSsTkWKhyeN9MCLqUl
+         BTwWA54vDwldv1jBuQl722i0fdx5BZWDQRzTpFpO/2uUuYkAhTu3OkbqrjAZWHExr5t9
+         Z7Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720626713; x=1721231513;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2S/Ws8T8aRzTnaLMwEZxjsu7iN6mSUkQ05y/iw/B/rc=;
+        b=Xh3PfYUfVnTUIlD4gPyrKcBLWAMRDWMPZA9C1VFC3bpJ9P1+/KBm5RfBI+6GKehitl
+         xwBzKWJVzPQ+/uxoUnlNYsbEnYs39bvvM0Pz16KY4+YSQ9eIBKdYv7m722uUoxD73KWh
+         cDF/M+OIpifYuZQNYk+G3T0hbqCo6nwVQSC9xQdFBS9ITeoTBn0jB9g2Mr8se8cBSsZC
+         2bXE4ejS1Od56e8Q3ln/VlUpJJa46p2y427bHinsQ/ekFpH2CbHx2+IBkgdgT61qpors
+         KMiXqjk6YUE3oBBkjswQ9VabKj/JOknL699+KkIMXdUC/oOE+fLG0PnmflBujv8Q5fIo
+         ooHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiAJzwEFCFYJCEkjFOHA3M9ooPNW8kq2Q+VKYtWjrXXl+TXjnC7hTJDk6dl89cJ8Sbu5jQL2tDnuKHNbqc4keRJ54EhajJ6ACB
+X-Gm-Message-State: AOJu0YypDe80mfrVLiTp1RBjf4L6J+bXrst/EfEqe2TxUSJYi2AOPcQa
+	l4mz6v74//yDJ5u4+J/D0XcUVzge/pLcw9BHs7Ev/vJsXLAJaYUtIrxspkvapLZtZqhfvVfbglK
+	5Cw==
+X-Google-Smtp-Source: AGHT+IGFDWyL4oVIv+kd3eR4ozKAgHx5u/arXUHJsTVnFMVwi1+9LesGIr7Enb4S0IMxOwQQwYsx6SyO0KU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:dad2:b0:1f7:175a:69ab with SMTP id
+ d9443c01a7336-1fbb6ce3e7dmr4023085ad.4.1720626712651; Wed, 10 Jul 2024
+ 08:51:52 -0700 (PDT)
+Date: Wed, 10 Jul 2024 08:51:51 -0700
+In-Reply-To: <CALzav=cwu3M2nLHwZLCTF=eGWx2Nq+=TuHMuGTfZCNa27mLs1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Message-Id: <64662665-929e-4d95-a9ac-c8f66bd83168@app.fastmail.com>
-In-Reply-To: 
- <CAMRc=McvRLeCTTXgC_OD5z5OAxQ0pZ46dTKP8XO+T-LkXKgRfQ@mail.gmail.com>
-References: 
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-5-3fd5f4a193cc@pengutronix.de>
- <27cf3056-5c7b-4759-b03a-1fa9b785611e@app.fastmail.com>
- <CAMRc=McvRLeCTTXgC_OD5z5OAxQ0pZ46dTKP8XO+T-LkXKgRfQ@mail.gmail.com>
-Date: Wed, 10 Jul 2024 16:06:03 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-Cc: "Andrew Lunn" <andrew@lunn.ch>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>, imx@lists.linux.dev,
- "Tony Lindgren" <tony@atomide.com>,
- "Marco Felsch" <m.felsch@pengutronix.de>,
- "Thierry Reding" <thierry.reding@gmail.com>,
- linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "WANG Xuerui" <kernel@xen0n.name>, "Fabio Estevam" <festevam@gmail.com>,
- linux-aspeed@lists.ozlabs.org, "Richard Weinberger" <richard@nod.at>,
- "Gregory Clement" <gregory.clement@bootlin.com>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Magnus Damm" <magnus.damm@gmail.com>,
- "Russell King" <linux@armlinux.org.uk>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Jon Hunter" <jonathanh@nvidia.com>, "Joel Stanley" <joel@jms.id.au>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- "Andrew Jeffery" <andrew@codeconstruct.com.au>,
- "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Vladimir Zapolskiy" <vz@mleia.com>, loongarch@lists.linux.dev,
- linux-tegra@vger.kernel.org, Linux-OMAP <linux-omap@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linuxppc-dev@lists.ozlabs.org,
- "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- linux-kernel@vger.kernel.org,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
- "Dinh Nguyen" <dinguyen@kernel.org>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Shawn Guo" <shawnguo@kernel.org>, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH 5/9] ARM: defconfig: convert to MTD_EEPROM_AT24
-Content-Type: text/plain;charset=utf-8
+Mime-Version: 1.0
+References: <20240503181734.1467938-1-dmatlack@google.com> <171874683295.1901599.10170158200177384059.b4-ty@google.com>
+ <CALzav=cwu3M2nLHwZLCTF=eGWx2Nq+=TuHMuGTfZCNa27mLs1A@mail.gmail.com>
+Message-ID: <Zo6uFz187FBYnQiY@google.com>
+Subject: Re: [PATCH v3 0/3] KVM: Set vcpu->preempted/ready iff scheduled out
+ while running
+From: Sean Christopherson <seanjc@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024, at 14:59, Bartosz Golaszewski wrote:
-> On Wed, Jul 10, 2024 at 2:49=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->>
->> On Mon, Jul 1, 2024, at 15:53, Marco Felsch wrote:
->> > The EEPROM_AT24 Kconfig symbol is marked as deprecated. Make use of=
- the
->> > new Kconfig symbol to select the I2C EEPROM driver support.
->> >
->> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
->> > ---
->> >  arch/arm/configs/aspeed_g4_defconfig   | 2 +-
->> >  arch/arm/configs/aspeed_g5_defconfig   | 2 +-
->> >  arch/arm/configs/at91_dt_defconfig     | 2 +-
->> >  arch/arm/configs/axm55xx_defconfig     | 2 +-
->> >  arch/arm/configs/davinci_all_defconfig | 2 +-
->> >  arch/arm/configs/imx_v4_v5_defconfig   | 2 +-
->> >  arch/arm/configs/imx_v6_v7_defconfig   | 2 +-
->> >  arch/arm/configs/ixp4xx_defconfig      | 2 +-
->> >  arch/arm/configs/keystone_defconfig    | 2 +-
->> >  arch/arm/configs/lpc18xx_defconfig     | 2 +-
->>
->> Applied to soc/defconfig, thanks
->
-> No! Why? This is still being discussed and it's not clear it will even
-> make it upstream.
+On Mon, Jul 01, 2024, David Matlack wrote:
+> On Tue, Jun 18, 2024 at 2:41=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> >
+> > On Fri, 03 May 2024 11:17:31 -0700, David Matlack wrote:
+> > > This series changes KVM to mark a vCPU as preempted/ready if-and-only=
+-if
+> > > it's scheduled out while running. i.e. Do not mark a vCPU
+> > > preempted/ready if it's scheduled out during a non-KVM_RUN ioctl() or
+> > > when userspace is doing KVM_RUN with immediate_exit=3Dtrue.
+> > >
+> > > This is a logical extension of commit 54aa83c90198 ("KVM: x86: do not
+> > > set st->preempted when going back to user space"), which  stopped
+> > > marking a vCPU as preempted when returning to userspace. But if users=
+pace
+> > > invokes a KVM vCPU ioctl() that gets preempted, the vCPU will be mark=
+ed
+> > > preempted/ready. This is arguably incorrect behavior since the vCPU w=
+as
+> > > not actually preempted while the guest was running, it was preempted
+> > > while doing something on behalf of userspace.
+> > >
+> > > [...]
+> >
+> > Applied to kvm-x86 generic, with minor changelog tweaks (me thinks you'=
+ve been
+> > away from upstream too long ;-) ).  Thanks!
+>=20
+> Thanks for the cleanups. Looks like you replaced "[Tt]his commit"
+> throughout. Anything else (so I can avoid the same mistakes in the
+> future)?
 
-Ok, dropped again, thanks for catching this.
-
-     Arnd
+I don't think so?  The "This commit" stuff is the only thing that I remembe=
+r, so
+any other tweaks can't be that important :-)
