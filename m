@@ -1,133 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A830116C6B7
-	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 08:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D38418FA12
+	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 10:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720601962; cv=none; b=EpCpmpN7P72Mr9B888zlJxg6LrGKv2QIIcdwCqCIFkS0ywoLGdpYkxGc6o4gkjf/Ip5axi1SILtE2IGErUWmpjKmrFVv9rG7MfmseX9xBuQD/ic8dNGES+ESWhnk4JoAqf6IB+GtAKGxZeKhgpfm9MkA3pUfwt2248ahDDkefXQ=
+	t=1720607260; cv=none; b=qv384OJcX4uCQyRNRi3j2vCO1YfYuopdSuqPSfNPP8iAibxkvPjYG8E/0PiwOwbzHINkpDEIZ8oYOvXlHdE2Yj5X0QsHYyaBT8oMzhPDt2MEvS/8eiadbAbGjYB4Gd9fPH9O9HuXDL7sLDK0MwnZ1/femRJ9EywUwE1HCzFKXnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720601962; c=relaxed/simple;
-	bh=7wKktnoDzEHozPgtg1T55fHPeoBJ/8cTfIxSsiSqOaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oJrUfF5DnRkszYu0a5o2aAWVLNz1W7SR2bihpFD74XQI3/0beVrFAHPARbckAD8xh3M0Vlza0XLdlM4c/sI4RMB0zKhXEBe0WEdUG3b6J2UGNqzoOJkUrsfgy/BZeBnjG8dPFvS6Bc8Z/fWbBkbmT0XYSaRqck7DMKi7+sPuBtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMSCRBEe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720607260; c=relaxed/simple;
+	bh=4Sico1dlLx2cucIw1hVJsr7ffu6bFhVb6M989R6P0Gw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=sGNmPgUk/68dLwRC6DKv5T/JF+8CxhkRxLj7+ORnEiO0qxjilfxMXvpX4ZULUwoI0ZvzXU/MpkL8NsXzdXO7lWCpZtZha5i8p2TqexBFAhV9Fv01JwcUmh+c/N0WdBb58eN6t4JUErSMWih4fNo/fMICuCQgX5gZWhHVgpd5GDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LyoeV7gW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TQea+NHx; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMSCRBEe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56CF9C4AF0A
-	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 08:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720601962;
-	bh=7wKktnoDzEHozPgtg1T55fHPeoBJ/8cTfIxSsiSqOaE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DMSCRBEe0whr7fL9tq+38yscSACyliQopgxbJRMqcLvyemr2jT1dGy2EN6kayv/r9
-	 CDMSX6SbYImNJUAdVLqdvtr8P9Jb2OG9ZQD0joIolDAql/j9rWll2IfPfqq/1WLJ0B
-	 ZidRqEGNseNsVtztHldY9I4gxf0/TOVxLBQ9/aB2dnZBCc/SNUdyleU9SQNih6GRlD
-	 yxrPq1ib82xS77spPf8gEYwg9jrsiXc15wgdBEHM8CW6Vhf2v5CFNfRZ5FwyIC1eJa
-	 KZ9WkQn7/bB7ScpSQYJZJEChkUhEudVqwTuJnGyb9VkLUNG0MWpMwz+sbAic9mo1h1
-	 TGU6axLnfOMgA==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee920b0781so58363861fa.1
-        for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 01:59:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX5tJ35VJ4uXw46KcaxJNKdkgk75juwzO0oDEulsqw1OcNrutQOAxH2A11abLUM1EOmTql0QNvlbPPVeRJR35lEf4olkEF2gvm7
-X-Gm-Message-State: AOJu0YzBP1Fhrg3pTDaNpsMiz6ydZOWjQfuUsonJKIoeBnpWJDL5eH5f
-	HWSxlskf1gGDXA1eaue+J2YbhnmRGLJrnMh+okzS2yG4Hi+9nipowkuO0WA/rmqJAluWZ/MwnyG
-	kAub2ObacHmIEtCUI6tX9T4TsezA=
-X-Google-Smtp-Source: AGHT+IGsjes5a9AyumKXYwEMmmWurniv473koxkLgYFhknWuqWsxKVxqzo8eCGX8IVMnocNH2St8Lj2r5J2E/0NJiPc=
-X-Received: by 2002:a05:651c:200f:b0:2ee:8555:4742 with SMTP id
- 38308e7fff4ca-2eeb30fe842mr27104411fa.27.1720601960688; Wed, 10 Jul 2024
- 01:59:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LyoeV7gW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TQea+NHx"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 7FA5213807ED;
+	Wed, 10 Jul 2024 06:27:37 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 10 Jul 2024 06:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1720607257; x=1720693657; bh=y7I9x5O068
+	rIa6OwNh1cKNoYpCATZicSDmRnAUguLsU=; b=LyoeV7gWDoZN30PXCwvf8Wxeg6
+	VhoBTVUhVW1s1omN6d8MKzk7jEzeXh8G5o3fMq2+GFZyBVg/9/7OEhye+/coWt2O
+	XfAhCV6pfHeQn17iPTTX2lKtnsu7/SS85QVlYeEFAIh8HBt+aTgpZe20ljb+djY9
+	KkAzG4mjhKV0qUKdG0gR+2CejXzNw/FxE5kv6+1kjsvhxagXsgNXyayRyPdaQbeQ
+	4TBQPDKF3YFf+VvY9c/rWAvGbZGkMYb+IU1xgJ04tc8Lwn7CByXKIAgP2f3v93aA
+	AoojIIDVoBGSZB+yjz8jXJf75ilDChNU4VltOrQAj2Dm90JSVQOz8ktykirw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720607257; x=1720693657; bh=y7I9x5O068rIa6OwNh1cKNoYpCAT
+	ZicSDmRnAUguLsU=; b=TQea+NHxpLxXt64jCbNK563C0E1TLCjGTuZN4XWClfBX
+	Q+hiwNI0APwrfFgBUmFeN+FlkT0ajXZjAbuIrQNBXBMSAspspDtA+vFl5wSJsH6E
+	cf197a4HNOG7bQXAR4Io3DEpsVFMTnNaNAdR20K7xWSpjgQ7DH48OO1jWq65WdVZ
+	KocA8mDU0G6OXbyBpcTXLQml76zE9t4F4YwV0CnWbjiN2MSuT46ZA1ZodsAUvB1Y
+	EMkXZXgPKUePYdiFfv6KLd+xOkVCBcPaKAeZ1lDw51o7t4aMsNfmIySSOVLdSNYT
+	RR8pYHgQg1azc7LSxH3IoyoJBkXtKrOxBa0ztmnx8Q==
+X-ME-Sender: <xms:FWKOZu7OEleYA2ZaQhHK0YTUnp8ZCDHU5Qv_qlmoFX318_1KRZ1MzQ>
+    <xme:FWKOZn4LSmiq1Nz2uEK5cmUYFupZB_cnhbb__NNmw8e_CrlbvFEeBRejSUSAy3RoL
+    fmzX2g8WT0vglJEYbo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedugddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:FWKOZtdwYsGl2L1-gJ_SxX2LvVQtIBz8P-0pqaYJsEiEIkuD8KivmA>
+    <xmx:FWKOZrKhYoVjzenA5bi3dxmDRoOXqMLEY13McAvD4kG-Wyq4f5hJDw>
+    <xmx:FWKOZiKJoBDOxda2I585qtzs7LQ5PYxoOCjycASUr7Si107QHnftyQ>
+    <xmx:FWKOZsyLzbfGhHPd5czHKWB7WVZYFT3G51G187eTM8ruvcR7PmmdPw>
+    <xmx:GWKOZurc55eLY785N_cbAB-SOzxSp53CmaIywxCCzaSOw7ZJQ6KRTTUf>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C869EB6008F; Wed, 10 Jul 2024 06:27:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240710084630.2553263-1-chenhuacai@loongson.cn>
-In-Reply-To: <20240710084630.2553263-1-chenhuacai@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 10 Jul 2024 16:59:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7LKccn4s=8Wm-AaXYMJLzMMCSyLVgh7D0yQ_0uu+59QQ@mail.gmail.com>
-Message-ID: <CAAhV-H7LKccn4s=8Wm-AaXYMJLzMMCSyLVgh7D0yQ_0uu+59QQ@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v6.11
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <9b269c2a-c6b5-4fa0-801b-e5e1c3ccb671@app.fastmail.com>
+In-Reply-To: <20240704143611.2979589-13-arnd@kernel.org>
+References: <20240704143611.2979589-1-arnd@kernel.org>
+ <20240704143611.2979589-13-arnd@kernel.org>
+Date: Wed, 10 Jul 2024 12:27:13 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Arnd Bergmann" <arnd@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>, "Vineet Gupta" <vgupta@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, guoren <guoren@kernel.org>,
+ "Brian Cain" <bcain@quicinc.com>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Dinh Nguyen" <dinguyen@kernel.org>,
+ "Jonas Bonn" <jonas@southpole.se>,
+ "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>,
+ "Stafford Horne" <shorne@gmail.com>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 12/17] csky: convert to generic syscall table
+Content-Type: text/plain
 
-Hi, Paolo,
+On Thu, Jul 4, 2024, at 16:36, Arnd Bergmann wrote:
+> -
+> -#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
+> -__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
+> -#define __NR_cacheflush		(__NR_arch_specific_syscall + 1)
+> -__SYSCALL(__NR_cacheflush, sys_cacheflush)
+> +#include <asm/unistd_32.h>
+> +#define __NR_sync_file_range2 __NR_sync_file_range
 
-I'm sorry, a typo is found in the last patch "Fecth" vs "Fetch",
-please ignore this PR and I will submit a new one later.
+A small update: I have folded this fixup into this patch
+and the hexagon one, to ensure we don't define both
+__NR_sync_file_range2 and __NR_sync_file_range. I already
+have patches to clean this up further to avoid both the
+#undef and #define, but that is part of a larger rework
+that is not ready before the merge window.
 
-Huacai
+     Arnd
 
-On Wed, Jul 10, 2024 at 4:46=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> The following changes since commit 256abd8e550ce977b728be79a74e1729438b49=
-48:
->
->   Linux 6.10-rc7 (2024-07-07 14:23:46 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-6.11
->
-> for you to fetch changes up to b3403f8d3c3fd8398bb5f23fe4f69faa738f1399:
->
->   perf kvm: Add kvm-stat for loongarch64 (2024-07-09 16:25:51 +0800)
->
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v6.11
->
-> 1. Add ParaVirt steal time support.
-> 2. Add some VM migration enhancement.
-> 3. Add perf kvm-stat support for loongarch.
->
-> ----------------------------------------------------------------
-> Bibo Mao (10):
->       LoongArch: KVM: Sync pending interrupt when getting ESTAT from user=
- mode
->       LoongArch: KVM: Delay secondary mmu tlb flush until guest entry
->       LoongArch: KVM: Select huge page only if secondary mmu supports it
->       LoongArch: KVM: Discard dirty page tracking on readonly memslot
->       LoongArch: KVM: Add memory barrier before update pmd entry
->       LoongArch: KVM: Add dirty bitmap initially all set support
->       LoongArch: KVM: Mark page accessed and dirty with page ref added
->       LoongArch: KVM: Add PV steal time support in host side
->       LoongArch: KVM: Add PV steal time support in guest side
->       perf kvm: Add kvm-stat for loongarch64
->
-> Jia Qingtong (1):
->       LoongArch: KVM: always make pte young in page map's fast path
->
->  Documentation/admin-guide/kernel-parameters.txt |   6 +-
->  arch/loongarch/Kconfig                          |  11 ++
->  arch/loongarch/include/asm/kvm_host.h           |  13 ++
->  arch/loongarch/include/asm/kvm_para.h           |  11 ++
->  arch/loongarch/include/asm/kvm_vcpu.h           |   5 +
->  arch/loongarch/include/asm/loongarch.h          |   1 +
->  arch/loongarch/include/asm/paravirt.h           |   5 +
->  arch/loongarch/include/uapi/asm/kvm.h           |   4 +
->  arch/loongarch/kernel/paravirt.c                | 145 ++++++++++++++++++=
-++++
->  arch/loongarch/kernel/time.c                    |   2 +
->  arch/loongarch/kvm/Kconfig                      |   1 +
->  arch/loongarch/kvm/exit.c                       |  38 +++++-
->  arch/loongarch/kvm/main.c                       |   1 +
->  arch/loongarch/kvm/mmu.c                        |  72 +++++++----
->  arch/loongarch/kvm/tlb.c                        |   5 +-
->  arch/loongarch/kvm/vcpu.c                       | 154 ++++++++++++++++++=
-+++++-
->  tools/perf/arch/loongarch/Makefile              |   1 +
->  tools/perf/arch/loongarch/util/Build            |   2 +
->  tools/perf/arch/loongarch/util/header.c         |  96 +++++++++++++++
->  tools/perf/arch/loongarch/util/kvm-stat.c       | 139 ++++++++++++++++++=
-+++
->  20 files changed, 680 insertions(+), 32 deletions(-)
->  create mode 100644 tools/perf/arch/loongarch/util/header.c
->  create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
+diff --git a/arch/csky/include/uapi/asm/unistd.h b/arch/csky/include/uapi/asm/unistd.h
+index 794adbc04e48..44882179a6e1 100644
+--- a/arch/csky/include/uapi/asm/unistd.h
++++ b/arch/csky/include/uapi/asm/unistd.h
+@@ -1,4 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ 
+ #include <asm/unistd_32.h>
+-#define __NR_sync_file_range2 __NR_sync_file_range
++
++#define __NR_sync_file_range2 84
++#undef __NR_sync_file_range
+diff --git a/arch/hexagon/include/uapi/asm/unistd.h b/arch/hexagon/include/uapi/asm/unistd.h
+index 6f670347dd61..a3b0cac25580 100644
+--- a/arch/hexagon/include/uapi/asm/unistd.h
++++ b/arch/hexagon/include/uapi/asm/unistd.h
+@@ -29,4 +29,5 @@
+ 
+ #include <asm/unistd_32.h>
+ 
+-#define __NR_sync_file_range2 __NR_sync_file_range
++#define __NR_sync_file_range2 84
++#undef __NR_sync_file_range
