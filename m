@@ -1,96 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow1-smtp.messagingengine.com (flow1-smtp.messagingengine.com [103.168.172.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF013C39;
-	Wed, 10 Jul 2024 10:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E736817B05F;
+	Wed, 10 Jul 2024 12:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720608577; cv=none; b=gK5HQKAuP16ufPmGbK8VM/3KPCKTMLInOulwUXX81vJyPbLn+6j3gzOZqbajLP5zGOcs0eGR31ohSXjCfL7R3let8cSailAy4BoyV5BvYELn0ahGaLHP44jygPHysqGPj4GzDNmZgWqU0WDsPQPT86TAgvNtEqDp4SJcRuov1rs=
+	t=1720615797; cv=none; b=VGVmIi3H1vzIskb7ejhi1K1AfsgauEWXMny0SRbc839QQN0bV1X9RtFVam7MCIe33px6Qo9Yj5lAYM5YJ5+GHJJ4H98cdJwJl/Zz0E1HOaZTA9U3A4Ewnjvoi1GqcvgVuLjmQGhFPF8CVDxj8sC5GskCbOXmLVnlKsViiTREXWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720608577; c=relaxed/simple;
-	bh=mTV/Bxn5YrSb8vb6gm6dEmvdfCiglcs/3pLGoW2b1dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aH1jSS06HQJAMA4ks7b2eNGI3q3HnlaguCtIBM5qjyHitsZ87nnPlrpwjtvSWkT7tkxvacmWEmo39DlR+dSpHj/s4aUgWM5FNwUhizzhGenmJ7jqbMOUN0Vbhhfuk+1eD+La+5B1IegojL3WByrrrDjlirBI3h47AKrdw3OvCtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F58C32781;
-	Wed, 10 Jul 2024 10:49:34 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.11
-Date: Wed, 10 Jul 2024 18:49:23 +0800
-Message-ID: <20240710104923.2569660-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1720615797; c=relaxed/simple;
+	bh=bTMI9iBEyKiP0DGKQWj1I7Ep4eh++YGxzDQWSLGLdy8=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=rJu65ggSNHWTtWrciNULaEDH7AJ5f1f8/j1jtU1lcqGszO0q8EV0IhtpLfAtsSfzpR0iagyybh+qdtv+YXxpCma+cbEEQjYTCSiCSvKaSC4tvGSoCzO4S9tWkj2ayxAEhUxA5tqcIQ4vx+GVvtlyg7dmt3M1vhNP2o2rf9I8ulI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=teTIciYZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=azzoWZRU; arc=none smtp.client-ip=103.168.172.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="teTIciYZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="azzoWZRU"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailflow.nyi.internal (Postfix) with ESMTP id E33CC20042D;
+	Wed, 10 Jul 2024 08:49:54 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 10 Jul 2024 08:49:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1720615794; x=1720622994; bh=j8Mj9dw1Fm
+	/JtEgtuTD5TSV9xTAWODaAOo5fjhNJeMk=; b=teTIciYZjvnAmtCaBvfsvRNjup
+	wfCqM8oj1NVTM4jQ8jo5sskqJd9CXNwzX82No3oPh2ILjs4uutrlschv4dsLphU3
+	DoHiZabk+5RNoNoz0INCQm1A/q0azsdpIKZ40BSY9zzvhrlrJsyAZoIB+AdhjZSM
+	pglEr9LbbW0omvvUOv9xqemh9id/jhlr5i0OZnHACguZQxkJK5xIIlZPHl7qxIZi
+	W18h/fh2fJqcEc9Qy9KDPKHfa/hVK9NfMC964RoDdIGpXNYZKvQ3LTPV8BpbXyRq
+	/YSFUKn6ydo2t/RPLCAoY+yDhYs54/3qhWLzotGyYi2xcf1uXo+GhSqGYN6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720615794; x=1720622994; bh=j8Mj9dw1Fm/JtEgtuTD5TSV9xTAW
+	ODaAOo5fjhNJeMk=; b=azzoWZRU5IySoav5jThTxI4/AKjfG7wh/UAeG5Y0yp/7
+	pSjbpcVBoFNXfnK1AoPP/qA9CqwrRF8Dry0A37SxJCpk4Z5ullPkhy+gC2T5PlNW
+	qtHzAzk/b8G5f3Tag6CJRkj0grWKT3j9AAJUB+sBlye1xyej0B+45sVmj7pFPIT0
+	0C8phEMHJHLEtbkJkAqgb4SfK8Mg1xM0BHjBi1UepOwgPEnmdulrH+N+Got5FU1k
+	1RVQ/Fe3Nc6RoIgAiYJC5LjOoh+Fk0b7Imsv7vkFNEtN+B28lrOP2iHu73sBprCP
+	xkZ00fMz0ava03lyq9Jugs0eBmn8yWi7qreY8Gmasw==
+X-ME-Sender: <xms:b4OOZh0Add5PpRvK-JwSRnx3M8MLRjt6lQVSLPf8bA1FKB4pYvBGow>
+    <xme:b4OOZoE2nV6HZMpoyEVk3eDfC7dus2QqobaL3YCy7l8HFtBHVk97Nwkt_A9WozDEc
+    C4EVANiB042rUeaNJQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedugdehjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:b4OOZh5zNJxlOfPHh0-H8WYSyelbHHrXbP1YSq7BCS2SyJWdegrqqQ>
+    <xmx:b4OOZu1jTQpah1fyyddzLy-SSEDaDFK_TWeDgISB8kW5bliLViVMcg>
+    <xmx:b4OOZkE-est_ti1vs2CHielhfk6js_rK4NVMMPgNmJ_Fck8MCdzLbg>
+    <xmx:b4OOZv-Dzbnlfj9JbL0x2Cl3B8vEn5obOKRlDMYB5cv0l5MtlBW17Q>
+    <xmx:coOOZviKtDwt5hZt1uJ3U9a5Mli5qRUVB721KXhKKAyxK8Y3E3_QlGxR>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D5425B60089; Wed, 10 Jul 2024 08:49:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <27cf3056-5c7b-4759-b03a-1fa9b785611e@app.fastmail.com>
+In-Reply-To: 
+ <20240701-b4-v6-10-topic-usbc-tcpci-v1-5-3fd5f4a193cc@pengutronix.de>
+References: 
+ <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
+ <20240701-b4-v6-10-topic-usbc-tcpci-v1-5-3fd5f4a193cc@pengutronix.de>
+Date: Wed, 10 Jul 2024 14:48:20 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Marco Felsch" <m.felsch@pengutronix.de>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Russell King" <linux@armlinux.org.uk>, "Joel Stanley" <joel@jms.id.au>,
+ "Andrew Jeffery" <andrew@codeconstruct.com.au>,
+ "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Fabio Estevam" <festevam@gmail.com>,
+ "Vladimir Zapolskiy" <vz@mleia.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Gregory Clement" <gregory.clement@bootlin.com>,
+ "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+ "Tony Lindgren" <tony@atomide.com>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Magnus Damm" <magnus.damm@gmail.com>,
+ "Dinh Nguyen" <dinguyen@kernel.org>,
+ "Thierry Reding" <thierry.reding@gmail.com>,
+ "Jon Hunter" <jonathanh@nvidia.com>,
+ =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, imx@lists.linux.dev,
+ Linux-OMAP <linux-omap@vger.kernel.org>,
+ Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+ linux-tegra@vger.kernel.org, openbmc@lists.ozlabs.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH 5/9] ARM: defconfig: convert to MTD_EEPROM_AT24
+Content-Type: text/plain
 
-The following changes since commit 256abd8e550ce977b728be79a74e1729438b4948:
+On Mon, Jul 1, 2024, at 15:53, Marco Felsch wrote:
+> The EEPROM_AT24 Kconfig symbol is marked as deprecated. Make use of the
+> new Kconfig symbol to select the I2C EEPROM driver support.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  arch/arm/configs/aspeed_g4_defconfig   | 2 +-
+>  arch/arm/configs/aspeed_g5_defconfig   | 2 +-
+>  arch/arm/configs/at91_dt_defconfig     | 2 +-
+>  arch/arm/configs/axm55xx_defconfig     | 2 +-
+>  arch/arm/configs/davinci_all_defconfig | 2 +-
+>  arch/arm/configs/imx_v4_v5_defconfig   | 2 +-
+>  arch/arm/configs/imx_v6_v7_defconfig   | 2 +-
+>  arch/arm/configs/ixp4xx_defconfig      | 2 +-
+>  arch/arm/configs/keystone_defconfig    | 2 +-
+>  arch/arm/configs/lpc18xx_defconfig     | 2 +-
 
-  Linux 6.10-rc7 (2024-07-07 14:23:46 -0700)
+Applied to soc/defconfig, thanks
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.11
-
-for you to fetch changes up to 492ac37fa38faf520b5beae44c930063265ee183:
-
-  perf kvm: Add kvm-stat for loongarch64 (2024-07-10 16:50:27 +0800)
-
-----------------------------------------------------------------
-LoongArch KVM changes for v6.11
-
-1. Add ParaVirt steal time support.
-2. Add some VM migration enhancement.
-3. Add perf kvm-stat support for loongarch.
-
-----------------------------------------------------------------
-Bibo Mao (10):
-      LoongArch: KVM: Sync pending interrupt when getting ESTAT from user mode
-      LoongArch: KVM: Delay secondary mmu tlb flush until guest entry
-      LoongArch: KVM: Select huge page only if secondary mmu supports it
-      LoongArch: KVM: Discard dirty page tracking on readonly memslot
-      LoongArch: KVM: Add memory barrier before update pmd entry
-      LoongArch: KVM: Add dirty bitmap initially all set support
-      LoongArch: KVM: Mark page accessed and dirty with page ref added
-      LoongArch: KVM: Add PV steal time support in host side
-      LoongArch: KVM: Add PV steal time support in guest side
-      perf kvm: Add kvm-stat for loongarch64
-
-Jia Qingtong (1):
-      LoongArch: KVM: always make pte young in page map's fast path
-
- Documentation/admin-guide/kernel-parameters.txt |   6 +-
- arch/loongarch/Kconfig                          |  11 ++
- arch/loongarch/include/asm/kvm_host.h           |  13 ++
- arch/loongarch/include/asm/kvm_para.h           |  11 ++
- arch/loongarch/include/asm/kvm_vcpu.h           |   5 +
- arch/loongarch/include/asm/loongarch.h          |   1 +
- arch/loongarch/include/asm/paravirt.h           |   5 +
- arch/loongarch/include/uapi/asm/kvm.h           |   4 +
- arch/loongarch/kernel/paravirt.c                | 145 ++++++++++++++++++++++
- arch/loongarch/kernel/time.c                    |   2 +
- arch/loongarch/kvm/Kconfig                      |   1 +
- arch/loongarch/kvm/exit.c                       |  38 +++++-
- arch/loongarch/kvm/main.c                       |   1 +
- arch/loongarch/kvm/mmu.c                        |  72 +++++++----
- arch/loongarch/kvm/tlb.c                        |   5 +-
- arch/loongarch/kvm/vcpu.c                       | 154 +++++++++++++++++++++++-
- tools/perf/arch/loongarch/Makefile              |   1 +
- tools/perf/arch/loongarch/util/Build            |   2 +
- tools/perf/arch/loongarch/util/header.c         |  96 +++++++++++++++
- tools/perf/arch/loongarch/util/kvm-stat.c       | 139 +++++++++++++++++++++
- 20 files changed, 680 insertions(+), 32 deletions(-)
- create mode 100644 tools/perf/arch/loongarch/util/header.c
- create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
+   Arnd
