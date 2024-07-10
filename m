@@ -1,120 +1,73 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60381194135
-	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 15:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF8B198A30
+	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 16:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720626714; cv=none; b=fqOjSrXs5kydpYYVzyWffI3oYlckge0LJDW1DELPY/K6Jner4439/W75vRENXLE8DlC+zuElbpC5eq0uYZJG2D+nMlNWgpFbzLpJjV5fggus7eUD4r7GAfpxK/QSDyBdLPJuxfvLvid6h7By+FRqbi2gLzXxTOitqiqPkZObCAA=
+	t=1720629061; cv=none; b=pXdb+I8Mv18YEvkg6F8PL8cDpQj85MP4FweyFRsH3pfpOkxMdGMqsWE2y+aqNZRn5H/KSx5UCRdhj4AiZUOFVL5di9k8lRJfFwdBObxMmtuuWPSUgmqfsrWKpDKc5lJguw7mGXnvTAAVtXIixGN29aCDPC8+Mbp8p5DSfikGfLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720626714; c=relaxed/simple;
-	bh=Yd7wN4MEwb/4Ych5ZfYI8ZDswiwmmeax1EQOB34ZhJk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OV6NMkMByKFIPNVh782CbD/9pkAG6o1Eji9yibVCkSNyc/cT0+7iObukijC+U44XRvhvzzBRruiA6ftwbeHWXGqAonLHNrBeZHnJos9O/tE06OqVaaaiRDfYe9wpOJLfuZ5hBh+r2KehSIDuiTIPrSbelcmtvQiSo6lPX++yVTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nrY2OV1f; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1720629061; c=relaxed/simple;
+	bh=qm8HzHGB14wODOFL06yDYplOi81bFFr5NGK1biv0p4Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=X8G97+eXaOWhqMtSFv4C03VZrn+skYafVp+BYZp5k6fQ4CmFqVKX8R27Ah6ldd277npfVyj4UB7LWL6KWnBC55gys3TfVBL2zjiJlseXWWyC1RCOGPxIXEPAERPAKtl7QYm9r45wmnQioxQcaEFANyQHST2+gmzZxJSVE3lcuI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K5e1rOEJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZRJqhhQK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nrY2OV1f"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fb3b398923so32924025ad.2
-        for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 08:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720626713; x=1721231513; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2S/Ws8T8aRzTnaLMwEZxjsu7iN6mSUkQ05y/iw/B/rc=;
-        b=nrY2OV1f4B1QrhCC4yfz+AAoyCQbsGoMdvUysaL/4eSab2vMnj0mWIwljviUfsHxao
-         4L4+oYe58RODhfjxnV6AxmNHASreVc9dlLG5N7r7ZTHg8XbzKU7z1L+CpsnvKAcjKjYT
-         SmCcTRReyX7j452THMaOjDIyXebivsKBbTTjYlgj4Zf/HNTrR+AfG7AdRy7Sq9xUyoZA
-         ES3rTh2KlfG6sx22HxfZlDtWP2iNZLs8LTdcXkLGAqU2Q0ShTlVSsTkWKhyeN9MCLqUl
-         BTwWA54vDwldv1jBuQl722i0fdx5BZWDQRzTpFpO/2uUuYkAhTu3OkbqrjAZWHExr5t9
-         Z7Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720626713; x=1721231513;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2S/Ws8T8aRzTnaLMwEZxjsu7iN6mSUkQ05y/iw/B/rc=;
-        b=Xh3PfYUfVnTUIlD4gPyrKcBLWAMRDWMPZA9C1VFC3bpJ9P1+/KBm5RfBI+6GKehitl
-         xwBzKWJVzPQ+/uxoUnlNYsbEnYs39bvvM0Pz16KY4+YSQ9eIBKdYv7m722uUoxD73KWh
-         cDF/M+OIpifYuZQNYk+G3T0hbqCo6nwVQSC9xQdFBS9ITeoTBn0jB9g2Mr8se8cBSsZC
-         2bXE4ejS1Od56e8Q3ln/VlUpJJa46p2y427bHinsQ/ekFpH2CbHx2+IBkgdgT61qpors
-         KMiXqjk6YUE3oBBkjswQ9VabKj/JOknL699+KkIMXdUC/oOE+fLG0PnmflBujv8Q5fIo
-         ooHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiAJzwEFCFYJCEkjFOHA3M9ooPNW8kq2Q+VKYtWjrXXl+TXjnC7hTJDk6dl89cJ8Sbu5jQL2tDnuKHNbqc4keRJ54EhajJ6ACB
-X-Gm-Message-State: AOJu0YypDe80mfrVLiTp1RBjf4L6J+bXrst/EfEqe2TxUSJYi2AOPcQa
-	l4mz6v74//yDJ5u4+J/D0XcUVzge/pLcw9BHs7Ev/vJsXLAJaYUtIrxspkvapLZtZqhfvVfbglK
-	5Cw==
-X-Google-Smtp-Source: AGHT+IGFDWyL4oVIv+kd3eR4ozKAgHx5u/arXUHJsTVnFMVwi1+9LesGIr7Enb4S0IMxOwQQwYsx6SyO0KU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:dad2:b0:1f7:175a:69ab with SMTP id
- d9443c01a7336-1fbb6ce3e7dmr4023085ad.4.1720626712651; Wed, 10 Jul 2024
- 08:51:52 -0700 (PDT)
-Date: Wed, 10 Jul 2024 08:51:51 -0700
-In-Reply-To: <CALzav=cwu3M2nLHwZLCTF=eGWx2Nq+=TuHMuGTfZCNa27mLs1A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K5e1rOEJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZRJqhhQK"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720629058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jgD85imx0bsIe6NlKqUbd38t4bOO5gPuwGe/n2JVjEA=;
+	b=K5e1rOEJmkG5famW39SvLbyRS29PJ+Sgci8kJT1Z63C98Jcrk4KYZLfJNJcpoVC7iwp178
+	HAFdaYmvdGnnw4HtpGlVo1qF51h0jZKxmtEbc9ix2Y1P71sZRkN/+3PqieXuiQVQkUC6iI
+	+ilTJqzrWRo4+oqiazgyNmtm/pe6VPc0nZ74ZWHaU7hmXc8jqvxv0WP5Jb/WJC6eLpIDfT
+	R+UZq1b8SCv0ZAXdgZcLWXXU2LrbW5oq1DfWNllM8qNsTxfmWjoVZNbU6z7DxhatSDrBHu
+	uulKuT22mNyV8bEJ23BV6znduIoUh+1aBXAjuZEkjfcfiE2knd8DsYIoMSpHbg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720629058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jgD85imx0bsIe6NlKqUbd38t4bOO5gPuwGe/n2JVjEA=;
+	b=ZRJqhhQKQGj8qRjlrIrNseiGxqcGwnyC72qAw6oIj3CGcJrFvs6R7cHbtm9en9sTEo2sIN
+	iKMaaYef84PXwSAg==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
+ alexs@kernel.org, siyanteng@loongson.cn, chenhuacai@kernel.org,
+ kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
+ wangliupu@loongson.cn, lvjianmin@loongson.cn, zhangtianyang@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4][RESEND] LoongArch: Add AVEC irqchip support
+In-Reply-To: <20240710043859.13053-1-zhangtianyang@loongson.cn>
+References: <20240710043859.13053-1-zhangtianyang@loongson.cn>
+Date: Wed, 10 Jul 2024 18:30:58 +0200
+Message-ID: <87zfqpus3h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240503181734.1467938-1-dmatlack@google.com> <171874683295.1901599.10170158200177384059.b4-ty@google.com>
- <CALzav=cwu3M2nLHwZLCTF=eGWx2Nq+=TuHMuGTfZCNa27mLs1A@mail.gmail.com>
-Message-ID: <Zo6uFz187FBYnQiY@google.com>
-Subject: Re: [PATCH v3 0/3] KVM: Set vcpu->preempted/ready iff scheduled out
- while running
-From: Sean Christopherson <seanjc@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Mon, Jul 01, 2024, David Matlack wrote:
-> On Tue, Jun 18, 2024 at 2:41=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > On Fri, 03 May 2024 11:17:31 -0700, David Matlack wrote:
-> > > This series changes KVM to mark a vCPU as preempted/ready if-and-only=
--if
-> > > it's scheduled out while running. i.e. Do not mark a vCPU
-> > > preempted/ready if it's scheduled out during a non-KVM_RUN ioctl() or
-> > > when userspace is doing KVM_RUN with immediate_exit=3Dtrue.
-> > >
-> > > This is a logical extension of commit 54aa83c90198 ("KVM: x86: do not
-> > > set st->preempted when going back to user space"), which  stopped
-> > > marking a vCPU as preempted when returning to userspace. But if users=
-pace
-> > > invokes a KVM vCPU ioctl() that gets preempted, the vCPU will be mark=
-ed
-> > > preempted/ready. This is arguably incorrect behavior since the vCPU w=
-as
-> > > not actually preempted while the guest was running, it was preempted
-> > > while doing something on behalf of userspace.
-> > >
-> > > [...]
-> >
-> > Applied to kvm-x86 generic, with minor changelog tweaks (me thinks you'=
-ve been
-> > away from upstream too long ;-) ).  Thanks!
->=20
-> Thanks for the cleanups. Looks like you replaced "[Tt]his commit"
-> throughout. Anything else (so I can avoid the same mistakes in the
-> future)?
+On Wed, Jul 10 2024 at 12:38, Tianyang Zhang wrote:
+> Introduce the advanced extended interrupt controllers. This feature will
+> allow each core to have 256 independent interrupt vectors and MSI
+> interrupts can be independently routed to any vector on any CPU.
 
-I don't think so?  The "This commit" stuff is the only thing that I remembe=
-r, so
-any other tweaks can't be that important :-)
+Why are you resending V4 if there have been review comments on the
+original V4 submission?
+
+Thanks,
+
+        tglx
