@@ -1,73 +1,159 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF8B198A30
-	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 16:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924315E88;
+	Wed, 10 Jul 2024 19:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720629061; cv=none; b=pXdb+I8Mv18YEvkg6F8PL8cDpQj85MP4FweyFRsH3pfpOkxMdGMqsWE2y+aqNZRn5H/KSx5UCRdhj4AiZUOFVL5di9k8lRJfFwdBObxMmtuuWPSUgmqfsrWKpDKc5lJguw7mGXnvTAAVtXIixGN29aCDPC8+Mbp8p5DSfikGfLI=
+	t=1720640913; cv=none; b=opl1wmD5LFl2CcHl2eWxBHqgnvnQ9rDGDfd1rEXktdXuWJToytpajYb0o/+81blfw4tGwjUk4+CvwucvJMJG/apFZfJc7b+1n195kZUVcNUJa9S+uyldK1ypE+H1q/CGp4CEGIwMpRwTZghu30SKOXi5g29DcqUZjytTy/EY8Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720629061; c=relaxed/simple;
-	bh=qm8HzHGB14wODOFL06yDYplOi81bFFr5NGK1biv0p4Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X8G97+eXaOWhqMtSFv4C03VZrn+skYafVp+BYZp5k6fQ4CmFqVKX8R27Ah6ldd277npfVyj4UB7LWL6KWnBC55gys3TfVBL2zjiJlseXWWyC1RCOGPxIXEPAERPAKtl7QYm9r45wmnQioxQcaEFANyQHST2+gmzZxJSVE3lcuI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K5e1rOEJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZRJqhhQK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1720640913; c=relaxed/simple;
+	bh=XhQRF5UFco4b8sHe0w5DuTqYrq5XvTZ+7qMoY5GC1cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iodEqSOCW/XquB+fXk6z29HpocHZdq20+qnkzlvPfWypLDZxvz13dRGTPCEojamIKnNmz1646su23ahKGeuCuceld1k/CYx1S5mq0irb4qOPhNImUg6+D55GIyJrOfnQNBe5Fij+bATGd5LpjT4s9NkilnXSWWK7Qx6MUchMjvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+BNFP2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K5e1rOEJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZRJqhhQK"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720629058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jgD85imx0bsIe6NlKqUbd38t4bOO5gPuwGe/n2JVjEA=;
-	b=K5e1rOEJmkG5famW39SvLbyRS29PJ+Sgci8kJT1Z63C98Jcrk4KYZLfJNJcpoVC7iwp178
-	HAFdaYmvdGnnw4HtpGlVo1qF51h0jZKxmtEbc9ix2Y1P71sZRkN/+3PqieXuiQVQkUC6iI
-	+ilTJqzrWRo4+oqiazgyNmtm/pe6VPc0nZ74ZWHaU7hmXc8jqvxv0WP5Jb/WJC6eLpIDfT
-	R+UZq1b8SCv0ZAXdgZcLWXXU2LrbW5oq1DfWNllM8qNsTxfmWjoVZNbU6z7DxhatSDrBHu
-	uulKuT22mNyV8bEJ23BV6znduIoUh+1aBXAjuZEkjfcfiE2knd8DsYIoMSpHbg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720629058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jgD85imx0bsIe6NlKqUbd38t4bOO5gPuwGe/n2JVjEA=;
-	b=ZRJqhhQKQGj8qRjlrIrNseiGxqcGwnyC72qAw6oIj3CGcJrFvs6R7cHbtm9en9sTEo2sIN
-	iKMaaYef84PXwSAg==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, siyanteng@loongson.cn, chenhuacai@kernel.org,
- kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
- wangliupu@loongson.cn, lvjianmin@loongson.cn, zhangtianyang@loongson.cn,
- yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
- dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
- zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
- zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4][RESEND] LoongArch: Add AVEC irqchip support
-In-Reply-To: <20240710043859.13053-1-zhangtianyang@loongson.cn>
-References: <20240710043859.13053-1-zhangtianyang@loongson.cn>
-Date: Wed, 10 Jul 2024 18:30:58 +0200
-Message-ID: <87zfqpus3h.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+BNFP2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A9CC32781;
+	Wed, 10 Jul 2024 19:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720640912;
+	bh=XhQRF5UFco4b8sHe0w5DuTqYrq5XvTZ+7qMoY5GC1cY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=g+BNFP2iIcvstd2oGpRAoM3V5PXWP69kXLn6JnzG/TqTCLFcbl+OYmE8Q9DF83B7Q
+	 MVckDciTYFAogF0BVSIqv3fMB4g/pmX2dd2VMs6nkjjiP6LaBDFWGfkF9QNE9ArB8G
+	 cM2hG65N7yXXt54lV2FkrlnCNt4krjPdD6CC47SbkuKUcmEfUhfnQPg8ptnJZi9JVz
+	 l6bZF1DsQWcEKG5KT+BZQM+zNuXOId6ymIU3L3A8EjCmrfg3Nq50xer99a+hJnomLl
+	 FiaVzL117RNozitipajNxrYE2usIyVvN5UbZyZbKzkcvvyDGnOVHWiinjZCrB2YXES
+	 pVHwfOjkqr1Og==
+Date: Wed, 10 Jul 2024 14:48:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev,
+	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+	Sheng Wu <wusheng@loongson.cn>
+Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
+Message-ID: <20240710194830.GA255085@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6=nOf_cSv7K3hS3jdXsGcWR7Go30EFyZeqxYNQKhtH8A@mail.gmail.com>
 
-On Wed, Jul 10 2024 at 12:38, Tianyang Zhang wrote:
-> Introduce the advanced extended interrupt controllers. This feature will
-> allow each core to have 256 independent interrupt vectors and MSI
-> interrupts can be independently routed to any vector on any CPU.
+On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
+> Hi, Bjorn,
+> 
+> On Wed, Jul 10, 2024 at 5:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
+> > > LS7A chipset can be used as a downstream bridge which connected to a
+> > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as the
+> > > upward port. We should always enable MSI caps of this port, otherwise
+> > > downstream devices cannot use MSI.
+> >
+> > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
+> > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in PCIe
+> > terms, it is basically a PCI host bridge (Root Complex, if you prefer)
+> > that is materialized as a PCI Endpoint?
+>
+> Now most of the existing LoongArch CPUs don't have an integrated PCIe
+> RC, instead they have HyperTransport controllers. But the latest CPU
+> (Loongson-3C6000) has an integrated PCIe RC and removed
+> HyperTransport.
+> 
+> LS7A bridge can work together with both old (HT) CPUs and new (PCIe)
+> CPUs. If it is connected to an old CPU, its upstream port is a HT
+> port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe port.
+> If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
+> upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and the
+> HT port is idle.
 
-Why are you resending V4 if there have been review comments on the
-original V4 submission?
+What does lspci look like for both the old HT and the new PCIe CPUs?
 
-Thanks,
+With the old HT CPU, I imagine this:
 
-        tglx
+  [LS7A includes a HT port that doesn't appear as a PCI device and
+  basically implements a PCIe Root Complex]
+  00:00.0 Root Port to [bus 01-1f] (DEV_LS7A_PCIE_PORT5)
+
+With a new PCIe CPU, if DEV_LS7A_PCIE_PORT5 is a PCIe Upstream Port,
+it would be part of a switch, so I'm imagining something like this:
+
+  00:00.0 Root Port to [bus 01-1f] (integrated into Loongson-3C6000)
+  01:00.0 Upstream Port to [bus 02-1f] (DEV_LS7A_PCIE_PORT5)
+  02:00.0 Downstream Port to [bus 03-1f] (part of the LS7A switch)
+
+In both cases, 00:00.0 and 01:00.0 (DEV_LS7A_PCIE_PORT5) would be a
+Type 1 device that is enumerated as a PCI-to-PCI bridge, which would
+normally have a Class Code of 0x0604 (PCI_CLASS_BRIDGE_PCI).
+
+But you're saying DEV_LS7A_PCIE_PORT5 has a Class Code of
+PCI_CLASS_BRIDGE_HOST, which is 0x0600.  That would normally be a Type
+0 device and would not have a secondary bus.
+
+> > I'm curious about what's going on here because the normal PCI MSI
+> > support should set PCI_MSI_FLAGS_ENABLE since it's completely
+> > specified by the spec, which says it controls whether *this function*
+> > can use MSI.
+> >
+> > But in this case PCI_MSI_FLAGS_ENABLE seems to have non-architected
+> > behavior of controlling MSI from *other* devices below this host
+> > bridge?  That's a little bit weird too because MSI looks like DMA to
+> > any bridges upstream from the device that is using MSI, and the Bus
+> > Master Enable bit in those bridges controls whether they forward those
+> > MSI DMA accesses upstream.  And of course the PCI core should already
+> > make sure those bridges have Bus Master Enable set when downstream
+> > devices use MSI.
+>
+> In my opinion this is a hardware bug, when DEV_LS7A_PCIE_PORT5 works
+> as a host bridge, it should enable MSI automatically. But
+> unfortunately hardware doesn't behave like this, so we need a quirk
+> here.
+
+I'm fine with the quirk to work around this issue.  But the commit log
+is confusing.
+
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Sheng Wu <wusheng@loongson.cn>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > > index 8b34ccff073a..ffc581605834 100644
+> > > --- a/drivers/pci/controller/pci-loongson.c
+> > > +++ b/drivers/pci/controller/pci-loongson.c
+> > > @@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+> > >                       DEV_LS7A_HDMI, loongson_pci_pin_quirk);
+> > >
+> > > +static void loongson_pci_msi_quirk(struct pci_dev *dev)
+> > > +{
+> > > +     u16 val, class = dev->class >> 8;
+> > > +
+> > > +     if (class == PCI_CLASS_BRIDGE_HOST) {
+> > > +             pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &val);
+> > > +             val |= PCI_MSI_FLAGS_ENABLE;
+> > > +             pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, val);
+> > > +     }
+> > > +}
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+> > > +
+> > >  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+> > >  {
+> > >       struct pci_config_window *cfg;
+> > > --
+> > > 2.43.0
+> > >
