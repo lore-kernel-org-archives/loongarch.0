@@ -1,103 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A60DF71
-	for <loongarch@lists.linux.dev>; Wed, 10 Jul 2024 20:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 070968BFC
+	for <loongarch@lists.linux.dev>; Thu, 11 Jul 2024 01:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720644706; cv=none; b=OITR/gkATd+gQwDcNp8vQCyNtCST83u49cC2JIe2x0QF1smc9DK6YEGtCqqZYgcdYHD+59sRTCd4EwIB3WtGByyuYoB1xC6DGq5KexJiuxGBXvWc9OaTTMLBq4vOkhQ4B+u0+alm5v0o/e6v+0TTAjRd+pYbGI3GIlzOn0Q8EBM=
+	t=1720662026; cv=none; b=u8xcZ+eyynHY7zykDYUoASzmoi4TsL5sKGL/Qg1gV68reVs8Nec/Zo95dWahqDRTYyQBSBVbfuEA/41hnMTlQF62JCQWpbyqA4jkMYMqDTx/hV8Pq+fJXF0L9BBYx+sMc+WS7wtg5wMCgee82sipt37HohsqPhXtDSanNVlspJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720644706; c=relaxed/simple;
-	bh=mM7urxq3H6CqC5/7nFaBFe9nr5abGJX0Y0GRZMsnUsk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AnUqVavQZ2kRp8XX2IxlDebnZzxMhKDGprIB0cH/LVK4zJjwTnu4BhYB8Ir/EDlpOwZudz/JqVO3+cU8/sDlbcq7XeMr8TXKcm1udH4kAZQBJr2JJ6pY5k2ixZ+6I/5Q3eXWSj9d3MdJ/h66G34Tw/QPjNam4C9adF6I2IXZlNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3S4hCWbQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QaWny3g5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3S4hCWbQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QaWny3g5"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720644702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1b/sQFS4yBt+s8M+2F5hEDBh21vdQF31Q8cakLMnlPU=;
-	b=3S4hCWbQPadDOYunyyU9VAq0zh6073fXDDG3rN3zCVRzJHAJQY2pd8OfTB9vWNC2KEkjKH
-	vIjEWvb+R7EIKf7volrSt3WtwUarq+NVfR7I4xOfhINEtO9qHc7Y2KxeUEjXGPJKTibvMX
-	4OwCsELydCfRfJTdDX2d3M/07clYIDLd7JSJHKlpLtKpdHADmMzqZD/Uea8VUUfjKhCA8N
-	HA4xa+pHsWE5Uo3U36C15HSO5TIeQ45xPs3hN97m1Q5V1a1yCy2SFF2CLLtVh0Ouob6V6/
-	bfFvvzW0A4J4KAOOi6inYudy9GsJf3Vyh9HiQISLRBZ9GmnirxXEkGUAz8wO+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720644702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1b/sQFS4yBt+s8M+2F5hEDBh21vdQF31Q8cakLMnlPU=;
-	b=QaWny3g5WGuM0G7Px5JNq5n3B+fofn8axJVnAdexUNyDugfoYtAjjCp3IRIroyBBIAGKQa
-	Y0idusv3eL7W4XCw==
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Peter Zijlstra
- <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Jiaxun Yang
- <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 1/3] cpu/hotplug: Make HOTPLUG_PARALLEL independent of
- HOTPLUG_SMT
-In-Reply-To: <20240705-loongarch-hotplug-v1-1-67d9c4709aa9@flygoat.com>
-References: <20240705-loongarch-hotplug-v1-0-67d9c4709aa9@flygoat.com>
- <20240705-loongarch-hotplug-v1-1-67d9c4709aa9@flygoat.com>
-Date: Wed, 10 Jul 2024 22:51:42 +0200
-Message-ID: <87le29ug0x.ffs@tglx>
+	s=arc-20240116; t=1720662026; c=relaxed/simple;
+	bh=gHZCudYtJbjBpW84Zauqc+kzdxu6KcsHFqxssG9s3n4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZIgkO39LEDp1n+eDh6ModUDevvk0bwLepMY1a1Ilh9Xtxw+EJb+O/prWCebBT2vgvXm8Re813c5cOiuPrVlamSx8OPaVaya9zDaPs8jMoB+cZK0q7xOOSZkvVcksN7NsLfIv1aLTYaoHy0T4LFg9WSHxxor5HSFRik/Z61qRM2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Cx8PEEOI9mBRUDAA--.9866S3;
+	Thu, 11 Jul 2024 09:40:20 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxssQBOI9m8l9DAA--.11968S3;
+	Thu, 11 Jul 2024 09:40:19 +0800 (CST)
+Subject: Re: [PATCH V4][RESEND] LoongArch: Add AVEC irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org,
+ siyanteng@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name,
+ jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com,
+ akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn,
+ xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org,
+ yangtiezhu@loongson.cn, zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240710043859.13053-1-zhangtianyang@loongson.cn>
+ <87zfqpus3h.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <245cd3c4-fdcd-768a-1c7c-e7abd1086864@loongson.cn>
+Date: Thu, 11 Jul 2024 09:40:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <87zfqpus3h.ffs@tglx>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8DxssQBOI9m8l9DAA--.11968S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XryDAF1UCFW8uFyDZw1fGrX_yoW3KwbEgr
+	10kF97A3W2v3WI9FWUJr47GFWfGay2kry8Kw4rGryFqa95Zr4kWFn29r12vw1rG3Z3Jrnx
+	KrZIy3yjgw17uosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
-On Fri, Jul 05 2024 at 11:29, Jiaxun Yang wrote:
->  
-> +#ifdef CONFIG_HOTPLUG_SMT
->  static inline bool cpuhp_smt_aware(void)
->  {
->  	return cpu_smt_max_threads > 1;
-> @@ -1817,6 +1818,7 @@ static inline const struct cpumask *cpuhp_get_primary_thread_mask(void)
->  {
->  	return cpu_primary_thread_mask;
->  }
-> +#endif
+Hi, Thomas
 
-Please provide stub functions in an #else clause
+ÔÚ 2024/7/11 ÉÏÎç12:30, Thomas Gleixner Ð´µÀ:
+> On Wed, Jul 10 2024 at 12:38, Tianyang Zhang wrote:
+>> Introduce the advanced extended interrupt controllers. This feature will
+>> allow each core to have 256 independent interrupt vectors and MSI
+>> interrupts can be independently routed to any vector on any CPU.
+> Why are you resending V4 if there have been review comments on the
+> original V4 submission?
+>
+> Thanks,
+>
+>          tglx
 
-#else
-static inline bool cpuhp_smt_aware(void) { return false; }
-static inline cpumask *cpuhp_get_primary_thread_mask(void) { return NULL; }
-#endif
+Due to the patch I submitted at the time introducing a fixed code for 
+testing,
 
-or something to that effect.
+I was eager to fix this issue and hope that subsequent reviews will be 
+based
 
->  /*
->   * On architectures which have enabled parallel bringup this invokes all BP
-> @@ -1837,6 +1839,7 @@ static bool __init cpuhp_bringup_cpus_parallel(unsigned int ncpus)
->  	if (!__cpuhp_parallel_bringup)
->  		return false;
->  
-> +#ifdef CONFIG_HOTPLUG_SMT
+on this correct version.
 
-That way you spare the ugly #ifdef here in the middle of the code and
-the compiler can optimize it out.
+I have reviewed the kernel submission documentation and found that the
 
->  	if (cpuhp_smt_aware()) {
->  		const struct cpumask *pmask = cpuhp_get_primary_thread_mask();
->  		static struct cpumask tmp_mask __initdata;
-> @@ -1857,6 +1860,7 @@ static bool __init cpuhp_bringup_cpus_parallel(unsigned int ncpus)
->  		cpumask_andnot(&tmp_mask, mask, pmask);
->  		mask = &tmp_mask;
->  	}
-> +#endif
+usage of RESEND is inappropriate. The next time there is a modification
 
-Thanks,
+issue, I will update the version and resubmit it
 
-        tglx
+
+Thanks
+
+TIanyang
+
+
