@@ -1,379 +1,133 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06AF31411E0
-	for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 08:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557717E76D
+	for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 08:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720772483; cv=none; b=A0AHAXQkA5iUetJumZRfV7hdRQChHHVWEWX0Q7sKvwxK2izpnMixmu9utKLZbvqu3aY8/Ir5tALPKrxtgy7M63UO8X74peleUkQNQQ6EO9TAHGH03g7lqXL5CvETG8k6moY5j1K2sKx/wSbcyQXJ/TTF1iVYuaJPFsUYEdsBc1c=
+	t=1720773485; cv=none; b=i6IDsGTT7hiucSlPhJJRJ2BbFxSc8HRUhTCtWO5GLHeBg7f3OkOk+MG0cocxMM6rjbVvtXWWZ6vpjBdMW6TgPHvtNx/BjX/qtQ3r4Jh8XcleTpGe+hppgE4wRG/+W0GwvkyZ0Uuhm0n4eFDqC3H5N3NZEaOivBFJL2Uno0rf43k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720772483; c=relaxed/simple;
-	bh=BwY0ZsxCEZcN7WG84LYPg6O2hxoZlhgLIraA6ElD1Fw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=mNzLCmUll2D/F8+31IFFiadrp2iDRY7dDyCZcm15K5wY0mJ+wMqTgPD6xfJ+X3h4ObeYkKjMc4inDe4qI9vj7mhUU/Nveub2W5n6k+bOBoNVB04SsmXsyYTqvtr9sECqf6WTuRe+d4U4RIQOoMOnTgKGOyAO+zyWQIurprU99+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxFep855BmuJsDAA--.1199S3;
-	Fri, 12 Jul 2024 16:21:17 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMV555BmhZ1FAA--.17179S3;
-	Fri, 12 Jul 2024 16:21:15 +0800 (CST)
-Subject: Re: [PATCH 05/11] LoongArch: KVM: Add EXTIOI device support
-To: Xianglai Li <lixianglai@loongson.cn>, linux-kernel@vger.kernel.org
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, Min Zhou <zhoumin@loongson.cn>,
- Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>
-References: <20240705023854.1005258-1-lixianglai@loongson.cn>
- <20240705023854.1005258-6-lixianglai@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <995820e9-2a51-414a-83d6-9921386dd655@loongson.cn>
-Date: Fri, 12 Jul 2024 16:21:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1720773485; c=relaxed/simple;
+	bh=X4sxkxfa0puHMD2lnMvIKYZ5jErEYw2uVCAwMxYRmSA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g62WBzB/tIRrFwZeOlQaA3YfxRidMhiPporkD6gMh1f3oB5nw9osPoWQMGhqm/7HvUVoZ0LIwdFjCkmuEqRCrlvrJMw5gMWuxy7mtCYp3CKaDM1aJ87mL/5Wa4CDODCPD6jI0K4nqUHz3veoLNwX8Xm23M5c2u3ToBXm9wGo+OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeuMLK5B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeuMLK5B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E03C4AF0F
+	for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 08:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720773484;
+	bh=X4sxkxfa0puHMD2lnMvIKYZ5jErEYw2uVCAwMxYRmSA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NeuMLK5BqZhyYqbUqCIhCYiuR1Fg4SN7BFy8Akyzo5Pg9sZWlMzvJ8OOucNGvv+92
+	 xGozI39ExmRKrL3F/ZTC/B04hFUq/GO3hTSt5RyXnaVb8ImoIXNHOT6pQfqwS6IfC/
+	 K/2XpVWEUeOadxiZ7F1uRun+NSZsiYE55vTGtJ4aa9hJmaGsl6+f3woxXY1hVCKVQn
+	 T1YqwtiEvHjnJqC3Fi6SMhFaQCXeexCLjoASMBFEjvZuTKmYEo9wBQtyrk5RcF9HzA
+	 9/0OMdjPyTTvbRSMopQD/W+K07o/MkwUQDrLTkVHXaQbAIQwJZV273OUlm8Xh8IBTB
+	 7stqWX6zwD3QA==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso16296221fa.3
+        for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 01:38:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV0xR2gCWHHtvuOOEHuaBTcdtLe+QTMANANQBfKxX1hdeb3xiNuYfYxoiOh5lCN53hwJCDsdnDZdCdiBg3NfMxqCBvKzWTOS1Kl
+X-Gm-Message-State: AOJu0Yz5k5DSwymZKN+9JcctNDJjzplQTJRVx0ge2HFu6fpzOrc6Xo41
+	VggfzZHKx5PYn4bciw2nz1zXayL4H3U3+GJld+OL50pSZMWDIecELqqZQOASM5EANMo/XgGa44C
+	oHU/5g8EQqkh7TSWnEFaISyvpRDw=
+X-Google-Smtp-Source: AGHT+IFfkbTH0GPwVyglXJ2Er1yvq7AU75kSwOPof9lxDJA6WZS/bfYrYyjHckbhe1dyXepshm4Uwstcj4sDcu5PIlo=
+X-Received: by 2002:a2e:95c6:0:b0:2ee:97b4:8028 with SMTP id
+ 38308e7fff4ca-2eeb30fd369mr67338551fa.31.1720773483308; Fri, 12 Jul 2024
+ 01:38:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240705023854.1005258-6-lixianglai@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxJMV555BmhZ1FAA--.17179S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKF4fKw1rKr4xurW5JF43Jwc_yoWftFW3pF
-	yDCFZ5Gr45Ww1xWr1qq3Z8ZryDXws3Ww1a9a42qa4fCFnFvry8KrykKr9FqFn8GaykCay0
-	qFyfG3Z09F4Dt3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jb
-	_-PUUUUU=
+References: <20240704143611.2979589-1-arnd@kernel.org> <20240704143611.2979589-4-arnd@kernel.org>
+In-Reply-To: <20240704143611.2979589-4-arnd@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 12 Jul 2024 17:37:26 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=h6dML-06ox1dje_bxF2+R-Gq7Yw-s73Vi-FW39L9eg@mail.gmail.com>
+Message-ID: <CAK7LNAS=h6dML-06ox1dje_bxF2+R-Gq7Yw-s73Vi-FW39L9eg@mail.gmail.com>
+Subject: Re: [PATCH 03/17] um: don't generate asm/bpf_perf_event.h
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Christian Brauner <brauner@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2024/7/5 上午10:38, Xianglai Li wrote:
-> Added device model for EXTIOI interrupt controller,
-> implemented basic create destroy interface,
-> and registered device model to kvm device table.
-> 
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+On Thu, Jul 4, 2024 at 11:37=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> If we start validating the existence of the asm-generic side of
+> generated headers, this one causes a warning:
+>
+> make[3]: *** No rule to make target 'arch/um/include/generated/asm/bpf_pe=
+rf_event.h', needed by 'all'.  Stop.
+>
+> The problem is that the asm-generic header only exists for the uapi
+> variant, but arch/um has no uapi headers and instead uses the x86
+> userspace API.
+>
+> Add a custom file with an explicit redirect to avoid this.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: kvm@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: Min Zhou <zhoumin@loongson.cn>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Xianglai li <lixianglai@loongson.cn>
-> 
->   arch/loongarch/include/asm/kvm_extioi.h |  78 +++++++++++++++++
->   arch/loongarch/include/asm/kvm_host.h   |   2 +
->   arch/loongarch/kvm/Makefile             |   1 +
->   arch/loongarch/kvm/intc/extioi.c        | 111 ++++++++++++++++++++++++
->   arch/loongarch/kvm/main.c               |   6 +-
->   include/uapi/linux/kvm.h                |   2 +
->   6 files changed, 199 insertions(+), 1 deletion(-)
->   create mode 100644 arch/loongarch/include/asm/kvm_extioi.h
->   create mode 100644 arch/loongarch/kvm/intc/extioi.c
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_extioi.h b/arch/loongarch/include/asm/kvm_extioi.h
+>  arch/um/include/asm/Kbuild           | 1 -
+>  arch/um/include/asm/bpf_perf_event.h | 3 +++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/um/include/asm/bpf_perf_event.h
+>
+> diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
+> index 6fe34779291a..6c583040537c 100644
+> --- a/arch/um/include/asm/Kbuild
+> +++ b/arch/um/include/asm/Kbuild
+> @@ -1,5 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -generic-y +=3D bpf_perf_event.h
+>  generic-y +=3D bug.h
+>  generic-y +=3D compat.h
+>  generic-y +=3D current.h
+> diff --git a/arch/um/include/asm/bpf_perf_event.h b/arch/um/include/asm/b=
+pf_perf_event.h
 > new file mode 100644
-> index 000000000000..48a117b2be5d
+> index 000000000000..0a30420c83de
 > --- /dev/null
-> +++ b/arch/loongarch/include/asm/kvm_extioi.h
-> @@ -0,0 +1,78 @@
+> +++ b/arch/um/include/asm/bpf_perf_event.h
+> @@ -0,0 +1,3 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2024 Loongson Technology Corporation Limited
-> + */
 > +
-> +#ifndef LOONGARCH_EXTIOI_H
-> +#define LOONGARCH_EXTIOI_H
-> +
-> +#include <kvm/iodev.h>
-> +
-> +#define EXTIOI_IRQS			256
-> +#define EXTIOI_ROUTE_MAX_VCPUS		256
-> +#define EXTIOI_IRQS_U8_NUMS		(EXTIOI_IRQS / 8)
-> +#define EXTIOI_IRQS_U32_NUMS		(EXTIOI_IRQS_U8_NUMS / 4)
-> +#define EXTIOI_IRQS_U64_NUMS		(EXTIOI_IRQS_U32_NUMS / 2)
-> +/* map to ipnum per 32 irqs */
-> +#define EXTIOI_IRQS_NODETYPE_COUNT	16
-> +
-> +#define EXTIOI_BASE			0x1400
-> +#define EXTIOI_SIZE			0x900
-> +
-> +#define LS3A_INTC_IP			8
-How about rename LS3A_INTC_IP with something like CPU_IP_NUM?
+> +#include <asm-generic/bpf_perf_event.h>
+> --
+> 2.39.2
+>
 
-> +
-> +struct loongarch_extioi {
-> +	spinlock_t lock;
-> +	struct kvm *kvm;
-> +	struct kvm_io_device device;
-> +	/* hardware state */
-> +	union nodetype {
-> +		u64 reg_u64[EXTIOI_IRQS_NODETYPE_COUNT / 4];
-> +		u32 reg_u32[EXTIOI_IRQS_NODETYPE_COUNT / 2];
-> +		uint16_t reg_u16[EXTIOI_IRQS_NODETYPE_COUNT];
-> +		u8 reg_u8[EXTIOI_IRQS_NODETYPE_COUNT * 2];
-> +	} nodetype;
-> +
-> +	/* one bit shows the state of one irq */
-> +	union bounce {
-> +		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-> +		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-> +		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-> +	} bounce;
-> +
-> +	union isr {
-> +		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-> +		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-> +		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-> +	} isr;
-> +	union coreisr {
-> +		u64 reg_u64[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U64_NUMS];
-> +		u32 reg_u32[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U32_NUMS];
-> +		u8 reg_u8[EXTIOI_ROUTE_MAX_VCPUS][EXTIOI_IRQS_U8_NUMS];
-> +	} coreisr;
-> +	union enable {
-> +		u64 reg_u64[EXTIOI_IRQS_U64_NUMS];
-> +		u32 reg_u32[EXTIOI_IRQS_U32_NUMS];
-> +		u8 reg_u8[EXTIOI_IRQS_U8_NUMS];
-> +	} enable;
-> +
-> +	/* use one byte to config ipmap for 32 irqs at once */
-> +	union ipmap {
-> +		u64 reg_u64;
-> +		u32 reg_u32[EXTIOI_IRQS_U32_NUMS / 4];
-> +		u8 reg_u8[EXTIOI_IRQS_U8_NUMS / 4];
-> +	} ipmap;
-> +	/* use one byte to config coremap for one irq */
-> +	union coremap {
-> +		u64 reg_u64[EXTIOI_IRQS / 8];
-> +		u32 reg_u32[EXTIOI_IRQS / 4];
-> +		u8 reg_u8[EXTIOI_IRQS];
-> +	} coremap;
-> +
-> +	DECLARE_BITMAP(sw_coreisr[EXTIOI_ROUTE_MAX_VCPUS][LS3A_INTC_IP], EXTIOI_IRQS);
-> +	uint8_t  sw_coremap[EXTIOI_IRQS];
-> +};
-> +
-> +void extioi_set_irq(struct loongarch_extioi *s, int irq, int level);
-> +int kvm_loongarch_register_extioi_device(void);
-> +#endif /* LOONGARCH_EXTIOI_H */
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index b28487975336..0e4e46e06420 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -20,6 +20,7 @@
->   #include <asm/kvm_mmu.h>
->   #include <asm/loongarch.h>
->   #include <asm/kvm_ipi.h>
-> +#include <asm/kvm_extioi.h>
->   
->   /* Loongarch KVM register ids */
->   #define KVM_GET_IOC_CSR_IDX(id)		((id & KVM_CSR_IDX_MASK) >> LOONGARCH_REG_SHIFT)
-> @@ -111,6 +112,7 @@ struct kvm_arch {
->   	s64 time_offset;
->   	struct kvm_context __percpu *vmcs;
->   	struct loongarch_ipi *ipi;
-> +	struct loongarch_extioi *extioi;
->   };
->   
->   #define CSR_MAX_NUMS		0x800
-> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-> index 36c3009fe89c..a481952e3855 100644
-> --- a/arch/loongarch/kvm/Makefile
-> +++ b/arch/loongarch/kvm/Makefile
-> @@ -19,5 +19,6 @@ kvm-y += tlb.o
->   kvm-y += vcpu.o
->   kvm-y += vm.o
->   kvm-y += intc/ipi.o
-> +kvm-y += intc/extioi.o
->   
->   CFLAGS_exit.o	+= $(call cc-option,-Wno-override-init,)
-> diff --git a/arch/loongarch/kvm/intc/extioi.c b/arch/loongarch/kvm/intc/extioi.c
-> new file mode 100644
-> index 000000000000..2f1b93e95f97
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/intc/extioi.c
-> @@ -0,0 +1,111 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2024 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <asm/kvm_extioi.h>
-> +#include <asm/kvm_vcpu.h>
-> +#include <linux/count_zeros.h>
-> +
-> +static int kvm_loongarch_extioi_write(struct kvm_vcpu *vcpu,
-> +				struct kvm_io_device *dev,
-> +				gpa_t addr, int len, const void *val)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int kvm_loongarch_extioi_read(struct kvm_vcpu *vcpu,
-> +				struct kvm_io_device *dev,
-> +				gpa_t addr, int len, void *val)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct kvm_io_device_ops kvm_loongarch_extioi_ops = {
-> +	.read	= kvm_loongarch_extioi_read,
-> +	.write	= kvm_loongarch_extioi_write,
-> +};
-> +
-> +static int kvm_loongarch_extioi_get_attr(struct kvm_device *dev,
-> +				struct kvm_device_attr *attr)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int kvm_loongarch_extioi_set_attr(struct kvm_device *dev,
-> +				struct kvm_device_attr *attr)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void kvm_loongarch_extioi_destroy(struct kvm_device *dev)
-> +{
-> +	struct kvm *kvm;
-> +	struct loongarch_extioi *extioi;
-> +	struct kvm_io_device *device;
-> +
-> +	if (!dev)
-> +		return;
-> +
-> +	kvm = dev->kvm;
-> +	if (!kvm)
-> +		return;
-> +
-> +	extioi = kvm->arch.extioi;
-> +	if (!extioi)
-> +		return;
-How about the sentence like this?
-	if (!dev || !dev->kvm || !dev->kvm->arch.extioi)
-		return;
-> +
-> +	device = &extioi->device;
-> +	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
-> +	kfree(extioi);
-> +}
-> +
-> +static int kvm_loongarch_extioi_create(struct kvm_device *dev, u32 type)
-> +{
-> +	int ret;
-> +	struct loongarch_extioi *s;
-> +	struct kvm_io_device *device;
-> +	struct kvm *kvm = dev->kvm;
-> +
-> +	/* extioi has been created */
-> +	if (kvm->arch.extioi)
-> +		return -EINVAL;
-> +
-> +	s = kzalloc(sizeof(struct loongarch_extioi), GFP_KERNEL);
-> +	if (!s)
-> +		return -ENOMEM;
-> +	spin_lock_init(&s->lock);
-> +	s->kvm = kvm;
-> +
-> +	/*
-> +	 * Initialize IOCSR device
-> +	 */
-> +	device = &s->device;
-> +	kvm_iodevice_init(device, &kvm_loongarch_extioi_ops);
-> +	mutex_lock(&kvm->slots_lock);
-> +	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, EXTIOI_BASE, EXTIOI_SIZE, device);
-> +	mutex_unlock(&kvm->slots_lock);
-> +	if (ret < 0) {
-> +		kfree(s);
-> +		return -EFAULT;
-Return value ret rather than -EFAULT?
 
-> +	}
-> +
-> +	kvm->arch.extioi = s;
-> +
-Empty line can be removed
-> +	kvm_info("create extioi device successfully\n");
-kvm_info() need be removed.
-> +	return 0;
-> +}
-> +
-> +static struct kvm_device_ops kvm_loongarch_extioi_dev_ops = {
-> +	.name = "kvm-loongarch-extioi",
-> +	.create = kvm_loongarch_extioi_create,
-> +	.destroy = kvm_loongarch_extioi_destroy,
-> +	.set_attr = kvm_loongarch_extioi_set_attr,
-> +	.get_attr = kvm_loongarch_extioi_get_attr,
-For simplity, it can be it kvm_extioi_xxx if you like.
+I guess this is a step backward.
 
-> +};
-> +
-> +int kvm_loongarch_register_extioi_device(void)
-> +{
-> +	return kvm_register_device_ops(&kvm_loongarch_extioi_dev_ops,
-> +					KVM_DEV_TYPE_LA_EXTIOI);
-> +}
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 36efc7b38f83..b5da4341006a 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -9,6 +9,7 @@
->   #include <asm/cacheflush.h>
->   #include <asm/cpufeature.h>
->   #include <asm/kvm_csr.h>
-> +#include <asm/kvm_extioi.h>
->   #include "trace.h"
->   
->   unsigned long vpid_mask;
-> @@ -372,7 +373,10 @@ static int kvm_loongarch_env_init(void)
->   	if (ret)
->   		return ret;
->   
-> -	return 0;
-> +	/* Register loongarch extioi interrupt controller interface. */
-> +	ret = kvm_loongarch_register_extioi_device();
-> +
-empty line can be removed here.
+Technically, kernel-space asm/*.h files are allowed to
+wrap UAPI <asm-generic/*.h>.
+There is no reason why we ban generic-y for doing this,
+whereas check-in source is allowed.
 
-Regards
-Bibo Mao
-> +	return ret;
->   }
->   
->   static void kvm_loongarch_env_exit(void)
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 341fc9d5f3ec..607895ea450f 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1144,6 +1144,8 @@ enum kvm_device_type {
->   #define KVM_DEV_TYPE_RISCV_AIA		KVM_DEV_TYPE_RISCV_AIA
->   	KVM_DEV_TYPE_LA_IPI,
->   #define KVM_DEV_TYPE_LA_IPI		KVM_DEV_TYPE_LA_IPI
-> +	KVM_DEV_TYPE_LA_EXTIOI,
-> +#define KVM_DEV_TYPE_LA_EXTIOI		KVM_DEV_TYPE_LA_EXTIOI
->   
->   	KVM_DEV_TYPE_MAX,
->   
-> 
 
+
+
+--
+Best Regards
+Masahiro Yamada
