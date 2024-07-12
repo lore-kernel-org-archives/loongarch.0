@@ -1,112 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC8910F7
-	for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 10:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3FF16DC3A
+	for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 15:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720779582; cv=none; b=GIOELSle2op9MgnZRgsUtKIlTVS4M1nQ0nG580Pndxq9HJpB92GCsuuLnyPd2HIe29NTDBtY4GmAaWUurBGaBlnpO0YgAa7E0dWKScukh2AKXzE9Ea47ipp+ij2N5tMcBYm/KR+tEd2I8md0+u6nfQDkm13W8E+NbybIDJt7aE4=
+	t=1720798294; cv=none; b=EARH7EpBnz/1Co0UnUNXWJHYJy3YU7XFkbh5qz4NQLKO5BUZNuqDv4d7tiPgLWpn/f8v6sEfnufGvB/vhLOkdCT7f9ISnoHfLZnSnfrCXHXP0nRN8gem3gkE73kzt1+A0etP8viec/qq5/JujO9omZexhyH63zNjcYYN4vvGlhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720779582; c=relaxed/simple;
-	bh=m8Fo37dbQHXF1VOFOJdFLjATgdftBN4o1j2llJWm8TU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=o36tw+1fYgfqpdldAUM5ah3ttPWhSN+5mrUmFUi9Dm3fEmoGuiyBbUbZYElBKMS3r7LGPygDTV18pISvPNMwOFXBmq1mM3nCk/TnSB0jPnMK/Dv5/Vll6lxbpuSUwkPfzDLvsQvZ8EUcZpVPVTZJU8Yy2zTm9LJ0LAWMkMMUJr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8CxZuo5A5FmzqYDAA--.1309S3;
-	Fri, 12 Jul 2024 18:19:38 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBMU2A5FmC8JFAA--.17381S3;
-	Fri, 12 Jul 2024 18:19:35 +0800 (CST)
-Subject: Re: [RFC PATCH 0/4] Add jump table support for objtool on LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <307bcd3e-f4fe-8cc0-c557-4069c97c6072@loongson.cn>
-Date: Fri, 12 Jul 2024 18:19:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1720798294; c=relaxed/simple;
+	bh=yuUkgSUd6vmj6tHpzYFlSGQESGT/hX3N3hMolRd/53s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qWFn/zvjQ9ACV9TmTzIE4hsaMHr8zHUNcgZ0zzg1BwCbPvG/UjzGZ+ukd3g0f9Q5HIgvn1ZTpu4WF+b/MT/v7nbU4xvHDzBMYQix7nxNht/Wgw46mRDi1Ays3nX/1g7A8N3si44Ly+y8TMV7W07y64zCb/+45zIOwqgWa7wi7CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Paa2Feqz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Paa2Feqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720798292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8pYjkzLgzHvy7cWc4vPkKfOHo7WvPjxKqpxHFA0Pgts=;
+	b=Paa2FeqzxA2EqzOuFPMaY3gWS851nGGYdXeaXKLn8SFEyBVboxV7CyjEWOD8abQ+G773Vy
+	+7xsgwdL51BrFYVZyRasPLGgSA8z2eMs0vkqDBdGnztTJKOfu5fbsSx2E59qHnpiJYzKXR
+	4cMTFzGijtG99G202Rjgp5nk/SljGSU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-v_AHXq2-MpisRoINbD8WzQ-1; Fri, 12 Jul 2024 11:31:27 -0400
+X-MC-Unique: v_AHXq2-MpisRoINbD8WzQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42725ec6d8dso19731165e9.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Jul 2024 08:31:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720798286; x=1721403086;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8pYjkzLgzHvy7cWc4vPkKfOHo7WvPjxKqpxHFA0Pgts=;
+        b=gSy95o83h85EylBWqKS+NzIYeaF4LN2vhFCr9v787JuUnaqqQJWO8bqn/280h+d22u
+         sf0BRa3EU+NAhpCVGv4qF0XvlV+Xg3T1uRv1zIXU5P4aVWz9Mq2CNfRxWzcB8CFz8y+r
+         GRFesuRvoRWLkJgHMwX98ZpFkiucqfSSnqCJhQWBex8LT/2Zc7uVJQqD/3Y47uc7IyAc
+         mMU3QKIuJKmgP0puvxlflqnmZOWjSANpDoxKaqN3eaU6AJa1fy10A7gRLuyOhqYfrDvq
+         6WRbOnfpNvaNSu4CjwX/cH1y0mvO75dp9OqCaqw2ITvtqt+QyNHQ6VKjBFXdswP+ARVm
+         9GUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrxzNbJc1ZTGQ7YorohoYKXnf3+XsnAJJ5cJJIenL+C6wcdisLEQDPLYrolVLsriDEE91KTSk1I4fpb2nFnYhEOMQCnC5P1nGI
+X-Gm-Message-State: AOJu0YzJOi7BRgGmJb4FaWKEmRH3yzzQsz/rK3o4Fm5ftpIqCn9VCsK+
+	U/ByqCI6FBySpEp6B004WA3XsHIppITX6TfGOipEVaTdMhAFnAL67N+5L4SQ6zP07LGQMDFklgi
+	Vr/1osQmvrmA4zh9NP4qZ7AX+C0dbSJ3YFZW266xyPl9gHh2Cy/V84XQ0KMjXNoWVGGcjt/CnUF
+	OKFXTSOCSa8/RZxJl1euBZVT8DBbxfRvAB
+X-Received: by 2002:a05:600c:47c7:b0:426:6ed5:fcb with SMTP id 5b1f17b1804b1-426706c62c0mr103472115e9.4.1720798286752;
+        Fri, 12 Jul 2024 08:31:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpwU6rx2/rdjP1qBUZaPIgntGNbKwFTW7FjwPn5/uO82kUiFkIG1Brg/z5ZHfnsc9cT0EpUfc5/AnoXthMn3k=
+X-Received: by 2002:a05:600c:47c7:b0:426:6ed5:fcb with SMTP id
+ 5b1f17b1804b1-426706c62c0mr103471885e9.4.1720798286392; Fri, 12 Jul 2024
+ 08:31:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240712091506.28140-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8AxBMU2A5FmC8JFAA--.17381S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFyDAr4DGry7Kr45Gry8WFX_yoW8uFyfpF
-	W7CrWfKFs8WFnaqwsxJw12gFy5Jr4fG34Utr43try09w4UXr1aqr4xtF9xZ3ZrW395W3y2
-	qr1YgFy7KF4vkacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8SdgUUU
-	UU=
+References: <20240710104923.2569660-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240710104923.2569660-1-chenhuacai@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 12 Jul 2024 17:31:15 +0200
+Message-ID: <CABgObfZd1ugY4cFygnvFtiO9p3iE1GA3Wn7Avdkajz_9iXVNTQ@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.11
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Are we always avoid our problems?
+On Wed, Jul 10, 2024 at 12:58=E2=80=AFPM Huacai Chen <chenhuacai@loongson.c=
+n> wrote:
+>
+> The following changes since commit 256abd8e550ce977b728be79a74e1729438b49=
+48:
+>
+>   Linux 6.10-rc7 (2024-07-07 14:23:46 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
+.git tags/loongarch-kvm-6.11
+>
+> for you to fetch changes up to 492ac37fa38faf520b5beae44c930063265ee183:
+>
+>   perf kvm: Add kvm-stat for loongarch64 (2024-07-10 16:50:27 +0800)
+>
+> ----------------------------------------------------------------
+> LoongArch KVM changes for v6.11
+>
+> 1. Add ParaVirt steal time support.
+> 2. Add some VM migration enhancement.
+> 3. Add perf kvm-stat support for loongarch.
+>
+> ----------------------------------------------------------------
 
-1, When text section not support "R_LARCH_32_PCREL", update compiler
-    to add AS_HAS_THIN_ADD_SUB.
-2, When not support jump-table, use "-fno-jump-tables" to avoid it,
-    (and now update compiler to add CC_HAS_ANNOTATE_TABLEJUMP).
-3, When not support relax, use "-mno-relax" to avoid it.
-4, When some where in asm can be backtraced but generate warning,
-    use STACK_FRAME_NON_STANDARD to avoid it.
-5, When the goto-table cannot be handled (I guess the Ruoyao's
-    patch cannot handle goto table), use CONFIG_BPF_JIT_ALWAYS_ON
-    to avoid compile ___bpf_prog_run.
-6, And other $fp warnings not be solved in clang. Do we only care gcc?
+Pulled, thanks.
 
-So how to do in the future if compilers have other changed? Do we
-need update compilers (both gcc and clang) again and again? Why
-not just update objtool codes to solves these problems? As many
-RISC arch not support directly find jump table, can we support
-more generic ways to find it?
-
-
-On 2024-07-12 17:15, Tiezhu Yang wrote:
-> This RFC version is based on Linux 6.10-rc7, there are no detailed
-> commit messages for each patch for now and the code are relatively
-> clear and simple.
->
-> This series is tested with the latest upstream gcc applied with patch
-> "LoongArch: Add support to annotate tablejump" [1] which adds a new
-> section discard.tablejump_annotate to record the jump info, it makes
-> life much easier, special thanks to Ruoyao.
->
-> I will address all the review comments and update the commit messages
-> after the merge window.
->
-> [1] https://inbox.sourceware.org/gcc-patches/20240711114415.4420-1-xry111@xry111.site/
->
-> Tiezhu Yang (4):
->    objtool: Check local label in find_jump_table()
->    objtool: Check various types in add_jump_table()
->    objtool/LoongArch: Add support for jump table
->    LoongArch: Remove -fno-jump-tables for objtool
->
->   arch/loongarch/Kconfig                 |  8 +++-
->   arch/loongarch/Makefile                |  6 +--
->   tools/objtool/arch/loongarch/special.c | 54 +++++++++++++++++++++++++-
->   tools/objtool/check.c                  | 36 +++++++++++++++--
->   4 files changed, 94 insertions(+), 10 deletions(-)
->
+Paolo
 
