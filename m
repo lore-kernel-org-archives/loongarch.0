@@ -1,136 +1,117 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399A048781
-	for <loongarch@lists.linux.dev>; Sat, 13 Jul 2024 07:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from cmccmta1.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B99A82628C
+	for <loongarch@lists.linux.dev>; Sat, 13 Jul 2024 08:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720854558; cv=none; b=NBsosFeoiawvWsoYBmmwKi8OfAQ1If9vvwIPligtmLddTRmyfj4cHmGZOSQYJjX7pXqRWQT5oF762LcvYv+AF6nhwHUvUZOYfeRKw7BRpPjvCUzrMi7Y2qM4005emLLreS4HbIe1dkgTQh/5cwtMZqsoicJxTFY3CDEcMPjJcZE=
+	t=1720857638; cv=none; b=MNd/4u+RVRLasEqzjCEh/kGQkwVTOh7BTiuqzMMXew9KQpclKQXTIbDRK1Wy0Whj46Sylx8Pw14WMKZ9rDKezjxIQXNs4d2zXtUbGMP2OnmNR1FxIrq5eJOdJfI0idWdN7pAANr4Bx2UoCB6cNYIxUWJrOawf+pkXJpGRwZ15Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720854558; c=relaxed/simple;
-	bh=9cGeujZtX2c/zEf05hq/l7o1WBt5GJFv+9LPfky90p8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sKMIfE/4A7e8/Kc3qTtr2kjBfzk0P65FOaDwNl5JHz/ENfyLVjY4MiPMUs6wq654jxMro1GOC4+3nSmY75sfvB8NU1bAPoV/RQstGjlYEc/8JNdP5NB+YqoxQKlh2WeaOYelnXBSpwOVXvHHbttfxdtfze4PJSVfbdzBqcUwKcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WLfhZ1Ccnz9sSb;
-	Sat, 13 Jul 2024 09:09:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id rBAPNnN2erdv; Sat, 13 Jul 2024 09:09:02 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WLfhY68WVz9sSS;
-	Sat, 13 Jul 2024 09:09:01 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BCB5C8B764;
-	Sat, 13 Jul 2024 09:09:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id U1NlTXZ3sw-T; Sat, 13 Jul 2024 09:09:01 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.195])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B6F798B76C;
-	Sat, 13 Jul 2024 09:09:00 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
+	s=arc-20240116; t=1720857638; c=relaxed/simple;
+	bh=hfYPjA00LDasRjY3/gpjinYkFcjZGczV5jqxpJ8QJ1w=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=o4c4zLGxjSq+H9IDtDB3BrUMIZqbOaqZeG0srKKjNgAYv2Q0UzsjLMUX7MEGllIaCt+yOnr2j5RDD37nRTmTiKdaZNOJXtnhCLuLmuKWcv8meqn06CshrNwjsmSatc7WJWblNl4YpU8zo5mZda9jShuCU55h0J4P41OZfQd4IVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee3669234142fc-12b07;
+	Sat, 13 Jul 2024 16:00:21 +0800 (CST)
+X-RM-TRANSID:2ee3669234142fc-12b07
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain.localdomain (unknown[223.108.79.100])
+	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee16692340ccff-6eea7;
+	Sat, 13 Jul 2024 16:00:21 +0800 (CST)
+X-RM-TRANSID:2ee16692340ccff-6eea7
+From: tangbin <tangbin@cmss.chinamobile.com>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	Peter Xu <peterx@redhat.com>
-Subject: [PATCH v3 5/5] mm: Add p{g/4}d_leaf() in asm-generic/pgtable-nop{4/u}d.h
-Date: Sat, 13 Jul 2024 09:08:27 +0200
-Message-ID: <7b6f39f3cc9823e0a058b27f50ad4f47b2e10979.1720854135.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <c81566e5df160587de50f9095d0ec377114fdba8.1720854135.git.christophe.leroy@csgroup.eu>
-References: <c81566e5df160587de50f9095d0ec377114fdba8.1720854135.git.christophe.leroy@csgroup.eu>
+	linux-kernel@vger.kernel.org,
+	tangbin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] LoongArch: KVM: Remove redundant assignment in kvm_map_page_fast
+Date: Sat, 13 Jul 2024 11:59:37 -0400
+Message-Id: <20240713155937.45261-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.18.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720854504; l=2504; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=9cGeujZtX2c/zEf05hq/l7o1WBt5GJFv+9LPfky90p8=; b=MN2/woF7LqGhnWnq57H61zGqJsMcmtZviZwr/m6VoCoVv5XepEx+34tqeLFna5lL+rtgkoHC6 84JnWQ04MY8AFTasVOBH1guX6oXN81IRpiabqc6NIYejAVLsU1O2E4y
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
 
-Commit 2c8a81dc0cc5 ("riscv/mm: fix two page table check related
-issues") added pud_leaf() in include/asm-generic/pgtable-nopmd.h
+In the function kvm_map_page_fast, the assignment of 'ret' is
+redundant, so remove it.
 
-Do the same for p4d_leaf() and pgd_leaf() to avoid getting them
-erroneously defined by architectures that do not implement the
-related page level.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
 ---
-v2: Added pXd_leaf macro as well in asm-generic/pgtable-nopXd.h to cohabit with the fallback
----
- include/asm-generic/pgtable-nop4d.h | 2 ++
- include/asm-generic/pgtable-nopmd.h | 1 +
- include/asm-generic/pgtable-nopud.h | 2 ++
- 3 files changed, 5 insertions(+)
+ arch/loongarch/kvm/mmu.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/include/asm-generic/pgtable-nop4d.h b/include/asm-generic/pgtable-nop4d.h
-index 03b7dae47dd4..ed7ba008469f 100644
---- a/include/asm-generic/pgtable-nop4d.h
-+++ b/include/asm-generic/pgtable-nop4d.h
-@@ -21,6 +21,8 @@ typedef struct { pgd_t pgd; } p4d_t;
- static inline int pgd_none(pgd_t pgd)		{ return 0; }
- static inline int pgd_bad(pgd_t pgd)		{ return 0; }
- static inline int pgd_present(pgd_t pgd)	{ return 1; }
-+static inline int pgd_leaf(pgd_t pgd)		{ return 0; }
-+#define pgd_leaf pgd_leaf
- static inline void pgd_clear(pgd_t *pgd)	{ }
- #define p4d_ERROR(p4d)				(pgd_ERROR((p4d).pgd))
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 2634a9e8d..d6c922a4a 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -551,7 +551,6 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+  */
+ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ {
+-	int ret = 0;
+ 	kvm_pfn_t pfn = 0;
+ 	kvm_pte_t *ptep, changed, new;
+ 	gfn_t gfn = gpa >> PAGE_SHIFT;
+@@ -563,20 +562,16 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
  
-diff --git a/include/asm-generic/pgtable-nopmd.h b/include/asm-generic/pgtable-nopmd.h
-index b01349a312fa..e178ace2e23e 100644
---- a/include/asm-generic/pgtable-nopmd.h
-+++ b/include/asm-generic/pgtable-nopmd.h
-@@ -31,6 +31,7 @@ static inline int pud_none(pud_t pud)		{ return 0; }
- static inline int pud_bad(pud_t pud)		{ return 0; }
- static inline int pud_present(pud_t pud)	{ return 1; }
- static inline int pud_leaf(pud_t pud)		{ return 0; }
-+#define pud_leaf pud_leaf
- static inline void pud_clear(pud_t *pud)	{ }
- #define pmd_ERROR(pmd)				(pud_ERROR((pmd).pud))
+ 	/* Fast path - just check GPA page table for an existing entry */
+ 	ptep = kvm_populate_gpa(kvm, NULL, gpa, 0);
+-	if (!ptep || !kvm_pte_present(NULL, ptep)) {
+-		ret = -EFAULT;
++	if (!ptep || !kvm_pte_present(NULL, ptep))
+ 		goto out;
+-	}
  
-diff --git a/include/asm-generic/pgtable-nopud.h b/include/asm-generic/pgtable-nopud.h
-index eb70c6d7ceff..655dfebea91c 100644
---- a/include/asm-generic/pgtable-nopud.h
-+++ b/include/asm-generic/pgtable-nopud.h
-@@ -28,6 +28,8 @@ typedef struct { p4d_t p4d; } pud_t;
- static inline int p4d_none(p4d_t p4d)		{ return 0; }
- static inline int p4d_bad(p4d_t p4d)		{ return 0; }
- static inline int p4d_present(p4d_t p4d)	{ return 1; }
-+static inline int p4d_leaf(p4d_t p4d)		{ return 0; }
-+#define p4d_leaf p4d_leaf
- static inline void p4d_clear(p4d_t *p4d)	{ }
- #define pud_ERROR(pud)				(p4d_ERROR((pud).p4d))
+ 	/* Track access to pages marked old */
+ 	new = kvm_pte_mkyoung(*ptep);
+ 	/* call kvm_set_pfn_accessed() after unlock */
  
+ 	if (write && !kvm_pte_dirty(new)) {
+-		if (!kvm_pte_write(new)) {
+-			ret = -EFAULT;
++		if (!kvm_pte_write(new))
+ 			goto out;
+-		}
+ 
+ 		if (kvm_pte_huge(new)) {
+ 			/*
+@@ -584,10 +579,8 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+ 			 * enabled for HugePages
+ 			 */
+ 			slot = gfn_to_memslot(kvm, gfn);
+-			if (kvm_slot_dirty_track_enabled(slot)) {
+-				ret = -EFAULT;
++			if (kvm_slot_dirty_track_enabled(slot))
+ 				goto out;
+-			}
+ 		}
+ 
+ 		/* Track dirtying of writeable pages */
+@@ -615,10 +608,10 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+ 		if (page)
+ 			put_page(page);
+ 	}
+-	return ret;
++	return 0;
+ out:
+ 	spin_unlock(&kvm->mmu_lock);
+-	return ret;
++	return -EFAULT;
+ }
+ 
+ static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
 -- 
-2.44.0
+2.18.4
+
+
 
