@@ -1,279 +1,242 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A9418EA62
-	for <loongarch@lists.linux.dev>; Mon, 15 Jul 2024 13:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBB473477
+	for <loongarch@lists.linux.dev>; Mon, 15 Jul 2024 21:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721050555; cv=none; b=t+OWNpGc22ueD48ziMXf+Fnvilf8gxkbFf6wHNQobGJ2lO9cMfWgQGOgZ7ElMKFjL1mYCL+HNmTPu6Yso0whSe1A7bMnTnAHsXOI+UQSEby2eHmAWZyiVB/T0vcL1pMC7qltQ7Omb7T8VATW9Y+eqmbBhXK+TQ5s+oWpNvWWC38=
+	t=1721077630; cv=none; b=IQYmCBi0N+pin/NBP4vFbMqDUDe5xSuLMHxzrNGTJNh6xaKwGcHZDCmsWK1twL+M5fiJgLXcNM4P9/dazrMSFFI+ibLYQFf9fuuCvmRsNodW9d8svUtXaQTWgA/Mf6dY+iJFX9JWZGCon1s30A89GiL/U8lYBniTqhgfd2ijSrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721050555; c=relaxed/simple;
-	bh=D2mqxCRzQvs1HI/FO9ROzuiLua0L8frnlc80PUjQ/tM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XdeeIVREodkGadFUlqqs+U09UtJc7GEItiuwKaF0cSQiSp1bcREtpIPP3ArOB4fLEmVMKAohAtbDITA8V2PPf+nCpK/COWZ56KvKsAuh2ycWK//LT2qe29YtqlCsTpxISiJZWY42hauwJA2QAoS1Fkcx25UaoYD/vuGZKsNODfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=rC3aYHVe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eJHVU+Ho; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1721077630; c=relaxed/simple;
+	bh=lizupEQGnTa1Co130gaT2iURcByI6Rqjj4RZmXjS+Uo=;
+	h=MIME-Version:Message-Id:Date:From:To:Cc:Subject:Content-Type; b=A+sqs7juebLNiTpV0j0ZU7a0FHzmwyHGkrr7yv+fdYUvAKcN/cJIy6HyZm8MHmwgdwjblPwGp7+M8Lj7pTbrM0VTxseG1WZYPiVdyc27IP0UTQPk24pTZyP6pIdewW9IZXP2cV3CAAMLmI9b6YfBkzXxxphydKQCVQcA04QGM8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=wS2E9kgf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SjWxd3R+; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rC3aYHVe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eJHVU+Ho"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 6866E1147F64;
-	Mon, 15 Jul 2024 09:35:53 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 15 Jul 2024 09:35:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721050553;
-	 x=1721136953; bh=HeqE0UK1T7UO6X2hOhXYyZrlSpcrQ0WC48brT+ZdXlU=; b=
-	rC3aYHVePbwlgqXCGlhnLIHB5KSW9cZWAwznoJ9D8Z618oCY1CE6l+npN6VjeQ2o
-	R/I2FnfvAojRyvpSJegPRLssL6Huc4PjM9/xZzf0ATLdUvTAF7uGZXY+7sY2oRR1
-	OPXae4bFAgw3qtk61P69wjmumJ72RGvtzGqiykRY9ixhc3st4PYUV8INxeDekNuW
-	pQDz33dM4daNlt4eWZW+JlB+w1W+yYMZrhWUcPRxOMhTVAqfdVKDxE6JHYQ40hhf
-	dVYS7whVVlYEHQLg3WM3wgZwt3TFlD1t9JWFA0EWIgV2luBDuF4RMtWdlElW415D
-	sSXxRKNS+RQo8tmKyhxy/A==
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="wS2E9kgf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SjWxd3R+"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 268BE1147F7B;
+	Mon, 15 Jul 2024 17:07:08 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 15 Jul 2024 17:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1721077628; x=1721164028; bh=7q+6IYnqmuD50MShCet25BciLTxKWgfP
+	x9cMuhrwtGI=; b=wS2E9kgfykEbvr4fI31z3CQP1CSeei4rzb0lMAGgZ6RIUSgo
+	BRFmtlOH+rtPNMxh+MzOYT7JWGdTneI1f9X1kg7Di+Y4R89a6etxzS9i0p8ViaDR
+	pYuLv634QUV0f1LUl9pIWNuFj4dqwrCe91RVCprEvN2tAxFEgJuSE4mCpd9iSfcm
+	hPS/1dcVjob5TD9XXIRSy/LKODsFITjxLWG3NVposgu441tHn+vIz31PUSu6FYQJ
+	mPKmRfkom7KkODjRVCtDW7bxEZRBxmDqyK5JyIiaDOXXC1rIbKFwEekFfDcj+unI
+	GCKwdwh1eg1RmUpiaLBg8LPcZUnmilwT54e0OQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721050553; x=
-	1721136953; bh=HeqE0UK1T7UO6X2hOhXYyZrlSpcrQ0WC48brT+ZdXlU=; b=e
-	JHVU+HozAvP7IYQqYuVwyDwjHLnh4OPhqvltAYoZAibK/KM1Szx7q/Az5N/SmkAf
-	2a1uOCDfFtUubP2IaR9DAqIrz/iIYhWuu27Aru/Cpm5l2Yous4if8gBFfr9dUeEt
-	2m4V6Simwzl544VwIjlLpxC8OPR2/rVSxNBi8idpobUKFPfekG6ZlGZ6Clxsynis
-	6RButDpLvJ/kzR/J314oIMCezPeXEquAQwQPdjDA+30HdBOk4lpVzgnZSJIQhm7X
-	MrNSWBB8TDOToDWu6IuV2qgDypWuYBGfepi4susAjNeaqGLTZ8+sx9WyCg2hw3P/
-	3/uJFiyyff7dMR/EKFqDA==
-X-ME-Sender: <xms:uCWVZu0GAG_zHVPuD5G7Xqz-5m9uxh06q0O2bVH0qFFQNAK7Ahb9Ww>
-    <xme:uCWVZhH9rXkNy-kk7yXijZB3bJmD_aNWOgsN_o02-Za--kcq06c4UA0VcUkPGLrDY
-    Ly1SEJd3mgDzO-DlP4>
-X-ME-Received: <xmr:uCWVZm5efiHHx6HFmL2K9SQDWGXVsVsdvtN03k_misM1Yl9W9Z_EVH1F74aavLn7Qxh5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgedvgdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpefgveeikefhgedufffggeduleejveehgfdvjeeivdeitdeiffel
-    jefgvddvudetvdenucffohhmrghinhephhgvrggurdhssgenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhih
-    ghhorghtrdgtohhm
-X-ME-Proxy: <xmx:uCWVZv108IGcdXQVvOJCE2Y7ZUIPBcyoDYwsANIq8RHrgEHGYDoPiw>
-    <xmx:uCWVZhHi_NdUpiSpiBPfX-8XwTKQpap_wseF789JiItP6OGgmyz9KQ>
-    <xmx:uCWVZo8jWtA78ndfNbiFm7AiOkRdKKUkzQPD4jIxamcyT0ryHuAjQA>
-    <xmx:uCWVZmkvxe5wtW_djuDBsMttd6aatw9wE8wZ0fJDD10M0hdkTSbNDA>
-    <xmx:uSWVZo3tRD_tJax7BNTiw_vg3gUfItXKwQijXTGdAXJRRQNMJQl3DpHh>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 Jul 2024 09:35:49 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Mon, 15 Jul 2024 21:35:30 +0800
-Subject: [PATCH v2 3/3] LoongArch: SMP: Implement parallel CPU bring up
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1721077628; x=1721164028; bh=7q+6IYnqmuD50MShCet25BciLTxKWgfPx9c
+	MuhrwtGI=; b=SjWxd3R+lq3EleIFErSZn/DYiwI00hnYTeFPdMPnD3A6Ia9ha/M
+	V+vruY9CxVBLEI3+lH6SsObvqysnd6z2bU0n6rv0dTlxxJ1VjL5LCcAwciN0KKOm
+	l0h0qesT3hFeQRSfZ4akx/QpoxsOqioKs+ldhkEsUYfMSF5i8yUm38y9xLYXSrlj
+	JJ6mU4Hwd7E8ouGF4zMa406ijk5mOsKVIQH0lSoDs85yFGv0wNZOJkR91xiaAzRx
+	VM/cRdJQYS6FUTVAfmZ07imAjVVBO3r7BCrEx3nkU6DX2MlwNu3FSc5ZdUDjPGjM
+	bYDaWXLt3fOvoDjoE8veNEQZ4FHXrPRuXxQ==
+X-ME-Sender: <xms:e4-VZmwQmKewoJrhtTl_WW5z1vjxWBGMWPgc_ZI9Ujfh3xtvgFv14A>
+    <xme:e4-VZiQiBg4B-TqGGxmpnFGo4CXilO_UJW7NLVTe0PVioUdhW9l6D6yE-0qm5E-ns
+    RYJcEZa08aQ-85jovE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgedvgdduheeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkfffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepfeefuefhkeejvedtvddtleeltddttdejgedvhfdtuddvhfeukeduiefhjeetgfei
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:fI-VZoU52SOcvNZtiAXeZWY6biEWtooXgSHE2f0fn2oZJhgcPrwZvA>
+    <xmx:fI-VZshnqg6B1qoW_S7KdOtvdUdOlBuC4nT7rMtA2tiP45Ttf_Duug>
+    <xmx:fI-VZoCkb7BEuRUCZ7p0XRlUaOvFGokWtF2TH98ZZ558Psgd4BVrZA>
+    <xmx:fI-VZtKmOpTNoEUAFXAlM4Idrlu_2Exwp_qe900ds72pKa9gl-BUhA>
+    <xmx:fI-VZk2NjfSL59A8L2VEa5T41Zzl-MBo4qJUHe3lLxKEloa9Wp2EPcjy>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D49A8B6008D; Mon, 15 Jul 2024 17:07:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-loongarch-hotplug-v2-3-7d18b3d46b11@flygoat.com>
-References: <20240715-loongarch-hotplug-v2-0-7d18b3d46b11@flygoat.com>
-In-Reply-To: <20240715-loongarch-hotplug-v2-0-7d18b3d46b11@flygoat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5856;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=D2mqxCRzQvs1HI/FO9ROzuiLua0L8frnlc80PUjQ/tM=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSpqitCCpoXuB433BvVk5FYW83BfC39V25HXM28x2YPm
- Dz4b5h3lLIwiHExyIopsoQIKPVtaLy44PqDrD8wc1iZQIYwcHEKwETW6jEyLE45ETrx1x0GTT3x
- x4xfOZzrz75cE/3qw3qV96d1Gf6zn2BkuBY6z17k/6GXP+SMnAV3PQj4+dtQ4MP5r+z7t5/b7X7
- 7ADcA
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Message-Id: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
+Date: Mon, 15 Jul 2024 23:14:27 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-snps-arc@lists.infradead.org
+Subject: [GIT PULL] asm-generic updates for 6.11
+Content-Type: text/plain
 
-Implement parallel CPU bring up for LoongArch to reduce
-boot time consumption on bring up CPUs.
+The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826:
 
-On my Loongson-3A5000 ~120ms boot time improvement is observed.
+  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
 
-tp, sp register values are passed by MBUF now to avoid racing
-cpuboot_data global struct.
+are available in the Git repository at:
 
-cpu_running completion is handled by HOTPLUG_CORE_SYNC_FULL.
+  https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/asm-generic-6.11
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/smp.h    |  6 ------
- arch/loongarch/kernel/asm-offsets.c | 10 ----------
- arch/loongarch/kernel/head.S        |  7 ++++---
- arch/loongarch/kernel/smp.c         | 35 +++++++----------------------------
- 5 files changed, 12 insertions(+), 47 deletions(-)
+for you to fetch changes up to 1a7b7326d587c9a5e8ff067e70d6aaf0333f4bb3:
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ddc042895d01..656435c1dbd5 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -162,6 +162,7 @@ config LOONGARCH
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_TIF_NOHZ
- 	select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
-+	select HOTPLUG_PARALLEL if SMP
- 	select IRQ_FORCED_THREADING
- 	select IRQ_LOONGARCH_CPU
- 	select LOCK_MM_AND_FIND_VMA
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 50db503f44e3..f6953cb16492 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -75,12 +75,6 @@ extern int __cpu_logical_map[NR_CPUS];
- #define SMP_CALL_FUNCTION	BIT(ACTION_CALL_FUNCTION)
- #define SMP_IRQ_WORK		BIT(ACTION_IRQ_WORK)
- 
--struct secondary_data {
--	unsigned long stack;
--	unsigned long thread_info;
--};
--extern struct secondary_data cpuboot_data;
--
- extern asmlinkage void smpboot_entry(void);
- extern asmlinkage void start_secondary(void);
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bee9f7a3108f..598498f47a4c 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -257,16 +257,6 @@ static void __used output_signal_defines(void)
- 	BLANK();
- }
- 
--#ifdef CONFIG_SMP
--static void __used output_smpboot_defines(void)
--{
--	COMMENT("Linux smp cpu boot offsets.");
--	OFFSET(CPU_BOOT_STACK, secondary_data, stack);
--	OFFSET(CPU_BOOT_TINFO, secondary_data, thread_info);
--	BLANK();
--}
--#endif
--
- #ifdef CONFIG_HIBERNATION
- static void __used output_pbe_defines(void)
- {
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index fdb831dc64df..8dd8fb450f46 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -136,9 +136,10 @@ SYM_CODE_START(smpboot_entry)
- 	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
- 	csrwr		t0, LOONGARCH_CSR_EUEN
- 
--	la.pcrel	t0, cpuboot_data
--	ld.d		sp, t0, CPU_BOOT_STACK
--	ld.d		tp, t0, CPU_BOOT_TINFO
-+	li.w		t0, LOONGARCH_IOCSR_MBUF1
-+	iocsrrd.d	sp, t0
-+	li.w		t0, LOONGARCH_IOCSR_MBUF2
-+	iocsrrd.d	tp, t0
- 
- 	bl		start_secondary
- 	ASM_BUG()
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index ca405ab86aae..ca6a95a0280d 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -48,10 +48,6 @@ EXPORT_SYMBOL(cpu_sibling_map);
- /* Representing the core map of multi-core chips of each logical CPU */
- cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(cpu_core_map);
--
--static DECLARE_COMPLETION(cpu_starting);
--static DECLARE_COMPLETION(cpu_running);
--
- /*
-  * A logcal cpu mask containing only one VPE per core to
-  * reduce the number of IPIs on large MT systems.
-@@ -65,7 +61,6 @@ static cpumask_t cpu_sibling_setup_map;
- /* representing cpus for which core maps can be computed */
- static cpumask_t cpu_core_setup_map;
- 
--struct secondary_data cpuboot_data;
- static DEFINE_PER_CPU(int, cpu_state);
- 
- static const char *ipi_types[NR_IPI] __tracepoint_string = {
-@@ -340,14 +335,16 @@ void __init loongson_prepare_cpus(unsigned int max_cpus)
-  */
- void loongson_boot_secondary(int cpu, struct task_struct *idle)
- {
--	unsigned long entry;
-+	unsigned long entry, stack, thread_info;
- 
- 	pr_info("Booting CPU#%d...\n", cpu);
- 
- 	entry = __pa_symbol((unsigned long)&smpboot_entry);
--	cpuboot_data.stack = (unsigned long)__KSTK_TOS(idle);
--	cpuboot_data.thread_info = (unsigned long)task_thread_info(idle);
-+	stack = (unsigned long)__KSTK_TOS(idle);
-+	thread_info = (unsigned long)task_thread_info(idle);
- 
-+	csr_mail_send(thread_info, cpu_logical_map(cpu), 2);
-+	csr_mail_send(stack, cpu_logical_map(cpu), 1);
- 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
- 
- 	loongson_send_ipi_single(cpu, ACTION_BOOT_CPU);
-@@ -525,20 +522,10 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- #endif
- }
- 
--int __cpu_up(unsigned int cpu, struct task_struct *tidle)
-+int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct *tidle)
- {
- 	loongson_boot_secondary(cpu, tidle);
- 
--	/* Wait for CPU to start and be ready to sync counters */
--	if (!wait_for_completion_timeout(&cpu_starting,
--					 msecs_to_jiffies(5000))) {
--		pr_crit("CPU%u: failed to start\n", cpu);
--		return -EIO;
--	}
--
--	/* Wait for CPU to finish startup & mark itself online before return */
--	wait_for_completion(&cpu_running);
--
- 	return 0;
- }
- 
-@@ -561,22 +548,14 @@ asmlinkage void start_secondary(void)
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
- 
-+	cpuhp_ap_sync_alive();
- 	notify_cpu_starting(cpu);
- 
--	/* Notify boot CPU that we're starting */
--	complete(&cpu_starting);
--
- 	/* The CPU is running, now mark it online */
- 	set_cpu_online(cpu, true);
- 
- 	calculate_cpu_foreign_map();
- 
--	/*
--	 * Notify boot CPU that we're up & online and it can safely return
--	 * from __cpu_up()
--	 */
--	complete(&cpu_running);
--
- 	/*
- 	 * irq will be enabled in loongson_smp_finish(), enabling it too
- 	 * early is dangerous.
+  vmlinux.lds.h: catch .bss..L* sections into BSS") (2024-07-12 08:52:45 +0200)
 
--- 
-2.45.2
+----------------------------------------------------------------
+asm-generic updates for 6.11
 
+Most of this is part of my ongoing work to clean up the system call
+tables. In this bit, all of the newer architectures are converted to
+use the machine readable syscall.tbl format instead in place of complex
+macros in include/uapi/asm-generic/unistd.h.
+
+This follows an earlier series that fixed various API mismatches
+and in turn is used as the base for planned simplifications.
+
+The other two patches are dead code removal and a warning fix.
+
+----------------------------------------------------------------
+Arnd Bergmann (17):
+      syscalls: add generic scripts/syscall.tbl
+      csky: drop asm/gpio.h wrapper
+      um: don't generate asm/bpf_perf_event.h
+      loongarch: avoid generating extra header files
+      kbuild: verify asm-generic header list
+      kbuild: add syscall table generation to scripts/Makefile.asm-headers
+      clone3: drop __ARCH_WANT_SYS_CLONE3 macro
+      arc: convert to generic syscall table
+      arm64: convert unistd_32.h to syscall.tbl format
+      arm64: generate 64-bit syscall.tbl
+      arm64: rework compat syscall macros
+      csky: convert to generic syscall table
+      hexagon: use new system call table
+      loongarch: convert to generic syscall table
+      nios2: convert to generic syscall table
+      openrisc: convert to generic syscall table
+      riscv: convert to generic syscall table
+
+Christophe Leroy (1):
+      vmlinux.lds.h: catch .bss..L* sections into BSS")
+
+Steven Price (1):
+      fixmap: Remove unused set_fixmap_offset_io()
+
+ Makefile                                          |   2 +-
+ arch/arc/include/asm/Kbuild                       |   2 +
+ arch/arc/include/asm/unistd.h                     |  14 +
+ arch/arc/include/uapi/asm/Kbuild                  |   2 +
+ arch/arc/include/uapi/asm/unistd.h                |  44 +-
+ arch/arc/kernel/Makefile.syscalls                 |   3 +
+ arch/arc/kernel/sys.c                             |   5 +-
+ arch/arm/include/asm/unistd.h                     |   1 -
+ arch/arm64/include/asm/Kbuild                     |   8 +
+ arch/arm64/include/asm/seccomp.h                  |  13 +-
+ arch/arm64/include/asm/unistd.h                   |  22 +-
+ arch/arm64/include/asm/unistd32.h                 | 939 +---------------------
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h |  12 +-
+ arch/arm64/include/uapi/asm/Kbuild                |   1 +
+ arch/arm64/include/uapi/asm/unistd.h              |  25 +-
+ arch/arm64/kernel/Makefile.syscalls               |   6 +
+ arch/arm64/kernel/signal32.c                      |   4 +-
+ arch/arm64/kernel/sigreturn32.S                   |  18 +-
+ arch/arm64/kernel/sys.c                           |   6 +-
+ arch/arm64/kernel/sys32.c                         |  17 +-
+ arch/arm64/kernel/syscall.c                       |   3 +-
+ arch/arm64/tools/Makefile                         |   6 +-
+ arch/arm64/tools/syscall_32.tbl                   | 476 +++++++++++
+ arch/arm64/tools/syscall_64.tbl                   |   1 +
+ arch/csky/include/asm/Kbuild                      |   3 +-
+ arch/csky/include/asm/unistd.h                    |   3 +
+ arch/csky/include/uapi/asm/Kbuild                 |   2 +
+ arch/csky/include/uapi/asm/unistd.h               |  15 +-
+ arch/csky/kernel/Makefile.syscalls                |   4 +
+ arch/csky/kernel/syscall_table.c                  |   4 +-
+ arch/hexagon/include/asm/Kbuild                   |   2 +
+ arch/hexagon/include/asm/unistd.h                 |  10 +
+ arch/hexagon/include/uapi/asm/Kbuild              |   2 +
+ arch/hexagon/include/uapi/asm/unistd.h            |  14 +-
+ arch/hexagon/kernel/Makefile.syscalls             |   3 +
+ arch/hexagon/kernel/syscalltab.c                  |   8 +-
+ arch/loongarch/include/asm/Kbuild                 |  17 +-
+ arch/loongarch/include/asm/unistd.h               |   2 +
+ arch/loongarch/include/uapi/asm/Kbuild            |   2 +
+ arch/loongarch/include/uapi/asm/unistd.h          |   4 +-
+ arch/loongarch/kernel/Makefile.syscalls           |   4 +
+ arch/loongarch/kernel/syscall.c                   |   3 +-
+ arch/m68k/include/asm/unistd.h                    |   1 -
+ arch/mips/include/asm/unistd.h                    |   1 -
+ arch/nios2/include/asm/Kbuild                     |   2 +
+ arch/nios2/include/asm/unistd.h                   |  12 +
+ arch/nios2/include/uapi/asm/Kbuild                |   2 +
+ arch/nios2/include/uapi/asm/unistd.h              |  14 +-
+ arch/nios2/kernel/Makefile.syscalls               |   3 +
+ arch/nios2/kernel/syscall_table.c                 |   6 +-
+ arch/openrisc/include/asm/Kbuild                  |   2 +
+ arch/openrisc/include/asm/syscalls.h              |   4 -
+ arch/openrisc/include/asm/unistd.h                |   8 +
+ arch/openrisc/include/uapi/asm/Kbuild             |   2 +
+ arch/openrisc/include/uapi/asm/unistd.h           |  15 +-
+ arch/openrisc/kernel/Makefile.syscalls            |   3 +
+ arch/openrisc/kernel/sys_call_table.c             |   9 +-
+ arch/parisc/include/asm/unistd.h                  |   1 -
+ arch/powerpc/include/asm/unistd.h                 |   1 -
+ arch/riscv/include/asm/Kbuild                     |   3 +
+ arch/riscv/include/asm/syscall_table.h            |   7 +
+ arch/riscv/include/asm/unistd.h                   |  13 +-
+ arch/riscv/include/uapi/asm/Kbuild                |   2 +
+ arch/riscv/include/uapi/asm/unistd.h              |  41 +-
+ arch/riscv/kernel/Makefile.syscalls               |   4 +
+ arch/riscv/kernel/compat_syscall_table.c          |   6 +-
+ arch/riscv/kernel/syscall_table.c                 |   6 +-
+ arch/s390/include/asm/unistd.h                    |   1 -
+ arch/sh/include/asm/unistd.h                      |   2 +
+ arch/sparc/include/asm/unistd.h                   |   2 +
+ arch/um/include/asm/Kbuild                        |   1 -
+ arch/um/include/asm/bpf_perf_event.h              |   9 +
+ arch/x86/include/asm/unistd.h                     |   1 -
+ arch/xtensa/include/asm/unistd.h                  |   1 -
+ include/asm-generic/Kbuild                        |   1 -
+ include/asm-generic/fixmap.h                      |   3 -
+ include/asm-generic/vmlinux.lds.h                 |   2 +-
+ include/uapi/asm-generic/unistd.h                 |   4 -
+ kernel/fork.c                                     |   8 +-
+ kernel/sys_ni.c                                   |   2 -
+ scripts/Makefile.asm-generic                      |  58 --
+ scripts/Makefile.asm-headers                      |  98 +++
+ scripts/syscall.tbl                               | 404 ++++++++++
+ tools/arch/arm64/include/uapi/asm/unistd.h        |   1 -
+ tools/arch/loongarch/include/uapi/asm/unistd.h    |   1 -
+ tools/include/uapi/asm-generic/unistd.h           |   4 -
+ 86 files changed, 1228 insertions(+), 1275 deletions(-)
+ create mode 100644 arch/arc/include/asm/unistd.h
+ create mode 100644 arch/arc/kernel/Makefile.syscalls
+ create mode 100644 arch/arm64/kernel/Makefile.syscalls
+ create mode 100644 arch/arm64/tools/syscall_32.tbl
+ create mode 120000 arch/arm64/tools/syscall_64.tbl
+ create mode 100644 arch/csky/kernel/Makefile.syscalls
+ create mode 100644 arch/hexagon/include/asm/unistd.h
+ create mode 100644 arch/hexagon/kernel/Makefile.syscalls
+ create mode 100644 arch/loongarch/kernel/Makefile.syscalls
+ create mode 100644 arch/nios2/include/asm/unistd.h
+ create mode 100644 arch/nios2/kernel/Makefile.syscalls
+ create mode 100644 arch/openrisc/include/asm/unistd.h
+ create mode 100644 arch/openrisc/kernel/Makefile.syscalls
+ create mode 100644 arch/riscv/include/asm/syscall_table.h
+ create mode 100644 arch/riscv/kernel/Makefile.syscalls
+ create mode 100644 arch/um/include/asm/bpf_perf_event.h
+ delete mode 100644 scripts/Makefile.asm-generic
+ create mode 100644 scripts/Makefile.asm-headers
+ create mode 100644 scripts/syscall.tbl
