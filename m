@@ -1,33 +1,34 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B37187329
-	for <loongarch@lists.linux.dev>; Mon, 15 Jul 2024 09:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 861C113B5BD
+	for <loongarch@lists.linux.dev>; Mon, 15 Jul 2024 10:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721037372; cv=none; b=od0bNvCaMyzgB3Th5si4vAVNhy+pkUH42O8dWgE+V5vlmCcRmrc2mtSpP2wN5SjXrmNUQwxiqXRv8oFEaUXQora0DZ9wfiE9gmMh8Bqb5bDKZC0h7/b4dMAulp4kXmJviJrWbvVqE1ATalfXq1401F5NdlyJVBGWVyhKXEfZ2EA=
+	t=1721039549; cv=none; b=k9CSVIxJUmce1Ej+UJdnjPhtCnJjDSDb/LyMq2BGmbdIkIYZusoS1OeVtoKq7yaYxFGJ6nUBg7GJ3fG2X1B/8+qKEaRsXJZVHeHDEO5w3IdY8VdS6RGPojMcPaST0mIAfgKEAaqZVzNCeCY8tGk5GddOoNkYyYkwzlVaJ/I6vkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721037372; c=relaxed/simple;
-	bh=1LT6bGdap7nmLMQbwo1fJ5WrO61MDan0T38QyFzr18E=;
+	s=arc-20240116; t=1721039549; c=relaxed/simple;
+	bh=1f1PUYMDSynzzQQV7ZnwruoYE5ot/fboiyGqOFjiY2c=;
 	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UWP0qz+wgqcTqZf/2fQ8nP2MdY3ocPzNalOpK8UW+NZ9WCDcxn1xp5E1exB+PAEgM3I4FmFvXYhaj/XHrNX7GZino+tKo0g58dtInu6bQ3JfEolbDrRPK7Q9yhZJVcSaQDqo3rM/p7ucFh8sRGxnUbgGyceGXxFLb2967u/gEeg=
+	 In-Reply-To:Content-Type; b=Gh3lR7VaD1jpKB450zaGHnniUnrwP+0G0LIj0bxVaiKan5dB/wKLhTM+It7lrUoZnIXW7Zgp6xMS8J9N1fNYec/zeO5aa0zykfca9RayQRFV87aZWdkvBgmtsiso13QbTwP9UUJAmeGsGfcUiczHESew8bAftMp4+CTtle2OduU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axh+o28pRmMJAEAA--.2930S3;
-	Mon, 15 Jul 2024 17:56:07 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dxfeu2+pRmR5IEAA--.12044S3;
+	Mon, 15 Jul 2024 18:32:23 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx08Q18pRmP6dJAA--.24803S3;
-	Mon, 15 Jul 2024 17:56:05 +0800 (CST)
-Subject: Re: [RFC PATCH 0/4] Add jump table support for objtool on LoongArch
-To: Jinyang He <hejinyang@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMW0+pRm_K1JAA--.24741S3;
+	Mon, 15 Jul 2024 18:32:21 +0800 (CST)
+Subject: Re: [RFC PATCH 4/4] LoongArch: Remove -fno-jump-tables for objtool
+To: Huacai Chen <chenhuacai@kernel.org>
 References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
- <307bcd3e-f4fe-8cc0-c557-4069c97c6072@loongson.cn>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
+ <20240712091506.28140-5-yangtiezhu@loongson.cn>
+ <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Xi Ruoyao <xry111@xry111.site>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <bad4a7fd-e487-498d-f6ab-b9a17e049dd7@loongson.cn>
-Date: Mon, 15 Jul 2024 17:56:03 +0800
+Message-ID: <497ec1a5-fdf9-037c-0781-4f25e9c4f27b@loongson.cn>
+Date: Mon, 15 Jul 2024 18:32:20 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -36,71 +37,69 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <307bcd3e-f4fe-8cc0-c557-4069c97c6072@loongson.cn>
+In-Reply-To: <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bx08Q18pRmP6dJAA--.24803S3
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxJMW0+pRm_K1JAA--.24741S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFyDAw17Jr1kZr45WrWfZwc_yoW8Kry8pF
-	WUu34ftFs8JanagwnrXr129ay3CayDG3yDtr45G348uw4aqr1IvF4vkF9IvanrArs3ZrWa
-	vF17K3srKa1vyacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UAw15ZFy7Xry3Gr1xWFX_yoW8WrWkpr
+	s7A3ZrGr48Xrs5ta9xt3yvg3y2vr97KF4xWr4xtFyrArZ093yqvr18Kr1qgFy8G395tw4S
+	qF1Sga4Y9F4UWFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QV
-	y3UUUUU==
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
 
-On 07/12/2024 06:19 PM, Jinyang He wrote:
-> Are we always avoid our problems?
+On 07/12/2024 05:40 PM, Huacai Chen wrote:
+> Hi, Tiezhu,
 >
-> 1, When text section not support "R_LARCH_32_PCREL", update compiler
->    to add AS_HAS_THIN_ADD_SUB.
-> 2, When not support jump-table, use "-fno-jump-tables" to avoid it,
->    (and now update compiler to add CC_HAS_ANNOTATE_TABLEJUMP).
-> 3, When not support relax, use "-mno-relax" to avoid it.
-> 4, When some where in asm can be backtraced but generate warning,
->    use STACK_FRAME_NON_STANDARD to avoid it.
-> 5, When the goto-table cannot be handled (I guess the Ruoyao's
->    patch cannot handle goto table), use CONFIG_BPF_JIT_ALWAYS_ON
->    to avoid compile ___bpf_prog_run.
-> 6, And other $fp warnings not be solved in clang. Do we only care gcc?
->
-> So how to do in the future if compilers have other changed? Do we
-> need update compilers (both gcc and clang) again and again? Why
-> not just update objtool codes to solves these problems? As many
-> RISC arch not support directly find jump table, can we support
-> more generic ways to find it?
+> On Fri, Jul 12, 2024 at 5:15 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  arch/loongarch/Kconfig  | 8 +++++++-
+>>  arch/loongarch/Makefile | 6 ++----
+>>  2 files changed, 9 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index ddc042895d01..57f28450a2ed 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -143,7 +143,7 @@ config LOONGARCH
+>>         select HAVE_LIVEPATCH
+>>         select HAVE_MOD_ARCH_SPECIFIC
+>>         select HAVE_NMI
+>> -       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && !CC_IS_CLANG
+>> +       select HAVE_OBJTOOL if TOOLCHAIN_SUPPORTS_OBJTOOL && !CC_IS_CLANG
+>>         select HAVE_PCI
+>>         select HAVE_PERF_EVENTS
+>>         select HAVE_PERF_REGS
+>> @@ -276,6 +276,12 @@ config AS_HAS_LBT_EXTENSION
+>>  config AS_HAS_LVZ_EXTENSION
+>>         def_bool $(as-instr,hvcl 0)
+>>
+>> +config CC_HAS_ANNOTATE_TABLEJUMP
+>> +       def_bool $(cc-option,-mannotate-tablejump)
+>> +
+>> +config TOOLCHAIN_SUPPORTS_OBJTOOL
+>> +       def_bool AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && CC_HAS_ANNOTATE_TABLEJUMP
+> Can AS_HAS_THIN_ADD_SUB be removed now?
 
-This is a choose and balance. In principle, I want to make the kernel
-code clear and simple to enhance the readability and maintainability,
-I do not want to modify too much architecture independent code of the
-objtool framework, I just want to implement the architecture specific
-function.
+If the following patch can be accepted, then objtool will not rely
+on AS_HAS_THIN_ADD_SUB, I will try to send this patch again.
 
-As the gcc patch "LoongArch: Add support to annotate tablejump" said,
-the objtool program needs to analysis the control flow of each .o file
-generated by compiler toolchain, if a jump table is used, objtool has
-to correlate the jump instruction with the table, on x86 it's simple:
-a relocation entry natrually correlates them because one instruction is
-used for table-based jump, but on an RISC machine objtool would have to
-reconstruct the data flow if it must find out the correlation on its own,
-so emit an additional section to store the correlation info as pairs of
-addresses, each pair contains the address of a jump instruction (jr) and
-the address of the jump table. This is very trivial to implement in GCC.
-
-For jump table support of objtool on LoongArch, it makes life much easier
-with the gcc changes. As far as I can see, the remain issues (goto table
-in ___bpf_prog_run() and jump table in assemble code) are only related
-with kernel and can be solved with kernel changes.
+objtool: Add skipped member in struct reloc
+https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-yangtiezhu@loongson.cn/
 
 Thanks,
 Tiezhu
