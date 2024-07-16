@@ -1,195 +1,141 @@
-Received: from flow5-smtp.messagingengine.com (flow5-smtp.messagingengine.com [103.168.172.140])
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648651448ED;
-	Tue, 16 Jul 2024 13:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513C719B3C9
+	for <loongarch@lists.linux.dev>; Tue, 16 Jul 2024 14:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721135307; cv=none; b=KPc72ed2HzBkKS5JfPd932ZaolXzIzlBJlQlsg7/bX3I5LKyp5hTdlwbmETFxBvlo4ZX4AMmebh4AgfPRGioGLMimevE5KzwoGrVpACnRPxEkjLnAr0HPmjiCKpcr94+83dGy8wbR5oYo3pF5UyBtI6J9it2dcwWcAgZ0lhC3NI=
+	t=1721139310; cv=none; b=XU+dpG1XNQsN5CXTKvaqEWJXaNLoV9TzRCbNRogpL54H/MmjqVYYh599RKqZ8eTfbBQ5uOBMRFsiWMUAscLYL4TRDFJB2MBxXld94KUMkmvwGqyAhbWL+21aEUQCLV9WJm7+Igt6zGj4sebgAmVodnojY43bq5WimiiJGf/lW2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721135307; c=relaxed/simple;
-	bh=HDznOx5hbb1IvT1ZrtlGW6ohzdUf5QDocyHD5/dDtnU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=lHk+dm3WoyYYFjMWEFH4kRsh6Avzlfw2VuP/bdEO3YDto2E/CZyXDu2Bq6UJLeiyRLiNBD+Z/gwFkDKuY3lyo2S59klexEVOuXCOSiCNejVK8mV/5ZFdRoydNC/ovRlvSbSKRNAa6y9G9Q3jutzc6EHBCwT6sH/ExbWkLRqdWPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=LLolVvbG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bG2YZz3j; arc=none smtp.client-ip=103.168.172.140
+	s=arc-20240116; t=1721139310; c=relaxed/simple;
+	bh=tk5TMmuul2lboVBVIaOCJWUBH1Nrg+wwCKaNSNGbwcM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J0R5qMcFNAMMOGvd7QAuRUsUuq3IXKxXBQsRwoa0Yj9laQxjx1UO+BFZ2+M4ufh//glk4uLF9FUbnvmV833ZRqAE92DNbKjXxrWXJ3edNgjzp9jCc9VGeHdKJ45UWIlYBW37/ksoUjwByxHdslgemHGYnOuJJUh8OtH3zwbqJSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=HAM/oXwj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p0l9jdZo; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="LLolVvbG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bG2YZz3j"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 64DA4201196;
-	Tue, 16 Jul 2024 09:08:24 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 16 Jul 2024 09:08:24 -0400
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HAM/oXwj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p0l9jdZo"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 7A06B11480A5;
+	Tue, 16 Jul 2024 10:15:08 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 16 Jul 2024 10:15:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721135304;
-	 x=1721142504; bh=zt6qUa/rBAPGttY012K2IM8tuPIkZZ+7qikKmJ20XiQ=; b=
-	LLolVvbGAnfV4iXPMW7seBnQ9ucngH1f2xp7EVD2uugxg3VEjVHJlV3vHpdUCRlV
-	2Crod5dg4xilCIfTvsTZ3G0tnDSqxiqhIDMAeN6+HEFwoCEsiOOPq8SsQLa0sr/G
-	xoG+i1vuZTOZ/7p3S2bp7uGbvMcxmbyusFaykv0mTCQZsmkThpkr9v2U6Zr+crZZ
-	kmtszuZc2FnPtn2KugCODrgWHPthZIH5B7IwAoGfLtZRAwh7tq+DE3K11XSzxYk8
-	5cprDH9mBZKnOwemRYCHcIIWN9/QaaLvzr+ZwZv/QxnXkafuN22zU1FFkVBylKx6
-	A+QxZ0MIkK2YbgL8XuvmWw==
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1721139308; x=1721225708; bh=IN
+	JyV6lCgUK9JMf7AobUOIZXv0ZhcOYphpMoAPpaOlw=; b=HAM/oXwjEQcav6UbEb
+	GO8a9OaHrpF60lAOu34ZY40VHl06S0xt41/DVlrDdjP22gm6zMMRG5kmlpMvNwQu
+	joT4Cexz8ulU2DT6fx78dVlGrvpEuWL4rLPg90DpdverljOmEsa9aISSYoSuY6kV
+	0TPIUbJj0SycsT6p7l5nw4XFmThfoU61isaPkuRdAC1rpv4x2OfvNjvrVWlQLiUQ
+	cNsJIagb6nhZacf5zSHn/+1quF9NffVLvxme17/W09doidZ8ej+SKYN+Uz7O2Noy
+	09LSVk1bHQtxFXZXON2GT/fojnZxhSBLh20bhpQPkESEMVwvJVYCtVv+cdc5KCRU
+	y1PQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721135304; x=
-	1721142504; bh=zt6qUa/rBAPGttY012K2IM8tuPIkZZ+7qikKmJ20XiQ=; b=b
-	G2YZz3jWm7iHL3gXNLVUTtNcfzTahLzLjR4iyuU0CNuyM89NLOf9oZyD2C3hYAIK
-	AfDf20U8qC7CTOkBsWjWvYOHnqiWY3TigtPu5Yde99vlDGBfkJrkykgrj6MZxNRd
-	OF0b0J9NpdNZ0L4sxgIiiEOEJlRsdc3+T+nlOeUW0yb0Z8JhW7I8RkOQgEq1DoaG
-	WOeM5WdMLmGD4/DXwHMeXVIh/TuGiCjq62Cmau3SRwhwxyMut9KqZw8PI0t559X3
-	drs3XIktjiBwP0mYVx52WH2pcoTQ4U95QNutDBRpZXbx67KkVSdfOjgua4ISKpVl
-	lzZmmp3ndbV1KXYw8/6vw==
-X-ME-Sender: <xms:xXCWZt3tlPtvPdXdpaZocqjicoskk-NG9y-bvebOxJ2yaqSo-ntZSQ>
-    <xme:xXCWZkHxzyEYBpjsPnzBU2BkygS49Fm5KQ2wiZODEv68093OCfiRbDkFvgNs4ylIq
-    zNg7JKbvF4HsO-agKk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdehlecutefuodetggdotefrodftvf
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1721139308; x=1721225708; bh=INJyV6lCgUK9J
+	Mf7AobUOIZXv0ZhcOYphpMoAPpaOlw=; b=p0l9jdZoTQUNIaUlS5oJDG0xQy4J5
+	7l0McLMVUmLiGe2HVFV314lo+/WEfk/xoNV1EqK7tOTWLXJo+8j3XhKwaMCntr32
+	ZcGCsfpTWyKVOiO4RLE0FoZ1LcmuWAHjw7b24WRmBN5R2O92Tv6rJfZfqLQdTpQv
+	lrnOVy4/8hZTFkjZe//q2UAp6SFLN6WaJNp2NVrE1VsPik7OjwuilLMWLD+wf04q
+	0rC9UZSXmrVtssLbGPTNBmMCPx0g/Q/sq3Mn00vTp2eY9iW3o8CfxdQCwHqz6rvT
+	SEQjZ9uEEwQYnVS+ltZwjqNluL7OQAdunqlltvgSatC44J7KtglukVqeA==
+X-ME-Sender: <xms:aoCWZjROUzFXkXkg_cJCuJ_Z6xOzbx3qohZ-dNbnnCGwyKODityeaA>
+    <xme:aoCWZkwgoVDSONIpNE0F9987HGeacX8n0AqDowYP9YY7ch8yo_EbuXmOUHH4G2rMB
+    iqxWleUeAlTYRmRcqE>
+X-ME-Received: <xmr:aoCWZo1gD73GfitUq9ISMrLLwC7SzhfUcEjufPcXdMmSWIY_HK1UPvTy3PWSE7rcsubr>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdejfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:xXCWZt52lvXg2r0FUCr8Pldg21ygP9uQs9__NpHOUsUBsrMqglT6BQ>
-    <xmx:xXCWZq18Zx1G13DUCBEKRxrSOCgkx2fk92PAR2EWDjXzJDjnn56Rcg>
-    <xmx:xXCWZgFI07CYIk3hv4CGlbyEsesGfT_8oHM0IC0w4mt3-qFdd2Rvsg>
-    <xmx:xXCWZr8qedzeakvaan4WKKj-eqO-aC5_umvCGYpV4BkCe0Dn1-_H4A>
-    <xmx:yHCWZiNMi5WAbUPy1KvZo5AqIJpXj9vGnZQG9x0mWda-jv_tKouiwZyc>
+    fjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheplfhirgiguhhn
+    ucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenucggtf
+    frrghtthgvrhhnpefgveffjeetgeejfeelgfekteelkefhuefggedvueeujeekjeetkeek
+    vdffffefudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhl
+    hihgohgrthdrtghomh
+X-ME-Proxy: <xmx:aoCWZjA2Kt1i1LlR-rft3xVpJ3QpmXhxwd_vGWrYgTOz3MAZPh7PyA>
+    <xmx:aoCWZsj2K-g6sWsQig46RY3SGC7Fke2ZTtriM6TBIo3S6Jno3krTwQ>
+    <xmx:aoCWZnpftsuAG1Px7KyI0GcNP8B_l6VjkTXrsckWFDET7rxwKXXMsQ>
+    <xmx:aoCWZnjUg9mR5m-qq9j-Iy9f5gTfyz32bKL0TSdB67RFRt7ET-u0nQ>
+    <xmx:bICWZohVA9CDlCE4FTkC5Nc0LFWmuEeH9GTfZMfDnYPCcyqEwzU2KZby>
 Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7559536A0075; Tue, 16 Jul 2024 09:08:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 16 Jul 2024 10:15:04 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v3 0/3] LoongArch: CPU parallel bring up
+Date: Tue, 16 Jul 2024 22:14:57 +0800
+Message-Id: <20240716-loongarch-hotplug-v3-0-af59b3bb35c8@flygoat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <2a2bb8b6-09ca-40c3-b6a9-d8fac7dd5208@app.fastmail.com>
-In-Reply-To: <20240716111346.3676969-4-rppt@kernel.org>
-References: <20240716111346.3676969-1-rppt@kernel.org>
- <20240716111346.3676969-4-rppt@kernel.org>
-Date: Tue, 16 Jul 2024 21:07:59 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Mike Rapoport" <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Andreas Larsson" <andreas@gaisler.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Arnd Bergmann" <arnd@arndb.de>, "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "David Hildenbrand" <david@redhat.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Jonathan Cameron" <jonathan.cameron@huawei.com>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vasily Gorbik" <gor@linux.ibm.com>, "Will Deacon" <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 03/17] MIPS: loongson64: rename __node_data to node_data
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGKAlmYC/23N3wqDIBiH4VsJj+fw39J2tPsYOzA1FVqGNllE9
+ z4LBht0+P7ge74FJBO9SeBaLSCa7JMPQwl6qoBycrAGel0aEEQY4ojBPoTByqgcdGEa+5eFtBO
+ C1K0QklFQ7sZoOv/ezfujtPNpCnHeX2S8rV/tcqBlDBGsuW4U46iRsrl1/WyDnM4qPMHmZfJj4
+ EODFINrLFqqWd1i/G+s6/oBQe/8lvgAAAA=
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1397;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=tk5TMmuul2lboVBVIaOCJWUBH1Nrg+wwCKaNSNGbwcM=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrRpDelMPqdMJ7xzzXl/9+e04z15ZXfltuxp072yaN/65
+ zwvpjl1dZSyMIhxMciKKbKECCj1bWi8uOD6g6w/MHNYmUCGMHBxCsBEJrIxMmyZ8Fk1v1o7uLeC
+ pcXkS+jz0hMbHIu/8DxTPOi42EzXLZyR4ca+KN3pM2PCOVj5TpaszWde6OTDWdt9c/ZJZo2WyvN
+ RrAA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
+Hi all,
 
+This series implemented CPU parallel bring up for LoongArch.
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8816=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=887:13=EF=BC=8CMike Rapoport=E5=86=99=E9=81=93=EF=BC=9A
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Make definition of node_data match other architectures.
-> This will allow pulling declaration of node_data to the generic mm cod=
-e in
-> the following commit.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Being the first non-x86 arch enabling that we need to fix some
+infra in patch 1 and 2, then implement everything in patch 3.
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-MIPS should go arch_numa at some point as well.
-
+Please review.
 Thanks
-- Jiaxun
 
-> ---
->  arch/mips/include/asm/mach-loongson64/mmzone.h | 4 ++--
->  arch/mips/loongson64/numa.c                    | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/mips/include/asm/mach-loongson64/mmzone.h=20
-> b/arch/mips/include/asm/mach-loongson64/mmzone.h
-> index a3d65d37b8b5..2effd5f8ed62 100644
-> --- a/arch/mips/include/asm/mach-loongson64/mmzone.h
-> +++ b/arch/mips/include/asm/mach-loongson64/mmzone.h
-> @@ -14,9 +14,9 @@
->  #define pa_to_nid(addr)  (((addr) & 0xf00000000000) >>=20
-> NODE_ADDRSPACE_SHIFT)
->  #define nid_to_addrbase(nid) ((unsigned long)(nid) <<=20
-> NODE_ADDRSPACE_SHIFT)
->=20
-> -extern struct pglist_data *__node_data[];
-> +extern struct pglist_data *node_data[];
->=20
-> -#define NODE_DATA(n)		(__node_data[n])
-> +#define NODE_DATA(n)		(node_data[n])
->=20
->  extern void __init prom_init_numa_memory(void);
->=20
-> diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-> index 68dafd6d3e25..b50ce28d2741 100644
-> --- a/arch/mips/loongson64/numa.c
-> +++ b/arch/mips/loongson64/numa.c
-> @@ -29,8 +29,8 @@
->=20
->  unsigned char __node_distances[MAX_NUMNODES][MAX_NUMNODES];
->  EXPORT_SYMBOL(__node_distances);
-> -struct pglist_data *__node_data[MAX_NUMNODES];
-> -EXPORT_SYMBOL(__node_data);
-> +struct pglist_data *node_data[MAX_NUMNODES];
-> +EXPORT_SYMBOL(node_data);
->=20
->  cpumask_t __node_cpumask[MAX_NUMNODES];
->  EXPORT_SYMBOL(__node_cpumask);
-> @@ -107,7 +107,7 @@ static void __init node_mem_init(unsigned int node)
->  	tnid =3D early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
->  	if (tnid !=3D node)
->  		pr_info("NODE_DATA(%d) on node %d\n", node, tnid);
-> -	__node_data[node] =3D nd;
-> +	node_data[node] =3D nd;
->  	NODE_DATA(node)->node_start_pfn =3D start_pfn;
->  	NODE_DATA(node)->node_spanned_pages =3D end_pfn - start_pfn;
->=20
-> @@ -206,5 +206,5 @@ pg_data_t * __init arch_alloc_nodedata(int nid)
->=20
->  void arch_refresh_nodedata(int nid, pg_data_t *pgdat)
->  {
-> -	__node_data[nid] =3D pgdat;
-> +	node_data[nid] =3D pgdat;
->  }
-> --=20
-> 2.43.0
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+Changes in v3:
+- Commit message improvemente
+- Remove unnecessary indirection
+- Link to v2: https://lore.kernel.org/r/20240715-loongarch-hotplug-v2-0-7d18b3d46b11@flygoat.com
 
---=20
-- Jiaxun
+Changes in v2:
+- Use stub functions (tglx)
+- Link to v1: https://lore.kernel.org/r/20240705-loongarch-hotplug-v1-0-67d9c4709aa9@flygoat.com
+
+---
+Jiaxun Yang (3):
+      cpu/hotplug: Make HOTPLUG_PARALLEL independent of HOTPLUG_SMT
+      cpu/hotplug: Weak fallback for arch_cpuhp_init_parallel_bringup
+      LoongArch: SMP: Implement parallel CPU bring up
+
+ arch/loongarch/Kconfig              |  1 +
+ arch/loongarch/include/asm/smp.h    |  6 -----
+ arch/loongarch/kernel/asm-offsets.c | 10 ---------
+ arch/loongarch/kernel/head.S        |  7 +++---
+ arch/loongarch/kernel/smp.c         | 44 ++++++++-----------------------------
+ kernel/cpu.c                        | 16 ++++++++++++++
+ 6 files changed, 30 insertions(+), 54 deletions(-)
+---
+base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
+change-id: 20240704-loongarch-hotplug-3f8826b88a43
+
+Best regards,
+-- 
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+
