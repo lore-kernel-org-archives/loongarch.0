@@ -1,110 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEA66FB9;
-	Wed, 17 Jul 2024 16:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEDB1DFCB;
+	Wed, 17 Jul 2024 16:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721234370; cv=none; b=JJBcD96LjK9bh55vc0ZUL84MB+v+iIlTuIuox6XLKvZRUWL/xVokfQOETX68CYZzj2JyeQloAnd4h+b6r2J8bhuRodQNLFmMi/XgoU9kqeS+zj8r76ZzQqYaW7CKd7VAh1w+zW+8RD4ukWwFYHnNrOxb1ca/Ayiqe6g8OVpBedE=
+	t=1721234776; cv=none; b=rq2ZiG9EgoQqVEU4L5VX20cp+lW3pwo7j1rwpHh09PxkNbQZH2iSg0HgT77Y+x3RtzgTivzsqF4hDkCbq9a0taLVU5BBsp3oRYIgUbgbnlUsnqeR5EIBiK7BpHUujCmCKsV6GnZ53DHYBlrDG/co44t0Jyak1iC/IRal2XMICzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721234370; c=relaxed/simple;
-	bh=YH/ejPCzozWh3/5AWbT/wAkKuaoN0u4W+macH1mMRsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRoOIiO6txLqDFzdwmaNOPSsIRw5MC2SnOu8ByZ+2Pp93jfuzj+ni/vhHGjnt9c/NMYlZ2VnJfMfQC1fLBR/TLJMT/jHVRvmp2qc9X6kWjQcDPqIYs+UDKFD6RTQaGr6NC1XFEapdz7MnfUTp46zi0FxzkRmCl60Zt8IQpwjULQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O04iYQcH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721234776; c=relaxed/simple;
+	bh=2S0ab5SdmVZu6CHXw0oDlN+TBmAuaYsarb+i1qS+Q+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YbgIy8xJSic0IJNYQicmyZbZPD4NnhmNx3++flzbHGQbKC9UvM/g34FNTlK0SW0txqmuirhkUQbklukGJetxMtnpklDUmbCQdkOVzzdEH+G2L8cC7uxuFLdYqtE7CgEFtKpGNjmqR+OTb383DaJxki5GZdq9fh3aFy4aey9qDx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFAJXqCH; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O04iYQcH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B36AC2BD10;
-	Wed, 17 Jul 2024 16:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721234369;
-	bh=YH/ejPCzozWh3/5AWbT/wAkKuaoN0u4W+macH1mMRsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O04iYQcHPl5FL6N8sUdE+q+FxTnXMHv1ATmczRdlil8B/W2PQm7sAL1AIzB5XEOAO
-	 P0kqoQmjdD/m5QpdXW1fpweEZ3LiWrlPkyeXlDDR6oHczma/MVRYvHHYjlqsW3pl4z
-	 X/BhkhsxdHoGYaquZ78lyq6hQo0jcufT9NWzuhtxg2KmqwiRIUwHJHK6E8zFGp+aWO
-	 v327eLhiEMDNCP/ZVe5LFr9/YAI67NjFUmK4OFsxwdCAtP0lWx7/ka5ahwtlWUvgKd
-	 tmq7jt7E7euAtjvs7lx5+WcXrCAHl4x8uZbOWzxDZNZOWL78eSdYgyvexuG3H4jBYp
-	 8mRPh0OnODKSA==
-Date: Wed, 17 Jul 2024 17:39:23 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Otavio Salvador <otavio.salvador@ossystems.com.br>,
-	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-	linux-kernel@vger.kernel.org,
-	Otavio Salvador <otavio@ossystems.com.br>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC
- from elgin-r1
-Message-ID: <20240717-gracious-canning-6ff715cd1b1f@spud>
-References: <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-parrot-malt-83cc04bf6b36@spud>
- <3870188.FjKLVJYuhi@diego>
- <CAP9ODKrpKDY91AFDYj7s++kU+=CSLw=F9mXyLZ621Mqq-8S6bw@mail.gmail.com>
- <CAOMZO5C7JknQaftquRWDetLs4W0CHMvs5PiJWBLyo0G1oo4rCA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFAJXqCH"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ee98a224b8so10900651fa.2;
+        Wed, 17 Jul 2024 09:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721234773; x=1721839573; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2S0ab5SdmVZu6CHXw0oDlN+TBmAuaYsarb+i1qS+Q+I=;
+        b=gFAJXqCHqFjXcWfHbKp2pzBsIFOEkZeWtPABU22OjatxK1anymY6XfY3nTJldfhdKe
+         DoVTL6Hu8sW91dFye27LLccH0IB1pgEfeZL6KgnNhHJ/krEQXket6L8gBzQNsWhPDVle
+         0FN3oNFI68Ei5dqHVuqz6ngcTuw2XM00glBfXoaoaw4SGWxFl6fSZ9Op3zs6MO1h1nA5
+         7LBh60gRS/Gaf3IFaQ8Zk04EzGs4MgurFdaYCwEGwELE1mADthc6O37A+7E1rkgVxssx
+         TI/GDrHLLlzmr9Z8elKP7BhnfjfCJ4qTCwg4bLIgY7EK1qolqJFcr41QDh8lRamZ9RfU
+         L8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721234773; x=1721839573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2S0ab5SdmVZu6CHXw0oDlN+TBmAuaYsarb+i1qS+Q+I=;
+        b=FTuO+0Qf7aHzPBCXi1ogUdgFfh8elhTb1fNf8ipnJGbL/eLUiahixy/7eocSZ+3gSL
+         y4az6PCRiz2XVuHsboarVpU3RoxzrTpNm0J9ptwPaf4aVzyr4kZpOhKhlgggE/jw55zN
+         egnpnP8K6NE14ov6scuossEim2/gZTo/fRI2FjP3mA1XSXQ/1yZDi+/8oddgLd0zhehr
+         dBGTECqkFMDFQVS+W9REAm/iL4PMMIPIzZHGmslXsiXFvHObwPoSicc+SW7ILB47GpHR
+         33cYL3Ukh48BsQDsuyOknJ8SDx1klwp0dxFMbHQJY4CvPWNW6TXs7JmHcdd5PTpiWSUC
+         SIQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUzOf9jzi/gDMQVCsMC4LuNS1ui9MgFC4Tk1vPkxUEBLzuE0qmrtOKKxQO3l1QkKS9JYI=@lists.linux.dev, AJvYcCXjbAClEVO3FS0ekx/ZqrZbskhVhHdb7GXgJpIX842a3QBpVo2LD9Wyib8qOZP+31pCYDVg1JWDH4Gc@lists.linux.dev
+X-Gm-Message-State: AOJu0YyrcC/QXLV+Cc7eE3WUDnnoWOeloF2/Yjj95MDloti4LMsIsGR+
+	MGT4HCCjwx+NuqhOy3cO1p1d6ay6QbX9haEuGeIrM66TI6mAFstkCGu9LjN/ja1MV8xpaofQN7a
+	eu9IzIxPl0WTaagV58f5oV8kedaE=
+X-Google-Smtp-Source: AGHT+IHoe46620+UsVuITlGPh3/c/KNcEkZ5F6Uq8F7R6XszLx9r5KYDXHcT2MQwJr48RLgG03dD62MwkhoqroWKBWc=
+X-Received: by 2002:a2e:6e15:0:b0:2ec:4399:9bfc with SMTP id
+ 38308e7fff4ca-2ef05997667mr23791fa.0.1721234772478; Wed, 17 Jul 2024 09:46:12
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OWGW13PXE3KVG+an"
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5C7JknQaftquRWDetLs4W0CHMvs5PiJWBLyo0G1oo4rCA@mail.gmail.com>
-
-
---OWGW13PXE3KVG+an
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20240717-anvil-ashy-544e80a1317c@spud> <20240717-parrot-malt-83cc04bf6b36@spud>
+In-Reply-To: <20240717-parrot-malt-83cc04bf6b36@spud>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 17 Jul 2024 13:46:00 -0300
+Message-ID: <CAOMZO5DuwjQxMG4dT-_HcLjA_4U-+B2kR8FW1580RFiHcxo6OQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC
+ from elgin-r1
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	imx@lists.linux.dev, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 17, 2024 at 12:34:03PM -0300, Fabio Estevam wrote:
-> On Wed, Jul 17, 2024 at 11:38=E2=80=AFAM Otavio Salvador
-> <otavio.salvador@ossystems.com.br> wrote:
->=20
-> > @Fabio Estevam can you check this patch?
->=20
-> Correct, the rv1108-elgin-r1.dts board does not contain the DAC.
->=20
-> There is an LCD controlled via spidev though.
->=20
-> Conor,
->=20
-> If spidev is needed, what is the recommended way to describe it in the
-> devicetree?
+On Wed, Jul 17, 2024 at 6:38=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> The Rohm dh2228fv (really the bh2228fv, the compatible in the kernel has
+> a typo) does not support frequencies above 10 MHz, nor per the
+> datasheet appear to use either CPOL or CPHA. I suspect that this
+> devicetree is abusing the compatible in order to bind the spidev driver
+> in Linux. Pretending to have devices on a board for this purpose is not
+> acceptable, so remove it.
 
-Describe the device you actually have in a binding, and add that
-compatible to the spidev driver. In this case, given there's a
-particular LCD there, that'll work. There's nothing wrong with using
-spidev, it's just lying about what hardware that is there that's
-problematic.
+In the Subject: s/unlikly/unlikely
 
-Otherwise, when it is an open connector where you can put anything, it's
-a wee bit messier... A connector binding is required then, something
-like the WIP mikrobus stuff that the beagle lads are working on. That's
-far from ready, at least on the devicetree side of things, though so
-you need to apply an overlay in your bootloader in that case.
-
---OWGW13PXE3KVG+an
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpfzuwAKCRB4tDGHoIJi
-0iuDAPwPEHiBf+CrFLYviCQhgaXSwg21qh0Iy2VX/LcKcPGr+QD+JGr9aUClwsTX
-KBS41ljoVPgMP9F/i3+On6b1MOR7iw0=
-=uuYV
------END PGP SIGNATURE-----
-
---OWGW13PXE3KVG+an--
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
