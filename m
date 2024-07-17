@@ -1,111 +1,110 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818D52EAE5
-	for <loongarch@lists.linux.dev>; Wed, 17 Jul 2024 09:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7363032A;
+	Wed, 17 Jul 2024 09:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721208999; cv=none; b=VHzwP8m5Cqsz+covEh62l2sHQ0K/3MGP1H1YMv0jQ09zfgzxDBOAZRYsCq+aj49CtkfTOKk8IWqRlAGfYDyK1jm3AhKMqT3mtct//D/1gNhsLoovw3WlA7tYNEqGSTE3iE6cqe4K2XSW49OxuJ1rV/pGfLTgJ6eT8cov8lffxn4=
+	t=1721209085; cv=none; b=LTMoT8z9B8OL8HrdoMhMbgm/zAFPfTwrpH7I6AB9zTwq3jlgY32YexZ1fwvMrHs9AujIlJUp+KtPCe2JGvKTWF1uztbyNJd2Suj8VxW8gZ+qQmmdXp2OHhaet3y5Fu/0WU2NTujgANk2brUB/zB9bG9yeMzN8xtxM3B2kr82bM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721208999; c=relaxed/simple;
-	bh=xyjyfNGXdWpRnYLoYvaMCdzkbU3pFFxpX1W4+PfIUb0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ePcSSy9j79BVYdy45mwzVy5MiaIfVWc8BNC1QkuCaa65wsDrtmknIjMlALbhsHKDGCKB8CuGzi7skKAllkXSlLxIJPHgdmuOwqY/Y5QGp0hwCc0waKJd50wAnKC6wp3Oq9g4r70NdEKO6UPSaDcVCtPfmh2zmyQk76E9/ByFOU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=isyoZPSE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IuTu2zxP; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1721209085; c=relaxed/simple;
+	bh=KwABkoRC4NHxGqyD41TdUDeSlwt8lkJ5FHVYu3NQ0Qk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=upMdnoIkfp2fYB4DpbGbc9ITLQMsrNjFN7aTQbjvqg+BoZTIdGzdHzbGnB0gZahvgcEkNsTTGCIIMbvRvpV13LB3myXLQSDpx6zlk/Uk5lw6MYLGt9jTh29MvukEpj8a2gzpnLFFjW2hIWmIO3kxNYfWVDDFohZWI5V8Uuk/ejo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNhZvrWm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="isyoZPSE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IuTu2zxP"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 92EC41380327;
-	Wed, 17 Jul 2024 05:36:36 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute6.internal (MEProxy); Wed, 17 Jul 2024 05:36:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1721208996; x=1721295396; bh=ds4aqM5Kli
-	aeb4EM9aEvOVD2sDxY4nAQiMOn0gmaAbs=; b=isyoZPSErBU9/B/t1RVSo3tn7U
-	Tc3YRkr7pgDPJni2+1kEPudKDRq9Z/DhmIm3IdRxv/xc5IbMqawD7hhI4RMUiZc8
-	9mACyynTn6yuEc4yNx+Wwg3lJYaxoZOqG9slbIAn4AdR9gu4GwgCVOmY4N0FYFbE
-	LQ7sr6n6dmOZ2a8Qp2MpuKR3NDWfVRo9Bmy3D329b6ex17kTCU8oKgUWjgmgk7mz
-	qr3c8jdpENSTE7CybQub0T7N8kA3EiBe9qEczTmxUV9bcDNvAguh9t7vQpGd2rJz
-	2g3g/Km2lgKDnj8MZetYS2/jbUNsV+KMueiMxxHXdFa+vj60MQw+gfhIIG6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1721208996; x=1721295396; bh=ds4aqM5Kliaeb4EM9aEvOVD2sDxY
-	4nAQiMOn0gmaAbs=; b=IuTu2zxPr6v2uLemejK0Ei3q2B4Q5qgGmSQzRk8i6DLv
-	vTrmN2pXjRAB7TogFn4MgE1l/SlcRTGZFdNhMgX6RowdwUfgZyXdETR7l/oQx8Uz
-	acXX3NohpJxvp7OEXzYW402k1xxPokR0RTJ7A3FxrsYAOigVoUPmiM74YMAM7jz6
-	PUfcqVFTwhWWYY63PWHaGQUB6ReeN+MssZ8JEUodVtXKlnLS2Ky5GIoUkEKePm6W
-	xRLMDKvrDQrp/Im3iLn/kL1I7ykewwGpFDWrRhFJKtH6gP0CoH/HcxfbEZvMCALB
-	OeLTYztagTQn3c5EnEI0C4GHxk9qYKBz1JwxEuvoKg==
-X-ME-Sender: <xms:o5CXZuhHJeo328Hjywk4ATXGO_xTowOvuBLqBMB9x7vDw3N3_h3p6A>
-    <xme:o5CXZvApUPKK7-wHjTzWsNyRJQ2vxM4h4IV9UcTrUVvPT3l8JJUm7IS8o4dZENEDn
-    YB1kug2ZKo964UxCck>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeigddujecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:o5CXZmHTb_KO_B7rug2PaYI8JJcj3CGwU5Q-oWM_o3p-cfzt28dWmA>
-    <xmx:o5CXZnSS1fFdG2a24qTS-iXIVfIn1WLz_T_hXOQBWB2dQPO-29ZlzQ>
-    <xmx:o5CXZrxXt7Ba_vQnQnpzMzBBqhuM1FlyIaX28V6hNbIT4Gm9_2zDQw>
-    <xmx:o5CXZl7fGWEov250RGBtfHL3SyIT_rpGUYjYUFhCMJk8j0lTbSPSMg>
-    <xmx:pJCXZgpR0x6tJgWfugM-QILTlcTWV-om2c6810xHInv2PguUoHyykUCM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 301D919C005F; Wed, 17 Jul 2024 05:36:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNhZvrWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4EDC32782;
+	Wed, 17 Jul 2024 09:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721209085;
+	bh=KwABkoRC4NHxGqyD41TdUDeSlwt8lkJ5FHVYu3NQ0Qk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tNhZvrWml/ON035dM1pgyvB/gEMyfQmpAtG8uhSyjPWsI4iwVCW5NHaTKv8BZtaIC
+	 3LvXWCiJloC7416UYOkb+bDbQFyn7DNKreuORtOfs3nhETAznr2yzjy1bbCZeWXYNL
+	 oOP7TeMaE1x9h7a3j7cjvK5YAsYCJrLAzXjgAZWsA4w7zcGCA9sTk0MgsbgHm3O/XK
+	 cadCk1hSI5IEtYbi3TotYKGQtzZ4sTVzPSkkN44To15XbDy8ZslgD9RKlz5OXH62PC
+	 5oY9Pb40bwnb3DHEdIkBeNA8m91EjT1NEkhfmN+qU8/aVxOeKIQ1N940aJzbzQyjFl
+	 gH+ZCiYsAQ67Q==
+From: Conor Dooley <conor@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	imx@lists.linux.dev,
+	loongarch@lists.linux.dev
+Subject: [PATCH v1 0/4] Removal of non-existent DAC nodes
+Date: Wed, 17 Jul 2024 10:37:52 +0100
+Message-ID: <20240717-anvil-ashy-544e80a1317c@spud>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <4d471a38-f86f-429d-a1a3-b882439ef7ba@app.fastmail.com>
-In-Reply-To: <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
-References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
- <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
- <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
- <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
- <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
- <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
- <ZpdnhhaQum_epcGp@hovoldconsulting.com>
- <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
- <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
-Date: Wed, 17 Jul 2024 11:36:15 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Johan Hovold" <johan@kernel.org>
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- linux-snps-arc@lists.infradead.org
-Subject: Re: [GIT PULL] asm-generic updates for 6.11
-Content-Type: text/plain
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1842; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=4e+rXBXLqQqSSHVIEfEJhU6tlJcG6qGYp0VGcEYWqUA=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGnTJ3x07+n9FSmZuEFwahLXo9MLWjzyLBx9tCcstVk84 d+GXVmLO0pZGMQ4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjCR1VwMf7iSZSUnTgyaq/ek XOt+E8ue0wYrhe8c9f2XGaYmt9GmtZThF3My88PT6loSutwznp1/VD7druJPippXCJ/aKfZfpXO TeQA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 17, 2024, at 10:17, Johan Hovold wrote:
-> On Wed, Jul 17, 2024 at 10:01:10AM +0200, Arnd Bergmann wrote:
->
-> Yeah, that's not something I noticed at least (and I assume I would
-> have). And I only did aarch64 builds on a 6.9 x86_64 host (make 4.4.1).
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Ok, I can reproduce the problem now: I installed a Fedora
-VM guest and chroot mount and I see the same issue in there.
+Recently I've been getting triggered by abuse of the Rohm dh2228fv
+compatible to get the spidev driver probing in Linux on development
+kits by employees of various silicon vendors (like NXP or my own
+employer). I had a look around the kernel and all users other than the
+original Clearfontz board added by Maxime appear to be similar abuse.
+Drop the non-existent nodes from all of these devices :)
 
-My normal Debian host has make 4.3, so I'll see if I can figure
-if a specific change in make does it.
+Fun fact: the dh2228fv isn't even real, and was originally a typo! The
+real DAC is a bh2228fv
 
-     Arnd
+Cheers,
+Conor.
+
+CC: Dinh Nguyen <dinguyen@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Conor Dooley <conor+dt@kernel.org>
+CC: Heiko Stuebner <heiko@sntech.de>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: Huacai Chen <chenhuacai@kernel.org>
+CC: WANG Xuerui <kernel@xen0n.name>
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-rockchip@lists.infradead.org
+CC: imx@lists.linux.dev
+CC: loongarch@lists.linux.dev
+
+Conor Dooley (4):
+  arm64: dts: imx8: remove non-existent DACs
+  ARM: dts: rockchip: remove unlikly-to-exist DAC from elgin-r1
+  loongarch: dts: remove non-existent DAC from 2k1000-ref
+  ARM: dts: socfpga: remove non-existent DAC from CycloneV devkit
+
+ .../arm/boot/dts/intel/socfpga/socfpga_cyclone5_socdk.dts | 6 ------
+ arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts            | 8 --------
+ arch/arm64/boot/dts/freescale/imx8dxl-evk.dts             | 6 ------
+ arch/arm64/boot/dts/freescale/imx8qm-mek.dts              | 6 ------
+ arch/loongarch/boot/dts/loongson-2k1000-ref.dts           | 5 -----
+ 5 files changed, 31 deletions(-)
+
+-- 
+2.43.0
+
