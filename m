@@ -1,95 +1,110 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2A41E51E;
-	Wed, 17 Jul 2024 15:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEA66FB9;
+	Wed, 17 Jul 2024 16:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721230459; cv=none; b=SxZjFAN5o3gLAnvE4knfxXcDG7wfarZfzOV2wkIZe1XbspVtPUJDbhWQS272SZRrigDWGVsTQwyVKQpOnoU/Joja1I9aRlp76IG7kZYSWa6u5d3PFEieWD11NMVoNfvt2Z4oWWhALlaFfyMhkEGw9BqG6Ncc0HaTj9oO1glTOEg=
+	t=1721234370; cv=none; b=JJBcD96LjK9bh55vc0ZUL84MB+v+iIlTuIuox6XLKvZRUWL/xVokfQOETX68CYZzj2JyeQloAnd4h+b6r2J8bhuRodQNLFmMi/XgoU9kqeS+zj8r76ZzQqYaW7CKd7VAh1w+zW+8RD4ukWwFYHnNrOxb1ca/Ayiqe6g8OVpBedE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721230459; c=relaxed/simple;
-	bh=t4iPvhXVa3AMcXzBfJFgYS6s3OmUCR4MVqbnPIR6/kI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PtEcjG97eoZIuxyOyGCTaWSaivXW7osru6yQMRuCrt8QgU6k6sj4WicszwMqgQ0JIFndOIPEqiStQWKl9TjuLx85g1fptS0nNKhaKHAx8Ev+oWdyJl0BUizf6xXV3DBYfyHE/dok850AwseMNrQ+tTN+PvovDsk6YqsgPN+W5lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWQUvZKE; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721234370; c=relaxed/simple;
+	bh=YH/ejPCzozWh3/5AWbT/wAkKuaoN0u4W+macH1mMRsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRoOIiO6txLqDFzdwmaNOPSsIRw5MC2SnOu8ByZ+2Pp93jfuzj+ni/vhHGjnt9c/NMYlZ2VnJfMfQC1fLBR/TLJMT/jHVRvmp2qc9X6kWjQcDPqIYs+UDKFD6RTQaGr6NC1XFEapdz7MnfUTp46zi0FxzkRmCl60Zt8IQpwjULQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O04iYQcH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWQUvZKE"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee8cccf2bbso8699461fa.3;
-        Wed, 17 Jul 2024 08:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721230456; x=1721835256; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t4iPvhXVa3AMcXzBfJFgYS6s3OmUCR4MVqbnPIR6/kI=;
-        b=MWQUvZKEFgV0CV6YcosyUH0WhH9BHBJ8sMwSeB5J7YWQrsRDuGeTE4HLoauQQATYtX
-         UkV8NPbqZnENYJrLNi7jyrAvM7o5q02+3Qy/jdS8pIqwetRa6RUKkjz7J80l795daQ+/
-         yL7UjwM4ycGSDlE7OSErjIfOXvxHEuhVrKF272pv8+LHSqdbw+AfpeHDr2F5a1y/jTq6
-         UrkC+Vx2g+O2KPTsvJllLQo/a45FMjWKeoHqdY5+nOa1qfaVuUEnljLplZnMsNg2X98W
-         Mr5L3QhP/yPzs0y4LRbXXDnMcriLoOp5MmDg7kZe8AHmMI2VRW1O/GDwmVMLpa2pIsnG
-         FhfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721230456; x=1721835256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t4iPvhXVa3AMcXzBfJFgYS6s3OmUCR4MVqbnPIR6/kI=;
-        b=CY6EXD3+LlW/+LXN/TlyxXkWrUnRSYea/3XJMnLJyGinmZv/0GYlg51hSBc138ZiEe
-         SorFMb3QcvDWdOCIvCXE4oxcyH1ECKyObWbT1Ly9fSl9ogzkgMOMeZcyPnBdo+diFMr+
-         QUoVgbtq8+7hSG4M4xWmm8FvZbKjC+JHeHZaC0533ozLiDjBkQ5oweAgf4cwq1TYKon5
-         BiwV9R2xB8mxOgAgiMaPhqwCBfHqAAHbFnC2WRL6rO0f6u/gVLR5sd7Z/jZFGDamYBqe
-         T1OdI/oZmu7CIVYBK2svYPMLVsnfeIiIDSa4rccok7/yPGV86byXzXK8QlaUXPPnRSLT
-         2ZDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0VHW29gger0IMyW7qfBuR5YsYLXX1n+G0ypYrnQSYl1WYzimTt+tzy2Y3WDbYzUHgQaXJfcxMQk5lzrY8PeDzTZATkHW+CNalzjUWG6F5eQFh7nKa2OZBM27rY48p
-X-Gm-Message-State: AOJu0Yw8+7CERhlNNm2Kv6LkJpXItF6+MAu8M0SGHNUOS8l5q94gKK2T
-	TSLq+x+NT5/Nf0TGn+tndEBPnh5/NL50/BXpOqEvWFy7jdmEl0iR9RZI1pSQt5+nwReKjcOZveK
-	gmv7dKiATe31utabKjmr8xIOyWbA=
-X-Google-Smtp-Source: AGHT+IFmkkq4f7VL86QzMTkqfkn1QPaCGg45UGmOuWB0BRvqpLJXZaINMT+NvWxqF4p/9Ea4jzkHPBRHbM/d6SY4tmE=
-X-Received: by 2002:a2e:9b0b:0:b0:2ec:4ed6:f4a with SMTP id
- 38308e7fff4ca-2eefd1521d2mr8120191fa.5.1721230455575; Wed, 17 Jul 2024
- 08:34:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O04iYQcH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B36AC2BD10;
+	Wed, 17 Jul 2024 16:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721234369;
+	bh=YH/ejPCzozWh3/5AWbT/wAkKuaoN0u4W+macH1mMRsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O04iYQcHPl5FL6N8sUdE+q+FxTnXMHv1ATmczRdlil8B/W2PQm7sAL1AIzB5XEOAO
+	 P0kqoQmjdD/m5QpdXW1fpweEZ3LiWrlPkyeXlDDR6oHczma/MVRYvHHYjlqsW3pl4z
+	 X/BhkhsxdHoGYaquZ78lyq6hQo0jcufT9NWzuhtxg2KmqwiRIUwHJHK6E8zFGp+aWO
+	 v327eLhiEMDNCP/ZVe5LFr9/YAI67NjFUmK4OFsxwdCAtP0lWx7/ka5ahwtlWUvgKd
+	 tmq7jt7E7euAtjvs7lx5+WcXrCAHl4x8uZbOWzxDZNZOWL78eSdYgyvexuG3H4jBYp
+	 8mRPh0OnODKSA==
+Date: Wed, 17 Jul 2024 17:39:23 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Otavio Salvador <otavio.salvador@ossystems.com.br>,
+	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	Otavio Salvador <otavio@ossystems.com.br>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, imx@lists.linux.dev,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC
+ from elgin-r1
+Message-ID: <20240717-gracious-canning-6ff715cd1b1f@spud>
+References: <20240717-anvil-ashy-544e80a1317c@spud>
+ <20240717-parrot-malt-83cc04bf6b36@spud>
+ <3870188.FjKLVJYuhi@diego>
+ <CAP9ODKrpKDY91AFDYj7s++kU+=CSLw=F9mXyLZ621Mqq-8S6bw@mail.gmail.com>
+ <CAOMZO5C7JknQaftquRWDetLs4W0CHMvs5PiJWBLyo0G1oo4rCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240717-anvil-ashy-544e80a1317c@spud> <20240717-parrot-malt-83cc04bf6b36@spud>
- <3870188.FjKLVJYuhi@diego> <CAP9ODKrpKDY91AFDYj7s++kU+=CSLw=F9mXyLZ621Mqq-8S6bw@mail.gmail.com>
-In-Reply-To: <CAP9ODKrpKDY91AFDYj7s++kU+=CSLw=F9mXyLZ621Mqq-8S6bw@mail.gmail.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 17 Jul 2024 12:34:03 -0300
-Message-ID: <CAOMZO5C7JknQaftquRWDetLs4W0CHMvs5PiJWBLyo0G1oo4rCA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC
- from elgin-r1
-To: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
-	linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>, 
-	Otavio Salvador <otavio@ossystems.com.br>, Conor Dooley <conor.dooley@microchip.com>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	imx@lists.linux.dev, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OWGW13PXE3KVG+an"
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5C7JknQaftquRWDetLs4W0CHMvs5PiJWBLyo0G1oo4rCA@mail.gmail.com>
+
+
+--OWGW13PXE3KVG+an
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 17, 2024 at 11:38=E2=80=AFAM Otavio Salvador
-<otavio.salvador@ossystems.com.br> wrote:
+On Wed, Jul 17, 2024 at 12:34:03PM -0300, Fabio Estevam wrote:
+> On Wed, Jul 17, 2024 at 11:38=E2=80=AFAM Otavio Salvador
+> <otavio.salvador@ossystems.com.br> wrote:
+>=20
+> > @Fabio Estevam can you check this patch?
+>=20
+> Correct, the rv1108-elgin-r1.dts board does not contain the DAC.
+>=20
+> There is an LCD controlled via spidev though.
+>=20
+> Conor,
+>=20
+> If spidev is needed, what is the recommended way to describe it in the
+> devicetree?
 
-> @Fabio Estevam can you check this patch?
+Describe the device you actually have in a binding, and add that
+compatible to the spidev driver. In this case, given there's a
+particular LCD there, that'll work. There's nothing wrong with using
+spidev, it's just lying about what hardware that is there that's
+problematic.
 
-Correct, the rv1108-elgin-r1.dts board does not contain the DAC.
+Otherwise, when it is an open connector where you can put anything, it's
+a wee bit messier... A connector binding is required then, something
+like the WIP mikrobus stuff that the beagle lads are working on. That's
+far from ready, at least on the devicetree side of things, though so
+you need to apply an overlay in your bootloader in that case.
 
-There is an LCD controlled via spidev though.
+--OWGW13PXE3KVG+an
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Conor,
+-----BEGIN PGP SIGNATURE-----
 
-If spidev is needed, what is the recommended way to describe it in the
-devicetree?
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpfzuwAKCRB4tDGHoIJi
+0iuDAPwPEHiBf+CrFLYviCQhgaXSwg21qh0Iy2VX/LcKcPGr+QD+JGr9aUClwsTX
+KBS41ljoVPgMP9F/i3+On6b1MOR7iw0=
+=uuYV
+-----END PGP SIGNATURE-----
 
-Thanks
+--OWGW13PXE3KVG+an--
