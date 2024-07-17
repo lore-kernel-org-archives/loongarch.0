@@ -1,117 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9FF4F88C;
-	Wed, 17 Jul 2024 09:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF17114A61B;
+	Wed, 17 Jul 2024 10:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721209176; cv=none; b=LjoPfKMKUuKgkGx0pOX3+SBo4n7KX44wN7X4SJ8iynv18qTG35pmjoFyF+SosK3R7I3pCu/rXuak9Sygyfmnlz+PsGJXHifImsUfOsIkAMGALA3guny4/VEPNF8F+Rr+59qhjCMjCgRVB/XMR1zHYh6UdHqrN69Tu9uPEujXebE=
+	t=1721211508; cv=none; b=HS47QLg86CBaUe1VtPUdYi6ApdxAXWIrqPjOOud0Rkwh14X5eY1N+UsOJOBzt8/aV0uQA3PPHfSTXmfW7fg/nL6csYvotpqKiSIl6JMR9V5n0sGkjFQCDyKNsCccww/dD4+DKuWxywGFk7BKo/EnNKDJS3DSU3o6TnszU7RRpV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721209176; c=relaxed/simple;
-	bh=d9O95bzVbKkcxfhQls1Vk/glISShfsvYzhZ9V8sNQB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e5H2HjfFhOspfpc3d7GFI9W2VYM9LwNNhTFeSqvaBhfGaQaJ9KGRWl6YwiNzgZsagdV26V+LUhmsLIBeH1GU5f1Tl0q+cOy8dTPSRL+xISnJsVCnWHLo/O8cPPqduvMn4ZQ4uJfPGCFTJ51ldIPsJl4xQQwFQz6IAah5g5jz6dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQ15Gko1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQ15Gko1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3A0C4AF09;
-	Wed, 17 Jul 2024 09:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721209176;
-	bh=d9O95bzVbKkcxfhQls1Vk/glISShfsvYzhZ9V8sNQB8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eQ15Gko1TkOhgvEGXhGzyZPsHH2m+yS7gglLBzqTgOOG1f+1i046JIb4kjh0qIumv
-	 cc5iz+XAC2+ItnnKwPYxmsoyB0bpYe6oy9nByWYdUXFN9bofNq0XwfrCn0a7uU/x4f
-	 lkTO3vdJGjwLRRvaPx1ZIz/ho2Z/gkOzW0dt8Hxk+XxazVAPRNDZkQTgLVio/8Na/E
-	 kY0GH+t5qJZyl59A182MxH6yFoOJlK5owy3RvvHBi3gU9P1BG1h3IkE1mEd1JXHOxZ
-	 OeUAaPir6grNhqkqWPs/pW8T46JcbONy9EPh296Y0FEqE86mnTRk3TKSCt37dDWGGU
-	 PlrtdQ9m5L2+Q==
-Message-ID: <6ff32295-f614-458b-9174-f86fa86f3764@kernel.org>
-Date: Wed, 17 Jul 2024 11:39:29 +0200
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/4] ARM: dts: socfpga: remove non-existent DAC from
- CycloneV devkit
-To: Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
+	s=arc-20240116; t=1721211508; c=relaxed/simple;
+	bh=UXQ+/dLLvHe5K0edkzLL8yMcOsAqy8P4gh1aXFyY9PE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KBABHUQmIJYBRrAS7RLVilhUSTc/iQltR63JtKgz894d7BJD2yUZAQPzhJuHTgOLMbqDEjTrXxpUpS1U/z9vJEgoZ++vYkpZkmJ2Oyz6Qhj0WryHOrx4mPAMm72p8dUEC1CNPJYWG9AdhnmZrSxTZhc1HICEyd7GOVed/YKj7uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e860d09.versanet.de ([94.134.13.9] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sU1je-0006py-5K; Wed, 17 Jul 2024 12:18:10 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>,
+ Otavio Salvador <otavio@ossystems.com.br>
+Cc: conor@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
  Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
  Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
  Pengutronix Kernel Team <kernel@pengutronix.de>,
  Fabio Estevam <festevam@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
  WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
  imx@lists.linux.dev, loongarch@lists.linux.dev
-References: <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-partake-antivirus-3347e415fb7d@spud>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240717-partake-antivirus-3347e415fb7d@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject:
+ Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC from
+ elgin-r1
+Date: Wed, 17 Jul 2024 12:18:08 +0200
+Message-ID: <3870188.FjKLVJYuhi@diego>
+In-Reply-To: <20240717-parrot-malt-83cc04bf6b36@spud>
+References:
+ <20240717-anvil-ashy-544e80a1317c@spud>
+ <20240717-parrot-malt-83cc04bf6b36@spud>
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 17/07/2024 11:37, Conor Dooley wrote:
+adding Otavio,
+
+Am Mittwoch, 17. Juli 2024, 11:37:54 CEST schrieb Conor Dooley:
 > From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> There is no Rohm DAC on the CycloneV devkit according to the online
-> documentation for it that I could find, and it definitely does not have
-> a dh2228fv as this device does not actually exist! Remove the DAC node
-> from the devicetree as it is not acceptable to pretend to have a device
-> on a board in order to bind the spidev driver in Linux.
-> 
+> The Rohm dh2228fv (really the bh2228fv, the compatible in the kernel has
+> a typo) does not support frequencies above 10 MHz, nor per the
+> datasheet appear to use either CPOL or CPHA. I suspect that this
+> devicetree is abusing the compatible in order to bind the spidev driver
+> in Linux. Pretending to have devices on a board for this purpose is not
+> acceptable, so remove it.
+
+Reasoning is sound, so I'll pick this up after the merge window.
+
+
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> I could not find any documentation for this board online, and it does
+> not blatantly say that the device is a "spidev" like other [ab]users, so
+> it is possible there's actually a DAC here - but I doubt it is a
+> bh2228fv given the other incompatibilities.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Otavio, as the original submitter of the Elgin R1 [0], do you happen
+to know what type of device this is? Especially as there really do not
+seem to be any schematics around for that board.
 
-Best regards,
-Krzysztof
+
+Heiko
+
+
+
+[0] https://patchwork.kernel.org/project/linux-rockchip/patch/20190104014023.17973-4-otavio@ossystems.com.br/
+
+> ---
+>  arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
+> index 2d9994379eb2..9df1cef406c5 100644
+> --- a/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
+> +++ b/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
+> @@ -167,14 +167,6 @@ &spi {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&spim1_clk &spim1_cs0 &spim1_tx &spim1_rx>;
+>  	status = "okay";
+> -
+> -	dh2228fv: dac@0 {
+> -		compatible = "rohm,dh2228fv";
+> -		reg = <0>;
+> -		spi-max-frequency = <24000000>;
+> -		spi-cpha;
+> -		spi-cpol;
+> -	};
+>  };
+>  
+>  &u2phy {
+> 
+
+
+
 
