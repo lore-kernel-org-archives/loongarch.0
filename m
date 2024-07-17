@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586E056766;
-	Wed, 17 Jul 2024 09:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9FF4F88C;
+	Wed, 17 Jul 2024 09:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721209162; cv=none; b=YtGRW9n5s6i+vjySw7tcXyTnCDM4m5xetouW4uCUCyaLgzvSBqkq+CS8s+ISt7a0tEiyaSRW/x+SRgv8RHuB0/dSH2v3rvL5mCZaTcC6FKD3lxA03YU+8UyP10v4qjUmQQ8nHhM/CnGWZPiNSDSKlHqF4nHEUsxiMjk7r116b8s=
+	t=1721209176; cv=none; b=LjoPfKMKUuKgkGx0pOX3+SBo4n7KX44wN7X4SJ8iynv18qTG35pmjoFyF+SosK3R7I3pCu/rXuak9Sygyfmnlz+PsGJXHifImsUfOsIkAMGALA3guny4/VEPNF8F+Rr+59qhjCMjCgRVB/XMR1zHYh6UdHqrN69Tu9uPEujXebE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721209162; c=relaxed/simple;
-	bh=N6QPrgE2ppM+gTZLC6zQEvEbaXRIl1p6sQHoE0Mvx+8=;
+	s=arc-20240116; t=1721209176; c=relaxed/simple;
+	bh=d9O95bzVbKkcxfhQls1Vk/glISShfsvYzhZ9V8sNQB8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZi0E8/3YRmZ3BltQb4BG8w0gMMjeIf9GgBqK/vh1tnhNPYmidYtiCbZ8orn2vWomMLAi4DlB1siqiNd+KKzD1/Be5XCHdWRK3iVojIzzwNVswH+EpMsVuz2NhOWXCxCj4pgaxDQgyTpMdX9VSzZ+MOJVJWvBusN/uslFhbGWQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW3YGn2P; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=e5H2HjfFhOspfpc3d7GFI9W2VYM9LwNNhTFeSqvaBhfGaQaJ9KGRWl6YwiNzgZsagdV26V+LUhmsLIBeH1GU5f1Tl0q+cOy8dTPSRL+xISnJsVCnWHLo/O8cPPqduvMn4ZQ4uJfPGCFTJ51ldIPsJl4xQQwFQz6IAah5g5jz6dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQ15Gko1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW3YGn2P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF736C32782;
-	Wed, 17 Jul 2024 09:39:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQ15Gko1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3A0C4AF09;
+	Wed, 17 Jul 2024 09:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721209161;
-	bh=N6QPrgE2ppM+gTZLC6zQEvEbaXRIl1p6sQHoE0Mvx+8=;
+	s=k20201202; t=1721209176;
+	bh=d9O95bzVbKkcxfhQls1Vk/glISShfsvYzhZ9V8sNQB8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UW3YGn2PCyRKFxrUg7EgdNXOgtB7LmoxUbHQGTkFliZub+ahrKPHo0nbHRQ7GTQJU
-	 Zgu7Crg+CJwAlBuAg0cn+OFzokKirbd+tsaZ2UO2crpBojL8XSgUTFiNGa/gzvOlF+
-	 kBjC9AZtpCyAO8DZBGLCUv5Ba3QZpQEhLukLrqy6G7hqcc4iriCq2qJs4rnHIVj31N
-	 ACOqLffjDrg7hl9wEYe2WlJkj00BJfDN6/eFckEvitTrLWh/Ob3aby3cDtd+VUKjRf
-	 ICJNlUwXUjlYcSH1uOaYRxa9pznkPzrC7S2yeT6bXXA0pid4Hzf6Jhz9hIzrjFSVIK
-	 DI36cJfVdyweA==
-Message-ID: <63aac431-cb01-414f-a8a8-96dd17633aad@kernel.org>
-Date: Wed, 17 Jul 2024 11:39:14 +0200
+	b=eQ15Gko1TkOhgvEGXhGzyZPsHH2m+yS7gglLBzqTgOOG1f+1i046JIb4kjh0qIumv
+	 cc5iz+XAC2+ItnnKwPYxmsoyB0bpYe6oy9nByWYdUXFN9bofNq0XwfrCn0a7uU/x4f
+	 lkTO3vdJGjwLRRvaPx1ZIz/ho2Z/gkOzW0dt8Hxk+XxazVAPRNDZkQTgLVio/8Na/E
+	 kY0GH+t5qJZyl59A182MxH6yFoOJlK5owy3RvvHBi3gU9P1BG1h3IkE1mEd1JXHOxZ
+	 OeUAaPir6grNhqkqWPs/pW8T46JcbONy9EPh296Y0FEqE86mnTRk3TKSCt37dDWGGU
+	 PlrtdQ9m5L2+Q==
+Message-ID: <6ff32295-f614-458b-9174-f86fa86f3764@kernel.org>
+Date: Wed, 17 Jul 2024 11:39:29 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] loongarch: dts: remove non-existent DAC from
- 2k1000-ref
+Subject: Re: [PATCH v1 4/4] ARM: dts: socfpga: remove non-existent DAC from
+ CycloneV devkit
 To: Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org
 Cc: Conor Dooley <conor.dooley@microchip.com>,
  Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -49,7 +49,7 @@ Cc: Conor Dooley <conor.dooley@microchip.com>,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
  imx@lists.linux.dev, loongarch@lists.linux.dev
 References: <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-preacher-sandal-2aeffa322b9f@spud>
+ <20240717-partake-antivirus-3347e415fb7d@spud>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,18 +95,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240717-preacher-sandal-2aeffa322b9f@spud>
+In-Reply-To: <20240717-partake-antivirus-3347e415fb7d@spud>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/07/2024 11:37, Conor Dooley wrote:
 > From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> The 2k1000 reference boards do not have a Rohm DAC on them as far as I
-> can tell, and they certainly do not have a dh2228fv, as this device does
-> not actually exist! Remove the dac nodes from the devicetrees as it is
-> not acceptable to pretend to have a device on a board in order to bind
-> the spidev driver in Linux.
+> There is no Rohm DAC on the CycloneV devkit according to the online
+> documentation for it that I could find, and it definitely does not have
+> a dh2228fv as this device does not actually exist! Remove the DAC node
+> from the devicetree as it is not acceptable to pretend to have a device
+> on a board in order to bind the spidev driver in Linux.
 > 
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
