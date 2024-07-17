@@ -1,112 +1,152 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF17114A61B;
-	Wed, 17 Jul 2024 10:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361701878
+	for <loongarch@lists.linux.dev>; Wed, 17 Jul 2024 10:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721211508; cv=none; b=HS47QLg86CBaUe1VtPUdYi6ApdxAXWIrqPjOOud0Rkwh14X5eY1N+UsOJOBzt8/aV0uQA3PPHfSTXmfW7fg/nL6csYvotpqKiSIl6JMR9V5n0sGkjFQCDyKNsCccww/dD4+DKuWxywGFk7BKo/EnNKDJS3DSU3o6TnszU7RRpV8=
+	t=1721213710; cv=none; b=OiG29b955jv7/RKExzdki7Cyy7Ilms46j0HUi5AhSFI2Y5zDmsZWR0RRW3cltWV++CjDXyfR4Q0WxIUhxPYJH7CxsQa8IFUopBegTH+xmCai4m9TMIjtG3uuRnaTBhuGRq+t0wrA7y8VGtlaI1kkaD4TxbVbmn9sXMKhDbFeMNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721211508; c=relaxed/simple;
-	bh=UXQ+/dLLvHe5K0edkzLL8yMcOsAqy8P4gh1aXFyY9PE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KBABHUQmIJYBRrAS7RLVilhUSTc/iQltR63JtKgz894d7BJD2yUZAQPzhJuHTgOLMbqDEjTrXxpUpS1U/z9vJEgoZ++vYkpZkmJ2Oyz6Qhj0WryHOrx4mPAMm72p8dUEC1CNPJYWG9AdhnmZrSxTZhc1HICEyd7GOVed/YKj7uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e860d09.versanet.de ([94.134.13.9] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sU1je-0006py-5K; Wed, 17 Jul 2024 12:18:10 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>,
- Otavio Salvador <otavio@ossystems.com.br>
-Cc: conor@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
- Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- imx@lists.linux.dev, loongarch@lists.linux.dev
-Subject:
- Re: [PATCH v1 2/4] ARM: dts: rockchip: remove unlikly-to-exist DAC from
- elgin-r1
-Date: Wed, 17 Jul 2024 12:18:08 +0200
-Message-ID: <3870188.FjKLVJYuhi@diego>
-In-Reply-To: <20240717-parrot-malt-83cc04bf6b36@spud>
-References:
- <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-parrot-malt-83cc04bf6b36@spud>
+	s=arc-20240116; t=1721213710; c=relaxed/simple;
+	bh=AMsDz/Ku3aEvwfE1d5aax219Ew2wLx/1hyo1nCxhUyo=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=uD9UnwnbysOfscayggeFVx08b9or5kk9DGVfGLrHW7rWCdIEB1uUxZ0P/7pnl3RCRgrY5FAIltPHSONsvEcxlPefc2C0pOrXFBKS5nsCBiADw76KpR4H2kUgsMsPVdzHnX+SkoSmpVcOiB4YPrCAZX52FtcArqqmqYBQ252ECx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=sSzQKesS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Uj/+wQX0; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="sSzQKesS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Uj/+wQX0"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 547B71380286;
+	Wed, 17 Jul 2024 06:55:08 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute6.internal (MEProxy); Wed, 17 Jul 2024 06:55:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1721213708; x=1721300108; bh=8TPRB3j9rL
+	zE1rwWl+Ls1dJsZyiFWQAyaVNpYBWytB8=; b=sSzQKesS28tzRD3ycMfsHJZzHM
+	mb+/LOuqTrCGwZJDGcQNnJdKH0Sj7JxGiyACbnSjdZ7jhKBEZhC26nSEXXff01YA
+	3JpotsV7/zJ5MCe+fdyamsjsp9S2DrchwkfORG/ELfJ3aXGRzEWYCd3zDP9Bk8HS
+	sGiiCkdFEOOq97/M6iqGdf4xbII/G8ccZWbljeSipuzObXbMUFC2VS/nqGduJ+kx
+	y07wayoLPaub+/tRYZ8V7VPF80IFiCXx+01rWOqumEUBbAPnjdCNT9jh51VvokDA
+	end0ch72kvrXPf2O/vnpUjMlgzNMfF+pA05NYI6k2P/CsDIDXTh+ilVpvT5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1721213708; x=1721300108; bh=8TPRB3j9rLzE1rwWl+Ls1dJsZyiF
+	WQAyaVNpYBWytB8=; b=Uj/+wQX06B0+FbPAETtoiXpL19N2SDw2r05omykUv9vm
+	UQ5jN/5ooHFpKmC9/OeTLL/mryXkc+YdSCIbrqlgkbv3+XccswlTzizUh+8cP+IM
+	HJCDQz9PpU692+Tl3nYX54rTTCZ9ds+kC6kEsmRFV3vV536xSEkjUAl+N8diE1i9
+	noad3VfSoGRNuWozy1WyABALzTvES+8zWTHpl1+Hr4WXO+jNY6+EV3earT56nH+t
+	iSweoq2QRsewPiFbHluLa+M2Ge+gJf7KYIK/nzoCoxpfyxyfefWwmpdxm6YoK1Pa
+	7xVk1Bxni+/9WO5T8w/NDQyzIco11dk5HSvl10l6KQ==
+X-ME-Sender: <xms:C6OXZuQOkBGuoTGdD5m5RKKuty_76kxEVrX373t3PNyieEnI7U3eUA>
+    <xme:C6OXZjxL3aEmkVItid8N0JP73i5KAG3vPgc3CMf51q6jtRBrwlPslTjnkBmQB1zHG
+    HVrJSgDm8_j4GRDSjk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeigdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:C6OXZr1IgRed4C-ppieiHgf6s7NlVM1e-Ll20ASfZcKMAXmjw-RtvQ>
+    <xmx:C6OXZqAyhWKbw21N6I3g1uwuLk08AmNjKjHvsb2gM7PZ0X_Wt--2aQ>
+    <xmx:C6OXZngS9kXR_S5sGCT-6pUxi1CsSNHKGPU2wArBAcGIUJffhG0IrA>
+    <xmx:C6OXZmpJ5HUuZfi2Eqz99SkyJK2dvK0bGYs7ddTni3cSWiNH7X1NCQ>
+    <xmx:DKOXZsYyZp4SgPBafctwqljY71fPeEOjc5k00ZIdbHF5w7UykbObrQto>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EB13219C005E; Wed, 17 Jul 2024 06:55:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Message-Id: <91b10591-1554-4860-8843-01c6cfd7de13@app.fastmail.com>
+In-Reply-To: <4d471a38-f86f-429d-a1a3-b882439ef7ba@app.fastmail.com>
+References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
+ <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
+ <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
+ <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
+ <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
+ <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
+ <ZpdnhhaQum_epcGp@hovoldconsulting.com>
+ <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
+ <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
+ <4d471a38-f86f-429d-a1a3-b882439ef7ba@app.fastmail.com>
+Date: Wed, 17 Jul 2024 12:54:46 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Johan Hovold" <johan@kernel.org>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-snps-arc@lists.infradead.org
+Subject: Re: [GIT PULL] asm-generic updates for 6.11
+Content-Type: text/plain
 
-adding Otavio,
+On Wed, Jul 17, 2024, at 11:36, Arnd Bergmann wrote:
+> On Wed, Jul 17, 2024, at 10:17, Johan Hovold wrote:
+>> On Wed, Jul 17, 2024 at 10:01:10AM +0200, Arnd Bergmann wrote:
+>>
+>> Yeah, that's not something I noticed at least (and I assume I would
+>> have). And I only did aarch64 builds on a 6.9 x86_64 host (make 4.4.1).
+>
+> Ok, I can reproduce the problem now: I installed a Fedora
+> VM guest and chroot mount and I see the same issue in there.
+>
+> My normal Debian host has make 4.3, so I'll see if I can figure
+> if a specific change in make does it.
 
-Am Mittwoch, 17. Juli 2024, 11:37:54 CEST schrieb Conor Dooley:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> The Rohm dh2228fv (really the bh2228fv, the compatible in the kernel has
-> a typo) does not support frequencies above 10 MHz, nor per the
-> datasheet appear to use either CPOL or CPHA. I suspect that this
-> devicetree is abusing the compatible in order to bind the spidev driver
-> in Linux. Pretending to have devices on a board for this purpose is not
-> acceptable, so remove it.
+I see that there is a version check in scripts/Makefile.include
+from commit 875ef1a57f32 ("kbuild: use .NOTINTERMEDIATE for
+future GNU Make versions") that detects Fedora's make 4.4.1
+as newer than 4.4, so for the first time enables this
+logic that I did not see on Debian.
 
-Reasoning is sound, so I'll pick this up after the merge window.
+In my scripts/Makefile.asm-headers, I had copied the 'FORCE'
+from the existing rules in arch/x86/entry/syscalls/Makefile
+etc without fully understanding what that does.
+It looks like this does not make a difference for make-4.3
+but is actually wrong for make-4.4 on the generic rule.
 
+This makes it work for me with both versions of make:
 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> I could not find any documentation for this board online, and it does
-> not blatantly say that the device is a "spidev" like other [ab]users, so
-> it is possible there's actually a DAC here - but I doubt it is a
-> bh2228fv given the other incompatibilities.
+--- a/scripts/Makefile.asm-headers
++++ b/scripts/Makefile.asm-headers
+@@ -77,14 +77,14 @@ all: $(generic-y) $(syscall-y)
+ $(obj)/%.h: $(srctree)/$(generic)/%.h
+        $(call cmd,wrap)
+ 
+-$(obj)/unistd_%.h: $(syscalltbl) $(syshdr) FORCE
++$(obj)/unistd_%.h: $(syscalltbl) $(syshdr)
+        $(call if_changed,syshdr)
+ 
+ $(obj)/unistd_compat_%.h: syscall_compat:=1
+-$(obj)/unistd_compat_%.h: $(syscalltbl) $(syshdr) FORCE
++$(obj)/unistd_compat_%.h: $(syscalltbl) $(syshdr)
+        $(call if_changed,syshdr)
+ 
+-$(obj)/syscall_table_%.h: $(syscalltbl) $(systbl) FORCE
++$(obj)/syscall_table_%.h: $(syscalltbl) $(systbl)
+        $(call if_changed,systbl)
+ 
+ # Create output directory. Skip it if at least one old header exists
 
-Otavio, as the original submitter of the Elgin R1 [0], do you happen
-to know what type of device this is? Especially as there really do not
-seem to be any schematics around for that board.
+Masahiro, does that make sense to you? I assume you can
+explain this properly, but I'll already send a patch with
+this version.
 
-
-Heiko
-
-
-
-[0] https://patchwork.kernel.org/project/linux-rockchip/patch/20190104014023.17973-4-otavio@ossystems.com.br/
-
-> ---
->  arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts b/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
-> index 2d9994379eb2..9df1cef406c5 100644
-> --- a/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
-> +++ b/arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dts
-> @@ -167,14 +167,6 @@ &spi {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&spim1_clk &spim1_cs0 &spim1_tx &spim1_rx>;
->  	status = "okay";
-> -
-> -	dh2228fv: dac@0 {
-> -		compatible = "rohm,dh2228fv";
-> -		reg = <0>;
-> -		spi-max-frequency = <24000000>;
-> -		spi-cpha;
-> -		spi-cpol;
-> -	};
->  };
->  
->  &u2phy {
-> 
-
-
-
-
+       Arnd
