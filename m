@@ -1,95 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084E839879;
-	Wed, 17 Jul 2024 08:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B56D1BF2A;
+	Wed, 17 Jul 2024 08:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204230; cv=none; b=EFXsb3KPnd476MVw3iY0BQOQqx3WT3Au0gn5nREyZFqATFRX70YkdnEX4uqbvInPj9CmWesntUMzk64WbNjt1ikd4Jz4Ja4eraWRBFoKV9k3+Pr6FM4N0Yktv/J8Q3RvsEQRmzfelH0UehL7Cz08k2K4aQGJyRtmCMTC2I34Hyc=
+	t=1721204405; cv=none; b=KT0BigP3rZ8uuZ4gx/LQ3UeF+dasWLObD+t33igVRaH7gdUlu7wq0x0Aw+PFyVhRIdvUVdr9NcL7GPhoMe4mwnQiyc8ebwhgNKRXdqVUaIzhMgYWfl1QjMa47je0ubAEZLIDpMXY2u/fkX4IpcuAIMePQ6UsyTk2wJxxnMQhNwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204230; c=relaxed/simple;
-	bh=rSLQAE5R5XyJVKc3bL13vDnmqk+hn+xn+GeAR87Ppeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukOWs56YaBWqp3xxHPmLFbhUY2p/BJ+ow5apH0Ie8hNg72K+uGcgLezX785+KWf6iK+DqUKBsdaLzz55BmwqvdtLU3okqsqQ/RkUjS18AD8qiAKntzrp+WeszMBTEzWid48Hbeur8kaCW/dgzr8e+n4TRmo07rxA7BblxOBw4VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vs9bfBue; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721204405; c=relaxed/simple;
+	bh=2CLtcxjWryy+ZrxMy3V6QLAyq9Tcxt0Pcwt6s+Wmc1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kBcSA844G4wn2Pa3dZeboTJKFdsOBmK0hfbggFabnGmDfv89VkY9rOQdLlnKedbdKJwmRiaWksLg5lHzgAsoAnYRATRpIOlFqjm1YtxUbAfnC+mILlhQMBoA53kGc2502CjVx7H/nn4mu0h25tSgWkB0PkLied8Cj5mD0LQWF94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Q8RMbd3X; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vs9bfBue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77758C32782;
-	Wed, 17 Jul 2024 08:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721204229;
-	bh=rSLQAE5R5XyJVKc3bL13vDnmqk+hn+xn+GeAR87Ppeo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vs9bfBuepk0tW64t9UP6JapsBWLgEUwmlAc2KyxVx4NUGCm3YuGnM5hmpwDeUHVd3
-	 v4a/qhFqoqRn8LrZSc5qr2WOIy3akxIVyaDrwOHmMcSG++1/H6EmHJ6+HQL+Sa97I2
-	 XCM3fMvjsbLDQvOIj9gfmTjrdSulOUGeQfgN1viWZHi2xxiDFLsuZNrhZ6+TTaTs2b
-	 hS69zFhzGSEZnoRNaTpQos2uv049YlI0vpcU5Kuv6PTB79BRIrqWYgY3IWOS379p64
-	 9spyEkXtHrFY6CWh1Jh6vJHq40b4Ah5aBshIvPxYpgpoH9eCLmLYkTDJYudivKqRA1
-	 TdOlhPvTxLW7w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sTzqZ-000000000I0-08bF;
-	Wed, 17 Jul 2024 10:17:11 +0200
-Date: Wed, 17 Jul 2024 10:17:11 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
-	linux-snps-arc@lists.infradead.org
-Subject: Re: [GIT PULL] asm-generic updates for 6.11
-Message-ID: <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
-References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
- <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
- <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
- <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
- <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
- <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
- <ZpdnhhaQum_epcGp@hovoldconsulting.com>
- <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Q8RMbd3X"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 255A8FF803;
+	Wed, 17 Jul 2024 08:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721204394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vYy4jlSppC2pcc6cg+3nF/8GvPZv6nmewlb2L7o9Nw8=;
+	b=Q8RMbd3XCm3mkOoSML4rikXKiJwOmxmdsX2NkXlZwRplYxuKqVu6DdyLJ7G/4YQS4TR3e0
+	tQ9HYyVU0QaJ7mJKdjZ58+NY03/Y4pQSR1nheyy9/gpjRgXyPcN/SYNbnfEvcXYx78cKK1
+	DspBdEnmtUUE2Vh7fB3axwb52s022qgb/fQK8B7JQxuL+DVdX8knHLZC7Oxu4B+r0HSgWa
+	t6AmHSpNSofRHkmWqrwexOh4wFUvNGOiGe2R2Gz1nk0z8FDgM9iuuAszfZbHO/r1L/BknS
+	0yhBDc0k6PoqJGn8/jBTZsc9id1S9XZ4jdCo9jE7HgZr9sw+Ct/c9wyvI/5QfA==
+Date: Wed, 17 Jul 2024 10:19:48 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Maxime Ripard <mripard@kernel.org>, Pratyush Yadav
+ <pratyush@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Richard
+ Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>,
+ Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
+ <magnus.damm@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ imx@lists.linux.dev, linux-omap@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+ openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
+ linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
+Message-ID: <20240717101948.2e99f472@xps-13>
+In-Reply-To: <20240709103841.7x7n4hdtqrunyoc3@pengutronix.de>
+References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
+	<20240701-b4-v6-10-topic-usbc-tcpci-v1-4-3fd5f4a193cc@pengutronix.de>
+	<07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
+	<mafs0ikxnykpr.fsf@kernel.org>
+	<20240702-congenial-vigilant-boar-aeae44@houat>
+	<mafs0ed8byj5z.fsf@kernel.org>
+	<20240702-mighty-brilliant-eel-b0d9fa@houat>
+	<20240708084440.70186564@xps-13>
+	<20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
+	<20240709114302.3c604ef3@xps-13>
+	<20240709103841.7x7n4hdtqrunyoc3@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, Jul 17, 2024 at 10:01:10AM +0200, Arnd Bergmann wrote:
-> On Wed, Jul 17, 2024, at 08:41, Johan Hovold wrote:
+Hi Marco,
 
-> > FWIW, I noticed this last Friday as well when I did a few builds of
-> > linux-next and every change I made triggered what appeared to be a full
-> > rebuild of the tree.
-> >
-> > This was with a trimmed config [1] and separate build tree (tmpfs).
-> 
-> Thanks, that makes it quicker to try out. I'm now using
-> your config to do more testing. I still don't see it with
-> a normal build though.
-> 
-> I do see that setting the timestamp of syscall.tbl to
-> a future date does result in always rebuilding everything,
-> but I don't think that is what you are seeing, since that
-> also produces a warning from make:
-> 
-> arnd@studio:~/arm-soc/build/bisect$ touch -t 202501010000 arch/x86/entry/syscalls/syscall_64.tbl 
-> arnd@studio:~/arm-soc/build/bisect$ make ARCH=x86 CROSS_COMPILE=x86_64-linux- 
-> make[2]: Warning: File 'arch/x86/entry/syscalls/syscall_64.tbl' has modification time 14483017 s in the future
->   SYSHDR  arch/x86/include/generated/uapi/asm/unistd_64.h
->   SYSHDR  arch/x86/include/generated/uapi/asm/unistd_x32.h
->   SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
->   SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
-> make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+> > > > Overall I think the idea of getting rid of these misc/ drivers is g=
+oes
+> > > > into the right direction, but registering directly into NVMEM makes
+> > > > more sense IMO.   =20
+> > >=20
+> > > So you propose to have two places for the partition handling (one for
+> > > MTD and one for NVMEM) instead of one and moving the code into NVMEM
+> > > directly? =20
+> >=20
+> > Why two places for the partitions handling? Just one, in NVMEM. Also =20
+>=20
+> Without checking the details I think that converting the MTD
+> partitioning code into NVMEM partitioning code is a bigger task. As you
+> said below there are many legacy code paths you need to consider so they
+> still work afterwards as well.
+>=20
+> > usually EEPROMs don't require very advanced partitioning schemes,
+> > unlike flashes (which are the most common MTD devices today). =20
+>=20
+> As said in my cover letter EEPROMs can become quite large and MTD
+> supports partitioning storage devices which is very handy for large
+> EEPROMs as well.
 
-Yeah, that's not something I noticed at least (and I assume I would
-have). And I only did aarch64 builds on a 6.9 x86_64 host (make 4.4.1).
+Did you had a look at nvmem-layouts ? In particular the fixed-layout.
 
-Johan
+Is there anything you would like to achieve already that is not
+possible with nvmem but is with mtd?
+
+Thanks,
+Miqu=C3=A8l
