@@ -1,163 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65DF3F9EC
-	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 06:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BA410E5;
+	Fri, 19 Jul 2024 13:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721371548; cv=none; b=QpICbuME48TCWG7c8pQLyFkO/FaYEMGg7/Fe7nsRl92V+rXpeIM9JhBnfcOlAAMxRNTPJlsEtAXOKak6Mr9G5MLz5eiE5XxLjG+5YaX/Nn0qF3q4gfvsuuSAIwTi43+RBdDlZkqFol9rb8VLZL/6nEhoP4bKOkeuo7MW9PtTY54=
+	t=1721396035; cv=none; b=hckwLPZcdUyY28gpqmNzIkFgMjiCva3w4AWenOmoPjMYY3OF99gs+AdxmkoeuxFb1dFVVbJICR9lQkW/QlLVTNGQJjjB2mC0Qh1EJwDVoK0JINTHeCs9qkScxD/KsqoNdraJj++nVeZKCGd5mfHpVRiJuKWP4djxBdAfj/hZCfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721371548; c=relaxed/simple;
-	bh=SkLVjyhDJtKPnHPxsgYnNVisePA45H9X3fSc8dGWfUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uD5072f/WO258MUeOtSlbfIsyMu4rli2Vs+wHzkHU8/k/L5UwtZ4ZRkCvyGbrowFAgPSAYuzmbE3m3jne/mLRO7MoYtDMda9loETPbE7lx+UCp6hyr48Qag2IhfZ1gZ4guvekhP5sH+uROzetGWpT68Iy0p7rKu083vI2UJSEBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqFmOCn3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqFmOCn3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EC9C4AF0E
-	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 06:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721371548;
-	bh=SkLVjyhDJtKPnHPxsgYnNVisePA45H9X3fSc8dGWfUE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UqFmOCn3A0LcFE/TGlYjPUnv9yQZEAiXZH004HNud165ZedOL0KLJLHxxFouyYHEs
-	 Tude8knwZuu18ga8TgCzHu98a8lTAprW0iGG7xrY9ax898P0RrT5ghdD7BwSrV3py2
-	 YUp4KWCOY5+gvduRHfIbdKAWYoP0UpFNoCrolVFL71FRP4xQO5N33wGLFFGnrnGhJ4
-	 DMLM8kVLXg6rDUL9NNaVQxGetwzZVb+43oCj/3OQJniLhdq9zfPNLhW9SmG3VtPh4r
-	 f8M9mjGt7U8GEvyKnC+aRhPoVBH+2zwv+ssRNnXB+qixF08TuZkk/D82YYD8obyJ+r
-	 IFD6RrbbwClCA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5a2ffc34677so379341a12.2
-        for <loongarch@lists.linux.dev>; Thu, 18 Jul 2024 23:45:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7ZI1ezLAgaPQAPm3DLY2A+LXYioM0d+2r96CRQsLbyo2cEiiZ4TLL0Ir3yo0334uJ4zfVG9Cit4yBYfbwNeHj/LhSfol2QIBO
-X-Gm-Message-State: AOJu0Yy/00Db2vebchrwwzBfXCRPOqJJ32a+6jmOOdK4lLE17J0Dw3XQ
-	5hUMhKf18wuKM4Or29ee7kFeblboA2WLnlIfIYrOtrkdp5ir8ripFD+gwiG9gqLdPgqS9YFbvcF
-	xDTsM2hiUVYR2E4IU2ColfZrKyCQ=
-X-Google-Smtp-Source: AGHT+IFI7UE4htQrB90kB6YM3G32cXHi+BrN+bUwAbDBQSouVE8j4kP/Asy9+Y6DecKitNlDpBrHtgvXnb+iwYTrpe8=
-X-Received: by 2002:a05:6402:35ce:b0:5a2:fc48:db27 with SMTP id
- 4fb4d7f45d1cf-5a2fc48e014mr783192a12.32.1721371546865; Thu, 18 Jul 2024
- 23:45:46 -0700 (PDT)
+	s=arc-20240116; t=1721396035; c=relaxed/simple;
+	bh=QcL5agAg50dx73nvzJdxQZPBrGmrIB51uy787OOzoi4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ao5BhzpL7CXrNWAq61IHG1FoidGVP3zJV9n395Fq/I28yDHF7ZCa4942mA8sh71rZHX2y+3y8mfRGhlGKM3C7+daXFiQseMjyMkdk59DiMCDAR0NVSxpsyDof5CNxM2MWh1tmx8SIuDIunjVTHUx9ltXWxdIfbTKjWwxlEeRo1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WQVw90sR6z6JBj4;
+	Fri, 19 Jul 2024 21:32:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D842140A87;
+	Fri, 19 Jul 2024 21:33:49 +0800 (CST)
+Received: from localhost (10.122.19.247) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 19 Jul
+ 2024 14:33:48 +0100
+Date: Fri, 19 Jul 2024 14:33:47 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
+ Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
+	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Heiko Carstens
+	<hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul Adrian
+ Glaubitz" <glaubitz@physik.fu-berlin.de>, Michael Ellerman
+	<mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, "Thomas
+ Bogendoerfer" <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH 00/17] mm: introduce numa_memblks
+Message-ID: <20240719143347.000077d9@huawei.com>
+In-Reply-To: <20240716111346.3676969-1-rppt@kernel.org>
+References: <20240716111346.3676969-1-rppt@kernel.org>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240719031427.119274-1-ruanjinjie@huawei.com>
-In-Reply-To: <20240719031427.119274-1-ruanjinjie@huawei.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 19 Jul 2024 14:45:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6hCrm97eeFXGMQtUae+UHRkyE36byyEnjTae7=5Wou8A@mail.gmail.com>
-Message-ID: <CAAhV-H6hCrm97eeFXGMQtUae+UHRkyE36byyEnjTae7=5Wou8A@mail.gmail.com>
-Subject: Re: [PATCH v2] loongarch: Support RANDOMIZE_KSTACK_OFFSET
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: kernel@xen0n.name, kees@kernel.org, gustavoars@kernel.org, arnd@arndb.de, 
-	maobibo@loongson.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Applied with small changes, thanks.
+On Tue, 16 Jul 2024 14:13:29 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-https://github.com/chenhuacai/linux/commit/a55a07439613689f0890c9482b9c5f76=
-dec255dd
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>=20
+> Hi,
+>=20
+> Following the discussion about handling of CXL fixed memory windows on
+> arm64 [1] I decided to bite the bullet and move numa_memblks from x86 to
+> the generic code so they will be available on arm64/riscv and maybe on
+> loongarch sometime later.
+>=20
+> While it could be possible to use memblock to describe CXL memory windows,
+> it currently lacks notion of unpopulated memory ranges and numa_memblks
+> does implement this.
+>=20
+> Another reason to make numa_memblks generic is that both arch_numa (arm64
+> and riscv) and loongarch use trimmed copy of x86 code although there is no
+> fundamental reason why the same code cannot be used on all these platform=
+s.
+> Having numa_memblks in mm/ will make it's interaction with ACPI and FDT
+> more consistent and I believe will reduce maintenance burden.
+>=20
+> And with generic numa_memblks it is (almost) straightforward to enable NU=
+MA
+> emulation on arm64 and riscv.
+>=20
+> The first 5 commits in this series are cleanups that are not strictly
+> related to numa_memblks.
+>=20
+> Commits 6-11 slightly reorder code in x86 to allow extracting numa_memblks
+> and NUMA emulation to the generic code.
+>=20
+> Commits 12-14 actually move the code from arch/x86/ to mm/ and commit 15
+> does some aftermath cleanups.
+>=20
+> Commit 16 switches arch_numa to numa_memblks.
+>=20
+> Commit 17 enables usage of phys_to_target_node() and
+> memory_add_physaddr_to_nid() with numa_memblks.
 
-Huacai
+Hi Mike,
 
-On Fri, Jul 19, 2024 at 11:09=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com=
-> wrote:
->
-> Add support of kernel stack offset randomization while handling syscall,
-> the offset is defaultly limited by KSTACK_OFFSET_MAX().
->
-> In order to avoid trigger stack canaries (due to __builtin_alloca) and
-> slowing down the entry path, use __no_stack_protector attribute to
-> disable stack protector for do_syscall() at function level.
->
-> With this patch, the REPORT_STACK test show that:
->         `loongarch64 bits of stack entropy: 7`
->
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
-> ---
-> v2:
-> - get_random_u16() -> drdtime().
-> - Add Suggested-by.
-> ---
->  arch/loongarch/Kconfig          |  1 +
->  arch/loongarch/kernel/syscall.c | 17 ++++++++++++++++-
->  2 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ddc042895d01..fcf6451b4e38 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -106,6 +106,7 @@ config LOONGARCH
->         select HAVE_ARCH_KFENCE
->         select HAVE_ARCH_KGDB if PERF_EVENTS
->         select HAVE_ARCH_MMAP_RND_BITS if MMU
-> +       select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->         select HAVE_ARCH_SECCOMP
->         select HAVE_ARCH_SECCOMP_FILTER
->         select HAVE_ARCH_TRACEHOOK
-> diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/sysc=
-all.c
-> index ec17cd5163b7..9df81197a09b 100644
-> --- a/arch/loongarch/kernel/syscall.c
-> +++ b/arch/loongarch/kernel/syscall.c
-> @@ -9,11 +9,13 @@
->  #include <linux/entry-common.h>
->  #include <linux/errno.h>
->  #include <linux/linkage.h>
-> +#include <linux/randomize_kstack.h>
->  #include <linux/syscalls.h>
->  #include <linux/unistd.h>
->
->  #include <asm/asm.h>
->  #include <asm/exception.h>
-> +#include <asm/loongarch.h>
->  #include <asm/signal.h>
->  #include <asm/switch_to.h>
->  #include <asm-generic/syscalls.h>
-> @@ -39,7 +41,7 @@ void *sys_call_table[__NR_syscalls] =3D {
->  typedef long (*sys_call_fn)(unsigned long, unsigned long,
->         unsigned long, unsigned long, unsigned long, unsigned long);
->
-> -void noinstr do_syscall(struct pt_regs *regs)
-> +__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
->  {
->         unsigned long nr;
->         sys_call_fn syscall_fn;
-> @@ -55,11 +57,24 @@ void noinstr do_syscall(struct pt_regs *regs)
->
->         nr =3D syscall_enter_from_user_mode(regs, nr);
->
-> +       add_random_kstack_offset();
-> +
->         if (nr < NR_syscalls) {
->                 syscall_fn =3D sys_call_table[nr];
->                 regs->regs[4] =3D syscall_fn(regs->orig_a0, regs->regs[5]=
-, regs->regs[6],
->                                            regs->regs[7], regs->regs[8], =
-regs->regs[9]);
->         }
->
-> +       /*
-> +        * This value will get limited by KSTACK_OFFSET_MAX(), which is 1=
-0
-> +        * bits. The actual entropy will be further reduced by the compil=
-er
-> +        * when applying stack alignment constraints: 16-byte (i.e. 4-bit=
-)
-> +        * aligned, which will remove the 4 low bits from any entropy cho=
-sen
-> +        * here.
-> +        *
-> +        * The resulting 6 bits of entropy is seen in SP[9:4].
-> +        */
-> +       choose_random_kstack_offset(drdtime());
-> +
->         syscall_exit_to_user_mode(regs);
->  }
-> --
-> 2.34.1
->
+I've lightly tested with emulated CXL + Generic Ports and Generic
+Initiators as well as more normal cpus and memory via qemu on arm64 and it's
+looking good.
+
+=46rom my earlier series, patch 4 is probably still needed to avoid
+presenting nodes with nothing in them at boot (but not if we hotplug
+memory then remove it again in which case they disappear)
+https://lore.kernel.org/all/20240529171236.32002-5-Jonathan.Cameron@huawei.=
+com/
+However that was broken/inconsistent before your rework so I can send that
+patch separately.=20
+
+Thanks for getting this sorted!  I should get time to do more extensive
+testing and review in next week or so.
+
+Jonathan
+
+>=20
+> [1] https://lore.kernel.org/all/20240529171236.32002-1-Jonathan.Cameron@h=
+uawei.com/
+>=20
+> Mike Rapoport (Microsoft) (17):
+>   mm: move kernel/numa.c to mm/
+>   MIPS: sgi-ip27: make NODE_DATA() the same as on all other
+>     architectures
+>   MIPS: loongson64: rename __node_data to node_data
+>   arch, mm: move definition of node_data to generic code
+>   arch, mm: pull out allocation of NODE_DATA to generic code
+>   x86/numa: simplify numa_distance allocation
+>   x86/numa: move FAKE_NODE_* defines to numa_emu
+>   x86/numa_emu: simplify allocation of phys_dist
+>   x86/numa_emu: split __apicid_to_node update to a helper function
+>   x86/numa_emu: use a helper function to get MAX_DMA32_PFN
+>   x86/numa: numa_{add,remove}_cpu: make cpu parameter unsigned
+>   mm: introduce numa_memblks
+>   mm: move numa_distance and related code from x86 to numa_memblks
+>   mm: introduce numa_emulation
+>   mm: make numa_memblks more self-contained
+>   arch_numa: switch over to numa_memblks
+>   mm: make range-to-target_node lookup facility a part of numa_memblks
+>=20
+>  arch/arm64/include/asm/Kbuild                 |   1 +
+>  arch/arm64/include/asm/mmzone.h               |  13 -
+>  arch/arm64/include/asm/topology.h             |   1 +
+>  arch/loongarch/include/asm/Kbuild             |   1 +
+>  arch/loongarch/include/asm/mmzone.h           |  16 -
+>  arch/loongarch/include/asm/topology.h         |   1 +
+>  arch/loongarch/kernel/numa.c                  |  21 -
+>  arch/mips/include/asm/mach-ip27/mmzone.h      |   1 -
+>  .../mips/include/asm/mach-loongson64/mmzone.h |   4 -
+>  arch/mips/loongson64/numa.c                   |  20 +-
+>  arch/mips/sgi-ip27/ip27-memory.c              |   2 +-
+>  arch/powerpc/include/asm/mmzone.h             |   6 -
+>  arch/powerpc/mm/numa.c                        |  26 +-
+>  arch/riscv/include/asm/Kbuild                 |   1 +
+>  arch/riscv/include/asm/mmzone.h               |  13 -
+>  arch/riscv/include/asm/topology.h             |   4 +
+>  arch/s390/include/asm/Kbuild                  |   1 +
+>  arch/s390/include/asm/mmzone.h                |  17 -
+>  arch/s390/kernel/numa.c                       |   3 -
+>  arch/sh/include/asm/mmzone.h                  |   3 -
+>  arch/sh/mm/init.c                             |   7 +-
+>  arch/sh/mm/numa.c                             |   3 -
+>  arch/sparc/include/asm/mmzone.h               |   4 -
+>  arch/sparc/mm/init_64.c                       |  11 +-
+>  arch/x86/Kconfig                              |   9 +-
+>  arch/x86/include/asm/Kbuild                   |   1 +
+>  arch/x86/include/asm/mmzone.h                 |   6 -
+>  arch/x86/include/asm/mmzone_32.h              |  17 -
+>  arch/x86/include/asm/mmzone_64.h              |  18 -
+>  arch/x86/include/asm/numa.h                   |  24 +-
+>  arch/x86/include/asm/sparsemem.h              |   9 -
+>  arch/x86/mm/Makefile                          |   1 -
+>  arch/x86/mm/amdtopology.c                     |   1 +
+>  arch/x86/mm/numa.c                            | 618 +-----------------
+>  arch/x86/mm/numa_internal.h                   |  24 -
+>  drivers/acpi/numa/srat.c                      |   1 +
+>  drivers/base/Kconfig                          |   1 +
+>  drivers/base/arch_numa.c                      | 223 ++-----
+>  drivers/cxl/Kconfig                           |   2 +-
+>  drivers/dax/Kconfig                           |   2 +-
+>  drivers/of/of_numa.c                          |   1 +
+>  include/asm-generic/mmzone.h                  |   5 +
+>  include/asm-generic/numa.h                    |   6 +-
+>  include/linux/numa.h                          |   5 +
+>  include/linux/numa_memblks.h                  |  58 ++
+>  kernel/Makefile                               |   1 -
+>  kernel/numa.c                                 |  26 -
+>  mm/Kconfig                                    |  11 +
+>  mm/Makefile                                   |   3 +
+>  mm/numa.c                                     |  57 ++
+>  {arch/x86/mm =3D> mm}/numa_emulation.c          |  42 +-
+>  mm/numa_memblks.c                             | 565 ++++++++++++++++
+>  52 files changed, 847 insertions(+), 1070 deletions(-)
+>  delete mode 100644 arch/arm64/include/asm/mmzone.h
+>  delete mode 100644 arch/loongarch/include/asm/mmzone.h
+>  delete mode 100644 arch/riscv/include/asm/mmzone.h
+>  delete mode 100644 arch/s390/include/asm/mmzone.h
+>  delete mode 100644 arch/x86/include/asm/mmzone.h
+>  delete mode 100644 arch/x86/include/asm/mmzone_32.h
+>  delete mode 100644 arch/x86/include/asm/mmzone_64.h
+>  create mode 100644 include/asm-generic/mmzone.h
+>  create mode 100644 include/linux/numa_memblks.h
+>  delete mode 100644 kernel/numa.c
+>  create mode 100644 mm/numa.c
+>  rename {arch/x86/mm =3D> mm}/numa_emulation.c (94%)
+>  create mode 100644 mm/numa_memblks.c
+>=20
+>=20
+> base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
+
