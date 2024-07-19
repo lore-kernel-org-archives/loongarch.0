@@ -1,308 +1,163 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F229F29CE6
-	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 06:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65DF3F9EC
+	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 06:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721370226; cv=none; b=ghNxmGRfEnj8WhUV/UW8Ok60dHfkmdFkpG/65PfCU6LeJSxNw1lnQLxTjoTRAGHcO0X0oZD/CNk5SIyv0okB+5ytVmJ/ZA3B6qZ2GWn/I9MUDMTZBHDz0VCtg+kVmBfqMuoP6LcWiFmydQ+pCvO/8oACdmMi7zDyBpjQ4BT9d2o=
+	t=1721371548; cv=none; b=QpICbuME48TCWG7c8pQLyFkO/FaYEMGg7/Fe7nsRl92V+rXpeIM9JhBnfcOlAAMxRNTPJlsEtAXOKak6Mr9G5MLz5eiE5XxLjG+5YaX/Nn0qF3q4gfvsuuSAIwTi43+RBdDlZkqFol9rb8VLZL/6nEhoP4bKOkeuo7MW9PtTY54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721370226; c=relaxed/simple;
-	bh=Vt4mIRkn8xc9CmlhcrNUhRtAmdsPN12lwNVEnTVROjg=;
+	s=arc-20240116; t=1721371548; c=relaxed/simple;
+	bh=SkLVjyhDJtKPnHPxsgYnNVisePA45H9X3fSc8dGWfUE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OVoxR67RfpHTxEsmhJl67NPY8VK+rcOKzSgzxn/zy5pQXYTJ/Z8jZjXN776+UPS31l6UlvbyZ0lN0DtrgLH812qs08qgMx13dE9yZGZni0FfZaAGzBpTyYEFK8J4+fpYsdGhhzxoCEgUSXRcdMve6DORD3qv5kh2b091BikADqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVJ1AkcB; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=uD5072f/WO258MUeOtSlbfIsyMu4rli2Vs+wHzkHU8/k/L5UwtZ4ZRkCvyGbrowFAgPSAYuzmbE3m3jne/mLRO7MoYtDMda9loETPbE7lx+UCp6hyr48Qag2IhfZ1gZ4guvekhP5sH+uROzetGWpT68Iy0p7rKu083vI2UJSEBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqFmOCn3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVJ1AkcB"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee91d9cb71so18845081fa.0
-        for <loongarch@lists.linux.dev>; Thu, 18 Jul 2024 23:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721370222; x=1721975022; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=427LWVWLeZhkBwKLb51oPsGE5tn2zlb2p54ZRNRxztk=;
-        b=LVJ1AkcB69vq9f920Q07a7KATmM4UuNs0s20ZWhwWgPfUms2AMcGas7F3GzBhg0hWx
-         UsiuA7o70RJZopf+hOVuf+Y8Zm5eiF1wU6Li3AYN4dzSvwzjJo991GOHXG/C7N0ZqNxp
-         UxyLe2n4mC704nKoj4VXcifrqbe8mbq83Yqti1SVMHwQ+BlqlsK7CNoGmF+xTcNpPDo4
-         YsYTAxBX9ap5KPA5x/rHFuehmOPAEwVm53i0e6lcIdmVyOkVrkdjnxH6nuZihj346tHD
-         7Acq9OTTSZLSrlTipkuSSeECvABq5sDHUmQhwtvAA2LIAnkkqiGism25bZmOAACgHXvS
-         cs2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721370222; x=1721975022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=427LWVWLeZhkBwKLb51oPsGE5tn2zlb2p54ZRNRxztk=;
-        b=HrvJRlUgo+TJy+PpwklYskh0vPuv1icOOsiZGf0GB+E7Ij4Cy9tDihuIMI6NTU46F4
-         j+Kbi1aDHxYCkm9TMy4F2zmmSPAsHdGnOrmpB81PSnzxdH5WhPGo9lndFZ8yyp+PsdYx
-         OoRRmVxfPEgsyvDeA2EVZ4guWFv2CKcRr5OJpimxZX9H7wqKdoF5GlwgyOcoAXfz1CVy
-         2BS2DGSt9WHmveL7G4HaFy/AMLefV2+bhLd84dvi1H5LHu4hl0z/IVfh0bysWeh+fApC
-         ELfDWpBzZ2Kk1WUVyJvMKJGTzKmR/yUFhuc1d97aSPFvOHAEJw+IxuF7duWmvqFXeEYi
-         GKBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNEdEcdYCyNyw63QEIrwfkAgxRPO5Jf5nlBDEWZ+2K0C+WAzgtNKaC+GUHLvVbQpWPm4UsJZ2pGSjOOWzftMT2zwb15KbgpgUh
-X-Gm-Message-State: AOJu0YyMp8oENWDg9/NdhTooFO8/rBPkcDAn+humBnYtf/C7h5DNoa0R
-	2ghQCBNahc57KMkyzO4OWchkfcgvzP4caY5cCrDJ/x941Kzj8SLwfQ4dZ02wnYFjv5aL7+mO7Gx
-	q9kq7wQO3xN7AAQzOm2Ya9BTm11WA13aC2G4=
-X-Google-Smtp-Source: AGHT+IH5txtRBRZ3wRQoNhcn6wucKzbpc0F8FBggv57SHHFI5M4lMOxeVuTL7ydZcEacDT9MRatW0Bg5jGpm5hzfNOs=
-X-Received: by 2002:a2e:99d2:0:b0:2ee:8ce9:5ad2 with SMTP id
- 38308e7fff4ca-2ef05c9f9a4mr28529601fa.23.1721370221236; Thu, 18 Jul 2024
- 23:23:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqFmOCn3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EC9C4AF0E
+	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 06:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721371548;
+	bh=SkLVjyhDJtKPnHPxsgYnNVisePA45H9X3fSc8dGWfUE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UqFmOCn3A0LcFE/TGlYjPUnv9yQZEAiXZH004HNud165ZedOL0KLJLHxxFouyYHEs
+	 Tude8knwZuu18ga8TgCzHu98a8lTAprW0iGG7xrY9ax898P0RrT5ghdD7BwSrV3py2
+	 YUp4KWCOY5+gvduRHfIbdKAWYoP0UpFNoCrolVFL71FRP4xQO5N33wGLFFGnrnGhJ4
+	 DMLM8kVLXg6rDUL9NNaVQxGetwzZVb+43oCj/3OQJniLhdq9zfPNLhW9SmG3VtPh4r
+	 f8M9mjGt7U8GEvyKnC+aRhPoVBH+2zwv+ssRNnXB+qixF08TuZkk/D82YYD8obyJ+r
+	 IFD6RrbbwClCA==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5a2ffc34677so379341a12.2
+        for <loongarch@lists.linux.dev>; Thu, 18 Jul 2024 23:45:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7ZI1ezLAgaPQAPm3DLY2A+LXYioM0d+2r96CRQsLbyo2cEiiZ4TLL0Ir3yo0334uJ4zfVG9Cit4yBYfbwNeHj/LhSfol2QIBO
+X-Gm-Message-State: AOJu0Yy/00Db2vebchrwwzBfXCRPOqJJ32a+6jmOOdK4lLE17J0Dw3XQ
+	5hUMhKf18wuKM4Or29ee7kFeblboA2WLnlIfIYrOtrkdp5ir8ripFD+gwiG9gqLdPgqS9YFbvcF
+	xDTsM2hiUVYR2E4IU2ColfZrKyCQ=
+X-Google-Smtp-Source: AGHT+IFI7UE4htQrB90kB6YM3G32cXHi+BrN+bUwAbDBQSouVE8j4kP/Asy9+Y6DecKitNlDpBrHtgvXnb+iwYTrpe8=
+X-Received: by 2002:a05:6402:35ce:b0:5a2:fc48:db27 with SMTP id
+ 4fb4d7f45d1cf-5a2fc48e014mr783192a12.32.1721371546865; Thu, 18 Jul 2024
+ 23:45:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAhV-H678eySqhLr8cYhCsrJqm1acFcRAFJY_dQOpEHkRLVAGQ@mail.gmail.com>
- <20240718230348.GA570741@bhelgaas>
-In-Reply-To: <20240718230348.GA570741@bhelgaas>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Fri, 19 Jul 2024 14:23:28 +0800
-Message-ID: <CAAhV-H4Pr6hE3_KiHT8hUkbaTooN9irt7yQGfBvzdyvwkN12OA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev, linux-pci@vger.kernel.org, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
-	Sheng Wu <wusheng@loongson.cn>
+References: <20240719031427.119274-1-ruanjinjie@huawei.com>
+In-Reply-To: <20240719031427.119274-1-ruanjinjie@huawei.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Jul 2024 14:45:33 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6hCrm97eeFXGMQtUae+UHRkyE36byyEnjTae7=5Wou8A@mail.gmail.com>
+Message-ID: <CAAhV-H6hCrm97eeFXGMQtUae+UHRkyE36byyEnjTae7=5Wou8A@mail.gmail.com>
+Subject: Re: [PATCH v2] loongarch: Support RANDOMIZE_KSTACK_OFFSET
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: kernel@xen0n.name, kees@kernel.org, gustavoars@kernel.org, arnd@arndb.de, 
+	maobibo@loongson.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 19, 2024 at 7:03=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, Jul 18, 2024 at 09:01:17PM +0800, Huacai Chen wrote:
-> > On Thu, Jul 11, 2024 at 3:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > > On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
-> > > > On Wed, Jul 10, 2024 at 5:24=E2=80=AFAM Bjorn Helgaas <helgaas@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
-> > > > > > LS7A chipset can be used as a downstream bridge which connected=
- to a
-> > > > > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is use=
-d as the
-> > > > > > upward port. We should always enable MSI caps of this port, oth=
-erwise
-> > > > > > downstream devices cannot use MSI.
-> > > > >
-> > > > > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
-> > > > > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in =
-PCIe
-> > > > > terms, it is basically a PCI host bridge (Root Complex, if you pr=
-efer)
-> > > > > that is materialized as a PCI Endpoint?
-> > > >
-> > > > Now most of the existing LoongArch CPUs don't have an integrated PC=
-Ie
-> > > > RC, instead they have HyperTransport controllers. But the latest CP=
-U
-> > > > (Loongson-3C6000) has an integrated PCIe RC and removed
-> > > > HyperTransport.
-> > > >
-> > > > LS7A bridge can work together with both old (HT) CPUs and new (PCIe=
-)
-> > > > CPUs. If it is connected to an old CPU, its upstream port is a HT
-> > > > port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe por=
-t.
-> > > > If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
-> > > > upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and th=
-e
-> > > > HT port is idle.
-> > >
-> > > What does lspci look like for both the old HT and the new PCIe CPUs?
-> > When LS7A connect to HT,
-> >
-> > 00:00.0 Host bridge: Loongson Technology LLC Hyper Transport Bridge Con=
-troller
-> > 00:00.1 Host bridge: Loongson Technology LLC Hyper Transport Bridge
-> > Controller (rev 01)
-> > 00:00.2 Host bridge: Loongson Technology LLC Device 7a20 (rev 01)
-> > 00:00.3 Host bridge: Loongson Technology LLC Device 7a30
-> > 00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
-> > 00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (re=
-v 02)
-> > 00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (re=
-v 02)
-> > 00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (re=
-v 02)
-> > 00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (re=
-v 02)
-> > 00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
-> > Audio) Controller
-> > 00:08.0 SATA controller: Loongson Technology LLC Device 7a18
-> > 00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
-> > 00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
-> > 00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
-> > 00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
-> > 00:13.0 PCI bridge: Loongson Technology LLC Device 7a59
-> > 00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
-> > 00:19.0 USB controller: Loongson Technology LLC Device 7a34
-> > 02:00.0 Non-Volatile memory controller: Shenzhen Longsys Electronics
-> > Co., Ltd. SM2263EN/SM2263XT-based OEM NVME SSD (DRAM-less) (rev 03)
-> > 04:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> > [AMD/ATI] Oland [Radeon HD 8570 / R5 430 OEM / R7 240/340 / Radeon 520
-> > OEM] (rev 87)
-> > 04:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
-> > Oland/Hainan/Cape Verde/Pitcairn HDMI Audio [Radeon HD 7000 Series]
-> >
-> > -[0000:00]-+-00.0  0014:7a00
-> >            +-00.1  0014:7a10
-> >            +-00.2  0014:7a20
-> >            +-00.3  0014:7a30
-> >            +-03.0  0014:7a13
-> >            +-04.0  0014:7a24
-> >            +-04.1  0014:7a14
-> >            +-05.0  0014:7a24
-> >            +-05.1  0014:7a14
-> >            +-07.0  0014:7a07
-> >            +-08.0  0014:7a18
-> >            +-09.0-[01]--
-> >            +-0d.0-[02]----00.0  1d97:2263
-> >            +-0f.0-[03]--
-> >            +-10.0-[04]--+-00.0  1002:6611
-> >            |            \-00.1  1002:aab0
-> >            +-13.0-[05]--
-> >            +-16.0  0014:7a1b
-> >            \-19.0  0014:7a34
-> >
-> > DEV_LS7A_PCIE_PORT5 is 00:13.0
->
-> In this case, the DEV_LS7A_PCIE_PORT5 at 00:13.0 is a Header Type 1
-> (PCI-to-PCI bridge).  I assume it has a PCIe Capability that
-> identifies it as Root Port, and the secondary bus 05 is probably a
-> PCIe Link leading to a slot.
->
-> I found "lspci -v" output similar to this at
-> https://linux-hardware.org/?probe=3Dad154077da&log=3Dlspci_all
->
-> > When LS7A connect to PCIe,
-> >
-> > 00:00.0 Host bridge: Loongson Technology LLC Device 7a59
-> > 00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
-> > 00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (re=
-v 02)
-> > 00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (re=
-v 02)
-> > 00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (re=
-v 02)
-> > 00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (re=
-v 02)
-> > 00:06.0 Multimedia video controller: Loongson Technology LLC Device
-> > 7a25 (rev 01)
-> > 00:06.1 VGA compatible controller: Loongson Technology LLC Device 7a36 =
-(rev 02)
-> > 00:06.2 Audio device: Loongson Technology LLC Device 7a37
-> > 00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
-> > Audio) Controller
-> > 00:08.0 SATA controller: Loongson Technology LLC Device 7a18
-> > 00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
-> > 00:0a.0 PCI bridge: Loongson Technology LLC Device 7a39
-> > 00:0b.0 PCI bridge: Loongson Technology LLC Device 7a39
-> > 00:0c.0 PCI bridge: Loongson Technology LLC Device 7a39
-> > 00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
-> > 00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
-> > 00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
-> > 00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
-> > 00:17.0 ISA bridge: Loongson Technology LLC LPC Controller (rev 01)
-> > 00:19.0 USB controller: Loongson Technology LLC Device 7a34
-> > 00:1c.0 PCI bridge: Loongson Technology LLC Device 3c09
-> > 00:1d.0 IOMMU: Loongson Technology LLC Device 3c0f
-> > 00:1e.0 PCI bridge: Loongson Technology LLC Device 3c09
-> > 02:00.0 Ethernet controller: Device 1f0a:6801 (rev 01)
-> > 08:00.0 PCI bridge: Loongson Technology LLC Device 3c19
-> > 08:01.0 PCI bridge: Loongson Technology LLC Device 3c29
-> > 08:02.0 PCI bridge: Loongson Technology LLC Device 3c29
-> > 0c:00.0 PCI bridge: Loongson Technology LLC Device 3c19
-> > 0c:01.0 PCI bridge: Loongson Technology LLC Device 3c19
-> > 0c:04.0 IOMMU: Loongson Technology LLC Device 3c0f
-> >
-> > -[0000:00]-+-00.0  0014:7a59
-> >            +-03.0  0014:7a13
-> >            +-04.0  0014:7a24
-> >            +-04.1  0014:7a14
-> >            +-05.0  0014:7a24
-> >            +-05.1  0014:7a14
-> >            +-06.0  0014:7a25
-> >            +-06.1  0014:7a36
-> >            +-06.2  0014:7a37
-> >            +-07.0  0014:7a07
-> >            +-08.0  0014:7a18
-> >            +-09.0-[01]--
-> >            +-0a.0-[02]----00.0  1f0a:6801
-> >            +-0b.0-[03]--
-> >            +-0c.0-[04]--
-> >            +-0d.0-[05]--
-> >            +-0f.0-[06]--
-> >            +-10.0-[07]--
-> >            +-16.0  0014:7a1b
-> >            +-17.0  0014:7a0c
-> >            +-19.0  0014:7a34
-> >            +-1c.0-[08-0b]--+-00.0-[09]--
-> >            |               +-01.0-[0a]--
-> >            |               \-02.0-[0b]--
-> >            +-1d.0  0014:3c0f
-> >            \-1e.0-[0c-0e]--+-00.0-[0d]--
-> >                            +-01.0-[0e]--
-> >                            \-04.0  0014:3c0f
-> >
-> > DEV_LS7A_PCIE_PORT5 becomes 00:00.0
->
-> In this case, the DEV_LS7A_PCIE_PORT5 at 00:00.0 looks like a Header
-> Type 0 device (not a bridge), and the bus 00 it is on is not a normal
-> PCIe Link.  Since it doesn't connect to a PCIe Link, 00:00.0 might not
-> have a PCIe Capability at all, or it could be an RCiEP.  Or it's
-> possible it has a PCIe Capability left over from the old model that
-> says it's a Root Port, although this would potentially confuse an OS.
->
-> The other bridges (00:09.0, 00:0a.0, etc) are probably PCIe Root
-> Ports, which are logically part of the Root Complex, so the Root
-> Complex would be implemented partly in the new CPU and partly in the
-> LS7A.
->
-> The connection between the new CPU and the LS7A might be electrically
-> similar to PCIe, but it's not part of a PCIe hierarchy that Linux
-> sees.  That connection would have to be managed in some non-PCI way,
-> the same as all PCI host bridges, i.e., by firmware, ACPI, or a Linux
-> native host bridge driver like pci-loongson.c.
->
-> Here's the current commit log:
->
->   The LS7A chipset can be used as a downstream bridge that connects to
->   a high-level host bridge, and in such case the DEV_LS7A_PCIE_PORT5
->   is used as the upstream port.
->
->   Thus, always enable MSI caps of this port, otherwise downstream
->   devices cannot use MSI.
->
-> In this configuration, DEV_LS7A_PCIE_PORT5 is not a PCI-to-PCI bridge
-> itself.  It might be some sort of downstream end of a connection from
-> the CPU, but that's not really relevant here.  And DEV_LS7A_PCIE_PORT5
-> doesn't have any devices directly downstream from it.
->
-> I think something like this would be clearer:
->
->   The LS7A chipset can be used as part of a PCIe Root Complex with
->   Loongson-3C6000 and similar CPUs.  In this case, DEV_LS7A_PCIE_PORT5
->   has a PCI_CLASS_BRIDGE_HOST class code, and it is a Type 0 Function
->   whose config space provides access to Root Complex registers.
->
->   The DEV_LS7A_PCIE_PORT5 has an MSI Capability, and its MSI Enable
->   bit must be set before other devices below the Root Complex can use
->   MSI.  This is not the standard PCI behavior of MSI Enable, so the
->   normal PCI MSI code does not set it.
->
->   Set the DEV_LS7A_PCIE_PORT5 MSI Enable bit via a quirk so other
->   devices below the Root Complex can use MSI.
->
-> What do you think?
+Applied with small changes, thanks.
 
-Yes, that's more better.
+https://github.com/chenhuacai/linux/commit/a55a07439613689f0890c9482b9c5f76=
+dec255dd
 
 Huacai
+
+On Fri, Jul 19, 2024 at 11:09=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com=
+> wrote:
+>
+> Add support of kernel stack offset randomization while handling syscall,
+> the offset is defaultly limited by KSTACK_OFFSET_MAX().
+>
+> In order to avoid trigger stack canaries (due to __builtin_alloca) and
+> slowing down the entry path, use __no_stack_protector attribute to
+> disable stack protector for do_syscall() at function level.
+>
+> With this patch, the REPORT_STACK test show that:
+>         `loongarch64 bits of stack entropy: 7`
+>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+> ---
+> v2:
+> - get_random_u16() -> drdtime().
+> - Add Suggested-by.
+> ---
+>  arch/loongarch/Kconfig          |  1 +
+>  arch/loongarch/kernel/syscall.c | 17 ++++++++++++++++-
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ddc042895d01..fcf6451b4e38 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -106,6 +106,7 @@ config LOONGARCH
+>         select HAVE_ARCH_KFENCE
+>         select HAVE_ARCH_KGDB if PERF_EVENTS
+>         select HAVE_ARCH_MMAP_RND_BITS if MMU
+> +       select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>         select HAVE_ARCH_SECCOMP
+>         select HAVE_ARCH_SECCOMP_FILTER
+>         select HAVE_ARCH_TRACEHOOK
+> diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/sysc=
+all.c
+> index ec17cd5163b7..9df81197a09b 100644
+> --- a/arch/loongarch/kernel/syscall.c
+> +++ b/arch/loongarch/kernel/syscall.c
+> @@ -9,11 +9,13 @@
+>  #include <linux/entry-common.h>
+>  #include <linux/errno.h>
+>  #include <linux/linkage.h>
+> +#include <linux/randomize_kstack.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/unistd.h>
+>
+>  #include <asm/asm.h>
+>  #include <asm/exception.h>
+> +#include <asm/loongarch.h>
+>  #include <asm/signal.h>
+>  #include <asm/switch_to.h>
+>  #include <asm-generic/syscalls.h>
+> @@ -39,7 +41,7 @@ void *sys_call_table[__NR_syscalls] =3D {
+>  typedef long (*sys_call_fn)(unsigned long, unsigned long,
+>         unsigned long, unsigned long, unsigned long, unsigned long);
+>
+> -void noinstr do_syscall(struct pt_regs *regs)
+> +__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
+>  {
+>         unsigned long nr;
+>         sys_call_fn syscall_fn;
+> @@ -55,11 +57,24 @@ void noinstr do_syscall(struct pt_regs *regs)
+>
+>         nr =3D syscall_enter_from_user_mode(regs, nr);
+>
+> +       add_random_kstack_offset();
+> +
+>         if (nr < NR_syscalls) {
+>                 syscall_fn =3D sys_call_table[nr];
+>                 regs->regs[4] =3D syscall_fn(regs->orig_a0, regs->regs[5]=
+, regs->regs[6],
+>                                            regs->regs[7], regs->regs[8], =
+regs->regs[9]);
+>         }
+>
+> +       /*
+> +        * This value will get limited by KSTACK_OFFSET_MAX(), which is 1=
+0
+> +        * bits. The actual entropy will be further reduced by the compil=
+er
+> +        * when applying stack alignment constraints: 16-byte (i.e. 4-bit=
+)
+> +        * aligned, which will remove the 4 low bits from any entropy cho=
+sen
+> +        * here.
+> +        *
+> +        * The resulting 6 bits of entropy is seen in SP[9:4].
+> +        */
+> +       choose_random_kstack_offset(drdtime());
+> +
+>         syscall_exit_to_user_mode(regs);
+>  }
+> --
+> 2.34.1
+>
