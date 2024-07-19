@@ -1,138 +1,72 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A836313D53F;
-	Fri, 19 Jul 2024 15:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F328443D;
+	Fri, 19 Jul 2024 16:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721404311; cv=none; b=dyvhp8n4isR69w+qoUlFiRRU/Jeft3/evG/U9m3Cd8LIaiOgUwGyim2lcT3C+cVG0sghnDVeBtUnCjdtoLGSgi9Po/YiMQSDjFGXXs7Y/2ceeW/f0HpuYW48hv0aTjh+zBV3ChDhgBlh8N8Q9Kf3nteI4W+vjxNe+LrMiMbquxM=
+	t=1721404885; cv=none; b=TGSAQUj/sP978Uf7XkV13MgxpkPU/kpsJnP5Irc3T2G3iwXt6lCPmg0M4l9SJ5mgZAbl14PjWe58PVvksVk5MD4bppquIor2W2CX3L4UkWDW8Es/ya2Y5GTcvhhXjaRZepijKuINjECN1y/VgeXnqTqEGSVLbDZ+PJ7Z69386D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721404311; c=relaxed/simple;
-	bh=AlQm9yZ2sFI01jHgI7WArkoI84hOnV0JYdzW/8DBq5k=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xa8q2sxdhQavGJBA3XJVAuhhq1Gt7TAqTif2uLYo+8JRenr54zF5t44s8bUvngn4s/GEHnaDUXz40+FUV9Cea7YuRITWHwJBbQhFUK/I253EkiCuwZXyTtr32rGH22j/B25PkBhrM0uQYg8eW1vhGTkAWND2TTBKMsMr44JdfLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WQYyl1P08z6J67T;
-	Fri, 19 Jul 2024 23:49:51 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id BC470140517;
-	Fri, 19 Jul 2024 23:51:45 +0800 (CST)
-Received: from localhost (10.48.157.16) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 19 Jul
- 2024 16:51:44 +0100
-Date: Fri, 19 Jul 2024 16:51:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: David Hildenbrand <david@redhat.com>
-CC: Mike Rapoport <rppt@kernel.org>, <linux-kernel@vger.kernel.org>,
-	"Alexander Gordeev" <agordeev@linux.ibm.com>, Andreas Larsson
-	<andreas@gaisler.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd
- Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Catalin Marinas
-	<catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Williams <dan.j.williams@intel.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Heiko Carstens
-	<hca@linux.ibm.com>, "Huacai Chen" <chenhuacai@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, John Paul Adrian
- Glaubitz <glaubitz@physik.fu-berlin.de>, Michael Ellerman
-	<mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
-	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
-	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-	<sparclinux@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH 05/17] arch, mm: pull out allocation of NODE_DATA to
- generic code
-Message-ID: <20240719165143.0000002e@Huawei.com>
-In-Reply-To: <96850252-a49f-4d78-a94b-a9a25e3f2bd5@redhat.com>
-References: <20240716111346.3676969-1-rppt@kernel.org>
-	<20240716111346.3676969-6-rppt@kernel.org>
-	<220da8ed-337a-4b1e-badf-2bff1d36e6c3@redhat.com>
-	<Zpi-HAb7EBxrZBtK@kernel.org>
-	<96850252-a49f-4d78-a94b-a9a25e3f2bd5@redhat.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1721404885; c=relaxed/simple;
+	bh=p94O4KFwhP6QRgPpW/E+AEjxs45NbRS4KUZpfxl0EpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwzIddx445KCB3Kv7/dLHLdA2Nk6fidS7a6DoLtBPwSISfekVe5NE+NmBfBmzo9Q3FyqGl8D7YPt1U64wg1yx48TZsewXSxbNQlUW5N4xH9mqY9AyrRg3NSzcg8ER5eXm1SAnlk0dlgaBLb9BiecrShCyUETRuHqNCLK2cuW3PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfYqpGRV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfYqpGRV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1DA9C32782;
+	Fri, 19 Jul 2024 16:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721404884;
+	bh=p94O4KFwhP6QRgPpW/E+AEjxs45NbRS4KUZpfxl0EpE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HfYqpGRVvdRSqdfowho0xqO+1L3x2Xj/AEV9Twi30Em3fHz8gr1bmmIKxmCAnE//B
+	 GRWB5IgPGV+v0HmgizldGBkAmc9J7AD+x9f2TJu/U/eFy2EYpNJf4Bkttpu8CLPV93
+	 Cke7sMkN5Q0PTe3jpvJlHmL3x3lSU3PPovF7NN6Q20leaGdTMiNYrXJ1o1Nn8Y7h8n
+	 +YzRnyAnqxrwCL0zn8ogAqaYSNgvtb6Or2MkMzppzuJAUAknuh77bITL5Qor000K38
+	 ZnR0+PZZcQ6yB8mQoTH356KAu1Kme91edCQCWu5QB3D1iTmHM7NHRig/gF97ZwirmW
+	 RIyw36h6jMR0g==
+Date: Fri, 19 Jul 2024 09:01:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, gustavoars@kernel.org,
+	arnd@arndb.de, maobibo@loongson.cn, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] loongarch: Support RANDOMIZE_KSTACK_OFFSET
+Message-ID: <202407190858.3097E9AF98@keescook>
+References: <20240719031427.119274-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240719031427.119274-1-ruanjinjie@huawei.com>
 
-On Fri, 19 Jul 2024 17:07:35 +0200
-David Hildenbrand <david@redhat.com> wrote:
-
-> >>> -	 * Allocate node data.  Try node-local memory and then any node.
-> >>> -	 * Never allocate in DMA zone.
-> >>> -	 */
-> >>> -	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-> >>> -	if (!nd_pa) {
-> >>> -		pr_err("Cannot find %zu bytes in any node (initial node: %d)\n",
-> >>> -		       nd_size, nid);
-> >>> -		return;
-> >>> -	}
-> >>> -	nd = __va(nd_pa);
-> >>> -
-> >>> -	/* report and initialize */
-> >>> -	printk(KERN_INFO "NODE_DATA(%d) allocated [mem %#010Lx-%#010Lx]\n", nid,
-> >>> -	       nd_pa, nd_pa + nd_size - 1);
-> >>> -	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
-> >>> -	if (tnid != nid)
-> >>> -		printk(KERN_INFO "    NODE_DATA(%d) on node %d\n", nid, tnid);
-> >>> -
-> >>> -	node_data[nid] = nd;
-> >>> -	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-> >>> -
-> >>> -	node_set_online(nid);
-> >>> -}
-> >>> -
-> >>>    /**
-> >>>     * numa_cleanup_meminfo - Cleanup a numa_meminfo
-> >>>     * @mi: numa_meminfo to clean up
-> >>> @@ -571,6 +538,7 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
-> >>>    			continue;
-> >>>    		alloc_node_data(nid);
-> >>> +		node_set_online(nid);
-> >>>    	}  
-> >>
-> >> I can spot that we only remove a single node_set_online() call from x86.
-> >>
-> >> What about all the other architectures? Will there be any change in behavior
-> >> for them? Or do we simply set the nodes online later once more?  
-> > 
-> > On x86 node_set_online() was a part of alloc_node_data() and I moved it
-> > outside so it's called right after alloc_node_data(). On other
-> > architectures the allocation didn't include that call, so there should be
-> > no difference there.  
+On Fri, Jul 19, 2024 at 11:14:27AM +0800, Jinjie Ruan wrote:
+> Add support of kernel stack offset randomization while handling syscall,
+> the offset is defaultly limited by KSTACK_OFFSET_MAX().
 > 
-> But won't their arch code try setting the nodes online at a later stage?
+> In order to avoid trigger stack canaries (due to __builtin_alloca) and
+> slowing down the entry path, use __no_stack_protector attribute to
+> disable stack protector for do_syscall() at function level.
 > 
-> And I think, some architectures only set nodes online conditionally
-> (see most other node_set_online() calls).
-> 
-> Sorry if I'm confused here, but with now unconditional node_set_online(), won't
-> we change the behavior of other architectures?
-This is moving x86 code to x86 code, not a generic location
-so how would that affect anyone else? Their onlining should be same as
-before.
+> With this patch, the REPORT_STACK test show that:
+> 	`loongarch64 bits of stack entropy: 7`
 
-The node onlining difference are a pain (I recall that fun from adding
-generic initiators) as different ordering on x86 and arm64 at least.
-
-Jonathan
+I suspect this will report the correct "6" after now that this commit
+has landed:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=872bb37f6829d4f7f3ed5afe2786add3d4384b4b
 
 > 
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
 
+Thanks for adding this and getting it tested!
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-- 
+Kees Cook
