@@ -1,134 +1,107 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6BE8F45
-	for <loongarch@lists.linux.dev>; Fri, 19 Jul 2024 03:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A678A35;
+	Fri, 19 Jul 2024 05:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721358595; cv=none; b=fqgy8of2sxTvoi+79F1PQtTtf88LJxtzU/zQHVmxwGViwRJWQmUUkViolTa76BkgjEwo4Iws68ckPxObAVGOeHMr0uxb6gMLP5pfafx7D/xXuHlpfGt4X2oC1si4Q3cWmGmFVRERZoBkgzX4kVpSZcjaA+NSPZK1Tnv3o99B0Bc=
+	t=1721368713; cv=none; b=XP3ID2nPSH2aLtgUDGiUiaUwOhPe0Jd6W+INdwDqAA4FOBlIs05+6Rl2aXjjhAXN9fgFp3u775emQ9VQWL5Dide918X1FfzW0ZVL5AMFkilCiClxhOVgW7k85u6SJJ9cgHbaOS4ZkO58bzSYqWxo/0OcX8Qs5pLvkxdTnGEcGTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721358595; c=relaxed/simple;
-	bh=0NipiEREOOjna/QPiVAGaJs9rCAbwvD6mTE4Or+JFkk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rxMgOgRuE06LiZ7vbDnX0A0J2MUdiezm7OcyMry0jFN20/PGuKt0pYRBMLeLlLG/zHc/Na8ns+00tMADtvgZ2n5PtS0mIIPSNlciQuCbmm1EzY7OqmXWuRBpJgxHGP72dWQCtwysYBBAVQPIndluwTbr2EEy6c+9/pOn/H+3gxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WQF4z5DqZznbfc;
-	Fri, 19 Jul 2024 11:09:07 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6F8E9180106;
-	Fri, 19 Jul 2024 11:09:33 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 19 Jul
- 2024 11:09:32 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <kees@kernel.org>,
-	<gustavoars@kernel.org>, <arnd@arndb.de>, <maobibo@loongson.cn>,
-	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v2] loongarch: Support RANDOMIZE_KSTACK_OFFSET
-Date: Fri, 19 Jul 2024 11:14:27 +0800
-Message-ID: <20240719031427.119274-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721368713; c=relaxed/simple;
+	bh=UQznUIdoHoSsnmJ9kRgND1mWM0Wr77U9QEYTciDIo28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZguJpHnX8fe8y7f/Qsn9brJu52qV8u2yaL50sznIj20S6Yvwl+AtUlL6yj9kgVEg6SoJT1sky3xSw9eq2410xHQaeJPFn7M4gpzEY2uFDb61IjzPKpNRp7mIeuz+sljKXjAka1KP0IneJmvv5NwCqdey6kKs3u+WMVmTpbFqQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRFthwaJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRFthwaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BCBC32782;
+	Fri, 19 Jul 2024 05:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721368712;
+	bh=UQznUIdoHoSsnmJ9kRgND1mWM0Wr77U9QEYTciDIo28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YRFthwaJnqijAayKx7Nr5Wz+cg7XtkKFYmu9Y+J8JOSZNkKtcyO0oPxjnmHQb5MAT
+	 +SzEDWjweXYNk8r/wQxrhgFgyaJzF2zS7ds36V+HfUkLd39/F0Jm+9Xel/QgVHiXrN
+	 u8dtVDBEcxTLfuJ09zphSq9TFj0SodZS5yh/iSTnCqMAmk0l0hgKZ81y9JEQyQLhxw
+	 sglzaaOKdzC/1FVu4YR8/PhMdvuoqPLRhEF6pZyxCI7bcLrHj8JLnnhhcpRX6xDDkZ
+	 xqyY0lHVXYowiKXrRiLwZxIMlHLP+cfRIEOh0c7+hIF8r+/xRAu73hBTRRXaUjI764
+	 7OCKjCrNEM7Gw==
+Date: Fri, 19 Jul 2024 08:55:27 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH 13/17] mm: move numa_distance and related code from x86
+ to numa_memblks
+Message-ID: <Zpn_z_NgzTl_db5t@kernel.org>
+References: <20240716111346.3676969-1-rppt@kernel.org>
+ <20240716111346.3676969-14-rppt@kernel.org>
+ <8b402e92-d874-4b30-9108-f521bd20d36c@sifive.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b402e92-d874-4b30-9108-f521bd20d36c@sifive.com>
 
-Add support of kernel stack offset randomization while handling syscall,
-the offset is defaultly limited by KSTACK_OFFSET_MAX().
+On Thu, Jul 18, 2024 at 04:46:17PM -0500, Samuel Holland wrote:
+> On 2024-07-16 6:13 AM, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > Move code dealing with numa_distance array from arch/x86 to
+> > mm/numa_memblks.c
+> > 
+> > This code will be later reused by arch_numa.
+> > 
+> > No functional changes.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > ---
+> >  arch/x86/mm/numa.c                   | 101 ---------------------------
+> >  arch/x86/mm/numa_internal.h          |   2 -
+> >  include/linux/numa_memblks.h         |   4 ++
+> >  {arch/x86/mm => mm}/numa_emulation.c |   0
+> >  mm/numa_memblks.c                    | 101 +++++++++++++++++++++++++++
+> >  5 files changed, 105 insertions(+), 103 deletions(-)
+> >  rename {arch/x86/mm => mm}/numa_emulation.c (100%)
+> 
+> The numa_emulation.c rename looks like it should be part of the next commit, not
+> this one.
 
-In order to avoid trigger stack canaries (due to __builtin_alloca) and
-slowing down the entry path, use __no_stack_protector attribute to
-disable stack protector for do_syscall() at function level.
+Right, thanks!
 
-With this patch, the REPORT_STACK test show that:
-	`loongarch64 bits of stack entropy: 7`
-
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Huacai Chen <chenhuacai@kernel.org>
----
-v2:
-- get_random_u16() -> drdtime().
-- Add Suggested-by.
----
- arch/loongarch/Kconfig          |  1 +
- arch/loongarch/kernel/syscall.c | 17 ++++++++++++++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ddc042895d01..fcf6451b4e38 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -106,6 +106,7 @@ config LOONGARCH
- 	select HAVE_ARCH_KFENCE
- 	select HAVE_ARCH_KGDB if PERF_EVENTS
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
-+	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index ec17cd5163b7..9df81197a09b 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -9,11 +9,13 @@
- #include <linux/entry-common.h>
- #include <linux/errno.h>
- #include <linux/linkage.h>
-+#include <linux/randomize_kstack.h>
- #include <linux/syscalls.h>
- #include <linux/unistd.h>
- 
- #include <asm/asm.h>
- #include <asm/exception.h>
-+#include <asm/loongarch.h>
- #include <asm/signal.h>
- #include <asm/switch_to.h>
- #include <asm-generic/syscalls.h>
-@@ -39,7 +41,7 @@ void *sys_call_table[__NR_syscalls] = {
- typedef long (*sys_call_fn)(unsigned long, unsigned long,
- 	unsigned long, unsigned long, unsigned long, unsigned long);
- 
--void noinstr do_syscall(struct pt_regs *regs)
-+__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
- {
- 	unsigned long nr;
- 	sys_call_fn syscall_fn;
-@@ -55,11 +57,24 @@ void noinstr do_syscall(struct pt_regs *regs)
- 
- 	nr = syscall_enter_from_user_mode(regs, nr);
- 
-+	add_random_kstack_offset();
-+
- 	if (nr < NR_syscalls) {
- 		syscall_fn = sys_call_table[nr];
- 		regs->regs[4] = syscall_fn(regs->orig_a0, regs->regs[5], regs->regs[6],
- 					   regs->regs[7], regs->regs[8], regs->regs[9]);
- 	}
- 
-+	/*
-+	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
-+	 * bits. The actual entropy will be further reduced by the compiler
-+	 * when applying stack alignment constraints: 16-byte (i.e. 4-bit)
-+	 * aligned, which will remove the 4 low bits from any entropy chosen
-+	 * here.
-+	 *
-+	 * The resulting 6 bits of entropy is seen in SP[9:4].
-+	 */
-+	choose_random_kstack_offset(drdtime());
-+
- 	syscall_exit_to_user_mode(regs);
- }
 -- 
-2.34.1
-
+Sincerely yours,
+Mike.
