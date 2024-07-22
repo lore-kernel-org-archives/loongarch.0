@@ -1,42 +1,33 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0923C23DE
-	for <loongarch@lists.linux.dev>; Mon, 22 Jul 2024 10:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324D16B74D;
+	Mon, 22 Jul 2024 14:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721644063; cv=none; b=OftU2X4XYZK02Bv8NegIKEkVHzHlTNm7YnooNkla1dW21HNnHd8cDwhufpq4UZCJoCR6oSYnCbeyErDfShhC0FqqoWWIaoQ5/HNXn5zWeHUR11aW2MMcD/HR4241yPaRZsjqYMVsA684Ij7ncYe8mNXPukqXNuqhBYaIMXpipv4=
+	t=1721659713; cv=none; b=nuSNmWOK3JjoczE2Q8UJi6SAvFL6mcJYbFanP3ePWq7qFM95pQyn4feDUrpoTMieBd1BecMSsCrvwLIr6j0Shs71B5yp89llqD0RLfJ44EuTLljWqvvDvb1kZ0cP+iNZ6e+MpHsNBPapNDric0aAivA9ZDjvdE7K70cIHiqHN5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721644063; c=relaxed/simple;
-	bh=1FRGGeU+wym2xELmubxiqoYTkV0hARifRn2Z6nZoCfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lagd4ghsPTWgIoHsxj2zyk+LjQHNetp3d9cCpX6ghMP682AZu894ta+ZABOWlYNl71XxFYSKJAmhOSagdOJKIqqDDGhyUzF0xRJoHIcGJtAXkpjTcRcfcJiYRHKBg1psQXylI3Wxa2G20MUHjoOeFHP+CX0Q0/CPx9WCGA0mhMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtpsz1t1721643990twg6sco
-X-QQ-Originating-IP: ZQWrQ315tVoU0wN0faBAvkhf0b2ujopfRfQI60mXTkc=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Ò», 22 7ÔÂ 2024 18:26:28 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6738067066252403474
-From: WangYuli <wangyuli@uniontech.com>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1721659713; c=relaxed/simple;
+	bh=cuzDDnA3GBV7pB5L/CiGYs8DablqcIWcQ3YQbmqoty0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pK1xQscqyWJl3VI3DkKq4JXosTwD3Y6dGceqBUKwMgZcrkoaiQsDeNhu/g4zENEvdcYhwUimUa3TLmMRIlVOMYqzty5felWo5nSj3mEh3s+TvaL7g0B42anhKGDQ4Wt96aYybKhxiusVRZlspFEKVTtydedifX5sUgS0hkVUzAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0280C116B1;
+	Mon, 22 Jul 2024 14:48:30 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com,
-	chao.p.peng@linux.intel.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] KVM: Loongarch: remove unnecessary definition of KVM_PRIVATE_MEM_SLOTS
-Date: Mon, 22 Jul 2024 18:26:24 +0800
-Message-ID: <09A6BAA84F3EF573+20240722102624.293359-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.11
+Date: Mon, 22 Jul 2024 22:48:22 +0800
+Message-ID: <20240722144822.4040791-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,35 +35,97 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-"KVM_PRIVATE_MEM_SLOTS" is renamed as "KVM_INTERNAL_MEM_SLOTS".
+The following changes since commit 0c3836482481200ead7b416ca80c68a29cfdaabd:
 
-KVM_PRIVATE_MEM_SLOTS defaults to zero, so it is not necessary to
-define it in Loongarch's asm/kvm_host.h.
+  Linux 6.10 (2024-07-14 15:43:32 -0700)
 
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=bdd1c37a315bc50ab14066c4852bc8dcf070451e
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b075450868dbc0950f0942617f222eeb989cad10
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/loongarch/include/asm/kvm_host.h | 2 --
- 1 file changed, 2 deletions(-)
+are available in the Git repository at:
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index fe38f98eeff8..ce3d36a890aa 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -26,8 +26,6 @@
- 
- #define KVM_MAX_VCPUS			256
- #define KVM_MAX_CPUCFG_REGS		21
--/* memory slots that does not exposed to userspace */
--#define KVM_PRIVATE_MEM_SLOTS		0
- 
- #define KVM_HALT_POLL_NS_DEFAULT	500000
- #define KVM_REQ_TLB_FLUSH_GPA		KVM_ARCH_REQ(0)
--- 
-2.43.4
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.11
 
+for you to fetch changes up to 998b17d4440b8559a8bf4926e86f493101995519:
+
+  LoongArch: Make the users of larch_insn_gen_break() constant (2024-07-20 22:41:07 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.11
+
+1, Define __ARCH_WANT_NEW_STAT in unistd.h;
+2, Always enumerate MADT and setup logical-physical CPU mapping;
+3, Add irq_work support via self IPIs;
+4, Add RANDOMIZE_KSTACK_OFFSET support;
+5, Add ARCH_HAS_PTE_DEVMAP support;
+6, Add ARCH_HAS_DEBUG_VM_PGTABLE support;
+7, Add writecombine support for DMW-based ioremap();
+8, Add architectural preparation for CPUFreq;
+9, Add ACPI standard hardware register based S3 support;
+10, Add support for relocating the kernel with RELR relocation;
+11, Some bug fixes and other small changes.
+
+----------------------------------------------------------------
+Huacai Chen (10):
+      Merge tag 'asm-generic-6.11' into loongarch-next
+      LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
+      LoongArch: Always enumerate MADT and setup logical-physical CPU mapping
+      LoongArch: Add irq_work support via self IPIs
+      LoongArch: Add ARCH_HAS_PTE_DEVMAP support
+      LoongArch: Add ARCH_HAS_DEBUG_VM_PGTABLE support
+      LoongArch: Add writecombine support for DMW-based ioremap()
+      LoongArch: Add architectural preparation for CPUFreq
+      LoongArch: Automatically disable KASLR for hibernation
+      LoongArch: Use correct API to map cmdline in relocate_kernel()
+
+Jiaxun Yang (1):
+      LoongArch: Add ACPI standard hardware register based S3 support
+
+Jinjie Ruan (1):
+      LoongArch: Add RANDOMIZE_KSTACK_OFFSET support
+
+Oleg Nesterov (1):
+      LoongArch: Make the users of larch_insn_gen_break() constant
+
+Tiezhu Yang (1):
+      LoongArch: Check TIF_LOAD_WATCH to enable user space watchpoint
+
+WANG Rui (1):
+      LoongArch: Use rustc option -Zdirect-access-external-data
+
+Xi Ruoyao (2):
+      LoongArch: Remove a redundant checking in relocator
+      LoongArch: Add support for relocating the kernel with RELR relocation
+
+ .../debug/debug-vm-pgtable/arch-support.txt        |  2 +-
+ arch/loongarch/Kconfig                             |  5 +++
+ arch/loongarch/Makefile                            |  3 +-
+ arch/loongarch/include/asm/addrspace.h             |  4 ++
+ arch/loongarch/include/asm/asmmacro.h              |  1 +
+ arch/loongarch/include/asm/hardirq.h               |  3 +-
+ arch/loongarch/include/asm/inst.h                  |  3 ++
+ arch/loongarch/include/asm/io.h                    | 10 ++++-
+ arch/loongarch/include/asm/irq_work.h              | 10 +++++
+ arch/loongarch/include/asm/loongarch.h             | 13 +++++-
+ arch/loongarch/include/asm/pgtable-bits.h          |  6 ++-
+ arch/loongarch/include/asm/pgtable.h               | 19 ++++++++
+ arch/loongarch/include/asm/setup.h                 |  5 +++
+ arch/loongarch/include/asm/smp.h                   |  2 +
+ arch/loongarch/include/asm/stackframe.h            | 11 +++++
+ arch/loongarch/include/asm/unistd.h                |  1 +
+ arch/loongarch/include/asm/uprobes.h               |  4 +-
+ arch/loongarch/kernel/Makefile.syscalls            |  3 +-
+ arch/loongarch/kernel/acpi.c                       | 22 ++++++---
+ arch/loongarch/kernel/head.S                       | 11 +----
+ arch/loongarch/kernel/hw_breakpoint.c              |  2 +-
+ arch/loongarch/kernel/kprobes.c                    |  4 +-
+ arch/loongarch/kernel/paravirt.c                   |  6 +++
+ arch/loongarch/kernel/ptrace.c                     |  3 ++
+ arch/loongarch/kernel/relocate.c                   | 52 ++++++++++++++++++++--
+ arch/loongarch/kernel/setup.c                      |  4 +-
+ arch/loongarch/kernel/smp.c                        | 21 +++++++--
+ arch/loongarch/kernel/syscall.c                    | 22 ++++++++-
+ arch/loongarch/kernel/vmlinux.lds.S                |  8 ++++
+ arch/loongarch/power/platform.c                    | 37 ++++++++++++---
+ arch/loongarch/power/suspend_asm.S                 |  8 +---
+ drivers/firmware/efi/libstub/loongarch.c           |  2 +
+ 32 files changed, 256 insertions(+), 51 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/irq_work.h
