@@ -1,136 +1,98 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFB14C587
-	for <loongarch@lists.linux.dev>; Tue, 23 Jul 2024 06:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A672A13CF85;
+	Tue, 23 Jul 2024 07:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721717231; cv=none; b=jqI65ciMYkKJl+ch/AgjEWp7gZvvodcgqCbZ1gOQWhx78SLE+zANA6xTyHfTLow6t6yPLAi3myRcgurMhbkkwZlZEncgDZ5HX4Q+5WyX7iC6/55hN0xNWNnZsZ6gM1qyQ/IwjbeBUTiEVA7ktPjXu4b4xI4eIqNnJoLkVQ0S/Ik=
+	t=1721720311; cv=none; b=tCyQe2SsxD7Ognz4PIrP5J+eFe2kIKpwyz/rKXY6uEXg6WyOjyzLWO37cdcklP50gjGozAo/nlDFzn29eeIkTfi7e6mDt4o9LlB/O6q69Iq4YaHadDqZlaEitOTS7CwQemZn8HELvybnCkKU34Yz1U6NGaUt0YxHzUG3o6lWLMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721717231; c=relaxed/simple;
-	bh=rdsl43wqViNyOkcSob+ypx/bgmSJeTjyX/tPYHtox2Q=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=s2y9DYFyBT9H7rj485eCQL/j6rY1Qs7iUDBpEROlFCt4EO63+GnQV2UNg/ZAyfAfccMcSfLjI3RWxUFtSrFzr+PC9nzj+eBb3lxWerrTifWSzXUIyZgiUjcCUx0jubvbVLIOiV6rn7WJmNE+o8y5m4wTL9U6jr9Afj1cKtfGkKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=R/AJStE6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DNBov5Au; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="R/AJStE6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DNBov5Au"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 2119C1140178;
-	Tue, 23 Jul 2024 02:47:08 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute5.internal (MEProxy); Tue, 23 Jul 2024 02:47:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1721717228;
-	 x=1721803628; bh=s07so1DLRy4G0iBOTj15rTc5zGbN0MeWZMyDnJgS5y0=; b=
-	R/AJStE6B4apXHYoj6yADOE4yfkSFR3GJ42B68lCaQvbedvfdT00hLU299zvgXsj
-	QOmPV8F/BocwvTX2Ys6kkn60x4T6UzeWml78kPLsojhBqbE64Sr8WnuXedugeX2E
-	PA4tSHz4xHGxVAQfg0dRgHMEsQIUGOBRKJsJyMEWn0+EUnpuO0yZ3wwcBEB7p8UN
-	oJu9BPFE356lwgmffhi/vOrfTa8JFCk8ukIUVzPueRJpAsas4YSnGlh+N/AUefvT
-	hrLFKkgbigOw5Txh1eBxGpm4pJhXzUdgS9KTvyLJTpmr9YHSw4Vc8EiVU9hYkw7g
-	1gGoJpkiGppj3OxthjeacQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1721717228; x=
-	1721803628; bh=s07so1DLRy4G0iBOTj15rTc5zGbN0MeWZMyDnJgS5y0=; b=D
-	NBov5Au/idvtLYdhHJy5rx5vnqYC4JlNOu1lsi8C1qjoAWEY4dyatejg8sb/fJvT
-	cLKRGpM09kz4me1c7d7DOFOjm6PPC4AlXUZY+6i245L+cg4M0PTl2ad2gjdhWojI
-	OVBbxJDEqmDUH005SxRbEORCQFMghwdCvtspBe6dnqcxEFh2nSgrcjr9zW9TAjfq
-	1/i8KDtahYkVvNv5iGw4ZmSz0nvfkpcGzyVUe9PXnzvNUbLUKndmtjoDggqJdcf6
-	BhmAXFaksOpK0zJy/6ajogmsyfzFwdgklkDQcqsC8TFBEYERs+A6Ix85EnkKLUln
-	eJSbJdmgJ5V26ZmKcPzkw==
-X-ME-Sender: <xms:7FGfZjNRiMvhlRnw-vd2guoIBEg2W7I48eEHYEM7TT6s36qd-oHu8g>
-    <xme:7FGfZt-A-H5l3byi3-j5U9dPvX1BVIpAlHwyvj4T4_dwlhYsKvLfgQoQPEZgFSXCN
-    FCflmmFbj8kSEDDT-U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrheekgdduudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggp
-    rhgtphhtthhopedt
-X-ME-Proxy: <xmx:7FGfZiSRi3qo54BMR6eEbO9G2VA2rnwyY0E-DJUS4QBTqX91YpP4NA>
-    <xmx:7FGfZnuQ5tsd7VuVJB7dcBYV1xTBccUYriuMUGNgtcBL5aZQvlRpzQ>
-    <xmx:7FGfZrfKod79ETiKWo110hXDCRkom7iJzldbTkPmtNQEpMtLYlzZQQ>
-    <xmx:7FGfZj1Wnjrd3jgjGssG3vg3O0wzIkwaBemisccFz9WA7UidG-6Upg>
-    <xmx:7FGfZjRpyFS7RWzDcmD4Nw3YkHmLu6JAwGQKlRTN_Pv6VnFI8U5U7Dz8>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E8AA719C0069; Tue, 23 Jul 2024 02:47:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-582-g5a02f8850-fm-20240719.002-g5a02f885
+	s=arc-20240116; t=1721720311; c=relaxed/simple;
+	bh=ZTzMUqY8joLASIi7mv9v5tM2TSHOz+ePsO7TCtOMSVU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nHEg1kyRVQ1zR07mDPTvBZqIzAMxsGr+YU9w9GyrNR93Bmc3N48cKc/q2tqFhzsLH9z4VRhpJ1fXxJCm5F03zDL1aHqc1aun+t7j5uGkO4jxS3CyKw2pQGuUKb6parKn8TZJ6uNs9MkiSjl5QN//ZWYLKQU0/ioxirR2gCfV9qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxmOnyXZ9m5GAAAA--.42S3;
+	Tue, 23 Jul 2024 15:38:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusbxXZ9m+l9VAA--.59486S2;
+	Tue, 23 Jul 2024 15:38:26 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH 0/2] LoongArch: KVM: Add paravirt qspinlock support
+Date: Tue, 23 Jul 2024 15:38:23 +0800
+Message-Id: <20240723073825.1811600-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <46775654-4c2c-4048-9f1d-bd464bbca25e@app.fastmail.com>
-In-Reply-To: <20240723064508.35560-1-chenhuacai@loongson.cn>
-References: <20240723064508.35560-1-chenhuacai@loongson.cn>
-Date: Tue, 23 Jul 2024 14:46:47 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@loongson.cn>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "Xuefeng Li" <lixuefeng@loongson.cn>, "Huacai Chen" <chenhuacai@gmail.com>,
- "Miao Wang" <shankerwangmiao@gmail.com>
-Subject: Re: [PATCH] irqchip/loongarch-cpu: Fix return value of lpic_gsi_to_irq()
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxusbxXZ9m+l9VAA--.59486S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
+
+Lock Holder Preemption (LHP) is classic problem especially on VM, if
+lock holder vCPU is preempted on host, other vCPUs will do busy looping
+and waste pCPU time. And there is no hw Pause Loop Exiting (PLE) supported
+on LoongArch system also.
+
+Here pavavirt qspinlock is introduced, by the kernel compiling test, it
+improves performance greatly if pVCPU is shared by multiple vCPUs. The
+testbed is on 3C5000 Dual-way machine with 32 cores and 2 numa nodes,
+test case is kcbench on kernel mainline 5.10, the detailed command is
+"kcbench --src /root/src/linux"
+
+Performance on host machine
+                      kernel compile time       performance impact
+   Original           150.29 seconds
+   With patch         150.20 seconds            almost no impact
+
+Performance on virtual machine:
+1. 1 VM  with 32 vCPUs and 2 numa node
+                      kernel compile time       performance impact
+   Original           173.07 seconds
+   With patch         171.73 seconds            +1%
+
+2. 2 VMs with 32 vCPUs and 2 numa node
+                      kernel compile time       performance impact
+   Original           2362.04 seconds
+   With patch         354.17 seconds            +566%
+
+Bibo Mao (2):
+  LoongArch: KVM: Add paravirt qspinlock in kvm side
+  LoongArch: KVM: Add paravirt qspinlock in guest side
+
+ arch/loongarch/Kconfig                        | 14 +++
+ arch/loongarch/include/asm/Kbuild             |  1 -
+ arch/loongarch/include/asm/kvm_host.h         |  4 +
+ arch/loongarch/include/asm/kvm_para.h         |  1 +
+ arch/loongarch/include/asm/loongarch.h        |  1 +
+ arch/loongarch/include/asm/paravirt.h         | 47 ++++++++++
+ arch/loongarch/include/asm/qspinlock.h        | 39 ++++++++
+ .../include/asm/qspinlock_paravirt.h          |  6 ++
+ arch/loongarch/kernel/paravirt.c              | 88 +++++++++++++++++++
+ arch/loongarch/kernel/smp.c                   |  4 +-
+ arch/loongarch/kvm/exit.c                     | 24 ++++-
+ arch/loongarch/kvm/vcpu.c                     | 13 ++-
+ 12 files changed, 238 insertions(+), 4 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/qspinlock.h
+ create mode 100644 arch/loongarch/include/asm/qspinlock_paravirt.h
 
 
+base-commit: 7846b618e0a4c3e08888099d1d4512722b39ca99
+-- 
+2.39.3
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8823=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=882:45=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> lpic_gsi_to_irq() should return a valid irq if acpi_register_gsi()
-> succeed, and return 0 otherwise. But now lpic_gsi_to_irq() converts
-> a negative return value of acpi_register_gsi() to a positive value
-> silently, so fix it.
->
-> Reported-by: Miao Wang <shankerwangmiao@gmail.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-> ---
->  drivers/irqchip/irq-loongarch-cpu.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongarch-cpu.c=20
-> b/drivers/irqchip/irq-loongarch-cpu.c
-> index 9d8f2c406043..b35903a06902 100644
-> --- a/drivers/irqchip/irq-loongarch-cpu.c
-> +++ b/drivers/irqchip/irq-loongarch-cpu.c
-> @@ -18,11 +18,13 @@ struct fwnode_handle *cpuintc_handle;
->=20
->  static u32 lpic_gsi_to_irq(u32 gsi)
->  {
-> +	int irq =3D 0;
-> +
->  	/* Only pch irqdomain transferring is required for LoongArch. */
->  	if (gsi >=3D GSI_MIN_PCH_IRQ && gsi <=3D GSI_MAX_PCH_IRQ)
-> -		return acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE, ACPI_ACTI=
-VE_HIGH);
-> +		irq =3D acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE, ACPI_ACT=
-IVE_HIGH);
->=20
-> -	return 0;
-> +	return (irq > 0) ? irq : 0;
->  }
->=20
->  static struct fwnode_handle *lpic_get_gsi_domain_id(u32 gsi)
-> --=20
-> 2.43.5
-
---=20
-- Jiaxun
