@@ -1,141 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9434A00
-	for <loongarch@lists.linux.dev>; Wed, 24 Jul 2024 02:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B53F18040;
+	Wed, 24 Jul 2024 02:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721789240; cv=none; b=gd4pve1WWcILrhF5rlAylHH/6NCQ92ffciex5XukXqCzoNOcgc5sV2Ch2mgf2vsabyJmEuU0mgXynUYK6b3/RMDc8J4SebJj9w7GDs8Ys53ynkrPmngikQzkt3LP8eptkCeBduf/T97IJgljUJ9s0uXrGnORdhBjJLmdAn0BL2k=
+	t=1721789587; cv=none; b=Z5XUNi21ox0gsWAMsw9MYcSzy2AeLljEF5RwHwd1C+IoMYi2aoksgFPOEWVndRTYvAhg3FwMOR/kspsuQx4+uJqn9kpKaUQ6/amU0Z17EQEcvrhU+8cuAkcaQ5R4LdJdiyDz460LYSGoQqKRmlUfNdRk3Lb07cnqejGcs6QF79M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721789240; c=relaxed/simple;
-	bh=9Vz8MYQsrGkJZnEnokzhHArRg9sVUnAdHQO+HCp4GWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cnP/l4se1u63eRv8HII4AEDXrRuOn9ek8maxiuH4eCb1sSffekM2PZ35Z/TRLWXpaCqzXhsslYohskX1MCDX8zaDttPVXhUxQAiPby+GqDZ8ym9In6vDfBugxuSsrgUmLNoxzQyKFW9tZ9t/DODnSDl9xWl6Hc9IarkRs35k7cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ns8a8RPQ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721789587; c=relaxed/simple;
+	bh=TN3jp9z/GxFmUrzd9XWw0Y0s+Blfp+n8KcnOoYKxXdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dNEcPk6d9JYi1qMwtm4wcs2MASiU8bo9WEmyGMwsL95j8mHJVSJUFjH7wyPl6+bzVE+iTeIVHcJkk6tmLQEOBnAe0xmaKLzMppJtw95USWECNIxGC0q/DeZCzDeJBbmxjlZEY//frrZXrdy2nJeEbGN5hVlAv0KFNLDoUaIz48M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEQNZ4l8; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ns8a8RPQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEQNZ4l8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721789240; x=1753325240;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9Vz8MYQsrGkJZnEnokzhHArRg9sVUnAdHQO+HCp4GWg=;
-  b=Ns8a8RPQ+cXpwnVtohy+HpLhL19EX0PgpEnfOYgzHq4Iy2gxB5lZbL9S
-   kjR4XH5p/1z6h5yUXqbOOtzP9Jf7TvP63VOIobLTS/k1LnPbwVKh+QJAQ
-   qT0Tf8OCI1a+lOCF5jZeMYg04Gugu73juewnH2Q/6WH5p6qc3fU1Tg3T+
-   NMpWBwpaJIYSk/G+9OJasq7FVJI7AZuWXJ4fkAN2v5c90edpYmPD/c4cw
-   o/as5+9TZFDxJVWvFV1PyX/r63zVq+dPNWBHv1EgBuDGOuJXDtO9tRkAP
-   SLsvlFKVNIQyYcMvjdqqyNi2x0bwBxBo2nQqh2eOmvi9YISzsjDJlBave
-   w==;
-X-CSE-ConnectionGUID: So0H0JVfTnWGqsJoToCo4w==
-X-CSE-MsgGUID: yTczjLXvSSCyH2U3PwzuJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="30592155"
+  t=1721789586; x=1753325586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TN3jp9z/GxFmUrzd9XWw0Y0s+Blfp+n8KcnOoYKxXdU=;
+  b=XEQNZ4l8OvHETAigdUPu88gCB0NJuSFiyFXxLxMR89/ex5Jm9KS9fXvr
+   ERWV8lq4IC+rfDbll0MIErf0be7n2dlKdTcZ1l6XrNtTJ0QDzhgMp9hXu
+   j2u5fKNl+dAzl9gquqMRrzOr2UGnAE1i3yq5/cjsO9U7nAXDoJti81wT7
+   3VEAZ61exwcX2nfp3eUKykFUY7xp0gvBGGfg8vRqFu2XFLqH4JOzSxgwL
+   VNtUo6IlGh4Hb3ieeTBlox2jSXe0elSpjh+4zTHOBzW0MVUVWY5xDSoBP
+   RnuEJdY5CMwJjp1gG+WkbznWgOXjDNqJRbfqOK1Bxzut41OyOmAazzkSC
+   A==;
+X-CSE-ConnectionGUID: uTTTa8cJRJiMjIFwfPWY3A==
+X-CSE-MsgGUID: CCdOhsC0RQ+GryyxGf3FQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="19592961"
 X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="30592155"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 19:47:10 -0700
-X-CSE-ConnectionGUID: elHXUOmYSXKPqUR/bd+ZGQ==
-X-CSE-MsgGUID: AgyOkfmzQLipPoeZZYO+XA==
+   d="scan'208";a="19592961"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 19:53:05 -0700
+X-CSE-ConnectionGUID: 0VIpVzQYRVGNiRGe/rwxMA==
+X-CSE-MsgGUID: e6glXE6yRBCV8lEnlVPLuw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="57551471"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.9.238]) ([10.124.9.238])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 19:47:06 -0700
-Message-ID: <670927f1-42d8-40bc-bd79-55e178bd907a@linux.intel.com>
-Date: Wed, 24 Jul 2024 10:47:04 +0800
+   d="scan'208";a="52498938"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 23 Jul 2024 19:53:02 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sWS7g-000mao-1U;
+	Wed, 24 Jul 2024 02:53:00 +0000
+Date: Wed, 24 Jul 2024 10:52:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 2/2] LoongArch: KVM: Add paravirt qspinlock in guest side
+Message-ID: <202407241016.NtaMVEAg-lkp@intel.com>
+References: <20240723073825.1811600-3-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when
- selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>,
- Markus Elfring <Markus.Elfring@web.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nitesh Narayan Lal <nitesh@redhat.com>,
- Frederic Weisbecker <frederic@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
- <a50b3865-8a04-4a9a-8d27-b317619a75c0@linux.intel.com>
- <7340a27e-67c1-c0c3-9304-77710dc44f7f@loongson.cn>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <7340a27e-67c1-c0c3-9304-77710dc44f7f@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240723073825.1811600-3-maobibo@loongson.cn>
 
-On 7/24/2024 9:58 AM, Hongchen Zhang wrote:
-> Hi Ethan,
-> On 2024/7/22 PM 3:39, Ethan Zhao wrote:
->>
->> On 6/13/2024 3:42 PM, Hongchen Zhang wrote:
->>> Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
->>> @cpu is a offline cpu would cause system stuck forever.
->>>
->>> This can be happen if a node is online while all its CPUs are
->>> offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
->>>
->>> So, in the above case, let pci_call_probe() call local_pci_probe()
->>> instead of work_on_cpu() when the best selected cpu is offline.
->>>
->>> Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping 
->>> CPUs")
->>> Cc: <stable@vger.kernel.org>
->>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
->>> ---
->>> v2 -> v3: Modify commit message according to Markus's suggestion
->>> v1 -> v2: Add a method to reproduce the problem
->>> ---
->>>   drivers/pci/pci-driver.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>> index af2996d0d17f..32a99828e6a3 100644
->>> --- a/drivers/pci/pci-driver.c
->>> +++ b/drivers/pci/pci-driver.c
->>> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver 
->>> *drv, struct pci_dev *dev,
->>>           free_cpumask_var(wq_domain_mask);
->>>       }
->>> -    if (cpu < nr_cpu_ids)
->>
->> Why not choose the right cpu to callwork_on_cpu() ? the one that is 
->> online. Thanks, Ethan
-> Yes, let housekeeping_cpumask() return online cpu is a good idea, but 
-> it may be changed by command line. so the simplest way is to call 
-> local_pci_probe when the best selected cpu is offline.
+Hi Bibo,
 
-Hmm..... housekeeping_cpumask() should never return offline CPU, so
-I guess you didn't hit issue with the CPU isolation, but the following
-code seems not good.
+kernel test robot noticed the following build warnings:
 
-...
+[auto build test WARNING on 7846b618e0a4c3e08888099d1d4512722b39ca99]
 
-if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
-         pci_physfn_is_probed(dev)) {
-         cpu = nr_cpu_ids;
-     } else {
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-paravirt-qspinlock-in-kvm-side/20240723-160536
+base:   7846b618e0a4c3e08888099d1d4512722b39ca99
+patch link:    https://lore.kernel.org/r/20240723073825.1811600-3-maobibo%40loongson.cn
+patch subject: [PATCH 2/2] LoongArch: KVM: Add paravirt qspinlock in guest side
+config: loongarch-kismet-CONFIG_PARAVIRT-CONFIG_PARAVIRT_SPINLOCKS-0-0 (https://download.01.org/0day-ci/archive/20240724/202407241016.NtaMVEAg-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240724/202407241016.NtaMVEAg-lkp@intel.com/reproduce)
 
-....
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407241016.NtaMVEAg-lkp@intel.com/
 
-perhaps you could change the logic there and fix it  ?
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for PARAVIRT when selected by PARAVIRT_SPINLOCKS
+   
 
-Thanks
-Ethan
-
-
-
->>
->>> +    if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->>>           error = work_on_cpu(cpu, local_pci_probe, &ddi);
->>>       else
->>>           error = local_pci_probe(&ddi);
->
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
