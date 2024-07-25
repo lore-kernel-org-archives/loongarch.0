@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F091C6A0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6BBB1C6A4
 	for <loongarch@lists.linux.dev>; Thu, 25 Jul 2024 03:34:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721878459; cv=none; b=A4CZaqaM5ylJgibqj+9aB4PQkksoPiaPsRCtHxbcFrX/hoXvG1pQZBBtPAhd2eu7ZpX3I26qzu9kBbJjHEcsyoEq6NqZSogCsrRKHCZmz74+khqryAviRTgQXLmE+jt9yR8eqE043faDcUcisoYBC/gTITkG0SxSPH17fCWd5+M=
+	t=1721878459; cv=none; b=D+lwoBRTBgVqGNm1fAskzSgJV8OSCLPRL/eVu6ijIVWi2M3jVTdP8nt43kTQBomkKorxEyEapf0+lhxjNM1Rc8FMQFVnZGR+EqZ0TDReOFowhaOhfQabiBeVV8BeYkd98ESvSZQ21dQmv7ZWetigyyxWEFPJnpQR4ORLryxy95I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721878459; c=relaxed/simple;
-	bh=M1SKQnhoZeocK0mNtkxjcLoo2dwNGAPwoDPauhxc2AQ=;
+	bh=3JiK5bvfiVwsBCbg5kudqDXogJePvcqJ6U9YebVM7RU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NnWRQLz1sR6ww2Y0rgb58n839mCWgL//y36ZXSoSeWD8FNF09Q0xkMNsMMxOOHUyijmK7vWenRqo8PdmqD7eS02w28xSLVQ4bUpLIvS0Bt/tygDhMGl9rncxWHTzxPbM9hhuQS+rSndzmw7fa6JWcr8fhzhLIVG5h0ncacLUV6E=
+	 MIME-Version; b=g/vAC+fW5aCm/27RgzZ18O5QRYHdiofibgerMhPaddXn46eh3Nd382oNDzJGM1AxZA/jF1b62WB2+PRL7lxK5wWg/NAiGcZzJfRfK2etY0JwDtbd/Uu4l35wroFNlfuBqx6fEuwQU1Yf9ChYrLxYsGFyYQf5yCDmw76H0ZnVTpY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8CxvOqwx6Fm6FUBAA--.5094S3;
-	Thu, 25 Jul 2024 11:34:08 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxOuqxx6Fm8lUBAA--.5162S3;
+	Thu, 25 Jul 2024 11:34:09 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMBxicWsx6FmppEAAA--.37S3;
-	Thu, 25 Jul 2024 11:34:05 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxicWsx6FmppEAAA--.37S5;
+	Thu, 25 Jul 2024 11:34:09 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -26,9 +26,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v5 1/3] LoongArch: KVM: Add HW Binary Translation extension support
-Date: Thu, 25 Jul 2024 11:34:02 +0800
-Message-Id: <20240725033404.2675204-2-maobibo@loongson.cn>
+Subject: [PATCH v5 3/3] LoongArch: KVM: Add vm migration support for LBT registers
+Date: Thu, 25 Jul 2024 11:34:04 +0800
+Message-Id: <20240725033404.2675204-4-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240725033404.2675204-1-maobibo@loongson.cn>
 References: <20240725033404.2675204-1-maobibo@loongson.cn>
@@ -39,232 +39,145 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxicWsx6FmppEAAA--.37S3
+X-CM-TRANSID:qMiowMBxicWsx6FmppEAAA--.37S5
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKrW3KF4UGFW5Ww4rWw4rZwc_yoWxWw4fpF
-	97urn5Zw4rWFyxKasrtrn09rs0v3ykKry7Xry2g3y5JF1Utry5JF4kKrWqvFy5Jw4FvF1S
-	vF93K3W5AFW8J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr1rAFW3uw1DZF1Dury5KFX_yoWrAr17pr
+	1DArs3Gr18Krn3C3yxKF1q9r17Xr4IkrWkZFySqa18Kr90vryFyw4ktr9xGFy3Jr48u3yf
+	C3Wvyw4jkF1xJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Loongson Binary Translation (LBT) is used to accelerate binary translation,
-which contains 4 scratch registers (scr0 to scr3), x86/ARM eflags (eflags)
-and x87 fpu stack pointer (ftop).
+Every vcpu has separate LBT registers. And there are four scr registers,
+one flags and ftop register for LBT extension. When VM migrates, VMM
+needs to get LBT registers for every vcpu.
 
-Like FPU extension, here late enabling method is used for LBT. LBT context
-is saved/restored on vcpu context switch path.
+Here macro KVM_REG_LOONGARCH_LBT is added for new vcpu lbt register type,
+the following macro is added to get/put LBT registers.
+  KVM_REG_LOONGARCH_LBT_SCR0
+  KVM_REG_LOONGARCH_LBT_SCR1
+  KVM_REG_LOONGARCH_LBT_SCR2
+  KVM_REG_LOONGARCH_LBT_SCR3
+  KVM_REG_LOONGARCH_LBT_EFLAGS
+  KVM_REG_LOONGARCH_LBT_FTOP
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_host.h |  8 ++++
- arch/loongarch/include/asm/kvm_vcpu.h |  6 +++
- arch/loongarch/kvm/exit.c             |  9 ++++
- arch/loongarch/kvm/vcpu.c             | 64 ++++++++++++++++++++++++++-
- 4 files changed, 86 insertions(+), 1 deletion(-)
+ arch/loongarch/include/uapi/asm/kvm.h |  9 +++++
+ arch/loongarch/kvm/vcpu.c             | 56 +++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 44b54965f5b4..c409ab15bae1 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -137,6 +137,7 @@ enum emulation_result {
- #define KVM_LARCH_LASX		(0x1 << 2)
- #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
- #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
-+#define KVM_LARCH_LBT		(0x1 << 5)
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index 49bafac8b22d..003fb766c93f 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -64,6 +64,7 @@ struct kvm_fpu {
+ #define KVM_REG_LOONGARCH_KVM		(KVM_REG_LOONGARCH | 0x20000ULL)
+ #define KVM_REG_LOONGARCH_FPSIMD	(KVM_REG_LOONGARCH | 0x30000ULL)
+ #define KVM_REG_LOONGARCH_CPUCFG	(KVM_REG_LOONGARCH | 0x40000ULL)
++#define KVM_REG_LOONGARCH_LBT		(KVM_REG_LOONGARCH | 0x50000ULL)
+ #define KVM_REG_LOONGARCH_MASK		(KVM_REG_LOONGARCH | 0x70000ULL)
+ #define KVM_CSR_IDX_MASK		0x7fff
+ #define KVM_CPUCFG_IDX_MASK		0x7fff
+@@ -77,6 +78,14 @@ struct kvm_fpu {
+ /* Debugging: Special instruction for software breakpoint */
+ #define KVM_REG_LOONGARCH_DEBUG_INST	(KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 3)
  
- struct kvm_vcpu_arch {
- 	/*
-@@ -170,6 +171,7 @@ struct kvm_vcpu_arch {
- 
- 	/* FPU state */
- 	struct loongarch_fpu fpu FPU_ALIGN;
-+	struct loongarch_lbt lbt;
- 
- 	/* CSR state */
- 	struct loongarch_csrs *csr;
-@@ -241,6 +243,12 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
- 	return arch->cpucfg[2] & CPUCFG2_LASX;
- }
- 
-+static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
-+{
-+	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT
-+					| CPUCFG2_MIPSBT);
-+}
++/* LBT registers */
++#define KVM_REG_LOONGARCH_LBT_SCR0	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 1)
++#define KVM_REG_LOONGARCH_LBT_SCR1	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 2)
++#define KVM_REG_LOONGARCH_LBT_SCR2	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 3)
++#define KVM_REG_LOONGARCH_LBT_SCR3	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 4)
++#define KVM_REG_LOONGARCH_LBT_EFLAGS	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 5)
++#define KVM_REG_LOONGARCH_LBT_FTOP	(KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | 6)
 +
- /* Debug: dump vcpu state */
- int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index c416cb7125c0..3cc906a0ff54 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -75,6 +75,12 @@ static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
- static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
- #endif
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu);
-+#else
-+static inline int kvm_own_lbt(struct kvm_vcpu *vcpu) { return -EINVAL; }
-+#endif
-+
- void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
- void kvm_reset_timer(struct kvm_vcpu *vcpu);
- void kvm_save_timer(struct kvm_vcpu *vcpu);
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ea73f9dc2cc6..be2c326253a3 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -835,6 +835,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- 	return ret;
- }
- 
-+static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_own_lbt(vcpu))
-+		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-+
-+	return RESUME_GUEST;
-+}
-+
- /*
-  * LoongArch KVM callback handling for unimplemented guest exiting
-  */
-@@ -867,6 +875,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
- 	[EXCCODE_LASXDIS]		= kvm_handle_lasx_disabled,
- 	[EXCCODE_GSPR]			= kvm_handle_gspr,
- 	[EXCCODE_HVC]			= kvm_handle_hypercall,
-+	[EXCCODE_BTDIS]			= kvm_handle_lbt_disabled,
- };
- 
- int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
+ #define LOONGARCH_REG_SHIFT		3
+ #define LOONGARCH_REG_64(TYPE, REG)	(TYPE | KVM_REG_SIZE_U64 | (REG << LOONGARCH_REG_SHIFT))
+ #define KVM_IOC_CSRID(REG)		LOONGARCH_REG_64(KVM_REG_LOONGARCH_CSR, REG)
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 16756ffb55e8..9c5d2d286607 100644
+index aeb5f76a86c1..76719bf522b7 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -6,6 +6,7 @@
- #include <linux/kvm_host.h>
- #include <linux/entry-kvm.h>
- #include <asm/fpu.h>
-+#include <asm/lbt.h>
- #include <asm/loongarch.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-@@ -977,12 +978,69 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
- 	return 0;
- }
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_guest_has_lbt(&vcpu->arch))
-+		return -EINVAL;
+@@ -597,6 +597,34 @@ static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
+ 			break;
+ 		}
+ 		break;
++	case KVM_REG_LOONGARCH_LBT:
++		if (!kvm_guest_has_lbt(&vcpu->arch))
++			return -ENXIO;
 +
-+	preempt_disable();
-+	set_csr_euen(CSR_EUEN_LBTEN);
-+
-+	_restore_lbt(&vcpu->arch.lbt);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_LBT;
-+	preempt_enable();
-+	return 0;
-+}
-+
-+static void kvm_lose_lbt(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_LBT) {
-+		_save_lbt(&vcpu->arch.lbt);
-+		clear_csr_euen(CSR_EUEN_LBTEN);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_LBT;
-+	}
-+	preempt_enable();
-+}
-+
-+static void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu, unsigned long fcsr)
-+{
-+	/*
-+	 * if TM is enabled, top register save/restore will
-+	 * cause lbt exception, here enable lbt in advance
-+	 */
-+	if (fcsr & FPU_CSR_TM)
-+		kvm_own_lbt(vcpu);
-+}
-+
-+static void kvm_check_fcsr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long fcsr;
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU)
-+		if (!(vcpu->arch.aux_inuse & KVM_LARCH_LBT)) {
-+			fcsr = read_fcsr(LOONGARCH_FCSR0);
-+			kvm_enable_lbt_fpu(vcpu, fcsr);
++		switch (reg->id) {
++		case KVM_REG_LOONGARCH_LBT_SCR0:
++			vcpu->arch.lbt.scr0 = v;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR1:
++			vcpu->arch.lbt.scr1 = v;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR2:
++			vcpu->arch.lbt.scr2 = v;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR3:
++			vcpu->arch.lbt.scr3 = v;
++			break;
++		case KVM_REG_LOONGARCH_LBT_EFLAGS:
++			vcpu->arch.lbt.eflags = v;
++			break;
++		case KVM_REG_LOONGARCH_LBT_FTOP:
++			vcpu->arch.fpu.ftop = v;
++			break;
++		default:
++			ret = -EINVAL;
++			break;
 +		}
-+}
-+#else
-+static inline void kvm_lose_lbt(struct kvm_vcpu *vcpu) { }
-+static inline void kvm_enable_lbt_fpu(struct kvm_vcpu *vcpu,
-+				unsigned long fcsr) { }
-+static inline void kvm_check_fcsr(struct kvm_vcpu *vcpu) { }
-+#endif
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+@@ -663,6 +691,34 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+ 			break;
+ 		}
+ 		break;
++	case KVM_REG_LOONGARCH_LBT:
++		if (!kvm_guest_has_lbt(&vcpu->arch))
++			return -ENXIO;
 +
- /* Enable FPU and restore context */
- void kvm_own_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
--	/* Enable FPU */
-+	/*
-+	 * Enable FPU for guest
-+	 * We set FR and FRE according to guest context
-+	 */
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN);
- 
- 	kvm_restore_fpu(&vcpu->arch.fpu);
-@@ -1002,6 +1060,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 	preempt_disable();
- 
- 	/* Enable LSX for guest */
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
- 	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
- 	case KVM_LARCH_FPU:
-@@ -1036,6 +1095,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 
- 	preempt_disable();
- 
-+	kvm_enable_lbt_fpu(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
- 	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
- 	case KVM_LARCH_LSX:
-@@ -1067,6 +1127,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
-+	kvm_check_fcsr(vcpu);
- 	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
- 		kvm_save_lasx(&vcpu->arch.fpu);
- 		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
-@@ -1089,6 +1150,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 		/* Disable FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN);
- 	}
-+	kvm_lose_lbt(vcpu);
- 
- 	preempt_enable();
- }
++		switch (reg->id) {
++		case KVM_REG_LOONGARCH_LBT_SCR0:
++			*v = vcpu->arch.lbt.scr0;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR1:
++			*v = vcpu->arch.lbt.scr1;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR2:
++			*v = vcpu->arch.lbt.scr2;
++			break;
++		case KVM_REG_LOONGARCH_LBT_SCR3:
++			*v = vcpu->arch.lbt.scr3;
++			break;
++		case KVM_REG_LOONGARCH_LBT_EFLAGS:
++			*v = vcpu->arch.lbt.eflags;
++			break;
++		case KVM_REG_LOONGARCH_LBT_FTOP:
++			*v = vcpu->arch.fpu.ftop;
++			break;
++		default:
++			ret = -EINVAL;
++			break;
++		}
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
 -- 
 2.39.3
 
