@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DED317F51E
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6477417FABF
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722038029; cv=none; b=CSURewsRnI9JfbrapTGfZ9vCzz3mNo0AKgQtZcaYSXOQ7Dca9jLwaKHPK1qLs0grD3Na8l5DoADePSoG6UNMDQ25iJneQDIz+wv+TgjRuI0qk1GQZKq056Bj+YHWnx+wAFNhInrQCzD/zN3kw1UBXmbTxKvE4Gf18eSe7ok131E=
+	t=1722038029; cv=none; b=IxWaAUP66ShpAIpbYZVI3H1b4mHGua8kY8St3KEarVdGxWIvD1fgUGujGVo4oatLOuj8hPrlKBjYaqtY2cDmJmo40YrUyg359O+Mhpc6pAA91N5DeD1uPAUIJXhgUCVaTeeU7KiUkswhJDvdjqy7HIJoKu+Rsn/HsQk7ohy0V9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722038029; c=relaxed/simple;
-	bh=8U41yEZkwmCC7j8hL2o/rtiKo/Y2IzaocSdWcXfAeko=;
+	bh=iyko0n6fwOnAH7YleGpA9px1iO4LPswzFGIVpqZk3kk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=i/4yX5u/jpqm/HDPbQUEQ/AKPOsOOho6lBrtmURN2q3Yb54ri0Z9PLBZ9+PkFvhBXGD2mzfaClSjbfUfDSBtWqDCvbyrBzWVnvA0BrqFtpYizKQjIG++0ck07WZytnjpgvJQQzKkRa+klH1bbFQWNJ7rD11FHcyg3kS9qaqy8AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ww70KDS+; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=lKscCie0SrmmT53IZvDSt2Bv0ua1TbpS0G56YrAVbanz7kPDh7S+A7kXym2SXQ/8cJKOMDABUkidQhPSocaxmVJudX5ymPpUSyIqqT+RM8T9pCrzIDL1F/5VRsgLcaa/LpCygoGqpd+QyQJwfYhQavR5LWXh/vTWrdmNtNrAJQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v6VVhaan; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ww70KDS+"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e087ed145caso389913276.3
-        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:53:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v6VVhaan"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1fee7c9e4a4so10496635ad.2
+        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:53:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722038026; x=1722642826; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722038028; x=1722642828; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=TLCx2qDCvkD9gyhhD5S2JLlOeuoeLAn7xH7FruJz3kQ=;
-        b=ww70KDS+/eP2LH0MAFiljYF9pZbxcBRj7xRjaiH5ukG0U0nbAmYWrLZBeICOMCaAbK
-         /N4bG7NYBRsl7m7fEKk6qAVLhekJlReHI+YYiddL3FUzLEe4Vvbm9vxU/Fi5Q7ah8lMt
-         Gvvz44eA1uDx0abbulkXrGAVrJl8fEKx8Sp7oG9EYp3SLBythCmXmS6ykSn1OQYWeEvW
-         IACmkkoI7gYpFelTYP5ruMoSpD0iMJOXzUGJbPbfNttE5hYbkfoqGcbMcZNVcJc8NZCp
-         Sxdm+Iip5vuwVHXrIfBrujosMewv3bQxd0kMTgqXh1/HqgnLfXKA9MnePUHvwYKXVPS7
-         wF1w==
+        bh=f0UOaTihDpRJ7PP+Ej2doGcOk+AHWo0BkuOsHzozLVI=;
+        b=v6VVhaanJw67KnBUhiQpuCSSA6BD8HpgA8LZG/BMmzFr08WlSt2PiI8iriFB0NTQoM
+         zyPPNr7ZvlFVIeL4Zx5mGJAM1cAw4WWz8Dh+fdk0BllfbWn/2kjzMUe3++LAynoO5gLJ
+         Uu0dQAeWfi1+a4H4fYSQNwqqhBPvHebZHu5LJVDwdaZyxEqH8yfr6UsAAWgQ0olLbIOD
+         948XQF0sPd6jOgV1DPo3qYrTd33gdZKdlLae9behp5SW5am7vzdC2RqBrIOZsblAJjFf
+         obUBNDkUHwLedMDe/udGQykXIoNuY/MzJlwJDl1Anccyk7VzmdiuBYpu0Fh+jFkKthsQ
+         NdzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722038026; x=1722642826;
+        d=1e100.net; s=20230601; t=1722038028; x=1722642828;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TLCx2qDCvkD9gyhhD5S2JLlOeuoeLAn7xH7FruJz3kQ=;
-        b=eLVrXuvftZ3/auURIGvgp4K5BfXpnzdei9S5K6nJUZ+vCi9kEXO5FnHXMhEekIpKMB
-         aJqpOBL2ppM/2hj8YMlM0ezhupMP8Z/vQ9tdDPefQROo6F7yy5sFDjguK9tl8GaLCwEH
-         hqhRjfswHxU9GbP4fg+0ixN5xRpTPmkPQA0NunGPyb/NWgYDy+HpsuNx3Zw8H6EcXBOu
-         BC/ptl0O6j8zjtG0KVINvv7eHx8Xb+Tk8ND8dC/ntu5ujOhjM79cw1/wepkcXMpIYQWB
-         koowoO8wOvePyWVWQMKDPs062f5MBBj3X4J+ekW+Mfi7QscWhucZrBZtrwyM5DvCIaBj
-         MrpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDgfv7hNLJHQs+TbFnZv0eVSmfIpkUJ7qHVQtYFA78E2CIy8vem9CnWTwhw1Kmkosfq6rNRgGFWJo3Rjf59cgW6gM+jd7XKidP
-X-Gm-Message-State: AOJu0YzfZGDlRBgNUHMV9b6q+1ztz4u/oJKztywa94fV6fGuCnSGAlez
-	bIf6rXAoSoECETLCEpnE+tpFovAI8r88nyyTFf/HOfU5HAuZ2XoyDsRXJ8J6i4Y/57QDQWj8S2a
-	Y9Q==
-X-Google-Smtp-Source: AGHT+IFuGqnDYAUSJ5FmVd85CGAsbS7YYsLTPQN/3Ul7QhkRMd8+dVyQHeeD8wiMpZyrbrthnX4Q+b9wtNM=
+        bh=f0UOaTihDpRJ7PP+Ej2doGcOk+AHWo0BkuOsHzozLVI=;
+        b=KaqoB1T5ikWSXuFEKt72VfOc6X7vy2LLs1dHnj9ag/haPZVJv+4Q8JTmgSDTkno9Fm
+         K2HwbU2mxcs1YxRB+1cmjSPDKahQKAeJO57aYusAyp2wg1KymyiiP3E56nqlu5SqmR/J
+         emCmStHyFbDLRivyxiN93OoPOoYWUmLLY+SfN0gtFIAAYQgUugbWUVAeUNnrYCWzxfiv
+         HMdjVBU8R+xMTqxZGM6NZXXMsjGJc7vx99GOAqNztk07yy6UTBL8BzemtwrNgLA9YwOz
+         NZs3EBqYtatj/81odI9lzyBEbry3UOR2eZfUZYqU7xvkvIhYQ53K1zTnFTrLJ437zhWr
+         ttDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSz4zZ8OnNL37lapKOJuLkzPGPKscjoBS4Pr5SDNIVSAsH5uhry4x8UHmtq7TpbPQavWcIl9+TmhY=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywtuvfn/1dQjp0RG5LR4rh5t+WGfumqp/vp31T2zP013o3Ryz1A
+	BttCViHpl/nKzbMCmt7W1xWNSupGv0U0ymuWCsSD3mB1Juqlakw4OlWV6Jy8ZgX4ts9sRkdvbwi
+	0dg==
+X-Google-Smtp-Source: AGHT+IGYUMRc1uUxr912DKcgHH4gUUnvf0wLEKnF8dkY5ruUFOJLgoqFTBS1LD3evC3JUrfTD0ZWGbhz678=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1005:b0:e0b:f93:fe8c with SMTP id
- 3f1490d57ef6-e0b5427fa67mr79832276.0.1722038025699; Fri, 26 Jul 2024 16:53:45
- -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:902:cecd:b0:1fd:6529:7443 with SMTP id
+ d9443c01a7336-1ff0486a65amr545105ad.11.1722038027663; Fri, 26 Jul 2024
+ 16:53:47 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jul 2024 16:51:42 -0700
+Date: Fri, 26 Jul 2024 16:51:43 -0700
 In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240726235234.228822-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240726235234.228822-34-seanjc@google.com>
-Subject: [PATCH v12 33/84] KVM: Disallow direct access (w/o mmu_notifier) to
- unpinned pfn by default
+Message-ID: <20240726235234.228822-35-seanjc@google.com>
+Subject: [PATCH v12 34/84] KVM: Add a helper to lookup a pfn without grabbing
+ a reference
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -80,68 +80,57 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Add an off-by-default module param to control whether or not KVM is allowed
-to map memory that isn't pinned, i.e. that KVM can't guarantee won't be
-freed while it is mapped into KVM and/or the guest.  Don't remove the
-functionality entirely, as there are use cases where mapping unpinned
-memory is safe (as defined by the platform owner), e.g. when memory is
-hidden from the kernel and managed by userspace, in which case userspace
-is already fully trusted to not muck with guest memory mappings.
-
-But for more typical setups, mapping unpinned memory is wildly unsafe, and
-unnecessary.  The APIs are used exclusively by x86's nested virtualization
-support, and there is no known (or sane) use case for mapping PFN-mapped
-memory a KVM guest _and_ letting the guest use it for virtualization
-structures.
+Add a kvm_follow_pfn() wrapper, kvm_lookup_pfn(), to allow looking up a
+gfn=>pfn mapping without the caller getting a reference to any underlying
+page.  The API will be used in flows that want to know if a gfn points at
+a valid pfn, but don't actually need to do anything with the pfn.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/kvm_main.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/kvm_host.h |  2 ++
+ virt/kvm/kvm_main.c      | 16 ++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 82ca0971c156..5a572cef4adc 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1212,6 +1212,8 @@ static inline void kvm_release_page_unused(struct page *page)
+ void kvm_release_page_clean(struct page *page);
+ void kvm_release_page_dirty(struct page *page);
+ 
++kvm_pfn_t kvm_lookup_pfn(struct kvm *kvm, gfn_t gfn);
++
+ kvm_pfn_t gfn_to_pfn(struct kvm *kvm, gfn_t gfn);
+ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
+ 		      bool *writable);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index a28479629488..0b3c0bddaa07 100644
+index 0b3c0bddaa07..ad84dab8c5dc 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -94,6 +94,13 @@ unsigned int halt_poll_ns_shrink = 2;
- module_param(halt_poll_ns_shrink, uint, 0644);
- EXPORT_SYMBOL_GPL(halt_poll_ns_shrink);
+@@ -3118,6 +3118,22 @@ kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn)
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_pfn);
  
-+/*
-+ * Allow direct access (from KVM or the CPU) without MMU notifier protection
-+ * to unpinned pages.
-+ */
-+static bool allow_unsafe_mappings;
-+module_param(allow_unsafe_mappings, bool, 0444);
++kvm_pfn_t kvm_lookup_pfn(struct kvm *kvm, gfn_t gfn)
++{
++	struct page *refcounted_page = NULL;
++	struct kvm_follow_pfn kfp = {
++		.slot = gfn_to_memslot(kvm, gfn),
++		.gfn = gfn,
++		.flags = FOLL_WRITE,
++		.refcounted_page = &refcounted_page,
++	};
++	kvm_pfn_t pfn;
 +
- /*
-  * Ordering of locks:
-  *
-@@ -2821,6 +2828,9 @@ static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
- 	 * reference to such pages would cause KVM to prematurely free a page
- 	 * it doesn't own (KVM gets and puts the one and only reference).
- 	 * Don't allow those pages until the FIXME is resolved.
-+	 *
-+	 * Don't grab a reference for pins, callers that pin pages are required
-+	 * to check refcounted_page, i.e. must not blindly release the pfn.
- 	 */
- 	if (pte) {
- 		pfn = pte_pfn(*pte);
-@@ -2942,6 +2952,14 @@ static int hva_to_pfn_remapped(struct vm_area_struct *vma,
- 	bool write_fault = kfp->flags & FOLL_WRITE;
- 	int r;
- 
-+	/*
-+	 * Remapped memory cannot be pinned in any meaningful sense.  Bail if
-+	 * the caller wants to pin the page, i.e. access the page outside of
-+	 * MMU notifier protection, and unsafe umappings are disallowed.
-+	 */
-+	if (kfp->pin && !allow_unsafe_mappings)
-+		return -EINVAL;
++	pfn = kvm_follow_pfn(&kfp);
++	kvm_release_page_unused(refcounted_page);
++	return pfn;
++}
 +
- 	r = follow_pte(vma, kfp->hva, &ptep, &ptl);
- 	if (r) {
- 		/*
+ int kvm_prefetch_pages(struct kvm_memory_slot *slot, gfn_t gfn,
+ 		       struct page **pages, int nr_pages)
+ {
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
