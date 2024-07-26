@@ -1,121 +1,129 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE93D23A8
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 03:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D7D39AEC
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 06:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721964910; cv=none; b=S0lR98RkPgkUbhgBXg1eEfqy/p1/T8E6p+exlonb4DXWzMINKvxXeA/sThxTzDFNl30dy0LuOE3d5uXnSIxe8f53MX+MkAY7kyA2KEAjwfULfEdM+fEYgAPQpzYdOdpDkw01CaX1AXYXKo+x96KMOGsOcq2zkKXRq/tui8JqQV4=
+	t=1721975558; cv=none; b=AZMpG8HQdc9T7YzywPCgyGLlwKx92IE0/QIh0BxPt5Y83yNKy02LFMPV7EFpEcRkTJqiHoA7UE7tu4Q/QikeoZsu6D7B7YKJ+1J2bn66oM5NcwNNFIEHygGxk896+e1M8EpkWO1ZIY/RVWpKKEI5ufuGy/Wh48sad0ol46DXgBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721964910; c=relaxed/simple;
-	bh=A9aJNiurICviezCurKvMzRiVwN9W5WJ3FN+2sqPkURg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=P6+jDwNiA5PTi6RE0gQcguHYP38cCJISOVQPE1q2+NfcapZ3OXPgtpmHgEUCUeBvkDrVMBYWTN0vGyx+Awv6vCsb06O625FGb0m6vl5r/KqanvUsAPyyR78OSQOPMsbo5HVPeGDMgP22SDxrF9tqdYyYCQWNtPE7GDYgSe1Nqng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxuOliGaNmAOYBAA--.7102S3;
-	Fri, 26 Jul 2024 11:34:58 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxHsdgGaNmISMCAA--.12641S3;
-	Fri, 26 Jul 2024 11:34:58 +0800 (CST)
-Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for
- kvm_hypercall
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Dandan Zhang <zhangdandan@uniontech.com>, zhaotianrui@loongson.cn,
- kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, wangyuli@uniontech.com,
- Wentao Guan <guanwentao@uniontech.com>
-References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
- <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn>
- <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn>
-Date: Fri, 26 Jul 2024 11:34:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1721975558; c=relaxed/simple;
+	bh=fX/RmpxpLqVU0ZwFcYrip898jiqaVvWfds9fPGAMYyY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cK82dRRGmngXPtNE/EnY0aD9YkCvlnEJaIroXhhQB8pY/4jJeGhniqKQjAlDtoFyrZ/2Bc/I8FNBLlTvVqNgnoZNq7+KUwM3FhQfA7cij1TsmQ5ZMnTuJNQR6NetE+NYH4ODxr1ffZnELCNtT6ft35p3lgNXwmVbezJgAAB1a24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QImTnMM+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QImTnMM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24016C32782
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 06:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721975558;
+	bh=fX/RmpxpLqVU0ZwFcYrip898jiqaVvWfds9fPGAMYyY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QImTnMM+6dCkK2RXamL4qdnU4iiNYmwsEXSo1/PZxNqsvwIEVadXwvGm154J3mYWz
+	 pGx08b7FC6O34VQ5+mjvqSt4W2475nQGEfvlITmVI5bICBZZ6dmQcr1aad+S9DG5ju
+	 UU46AsQZzqTZJg78BG6/UAfnTQ40X0vpWvt/GkugvzLD6ALbNd+Lcby/cPqQRflaJU
+	 0yqB34U6AoPZaACrc7DNcMVyLA+MdpFrbSJ+4TcmNL5wNutb2kfGnJLR9gI2BegRAR
+	 iRkHRfO00GqnYA/YGtgGNDaVDV0fzK/KjJrdGJ3hfG0wJX0GW7u+0dMflGzTmgDrxz
+	 oEd+nOKCLwpJQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52efa9500e0so1146708e87.3
+        for <loongarch@lists.linux.dev>; Thu, 25 Jul 2024 23:32:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVWsEd6mfUoh3HL4nhe0Hk06pZQ6mpekrPq0WFEKoKT9FXKA9Q5dHtCm+6m4ftKWTFX1Q29haUDJdsfjdTmNJZluQ+e2iOZm+lE
+X-Gm-Message-State: AOJu0YzHgj16haIAJrxZSeZBrvMyv0GxYIsQ8tsXRlZHoZAtxpDwY64z
+	9fqmhGXFQ39JhREj4oVgpVe64AsvL17yN4XmKIpQxvCGgSgo/qlWAuX/KnIsbEXOtSkp2wwzIcW
+	ojWBw3xN9Kg7ZhrOz3WMVZNhAMlI=
+X-Google-Smtp-Source: AGHT+IEbsWFdlyx5e6tE50U4RUretNlLHmWz33cPn1HP2NFpalZmhFOdO5lLwnhvf0kSGhuYk8rSbcPOUm+F569YkEY=
+X-Received: by 2002:a05:6512:3c8b:b0:52c:e047:5c38 with SMTP id
+ 2adb3069b0e04-52fd602ad06mr3047042e87.15.1721975556511; Thu, 25 Jul 2024
+ 23:32:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxHsdgGaNmISMCAA--.12641S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur47Zw1UCFy5XrWxtw45XFc_yoW8Cr4rpF
-	ZxA3WvkF48Kr1fC34xtrs8uryagrZ7Gw12gF98W345CrsFvwn3tr48tF1DuF1kAw1rJF4F
-	qFya93WfZFyUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8PC
-	zJUUUUU==
+References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
+ <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn> <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
+ <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn>
+In-Reply-To: <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 26 Jul 2024 14:32:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
+Message-ID: <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
+Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for kvm_hypercall
+To: maobibo <maobibo@loongson.cn>
+Cc: Dandan Zhang <zhangdandan@uniontech.com>, zhaotianrui@loongson.cn, kernel@xen0n.name, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	wangyuli@uniontech.com, Wentao Guan <guanwentao@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 26, 2024 at 11:35=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2024/7/26 =E4=B8=8A=E5=8D=8810:55, Huacai Chen wrote:
+> > On Fri, Jul 26, 2024 at 9:49=E2=80=AFAM maobibo <maobibo@loongson.cn> w=
+rote:
+> >>
+> >>
+> >>
+> >> On 2024/7/25 =E4=B8=8B=E5=8D=889:48, Dandan Zhang wrote:
+> >>> The kvm_hypercall set for LoongArch is limited to a1-a5.
+> >>> The mention of a6 in the comment is undefined that needs to be rectif=
+ied.
+> >>>
+> >>> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> >>> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
+> >>> ---
+> >>>    arch/loongarch/include/asm/kvm_para.h | 4 ++--
+> >>>    1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/i=
+nclude/asm/kvm_para.h
+> >>> index 335fb86778e2..43ec61589e6c 100644
+> >>> --- a/arch/loongarch/include/asm/kvm_para.h
+> >>> +++ b/arch/loongarch/include/asm/kvm_para.h
+> >>> @@ -39,9 +39,9 @@ struct kvm_steal_time {
+> >>>     * Hypercall interface for KVM hypervisor
+> >>>     *
+> >>>     * a0: function identifier
+> >>> - * a1-a6: args
+> >>> + * a1-a5: args
+> >>>     * Return value will be placed in a0.
+> >>> - * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
+> >>> + * Up to 5 arguments are passed in a1, a2, a3, a4, a5.
+> >>>     */
+> >>>    static __always_inline long kvm_hypercall0(u64 fid)
+> >>>    {
+> >>>
+> >>
+> >> Dandan,
+> >>
+> >> Nice catch. In future hypercall abi may expand such as the number of
+> >> input register and output register, or async hypercall function if the=
+re
+> >> is really such requirement.
+> >>
+> >> Anyway the modification is deserved and it is enough to use now, thank=
+s
+> >> for doing it.
+> >>
+> >> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> > Maybe it is better to implement kvm_hypercall6() than remove a6 now?
+> That is one option also. The main reason is that there is no such
+> requirement in near future :(, I prefer to removing the annotation and
+> keeping it clean.
+I don't like removing something and then adding it back again, so if
+kvm_hypercall6() is needed in future, it is better to add it now.
 
-
-On 2024/7/26 上午10:55, Huacai Chen wrote:
-> On Fri, Jul 26, 2024 at 9:49 AM maobibo <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2024/7/25 下午9:48, Dandan Zhang wrote:
->>> The kvm_hypercall set for LoongArch is limited to a1-a5.
->>> The mention of a6 in the comment is undefined that needs to be rectified.
->>>
->>> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
->>> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
->>> ---
->>>    arch/loongarch/include/asm/kvm_para.h | 4 ++--
->>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
->>> index 335fb86778e2..43ec61589e6c 100644
->>> --- a/arch/loongarch/include/asm/kvm_para.h
->>> +++ b/arch/loongarch/include/asm/kvm_para.h
->>> @@ -39,9 +39,9 @@ struct kvm_steal_time {
->>>     * Hypercall interface for KVM hypervisor
->>>     *
->>>     * a0: function identifier
->>> - * a1-a6: args
->>> + * a1-a5: args
->>>     * Return value will be placed in a0.
->>> - * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
->>> + * Up to 5 arguments are passed in a1, a2, a3, a4, a5.
->>>     */
->>>    static __always_inline long kvm_hypercall0(u64 fid)
->>>    {
->>>
->>
->> Dandan,
->>
->> Nice catch. In future hypercall abi may expand such as the number of
->> input register and output register, or async hypercall function if there
->> is really such requirement.
->>
->> Anyway the modification is deserved and it is enough to use now, thanks
->> for doing it.
->>
->> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Maybe it is better to implement kvm_hypercall6() than remove a6 now?
-That is one option also. The main reason is that there is no such 
-requirement in near future :(, I prefer to removing the annotation and 
-keeping it clean.
-
-Regards
-Bibo Mao
-> 
-> Huacai
->>
-
+Huacai
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >>
+>
+>
