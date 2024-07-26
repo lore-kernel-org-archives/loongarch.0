@@ -1,147 +1,155 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB92E176237
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 06:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1B41A286;
+	Fri, 26 Jul 2024 09:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721976620; cv=none; b=QGWoaBA/umowFV2GrF18UA4QOeuUpNe8q8yCrdur3ZBIzRaNvf7WqQJsWeJVFp082PWiOifgKIiHxDtlwE+9iQxej/idIDDUcF//tgC/AYJQjQV9xFAtKkGio1f6xJqp+Wcu9mtO6p9IXp0YcMLPuL/TWzEO334kjJYEK87F9Rk=
+	t=1721986831; cv=none; b=cSKIVcGjEuOI9NDHxWdnPFSYJGadddiqw0Bw/0X10KKNQXsK+T586XWkmjViHLQBi75JLWTcx9H8jD/kPQa1zuF3d+av7WhxwGg7eOxlMiDVNHR1rTzuAL+3Qb/YC/yfXZCT/5G/nII3OjHukfkaWkPJm2ERsBsTgwytbSaoGUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721976620; c=relaxed/simple;
-	bh=yuY8lQr4XJsFDjEBO/51xJBBFKCJZKqleGTBLoabv8k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=O88+Pc+sdhGl+L2/lftxDzzxNirgKMMcq1/UIq2Fum9wPSpquEV9CmMPNfIDlriDIhef1c765gKuR4TMYSgcNs8QHmlFploJznupy53Xp2zCUOwnJTh0ZsKlfQXxOF1nIK19pZ+vp2lcIuT+X6iU8p1orqi7ylKXChcpFk/vUfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxuOkjR6NmnfcBAA--.7341S3;
-	Fri, 26 Jul 2024 14:50:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxa+UgR6NmT1oCAA--.13636S3;
-	Fri, 26 Jul 2024 14:50:11 +0800 (CST)
-Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for
- kvm_hypercall
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Dandan Zhang <zhangdandan@uniontech.com>, zhaotianrui@loongson.cn,
- kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, wangyuli@uniontech.com,
- Wentao Guan <guanwentao@uniontech.com>
-References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
- <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn>
- <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
- <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn>
- <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <9bad6e47-dac5-82d2-1828-57df3ec840f8@loongson.cn>
-Date: Fri, 26 Jul 2024 14:50:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1721986831; c=relaxed/simple;
+	bh=/W5kbKWSvcsVRYIH6lNhUURaeOalcNxprGj7xwqXc8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBFRF6w5Vc95asL3rDHbR9IyvGpyJW8RyLF4m8jvJfeiZ9TbNfkxFXhNTkEgyb2EfbKzOkhe8itvQ8yDnIc34LaRSjJTPpRK1uaaclvpze6DmYhMZ1ytM4j6x22UoK01mD6eCTSao2XH4fzP6WxwehwuZW3EQQVd+ba9Yh5W9zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erbBnHVt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erbBnHVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9535FC32782;
+	Fri, 26 Jul 2024 09:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721986830;
+	bh=/W5kbKWSvcsVRYIH6lNhUURaeOalcNxprGj7xwqXc8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=erbBnHVtheMUAGs7sb6st1OpVR9FaIVHYj78yec90OKFphlkSZV5k/wAOzf9v7bHw
+	 qD/B4sk/oLODwsgv3p0XiErsiTqRDrNBJUfunPPt2ly/fcLhz146SfXfrJeznvLkZe
+	 U5MzHL6oELYwecQ5CE2FRGA7zc5ak6Om4kOHFE+xDor4Bpwaxj+6BMtxs9zpKRb0zj
+	 t0frO2fOt1mK8tuZJlZLn78/gGZpvARM3U+4DMaFSKK7j8fCZBwVSU2h9+v0uuhWmf
+	 doJp2N540bOFVoqeMi8DgOk/gCs4xM/TGYVOkNqWaGGBNobmAGDB5q2iYuCtHTHaiN
+	 kQwqqR1cv6trg==
+Date: Fri, 26 Jul 2024 12:40:03 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, nvdimm@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 00/25] mm: introduce numa_memblks
+Message-ID: <ZqNu8zwjhiTkbpIB@kernel.org>
+References: <20240723064156.4009477-1-rppt@kernel.org>
+ <1D474894-F8AC-427B-8F90-5A6808E77CC5@nvidia.com>
+ <6336C276-113E-4D93-A09E-13420A6438D8@nvidia.com>
+ <231F6DF6-96C8-4149-92CF-4FC03C9FE357@nvidia.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxa+UgR6NmT1oCAA--.13636S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXF1Uuw4rJF4ruFy8Jr15Jrc_yoW5GFyDpF
-	ZxC3WDCF48Kr1xCw1xt3s8uryavrWkKw12gF15Wry5Arnxtr1fJr48tF4UCF1kZayrJF10
-	qFyag3WfZFyUA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07jOuc_UUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <231F6DF6-96C8-4149-92CF-4FC03C9FE357@nvidia.com>
 
-
-
-On 2024/7/26 下午2:32, Huacai Chen wrote:
-> On Fri, Jul 26, 2024 at 11:35 AM maobibo <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2024/7/26 上午10:55, Huacai Chen wrote:
->>> On Fri, Jul 26, 2024 at 9:49 AM maobibo <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2024/7/25 下午9:48, Dandan Zhang wrote:
->>>>> The kvm_hypercall set for LoongArch is limited to a1-a5.
->>>>> The mention of a6 in the comment is undefined that needs to be rectified.
->>>>>
->>>>> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
->>>>> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
->>>>> ---
->>>>>     arch/loongarch/include/asm/kvm_para.h | 4 ++--
->>>>>     1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
->>>>> index 335fb86778e2..43ec61589e6c 100644
->>>>> --- a/arch/loongarch/include/asm/kvm_para.h
->>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
->>>>> @@ -39,9 +39,9 @@ struct kvm_steal_time {
->>>>>      * Hypercall interface for KVM hypervisor
->>>>>      *
->>>>>      * a0: function identifier
->>>>> - * a1-a6: args
->>>>> + * a1-a5: args
->>>>>      * Return value will be placed in a0.
->>>>> - * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
->>>>> + * Up to 5 arguments are passed in a1, a2, a3, a4, a5.
->>>>>      */
->>>>>     static __always_inline long kvm_hypercall0(u64 fid)
->>>>>     {
->>>>>
->>>>
->>>> Dandan,
->>>>
->>>> Nice catch. In future hypercall abi may expand such as the number of
->>>> input register and output register, or async hypercall function if there
->>>> is really such requirement.
->>>>
->>>> Anyway the modification is deserved and it is enough to use now, thanks
->>>> for doing it.
->>>>
->>>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
->>> Maybe it is better to implement kvm_hypercall6() than remove a6 now?
->> That is one option also. The main reason is that there is no such
->> requirement in near future :(, I prefer to removing the annotation and
->> keeping it clean.
-> I don't like removing something and then adding it back again, so if
-> kvm_hypercall6() is needed in future, it is better to add it now.
-I do not see the requirement by now.
-
-At the same time I just suggest you care about LoongArch kernel and 
-catch up the gap, just go forward rather than go around. Is it 
-responsibility of maintainer to catch future direction?
-
-Thanks for merging LoongArch KVM code at beginning, and I think I can 
-merge LoongArch kvm kernel to KVM tree directly just like KVM 
-x86/ARM64/RISCV.
-
-Regards
-Bibo
-
+On Wed, Jul 24, 2024 at 10:48:42PM -0400, Zi Yan wrote:
+> On 24 Jul 2024, at 20:35, Zi Yan wrote:
+> > On 24 Jul 2024, at 18:44, Zi Yan wrote:
+> >>
+> >> Hi,
+> >>
+> >> I have tested this series on both x86_64 and arm64. It works fine on x86_64.
+> >> All numa=fake= options work as they did before the series.
+> >>
+> >> But I am not able to boot the kernel (no printout at all) on arm64 VM
+> >> (Mac mini M1 VMWare). By git bisecting, arch_numa: switch over to numa_memblks
+> >> is the first patch causing the boot failure. I see the warning:
+> >>
+> >> WARNING: modpost: vmlinux: section mismatch in reference: numa_add_cpu+0x1c (section: .text) -> early_cpu_to_node (section: .init.text)
+> >>
+> >> I am not sure if it is red herring or not, since changing early_cpu_to_node
+> >> to cpu_to_node in numa_add_cpu() from mm/numa_emulation.c did get rid of the
+> >> warning, but the system still failed to boot.
+> >>
+> >> Please note that you need binutils 2.40 to build the arm64 kernel, since there
+> >> is a bug(https://sourceware.org/bugzilla/show_bug.cgi?id=31924) in 2.42 preventing
+> >> arm64 kernel from booting as well.
+> >>
+> >> My config is attached.
+> >
+> > I get more info after adding earlycon to the boot option.
+> > pgdat is NULL, causing issues when free_area_init_node() is dereferencing
+> > it at first WARN_ON.
+> >
+> > FYI, my build is this series on top of v6.10 instead of the base commit,
+> > where the series applies cleanly on top v6.10.
 > 
-> Huacai
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>>
->>
->>
+> OK, the issue comes from that my arm64 VM has no ACPI but x86_64 VM has it,
+> thus on arm64 VM numa_init(arch_acpi_numa_ini) failed in arch_numa_init()
+> and the code falls back to numa_init(dummy_numa_init). In dummy_numa_init(),
+> before patch 23 "arch_numa: switch over to numa_memblks", numa_add_memblk()
+> from drivers/base/arch_numa.c is called on arm64, which unconditionally
+> set 0 to numa_nodes_parsed. This is missing in the x86 version of
+> numa_add_memblk(), which is now used by all arch. By adding the patch
+> below, my arm64 kernel boots in the VM.
+> 
+> 
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 806550239d08..354f15b8d9b7 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -279,6 +279,7 @@ static int __init dummy_numa_init(void)
+>                 pr_err("NUMA init failed\n");
+>                 return ret;
+>         }
+> +       node_set(0, numa_nodes_parsed);
+> 
+>         numa_off = true;
+>         return 0;
+> 
+> 
+> Feel free to add
+> 
+> Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
+> 
+> after you incorporate the fix.
 
+Thanks a lot for testing, debugging and fixing! 
+> 
+> --
+> Best Regards,
+> Yan, Zi
+
+
+
+-- 
+Sincerely yours,
+Mike.
