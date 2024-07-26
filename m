@@ -1,57 +1,57 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5C214F133
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA37E154445
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722037963; cv=none; b=dFMedZ2T8WX0NMznFTyxp8Qlkus8nj+Yyb+HBkTWW1QfgyNlCw6NgG/FSRtkTaDX/PeZBysyQNzPW3aZadM/6wNIUTQzB1lI4/MaAKKM2omPJXbpwDWy+RlQyZ+wlK1C6cJw+CkuyjmY5beuyfdH4xY+8J4li5YFr04VfbaVwX0=
+	t=1722037965; cv=none; b=syecJ3GxaLg3qjEwvv67bEZKCD+Jwy/gKFkcG7q8ZhZ5fC6rXwlPSDZH7qDzA/QrkZpU52ooPIM0+xp9THQ0/RCoesdDwRPg1S9u5G7/LTozsXw19JwhnzFOPKpxYGlaCo+zGvZrcKq0aavfCAqm7vR3uCof01Guxf163WpTrPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722037963; c=relaxed/simple;
-	bh=24lki3QCeS0kH+gNN4dUIYpp1e6lnIRlAVL0zCm0YAQ=;
+	s=arc-20240116; t=1722037965; c=relaxed/simple;
+	bh=FV9suUWbUk18QdDUsD1tv1G/hfnnbrNwbRzzjldv2AY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UFRQ+qFhMtAdJBAfBwzmv1/dEN2BZnU4ZGlYRpi8ik3ev4JsohSBiizUa92NHenxApYHXPLZSrfiZt1vbWYDo/QFeAC65ZE2CKcSRILDcVcPXfy5EHo6+KFrmcIHsYTxUVAQBHHNtk2QYeuXTnWez5MdJn+TI2WEofAc12tHbBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DQ2wIosC; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=O7sbIjEmXpE5cPv76ThkzGeRePfJTwPbckDZ8oAfn4ivWWSqnydK0K+9hFlsuuwqAwDpAOILMaXLcONqhQ4IqEirUwm9LFi74XNaM9KF0bLvvm7UO8eUjXCx/DlBRIvjx+SiZNnSNENVil5qKpjBLnllX5l2Yh29Ha+p+c8fxM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MJXIZqhu; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQ2wIosC"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fc5e61f0bbso13355045ad.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:52:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MJXIZqhu"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70d26115cd5so1192577b3a.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722037960; x=1722642760; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722037962; x=1722642762; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=B44llYCZd4EZ9BiHApjJ5QQ8CK6GbkfpTxw4rYmbmqk=;
-        b=DQ2wIosCtjWr3MSBrMh63dKyCKJSAHwvBVaUuLV03dEEoDYkCGjpSoELgW0bWQK/ap
-         jsIVnlbu/TPQ/PQ+7mkrxQ47x1E1olnt0/gwshwAPijdME4c6b6ptZjzuZ3ahzneyY7A
-         e4C94qYPvIfXpvNHFdDGN0/woYne4Xr6N/tusOJ6W9cweWcY2ZWahRDo9m1JNrSCAtj7
-         d5Su3EzQ2ksv8m5x0xJSp/dF4UK/AjsSJe2jYi3MTEfTVmxfg4iLoUkPLJLQtkpSeSu/
-         AY4EAlRwcEfMxVBHZupmAS7ugGIHbYqFFtVKIXyrJUcM3EhQZLwg5Effwg+XiCrq2S2f
-         /jvg==
+        bh=+ACqpXiHFW0htcnePdxx7jkBXYAkQBnbtzPYGP86yy4=;
+        b=MJXIZqhuxpJj9JOTXgOq7tm2YEpmos1noymv2oz1uvBtAtGPUfW1shUFvO23IlQJcT
+         nrsAiGgkb1ReViPpXHyXrcYi4Um7uQ6iy32TdgP4Ln1in6nDvqlJsmam1Q6maTelLYKP
+         Pum8F2FR2NF+ms9ZvsBRGtJRytmRYfGmEYiyZ9U/AGRkh3rnKNoVNMW74FuO3uFVrOyR
+         pTBSHoOdkGazhsOyIGOZS3MeDmoalQiTZ9C1ci/hlSs5FBzVOFdPzu7oY1WcdTzBIFsi
+         6j/sRb3PNV6wuj2WVcgPe1QmXSjzk1l8WJBt6hFGeRo1GyG1vFCSh6CqTi4UxVpL41oy
+         4lXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722037960; x=1722642760;
+        d=1e100.net; s=20230601; t=1722037962; x=1722642762;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=B44llYCZd4EZ9BiHApjJ5QQ8CK6GbkfpTxw4rYmbmqk=;
-        b=X8BtMhHoUOZrj9xDdC7pgcxVxxN7e/ZCJqftyxRH4izQpduE3hY1MDWZ/ekv7oUcJQ
-         l5GlAwfxEEsbL0o0c7K9h9jWF+lMgxiYYanw2tPDcgWZqwyhHVWSncKD5Kb3jpTrw8CZ
-         F0vp0dFMuZ+JsEK94jQcRon1ngkCYX1N0hb5glJOd8f76KkU1n7oVTcdJ4424UxztSyn
-         KfLFEpJnOceuyEx7BvAo1SbSPjPn9i0WA3Oh6JTr36dq0vEjtpK7Wpd9QrzrhdwFMipd
-         4CmOXkRUsJBDPTJvDw58CfNngeEvYQ/hbjieHWFqAiemtwc3ZrJ+IjT3iZP2EEYhrxZf
-         sP9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWuVKG4YoqsAGIUbzL4RGRY4OM0erlcnA4WNwiRXvHFTsMebk1mhro6H2tfitlRhCRsLD9gRNs2tocit4LpqcwPMpDu6Rwc/tiM
-X-Gm-Message-State: AOJu0YxUBp48b1G/IoV33qYB42mCTsOcFgnXMyNjZOX7st7BsIcDO/1x
-	zgUhZC+WQK6xEyGgFy+pBYNWiiIkFPW+Jv2BmRuBzqpRLCh97n8IZWn8HdB+sdhSUP+Xi74ys9q
-	imA==
-X-Google-Smtp-Source: AGHT+IEjG0ZQEVlDvyCmqtjyibvaIBPxkBHQDdDjj94pZYYC/xb/lJ2iSbTktb4rvu/gOGNYLlpIc1q2Vcw=
+        bh=+ACqpXiHFW0htcnePdxx7jkBXYAkQBnbtzPYGP86yy4=;
+        b=nHiJaERL1EP2tctynIKEKbZ67yTn+E4PzW5JjnhivF1ymLYKFa1WH7V3obEk+2MIYm
+         r/Poi9D6Jo+L0EHH9I3+LxiCmI8fCa/fCDcQTJzPAt7ldFRCD5e+JWNuywY52vEJTXlY
+         S+abzni1lIOQUzc4fXfa06IFULbjvD5otVvFjoXW2yrAUuWaAD8NPr6opca8dZxLhZ6y
+         6ivgHfPWWz7+AFxkKumy18DG06BX+ca7QnkPangLF8LYhed4ONKiG3DQY1BSBlXwxV7A
+         S3LkUxAgOde1sEXSD7OXBDGjUCii5yJec5SrMhU9io8mCEZXAyjKVa7bBnw+MfajJ4z0
+         7TcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgWJzjKGPVQtDtE7sCuZrAy7ERyp0gJt1AN0rDBlvc86mldNmoFYSSS73MZr/VHND2nW8yJQwifsKajPZSt9pARDbIbpakId/Y
+X-Gm-Message-State: AOJu0Yw7UTdwqJorXMiQr2V9qsQZXcQJs2lz/E3/o+66F5uR10x/B5Xo
+	a+yLl6ke28jWZs/lslZYeuZPbxvK69J19zqPiLky4SQLLvikZjlL5Dc7uFXMjog1H98ZJGzxyBM
+	48Q==
+X-Google-Smtp-Source: AGHT+IGwCQGQqihWYa2umPunvMXl+38XfICaGVr07aRfeEr4UWXG0owvMV5oQenmn7mjdAWrLBWC2Kt2f3c=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:2b0e:b0:1fd:7097:af5c with SMTP id
- d9443c01a7336-1ff048d8505mr410065ad.11.1722037959655; Fri, 26 Jul 2024
- 16:52:39 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:2d5:b0:70d:1cb3:e3bb with SMTP id
+ d2e1a72fcca58-70ecedee1c9mr17317b3a.5.1722037961972; Fri, 26 Jul 2024
+ 16:52:41 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jul 2024 16:51:10 -0700
+Date: Fri, 26 Jul 2024 16:51:11 -0700
 In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240726235234.228822-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240726235234.228822-2-seanjc@google.com>
-Subject: [PATCH v12 01/84] KVM: arm64: Release pfn, i.e. put page, if copying
- MTE tags hits ZONE_DEVICE
+Message-ID: <20240726235234.228822-3-seanjc@google.com>
+Subject: [PATCH v12 02/84] KVM: arm64: Disallow copying MTE to guest memory
+ while KVM is dirty logging
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -80,29 +80,35 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Put the page reference acquired by gfn_to_pfn_prot() if
-kvm_vm_ioctl_mte_copy_tags() runs into ZONE_DEVICE memory.  KVM's less-
-than-stellar heuristics for dealing with pfn-mapped memory means that KVM
-can get a page reference to ZONE_DEVICE memory.
+Disallow copying MTE tags to guest memory while KVM is dirty logging, as
+writing guest memory without marking the gfn as dirty in the memslot could
+result in userspace failing to migrate the updated page.  Ideally (maybe?),
+KVM would simply mark the gfn as dirty, but there is no vCPU to work with,
+and presumably the only use case for copy MTE tags _to_ the guest is when
+restoring state on the target.
 
 Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/kvm/guest.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kvm/guest.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 11098eb7eb44..e1f0ff08836a 100644
+index e1f0ff08836a..962f985977c2 100644
 --- a/arch/arm64/kvm/guest.c
 +++ b/arch/arm64/kvm/guest.c
-@@ -1059,6 +1059,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
- 		page = pfn_to_online_page(pfn);
- 		if (!page) {
- 			/* Reject ZONE_DEVICE memory */
-+			kvm_release_pfn_clean(pfn);
- 			ret = -EFAULT;
- 			goto out;
- 		}
+@@ -1045,6 +1045,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+ 
+ 	mutex_lock(&kvm->slots_lock);
+ 
++	if (write && atomic_read(&kvm->nr_memslots_dirty_logging)) {
++		ret = -EBUSY;
++		goto out;
++	}
++
+ 	while (length > 0) {
+ 		kvm_pfn_t pfn = gfn_to_pfn_prot(kvm, gfn, write, NULL);
+ 		void *maddr;
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
