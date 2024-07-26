@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F9718133D
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EF5181CEE
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722038044; cv=none; b=O8brKVg+qBJPjVQuIr/bMK6YD71fogKlM39BbKDkxMiHRyjnDLYvll/wZlA1xmb+vfZY+KUxQbf2zykWjr4wogzVw8aZw4VPuBVKtna6mZCv/A80xxZMUBoN0borAwmnNYtJbLEW8127fPlICxhPLGkmSOKhqNqXFltqp4yHKkw=
+	t=1722038048; cv=none; b=kMut2B2AIFZVAKTGmidnvtwUTs6whSOmgAdPWRUEWDypZMlzlXVK/hVYvBaSaVAw9U5L2Y+TECqMbUoiBraAko0c0jXAWYKE9yMFqGF4d3XBYzheQGtTR6QSH6Vh2kv1jlxJPZX8Riklk5Naw40oVBmXJZlERzdWI5aY3oTq3uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722038044; c=relaxed/simple;
-	bh=ekyGgwJW5KCFeLGIovEA7dKaEjIwCbNp1pdHY6eLnUg=;
+	s=arc-20240116; t=1722038048; c=relaxed/simple;
+	bh=UWINRAqNW2M8Y4oOWNTo24b9GyZbmPXxBUrdFtS1EX8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iyUsPWPiRgKgKZ78aBqJ8nFoUfgarOH9aEl7HPyNdXg8PPAIoWVNTuTDaD67MzMCVsmD5coemoNSbGcKOKaIPwG0GTdtf7TsGo7s+gY2szpl8n/9A54YvnnPFe5SxqHsA1Ibc1FsQtRTQ5n8Vi4marERGOYvxBD69O5f99eqQbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Y6ciOjP; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=OwAeSy/DUEyq+jpQ/HaGSl9I8prw4RqlpzPkhMzg/JujlIJDf8GMUz857gHVjd7T/kPpgohxIMBaAOpWwNJQBx5O8dRm1z4hqxihtezzQBEy5hUIJ4d8pNBUTlQNgq7lvJ+yt4I35DYhoSYNslgPu/DkJOZPQt2GYHH6Me4RpUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vuY4G9VT; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Y6ciOjP"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-70e9ea89b42so1344062b3a.3
-        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:54:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vuY4G9VT"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-664c185a606so7416977b3.2
+        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722038042; x=1722642842; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722038044; x=1722642844; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=9zY2YEu1HUtjdcDr5plCoNlYuLGLbh4OhGnITp611eA=;
-        b=4Y6ciOjPAegagn96Xlzk3JayEnd5vnEWRdxsUqT3SYZdryzOR7qP8F+mYgiQgMA3UN
-         yfXbcSu0GVnYq0aVJNd6ziIop70wbttkKQFEfL3JDHbom7rurj2NmJeUVToYsnfqLqfC
-         5w/2zkOKUx58q5SVykjWQSqnUVFlN8YoUbQR1jrK83qgXlHK/VmHz8iQf7d6yx9MWvp9
-         bu6sF7haApArxlp33LkOKq5IA8UgaM1bTIpPlR+ImivieD8K2Mbve2MWg2GVjjJ5zY4b
-         5fDhLS2lI+9wFsxpdwHCdR87cXfLVyQA+Y5LQnlQOcBS+6HdsmViKofwDSnkBkw0Gyhx
-         Fosw==
+        bh=66tkjZePX8REZ4BHWwuGWSSOzSubgrfSmhtIFHX3PRM=;
+        b=vuY4G9VTzkrtKYtkoIDRIkVumRaCC8aGEZ5Mua+q2XIGMCPi3jd7Hc9tOOnmIAkqNT
+         +D6l53cKNfeJYZ7eEvlBlae5CEL1+ZLEvN5UAqaQM0T45kkQXr+P7rl/FX7v39qngBbQ
+         z+LIAurbgDXz9H9iyYGZHkeaDFkG5F6xuhTmDl8WWsRWyxnWQASUhR3VWMoZ0YxSqD41
+         QvzN9cvfIlnjCl/FlIdMMJ4E15TUaY01Uyk+wi6yO4kYikVK73yCFHbqMiaRANTELyGD
+         harqbvsSc/UZUWGmCZWKyDbKnwFRSLnROtLeSDHE0VuYsPnDR6AHEIUBNUthGjgpff2X
+         YtUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722038042; x=1722642842;
+        d=1e100.net; s=20230601; t=1722038044; x=1722642844;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9zY2YEu1HUtjdcDr5plCoNlYuLGLbh4OhGnITp611eA=;
-        b=e3I1qL+yfjZKiMJ0N/4i4oenUJiTfjp4N/qU+8eZZtY9Vy8yvOnPMdrXtlshoGDOYM
-         o0SiWVZU/MY2G7VhUcZFfeJxge8TdvUKGvp7rWUVCesZg9UnpTQ8bA/5ACn+HvIQ8qvk
-         hMIIi8C557CMElehJPX4UsM2C5PaNRi9kUa0JKTNcCIPkJ0wt8LyNJ79Bvi/oN0sj7sQ
-         CKvb2OjK7WCV/R+Z1W9LBJjEq8y2eDGJ3Bi1Ko/1g7/Y5bNa2FBE2XlsLaNuOQB0JQe7
-         RdmqI3q4KScZnRABGyvvCa/T4RMGbHobFXdVVish/HKmkQvDFo2TCF7/D5FgJI6qBNzm
-         cSyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwns1Lh7ZRymrJddgrXnAabofM8qbbhb6XWAn60qNuNmo5t/1he59YgcdVT/UhhaJ+1A2c4VTLSYewjRIxqxssGwARRlxj3lUP
-X-Gm-Message-State: AOJu0YxxC1fIVomGRt/95tSKAsieG0lRTIXRZnnlfaY8hRqazMrOaP+t
-	YNT33TgjgCgBgDQpoDXkKppiUUYGB//yvDc9Pssb1x+GTPn7Z7aMBRMKKm1dM0Qx2fMQ5Oupke0
-	JxQ==
-X-Google-Smtp-Source: AGHT+IFj2ro53tB8A9NyZ1GYVrgqdx/ajbf6jMsbjIk3q7R62qDhpHqlToArJZlcHrNz2kHOoBaEKLt0+7c=
+        bh=66tkjZePX8REZ4BHWwuGWSSOzSubgrfSmhtIFHX3PRM=;
+        b=KjOrs/ZuSN3btIi8oW9v/RKxZjuMLYfqE9mRHNMJbvK3zHpCn88Nol5ghEkic0gA/k
+         VAZn2ib6fEgurt7/axypI2eYbDy/L49VFNF5q0t9OHEuaQYJc6YatyxPyzsI5Wggo3Lt
+         EWqEDU2+zBzgpDdKJwBA7ZpucPDCpSygUXrsjPUlYOKxBx2bL24JqTxcGkdDXbxHCpcN
+         IPaO3pMfKCn2aMhjJzxpgRrCY/VSwgmhJ7yGi41lu/+VDbtieuw2bMmZDMySqN6Wdy7D
+         XFk9KdMtE7PmzTfpWIsNQ2HeOlaaJgpWr3uuKfaJQVgkgv6f5TuDVUdgjq8fQMbUJ8ca
+         IG0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXeDgE4pO+dxkVxRYD5YzXheDpkGugiX9l0DPXR8QUP1qGHk4vTFDds5n4fofcztIm3qR8vyIIxg4nwPvd8YXrIS5DRhMY8YbVx
+X-Gm-Message-State: AOJu0YyP5XSXITbkj8aDL1JiAkx14LVXZL5aGXhL+4S1cFMbYtTgeToO
+	pO2tW912J79wT4wEG+69Noy/qOxdBNYhfxxDP9EfcwQaXgUn+zAVp69OeseYv0kaVbX92Qms2CY
+	gWw==
+X-Google-Smtp-Source: AGHT+IEXCHhy0parcxZWaUKhAkA9z5ds6aScUvbMwsWWyatCr0tT87bBO0XasR4cX5mU+wgB/x+9BeJQnC8=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:66e5:b0:70d:27ca:96b8 with SMTP id
- d2e1a72fcca58-70ece926ad1mr25418b3a.0.1722038041966; Fri, 26 Jul 2024
- 16:54:01 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:690c:f92:b0:673:b39a:92f2 with SMTP id
+ 00721157ae682-67a0a7fd778mr244297b3.7.1722038044118; Fri, 26 Jul 2024
+ 16:54:04 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jul 2024 16:51:50 -0700
+Date: Fri, 26 Jul 2024 16:51:51 -0700
 In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240726235234.228822-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240726235234.228822-42-seanjc@google.com>
-Subject: [PATCH v12 41/84] KVM: x86/mmu: Mark pages/folios dirty at the origin
- of make_spte()
+Message-ID: <20240726235234.228822-43-seanjc@google.com>
+Subject: [PATCH v12 42/84] KVM: Move declarations of memslot accessors up in kvm_host.h
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -80,104 +79,48 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the marking of folios dirty from make_spte() out to its callers,
-which have access to the _struct page_, not just the underlying pfn.
-Once all architectures follow suit, this will allow removing KVM's ugly
-hack where KVM elevates the refcount of VM_MIXEDMAP pfns that happen to
-be struct page memory.
+Move the memslot lookup helpers further up in kvm_host.h so that they can
+be used by inlined "to pfn" wrappers.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c         | 29 +++++++++++++++++++++++++++--
- arch/x86/kvm/mmu/paging_tmpl.h |  5 +++++
- arch/x86/kvm/mmu/spte.c        | 11 -----------
- 3 files changed, 32 insertions(+), 13 deletions(-)
+ include/linux/kvm_host.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 1cdd67707461..7e7b855ce1e1 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2918,7 +2918,16 @@ static bool kvm_mmu_prefetch_sptes(struct kvm_vcpu *vcpu, gfn_t gfn, u64 *sptep,
- 	for (i = 0; i < nr_pages; i++, gfn++, sptep++) {
- 		mmu_set_spte(vcpu, slot, sptep, access, gfn,
- 			     page_to_pfn(pages[i]), NULL);
--		kvm_release_page_clean(pages[i]);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 5a572cef4adc..ef0277b77375 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1153,6 +1153,10 @@ static inline bool kvm_memslot_iter_is_valid(struct kvm_memslot_iter *iter, gfn_
+ 	     kvm_memslot_iter_is_valid(iter, end);			\
+ 	     kvm_memslot_iter_next(iter))
+ 
++struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
++struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
++struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn);
 +
-+		/*
-+		 * KVM always prefetches writable pages from the primary MMU,
-+		 * and KVM can make its SPTE writable in the fast page, without
-+		 * notifying the primary MMU.  Mark pages/folios dirty now to
-+		 * ensure file data is written back if it ends up being written
-+		 * by the guest.  Because KVM's prefetching GUPs writable PTEs,
-+		 * the probability of unnecessary writeback is extremely low.
-+		 */
-+		kvm_release_page_dirty(pages[i]);
- 	}
+ /*
+  * KVM_SET_USER_MEMORY_REGION ioctl allows the following operations:
+  * - create a new memory slot
+@@ -1290,15 +1294,13 @@ int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ })
  
- 	return true;
-@@ -4314,7 +4323,23 @@ static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
- static void kvm_mmu_finish_page_fault(struct kvm_vcpu *vcpu,
- 				      struct kvm_page_fault *fault, int r)
- {
--	kvm_release_pfn_clean(fault->pfn);
-+	lockdep_assert_once(lockdep_is_held(&vcpu->kvm->mmu_lock) ||
-+			    r == RET_PF_RETRY);
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+-struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
+ bool kvm_vcpu_is_visible_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
+ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void mark_page_dirty_in_slot(struct kvm *kvm, const struct kvm_memory_slot *memslot, gfn_t gfn);
+ void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
+ 
+-struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
+-struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn);
 +
-+	/*
-+	 * If the page that KVM got from the *primary MMU* is writable, and KVM
-+	 * installed or reused a SPTE, mark the page/folio dirty.  Note, this
-+	 * may mark a folio dirty even if KVM created a read-only SPTE, e.g. if
-+	 * the GFN is write-protected.  Folios can't be safely marked dirty
-+	 * outside of mmu_lock as doing so could race with writeback on the
-+	 * folio.  As a result, KVM can't mark folios dirty in the fast page
-+	 * fault handler, and so KVM must (somewhat) speculatively mark the
-+	 * folio dirty if KVM could locklessly make the SPTE writable.
-+	 */
-+	if (!fault->map_writable || r == RET_PF_RETRY)
-+		kvm_release_pfn_clean(fault->pfn);
-+	else
-+		kvm_release_pfn_dirty(fault->pfn);
- }
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
  
- static int kvm_mmu_faultin_pfn_private(struct kvm_vcpu *vcpu,
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index b6897916c76b..2e2d87a925ac 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -953,6 +953,11 @@ static int FNAME(sync_spte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int
- 		  spte_to_pfn(spte), spte, true, false,
- 		  host_writable, &spte);
- 
-+	/*
-+	 * There is no need to mark the pfn dirty, as the new protections must
-+	 * be a subset of the old protections, i.e. synchronizing a SPTE cannot
-+	 * change the SPTE from read-only to writable.
-+	 */
- 	return mmu_spte_update(sptep, spte);
- }
- 
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index 9b8795bd2f04..2c5650390d3b 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -277,17 +277,6 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
- 		mark_page_dirty_in_slot(vcpu->kvm, slot, gfn);
- 	}
- 
--	/*
--	 * If the page that KVM got from the primary MMU is writable, i.e. if
--	 * it's host-writable, mark the page/folio dirty.  As alluded to above,
--	 * folios can't be safely marked dirty in the fast page fault handler,
--	 * and so KVM must (somewhat) speculatively mark the folio dirty even
--	 * though it isn't guaranteed to be written as KVM won't mark the folio
--	 * dirty if/when the SPTE is made writable.
--	 */
--	if (host_writable)
--		kvm_set_pfn_dirty(pfn);
--
- 	*new_spte = spte;
- 	return wrprot;
- }
+ int __kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map,
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
