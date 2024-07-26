@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA37E154445
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8A15533F
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722037965; cv=none; b=syecJ3GxaLg3qjEwvv67bEZKCD+Jwy/gKFkcG7q8ZhZ5fC6rXwlPSDZH7qDzA/QrkZpU52ooPIM0+xp9THQ0/RCoesdDwRPg1S9u5G7/LTozsXw19JwhnzFOPKpxYGlaCo+zGvZrcKq0aavfCAqm7vR3uCof01Guxf163WpTrPU=
+	t=1722037966; cv=none; b=aWoWHPmyCvVAZ07E2S4VW5TVR19v3PH/zJc3ikLmahANbQLEa84F1Cr8mVQnqQJlFZjuwrszCLwzmov+mhsMD0dFs4qjJG9WXatyAQZMlYPaNSZX8k6+1Q+cTvuV3d0pf3vS765k7XhFtzI9URWZl9JCjnLKZjvFKpm49mEhuzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722037965; c=relaxed/simple;
-	bh=FV9suUWbUk18QdDUsD1tv1G/hfnnbrNwbRzzjldv2AY=;
+	s=arc-20240116; t=1722037966; c=relaxed/simple;
+	bh=As5a6sCjA0bn2QxKfat0y/Alc6god6QcgzHJ1XC3GL0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O7sbIjEmXpE5cPv76ThkzGeRePfJTwPbckDZ8oAfn4ivWWSqnydK0K+9hFlsuuwqAwDpAOILMaXLcONqhQ4IqEirUwm9LFi74XNaM9KF0bLvvm7UO8eUjXCx/DlBRIvjx+SiZNnSNENVil5qKpjBLnllX5l2Yh29Ha+p+c8fxM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MJXIZqhu; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=ZA5y+4LSZ0MzgDzCGwXS2DaBMlyPt5vaB6bAGvajrc+bpW/E8/UTZra5l+qemM4NRBQ6cKuZwKZtGR45f/6kAWaxk4wZZCBTY4ZSAJZM4cf+bsN0HkRsE0bMgrHjRF3/zT1jFxwbGl5O5NAs+VNZeRmXgr0qZ/7zZ9AkZTvrDq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Szdo5WLJ; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MJXIZqhu"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70d26115cd5so1192577b3a.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:52:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Szdo5WLJ"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fc54c57a92so10621815ad.3
+        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:52:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722037962; x=1722642762; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722037964; x=1722642764; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ACqpXiHFW0htcnePdxx7jkBXYAkQBnbtzPYGP86yy4=;
-        b=MJXIZqhuxpJj9JOTXgOq7tm2YEpmos1noymv2oz1uvBtAtGPUfW1shUFvO23IlQJcT
-         nrsAiGgkb1ReViPpXHyXrcYi4Um7uQ6iy32TdgP4Ln1in6nDvqlJsmam1Q6maTelLYKP
-         Pum8F2FR2NF+ms9ZvsBRGtJRytmRYfGmEYiyZ9U/AGRkh3rnKNoVNMW74FuO3uFVrOyR
-         pTBSHoOdkGazhsOyIGOZS3MeDmoalQiTZ9C1ci/hlSs5FBzVOFdPzu7oY1WcdTzBIFsi
-         6j/sRb3PNV6wuj2WVcgPe1QmXSjzk1l8WJBt6hFGeRo1GyG1vFCSh6CqTi4UxVpL41oy
-         4lXw==
+        bh=oJ4Czs6Wm6GL3WD+/Q+iqutVJUfrJPNLt1yka1W8eMI=;
+        b=Szdo5WLJYB9LQgOaTSq46iKlPseSDwylU40n3gjaZ1uJBwdwKsa/Sg/DiXdcTcWnN+
+         n4jl5tSN18l/4Am8iu+3TfQvC4ph/DbBy5OHRRQU5ufrz88FKhP+1q/xTJOtyQ3AEXkb
+         cpPQsJGxlWdy8GXwew4r14DE/XDECE8eGnpuo/Ht6h7AIbg2vFkfTpGQSt4odnZNGOWx
+         QquubYZkKLRVGXU1zNDIvNRmpSbsua9cDkflaonKn0VM8OqW1eTMhk4pIw0CSg6VKStV
+         D1EXAQXr+ksK9FTDz/wirIVqP/GP/geiplj79VCf9QH/2S/Lj/lBfsSs6zR0DoriARmt
+         ncBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722037962; x=1722642762;
+        d=1e100.net; s=20230601; t=1722037964; x=1722642764;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+ACqpXiHFW0htcnePdxx7jkBXYAkQBnbtzPYGP86yy4=;
-        b=nHiJaERL1EP2tctynIKEKbZ67yTn+E4PzW5JjnhivF1ymLYKFa1WH7V3obEk+2MIYm
-         r/Poi9D6Jo+L0EHH9I3+LxiCmI8fCa/fCDcQTJzPAt7ldFRCD5e+JWNuywY52vEJTXlY
-         S+abzni1lIOQUzc4fXfa06IFULbjvD5otVvFjoXW2yrAUuWaAD8NPr6opca8dZxLhZ6y
-         6ivgHfPWWz7+AFxkKumy18DG06BX+ca7QnkPangLF8LYhed4ONKiG3DQY1BSBlXwxV7A
-         S3LkUxAgOde1sEXSD7OXBDGjUCii5yJec5SrMhU9io8mCEZXAyjKVa7bBnw+MfajJ4z0
-         7TcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgWJzjKGPVQtDtE7sCuZrAy7ERyp0gJt1AN0rDBlvc86mldNmoFYSSS73MZr/VHND2nW8yJQwifsKajPZSt9pARDbIbpakId/Y
-X-Gm-Message-State: AOJu0Yw7UTdwqJorXMiQr2V9qsQZXcQJs2lz/E3/o+66F5uR10x/B5Xo
-	a+yLl6ke28jWZs/lslZYeuZPbxvK69J19zqPiLky4SQLLvikZjlL5Dc7uFXMjog1H98ZJGzxyBM
-	48Q==
-X-Google-Smtp-Source: AGHT+IGwCQGQqihWYa2umPunvMXl+38XfICaGVr07aRfeEr4UWXG0owvMV5oQenmn7mjdAWrLBWC2Kt2f3c=
+        bh=oJ4Czs6Wm6GL3WD+/Q+iqutVJUfrJPNLt1yka1W8eMI=;
+        b=M3kuTrrdGAMespkrsJJ1pgrJLyUSr7icMwQ0brM0yMLggBDCJQTUT400pKqOFJF4yR
+         knFDDsEYgUWCotRL4AOYyGbU7EHl+b0kutf23aThMDDDX3bODNNJDIGWhWk1B2lePpbG
+         eTW8yeHSXYatQojx26hvYu1AWovchurEF0Fd9uAhdSFEbRGR4T0vVEzvgDXZZSLOOB8o
+         093+9BufNjcg42kmRFT9QUDw/j1asO3Umr87vLDKx2+evZHWUQQc2Wb1tfjLRBKhwy6L
+         pM86NuVt6ehSBCSroiKhIlj1ZBL1gAvJ7lWMcQyUVb/3A3ykf0Cva0aRbsV4ZjpNUfko
+         TtVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnJ/P1S8AHVMFlinGeCIwhEghdYnP1Uz/nQkSFhg4uf5tYaoEHTnGNtAtm+cH/FSLbryUfKLHjFDgE8mIoq3Yk1lvuzG5iEkMj
+X-Gm-Message-State: AOJu0YzMK9ohidybNHDMMXfQJVAcH4oYkSX3KllErj80ynbA2Tvq/BXu
+	iBOkLdPfB5vtYqZFylvtnw6EFHTHnuxUWT8tAsR3jbMGvC4zr35vOmHBnygu9emW4pnAGbHWAer
+	kUA==
+X-Google-Smtp-Source: AGHT+IE4QseE8FQyDppGpUcmrzEgygvCajM4BiXmkGQ8bCrs1hHMNuBsnO5u2Op4CzG6c9mnubgf1na2VnA=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2d5:b0:70d:1cb3:e3bb with SMTP id
- d2e1a72fcca58-70ecedee1c9mr17317b3a.5.1722037961972; Fri, 26 Jul 2024
- 16:52:41 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:902:f683:b0:1fc:27be:42dd with SMTP id
+ d9443c01a7336-1ff0479bbb4mr799825ad.1.1722037964087; Fri, 26 Jul 2024
+ 16:52:44 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jul 2024 16:51:11 -0700
+Date: Fri, 26 Jul 2024 16:51:12 -0700
 In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240726235234.228822-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240726235234.228822-3-seanjc@google.com>
-Subject: [PATCH v12 02/84] KVM: arm64: Disallow copying MTE to guest memory
- while KVM is dirty logging
+Message-ID: <20240726235234.228822-4-seanjc@google.com>
+Subject: [PATCH v12 03/84] KVM: Drop KVM_ERR_PTR_BAD_PAGE and instead return
+ NULL to indicate an error
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -80,35 +80,137 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Disallow copying MTE tags to guest memory while KVM is dirty logging, as
-writing guest memory without marking the gfn as dirty in the memslot could
-result in userspace failing to migrate the updated page.  Ideally (maybe?),
-KVM would simply mark the gfn as dirty, but there is no vCPU to work with,
-and presumably the only use case for copy MTE tags _to_ the guest is when
-restoring state on the target.
+Remove KVM_ERR_PTR_BAD_PAGE and instead return NULL, as "bad page" is just
+a leftover bit of weirdness from days of old when KVM stuffed a "bad" page
+into the guest instead of actually handling missing pages.  See commit
+cea7bb21280e ("KVM: MMU: Make gfn_to_page() always safe").
 
-Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/kvm/guest.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/kvm/book3s_pr.c          |  2 +-
+ arch/powerpc/kvm/book3s_xive_native.c |  2 +-
+ arch/s390/kvm/vsie.c                  |  2 +-
+ arch/x86/kvm/lapic.c                  |  2 +-
+ include/linux/kvm_host.h              |  7 -------
+ virt/kvm/kvm_main.c                   | 15 ++++++---------
+ 6 files changed, 10 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index e1f0ff08836a..962f985977c2 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -1045,6 +1045,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index a7d7137ea0c8..1bdcd4ee4813 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -645,7 +645,7 @@ static void kvmppc_patch_dcbz(struct kvm_vcpu *vcpu, struct kvmppc_pte *pte)
+ 	int i;
  
- 	mutex_lock(&kvm->slots_lock);
+ 	hpage = gfn_to_page(vcpu->kvm, pte->raddr >> PAGE_SHIFT);
+-	if (is_error_page(hpage))
++	if (!hpage)
+ 		return;
  
-+	if (write && atomic_read(&kvm->nr_memslots_dirty_logging)) {
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+
- 	while (length > 0) {
- 		kvm_pfn_t pfn = gfn_to_pfn_prot(kvm, gfn, write, NULL);
- 		void *maddr;
+ 	hpage_offset = pte->raddr & ~PAGE_MASK;
+diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
+index 6e2ebbd8aaac..d9bf1bc3ff61 100644
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -654,7 +654,7 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+ 	}
+ 
+ 	page = gfn_to_page(kvm, gfn);
+-	if (is_error_page(page)) {
++	if (!page) {
+ 		srcu_read_unlock(&kvm->srcu, srcu_idx);
+ 		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
+ 		return -EINVAL;
+diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+index 54deafd0d698..566697ee37eb 100644
+--- a/arch/s390/kvm/vsie.c
++++ b/arch/s390/kvm/vsie.c
+@@ -661,7 +661,7 @@ static int pin_guest_page(struct kvm *kvm, gpa_t gpa, hpa_t *hpa)
+ 	struct page *page;
+ 
+ 	page = gfn_to_page(kvm, gpa_to_gfn(gpa));
+-	if (is_error_page(page))
++	if (!page)
+ 		return -EINVAL;
+ 	*hpa = (hpa_t)page_to_phys(page) + (gpa & ~PAGE_MASK);
+ 	return 0;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index a7172ba59ad2..6d65b36fac29 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2629,7 +2629,7 @@ int kvm_alloc_apic_access_page(struct kvm *kvm)
+ 	}
+ 
+ 	page = gfn_to_page(kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
+-	if (is_error_page(page)) {
++	if (!page) {
+ 		ret = -EFAULT;
+ 		goto out;
+ 	}
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 689e8be873a7..3d9617d1de41 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -153,13 +153,6 @@ static inline bool kvm_is_error_gpa(gpa_t gpa)
+ 	return gpa == INVALID_GPA;
+ }
+ 
+-#define KVM_ERR_PTR_BAD_PAGE	(ERR_PTR(-ENOENT))
+-
+-static inline bool is_error_page(struct page *page)
+-{
+-	return IS_ERR(page);
+-}
+-
+ #define KVM_REQUEST_MASK           GENMASK(7,0)
+ #define KVM_REQUEST_NO_WAKEUP      BIT(8)
+ #define KVM_REQUEST_WAIT           BIT(9)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index d0788d0a72cc..fd8c212b8de7 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3085,19 +3085,14 @@ EXPORT_SYMBOL_GPL(gfn_to_page_many_atomic);
+  */
+ struct page *gfn_to_page(struct kvm *kvm, gfn_t gfn)
+ {
+-	struct page *page;
+ 	kvm_pfn_t pfn;
+ 
+ 	pfn = gfn_to_pfn(kvm, gfn);
+ 
+ 	if (is_error_noslot_pfn(pfn))
+-		return KVM_ERR_PTR_BAD_PAGE;
++		return NULL;
+ 
+-	page = kvm_pfn_to_refcounted_page(pfn);
+-	if (!page)
+-		return KVM_ERR_PTR_BAD_PAGE;
+-
+-	return page;
++	return kvm_pfn_to_refcounted_page(pfn);
+ }
+ EXPORT_SYMBOL_GPL(gfn_to_page);
+ 
+@@ -3191,7 +3186,8 @@ static void kvm_set_page_accessed(struct page *page)
+ 
+ void kvm_release_page_clean(struct page *page)
+ {
+-	WARN_ON(is_error_page(page));
++	if (WARN_ON(!page))
++		return;
+ 
+ 	kvm_set_page_accessed(page);
+ 	put_page(page);
+@@ -3215,7 +3211,8 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_clean);
+ 
+ void kvm_release_page_dirty(struct page *page)
+ {
+-	WARN_ON(is_error_page(page));
++	if (WARN_ON(!page))
++		return;
+ 
+ 	kvm_set_page_dirty(page);
+ 	kvm_release_page_clean(page);
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
