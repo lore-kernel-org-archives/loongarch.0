@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4AA190696
-	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89699191493
+	for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 23:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722038124; cv=none; b=sVktSPho4U/50L6BddO327m3xx5gEcFJoxE9tDDhEl9Q9T/svXMSguZw+AOWbgfVnqpBw3ZsSC20YEMTYDSkulHZl6pbd6xGH56ZvWVEc7pHdQL3gM5R46ahCe2UxkL1Aee/LoncAEcraK9orJjAqQcrZE1IRA0Y+w7x3AlBBbQ=
+	t=1722038125; cv=none; b=f6UNSUftQWtaAgoPk+YOgtXAtPmj3FIACLeBewRRqbaaSQyXfk1jXu1wRPPnrfErM+g72rZKG6jicLms/TEWXcbg7BaZ4Ac6ov467vldrZebg626sL+UgTOo/cev73ZDmWLDxuQXE97ytY82VmpiOdnrKpVRuuf0Pe7xMwoHRcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722038124; c=relaxed/simple;
-	bh=7Hftste+MoYv6vvr7E6Hei8BDRxdZZ0dk5NIAY9vDsg=;
+	s=arc-20240116; t=1722038125; c=relaxed/simple;
+	bh=rI1deqx8R2FAT3yDZksFCzznTBxsLeNOCK4lgbhIK5U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mKmHrMB1X/Nd3S80sRB/eiUNv/uUNMj93iPMnAEuOBzjPZRDKXSxXNiQvUFz9fzhwhJQjyWBKHrGAF7vH1JUz4D55q/j69nCxrvi/Zrh/4605pVVEYEEFSiLoNUB8CbUH2nDp00RNqxbOcztj+7mzGhdlgzhi+fOlHcemUiRnPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bv3DvZnG; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=JobpXpu1jMCoFCNUGfAVGz01Cn31Czy/Xxhq3KAidkp6SVIZVwcOwd76MTIGRypWj0/LgzbSZIwAN/mYWDL93YqiVqYT9kG8ID+RgrF44+o4fenhitdIqmlj8Xrf/Uv6h2da7UYfFnLfYbhBQDlK5Ly6ID2V5nLz7MZyaR1Ub3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=23IaIzGC; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bv3DvZnG"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-672bea19dd3so7049857b3.1
-        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:55:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="23IaIzGC"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fca868b53cso10626625ad.1
+        for <loongarch@lists.linux.dev>; Fri, 26 Jul 2024 16:55:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722038122; x=1722642922; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722038124; x=1722642924; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=dTOlfH+mhloY9mYg+/p0IQai80b+6RXS/WhBEV7av3U=;
-        b=Bv3DvZnGMp6Pk1yAm+xpbcG0mcMn9swYRDGdrLOZCMeUtDQjePedY151dikoVM5b6m
-         NQlZS6Y6x36qNdOMtAp0XPlGBnzCTGNll5lcD+4w6vz9iJShttCTIve6xXHqSRlKCyrH
-         +0/P4FjJSrPOPa95z6ODwuTafuyqH9EZZQVe+zY/BeCVJIPTpgEeayRYWA2I8KHCsYnE
-         1MJ5vAOwgThQ1DqdtDVHH0hVO1Q7pOOQHpHjMdVMkEYUB3oemfaXdtJf1L/OPTdAh/Ji
-         QS5pyWawiv5Q0LbN/hka5lcFWZ/hlcSpK9QJavfqhvsUw21LXjNX3d0h0bL+GHLgqRMC
-         bZvQ==
+        bh=4JkhtJX/rWB1cBzt9zuFqY6FqfPwx7EIf6/sG5QRcB4=;
+        b=23IaIzGCDmNQBqQbx9z65L/HDe8h3AYpqOnfCg+gGNz17C2AgSeOWEC3qwFT1hiSF5
+         VmNJCyWJmIrHs6WywotBaNtqllvly8JTGBSMqQo+6/9c6Mkg858n6/aSQ+97JnjwaaQu
+         jX3Sosrr+znQ7SqcsubfjIUNWK51BTECi+scgpuiT1Cr3+auokR7vvodKFJZ0fQ9MaFs
+         v4eh0zV+vyM+Ncg9AL0j8orrGHGGSe0CK88FedhIXpg9GF5cGWp7UAwqRq7zZsFh/IHf
+         Ez+VIbmJ2mC4n6vaW4D0RVrbwKiEQngqS56eNEapPnNbq8JgommPMG6hk4mg0oP7EP+R
+         zoFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722038122; x=1722642922;
+        d=1e100.net; s=20230601; t=1722038124; x=1722642924;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dTOlfH+mhloY9mYg+/p0IQai80b+6RXS/WhBEV7av3U=;
-        b=N+YMaBvhpCSoPuh2XaIQvOlKFThzlARTl5Pcxhi+Ne9bmOVm3xG9x+f9eWymSLtEBh
-         MG0iYAdMAayZdoG9fUKweL+KridVAuj52+3RckIKSJ2EwY5+HkC210x/wLIRX9ZlYSBp
-         7i+PmyZywu+bNRa4amle5x/ouI4gmKU6DZfZ3nG0vRl0s/yAD5ncQgloOm8ChPI7RPLe
-         9hlhyYuHSq4rTQ7uBAp8BavqRx988qW+hnb0dwDiPrWdDJeLhQgMcmtT7ShZ+CVYh3A6
-         xp3LCvyOMba4vWMn/hwknwIz6kDS0Ko2szArSO7JNOopbV5xt0Z/KNxasJXHx46aLEPG
-         fqkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTW0IMBhFg2wlRUrkn+Er5ekUi8OUSQe9cfawmlBx3tlQh+0IktPDQciezTRXOBV/Uq2CYRB73WRBNWworNlr7h9uXNqc8m4Hm
-X-Gm-Message-State: AOJu0Yxo2pa4vozKvX4azQFIsdLZxnds+owy1e0mg63qIULWRz4/la+/
-	XukSP4SRp59cX5m5uMU5Tpv9pcTO0hDTdPLQ/5/cQfHlruZJLWzW77xmvHJpkgreqH3ZVIHwN7K
-	Xgg==
-X-Google-Smtp-Source: AGHT+IGgifSFTGz9fVU5jdzVocA5wMp2MITnk/v5MkueXs++Udesz0kCsEkHm8VEDJpbtR+Hv7uv12YKgg8=
+        bh=4JkhtJX/rWB1cBzt9zuFqY6FqfPwx7EIf6/sG5QRcB4=;
+        b=AbV+jauJfGSFTEJDJgR4xKoR4Y3X1JtnNKbQ83vynhjz8Mxl0cNhL5xpm5gjVb6f3q
+         cUEg44MSkXizZfEIEzlUsoc9WORWBljylZQNipAW2m8lgdp8AsWkIDKNOvIGfX61bSuh
+         nAtfEbLzH5rwz4RWo9yTwx927nPqSpZDjHOS0b85cRtdCMAt5due1tYq7JFG30Bc9LQ5
+         D2nrX6AM/RVQ/whuyyv9iKzEe7V/FqPtSNGz+/wGt7C6+ssu+ggKhDzgzfNVMH072Jcz
+         wZvRjXd+LBO/ObEfRt0u7yAag1ruhpnm+0H/Z9WesskYOMVJfcGbbbFZHyyqXeoHNZzk
+         9HXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEm8VKgu2oGvNv2pVYDPBxVZlc40Lkx52dUoioBeq+1Bcv9rhacMitNv4/byrAJOTusuvm1K6hCYwDEmkYBsZRYcYpNtQrLBqn
+X-Gm-Message-State: AOJu0YzH8zvAW2C+B0xcrLl1EGUW+papG2zox6WoL6sNkLdQvj5Wd05C
+	tTPcB/on1W5g7iqRAN8zFutpo+3dxDvqtuqFgS69ThUJIyxznPJgv/p4krUJUdY9tm6N3iXVcqK
+	Wxw==
+X-Google-Smtp-Source: AGHT+IFPQa1UjlYj7+Kv/jUhsXC3P8YtU5HtBxuA0lRTgUmwYvAf/3a7bhqWFsOX8QFlAkrWz2XoripRfzc=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:f0a:b0:62f:1f63:ae4f with SMTP id
- 00721157ae682-67a052e5dccmr429907b3.1.1722038121721; Fri, 26 Jul 2024
- 16:55:21 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:902:ea03:b0:1fb:7f2c:5652 with SMTP id
+ d9443c01a7336-1ff04893401mr182655ad.7.1722038123783; Fri, 26 Jul 2024
+ 16:55:23 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jul 2024 16:52:28 -0700
+Date: Fri, 26 Jul 2024 16:52:29 -0700
 In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240726235234.228822-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240726235234.228822-80-seanjc@google.com>
-Subject: [PATCH v12 79/84] KVM: s390: Use kvm_release_page_dirty() to unpin
- "struct page" memory
+Message-ID: <20240726235234.228822-81-seanjc@google.com>
+Subject: [PATCH v12 80/84] KVM: Make kvm_follow_pfn.refcounted_page a required field
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -80,29 +79,39 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Use kvm_release_page_dirty() when unpinning guest pages, as the pfn was
-retrieved via pin_guest_page(), i.e. is guaranteed to be backed by struct
-page memory.  This will allow dropping kvm_release_pfn_dirty() and
-friends.
+Now that the legacy gfn_to_pfn() APIs are gone, and all callers of
+hva_to_pfn() pass in a refcounted_page pointer, make it a required field
+to ensure all future usage in KVM plays nice.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/s390/kvm/vsie.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ virt/kvm/kvm_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 566697ee37eb..f6f1569be1cc 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -670,7 +670,7 @@ static int pin_guest_page(struct kvm *kvm, gpa_t gpa, hpa_t *hpa)
- /* Unpins a page previously pinned via pin_guest_page, marking it as dirty. */
- static void unpin_guest_page(struct kvm *kvm, gpa_t gpa, hpa_t hpa)
- {
--	kvm_release_pfn_dirty(hpa >> PAGE_SHIFT);
-+	kvm_release_page_dirty(pfn_to_page(hpa >> PAGE_SHIFT));
- 	/* mark the page always as dirty for migration */
- 	mark_page_dirty(kvm, gpa_to_gfn(gpa));
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 5dcf3561b829..030a08d4b21d 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2844,8 +2844,7 @@ static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
+ 		pfn = page_to_pfn(page);
+ 	}
+ 
+-	if (kfp->refcounted_page)
+-		*kfp->refcounted_page = page;
++	*kfp->refcounted_page = page;
+ 
+ 	return pfn;
  }
+@@ -3001,6 +3000,9 @@ kvm_pfn_t hva_to_pfn(struct kvm_follow_pfn *kfp)
+ 
+ 	might_sleep();
+ 
++	if (WARN_ON_ONCE(!kfp->refcounted_page))
++		return KVM_PFN_ERR_FAULT;
++
+ 	if (hva_to_pfn_fast(kfp, &pfn))
+ 		return pfn;
+ 
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
