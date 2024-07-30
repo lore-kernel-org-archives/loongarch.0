@@ -1,67 +1,65 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E422318CC0B
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 20:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEEA18E053
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 22:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722370910; cv=none; b=CdzKEtxsnQh8bw1lQ0B1ba+y4Tm8jOOQEo9SFJbOGJMvmSDSnJyPX+q3uvvYPyIS+xESyS2gwGPoiT5u571MDsW8c6xSo8dNDD0CMbvIYnnXYkwfghk7/7rOB59EzkqcyhDEQep5UGLqNpBG2ikMEZe+zIyJvYJlSLTV/563Z7s=
+	t=1722378922; cv=none; b=KqD5ogssVhZDDMfEi/p9AIv89MSxwr+g9NE9aymvL/Sap1J1IcnYCGSSRAyXrWKyXoGVJRSRMw0B1zxlx4AGGF6MB8fXwqCudlpSrOsimO4ANWL+DnmxwbAKbGtmFGxCbGWCaafu7bO8AWd2RD/7LEqQdb7KJcwkim1k/D+i1k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722370910; c=relaxed/simple;
-	bh=HxOBAEamRc5o/YLmQaHET0I/Gtrys86BlZ/DJ9hLc6w=;
+	s=arc-20240116; t=1722378922; c=relaxed/simple;
+	bh=YFDCChsqaB4UhHP0/2HzjxvaMXC55WBTMkh7IBQDDtE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hMFWR3LoNNgmteh4V8LXxt72gocHRXZdvQlcW8H/vu6F7OTpoxmY5xp2zRa6cRUal57jETEkMchMq59gmXq02ujRAHPu0TTs6mz4JInRTG+/KQSA4f0yB0GG8+WoB7EC6qB5UJueNO/5glDlHL0qdajtr0hA252ftiTDMeOQ8wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AK7AEaje; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=hLnruuqXmgcT+lCthwUoJzN6RDzvDpBZwGDcRExiovUOWhNEEnsFppUNOy5wlPjKwvk1CJlh7z7bN+hfPss/NUhOEaNgfngfmaptaRsLcrKkPay1TdocOuWy/Umfwc7KLL0+NzgZwe8c8txAhd8RNooYtYzHRerflY2mGA7JXJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dyR82lnw; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AK7AEaje"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso197177a12.0
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 13:21:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dyR82lnw"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-710415c77f8so1529869b3a.2
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 15:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722370908; x=1722975708; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722378920; x=1722983720; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lo0MEBygX1JypWEaHf/k6xfxdkehMYQ1A9Hdq1FNmkM=;
-        b=AK7AEajelFbjeX1rFAejK9AjckEOUGw1RBWcyztAD4V/BRnA0lLSZ/dmie5U7IRQKR
-         T6/WdWgtji+C2keLweDbFk5TXbU81mLVzG1YtzysmCudGzaAaS7twwVZ5m94jJyTvi1l
-         zzqZy8O8fbaOoqZJ2ld0UAPQtvjSpvNZG7hHgCeLGLoNG2P/5EGnj0BSh6ZrNeLHu4EG
-         CaOldlXP1k90tho7IrJM0nnJUQ6QYUl5ow2QC7H1xhyxvS8r7q/hrWPJy4/0vujkEeeP
-         hcoaVdRD5ZCyNLHedD5+Bh9ju8uEXoiMzrwGnNmMrts3xwYKphqsYMvWZOnVSvZ+0pAV
-         LlNg==
+        bh=eSOwPlC4K/K4c1NtKrHXJlP1TgjanOwgNCfxP6XzMYQ=;
+        b=dyR82lnwmdLl0WcLqcAxWHGW51KIKMIAMkJUUH3tL/oMTnv35dOTKC4TyYQqEOWP9t
+         fVgM/5NjUycQkPThxTgBDuzLS9izlsIWj5bnV7TIHEUnfPkH37KaAn7qJ3ufiksq/7kh
+         /lmFPrXR/8aJ0xClwW07R4Zmm/JKtrT5pUQkj4ScVR4VOxVaj6cHfR+ejYtsvo7hjWXA
+         0tYeXKU/wiFpMHpWms+EYYszMQt47mHeUnkzInEMTtBrdfOGQjGQjj80BZiln2t1rdlC
+         LHGDinBLzUpFh1/Gb+v1HmwKo+wnKzY4ci6/1QQhyHywozRcIBLIaNeQIrkddermhi3P
+         qQ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722370908; x=1722975708;
+        d=1e100.net; s=20230601; t=1722378920; x=1722983720;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lo0MEBygX1JypWEaHf/k6xfxdkehMYQ1A9Hdq1FNmkM=;
-        b=uudrNR7VewPEyVZgAZpnpZFw47KOWPocZ2b5o5bUnECjOcPfvJC95nlNFbq1SIE/T/
-         P57tL23HKmTnjUUHifFW1kOnD2A6Cs0w3vqOQ6oMALqMZp3kYLavwBfTbW8FOnwdW9wV
-         mDGHDpcl7UanJM/t9Awabq47xO1g0qqpu963hCrZmgfD0BQyEqi7H7rr0AY3k7T/++ro
-         U+pQOiNRSLpZ8jNN+b8TjI1iosBNUfiUx+P5dN36dSQ0vgRUD0Mdj5yFCEzU7lEXVldk
-         C0gDhJAxo1iy9ZezJLOI32ehc6lP4ZZDMTdKaSqmyo5RUwq2jBaquWXr53EFSwEXW6ET
-         h9GA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLLFGpFyqeua0jz9zD6nkHdCj9RNnbulFgSMuBkBimyVJ9R8JLfGaICzaLqL+bi893ekY0Z2iO6i6Y9af8Q9wA5IZXgULCn7wH
-X-Gm-Message-State: AOJu0YxDwafDRvOhTSz49yahDwQIc010oDfSweH93u1ZhhKAVJqRq2xc
-	SKtaf09vqRFwfZMi3VGVJem+yg9XJduOEFkcgvAXg4DqVSqvpwx4dOk+Yk4JsBt3kjd9kXyP5Eq
-	TfQ==
-X-Google-Smtp-Source: AGHT+IFRxL1KATidTTKhi0tYZI3Y5cQGXURHMsVQzSWYAdVw9bcIrYssZFg0WYN1ZfdRJ6uqRn8d2puX7Kc=
+        bh=eSOwPlC4K/K4c1NtKrHXJlP1TgjanOwgNCfxP6XzMYQ=;
+        b=hJSpM4FjkRYt0ELkiDGku9O/D82qHapfsPxaBEDpkY3WFBNUCCbcS9JfU0UUCZ0TEF
+         rWaYeJ2854LvMdmO846/+c4MOGAg5bXzOGBGJRe9jB5f7/tG+rwnuNHzXOrih3XLcQCW
+         Mpk+CGVvyodWKReRlNnxAfWVzDSYxwweCQJm9lMXQ2IONiwWMdluFokyXVDB20wUMP4V
+         j1HjTJAO9J/+zkEeAOpLiioUqYw96BtcchAXUzUVIrKB3odrXH3ZQliFfT4R5HCy1A5p
+         4K8rsZDUjize5D1NvacLZtbQCyphz83yHrFA8CfioUh+TWtjtim+dFD4QVPA7fUXiMcF
+         RD5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXd34nlyMzcwuNaNdNMU8qVm7XCJUzmCkvdXx+WDCP4QHW3yEv3NkhTPQdwr/cHmGEY7raT++ubcoTc4dGWxQvSySY+F+Tx7mR7
+X-Gm-Message-State: AOJu0Yx1lpr8IwvwafwCOaPZDyuVv7UkFFBv91ULtefHGk8YtH4JVONh
+	tEVfGpYsjvwfoefPXTpvZIBN7mxn9Vi2lqwb7s4q24hjM55pgTltoa+j8BvLOMTlOp3zvYUlJ4K
+	UCA==
+X-Google-Smtp-Source: AGHT+IFhvXMAoVFBOUzUOOlo2Rzlu+lOmmXT/AMKduASO9OrwvfaDw5U6qKsr5Vo6lwrA4+Cjt72+QiZt8Y=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:ca8b:b0:2cf:93dc:112d with SMTP id
- 98e67ed59e1d1-2cfcab4fa5emr42966a91.4.1722370907896; Tue, 30 Jul 2024
- 13:21:47 -0700 (PDT)
-Date: Tue, 30 Jul 2024 13:21:46 -0700
-In-Reply-To: <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:91c7:b0:710:4d08:e41f with SMTP id
+ d2e1a72fcca58-7104d08e48amr716b3a.4.1722378920090; Tue, 30 Jul 2024 15:35:20
+ -0700 (PDT)
+Date: Tue, 30 Jul 2024 15:35:18 -0700
+In-Reply-To: <419ea6ce-83ca-413e-936c-1935e2c51497@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-85-seanjc@google.com>
- <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
-Message-ID: <ZqlLWl0R1p41CS0O@google.com>
-Subject: Re: [PATCH v12 84/84] KVM: Don't grab reference on VM_MIXEDMAP pfns
- that have a "struct page"
+References: <20240726235234.228822-1-seanjc@google.com> <419ea6ce-83ca-413e-936c-1935e2c51497@redhat.com>
+Message-ID: <ZqlqpjO0TiWnOEqx@google.com>
+Subject: Re: [PATCH v12 00/84] KVM: Stop grabbing references to PFNMAP'd pages
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
@@ -79,47 +77,34 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Tue, Jul 30, 2024, Paolo Bonzini wrote:
-> On 7/27/24 01:52, Sean Christopherson wrote:
-> > Now that KVM no longer relies on an ugly heuristic to find its struct page
-> > references, i.e. now that KVM can't get false positives on VM_MIXEDMAP
-> > pfns, remove KVM's hack to elevate the refcount for pfns that happen to
-> > have a valid struct page.  In addition to removing a long-standing wart
-> > in KVM, this allows KVM to map non-refcounted struct page memory into the
-> > guest, e.g. for exposing GPU TTM buffers to KVM guests.
-> 
-> Feel free to leave it to me for later, but there are more cleanups that
-> can be made, given how simple kvm_resolve_pfn() is now:
+> An interesting evolution of the API could be to pass a struct kvm_follow_pfn
+> pointer to {,__}kvm_faultin_pfn() and __gfn_to_page() (the "constructors");
+> and on the other side to kvm_release_faultin_page() and
+> kvm_release_page_*().  The struct kvm_follow_pfn could be embedded in the
+> (x86) kvm_page_fault and (generic) kvm_host_map structs.  But certainly not
+> as part of this already huge work.
 
-I'll revisit kvm_resolve_pfn(), Maxim also wasn't a fan of a similar helper that
-existed in v11.
+For kvm_faultin_pfn(), my hope/dream is to make kvm_page_fault a common struct,
+with an arch member (a la kvm_vcpu), and get to something like:
 
-> Also, check_user_page_hwpoison() should not be needed anymore, probably
-> not since commit 234b239bea39 ("kvm: Faults which trigger IO release the
-> mmap_sem", 2014-09-24) removed get_user_pages_fast() from hva_to_pfn_slow().
+  static int arch_page_fault_handler(...)
+  {
+	struct kvm_page_fault fault = {
+		<const common stuff>,
 
-Ha, I *knew* this sounded familiar.  Past me apparently came to the same
-conclusion[*], though I wrongly suspected a memory leak and promptly forgot to
-ever send a patch.  I'll tack one on this time around.
+		.arch.xxx = <arch stuff>,
+	};
 
-[*] https://lore.kernel.org/all/ZGKC9fHoE+kDs0ar@google.com
+	<arch code>
 
-> The only way that you could get a poisoned page without returning -EHWPOISON,
-> is if FOLL_HWPOISON was not passed.  But even without these patches,
-> the cases are:
-> - npages == 0, then you must have FOLL_NOWAIT and you'd not use
->   check_user_page_hwpoison()
-> - npages == 1 or npages == -EHWPOISON, all good
-> - npages == -EAGAIN from mmap_read_lock_killable() - should handle that like -EINTR
-> - everything else including -EFAULT can go downt the vma_lookup() path, because
-> npages < 0 means we went through hva_to_pfn_slow() which uses FOLL_HWPOISON
-> 
-> This means that you can simply have
-> 
-> 	if (npages == -EHWPOISON)
-> 		return KVM_PFN_ERR_HWPOISON;
-> 
-> before the mmap_read_lock() line.  You may either sneak this at the beginning
-> of the series or leave it for later.
-> 
-> Paolo
-> 
+
+	r = kvm_faultin_pfn();
+	
+	...
+  }
+
+In theory, that would allow moving the kvm->mmu_invalidate_seq handling, memslot
+lookup, etc. into kvm_faultin_pfn(), or maybe another helper that is invoked to
+setup the fault structure.  I.e. it would give us a way to drive convergence for
+at least some of the fault handling logic, without having to tackle gory arch
+details, at least not right away.
