@@ -1,147 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CC918EFE9
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 10:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF65D12EBCE
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 10:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722336099; cv=none; b=INaATyMYr0tm6yljNFKtbNUwp9t/RP57uBbRnuebjIWZFoDuqplO6ceFyjKUAZSNbf1M3lt16JE9mn1s/1BxrsI0fg7Pb7909HToSHy9252ewdRGOCiQrmFVghrDjDs8wnMM1vR5y9qHhcw59bX7EUomqPtYCfrR7xrKviRu9zM=
+	t=1722337075; cv=none; b=Cq7VKsBa3MiIyM7AffNa1Qcm7hIDDJXB0qnR15SmldAMVBgQ3IumtTNkEH4QWB+HyGwWmzHY+nFSDvSOoHQswmr7y84oDZT2MoL16G4X61MwhpDx8GSriNcxpEAvH3t5ETpxqxy6+azwt5gfP+wZ70tyP/YVe49nr73jROf9zdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722336099; c=relaxed/simple;
-	bh=DhzCAI2qKRiMRe5MUI4Qm796RQ6OVVSx+lGb39s7xlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RgL36jkNpOOm9D+cTeblEMoSiJzEYqZX+HCp8PRTXx2Ks9sfRaY07ppE4naemUGBirD1Y51qrNHPGSiIlmyzR4nQhIBeE2Wsr5fiRpbpOcbkOEQml6/Du8gs4MUp4m7kQWezaE6+xtVdQykC5JADU1NEkIzbuKGBL3SPMErpHDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B7w4uLEw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B7w4uLEw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722336096;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8g9eu69hY+tFcVns2hzHdTrw7hODbFfcDdVx3JGaNxs=;
-	b=B7w4uLEw7TtOLa2Hj39vW+sRgDu0gFuDb1pI4B+a87Up4gu9YzLiy6RVMLcm2EzWYRx8Xa
-	l+Wge+1pfBCyZdLX09WbyYsY+ScnWVXRGldMJFQSR16lz/9QAZxwdMD5sKTeI8hU17oGiD
-	FN7yQ6a2ckcYiF5T13D5DKqKwM0Exr4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-329-LmCYh7iWPRG10_2y8OjrZg-1; Tue, 30 Jul 2024 06:41:35 -0400
-X-MC-Unique: LmCYh7iWPRG10_2y8OjrZg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5a7c6a0f440so3296445a12.0
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 03:41:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722336094; x=1722940894;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8g9eu69hY+tFcVns2hzHdTrw7hODbFfcDdVx3JGaNxs=;
-        b=qSWZN5TFR/2q7sllaufJyGYKFhbqOnf739KOkdJ0S2B+SAqhJRpTw0XaGR48oOrWxJ
-         AlK0YSySvg4cwP9V7cyIVneStj70be+asrW88cMu0TEhQ/32w2j2O8q3gx71tgSE7DMs
-         nOOrn75gwWs3doEhM1/VwmSyzdXijsbo6z1Vdejqu7GUI5czDco1Jzyxr8NzCAa+5Mod
-         +psQRjZodz47KGz0kl6u9025XHuX7pxHJhOzdAToACGj9ldBRHEoN/RLgkDeDAtXlJZR
-         AluNMbhk8A44pG31GtPe6L8aQ7+czK/RSeGCcou+T0rr9LhRw/EZAjbZBab+K98qXjAC
-         q0RA==
-X-Forwarded-Encrypted: i=1; AJvYcCVakOjZblR9oZeVN2KnyvwYHQ1Rc1st2ufMTqHur5+2LJGE3jYYmmtE0VnAa8L6mrJrh2VGDCghO7EfhHQp+DIITLWw7cqAuN6E
-X-Gm-Message-State: AOJu0Yy/eNwAlOR4symNJhSfVU7T7j2reaq3DlSPHR0CvLy3XSZsGvpu
-	eM1tWv1OQ6GvLWL1S7n8TdwXf0YNUFcDdJ8UAFxDoSSrwHeHYTehOyV3RS2ahG/xWGyOPnSQQ5E
-	j9V0d6aFNYoNTWikKpgg+MmcJEPDSt41D52Lw9BBMlh/NafVvsR7MZZTUrQ==
-X-Received: by 2002:a50:a411:0:b0:5a1:7d68:62d8 with SMTP id 4fb4d7f45d1cf-5b022c81f43mr6159502a12.38.1722336094337;
-        Tue, 30 Jul 2024 03:41:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDPyYZQ8rptYaeG/QLRVtJLyqTXdGIvl8oYe7Os3i41TwtBzRWbRKhmb66UoorwOaLwZdqjQ==
-X-Received: by 2002:a50:a411:0:b0:5a1:7d68:62d8 with SMTP id 4fb4d7f45d1cf-5b022c81f43mr6159475a12.38.1722336093853;
-        Tue, 30 Jul 2024 03:41:33 -0700 (PDT)
-Received: from [192.168.10.47] ([151.95.101.29])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5ac6377e06fsm7118734a12.28.2024.07.30.03.41.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 03:41:33 -0700 (PDT)
-Message-ID: <63c41e25-2523-4397-96b4-557394281443@redhat.com>
-Date: Tue, 30 Jul 2024 12:41:31 +0200
+	s=arc-20240116; t=1722337075; c=relaxed/simple;
+	bh=fDp1d/mg0Zzqb9iZx2iJYS7OWCBh7c2Kr/tOqv+/pqE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=S2xBYEQYif/Nwr4FoR3eCGfGEsbHVsGKo+E+cBqyR/dXjRCtOtL5maN16T1igi9g7f+KebHRAakUmZytXkn0n9pCUl/wkCC9cT9aLlWXw/vkX1bdP+5JMuOhClMm2Pnu3rWp0S2nZAW8FpZJVZGjfKLyUc+Gw6IbxPElJzyChzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Bx7eoux6hml2wEAA--.15469S3;
+	Tue, 30 Jul 2024 18:57:50 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMAxX8csx6hm5XMGAA--.32005S3;
+	Tue, 30 Jul 2024 18:57:50 +0800 (CST)
+Subject: Re: [PATCH 1/2] objtool/LoongArch: Restrict stack operation
+ instruction
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
+ <20240730061901.21485-2-yangtiezhu@loongson.cn>
+ <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
+ <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <ca433beb-e3cd-8036-cc05-5f4cc1a735fa@loongson.cn>
+Date: Tue, 30 Jul 2024 18:57:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 34/84] KVM: Add a helper to lookup a pfn without
- grabbing a reference
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
- David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-35-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20240726235234.228822-35-seanjc@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+In-Reply-To: <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAxX8csx6hm5XMGAA--.32005S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZF17Cr45Jr13uw17GF45Jwc_yoW8Kw18pF
+	97J3Z8JFWkG34IkrnFqF1DWa4qyrW7Xw1UGr15ta4Fyrs8AF12gr4rXFW29FnxXrs3Jw1j
+	krWfZrWxuFyqqFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xu
+	ctUUUUU==
 
-On 7/27/24 01:51, Sean Christopherson wrote:
-> Add a kvm_follow_pfn() wrapper, kvm_lookup_pfn(), to allow looking up a
-> gfn=>pfn mapping without the caller getting a reference to any underlying
-> page.  The API will be used in flows that want to know if a gfn points at
-> a valid pfn, but don't actually need to do anything with the pfn.
 
-Can you rename the function kvm_gfn_has_pfn(), or 
-kvm_gfn_can_be_mapped(), and make it return a bool?
+On 2024-07-30 17:49, Tiezhu Yang wrote:
+> On 07/30/2024 05:28 PM, Jinyang He wrote:
+>> On 2024-07-30 14:19, Tiezhu Yang wrote:
+>>
+>>> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
+>>> support"), the code flow of do_syscall() was changed when compiled
+>>> with GCC due to the secondary stack of add_random_kstack_offset(),
+>>> something like this:
+>>>
+>>>    addi.d          $sp, $sp, -32
+>>>    st.d            $fp, $sp, 16
+>>>    st.d            $ra, $sp, 24
+>>>    addi.d          $fp, $sp, 32
+>>>    ...
+>>>    sub.d           $sp, $sp, $t1
+>> Have you checked the ORC info whether is right or tried backtrace which
+>> passed do_syscall? The "sub.d $sp, $sp, $t1" has modified the $sp so the
+>> $sp cannot express CFA here. This patch just clear the warning but 
+>> ignore
+>> the validity of ORC info. The wrong ORC info may cause illegally access
+>> memory when backtrace.
+>
+> I did testing many times before submitting, the call trace is
+> expected when testing "echo l > /proc/sysrq-trigger".
+Make sure the RANDOMIZE_KSTACK_OFFSET is enable. I tested it by
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y on qemu and it did
+not show the frame about handle_syscall.
 
-(As an aside, I wonder if reexecute_instruction() could just use 
-kvm_is_error_hva(kvm_vcpu_gfn_to_hva(vcpu, gpa_to_gfn(gpa)) instead of 
-going all the way to a pfn.  But it's ok to be more restrictive).
-
-Paolo
+On the other hand,
+$ ./tools/objtool/objtool --dump arch/loongarch/kernel/syscall.o
+.noinstr.text+0:type:call sp:sp +   0 fp: (und)  ra: (und)  signal:0
+.noinstr.text+4:type:call sp:sp +  32 fp: (und)  ra: (und)  signal:0
+.noinstr.text+8:type:call sp:sp +  32 fp:prevsp + -16 ra: (und) signal:0
+.noinstr.text+c:type:call sp:sp +  32 fp:prevsp + -16 ra:prevsp + -8 
+signal:0
+.noinstr.text+e4:type:call sp:sp +  32 fp:prevsp + -16 ra: (und) signal:0
+.noinstr.text+e8:type:call sp:sp +  32 fp: (und)  ra: (und) signal:0
+.noinstr.text+ec:type:call sp:sp +   0 fp: (und)  ra: (und) signal:0
+.noinstr.text+f0:type:? sp: (und)  fp: (und)  ra: (und)  signal:0
+.noinstr.text+100:type:call sp:sp +  32 fp:prevsp + -16 ra:prevsp + -8 
+signal:0
+.noinstr.text+118:type:? sp: (und)  fp: (und)  ra: (und)  signal:0
+$ objdump -d arch/loongarch/kernel/syscall.o | grep "sub.*sp.*sp"
+   70:    0011b463     sub.d           $sp, $sp, $t1
+Obviously the ORC info is wrong.
+(Assume the backtrace PC is 0x74, how to find the previous frame?)
 
