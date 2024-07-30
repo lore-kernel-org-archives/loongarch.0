@@ -1,35 +1,100 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D685F18E75C
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 06:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2F62563;
+	Tue, 30 Jul 2024 06:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722320352; cv=none; b=I6Xj539xFi2++DFP71epNBWkuP0RTWgVtsu+cnluad1RMF2tlU2A+NMawJFuj7jKp80IbCo1V3r9vepvh0cOZHctJD3I6BV1W1gGzoo5fJ8srNwHyfyYpAF33hyRsqOlTbjbt/u9kaN0gT6jHStXvKEM281dgnsAjWKES+n6St4=
+	t=1722321766; cv=none; b=sCmKX56khpAIFVt9kq+6STsLRLyjsoQGPuKNKzsq0IhFsj5Itt/lMM/asCbCN6ZKyYYvC+SjYh3uowA1i+ojnLEWP4zIT04B1pcSycLWftzc+M6EzlNAjgV+VGDW81/6V62DvvDpDxX8aO3WMaJElymCXFvo41xqrOLuYgfKqcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722320352; c=relaxed/simple;
-	bh=RGBxeBNAsLjNI0RAMKCCiMDIOMWMS7Ex43q2Wq8lM2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IXfRnmmnU5OWqgISP7P7AA6uWHutGczbUp1dZSDEKA0XuDFWFrOs5vTkUMFrYdhFrh/qJnlc5Ryv9/Kr0SOrq3HdKQXCd/UYV75CGluQ93bZdICBeCSVzWrkW+e5b0DYlDFRraM2Unnck/kSNBqprpwv8vA0mTY+TdDmSHyLc48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxHuvXhahm0kMEAA--.14836S3;
-	Tue, 30 Jul 2024 14:19:03 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxX8fVhahmehYGAA--.30051S4;
-	Tue, 30 Jul 2024 14:19:03 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	s=arc-20240116; t=1722321766; c=relaxed/simple;
+	bh=9fMo0SqZ7mOf+MpuDKzR6wBE4n9v1usaMOUOV+GRiz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dIuB1fdosAG5jpKQbQqNLIO1sLBhaS/dYfiDHW76mu2IHyyeLV1RC/ate5ei5a+VDVNlKmSX5tywcSPeetSAj1ChvrAds+R5kT80qZGydk8yLpSbcK/F9P+iRhIQU9hUIIQ8QZuqsi0AiEzZYxxkcBMs2Zpjuzq5vM8YAgp3Vu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odNyHSwO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odNyHSwO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B562C32782;
+	Tue, 30 Jul 2024 06:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722321766;
+	bh=9fMo0SqZ7mOf+MpuDKzR6wBE4n9v1usaMOUOV+GRiz8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=odNyHSwOlBtV2oqVtExlin1GDO7kYlIOx8pVUXrIJUKZbGYwA4WqDas0/GxrcEr55
+	 U96WNS8VFoK93eKlrMoYeKy3Hx5hYk7u0MHfPCvnoc4pMqeCyLihL2sOgCRB2BK0LQ
+	 L8992A0T1NOO7inaUSioa2w4g0sAStq/hkXExqTSsAXodpT6mGb0xRWKuDd+nH2N+A
+	 BTsDqxMoTTjSETReBcCKjEeWWC7pCscYpqZJszwilu2vcMmxr/pCQlNwRRubPXHBaB
+	 JADt14YJLrGWRmg/Gsmy3mjRBjVlp6DBpI92v1G7zStat5RwD14Iv/xZapDPo4c7xq
+	 lwWpWj2GOPung==
+From: alexs@kernel.org
+To: Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Nick Piggin <npiggin@gmail.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] LoongArch: Remove STACK_FRAME_NON_STANDARD(do_syscall)
-Date: Tue, 30 Jul 2024 14:19:01 +0800
-Message-ID: <20240730061901.21485-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240730061901.21485-1-yangtiezhu@loongson.cn>
-References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Brian Cain <bcain@quicinc.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Naveen N Rao <naveen@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Vishal Moola <vishal.moola@gmail.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Peter Xu <peterx@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	linux-s390@vger.kernel.org
+Cc: Guo Ren <guoren@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Alex Shi <alexs@kernel.org>
+Subject: [RFC PATCH 00/18] use struct ptdesc to replace pgtable_t 
+Date: Tue, 30 Jul 2024 14:46:54 +0800
+Message-ID: <20240730064712.3714387-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,47 +102,113 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxX8fVhahmehYGAA--.30051S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JFykXw45KFyrCFWktw4fWFX_yoWfJrX_GF
-	1fKw1UWrWrJa12v3Z5t3W5ur4xu3WkJFsakFn29ry7Ka43Jry5Jryav345Cr1q9a1kWrZ5
-	WrWkX3s0v34FyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
 
-For now, it can remove STACK_FRAME_NON_STANDARD(do_syscall) because
-there is no objtool warning "do_syscall+0x11c: return with modified
-stack frame".
+From: Alex Shi <alexs@kernel.org>
 
-Fixes: a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/syscall.c | 4 ----
- 1 file changed, 4 deletions(-)
+We have struct ptdesc for page table descriptor a year ago, but it
+has no much usages in kernel, while pgtable_t is used widely.
 
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index ba5d0930a74f..168bd97540f8 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -79,7 +79,3 @@ void noinstr __no_stack_protector do_syscall(struct pt_regs *regs)
- 
- 	syscall_exit_to_user_mode(regs);
- }
--
--#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
--STACK_FRAME_NON_STANDARD(do_syscall);
--#endif
+The pgtable_t is typedefed as 'pte_t *' in sparc, s390, powerpc and m68k
+except SUN3, others archs are all same as 'struct page *'.
+
+These blocks the conception and code update for page table descriptor to
+struct ptdesc.
+
+So, the simple idea to push the ptdesc conception forward is to update
+all pgtable_t by ptdesc or pte_t pointer. But this needs widely
+knowledges for most all of different archs. Common code change is easy
+for include/ and mm/ directory, but it's hard in all archs.
+
+Thanks for intel LKP framework, I fixed most all of build issues except
+a bug on powerpc which reports a "struct ptdesc *" incompatible with 
+struct ptdesc *' pointer issue...
+
+Another trouble is pmd_pgtable() conversion in the last patch.
+Maybe some of arch need define theirself own pmd_ptdesc()?
+
+This patchset is immature, even except above 2 issues, I just tested
+virutal machine booting and kselftest mm on x86 and arm64.
+
+Anyway any input are appreciated!
+
+Thanks
+Alex
+
+Alex Shi (18):
+  mm/pgtable: use ptdesc in pte_free_now/pte_free_defer
+  mm/pgtable: convert ptdesc.pmd_huge_pte to ptdesc pointer
+  fs/dax: use ptdesc in dax_pmd_load_hole
+  mm/thp: use ptdesc pointer in __do_huge_pmd_anonymous_page
+  mm/thp: use ptdesc in do_huge_pmd_anonymous_page
+  mm/thp: convert insert_pfn_pmd and its caller to use ptdesc
+  mm/thp: use ptdesc in copy_huge_pmd
+  mm/memory: use ptdesc in __pte_alloc
+  mm/pgtable: fully use ptdesc in pte_alloc_one series functions
+  mm/pgtable: pass ptdesc to pte_free()
+  mm/pgtable: introduce ptdesc_pfn and use ptdesc in free_pte_range()
+  mm/thp: pass ptdesc to set_huge_zero_folio function
+  mm/pgtable: return ptdesc pointer in pgtable_trans_huge_withdraw
+  mm/pgtable: use ptdesc in pgtable_trans_huge_deposit
+  mm/pgtable: pass ptdesc to pmd_populate
+  mm/pgtable: pass ptdesc to pmd_install
+  mm: convert vmf.prealloc_pte to struct ptdesc pointer
+  mm/pgtable: pass ptdesc in pte_free_defer
+
+ arch/alpha/include/asm/pgalloc.h              |   4 +-
+ arch/arc/include/asm/pgalloc.h                |   4 +-
+ arch/arm/include/asm/pgalloc.h                |  13 +--
+ arch/arm/include/asm/tlb.h                    |   4 +-
+ arch/arm/mm/pgd.c                             |   2 +-
+ arch/arm64/include/asm/pgalloc.h              |   4 +-
+ arch/arm64/include/asm/tlb.h                  |   4 +-
+ arch/csky/include/asm/pgalloc.h               |   4 +-
+ arch/hexagon/include/asm/pgalloc.h            |   8 +-
+ arch/loongarch/include/asm/pgalloc.h          |   8 +-
+ arch/m68k/include/asm/motorola_pgalloc.h      |  12 +-
+ arch/m68k/include/asm/sun3_pgalloc.h          |   4 +-
+ arch/microblaze/include/asm/pgalloc.h         |   2 +-
+ arch/mips/include/asm/pgalloc.h               |   4 +-
+ arch/nios2/include/asm/pgalloc.h              |   4 +-
+ arch/openrisc/include/asm/pgalloc.h           |   8 +-
+ arch/parisc/include/asm/pgalloc.h             |   2 +-
+ arch/powerpc/include/asm/book3s/32/pgalloc.h  |   4 +-
+ arch/powerpc/include/asm/book3s/64/hash-4k.h  |   4 +-
+ arch/powerpc/include/asm/book3s/64/hash-64k.h |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgalloc.h  |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |   8 +-
+ arch/powerpc/include/asm/book3s/64/radix.h    |   4 +-
+ arch/powerpc/include/asm/pgalloc.h            |   8 +-
+ arch/powerpc/mm/book3s64/hash_pgtable.c       |  10 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  10 +-
+ arch/riscv/include/asm/pgalloc.h              |   8 +-
+ arch/s390/include/asm/pgalloc.h               |   4 +-
+ arch/s390/include/asm/pgtable.h               |   4 +-
+ arch/s390/mm/pgalloc.c                        |   2 +-
+ arch/s390/mm/pgtable.c                        |  14 +--
+ arch/sh/include/asm/pgalloc.h                 |   4 +-
+ arch/sparc/include/asm/pgalloc_32.h           |   6 +-
+ arch/sparc/include/asm/pgalloc_64.h           |   2 +-
+ arch/sparc/include/asm/pgtable_64.h           |   4 +-
+ arch/sparc/mm/init_64.c                       |   2 +-
+ arch/sparc/mm/srmmu.c                         |   6 +-
+ arch/sparc/mm/tlb.c                           |  14 +--
+ arch/x86/include/asm/pgalloc.h                |  10 +-
+ arch/x86/mm/pgtable.c                         |   8 +-
+ arch/xtensa/include/asm/pgalloc.h             |  12 +-
+ fs/dax.c                                      |  14 +--
+ include/asm-generic/pgalloc.h                 |  10 +-
+ include/linux/mm.h                            |  16 ++-
+ include/linux/mm_types.h                      |   4 +-
+ include/linux/pgtable.h                       |   6 +-
+ mm/debug_vm_pgtable.c                         |   6 +-
+ mm/huge_memory.c                              | 103 +++++++++---------
+ mm/internal.h                                 |   2 +-
+ mm/khugepaged.c                               |  14 +--
+ mm/memory.c                                   |  15 +--
+ mm/mremap.c                                   |   2 +-
+ mm/pgtable-generic.c                          |  37 +++----
+ 53 files changed, 240 insertions(+), 236 deletions(-)
+
 -- 
-2.42.0
+2.43.0
 
