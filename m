@@ -1,134 +1,92 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0802AD15
-	for <loongarch@lists.linux.dev>; Mon, 29 Jul 2024 03:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FCC10A12;
+	Tue, 30 Jul 2024 02:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722225004; cv=none; b=jErdtqK82p+LYvYSgrrQEI5pvk0j8+IdZEYh2pdivjYML4oHCXhu3TU77VU6dgaaceL/lWYpBAnYIvCUv4VygEvMtd7Nyjx3PR77spwb0WEiyL0+C299exFGZKp928ST33IPbMMgSuOb+XHld9JbsAkqPEaplGASPPeusRCIdeI=
+	t=1722306362; cv=none; b=jHHPE7weossUHbv7gyIfKzw4McpFZKwNU6f94gwXnpQavOn0o1X74eWUWncD7xiCsWajErv5TLpo9i9kLCjDneh0cvMIbzVxev4HjWfLAR4rRPVCjZZcNx6Fq3Tv3lUD38SrG5cBcjJzVCwdXIH1E9t6+3SMJ2BzMs5eLUHqf9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722225004; c=relaxed/simple;
-	bh=d9ugLOY3YSPTwydIDtkHiCrwApM0k3T2ez6oBbM0aDk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hjyKWmWI+D50ln4gwa+VZjVmKats8pLsN2fHJRxkyuTG+1q+OmypXf3LNYb7X4j4iOokWjTread3wsUZjJLsYxrJaZ91dXHYMGnoE8RZOZ8jFDh2reMCVFT/vLYY2agXfXPtJhF4jN8f5WbX5HsuWor24oReH1aU7dxul+aOvtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Cxe+phEadmal8DAA--.12093S3;
-	Mon, 29 Jul 2024 11:49:53 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxf8deEadmNiIEAA--.20240S3;
-	Mon, 29 Jul 2024 11:49:53 +0800 (CST)
-Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for
- kvm_hypercall
-To: WangYuli <wangyuli@uniontech.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Dandan Zhang <zhangdandan@uniontech.com>, zhaotianrui@loongson.cn,
- kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Wentao Guan <guanwentao@uniontech.com>,
- baimingcong@uniontech.com
-References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
- <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn>
- <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
- <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn>
- <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
- <9bad6e47-dac5-82d2-1828-57df3ec840f8@loongson.cn>
- <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <a984a8a7-135a-934f-f3f0-e77d6ae59e52@loongson.cn>
-Date: Mon, 29 Jul 2024 11:49:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1722306362; c=relaxed/simple;
+	bh=taQe3psEegTsQujwHfTE9wNpSVFvMPBJ23z/qcR0d0g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kXGqixDygrFtS7gJnrr9pJCcOHq4eVg+jwESur8xZP/VZtxbnQpKxUtvI+Of6iV/gn+57DRWLq0JOry+/p3+67UpO77B6KhNLzgJT8PTSrisMrsNUKosBgrKqgSkGfsSvgXj8Gp6rICyR0vjUUrHyjhRTIM0Or2fHf7sHoOWMKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DF8C4AF0F;
+	Tue, 30 Jul 2024 02:26:00 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH for-stable] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
+Date: Tue, 30 Jul 2024 10:25:42 +0800
+Message-ID: <20240730022542.3553255-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
+References: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxf8deEadmNiIEAA--.20240S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF45Wry3Jw4DGw13Xr4UWrX_yoW8Gw4fpa
-	yUt3W3CFnaqr4kA3W3Aw1UZr1rGr4fWanFqwn5Jr1UCrs8GFn3t3yxtwn0yFykW3yFqFyY
-	vF40q345XFy5ZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
 
+Chromium sandbox apparently wants to deny statx [1] so it could properly
+inspect arguments after the sandboxed process later falls back to fstat.
+Because there's currently not a "fd-only" version of statx, so that the
+sandbox has no way to ensure the path argument is empty without being
+able to peek into the sandboxed process's memory. For architectures able
+to do newfstatat though, glibc falls back to newfstatat after getting
+-ENOSYS for statx, then the respective SIGSYS handler [2] takes care of
+inspecting the path argument, transforming allowed newfstatat's into
+fstat instead which is allowed and has the same type of return value.
 
+But, as LoongArch is the first architecture to not have fstat nor
+newfstatat, the LoongArch glibc does not attempt falling back at all
+when it gets -ENOSYS for statx -- and you see the problem there!
 
-On 2024/7/29 上午11:03, WangYuli wrote:
-> Hi Bibo and Huacai,
-> 
-> 
-> Ah... tell me you two aren't arguing, right?
-> 
-> 
-> Both of you are working towards the same goal—making the upstream
-> 
-> code for the Loongarch architecture as clean and elegant as possible.
-> 
-> If it's just a disagreement about how to handle this small patch,
-> 
-> there's no need to make things complicated.
-> 
-> 
-> As a partner of yours and a community developer passionate about
-> 
-> Loongson CPU, I'd much rather see you two working together
-> 
-> harmoniously than complaining about each other's work. I have full
-> 
-> confidence in Bibo's judgment on the direction of KVM for Loongarch,
-> 
-> and I also believe that Huacai, as the Loongarch maintainer, has always
-> 
-> been fulfilling his responsibilities.
-> 
-> 
-> You are both excellent Linux developers. That's all.
-> 
-> 
-> To be specific about the controversy caused by this particular commit,
-> 
-> I think the root cause is that the KVM documentation for Loongarch
-> 
-> hasn't been upstreamed. In my opinion, the documentation seems
-> 
-> ready to be upstreamed. If you're all busy with more important work,
-> 
-> I can take the time to submit them and provide a Chinese translation.
-> 
-> 
-> If this is feasible, it would be better to merge this commit after that.
-Yuli,
+Actually, back when the LoongArch port was under review, people were
+aware of the same problem with sandboxing clone3 [3], so clone was
+eventually kept. Unfortunately it seemed at that time no one had noticed
+statx, so besides restoring fstat/newfstatat to LoongArch uapi (and
+postponing the problem further), it seems inevitable that we would need
+to tackle seccomp deep argument inspection.
 
-The argument is normal in the work and life :)
+However, this is obviously a decision that shouldn't be taken lightly,
+so we just restore fstat/newfstatat by defining __ARCH_WANT_NEW_STAT
+in unistd.h. This is the simplest solution for now, and so we hope the
+community will tackle the long-standing problem of seccomp deep argument
+inspection in the future [4][5].
 
-You are right, KVM document is important and any contribution is welcome.
+More infomation please reading this thread [6].
 
-Regards
-Bibo Mao
-> 
-> 
-> Best wishes,
-> 
-> 
-> -- 
-> 
-> WangYuli
-> 
-> 
+[1] https://chromium-review.googlesource.com/c/chromium/src/+/2823150
+[2] https://chromium.googlesource.com/chromium/src/sandbox/+/c085b51940bd/linux/seccomp-bpf-helpers/sigsys_handlers.cc#355
+[3] https://lore.kernel.org/linux-arch/20220511211231.GG7074@brightrain.aerifal.cx/
+[4] https://lwn.net/Articles/799557/
+[5] https://lpc.events/event/4/contributions/560/attachments/397/640/deep-arg-inspection.pdf
+[6] https://lore.kernel.org/loongarch/20240226-granit-seilschaft-eccc2433014d@brauner/T/#t
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/uapi/asm/unistd.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
+index fcb668984f03..b344b1f91715 100644
+--- a/arch/loongarch/include/uapi/asm/unistd.h
++++ b/arch/loongarch/include/uapi/asm/unistd.h
+@@ -1,4 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SYS_CLONE
+ #define __ARCH_WANT_SYS_CLONE3
+ 
+-- 
+2.43.5
 
