@@ -1,108 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F971A00CE;
-	Tue, 30 Jul 2024 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59F511A2573
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 14:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722349452; cv=none; b=fOlopHQAaOWw67R7XuHesZjuixaskmYWFm5N8Iy0mVWIya6To8sgVXa7+5GuByKoWiS22aMlDcKerw5zdfrtz9EZ/d7HKXoWFl3JqUNNqg/HLqOtuLvzM1vTBdW3Uk4z2itt47VZlMI6J0QlCcHB5jQDpIFdW+e9EQ0nEZrCM+c=
+	t=1722351280; cv=none; b=BEV13D6T4X0Xox0dNCe0IN79FTP68guCB0zzVcP6tGVIGGxj7LYgN5otBwuG0ygtPBCeQDFN35gkJnndomiVucbZjxQSNpxDLXJcTJjJU55Wg/vT5xA2WM2lZViC8PgOXVPCL6DlwwfsuvOJxNld7LXogIiDCuEPE308zmMyfpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722349452; c=relaxed/simple;
-	bh=d0CEwF5u8K2jTXxISWUisJEv8UUhL0AyQQ1NkNiJXlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JFTShmbmGXdNCRTzY97s/8Nd3RlF/+Vm5oq3g2WHmLZkQQyN04wUI+6d81pcBv31sSfAtumZW+nyTMT6wqLYj1S2wDDgQEHv0tRlfwq+VQBg/Y4VT4Aa4/A7/+HCSktifxFxYpdLiNsdIjP5hiNa00Ddvlggvjyw1O0OLTNROgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vOb4LPCp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vOb4LPCp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD588C32782;
-	Tue, 30 Jul 2024 14:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1722349452;
-	bh=d0CEwF5u8K2jTXxISWUisJEv8UUhL0AyQQ1NkNiJXlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vOb4LPCpYSP0rne4Q0/AZ5mL1sSs1Gjcd+k63kNfQGk7dBrOLQ6JUav0cIkG77LXD
-	 mKxtqkYt7+5hocVxkeLQ05l/e42fNbfF7p2WlihWLkN//XbWKDFOZn/Nyxg0/oEDJA
-	 tr/PjyeAHjmYby1Si5SYagi2msDkLtRdQTnb0mRw=
-Date: Tue, 30 Jul 2024 16:24:09 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH for-stable] LoongArch: Define __ARCH_WANT_NEW_STAT in
- unistd.h
-Message-ID: <2024073059-hamstring-verbalize-91df@gregkh>
-References: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
- <20240730022542.3553255-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1722351280; c=relaxed/simple;
+	bh=D+dqNVllEU8lT2cgVsxsWINdUlJF87pze3+Qcm2ehQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ChfKlUURIKNfne9+jmORlx+anb2nqYMRROPRC39BZ+uOzuUzlGgqtIVNexKrFM1JgPzU1DkIp6/R4kNbA73g2YJZwM/x76Aabprq3O2CaEgT/4u5T9RFBYAYm8jn/++DGn7592rRLaaTK/GQLJTtDjMFLeairVWsci5cfcW5msk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.126.21])
+	by gateway (Coremail) with SMTP id _____8Axz+ur_qhmmY0EAA--.16104S3;
+	Tue, 30 Jul 2024 22:54:35 +0800 (CST)
+Received: from [192.168.0.108] (unknown [36.44.126.21])
+	by front1 (Coremail) with SMTP id qMiowMAxHsen_qhmycEGAA--.34081S3;
+	Tue, 30 Jul 2024 22:54:33 +0800 (CST)
+Message-ID: <05ce0eba-22f6-ed0d-5005-227251decf50@loongson.cn>
+Date: Tue, 30 Jul 2024 22:54:32 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240730022542.3553255-1-chenhuacai@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 1/2] objtool/LoongArch: Restrict stack operation
+ instruction
+Content-Language: en-US
+To: Jinyang He <hejinyang@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
+ <20240730061901.21485-2-yangtiezhu@loongson.cn>
+ <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
+ <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
+ <ca433beb-e3cd-8036-cc05-5f4cc1a735fa@loongson.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <ca433beb-e3cd-8036-cc05-5f4cc1a735fa@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxHsen_qhmycEGAA--.34081S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw47uFW5Kw1ruryUJF4fWFX_yoW8Cr1rpr
+	yfJa1UJFZ8Gr1fCr1qqr1DWFyYyryxJ34DWr45ta15Aws0va4Sqr1UXF4j9a1DXrs3JrWY
+	yrWrZry3Zr9xXabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jU
+	sqXUUUUU=
 
-On Tue, Jul 30, 2024 at 10:25:42AM +0800, Huacai Chen wrote:
-> Chromium sandbox apparently wants to deny statx [1] so it could properly
-> inspect arguments after the sandboxed process later falls back to fstat.
-> Because there's currently not a "fd-only" version of statx, so that the
-> sandbox has no way to ensure the path argument is empty without being
-> able to peek into the sandboxed process's memory. For architectures able
-> to do newfstatat though, glibc falls back to newfstatat after getting
-> -ENOSYS for statx, then the respective SIGSYS handler [2] takes care of
-> inspecting the path argument, transforming allowed newfstatat's into
-> fstat instead which is allowed and has the same type of return value.
+On 7/30/24 18:57, Jinyang He wrote:
 > 
-> But, as LoongArch is the first architecture to not have fstat nor
-> newfstatat, the LoongArch glibc does not attempt falling back at all
-> when it gets -ENOSYS for statx -- and you see the problem there!
-> 
-> Actually, back when the LoongArch port was under review, people were
-> aware of the same problem with sandboxing clone3 [3], so clone was
-> eventually kept. Unfortunately it seemed at that time no one had noticed
-> statx, so besides restoring fstat/newfstatat to LoongArch uapi (and
-> postponing the problem further), it seems inevitable that we would need
-> to tackle seccomp deep argument inspection.
-> 
-> However, this is obviously a decision that shouldn't be taken lightly,
-> so we just restore fstat/newfstatat by defining __ARCH_WANT_NEW_STAT
-> in unistd.h. This is the simplest solution for now, and so we hope the
-> community will tackle the long-standing problem of seccomp deep argument
-> inspection in the future [4][5].
-> 
-> More infomation please reading this thread [6].
-> 
-> [1] https://chromium-review.googlesource.com/c/chromium/src/+/2823150
-> [2] https://chromium.googlesource.com/chromium/src/sandbox/+/c085b51940bd/linux/seccomp-bpf-helpers/sigsys_handlers.cc#355
-> [3] https://lore.kernel.org/linux-arch/20220511211231.GG7074@brightrain.aerifal.cx/
-> [4] https://lwn.net/Articles/799557/
-> [5] https://lpc.events/event/4/contributions/560/attachments/397/640/deep-arg-inspection.pdf
-> [6] https://lore.kernel.org/loongarch/20240226-granit-seilschaft-eccc2433014d@brauner/T/#t
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/include/uapi/asm/unistd.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
-> index fcb668984f03..b344b1f91715 100644
-> --- a/arch/loongarch/include/uapi/asm/unistd.h
-> +++ b/arch/loongarch/include/uapi/asm/unistd.h
-> @@ -1,4 +1,5 @@
->  /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#define __ARCH_WANT_NEW_STAT
->  #define __ARCH_WANT_SYS_CLONE
->  #define __ARCH_WANT_SYS_CLONE3
->  
-> -- 
-> 2.43.5
-> 
-> 
+> On 2024-07-30 17:49, Tiezhu Yang wrote:
+>> On 07/30/2024 05:28 PM, Jinyang He wrote:
+>>> On 2024-07-30 14:19, Tiezhu Yang wrote:
+>>>
+>>>> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
+>>>> support"), the code flow of do_syscall() was changed when compiled
+>>>> with GCC due to the secondary stack of add_random_kstack_offset(),
+>>>> something like this:
+>>>>
+>>>>    addi.d          $sp, $sp, -32
+>>>>    st.d            $fp, $sp, 16
+>>>>    st.d            $ra, $sp, 24
+>>>>    addi.d          $fp, $sp, 32
+>>>>    ...
+>>>>    sub.d           $sp, $sp, $t1
+>>> Have you checked the ORC info whether is right or tried backtrace which
+>>> passed do_syscall? The "sub.d $sp, $sp, $t1" has modified the $sp so the
+>>> $sp cannot express CFA here. This patch just clear the warning but 
+>>> ignore
+>>> the validity of ORC info. The wrong ORC info may cause illegally access
+>>> memory when backtrace.
+>>
+>> I did testing many times before submitting, the call trace is
+>> expected when testing "echo l > /proc/sysrq-trigger".
+> Make sure the RANDOMIZE_KSTACK_OFFSET is enable. I tested it by
+> CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y on qemu and it did
+> not show the frame about handle_syscall.
 
-What kernel branch(s) is this for?
+I tested with the defconfig, CONFIG_RANDOMIZE_KSTACK_OFFSET is set but
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT is not set, the call trace has
+handle_syscall() which is the previous frame of do_syscall(), and the
+orc dump info is correct.
 
-thanks,
+Let me modify the config file and test again with the following configs:
+CONFIG_RANDOMIZE_KSTACK_OFFSET=y CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
 
-greg k-h
+If there exists problem, I will fix it.
+
+Thanks,
+Tiezhu
+
