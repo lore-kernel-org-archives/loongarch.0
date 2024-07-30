@@ -1,259 +1,219 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A862191F91
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 07:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D673187322
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722326269; cv=none; b=aY1HruGmHNGYfBYMUC4k/eRVoNJ/dvUvJR6RcQ3seYhf6vkLdIiPxIuxSI2NINFzq7dKQCoHONBdxS1yPpo5yMjbmHwG5pl+ui/mIJ6a44xjHFhUiKrd4UB3nwM4AXTYBzp7utooa1MlCFZe/ic6QqWJv+hhNKF1jO7GBJuQc1k=
+	t=1722327038; cv=none; b=sYzUuFAH4gQ2JUZOIZgVzH23gWtF3wH7gVzFyLmIPzDcGKkw/qqnoPI9nP9pGmMYk71gA0YL5XOx8MmF8WU7O8YlqjC5FTcYz/SdoZ+yK66DAQPOzIngQaUssJmfmGMexCYHCj3r+oTePBfUlwAa9XlxKLBEAILFobp+7BeQTYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722326269; c=relaxed/simple;
-	bh=9wMZqdqGzCugtv9QYM7E5DR7ZJHLVgka004bdRgej40=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pqPSEM8fx7qnAEPfAO1wTt8l1t95WQavCpyqBiiZemoimtnyBOnJcbQ7m2dp/xumi/GuwGhR0AzA76Fb8zcQh6HNSoUsHMQ1pFQjEHM4pO8EuhNZrP9hUAYGaddX466l+ATiYL9uGooAZHjgB6fwsXooBruq6P/oG2ASNOHFHkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxW+r4nKhm9VEEAA--.15102S3;
-	Tue, 30 Jul 2024 15:57:44 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxX8f4nKhmrTUGAA--.30670S3;
-	Tue, 30 Jul 2024 15:57:44 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v6 1/3] LoongArch: KVM: Add HW Binary Translation extension support
-Date: Tue, 30 Jul 2024 15:57:41 +0800
-Message-Id: <20240730075744.1215856-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240730075744.1215856-1-maobibo@loongson.cn>
-References: <20240730075744.1215856-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1722327038; c=relaxed/simple;
+	bh=my3L8G0O16Q8jX9sqyOmzVO7D6UraxN07D2CKn52GqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o+pRza2eQCjhHsRnw8d6tD8QZkss4EIh7vvq7Mwk0Y9a5qf5aL1Fa3uFl3rIYwuJK7nHwDwWBzm1mPu/CJhyw6sGA12KbEf2hzM5FMp4aiTgajwR5UdJSK+e8Tz4Y5EvEY9KB55mL3rGg+CZuIel1ZkFB5lSDGQxV2U+iqiwNz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hGP3113T; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGP3113T"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2cb63ceff6dso2693397a91.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 01:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722327037; x=1722931837; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4/S17o3ryXO92fKPDsd+20QrVlSG6ehQAGuA4AgUnAA=;
+        b=hGP3113TW2/Uw+Hl4qCl1y0oLEPXT2928Kip0fAjFyRJb7IC9nf8Ccm7+f9xBPsb+Y
+         ShGJEa5pGAcyT9ygBbPSOuT32rWrxJSuGuOU02Mr6vqj8I64Ok6/ZA12P0Phkgur8xv4
+         uPiw+3Kte1qtIoEw5sfYWlr6K87GUVmw48pRdgBxIDVZm++JDVIZ20+BXu2pq67WD2Ha
+         aJAVWxBwq1NjcFRna7eq1/2uUDt3enYLWp+x5EA9rSWR+lZlAnURT7gmmWC4HmH/dqJd
+         iM78bVzOG4f+wwCHW+UYHPVAv5ZMoEp1r4docYmScpKzVPckZ5NXlC/zfd5XbmB+jR5D
+         vSVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722327037; x=1722931837;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4/S17o3ryXO92fKPDsd+20QrVlSG6ehQAGuA4AgUnAA=;
+        b=qYRzeB3YUAsEsPizaxDNt57PeH2+Np3344SdpE6Y1PaogqldnSmsTTsWE3k7QdAEax
+         AJE2Zyw2L/mLx41qnY8pcneb7zs5sEKuPFptJ7nqobD6R2BLumAaCwGORoG6go3gQRB5
+         jr+IvIrQrszaHr0h47pd+rnNl1+VJzgL4EoZBvU7xUKVkggmzg7zlC6He0xxD/4ooZ5f
+         tc/xQvFD3CyBhibq4Q/bwAmXEgbv533inSdabszHm3rO7Gmsihd4E1/hMs1hcl37570O
+         XxkmGAqD6z+04DQnyGRBZ9ilCEztBiiLYN6yuuDZzrCroYqUIAXlAhQPl1KCmlFPGMXl
+         XC8w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4zy7fBX/JI4LHksQ+52nqKzO0F7TzZbVAQ0uPPva+HO1JgQMFQuKJFs/jL9nV2jArBQyQXG3DD023cqLUBYhO6gG/In0ranV7
+X-Gm-Message-State: AOJu0Yx1AZ3glgeIZkj+lgy7whvabEoCAVeI3oxXFpY35e8pL1WWegKV
+	SxDirqy/xZc1kYEiGuytnHIFc7Ko8GcEaTC/L8Y5TiSfxDR0xhT8
+X-Google-Smtp-Source: AGHT+IHd+8idtSf9No9KXFiHPkFqgsgm8Dqu198TXfzlUpyaNdqot/AMDpkwkaetathdKfNuieqdfQ==
+X-Received: by 2002:a17:90b:3a90:b0:2c9:9fdf:f72e with SMTP id 98e67ed59e1d1-2cf7e606d04mr8262857a91.26.1722327036447;
+        Tue, 30 Jul 2024 01:10:36 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.24])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cf28e3cbaasm9886868a91.51.2024.07.30.01.10.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jul 2024 01:10:35 -0700 (PDT)
+Message-ID: <c2accb5d-33f6-404b-9298-6b9e8bf24a9b@gmail.com>
+Date: Tue, 30 Jul 2024 16:10:23 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxX8f4nKhmrTUGAA--.30670S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/18] use struct ptdesc to replace pgtable_t
+To: alexs@kernel.org, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Brian Cain <bcain@quicinc.com>,
+ WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Naveen N Rao <naveen@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Vishal Moola <vishal.moola@gmail.com>,
+ "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Lance Yang <ioworker0@gmail.com>,
+ Peter Xu <peterx@redhat.com>, Barry Song <baohua@kernel.org>,
+ linux-s390@vger.kernel.org
+Cc: Guo Ren <guoren@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Anup Patel
+ <anup@brainfault.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Breno Leitao <leitao@debian.org>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Matthew Wilcox <willy@infradead.org>
+References: <20240730064712.3714387-1-alexs@kernel.org>
+Content-Language: en-US
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <20240730064712.3714387-1-alexs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Loongson Binary Translation (LBT) is used to accelerate binary translation,
-which contains 4 scratch registers (scr0 to scr3), x86/ARM eflags (eflags)
-and x87 fpu stack pointer (ftop).
+BTW, the patchset based on the latest git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm mm-unstable branch.
 
-Like FPU extension, here late enabling method is used for LBT. LBT context
-is saved/restored on vcpu context switch path.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  8 ++++
- arch/loongarch/include/asm/kvm_vcpu.h |  6 +++
- arch/loongarch/kvm/exit.c             |  9 ++++
- arch/loongarch/kvm/vcpu.c             | 66 ++++++++++++++++++++++++++-
- 4 files changed, 88 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 44b54965f5b4..c409ab15bae1 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -137,6 +137,7 @@ enum emulation_result {
- #define KVM_LARCH_LASX		(0x1 << 2)
- #define KVM_LARCH_SWCSR_LATEST	(0x1 << 3)
- #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
-+#define KVM_LARCH_LBT		(0x1 << 5)
- 
- struct kvm_vcpu_arch {
- 	/*
-@@ -170,6 +171,7 @@ struct kvm_vcpu_arch {
- 
- 	/* FPU state */
- 	struct loongarch_fpu fpu FPU_ALIGN;
-+	struct loongarch_lbt lbt;
- 
- 	/* CSR state */
- 	struct loongarch_csrs *csr;
-@@ -241,6 +243,12 @@ static inline bool kvm_guest_has_lasx(struct kvm_vcpu_arch *arch)
- 	return arch->cpucfg[2] & CPUCFG2_LASX;
- }
- 
-+static inline bool kvm_guest_has_lbt(struct kvm_vcpu_arch *arch)
-+{
-+	return arch->cpucfg[2] & (CPUCFG2_X86BT | CPUCFG2_ARMBT
-+					| CPUCFG2_MIPSBT);
-+}
-+
- /* Debug: dump vcpu state */
- int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index c416cb7125c0..3cc906a0ff54 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -75,6 +75,12 @@ static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
- static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
- #endif
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu);
-+#else
-+static inline int kvm_own_lbt(struct kvm_vcpu *vcpu) { return -EINVAL; }
-+#endif
-+
- void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
- void kvm_reset_timer(struct kvm_vcpu *vcpu);
- void kvm_save_timer(struct kvm_vcpu *vcpu);
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ea73f9dc2cc6..be2c326253a3 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -835,6 +835,14 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- 	return ret;
- }
- 
-+static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_own_lbt(vcpu))
-+		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-+
-+	return RESUME_GUEST;
-+}
-+
- /*
-  * LoongArch KVM callback handling for unimplemented guest exiting
-  */
-@@ -867,6 +875,7 @@ static exit_handle_fn kvm_fault_tables[EXCCODE_INT_START] = {
- 	[EXCCODE_LASXDIS]		= kvm_handle_lasx_disabled,
- 	[EXCCODE_GSPR]			= kvm_handle_gspr,
- 	[EXCCODE_HVC]			= kvm_handle_hypercall,
-+	[EXCCODE_BTDIS]			= kvm_handle_lbt_disabled,
- };
- 
- int kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 16756ffb55e8..36db2b257a95 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -6,6 +6,7 @@
- #include <linux/kvm_host.h>
- #include <linux/entry-kvm.h>
- #include <asm/fpu.h>
-+#include <asm/lbt.h>
- #include <asm/loongarch.h>
- #include <asm/setup.h>
- #include <asm/time.h>
-@@ -977,12 +978,71 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
- 	return 0;
- }
- 
-+#ifdef CONFIG_CPU_HAS_LBT
-+int kvm_own_lbt(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_guest_has_lbt(&vcpu->arch))
-+		return -EINVAL;
-+
-+	preempt_disable();
-+	set_csr_euen(CSR_EUEN_LBTEN);
-+
-+	_restore_lbt(&vcpu->arch.lbt);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_LBT;
-+	preempt_enable();
-+	return 0;
-+}
-+
-+static void kvm_lose_lbt(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_LBT) {
-+		_save_lbt(&vcpu->arch.lbt);
-+		clear_csr_euen(CSR_EUEN_LBTEN);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_LBT;
-+	}
-+	preempt_enable();
-+}
-+
-+static void kvm_check_fscr(struct kvm_vcpu *vcpu, unsigned long fcsr)
-+{
-+	/*
-+	 * If TM is enabled, top register save/restore will
-+	 * cause lbt exception, here enable lbt in advance
-+	 */
-+	if (fcsr & FPU_CSR_TM)
-+		kvm_own_lbt(vcpu);
-+}
-+
-+static void kvm_check_fcsr_alive(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long fcsr;
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-+		if (vcpu->arch.aux_inuse & KVM_LARCH_LBT)
-+			return;
-+
-+		fcsr = read_fcsr(LOONGARCH_FCSR0);
-+		kvm_check_fscr(vcpu, fcsr);
-+	}
-+}
-+#else
-+static inline void kvm_lose_lbt(struct kvm_vcpu *vcpu) { }
-+static inline void kvm_check_fscr(struct kvm_vcpu *vcpu,
-+				unsigned long fcsr) { }
-+static inline void kvm_check_fcsr_alive(struct kvm_vcpu *vcpu) { }
-+#endif
-+
- /* Enable FPU and restore context */
- void kvm_own_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
--	/* Enable FPU */
-+	/*
-+	 * Enable FPU for guest
-+	 * Set FR and FRE according to guest context
-+	 */
-+	kvm_check_fscr(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN);
- 
- 	kvm_restore_fpu(&vcpu->arch.fpu);
-@@ -1002,6 +1062,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 	preempt_disable();
- 
- 	/* Enable LSX for guest */
-+	kvm_check_fscr(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
- 	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
- 	case KVM_LARCH_FPU:
-@@ -1036,6 +1097,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 
- 	preempt_disable();
- 
-+	kvm_check_fscr(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
- 	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
- 	case KVM_LARCH_LSX:
-@@ -1067,6 +1129,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- {
- 	preempt_disable();
- 
-+	kvm_check_fcsr_alive(vcpu);
- 	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
- 		kvm_save_lasx(&vcpu->arch.fpu);
- 		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
-@@ -1089,6 +1152,7 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 		/* Disable FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN);
- 	}
-+	kvm_lose_lbt(vcpu);
- 
- 	preempt_enable();
- }
--- 
-2.39.3
-
+On 7/30/24 2:46 PM, alexs@kernel.org wrote:
+> From: Alex Shi <alexs@kernel.org>
+> 
+> We have struct ptdesc for page table descriptor a year ago, but it
+> has no much usages in kernel, while pgtable_t is used widely.
+> 
+> The pgtable_t is typedefed as 'pte_t *' in sparc, s390, powerpc and m68k
+> except SUN3, others archs are all same as 'struct page *'.
+> 
+> These blocks the conception and code update for page table descriptor to
+> struct ptdesc.
+> 
+> So, the simple idea to push the ptdesc conception forward is to update
+> all pgtable_t by ptdesc or pte_t pointer. But this needs widely
+> knowledges for most all of different archs. Common code change is easy
+> for include/ and mm/ directory, but it's hard in all archs.
+> 
+> Thanks for intel LKP framework, I fixed most all of build issues except
+> a bug on powerpc which reports a "struct ptdesc *" incompatible with 
+> struct ptdesc *' pointer issue...
+> 
+> Another trouble is pmd_pgtable() conversion in the last patch.
+> Maybe some of arch need define theirself own pmd_ptdesc()?
+> 
+> This patchset is immature, even except above 2 issues, I just tested
+> virutal machine booting and kselftest mm on x86 and arm64.
+> 
+> Anyway any input are appreciated!
+> 
+> Thanks
+> Alex
+> 
+> Alex Shi (18):
+>   mm/pgtable: use ptdesc in pte_free_now/pte_free_defer
+>   mm/pgtable: convert ptdesc.pmd_huge_pte to ptdesc pointer
+>   fs/dax: use ptdesc in dax_pmd_load_hole
+>   mm/thp: use ptdesc pointer in __do_huge_pmd_anonymous_page
+>   mm/thp: use ptdesc in do_huge_pmd_anonymous_page
+>   mm/thp: convert insert_pfn_pmd and its caller to use ptdesc
+>   mm/thp: use ptdesc in copy_huge_pmd
+>   mm/memory: use ptdesc in __pte_alloc
+>   mm/pgtable: fully use ptdesc in pte_alloc_one series functions
+>   mm/pgtable: pass ptdesc to pte_free()
+>   mm/pgtable: introduce ptdesc_pfn and use ptdesc in free_pte_range()
+>   mm/thp: pass ptdesc to set_huge_zero_folio function
+>   mm/pgtable: return ptdesc pointer in pgtable_trans_huge_withdraw
+>   mm/pgtable: use ptdesc in pgtable_trans_huge_deposit
+>   mm/pgtable: pass ptdesc to pmd_populate
+>   mm/pgtable: pass ptdesc to pmd_install
+>   mm: convert vmf.prealloc_pte to struct ptdesc pointer
+>   mm/pgtable: pass ptdesc in pte_free_defer
+> 
+>  arch/alpha/include/asm/pgalloc.h              |   4 +-
+>  arch/arc/include/asm/pgalloc.h                |   4 +-
+>  arch/arm/include/asm/pgalloc.h                |  13 +--
+>  arch/arm/include/asm/tlb.h                    |   4 +-
+>  arch/arm/mm/pgd.c                             |   2 +-
+>  arch/arm64/include/asm/pgalloc.h              |   4 +-
+>  arch/arm64/include/asm/tlb.h                  |   4 +-
+>  arch/csky/include/asm/pgalloc.h               |   4 +-
+>  arch/hexagon/include/asm/pgalloc.h            |   8 +-
+>  arch/loongarch/include/asm/pgalloc.h          |   8 +-
+>  arch/m68k/include/asm/motorola_pgalloc.h      |  12 +-
+>  arch/m68k/include/asm/sun3_pgalloc.h          |   4 +-
+>  arch/microblaze/include/asm/pgalloc.h         |   2 +-
+>  arch/mips/include/asm/pgalloc.h               |   4 +-
+>  arch/nios2/include/asm/pgalloc.h              |   4 +-
+>  arch/openrisc/include/asm/pgalloc.h           |   8 +-
+>  arch/parisc/include/asm/pgalloc.h             |   2 +-
+>  arch/powerpc/include/asm/book3s/32/pgalloc.h  |   4 +-
+>  arch/powerpc/include/asm/book3s/64/hash-4k.h  |   4 +-
+>  arch/powerpc/include/asm/book3s/64/hash-64k.h |   4 +-
+>  arch/powerpc/include/asm/book3s/64/pgalloc.h  |   4 +-
+>  arch/powerpc/include/asm/book3s/64/pgtable.h  |   8 +-
+>  arch/powerpc/include/asm/book3s/64/radix.h    |   4 +-
+>  arch/powerpc/include/asm/pgalloc.h            |   8 +-
+>  arch/powerpc/mm/book3s64/hash_pgtable.c       |  10 +-
+>  arch/powerpc/mm/book3s64/radix_pgtable.c      |  10 +-
+>  arch/riscv/include/asm/pgalloc.h              |   8 +-
+>  arch/s390/include/asm/pgalloc.h               |   4 +-
+>  arch/s390/include/asm/pgtable.h               |   4 +-
+>  arch/s390/mm/pgalloc.c                        |   2 +-
+>  arch/s390/mm/pgtable.c                        |  14 +--
+>  arch/sh/include/asm/pgalloc.h                 |   4 +-
+>  arch/sparc/include/asm/pgalloc_32.h           |   6 +-
+>  arch/sparc/include/asm/pgalloc_64.h           |   2 +-
+>  arch/sparc/include/asm/pgtable_64.h           |   4 +-
+>  arch/sparc/mm/init_64.c                       |   2 +-
+>  arch/sparc/mm/srmmu.c                         |   6 +-
+>  arch/sparc/mm/tlb.c                           |  14 +--
+>  arch/x86/include/asm/pgalloc.h                |  10 +-
+>  arch/x86/mm/pgtable.c                         |   8 +-
+>  arch/xtensa/include/asm/pgalloc.h             |  12 +-
+>  fs/dax.c                                      |  14 +--
+>  include/asm-generic/pgalloc.h                 |  10 +-
+>  include/linux/mm.h                            |  16 ++-
+>  include/linux/mm_types.h                      |   4 +-
+>  include/linux/pgtable.h                       |   6 +-
+>  mm/debug_vm_pgtable.c                         |   6 +-
+>  mm/huge_memory.c                              | 103 +++++++++---------
+>  mm/internal.h                                 |   2 +-
+>  mm/khugepaged.c                               |  14 +--
+>  mm/memory.c                                   |  15 +--
+>  mm/mremap.c                                   |   2 +-
+>  mm/pgtable-generic.c                          |  37 +++----
+>  53 files changed, 240 insertions(+), 236 deletions(-)
+> 
