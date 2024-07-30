@@ -1,113 +1,330 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C7F19D8A6
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 11:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC4819FA96
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 11:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722338969; cv=none; b=S9LY8JvbIAu4KwM2HNe2lDAgSFrjyPGkQtgWJis+qNOYDFMNJWCZkEWCpoo9iWs9KtiQ2GRHRI0uEe+7ZreifnoYG/RxMhhM5bZUxBU6iy9RJptOVdlo9mFX5sMBkJLhTIM9INW1FsKC7IxOLA8TkUOP09dm2CjHTEZAmJR4W/U=
+	t=1722339510; cv=none; b=C88+OzTXU4Nv0r7x2ReGuDYmjmUXzVaa0BJUeBERvB0C6QyFXcqr5Qo5uUc/ACvkQ/qrzlRFJN3qL+cqVqK8FB5VzJy68mKFUcs6b4cAv3BI9XWm4lltnwLcO20RvrUl9JVY/4oUAl5gyglLbXXgqkZXA1wO4JARDZ43+VhYfdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722338969; c=relaxed/simple;
-	bh=aIydPvqJA2em2PQ8rQgyo2FGOfcmh0a+5O18l211/5U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T5Vz/og/GuqUu3WbUL8MEUOg9y0wgpJqBsx/y/bTJyOk2WIMdbRTHbdx3O4HOdt4fF4W0WBidKVbDPM7On7z3V++q8B+HVha3Je0o8fOJWwlyLow2N5Rs0Rj5UjU6a8K0cuXYD7zr1MBDvSmQqpl73KSOq6m1LBdx1SkWrzMC4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j0hyiaym; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dESyCu4j; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1722339510; c=relaxed/simple;
+	bh=jEQjAI9y/pos62ZtY9408Lx8xEWIbgsSw4bTFr5ulUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OKUUHiy9nOBieOUzdTeM2HSqoNGIwnzcIhoX6MSWApa1wSNAG2PO6VmDIu+av5RMVFkJ7X8rcFhyn6VL2M78zZTNuY7ZDUE2SGJTnu+5XUtelT/JEcanpkDXipHEwpeWmreCjkosZvkI7CDBrSI/YFVcjROs2t0aHjIkCJITOAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JRI2t9Zj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j0hyiaym";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dESyCu4j"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722338966;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JRI2t9Zj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722339506;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qTD/R6R0srsJVGCxFPEOiXeBb576WkIuMblUhuZTAbo=;
-	b=j0hyiaymqL2DdUjfhT3Vq0LnIl2oArFS1FLzP578NQGGFzOiqLlMNqsbt6rjN+Ts1NYhMX
-	hTteEza9ncc0tIAiPLacR2x7rVilXwngsw2He58eFrf9wBJ39c+6yug3MzcP+pBKrT5K8V
-	dNDh3x744TmfA9gCPjtwNFdoVemdimoMw0DeiWxc2JKwjPqVks3o4cnO/bzBZJzVpAO7gi
-	11S/6xt/4D+26Oo0QfMFCiXmNu31a8mGJ9DPSoDO/BMaFJLY/aqebsnZCXL7PmX4jV6L/v
-	CAWjBF/O+iq757EStkCoBbkbHX4HMSiD3xH4APxcwicPBwK9U+GhEDY6WnLokA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722338966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qTD/R6R0srsJVGCxFPEOiXeBb576WkIuMblUhuZTAbo=;
-	b=dESyCu4j7dkif/Co9M2x5fkynoy1U9lTlSvznKsKHWhLCxufiHK9LkvWqpoVaTLzn6CBKV
-	B1HHfPLKWXVrvyBg==
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, siyanteng@loongson.cn, kernel@xen0n.name,
- jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com,
- akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn,
- xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org,
- yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen
- <chenhuacai@loongson.cn>
-Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
-In-Reply-To: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
-References: <20240726102443.12471-1-zhangtianyang@loongson.cn>
- <87o76kuqza.ffs@tglx>
- <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
-Date: Tue, 30 Jul 2024 13:29:26 +0200
-Message-ID: <87r0bb6ru1.ffs@tglx>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ERqvjmTEXa43pGz7pfJyJekKhPX7hTshV7jfkEYTbUI=;
+	b=JRI2t9ZjrdvoBTvOKJ2lhqsz07ntIWQ5uzFe3cxKbj8k3gYOgJVToSgL4l9x01MgxVU5wo
+	1TrNpEt5kgVvy6/QXWB9w+BxztwMT7mPKDRhFH9S84cgJU+hCI0Qo2rlZtBG7UaKl0KFUm
+	uj/8PK6bdODbBNgsYz3YVaCg55NyjyA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-252-50kY5D1ANce1S_AnBcci-Q-1; Tue, 30 Jul 2024 07:38:22 -0400
+X-MC-Unique: 50kY5D1ANce1S_AnBcci-Q-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5a8b0832defso8345439a12.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 04:38:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722339501; x=1722944301;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ERqvjmTEXa43pGz7pfJyJekKhPX7hTshV7jfkEYTbUI=;
+        b=G2Kopbp+6wwiZXo2yp+PFSXNjtmwR7IiqwcScqSBwn8jbcpOJL2hes7byouPhiUekZ
+         RIhe+nJ645M+GDXcRVXIkMpiMjgC018lL+4hNZvXLTt6ZDQpF91AFT3cYNzj0yqr5Zpa
+         U6qto9P3gObkpjdVTEZ53ZAejq0PgLBQk7OGVXDUabfYlVEFsAlJdK1eoXaJdNfP/bwl
+         r68rbdnG7C1wOKTGtQXIPTULOBoAPooCsIH+ZY/9BwqA6qLXsfaJkLAYC84CaLJf0NBq
+         292Pf4awLtRMUOOZzLfdHayDoO4sHs2EiMQueWpI3NbyWr3KpeZr/Hhg4aM+bGedlSRG
+         qVWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVENc02Z7WIa9BzR1no0ZHF4RZabGsWeWgGiJgzWyQuyRt3WOGVqGV9e8CYRaCGnBhrgWsVUUAy6msiYuxVs9/Ra2dHU18ZP5Hb
+X-Gm-Message-State: AOJu0Yz7v1rZiFVeUhEqFMs2IGqjjffPCnJAQtQlPpYEnFk6lrNuRTmA
+	yQwiYoy8ljQAJH+UhuFnfxqcpDK7BNETAMMpj5QD6cBpk5oOAhcmzF4aBJjAAGvIZSKlzgfw4pV
+	Sr2Ea4Iswx+PuA+9Xt6ewdjjTjiwlLYQdK8y7Ckt9imEzjmVC4K/CSSHxcQ==
+X-Received: by 2002:a50:8a97:0:b0:58a:f14f:4d6d with SMTP id 4fb4d7f45d1cf-5b46dcc63bemr1603243a12.19.1722339500913;
+        Tue, 30 Jul 2024 04:38:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5mXget4GcehKSHwg1m9swHhHUWQVbVnzHoQE7CArjlMaR1EOy+GWFyRYZ9RZxu1lu8WCBeQ==
+X-Received: by 2002:a50:8a97:0:b0:58a:f14f:4d6d with SMTP id 4fb4d7f45d1cf-5b46dcc63bemr1603198a12.19.1722339500323;
+        Tue, 30 Jul 2024 04:38:20 -0700 (PDT)
+Received: from [192.168.10.47] ([151.95.101.29])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5ac63b59c86sm7201458a12.42.2024.07.30.04.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jul 2024 04:38:19 -0700 (PDT)
+Message-ID: <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
+Date: Tue, 30 Jul 2024 13:38:18 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 84/84] KVM: Don't grab reference on VM_MIXEDMAP pfns
+ that have a "struct page"
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+ David Stevens <stevensd@chromium.org>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-85-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240726235234.228822-85-seanjc@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Huacai!
+On 7/27/24 01:52, Sean Christopherson wrote:
+> Now that KVM no longer relies on an ugly heuristic to find its struct page
+> references, i.e. now that KVM can't get false positives on VM_MIXEDMAP
+> pfns, remove KVM's hack to elevate the refcount for pfns that happen to
+> have a valid struct page.  In addition to removing a long-standing wart
+> in KVM, this allows KVM to map non-refcounted struct page memory into the
+> guest, e.g. for exposing GPU TTM buffers to KVM guests.
 
-On Tue, Jul 30 2024 at 16:51, Huacai Chen wrote:
-> On Fri, Jul 26, 2024 at 11:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
->> > +     while (true) {
->> > +             vector =3D csr_read64(LOONGARCH_CSR_IRR);
->> > +             if (vector & IRR_INVALID_MASK)
->> > +                     break;
->> > +
->> > +             vector &=3D IRR_VECTOR_MASK;
->> > +
->> > +             d =3D this_cpu_read(irq_map[vector]);
->> > +             if (d)
->> > +                     generic_handle_irq_desc(d);
->> > +             else {
->>
->> See bracket rules.
-> Do you mean even if there is only one statement in the if condition,
-> we still need to do like this?
-> if (xxx) {
->     yyy;
-> } else {
->     zzz;
-> }
+Feel free to leave it to me for later, but there are more cleanups that
+can be made, given how simple kvm_resolve_pfn() is now:
 
-Yes. It's documented.
+> @@ -2814,35 +2768,10 @@ static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
+>   	if (kfp->map_writable)
+>   		*kfp->map_writable = writable;
+>   
+> 	if (pte)
+>   		pfn = pte_pfn(*pte);
+> 	else
+>   		pfn = page_to_pfn(page);
+>   
+>   	*kfp->refcounted_page = page;
+>   
 
->> > +     msi_domain =3D pci_msi_create_irq_domain(pch_msi_handle[0],
->> > +                                            &pch_msi_domain_info_v2, =
-parent);
->>
->> Please don't do that. Convert this to use per device MSI domains.
-> OK, thanks. But it is better to split the conversion to another patch
-> (so we can convert both V1 and V2).
+Something like (untested/uncompiled):
 
-Why adding it first?
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2758,32 +2758,12 @@ static inline int check_user_page_hwpois
+  	return rc == -EHWPOISON;
+  }
+  
+-static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
+-				 pte_t *pte, bool writable)
+-{
+-	kvm_pfn_t pfn;
+-
+-	WARN_ON_ONCE(!!page == !!pte);
+-
+-	if (kfp->map_writable)
+-		*kfp->map_writable = writable;
+-
+-	if (pte)
+-		pfn = pte_pfn(*pte);
+-	else
+-		pfn = page_to_pfn(page);
+-
+-	*kfp->refcounted_page = page;
+-
+-	return pfn;
+-}
+-
+  /*
+   * The fast path to get the writable pfn which will be stored in @pfn,
+   * true indicates success, otherwise false is returned.  It's also the
+   * only part that runs if we can in atomic context.
+   */
+-static bool hva_to_pfn_fast(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
++static bool hva_to_page_fast(struct kvm_follow_pfn *kfp)
+  {
+  	struct page *page;
+  	bool r;
+@@ -2799,23 +2779,21 @@ static bool hva_to_pfn_fast(struct kvm_f
+  		return false;
+  
+  	if (kfp->pin)
+-		r = pin_user_pages_fast(kfp->hva, 1, FOLL_WRITE, &page) == 1;
++		r = pin_user_pages_fast(kfp->hva, 1, FOLL_WRITE, kfp->refcounted_page) == 1;
+  	else
+-		r = get_user_page_fast_only(kfp->hva, FOLL_WRITE, &page);
++		r = get_user_page_fast_only(kfp->hva, FOLL_WRITE, kfp->refcounted_page);
+  
+-	if (r) {
+-		*pfn = kvm_resolve_pfn(kfp, page, NULL, true);
+-		return true;
+-	}
++	if (r)
++		kfp->flags |= FOLL_WRITE;
+  
+-	return false;
++	return r;
+  }
+  
+  /*
+   * The slow path to get the pfn of the specified host virtual address,
+   * 1 indicates success, -errno is returned if error is detected.
+   */
+-static int hva_to_pfn_slow(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
++static int hva_to_page(struct kvm_follow_pfn *kfp)
+  {
+  	/*
+  	 * When a VCPU accesses a page that is not mapped into the secondary
+@@ -2829,34 +2807,32 @@ static int hva_to_pfn_slow(struct kvm_fo
+  	 * implicitly honor NUMA hinting faults and don't need this flag.
+  	 */
+  	unsigned int flags = FOLL_HWPOISON | FOLL_HONOR_NUMA_FAULT | kfp->flags;
+-	struct page *page, *wpage;
++	struct page *wpage;
+  	int npages;
+  
++	if (hva_to_page_fast(kfp))
++		return 1;
++
+  	if (kfp->pin)
+-		npages = pin_user_pages_unlocked(kfp->hva, 1, &page, flags);
++		npages = pin_user_pages_unlocked(kfp->hva, 1, kfp->refcounted_page, flags);
+  	else
+-		npages = get_user_pages_unlocked(kfp->hva, 1, &page, flags);
+-	if (npages != 1)
+-		return npages;
++		npages = get_user_pages_unlocked(kfp->hva, 1, kfp->refcounted_page, flags);
+  
+  	/*
+-	 * Pinning is mutually exclusive with opportunistically mapping a read
+-	 * fault as writable, as KVM should never pin pages when mapping memory
+-	 * into the guest (pinning is only for direct accesses from KVM).
++	 * Map read fault as writable if possible; pinning is mutually exclusive
++	 * with opportunistically mapping a read fault as writable, as KVM should
++	 * should never pin pages when mapping memory into the guest (pinning is
++	 * only for direct accesses from KVM).
+  	 */
+-	if (WARN_ON_ONCE(kfp->map_writable && kfp->pin))
+-		goto out;
+-
+-	/* map read fault as writable if possible */
+-	if (!(flags & FOLL_WRITE) && kfp->map_writable &&
++	if (npages == 1 &&
++	    kfp->map_writable && !WARN_ON_ONCE(kfp->pin) &&
++	    !(flags & FOLL_WRITE) &&
+  	    get_user_page_fast_only(kfp->hva, FOLL_WRITE, &wpage)) {
+-		put_page(page);
+-		page = wpage;
+-		flags |= FOLL_WRITE;
++		put_page(kfp->refcounted_page);
++		kfp->refcounted_page = wpage;
++		kfp->flags |= FOLL_WRITE;
+  	}
+  
+-out:
+-	*pfn = kvm_resolve_pfn(kfp, page, NULL, flags & FOLL_WRITE);
+  	return npages;
+  }
+  
+@@ -2915,7 +2891,9 @@ static int hva_to_pfn_remapped(struct vm
+  		goto out;
+  	}
+  
+-	*p_pfn = kvm_resolve_pfn(kfp, NULL, &pte, pte_write(pte));
++	if (kfp->map_writable)
++		*kfp->map_writable = pte_write(pte);
++	*p_pfn = pte_pfn(pte);
+  out:
+  	pte_unmap_unlock(ptep, ptl);
+  	return r;
+@@ -2932,12 +2910,13 @@ kvm_pfn_t hva_to_pfn(struct kvm_follow_p
+  	if (WARN_ON_ONCE(!kfp->refcounted_page))
+  		return KVM_PFN_ERR_FAULT;
+  
+-	if (hva_to_pfn_fast(kfp, &pfn))
+-		return pfn;
++	npages = hva_to_page(kfp);
++	if (npages == 1) {
++		if (kfp->map_writable)
++			*kfp->map_writable = kfp->flags & FOLL_WRITE;
++		return page_to_pfn(kfp->refcounted_page);
++	}
+  
+-	npages = hva_to_pfn_slow(kfp, &pfn);
+-	if (npages == 1)
+-		return pfn;
+  	if (npages == -EINTR)
+  		return KVM_PFN_ERR_SIGPENDING;
+  
 
-This can be done per interrupt chip. See the conversion series for
-ARM[64]:
 
-    https://lore.kernel.org/r/20240623142137.448898081@linutronix.de
+Also, check_user_page_hwpoison() should not be needed anymore, probably
+not since commit 234b239bea39 ("kvm: Faults which trigger IO release the
+mmap_sem", 2014-09-24) removed get_user_pages_fast() from hva_to_pfn_slow().
 
-Thanks,
+The only way that you could get a poisoned page without returning -EHWPOISON,
+is if FOLL_HWPOISON was not passed.  But even without these patches,
+the cases are:
+- npages == 0, then you must have FOLL_NOWAIT and you'd not use
+   check_user_page_hwpoison()
+- npages == 1 or npages == -EHWPOISON, all good
+- npages == -EAGAIN from mmap_read_lock_killable() - should handle that like -EINTR
+- everything else including -EFAULT can go downt the vma_lookup() path, because
+npages < 0 means we went through hva_to_pfn_slow() which uses FOLL_HWPOISON
 
-        tglx
+This means that you can simply have
+
+	if (npages == -EHWPOISON)
+		return KVM_PFN_ERR_HWPOISON;
+
+before the mmap_read_lock() line.  You may either sneak this at the beginning
+of the series or leave it for later.
+
+Paolo
+
