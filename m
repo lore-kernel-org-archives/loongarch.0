@@ -1,219 +1,557 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D673187322
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3651C19309A
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722327038; cv=none; b=sYzUuFAH4gQ2JUZOIZgVzH23gWtF3wH7gVzFyLmIPzDcGKkw/qqnoPI9nP9pGmMYk71gA0YL5XOx8MmF8WU7O8YlqjC5FTcYz/SdoZ+yK66DAQPOzIngQaUssJmfmGMexCYHCj3r+oTePBfUlwAa9XlxKLBEAILFobp+7BeQTYU=
+	t=1722329521; cv=none; b=DE+yfOesNiiNRckVlJDGMNaNAAVY0hicX3BV1KL7o883HmEZw7foZJIVqc4Q6nU+T/tdzSDQk5fC9t0KiOzCLANZg6hEzjnap/gSMc9KwQPub8BZ0FeMyztIjhGNHgudoCibO/G9XgzVAq1w6ZTfbtGBlUEl/FyMDWF0AH8UHDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722327038; c=relaxed/simple;
-	bh=my3L8G0O16Q8jX9sqyOmzVO7D6UraxN07D2CKn52GqY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o+pRza2eQCjhHsRnw8d6tD8QZkss4EIh7vvq7Mwk0Y9a5qf5aL1Fa3uFl3rIYwuJK7nHwDwWBzm1mPu/CJhyw6sGA12KbEf2hzM5FMp4aiTgajwR5UdJSK+e8Tz4Y5EvEY9KB55mL3rGg+CZuIel1ZkFB5lSDGQxV2U+iqiwNz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hGP3113T; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722329521; c=relaxed/simple;
+	bh=mLIWRpXHk39LsbIfes1DXHI3y+srUmTV4y/dISbd/Hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NNQoaN+G9Dmihxt+pPs1J0uo93rOo5AtkRL9O8gXElw8t5ES8Dmcha4Yg6RXFhGUUBFglnmqEkATFY5X4rjvuroUR9PQInB0EpacPYUNUgzKNmcYSc2i8SN5O+AZt6AVyUp9BQelk8LGku4xA/ZsUjLBcL+4dCTdGoJQvTNnnX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQQo7smg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGP3113T"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2cb63ceff6dso2693397a91.1
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 01:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722327037; x=1722931837; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4/S17o3ryXO92fKPDsd+20QrVlSG6ehQAGuA4AgUnAA=;
-        b=hGP3113TW2/Uw+Hl4qCl1y0oLEPXT2928Kip0fAjFyRJb7IC9nf8Ccm7+f9xBPsb+Y
-         ShGJEa5pGAcyT9ygBbPSOuT32rWrxJSuGuOU02Mr6vqj8I64Ok6/ZA12P0Phkgur8xv4
-         uPiw+3Kte1qtIoEw5sfYWlr6K87GUVmw48pRdgBxIDVZm++JDVIZ20+BXu2pq67WD2Ha
-         aJAVWxBwq1NjcFRna7eq1/2uUDt3enYLWp+x5EA9rSWR+lZlAnURT7gmmWC4HmH/dqJd
-         iM78bVzOG4f+wwCHW+UYHPVAv5ZMoEp1r4docYmScpKzVPckZ5NXlC/zfd5XbmB+jR5D
-         vSVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722327037; x=1722931837;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/S17o3ryXO92fKPDsd+20QrVlSG6ehQAGuA4AgUnAA=;
-        b=qYRzeB3YUAsEsPizaxDNt57PeH2+Np3344SdpE6Y1PaogqldnSmsTTsWE3k7QdAEax
-         AJE2Zyw2L/mLx41qnY8pcneb7zs5sEKuPFptJ7nqobD6R2BLumAaCwGORoG6go3gQRB5
-         jr+IvIrQrszaHr0h47pd+rnNl1+VJzgL4EoZBvU7xUKVkggmzg7zlC6He0xxD/4ooZ5f
-         tc/xQvFD3CyBhibq4Q/bwAmXEgbv533inSdabszHm3rO7Gmsihd4E1/hMs1hcl37570O
-         XxkmGAqD6z+04DQnyGRBZ9ilCEztBiiLYN6yuuDZzrCroYqUIAXlAhQPl1KCmlFPGMXl
-         XC8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4zy7fBX/JI4LHksQ+52nqKzO0F7TzZbVAQ0uPPva+HO1JgQMFQuKJFs/jL9nV2jArBQyQXG3DD023cqLUBYhO6gG/In0ranV7
-X-Gm-Message-State: AOJu0Yx1AZ3glgeIZkj+lgy7whvabEoCAVeI3oxXFpY35e8pL1WWegKV
-	SxDirqy/xZc1kYEiGuytnHIFc7Ko8GcEaTC/L8Y5TiSfxDR0xhT8
-X-Google-Smtp-Source: AGHT+IHd+8idtSf9No9KXFiHPkFqgsgm8Dqu198TXfzlUpyaNdqot/AMDpkwkaetathdKfNuieqdfQ==
-X-Received: by 2002:a17:90b:3a90:b0:2c9:9fdf:f72e with SMTP id 98e67ed59e1d1-2cf7e606d04mr8262857a91.26.1722327036447;
-        Tue, 30 Jul 2024 01:10:36 -0700 (PDT)
-Received: from [192.168.255.10] ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cf28e3cbaasm9886868a91.51.2024.07.30.01.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 01:10:35 -0700 (PDT)
-Message-ID: <c2accb5d-33f6-404b-9298-6b9e8bf24a9b@gmail.com>
-Date: Tue, 30 Jul 2024 16:10:23 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQQo7smg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F296AC4AF13
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722329521;
+	bh=mLIWRpXHk39LsbIfes1DXHI3y+srUmTV4y/dISbd/Hg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SQQo7smgHg6rBeX6xAcSSgevExtMA2QyAlXyQ2jW0PPkgFrln2mEZMM6JRF5Byned
+	 d7ny1797kyBzfSAKL6FGiS1Qhp46gLDkfs5wAV21OMKgYEJptnQw+lwkQpbjkjJS9S
+	 EhMOTw3MqdZ6VKqBV++ksrSqZD9Mi8Y4kYy1D22y0cA+OmLm+KnXxAz0NA3eEYwzgP
+	 zwJIy+2DlIiAHOnSSUolbS7pZvj8rRW4hGlvyCakRTBOZtb2I27iSjZ0jdKu7iZiE0
+	 RaKQ/m6STdiKtnJcDfgpI8Epr+rL3eM87S1dyZJrWxuQu6SO9C9/xQ32Lfb7EMMD8f
+	 EXcOvmBi4BG5g==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5a2ffc34722so8925651a12.0
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 01:52:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVoSp2llqtFiuRm5P6OA6zngBKIlsUik/PGHYv6P9J8yWwDnimxiD9B0bbJvRpsIUecL9oyM+pD2mYcnP6n2DhWb76E6KpK9QmT
+X-Gm-Message-State: AOJu0Yw1owYf6j/rAkLe2US0ERxohZ4N0k9N/ODZOZMr1fpZhsQY765S
+	tnfr502/WludL3ZbGQNG0YwGm++j3rrjjIh+ecwjRjaftW6U66BtLTKarYD3LyC0O3VAZQME9Dd
+	X/ht3PIODRC3Q1bzyo8wHMha/6XY=
+X-Google-Smtp-Source: AGHT+IHW+AU1W+r7xsiUOp1hBCSxb/mXz6j+yFu17KcOiySzFvfuqEaWjA5st56MFNvOvxgarVqBSgCTy4vncXn50V0=
+X-Received: by 2002:a50:a68f:0:b0:59f:9f59:b034 with SMTP id
+ 4fb4d7f45d1cf-5b46ca2845cmr1192944a12.13.1722329519301; Tue, 30 Jul 2024
+ 01:51:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/18] use struct ptdesc to replace pgtable_t
-To: alexs@kernel.org, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Brian Cain <bcain@quicinc.com>,
- WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Naveen N Rao <naveen@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Vishal Moola <vishal.moola@gmail.com>,
- "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Lance Yang <ioworker0@gmail.com>,
- Peter Xu <peterx@redhat.com>, Barry Song <baohua@kernel.org>,
- linux-s390@vger.kernel.org
-Cc: Guo Ren <guoren@kernel.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Mike Rapoport <rppt@kernel.org>,
- Oscar Salvador <osalvador@suse.de>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Anup Patel
- <anup@brainfault.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Breno Leitao <leitao@debian.org>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Matthew Wilcox <willy@infradead.org>
-References: <20240730064712.3714387-1-alexs@kernel.org>
-Content-Language: en-US
-From: Alex Shi <seakeel@gmail.com>
-In-Reply-To: <20240730064712.3714387-1-alexs@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240726102443.12471-1-zhangtianyang@loongson.cn> <87o76kuqza.ffs@tglx>
+In-Reply-To: <87o76kuqza.ffs@tglx>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 30 Jul 2024 16:51:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
+Message-ID: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
+Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net, alexs@kernel.org, 
+	siyanteng@loongson.cn, kernel@xen0n.name, jiaxun.yang@flygoat.com, 
+	gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn, 
+	yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org, 
+	dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site, 
+	zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn, 
+	zhoubinbin@loongson.cn, loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-BTW, the patchset based on the latest git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm mm-unstable branch.
+Hi, Thomas,
 
-On 7/30/24 2:46 PM, alexs@kernel.org wrote:
-> From: Alex Shi <alexs@kernel.org>
-> 
-> We have struct ptdesc for page table descriptor a year ago, but it
-> has no much usages in kernel, while pgtable_t is used widely.
-> 
-> The pgtable_t is typedefed as 'pte_t *' in sparc, s390, powerpc and m68k
-> except SUN3, others archs are all same as 'struct page *'.
-> 
-> These blocks the conception and code update for page table descriptor to
-> struct ptdesc.
-> 
-> So, the simple idea to push the ptdesc conception forward is to update
-> all pgtable_t by ptdesc or pte_t pointer. But this needs widely
-> knowledges for most all of different archs. Common code change is easy
-> for include/ and mm/ directory, but it's hard in all archs.
-> 
-> Thanks for intel LKP framework, I fixed most all of build issues except
-> a bug on powerpc which reports a "struct ptdesc *" incompatible with 
-> struct ptdesc *' pointer issue...
-> 
-> Another trouble is pmd_pgtable() conversion in the last patch.
-> Maybe some of arch need define theirself own pmd_ptdesc()?
-> 
-> This patchset is immature, even except above 2 issues, I just tested
-> virutal machine booting and kselftest mm on x86 and arm64.
-> 
-> Anyway any input are appreciated!
-> 
-> Thanks
-> Alex
-> 
-> Alex Shi (18):
->   mm/pgtable: use ptdesc in pte_free_now/pte_free_defer
->   mm/pgtable: convert ptdesc.pmd_huge_pte to ptdesc pointer
->   fs/dax: use ptdesc in dax_pmd_load_hole
->   mm/thp: use ptdesc pointer in __do_huge_pmd_anonymous_page
->   mm/thp: use ptdesc in do_huge_pmd_anonymous_page
->   mm/thp: convert insert_pfn_pmd and its caller to use ptdesc
->   mm/thp: use ptdesc in copy_huge_pmd
->   mm/memory: use ptdesc in __pte_alloc
->   mm/pgtable: fully use ptdesc in pte_alloc_one series functions
->   mm/pgtable: pass ptdesc to pte_free()
->   mm/pgtable: introduce ptdesc_pfn and use ptdesc in free_pte_range()
->   mm/thp: pass ptdesc to set_huge_zero_folio function
->   mm/pgtable: return ptdesc pointer in pgtable_trans_huge_withdraw
->   mm/pgtable: use ptdesc in pgtable_trans_huge_deposit
->   mm/pgtable: pass ptdesc to pmd_populate
->   mm/pgtable: pass ptdesc to pmd_install
->   mm: convert vmf.prealloc_pte to struct ptdesc pointer
->   mm/pgtable: pass ptdesc in pte_free_defer
-> 
->  arch/alpha/include/asm/pgalloc.h              |   4 +-
->  arch/arc/include/asm/pgalloc.h                |   4 +-
->  arch/arm/include/asm/pgalloc.h                |  13 +--
->  arch/arm/include/asm/tlb.h                    |   4 +-
->  arch/arm/mm/pgd.c                             |   2 +-
->  arch/arm64/include/asm/pgalloc.h              |   4 +-
->  arch/arm64/include/asm/tlb.h                  |   4 +-
->  arch/csky/include/asm/pgalloc.h               |   4 +-
->  arch/hexagon/include/asm/pgalloc.h            |   8 +-
->  arch/loongarch/include/asm/pgalloc.h          |   8 +-
->  arch/m68k/include/asm/motorola_pgalloc.h      |  12 +-
->  arch/m68k/include/asm/sun3_pgalloc.h          |   4 +-
->  arch/microblaze/include/asm/pgalloc.h         |   2 +-
->  arch/mips/include/asm/pgalloc.h               |   4 +-
->  arch/nios2/include/asm/pgalloc.h              |   4 +-
->  arch/openrisc/include/asm/pgalloc.h           |   8 +-
->  arch/parisc/include/asm/pgalloc.h             |   2 +-
->  arch/powerpc/include/asm/book3s/32/pgalloc.h  |   4 +-
->  arch/powerpc/include/asm/book3s/64/hash-4k.h  |   4 +-
->  arch/powerpc/include/asm/book3s/64/hash-64k.h |   4 +-
->  arch/powerpc/include/asm/book3s/64/pgalloc.h  |   4 +-
->  arch/powerpc/include/asm/book3s/64/pgtable.h  |   8 +-
->  arch/powerpc/include/asm/book3s/64/radix.h    |   4 +-
->  arch/powerpc/include/asm/pgalloc.h            |   8 +-
->  arch/powerpc/mm/book3s64/hash_pgtable.c       |  10 +-
->  arch/powerpc/mm/book3s64/radix_pgtable.c      |  10 +-
->  arch/riscv/include/asm/pgalloc.h              |   8 +-
->  arch/s390/include/asm/pgalloc.h               |   4 +-
->  arch/s390/include/asm/pgtable.h               |   4 +-
->  arch/s390/mm/pgalloc.c                        |   2 +-
->  arch/s390/mm/pgtable.c                        |  14 +--
->  arch/sh/include/asm/pgalloc.h                 |   4 +-
->  arch/sparc/include/asm/pgalloc_32.h           |   6 +-
->  arch/sparc/include/asm/pgalloc_64.h           |   2 +-
->  arch/sparc/include/asm/pgtable_64.h           |   4 +-
->  arch/sparc/mm/init_64.c                       |   2 +-
->  arch/sparc/mm/srmmu.c                         |   6 +-
->  arch/sparc/mm/tlb.c                           |  14 +--
->  arch/x86/include/asm/pgalloc.h                |  10 +-
->  arch/x86/mm/pgtable.c                         |   8 +-
->  arch/xtensa/include/asm/pgalloc.h             |  12 +-
->  fs/dax.c                                      |  14 +--
->  include/asm-generic/pgalloc.h                 |  10 +-
->  include/linux/mm.h                            |  16 ++-
->  include/linux/mm_types.h                      |   4 +-
->  include/linux/pgtable.h                       |   6 +-
->  mm/debug_vm_pgtable.c                         |   6 +-
->  mm/huge_memory.c                              | 103 +++++++++---------
->  mm/internal.h                                 |   2 +-
->  mm/khugepaged.c                               |  14 +--
->  mm/memory.c                                   |  15 +--
->  mm/mremap.c                                   |   2 +-
->  mm/pgtable-generic.c                          |  37 +++----
->  53 files changed, 240 insertions(+), 236 deletions(-)
-> 
+On Fri, Jul 26, 2024 at 11:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> On Fri, Jul 26 2024 at 18:24, Tianyang Zhang wrote:
+> > +static int avecintc_set_affinity(struct irq_data *data, const struct c=
+pumask *dest,
+> > +                                    bool force)
+>
+> Please align arguments according to documentation. In this case don't
+> use a line break. Just use the full 100 character width all over the plac=
+e
+>
+> > +{
+> > +     unsigned int cpu, ret, vector;
+> > +     unsigned long flags;
+> > +     struct avecintc_data *adata;
+>
+> Please look for variable declarations in:
+>
+>        https://www.kernel.org/doc/html/latest/process/maintainer-tip.html
+>
+> and fix it up all over the place.
+OK, thanks.
+
+>
+> > +
+> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>
+> This does not need irqsave because the function is always called with
+> interrupts disabled.
+OK, thanks.
+
+>
+> > +     adata =3D irq_data_get_irq_chip_data(data);
+> > +
+> > +     if (adata->vec && cpu_online(adata->cpu) && cpumask_test_cpu(adat=
+a->cpu, dest)) {
+> > +             raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +             return 0;
+> > +     }
+> > +
+> > +     if (adata->moving)
+> > +             return -EBUSY;
+>
+> This leaks loongarch_avec.lock. Please use
+>
+>      scoped_guard(raw_spin_lock)(&loongarch_avec.lock);
+OK, thanks.
+
+>
+> above so you spare all the unlocks and cannot miss one.
+>
+> > +     cpumask_and(&intersect_mask, dest, cpu_online_mask);
+> > +
+> > +     ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, &intersect=
+_mask, false, &cpu);
+> > +     if (ret < 0) {
+> > +             raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +             return ret;
+> > +     }
+> > +
+> > +     vector =3D ret;
+> > +     adata->cpu =3D cpu;
+> > +     adata->vec =3D vector;
+> > +     per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data_to_desc=
+(data);
+> > +     avecintc_sync(adata);
+> > +
+> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +     irq_data_update_effective_affinity(data, cpumask_of(cpu));
+> > +
+> > +     return IRQ_SET_MASK_OK;
+> > +}
+> > +
+> > +static int avecintc_cpu_online(unsigned int cpu)
+> > +{
+> > +     unsigned long flags;
+> > +
+> > +     if (!loongarch_avec.vector_matrix)
+> > +             return 0;
+> > +
+> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>
+>   guard(raw_spin_lock)
+>
+> interrupts are disabled.
+OK, thanks.
+
+>
+> > +     irq_matrix_online(loongarch_avec.vector_matrix);
+> > +
+> > +     pending_list_init(cpu);
+> > +
+> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int avecintc_cpu_offline(unsigned int cpu)
+> > +{
+> > +     unsigned long flags;
+> > +     struct pending_list *plist =3D per_cpu_ptr(&pending_list, cpu);
+> > +
+> > +     if (!loongarch_avec.vector_matrix)
+> > +             return 0;
+> > +
+> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>
+> Ditto.
+>
+> > +     if (list_empty(&plist->head))
+> > +             irq_matrix_offline(loongarch_avec.vector_matrix);
+> > +     else
+> > +             pr_warn("CPU#%d advanced vector is busy\n", cpu);
+>
+> Seriously? You leave the matrix online so allocation can be made from an
+> offline CPU?
+Yes, we should always call irq_matrix_offline(loongarch_avec.vector_matrix)=
+.
+
+>
+> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +void complete_irq_moving(void)
+> > +{
+> > +     struct pending_list *plist =3D this_cpu_ptr(&pending_list);
+> > +     struct avecintc_data *adata, *tdata;
+> > +     int cpu, vector, bias;
+> > +     uint64_t isr;
+> > +
+> > +     raw_spin_lock(&loongarch_avec.lock);
+>
+>   guard()
+>
+> > +     list_for_each_entry_safe(adata, tdata, &plist->head, entry) {
+> > +             cpu =3D adata->prev_cpu;
+> > +             vector =3D adata->prev_vec;
+> > +             bias =3D vector / VECTORS_PER_REG;
+> > +             switch (bias) {
+> > +             case 0:
+> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR0);
+> > +             case 1:
+> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR1);
+> > +             case 2:
+> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR2);
+> > +             case 3:
+> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR3);
+> > +             }
+> > +
+> > +             if (isr & (1UL << (vector % VECTORS_PER_REG))) {
+> > +                     mp_ops.send_ipi_single(cpu, ACTION_CLEAR_VECTOR);
+>
+> Is it guaranteed that the device vector is handled _before_ the next
+> IPI is handled? If not this is a live lock.
+I have also concerned about this in an early version, at last Tianyang
+confirmed it is OK.
+
+>
+> > +                     continue;
+> > +             }
+> > +             list_del(&adata->entry);
+> > +             irq_matrix_free(loongarch_avec.vector_matrix, cpu, vector=
+, adata->managed);
+> > +             this_cpu_write(irq_map[vector], NULL);
+> > +             adata->prev_cpu =3D adata->cpu;
+> > +             adata->prev_vec =3D adata->vec;
+> > +             adata->moving =3D 0;
+> > +     }
+> > +
+> > +     raw_spin_unlock(&loongarch_avec.lock);
+> > +}
+> > +#endif
+> > +
+> > +static void avecintc_compose_msi_msg(struct irq_data *d, struct msi_ms=
+g *msg)
+> > +{
+> > +     struct avecintc_data *adata;
+> > +
+> > +     adata =3D irq_data_get_irq_chip_data(d);
+>
+> Move the assignement up to the declaration.
+OK, thanks.
+
+>
+>
+> > +     msg->address_hi =3D 0x0;
+> > +     msg->address_lo =3D (msi_base_addr | (adata->vec & 0xff) << 4) |
+> > +                       ((cpu_logical_map(adata->cpu & 0xffff)) << 12);
+> > +     msg->data =3D 0x0;
+> > +}
+> > +
+> > +static struct irq_chip avec_irq_controller =3D {
+> > +     .name                   =3D "AVECINTC",
+> > +     .irq_ack                =3D avecintc_ack_irq,
+> > +     .irq_mask               =3D avecintc_mask_irq,
+> > +     .irq_unmask             =3D avecintc_unmask_irq,
+> > +#ifdef CONFIG_SMP
+> > +     .irq_set_affinity       =3D avecintc_set_affinity,
+> > +#endif
+> > +     .irq_compose_msi_msg    =3D avecintc_compose_msi_msg,
+> > +};
+> > +
+> > +static void avecintc_irq_dispatch(struct irq_desc *desc)
+> > +{
+> > +     unsigned long vector;
+> > +     struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> > +     struct irq_desc *d;
+> > +
+> > +     chained_irq_enter(chip, desc);
+> > +
+> > +     while (true) {
+> > +             vector =3D csr_read64(LOONGARCH_CSR_IRR);
+> > +             if (vector & IRR_INVALID_MASK)
+> > +                     break;
+> > +
+> > +             vector &=3D IRR_VECTOR_MASK;
+> > +
+> > +             d =3D this_cpu_read(irq_map[vector]);
+> > +             if (d)
+> > +                     generic_handle_irq_desc(d);
+> > +             else {
+>
+> See bracket rules.
+Do you mean even if there is only one statement in the if condition,
+we still need to do like this?
+if (xxx) {
+    yyy;
+} else {
+    zzz;
+}
+
+>
+> > +                     spurious_interrupt();
+> > +                     pr_warn("Unexpected IRQ occurs on CPU#%d [vector =
+%ld]\n", smp_processor_id(), vector);
+> > +             }
+>
+> > +     }
+> > +
+> > +     chained_irq_exit(chip, desc);
+> > +}
+> > +
+> > +static int avecintc_domain_alloc(struct irq_domain *domain,
+> > +                              unsigned int virq, unsigned int nr_irqs,=
+ void *arg)
+> > +{
+> > +     unsigned int cpu, i, ret;
+> > +     unsigned long flags;
+> > +     struct irq_data *irqd;
+> > +     struct avecintc_data *adata;
+> > +
+> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>
+>
+>   guard(raw_spinlock_irqsave)(....);
+OK, thanks.
+
+>
+> > +     for (i =3D 0; i < nr_irqs; i++) {
+> > +             irqd =3D irq_domain_get_irq_data(domain, virq + i);
+> > +             adata =3D kzalloc(sizeof(*adata), GFP_KERNEL);
+> > +             if (!adata) {
+> > +                     raw_spin_unlock_irqrestore(&loongarch_avec.lock, =
+flags);
+> > +                     return -ENOMEM;
+> > +             }
+> > +
+> > +             ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, cp=
+u_online_mask, false, &cpu);
+> > +             if (ret < 0) {
+> > +                     raw_spin_unlock_irqrestore(&loongarch_avec.lock, =
+flags);
+> > +                     return ret;
+> > +             }
+> > +
+> > +             adata->prev_cpu =3D adata->cpu =3D cpu;
+> > +             adata->prev_vec =3D adata->vec =3D ret;
+> > +             adata->managed =3D irqd_affinity_is_managed(irqd);
+> > +             irq_domain_set_info(domain, virq + i, virq + i, &avec_irq=
+_controller,
+> > +                                 adata, handle_edge_irq, NULL, NULL);
+> > +             adata->moving =3D 0;
+>
+> Initialize first before doing enything else.
+OK, thanks.
+
+>
+> > +             irqd_set_single_target(irqd);
+> > +             irqd_set_affinity_on_activate(irqd);
+> > +
+> > +             per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data=
+_to_desc(irqd);
+> > +     }
+> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void clear_free_vector(struct irq_data *irqd)
+> > +{
+> > +     bool managed =3D irqd_affinity_is_managed(irqd);
+> > +     struct avecintc_data *adata =3D irq_data_get_irq_chip_data(irqd);
+> > +
+> > +     per_cpu(irq_map, adata->cpu)[adata->vec] =3D NULL;
+> > +     irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->=
+vec, managed);
+> > +     adata->cpu =3D 0;
+>
+> 0 is a valid CPU number, no?
+Yes, UINT_MAX is better.
+
+>
+> > +     adata->vec =3D 0;
+> > +
+> > +#ifdef CONFIG_SMP
+> > +     if (!adata->moving)
+> > +             return;
+> > +
+> > +     per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] =3D NULL;
+> > +     irq_matrix_free(loongarch_avec.vector_matrix,
+> > +                     adata->prev_cpu, adata->prev_vec, adata->managed)=
+;
+> > +     adata->moving =3D 0;
+> > +     adata->prev_vec =3D 0;
+> > +     adata->prev_cpu =3D 0;
+> > +     list_del_init(&adata->entry);
+> > +#endif
+> > +}
+> > +
+> > +static void avecintc_domain_free(struct irq_domain *domain,
+> > +                              unsigned int virq, unsigned int nr_irqs)
+> > +{
+> > +     unsigned int i;
+> > +     unsigned long flags;
+> > +     struct irq_data *d;
+> > +
+> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
+>
+> guard()
+OK, thanks.
+
+>
+> > +     for (i =3D 0; i < nr_irqs; i++) {
+> > +             d =3D irq_domain_get_irq_data(domain, virq + i);
+> > +             if (d) {
+> > +                     clear_free_vector(d);
+> > +                     irq_domain_reset_irq_data(d);
+> > +
+> > +             }
+> > +     }
+> > +
+> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
+> > +}
+> > +
+> > +static const struct irq_domain_ops avecintc_domain_ops =3D {
+> > +     .alloc          =3D avecintc_domain_alloc,
+> > +     .free           =3D avecintc_domain_free,
+> > +};
+> > +
+> > +static int __init irq_matrix_init(void)
+> > +{
+> > +     int i;
+> > +
+> > +     loongarch_avec.vector_matrix =3D irq_alloc_matrix(NR_VECTORS, 0, =
+NR_VECTORS - 1);
+> > +     if (!loongarch_avec.vector_matrix)
+> > +             return -ENOMEM;
+> > +
+> > +     for (i =3D 0; i < NR_LEGACY_VECTORS; i++)
+> > +             irq_matrix_assign_system(loongarch_avec.vector_matrix, i,=
+ false);
+> > +
+> > +     irq_matrix_online(loongarch_avec.vector_matrix);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int __init avecintc_init(struct irq_domain *parent)
+> > +{
+> > +     int ret, parent_irq;
+> > +     unsigned long value;
+> > +
+> > +     raw_spin_lock_init(&loongarch_avec.lock);
+> > +
+> > +     loongarch_avec.fwnode =3D irq_domain_alloc_named_fwnode("AVECINTC=
+");
+> > +     if (!loongarch_avec.fwnode) {
+> > +             pr_err("Unable to allocate domain handle\n");
+> > +             ret =3D -ENOMEM;
+> > +             goto out;
+> > +     }
+> > +
+> > +     loongarch_avec.domain =3D irq_domain_create_tree(loongarch_avec.f=
+wnode,
+> > +                                                    &avecintc_domain_o=
+ps, NULL);
+> > +     if (!loongarch_avec.domain) {
+> > +             pr_err("Unable to create IRQ domain\n");
+> > +             ret =3D -ENOMEM;
+> > +             goto out_free_handle;
+> > +     }
+> > +
+> > +     parent_irq =3D irq_create_mapping(parent, INT_AVEC);
+> > +     if (!parent_irq) {
+> > +             pr_err("Failed to mapping hwirq\n");
+> > +             ret =3D -EINVAL;
+> > +             goto out_remove_domain;
+> > +     }
+> > +     irq_set_chained_handler_and_data(parent_irq, avecintc_irq_dispatc=
+h, NULL);
+> > +
+> > +     ret =3D irq_matrix_init();
+> > +     if (ret < 0) {
+> > +             pr_err("Failed to init irq matrix\n");
+> > +             goto out_free_matrix;
+> > +     }
+> > +#ifdef CONFIG_SMP
+> > +     pending_list_init(0);
+> > +     ret =3D cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_AVECINTC_STARTING,
+> > +                                     "irqchip/loongarch/avecintc:start=
+ing",
+> > +                                     avecintc_cpu_online, avecintc_cpu=
+_offline);
+> > +#endif
+> > +     value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> > +     value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> > +     iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> > +
+> > +     return ret;
+> > +
+> > +out_free_matrix:
+> > +     kfree(loongarch_avec.vector_matrix);
+>
+> The code above just failed to allocate the matrix, so why are you trying
+> to free it?
+Yes, this is a mistake.
+
+>
+> And this happily fails to uninstall the chained handler.
+>
+> > +out_remove_domain:
+> > +     irq_domain_remove(loongarch_avec.domain);
+> > +out_free_handle:
+> > +     irq_domain_free_fwnode(loongarch_avec.fwnode);
+> > +out:
+> > +     return ret;
+> > +}
+> > +
+> > +static struct irq_chip pch_msi_irq_chip_v2 =3D {
+> > +     .name                   =3D "PCH PCI MSI",
+> > +     .irq_ack                =3D irq_chip_ack_parent,
+> > +};
+> > +
+> > +static struct msi_domain_info pch_msi_domain_info_v2 =3D {
+> > +     .flags  =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS =
+|
+> > +               MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+> > +     .chip   =3D &pch_msi_irq_chip_v2,
+> > +};
+> > +
+> > +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
+> > +                                     struct acpi_madt_msi_pic *acpi_pc=
+hmsi)
+> > +{
+> > +     struct irq_domain *msi_domain;
+> > +
+> > +     if (pch_msi_handle[0])
+> > +             return 0;
+> > +
+> > +     pch_msi_handle[0] =3D irq_domain_alloc_fwnode(&acpi_pchmsi->msg_a=
+ddress);
+> > +     if (!pch_msi_handle[0]) {
+> > +             pr_err("Unable to allocate domain handle\n");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     msi_domain =3D pci_msi_create_irq_domain(pch_msi_handle[0],
+> > +                                            &pch_msi_domain_info_v2, p=
+arent);
+>
+> Please don't do that. Convert this to use per device MSI domains.
+OK, thanks. But it is better to split the conversion to another patch
+(so we can convert both V1 and V2).
+
+Huacai
+>
+> Thanks,
+>
+>         tglx
