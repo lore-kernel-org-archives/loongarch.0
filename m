@@ -1,32 +1,32 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FCC10A12;
-	Tue, 30 Jul 2024 02:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0377C169AD2
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 06:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722306362; cv=none; b=jHHPE7weossUHbv7gyIfKzw4McpFZKwNU6f94gwXnpQavOn0o1X74eWUWncD7xiCsWajErv5TLpo9i9kLCjDneh0cvMIbzVxev4HjWfLAR4rRPVCjZZcNx6Fq3Tv3lUD38SrG5cBcjJzVCwdXIH1E9t6+3SMJ2BzMs5eLUHqf9Y=
+	t=1722320352; cv=none; b=DmwnJsiQFtDZPFg6/u6gvT0xGeXfLBtdyZSoP6l+uzWLCvhtD8qJljb4vQhT27p6GaEaGIVrRuzDO1T7lFnMb/RTEBAxin+YllqPpWx0HofraMz0e9aNuuFnmSfKWmAPtwOtDE/C3sqEfrhPd4VPgdENNdLJziMRafBLhTALVrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722306362; c=relaxed/simple;
-	bh=taQe3psEegTsQujwHfTE9wNpSVFvMPBJ23z/qcR0d0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kXGqixDygrFtS7gJnrr9pJCcOHq4eVg+jwESur8xZP/VZtxbnQpKxUtvI+Of6iV/gn+57DRWLq0JOry+/p3+67UpO77B6KhNLzgJT8PTSrisMrsNUKosBgrKqgSkGfsSvgXj8Gp6rICyR0vjUUrHyjhRTIM0Or2fHf7sHoOWMKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DF8C4AF0F;
-	Tue, 30 Jul 2024 02:26:00 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+	s=arc-20240116; t=1722320352; c=relaxed/simple;
+	bh=tH7L+Uo2XulclK4GUmSG9W19Epj7O2ocH6t9sgBPLKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G/A7R7K7G5T/Gbg2ZGaHStxgw+Vnc+bUZFjSeXx0UFIEEju8tS2Eo4CetQ3VoeDcnrvr8dsFuZ2sSnwwUNsGTickVBjr2I5S56iyg8zvXTIWuqF6iKxONs68bti7SmxEEad6zrDFK6MLsIvSKG+7889AesgVHqAkG5skjTuLpWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxh+nVhahmyEMEAA--.13493S3;
+	Tue, 30 Jul 2024 14:19:01 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxX8fVhahmehYGAA--.30051S2;
+	Tue, 30 Jul 2024 14:19:01 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	stable@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for-stable] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
-Date: Tue, 30 Jul 2024 10:25:42 +0800
-Message-ID: <20240730022542.3553255-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
-References: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Fix objtool warning about do_syscall() on LoongArch
+Date: Tue, 30 Jul 2024 14:18:59 +0800
+Message-ID: <20240730061901.21485-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,59 +34,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxX8fVhahmehYGAA--.30051S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
 
-Chromium sandbox apparently wants to deny statx [1] so it could properly
-inspect arguments after the sandboxed process later falls back to fstat.
-Because there's currently not a "fd-only" version of statx, so that the
-sandbox has no way to ensure the path argument is empty without being
-able to peek into the sandboxed process's memory. For architectures able
-to do newfstatat though, glibc falls back to newfstatat after getting
--ENOSYS for statx, then the respective SIGSYS handler [2] takes care of
-inspecting the path argument, transforming allowed newfstatat's into
-fstat instead which is allowed and has the same type of return value.
+Tiezhu Yang (2):
+  objtool/LoongArch: Restrict stack operation instruction
+  LoongArch: Remove STACK_FRAME_NON_STANDARD(do_syscall)
 
-But, as LoongArch is the first architecture to not have fstat nor
-newfstatat, the LoongArch glibc does not attempt falling back at all
-when it gets -ENOSYS for statx -- and you see the problem there!
+Tiezhu Yang (2):
+  objtool/LoongArch: Restrict stack operation instruction
+  LoongArch: Remove STACK_FRAME_NON_STANDARD(do_syscall)
 
-Actually, back when the LoongArch port was under review, people were
-aware of the same problem with sandboxing clone3 [3], so clone was
-eventually kept. Unfortunately it seemed at that time no one had noticed
-statx, so besides restoring fstat/newfstatat to LoongArch uapi (and
-postponing the problem further), it seems inevitable that we would need
-to tackle seccomp deep argument inspection.
+ arch/loongarch/kernel/syscall.c       | 4 ----
+ tools/objtool/arch/loongarch/decode.c | 4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-However, this is obviously a decision that shouldn't be taken lightly,
-so we just restore fstat/newfstatat by defining __ARCH_WANT_NEW_STAT
-in unistd.h. This is the simplest solution for now, and so we hope the
-community will tackle the long-standing problem of seccomp deep argument
-inspection in the future [4][5].
-
-More infomation please reading this thread [6].
-
-[1] https://chromium-review.googlesource.com/c/chromium/src/+/2823150
-[2] https://chromium.googlesource.com/chromium/src/sandbox/+/c085b51940bd/linux/seccomp-bpf-helpers/sigsys_handlers.cc#355
-[3] https://lore.kernel.org/linux-arch/20220511211231.GG7074@brightrain.aerifal.cx/
-[4] https://lwn.net/Articles/799557/
-[5] https://lpc.events/event/4/contributions/560/attachments/397/640/deep-arg-inspection.pdf
-[6] https://lore.kernel.org/loongarch/20240226-granit-seilschaft-eccc2433014d@brauner/T/#t
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/uapi/asm/unistd.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
-index fcb668984f03..b344b1f91715 100644
---- a/arch/loongarch/include/uapi/asm/unistd.h
-+++ b/arch/loongarch/include/uapi/asm/unistd.h
-@@ -1,4 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#define __ARCH_WANT_NEW_STAT
- #define __ARCH_WANT_SYS_CLONE
- #define __ARCH_WANT_SYS_CLONE3
- 
 -- 
-2.43.5
+2.42.0
 
