@@ -1,105 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0D1186289;
-	Tue, 30 Jul 2024 07:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD92191484;
+	Tue, 30 Jul 2024 07:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722324253; cv=none; b=QRG19+t+ahaZh1RA54Q1R5KW5sp/N6tqbtNrLKwnzv9xDTdHbUMogahZGJY5nY3XHMcquZgL/7Zlb0+nQoCCLGIl1o1t7ncQ1vPvW0Io+vT4B5Tybr0FTWmSPbIVhpMatJbPLrhkFUaOnIDCVADOOk8w0uMaBX/ysEjw8EtO8Oc=
+	t=1722326030; cv=none; b=N4iXUfIKZayWAVHIpemw+oP6daMLKcKc+cpo3OgfZv0Daw5JKRyIhr46XHrI75XeCGBgKoW7j9VkfbIlDoEOogj32T8QJQxDyRB+CCGwcuM2MExz7EHqDKwMSA2wEVISBrgfrkiTTa4YRLbHzRGHp72lLU4y2OSf19ARW99C3ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722324253; c=relaxed/simple;
-	bh=8w3GasCTOtDHhV15ERLHRdppxCj5vRL742PIV75jwC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PjgG5S3OaoBQeCg5c1RqjuTJDg8VNtpBj05KhZpZjP2r1mMiZMz1NAut8mhEf+Z7M1zkkrpymLXzMO2Y9c7r7/pgMnPvAAAGwFeXcvInHkOm8MV3vZD7mUgWM8mr4OcWtkegFJ94OVqyS92Dwg3zdhEnNe8ndA5ha07J1RogvYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNah1I2e; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNah1I2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DD3FC32782;
-	Tue, 30 Jul 2024 07:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722324253;
-	bh=8w3GasCTOtDHhV15ERLHRdppxCj5vRL742PIV75jwC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BNah1I2e6F1QoAnt7xUUiWCMNufC/iZmg+WwLGUeKSjh/ezvW81r2QzGBGhopUnZw
-	 T833FXdR7zygKEdg2G+quC5GtOt4OQTzugQai+O+6TupWTHCwZY5BlwYKwXw56TSdq
-	 vY34shLfDNHoPzuLCy400CbGOeFlukSJvU0eGFABH99AvKOdaFwdjgHm29H1euM8gA
-	 WlrNy3SLd5dfkQ/+cLJx9pG7QYiKRwVC5MJSSW/9dJiRv1LpUoJHsX2N7UJqj6fgKK
-	 IO9qGAvc0jLl3AJAX7InSokEu+On5T61pO/8BtUoFF4W/zuaN+246bWmc18jRq3Ct9
-	 h3HFRijs52IOw==
-From: alexs@kernel.org
-To: Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Brian Cain <bcain@quicinc.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Naveen N Rao <naveen@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
+	s=arc-20240116; t=1722326030; c=relaxed/simple;
+	bh=sntPLk9JUczN3t1GG9IWiP1HHqBUQTpUXd2iKWnCP/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lwhL9IJCl+6bO+h+3sR90Dk/Iid2IA8zCFXBGyBa51vi+SI5QpzlR+1W+ys7kAi2kdxQSGt3Onl9F22LWmb+31TKyMaz5HJDxPDhyMM2ld6Fjswek6L/pKe7c+TCWddMglmooNVSc5Vwe0Art8MdgEsQ4uyn1CQqY4Fe9/WCrzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxvOoJnKhmEVEEAA--.15092S3;
+	Tue, 30 Jul 2024 15:53:45 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxLscInKhmVjQGAA--.31411S4;
+	Tue, 30 Jul 2024 15:53:45 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Vishal Moola <vishal.moola@gmail.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Lance Yang <ioworker0@gmail.com>,
-	Peter Xu <peterx@redhat.com>,
-	Barry Song <baohua@kernel.org>,
-	linux-s390@vger.kernel.org
-Cc: Guo Ren <guoren@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Hugh Dickins <hughd@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Alex Shi <alexs@kernel.org>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
-Subject: [RFC PATCH 18/18] mm/pgtable: pass ptdesc in pte_free_defer
-Date: Tue, 30 Jul 2024 15:27:19 +0800
-Message-ID: <20240730072719.3715016-8-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240730072719.3715016-1-alexs@kernel.org>
-References: <20240730064712.3714387-1-alexs@kernel.org>
- <20240730072719.3715016-1-alexs@kernel.org>
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	x86@kernel.org,
+	Song Gao <gaosong@loongson.cn>
+Subject: [PATCH v4 2/3] LoongArch: KVM: Implement function kvm_para_has_feature
+Date: Tue, 30 Jul 2024 15:53:43 +0800
+Message-Id: <20240730075344.1215681-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240730075344.1215681-1-maobibo@loongson.cn>
+References: <20240730075344.1215681-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -107,167 +42,114 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLscInKhmVjQGAA--.31411S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-From: Alex Shi <alexs@kernel.org>
+Function kvm_para_has_feature() is to detect supported paravirt features,
+it can be used by device driver to detect and enable paravirt features,
+such as extioi irqchip driver can detect KVM_FEATURE_VIRT_EXTIOI and do
+some optimization.
 
-pass ptdesc in pte_free_defer() and use ptdesc in collapse_huge_page().
-
-This patch is immature, there is a issue from pmd_pgtable() conversion
-in few archs. The problem need a fix.
-
-Signed-off-by: Alex Shi <alexs@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Mike Rapoport  <rppt@kernel.org>
-Cc: Barry Song <baohua@kernel.org>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Lance Yang <ioworker0@gmail.com>
-Cc: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Naveen N Rao <naveen@kernel.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Matthew Wilcox  <willy@infradead.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Vishal Moola  <vishal.moola@gmail.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/powerpc/include/asm/pgalloc.h |  2 +-
- arch/s390/include/asm/pgalloc.h    |  2 +-
- arch/s390/mm/pgalloc.c             |  2 +-
- include/linux/pgtable.h            |  2 +-
- mm/khugepaged.c                    | 10 +++++-----
- mm/pgtable-generic.c               |  4 +---
- 6 files changed, 10 insertions(+), 12 deletions(-)
+ arch/loongarch/include/asm/kvm_para.h | 10 ++++++++++
+ arch/loongarch/kernel/paravirt.c      | 28 +++++++++++++++------------
+ 2 files changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pgalloc.h b/arch/powerpc/include/asm/pgalloc.h
-index 12520521163e..ca21b67c593f 100644
---- a/arch/powerpc/include/asm/pgalloc.h
-+++ b/arch/powerpc/include/asm/pgalloc.h
-@@ -47,7 +47,7 @@ static inline void pte_free(struct mm_struct *mm, struct ptdesc *ptepage)
- 
- /* arch use pte_free_defer() implementation in arch/powerpc/mm/pgtable-frag.c */
- #define pte_free_defer pte_free_defer
--void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable);
-+void pte_free_defer(struct mm_struct *mm, struct ptdesc *pgtable);
- 
- /*
-  * Functions that deal with pagetables that could be at any level of
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index 771494526f6e..a229cee11bbd 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -144,7 +144,7 @@ static inline void pmd_populate(struct mm_struct *mm,
- 
- /* arch use pte_free_defer() implementation in arch/s390/mm/pgalloc.c */
- #define pte_free_defer pte_free_defer
--void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable);
-+void pte_free_defer(struct mm_struct *mm, struct ptdesc *pgtable);
- 
- void vmem_map_init(void);
- void *vmem_crst_alloc(unsigned long val);
-diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-index f691e0fb66a2..c7bb38d85d81 100644
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -214,7 +214,7 @@ static void pte_free_now(struct rcu_head *head)
- 	pagetable_pte_dtor_free(ptdesc);
+diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+index 9814d56b8d0e..327f331d5237 100644
+--- a/arch/loongarch/include/asm/kvm_para.h
++++ b/arch/loongarch/include/asm/kvm_para.h
+@@ -155,10 +155,20 @@ static __always_inline long kvm_hypercall5(u64 fid,
+ 	return ret;
  }
  
--void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable)
-+void pte_free_defer(struct mm_struct *mm, struct ptdesc *pgtable)
++#ifdef CONFIG_PARAVIRT
++bool kvm_para_available(void);
++unsigned int kvm_arch_para_features(void);
++#else
++static inline bool kvm_para_available(void)
++{
++	return false;
++}
++
+ static inline unsigned int kvm_arch_para_features(void)
  {
- 	struct ptdesc *ptdesc = virt_to_ptdesc(pgtable);
+ 	return 0;
+ }
++#endif
  
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 9d256c548f5e..e7b018de1d0f 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -116,7 +116,7 @@ static inline void pte_unmap(pte_t *pte)
+ static inline unsigned int kvm_arch_para_hints(void)
+ {
+diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+index cc6bf096cb88..10683e25b6b3 100644
+--- a/arch/loongarch/kernel/paravirt.c
++++ b/arch/loongarch/kernel/paravirt.c
+@@ -151,11 +151,14 @@ static void pv_init_ipi(void)
  }
  #endif
  
--void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable);
-+void pte_free_defer(struct mm_struct *mm, struct ptdesc *ptdesc);
- 
- /* Find an entry in the second-level page table.. */
- #ifndef pmd_offset
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 5b466a1c2136..30cf61d02c1c 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1094,7 +1094,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	LIST_HEAD(compound_pagelist);
- 	pmd_t *pmd, _pmd;
- 	pte_t *pte;
--	pgtable_t pgtable;
-+	struct ptdesc *ptdesc;
- 	struct folio *folio;
- 	spinlock_t *pmd_ptl, *pte_ptl;
- 	int result = SCAN_FAIL;
-@@ -1223,7 +1223,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 * write.
- 	 */
- 	__folio_mark_uptodate(folio);
--	pgtable = pmd_pgtable(_pmd);
-+	ptdesc = pmd_ptdesc(&_pmd);
- 
- 	_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
- 	_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-@@ -1232,7 +1232,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	BUG_ON(!pmd_none(*pmd));
- 	folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
- 	folio_add_lru_vma(folio, vma);
--	pgtable_trans_huge_deposit(mm, pmd, page_ptdesc(pgtable));
-+	pgtable_trans_huge_deposit(mm, pmd, ptdesc);
- 	set_pmd_at(mm, address, pmd, _pmd);
- 	update_mmu_cache_pmd(vma, address, pmd);
- 	spin_unlock(pmd_ptl);
-@@ -1664,7 +1664,7 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- 
- 	mm_dec_nr_ptes(mm);
- 	page_table_check_pte_clear_range(mm, haddr, pgt_pmd);
--	pte_free_defer(mm, pmd_pgtable(pgt_pmd));
-+	pte_free_defer(mm, pmd_ptdesc(&pgt_pmd));
- 
- maybe_install_pmd:
- 	/* step 5: install pmd entry */
-@@ -1777,7 +1777,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- 		if (retracted) {
- 			mm_dec_nr_ptes(mm);
- 			page_table_check_pte_clear_range(mm, addr, pgt_pmd);
--			pte_free_defer(mm, pmd_pgtable(pgt_pmd));
-+			pte_free_defer(mm, pmd_ptdesc(&pgt_pmd));
- 		}
- 	}
- 	i_mmap_unlock_read(mapping);
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 5e763682941d..f3bc2b17893a 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -244,10 +244,8 @@ static void pte_free_now(struct rcu_head *head)
- 	pte_free(NULL /* mm not passed and not used */, ptdesc);
- }
- 
--void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable)
-+void pte_free_defer(struct mm_struct *mm, struct ptdesc *ptdesc)
+-static bool kvm_para_available(void)
++bool kvm_para_available(void)
  {
--	struct ptdesc *ptdesc = page_ptdesc(pgtable);
--
- 	call_rcu(&ptdesc->pt_rcu_head, pte_free_now);
+ 	int config;
+ 	static int hypervisor_type;
+ 
++	if (!cpu_has_hypervisor)
++		return false;
++
+ 	if (!hypervisor_type) {
+ 		config = read_cpucfg(CPUCFG_KVM_SIG);
+ 		if (!memcmp(&config, KVM_SIGNATURE, 4))
+@@ -165,17 +168,21 @@ static bool kvm_para_available(void)
+ 	return hypervisor_type == HYPERVISOR_KVM;
  }
- #endif /* pte_free_defer */
+ 
+-int __init pv_ipi_init(void)
++unsigned int kvm_arch_para_features(void)
+ {
+-	int feature;
++	static int feature;
+ 
+-	if (!cpu_has_hypervisor)
+-		return 0;
++	if (!feature)
++		feature = read_cpucfg(CPUCFG_KVM_FEATURE);
++	return feature;
++}
++
++int __init pv_ipi_init(void)
++{
+ 	if (!kvm_para_available())
+ 		return 0;
+ 
+-	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
+-	if (!(feature & BIT(KVM_FEATURE_IPI)))
++	if (!kvm_para_has_feature(KVM_FEATURE_IPI))
+ 		return 0;
+ 
+ #ifdef CONFIG_SMP
+@@ -258,15 +265,12 @@ static struct notifier_block pv_reboot_nb = {
+ 
+ int __init pv_time_init(void)
+ {
+-	int r, feature;
++	int r;
+ 
+-	if (!cpu_has_hypervisor)
+-		return 0;
+ 	if (!kvm_para_available())
+ 		return 0;
+ 
+-	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
+-	if (!(feature & BIT(KVM_FEATURE_STEAL_TIME)))
++	if (!kvm_para_has_feature(KVM_FEATURE_STEAL_TIME))
+ 		return 0;
+ 
+ 	has_steal_clock = 1;
 -- 
-2.43.0
+2.39.3
 
