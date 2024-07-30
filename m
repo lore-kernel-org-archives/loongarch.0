@@ -1,557 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3651C19309A
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B293A193084
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722329521; cv=none; b=DE+yfOesNiiNRckVlJDGMNaNAAVY0hicX3BV1KL7o883HmEZw7foZJIVqc4Q6nU+T/tdzSDQk5fC9t0KiOzCLANZg6hEzjnap/gSMc9KwQPub8BZ0FeMyztIjhGNHgudoCibO/G9XgzVAq1w6ZTfbtGBlUEl/FyMDWF0AH8UHDs=
+	t=1722329886; cv=none; b=kY5heIIL32M9ffHUlEr8U4PaWP4pTDbYlX1/Fu+F0jpyhwem8v/75jGH0tq4dNZS5pzjubrS6CsKXzjaeqLZuBnviFuaniE6VpDaLVIgWvgtrDwOrDOoobpJjkc2nmNCvHxheGpPcAfA67VLF05FsD20Ji1kRwhvsyBbwQy6NNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722329521; c=relaxed/simple;
-	bh=mLIWRpXHk39LsbIfes1DXHI3y+srUmTV4y/dISbd/Hg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NNQoaN+G9Dmihxt+pPs1J0uo93rOo5AtkRL9O8gXElw8t5ES8Dmcha4Yg6RXFhGUUBFglnmqEkATFY5X4rjvuroUR9PQInB0EpacPYUNUgzKNmcYSc2i8SN5O+AZt6AVyUp9BQelk8LGku4xA/ZsUjLBcL+4dCTdGoJQvTNnnX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQQo7smg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722329886; c=relaxed/simple;
+	bh=UOn93hUpu6nETBc80RJAdFaC1UNmh5dFpSEiFmnvSVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fu6pxLfmfN/rZp0ZXt0viaU67zTv6V4LJv3STf+EA8ZgmZ5jEPNOtszqAYW0bS349RVL29b2/3BhiYl8+Jh/5DCh/or2sERjoDblut6GcnXT9TJvr6qOwxTeUTLY5SYmuxGVebtmt6ocTeqrHQ7IDU8a7pI/qHEkP/51ntevMWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=APkqj5bo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQQo7smg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F296AC4AF13
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 08:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722329521;
-	bh=mLIWRpXHk39LsbIfes1DXHI3y+srUmTV4y/dISbd/Hg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SQQo7smgHg6rBeX6xAcSSgevExtMA2QyAlXyQ2jW0PPkgFrln2mEZMM6JRF5Byned
-	 d7ny1797kyBzfSAKL6FGiS1Qhp46gLDkfs5wAV21OMKgYEJptnQw+lwkQpbjkjJS9S
-	 EhMOTw3MqdZ6VKqBV++ksrSqZD9Mi8Y4kYy1D22y0cA+OmLm+KnXxAz0NA3eEYwzgP
-	 zwJIy+2DlIiAHOnSSUolbS7pZvj8rRW4hGlvyCakRTBOZtb2I27iSjZ0jdKu7iZiE0
-	 RaKQ/m6STdiKtnJcDfgpI8Epr+rL3eM87S1dyZJrWxuQu6SO9C9/xQ32Lfb7EMMD8f
-	 EXcOvmBi4BG5g==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5a2ffc34722so8925651a12.0
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 01:52:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoSp2llqtFiuRm5P6OA6zngBKIlsUik/PGHYv6P9J8yWwDnimxiD9B0bbJvRpsIUecL9oyM+pD2mYcnP6n2DhWb76E6KpK9QmT
-X-Gm-Message-State: AOJu0Yw1owYf6j/rAkLe2US0ERxohZ4N0k9N/ODZOZMr1fpZhsQY765S
-	tnfr502/WludL3ZbGQNG0YwGm++j3rrjjIh+ecwjRjaftW6U66BtLTKarYD3LyC0O3VAZQME9Dd
-	X/ht3PIODRC3Q1bzyo8wHMha/6XY=
-X-Google-Smtp-Source: AGHT+IHW+AU1W+r7xsiUOp1hBCSxb/mXz6j+yFu17KcOiySzFvfuqEaWjA5st56MFNvOvxgarVqBSgCTy4vncXn50V0=
-X-Received: by 2002:a50:a68f:0:b0:59f:9f59:b034 with SMTP id
- 4fb4d7f45d1cf-5b46ca2845cmr1192944a12.13.1722329519301; Tue, 30 Jul 2024
- 01:51:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="APkqj5bo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722329883;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZpZjVsHvHCj8FzxVeFJOZEzA3scYhLR2Ib5TteBtfAg=;
+	b=APkqj5boTIdmiRwFK3GxVNZ/hbcNunFQYaNbC5w37qquqSBVlBVyNyMOKQz/KB3h5qlpFm
+	VBDhv8QpL2VxdhRrXLfCLMXKlwV5w8LZx2wMdyXoGFqyp+IxJooQjNEV9/so3sWBCiA905
+	P2eCUU+W1yaFsYwdXG0pi0+RywZD0sg=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-28-zc_XswZAMoG-zcSzj42DbQ-1; Tue, 30 Jul 2024 04:57:59 -0400
+X-MC-Unique: zc_XswZAMoG-zcSzj42DbQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a7a979cae97so392560766b.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 01:57:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722329879; x=1722934679;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZpZjVsHvHCj8FzxVeFJOZEzA3scYhLR2Ib5TteBtfAg=;
+        b=VKEaSD7PJWk6s+EZ6Hl+FePGB6vXZQ9+HuJs8wxufw+FzrU+GGb1XK9Q5B9/a9w1Va
+         xT/UAK1PVxnwj/Bp97eq1Wgph+y08AhzFM2TffomHyLIbIRfj0/6HgDRlTDmZHypC3Lc
+         2ZwpE1Ub+WTTFdfB3vxA2x1JnxLH0Ea52pHdFFxXxrv4NlNyW8GfWhqL1rlFT1JjN2jF
+         OJGJCK68H3gNEI5E2Z0OxjjLcEvxYqVyNPz96rOrVQ1Mq6/3aMoeBVydI32Po2ycMjTB
+         iqXV/gUKfNM57yCNDiXqUchcufpF8OkmuyWsoVnKiQ2pjHGSifxK6j8pCzx5UT+1DQ88
+         kP/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUvrC2SAvJv8nuF81NnY87klTwezI6m3LTYdKjl3Z6RcEaYbHMhlSkVgS/4xfnphjJPqEIskenklf5RdvnbDXvEa74CzxKur6sI
+X-Gm-Message-State: AOJu0YzJarSOKmqS4Hqb9RyIL2kRCwVQG5UQ2RRwhmSqqmymxEZG2e6T
+	JpybPZxIdIw2M4Ajut3BrTgmgSGUS5r3Iv7vp3xYJxumP5CadnjnPxgialCwGSKrURJcHCDgg3G
+	j4YXv+zj5zkKEV7c4rl0pqUUHU7FJfilVpsbZA1BegVqIqbUevw0Zhx6MRg==
+X-Received: by 2002:a17:907:3f1f:b0:a7a:c106:3647 with SMTP id a640c23a62f3a-a7d401861c0mr815521066b.58.1722329878633;
+        Tue, 30 Jul 2024 01:57:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFO2B6RyDZT6FnZIzF9nSeY5BVBQwIsgCkX4qd602jC/+1nmH3bvjS4vKWDGNBFOCLTdQ0vMQ==
+X-Received: by 2002:a17:907:3f1f:b0:a7a:c106:3647 with SMTP id a640c23a62f3a-a7d401861c0mr815518266b.58.1722329878201;
+        Tue, 30 Jul 2024 01:57:58 -0700 (PDT)
+Received: from [192.168.10.47] ([151.95.101.29])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a7acad411a6sm609184766b.117.2024.07.30.01.57.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jul 2024 01:57:57 -0700 (PDT)
+Message-ID: <e425ac5e-6ca2-463e-879c-acb7d231ab72@redhat.com>
+Date: Tue, 30 Jul 2024 10:57:55 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240726102443.12471-1-zhangtianyang@loongson.cn> <87o76kuqza.ffs@tglx>
-In-Reply-To: <87o76kuqza.ffs@tglx>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 30 Jul 2024 16:51:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
-Message-ID: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
-Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net, alexs@kernel.org, 
-	siyanteng@loongson.cn, kernel@xen0n.name, jiaxun.yang@flygoat.com, 
-	gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn, 
-	yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org, 
-	dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site, 
-	zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn, 
-	zhoubinbin@loongson.cn, loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 41/84] KVM: x86/mmu: Mark pages/folios dirty at the
+ origin of make_spte()
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+ David Stevens <stevensd@chromium.org>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-42-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240726235234.228822-42-seanjc@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Thomas,
+On 7/27/24 01:51, Sean Christopherson wrote:
+> Move the marking of folios dirty from make_spte() out to its callers,
+> which have access to the _struct page_, not just the underlying pfn.
+> Once all architectures follow suit, this will allow removing KVM's ugly
+> hack where KVM elevates the refcount of VM_MIXEDMAP pfns that happen to
+> be struct page memory.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/mmu/mmu.c         | 29 +++++++++++++++++++++++++++--
+>   arch/x86/kvm/mmu/paging_tmpl.h |  5 +++++
+>   arch/x86/kvm/mmu/spte.c        | 11 -----------
+>   3 files changed, 32 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 1cdd67707461..7e7b855ce1e1 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -2918,7 +2918,16 @@ static bool kvm_mmu_prefetch_sptes(struct kvm_vcpu *vcpu, gfn_t gfn, u64 *sptep,
+>   	for (i = 0; i < nr_pages; i++, gfn++, sptep++) {
+>   		mmu_set_spte(vcpu, slot, sptep, access, gfn,
+>   			     page_to_pfn(pages[i]), NULL);
+> -		kvm_release_page_clean(pages[i]);
+> +
+> +		/*
+> +		 * KVM always prefetches writable pages from the primary MMU,
+> +		 * and KVM can make its SPTE writable in the fast page, without
 
-On Fri, Jul 26, 2024 at 11:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->
-> On Fri, Jul 26 2024 at 18:24, Tianyang Zhang wrote:
-> > +static int avecintc_set_affinity(struct irq_data *data, const struct c=
-pumask *dest,
-> > +                                    bool force)
->
-> Please align arguments according to documentation. In this case don't
-> use a line break. Just use the full 100 character width all over the plac=
-e
->
-> > +{
-> > +     unsigned int cpu, ret, vector;
-> > +     unsigned long flags;
-> > +     struct avecintc_data *adata;
->
-> Please look for variable declarations in:
->
->        https://www.kernel.org/doc/html/latest/process/maintainer-tip.html
->
-> and fix it up all over the place.
-OK, thanks.
+"with a fast page fault"
 
->
-> > +
-> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
->
-> This does not need irqsave because the function is always called with
-> interrupts disabled.
-OK, thanks.
+Paolo
 
->
-> > +     adata =3D irq_data_get_irq_chip_data(data);
-> > +
-> > +     if (adata->vec && cpu_online(adata->cpu) && cpumask_test_cpu(adat=
-a->cpu, dest)) {
-> > +             raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +             return 0;
-> > +     }
-> > +
-> > +     if (adata->moving)
-> > +             return -EBUSY;
->
-> This leaks loongarch_avec.lock. Please use
->
->      scoped_guard(raw_spin_lock)(&loongarch_avec.lock);
-OK, thanks.
+> +		 * notifying the primary MMU.  Mark pages/folios dirty now to
+> +		 * ensure file data is written back if it ends up being written
+> +		 * by the guest.  Because KVM's prefetching GUPs writable PTEs,
+> +		 * the probability of unnecessary writeback is extremely low.
+> +		 */
+> +		kvm_release_page_dirty(pages[i]);
+>   	}
+>   
+>   	return true;
+> @@ -4314,7 +4323,23 @@ static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
+>   static void kvm_mmu_finish_page_fault(struct kvm_vcpu *vcpu,
+>   				      struct kvm_page_fault *fault, int r)
+>   {
+> -	kvm_release_pfn_clean(fault->pfn);
+> +	lockdep_assert_once(lockdep_is_held(&vcpu->kvm->mmu_lock) ||
+> +			    r == RET_PF_RETRY);
+> +
+> +	/*
+> +	 * If the page that KVM got from the *primary MMU* is writable, and KVM
+> +	 * installed or reused a SPTE, mark the page/folio dirty.  Note, this
+> +	 * may mark a folio dirty even if KVM created a read-only SPTE, e.g. if
+> +	 * the GFN is write-protected.  Folios can't be safely marked dirty
+> +	 * outside of mmu_lock as doing so could race with writeback on the
+> +	 * folio.  As a result, KVM can't mark folios dirty in the fast page
+> +	 * fault handler, and so KVM must (somewhat) speculatively mark the
+> +	 * folio dirty if KVM could locklessly make the SPTE writable.
+> +	 */
+> +	if (!fault->map_writable || r == RET_PF_RETRY)
+> +		kvm_release_pfn_clean(fault->pfn);
+> +	else
+> +		kvm_release_pfn_dirty(fault->pfn);
+>   }
+>   
+>   static int kvm_mmu_faultin_pfn_private(struct kvm_vcpu *vcpu,
+> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+> index b6897916c76b..2e2d87a925ac 100644
+> --- a/arch/x86/kvm/mmu/paging_tmpl.h
+> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
+> @@ -953,6 +953,11 @@ static int FNAME(sync_spte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int
+>   		  spte_to_pfn(spte), spte, true, false,
+>   		  host_writable, &spte);
+>   
+> +	/*
+> +	 * There is no need to mark the pfn dirty, as the new protections must
+> +	 * be a subset of the old protections, i.e. synchronizing a SPTE cannot
+> +	 * change the SPTE from read-only to writable.
+> +	 */
+>   	return mmu_spte_update(sptep, spte);
+>   }
+>   
+> diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+> index 9b8795bd2f04..2c5650390d3b 100644
+> --- a/arch/x86/kvm/mmu/spte.c
+> +++ b/arch/x86/kvm/mmu/spte.c
+> @@ -277,17 +277,6 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
+>   		mark_page_dirty_in_slot(vcpu->kvm, slot, gfn);
+>   	}
+>   
+> -	/*
+> -	 * If the page that KVM got from the primary MMU is writable, i.e. if
+> -	 * it's host-writable, mark the page/folio dirty.  As alluded to above,
+> -	 * folios can't be safely marked dirty in the fast page fault handler,
+> -	 * and so KVM must (somewhat) speculatively mark the folio dirty even
+> -	 * though it isn't guaranteed to be written as KVM won't mark the folio
+> -	 * dirty if/when the SPTE is made writable.
+> -	 */
+> -	if (host_writable)
+> -		kvm_set_pfn_dirty(pfn);
+> -
+>   	*new_spte = spte;
+>   	return wrprot;
+>   }
 
->
-> above so you spare all the unlocks and cannot miss one.
->
-> > +     cpumask_and(&intersect_mask, dest, cpu_online_mask);
-> > +
-> > +     ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, &intersect=
-_mask, false, &cpu);
-> > +     if (ret < 0) {
-> > +             raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +             return ret;
-> > +     }
-> > +
-> > +     vector =3D ret;
-> > +     adata->cpu =3D cpu;
-> > +     adata->vec =3D vector;
-> > +     per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data_to_desc=
-(data);
-> > +     avecintc_sync(adata);
-> > +
-> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +     irq_data_update_effective_affinity(data, cpumask_of(cpu));
-> > +
-> > +     return IRQ_SET_MASK_OK;
-> > +}
-> > +
-> > +static int avecintc_cpu_online(unsigned int cpu)
-> > +{
-> > +     unsigned long flags;
-> > +
-> > +     if (!loongarch_avec.vector_matrix)
-> > +             return 0;
-> > +
-> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
->
->   guard(raw_spin_lock)
->
-> interrupts are disabled.
-OK, thanks.
-
->
-> > +     irq_matrix_online(loongarch_avec.vector_matrix);
-> > +
-> > +     pending_list_init(cpu);
-> > +
-> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int avecintc_cpu_offline(unsigned int cpu)
-> > +{
-> > +     unsigned long flags;
-> > +     struct pending_list *plist =3D per_cpu_ptr(&pending_list, cpu);
-> > +
-> > +     if (!loongarch_avec.vector_matrix)
-> > +             return 0;
-> > +
-> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
->
-> Ditto.
->
-> > +     if (list_empty(&plist->head))
-> > +             irq_matrix_offline(loongarch_avec.vector_matrix);
-> > +     else
-> > +             pr_warn("CPU#%d advanced vector is busy\n", cpu);
->
-> Seriously? You leave the matrix online so allocation can be made from an
-> offline CPU?
-Yes, we should always call irq_matrix_offline(loongarch_avec.vector_matrix)=
-.
-
->
-> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +void complete_irq_moving(void)
-> > +{
-> > +     struct pending_list *plist =3D this_cpu_ptr(&pending_list);
-> > +     struct avecintc_data *adata, *tdata;
-> > +     int cpu, vector, bias;
-> > +     uint64_t isr;
-> > +
-> > +     raw_spin_lock(&loongarch_avec.lock);
->
->   guard()
->
-> > +     list_for_each_entry_safe(adata, tdata, &plist->head, entry) {
-> > +             cpu =3D adata->prev_cpu;
-> > +             vector =3D adata->prev_vec;
-> > +             bias =3D vector / VECTORS_PER_REG;
-> > +             switch (bias) {
-> > +             case 0:
-> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR0);
-> > +             case 1:
-> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR1);
-> > +             case 2:
-> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR2);
-> > +             case 3:
-> > +                     isr =3D csr_read64(LOONGARCH_CSR_ISR3);
-> > +             }
-> > +
-> > +             if (isr & (1UL << (vector % VECTORS_PER_REG))) {
-> > +                     mp_ops.send_ipi_single(cpu, ACTION_CLEAR_VECTOR);
->
-> Is it guaranteed that the device vector is handled _before_ the next
-> IPI is handled? If not this is a live lock.
-I have also concerned about this in an early version, at last Tianyang
-confirmed it is OK.
-
->
-> > +                     continue;
-> > +             }
-> > +             list_del(&adata->entry);
-> > +             irq_matrix_free(loongarch_avec.vector_matrix, cpu, vector=
-, adata->managed);
-> > +             this_cpu_write(irq_map[vector], NULL);
-> > +             adata->prev_cpu =3D adata->cpu;
-> > +             adata->prev_vec =3D adata->vec;
-> > +             adata->moving =3D 0;
-> > +     }
-> > +
-> > +     raw_spin_unlock(&loongarch_avec.lock);
-> > +}
-> > +#endif
-> > +
-> > +static void avecintc_compose_msi_msg(struct irq_data *d, struct msi_ms=
-g *msg)
-> > +{
-> > +     struct avecintc_data *adata;
-> > +
-> > +     adata =3D irq_data_get_irq_chip_data(d);
->
-> Move the assignement up to the declaration.
-OK, thanks.
-
->
->
-> > +     msg->address_hi =3D 0x0;
-> > +     msg->address_lo =3D (msi_base_addr | (adata->vec & 0xff) << 4) |
-> > +                       ((cpu_logical_map(adata->cpu & 0xffff)) << 12);
-> > +     msg->data =3D 0x0;
-> > +}
-> > +
-> > +static struct irq_chip avec_irq_controller =3D {
-> > +     .name                   =3D "AVECINTC",
-> > +     .irq_ack                =3D avecintc_ack_irq,
-> > +     .irq_mask               =3D avecintc_mask_irq,
-> > +     .irq_unmask             =3D avecintc_unmask_irq,
-> > +#ifdef CONFIG_SMP
-> > +     .irq_set_affinity       =3D avecintc_set_affinity,
-> > +#endif
-> > +     .irq_compose_msi_msg    =3D avecintc_compose_msi_msg,
-> > +};
-> > +
-> > +static void avecintc_irq_dispatch(struct irq_desc *desc)
-> > +{
-> > +     unsigned long vector;
-> > +     struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> > +     struct irq_desc *d;
-> > +
-> > +     chained_irq_enter(chip, desc);
-> > +
-> > +     while (true) {
-> > +             vector =3D csr_read64(LOONGARCH_CSR_IRR);
-> > +             if (vector & IRR_INVALID_MASK)
-> > +                     break;
-> > +
-> > +             vector &=3D IRR_VECTOR_MASK;
-> > +
-> > +             d =3D this_cpu_read(irq_map[vector]);
-> > +             if (d)
-> > +                     generic_handle_irq_desc(d);
-> > +             else {
->
-> See bracket rules.
-Do you mean even if there is only one statement in the if condition,
-we still need to do like this?
-if (xxx) {
-    yyy;
-} else {
-    zzz;
-}
-
->
-> > +                     spurious_interrupt();
-> > +                     pr_warn("Unexpected IRQ occurs on CPU#%d [vector =
-%ld]\n", smp_processor_id(), vector);
-> > +             }
->
-> > +     }
-> > +
-> > +     chained_irq_exit(chip, desc);
-> > +}
-> > +
-> > +static int avecintc_domain_alloc(struct irq_domain *domain,
-> > +                              unsigned int virq, unsigned int nr_irqs,=
- void *arg)
-> > +{
-> > +     unsigned int cpu, i, ret;
-> > +     unsigned long flags;
-> > +     struct irq_data *irqd;
-> > +     struct avecintc_data *adata;
-> > +
-> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
->
->
->   guard(raw_spinlock_irqsave)(....);
-OK, thanks.
-
->
-> > +     for (i =3D 0; i < nr_irqs; i++) {
-> > +             irqd =3D irq_domain_get_irq_data(domain, virq + i);
-> > +             adata =3D kzalloc(sizeof(*adata), GFP_KERNEL);
-> > +             if (!adata) {
-> > +                     raw_spin_unlock_irqrestore(&loongarch_avec.lock, =
-flags);
-> > +                     return -ENOMEM;
-> > +             }
-> > +
-> > +             ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, cp=
-u_online_mask, false, &cpu);
-> > +             if (ret < 0) {
-> > +                     raw_spin_unlock_irqrestore(&loongarch_avec.lock, =
-flags);
-> > +                     return ret;
-> > +             }
-> > +
-> > +             adata->prev_cpu =3D adata->cpu =3D cpu;
-> > +             adata->prev_vec =3D adata->vec =3D ret;
-> > +             adata->managed =3D irqd_affinity_is_managed(irqd);
-> > +             irq_domain_set_info(domain, virq + i, virq + i, &avec_irq=
-_controller,
-> > +                                 adata, handle_edge_irq, NULL, NULL);
-> > +             adata->moving =3D 0;
->
-> Initialize first before doing enything else.
-OK, thanks.
-
->
-> > +             irqd_set_single_target(irqd);
-> > +             irqd_set_affinity_on_activate(irqd);
-> > +
-> > +             per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data=
-_to_desc(irqd);
-> > +     }
-> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void clear_free_vector(struct irq_data *irqd)
-> > +{
-> > +     bool managed =3D irqd_affinity_is_managed(irqd);
-> > +     struct avecintc_data *adata =3D irq_data_get_irq_chip_data(irqd);
-> > +
-> > +     per_cpu(irq_map, adata->cpu)[adata->vec] =3D NULL;
-> > +     irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->=
-vec, managed);
-> > +     adata->cpu =3D 0;
->
-> 0 is a valid CPU number, no?
-Yes, UINT_MAX is better.
-
->
-> > +     adata->vec =3D 0;
-> > +
-> > +#ifdef CONFIG_SMP
-> > +     if (!adata->moving)
-> > +             return;
-> > +
-> > +     per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] =3D NULL;
-> > +     irq_matrix_free(loongarch_avec.vector_matrix,
-> > +                     adata->prev_cpu, adata->prev_vec, adata->managed)=
-;
-> > +     adata->moving =3D 0;
-> > +     adata->prev_vec =3D 0;
-> > +     adata->prev_cpu =3D 0;
-> > +     list_del_init(&adata->entry);
-> > +#endif
-> > +}
-> > +
-> > +static void avecintc_domain_free(struct irq_domain *domain,
-> > +                              unsigned int virq, unsigned int nr_irqs)
-> > +{
-> > +     unsigned int i;
-> > +     unsigned long flags;
-> > +     struct irq_data *d;
-> > +
-> > +     raw_spin_lock_irqsave(&loongarch_avec.lock, flags);
->
-> guard()
-OK, thanks.
-
->
-> > +     for (i =3D 0; i < nr_irqs; i++) {
-> > +             d =3D irq_domain_get_irq_data(domain, virq + i);
-> > +             if (d) {
-> > +                     clear_free_vector(d);
-> > +                     irq_domain_reset_irq_data(d);
-> > +
-> > +             }
-> > +     }
-> > +
-> > +     raw_spin_unlock_irqrestore(&loongarch_avec.lock, flags);
-> > +}
-> > +
-> > +static const struct irq_domain_ops avecintc_domain_ops =3D {
-> > +     .alloc          =3D avecintc_domain_alloc,
-> > +     .free           =3D avecintc_domain_free,
-> > +};
-> > +
-> > +static int __init irq_matrix_init(void)
-> > +{
-> > +     int i;
-> > +
-> > +     loongarch_avec.vector_matrix =3D irq_alloc_matrix(NR_VECTORS, 0, =
-NR_VECTORS - 1);
-> > +     if (!loongarch_avec.vector_matrix)
-> > +             return -ENOMEM;
-> > +
-> > +     for (i =3D 0; i < NR_LEGACY_VECTORS; i++)
-> > +             irq_matrix_assign_system(loongarch_avec.vector_matrix, i,=
- false);
-> > +
-> > +     irq_matrix_online(loongarch_avec.vector_matrix);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int __init avecintc_init(struct irq_domain *parent)
-> > +{
-> > +     int ret, parent_irq;
-> > +     unsigned long value;
-> > +
-> > +     raw_spin_lock_init(&loongarch_avec.lock);
-> > +
-> > +     loongarch_avec.fwnode =3D irq_domain_alloc_named_fwnode("AVECINTC=
-");
-> > +     if (!loongarch_avec.fwnode) {
-> > +             pr_err("Unable to allocate domain handle\n");
-> > +             ret =3D -ENOMEM;
-> > +             goto out;
-> > +     }
-> > +
-> > +     loongarch_avec.domain =3D irq_domain_create_tree(loongarch_avec.f=
-wnode,
-> > +                                                    &avecintc_domain_o=
-ps, NULL);
-> > +     if (!loongarch_avec.domain) {
-> > +             pr_err("Unable to create IRQ domain\n");
-> > +             ret =3D -ENOMEM;
-> > +             goto out_free_handle;
-> > +     }
-> > +
-> > +     parent_irq =3D irq_create_mapping(parent, INT_AVEC);
-> > +     if (!parent_irq) {
-> > +             pr_err("Failed to mapping hwirq\n");
-> > +             ret =3D -EINVAL;
-> > +             goto out_remove_domain;
-> > +     }
-> > +     irq_set_chained_handler_and_data(parent_irq, avecintc_irq_dispatc=
-h, NULL);
-> > +
-> > +     ret =3D irq_matrix_init();
-> > +     if (ret < 0) {
-> > +             pr_err("Failed to init irq matrix\n");
-> > +             goto out_free_matrix;
-> > +     }
-> > +#ifdef CONFIG_SMP
-> > +     pending_list_init(0);
-> > +     ret =3D cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_AVECINTC_STARTING,
-> > +                                     "irqchip/loongarch/avecintc:start=
-ing",
-> > +                                     avecintc_cpu_online, avecintc_cpu=
-_offline);
-> > +#endif
-> > +     value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> > +     value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> > +     iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> > +
-> > +     return ret;
-> > +
-> > +out_free_matrix:
-> > +     kfree(loongarch_avec.vector_matrix);
->
-> The code above just failed to allocate the matrix, so why are you trying
-> to free it?
-Yes, this is a mistake.
-
->
-> And this happily fails to uninstall the chained handler.
->
-> > +out_remove_domain:
-> > +     irq_domain_remove(loongarch_avec.domain);
-> > +out_free_handle:
-> > +     irq_domain_free_fwnode(loongarch_avec.fwnode);
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> > +static struct irq_chip pch_msi_irq_chip_v2 =3D {
-> > +     .name                   =3D "PCH PCI MSI",
-> > +     .irq_ack                =3D irq_chip_ack_parent,
-> > +};
-> > +
-> > +static struct msi_domain_info pch_msi_domain_info_v2 =3D {
-> > +     .flags  =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS =
-|
-> > +               MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-> > +     .chip   =3D &pch_msi_irq_chip_v2,
-> > +};
-> > +
-> > +int __init pch_msi_acpi_init_v2(struct irq_domain *parent,
-> > +                                     struct acpi_madt_msi_pic *acpi_pc=
-hmsi)
-> > +{
-> > +     struct irq_domain *msi_domain;
-> > +
-> > +     if (pch_msi_handle[0])
-> > +             return 0;
-> > +
-> > +     pch_msi_handle[0] =3D irq_domain_alloc_fwnode(&acpi_pchmsi->msg_a=
-ddress);
-> > +     if (!pch_msi_handle[0]) {
-> > +             pr_err("Unable to allocate domain handle\n");
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     msi_domain =3D pci_msi_create_irq_domain(pch_msi_handle[0],
-> > +                                            &pch_msi_domain_info_v2, p=
-arent);
->
-> Please don't do that. Convert this to use per device MSI domains.
-OK, thanks. But it is better to split the conversion to another patch
-(so we can convert both V1 and V2).
-
-Huacai
->
-> Thanks,
->
->         tglx
