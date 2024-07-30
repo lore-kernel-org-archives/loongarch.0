@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC4819FA96
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 11:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2092196DA1
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 11:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722339510; cv=none; b=C88+OzTXU4Nv0r7x2ReGuDYmjmUXzVaa0BJUeBERvB0C6QyFXcqr5Qo5uUc/ACvkQ/qrzlRFJN3qL+cqVqK8FB5VzJy68mKFUcs6b4cAv3BI9XWm4lltnwLcO20RvrUl9JVY/4oUAl5gyglLbXXgqkZXA1wO4JARDZ43+VhYfdo=
+	t=1722340343; cv=none; b=B++4KBYHuA2vOOnsRFy0gDxnXmV4AiTfVYMyfbeByZRUst8IABK+HdH7o4wgzT4z+f98eNi7iaN/Uj1Z5VcbsLDcTZByJw5D7dmNuJMsOvLm3GaupUnqhRxiosqsIjt/HyuLudMniPIT18KykVKBJr8JCCVwqs86gHTZ3IE2H0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722339510; c=relaxed/simple;
-	bh=jEQjAI9y/pos62ZtY9408Lx8xEWIbgsSw4bTFr5ulUY=;
+	s=arc-20240116; t=1722340343; c=relaxed/simple;
+	bh=i5pqEBAzsxZVYdIgCz2pQRWHOKq/9I2sY7ExiVSJ1S0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OKUUHiy9nOBieOUzdTeM2HSqoNGIwnzcIhoX6MSWApa1wSNAG2PO6VmDIu+av5RMVFkJ7X8rcFhyn6VL2M78zZTNuY7ZDUE2SGJTnu+5XUtelT/JEcanpkDXipHEwpeWmreCjkosZvkI7CDBrSI/YFVcjROs2t0aHjIkCJITOAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JRI2t9Zj; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=eeEV+GwL2vgVakihQRynTS6Lz6WkIpn8m1zg3MARVcxYR/bwge40vhjA0FsgKraJg0K8EDw85BDkwMCgDuZA/TY8lRmOtolraHv0PLSIIzvEXaNy5BiYO0fUTEBv1B2ACCmZOWXlL3VZq4e+Hlk7teBpao7jFhXn4oaNLALm8Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SGyv4jOw; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JRI2t9Zj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGyv4jOw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722339506;
+	s=mimecast20190719; t=1722340340;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ERqvjmTEXa43pGz7pfJyJekKhPX7hTshV7jfkEYTbUI=;
-	b=JRI2t9ZjrdvoBTvOKJ2lhqsz07ntIWQ5uzFe3cxKbj8k3gYOgJVToSgL4l9x01MgxVU5wo
-	1TrNpEt5kgVvy6/QXWB9w+BxztwMT7mPKDRhFH9S84cgJU+hCI0Qo2rlZtBG7UaKl0KFUm
-	uj/8PK6bdODbBNgsYz3YVaCg55NyjyA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=kBFBIKd1rJgOI9YcivSLfU1/eAHX+x0Dw4M+NCBYe5U=;
+	b=SGyv4jOwFUplvcgLXsMuTlbyFADjfg06EmLvLjvOnows7sK4Tk5PNjXsIQRXt71GY/DL29
+	KfdswJ+2Gq4OfamdpnoFFNFACXYLxiYIN3fQkRKgcqo2J2dW+7xLQAW43RmNJLE0Sqi+s+
+	MdN6maZbLH+8F0OyR1PL79yw+i9eaRo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-50kY5D1ANce1S_AnBcci-Q-1; Tue, 30 Jul 2024 07:38:22 -0400
-X-MC-Unique: 50kY5D1ANce1S_AnBcci-Q-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5a8b0832defso8345439a12.1
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 04:38:22 -0700 (PDT)
+ us-mta-584-btJEvpeiPACI3g8uWQ2A5w-1; Tue, 30 Jul 2024 07:52:19 -0400
+X-MC-Unique: btJEvpeiPACI3g8uWQ2A5w-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a7661b251aso4674163a12.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 04:52:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722339501; x=1722944301;
+        d=1e100.net; s=20230601; t=1722340338; x=1722945138;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ERqvjmTEXa43pGz7pfJyJekKhPX7hTshV7jfkEYTbUI=;
-        b=G2Kopbp+6wwiZXo2yp+PFSXNjtmwR7IiqwcScqSBwn8jbcpOJL2hes7byouPhiUekZ
-         RIhe+nJ645M+GDXcRVXIkMpiMjgC018lL+4hNZvXLTt6ZDQpF91AFT3cYNzj0yqr5Zpa
-         U6qto9P3gObkpjdVTEZ53ZAejq0PgLBQk7OGVXDUabfYlVEFsAlJdK1eoXaJdNfP/bwl
-         r68rbdnG7C1wOKTGtQXIPTULOBoAPooCsIH+ZY/9BwqA6qLXsfaJkLAYC84CaLJf0NBq
-         292Pf4awLtRMUOOZzLfdHayDoO4sHs2EiMQueWpI3NbyWr3KpeZr/Hhg4aM+bGedlSRG
-         qVWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVENc02Z7WIa9BzR1no0ZHF4RZabGsWeWgGiJgzWyQuyRt3WOGVqGV9e8CYRaCGnBhrgWsVUUAy6msiYuxVs9/Ra2dHU18ZP5Hb
-X-Gm-Message-State: AOJu0Yz7v1rZiFVeUhEqFMs2IGqjjffPCnJAQtQlPpYEnFk6lrNuRTmA
-	yQwiYoy8ljQAJH+UhuFnfxqcpDK7BNETAMMpj5QD6cBpk5oOAhcmzF4aBJjAAGvIZSKlzgfw4pV
-	Sr2Ea4Iswx+PuA+9Xt6ewdjjTjiwlLYQdK8y7Ckt9imEzjmVC4K/CSSHxcQ==
-X-Received: by 2002:a50:8a97:0:b0:58a:f14f:4d6d with SMTP id 4fb4d7f45d1cf-5b46dcc63bemr1603243a12.19.1722339500913;
-        Tue, 30 Jul 2024 04:38:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH5mXget4GcehKSHwg1m9swHhHUWQVbVnzHoQE7CArjlMaR1EOy+GWFyRYZ9RZxu1lu8WCBeQ==
-X-Received: by 2002:a50:8a97:0:b0:58a:f14f:4d6d with SMTP id 4fb4d7f45d1cf-5b46dcc63bemr1603198a12.19.1722339500323;
-        Tue, 30 Jul 2024 04:38:20 -0700 (PDT)
+        bh=kBFBIKd1rJgOI9YcivSLfU1/eAHX+x0Dw4M+NCBYe5U=;
+        b=VeMWibjvt0Lrm+SDF4XY8SveXK/wboubS3MBP1MCSE7/t8H9aELj4eYkWOPrAlYUDN
+         ZsCE70CB9AJhFPzhU0gMmrUtK4bhFN9Tf7RaKgqtMOKns9pgftzlCYkyIz4eZ1EFzd5M
+         i97fbapKtClXs0srUxTJ7xBg5zcuQLE/OXUaGnmsbFu8kfUmyFPfvIcAT0PlZGGpF3Q+
+         LDarFSw8VUoWfct40M+PY0X/m+1wiDiuMQPMtFzAfDFEFLRsunNe2eDfeYRS+ojToCfZ
+         ChzDY7FNL43ytvyHMIrb/JDKKphzS7WEQ8bbYiMxMBJx/H7vbs8XVY6yx+gpA3FBTs17
+         anmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmVxlOo3wxTz98nMsSMnUuWgtUM6v4NFwHaEyVhYbCXo0/bjvC/B0CyHCs8sd5gK8NSFg2PWcEGh5kYTpwazUCoHYPNGNHJSof
+X-Gm-Message-State: AOJu0Yygk+W0GUUZA3Z9vELBAX4u0TMx/LBSzWNlO2GY1M5BvwhZ1ynT
+	yuoHsqe3PM4VzObAtp+h9FJV51waR8OtFqMuRDep7PE5n1zS1YqK+TB7GnMYBF7Fc6sJwsyI5yx
+	rzsd774vq4pRmzLXL4VK4MYBt+nsTqoXRC8ZIldkpbFzWZFjWdeyMEsimWw==
+X-Received: by 2002:a50:d742:0:b0:5a1:6c50:a35 with SMTP id 4fb4d7f45d1cf-5b022b8cd30mr5926685a12.37.1722340338220;
+        Tue, 30 Jul 2024 04:52:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBJKwuTl3GcCc5YuDbeqMD1zDkMcs4VmkJUQMAj6w6PoPQ2QTlBUJ4IvJ66qrB4FTpUDSGzA==
+X-Received: by 2002:a50:d742:0:b0:5a1:6c50:a35 with SMTP id 4fb4d7f45d1cf-5b022b8cd30mr5926669a12.37.1722340337692;
+        Tue, 30 Jul 2024 04:52:17 -0700 (PDT)
 Received: from [192.168.10.47] ([151.95.101.29])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5ac63b59c86sm7201458a12.42.2024.07.30.04.38.18
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5b0044c72d4sm5211327a12.70.2024.07.30.04.52.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 04:38:19 -0700 (PDT)
-Message-ID: <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
-Date: Tue, 30 Jul 2024 13:38:18 +0200
+        Tue, 30 Jul 2024 04:52:17 -0700 (PDT)
+Message-ID: <419ea6ce-83ca-413e-936c-1935e2c51497@redhat.com>
+Date: Tue, 30 Jul 2024 13:52:15 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,8 +68,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 84/84] KVM: Don't grab reference on VM_MIXEDMAP pfns
- that have a "struct page"
+Subject: Re: [PATCH v12 00/84] KVM: Stop grabbing references to PFNMAP'd pages
 To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
  Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
  <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
@@ -86,7 +85,6 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
  David Stevens <stevensd@chromium.org>
 References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-85-seanjc@google.com>
 From: Paolo Bonzini <pbonzini@redhat.com>
 Autocrypt: addr=pbonzini@redhat.com; keydata=
  xsEhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
@@ -123,208 +121,46 @@ Autocrypt: addr=pbonzini@redhat.com; keydata=
  JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
  dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
  b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
-In-Reply-To: <20240726235234.228822-85-seanjc@google.com>
+In-Reply-To: <20240726235234.228822-1-seanjc@google.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 7/27/24 01:52, Sean Christopherson wrote:
-> Now that KVM no longer relies on an ugly heuristic to find its struct page
-> references, i.e. now that KVM can't get false positives on VM_MIXEDMAP
-> pfns, remove KVM's hack to elevate the refcount for pfns that happen to
-> have a valid struct page.  In addition to removing a long-standing wart
-> in KVM, this allows KVM to map non-refcounted struct page memory into the
-> guest, e.g. for exposing GPU TTM buffers to KVM guests.
+On 7/27/24 01:51, Sean Christopherson wrote:
+> arm64 folks, the first two patches are bug fixes, but I have very low
+> confidence that they are correct and/or desirable.  If they are more or
+> less correct, I can post them separately if that'd make life easier.  I
+> included them here to avoid conflicts, and because I'm pretty sure how
+> KVM deals with MTE tags vs. dirty logging will impact what APIs KVM needs
+> to provide to arch code.
+> 
+> On to the series...  The TL;DR is that I would like to get input on two
+> things:
+> 
+>   1. Marking folios dirty/accessed only on the intial stage-2 page fault
+>   2. The new APIs for faulting, prefetching, and doing "lookups" on pfns
 
-Feel free to leave it to me for later, but there are more cleanups that
-can be made, given how simple kvm_resolve_pfn() is now:
+Wow!
 
-> @@ -2814,35 +2768,10 @@ static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
->   	if (kfp->map_writable)
->   		*kfp->map_writable = writable;
->   
-> 	if (pte)
->   		pfn = pte_pfn(*pte);
-> 	else
->   		pfn = page_to_pfn(page);
->   
->   	*kfp->refcounted_page = page;
->   
+Splitting out prefetching makes a lot of sense, as it's the only one 
+with npages > 1 and it doesn't need all the complexity of hva_to_pfn().
 
-Something like (untested/uncompiled):
+I've left a comment on the lookup API, which is probably the only one 
+that can be simplified further.
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2758,32 +2758,12 @@ static inline int check_user_page_hwpois
-  	return rc == -EHWPOISON;
-  }
-  
--static kvm_pfn_t kvm_resolve_pfn(struct kvm_follow_pfn *kfp, struct page *page,
--				 pte_t *pte, bool writable)
--{
--	kvm_pfn_t pfn;
--
--	WARN_ON_ONCE(!!page == !!pte);
--
--	if (kfp->map_writable)
--		*kfp->map_writable = writable;
--
--	if (pte)
--		pfn = pte_pfn(*pte);
--	else
--		pfn = page_to_pfn(page);
--
--	*kfp->refcounted_page = page;
--
--	return pfn;
--}
--
-  /*
-   * The fast path to get the writable pfn which will be stored in @pfn,
-   * true indicates success, otherwise false is returned.  It's also the
-   * only part that runs if we can in atomic context.
-   */
--static bool hva_to_pfn_fast(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
-+static bool hva_to_page_fast(struct kvm_follow_pfn *kfp)
-  {
-  	struct page *page;
-  	bool r;
-@@ -2799,23 +2779,21 @@ static bool hva_to_pfn_fast(struct kvm_f
-  		return false;
-  
-  	if (kfp->pin)
--		r = pin_user_pages_fast(kfp->hva, 1, FOLL_WRITE, &page) == 1;
-+		r = pin_user_pages_fast(kfp->hva, 1, FOLL_WRITE, kfp->refcounted_page) == 1;
-  	else
--		r = get_user_page_fast_only(kfp->hva, FOLL_WRITE, &page);
-+		r = get_user_page_fast_only(kfp->hva, FOLL_WRITE, kfp->refcounted_page);
-  
--	if (r) {
--		*pfn = kvm_resolve_pfn(kfp, page, NULL, true);
--		return true;
--	}
-+	if (r)
-+		kfp->flags |= FOLL_WRITE;
-  
--	return false;
-+	return r;
-  }
-  
-  /*
-   * The slow path to get the pfn of the specified host virtual address,
-   * 1 indicates success, -errno is returned if error is detected.
-   */
--static int hva_to_pfn_slow(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
-+static int hva_to_page(struct kvm_follow_pfn *kfp)
-  {
-  	/*
-  	 * When a VCPU accesses a page that is not mapped into the secondary
-@@ -2829,34 +2807,32 @@ static int hva_to_pfn_slow(struct kvm_fo
-  	 * implicitly honor NUMA hinting faults and don't need this flag.
-  	 */
-  	unsigned int flags = FOLL_HWPOISON | FOLL_HONOR_NUMA_FAULT | kfp->flags;
--	struct page *page, *wpage;
-+	struct page *wpage;
-  	int npages;
-  
-+	if (hva_to_page_fast(kfp))
-+		return 1;
-+
-  	if (kfp->pin)
--		npages = pin_user_pages_unlocked(kfp->hva, 1, &page, flags);
-+		npages = pin_user_pages_unlocked(kfp->hva, 1, kfp->refcounted_page, flags);
-  	else
--		npages = get_user_pages_unlocked(kfp->hva, 1, &page, flags);
--	if (npages != 1)
--		return npages;
-+		npages = get_user_pages_unlocked(kfp->hva, 1, kfp->refcounted_page, flags);
-  
-  	/*
--	 * Pinning is mutually exclusive with opportunistically mapping a read
--	 * fault as writable, as KVM should never pin pages when mapping memory
--	 * into the guest (pinning is only for direct accesses from KVM).
-+	 * Map read fault as writable if possible; pinning is mutually exclusive
-+	 * with opportunistically mapping a read fault as writable, as KVM should
-+	 * should never pin pages when mapping memory into the guest (pinning is
-+	 * only for direct accesses from KVM).
-  	 */
--	if (WARN_ON_ONCE(kfp->map_writable && kfp->pin))
--		goto out;
--
--	/* map read fault as writable if possible */
--	if (!(flags & FOLL_WRITE) && kfp->map_writable &&
-+	if (npages == 1 &&
-+	    kfp->map_writable && !WARN_ON_ONCE(kfp->pin) &&
-+	    !(flags & FOLL_WRITE) &&
-  	    get_user_page_fast_only(kfp->hva, FOLL_WRITE, &wpage)) {
--		put_page(page);
--		page = wpage;
--		flags |= FOLL_WRITE;
-+		put_page(kfp->refcounted_page);
-+		kfp->refcounted_page = wpage;
-+		kfp->flags |= FOLL_WRITE;
-  	}
-  
--out:
--	*pfn = kvm_resolve_pfn(kfp, page, NULL, flags & FOLL_WRITE);
-  	return npages;
-  }
-  
-@@ -2915,7 +2891,9 @@ static int hva_to_pfn_remapped(struct vm
-  		goto out;
-  	}
-  
--	*p_pfn = kvm_resolve_pfn(kfp, NULL, &pte, pte_write(pte));
-+	if (kfp->map_writable)
-+		*kfp->map_writable = pte_write(pte);
-+	*p_pfn = pte_pfn(pte);
-  out:
-  	pte_unmap_unlock(ptep, ptl);
-  	return r;
-@@ -2932,12 +2910,13 @@ kvm_pfn_t hva_to_pfn(struct kvm_follow_p
-  	if (WARN_ON_ONCE(!kfp->refcounted_page))
-  		return KVM_PFN_ERR_FAULT;
-  
--	if (hva_to_pfn_fast(kfp, &pfn))
--		return pfn;
-+	npages = hva_to_page(kfp);
-+	if (npages == 1) {
-+		if (kfp->map_writable)
-+			*kfp->map_writable = kfp->flags & FOLL_WRITE;
-+		return page_to_pfn(kfp->refcounted_page);
-+	}
-  
--	npages = hva_to_pfn_slow(kfp, &pfn);
--	if (npages == 1)
--		return pfn;
-  	if (npages == -EINTR)
-  		return KVM_PFN_ERR_SIGPENDING;
-  
+The faulting API looks good as a first iteration.  Code-wise, 
+kvm_resolve_pfn() is probably unnecessary at the end of the series but I 
+can see why you had to restrain yourself and declare it done. :)
 
-
-Also, check_user_page_hwpoison() should not be needed anymore, probably
-not since commit 234b239bea39 ("kvm: Faults which trigger IO release the
-mmap_sem", 2014-09-24) removed get_user_pages_fast() from hva_to_pfn_slow().
-
-The only way that you could get a poisoned page without returning -EHWPOISON,
-is if FOLL_HWPOISON was not passed.  But even without these patches,
-the cases are:
-- npages == 0, then you must have FOLL_NOWAIT and you'd not use
-   check_user_page_hwpoison()
-- npages == 1 or npages == -EHWPOISON, all good
-- npages == -EAGAIN from mmap_read_lock_killable() - should handle that like -EINTR
-- everything else including -EFAULT can go downt the vma_lookup() path, because
-npages < 0 means we went through hva_to_pfn_slow() which uses FOLL_HWPOISON
-
-This means that you can simply have
-
-	if (npages == -EHWPOISON)
-		return KVM_PFN_ERR_HWPOISON;
-
-before the mmap_read_lock() line.  You may either sneak this at the beginning
-of the series or leave it for later.
+An interesting evolution of the API could be to pass a struct 
+kvm_follow_pfn pointer to {,__}kvm_faultin_pfn() and __gfn_to_page() 
+(the "constructors"); and on the other side to 
+kvm_release_faultin_page() and kvm_release_page_*().  The struct 
+kvm_follow_pfn could be embedded in the (x86) kvm_page_fault and 
+(generic) kvm_host_map structs.  But certainly not as part of this 
+already huge work.
 
 Paolo
 
