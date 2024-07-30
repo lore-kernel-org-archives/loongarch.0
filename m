@@ -1,261 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3D2194156
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 09:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B699196DA1
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 09:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722330347; cv=none; b=hZhkFXkyR18KvjOGYM5/82zOObQ4Cp0r0DpmALCNQIKppGZymb+gScSw+cnpEG+QGvpq0IELEx3V/sZFimh+4IQaXL6+cRIuTcgswJZ3MsAZ3z8TAfBFZ9b0mq+ZS6JVgxhDE43meV+Heuf9DaGstbu2lVewuA5TNJ4qmvlvuEQ=
+	t=1722331736; cv=none; b=iVpWdB3yS7hw8dG4MlD0Y1RHcAuWHM9h81J1dg8zJxUJvtxjnCTVV1VypS3N1WmOQFH4qCApx8PP5C4yuiu/R6J5c71MvJQii+E43WuKimPnID7sxGKyixh7qTrCSs3W/Fiil/eSHDKW6QszsKgbfTxQUIQWjxx2igzHrHN20Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722330347; c=relaxed/simple;
-	bh=AMADz3cAvKTXjxmizkMCUls5b/7+qLUiUKoat0OUU9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kJlojR3peYGEgkY5np6E7iMqG7wHK7duTTXYTAmiBx+1e/3oVUl90QLe7Uy/ErrfYgBN+A9i6RU8GwSn1IZ0SkdVnWrL7BLx4MMYpPqRaP87inVaeq2V2y9e77rowjdaP/MGb0dEddNbkjRLxODnjtyk3xm3bws+IznDAIoyEso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LF7byxQP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LF7byxQP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722330344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=y8G0Rsvl2ZfKQVim3WYEu/ULpMdQ5SB3TZr8FpmD1gs=;
-	b=LF7byxQPSh4tpVGk/8dOl4m1YawPMCp/IgX+IJvWLVgwmkeR0JVejiqQbF/nOxkQ/dpnzQ
-	/5cmEXty/6TPSiAM6A59cbhMdjYUbvAOIvD6Cf8lN8lr0KfeXA1TEHzZGAu6VdDCf3/wCg
-	l0TTxmfxW4xXmn9qmREzb8aPaOFCCsM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-75-eRJH3VszOCWfl-h4b1JoVA-1; Tue, 30 Jul 2024 05:05:39 -0400
-X-MC-Unique: eRJH3VszOCWfl-h4b1JoVA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a7bcaa94892so392822466b.0
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 02:05:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722330338; x=1722935138;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y8G0Rsvl2ZfKQVim3WYEu/ULpMdQ5SB3TZr8FpmD1gs=;
-        b=p8I24CY/vrrJetNMfyiAD12lR0PvM8RjAvL9IGncmKgBrK2DMmbiHBpFOuEKQr3l6A
-         /UKA6utzokfI4kb/2Ga5sZt68MyGqSyU9AYMJRmB/SoLV3yP1YXIfyhdUe1G6vC/d8wD
-         V4H2COON6c3Bl99PtCqXu9xgmIljKynTFjVLZvszP52JBSoVg8Jtpa+v76mbPy1PcNuo
-         7zZ2MuBL/v52C7xUB3WfapOigPZ4QWUnQK4+fukdQoBzEOCc4kJsXqgI+uMBcEFykNeA
-         Ha/IAaeM97MY93PjcODWBHP+NCYqV26Mmi1gPusyq9NharJNJT1kU3qVSCVLCXZ8SZFi
-         Qp6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXOVJKQ9exRmX6dbbw2o89YQg4U9hdfeMVb8/evO3svWFKrQDX7onT8bq/QEkBDCZX7mhzhYm2BamGD0+Q8/cA6jyHvZQy7vC8A
-X-Gm-Message-State: AOJu0Yyc3A8MdyByqD1WrE1wBtD9mOww+pnCtfLYIpWIwBd7YZPrdFSL
-	Eq6CWCGR34/FEs5/oFy1ScQd7uSNBxEW4LfWWhfL/e69MGsUxMblVePoKuBQCAjr8D9oiD4/gFa
-	lqcFnjfitQgYOxqZ/lHpj55OXlJXJsDX4TaE7TmH5urGDUo4t2psi2fOyhQ==
-X-Received: by 2002:a17:907:9803:b0:a6f:4f2c:1936 with SMTP id a640c23a62f3a-a7d4011446bmr605767566b.44.1722330338313;
-        Tue, 30 Jul 2024 02:05:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyHe4aJyS1Uxr4GJW4wjt2WBKjxS53+1D2JV4zXUtkqi7IDeNByS7dwef5YTgCXCGFtY96FA==
-X-Received: by 2002:a17:907:9803:b0:a6f:4f2c:1936 with SMTP id a640c23a62f3a-a7d4011446bmr605763366b.44.1722330337702;
-        Tue, 30 Jul 2024 02:05:37 -0700 (PDT)
-Received: from [192.168.10.47] ([151.95.101.29])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a7acab23157sm617304466b.33.2024.07.30.02.05.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 02:05:37 -0700 (PDT)
-Message-ID: <2da6b57e-d5c2-4016-b89b-d51700eeb845@redhat.com>
-Date: Tue, 30 Jul 2024 11:05:35 +0200
+	s=arc-20240116; t=1722331736; c=relaxed/simple;
+	bh=jJ30hZ+t26XjjD5MEcchEPJQEVCFRjcLsT+FDXAQC0w=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sDGGjdNY7G47e9c45leQ11OmGiHKl1xFhopxJK/+xnbPw+oE27wKi67ri6NFqMgT6PgwIJNmORLns7Yps3JR/800Hqd+Ouj7S/zDZtTfD8A5UXiWgMmbFjM6lijOSutti3dvx9r1N4Ro5mpY3phaIFrDlg46CY9yF+0zp2nHqFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxvOpTsqhmBGEEAA--.15304S3;
+	Tue, 30 Jul 2024 17:28:51 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMCxPsdQsqhmQVYGAA--.31918S3;
+	Tue, 30 Jul 2024 17:28:49 +0800 (CST)
+Subject: Re: [PATCH 1/2] objtool/LoongArch: Restrict stack operation
+ instruction
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
+ <20240730061901.21485-2-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
+Date: Tue, 30 Jul 2024 17:28:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 45/84] KVM: guest_memfd: Provide "struct page" as
- output from kvm_gmem_get_pfn()
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
- David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-46-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20240726235234.228822-46-seanjc@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20240730061901.21485-2-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxPsdQsqhmQVYGAA--.31918S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr13Cr1fZr4DXw1kWr4kAFc_yoW5Xw1Upr
+	Zru3ZrGFWUWr97uw10qayUWrZ8Grs3XryFgFyftF13Cr13Xrn7Xr1Ig3WjkF1vqws3K3y0
+	grWfZF9rJF4qvagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-On 7/27/24 01:51, Sean Christopherson wrote:
-> Provide the "struct page" associated with a guest_memfd pfn as an output
-> from __kvm_gmem_get_pfn() so that KVM guest page fault handlers can
-        ^^^^^^^^^^^^^^^^^^^^
+On 2024-07-30 14:19, Tiezhu Yang wrote:
 
-Just "kvm_gmem_get_pfn()".
-
-> directly put the page instead of having to rely on
-> kvm_pfn_to_refcounted_page().
-
-This will conflict with my series, where I'm introducing
-folio_file_pfn() and using it here:
-> -	page = folio_file_page(folio, index);
-> +	*page = folio_file_page(folio, index);
->   
-> -	*pfn = page_to_pfn(page);
-> +	*pfn = page_to_pfn(*page);
->   	if (max_order)
->   		*max_order = 0;
-
-That said, I think it's better to turn kvm_gmem_get_pfn() into
-kvm_gmem_get_page() here, and pull the page_to_pfn() or page_to_phys()
-to the caller as applicable.  This highlights that the caller always
-gets a refcounted page with guest_memfd.
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 901be9e420a4..bcc4a4c594ef 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4348,13 +4348,14 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
-  		return -EFAULT;
-  	}
-  
--	r = kvm_gmem_get_pfn(vcpu->kvm, fault->slot, fault->gfn, &fault->pfn,
-+	r = kvm_gmem_get_page(vcpu->kvm, fault->slot, fault->gfn, &fault->refcounted_page,
-  			     &max_order);
-  	if (r) {
-  		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-  		return r;
-  	}
-  
-+	fault->pfn = page_to_pfn(page);
-  	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
-  	fault->max_level = kvm_max_private_mapping_level(vcpu->kvm, fault->pfn,
-  							 fault->max_level, max_order);
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index a16c873b3232..db4181d11f2e 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3847,7 +3847,7 @@ static int __sev_snp_update_protected_guest_state(struct kvm_vcpu *vcpu)
-  	if (VALID_PAGE(svm->sev_es.snp_vmsa_gpa)) {
-  		gfn_t gfn = gpa_to_gfn(svm->sev_es.snp_vmsa_gpa);
-  		struct kvm_memory_slot *slot;
--		kvm_pfn_t pfn;
-+		struct page *page;
-  
-  		slot = gfn_to_memslot(vcpu->kvm, gfn);
-  		if (!slot)
-@@ -3857,7 +3857,7 @@ static int __sev_snp_update_protected_guest_state(struct kvm_vcpu *vcpu)
-  		 * The new VMSA will be private memory guest memory, so
-  		 * retrieve the PFN from the gmem backend.
-  		 */
--		if (kvm_gmem_get_pfn(vcpu->kvm, slot, gfn, &pfn, NULL))
-+		if (kvm_gmem_get_page(vcpu->kvm, slot, gfn, &page, NULL))
-  			return -EINVAL;
-  
-  		/*
-@@ -3873,7 +3873,7 @@ static int __sev_snp_update_protected_guest_state(struct kvm_vcpu *vcpu)
-  		svm->sev_es.snp_has_guest_vmsa = true;
-  
-  		/* Use the new VMSA */
--		svm->vmcb->control.vmsa_pa = pfn_to_hpa(pfn);
-+		svm->vmcb->control.vmsa_pa = page_to_phys(page);
-  
-  		/* Mark the vCPU as runnable */
-  		vcpu->arch.pv.pv_unhalted = false;
-@@ -3886,7 +3886,7 @@ static int __sev_snp_update_protected_guest_state(struct kvm_vcpu *vcpu)
-  		 * changes then care should be taken to ensure
-  		 * svm->sev_es.vmsa is pinned through some other means.
-  		 */
--		kvm_release_pfn_clean(pfn);
-+		kvm_release_page_clean(page);
-  	}
-  
-  	/*
-@@ -4687,6 +4687,7 @@ void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code)
-  	struct kvm *kvm = vcpu->kvm;
-  	int order, rmp_level, ret;
-  	bool assigned;
-+	struct page *page;
-  	kvm_pfn_t pfn;
-  	gfn_t gfn;
-  
-@@ -4712,13 +4713,14 @@ void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code)
-  		return;
-  	}
-  
--	ret = kvm_gmem_get_pfn(kvm, slot, gfn, &pfn, &order);
-+	ret = kvm_gmem_get_page(kvm, slot, gfn, &page, &order);
-  	if (ret) {
-  		pr_warn_ratelimited("SEV: Unexpected RMP fault, no backing page for private GPA 0x%llx\n",
-  				    gpa);
-  		return;
-  	}
-  
-+	pfn = page_to_pfn(page);
-  	ret = snp_lookup_rmpentry(pfn, &assigned, &rmp_level);
-  	if (ret || !assigned) {
-  		pr_warn_ratelimited("SEV: Unexpected RMP fault, no assigned RMP entry found for GPA 0x%llx PFN 0x%llx error %d\n",
-@@ -4770,7 +4772,7 @@ void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code)
-  out:
-  	trace_kvm_rmp_fault(vcpu, gpa, pfn, error_code, rmp_level, ret);
-  out_no_trace:
--	put_page(pfn_to_page(pfn));
-+	kvm_release_page_unused(page);
-  }
-  
-  static bool is_pfn_range_shared(kvm_pfn_t start, kvm_pfn_t end)
+> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
+> support"), the code flow of do_syscall() was changed when compiled
+> with GCC due to the secondary stack of add_random_kstack_offset(),
+> something like this:
+>
+>    addi.d          $sp, $sp, -32
+>    st.d            $fp, $sp, 16
+>    st.d            $ra, $sp, 24
+>    addi.d          $fp, $sp, 32
+>    ...
+>    sub.d           $sp, $sp, $t1
+Have you checked the ORC info whether is right or tried backtrace which
+passed do_syscall? The "sub.d $sp, $sp, $t1" has modified the $sp so the
+$sp cannot express CFA here. This patch just clear the warning but ignore
+the validity of ORC info. The wrong ORC info may cause illegally access
+memory when backtrace.
 
 
-And the change in virt/kvm/guest_memfd.c then is just as trivial, apart
-from all the renaming:
-
--	*pfn = folio_file_pfn(folio, index);
-+	*page = folio_file_page(folio, index);
-
-
-Paolo
+Thanks,
+Jinyang
+>    ...
+>    addi.d          $sp, $fp, -32
+>    ld.d            $ra, $sp, 24
+>    ld.d            $fp, $sp, 16
+>    addi.d          $sp, $sp, 32
+>
+> fp points to the stack top, it is only used to save and restore the
+> original sp and is not used as cfa base for arch_callee_saved_reg().
+> In the case OP_SRC_ADD of update_cfi_state(), the above rare case is
+> not handled so that lead to a wrong stack size, then there exists a
+> objtool warning "do_syscall+0x11c: return with modified stack frame".
+>
+> Because the fp related instructions do not modify the stack frame,
+> no need to decode them, just restrict stack operation instruction
+> only with the single case "addi.d sp,sp,si12".
+>
+> By the way, if fp is used as cfa base for arch_callee_saved_reg()
+> (there is no this behavior on LoongArch at present), then it needs
+> to decode the related instructions and modify update_cfi_state().
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202407201336.mW8dj1VB-lkp@intel.com/
+> Fixes: b2d23158e6c8 ("objtool/LoongArch: Implement instruction decoder")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   tools/objtool/arch/loongarch/decode.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+> index aee479d2191c..6a34af675cee 100644
+> --- a/tools/objtool/arch/loongarch/decode.c
+> +++ b/tools/objtool/arch/loongarch/decode.c
+> @@ -121,8 +121,8 @@ static bool decode_insn_reg2i12_fomat(union loongarch_instruction inst,
+>   {
+>   	switch (inst.reg2i12_format.opcode) {
+>   	case addid_op:
+> -		if ((inst.reg2i12_format.rd == CFI_SP) || (inst.reg2i12_format.rj == CFI_SP)) {
+> -			/* addi.d sp,sp,si12 or addi.d fp,sp,si12 */
+> +		if ((inst.reg2i12_format.rd == CFI_SP) && (inst.reg2i12_format.rj == CFI_SP)) {
+> +			/* addi.d sp,sp,si12 */
+>   			insn->immediate = sign_extend64(inst.reg2i12_format.immediate, 11);
+>   			ADD_OP(op) {
+>   				op->src.type = OP_SRC_ADD;
 
