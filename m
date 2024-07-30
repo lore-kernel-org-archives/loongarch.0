@@ -1,113 +1,113 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF65D12EBCE
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 10:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C7F19D8A6
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 11:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722337075; cv=none; b=Cq7VKsBa3MiIyM7AffNa1Qcm7hIDDJXB0qnR15SmldAMVBgQ3IumtTNkEH4QWB+HyGwWmzHY+nFSDvSOoHQswmr7y84oDZT2MoL16G4X61MwhpDx8GSriNcxpEAvH3t5ETpxqxy6+azwt5gfP+wZ70tyP/YVe49nr73jROf9zdA=
+	t=1722338969; cv=none; b=S9LY8JvbIAu4KwM2HNe2lDAgSFrjyPGkQtgWJis+qNOYDFMNJWCZkEWCpoo9iWs9KtiQ2GRHRI0uEe+7ZreifnoYG/RxMhhM5bZUxBU6iy9RJptOVdlo9mFX5sMBkJLhTIM9INW1FsKC7IxOLA8TkUOP09dm2CjHTEZAmJR4W/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722337075; c=relaxed/simple;
-	bh=fDp1d/mg0Zzqb9iZx2iJYS7OWCBh7c2Kr/tOqv+/pqE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S2xBYEQYif/Nwr4FoR3eCGfGEsbHVsGKo+E+cBqyR/dXjRCtOtL5maN16T1igi9g7f+KebHRAakUmZytXkn0n9pCUl/wkCC9cT9aLlWXw/vkX1bdP+5JMuOhClMm2Pnu3rWp0S2nZAW8FpZJVZGjfKLyUc+Gw6IbxPElJzyChzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Bx7eoux6hml2wEAA--.15469S3;
-	Tue, 30 Jul 2024 18:57:50 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowMAxX8csx6hm5XMGAA--.32005S3;
-	Tue, 30 Jul 2024 18:57:50 +0800 (CST)
-Subject: Re: [PATCH 1/2] objtool/LoongArch: Restrict stack operation
- instruction
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
- <20240730061901.21485-2-yangtiezhu@loongson.cn>
- <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
- <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <ca433beb-e3cd-8036-cc05-5f4cc1a735fa@loongson.cn>
-Date: Tue, 30 Jul 2024 18:57:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1722338969; c=relaxed/simple;
+	bh=aIydPvqJA2em2PQ8rQgyo2FGOfcmh0a+5O18l211/5U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T5Vz/og/GuqUu3WbUL8MEUOg9y0wgpJqBsx/y/bTJyOk2WIMdbRTHbdx3O4HOdt4fF4W0WBidKVbDPM7On7z3V++q8B+HVha3Je0o8fOJWwlyLow2N5Rs0Rj5UjU6a8K0cuXYD7zr1MBDvSmQqpl73KSOq6m1LBdx1SkWrzMC4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j0hyiaym; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dESyCu4j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j0hyiaym";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dESyCu4j"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1722338966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qTD/R6R0srsJVGCxFPEOiXeBb576WkIuMblUhuZTAbo=;
+	b=j0hyiaymqL2DdUjfhT3Vq0LnIl2oArFS1FLzP578NQGGFzOiqLlMNqsbt6rjN+Ts1NYhMX
+	hTteEza9ncc0tIAiPLacR2x7rVilXwngsw2He58eFrf9wBJ39c+6yug3MzcP+pBKrT5K8V
+	dNDh3x744TmfA9gCPjtwNFdoVemdimoMw0DeiWxc2JKwjPqVks3o4cnO/bzBZJzVpAO7gi
+	11S/6xt/4D+26Oo0QfMFCiXmNu31a8mGJ9DPSoDO/BMaFJLY/aqebsnZCXL7PmX4jV6L/v
+	CAWjBF/O+iq757EStkCoBbkbHX4HMSiD3xH4APxcwicPBwK9U+GhEDY6WnLokA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1722338966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qTD/R6R0srsJVGCxFPEOiXeBb576WkIuMblUhuZTAbo=;
+	b=dESyCu4j7dkif/Co9M2x5fkynoy1U9lTlSvznKsKHWhLCxufiHK9LkvWqpoVaTLzn6CBKV
+	B1HHfPLKWXVrvyBg==
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
+ alexs@kernel.org, siyanteng@loongson.cn, kernel@xen0n.name,
+ jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com,
+ akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn,
+ xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org,
+ yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen
+ <chenhuacai@loongson.cn>
+Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
+In-Reply-To: <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
+References: <20240726102443.12471-1-zhangtianyang@loongson.cn>
+ <87o76kuqza.ffs@tglx>
+ <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
+Date: Tue, 30 Jul 2024 13:29:26 +0200
+Message-ID: <87r0bb6ru1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMAxX8csx6hm5XMGAA--.32005S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF17Cr45Jr13uw17GF45Jwc_yoW8Kw18pF
-	97J3Z8JFWkG34IkrnFqF1DWa4qyrW7Xw1UGr15ta4Fyrs8AF12gr4rXFW29FnxXrs3Jw1j
-	krWfZrWxuFyqqFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xu
-	ctUUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Huacai!
 
-On 2024-07-30 17:49, Tiezhu Yang wrote:
-> On 07/30/2024 05:28 PM, Jinyang He wrote:
->> On 2024-07-30 14:19, Tiezhu Yang wrote:
+On Tue, Jul 30 2024 at 16:51, Huacai Chen wrote:
+> On Fri, Jul 26, 2024 at 11:12=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+>> > +     while (true) {
+>> > +             vector =3D csr_read64(LOONGARCH_CSR_IRR);
+>> > +             if (vector & IRR_INVALID_MASK)
+>> > +                     break;
+>> > +
+>> > +             vector &=3D IRR_VECTOR_MASK;
+>> > +
+>> > +             d =3D this_cpu_read(irq_map[vector]);
+>> > +             if (d)
+>> > +                     generic_handle_irq_desc(d);
+>> > +             else {
 >>
->>> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
->>> support"), the code flow of do_syscall() was changed when compiled
->>> with GCC due to the secondary stack of add_random_kstack_offset(),
->>> something like this:
->>>
->>>    addi.d          $sp, $sp, -32
->>>    st.d            $fp, $sp, 16
->>>    st.d            $ra, $sp, 24
->>>    addi.d          $fp, $sp, 32
->>>    ...
->>>    sub.d           $sp, $sp, $t1
->> Have you checked the ORC info whether is right or tried backtrace which
->> passed do_syscall? The "sub.d $sp, $sp, $t1" has modified the $sp so the
->> $sp cannot express CFA here. This patch just clear the warning but 
->> ignore
->> the validity of ORC info. The wrong ORC info may cause illegally access
->> memory when backtrace.
->
-> I did testing many times before submitting, the call trace is
-> expected when testing "echo l > /proc/sysrq-trigger".
-Make sure the RANDOMIZE_KSTACK_OFFSET is enable. I tested it by
-CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y on qemu and it did
-not show the frame about handle_syscall.
+>> See bracket rules.
+> Do you mean even if there is only one statement in the if condition,
+> we still need to do like this?
+> if (xxx) {
+>     yyy;
+> } else {
+>     zzz;
+> }
 
-On the other hand,
-$ ./tools/objtool/objtool --dump arch/loongarch/kernel/syscall.o
-.noinstr.text+0:type:call sp:sp +   0 fp: (und)  ra: (und)  signal:0
-.noinstr.text+4:type:call sp:sp +  32 fp: (und)  ra: (und)  signal:0
-.noinstr.text+8:type:call sp:sp +  32 fp:prevsp + -16 ra: (und) signal:0
-.noinstr.text+c:type:call sp:sp +  32 fp:prevsp + -16 ra:prevsp + -8 
-signal:0
-.noinstr.text+e4:type:call sp:sp +  32 fp:prevsp + -16 ra: (und) signal:0
-.noinstr.text+e8:type:call sp:sp +  32 fp: (und)  ra: (und) signal:0
-.noinstr.text+ec:type:call sp:sp +   0 fp: (und)  ra: (und) signal:0
-.noinstr.text+f0:type:? sp: (und)  fp: (und)  ra: (und)  signal:0
-.noinstr.text+100:type:call sp:sp +  32 fp:prevsp + -16 ra:prevsp + -8 
-signal:0
-.noinstr.text+118:type:? sp: (und)  fp: (und)  ra: (und)  signal:0
-$ objdump -d arch/loongarch/kernel/syscall.o | grep "sub.*sp.*sp"
-   70:    0011b463     sub.d           $sp, $sp, $t1
-Obviously the ORC info is wrong.
-(Assume the backtrace PC is 0x74, how to find the previous frame?)
+Yes. It's documented.
 
+>> > +     msi_domain =3D pci_msi_create_irq_domain(pch_msi_handle[0],
+>> > +                                            &pch_msi_domain_info_v2, =
+parent);
+>>
+>> Please don't do that. Convert this to use per device MSI domains.
+> OK, thanks. But it is better to split the conversion to another patch
+> (so we can convert both V1 and V2).
+
+Why adding it first?
+
+This can be done per interrupt chip. See the conversion series for
+ARM[64]:
+
+    https://lore.kernel.org/r/20240623142137.448898081@linutronix.de
+
+Thanks,
+
+        tglx
