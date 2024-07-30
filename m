@@ -1,67 +1,67 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBF718B47D
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 20:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341CF18DF7A
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 20:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722369653; cv=none; b=KK/bQFW5IrTBZXsgZ7MvaWEg01sITYzziCcMIPHwYtY2a0/mZJlfYZUbo0QKRYPvKIU2MNRMeJguWzZAUoPs5C7A6rvi0iSOUCd15hfLln8O7sfgmptq/EMXDisjhnYeTDEDwY1Rhqu9Wt1oC/VHNHVnbr1/WloK3eDCoY8uSEQ=
+	t=1722370504; cv=none; b=i5G5G8MUJnSBoooBo4enQp3IDH/qvS51kQCc8dlhQt5t7iE9caxjcdH9Xby3KY53OzInjve4CMew+DI6rwNdIlwNz4j195vqI/tbopjawCEyfqG0ipDsC7TWQeHUfc/A0NLMgk0pXrns2m9t1yJNX3AnJTmHusVi2XkaGZkxn3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722369653; c=relaxed/simple;
-	bh=Sm9YliIBseVNdVtXfF6wU54oboHpFF3iBhE8X9in9r4=;
+	s=arc-20240116; t=1722370504; c=relaxed/simple;
+	bh=Xb56Rjm9GNT0X5C07vjpbr8J+7v+LjPM+oZnEZ2ZEvY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qdNyCsWP5ly2tJkQ7tA96p1IeXRH7ZR3ld1VXsDF8erMphf+l6clzVh9fieHi2pb27CyOhktAI6MDjh1a1Zil5D7U18xNoNnvR7iLiPWoOJLN8eOytFo+OsmzGm/n2pczwmUGUBmqi2oeJNBMrg3AR+xqdK9xxZ7n933ZX9M7yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0sltv6oH; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=tQ0bho7Q3qCFhs8vTqAEeU44veu++koYBh+RLtzPQYZL/yWwyyEUOxsvzL614BSitQ7fiHZdApUUcgmZSAy+ObWYFdUJDibEK6O5DuKkI41aU6wELowEeDngv6qVZFsaegN9AutbtWiRfJgWUUE/AyRrAbGHwhhccSxy6GXfG70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0wGCuw1p; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0sltv6oH"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-79d95667cfaso5086161a12.2
-        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 13:00:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0wGCuw1p"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1fc51ea72abso42455035ad.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 13:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722369651; x=1722974451; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1722370502; x=1722975302; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T1b0dd+u4QtRKmjCQ1fWaclUboiBOp5PBFZF+RqiWy8=;
-        b=0sltv6oHYHMWo7rkTv5Lz15aFfq8MT7UoLW6U1cZHIqnUPBtE2S7j1SoLqYR3CaWyF
-         uKrY93gl3C6ButQKGcYK2mSvMmHIcPwfGEagGQ1NUwNFLyO8ooIkD91IfeHgoryuKs3F
-         RRBUyZLT7nC0H6s5jarsGigvi2nsXAC6bADxJoOAfX3E+YQFjLg2u0jAmS5I1st18AjY
-         w7wVyO/uMLVG+9gEim1erLnahKErDY1stYX/tfSNk/t8sxom0yJ8Hd2HtSwiJMtbTYcR
-         Ik0le5q90MPUAnPQ1oNFBhdgmqkMklXsSM4E/5CkuF+t78FytvrxNO2A73l+XvcuY2GJ
-         4Rpg==
+        bh=C8yo2cbMxRjf1SYFGiWaoP3WEwWP/CuFq0W0aGvMAlc=;
+        b=0wGCuw1pbQXN7wWO26SSSHj3M3d46PTE6rXmKmePkT+Dqi9jPczInw+6S4J/zpDhRz
+         UHQZyyo+eOFZLNMcPY5F/e3QbjYOiTisjGC1WC0RIP4wMhlq9nkEvcjfqKOLOLW2uq1I
+         wJSoc7fpogC/VF5ENI0t3yDKzY4A+d7b7jFoPKKpO3atIpLOnjWKduL6cuXEKpBcLe5O
+         /T3fhk7qHOEwBLjtM6W5BwMse89Os7Omy5ZsflWEk9QT1zXgvZxftCRfz8mfsP8G2vs+
+         4vMXedK+OsCKfhBkrH+fDy5xWMWdJbV3SMR1ACssxvxRLe2UPEs7Qk9RoXBAROdFGBtX
+         sCdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722369651; x=1722974451;
+        d=1e100.net; s=20230601; t=1722370502; x=1722975302;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T1b0dd+u4QtRKmjCQ1fWaclUboiBOp5PBFZF+RqiWy8=;
-        b=FmCJfmmx0Ny/AFa6NCQ3eMNaeJTO57f7MXDmZPE1ccBqIgtoQLHg6Au06wEYBNuIM3
-         ALwE2jX2rGKkz73OsQGzXpnJw1+lK+2g2wbsSKSz49RHyh8yJ+Ud3gPe3GAKq64W3NAy
-         3VzSY6UEvCbUI4GpWE0GkKndtjViPOme2chueaVPiJYBADy6rgab2uIy3l5rQh++eGCc
-         pxHBA5VFQZy3TVDkRGQbxgFfh2rCuxs73eyiaJ7Pc/M6/eZdAJjQhvMNDRrugEaXyT2x
-         YXmgPtLdq47BKHXBXGdLf20brnw6L9WSJEX0A3LL37bUhrtLrDBL8nkS33Wats2Fiwjt
-         6Wmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWPKq5UjqK3g9g5useFvhL70fEG89mNcY+z2Bl/9Qnl9wVs9CnHGhp15v/qhqFQuxQ17+iHSbXZebX1n2I0iAZ14bgpnT5hraH
-X-Gm-Message-State: AOJu0YxH9WHhNbBTu/4lrrbE2tx3VnAJzn0BdPEKY8U1bJqvHc1ArjC6
-	wT+O8VFe52738bQvJIx1YGK9MK44+ezQy9JDfXaIWESqrTH1oJlW1YDLjyvVC7nT0SLzZZ91jNs
-	s+w==
-X-Google-Smtp-Source: AGHT+IFIpN0t9CwDntyaqKmkPJ5cyx3sfG1IwNUw2ka0n2i9gazwPDbMR7YOpYtas1d8Mj8EPxP4qtxT2wA=
+        bh=C8yo2cbMxRjf1SYFGiWaoP3WEwWP/CuFq0W0aGvMAlc=;
+        b=aEma9G+mbb1QcMXdfnVECDaz4ZA1cdrynwQGeBbXgQx+9ZL+BMGvD2IQh/MVhHLavU
+         aKvA1FM7qjwxM8zvUT6dgbLx/zvcjzSnyD8Hku4UAeBpnNDlVecDFwGfZvdr4zd9jp0r
+         3Mnjk8DR6UE4haBnLxhW1mcpCv52HfM/n8nJVSlPNRZ33WMky8FpAto1iyoyCeL/775w
+         6KKPiSqtFZ38fb0/ZllyM+B8k56Fm9Q6lo+n6fRCHiMd1QdqSNpDYRAsiPO9m9QtSowJ
+         T/fjfmsjIHFN6v7WcnRmIAflkBumQvdzwWCDhCnEMXu5kmvCYZ26hU00gvclZfaZs8Cz
+         p7mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWu70WFiKghBx8X0e/8HcZZI5DFPobGZh8e2S4CZRSFUSdBa3gGEc6Vo1Cp/XcWlom+e2s7FRfYF5kWc0fGEUFCaj+S2EvhJLy
+X-Gm-Message-State: AOJu0Yz9LyGkGdWJIMJ46xFR9hG58/24Ld2lODV4YZvp+EndwKN5ujlh
+	z9L8Qo7yru3PmL5IlxmiUJLDxnivgZmVRPDzwkM9FXIEXzyeIaNXXNa9aRjmmJn8xi2SUH6wOrw
+	jXA==
+X-Google-Smtp-Source: AGHT+IH9iITYoLB/ZN9Oi4VKGOQu9lhx7HYkDR9WKhrc/jsriwfmp+7ZOuZAysZ686xisdvdjIEEvamlnSs=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:5a3:b0:6bc:b210:c1dd with SMTP id
- 41be03b00d2f7-7ac8fd2ec71mr34114a12.8.1722369651264; Tue, 30 Jul 2024
- 13:00:51 -0700 (PDT)
-Date: Tue, 30 Jul 2024 13:00:49 -0700
-In-Reply-To: <2da6b57e-d5c2-4016-b89b-d51700eeb845@redhat.com>
+ (user=seanjc job=sendgmr) by 2002:a17:902:ea01:b0:1fb:54d9:ebb3 with SMTP id
+ d9443c01a7336-1ff04828eb3mr5974125ad.6.1722370502109; Tue, 30 Jul 2024
+ 13:15:02 -0700 (PDT)
+Date: Tue, 30 Jul 2024 13:15:00 -0700
+In-Reply-To: <63c41e25-2523-4397-96b4-557394281443@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-46-seanjc@google.com>
- <2da6b57e-d5c2-4016-b89b-d51700eeb845@redhat.com>
-Message-ID: <ZqlGcaESdxw5vzl8@google.com>
-Subject: Re: [PATCH v12 45/84] KVM: guest_memfd: Provide "struct page" as
- output from kvm_gmem_get_pfn()
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-35-seanjc@google.com>
+ <63c41e25-2523-4397-96b4-557394281443@redhat.com>
+Message-ID: <ZqlJxJyOdsR206Zc@google.com>
+Subject: Re: [PATCH v12 34/84] KVM: Add a helper to lookup a pfn without
+ grabbing a reference
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
@@ -80,43 +80,23 @@ Content-Type: text/plain; charset="us-ascii"
 
 On Tue, Jul 30, 2024, Paolo Bonzini wrote:
 > On 7/27/24 01:51, Sean Christopherson wrote:
-> > Provide the "struct page" associated with a guest_memfd pfn as an output
-> > from __kvm_gmem_get_pfn() so that KVM guest page fault handlers can
->        ^^^^^^^^^^^^^^^^^^^^
+> > Add a kvm_follow_pfn() wrapper, kvm_lookup_pfn(), to allow looking up a
+> > gfn=>pfn mapping without the caller getting a reference to any underlying
+> > page.  The API will be used in flows that want to know if a gfn points at
+> > a valid pfn, but don't actually need to do anything with the pfn.
 > 
-> Just "kvm_gmem_get_pfn()".
-> 
-> > directly put the page instead of having to rely on
-> > kvm_pfn_to_refcounted_page().
-> 
-> This will conflict with my series, where I'm introducing
-> folio_file_pfn() and using it here:
-> > -	page = folio_file_page(folio, index);
-> > +	*page = folio_file_page(folio, index);
-> > -	*pfn = page_to_pfn(page);
-> > +	*pfn = page_to_pfn(*page);
-> >   	if (max_order)
-> >   		*max_order = 0;
-> 
-> That said, I think it's better to turn kvm_gmem_get_pfn() into
-> kvm_gmem_get_page() here, and pull the page_to_pfn() or page_to_phys()
-> to the caller as applicable.  This highlights that the caller always
-> gets a refcounted page with guest_memfd.
+> Can you rename the function kvm_gfn_has_pfn(), or kvm_gfn_can_be_mapped(),
+> and make it return a bool?
 
-I have mixed feelings on this.
+Heh, sure.  I initially planned on having it return a bool, but I couldn't figure
+out a name, mainly because the kernel's pfn_valid() makes things like
+kvm_gfn_has_valid_pfn() confusing/misleading :-(
 
-On one hand, it's silly/confusing to return a pfn+page pair and thus imply that
-guest_memfd can return a pfn without a page.
+> (As an aside, I wonder if reexecute_instruction() could just use
+> kvm_is_error_hva(kvm_vcpu_gfn_to_hva(vcpu, gpa_to_gfn(gpa)) instead of going
+> all the way to a pfn.  But it's ok to be more restrictive).
 
-On the other hand, if guest_memfd does ever serve pfns without a struct page,
-it could be quite painful to unwind all of the arch arch code we'll accrue that
-assumes guest_memfd only ever returns a refcounted page (as evidenced by this
-series).
-
-The probability of guest_memfd not having struct page for mapped pfns is likely
-very low, but at the same time, providing a pfn+page pair doesn't cost us much.
-And if it turns out that not having struct page is nonsensical, deferring the
-kvm_gmem_get_pfn() => kvm_gmem_get_page() conversion could be annoying, but highly
-unlikely to be painful since it should be 100% mechanical.  Whereas reverting back
-to kvm_gmem_get_pfn() if we make the wrong decision now could mean doing surgery
-on a pile of arch code.
+Heh #2, I wondered the same thing.  I think it would work?  Verifying that there's
+a usable pfn also protects against retrying an access that hit -EHWPOISON, but I'm
+prety sure that would require a rare race, and I don't think it could result in
+the guest being put into an infinite loop.
