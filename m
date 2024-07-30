@@ -1,88 +1,193 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02A191946DA
-	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 09:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722332959; cv=none; b=byephQR0JhwreasRAtSX/h4/V/xeKBxEBzr02jFMn4CEQGI4ChZKOfpQnrpamG6eb5sG2za3HEVIq6ueNpxm91/sMbfxth30WcMxUnTlHsAwkM6SnXyOHl64TqW75QETX/YijVlTStcKM80Jh0Zm1u/AeKumGyytG0+kDoPpbJU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722332959; c=relaxed/simple;
-	bh=IhpWm4gfNHBkjcBIwsHm1lQ2cCRzEXfGacHjhRjPNFg=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=a1UaUnU9Tns/E04j4BnW7P/GVXU+dRA/hA9l3I/WLtPGynm/pxGlS4q2RHdPagD0pwH5g4E1YGrBnObJJCN0BAUnmIaPSFrETdGLp42Sf3zmFvOKuJ34+fDOWK99daFX2ABnf9bZmIjpzN5Cqk0m66OABZpMdGLu7NBU/3hdEHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxuOkbt6hm02MEAA--.15502S3;
-	Tue, 30 Jul 2024 17:49:15 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxf8cat6hmnV0GAA--.31800S3;
-	Tue, 30 Jul 2024 17:49:15 +0800 (CST)
-Subject: Re: [PATCH 1/2] objtool/LoongArch: Restrict stack operation
- instruction
-To: Jinyang He <hejinyang@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-References: <20240730061901.21485-1-yangtiezhu@loongson.cn>
- <20240730061901.21485-2-yangtiezhu@loongson.cn>
- <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <6ee45e77-eb22-c4ac-ee47-6a329236eeb7@loongson.cn>
-Date: Tue, 30 Jul 2024 17:49:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from GBR01-CWX-obe.outbound.protection.outlook.com (mail-cwxgbr01on2090.outbound.protection.outlook.com [40.107.121.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB06208DA
+	for <loongarch@lists.linux.dev>; Tue, 30 Jul 2024 10:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.121.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722334896; cv=fail; b=pIlP0Z3owcqT8ze44VNL2V5FvFwueNxR0okOjqYhefcDoq9WnFzW1KeKGvIMrFiKAOUvQyOJ08EBFWyLmj/i2V0uTQGvCmuy+4WIq3ZzUg2826+0pGqLdopgME4SHPKDm2wk8POe4uE6w7D2vdPgqNoRq76t80oFc99/r2MigEY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722334896; c=relaxed/simple;
+	bh=DRBX85TKORC6ogGB9Xdfymm5GWtJCaf6cp+bzF5BvNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Isujvy1uZ6KenLZfBgHXewDiECe64CCvcuQ2nDINkHgnDMwOTd2T9TfiHlsBq8sI+VjWXeDF8I3UmkRw2f5lZrL/VULTh3Sa6ghbBN2ehn5xB5hbpLcWrZuhvszJ84a06950XyJTVkXZ/kR7QMVXbA+qbYRlWYkBTWU3K1FmFBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=RJlGkIxR; arc=fail smtp.client-ip=40.107.121.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="RJlGkIxR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H15IKT4X4gpjBH0ZtjQEraW+3QLG1g5joOzVUjQq9Sm64V+ypIwqyqIdrp3wmnoJh1gaK0U11KkxTGLeT8SlEMA7axaUHl8wm4AHyJVraHVSQYCSSHrRWCcilAVK0dGI3a+ET7FqBREvFtVlLevxsdtUsqNkBA7yE4j2oiU7eEGalicy4EfwniCJpbIaoMBzlo3E5N+MpRMnlkUuBi/z/cHo/onGHi3BLmNShZ+O52pHSwrg9koN0VVacHG3iXa6/LvXzSugwDGeDHUS0ps+/DUVVaYle964ArDq9KBNHtd8PjF5Gc3OWeq/05Jtk1SC2jbgyKpuugYn5tTvxoxCog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gFZ82QBk/r0tIiq+WrT1tcKo2VV8NOsNSkcij4YS1pg=;
+ b=Ggft1D4oulvbyEWNZMDfApoFwK+ToPgN389N+OcMbSTX2xGJ6qchY97kyAJ2pY4jCsOgSkLa7fEoe00sS2lPquryAICgA8CyDUEj7Pb/UuZPjnVYnHzdouHM+4ZkL1H69/uaFGtUkklB1LpSjNNKZhuNKpDbE5pCnG4Wpso+H71shnMToAit24LwTs9a3J2VbBfv+YkhZ5CblIuy7rkgOpTN4nB8Rjg0L6Rav/V69nO0RtWzWMuOYVfBeITxXI59caAgtsHR05Jp70Nrq7ooqk/EWD2B22Eh4EbMWb3685KX2cLtE70X0fRjlkE9HsEU5SYuKJUCqLq0X2UnIp56EQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gFZ82QBk/r0tIiq+WrT1tcKo2VV8NOsNSkcij4YS1pg=;
+ b=RJlGkIxR8mQmOnjSLUu9nwNd32BFSnZxcDREeSrA+bZuqDBWqiKrVbt9fe9JI/vo8OhyGmpTaQeO3DoLmmXWXSUwnmwIVXqN0KfWfVq6zVAGmL6y7ZMuBuEhUg2kjj5FrjhlxtKBxW9p8PW1/SmxNkRxJvSy/iY98gnG9gqHpTo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
+ by LO2P265MB3481.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:1a2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.28; Tue, 30 Jul
+ 2024 10:20:17 +0000
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7%7]) with mapi id 15.20.7807.026; Tue, 30 Jul 2024
+ 10:20:17 +0000
+Date: Tue, 30 Jul 2024 11:20:13 +0100
+From: Gary Guo <gary@garyguo.net>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@samsung.com>, linux-trace-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
+ <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
+ <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros
+ Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Samuel Holland
+ <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
+ <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/2] rust: add static_key_false
+Message-ID: <20240730112013.4d0cd624@eugeo>
+In-Reply-To: <20240628-tracepoint-v4-1-353d523a9c15@google.com>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+	<20240628-tracepoint-v4-1-353d523a9c15@google.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM9P250CA0024.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21c::29) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:253::10)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4ac60afc-de6b-acf6-c9e6-1f45c0680dbe@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCxf8cat6hmnV0GAA--.31800S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZr48uFy5GryrAF1xKw13WrX_yoWfCrcEvF
-	Wjyry8Cw1IyF97Zwn0yFyrAr92ga17Xrn8XasFkr9rXa43tFWrWF1SkF1xArZ5JFWvqFnr
-	WFW3Xa4UZw1FkosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbaAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
-	14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU8PCzJUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO2P265MB3481:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08349b05-4d70-48aa-6913-08dcb081352b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6InyZ1pyPdlryjPSoDsqa3qc5xecLwKH2pZ2dSBXOiS7gY1uEP6ohU1xMUYh?=
+ =?us-ascii?Q?j/9TTKBsuucGStJUqNwSzzaJAjQCDGAlbgIKz+7E0BxCwkOBHX45Wxv5aGSM?=
+ =?us-ascii?Q?GwvkxhZVToGtOgEENkx8rJvLNP3DTBSzYKYYcQYpXLLO6JrKXbFVzIJK4MES?=
+ =?us-ascii?Q?RixYG5RvXPKNUZKYd0WxkbYLSQBFs43CAGpMNfSmRFDdN+N6Do0jmnLjAwhI?=
+ =?us-ascii?Q?StU019DdXLpsw3YVcTpKr0I+FERrCXZ1TxQc6hIB8h7mOB/SmQ1rCzyiK3r3?=
+ =?us-ascii?Q?gMnlUF+ps8d7/twrbOJB4KGxrW/CkOJRKuC0ixHi5WqF0Pm4yJDavsBaDiMe?=
+ =?us-ascii?Q?wghIJRhQuUhqDyaLx/wF38Ff7kyCEXzOGwz69R6iYQEL0Y2opRmJnzhpl3Yi?=
+ =?us-ascii?Q?h5n+GGsk9h3gtBWdOw34/ZbOGYCaz2bFetVSPCgnPYsFdsWoZZJ7pvI/Om5g?=
+ =?us-ascii?Q?Of18hllFtQCoQDfeBe4PVtmZ9tqQ2tNu5TY/m04/c1ulvyLliiHRM5jmW7Ro?=
+ =?us-ascii?Q?GRnKq7sBmdluFdPd8ISFbFYC47KYM6WhEqXS4om2lqRNWo4ZSK5Ejcx/e7lE?=
+ =?us-ascii?Q?sJFSNtYDwIyxKT8fFvqVYWTDTIozymMx9G+Axv6PegMLstw911ZfiKh13Uyn?=
+ =?us-ascii?Q?B7Rt/cY3elLC0dunxvucu06d3MtMLFO5m91UNuu+e4UnfCq6413CoyFPjptc?=
+ =?us-ascii?Q?vAr1zanRmmzMxy4hxezOl8JLZVhZxuz0tSuSYprV6EE43rfGVzd+lUfhEy30?=
+ =?us-ascii?Q?Pc/8epaUHzn7KPRj3xXs/aStFmrEv45/pPCDuGUFJ1Jft1U4ZSxzCbXvDt2Z?=
+ =?us-ascii?Q?G8nRDd4RcPDebMGpYZv6r7qTvJhq9nEhIB8hnAXc+7bAiXBUx/74xlddiul/?=
+ =?us-ascii?Q?SYSPN/vpMEkYz9u3HV+Q6uxGts/1+Mcmbhx8AW0gjY906jJefzi2z0pNnbhi?=
+ =?us-ascii?Q?BNPaL3IsWumqmLSrhtJoODAIOvYrZmKRneQVpWcjjDZOd3UZxTY6zykqN/LO?=
+ =?us-ascii?Q?WDmH9bAPaa29mjnJwK36uTyjswh+sMyqJl/rOhx/hEsVayjF539WR3MwUvUA?=
+ =?us-ascii?Q?/Iyf9cKlPwOsr/6iaiDzekENyVSIKRVBokmrWLJrAfpLz4PF21w/n3C4lTAb?=
+ =?us-ascii?Q?L+XJ8jWv/hnRBZIvs4wZW237hTuuagJ31NtN9WNorZy09Kao++w1QB+UMZxw?=
+ =?us-ascii?Q?OqMR+HZ1Mq8A1O3P5oYxTeORLx6BmjjVfpaDveWdUZ3tzTNLExq6foCSYn9T?=
+ =?us-ascii?Q?akguO5NylAQ3P0DEUAMEd0GtM7VPu6Cy1jqCNM+CEooyH7kpZwnvUm+sarJU?=
+ =?us-ascii?Q?/Gc48ri2j0kr0a4pkb91sBnqjMMdapkskMFwN+VP7bdIww=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?l7gP54bxgXn652BZq7K1Jc4ll7qzkjUERp2b+Q0uQfl2xJo+tiXAl5iOAGNa?=
+ =?us-ascii?Q?zoKD8cGxRWhzX0uHtc3AcVTtDZU/9hsJPWRUowT5BRirCpilGE/Gc+itwT82?=
+ =?us-ascii?Q?3wExkpg8qGE+yClKj5sK+V4rNTaKlDxIPFRkw+YSGuBM7cHSWgW+2/cSwxKj?=
+ =?us-ascii?Q?dW6NuU7HFTfVETg2+5jSAX96vUjMAYNH9p32vnxs22YZY/fYpkRry+py5Np5?=
+ =?us-ascii?Q?DZzUJ6JHDQ7LSVFsdrXFDJIcu4IIdaCiSlLjlU08eDr12qcnsXq/MWkGv9UQ?=
+ =?us-ascii?Q?+u0iEFe2oEySGJACspIDMSZeudqkp54X2czbpEOSudoIzE4DM1hakv57wgCw?=
+ =?us-ascii?Q?RRzZPEvBALdESNfqDPLiZ/ATq0HUInTzp+mYqXCFkNzsDolJRNcEhps6JUQx?=
+ =?us-ascii?Q?EdFic9U5nePg6eV1FraDWRUfVuy8WypNRn0Y3qV9SlP8mPv4P/K7XTYpAMfO?=
+ =?us-ascii?Q?r0qge7PAOcvi/JHfmaUlUxg4RKliRVXlED209vX+G2RlRA7QCZwSnxm0EyUg?=
+ =?us-ascii?Q?KS+aE12UzHocwhCrl4V7wI434Sn9CYG2zEF4QaVztgY3gsG7HA1iTUlcZOAV?=
+ =?us-ascii?Q?6OiFG1XGmGW2R1zhjjxc+Zhnwh/LTjIqW0E66KMCpNyDGxyw8O+0sm6FEzT7?=
+ =?us-ascii?Q?fAKyta0Rds7XbIttVMEXhCmj7LqyE7O+R6Zk9Fu7siZ73SyvERt1QwYcy+G1?=
+ =?us-ascii?Q?LiCI8Y5aIfzsaW02lFwiiZsujH4PX4JaMXbO/F8D2fYHVlXhnbwONvAsXbQ/?=
+ =?us-ascii?Q?AeshYtEFeD0Y4fvupGlt8mbm1N8n+hEowHMZsgqokxm7U5IFJhCWggy+YilY?=
+ =?us-ascii?Q?laNi8MnL3omjlnqde30movfFH+GA1ArJXBjEOSsBsomYC1w8mPKi6od8uAxO?=
+ =?us-ascii?Q?rOJGEdUnwBO2kmK1WKRL/I0xwycwGW6S9bfqzuH/zQaBfD6RYSh53Zh20Hj7?=
+ =?us-ascii?Q?L9t5Avd0Qb8B+ZlRHf9X5wZHad4af05ZtLQxddZp2w1QA8GDn979c8tePATr?=
+ =?us-ascii?Q?zJdKYMFEWcwdXIUI73IUuwzAaG9Nq5f+EaBTY2Ofm6CcoplXZ0zeRSFUeJ1H?=
+ =?us-ascii?Q?jSMhoaHmnNmtJRu2xxOkDmdTxj1ovTHJL/fdoaFzAUWTIDEL8qcuygQk0Ygr?=
+ =?us-ascii?Q?0Sh7XKpWrok7fzMB5StLEA/uKe8hN9YFvliG8ligyUhkduu5i0dMAZwr+kRA?=
+ =?us-ascii?Q?foJN7vO8h2ZvapQJUNSwjALglrIfrtc35oDzzlwx4k0C6m/X89rAc434Xc4+?=
+ =?us-ascii?Q?khh7W5OsAw0Bg/+mNla+qeannP9XQsP/WYk2lvviUGK+xElo+KYa+AMVo0H3?=
+ =?us-ascii?Q?Ac2IvOUxXOktIbuT68KYxLrMInLIccVpetC7N36gjqlyim40kCZGpEclTr+i?=
+ =?us-ascii?Q?gJb7umNn7q3eg+cnSqKhciuSzhLxglovY5IWFjSzeZSOZ/YSpsvfconxugvq?=
+ =?us-ascii?Q?Zldr1UdfeLiMI8WJY6zRqEA1OIChbamcvcQOKKhMBcQMzL7vs2YGVk2gNF28?=
+ =?us-ascii?Q?/FSMVPI/dxUzZ8n1ZEGXHKcRGMtdS6i0vCtKEsfa3nElluK1j7lGfVNcpZfq?=
+ =?us-ascii?Q?f8BIX/+ZPk6I4/gYAl1R7EQkKXA2aZ30Yy4AP7By?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08349b05-4d70-48aa-6913-08dcb081352b
+X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2024 10:20:17.0874
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BnqH9N/yzHb61y5doCAdlqbsaLVkwmp33gdB7v1mqY05HviLF/DyVb/0pEGRnsjzIl8bwhE133VXVGzle7l0Tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB3481
 
-On 07/30/2024 05:28 PM, Jinyang He wrote:
-> On 2024-07-30 14:19, Tiezhu Yang wrote:
->
->> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
->> support"), the code flow of do_syscall() was changed when compiled
->> with GCC due to the secondary stack of add_random_kstack_offset(),
->> something like this:
->>
->>    addi.d          $sp, $sp, -32
->>    st.d            $fp, $sp, 16
->>    st.d            $ra, $sp, 24
->>    addi.d          $fp, $sp, 32
->>    ...
->>    sub.d           $sp, $sp, $t1
-> Have you checked the ORC info whether is right or tried backtrace which
-> passed do_syscall? The "sub.d $sp, $sp, $t1" has modified the $sp so the
-> $sp cannot express CFA here. This patch just clear the warning but ignore
-> the validity of ORC info. The wrong ORC info may cause illegally access
-> memory when backtrace.
+On Fri, 28 Jun 2024 13:23:31 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-I did testing many times before submitting, the call trace is
-expected when testing "echo l > /proc/sysrq-trigger".
+> Add just enough support for static key so that we can use it from
+> tracepoints. Tracepoints rely on `static_key_false` even though it is
+> deprecated, so we add the same functionality to Rust.
+> 
+> It is not possible to use the existing C implementation of
+> arch_static_branch because it passes the argument `key` to inline
+> assembly as an 'i' parameter, so any attempt to add a C helper for this
+> function will fail to compile because the value of `key` must be known
+> at compile-time.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Thanks,
-Tiezhu
+Reviewed-by: Gary Guo <gary@garyguo.net>
 
+> ---
+>  rust/kernel/arch/arm64/jump_label.rs     | 34 ++++++++++++++++++++++++++++
+>  rust/kernel/arch/loongarch/jump_label.rs | 35 +++++++++++++++++++++++++++++
+>  rust/kernel/arch/mod.rs                  | 24 ++++++++++++++++++++
+>  rust/kernel/arch/riscv/jump_label.rs     | 38 ++++++++++++++++++++++++++++++++
+>  rust/kernel/arch/x86/jump_label.rs       | 35 +++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs                       |  2 ++
+>  rust/kernel/static_key.rs                | 32 +++++++++++++++++++++++++++
+>  scripts/Makefile.build                   |  2 +-
+>  8 files changed, 201 insertions(+), 1 deletion(-)
