@@ -1,111 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732A1BC2A;
-	Wed, 31 Jul 2024 16:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5591A76C2
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 16:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722442510; cv=none; b=Wfvp/0zL/C13uDMspEjbFTjD5EGSTDvVrB+h9u5nbOI/J+9GjhjxfZtYp23ihqDWbw6ctaQeAnVrvI0nThWnmzXBVs6m1jQdfkiYDNLBofClUuIsg8YGTM80FsjZjZ5afKwvY5SCThdKnn9wk/qvvt3Iy0wc1cbbEXnUfj3XeYE=
+	t=1722443020; cv=none; b=KA89PH4w6R15AwKPm0m0wqMEC1KIjgft3ff7/FXF9So0Zs/8pHj8V0jUiMTbxMLArIF190kD8VaFV7aK7ZHlRuPRr9xeV01McuWiNvpSuooBps58ZEZQYCWFeeAMgwGExUloRK3ipEP0JqyXgZE30kpqmtN7h2xG9zTZ+Kw8OIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722442510; c=relaxed/simple;
-	bh=pfHnPMYK0TtleosbWCfB/5JPB/LqQy3ukFb8Be23aPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBPNbVwP5N7Twdzu+RLivXWR0SPEroLFYPNvBCxXbJrrXIBiScysvNFjc5UA/fbl1Z+rnMYrO/NzAWk73N9AHTSTE2s5PqWvY04uIYBLU+2DtjYRdCnJEqRYxzmlv7q+dloM7M1usijOrh5Pp0tUg1yZ3BntccR35f2eYbCYXsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC10C116B1;
-	Wed, 31 Jul 2024 16:15:04 +0000 (UTC)
-Date: Wed, 31 Jul 2024 12:15:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gary Guo <gary@garyguo.net>
-Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
- <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
- <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@samsung.com>, linux-trace-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
- <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
- <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros
- Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-arm-kernel@lists.infradead.org, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
- <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
- Dooley <conor.dooley@microchip.com>, Samuel Holland
- <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
- <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
- <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
-Message-ID: <20240731121539.0888738b@gandalf.local.home>
-In-Reply-To: <20240730113527.5c9896db@eugeo>
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
-	<20240628-tracepoint-v4-2-353d523a9c15@google.com>
-	<20240730113527.5c9896db@eugeo>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1722443020; c=relaxed/simple;
+	bh=2HhUeVKAqujM6tGjz7xY7eoGDJF2k6V8JCfwVRNXp0M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MaaQSeSH4voP/75Rh5MvXepo6tTe//+vGVkClh/kk4wHXeW2CCWUC6SNdwIp28KhOnFp4aKG+PIIL/wjFZQn72FPTFuGW564wkpirPMrI3F3mU6FlxRElE3hyumEtmFCMkS/k53I1dpNj+rWyYoKXVV7O/ainbapxzR1XVmlKoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GAA5B0xL; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GAA5B0xL"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so715104966b.1
+        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1722443016; x=1723047816; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Jy3Eo6Gu+vhJFsd2nEOfkihTm91GOS2uDXcn/bR1Cs=;
+        b=GAA5B0xLMxei9D/hOLh0U6AKzRakAwvFJRuUal+08LdYjBpP+Q51vdU1sCPm+AJVmH
+         xJSAj8eVqZT/Hbo8OlQALRjAuyg0V7BSg/nLZamSmJLKsEUXQ183WCY+9NFI3Mpm2MFV
+         Slk7sMauS0mXx+mi9lpt/sxRxoAu6Ks2Ale3hSDgsif1ucD/2CnjvTunFR9ZuhZ82znR
+         yZAGtnEnaYZBVXShzEzr0LX/ZrskkslmHRBVcT3bG4AYGCso26pkqr0sHUr/DhF/d3cE
+         oTzuex03bAxD8HMDC2DUwA7xuxdUgyhgR1wLS4V5nStJjH4+/hQfR8m6iaUY/9za2PBT
+         wWMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722443016; x=1723047816;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Jy3Eo6Gu+vhJFsd2nEOfkihTm91GOS2uDXcn/bR1Cs=;
+        b=HkkHDt/U5D8kVlesXWuO+Nee42XsUBEDagKW1DHaCaS8Z0bGf3LIkWnPAuiPa6cg9H
+         lMI90GWXjdlMjvdaDXeW1QGcKMN1mkXtAUXtzEFxz98QMvWcE0/eEuaqTZFTvcWctXcB
+         09DlTeD/Up/JMummq/fxfZcwOPkMff+1KPFPM8RKuaBos4wvJJTZIlSyKq2GhkWchuFX
+         XTUCbqFz8rs0btdGjcQAYZMKgTTeI864lNpMYsGFkYNkWLpAlxuBqHv6t6HCig6hAZB0
+         DSfreKMDnfdJWniB2Rw26c4LoQZ1cSL5ZsDhnx08a+to2zOkXwuAr74Y+P2tS6tUBsJk
+         6IHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrN+DwQQwO6Ea+5zH7I6kxPdrbv0V6qLPgbtV+/8enQoK6CTuqXQz0Aie3F1CKYiIPyQuWnQO54jFl8g/YKiiIHbD3VGmazPUo
+X-Gm-Message-State: AOJu0YzZjpK/o0atrKYk6VQdeuHdQ09aHWXXzhKvTxr2I1fHU1h/VLed
+	e2f9gWoZNwpo2gF6UopmlMNKPnIqKzFo5b8m+jQwubPMigYTG+D34pBdcIQYS5k=
+X-Google-Smtp-Source: AGHT+IFaeuLsqXvHIvwNkMOmXQ/kk95KnaHAVzfZZFY2rJSwrdZANzuSfUeE19U50MBeGB1J/TbUHg==
+X-Received: by 2002:a17:907:a0d5:b0:a7a:b070:92c6 with SMTP id a640c23a62f3a-a7d40116a4bmr801926666b.50.1722443015967;
+        Wed, 31 Jul 2024 09:23:35 -0700 (PDT)
+Received: from draig.lan ([85.9.250.243])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad416basm784769266b.104.2024.07.31.09.23.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jul 2024 09:23:35 -0700 (PDT)
+Received: from draig (localhost [IPv6:::1])
+	by draig.lan (Postfix) with ESMTP id 614DC5F8CB;
+	Wed, 31 Jul 2024 17:23:34 +0100 (BST)
+From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,  Marc Zyngier <maz@kernel.org>,
+  Oliver Upton <oliver.upton@linux.dev>,  Tianrui Zhao
+ <zhaotianrui@loongson.cn>,  Bibo Mao <maobibo@loongson.cn>,  Huacai Chen
+ <chenhuacai@kernel.org>,  Michael Ellerman <mpe@ellerman.id.au>,  Anup
+ Patel <anup@brainfault.org>,  Paul Walmsley <paul.walmsley@sifive.com>,
+  Palmer Dabbelt <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,  Janosch Frank
+ <frankja@linux.ibm.com>,  Claudio Imbrenda <imbrenda@linux.ibm.com>,
+  kvm@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+  kvmarm@lists.linux.dev,  loongarch@lists.linux.dev,
+  linux-mips@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
+  kvm-riscv@lists.infradead.org,  linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  David Matlack <dmatlack@google.com>,
+  David Stevens <stevensd@chromium.org>
+Subject: Re: [PATCH v12 01/84] KVM: arm64: Release pfn, i.e. put page, if
+ copying MTE tags hits ZONE_DEVICE
+In-Reply-To: <20240726235234.228822-2-seanjc@google.com> (Sean
+	Christopherson's message of "Fri, 26 Jul 2024 16:51:10 -0700")
+References: <20240726235234.228822-1-seanjc@google.com>
+	<20240726235234.228822-2-seanjc@google.com>
+Date: Wed, 31 Jul 2024 17:23:34 +0100
+Message-ID: <87a5hxfs3d.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Jul 2024 11:35:27 +0100
-Gary Guo <gary@garyguo.net> wrote:
+Sean Christopherson <seanjc@google.com> writes:
 
-> > +/*
-> > + * Declare an exported function that Rust code can call to trigger this
-> > + * tracepoint. This function does not include the static branch; that is done
-> > + * in Rust to avoid a function call when the tracepoint is disabled.
-> > + */
-> > +#define DEFINE_RUST_DO_TRACE(name, proto, args)
-> > +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)			\
-> > +	notrace void rust_do_trace_##name(proto)			\
-> > +	{								\
-> > +		__DO_TRACE(name,					\
-> > +			TP_ARGS(args),					\
-> > +			cpu_online(raw_smp_processor_id()), 0);		\  
-> 
-> I guess this doesn't support conditions. Currently the conditions are
-> specified during declaration and not during definition.
-> 
-> Would it make sense to have
-> 
-> 	static inline void do_trace_##name(proto)
-> 	{
-> 		__DO_TRACE(name, TP_ARGS(args), TP_CONDITION(cond), 0);
+> Put the page reference acquired by gfn_to_pfn_prot() if
+> kvm_vm_ioctl_mte_copy_tags() runs into ZONE_DEVICE memory.  KVM's less-
+> than-stellar heuristics for dealing with pfn-mapped memory means that KVM
+> can get a page reference to ZONE_DEVICE memory.
+>
+> Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a gues=
+t")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/arm64/kvm/guest.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index 11098eb7eb44..e1f0ff08836a 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -1059,6 +1059,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+>  		page =3D pfn_to_online_page(pfn);
+>  		if (!page) {
+>  			/* Reject ZONE_DEVICE memory */
+> +			kvm_release_pfn_clean(pfn);
 
-But where is the "cond" passed in from?
+I guess this gets renamed later in the series.
 
-I guess in the future if you want to add conditions, you would then just
-add:
+However my main comment is does lack of page always mean a ZONE_DEVICE?
+Looking at pfn_to_online_page() I see a bunch of other checks first. Why
+isn't it that functions responsibility to clean up after itself if its
+returning NULLs?
 
-#define DEFINE_RUST_DO_TRACE_REAL_CONDITION(name, proto, args, cond)			\
-	notrace void rust_do_trace_##name(proto)			\
-	{								\
-		__DO_TRACE(name,					\
-			TP_ARGS(args),					\
-			cpu_online(raw_smp_processor_id()) &&		\
-			TP_CONDITION(cond), 0);				\  
+>  			ret =3D -EFAULT;
+>  			goto out;
+>  		}
 
--- Steve
-
-> 	}
-> 
-> in `__DECLARE_TRACE` and then simply call it in `rust_do_trace_##name`?
-> 
-> > +	}
-> > +
-> >  /*
+--=20
+Alex Benn=C3=A9e
+Virtualisation Tech Lead @ Linaro
