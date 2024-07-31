@@ -1,164 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A326C1AB51B
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B192E62B;
+	Wed, 31 Jul 2024 10:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722419447; cv=none; b=JJH6RyHhkFL6PtnmpD6JYTFpNZtv4CFr+O5iAisidNoqa9SQA0FSzFCVfxQvCs3g7uSIsjkPwwYMbISXqRHnYZbVLp+uIELfIYHk/4uBQXod9Fd0+r2+C/jdNrf0SWU805JWa3FQXpmI6+NyvYpoNfPyTQcbGoLP9LVnq5CtH1Y=
+	t=1722420526; cv=none; b=XoNyWynqEuSIv7ZN79FsuOIOHrGdrTcTCI1vNWChy333BgiOnaTC/KtFK4Gd7SscNreg/J8BhxIT6/6fWZFB0Q9pqZzorv7LlLOepQhddQiWHyURE1khNx0UHE+y/Nno1bxPCZybk5+AWw0lG0YsvuSya+/yhzDSmO/vMXxq//k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722419447; c=relaxed/simple;
-	bh=XTrejJ34wyqTmqzJGqmoE5EbaZZYWrCKbhJX3mWbjW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o8EgfjHKBDcJcEP0tVhycQWb5aq5xbT4J6NSgJxuSJGusySas4mHeVFl78iHgI3OiBcX6PgPqFsqG43E5CN5/J0dRkDZYn3DvpNvSHQlFJURB2deodYMsPFn9T+Si2UvocEPSHeL9ymN7tIsuHG5U+QxcOGGK38PguI6KI8iimY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrEy5xBV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrEy5xBV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722419444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kF8YsGqLWNT4+a8R4w4P9MUEGEAYWYiYSABna27uXpU=;
-	b=KrEy5xBVc1iGF2PVOY7dITK1PYtisicQgOaKSayL34SW7TgJ27MZDD7csgG0vXDCoIV4lP
-	XDevCAOVyoCv7zJYenootvNrJFekg08VPCUcOwVk5HetdAL1xAdx/5306f55E8Cpo0cFe5
-	6YT1V7vpeNo/sA63WDaazWkq43GtuRs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-530-Dg9p2b3lOtmMlBgH-DEjyg-1; Wed, 31 Jul 2024 05:50:41 -0400
-X-MC-Unique: Dg9p2b3lOtmMlBgH-DEjyg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a7aa020cef5so502213566b.0
-        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 02:50:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722419440; x=1723024240;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kF8YsGqLWNT4+a8R4w4P9MUEGEAYWYiYSABna27uXpU=;
-        b=cAl7s5mNfoOpFNYcCvviMlAc4xSLSKkuFYDVzGj1Tk2iB+Z6LgsiLwD2uWaKpEh67H
-         SVkxQ/cCwrF0hPgBwzklHvitsc3/cM4uPrUHB5GcIisoJe1OPrpE+BWGdBwf+1fOQT7V
-         Fo5EXluCQRpCx9BzZAZOOzTk9tFsM0lzvhliQsw9OSARmgJriIBJPpnmdd/OXCeMVxZ/
-         0bOydZYstN9nxyAp0IAtkkOl0y6zXA5ZDAd/f2e2KgIpBn4mA/vQVS7v3vwe4kTfseYL
-         jPJKjIzCLvWq14GVZAFeMUc9h0QoEQ5wi4puMnTtJgaaQcuOCZ+bSqqKDjo7olbwsIOJ
-         qwpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXOQmv+HLveK2V6F07wH3ySSAQR8EtuOHHq/mfe6RAJyrGLpf6fnpQgDIeK0Jq92WugDtUj+48U/hVrB5SGrJz2DEhbcobzEDh
-X-Gm-Message-State: AOJu0YyBZEBDF9fAvt/PiB7kYmR/tSaDLkv8wQ0VxakzoiucGbQ1zj+q
-	BNZ7sqr4SiaRwgzEzuqPwbdgxDTgc7/2YPR6wt0wvkrvliE2/eJ99UbbDfjYiTmvuNGiq7CxzB3
-	kSqxSpPuZ3xJwz0IO/6JOqt8z2ctrFxjUBKTJcYkQILF4dp1qtbFjNi8fVg==
-X-Received: by 2002:a17:907:94cb:b0:a7a:bece:6223 with SMTP id a640c23a62f3a-a7d3ff7b8e4mr1064730766b.6.1722419440610;
-        Wed, 31 Jul 2024 02:50:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHm0sw2f7Q/hSxPLtTI3KYQw5uCrmW/NKDuI5rQ7HlgfsjazxGbnWK3KS2H8Xhx5SNKvtVQug==
-X-Received: by 2002:a17:907:94cb:b0:a7a:bece:6223 with SMTP id a640c23a62f3a-a7d3ff7b8e4mr1064728266b.6.1722419440130;
-        Wed, 31 Jul 2024 02:50:40 -0700 (PDT)
-Received: from [192.168.10.81] ([151.95.101.29])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a7acad93105sm746255566b.167.2024.07.31.02.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jul 2024 02:50:39 -0700 (PDT)
-Message-ID: <57ba7e1d-0121-4d71-89b8-c61c476ca724@redhat.com>
-Date: Wed, 31 Jul 2024 11:50:38 +0200
+	s=arc-20240116; t=1722420526; c=relaxed/simple;
+	bh=uz2t1NnpwQFIdWvonAV+fm4haMvGFvMDaxcUxXo2Yh8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=diwFypxgjNTkFbeXV69JYJ7+Vu+kjMwJKZf0rFzdpX82CRoTnBioTYQcJD3R6ZCwmncd4T15N1aMAB92s28Ss2eNVOXXdFon1KeSla6QAMIkaYE0oMH90MgVaqpbTf1ZTJ3OiF4k9xzhoPzzVD+YdL2AY2kRwH7u00LQY687n1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dxh+khDapmXxgFAA--.16375S3;
+	Wed, 31 Jul 2024 18:08:33 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxmcUgDapmPygIAA--.41017S2;
+	Wed, 31 Jul 2024 18:08:32 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH] LoongArch: Revert qspinlock to test-and-set on VMs
+Date: Wed, 31 Jul 2024 18:08:32 +0800
+Message-Id: <20240731100832.2255320-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 84/84] KVM: Don't grab reference on VM_MIXEDMAP pfns
- that have a "struct page"
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-85-seanjc@google.com>
- <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
- <ZqlLWl0R1p41CS0O@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <ZqlLWl0R1p41CS0O@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxmcUgDapmPygIAA--.41017S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On 7/30/24 22:21, Sean Christopherson wrote:
-> On Tue, Jul 30, 2024, Paolo Bonzini wrote:
->> On 7/27/24 01:52, Sean Christopherson wrote:
->>> Now that KVM no longer relies on an ugly heuristic to find its struct page
->>> references, i.e. now that KVM can't get false positives on VM_MIXEDMAP
->>> pfns, remove KVM's hack to elevate the refcount for pfns that happen to
->>> have a valid struct page.  In addition to removing a long-standing wart
->>> in KVM, this allows KVM to map non-refcounted struct page memory into the
->>> guest, e.g. for exposing GPU TTM buffers to KVM guests.
->>
->> Feel free to leave it to me for later, but there are more cleanups that
->> can be made, given how simple kvm_resolve_pfn() is now:
-> 
-> I'll revisit kvm_resolve_pfn(), Maxim also wasn't a fan of a similar helper that
-> existed in v11.
+Similar with x86, when VM is detected, revert to a simple test-and-set
+lock to avoid the horrors of queue preemption.
 
-FWIW kvm_resolve_pfn() is totally fine as an intermediate step.  Just 
-food for thought for possible follow-ups.
+Tested on 3C5000 Dual-way machine with 32 cores and 2 numa nodes,
+test case is kcbench on kernel mainline 6.10, the detailed command is
+"kcbench --src /root/src/linux"
 
->> Also, check_user_page_hwpoison() should not be needed anymore, probably
->> not since commit 234b239bea39 ("kvm: Faults which trigger IO release the
->> mmap_sem", 2014-09-24) removed get_user_pages_fast() from hva_to_pfn_slow().
-> 
-> Ha, I *knew* this sounded familiar.  Past me apparently came to the same
-> conclusion[*], though I wrongly suspected a memory leak and promptly forgot to
-> ever send a patch.  I'll tack one on this time around.
+Performance on host machine
+                      kernel compile time       performance impact
+   Original           150.29 seconds
+   With patch         150.19 seconds            almost no impact
 
-As you prefer.
+Performance on virtual machine:
+1. 1 VM with 32 vCPUs and 2 numa node, numa node pinned
+                      kernel compile time       performance impact
+   Original           170.87 seconds
+   With patch         171.73 seconds            almost no impact
 
-Paolo
+2. 2 VMs, each VM with 32 vCPUs and 2 numa node, numa node pinned
+                      kernel compile time       performance impact
+   Original           2362.04 seconds
+   With patch         354.73  seconds            +565%
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/Kbuild      |  1 -
+ arch/loongarch/include/asm/paravirt.h  |  3 ++
+ arch/loongarch/include/asm/qspinlock.h | 41 ++++++++++++++++++++++++++
+ arch/loongarch/kernel/paravirt.c       |  9 ++++++
+ arch/loongarch/kernel/setup.c          |  5 ++++
+ arch/loongarch/kernel/smp.c            |  2 ++
+ 6 files changed, 60 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/qspinlock.h
+
+diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
+index 2bb3676429c0..4635b755b2b4 100644
+--- a/arch/loongarch/include/asm/Kbuild
++++ b/arch/loongarch/include/asm/Kbuild
+@@ -6,7 +6,6 @@ generic-y += mcs_spinlock.h
+ generic-y += parport.h
+ generic-y += early_ioremap.h
+ generic-y += qrwlock.h
+-generic-y += qspinlock.h
+ generic-y += user.h
+ generic-y += ioctl.h
+ generic-y += statfs.h
+diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+index dddec49671ae..dcc2b46d31fe 100644
+--- a/arch/loongarch/include/asm/paravirt.h
++++ b/arch/loongarch/include/asm/paravirt.h
+@@ -19,6 +19,7 @@ static inline u64 paravirt_steal_clock(int cpu)
+ 
+ int __init pv_ipi_init(void);
+ int __init pv_time_init(void);
++void __init pv_spinlock_init(void);
+ 
+ #else
+ 
+@@ -31,5 +32,7 @@ static inline int pv_time_init(void)
+ {
+ 	return 0;
+ }
++
++static inline void pv_spinlock_init(void) { }
+ #endif // CONFIG_PARAVIRT
+ #endif
+diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+new file mode 100644
+index 000000000000..b2d53b8c6679
+--- /dev/null
++++ b/arch/loongarch/include/asm/qspinlock.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_LOONGARCH_QSPINLOCK_H
++#define _ASM_LOONGARCH_QSPINLOCK_H
++
++#include <linux/jump_label.h>
++#include <asm/cpu-features.h>
++
++#ifdef CONFIG_PARAVIRT
++
++DECLARE_STATIC_KEY_TRUE(virt_spin_lock_key);
++
++#define virt_spin_lock virt_spin_lock
++static inline bool virt_spin_lock(struct qspinlock *lock)
++{
++	int val;
++
++	if (static_branch_likely(&virt_spin_lock_key))
++		return false;
++
++	/*
++	 * On hypervisors without PARAVIRT_SPINLOCKS support we fall
++	 * back to a Test-and-Set spinlock, because fair locks have
++	 * horrible lock 'holder' preemption issues.
++	 */
++
++__retry:
++	val = atomic_read(&lock->val);
++
++	if (val || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
++		cpu_relax();
++		goto __retry;
++	}
++
++	return true;
++}
++
++#endif /* CONFIG_PARAVIRT */
++
++#include <asm-generic/qspinlock.h>
++
++#endif // _ASM_LOONGARCH_QSPINLOCK_H
+diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+index 9c9b75b76f62..49ebc54bdbcb 100644
+--- a/arch/loongarch/kernel/paravirt.c
++++ b/arch/loongarch/kernel/paravirt.c
+@@ -9,6 +9,7 @@
+ #include <linux/static_call.h>
+ #include <asm/paravirt.h>
+ 
++DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
+ static int has_steal_clock;
+ struct static_key paravirt_steal_enabled;
+ struct static_key paravirt_steal_rq_enabled;
+@@ -300,3 +301,11 @@ int __init pv_time_init(void)
+ 
+ 	return 0;
+ }
++
++void __init pv_spinlock_init(void)
++{
++	if (!cpu_has_hypervisor)
++		return;
++
++	static_branch_disable(&virt_spin_lock_key);
++}
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 0f0740f0be27..70a670efe3cf 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -599,6 +599,11 @@ void __init setup_arch(char **cmdline_p)
+ 	parse_early_param();
+ 	reserve_initrd_mem();
+ 
++	/*
++	 * Initialise the static keys early as they may be enabled by the
++	 * cpufeature code and early parameters.
++	 */
++	jump_label_init();
+ 	platform_init();
+ 	arch_mem_init(cmdline_p);
+ 
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index ca405ab86aae..f499bff1050b 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -509,6 +509,8 @@ void smp_prepare_boot_cpu(void)
+ 			rr_node = next_node_in(rr_node, node_online_map);
+ 		}
+ 	}
++
++	pv_spinlock_init();
+ }
+ 
+ /* called from main before smp_init() */
+
+base-commit: 94ede2a3e9135764736221c080ac7c0ad993dc2d
+-- 
+2.39.3
 
