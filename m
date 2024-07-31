@@ -1,339 +1,164 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDE81A7206
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A326C1AB51B
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722417669; cv=none; b=pJdLXt77bpV5vK/jFhr0DzMvxwOKlCXzrYW2SwRxOA4Y9Wklprr8Sysi9yvQgZFRoHk7LhJ5isSeW/0Aerbx8xcaeiJTNo9s40J4QpA0G0y4ZdIIP0cEAHL1Z2snicigZ4uF2mxpcEK4pH6+KfDL09DxGeubg5UXWOMBAjOthDU=
+	t=1722419447; cv=none; b=JJH6RyHhkFL6PtnmpD6JYTFpNZtv4CFr+O5iAisidNoqa9SQA0FSzFCVfxQvCs3g7uSIsjkPwwYMbISXqRHnYZbVLp+uIELfIYHk/4uBQXod9Fd0+r2+C/jdNrf0SWU805JWa3FQXpmI6+NyvYpoNfPyTQcbGoLP9LVnq5CtH1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722417669; c=relaxed/simple;
-	bh=3+vM12SWlc1ny4Y/bpC01kRYAc71CKZmegr4wNVXjg0=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=SDKmUpnAU5YOu+rb8rIXgRXAHmUzW2xxV4wCU30WNthBvXTfypG4j2LWKEO2AazoPmHynzNTw9XRTRE63WDJw9DMJ7/NwycV8l5W0sLoluUcoVE/T83XvBep+srY3QBqrtCsWfW1WdFGv2lPOx+a3+/LMXzuTJnyB9CuleSKjcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=rMxo0eVQ; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1722419447; c=relaxed/simple;
+	bh=XTrejJ34wyqTmqzJGqmoE5EbaZZYWrCKbhJX3mWbjW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8EgfjHKBDcJcEP0tVhycQWb5aq5xbT4J6NSgJxuSJGusySas4mHeVFl78iHgI3OiBcX6PgPqFsqG43E5CN5/J0dRkDZYn3DvpNvSHQlFJURB2deodYMsPFn9T+Si2UvocEPSHeL9ymN7tIsuHG5U+QxcOGGK38PguI6KI8iimY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrEy5xBV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="rMxo0eVQ"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 7A9D220899
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:15:06 +0000 (UTC)
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 815E12613B
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:14:57 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id A0FBD3E84A;
-	Wed, 31 Jul 2024 09:14:50 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 1D980400AD;
-	Wed, 31 Jul 2024 09:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1722417288; bh=3+vM12SWlc1ny4Y/bpC01kRYAc71CKZmegr4wNVXjg0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rMxo0eVQJLHcGAh9yqrjtbwHghplROA18UuOhMlkgnTJgNAeHpzt+9Kd948RlOaYY
-	 i9J1hLJnibW6x45Q8lwY+WC8id1ryHe5waJbke4FLSkJEXkma/+Si/Vz+YeOzjiH37
-	 9+mc+qvw9hWA7dKgthq+AWrTy3vA+61Ec0dfidQ8=
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 4A13840A78;
-	Wed, 31 Jul 2024 09:14:48 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrEy5xBV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722419444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kF8YsGqLWNT4+a8R4w4P9MUEGEAYWYiYSABna27uXpU=;
+	b=KrEy5xBVc1iGF2PVOY7dITK1PYtisicQgOaKSayL34SW7TgJ27MZDD7csgG0vXDCoIV4lP
+	XDevCAOVyoCv7zJYenootvNrJFekg08VPCUcOwVk5HetdAL1xAdx/5306f55E8Cpo0cFe5
+	6YT1V7vpeNo/sA63WDaazWkq43GtuRs=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-Dg9p2b3lOtmMlBgH-DEjyg-1; Wed, 31 Jul 2024 05:50:41 -0400
+X-MC-Unique: Dg9p2b3lOtmMlBgH-DEjyg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a7aa020cef5so502213566b.0
+        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 02:50:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722419440; x=1723024240;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kF8YsGqLWNT4+a8R4w4P9MUEGEAYWYiYSABna27uXpU=;
+        b=cAl7s5mNfoOpFNYcCvviMlAc4xSLSKkuFYDVzGj1Tk2iB+Z6LgsiLwD2uWaKpEh67H
+         SVkxQ/cCwrF0hPgBwzklHvitsc3/cM4uPrUHB5GcIisoJe1OPrpE+BWGdBwf+1fOQT7V
+         Fo5EXluCQRpCx9BzZAZOOzTk9tFsM0lzvhliQsw9OSARmgJriIBJPpnmdd/OXCeMVxZ/
+         0bOydZYstN9nxyAp0IAtkkOl0y6zXA5ZDAd/f2e2KgIpBn4mA/vQVS7v3vwe4kTfseYL
+         jPJKjIzCLvWq14GVZAFeMUc9h0QoEQ5wi4puMnTtJgaaQcuOCZ+bSqqKDjo7olbwsIOJ
+         qwpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXOQmv+HLveK2V6F07wH3ySSAQR8EtuOHHq/mfe6RAJyrGLpf6fnpQgDIeK0Jq92WugDtUj+48U/hVrB5SGrJz2DEhbcobzEDh
+X-Gm-Message-State: AOJu0YyBZEBDF9fAvt/PiB7kYmR/tSaDLkv8wQ0VxakzoiucGbQ1zj+q
+	BNZ7sqr4SiaRwgzEzuqPwbdgxDTgc7/2YPR6wt0wvkrvliE2/eJ99UbbDfjYiTmvuNGiq7CxzB3
+	kSqxSpPuZ3xJwz0IO/6JOqt8z2ctrFxjUBKTJcYkQILF4dp1qtbFjNi8fVg==
+X-Received: by 2002:a17:907:94cb:b0:a7a:bece:6223 with SMTP id a640c23a62f3a-a7d3ff7b8e4mr1064730766b.6.1722419440610;
+        Wed, 31 Jul 2024 02:50:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHm0sw2f7Q/hSxPLtTI3KYQw5uCrmW/NKDuI5rQ7HlgfsjazxGbnWK3KS2H8Xhx5SNKvtVQug==
+X-Received: by 2002:a17:907:94cb:b0:a7a:bece:6223 with SMTP id a640c23a62f3a-a7d3ff7b8e4mr1064728266b.6.1722419440130;
+        Wed, 31 Jul 2024 02:50:40 -0700 (PDT)
+Received: from [192.168.10.81] ([151.95.101.29])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a7acad93105sm746255566b.167.2024.07.31.02.50.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jul 2024 02:50:39 -0700 (PDT)
+Message-ID: <57ba7e1d-0121-4d71-89b8-c61c476ca724@redhat.com>
+Date: Wed, 31 Jul 2024 11:50:38 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 31 Jul 2024 17:14:47 +0800
-From: Mingcong Bai <jeffbai@aosc.io>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: pbonzini@redhat.com, corbet@lwn.net, zhaotianrui@loongson.cn,
- maobibo@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, guanwentao@uniontech.com, Xianglai Li
- <lixianglai@loongson.cn>
-Subject: Re: [PATCH] Loongarch: KVM: Add KVM hypercalls documentation for
- LoongArch
-In-Reply-To: <04DAF94279B88A3F+20240731055755.84082-1-wangyuli@uniontech.com>
-References: <04DAF94279B88A3F+20240731055755.84082-1-wangyuli@uniontech.com>
-Message-ID: <5c338084b1bcccc1d57dce9ddb1e7081@aosc.io>
-X-Sender: jeffbai@aosc.io
-Organization: Anthon Open Source Community
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 1D980400AD
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 84/84] KVM: Don't grab reference on VM_MIXEDMAP pfns
+ that have a "struct page"
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-85-seanjc@google.com>
+ <992c4a07-fb84-42d8-93b3-96fb3a12c8e0@redhat.com>
+ <ZqlLWl0R1p41CS0O@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <ZqlLWl0R1p41CS0O@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Yuli,
-
-Thanks for submitting this documentation. I have just a couple 
-suggestions on prose and grammar. Please see below.
-
-在 2024-07-31 13:57，WangYuli 写道：
-> From: Bibo Mao <maobibo@loongson.cn>
+On 7/30/24 22:21, Sean Christopherson wrote:
+> On Tue, Jul 30, 2024, Paolo Bonzini wrote:
+>> On 7/27/24 01:52, Sean Christopherson wrote:
+>>> Now that KVM no longer relies on an ugly heuristic to find its struct page
+>>> references, i.e. now that KVM can't get false positives on VM_MIXEDMAP
+>>> pfns, remove KVM's hack to elevate the refcount for pfns that happen to
+>>> have a valid struct page.  In addition to removing a long-standing wart
+>>> in KVM, this allows KVM to map non-refcounted struct page memory into the
+>>> guest, e.g. for exposing GPU TTM buffers to KVM guests.
+>>
+>> Feel free to leave it to me for later, but there are more cleanups that
+>> can be made, given how simple kvm_resolve_pfn() is now:
 > 
-> Add documentation topic for using pv_virt when running as a guest
-> on KVM hypervisor.
+> I'll revisit kvm_resolve_pfn(), Maxim also wasn't a fan of a similar helper that
+> existed in v11.
+
+FWIW kvm_resolve_pfn() is totally fine as an intermediate step.  Just 
+food for thought for possible follow-ups.
+
+>> Also, check_user_page_hwpoison() should not be needed anymore, probably
+>> not since commit 234b239bea39 ("kvm: Faults which trigger IO release the
+>> mmap_sem", 2014-09-24) removed get_user_pages_fast() from hva_to_pfn_slow().
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->  Documentation/virt/kvm/index.rst              |  1 +
->  .../virt/kvm/loongarch/hypercalls.rst         | 79 +++++++++++++++++++
->  Documentation/virt/kvm/loongarch/index.rst    | 10 +++
->  MAINTAINERS                                   |  1 +
->  4 files changed, 91 insertions(+)
->  create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
->  create mode 100644 Documentation/virt/kvm/loongarch/index.rst
-> 
-> diff --git a/Documentation/virt/kvm/index.rst 
-> b/Documentation/virt/kvm/index.rst
-> index ad13ec55ddfe..9ca5a45c2140 100644
-> --- a/Documentation/virt/kvm/index.rst
-> +++ b/Documentation/virt/kvm/index.rst
-> @@ -14,6 +14,7 @@ KVM
->     s390/index
->     ppc-pv
->     x86/index
-> +   loongarch/index
-> 
->     locking
->     vcpu-requests
-> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst 
-> b/Documentation/virt/kvm/loongarch/hypercalls.rst
-> new file mode 100644
-> index 000000000000..1679e48d67d2
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
-> @@ -0,0 +1,79 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===================================
-> +The LoongArch paravirtual interface
-> +===================================
-> +
-> +KVM hypercalls use the HVCL instruction with code 0x100, and the 
-> hypercall
-> +number is put in a0 and up to five arguments may be placed in a1-a5, 
-> the
-> +return value is placed in v0 (alias with a0).
+> Ha, I *knew* this sounded familiar.  Past me apparently came to the same
+> conclusion[*], though I wrongly suspected a memory leak and promptly forgot to
+> ever send a patch.  I'll tack one on this time around.
 
-The original paragraph can be split into a few sentences for better 
-readability:
+As you prefer.
 
-"KVM hypercalls use the HVCL instruction with code 0x100 and the 
-hypercall number is put in a0. Up to five arguments may be placed in 
-registers a1 - a5. The return value is placed in v0 (an alias of a0)."
+Paolo
 
-Not sure if "HVCL instruction with code 0x100" is a proper expression, 
-so I have left it alone (I'm a little suspicious). Others are welcome to 
-comment on this.
-
-> +
-> +The code for that interface can be found in arch/loongarch/kvm/*
-
-It would seem that this sentence (or rather the components and 
-structures of this whole documentation?) was borrowed from 
-Documentation/virt/kvm/ppc-pv.rst. But nevertheless:
-
-"Source code for this interface can be found in arch/loongarch/kvm*."
-
-> +
-> +Querying for existence
-> +======================
-> +
-> +To find out if we're running on KVM or not, cpucfg can be used with 
-> index
-> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
-> 0x400000FF
-> +is marked as a specially reserved range. All existing and future 
-> processors
-> +will not implement any features in this range.
-
-Again, please consider splitting up the sentences:
-
-"We can use cpucfg() at index CPUCFG_KVM_BASE (0x40000000) to query 
-whether the host is running on KVM. The CPUCPU_KVM_BASE range between 
-0x40000000 - 0x400000FF is marked as reserved - all existing and future 
-processors will not implement any features in this range."
-
-> +
-> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
-> (0x40000000)
-> +returns magic string "KVM\0"
-
-When the Linux host is running on KVM, a read on cpucfg() at index 
-CPUCFG_KVM_BASE (0x40000000) returns a magic string "KVM\0".
-
-> +
-> +Once you determined you're running under a PV capable KVM, you can now 
-> use
-> +hypercalls as described below.
-
-Once you have determined that your host is running on a 
-paravirtualization-capable KVM, you may now use hypercalls as described 
-below.
-
-> +
-> +KVM hypercall ABI
-> +=================
-> +
-> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) and 
-> at most
-> +five generic registers used as input parameter. FP register and vector 
-> register
-> +is not used for input register and should not be modified during 
-> hypercall.
-> +Hypercall function can be inlined since there is only one scratch 
-> register.
-
-"The KVM hypercall ABI is simple, with one scratch register a0 (v0) and 
-at most five generic registers (a1 - a5) used as input parameters. The 
-FP and vector registers are not used as input registers and should not 
-be modified in a hypercall. Hypercall functions can be inlined, as there 
-is only one scratch register."
-
-It is recommended to define what the "The FP and vector registers" are 
-with parentheses.
-
-> +
-> +The parameters are as follows:
-> +
-> +        ========	================	================
-> +	Register	IN			OUT
-> +        ========	================	================
-> +	a0		function number		Return code
-
-Function index?
-
-> +	a1		1st parameter		-
-> +	a2		2nd parameter		-
-> +	a3		3rd parameter		-
-> +	a4		4th parameter		-
-> +	a5		5th parameter		-
-> +        ========	================	================
-> +
-> +Return codes can be as follows:
-
-The return codes may be one of the following:
-
-> +
-> +	====		=========================
-> +	Code		Meaning
-> +	====		=========================
-> +	0		Success
-> +	-1		Hypercall not implemented
-> +	-2		Hypercall parameter error
-
-Bad hypercall parameter
-
-> +	====		=========================
-> +
-> +KVM Hypercalls Documentation
-> +============================
-> +
-> +The template for each hypercall is:
-
-"The template for each hypercall is as follows:"
-
-Also, please consider adding a blank line here (though it probably 
-doesn't matter once rendered, but it would make the plain text more 
-readable).
-
-> +1. Hypercall name
-> +2. Purpose
-> +
-> +1. KVM_HCALL_FUNC_PV_IPI
-> +------------------------
-> +
-> +:Purpose: Send IPIs to multiple vCPUs.
-> +
-> +- a0: KVM_HCALL_FUNC_PV_IPI
-> +- a1: lower part of the bitmap of destination physical CPUIDs
-
-Lower part of the bitmap for destination physical CPUIDs.
-
-> +- a2: higher part of the bitmap of destination physical CPUIDs
-
-Ditto, please capitalize the first letter after ":" and use "for" before 
-"destination physical CPUIDs".
-
-> +- a3: the lowest physical CPUID in bitmap
-
-The lowest physical CPUID in the bitmap.
-
-> +
-> +The hypercall lets a guest send multicast IPIs, with at most 128
-> +destinations per hypercall.  The destinations are represented by a 
-> bitmap
-> +contained in the first two arguments (a1 and a2). Bit 0 of a1 
-> corresponds
-> +to the physical CPUID in the third argument (a3), bit 1 corresponds to 
-> the
-> +physical ID a3+1, and so on.
-
-Cleaning up sentences and dropping inconsistent expressions (such as 
-"argument registers", which was never brought up before). I would 
-recommend making them all consistent throughout by classifying a0 and a1 
-- a5.
-
-The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) 
-with at most 128 destinations per hypercall. The destinations are 
-represented in a bitmap contained in the first two input registers (a1 
-and a2). Bit 0 of a1 corresponds to the physical CPUID in the third 
-input register (a3) and bit 1 corresponds to the physical CPUID in a3+1 
-(a4), and so on.
-
-> diff --git a/Documentation/virt/kvm/loongarch/index.rst 
-> b/Documentation/virt/kvm/loongarch/index.rst
-> new file mode 100644
-> index 000000000000..83387b4c5345
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/loongarch/index.rst
-> @@ -0,0 +1,10 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================
-> +KVM for LoongArch systems
-> +=========================
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   hypercalls.rst
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 958e935449e5..8aa5d92b12ee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12073,6 +12073,7 @@ L:	kvm@vger.kernel.org
->  L:	loongarch@lists.linux.dev
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-> +F:	Documentation/virt/kvm/loongarch/
->  F:	arch/loongarch/include/asm/kvm*
->  F:	arch/loongarch/include/uapi/asm/kvm*
->  F:	arch/loongarch/kvm/
-
-Best Regards,
-Mingcong Bai
