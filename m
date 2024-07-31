@@ -1,127 +1,127 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5501F13BC25
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 18:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921CA1BC4E
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 20:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722452324; cv=none; b=deJP8PhRhPb6wVSFuMxAHFAdU89c+IShT1THO7HgiwBig6CidGr0kKJYCT7n8xXaygoRwFLLs+H/ZFshf9cGeCQJ2gK3DBOYUJxYNefqcymGnyzyR30teAobolLBbJn4YTw3weP+bxvRvRKkasW9CfOakTuRZ+E43WPExP18GTM=
+	t=1722458189; cv=none; b=NHp1HveDBqqmPlEmJcHZipODCasnxKL3tFY17ZgMvGBkEFuF1cUJnIpWecgH8Y9UMUDru5p09IIkwTUHZx2XvAJB3zwruHxuW0Q5II9UH+10/bl3FGKT3XUM+r2ghAsD38P8KP8azILsnA3AYqgoiPd7Vi7PtBZdHBL+HMRZNJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722452324; c=relaxed/simple;
-	bh=Os8qowKsxDSRcPHPF/e1AaWARnryjEqWztOmIrjOGZI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Drmf2BBzs4MoMPU7y6ZfxONBO2aPcTf6J162RfQH+lA1xk93IetdoRwDo4+8cTzSF4ZHaZdJPbBEH11UeLptv+9OkhrVJdVKv/otaAwj+rQkFbfnixvLGKIAseiQD/T7kM49OH/zwbh+TCQ355iHjTkMgO1KfzV6BbQSj/lNE1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b1nTHKn2; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1722458189; c=relaxed/simple;
+	bh=z1aLVeNoBym3Qjn/r9ThqGkDG4AOjTwKh0lTuQS/B+0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gkj/4Res8kV9+mxm2wSw1qV4uMG41ANRZXNErHgkrIo/kyGqyeUkSYOGCYbfYF3XNs3NiF8T08lRWcDFsvazg7c+PDuf7Fv+R11dj0RdzTWgfezx7t4DeBBes1NbdHQAhZvVruaHDbc02PNpENN5jZuLthIergDvj9r2NC1YS/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JvNGKR2N; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b1nTHKn2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1722452314; x=1722711514;
-	bh=Ok2jcwhhpJcH2GHlECFhqT7lAO056VLfnNsP0CYcDJg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=b1nTHKn2T1dmR8vteP/M2sWrDZnltmVMV+WeJpQaWHdshFgouh8mtm6NWkSOyvsxv
-	 zbvWJCt5CARyolCYp8jYPTiMMC2/kamd6t1bN+hVlgjMjCiCQAFbJEnz1IMoa3ET7b
-	 dv/+gkT8NoDZWbongMdRmVuvEm5gxl2UjI9LZZyU/hVmY7z8FZclgaMloojKNlSXGl
-	 3JDlf6u0EO7lKkTxR5KncuBvKc2QYLLC9GUUqnUn8OIok9sbIj5OjDnyv1rHUrCrft
-	 30wBI2Y8WrNCEUZoxCwk/KYw5Ic9fuzfIcT71pq+GI6qDGIg08sGLP7pGBPC44S4xU
-	 28vEKBj2xRsUw==
-Date: Wed, 31 Jul 2024 18:58:28 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti
-	<alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
-Message-ID: <b675e620-6a20-496a-8d23-8e184d7bde6b@proton.me>
-In-Reply-To: <20240628-tracepoint-v4-2-353d523a9c15@google.com>
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com> <20240628-tracepoint-v4-2-353d523a9c15@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 8ba1730ad398f749464698fd1f1be0f27b26c0d0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvNGKR2N"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0bcd04741fso172441276.2
+        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 13:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722458186; x=1723062986; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kd/mYHbPzOSIwsUM5m5UMPqJkKyWoklOLcVSOqbILGs=;
+        b=JvNGKR2NUA8x0vJnM8G6j2bHRRiqpfozh6wYAfncdDQ4QTSDVvGLNfz46piz+hA9y6
+         MBAqiucOeN+laHZiQLoDIlY7y3d46Lb46GCY7fMcAen35Mdj+KB3r6OaJHeaIggHPPn7
+         ElIFr9Q6BxWN2Dj1A4yUUogPjqvUAmhdmJbG/U+Nchdta/rUrdk1fG3SRkRR48Fc8gRi
+         s0l7Z/bsVWumh2cZocEHISx8fvpqtdDjCrntoQEmhnR86dWaruufEhf6Unq+lVK5IUhV
+         q1Y6aXPtMg+RNVj8bZ/wSBcw2nK9xjyRQPcJvwNY+/h5NFaN3W6fPzf2Jw916jdZFRgj
+         WSvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722458186; x=1723062986;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Kd/mYHbPzOSIwsUM5m5UMPqJkKyWoklOLcVSOqbILGs=;
+        b=YeWDwR+UGIUXPZ1wO4UxUr2R6NToZc5dZ5A3iJKmW4Q7wTLkr69WpT7n9+me2u2JPg
+         NrRLE/XHgOo/TnvPoHdxD43oiClZBI+bJicxKyojo2XE6Y6m0dbIm95Q1vzDwRXDQuVT
+         DqoitGD+Hr//GqCRJgGDS7/UYF8HXY4x2WigJ5KzO6mEMlhc6arJFNVgb3WC2ukWW6VT
+         Q/Uo/m4o8G1+TZGzOIL4XcE7JtuPygm9ArJGiNHYbDfwBrE8eqXWoWawUSFhCbHmYdYe
+         ad0WLvRNhjUNFQzbOzN7ttuWJzXCNrLCDtTHYdpqrvfz3/FfywGrUvb1ERGAYKeKkxrx
+         Y3YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgF3Or0OF4NxB6LEdEy/i3TDfmukAoCJDTn9azBNehIhr2+O+XHRm5Mb8QbWzOGh6zSTUS0+eAUw6XZm6QBi4K1Jonca4DZY78
+X-Gm-Message-State: AOJu0YxZ/ILu+iC7RVQ5IwuwDAD3qF7ipC6EMXTq6PdDyOvI6j3ftaNx
+	Xed3Jvj9W9OeXYdiTVmos84eIJOHntlsdGgw/KS/HlgwI3xRHnSI0QWGZ1VaTz+TcQ3x3P1L1Le
+	KEg==
+X-Google-Smtp-Source: AGHT+IH0DRpeCdEjd5+EVXte2iiNPB7q7dTvECq86U0Z8nMo4fguKYduL9RXt42ZsXAM2SH8mq6gA4JZJ0k=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:18d2:b0:e0b:bf20:4ff8 with SMTP id
+ 3f1490d57ef6-e0bccf7b434mr932276.0.1722458186501; Wed, 31 Jul 2024 13:36:26
+ -0700 (PDT)
+Date: Wed, 31 Jul 2024 13:36:25 -0700
+In-Reply-To: <87a5hxfs3d.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-2-seanjc@google.com>
+ <87a5hxfs3d.fsf@draig.linaro.org>
+Message-ID: <ZqqgSW1Z07aBGwQh@google.com>
+Subject: Re: [PATCH v12 01/84] KVM: arm64: Release pfn, i.e. put page, if
+ copying MTE tags hits ZONE_DEVICE
+From: Sean Christopherson <seanjc@google.com>
+To: "Alex =?utf-8?Q?Benn=C3=A9e?=" <alex.bennee@linaro.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 28.06.24 15:23, Alice Ryhl wrote:
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> new file mode 100644
-> index 000000000000..1005f09e0330
-> --- /dev/null
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for tracepoints.
-> +
-> +/// Declare the Rust entry point for a tracepoint.
-> +#[macro_export]
-> +macro_rules! declare_trace {
-> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
-typ:ty),* $(,)?);)*) =3D> {$(
-> +        $( #[$attr] )*
-> +        #[inline(always)]
-> +        $pub unsafe fn $name($($argname : $argtyp),*) {
-> +            #[cfg(CONFIG_TRACEPOINTS)]
-> +            {
-> +                use $crate::bindings::*;
-
-Why is this needed, can't you put this into the invocation of `paste!`?
-ie `[< $crate::bindings::__tracepoint_ $name >]`?
-
-> +
-> +                // SAFETY: It's always okay to query the static key for =
-a tracepoint.
-> +                let should_trace =3D unsafe {
-> +                    $crate::macros::paste! {
-> +                        $crate::static_key::static_key_false!(
-> +                            [< __tracepoint_ $name >],
-> +                            $crate::bindings::tracepoint,
-> +                            key
-> +                        )
-> +                    }
-> +                };
-> +
-> +                if should_trace {
-> +                    $crate::macros::paste! {
-> +                        // SAFETY: The caller guarantees that it is okay=
- to call this tracepoint.
-
-Can you add this on the docs of `$name`? ie add a Safety section.
-The docs should still appear when creating them/when LSPs show them to
-you.
-
----
-Cheers,
-Benno
-
-> +                        unsafe { [< rust_do_trace_ $name >]($($argname),=
-*) };
-> +                    }
-> +                }
-> +            }
-> +
-> +            #[cfg(not(CONFIG_TRACEPOINTS))]
-> +            {
-> +                // If tracepoints are disabled, insert a trivial use of =
-each argument
-> +                // to avoid unused argument warnings.
-> +                $( let _unused =3D $argname; )*
-> +            }
-> +        }
-> +    )*}
-> +}
-> +
-> +pub use declare_trace;
+On Wed, Jul 31, 2024, Alex Benn=C3=A9e wrote:
+> Sean Christopherson <seanjc@google.com> writes:
 >=20
-> --
-> 2.45.2.803.g4e1b14247a-goog
+> > Put the page reference acquired by gfn_to_pfn_prot() if
+> > kvm_vm_ioctl_mte_copy_tags() runs into ZONE_DEVICE memory.  KVM's less-
+> > than-stellar heuristics for dealing with pfn-mapped memory means that K=
+VM
+> > can get a page reference to ZONE_DEVICE memory.
+> >
+> > Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a gu=
+est")
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/arm64/kvm/guest.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> > index 11098eb7eb44..e1f0ff08836a 100644
+> > --- a/arch/arm64/kvm/guest.c
+> > +++ b/arch/arm64/kvm/guest.c
+> > @@ -1059,6 +1059,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+> >  		page =3D pfn_to_online_page(pfn);
+> >  		if (!page) {
+> >  			/* Reject ZONE_DEVICE memory */
+> > +			kvm_release_pfn_clean(pfn);
 >=20
+> I guess this gets renamed later in the series.
+>=20
+> However my main comment is does lack of page always mean a ZONE_DEVICE?
 
+Nope.
+
+> Looking at pfn_to_online_page() I see a bunch of other checks first. Why
+> isn't it that functions responsibility to clean up after itself if its
+> returning NULLs?
+
+pfn_to_online_page() is more strict than gfn_to_pfn_prot().  At least in th=
+eory,
+gfn_to_pfn_prot() could return a pfn that has an associated "struct page", =
+with
+a reference held to said page.  But for that same pfn, pfn_to_online_page()=
+ could
+return NULL, in which case KVM needs to put the reference it acquired via
+gfn_to_pfn_prot().
