@@ -1,116 +1,339 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4CE1A8BE3
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 08:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDE81A7206
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722413557; cv=none; b=TlKxE7ZBRsSbQuuofy/jov3pG7R+AVwWTXbNoeUGeAxFI5cQQ2jawkiokKmkHm+Kt/3l8R3QISFATwuBux2hYhBhTnwaj5H9ViT7b5ACCkFmSjo3/d3z0TqwgoWVoftZR5b97GBNhoEeB8gs6iMSxafnkjHDu6j92kb8Mj04sd4=
+	t=1722417669; cv=none; b=pJdLXt77bpV5vK/jFhr0DzMvxwOKlCXzrYW2SwRxOA4Y9Wklprr8Sysi9yvQgZFRoHk7LhJ5isSeW/0Aerbx8xcaeiJTNo9s40J4QpA0G0y4ZdIIP0cEAHL1Z2snicigZ4uF2mxpcEK4pH6+KfDL09DxGeubg5UXWOMBAjOthDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722413557; c=relaxed/simple;
-	bh=b8hVmojrUfUxc5sorDFfUegqxUC1JzH5YJUFRcGslDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWuC4a6VSlEG4DyX19VObVtAy2UpV8ArEflLVaFU0wKdfy0kcLZ5gbo5n6ZZ0lztYxBeMQH5CAWxE0pbaVhCvTHt/4sWHh621PxMz4cOCfiJ58Cxtfdlg/0OaGmuL/hEkWcJyXr/Y/fYV5pp+5LU9tL/r6hmz4MSP4na78trdaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JQC5SEKd; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1722417669; c=relaxed/simple;
+	bh=3+vM12SWlc1ny4Y/bpC01kRYAc71CKZmegr4wNVXjg0=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=SDKmUpnAU5YOu+rb8rIXgRXAHmUzW2xxV4wCU30WNthBvXTfypG4j2LWKEO2AazoPmHynzNTw9XRTRE63WDJw9DMJ7/NwycV8l5W0sLoluUcoVE/T83XvBep+srY3QBqrtCsWfW1WdFGv2lPOx+a3+/LMXzuTJnyB9CuleSKjcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=rMxo0eVQ; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JQC5SEKd"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5a15c2dc569so4762091a12.3
-        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 01:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1722413552; x=1723018352; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPhqvXPcxjB8hmfad49hCHGbmNQ9dpteVou05ijuxXo=;
-        b=JQC5SEKdjghRS+1qtVUn0oMGChm650JTkWfVa9YVxgHMzMVfhi1AaDN8rBYO885W99
-         XP9FABJyWdu862lW8Gl27c3gIRK5qfbRMeIk9BmF/iptcbMJbzDwiN8amGCr+OOVZXAi
-         Tx6mEv1v18PnqXC9n1EakTeJ6mGI+ye2MNM31MQ4FH6F5ihr1PM9jh2r8UDjnZxf76d+
-         j0MaTY2zr37lIW+5EWh9NVNJoxP92aPGDgTFQCgaulixs6zohYYhNZiMo9OXbi/ZwNW2
-         TByVww7Tls8IkMwRX+nAE/3/ibpoBQhP3OkpsbFDrXXqBAk1N2JkjAoZ9jx0cQ9ujXD5
-         e5ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722413552; x=1723018352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bPhqvXPcxjB8hmfad49hCHGbmNQ9dpteVou05ijuxXo=;
-        b=ZdE5nt6kwPgZE4SFrnx6rgmhS3t4pyrZj9B9bDktnzdhqN7IPioBHR4fbjye5OYFRF
-         5TbOcVXE8IAt4QpZZeJ6dKQfJTqyHFNAlwnhTpJy8ivUL46x5um6QE/ePeI869pcvmWV
-         cLNuX/IaiDQ+ZY+im+qzE3ysHJ5Op5LwpnbxDFaIfcVSIKKUQgeJplH/M1K9xfPC3bhd
-         LtbDFFg2wV7YDE2XAY7hWjBIibXHfSEKkW4SCA4/azeztld9guw91AU3AgUTJgG2GHcm
-         M6lsoHf+TXI4E6wJtRDOMW+kudfkdsi1IiqoUr8orpLXu0MDtvaQ+FPDv7tS4FYojNpw
-         7V2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUuJFgB2GwZGSVsc0MJ+5LUuDDr9NiCquZJJMWGiIz5olnzcSXEpNKQ7cFOs+VaYrkJ2/2uj6IC1hRI28dtYGc7gByjV8+4oF+c
-X-Gm-Message-State: AOJu0YwG91MpS9dG9bnITTfVCbqQqzPUo/xOR0ko4sBzhc+q384V1mq5
-	BhysgWehbubYYOezx8EGjrCTyoP4JKgtlozJicXod3x82dk+6TCTojS4SYa9PLw=
-X-Google-Smtp-Source: AGHT+IGxlRCnb+W6DiXG7nTnr6lyiGJnx0i1YWV+5ADomMCnBj37OyG82iPSl5g4jXJI8y3klQMjSg==
-X-Received: by 2002:a50:d7c1:0:b0:57d:3df:f881 with SMTP id 4fb4d7f45d1cf-5b021190495mr11744615a12.3.1722413552263;
-        Wed, 31 Jul 2024 01:12:32 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ac60918cb4sm8394451a12.0.2024.07.31.01.12.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jul 2024 01:12:31 -0700 (PDT)
-Date: Wed, 31 Jul 2024 10:12:31 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-Subject: Re: [PATCH v12 57/84] KVM: RISC-V: Mark "struct page" pfns accessed
- before dropping mmu_lock
-Message-ID: <20240731-f034f3516f0fffede877c68d@orel>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-58-seanjc@google.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="rMxo0eVQ"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 7A9D220899
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:15:06 +0000 (UTC)
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 815E12613B
+	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 09:14:57 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id A0FBD3E84A;
+	Wed, 31 Jul 2024 09:14:50 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 1D980400AD;
+	Wed, 31 Jul 2024 09:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1722417288; bh=3+vM12SWlc1ny4Y/bpC01kRYAc71CKZmegr4wNVXjg0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rMxo0eVQJLHcGAh9yqrjtbwHghplROA18UuOhMlkgnTJgNAeHpzt+9Kd948RlOaYY
+	 i9J1hLJnibW6x45Q8lwY+WC8id1ryHe5waJbke4FLSkJEXkma/+Si/Vz+YeOzjiH37
+	 9+mc+qvw9hWA7dKgthq+AWrTy3vA+61Ec0dfidQ8=
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 4A13840A78;
+	Wed, 31 Jul 2024 09:14:48 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240726235234.228822-58-seanjc@google.com>
+Date: Wed, 31 Jul 2024 17:14:47 +0800
+From: Mingcong Bai <jeffbai@aosc.io>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, zhaotianrui@loongson.cn,
+ maobibo@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, guanwentao@uniontech.com, Xianglai Li
+ <lixianglai@loongson.cn>
+Subject: Re: [PATCH] Loongarch: KVM: Add KVM hypercalls documentation for
+ LoongArch
+In-Reply-To: <04DAF94279B88A3F+20240731055755.84082-1-wangyuli@uniontech.com>
+References: <04DAF94279B88A3F+20240731055755.84082-1-wangyuli@uniontech.com>
+Message-ID: <5c338084b1bcccc1d57dce9ddb1e7081@aosc.io>
+X-Sender: jeffbai@aosc.io
+Organization: Anthon Open Source Community
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 1D980400AD
 
-On Fri, Jul 26, 2024 at 04:52:06PM GMT, Sean Christopherson wrote:
-> Mark pages accessed before dropping mmu_lock when faulting in guest memory
-> so that RISC-V can convert to kvm_release_faultin_page() without tripping
-> its lockdep assertion on mmu_lock being held.  Marking pages accessed
-> outside of mmu_lock is ok (not great, but safe), but marking pages _dirty_
-> outside of mmu_lock can make filesystems unhappy.
+Hi Yuli,
+
+Thanks for submitting this documentation. I have just a couple 
+suggestions on prose and grammar. Please see below.
+
+在 2024-07-31 13:57，WangYuli 写道：
+> From: Bibo Mao <maobibo@loongson.cn>
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Add documentation topic for using pv_virt when running as a guest
+> on KVM hypervisor.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 > ---
->  arch/riscv/kvm/mmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/virt/kvm/index.rst              |  1 +
+>  .../virt/kvm/loongarch/hypercalls.rst         | 79 +++++++++++++++++++
+>  Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+>  MAINTAINERS                                   |  1 +
+>  4 files changed, 91 insertions(+)
+>  create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+>  create mode 100644 Documentation/virt/kvm/loongarch/index.rst
 > 
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index 06aa5a0d056d..806f68e70642 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -683,10 +683,10 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->  out_unlock:
->  	if ((!ret || ret == -EEXIST) && writable)
->  		kvm_set_pfn_dirty(hfn);
-> +	else
-> +		kvm_release_pfn_clean(hfn);
->  
->  	spin_unlock(&kvm->mmu_lock);
-> -	kvm_set_pfn_accessed(hfn);
-> -	kvm_release_pfn_clean(hfn);
->  	return ret;
->  }
->  
-> -- 
-> 2.46.0.rc1.232.g9752f9e123-goog
->
+> diff --git a/Documentation/virt/kvm/index.rst 
+> b/Documentation/virt/kvm/index.rst
+> index ad13ec55ddfe..9ca5a45c2140 100644
+> --- a/Documentation/virt/kvm/index.rst
+> +++ b/Documentation/virt/kvm/index.rst
+> @@ -14,6 +14,7 @@ KVM
+>     s390/index
+>     ppc-pv
+>     x86/index
+> +   loongarch/index
+> 
+>     locking
+>     vcpu-requests
+> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst 
+> b/Documentation/virt/kvm/loongarch/hypercalls.rst
+> new file mode 100644
+> index 000000000000..1679e48d67d2
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
+> @@ -0,0 +1,79 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===================================
+> +The LoongArch paravirtual interface
+> +===================================
+> +
+> +KVM hypercalls use the HVCL instruction with code 0x100, and the 
+> hypercall
+> +number is put in a0 and up to five arguments may be placed in a1-a5, 
+> the
+> +return value is placed in v0 (alias with a0).
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+The original paragraph can be split into a few sentences for better 
+readability:
+
+"KVM hypercalls use the HVCL instruction with code 0x100 and the 
+hypercall number is put in a0. Up to five arguments may be placed in 
+registers a1 - a5. The return value is placed in v0 (an alias of a0)."
+
+Not sure if "HVCL instruction with code 0x100" is a proper expression, 
+so I have left it alone (I'm a little suspicious). Others are welcome to 
+comment on this.
+
+> +
+> +The code for that interface can be found in arch/loongarch/kvm/*
+
+It would seem that this sentence (or rather the components and 
+structures of this whole documentation?) was borrowed from 
+Documentation/virt/kvm/ppc-pv.rst. But nevertheless:
+
+"Source code for this interface can be found in arch/loongarch/kvm*."
+
+> +
+> +Querying for existence
+> +======================
+> +
+> +To find out if we're running on KVM or not, cpucfg can be used with 
+> index
+> +CPUCFG_KVM_BASE (0x40000000), cpucfg range between 0x40000000 - 
+> 0x400000FF
+> +is marked as a specially reserved range. All existing and future 
+> processors
+> +will not implement any features in this range.
+
+Again, please consider splitting up the sentences:
+
+"We can use cpucfg() at index CPUCFG_KVM_BASE (0x40000000) to query 
+whether the host is running on KVM. The CPUCPU_KVM_BASE range between 
+0x40000000 - 0x400000FF is marked as reserved - all existing and future 
+processors will not implement any features in this range."
+
+> +
+> +When Linux is running on KVM, cpucfg with index CPUCFG_KVM_BASE 
+> (0x40000000)
+> +returns magic string "KVM\0"
+
+When the Linux host is running on KVM, a read on cpucfg() at index 
+CPUCFG_KVM_BASE (0x40000000) returns a magic string "KVM\0".
+
+> +
+> +Once you determined you're running under a PV capable KVM, you can now 
+> use
+> +hypercalls as described below.
+
+Once you have determined that your host is running on a 
+paravirtualization-capable KVM, you may now use hypercalls as described 
+below.
+
+> +
+> +KVM hypercall ABI
+> +=================
+> +
+> +Hypercall ABI on KVM is simple, only one scratch register a0 (v0) and 
+> at most
+> +five generic registers used as input parameter. FP register and vector 
+> register
+> +is not used for input register and should not be modified during 
+> hypercall.
+> +Hypercall function can be inlined since there is only one scratch 
+> register.
+
+"The KVM hypercall ABI is simple, with one scratch register a0 (v0) and 
+at most five generic registers (a1 - a5) used as input parameters. The 
+FP and vector registers are not used as input registers and should not 
+be modified in a hypercall. Hypercall functions can be inlined, as there 
+is only one scratch register."
+
+It is recommended to define what the "The FP and vector registers" are 
+with parentheses.
+
+> +
+> +The parameters are as follows:
+> +
+> +        ========	================	================
+> +	Register	IN			OUT
+> +        ========	================	================
+> +	a0		function number		Return code
+
+Function index?
+
+> +	a1		1st parameter		-
+> +	a2		2nd parameter		-
+> +	a3		3rd parameter		-
+> +	a4		4th parameter		-
+> +	a5		5th parameter		-
+> +        ========	================	================
+> +
+> +Return codes can be as follows:
+
+The return codes may be one of the following:
+
+> +
+> +	====		=========================
+> +	Code		Meaning
+> +	====		=========================
+> +	0		Success
+> +	-1		Hypercall not implemented
+> +	-2		Hypercall parameter error
+
+Bad hypercall parameter
+
+> +	====		=========================
+> +
+> +KVM Hypercalls Documentation
+> +============================
+> +
+> +The template for each hypercall is:
+
+"The template for each hypercall is as follows:"
+
+Also, please consider adding a blank line here (though it probably 
+doesn't matter once rendered, but it would make the plain text more 
+readable).
+
+> +1. Hypercall name
+> +2. Purpose
+> +
+> +1. KVM_HCALL_FUNC_PV_IPI
+> +------------------------
+> +
+> +:Purpose: Send IPIs to multiple vCPUs.
+> +
+> +- a0: KVM_HCALL_FUNC_PV_IPI
+> +- a1: lower part of the bitmap of destination physical CPUIDs
+
+Lower part of the bitmap for destination physical CPUIDs.
+
+> +- a2: higher part of the bitmap of destination physical CPUIDs
+
+Ditto, please capitalize the first letter after ":" and use "for" before 
+"destination physical CPUIDs".
+
+> +- a3: the lowest physical CPUID in bitmap
+
+The lowest physical CPUID in the bitmap.
+
+> +
+> +The hypercall lets a guest send multicast IPIs, with at most 128
+> +destinations per hypercall.  The destinations are represented by a 
+> bitmap
+> +contained in the first two arguments (a1 and a2). Bit 0 of a1 
+> corresponds
+> +to the physical CPUID in the third argument (a3), bit 1 corresponds to 
+> the
+> +physical ID a3+1, and so on.
+
+Cleaning up sentences and dropping inconsistent expressions (such as 
+"argument registers", which was never brought up before). I would 
+recommend making them all consistent throughout by classifying a0 and a1 
+- a5.
+
+The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) 
+with at most 128 destinations per hypercall. The destinations are 
+represented in a bitmap contained in the first two input registers (a1 
+and a2). Bit 0 of a1 corresponds to the physical CPUID in the third 
+input register (a3) and bit 1 corresponds to the physical CPUID in a3+1 
+(a4), and so on.
+
+> diff --git a/Documentation/virt/kvm/loongarch/index.rst 
+> b/Documentation/virt/kvm/loongarch/index.rst
+> new file mode 100644
+> index 000000000000..83387b4c5345
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/loongarch/index.rst
+> @@ -0,0 +1,10 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================
+> +KVM for LoongArch systems
+> +=========================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   hypercalls.rst
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 958e935449e5..8aa5d92b12ee 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12073,6 +12073,7 @@ L:	kvm@vger.kernel.org
+>  L:	loongarch@lists.linux.dev
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> +F:	Documentation/virt/kvm/loongarch/
+>  F:	arch/loongarch/include/asm/kvm*
+>  F:	arch/loongarch/include/uapi/asm/kvm*
+>  F:	arch/loongarch/kvm/
+
+Best Regards,
+Mingcong Bai
