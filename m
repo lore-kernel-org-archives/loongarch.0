@@ -1,188 +1,248 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C341B2F37
-	for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 21:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166F41EB487;
+	Thu,  1 Aug 2024 06:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722461668; cv=none; b=eXwGm2Q88httVmbbrjoax6iZDEtygStx5ydpwdwjlN1nf2M7UlttqkwMZ52sqwTawevFMQAbg3ZxrWEqz112H/3MkV/0eNRs7xcE9mEoDOkcdHcufLTk34rcwi4b+cmrtjbnviq6MRE8C3rbmuqGhH89/221E65QAvFGLrPJNYY=
+	t=1722492528; cv=none; b=SMP27RSOV8jDXgrPX9JtOKHgTVrs9hvPqaPhrRHLgewiBOtsmDbbNN0Jsig8B7mdLvUlTAscLHo2lTpdXrQsWmOQ6mKhNSsq8DtFIlV54sgRui1d3Iq/jeBjt3MIeDL36c2eI9ssV3eOhhYoa75+79uyMd2FdgDpNEPQ9EazO6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722461668; c=relaxed/simple;
-	bh=7409YPGD84DSohjrVEJAwG5xvR83yL1kGxaxMdosLHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sOOImTO7K6nw+gdAFtZUi8x23wY8FQtfaLZb0cJfu/F5dvVFDp6xU2mixa6uQBPtsTElLjcyWgjNZIlYhRFNDUAqhTZ4mlp/+0rVFFaB/3G2WvRDR4qCxWDcOq/jhVLhrAbGigB3cRFzn2HJxZ84OnGlOCn5dzpdY1vyHwxqQAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o7SBtOQf; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722492528; c=relaxed/simple;
+	bh=6bV01Igo0vm/teHus5SOoAdpI2cX0Ttgy2pDh5oYhjA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FNHdCzphJ9kZrn2XMOsZxUmV+1c835x7Moe87epyouZJi8oEqwQYnpKEj1fM90w9Y/LjlwUlgOwfRkqD1L6PwcLm8NtwECiTFzGqwIyYfh61Y1f1PahOAKijAkMQNSzRgjEhDNSB0F2LVPzDqDUoYf0q01OCmiNt/jgpc8mwkDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXNEbP2s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7SBtOQf"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42816ca782dso39457665e9.2
-        for <loongarch@lists.linux.dev>; Wed, 31 Jul 2024 14:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722461665; x=1723066465; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
-        b=o7SBtOQfk6BgpUT9Uq7u9sKGYHfqJL8QGfb4vwH8ncihZucJ38dvPTUlJlYeAFLFei
-         lETmdwyZIEtXYhfGZBqbUXXVhARnM6O6GV8uGeVXWBDyeA3EnAfm0FdnPEhnYndyyTwP
-         iMDt7KgXdJlTNT/JPoJpxoluALztAOQdo4QZ1NjuW3InL0PdS6tMl8HH9GhtNiKl+6D7
-         XhyyrX/RCDpsw3l3By4FDnW9t4VkvygsV/7DJ44TrQ0IH0qA2x6gvU/rCXi0iOm+OpwC
-         sBu3m4bGVA2eg3IciJCEQ9nzyO8M9dxlYr3WddMSXnDk4m0PgeaO0/AT+fjm0DQ5IehF
-         VL1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722461665; x=1723066465;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
-        b=PWW0CUSQK6Gn27NdUvbWgygGt0PY9fW9v0LhRiAb5KdeADXZup0eWriYkLxorRSDpX
-         VcPQEvp4rKVPUrX6gko1COrMjHsWoPpLjC7brwP4ZbvMt6/1itcSe5xsCpo6xOjLl7V3
-         CjCOO90LKur99OVY+vnHwIyqIIlUEJvWMKRRVIIVx0WyjJA30akb55w7dO3WonEowJyF
-         yBueGzCBUV6V2Yl200mHD/A+Touej4+FmEDJBtH44me1pYkBSsKQP+QJTwR2+1L/fOI5
-         /xVN/KbQsnOETU+6ZboGCl37j7VjLsNL2unNFgecQO/4+QaeyDm1cnQ6UcmJZUsvBY6I
-         ckvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ZQs0Q8OsmRWDos4iqPcPhxvLgfUKYxj9X8/HhNroQBsQ4Qu54xzAQTKWSjPqRogfZYwnif5i1zXKmyj6pqwznv9k9FoA637U
-X-Gm-Message-State: AOJu0Yya7FnTObOKbwVBMmM61bFTVBmGWGLMaYfAdFvP0O5slcVO/MBs
-	07DXVACzsJaFXi74HDBfURn3TgJH/qkxCnwVpcEXmv32LBRR8Jyj6qMkHhhVMl4zBafRTdK3pWs
-	EVGzbtOe33+tvTiA+aP3LjkqTcvS/L6UMH/cJ
-X-Google-Smtp-Source: AGHT+IEnnH7Vl1oPP/7poRoKnYi3pQkDBFhO+xnBb/MH3dLIwjkKyZ7/ziEU66uYwoK2Ox4X3gDKYbUA6wyDWgsUmeg=
-X-Received: by 2002:a05:600c:3543:b0:426:6ee7:c05a with SMTP id
- 5b1f17b1804b1-428a9bdcd50mr4067365e9.15.1722461664765; Wed, 31 Jul 2024
- 14:34:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXNEbP2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74391C4AF09;
+	Thu,  1 Aug 2024 06:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722492527;
+	bh=6bV01Igo0vm/teHus5SOoAdpI2cX0Ttgy2pDh5oYhjA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CXNEbP2sCuXXcLtnU1Im8vcEfX+Ba8ImoGoJdTPy/rvEsaLwu/okVVXfnTfcw0E+a
+	 PF48mhukFNpdGHFhOqECuqmjQ74t4U7aKFKEvu0lcDvSAbpjnR/B9ZHdgw7k5qDuPc
+	 wkQrwpVW7zg/p6lChP7ihXepuCzenZCOoest9ZwagSbXBigbYbJAyWmJe70AnEdjNa
+	 cr7WYs6+/WXHjo/hTxyS0i3eDMwd6vLTE3k8SyVxwoMktV05+0OSUo/WvZ8+iP8sgf
+	 RoxwYNVF97lhLo9ZKc7tIO8VPxnb5Ho7v9vk12s6dVADrW2eNFcO9bHenCRQWgPx0E
+	 SXclvNFKP+YJQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v3 00/26] mm: introduce numa_memblks
+Date: Thu,  1 Aug 2024 09:08:00 +0300
+Message-ID: <20240801060826.559858-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
- <20240628-tracepoint-v4-1-353d523a9c15@google.com> <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 31 Jul 2024 23:34:13 +0200
-Message-ID: <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: add static_key_false
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
-	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 31, 2024 at 7:05=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Fri, Jun 28, 2024 at 01:23:31PM +0000, Alice Ryhl wrote:
->
-> >  rust/kernel/arch/arm64/jump_label.rs     | 34 ++++++++++++++++++++++++=
-++++
-> >  rust/kernel/arch/loongarch/jump_label.rs | 35 ++++++++++++++++++++++++=
-+++++
-> >  rust/kernel/arch/mod.rs                  | 24 ++++++++++++++++++++
-> >  rust/kernel/arch/riscv/jump_label.rs     | 38 ++++++++++++++++++++++++=
-++++++++
-> >  rust/kernel/arch/x86/jump_label.rs       | 35 ++++++++++++++++++++++++=
-+++++
-> >  rust/kernel/lib.rs                       |  2 ++
-> >  rust/kernel/static_key.rs                | 32 ++++++++++++++++++++++++=
-+++
-> >  scripts/Makefile.build                   |  2 +-
-> >  8 files changed, 201 insertions(+), 1 deletion(-)
->
-> So I really find the amount of duplicated asm offensive. Is is far too
-> easy for any of this to get out of sync.
->
-> > diff --git a/rust/kernel/arch/x86/jump_label.rs b/rust/kernel/arch/x86/=
-jump_label.rs
-> > new file mode 100644
-> > index 000000000000..383bed273c50
-> > --- /dev/null
-> > +++ b/rust/kernel/arch/x86/jump_label.rs
-> > @@ -0,0 +1,35 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +// Copyright (C) 2024 Google LLC.
-> > +
-> > +//! X86 Rust implementation of jump_label.h
-> > +
-> > +/// x86 implementation of arch_static_branch
-> > +#[macro_export]
-> > +#[cfg(target_arch =3D "x86_64")]
-> > +macro_rules! arch_static_branch {
-> > +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) =3D> {'my_labe=
-l: {
-> > +        core::arch::asm!(
-> > +            r#"
-> > +            1: .byte 0x0f,0x1f,0x44,0x00,0x00
-> > +
-> > +            .pushsection __jump_table,  "aw"
-> > +            .balign 8
-> > +            .long 1b - .
-> > +            .long {0} - .
-> > +            .quad {1} + {2} + {3} - .
-> > +            .popsection
-> > +            "#,
-> > +            label {
-> > +                break 'my_label true;
-> > +            },
-> > +            sym $key,
-> > +            const ::core::mem::offset_of!($keytyp, $field),
-> > +            const $crate::arch::bool_to_int($branch),
-> > +        );
-> > +
-> > +        break 'my_label false;
-> > +    }};
-> > +}
->
-> Note that this uses the forced 5 byte version, and not the dynamic sized
-> one. On top of that it hard-codes the nop5 string :/
->
-> Please work harder to not have to duplicate stuff like this.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-I really didn't want to duplicate it, but it's very hard to find a
-performant alternative. Is there any way we could accept duplication
-only in the cases where an 'i' parameter is used? I don't have the
-choice of using a Rust helper for 'i' parameters.
+Hi,
 
-Perhaps one option could be to put the Rust code inside jump_label.h
-and have the header file evaluate to either C or Rust depending on the
-value of some #ifdefs?
+Following the discussion about handling of CXL fixed memory windows on
+arm64 [1] I decided to bite the bullet and move numa_memblks from x86 to
+the generic code so they will be available on arm64/riscv and maybe on
+loongarch sometime later.
 
-#ifndef RUST_ASM
-/* existing C code goes here */
-#endif
-#ifdef RUST_ASM
-// rust code goes here
-#endif
+While it could be possible to use memblock to describe CXL memory windows,
+it currently lacks notion of unpopulated memory ranges and numa_memblks
+does implement this.
 
-That way the duplication is all in a single file. It would also avoid
-the need for duplicating the nop5 string, as the Rust case is still
-going through the C preprocessor and can use the existing #define.
+Another reason to make numa_memblks generic is that both arch_numa (arm64
+and riscv) and loongarch use trimmed copy of x86 code although there is no
+fundamental reason why the same code cannot be used on all these platforms.
+Having numa_memblks in mm/ will make it's interaction with ACPI and FDT
+more consistent and I believe will reduce maintenance burden.
 
-I'm also open to other alternatives. But I don't have infinite
-resources to drive major language changes.
+And with generic numa_memblks it is (almost) straightforward to enable NUMA
+emulation on arm64 and riscv.
 
-Alice
+The first 9 commits in this series are cleanups that are not strictly
+related to numa_memblks.
+Commits 10-16 slightly reorder code in x86 to allow extracting numa_memblks
+and NUMA emulation to the generic code.
+Commits 17-19 actually move the code from arch/x86/ to mm/ and commits 20-22
+does some aftermath cleanups.
+Commit 23 updates of_numa_init() to return error of no NUMA nodes were
+found in the device tree.
+Commit 24 switches arch_numa to numa_memblks.
+Commit 25 enables usage of phys_to_target_node() and
+memory_add_physaddr_to_nid() with numa_memblks.
+Commit 26 moves the description for numa=fake from x86 to admin-guide.
+
+[1] https://lore.kernel.org/all/20240529171236.32002-1-Jonathan.Cameron@huawei.com/
+
+v2: https://lore.kernel.org/all/20240723064156.4009477-1-rppt@kernel.org
+* rebase on v6.11-rc1
+* fix dummy_numa_init() in arch_numa, thanks Zi Yan
+* update of_numa_init() to return error of no NUMA nodes were
+* add Tested-by, thanks Zi Yan
+
+v1: https://lore.kernel.org/all/20240716111346.3676969-1-rppt@kernel.org
+* add cleanup for arch_alloc_nodedata and HAVE_ARCH_NODEDATA_EXTENSION
+* add patch that moves description of numa=fake kernel parameter from
+  x86 to admin-guide
+* reduce rounding up of node_data allocations from PAGE_SIZE to
+  SMP_CACHE_BYTES
+* restore single allocation attempt of numa_distance
+* fix several comments
+* added review tags
+
+Mike Rapoport (Microsoft) (26):
+  mm: move kernel/numa.c to mm/
+  MIPS: sgi-ip27: make NODE_DATA() the same as on all other architectures
+  MIPS: sgi-ip27: ensure node_possible_map only contains valid nodes
+  MIPS: sgi-ip27: drop HAVE_ARCH_NODEDATA_EXTENSION
+  MIPS: loongson64: rename __node_data to node_data
+  MIPS: loongson64: drop HAVE_ARCH_NODEDATA_EXTENSION
+  mm: drop CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
+  arch, mm: move definition of node_data to generic code
+  arch, mm: pull out allocation of NODE_DATA to generic code
+  x86/numa: simplify numa_distance allocation
+  x86/numa: use get_pfn_range_for_nid to verify that node spans memory
+  x86/numa: move FAKE_NODE_* defines to numa_emu
+  x86/numa_emu: simplify allocation of phys_dist
+  x86/numa_emu: split __apicid_to_node update to a helper function
+  x86/numa_emu: use a helper function to get MAX_DMA32_PFN
+  x86/numa: numa_{add,remove}_cpu: make cpu parameter unsigned
+  mm: introduce numa_memblks
+  mm: move numa_distance and related code from x86 to numa_memblks
+  mm: introduce numa_emulation
+  mm: numa_memblks: introduce numa_memblks_init
+  mm: numa_memblks: make several functions and variables static
+  mm: numa_memblks: use memblock_{start,end}_of_DRAM() when sanitizing
+    meminfo
+  of, numa: return -EINVAL when no numa-node-id is found
+  arch_numa: switch over to numa_memblks
+  mm: make range-to-target_node lookup facility a part of numa_memblks
+  docs: move numa=fake description to kernel-parameters.txt
+
+ .../admin-guide/kernel-parameters.txt         |  15 +
+ .../arch/x86/x86_64/boot-options.rst          |  12 -
+ arch/arm64/include/asm/Kbuild                 |   1 +
+ arch/arm64/include/asm/mmzone.h               |  13 -
+ arch/arm64/include/asm/topology.h             |   1 +
+ arch/loongarch/include/asm/Kbuild             |   1 +
+ arch/loongarch/include/asm/mmzone.h           |  16 -
+ arch/loongarch/include/asm/topology.h         |   1 +
+ arch/loongarch/kernel/numa.c                  |  21 -
+ arch/mips/Kconfig                             |   5 -
+ arch/mips/include/asm/mach-ip27/mmzone.h      |   1 -
+ .../mips/include/asm/mach-loongson64/mmzone.h |   4 -
+ arch/mips/loongson64/numa.c                   |  28 +-
+ arch/mips/sgi-ip27/ip27-memory.c              |  12 +-
+ arch/mips/sgi-ip27/ip27-smp.c                 |   2 +
+ arch/powerpc/include/asm/mmzone.h             |   6 -
+ arch/powerpc/mm/numa.c                        |  26 +-
+ arch/riscv/include/asm/Kbuild                 |   1 +
+ arch/riscv/include/asm/mmzone.h               |  13 -
+ arch/riscv/include/asm/topology.h             |   4 +
+ arch/s390/include/asm/Kbuild                  |   1 +
+ arch/s390/include/asm/mmzone.h                |  17 -
+ arch/s390/kernel/numa.c                       |   3 -
+ arch/sh/include/asm/mmzone.h                  |   3 -
+ arch/sh/mm/init.c                             |   7 +-
+ arch/sh/mm/numa.c                             |   3 -
+ arch/sparc/include/asm/mmzone.h               |   4 -
+ arch/sparc/mm/init_64.c                       |  11 +-
+ arch/x86/Kconfig                              |   9 +-
+ arch/x86/include/asm/Kbuild                   |   1 +
+ arch/x86/include/asm/mmzone.h                 |   6 -
+ arch/x86/include/asm/mmzone_32.h              |  17 -
+ arch/x86/include/asm/mmzone_64.h              |  18 -
+ arch/x86/include/asm/numa.h                   |  26 +-
+ arch/x86/include/asm/sparsemem.h              |   9 -
+ arch/x86/mm/Makefile                          |   1 -
+ arch/x86/mm/amdtopology.c                     |   1 +
+ arch/x86/mm/numa.c                            | 618 +-----------------
+ arch/x86/mm/numa_internal.h                   |  24 -
+ drivers/acpi/numa/srat.c                      |   1 +
+ drivers/base/Kconfig                          |   1 +
+ drivers/base/arch_numa.c                      | 224 ++-----
+ drivers/cxl/Kconfig                           |   2 +-
+ drivers/dax/Kconfig                           |   2 +-
+ drivers/of/of_numa.c                          |   5 +-
+ include/asm-generic/mmzone.h                  |   5 +
+ include/asm-generic/numa.h                    |   6 +-
+ include/linux/memory_hotplug.h                |  48 --
+ include/linux/numa.h                          |   5 +
+ include/linux/numa_memblks.h                  |  58 ++
+ kernel/Makefile                               |   1 -
+ kernel/numa.c                                 |  26 -
+ mm/Kconfig                                    |  11 +
+ mm/Makefile                                   |   3 +
+ mm/mm_init.c                                  |   3 +-
+ mm/numa.c                                     |  57 ++
+ {arch/x86/mm => mm}/numa_emulation.c          |  42 +-
+ mm/numa_memblks.c                             | 568 ++++++++++++++++
+ 58 files changed, 870 insertions(+), 1160 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/mmzone.h
+ delete mode 100644 arch/loongarch/include/asm/mmzone.h
+ delete mode 100644 arch/riscv/include/asm/mmzone.h
+ delete mode 100644 arch/s390/include/asm/mmzone.h
+ delete mode 100644 arch/x86/include/asm/mmzone.h
+ delete mode 100644 arch/x86/include/asm/mmzone_32.h
+ delete mode 100644 arch/x86/include/asm/mmzone_64.h
+ create mode 100644 include/asm-generic/mmzone.h
+ create mode 100644 include/linux/numa_memblks.h
+ delete mode 100644 kernel/numa.c
+ create mode 100644 mm/numa.c
+ rename {arch/x86/mm => mm}/numa_emulation.c (94%)
+ create mode 100644 mm/numa_memblks.c
+
+
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+-- 
+2.43.0
+
