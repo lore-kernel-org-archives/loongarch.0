@@ -1,128 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5349641;
-	Thu,  1 Aug 2024 12:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82D01A57E5
+	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 14:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722515598; cv=none; b=rJPlfkUDIkyIyH/ZFu5Y7vq5PdPBYj/k6K5j7XcumfdE7Ee3pudW2fMiiHOXEfIauPDfWupIMFTetFtYvkMlbPzopyIfCNUqzPhL4VJWZFe5piifssAcHxGemvP7Utbo5lqsKd/EmE0wwdfL5Zyh28LgYeF5l+Bz1lcQg8nz5Rs=
+	t=1722523397; cv=none; b=HI6Un4YMO2lHNQYAtzWJ/v2ac2mlpKuQ+D71S6S+VqvhBULKgFShm3hZkqeODfGThrI0l+l4Ffov7zLgPsXBq+/+Q04fbohb4F3sRMiNzaKpoX0Ieh2j/iyfCGcDHpC/EodNcrfwmTGcCcgbOsSDl8A17ksBNapQ0XNAM6wC36k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722515598; c=relaxed/simple;
-	bh=4aOsClOUPnAaG9L0WTgcWPLsN20TbGHJxOPzz8LH9jg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ULeIt1k69n4adPTDZp8N/tXZlX3mmA4juYFMZDFPifLpivtuTQQK4PA3/hNOq0mQkebuuoZXD2wrzPXAwYGGU2iif5TiPI27VSQky5jaAfva8EbyxpFTl3WguFdaKUibGPwk6sbMLIrkws7oQsBii4vGYIxQbP6TLNXGnqWPvgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6OvicIN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722523397; c=relaxed/simple;
+	bh=IsY6cT/EMNbdEHxsGGmKU2yom71VQGN3eoqzlVoDRMA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vojookl6i9yIjjI082PvGRI5yX0QXi/C2NvxzlKTImBAC3ifwsFiWqQjghKGV5fEfgbWzRKCQGQyiRFL8j6d4RVDDn+uHIMiS6CNeM8p1n+YpwjjK5Tili0VHFyRlGr2r7y/wTN+1HDihEMRNKwoldV2wtw3D0U+U9GuEj4RWBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ATCP681e; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6OvicIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A281FC32786;
-	Thu,  1 Aug 2024 12:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722515597;
-	bh=4aOsClOUPnAaG9L0WTgcWPLsN20TbGHJxOPzz8LH9jg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=b6OvicIN5ag2uDECZrMW/7VfkT9HERuTj8qcQQFTP+ojAJ1xLSW9Rl/I6unXUj52n
-	 I+kr2gohM/Nz2uGnehivcWGGW6nP0I9vzQOuT4aJoX9XeZPcYGg9VFmnpbqYUfrSfn
-	 kL0chkz95j8GFJdvYQMjybRNX1poNzWQZQwnv8ISknQfis+9QYYgZ7IyC1RvqVvnH2
-	 ifg4scGA2y9CWR7mAwdvT/OQyLlLEl3YdJR/Guj3s+igv0uix2x2NYAVO0jeZmyPKl
-	 L6j6qGuylIr31wKvq/oI+vpB/3J1ktwTLQS5fNTjRY6v0WyCodIKh6EnEWB2eV8irg
-	 aEUMT332EEFtA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Andreas Schwab <schwab@suse.de>,
-	Florian Weimer <fweimer@redhat.com>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-api@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH] syscalls: fix syscall macros for newfstat/newfstatat
-Date: Thu,  1 Aug 2024 14:32:33 +0200
-Message-Id: <20240801123305.2392874-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ATCP681e"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-688777c95c4so11127617b3.1
+        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 07:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722523395; x=1723128195; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9BUCK9RfTKafiexBRvCEwFw2qC43V57hNjDHfumiy08=;
+        b=ATCP681eu6Kt/PIShW2CFNQX/BZoqW5aNGnpvDNef2M3MXvAQmWNK5JwOkQ8Dvxorc
+         1aj/D4P+2OyWlPKbFiUz6tCYOdRcGzUJnwU2rsLJ/QruRyHY43meKFIpeIZ1/a5fmfyS
+         5TAMilY26MdtIiZRRY3FJIyek184T9YAujscE31mFTsPlxRyzzWFiefUIX5R3HZcxuCO
+         EjBTf6hAZJTOkJOR5lL/dQ/fK7KphemfBeBLaUQNfUxltSQGXTxYB6hirwviflWhMBbP
+         TA5Xw1S3AKPAcA2TUruA1zOSI1TcToobJBiWeurOOkms4kqd/odRgu4/J3YqeWgxI+T5
+         su4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722523395; x=1723128195;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9BUCK9RfTKafiexBRvCEwFw2qC43V57hNjDHfumiy08=;
+        b=uc8aLxBZDdFO+7WV4VGCgSueSMFysrAaljMu2AxuMLga1zEJtjG681BN4xGGgAAzN3
+         khoQiy+Kw8eTcJtTft1SnxPWSevwBiTFeqPN0CpiuUC8zPLCEYDDRiVZNXn7ECgTBUgZ
+         2Tk+iVLyQ6d/H2BGhimf1qtqwRIIW/48AVZRxTfqok7fpxVn+84D8c6t4rnzJ2YvLdtM
+         ztAzOEhmJAgpryMK1lJP8+YSi1zqnjURdOrlLtLeVeVnlxcCF3C/GsuVG/sOxqQolnDC
+         Oe6/Y2acleBxrmV3AA/dF1TqSeg+YKCJoQxpashiqKoQcE6LdI+FU6TV/SdnvXoBWWjZ
+         lySQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh4fdZKqXpKzoq84hSTV7vg5USnFH3xFhwKEybsjMBG2Xv3ZQoNXxRfaQBfc9X7M7rCz2A/jliRvfs+X4Ic8cXi0aJsuBHsWaA
+X-Gm-Message-State: AOJu0YwRv1OAwzCqDxx3HTSqrC1fwS6+0yRKNsHd3JyXr01IN+kQeI25
+	KWfWWj3L3K2KDdvwbYqghRiwjTkkzscqq+87Z/ctnsVvotHtti2YueKsRy5r4sB3wh7jzX2YAfB
+	dYw==
+X-Google-Smtp-Source: AGHT+IHkE7Ce/eHqXIIWUhOrz6iZ7wUAM+0kNmbjyrQoG1wEe6+vtvmxZ2gwjb9N0RAQKGaJuDaT2daG0VE=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1104:b0:e0b:b6f3:85 with SMTP id
+ 3f1490d57ef6-e0bde2f0105mr658276.2.1722523394843; Thu, 01 Aug 2024 07:43:14
+ -0700 (PDT)
+Date: Thu, 1 Aug 2024 07:43:13 -0700
+In-Reply-To: <87wml0egzo.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-6-seanjc@google.com>
+ <87wml0egzo.fsf@draig.linaro.org>
+Message-ID: <ZqufAYyVOa9M1z76@google.com>
+Subject: Re: [PATCH v12 05/84] KVM: Add kvm_release_page_unused() API to put
+ pages that KVM never consumes
+From: Sean Christopherson <seanjc@google.com>
+To: "Alex =?utf-8?Q?Benn=C3=A9e?=" <alex.bennee@linaro.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Aug 01, 2024, Alex Benn=C3=A9e wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+>=20
+> > Add an API to release an unused page, i.e. to put a page without markin=
+g
+> > it accessed or dirty.  The API will be used when KVM faults-in a page b=
+ut
+> > bails before installing the guest mapping (and other similar flows).
+> >
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  include/linux/kvm_host.h | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > index 3d9617d1de41..c5d39a337aa3 100644
+> > --- a/include/linux/kvm_host.h
+> > +++ b/include/linux/kvm_host.h
+> > @@ -1201,6 +1201,15 @@ unsigned long gfn_to_hva_prot(struct kvm *kvm, g=
+fn_t gfn, bool *writable);
+> >  unsigned long gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t g=
+fn);
+> >  unsigned long gfn_to_hva_memslot_prot(struct kvm_memory_slot *slot, gf=
+n_t gfn,
+> >  				      bool *writable);
+> > +
+> > +static inline void kvm_release_page_unused(struct page *page)
+> > +{
+> > +	if (!page)
+> > +		return;
+> > +
+> > +	put_page(page);
+> > +}
+>=20
+> I guess it's unfamiliarity with the mm layout but I was trying to find
+> where the get_pages come from to see the full pattern of allocate and
+> return. I guess somewhere in the depths of hva_to_pfn() from
+> hva_to_pfn_retry()?
 
-The __NR_newfstat and __NR_newfstatat macros accidentally got renamed
-in the conversion to the syscall.tbl format, dropping the 'new' portion
-of the name.
+If successful, get_user_page_fast_only() and get_user_pages_unlocked() grab=
+ a
+reference on behalf of the caller.
 
-In an unrelated change, the two syscalls are no longer architecture
-specific but are once more defined on all 64-bit architectures, so the
-'newstat' ABI keyword can be dropped from the table as a simplification.
+As of this patch, hva_to_pfn_remapped() also grabs a reference to pages tha=
+t
+appear to be refcounted, which is the underlying wart this series aims to f=
+ix.
+In KVM's early days, it _only_ supported GUP, i.e. if KVM got a pfn, that p=
+fn
+was (a) backed by struct page and (b) KVM had a reference to said page.  Th=
+at
+led to the current mess, as KVM didn't get reworked to properly track pages=
+ vs.
+pfns when support for VM_MIXEDMAP was added.
 
-Fixes: Fixes: 4fe53bf2ba0a ("syscalls: add generic scripts/syscall.tbl")
-Closes: https://lore.kernel.org/lkml/838053e0-b186-4e9f-9668-9a3384a71f23@app.fastmail.com/T/#t
-Reported-by: Florian Weimer <fweimer@redhat.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm64/kernel/Makefile.syscalls     | 2 +-
- arch/loongarch/kernel/Makefile.syscalls | 3 ++-
- arch/riscv/kernel/Makefile.syscalls     | 2 +-
- scripts/syscall.tbl                     | 4 ++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/kernel/Makefile.syscalls b/arch/arm64/kernel/Makefile.syscalls
-index 3cfafd003b2d..0542a718871a 100644
---- a/arch/arm64/kernel/Makefile.syscalls
-+++ b/arch/arm64/kernel/Makefile.syscalls
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- syscall_abis_32 +=
--syscall_abis_64 += renameat newstat rlimit memfd_secret
-+syscall_abis_64 += renameat rlimit memfd_secret
- 
- syscalltbl = arch/arm64/tools/syscall_%.tbl
-diff --git a/arch/loongarch/kernel/Makefile.syscalls b/arch/loongarch/kernel/Makefile.syscalls
-index 523bb411a3bc..ab7d9baa2915 100644
---- a/arch/loongarch/kernel/Makefile.syscalls
-+++ b/arch/loongarch/kernel/Makefile.syscalls
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--syscall_abis_64 += newstat
-+# No special ABIs on loongarch so far
-+syscall_abis_64 +=
-diff --git a/arch/riscv/kernel/Makefile.syscalls b/arch/riscv/kernel/Makefile.syscalls
-index 52087a023b3d..9668fd1faf60 100644
---- a/arch/riscv/kernel/Makefile.syscalls
-+++ b/arch/riscv/kernel/Makefile.syscalls
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- syscall_abis_32 += riscv memfd_secret
--syscall_abis_64 += riscv newstat rlimit memfd_secret
-+syscall_abis_64 += riscv rlimit memfd_secret
-diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
-index 797e20ea99a2..4586a18dfe9b 100644
---- a/scripts/syscall.tbl
-+++ b/scripts/syscall.tbl
-@@ -98,9 +98,9 @@
- 77	common	tee				sys_tee
- 78	common	readlinkat			sys_readlinkat
- 79	stat64	fstatat64			sys_fstatat64
--79	newstat	fstatat				sys_newfstatat
-+79	64	newfstatat			sys_newfstatat
- 80	stat64	fstat64				sys_fstat64
--80	newstat	fstat				sys_newfstat
-+80	64	newfstat			sys_newfstat
- 81	common	sync				sys_sync
- 82	common	fsync				sys_fsync
- 83	common	fdatasync			sys_fdatasync
--- 
-2.39.2
-
+	/*
+	 * Get a reference here because callers of *hva_to_pfn* and
+	 * *gfn_to_pfn* ultimately call kvm_release_pfn_clean on the
+	 * returned pfn.  This is only needed if the VMA has VM_MIXEDMAP
+	 * set, but the kvm_try_get_pfn/kvm_release_pfn_clean pair will
+	 * simply do nothing for reserved pfns.
+	 *
+	 * Whoever called remap_pfn_range is also going to call e.g.
+	 * unmap_mapping_range before the underlying pages are freed,
+	 * causing a call to our MMU notifier.
+	 *
+	 * Certain IO or PFNMAP mappings can be backed with valid
+	 * struct pages, but be allocated without refcounting e.g.,
+	 * tail pages of non-compound higher order allocations, which
+	 * would then underflow the refcount when the caller does the
+	 * required put_page. Don't allow those pages here.
+	 */
+	if (!kvm_try_get_pfn(pfn))
+		r =3D -EFAULT;
