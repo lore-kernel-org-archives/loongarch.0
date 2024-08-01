@@ -1,60 +1,60 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C7116EB6E
-	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 08:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2C3157493
+	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 09:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722502652; cv=none; b=t76WUZY1So+O/1c46v4XhkO6HnyyKAkEvWXWtKQxe27Yfi+LoPCiMYvEc2CRod126vtyW5J7Edudrk7Ux9i3qslX/XY6MOLFXRMVRMRtd9NWeUgO41+NkSpzqofPYk+6d4yeydCOMF5Ipu3DbR/qiHvSvQWzl43b/AsWC23aLL0=
+	t=1722503026; cv=none; b=vBvqdwBBn4vE7F1i6tP5AT1cCk/p91NDJtOTaV1Ri+OCK/5111JRK0G3hxDooylc+faV5RlYwjzQIx8pecqd+eLp8ytTk2kkx419SaL6fuCiABzKEaEEO78H47+dHETXxzyoBsB/C9SqWqTuJD3f/V/B8wOip9JdVssU6GXXpTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722502652; c=relaxed/simple;
-	bh=JtRBSdBvaqBsQtNVvhstlkMyWmalBV9Q7J8Cb3IfAjw=;
+	s=arc-20240116; t=1722503026; c=relaxed/simple;
+	bh=M/Nhi0sMK7PpCm2r/uuIU8M4tCHIO/lVeQuknqZEy3M=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Uwnf2sYySwPTiOqhgoHZfeFh1aTe5pbiJ4fXMe2md9nd46Dqg6HXOPhqg3rwgvya/1dNC+k/9uhcpl/y4GXneh8KKehNurDWYFxKtQCK3x2jrkNfE4svjlIYa1pNMrr3QiDNFqCPo+AniP/shThYVpef5m0mIyMRf3RbE1x+J2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ct4JDeIz; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version:Content-Type; b=Fm3E5NL91bdLhAjBBM01rPPjNFdP+b/dOvG6JqODDdUTuBrVAVMWKj4LpOd6SAfHu7DcP9Z3eK5WZjBiH4lb7bYEEOYsezYOkmpFYOom4rd6yMmcjMFcbvjBFLH/E478Fm+4A4vwA4xxlTRsIQfZvEJhuwok/4OBTWgTGo2QAT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZmEewjAD; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ct4JDeIz"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a7abf92f57bso876554366b.2
-        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 01:57:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmEewjAD"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a7a8caef11fso776694166b.0
+        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 02:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722502649; x=1723107449; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1722503022; x=1723107822; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Syi3zSlJ8k1vqxBzUq6nZD+avtMgHQU+/NZ7B5gDmQ4=;
-        b=Ct4JDeIz4tVP3G/9jQ1ptBJDTjvm9PS6RW5+2wwMMCvSNfXFUxv+AgckDgulghchrU
-         YkpcFc2f673T8XS7JnAFeASh/QBWaHdzJ379tYMnbKzpMDQJwQlS6PAG6pBAciqnoKux
-         dljzbHkGZ+zLGT4N/LO62MH7to0l6UYQRX7fA2M/42lDde2lxFkf1cbVW1pTHFNZiQWp
-         9/Ku2F2KvodppdeTmr6SyZWvoIa1+pksqyCak4RLw0cGyLGyNw5PO/BCVFO+HnfrtMts
-         7WC2vpfwJr/1pe6TQ4FdTvKzjWTL3Mwp0HeDY+EoQBB12PMzhd3qDALkBd7mt8UEjTnX
-         tt2Q==
+        bh=M/Nhi0sMK7PpCm2r/uuIU8M4tCHIO/lVeQuknqZEy3M=;
+        b=ZmEewjADCcu3KdLu3yApe4e3vWEcgBEQk5tfVVHkWmRuqkD0hdMbs5Nc9/2fEx16ns
+         ZLXkrtB69tnrZBMj8rzaDK8iGQn1bmhBdMbQPorKee4fNa8dHsBCMIzFyvAj+/yrWVUb
+         uhzWs72LCMIguDHwJghj9xUD3Qd0rpD7s8hpP4/M8e25qXiES/VWZuBpqycpXcanChyC
+         QmLSo+eSQYGomE2ykzMwrobJ1aSt8g+z4iqEl6+sxWRbcqis7S0VDHeESnLp/x4Yize7
+         xoeo+/r2zM4iKJkrrdtfXAMCPJUG1bYRPxwm1PpvauXgj2Ox23g0Hg1NzYwoRp3ZGf94
+         +80A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722502649; x=1723107449;
+        d=1e100.net; s=20230601; t=1722503022; x=1723107822;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Syi3zSlJ8k1vqxBzUq6nZD+avtMgHQU+/NZ7B5gDmQ4=;
-        b=KCoJob3TtuvMEOsxBfjlpw4b4LyFrN5SnrKEvD2YmXRlhb8rBKkR2/7uEXqOikaRNw
-         VdqtQOMnH3cJX1g6JRE7wbX1+hEYG4KmbPR7vC4mSt4nib+P/GuhBrLokSNO7OuMeRQT
-         iJlAcIDDcGFhCCIpsAkulG8t3sQyh8psLzzci4Lp59GKqjZwvXspVS8UAR8UOPwp+Pk5
-         8NlVDplkkB2qxljUEzFaknF8bEXbm8LfhSp2p+RCTj67MYh2CNzbDv5Xx43TEQFly+jE
-         rrlawnvFeCbhaFcvZmj3L/+sH0eyjPbMFPWYtkh8T1gC0tZKN07ukBp1SP3KISgZGrmU
-         3mVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWb7H/8GRh+WjckySyFCW1ee6Fxqx7vQSyLIeW98HvGBU2Z90Z5fUZIg6YlLb+kLKwBhnVeVUz63ceRY+uMusuZAZOyXVhc9i22
-X-Gm-Message-State: AOJu0Yyg2jLnEo9+Ba+qBbmcXzTe/3AQ7C1xigqELRBhTGGOEg/9hgKv
-	fV5MPO5P7H2Hk52h+EmSy34shm/7ZoXCzjM+YdXxWcfTKQzp82fbpYrpSvW6sKg=
-X-Google-Smtp-Source: AGHT+IEdS3NM6t6Y7T/95sEL4C7ubpn/6F0Cu3mCtANczyd9mmWSLE4tcyyhWaOoIZKPq4CsXdarWQ==
-X-Received: by 2002:a17:907:6d0e:b0:a75:1069:5b94 with SMTP id a640c23a62f3a-a7daf535320mr136914966b.21.1722502647807;
-        Thu, 01 Aug 2024 01:57:27 -0700 (PDT)
+        bh=M/Nhi0sMK7PpCm2r/uuIU8M4tCHIO/lVeQuknqZEy3M=;
+        b=tRCb6Mpq2DJjBlhELLwrNbHi2bRJ2OdOuECKjjPb9TbYyaROLYo1dIQm7gmuNfw9++
+         KuU9J/lIZn7n3ss4ukDCWjBwmaYUX4kKRr3PJyp9SsPj/zSGUPX58yvD5VdbgJ9kt2hP
+         uCi/23P4IdxOewmGA4oh3aw3EXEk9Q1HPHDr3hMEQD/HxIq5mBnf/2cQEFzehopKc5v3
+         AqhP4i1up0j2aCstBu9lG1PcRgiX5AykhTijw8wXOCU+abCtu5IPA/EhYTwyFxdp7G4A
+         RqYmR6ham65DmzdmpY4Z1MstYEAi0rk2Pz/1DgEP0849NKMciQmUX8MEc6bQfYhmNiR1
+         ue9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWSx8tmQxx8WTyJmPBs+JNWVctTp/kg086/zqkMW3mhCmOIMTkSAIdpxjDi8JJZaVkktTNHtEwCmIcs4dZxeASGj7EN89ga7Mpg
+X-Gm-Message-State: AOJu0Ywq22djqFvvUMgkejcyZpHUcLuSnHm0TuRHIvozcE1r/7r4n6du
+	FCuvRxCYs84Fp666fuV4bn5JVbLx3iOqZZ4RrJPt8WysTqoGBNnXi+t7lUgaNCs=
+X-Google-Smtp-Source: AGHT+IHhni1Uh+bJITVWfhi2vAVjvXUzKzH/nw0taqtk6cxicA1yt55vq2KJXrilVInru0VfNsUVMQ==
+X-Received: by 2002:a17:907:a4c:b0:a77:c199:9d01 with SMTP id a640c23a62f3a-a7daf4c7df7mr132037366b.22.1722503021389;
+        Thu, 01 Aug 2024 02:03:41 -0700 (PDT)
 Received: from draig.lan ([85.9.250.243])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acadb82d5sm865337466b.199.2024.08.01.01.57.27
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad902e2sm878292566b.146.2024.08.01.02.03.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 01:57:27 -0700 (PDT)
+        Thu, 01 Aug 2024 02:03:39 -0700 (PDT)
 Received: from draig (localhost [IPv6:::1])
-	by draig.lan (Postfix) with ESMTP id 3FE7E5F80C;
-	Thu,  1 Aug 2024 09:57:26 +0100 (BST)
+	by draig.lan (Postfix) with ESMTP id 36EF35F80C;
+	Thu,  1 Aug 2024 10:03:38 +0100 (BST)
 From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
 To: Sean Christopherson <seanjc@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>,  Marc Zyngier <maz@kernel.org>,
@@ -71,14 +71,14 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,  Marc Zyngier <maz@kernel.org>,
   kvm-riscv@lists.infradead.org,  linux-riscv@lists.infradead.org,
   linux-kernel@vger.kernel.org,  David Matlack <dmatlack@google.com>,
   David Stevens <stevensd@chromium.org>
-Subject: Re: [PATCH v12 03/84] KVM: Drop KVM_ERR_PTR_BAD_PAGE and instead
- return NULL to indicate an error
-In-Reply-To: <20240726235234.228822-4-seanjc@google.com> (Sean
-	Christopherson's message of "Fri, 26 Jul 2024 16:51:12 -0700")
+Subject: Re: [PATCH v12 04/84] KVM: Allow calling
+ kvm_release_page_{clean,dirty}() on a NULL page pointer
+In-Reply-To: <20240726235234.228822-5-seanjc@google.com> (Sean
+	Christopherson's message of "Fri, 26 Jul 2024 16:51:13 -0700")
 References: <20240726235234.228822-1-seanjc@google.com>
-	<20240726235234.228822-4-seanjc@google.com>
-Date: Thu, 01 Aug 2024 09:57:26 +0100
-Message-ID: <875xskfwnd.fsf@draig.linaro.org>
+	<20240726235234.228822-5-seanjc@google.com>
+Date: Thu, 01 Aug 2024 10:03:38 +0100
+Message-ID: <871q38fwd1.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -90,10 +90,9 @@ Content-Transfer-Encoding: quoted-printable
 
 Sean Christopherson <seanjc@google.com> writes:
 
-> Remove KVM_ERR_PTR_BAD_PAGE and instead return NULL, as "bad page" is just
-> a leftover bit of weirdness from days of old when KVM stuffed a "bad" page
-> into the guest instead of actually handling missing pages.  See commit
-> cea7bb21280e ("KVM: MMU: Make gfn_to_page() always safe").
+> Allow passing a NULL @page to kvm_release_page_{clean,dirty}(), there's no
+> tangible benefit to forcing the callers to pre-check @page, and it ends up
+> generating a lot of duplicate boilerplate code.
 >
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
