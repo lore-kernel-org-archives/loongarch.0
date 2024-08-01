@@ -1,157 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EB3157A61;
-	Thu,  1 Aug 2024 06:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D62E49626;
+	Thu,  1 Aug 2024 07:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722492831; cv=none; b=lhP7zkFDDrjWakGcX/AhiRwpMFOf/TJPEEzyu+oWJKYJdDnSxpuCb2E3miV5SZUUfp4ikjSXSKuihwRKAYyN0uWbdPTpd+oxm9OAMF7H4qzvyRBRMz1kxV9N4R/0MIilawgbG+kvSq6jXkFXdXn7OzMs5E018D66v3e9FjRLPoI=
+	t=1722497697; cv=none; b=C0LKgxEEixIvmvrz2Z71vPPn+rE7jB9LdR4DycUbwMvTH06/gu4HiRrcpjk3UmRiYz+Et59qLPerbK/FMgxrX3o8xuc+wbh71TJdCmSMxItWN+D3HxDT67sIfOwtr7+fYM9C0O/OSY2wLnZ5pU2VA4NGbSFTlL1RirBNwXMYR8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722492831; c=relaxed/simple;
-	bh=2z4bHnWIWcvxAiFTLgSYfPcGY4CSFltdU+BtR9hEENA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BsHMjGs1DPreEDY+ebC1gSMGjxZotK3FF9xWXvYGcfT/Sn8dk7Gg9GD6X3e7W2vcUMfQodFT5gQLYi/u+t3NYKUJQgOjxZYqDXmL9rc43BC85nramEy7QmDZNnqGh6XwSGT39196WjnajkNIjS7QndicpEUz99UHO91Wujl0n/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Krg1nriO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722497697; c=relaxed/simple;
+	bh=4fAL4cODCnjl0NV8qGw/Qqudnit/5hoHCsZrciMhbUs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k5YpY4R0L2a3dtzCWqRnB773xA7F7htuHc5vID+7jZnEq6MkxZW+qSQzIdy50YMa4wXUnOP0Qd83IqLfYQwedCPAuQxxrx0/dAeA0CrSriyf1l8EywNnJAEh9BsXuqVJHS70NhnTqxbL1krEWKk+U1xrX6aY0+w7OG2FeyKEoSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hm6lqGrn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Krg1nriO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97316C4AF0E;
-	Thu,  1 Aug 2024 06:13:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hm6lqGrn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C540CC4AF0A;
+	Thu,  1 Aug 2024 07:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722492830;
-	bh=2z4bHnWIWcvxAiFTLgSYfPcGY4CSFltdU+BtR9hEENA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Krg1nriO+eqnJw/SwdbuG3fCazMoLJlQMveWlRkHWmGKjUeBAV7SPEb3qpYrtisDR
-	 zcMTZ9ucUhsZWHm5P0W+e7OwiQbmCzYDNW0O0KB9bpGyPbYgbomgp6evmqSqJK760o
-	 G3tlRtfaCIlHRTSAxX+B6jfurNE/P42/ILnPuKFYuvjt2jr3XDTpBGpJgTe69srkyE
-	 T7HP4P7RrEbKkHv+Z2WcA38kANShZuYnsFLoO9R+x/ze0wRTfzDScZQnHsTT0bkqEp
-	 r3/pInPgL1sn+CE/kAYEoSxGqH/IFD6WOJQ4wImNEhfM2qe3oPpI8DAV+mZ7uJVllq
-	 swnBD4lW/yIiw==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
+	s=k20201202; t=1722497697;
+	bh=4fAL4cODCnjl0NV8qGw/Qqudnit/5hoHCsZrciMhbUs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=hm6lqGrnGLdGUt29ZxrQ9cGwGC5e/My8adr9xG8pGwOWvxzaIy2wVVZecHcsaS7MD
+	 2vhxDp5qw6P6jWSVDdYpSlndt26lYMY/9L3hrdQVP6XL1jiOwA3de3PchwMF07I1N4
+	 2YEHskiwTzLI1+iwXeDgxTjbuc9HN0GjQyrYNiG+t6NhVrrxrlXYCf8VJMbSS/9yNs
+	 oHiP/3JEHHEyg0SbxiUkt+heXZ9wY3Uvo6jOHCc4TGv31tTJIER/7SKgCRJbrwGHtk
+	 ninurOs1MqcQM+fogPcJEhZWkju/RfarTKElxrf4Eq/YQ9RcoW3WZjBJcrAerVNRjv
+	 rukvhfzurLf/A==
+X-Mailer: emacs 31.0.50 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Jonathan Corbet <corbet@lwn.net>,
 	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Will Deacon <will@kernel.org>,
-	Zi Yan <ziy@nvidia.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 26/26] docs: move numa=fake description to kernel-parameters.txt
-Date: Thu,  1 Aug 2024 09:08:26 +0300
-Message-ID: <20240801060826.559858-27-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240801060826.559858-1-rppt@kernel.org>
-References: <20240801060826.559858-1-rppt@kernel.org>
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	David Stevens <stevensd@chromium.org>
+Subject: Re: [PATCH v12 02/84] KVM: arm64: Disallow copying MTE to guest
+ memory while KVM is dirty logging
+In-Reply-To: <20240726235234.228822-3-seanjc@google.com>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-3-seanjc@google.com>
+Date: Thu, 01 Aug 2024 13:04:43 +0530
+Message-ID: <yq5aikwku25o.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Sean Christopherson <seanjc@google.com> writes:
 
-NUMA emulation can be now enabled on arm64 and riscv in addition to x86.
+> Disallow copying MTE tags to guest memory while KVM is dirty logging, as
+> writing guest memory without marking the gfn as dirty in the memslot could
+> result in userspace failing to migrate the updated page.  Ideally (maybe?),
+> KVM would simply mark the gfn as dirty, but there is no vCPU to work with,
+> and presumably the only use case for copy MTE tags _to_ the guest is when
+> restoring state on the target.
+>
+> Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/arm64/kvm/guest.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index e1f0ff08836a..962f985977c2 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -1045,6 +1045,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
+>  
+>  	mutex_lock(&kvm->slots_lock);
+>  
+> +	if (write && atomic_read(&kvm->nr_memslots_dirty_logging)) {
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+>
 
-Move description of numa=fake parameters from x86 documentation of
-admin-guide/kernel-parameters.txt
+is this equivalent to kvm_follow_pfn() with kfp->pin = 1 ? Should all
+those pin request fail if kvm->nr_memslots_dirty_logging != 0? 
 
-Suggested-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
- Documentation/arch/x86/x86_64/boot-options.rst  | 12 ------------
- 2 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f1384c7b59c9..bcdee8984e1f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4123,6 +4123,21 @@
- 			Disable NUMA, Only set up a single NUMA node
- 			spanning all memory.
- 
-+	numa=fake=<size>[MG]
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as a memory unit, fills all system RAM with
-+			nodes of size interleaved over physical nodes.
-+
-+	numa=fake=<N>
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as an integer, fills all system RAM with N
-+			fake nodes interleaved over physical nodes.
-+
-+	numa=fake=<N>U
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as an integer followed by 'U', it will
-+			divide each physical node into N emulated nodes.
-+
- 	numa_balancing=	[KNL,ARM64,PPC,RISCV,S390,X86] Enable or disable automatic
- 			NUMA balancing.
- 			Allowed values are enable and disable
-diff --git a/Documentation/arch/x86/x86_64/boot-options.rst b/Documentation/arch/x86/x86_64/boot-options.rst
-index 137432d34109..98d4805f0823 100644
---- a/Documentation/arch/x86/x86_64/boot-options.rst
-+++ b/Documentation/arch/x86/x86_64/boot-options.rst
-@@ -170,18 +170,6 @@ NUMA
-     Don't parse the HMAT table for NUMA setup, or soft-reserved memory
-     partitioning.
- 
--  numa=fake=<size>[MG]
--    If given as a memory unit, fills all system RAM with nodes of
--    size interleaved over physical nodes.
--
--  numa=fake=<N>
--    If given as an integer, fills all system RAM with N fake nodes
--    interleaved over physical nodes.
--
--  numa=fake=<N>U
--    If given as an integer followed by 'U', it will divide each
--    physical node into N emulated nodes.
--
- ACPI
- ====
- 
--- 
-2.43.0
-
+>  	while (length > 0) {
+>  		kvm_pfn_t pfn = gfn_to_pfn_prot(kvm, gfn, write, NULL);
+>  		void *maddr;
+> -- 
+> 2.46.0.rc1.232.g9752f9e123-goog
