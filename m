@@ -1,118 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9497B174EEB;
-	Thu,  1 Aug 2024 10:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4015B446A1;
+	Thu,  1 Aug 2024 10:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722506875; cv=none; b=ZmExBWe5zAR+cOGlD15LpPLHtdtwyCr2eziKpeXPsQXpO3LFwGDoJrAGKevmrCpspPjalQ1jx9h9/HFkiRDBMQ+5e28ncU3CdJP/2NfU66WPw7n6L4slDCggakecQmsgvz1klbeut+mIoNWePWB2lOcOl6jntmwcs4IrEBiHgW0=
+	t=1722508114; cv=none; b=ESj3C5JrdFvQDTPnzAPCDePfcOdD7HTs4JzBrXsvrA68SE/oqkvkeoIFgrOrxanV6tUYMfY+524JwNbryjK3YFYM8TKmK5f3jVmL2cizDyAHYJqbEa8BItSGHzQH6uNhazGihzrD48nEHVxuqUYqmHIrckRawv6RNvtc/0f3kYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722506875; c=relaxed/simple;
-	bh=1omcIl0ySlr8+5216FhuGPRNQkd7nfMr+PkPp6A7HmE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IIKOpcMyG9xy3Fj9vvkPaF3lDgbgN9Qjk1MNP7rz35ILJcWhVPtcOv9B+vjmJzt2+I+dwCQcQWXYCOYA6CIih2vioIrx+eO+V+/KQ4kaQQHwmZwDSOwSKsLqvN9weqigqU17pn1+9Nu00xrU7EmnhvTaZPI5zaEpA50GaX//ito=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXl6XfVw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722508114; c=relaxed/simple;
+	bh=yPtcdL9rfkhbng4xukjmHie3gmq6wgHWdXoJQhB6XuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qc4vjVJK+v9n3EAoIdzQcNxh8iWR0nmCXThajwBXUBeGEmioBCp337zFvbHN31yC8ovhbI978OwcFFQuTN0MpFkdwPXVt6aX0G6LJpti1peI0md7xI6atBY4BbpwVmZRt4W0FzlpG4C1RGABVAK9sp4tk1DyfLlMR8CYsy51sWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qLqxu/A7; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXl6XfVw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F19EC32786;
-	Thu,  1 Aug 2024 10:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722506875;
-	bh=1omcIl0ySlr8+5216FhuGPRNQkd7nfMr+PkPp6A7HmE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dXl6XfVwOB9GlSLpifm4SQnLN1SxN9WD5f/MTtx+7gzr1ecINtOADxIOmr8sjVBL0
-	 DVMXHY/qfYmEhNan55mGOmG6D7THyLOPd70VPVKIpK/4MAQ5E5HS45NyBgeC5R48+X
-	 z9v7rywzNiMJ0Y3pLiLCJmKABr+FNbRPJFAyTyruso3jShF040qqp9MpwrWDsAtHKt
-	 fWTz+yRtpK8TbmWmQV9Ovzo1U3O3+yf5d0a9Gg2dNbSlY68eZRNVapCcFH1FcVxKAs
-	 Ludh8f3lr4RMdR6f7qJHOWB6bVOFl8ZRUulSkXqf7CV6Gn2MFS6IIw7ZvAl4rbJ8vr
-	 zHK3gmvw2IfAQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sZSiv-00HLX2-08;
-	Thu, 01 Aug 2024 11:07:53 +0100
-Date: Thu, 01 Aug 2024 11:07:52 +0100
-Message-ID: <86plqs1rpj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sean Christopherson <seanjc@google.com>,
-    Steven Price <steven.price@arm.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qLqxu/A7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=v1s+5Bi9d041LGdTeseO3YDdAQzIcr7DZg2LK0/Pvu0=; b=qLqxu/A7f3yE8trlCtn2zwr4Sr
+	HsLHcEDK9/3J6tw7LUc6f6UbjMMG4sOJfSifCTcBNiwZSAV/P3ODLWlG7yA2knS7LCa0qhRE4PlrQ
+	ylZjSUWBL9DxVjhdQzws15gwx0gi0lDvz7cXdxLOsjy7w+Ib4IOHWMokdPVtwpOChpjjVn+ye1Uld
+	GFG+rsmUPvDikDI9xHGuE71rzQkSd89IUW183/BHQCmgpPHLpOyMsudNwch8jn/2BqO15VJiimQxp
+	xtAjbcKmLuxcKg2Ku/JMxVsbtgiI4S+inNFNHpfHD9Z1+dwbMwwNH7EbzTp55VBxzAL5Gb3OZJgjQ
+	lwCLoQBw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZT2T-00000005RW8-1u0R;
+	Thu, 01 Aug 2024 10:28:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8B25A30074E; Thu,  1 Aug 2024 12:28:04 +0200 (CEST)
+Date: Thu, 1 Aug 2024 12:28:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Anup Patel <anup@brainfault.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
 	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	David Matlack <dmatlack@google.com>,
-	David Stevens <stevensd@chromium.org>
-Subject: Re: [PATCH v12 01/84] KVM: arm64: Release pfn, i.e. put page, if copying MTE tags hits ZONE_DEVICE
-In-Reply-To: <20240726235234.228822-2-seanjc@google.com>
-References: <20240726235234.228822-1-seanjc@google.com>
-	<20240726235234.228822-2-seanjc@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/2] rust: add static_key_false
+Message-ID: <20240801102804.GQ33588@noisy.programming.kicks-ass.net>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-1-353d523a9c15@google.com>
+ <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
+ <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: seanjc@google.com, steven.price@arm.com, pbonzini@redhat.com, oliver.upton@linux.dev, zhaotianrui@loongson.cn, maobibo@loongson.cn, chenhuacai@kernel.org, mpe@ellerman.id.au, anup@brainfault.org, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, dmatlack@google.com, stevensd@chromium.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com>
 
-+ Steven Price for this patch (and the following one), as this really
-is his turf.
+On Wed, Jul 31, 2024 at 11:34:13PM +0200, Alice Ryhl wrote:
 
-On Sat, 27 Jul 2024 00:51:10 +0100,
-Sean Christopherson <seanjc@google.com> wrote:
+> > Please work harder to not have to duplicate stuff like this.
 > 
-> Put the page reference acquired by gfn_to_pfn_prot() if
-> kvm_vm_ioctl_mte_copy_tags() runs into ZONE_DEVICE memory.  KVM's less-
-> than-stellar heuristics for dealing with pfn-mapped memory means that KVM
-> can get a page reference to ZONE_DEVICE memory.
+> I really didn't want to duplicate it, but it's very hard to find a
+> performant alternative. Is there any way we could accept duplication
+> only in the cases where an 'i' parameter is used? I don't have the
+> choice of using a Rust helper for 'i' parameters.
 > 
-> Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/arm64/kvm/guest.c | 1 +
->  1 file changed, 1 insertion(+)
+> Perhaps one option could be to put the Rust code inside jump_label.h
+> and have the header file evaluate to either C or Rust depending on the
+> value of some #ifdefs?
 > 
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index 11098eb7eb44..e1f0ff08836a 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -1059,6 +1059,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
->  		page = pfn_to_online_page(pfn);
->  		if (!page) {
->  			/* Reject ZONE_DEVICE memory */
-> +			kvm_release_pfn_clean(pfn);
->  			ret = -EFAULT;
->  			goto out;
->  		}
-> -- 
-> 2.46.0.rc1.232.g9752f9e123-goog
+> #ifndef RUST_ASM
+> /* existing C code goes here */
+> #endif
+> #ifdef RUST_ASM
+> // rust code goes here
+> #endif
 > 
-> 
+> That way the duplication is all in a single file. It would also avoid
+> the need for duplicating the nop5 string, as the Rust case is still
+> going through the C preprocessor and can use the existing #define.
 
--- 
-Without deviation from the norm, progress is not possible.
+I suppose that is slightly better, but ideally you generate the whole of
+the Rust thing from the C version. After all, Clang can already parse
+this.
+
+That said, with the below patch, I think you should be able to reuse the
+JUMP_TABLE_ENTRY macro like:
+
+	JUMP_TABLE_ENTRY({0}, {1}, {2} + {3})
+
+> I'm also open to other alternatives. But I don't have infinite
+> resources to drive major language changes.
+
+Yes, well, you all picked this terrible language full well knowing it
+hated C/C++ and had not a single effort put into integration with
+existing code bases.
+
+I find it very hard to care for the problems you've created for
+yourself.
+
+
+---
+diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+index cbbef32517f0..6cff7bf5e779 100644
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -12,12 +12,12 @@
+ #include <linux/stringify.h>
+ #include <linux/types.h>
+ 
+-#define JUMP_TABLE_ENTRY				\
+-	".pushsection __jump_table,  \"aw\" \n\t"	\
+-	_ASM_ALIGN "\n\t"				\
+-	".long 1b - . \n\t"				\
+-	".long %l[l_yes] - . \n\t"			\
+-	_ASM_PTR "%c0 + %c1 - .\n\t"			\
++#define JUMP_TABLE_ENTRY(l_yes, key, branch)				\
++	".pushsection __jump_table,  \"aw\" \n\t"			\
++	_ASM_ALIGN "\n\t"						\
++	".long 1b - . \n\t"						\
++	".long " __stringify(l_yes) "- . \n\t"				\
++	_ASM_PTR " " __stringify(key) " + " __stringify(branch) " - . \n\t" \
+ 	".popsection \n\t"
+ 
+ #ifdef CONFIG_HAVE_JUMP_LABEL_HACK
+@@ -26,7 +26,7 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+ {
+ 	asm goto("1:"
+ 		"jmp %l[l_yes] # objtool NOPs this \n\t"
+-		JUMP_TABLE_ENTRY
++		JUMP_TABLE_ENTRY(%[l_yes], %c0, %c1)
+ 		: :  "i" (key), "i" (2 | branch) : : l_yes);
+ 
+ 	return false;
+@@ -40,7 +40,7 @@ static __always_inline bool arch_static_branch(struct static_key * const key, co
+ {
+ 	asm goto("1:"
+ 		".byte " __stringify(BYTES_NOP5) "\n\t"
+-		JUMP_TABLE_ENTRY
++		JUMP_TABLE_ENTRY(%[l_yes], %c0, %c1)
+ 		: :  "i" (key), "i" (branch) : : l_yes);
+ 
+ 	return false;
+@@ -54,7 +54,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
+ {
+ 	asm goto("1:"
+ 		"jmp %l[l_yes]\n\t"
+-		JUMP_TABLE_ENTRY
++		JUMP_TABLE_ENTRY(%[l_yes], %c0, %c1)
+ 		: :  "i" (key), "i" (branch) : : l_yes);
+ 
+ 	return false;
