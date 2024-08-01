@@ -1,128 +1,135 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FDC2837A
-	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 18:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7653314374D
+	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 18:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722535294; cv=none; b=ddEICO1rhfPwZmfhuuW9ekWcd6NOYvgzAhGv27TbPEXc4/n4DzFbO5iwD71NfHo15OvrMWkU7/YPeqPTpRRxz8H+lTwGxKCsblKf+aVshzJum2uLknGAix5o0G0R9YdxQNgjCDGFYx1xujc3gem4h6O6GMrwXkWUo/yu7A6OdU0=
+	t=1722536818; cv=none; b=ha8h/XnLdNMUE16I7tnd4RaFJvV1BpynbnpptlZSxy6M1r71sIxAXtNSyaZ6ngmWWS6dtlgQv3YW6S7aOkGH6oYGeXnOf/keVsOdYcBFARZEtWh/7/pHmGyIWAAqmEOVjKOzbYGWa07V9U+n3zJRMeZEFk+e1IrZIdXTyxkXIA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722535294; c=relaxed/simple;
-	bh=B4USJ3DcoEtC2grgJaNeehMjrX/R6yyLoOz0nwuEw9c=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sCYzOOq/lWYxSdUt5TRv0M2ysvO2DKO3vlqFQCM9iHpoJ5fPOivT+CTm38PM+dSmhYzQXhsQydlmc/ul9DM8haOAtVNov2q5DiSnnfFKzkUyrQk+SwK0n8L/xOnaGaz6fCuoOpS2IqKIojrzlzEur2c+hiXBzK6B+FLXpmJnlUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4moarI/e; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1722536818; c=relaxed/simple;
+	bh=lHbIHLFhtQNciusEsnruiPFrsux+ubJl8cotIGgu9QA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWZDC/xz06v+fz3koh4M7B+iYhM0EGYoMEo6yU8krv5rNS43TZ2AUfRQ26EBLwxxxnOfzxoOAyktU6tMqwWcEmcGdil1qoMgT7knTddcigHzO/grF6y/1lOu32OHR7GaopUm57OiXR5jPk+S1IdXaZYqgEe8msY3ZOQlZCEbLDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nf9yagah; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4moarI/e"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-7a23a0fb195so7397197a12.0
-        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 11:01:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nf9yagah"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3687f8fcab5so3602687f8f.3
+        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 11:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722535292; x=1723140092; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xl2Pju3NY9Fnm1xajnPNr4ZOFDET+sfv7XV8JXyIerc=;
-        b=4moarI/efjsuhWG1RgrJl0p8ZHZ3T7DeYTEUR5q5CwH3okgTbbhOwjsdV5coFVbyCO
-         wG6IAnlwtcJGVtJ5w0ag5f3AIsIapjuYNQsasHFHKp9eI+A9URbCb+O0LEdoa3/FCrxB
-         EsDDugHkFSVWjXI/PjFZjaP9T2qUc6nItlLefNlWOoXtANyv1Z7PlWe/+cxWIhCr3CQ1
-         Z5WmKHvDwOnyABHEiKAs7Uqh+IGS+EgH9Ew+DC3tl0zScVWwWL78x4F6Ovzp0K80GbTR
-         2SZ4P1uH4UL6QYcHFgVo9SdjK0r+VnGb76SbExvYPT3bN/UXth16B/ceHH+LWkEZdcsF
-         DwBA==
+        d=google.com; s=20230601; t=1722536815; x=1723141615; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2GkfD0g8hTHOTE05py9mAwmf1QYzZu9yR2OS6+zzI80=;
+        b=Nf9yagahnxNECKBnOtadu1zzzGVBG/tn0Nkjw6wb2u0pdWnyLeVciO9nPBS8Gi7Rnf
+         AwxYd1tF16db7tZVZyT2XXVj1TR6P2GZvPjNSCxzdHYygznsglAfvxD/MI/ep2eCAUNk
+         Ja4MbTdq15KkrRzuQX0IumywhIYbgN1ao8fh2r/H2gHHy0UDFPSIdm1R20icFefx30eZ
+         YKafBjwd3/XSnpQJFa0HNIA6DU5xNLvBJ2liIDX1nEgxA9WjcKwFUmQNAYtds55v0flv
+         sN8LjauXRMX0fCnxdUcP82+6kJ9IPIRCuopQnYQacXBjFR9E1AhQwqcGu59/wTeI9DF8
+         KTPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722535292; x=1723140092;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xl2Pju3NY9Fnm1xajnPNr4ZOFDET+sfv7XV8JXyIerc=;
-        b=rtiA1j25ihfK5Inl8JVNvKd9QnUR1/2ZD5OBnQUEneYnRNyKl55mRaqvk7bnNb9NNG
-         g6to7pYw5nJ+aEGMv9fdrALNrfl1MReBZx4Qo2YchTgRcPkhroSaj2PUVbxqFkZzaIRH
-         8jz1DkJDeJYSlpAvXPvu5T9rFqqpCCPZpQZ/MDQkCFysIzsQSlX5VV1sERnwmosy320W
-         bmNPJHYjSwNo+z0arF2MYUXTKuJfxLgz1IcVjmaWfpD14EyuLqaG4/nzlC5uTHbNTvEU
-         sAaqA0QYGD/tsqzzUMCjG7y9R6I4x+95n+PMBbKQ6em7LkxslwCOdD68EBh5u3p+nWRQ
-         oK9w==
-X-Forwarded-Encrypted: i=1; AJvYcCX8y//THrYDekKM/HXyzk25zPWSU137NvOWAv7gr2PbUtwGOH3ENRMnpUTaWEXekkhshFs7ZzxW/PubiiHOY8zoHERmrSi3URBF
-X-Gm-Message-State: AOJu0YzfwQWi2iuXw6ZjjRnegM724O2eFk5IFCAfMx5nFDD6JtaOYfpi
-	I45P6u4NIOzvwcYqKDqm4SKR2wR+Cjp+gYGU0ZtmgLOl1EghC6F8iJGTaPSl6Xq3pAxeNL8OwY6
-	zzg==
-X-Google-Smtp-Source: AGHT+IF64U8Ib+bNIe3iPxoSzJOvvilQGXPjPZq7Y/8acNPwlcg0hACHnvmYPGnFv3dx9aufX4l27GJDySU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a65:6252:0:b0:75a:b299:85b6 with SMTP id
- 41be03b00d2f7-7b74669c7b3mr1534a12.2.1722535291408; Thu, 01 Aug 2024 11:01:31
- -0700 (PDT)
-Date: Thu, 1 Aug 2024 11:01:30 -0700
-In-Reply-To: <yq5aikwku25o.fsf@kernel.org>
+        d=1e100.net; s=20230601; t=1722536815; x=1723141615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2GkfD0g8hTHOTE05py9mAwmf1QYzZu9yR2OS6+zzI80=;
+        b=rijrZDPGnL9DJIuKeYjVLJeZ9YQ5xFlQGkt7NPh8I4H+21atx27xAB9j9zI0R6+E5U
+         Qti1L2Z5BwvW6RPRSUfZS6ze5OmVSclcdfhfSOz0OQYRwCXnqHHG3JFHnSo7dOnFGXPH
+         0y5WNiD9ump78M1hWU9NROWIN6sN4qkrbfVaKnKioUAC6eOoH5hR6aUkIqVbpcsyXLXh
+         WGXLYUc8UyY6Q2cc04gNxz8Wd3NwJ3AL6sBsBTR/Z34NF9bF7jUyeKXKXqy/8jdya0QK
+         mEDgaXSvJZscgNs4TBlJY8sDjFGjjwmbIbz81Yc0fm9PHh8c52j0uQIdSLbmvc3vdAMB
+         SMTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIBsFSD6z5fJta1Uhi6ZCUlYxIZpJZpD51s9r1h3ruhc/eo6B+ItfvRuvmhfybghH2/cmD6FPnl/vkuh28Ml27vLroyActnKMS
+X-Gm-Message-State: AOJu0YxJLdM3SPZnkoc0hn9MR4sOKQuUWh450vQmbbUWmZWbvlMJHkcp
+	KwrQkFW+EmGmE1lBC7VSMSQy2YI+xRXce6dxYDc8I8qdqyC7SYV851J/2wIXg54xOmtbxb2nUYK
+	Fng22CTFp4MIfNU0wYmDfWppumo73+3BHMorh
+X-Google-Smtp-Source: AGHT+IGwaGkw42I/amAH0IQd6LdSV/vkI/phXZAUV/1lm1vKxK6jNhFtpwWWcpoa+ZqQDQpJUtDs/GFofzfYgLUeu2Q=
+X-Received: by 2002:adf:a356:0:b0:368:3895:67d6 with SMTP id
+ ffacd0b85a97d-36bbc0cbe69mr533475f8f.20.1722536814320; Thu, 01 Aug 2024
+ 11:26:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-3-seanjc@google.com>
- <yq5aikwku25o.fsf@kernel.org>
-Message-ID: <ZqvNekQAjs-SN-se@google.com>
-Subject: Re: [PATCH v12 02/84] KVM: arm64: Disallow copying MTE to guest
- memory while KVM is dirty logging
-From: Sean Christopherson <seanjc@google.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
+MIME-Version: 1.0
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-1-353d523a9c15@google.com> <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
+ <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com> <20240801102804.GQ33588@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240801102804.GQ33588@noisy.programming.kicks-ass.net>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 1 Aug 2024 20:26:42 +0200
+Message-ID: <CAH5fLgiOe1ECCwE1cwczsT13iPyymdUTbV-9ZHeDrp_OGq5FgQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: add static_key_false
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
+	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
 	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-Content-Type: text/plain; charset="us-ascii"
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 01, 2024, Aneesh Kumar K.V wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > Disallow copying MTE tags to guest memory while KVM is dirty logging, as
-> > writing guest memory without marking the gfn as dirty in the memslot could
-> > result in userspace failing to migrate the updated page.  Ideally (maybe?),
-> > KVM would simply mark the gfn as dirty, but there is no vCPU to work with,
-> > and presumably the only use case for copy MTE tags _to_ the guest is when
-> > restoring state on the target.
+On Thu, Aug 1, 2024 at 12:28=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Jul 31, 2024 at 11:34:13PM +0200, Alice Ryhl wrote:
+>
+> > > Please work harder to not have to duplicate stuff like this.
 > >
-> > Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/arm64/kvm/guest.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
+> > I really didn't want to duplicate it, but it's very hard to find a
+> > performant alternative. Is there any way we could accept duplication
+> > only in the cases where an 'i' parameter is used? I don't have the
+> > choice of using a Rust helper for 'i' parameters.
 > >
-> > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> > index e1f0ff08836a..962f985977c2 100644
-> > --- a/arch/arm64/kvm/guest.c
-> > +++ b/arch/arm64/kvm/guest.c
-> > @@ -1045,6 +1045,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
-> >  
-> >  	mutex_lock(&kvm->slots_lock);
-> >  
-> > +	if (write && atomic_read(&kvm->nr_memslots_dirty_logging)) {
-> > +		ret = -EBUSY;
-> > +		goto out;
-> > +	}
-> > +
+> > Perhaps one option could be to put the Rust code inside jump_label.h
+> > and have the header file evaluate to either C or Rust depending on the
+> > value of some #ifdefs?
 > >
-> 
-> is this equivalent to kvm_follow_pfn() with kfp->pin = 1 ?
+> > #ifndef RUST_ASM
+> > /* existing C code goes here */
+> > #endif
+> > #ifdef RUST_ASM
+> > // rust code goes here
+> > #endif
+> >
+> > That way the duplication is all in a single file. It would also avoid
+> > the need for duplicating the nop5 string, as the Rust case is still
+> > going through the C preprocessor and can use the existing #define.
+>
+> I suppose that is slightly better, but ideally you generate the whole of
+> the Rust thing from the C version. After all, Clang can already parse
+> this.
+>
+> That said, with the below patch, I think you should be able to reuse the
+> JUMP_TABLE_ENTRY macro like:
+>
+>         JUMP_TABLE_ENTRY({0}, {1}, {2} + {3})
 
-No, gfn_to_pfn_prot() == FOLL_GET, kfp->pin == FOLL_PIN.  But that's not really
-relevant.
+Yeah, I think this can work. I will submit a follow-up patch that
+removes the duplication soon.
 
-> Should all those pin request fail if kvm->nr_memslots_dirty_logging != 0? 
-
-No, the conflict with dirty logging is specifically that this code doesn't invoke
-mark_page_dirty().  And it can't easily do that, because there's no loaded ("running")
-vCPU, i.e. doing so would trip this WARN:
-
-#ifdef CONFIG_HAVE_KVM_DIRTY_RING
-	if (WARN_ON_ONCE(vcpu && vcpu->kvm != kvm))
-		return;
-
-	WARN_ON_ONCE(!vcpu && !kvm_arch_allow_write_without_running_vcpu(kvm)); <====
-#endif
+Alice
