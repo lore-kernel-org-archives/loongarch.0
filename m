@@ -1,103 +1,130 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4826E16BE0D;
-	Fri,  2 Aug 2024 16:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F1516BE0C
+	for <loongarch@lists.linux.dev>; Fri,  2 Aug 2024 17:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722617090; cv=none; b=SMyzWyKcHPja6E70obM0Qe2N6JnAwjhbf6tCAibYMyiD5tiTiqxbc+adkoSSO/aXNbkBlCjKIuYY8qD5Ej+NnnUqGkjyiGMWZ1rMQLA5azQoecG9aJIvAqB1CtjBq8vNKC8FrZbpT/xm66bbn3stB89MIxdeqsRYWExz644YJhA=
+	t=1722619449; cv=none; b=Pc3meB0KZh9JfOaRZSIriZ5xlpUE97eEahGhI/QUa81+/awpus48R+cemGr7avoHThhW2ouRPZfINELikxQypMFWmuXBbgTBOxuPcbKod4PeJZz7wT62/uQc5rxuHE6Hqxe0OQ7x5yI4EUF/eVcu4qV5DGdUwuzDeJashQb1dJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722617090; c=relaxed/simple;
-	bh=NCbcoYaXRkWCPqQyDc3SvLTQKqJDdoxXXdNRp7Lxpbs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=px6s/ogXtn+UV5z6mSnTcxAAdDM0rMtupppEu4BTasDtx2hrePSEgtlF+cmqqpgc/Mdgze+I3CWBvUrKbp3SdRbGt+DbSbIDlNc5GJ1If5KsaObmjDId5h71qoA7SVkFgbDUnKPXlY9Dd2MhW+5tJ3JPDFNnXC0LXoLtVbB4l2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WbBTD2kfFz6K5YZ;
-	Sat,  3 Aug 2024 00:42:40 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A6A811404F5;
-	Sat,  3 Aug 2024 00:44:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
- 2024 17:44:43 +0100
-Date: Fri, 2 Aug 2024 17:44:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Mike Rapoport <rppt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
-	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
- Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
-	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
-	<dave@stgolabs.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Heiko
- Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul
- Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
-	<corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt
-	<palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring
-	<robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
-	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
-	<will@kernel.org>, Zi Yan <ziy@nvidia.com>, <devicetree@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
-	<nvdimm@lists.linux.dev>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
-Subject: Re: [PATCH v3 00/26] mm: introduce numa_memblks
-Message-ID: <20240802174443.0000710c@Huawei.com>
-In-Reply-To: <20240801060826.559858-1-rppt@kernel.org>
-References: <20240801060826.559858-1-rppt@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1722619449; c=relaxed/simple;
+	bh=WFAHa2ete4Xb+JbywsGV+pLk9gCOl+vYhLmCllbETPw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hiFQbH9LasDJgoYFvuhXDelVVJujRMjU4KQ5TXPBzYbhypdjF+WT96N0/tPcwj1Yzgr0GrA3idAnllzaOHjFe5igy91oci5EHn1uBcEV1LxsCHQ7R/ijF+F7JsfLing4ejqHfYtRn6bAbmhHZ7chLSHBZp/KtbT9OCc5ptTylLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=NvaGzkys; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="NvaGzkys"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1722619446; x=1722878646;
+	bh=KYJ880DzvybbissblwMCNzUlLxxe1Ktl0TOAACRRXAQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=NvaGzkysirXcjizn6Jo4e4bFXgCgbyugGW/9RojsJdsReD3ddkqxDsLLila/aLRf6
+	 zAbt4EB/1Gu795L1QQ/3CavkmtMHt7uIFQq8t2ItVC3iOl9fwTeC1AthRSX4z+8iNe
+	 oTr8wCRurge3wMmBL2CzZSMR6HFHR48iZ/RMDQcD0zhPEJL/htJer4r63YJ548B1tb
+	 J6FK0Z9l/PtQc892UbtZkC+5Plst5EtSJMIYvNubk7qKCDAz8J/AnUw2YqS/s397gC
+	 G+gnJ0EzhLYfOWcLjc7ypKcE9FOL5T0G59OgxWS4zTsdbw3CdY61bx6jAIVXRefpsV
+	 feUbG72Eojoow==
+Date: Fri, 02 Aug 2024 17:23:59 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, Carlos Llamas <cmllamas@google.com>
+Subject: Re: [PATCH v5 2/2] rust: add tracepoint support
+Message-ID: <a381ef22-96f4-4a72-8e3a-cc023dee111a@proton.me>
+In-Reply-To: <20240802-tracepoint-v5-2-faa164494dcb@google.com>
+References: <20240802-tracepoint-v5-0-faa164494dcb@google.com> <20240802-tracepoint-v5-2-faa164494dcb@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: d47c8e3b3391333c5a5926396deb7ee3ad135f33
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu,  1 Aug 2024 09:08:00 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+On 02.08.24 11:31, Alice Ryhl wrote:
+> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
+> new file mode 100644
+> index 000000000000..69dafdb8bfe8
+> --- /dev/null
+> +++ b/rust/kernel/tracepoint.rs
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024 Google LLC.
+> +
+> +//! Logic for tracepoints.
+> +
+> +/// Declare the Rust entry point for a tracepoint.
+> +///
+> +/// This macro generates an unsafe function that calls into C, and its s=
+afety requirements will be
+> +/// whatever the relevant C code requires. To document these safety requ=
+irements, you may add
+> +/// doc-comments when invoking the macro.
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Hi,
-> 
-> Following the discussion about handling of CXL fixed memory windows on
-> arm64 [1] I decided to bite the bullet and move numa_memblks from x86 to
-> the generic code so they will be available on arm64/riscv and maybe on
-> loongarch sometime later.
-> 
-> While it could be possible to use memblock to describe CXL memory windows,
-> it currently lacks notion of unpopulated memory ranges and numa_memblks
-> does implement this.
-> 
-> Another reason to make numa_memblks generic is that both arch_numa (arm64
-> and riscv) and loongarch use trimmed copy of x86 code although there is no
-> fundamental reason why the same code cannot be used on all these platforms.
-> Having numa_memblks in mm/ will make it's interaction with ACPI and FDT
-> more consistent and I believe will reduce maintenance burden.
-> 
-> And with generic numa_memblks it is (almost) straightforward to enable NUMA
-> emulation on arm64 and riscv.
+I think we should mandate safety documentation for the function.
 
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #arm64 + CXL via QEMU
-With that one fix in patch 7.
+> +#[macro_export]
+> +macro_rules! declare_trace {
+> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
+typ:ty),* $(,)?);)*) =3D> {$(
 
-Feel free to figure out which patches actually got tested by that
-(or tag them all - I'll pretend I tested ip27 :)
+Can you add an `unsafe` in front of `fn`, since this macro generates an
+`unsafe` function? Otherwise I don't see how the SAFETY comment below is
+correct.
 
-Jonathan
+---
+Cheers,
+Benno
+
+> +        $( #[$attr] )*
+> +        #[inline(always)]
+> +        $pub unsafe fn $name($($argname : $argtyp),*) {
+> +            #[cfg(CONFIG_TRACEPOINTS)]
+> +            {
+> +                // SAFETY: It's always okay to query the static key for =
+a tracepoint.
+> +                let should_trace =3D unsafe {
+> +                    $crate::macros::paste! {
+> +                        $crate::static_key::static_key_false!(
+> +                            $crate::bindings::[< __tracepoint_ $name >],
+> +                            $crate::bindings::tracepoint,
+> +                            key
+> +                        )
+> +                    }
+> +                };
+> +
+> +                if should_trace {
+> +                    $crate::macros::paste! {
+> +                        // SAFETY: The caller guarantees that it is okay=
+ to call this tracepoint.
+> +                        unsafe { $crate::bindings::[< rust_do_trace_ $na=
+me >]($($argname),*) };
+> +                    }
+> +                }
+> +            }
+> +
+> +            #[cfg(not(CONFIG_TRACEPOINTS))]
+> +            {
+> +                // If tracepoints are disabled, insert a trivial use of =
+each argument
+> +                // to avoid unused argument warnings.
+> +                $( let _unused =3D $argname; )*
+> +            }
+> +        }
+> +    )*}
+> +}
+> +
+> +pub use declare_trace;
+>=20
+> --
+> 2.46.0.rc2.264.g509ed76dc8-goog
+>=20
 
