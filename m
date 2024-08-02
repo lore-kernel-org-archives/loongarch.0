@@ -1,135 +1,144 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7653314374D
-	for <loongarch@lists.linux.dev>; Thu,  1 Aug 2024 18:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AB51BE87F;
+	Fri,  2 Aug 2024 07:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722536818; cv=none; b=ha8h/XnLdNMUE16I7tnd4RaFJvV1BpynbnpptlZSxy6M1r71sIxAXtNSyaZ6ngmWWS6dtlgQv3YW6S7aOkGH6oYGeXnOf/keVsOdYcBFARZEtWh/7/pHmGyIWAAqmEOVjKOzbYGWa07V9U+n3zJRMeZEFk+e1IrZIdXTyxkXIA0=
+	t=1722584085; cv=none; b=qNc4rGwmNWLyHxihEp0Fy0yoJ+34VAVxI/2knktQXzu7BzjXOnOnFT+bqibCno4gD9bR37U278eAIYYBWJ5cMPp6qDjFVN/J/TE8VUK8jIqRb4opbOI3v3a+Ut+spfwEOH2cluw16rkCDDoyc93xxFCoTfop9W0fD4A8m7FwElI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722536818; c=relaxed/simple;
-	bh=lHbIHLFhtQNciusEsnruiPFrsux+ubJl8cotIGgu9QA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cWZDC/xz06v+fz3koh4M7B+iYhM0EGYoMEo6yU8krv5rNS43TZ2AUfRQ26EBLwxxxnOfzxoOAyktU6tMqwWcEmcGdil1qoMgT7knTddcigHzO/grF6y/1lOu32OHR7GaopUm57OiXR5jPk+S1IdXaZYqgEe8msY3ZOQlZCEbLDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nf9yagah; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nf9yagah"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3687f8fcab5so3602687f8f.3
-        for <loongarch@lists.linux.dev>; Thu, 01 Aug 2024 11:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722536815; x=1723141615; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2GkfD0g8hTHOTE05py9mAwmf1QYzZu9yR2OS6+zzI80=;
-        b=Nf9yagahnxNECKBnOtadu1zzzGVBG/tn0Nkjw6wb2u0pdWnyLeVciO9nPBS8Gi7Rnf
-         AwxYd1tF16db7tZVZyT2XXVj1TR6P2GZvPjNSCxzdHYygznsglAfvxD/MI/ep2eCAUNk
-         Ja4MbTdq15KkrRzuQX0IumywhIYbgN1ao8fh2r/H2gHHy0UDFPSIdm1R20icFefx30eZ
-         YKafBjwd3/XSnpQJFa0HNIA6DU5xNLvBJ2liIDX1nEgxA9WjcKwFUmQNAYtds55v0flv
-         sN8LjauXRMX0fCnxdUcP82+6kJ9IPIRCuopQnYQacXBjFR9E1AhQwqcGu59/wTeI9DF8
-         KTPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722536815; x=1723141615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2GkfD0g8hTHOTE05py9mAwmf1QYzZu9yR2OS6+zzI80=;
-        b=rijrZDPGnL9DJIuKeYjVLJeZ9YQ5xFlQGkt7NPh8I4H+21atx27xAB9j9zI0R6+E5U
-         Qti1L2Z5BwvW6RPRSUfZS6ze5OmVSclcdfhfSOz0OQYRwCXnqHHG3JFHnSo7dOnFGXPH
-         0y5WNiD9ump78M1hWU9NROWIN6sN4qkrbfVaKnKioUAC6eOoH5hR6aUkIqVbpcsyXLXh
-         WGXLYUc8UyY6Q2cc04gNxz8Wd3NwJ3AL6sBsBTR/Z34NF9bF7jUyeKXKXqy/8jdya0QK
-         mEDgaXSvJZscgNs4TBlJY8sDjFGjjwmbIbz81Yc0fm9PHh8c52j0uQIdSLbmvc3vdAMB
-         SMTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIBsFSD6z5fJta1Uhi6ZCUlYxIZpJZpD51s9r1h3ruhc/eo6B+ItfvRuvmhfybghH2/cmD6FPnl/vkuh28Ml27vLroyActnKMS
-X-Gm-Message-State: AOJu0YxJLdM3SPZnkoc0hn9MR4sOKQuUWh450vQmbbUWmZWbvlMJHkcp
-	KwrQkFW+EmGmE1lBC7VSMSQy2YI+xRXce6dxYDc8I8qdqyC7SYV851J/2wIXg54xOmtbxb2nUYK
-	Fng22CTFp4MIfNU0wYmDfWppumo73+3BHMorh
-X-Google-Smtp-Source: AGHT+IGwaGkw42I/amAH0IQd6LdSV/vkI/phXZAUV/1lm1vKxK6jNhFtpwWWcpoa+ZqQDQpJUtDs/GFofzfYgLUeu2Q=
-X-Received: by 2002:adf:a356:0:b0:368:3895:67d6 with SMTP id
- ffacd0b85a97d-36bbc0cbe69mr533475f8f.20.1722536814320; Thu, 01 Aug 2024
- 11:26:54 -0700 (PDT)
+	s=arc-20240116; t=1722584085; c=relaxed/simple;
+	bh=28kV5J8/flAVt86/GsEj43NZxtciKgmXFgOHNgHpFQI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Nkt1whhHeHqduO2aeRypfZkO/l/pO76WKHur2omTYhcbhOumMdklxrDUy94fsAcdJUHzlVwkOtRULmmHWNKnBzvIiKobZUl2arE5dZzTmJI5HSU93jUkNTtrFjHWDML8ao+sVq5Xu7SY6Bnm5Hauo8dFEbQ+yvi99Pud2CI1dGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxnOoQjKxmAVoGAA--.22201S3;
+	Fri, 02 Aug 2024 15:34:40 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMCxbuUPjKxm0GILAA--.55848S3;
+	Fri, 02 Aug 2024 15:34:39 +0800 (CST)
+Subject: Re: [PATCH v12 65/84] KVM: LoongArch: Mark "struct page" pfns
+ accessed only in "slow" page fault path
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+ David Stevens <stevensd@chromium.org>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-66-seanjc@google.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <d5405245-edd3-9bc5-0c40-282a30e46fae@loongson.cn>
+Date: Fri, 2 Aug 2024 15:34:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
- <20240628-tracepoint-v4-1-353d523a9c15@google.com> <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
- <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com> <20240801102804.GQ33588@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240801102804.GQ33588@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 1 Aug 2024 20:26:42 +0200
-Message-ID: <CAH5fLgiOe1ECCwE1cwczsT13iPyymdUTbV-9ZHeDrp_OGq5FgQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: add static_key_false
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
-	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240726235234.228822-66-seanjc@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxbuUPjKxm0GILAA--.55848S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFWUJw1rKF47AFWUZFWfCrX_yoW8ZF1xpF
+	ZxCwsrtr4rtrn093srta4qvF17Gw4DKr1xX3W2q34FkFnIqw1Y93W8W397WFyUJ392ya1S
+	vF1rt3WUWan0vacCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDU
+	UUU
 
-On Thu, Aug 1, 2024 at 12:28=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Jul 31, 2024 at 11:34:13PM +0200, Alice Ryhl wrote:
->
-> > > Please work harder to not have to duplicate stuff like this.
-> >
-> > I really didn't want to duplicate it, but it's very hard to find a
-> > performant alternative. Is there any way we could accept duplication
-> > only in the cases where an 'i' parameter is used? I don't have the
-> > choice of using a Rust helper for 'i' parameters.
-> >
-> > Perhaps one option could be to put the Rust code inside jump_label.h
-> > and have the header file evaluate to either C or Rust depending on the
-> > value of some #ifdefs?
-> >
-> > #ifndef RUST_ASM
-> > /* existing C code goes here */
-> > #endif
-> > #ifdef RUST_ASM
-> > // rust code goes here
-> > #endif
-> >
-> > That way the duplication is all in a single file. It would also avoid
-> > the need for duplicating the nop5 string, as the Rust case is still
-> > going through the C preprocessor and can use the existing #define.
->
-> I suppose that is slightly better, but ideally you generate the whole of
-> the Rust thing from the C version. After all, Clang can already parse
-> this.
->
-> That said, with the below patch, I think you should be able to reuse the
-> JUMP_TABLE_ENTRY macro like:
->
->         JUMP_TABLE_ENTRY({0}, {1}, {2} + {3})
 
-Yeah, I think this can work. I will submit a follow-up patch that
-removes the duplication soon.
 
-Alice
+On 2024/7/27 上午7:52, Sean Christopherson wrote:
+> Mark pages accessed only in the slow path, before dropping mmu_lock when
+> faulting in guest memory so that LoongArch can convert to
+> kvm_release_faultin_page() without tripping its lockdep assertion on
+> mmu_lock being held.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/loongarch/kvm/mmu.c | 20 ++------------------
+>   1 file changed, 2 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 364dd35e0557..52b5c16cf250 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -552,12 +552,10 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>   static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>   {
+>   	int ret = 0;
+> -	kvm_pfn_t pfn = 0;
+>   	kvm_pte_t *ptep, changed, new;
+>   	gfn_t gfn = gpa >> PAGE_SHIFT;
+>   	struct kvm *kvm = vcpu->kvm;
+>   	struct kvm_memory_slot *slot;
+> -	struct page *page;
+>   
+>   	spin_lock(&kvm->mmu_lock);
+>   
+> @@ -570,8 +568,6 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+>   
+>   	/* Track access to pages marked old */
+>   	new = kvm_pte_mkyoung(*ptep);
+> -	/* call kvm_set_pfn_accessed() after unlock */
+> -
+>   	if (write && !kvm_pte_dirty(new)) {
+>   		if (!kvm_pte_write(new)) {
+>   			ret = -EFAULT;
+> @@ -595,23 +591,11 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+>   	}
+>   
+>   	changed = new ^ (*ptep);
+> -	if (changed) {
+> +	if (changed)
+>   		kvm_set_pte(ptep, new);
+> -		pfn = kvm_pte_pfn(new);
+> -		page = kvm_pfn_to_refcounted_page(pfn);
+> -		if (page)
+> -			get_page(page);
+> -	}
+> +
+>   	spin_unlock(&kvm->mmu_lock);
+>   
+> -	if (changed) {
+> -		if (kvm_pte_young(changed))
+> -			kvm_set_pfn_accessed(pfn);
+> -
+> -		if (page)
+> -			put_page(page);
+> -	}
+> -
+>   	if (kvm_pte_dirty(changed))
+>   		mark_page_dirty(kvm, gfn);
+>   
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
