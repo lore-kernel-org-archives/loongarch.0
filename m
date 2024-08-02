@@ -1,142 +1,90 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FD615AD9C
-	for <loongarch@lists.linux.dev>; Fri,  2 Aug 2024 11:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AC61E2109;
+	Fri,  2 Aug 2024 11:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722597376; cv=none; b=qaEpC1X74j2CvnVK6q4lGiIezKMiujQM18TBQKi4G3FH19dMQpZk2R7VyI3Y9pt5a1J1aRRGQCD+C9ZksIy3jnpJkihrcQQ24vpTKMQ3oVGuo7LO/UJ3lr7IDhCMeQbK5tPblnpgr//sqqSGXHtmEA2xVuYNh86IaHJIDoX8KWg=
+	t=1722597610; cv=none; b=BFg7ad13r1+owGuorlIUF7nrQiE/kEZOojNtPdKBecFOFxQjUyvh64fHczDPX8NXbZ+yjqpEoW1NlBPRTXIZ+0Ciuy474TQ2LRSmi0WtIYJVjsoiWbUYklavcoupcMhS0O7OJwofpzUSO+NvbOE/L82ZCRru1ceId/MjoDK/+Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722597376; c=relaxed/simple;
-	bh=5/L0Yc2Z+AOSOKZw3/Dotf6pZ+cloK9IZVwKZGtH7AE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LH4gza743+B7wbmwWjXpAMEvah1ifrpjdAa6YoQ/8z2z51cX3zBe3iuxZC+orkdoyWSVKFPDvoV60/tRbyW6wlSdHOYy6f3opjhngjuyVPhOjOHAbopiqx9/z5YNGx/+U25Mq2Rov2g1t+fDrmuWrNImJb5rs5W3mVspj31Yy5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=REymIrjO; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="REymIrjO"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7ac469e4c4so562080266b.0
-        for <loongarch@lists.linux.dev>; Fri, 02 Aug 2024 04:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722597373; x=1723202173; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h+a+YbUYnYp2O9o3vDX++ZHVr+zNy81A/L7Ak8HFY0M=;
-        b=REymIrjO6nz8wh62hISnn4LImQPpjFqsUw8yhtlO6qeC0I9bgSWxKozVCOCE0hBxcn
-         3BzwHdOKC/9Rci/92rYO3hkxjj74RtkvwcnTN3Mx0spXMn85Bsv4MZsbruZ2kJhDYCtm
-         dWnnIRp46D/R0T5Y0oHZ/WssjT34nN5dr+SVBNxU0g/K8vQp7k64sk53qyTSkbHoOOym
-         k3tbe+rrfFXRPG8ic6lH3kGDVvLwA3W1a4EGp9ye+wuHLIlJccbQ6I6H7UQyYRDEUQ5k
-         hbd+K8lGzCxIa+Tfmogw6szFwAPPxZ2iJt78gCo9oe5/1yJQuG3N/0nr2G0g/fKXHyOU
-         oWBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722597373; x=1723202173;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h+a+YbUYnYp2O9o3vDX++ZHVr+zNy81A/L7Ak8HFY0M=;
-        b=cNrE3kERCftsQaFAfq4TTADTh+R3xtKGC+ZEnIcs/5PLKAvn8T1o5BInOYBA1YkMaK
-         Cp6mliBAwIJu/IvZtwYww1xYURZ+nVBE5C4jmFB3q/ZWgHymuz7IZQkjIwXV7Dzau5T8
-         Evt4vc/j7TOHv9OZvP0GcUWEweWlji5Lu10iEyCyJcKuDYHhYCup9CTUy0EZvnBajPVg
-         B8FmMYV+1dUI0rJD8CswUW5WbUyM3AlpDTwA93v8WZfrJ996nsaLB5Vylo4ZV6WxCT8R
-         val+5KTpjH/OFRDS2KHAJI1fqtNE/lSKYwQYgVwk8zehYTC8NtGpwiW/wXWyEgjPqbsw
-         s/YA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZXeGtvb70Nlt6+2q72wBrwVAr6CxMPGbzP6lU0Sw63bRincgA1E8zHxwKSTlWwGPoM8uNnv/jxATr5caBp7+2wXzktO9rt+Ey
-X-Gm-Message-State: AOJu0YysicODGGQk59R4GIbU0IR0YjME9eMgGHYhdeLYQxcWzbq7AXuV
-	0mXA5whfJvKYvoyvPGevrn3egVQleI23HnaeCj7MVAvQGI53bA7iwkDXJCy7QKA=
-X-Google-Smtp-Source: AGHT+IHUr2+eigMQMyKiFV2SC/+LcUpbtIeuSXGg+vhEQqD67tJuIK6amWVCFT4RRO+CzEGYIGxtXA==
-X-Received: by 2002:a17:907:25c5:b0:a7a:acae:340b with SMTP id a640c23a62f3a-a7dc628bf8fmr256404766b.31.1722597372903;
-        Fri, 02 Aug 2024 04:16:12 -0700 (PDT)
-Received: from draig.lan ([85.9.250.243])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9bcb19csm87224666b.42.2024.08.02.04.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 04:16:08 -0700 (PDT)
-Received: from draig (localhost [IPv6:::1])
-	by draig.lan (Postfix) with ESMTP id 91DEE5F8A9;
-	Fri,  2 Aug 2024 12:16:04 +0100 (BST)
-From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,  Marc Zyngier <maz@kernel.org>,
-  Oliver Upton <oliver.upton@linux.dev>,  Tianrui Zhao
- <zhaotianrui@loongson.cn>,  Bibo Mao <maobibo@loongson.cn>,  Huacai Chen
- <chenhuacai@kernel.org>,  Michael Ellerman <mpe@ellerman.id.au>,  Anup
- Patel <anup@brainfault.org>,  Paul Walmsley <paul.walmsley@sifive.com>,
-  Palmer Dabbelt <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,
-  Christian Borntraeger <borntraeger@linux.ibm.com>,  Janosch Frank
- <frankja@linux.ibm.com>,  Claudio Imbrenda <imbrenda@linux.ibm.com>,
-  kvm@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  kvmarm@lists.linux.dev,  loongarch@lists.linux.dev,
-  linux-mips@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
-  kvm-riscv@lists.infradead.org,  linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  David Matlack <dmatlack@google.com>,
-  David Stevens <stevensd@chromium.org>
-Subject: Re: [PATCH v12 11/84] KVM: Rename gfn_to_page_many_atomic() to
- kvm_prefetch_pages()
-In-Reply-To: <20240726235234.228822-12-seanjc@google.com> (Sean
-	Christopherson's message of "Fri, 26 Jul 2024 16:51:20 -0700")
-References: <20240726235234.228822-1-seanjc@google.com>
-	<20240726235234.228822-12-seanjc@google.com>
-Date: Fri, 02 Aug 2024 12:16:04 +0100
-Message-ID: <87frrncgzv.fsf@draig.linaro.org>
+	s=arc-20240116; t=1722597610; c=relaxed/simple;
+	bh=4xShjOftd4+pZBV2l+SeEhAEEaYdoitSomtoKS3Umuk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t/Hxi77r0Y42gHDmIu6zC9BlUsmBsCkoI+RoIbkODDsFOo3Z1plKgqaVW0JkQkhXSwbwLdGIVjWK/eLL392j6RFB4h9Nwll7ZjYyty87ceHpDWhBMFjyOBxFYtXtKNjRg44I9sku2/V6JvDIhKD/olU/kyhyPX1B4uhnc5ytoTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wb3Ft71Q0z6K6GR;
+	Fri,  2 Aug 2024 19:17:22 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 653A91400D9;
+	Fri,  2 Aug 2024 19:20:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
+ 2024 12:20:00 +0100
+Date: Fri, 2 Aug 2024 12:19:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
+ Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
+	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul
+ Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
+	<corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt
+	<palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring
+	<robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, Zi Yan <ziy@nvidia.com>, <devicetree@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v3 19/26] mm: introduce numa_emulation
+Message-ID: <20240802121959.00003c18@Huawei.com>
+In-Reply-To: <20240801060826.559858-20-rppt@kernel.org>
+References: <20240801060826.559858-1-rppt@kernel.org>
+	<20240801060826.559858-20-rppt@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Sean Christopherson <seanjc@google.com> writes:
+On Thu,  1 Aug 2024 09:08:19 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-> Rename gfn_to_page_many_atomic() to kvm_prefetch_pages() to try and
-> communicate its true purpose, as the "atomic" aspect is essentially a
-> side effect of the fact that x86 uses the API while holding mmu_lock.
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Move numa_emulation codfrom arch/x86 to mm/numa_emulation.c
+> 
+> This code will be later reused by arch_numa.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
+I ran some basic tests on ARM with this. Seems to do the job.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-It's never too late to start adding some kdoc annotations to a function
-and renaming a kvm_host API call seems like a good time to do it.
+Works on both ACPI and dsdt boots.
 
-> E.g. even if mmu_lock weren't held, KVM wouldn't want to fault-in pages,
-> as the goal is to opportunistically grab surrounding pages that have
-> already been accessed and/or dirtied by the host, and to do so quickly.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
-<snip>
-
-/**
- * kvm_prefetch_pages() - opportunistically grab previously accessed pages
- * @slot: which @kvm_memory_slot the pages are in
- * @gfn: guest frame
- * @pages: array to receives page pointers
- * @nr_pages: number of pages
- *
- * Returns the number of pages actually mapped.
- */
-
-?
-
->=20=20
-> -int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
-> -			    struct page **pages, int nr_pages)
-> +int kvm_prefetch_pages(struct kvm_memory_slot *slot, gfn_t gfn,
-> +		       struct page **pages, int nr_pages)
->  {
->  	unsigned long addr;
->  	gfn_t entry =3D 0;
-> @@ -3075,7 +3075,7 @@ int gfn_to_page_many_atomic(struct kvm_memory_slot =
-*slot, gfn_t gfn,
->=20=20
->  	return get_user_pages_fast_only(addr, nr_pages, FOLL_WRITE, pages);
->  }
-> -EXPORT_SYMBOL_GPL(gfn_to_page_many_atomic);
-> +EXPORT_SYMBOL_GPL(kvm_prefetch_pages);
->=20=20
->  /*
->   * Do not use this helper unless you are absolutely certain the gfn _mus=
-t_ be
-
---=20
-Alex Benn=C3=A9e
-Virtualisation Tech Lead @ Linaro
