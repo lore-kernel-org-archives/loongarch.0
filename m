@@ -1,130 +1,148 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F1516BE0C
-	for <loongarch@lists.linux.dev>; Fri,  2 Aug 2024 17:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611D141C71
+	for <loongarch@lists.linux.dev>; Fri,  2 Aug 2024 19:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722619449; cv=none; b=Pc3meB0KZh9JfOaRZSIriZ5xlpUE97eEahGhI/QUa81+/awpus48R+cemGr7avoHThhW2ouRPZfINELikxQypMFWmuXBbgTBOxuPcbKod4PeJZz7wT62/uQc5rxuHE6Hqxe0OQ7x5yI4EUF/eVcu4qV5DGdUwuzDeJashQb1dJQ=
+	t=1722627132; cv=none; b=NM9qlF+6hCYaTOaHuqkCDMgdLSJz0sXgk3gfTiA8EJCW5saACTIw6WVidDgIWkLmZrzF9jWtVCe08k2VnrWYYqcCtqTOzMDLia1mIRUehPVRSrvpP4YUb5rP4mH/SNWg2jq0boyGo0wg7CXV+5MKJzrHfNN+WCzxIT9VTmI8t2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722619449; c=relaxed/simple;
-	bh=WFAHa2ete4Xb+JbywsGV+pLk9gCOl+vYhLmCllbETPw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hiFQbH9LasDJgoYFvuhXDelVVJujRMjU4KQ5TXPBzYbhypdjF+WT96N0/tPcwj1Yzgr0GrA3idAnllzaOHjFe5igy91oci5EHn1uBcEV1LxsCHQ7R/ijF+F7JsfLing4ejqHfYtRn6bAbmhHZ7chLSHBZp/KtbT9OCc5ptTylLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=NvaGzkys; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1722627132; c=relaxed/simple;
+	bh=csd0MkbfiRZ32mkpXZ9twM9kRQL1vy8OM+kdMsU6aRQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mnZ9xlt2R4S1TVr+XKEb6wTe7/vSmkniaxRdxoxCJADk1B4WjUgmWbOF/8gY5H2B5/41Afau7ur1Anh6EyXqQmUbRVAEZWcQk0oKjlNSIx5oaK/ez+5G92MXryJd11tLllj98IvGBsUesuQLECTm9wvPn/LzGKf/cJ0DKycfRDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iNmJ+tal; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="NvaGzkys"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1722619446; x=1722878646;
-	bh=KYJ880DzvybbissblwMCNzUlLxxe1Ktl0TOAACRRXAQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=NvaGzkysirXcjizn6Jo4e4bFXgCgbyugGW/9RojsJdsReD3ddkqxDsLLila/aLRf6
-	 zAbt4EB/1Gu795L1QQ/3CavkmtMHt7uIFQq8t2ItVC3iOl9fwTeC1AthRSX4z+8iNe
-	 oTr8wCRurge3wMmBL2CzZSMR6HFHR48iZ/RMDQcD0zhPEJL/htJer4r63YJ548B1tb
-	 J6FK0Z9l/PtQc892UbtZkC+5Plst5EtSJMIYvNubk7qKCDAz8J/AnUw2YqS/s397gC
-	 G+gnJ0EzhLYfOWcLjc7ypKcE9FOL5T0G59OgxWS4zTsdbw3CdY61bx6jAIVXRefpsV
-	 feUbG72Eojoow==
-Date: Fri, 02 Aug 2024 17:23:59 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, Carlos Llamas <cmllamas@google.com>
-Subject: Re: [PATCH v5 2/2] rust: add tracepoint support
-Message-ID: <a381ef22-96f4-4a72-8e3a-cc023dee111a@proton.me>
-In-Reply-To: <20240802-tracepoint-v5-2-faa164494dcb@google.com>
-References: <20240802-tracepoint-v5-0-faa164494dcb@google.com> <20240802-tracepoint-v5-2-faa164494dcb@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d47c8e3b3391333c5a5926396deb7ee3ad135f33
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNmJ+tal"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2cb685d5987so10521509a91.2
+        for <loongarch@lists.linux.dev>; Fri, 02 Aug 2024 12:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722627130; x=1723231930; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TTqa7oavJrWkxSTFWtVmMnGsBDrmN4Dgl5PSeoZtRS0=;
+        b=iNmJ+talcLKvuEHChjLnAk72W65Z9sdjrj8B3sFMPPDTx6js2H94XAp9aFOpyxNOJx
+         pe8HbMqzjT1wfVn6uOkA8gfQ1pFFM+U4Seg9LsTgI9vW+hlzBj4gNOvNa0ktNXxy57XI
+         kOuyOI7mhUFZIbdPbcKhXFXnu2yC1c9yMHZsS15MlnCrDiPEwYFD7eEUA+51nlBwgE6r
+         DA9ET2i7HN3WQwrOdKzPtvL20dx5sORUmp3bvQp0VN4P5s9ZjfYphKE45csPdiW9CMgL
+         ojl1fs0hDJX5fjr/qP6f4E9Typ8+U8gYCLrWtaEhGECr8SPoTx8WbBDAqmpSLVQGRA1x
+         LwOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722627130; x=1723231930;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TTqa7oavJrWkxSTFWtVmMnGsBDrmN4Dgl5PSeoZtRS0=;
+        b=HOfhAewp/URXiP0S1uJkyEwOLYg5rKp5g60Y9pzOTO1E9Fxjg/OU1mEx6ozgM7Ensw
+         8QMwZYbjzOzavg6hTcBB+T6S8Qp81lGJfe/oSZnZIIacCZtIOauXY4PGP3SOk9OSQUoQ
+         5HNor2sCbbr3H6PuO8curJF65zItAnb571Veky83hDBwHJCGyurnEafTsG5//P3p0XVh
+         GOnjMGrdLLKEEsjrzQjrACDyPAmI4QClUs5h61fCH4DcGA5FCZ2wWJEXcfTVIOH/pTG5
+         qOHPnBZE3Ni6HoSpoKcuQ18nW2rWLTYPm6Ft8kQ79WOm34DQ1jn7tGiDiJQmeRUjmUR/
+         8LTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaf55VIsa1kMnyg2uHDOxS7IqL64g9eEd+0k/SMZWCNFC2+lWYJq/IRQNRuCAj/htysur5/ZGIpC+LX23hw65pd7elvVyYBhvy
+X-Gm-Message-State: AOJu0YxZvyLtxsh8VD9fZZvby4YBZkhxoBb31nmYhuENJDOOuVaadROs
+	LYuEy2lDD5nf0EMi5DJ+5B5yuJBzAsYAKKn0jG0M26WKZj0nomq7hIZE2e1ukrLO6rNMSyDi8VE
+	9yQ==
+X-Google-Smtp-Source: AGHT+IHxpD4UvI3cH5YcMAfSn5X/q5FbzhvcZwiTnoiXfWEKupcq/mKgFqqrl+E4nqq+ftOi/sOAAYuzYXs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:50cf:b0:2c9:61f9:9b27 with SMTP id
+ 98e67ed59e1d1-2cff9526286mr68117a91.5.1722627130434; Fri, 02 Aug 2024
+ 12:32:10 -0700 (PDT)
+Date: Fri, 2 Aug 2024 12:32:09 -0700
+In-Reply-To: <a039b758-d4e3-3798-806f-25bceb2f33a5@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-65-seanjc@google.com>
+ <a039b758-d4e3-3798-806f-25bceb2f33a5@loongson.cn>
+Message-ID: <Zq00OYowF5kc9QFE@google.com>
+Subject: Re: [PATCH v12 64/84] KVM: LoongArch: Mark "struct page" pfns dirty
+ only in "slow" page fault path
+From: Sean Christopherson <seanjc@google.com>
+To: maobibo <maobibo@loongson.cn>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 02.08.24 11:31, Alice Ryhl wrote:
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> new file mode 100644
-> index 000000000000..69dafdb8bfe8
-> --- /dev/null
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for tracepoints.
-> +
-> +/// Declare the Rust entry point for a tracepoint.
-> +///
-> +/// This macro generates an unsafe function that calls into C, and its s=
-afety requirements will be
-> +/// whatever the relevant C code requires. To document these safety requ=
-irements, you may add
-> +/// doc-comments when invoking the macro.
+On Fri, Aug 02, 2024, maobibo wrote:
+> On 2024/7/27 =E4=B8=8A=E5=8D=887:52, Sean Christopherson wrote:
+> > Mark pages/folios dirty only the slow page fault path, i.e. only when
+> > mmu_lock is held and the operation is mmu_notifier-protected, as markin=
+g a
+> > page/folio dirty after it has been written back can make some filesyste=
+ms
+> > unhappy (backing KVM guests will such filesystem files is uncommon, and
+> > the race is minuscule, hence the lack of complaints).
+> >=20
+> > See the link below for details.
+> >=20
+> > Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.c=
+om
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >   arch/loongarch/kvm/mmu.c | 18 ++++++++++--------
+> >   1 file changed, 10 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> > index 2634a9e8d82c..364dd35e0557 100644
+> > --- a/arch/loongarch/kvm/mmu.c
+> > +++ b/arch/loongarch/kvm/mmu.c
+> > @@ -608,13 +608,13 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcp=
+u, unsigned long gpa, bool writ
+> >   		if (kvm_pte_young(changed))
+> >   			kvm_set_pfn_accessed(pfn);
+> > -		if (kvm_pte_dirty(changed)) {
+> > -			mark_page_dirty(kvm, gfn);
+> > -			kvm_set_pfn_dirty(pfn);
+> > -		}
+> >   		if (page)
+> >   			put_page(page);
+> >   	}
+> > +
+> > +	if (kvm_pte_dirty(changed))
+> > +		mark_page_dirty(kvm, gfn);
+> > +
+> >   	return ret;
+> >   out:
+> >   	spin_unlock(&kvm->mmu_lock);
+> > @@ -915,12 +915,14 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, un=
+signed long gpa, bool write)
+> >   	else
+> >   		++kvm->stat.pages;
+> >   	kvm_set_pte(ptep, new_pte);
+> > -	spin_unlock(&kvm->mmu_lock);
+> > -	if (prot_bits & _PAGE_DIRTY) {
+> > -		mark_page_dirty_in_slot(kvm, memslot, gfn);
+> > +	if (writeable)
+> Is it better to use write or (prot_bits & _PAGE_DIRTY) here?  writable is
+> pte permission from function hva_to_pfn_slow(), write is fault action.
 
-I think we should mandate safety documentation for the function.
+Marking folios dirty in the slow/full path basically necessitates marking t=
+he
+folio dirty if KVM creates a writable SPTE, as KVM won't mark the folio dir=
+ty
+if/when _PAGE_DIRTY is set.
 
-> +#[macro_export]
-> +macro_rules! declare_trace {
-> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
-typ:ty),* $(,)?);)*) =3D> {$(
-
-Can you add an `unsafe` in front of `fn`, since this macro generates an
-`unsafe` function? Otherwise I don't see how the SAFETY comment below is
-correct.
-
----
-Cheers,
-Benno
-
-> +        $( #[$attr] )*
-> +        #[inline(always)]
-> +        $pub unsafe fn $name($($argname : $argtyp),*) {
-> +            #[cfg(CONFIG_TRACEPOINTS)]
-> +            {
-> +                // SAFETY: It's always okay to query the static key for =
-a tracepoint.
-> +                let should_trace =3D unsafe {
-> +                    $crate::macros::paste! {
-> +                        $crate::static_key::static_key_false!(
-> +                            $crate::bindings::[< __tracepoint_ $name >],
-> +                            $crate::bindings::tracepoint,
-> +                            key
-> +                        )
-> +                    }
-> +                };
-> +
-> +                if should_trace {
-> +                    $crate::macros::paste! {
-> +                        // SAFETY: The caller guarantees that it is okay=
- to call this tracepoint.
-> +                        unsafe { $crate::bindings::[< rust_do_trace_ $na=
-me >]($($argname),*) };
-> +                    }
-> +                }
-> +            }
-> +
-> +            #[cfg(not(CONFIG_TRACEPOINTS))]
-> +            {
-> +                // If tracepoints are disabled, insert a trivial use of =
-each argument
-> +                // to avoid unused argument warnings.
-> +                $( let _unused =3D $argname; )*
-> +            }
-> +        }
-> +    )*}
-> +}
-> +
-> +pub use declare_trace;
->=20
-> --
-> 2.46.0.rc2.264.g509ed76dc8-goog
->=20
-
+Practically speaking, I'm 99.9% certain it doesn't matter.  The folio is ma=
+rked
+dirty by core MM when the folio is made writable, and cleaning the folio tr=
+iggers
+an mmu_notifier invalidation.  I.e. if the page is mapped writable in KVM's
+stage-2 PTEs, then its folio has already been marked dirty.
