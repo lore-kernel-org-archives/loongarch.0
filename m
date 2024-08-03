@@ -1,154 +1,109 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F87F9F5;
-	Sat,  3 Aug 2024 03:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9909B29414
+	for <loongarch@lists.linux.dev>; Sat,  3 Aug 2024 05:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722654146; cv=none; b=q81gNYHri9+3GEvorN0kb1C4ZebCRXj9UtDSQPGfjYD0/BrUmZ6NH9Xhm8XgCaAQnzPWsbyTPJvjW5d5q2hX7PI3tiV4xAZ5GeQrCY3rtE9hk8tEBHNRYXJm/eHjMDsREwWDI0W2A5vFMQPPD/3X0nLL2JNDHYZFRsrbztCdREA=
+	t=1722662093; cv=none; b=mvLX2Zv8b9IZ3fs2rpUG3wyE70FC1cMTv+Dfe5z36hhBvHnbvIKgdbu8gXTfBtkOVklSdJsmc9rW1GBOWWDFrm1F1CoCvYwQUbMhCEoDpvn6Ib06xIGyYseLpGZiRsJNuJGDLHCEJsr9BlpY78wQc+Fwhbxpv7w1H5d1Q+LaosU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722654146; c=relaxed/simple;
-	bh=NoDHZy9WHNV+LcYNuOiFb+aviu1JIBbgKM7qngzRd8c=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MOgpO56JL+XUYm3nmdVeUyGksq5x9OqFSwStfpNmLbM0lLy8pOABS5jJlnjrKQrKjahi8X0UWyTyy8KpBJFyvlmrw3PnUtlgkfVViO1TSpI1vpj6vgnD7e6TTxWpYvX67XcuLN5flcdyABunqjAgWz3s6+07Kf5XqG6Sj9DyFtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx7eq1na1myuEGAA--.24073S3;
-	Sat, 03 Aug 2024 11:02:13 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxwuGwna1mXuwAAA--.5506S3;
-	Sat, 03 Aug 2024 11:02:10 +0800 (CST)
-Subject: Re: [PATCH v12 64/84] KVM: LoongArch: Mark "struct page" pfns dirty
- only in "slow" page fault path
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-65-seanjc@google.com>
- <a039b758-d4e3-3798-806f-25bceb2f33a5@loongson.cn>
- <Zq00OYowF5kc9QFE@google.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <345d89c1-4f31-6b49-2cd4-a0696210fa7c@loongson.cn>
-Date: Sat, 3 Aug 2024 11:02:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1722662093; c=relaxed/simple;
+	bh=y/G0q6vSGh56Cm0FF0nqqRrgKaaLLgJrjCyqE6ot6iE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p1iT2m9EwGw3zVkcGh8ecWA+geeBvqbLKZHVVufbB2b0etmxN414c7lC8pjkq2jYWLNJbJsmEfudJsnsr/T0PZrmsP+/BhXhzU+nTCgAn9ZdKQbKsKrp6fhRLKsRQ/Xn1B/4N//54zZdzOUWULZCTu5I8jFyQJkJhTOqTMlOimI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heitbaum.com; spf=pass smtp.mailfrom=heitbaum.com; dkim=pass (1024-bit key) header.d=heitbaum.com header.i=@heitbaum.com header.b=A5lqlbay; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heitbaum.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heitbaum.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=heitbaum.com header.i=@heitbaum.com header.b="A5lqlbay"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70d399da0b5so7593544b3a.3
+        for <loongarch@lists.linux.dev>; Fri, 02 Aug 2024 22:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=heitbaum.com; s=google; t=1722662090; x=1723266890; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BmvtDB3s2cR8UrreA9la38N0r8HdMO9IViXvEFHt/Nw=;
+        b=A5lqlbayzTq0dE4jJqG3mNvIEse2JwRP4BG8cnATpyWvG/0g5K0XoNpeNbgIcs0qJC
+         NlAqvsxyLIFSVmp8FzxdoyplwTwxcM3vHeq8ncj4HBDf3MxTjPOG3nSpT8Pg1BITa6Eb
+         jeopAJPG6Vkb7E48W4klRAyt5VCd8W8Svt76c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722662090; x=1723266890;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BmvtDB3s2cR8UrreA9la38N0r8HdMO9IViXvEFHt/Nw=;
+        b=iGn80EbZw9GMVbj3bN/0Shx5Ki0wdIKuJDRMb4Ogoton4A87dsrwoqzJFzOQEKyW8o
+         LWv9NqsueUBUjzj7LzJ/0FbDvuPufN75ut9bS26Eljf6jlKe+dKmO0AgOOoyWFgijg8M
+         fBqAUOtB94pacpAN6DHammgDNrkK7oZy4tCwPq8uFufcpLwjqbCEPXlRXbBuSrZJwO1H
+         t7Un/4Lxu9mpmOkVrhiXL+vbKkWLrskKDi3Bn2uyhUPyXQ8ITQSm8j54S/utX3m+ZXj5
+         UxJSbHNzTfbAn4JohLd4WsXuM0lMGJHWFG1/xZCl9QdVBqOsQ9C8fPGNM/nF7HSfi/FG
+         AGXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzVm2/z0VJ0ZaUk810nsFlDRm+qsrpGH4u+F1NXs6R27PKMmYCmAykq9hsdhDKAv5p2KjQsfFkrXLIYwNTl8xv1O5Hop9Or321
+X-Gm-Message-State: AOJu0YwUYimLO3RMX3RpDtSWWEDhwu31cNx4bjw05XanMyecMtWhbtye
+	FIudW3WJX9Tsg/r+mnnfJoipiEFBKiMjlB+dP4Xxwwi0b5r/3b/aD3jpW5Z+Qcs=
+X-Google-Smtp-Source: AGHT+IFtk7L8k8Q3OP5IS2+A9RpjMYCUcoWx/gWA5UpNjio/ITBkqtqn6ebqg37Slew3B08+KAqPog==
+X-Received: by 2002:a05:6a20:a11f:b0:1c4:944c:41e2 with SMTP id adf61e73a8af0-1c699683bdbmr8888959637.51.1722662089837;
+        Fri, 02 Aug 2024 22:14:49 -0700 (PDT)
+Received: from faede8dcc269 ([122.199.11.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f57176sm26262095ad.80.2024.08.02.22.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Aug 2024 22:14:49 -0700 (PDT)
+Date: Sat, 3 Aug 2024 05:14:41 +0000
+From: Rudi Heitbaum <rudi@heitbaum.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>,
+	Florian Weimer <fweimer@redhat.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-api@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH] syscalls: fix syscall macros for newfstat/newfstatat
+Message-ID: <Zq28wejX3U9J1_JV@faede8dcc269>
+References: <20240801123305.2392874-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Zq00OYowF5kc9QFE@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxwuGwna1mXuwAAA--.5506S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFyfAryfKw1fGw43AFyrGrX_yoW5uw17pF
-	WUCFWqkFs5tryYyrZrt39IvrWrK39xKr1xX3W7J34Fkas0qr1IqF10grWfWFyUA3yfAayS
-	qr4UKF9xuFZ8AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240801123305.2392874-1-arnd@kernel.org>
 
-
-
-On 2024/8/3 上午3:32, Sean Christopherson wrote:
-> On Fri, Aug 02, 2024, maobibo wrote:
->> On 2024/7/27 上午7:52, Sean Christopherson wrote:
->>> Mark pages/folios dirty only the slow page fault path, i.e. only when
->>> mmu_lock is held and the operation is mmu_notifier-protected, as marking a
->>> page/folio dirty after it has been written back can make some filesystems
->>> unhappy (backing KVM guests will such filesystem files is uncommon, and
->>> the race is minuscule, hence the lack of complaints).
->>>
->>> See the link below for details.
->>>
->>> Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com
->>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>> ---
->>>    arch/loongarch/kvm/mmu.c | 18 ++++++++++--------
->>>    1 file changed, 10 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>> index 2634a9e8d82c..364dd35e0557 100644
->>> --- a/arch/loongarch/kvm/mmu.c
->>> +++ b/arch/loongarch/kvm/mmu.c
->>> @@ -608,13 +608,13 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
->>>    		if (kvm_pte_young(changed))
->>>    			kvm_set_pfn_accessed(pfn);
->>> -		if (kvm_pte_dirty(changed)) {
->>> -			mark_page_dirty(kvm, gfn);
->>> -			kvm_set_pfn_dirty(pfn);
->>> -		}
->>>    		if (page)
->>>    			put_page(page);
->>>    	}
->>> +
->>> +	if (kvm_pte_dirty(changed))
->>> +		mark_page_dirty(kvm, gfn);
->>> +
->>>    	return ret;
->>>    out:
->>>    	spin_unlock(&kvm->mmu_lock);
->>> @@ -915,12 +915,14 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>    	else
->>>    		++kvm->stat.pages;
->>>    	kvm_set_pte(ptep, new_pte);
->>> -	spin_unlock(&kvm->mmu_lock);
->>> -	if (prot_bits & _PAGE_DIRTY) {
->>> -		mark_page_dirty_in_slot(kvm, memslot, gfn);
->>> +	if (writeable)
->> Is it better to use write or (prot_bits & _PAGE_DIRTY) here?  writable is
->> pte permission from function hva_to_pfn_slow(), write is fault action.
+On Thu, Aug 01, 2024 at 02:32:33PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Marking folios dirty in the slow/full path basically necessitates marking the
-> folio dirty if KVM creates a writable SPTE, as KVM won't mark the folio dirty
-> if/when _PAGE_DIRTY is set.
+> The __NR_newfstat and __NR_newfstatat macros accidentally got renamed
+> in the conversion to the syscall.tbl format, dropping the 'new' portion
+> of the name.
 > 
-> Practically speaking, I'm 99.9% certain it doesn't matter.  The folio is marked
-> dirty by core MM when the folio is made writable, and cleaning the folio triggers
-> an mmu_notifier invalidation.  I.e. if the page is mapped writable in KVM's
-yes, it is. Thanks for the explanation. kvm_set_pfn_dirty() can be put 
-only in slow page fault path. I only concern with fault type, read fault 
-type can set pte entry writable however not _PAGE_DIRTY at stage-2 mmu 
-table.
+> In an unrelated change, the two syscalls are no longer architecture
+> specific but are once more defined on all 64-bit architectures, so the
+> 'newstat' ABI keyword can be dropped from the table as a simplification.
+> 
+> Fixes: Fixes: 4fe53bf2ba0a ("syscalls: add generic scripts/syscall.tbl")
+> Closes: https://lore.kernel.org/lkml/838053e0-b186-4e9f-9668-9a3384a71f23@app.fastmail.com/T/#t
+> Reported-by: Florian Weimer <fweimer@redhat.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> stage-2 PTEs, then its folio has already been marked dirty.
-Considering one condition although I do not know whether it exists 
-actually. user mode VMM writes the folio with hva address firstly, then 
-VCPU thread *reads* the folio. With primary mmu table, pte entry is 
-writable and _PAGE_DIRTY is set, with secondary mmu table(state-2 PTE 
-table), it is pte_none since the filio is accessed at first time, so 
-there will be slow page fault path for stage-2 mmu page table filling.
+Hi Arnd,
 
-Since it is read fault, stage-2 PTE will be created with 
-_PAGE_WRITE(coming from function hva_to_pfn_slow()), however _PAGE_DIRTY 
-is not set. Do we need call kvm_set_pfn_dirty() at this situation?
+With this patch to kernel 6.11-rc1 the error whilst compiling gcc-14.2 for
+aarch64 with libsanitizer has changed from '__NR_newfstatat' to
+'__NR_fstat', so some change, but still fail8ng.
+
+sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_newfstatat' was not declared in this scope
+   13 | #define SYSCALL(name) __NR_ ## name
+      |                       ^~~~~
+
+sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_fstat' was not declared in this scope
+   13 | #define SYSCALL(name) __NR_ ## name
+      |                       ^~~~~
 
 Regards
-Bibo Mao
-
+Rudi
