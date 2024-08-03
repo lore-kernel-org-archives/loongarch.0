@@ -1,124 +1,98 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35B4E41A8E
-	for <loongarch@lists.linux.dev>; Sat,  3 Aug 2024 06:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614ED481DB
+	for <loongarch@lists.linux.dev>; Sat,  3 Aug 2024 08:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722667233; cv=none; b=SKPZOSmG/NWjwelbPGvXLUFnFSe8XHV2EfYuWXXxIjjnkeK7tMubena6kWGbMnEdBtZ8Nn4/RlrKkx5jRwb+cOLS9RXOQhgBoMOpnSrJ9gAnLOpOBCPzg8XADNeUMf380w8X+J9W7sASLatpS6wQMjMlI93b5xuUN46nB3ZePz8=
+	t=1722672069; cv=none; b=S0VMH44IoEkufTWYtEstlnWRMA/HgSz1pRdwvWelnPDstfozbWZQJfd/4jfCd3Ap6ZEMZ5wW+GIW/E/PrKSFXTITgNW430ONi2/SRCN9j29ckopYrsdIr4ogv0VZl1mqJOLdfKQ2LGmCYUyqeW4ffNzkPs0kFNyJrYMZ8nR1FIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722667233; c=relaxed/simple;
-	bh=z3ZXGXsNwuDa56mQqzVBvXDgtN4maYAscG3wgNEp86s=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uHx34tQrUucs4ta8TN4Rrv7Sv1J3sBdbtrsDrDrlab81mAj+laSlvs5En096hLJoxHJR6kA9A9mbgIwTmewOmkya26Fl1EEZZoTT+15+9VjCS2L0BO4T/ZtI3pVSDv51/RZU87bk6Vw7b13avFZp6E1GTk1oROhb10c828blH+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxnOrb0K1mSvIGAA--.24221S3;
-	Sat, 03 Aug 2024 14:40:27 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMCxA+LZ0K1msh4BAA--.6609S3;
-	Sat, 03 Aug 2024 14:40:25 +0800 (CST)
-Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen <chenhuacai@kernel.org>
-Cc: corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn,
- kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
- wangliupu@loongson.cn, lvjianmin@loongson.cn, yijun@loongson.cn,
- mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org,
- maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn,
- nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn,
- loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240726102443.12471-1-zhangtianyang@loongson.cn>
- <87o76kuqza.ffs@tglx>
- <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
- <87r0bb6ru1.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <cff37371-0692-0db5-cb14-74c519eb1c56@loongson.cn>
-Date: Sat, 3 Aug 2024 14:40:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1722672069; c=relaxed/simple;
+	bh=ICoSMWNZ5soFFQALhyx1p+h8nSp+ARvZKTF52R1qkpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Erwj0pHTVNzjp7bTKBNcSSDXXBYyYQ94T8iA06f8xp88G4jtUuT1D4PBErHgXl2VrJW0+K33PL4ovllP9Bw3869pFmI007wPTbvmfF7G51pfeAQpm4xrH1BhVbYl1s4GyFSDJKj3D0TmGUdtr8YWBO+XQG7FtquojbHpCSAqcPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ruzgn3DL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ruzgn3DL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722672066;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=ChVTiGdYPFEhWu1znKPIMwiy58kLR6qAS9OD9lZfQ0M=;
+	b=Ruzgn3DLAbPhYj1/HksbHNC/X3itTJOi76HiPnqaA4fpmDfTNljfJwki8CrLub2Wi/vYJX
+	MRiGAg3QUgtt4ieYM8lbUXz2gjZSQ/Izpphot81j12v5Odc20ufxkbLIz9TuoPS4FeoHiH
+	1maHG5QbHoSn96m7jBJuVz0IM2xTJ5E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-i1KcjCVDOlW0clbpFo74aw-1; Sat,
+ 03 Aug 2024 04:01:00 -0400
+X-MC-Unique: i1KcjCVDOlW0clbpFo74aw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1FC0C19560A1;
+	Sat,  3 Aug 2024 08:00:51 +0000 (UTC)
+Received: from tucnak.zalov.cz (unknown [10.45.224.25])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20CAF300018D;
+	Sat,  3 Aug 2024 08:00:48 +0000 (UTC)
+Received: from tucnak.zalov.cz (localhost [127.0.0.1])
+	by tucnak.zalov.cz (8.17.1/8.17.1) with ESMTPS id 47380i3q931236
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Sat, 3 Aug 2024 10:00:44 +0200
+Received: (from jakub@localhost)
+	by tucnak.zalov.cz (8.17.1/8.17.1/Submit) id 47380fEc931235;
+	Sat, 3 Aug 2024 10:00:41 +0200
+Date: Sat, 3 Aug 2024 10:00:41 +0200
+From: Jakub Jelinek <jakub@redhat.com>
+To: Rudi Heitbaum <rudi@heitbaum.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Andreas Schwab <schwab@suse.de>, Florian Weimer <fweimer@redhat.com>,
+        linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        WANG Xuerui <kernel@xen0n.name>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH] syscalls: fix syscall macros for newfstat/newfstatat
+Message-ID: <Zq3jqeq6USL066k+@tucnak>
+Reply-To: Jakub Jelinek <jakub@redhat.com>
+References: <20240801123305.2392874-1-arnd@kernel.org>
+ <Zq28wejX3U9J1_JV@faede8dcc269>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87r0bb6ru1.ffs@tglx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxA+LZ0K1msh4BAA--.6609S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy8GF43XFW7Cr4kJr4DJrc_yoW8Ar15pF
-	WUG3W5Ar4Dtry2ka97uw10qFnIyrnaqFW8Jw1rJ34UG3s8WFnaqry8JFWaka4xCrZxJryj
-	vw12v3s0kas8JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5xhLUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zq28wejX3U9J1_JV@faede8dcc269>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi, Thomas
+On Sat, Aug 03, 2024 at 05:14:41AM +0000, Rudi Heitbaum wrote:
+> With this patch to kernel 6.11-rc1 the error whilst compiling gcc-14.2 for
+> aarch64 with libsanitizer has changed from '__NR_newfstatat' to
+> '__NR_fstat', so some change, but still fail8ng.
+> 
+> sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_newfstatat' was not declared in this scope
+>    13 | #define SYSCALL(name) __NR_ ## name
+>       |                       ^~~~~
+> 
+> sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_fstat' was not declared in this scope
+>    13 | #define SYSCALL(name) __NR_ ## name
+>       |                       ^~~~~
 
-在 2024/7/30 下午7:29, Thomas Gleixner 写道:
-> Huacai!
->
-> On Tue, Jul 30 2024 at 16:51, Huacai Chen wrote:
->> On Fri, Jul 26, 2024 at 11:12 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>>> +     while (true) {
->>>> +             vector = csr_read64(LOONGARCH_CSR_IRR);
->>>> +             if (vector & IRR_INVALID_MASK)
->>>> +                     break;
->>>> +
->>>> +             vector &= IRR_VECTOR_MASK;
->>>> +
->>>> +             d = this_cpu_read(irq_map[vector]);
->>>> +             if (d)
->>>> +                     generic_handle_irq_desc(d);
->>>> +             else {
->>> See bracket rules.
->> Do you mean even if there is only one statement in the if condition,
->> we still need to do like this?
->> if (xxx) {
->>      yyy;
->> } else {
->>      zzz;
->> }
-> Yes. It's documented.
->
->>>> +     msi_domain = pci_msi_create_irq_domain(pch_msi_handle[0],
->>>> +                                            &pch_msi_domain_info_v2, parent);
->>> Please don't do that. Convert this to use per device MSI domains.
->> OK, thanks. But it is better to split the conversion to another patch
->> (so we can convert both V1 and V2).
-> Why adding it first?
->
-> This can be done per interrupt chip. See the conversion series for
-> ARM[64]:
->
->      https://lore.kernel.org/r/20240623142137.448898081@linutronix.de
->
-> Thanks,
->
->          tglx
+Probably it would be useful to check
+echo '#include <asm/unistd.h>' | gcc -E -dD -xc - | grep '#define __NR_' | sort
+for all arches between 6.10 and the latest git, diff them and resolve any
+unintended differences.
 
-We consider that since the original extioi-msi is still using the 
-legacy-MSI interrupt model at irq-loongson-pch-msi.c, if per-device-MSI 
-is directly supported in the AVEC support patch, it will result in the 
-simultaneous use of two MSI-interrupt-mode in irq-loongson-pch-msi.c, 
-which may seem a bit strange. So we decided to split it into two 
-patches, the first one using tlegace-MSI to support AVEC interrupt 
-controllers, and the second one will be uniformly modified to use 
-per-device-MSI
-
-Tianyang
+	Jakub
 
