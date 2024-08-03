@@ -1,109 +1,124 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9909B29414
-	for <loongarch@lists.linux.dev>; Sat,  3 Aug 2024 05:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35B4E41A8E
+	for <loongarch@lists.linux.dev>; Sat,  3 Aug 2024 06:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722662093; cv=none; b=mvLX2Zv8b9IZ3fs2rpUG3wyE70FC1cMTv+Dfe5z36hhBvHnbvIKgdbu8gXTfBtkOVklSdJsmc9rW1GBOWWDFrm1F1CoCvYwQUbMhCEoDpvn6Ib06xIGyYseLpGZiRsJNuJGDLHCEJsr9BlpY78wQc+Fwhbxpv7w1H5d1Q+LaosU=
+	t=1722667233; cv=none; b=SKPZOSmG/NWjwelbPGvXLUFnFSe8XHV2EfYuWXXxIjjnkeK7tMubena6kWGbMnEdBtZ8Nn4/RlrKkx5jRwb+cOLS9RXOQhgBoMOpnSrJ9gAnLOpOBCPzg8XADNeUMf380w8X+J9W7sASLatpS6wQMjMlI93b5xuUN46nB3ZePz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722662093; c=relaxed/simple;
-	bh=y/G0q6vSGh56Cm0FF0nqqRrgKaaLLgJrjCyqE6ot6iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1iT2m9EwGw3zVkcGh8ecWA+geeBvqbLKZHVVufbB2b0etmxN414c7lC8pjkq2jYWLNJbJsmEfudJsnsr/T0PZrmsP+/BhXhzU+nTCgAn9ZdKQbKsKrp6fhRLKsRQ/Xn1B/4N//54zZdzOUWULZCTu5I8jFyQJkJhTOqTMlOimI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heitbaum.com; spf=pass smtp.mailfrom=heitbaum.com; dkim=pass (1024-bit key) header.d=heitbaum.com header.i=@heitbaum.com header.b=A5lqlbay; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heitbaum.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heitbaum.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=heitbaum.com header.i=@heitbaum.com header.b="A5lqlbay"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70d399da0b5so7593544b3a.3
-        for <loongarch@lists.linux.dev>; Fri, 02 Aug 2024 22:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=heitbaum.com; s=google; t=1722662090; x=1723266890; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BmvtDB3s2cR8UrreA9la38N0r8HdMO9IViXvEFHt/Nw=;
-        b=A5lqlbayzTq0dE4jJqG3mNvIEse2JwRP4BG8cnATpyWvG/0g5K0XoNpeNbgIcs0qJC
-         NlAqvsxyLIFSVmp8FzxdoyplwTwxcM3vHeq8ncj4HBDf3MxTjPOG3nSpT8Pg1BITa6Eb
-         jeopAJPG6Vkb7E48W4klRAyt5VCd8W8Svt76c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722662090; x=1723266890;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BmvtDB3s2cR8UrreA9la38N0r8HdMO9IViXvEFHt/Nw=;
-        b=iGn80EbZw9GMVbj3bN/0Shx5Ki0wdIKuJDRMb4Ogoton4A87dsrwoqzJFzOQEKyW8o
-         LWv9NqsueUBUjzj7LzJ/0FbDvuPufN75ut9bS26Eljf6jlKe+dKmO0AgOOoyWFgijg8M
-         fBqAUOtB94pacpAN6DHammgDNrkK7oZy4tCwPq8uFufcpLwjqbCEPXlRXbBuSrZJwO1H
-         t7Un/4Lxu9mpmOkVrhiXL+vbKkWLrskKDi3Bn2uyhUPyXQ8ITQSm8j54S/utX3m+ZXj5
-         UxJSbHNzTfbAn4JohLd4WsXuM0lMGJHWFG1/xZCl9QdVBqOsQ9C8fPGNM/nF7HSfi/FG
-         AGXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzVm2/z0VJ0ZaUk810nsFlDRm+qsrpGH4u+F1NXs6R27PKMmYCmAykq9hsdhDKAv5p2KjQsfFkrXLIYwNTl8xv1O5Hop9Or321
-X-Gm-Message-State: AOJu0YwUYimLO3RMX3RpDtSWWEDhwu31cNx4bjw05XanMyecMtWhbtye
-	FIudW3WJX9Tsg/r+mnnfJoipiEFBKiMjlB+dP4Xxwwi0b5r/3b/aD3jpW5Z+Qcs=
-X-Google-Smtp-Source: AGHT+IFtk7L8k8Q3OP5IS2+A9RpjMYCUcoWx/gWA5UpNjio/ITBkqtqn6ebqg37Slew3B08+KAqPog==
-X-Received: by 2002:a05:6a20:a11f:b0:1c4:944c:41e2 with SMTP id adf61e73a8af0-1c699683bdbmr8888959637.51.1722662089837;
-        Fri, 02 Aug 2024 22:14:49 -0700 (PDT)
-Received: from faede8dcc269 ([122.199.11.121])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f57176sm26262095ad.80.2024.08.02.22.14.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 22:14:49 -0700 (PDT)
-Date: Sat, 3 Aug 2024 05:14:41 +0000
-From: Rudi Heitbaum <rudi@heitbaum.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Andreas Schwab <schwab@suse.de>,
-	Florian Weimer <fweimer@redhat.com>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-api@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH] syscalls: fix syscall macros for newfstat/newfstatat
-Message-ID: <Zq28wejX3U9J1_JV@faede8dcc269>
-References: <20240801123305.2392874-1-arnd@kernel.org>
+	s=arc-20240116; t=1722667233; c=relaxed/simple;
+	bh=z3ZXGXsNwuDa56mQqzVBvXDgtN4maYAscG3wgNEp86s=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uHx34tQrUucs4ta8TN4Rrv7Sv1J3sBdbtrsDrDrlab81mAj+laSlvs5En096hLJoxHJR6kA9A9mbgIwTmewOmkya26Fl1EEZZoTT+15+9VjCS2L0BO4T/ZtI3pVSDv51/RZU87bk6Vw7b13avFZp6E1GTk1oROhb10c828blH+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8AxnOrb0K1mSvIGAA--.24221S3;
+	Sat, 03 Aug 2024 14:40:27 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMCxA+LZ0K1msh4BAA--.6609S3;
+	Sat, 03 Aug 2024 14:40:25 +0800 (CST)
+Subject: Re: [PATCH V7] LoongArch: Add AVEC irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen <chenhuacai@kernel.org>
+Cc: corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn,
+ kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn,
+ wangliupu@loongson.cn, lvjianmin@loongson.cn, yijun@loongson.cn,
+ mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org,
+ maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn,
+ nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn,
+ loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+References: <20240726102443.12471-1-zhangtianyang@loongson.cn>
+ <87o76kuqza.ffs@tglx>
+ <CAAhV-H7c0Gtjf-6iS-E4nviMqmPWpJMNwvhWf0fLBx75pDXtrQ@mail.gmail.com>
+ <87r0bb6ru1.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <cff37371-0692-0db5-cb14-74c519eb1c56@loongson.cn>
+Date: Sat, 3 Aug 2024 14:40:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240801123305.2392874-1-arnd@kernel.org>
+In-Reply-To: <87r0bb6ru1.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxA+LZ0K1msh4BAA--.6609S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFy8GF43XFW7Cr4kJr4DJrc_yoW8Ar15pF
+	WUG3W5Ar4Dtry2ka97uw10qFnIyrnaqFW8Jw1rJ34UG3s8WFnaqry8JFWaka4xCrZxJryj
+	vw12v3s0kas8JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5xhLUUUUU=
 
-On Thu, Aug 01, 2024 at 02:32:33PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The __NR_newfstat and __NR_newfstatat macros accidentally got renamed
-> in the conversion to the syscall.tbl format, dropping the 'new' portion
-> of the name.
-> 
-> In an unrelated change, the two syscalls are no longer architecture
-> specific but are once more defined on all 64-bit architectures, so the
-> 'newstat' ABI keyword can be dropped from the table as a simplification.
-> 
-> Fixes: Fixes: 4fe53bf2ba0a ("syscalls: add generic scripts/syscall.tbl")
-> Closes: https://lore.kernel.org/lkml/838053e0-b186-4e9f-9668-9a3384a71f23@app.fastmail.com/T/#t
-> Reported-by: Florian Weimer <fweimer@redhat.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi, Thomas
 
-Hi Arnd,
+在 2024/7/30 下午7:29, Thomas Gleixner 写道:
+> Huacai!
+>
+> On Tue, Jul 30 2024 at 16:51, Huacai Chen wrote:
+>> On Fri, Jul 26, 2024 at 11:12 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>>> +     while (true) {
+>>>> +             vector = csr_read64(LOONGARCH_CSR_IRR);
+>>>> +             if (vector & IRR_INVALID_MASK)
+>>>> +                     break;
+>>>> +
+>>>> +             vector &= IRR_VECTOR_MASK;
+>>>> +
+>>>> +             d = this_cpu_read(irq_map[vector]);
+>>>> +             if (d)
+>>>> +                     generic_handle_irq_desc(d);
+>>>> +             else {
+>>> See bracket rules.
+>> Do you mean even if there is only one statement in the if condition,
+>> we still need to do like this?
+>> if (xxx) {
+>>      yyy;
+>> } else {
+>>      zzz;
+>> }
+> Yes. It's documented.
+>
+>>>> +     msi_domain = pci_msi_create_irq_domain(pch_msi_handle[0],
+>>>> +                                            &pch_msi_domain_info_v2, parent);
+>>> Please don't do that. Convert this to use per device MSI domains.
+>> OK, thanks. But it is better to split the conversion to another patch
+>> (so we can convert both V1 and V2).
+> Why adding it first?
+>
+> This can be done per interrupt chip. See the conversion series for
+> ARM[64]:
+>
+>      https://lore.kernel.org/r/20240623142137.448898081@linutronix.de
+>
+> Thanks,
+>
+>          tglx
 
-With this patch to kernel 6.11-rc1 the error whilst compiling gcc-14.2 for
-aarch64 with libsanitizer has changed from '__NR_newfstatat' to
-'__NR_fstat', so some change, but still fail8ng.
+We consider that since the original extioi-msi is still using the 
+legacy-MSI interrupt model at irq-loongson-pch-msi.c, if per-device-MSI 
+is directly supported in the AVEC support patch, it will result in the 
+simultaneous use of two MSI-interrupt-mode in irq-loongson-pch-msi.c, 
+which may seem a bit strange. So we decided to split it into two 
+patches, the first one using tlegace-MSI to support AVEC interrupt 
+controllers, and the second one will be uniformly modified to use 
+per-device-MSI
 
-sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_newfstatat' was not declared in this scope
-   13 | #define SYSCALL(name) __NR_ ## name
-      |                       ^~~~~
+Tianyang
 
-sanitizer_syscall_linux_aarch64.inc:13:23: error: '__NR_fstat' was not declared in this scope
-   13 | #define SYSCALL(name) __NR_ ## name
-      |                       ^~~~~
-
-Regards
-Rudi
