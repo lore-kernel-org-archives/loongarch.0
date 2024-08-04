@@ -1,212 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8323182AE;
-	Sun,  4 Aug 2024 07:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD2622089;
+	Sun,  4 Aug 2024 08:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722756394; cv=none; b=Z7CadaDeegNVS7gRk3bQlQXC0tSwb295nAVtwl8CiSOyK3Sya2a+6tPgPKn0eZlj5KcsMAxtP/qTN3es5P/1n5mI+MAId4P/pAzOpBuBHBNCkfo99twUzKF+qR9UL+XZgkv7uTdAMvXbL0pk3tmqiz57iMlFllu9bp9hpT7xHRk=
+	t=1722760832; cv=none; b=H3mycIJyx57L8FNXfLX01HODGv3FubJkOsB+XXKRWSVO41/AZ4R8ZClYm0+WQW121FrUR3VIaj05rPGuRu2JYATw1C8h1gQbE1fbB4yzTueHmeCEXWvpxDcrYmYba5Us7NdqbamRT+o67UJFWROq02o1bp0hbtfDWGlua4HcPDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722756394; c=relaxed/simple;
-	bh=rx2UdBu3Jn4YvMBlkSpIvWfaZAHG3g5eVDYxreRC0w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X20AeBFAVk/Wo5HEZjYW3gPQIelM1eCMXWKq8vKdHwmk8E/N/Nct7eEC5LGF0vkZMmAE6I4fQ6F42FlLpYZEXrNUw4QAGlptnhT4Tho9LTiU3ik5alz5qy8RJaeel0D+gT68fkYAoIRSSPWHOHV+ovPbDUNsAadScBG+oLr7c6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIU8LoVO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722760832; c=relaxed/simple;
+	bh=mfEVLu8lBP2zlustvLgLm/oqAZjT2oZLRRL9j0eTnok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NhOflPb5Hf/mRx02s4AkxwtNkY2lOgoVsDSYzpfDfAZuM0lx6nkmvRjsp2eN4fGy5LhXEq51LSbROfV5q8DZEfay5wQJZ3tgVAOADWCbXCx24nDTnAzJ1giyywJNuX8A7JFY/ajH5+3G9iJjvVnGkWOPpTy+zZvHolCqlr9+wMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpjojAFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIU8LoVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD611C32786;
-	Sun,  4 Aug 2024 07:26:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpjojAFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3338C32786;
+	Sun,  4 Aug 2024 08:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722756393;
-	bh=rx2UdBu3Jn4YvMBlkSpIvWfaZAHG3g5eVDYxreRC0w8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KIU8LoVOwFPBw/i+e9r4MNw3lCZ9Vibx6Dii6JlG87646MCH9g5WB4uLhl1sgD8XY
-	 fdhDH8dGci/plC04bp2qqqFN5dQbJHMWc6fWKJYivJ+bk5+GubVSlg3B3t+HSNIfir
-	 JTwRTaCcEoGzTNU1jYvwPfIqnBAdwUe1xFf3HqAX19LfaXMjWdmtrEyuqIK93JEmBz
-	 EFHb56nL5u7GvI90DNZwVtfaVmCpUg9fU4iOezzHPPuQFpcF1invnI5Iw9ThB6TUT4
-	 ADe9mcgPXLgojRwwccp6Y65CANZWgRQC4iHBhVf31YxxkVq1gi+zDus1lvqFhKf27J
-	 Jc+qx/YNiH/Gg==
-Date: Sun, 4 Aug 2024 10:24:15 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	Zi Yan <ziy@nvidia.com>, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	nvdimm@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 07/26] mm: drop CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
-Message-ID: <Zq8sn5iD1iOmYrss@kernel.org>
-References: <20240801060826.559858-1-rppt@kernel.org>
- <20240801060826.559858-8-rppt@kernel.org>
- <20240802104922.000051a0@Huawei.com>
- <20240803115813.809f808f1afbe9f9feaae129@linux-foundation.org>
+	s=k20201202; t=1722760831;
+	bh=mfEVLu8lBP2zlustvLgLm/oqAZjT2oZLRRL9j0eTnok=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TpjojAFhBfXLzsBjDnh9BXjvt/lEFdmQuwbUlMvoQkZQx8GxLcKH4mjHFhQ9FyqVf
+	 hcLtexYXOhdkNstH4S1XxjgP8g3DlkZSjoKTTIkWjnAW3OEAKEn1zQXTOH+sMrvZS/
+	 Cj9zmRC1ajaXKRNHQ7NtenwxU5U2jHwNn3MTqMAh4rHqtUtkDv7IhJSaAuSFQyHgoL
+	 VLZ12/N1fK6DqCy+dCocT/P+bPQe77eyKZ/zqAe1zCTOCgHfyp2Ngge4nz/6Pf/f5C
+	 bwbWV5JYwITX4eBYf22kzwz3Ddq1xwVtuU3DdQ9CNnr94u8ZJ+hmZj3Wc8THUc+i/2
+	 LUNjxtLrGDr8A==
+Message-ID: <bf6fbb80-95f5-4c9c-b7d4-dd7f432056c7@kernel.org>
+Date: Sun, 4 Aug 2024 10:40:24 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240803115813.809f808f1afbe9f9feaae129@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] LoongArch: dts: Update UART driver to
+ Loongson-2K0500, Loongson-2K1000 and Loongson-2K2000.
+To: zhenghaowei@loongson.cn, gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ p.zabel@pengutronix.de
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20240804063834.70022-1-zhenghaowei@loongson.cn>
+ <20240804063834.70022-3-zhenghaowei@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240804063834.70022-3-zhenghaowei@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 03, 2024 at 11:58:13AM -0700, Andrew Morton wrote:
-> On Fri, 2 Aug 2024 10:49:22 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On 04/08/2024 08:38, zhenghaowei@loongson.cn wrote:
+> From: Haowei Zheng <zhenghaowei@loongson.cn>
 > 
-> > > --- a/mm/mm_init.c
-> > > +++ b/mm/mm_init.c
-> > > @@ -1838,11 +1838,10 @@ void __init free_area_init(unsigned long *max_zone_pfn)
-> > >  
-> > >  		if (!node_online(nid)) {
-> > >  			/* Allocator not initialized yet */
-> > > -			pgdat = arch_alloc_nodedata(nid);
-> > > +			pgdat = memblock_alloc(sizeof(*pgdat), SMP_CACHE_BYTES);
-> > >  			if (!pgdat)
-> > >  				panic("Cannot allocate %zuB for node %d.\n",
-> > >  				       sizeof(*pgdat), nid);
-> > > -			arch_refresh_nodedata(nid, pgdat);
-> > 
-> > This allocates pgdat but never sets node_data[nid] to it
-> > and promptly leaks it on the line below. 
-> > 
-> > Just to sanity check this I spun up a qemu machine with no memory
-> > initially present on some nodes and it went boom as you'd expect.
-> > 
-> > I tested with addition of
-> > 			NODE_DATA(nid) = pgdat;
-> > and it all seems to work as expected.
+> Change to use the Loongson UART driver by default.
 > 
-> Thanks, I added that.  It blew up on x86_64 allnoconfig because
-> node_data[] (and hence NODE_DATA()) isn't an lvalue when CONFIG_NUMA=n.
-> 
-> I'll put some #ifdef CONFIG_NUMAs in there for now but
-> 
-> a) NODE_DATA() is upper-case. Implies "constant".  Shouldn't be assigned to.
-> 
-> b) NODE_DATA() should be non-lvalue when CONFIG_NUMA=y also.  But no,
->    we insist on implementing things in cpp instead of in C.
+> Signed-off-by: Haowei Zheng <zhenghaowei@loongson.cn>
 
-This looks like a candidate for a separate tree-wide cleanup.
- 
-> c) In fact assigning to anything which ends in "()" is nuts.  Please
->    clean up my tempfix.
-> 
-> c) Mike, generally I'm wondering if there's a bunch of code here
->    which isn't needed on CONFIG_NUMA=n.  Please check all of this for
->    unneeded bloatiness.
+No changelog? Nothing improved?
 
-I believe the patch addresses your concerns, just with this the commit log
-needs update. Instead of 
+Best regards,
+Krzysztof
 
-    Replace the call to arch_alloc_nodedata() in free_area_init() with
-    memblock_alloc(), remove arch_refresh_nodedata() and cleanup
-    include/linux/memory_hotplug.h from the associated ifdefery.
-
-it should be
-
-    Replace the call to arch_alloc_nodedata() in free_area_init() with a
-    new helper alloc_offline_node_data(), remove arch_refresh_nodedata()
-    and cleanup include/linux/memory_hotplug.h from the associated
-    ifdefery.
-
-I can send an updated patch if you prefer.
-
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 3b12d8ca0afd..5a749fd67f39 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -34,6 +34,7 @@ extern struct pglist_data *node_data[];
- #define NODE_DATA(nid)	(node_data[nid])
- 
- void __init alloc_node_data(int nid);
-+void __init alloc_offline_node_data(int nit);
- 
- /* Generic implementation available */
- int numa_nearest_node(int node, unsigned int state);
-@@ -62,6 +63,8 @@ static inline int phys_to_target_node(u64 start)
- {
- 	return 0;
- }
-+
-+static inline void alloc_offline_node_data(int nit) {}
- #endif
- 
- #define numa_map_to_online_node(node) numa_nearest_node(node, N_ONLINE)
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index bcc2f2dd8021..2785be04e7bb 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1836,13 +1836,8 @@ void __init free_area_init(unsigned long *max_zone_pfn)
- 	for_each_node(nid) {
- 		pg_data_t *pgdat;
- 
--		if (!node_online(nid)) {
--			/* Allocator not initialized yet */
--			pgdat = memblock_alloc(sizeof(*pgdat), SMP_CACHE_BYTES);
--			if (!pgdat)
--				panic("Cannot allocate %zuB for node %d.\n",
--				       sizeof(*pgdat), nid);
--		}
-+		if (!node_online(nid))
-+			alloc_offline_node_data(nid);
- 
- 		pgdat = NODE_DATA(nid);
- 		free_area_init_node(nid);
-diff --git a/mm/numa.c b/mm/numa.c
-index da27eb151dc5..07e486a977c7 100644
---- a/mm/numa.c
-+++ b/mm/numa.c
-@@ -34,6 +34,18 @@ void __init alloc_node_data(int nid)
- 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
- }
- 
-+void __init alloc_offline_node_data(int nit)
-+{
-+	pg_data_t *pgdat;
-+
-+	pgdat = memblock_alloc(sizeof(*pgdat), SMP_CACHE_BYTES);
-+	if (!pgdat)
-+		panic("Cannot allocate %zuB for node %d.\n",
-+		      sizeof(*pgdat), nid);
-+
-+	node_data[nid] = pgdat;
-+}
-+
- /* Stub functions: */
- 
- #ifndef memory_add_physaddr_to_nid
-
- 
-
--- 
-Sincerely yours,
-Mike.
