@@ -1,124 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E8C558B7;
-	Sun,  4 Aug 2024 16:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272DC13D502
+	for <loongarch@lists.linux.dev>; Mon,  5 Aug 2024 03:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722789801; cv=none; b=eOn0OBA1NYS0s4FX3/eJITfn7GdO3NvC3nw68EzFowZGGymgXKL2+0/EirhL5QgOUGN6/XknLWWfje9UhgKrFbs8HzVLYYwHkYVsPvSXdewUVwx1HQcDoVIU12OBcOmgMu3wlV0JU5NweBwKGgk9Ynwg/m3QiDzMVUHeKHut6S4=
+	t=1722828426; cv=none; b=UyBYkkBEHxuqC1a3DOv48DBzDAJsGiw/Fa1A5P8tSwWm0lNa/OasBWX9Atg4hvbj+ffbITIlldKfFVP2T/wvOer+80ifpjR6kfqJDvcCtVfr5JbjYN5b1G6EfjW+x4mVT1OuVw6koqhqeVt3WV4IeUb2zUAjY+Tdx8TKsNRyAYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722789801; c=relaxed/simple;
-	bh=HNyFFfVNO+jBUsoZ+Wz9kLjM5s7uzZZ8sEH1bOQtruM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fd7WAYh8K3/69OGGoSfKC25mMU6KHM3Kdaf9kvtwZFGkMkeVdybjF8NWEws2ItJnJsQSv1LRl3/dZsw792k7Y5ibnttfJAS9N/7ozy4wEwqlYb6lgc6R5ngoymz6wxnEIGcMaIYgwhRMNDEaDHwbwZzIEkT40ghQapYi75QQfR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVpPDQir; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVpPDQir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722789799; x=1754325799;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HNyFFfVNO+jBUsoZ+Wz9kLjM5s7uzZZ8sEH1bOQtruM=;
-  b=jVpPDQir7Pd9NT/6Xx0rwh+6XIbwPwSKtnblU3radQQU4y5rXt5aEKaI
-   Nevhw3QQVg7cEGx1C7kgSwqCuiD+dLfG3rrbJBLc3e+0hpA7Uktn+L5Gb
-   crVqxE0WsRTa0nuQ7Z56yyWUe5etXsa+8YMtxqxMp2WgEONzl/d7Iq7Yr
-   7JAKIQ45YLf0puMr+qs2EjHnHbj5lQRkkDiFMAZcX05tQkXmFg3N7d6qi
-   1MK1w0uR4jc9dMWUQh/TNRFZNOe7WTQ/kkUYEDphNd0kA2TSUMVqwQzVy
-   HND6618kjAj6xIcfKIIcf9084Mc3YxaYxT1J2yKwCdOG6vL82mA06XHOp
-   g==;
-X-CSE-ConnectionGUID: R6AqA+CJQlCU25GlKAaEmw==
-X-CSE-MsgGUID: 8cJDNal0RAuCS3ADf0g1rg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11154"; a="31405543"
-X-IronPort-AV: E=Sophos;i="6.09,262,1716274800"; 
-   d="scan'208";a="31405543"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2024 09:43:18 -0700
-X-CSE-ConnectionGUID: u6Pnklg0TqWgDnh9Ko0luA==
-X-CSE-MsgGUID: ci8I1AuCRjmzQLt9AVKhOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,262,1716274800"; 
-   d="scan'208";a="55884556"
-Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 04 Aug 2024 09:43:15 -0700
-Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1saeK8-0001Xm-2A;
-	Sun, 04 Aug 2024 16:43:12 +0000
-Date: Mon, 5 Aug 2024 00:42:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: zhenghaowei@loongson.cn, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-	p.zabel@pengutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 2/3] tty: serial: 8250: Add loongson uart driver
- support
-Message-ID: <202408050031.dYYkSqDM-lkp@intel.com>
-References: <20240804063834.70022-2-zhenghaowei@loongson.cn>
+	s=arc-20240116; t=1722828426; c=relaxed/simple;
+	bh=hl0dbmk20s8D35tLoREPfCShfffkpWB3hKqyL5SB2wM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GmE3QiHL+RBTD4AOZgy444DWtLB6JCS4xdaJSvfjH+kUBAYHqh22vymVwiYEA3D1J0bCG+nDAAP242ufYAYMBE6kOC860/LXjIsm6+d0Jzck/IFeroabZJSQAnkYs4OpezXD4tw72g1egIfFwrzBPgu0F3g/+pWj9IHH66xIMgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Ax2emGRrBmGtAHAA--.26592S3;
+	Mon, 05 Aug 2024 11:27:02 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxkeGFRrBmgeADAA--.20473S3;
+	Mon, 05 Aug 2024 11:27:02 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] objtool/LoongArch: Decode secondary stack instruction
+Date: Mon,  5 Aug 2024 11:26:58 +0800
+Message-ID: <20240805032700.16038-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240805032700.16038-1-yangtiezhu@loongson.cn>
+References: <20240805032700.16038-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240804063834.70022-2-zhenghaowei@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxkeGFRrBmgeADAA--.20473S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr13XF18tw1DZw4DKr4kAFc_yoW5Cr18pa
+	nrZ3s5Jr4rWr1SyrnrJ3y5urW3Grs3WryIqFsxG34IkrWaqr95XF1IgFy0yF1kGw4rKFyI
+	9r4fZw17WF1UAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
 
-Hi,
+After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
+support"), there is a new instruction "sub.d $sp, $sp, $t0" for the
+secondary stack in do_syscall(), then there exists a objtool warning
+"do_syscall+0x11c: return with modified stack frame" and there is no
+handle_syscall() which is the previous frame of do_syscall() in the
+call trace when executing the command "echo l > /proc/sysrq-trigger".
 
-kernel test robot noticed the following build errors:
+In order to solve the above issues, the first step is to decode the
+secondary stack instruction "sub.d $sp, $sp, $t0".
 
-[auto build test ERROR on tty/tty-testing]
-[also build test ERROR on tty/tty-next tty/tty-linus robh/for-next usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.11-rc1 next-20240802]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Cc: stable@vger.kernel.org # 6.9+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/arch/loongarch/include/asm/inst.h | 12 ++++++++++++
+ tools/objtool/arch/loongarch/decode.c   | 21 +++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/zhenghaowei-loongson-cn/tty-serial-8250-Add-loongson-uart-driver-support/20240804-145047
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20240804063834.70022-2-zhenghaowei%40loongson.cn
-patch subject: [PATCH v2 2/3] tty: serial: 8250: Add loongson uart driver support
-config: mips-lemote2f_defconfig (https://download.01.org/0day-ci/archive/20240805/202408050031.dYYkSqDM-lkp@intel.com/config)
-compiler: mips64el-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240805/202408050031.dYYkSqDM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408050031.dYYkSqDM-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> drivers/tty/serial/8250/8250_loongson.c:200:35: error: implicit declaration of function 'of_match_ptr' [-Werror=implicit-function-declaration]
-     200 |                 .of_match_table = of_match_ptr(of_platform_serial_table),
-         |                                   ^~~~~~~~~~~~
->> drivers/tty/serial/8250/8250_loongson.c:200:35: warning: initialization of 'const struct of_device_id *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-   drivers/tty/serial/8250/8250_loongson.c:200:35: note: (near initialization for 'loongson_uart_driver.driver.of_match_table')
->> drivers/tty/serial/8250/8250_loongson.c:200:35: error: initializer element is not constant
-   drivers/tty/serial/8250/8250_loongson.c:200:35: note: (near initialization for 'loongson_uart_driver.driver.of_match_table')
-   cc1: some warnings being treated as errors
-
-
-vim +/of_match_ptr +200 drivers/tty/serial/8250/8250_loongson.c
-
-   193	
-   194	static struct platform_driver loongson_uart_driver = {
-   195		.probe = loongson_uart_probe,
-   196		.remove = loongson_uart_remove,
-   197		.driver = {
-   198			.name = "ls7a-uart",
-   199			.pm = &loongson_uart_pm_ops,
- > 200			.of_match_table = of_match_ptr(of_platform_serial_table),
-   201		},
-   202	};
-   203	
-
+diff --git a/tools/arch/loongarch/include/asm/inst.h b/tools/arch/loongarch/include/asm/inst.h
+index c25b5853181d..935b596642e2 100644
+--- a/tools/arch/loongarch/include/asm/inst.h
++++ b/tools/arch/loongarch/include/asm/inst.h
+@@ -51,6 +51,10 @@ enum reg2i16_op {
+ 	bgeu_op		= 0x1b,
+ };
+ 
++enum reg3_op {
++	subd_op		= 0x23,
++};
++
+ struct reg0i15_format {
+ 	unsigned int immediate : 15;
+ 	unsigned int opcode : 17;
+@@ -96,6 +100,13 @@ struct reg2i16_format {
+ 	unsigned int opcode : 6;
+ };
+ 
++struct reg3_format {
++	unsigned int rd : 5;
++	unsigned int rj : 5;
++	unsigned int rk : 5;
++	unsigned int opcode : 17;
++};
++
+ union loongarch_instruction {
+ 	unsigned int word;
+ 	struct reg0i15_format	reg0i15_format;
+@@ -105,6 +116,7 @@ union loongarch_instruction {
+ 	struct reg2i12_format	reg2i12_format;
+ 	struct reg2i14_format	reg2i14_format;
+ 	struct reg2i16_format	reg2i16_format;
++	struct reg3_format	reg3_format;
+ };
+ 
+ #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
+diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+index aee479d2191c..db4dd05cdb49 100644
+--- a/tools/objtool/arch/loongarch/decode.c
++++ b/tools/objtool/arch/loongarch/decode.c
+@@ -272,6 +272,25 @@ static bool decode_insn_reg2i16_fomat(union loongarch_instruction inst,
+ 	return true;
+ }
+ 
++static bool decode_insn_reg3_fomat(union loongarch_instruction inst,
++				   struct instruction *insn)
++{
++	switch (inst.reg3_format.opcode) {
++	case subd_op:
++		if ((inst.reg3_format.rd == CFI_SP) && (inst.reg3_format.rj == CFI_SP)) {
++			/*
++			 * sub.d sp,sp,t0
++			 * this is a rare case for the secondary stack.
++			 */
++		}
++		break;
++	default:
++		return false;
++	}
++
++	return true;
++}
++
+ int arch_decode_instruction(struct objtool_file *file, const struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+ 			    struct instruction *insn)
+@@ -303,6 +322,8 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 		return 0;
+ 	if (decode_insn_reg2i16_fomat(inst, insn))
+ 		return 0;
++	if (decode_insn_reg3_fomat(inst, insn))
++		return 0;
+ 
+ 	if (inst.word == 0)
+ 		insn->type = INSN_NOP;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.42.0
+
