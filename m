@@ -1,139 +1,178 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629481799B
-	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 15:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16CD14C59A
+	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 22:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722957573; cv=none; b=tkCJdBQkcvm9qkhZm6hc7afAIWg13mU06HxcNh6eZtaYHXjZvt/3fh/UhLjrbufXxgOgV8kLj26Emx/T6P2JuxMoRnFJi+vHUWTpfFztxJBty3pXSKDeNjv5oVpqGhs9rSB4UgfCNVBnG3WxEKbJod5WWxiyQoQGTUSuqYs/2e8=
+	t=1722982500; cv=none; b=B4Fgsr4BasUXbeZui6l493I/3rK4aRuMcXhUJnJvk+YKDgm/v35jLBlMoa6deV/VpCHjaMsGbJheSe1a2F9W/Jd6ly0XkF40AFqwPuDI7Ci1Pa5FgNPA75vYamrKg6pKxy4XGGCWvAiM8XOikIEkyjHBr7teRZdSzuNDYDMVPqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722957573; c=relaxed/simple;
-	bh=507JunshFPL0z45Z3MTpxjvv85WUDf3XTVoh4ip9AK8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U32WoAMWCv54ICzIvpjLq+NnSZY6A5zs63efJifh3D7q89MuitDEfBlLUgvFbtAXVvuo4R5i/uT2/hTDiKXZWMzcSBS+FeDXeI+R+W6LfG9mG43i+lNTPkb6h+iJsAWl7B48wbpllexqErtXwcCFPZxi0HuVrpMFn97cWLBKdPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVLpNt8H; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1722982500; c=relaxed/simple;
+	bh=Ogo68UR/OsXc9UdIgAzdmezFiK2lZB543zE7hjBKpoA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=eG5c+AyaZGnwxUwd3s5++qlbiWqwUxqAHF2Wx+Ez0aMqk0NF/hTh/ucZN+1s/T2KAK7a5USgBAPztS1AOUQSRt1CwoeehjuBJg/gBE6F9hBdcP5XZFIfwc7oCO/JmghxwVHKp1sHSaqIvuDNJEL3icyz0FZgdCu3lmtP2y8dYEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=aJDsBHa3; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVLpNt8H"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1fc51ea72abso7299595ad.1
-        for <loongarch@lists.linux.dev>; Tue, 06 Aug 2024 08:19:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="aJDsBHa3"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b7aed340daso6705346d6.3
+        for <loongarch@lists.linux.dev>; Tue, 06 Aug 2024 15:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722957572; x=1723562372; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfDlFqosrXLKfrNosA2JBe6CUch6c/VqYqOk4CYX594=;
-        b=iVLpNt8HQO4wYEdnnjSjRlbnbQxOTNZtYKDfnPpHaseFWo5rNXVL7mNe3b+OX9K7K+
-         OZrxO3xGpQBXYUrO5ezrBM6ZiXunCT02FXUR1pUX0lx9IBPNnImShdseHlqu+23sVOal
-         WQVzrE9Ssov9R+YUO+yvBoSYMEMkPSPGSOR14G7/RkownBYnEXb5OeFHnY6pvVNeRINt
-         r2j45hCeywjBtyhiFn5dueFKYEWBGf/QN23tE+1h6SCGO/ulegqulTRwyONiwQEqtikz
-         Fh2uQRATQF287ICDw3kvbYE/qCJTCdTPn5BKHHPkjUV7Srq6ZNE/sEYVtLcvKKQZDtNa
-         wqFA==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1722982498; x=1723587298; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DpwrGsGSvnHFdGVf1tlm4Wyo1L4IUT4bE3I4p9OVTOM=;
+        b=aJDsBHa35lx6MXllLUIC4JgAvLjzNmOpBNfH35fYuZ84MXUofTwPRNBbANRiKOxXmS
+         tTepcbHcYyJzaI2YjuQIqg8lYFs3ELePrOSEOO6SxfWi0P8d6+fYOJRgk1KX2Zfwod3M
+         flbJLhhIZBToGR35P1aM5ZCCzOCF1r071jF2qTQWej88iJ35NL3TK6BBGut1TGPe4afj
+         8SgPxY8HjVTksFv6E4Mz/i6rp7ftA0NqY3G8UD9pxhZAMZGRh37aObCrV/2UNQ8FmFE/
+         90ybmMX9SEQ145E4LbUMgK+ot9byAF1qJDaFmInL1zxrg5M/eD0Nkv8q5uTv/yRGr2KB
+         6DBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722957572; x=1723562372;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfDlFqosrXLKfrNosA2JBe6CUch6c/VqYqOk4CYX594=;
-        b=YWMzAVyrcqYZGMNkHcxEIqSTf/m8mL88PudWooXhjEbbU7wFWMCYjM3sMRoV+EJ0bV
-         CMBDS6QRucazdHbSMUF9uVjaguvk+zHemvswPH69CMvqOLLrTLk/OxmtK4+KJuTCgl8e
-         7UWry5xbtYT0+iWShDLfyWmh2EYPYsok9zsUL5jy0/1IWEjCuUFZEz1Fbbhdu9iQn0tO
-         EoUP7KgxJ9Wu2DLyDQqj6+UII3FxZr6YQRnt2NZjDvX4zKepPXrtxW0jEZ5EWZO7Cima
-         ddItw4JoMpZNdeBW8lPpiTkrhjZP8fTKmZofKL6iQBxSLeUiq4moiHMOEreT12MWqDS4
-         RKow==
-X-Forwarded-Encrypted: i=1; AJvYcCXrw2I+mEBbsntlvXtTsOniwNn/2yGUONN6qOP0Gwuqj7i0pj3eJRj0DP2CdFg2Re0W96xqFykggxjcNx3oJcIBGtMyGbiDaHU+
-X-Gm-Message-State: AOJu0Yz1tV+mD1/n6a2Rc70p0FcYO6nct2giNzcknD4BDgEmKvmKzBCZ
-	9f6zS/CteZz4KzgdUog2ff/IOU4Yh4LMlcpsTjD2tZFQhE6bqyfHzO0Q/9xjT8QsJ/8GQVAe9tX
-	cjg==
-X-Google-Smtp-Source: AGHT+IG+kq4xSCmsszhC87T6ezpGfclhL8SLo9v6dzemvAwTfI9EBqVt37Vs+G2GK8dBxj5hzSimY+F6XI8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:e743:b0:1fb:54d9:ebb3 with SMTP id
- d9443c01a7336-1ff57309939mr9499665ad.6.1722957571476; Tue, 06 Aug 2024
- 08:19:31 -0700 (PDT)
-Date: Tue, 6 Aug 2024 08:19:29 -0700
-In-Reply-To: <86ikwe2fph.wl-maz@kernel.org>
+        d=1e100.net; s=20230601; t=1722982498; x=1723587298;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DpwrGsGSvnHFdGVf1tlm4Wyo1L4IUT4bE3I4p9OVTOM=;
+        b=ZNjelJ3Xde5R7B6tyOecTdTuu7TOkkV4MLfMTeOrGdYBhX0j1nbA9EQ+0mgxnaaETP
+         BU+EG0/827hTQscvPEDK7PMgZJx1bwfu9S6bY32zoSyBAfHgkKMsO0A1aj/yoMzclSis
+         kZTgN3VDE2Scx8JfG/HzpgdnmfMRTDZdB5VxRrxF4034Hfngt1F0jHzNpL1tcCOsJ649
+         k3sbGD6pOhmdLzi8meOjYQS4HleotlmPkfQ49FhTWTxu9iyevuTGSK14mhSBAwW7ZwPJ
+         yzDSYoc37m3WUE4zNXniBW+uKZObmxQRupcgkos7xvu+WrF74R0cpgN2139bNNUY5DY1
+         FynQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfr9T9WLyIX/ee7+VPe8XX+ewVTNrLx40v44t4GrAUW3WTRhR43jOsgs+KAgWhHWYCvpnwJfbpQy9LFb9gWsGnqb/O4yUCmnVQ
+X-Gm-Message-State: AOJu0Yx9HXiZj+AnZ/3cvfTGOsIodJI0DzPcvZDXowEvM+7Eua+6vWP/
+	Vyvm6dqemRLO00C5nzefTfDA3LPa2ZSzm5adkLacf47MtvBHJNKyw8Yf0fhApVg=
+X-Google-Smtp-Source: AGHT+IGvHhFLKBv+CzG3kEzbceETNjAkvAWmYHLIEUsuY6FkehJnB//a5YH4EciwSMoOH9WpYcIhcQ==
+X-Received: by 2002:a05:6214:5990:b0:6b0:86f9:64ad with SMTP id 6a1803df08f44-6bb98493eb3mr259732626d6.52.1722982497815;
+        Tue, 06 Aug 2024 15:14:57 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c8778e1sm50584506d6.128.2024.08.06.15.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 15:14:57 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	alexghiti@rivosinc.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	arnd@arndb.de,
+	bhe@redhat.com,
+	bjorn@rivosinc.com,
+	borntraeger@linux.ibm.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	chenhuacai@kernel.org,
+	chenjiahao16@huawei.com,
+	christophe.leroy@csgroup.eu,
+	dave.hansen@linux.intel.com,
+	david@redhat.com,
+	dawei.li@shingroup.cn,
+	gerald.schaefer@linux.ibm.com,
+	gor@linux.ibm.com,
+	hca@linux.ibm.com,
+	hpa@zytor.com,
+	kent.overstreet@linux.dev,
+	kernel@xen0n.name,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	luto@kernel.org,
+	maobibo@loongson.cn,
+	mark.rutland@arm.com,
+	mcgrof@kernel.org,
+	mingo@redhat.com,
+	mpe@ellerman.id.au,
+	muchun.song@linux.dev,
+	namcao@linutronix.de,
+	naveen@kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	palmer@dabbelt.com,
+	pasha.tatashin@soleen.com,
+	paul.walmsley@sifive.com,
+	peterz@infradead.org,
+	philmd@linaro.org,
+	rdunlap@infradead.org,
+	rientjes@google.com,
+	rppt@kernel.org,
+	ryan.roberts@arm.com,
+	souravpanda@google.com,
+	svens@linux.ibm.com,
+	tglx@linutronix.de,
+	tzimmermann@suse.de,
+	will@kernel.org,
+	x86@kernel.org
+Subject: [PATCH 1/2] mm: update the memmap stat before page is freed
+Date: Tue,  6 Aug 2024 22:14:53 +0000
+Message-ID: <20240806221454.1971755-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-55-seanjc@google.com>
- <ZrFfgzRbiqT-Zi2O@linux.dev> <ZrFfvjy_-Tyx4xUV@linux.dev> <86ikwe2fph.wl-maz@kernel.org>
-Message-ID: <ZrI_AdLhWZqNKC4z@google.com>
-Subject: Re: [PATCH v12 54/84] KVM: arm64: Mark "struct page" pfns
- accessed/dirty before dropping mmu_lock
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>, 
-	Fuad Tabba <tabba@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 06, 2024, Marc Zyngier wrote:
-> On Tue, 06 Aug 2024 00:26:54 +0100,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
-> > 
-> > On Mon, Aug 05, 2024 at 11:26:03PM +0000, Oliver Upton wrote:
-> > > [+cc Fuad]
-> > 
-> > Take 2!
-> > 
-> > > Fuad, you mentioned in commit 9c30fc615daa ("KVM: arm64: Move setting
-> > > the page as dirty out of the critical section") that restructuring
-> > > around the MMU lock was helpful for reuse (presumably for pKVM), but I
-> > > lack the context there.
-> > > 
-> > > On Fri, Jul 26, 2024 at 04:52:03PM -0700, Sean Christopherson wrote:
-> > > > Mark pages/folios accessed+dirty prior to dropping mmu_lock, as marking a
-> > > > page/folio dirty after it has been written back can make some filesystems
-> > > > unhappy (backing KVM guests will such filesystem files is uncommon, and
-> > > 
-> > > typo: s/will/with/
-> > > 
-> > > > the race is minuscule, hence the lack of complaints).  See the link below
-> > > > for details.
-> 
-> Should we consider reverting 9c30fc615daa then?
+It is more logical to update the stat before the page is freed, to avoid
+use after free scenarios.
 
-Aha!  After thinking through things more, I don't think a revert is necessary.
-I _think_ the worst case scenario is that KVM would trigger this WARN in
-filemap_unaccount_folio():
+Fixes: 15995a352474 ("mm: report per-page metadata information")
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ mm/hugetlb_vmemmap.c | 4 ++--
+ mm/page_ext.c        | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-	/*
-	 * At this point folio must be either written or cleaned by
-	 * truncate.  Dirty folio here signals a bug and loss of
-	 * unwritten data - on ordinary filesystems.
-	 *
-	 * But it's harmless on in-memory filesystems like tmpfs; and can
-	 * occur when a driver which did get_user_pages() sets page dirty
-	 * before putting it, while the inode is being finally evicted.
-	 *
-	 * Below fixes dirty accounting after removing the folio entirely
-	 * but leaves the dirty flag set: it has no effect for truncated
-	 * folio and anyway will be cleared before returning folio to
-	 * buddy allocator.
-	 */
-	if (WARN_ON_ONCE(folio_test_dirty(folio) &&
-			 mapping_can_writeback(mapping)))
-		folio_account_cleaned(folio, inode_to_wb(mapping->host));
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 829112b0a914..fa83a7b38199 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -185,11 +185,11 @@ static int vmemmap_remap_range(unsigned long start, unsigned long end,
+ static inline void free_vmemmap_page(struct page *page)
+ {
+ 	if (PageReserved(page)) {
+-		free_bootmem_page(page);
+ 		mod_node_page_state(page_pgdat(page), NR_MEMMAP_BOOT, -1);
++		free_bootmem_page(page);
+ 	} else {
+-		__free_page(page);
+ 		mod_node_page_state(page_pgdat(page), NR_MEMMAP, -1);
++		__free_page(page);
+ 	}
+ }
+ 
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index c191e490c401..962d45eee1f8 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -330,18 +330,18 @@ static void free_page_ext(void *addr)
+ 	if (is_vmalloc_addr(addr)) {
+ 		page = vmalloc_to_page(addr);
+ 		pgdat = page_pgdat(page);
++		mod_node_page_state(pgdat, NR_MEMMAP,
++				    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
+ 		vfree(addr);
+ 	} else {
+ 		page = virt_to_page(addr);
+ 		pgdat = page_pgdat(page);
++		mod_node_page_state(pgdat, NR_MEMMAP,
++				    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
+ 		BUG_ON(PageReserved(page));
+ 		kmemleak_free(addr);
+ 		free_pages_exact(addr, table_size);
+ 	}
+-
+-	mod_node_page_state(pgdat, NR_MEMMAP,
+-			    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
+-
+ }
+ 
+ static void __free_page_ext(unsigned long pfn)
+-- 
+2.46.0.76.ge559c4bf1a-goog
 
-KVM won't actually write memory because the stage-2 mappings are protected by the
-mmu_notifier, i.e. there is no risk of loss of data, even if the VM were backed
-by memory that needs writeback.
-
-And FWIW, given that multiple other KVM architectures mark folios dirty outside
-of mmu_notifier protection and have never tripped over this, I think it's highly
-unlikely the WARN will ever be triggered by a sane virtualization setup.
-
-I can add something to that effect to the changelog, e.g. to document that this
-isn't super urgent.  
