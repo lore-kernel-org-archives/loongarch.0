@@ -1,184 +1,390 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2A2CA62;
-	Tue,  6 Aug 2024 01:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309EB1C32;
+	Tue,  6 Aug 2024 07:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722907003; cv=none; b=lgPLaDOn0OL9C9tR+qc6UvMsSVEQ6Wz/aGp+/3C82Ch3SgV8YpJhN/QMJXVdAqCTl1epMP4LLVsa95U23P0haeLEvVa913iDvQ2xANNka9klqLzr7Fv0Ox5ywXCgYtpSMiAWkPFqv+tCuTxI+EgWXMBimEbyQMFUUz5Leq6vXY0=
+	t=1722928039; cv=none; b=SSulca607lk9jYAqrquLcSmDTk/aFfPQiHGa6IKrJdsvAuI5LjqUTFmtRUQhHC3XQ2dTcpY9JGmy2mgSdziXTh/cY3SLzKgVRPyazFr/+Eyo1rR622znk+WVpJ1aubX08GSy5KN0QwQiaHlCuQIbbT0edziePMTBACVGwaDXAbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722907003; c=relaxed/simple;
-	bh=f+cJnRA0D41KdlZZAwfr/fC1+z2E24XEyE8wtlLvSzY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RHubxEH41OOGSyqHcPrQxOthKUDaDMTzIq9BGG8snB0tVeipXiaCcGIgV3y3G1nc36pgxA39LWLcHyNHrq3dyuk3V7eb65M7yR7n7zVNm+TP6dbObDL/Nh7d4VFXJN8LQ6HJ79UEoCtGZuJlSXy4HQW6FSSs6gWdyHusK6S+g9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxTZt1ebFm4VkIAA--.1700S3;
-	Tue, 06 Aug 2024 09:16:37 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxVOBvebFm_VgFAA--.28281S3;
-	Tue, 06 Aug 2024 09:16:33 +0800 (CST)
-Subject: Re: [PATCH v12 64/84] KVM: LoongArch: Mark "struct page" pfns dirty
- only in "slow" page fault path
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-65-seanjc@google.com>
- <a039b758-d4e3-3798-806f-25bceb2f33a5@loongson.cn>
- <Zq00OYowF5kc9QFE@google.com>
- <345d89c1-4f31-6b49-2cd4-a0696210fa7c@loongson.cn>
- <ZrFezgVbCI3DRQH3@google.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <d673ec04-5445-6233-81e2-49863d044bf0@loongson.cn>
-Date: Tue, 6 Aug 2024 09:16:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1722928039; c=relaxed/simple;
+	bh=uZNGqv4GlsuTSJvzYyd3Wu0i/iKa3Wc4mCH37O74eTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IOq91bHEf4w4todFKwuqDkKqW+eWz7aSArLL6GTysBwFs1y5kuCDhmTOB6vlET3Y43jElxHVU2uxnrg2wFDjEspJ5Tk4L0DRRiPjCgTNaySr1QFJd0YmQav3F8ivQpEhcli1X5LC/sArlwtlYbsF3+oUffp1TjrIsSl4UophBF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6802EC32786;
+	Tue,  6 Aug 2024 07:07:16 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Use accessors to page table entries instead of direct dereference
+Date: Tue,  6 Aug 2024 15:07:06 +0800
+Message-ID: <20240806070706.128005-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZrFezgVbCI3DRQH3@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxVOBvebFm_VgFAA--.28281S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WryUCFyxZw4kJrWxJr4kXwc_yoW7WF1rpF
-	W8CFWqkrs8Jr1Fyr9rtwsIvryYk39rKr4xXa47J34Yk3Wqvr12qF18W3yfWFyUA3yfC3WS
-	qr4UtF9xuFW5AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUP529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDUUUU
 
+As very well explained in commit 20a004e7b017cce282 ("arm64: mm: Use
+READ_ONCE/WRITE_ONCE when accessing page tables"), an architecture whose
+page table walker can modify the PTE in parallel must use READ_ONCE()/
+WRITE_ONCE() macro to avoid any compiler transformation.
 
+So apply that to LoongArch which is such an architecture, in order to
+avoid potential problems.
 
-On 2024/8/6 上午7:22, Sean Christopherson wrote:
-> On Sat, Aug 03, 2024, maobibo wrote:
->> On 2024/8/3 上午3:32, Sean Christopherson wrote:
->>> On Fri, Aug 02, 2024, maobibo wrote:
->>>> On 2024/7/27 上午7:52, Sean Christopherson wrote:
->>>>> Mark pages/folios dirty only the slow page fault path, i.e. only when
->>>>> mmu_lock is held and the operation is mmu_notifier-protected, as marking a
->>>>> page/folio dirty after it has been written back can make some filesystems
->>>>> unhappy (backing KVM guests will such filesystem files is uncommon, and
->>>>> the race is minuscule, hence the lack of complaints).
->>>>>
->>>>> See the link below for details.
->>>>>
->>>>> Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com
->>>>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>>>> ---
->>>>>     arch/loongarch/kvm/mmu.c | 18 ++++++++++--------
->>>>>     1 file changed, 10 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
->>>>> index 2634a9e8d82c..364dd35e0557 100644
->>>>> --- a/arch/loongarch/kvm/mmu.c
->>>>> +++ b/arch/loongarch/kvm/mmu.c
->>>>> @@ -608,13 +608,13 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
->>>>>     		if (kvm_pte_young(changed))
->>>>>     			kvm_set_pfn_accessed(pfn);
->>>>> -		if (kvm_pte_dirty(changed)) {
->>>>> -			mark_page_dirty(kvm, gfn);
->>>>> -			kvm_set_pfn_dirty(pfn);
->>>>> -		}
->>>>>     		if (page)
->>>>>     			put_page(page);
->>>>>     	}
->>>>> +
->>>>> +	if (kvm_pte_dirty(changed))
->>>>> +		mark_page_dirty(kvm, gfn);
->>>>> +
->>>>>     	return ret;
->>>>>     out:
->>>>>     	spin_unlock(&kvm->mmu_lock);
->>>>> @@ -915,12 +915,14 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
->>>>>     	else
->>>>>     		++kvm->stat.pages;
->>>>>     	kvm_set_pte(ptep, new_pte);
->>>>> -	spin_unlock(&kvm->mmu_lock);
->>>>> -	if (prot_bits & _PAGE_DIRTY) {
->>>>> -		mark_page_dirty_in_slot(kvm, memslot, gfn);
->>>>> +	if (writeable)
->>>> Is it better to use write or (prot_bits & _PAGE_DIRTY) here?  writable is
->>>> pte permission from function hva_to_pfn_slow(), write is fault action.
->>>
->>> Marking folios dirty in the slow/full path basically necessitates marking the
->>> folio dirty if KVM creates a writable SPTE, as KVM won't mark the folio dirty
->>> if/when _PAGE_DIRTY is set.
->>>
->>> Practically speaking, I'm 99.9% certain it doesn't matter.  The folio is marked
->>> dirty by core MM when the folio is made writable, and cleaning the folio triggers
->>> an mmu_notifier invalidation.  I.e. if the page is mapped writable in KVM's
->> yes, it is. Thanks for the explanation. kvm_set_pfn_dirty() can be put only
->> in slow page fault path. I only concern with fault type, read fault type can
->> set pte entry writable however not _PAGE_DIRTY at stage-2 mmu table.
->>
->>> stage-2 PTEs, then its folio has already been marked dirty.
->> Considering one condition although I do not know whether it exists actually.
->> user mode VMM writes the folio with hva address firstly, then VCPU thread
->> *reads* the folio. With primary mmu table, pte entry is writable and
->> _PAGE_DIRTY is set, with secondary mmu table(state-2 PTE table), it is
->> pte_none since the filio is accessed at first time, so there will be slow
->> page fault path for stage-2 mmu page table filling.
->>
->> Since it is read fault, stage-2 PTE will be created with _PAGE_WRITE(coming
->> from function hva_to_pfn_slow()), however _PAGE_DIRTY is not set. Do we need
->> call kvm_set_pfn_dirty() at this situation?
-> 
-> If KVM doesn't mark the folio dirty when the stage-2 _PAGE_DIRTY flag is set,
-> i.e. as proposed in this series, then yes, KVM needs to call kvm_set_pfn_dirty()
-> even though the VM hasn't (yet) written to the memory.  In practice, KVM calling
-> kvm_set_pfn_dirty() is redundant the majority of the time, as the stage-1 PTE
-> will have _PAGE_DIRTY set, and that will get propagated to the folio when the
-> primary MMU does anything relevant with the PTE.  And for file systems that care
-> about writeback, odds are very good that the folio was marked dirty even earlier,
-> when MM invoked vm_operations_struct.page_mkwrite().
-> 
-> The reason I am pushing to have all architectures mark pages/folios dirty in the
-> slow page fault path is that a false positive (marking a folio dirty without the
-> folio ever being written in _any_ context since the last pte_mkclean()) is rare,
-> and at worst results an unnecessary writeback.  On the other hand, marking folios
-It does not influence the result. At worst there is one unnecessary 
-kvm_set_pfn_dirty() before the last pte_mkclean(). That is ok for me, 
-and thanks for your detailed explanation.
+Similar to commit edf955647269422e ("riscv: Use accessors to page table
+entries instead of direct dereference").
 
-> dirty in fast page fault handlers (or anywhere else that isn't protected by
-> mmu_notifiers) is technically unsafe.
-yeap, moving marking folios dirty to slow fault handler makes logic 
-clear and simple here, and technically safer.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/hugetlb.h |  4 +--
+ arch/loongarch/include/asm/kfence.h  |  6 ++--
+ arch/loongarch/include/asm/pgtable.h | 48 +++++++++++++++++-----------
+ arch/loongarch/kvm/mmu.c             |  8 ++---
+ arch/loongarch/mm/hugetlbpage.c      |  6 ++--
+ arch/loongarch/mm/init.c             | 10 +++---
+ arch/loongarch/mm/kasan_init.c       | 10 +++---
+ arch/loongarch/mm/pgtable.c          |  2 +-
+ 8 files changed, 52 insertions(+), 42 deletions(-)
 
-Regards
-Bibo Mao
-> 
-> In other words, the intent is to sacrifice accuracy to improve stability/robustness,
-> because the vast majority of time the loss in accuracy has no effect, and the worst
-> case scenario is that the kernel does I/O that wasn't necessary.
-> 
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index aa44b3fe43dd..5da32c00d483 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -34,7 +34,7 @@ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep)
+ {
+ 	pte_t clear;
+-	pte_t pte = *ptep;
++	pte_t pte = ptep_get(ptep);
+ 
+ 	pte_val(clear) = (unsigned long)invalid_pte_table;
+ 	set_pte_at(mm, addr, ptep, clear);
+@@ -65,7 +65,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 					     pte_t *ptep, pte_t pte,
+ 					     int dirty)
+ {
+-	int changed = !pte_same(*ptep, pte);
++	int changed = !pte_same(ptep_get(ptep), pte);
+ 
+ 	if (changed) {
+ 		set_pte_at(vma->vm_mm, addr, ptep, pte);
+diff --git a/arch/loongarch/include/asm/kfence.h b/arch/loongarch/include/asm/kfence.h
+index 92636e82957c..da9e93024626 100644
+--- a/arch/loongarch/include/asm/kfence.h
++++ b/arch/loongarch/include/asm/kfence.h
+@@ -53,13 +53,13 @@ static inline bool kfence_protect_page(unsigned long addr, bool protect)
+ {
+ 	pte_t *pte = virt_to_kpte(addr);
+ 
+-	if (WARN_ON(!pte) || pte_none(*pte))
++	if (WARN_ON(!pte) || pte_none(ptep_get(pte)))
+ 		return false;
+ 
+ 	if (protect)
+-		set_pte(pte, __pte(pte_val(*pte) & ~(_PAGE_VALID | _PAGE_PRESENT)));
++		set_pte(pte, __pte(pte_val(ptep_get(pte)) & ~(_PAGE_VALID | _PAGE_PRESENT)));
+ 	else
+-		set_pte(pte, __pte(pte_val(*pte) | (_PAGE_VALID | _PAGE_PRESENT)));
++		set_pte(pte, __pte(pte_val(ptep_get(pte)) | (_PAGE_VALID | _PAGE_PRESENT)));
+ 
+ 	preempt_disable();
+ 	local_flush_tlb_one(addr);
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 3fbf1f37c58e..85431f20a14d 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -106,6 +106,9 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
+ #define KFENCE_AREA_START	(VMEMMAP_END + 1)
+ #define KFENCE_AREA_END		(KFENCE_AREA_START + KFENCE_AREA_SIZE - 1)
+ 
++#define ptep_get(ptep) READ_ONCE(*(ptep))
++#define pmdp_get(pmdp) READ_ONCE(*(pmdp))
++
+ #define pte_ERROR(e) \
+ 	pr_err("%s:%d: bad pte %016lx.\n", __FILE__, __LINE__, pte_val(e))
+ #ifndef __PAGETABLE_PMD_FOLDED
+@@ -147,11 +150,6 @@ static inline int p4d_present(p4d_t p4d)
+ 	return p4d_val(p4d) != (unsigned long)invalid_pud_table;
+ }
+ 
+-static inline void p4d_clear(p4d_t *p4dp)
+-{
+-	p4d_val(*p4dp) = (unsigned long)invalid_pud_table;
+-}
+-
+ static inline pud_t *p4d_pgtable(p4d_t p4d)
+ {
+ 	return (pud_t *)p4d_val(p4d);
+@@ -159,7 +157,12 @@ static inline pud_t *p4d_pgtable(p4d_t p4d)
+ 
+ static inline void set_p4d(p4d_t *p4d, p4d_t p4dval)
+ {
+-	*p4d = p4dval;
++	WRITE_ONCE(*p4d, p4dval);
++}
++
++static inline void p4d_clear(p4d_t *p4dp)
++{
++	set_p4d(p4dp, __p4d((unsigned long)invalid_pud_table));
+ }
+ 
+ #define p4d_phys(p4d)		PHYSADDR(p4d_val(p4d))
+@@ -193,17 +196,20 @@ static inline int pud_present(pud_t pud)
+ 	return pud_val(pud) != (unsigned long)invalid_pmd_table;
+ }
+ 
+-static inline void pud_clear(pud_t *pudp)
++static inline pmd_t *pud_pgtable(pud_t pud)
+ {
+-	pud_val(*pudp) = ((unsigned long)invalid_pmd_table);
++	return (pmd_t *)pud_val(pud);
+ }
+ 
+-static inline pmd_t *pud_pgtable(pud_t pud)
++static inline void set_pud(pud_t *pud, pud_t pudval)
+ {
+-	return (pmd_t *)pud_val(pud);
++	WRITE_ONCE(*pud, pudval);
+ }
+ 
+-#define set_pud(pudptr, pudval) do { *(pudptr) = (pudval); } while (0)
++static inline void pud_clear(pud_t *pudp)
++{
++	set_pud(pudp, __pud((unsigned long)invalid_pmd_table));
++}
+ 
+ #define pud_phys(pud)		PHYSADDR(pud_val(pud))
+ #define pud_page(pud)		(pfn_to_page(pud_phys(pud) >> PAGE_SHIFT))
+@@ -231,12 +237,15 @@ static inline int pmd_present(pmd_t pmd)
+ 	return pmd_val(pmd) != (unsigned long)invalid_pte_table;
+ }
+ 
+-static inline void pmd_clear(pmd_t *pmdp)
++static inline void set_pmd(pmd_t *pmd, pmd_t pmdval)
+ {
+-	pmd_val(*pmdp) = ((unsigned long)invalid_pte_table);
++	WRITE_ONCE(*pmd, pmdval);
+ }
+ 
+-#define set_pmd(pmdptr, pmdval) do { *(pmdptr) = (pmdval); } while (0)
++static inline void pmd_clear(pmd_t *pmdp)
++{
++	set_pmd(pmdp, __pmd((unsigned long)invalid_pte_table));
++}
+ 
+ #define pmd_phys(pmd)		PHYSADDR(pmd_val(pmd))
+ 
+@@ -314,7 +323,8 @@ extern void paging_init(void);
+ 
+ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ {
+-	*ptep = pteval;
++	WRITE_ONCE(*ptep, pteval);
++
+ 	if (pte_val(pteval) & _PAGE_GLOBAL) {
+ 		pte_t *buddy = ptep_buddy(ptep);
+ 		/*
+@@ -341,8 +351,8 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 		: [buddy] "+m" (buddy->pte), [tmp] "=&r" (tmp)
+ 		: [global] "r" (page_global));
+ #else /* !CONFIG_SMP */
+-		if (pte_none(*buddy))
+-			pte_val(*buddy) = pte_val(*buddy) | _PAGE_GLOBAL;
++		if (pte_none(ptep_get(buddy)))
++			WRITE_ONCE(*buddy, __pte(pte_val(ptep_get(buddy)) | _PAGE_GLOBAL));
+ #endif /* CONFIG_SMP */
+ 	}
+ }
+@@ -350,7 +360,7 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+-	if (pte_val(*ptep_buddy(ptep)) & _PAGE_GLOBAL)
++	if (pte_val(ptep_get(ptep_buddy(ptep))) & _PAGE_GLOBAL)
+ 		set_pte(ptep, __pte(_PAGE_GLOBAL));
+ 	else
+ 		set_pte(ptep, __pte(0));
+@@ -603,7 +613,7 @@ static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long address, pmd_t *pmdp)
+ {
+-	pmd_t old = *pmdp;
++	pmd_t old = pmdp_get(pmdp);
+ 
+ 	pmd_clear(pmdp);
+ 
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index 2634a9e8d82c..28681dfb4b85 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -714,19 +714,19 @@ static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
+ 	 * value) and then p*d_offset() walks into the target huge page instead
+ 	 * of the old page table (sees the new value).
+ 	 */
+-	pgd = READ_ONCE(*pgd_offset(kvm->mm, hva));
++	pgd = pgdp_get(pgd_offset(kvm->mm, hva));
+ 	if (pgd_none(pgd))
+ 		goto out;
+ 
+-	p4d = READ_ONCE(*p4d_offset(&pgd, hva));
++	p4d = p4dp_get(p4d_offset(&pgd, hva));
+ 	if (p4d_none(p4d) || !p4d_present(p4d))
+ 		goto out;
+ 
+-	pud = READ_ONCE(*pud_offset(&p4d, hva));
++	pud = pudp_get(pud_offset(&p4d, hva));
+ 	if (pud_none(pud) || !pud_present(pud))
+ 		goto out;
+ 
+-	pmd = READ_ONCE(*pmd_offset(&pud, hva));
++	pmd = pmdp_get(pmd_offset(&pud, hva));
+ 	if (pmd_none(pmd) || !pmd_present(pmd))
+ 		goto out;
+ 
+diff --git a/arch/loongarch/mm/hugetlbpage.c b/arch/loongarch/mm/hugetlbpage.c
+index 12222c56cb59..e4068906143b 100644
+--- a/arch/loongarch/mm/hugetlbpage.c
++++ b/arch/loongarch/mm/hugetlbpage.c
+@@ -39,11 +39,11 @@ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
+ 	pmd_t *pmd = NULL;
+ 
+ 	pgd = pgd_offset(mm, addr);
+-	if (pgd_present(*pgd)) {
++	if (pgd_present(pgdp_get(pgd))) {
+ 		p4d = p4d_offset(pgd, addr);
+-		if (p4d_present(*p4d)) {
++		if (p4d_present(p4dp_get(p4d))) {
+ 			pud = pud_offset(p4d, addr);
+-			if (pud_present(*pud))
++			if (pud_present(pudp_get(pud)))
+ 				pmd = pmd_offset(pud, addr);
+ 		}
+ 	}
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index bf789d114c2d..8a87a482c8f4 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -141,7 +141,7 @@ void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+ int __meminit vmemmap_check_pmd(pmd_t *pmd, int node,
+ 				unsigned long addr, unsigned long next)
+ {
+-	int huge = pmd_val(*pmd) & _PAGE_HUGE;
++	int huge = pmd_val(pmdp_get(pmd)) & _PAGE_HUGE;
+ 
+ 	if (huge)
+ 		vmemmap_verify((pte_t *)pmd, node, addr, next);
+@@ -173,7 +173,7 @@ pte_t * __init populate_kernel_pte(unsigned long addr)
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+-	if (p4d_none(*p4d)) {
++	if (p4d_none(p4dp_get(p4d))) {
+ 		pud = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+ 		if (!pud)
+ 			panic("%s: Failed to allocate memory\n", __func__);
+@@ -184,7 +184,7 @@ pte_t * __init populate_kernel_pte(unsigned long addr)
+ 	}
+ 
+ 	pud = pud_offset(p4d, addr);
+-	if (pud_none(*pud)) {
++	if (pud_none(pudp_get(pud))) {
+ 		pmd = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+ 		if (!pmd)
+ 			panic("%s: Failed to allocate memory\n", __func__);
+@@ -195,7 +195,7 @@ pte_t * __init populate_kernel_pte(unsigned long addr)
+ 	}
+ 
+ 	pmd = pmd_offset(pud, addr);
+-	if (!pmd_present(*pmd)) {
++	if (!pmd_present(pmdp_get(pmd))) {
+ 		pte_t *pte;
+ 
+ 		pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+@@ -216,7 +216,7 @@ void __init __set_fixmap(enum fixed_addresses idx,
+ 	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+ 
+ 	ptep = populate_kernel_pte(addr);
+-	if (!pte_none(*ptep)) {
++	if (!pte_none(ptep_get(ptep))) {
+ 		pte_ERROR(*ptep);
+ 		return;
+ 	}
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index c608adc99845..427d6b1aec09 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -105,7 +105,7 @@ static phys_addr_t __init kasan_alloc_zeroed_page(int node)
+ 
+ static pte_t *__init kasan_pte_offset(pmd_t *pmdp, unsigned long addr, int node, bool early)
+ {
+-	if (__pmd_none(early, READ_ONCE(*pmdp))) {
++	if (__pmd_none(early, pmdp_get(pmdp))) {
+ 		phys_addr_t pte_phys = early ?
+ 				__pa_symbol(kasan_early_shadow_pte) : kasan_alloc_zeroed_page(node);
+ 		if (!early)
+@@ -118,7 +118,7 @@ static pte_t *__init kasan_pte_offset(pmd_t *pmdp, unsigned long addr, int node,
+ 
+ static pmd_t *__init kasan_pmd_offset(pud_t *pudp, unsigned long addr, int node, bool early)
+ {
+-	if (__pud_none(early, READ_ONCE(*pudp))) {
++	if (__pud_none(early, pudp_get(pudp))) {
+ 		phys_addr_t pmd_phys = early ?
+ 				__pa_symbol(kasan_early_shadow_pmd) : kasan_alloc_zeroed_page(node);
+ 		if (!early)
+@@ -131,7 +131,7 @@ static pmd_t *__init kasan_pmd_offset(pud_t *pudp, unsigned long addr, int node,
+ 
+ static pud_t *__init kasan_pud_offset(p4d_t *p4dp, unsigned long addr, int node, bool early)
+ {
+-	if (__p4d_none(early, READ_ONCE(*p4dp))) {
++	if (__p4d_none(early, p4dp_get(p4dp))) {
+ 		phys_addr_t pud_phys = early ?
+ 			__pa_symbol(kasan_early_shadow_pud) : kasan_alloc_zeroed_page(node);
+ 		if (!early)
+@@ -154,7 +154,7 @@ static void __init kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
+ 					      : kasan_alloc_zeroed_page(node);
+ 		next = addr + PAGE_SIZE;
+ 		set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERNEL));
+-	} while (ptep++, addr = next, addr != end && __pte_none(early, READ_ONCE(*ptep)));
++	} while (ptep++, addr = next, addr != end && __pte_none(early, ptep_get(ptep)));
+ }
+ 
+ static void __init kasan_pmd_populate(pud_t *pudp, unsigned long addr,
+@@ -166,7 +166,7 @@ static void __init kasan_pmd_populate(pud_t *pudp, unsigned long addr,
+ 	do {
+ 		next = pmd_addr_end(addr, end);
+ 		kasan_pte_populate(pmdp, addr, next, node, early);
+-	} while (pmdp++, addr = next, addr != end && __pmd_none(early, READ_ONCE(*pmdp)));
++	} while (pmdp++, addr = next, addr != end && __pmd_none(early, pmdp_get(pmdp)));
+ }
+ 
+ static void __init kasan_pud_populate(p4d_t *p4dp, unsigned long addr,
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index bda018150000..eb6a29b491a7 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -128,7 +128,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
+ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ 		pmd_t *pmdp, pmd_t pmd)
+ {
+-	*pmdp = pmd;
++	WRITE_ONCE(*pmdp, pmd);
+ 	flush_tlb_all();
+ }
+ 
+-- 
+2.43.5
 
