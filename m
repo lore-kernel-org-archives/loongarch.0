@@ -1,124 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BCD3C092
-	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 07:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5451BD013
+	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 08:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722930353; cv=none; b=Bn2YqzUAqiPdenM/IHInzGJ6Pwrp8dRYziXBfV6nls/ZNz+FpAjFLpEaYQJQ0DTp0ggB9gHyhXDnW2fWoYO32qHqOSHedXu30EeDeNmOS0j+gKCCElzMyNEo2HZG2qOHo/TXyHvfw9jPM0VB4H5um2nLT7Mjp1nJB3It6CS10FI=
+	t=1722932726; cv=none; b=Lc25ghAewCOGP+nazzp4a3gt/NTOF5QHDfgT7UWQrrbKz1ouu1GPXz3s2SnDLAAGkVdZc4l84aKKfguAjFDroP81WBBlHJsHViQI6HqQZoJassvZWMdH1pvwQzFSLec/eJdB3Xgnotp6336MgYTRnOVmyg+1+p75KPlw022zwm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722930353; c=relaxed/simple;
-	bh=yGiNiFGi7Vaq87quk92S2Swz/r+ypNNm0Lc2mBcEMyQ=;
+	s=arc-20240116; t=1722932726; c=relaxed/simple;
+	bh=k7zHAEEEUxyRomVtvnM2viO2YFKTnrtBHjiLIBw6Z38=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iE2qppr8aorUEYEeysCJS+0JcoK88PwWCWMyjd+QRDsTLgb5ZqyJXlsV4TYXnAoRa6YfXyaRxEimeLU3pmGduri/qKRdSVGtmx2Ov9LDRyt3gcwJJESb6iB9D4leDaN/Jrc38DTpgrkldplAowE2yEm5tk2dXznkpHcX4NSemn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoqiKYIh; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=CZIXTPlasAI4cMi+a3SJN+llQQ7PSGVYP63koRlq7+e4dzUn1VBnJ88Lk1uNfqjmjWy1p+79AwHz7Jno/9bLAe8kFpbIelRxeXNXyA5gVcn0GAHfmuOPZPhLnWVGYu0zIevL18dkRvRJwDMzofqdAs35+Te1Y+/UE5Wbj4Hn0FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yI3Iaswv; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoqiKYIh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC48C4AF09
-	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 07:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722930352;
-	bh=yGiNiFGi7Vaq87quk92S2Swz/r+ypNNm0Lc2mBcEMyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZoqiKYIhd1x3S00BKm1jiixbglE+w3LLz2tvXP77Rkj8333Egus2iPcZQzW3Nxkff
-	 Sggs9TGr3PRPiJ/Q00/E2SLqTKeOdmQHI5iXtr2jHGq6TyuadZn96v3Jr0sWg1HUxz
-	 SkrOcDNd2H3PyPV15aKvPvsJxRzosJbynkkHioCGA7HNREIySmto014GL/YmMd5LY7
-	 rWWzPjuEk2BSx0+zde5bOvlWfMCBHWPU+BZwxXsfkH4tQFk1wrNhRJNi6zTTis2RlB
-	 l23xM6R5XpDMg18RaggLaASzCGQoChMTPTYo8Lh7GC1nU3iV8ddUvXra7LIMCtMG9P
-	 T+jvR9xJVUlbA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso661922a12.1
-        for <loongarch@lists.linux.dev>; Tue, 06 Aug 2024 00:45:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWJUV4VvWKOe84MF1Y5reE0EzSHpWroEZIy6AUMgDCCx9v4KedYC+RS30caZ2ZZienIDxiNi6KzfTKfCdtBseijROLt6M47DEzR
-X-Gm-Message-State: AOJu0Yw31a5+rEmPXHrQrHpqR0Hg11ouE52G40zYvnqgqoH/CdGkEOrF
-	NzzupWqAdgX+1T/wAbWxhEu8ZT9jrMQz2uaMzjKjyTeCBuerqUoCpHnhQHe+diFVBILZ66nh5G7
-	t4qiTVQSlqeGs5ZxztFAdhewi8bY=
-X-Google-Smtp-Source: AGHT+IGFW4nB0Godlt8tjYNw+BdB5pIE9dNG90d0hv4ZSDmWnDVURzXoI/38bpiLY+5Dp1IAu21Iurff6ztAAI5Px9U=
-X-Received: by 2002:aa7:c599:0:b0:5a2:a0d9:c1a2 with SMTP id
- 4fb4d7f45d1cf-5b7f56fd9cdmr9973224a12.26.1722930351191; Tue, 06 Aug 2024
- 00:45:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yI3Iaswv"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-368313809a4so3707652f8f.0
+        for <loongarch@lists.linux.dev>; Tue, 06 Aug 2024 01:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722932721; x=1723537521; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJJmve+UBZqWHPzqvXAkYx9wHC1+4s/jebXaeWpKSm4=;
+        b=yI3IaswvtxdLELnbfzCUcQEOihCI+kf/j3YCT5+SfNEBQW8CX/gej1qPzlzjIIfnce
+         Z5T6ajBzUNhby53o60CV3Uz/dYUTFr6UR5W0fGUo5RT+tg6zW1aLXZMpcIdHQLOH3KbO
+         d1iHF3amTSUepvsUNxgF/mLIS7NvL0SlOf7zxzXFqJEiOV8Jx30ZrItyLHNAmSUI+aIc
+         q7KRglHwVmw2tfNd9f8QxmuUm1tWDhglgLCSaTeMmAi5VEf45VZMF4cKY+/HZ0mzdodX
+         sQCAtXVwT1NDzFxYZrddLynMAqdyq+wlLLIdFKYM/BUoepFkBsblSHKwKvxiNeEiWrCL
+         ydGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722932721; x=1723537521;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJJmve+UBZqWHPzqvXAkYx9wHC1+4s/jebXaeWpKSm4=;
+        b=u7W7QK9EehbpawwSbUE6BrWb/wlHA0A/dfTx2m+g2gWmrfTRrQT8Oq3J0yE+q4Rhq9
+         Ha5hZ+YE/v4Row0oX876v8LcyBGX2yr7WF9Og/TtLCFAWQdos0baPtr2IescVJ1feHsB
+         7q2sBUMwYhGeB7LbDDI3Jvi+g0izKmA0PY36LRdDOdJKi6tgvEg5MibDWU5vvV/vD3km
+         bK0RFa0QS//S4q7SSU4RKZKELk7maXaTKcXqU2wmGNhYfOS54+XCwyT3e1mx/U2p6zn+
+         QfG4tiAyNcPmQftSTbwMOKscMfauAl5gS4rp+aax+GbRmPQgVAa01aqTsX6os1uVXgob
+         VobQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtGRS/uayWZ45an3zdVrymCX/egZiLkQvQosG7nrGsIDdkaoMhJNqVQGrQriBmVHfwMGK4eF8xi7UQ2MyiK6Kb5P7JSgVUCkVO
+X-Gm-Message-State: AOJu0Yzx+ES8fR5UJWT7wuNs1we02U6j4J6gMEFZbYPLASdx+5/ROdI+
+	M1xWcAg+bqOyrNzbYtDttBkZ2axLfJ7yc3JPfR1XgHEgqdAKx/lpS5/o66G01zS3Mbm356jGPBO
+	h9DFHYyQTV+OySitGZNxnypbEC82Tjg0Gz4Hn
+X-Google-Smtp-Source: AGHT+IEuJVBQVgvvzdKoA/IljQMVSQQCy4ILUfIi4PfR2IcPP3crNOUdNiIGa90I2U+SlhluocGZ2/3ZifLac4nEAJY=
+X-Received: by 2002:a05:6000:1151:b0:362:2af4:43cc with SMTP id
+ ffacd0b85a97d-36bbbe5be99mr9354068f8f.19.1722932721184; Tue, 06 Aug 2024
+ 01:25:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
- <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn> <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
- <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn> <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
- <9bad6e47-dac5-82d2-1828-57df3ec840f8@loongson.cn> <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
-In-Reply-To: <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 6 Aug 2024 15:45:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H61-x2s-22q5+WqrQ_RnmwWgY2E8cqSozLPrdxv1MX+1g@mail.gmail.com>
-Message-ID: <CAAhV-H61-x2s-22q5+WqrQ_RnmwWgY2E8cqSozLPrdxv1MX+1g@mail.gmail.com>
-Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for kvm_hypercall
-To: WangYuli <wangyuli@uniontech.com>
-Cc: maobibo <maobibo@loongson.cn>, Dandan Zhang <zhangdandan@uniontech.com>, 
-	zhaotianrui@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Wentao Guan <guanwentao@uniontech.com>, baimingcong@uniontech.com
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-55-seanjc@google.com>
+ <ZrFfgzRbiqT-Zi2O@linux.dev>
+In-Reply-To: <ZrFfgzRbiqT-Zi2O@linux.dev>
+From: Fuad Tabba <tabba@google.com>
+Date: Tue, 6 Aug 2024 09:24:43 +0100
+Message-ID: <CA+EHjTxZwDOeC94Y1otxcp-mcwUZA=TpQp4pav-E8Xvb2MA64Q@mail.gmail.com>
+Subject: Re: [PATCH v12 54/84] KVM: arm64: Mark "struct page" pfns
+ accessed/dirty before dropping mmu_lock
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Marc Zyngier <maz@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 29, 2024 at 11:03=E2=80=AFAM WangYuli <wangyuli@uniontech.com> =
-wrote:
->
-> Hi Bibo and Huacai,
->
->
-> Ah... tell me you two aren't arguing, right?
->
->
-> Both of you are working towards the same goal=E2=80=94making the upstream
->
-> code for the Loongarch architecture as clean and elegant as possible.
->
-> If it's just a disagreement about how to handle this small patch,
->
-> there's no need to make things complicated.
->
->
-> As a partner of yours and a community developer passionate about
->
-> Loongson CPU, I'd much rather see you two working together
->
-> harmoniously than complaining about each other's work. I have full
->
-> confidence in Bibo's judgment on the direction of KVM for Loongarch,
->
-> and I also believe that Huacai, as the Loongarch maintainer, has always
->
-> been fulfilling his responsibilities.
->
->
-> You are both excellent Linux developers. That's all.
-Bibo has made lots of contributions on LoongArch/KVM, and he is more
-professional than me. I hope we can collaborate well in the future.
-For this patch itself, I've applied to loongarch-fixes, thanks.
+Hi Oliver,
 
-Huacai
+On Tue, 6 Aug 2024 at 00:26, Oliver Upton <oliver.upton@linux.dev> wrote:
+>
+> [+cc Fuad]
+>
+> Fuad, you mentioned in commit 9c30fc615daa ("KVM: arm64: Move setting
+> the page as dirty out of the critical section") that restructuring
+> around the MMU lock was helpful for reuse (presumably for pKVM), but I
+> lack the context there.
 
+That was for some refactoring I'd done later on for mem_aborts in
+pKVM. That said, I didn't know at the time that there might be a race
+with some filesystems. I'll keep this in mind for the pKVM code we
+have for now, and when upstreaming.
+
+Thanks,
+/fuad
+
+> On Fri, Jul 26, 2024 at 04:52:03PM -0700, Sean Christopherson wrote:
+> > Mark pages/folios accessed+dirty prior to dropping mmu_lock, as marking a
+> > page/folio dirty after it has been written back can make some filesystems
+> > unhappy (backing KVM guests will such filesystem files is uncommon, and
 >
+> typo: s/will/with/
 >
-> To be specific about the controversy caused by this particular commit,
+> > the race is minuscule, hence the lack of complaints).  See the link below
+> > for details.
+> >
+> > This will also allow converting arm64 to kvm_release_faultin_page(), which
+> > requires that mmu_lock be held (for the aforementioned reason).
+> >
+> > Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/arm64/kvm/mmu.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> > index 22ee37360c4e..ce13c3d884d5 100644
+> > --- a/arch/arm64/kvm/mmu.c
+> > +++ b/arch/arm64/kvm/mmu.c
+> > @@ -1685,15 +1685,17 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+> >       }
+> >
+> >  out_unlock:
+> > +     if (writable && !ret)
+> > +             kvm_set_pfn_dirty(pfn);
 >
-> I think the root cause is that the KVM documentation for Loongarch
+> I'm guessing you meant kvm_release_pfn_dirty() here, because this leaks
+> a reference.
 >
-> hasn't been upstreamed. In my opinion, the documentation seems
->
-> ready to be upstreamed. If you're all busy with more important work,
->
-> I can take the time to submit them and provide a Chinese translation.
->
->
-> If this is feasible, it would be better to merge this commit after that.
->
->
-> Best wishes,
->
+> > +     else
+> > +             kvm_release_pfn_clean(pfn);
+> > +
+> >       read_unlock(&kvm->mmu_lock);
+> >
+> >       /* Mark the page dirty only if the fault is handled successfully */
+> > -     if (writable && !ret) {
+> > -             kvm_set_pfn_dirty(pfn);
+> > +     if (writable && !ret)
+> >               mark_page_dirty_in_slot(kvm, memslot, gfn);
+> > -     }
+> >
+> > -     kvm_release_pfn_clean(pfn);
+> >       return ret != -EAGAIN ? ret : 0;
+> >  }
+> >
+> > --
+> > 2.46.0.rc1.232.g9752f9e123-goog
+> >
 >
 > --
->
-> WangYuli
->
+> Thanks,
+> Oliver
 >
