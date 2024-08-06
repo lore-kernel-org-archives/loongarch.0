@@ -1,169 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FD615FA72;
-	Tue,  6 Aug 2024 07:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BCD3C092
+	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 07:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722928088; cv=none; b=O25SBxDjOlvpcFJlHfhOet540n9/TBqKfdKiTTo8MjSU6UZjrTpaCDbsZcMhRv5HrUNHHAoYT76N2/Q9xZOM4fibYY0VOUB1ChAeuiYWKGAST+jO+wayzMA7BuWLZDYqFPN/8ykb76ZIqPGf3+BE4z+75GOlX4dll78yIJMWoCo=
+	t=1722930353; cv=none; b=Bn2YqzUAqiPdenM/IHInzGJ6Pwrp8dRYziXBfV6nls/ZNz+FpAjFLpEaYQJQ0DTp0ggB9gHyhXDnW2fWoYO32qHqOSHedXu30EeDeNmOS0j+gKCCElzMyNEo2HZG2qOHo/TXyHvfw9jPM0VB4H5um2nLT7Mjp1nJB3It6CS10FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722928088; c=relaxed/simple;
-	bh=iEwktt8Rx8h2dYXaJk7IyXpqPBEjz8cLyrQLNmVwRdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ed01Tl2XIgXG2zQB1uYzwdtB7U9Vfq1suSIzDWUONbBRveEStkQeOJ116cDvhqtMGvexSD6WPCvCYOOLtpRw3I5/iepML8OmaP2Ix1Lq4DnXx4P67MtkI26lh0CXvumJ5IWNwKPK3Sr4pT1b6f039/iDVQrXF3gvt0GOLGO3eqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F61EC32786;
-	Tue,  6 Aug 2024 07:08:05 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add ARCH_HAS_SET_DIRECT_MAP support
-Date: Tue,  6 Aug 2024 15:07:42 +0800
-Message-ID: <20240806070742.128064-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1722930353; c=relaxed/simple;
+	bh=yGiNiFGi7Vaq87quk92S2Swz/r+ypNNm0Lc2mBcEMyQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iE2qppr8aorUEYEeysCJS+0JcoK88PwWCWMyjd+QRDsTLgb5ZqyJXlsV4TYXnAoRa6YfXyaRxEimeLU3pmGduri/qKRdSVGtmx2Ov9LDRyt3gcwJJESb6iB9D4leDaN/Jrc38DTpgrkldplAowE2yEm5tk2dXznkpHcX4NSemn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoqiKYIh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoqiKYIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC48C4AF09
+	for <loongarch@lists.linux.dev>; Tue,  6 Aug 2024 07:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722930352;
+	bh=yGiNiFGi7Vaq87quk92S2Swz/r+ypNNm0Lc2mBcEMyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZoqiKYIhd1x3S00BKm1jiixbglE+w3LLz2tvXP77Rkj8333Egus2iPcZQzW3Nxkff
+	 Sggs9TGr3PRPiJ/Q00/E2SLqTKeOdmQHI5iXtr2jHGq6TyuadZn96v3Jr0sWg1HUxz
+	 SkrOcDNd2H3PyPV15aKvPvsJxRzosJbynkkHioCGA7HNREIySmto014GL/YmMd5LY7
+	 rWWzPjuEk2BSx0+zde5bOvlWfMCBHWPU+BZwxXsfkH4tQFk1wrNhRJNi6zTTis2RlB
+	 l23xM6R5XpDMg18RaggLaASzCGQoChMTPTYo8Lh7GC1nU3iV8ddUvXra7LIMCtMG9P
+	 T+jvR9xJVUlbA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso661922a12.1
+        for <loongarch@lists.linux.dev>; Tue, 06 Aug 2024 00:45:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWJUV4VvWKOe84MF1Y5reE0EzSHpWroEZIy6AUMgDCCx9v4KedYC+RS30caZ2ZZienIDxiNi6KzfTKfCdtBseijROLt6M47DEzR
+X-Gm-Message-State: AOJu0Yw31a5+rEmPXHrQrHpqR0Hg11ouE52G40zYvnqgqoH/CdGkEOrF
+	NzzupWqAdgX+1T/wAbWxhEu8ZT9jrMQz2uaMzjKjyTeCBuerqUoCpHnhQHe+diFVBILZ66nh5G7
+	t4qiTVQSlqeGs5ZxztFAdhewi8bY=
+X-Google-Smtp-Source: AGHT+IGFW4nB0Godlt8tjYNw+BdB5pIE9dNG90d0hv4ZSDmWnDVURzXoI/38bpiLY+5Dp1IAu21Iurff6ztAAI5Px9U=
+X-Received: by 2002:aa7:c599:0:b0:5a2:a0d9:c1a2 with SMTP id
+ 4fb4d7f45d1cf-5b7f56fd9cdmr9973224a12.26.1722930351191; Tue, 06 Aug 2024
+ 00:45:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <6D5128458C9E19E4+20240725134820.55817-1-zhangdandan@uniontech.com>
+ <c40854ac-38ef-4781-6c6b-4f74e24f265c@loongson.cn> <CAAhV-H5R_kamf=YJ62hb+iFr7Y+cvCaBBrY1rdk_wEEq4+6D_w@mail.gmail.com>
+ <a9245b66-be6e-7211-49dd-a9a2d23ec2cf@loongson.cn> <CAAhV-H7Op_W0B7d4uQQVU_BEkpyQmwf9TCxQA9bYx3=JrQZ8pg@mail.gmail.com>
+ <9bad6e47-dac5-82d2-1828-57df3ec840f8@loongson.cn> <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
+In-Reply-To: <DB945E243D91EB2F+df447e7b-ddd6-459d-9951-d92fcfceb92c@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 6 Aug 2024 15:45:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H61-x2s-22q5+WqrQ_RnmwWgY2E8cqSozLPrdxv1MX+1g@mail.gmail.com>
+Message-ID: <CAAhV-H61-x2s-22q5+WqrQ_RnmwWgY2E8cqSozLPrdxv1MX+1g@mail.gmail.com>
+Subject: Re: [PATCH] KVM: Loongarch: Remove undefined a6 argument comment for kvm_hypercall
+To: WangYuli <wangyuli@uniontech.com>
+Cc: maobibo <maobibo@loongson.cn>, Dandan Zhang <zhangdandan@uniontech.com>, 
+	zhaotianrui@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Wentao Guan <guanwentao@uniontech.com>, baimingcong@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add set_direct_map_*() functions for setting the direct map alias for
-the page to its default permissions and to an invalid state that cannot
-be cached in a TLB. (See d253ca0c3 ("x86/mm/cpa: Add set_direct_map_*()
-functions")) Add a similar implementation for LoongArch.
+On Mon, Jul 29, 2024 at 11:03=E2=80=AFAM WangYuli <wangyuli@uniontech.com> =
+wrote:
+>
+> Hi Bibo and Huacai,
+>
+>
+> Ah... tell me you two aren't arguing, right?
+>
+>
+> Both of you are working towards the same goal=E2=80=94making the upstream
+>
+> code for the Loongarch architecture as clean and elegant as possible.
+>
+> If it's just a disagreement about how to handle this small patch,
+>
+> there's no need to make things complicated.
+>
+>
+> As a partner of yours and a community developer passionate about
+>
+> Loongson CPU, I'd much rather see you two working together
+>
+> harmoniously than complaining about each other's work. I have full
+>
+> confidence in Bibo's judgment on the direction of KVM for Loongarch,
+>
+> and I also believe that Huacai, as the Loongarch maintainer, has always
+>
+> been fulfilling his responsibilities.
+>
+>
+> You are both excellent Linux developers. That's all.
+Bibo has made lots of contributions on LoongArch/KVM, and he is more
+professional than me. I hope we can collaborate well in the future.
+For this patch itself, I've applied to loongarch-fixes, thanks.
 
-This fixes the KFENCE warnings during hibernation:
+Huacai
 
- ==================================================================
- BUG: KFENCE: invalid read in swsusp_save+0x368/0x4d8
-
- Invalid read at 0x00000000f7b89a3c:
-  swsusp_save+0x368/0x4d8
-  hibernation_snapshot+0x3f0/0x4e0
-  hibernate+0x20c/0x440
-  state_store+0x128/0x140
-  kernfs_fop_write_iter+0x160/0x260
-  vfs_write+0x2c0/0x520
-  ksys_write+0x74/0x160
-  do_syscall+0xb0/0x160
-
- CPU: 0 UID: 0 PID: 812 Comm: bash Tainted: G    B              6.11.0-rc1+ #1566
- Tainted: [B]=BAD_PAGE
- Hardware name: Loongson-LS3A5000-7A1000-1w-CRB, BIOS vUDK2018-LoongArch-V2.0.0 10/21/2022
- ==================================================================
-
-Note: We can only set permissions for KVRANGE/XKVRANGE kernel addresses.
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig                  |  1 +
- arch/loongarch/include/asm/set_memory.h |  4 ++
- arch/loongarch/mm/pageattr.c            | 60 +++++++++++++++++++++++++
- 3 files changed, 65 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 49efa0470e16..727dc80d0477 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -26,6 +26,7 @@ config LOONGARCH
- 	select ARCH_HAS_PTE_DEVMAP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SET_MEMORY
-+	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
- 	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-diff --git a/arch/loongarch/include/asm/set_memory.h b/arch/loongarch/include/asm/set_memory.h
-index 64c7f942e8ec..d70505b6676c 100644
---- a/arch/loongarch/include/asm/set_memory.h
-+++ b/arch/loongarch/include/asm/set_memory.h
-@@ -14,4 +14,8 @@ int set_memory_nx(unsigned long addr, int numpages);
- int set_memory_ro(unsigned long addr, int numpages);
- int set_memory_rw(unsigned long addr, int numpages);
- 
-+bool kernel_page_present(struct page *page);
-+int set_direct_map_default_noflush(struct page *page);
-+int set_direct_map_invalid_noflush(struct page *page);
-+
- #endif /* _ASM_LOONGARCH_SET_MEMORY_H */
-diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
-index d11c8f4b8248..5ca25481b275 100644
---- a/arch/loongarch/mm/pageattr.c
-+++ b/arch/loongarch/mm/pageattr.c
-@@ -157,3 +157,63 @@ int set_memory_rw(unsigned long addr, int numpages)
- 
- 	return __set_memory(addr, numpages, __pgprot(_PAGE_WRITE | _PAGE_DIRTY), __pgprot(0));
- }
-+
-+bool kernel_page_present(struct page *page)
-+{
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+	pte_t *pte;
-+	unsigned long addr = (unsigned long)page_address(page);
-+
-+	if (addr < vm_map_base)
-+		return true;
-+
-+	pgd = pgd_offset_k(addr);
-+	if (pgd_none(pgdp_get(pgd)))
-+		return false;
-+	if (pgd_leaf(pgdp_get(pgd)))
-+		return true;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	if (p4d_none(p4dp_get(p4d)))
-+		return false;
-+	if (p4d_leaf(p4dp_get(p4d)))
-+		return true;
-+
-+	pud = pud_offset(p4d, addr);
-+	if (pud_none(pudp_get(pud)))
-+		return false;
-+	if (pud_leaf(pudp_get(pud)))
-+		return true;
-+
-+	pmd = pmd_offset(pud, addr);
-+	if (pmd_none(pmdp_get(pmd)))
-+		return false;
-+	if (pmd_leaf(pmdp_get(pmd)))
-+		return true;
-+
-+	pte = pte_offset_kernel(pmd, addr);
-+	return pte_present(ptep_get(pte));
-+}
-+
-+int set_direct_map_default_noflush(struct page *page)
-+{
-+	unsigned long addr = (unsigned long)page_address(page);
-+
-+	if (addr < vm_map_base)
-+		return 0;
-+
-+	return __set_memory(addr, 1, PAGE_KERNEL, __pgprot(0));
-+}
-+
-+int set_direct_map_invalid_noflush(struct page *page)
-+{
-+	unsigned long addr = (unsigned long)page_address(page);
-+
-+	if (addr < vm_map_base)
-+		return 0;
-+
-+	return __set_memory(addr, 1, __pgprot(0), __pgprot(_PAGE_PRESENT | _PAGE_VALID));
-+}
--- 
-2.43.5
-
+>
+>
+> To be specific about the controversy caused by this particular commit,
+>
+> I think the root cause is that the KVM documentation for Loongarch
+>
+> hasn't been upstreamed. In my opinion, the documentation seems
+>
+> ready to be upstreamed. If you're all busy with more important work,
+>
+> I can take the time to submit them and provide a Chinese translation.
+>
+>
+> If this is feasible, it would be better to merge this commit after that.
+>
+>
+> Best wishes,
+>
+>
+> --
+>
+> WangYuli
+>
+>
