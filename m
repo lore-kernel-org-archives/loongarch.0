@@ -1,25 +1,25 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765421C8FD1
-	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 08:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166621B86E4
+	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 08:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723019030; cv=none; b=eA7ASanQfgyGWoqjmhUcj1O0C5aKR/pfRFd95z+wHjQSwgJ/sQ+dPYAvCY24pX1AmyAgvqj2sH8CmZV+dW+lgQoWrPhpBQEC6jUljZSgaRfkqcQ3b7+S+pG1M+bA5puyO4JD1M3EyXWjNwEYzumzqXbroCsLjHdcBhUf31Z8nF0=
+	t=1723019058; cv=none; b=J7bifGF0e2wvmHmqcNvInKDxBSeLzDImX7zKgejh1vqXp1bSMkjB/DHH9LEN/8EJMZdKB3Kzhrc+iIpaA7pxodXowAm0Ul9oGm4RaVkM9C8CeBL9/4XUSPRn+q67QRyuznJNOCO/c9eU7MidOn+9pKq3OlMZ+eOyhgiyVozU774=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723019030; c=relaxed/simple;
-	bh=ZQYMwzixvYDiYSkoVYrM7PzXcdK9+z4VeEcg+7dgiw8=;
+	s=arc-20240116; t=1723019058; c=relaxed/simple;
+	bh=X/JptzBp44C9v+duQp9x/39KcrWm0ygGr5LVQ4+tAbo=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YrDKcXIC3kPt48ORM/3ShMLjSYBicO8Wn1nmo0bXyGQCGI8F1YN4p1u3yCsMgAmn24YQ4QRwlNm0zKh6/ORPMkw/stwkNODKpRvkdyRdr5o+iXUqALSeCNudZ0JF3xWdy3vixKrCBBMgQn1b88gWjJ0A2gOUGN20NThxr3bHDho=
+	 In-Reply-To:Content-Type; b=PNUNG14xqSweqhN4QAu8cfNT/H87kgIRcYqa/twagfobRg2uP9gQ+xKy9Rpg35kfshR52JLshyts1EK129a44MsF0oRRUtQIRxikK/I28ApipOWSqLFgHShqgIW/Jp0VHEbiSjlIUx9q9asiBUa0r2SiPkJCwv5TuQJbjYdjtx4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.4.132])
-	by gateway (Coremail) with SMTP id _____8BxrOoSL7Nm1iYKAA--.32165S3;
-	Wed, 07 Aug 2024 16:23:46 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxqOkuL7Nm_SYKAA--.30282S3;
+	Wed, 07 Aug 2024 16:24:14 +0800 (CST)
 Received: from [10.20.4.132] (unknown [10.20.4.132])
-	by front1 (Coremail) with SMTP id qMiowMAx3eMSL7NmNbUHAA--.11002S2;
-	Wed, 07 Aug 2024 16:23:46 +0800 (CST)
-Message-ID: <f31609c4-1e47-49bc-9231-5b0353d35dc9@loongson.cn>
-Date: Wed, 7 Aug 2024 16:23:46 +0800
+	by front1 (Coremail) with SMTP id qMiowMBxsuEuL7NmVLUHAA--.10864S2;
+	Wed, 07 Aug 2024 16:24:14 +0800 (CST)
+Message-ID: <77b249fd-3cf7-4cb4-a2b4-64c0c2ba96fa@loongson.cn>
+Date: Wed, 7 Aug 2024 16:24:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -28,7 +28,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: =?UTF-8?B?6YOR6LGq5aiB?= <zhenghaowei@loongson.cn>
-Subject: Re: [PATCH v2 1/3] dt-bindings: serial: Add Loongson UART controller
+Subject: Re: [PATCH v2 2/3] tty: serial: 8250: Add loongson uart driver
+ support
 To: Krzysztof Kozlowski <krzk@kernel.org>, gregkh@linuxfoundation.org,
  jirislaby@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
@@ -36,137 +37,307 @@ To: Krzysztof Kozlowski <krzk@kernel.org>, gregkh@linuxfoundation.org,
 Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, loongarch@lists.linux.dev
 References: <20240804063834.70022-1-zhenghaowei@loongson.cn>
- <4d1f2426-b43c-4727-8387-f18edf937163@kernel.org>
+ <20240804063834.70022-2-zhenghaowei@loongson.cn>
+ <84ff11bd-1d11-4d66-a56b-84bf915af346@kernel.org>
 Content-Language: en-US
-In-Reply-To: <4d1f2426-b43c-4727-8387-f18edf937163@kernel.org>
+In-Reply-To: <84ff11bd-1d11-4d66-a56b-84bf915af346@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx3eMSL7NmNbUHAA--.11002S2
-X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAQECBGayEXMQKQAAsJ
-X-Coremail-Antispam: 1Uk129KBj93XoWxGF1UAw1xGryrArW7WFW8Zrc_yoW5ZF4kpa
-	15CanFyr4qqr1xuws7ta4fAFn3Z393JFnrur4Dt34UKa909w1Sqr1ak3WY9397WryUZrW2
-	q3Wjk3y7ua15ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowMBxsuEuL7NmVLUHAA--.10864S2
+X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAQECBGayEXMQKgABsL
+X-Coremail-Antispam: 1Uk129KBj93XoW3GFyxJF18Gw43Aw1fXw4fJFc_yoWfJr45pF
+	yDtF4qkrWjqFyxGw1kXr1UZFWavr1Ikr12kry7Ka4akr90y3sYgryrKFyq9r9YyrWkCryj
+	vF1UCrWI9F15XFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUq
-	UUUUU
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jo
+	sjUUUUUU=
 
 
-在 2024/8/4 16:43, Krzysztof Kozlowski 写道:
+在 2024/8/4 23:33, Krzysztof Kozlowski 写道:
 > On 04/08/2024 08:38,zhenghaowei@loongson.cn wrote:
->
-> Due to lack of changelog, I assume you send the same patch, so:
->
-> <form letter>
-> This is a friendly reminder during the review process.
->
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
->
-> Thank you.
-> </form letter>
->
-> Also:
->
+>> From: Haowei Zheng<zhenghaowei@loongson.cn>
+>>
+>> Due to certain hardware design challenges, we have opted to
+>> utilize a dedicated UART driver to probe the UART interface.
+>>
+>> Presently, we have defined four parameters — 'fractional-division',
+>> 'invert-rts', 'invert-dtr', 'invert-cts', and 'invert-dsr' — which
+>> will be employed as needed.
+>>
+>> Signed-off-by: Haowei Zheng<zhenghaowei@loongson.cn>
+>> ---
+>>   drivers/tty/serial/8250/8250_loongson.c | 208 ++++++++++++++++++++++++
+>>   drivers/tty/serial/8250/8250_port.c     |   8 +
+>>   drivers/tty/serial/8250/Kconfig         |   9 +
+>>   drivers/tty/serial/8250/Makefile        |   1 +
+>>   include/uapi/linux/serial_core.h        |   1 +
+>>   5 files changed, 227 insertions(+)
+>>   create mode 100644 drivers/tty/serial/8250/8250_loongson.c
+>>
+>> diff --git a/drivers/tty/serial/8250/8250_loongson.c b/drivers/tty/serial/8250/8250_loongson.c
+>> new file mode 100644
+>> index 000000000000..eb16677f1dde
+>> --- /dev/null
+>> +++ b/drivers/tty/serial/8250/8250_loongson.c
+>> @@ -0,0 +1,208 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * Copyright (C) 2020-2024 Loongson Technology Corporation Limited
+>> + */
 >> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  fractional-division:
-> Where are this and following defined? In which schema?
->
-These and the ones below are new definitions, can I use them like this?
+>> +#include <linux/acpi.h>
+> How is this used?
 
-+  fractional-division:
-+    description: Enables fractional-N division. Currently,
-+      only LS2K1500 and LS2K2000 support this feature.
-+    type: boolean
+I forgot to drop it, Before this, when the kernel was booted in ACPI 
+mode, we used acpi_match_table
 
->> +    description: Enables fractional-N division. Currently,
->> +      only LS2K1500 and LS2K2000 support this feature.
+for driver registration. To maintain code simplicity, now we use 
+"PRP0001" for driver registration, so we
+
+don't need 'acpi.h' anymore.
+
+>> +#include <linux/clk.h>
+> And this?
+Currently, it doesn't seem to serve much purpose, and I will remove it 
+in the next version.
+>> +#include <linux/console.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/reset.h>
 >> +
->> +  rts-invert:
->> +    description: Inverts the RTS value in the MCR register.
->> +      This should be used on Loongson-3 series CPUs, Loongson-2K
->> +      series CPUs, and Loongson LS7A bridge chips.
+>> +#include "8250.h"
 >> +
->> +  dtr-invert:
->> +    description: Inverts the DTR value in the MCR register.
->> +      This should be used on Loongson-3 series CPUs, Loongson-2K
->> +      series CPUs, and Loongson LS7A bridge chips.
+>> +struct loongson_uart_data {
+>> +	struct reset_control *rst;
+>> +	int line;
+>> +	int mcr_invert;
+>> +	int msr_invert;
+>> +};
+> ...
+>
+>> +static int loongson_uart_probe(struct platform_device *pdev)
+>> +{
+>> +	struct uart_8250_port uart = {};
+>> +	struct loongson_uart_data *data;
+>> +	struct uart_port *port;
+>> +	struct resource *res;
+>> +	int ret;
 >> +
->> +  cts-invert:
->> +    description: Inverts the CTS value in the MSR register.
->> +      This should be used on Loongson-2K0500, Loongson-2K1000,
->> +      and Loongson LS7A bridge chips.
+>> +	port = &uart.port;
+>> +	spin_lock_init(&port->lock);
 >> +
->> +  dsr-invert:
->> +    description: Inverts the DSR value in the MSR register.
->> +      This should be used on Loongson-2K0500, Loongson-2K1000,
->> +      and Loongson LS7A bridge chips.
+>> +	port->flags		= UPF_SHARE_IRQ | UPF_FIXED_PORT | UPF_FIXED_TYPE;
+>> +	port->iotype		= UPIO_MEM;
+>> +	port->regshift		= 0;
+>> +	port->dev		= &pdev->dev;
+>> +	port->type		= (unsigned long)device_get_match_data(&pdev->dev);
+>> +	port->serial_in		= loongson_serial_in;
+>> +	port->serial_out	= loongson_serial_out;
 >> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res)
+>> +		return -ENODEV;
 >> +
->> +allOf:
->> +  - $ref: serial.yaml
+>> +	port->membase = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+>> +	if (!port->membase)
+>> +		return -ENOMEM;
 >> +
->> +unevaluatedProperties: false
+> Use wrapper combining both calls.
+
+I got it, did you mean like this?
+
++    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++    if (!res)
++        return -ENODEV;
++
++    port->mapbase = res->start;
++    port->mapsize = resource_size(res);
++
++    port->membase = devm_ioremap(&pdev->dev, port->mapbase, port->mapsize);
++    if (!port->membase)
+  +       return -ENOMEM;
+
+>> +	port->mapbase = res->start;
+>> +	port->mapsize = resource_size(res);
 >> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+>> +	port->irq = platform_get_irq(pdev, 0);
+>> +	if (port->irq < 0)
+>> +		return -EINVAL;
 >> +
->> +    serial@1fe001e0 {
->> +        compatible = "loongson,ls7a-uart";
->> +        reg = <0x0 0x1fe001e0 0x0 0x10>;
->> +        clock-frequency = <100000000>;
->> +        interrupt-parent = <&liointc>;
->> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
->> +        fractional-division;
->> +        rts-invert;
->> +        dtr-invert;
->> +    };
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 8766f3e5e87e..a6306327dba5 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -13189,6 +13189,13 @@ S:	Maintained
->>   F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
->>   F:	drivers/i2c/busses/i2c-ls2x.c
+>> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	port->private_data = data;
+>> +
+>> +	if (device_property_read_bool(&pdev->dev, "fractional-division")) {
+>> +		port->get_divisor = loongson_frac_get_divisor;
+>> +		port->set_divisor = loongson_frac_set_divisor;
+>> +	}
+>> +
+>> +	if (device_property_read_bool(&pdev->dev, "rts-invert"))
+>> +		data->mcr_invert |= UART_MCR_RTS;
+>> +
+>> +	if (device_property_read_bool(&pdev->dev, "dtr-invert"))
+>> +		data->mcr_invert |= UART_MCR_DTR;
+>> +
+>> +	if (device_property_read_bool(&pdev->dev, "cts-invert"))
+>> +		data->msr_invert |= UART_MSR_CTS;
+>> +
+>> +	if (device_property_read_bool(&pdev->dev, "dsr-invert"))
+>> +		data->msr_invert |= UART_MSR_DSR;
+>> +
+>> +	data->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+>> +	if (IS_ERR(data->rst))
+>> +		return PTR_ERR(data->rst);
+>> +
+>> +	device_property_read_u32(&pdev->dev, "clock-frequency", &port->uartclk);
+>> +
+>> +	ret = reset_control_deassert(data->rst);
+>> +	if (ret)
+>> +		goto err_unprepare;
+>> +
+>> +	ret = serial8250_register_8250_port(&uart);
+>> +	if (ret < 0)
+>> +		goto err_unprepare;
+>> +
+>> +	platform_set_drvdata(pdev, data);
+>> +	data->line = ret;
+>> +
+>> +	return 0;
+>> +
+>> +err_unprepare:
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void loongson_uart_remove(struct platform_device *pdev)
+>> +{
+>> +	struct loongson_uart_data *data = platform_get_drvdata(pdev);
+>> +
+>> +	serial8250_unregister_port(data->line);
+>> +	reset_control_assert(data->rst);
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int loongson_uart_suspend(struct device *dev)
+>> +{
+>> +	struct loongson_uart_data *data = dev_get_drvdata(dev);
+>> +
+>> +	serial8250_suspend_port(data->line);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int loongson_uart_resume(struct device *dev)
+>> +{
+>> +	struct loongson_uart_data *data = dev_get_drvdata(dev);
+>> +
+>> +	serial8250_resume_port(data->line);
+>> +
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> +static const struct dev_pm_ops loongson_uart_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(loongson_uart_suspend, loongson_uart_resume)
+>> +};
+>> +
+>> +static const struct of_device_id of_platform_serial_table[] = {
+>> +	{.compatible = "loongson,ls7a-uart", .data = (void *)PORT_LOONGSON},
+> Why do you need match data if there is no choice?
+
+Considering whether new port types might be added in the future.
+
+Of course, currently it doesn't seem necessary to do so.
+
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_platform_serial_table);
+>> +
+>> +static struct platform_driver loongson_uart_driver = {
+>> +	.probe = loongson_uart_probe,
+>> +	.remove = loongson_uart_remove,
+>> +	.driver = {
+>> +		.name = "ls7a-uart",
+>> +		.pm = &loongson_uart_pm_ops,
+>> +		.of_match_table = of_match_ptr(of_platform_serial_table),
+> Except that this does not build... drop of_match_ptr(), not needed and
+> causes warnings.
+>
+Ok, I got it.
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(loongson_uart_driver);
+>> +
+>> +MODULE_DESCRIPTION("LOONGSON 8250 Driver");
+>> +MODULE_AUTHOR("Haowei Zheng<zhenghaowei@loongson.cn>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+>> index 2786918aea98..60b72c785028 100644
+>> --- a/drivers/tty/serial/8250/8250_port.c
+>> +++ b/drivers/tty/serial/8250/8250_port.c
+>> @@ -319,6 +319,14 @@ static const struct serial8250_config uart_config[] = {
+>>   		.rxtrig_bytes	= {1, 8, 16, 30},
+>>   		.flags		= UART_CAP_FIFO | UART_CAP_AFE,
+>>   	},
+>> +	[PORT_LOONGSON] = {
+>> +		.name		= "Loongson",
+>> +		.fifo_size	= 16,
+>> +		.tx_loadsz	= 16,
+>> +		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
+>> +		.rxtrig_bytes   = {1, 4, 8, 14},
+>> +		.flags		= UART_CAP_FIFO,
+>> +	},
+>>   };
 >>   
->> +LOONGSON UART DRIVER
->> +M:	Haowei Zheng<zhenghaowei@loongson.cn>
->> +L:	linux-serial@vger.kernel.org
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/serial/loongson,ls7a-uart.yaml
->> +F:	drivers/tty/serial/8250/8250_loongson.c
-> There is no such file.
+>>   /* Uart divisor latch read */
+>> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+>> index 47ff50763c04..a696afc4f8a8 100644
+>> --- a/drivers/tty/serial/8250/Kconfig
+>> +++ b/drivers/tty/serial/8250/Kconfig
+>> @@ -568,6 +568,15 @@ config SERIAL_8250_BCM7271
+>>   	  including DMA support and high accuracy BAUD rates, say
+>>   	  Y to this option. If unsure, say N.
+>>   
+>> +config SERIAL_8250_LOONGSON
+>> +	tristate "Loongson 8250 serial port support"
+>> +	default SERIAL_8250
+>> +	depends on SERIAL_8250
+>> +	depends on LOONGARCH || MIPS
+> MIPS? Why?
+>
+> You also miss COMPILE_TEST.
+>
+>
 >
 > Best regards,
 > Krzysztof
 
-The file "drivers/tty/serial/8250/8250_loongson.c" will be created in 
-the patch
+The addition of mips was intended to maintain compatibility with 
+loongson-3a4000 and earlier chips.
 
-"tty: serial: 8250: Add loongson uart driver support". Is it 
-inappropriate to reference it here?
+Currently, it appears that this lacks sufficient validation, and I will 
+remove it in the next version.
+
+
+I compiled and verified it on the Loongson 3A6000 machine, and currently 
+it seems to have issues.
+
+I will fix the compilation problem in the next version.
 
 
 Best regards,
