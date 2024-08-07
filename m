@@ -1,96 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2631D3630
-	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 10:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA641B8EAD
+	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 11:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723025188; cv=none; b=n0r2fLKS7mEz/SNur+S0a6BgbgYTXPFU4xmRdElIJHkWfkwzz33VAWrzD6GA84105aodu+xna/37IoliF0x45BuWJNFSEII/EGfxHcuvqrJUmrO0M9wBCr526S7sWAeHV1vXXVXWeSPFYFFevOzFe6geYUVWzddd0PE/oib2aas=
+	t=1723029907; cv=none; b=IC85+xWTxtCLBVFlgLu9d/ZPW/lMV3FyCelOo6pFHK8iarkjOyjPeI4KxGJUJ6XU9Hapm7rcjcIJcBHt9R6d0XdAQubLkui0JTXxpif/sQ33MsSh6+C9Mf4DAntOvoP6IdwN3VakXwc8o4lXLtLeUXr48pcHwOJcxJLoOZ/TtOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723025188; c=relaxed/simple;
-	bh=kJ5T6A32kDeNCl0GvaRC+V4muNe1lMPSaqgtsY31RDg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qv/vp+6r+YIwgJjzuyr6737jBo2DNJ7KgDGa1BdSYwzvKQa4tWhmHhNYR/k5Owd92XEy9VlXX5nANWHuw5XZ3H2g0gNrP3QWUqrh9P5Z/9WJrdMNFTwcXST6HW1jZIpi6R3PXffw8+sHeibDxI6fVCnQ1+d4iwnguYnbvGHgquc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PFVF49K4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723029907; c=relaxed/simple;
+	bh=cjKe5aqjltaMy5lpigAbb0QJGUmcGvoVQob3xsuhGDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tGWMSr9fLB/J0w+8fiMCmcgrR44vNalYsLAW7/VxTEqrzOVN/B/Sktg6W6TQPaUnfkQgPD7IDVhgbjLfg4Chwvllw1I/13zPDoqBEZp1J8m9ErIj3t/+cYlcd1+BWI0mM1lQN0wbD5aYNUTgsuBOTSGZIOKIixKlhD/DM/nmElU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AozdfuwD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFVF49K4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0E5C4AF09
-	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 10:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723025187;
-	bh=kJ5T6A32kDeNCl0GvaRC+V4muNe1lMPSaqgtsY31RDg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PFVF49K4vZDP6W7mhcjSUh/4S2l67jdsek7aPDIiwxdSwxiQ84z5WOJcddomPDXKC
-	 xgMqAfUlenBc8LTbNavmPiLYYoumnhWuEseOIMZplD3DXL0lNSM7CRO9tl137iCUYM
-	 IKZpdYf+MmkPlTMDEfrfKo+YmbVj1ezLnyTOu8yMKkRy1oZBI7med2fzm0+Au21vjb
-	 J1LWyvaE/liODVqM8V0ulEUTsf/oFgdiuSa+v4FLKc3xirkz+f8OocATcwA+BhIpBe
-	 8gPoEuD6PO4LTti1a2WMYXjzu5Mb8A8kmluuy+Bv2aGaScPUGw6RrbEgZwnuIq0w86
-	 OeryhvGw1f32g==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5ba43b433beso1837181a12.1
-        for <loongarch@lists.linux.dev>; Wed, 07 Aug 2024 03:06:27 -0700 (PDT)
-X-Gm-Message-State: AOJu0YylJdGqRaBi4vJiQIIO4PJoJ9s2xKsT+/TAlBE823mi3MI2Imp+
-	TRPl1dKccRcrotPd64IPQw04CqtvvVD+guzjzh+JP+tmFfAt2KGMbvbCUEHbULufiuPakoFcsAV
-	MjbtJRiB2BmlabVB5f74iaYAtCeo=
-X-Google-Smtp-Source: AGHT+IFDjCYDdrt0fm2Iy8PHjml6fyYttKXQez8vg+/KWK4r/1FbA8ALNFpyI+7n/fLFRt3x728tp3DzDjIzebiy9XY=
-X-Received: by 2002:a17:906:4788:b0:a7a:a30b:7b91 with SMTP id
- a640c23a62f3a-a7dc51be557mr1313655066b.64.1723025186480; Wed, 07 Aug 2024
- 03:06:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AozdfuwD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723029904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kUmg6m+rX0ZdRF47MclkDhoxeaVkz+iC7VCa9/iV6Vw=;
+	b=AozdfuwDf3+x/z+D5lfpe/CeLWfH6PPBVvZIiIGvnd709b0A3rDel5RDbnX6UX/+8mBB8P
+	1zFnCIukhqyx5cppoAhVQOoOsRZSbg/nnBXr8Z1ZvhAoUNPrTBfvbsI1VwxMZVCcDwywOj
+	gAs6l+kXdvv5fsYuZK9dM6Pn6qQnc80=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-AX-M5JB3OpGctKFJq0FI9A-1; Wed, 07 Aug 2024 07:25:02 -0400
+X-MC-Unique: AX-M5JB3OpGctKFJq0FI9A-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3687f5a2480so831856f8f.3
+        for <loongarch@lists.linux.dev>; Wed, 07 Aug 2024 04:25:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723029901; x=1723634701;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kUmg6m+rX0ZdRF47MclkDhoxeaVkz+iC7VCa9/iV6Vw=;
+        b=idcIzb1o+8L3tJ6uHmj6l/T8O1btrLM4byUdHU8xaaQrzkbQP6cZo2Dqeo1kka1AxH
+         NzidweDar5qDkHaCzVA/vUGxLcI7aG+toWLLluGI47Knkn+G+IsRFgc6pgjOaFrA9/6D
+         S+Ke1flvwbszSrnhiuN8Y0sNbCAF+y2KcNo20x2PZ+DwLaXBXSQfmVX4RpL/0SOygSj3
+         /Cg1OFqcRdON1u6VLgsjxaLpQzsTeHCu8BHMCuEjGDtU1aEyw6kVNOvgAaKr91PZCt/H
+         8OM+bxdWm3WyYmrpQKkH9IMxx81RN0wBy1WOjLDvsf1BSFpHz0KGMGGk1LMrSrue7GDJ
+         niag==
+X-Forwarded-Encrypted: i=1; AJvYcCUKbs6Z6vtwrPDxMUYJYOzhZdRhbmocos8Rdl+b4vcbRA0WMMSc1WJQI8SLQ5ORfRjUTyT7svZQvP8impTyoOqXdlIgKNkIIVnV
+X-Gm-Message-State: AOJu0YyTLsVWSGyLlougH1eTMaRBvQwjyevWILw5ONEb42iOXgtdwllw
+	uioi7lwSnXXLXVFMpZEqi4r+bgUHL8tMbcTeYwqmi/iVgrKL+TMiFKSave9iiQ8YYPoOCT5R/oK
+	1fYwFKHscO8GVDn2GG8UNBCda98jUPKN/oklFkUjR0vlwmLpquTII/vAs0w==
+X-Received: by 2002:a05:6000:2a6:b0:368:31c7:19d9 with SMTP id ffacd0b85a97d-36bbc0c54eamr16661078f8f.12.1723029901511;
+        Wed, 07 Aug 2024 04:25:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSeCKCmaFkgVQy7NTVGMO35DBiIizaJ1GZqRtDIurBEJSTZSCwcCs/VepdNDXoauGMk9Tgsg==
+X-Received: by 2002:a05:6000:2a6:b0:368:31c7:19d9 with SMTP id ffacd0b85a97d-36bbc0c54eamr16661039f8f.12.1723029900802;
+        Wed, 07 Aug 2024 04:25:00 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c708:1a00:df86:93fe:6505:d096? (p200300cbc7081a00df8693fe6505d096.dip0.t-ipconnect.de. [2003:cb:c708:1a00:df86:93fe:6505:d096])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36bbd059e44sm15739210f8f.70.2024.08.07.04.24.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Aug 2024 04:25:00 -0700 (PDT)
+Message-ID: <8da4b0dc-6522-40ff-ba61-ea41fb3437b0@redhat.com>
+Date: Wed, 7 Aug 2024 13:24:57 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <66b309e9.050a0220.a8344.6d9eSMTPIN_ADDED_BROKEN@mx.google.com>
-In-Reply-To: <66b309e9.050a0220.a8344.6d9eSMTPIN_ADDED_BROKEN@mx.google.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 Aug 2024 18:06:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5g1azDU+Oscr0CT3CxgN8f_VOsihMCERLvgjLci+CTgQ@mail.gmail.com>
-Message-ID: <CAAhV-H5g1azDU+Oscr0CT3CxgN8f_VOsihMCERLvgjLci+CTgQ@mail.gmail.com>
-Subject: Re: [PATCH] loongarch/efi: enable general efi poweroff
-To: shankerwangmiao@gmail.com
-Cc: loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm: update the memmap stat before page is freed
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, agordeev@linux.ibm.com,
+ akpm@linux-foundation.org, alexghiti@rivosinc.com, aou@eecs.berkeley.edu,
+ ardb@kernel.org, arnd@arndb.de, bhe@redhat.com, bjorn@rivosinc.com,
+ borntraeger@linux.ibm.com, bp@alien8.de, catalin.marinas@arm.com,
+ chenhuacai@kernel.org, chenjiahao16@huawei.com, christophe.leroy@csgroup.eu,
+ dave.hansen@linux.intel.com, dawei.li@shingroup.cn,
+ gerald.schaefer@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
+ hpa@zytor.com, kent.overstreet@linux.dev, kernel@xen0n.name,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ loongarch@lists.linux.dev, luto@kernel.org, maobibo@loongson.cn,
+ mark.rutland@arm.com, mcgrof@kernel.org, mingo@redhat.com,
+ mpe@ellerman.id.au, muchun.song@linux.dev, namcao@linutronix.de,
+ naveen@kernel.org, npiggin@gmail.com, osalvador@suse.de, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, peterz@infradead.org, philmd@linaro.org,
+ rdunlap@infradead.org, rientjes@google.com, rppt@kernel.org,
+ ryan.roberts@arm.com, souravpanda@google.com, svens@linux.ibm.com,
+ tglx@linutronix.de, tzimmermann@suse.de, will@kernel.org, x86@kernel.org
+References: <20240806221454.1971755-1-pasha.tatashin@soleen.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240806221454.1971755-1-pasha.tatashin@soleen.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Applied with small modifications, thanks.
-
-Huacai
-
-On Wed, Aug 7, 2024 at 1:45=E2=80=AFPM Miao Wang via B4 Relay
-<devnull+shankerwangmiao.gmail.com@kernel.org> wrote:
->
-> From: Miao Wang <shankerwangmiao@gmail.com>
->
-> efi_shutdown_init can register a general sys_off handler,
-> efi_power_off. Enable this by providing efi_poweroff_required,
-> like arm and x86, since this is also supported on loongarch.
->
-> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
+On 07.08.24 00:14, Pasha Tatashin wrote:
+> It is more logical to update the stat before the page is freed, to avoid
+> use after free scenarios.
+> 
+> Fixes: 15995a352474 ("mm: report per-page metadata information")
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->  arch/loongarch/kernel/efi.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> index 000825406c1f..df57c2674758 100644
-> --- a/arch/loongarch/kernel/efi.c
-> +++ b/arch/loongarch/kernel/efi.c
-> @@ -73,6 +73,11 @@ struct screen_info screen_info __section(".data");
->  EXPORT_SYMBOL_GPL(screen_info);
->  #endif
->
-> +bool efi_poweroff_required(void)
-> +{
-> +       return efi_enabled(EFI_RUNTIME_SERVICES);
-> +}
-> +
->  static void __init init_screen_info(void)
->  {
->         struct screen_info *si;
-> --
-> 2.43.0
->
->
->
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
