@@ -1,25 +1,25 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F4982863
-	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 08:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765421C8FD1
+	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 08:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723019020; cv=none; b=dRf5XQDLc5Lbins07WJqtb8vNLWIlG4pcjG/TdoEA/qIclx13dRzEph4Ldk12Erkb4OS8O7Tp/HC8UJzA9JYoTGBWzGA2yjWAm1w9UhzhW3k5gKxl9uw5w5AuDBRepYNQOqXmiQJJ5MY11Oo5uovC6Bu115dv7byMOwzj8CMW/c=
+	t=1723019030; cv=none; b=eA7ASanQfgyGWoqjmhUcj1O0C5aKR/pfRFd95z+wHjQSwgJ/sQ+dPYAvCY24pX1AmyAgvqj2sH8CmZV+dW+lgQoWrPhpBQEC6jUljZSgaRfkqcQ3b7+S+pG1M+bA5puyO4JD1M3EyXWjNwEYzumzqXbroCsLjHdcBhUf31Z8nF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723019020; c=relaxed/simple;
-	bh=cfIpmgiI5x0yn2PAOj2m02+n6eZ7sC+4EZ8CMsWZ2c8=;
+	s=arc-20240116; t=1723019030; c=relaxed/simple;
+	bh=ZQYMwzixvYDiYSkoVYrM7PzXcdK9+z4VeEcg+7dgiw8=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bjznmF9BN7unkDctRraj93vtJI88Iss+1OulFgt+AweLmAwyMttI0/PKPzWP9mGAtxfIskMhZ49C39bxh4SD/MvmksUv0WYl247jq+hX2B9VQrV7qTIbiePE0Z40+BR3M2KIH4kKbpi6mguM0kfEsM8WuUnNl4/fHSQAJugIUcc=
+	 In-Reply-To:Content-Type; b=YrDKcXIC3kPt48ORM/3ShMLjSYBicO8Wn1nmo0bXyGQCGI8F1YN4p1u3yCsMgAmn24YQ4QRwlNm0zKh6/ORPMkw/stwkNODKpRvkdyRdr5o+iXUqALSeCNudZ0JF3xWdy3vixKrCBBMgQn1b88gWjJ0A2gOUGN20NThxr3bHDho=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.4.132])
-	by gateway (Coremail) with SMTP id _____8BxqOkIL7NmwSYKAA--.30277S3;
-	Wed, 07 Aug 2024 16:23:36 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxrOoSL7Nm1iYKAA--.32165S3;
+	Wed, 07 Aug 2024 16:23:46 +0800 (CST)
 Received: from [10.20.4.132] (unknown [10.20.4.132])
-	by front1 (Coremail) with SMTP id qMiowMDx_2cIL7NmJrUHAA--.10741S2;
-	Wed, 07 Aug 2024 16:23:36 +0800 (CST)
-Message-ID: <fe8c919a-766b-4eb7-853c-19a14341018e@loongson.cn>
-Date: Wed, 7 Aug 2024 16:23:36 +0800
+	by front1 (Coremail) with SMTP id qMiowMAx3eMSL7NmNbUHAA--.11002S2;
+	Wed, 07 Aug 2024 16:23:46 +0800 (CST)
+Message-ID: <f31609c4-1e47-49bc-9231-5b0353d35dc9@loongson.cn>
+Date: Wed, 7 Aug 2024 16:23:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,54 +36,137 @@ To: Krzysztof Kozlowski <krzk@kernel.org>, gregkh@linuxfoundation.org,
 Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, loongarch@lists.linux.dev
 References: <20240804063834.70022-1-zhenghaowei@loongson.cn>
- <8aeb4071-3609-4f89-abc7-5b8328dc4290@kernel.org>
+ <4d1f2426-b43c-4727-8387-f18edf937163@kernel.org>
 Content-Language: en-US
-In-Reply-To: <8aeb4071-3609-4f89-abc7-5b8328dc4290@kernel.org>
+In-Reply-To: <4d1f2426-b43c-4727-8387-f18edf937163@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_2cIL7NmJrUHAA--.10741S2
-X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAgECBGayEhgQoAABsq
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw47AF1rtr1Utw43WrWDKFX_yoWxZFX_GF
-	9Fyw4vgr1ktFWrA3Z8XF4kJry3uayj934DuayYyr1Iv3s0vFy5Jry0yryfWF4fJFZ0kF9a
-	9rWkWFnYyr43uosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+X-CM-TRANSID:qMiowMAx3eMSL7NmNbUHAA--.11002S2
+X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAQECBGayEXMQKQAAsJ
+X-Coremail-Antispam: 1Uk129KBj93XoWxGF1UAw1xGryrArW7WFW8Zrc_yoW5ZF4kpa
+	15CanFyr4qqr1xuws7ta4fAFn3Z393JFnrur4Dt34UKa909w1Sqr1ak3WY9397WryUZrW2
+	q3Wjk3y7ua15ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
+	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUq
+	UUUUU
 
 
-在 2024/8/4 16:41, Krzysztof Kozlowski 写道:
+在 2024/8/4 16:43, Krzysztof Kozlowski 写道:
 > On 04/08/2024 08:38,zhenghaowei@loongson.cn wrote:
->> From: Haowei Zheng<zhenghaowei@loongson.cn>
->>
->> Add Loongson UART controller binding with DT schema format using
->> json-schema.
->>
-> Where is the changelog? Are you sending the same patch again?
+>
+> Due to lack of changelog, I assume you send the same patch, so:
+>
+> <form letter>
+> This is a friendly reminder during the review process.
+>
+> It seems my or other reviewer's previous comments were not fully
+> addressed. Maybe the feedback got lost between the quotes, maybe you
+> just forgot to apply it. Please go back to the previous discussion and
+> either implement all requested changes or keep discussing them.
+>
+> Thank you.
+> </form letter>
+>
+> Also:
+>
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  fractional-division:
+> Where are this and following defined? In which schema?
+>
+These and the ones below are new definitions, can I use them like this?
+
++  fractional-division:
++    description: Enables fractional-N division. Currently,
++      only LS2K1500 and LS2K2000 support this feature.
++    type: boolean
+
+>> +    description: Enables fractional-N division. Currently,
+>> +      only LS2K1500 and LS2K2000 support this feature.
+>> +
+>> +  rts-invert:
+>> +    description: Inverts the RTS value in the MCR register.
+>> +      This should be used on Loongson-3 series CPUs, Loongson-2K
+>> +      series CPUs, and Loongson LS7A bridge chips.
+>> +
+>> +  dtr-invert:
+>> +    description: Inverts the DTR value in the MCR register.
+>> +      This should be used on Loongson-3 series CPUs, Loongson-2K
+>> +      series CPUs, and Loongson LS7A bridge chips.
+>> +
+>> +  cts-invert:
+>> +    description: Inverts the CTS value in the MSR register.
+>> +      This should be used on Loongson-2K0500, Loongson-2K1000,
+>> +      and Loongson LS7A bridge chips.
+>> +
+>> +  dsr-invert:
+>> +    description: Inverts the DSR value in the MSR register.
+>> +      This should be used on Loongson-2K0500, Loongson-2K1000,
+>> +      and Loongson LS7A bridge chips.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +
+>> +allOf:
+>> +  - $ref: serial.yaml
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+>> +
+>> +    serial@1fe001e0 {
+>> +        compatible = "loongson,ls7a-uart";
+>> +        reg = <0x0 0x1fe001e0 0x0 0x10>;
+>> +        clock-frequency = <100000000>;
+>> +        interrupt-parent = <&liointc>;
+>> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+>> +        fractional-division;
+>> +        rts-invert;
+>> +        dtr-invert;
+>> +    };
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 8766f3e5e87e..a6306327dba5 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13189,6 +13189,13 @@ S:	Maintained
+>>   F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+>>   F:	drivers/i2c/busses/i2c-ls2x.c
+>>   
+>> +LOONGSON UART DRIVER
+>> +M:	Haowei Zheng<zhenghaowei@loongson.cn>
+>> +L:	linux-serial@vger.kernel.org
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/serial/loongson,ls7a-uart.yaml
+>> +F:	drivers/tty/serial/8250/8250_loongson.c
+> There is no such file.
 >
 > Best regards,
 > Krzysztof
 
-Sorry, here are the change log from V1 to V2, and I will include the update
+The file "drivers/tty/serial/8250/8250_loongson.c" will be created in 
+the patch
 
-in the next patch update.
-
-Changes in V2:
-
-- Correct the schema formatting errors.
-
-- file name changed from 'loongson-uart.yaml' to 'loongson,ls7a-uart.yaml'
-
-- Replace 'loongson,loongson-uart' with 'loongson,ls7a-uart'.
+"tty: serial: 8250: Add loongson uart driver support". Is it 
+inappropriate to reference it here?
 
 
 Best regards,
