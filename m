@@ -1,83 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2932F26AFC;
-	Wed,  7 Aug 2024 14:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF52684A27
+	for <loongarch@lists.linux.dev>; Wed,  7 Aug 2024 14:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723040139; cv=none; b=XjcUSKFSfXo2xNRVCnESDtCglSnmvBTPvoszpbeUZlAD07CZU/WSQpNJca0sy8SIwnKm9tLVC+yeFtXp+GBFVBbDMuNujSmDg5MbMpIJkXk0bg7IOpdALyUP5jsiHx3zRfut+M6Ibv6RblFVBMwLCtMlXFlgoay5/fJjTXDkAW8=
+	t=1723041657; cv=none; b=qMhuTuFYrpM+ZcHqHgxX4jHuv57B+OGgp0K8pBpcaj9CZ3T5lO35c8RVGVIWhuAovwIkXXkXgacPXkXeVNqNlnQzHMABUZHXneIZCPnJuvfuaRfRUxKDjeg6v1owuzI3MttDIPt5nHAdKiVBqGsLOJ/Q4GRUuYUSmctUPfn8AJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723040139; c=relaxed/simple;
-	bh=N3Upe6B3zDaIo7gAE4ChFYQqp1vXvS+k5/9lYXUJDpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiLcJ7HrtVu155KlOSO584KLToKqbfUiVALPcqIXVD1UdkyKNTBHfPYpwv033Gxa9v67+R58ltJp/7O9tW9zVZhCD4h+0djzbd1qzW62KPHnPwe9yzCjbWuqHANxoWXAt1zl9W2+iK3O5hiN4wN8dxqnPRVKuWVBxiJUjNESAWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C09C4AF0B;
-	Wed,  7 Aug 2024 14:15:33 +0000 (UTC)
-Date: Wed, 7 Aug 2024 15:15:31 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	David Matlack <dmatlack@google.com>,
-	David Stevens <stevensd@chromium.org>,
-	Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v12 01/84] KVM: arm64: Release pfn, i.e. put page, if
- copying MTE tags hits ZONE_DEVICE
-Message-ID: <ZrOBg70pCnv7PHyK@arm.com>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-2-seanjc@google.com>
+	s=arc-20240116; t=1723041657; c=relaxed/simple;
+	bh=0sQ9CcuwNmnt4bKftEBHMaRCYgOPu5Lyc31KuvZDi60=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hiNbThfad6vEGhigTPgjN6LaGnImuED25xBFR58UB9lVX8kaRFtZ7xzSwBxrjzHD68yfOGVKUfeKTsnniJM6h3zyK3CqbZoYHNq2+CS3vv6+44tFjX0pIsu+53qCRDWfGGsNfKKOdSJM8iXyJMiFAuLdu5P+eEILhWrlPXCk4LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=NZHikQwT; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="NZHikQwT"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3db2315d7ceso890069b6e.1
+        for <loongarch@lists.linux.dev>; Wed, 07 Aug 2024 07:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723041655; x=1723646455; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3FCSeVm0zgIRrRlVAZ6M3ezYAgjYCe4IP6mmA4qsAbw=;
+        b=NZHikQwTjuFgHC8lGf7YhYRao+IErMXZ2BTAtJq+/Hj7M4AL8s3X2VhhVJBXDqyEAn
+         o4CybENspxY3rMneTuPnnu+limdc3Gps1/+f1Lr3ZB738CtkW2BOG+GutezePG/XxXmy
+         vtaiZPStsFkYhydORB6aPuwajYWvcAOX8UnEwX6rcCRkKe4MFAuKyAdLyF/YU2BBAvSB
+         YCzudhH3M1HPBHJjDAalzD+YAgb+hITmjUweqFWeb3uNQYpq56eJYACb9c1BGan7extd
+         ghtHtgjXbkfv0cfTQqt9MOKsLvdEGPmS9lZRaswX4iO3Kqx55egbrBIo0mfYdSk+3D5+
+         N/OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723041655; x=1723646455;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3FCSeVm0zgIRrRlVAZ6M3ezYAgjYCe4IP6mmA4qsAbw=;
+        b=qQ+QkKeNUT9B+hTDek+uhFgX1uJxKqcfQGbPsI4Li4RGJ6ju9XmIZwgxldVVLFfD3c
+         BwvgyfsoaAYhaRKPw7qf7LF/+Ne8wy/hl2O8j4/vC/9nBHimoGedcDDhbskOYSDhw6ri
+         igxoxOziwLb7xQ4uw/tM2I1/jad2gOVNaiaE53hVzaGuQ/uVNsaG6atl9vQZZCdKNasw
+         1LZDAkbuiuw3gMAzKjBIkcJs2NM0CSMMuShTtgQFEENIriwIQ8gQ7oJyAeMmTeBiU7SI
+         TCcqtoXw6NZ3RZRxcBFPDryg6uEeiyNoolFnhAMLVsXhDfCrVk1izGDh27WOQu4iHhth
+         5T7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXNtqrmZt99ZtQaezRSOASEQQ8wRG6JsBJ1sYPbGlSugcKBmvrV35hX2kvI3sCKuOz7KIrBtug3bdZjHz4R8vd7DTStN4bejRyc
+X-Gm-Message-State: AOJu0YymeXu6Xm15v9SCmskKNXWh7rTq+QdKZEaNdiCXuyn8XS9ZVfAd
+	F8FD2fG80nCWpy9D7ZqtoVVZarmBUe8FDXHdq7au5JxAbbb/HC+BI0uWxRqMAB7EH9nwXhks7Xn
+	ZSk4bu0BWdi8L0QufMphC03SYwdT5UXUydzJcyA==
+X-Google-Smtp-Source: AGHT+IGOXQAzEiXp6xdPGUMTTnKI09YBOs1Vk6kj0LXvCI51MvBrgaaI5JzS3LcBWq8pGTljqab9RWCOjdJxV6Tr6zo=
+X-Received: by 2002:a05:6808:130f:b0:3db:251b:c16 with SMTP id
+ 5614622812f47-3db558397b9mr20918330b6e.42.1723041654777; Wed, 07 Aug 2024
+ 07:40:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240726235234.228822-2-seanjc@google.com>
+References: <20240806221454.1971755-1-pasha.tatashin@soleen.com>
+ <20240806221454.1971755-2-pasha.tatashin@soleen.com> <345ba221-e094-47e8-9481-562faf4acd85@redhat.com>
+ <e780e9af-e23d-44ff-ae0f-a8f4ee098a1c@redhat.com>
+In-Reply-To: <e780e9af-e23d-44ff-ae0f-a8f4ee098a1c@redhat.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Wed, 7 Aug 2024 10:40:17 -0400
+Message-ID: <CA+CK2bBuDu-3XeeAsy4zggOrxTrp84bcZp9p6mQipzc3NqpcSg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: keep nid around during hot-remove
+To: David Hildenbrand <david@redhat.com>
+Cc: agordeev@linux.ibm.com, akpm@linux-foundation.org, alexghiti@rivosinc.com, 
+	aou@eecs.berkeley.edu, ardb@kernel.org, arnd@arndb.de, bhe@redhat.com, 
+	bjorn@rivosinc.com, borntraeger@linux.ibm.com, bp@alien8.de, 
+	catalin.marinas@arm.com, chenhuacai@kernel.org, chenjiahao16@huawei.com, 
+	christophe.leroy@csgroup.eu, dave.hansen@linux.intel.com, 
+	dawei.li@shingroup.cn, gerald.schaefer@linux.ibm.com, gor@linux.ibm.com, 
+	hca@linux.ibm.com, hpa@zytor.com, kent.overstreet@linux.dev, 
+	kernel@xen0n.name, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, loongarch@lists.linux.dev, luto@kernel.org, 
+	maobibo@loongson.cn, mark.rutland@arm.com, mcgrof@kernel.org, 
+	mingo@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
+	namcao@linutronix.de, naveen@kernel.org, npiggin@gmail.com, osalvador@suse.de, 
+	palmer@dabbelt.com, paul.walmsley@sifive.com, peterz@infradead.org, 
+	philmd@linaro.org, rdunlap@infradead.org, rientjes@google.com, 
+	rppt@kernel.org, ryan.roberts@arm.com, souravpanda@google.com, 
+	svens@linux.ibm.com, tglx@linutronix.de, tzimmermann@suse.de, will@kernel.org, 
+	x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 26, 2024 at 04:51:10PM -0700, Sean Christopherson wrote:
-> Put the page reference acquired by gfn_to_pfn_prot() if
-> kvm_vm_ioctl_mte_copy_tags() runs into ZONE_DEVICE memory.  KVM's less-
-> than-stellar heuristics for dealing with pfn-mapped memory means that KVM
-> can get a page reference to ZONE_DEVICE memory.
-> 
-> Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/arm64/kvm/guest.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index 11098eb7eb44..e1f0ff08836a 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -1059,6 +1059,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
->  		page = pfn_to_online_page(pfn);
->  		if (!page) {
->  			/* Reject ZONE_DEVICE memory */
-> +			kvm_release_pfn_clean(pfn);
->  			ret = -EFAULT;
->  			goto out;
->  		}
+On Wed, Aug 7, 2024 at 7:50=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 07.08.24 13:32, David Hildenbrand wrote:
+> > On 07.08.24 00:14, Pasha Tatashin wrote:
+> >> nid is needed during memory hot-remove in order to account the
+> >> information about the memmap overhead that is being removed.
+> >>
+> >> In addition, we cannot use page_pgdat(pfn_to_page(pfn)) during
+> >> hotremove after remove_pfn_range_from_zone().
+> >>
+> >> We also cannot determine nid from walking through memblocks after
+> >> remove_memory_block_devices() is called.
+> >>
+> >> Therefore, pass nid down from the beginning of hotremove to where
+> >> it is used for the accounting purposes.
+> >
+> > I was happy to finally remove that nid parameter for good in:
+> >
+> > commit 65a2aa5f482ed0c1b5afb9e6b0b9e0b16bb8b616
+> > Author: David Hildenbrand <david@redhat.com>
+> > Date:   Tue Sep 7 19:55:04 2021 -0700
+> >
+> >       mm/memory_hotplug: remove nid parameter from arch_remove_memory()
+> >
+> > To ask the real question: Do we really need this counter per-nid at all=
+?
+> >
+> > Seems to over-complicate things.
+>
+> Case in point: I think the handling is wrong?
+>
+> Just because some memory belongs to a nid doesn't mean that the vmemmap
+> was allocated from that nid?
 
-This patch makes sense irrespective of whether the above pfn is a
-ZONE_DEVICE or not. gfn_to_pfn_prot() increased the page refcount via
-GUP, so it must be released before bailing out of this loop.
+I believe when we hot-add we use nid for the memory that is being
+added to account vmemmap, and when we do hot-remove we also use nid of
+the memory that is being removed. But, you are correct, this does not
+guarantee that the actual vmemmap memory is being allocated or removed
+from the given nid.
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Wouldn't we want to look at the actual nid the vmemmap page belongs to
+> that we are removing?
+
+I am now looking into converting this counter to be system wide, i.e.
+vm_event, it is all done under hotplug lock, so there is no
+contention.
+
+Pasha
