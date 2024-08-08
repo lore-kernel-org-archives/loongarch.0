@@ -1,164 +1,315 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BF3143723
-	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 08:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD29F1474B9
+	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 08:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723104209; cv=none; b=BWrngz09lJ+bKuQcDPXZdy8cmfl+fw6CQWL2BWJh8swYv7RWGwwP4EaLtCVtYCzsg8/CF2J6NKvXghOmObwOn/Z3xqb0EeeM5HE0LGjAjH8mLDoEy4g6qRwtbc6P9hk+C2tMm7ROVkf0htZri7lpTp5X6vsJJIiUlux5ZKiiCTs=
+	t=1723106206; cv=none; b=RR2oZDyXofovmws6Dpy0NshBi33RltlPS0PKdMmlwbfYYy3PzmOzfvcyv1s7OotbKWlGUCIRWKL31avw8hnElIE123ZRqy7YE4RPc38u1BTjKtSb+cHWwq3Q/UYwj7SELfkNAVVNSboY/vzaBtGjd+MZ3njvRgfD11OeDhm6s6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723104209; c=relaxed/simple;
-	bh=5XIOBDmdcE1xfi6LAPUxjIUtOcBxQgathFGyanyABbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m/riSfhIU0GUMzqRCL7a2Ss8CXh9qVfl17IINzo781dHpW9EepB0eRp9oPzOXaQQG1HQWVMnBO5ddjuiazflPJ0WovzMT/ilgjFvyNU3glAmV/xa95M2GXgJz0NY57I9jeS0RWOUpO2oj0ZCRNfbwyNRZowGqPqfBU2hQyWQVfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgZ/f68l; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgZ/f68l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B68C4AF16
-	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 08:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723104208;
-	bh=5XIOBDmdcE1xfi6LAPUxjIUtOcBxQgathFGyanyABbg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GgZ/f68lJ/wZt5nsjJ2FmN7osJSDJgnDXZNK5+qBUk+HQPaiMTKvJ9oeVokp+v1FD
-	 Pu6s2kY4by2jKzBwQVWlRJMdaoySjX5E0QEA9QjNlEKsDKEhOZ5ye10Kjfk1ZaOCB/
-	 /V0Rq+po1U2rGFHjjRvJCkpRvg0lXwQrTHPfbtho20RbDZL1MbTKO4tMbFdqWQHhO7
-	 LMbE7OIRoDd/nHRSaGzextCWe328gAjIwCu2UfUQUSmnI5ZwCy8ucd5noe9xm1vFDH
-	 VEP0iEhqRjVSls/4TmTed9GrI3Kwvt3oMI71IXtZfbf4JP/yORkZLZpyebdSCLPFf2
-	 f1Kqpjfwrt9Jg==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52efdf02d13so1208416e87.2
-        for <loongarch@lists.linux.dev>; Thu, 08 Aug 2024 01:03:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUlT4eVmJG0ekoBG1vq2NziD+ZijefkeZQDbPcnoEaqQTRhKtYmyLpGoTiznZUQ32oo6uwlt4kQnC0vKxiAbnHldv6UmVvWfQbi
-X-Gm-Message-State: AOJu0YytvZYgwc/y/MPJ6sgXjimt+jGxVZhWVCXaDoUvvE3B4jxvGj3U
-	6VHo6q687FzSe/w+Oyqpp7sglLHcdNuY66bFUn1ppyCF1k022jtSvBYw6cb5Yc7EaYUSQXIn9em
-	lXpc1QEFVJ19J5AFyegq5+aohFR4=
-X-Google-Smtp-Source: AGHT+IGUcyROuCVRvFawk0tNkyq3zXVcrypZ/E0fTJF+LE3Z7riNXq3gQCNs3MGE4OjTaREQLn9aFU8R3EPyh+dDwpM=
-X-Received: by 2002:a05:6512:318d:b0:52e:d0f8:2d43 with SMTP id
- 2adb3069b0e04-530e58207d0mr801724e87.17.1723104206774; Thu, 08 Aug 2024
- 01:03:26 -0700 (PDT)
+	s=arc-20240116; t=1723106206; c=relaxed/simple;
+	bh=5zQkurv4VdW0h3BdhXp17zysHzZ2zWbjCvbCFY+zLBM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0QEvBQzN93ncoHp/IrsRZF8Pi80lmGjVrpksrxYlpI7ph1/ZPEsefRaErV8CwBE8FrbVHvZV94aNdcPArnicLApDWdxP4SwuHPoRz8EhLDEBUOrxTTTtQygXLB2z3I8CJXDofgi8Ai2phCK7KsjMCdr/7CeKczDFSXypO922H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxHuuYg7RmPZgLAA--.35106S3;
+	Thu, 08 Aug 2024 16:36:40 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMDx0uGWg7RmUXkJAA--.47562S2;
+	Thu, 08 Aug 2024 16:36:39 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add haltpoll control feature in kvm side
+Date: Thu,  8 Aug 2024 16:36:38 +0800
+Message-Id: <20240808083638.205659-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240806115557.4750-1-zhangtianyang@loongson.cn>
- <87le180z8b.ffs@tglx> <bc5d4e7a-ba81-f8f7-3629-2c80897d8ffc@loongson.cn>
-In-Reply-To: <bc5d4e7a-ba81-f8f7-3629-2c80897d8ffc@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 8 Aug 2024 16:03:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7EHRSFsJCY3F2NdwjGcEO-TnSF4S3iQnYXh-N8c2-b4g@mail.gmail.com>
-Message-ID: <CAAhV-H7EHRSFsJCY3F2NdwjGcEO-TnSF4S3iQnYXh-N8c2-b4g@mail.gmail.com>
-Subject: Re: [PATCH V8 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org, kernel@xen0n.name, 
-	jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn, 
-	lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com, 
-	akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn, 
-	xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org, 
-	yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx0uGWg7RmUXkJAA--.47562S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Tianyang,
+The cpuidle-haltpoll driver with haltpoll governor allows the guest
+vcpus to poll for a specified amount of time before halting. This
+provides some benefits such as avoid sending IPI to perform a wakeup
+and avoid VM-exit cost.
 
-On Thu, Aug 8, 2024 at 2:52=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
-on.cn> wrote:
->
-> Hi, Thomas
->
-> Thank you for your feedback.
->
-> =E5=9C=A8 2024/8/8 =E4=B8=8A=E5=8D=886:01, Thomas Gleixner =E5=86=99=E9=
-=81=93:
->
-> >> +    guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
-> >> +
-> >> +    for (i =3D 0; i < nr_irqs; i++) {
-> >> +            d =3D irq_domain_get_irq_data(domain, virq + i);
-> >> +            if (d) {
-> >> +                    clear_free_vector(d);
-> >> +                    irq_domain_reset_irq_data(d);
-> >> +
-> > Stray newline, but the more important question is what kfree()'s 'd'?
-> >
-> > AFAICT, nothing. So that's a memory leak, no?
-> With my understand , 'd' as 'struct irq_data' can be free at public
-> irqdomain process, and really miss a kfree targeting 'struct chip_data'
-> >
-> >> +static int __init avecintc_init(struct irq_domain *parent)
-> >> +{
-> >> +    parent_irq =3D irq_create_mapping(parent, INT_AVEC);
-> >> +    if (!parent_irq) {
-> >> +            pr_err("Failed to mapping hwirq\n");
-> >> +            ret =3D -EINVAL;
-> >> +            goto out_remove_domain;
-> >> +    }
-> >> +    irq_set_chained_handler_and_data(parent_irq, avecintc_irq_dispatc=
-h, NULL);
-> >> +
-> >> +    ret =3D irq_matrix_init();
-> >> +    if (ret < 0) {
-> >> +            pr_err("Failed to init irq matrix\n");
-> >> +            goto out_remove_domain;
-> > Which still leaves the disfunct chained handler installed and the
-> > mapping intact.
->
-> There is indeed a problem here, but we have not found a similar approach
-> for reference.
->
-> Is it reasonable to replace here with handle_bad_irq in case of failure?
-> or is there any other more suitable way. We hope you can give us some
-> suggestions, thank you very much
-Maybe we can move irq_set_chained_handler_and_data(parent_irq,
-avecintc_irq_dispatch, NULL) after the checking of irq_matrix_init().
+When guest VM uses cpuidle-halt poll method, haltpoll need be disabled
+at host hypervisor side to avoid double haltpoll in both guest VM and
+host hypervisor. Here KVM_FEATURE_POLL_CONTROL feature is added in KVM
+and guest can detect this feature and disable haltpoll in host side.
 
-Huacai
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h  |  1 +
+ arch/loongarch/include/asm/loongarch.h |  1 +
+ arch/loongarch/include/uapi/asm/kvm.h  |  3 +
+ arch/loongarch/kvm/Kconfig             |  1 +
+ arch/loongarch/kvm/exit.c              |  9 ++-
+ arch/loongarch/kvm/vcpu.c              | 85 ++++++++++++++++++++------
+ 6 files changed, 81 insertions(+), 19 deletions(-)
 
->
-> >> +#endif
-> >> +    value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> >> +    value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> >> +    iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> >> +
-> >> +    return ret;
-> >> +
-> >> +out_remove_domain:
-> >> +    irq_domain_remove(loongarch_avec.domain);
-> >> +out_free_handle:
-> >> +    irq_domain_free_fwnode(loongarch_avec.fwnode);
-> >> +out:
-> >> +    return ret;
-> >> +}
-> >> +
-> >> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *hea=
-der,
-> >> +                                 const unsigned long end)
-> >> +{
-> >> +    struct acpi_madt_msi_pic *pchmsi_entry =3D (struct acpi_madt_msi_=
-pic *)header;
-> >> +
-> >> +    msi_base_addr =3D pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-> > What validates that msi_base_addr has none of the lower 16 bits set, as
-> > they are required to be zero to make MSI message composing work, right?
->
-> This operation originates from some hardware designs.
->
-> In 3C6000, either eiointc or avecintc can be the parent controller for
-> MSI interrupts and these two controllers have different MSI msg address.
->
-> In our platform design scheme, we fix avec-msg-address to the address of
-> (eiointc-msg-address - 0x100000). Therefore, here we need to subtract
-> AVEC_MSG_OFFSET from the msg_address obtained by MCFG
->
-> The main purpose of the design that users of 3C6000 can freely choose
-> the version of the Linux kernel that supports loongarch (regardless of
-> whether AVEC is supported or not) without having to change the firmware
->
->
-> Thanks again
->
-> Tianyang
->
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 44b54965f5b4..a972f70ccdfc 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -214,6 +214,7 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		struct gfn_to_hva_cache cache;
+ 	} st;
++	unsigned long kvm_poll_control;
+ };
+ 
+ static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 04a78010fc72..e4fc30cf3572 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -170,6 +170,7 @@
+ #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
+ #define  KVM_FEATURE_IPI		BIT(1)
+ #define  KVM_FEATURE_STEAL_TIME		BIT(2)
++#define  KVM_FEATURE_POLL_CONTROL	BIT(3)
+ 
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index ddc5cab0ffd0..191f10c2b6c2 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -85,7 +85,10 @@ struct kvm_fpu {
+ /* Device Control API on vcpu fd */
+ #define KVM_LOONGARCH_VCPU_CPUCFG	0
+ #define KVM_LOONGARCH_VCPU_PVTIME_CTRL	1
++/* Alias of KVM_LOONGARCH_VCPU_PVTIME_CTRL for wider use */
++#define KVM_LOONGARCH_VCPU_PV_CTRL	1
+ #define  KVM_LOONGARCH_VCPU_PVTIME_GPA	0
++#define  KVM_LOONGARCH_VCPU_POLL_CTRL	1
+ 
+ struct kvm_debug_exit_arch {
+ };
+diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+index 248744b4d086..c5cc4dd2fb90 100644
+--- a/arch/loongarch/kvm/Kconfig
++++ b/arch/loongarch/kvm/Kconfig
+@@ -21,6 +21,7 @@ config KVM
+ 	tristate "Kernel-based Virtual Machine (KVM) support"
+ 	depends on AS_HAS_LVZ_EXTENSION
+ 	select HAVE_KVM_DIRTY_RING_ACQ_REL
++	select HAVE_KVM_NO_POLL
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select KVM_COMMON
+ 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ea73f9dc2cc6..ebd578251388 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -50,7 +50,7 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
+ 		vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
+ 		break;
+ 	case CPUCFG_KVM_FEATURE:
+-		ret = KVM_FEATURE_IPI;
++		ret = KVM_FEATURE_IPI | KVM_FEATURE_POLL_CONTROL;
+ 		if (kvm_pvtime_supported())
+ 			ret |= KVM_FEATURE_STEAL_TIME;
+ 		vcpu->arch.gprs[rd] = ret;
+@@ -711,6 +711,13 @@ static long kvm_save_notify(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.st.last_steal = current->sched_info.run_delay;
+ 		kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
+ 		break;
++	case KVM_FEATURE_POLL_CONTROL:
++		/* Only enable bit supported */
++		if (data & (-1ULL << 1))
++			return KVM_HCALL_INVALID_PARAMETER;
++
++		vcpu->arch.kvm_poll_control = data;
++		break;
+ 	default:
+ 		break;
+ 	};
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 16756ffb55e8..6e5c58cef90f 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -233,6 +233,11 @@ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
+ 	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
+ }
+ 
++bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
++{
++	return (vcpu->arch.kvm_poll_control & 1) == 0;
++}
++
+ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
+ {
+ 	return false;
+@@ -650,6 +655,7 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+ 			kvm_reset_timer(vcpu);
+ 			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+ 			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++			vcpu->arch.kvm_poll_control = 1;
+ 			break;
+ 		default:
+ 			ret = -EINVAL;
+@@ -737,14 +743,21 @@ static int kvm_loongarch_cpucfg_has_attr(struct kvm_vcpu *vcpu,
+ 	return -ENXIO;
+ }
+ 
+-static int kvm_loongarch_pvtime_has_attr(struct kvm_vcpu *vcpu,
++static int kvm_loongarch_pv_has_attr(struct kvm_vcpu *vcpu,
+ 					 struct kvm_device_attr *attr)
+ {
+-	if (!kvm_pvtime_supported() ||
+-			attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
++	switch (attr->attr) {
++	case KVM_LOONGARCH_VCPU_PVTIME_GPA:
++		if (!kvm_pvtime_supported())
++			return -ENXIO;
++		return 0;
++	case KVM_LOONGARCH_VCPU_POLL_CTRL:
++		return 0;
++	default:
+ 		return -ENXIO;
++	}
+ 
+-	return 0;
++	return -ENXIO;
+ }
+ 
+ static int kvm_loongarch_vcpu_has_attr(struct kvm_vcpu *vcpu,
+@@ -756,8 +769,8 @@ static int kvm_loongarch_vcpu_has_attr(struct kvm_vcpu *vcpu,
+ 	case KVM_LOONGARCH_VCPU_CPUCFG:
+ 		ret = kvm_loongarch_cpucfg_has_attr(vcpu, attr);
+ 		break;
+-	case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+-		ret = kvm_loongarch_pvtime_has_attr(vcpu, attr);
++	case KVM_LOONGARCH_VCPU_PV_CTRL:
++		ret = kvm_loongarch_pv_has_attr(vcpu, attr);
+ 		break;
+ 	default:
+ 		break;
+@@ -782,18 +795,26 @@ static int kvm_loongarch_cpucfg_get_attr(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
+-static int kvm_loongarch_pvtime_get_attr(struct kvm_vcpu *vcpu,
++static int kvm_loongarch_pv_get_attr(struct kvm_vcpu *vcpu,
+ 					 struct kvm_device_attr *attr)
+ {
+-	u64 gpa;
++	u64 val;
+ 	u64 __user *user = (u64 __user *)attr->addr;
+ 
+-	if (!kvm_pvtime_supported() ||
+-			attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
++	switch (attr->attr) {
++	case KVM_LOONGARCH_VCPU_PVTIME_GPA:
++		if (!kvm_pvtime_supported())
++			return -ENXIO;
++		val = vcpu->arch.st.guest_addr;
++		break;
++	case KVM_LOONGARCH_VCPU_POLL_CTRL:
++		val = vcpu->arch.kvm_poll_control;
++		break;
++	default:
+ 		return -ENXIO;
++	}
+ 
+-	gpa = vcpu->arch.st.guest_addr;
+-	if (put_user(gpa, user))
++	if (put_user(val, user))
+ 		return -EFAULT;
+ 
+ 	return 0;
+@@ -808,8 +829,8 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
+ 	case KVM_LOONGARCH_VCPU_CPUCFG:
+ 		ret = kvm_loongarch_cpucfg_get_attr(vcpu, attr);
+ 		break;
+-	case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+-		ret = kvm_loongarch_pvtime_get_attr(vcpu, attr);
++	case KVM_LOONGARCH_VCPU_PV_CTRL:
++		ret = kvm_loongarch_pv_get_attr(vcpu, attr);
+ 		break;
+ 	default:
+ 		break;
+@@ -831,8 +852,7 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+ 	u64 gpa, __user *user = (u64 __user *)attr->addr;
+ 	struct kvm *kvm = vcpu->kvm;
+ 
+-	if (!kvm_pvtime_supported() ||
+-			attr->attr != KVM_LOONGARCH_VCPU_PVTIME_GPA)
++	if (!kvm_pvtime_supported())
+ 		return -ENXIO;
+ 
+ 	if (get_user(gpa, user))
+@@ -861,6 +881,33 @@ static int kvm_loongarch_pvtime_set_attr(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
++static int kvm_loongarch_pv_set_attr(struct kvm_vcpu *vcpu,
++					struct kvm_device_attr *attr)
++{
++	u64 val,  __user *user = (u64 __user *)attr->addr;
++
++	switch (attr->attr) {
++	case KVM_LOONGARCH_VCPU_PVTIME_GPA:
++		return kvm_loongarch_pvtime_set_attr(vcpu, attr);
++
++	case KVM_LOONGARCH_VCPU_POLL_CTRL:
++		if (get_user(val, user))
++			return -EFAULT;
++
++		/* Only enable bit supported */
++		if (val & (-1ULL << 1))
++			return -EINVAL;
++
++		vcpu->arch.kvm_poll_control = val;
++		break;
++
++	default:
++		return -ENXIO;
++	}
++
++	return -ENXIO;
++}
++
+ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+ 				       struct kvm_device_attr *attr)
+ {
+@@ -870,8 +917,8 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+ 	case KVM_LOONGARCH_VCPU_CPUCFG:
+ 		ret = kvm_loongarch_cpucfg_set_attr(vcpu, attr);
+ 		break;
+-	case KVM_LOONGARCH_VCPU_PVTIME_CTRL:
+-		ret = kvm_loongarch_pvtime_set_attr(vcpu, attr);
++	case KVM_LOONGARCH_VCPU_PV_CTRL:
++		ret = kvm_loongarch_pv_set_attr(vcpu, attr);
+ 		break;
+ 	default:
+ 		break;
+@@ -1179,6 +1226,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	/* Start with no pending virtual guest interrupts */
+ 	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
+ 
++	/* poll control enabled by default */
++	vcpu->arch.kvm_poll_control = 1;
+ 	return 0;
+ }
+ 
+
+base-commit: de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed
+-- 
+2.39.3
+
