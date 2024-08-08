@@ -1,102 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BECE181328;
-	Thu,  8 Aug 2024 09:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BF818C92E;
+	Thu,  8 Aug 2024 11:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723110879; cv=none; b=klcrwfloFumzJErBnEIYULDXI+taWiYzwqfVv0lfdZN4FXNCxMfwc/P/M7+DLSJaKXUh2955kJ9GGT9Yqo1WJ5W9sxj+UxpULoFOXjQ8VSU3h/MPutels5fHGolmgy4k4Y+GyhZZFGNgNBk3gEKIui5RdJUX7Je8hoKECr2nh5Q=
+	t=1723116294; cv=none; b=pHpYewg8BxN+gpcCOLELAb/u190DS9cGFrSs2W5bg59qbueu+fjZUDLqWTaHYsX1RqqbeZ/fR+hj4lzyJi2hIrEgrhVjIPa9VijUs6REQGdrAx8qkrenrwkV2u6TSSIev4xEISZTYJbMn2ou1X+3oDKUt4KGewmRea8nD47JvA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723110879; c=relaxed/simple;
-	bh=kYdZ12KYr52wq3EuDfSIsj0fkppY2ClttYsU/ZJzhBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X3QmtW4hBrxJivwfzrv3EP/cMJ5k8UFK9SVu3ZokjksIYq7Csfl0MnD74MFHzL+Iyl6dGjWeGxeMt3NDUaAZznS6iQHSL1gFed158geypv3rjq47jYDEe0RF/3PK35I2FGKUOAFB6tld0Y+J5g1bbBeVsQnmrJkV8JN88J81tGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA0441042;
-	Thu,  8 Aug 2024 02:55:01 -0700 (PDT)
-Received: from [10.1.26.21] (e122027.cambridge.arm.com [10.1.26.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A95173F6A8;
-	Thu,  8 Aug 2024 02:54:29 -0700 (PDT)
-Message-ID: <fbcbd4da-cab5-420e-b8b6-bf04e27bf69c@arm.com>
-Date: Thu, 8 Aug 2024 10:54:24 +0100
+	s=arc-20240116; t=1723116294; c=relaxed/simple;
+	bh=kWylaPC9muCUi953Oy76biClG+5GXj6epxJaGfOLYn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7U1V0jXACoqKBu1R+EBINioMy8pGzY6F0bOHgiFuzu9ldtu0/0DMXudu0wEED80t/FFZmbMARPDEjt5YvSKBuseYPAuxuM+6iVTmtVe7hkQ/OTzdD1UUdFVBYjeZhytVw4AtYgHTGkNFhwsyC/8hKn+Eso5o04qG7GyTzT2yJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A3AC4AF0C;
+	Thu,  8 Aug 2024 11:24:51 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.11-rc3
+Date: Thu,  8 Aug 2024 19:24:37 +0800
+Message-ID: <20240808112437.1538513-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 02/84] KVM: arm64: Disallow copying MTE to guest
- memory while KVM is dirty logging
-To: Catalin Marinas <catalin.marinas@arm.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
-References: <20240726235234.228822-1-seanjc@google.com>
- <20240726235234.228822-3-seanjc@google.com> <ZrOfB8bOdSJVcWFr@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <ZrOfB8bOdSJVcWFr@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/08/2024 17:21, Catalin Marinas wrote:
-> On Fri, Jul 26, 2024 at 04:51:11PM -0700, Sean Christopherson wrote:
->> Disallow copying MTE tags to guest memory while KVM is dirty logging, as
->> writing guest memory without marking the gfn as dirty in the memslot could
->> result in userspace failing to migrate the updated page.  Ideally (maybe?),
->> KVM would simply mark the gfn as dirty, but there is no vCPU to work with,
->> and presumably the only use case for copy MTE tags _to_ the guest is when
->> restoring state on the target.
->>
->> Fixes: f0376edb1ddc ("KVM: arm64: Add ioctl to fetch/store tags in a guest")
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> ---
->>  arch/arm64/kvm/guest.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
->> index e1f0ff08836a..962f985977c2 100644
->> --- a/arch/arm64/kvm/guest.c
->> +++ b/arch/arm64/kvm/guest.c
->> @@ -1045,6 +1045,11 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
->>  
->>  	mutex_lock(&kvm->slots_lock);
->>  
->> +	if (write && atomic_read(&kvm->nr_memslots_dirty_logging)) {
->> +		ret = -EBUSY;
->> +		goto out;
->> +	}
-> 
-> There are ways to actually log the page dirtying but I don't think
-> it's worth it. AFAICT, reading the tags still works and that's what's
-> used during migration (on the VM where dirty tracking takes place).
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
+The following changes since commit de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed:
 
-Looks sensible to me - my initial thought was "why would a VMM do
-that?". But it would make sense to actually return a failure rather than
-letting the VMM shoot itself in the foot.
+  Linux 6.11-rc2 (2024-08-04 13:50:53 -0700)
 
-If there's actually a use-case then we could look at making the dirty
-tracking work, but I'm not convinced there is a good reason.
+are available in the Git repository at:
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.11-1
 
-Thanks,
+for you to fetch changes up to 494b0792d962e8efac72b3a5b6d9bcd4e6fa8cf0:
 
-Steve
+  LoongArch: KVM: Remove undefined a6 argument comment for kvm_hypercall() (2024-08-07 17:37:14 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.11-rc3
+
+Enable general EFI poweroff method to make poweroff usable on hardwares
+which lack ACPI S5, use accessors to page table entries instead of direct
+dereference to avoid potential problems, and two trivial kvm cleanups.
+----------------------------------------------------------------
+Dandan Zhang (1):
+      LoongArch: KVM: Remove undefined a6 argument comment for kvm_hypercall()
+
+Huacai Chen (1):
+      LoongArch: Use accessors to page table entries instead of direct dereference
+
+Miao Wang (1):
+      LoongArch: Enable general EFI poweroff method
+
+Yuli Wang (1):
+      LoongArch: KVM: Remove unnecessary definition of KVM_PRIVATE_MEM_SLOTS
+
+ arch/loongarch/include/asm/hugetlb.h  |  4 +--
+ arch/loongarch/include/asm/kfence.h   |  6 ++---
+ arch/loongarch/include/asm/kvm_host.h |  2 --
+ arch/loongarch/include/asm/kvm_para.h |  4 +--
+ arch/loongarch/include/asm/pgtable.h  | 48 +++++++++++++++++++++--------------
+ arch/loongarch/kernel/efi.c           |  6 +++++
+ arch/loongarch/kvm/mmu.c              |  8 +++---
+ arch/loongarch/mm/hugetlbpage.c       |  6 ++---
+ arch/loongarch/mm/init.c              | 10 ++++----
+ arch/loongarch/mm/kasan_init.c        | 10 ++++----
+ arch/loongarch/mm/pgtable.c           |  2 +-
+ 11 files changed, 60 insertions(+), 46 deletions(-)
