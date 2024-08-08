@@ -1,81 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BF818C92E;
-	Thu,  8 Aug 2024 11:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9343D18B46F;
+	Thu,  8 Aug 2024 11:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723116294; cv=none; b=pHpYewg8BxN+gpcCOLELAb/u190DS9cGFrSs2W5bg59qbueu+fjZUDLqWTaHYsX1RqqbeZ/fR+hj4lzyJi2hIrEgrhVjIPa9VijUs6REQGdrAx8qkrenrwkV2u6TSSIev4xEISZTYJbMn2ou1X+3oDKUt4KGewmRea8nD47JvA8=
+	t=1723117100; cv=none; b=iNGyLjRPF9+GoS096XDu46CyTbtNbdDXkykzfoz3lED3I1RKTwisvE0i7L10E6BdhQ5tBlwXdl6uPx6fYkpzMU9E/K0GgmzantnLxwYRiM9l0Mrw298THXOi2A0SUnpYfAux3Qnpt/hL3ekqMJuvoyruCkdvWu/BqP7fBE8vGy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723116294; c=relaxed/simple;
-	bh=kWylaPC9muCUi953Oy76biClG+5GXj6epxJaGfOLYn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7U1V0jXACoqKBu1R+EBINioMy8pGzY6F0bOHgiFuzu9ldtu0/0DMXudu0wEED80t/FFZmbMARPDEjt5YvSKBuseYPAuxuM+6iVTmtVe7hkQ/OTzdD1UUdFVBYjeZhytVw4AtYgHTGkNFhwsyC/8hKn+Eso5o04qG7GyTzT2yJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A3AC4AF0C;
-	Thu,  8 Aug 2024 11:24:51 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.11-rc3
-Date: Thu,  8 Aug 2024 19:24:37 +0800
-Message-ID: <20240808112437.1538513-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1723117100; c=relaxed/simple;
+	bh=fHaBzS2wDuNOzCPXi9gb65z7kShhgEjKyN/BRQR7/p0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=H7eRZmscdrjwVXEV0qilg1hSMegXy8ejIqjrpLcSsASn/+X2zGF1WSe/to5y6SvyGKWcOBWrkKqjO0bFmoVLjHC6oq8+hx8V+ydvdp1V5bIycirmCVc7yAFQfsgCxmZYAZenPC/QV4CsB+r2v16s/qimbpM6HxwUUFfQT3UG33Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxbZskrrRmicMLAA--.8941S3;
+	Thu, 08 Aug 2024 19:38:12 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxkeEgrrRmtq8JAA--.48118S3;
+	Thu, 08 Aug 2024 19:38:09 +0800 (CST)
+Subject: Re: [PATCH v12 64/84] KVM: LoongArch: Mark "struct page" pfns dirty
+ only in "slow" page fault path
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+ David Stevens <stevensd@chromium.org>
+References: <20240726235234.228822-1-seanjc@google.com>
+ <20240726235234.228822-65-seanjc@google.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <b54357a9-6146-603b-45cd-e8ee0db4a709@loongson.cn>
+Date: Thu, 8 Aug 2024 19:38:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20240726235234.228822-65-seanjc@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxkeEgrrRmtq8JAA--.48118S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFW8JryfWw13KFy5Xw4kKrX_yoW8CFWkpF
+	W7CrZrGrWrtrnavrZrt3sF9rs0yrs8Kr1xXa4xG34rGF1qqryYq3W0grZ7WF1fJ3s3AFWS
+	qF1rKFnFgFs5JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUstxhDU
+	UUU
 
-The following changes since commit de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed:
 
-  Linux 6.11-rc2 (2024-08-04 13:50:53 -0700)
 
-are available in the Git repository at:
+On 2024/7/27 上午7:52, Sean Christopherson wrote:
+> Mark pages/folios dirty only the slow page fault path, i.e. only when
+> mmu_lock is held and the operation is mmu_notifier-protected, as marking a
+> page/folio dirty after it has been written back can make some filesystems
+> unhappy (backing KVM guests will such filesystem files is uncommon, and
+> the race is minuscule, hence the lack of complaints).
+> 
+> See the link below for details.
+> 
+> Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/loongarch/kvm/mmu.c | 18 ++++++++++--------
+>   1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index 2634a9e8d82c..364dd35e0557 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -608,13 +608,13 @@ static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa, bool writ
+>   		if (kvm_pte_young(changed))
+>   			kvm_set_pfn_accessed(pfn);
+>   
+> -		if (kvm_pte_dirty(changed)) {
+> -			mark_page_dirty(kvm, gfn);
+> -			kvm_set_pfn_dirty(pfn);
+> -		}
+>   		if (page)
+>   			put_page(page);
+>   	}
+> +
+> +	if (kvm_pte_dirty(changed))
+> +		mark_page_dirty(kvm, gfn);
+> +
+>   	return ret;
+>   out:
+>   	spin_unlock(&kvm->mmu_lock);
+> @@ -915,12 +915,14 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+>   	else
+>   		++kvm->stat.pages;
+>   	kvm_set_pte(ptep, new_pte);
+> -	spin_unlock(&kvm->mmu_lock);
+>   
+> -	if (prot_bits & _PAGE_DIRTY) {
+> -		mark_page_dirty_in_slot(kvm, memslot, gfn);
+> +	if (writeable)
+>   		kvm_set_pfn_dirty(pfn);
+> -	}
+> +
+> +	spin_unlock(&kvm->mmu_lock);
+> +
+> +	if (prot_bits & _PAGE_DIRTY)
+> +		mark_page_dirty_in_slot(kvm, memslot, gfn);
+>   
+>   	kvm_release_pfn_clean(pfn);
+>   out:
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.11-1
-
-for you to fetch changes up to 494b0792d962e8efac72b3a5b6d9bcd4e6fa8cf0:
-
-  LoongArch: KVM: Remove undefined a6 argument comment for kvm_hypercall() (2024-08-07 17:37:14 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.11-rc3
-
-Enable general EFI poweroff method to make poweroff usable on hardwares
-which lack ACPI S5, use accessors to page table entries instead of direct
-dereference to avoid potential problems, and two trivial kvm cleanups.
-----------------------------------------------------------------
-Dandan Zhang (1):
-      LoongArch: KVM: Remove undefined a6 argument comment for kvm_hypercall()
-
-Huacai Chen (1):
-      LoongArch: Use accessors to page table entries instead of direct dereference
-
-Miao Wang (1):
-      LoongArch: Enable general EFI poweroff method
-
-Yuli Wang (1):
-      LoongArch: KVM: Remove unnecessary definition of KVM_PRIVATE_MEM_SLOTS
-
- arch/loongarch/include/asm/hugetlb.h  |  4 +--
- arch/loongarch/include/asm/kfence.h   |  6 ++---
- arch/loongarch/include/asm/kvm_host.h |  2 --
- arch/loongarch/include/asm/kvm_para.h |  4 +--
- arch/loongarch/include/asm/pgtable.h  | 48 +++++++++++++++++++++--------------
- arch/loongarch/kernel/efi.c           |  6 +++++
- arch/loongarch/kvm/mmu.c              |  8 +++---
- arch/loongarch/mm/hugetlbpage.c       |  6 ++---
- arch/loongarch/mm/init.c              | 10 ++++----
- arch/loongarch/mm/kasan_init.c        | 10 ++++----
- arch/loongarch/mm/pgtable.c           |  2 +-
- 11 files changed, 60 insertions(+), 46 deletions(-)
