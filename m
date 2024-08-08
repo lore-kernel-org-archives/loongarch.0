@@ -1,141 +1,110 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7639118C329
-	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 12:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B012218DF7A
+	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 13:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723118406; cv=none; b=q3gs3+N7EOUGU4Dx+UVdyohym2oiYIPnzMGpIZ2nksCPAV3zG7W2mLevWU3tZQSsDiOmcWPWY4QBZdCbPSVX9j9lpxaVzoLrohGha7VHQIAw2ZyWG2zISEYepCC2eHBirrbefdTo70xtbHnrpLsKc8X0tSryVst1j3t+nma41VE=
+	t=1723123010; cv=none; b=XoGd6npkm4XcFe4GTyPpe01Xf3PMIjJeiN105amlf32gW87jejIsi/nyG+9Tiv1nbPZSh5SeliMz2n7SBrB0/RjWpTXWCuHIKdyW87av99RHvulgRQ9M9ZfIMWmDJmQoMTd1K0tU0b46aKo/Sa1wnRwH04NodOs41O8qKaRfsXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723118406; c=relaxed/simple;
-	bh=4VJkCGOnJpRwR4YKBH81A1uxdWFs9jOzqwkiDCMslRY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HLQmqonp3Maj4no6BbAvDgJnnfAjFxwW/6rWt+NrJXrhSgngZe3GCzTEupSGVzVo5ZKe3MSdHmjt5ApbaWgnt4XAOmnRc5Drj+wYYB1oqvm3Em+j8fnqWDrhqm6fzrbowpI2BNpujwWj8tsQULdCa5ZeeId+NOPNZRoKV6267ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ddkuFE9F; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723123010; c=relaxed/simple;
+	bh=SIRHTk+m4P1RNpcxL6rwR5xC8tZQja2BIbrMKp2HGV0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XbhNpKlVvKyap+C9ThE7Uoorq0Dku4W6ubjVp1PumEyudO5sD6a/AGxRXpsW2sXOjmcPiwkcNh+YKKBpXxroYq0hO7qvsqq8Wlv7YsP9QPwck8q7Grb/0KItX7wCX0jqTJBFBtwvgvGKzoy24bw/fJ4MKibdlIMp6G1+9QplF1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EsJQWJmP; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ddkuFE9F"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3685a5e7d3cso457783f8f.1
-        for <loongarch@lists.linux.dev>; Thu, 08 Aug 2024 05:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsJQWJmP"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-70d34fa1726so1100426b3a.1
+        for <loongarch@lists.linux.dev>; Thu, 08 Aug 2024 06:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723118403; x=1723723203; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+        d=google.com; s=20230601; t=1723123008; x=1723727808; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l8fBZbfSfQMp8/8SurSvfBz+MaimrqNdI2CubOLP3Ew=;
-        b=ddkuFE9FINzia0qQVVaAQtZuEXNAIekNuYkVjCLYxZyvoCdYq1EEgTZx2+1AOrzHqt
-         +31SUlBnAGOJ3JBSQYO66KKvQvP5QfHjsLIzws812nAW0O5c5nVf6fCLOO1CvOPDh5oK
-         Lzw6NNaIXWLRKVugiwcSxG/lfgdfWXCaSQBjhhslNoOO47IsjeA7Jkkp3WP2zljECXlP
-         pSiWXIF6m7UxwyEqa1Gl3LCvcBuqYhHXMdQI6BMMYHT6Ux1CP9a7iWJ5HW/BiPZEJa0w
-         Lo/G490AaghDCjLxE4LDa3KBmPgjeaytGziiOh25PJ7sBROW/mXaPdMqBcBAi8ZRahgb
-         +Z1w==
+        bh=ep+xfrS41+80V4sejFNz0q3mTB6TQE8jTTfF1Jh5lTI=;
+        b=EsJQWJmPoNQ84VMOpavP3ll3u7lGZzJywbfhAODIUVOCOnI0mn5Ncy7sIct+bZ22Dn
+         fj92WOFc0Jm51XwOLqosRowsQ3O9ttHWLVSYBY9mwG8NVFL8/j4u0QBTt2tEmORpvx1f
+         XORB3QAmxwvTLvwPiKVb3PlfrzdKT6ejKzM/oEJ8XLN5n6eCGPmhx4PCJWk91EL3wrFF
+         ijCg3WWin86Yyxx+vpA97l14/Suf2B+kWEsWbvsmO+ssQaxza9CBZXV2+rjkRVVhjmas
+         I048xvK0Oo8hTSnsVMJENFHEsg2n5IUvWhkSYVs0TWIdSsaXh17vPI+XZyYxEwNQVGQ/
+         GsNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723118403; x=1723723203;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l8fBZbfSfQMp8/8SurSvfBz+MaimrqNdI2CubOLP3Ew=;
-        b=wFFtxwod9l7p72J4cx4H67E/bE/lbmtqCuqy7q9m9tvIU5uhe8L6C6+O9PCh7vSWL6
-         moSCGZf/dni89vD2DHTKV5nb2/v/DZ75inPEatUpFBu01DCbPjobcpIZmThS0PPQ9xiR
-         8+JSn/7Hpcs8vkvjaDsar3s1TnaCMNRSyMCpAvhvr7edjyZ6K8DdC90w5gZJhGbt/Qvh
-         RiOmoN3l+AKcWDzvVg7kAKE8vBJWm2tvjIHmNiACx7vgdloeHcqbws9Agjk+Lxb23voN
-         bvgHv5yoqyXVa9gXZxxg1kNJ1Pd+p3V5fMO/521/9+BI5m0U2tvZ5WkFX89JHAOSXAN0
-         BcAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIU7yVtVk5VJJjelVU1CTrF9v5N9N6iYkpe4yr9UeHDL6zNIzTD0kxqyGxDiQHSdxkG43z8XE51rkXaIpQCZaFTkvvy/gcGOpp
-X-Gm-Message-State: AOJu0Yz0fAlBcXh36Br8hlfdXLD9aq9F+Zu5WU7k6nO72HtUZgNcgbQL
-	6u55yv+Bi2H71BGrpfgCYctS7FyZojDMJ5m8Q0WQP+/L1zHr63FQtALe2SQNiEE=
-X-Google-Smtp-Source: AGHT+IHHX2fBYyF3bzrkIN6FI+lRc2WcNWD9HizbtFbwpwdbf6zDJoYFHOfDyhNaZKL5sM+Jijm6XQ==
-X-Received: by 2002:a5d:698f:0:b0:367:8fee:443b with SMTP id ffacd0b85a97d-36d27561461mr1129489f8f.41.1723118402280;
-        Thu, 08 Aug 2024 05:00:02 -0700 (PDT)
-Received: from draig.lan ([85.9.250.243])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36d27156c8asm1700288f8f.24.2024.08.08.05.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 05:00:01 -0700 (PDT)
-Received: from draig (localhost [IPv6:::1])
-	by draig.lan (Postfix) with ESMTP id 751635F769;
-	Thu,  8 Aug 2024 13:00:00 +0100 (BST)
-From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,  Marc Zyngier <maz@kernel.org>,
-  Oliver Upton <oliver.upton@linux.dev>,  Tianrui Zhao
- <zhaotianrui@loongson.cn>,  Bibo Mao <maobibo@loongson.cn>,  Huacai Chen
- <chenhuacai@kernel.org>,  Michael Ellerman <mpe@ellerman.id.au>,  Anup
- Patel <anup@brainfault.org>,  Paul Walmsley <paul.walmsley@sifive.com>,
-  Palmer Dabbelt <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,
-  Christian Borntraeger <borntraeger@linux.ibm.com>,  Janosch Frank
- <frankja@linux.ibm.com>,  Claudio Imbrenda <imbrenda@linux.ibm.com>,
-  kvm@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  kvmarm@lists.linux.dev,  loongarch@lists.linux.dev,
-  linux-mips@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
-  kvm-riscv@lists.infradead.org,  linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  David Matlack <dmatlack@google.com>,
-  David Stevens <stevensd@chromium.org>
-Subject: Re: [PATCH v12 13/84] KVM: Annotate that all paths in hva_to_pfn()
- might sleep
-In-Reply-To: <20240726235234.228822-14-seanjc@google.com> (Sean
-	Christopherson's message of "Fri, 26 Jul 2024 16:51:22 -0700")
-References: <20240726235234.228822-1-seanjc@google.com>
-	<20240726235234.228822-14-seanjc@google.com>
-Date: Thu, 08 Aug 2024 13:00:00 +0100
-Message-ID: <87bk23ql6n.fsf@draig.linaro.org>
+        d=1e100.net; s=20230601; t=1723123008; x=1723727808;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ep+xfrS41+80V4sejFNz0q3mTB6TQE8jTTfF1Jh5lTI=;
+        b=w2ogxRyOjG37MQTaHMnHKoFuQBxE6xkoXDe61/WvVqZGdxxIW50i4m5shYDzQh0qME
+         Wvbtf2jA6iDliS2fafR5ovkJdPmLxlucI2zAIogqHqOTB4ie2edOv24JXOArl4aZ8VvD
+         szjqbH2I+9X9PlIyB0N1n8BueMEKPM1cQ+72GdC05SraJBxsl8MH5tNz2cvwQlR20dcm
+         8wFg6+A9rOxJt8lUVUJ3ihsNNUHBQW+lBDguqITncUars/7KmKMJghX6TYK5k0RmmLca
+         73aY/wKbF5v/8ihKeMmS4tK7oyAJCDSeLXscppzmA75ITDoUvGFDb9AzlArFXyxS5xZ+
+         DnIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj8qqNafwtPDP2ofQGQl81dpkUpY/NCtX7t1oRlJF873RQRrz5Zl4aVKKLcQx/jKLZAhZqc4/TKFLJ0D72sJFGTvxnFY2VejSu
+X-Gm-Message-State: AOJu0Yxf40CbtJ9/oyOCduNTw6NUCtS+22QpDfgEpolxg9yY/BCIMklf
+	EA5Yk6dBKM/AhBbyh1ugJPBhMwqOQjaf0knW0YUjY46YMwFceYX2zKjhqSZBr6GNvMr5UQf9rFY
+	xQg==
+X-Google-Smtp-Source: AGHT+IHJBsGw5UgR/iugxzmSr+QeSrp5dZN/v/XODES4sTP0wn0G9d+/VHKS2R50We/GZxKaCQexvWJSP70=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:2d8c:b0:70d:2a24:245d with SMTP id
+ d2e1a72fcca58-710cae763e9mr108614b3a.3.1723123007877; Thu, 08 Aug 2024
+ 06:16:47 -0700 (PDT)
+Date: Thu, 8 Aug 2024 06:16:46 -0700
+In-Reply-To: <87bk23ql6n.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+References: <20240726235234.228822-1-seanjc@google.com> <20240726235234.228822-14-seanjc@google.com>
+ <87bk23ql6n.fsf@draig.linaro.org>
+Message-ID: <ZrTFPhy0e1fFb9vA@google.com>
+Subject: Re: [PATCH v12 13/84] KVM: Annotate that all paths in hva_to_pfn()
+ might sleep
+From: Sean Christopherson <seanjc@google.com>
+To: "Alex =?utf-8?Q?Benn=C3=A9e?=" <alex.bennee@linaro.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Sean Christopherson <seanjc@google.com> writes:
+On Thu, Aug 08, 2024, Alex Benn=C3=A9e wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+>=20
+> > Now that hva_to_pfn() no longer supports being called in atomic context=
+,
+> > move the might_sleep() annotation from hva_to_pfn_slow() to
+> > hva_to_pfn().
+>=20
+> The commentary for hva_to_pfn_fast disagrees.
+>=20
+>   /*
+>    * The fast path to get the writable pfn which will be stored in @pfn,
+>    * true indicates success, otherwise false is returned.  It's also the
+>    * only part that runs if we can in atomic context.
+>    */
+>   static bool hva_to_pfn_fast(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
+>=20
+> At which point did it loose the ability to run in the atomic context? I
+> couldn't work it out from the commits.
 
-> Now that hva_to_pfn() no longer supports being called in atomic context,
-> move the might_sleep() annotation from hva_to_pfn_slow() to
-> hva_to_pfn().
+It didn't lose the ability per se (calling hva_to_pfn_fast() in atomic cont=
+ext
+would still be functionally ok), rather the previous patch
 
-The commentary for hva_to_pfn_fast disagrees.
+  KVM: Drop @atomic param from gfn=3D>pfn and hva=3D>pfn APIs
 
-  /*
-   * The fast path to get the writable pfn which will be stored in @pfn,
-   * true indicates success, otherwise false is returned.  It's also the
-   * only part that runs if we can in atomic context.
-   */
-  static bool hva_to_pfn_fast(struct kvm_follow_pfn *kfp, kvm_pfn_t *pfn)
-
-At which point did it loose the ability to run in the atomic context? I
-couldn't work it out from the commits.
-
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  virt/kvm/kvm_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 84c73b4fc804..03af1a0090b1 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2807,8 +2807,6 @@ static int hva_to_pfn_slow(unsigned long addr, bool=
- *async, bool write_fault,
->  	struct page *page;
->  	int npages;
->=20=20
-> -	might_sleep();
-> -
->  	if (writable)
->  		*writable =3D write_fault;
->=20=20
-> @@ -2947,6 +2945,8 @@ kvm_pfn_t hva_to_pfn(unsigned long addr, bool inter=
-ruptible, bool *async,
->  	kvm_pfn_t pfn;
->  	int npages, r;
->=20=20
-> +	might_sleep();
-> +
->  	if (hva_to_pfn_fast(addr, write_fault, writable, &pfn))
->  		return pfn;
-
---=20
-Alex Benn=C3=A9e
-Virtualisation Tech Lead @ Linaro
+removed support for doing so in order to simplify hva_to_pfn() as a whole.
