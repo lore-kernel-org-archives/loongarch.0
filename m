@@ -1,154 +1,164 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EF8D185E7A
-	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 06:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BF3143723
+	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 08:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723099938; cv=none; b=M1zb+W1vV3liyUkBQUkH2KoC6sEk4xDkdHi1ry5M7m3A60O0HtepAGNfrkgTvFC4k1pWFao7uucaVpQ2QyjK3gRcORpO7Vw33v9sgzeKo/MCkgEQL2fsME2R8Y2B0Q/tHkYVKyjDjDjWbL2npo3RwAegVaLtSKr5EmZN2XaeE4U=
+	t=1723104209; cv=none; b=BWrngz09lJ+bKuQcDPXZdy8cmfl+fw6CQWL2BWJh8swYv7RWGwwP4EaLtCVtYCzsg8/CF2J6NKvXghOmObwOn/Z3xqb0EeeM5HE0LGjAjH8mLDoEy4g6qRwtbc6P9hk+C2tMm7ROVkf0htZri7lpTp5X6vsJJIiUlux5ZKiiCTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723099938; c=relaxed/simple;
-	bh=tyzblumlpNxy/lgpFjj9twjGD98ubq+OFuL+jONNIco=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UieUOp3iqmFh+a6Jx4MIDmbyaplsjIOVzXcMZl90oOQgeXLN7Z9d6zIddq0xhfsFFfVYst15ueiwIt9xqyA10jqhEyEMW3ukd8KldfHrIPpOEliixZt4KeyXEH2++vviZQbS4o7+s5f/VDN9Mo8vTT1bsnK+Qh8lEfEM/YUHm5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8CxvOoca7Rm3X0LAA--.34519S3;
-	Thu, 08 Aug 2024 14:52:12 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMDxnWcYa7RmilIJAA--.17111S3;
-	Thu, 08 Aug 2024 14:52:10 +0800 (CST)
-Subject: Re: [PATCH V8 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
- dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
- zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
- zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240806115557.4750-1-zhangtianyang@loongson.cn>
- <87le180z8b.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <bc5d4e7a-ba81-f8f7-3629-2c80897d8ffc@loongson.cn>
-Date: Thu, 8 Aug 2024 14:52:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1723104209; c=relaxed/simple;
+	bh=5XIOBDmdcE1xfi6LAPUxjIUtOcBxQgathFGyanyABbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m/riSfhIU0GUMzqRCL7a2Ss8CXh9qVfl17IINzo781dHpW9EepB0eRp9oPzOXaQQG1HQWVMnBO5ddjuiazflPJ0WovzMT/ilgjFvyNU3glAmV/xa95M2GXgJz0NY57I9jeS0RWOUpO2oj0ZCRNfbwyNRZowGqPqfBU2hQyWQVfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgZ/f68l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgZ/f68l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B68C4AF16
+	for <loongarch@lists.linux.dev>; Thu,  8 Aug 2024 08:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723104208;
+	bh=5XIOBDmdcE1xfi6LAPUxjIUtOcBxQgathFGyanyABbg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GgZ/f68lJ/wZt5nsjJ2FmN7osJSDJgnDXZNK5+qBUk+HQPaiMTKvJ9oeVokp+v1FD
+	 Pu6s2kY4by2jKzBwQVWlRJMdaoySjX5E0QEA9QjNlEKsDKEhOZ5ye10Kjfk1ZaOCB/
+	 /V0Rq+po1U2rGFHjjRvJCkpRvg0lXwQrTHPfbtho20RbDZL1MbTKO4tMbFdqWQHhO7
+	 LMbE7OIRoDd/nHRSaGzextCWe328gAjIwCu2UfUQUSmnI5ZwCy8ucd5noe9xm1vFDH
+	 VEP0iEhqRjVSls/4TmTed9GrI3Kwvt3oMI71IXtZfbf4JP/yORkZLZpyebdSCLPFf2
+	 f1Kqpjfwrt9Jg==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52efdf02d13so1208416e87.2
+        for <loongarch@lists.linux.dev>; Thu, 08 Aug 2024 01:03:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUlT4eVmJG0ekoBG1vq2NziD+ZijefkeZQDbPcnoEaqQTRhKtYmyLpGoTiznZUQ32oo6uwlt4kQnC0vKxiAbnHldv6UmVvWfQbi
+X-Gm-Message-State: AOJu0YytvZYgwc/y/MPJ6sgXjimt+jGxVZhWVCXaDoUvvE3B4jxvGj3U
+	6VHo6q687FzSe/w+Oyqpp7sglLHcdNuY66bFUn1ppyCF1k022jtSvBYw6cb5Yc7EaYUSQXIn9em
+	lXpc1QEFVJ19J5AFyegq5+aohFR4=
+X-Google-Smtp-Source: AGHT+IGUcyROuCVRvFawk0tNkyq3zXVcrypZ/E0fTJF+LE3Z7riNXq3gQCNs3MGE4OjTaREQLn9aFU8R3EPyh+dDwpM=
+X-Received: by 2002:a05:6512:318d:b0:52e:d0f8:2d43 with SMTP id
+ 2adb3069b0e04-530e58207d0mr801724e87.17.1723104206774; Thu, 08 Aug 2024
+ 01:03:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87le180z8b.ffs@tglx>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMDxnWcYa7RmilIJAA--.17111S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWF4rCr1xur1DZF4ftFWfCrX_yoW5Ww1UpF
-	WUJw4Dur48tFyFqrWkX3yDZryavryIg3WDK34fCa4xAa4Y9ryI9Fy0kF47uFyUCr48Aw4j
-	vr40vrykCan8JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUU
-	UU=
+References: <20240806115557.4750-1-zhangtianyang@loongson.cn>
+ <87le180z8b.ffs@tglx> <bc5d4e7a-ba81-f8f7-3629-2c80897d8ffc@loongson.cn>
+In-Reply-To: <bc5d4e7a-ba81-f8f7-3629-2c80897d8ffc@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 8 Aug 2024 16:03:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7EHRSFsJCY3F2NdwjGcEO-TnSF4S3iQnYXh-N8c2-b4g@mail.gmail.com>
+Message-ID: <CAAhV-H7EHRSFsJCY3F2NdwjGcEO-TnSF4S3iQnYXh-N8c2-b4g@mail.gmail.com>
+Subject: Re: [PATCH V8 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org, kernel@xen0n.name, 
+	jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn, 
+	lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com, 
+	akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn, 
+	xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org, 
+	yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Thomas
+Hi, Tianyang,
 
-Thank you for your feedback.
-
-ÔÚ 2024/8/8 ÉÏÎç6:01, Thomas Gleixner Ð´µÀ:
-
->> +	guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
->> +
->> +	for (i = 0; i < nr_irqs; i++) {
->> +		d = irq_domain_get_irq_data(domain, virq + i);
->> +		if (d) {
->> +			clear_free_vector(d);
->> +			irq_domain_reset_irq_data(d);
->> +
-> Stray newline, but the more important question is what kfree()'s 'd'?
+On Thu, Aug 8, 2024 at 2:52=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
+on.cn> wrote:
 >
-> AFAICT, nothing. So that's a memory leak, no?
-With my understand , 'd' as 'struct irq_data' can be free at public 
-irqdomain process, and really miss a kfree targeting 'struct chip_data'
+> Hi, Thomas
 >
->> +static int __init avecintc_init(struct irq_domain *parent)
->> +{
->> +	parent_irq = irq_create_mapping(parent, INT_AVEC);
->> +	if (!parent_irq) {
->> +		pr_err("Failed to mapping hwirq\n");
->> +		ret = -EINVAL;
->> +		goto out_remove_domain;
->> +	}
->> +	irq_set_chained_handler_and_data(parent_irq, avecintc_irq_dispatch, NULL);
->> +
->> +	ret = irq_matrix_init();
->> +	if (ret < 0) {
->> +		pr_err("Failed to init irq matrix\n");
->> +		goto out_remove_domain;
-> Which still leaves the disfunct chained handler installed and the
-> mapping intact.
+> Thank you for your feedback.
+>
+> =E5=9C=A8 2024/8/8 =E4=B8=8A=E5=8D=886:01, Thomas Gleixner =E5=86=99=E9=
+=81=93:
+>
+> >> +    guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
+> >> +
+> >> +    for (i =3D 0; i < nr_irqs; i++) {
+> >> +            d =3D irq_domain_get_irq_data(domain, virq + i);
+> >> +            if (d) {
+> >> +                    clear_free_vector(d);
+> >> +                    irq_domain_reset_irq_data(d);
+> >> +
+> > Stray newline, but the more important question is what kfree()'s 'd'?
+> >
+> > AFAICT, nothing. So that's a memory leak, no?
+> With my understand , 'd' as 'struct irq_data' can be free at public
+> irqdomain process, and really miss a kfree targeting 'struct chip_data'
+> >
+> >> +static int __init avecintc_init(struct irq_domain *parent)
+> >> +{
+> >> +    parent_irq =3D irq_create_mapping(parent, INT_AVEC);
+> >> +    if (!parent_irq) {
+> >> +            pr_err("Failed to mapping hwirq\n");
+> >> +            ret =3D -EINVAL;
+> >> +            goto out_remove_domain;
+> >> +    }
+> >> +    irq_set_chained_handler_and_data(parent_irq, avecintc_irq_dispatc=
+h, NULL);
+> >> +
+> >> +    ret =3D irq_matrix_init();
+> >> +    if (ret < 0) {
+> >> +            pr_err("Failed to init irq matrix\n");
+> >> +            goto out_remove_domain;
+> > Which still leaves the disfunct chained handler installed and the
+> > mapping intact.
+>
+> There is indeed a problem here, but we have not found a similar approach
+> for reference.
+>
+> Is it reasonable to replace here with handle_bad_irq in case of failure?
+> or is there any other more suitable way. We hope you can give us some
+> suggestions, thank you very much
+Maybe we can move irq_set_chained_handler_and_data(parent_irq,
+avecintc_irq_dispatch, NULL) after the checking of irq_matrix_init().
 
-There is indeed a problem here, but we have not found a similar approach 
-for reference.
+Huacai
 
-Is it reasonable to replace here with handle_bad_irq in case of failure? 
-or is there any other more suitable way. We hope you can give us some 
-suggestions, thank you very much
-
->> +#endif
->> +	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
->> +	value |= IOCSR_MISC_FUNC_AVEC_EN;
->> +	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
->> +
->> +	return ret;
->> +
->> +out_remove_domain:
->> +	irq_domain_remove(loongarch_avec.domain);
->> +out_free_handle:
->> +	irq_domain_free_fwnode(loongarch_avec.fwnode);
->> +out:
->> +	return ret;
->> +}
->> +
->> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
->> +				     const unsigned long end)
->> +{
->> +	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
->> +
->> +	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-> What validates that msi_base_addr has none of the lower 16 bits set, as
-> they are required to be zero to make MSI message composing work, right?
-
-This operation originates from some hardware designs.
-
-In 3C6000, either eiointc or avecintc can be the parent controller for 
-MSI interrupts and these two controllers have different MSI msg address.
-
-In our platform design scheme, we fix avec-msg-address to the address of 
-(eiointc-msg-address - 0x100000). Therefore, here we need to subtract 
-AVEC_MSG_OFFSET from the msg_address obtained by MCFG
-
-The main purpose of the design that users of 3C6000 can freely choose 
-the version of the Linux kernel that supports loongarch (regardless of 
-whether AVEC is supported or not) without having to change the firmware
-
-
-Thanks again
-
-Tianyang
-
+>
+> >> +#endif
+> >> +    value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> >> +    value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> >> +    iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> >> +
+> >> +    return ret;
+> >> +
+> >> +out_remove_domain:
+> >> +    irq_domain_remove(loongarch_avec.domain);
+> >> +out_free_handle:
+> >> +    irq_domain_free_fwnode(loongarch_avec.fwnode);
+> >> +out:
+> >> +    return ret;
+> >> +}
+> >> +
+> >> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *hea=
+der,
+> >> +                                 const unsigned long end)
+> >> +{
+> >> +    struct acpi_madt_msi_pic *pchmsi_entry =3D (struct acpi_madt_msi_=
+pic *)header;
+> >> +
+> >> +    msi_base_addr =3D pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
+> > What validates that msi_base_addr has none of the lower 16 bits set, as
+> > they are required to be zero to make MSI message composing work, right?
+>
+> This operation originates from some hardware designs.
+>
+> In 3C6000, either eiointc or avecintc can be the parent controller for
+> MSI interrupts and these two controllers have different MSI msg address.
+>
+> In our platform design scheme, we fix avec-msg-address to the address of
+> (eiointc-msg-address - 0x100000). Therefore, here we need to subtract
+> AVEC_MSG_OFFSET from the msg_address obtained by MCFG
+>
+> The main purpose of the design that users of 3C6000 can freely choose
+> the version of the Linux kernel that supports loongarch (regardless of
+> whether AVEC is supported or not) without having to change the firmware
+>
+>
+> Thanks again
+>
+> Tianyang
+>
