@@ -1,106 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180A542A96;
-	Sat, 10 Aug 2024 20:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3D93AC36;
+	Sat, 10 Aug 2024 21:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723322803; cv=none; b=ReSuaVtZofE5utdgpXgtEV+AyF7oKhF6snVqJiz426T1Jqvu6iQ9eaHlhrjmk6HIeNuVPGZV9x4Jw04cOCD9oZvX2TUcoE94BHf6nqmAkzU2gfBxZ3cLttFk98FnKc1gB4Eiv3tkDpoApkOczPg67/gQUo3/SKjKuWHAN0D7j5k=
+	t=1723323877; cv=none; b=sHMUvV7+1AJKoTaHy5kOSmbRSv/MdPLaC9pphvtqysU48DkQ4g0Bpiz7peSVHwltVKjk3xix2pPeMpk4/pYBFaLw0BnsO5PwfbrDBW5bFSQZjUl79InKHst6x1H0erBDxCULr2v9Kc9pgvSZFCiu/fjP5m6XWahvzwVGok5sQg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723322803; c=relaxed/simple;
-	bh=KKatjUDfUDh3394abB3/k7FYraV6vbUqJI+NfUHQpFs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eem9tSbL5M+OnhJ0EKvLP88w5hutYT9OKbF9CzecbBTcJqKjhFUYorHoF992/XDz5jvm0G0EJL+GAutl8b0VUdyw7cav64djztW2e98Op/0ena1oQ39dXDMaqXbQcH8BFwf6r/EDhXPJUqcAxIGx0eywjG+IWTjX8XUrDSLva8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SYzN/+gm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=luYSufYO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1723323877; c=relaxed/simple;
+	bh=U6uyqW0VIsr3ynf+I05mOzu59oLHp/XRqRKQdkUKQPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YkFoGwfSWIZ9nV+AcCAuP/+Y9mk2ozoqkIHT1FL/Gy0/bqNkZApyG1qALvdmIrDjNRfr8mVuc1ZvgK2jaG05zSpCrMWz4pus+4Uj0MzhJcxKdMXMhhdAe4RU4VnZ+oo3FJq774gSkKR2EcT16lK7XWOhJO/ch8inhkoEtaSRaFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WSyOlZN4; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SYzN/+gm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="luYSufYO"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723322800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4EB6G605UpqViWz3uTt7qqaR1ty9Iaba8hEW5CoDrxE=;
-	b=SYzN/+gmwiSt8zjP5e320hPbBMJJpemWcEOV/C61HAH+KNL9nsWIox8NbYP2pgPBu/3Xz0
-	yQL8Z8FSMjkgq5HqSuP3gglZpwJZJxIfnWtlHXDOTcatRP1ge7bHqk2O+5jYypO4nKQ/ie
-	Y5cm2q2/hr3uG9ha5MFfXl6J6BBW4gQrUxg75QKpAy+135p/m1Kd+Jstf+lgMCdSUk8MXH
-	pu0y/bELyEwu9AzPBifUCklSNog2tdhdovqPMzyMx8swps0UV/6FVWNTC0VTEh9ekXSO7e
-	Qd14+TnDIrnYJw/OwzlPX2Gp8eipcnz9IzOivrr1ZiQS5ZXyNK++cAFXZz/uxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723322800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4EB6G605UpqViWz3uTt7qqaR1ty9Iaba8hEW5CoDrxE=;
-	b=luYSufYOE9iMYEfrZDBXG+F6zYOlckEFvz6toHP8i6rE/EeatF5aAnFxWLQz2Qdz7uhNAW
-	T3FJE0uaRdpNJgDA==
-To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, x86@kernel.org, Song Gao
- <gaosong@loongson.cn>
-Subject: Re: [PATCH v5 3/3] irqchip/loongson-eiointc: Add extioi virt
- extension support
-In-Reply-To: <20240805073546.668475-4-maobibo@loongson.cn>
-References: <20240805073546.668475-1-maobibo@loongson.cn>
- <20240805073546.668475-4-maobibo@loongson.cn>
-Date: Sat, 10 Aug 2024 22:46:39 +0200
-Message-ID: <87wmkortqo.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WSyOlZN4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=L5ZaMkcysgxHBoobfCUH51gejY2SZF51sPwk8BxYjEY=; b=WSyOlZN4Nni7gLJNXzcNaOAvzJ
+	AGptP8rQIgN+f0r3MKaa4DkO8n0uajfvfFHFin2/Bt8kD3YAo9vEUuRl1Bupm9EadiUsbtx7hSql/
+	a8CkFGhTcyPe5ZoM/Dz28ZIEApK1jA67plyopWOnjdxd8Am17AfJWo7UaF3NqvbZcOn5fRgJ5ikG/
+	p7WlXxAtLLnWnn/XjjEmwkOEdDCvSLYCRAq1X4fFc4ZgXbYymk4kT6SIvGoQtEcCkjSjqLxp+eKdj
+	acvI13ItRy/3Cn738bv0ltJVQZNhgXszAuribt/HlAdGjnA9yaqgfs/Kf+cSvUsGKtI8rLZwpgI+r
+	WLGtRLyA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sctFn-00000007Fdg-2gux;
+	Sat, 10 Aug 2024 21:04:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3BB1B300729; Sat, 10 Aug 2024 23:03:59 +0200 (CEST)
+Date: Sat, 10 Aug 2024 23:03:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v6 5/5] rust: add arch_static_branch
+Message-ID: <20240810210359.GD11646@noisy.programming.kicks-ass.net>
+References: <20240808-tracepoint-v6-0-a23f800f1189@google.com>
+ <20240808-tracepoint-v6-5-a23f800f1189@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240808-tracepoint-v6-5-a23f800f1189@google.com>
 
-On Mon, Aug 05 2024 at 15:35, Bibo Mao wrote:
+On Thu, Aug 08, 2024 at 05:23:41PM +0000, Alice Ryhl wrote:
 
-> Interrupts can be routed to maximal four virtual CPUs with one external
-> hardware interrupt. Add the extioi virt extension support so that
-> Interrupts can be routed to 256 vcpus on hypervisor mode.
-
-interrupts .... 256 vCPUs in hypervisor mode.
-
->  static int cpu_to_eio_node(int cpu)
->  {
-> -	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-> +	int cores;
+> +/// Wrapper around `asm!` that uses at&t syntax on x86.
+> +// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
+> +// syntax.
+> +#[cfg(target_arch = "x86_64")]
+> +#[macro_export]
+> +macro_rules! asm {
+> +    ($($asm:expr),* ; $($rest:tt)*) => {
+> +        ::core::arch::asm!( $($asm)*, options(att_syntax), $($rest)* )
+> +    };
+> +}
 > +
-> +	if (kvm_para_available() && kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI))
+> +/// Wrapper around `asm!` that uses at&t syntax on x86.
 
-Why isn't that kvm_para_available() check inside of
-kvm_para_has_feature() instead of inflicting it on every usage site?
-That's just error prone.
+^ the above line seems out of place given the 'not' below.
 
-> +		cores = CORES_PER_VEIO_NODE;
-> +	else
-> +		cores = CORES_PER_EIO_NODE;
-> +	return cpu_logical_map(cpu) / cores;
->  }
-
-> @@ -105,18 +144,24 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
-> @@ -140,17 +185,23 @@ static int eiointc_index(int node)
->  
->  static int eiointc_router_init(unsigned int cpu)
->  {
-> -	int i, bit;
-> -	uint32_t data;
-> -	uint32_t node = cpu_to_eio_node(cpu);
-> -	int index = eiointc_index(node);
-> +	uint32_t data, node;
-> +	int i, bit, cores, index;
-
-Is it so hard to follow:
-
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
-
-?
-
-Thanks,
-
-        tglx
+> +// For non-x86 arches we just pass through to `asm!`.
+> +#[cfg(not(target_arch = "x86_64"))]
+         ^^^
+> +#[macro_export]
+> +macro_rules! asm {
+> +    ($($asm:expr),* ; $($rest:tt)*) => {
+> +        ::core::arch::asm!( $($asm)*, $($rest)* )
+> +    };
+> +}
