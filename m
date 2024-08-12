@@ -1,72 +1,111 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECCA16DC32;
-	Mon, 12 Aug 2024 09:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DBC17B43F
+	for <loongarch@lists.linux.dev>; Mon, 12 Aug 2024 13:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723455846; cv=none; b=dEYKGdoNz9m2bIXzl6vKzE+3DlZPkHyy5pfaJg4IM8ppSP7D6nG1LBwVlwecXV47pxAws+zfU9s7afM0RqF9ntNJtg9nYI0AjuTCCZzDV4EjmZZvxqG+ud3j32jAHMJzXafryRDUEj0sBokMK5eNfjhXkPDpqKAPqHUht74g7vE=
+	t=1723469594; cv=none; b=Z3DcVof8AYVlinliSXIb5dhhA7Vr/wKLOPGqZOH18shXhxSvDSQivqy+UT7IDtcqRoScTU9gPE91wb9JLIb9YXXethS5eJUhsTBj1hnyj1fjLZE/gBAuuIid0fhK1JvyuWADyRAbNqUyCS1+opRLpaGx2qHPt/G4nGghRgtUGKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723455846; c=relaxed/simple;
-	bh=P8t2qzTDKtuBQhzPXUYxfC3tFEHNAV85Pec+kdaY5zE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZT7y/zxf6C+lT7v69cGWCPAHtcQh7dNZGlGMEgPYyXWWNzj0uihBxqlHeMLNBiysSP4CRWhSoEQkfrqM33TVltGqwpcqxxZ9JHi03R0foNNsL7QY0/pFHqapltDedZyd4n91ambXd4pwOyNYruRKFJtKNnn+PGZfwJcnNDnhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=AcWQh47x; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1723469594; c=relaxed/simple;
+	bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XqVI0mnQdygBB807dlA8iHiNMiPphDBztbTJh5RGvXfcWF5S1jocjr+zJdh4GneUpObLb1GJSL6i/xoyecGY+9BJcZdDkuy1Dpl9cdJU61yMPPsw6SXGArx05FgoWmYCrYWj3WBDeFkInjZGE2GHIhKlrNO4v0dXf9iB01GmOJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xk2n0jLs; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="AcWQh47x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=8OQDzwap6QK8JuO7jTB4iPv7Bd6WkmI/d68Ki8Wr0Ik=;
-	b=AcWQh47x9pr/Dfjbz1ISPz0mIIAnCslrTImIcAZBaRUfWxpBXF8lKZSN2SPFhK
-	lF5bgxux15pii+5/yBfzpFsNKMM5GWD2N4/YPatm7gTq4KzHA6E3C/Q0Oevs/vAY
-	ESM/PzTsuS6AJ4mdooVhuVErXywKoEq2ry+h7gWpMzcKc=
-Received: from dragon (unknown [117.62.10.86])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD3f8JH2blmcEBWAg--.28001S3;
-	Mon, 12 Aug 2024 17:43:37 +0800 (CST)
-Date: Mon, 12 Aug 2024 17:43:35 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 1/4] arm64: dts: imx8: remove non-existent DACs
-Message-ID: <ZrnZRz4U7D8oqOMK@dragon>
-References: <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-alkalize-bouncy-83e748284bc7@spud>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xk2n0jLs"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42816ca782dso33280995e9.2
+        for <loongarch@lists.linux.dev>; Mon, 12 Aug 2024 06:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723469592; x=1724074392; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
+        b=xk2n0jLsEVgOFgCTgcuG8u6SbeNiNid0GXk010WEORn7EB1eVOmLx8YoeT+10ovmC6
+         m5kGdsJslwiRVr8odooKCpV+Vf9IkBITYtxCKX8DGJEE4L5QCFCUo00R9ZGdzbF8qJ+5
+         VnjHdN98zeP+PIrBvklVi5NvJk7xqr2l6dIwmYjFUf4TbMAmt81xmvWlb2+pSSbpET5r
+         wi2ivm+noHLTycvsqOMuwighbiPWU4sHtVx48T3dYO+EBRgoxei7emgoT7u3uQFNOwgs
+         8XwlIS1uT+z4IYoRzmvPW041jQRN7H+HV0faOIj+VCgNpaxO4t966EzZ+lpPfrg+tTke
+         +HWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723469592; x=1724074392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
+        b=qppFp6Fj54lTmMWndksWbiP0AFY7PFtsVKmNhizLZdAPtQdKNhLTNqUT5rlnrAuK4W
+         LWFxRLrYbidI2sqf6jO+h5xlbGOFqsr6Q+Jj3ANwIZ5qxBDxjYOGhHEOrNyx231XHKAg
+         9sIYS/1hsPRafme+3x82UGR3mKsrhHnr3G/VkpgTGj1LwFR0a6cb/QByHt+/zALyk2Uv
+         xTm8wOhhnQxljvt3zVhQ4HYsjBVDCIoQ1r6BUICe+Ap+2oUtrLSBv0WC9kAvS+rysCQz
+         3Zt96hYYqr3E8deufLv8NEmPwmYi+LGFPSCnAcKolHguTjFmP5dM+im8jBH3j3b/PJfB
+         bykg==
+X-Forwarded-Encrypted: i=1; AJvYcCXL3k4BNyLi2LqtkmzPjnp4YRMmb4O2tK1O2J3wLSMP4v/ejDCvK3/rcLJrKKDzk/vFFMEsPfWsqRGj2dMLFPpFoy9ybJWy7zhe
+X-Gm-Message-State: AOJu0YzRBV/XttNBUOHOjJDAhNFY1R4JpE189yZngwaU915Mg4ZQ7NWZ
+	sWfnLNYsNV3ZxrGy+FBxHWM0EU3zuZICpjmYdDT/nfQrs/ToVtA7S2YwWq52nrcbZL+RI8MS30P
+	//ETT0kotLKbwggsN+IBWvmLYYOzAdqdUSKhL
+X-Google-Smtp-Source: AGHT+IHW60xClnCiQEYYTC8Z9PZ33xaYy4WZgALT6Q+LMP95jazFgPNu9OZ8W3SxyYi1G4TpTJOyz0WQCdXu9YQVFvk=
+X-Received: by 2002:a05:6000:b42:b0:363:d980:9a9e with SMTP id
+ ffacd0b85a97d-3716cd267abmr226021f8f.55.1723469591316; Mon, 12 Aug 2024
+ 06:33:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717-alkalize-bouncy-83e748284bc7@spud>
-X-CM-TRANSID:Ms8vCgD3f8JH2blmcEBWAg--.28001S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUI_OzUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAgc5ZWa5z7Yh8gAAss
+References: <20240808-tracepoint-v6-0-a23f800f1189@google.com> <20240808-tracepoint-v6-4-a23f800f1189@google.com>
+In-Reply-To: <20240808-tracepoint-v6-4-a23f800f1189@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 12 Aug 2024 15:32:59 +0200
+Message-ID: <CAH5fLggC_73YQGLLjUsGnsUjAr9vOS-ebG0=-dWGqS7euzzf4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] jump_label: adjust inline asm to be consistent
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 17, 2024 at 10:37:53AM +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Neither the imx8dxl-evk or imx8qm-mek have a Rohm DAC on them as far as
-> I can tell from online documentation, and they certainly do not have a
-> dh2228fv, as this device does not actually exist! Remove the DAC nodes
-> from the devicetrees as it is not acceptable to pretend to have a device
-> on a board in order to bind the spidev driver in Linux.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+On Thu, Aug 8, 2024 at 7:23=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
+ote:
+>
+> To avoid duplication of inline asm between C and Rust, we need to
+> import the inline asm from the relevant `jump_label.h` header into Rust.
+> To make that easier, this patch updates the header files to expose the
+> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
+>
+> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
+> takes the same arguments in a consistent order so that Rust can use the
+> same logic for every architecture.
+>
+> Link: https://lore.kernel.org/r/20240725183325.122827-7-ojeda@kernel.org =
+[1]
 
-Applied, thanks!
+This link is in the wrong place. It's supposed to be mentioned as a
+dependency for this series. Also, I intended to have the same tags
+here as I did on the last patch.
 
+Alice
