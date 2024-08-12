@@ -1,114 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DB322615;
-	Sun, 11 Aug 2024 15:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DE5BA2F;
+	Mon, 12 Aug 2024 01:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723390974; cv=none; b=ljiGA6TD4eK9Wt2sIL9l5P1UC2p9gEbNZI+uk+IzAZM5VMF7Pi/Pu5vD6HzmX3Yf3tY6TKmdVN6SZR65d0Ps3ecqlaxU8gX1O4OI0WQn2yQh7w7lqek4WHaiN8eJUv0s4Vjt/byLMIhZrrlyVnULZHhcyJ9CUmxodF5UCTNCIzU=
+	t=1723425058; cv=none; b=ASdSwbMab9ChTTbJDc8IG8kqLk7Us4Z/EdCGbQ65brbvVN9ax2/I1fcZafreBcaAn8OYzFwNYUQYEgiBsMcjc4wbNgP9rg+tocvQyPThEOZjHWgwnkjDMhgDcUEp2Fp9cxWJCdTlKxi9rL20gs6TT2s6orSF1XUtOS9A3DRXbZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723390974; c=relaxed/simple;
-	bh=RfN2eLdQYRcxLEXUx5OMX2Hcrwqp3yedHcg9gDMAwX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4LDnZTg5P+zjRlWj05jIoFcjBf7rAnkjwZtSngieCbQBYrSygoglsOn+K6fd/qIDs7/2xUi+/LDz+nM46Y3Cbk2NVCmzAcU1dsR7i0DnPbQ56IGDkv4o022/Pfjh3rqnvms+yPDXdzLO3QEq0X1BZcISdzftdYeQ/HmyxplXCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=c9W9TuGV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="c9W9TuGV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4EAC32786;
-	Sun, 11 Aug 2024 15:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723390973;
-	bh=RfN2eLdQYRcxLEXUx5OMX2Hcrwqp3yedHcg9gDMAwX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c9W9TuGVjiUm39yj8GR4B27ohrI0cnV6wJgwMzUtZvbxvTquGT0cwTpRXbNJPWr37
-	 ax6do0qnFkBgI1GVYuookdY/hdtekFeHzeTNOEKtlLhBpDSCMi490Ddn2GtdGWTLOU
-	 khnn1saCJtLs3H184XYPpZSKiUiFaKTlLPBflT7c=
-Date: Sun, 11 Aug 2024 17:42:50 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
-	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH for-stable] LoongArch: Define __ARCH_WANT_NEW_STAT in
- unistd.h
-Message-ID: <2024081126-blubber-flaky-8219@gregkh>
-References: <CAAhV-H6vXEaJf9NO9Lqh0xKoFAehtOOOLQVO4j5v+_tD7oKEXQ@mail.gmail.com>
- <20240730022542.3553255-1-chenhuacai@loongson.cn>
- <2024073059-hamstring-verbalize-91df@gregkh>
- <CAAhV-H7W-Ygn6tXySrip4k3P5xVbVf7GpjOzjXfQvCCbA4r5Wg@mail.gmail.com>
+	s=arc-20240116; t=1723425058; c=relaxed/simple;
+	bh=rJrFm7yEqlB7PpqcS2AkAo08q2R8lUg3ybyZjtiWt9k=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=f6JiNSRIE2IaGlqOwBt7d7MjYAP9pYB+0YOyV0UR1uw09aicUKI5niaqB4nUMr6TMPE6vGoTdG7SW/Rjn9PALS7OwIfPxEIpdJcuSudurww2g77mtiYPI+KROEsBIPl2IfWBOWUjuAYxI8L0JUSCZGUeg1Jo3+yAHmi25NbWgl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxvOobYblmfjgQAA--.42116S3;
+	Mon, 12 Aug 2024 09:10:52 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxkeEZYblmzYkPAA--.8190S3;
+	Mon, 12 Aug 2024 09:10:49 +0800 (CST)
+Subject: Re: [PATCH v5 3/3] irqchip/loongson-eiointc: Add extioi virt
+ extension support
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, x86@kernel.org,
+ Song Gao <gaosong@loongson.cn>
+References: <20240805073546.668475-1-maobibo@loongson.cn>
+ <20240805073546.668475-4-maobibo@loongson.cn> <87wmkortqo.ffs@tglx>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <09d4ad7a-0548-28e6-f60e-c1b68c8c20b5@loongson.cn>
+Date: Mon, 12 Aug 2024 09:10:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <87wmkortqo.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7W-Ygn6tXySrip4k3P5xVbVf7GpjOzjXfQvCCbA4r5Wg@mail.gmail.com>
+X-CM-TRANSID:qMiowMDxkeEZYblmzYkPAA--.8190S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tw4DCFWxurykJrWfWF47Jrc_yoW8Aw4kpF
+	W8tFsI9w4DtryavwsYqrn7JF1FvrsxJFWUK3W8KayrJa9rZryrtFnYvFy3A3WDC348AasI
+	qFW5JF4j9a4SyrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOxhLUUUUU=
 
-On Wed, Jul 31, 2024 at 09:06:56AM +0800, Huacai Chen wrote:
-> On Tue, Jul 30, 2024 at 10:24 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jul 30, 2024 at 10:25:42AM +0800, Huacai Chen wrote:
-> > > Chromium sandbox apparently wants to deny statx [1] so it could properly
-> > > inspect arguments after the sandboxed process later falls back to fstat.
-> > > Because there's currently not a "fd-only" version of statx, so that the
-> > > sandbox has no way to ensure the path argument is empty without being
-> > > able to peek into the sandboxed process's memory. For architectures able
-> > > to do newfstatat though, glibc falls back to newfstatat after getting
-> > > -ENOSYS for statx, then the respective SIGSYS handler [2] takes care of
-> > > inspecting the path argument, transforming allowed newfstatat's into
-> > > fstat instead which is allowed and has the same type of return value.
-> > >
-> > > But, as LoongArch is the first architecture to not have fstat nor
-> > > newfstatat, the LoongArch glibc does not attempt falling back at all
-> > > when it gets -ENOSYS for statx -- and you see the problem there!
-> > >
-> > > Actually, back when the LoongArch port was under review, people were
-> > > aware of the same problem with sandboxing clone3 [3], so clone was
-> > > eventually kept. Unfortunately it seemed at that time no one had noticed
-> > > statx, so besides restoring fstat/newfstatat to LoongArch uapi (and
-> > > postponing the problem further), it seems inevitable that we would need
-> > > to tackle seccomp deep argument inspection.
-> > >
-> > > However, this is obviously a decision that shouldn't be taken lightly,
-> > > so we just restore fstat/newfstatat by defining __ARCH_WANT_NEW_STAT
-> > > in unistd.h. This is the simplest solution for now, and so we hope the
-> > > community will tackle the long-standing problem of seccomp deep argument
-> > > inspection in the future [4][5].
-> > >
-> > > More infomation please reading this thread [6].
-> > >
-> > > [1] https://chromium-review.googlesource.com/c/chromium/src/+/2823150
-> > > [2] https://chromium.googlesource.com/chromium/src/sandbox/+/c085b51940bd/linux/seccomp-bpf-helpers/sigsys_handlers.cc#355
-> > > [3] https://lore.kernel.org/linux-arch/20220511211231.GG7074@brightrain.aerifal.cx/
-> > > [4] https://lwn.net/Articles/799557/
-> > > [5] https://lpc.events/event/4/contributions/560/attachments/397/640/deep-arg-inspection.pdf
-> > > [6] https://lore.kernel.org/loongarch/20240226-granit-seilschaft-eccc2433014d@brauner/T/#t
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  arch/loongarch/include/uapi/asm/unistd.h | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
-> > > index fcb668984f03..b344b1f91715 100644
-> > > --- a/arch/loongarch/include/uapi/asm/unistd.h
-> > > +++ b/arch/loongarch/include/uapi/asm/unistd.h
-> > > @@ -1,4 +1,5 @@
-> > >  /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > +#define __ARCH_WANT_NEW_STAT
-> > >  #define __ARCH_WANT_SYS_CLONE
-> > >  #define __ARCH_WANT_SYS_CLONE3
-> > >
-> > > --
-> > > 2.43.5
-> > >
-> > >
-> >
-> > What kernel branch(s) is this for?
-> For 6.1~6.10.
 
-What is the git id of this change in Linus's tree?
+
+On 2024/8/11 上午4:46, Thomas Gleixner wrote:
+> On Mon, Aug 05 2024 at 15:35, Bibo Mao wrote:
+> 
+>> Interrupts can be routed to maximal four virtual CPUs with one external
+>> hardware interrupt. Add the extioi virt extension support so that
+>> Interrupts can be routed to 256 vcpus on hypervisor mode.
+> 
+> interrupts .... 256 vCPUs in hypervisor mode.
+will modify in next version.
+
+> 
+>>   static int cpu_to_eio_node(int cpu)
+>>   {
+>> -	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
+>> +	int cores;
+>> +
+>> +	if (kvm_para_available() && kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI))
+> 
+> Why isn't that kvm_para_available() check inside of
+> kvm_para_has_feature() instead of inflicting it on every usage site?
+> That's just error prone.
+I had the same idea but not sure about it, it is to follow the 
+implemantion of x86.
+
+Yeap, it is better to put kvm_para_available() in function 
+kvm_para_has_feature(), one api for caller is simple and enough.
+
+Will do in next version.
+> 
+>> +		cores = CORES_PER_VEIO_NODE;
+>> +	else
+>> +		cores = CORES_PER_EIO_NODE;
+>> +	return cpu_logical_map(cpu) / cores;
+>>   }
+> 
+>> @@ -105,18 +144,24 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+>> @@ -140,17 +185,23 @@ static int eiointc_index(int node)
+>>   
+>>   static int eiointc_router_init(unsigned int cpu)
+>>   {
+>> -	int i, bit;
+>> -	uint32_t data;
+>> -	uint32_t node = cpu_to_eio_node(cpu);
+>> -	int index = eiointc_index(node);
+>> +	uint32_t data, node;
+>> +	int i, bit, cores, index;
+> 
+> Is it so hard to follow:
+> 
+>    https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+> 
+> ?
+Sorry to have the same coding style issue for the second time. I am not 
+familiar with it.
+
+Will do in next version.
+
+Regards
+Bibo Mao
+> 
+> Thanks,
+> 
+>          tglx
+> 
+
