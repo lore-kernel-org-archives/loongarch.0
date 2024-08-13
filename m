@@ -1,111 +1,206 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DBC17B43F
-	for <loongarch@lists.linux.dev>; Mon, 12 Aug 2024 13:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6400816DEA9
+	for <loongarch@lists.linux.dev>; Tue, 13 Aug 2024 08:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723469594; cv=none; b=Z3DcVof8AYVlinliSXIb5dhhA7Vr/wKLOPGqZOH18shXhxSvDSQivqy+UT7IDtcqRoScTU9gPE91wb9JLIb9YXXethS5eJUhsTBj1hnyj1fjLZE/gBAuuIid0fhK1JvyuWADyRAbNqUyCS1+opRLpaGx2qHPt/G4nGghRgtUGKo=
+	t=1723539264; cv=none; b=s98kaUwq+1TRoeGC0CRI/hAgshwsvdwR49y1V9tA9m2HCqnoPGaJHDptoM9TXRCKmaAj4qgIleQLGd8YTEx7fjq+sqy6qVwCGayGMg/o/LPtzg1ny3cG4d0srUffv5ZW/cZEbkqHKz+Ey09CfpPEjOLMag/w1GEyagNJAUjzFfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723469594; c=relaxed/simple;
-	bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqVI0mnQdygBB807dlA8iHiNMiPphDBztbTJh5RGvXfcWF5S1jocjr+zJdh4GneUpObLb1GJSL6i/xoyecGY+9BJcZdDkuy1Dpl9cdJU61yMPPsw6SXGArx05FgoWmYCrYWj3WBDeFkInjZGE2GHIhKlrNO4v0dXf9iB01GmOJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xk2n0jLs; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xk2n0jLs"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42816ca782dso33280995e9.2
-        for <loongarch@lists.linux.dev>; Mon, 12 Aug 2024 06:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723469592; x=1724074392; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
-        b=xk2n0jLsEVgOFgCTgcuG8u6SbeNiNid0GXk010WEORn7EB1eVOmLx8YoeT+10ovmC6
-         m5kGdsJslwiRVr8odooKCpV+Vf9IkBITYtxCKX8DGJEE4L5QCFCUo00R9ZGdzbF8qJ+5
-         VnjHdN98zeP+PIrBvklVi5NvJk7xqr2l6dIwmYjFUf4TbMAmt81xmvWlb2+pSSbpET5r
-         wi2ivm+noHLTycvsqOMuwighbiPWU4sHtVx48T3dYO+EBRgoxei7emgoT7u3uQFNOwgs
-         8XwlIS1uT+z4IYoRzmvPW041jQRN7H+HV0faOIj+VCgNpaxO4t966EzZ+lpPfrg+tTke
-         +HWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723469592; x=1724074392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
-        b=qppFp6Fj54lTmMWndksWbiP0AFY7PFtsVKmNhizLZdAPtQdKNhLTNqUT5rlnrAuK4W
-         LWFxRLrYbidI2sqf6jO+h5xlbGOFqsr6Q+Jj3ANwIZ5qxBDxjYOGhHEOrNyx231XHKAg
-         9sIYS/1hsPRafme+3x82UGR3mKsrhHnr3G/VkpgTGj1LwFR0a6cb/QByHt+/zALyk2Uv
-         xTm8wOhhnQxljvt3zVhQ4HYsjBVDCIoQ1r6BUICe+Ap+2oUtrLSBv0WC9kAvS+rysCQz
-         3Zt96hYYqr3E8deufLv8NEmPwmYi+LGFPSCnAcKolHguTjFmP5dM+im8jBH3j3b/PJfB
-         bykg==
-X-Forwarded-Encrypted: i=1; AJvYcCXL3k4BNyLi2LqtkmzPjnp4YRMmb4O2tK1O2J3wLSMP4v/ejDCvK3/rcLJrKKDzk/vFFMEsPfWsqRGj2dMLFPpFoy9ybJWy7zhe
-X-Gm-Message-State: AOJu0YzRBV/XttNBUOHOjJDAhNFY1R4JpE189yZngwaU915Mg4ZQ7NWZ
-	sWfnLNYsNV3ZxrGy+FBxHWM0EU3zuZICpjmYdDT/nfQrs/ToVtA7S2YwWq52nrcbZL+RI8MS30P
-	//ETT0kotLKbwggsN+IBWvmLYYOzAdqdUSKhL
-X-Google-Smtp-Source: AGHT+IHW60xClnCiQEYYTC8Z9PZ33xaYy4WZgALT6Q+LMP95jazFgPNu9OZ8W3SxyYi1G4TpTJOyz0WQCdXu9YQVFvk=
-X-Received: by 2002:a05:6000:b42:b0:363:d980:9a9e with SMTP id
- ffacd0b85a97d-3716cd267abmr226021f8f.55.1723469591316; Mon, 12 Aug 2024
- 06:33:11 -0700 (PDT)
+	s=arc-20240116; t=1723539264; c=relaxed/simple;
+	bh=99qHv74OASxAlC3ZKG47sDwra5wLJQY/UxW60bDJNYQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m0py9Pd3eOf8HJT6D8k43Z3sA4hg+o6mZLL/poDEFka/bvbFuCnvAFCpv0gXIGdLAKOXs1ruqcnnQKlB77X+W2L14uhqmYowZCMEr0UK+1kFuLfwD26Z738XTfjRpC91y1mqJVxdyejJCXpFYU44oEM+bnf+k6vEB8Lk7LW/B5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8Dxi+o6H7tmVB0SAA--.45378S3;
+	Tue, 13 Aug 2024 16:54:18 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMCxA+I6H7tmKfURAA--.19540S2;
+	Tue, 13 Aug 2024 16:54:18 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: corbet@lwn.net,
+	alexs@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tglx@linutronix.de,
+	jiaxun.yang@flygoat.com,
+	gaoliang@loongson.cn,
+	wangliupu@loongson.cn,
+	lvjianmin@loongson.cn,
+	zhangtianyang@loongson.cn,
+	yijun@loongson.cn,
+	mhocko@suse.com,
+	akpm@linux-foundation.org,
+	dianders@chromium.org,
+	maobibo@loongson.cn,
+	xry111@xry111.site,
+	zhaotianrui@loongson.cn,
+	nathan@kernel.org,
+	yangtiezhu@loongson.cn,
+	zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH Loongarch-avec support V9 1/2] irqchip/loongson-pch-msi: Switch to MSI parent domains
+Date: Tue, 13 Aug 2024 16:54:15 +0800
+Message-Id: <20240813085415.20035-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240808-tracepoint-v6-0-a23f800f1189@google.com> <20240808-tracepoint-v6-4-a23f800f1189@google.com>
-In-Reply-To: <20240808-tracepoint-v6-4-a23f800f1189@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 12 Aug 2024 15:32:59 +0200
-Message-ID: <CAH5fLggC_73YQGLLjUsGnsUjAr9vOS-ebG0=-dWGqS7euzzf4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] jump_label: adjust inline asm to be consistent
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxA+I6H7tmKfURAA--.19540S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAryxAryrKr1xXFyUXw43urX_yoWrAw4fpF
+	W3u342vrW8Aay8ZFZ7GwnrZFy3Cas3tFWUta1fGw1ftry8Zw1vgF1DtF42krWYyFWkGryD
+	Aa18Jr4Dua1DGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxUc0eHDUUUU
 
-On Thu, Aug 8, 2024 at 7:23=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
->
-> To avoid duplication of inline asm between C and Rust, we need to
-> import the inline asm from the relevant `jump_label.h` header into Rust.
-> To make that easier, this patch updates the header files to expose the
-> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
->
-> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
-> takes the same arguments in a consistent order so that Rust can use the
-> same logic for every architecture.
->
-> Link: https://lore.kernel.org/r/20240725183325.122827-7-ojeda@kernel.org =
-[1]
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-This link is in the wrong place. It's supposed to be mentioned as a
-dependency for this series. Also, I intended to have the same tags
-here as I did on the last patch.
+Now remove the global PCI/MSI irqdomain implementation and provide the
+required MSI parent functionality by filling in msi_parent_ops, so the
+PCI/MSI code can detect the new parent and setup per-device MSI domains.
 
-Alice
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ drivers/irqchip/Kconfig                |  1 +
+ drivers/irqchip/irq-loongson-pch-msi.c | 58 ++++++++++----------------
+ 2 files changed, 24 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index d078bdc48c38..341cd9ca5a05 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -685,6 +685,7 @@ config LOONGSON_PCH_MSI
+ 	depends on PCI
+ 	default MACH_LOONGSON64
+ 	select IRQ_DOMAIN_HIERARCHY
++	select IRQ_MSI_LIB
+ 	select PCI_MSI
+ 	help
+ 	  Support for the Loongson PCH MSI Controller.
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index dd4d699170f4..2242f63c66fc 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -15,6 +15,8 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ 
++#include "irq-msi-lib.h"
++
+ static int nr_pics;
+ 
+ struct pch_msi_data {
+@@ -27,26 +29,6 @@ struct pch_msi_data {
+ 
+ static struct fwnode_handle *pch_msi_handle[MAX_IO_PICS];
+ 
+-static void pch_msi_mask_msi_irq(struct irq_data *d)
+-{
+-	pci_msi_mask_irq(d);
+-	irq_chip_mask_parent(d);
+-}
+-
+-static void pch_msi_unmask_msi_irq(struct irq_data *d)
+-{
+-	irq_chip_unmask_parent(d);
+-	pci_msi_unmask_irq(d);
+-}
+-
+-static struct irq_chip pch_msi_irq_chip = {
+-	.name			= "PCH PCI MSI",
+-	.irq_mask		= pch_msi_mask_msi_irq,
+-	.irq_unmask		= pch_msi_unmask_msi_irq,
+-	.irq_ack		= irq_chip_ack_parent,
+-	.irq_set_affinity	= irq_chip_set_affinity_parent,
+-};
+-
+ static int pch_msi_allocate_hwirq(struct pch_msi_data *priv, int num_req)
+ {
+ 	int first;
+@@ -85,12 +67,6 @@ static void pch_msi_compose_msi_msg(struct irq_data *data,
+ 	msg->data = data->hwirq;
+ }
+ 
+-static struct msi_domain_info pch_msi_domain_info = {
+-	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+-	.chip	= &pch_msi_irq_chip,
+-};
+-
+ static struct irq_chip middle_irq_chip = {
+ 	.name			= "PCH MSI",
+ 	.irq_mask		= irq_chip_mask_parent,
+@@ -155,13 +131,31 @@ static void pch_msi_middle_domain_free(struct irq_domain *domain,
+ static const struct irq_domain_ops pch_msi_middle_domain_ops = {
+ 	.alloc	= pch_msi_middle_domain_alloc,
+ 	.free	= pch_msi_middle_domain_free,
++	.select	= msi_lib_irq_domain_select,
++};
++
++#define PCH_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
++				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
++				 MSI_FLAG_PCI_MSI_MASK_PARENT)
++
++#define PCH_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
++				 MSI_FLAG_PCI_MSIX      |	\
++				 MSI_FLAG_MULTI_PCI_MSI)
++
++static struct msi_parent_ops pch_msi_parent_ops = {
++	.required_flags		= PCH_MSI_FLAGS_REQUIRED,
++	.supported_flags	= PCH_MSI_FLAGS_SUPPORTED,
++	.bus_select_mask	= MATCH_PCI_MSI,
++	.bus_select_token	= DOMAIN_BUS_NEXUS,
++	.prefix			= "PCH-",
++	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
+ };
+ 
+ static int pch_msi_init_domains(struct pch_msi_data *priv,
+ 				struct irq_domain *parent,
+ 				struct fwnode_handle *domain_handle)
+ {
+-	struct irq_domain *middle_domain, *msi_domain;
++	struct irq_domain *middle_domain;
+ 
+ 	middle_domain = irq_domain_create_hierarchy(parent, 0, priv->num_irqs,
+ 						    domain_handle,
+@@ -174,14 +168,8 @@ static int pch_msi_init_domains(struct pch_msi_data *priv,
+ 
+ 	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
+ 
+-	msi_domain = pci_msi_create_irq_domain(domain_handle,
+-					       &pch_msi_domain_info,
+-					       middle_domain);
+-	if (!msi_domain) {
+-		pr_err("Failed to create PCI MSI domain\n");
+-		irq_domain_remove(middle_domain);
+-		return -ENOMEM;
+-	}
++	middle_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
++	middle_domain->msi_parent_ops = &pch_msi_parent_ops;
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
