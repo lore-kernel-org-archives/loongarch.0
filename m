@@ -1,62 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA0219F49B;
-	Thu, 15 Aug 2024 14:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2F01ABEA2
+	for <loongarch@lists.linux.dev>; Thu, 15 Aug 2024 14:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723730934; cv=none; b=HX6BvvoJO5WEP/y7JGGx15FYW7iYCFwZQlyN4wU7m6Mli+PBpFXg1LphyRDvbpW+3m+wGlGtzZPz6ioxk1PuTXf+wIyTTdaK0UvRZs2hc18lTHpgz2zj1osYxC65IC7iTwCWGQROpZICXIpjjwZFFCCG6oRObXTbrzRcw9CEVZo=
+	t=1723731766; cv=none; b=iVdODRhqxUyRyoQ1kX3Gq8ufcjX6ZL8cM6wT0/j4h0h761ZF1TNt2wo0StB3/hvugneEUAkyGMRlHIYjkUXMX5vCgPhFD67Z/BufjXd05pg2X4GFWUpDg4I3owkZ6WFY7W4mUbfMzEHcwvjjFaR5YRul3tUazXF65a0QcEUgiLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723730934; c=relaxed/simple;
-	bh=6J7/nbBGANAtqTMijx3LW7jLQZcKylk+IT8kHzyQfuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1L9WyRpGdr54ogM54gIknDaGhlun7raurDX+CQyPweNE3bZqICiNqNqdbHlhwPl1SJuETHHl/9XoT25/vFwqHGOD8aVSJ1wJPtmiTfGPdrRvRQSHRme45zSgctSwmfgCQZJEY4oygqy+cqgqcM6wqWJtTr3VUDTZTm6DVp85mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=hr3j+aCl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723731766; c=relaxed/simple;
+	bh=ICqgEAlYxLMRUQ5X2ysP7oB5piwO9M6V0hHbg4nVa+w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Vak5V6swWpj0SnnCuIEBydFfK5m0Bbm0JmdSJ6sXskB66vUBbspEbjyOBtRxN9fVbfvf8aMr2deNTty7iotcDNXhgYQKIYw9rsF5ZdOiyWKqGxy5sb3TlEqeCTJjYHSkPK5ebvxGLqQnQDAUATMtMIDadZL7Wv12k4nWNBHQmgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=S3CKv3n1; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hr3j+aCl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0405AC32786;
-	Thu, 15 Aug 2024 14:08:52 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hr3j+aCl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1723730931;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q7Qe90W7d8OXonZG2Y/sUz0TFsN4GjLdPacQQ4g1UkY=;
-	b=hr3j+aCltqdA/f5x6s5ggxLKx93bVRr1k3y5zQz/bOo7rT7DHQr9lNE/MMgZxnwaTCNs8k
-	gYsFAqQqG8BsfKcsCCN1nwYi++lGoeFC+FMkyu6wfDr+oIzFQxCWtNiSYewgKNRsocc+l3
-	PEF9LGDcr41/xsunDzsU9FPnF+UBr3E=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id aa72d43a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 15 Aug 2024 14:08:51 +0000 (UTC)
-Date: Thu, 15 Aug 2024 14:08:46 +0000
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="S3CKv3n1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1723731764;
+	bh=ICqgEAlYxLMRUQ5X2ysP7oB5piwO9M6V0hHbg4nVa+w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=S3CKv3n1KXmB1LZ0/dSeX2wG7FJaRusF5xHm0yCfeQRQvphiP/G4dXAjfw79UFZ4V
+	 JHZLHuE+/DDMEiCEW3F5nPk6aQllIiNvAyTVn9PqHl6yIv7/EUfZElfDMi+KIFpE4Y
+	 ItyEQAUGE409YkvMRejxGek6TSCjM6uWgt8JXzcE=
+Received: from [IPv6:240e:456:1030:181:abd4:6e7f:e826:ac0f] (unknown [IPv6:240e:456:1030:181:abd4:6e7f:e826:ac0f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id F194F66F26;
+	Thu, 15 Aug 2024 10:22:38 -0400 (EDT)
+Message-ID: <eae5ab91ee6a6eb96c397b4ff6470b72e9bf3086.camel@xry111.site>
 Subject: Re: [PATCH v2 0/2] LoongArch: Implement getrandom() in vDSO
-Message-ID: <Zr4L7qj1SxVnkMC0@zx2c4.com>
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ linux-crypto@vger.kernel.org, loongarch@lists.linux.dev, Jinyang He
+ <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd
+ Bergmann <arnd@arndb.de>
+Date: Thu, 15 Aug 2024 22:22:31 +0800
+In-Reply-To: <Zr4K77uPi3CMfE-S@zx2c4.com>
 References: <20240815133357.35829-1-xry111@xry111.site>
+	 <Zr4K77uPi3CMfE-S@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240815133357.35829-1-xry111@xry111.site>
 
-On Thu, Aug 15, 2024 at 09:33:55PM +0800, Xi Ruoyao wrote:
-> v1->v2: Remove Cc: lists in the cover letter and just type them in git
-> send-email command.  I assumed the Cc: lists in the cover letter would be
-> "propagated" to the patches by git send-email but I was wrong, so v1 was
-> never properly delivered to the lists.
+On Thu, 2024-08-15 at 14:04 +0000, Jason A. Donenfeld wrote:
+> Hi Xi,
+>=20
+> Thanks for posting this! That's very nice to see.
+>=20
+> I'm currently traveling without my laptop (actually in Yunnan, China!),
 
-The `--cc-cover` flag is what you want, or set sendemail.ccCover in your
-git config file.
+Have fun!
 
-https://git-scm.com/docs/git-send-email/en#Documentation/git-send-email.txt---no-cc-cover
+> so I'll be able to take a look at this for real starting the 26th, as
+> right now I'm just on my cellphone using lore+mutt.
+>=20
+> One thing I wanted to ask, though, is - doesn't LoongArch have 32 8-byte
+> registers? Shouldn't that be enough to implement ChaCha without spilling
+> and without using LSX?
+
+I'll work on it but I need to ask a question (it may be stupid because I
+know a little about security) before starting to code:
+
+Is "stack-less" meaning simply "don't spill any sensitive data onto the
+stack," or more strictly "stack shouldn't be used at all"?
+
+For example, is it OK to save all the callee-saved registers in the
+function prologue onto the stack, and restore them in the epilogue?
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
