@@ -1,82 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E20A1991B3
-	for <loongarch@lists.linux.dev>; Thu, 15 Aug 2024 08:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80D31AD3E2
+	for <loongarch@lists.linux.dev>; Thu, 15 Aug 2024 10:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723712031; cv=none; b=ZXoojjdIj+CgVySp/+NoMcohlBsyisPWX5TM6c3xStGpIqHzFqdj9dGtIdEuZV6C6Xcyyzw96ouRwFLY576qAeCn/RRRZ91Yg0+LIueaQrX8ruvfINWYOqRRBoDTpnFghMuh95FrFqbQ6ozoOzMlcGeYWpBojBFxi9PPzNSP2Pg=
+	t=1723718589; cv=none; b=a6g9tFgzoRmjahWEdaiktF645j9bi7sdt9VWO3viPv8+fBCT7qVnCCFv372u85B5ULmCNo4AMlwE7oagFEZ8nrtzo0HJy84c7XTDiyDwffXrCnBHgJ1Yatm2hJT3uNrkEaMYdRECkfAgT4gDEcDLfAHEluA5uqNVmW+AoysYyzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723712031; c=relaxed/simple;
-	bh=XQcoIaduwuccWjdCQClDPfInyE20Zdx9SbBaF+E0ypM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oYtiT2R5LeEM5Lnsm3y45gLIqvzgyeSrN7tMI6nia4A2sqlKCn2msruLJyuanqFDKvkPoA5ixd3TIjGVl+LTg8/wMMp7fsAOYvONlG8gF01axX/pgE2q/1TDgJWJBlA/jkXLc0xoysUrRiqmCzsQdxwfaAiBcDoUjM7cYlrXoEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=44NQ/Hch; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n6crkEUp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="44NQ/Hch";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n6crkEUp"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723712022;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=maVLekNauL+jpDz+leGh246XtWlgDC9MP29oK4IiT7E=;
-	b=44NQ/HchKK3iKxGkYe1BChOdPu6lvBL8EC0jw+k33niArfBmLSHtJXaRdv2eMgwx1Amc4Q
-	Xvoi6CdbqsMQLI1rZuDuK5MOkHToDGJD0b6+d7wVll//5H89MqHjhGij0d5zowNuVxBE2A
-	e5lhqJEaLy7R186XO8fmNy/Fzs+sJONigJWhvfmAgG7QqiowQZHoKjZMGV5FobSK2aQPKa
-	hX1RkDduWqZfiu2/+gsnlD2oOBdZE5Pl9kkbroxFLWka0vbHCrBFFXsrF3fqqGtwFHMukQ
-	phUEnHUfynFrHyXsIKZB9EliVxSRDaa4ANTlZ4MSVxzyrP9ndxLDeh7s+UJpzA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723712022;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=maVLekNauL+jpDz+leGh246XtWlgDC9MP29oK4IiT7E=;
-	b=n6crkEUp63LnOqn27icdijXc1Ze4PzkU1YWR1wP7QoBV/SWwTFvYEWoAbsWVDT2NjJX/9/
-	NH49d78I62cbyLDw==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, yijun@loongson.cn, mhocko@suse.com,
- akpm@linux-foundation.org, dianders@chromium.org, maobibo@loongson.cn,
- xry111@xry111.site, zhaotianrui@loongson.cn, nathan@kernel.org,
- yangtiezhu@loongson.cn, zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+	s=arc-20240116; t=1723718589; c=relaxed/simple;
+	bh=53uJymTnaOSNOFQYTB/VFbDVsYSJ4y6rV1IyQwjoCCo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PBO5ZBa6mG829W9U/sz5eydEHC0FqgWu/w77+qYmDfKneDSNmgQnyzyQ0qy8t4eg8pQjp+htlywT8uyc/QdrerMgjOFMtcvRJGGfaJRptxuWtjeR4JNs1ek8opkUVcQsvKyp40KEXLdkhrfOXVwdrOf+pGcWgVa+ck5Rttg4jo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8AxHuu5271mnr0UAA--.49326S3;
+	Thu, 15 Aug 2024 18:43:05 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMAxYeG2271mITAVAA--.32596S3;
+	Thu, 15 Aug 2024 18:43:03 +0800 (CST)
 Subject: Re: [PATCH Loongarch-avec support V9 1/2] irqchip/loongson-pch-msi:
  Switch to MSI parent domains
-In-Reply-To: <6495631f-ec9c-c86a-39d2-1ada793b8098@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+ gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
 References: <20240813085415.20035-1-zhangtianyang@loongson.cn>
  <875xs3petd.ffs@tglx> <6495631f-ec9c-c86a-39d2-1ada793b8098@loongson.cn>
-Date: Thu, 15 Aug 2024 10:53:41 +0200
-Message-ID: <8734n6np4a.ffs@tglx>
+ <8734n6np4a.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <d5c5fdc8-abd5-685f-b952-f36b9e0bd908@loongson.cn>
+Date: Thu, 15 Aug 2024 18:43:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8734n6np4a.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxYeG2271mITAVAA--.32596S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrXF4fGFWrGF1xCw13CF1rGrX_yoWxWrc_ua
+	47AryUCF1DCFs29ay7tr43AF42ya4jk3y0qw45JrWYvayFqr1DJanFg3srXrn8Xan7Xr90
+	kF9YqwnIqwnF9osvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7BMNUUU
+	UU=
 
-On Thu, Aug 15 2024 at 09:13, Tianyang Zhang wrote:
-> https://lore.kernel.org/all/20240813085427.20194-1-zhangtianyang@loongson=
-.cn/
->
-> =E5=9C=A8 2024/8/14 =E4=B8=8B=E5=8D=886:41, Thomas Gleixner =E5=86=99=E9=
-=81=93:
->> On Tue, Aug 13 2024 at 16:54, Tianyang Zhang wrote:
+Hi, Thomas
+
+在 2024/8/15 下午4:53, Thomas Gleixner 写道:
+> On Thu, Aug 15 2024 at 09:13, Tianyang Zhang wrote:
+>> https://lore.kernel.org/all/20240813085427.20194-1-zhangtianyang@loongson.cn/
 >>
->> Where is patch 2/2 ?
+>> 在 2024/8/14 下午6:41, Thomas Gleixner 写道:
+>>> On Tue, Aug 13 2024 at 16:54, Tianyang Zhang wrote:
+>>>
+>>> Where is patch 2/2 ?
+> Can you please thread your submissions properly and not send them
+> separately?
+>
+> Thanks,
+>
+>          tglx
 
-Can you please thread your submissions properly and not send them
-separately?
+I relearned the series of patches in the kernel submission guide. Now I 
+know how to generate the series-cover.
 
-Thanks,
+Can I resend all patches directly with a correct cover now?
 
-        tglx
+Tianyang
+
