@@ -1,74 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123CB15CB
-	for <loongarch@lists.linux.dev>; Thu, 15 Aug 2024 01:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DA226AFB
+	for <loongarch@lists.linux.dev>; Thu, 15 Aug 2024 06:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723684420; cv=none; b=hVaPGviiJdcTiEp6ezp8o96dkQqBE/cDU+prM45omWg1PqBv1HzUqjSiYRk00yZUqNZpXYzlKW1fUJmR3AC5BnQnm9ZKoRqVzxIOqLTrtM3fN+DH43WBKxo++OsIpzTNKdDURFF0YdP9Pa0QPDrcA2vE3eqyCxW0DP/4qobTiaA=
+	t=1723702681; cv=none; b=M35ULiabYF//qkTiw1WNGwAMD42rlO4UXIwKNaYsNffy+6Z5ksRkCzXECxZybIjL/+yNmBpM0KRBEDo8CHpKsxsM9RuPpiW8TeoQvaYiJ/XapIBHZ3hQN1Kbwl7eXaKzuF91WPmw2lRZ+TwJcg+dR4PcbJIsWGsc90m2//JozrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723684420; c=relaxed/simple;
-	bh=OJ2fQ1r1owYxLF2XcaRjIR/oGzV6xwhXHP++kmaQ1Lc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VCOSOUMR6xSyghLnpH+Od0t0el15c0IJmkw4qeoBi+n6vHKBXqOyXCDhjlMAbp2RSzqnZnJEfbN9v+gv5RSD5e12k3MaVXRi2M9/58HHjC4rsSIi8SzEPwos1bqboepeF56aCPZ6JxFu7c9inNR5zE56Bt5CE8cmNswOXgWVOEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxmOk4Vr1mEhsUAA--.46571S3;
-	Thu, 15 Aug 2024 09:13:28 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMDxnWc0Vr1mLmAUAA--.1077S3;
-	Thu, 15 Aug 2024 09:13:26 +0800 (CST)
-Subject: Re: [PATCH Loongarch-avec support V9 1/2] irqchip/loongson-pch-msi:
- Switch to MSI parent domains
-To: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
- dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
- zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
- zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240813085415.20035-1-zhangtianyang@loongson.cn>
- <875xs3petd.ffs@tglx>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <6495631f-ec9c-c86a-39d2-1ada793b8098@loongson.cn>
-Date: Thu, 15 Aug 2024 09:13:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1723702681; c=relaxed/simple;
+	bh=2ieEkSgkeeXHKQaOG4S/bYJ9as9XsQf3erKR7zsdkP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TtWLA+p7c5CeSqh+MmmZOEhQdGoavuJzDfLBn3PBX3oYenCtNVFYkWDQYm+kQgYyF54GjSDeA0oAbJzW5TQKnr1i/hsuNduUwXcCDmpfmmtsvWgp6d9qQacHcY1JXC8Zk7u2AZBLNTIYojhNOjVjfOOGjCMJYxO9vTS4dpdi5CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JdnL/G9X; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdnL/G9X"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-27002047ee6so274033fac.3
+        for <loongarch@lists.linux.dev>; Wed, 14 Aug 2024 23:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723702679; x=1724307479; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SAHWmUt5jip0y+u22BsHFrHANReT/fLelSD2WuMjZ6U=;
+        b=JdnL/G9XJfXEne8N/uv5oUrmlNYJAf5e2XkmHY2Ce/V32f5/3XU7ZTd4xQDufydctf
+         cEibnvCsmDVGo8ZxqNzjT8p5nYPQoCq9Isq+TOEV8WomZYlex6z7SCgcaONNiocl4NUj
+         mtJuHT8KGhnkrPMn8NuXsTdNqMn6oHknlQ65wH+l3SJWP4yxEy6RgfxqicUybDoU3htv
+         wMXtwgmxo17IH0ZVR/+HmUXTvP1EDRItwZFcAngQt1Vs74G7hjwG50Lq/6BjjNj4lo/a
+         FDCAxyW93flqO0Pkfwfy57D9HWR3UAi/BV0TvPYQ9NQ6t2DCWdXSuwKTbxFHv1g+8zPe
+         Oy4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723702679; x=1724307479;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SAHWmUt5jip0y+u22BsHFrHANReT/fLelSD2WuMjZ6U=;
+        b=v0NcgSx59jg/+t5HX9aan9YJjFt8MCL/U5O3Kbxb83zSkCGQ68YERZFK9dHOILQTlt
+         97fjApPGacHVyH9+tUjRiJ7squ/OK3yZpd+8bhgF4/LKnEMF4ccJEOio9xhau9/FBGrW
+         MUuHsQZwaAV8Du2bdnmM/dwXNcU12tsiFF3I6Xb9SriauM3FFSSs0Z67c8tVsBS/Z7B4
+         DwtImydYXi/+M30xqo4fwgu1ez0h4FJtxpZ6NFPnmvrTBw6CSZJ8iT2wx3JIr3K4njrz
+         lVElp7lXgM+G8uKz3Q4ZqML6rCsAcK2iQHwI1t3+3CiferWt0mPs6OzmMnAHATTg9Nca
+         r68A==
+X-Forwarded-Encrypted: i=1; AJvYcCV4NOK+nf4RF15Pub4adI5YDrzcJYLIm5ZFIR84R3i/yVsnhXecvkPelo0y7reBSzYI6q3y4HLi3H6XYVAKcFKlj2AgXOtG+EW/
+X-Gm-Message-State: AOJu0YwSUkza9Or1O9p6c0982PhtwA1mBzFYnusEFrnJuXuIPjJjbboe
+	h+7ZEs1FY4EzQcAvyrdTU3GFVIDADpMj/vjHMhNWAwJGRGvyzjRM
+X-Google-Smtp-Source: AGHT+IGJpazxnkj0vrfs0qcLRP6qpL8RKPrwMyfkdNMVp4bX1EZv/Ik/vGgVpgkEp8G6HmJcF19Ukw==
+X-Received: by 2002:a05:6870:8a12:b0:258:3455:4b02 with SMTP id 586e51a60fabf-26fe5ca588amr5544755fac.51.1723702678720;
+        Wed, 14 Aug 2024 23:17:58 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127add6b3dsm479443b3a.8.2024.08.14.23.17.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2024 23:17:58 -0700 (PDT)
+Message-ID: <02d7b8a2-b0d6-4713-b03e-5b22968387c3@gmail.com>
+Date: Thu, 15 Aug 2024 14:17:45 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <875xs3petd.ffs@tglx>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/18] use struct ptdesc to replace pgtable_t
+To: Matthew Wilcox <willy@infradead.org>, alexs@kernel.org
+Cc: Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Brian Cain <bcain@quicinc.com>,
+ WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Naveen N Rao <naveen@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Vishal Moola <vishal.moola@gmail.com>,
+ "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Lance Yang <ioworker0@gmail.com>,
+ Peter Xu <peterx@redhat.com>, Barry Song <baohua@kernel.org>,
+ linux-s390@vger.kernel.org, Guo Ren <guoren@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Anup Patel
+ <anup@brainfault.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Breno Leitao <leitao@debian.org>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>
+References: <20240730064712.3714387-1-alexs@kernel.org>
+ <ZrzlnIWrnaUx66rY@casper.infradead.org>
 Content-Language: en-US
-X-CM-TRANSID:qMiowMDxnWc0Vr1mLmAUAA--.1077S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUPKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4c8EcI0Ec7Cj
-	xVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
-	ZFpf9x07j83kZUUUUU=
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <ZrzlnIWrnaUx66rY@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-https://lore.kernel.org/all/20240813085427.20194-1-zhangtianyang@loongson.cn/
 
-ÔÚ 2024/8/14 ÏÂÎç6:41, Thomas Gleixner Ð´µÀ:
-> On Tue, Aug 13 2024 at 16:54, Tianyang Zhang wrote:
->
-> Where is patch 2/2 ?
 
+On 8/15/24 1:13 AM, Matthew Wilcox wrote:
+> On Tue, Jul 30, 2024 at 02:46:54PM +0800, alexs@kernel.org wrote:
+>> We have struct ptdesc for page table descriptor a year ago, but it
+>> has no much usages in kernel, while pgtable_t is used widely.
+> 
+> Hum, I thought I responded to this to point out the problem, but
+> I don't see the response anywhere, so I'll try again.
+> 
+>> The pgtable_t is typedefed as 'pte_t *' in sparc, s390, powerpc and m68k
+>> except SUN3, others archs are all same as 'struct page *'.
+> 
+> And there's a very good reason for that.  On s390 and powerpc (I cannot
+> speak to the sparc/m68k), each page table is (potentially) smaller
+> than PAGE_SIZE.  So we cannot do what your patch purports to do, as
+> we would not know whether we're referring to the first or subsequent
+> page tables contained within a page.
+>> Maybe at some point in the distant future we'll be able to allocate
+> a ptdesc per page table instead of per page allocated for use by page
+> tables.  But we cannot do that yet.
+
+
+Got it. Thanks a lot for the info!
