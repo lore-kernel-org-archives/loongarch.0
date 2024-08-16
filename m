@@ -1,186 +1,119 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E1192B97
-	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 10:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F27617BEB7
+	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 11:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723805107; cv=none; b=O011B4rz7HPdKfYf1irmtzOqDkiS78Zz1hQjJbZE330wNjvuThuxnCO45LAb/d2QWMwuhwZZL1dENteDjkWZ8ngn0qe1Xt/wUzpgsWGjfHkyh5Njw1agiLbX/VWdQKi+d1tIWwX9V4HWSmFWal9SWCQtSldYitHy2V8s+mZ55/o=
+	t=1723806463; cv=none; b=UiiszmOQXcM26mbjnAvfaKtlicAWyi+E8WVo8R3EnHSZLSSDUT/yT8jHLAaJxDTapsBan+rzm5Td9rTkG315u2O6BOgMtjJwh5Iug0zoTs+kn0QWCObKfps/iJmRdqGQq/OkwdIKgKtR+Lb90HyuK2M+ARZB7sElT1T7LSNosIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723805107; c=relaxed/simple;
-	bh=TuI+3JNN/KVJjGPeIeWqNHx4YCm3oM0eyYi9XN8BW70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfiyCqs1ZX3G7KDyYLroQBfWARtDU8i6+iRdWU4C//auX8rltCqOdM7ekwKcMTUuLKPLOxr5/hNUBAS4hKYajko/nFlrsIEKiJntak1VhgEi+cFk/qGHF5Vws+u+kAmiGGGsZowOF8Mj3TqQ8DdJj4KvHwxqqmalPFmmKJ8MDpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=GiJ/Y5Gi; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1723806463; c=relaxed/simple;
+	bh=Ist7kymIdrBgHBhzaycHtnyoW3xAaoZVWRQN5c2CX74=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OLTXu89SDTSGGYRPiyWN4EbVFdWF1e7Ufdwz7WuXMlf0vr2CYiBVvsktcLSKheclAJnDAmpmfgDBvuH5UfFJ2ljjd1HuLlhOr7W5jFJEaC1sMAnXbar06wvmMKCvOGLCdkdCjBlGD+buxD5/qu7s67puTrlf5DJpc9vqo9pOlcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Ajym5f+P; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="GiJ/Y5Gi"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-39834949e42so6967815ab.1
-        for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 03:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1723805105; x=1724409905; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BQ76OrJ+D6EglboDmRkksAWPF9+ReWU1C7wwydHo8w8=;
-        b=GiJ/Y5GiJdySiDUUiO8cXn9mHRir17cMOAF3dD3zEwxOvqSuuXCEfpi6jYe6kZbnw3
-         lMBCUAITvca0IIllugXhERfAFaK0721I48XntvVRbvl9noyn7/gSpwnG520wNJDEHCfL
-         cA5ChAldoQr1RUGQHA1tmtbxSuJOA2laIz1tKpIT6wLcUfDgb/r8/okqPC0eo68DgJWQ
-         oqoc+ux+02Y7mDHf0IoXCa2f/gnlzNLh9iU5wPLmPDHw+o1UK0vQ8Nr4YMwKceBMqCCo
-         xRuCQ16ZYiSGuVZUzI+g7bK0Iz+j91jR2BXodJfwTmz8pcYP3m3OeG5yqQ7xsGpQ191I
-         C+yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723805105; x=1724409905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BQ76OrJ+D6EglboDmRkksAWPF9+ReWU1C7wwydHo8w8=;
-        b=T2uApQOLY8iTXgEs1WAifO/5o9ykSATO5jT5AztVNUVpwcjs1s9yoGOlcQQ+3Ir2kV
-         sUzWc/5YwEnXJMa7zImPEWolWaxyiAcdGWzC22opiAqBWsKomGRdKKZ4zwcUi7Tc9KZP
-         EAJbRRLHKZB1cA0lFIADxF98zXMGYWt/W26KrmcawCeeqpjoOp3VdJoBR1EaSXzsjwUN
-         1XNGzd8igy8Q/yzvXqKBrfP/rTWLFUZHrSni/0Y1UVaIn9MeMVRA7PHpPGMECk2P99XF
-         jAk8AALBN/XGRWjFRcBGCmaVbO9Y5DuGIZE1mhGgS5jsPk484540EAxPE2dEHNb5IiCn
-         cLKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkyNLoNlX0gZmJmwBp1caxAd3rNWCty7oRYY5HaD+Dy0wXIiBn496nh1aAzzkYr81+WllOoZjS/65HIXd6omhYLaAVLcYdSYqR
-X-Gm-Message-State: AOJu0YyeTQh1qFOh9cTlWRJ4pBcNqoEpE1C2WOjWkIW/NSg/e7m8+WRS
-	XgL+wIn5oHr7wy0a6t3HAnNi50We3eseZyM/nu4emJEdpTk8kkRRk53XAqdF4Dkg5gjW+tMMUU3
-	dExi1/HtUjzvvT9jwW9bsTOwVJk6LMeUdWVFib8QuBu4d0nVk
-X-Google-Smtp-Source: AGHT+IGOY2wZxg3oQyKstZDxzeAo3jAK3M41BK/FipMiQ0FhdiHyS6sxut/JjEf5JetJ4eJZeTSIb18KGPl1+eyfyBU=
-X-Received: by 2002:a05:6e02:13a6:b0:39a:ea20:bf7f with SMTP id
- e9e14a558f8ab-39d26d791ccmr34640735ab.25.1723805104686; Fri, 16 Aug 2024
- 03:45:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Ajym5f+P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1723806455;
+	bh=Ist7kymIdrBgHBhzaycHtnyoW3xAaoZVWRQN5c2CX74=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ajym5f+PAXP5cuYUitQsvO2qTV+f6ASVUqJpfVZxAWzSMt96fy+n9H53cnYVwjgWy
+	 pbFyksORbd/pb+kAV2mIBQWZzh6CtKiDSUgAPd83JPTG4iCiufcAl/A5uDkWq9erlp
+	 1Z/7Y/pn6TVIwi8tG8xLHiamErtsZjMrsWUP9UgQ=
+Received: from stargazer.. (unknown [IPv6:240e:457:1000:1603:4ab7:c07d:7ab1:44b2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id E085C66F26;
+	Fri, 16 Aug 2024 07:07:28 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: 
+Date: Fri, 16 Aug 2024 19:07:13 +0800
+Message-ID: <20240816110717.10249-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240816095520.96348-2-ajones@ventanamicro.com>
-In-Reply-To: <20240816095520.96348-2-ajones@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 16 Aug 2024 16:14:52 +0530
-Message-ID: <CAAhSdy0wxpDXoUmGyuQOeMfNCubdp9_iYdBOSN=EcweG1nkwwg@mail.gmail.com>
-Subject: Re: [PATCH] of/irq: Support #msi-cells=<0> in of_msi_get_domain
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, maz@kernel.org, 
-	mark.rutland@arm.com, robh@kernel.org, saravanak@google.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	Anup Patel <apatel@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 16, 2024 at 3:25=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
-om> wrote:
->
-> An 'msi-parent' property with a single entry and no accompanying
-> '#msi-cells' property is considered the legacy definition as opposed
-> to its definition after being expanded with commit 126b16e2ad98
-> ("Docs: dt: add generic MSI bindings"). However, the legacy
-> definition is completely compatible with the current definition and,
-> since of_phandle_iterator_next() tolerates missing and present-but-
-> zero *cells properties since commit e42ee61017f5 ("of: Let
-> of_for_each_phandle fallback to non-negative cell_count"), there's no
-> need anymore to special case the legacy definition in
-> of_msi_get_domain().
->
-> Indeed, special casing has turned out to be harmful, because, as of
-> commit 7c025238b47a ("dt-bindings: irqchip: Describe the IMX MU block
-> as a MSI controller"), MSI controller DT bindings have started
-> specifying '#msi-cells' as a required property (even when the value
-> must be zero) as an effort to make the bindings more explicit. But,
-> since the special casing of 'msi-parent' only uses the existence of
-> '#msi-cells' for its heuristic, and not whether or not it's also
-> nonzero, the legacy path is not taken. Furthermore, the path to
-> support the new, broader definition isn't taken either since that
-> path has been restricted to the platform-msi bus.
->
-> But, neither the definition of 'msi-parent' nor the definition of
-> '#msi-cells' is platform-msi-specific (the platform-msi bus was just
-> the first bus that needed '#msi-cells'), so remove both the special
-> casing and the restriction. This not only simplifies the code but
-> also resolves an issue with PCI devices finding their MSI controllers
-> on riscv, as the riscv,imsics binding requires '#msi-cells=3D<0>'.
->
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->  drivers/of/irq.c | 37 +++++++++++--------------------------
->  1 file changed, 11 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index c94203ce65bb..026b52c8ee63 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -709,8 +709,7 @@ struct irq_domain *of_msi_map_get_device_domain(struc=
-t device *dev, u32 id,
->   * @np: device node for @dev
->   * @token: bus type for this domain
->   *
-> - * Parse the msi-parent property (both the simple and the complex
-> - * versions), and returns the corresponding MSI domain.
-> + * Parse the msi-parent property and returns the corresponding MSI domai=
-n.
->   *
->   * Returns: the MSI domain for this device (or NULL on failure).
->   */
-> @@ -718,33 +717,19 @@ struct irq_domain *of_msi_get_domain(struct device =
-*dev,
->                                      struct device_node *np,
->                                      enum irq_domain_bus_token token)
->  {
-> -       struct device_node *msi_np;
-> +       struct of_phandle_args args;
->         struct irq_domain *d;
-> +       int index =3D 0;
->
-> -       /* Check for a single msi-parent property */
-> -       msi_np =3D of_parse_phandle(np, "msi-parent", 0);
-> -       if (msi_np && !of_property_read_bool(msi_np, "#msi-cells")) {
-> -               d =3D irq_find_matching_host(msi_np, token);
-> -               if (!d)
-> -                       of_node_put(msi_np);
-> -               return d;
-> -       }
+Subject: [PATCH v3 0/2] LoongArch: Implement getrandom() in vDSO
 
-Dropping this special case of single msi-parent property breaks
-RISC-V KVM guest created using KVMTOOl with AIA available
-on the host.
+For the rationale to implement getrandom() in vDSO see [1].
 
-Let's not drop this special case.
+The vDSO getrandom() needs a stack-less ChaCha20 implementation, so we
+need to add architecture-specific code and wire it up with the generic
+code.  Both generic LoongArch implementation and Loongson SIMD eXtension
+based implementation are added.  To dispatch them at runtime without
+invoking cpucfg on each call, the alternative runtime patching mechanism
+is extended to cover the vDSO.
 
-> -
-> -       if (token =3D=3D DOMAIN_BUS_PLATFORM_MSI) {
-> -               /* Check for the complex msi-parent version */
-> -               struct of_phandle_args args;
-> -               int index =3D 0;
-> +       while (!of_parse_phandle_with_args(np, "msi-parent",
-> +                                          "#msi-cells",
-> +                                          index, &args)) {
-> +               d =3D irq_find_matching_host(args.np, token);
-> +               if (d)
-> +                       return d;
->
-> -               while (!of_parse_phandle_with_args(np, "msi-parent",
-> -                                                  "#msi-cells",
-> -                                                  index, &args)) {
-> -                       d =3D irq_find_matching_host(args.np, token);
-> -                       if (d)
-> -                               return d;
-> -
-> -                       of_node_put(args.np);
-> -                       index++;
-> -               }
-> +               of_node_put(args.np);
-> +               index++;
->         }
->
->         return NULL;
-> --
-> 2.45.2
->
->
+The implementation is tested with the kernel selftests added by the last
+patch in [1].  I had to make some adjustments to make it work on
+LoongArch (see [2], I've not submitted the changes as at now because I'm
+unsure about the KHDR_INCLUDES addition).  The vdso_test_getrandom
+bench-single result:
 
-Regards,
-Anup
+       vdso: 25000000 times in 0.647855257 seconds (generic)
+       vdso: 25000000 times in 0.601068605 seconds (LSX)
+       libc: 25000000 times in 6.948168864 seconds
+    syscall: 25000000 times in 6.990265548 seconds
+
+The vdso_test_getrandom bench-multi result:
+
+       vdso: 25000000 x 256 times in 35.322187834 seconds (generic)
+       vdso: 25000000 x 256 times in 29.183885426 seconds (LSX)
+       libc: 25000000 x 256 times in 356.628428409 seconds
+       syscall: 25000000 x 256 times in 334.764602866 seconds
+
+[1]:https://lore.kernel.org/all/20240712014009.281406-1-Jason@zx2c4.com/
+[2]:https://github.com/xry111/linux/commits/xry111/la-vdso-v3/
+
+[v2]->v3:
+- Add a generic LoongArch implementation for which LSX isn't needed.
+
+v1->v2:
+- Properly send the series to the list.
+
+[v2]:https://lore.kernel.org/all/20240815133357.35829-1-xry111@xry111.site/
+
+Xi Ruoyao (3):
+  LoongArch: vDSO: Wire up getrandom() vDSO implementation
+  LoongArch: Perform alternative runtime patching on vDSO
+  LoongArch: vDSO: Add LSX implementation of vDSO getrandom()
+
+ arch/loongarch/Kconfig                      |   1 +
+ arch/loongarch/include/asm/vdso/getrandom.h |  47 ++++
+ arch/loongarch/include/asm/vdso/vdso.h      |   8 +
+ arch/loongarch/kernel/asm-offsets.c         |  10 +
+ arch/loongarch/kernel/vdso.c                |  14 +-
+ arch/loongarch/vdso/Makefile                |   6 +
+ arch/loongarch/vdso/memset.S                |  24 ++
+ arch/loongarch/vdso/vdso.lds.S              |   7 +
+ arch/loongarch/vdso/vgetrandom-chacha-lsx.S | 162 +++++++++++++
+ arch/loongarch/vdso/vgetrandom-chacha.S     | 252 ++++++++++++++++++++
+ arch/loongarch/vdso/vgetrandom.c            |  19 ++
+ 11 files changed, 549 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/vdso/getrandom.h
+ create mode 100644 arch/loongarch/vdso/memset.S
+ create mode 100644 arch/loongarch/vdso/vgetrandom-chacha-lsx.S
+ create mode 100644 arch/loongarch/vdso/vgetrandom-chacha.S
+ create mode 100644 arch/loongarch/vdso/vgetrandom.c
+
+-- 
+2.46.0
+
