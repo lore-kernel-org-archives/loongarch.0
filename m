@@ -1,558 +1,266 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6741974EA
-	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 11:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B54B198A2A
+	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 11:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723806469; cv=none; b=dRWiRoVBFxm9zl3MV6Inl6ky+PWjRcjbUZ+D/sJijXsD8lliOmqCgGUbmE1G3iYV1Ghq52efqCX9gucmHVM3YOWbmcHKNDkvlgeBmDGwyyVqr3qZ5pK3IlVstdQvsxqTjxigKTAVGpwmLhakHpjH9MALFnxEFaiOcMGHWzsBEWo=
+	t=1723806501; cv=none; b=iIwMPdds+GO7wvXat6Fxbp2l4yWSvIIk3KolNM45u4Lh2ORdcBKjkCTUzhfQIH7oBhnfst/NxPvoceozXgyNVreWIA/yokDOmY2fXizXqJgPAH8Ejyjqcj3x4mY5RFQPbTZSoPTPOWBEyn3aJQ8QUmtEGW0Af18nPhgfA+nOFJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723806469; c=relaxed/simple;
-	bh=8OC7nzC/nicmDbBE5a9SQEEtMU/SQrKF2XChYp742k8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AXMOuaNzx8VkEioeDy+ISvhF6wXwYgpReg/E4Leoff1fKXvNWJwRSx6cUfHoXoojtORKFSZ7K8wvSmfXZRS3FNVO1/uQM572SCuSAEhO4Ma5duYUcyFy60WWXQOVQrs0X6HiH2+BVKeyFgPHCQRvB+T5YVVeIG/QM8zYp5lYdmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=gP+l2mdQ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1723806501; c=relaxed/simple;
+	bh=4pZVFpJRO3MHz/DoPuIAKSdqaAhQNfTKgM2dcrTjI3I=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nYFF8K1Qlx84/pEcUTfLAeNUjpJ8Hy7Di8UE7axE3Mer2KmNxqfGz0+z6rIEIpzXDjuJqt1Y5MO9UOMBmOtc5I1Vf9bN44DC5r7ay2VQE2c47lWOT7jSCpvkX/nS0UXF8sTejWdjcAe6zyeGSk/Jow0kZ3F2vB5giOmunEC009Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4bxkehqQ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="gP+l2mdQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1723806467;
-	bh=8OC7nzC/nicmDbBE5a9SQEEtMU/SQrKF2XChYp742k8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gP+l2mdQjRfhB1n2oqrVWePUFpRSIy/VAa+aRH+3Ab49bghDZ0NSvyefFTTbZALl4
-	 9PC48uN1sYrduYw9q/WDJrZA/BvmQufFdZegKTS/ARaCJASoIZFBTByOr1Bp8Mr1ek
-	 vy/jx4qVkWTXvWoe336doPJUlWYcrw1OjPxgAh7s=
-Received: from stargazer.. (unknown [IPv6:240e:457:1000:1603:4ab7:c07d:7ab1:44b2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 96D0066F27;
-	Fri, 16 Aug 2024 07:07:41 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: "Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Xi Ruoyao <xry111@xry111.site>,
-	linux-crypto@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v3 1/3] LoongArch: vDSO: Wire up getrandom() vDSO implementation
-Date: Fri, 16 Aug 2024 19:07:14 +0800
-Message-ID: <20240816110717.10249-2-xry111@xry111.site>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240816110717.10249-1-xry111@xry111.site>
-References: <20240816110717.10249-1-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4bxkehqQ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6af8f7a30dbso29718777b3.2
+        for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 04:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723806498; x=1724411298; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GBSVjeF7/vjpC1dXeVG0LVGAvDGvE8sdoN+9xc5O6HU=;
+        b=4bxkehqQao+MfWqD5GwUfFWeg9OQNqbHHQGDLKm0eLkV9iYi2DwIeU4STi2oRKz9Up
+         Hx2X2Mq/1jWzChduXZ4XbFXK5P2bn5hJgnuqZ0Hs1SYxzfwOQMC+vkL1QXJ37leu21cf
+         al0MTKbZGgTKlxSsvvD7wRSbh+O8ITenX3d0bOmDpUj4WuLArRiZ0uTPfSNsl5lsxUb7
+         HA1YCLnSnDTGh48jvg25b/OoQ7EIr90wMTt+OX2tkavtgXwSzkIBJWaXz8bvCzphmFkJ
+         m60329dKUgfBCUWS+dixbak3qGxGManEzIB7C8Bei3TqD9K4Up2l/Wg8yA+51iyIhqt3
+         v37w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723806498; x=1724411298;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GBSVjeF7/vjpC1dXeVG0LVGAvDGvE8sdoN+9xc5O6HU=;
+        b=lbEXYHVNu5zj6ZQnEwJrX9xeuxmUJSTTVXyhW1aQVZqjlUFYacbipfyPCvNVEMdQzf
+         LQVr8NDodAWwNDLt8o3Cibtifcq+pHb8r83ebZ/mDEvq2yPjShXiQCc9W8P0W6BE6QP9
+         6QC4ijKsxp52wos755xkhbTbNcm5e0TwoNdni2Vz4DIK1X6C3MS0MgJM/Jsx8s9p1vqF
+         JTvfqcgFi5/fTxJ6nJamVeb8P1zsaskwqJAD6JfKHJc2goYCqlI53xnkhYAw/xQZzKYi
+         cJVXz8/nr+S515/nfCO6xQT++Z8ToHwhg23c8b/T7Zs8yTfU2EJ6h+zeIXtgyOdfQ/IP
+         uX7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWM8KTHnmhJvTDuGLaPVCjDm7Q28oR0H8/8Fz5y4rkNQn+GiAE1O5L2aNUhLskDgufEUQ81PwHWQ4CcfUqgGw9NmF4EM76ZjEB+
+X-Gm-Message-State: AOJu0YwRX+NyBI6ESjnd/KoehXl+Six4Ydh7pKcHLdP2sNKSMwdixTow
+	PNm7Mv0LTdExygdA/SQF3JEbDK6LJdoXO4pLP1qSB0rIYOPx6vd6JAfUF2B342hEZARPAsOp6am
+	rtF7kd+AqPU7Srg==
+X-Google-Smtp-Source: AGHT+IHxFvy1KqAYn0MvS6oUKrhauQESgORV1h/F83xZuq+N5sGLBg0AYPrvpVQZa7Oof89hGa3nC7SROwJGVts=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
+ (user=aliceryhl job=sendgmr) by 2002:a5b:c44:0:b0:e0b:cce3:45c7 with SMTP id
+ 3f1490d57ef6-e1180f5614dmr4437276.9.1723806498310; Fri, 16 Aug 2024 04:08:18
+ -0700 (PDT)
+Date: Fri, 16 Aug 2024 11:07:37 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPkyv2YC/23PQW7EIAwF0KuMWJcKAyZkVr1H1QUQk0Fqw4hEU
+ atR7l4mmwaly2/pfdsPNlNJNLPr5cEKrWlOeaqhe7mwcHPTSDwNNTMppBZGGL4UF+ie07RwBQT
+ oe0G6A1bBvVBM33vZ+0fNtzQvufzs3Ss8p//WrMAFN4hgZOcjgn8bcx4/6TXkL/bsWeXBgmisr
+ DY68m6w4BXiyaqDldBYVW1PWhORk96erT5a21hdrUI1oFSuD3C2+GetkI3F/WYHRuteD+H8rzn adq+p1kkVrRARwPaN3bbtFzZxMCLRAQAA
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6427; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=4pZVFpJRO3MHz/DoPuIAKSdqaAhQNfTKgM2dcrTjI3I=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmvzMAqI6madHbK+l0LjW2ZBvrusxLNCk6x5EZ7
+ WANKcWB+32JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZr8zAAAKCRAEWL7uWMY5
+ Rqn6EACyr/SU1Cs0JgS1mWu3IE4tKJlLJ7t8RzY9m/fnuo+2ZYJ6uHwfQgOsBGxb2JzzwZil4z7
+ jO3XGovFP0HdmRKVeByL3LsRh9S97IsqWkqDNK2TIODg1iYw/6CNSEfetZeAdUihQeKi7iIQdhs
+ 2DGQsWFhgwNsVPCuZOMwM1Gmmw5oFN/KVNyAaNKrVJM7X7qwqUVD8odlBtgfxpFKkoHk6N35L5x
+ Ocp3Z6taLtD/DugADvFcAR+MasYiF1AJIkqkaxobWlO8wcPV6eY4BDjtHJoIP+7O/lRitkUlvBP
+ qciD6i59r8k9Zc5+BdVGadx8kHWQ74LrdVQTSXgw9VfSCsGmTwew1Zbkh7zqI/oqTjVpHpBee4c
+ 6WIXRSHmJKmYpdqQbqpfJdpzQNjr6V6eXgHjA1iAQlaLPUXXL7ri3zXOH/t9m9iQ2dtzpMQpiuA
+ y37vprsoWs75OBHsiO+uiqdDImGQnvJswCk8ZZpHXqtBMGwIfZkNCy85wKpkavMnXqjOqFvnU8E
+ wKcsDU6bbKOdkHJTDs0DDAdCzpB8eFi+wpzSmkh+PK8AQOec7WWRMyvkvfGnFgdj32mwlAsIqQ7
+ hmbIzTMzBWI2WzBM5Zxr5jtwcGokL6zADXDbs6N+MXML9wAakwurMhv7SWG9+eB47zHgIcXNm83 Ry8aemcFhD4M8Ug==
+X-Mailer: b4 0.13.0
+Message-ID: <20240816-tracepoint-v7-0-d609b916b819@google.com>
+Subject: [PATCH v7 0/5] Tracepoints and static branch in Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	Alice Ryhl <aliceryhl@google.com>, Carlos Llamas <cmllamas@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hook up the generic vDSO implementation to the LoongArch vDSO data page:
-embed struct vdso_rng_data into struct loongarch_vdso_data, and use
-assembler hack to resolve the symbol name "_vdso_rng_data" (which is
-expected by the generic vDSO implementation) to the rng_data field in
-loongarch_vdso_data.
+An important part of a production ready Linux kernel driver is
+tracepoints. So to write production ready Linux kernel drivers in Rust,
+we must be able to call tracepoints from Rust code. This patch series
+adds support for calling tracepoints declared in C from Rust.
 
-The compiler (GCC 14.2) calls memset() for initializing a "large" struct
-in a cold path of the generic vDSO getrandom() code.  There seems no way
-to prevent it from calling memset(), and it's a cold path so the
-performance does not matter, so just provide a naive memset()
-implementation for vDSO.
+To use the tracepoint support, you must:
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+1. Declare the tracepoint in a C header file as usual.
+
+2. Add #define CREATE_RUST_TRACE_POINTS next to your
+   #define CREATE_TRACE_POINTS.
+
+3. Make sure that the header file is visible to bindgen.
+
+4. Use the declare_trace! macro in your Rust code to generate Rust
+   functions that call into the tracepoint.
+
+For example, the kernel has a tracepoint called `sched_kthread_stop`. It
+is declared like this:
+
+	TRACE_EVENT(sched_kthread_stop,
+		TP_PROTO(struct task_struct *t),
+		TP_ARGS(t),
+		TP_STRUCT__entry(
+			__array(	char,	comm,	TASK_COMM_LEN	)
+			__field(	pid_t,	pid			)
+		),
+		TP_fast_assign(
+			memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
+			__entry->pid	= t->pid;
+		),
+		TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
+	);
+
+To call the above tracepoint from Rust code, you must first ensure that
+the Rust helper for the tracepoint is generated. To do this, you would
+modify kernel/sched/core.c by adding #define CREATE_RUST_TRACE_POINTS.
+
+Next, you would include include/trace/events/sched.h in
+rust/bindings/bindings_helper.h so that the exported C functions are
+visible to Rust, and then you would declare the tracepoint in Rust:
+
+	declare_trace! {
+	    fn sched_kthread_stop(task: *mut task_struct);
+	}
+
+This will define an inline Rust function that checks the static key,
+calling into rust_do_trace_##name if the tracepoint is active. Since
+these tracepoints often take raw pointers as arguments, it may be
+convenient to wrap it in a safe wrapper:
+
+	mod raw {
+	    declare_trace! {
+	    	/// # Safety
+		/// `task` must point at a valid task for the duration
+		/// of this call.
+	        fn sched_kthread_stop(task: *mut task_struct);
+	    }
+	}
+	
+	#[inline]
+	pub fn trace_sched_kthread_stop(task: &Task) {
+	    // SAFETY: The pointer to `task` is valid.
+	    unsafe { raw::sched_kthread_stop(task.as_raw()) }
+	}
+
+A future expansion of the tracepoint support could generate these safe
+versions automatically, but that is left as future work for now.
+
+This is intended for use in the Rust Binder driver, which was originally
+sent as an RFC [1]. The RFC did not include tracepoint support, but you
+can see how it will be used in Rust Binder at [2]. The author has
+verified that the tracepoint support works on Android devices.
+
+This implementation implements support for static keys in Rust so that
+the actual static branch happens in the Rust object file. However, the
+__DO_TRACE body remains in C code. See v1 for an implementation where
+__DO_TRACE is also implemented in Rust.
+
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Link: https://r.android.com/3119993 [2]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- arch/loongarch/Kconfig                      |   1 +
- arch/loongarch/include/asm/vdso/getrandom.h |  47 ++++
- arch/loongarch/include/asm/vdso/vdso.h      |   8 +
- arch/loongarch/kernel/asm-offsets.c         |  10 +
- arch/loongarch/kernel/vdso.c                |   6 +
- arch/loongarch/vdso/Makefile                |   2 +
- arch/loongarch/vdso/memset.S                |  24 ++
- arch/loongarch/vdso/vdso.lds.S              |   1 +
- arch/loongarch/vdso/vgetrandom-chacha.S     | 239 ++++++++++++++++++++
- arch/loongarch/vdso/vgetrandom.c            |  19 ++
- 10 files changed, 357 insertions(+)
- create mode 100644 arch/loongarch/include/asm/vdso/getrandom.h
- create mode 100644 arch/loongarch/vdso/memset.S
- create mode 100644 arch/loongarch/vdso/vgetrandom-chacha.S
- create mode 100644 arch/loongarch/vdso/vgetrandom.c
+Changes in v7:
+- Fix spurious file included in first patch.
+- Fix issue with riscv asm.
+- Fix tags on fourth patch to match fifth patch.
+- Add Reviewed-by/Acked-by tags where appropriate.
+- Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 70f169210b52..14821c2aba5b 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -190,6 +190,7 @@ config LOONGARCH
- 	select TRACE_IRQFLAGS_SUPPORT
- 	select USE_PERCPU_NUMA_NODE_ID
- 	select USER_STACKTRACE_SUPPORT
-+	select VDSO_GETRANDOM
- 	select ZONE_DMA32
- 
- config 32BIT
-diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch/include/asm/vdso/getrandom.h
-new file mode 100644
-index 000000000000..a369588a4ebf
---- /dev/null
-+++ b/arch/loongarch/include/asm/vdso/getrandom.h
-@@ -0,0 +1,47 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
-+ */
-+#ifndef __ASM_VDSO_GETRANDOM_H
-+#define __ASM_VDSO_GETRANDOM_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <asm/unistd.h>
-+#include <asm/vdso/vdso.h>
-+
-+static __always_inline ssize_t getrandom_syscall(void *_buffer,
-+						 size_t _len,
-+						 unsigned int _flags)
-+{
-+	register long ret asm("a0");
-+	register long int nr asm("a7") = __NR_getrandom;
-+	register void *buffer asm("a0") = _buffer;
-+	register size_t len asm("a1") = _len;
-+	register unsigned int flags asm("a2") = _flags;
-+
-+	asm volatile(
-+	"      syscall 0\n"
-+	: "+r" (ret)
-+	: "r" (nr), "r" (buffer), "r" (len), "r" (flags)
-+	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
-+	  "memory");
-+
-+	return ret;
-+}
-+
-+static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(
-+	void)
-+{
-+	return (const struct vdso_rng_data *)(
-+		get_vdso_data() +
-+		VVAR_LOONGARCH_PAGES_START * PAGE_SIZE +
-+		offsetof(struct loongarch_vdso_data, rng_data));
-+}
-+
-+extern void __arch_chacha20_blocks_nostack(u8 *dst_bytes, const u32 *key,
-+					   u32 *counter, size_t nblocks);
-+
-+#endif /* !__ASSEMBLY__ */
-+
-+#endif /* __ASM_VDSO_GETRANDOM_H */
-diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
-index 5a12309d9fb5..a2e24c3007e2 100644
---- a/arch/loongarch/include/asm/vdso/vdso.h
-+++ b/arch/loongarch/include/asm/vdso/vdso.h
-@@ -4,6 +4,9 @@
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
- 
-+#ifndef _ASM_VDSO_VDSO_H
-+#define _ASM_VDSO_VDSO_H
-+
- #ifndef __ASSEMBLY__
- 
- #include <asm/asm.h>
-@@ -16,6 +19,9 @@ struct vdso_pcpu_data {
- 
- struct loongarch_vdso_data {
- 	struct vdso_pcpu_data pdata[NR_CPUS];
-+#ifdef CONFIG_VDSO_GETRANDOM
-+	struct vdso_rng_data rng_data;
-+#endif
- };
- 
- /*
-@@ -63,3 +69,5 @@ static inline unsigned long get_vdso_data(void)
- }
- 
- #endif /* __ASSEMBLY__ */
-+
-+#endif
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bee9f7a3108f..86f6d8a6dc23 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -14,6 +14,7 @@
- #include <asm/ptrace.h>
- #include <asm/processor.h>
- #include <asm/ftrace.h>
-+#include <asm/vdso/vdso.h>
- 
- static void __used output_ptreg_defines(void)
- {
-@@ -321,3 +322,12 @@ static void __used output_kvm_defines(void)
- 	OFFSET(KVM_GPGD, kvm, arch.pgd);
- 	BLANK();
- }
-+
-+#ifdef CONFIG_VDSO_GETRANDOM
-+static void __used output_vdso_rng_defines(void)
-+{
-+	COMMENT("LoongArch VDSO getrandom offsets.");
-+	OFFSET(VDSO_RNG_DATA, loongarch_vdso_data, rng_data);
-+	BLANK();
-+}
-+#endif
-diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-index 90dfccb41c14..15b65d8e2fdc 100644
---- a/arch/loongarch/kernel/vdso.c
-+++ b/arch/loongarch/kernel/vdso.c
-@@ -22,6 +22,7 @@
- #include <vdso/helpers.h>
- #include <vdso/vsyscall.h>
- #include <vdso/datapage.h>
-+#include <generated/asm-offsets.h>
- #include <generated/vdso-offsets.h>
- 
- extern char vdso_start[], vdso_end[];
-@@ -34,6 +35,11 @@ static union {
- 	struct loongarch_vdso_data vdata;
- } loongarch_vdso_data __page_aligned_data;
- 
-+#ifdef CONFIG_VDSO_GETRANDOM
-+asm(".globl _vdso_rng_data\n"
-+    ".set _vdso_rng_data, loongarch_vdso_data + " __stringify(VDSO_RNG_DATA));
-+#endif
-+
- static struct page *vdso_pages[] = { NULL };
- struct vdso_data *vdso_data = generic_vdso_data.data;
- struct vdso_pcpu_data *vdso_pdata = loongarch_vdso_data.vdata.pdata;
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 2ddf0480e710..c8c5d9a7c80c 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -6,6 +6,8 @@ include $(srctree)/lib/vdso/Makefile
- 
- obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o
- 
-+obj-vdso-$(CONFIG_VDSO_GETRANDOM) += vgetrandom.o vgetrandom-chacha.o memset.o
-+
- # Common compiler flags between ABIs.
- ccflags-vdso := \
- 	$(filter -I%,$(KBUILD_CFLAGS)) \
-diff --git a/arch/loongarch/vdso/memset.S b/arch/loongarch/vdso/memset.S
-new file mode 100644
-index 000000000000..ec1531683936
---- /dev/null
-+++ b/arch/loongarch/vdso/memset.S
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A copy of __memset_generic from arch/loongarch/lib/memset.S for vDSO.
-+ *
-+ * Copyright (C) 2020-2024 Loongson Technology Corporation Limited
-+ */
-+
-+#include <asm/regdef.h>
-+#include <linux/linkage.h>
-+
-+SYM_FUNC_START(memset)
-+	move	a3, a0
-+	beqz	a2, 2f
-+
-+1:	st.b	a1, a0, 0
-+	addi.d	a0, a0, 1
-+	addi.d	a2, a2, -1
-+	bgt	a2, zero, 1b
-+
-+2:	move	a0, a3
-+	jr	ra
-+SYM_FUNC_END(memset)
-+
-+.hidden memset
-diff --git a/arch/loongarch/vdso/vdso.lds.S b/arch/loongarch/vdso/vdso.lds.S
-index 56ad855896de..2c965a597d9e 100644
---- a/arch/loongarch/vdso/vdso.lds.S
-+++ b/arch/loongarch/vdso/vdso.lds.S
-@@ -63,6 +63,7 @@ VERSION
- 		__vdso_clock_gettime;
- 		__vdso_gettimeofday;
- 		__vdso_rt_sigreturn;
-+		__vdso_getrandom;
- 	local: *;
- 	};
- }
-diff --git a/arch/loongarch/vdso/vgetrandom-chacha.S b/arch/loongarch/vdso/vgetrandom-chacha.S
-new file mode 100644
-index 000000000000..2e42198f2faf
---- /dev/null
-+++ b/arch/loongarch/vdso/vgetrandom-chacha.S
-@@ -0,0 +1,239 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
-+ */
-+
-+#include <asm/asm.h>
-+#include <asm/regdef.h>
-+#include <linux/linkage.h>
-+
-+.text
-+
-+/* Salsa20 quarter-round */
-+.macro	QR	a b c d
-+	add.w		\a, \a, \b
-+	xor		\d, \d, \a
-+	rotri.w		\d, \d, 16
-+
-+	add.w		\c, \c, \d
-+	xor		\b, \b, \c
-+	rotri.w		\b, \b, 20
-+
-+	add.w		\a, \a, \b
-+	xor		\d, \d, \a
-+	rotri.w		\d, \d, 24
-+
-+	add.w		\c, \c, \d
-+	xor		\b, \b, \c
-+	rotri.w		\b, \b, 25
-+.endm
-+
-+/*
-+ * Very basic LoongArch implementation of ChaCha20. Produces a given positive
-+ * number of blocks of output with a nonce of 0, taking an input key and
-+ * 8-byte counter. Importantly does not spill to the stack. Its arguments
-+ * are:
-+ *
-+ *	a0: output bytes
-+ *	a1: 32-byte key input
-+ *	a2: 8-byte counter input/output
-+ *	a3: number of 64-byte blocks to write to output
-+ */
-+SYM_FUNC_START(__arch_chacha20_blocks_nostack)
-+
-+/* We don't need a frame pointer */
-+#define s9		fp
-+
-+#define output		a0
-+#define key		a1
-+#define counter		a2
-+#define nblocks		a3
-+#define i		a4
-+#define state0		s0
-+#define state1		s1
-+#define state2		s2
-+#define state3		s3
-+#define state4		s4
-+#define state5		s5
-+#define state6		s6
-+#define state7		s7
-+#define state8		s8
-+#define state9		s9
-+#define state10		a5
-+#define state11		a6
-+#define state12		a7
-+#define state13		t0
-+#define state14		t1
-+#define state15		t2
-+#define cnt_lo		t3
-+#define cnt_hi		t4
-+#define copy0		t5
-+#define copy1		t6
-+#define copy2		t7
-+
-+/* Reuse i as copy3 */
-+#define copy3		i
-+
-+	/*
-+	 * The ABI requires s0-s9 saved, and sp aligned to 16-byte.
-+	 * This does not violate the stack-less requirement: no sensitive data
-+	 * is spilled onto the stack.
-+	 */
-+	PTR_ADDI	sp, sp, (-SZREG * 10) & STACK_ALIGN
-+	REG_S		s0, sp, 0
-+	REG_S		s1, sp, SZREG
-+	REG_S		s2, sp, SZREG * 2
-+	REG_S		s3, sp, SZREG * 3
-+	REG_S		s4, sp, SZREG * 4
-+	REG_S		s5, sp, SZREG * 5
-+	REG_S		s6, sp, SZREG * 6
-+	REG_S		s7, sp, SZREG * 7
-+	REG_S		s8, sp, SZREG * 8
-+	REG_S		s9, sp, SZREG * 9
-+
-+	li.w		copy0, 0x61707865
-+	li.w		copy1, 0x3320646e
-+	li.w		copy2, 0x79622d32
-+
-+	ld.w		cnt_lo, counter, 0
-+	ld.w		cnt_hi, counter, 4
-+
-+.Lblock:
-+	/* state[0,1,2,3] = "expand 32-byte k" */
-+	move		state0, copy0
-+	move		state1, copy1
-+	move		state2, copy2
-+	li.w		state3, 0x6b206574
-+
-+	/* state[4,5,..,11] = key */
-+	ld.w		state4, key, 0
-+	ld.w		state5, key, 4
-+	ld.w		state6, key, 8
-+	ld.w		state7, key, 12
-+	ld.w		state8, key, 16
-+	ld.w		state9, key, 20
-+	ld.w		state10, key, 24
-+	ld.w		state11, key, 28
-+
-+	/* state[12,13] = counter */
-+	move		state12, cnt_lo
-+	move		state13, cnt_hi
-+
-+	/* state[14,15] = 0 */
-+	move		state14, zero
-+	move		state15, zero
-+
-+	li.w		i, 10
-+.Lpermute:
-+	/* odd round */
-+	QR		state0, state4, state8, state12
-+	QR		state1, state5, state9, state13
-+	QR		state2, state6, state10, state14
-+	QR		state3, state7, state11, state15
-+
-+	/* even round */
-+	QR		state0, state5, state10, state15
-+	QR		state1, state6, state11, state12
-+	QR		state2, state7, state8, state13
-+	QR		state3, state4, state9, state14
-+
-+	addi.w		i, i, -1
-+	bnez		i, .Lpermute
-+
-+	/* copy[3] = "expa" */
-+	li.w		copy3, 0x6b206574
-+
-+	/* output[0,1,2,3] = copy[0,1,2,3] + state[0,1,2,3] */
-+	add.w		state0, state0, copy0
-+	add.w		state1, state1, copy1
-+	add.w		state2, state2, copy2
-+	add.w		state3, state3, copy3
-+	st.w		state0, output, 0
-+	st.w		state1, output, 4
-+	st.w		state2, output, 8
-+	st.w		state3, output, 12
-+
-+	/* from now on state[0,1,2,3] are scratch registers  */
-+
-+	/* state[0,1,2,3] = lo32(key) */
-+	ld.w		state0, key, 0
-+	ld.w		state1, key, 4
-+	ld.w		state2, key, 8
-+	ld.w		state3, key, 12
-+
-+	/* output[4,5,6,7] = state[0,1,2,3] + state[4,5,6,7] */
-+	add.w		state4, state4, state0
-+	add.w		state5, state5, state1
-+	add.w		state6, state6, state2
-+	add.w		state7, state7, state3
-+	st.w		state4, output, 16
-+	st.w		state5, output, 20
-+	st.w		state6, output, 24
-+	st.w		state7, output, 28
-+
-+	/* state[0,1,2,3] = hi32(key) */
-+	ld.w		state0, key, 16
-+	ld.w		state1, key, 20
-+	ld.w		state2, key, 24
-+	ld.w		state3, key, 28
-+
-+	/* output[8,9,10,11] = state[0,1,2,3] + state[8,9,10,11] */
-+	add.w		state8, state8, state0
-+	add.w		state9, state9, state1
-+	add.w		state10, state10, state2
-+	add.w		state11, state11, state3
-+	st.w		state8, output, 32
-+	st.w		state9, output, 36
-+	st.w		state10, output, 40
-+	st.w		state11, output, 44
-+
-+	/* output[12,13,14,15] = state[12,13,14,15] + [cnt_lo, cnt_hi, 0, 0] */
-+	add.w		state12, state12, cnt_lo
-+	add.w		state13, state13, cnt_hi
-+	st.w		state12, output, 48
-+	st.w		state13, output, 52
-+	st.w		state14, output, 56
-+	st.w		state15, output, 60
-+
-+	/* ++counter  */
-+	addi.w		cnt_lo, cnt_lo, 1
-+	sltui		state0, cnt_lo, 1
-+	add.w		cnt_hi, cnt_hi, state0
-+
-+	/* output += 64 */
-+	PTR_ADDI	output, output, 64
-+	/* --nblocks */
-+	PTR_ADDI	nblocks, nblocks, -1
-+	bnez		nblocks, .Lblock
-+
-+	/* counter = [cnt_lo, cnt_hi] */
-+	st.w		cnt_lo, counter, 0
-+	st.w		cnt_hi, counter, 4
-+
-+	/*
-+	 * Zero out the potentially sensitive regs, in case nothing uses these
-+	 * again. As at now copy[0,1,2,3] just contains "expand 32-byte k" and
-+	 * state[0,...,9] are s0-s9 those we'll restore in the epilogue, so we
-+	 * only need to zero state[11,...,15].
-+	 */
-+	move		state10, zero
-+	move		state11, zero
-+	move		state12, zero
-+	move		state13, zero
-+	move		state14, zero
-+	move		state15, zero
-+
-+	REG_L		s0, sp, 0
-+	REG_L		s1, sp, SZREG
-+	REG_L		s2, sp, SZREG * 2
-+	REG_L		s3, sp, SZREG * 3
-+	REG_L		s4, sp, SZREG * 4
-+	REG_L		s5, sp, SZREG * 5
-+	REG_L		s6, sp, SZREG * 6
-+	REG_L		s7, sp, SZREG * 7
-+	REG_L		s8, sp, SZREG * 8
-+	REG_L		s9, sp, SZREG * 9
-+	PTR_ADDI	sp, sp, -((-SZREG * 10) & STACK_ALIGN)
-+
-+	jr		ra
-+SYM_FUNC_END(__arch_chacha20_blocks_nostack)
-diff --git a/arch/loongarch/vdso/vgetrandom.c b/arch/loongarch/vdso/vgetrandom.c
-new file mode 100644
-index 000000000000..0b3b30ecd68a
---- /dev/null
-+++ b/arch/loongarch/vdso/vgetrandom.c
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
-+ */
-+#include <linux/types.h>
-+
-+#include "../../../../lib/vdso/getrandom.c"
-+
-+typeof(__cvdso_getrandom) __vdso_getrandom;
-+
-+ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags,
-+			 void *opaque_state, size_t opaque_len)
-+{
-+	return __cvdso_getrandom(buffer, len, flags, opaque_state,
-+				 opaque_len);
-+}
-+
-+typeof(__cvdso_getrandom) getrandom
-+	__attribute__((weak, alias("__vdso_getrandom")));
+Changes in v6:
+- Add support for !CONFIG_JUMP_LABEL.
+- Add tracepoint to rust_print sample.
+- Deduplicate inline asm.
+- Require unsafe inside `declare_trace!`.
+- Fix bug on x86 due to use of intel syntax.
+- Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
+
+Changes in v5:
+- Update first patch regarding inline asm duplication.
+- Add __rust_do_trace helper to support conditions.
+- Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
+- Get rid of glob-import in tracepoint macro.
+- Address safety requirements on tracepoints in docs.
+- Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
+
+Changes in v4:
+- Move arch-specific code into rust/kernel/arch.
+- Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
+- Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
+
+Changes in v3:
+- Support for Rust static_key on loongarch64 and riscv64.
+- Avoid failing compilation on architectures that are missing Rust
+  static_key support when the archtectures does not actually use it.
+- Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
+
+Changes in v2:
+- Call into C code for __DO_TRACE.
+- Drop static_call patch, as it is no longer needed.
+- Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
+
+---
+Alice Ryhl (5):
+      rust: add generic static_key_false
+      rust: add tracepoint support
+      rust: samples: add tracepoint to Rust sample
+      jump_label: adjust inline asm to be consistent
+      rust: add arch_static_branch
+
+ MAINTAINERS                             |  1 +
+ arch/arm/include/asm/jump_label.h       | 14 +++--
+ arch/arm64/include/asm/jump_label.h     | 20 +++++---
+ arch/loongarch/include/asm/jump_label.h | 16 +++---
+ arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
+ arch/x86/include/asm/jump_label.h       | 38 ++++++--------
+ include/linux/tracepoint.h              | 22 +++++++-
+ include/trace/define_trace.h            | 12 +++++
+ include/trace/events/rust_sample.h      | 31 +++++++++++
+ rust/Makefile                           |  5 +-
+ rust/bindings/bindings_helper.h         |  3 ++
+ rust/helpers.c                          |  9 ++++
+ rust/kernel/.gitignore                  |  3 ++
+ rust/kernel/arch_static_branch_asm.rs.S |  7 +++
+ rust/kernel/jump_label.rs               | 91 +++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs                      | 32 ++++++++++++
+ rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
+ samples/rust/Makefile                   |  3 +-
+ samples/rust/rust_print.rs              | 18 +++++++
+ samples/rust/rust_print_events.c        |  8 +++
+ scripts/Makefile.build                  |  9 +++-
+ 21 files changed, 374 insertions(+), 67 deletions(-)
+---
+base-commit: 65ae9c6348cc15f77e2ce2ff41c2bb14de9460d6
+change-id: 20240606-tracepoint-31e15b90e471
+
+Best regards,
 -- 
-2.46.0
+Alice Ryhl <aliceryhl@google.com>
 
