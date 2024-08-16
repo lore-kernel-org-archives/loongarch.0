@@ -1,327 +1,287 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEF51B3730
-	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 11:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A651B86E5
+	for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 11:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723806514; cv=none; b=nHBivaepzBQoI84dxgyTMsM/E5NrPYziAX7Rdr1NzqCn6dDXgdHtOYqPSQL5tzgvv8Uv7KsDK6zCWMxFngYiFwZBTMyTbEUllETfvsa2yTwQyTmuHoxSU01iV0GSEIFFM6mcCJgp/T3fqRaq2ew2Ji+qMzrOij46m3hozNFSolA=
+	t=1723806516; cv=none; b=S6B2t2stHCMVXnZU44gW8m2uBpVSzso6hGYq37e3qDeuVJZIppPW4NCkkUb+y5gmyB3T1Tfp+8cJd5RuXBopuobxezk1DKiGsSDDKiUYFy9sx8aldXpsjckP8s7VyweIRxjOC5sZj5RPitmUflXWMooKh2hOcK2JhhN1EARXguI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723806514; c=relaxed/simple;
-	bh=eqhw7ynCkyqRTBYr25akl57ew2XiOS3KqCJmdV1FKbU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O2kCjnxkpF07TpnwpagltibM9S5x/ZgHXJdyPhpqmOni3t/1/Z2dumewNMeJY8wfOcAXyp0obGFHcbGyHmq17JW13rr57fXkTw2a1ddvSasbS3WUtxpCtpZScq0MGh921F/cvBVmjwXrEDIaWAeUXvCCCQy59vxH+HGRLPfF0XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HkTzA262; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1723806516; c=relaxed/simple;
+	bh=N6IxPQvc73cA34ZLFBJ+Wb3X71a6U0xPaAu/Ebm+NH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DorlV8zC83SANbVqvqsG/RbIPsDfZGMiYJhcO90eQXTKyxvnwENA6hn+USqqi8v07JB7Mxj2XaWtc44TdoFa3+cdQS30vZLAmWPZ0Je2k74oQNgpMwStGQWTC414Ao4IEK/MhfDjnKyxwBrIxhUEP041lEj6S4KG1ZDnkB/KyO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U+c+SwVl; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HkTzA262"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0b3742b309so3028510276.1
-        for <loongarch@lists.linux.dev>; Fri, 16 Aug 2024 04:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723806511; x=1724411311; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1kYdvblUgw1OrOR7Jj8FoRwUp6cU/heH8TLgLEsBdOM=;
-        b=HkTzA262vbmLp7/xLT1JK3k9Uzd6T9fidbDs9JtR1WxPns/n/bDA8Xjq0LBfIuqSkP
-         MBFvZubz/FYzzQ9N+kaAVANnq7GrMY63/LSFtCmMJCVn+TiEC4fUAPMBE25TaXBUnE4R
-         steHWYyOMicrcyvQj6UA9gQmVGJKbZzB8H1UzHzoB9WDY3s5F4LCkQ9rK57O3/qLt1Ul
-         bLcD0fS3OWQj9pfueN6/hDcV8Zgh1RnjqnZSY9B4kVpVRyDR80Etp4yBRlHbG8kHI6oz
-         39AUbS31YGz6IlmIkbSnn29oCg9AyzaPLuf2BQPZ5IIBowTkU/tJ9ahkSGr3KeYj5YS3
-         yDRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723806511; x=1724411311;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1kYdvblUgw1OrOR7Jj8FoRwUp6cU/heH8TLgLEsBdOM=;
-        b=m6eeI+Yy31pUBdIHL79oA0ZvZcy6X2Of/mEyQgDMh9dbymvB8k+M/6uGPFeK5YCXHB
-         G30kQaI28l/QMR+Da+vXU2zln4ZO/+K0Ug2mU39+q2Qn0+AV3Yj7a0LcR/wEpQS3hdiu
-         VOdN8//r+TEsw5Ie7Dmw4WjMRPfczGsUTWlSrwJzOSqAv6rPky01cBLsHe8PxaSMaKOj
-         0C55Nk+yaVUcHHvf1hpkk5YrAE8ZqtraJhb4s7CmjXWxOJgYXCDsMAEV4ZTAhxUAJUVH
-         pEg7H0BZ32N64gzhw5fe1tv/PWbKEQoq5TnBwhrQ+fOTfuZkfhetODbfLKm0eunSU6WX
-         3pzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSqR2DuR7DVJE4/a3QDy+DCXxH9zyr+tAYGsmYTHXxnyTOeFLYBDmoCS0zXdYk580g7tk6wjtGvQs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YylbM5vla8tEakCU8hPOHCa3+x2YI/BT1O/uY3jjqsH2qw/sAy5
-	SF95WexslUV7rCqDf6R9B4gs3XT/Mhju+mGYH//y98yAmkUHn2eJiiVZYodEeR+yc7fbUlYmrUF
-	Q6cwWu0c4h3e53Q==
-X-Google-Smtp-Source: AGHT+IHHn3SbNiaCXJVjGPZrPAeS795rmnbHQkIGg2oTGHUByE9noAMpW2KQu0mkZPJ0Vqp6E7Vjez3yz4VfD7s=
-X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
- (user=aliceryhl job=sendgmr) by 2002:a25:c7d1:0:b0:e11:623d:874 with SMTP id
- 3f1490d57ef6-e1180e6098fmr50843276.3.1723806511454; Fri, 16 Aug 2024 04:08:31
- -0700 (PDT)
-Date: Fri, 16 Aug 2024 11:07:42 +0000
-In-Reply-To: <20240816-tracepoint-v7-0-d609b916b819@google.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U+c+SwVl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1723806514;
+	bh=N6IxPQvc73cA34ZLFBJ+Wb3X71a6U0xPaAu/Ebm+NH8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U+c+SwVl+0r96mp/pcLyUErptnO0LAhYULTsdRU82Y+dS1tsw/w6jyqzjeJzgv0ND
+	 /xkLT3+ecLzu5bcpp7ROPiyM/Yf41gMzn8ztorullIdBzcqMS+GoHLKJ+KH8oFl633
+	 TaZCjPFpROQmPuCJEbqKK2CdGOC2Pq2BkrfE5F8c=
+Received: from stargazer.. (unknown [IPv6:240e:457:1000:1603:4ab7:c07d:7ab1:44b2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8BEDD66F27;
+	Fri, 16 Aug 2024 07:08:28 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 3/3] LoongArch: vDSO: Add LSX implementation of vDSO getrandom()
+Date: Fri, 16 Aug 2024 19:07:16 +0800
+Message-ID: <20240816110717.10249-4-xry111@xry111.site>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20240816110717.10249-1-xry111@xry111.site>
+References: <20240816110717.10249-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240816-tracepoint-v7-0-d609b916b819@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8293; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=eqhw7ynCkyqRTBYr25akl57ew2XiOS3KqCJmdV1FKbU=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmvzMfcXLQpUYwewTAhsSdNWmokGVZvVA8EJG//
- aC62ZEklIeJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZr8zHwAKCRAEWL7uWMY5
- RoZHD/9KDdVUP3BBgQ8pSdZ3eJOAhx3HVdp/bSXL+MXcHSRDrSDIsJwxRWZS60hr6EtwT6AurLn
- UPla/AqD6Oay++sCbgaH8VLUixf+Tbvt7yuogvGmQZWZNTHWTJDEc7r7qZQ59/R1jI/PupK3IZ5
- WAKHPbXBDCc1TSWmWKgCFLofieTPsG6pwHc+YnT24Cvn0VDvTF1OGXGhR1ekG2wj4rGEoIzzJj8
- s0exuGT7OLyWPcxq2VBhvcWcxbplSMH3JfAhlhEIZ42Cf9mKPcSIZZYz+6VFdiCQDNMXfuP3B9J
- 8KwdUNCYWQpJaNnDIQUJuUGCmngfihTxD8GOr/qT2p2xdPfLiSmaXHlmNBJ7+xdHCwFXZbaq6KF
- BbD9z1HOS3dl2AdojQ32VfZPxSruVbQpUqw5oQpLhm2qZafOgiQBCJtxBSJm8Q/XmXjDSu9qu0F
- iPWOoS0lzTbWgbZN5Aje/U+aRPjdSm2CvTOXMzPyf/FsfsvBnpDucB5mAJffbfo+3yYunvJBkCr
- rDQbQiObpHhbXbEBg4y6KMY83Load++HUKIJRkrniazwGFJnMUFvqMrN/Hk2gQuAQNbp8fvd93b
- +NGHq0nYPgGFl3/jed1TAWrgBirpddAnt31c3ls16hHqlKFV/OG1ygnWvnSfgYhxUF/djO7+BZx 9GKLEuK+9ku6UiA==
-X-Mailer: b4 0.13.0
-Message-ID: <20240816-tracepoint-v7-5-d609b916b819@google.com>
-Subject: [PATCH v7 5/5] rust: add arch_static_branch
-From: Alice Ryhl <aliceryhl@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-To allow the Rust implementation of static_key_false to use runtime code
-patching instead of the generic implementation, pull in the relevant
-inline assembly from the jump_label.h header by running the C
-preprocessor on a .rs.S file. Build rules are added for .rs.S files.
+It's 7% faster in vdso_test_getrandom bench-single test and 21% faster
+in vdso_test_getrandom bench-multi test than the generic LoongArch
+implementation.
 
-Since the relevant inline asm has been adjusted to export the inline asm
-via the ARCH_STATIC_BRANCH_ASM macro in a consistent way, the Rust side
-does not need architecture specific code to pull in the asm.
-
-It is not possible to use the existing C implementation of
-arch_static_branch via a Rust helper because it passes the argument
-`key` to inline assembly as an 'i' parameter. Any attempt to add a C
-helper for this function will fail to compile because the value of `key`
-must be known at compile-time.
-
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- rust/Makefile                           |  5 ++-
- rust/kernel/.gitignore                  |  3 ++
- rust/kernel/arch_static_branch_asm.rs.S |  7 ++++
- rust/kernel/jump_label.rs               | 64 ++++++++++++++++++++++++++++++++-
- rust/kernel/lib.rs                      | 30 ++++++++++++++++
- scripts/Makefile.build                  |  9 ++++-
- 6 files changed, 115 insertions(+), 3 deletions(-)
+ arch/loongarch/vdso/Makefile                |   4 +
+ arch/loongarch/vdso/vgetrandom-chacha-lsx.S | 162 ++++++++++++++++++++
+ arch/loongarch/vdso/vgetrandom-chacha.S     |  13 ++
+ 3 files changed, 179 insertions(+)
+ create mode 100644 arch/loongarch/vdso/vgetrandom-chacha-lsx.S
 
-diff --git a/rust/Makefile b/rust/Makefile
-index 199e0db67962..277fcef656b8 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -14,6 +14,8 @@ CFLAGS_REMOVE_helpers.o = -Wmissing-prototypes -Wmissing-declarations
- always-$(CONFIG_RUST) += libmacros.so
- no-clean-files += libmacros.so
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index c8c5d9a7c80c..cab92c3a70a4 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -8,6 +8,10 @@ obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o
  
-+always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/arch_static_branch_asm.rs
-+
- always-$(CONFIG_RUST) += bindings/bindings_generated.rs bindings/bindings_helpers_generated.rs
- obj-$(CONFIG_RUST) += alloc.o bindings.o kernel.o
- always-$(CONFIG_RUST) += exports_alloc_generated.h exports_bindings_generated.h \
-@@ -409,7 +411,8 @@ $(obj)/uapi.o: $(src)/uapi/lib.rs \
- $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
-     --extern build_error --extern macros --extern bindings --extern uapi
- $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
--    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
-+    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o \
-+	$(obj)/kernel/arch_static_branch_asm.rs FORCE
- 	+$(call if_changed_rule,rustc_library)
+ obj-vdso-$(CONFIG_VDSO_GETRANDOM) += vgetrandom.o vgetrandom-chacha.o memset.o
  
- endif # CONFIG_RUST
-diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
-new file mode 100644
-index 000000000000..d082731007c6
---- /dev/null
-+++ b/rust/kernel/.gitignore
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
++ifdef CONFIG_CPU_HAS_LSX
++obj-vdso-$(CONFIG_VDSO_GETRANDOM) += vgetrandom-chacha-lsx.o
++endif
 +
-+/arch_static_branch_asm.rs
-diff --git a/rust/kernel/arch_static_branch_asm.rs.S b/rust/kernel/arch_static_branch_asm.rs.S
+ # Common compiler flags between ABIs.
+ ccflags-vdso := \
+ 	$(filter -I%,$(KBUILD_CFLAGS)) \
+diff --git a/arch/loongarch/vdso/vgetrandom-chacha-lsx.S b/arch/loongarch/vdso/vgetrandom-chacha-lsx.S
 new file mode 100644
-index 000000000000..9e373d4f7567
+index 000000000000..6d8c886d78c8
 --- /dev/null
-+++ b/rust/kernel/arch_static_branch_asm.rs.S
-@@ -0,0 +1,7 @@
++++ b/arch/loongarch/vdso/vgetrandom-chacha-lsx.S
+@@ -0,0 +1,162 @@
 +// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ *
++ * Based on arch/x86/entry/vdso/vgetrandom-chacha.S:
++ *
++ * Copyright (C) 2022-2024 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights
++ * Reserved.
++ */
 +
-+#include <linux/jump_label.h>
++#include <asm/asm.h>
++#include <asm/regdef.h>
++#include <linux/linkage.h>
 +
-+// Cut here.
++.section	.rodata
++.align 4
++CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
 +
-+::kernel::concat_literals!(ARCH_STATIC_BRANCH_ASM("{symb} + {off} + {branch}", "{l_yes}"))
-diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-index 011e1fc1d19a..7757e4f8e85e 100644
---- a/rust/kernel/jump_label.rs
-+++ b/rust/kernel/jump_label.rs
-@@ -23,7 +23,69 @@ macro_rules! static_key_false {
-         let _key: *const $keytyp = ::core::ptr::addr_of!($key);
-         let _key: *const $crate::bindings::static_key = ::core::ptr::addr_of!((*_key).$field);
++.text
++
++/*
++ * Loongson SIMD eXtension implementation of ChaCha20. Produces a given
++ * positive number of blocks of output with a nonce of 0, taking an input
++ * key and 8-byte counter. Importantly does not spill to the stack. Its
++ * arguments are:
++ *
++ *	a0: output bytes
++ *	a1: 32-byte key input
++ *	a2: 8-byte counter input/output
++ *	a3: number of 64-byte blocks to write to output
++ */
++SYM_FUNC_START(__arch_chacha20_blocks_nostack_lsx)
++#define output		a0
++#define key		a1
++#define counter		a2
++#define nblocks		a3
++#define i		t0
++/* LSX registers vr0-vr23 are caller-save. */
++#define state0		$vr0
++#define state1		$vr1
++#define state2		$vr2
++#define state3		$vr3
++#define copy0		$vr4
++#define copy1		$vr5
++#define copy2		$vr6
++#define copy3		$vr7
++#define one		$vr8
++
++	/* copy0 = "expand 32-byte k" */
++	la.pcrel	t1, CONSTANTS
++	vld		copy0, t1, 0
++	/* copy1, copy2 = key */
++	vld		copy1, key, 0
++	vld		copy2, key, 0x10
++	/* copy3 = counter || zero nonce */
++	vldrepl.d	copy3, counter, 0
++	vinsgr2vr.d	copy3, zero, 1
++	/* one = 1 || 0 */
++	vldi		one, 0b0110000000001
++	vinsgr2vr.d	one, zero, 1
++
++.Lblock:
++	/* state = copy */
++	vori.b		state0, copy0, 0
++	vori.b		state1, copy1, 0
++	vori.b		state2, copy2, 0
++	vori.b		state3, copy3, 0
++
++	li.w		i, 10
++.Lpermute:
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
++	vadd.w		state0, state0, state1
++	vxor.v		state3, state3, state0
++	vrotri.w	state3, state3, 16
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
++	vadd.w		state2, state2, state3
++	vxor.v		state1, state1, state2
++	vrotri.w	state1, state1, 20
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
++	vadd.w		state0, state0, state1
++	vxor.v		state3, state3, state0
++	vrotri.w	state3, state3, 24
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
++	vadd.w		state2, state2, state3
++	vxor.v		state1, state1, state2
++	vrotri.w	state1, state1, 25
++
++	/* state1[0,1,2,3] = state1[1,2,3,0] */
++	vshuf4i.w	state1, state1, 0b00111001
++	/* state2[0,1,2,3] = state2[2,3,0,1] */
++	vshuf4i.w	state2, state2, 0b01001110
++	/* state3[0,1,2,3] = state3[1,2,3,0] */
++	vshuf4i.w	state3, state3, 0b10010011
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 16) */
++	vadd.w		state0, state0, state1
++	vxor.v		state3, state3, state0
++	vrotri.w	state3, state3, 16
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 12) */
++	vadd.w		state2, state2, state3
++	vxor.v		state1, state1, state2
++	vrotri.w	state1, state1, 20
++
++	/* state0 += state1, state3 = rotl32(state3 ^ state0, 8) */
++	vadd.w		state0, state0, state1
++	vxor.v		state3, state3, state0
++	vrotri.w	state3, state3, 24
++
++	/* state2 += state3, state1 = rotl32(state1 ^ state2, 7) */
++	vadd.w		state2, state2, state3
++	vxor.v		state1, state1, state2
++	vrotri.w	state1, state1, 25
++
++	/* state1[0,1,2,3] = state1[3,0,1,2] */
++	vshuf4i.w	state1, state1, 0b10010011
++	/* state2[0,1,2,3] = state2[2,3,0,1] */
++	vshuf4i.w	state2, state2, 0b01001110
++	/* state3[0,1,2,3] = state3[1,2,3,0] */
++	vshuf4i.w	state3, state3, 0b00111001
++
++	addi.w		i, i, -1
++	bnez		i, .Lpermute
++
++	/* output0 = state0 + copy0 */
++	vadd.w		state0, state0, copy0
++	vst		state0, output, 0
++	/* output1 = state1 + copy1 */
++	vadd.w		state1, state1, copy1
++	vst		state1, output, 0x10
++	/* output2 = state2 + copy2 */
++	vadd.w		state2, state2, copy2
++	vst		state2, output, 0x20
++	/* output3 = state3 + copy3 */
++	vadd.w		state3, state3, copy3
++	vst		state3, output, 0x30
++
++	/* ++copy3.counter */
++	vadd.d		copy3, copy3, one
++
++	/* output += 64 */
++	PTR_ADDI	output, output, 64
++	/* --nblocks */
++	PTR_ADDI	nblocks, nblocks, -1
++	bnez		nblocks, .Lblock
++
++	/* counter = copy3.counter */
++	vstelm.d	copy3, counter, 0, 0
++
++	/* Zero out the potentially sensitive regs, in case nothing uses these again. */
++	vldi		state0, 0
++	vldi		state1, 0
++	vldi		state2, 0
++	vldi		state3, 0
++	vldi		copy1, 0
++	vldi		copy2, 0
++
++	jr		ra
++SYM_FUNC_END(__arch_chacha20_blocks_nostack_lsx)
+diff --git a/arch/loongarch/vdso/vgetrandom-chacha.S b/arch/loongarch/vdso/vgetrandom-chacha.S
+index 2e42198f2faf..1931119e12a6 100644
+--- a/arch/loongarch/vdso/vgetrandom-chacha.S
++++ b/arch/loongarch/vdso/vgetrandom-chacha.S
+@@ -7,6 +7,11 @@
+ #include <asm/regdef.h>
+ #include <linux/linkage.h>
  
--        $crate::bindings::static_key_count(_key.cast_mut()) > 0
-+        #[cfg(not(CONFIG_JUMP_LABEL))]
-+        {
-+            $crate::bindings::static_key_count(_key.cast_mut()) > 0
-+        }
++#ifdef CONFIG_CPU_HAS_LSX
++# include <asm/alternative-asm.h>
++# include <asm/cpu.h>
++#endif
 +
-+        #[cfg(CONFIG_JUMP_LABEL)]
-+        $crate::jump_label::arch_static_branch! { $key, $keytyp, $field, false }
-     }};
- }
- pub use static_key_false;
-+
-+/// Assert that the assembly block evaluates to a string literal.
-+#[cfg(CONFIG_JUMP_LABEL)]
-+const _: &str = include!("arch_static_branch_asm.rs");
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(CONFIG_JUMP_LABEL)]
-+#[cfg(not(CONFIG_HAVE_JUMP_LABEL_HACK))]
-+macro_rules! arch_static_branch {
-+    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
-+        $crate::asm!(
-+            include!(concat!(env!("SRCTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+            l_yes = label {
-+                break 'my_label true;
-+            },
-+            symb = sym $key,
-+            off = const ::core::mem::offset_of!($keytyp, $field),
-+            branch = const $crate::jump_label::bool_to_int($branch),
-+        );
-+
-+        break 'my_label false;
-+    }};
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(CONFIG_JUMP_LABEL)]
-+#[cfg(CONFIG_HAVE_JUMP_LABEL_HACK)]
-+macro_rules! arch_static_branch {
-+    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
-+        $crate::asm!(
-+            include!(concat!(env!("SRCTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+            l_yes = label {
-+                break 'my_label true;
-+            },
-+            symb = sym $key,
-+            off = const ::core::mem::offset_of!($keytyp, $field),
-+            branch = const 2 | $crate::jump_label::bool_to_int($branch),
-+        );
-+
-+        break 'my_label false;
-+    }};
-+}
-+
-+#[cfg(CONFIG_JUMP_LABEL)]
-+pub use arch_static_branch;
-+
-+/// A helper used by inline assembly to pass a boolean to as a `const` parameter.
-+///
-+/// Using this function instead of a cast lets you assert that the input is a boolean, and not some
-+/// other type that can also be cast to an integer.
-+#[doc(hidden)]
-+pub const fn bool_to_int(b: bool) -> i32 {
-+    b as i32
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index d00a44b000b6..9e9b95ab6966 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -145,3 +145,33 @@ macro_rules! container_of {
-         ptr.sub(offset) as *const $type
-     }}
- }
-+
-+/// Helper for `.rs.S` files.
-+#[doc(hidden)]
-+#[macro_export]
-+macro_rules! concat_literals {
-+    ($( $asm:literal )* ) => {
-+        ::core::concat!($($asm),*)
-+    };
-+}
-+
-+/// Wrapper around `asm!` that uses at&t syntax on x86.
-+// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
-+// syntax.
-+#[cfg(target_arch = "x86_64")]
-+#[macro_export]
-+macro_rules! asm {
-+    ($($asm:expr),* ; $($rest:tt)*) => {
-+        ::core::arch::asm!( $($asm)*, options(att_syntax), $($rest)* )
-+    };
-+}
-+
-+/// Wrapper around `asm!` that uses at&t syntax on x86.
-+// For non-x86 arches we just pass through to `asm!`.
-+#[cfg(not(target_arch = "x86_64"))]
-+#[macro_export]
-+macro_rules! asm {
-+    ($($asm:expr),* ; $($rest:tt)*) => {
-+        ::core::arch::asm!( $($asm)*, $($rest)* )
-+    };
-+}
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 72b1232b1f7d..59fe83fba647 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -263,12 +263,13 @@ $(obj)/%.lst: $(obj)/%.c FORCE
- # Compile Rust sources (.rs)
- # ---------------------------------------------------------------------------
+ .text
  
--rust_allowed_features := new_uninit
-+rust_allowed_features := asm_const,asm_goto,new_uninit
- 
- # `--out-dir` is required to avoid temporaries being created by `rustc` in the
- # current working directory, which may be not accessible in the out-of-tree
- # modules case.
- rust_common_cmd = \
-+	SRCTREE=$(abspath $(srctree)) \
- 	RUST_MODFILE=$(modfile) $(RUSTC_OR_CLIPPY) $(rust_flags) \
- 	-Zallow-features=$(rust_allowed_features) \
- 	-Zcrate-attr=no_std \
-@@ -318,6 +319,12 @@ quiet_cmd_rustc_ll_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
- $(obj)/%.ll: $(obj)/%.rs FORCE
- 	+$(call if_changed_dep,rustc_ll_rs)
- 
-+quiet_cmd_rustc_rs_rs_S = RSCPP $(quiet_modtag) $@
-+      cmd_rustc_rs_rs_S = $(CPP) $(c_flags) -xc -C -P $< | sed '1,/^\/\/ Cut here.$$/d' >$@
-+
-+$(obj)/%.rs: $(obj)/%.rs.S FORCE
-+	+$(call if_changed_dep,rustc_rs_rs_S)
-+
- # Compile assembler sources (.S)
- # ---------------------------------------------------------------------------
- 
-
+ /* Salsa20 quarter-round */
+@@ -78,8 +83,16 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+ 	 * The ABI requires s0-s9 saved, and sp aligned to 16-byte.
+ 	 * This does not violate the stack-less requirement: no sensitive data
+ 	 * is spilled onto the stack.
++	 *
++	 * Rewrite the very first instruction to jump to the LSX implementation
++	 * if LSX is available.
+ 	 */
++#ifdef CONFIG_CPU_HAS_LSX
++	ALTERNATIVE __stringify(PTR_ADDI sp, sp, (-SZREG * 10) & STACK_ALIGN), \
++		    "b __arch_chacha20_blocks_nostack_lsx", CPU_FEATURE_LSX
++#else
+ 	PTR_ADDI	sp, sp, (-SZREG * 10) & STACK_ALIGN
++#endif
+ 	REG_S		s0, sp, 0
+ 	REG_S		s1, sp, SZREG
+ 	REG_S		s2, sp, SZREG * 2
 -- 
-2.46.0.184.g6999bdac58-goog
+2.46.0
 
