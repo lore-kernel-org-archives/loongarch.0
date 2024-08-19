@@ -1,87 +1,100 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1058C12FB34
-	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 15:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB87418991C;
+	Mon, 19 Aug 2024 18:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724082881; cv=none; b=EUqjjVK58nyIaslqS9xg8XDErh/NEDr5CV/6Nsmd9e+iCB7Ra052YOkdy/VOvgpcsGPD3swxK6WyfeNpkuaptjKCOZUZMZVaUvm5ut1dEqpkwA6G/4PoCDPzX+aokaGAqKoWKLdbMtbe2UrjG3PaHEuR8sEXFMwKMDZRB410jgY=
+	t=1724092832; cv=none; b=sCnf+Dtf7BhEQzWqAgLpQccpj5VGt033sq2pkL9UEuTEp77RQliUW1kNBGS2iSq/yx2ITMKe8cQ1pM9AbsiXabirAEo/9fexFjPG2bHCndvspudzuP3nO+G28r6tbDQ9nQoccpIoCToBwxv68E4O78ZZvj5rRAQThnaZoUyF1mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724082881; c=relaxed/simple;
-	bh=oSmLQncAkEs2Zw8wryDIMacsQInU88bocr9yYTzc/Io=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HNjkIN5R1TtOLmwY4hf70Du52o51vOIcXI4giBC6W/+nfCFH9w7h1O9tb8slQmGtK+1eUi9m1rxilSdigXza5dCXh/bc+sMco+SC8KS+aKEFH5poac+d9uk4bj+JsMxhSA/IKRv3hD88Kivawpb124Jm2etTPaAuOJAQ9Ie041w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=AXE3x4ro; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1724092832; c=relaxed/simple;
+	bh=ZMbADLpUAELxGABAgnkEdvEemGcRN8dlaJqTQh3jz20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tzss3rAzZU99THSKMWbe88RxY5PP44Qzui7/pknI8/uKbbpscBpAb3HcYLNwP+LMBc52G19rMtdF6ECN9lk5bEmvw0+U+0SohFea8K0EXXlGZhJ5qfD2si9E6j5F6hbnvbiaZixroBIl2XOlUEeANW4Vm3N6wke/OCVO+bTcckI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tf3yuuM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="AXE3x4ro"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1724082879;
-	bh=oSmLQncAkEs2Zw8wryDIMacsQInU88bocr9yYTzc/Io=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AXE3x4roBYWZ/cv7KGH25qAWtFH638p4aVwrPRXFo8eNimZUS5kwvjq839xj7whVF
-	 +VKHdBlK959bpZJOGet2jtsRPWgcub9Lbm+reXmVsNoILpN6Ak/X88ZnaIg7Uro3SN
-	 DbgTqjsA99/ufV2mOqHBM3zX3fBnVZ7h810XS6vs=
-Received: from [192.168.124.6] (unknown [113.200.174.126])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 4AB426656F;
-	Mon, 19 Aug 2024 11:54:37 -0400 (EDT)
-Message-ID: <46567f45f41512e8e43a37a5caaf08b6be810f3d.camel@xry111.site>
-Subject: Re:
-From: Xi Ruoyao <xry111@xry111.site>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, Huacai Chen
- <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, linux-crypto@vger.kernel.org, 
-	loongarch@lists.linux.dev, Jinyang He <hejinyang@loongson.cn>, Tiezhu Yang
-	 <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 19 Aug 2024 23:54:29 +0800
-In-Reply-To: <d10c0e620ae26e0c53e50aaae6efc87719b034f0.camel@xry111.site>
-References: <20240816110717.10249-1-xry111@xry111.site>
-	 <CAAhV-H5a42p6AAda=ncqCdmpHyc_tpXHjDVHq_F1pPZumfGeLw@mail.gmail.com>
-	 <ZsNCPKo9XZG52Yph@zx2c4.com>
-	 <d10c0e620ae26e0c53e50aaae6efc87719b034f0.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tf3yuuM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383A8C32782;
+	Mon, 19 Aug 2024 18:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724092831;
+	bh=ZMbADLpUAELxGABAgnkEdvEemGcRN8dlaJqTQh3jz20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tf3yuuM1xaQV1GST44D/askCKHwx3RLYMccgOWofU5ZQowzzd2wkHcAKj8q2/9jps
+	 dWoDaTIPRud5AuoFw1vcPgEABHC5VQ6LtZPVWI+Rd+61P7xfAM0XghusGTHqqGAXwa
+	 ZuWS1bQ5p18MAH42HP2ERd+ay+LdSVSO2DNyXUOlGZRZU+BWq8SAQ+pD1CzCsQNt0n
+	 Yl0QmavVLBDvxe1bnFz8uRC1/IMU9GRj+viqsIf26HyBNL+1YlG61oc5g45sk30HhE
+	 2aLe7pJ8xurVdeYOentskQg+vTtgtPrxjluAjbRzcxHR5eOHS8Yv8Xc/d6VU8RgR5J
+	 AKJCdvos/PpIQ==
+Date: Mon, 19 Aug 2024 12:40:28 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	palmer@dabbelt.com, Anup Patel <apatel@ventanamicro.com>,
+	linux-mips@vger.kernel.org, maz@kernel.org,
+	linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu,
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+	saravanak@google.com, paul.walmsley@sifive.com,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3] of/irq: Support #msi-cells=<0> in of_msi_get_domain
+Message-ID: <172409282414.2143677.12162426898759329021.robh@kernel.org>
+References: <20240817074107.31153-2-ajones@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240817074107.31153-2-ajones@ventanamicro.com>
 
-On Mon, 2024-08-19 at 23:22 +0800, Xi Ruoyao wrote:
-> On Mon, 2024-08-19 at 13:01 +0000, Jason A. Donenfeld wrote:
-> > > I don't see significant improvements about LSX here, so I prefer to
-> > > just use the generic version to avoid complexity (I remember Linus
-> > > said the whole of __vdso_getrandom is not very useful).
-> >=20
-> > I'm inclined to feel the same way, at least for now. Let's just go with
-> > one implementation -- the generic one -- and then we can see if
-> > optimization really makes sense later. I suspect the large speedup we'r=
-e
-> > already getting from being in the vDSO is already sufficient for
-> > purposes.
->=20
-> Ok I'll drop the 2nd and 3rd patches in the next version.=C2=A0 But I'm
-> puzzled why the LSX implementation isn't much faster, maybe I made some
-> mistake in it?
 
-After some thinking this seems making sense: the LoongArch desktop
-processors have 4 ALUs able to perform the scalar add/rot/xor
-operations, and the throughput is already maximized for ChaCha20 due to
-the data dependency.  The advantage of LSX seems just to avoid reloading
-key from the memory (because the register file is large enough to hold a
-copy of it).
+On Sat, 17 Aug 2024 09:41:08 +0200, Andrew Jones wrote:
+> An 'msi-parent' property with a single entry and no accompanying
+> '#msi-cells' property is considered the legacy definition as opposed
+> to its definition after being expanded with commit 126b16e2ad98
+> ("Docs: dt: add generic MSI bindings"). However, the legacy
+> definition is completely compatible with the current definition and,
+> since of_phandle_iterator_next() tolerates missing and present-but-
+> zero *cells properties since commit e42ee61017f5 ("of: Let
+> of_for_each_phandle fallback to non-negative cell_count"), there's no
+> need anymore to special case the legacy definition in
+> of_msi_get_domain().
+> 
+> Indeed, special casing has turned out to be harmful, because, as of
+> commit 7c025238b47a ("dt-bindings: irqchip: Describe the IMX MU block
+> as a MSI controller"), MSI controller DT bindings have started
+> specifying '#msi-cells' as a required property (even when the value
+> must be zero) as an effort to make the bindings more explicit. But,
+> since the special casing of 'msi-parent' only uses the existence of
+> '#msi-cells' for its heuristic, and not whether or not it's also
+> nonzero, the legacy path is not taken. Furthermore, the path to
+> support the new, broader definition isn't taken either since that
+> path has been restricted to the platform-msi bus.
+> 
+> But, neither the definition of 'msi-parent' nor the definition of
+> '#msi-cells' is platform-msi-specific (the platform-msi bus was just
+> the first bus that needed '#msi-cells'), so remove both the special
+> casing and the restriction. The code removal also requires changing
+> to of_parse_phandle_with_optional_args() in order to ensure the
+> legacy (but compatible) use of 'msi-parent' remains supported. This
+> not only simplifies the code but also resolves an issue with PCI
+> devices finding their MSI controllers on riscv, as the riscv,imsics
+> binding requires '#msi-cells=<0>'.
+> 
+> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+> ---
+> v3:
+>  - switch to of_for_each_phandle() to further cleanup/simplify the
+>    code [Rob]
+> v2:
+>  - switch to of_parse_phandle_with_optional_args() to ensure the
+>    absence of #msi-cells means count=0
+> 
+>  drivers/of/irq.c | 35 ++++++++---------------------------
+>  1 file changed, 8 insertions(+), 27 deletions(-)
+> 
 
-Perhaps LSX will be much better on those embedded processors with 2 ALUs
-and 1 SIMD unit (if they don't downclock with heavy SIMD load), but I
-don't have one for testing.
+Applied, thanks!
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
