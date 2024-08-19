@@ -1,110 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B753E15C130
-	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 08:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B13165F18
+	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 12:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724057350; cv=none; b=R4QtRQIKUorkBLFFmVIYILx6yptlpPNYR6OA6b+DzKw/8pBXKNOHjdb+IuHH+fhN/Xqw0C3mDfdIdrDzzrmanY/uYG26B7G1zWXJTV7H+MeP2IhCgqzzrwDSdzcDObXqMRjYhEwV4O04e8AZvDf6zSx7pbUnJM08dxRoXVhsZ5U=
+	t=1724071254; cv=none; b=iOnBnBxCGOf1Al54eAuaNvOpLmM9npAsmWQEbVjNUfFeyNduUMkGivb4Eoy9x4PVFWp65StpNuitgAd0rMgwKzUxVz7XFyQIqfUevHj/Hk/l+GmTdGElyQTHL3mnFv1gglD5b6kO4xpMXompIfxhPp27n6qN5tkBLlcHE6xInYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724057350; c=relaxed/simple;
-	bh=ikeSjRy4GsW1m2fYRfCUzbJkQ/cLV6dTiPYaEPwsdbU=;
+	s=arc-20240116; t=1724071254; c=relaxed/simple;
+	bh=LfWFvQDr2iatJwzhi4bxZutntdC6dIRnO/i0kp6H0Ig=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UKia7m6V8wpm9DVVM5MpET8IqWT4Mpq3mACv/+MfW31qeMBU+9ns+w4Awsiv6bEVcSFfit2Q5aZxv88nM7X5Za9QtxYmuD5/wQoYuDSJ+WZZgRirPiwBMqgscZHs0TtzblO+fhTMRv4Xl2uGKABQdExv0JMMWAsKugPojfqJJ9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DB5ay+B1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=t6sPc8YibtyH3fusu73iGp01nSSX4HFlnwM55bihtw3KYLt4ZS2WxBXJyu/jy1gCGqk5moXqwRD27/o6AP+vb7xE5Ik5/rX9s4M+AES6UIWzOCIr0mpuYEOSiz6fEi4QxYfI/B/Nmv9vsHZrOkn3MQG+M6T9bgGhfI8KNF4eLnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q34UapCH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DB5ay+B1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 448C8C4AF12
-	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 08:49:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q34UapCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD31C4AF0F
+	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 12:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724057350;
-	bh=ikeSjRy4GsW1m2fYRfCUzbJkQ/cLV6dTiPYaEPwsdbU=;
+	s=k20201202; t=1724071254;
+	bh=LfWFvQDr2iatJwzhi4bxZutntdC6dIRnO/i0kp6H0Ig=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DB5ay+B1SbvuK0W/tIq07Vh5cW5GH67aQBpzRM1NtCNgImUNaniZvOw8i+UTZTmTC
-	 cXAiZWkZaZJdkOYwYC+6NVW37RRSUDj41llkzUzX4W2dydxf4BmGof1xv7vXIVvk5L
-	 egImF0VNDy0SuW91wJNOgR0kVFq/hKLz0c86Kh7E7QzZ7hWd8wWmI8RWqYFDE7Fefb
-	 +Rj7qhCx55Y5fbdhOf01+TnA2Hn3fAZlrxGtmMmKzOIj94Qt6DfP7/IiUmIGTyv5gK
-	 MoghLCyygSsXX2yElsJ7knt96Bk7BgPe9UDpI48V0Vgckuv5E9kRdYTMN/jXlXBhWh
-	 uvtpAY0tLfMLw==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f189a2a7f8so41615391fa.2
-        for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 01:49:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXa2T4i/PgNHUG//JMee3en98zQ59p0ySqn4njr3DgVeg4r/JWGVxTtJfQmrQn3VYBqvNzLBLbihC+lLQAwSVNjZCoy4aqskJbw
-X-Gm-Message-State: AOJu0YwrYOPAbIAR/ELNA/FZmBujuM/Gdx6nwnvsbhrXFRzRCTMdtr3u
-	augt68j+OPQNu7hC2MfInvgfsjoObmchqBmPioZnuurwqnJzC4UVWFvAx69D1y3wK1s9f68wQrp
-	3cNIbEhnUIBQrUXDOADr4A1LU+g0=
-X-Google-Smtp-Source: AGHT+IGmH+b8jUe5ni2UMuI8Z7jONtWR0To4PVrSyU6P+lbditYQK79uhqh5roR1ezY68Ur4UM5epZBfW+DnTBTSo/4=
-X-Received: by 2002:a2e:4e01:0:b0:2ee:974c:596f with SMTP id
- 38308e7fff4ca-2f3be5bfe54mr70497211fa.28.1724057348523; Mon, 19 Aug 2024
- 01:49:08 -0700 (PDT)
+	b=q34UapCH0xUjuGjBmuVEWpNx01J3PinW4eOtPV2lkyUe9dDyVrD/bbMyaoeKc06lK
+	 +31lPpuK5r6ANqjs0/RxZpC9CJ73dKqZdEX3owFkPdbhqvp1Zp8W+6+RXST1ff+drb
+	 NPOjMpTa6GJqDNQg9Hr4jRC+s98kbCDXUgMVCNA2AoNSu4yxAFZhe32WGDHUlw3029
+	 kox3o4pIkF2GT8M++COB8f3ulrXawUmAdM1iJNNpl+dmW6JMS9ZqAByPLNkPswb7f/
+	 4z4NkyuDZgcn8m1G8r9RsbOmJE18wfzHQ9Xsth4Rqc+3lQ/O+LfuEiB1kjOwQ4FEC8
+	 e/YC/AO2JqZMw==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f1a7faa4d5so53354061fa.3
+        for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 05:40:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX3m43wCreP/caYSTJl67UOiSJJKG/jQWjq+MR/MEc4ril1AazuT0Q8Xs8mh13+M1TlDAs6jSFHb6EXx2TPLwH5zAm7w2ZefxL4
+X-Gm-Message-State: AOJu0Ywo0PJVPxr6W1E4XpGK+J5VFwZrx/szfB5zcJ8CwiiMXYHw7ZQB
+	g0wFmuEjiVzIKlFc5uVxPLK4o+y9el+PYmxsksFzdyF/R3WRsbV1MW+eEI6AYrKH7T++UtDlEcE
+	Nh10hQMAAewnxrBF2CywP30k7Bsc=
+X-Google-Smtp-Source: AGHT+IGz0jwwf5TkvEXxouu78uKMjOK2HgQDjQvqcUjC8NNidiYey0vWZI1O9paDT+z72wQ2RT7PAD1jZG8UlDu7TMQ=
+X-Received: by 2002:a2e:819a:0:b0:2f3:b76c:25c4 with SMTP id
+ 38308e7fff4ca-2f3be600e71mr66193211fa.37.1724071252465; Mon, 19 Aug 2024
+ 05:40:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240812-clean-dma-direct-v1-1-cbe19c2b73f5@gmail.com>
-In-Reply-To: <20240812-clean-dma-direct-v1-1-cbe19c2b73f5@gmail.com>
+References: <20240816110717.10249-1-xry111@xry111.site>
+In-Reply-To: <20240816110717.10249-1-xry111@xry111.site>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 19 Aug 2024 16:48:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4VgKaN0PywbyX5fFTMK-UNVbnLCYi1zGYPEPwVFwXkBQ@mail.gmail.com>
-Message-ID: <CAAhV-H4VgKaN0PywbyX5fFTMK-UNVbnLCYi1zGYPEPwVFwXkBQ@mail.gmail.com>
-Subject: Re: [PATCH] loongarch/dma: remove dma-direct.h
-To: shankerwangmiao@gmail.com
-Cc: WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	loongarch@lists.linux.dev
+Date: Mon, 19 Aug 2024 20:40:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5a42p6AAda=ncqCdmpHyc_tpXHjDVHq_F1pPZumfGeLw@mail.gmail.com>
+Message-ID: <CAAhV-H5a42p6AAda=ncqCdmpHyc_tpXHjDVHq_F1pPZumfGeLw@mail.gmail.com>
+Subject: Re:
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>, WANG Xuerui <kernel@xen0n.name>, linux-crypto@vger.kernel.org, 
+	loongarch@lists.linux.dev, Jinyang He <hejinyang@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued, thanks.
+Hi, Ruoyao,
+
+Why no subject?
+
+On Fri, Aug 16, 2024 at 7:07=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> Subject: [PATCH v3 0/2] LoongArch: Implement getrandom() in vDSO
+>
+> For the rationale to implement getrandom() in vDSO see [1].
+>
+> The vDSO getrandom() needs a stack-less ChaCha20 implementation, so we
+> need to add architecture-specific code and wire it up with the generic
+> code.  Both generic LoongArch implementation and Loongson SIMD eXtension
+> based implementation are added.  To dispatch them at runtime without
+> invoking cpucfg on each call, the alternative runtime patching mechanism
+> is extended to cover the vDSO.
+>
+> The implementation is tested with the kernel selftests added by the last
+> patch in [1].  I had to make some adjustments to make it work on
+> LoongArch (see [2], I've not submitted the changes as at now because I'm
+> unsure about the KHDR_INCLUDES addition).  The vdso_test_getrandom
+> bench-single result:
+>
+>        vdso: 25000000 times in 0.647855257 seconds (generic)
+>        vdso: 25000000 times in 0.601068605 seconds (LSX)
+>        libc: 25000000 times in 6.948168864 seconds
+>     syscall: 25000000 times in 6.990265548 seconds
+>
+> The vdso_test_getrandom bench-multi result:
+>
+>        vdso: 25000000 x 256 times in 35.322187834 seconds (generic)
+>        vdso: 25000000 x 256 times in 29.183885426 seconds (LSX)
+>        libc: 25000000 x 256 times in 356.628428409 seconds
+>        syscall: 25000000 x 256 times in 334.764602866 seconds
+I don't see significant improvements about LSX here, so I prefer to
+just use the generic version to avoid complexity (I remember Linus
+said the whole of __vdso_getrandom is not very useful).
+
 
 Huacai
 
-On Mon, Aug 12, 2024 at 1:30=E2=80=AFPM Miao Wang via B4 Relay
-<devnull+shankerwangmiao.gmail.com@kernel.org> wrote:
 >
-> From: Miao Wang <shankerwangmiao@gmail.com>
+> [1]:https://lore.kernel.org/all/20240712014009.281406-1-Jason@zx2c4.com/
+> [2]:https://github.com/xry111/linux/commits/xry111/la-vdso-v3/
 >
-> dma-direct.h is introduced in commit d4b6f1562a3c ("LoongArch:
-> Add Non-Uniform Memory Access (NUMA) support"). In commit
-> c78c43fe7d42 ("LoongArch: Use acpi_arch_dma_setup() and remove
-> ARCH_HAS_PHYS_TO_DMA"), ARCH_HAS_PHYS_TO_DMA was deselected and
-> the coresponding phys_to_dma and dma_to_phys functions were
-> removed. However, the unused dma-direct.h was left behind,
-> which is removed by this patch.
+> [v2]->v3:
+> - Add a generic LoongArch implementation for which LSX isn't needed.
 >
-> Fixes: c78c43fe7d42 ("LoongArch: Use acpi_arch_dma_setup() and remove ARC=
-H_HAS_PHYS_TO_DMA")
-> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
-> ---
->  arch/loongarch/include/asm/dma-direct.h | 11 -----------
->  1 file changed, 11 deletions(-)
+> v1->v2:
+> - Properly send the series to the list.
 >
-> diff --git a/arch/loongarch/include/asm/dma-direct.h b/arch/loongarch/inc=
-lude/asm/dma-direct.h
-> deleted file mode 100644
-> index 75ccd808a2af..000000000000
-> --- a/arch/loongarch/include/asm/dma-direct.h
-> +++ /dev/null
-> @@ -1,11 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/*
-> - * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-> - */
-> -#ifndef _LOONGARCH_DMA_DIRECT_H
-> -#define _LOONGARCH_DMA_DIRECT_H
-> -
-> -dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
-> -phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr);
-> -
-> -#endif /* _LOONGARCH_DMA_DIRECT_H */
+> [v2]:https://lore.kernel.org/all/20240815133357.35829-1-xry111@xry111.sit=
+e/
 >
-> ---
-> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
-> change-id: 20240812-clean-dma-direct-2eef3cb0c987
+> Xi Ruoyao (3):
+>   LoongArch: vDSO: Wire up getrandom() vDSO implementation
+>   LoongArch: Perform alternative runtime patching on vDSO
+>   LoongArch: vDSO: Add LSX implementation of vDSO getrandom()
 >
-> Best regards,
+>  arch/loongarch/Kconfig                      |   1 +
+>  arch/loongarch/include/asm/vdso/getrandom.h |  47 ++++
+>  arch/loongarch/include/asm/vdso/vdso.h      |   8 +
+>  arch/loongarch/kernel/asm-offsets.c         |  10 +
+>  arch/loongarch/kernel/vdso.c                |  14 +-
+>  arch/loongarch/vdso/Makefile                |   6 +
+>  arch/loongarch/vdso/memset.S                |  24 ++
+>  arch/loongarch/vdso/vdso.lds.S              |   7 +
+>  arch/loongarch/vdso/vgetrandom-chacha-lsx.S | 162 +++++++++++++
+>  arch/loongarch/vdso/vgetrandom-chacha.S     | 252 ++++++++++++++++++++
+>  arch/loongarch/vdso/vgetrandom.c            |  19 ++
+>  11 files changed, 549 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/include/asm/vdso/getrandom.h
+>  create mode 100644 arch/loongarch/vdso/memset.S
+>  create mode 100644 arch/loongarch/vdso/vgetrandom-chacha-lsx.S
+>  create mode 100644 arch/loongarch/vdso/vgetrandom-chacha.S
+>  create mode 100644 arch/loongarch/vdso/vgetrandom.c
+>
 > --
-> Miao Wang <shankerwangmiao@gmail.com>
->
+> 2.46.0
 >
