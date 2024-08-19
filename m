@@ -1,97 +1,110 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2220614B95E
-	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 07:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B753E15C130
+	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 08:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724052948; cv=none; b=VTLBa0gi0oWVq0B/EEry6llG83Pr/bZlt0YZPlAhhaRGTeS6v9EK4jeSjbliLHhEm+byuz2K83I+Aii7CcvlBDTLsQgr7iuALAJlQaIXj6san6DzvjUTMh9amOHnlxc0A9SgICXpmOdC6/02C/q3R6pXqX+ieracArAcVVAUUyc=
+	t=1724057350; cv=none; b=R4QtRQIKUorkBLFFmVIYILx6yptlpPNYR6OA6b+DzKw/8pBXKNOHjdb+IuHH+fhN/Xqw0C3mDfdIdrDzzrmanY/uYG26B7G1zWXJTV7H+MeP2IhCgqzzrwDSdzcDObXqMRjYhEwV4O04e8AZvDf6zSx7pbUnJM08dxRoXVhsZ5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724052948; c=relaxed/simple;
-	bh=spq6B6sb/ZIFGYSOPazEWb0knQr9sjtzp6ILO0qVbpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A85EOX02iVsDd7ropAlijNFPPckwgHO5CQJRwvwBocLNLcLUvO+0VTOlIois6poPdiYNn8hT3+V9GW4+ETEgzHtsrSugnOFwnvybHBZsv57pcrZvXWLVKgBfsb6jfYo9pP96CWCODspMiOeCMRzxthDNjChFs7q5R1Ozjzv0l04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=d1QYJxMC; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1724057350; c=relaxed/simple;
+	bh=ikeSjRy4GsW1m2fYRfCUzbJkQ/cLV6dTiPYaEPwsdbU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UKia7m6V8wpm9DVVM5MpET8IqWT4Mpq3mACv/+MfW31qeMBU+9ns+w4Awsiv6bEVcSFfit2Q5aZxv88nM7X5Za9QtxYmuD5/wQoYuDSJ+WZZgRirPiwBMqgscZHs0TtzblO+fhTMRv4Xl2uGKABQdExv0JMMWAsKugPojfqJJ9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DB5ay+B1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="d1QYJxMC"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a83597ce5beso603081666b.1
-        for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 00:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1724052945; x=1724657745; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8NyA3r+0SEkxLBULpRBSrNH9reIkd05NfXfPtxwYdwY=;
-        b=d1QYJxMC0qn1FV7XmpGqVj3VDqy+hnQ/pymNnvLjvb7CMVJDD7s/VwoWby3VHqxQ2G
-         wJBdB+KFqLGVSd+Ep98KMSm8083NRl505Posl9wg7H1LmrUGngCVaIF+fa3CTEJ7zY34
-         GfBS/a0/qPA7KlzmdOoq3D8RIZu/K6a5+V5uQhF0eqA3FoNX/aCqzZoMwPhl4VdCqhHT
-         zAi+T8wLJiopSmvnG6Tl+LJMVawRawAdqBEmCHkEqtEKwvvAxRW0UP3D90wyjJbhPG3Q
-         /F/n9JJhdtwZU0KllDMHPqTUNgBP+pE0YFvvTRQqaUBYNiPHoP/zZBvQorj/iEf1uSed
-         terg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724052945; x=1724657745;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8NyA3r+0SEkxLBULpRBSrNH9reIkd05NfXfPtxwYdwY=;
-        b=NsXA4/EtQknWR/EHQuHStF8UpKwgRYZ4q9qYYN3T41DKykwMntyolJA0xw2Yc5bZuk
-         qYf6rFweOCbLHwM8P1Dl0nRJaARMCTo4Wrb7hI+qubqlLhtSKvPelK06i+LCQ22/Vo20
-         f1mcqIVbPcjgLXGMuSgKFlj7YDaCnhVCB4FGjlQzbB0sn+QK4mhdMKD3g6a5g7Mj/yw2
-         ibAAMwXqA6WHTwWtPQO7yUlmrpLPAPUkHcSOzBpjdgCFA286VYja2SLAISbLFdpegTAK
-         Xhl2Ea7nt678HW0tjUc7NpbK03ha7LUhYiK1DVTe1BVW4IlBopkI/e8jBRYU0ExAYdxa
-         yv6A==
-X-Forwarded-Encrypted: i=1; AJvYcCV+gyIiLcNgGmrkyD4K85NGVSwWPSVTvto1OqIIL9wEn9F9Ef5ABDMmM2GUHQx4skN21JAtyDU6TDKkhL/6BZLTHuOUwfCmEL5m
-X-Gm-Message-State: AOJu0YxZpvIMCCYcjc0yakRI3qmKutNDTM79sJJWXAA1LqG4vhO8JdcN
-	4TGcLrQO3Eg6Gtu89a3mR10E16b8EZ0tHZnRV7TxlDAcL4kinLdPWaZ2w0agWR2kI8Gr2BXCazU
-	NCZA=
-X-Google-Smtp-Source: AGHT+IFGNW4Rp1MF9pErnW5tAeVHGUBzNbSFgBGlimGRBnHwWDOlPps9HXt2/6wAXUpzwZnZvX8mQw==
-X-Received: by 2002:a17:907:6d2a:b0:a72:5967:b34 with SMTP id a640c23a62f3a-a8394f7e0b9mr963569066b.22.1724052944878;
-        Mon, 19 Aug 2024 00:35:44 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c6c07sm603195566b.43.2024.08.19.00.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 00:35:44 -0700 (PDT)
-Date: Mon, 19 Aug 2024 09:35:43 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, maz@kernel.org, mark.rutland@arm.com, saravanak@google.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	Anup Patel <apatel@ventanamicro.com>
-Subject: Re: [PATCH v3] of/irq: Support #msi-cells=<0> in of_msi_get_domain
-Message-ID: <20240819-3fd4ff3cfa1d216a1241f5a0@orel>
-References: <20240817074107.31153-2-ajones@ventanamicro.com>
- <20240818161816.GA173148-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DB5ay+B1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 448C8C4AF12
+	for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 08:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724057350;
+	bh=ikeSjRy4GsW1m2fYRfCUzbJkQ/cLV6dTiPYaEPwsdbU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DB5ay+B1SbvuK0W/tIq07Vh5cW5GH67aQBpzRM1NtCNgImUNaniZvOw8i+UTZTmTC
+	 cXAiZWkZaZJdkOYwYC+6NVW37RRSUDj41llkzUzX4W2dydxf4BmGof1xv7vXIVvk5L
+	 egImF0VNDy0SuW91wJNOgR0kVFq/hKLz0c86Kh7E7QzZ7hWd8wWmI8RWqYFDE7Fefb
+	 +Rj7qhCx55Y5fbdhOf01+TnA2Hn3fAZlrxGtmMmKzOIj94Qt6DfP7/IiUmIGTyv5gK
+	 MoghLCyygSsXX2yElsJ7knt96Bk7BgPe9UDpI48V0Vgckuv5E9kRdYTMN/jXlXBhWh
+	 uvtpAY0tLfMLw==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f189a2a7f8so41615391fa.2
+        for <loongarch@lists.linux.dev>; Mon, 19 Aug 2024 01:49:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXa2T4i/PgNHUG//JMee3en98zQ59p0ySqn4njr3DgVeg4r/JWGVxTtJfQmrQn3VYBqvNzLBLbihC+lLQAwSVNjZCoy4aqskJbw
+X-Gm-Message-State: AOJu0YwrYOPAbIAR/ELNA/FZmBujuM/Gdx6nwnvsbhrXFRzRCTMdtr3u
+	augt68j+OPQNu7hC2MfInvgfsjoObmchqBmPioZnuurwqnJzC4UVWFvAx69D1y3wK1s9f68wQrp
+	3cNIbEhnUIBQrUXDOADr4A1LU+g0=
+X-Google-Smtp-Source: AGHT+IGmH+b8jUe5ni2UMuI8Z7jONtWR0To4PVrSyU6P+lbditYQK79uhqh5roR1ezY68Ur4UM5epZBfW+DnTBTSo/4=
+X-Received: by 2002:a2e:4e01:0:b0:2ee:974c:596f with SMTP id
+ 38308e7fff4ca-2f3be5bfe54mr70497211fa.28.1724057348523; Mon, 19 Aug 2024
+ 01:49:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240818161816.GA173148-robh@kernel.org>
+References: <20240812-clean-dma-direct-v1-1-cbe19c2b73f5@gmail.com>
+In-Reply-To: <20240812-clean-dma-direct-v1-1-cbe19c2b73f5@gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 19 Aug 2024 16:48:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4VgKaN0PywbyX5fFTMK-UNVbnLCYi1zGYPEPwVFwXkBQ@mail.gmail.com>
+Message-ID: <CAAhV-H4VgKaN0PywbyX5fFTMK-UNVbnLCYi1zGYPEPwVFwXkBQ@mail.gmail.com>
+Subject: Re: [PATCH] loongarch/dma: remove dma-direct.h
+To: shankerwangmiao@gmail.com
+Cc: WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 18, 2024 at 10:18:16AM GMT, Rob Herring wrote:
-> On Sat, Aug 17, 2024 at 09:41:08AM +0200, Andrew Jones wrote:
-...
-> > +	of_for_each_phandle(&it, err, np, "msi-parent", "#msi-cells", 0) {
-> > +		d = irq_find_matching_host(it.node, token);
-> > +		if (d)
-> > +			return d;
-> > +		of_node_put(it.node);
-> 
-> Pretty sure the iterator does this for you. I can fixup when applying.
+Queued, thanks.
 
-Doh, I managed to mess up my usage of OF APIs twice. Thanks for applying
-the fixup.
+Huacai
 
-> 
-> I plan to tag for stable too.
-
-Good idea.
-
-Thanks,
-drew
+On Mon, Aug 12, 2024 at 1:30=E2=80=AFPM Miao Wang via B4 Relay
+<devnull+shankerwangmiao.gmail.com@kernel.org> wrote:
+>
+> From: Miao Wang <shankerwangmiao@gmail.com>
+>
+> dma-direct.h is introduced in commit d4b6f1562a3c ("LoongArch:
+> Add Non-Uniform Memory Access (NUMA) support"). In commit
+> c78c43fe7d42 ("LoongArch: Use acpi_arch_dma_setup() and remove
+> ARCH_HAS_PHYS_TO_DMA"), ARCH_HAS_PHYS_TO_DMA was deselected and
+> the coresponding phys_to_dma and dma_to_phys functions were
+> removed. However, the unused dma-direct.h was left behind,
+> which is removed by this patch.
+>
+> Fixes: c78c43fe7d42 ("LoongArch: Use acpi_arch_dma_setup() and remove ARC=
+H_HAS_PHYS_TO_DMA")
+> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
+> ---
+>  arch/loongarch/include/asm/dma-direct.h | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/dma-direct.h b/arch/loongarch/inc=
+lude/asm/dma-direct.h
+> deleted file mode 100644
+> index 75ccd808a2af..000000000000
+> --- a/arch/loongarch/include/asm/dma-direct.h
+> +++ /dev/null
+> @@ -1,11 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> - */
+> -#ifndef _LOONGARCH_DMA_DIRECT_H
+> -#define _LOONGARCH_DMA_DIRECT_H
+> -
+> -dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
+> -phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr);
+> -
+> -#endif /* _LOONGARCH_DMA_DIRECT_H */
+>
+> ---
+> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+> change-id: 20240812-clean-dma-direct-2eef3cb0c987
+>
+> Best regards,
+> --
+> Miao Wang <shankerwangmiao@gmail.com>
+>
+>
