@@ -1,325 +1,69 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50311AB52A
-	for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 16:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C416E1494A0;
+	Tue, 20 Aug 2024 18:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724171375; cv=none; b=ZU+JmA2faGQenpOvd5f4CJTgKtayfcFni8fe205XFNC34cyaBU1nT9DaiVfsPDIVVNcGgFvvLkFBriu4gyMntmcgaq6AOoSVOHmvSp1sDvuyh1HuULaI8Gomtu0f+pYBlzIPSXsdxwAnqtOty+rZA6sTBCcveM8lK2EHRmJjMW8=
+	t=1724178643; cv=none; b=IGXHYer9mH9XHWxsUtdV4irvoRYzZgOa51SJPy0IKmXaynHkjX/O6/m8M9wGyCZO4ZGgxS3/0JVigq/oebQj6XJCm4ADAz9RQgGJ57ymRDYUh4JWhNYCwWAKMwhS6DoeCJ0WU6TDCstc0HDOtFY8iVzA13Zwi4ScTQ72CT0HB5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724171375; c=relaxed/simple;
-	bh=Voq048pM2Kl4TdkOvYya7BvdxsDdu+6WpfYu5FJSLuE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pWQ/R7ti5MQtUIcB8a/+UC+KNCKvLZFMrjc/40DH+sItX9O9B2g1RwXv0xa0Uurl4LZANAihXnz7ZGxpKbkUh1Y6CLNHl2fRRm0ias+3zKjyXVLearalgp4FIpt250fp2l+4FxlFPyd1keUHj4sZN3QNCugy9d4E/2aZ71b29n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JgesEHAQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1SserZbP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JgesEHAQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1SserZbP"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724171370;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rt+qJPRnUlTdCxy+HqQKlWVloB8PPTVjPXwBqnEDk+0=;
-	b=JgesEHAQZzySxLXlM36vPyH8lHIylwIOzBytwcMjS6F/VggEzQzyyuauwnSSAwKu4ew2H9
-	Aw3aSxvx6LUKU7m1uJ0Vn99VBH6APahmXOygHG1DsQY3+qx6tKe+HK8BhnotdL83+1g3oB
-	uoVCzgKN0FCpY4LEOQpYZcvptY0d2AN6RDAzYzUsFiIv5hvc079Do28bHDQ68ZZ7hPhhO2
-	DpdRgGRhlxZ+jWqPIqtl9ZrN+DjuDFQBupZZbp2G+v9HzSIljvmxcQUWCJCUmR+bLMzbZm
-	TAluBf+s4bW5PBnXUubmUYcbKMPbGC05MpxZPuBabxwMwc4sCDKLIhVMDv8GwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724171370;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rt+qJPRnUlTdCxy+HqQKlWVloB8PPTVjPXwBqnEDk+0=;
-	b=1SserZbPrG1HBE+Xmwsgt8bB7uIp0spb8ECHVnnPvzheXB/NaxtoJ+pu/igEiUwJBmEt9v
-	5zopFYzdN/5ZtWCQ==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, zhangtianyang@loongson.cn, yijun@loongson.cn,
- mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org,
- maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn,
- nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-In-Reply-To: <20240815112608.26925-3-zhangtianyang@loongson.cn>
-References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
- <20240815112608.26925-3-zhangtianyang@loongson.cn>
-Date: Tue, 20 Aug 2024 18:29:29 +0200
-Message-ID: <87msl7jgye.ffs@tglx>
+	s=arc-20240116; t=1724178643; c=relaxed/simple;
+	bh=anCgAaHfG8Tm61jyfGeIZ8qm77ntivfuE4rHccrGIu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2wujZmaM+yspC+SdyXl5CWK9PHxedkMnh05FmCPDaih/KRn9Quglx2kwIu0fx7gBV4M/ifusEJHm9AeXsEfamMmYQTkCvI5lh4fyEA8bJw24wbTnJI9/JUdAOXP10Uo58kwO9ta8fSoQT3z9qErOx1ojGWGoQhchSiHDQOLgEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by mail.home.local (8.17.1/8.17.1/Submit) id 47KIUTnC017648;
+	Tue, 20 Aug 2024 20:30:29 +0200
+Date: Tue, 20 Aug 2024 20:30:29 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Miao Wang <shankerwangmiao@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+        loongarch@lists.linux.dev, Sasha Levin <sashal@kernel.org>,
+        stable@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+        linux-api@vger.kernel.org
+Subject: Re: It is correct to introduce new sys calls to stable versions?
+Message-ID: <ZsTgxUndhb04snd6@1wt.eu>
+References: <DF762B6F-360A-4C0C-8C85-55686417209B@gmail.com>
+ <2024082057-coherence-lethargy-3513@gregkh>
+ <D19DB99F-B5D9-49A6-BCF8-A5980A9BC1A0@gmail.com>
+ <2024082027-deskbound-rumbling-b96f@gregkh>
+ <ZsSwnPfyOvdSBMOC@1wt.eu>
+ <46C6EB05-1AA2-42BF-82BF-3B99CCA57439@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46C6EB05-1AA2-42BF-82BF-3B99CCA57439@gmail.com>
 
-On Thu, Aug 15 2024 at 19:26, Tianyang Zhang wrote:
->  .../arch/loongarch/irq-chip-model.rst         |  32 ++
->  .../zh_CN/arch/loongarch/irq-chip-model.rst   |  32 ++
->  arch/loongarch/Kconfig                        |   1 +
->  arch/loongarch/include/asm/cpu-features.h     |   1 +
->  arch/loongarch/include/asm/cpu.h              |   2 +
->  arch/loongarch/include/asm/hardirq.h          |   3 +-
->  arch/loongarch/include/asm/hw_irq.h           |   2 +
->  arch/loongarch/include/asm/irq.h              |  25 +-
->  arch/loongarch/include/asm/loongarch.h        |  18 +-
->  arch/loongarch/include/asm/smp.h              |   2 +
->  arch/loongarch/kernel/cpu-probe.c             |   3 +-
->  arch/loongarch/kernel/irq.c                   |  15 +-
->  arch/loongarch/kernel/paravirt.c              |   5 +
->  arch/loongarch/kernel/smp.c                   |   6 +
->  drivers/irqchip/Makefile                      |   2 +-
->  drivers/irqchip/irq-loongarch-avec.c          | 426 ++++++++++++++++++
->  drivers/irqchip/irq-loongarch-cpu.c           |   5 +-
->  drivers/irqchip/irq-loongson-eiointc.c        |   7 +-
->  drivers/irqchip/irq-loongson-pch-msi.c        |  24 +-
->  include/linux/cpuhotplug.h                    |   3 +-
+On Wed, Aug 21, 2024 at 12:09:41AM +0800, Miao Wang wrote:
+> However, my original question is whether it is expected to include new
+> syscalls in kernel stable tree. According to the document "stable-kernel-
+> rules", if I'm interpreting it correctly, I expect only bug fixes and small
+> driver enhancements from stable releases. I understand the patch in question
+> is actually introducing new syscalls, which is beyond my expectation. So I
+> wonder the consideration of including this patch in stable releases.
 
-This patch is doing too many things at once and is absolutely not
-reviewable.
+When you maintain stable software you quickly realize that everything
+is not just pure white or black but a shade of gray and that if it can
+be considered as a bug to miss a syscall in certain environments for
+example, then it can become a valid fix to add it. I don't have any
+opinion on this particular one, but since your question is broader I'm
+trying to explain.
 
-Please split it up into the obvious bits and pieces:
+Different people have different expectations about what needs to be
+fixed, that's even why some people will choose a distro over another
+one (prefer to fix only critical bugs over fixing all bugs for example),
+but there's no point restarting a philosophical on this topic which has
+already been rehashed too many times in the past.
 
-   1) The IRQ_NOPROBE change
-
-   2) See below
-
-   3) Documentation
-
-   4) Add the arch/loongson parts, i.e. all the defines and
-      basic required function prototypes with a little twist.
-      Add a Kconfig symbol:
-
-	Kconfig IRQ_LOONGARCH_AVEC
-        	bool  
-
-      in drivers/irqchip/Kconfig. This allows you to add all
-      arch/loongarch/ changes with the simple tweak:
-
-      #ifdef CONFIG_IRQ_LOONGARCH_AVEC
-      # define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
-      #else
-      # define cpu_has_avecint		false
-      #endif
-      
-      and
-      
-      #ifdef CONFIG_IRQ_LOONGARCH_AVEC
-      # define SMP_CLEAR_VECTOR		BIT(ACTION_CLEAR_VECTOR)
-      #else
-      # define SMP_CLEAR_VECTOR		(0)
-      #endif
-
-      That way the compiler will optimize out stuff like the
-      SMP_CLEAR_VECTOR handling and you only need the prototype of
-      complete_irq_moving(), but no implementation.
-
-   5) Change the CPU hotplug callback for EOINTC and do
-      the acpi_cascade_irqdomain_init() change.
-
-   6) Prepare get_pch_msi_handle() in the pch MSI driver
-
-   7) Implement the driver and select IRQ_LOONGARCH_AVEC
-      from IRQ_LOONGARCH_CPU
-
-   8) Remove the IRQ_LOONGARCH_AVEC helpers
-
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 70f169210b52..0e3abf7b0bd3 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -85,6 +85,7 @@ config LOONGARCH
->  	select GENERIC_ENTRY
->  	select GENERIC_GETTIMEOFDAY
->  	select GENERIC_IOREMAP if !ARCH_IOREMAP
-> +	select GENERIC_IRQ_MATRIX_ALLOCATOR
-
-Please move this to IRQ_LOONGARCH_CPU in patch #7
-
-> @@ -92,15 +103,21 @@ int liointc_acpi_init(struct irq_domain *parent,
->  					struct acpi_madt_lio_pic *acpi_liointc);
->  int eiointc_acpi_init(struct irq_domain *parent,
->  					struct acpi_madt_eio_pic *acpi_eiointc);
-> +int avecintc_acpi_init(struct irq_domain *parent);
-> +
-> +void complete_irq_moving(void);
->  
->  int htvec_acpi_init(struct irq_domain *parent,
->  					struct acpi_madt_ht_pic *acpi_htvec);
->  int pch_lpc_acpi_init(struct irq_domain *parent,
->  					struct acpi_madt_lpc_pic *acpi_pchlpc);
-> -int pch_msi_acpi_init(struct irq_domain *parent,
-> -					struct acpi_madt_msi_pic *acpi_pchmsi);
->  int pch_pic_acpi_init(struct irq_domain *parent,
->  					struct acpi_madt_bio_pic *acpi_pchpic);
-> +int pch_msi_acpi_init(struct irq_domain *parent,
-> +					struct acpi_madt_msi_pic *acpi_pchmsi);
-> +int pch_msi_acpi_init_v2(struct irq_domain *parent,
-> +					struct acpi_madt_msi_pic *acpi_pchmsi);
-
-This is really the wrong place for all these prototypes. They are only
-used in drivers/irqchip/... except for complete_irq_moving().
-
-So the proper place for them is drivers/irqchip/irq-loongarch.h
-
-Move them there. This is patch #2 which I referred to above.
-
->
-> +static phys_addr_t msi_base_addr;
->
-
-So you have everything related to the avec chip in loongarch_avec, so
-why don't you move that into that data structure?
-
-> +struct avecintc_chip {
-> +	struct fwnode_handle	*fwnode;
-> +	struct irq_domain	*domain;
-> +	struct irq_matrix	*vector_matrix;
-> +	raw_spinlock_t		lock;
-> +};
-
-The lock should be the first member as spinlocks have alignment
-requirements....
-
-> +static int avecintc_domain_alloc(struct irq_domain *domain,
-> +				 unsigned int virq, unsigned int nr_irqs, void *arg)
-> +{
-> +	guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
-> +
-> +	for (unsigned int i = 0; i < nr_irqs; i++) {
-> +		struct irq_data *irqd = irq_domain_get_irq_data(domain, virq + i);
-> +		struct avecintc_data *adata = kzalloc(sizeof(*adata), GFP_KERNEL);
-
-That was never tested with any debug. You _cannot_ do a GFP_KERNEL
-allocation with the raw spinlock held. And no, don't use
-GFP_ATOMIC. There is absolutely zero reason to hold the lock accross all
-of that. As you got your ideas from x86_vector_alloc_irqs(), you could
-have looked at how that's done correctly.
-
-> +		unsigned int cpu, ret;
-> +
-> +		if (!adata)
-> +			return -ENOMEM;
-> +
-> +		ret = irq_matrix_alloc(loongarch_avec.vector_matrix, cpu_online_mask, false, &cpu);
-> +		if (ret < 0) {
-> +			kfree(adata);
-> +			return ret;
-> +		}
-> +
-> +		adata->moving = 0;
-
-Redundant. The struct is allocated with kzalloc()...
-
-> +		adata->prev_cpu = adata->cpu = cpu;
-> +		adata->prev_vec = adata->vec = ret;
-> +		adata->managed = irqd_affinity_is_managed(irqd);
-
-If you want to support managed interrupts, then you cannot allocate
-from the CPU online mask. See x86...
-
-> +		irq_domain_set_info(domain, virq + i, virq + i, &avec_irq_controller,
-> +				    adata, handle_edge_irq, NULL, NULL);
-> +		irqd_set_single_target(irqd);
-> +		irqd_set_affinity_on_activate(irqd);
-> +
-> +		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(irqd);
-
-static int avecintc_alloc_vector(struct avecintc_adata *adata)
-{
-        int ret, cpu;
-
-	guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
-	ret = irq_matrix_alloc(loongarch_avec.vector_matrix, cpu_online_mask, false, &cpu);
-        if (ret < 0)
-              return ret;
-
-	adata->prev_cpu = adata->cpu = cpu;
-	adata->prev_vec = adata->vec = ret;
-        per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(irqd);
-        return 0;
-}
-
-static int avecintc_domain_alloc(struct irq_domain *domain, ...)
-{
-	for (unsigned int i = 0; i < nr_irqs; i++) {
-		struct irq_data *irqd = irq_domain_get_irq_data(domain, virq + i);
-		struct avecintc_data *adata = kzalloc(sizeof(*adata), GFP_KERNEL);
-                int ret;
-
-		if (!adata)
-			return -ENOMEM;
-
-		irq_domain_set_info(domain, virq + i, virq + i, &avec_irq_controller,
-				    adata, handle_edge_irq, NULL, NULL);
-		irqd_set_single_target(irqd);
-		irqd_set_affinity_on_activate(irqd);
-
-		ret = avecintc_alloc_vector(adata);
-                if (ret < 0) {
-			kfree(adata);
-                        return ret;
-                }
-         }
-No?
-
-> +static void clear_free_vector(struct irq_data *irqd)
-> +{
-> +	struct avecintc_data *adata = irq_data_get_irq_chip_data(irqd);
-> +	bool managed = irqd_affinity_is_managed(irqd);
-
-Don't even try. Your managed support is broken at the allocation side
-and at several other places.
-
-> +	per_cpu(irq_map, adata->cpu)[adata->vec] = NULL;
-> +	irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->vec, managed);
-> +	adata->cpu = UINT_MAX;
-> +	adata->vec = UINT_MAX;
-> +
-> +#ifdef CONFIG_SMP
-> +	if (!adata->moving)
-> +		return;
-> +
-> +	per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] = NULL;
-> +	irq_matrix_free(loongarch_avec.vector_matrix,
-> +			adata->prev_cpu, adata->prev_vec, adata->managed);
-> +	adata->moving = 0;
-> +	adata->prev_vec = UINT_MAX;
-> +	adata->prev_cpu = UINT_MAX;
-
-What's all the clearing for when you kfree() it two lines further down?
-
-> +	list_del_init(&adata->entry);
-> +#endif
-> +	kfree(adata);
-
-And no, not under the lock .... Move the locking into this function and
-kfree() at the call site. There is zero reason to hold the lock over the
-full loop.
-
-> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-> +				     const unsigned long end)
-> +{
-> +	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-> +
-> +	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-> +
-> +	return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
-> +}
-
-...
-
-> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent, struct acpi_madt_msi_pic *acpi_pchmsi)
-
-The second argument is required because?
+As a rule of thumb, just keep in mind that anything that needs to get
+fix will eventually be fixed.
 
 Thanks,
-
-        tglx
+Willy
