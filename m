@@ -1,31 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D78D518EFF1
-	for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 12:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2BC18FC89
+	for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 12:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724157460; cv=none; b=pNy28GKSIIYPKmIuKMbQbfpZe3T/z4X9t3LfdbcJqrJ1u1GHE1iINGs+k53uQuRvfY6uXvUmOlF6WN4LesG2wwHgTeqQ3iel9O88V9UYQYiOQIlIz9n8h4jpZ+/zjMM2mAw5yAWzKT94nIRjvLfNZmUP3Wel3H+FpKnn5bD07fc=
+	t=1724157461; cv=none; b=sDQuHAgpXFhsolYiPPc2mVGyFbilgta9Y7zSrt6TNnNqpWO8RNURbQdP7c1WvWsKUNlPR/DC4GEOeGJUEgbzZ6zY1QAz1ZFWYurEdX35o9mAcFf34OfW8KU6srLb+HKNfdtkXMSKF4JdvKbboOmEl6Su1X6nN3+QeVJzQ8BLDIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724157460; c=relaxed/simple;
-	bh=sRePvfj/oJ6v8RUicxjMB9eW5qwEBHExj2tE1CepU8E=;
+	s=arc-20240116; t=1724157461; c=relaxed/simple;
+	bh=t9x4TYYD0UVihjjijunrAnfnxESPR+7kSgN2YaQSQ9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SHqmAkvbSSEWFV4m62hI0Z5ukT2sUTqh0qDTt3eDeNj3xuLRTjOq6DNH08RB+W3n2jJaOSa3nVc3gkah/32bG9bjXgbRvfLoJ/QCmRgncJ0wkNXN03VolkoGQrFDJbIYAwlrQDhMaAmtgs6Dt4sVG4ulIYe7mvsAT1/UrU2ZIWM=
+	 MIME-Version; b=EOMCxLbgi88xhaYcBtmoeV6auk34HYKc8FEwD1fqSLFseuO+5wpX+uBe3ymrcizSycX4OzmIuP19xBkvy+PD04RKzQMP9mPlLzbxlJvLJXxh00lvjKaKKPyNc+yBqxH6/rfU4lPQd1GocknebRlCFThGbi/obFMhwDousXkvPaM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxSZoQjsRmwyYaAA--.20041S3;
-	Tue, 20 Aug 2024 20:37:36 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxHusRjsRmxiYaAA--.57546S3;
+	Tue, 20 Aug 2024 20:37:37 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxkeEMjsRmL5MbAA--.56855S3;
-	Tue, 20 Aug 2024 20:37:33 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMDxkeEMjsRmL5MbAA--.56855S4;
+	Tue, 20 Aug 2024 20:37:36 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] LoongArch: Define barrier_before_unreachable() as empty
-Date: Tue, 20 Aug 2024 20:37:30 +0800
-Message-ID: <20240820123731.31568-2-yangtiezhu@loongson.cn>
+Subject: [PATCH v1 2/2] LoongArch: Add ifdefs to fix LSX and LASX related issues
+Date: Tue, 20 Aug 2024 20:37:31 +0800
+Message-ID: <20240820123731.31568-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240820123731.31568-1-yangtiezhu@loongson.cn>
 References: <20240820123731.31568-1-yangtiezhu@loongson.cn>
@@ -36,125 +36,83 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxkeEMjsRmL5MbAA--.56855S3
+X-CM-TRANSID:qMiowMDxkeEMjsRmL5MbAA--.56855S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAr43Gr1rWw43tw45Kr43XFc_yoW5KF43pF
-	nFvryDGr4kWrs7Cw17t345ur45Aw4kCF4agry8Xa4UZFy5Xw1ktwn7KrW7JFyjgws2grW0
-	gF1fG34YgF48JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxuF1kGr1fur43GrWxWr4fCrX_yoW5XFWrpr
+	9xCrs5Kr45WFn2y3yDZwn5WFZ0ka97Gr1agF4qy34fCF4qqFnrXr18tFn8XFyjgws7Ja1F
+	gFWrGw4YqayUAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8CztUUUUU=
 
-When building kernel with -Os (CONFIG_CC_OPTIMIZE_FOR_SIZE=y) rather
-than the default -O2 (CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is not set),
-there exist many objtool warnings "unreachable instruction", this is
-because objtool couldn't find a code path to reach the instruction,
-objdump shows that the unreachable instruction is related with BUG()
-or unreachable().
+There exist some issues when building kernel if CONFIG_CPU_HAS_LBT is set
+but CONFIG_CPU_HAS_LSX and CONFIG_CPU_HAS_LASX are not set. In this case,
+there are no definitions of _restore_lsx and _restore_lasx and there are
+also no definitions of kvm_restore_lsx and kvm_restore_lasx in fpu.S and
+switch.S respectively, just add some ifdefs to fix the issues.
 
-In include/linux/compiler-gcc.h, there is an empty inline assembly
+  AS      arch/loongarch/kernel/fpu.o
+arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
 
-  #define barrier_before_unreachable() asm volatile("")
+  AS [M]  arch/loongarch/kvm/switch.o
+arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
 
-in the definition of unreachable() to work around GCC 7.0 after the
-commit 173a3efd3edb ("bug.h: work around GCC PR82365 in BUG()") in
-the year of 2018, the unreachable instruction is generated by it.
-
-As far as I can see, this workaround is to fix warnings of frame sizes,
-the default CONFIG_FRAME_WARN is 2048 on 64 bit system now, it seems
-that there are no -Wframe-larger-than warnings in the current kernel
-without this workaround.
-
-I am not sure whether the GCC bug has been fixed, I can not find the
-fixup in the link https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82365
-and in the GCC repo. So I am not sure whether it is time and proper
-to remove this workaround in the common header totally, just remove
-it in the arch specified header when compiling kernel with a newer
-GCC version (for example GCC 12.1 or higher on LoongArch) at least.
-
-For example:
-arch/loongarch/kernel/cpu-probe.o: warning: objtool: cpu_probe+0x664: unreachable instruction
-
-objdump -M no-aliases -D arch/loongarch/kernel/cpu-probe.o
-
-Without this patch:
-
-0000000000000000 <cpu_probe>:
- ...
- 65c:   44000d80        bnez            $t0, 12 # 668 <.L345^B1+0x4>
-
-0000000000000660 <.L10001^B2>:
- 660:   002a0001        break           0x1
-
-0000000000000664 <.L345^B1>:
- 664:   53ff63ff        b               -160    # 5c4 <.L344^B1>
- 668:   0280040c        addi.w          $t0, $zero, 1
- 66c:   00006d8d        cpucfg          $t1, $t0
-
-With this patch:
-
-0000000000000000 <cpu_probe>:
- ...
- 65c:   44000980        bnez            $t0, 8  # 664 <.L345^B1>
-
-0000000000000660 <.L10001^B2>:
- 660:   002a0001        break           0x1
-
-0000000000000664 <.L345^B1>:
- 664:   0280040c        addi.w          $t0, $zero, 1
- 668:   00006d8d        cpucfg          $t1, $t0
+  MODPOST Module.symvers
+ERROR: modpost: "kvm_restore_lsx" [arch/loongarch/kvm/kvm.ko] undefined!
+ERROR: modpost: "kvm_restore_lasx" [arch/loongarch/kvm/kvm.ko] undefined!
 
 Cc: stable@vger.kernel.org # 6.9+
+Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
 Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407221208.6SSBeN9H-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202408120955.qls5oNQY-lkp@intel.com/
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/Kconfig                |  1 +
- arch/loongarch/include/asm/compiler.h | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 arch/loongarch/include/asm/compiler.h
+ arch/loongarch/kernel/fpu.S | 4 ++++
+ arch/loongarch/kvm/switch.S | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 70f169210b52..3af0da76d103 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -102,6 +102,7 @@ config LOONGARCH
- 	select GPIOLIB
- 	select HAS_IOPORT
- 	select HAVE_ARCH_AUDITSYSCALL
-+	select HAVE_ARCH_COMPILER_H
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
- 	select HAVE_ARCH_KASAN
-diff --git a/arch/loongarch/include/asm/compiler.h b/arch/loongarch/include/asm/compiler.h
-new file mode 100644
-index 000000000000..4f6adb8d533e
---- /dev/null
-+++ b/arch/loongarch/include/asm/compiler.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
-+#ifndef _ASM_COMPILER_H
-+#define _ASM_COMPILER_H
-+
-+#ifdef barrier_before_unreachable
-+#undef barrier_before_unreachable
-+#define barrier_before_unreachable() do { } while (0)
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index 69a85f2479fb..6ab640101457 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -530,6 +530,10 @@ SYM_FUNC_END(_restore_lasx_context)
+ 
+ #ifdef CONFIG_CPU_HAS_LBT
+ STACK_FRAME_NON_STANDARD _restore_fp
++#ifdef CONFIG_CPU_HAS_LSX
+ STACK_FRAME_NON_STANDARD _restore_lsx
 +#endif
-+
-+#endif /* _ASM_COMPILER_H */
++#ifdef CONFIG_CPU_HAS_LASX
+ STACK_FRAME_NON_STANDARD _restore_lasx
+ #endif
++#endif
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 80e988985a6a..0c292f818492 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -277,6 +277,10 @@ SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+ 
+ #ifdef CONFIG_CPU_HAS_LBT
+ STACK_FRAME_NON_STANDARD kvm_restore_fpu
++#ifdef CONFIG_CPU_HAS_LSX
+ STACK_FRAME_NON_STANDARD kvm_restore_lsx
++#endif
++#ifdef CONFIG_CPU_HAS_LASX
+ STACK_FRAME_NON_STANDARD kvm_restore_lasx
+ #endif
++#endif
 -- 
 2.42.0
 
