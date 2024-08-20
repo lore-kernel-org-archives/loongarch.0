@@ -1,100 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB87418991C;
-	Mon, 19 Aug 2024 18:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1835FDDA0
+	for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 00:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724092832; cv=none; b=sCnf+Dtf7BhEQzWqAgLpQccpj5VGt033sq2pkL9UEuTEp77RQliUW1kNBGS2iSq/yx2ITMKe8cQ1pM9AbsiXabirAEo/9fexFjPG2bHCndvspudzuP3nO+G28r6tbDQ9nQoccpIoCToBwxv68E4O78ZZvj5rRAQThnaZoUyF1mk=
+	t=1724115138; cv=none; b=qJv59h551p9sG/Veyp/au6zhkV/Km0oilsFskXeAd3H0xPC914cb73PtmE2X33mnlaUPMASzQ9kFFcTYqGoSjcVmteSPCG75ag4fkcwfNcTsijwLioZb2U90GImxWhTr9lc9K9/4KMhqEJtwMMhJP0JEdf7dJwLLnMmKuxa/bMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724092832; c=relaxed/simple;
-	bh=ZMbADLpUAELxGABAgnkEdvEemGcRN8dlaJqTQh3jz20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tzss3rAzZU99THSKMWbe88RxY5PP44Qzui7/pknI8/uKbbpscBpAb3HcYLNwP+LMBc52G19rMtdF6ECN9lk5bEmvw0+U+0SohFea8K0EXXlGZhJ5qfD2si9E6j5F6hbnvbiaZixroBIl2XOlUEeANW4Vm3N6wke/OCVO+bTcckI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tf3yuuM1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tf3yuuM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383A8C32782;
-	Mon, 19 Aug 2024 18:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724092831;
-	bh=ZMbADLpUAELxGABAgnkEdvEemGcRN8dlaJqTQh3jz20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tf3yuuM1xaQV1GST44D/askCKHwx3RLYMccgOWofU5ZQowzzd2wkHcAKj8q2/9jps
-	 dWoDaTIPRud5AuoFw1vcPgEABHC5VQ6LtZPVWI+Rd+61P7xfAM0XghusGTHqqGAXwa
-	 ZuWS1bQ5p18MAH42HP2ERd+ay+LdSVSO2DNyXUOlGZRZU+BWq8SAQ+pD1CzCsQNt0n
-	 Yl0QmavVLBDvxe1bnFz8uRC1/IMU9GRj+viqsIf26HyBNL+1YlG61oc5g45sk30HhE
-	 2aLe7pJ8xurVdeYOentskQg+vTtgtPrxjluAjbRzcxHR5eOHS8Yv8Xc/d6VU8RgR5J
-	 AKJCdvos/PpIQ==
-Date: Mon, 19 Aug 2024 12:40:28 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	palmer@dabbelt.com, Anup Patel <apatel@ventanamicro.com>,
-	linux-mips@vger.kernel.org, maz@kernel.org,
-	linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu,
-	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-	saravanak@google.com, paul.walmsley@sifive.com,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] of/irq: Support #msi-cells=<0> in of_msi_get_domain
-Message-ID: <172409282414.2143677.12162426898759329021.robh@kernel.org>
-References: <20240817074107.31153-2-ajones@ventanamicro.com>
+	s=arc-20240116; t=1724115138; c=relaxed/simple;
+	bh=2ioYGP+M8IHViOUOeVxEe4+PE+2PfXR1I4ooDHkhex0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TXB8DrEr4DdBWIhVYIhNo8zwsnrUnlt82s3uZ2/KFaPbWkBELItfJI+EvCkJtG86sFC5pMa0cAz3uPYucNdSonTX9cQFCcbgTeFe3rGP2bUquJurfOV6MckIY9TXVtNzegr3VzyViflrypn7Ots9gLVrwjn7oFAam+ZNmxMvvUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8DxeZpC6MNmDbUZAA--.19425S3;
+	Tue, 20 Aug 2024 08:50:10 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMDxnWdA6MNm0wMbAA--.25858S3;
+	Tue, 20 Aug 2024 08:50:09 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] LoongArch: vDSO: Wire up getrandom() vDSO
+ implementation
+To: Xi Ruoyao <xry111@xry111.site>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, linux-crypto@vger.kernel.org,
+ loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Arnd Bergmann <arnd@arndb.de>
+References: <20240816110717.10249-1-xry111@xry111.site>
+ <20240816110717.10249-2-xry111@xry111.site>
+ <CAAhV-H7TKg98QXtrv9UmzZd9O=pxERvzCsz83Y+m+kf0zbeCkA@mail.gmail.com>
+ <ZsNClVFzfi3djXDz@zx2c4.com>
+ <9d6850dd52989ad72238903187377cbaa59f7e62.camel@xry111.site>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <a29807b5-d0ce-f04e-a7d1-024d29f398be@loongson.cn>
+Date: Tue, 20 Aug 2024 08:50:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240817074107.31153-2-ajones@ventanamicro.com>
+In-Reply-To: <9d6850dd52989ad72238903187377cbaa59f7e62.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxnWdA6MNm0wMbAA--.25858S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XFWfCryktF4fAr1rGrWfJFc_yoWxZwb_ur
+	1kuF48CanI9r4DJFWvk3WrA3sFq392qw13AF1vvr13X343J3y5CFWq9rWF9w48XF18XFsF
+	9Fs0q3Z3ury2gosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267AKxVWU
+	JVW8JwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU
+	=
 
+On 2024-08-19 23:36, Xi Ruoyao wrote:
 
-On Sat, 17 Aug 2024 09:41:08 +0200, Andrew Jones wrote:
-> An 'msi-parent' property with a single entry and no accompanying
-> '#msi-cells' property is considered the legacy definition as opposed
-> to its definition after being expanded with commit 126b16e2ad98
-> ("Docs: dt: add generic MSI bindings"). However, the legacy
-> definition is completely compatible with the current definition and,
-> since of_phandle_iterator_next() tolerates missing and present-but-
-> zero *cells properties since commit e42ee61017f5 ("of: Let
-> of_for_each_phandle fallback to non-negative cell_count"), there's no
-> need anymore to special case the legacy definition in
-> of_msi_get_domain().
-> 
-> Indeed, special casing has turned out to be harmful, because, as of
-> commit 7c025238b47a ("dt-bindings: irqchip: Describe the IMX MU block
-> as a MSI controller"), MSI controller DT bindings have started
-> specifying '#msi-cells' as a required property (even when the value
-> must be zero) as an effort to make the bindings more explicit. But,
-> since the special casing of 'msi-parent' only uses the existence of
-> '#msi-cells' for its heuristic, and not whether or not it's also
-> nonzero, the legacy path is not taken. Furthermore, the path to
-> support the new, broader definition isn't taken either since that
-> path has been restricted to the platform-msi bus.
-> 
-> But, neither the definition of 'msi-parent' nor the definition of
-> '#msi-cells' is platform-msi-specific (the platform-msi bus was just
-> the first bus that needed '#msi-cells'), so remove both the special
-> casing and the restriction. The code removal also requires changing
-> to of_parse_phandle_with_optional_args() in order to ensure the
-> legacy (but compatible) use of 'msi-parent' remains supported. This
-> not only simplifies the code but also resolves an issue with PCI
-> devices finding their MSI controllers on riscv, as the riscv,imsics
-> binding requires '#msi-cells=<0>'.
-> 
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
-> v3:
->  - switch to of_for_each_phandle() to further cleanup/simplify the
->    code [Rob]
-> v2:
->  - switch to of_parse_phandle_with_optional_args() to ensure the
->    absence of #msi-cells means count=0
-> 
->  drivers/of/irq.c | 35 ++++++++---------------------------
->  1 file changed, 8 insertions(+), 27 deletions(-)
-> 
-
-Applied, thanks!
+> On Mon, 2024-08-19 at 13:03 +0000, Jason A. Donenfeld wrote:
+>>>> The compiler (GCC 14.2) calls memset() for initializing a "large" struct
+>>>> in a cold path of the generic vDSO getrandom() code.  There seems no way
+>>>> to prevent it from calling memset(), and it's a cold path so the
+>>>> performance does not matter, so just provide a naive memset()
+>>>> implementation for vDSO.
+>>> Why x86 doesn't need to provide a naive memset()?
+> I'm not sure.  Maybe it's because x86_64 has SSE2 enabled so by default
+> the maximum buffer length to inline memset is larger.
+>
+I suspect the loongarch gcc has issue with -fno-builtin(-memset).
 
