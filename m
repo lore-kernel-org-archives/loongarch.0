@@ -1,34 +1,39 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B85EEBA
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 01:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C88A12B17C
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 01:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724202770; cv=none; b=Cjv3cDT8sKNyW7+DKN5Ioq+nki/XyQAY3kYjuEVWNA32HbiDbV6AhCuhdiqxtAHIMQy+RgKdFfO2upV1MSSrYreGBiHEuo/WAz7fog4C9E7WkcpphfD/O++SELp8SZnFEd6CaC3wq8HjttBiTGKKgjv6x7dKKdRgYk0vmSUnvrk=
+	t=1724204852; cv=none; b=uMU5vrDtz+tk5YpNFWLs+EUR+9RDZQZz4p9UF1hKWbXdG8gtZvFBFao97wxO8/bWEdzRVa/XvtaWkmBuFVlXdwU/8k1mje1yHhka2AXD+z0fkIO8JcC67sA/7KuXgV+rW1Vko3jpi02qIEqfHmYHbps0jPmhUNMxEK2MVRQ0bVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724202770; c=relaxed/simple;
-	bh=93ucYNzm6rjFAJLlmlDLDdpg7flXKMWTpnKPf5+hKCg=;
+	s=arc-20240116; t=1724204852; c=relaxed/simple;
+	bh=2m97ekdXZqDJ+lbtAaH6RYUqRyNuOw737fH402QMvAk=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iGwYgyYStKg/eWwUprgDx2M2E5U+rL26dytN8J7uCXx6J/Jn9eiUsrsT1T2QyMczBJJ2FmPnWxDyCRBrtbWj6Q25eOfV3FRA7jAOAZPRew3gaKYLFs1/ELKa5WvEXSWewfPvt+MciDEWQpVX7aHemfHFAxOwhysYw0Ug9mU4gkQ=
+	 In-Reply-To:Content-Type; b=P3V1Y8ObBdYRAtE8c9lr1DKEDXv8fj5ZU1BGsaazZrGquV0G9XD5dN11QlfTRtcOx1PKK4GRhlUCUZav0h7leQQhIpV+YB7RAcyYllTK7tCbLsGzMwVFsxXdo2tx7/ph/3lgrLxM0zNhN0Q5mDFyAptewpXkSOhGhuejX0MI8rI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxfZsGP8VmybsaAA--.31846S3;
-	Wed, 21 Aug 2024 09:12:38 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxVOAEP8VmLB8cAA--.59112S3;
-	Wed, 21 Aug 2024 09:12:36 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: Add ifdefs to fix LSX and LASX related
- issues
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240820123731.31568-1-yangtiezhu@loongson.cn>
- <20240820123731.31568-3-yangtiezhu@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <1d23bbfe-dd36-b2ff-c4b3-cf69396ea53f@loongson.cn>
-Date: Wed, 21 Aug 2024 09:12:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Bx7eovR8VmaMAaAA--.57836S3;
+	Wed, 21 Aug 2024 09:47:27 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMAxz2cmR8Vm8SQcAA--.48465S3;
+	Wed, 21 Aug 2024 09:47:19 +0800 (CST)
+Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, corbet@lwn.net, alexs@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+ gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
+ <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <40b3b302-14a1-c158-99ed-feb81d3fefc4@loongson.cn>
+Date: Wed, 21 Aug 2024 09:47:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -36,117 +41,297 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240820123731.31568-3-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <87msl7jgye.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxVOAEP8VmLB8cAA--.59112S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXr4kKrWkAw17Xr48CF47WrX_yoW5Kw1kpr
-	9rArs5tr4ruFnFy3ykAw1kWFZ09397Gr4agF4DtryrCr4qgrnxJr18tF1DXFyjga1xJa1F
-	gFZ5Wr4YqayUtwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxz2cmR8Vm8SQcAA--.48465S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Wr1fZF4rCry7JF4kCFyfGrX_yoWfKr1DpF
+	W5AanrKr48JrWxWryjgw4Uury3Kw1xWr12qa1fCa4xCrWqkryIkF10yr9ruFy0vw48G3yj
+	vF4Utas3uFn0y3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
+Hi, Thomas
 
+在 2024/8/21 上午12:29, Thomas Gleixner 写道:
+> On Thu, Aug 15 2024 at 19:26, Tianyang Zhang wrote:
+>>   .../arch/loongarch/irq-chip-model.rst         |  32 ++
+>>   .../zh_CN/arch/loongarch/irq-chip-model.rst   |  32 ++
+>>   arch/loongarch/Kconfig                        |   1 +
+>>   arch/loongarch/include/asm/cpu-features.h     |   1 +
+>>   arch/loongarch/include/asm/cpu.h              |   2 +
+>>   arch/loongarch/include/asm/hardirq.h          |   3 +-
+>>   arch/loongarch/include/asm/hw_irq.h           |   2 +
+>>   arch/loongarch/include/asm/irq.h              |  25 +-
+>>   arch/loongarch/include/asm/loongarch.h        |  18 +-
+>>   arch/loongarch/include/asm/smp.h              |   2 +
+>>   arch/loongarch/kernel/cpu-probe.c             |   3 +-
+>>   arch/loongarch/kernel/irq.c                   |  15 +-
+>>   arch/loongarch/kernel/paravirt.c              |   5 +
+>>   arch/loongarch/kernel/smp.c                   |   6 +
+>>   drivers/irqchip/Makefile                      |   2 +-
+>>   drivers/irqchip/irq-loongarch-avec.c          | 426 ++++++++++++++++++
+>>   drivers/irqchip/irq-loongarch-cpu.c           |   5 +-
+>>   drivers/irqchip/irq-loongson-eiointc.c        |   7 +-
+>>   drivers/irqchip/irq-loongson-pch-msi.c        |  24 +-
+>>   include/linux/cpuhotplug.h                    |   3 +-
+> This patch is doing too many things at once and is absolutely not
+> reviewable.
+>
+> Please split it up into the obvious bits and pieces:
+>
+>     1) The IRQ_NOPROBE change
+>
+>     2) See below
+>
+>     3) Documentation
+>
+>     4) Add the arch/loongson parts, i.e. all the defines and
+>        basic required function prototypes with a little twist.
+>        Add a Kconfig symbol:
+>
+> 	Kconfig IRQ_LOONGARCH_AVEC
+>          	bool
+>
+>        in drivers/irqchip/Kconfig. This allows you to add all
+>        arch/loongarch/ changes with the simple tweak:
+>
+>        #ifdef CONFIG_IRQ_LOONGARCH_AVEC
+>        # define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
+>        #else
+>        # define cpu_has_avecint		false
+>        #endif
+>        
+>        and
+>        
+>        #ifdef CONFIG_IRQ_LOONGARCH_AVEC
+>        # define SMP_CLEAR_VECTOR		BIT(ACTION_CLEAR_VECTOR)
+>        #else
+>        # define SMP_CLEAR_VECTOR		(0)
+>        #endif
+>
+>        That way the compiler will optimize out stuff like the
+>        SMP_CLEAR_VECTOR handling and you only need the prototype of
+>        complete_irq_moving(), but no implementation.
+>
+>     5) Change the CPU hotplug callback for EOINTC and do
+>        the acpi_cascade_irqdomain_init() change.
+>
+>     6) Prepare get_pch_msi_handle() in the pch MSI driver
+>
+>     7) Implement the driver and select IRQ_LOONGARCH_AVEC
+>        from IRQ_LOONGARCH_CPU
+>
+>     8) Remove the IRQ_LOONGARCH_AVEC helpers
+Thanks for your guiding, we will complete the split as required
+>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index 70f169210b52..0e3abf7b0bd3 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -85,6 +85,7 @@ config LOONGARCH
+>>   	select GENERIC_ENTRY
+>>   	select GENERIC_GETTIMEOFDAY
+>>   	select GENERIC_IOREMAP if !ARCH_IOREMAP
+>> +	select GENERIC_IRQ_MATRIX_ALLOCATOR
+> Please move this to IRQ_LOONGARCH_CPU in patch #7
+OK, thanks
+>
+>> @@ -92,15 +103,21 @@ int liointc_acpi_init(struct irq_domain *parent,
+>>   					struct acpi_madt_lio_pic *acpi_liointc);
+>>   int eiointc_acpi_init(struct irq_domain *parent,
+>>   					struct acpi_madt_eio_pic *acpi_eiointc);
+>> +int avecintc_acpi_init(struct irq_domain *parent);
+>> +
+>> +void complete_irq_moving(void);
+>>   
+>>   int htvec_acpi_init(struct irq_domain *parent,
+>>   					struct acpi_madt_ht_pic *acpi_htvec);
+>>   int pch_lpc_acpi_init(struct irq_domain *parent,
+>>   					struct acpi_madt_lpc_pic *acpi_pchlpc);
+>> -int pch_msi_acpi_init(struct irq_domain *parent,
+>> -					struct acpi_madt_msi_pic *acpi_pchmsi);
+>>   int pch_pic_acpi_init(struct irq_domain *parent,
+>>   					struct acpi_madt_bio_pic *acpi_pchpic);
+>> +int pch_msi_acpi_init(struct irq_domain *parent,
+>> +					struct acpi_madt_msi_pic *acpi_pchmsi);
+>> +int pch_msi_acpi_init_v2(struct irq_domain *parent,
+>> +					struct acpi_madt_msi_pic *acpi_pchmsi);
+> This is really the wrong place for all these prototypes. They are only
+> used in drivers/irqchip/... except for complete_irq_moving().
+>
+> So the proper place for them is drivers/irqchip/irq-loongarch.h
+>
+> Move them there. This is patch #2 which I referred to above.
+Ok ,thanks
+>
+>> +static phys_addr_t msi_base_addr;
+>>
+> So you have everything related to the avec chip in loongarch_avec, so
+> why don't you move that into that data structure?
+Ok, thanks
+>
+>> It just looks more compatible with the previous one. It really doesn't make sense. We will delete it later+struct avecintc_chip {
+>> +	struct fwnode_handle	*fwnode;
+>> +	struct irq_domain	*domain;
+>> +	struct irq_matrix	*vector_matrix;
+>> +	raw_spinlock_t		lock;
+>> +};
+> The lock should be the first member as spinlocks have alignment
+> requirements....
+Ok ,thanks
+> It just looks more compatible with the previous one. It really doesn't make sense. We will delete it later
+>
+>> +static int avecintc_domain_alloc(struct irq_domain *domain,
+>> +				 unsigned int virq, unsigned int nr_irqs, void *arg)
+>> +{
+>> +	guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
+>> +
+>> +	for (unsigned int i = 0; i < nr_irqs; i++) {
+>> +		struct irq_data *irqd = irq_domain_get_irq_data(domain, virq + i);
+>> +		struct avecintc_data *adata = kzalloc(sizeof(*adata), GFP_KERNEL);
+> That was never tested with any debug. You _cannot_ do a GFP_KERNEL
+> allocation with the raw spinlock held. And no, don't use
+> GFP_ATOMIC. There is absolutely zero reason to hold the lock accross all
+> of that. As you got your ideas from x86_vector_alloc_irqs(), you could
+> have looked at how that's done correctly.
+I got it , thanks
+>
+>> +		unsigned int cpu, ret;
+>> +
+>> +		if (!adata)
+>> +			return -ENOMEM;
+>> +
+>> +		ret = irq_matrix_alloc(loongarch_avec.vector_matrix, cpu_online_mask, false, &cpu);
+>> +		if (ret < 0) {
+>> +			kfree(adata);
+>> +			return ret;
+>> +		}
+>> +
+>> +		adata->moving = 0;
+> Redundant. The struct is allocated with kzalloc()...
+sorry, this is my stupid mistake ..... ,thanks
+>
+>> +		adata->prev_cpu = adata->cpu = cpu;
+>> +		adata->prev_vec = adata->vec = ret;
+>> +		adata->managed = irqd_affinity_is_managed(irqd);
+> If you want to support managed interrupts, then you cannot allocate
+> from the CPU online mask. See x86...
+Ok, we will reconsider these functions, thanks
+>
+>> +		irq_domain_set_info(domain, virq + i, virq + i, &avec_irq_controller,
+>> +				    adata, handle_edge_irq, NULL, NULL);
+>> +		irqd_set_single_target(irqd);
+>> +		irqd_set_affinity_on_activate(irqd);
+>> +
+>> +		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(irqd);
+> static int avecintc_alloc_vector(struct avecintc_adata *adata)
+> {
+>          int ret, cpu;
+>
+> 	guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
+> 	ret = irq_matrix_alloc(loongarch_avec.vector_matrix, cpu_online_mask, false, &cpu);
+>          if (ret < 0)
+>                return ret;
+>
+> 	adata->prev_cpu = adata->cpu = cpu;
+> 	adata->prev_vec = adata->vec = ret;
+>          per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(irqd);
+>          return 0;
+> }
+>
+> static int avecintc_domain_alloc(struct irq_domain *domain, ...)
+> {
+> 	for (unsigned int i = 0; i < nr_irqs; i++) {
+> 		struct irq_data *irqd = irq_domain_get_irq_data(domain, virq + i);
+> 		struct avecintc_data *adata = kzalloc(sizeof(*adata), GFP_KERNEL);
+>                  int ret;
+>
+> 		if (!adata)
+> 			return -ENOMEM;
+>
+> 		irq_domain_set_info(domain, virq + i, virq + i, &avec_irq_controller,
+> 				    adata, handle_edge_irq, NULL, NULL);
+> 		irqd_set_single_target(irqd);
+> 		irqd_set_affinity_on_activate(irqd);
+>
+> 		ret = avecintc_alloc_vector(adata);
+>                  if (ret < 0) {
+> 			kfree(adata);
+>                          return ret;
+>                  }
+>           }
+> No?
+OK , It really seems more appropriate, thanks
+> It just looks more compatible with the previous one. It really doesn't make sense. We will delete it later
+>
+>> +static void clear_free_vector(struct irq_data *irqd)
+>> +{
+>> +	struct avecintc_data *adata = irq_data_get_irq_chip_data(irqd);
+>> +	bool managed = irqd_affinity_is_managed(irqd);
+> Don't even try. Your managed support is broken at the allocation side
+> and at several other places.
+OK, thanks
+>> +	per_cpu(irq_map, adata->cpu)[adata->vec] = NULL;
+>> +	irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->vec, managed);
+>> +	adata->cpu = UINT_MAX;
+>> +	adata->vec = UINT_MAX;
+>> +
+>> +#ifdef CONFIG_SMP
+>> +	if (!adata->moving)
+>> +		return;
+>> +
+>> +	per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] = NULL;
+>> +	irq_matrix_free(loongarch_avec.vector_matrix,
+>> +			adata->prev_cpu, adata->prev_vec, adata->managed);
+>> +	adata->moving = 0;
+>> +	adata->prev_vec = UINT_MAX;
+>> +	adata->prev_cpu = UINT_MAX;
+> What's all the clearing for when you kfree() it two lines further down?
+OK, we will reconsider there ,thanks
+>
+>> +	list_del_init(&adata->entry);
+>> +#endif
+>> +	kfree(adata);
+> And no, not under the lock .... Move the locking into this function and
+> kfree() at the call site. There is zero reason to hold the lock over the
+> full loop.
+Ok ,thanks
+>> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+>> +				     const unsigned long end)
+>> +{
+>> +	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+>> +
+>> +	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
+>> +
+>> +	return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
+>> +}
+> ...
+>
+>> +int __init pch_msi_acpi_init_v2(struct irq_domain *parent, struct acpi_madt_msi_pic *acpi_pchmsi)
+> The second argument is required because?
+It just looks more compatible with the previous one. It really doesn't 
+make sense. We will delete it later, Thanks
+>
+> Thanks,
+>
+>          tglx
 
-On 2024/8/20 下午8:37, Tiezhu Yang wrote:
-> There exist some issues when building kernel if CONFIG_CPU_HAS_LBT is set
-> but CONFIG_CPU_HAS_LSX and CONFIG_CPU_HAS_LASX are not set. In this case,
-> there are no definitions of _restore_lsx and _restore_lasx and there are
-> also no definitions of kvm_restore_lsx and kvm_restore_lasx in fpu.S and
-> switch.S respectively, just add some ifdefs to fix the issues.
-> 
->    AS      arch/loongarch/kernel/fpu.o
-> arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
-> arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
-> 
->    AS [M]  arch/loongarch/kvm/switch.o
-> arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
-> arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
-> 
->    MODPOST Module.symvers
-> ERROR: modpost: "kvm_restore_lsx" [arch/loongarch/kvm/kvm.ko] undefined!
-> ERROR: modpost: "kvm_restore_lasx" [arch/loongarch/kvm/kvm.ko] undefined!
-> 
-> Cc: stable@vger.kernel.org # 6.9+
-> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202408120955.qls5oNQY-lkp@intel.com/
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/kernel/fpu.S | 4 ++++
->   arch/loongarch/kvm/switch.S | 4 ++++
->   2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-> index 69a85f2479fb..6ab640101457 100644
-> --- a/arch/loongarch/kernel/fpu.S
-> +++ b/arch/loongarch/kernel/fpu.S
-> @@ -530,6 +530,10 @@ SYM_FUNC_END(_restore_lasx_context)
->   
->   #ifdef CONFIG_CPU_HAS_LBT
->   STACK_FRAME_NON_STANDARD _restore_fp
-> +#ifdef CONFIG_CPU_HAS_LSX
->   STACK_FRAME_NON_STANDARD _restore_lsx
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LASX
->   STACK_FRAME_NON_STANDARD _restore_lasx
->   #endif
-> +#endif
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 80e988985a6a..0c292f818492 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -277,6 +277,10 @@ SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
->   
->   #ifdef CONFIG_CPU_HAS_LBT
->   STACK_FRAME_NON_STANDARD kvm_restore_fpu
-> +#ifdef CONFIG_CPU_HAS_LSX
->   STACK_FRAME_NON_STANDARD kvm_restore_lsx
-> +#endif
-> +#ifdef CONFIG_CPU_HAS_LASX
->   STACK_FRAME_NON_STANDARD kvm_restore_lasx
->   #endif
-> +#endif
-> 
-It is hard to understand to put CONFIG_CPU_HAS_LASX inside 
-CONFIG_CPU_HAS_LBT, in general option CONFIG_CPU_HAS_LBT has nothing 
-with CONFIG_CPU_HAS_LASX.
+Thanks again
 
-Would you like to add parameter func in macro fpu_restore_csr like this?
-
---- a/arch/loongarch/include/asm/asmmacro.h
-+++ b/arch/loongarch/include/asm/asmmacro.h
-@@ -55,10 +55,11 @@
-  #endif
-         .endm
-
--       .macro fpu_restore_csr thread tmp0 tmp1
-+       .macro fpu_restore_csr thread tmp0 tmp1 func
-         ldptr.w         \tmp0, \thread, THREAD_FCSR
-         movgr2fcsr      fcsr0, \tmp0
-  #ifdef CONFIG_CPU_HAS_LBT
-+       STACK_FRAME_NON_STANDARD        \func
-         /* TM bit is always 0 if LBT not supported */
-         andi            \tmp0, \tmp0, FPU_CSR_TM
-         beqz            \tmp0, 2f
-@@ -282,10 +283,10 @@
-         lsx_save_data           \thread, \tmp0
-         .endm
-
-Regards
-Bibo Mao
+Tianyang
 
