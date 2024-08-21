@@ -1,109 +1,66 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C741ACDFC
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 10:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9B6D21096F
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 10:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724234856; cv=none; b=QUbgFSt+qHBH2U1wEtM8HDyPXLa0OioWJSyqkimNPe3BHNyTcVT7JaT7nbDpJAMz20AKJxzdJSGraNXadvGJvE8cmIhmqqTczOk/0LS4Y5NnHTkX8VoqQMhOBGwQWChcrt6xuVkh37DHyA7edQGFJUcnSeqzSX0gwB3YBDyIBPc=
+	t=1724235118; cv=none; b=UG3oWd6yWD1o4y6xtZQcqhSSjasib7DNmkvb9nCXeT1Ad91C+l0pF0RIlUr/C+zCspcKg/k6+ZeO8ZYSJCEhzBmitbCJXpSKWegDb+c9q3szosdapDwic9IxEY9qJWYdDXeLrmxf5qM6lz/I3hs6pQWtOgwqdXQlwgC8DGatuI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724234856; c=relaxed/simple;
-	bh=srSdP1UYmOER5prpDdEW4RKHGToQ++nbTSVPyweYMws=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RxPWK9KsFOqn4MKUTkCtPE1Lk+0lFRFxIDF155pgZQoV5f4JztbDVMx4DQkiPSWR0vDjl5VIYdQMYYRJ+1T9XfHb/6WFjm0+zxIBlPlZL3xHTutAgNsg4WAWL+Lc2YcEjLImMgcfrYBqAuLTQjBbeMa7tIiFQA4eo7Nh5kfNukw=
+	s=arc-20240116; t=1724235118; c=relaxed/simple;
+	bh=/bFmMeiy0T5fSe7EuWC53jhXfJ/0O37Sn4G03HWLoBQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OSlH+7QgafJhiK2gAZSivrmtXE0goVH3ox7BcfYOhhPs1CAzjvDTKgEluoNJebNI0YJl8YXS0AIBh+i8ykvdak/CSZVINBYfZ28BlERC1IQ2Fc4S+dSCEq//whHZ3XBfGsxK1sHeTE1RLcjiYh4pFa555aXaKVOn4B2ZiA+RyCo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxmppivMVmQRAbAA--.21654S3;
-	Wed, 21 Aug 2024 18:07:30 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxkeFhvMVmEYIcAA--.60605S3;
-	Wed, 21 Aug 2024 18:07:29 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: Add ifdefs to fix LSX and LASX related
- issues
-To: maobibo <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20240820123731.31568-1-yangtiezhu@loongson.cn>
- <20240820123731.31568-3-yangtiezhu@loongson.cn>
- <1d23bbfe-dd36-b2ff-c4b3-cf69396ea53f@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <882d3aa3-24cf-9866-7e00-161e94893811@loongson.cn>
-Date: Wed, 21 Aug 2024 18:07:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxmOlqvcVm3BAbAA--.56939S3;
+	Wed, 21 Aug 2024 18:11:54 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMAxouFqvcVm_oIcAA--.60915S2;
+	Wed, 21 Aug 2024 18:11:54 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: [RFC 0/2] irqchip/loongson-eiointc: Add multiple interrupt pin routing support
+Date: Wed, 21 Aug 2024 18:11:51 +0800
+Message-Id: <20240821101153.2262290-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1d23bbfe-dd36-b2ff-c4b3-cf69396ea53f@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxkeFhvMVmEYIcAA--.60605S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZryUJry3uw17CF4Utr1xCrX_yoW8Wr45pr
-	Z8C395tF4rWF1DZrn7Xw1kWF95tas3GF4YqFyDJryfArs8GwsagF4UK3Z8Xr9rWFn7W3WS
-	vFZ7W3Z8tFWqvabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
-	e5UUUUU==
+X-CM-TRANSID:qMiowMAxouFqvcVm_oIcAA--.60915S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On 08/21/2024 09:12 AM, maobibo wrote:
->
->
-> On 2024/8/20 下午8:37, Tiezhu Yang wrote:
->> There exist some issues when building kernel if CONFIG_CPU_HAS_LBT is set
->> but CONFIG_CPU_HAS_LSX and CONFIG_CPU_HAS_LASX are not set. In this case,
->> there are no definitions of _restore_lsx and _restore_lasx and there are
->> also no definitions of kvm_restore_lsx and kvm_restore_lasx in fpu.S and
->> switch.S respectively, just add some ifdefs to fix the issues.
+There are four times about EIOINTC_REG_ISR register group access in
+eiointc irq handler, in order to get all irq status about 256 interrupt
+vectors. It causes four times VM-exits since eiointc register are
+software emulated, here multiple interrupt pin routing is introduced
+and each 64 interrupt vector is routed to one interrupt pin.
 
-...
+With this method, there will be only on one EIOINTC_REG_ISR register
+group acces in irq handler, it will reduce VM-exits.
 
-> It is hard to understand to put CONFIG_CPU_HAS_LASX inside
-> CONFIG_CPU_HAS_LBT, in general option CONFIG_CPU_HAS_LBT has nothing
-> with CONFIG_CPU_HAS_LASX.
->
-> Would you like to add parameter func in macro fpu_restore_csr like this?
->
-> --- a/arch/loongarch/include/asm/asmmacro.h
-> +++ b/arch/loongarch/include/asm/asmmacro.h
-> @@ -55,10 +55,11 @@
->  #endif
->         .endm
->
-> -       .macro fpu_restore_csr thread tmp0 tmp1
-> +       .macro fpu_restore_csr thread tmp0 tmp1 func
->         ldptr.w         \tmp0, \thread, THREAD_FCSR
->         movgr2fcsr      fcsr0, \tmp0
->  #ifdef CONFIG_CPU_HAS_LBT
-> +       STACK_FRAME_NON_STANDARD        \func
->         /* TM bit is always 0 if LBT not supported */
->         andi            \tmp0, \tmp0, FPU_CSR_TM
->         beqz            \tmp0, 2f
-> @@ -282,10 +283,10 @@
->         lsx_save_data           \thread, \tmp0
->         .endm
+Bibo Mao (2):
+  irqchip/loongson-eiointc: Route interrupt parsed from acpi table
+  irqchip/loongson-eiointc: Add multiple interrupt pin routing support
 
-For the record, I modified the related code as you suggested and tested 
-with various configs, it works well.
+ arch/loongarch/kernel/irq.c            |  3 +-
+ arch/loongarch/kernel/smp.c            |  2 +-
+ drivers/irqchip/irq-loongson-eiointc.c | 66 +++++++++++++++++++++++---
+ 3 files changed, 62 insertions(+), 9 deletions(-)
 
-But as we discussed offline, these current changes are small relatively
-and the STACK_FRAME_NON_STANDARD related code may be removed if there
-is a proper possible way, so just leave it as is in my opinion.
 
-Thanks,
-Tiezhu
+base-commit: 1fb918967b56df3262ee984175816f0acb310501
+-- 
+2.39.3
 
