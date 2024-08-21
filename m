@@ -1,380 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9308F199FA5
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5561A4B89
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724246084; cv=none; b=nG67sy+PUCpZJuakS4gdhFpoulgcaMuJamPm8IdlvmKDv+crl3jW4Pvo61Vrjohjln1a9xSvJnfmeSoRrjZe77GJdMM0trgf/XdVH1DydYmTlkhjxY7fDxjj8SLYG3RNPtlgQlfICsKymTv008juZZsu9mT9aCBKffboAWodJy8=
+	t=1724248269; cv=none; b=bjSqRM+bQQ+MqOiNHmDbZimGtnwn/PDo5gv+qWHFWzoA9adp9KNx+YMvAxO+/Dm+B0WFuYJ6+gIBKS8du2WHRfcMhW7PrxQe5BY8TWJll8fHf9qrT2fCp4f4uYHSgCxbHEgwgsJtbZt1cEjSJF498s1qnBDmIF3FWDOqaFOLvW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724246084; c=relaxed/simple;
-	bh=zJVdbgK4PuySLtBpCnVhjJ0wV4eDUh7CxNJ/l6R0G/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfMYvU4P/j4MHKI7OwIVjNRok27naFbPqlj1IAkJ4XZw0hA0N0kF20xCJD8TbMPNH+BzakLo4AFU/AHSVSGr9SJaSNIGWdkugYHKGVC0zqpiMkrZ7jtuhCSg9+OuG+9ruunZcFTkLjl3QuT1AXJCOt9nI8wQBfwD9rb5kLVRx2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0Cs+4a1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724248269; c=relaxed/simple;
+	bh=VREe6dmeBlSWDixcHb6rWQ3okpY5wc40Tb/3plHA1kE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AH97Kj3NtEOXJY90CZKjzMfgx4zaznTMBqg3h99yl48pUEM+T+tyO6vndUldWCypYkLKxTVQshZs8GgE7LT4xL4Bug4n1fUXGpHovC+3RxrPG1GHZkFTxEWbjxS90nE9ygzgcmbQJ8RdC7XVahrf/ECA7HWT1MAiNovfSRN0SkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Ta72rAEc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RBuQ98Vp; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0Cs+4a1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2387FC4AF17
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724246084;
-	bh=zJVdbgK4PuySLtBpCnVhjJ0wV4eDUh7CxNJ/l6R0G/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a0Cs+4a1gTfAA6Qpj52TLcexEzsTbt+8d6VXpd31V6hXIDKudKbHKsquHnrm2vN39
-	 plx+DhDJC2YuoSh9bZCKOg1QAhmqRCVEM22t8YgC08eDli9NtWSQOdW6T6DkBJMWXY
-	 rBplzcyegLGIJl/B3+ztDolv/kx2zvlYl71POvtAAetMVyWBcJA7082a0Kx2jj4Yxr
-	 WlHaamwbfDRipl3PVh2TdQ4qPisA0SO/KkNViLoxwtQLQxZC7X5vwH6+DX9O9yHgxh
-	 L8SVfPtXqCcYQDwGSX1xKfYpVUUyHxtzwePCDzTr2JYJ5k8As4pnHxt3OHvwcoHR21
-	 CwgcO053Klo/Q==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2f3edb2d908so18671991fa.2
-        for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 06:14:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVmgFPu2lXUNyp9usRJXLuQE0sPeOMD2GAHdYkOjx2pSBG2Px2CUd1N/SBZ6oDgGAUWgRPtZE09Nd4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzoKyN3rTM4aR1yloONNP4XJC7edAdeIBykEzbGaZJzZMBw79+p
-	h+CT1pwdupOsYFNCkXZU9wRAtZcwrchyOGYq/WGg77jspi7ru4jmBfQavzul0D9f/oaWi7pe8Qs
-	oAykvSEpMD/19N56M0Ufusa8YEog=
-X-Google-Smtp-Source: AGHT+IFp/bJomoopeOJowttCDFy1h5Urtm6xc4mDMzGDWnQLDi3tEBgocFTcLWGoAEAIeiITNZsbaC1UCqGJx66FrKA=
-X-Received: by 2002:a2e:4c0a:0:b0:2f3:f25a:15a3 with SMTP id
- 38308e7fff4ca-2f3f88efccfmr13904561fa.25.1724246082131; Wed, 21 Aug 2024
- 06:14:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Ta72rAEc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RBuQ98Vp"
+Received: from phl-compute-04.internal (phl-compute-04.nyi.internal [10.202.2.44])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 0B2211151B89;
+	Wed, 21 Aug 2024 09:51:05 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 21 Aug 2024 09:51:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1724248265; x=1724334665; bh=bT
+	nHbaMxlSqh0j7gqkS8t5Ui5kNr3bqywopcDANcfpA=; b=Ta72rAEcRqAT8j3v1z
+	bI7xHgypypRLfAmbLODAHVOBO2B5cvi1GkYTVN+Y1fIaAhJWbCuQ/JCdach8/rb1
+	/7EZM3JgCkpdAPgJB9eMKUjYKn+493xmfj573uGeYe1FZkM1q23LTex+Ba21jt0X
+	ulTpKZ4Fr4Kl2nnQKzkmpcIKDFjUrH+gWH3Yy9X7fWGwQ154Abhw9wjWT6MqxGLZ
+	lKX8sEnhuyeSm4suB1Vc3AnWiRcw2JG+tRmxmejxZ/7lOy6cgWmSZQYrmZSZBk9+
+	TZwxwfE7Iw7wKEOn+YH+sdAi/h00xOPkw29IQv2s26lSFhuKTo8m7D6NnyT8bMQO
+	odLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1724248265; x=1724334665; bh=bTnHbaMxlSqh0
+	j7gqkS8t5Ui5kNr3bqywopcDANcfpA=; b=RBuQ98VpGBxJf33RDGY5FxDaraayo
+	Pt2QRtNlJgnRfuDaFXmwmNiltPkWxsWAbxkvcgkJdD89T4joZ+O9inaPBnMTT3Q5
+	d1jHrAP1l1ejBBD82YGxv64/MwyWQAAGs2mRKraUfCyavywlwp2koA7lP36uWvgJ
+	B8H3SqOlL2ZUxXbMXJ3XZGC0uiKgD1KGW75bWxTgNWPFDuM1dpjB5zwgprfEVcY/
+	XBy+TJXLHmNxYayadU94gihQ3Of5DkGH4gTp3ctLCifjtRJWlPejZpRg0XX1VeYf
+	kgbfFosH2vi19TQa10XhnOgB4VMzA2GJ1gfRpc4DGExIXJnrS3m0f0XCA==
+X-ME-Sender: <xms:yPDFZp9iXxkrQiNGFnkgQ1XUf68_cqNttGWOB3fa6szmkAoZdrW2mg>
+    <xme:yPDFZtvzwZRGO-6feaFi3SxQ65dfwKoCRYOeXItrjybi862Krt_j95hl0QcFvJQBj
+    Uswpu_75twWIXVZGRc>
+X-ME-Received: <xmr:yPDFZnDu70aUyfCYprOOLHfGj2o8kTkCbbPpf7h5AcvBB1sI7CTDqCq103mAeuphGr0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddukedgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecu
+    hfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgoh
+    grthdrtghomheqnecuggftrfgrthhtvghrnhephfffgeejgfejieeugffgudegvdekffev
+    geeuteetgeejveeiteeivedvffehlefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgr
+    gihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhopeekpdhmoh
+    guvgepshhmthhpohhuthdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepvghnkhgvrhgvfihpoheshhhothhmrghilhdrtghomhdprhgtphhtthhope
+    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopehjihgrgihunh
+    drhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtoheplhhoohhnghgrrhgthhes
+    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgv
+    rhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:yPDFZteRhPhkW_XshafjUYucxvx6h_fFoSbbkjtjtarrh_YoypJe7A>
+    <xmx:yPDFZuMG8QutWk8lZBvTVtuUjr3TEWUs5skEcLkRT3zBjbxbjQgbmQ>
+    <xmx:yPDFZvl8-lUEWtMpxzUf5GfoqTAY7t-SIB0yotBUoxVmT_Qa352B_w>
+    <xmx:yPDFZot9GD40aQ9oinvA1upeq8O6WtHuc54Lz2m4gAlqrWsOzg8wBQ>
+    <xmx:yfDFZvhSNyWGCg8dbYpM3FvjM0wTmKTfwKPYJZzHrZWf6oo_kFuq_B-G>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 21 Aug 2024 09:51:03 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Wed, 21 Aug 2024 14:51:02 +0100
+Subject: [PATCH] of_reserved_mem: Save region name string into struct
+ reserved_mem
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
- <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
-In-Reply-To: <87msl7jgye.ffs@tglx>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 21 Aug 2024 21:14:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
-Message-ID: <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net, alexs@kernel.org, 
-	kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn, 
-	wangliupu@loongson.cn, lvjianmin@loongson.cn, yijun@loongson.cn, 
-	mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org, 
-	maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn, 
-	nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, 
-	loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
+X-B4-Tracking: v=1; b=H4sIAMXwxWYC/x3MMQqAMBAF0auErQ3oahG8ikiI+tUtjJKFIIh3N
+ 1i+YuYhRRIo9eahhCwqZyxoKkPzHuIGK0sxcc1d7bixGjJ8gmYfwwHbrQyeJ+dcO1GJroRV7n8
+ 4jO/7AbP4YQJgAAAA
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, chenhuacai@kernel.org, 
+ Kevin Wheatfox <enkerewpo@hotmail.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1791;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=VREe6dmeBlSWDixcHb6rWQ3okpY5wc40Tb/3plHA1kE=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSjH47/E5kuum1qV1Tj95++B9VU3h458TYn7PQkjX7B7
+ 8xNL2fqdpSyMIhxMciKKbKECCj1bWi8uOD6g6w/MHNYmUCGMHBxCsBE3J4yMpw4L7un0uX1vK9/
+ subemqJd23af112jdaktX9Oyfivdn3qMDNe6626zevz6GvvwYNa7bY9n5v68NbnKMtJMJytmb07
+ APg4A
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Hi, Thomas,
+Previously only a pointer to fdt string pool is saved to struct
+reserved_mem as region name.
 
-Just some complements for Tianyang.
+As on some architectures booting FDT will be wiped at later initialisation
+stages, this is breaking reserved_mem users.
 
-On Wed, Aug 21, 2024 at 12:29=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->
-> On Thu, Aug 15 2024 at 19:26, Tianyang Zhang wrote:
-> >  .../arch/loongarch/irq-chip-model.rst         |  32 ++
-> >  .../zh_CN/arch/loongarch/irq-chip-model.rst   |  32 ++
-> >  arch/loongarch/Kconfig                        |   1 +
-> >  arch/loongarch/include/asm/cpu-features.h     |   1 +
-> >  arch/loongarch/include/asm/cpu.h              |   2 +
-> >  arch/loongarch/include/asm/hardirq.h          |   3 +-
-> >  arch/loongarch/include/asm/hw_irq.h           |   2 +
-> >  arch/loongarch/include/asm/irq.h              |  25 +-
-> >  arch/loongarch/include/asm/loongarch.h        |  18 +-
-> >  arch/loongarch/include/asm/smp.h              |   2 +
-> >  arch/loongarch/kernel/cpu-probe.c             |   3 +-
-> >  arch/loongarch/kernel/irq.c                   |  15 +-
-> >  arch/loongarch/kernel/paravirt.c              |   5 +
-> >  arch/loongarch/kernel/smp.c                   |   6 +
-> >  drivers/irqchip/Makefile                      |   2 +-
-> >  drivers/irqchip/irq-loongarch-avec.c          | 426 ++++++++++++++++++
-> >  drivers/irqchip/irq-loongarch-cpu.c           |   5 +-
-> >  drivers/irqchip/irq-loongson-eiointc.c        |   7 +-
-> >  drivers/irqchip/irq-loongson-pch-msi.c        |  24 +-
-> >  include/linux/cpuhotplug.h                    |   3 +-
->
-> This patch is doing too many things at once and is absolutely not
-> reviewable.
->
-> Please split it up into the obvious bits and pieces:
-Splitting may cause another problem: some patches will get upstream
-via the arch tree and others via the irq tree. These dependencies may
-cause build errors in a certain tree. But anyway, we will try our best
-to do this.
+Copy and save the whole string into struct reserved_mem to avoid
+FDT lifecycle problem.
 
->
->    1) The IRQ_NOPROBE change
->
->    2) See below
->
->    3) Documentation
->
->    4) Add the arch/loongson parts, i.e. all the defines and
->       basic required function prototypes with a little twist.
->       Add a Kconfig symbol:
->
->         Kconfig IRQ_LOONGARCH_AVEC
->                 bool
->
->       in drivers/irqchip/Kconfig. This allows you to add all
->       arch/loongarch/ changes with the simple tweak:
->
->       #ifdef CONFIG_IRQ_LOONGARCH_AVEC
->       # define cpu_has_avecint          cpu_opt(LOONGARCH_CPU_AVECINT)
->       #else
->       # define cpu_has_avecint          false
->       #endif
->
->       and
->
->       #ifdef CONFIG_IRQ_LOONGARCH_AVEC
->       # define SMP_CLEAR_VECTOR         BIT(ACTION_CLEAR_VECTOR)
->       #else
->       # define SMP_CLEAR_VECTOR         (0)
->       #endif
->
->       That way the compiler will optimize out stuff like the
->       SMP_CLEAR_VECTOR handling and you only need the prototype of
->       complete_irq_moving(), but no implementation.
-These macros are not in hot-path, and we have already tried our best
-to avoid using #ifdefs for cpu_has_xxx, so I suggest not introduce a
-new Kconfig option. Moreover, the new option should always be selected
-due to the deep coupling among loongson's irqchips, which makes the
-#ifdefs useless.
+Reported-by: Kevin Wheatfox <enkerewpo@hotmail.com>
+Closes: https://lore.kernel.org/loongarch/ME4P282MB1397447C3C094554C7AF2E37B58E2@ME4P282MB1397.AUSP282.PROD.OUTLOOK.COM/
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/of/of_reserved_mem.c    | 2 +-
+ include/linux/of_reserved_mem.h | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
->
->    5) Change the CPU hotplug callback for EOINTC and do
->       the acpi_cascade_irqdomain_init() change.
->
->    6) Prepare get_pch_msi_handle() in the pch MSI driver
->
->    7) Implement the driver and select IRQ_LOONGARCH_AVEC
->       from IRQ_LOONGARCH_CPU
->
->    8) Remove the IRQ_LOONGARCH_AVEC helpers
->
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 70f169210b52..0e3abf7b0bd3 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -85,6 +85,7 @@ config LOONGARCH
-> >       select GENERIC_ENTRY
-> >       select GENERIC_GETTIMEOFDAY
-> >       select GENERIC_IOREMAP if !ARCH_IOREMAP
-> > +     select GENERIC_IRQ_MATRIX_ALLOCATOR
->
-> Please move this to IRQ_LOONGARCH_CPU in patch #7
->
-> > @@ -92,15 +103,21 @@ int liointc_acpi_init(struct irq_domain *parent,
-> >                                       struct acpi_madt_lio_pic *acpi_li=
-ointc);
-> >  int eiointc_acpi_init(struct irq_domain *parent,
-> >                                       struct acpi_madt_eio_pic *acpi_ei=
-ointc);
-> > +int avecintc_acpi_init(struct irq_domain *parent);
-> > +
-> > +void complete_irq_moving(void);
-> >
-> >  int htvec_acpi_init(struct irq_domain *parent,
-> >                                       struct acpi_madt_ht_pic *acpi_htv=
-ec);
-> >  int pch_lpc_acpi_init(struct irq_domain *parent,
-> >                                       struct acpi_madt_lpc_pic *acpi_pc=
-hlpc);
-> > -int pch_msi_acpi_init(struct irq_domain *parent,
-> > -                                     struct acpi_madt_msi_pic *acpi_pc=
-hmsi);
-> >  int pch_pic_acpi_init(struct irq_domain *parent,
-> >                                       struct acpi_madt_bio_pic *acpi_pc=
-hpic);
-> > +int pch_msi_acpi_init(struct irq_domain *parent,
-> > +                                     struct acpi_madt_msi_pic *acpi_pc=
-hmsi);
-> > +int pch_msi_acpi_init_v2(struct irq_domain *parent,
-> > +                                     struct acpi_madt_msi_pic *acpi_pc=
-hmsi);
->
-> This is really the wrong place for all these prototypes. They are only
-> used in drivers/irqchip/... except for complete_irq_moving().
->
-> So the proper place for them is drivers/irqchip/irq-loongarch.h
-irq-loongson.h is a little better because those drivers are shared by
-MIPS and LoongArch.
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 46e1c3fbc769..22841599cd83 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -70,7 +70,7 @@ static void __init fdt_reserved_mem_save_node(unsigned long node, const char *un
+ 	}
+ 
+ 	rmem->fdt_node = node;
+-	rmem->name = uname;
++	strscpy(rmem->name, uname, RESERVED_MEM_NAME_LEN);
+ 	rmem->base = base;
+ 	rmem->size = size;
+ 
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+index e338282da652..ed9de36c9cc9 100644
+--- a/include/linux/of_reserved_mem.h
++++ b/include/linux/of_reserved_mem.h
+@@ -8,8 +8,10 @@
+ struct of_phandle_args;
+ struct reserved_mem_ops;
+ 
++#define RESERVED_MEM_NAME_LEN	128
++
+ struct reserved_mem {
+-	const char			*name;
++	char				name[RESERVED_MEM_NAME_LEN];
+ 	unsigned long			fdt_node;
+ 	const struct reserved_mem_ops	*ops;
+ 	phys_addr_t			base;
 
->
-> Move them there. This is patch #2 which I referred to above.
->
-> >
-> > +static phys_addr_t msi_base_addr;
-> >
->
-> So you have everything related to the avec chip in loongarch_avec, so
-> why don't you move that into that data structure?
->
-> > +struct avecintc_chip {
-> > +     struct fwnode_handle    *fwnode;
-> > +     struct irq_domain       *domain;
-> > +     struct irq_matrix       *vector_matrix;
-> > +     raw_spinlock_t          lock;
-> > +};
->
-> The lock should be the first member as spinlocks have alignment
-> requirements....
->
-> > +static int avecintc_domain_alloc(struct irq_domain *domain,
-> > +                              unsigned int virq, unsigned int nr_irqs,=
- void *arg)
-> > +{
-> > +     guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
-> > +
-> > +     for (unsigned int i =3D 0; i < nr_irqs; i++) {
-> > +             struct irq_data *irqd =3D irq_domain_get_irq_data(domain,=
- virq + i);
-> > +             struct avecintc_data *adata =3D kzalloc(sizeof(*adata), G=
-FP_KERNEL);
->
-> That was never tested with any debug. You _cannot_ do a GFP_KERNEL
-> allocation with the raw spinlock held. And no, don't use
-> GFP_ATOMIC. There is absolutely zero reason to hold the lock accross all
-> of that. As you got your ideas from x86_vector_alloc_irqs(), you could
-> have looked at how that's done correctly.
->
-> > +             unsigned int cpu, ret;
-> > +
-> > +             if (!adata)
-> > +                     return -ENOMEM;
-> > +
-> > +             ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, cp=
-u_online_mask, false, &cpu);
-> > +             if (ret < 0) {
-> > +                     kfree(adata);
-> > +                     return ret;
-> > +             }
-> > +
-> > +             adata->moving =3D 0;
->
-> Redundant. The struct is allocated with kzalloc()...
->
-> > +             adata->prev_cpu =3D adata->cpu =3D cpu;
-> > +             adata->prev_vec =3D adata->vec =3D ret;
-> > +             adata->managed =3D irqd_affinity_is_managed(irqd);
->
-> If you want to support managed interrupts, then you cannot allocate
-> from the CPU online mask. See x86...
->
-> > +             irq_domain_set_info(domain, virq + i, virq + i, &avec_irq=
-_controller,
-> > +                                 adata, handle_edge_irq, NULL, NULL);
-> > +             irqd_set_single_target(irqd);
-> > +             irqd_set_affinity_on_activate(irqd);
-> > +
-> > +             per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data=
-_to_desc(irqd);
->
-> static int avecintc_alloc_vector(struct avecintc_adata *adata)
-> {
->         int ret, cpu;
->
->         guard(raw_spinlock_irqsave)(&loongarch_avec.lock);
->         ret =3D irq_matrix_alloc(loongarch_avec.vector_matrix, cpu_online=
-_mask, false, &cpu);
->         if (ret < 0)
->               return ret;
->
->         adata->prev_cpu =3D adata->cpu =3D cpu;
->         adata->prev_vec =3D adata->vec =3D ret;
->         per_cpu_ptr(irq_map, adata->cpu)[adata->vec] =3D irq_data_to_desc=
-(irqd);
->         return 0;
-> }
->
-> static int avecintc_domain_alloc(struct irq_domain *domain, ...)
-> {
->         for (unsigned int i =3D 0; i < nr_irqs; i++) {
->                 struct irq_data *irqd =3D irq_domain_get_irq_data(domain,=
- virq + i);
->                 struct avecintc_data *adata =3D kzalloc(sizeof(*adata), G=
-FP_KERNEL);
->                 int ret;
->
->                 if (!adata)
->                         return -ENOMEM;
->
->                 irq_domain_set_info(domain, virq + i, virq + i, &avec_irq=
-_controller,
->                                     adata, handle_edge_irq, NULL, NULL);
->                 irqd_set_single_target(irqd);
->                 irqd_set_affinity_on_activate(irqd);
->
->                 ret =3D avecintc_alloc_vector(adata);
->                 if (ret < 0) {
->                         kfree(adata);
->                         return ret;
->                 }
->          }
-> No?
->
-> > +static void clear_free_vector(struct irq_data *irqd)
-> > +{
-> > +     struct avecintc_data *adata =3D irq_data_get_irq_chip_data(irqd);
-> > +     bool managed =3D irqd_affinity_is_managed(irqd);
->
-> Don't even try. Your managed support is broken at the allocation side
-> and at several other places.
-I'm a bit confused here, irq_create_affinity_masks() marks some
-interrupts "managed". So if we completely ignore "managed" here, then
-can irq_create_affinity_masks() still work? Or the two has nothing to
-do with each other?
+---
+base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
+change-id: 20240821-save_resv_name-4f2e2cb8883b
 
-Huacai
+Best regards,
+-- 
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
->
-> > +     per_cpu(irq_map, adata->cpu)[adata->vec] =3D NULL;
-> > +     irq_matrix_free(loongarch_avec.vector_matrix, adata->cpu, adata->=
-vec, managed);
-> > +     adata->cpu =3D UINT_MAX;
-> > +     adata->vec =3D UINT_MAX;
-> > +
-> > +#ifdef CONFIG_SMP
-> > +     if (!adata->moving)
-> > +             return;
-> > +
-> > +     per_cpu(irq_map, adata->prev_cpu)[adata->prev_vec] =3D NULL;
-> > +     irq_matrix_free(loongarch_avec.vector_matrix,
-> > +                     adata->prev_cpu, adata->prev_vec, adata->managed)=
-;
-> > +     adata->moving =3D 0;
-> > +     adata->prev_vec =3D UINT_MAX;
-> > +     adata->prev_cpu =3D UINT_MAX;
->
-> What's all the clearing for when you kfree() it two lines further down?
->
-> > +     list_del_init(&adata->entry);
-> > +#endif
-> > +     kfree(adata);
->
-> And no, not under the lock .... Move the locking into this function and
-> kfree() at the call site. There is zero reason to hold the lock over the
-> full loop.
->
-> > +static int __init pch_msi_parse_madt(union acpi_subtable_headers *head=
-er,
-> > +                                  const unsigned long end)
-> > +{
-> > +     struct acpi_madt_msi_pic *pchmsi_entry =3D (struct acpi_madt_msi_=
-pic *)header;
-> > +
-> > +     msi_base_addr =3D pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-> > +
-> > +     return pch_msi_acpi_init_v2(loongarch_avec.domain, pchmsi_entry);
-> > +}
->
-> ...
->
-> > +int __init pch_msi_acpi_init_v2(struct irq_domain *parent, struct acpi=
-_madt_msi_pic *acpi_pchmsi)
->
-> The second argument is required because?
->
-> Thanks,
->
->         tglx
->
