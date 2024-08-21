@@ -1,130 +1,152 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46CC158A25
-	for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 19:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B85EEBA
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 01:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724181879; cv=none; b=lLAC2hDL02Z4qWOQG1+Zomqqqtj6fD4qUX1cFnPe1/iQLj1c7jCc7Hj1eQ7ReXYJpVqlZXK9PZlchirBh2j7YGvJj+pRnEdzp5YuJl4ty4jsG4QnCjka8rG4NMh9LmxywP7MYV+/fiBWiJcD6snZH0pECESsi5kDkiB04pMpQJA=
+	t=1724202770; cv=none; b=Cjv3cDT8sKNyW7+DKN5Ioq+nki/XyQAY3kYjuEVWNA32HbiDbV6AhCuhdiqxtAHIMQy+RgKdFfO2upV1MSSrYreGBiHEuo/WAz7fog4C9E7WkcpphfD/O++SELp8SZnFEd6CaC3wq8HjttBiTGKKgjv6x7dKKdRgYk0vmSUnvrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724181879; c=relaxed/simple;
-	bh=4bfIMgpJwUN9el8i9XHzhs2svCvajb2m8PRxmIeFH8o=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=VkYg7M7krqpwySC5D4vLAV9dWv+BNLOQH3QdUpeuOJxMiOXyh1/fTT8l0iIWthmP0tbGhEHkOQTsP1eiJny0x+BIEFQMqkjIAm2+QR/HiRjVGFvv1D/vQIGKlolMYLE+Q4covnjCUTHoxlhvtoZK0m+xQI7CPAlC+fF2DX6UpLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfOePuoe; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfOePuoe"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2d3badec49eso745626a91.1
-        for <loongarch@lists.linux.dev>; Tue, 20 Aug 2024 12:24:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724181877; x=1724786677; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4bfIMgpJwUN9el8i9XHzhs2svCvajb2m8PRxmIeFH8o=;
-        b=HfOePuoe6OtN1c1Qpz5HY/PIwVxtcHk1Rba7O9WV25dnz9q3XOYEwOCpUz8nzNQV+i
-         Xxx03KkxI1SZKSphXrEpsswdSto2LA28x9iUuc90o7TS96uUlpXdcNlqr5Q1djOOHSQV
-         cr6aUPvUJdUN03vK06sYK6aXHP30kElNYiXkzza0UjYIAlUvNwHIyaJfmvHsAOgWHd04
-         2IvsKVUBeeL3p9XrbWaKfLqiOP/lcLuQCAx5XWI0bYuV9TGhS+A0rKu5z3wm5XQzwdsn
-         C10z/nmXcdLrcuq85S0nfTVTtdYauSbZi4z49LYbaoTrlsbS23cFfUI2yZSEGnnxLH8X
-         gJOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724181877; x=1724786677;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4bfIMgpJwUN9el8i9XHzhs2svCvajb2m8PRxmIeFH8o=;
-        b=o5djD37qBk2ZaxoYrgchNSWR2w6Mt2g85BicWFDf4udoTwNI+YUqnxL7uRP5nQDEk4
-         eNJSzysWiV6E2SS6+rXTLfcH4dZZe3H+Z1XvJKWT26ZzpBTWs7mWM0wEyvF3Tkepr1KY
-         G+5AYRpbFtpxg65dG7owHdqE2/VVKZ9glhjToitjdHgaPX0KNNBPK6Y0wBDjcRrpIA7D
-         t9xWVV5O9HGKKR4YEIqqkJvNY2H4xdgUBMmPszD5Dmnj4IYxxjAmBSmAlw3ONih1ckdu
-         o1MlFv+dL5jS7vQ9jiO/0+/JdI9gUDuqCiTL6Zs6tm/arIVtB1p13dCLxox+SMVN0wJh
-         QS8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzd0yjonWaOC16Q6jlLFFpPFfLNy8yz52B5bNgTlrhvAIo2ESa200p5T4HmTAItoaaQmIyA+e51uM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwLiZy+aJoMGTK2+5qXa4KEkzaT0FEW9Vnv0n7NxzCw7kPQWvDF
-	C8j5vokfF3f4K7psf3ReoYJr7t/19rWmZbw+L6E+s4HDETQGdhQT
-X-Google-Smtp-Source: AGHT+IEoRfGjjZJh3l/s5wOxl5IFeYiNBBI63m5S1vxD5J/TuosUjuf//avNRbiV5EqQVZwPCxchZQ==
-X-Received: by 2002:a17:90a:bc8a:b0:2c8:e8ed:8a33 with SMTP id 98e67ed59e1d1-2d3e1121bbdmr10169636a91.4.1724181876716;
-        Tue, 20 Aug 2024 12:24:36 -0700 (PDT)
-Received: from smtpclient.apple (v133-130-115-230.a046.g.tyo1.static.cnode.io. [133.130.115.230])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e2330f26sm9853110a91.0.2024.08.20.12.24.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2024 12:24:35 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1724202770; c=relaxed/simple;
+	bh=93ucYNzm6rjFAJLlmlDLDdpg7flXKMWTpnKPf5+hKCg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=iGwYgyYStKg/eWwUprgDx2M2E5U+rL26dytN8J7uCXx6J/Jn9eiUsrsT1T2QyMczBJJ2FmPnWxDyCRBrtbWj6Q25eOfV3FRA7jAOAZPRew3gaKYLFs1/ELKa5WvEXSWewfPvt+MciDEWQpVX7aHemfHFAxOwhysYw0Ug9mU4gkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxfZsGP8VmybsaAA--.31846S3;
+	Wed, 21 Aug 2024 09:12:38 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMAxVOAEP8VmLB8cAA--.59112S3;
+	Wed, 21 Aug 2024 09:12:36 +0800 (CST)
+Subject: Re: [PATCH v1 2/2] LoongArch: Add ifdefs to fix LSX and LASX related
+ issues
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240820123731.31568-1-yangtiezhu@loongson.cn>
+ <20240820123731.31568-3-yangtiezhu@loongson.cn>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <1d23bbfe-dd36-b2ff-c4b3-cf69396ea53f@loongson.cn>
+Date: Wed, 21 Aug 2024 09:12:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: It is correct to introduce new sys calls to stable versions?
-From: Miao Wang <shankerwangmiao@gmail.com>
-In-Reply-To: <ZsTgxUndhb04snd6@1wt.eu>
-Date: Wed, 21 Aug 2024 03:24:19 +0800
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Xi Ruoyao <xry111@xry111.site>,
- Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev,
- Sasha Levin <sashal@kernel.org>,
- stable@vger.kernel.org,
- WANG Xuerui <kernel@xen0n.name>,
- linux-api@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <17D9A385-5149-4BED-94B8-82E43309484D@gmail.com>
-References: <DF762B6F-360A-4C0C-8C85-55686417209B@gmail.com>
- <2024082057-coherence-lethargy-3513@gregkh>
- <D19DB99F-B5D9-49A6-BCF8-A5980A9BC1A0@gmail.com>
- <2024082027-deskbound-rumbling-b96f@gregkh> <ZsSwnPfyOvdSBMOC@1wt.eu>
- <46C6EB05-1AA2-42BF-82BF-3B99CCA57439@gmail.com> <ZsTgxUndhb04snd6@1wt.eu>
-To: Willy Tarreau <w@1wt.eu>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+In-Reply-To: <20240820123731.31568-3-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxVOAEP8VmLB8cAA--.59112S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr4kKrWkAw17Xr48CF47WrX_yoW5Kw1kpr
+	9rArs5tr4ruFnFy3ykAw1kWFZ09397Gr4agF4DtryrCr4qgrnxJr18tF1DXFyjga1xJa1F
+	gFZ5Wr4YqayUtwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
 
 
-> 2024=E5=B9=B48=E6=9C=8821=E6=97=A5 02:30=EF=BC=8CWilly Tarreau =
-<w@1wt.eu> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Wed, Aug 21, 2024 at 12:09:41AM +0800, Miao Wang wrote:
->> However, my original question is whether it is expected to include =
-new
->> syscalls in kernel stable tree. According to the document =
-"stable-kernel-
->> rules", if I'm interpreting it correctly, I expect only bug fixes and =
-small
->> driver enhancements from stable releases. I understand the patch in =
-question
->> is actually introducing new syscalls, which is beyond my expectation. =
-So I
->> wonder the consideration of including this patch in stable releases.
->=20
-> When you maintain stable software you quickly realize that everything
-> is not just pure white or black but a shade of gray and that if it can
-> be considered as a bug to miss a syscall in certain environments for
-> example, then it can become a valid fix to add it. I don't have any
-> opinion on this particular one, but since your question is broader I'm
-> trying to explain.
->=20
-> Different people have different expectations about what needs to be
-> fixed, that's even why some people will choose a distro over another
-> one (prefer to fix only critical bugs over fixing all bugs for =
-example),
-> but there's no point restarting a philosophical on this topic which =
-has
-> already been rehashed too many times in the past.
->=20
-> As a rule of thumb, just keep in mind that anything that needs to get
-> fix will eventually be fixed.
+On 2024/8/20 下午8:37, Tiezhu Yang wrote:
+> There exist some issues when building kernel if CONFIG_CPU_HAS_LBT is set
+> but CONFIG_CPU_HAS_LSX and CONFIG_CPU_HAS_LASX are not set. In this case,
+> there are no definitions of _restore_lsx and _restore_lasx and there are
+> also no definitions of kvm_restore_lsx and kvm_restore_lasx in fpu.S and
+> switch.S respectively, just add some ifdefs to fix the issues.
+> 
+>    AS      arch/loongarch/kernel/fpu.o
+> arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+> arch/loongarch/kernel/fpu.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+> 
+>    AS [M]  arch/loongarch/kvm/switch.o
+> arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+> arch/loongarch/kvm/switch.o: warning: objtool: unexpected relocation symbol type in .rela.discard.func_stack_frame_non_standard: 0
+> 
+>    MODPOST Module.symvers
+> ERROR: modpost: "kvm_restore_lsx" [arch/loongarch/kvm/kvm.ko] undefined!
+> ERROR: modpost: "kvm_restore_lasx" [arch/loongarch/kvm/kvm.ko] undefined!
+> 
+> Cc: stable@vger.kernel.org # 6.9+
+> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202408120955.qls5oNQY-lkp@intel.com/
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/kernel/fpu.S | 4 ++++
+>   arch/loongarch/kvm/switch.S | 4 ++++
+>   2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+> index 69a85f2479fb..6ab640101457 100644
+> --- a/arch/loongarch/kernel/fpu.S
+> +++ b/arch/loongarch/kernel/fpu.S
+> @@ -530,6 +530,10 @@ SYM_FUNC_END(_restore_lasx_context)
+>   
+>   #ifdef CONFIG_CPU_HAS_LBT
+>   STACK_FRAME_NON_STANDARD _restore_fp
+> +#ifdef CONFIG_CPU_HAS_LSX
+>   STACK_FRAME_NON_STANDARD _restore_lsx
+> +#endif
+> +#ifdef CONFIG_CPU_HAS_LASX
+>   STACK_FRAME_NON_STANDARD _restore_lasx
+>   #endif
+> +#endif
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index 80e988985a6a..0c292f818492 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -277,6 +277,10 @@ SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+>   
+>   #ifdef CONFIG_CPU_HAS_LBT
+>   STACK_FRAME_NON_STANDARD kvm_restore_fpu
+> +#ifdef CONFIG_CPU_HAS_LSX
+>   STACK_FRAME_NON_STANDARD kvm_restore_lsx
+> +#endif
+> +#ifdef CONFIG_CPU_HAS_LASX
+>   STACK_FRAME_NON_STANDARD kvm_restore_lasx
+>   #endif
+> +#endif
+> 
+It is hard to understand to put CONFIG_CPU_HAS_LASX inside 
+CONFIG_CPU_HAS_LBT, in general option CONFIG_CPU_HAS_LBT has nothing 
+with CONFIG_CPU_HAS_LASX.
 
-Many thanks for your explanation!
+Would you like to add parameter func in macro fpu_restore_csr like this?
 
-Cheers,
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -55,10 +55,11 @@
+  #endif
+         .endm
 
-Miao Wang
+-       .macro fpu_restore_csr thread tmp0 tmp1
++       .macro fpu_restore_csr thread tmp0 tmp1 func
+         ldptr.w         \tmp0, \thread, THREAD_FCSR
+         movgr2fcsr      fcsr0, \tmp0
+  #ifdef CONFIG_CPU_HAS_LBT
++       STACK_FRAME_NON_STANDARD        \func
+         /* TM bit is always 0 if LBT not supported */
+         andi            \tmp0, \tmp0, FPU_CSR_TM
+         beqz            \tmp0, 2f
+@@ -282,10 +283,10 @@
+         lsx_save_data           \thread, \tmp0
+         .endm
 
->=20
-> Thanks,
-> Willy
+Regards
+Bibo Mao
 
