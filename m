@@ -1,79 +1,80 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3538196C86
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6245B19993D
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724245940; cv=none; b=mMprJqjWSWxbhHBnifG0m/4pBjZ9ptkHSeUS1MJIpBMz2CYEXdXgH9GYNAgpN7Waf3tbX8WBZczvRk4ciknfVbNii+zM9j+ahzUtHAUu99crga3y1DfVkLGZfsybwU3Z0W90ydkB0mD7brgleAWFuEwnmJz1jDlYOgvhb+Yl8q4=
+	t=1724245943; cv=none; b=DpCBWlbOcRQbsuG0a9auLdrEK3n082f/2/5iurPPvxMids9C59tpbut8bsgPqiaL2EDyGsJsaeCiAtSFSxs5QEe+rvrVnTTGSlCq61oPD+F9WYq3oBTWEeFJ0wJoJtLvYQXKSt2YWndbZxLB/iCBtFoKSXR5yvGE3N8fFpM7/jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724245940; c=relaxed/simple;
-	bh=uhEojgTCYuS4b3VZKYgvzOj1cIxoZL306kOA+EXN7Jg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Os9DoU4Y0eedUE64Ntwa2i70z4pcWUR/k6YqBTu9ovlrSgTIr6/W+qxtnvRDkly6ZYVzH5XJtmRBbAZ+7GPBEjymeK39av/bffsPezKdC2IY42ZgyOMkTj9ktMmSeczkIHpGZzamnCEca4SQJAWP6eSAw0AOEEtX9orlwtbq/x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=6HoUwOoM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XQHX9G2V; arc=none smtp.client-ip=103.168.172.147
+	s=arc-20240116; t=1724245943; c=relaxed/simple;
+	bh=VozuwTVFg2YahKjNSXoyaFv70BxtLPQzAWZ8FXGAmJ0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pSSoxvWXM0Ue3jGL8wgliBIX5kdM3658D3MMn40KDROZlPQVp4BYZOSw2SE+zBAURnrNdLbIPwwSv2DtDoH/FgCtd0n0bmMhoXAAn961UUDMcFAK6AJkUqPFr1b13DP/3lRAbgRLEB4aGkRLG5SLvIYdmU2qhpUuC16lFX7nxQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Mk6RVncR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mMEFH+w2; arc=none smtp.client-ip=103.168.172.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="6HoUwOoM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XQHX9G2V"
-Received: from phl-compute-01.internal (phl-compute-01.nyi.internal [10.202.2.41])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 23D89138FE69;
-	Wed, 21 Aug 2024 09:12:18 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Mk6RVncR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mMEFH+w2"
+Received: from phl-compute-08.internal (phl-compute-08.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 9B7A31151AA8;
+	Wed, 21 Aug 2024 09:12:20 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 21 Aug 2024 09:12:18 -0400
+  by phl-compute-08.internal (MEProxy); Wed, 21 Aug 2024 09:12:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm2; t=1724245938; x=1724332338; bh=IZ
-	1T2q2NbXU3STABROBiLXRJ9ALs+qhd/j21wZm0/zc=; b=6HoUwOoMJZs1pLCxue
-	MxzlvfH5qEyKwA2p9kAFQQhPvMj7mxEq0BtqUAGbKIGFqm8uiANajo808iDfOqBL
-	XEn/OOMRMG71Tt3w1DTOr2W1PJS32R43rVPZgKPKgjMRhUa+MaFFo/V5k2oF5Da+
-	61skgGsQomMJ8gqJUbXcf7vkrRnwjPRkLL575z32HandbQ5J6uLhawJ5jNIEx6wx
-	lR4Bb0nRiQIHqc2esWm0EDnz3+IUpgQI2nmGktaPMSo5Q2uvP6vXe6H5OoGDBzjO
-	ApHlCjnGCoj/e3kJr0/jOgQq5nLvBsrLGcB21jLWx6s62OlfOqRJ8mfiHV+Iu+Ru
-	BIDw==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1724245940;
+	 x=1724332340; bh=glHCdfrShpImXCyDmQP8PrGcVW7ZjuKaqZGGEuGe/Cw=; b=
+	Mk6RVncRqJEvZCvw+/cJDrrK9rNkNmdenxnXuKYYJ0p3H1R7b5CocwmScxbaZUuP
+	Hkx5oDtwF1NBS3Wg79JZFnutoiJrv2h8i6Glsr0nfvhr46mGU2YyXl7cpiy7n4dA
+	VCBopHX/2VZs8y5vRaXNtJ56FYdA6xbbTe+HJMoOy3N4p4/nLloPT1SHDZIGc+He
+	KAv54zy4h8/78nQFOMOpVUqMf5G1JyMc67DAtoXG4PqGm5Li/O3dr+N0bfeUFbFw
+	+ugapKHvKFesah3lhvjqdxAi2m9EZQ830yD3JpmFc+9Pyd7eBIela4E6uNgya9uz
+	xZXVOlD92zrNdtD0Abu9ZQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1724245938; x=1724332338; bh=IZ1T2q2NbXU3S
-	TABROBiLXRJ9ALs+qhd/j21wZm0/zc=; b=XQHX9G2VB2X4JcIBYkDUhLSpeRGQo
-	PWtNOogFq7RzdrASO/hAPjqVmx+tBgDRSrdOBGg2ZN3TT67iIzk9a255y28KmPQg
-	OGn1MVdDmxnTjTCCjIBmsArxJInpu2dEIBWZY2sPAPNKDDv7mTplzxg4a9MMLBMo
-	6Xg4ofVJ/qCtxN32QPeDA07uKemsGTiWTGA9SsyhP+iGXFT6wFWOCPszLTNglauI
-	fqNmMR6DTPk8so+ta8LNOHszztwwHaEmYUBw0gEHRjo1Z7JrYfjEzHW37NRdQVFg
-	PUNMfejPyMCw9kPB3GOkZmNHNW0kReppoDf+SWoOlRxBN0TsSBMOcXeRw==
-X-ME-Sender: <xms:sefFZqoPFDGGEArKykFIdu95rXdRPN1kEJjHzBR9lxW8BkQ2yAhTIQ>
-    <xme:sefFZoqDSxAmBrOnR-qY-zVGnkzHqPaM8a8J1mAU7QASlSLcpFYioYhHDQVkWCXid
-    UFWWnTqEwY14SvafmM>
-X-ME-Received: <xmr:sefFZvNV7a5buyboqdVTR8x7FwqIw9mcBqRCkTYT5jrFr3IaWPuWFsfKYAlg2fwTGJk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddukedgiedvucetufdoteggodetrfdotf
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1724245940; x=
+	1724332340; bh=glHCdfrShpImXCyDmQP8PrGcVW7ZjuKaqZGGEuGe/Cw=; b=m
+	MEFH+w2DuvGMMd+xjlgh6IEpK2St1UJs7gnyDn8Y945wqQvtjTGqyG7blopBST5W
+	2H9IzHZFsYWwDjkMz4DqFbF5KK0BPWzWim0DMEFpuj/7/bZqUbn7f26xhQx8Q4NJ
+	QFkOw9N51V/sxpdQtQudAU2B3X/wIc6oY/2cUnlSKAOcvrJrCpNX5A+AD4gvlDfj
+	dyV9+mff5pEiu1YoKrdKxLLdx416D+FVctwURqhvRwQqGiOG5XUNFhyuV0jVsU3b
+	QDAl63Ejg4C/YuDTsldaUXe58ZRkJT3aEoz194trz4MsMzqvHA/U6xV7s4rGaAUp
+	dJ7qWTgVXIUS7xW1rD98g==
+X-ME-Sender: <xms:tOfFZmdHqERK-Pbr3XYiCHTG9Qmn5wwJosUiQH9KBDbg8NrnYHpj4Q>
+    <xme:tOfFZgMNt9i82gkuwLbUjrWlpz3s-ICqaR1YFKTkCKSFsoj2TcwkcreBezvmh_9l5
+    oxaPLAy4Ld7r1amIWs>
+X-ME-Received: <xmr:tOfFZniUxUuAulml90IBGucVPth6Von8q2wsutH7Ya2CaMiJeXYr3flAwSfN-lEItJA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddukedgieduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecu
-    hfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgoh
-    grthdrtghomheqnecuggftrfgrthhtvghrnhepudffffffhfeuheevhffgleevkeeugeet
-    feegieeijeehfeekheekveduveeigeeunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtgho
-    mhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkh
-    gvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopegthhgvnhhhuhgrtggrihes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdr
-    lhhinhhugidruggvvhdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorg
-    htrdgtohhm
-X-ME-Proxy: <xmx:sefFZp5WLfE8ddyTEBa_isOG52nWElKNq_IglGvLh51uyxeO0LFVpA>
-    <xmx:sefFZp6ZC4YrojJc2J3xkiDRNYU6kVRy_Yk0UBkXlsTKhuk00xp37A>
-    <xmx:sefFZpj4gqFGY434Jr6x-jIiHUssEtX1O1T0X1dWE5KxMe55VwG4MA>
-    <xmx:sefFZj762d6LXxVkj0rx6A2EgPhjVclhvNfQdTjwq3Jk4geT3G6iuQ>
-    <xmx:sufFZnRlNXxOBX6LnOSRuHCYsJNMi-hv83jym9yGboPc_jUMV6xsXaeV>
+    htshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdej
+    necuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhi
+    hgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffek
+    gedugefhtdduudeghfeuveegffegudekjeelnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdr
+    tghomhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epkhgvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopegthhgvnhhhuhgrtggr
+    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishht
+    shdrlhhinhhugidruggvvhdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihgh
+    horghtrdgtohhm
+X-ME-Proxy: <xmx:tOfFZj9zB_oNhnO6_XgCWnH2sZnCP5MiHNr5lqEk9SRHdVaVpau3-Q>
+    <xmx:tOfFZitwDkOOr20_5wTlmOST5Q_4c5-1Pb9TGLZx7LKho4eQZCsXxw>
+    <xmx:tOfFZqEAd7gxvj--az44ReLqoWU0PeXLd26tSNP39j4fDnO8w4aeQg>
+    <xmx:tOfFZhN8RRptcPLNodETwksRS4dZh4IWLmVcPx23EnI9WoQoWsJSSQ>
+    <xmx:tOfFZkWwb-AyZ25O1gyF3q28SdCyEZybmHsA56sYNfAlRv8mVkJSBn_N>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Aug 2024 09:12:16 -0400 (EDT)
+ 21 Aug 2024 09:12:19 -0400 (EDT)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 0/3] LoongArch: Migrate arch_numa
-Date: Wed, 21 Aug 2024 14:12:14 +0100
-Message-Id: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
+Date: Wed, 21 Aug 2024 14:12:16 +0100
+Subject: [PATCH 2/3] LoongArch: ACPI: Introduce get_cpu_for_acpi_id
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -82,60 +83,55 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAK7nxWYC/x2MQQqAIBAAvyJ7TjCRrL4SEWZbLZSGUgTh37MuA
- 3OYeSBiIIzQsgcCXhTJuyxlwcCuxi3IacoOUkglain45r1bTLDr8MGdu+GVms2odVPqCiGHR8C
- Z7n/a9Sm9WY2kwWQAAAA=
+Message-Id: <20240821-loongarch_archnuma-v1-2-f47b191beee8@flygoat.com>
+References: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
+In-Reply-To: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
 To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1290;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=956;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=uhEojgTCYuS4b3VZKYgvzOj1cIxoZL306kOA+EXN7Jg=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSjzzc0R/B57t1xsE2tpeWjOmPmZvPer7MWFnD9WG6UP
- jV7a55kRykLgxgXg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAEzEWojhn8aG9HeKrK3X7y9w
- k3lwq3m/d/nkVxfsxBeuvs8dm90t/5+R4e2dFL8Unvv1Ygu9VwakbG3fvdXwStu+xVn5WyvU/S7
- eZwIA
+ bh=VozuwTVFg2YahKjNSXoyaFv70BxtLPQzAWZ8FXGAmJ0=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSjzzcYiu/a7ppn/4lNPbWCb8JhF5V7Yr5MlsuYtx9pc
+ uxL9bTtKGVhEONikBVTZAkRUOrb0HhxwfUHWX9g5rAygQxh4OIUgInwnWRkmClXl+GcG3VaWjLn
+ qNCF/R0d9+fdi7NRcDQx2D23yIi5keF/ToH4C8vtX3q+Wx/J+Z4h2hEu9PnXfc2y1DWP3b5flcz
+ lBAA=
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Hi folks,
-
-This series migrated LoongArch NUMA implementation to common arch_numa
-logic to enable devicetree based numa.
-
-Only tested against QEMU emulated NUMA system.
-
-Please review.
-
-Thanks
-- Jiaxun
+This would allow us to reverse lookup cpu_id from apic_id.
+Since it won't be a hot function, just use simple iteration match.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-Jiaxun Yang (3):
-      LoongArch: Move pcibus_to_node to pci.h
-      LoongArch: ACPI: Introduce get_cpu_for_acpi_id
-      LoongArch: Convert to arch_numa
+ arch/loongarch/include/asm/acpi.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
- arch/loongarch/Kconfig                |  10 +-
- arch/loongarch/include/asm/acpi.h     |  12 +
- arch/loongarch/include/asm/bootinfo.h |   1 -
- arch/loongarch/include/asm/numa.h     |  50 +----
- arch/loongarch/include/asm/pci.h      |  12 +
- arch/loongarch/include/asm/topology.h |  18 --
- arch/loongarch/kernel/Makefile        |   2 -
- arch/loongarch/kernel/acpi.c          |  91 ++------
- arch/loongarch/kernel/numa.c          | 400 ----------------------------------
- arch/loongarch/kernel/setup.c         |  19 +-
- arch/loongarch/kernel/smp.c           |  43 +---
- arch/loongarch/mm/init.c              |  12 +-
- 12 files changed, 77 insertions(+), 593 deletions(-)
----
-base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
-change-id: 20240820-loongarch_archnuma-64fab779176e
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index 313f66f7913a..5d4f8f5efdb6 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -45,6 +45,18 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+ 	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+ }
+ 
++static inline int get_cpu_for_acpi_id(u32 acpi_id)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		if (acpi_core_pic[cpu_logical_map(cpu)].processor_id == acpi_id)
++			return cpu;
++	}
++
++	return -1;
++}
++
+ #endif /* !CONFIG_ACPI */
+ 
+ #define ACPI_TABLE_UPGRADE_MAX_PHYS ARCH_LOW_ADDRESS_LIMIT
 
-Best regards,
 -- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
+2.46.0
 
