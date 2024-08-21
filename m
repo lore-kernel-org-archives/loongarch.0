@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B0221C163
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 06:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94A921C18B
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 06:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724222905; cv=none; b=ZJPe6O+8w08WrOZwZs2Ud20XJxr8/MVC6FVKqkVejfDs3WawkBdAL2jVchFkUo/Ox4O6F90KMz5RhpRLDrb3KB0n5GYD6ku62w1maOiiLsZwzjQ2zGMVRJ6/uKMcDhyJWGpw87bpEX4hRPXUrQnzWfHBtzp1GF9NalNIFJO5/Qs=
+	t=1724222922; cv=none; b=sf8h1/JB2Rtt6aWtgMByRFkdANt61RITUXcWogA/fzVob9Esb/yC1qerqXu3xXTd8TU05babtSaF9kG9B4YtbXJfMH13QLMGNn3hmUAF3oy0zMp6lX9yfpmK48BkQFtI7m4JsywyXUX4MDa6hNG6Hc8j0DngL1RN/fglOvNgjNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724222905; c=relaxed/simple;
-	bh=TnfqwPhCDzvHlQgyCowvuGGh7oEQuJ1Tf2kdo2IYJS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sTBmGAjxUxoHR6eUaDdWLrLrlK11auCHfcidPxGbOyLUh/aaF/4K22qLPikZ96owXcgnzAvmPLgtvNXvfwb9nThb/FjZ83iNTkGtqZ29LNkW+6CKcQH1fkksiAkpUzEno9CkKmu2ojSQO5okQ14D5CUfJLiUkhgj/ClnYxJVwJo=
+	s=arc-20240116; t=1724222922; c=relaxed/simple;
+	bh=fQTyFTfS0xJcfuNBViPAYJRfqOmXNGXVTYpZvmBNFGE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MLVMQ822AX5Z+RnMN3Rx8k0Lt9F2aH73Wl+MLl2Mg0o+KFbcY1cCmsydYOrkS0AD3xbL63atXopOuQaDv7y35fSr284vRs2IWut2maV/ZY/Y9CtVVUWwvmDcRXrmmrN1heCbb5DS1XqQQQVSDUu3LdYw3EJZ5POV4LaS8TXqANA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8AxSZqxjcVmSukaAA--.21238S3;
-	Wed, 21 Aug 2024 14:48:17 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx+5rGjcVmfOkaAA--.21534S3;
+	Wed, 21 Aug 2024 14:48:38 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMAxVOCxjcVmQVQcAA--.59935S2;
-	Wed, 21 Aug 2024 14:48:17 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxVOCxjcVmQVQcAA--.59935S3;
+	Wed, 21 Aug 2024 14:48:37 +0800 (CST)
 From: Zhao Qunqin <zhaoqunqin@loongson.cn>
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -33,10 +34,12 @@ Cc: loongarch@lists.linux.dev,
 	linux-edac@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	zhaoqunqin <zhaoqunqin@loongson.cn>
-Subject: [PATCH v1 0/2] Add EDAC driver for loongson memory controller
-Date: Wed, 21 Aug 2024 14:47:26 +0800
-Message-Id: <20240821064728.8642-1-zhaoqunqin@loongson.cn>
+Subject: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory controller
+Date: Wed, 21 Aug 2024 14:47:27 +0800
+Message-Id: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240821064728.8642-1-zhaoqunqin@loongson.cn>
+References: <20240821064728.8642-1-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,45 +47,295 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxVOCxjcVmQVQcAA--.59935S2
+X-CM-TRANSID:qMiowMAxVOCxjcVmQVQcAA--.59935S3
 X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GF18Kr47ZrWrJw17JF1UurX_yoWxKwc_Ca
-	4xAaykGr4kKa4UGayYqr18ZrWaqFWjk3Z5C3Wqqw1rXw1avr13Xr4Du3W3Ca47JF4DWFnx
-	ZrW8KF93Z3WUtosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr4UAryrWF43Xw17CF45urX_yoWxZFWDpF
+	13Aw13Gr4rtr13uwsxArWDZF15Awsaqa9Fvay3A3yYk34DAryDZ34ktFy2yF9rCr98GrW3
+	X3yrGa1kCFn8GrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8EPfPUUUUU==
 
 From: zhaoqunqin <zhaoqunqin@loongson.cn>
 
-These patchs are based on 6.10.4. Add a simple EDAC driver which report
-single bit errors (CE) only on loongson platform.
+Report single bit errors (CE) only
 
-zhaoqunqin (2):
-  Loongarch: EDAC driver for loongson memory controller
-  dt-bindings: EDAC for loongson memory controller
-
- .../bindings/edac/loongson,ls-mc-edac.yaml    |  35 +++
- MAINTAINERS                                   |   7 +
- arch/loongarch/Kconfig                        |   2 +
- drivers/edac/Kconfig                          |  10 +
- drivers/edac/Makefile                         |   1 +
- drivers/edac/loongson_edac.c                  | 208 ++++++++++++++++++
- 6 files changed, 263 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
+Signed-off-by: zhaoqunqin <zhaoqunqin@loongson.cn>
+---
+ arch/loongarch/Kconfig       |   2 +
+ drivers/edac/Kconfig         |  10 ++
+ drivers/edac/Makefile        |   1 +
+ drivers/edac/loongson_edac.c | 208 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 221 insertions(+)
  create mode 100644 drivers/edac/loongson_edac.c
 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ddc042895..59d47053f 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -179,6 +179,8 @@ config LOONGARCH
+ 	select PCI_QUIRKS
+ 	select PERF_USE_VMALLOC
+ 	select RTC_LIB
++	select EDAC_SUPPORT
++	select EDAC
+ 	select SPARSE_IRQ
+ 	select SYSCTL_ARCH_UNALIGN_ALLOW
+ 	select SYSCTL_ARCH_UNALIGN_NO_WARN
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 16c8de505..60b1997f0 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -573,5 +573,15 @@ config EDAC_VERSAL
+ 	  Support injecting both correctable and uncorrectable errors
+ 	  for debugging purposes.
+ 
++config EDAC_LOONGSON
++	tristate "Loongson EDAC"
++	depends on LOONGARCH
++	default m
++	help
++	  Support for error detection and correction on the loongson memory
++	  controller.
++
++	  Report single bit errors (CE) only.
++
+ 
+ endif # EDAC
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 4edfb83ff..d6f2cfe7e 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -89,3 +89,4 @@ obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
+ obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+ obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
++obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
+diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+new file mode 100644
+index 000000000..c639c11ed
+--- /dev/null
++++ b/drivers/edac/loongson_edac.c
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Loongson Technology Corporation Limited.
++ */
++
++#include <linux/edac.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++
++#include "edac_module.h"
++
++enum ecc_index {
++	ECC_SET = 0,
++	ECC_RESERVED,
++	ECC_COUNT,
++	ECC_CS_COUNT,
++	ECC_CODE,
++	ECC_ADDR,
++	ECC_DATA0,
++	ECC_DATA1,
++	ECC_DATA2,
++	ECC_DATA3,
++};
++
++static long idx;
++
++struct loongson_edac_pvt {
++	volatile u64 *ecc_base;
++	int last_ce_count;
++};
++
++static void loongson_update_ce_count(struct mem_ctl_info *mci,
++					int chan,
++					int new)
++{
++	int add;
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++
++	add = new - pvt->last_ce_count;
++
++	/* Store the new values */
++	pvt->last_ce_count = new;
++
++	/* device resume or any other exceptions*/
++	if (add < 0)
++		return;
++
++	/*updated the edac core */
++	if (add != 0) {
++		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
++					0, 0, 0,
++					chan, 0, -1, "error", "");
++		edac_mc_printk(mci, KERN_INFO, "add: %d", add);
++	}
++}
++
++static int loongson_read_ecc(struct mem_ctl_info *mci)
++{
++	u64 ecc;
++	int cs = 0;
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++
++	if (!pvt->ecc_base)
++		return pvt->last_ce_count;
++
++	ecc = pvt->ecc_base[ECC_CS_COUNT];
++	cs += ecc & 0xff;		// cs0
++	cs += (ecc >> 8) & 0xff;	// cs1
++	cs += (ecc >> 16) & 0xff;	// cs2
++	cs += (ecc >> 24) & 0xff;	// cs3
++
++	return cs;
++}
++
++static void loongson_edac_check(struct mem_ctl_info *mci)
++{
++	loongson_update_ce_count(mci, 0, loongson_read_ecc(mci));
++}
++
++static int get_dimm_config(struct mem_ctl_info *mci)
++{
++	u32 size, npages;
++	struct dimm_info *dimm;
++
++	/* size not used */
++	size = -1;
++	npages = MiB_TO_PAGES(size);
++
++	dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
++			0, 0, 0);
++	dimm->nr_pages = npages;
++	snprintf(dimm->label, sizeof(dimm->label),
++			"MC#%uChannel#%u_DIMM#%u",
++			mci->mc_idx, 0, 0);
++	dimm->grain = 8;
++
++	return 0;
++}
++
++static void loongson_pvt_init(struct mem_ctl_info *mci, u64 *vbase)
++{
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++
++	pvt->ecc_base = vbase;
++	pvt->last_ce_count = loongson_read_ecc(mci);
++}
++
++static int loongson_edac_probe(struct platform_device *pdev)
++{
++	struct resource *rs;
++	struct mem_ctl_info *mci;
++	struct edac_mc_layer layers[2];
++	struct loongson_edac_pvt *pvt;
++	u64 *vbase = NULL;
++
++	rs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!rs)
++		return -EINVAL;
++	if (rs->start) {
++		vbase = devm_ioremap(&pdev->dev, rs->start, resource_size(rs));
++		if (!vbase)
++			return -ENOMEM;
++	}
++
++	/* allocate a new MC control structure */
++	layers[0].type = EDAC_MC_LAYER_CHANNEL;
++	layers[0].size = 1;
++	layers[0].is_virt_csrow = false;
++	layers[1].type = EDAC_MC_LAYER_SLOT;
++	layers[1].size = 1;
++	layers[1].is_virt_csrow = true;
++	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(*pvt));
++	if (mci == NULL)
++		return -ENOMEM;
++
++	edac_dbg(0, "MC: mci = %p\n", mci);
++
++	mci->mc_idx = idx++;
++	mci->mtype_cap = MEM_FLAG_RDDR4;
++	mci->edac_ctl_cap = EDAC_FLAG_NONE;
++	mci->edac_cap = EDAC_FLAG_NONE;
++	mci->mod_name = "loongson_edac.c";
++	mci->ctl_name = "loongson_edac_ctl";
++	mci->dev_name = "loongson_edac_dev";
++	mci->ctl_page_to_phys = NULL;
++	mci->pdev = &pdev->dev;
++	mci->error_desc.grain = 8;
++	/* Set the function pointer to an actual operation function */
++	mci->edac_check = loongson_edac_check;
++
++	loongson_pvt_init(mci, vbase);
++	get_dimm_config(mci);
++
++	if (edac_mc_add_mc(mci)) {
++		edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
++		edac_mc_free(mci);
++	}
++	return 0;
++}
++
++static int loongson_edac_remove(struct platform_device *pdev)
++{
++	struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
++
++	if (mci) {
++		edac_mc_free(mci);
++		return 0;
++	}
++	return -ENODEV;
++}
++
++static const struct of_device_id loongson_edac_of_match[] = {
++	{ .compatible = "loongson,ls-mc-edac", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, loongson_edac_of_match);
++
++static struct platform_driver loongson_edac_driver = {
++	.probe		= loongson_edac_probe,
++	.remove		= loongson_edac_remove,
++	.driver		= {
++		.name	= "ls-mc-edac",
++		.owner = THIS_MODULE,
++		.of_match_table = loongson_edac_of_match,
++	},
++};
++
++static int __init loongson_edac_init(void)
++{
++	/* poll only */
++	edac_op_state = EDAC_OPSTATE_POLL;
++
++	return platform_driver_register(&loongson_edac_driver);
++}
++
++static void __exit loongson_edac_exit(void)
++{
++	platform_driver_unregister(&loongson_edac_driver);
++}
++
++module_init(loongson_edac_init);
++module_exit(loongson_edac_exit);
++module_param(edac_op_state, int, 0444);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Zhao Qunqin <zhaoqunqin@loongson.cn>\n");
++MODULE_DESCRIPTION("EDAC driver for loongson memory controller");
 -- 
 2.31.1
 
