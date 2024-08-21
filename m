@@ -1,173 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA6C193420
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 07:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA07188A3A
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 07:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724225883; cv=none; b=M6UTWzXzfp5247ISGbtV7lQCy4WVws7Jftdt/kuTTI/B++VTS3POT6EhWTpJMznd18SbSk2Hl2QGBtCXO4fA/ImvYDG6/y+9BG+bvUM2M+LKMtR0pcXKWHcKrd4KmU2w3jCCet/YkKrojO58zqBxhylzmdrz5f9aafgzYpbtWBY=
+	t=1724226756; cv=none; b=RfK6tvc37riT+mRjvWiGgSvINap6KxZhsY0ArhxGCh4wX9ameRiIrKlAdTreJJnVcA7XA++74Vqgvs9MMHMmM0onwYb8KLD947ZgNZIO+NGhxtYD+fX+Bh68EChxTOomATs5bp27BTXS9t7eKFShF86bPg0k2EC1otFJBzuAnN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724225883; c=relaxed/simple;
-	bh=n0y1tUqVQ4fIM3H/3lqDQUYe/hlGQ2kJX2bSDgPYpJQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t1X37gayE2Q2HUmOziHILYsjQzs+l1oZy7fwHIkXGxdr8rGQ0irpi4spSsl13qVm6E3wr5ChcftarWUYSLCRNBONAlMD+hy3egLOM/mUw7ALKv7H54GN9l/ST10x9uxuM2z5aBRE2VeDjB52zP77MeeHuqSXCeYSO0p9C3fnnw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRq6bFrT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724226756; c=relaxed/simple;
+	bh=rWbfdO/najgX+NclvzhAae3qpVHyvWxSPaRx6iJwxfU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U1sPVhQGcx0JxzPu1pq942CI86M3f/G5uX47D5dktkqLAp8Z3X0v317o/ibTioZ3tHg6+bQClPzaNrD+vSaleBuVI1D3JdjEDxn7OM9ctFPFiXGltF1FdTWRXds3sQiWiXUAuxnJonygbTIYCvJMlYsUB0ytN0jDzTwK75rs15M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U+CVY6NX; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRq6bFrT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39B72C4AF12
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 07:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724225883;
-	bh=n0y1tUqVQ4fIM3H/3lqDQUYe/hlGQ2kJX2bSDgPYpJQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qRq6bFrTRGRVrE3jk8Rqf9g8Wdey3Hmbhw7xQJIHarCByw/mLmOIpE8Rs7ufN0yRt
-	 Aa+m+Y3XcZooD2PF/9DlYpUBcxCBGBb4Ir16gE+h+VaL6p5OmpfSv6aENVuTXT6BAj
-	 TLlQezIFG/CgNinkJsITvCI6beMDBoEwKDTTFEOxROPjLn2ATLhqqd3dUmnUVYLarK
-	 Ij9hv3AOsVTEenj8s3uwXuFUM172E5D9eNYYPCnpO/MLUnSx7/Zyqm/OGiO3RohZtL
-	 /hts/MXK24YvbiYKDUGi1nc4JUcWlf9kDMnLnM1j1l/b7kIiTEA2g+Cp0DAvCcCTTM
-	 rWNJa92ua2NIg==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ef2c56d9dcso74025941fa.2
-        for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 00:38:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXaYZnSdlfba53LUmQ5UeNZv7U8efION123gX156QTPcpHd7QqYvlVsc33/BPSwdsY/KgTuUkC2QWk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzQn43EZlnER1seM+qXf9IYm0/vYugsOpc0IVzU2C7egFYxHMrQ
-	9gVnb3XZQ6EviGeYaJA4AmFEEaCnh9UqqKS818HS6OiPYpMC9GNfYlxjngUQvazRq9T1Sdc1XNa
-	0jZPNY43X82Gf9WAQn1y6U3xW7/s=
-X-Google-Smtp-Source: AGHT+IEShOkMbPYRq0Maf0J8b85cfd6TJktvzDAzXlBcoXnwUSr2MahILkdgU141foEExPPD0rHQDxiYmD5CkSDu4Wc=
-X-Received: by 2002:a2e:4c12:0:b0:2f3:f4db:910a with SMTP id
- 38308e7fff4ca-2f3f894f50cmr8454771fa.46.1724225881462; Wed, 21 Aug 2024
- 00:38:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U+CVY6NX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1724226754;
+	bh=rWbfdO/najgX+NclvzhAae3qpVHyvWxSPaRx6iJwxfU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U+CVY6NXtjA9ATlzGmfTizRexZlBxEzhme+an1MMa1zlN7QaITYrOoRHP2DHbheLw
+	 ifNlDoI0kk85jmF7YpvSVjz8NdOsa0orTkMYrL3/AvEl9WL4nomVhj+xVg8QLCVkNi
+	 JvH2K80iYvsjq7Fq9iGPbdtiolVAC+T1UmCek4gE=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 06B7666F26;
+	Wed, 21 Aug 2024 03:52:32 -0400 (EDT)
+Message-ID: <dab9357bd21d257f66a9f6a145570d0de61c4595.camel@xry111.site>
+Subject: Re: [PATCH v1 1/2] LoongArch: Define barrier_before_unreachable()
+ as empty
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>,  Jinyang He <hejinyang@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 21 Aug 2024 15:52:31 +0800
+In-Reply-To: <CAAhV-H6Mh3didzHnKJiEsMP4yVgggnBBuDS1U6yDzEvdVEbGRg@mail.gmail.com>
+References: <20240820123731.31568-1-yangtiezhu@loongson.cn>
+	 <20240820123731.31568-2-yangtiezhu@loongson.cn>
+	 <CAAhV-H6Mh3didzHnKJiEsMP4yVgggnBBuDS1U6yDzEvdVEbGRg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240820123731.31568-1-yangtiezhu@loongson.cn> <20240820123731.31568-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20240820123731.31568-2-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 21 Aug 2024 15:37:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Mh3didzHnKJiEsMP4yVgggnBBuDS1U6yDzEvdVEbGRg@mail.gmail.com>
-Message-ID: <CAAhV-H6Mh3didzHnKJiEsMP4yVgggnBBuDS1U6yDzEvdVEbGRg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] LoongArch: Define barrier_before_unreachable() as empty
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Arnd and Jinyang,
+On Wed, 2024-08-21 at 15:37 +0800, Huacai Chen wrote:
+> > I am not sure whether the GCC bug has been fixed, I can not find the
+> > fixup in the link https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D82365
+> > and in the GCC repo. So I am not sure whether it is time and proper
+> > to remove this workaround in the common header totally, just remove
+> > it in the arch specified header when compiling kernel with a newer
+> > GCC version (for example GCC 12.1 or higher on LoongArch) at least.
 
-On Tue, Aug 20, 2024 at 8:37=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When building kernel with -Os (CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy) rather
-> than the default -O2 (CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is not set),
-> there exist many objtool warnings "unreachable instruction", this is
-> because objtool couldn't find a code path to reach the instruction,
-> objdump shows that the unreachable instruction is related with BUG()
-> or unreachable().
->
-> In include/linux/compiler-gcc.h, there is an empty inline assembly
->
->   #define barrier_before_unreachable() asm volatile("")
->
-> in the definition of unreachable() to work around GCC 7.0 after the
-> commit 173a3efd3edb ("bug.h: work around GCC PR82365 in BUG()") in
-> the year of 2018, the unreachable instruction is generated by it.
->
-> As far as I can see, this workaround is to fix warnings of frame sizes,
-> the default CONFIG_FRAME_WARN is 2048 on 64 bit system now, it seems
-> that there are no -Wframe-larger-than warnings in the current kernel
-> without this workaround.
->
-> I am not sure whether the GCC bug has been fixed, I can not find the
-> fixup in the link https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D82365
-> and in the GCC repo. So I am not sure whether it is time and proper
-> to remove this workaround in the common header totally, just remove
-> it in the arch specified header when compiling kernel with a newer
-> GCC version (for example GCC 12.1 or higher on LoongArch) at least.
-What's your opinion? From my point of view, this GCC bug hasn't been
-fixed. So there may still be potential problems.
+> What's your opinion? From my point of view, this GCC bug hasn't been
+> fixed. So there may still be potential problems.
 
-Huacai
+I'm pretty sure it isn't fixed.  Using the test case from the bug
+report:
 
->
-> For example:
-> arch/loongarch/kernel/cpu-probe.o: warning: objtool: cpu_probe+0x664: unr=
-eachable instruction
->
-> objdump -M no-aliases -D arch/loongarch/kernel/cpu-probe.o
->
-> Without this patch:
->
-> 0000000000000000 <cpu_probe>:
->  ...
->  65c:   44000d80        bnez            $t0, 12 # 668 <.L345^B1+0x4>
->
-> 0000000000000660 <.L10001^B2>:
->  660:   002a0001        break           0x1
->
-> 0000000000000664 <.L345^B1>:
->  664:   53ff63ff        b               -160    # 5c4 <.L344^B1>
->  668:   0280040c        addi.w          $t0, $zero, 1
->  66c:   00006d8d        cpucfg          $t1, $t0
->
-> With this patch:
->
-> 0000000000000000 <cpu_probe>:
->  ...
->  65c:   44000980        bnez            $t0, 8  # 664 <.L345^B1>
->
-> 0000000000000660 <.L10001^B2>:
->  660:   002a0001        break           0x1
->
-> 0000000000000664 <.L345^B1>:
->  664:   0280040c        addi.w          $t0, $zero, 1
->  668:   00006d8d        cpucfg          $t1, $t0
->
-> Cc: stable@vger.kernel.org # 6.9+
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202407221208.6SSBeN9H-lkp@i=
-ntel.com/
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/Kconfig                |  1 +
->  arch/loongarch/include/asm/compiler.h | 13 +++++++++++++
->  2 files changed, 14 insertions(+)
->  create mode 100644 arch/loongarch/include/asm/compiler.h
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 70f169210b52..3af0da76d103 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -102,6 +102,7 @@ config LOONGARCH
->         select GPIOLIB
->         select HAS_IOPORT
->         select HAVE_ARCH_AUDITSYSCALL
-> +       select HAVE_ARCH_COMPILER_H
->         select HAVE_ARCH_JUMP_LABEL
->         select HAVE_ARCH_JUMP_LABEL_RELATIVE
->         select HAVE_ARCH_KASAN
-> diff --git a/arch/loongarch/include/asm/compiler.h b/arch/loongarch/inclu=
-de/asm/compiler.h
-> new file mode 100644
-> index 000000000000..4f6adb8d533e
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/compiler.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2024 Loongson Technology Corporation Limited
-> + */
-> +#ifndef _ASM_COMPILER_H
-> +#define _ASM_COMPILER_H
-> +
-> +#ifdef barrier_before_unreachable
-> +#undef barrier_before_unreachable
-> +#define barrier_before_unreachable() do { } while (0)
-> +#endif
-> +
-> +#endif /* _ASM_COMPILER_H */
-> --
-> 2.42.0
->
->
+struct i2c_board_info {
+        char type[20];
+        char pad[100];
+};
+
+#ifdef NONORETURN
+void fortify_panic();
+#else
+void fortify_panic() __attribute__((noreturn));
+#endif
+
+
+int f(int a)
+{
+  if (a)
+    fortify_panic();
+}
+
+
+void i2c_new_device(struct i2c_board_info *);
+int em28xx_dvb_init(int model, int a, int b, int c, int d)
+{
+        switch (model) {
+        case 1:{
+                        struct i2c_board_info info =3D {};
+                        f(a);
+                        i2c_new_device(&info);
+                        break;
+                }
+        case 2:{
+                        struct i2c_board_info info =3D {};
+                        f(b);
+                        i2c_new_device(&info);
+                        break;
+                }
+        case 3:{
+                        struct i2c_board_info info =3D { };
+                        f(c);
+                        i2c_new_device(&info);
+                        break;
+                }
+        case 4:{
+                        struct i2c_board_info info =3D { };
+                        f(d);
+                        i2c_new_device(&info);
+                        break;
+                }
+        }
+        return 0;
+}
+
+$ cc -v
+Using built-in specs.
+COLLECT_GCC=3Dcc
+COLLECT_LTO_WRAPPER=3D/usr/libexec/gcc/loongarch64-unknown-linux-gnu/14.2.0=
+/lto-wrapper
+Target: loongarch64-unknown-linux-gnu
+Configured with: ../configure --prefix=3D/usr LD=3Dld --enable-languages=3D=
+c,c++ --enable-default-pie --enable-default-ssp --disable-multilib --with-b=
+uild-config=3Dbootstrap-lto --disable-fixincludes --with-system-zlib --enab=
+le-host-pie
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 14.2.0 (GCC)=20
+$ cc t.c -S -Wframe-larger-than=3D1 -DNONORETURN -O2
+t.c: In function 'em28xx_dvb_init':
+t.c:50:1: warning: the frame size of 144 bytes is larger than 1 bytes [-Wfr=
+ame-larger-than=3D]
+   50 | }
+      | ^
+$ cc t.c -S -Wframe-larger-than=3D1 -O2           =20
+t.c: In function 'em28xx_dvb_init':
+t.c:50:1: warning: the frame size of 512 bytes is larger than 1 bytes [-Wfr=
+ame-larger-than=3D]
+   50 | }
+      | ^
+
+And I'm puzzled why "unreachable instruction" is not a problem on x86?
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
