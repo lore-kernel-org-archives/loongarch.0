@@ -1,125 +1,141 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08413210972
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 10:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3538196C86
+	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 13:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724235119; cv=none; b=EIZl+MIQgv4FApr4JJy9kC6kj75qZZvX3cMfeQLkYUix4Hu8qJQbuhHDDB4kZsQdTJ/R/9OVy/9WwW7WYMFRUKpc4jSMfQa3OHwDeW23mXhwSOIwE26tGWmo2R+z5fldHPWqYMJN09Hb1jI+KE+q52ckmebZWv7UmP23cZjvDQ4=
+	t=1724245940; cv=none; b=mMprJqjWSWxbhHBnifG0m/4pBjZ9ptkHSeUS1MJIpBMz2CYEXdXgH9GYNAgpN7Waf3tbX8WBZczvRk4ciknfVbNii+zM9j+ahzUtHAUu99crga3y1DfVkLGZfsybwU3Z0W90ydkB0mD7brgleAWFuEwnmJz1jDlYOgvhb+Yl8q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724235119; c=relaxed/simple;
-	bh=nizlCHfbuoGImdFJM4bzVM7rc1oIMDc3cMJIQ6PswdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z9w0Jt0eKMyfEZS+vWqiAIheaQlBSn0dWqD3jEeaFkGvpPI3GijP5yUOiLpWNtpdHWQnG6YchY93fcQYec6iwhQYhmCHEcKwB//MmeDTW4yzf9pynXvG/maFnEBJ3SQBs/pdhhj8naba1zAn5qVeWauxst1WXlrsHX8R+Y9Zu5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxHJtqvcVm4RAbAA--.21643S3;
-	Wed, 21 Aug 2024 18:11:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxouFqvcVm_oIcAA--.60915S3;
-	Wed, 21 Aug 2024 18:11:54 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: [RFC 1/2] irqchip/loongson-eiointc: Route interrupt parsed from acpi table
-Date: Wed, 21 Aug 2024 18:11:52 +0800
-Message-Id: <20240821101153.2262290-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240821101153.2262290-1-maobibo@loongson.cn>
-References: <20240821101153.2262290-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1724245940; c=relaxed/simple;
+	bh=uhEojgTCYuS4b3VZKYgvzOj1cIxoZL306kOA+EXN7Jg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Os9DoU4Y0eedUE64Ntwa2i70z4pcWUR/k6YqBTu9ovlrSgTIr6/W+qxtnvRDkly6ZYVzH5XJtmRBbAZ+7GPBEjymeK39av/bffsPezKdC2IY42ZgyOMkTj9ktMmSeczkIHpGZzamnCEca4SQJAWP6eSAw0AOEEtX9orlwtbq/x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=6HoUwOoM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XQHX9G2V; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="6HoUwOoM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XQHX9G2V"
+Received: from phl-compute-01.internal (phl-compute-01.nyi.internal [10.202.2.41])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 23D89138FE69;
+	Wed, 21 Aug 2024 09:12:18 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 21 Aug 2024 09:12:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1724245938; x=1724332338; bh=IZ
+	1T2q2NbXU3STABROBiLXRJ9ALs+qhd/j21wZm0/zc=; b=6HoUwOoMJZs1pLCxue
+	MxzlvfH5qEyKwA2p9kAFQQhPvMj7mxEq0BtqUAGbKIGFqm8uiANajo808iDfOqBL
+	XEn/OOMRMG71Tt3w1DTOr2W1PJS32R43rVPZgKPKgjMRhUa+MaFFo/V5k2oF5Da+
+	61skgGsQomMJ8gqJUbXcf7vkrRnwjPRkLL575z32HandbQ5J6uLhawJ5jNIEx6wx
+	lR4Bb0nRiQIHqc2esWm0EDnz3+IUpgQI2nmGktaPMSo5Q2uvP6vXe6H5OoGDBzjO
+	ApHlCjnGCoj/e3kJr0/jOgQq5nLvBsrLGcB21jLWx6s62OlfOqRJ8mfiHV+Iu+Ru
+	BIDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1724245938; x=1724332338; bh=IZ1T2q2NbXU3S
+	TABROBiLXRJ9ALs+qhd/j21wZm0/zc=; b=XQHX9G2VB2X4JcIBYkDUhLSpeRGQo
+	PWtNOogFq7RzdrASO/hAPjqVmx+tBgDRSrdOBGg2ZN3TT67iIzk9a255y28KmPQg
+	OGn1MVdDmxnTjTCCjIBmsArxJInpu2dEIBWZY2sPAPNKDDv7mTplzxg4a9MMLBMo
+	6Xg4ofVJ/qCtxN32QPeDA07uKemsGTiWTGA9SsyhP+iGXFT6wFWOCPszLTNglauI
+	fqNmMR6DTPk8so+ta8LNOHszztwwHaEmYUBw0gEHRjo1Z7JrYfjEzHW37NRdQVFg
+	PUNMfejPyMCw9kPB3GOkZmNHNW0kReppoDf+SWoOlRxBN0TsSBMOcXeRw==
+X-ME-Sender: <xms:sefFZqoPFDGGEArKykFIdu95rXdRPN1kEJjHzBR9lxW8BkQ2yAhTIQ>
+    <xme:sefFZoqDSxAmBrOnR-qY-zVGnkzHqPaM8a8J1mAU7QASlSLcpFYioYhHDQVkWCXid
+    UFWWnTqEwY14SvafmM>
+X-ME-Received: <xmr:sefFZvNV7a5buyboqdVTR8x7FwqIw9mcBqRCkTYT5jrFr3IaWPuWFsfKYAlg2fwTGJk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddukedgiedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecu
+    hfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgoh
+    grthdrtghomheqnecuggftrfgrthhtvghrnhepudffffffhfeuheevhffgleevkeeugeet
+    feegieeijeehfeekheekveduveeigeeunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtgho
+    mhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkh
+    gvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopegthhgvnhhhuhgrtggrihes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrh
+    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdr
+    lhhinhhugidruggvvhdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorg
+    htrdgtohhm
+X-ME-Proxy: <xmx:sefFZp5WLfE8ddyTEBa_isOG52nWElKNq_IglGvLh51uyxeO0LFVpA>
+    <xmx:sefFZp6ZC4YrojJc2J3xkiDRNYU6kVRy_Yk0UBkXlsTKhuk00xp37A>
+    <xmx:sefFZpj4gqFGY434Jr6x-jIiHUssEtX1O1T0X1dWE5KxMe55VwG4MA>
+    <xmx:sefFZj762d6LXxVkj0rx6A2EgPhjVclhvNfQdTjwq3Jk4geT3G6iuQ>
+    <xmx:sufFZnRlNXxOBX6LnOSRuHCYsJNMi-hv83jym9yGboPc_jUMV6xsXaeV>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 21 Aug 2024 09:12:16 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/3] LoongArch: Migrate arch_numa
+Date: Wed, 21 Aug 2024 14:12:14 +0100
+Message-Id: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxouFqvcVm_oIcAA--.60915S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK7nxWYC/x2MQQqAIBAAvyJ7TjCRrL4SEWZbLZSGUgTh37MuA
+ 3OYeSBiIIzQsgcCXhTJuyxlwcCuxi3IacoOUkglain45r1bTLDr8MGdu+GVms2odVPqCiGHR8C
+ Z7n/a9Sm9WY2kwWQAAAA=
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1290;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=uhEojgTCYuS4b3VZKYgvzOj1cIxoZL306kOA+EXN7Jg=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrSjzzc0R/B57t1xsE2tpeWjOmPmZvPer7MWFnD9WG6UP
+ jV7a55kRykLgxgXg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAEzEWojhn8aG9HeKrK3X7y9w
+ k3lwq3m/d/nkVxfsxBeuvs8dm90t/5+R4e2dFL8Unvv1Ygu9VwakbG3fvdXwStu+xVn5WyvU/S7
+ eZwIA
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Interrupt controller eiointc routes irq to cpu interface IP0 - IP7,
-now it is hard-coded that eiointc routes irq to CPU started from IP1.
-It can be parsed from acpi table, instead hwirq is used for function
-irq_create_mapping() already, routed interrupt pin must be the same
-with parent hwirq.
+Hi folks,
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+This series migrated LoongArch NUMA implementation to common arch_numa
+logic to enable devicetree based numa.
+
+Only tested against QEMU emulated NUMA system.
+
+Please review.
+
+Thanks
+- Jiaxun
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- drivers/irqchip/irq-loongson-eiointc.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Jiaxun Yang (3):
+      LoongArch: Move pcibus_to_node to pci.h
+      LoongArch: ACPI: Introduce get_cpu_for_acpi_id
+      LoongArch: Convert to arch_numa
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index b1f2080be2be..e9ec63d85ee8 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -42,6 +42,7 @@ struct eiointc_priv {
- 	cpumask_t		cpuspan_map;
- 	struct fwnode_handle	*domain_handle;
- 	struct irq_domain	*eiointc_domain;
-+	int			parent_hwirq;
- };
- 
- static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-@@ -159,7 +160,12 @@ static int eiointc_router_init(unsigned int cpu)
- 		}
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
--			bit = BIT(1 + index); /* Route to IP[1 + index] */
-+			/*
-+			 * Route to interrupt pin, using offset minus INT_HWI0
-+			 * Offset 0 means IP0 and so on
-+			 * Every 32 vector routing to one interrupt pin
-+			 */
-+			bit = BIT(eiointc_priv[index]->parent_hwirq - INT_HWI0);
- 			data = bit | (bit << 8) | (bit << 16) | (bit << 24);
- 			iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
- 		}
-@@ -424,7 +430,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 
- 	priv->vec_count = VEC_COUNT;
- 	priv->node = acpi_eiointc->node;
--
-+	priv->parent_hwirq = acpi_eiointc->cascade;
- 	parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
- 
- 	ret = eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
-@@ -458,6 +464,7 @@ static int __init eiointc_of_init(struct device_node *of_node,
- {
- 	int parent_irq, ret;
- 	struct eiointc_priv *priv;
-+	struct irq_data *irq_data;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -473,6 +480,12 @@ static int __init eiointc_of_init(struct device_node *of_node,
- 	if (ret < 0)
- 		goto out_free_priv;
- 
-+	irq_data = irq_get_irq_data(parent_irq);
-+	if (!irq_data) {
-+		ret = -ENODEV;
-+		goto out_free_priv;
-+	}
-+
- 	/*
- 	 * In particular, the number of devices supported by the LS2K0500
- 	 * extended I/O interrupt vector is 128.
-@@ -484,7 +497,7 @@ static int __init eiointc_of_init(struct device_node *of_node,
- 
- 	priv->node = 0;
- 	priv->domain_handle = of_node_to_fwnode(of_node);
--
-+	priv->parent_hwirq = irqd_to_hwirq(irq_data);
- 	ret = eiointc_init(priv, parent_irq, 0);
- 	if (ret < 0)
- 		goto out_free_priv;
+ arch/loongarch/Kconfig                |  10 +-
+ arch/loongarch/include/asm/acpi.h     |  12 +
+ arch/loongarch/include/asm/bootinfo.h |   1 -
+ arch/loongarch/include/asm/numa.h     |  50 +----
+ arch/loongarch/include/asm/pci.h      |  12 +
+ arch/loongarch/include/asm/topology.h |  18 --
+ arch/loongarch/kernel/Makefile        |   2 -
+ arch/loongarch/kernel/acpi.c          |  91 ++------
+ arch/loongarch/kernel/numa.c          | 400 ----------------------------------
+ arch/loongarch/kernel/setup.c         |  19 +-
+ arch/loongarch/kernel/smp.c           |  43 +---
+ arch/loongarch/mm/init.c              |  12 +-
+ 12 files changed, 77 insertions(+), 593 deletions(-)
+---
+base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
+change-id: 20240820-loongarch_archnuma-64fab779176e
+
+Best regards,
 -- 
-2.39.3
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
