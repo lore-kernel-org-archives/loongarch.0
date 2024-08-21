@@ -1,177 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704325733A
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 14:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85521B1D6B;
+	Wed, 21 Aug 2024 14:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724250696; cv=none; b=aIXOEOEZvtBvv58c1RIvri5k1u/AwBumbSOJec1GdVqakJUzlLmMMCFF8vJj5eSgcYpNStVSFwllDdN1e2AjFkqy2xMXIIHNaZ+speWdYs3dSqSTmgeWgWiwunUfbB3Gidy9qaV9HuX7i5h8g2HLxtRLPtmsx+i99X1Jqofkehg=
+	t=1724252378; cv=none; b=hwddexXwnecAA+BMSpANlUSb/f0hKcwmb8uVSLKZx7Sa/Sxm8IMCwgEx+fiebv6r7fjcIxK6pT3xZIgliwafhnrK6SZvi7KSmrootYlwQC5CCT1SJ7YjYnXtJERbVAj4kFDj3PKHbaZyow+3VoiD1qn95C2WCoYX74fQs75eMHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724250696; c=relaxed/simple;
-	bh=c0OW0cW5hDmc6K2btWRZo5y8jLnJfEFGaMlukrhO9Gg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CVNrWdffvGqXPyvepkSy5rL10pGi6/zBLTabb3NuhAsA3L1TUhBIk2/p/tnov2McT5wIvbq9Qhv7XAj8omFuKvHk4F74V0uhJHW1i0OIorS2B5RAng0fVeZAlQrOstqI4N/5s0E7xqLb2CYtJOOcw24Guy+yM9C0qEQwvKEi08w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=srumyX4z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dItHffqA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1724252378; c=relaxed/simple;
+	bh=BUOKPDhti0TU1HDgxuAIsHdwadzjlxbSiAgWhEZ/1NU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vlh7YErufes3O2Op/P1WepuH8aWwaNaCp/BTNBQ1t4c7lmxq21sFnk5khZWNfKEXty9doTd/sXNojW7MJlKxhOF5IiOosduBJIIq4z+neLuGE8YVPGozrnbhss4JZj70ozmUKoKKXGI8ttK8JeQFkACkLuuz/eN/Ye/TIkIhW0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I23JLl5r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="srumyX4z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dItHffqA"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724250692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJy4vBugzlwV92hnkKNfRqFL+RejFHcSLWidbn/Vn6s=;
-	b=srumyX4zQUqos1L0K89Vdf/MJloYV7pVVe4yQW430ylXuWIOpIccTKNbFvy5LixpaiLh6L
-	7srFRtK1Ocl0WFj+N6FTMJlDUOfFo5JuIXHyA7ZDgKdV5T+O7wEnbgGAmc2CSNSWiC8Ml2
-	wO5mKu8o3JW4ZQ9I0BT4AjIaQBQiWRhXUJjbHAS+Yznw0/YusZUV90uOnhyl5QnYd+GlD9
-	nl/1BPyhlh5MW7xPLdsyYztyQG/IxEXe/PhV1/egC5nfmMMLNQpS6oJ5OdMLIjsmve/0Rz
-	bZG6Y4uhGnPZxo7OsLSrB+NQelD1S4TJa7YZWbzmyCkOjQ47GJKE2W3OJPHolw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724250692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJy4vBugzlwV92hnkKNfRqFL+RejFHcSLWidbn/Vn6s=;
-	b=dItHffqAzaM1p8KLS+JddMr7adq306CddspxgX5Oq1CjYG4EKIroOn23mxzSP8638UWdUO
-	OP7poBHK+SoHtaBg==
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
- dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
- zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
- zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen
- <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-In-Reply-To: <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
-References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
- <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
- <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
-Date: Wed, 21 Aug 2024 16:31:32 +0200
-Message-ID: <87cym2hrqz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I23JLl5r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC457C32786;
+	Wed, 21 Aug 2024 14:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724252378;
+	bh=BUOKPDhti0TU1HDgxuAIsHdwadzjlxbSiAgWhEZ/1NU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I23JLl5rAuH4WlGbirMRvAinLTJcdMryWMXE6g5+qEUusxyGlcDI70uUi+WcLNHQB
+	 wCW1wYjF5r1mRdeVZc2O0fiENYDVnyWxhS737xTaJOzGkDByAK07e+pbkTSLvs8lBL
+	 FSRXd8dGedKSQwtvTjtH3qoA/uOFxKmSSKuEdXs0cmbl2hKtIm+Qgs0359YDzdxrn2
+	 vUoY6hxHRzAutSzU5wBn4//KTlEYmVvclqVypq0/fC20uDw1WkPpJqmPeUdXZmbBvg
+	 A27gQ7mcV4Y63cd9Uh8PmyYol/4Azy0GNEB1t35pUntnxEzjZ1k23ZRYaoRCF+njv5
+	 PwXD2tqlqiQUA==
+Date: Wed, 21 Aug 2024 15:59:32 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Zhao Qunqin <zhaoqunqin@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, bp@alien8.de, tony.luck@intel.com,
+	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] dt-bindings: EDAC for loongson memory controller
+Message-ID: <20240821-evasion-octane-891e772673f9@spud>
+References: <20240821064728.8642-1-zhaoqunqin@loongson.cn>
+ <20240821064728.8642-3-zhaoqunqin@loongson.cn>
+ <de5ffcd8-0f2a-4cca-a7a0-0c4fc0158392@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="EW2/+imsnmrdCVSJ"
+Content-Disposition: inline
+In-Reply-To: <de5ffcd8-0f2a-4cca-a7a0-0c4fc0158392@kernel.org>
+
+
+--EW2/+imsnmrdCVSJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 21 2024 at 21:14, Huacai Chen wrote:
-> On Wed, Aug 21, 2024 at 12:29=E2=80=AFAM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
->> This patch is doing too many things at once and is absolutely not
->> reviewable.
->>
->> Please split it up into the obvious bits and pieces:
-> Splitting may cause another problem: some patches will get upstream
-> via the arch tree and others via the irq tree. These dependencies may
-> cause build errors in a certain tree. But anyway, we will try our best
-> to do this.
+On Wed, Aug 21, 2024 at 10:20:29AM +0200, Krzysztof Kozlowski wrote:
+> On 21/08/2024 08:47, Zhao Qunqin wrote:
+> > From: zhaoqunqin <zhaoqunqin@loongson.cn>
+> >=20
+> > Add: drivers/edac/loongson_edac.c
 
-That's not a problem at all. The trivial way to solve this is to apply
-the architecture changes to the loongarch tree in a separate branch
-which is based of some -rcX tag and only contains those dependencies.
-That branch is then merged into the main loongarch branch and I can pull
-it in to my tree for adding the irqchip changes. No conflicts, no merge
-dependencies, nothing.
+This is not what your patch does.
 
->>       #ifdef CONFIG_IRQ_LOONGARCH_AVEC
->>       # define SMP_CLEAR_VECTOR         BIT(ACTION_CLEAR_VECTOR)
->>       #else
->>       # define SMP_CLEAR_VECTOR         (0)
->>       #endif
->>
->>       That way the compiler will optimize out stuff like the
->>       SMP_CLEAR_VECTOR handling and you only need the prototype of
->>       complete_irq_moving(), but no implementation.
-> These macros are not in hot-path, and we have already tried our best
-> to avoid using #ifdefs for cpu_has_xxx, so I suggest not introduce a
-> new Kconfig option. Moreover, the new option should always be selected
-> due to the deep coupling among loongson's irqchips, which makes the
-> #ifdefs useless.
+> >=20
+> > Signed-off-by: zhaoqunqin <zhaoqunqin@loongson.cn>
+>=20
+> Please use full name, not login.
+>=20
+> > ---
+> >  .../bindings/edac/loongson,ls-mc-edac.yaml    | 35 +++++++++++++++++++
+>=20
+> Bindings are before users.
+>=20
+> >  MAINTAINERS                                   |  7 ++++
+> >  2 files changed, 42 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls-=
+mc-edac.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac=
+=2Eyaml b/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
+> > new file mode 100644
+> > index 000000000..29e5b8381
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
+> > @@ -0,0 +1,35 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/edac/loongson,ls-mc-edac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Loongson Memory Controller EDAC
+> > +
+> > +maintainers:
+> > +  - Zhao Qunqin <zhaoqunqin@loongson.cn>
+> > +
+> > +description: |
+> > +  EDAC node is defined to describe on-chip error detection and correct=
+ion for
+> > +  Loongson Memory Controller.
+> > +
+> > +properties:
+> > +
+> > +  compatible:
+> > +    const: loongson,ls-mc-edac
+>=20
+> Missing soc part. And then adjust filename to match proper (new) compatib=
+le.
 
-They are removed in step 8 again. It's for having a sanely split up and
-structured patch series instead of one big lump.
-
->> > +static void clear_free_vector(struct irq_data *irqd)
->> > +{
->> > +     struct avecintc_data *adata =3D irq_data_get_irq_chip_data(irqd);
->> > +     bool managed =3D irqd_affinity_is_managed(irqd);
->>
->> Don't even try. Your managed support is broken at the allocation side
->> and at several other places.
-> I'm a bit confused here, irq_create_affinity_masks() marks some
-> interrupts "managed". So if we completely ignore "managed" here, then
-> can irq_create_affinity_masks() still work? Or the two has nothing to
-> do with each other?
-
-Managed interrupts have the property that the core and irqchip code
-guarantees the interrupts to be affinable to the CPU masks which are
-handed in to the allocator for them.
-
-So the requirement for architectures which have a limited number of
-vectors per CPU (x86, loongarch) is that you have to reserve the managed
-vectors right at allocation time.
-
-x86_vector_alloc_irqs()
-    assign_irq_vector_policy()
-        if (managed)
-            reserve_managed_vector()
-               irq_matrix_reserve_managed(mask)
-
-irq_matrix_reserve_managed() then reserves a vector on all CPUs which
-are in the affinity mask.
-
-On activation:
-
-x86_vector_activate()
-   if (managed)
-      activate_managed()
-        assign_managed_vector(mask)
-           irq_matrix_alloc_managed(mask)
-
-irq_matrix_alloc_managed() then picks an unassigned vector out of the
-managed vector space. Similar mechanism when the affinity is set.
-
-Why is this important for x86 (and loongarch)?
-
-Because both have a limited vector space of 256 vectors per CPU, where
-some of the vectors might be reserved for exceptions and OS purposes or
-the legacy space.
-
-The managed mechanism guarantees at allocation time that the interrupt
-will have a reserved vector on all CPUs in the mask. That ensures that
-on CPU hotplug the interrupt can be migrated over to a still online CPU
-in the mask. If the last CPU goes offline the interrupt is shut down.
-
-You might not yet have run into the situation of vector exhaustion, but
-once your number of CPUs gets big enough that is guaranteed to happen.
-
-That's why x86 also uses the concept of reserved (not guaranteed)
-regular vectors for non-managed interrupts. x86 uses the spurious vector
-for that. That's important because there are enough device drivers out
-there which allocate a gazillion of interrupts at probe time, but only
-request a few of them.
-
-If you allocate all vectors for them right upfront, then you exhaust
-your vector space quickly for no reason. Only when the interrupt is
-requested then a usable vector is allocated - or the allocation fails
-and request_irq() fails. That's better than exhausting the vector space
-for nothing.
-
-The complexity of the x86 allocation/activate/set_affinity mechanisms
-is there for a reason and not just because we did not have anything
-better to do. :)
+Please, please speak with your colleagues at Loongson that have submitted
+other binding patches. Each time someone new submits one, we are back to
+square one in terms of compatible strings.
 
 Thanks,
+Conor.
 
-        tglx
+--EW2/+imsnmrdCVSJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsYA1AAKCRB4tDGHoIJi
+0mPmAP0X+UpKzVS4hoTHY6v2niMH9kvo2bGwT0gBareYLorCTQD/b6DLDKg0ykob
+N4mBRGnbqXJPSL6i5U7DkVfu0UEBmAk=
+=xbWz
+-----END PGP SIGNATURE-----
+
+--EW2/+imsnmrdCVSJ--
