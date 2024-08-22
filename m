@@ -1,220 +1,226 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6056D4085D
-	for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 18:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B410EC5;
+	Thu, 22 Aug 2024 00:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724264203; cv=none; b=gIfDUVr0gvnJWSq1KyQrXHnPzVS9yEXh87b0BD9ZB3fXvB9tttq4qpScXo3EGnPFaE701Veb3wSVoxmn9W+4umJ8tlGF4WBNf7/jikfOkaL97jrT6soTLhKSh2muC4RvNni8AhwLpPVZG/UW4bvwPuPvI6LxzCv8uTInbBXzerA=
+	t=1724285292; cv=none; b=kW+PQnOeCJUGm3b0kBUo5mz6kftpGcgH5Q0trAqRbLg6Peq0nMxYAFK6aZy/SRaMuXZOMEiJXo9NQHcMrKhCB1zVm7URPkV+1S0QSRFbuG71pah+bWG/ZLtX8DF1ehPxCXi9dAFS5yN7IjGbgrmnTWodwqI6TDMQJTJ0KEGVARg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724264203; c=relaxed/simple;
-	bh=JnxeSLPQhSwfoYfEPIBCpVy3r4CFvAx9fVu3+4VZyrM=;
+	s=arc-20240116; t=1724285292; c=relaxed/simple;
+	bh=vgfOndwrjlpq8T9jckd7c4m1f+9iW2L/9WwWjTdusj0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dfk+5SQ4GRgMGdUB0u5+rV93CTJ/hVqlsm5+ajd68cpQW0ejN9M3rlFnOoCjRpT5babxVL0ob2j6CxrQroFpUFu2qV1QKbgXoa6LaGyzY0zkVchAZiBWSUoPr3pAL3TzAzarTgN6HfwJcP7BUMyMCR/TlFLO2R/ysm+jZDlgwDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gt5UzGcY; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uJJnP48ZueSFOTfb4s/HkNuy7xpDXMBXpn2+K6R+K43HSeCrVnTQZY5w8vZqQzDOvp+XWXUIcgCMSDvjaRMfdwSV4YsgO1KNVWyS1BH9+0g971gBojg/1zeQZkqn+tNHf88sJLg4Lvg5E9sD2gkJArAq3tbSOhb55CcO8mD9plQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S6CjJRkX; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gt5UzGcY"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44ff7bdb5a6so120281cf.3
-        for <loongarch@lists.linux.dev>; Wed, 21 Aug 2024 11:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724264201; x=1724869001; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=sG1wp5ENtjpkC5FIqQpPJO0RYHtQ0kKqwcDpDZ1g0uo=;
-        b=Gt5UzGcYBMnSidNVDgDBoYZaFqX5TxLaSkUkQJkzozsWCIOU6cMNv1giQ5sz1U0jtm
-         p7hrsxD8joW+spSvA/i+DPvPEpkUW8L4XsAX4s772V32tBe0LiTztpPhS2jrK3d3AHG+
-         75WhJn68Mhfz0IDCaSuCVewdYKjsDa4HEQKcL4vBYCS/66oTMN3hmgM0/gBbFRmDOJFd
-         I+c0Mx41BJ6CNwMR4o26p1C4EvKwc3ZCtWsV5TUU4CYjuwfd4fDUv+kvrKKdA1tc+lxy
-         Eg8qt12D6qftXBns/jZ3IrHwRd9cu2fSE6tK15OptCczcepyRnPRiy5S6uG+JPFCxYtq
-         cyCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724264201; x=1724869001;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sG1wp5ENtjpkC5FIqQpPJO0RYHtQ0kKqwcDpDZ1g0uo=;
-        b=H6ysqsFcybi3fZM1jRrexZ4yji5zWXdcNfOV3AnkV/830PPWc1wRl7OL76tmHoENEk
-         F47w4GWoBFjCfE00hHGXo2jX7KFZvngosNDQqD85Ko+oCnf9d6Vr/OP/dWoUKrjz8A6t
-         N48j2wlmLStJCSLGby9025ZgZgJv9r0QNmNll3YzJVyUJ/j+HF8IhmKdOu1SVaymC8lh
-         ewQxqPyAx8uD+uICpzqI38Kw7tis7YLrk3PsSWqqWzZzqSn+2SwTup/vGjjxjMryUHfc
-         QrSYJxXdIK6JGUeDxQnSubFA5eLhVqgnPCRz4Il1R+srwrO36mXR2M/P32YbBBQ+zXLe
-         wCJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWp4qGADWtUmahEfNnaXCXRoNy4rehLx5Tp96mXmxJq6ONpjW2UNxGf9a6PnTMrIcItn5ychF4i5f4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwqLT8beofOf4epZPDmVdB2bEaGjYNXQIeXMsAvHcN9JObhBqKF
-	zv9at9/TNJsFJ6WBc4wWOXHW5+SchuEDBAH7QbzECe/81WXBKnO0
-X-Google-Smtp-Source: AGHT+IEmIudWwUZSOHrAG/eup+YcE8K3ibS5ReEgFCUmkDy3yMOQddDLaWBfo/D6lfVEz1iolaNsRQ==
-X-Received: by 2002:a05:622a:4c87:b0:447:e542:ab00 with SMTP id d75a77b69052e-454f2572a5bmr39175031cf.50.1724264201152;
-        Wed, 21 Aug 2024 11:16:41 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45369ff5348sm61597621cf.32.2024.08.21.11.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 11:16:41 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.nyi.internal [10.202.2.41])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id D2D001200068;
-	Wed, 21 Aug 2024 14:16:38 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 21 Aug 2024 14:16:38 -0400
-X-ME-Sender: <xms:Bi_GZjkYOU0_uPVPB7K8kPU5t6uwe1a7iRrD-8l2b4FwhEEHvPWNqA>
-    <xme:Bi_GZm2ilDewDM48ADFZyAyLkN8ETYp8o2kgHXVk2M3oH1XV2KSY8l8XSHpaXSdPi
-    vUWJDJ9vpJCTKTtBQ>
-X-ME-Received: <xmr:Bi_GZppuE27zSpGhNm_MKiRYFzIueXaa6Olt3HDwdTYkHLAy97t7mvl_E4M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddukedguddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
-    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledt
-    hffgheegkeekiefgudekhffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepheegpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehmihhguhgvlhdrohhjvggurgdrshgrnh
-    guohhnihhssehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghho
-    ohhglhgvrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrgh
-    dprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    mhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhitghiohhsrdgtohhmpdhrtghpth
-    htohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepjhhpohhi
-    mhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggrrhhonhesrghkrghmrg
-    hirdgtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Bi_GZrnffxrLWDEUyOfAuK4X7MxRHl41DuNXEXwU9qN7EOxG4IC8rw>
-    <xmx:Bi_GZh08QhTMZZDvPplmdtt8yUAyIg0RVUC7Hs34ECG-0ApoLpa8Lw>
-    <xmx:Bi_GZqtC2DOqemnStVjIsc28f6yLb0riAR4qzKHtDsMZ3qIXiCyfOg>
-    <xmx:Bi_GZlWWO5FFsKpoIG5v09YA8ZfPbtyqcLKXJfL7WsrB9b0kzX0aXg>
-    <xmx:Bi_GZg0tfLSerjrQuTHq9tMZrxOF1nPbYUVoJWR9XLUkCH6bFCPKKA61>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Aug 2024 14:16:38 -0400 (EDT)
-Date: Wed, 21 Aug 2024 11:16:32 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
- Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
- Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v7 5/5] rust: add arch_static_branch
-Message-ID: <ZsYvAJbGB8qUcjXA@boqun-archlinux>
-References: <20240816-tracepoint-v7-0-d609b916b819@google.com>
- <20240816-tracepoint-v7-5-d609b916b819@google.com>
- <ZsYfAFrBFVewchGM@boqun-archlinux>
- <CANiq72np8GhZ4V22b7RekvQOhCbM67A-19Px2aVLgweC4Qxebg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S6CjJRkX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724285289; x=1755821289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vgfOndwrjlpq8T9jckd7c4m1f+9iW2L/9WwWjTdusj0=;
+  b=S6CjJRkXw4AwC4v3aAg+4H/FVac3iNs9XSkUa2rAy0F1eUS100+tnG0G
+   NsHlVHSW4/Y7jgriFYPitwz8fPHRz6uFuaslpARo9xTCcIAYX760WVbqI
+   NgWAH0PKf0Kce9r3kCnQ4MwI4Z5PEASwHjimxu6raYqVB/1JyoS+w2RXf
+   aL15N8Ow3sP2oWcyc+JXjZYEQxzuIUCGr/e3+Z7qRuSF9f0yzpuXQ4DLT
+   PafrFGvDILPaEK1t+dDxVmn/fRmbHPzeSU6NlmBwFlD/MsSUHKgyn8umJ
+   RSue/7yloLWehmSIT8RLwsAM3umu+lB+ce3OI+zFC7ztqvRCn5P01FLAj
+   w==;
+X-CSE-ConnectionGUID: O/wXXOZgSt63D72N9gJKpQ==
+X-CSE-MsgGUID: BsMBQjObTi+h1U9fWFgQUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="22842929"
+X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
+   d="scan'208";a="22842929"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 17:08:08 -0700
+X-CSE-ConnectionGUID: LZBuqbL4RZiT/6eseKCY6A==
+X-CSE-MsgGUID: 6EjppWBSQliFO65ITpIXsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
+   d="scan'208";a="84433107"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 21 Aug 2024 17:08:05 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sgvMx-000C4S-0O;
+	Thu, 22 Aug 2024 00:08:03 +0000
+Date: Thu, 22 Aug 2024 08:07:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, bp@alien8.de, tony.luck@intel.com,
+	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	devicetree@vger.kernel.org, zhaoqunqin <zhaoqunqin@loongson.cn>
+Subject: Re: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory
+ controller
+Message-ID: <202408220634.Irq2TUcL-lkp@intel.com>
+References: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72np8GhZ4V22b7RekvQOhCbM67A-19Px2aVLgweC4Qxebg@mail.gmail.com>
+In-Reply-To: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
 
-On Wed, Aug 21, 2024 at 07:54:51PM +0200, Miguel Ojeda wrote:
-> On Wed, Aug 21, 2024 at 7:08 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > Have you try this with "make O=<dir>"? I hit the following issue, but I
-> > am rebasing on rust-dev, so I might miss something:
-> >
-> >         error: couldn't read ../rust/kernel/arch_static_branch_asm.rs: No such file or directory (os error 2)
-> >           --> ../rust/kernel/jump_label.rs:39:17
-> >            |
-> >         39 | const _: &str = include!("arch_static_branch_asm.rs");
-> >            |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >            |
-> >            = note: this error originates in the macro `include` (in Nightly builds, run with -Z macro-backtrace for more info)
-> >
-> >         error: aborting due to 1 previous error
-> 
-> Yeah, we should use a `*TREE` everywhere. In addition, we should not
-> use `SRCTREE` but `OBJTREE`. It is my fault, this comes from my
-> prototype I gave Alice.
-> 
-> Please see the attached diff.
-> 
+Hi Zhao,
 
-Yes, this fix works, thanks!
+kernel test robot noticed the following build errors:
 
-Regards,
-Boqun
+[auto build test ERROR on ras/edac-for-next]
+[also build test ERROR on robh/for-next linus/master v6.11-rc4 next-20240821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Cheers,
-> Miguel
+url:    https://github.com/intel-lab-lkp/linux/commits/Zhao-Qunqin/Loongarch-EDAC-driver-for-loongson-memory-controller/20240821-145127
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+patch link:    https://lore.kernel.org/r/20240821064728.8642-2-zhaoqunqin%40loongson.cn
+patch subject: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory controller
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240822/202408220634.Irq2TUcL-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240822/202408220634.Irq2TUcL-lkp@intel.com/reproduce)
 
-> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-> index 7757e4f8e85e..ccfd20589c21 100644
-> --- a/rust/kernel/jump_label.rs
-> +++ b/rust/kernel/jump_label.rs
-> @@ -36,7 +36,7 @@ macro_rules! static_key_false {
-> 
->  /// Assert that the assembly block evaluates to a string literal.
->  #[cfg(CONFIG_JUMP_LABEL)]
-> -const _: &str = include!("arch_static_branch_asm.rs");
-> +const _: &str = include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-> 
->  #[macro_export]
->  #[doc(hidden)]
-> @@ -45,7 +45,7 @@ macro_rules! static_key_false {
->  macro_rules! arch_static_branch {
->      ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
->          $crate::asm!(
-> -            include!(concat!(env!("SRCTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-> +            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
->              l_yes = label {
->                  break 'my_label true;
->              },
-> @@ -65,7 +65,7 @@ macro_rules! arch_static_branch {
->  macro_rules! arch_static_branch {
->      ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
->          $crate::asm!(
-> -            include!(concat!(env!("SRCTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-> +            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
->              l_yes = label {
->                  break 'my_label true;
->              },
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 4f0f6b13ebd7..746cce80545f 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -269,7 +269,7 @@ rust_allowed_features := asm_const,asm_goto,new_uninit
->  # current working directory, which may be not accessible in the out-of-tree
->  # modules case.
->  rust_common_cmd = \
-> -	SRCTREE=$(abspath $(srctree)) \
-> +	OBJTREE=$(abspath $(objtree)) \
->  	RUST_MODFILE=$(modfile) $(RUSTC_OR_CLIPPY) $(rust_flags) \
->  	-Zallow-features=$(rust_allowed_features) \
->  	-Zcrate-attr=no_std \
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408220634.Irq2TUcL-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   drivers/edac/loongson_edac.c: In function 'get_dimm_config':
+>> drivers/edac/loongson_edac.c:90:16: error: implicit declaration of function 'EDAC_DIMM_PTR' [-Wimplicit-function-declaration]
+      90 |         dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+         |                ^~~~~~~~~~~~~
+>> drivers/edac/loongson_edac.c:90:14: error: assignment to 'struct dimm_info *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      90 |         dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+         |              ^
+   drivers/edac/loongson_edac.c: At top level:
+>> drivers/edac/loongson_edac.c:181:27: error: initialization of 'void (*)(struct platform_device *)' from incompatible pointer type 'int (*)(struct platform_device *)' [-Wincompatible-pointer-types]
+     181 |         .remove         = loongson_edac_remove,
+         |                           ^~~~~~~~~~~~~~~~~~~~
+   drivers/edac/loongson_edac.c:181:27: note: (near initialization for 'loongson_edac_driver.<anonymous>.remove')
+
+
+vim +/EDAC_DIMM_PTR +90 drivers/edac/loongson_edac.c
+
+    80	
+    81	static int get_dimm_config(struct mem_ctl_info *mci)
+    82	{
+    83		u32 size, npages;
+    84		struct dimm_info *dimm;
+    85	
+    86		/* size not used */
+    87		size = -1;
+    88		npages = MiB_TO_PAGES(size);
+    89	
+  > 90		dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+    91				0, 0, 0);
+    92		dimm->nr_pages = npages;
+    93		snprintf(dimm->label, sizeof(dimm->label),
+    94				"MC#%uChannel#%u_DIMM#%u",
+    95				mci->mc_idx, 0, 0);
+    96		dimm->grain = 8;
+    97	
+    98		return 0;
+    99	}
+   100	
+   101	static void loongson_pvt_init(struct mem_ctl_info *mci, u64 *vbase)
+   102	{
+   103		struct loongson_edac_pvt *pvt = mci->pvt_info;
+   104	
+   105		pvt->ecc_base = vbase;
+   106		pvt->last_ce_count = loongson_read_ecc(mci);
+   107	}
+   108	
+   109	static int loongson_edac_probe(struct platform_device *pdev)
+   110	{
+   111		struct resource *rs;
+   112		struct mem_ctl_info *mci;
+   113		struct edac_mc_layer layers[2];
+   114		struct loongson_edac_pvt *pvt;
+   115		u64 *vbase = NULL;
+   116	
+   117		rs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+   118		if (!rs)
+   119			return -EINVAL;
+   120		if (rs->start) {
+   121			vbase = devm_ioremap(&pdev->dev, rs->start, resource_size(rs));
+   122			if (!vbase)
+   123				return -ENOMEM;
+   124		}
+   125	
+   126		/* allocate a new MC control structure */
+   127		layers[0].type = EDAC_MC_LAYER_CHANNEL;
+   128		layers[0].size = 1;
+   129		layers[0].is_virt_csrow = false;
+   130		layers[1].type = EDAC_MC_LAYER_SLOT;
+   131		layers[1].size = 1;
+   132		layers[1].is_virt_csrow = true;
+   133		mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(*pvt));
+   134		if (mci == NULL)
+   135			return -ENOMEM;
+   136	
+   137		edac_dbg(0, "MC: mci = %p\n", mci);
+   138	
+   139		mci->mc_idx = idx++;
+   140		mci->mtype_cap = MEM_FLAG_RDDR4;
+   141		mci->edac_ctl_cap = EDAC_FLAG_NONE;
+   142		mci->edac_cap = EDAC_FLAG_NONE;
+   143		mci->mod_name = "loongson_edac.c";
+   144		mci->ctl_name = "loongson_edac_ctl";
+   145		mci->dev_name = "loongson_edac_dev";
+   146		mci->ctl_page_to_phys = NULL;
+   147		mci->pdev = &pdev->dev;
+   148		mci->error_desc.grain = 8;
+   149		/* Set the function pointer to an actual operation function */
+   150		mci->edac_check = loongson_edac_check;
+   151	
+   152		loongson_pvt_init(mci, vbase);
+   153		get_dimm_config(mci);
+   154	
+   155		if (edac_mc_add_mc(mci)) {
+   156			edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
+   157			edac_mc_free(mci);
+   158		}
+   159		return 0;
+   160	}
+   161	
+   162	static int loongson_edac_remove(struct platform_device *pdev)
+   163	{
+   164		struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
+   165	
+   166		if (mci) {
+   167			edac_mc_free(mci);
+   168			return 0;
+   169		}
+   170		return -ENODEV;
+   171	}
+   172	
+   173	static const struct of_device_id loongson_edac_of_match[] = {
+   174		{ .compatible = "loongson,ls-mc-edac", },
+   175		{}
+   176	};
+   177	MODULE_DEVICE_TABLE(of, loongson_edac_of_match);
+   178	
+   179	static struct platform_driver loongson_edac_driver = {
+   180		.probe		= loongson_edac_probe,
+ > 181		.remove		= loongson_edac_remove,
+   182		.driver		= {
+   183			.name	= "ls-mc-edac",
+   184			.owner = THIS_MODULE,
+   185			.of_match_table = loongson_edac_of_match,
+   186		},
+   187	};
+   188	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
