@@ -1,106 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDBC1B970;
-	Thu, 22 Aug 2024 03:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0805A933;
+	Thu, 22 Aug 2024 07:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724296463; cv=none; b=cvYyb+BzCMO0Y7opghfG0PhyJUrFy+iQmSlulUYG+bqdXtiWcWDAw7fDGMkfCRaq9HXXEs8ZRvbgyVAQky1eUrhoKPA3sw9AE11icsf6LwUAZqrwPQmRn74T88pQLgDvWPwJmCL0ytt3kWvHiwMWGhqGel8efzW3ioR4dvjMNcY=
+	t=1724312053; cv=none; b=bWJiCgBltBUJT1iMF392wm/UsQHy9X9nWkG0yjDEKVGIYPhT8FPQ2quDQgKAXTcAs+ht3HVlnUrEXmmcPy+kIXyBOKwecDkavjrJlCrLB8j4Wdwqx8FU95hsY2/Ka21UsblSL/XqR9ggIlqloxPOQiGB4SLEGGoh8ScbLz2uJiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724296463; c=relaxed/simple;
-	bh=kX/eJEnUnP1fnuKVgl95jcVQXrBQNB/ruJcrqp1XQaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lKxf3Za9PjANTcSMxlZ0jn5AhB9b/RCRtt17/z6CXV99yzBH2ZeYj+lF0TuwkwvcnY6rUccMdz+9zggqunyRPm4kZTe0yUtJO89qUs9dCxOr+aK3DmnAPhNNDBsq13oqj+URBQZSdSCyNd/bMkOXDZw60W5IP948jLCtqPISKCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik5pq85f; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1724312053; c=relaxed/simple;
+	bh=lIKHvHDsMIm2CVSLExtUiHMjQu2vPE8seshIYDk/SIk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Xoe2pz7eb+mUHZJzXgpZGHZ4B8ofNx/p7hGl+TTyVUCm50/XxErPZ03l8NCywy56bzsAOpOJ7wUo/cbkIxqaBjwRFJy+x+lqdyu+Ew60DT+NWX5dfq9ACWdQhljE1t+cklWSCrSL61A/XcHN5+Bilt/H6lETIUD4l0UothAtG8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=nlPGcbSN; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik5pq85f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724296461; x=1755832461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kX/eJEnUnP1fnuKVgl95jcVQXrBQNB/ruJcrqp1XQaE=;
-  b=ik5pq85ffQ8M5AVtaoUQXnbgG2ZXy1iMZez6XMHE3Mr+dlBd5zrZRdo+
-   +8IBzXRZ+5t5Mcia1U7lpA9RpjASyYjOmPpQ8QSrGAinoA0V+CpelPsAu
-   fVDRMX2gxCJSEtqHRXEqRMwhW6ZS6OpgRXZOSu3vcUxr/kMtFEo+wvhPK
-   sRYbTGISj/sDTSeYbXAL52He6SRBEelmIUJkgaQMybkNtpx65sc5nvWan
-   neHXc1Dg0EC/eTw2lEbcwWlKW7C41Ix4WO1hOvGGTNYXA5TyvcSCA1WFB
-   J+r03DuhgKkqhaFwjmYlQc0jWux4OsCpWjj7s/+JfCvIJOd0JHr3sQbnt
-   w==;
-X-CSE-ConnectionGUID: D3iWwcLqQwK115EPng/2yQ==
-X-CSE-MsgGUID: FEPpWCOVS1aFyj4wZe4J3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="22839556"
-X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
-   d="scan'208";a="22839556"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 20:14:21 -0700
-X-CSE-ConnectionGUID: b2O2YlYAQqiMBXbgghkKjg==
-X-CSE-MsgGUID: 74af8rXIRTKQt0wXFjqxhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
-   d="scan'208";a="98800083"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 21 Aug 2024 20:14:17 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sgyH8-000CDc-0D;
-	Thu, 22 Aug 2024 03:14:14 +0000
-Date: Thu, 22 Aug 2024 11:14:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zhao Qunqin <zhaoqunqin@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, bp@alien8.de, tony.luck@intel.com,
-	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	devicetree@vger.kernel.org, zhaoqunqin <zhaoqunqin@loongson.cn>
-Subject: Re: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory
- controller
-Message-ID: <202408221024.FpH0yAEh-lkp@intel.com>
-References: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="nlPGcbSN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nsNs6OoEVbcw2LLEgSbDKi7BEPoPfsioIF+I1dRzjSQ=; t=1724312050; x=1724916850; 
+	b=nlPGcbSNTlJ1ua53ttil+1bd31AMJzzCWczPIlCSh1ckviFmz5/SvN4/+KmwHN7ROOQP6jaPlNN
+	xdPCDJ2h56xYGwLbDG/+tBZUxf1rSaTe4MwwBakvXHEue5fDbVIgQmXWtMjc60v723txEaBKwo3ft
+	qt3tgfrXa9vpd4k2Imvzxda6Se4VWwfsnnkjvbTyPbo26HuQIYvjkE4Kjt36HeZXyrnOKFZsV1aA7
+	5eJ2ChYEEg16SPepCcqYip+VQI0P9eLTzX0ZvVEZiHTeBhV4lvYa+XI8V0aYEmRpxT8IXlD7eH5Rw
+	nwsXDZ5c1beiTcK26lrVGa2yj3+kYQyIeyBA==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1sh2KT-000000008j9-3CbJ; Thu, 22 Aug 2024 09:33:57 +0200
+Received: from p5b13a2bf.dip0.t-ipconnect.de ([91.19.162.191] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1sh2KT-00000002vTy-29Tp; Thu, 22 Aug 2024 09:33:57 +0200
+Message-ID: <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related
+ config items
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Dave Vasilevsky <dave@vasilevsky.ca>, Michael Ellerman
+ <mpe@ellerman.id.au>,  kexec@lists.infradead.org,
+ debian-powerpc@lists.debian.org, x86@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-mips@vger.kernel.org,  linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev,  akpm@linux-foundation.org,
+ ebiederm@xmission.com, hbathini@linux.ibm.com,  piliu@redhat.com,
+ viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
+Date: Thu, 22 Aug 2024 09:33:56 +0200
+In-Reply-To: <20240124051254.67105-6-bhe@redhat.com>
+References: <20240124051254.67105-1-bhe@redhat.com>
+	 <20240124051254.67105-6-bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Hi Zhao,
+Hi Baoquan,
 
-kernel test robot noticed the following build warnings:
+On Wed, 2024-01-24 at 13:12 +0800, Baoquan He wrote:
+> By splitting CRASH_RESERVE and VMCORE_INFO out from CRASH_CORE, cleaning
+> up the dependency of FA_DMUMP on CRASH_DUMP, and moving crash codes from
+> kexec_core.c to crash_core.c, now we can rearrange CRASH_DUMP to
+> depend on KEXEC_CORE, and make CRASH_DUMP select CRASH_RESERVE and
+> VMCORE_INFO.
+>=20
+> KEXEC_CORE won't select CRASH_RESERVE and VMCORE_INFO any more because
+> KEXEC_CORE enables codes which allocate control pages, copy
+> kexec/kdump segments, and prepare for switching. These codes are shared
+> by both kexec reboot and crash dumping.
+>=20
+> Doing this makes codes and the corresponding config items more
+> logical (the right item depends on or is selected by the left item).
+>=20
+> PROC_KCORE -----------> VMCORE_INFO
+>=20
+>            |----------> VMCORE_INFO
+> FA_DUMP----|
+>            |----------> CRASH_RESERVE
+>=20
+>                                                 ---->VMCORE_INFO
+>                                                /
+>                                                |---->CRASH_RESERVE
+> KEXEC      --|                                /|
+>              |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
+> KEXEC_FILE --|                               \ |
+>                                                \---->CRASH_HOTPLUG
+>=20
+> KEXEC      --|
+>              |--> KEXEC_CORE--> kexec reboot
+> KEXEC_FILE --|
+>=20
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  kernel/Kconfig.kexec | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 8faf27043432..6c34e63c88ff 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -9,8 +9,6 @@ config VMCORE_INFO
+>  	bool
+> =20
+>  config KEXEC_CORE
+> -	select VMCORE_INFO
+> -	select CRASH_RESERVE
+>  	bool
+> =20
+>  config KEXEC_ELF
+> @@ -99,8 +97,11 @@ config KEXEC_JUMP
+> =20
+>  config CRASH_DUMP
+>  	bool "kernel crash dumps"
+> +	default y
+>  	depends on ARCH_SUPPORTS_CRASH_DUMP
+> -	select KEXEC_CORE
+> +	depends on KEXEC_CORE
+> +	select VMCORE_INFO
+> +	select CRASH_RESERVE
+>  	help
+>  	  Generate crash dump after being started by kexec.
+>  	  This should be normally only set in special crash dump kernels
 
-[auto build test WARNING on ras/edac-for-next]
-[also build test WARNING on robh/for-next linus/master v6.11-rc4 next-20240821]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
+on 32-bit Power Macintosh systems which fail after GRUB with:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zhao-Qunqin/Loongarch-EDAC-driver-for-loongson-memory-controller/20240821-145127
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
-patch link:    https://lore.kernel.org/r/20240821064728.8642-2-zhaoqunqin%40loongson.cn
-patch subject: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory controller
-config: loongarch-kismet-CONFIG_EDAC-CONFIG_LOONGARCH-0-0 (https://download.01.org/0day-ci/archive/20240822/202408221024.FpH0yAEh-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240822/202408221024.FpH0yAEh-lkp@intel.com/reproduce)
+	"Error: You can't boot a kdump kernel from OF!"
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408221024.FpH0yAEh-lkp@intel.com/
+We may have to turn this off for 32-bit Power Macintosh systems.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for EDAC when selected by LOONGARCH
-   WARNING: unmet direct dependencies detected for EDAC
-     Depends on [n]: HAS_IOMEM [=y] && EDAC_SUPPORT [=y] && RAS [=n]
-     Selected by [y]:
-     - LOONGARCH [=y]
+See this thread on debian-powerpc ML: https://lists.debian.org/debian-power=
+pc/2024/07/msg00001.html
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
