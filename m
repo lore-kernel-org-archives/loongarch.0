@@ -1,198 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E051C93B2
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 11:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476D51C93D7
+	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 12:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724327609; cv=none; b=jECcpnszSuHxfmZi3SVnmeWZxGkV5oP0Do4a/cFA9keXcThI6e2HQuG6kOnuB/jY5uP83rZDJyjWyq09beEZnxN4hKzCj7VgmD1CQojLPGNwL9FE24Ay59DhxmGHoGDYyWTv40GW3cAwZOUG/hdD+EDoe3SWU/PNCcHgSIurfPc=
+	t=1724328294; cv=none; b=Op98wlYnS1jHM/O4sW8SQwALaEqswhKddj4T4i9WNXrdbRCM6o7SKPmGpLpiEHmhhCY+necgxrbn8Vf1VErOsgNrnlUYvgMZK5PMdHitDkW+Ri9KmpWIXTaZtpa4L08/yk0g4PN+nGhZYscK0PvzB+XCMOSy4z6bYvXMvskV8Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724327609; c=relaxed/simple;
-	bh=kq7HkHLVZBMwOV2O6R4WSTN1EqJabyZVI07suXmSc/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dka6asmMN3Oeb33OQUbMdbib0C9Ix7h8tUm6emWvdRjRYf980JpHOeOxJWGJyfydSb02S0hybas+dE4OcFu0hvjDa3zM5TLsMY1ia+KQzDAW4/meS4/CbWEAYzZ0JCm0JplNejVuPgZ6XStqswNqxo8Rr1/jmb19ItgqM1Y/qUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ul3rSUPR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724328294; c=relaxed/simple;
+	bh=4wPruubT8llHHATxdqsGwe1CHDZt4aUPk/RJRbbIGjg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VLsILu+aiLA411H/8kttNjDrG0aE1b/JQgobM7cwJqOkKYXiF0Agw6MNmowuqzdL/vUo+HZTA4Jln+IdyNsMc+4/caHSqYrRAjsVAETISeZEwBwjZdCxkBXhUUOiHjnEOOZSxbxHx6LwFVZ1fwnOn7t+m+0f8IEr7OkvpflXbhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P1/ls7Sj; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ul3rSUPR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DAEFC4AF11
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 11:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724327609;
-	bh=kq7HkHLVZBMwOV2O6R4WSTN1EqJabyZVI07suXmSc/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ul3rSUPR4uSrgVCuvGaIreY6oyMJ/Iz4VzpHxjoReDMlSD+PLQVdRNPenprp0tyM+
-	 4PRW8E/bclapaO9ix2LZuUdzKztIKXAye54ae/WOl+V3WGll8vExjfsMY6ld9f5xiP
-	 RNs2MKiYVZfN0l3rTwjAy95XdwrKMJN1aj8bayH5ZkPMapxVlWPyXXpZv8f+5KBFoD
-	 uTIEcbM6S9Zu16mx6DTqR1xUhZjlzTpvAu2xdhoTvtSsABezKtyg2rPwi+zKX9Ci3N
-	 Qe3YxcB7ElTJkjnryLwRsO1yATHrhDrx1URUwiyCFJK4FZhM4tz8j58y4Zv0qrRbHX
-	 6So7WpOesArfQ==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5bb85e90ad5so760968a12.3
-        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 04:53:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXxnu6GyAbwJdqMWRxHu/f3Mo8nM9Jz4uNPRzsmWb3aS0A/ylq4icB1Gwust18ogsh5s+rHtpZ9G18=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxpRminKYkxc+Nf5MFHepQ5rWU1pRXC2I7CILHagNMVs4V9UWVV
-	wj1b9WW9WOWmGcKqC6Ujp1c0WjEI4y/kaV77glFqYnAEdjWNIJ3Mcj9g+aTC7qUhbsYpzv5K8we
-	M0oKe6kWTIdKh1Cb+VZh2N7fk4UE=
-X-Google-Smtp-Source: AGHT+IGuBOo9QhUzweuJTGry2O7SAHfVgztCGpD9T8pktDrHaSIOc8XLNCru4hE14bswILF0Fq3qHz1KAL0u5zAQmJM=
-X-Received: by 2002:a05:6402:13ca:b0:5bb:9b09:8c7e with SMTP id
- 4fb4d7f45d1cf-5c07928f58amr1133235a12.26.1724327607686; Thu, 22 Aug 2024
- 04:53:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P1/ls7Sj"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e11741a4c92so1088756276.3
+        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 05:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724328290; x=1724933090; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qaeHNeC4U+gSuIpF/blhfiveOXLPImv9FOraCwj5ang=;
+        b=P1/ls7SjkhGAP0V+EwxeGKpSvWcywjysVQY6pvs7LSCg1ZqEgd1LYGsLqBLlGU6C6f
+         p3Vr+nHasPfZwZTU8kiMLbclTLBHfMRmS4t69rIR0OnFBDpQ2BXeyD0+CR+QHsAWFwcP
+         F8IWt+u/HaxWVqo4BwJYTZY3GaytAAQ+u5ckg3MQkLvDuNSRrJ7Jh258hJmOCZf25IZx
+         tqO9qp1S+9HpRmKJEoqXpjLtREuMMx2kEZUTSukc32Haqu/ItyDJ/vHJmg8ZYGtgnqXL
+         DKOmPE82Km/X/wrx87SnODdjlnRWWcgqFpufBKIOALWCenP1Qvbu8LOr6S5KQz/wtmsA
+         bnvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724328290; x=1724933090;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qaeHNeC4U+gSuIpF/blhfiveOXLPImv9FOraCwj5ang=;
+        b=KdnN7vft+FKICbxEH3dLE0Pk/Fn+vb3CREKVAHUe2gqSS5eaZPbDn2IvvF+TjdyfF4
+         HgWFcb21EQ3wR9CR9ew3MQaI1PRxQkqxdDZVXclR7Ckq0s5sp8AQuNnNK85zviUk9JnK
+         iF1ZxiNCwUIEGF9pXYluipB58Q5R8WnQpnpCi9a4lttvadRsIz6nkaY/Uhcum9Z+ehcR
+         haBHZSU6FJ8VNa95owcSaiXzIxBV3MdrjGgYZ9ux/WvONq1+yMHQ6uZ4f5Pb22odXk6B
+         roVwhYH1ntNenPgHfS1fdjatueLQmz24YNtF4qwoQ68LOSPNWa6Patwr/42bqTg/TfTF
+         ZLBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGVyFrwJt6N4DvAPlzH/U6KD2qlqJaxiPaKUPeEMnGG5qxyQ9S6Fr5MhE1UhStCB3BMEwEYJD0BYU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YySYoeMPtqrfHNRueP7BUvX+ZZKGTheLJQYXfTnOMFsNYiLV7FY
+	RKRvgWyIk0LCcY/kTdle4JoCs57iOuF/mWs0L2wGvBiTfq2gIyDEv4jAebBugttY6iVbgmczptA
+	oEQTGPU0UM6BLgQ==
+X-Google-Smtp-Source: AGHT+IEIHScnmgqTJmuCdOdZdFrXk6gyAD2n2QTBVJYojsFAgQWMDhll0TNe5nx6xpeyVM/+JOGxXJdwv2SpyHk=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
+ (user=aliceryhl job=sendgmr) by 2002:a25:aa84:0:b0:e0b:d729:ff8d with SMTP id
+ 3f1490d57ef6-e166543c856mr14145276.5.1724328289940; Thu, 22 Aug 2024 05:04:49
+ -0700 (PDT)
+Date: Thu, 22 Aug 2024 12:04:12 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
- <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
- <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com> <87cym2hrqz.ffs@tglx>
-In-Reply-To: <87cym2hrqz.ffs@tglx>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 22 Aug 2024 19:53:12 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
-Message-ID: <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net, alexs@kernel.org, 
-	kernel@xen0n.name, jiaxun.yang@flygoat.com, gaoliang@loongson.cn, 
-	wangliupu@loongson.cn, lvjianmin@loongson.cn, yijun@loongson.cn, 
-	mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org, 
-	maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn, 
-	nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn, 
-	loongarch@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADwpx2YC/23Qy27DIBAF0F+JWNcVw8uQVf+j6oLH2EFqTYQtq
+ 1Xkfy/xpiC6vEjnMjMPsmKOuJLr5UEy7nGNaSlBv1yIv9llxiGGkgmjTFBF1bBl6/Ge4rINHBC
+ kMxTFCKSAe8Ypfp9l7x8l3+K6pfxzdu/wfP23ZoeBDkpKUGx0kwT3Nqc0f+KrT1/k2bOzygJtL
+ Ct2suhs0OC4lJ3llWXQWF6sQSEQ0TKneytqqxsriuWSB8m4NR56K/+spqyx8pzZghLCiOD7fVV t239VsZbxSVM6AWjT2bGy0N55LDYoapwB5TS09jiOX3jnaSYNAgAA
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5477; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=4wPruubT8llHHATxdqsGwe1CHDZt4aUPk/RJRbbIGjg=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmxylZCAp++W0g03p2207w/bZOFkFKkI+DjX+LP
+ TlaZhO497WJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZscpWQAKCRAEWL7uWMY5
+ Rhs+D/9wZyUjJN4r4koXI+//cd7ZcTKIuHeOxcDinqLwj7qF+USMJHsCAmLQ/cF08mTpuaios2X
+ 1rnPBggHshySYc+DfHxyw2p3+RCkwXEmx74TtThOZsAiNYQ5XQlIF/q0J7CWtLBBmi2uAT53OA7
+ 6yCfIuo1vqRBSMp66saDoRoQp7S8AL71UyvWD21+jZ/+hFy10wVML+Xu4ouG1/e/V9zK8vwTYk4
+ jKfhfjlG9EW8yVXGd+/quQopg5cSGOxvcyIpbN1amP01SLK1aMK1CKGQjuam/l3bwaaWTk5R8vo
+ xUgj4NR4iiSa0idNH82zVHgPrlNie9FYJqYnpImHcKcj4/Po5nMsJ6Xxmx6c0/t9rOCk9hJDwmh
+ IxHaI7jlU8sH90owV4Mv8AhFU+xbL9uyvsMSmK7svUMcqYCrHOjZw57RxMIV0Vsr35Tvu9CHJon
+ NO0S5ogSiOHwCFESn0RltVmLFC7gkLzgIHRReMaGOdcZ0qljSFuGXUCVPD0fsemcIiXLvF/f+Wi
+ uJTJ3zks7aA+LnhUAFsmDSe4Rws4EtUizV1kYwm6SfSORqZMqvNKVb9eksXvm3qkzAEu/lLUMA3
+ tWaCxOxms2Ns87v3MrKckIUkrNmH2BLHSjt7Ku3PctE/fIjy/d5FolEcgRM5q8PXLKASN9ceGS1 bPjj1UgxpInqEHA==
+X-Mailer: b4 0.13.0
+Message-ID: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
+Subject: [PATCH v8 0/5] Tracepoints and static branch in Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	Alice Ryhl <aliceryhl@google.com>, Carlos Llamas <cmllamas@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Aug 21, 2024 at 10:31=E2=80=AFPM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->
-> On Wed, Aug 21 2024 at 21:14, Huacai Chen wrote:
-> > On Wed, Aug 21, 2024 at 12:29=E2=80=AFAM Thomas Gleixner <tglx@linutron=
-ix.de> wrote:
-> >> This patch is doing too many things at once and is absolutely not
-> >> reviewable.
-> >>
-> >> Please split it up into the obvious bits and pieces:
-> > Splitting may cause another problem: some patches will get upstream
-> > via the arch tree and others via the irq tree. These dependencies may
-> > cause build errors in a certain tree. But anyway, we will try our best
-> > to do this.
->
-> That's not a problem at all. The trivial way to solve this is to apply
-> the architecture changes to the loongarch tree in a separate branch
-> which is based of some -rcX tag and only contains those dependencies.
-> That branch is then merged into the main loongarch branch and I can pull
-> it in to my tree for adding the irqchip changes. No conflicts, no merge
-> dependencies, nothing.
-Emm, another way is apply all patches to the irq tree with my Acked-by.
+An important part of a production ready Linux kernel driver is
+tracepoints. So to write production ready Linux kernel drivers in Rust,
+we must be able to call tracepoints from Rust code. This patch series
+adds support for calling tracepoints declared in C from Rust.
 
+This series includes a patch that adds a user of tracepoits to the
+rust_print sample. Please see that sample for details on what is needed
+to use this feature in Rust code.
 
->
-> >>       #ifdef CONFIG_IRQ_LOONGARCH_AVEC
-> >>       # define SMP_CLEAR_VECTOR         BIT(ACTION_CLEAR_VECTOR)
-> >>       #else
-> >>       # define SMP_CLEAR_VECTOR         (0)
-> >>       #endif
-> >>
-> >>       That way the compiler will optimize out stuff like the
-> >>       SMP_CLEAR_VECTOR handling and you only need the prototype of
-> >>       complete_irq_moving(), but no implementation.
-> > These macros are not in hot-path, and we have already tried our best
-> > to avoid using #ifdefs for cpu_has_xxx, so I suggest not introduce a
-> > new Kconfig option. Moreover, the new option should always be selected
-> > due to the deep coupling among loongson's irqchips, which makes the
-> > #ifdefs useless.
->
-> They are removed in step 8 again. It's for having a sanely split up and
-> structured patch series instead of one big lump.
-I see, but I'm trying another splitting way to avoid
-adding-and-then-removing, of course it should also make reviews easy.
+This is intended for use in the Rust Binder driver, which was originally
+sent as an RFC [1]. The RFC did not include tracepoint support, but you
+can see how it will be used in Rust Binder at [2]. The author has
+verified that the tracepoint support works on Android devices.
 
->
-> >> > +static void clear_free_vector(struct irq_data *irqd)
-> >> > +{
-> >> > +     struct avecintc_data *adata =3D irq_data_get_irq_chip_data(irq=
-d);
-> >> > +     bool managed =3D irqd_affinity_is_managed(irqd);
-> >>
-> >> Don't even try. Your managed support is broken at the allocation side
-> >> and at several other places.
-> > I'm a bit confused here, irq_create_affinity_masks() marks some
-> > interrupts "managed". So if we completely ignore "managed" here, then
-> > can irq_create_affinity_masks() still work? Or the two has nothing to
-> > do with each other?
->
-> Managed interrupts have the property that the core and irqchip code
-> guarantees the interrupts to be affinable to the CPU masks which are
-> handed in to the allocator for them.
->
-> So the requirement for architectures which have a limited number of
-> vectors per CPU (x86, loongarch) is that you have to reserve the managed
-> vectors right at allocation time.
->
-> x86_vector_alloc_irqs()
->     assign_irq_vector_policy()
->         if (managed)
->             reserve_managed_vector()
->                irq_matrix_reserve_managed(mask)
->
-> irq_matrix_reserve_managed() then reserves a vector on all CPUs which
-> are in the affinity mask.
->
-> On activation:
->
-> x86_vector_activate()
->    if (managed)
->       activate_managed()
->         assign_managed_vector(mask)
->            irq_matrix_alloc_managed(mask)
->
-> irq_matrix_alloc_managed() then picks an unassigned vector out of the
-> managed vector space. Similar mechanism when the affinity is set.
->
-> Why is this important for x86 (and loongarch)?
->
-> Because both have a limited vector space of 256 vectors per CPU, where
-> some of the vectors might be reserved for exceptions and OS purposes or
-> the legacy space.
->
-> The managed mechanism guarantees at allocation time that the interrupt
-> will have a reserved vector on all CPUs in the mask. That ensures that
-> on CPU hotplug the interrupt can be migrated over to a still online CPU
-> in the mask. If the last CPU goes offline the interrupt is shut down.
->
-> You might not yet have run into the situation of vector exhaustion, but
-> once your number of CPUs gets big enough that is guaranteed to happen.
->
-> That's why x86 also uses the concept of reserved (not guaranteed)
-> regular vectors for non-managed interrupts. x86 uses the spurious vector
-> for that. That's important because there are enough device drivers out
-> there which allocate a gazillion of interrupts at probe time, but only
-> request a few of them.
->
-> If you allocate all vectors for them right upfront, then you exhaust
-> your vector space quickly for no reason. Only when the interrupt is
-> requested then a usable vector is allocated - or the allocation fails
-> and request_irq() fails. That's better than exhausting the vector space
-> for nothing.
->
-> The complexity of the x86 allocation/activate/set_affinity mechanisms
-> is there for a reason and not just because we did not have anything
-> better to do. :)
-Frankly, I haven't absorbed everything here, but I think I can try to
-answer my question "can irq_create_affinity_masks() still work".
+This implementation implements support for static keys in Rust so that
+the actual static branch happens in the Rust object file. However, the
+__DO_TRACE body remains in C code. See v1 for an implementation where
+__DO_TRACE is also implemented in Rust.
 
-irq_create_affinity_masks() can still mark interrupts "managed" if
-avecintc driver doesn't support "managed", but it cannot guarantee
-that set_affinity can always succeed. If the destination cpu has a
-free vector, then set_affinity succeeds, otherwise it will fail. But
-if avecintc driver supports "managed", set_affinity can always
-succeed, because the destination cpu has already reserved a vector for
-this. Am I right?
+When compiling for x86, this patchset has a dependency on [3] as we need
+objtool to convert jmp instructions to nop instructions. This patchset
+is based on top of the series containing [3].
 
-Huacai
+There is also a conflict with splitting up the C helpers [4]. I've
+included an alternate version of the first patch that shows how to
+resolve the conflict. When using the alternate version of the first
+patch, this series applies cleanly on top of rust-next.
 
->
-> Thanks,
->
->         tglx
+Both [3] and [4] are already in rust-next.
+
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Link: https://r.android.com/3119993 [2]
+Link: https://lore.kernel.org/all/20240725183325.122827-7-ojeda@kernel.org/ [3]
+Link: https://lore.kernel.org/all/20240815103016.2771842-1-nmi@metaspace.dk/ [4]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v8:
+- Use OBJTREE instead of SRCTREE for temporary asm file.
+- Adjust comments on `asm!` wrapper to be less confusing.
+- Include resolution of conflict with helpers splitting.
+- Link to v7: https://lore.kernel.org/r/20240816-tracepoint-v7-0-d609b916b819@google.com
+
+Changes in v7:
+- Fix spurious file included in first patch.
+- Fix issue with riscv asm.
+- Fix tags on fourth patch to match fifth patch.
+- Add Reviewed-by/Acked-by tags where appropriate.
+- Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
+
+Changes in v6:
+- Add support for !CONFIG_JUMP_LABEL.
+- Add tracepoint to rust_print sample.
+- Deduplicate inline asm.
+- Require unsafe inside `declare_trace!`.
+- Fix bug on x86 due to use of intel syntax.
+- Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
+
+Changes in v5:
+- Update first patch regarding inline asm duplication.
+- Add __rust_do_trace helper to support conditions.
+- Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
+- Get rid of glob-import in tracepoint macro.
+- Address safety requirements on tracepoints in docs.
+- Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
+
+Changes in v4:
+- Move arch-specific code into rust/kernel/arch.
+- Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
+- Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
+
+Changes in v3:
+- Support for Rust static_key on loongarch64 and riscv64.
+- Avoid failing compilation on architectures that are missing Rust
+  static_key support when the archtectures does not actually use it.
+- Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
+
+Changes in v2:
+- Call into C code for __DO_TRACE.
+- Drop static_call patch, as it is no longer needed.
+- Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
+
+---
+Alice Ryhl (5):
+      rust: add generic static_key_false
+      rust: add tracepoint support
+      rust: samples: add tracepoint to Rust sample
+      jump_label: adjust inline asm to be consistent
+      rust: add arch_static_branch
+
+ MAINTAINERS                             |  1 +
+ arch/arm/include/asm/jump_label.h       | 14 +++--
+ arch/arm64/include/asm/jump_label.h     | 20 +++++---
+ arch/loongarch/include/asm/jump_label.h | 16 +++---
+ arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
+ arch/x86/include/asm/jump_label.h       | 38 ++++++--------
+ include/linux/tracepoint.h              | 22 +++++++-
+ include/trace/define_trace.h            | 12 +++++
+ include/trace/events/rust_sample.h      | 31 +++++++++++
+ rust/Makefile                           |  5 +-
+ rust/bindings/bindings_helper.h         |  3 ++
+ rust/helpers.c                          |  9 ++++
+ rust/kernel/.gitignore                  |  3 ++
+ rust/kernel/arch_static_branch_asm.rs.S |  7 +++
+ rust/kernel/jump_label.rs               | 91 +++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs                      | 37 ++++++++++++++
+ rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
+ samples/rust/Makefile                   |  3 +-
+ samples/rust/rust_print.rs              | 18 +++++++
+ samples/rust/rust_print_events.c        |  8 +++
+ scripts/Makefile.build                  |  9 +++-
+ 21 files changed, 379 insertions(+), 67 deletions(-)
+---
+base-commit: 88359b25b950670432ef1da4352eb6cc62e0fa9f
+change-id: 20240606-tracepoint-31e15b90e471
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
