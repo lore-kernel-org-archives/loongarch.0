@@ -1,168 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894E5181334
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 09:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D77016DEDF
+	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 09:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724318278; cv=none; b=O4uR36ztftzY84kWVNrahp4LAjUKHdDtzgPtGNImRM1JPZj/569IJWj4NSWUjGgj+YX+JErHuQ5UXcFq+ZPA1Q/bq3//9uqwhYYaDwAXeEfjnKYsJ6moMy0zxnRIh+dRZm2ecPyg9neUAddhrqsPbQR95WPA+j2sIotBSymKNH8=
+	t=1724319187; cv=none; b=gxRY3E+Cwbl3zlXpTlgCD0afyH6DSdCgaxm2piGOkXEdAPh+GdzlQaHVYbkvUtDS7/yPrQQRsM3PfdsIBhYyFzJjuAAK9bOeuQt9hWzh8a7TDVDrJkhKHUjW0T0THUdRtax3hOBWooi9VIpqcTHk+XRPVWo2MG6feOb2jZO9Ov4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724318278; c=relaxed/simple;
-	bh=M6DBVSoi1Ub3YvsLPKPI+Wu54c/MStvP44GPQEeuXl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qM2HeVt4KN+3GQ+K71ePlE18zyrAhqDcwrAXKvrxqyhT4oQdg8O/KUFshcToBQ+ejfi/IjWyLFjPmhilQa77qYlIw+tH+FS4qRWYaaAlWVYszagWCrNAVm7oaOJ8ogNimGOXnT0vCgkVjMKvlbijFFRsumCo24FlU4nBweCRnuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0hGY2b4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724319187; c=relaxed/simple;
+	bh=RDA0O88viAbVGJmVXrLsouv7DnSUUgl3x41JaEOsalk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KmI1tgB5+6o3plgX27Ga7m2wMi7aEsBD5eel/Wftz2p+HeXpvF3FEsEMNV5miOPESGxucCkjlMDfIer++9OidOA4kzd+eLPK+0O/UsRMXQ36grbeUy2gVqVlH8mN1Kp48pZ3bmvhY8NJrVn/Dd59S3/EH7MCSi6JfJ84EmpfcBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlQ4RFet; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0hGY2b4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724318275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TQYE68vcEgjS0sSHwEvda+5305YgNqXrXPbN5IkBuaU=;
-	b=g0hGY2b4TQCMhnKAYsjNWAPZcewc3OwOGLyV5f0tHw8zViUY8ek364zjiPaHNZy6QSrcpg
-	vHTsr1Ty4RtVU64Lyrap6sUOoqHpt0HMJW30ULi6gITicbWesZICciH0gzJkeJZXqKCTjp
-	fYleKCJZE5hhlHHNrvs44ax579xgUA4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-L0turdIFM4OQX6QvsCLAsw-1; Thu,
- 22 Aug 2024 05:17:49 -0400
-X-MC-Unique: L0turdIFM4OQX6QvsCLAsw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3C3B1955EB3;
-	Thu, 22 Aug 2024 09:17:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A174E1956053;
-	Thu, 22 Aug 2024 09:17:41 +0000 (UTC)
-Date: Thu, 22 Aug 2024 17:17:36 +0800
-From: Baoquan He <bhe@redhat.com>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>,
-	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-	debian-powerpc@lists.debian.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
-	viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
- items
-Message-ID: <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-6-bhe@redhat.com>
- <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlQ4RFet"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76FFC4AF0C
+	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 09:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724319186;
+	bh=RDA0O88viAbVGJmVXrLsouv7DnSUUgl3x41JaEOsalk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dlQ4RFeteOaeMFsacIEHzB6Nu+jnWyKfh507rmQenOOdSvPt//oyc7iiXjbDM36rK
+	 0Z85haW5BpaF+IlemhDQuAbJn88GP6gSzQDSMW+tYg4IIi+GVyBtCU5YFpQNj2hfPV
+	 wnsVU1XK4fEoXmPRDLP+jdP0IlYN4iLDHxYeQdoOQjg7oIA5KR5A2Bz5ISaTjvGCBA
+	 Ow56dO9R5Vuwcjc1lkYSyp2CYCRY2NWyPu72I0O1UuIyn29Q+SR10WsBPPT/TUG31z
+	 Zc9Zi5Lqzyx7pGRdNiP/m6SaidYWqCnYo3x8g+/wY4NbXleuV7W0Qhg03S4iaQ1v4l
+	 vuE3gVJWeul/Q==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f3f07ac2dcso5829401fa.2
+        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 02:33:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUL07DNsf9dNyatwSvP/KyXJkyyTgC+xPE0IfdWHdoFN1SLuNOmmpoJxCp11n0F8zyLlDMrmdqd9rQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyq5As00UkuforsxRkJODbIN3M3Fp7jEki/93nYd3DXW6ij1LP1
+	xMjWKnlG2mNgCOicMPB7ylwRDbWSHRoxv1V1TxJ3aGCayHkJvwonq/J811WJlx/l0RdaUWyzGXW
+	SUscEVEWeTE2m27IKpSrcw0tY5+A=
+X-Google-Smtp-Source: AGHT+IFdvVqadzXIUUC9/448SeOWoOZR70NaSYnTz+bRgYV3uJMinhk7Emj9fn/bdVGyQylDtgHjVxKUJGh1ErjOy7M=
+X-Received: by 2002:a2e:b8c6:0:b0:2f1:929b:af03 with SMTP id
+ 38308e7fff4ca-2f405eeddecmr8925601fa.30.1724319185063; Thu, 22 Aug 2024
+ 02:33:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
+In-Reply-To: <20240821-loongarch_archnuma-v1-0-f47b191beee8@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 22 Aug 2024 17:32:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H68HR+GGyez330=b-AiUgbHhfjrEwY0aezq+-NraJvBGw@mail.gmail.com>
+Message-ID: <CAAhV-H68HR+GGyez330=b-AiUgbHhfjrEwY0aezq+-NraJvBGw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] LoongArch: Migrate arch_numa
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/22/24 at 09:33am, John Paul Adrian Glaubitz wrote:
-> Hi Baoquan,
-> 
-> On Wed, 2024-01-24 at 13:12 +0800, Baoquan He wrote:
-> > By splitting CRASH_RESERVE and VMCORE_INFO out from CRASH_CORE, cleaning
-> > up the dependency of FA_DMUMP on CRASH_DUMP, and moving crash codes from
-> > kexec_core.c to crash_core.c, now we can rearrange CRASH_DUMP to
-> > depend on KEXEC_CORE, and make CRASH_DUMP select CRASH_RESERVE and
-> > VMCORE_INFO.
-> > 
-> > KEXEC_CORE won't select CRASH_RESERVE and VMCORE_INFO any more because
-> > KEXEC_CORE enables codes which allocate control pages, copy
-> > kexec/kdump segments, and prepare for switching. These codes are shared
-> > by both kexec reboot and crash dumping.
-> > 
-> > Doing this makes codes and the corresponding config items more
-> > logical (the right item depends on or is selected by the left item).
-> > 
-> > PROC_KCORE -----------> VMCORE_INFO
-> > 
-> >            |----------> VMCORE_INFO
-> > FA_DUMP----|
-> >            |----------> CRASH_RESERVE
-> > 
-> >                                                 ---->VMCORE_INFO
-> >                                                /
-> >                                                |---->CRASH_RESERVE
-> > KEXEC      --|                                /|
-> >              |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
-> > KEXEC_FILE --|                               \ |
-> >                                                \---->CRASH_HOTPLUG
-> > 
-> > KEXEC      --|
-> >              |--> KEXEC_CORE--> kexec reboot
-> > KEXEC_FILE --|
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  kernel/Kconfig.kexec | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> > index 8faf27043432..6c34e63c88ff 100644
-> > --- a/kernel/Kconfig.kexec
-> > +++ b/kernel/Kconfig.kexec
-> > @@ -9,8 +9,6 @@ config VMCORE_INFO
-> >  	bool
-> >  
-> >  config KEXEC_CORE
-> > -	select VMCORE_INFO
-> > -	select CRASH_RESERVE
-> >  	bool
-> >  
-> >  config KEXEC_ELF
-> > @@ -99,8 +97,11 @@ config KEXEC_JUMP
-> >  
-> >  config CRASH_DUMP
-> >  	bool "kernel crash dumps"
-> > +	default y
-> >  	depends on ARCH_SUPPORTS_CRASH_DUMP
-> > -	select KEXEC_CORE
-> > +	depends on KEXEC_CORE
-> > +	select VMCORE_INFO
-> > +	select CRASH_RESERVE
-> >  	help
-> >  	  Generate crash dump after being started by kexec.
-> >  	  This should be normally only set in special crash dump kernels
-> 
-> The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
-> on 32-bit Power Macintosh systems which fail after GRUB with:
-> 
-> 	"Error: You can't boot a kdump kernel from OF!"
-> 
-> We may have to turn this off for 32-bit Power Macintosh systems.
-> 
-> See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+Hi, Jianmin,
 
-If so, fix need be made.
+On Wed, Aug 21, 2024 at 9:12=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+> Hi folks,
+>
+> This series migrated LoongArch NUMA implementation to common arch_numa
+> logic to enable devicetree based numa.
+>
+> Only tested against QEMU emulated NUMA system.
+>
+> Please review.
+What's your opinion? From my point of view, there are lots of corner
+cases for real machines. :)
 
-We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
-post a patch? I don't know how to identify 32-bit Power Macintosh.
+Huacai
 
-arch/powerpc/Kconfig:
-===
-config ARCH_SUPPORTS_CRASH_DUMP
-        def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
-        
-config ARCH_SELECTS_CRASH_DUMP
-        def_bool y
-        depends on CRASH_DUMP
-        select RELOCATABLE if PPC64 || 44x || PPC_85xx
-......
-config PHYSICAL_START
-        hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
-        default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
-        default "0x00000000"
-
+>
+> Thanks
+> - Jiaxun
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> Jiaxun Yang (3):
+>       LoongArch: Move pcibus_to_node to pci.h
+>       LoongArch: ACPI: Introduce get_cpu_for_acpi_id
+>       LoongArch: Convert to arch_numa
+>
+>  arch/loongarch/Kconfig                |  10 +-
+>  arch/loongarch/include/asm/acpi.h     |  12 +
+>  arch/loongarch/include/asm/bootinfo.h |   1 -
+>  arch/loongarch/include/asm/numa.h     |  50 +----
+>  arch/loongarch/include/asm/pci.h      |  12 +
+>  arch/loongarch/include/asm/topology.h |  18 --
+>  arch/loongarch/kernel/Makefile        |   2 -
+>  arch/loongarch/kernel/acpi.c          |  91 ++------
+>  arch/loongarch/kernel/numa.c          | 400 ----------------------------=
+------
+>  arch/loongarch/kernel/setup.c         |  19 +-
+>  arch/loongarch/kernel/smp.c           |  43 +---
+>  arch/loongarch/mm/init.c              |  12 +-
+>  12 files changed, 77 insertions(+), 593 deletions(-)
+> ---
+> base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
+> change-id: 20240820-loongarch_archnuma-64fab779176e
+>
+> Best regards,
+> --
+> Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
+>
