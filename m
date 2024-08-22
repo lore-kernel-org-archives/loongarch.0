@@ -1,61 +1,62 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A991CFEBD
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 17:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3C91D0494
+	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 17:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348620; cv=none; b=D+t2DWdHvziI8NyBIAeNA8QZIdOgoHTtScLRqTMxeomclz/S5KhTjsWcWCe8Iaqq1QgX81pRoju7pUqVxzBqBD3UXj7PgzeaXE8jHGToCNycsR6ftUGuB+Rp21PP/yMEi8S4fa1YRgb7TaWNN+ECt/LZRbxrmCr0vj6xzLtRkJE=
+	t=1724348623; cv=none; b=a+ObvT058YUK0alW1KAdM1I34Dsm416LgX9UsnTWk+oVQsOVxQR1l6WP36I+1BE19QGye2kLtwuJPlSGh7igojDpQxxF/HlejXw/NkwUTLarykg2B7cWElqK9uHxZSwKnTH+8usCJqozxtSXZwTxgFfeyv4ZFrF7Xxlnq3IPcb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348620; c=relaxed/simple;
-	bh=BD75Xt3LZKpr2Q5IcAd6LQbXDWkdD5S9pnl1NWkD0aY=;
+	s=arc-20240116; t=1724348623; c=relaxed/simple;
+	bh=RtVPfBukDdiWXFe+rES/vpRLMHkhNnaCFx7uCSJVdVE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V0Jz/3dkU3RcB5BIXjbcnKx3PoZFfEae31/iBqM/EvTiYurDvC+Ej/xgZJU/GcLRUK7UBkzsW/RtrQpRjblGxDhNaoUL2c57NojmnAk4vcImUF7IZvX4lgKeJ/axER0OAs2bV7doVj2OicFX34XCk8wb1NG0ASNKeu/WZ5YuOqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZiQ2z4p; arc=none smtp.client-ip=209.85.214.194
+	 In-Reply-To:To:Cc; b=oPqwQTzfoismQaYi6Je0WuJMsnnyIDD9CPgu2TtlqhB5EDxe5myNm20utfWojWA1QwED4CZ9T0AShesXaWd426ydjhQVnbnN43bCda001VTarPX0WR8BvH5ObwrMIP8HcFQVjiSOJ/KlgBla9NUezoecd+HDY/I3wgRkaFsKZhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DlRSZrdg; arc=none smtp.client-ip=209.85.215.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZiQ2z4p"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2025031eb60so9382045ad.3
-        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 10:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlRSZrdg"
+Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-7c3e1081804so729853a12.3
+        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 10:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724348619; x=1724953419; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1724348622; x=1724953422; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=naTDf2Yfagd090z1pfb9ctw1MuISnW6ZHr9QkxmSD9w=;
-        b=VZiQ2z4pvPRzkQEew9Jw1dWpkawUWVhhwbrJ0zcU6SIjIdW7xcdJgYooPxXx5P2Smx
-         eF6WU1BvuOvFrjUr8BXx24knUJD5EmRf53KNKurMqtx4HvduixWXIXDeznigqa6Ko6BE
-         HgFpzD38cxZxONFuimXyBx/eCH8wVJbJVYclcdirvyRvopEzSgF5OorvKkZmMXeB0AQ5
-         K2sg4r8TKxS6XAZZljhcSSEvTDKbGXxE3IfBgJAPfakaI/e3ZmcvoWDusoF+B0waio6B
-         +najZezL6kvBx76dcbqNjTBhF73D4mDT9Nr6xLVjMyaGeMVh6IUU/XB568Us90NphiC/
-         gTKw==
+        bh=7sOOkFBlhh23O4ezy3O2VeMYO9nyKzVNPflyo9LvKHU=;
+        b=DlRSZrdgOP6bvulkLZN5AQXX2n09Zvox0esVQALOPYkqSS2iUpGRgJya2tz4kTP61a
+         f1i/H5GzxRFz87tv/J4XlCSFMUxi6K9SXUPFtSLGpKpa1991i9oazsrElvNxQztTkPKH
+         l+ZCAptiqzkyLAhjdNXl4D9qEemBcxkIE4e23SCzopPq1sjHUIknNGKGuLYX/nQlv1VW
+         r9jjA5m9eyfVr6LUF4pEVuOrfokTuaOLOd0O/9KSRimjex4Nr280nt4ctl6PVq+FfYGl
+         dsa/5Xfqiqjor2BY8tRYfVxSWDdHpZwYP9OySy5olt8rrhJxoWeWTCPY/dMKgwXe79Wm
+         T5Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724348619; x=1724953419;
+        d=1e100.net; s=20230601; t=1724348622; x=1724953422;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=naTDf2Yfagd090z1pfb9ctw1MuISnW6ZHr9QkxmSD9w=;
-        b=tldRGxMBMk9DXa7k7AoRSURoRheq6/9dRRvzgDk8gRy6M+YQ1ESWC+lOFjZKi1vcSX
-         jbkKS6gouv+VeDRdvQBGnDyWPXDP/P2c23BHO06a2zv3FgqTU6TtZGiiOqPzyjo5zXFM
-         ksM/rbn7f5M0LCI8n9nBb76G4hw+psVkjISriHksjstz3M0JkpYwmNl50r0Q9f5h2uXf
-         ZrmQ3iU6Clj7SxdaWehDzquZWP28IYu1ErKO/OsNL+HApWdVMI1IHlb4ecWqgoffHOHE
-         ofGOGmJW3cWcxoqP8n6DobMkrNn3tVo475zehioGdenWA4gfJ/FcSSv1lXdrBCgbdduS
-         ClOA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3mkYWpX+VFa1GoUqaJd0A/Q4WzWSFy18K8U3mzQh1zcoY5q4IJxJ23kRxdxcKWOql/sRk8uAEPVo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvAoBX1XGb01cetljH6VNcD+TfG9RDHAMWpr6hG0HSVupH9Drk
-	wePObU2ePN1cXyzcaQLjYGKUtV5iefOV2m5e793HD+StWEtMauBD
-X-Google-Smtp-Source: AGHT+IE8Wv2mi92FmXr0EVETbptIN+dts38PH1ZrQUIYcAnqCM0iFwVebSqZvsivRqmBz2JSK5Lz5A==
-X-Received: by 2002:a17:902:c408:b0:1fc:3600:5cd7 with SMTP id d9443c01a7336-20367af0b9amr84139415ad.10.1724348618612;
-        Thu, 22 Aug 2024 10:43:38 -0700 (PDT)
+        bh=7sOOkFBlhh23O4ezy3O2VeMYO9nyKzVNPflyo9LvKHU=;
+        b=puhJy5i8tiPZFvxbCv4fUZhSlCY0a5Y38Q5Eg2mtauxEtvq8zznhELNnREzq6oPJOP
+         ryThDZcI+6IjZ+HkzqNW8YgKc1JlM0DzaHz15xx85BaoXyRsMnoyoKz+HJ97l77q+cVQ
+         6CixLvfx1I9ld0Rfw2obyYuygGlTWJ5Rch0APa6kSzxKyBQFXWWchHYv5wPDyB8cLn75
+         mtddFMk5A9dMw3Gjk/kuFpiOfI/rS4UbJ1aKkeGVhSzZUYktILr0LRsvnTP3J7ASx45g
+         VqnimZim+3OwCBlEF30DEThL/Oq0wsa/zjfBL+iBdrFWQdOIumsSsUEwXlVQTtt104WU
+         s8XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMb+ISrasO3VNWtOtIlqAelk1ZXtP2xa/BIvdaNDGc4kceezNron55e5CLJzPH1hJVCW7/eoaOr6s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNR3dXBEhxD8t0sSpLRRXR18A9mzrVS8us2v1dqScLlNnO8vYn
+	1D0JlNPl0qz3aNyQLwJZcJAypI1T8y9vtssDwKgDZvNBv8IlO/AQ
+X-Google-Smtp-Source: AGHT+IFVKAnltALjlFsjogL3o8zeO/3bEDh5Wkul+T/Aa6h0si5BxRHsYJSRp8SKq/v4VG7qkbpDqg==
+X-Received: by 2002:a17:90b:3881:b0:2c9:7d09:1e7b with SMTP id 98e67ed59e1d1-2d5e9db8804mr7441404a91.27.1724348621520;
+        Thu, 22 Aug 2024 10:43:41 -0700 (PDT)
 Received: from localhost ([103.156.242.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-203855664a7sm15365755ad.15.2024.08.22.10.43.37
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d613941e6esm2174700a91.26.2024.08.22.10.43.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 10:43:38 -0700 (PDT)
+        Thu, 22 Aug 2024 10:43:41 -0700 (PDT)
 From: Celeste Liu <coelacanthushex@gmail.com>
 X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-Date: Fri, 23 Aug 2024 01:43:27 +0800
-Subject: [PATCH v2 2/4] loongarch: defconfig: drop RT_GROUP_SCHED=y
+Date: Fri, 23 Aug 2024 01:43:28 +0800
+Subject: [PATCH v2 3/4] sh: defconfig: drop RT_GROUP_SCHED=y from
+ sdk7786/urquell
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,7 +65,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240823-fix-riscv-rt_group_sched-v2-2-e4dbae24f7e1@gmail.com>
+Message-Id: <20240823-fix-riscv-rt_group_sched-v2-3-e4dbae24f7e1@gmail.com>
 References: <20240823-fix-riscv-rt_group_sched-v2-0-e4dbae24f7e1@gmail.com>
 In-Reply-To: <20240823-fix-riscv-rt_group_sched-v2-0-e4dbae24f7e1@gmail.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -84,16 +85,15 @@ Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Xi Ruoyao <xry111@xry111.site>, 
- Celeste Liu <CoelacanthusHex@gmail.com>
+ linux-tegra@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1676;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2031;
  i=CoelacanthusHex@gmail.com; h=from:subject:message-id;
- bh=BD75Xt3LZKpr2Q5IcAd6LQbXDWkdD5S9pnl1NWkD0aY=;
- b=owJ4nJvAy8zAJfY4pvNJRPo6U8bTakkMaccrDq7cWv9HKpm1gp9XuSSxq8t74rLzH8Iuc9/9Z
- V6+kdfkhV1HKQuDGBeDrJgii9jOp6+XlT76sIzXZAbMHFYmkCEMXJwCMBH5fob/mZs/PD5ma8Hx
- 8F7zO+Gcfce/RpUvkP7W1qScI/C0aYLCVYb/pR2XVnbPdNm4oDwvfcO+zZx8fjqb7h2UvJJdVsM
- b5lHKCADITk6N
+ bh=RtVPfBukDdiWXFe+rES/vpRLMHkhNnaCFx7uCSJVdVE=;
+ b=owJ4nJvAy8zAJfY4pvNJRPo6U8bTakkMaccrDrHXhbvqv0j2K04OUp6r9c3yjL7wmfkK3ed0L
+ wiLJwVfOdVRysIgxsUgK6bIIrbz6etlpY8+LOM1mQEzh5UJZAgDF6cATIR5CcP/uAsdETX3d4jM
+ P1D0MeoGY0/w5qWbQibevqlWcn6F0szobQx/ZR6s/XP6xDnB6RkyIt+j14R9+7s1gD9Tsy1IxPC
+ t2qsvjAD/Nk5/
 X-Developer-Key: i=CoelacanthusHex@gmail.com; a=openpgp;
  fpr=892EBC7DC392DFF9C9C03F1D15F4180E73787863
 
@@ -115,24 +115,36 @@ support it.[2]
 [1]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
 [2]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
 
-Reviewed-by: Xi Ruoyao <xry111@xry111.site>
 Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
 ---
- arch/loongarch/configs/loongson3_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+ arch/sh/configs/sdk7786_defconfig | 1 -
+ arch/sh/configs/urquell_defconfig | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index b4252c357c8e..4d93adb3f1a2 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -23,7 +23,6 @@ CONFIG_NUMA_BALANCING=y
- CONFIG_MEMCG=y
- CONFIG_BLK_CGROUP=y
- CONFIG_CFS_BANDWIDTH=y
+diff --git a/arch/sh/configs/sdk7786_defconfig b/arch/sh/configs/sdk7786_defconfig
+index 7b427c17fbfe..3599b1683593 100644
+--- a/arch/sh/configs/sdk7786_defconfig
++++ b/arch/sh/configs/sdk7786_defconfig
+@@ -17,7 +17,6 @@ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_MEMCG=y
+ CONFIG_CGROUP_SCHED=y
 -CONFIG_RT_GROUP_SCHED=y
- CONFIG_CGROUP_PIDS=y
- CONFIG_CGROUP_RDMA=y
- CONFIG_CGROUP_FREEZER=y
+ CONFIG_BLK_CGROUP=y
+ CONFIG_RELAY=y
+ CONFIG_NAMESPACES=y
+diff --git a/arch/sh/configs/urquell_defconfig b/arch/sh/configs/urquell_defconfig
+index 00ef62133b04..9cf4a719001e 100644
+--- a/arch/sh/configs/urquell_defconfig
++++ b/arch/sh/configs/urquell_defconfig
+@@ -15,7 +15,6 @@ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_MEMCG=y
+ CONFIG_CGROUP_SCHED=y
+-CONFIG_RT_GROUP_SCHED=y
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_PROFILING=y
+ CONFIG_MODULES=y
 
 -- 
 2.46.0
