@@ -1,172 +1,137 @@
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5D61D04B2
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 17:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66D816DEB1
+	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 20:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348625; cv=none; b=ZvUg+E/+zj2+B27s0Sycn1lDItT69LEwVQig3BVwgk9uxSsa5mccYkbunl2D9c+77tFOMl/OS96Cr8Rt4Tvt3WVVwX17dP0Et2iX1qvgon6h5ejm16NeW+Jjygrc+z1mEDY94+NzaGMJMcMlNSDUKTOIXiHQlU7JA88Eb4newo4=
+	t=1724359938; cv=none; b=tTCedamDz57bE3wRE+PaXQ/lU0eXEhTf1Fwwo/v/pr6WSapGkeE0xL4+Nb0oYJsROb/a6E/wgf1l3cSpXhIwt5XupR0cGimumehrRxCG5Vwj1MqR9OB2r1rYw2UJzKq0juuOZBe83rdiGGoL3Dk/7ekF8CgtXkQSrnALW7X+540=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348625; c=relaxed/simple;
-	bh=NFJyZNClpVUHx0Z3NXNiq6kpWDX+CueV3L4clx5uBrg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D6V1ibN1t3kWRO0O7oBVMJakrPbH/LrigBqUjQK2oHLaIR1uQwYFaUCefuUwV1UUeCG4fIlKBJaNa5F8o1tF3aUeWGzhCEClSPhwnc3xce4+mOaAMD9p+1akOQp4RYptkpiceVD2GaqwvAsqgbtmJTqwPNKQqoOMJ/3UPgzj8Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CcFNVdGk; arc=none smtp.client-ip=209.85.210.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724359938; c=relaxed/simple;
+	bh=2x3OHdXqC2nN68R6PsfrH7HZf8vLL3DwjDZ/e8OcwPI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Dn+wXH6EjVUKKI1lU3KAgBw29s/GGeaCASUD7zJQpexSoAQ3iLjB3RLoTx9M+Hjd5tV7vQjTwDVleimJnkqqIzisTgq7DJbBJeL2nDJkw9pb194JGfmt6+eDRX29KEuv/bEE8/42fUXsiy4jwPEatK0PALzg9JDnU/2Rh24a2IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xSU3+fxt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfdDAwWD; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CcFNVdGk"
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7141b04e7b5so726463b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 10:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724348624; x=1724953424; darn=lists.linux.dev;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=flQt4FT94ocjxfYVsDsgAIXjhRxl01ohtqmqMtZp6jc=;
-        b=CcFNVdGkikLVxPsrL+t2ecRwxziZCA5oZF7l4fWLiUIZjwwopC2rLWhbaIemPt/zgo
-         2e9OW5wkoumS470L5D3MHkxWTqZYzk2X7Pn/KTl2HTeIjmwodjw6wnxVUG6nddwVM9sT
-         ef/231BDsTia0b+rjCvt21h0UDJRaEFh6CUER80tIHfXeF0hfrtmSSTJdvMS8JxmqsR7
-         LRuZ3Wbw+f8MEpEIJGvVMmKGl5njCiBLSYZzBHlZdz5cz7uLvFHlwzLzd4yoPmaIY2TJ
-         /t4SJx+kPxQhim0oPUs4ZK0pQQF6r2dPhIh8vQsm0abjbRL4M6wq7dCa38bjz/MigP/I
-         SHrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724348624; x=1724953424;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=flQt4FT94ocjxfYVsDsgAIXjhRxl01ohtqmqMtZp6jc=;
-        b=YPLDp1Wu5YGgUjf2jEAyFUqcwfyLP4Q0np3p5Dyp5T30v8qxLjijOuvEmJ3C1NfjtM
-         l+4nd/dIMe9Ubo/Pm2gS83DX4gGcuYCtRFA37E3saj37RzhM4VBG/UZao5Js/WFacrwf
-         yOZLe87fjXG3QEKbtYNl04rc4aexBUgEkt9yOGKE9cjgYSSc/JqXwUcRXySkawNmfKJQ
-         PMvWPzwhRfNPhqOzjII0OMHLbV/z7IFJ/6/cqeCuxeY0mzml2Zp1Mtb0mNiTryI9cx63
-         dtch4h254HR3TjB1AiWVTwi1SiPU22W7ijsDIIYEquBCuE5Sh9gSCLf2hkRpjgFyZFoq
-         pr9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKa2I1RQsJ3PjF6WSbAZmKfZyJ/Zg5B4zmjP89KjkV/axPcaPnxLj9kvQ5dHGSvqa50ueUkmuu3b0=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz6FCS6+eZNTaC0bv1qyi6PMhdZqZI9/dalgWGQdUmOpCeCefwG
-	z592u4iGwQRh7SWlkuS2Ytb+nJ5qVkhkLLLLNMvmWqOJdTx1SjhM
-X-Google-Smtp-Source: AGHT+IFGkELVvNa0lI1frVFe6EWSijWeT2NndQtVRkhY3tXIvi6/Nr7KdOgUntuymQnVsLZZV1NHsQ==
-X-Received: by 2002:a05:6a20:cfa4:b0:1c4:9c27:77a5 with SMTP id adf61e73a8af0-1cad7fb3fd0mr7479354637.31.1724348623824;
-        Thu, 22 Aug 2024 10:43:43 -0700 (PDT)
-Received: from localhost ([103.156.242.194])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71434af17ebsm1583180b3a.3.2024.08.22.10.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 10:43:43 -0700 (PDT)
-From: Celeste Liu <coelacanthushex@gmail.com>
-X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-Date: Fri, 23 Aug 2024 01:43:29 +0800
-Subject: [PATCH v2 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2835/tegra/omap2plus
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xSU3+fxt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfdDAwWD"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1724359934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LwRahi9Tt5Gcpo+n8KvB8bABTwMi1Q1kuJQ9Biekl6A=;
+	b=xSU3+fxtjjSwe8kudeyVPEiovj2q5IGkfReXjg9445u3ij5IKsu8+xHlcnClHw1XCnNHit
+	pxIBDJj1sI0dphETij+17EKZNJIAMzijqrJgnGlK4pu3auNV+qEWnpa4zlfb4uLjxmIshV
+	UGo5Ks9BQMg8C+l7pr6B4+mgoaC8TjdE6QmOWfMIxWPUeuDPUSaFi0vT2RKS7XEPjRMFTc
+	OokcyFiNrMet5UArOaKsbwXi5rEJnPcjRjuO/EL1+0pkWrrDfv96pU54bF5jFxJnO31JJ0
+	HtEh1H3OeaFZLxAh+qWyxog832OH4ST8FZXdc0T4F9Ppwl7XeDpS8VITlhejQA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1724359934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LwRahi9Tt5Gcpo+n8KvB8bABTwMi1Q1kuJQ9Biekl6A=;
+	b=PfdDAwWDxxlAY208eWnSCU8Z8GWkec9oOlmVGmRFbxtqo+iJYOA6x2kNDGzpwvlybzkczF
+	S8pyLJRkHUCI1XBQ==
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
+ alexs@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+ gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
+ dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
+ zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
+ zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen
+ <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
+In-Reply-To: <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
+References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
+ <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
+ <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
+ <87cym2hrqz.ffs@tglx>
+ <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
+Date: Thu, 22 Aug 2024 22:52:14 +0200
+Message-ID: <87r0aggu0x.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240823-fix-riscv-rt_group_sched-v2-4-e4dbae24f7e1@gmail.com>
-References: <20240823-fix-riscv-rt_group_sched-v2-0-e4dbae24f7e1@gmail.com>
-In-Reply-To: <20240823-fix-riscv-rt_group_sched-v2-0-e4dbae24f7e1@gmail.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Guo Ren <guoren@kernel.org>, Anup Patel <anup@brainfault.org>, 
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Russell King <linux@armlinux.org.uk>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, 
- Kevin Hilman <khilman@baylibre.com>, 
- Celeste Liu <CoelacanthusHex@gmail.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2823;
- i=CoelacanthusHex@gmail.com; h=from:subject:message-id;
- bh=NFJyZNClpVUHx0Z3NXNiq6kpWDX+CueV3L4clx5uBrg=;
- b=owJ4nJvAy8zAJfY4pvNJRPo6U8bTakkMaccrDivyM1yYePqvmKhQXbdc0o4/M99VH9rqbjfrd
- C2704FIwfKOUhYGMS4GWTFFFrGdT18vK330YRmvyQyYOaxMIEMYuDgF4CKcjAwdc84dWeL8XvrP
- oXWq2Tvq7x9Qlrtz8PpheXWhu2maxd+PMfyvY/2cPcnsqtDXK2v61hZlLJVe4rPDPnSvlHrjhGk
- +FpHMAC41TKg=
-X-Developer-Key: i=CoelacanthusHex@gmail.com; a=openpgp;
- fpr=892EBC7DC392DFF9C9C03F1D15F4180E73787863
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
-with systemd") said it's because of recommendation from systemd. But
-systemd changed their recommendation later.[1]
+Huacai!
 
-For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
-needs an RT budget assigned, otherwise the processes in it will not be able to
-get RT at all. The problem with RT group scheduling is that it requires the
-budget assigned but there's no way we could assign a default budget, since the
-values to assign are both upper and lower time limits, are absolute, and need to
-be sum up to < 1 for each individal cgroup. That means we cannot really come up
-with values that would work by default in the general case.[2]
+On Thu, Aug 22 2024 at 19:53, Huacai Chen wrote:
+> On Wed, Aug 21, 2024 at 10:31=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+>>
+>> On Wed, Aug 21 2024 at 21:14, Huacai Chen wrote:
+>> > On Wed, Aug 21, 2024 at 12:29=E2=80=AFAM Thomas Gleixner <tglx@linutro=
+nix.de> wrote:
+>> >> This patch is doing too many things at once and is absolutely not
+>> >> reviewable.
+>> >>
+>> >> Please split it up into the obvious bits and pieces:
+>> > Splitting may cause another problem: some patches will get upstream
+>> > via the arch tree and others via the irq tree. These dependencies may
+>> > cause build errors in a certain tree. But anyway, we will try our best
+>> > to do this.
+>>
+>> That's not a problem at all. The trivial way to solve this is to apply
+>> the architecture changes to the loongarch tree in a separate branch
+>> which is based of some -rcX tag and only contains those dependencies.
+>> That branch is then merged into the main loongarch branch and I can pull
+>> it in to my tree for adding the irqchip changes. No conflicts, no merge
+>> dependencies, nothing.
+> Emm, another way is apply all patches to the irq tree with my Acked-by.
 
-For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
-can only be enabled when all RT processes are in the root cgroup. But it will
-lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
+Correct, but that has the potential of creating conflicts when the
+loongarch tree grows changes in the same areas.
 
-Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
-support it.
+>> > These macros are not in hot-path, and we have already tried our best
+>> > to avoid using #ifdefs for cpu_has_xxx, so I suggest not introduce a
+>> > new Kconfig option. Moreover, the new option should always be selected
+>> > due to the deep coupling among loongson's irqchips, which makes the
+>> > #ifdefs useless.
+>>
+>> They are removed in step 8 again. It's for having a sanely split up and
+>> structured patch series instead of one big lump.
+> I see, but I'm trying another splitting way to avoid
+> adding-and-then-removing, of course it should also make reviews easy.
 
-[1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1be321c31d5299f69f
-[2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
+That's the whole point of the exercise.
 
-Tested-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
----
- arch/arm/configs/bcm2835_defconfig   | 1 -
- arch/arm/configs/omap2plus_defconfig | 1 -
- arch/arm/configs/tegra_defconfig     | 1 -
- 3 files changed, 3 deletions(-)
+>> The complexity of the x86 allocation/activate/set_affinity mechanisms
+>> is there for a reason and not just because we did not have anything
+>> better to do. :)
+>
+> Frankly, I haven't absorbed everything here, but I think I can try to
+> answer my question "can irq_create_affinity_masks() still work".
+>
+> irq_create_affinity_masks() can still mark interrupts "managed" if
+> avecintc driver doesn't support "managed", but it cannot guarantee
+> that set_affinity can always succeed. If the destination cpu has a
+> free vector, then set_affinity succeeds, otherwise it will fail. But
+> if avecintc driver supports "managed", set_affinity can always
+> succeed, because the destination cpu has already reserved a vector for
+> this. Am I right?
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index b5f0bd8dd536..27dc3bf6b124 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -7,7 +7,6 @@ CONFIG_BSD_PROCESS_ACCT=y
- CONFIG_BSD_PROCESS_ACCT_V3=y
- CONFIG_LOG_BUF_SHIFT=18
- CONFIG_CFS_BANDWIDTH=y
--CONFIG_RT_GROUP_SCHED=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_DEVICE=y
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 3a166c2f02bd..9cb265c8d414 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -13,7 +13,6 @@ CONFIG_MEMCG=y
- CONFIG_BLK_CGROUP=y
- CONFIG_CGROUP_SCHED=y
- CONFIG_CFS_BANDWIDTH=y
--CONFIG_RT_GROUP_SCHED=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_DEVICE=y
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index d2a094ad360c..3a9bda2bf422 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -6,7 +6,6 @@ CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_CGROUPS=y
- CONFIG_CGROUP_SCHED=y
--CONFIG_RT_GROUP_SCHED=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CGROUP_CPUACCT=y
- CONFIG_CGROUP_DEBUG=y
+It can work by some definition of "works", but in case of vector
+exhaustion it will fail which is contrary to the purpose of managed
+interrupts.
 
--- 
-2.46.0
+The matrix allocator already provides all the infrastructure and the
+x86 reference implementation does the right thing. So why do you want to
+shortcut that and make loongarch a special snowflake?
 
+Thanks,
+
+        tglx
