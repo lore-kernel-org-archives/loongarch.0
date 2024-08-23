@@ -1,162 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00E4197
-	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 00:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98980AD59
+	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 00:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724371467; cv=none; b=lEYMSiTrhdWAsB7i5SzKXn0H4rHSi8Rv7aBnCFjTsXlMR73Xem28U2Pv0RXJwcCdyXhev3K5/TV1GENz9wUkJCcC1T4oX9NI6EbS+yNWfbR+OLSXABw6Ey97iq2GRZbUyxEzov/7UzfhsW5UFWXbeY4QakY2X0RPPW6cbfEH/Ac=
+	t=1724373709; cv=none; b=P4NOGpH7WZswwKeEyhXAxmoYJqS/bT9+4WlW8+7XTcU9K+fHlMsQ2OV+yuLDgBoiWbZKLrwKYfqDAJvcP6H3hLDuJvuM3TwiAxENKc8ycQT1RIzaMhyGOg6TCG+eKFJUdLJq7dw769nAXTMBJrGIk7xPVVOYrhf2sJRwK+WuCRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724371467; c=relaxed/simple;
-	bh=3QnAdixYo6jA5LfHGge4JAkNB7yoXQF4pxxURUN8JXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=upIE9WX6Lk44ZGrj+MWJC0zuzI1ilyYy6yR/snkPvAlzSmtz4ZfglLNf83S3/k9FaNIXGWrSn7yBr1UYjPOQMMeObQHsspd4bJoHAWz/l9WBpKi2cySbzZCYQWWVrrx7CWFTj2Bt1A/vAMVE1FnstZ/qRiXWoDPGTPsI0WFVcSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ON0z/daj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ON0z/daj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724371463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HHqbq1AQSOY5EcS479bGVBSadv/yHMIWF28e/YV8WdA=;
-	b=ON0z/dajkrSyPS5QqkOqQfNn8q70Dpr3pIAGQukIfCsgKn9vxlcwBezFraob/MG0BXnKcm
-	reC5GvpSUeJ1N0ZfLqtZyvi9pg1JvVSLyWkM1H3S/zDRvwcoP+XLB5xfDCZ+UlA0Wu7yem
-	qTBCFaKfR0TQhGJOyQUeGj/Ewjo+z1k=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-Q2zfLi0YMr2QKG2BabfBhQ-1; Thu,
- 22 Aug 2024 20:04:18 -0400
-X-MC-Unique: Q2zfLi0YMr2QKG2BabfBhQ-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0352B1955BF4;
-	Fri, 23 Aug 2024 00:04:14 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACCC819560A3;
-	Fri, 23 Aug 2024 00:04:10 +0000 (UTC)
-Date: Fri, 23 Aug 2024 08:04:06 +0800
-From: Baoquan He <bhe@redhat.com>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>,
-	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
-	debian-powerpc@lists.debian.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev, akpm@linux-foundation.org,
-	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
-	viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
- items
-Message-ID: <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-6-bhe@redhat.com>
- <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
- <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
- <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
+	s=arc-20240116; t=1724373709; c=relaxed/simple;
+	bh=ay4D6AfbKHWeweQWZp8GUqV00zuH70bD131HhDyI2/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SWlNMzqM3Y/CSOq1D9OiP8/EVzOfqQXmTipaSNj8M9VyEVlPI7Fx1ln42goCxkwphv6nEMVdUoCploaXmOV8Of9ftxTBtGfJYGsGK93eKorc+Ko9JAWUWZjCOjx9s0nwlVaxVyiCvm1FOzOHf6ReyPiLHpZbyVe8DOV+AxIRc9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vasilevsky.ca; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vasilevsky.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e1659e9a982so1648334276.1
+        for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 17:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724373706; x=1724978506;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hrrorkPUTMRy8B+Se5r9dC5v0n87yzEWeWGrk9H7liI=;
+        b=dyBNLmha8JLHiTvzE8awOzWJunJQTElshHSEj6vjIWGAL5Kpj97xfhHrLazppmwVR4
+         vDSiyV7pqwTAKSr4++9tmqrvvuOMYixEH03mMbcgmVQe6RHFyEusLGsExCXrQwaLnsK4
+         dPyZyYY0tX793f3au6wY8Qkkfzw51N7fFy/qbFwxDj1uZswjAxZsz7tNWri4MYVsVOrU
+         Eotv7E7d3tRucVibG4X72Tlwl5Lbl2EsVlH4jQ2fKGzFdcxYrYtIVF8pwNTmneU/Wlse
+         AUqVmSosMBjXQC0RaLraq6W+y/g0FHCXmGKhRZzm3J551H7mMnSGn/mNLNtJMgwvi5IG
+         BaUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKsrZRnhQvR2qcZGG++bx2KM6IT7+LHgA1MS9C8u87fUlSD56sSTXAh+sh+wDv+9IYLD2ew3q+dRE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yydt7gFs4Kyg+hjsCuZOGnG7yMIjbdORiWzGXNEJT7F1SlPKeaM
+	+6c5hEQGwl3Q44QGwI8oLGlGYHU50YZxhPaETWvcJ66QhMGZ5kAK
+X-Google-Smtp-Source: AGHT+IFIoz3CpMkQuGZF7qiev1E8+/L42B5M6zof+vl5mrM+UBz8KVmsk5nfokb4H2v2uq4x0faLyg==
+X-Received: by 2002:a05:6902:2083:b0:e16:4dc8:3cbf with SMTP id 3f1490d57ef6-e17a83e2837mr770622276.28.1724373706517;
+        Thu, 22 Aug 2024 17:41:46 -0700 (PDT)
+Received: from [192.168.2.219] (bras-base-mtrlpq3141w-grc-05-65-93-184-127.dsl.bell.ca. [65.93.184.127])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-454fe0dda4bsm12009631cf.22.2024.08.22.17.41.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2024 17:41:46 -0700 (PDT)
+Message-ID: <768dfe3e-c437-40cc-96a5-6c5b34b2d19d@vasilevsky.ca>
+Date: Thu, 22 Aug 2024 20:41:40 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
+ items
+To: Baoquan He <bhe@redhat.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+ kexec@lists.infradead.org, debian-powerpc@lists.debian.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com,
+ hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk,
+ Sam James <sam@gentoo.org>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-6-bhe@redhat.com>
+ <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+ <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
+ <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
+ <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Dave Vasilevsky <dave@vasilevsky.ca>
+In-Reply-To: <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 08/22/24 at 11:37am, John Paul Adrian Glaubitz wrote:
-> Hi Baoquan,
-> 
-> On Thu, 2024-08-22 at 17:17 +0800, Baoquan He wrote:
-> > > The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
-> > > on 32-bit Power Macintosh systems which fail after GRUB with:
-> > > 
-> > > 	"Error: You can't boot a kdump kernel from OF!"
-> > > 
-> > > We may have to turn this off for 32-bit Power Macintosh systems.
-> > > 
-> > > See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
-> > 
-> > If so, fix need be made.
-> > 
-> > We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
-> > post a patch? I don't know how to identify 32-bit Power Macintosh.
-> > 
-> > arch/powerpc/Kconfig:
-> > ===
-> > config ARCH_SUPPORTS_CRASH_DUMP
-> >         def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
-> >         
-> > config ARCH_SELECTS_CRASH_DUMP
-> >         def_bool y
-> >         depends on CRASH_DUMP
-> >         select RELOCATABLE if PPC64 || 44x || PPC_85xx
-> > ......
-> > config PHYSICAL_START
-> >         hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
-> >         default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
-> >         default "0x00000000"
-> 
-> I think the architecture does support crash dumps, but I think the kernel has to
-> be booted from kexec in this case. Booting a kernel with CRASH_DUMP enabled won't
-> work from Open Firmware. So, I think CRASH_DUMP should just be disabled for
-> PPC_BOOK3S_32 by default and users who want to use it on these systems, will have to
-> enable it explicitly.
+On 2024-08-22 20:04, Baoquan He wrote:
+> If so, below patch possiblly can fix it. Can you help check if it's OK?
 
-If so, below patch possiblly can fix it. Can you help check if it's OK?
+That removes the possibility of enabling CRASH_DUMP on PPC_BOOK3S_32, even when booting via other mechanisms. Maybe it would be best to just make it not-default? Please take a look at this patch:
 
-From dd5318dc5dcd66521b31214f0e5921f258532ef8 Mon Sep 17 00:00:00 2001
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 23 Aug 2024 07:37:38 +0800
-Subject: [PATCH] powerpc/crash: do not default to enable CRASH_DUMP for
- PPC_BOOK3S_32 system
-Content-type: text/plain
 
-Recently it's reported that PowerPC macMini system failed to boot up.
-It's because CONFIG_CRASH_DUMP=y is set by default on the system since
-kernel 6.9, and that makes CONFIG_PHYSICAL_START not equaling 0 any
-more and causes failure of normal kernel bootup.
+From d6e5fe3a45f46f1aa01914648c443291d956de9e Mon Sep 17 00:00:00 2001
+From: Dave Vasilevsky <dave@vasilevsky.ca>
+Date: Thu, 22 Aug 2024 20:13:46 -0400
+Subject: [PATCH] powerpc: Default to CRASH_DUMP=n when Open Firmware boot is
+ likely
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The link of error report can be found here:
+Open Firmware is unable to boot a kernel where PHYSICAL_START is
+non-zero, which occurs when CRASH_DUMP is on.
 
-https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+On PPC_BOOK3S_32, the most common way of booting is Open Firmware, so
+most users probably don't want CRASH_DUMP. Users booting via some
+other mechanism can turn it on explicitly.
 
-And copy the code snippet here for reference:
-arch/powerpc/Kconfig:
-==================
-config KERNEL_START
-        hex "Virtual address of kernel base" if KERNEL_START_BOOL
-        default PAGE_OFFSET if PAGE_OFFSET_BOOL
-        default "0xc2000000" if CRASH_DUMP && !NONSTATIC_KERNEL
-        default "0xc0000000"
-
-So let's stop enabling CRASH_DUMP by default on PPC_BOOK3S_32.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Dave Vasilevsky <dave@vasilevsky.ca>
+Reported-by: Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+Fixes: 75bc255a7444
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/Kconfig       | 3 +++
+ arch/arm64/Kconfig     | 3 +++
+ arch/loongarch/Kconfig | 3 +++
+ arch/mips/Kconfig      | 3 +++
+ arch/powerpc/Kconfig   | 4 ++++
+ arch/riscv/Kconfig     | 3 +++
+ arch/s390/Kconfig      | 3 +++
+ arch/sh/Kconfig        | 3 +++
+ arch/x86/Kconfig       | 3 +++
+ kernel/Kconfig.kexec   | 2 +-
+ 10 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index d7b09b064a8a..dc5ca58be1d6 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -680,7 +680,7 @@ config RELOCATABLE_TEST
- 	  relocation code.
- 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 54b2bb817a7f..200995052690 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1597,6 +1597,9 @@ config ATAGS_PROC
  config ARCH_SUPPORTS_CRASH_DUMP
--	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
-+	def_bool PPC64 || PPC_85xx || (44x && !SMP)
+ 	def_bool y
  
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config AUTO_ZRELADDR
+ 	bool "Auto calculation of the decompressed kernel image address" if !ARCH_MULTIPLATFORM
+ 	default !(ARCH_FOOTBRIDGE || ARCH_RPC || ARCH_SA1100)
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index a2f8ff354ca6..43e08cc8204f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1558,6 +1558,9 @@ config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ 	def_bool CRASH_RESERVE
+ 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 70f169210b52..ce232ddcd27d 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -599,6 +599,9 @@ config ARCH_SUPPORTS_KEXEC
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
  config ARCH_SELECTS_CRASH_DUMP
  	def_bool y
+ 	depends on CRASH_DUMP
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 60077e576935..b547f4304d0c 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2881,6 +2881,9 @@ config ARCH_SUPPORTS_KEXEC
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config PHYSICAL_START
+ 	hex "Physical address where the kernel is loaded"
+ 	default "0xffffffff84000000"
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d7b09b064a8a..0f3c1f958eac 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -682,6 +682,10 @@ config RELOCATABLE_TEST
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	bool
++	default y if !PPC_BOOK3S_32
++
+ config ARCH_SELECTS_CRASH_DUMP
+ 	def_bool y
+ 	depends on CRASH_DUMP
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 0f3cd7c3a436..eb247b5ee569 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -880,6 +880,9 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ 	def_bool CRASH_RESERVE
+ 
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index a822f952f64a..05a1fb408471 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -275,6 +275,9 @@ config ARCH_SUPPORTS_CRASH_DUMP
+ 	  This option also enables s390 zfcpdump.
+ 	  See also <file:Documentation/arch/s390/zfcpdump.rst>
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ menu "Processor type and features"
+ 
+ config HAVE_MARCH_Z10_FEATURES
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 1aa3c4a0c5b2..3a6338962636 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -549,6 +549,9 @@ config ARCH_SUPPORTS_KEXEC
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool BROKEN_ON_SMP
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config ARCH_SUPPORTS_KEXEC_JUMP
+ 	def_bool y
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 007bab9f2a0e..aa4666bb9e9c 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2087,6 +2087,9 @@ config ARCH_SUPPORTS_KEXEC_JUMP
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool X86_64 || (X86_32 && HIGHMEM)
+ 
++config ARCH_DEFAULT_CRASH_DUMP
++	def_bool y
++
+ config ARCH_SUPPORTS_CRASH_HOTPLUG
+ 	def_bool y
+ 
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 6c34e63c88ff..4d111f871951 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -97,7 +97,7 @@ config KEXEC_JUMP
+ 
+ config CRASH_DUMP
+ 	bool "kernel crash dumps"
+-	default y
++	default ARCH_DEFAULT_CRASH_DUMP
+ 	depends on ARCH_SUPPORTS_CRASH_DUMP
+ 	depends on KEXEC_CORE
+ 	select VMCORE_INFO
 -- 
-2.41.0
+2.34.1
 
