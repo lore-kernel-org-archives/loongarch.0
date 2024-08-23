@@ -1,268 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B781CA96
-	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 01:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A9B20DE8;
+	Fri, 23 Aug 2024 02:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724378349; cv=none; b=EpJSpURa9ApAzayIVbGX/mH7q1T8KFdnwE5niiVZtzG+mKOLFam2YYdw9lzAIciszGDDNhI2sAuHjqXyHIo8KLoOxYDIO7V3ywX4allGLO5O3EiP8ZCvy5x+XuBZBZF3S5I0OAFqTERMmzijXHAGmX2EHu1lGlIkEeIUDrYca74=
+	t=1724380997; cv=none; b=FM3TrUCzpbGYPuEx/QPq5Bc824SbegXEXt8E2+vRgMllT75ZHkOWuaGJv4dVdHpp60OKKo5g1qx5LsEO362rzbjozMzJzFyvlSNI9KGlQuqR4a0Bo71q1xg/LeAsZQXilFfMf/MOizY3nk0A40AET+vSHWTG2LXtUcIrxrPh3Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724378349; c=relaxed/simple;
-	bh=KAOIasN/hhonSibrWmd5NGn4sRRLCj6E3rhDNzfzvcs=;
+	s=arc-20240116; t=1724380997; c=relaxed/simple;
+	bh=uP5IakzORudRLADCNa/D+ltxEuEvKGniLh27EekWsU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lpg0j3Yzg03JXtKQbkuAD6fgwovheNhSnGy++8c1uLVM86VyxOLuSNuI87uIXCNj+Rq1XrVLkAP84wi8jb2FDaTJk/ZnC1QA407qe4f0Aq6izFu4HJR73KQDEfnZJyN7gohiKtF9CMQy8XdcLUPWeC/jizZZEy7khKGKgwJ2dPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A8/t7Tzr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IE75T8lkTcAdE2VWn6E5pAFQtYCUsiExLTI7+UzHWd4StPPO+xbCWTwIEfgQHVDaFquB8jOI9/+SiAZVt+Xp19xNGm4rrLBDiN3O2sxg03zemnmm7LexAPgQ4Rw+iuQb4tGbpH4bUf3H5OsoufxutghFbR9PsfZVGGLqIOVRHyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gBTLKsmj; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8/t7Tzr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724378346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vptUsTTd+Ahgj+G0OF7GYw9gEl0AVQwqRfpIh4Og1O8=;
-	b=A8/t7TzrF742FR8F6MiBVGBpNi1x5oGhQzlBLdDRI/HczXJN6WxdKiv7Th0taKK0i7HUev
-	gErXodFDGMKiqzZcWdWX4/DCz2uCAQb0wdP6VCA66yuU25130cFJ2AZdyhXazF3BcKoLUf
-	7GeblxA0nhznCk8MgLutz9d/hKswluM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-soz-U4RROwaHLeJV3p9How-1; Thu,
- 22 Aug 2024 21:59:02 -0400
-X-MC-Unique: soz-U4RROwaHLeJV3p9How-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E6A61955D45;
-	Fri, 23 Aug 2024 01:58:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E2AD1956053;
-	Fri, 23 Aug 2024 01:58:54 +0000 (UTC)
-Date: Fri, 23 Aug 2024 09:58:49 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Dave Vasilevsky <dave@vasilevsky.ca>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	kexec@lists.infradead.org, debian-powerpc@lists.debian.org,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	akpm@linux-foundation.org, ebiederm@xmission.com,
-	hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
- items
-Message-ID: <Zsfs2VhE0lTY2tpO@MiWiFi-R3L-srv>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-6-bhe@redhat.com>
- <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
- <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
- <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
- <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
- <768dfe3e-c437-40cc-96a5-6c5b34b2d19d@vasilevsky.ca>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBTLKsmj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724380996; x=1755916996;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uP5IakzORudRLADCNa/D+ltxEuEvKGniLh27EekWsU8=;
+  b=gBTLKsmj8PjPD+xNS+t9/TDT+DJkn79hkagrqINomjakX30QmSlNTKe6
+   NMWRXsAWs/jAdlZX2O5GiH+n8U2mLQMXfFitP83HbPFi+6/SG5voERs+i
+   c2RtG3o7dLgVG7ZnehTE1QqhQC0Ml5lmxV924PwoaDV7RJRdceANRjAUo
+   EeEjrbImOxb4Z2tfmUuvuNNbLjF+Vk5DboA6clnGxQdnSmAUQKCEe88iy
+   liUoCjRWU2cL+Y/Dbmffnoj8Oxw+AEcaT12kNdFk2e2N+qfk4zgNafPXJ
+   +QZdO3Afh0TMSGzES/ezJGPW3OE/mmFI8LIyz/l8/wMu9cgDE2LwdfSje
+   g==;
+X-CSE-ConnectionGUID: BZWFwleCRv2gQJ+GffNb3Q==
+X-CSE-MsgGUID: x+e9MVWYQ0y7Y1n/0ndBmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33399131"
+X-IronPort-AV: E=Sophos;i="6.10,169,1719903600"; 
+   d="scan'208";a="33399131"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 19:43:15 -0700
+X-CSE-ConnectionGUID: FZJsR5w5QVOE1ZQoxQVNlA==
+X-CSE-MsgGUID: puxOFJv1Sqmw0BHB3GROnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,169,1719903600"; 
+   d="scan'208";a="61509548"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 22 Aug 2024 19:43:12 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1shKGb-000DOy-1P;
+	Fri, 23 Aug 2024 02:43:09 +0000
+Date: Fri, 23 Aug 2024 10:42:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, bp@alien8.de, tony.luck@intel.com,
+	james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	devicetree@vger.kernel.org, zhaoqunqin <zhaoqunqin@loongson.cn>
+Subject: Re: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory
+ controller
+Message-ID: <202408231055.okLH0uuC-lkp@intel.com>
+References: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <768dfe3e-c437-40cc-96a5-6c5b34b2d19d@vasilevsky.ca>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20240821064728.8642-2-zhaoqunqin@loongson.cn>
 
-On 08/22/24 at 08:41pm, Dave Vasilevsky wrote:
-> On 2024-08-22 20:04, Baoquan He wrote:
-> > If so, below patch possiblly can fix it. Can you help check if it's OK?
-> 
-> That removes the possibility of enabling CRASH_DUMP on PPC_BOOK3S_32, even when booting via other mechanisms. Maybe it would be best to just make it not-default? Please take a look at this patch:
-> 
+Hi Zhao,
 
-This is a good mimic of ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG and the
-correspondent KEXEC_IMAGE_VERIFY_SIG. It looks good to me, as long as no
-one complain we introduce too many knobs.
+kernel test robot noticed the following build warnings:
 
-Can you post this formally so that people can review it?
+[auto build test WARNING on ras/edac-for-next]
+[also build test WARNING on robh/for-next linus/master v6.11-rc4 next-20240822]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> From d6e5fe3a45f46f1aa01914648c443291d956de9e Mon Sep 17 00:00:00 2001
-> From: Dave Vasilevsky <dave@vasilevsky.ca>
-> Date: Thu, 22 Aug 2024 20:13:46 -0400
-> Subject: [PATCH] powerpc: Default to CRASH_DUMP=n when Open Firmware boot is
->  likely
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
-> 
-> Open Firmware is unable to boot a kernel where PHYSICAL_START is
-> non-zero, which occurs when CRASH_DUMP is on.
-> 
-> On PPC_BOOK3S_32, the most common way of booting is Open Firmware, so
-> most users probably don't want CRASH_DUMP. Users booting via some
-> other mechanism can turn it on explicitly.
-> 
-> Signed-off-by: Dave Vasilevsky <dave@vasilevsky.ca>
-> Reported-by: Reimar Döffinger <Reimar.Doeffinger@gmx.de>
-> Fixes: 75bc255a7444
-> ---
->  arch/arm/Kconfig       | 3 +++
->  arch/arm64/Kconfig     | 3 +++
->  arch/loongarch/Kconfig | 3 +++
->  arch/mips/Kconfig      | 3 +++
->  arch/powerpc/Kconfig   | 4 ++++
->  arch/riscv/Kconfig     | 3 +++
->  arch/s390/Kconfig      | 3 +++
->  arch/sh/Kconfig        | 3 +++
->  arch/x86/Kconfig       | 3 +++
->  kernel/Kconfig.kexec   | 2 +-
->  10 files changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 54b2bb817a7f..200995052690 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1597,6 +1597,9 @@ config ATAGS_PROC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config AUTO_ZRELADDR
->  	bool "Auto calculation of the decompressed kernel image address" if !ARCH_MULTIPLATFORM
->  	default !(ARCH_FOOTBRIDGE || ARCH_RPC || ARCH_SA1100)
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index a2f8ff354ca6..43e08cc8204f 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1558,6 +1558,9 @@ config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  	def_bool CRASH_RESERVE
->  
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 70f169210b52..ce232ddcd27d 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -599,6 +599,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SELECTS_CRASH_DUMP
->  	def_bool y
->  	depends on CRASH_DUMP
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 60077e576935..b547f4304d0c 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -2881,6 +2881,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config PHYSICAL_START
->  	hex "Physical address where the kernel is loaded"
->  	default "0xffffffff84000000"
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index d7b09b064a8a..0f3c1f958eac 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -682,6 +682,10 @@ config RELOCATABLE_TEST
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	bool
-> +	default y if !PPC_BOOK3S_32
-> +
->  config ARCH_SELECTS_CRASH_DUMP
->  	def_bool y
->  	depends on CRASH_DUMP
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0f3cd7c3a436..eb247b5ee569 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -880,6 +880,9 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  	def_bool CRASH_RESERVE
->  
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index a822f952f64a..05a1fb408471 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -275,6 +275,9 @@ config ARCH_SUPPORTS_CRASH_DUMP
->  	  This option also enables s390 zfcpdump.
->  	  See also <file:Documentation/arch/s390/zfcpdump.rst>
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  menu "Processor type and features"
->  
->  config HAVE_MARCH_Z10_FEATURES
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 1aa3c4a0c5b2..3a6338962636 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -549,6 +549,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool BROKEN_ON_SMP
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SUPPORTS_KEXEC_JUMP
->  	def_bool y
->  
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 007bab9f2a0e..aa4666bb9e9c 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2087,6 +2087,9 @@ config ARCH_SUPPORTS_KEXEC_JUMP
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool X86_64 || (X86_32 && HIGHMEM)
->  
-> +config ARCH_DEFAULT_CRASH_DUMP
-> +	def_bool y
-> +
->  config ARCH_SUPPORTS_CRASH_HOTPLUG
->  	def_bool y
->  
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 6c34e63c88ff..4d111f871951 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -97,7 +97,7 @@ config KEXEC_JUMP
->  
->  config CRASH_DUMP
->  	bool "kernel crash dumps"
-> -	default y
-> +	default ARCH_DEFAULT_CRASH_DUMP
->  	depends on ARCH_SUPPORTS_CRASH_DUMP
->  	depends on KEXEC_CORE
->  	select VMCORE_INFO
-> -- 
-> 2.34.1
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Zhao-Qunqin/Loongarch-EDAC-driver-for-loongson-memory-controller/20240821-145127
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+patch link:    https://lore.kernel.org/r/20240821064728.8642-2-zhaoqunqin%40loongson.cn
+patch subject: [PATCH v1 1/2] Loongarch: EDAC driver for loongson memory controller
+config: loongarch-loongson3_defconfig (https://download.01.org/0day-ci/archive/20240823/202408231055.okLH0uuC-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240823/202408231055.okLH0uuC-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408231055.okLH0uuC-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/edac/loongson_edac.c: In function 'get_dimm_config':
+   drivers/edac/loongson_edac.c:90:16: error: implicit declaration of function 'EDAC_DIMM_PTR' [-Werror=implicit-function-declaration]
+      90 |         dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+         |                ^~~~~~~~~~~~~
+>> drivers/edac/loongson_edac.c:90:14: warning: assignment to 'struct dimm_info *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      90 |         dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+         |              ^
+   drivers/edac/loongson_edac.c: At top level:
+   drivers/edac/loongson_edac.c:181:27: error: initialization of 'void (*)(struct platform_device *)' from incompatible pointer type 'int (*)(struct platform_device *)' [-Werror=incompatible-pointer-types]
+     181 |         .remove         = loongson_edac_remove,
+         |                           ^~~~~~~~~~~~~~~~~~~~
+   drivers/edac/loongson_edac.c:181:27: note: (near initialization for 'loongson_edac_driver.<anonymous>.remove')
+   cc1: some warnings being treated as errors
+
+
+vim +90 drivers/edac/loongson_edac.c
+
+    80	
+    81	static int get_dimm_config(struct mem_ctl_info *mci)
+    82	{
+    83		u32 size, npages;
+    84		struct dimm_info *dimm;
+    85	
+    86		/* size not used */
+    87		size = -1;
+    88		npages = MiB_TO_PAGES(size);
+    89	
+  > 90		dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms, mci->n_layers,
+    91				0, 0, 0);
+    92		dimm->nr_pages = npages;
+    93		snprintf(dimm->label, sizeof(dimm->label),
+    94				"MC#%uChannel#%u_DIMM#%u",
+    95				mci->mc_idx, 0, 0);
+    96		dimm->grain = 8;
+    97	
+    98		return 0;
+    99	}
+   100	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
