@@ -1,137 +1,162 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66D816DEB1
-	for <loongarch@lists.linux.dev>; Thu, 22 Aug 2024 20:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00E4197
+	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 00:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724359938; cv=none; b=tTCedamDz57bE3wRE+PaXQ/lU0eXEhTf1Fwwo/v/pr6WSapGkeE0xL4+Nb0oYJsROb/a6E/wgf1l3cSpXhIwt5XupR0cGimumehrRxCG5Vwj1MqR9OB2r1rYw2UJzKq0juuOZBe83rdiGGoL3Dk/7ekF8CgtXkQSrnALW7X+540=
+	t=1724371467; cv=none; b=lEYMSiTrhdWAsB7i5SzKXn0H4rHSi8Rv7aBnCFjTsXlMR73Xem28U2Pv0RXJwcCdyXhev3K5/TV1GENz9wUkJCcC1T4oX9NI6EbS+yNWfbR+OLSXABw6Ey97iq2GRZbUyxEzov/7UzfhsW5UFWXbeY4QakY2X0RPPW6cbfEH/Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724359938; c=relaxed/simple;
-	bh=2x3OHdXqC2nN68R6PsfrH7HZf8vLL3DwjDZ/e8OcwPI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dn+wXH6EjVUKKI1lU3KAgBw29s/GGeaCASUD7zJQpexSoAQ3iLjB3RLoTx9M+Hjd5tV7vQjTwDVleimJnkqqIzisTgq7DJbBJeL2nDJkw9pb194JGfmt6+eDRX29KEuv/bEE8/42fUXsiy4jwPEatK0PALzg9JDnU/2Rh24a2IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xSU3+fxt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfdDAwWD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1724371467; c=relaxed/simple;
+	bh=3QnAdixYo6jA5LfHGge4JAkNB7yoXQF4pxxURUN8JXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upIE9WX6Lk44ZGrj+MWJC0zuzI1ilyYy6yR/snkPvAlzSmtz4ZfglLNf83S3/k9FaNIXGWrSn7yBr1UYjPOQMMeObQHsspd4bJoHAWz/l9WBpKi2cySbzZCYQWWVrrx7CWFTj2Bt1A/vAMVE1FnstZ/qRiXWoDPGTPsI0WFVcSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ON0z/daj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xSU3+fxt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfdDAwWD"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724359934;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ON0z/daj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724371463;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LwRahi9Tt5Gcpo+n8KvB8bABTwMi1Q1kuJQ9Biekl6A=;
-	b=xSU3+fxtjjSwe8kudeyVPEiovj2q5IGkfReXjg9445u3ij5IKsu8+xHlcnClHw1XCnNHit
-	pxIBDJj1sI0dphETij+17EKZNJIAMzijqrJgnGlK4pu3auNV+qEWnpa4zlfb4uLjxmIshV
-	UGo5Ks9BQMg8C+l7pr6B4+mgoaC8TjdE6QmOWfMIxWPUeuDPUSaFi0vT2RKS7XEPjRMFTc
-	OokcyFiNrMet5UArOaKsbwXi5rEJnPcjRjuO/EL1+0pkWrrDfv96pU54bF5jFxJnO31JJ0
-	HtEh1H3OeaFZLxAh+qWyxog832OH4ST8FZXdc0T4F9Ppwl7XeDpS8VITlhejQA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724359934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LwRahi9Tt5Gcpo+n8KvB8bABTwMi1Q1kuJQ9Biekl6A=;
-	b=PfdDAwWDxxlAY208eWnSCU8Z8GWkec9oOlmVGmRFbxtqo+iJYOA6x2kNDGzpwvlybzkczF
-	S8pyLJRkHUCI1XBQ==
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
- dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
- zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
- zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Huacai Chen
- <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v10 2/2] irqchip/loongarch-avec: Add AVEC irqchip support
-In-Reply-To: <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
-References: <20240815112608.26925-1-zhangtianyang@loongson.cn>
- <20240815112608.26925-3-zhangtianyang@loongson.cn> <87msl7jgye.ffs@tglx>
- <CAAhV-H424SB_Ff6y4m4Cb7Cx9eWTLbK08Wycwa803y08qWVoOA@mail.gmail.com>
- <87cym2hrqz.ffs@tglx>
- <CAAhV-H4umZBXAugRm45=dewiTGjpDSJf2wnjCtkakk+xG3VLHg@mail.gmail.com>
-Date: Thu, 22 Aug 2024 22:52:14 +0200
-Message-ID: <87r0aggu0x.ffs@tglx>
+	bh=HHqbq1AQSOY5EcS479bGVBSadv/yHMIWF28e/YV8WdA=;
+	b=ON0z/dajkrSyPS5QqkOqQfNn8q70Dpr3pIAGQukIfCsgKn9vxlcwBezFraob/MG0BXnKcm
+	reC5GvpSUeJ1N0ZfLqtZyvi9pg1JvVSLyWkM1H3S/zDRvwcoP+XLB5xfDCZ+UlA0Wu7yem
+	qTBCFaKfR0TQhGJOyQUeGj/Ewjo+z1k=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-Q2zfLi0YMr2QKG2BabfBhQ-1; Thu,
+ 22 Aug 2024 20:04:18 -0400
+X-MC-Unique: Q2zfLi0YMr2QKG2BabfBhQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0352B1955BF4;
+	Fri, 23 Aug 2024 00:04:14 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.51])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACCC819560A3;
+	Fri, 23 Aug 2024 00:04:10 +0000 (UTC)
+Date: Fri, 23 Aug 2024 08:04:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org, Dave Vasilevsky <dave@vasilevsky.ca>,
+	Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org,
+	debian-powerpc@lists.debian.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk, Sam James <sam@gentoo.org>
+Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
+ items
+Message-ID: <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-6-bhe@redhat.com>
+ <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
+ <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
+ <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Huacai!
+On 08/22/24 at 11:37am, John Paul Adrian Glaubitz wrote:
+> Hi Baoquan,
+> 
+> On Thu, 2024-08-22 at 17:17 +0800, Baoquan He wrote:
+> > > The change to enable CONFIG_CRASH_DUMP by default apparently broke the boot
+> > > on 32-bit Power Macintosh systems which fail after GRUB with:
+> > > 
+> > > 	"Error: You can't boot a kdump kernel from OF!"
+> > > 
+> > > We may have to turn this off for 32-bit Power Macintosh systems.
+> > > 
+> > > See this thread on debian-powerpc ML: https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
+> > 
+> > If so, fix need be made.
+> > 
+> > We may need change in ARCH_SUPPORTS_CRASH_DUMP of ppc, can you or anyone
+> > post a patch? I don't know how to identify 32-bit Power Macintosh.
+> > 
+> > arch/powerpc/Kconfig:
+> > ===
+> > config ARCH_SUPPORTS_CRASH_DUMP
+> >         def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+> >         
+> > config ARCH_SELECTS_CRASH_DUMP
+> >         def_bool y
+> >         depends on CRASH_DUMP
+> >         select RELOCATABLE if PPC64 || 44x || PPC_85xx
+> > ......
+> > config PHYSICAL_START
+> >         hex "Physical address where the kernel is loaded" if PHYSICAL_START_BOOL
+> >         default "0x02000000" if PPC_BOOK3S && CRASH_DUMP && !NONSTATIC_KERNEL
+> >         default "0x00000000"
+> 
+> I think the architecture does support crash dumps, but I think the kernel has to
+> be booted from kexec in this case. Booting a kernel with CRASH_DUMP enabled won't
+> work from Open Firmware. So, I think CRASH_DUMP should just be disabled for
+> PPC_BOOK3S_32 by default and users who want to use it on these systems, will have to
+> enable it explicitly.
 
-On Thu, Aug 22 2024 at 19:53, Huacai Chen wrote:
-> On Wed, Aug 21, 2024 at 10:31=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
->>
->> On Wed, Aug 21 2024 at 21:14, Huacai Chen wrote:
->> > On Wed, Aug 21, 2024 at 12:29=E2=80=AFAM Thomas Gleixner <tglx@linutro=
-nix.de> wrote:
->> >> This patch is doing too many things at once and is absolutely not
->> >> reviewable.
->> >>
->> >> Please split it up into the obvious bits and pieces:
->> > Splitting may cause another problem: some patches will get upstream
->> > via the arch tree and others via the irq tree. These dependencies may
->> > cause build errors in a certain tree. But anyway, we will try our best
->> > to do this.
->>
->> That's not a problem at all. The trivial way to solve this is to apply
->> the architecture changes to the loongarch tree in a separate branch
->> which is based of some -rcX tag and only contains those dependencies.
->> That branch is then merged into the main loongarch branch and I can pull
->> it in to my tree for adding the irqchip changes. No conflicts, no merge
->> dependencies, nothing.
-> Emm, another way is apply all patches to the irq tree with my Acked-by.
+If so, below patch possiblly can fix it. Can you help check if it's OK?
 
-Correct, but that has the potential of creating conflicts when the
-loongarch tree grows changes in the same areas.
+From dd5318dc5dcd66521b31214f0e5921f258532ef8 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 23 Aug 2024 07:37:38 +0800
+Subject: [PATCH] powerpc/crash: do not default to enable CRASH_DUMP for
+ PPC_BOOK3S_32 system
+Content-type: text/plain
 
->> > These macros are not in hot-path, and we have already tried our best
->> > to avoid using #ifdefs for cpu_has_xxx, so I suggest not introduce a
->> > new Kconfig option. Moreover, the new option should always be selected
->> > due to the deep coupling among loongson's irqchips, which makes the
->> > #ifdefs useless.
->>
->> They are removed in step 8 again. It's for having a sanely split up and
->> structured patch series instead of one big lump.
-> I see, but I'm trying another splitting way to avoid
-> adding-and-then-removing, of course it should also make reviews easy.
+Recently it's reported that PowerPC macMini system failed to boot up.
+It's because CONFIG_CRASH_DUMP=y is set by default on the system since
+kernel 6.9, and that makes CONFIG_PHYSICAL_START not equaling 0 any
+more and causes failure of normal kernel bootup.
 
-That's the whole point of the exercise.
+The link of error report can be found here:
 
->> The complexity of the x86 allocation/activate/set_affinity mechanisms
->> is there for a reason and not just because we did not have anything
->> better to do. :)
->
-> Frankly, I haven't absorbed everything here, but I think I can try to
-> answer my question "can irq_create_affinity_masks() still work".
->
-> irq_create_affinity_masks() can still mark interrupts "managed" if
-> avecintc driver doesn't support "managed", but it cannot guarantee
-> that set_affinity can always succeed. If the destination cpu has a
-> free vector, then set_affinity succeeds, otherwise it will fail. But
-> if avecintc driver supports "managed", set_affinity can always
-> succeed, because the destination cpu has already reserved a vector for
-> this. Am I right?
+https://lists.debian.org/debian-powerpc/2024/07/msg00001.html
 
-It can work by some definition of "works", but in case of vector
-exhaustion it will fail which is contrary to the purpose of managed
-interrupts.
+And copy the code snippet here for reference:
+arch/powerpc/Kconfig:
+==================
+config KERNEL_START
+        hex "Virtual address of kernel base" if KERNEL_START_BOOL
+        default PAGE_OFFSET if PAGE_OFFSET_BOOL
+        default "0xc2000000" if CRASH_DUMP && !NONSTATIC_KERNEL
+        default "0xc0000000"
 
-The matrix allocator already provides all the infrastructure and the
-x86 reference implementation does the right thing. So why do you want to
-shortcut that and make loongarch a special snowflake?
+So let's stop enabling CRASH_DUMP by default on PPC_BOOK3S_32.
 
-Thanks,
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        tglx
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d7b09b064a8a..dc5ca58be1d6 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -680,7 +680,7 @@ config RELOCATABLE_TEST
+ 	  relocation code.
+ 
+ config ARCH_SUPPORTS_CRASH_DUMP
+-	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
++	def_bool PPC64 || PPC_85xx || (44x && !SMP)
+ 
+ config ARCH_SELECTS_CRASH_DUMP
+ 	def_bool y
+-- 
+2.41.0
+
