@@ -1,85 +1,155 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BF7184551
-	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 12:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC3A189536;
+	Fri, 23 Aug 2024 15:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724414758; cv=none; b=HrYYfcMQaLtykPTFLE8dKbzLxTcwkn3HKIQkKTv/nHD0FYVeHtWmKylOaNvcxLuNjeuGpBSO0pLUUpv0x9HZkBLTC4Ke9imyKH3P77X3rwqh61GFIATU4e3L/VTnkGix20NF+4Nlc9CozZNd+FMJLaqS9WHrlQsTcQ5Pn5yZe/g=
+	t=1724427481; cv=none; b=CezNGI6E4OoNLncZeKSXYzog1WD3URp12nGFrkXQKw6cpBzlnxsuq4t6firmBmzS57xYofY0KBC5/0gvA6y2P31vPFZNQckghAXEC9SvxLn6J3HumeSTmBvAzwJ+cj1OQkyWi9buD/NQUWDPZGrCCTuLxjv/+qF4Qc4FAXrIVX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724414758; c=relaxed/simple;
-	bh=DR7bqGR51LfqIMAQgP/pa0BHPRZM7nHCDVY2zJ8WToM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VIyUOKCXDBg2o0up+Ek3VtOIhl6iZmupPqvMYJD17IaqYXKJOot0hIQJLJ3x2J1Ttu1mW0XA4zp80jRY7yGFNH0ljrRc2OgmKpaivatfOz2MoysPFD3vS8bwh5Ih/OhH6BtorYU4HS0N5LeAJyaPN7ZAftEXM2fVIQRTL/AICsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vasilevsky.ca; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vasilevsky.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44ff99fcd42so10714501cf.0
-        for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 05:05:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724414756; x=1725019556;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NGZF0AvlZej7rqgff9jJof3mfOBatM8jwICNkXKrrqk=;
-        b=NPLYc5NbisFLU/nnBKqCuOJuGee/591243S4dg0RXad+R4muZXKcptzWeF9An/VE+L
-         gfin0m36RxMiF+QpyadJbG+AQ0R/mYyd9PIg0HWJ9Y7K+tzEr5VIBG7KpMoQdqysS9OV
-         9x3cbORdLWfkJb9z/FqaoOIu9zHe/2+1kXhCuNiMyZgK9EMRJc3JwmnWJsV6cUSYNfgy
-         zMKOhHoUnnJiJVKIKmgJr+OyhVz1PUx9mTmDHSUjHBHa8If+lOkQIPhQADfKLsMblr+6
-         Sd1K8D2GcNSAC0M1VhUq93CaRCRmGICwbR/Jhf+IcFj1jT9aTnHMA0W1guQdYxjAJcrk
-         Ydmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVB44uK5kkjGrRPe6Amm+bTEtHmabIqT8mdT/eC/VdXGnJG4sMLn1ZF6X4HPWtHzBxnMyYuLHr+/Sk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxY4mYMZzz5giNdr8AYmW3uxgEbzVc3ASAZMv/nTGdJnwqT7fKm
-	atCV5kfJe92iBB7+8FE8fmhXgYm1Vqhi8PNjICpaqH0ZBN1y5H12
-X-Google-Smtp-Source: AGHT+IHUiEQ2UHjFnBpHefvI6CBVfER5s973r4J8f4wJcBtlNN4Eyl+cyb4eanEq6/83M/3CpkPpMA==
-X-Received: by 2002:a05:622a:1f06:b0:447:f41a:aac5 with SMTP id d75a77b69052e-4550964738amr23293121cf.25.1724414756229;
-        Fri, 23 Aug 2024 05:05:56 -0700 (PDT)
-Received: from [192.168.2.219] ([65.93.184.127])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-454fe196d10sm16584871cf.71.2024.08.23.05.05.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Aug 2024 05:05:54 -0700 (PDT)
-Message-ID: <e7629e1e-ab41-4400-85c4-e3b39cf5be2f@vasilevsky.ca>
-Date: Fri, 23 Aug 2024 08:05:43 -0400
+	s=arc-20240116; t=1724427481; c=relaxed/simple;
+	bh=zCxIRWkih4tuPLzhcTwAD0rHAXZgw44YpE8z23P2up4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ryqOi1WcRX7Ofa2Tkkgl5Y1CAPPaE/hmEJsTs3xRaRGktCFbFbm256UfQH5HTe6kSEU8I0/+u/g8zxbQ9OFnXcjBjDLXwH5cIK5D3su4sBeOLwuAj/NuYIBg9H0GpZhE5xxvsgzi1yVwrD2LLbW2F9XH4izHFZyTfT+t+QqO+vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EQgdhHc1; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EQgdhHc1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DCDC41BF206;
+	Fri, 23 Aug 2024 15:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1724427477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7CutgodhxN+FJr5V+VHWsJBhY68LFF7RKhgiCY4alWI=;
+	b=EQgdhHc1vU0jHveAWULFKVBKA5K/Reu7E11e/ThNq9x2gK+seD0B13sWiulonMlwdOssZ+
+	k+eOdW0o2tv4Ud7+Sc+JOMrfETHvLbvlgyy+kMY6NXxlMbsUmLZ7/FAN5WXqj27n4bSlr+
+	dmDpxLQ/Z+1AQ01pr9Z1lBOL3BCycoIwydon6a7UJIbtuAqynLhzcVgS7Tyw1JXQgEmX0x
+	VOnCrmUGt8M8ZePqnH/ue6a4gvzyEDN1u3bA6Elhg+jRCgsbvMd5Mx/JhrjqIxq4e6ckw+
+	detDzZoFkx9y82FATvoOoDjp178jqdsLKA7rVAVuQiUuWcQl3YXaclc2dwkXfg==
+Date: Fri, 23 Aug 2024 17:37:48 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Maxime Ripard <mripard@kernel.org>, Pratyush Yadav
+ <pratyush@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Richard
+ Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>,
+ Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
+ <magnus.damm@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ imx@lists.linux.dev, linux-omap@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+ openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
+ linux-mips@vger.kernel.org, loongarch@lists.linux.dev, Michael Walle
+ <michael@walle.cc>
+Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
+Message-ID: <20240823173748.2b3a364a@xps-13>
+In-Reply-To: <20240718091753.apwsrvmekn2vvo4k@pengutronix.de>
+References: <07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
+	<mafs0ikxnykpr.fsf@kernel.org>
+	<20240702-congenial-vigilant-boar-aeae44@houat>
+	<mafs0ed8byj5z.fsf@kernel.org>
+	<20240702-mighty-brilliant-eel-b0d9fa@houat>
+	<20240708084440.70186564@xps-13>
+	<20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
+	<20240709114302.3c604ef3@xps-13>
+	<20240709103841.7x7n4hdtqrunyoc3@pengutronix.de>
+	<20240717101948.2e99f472@xps-13>
+	<20240718091753.apwsrvmekn2vvo4k@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next v3 05/14] crash: clean up kdump related config
- items
-From: Dave Vasilevsky <dave@vasilevsky.ca>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
- kexec@lists.infradead.org, debian-powerpc@lists.debian.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com,
- hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk,
- Sam James <sam@gentoo.org>
-References: <20240124051254.67105-1-bhe@redhat.com>
- <20240124051254.67105-6-bhe@redhat.com>
- <a9d9ecd1ed8d62eae47ec26257093495e6cbd44a.camel@physik.fu-berlin.de>
- <ZscCMLfNbj2MDiaB@MiWiFi-R3L-srv>
- <c5e9996e4d2ba2a0849d65f68e3dce94fffc5828.camel@physik.fu-berlin.de>
- <ZsfR9rdMt8yn1+Bz@MiWiFi-R3L-srv>
- <768dfe3e-c437-40cc-96a5-6c5b34b2d19d@vasilevsky.ca>
- <c74e24213fd98b252a2a1ff02a107005e50f4f7b.camel@physik.fu-berlin.de>
- <dc4a1941-6671-4e89-90c2-3a1c19fd3e1c@vasilevsky.ca>
-Content-Language: en-US
-In-Reply-To: <dc4a1941-6671-4e89-90c2-3a1c19fd3e1c@vasilevsky.ca>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 2024-08-23 07:58, Dave Vasilevsky wrote:
-> On 2024-08-23 03:16, John Paul Adrian Glaubitz wrote:
->> It should be disabled on m68k and sh by default as well.
-> 
-> Sure, I can change that. What's the reasoning, so I can explain in my commit message?
+Hi Marco,
 
-Oh I don't think m68k even has ARCH_SUPPORTS_CRASH_DUMP, so it will always be off. My question still stands for sh though.
+m.felsch@pengutronix.de wrote on Thu, 18 Jul 2024 11:17:53 +0200:
 
--Dave 
+> Hi Miquel,
+>=20
+> On 24-07-17, Miquel Raynal wrote:
+> > Hi Marco,
+> >  =20
+> > > > > > Overall I think the idea of getting rid of these misc/ drivers =
+is goes
+> > > > > > into the right direction, but registering directly into NVMEM m=
+akes
+> > > > > > more sense IMO.     =20
+> > > > >=20
+> > > > > So you propose to have two places for the partition handling (one=
+ for
+> > > > > MTD and one for NVMEM) instead of one and moving the code into NV=
+MEM
+> > > > > directly?   =20
+> > > >=20
+> > > > Why two places for the partitions handling? Just one, in NVMEM. Als=
+o   =20
+> > >=20
+> > > Without checking the details I think that converting the MTD
+> > > partitioning code into NVMEM partitioning code is a bigger task. As y=
+ou
+> > > said below there are many legacy code paths you need to consider so t=
+hey
+> > > still work afterwards as well.
+> > >  =20
+> > > > usually EEPROMs don't require very advanced partitioning schemes,
+> > > > unlike flashes (which are the most common MTD devices today).   =20
+> > >=20
+> > > As said in my cover letter EEPROMs can become quite large and MTD
+> > > supports partitioning storage devices which is very handy for large
+> > > EEPROMs as well. =20
+> >=20
+> > Did you had a look at nvmem-layouts ? In particular the fixed-layout. =
+=20
+>=20
+> Yes I had a look at nvmem-layouts and we use them within a
+> mtd-partition. Using them instead of a mtd-partition is not sufficient
+> since they:
+>  1) don't support user-space write (I send a patch for it but it doesn't
+>     seem to be accepted soon).
+
+Yes, this needed improvements maybe but was not refused either.
+
+>  2) If write would be supported the user-space need to write the
+>     complete cell e.g. no partial writes.
+
+Maybe that can also be brought to nvmem. Again, nvmem was introduced
+for handling EEPROMs in the first place.
+
+Anyway, if other people in Cc: want to share some thoughts, they are
+also welcomed, I don't want to block this series for bad reasons. I'm
+also adding Michael Walle in Cc: who might have an opinion on that.
+
+Link: https://lore.kernel.org/linux-mtd/20240701-b4-v6-10-topic-usbc-tcpci-=
+v1-4-3fd5f4a193cc@pengutronix.de/
+
+Thanks,
+Miqu=C3=A8l
