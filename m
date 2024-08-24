@@ -1,77 +1,161 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87D118E743
-	for <loongarch@lists.linux.dev>; Fri, 23 Aug 2024 17:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC1E1F94D;
+	Sat, 24 Aug 2024 08:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724434499; cv=none; b=a0vKZK9n8qQEA0lhed17YzSsJtUbERu6IGhGwfTVCuzdKCZ0W/TK2nZV2FhNpk4exJwzi/vFHPJqPcPorskAg3F5+GGVdXAVEpM9Rxn7LqYMoeo0tlRUR5mbG2A1qP/9AEY8wuBoZAOI2a7alvi+cIQCcP8m4XuQfNktlJLiloI=
+	t=1724486702; cv=none; b=VzI0eVVXm/Q0L2tSMFibC/+yvvPABXMmEGZtqIxwjoV3ahO5SMeRCn/PMsAe8uEcngzppti1/n1e0uHN3ku6E/enTHnZTsvU19/ewHG+acjiEmeA3BHcUMzWsvC/1hd8k+VOQFoWR3tVNLewO8DtKUlTdokN32rwMvpUEcFODng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724434499; c=relaxed/simple;
-	bh=NFF/2cUYTJ/4NeMO0Tzg66sX7A/koDNnPT4RhW4dHjg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=If7GI3yqIBNlPFC4/21PQ58v6j86JTRB/3ZqRkjm5jc67TtEFeFsHorcNmO9k+ErKJBfvO4JYmSNL+FmIMx1haXR+BOx+4fOuJiLoxYGV+z9Tc9Dp/LnEpf2DOmnplAKghOnvkVrLhsEMj1+zUOi9+gQMNKeufeZy5BXnA5FYcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S+QPm9nO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JuM6tkxk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1724486702; c=relaxed/simple;
+	bh=foS8KQkUxVxkulvd5nUBkVF0PXcyoL+M3U6ZzApzLw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Krj4sEKG0Mu0QysOC8jviAPGaX4Q/9gQGLJllyGAzTHugHiWS01XRmPJrc9hle3N9drENf9uGBbUBpV91CPKWxBx7XaptdnNCTm2Ju7piXdcU4Q9bE8svJtoArs96h7BPF5vHoeav1tiaJHfVM9sB16fSpSjH1m71qhY/N1LthE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HI5TDGrd; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S+QPm9nO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JuM6tkxk"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724434495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NFF/2cUYTJ/4NeMO0Tzg66sX7A/koDNnPT4RhW4dHjg=;
-	b=S+QPm9nOrOJws9Vm0SHeksL8GW9so7vvVwkZlu7RsYdN2MrsduWTGNGQu94uThg4aEInrr
-	JXxQwjdxufbvOfCgXKJ5+Blj8eggpoEvGZ6eNk/TnRCdsVJYnbhYTtZUsGIlmwV3fM9E8j
-	b5l6TUaw7PpLCOE+amQ9RZs1LwRJy1geMkRBBJ3T7WFlcdkl74MlSMvjWT1ZXTR8WsKv9E
-	XzHIUnXhyJnvPHn5b789gYUIIsF5MXIILot8MCaru0MVjZOsn3rZdvmNg/3d3dQrmfzW3o
-	HmFKCU0GfOY/l6V58S7Z1LmUo7cJg3eflmYc9ivYgQEuUL1j5St7VV3ZT7OgPA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724434495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NFF/2cUYTJ/4NeMO0Tzg66sX7A/koDNnPT4RhW4dHjg=;
-	b=JuM6tkxkuEFodDxWTvecvRItoc5MGVKSqJV9fKejZzz+JKSdQe0cquOB97aPo4DZENi+kN
-	QubMap1XKSg0egCQ==
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, corbet@lwn.net,
- alexs@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- jiaxun.yang@flygoat.com, gaoliang@loongson.cn, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, zhangtianyang@loongson.cn, yijun@loongson.cn,
- mhocko@suse.com, akpm@linux-foundation.org, dianders@chromium.org,
- maobibo@loongson.cn, xry111@xry111.site, zhaotianrui@loongson.cn,
- nathan@kernel.org, yangtiezhu@loongson.cn, zhoubinbin@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v11 2/7] LoongArch: Define ARCH_IRQ_INIT_FLAGS as
- IRQ_NOPROBE
-In-Reply-To: <20240823103337.23602-3-zhangtianyang@loongson.cn>
-References: <20240823103337.23602-1-zhangtianyang@loongson.cn>
- <20240823103337.23602-3-zhangtianyang@loongson.cn>
-Date: Fri, 23 Aug 2024 19:34:55 +0200
-Message-ID: <87a5h3gn28.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HI5TDGrd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724486700; x=1756022700;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=foS8KQkUxVxkulvd5nUBkVF0PXcyoL+M3U6ZzApzLw8=;
+  b=HI5TDGrdGKPYD5z3vdNmzEcTvbmRxhWAPdV/62jxNz/QA9Q+SD0mbtXq
+   jtS38QVkVvzgoN5+1bMK1jBnarPhXmF8rYAv7XuExQBgU47Rcf/Ei+ad1
+   w/OtsybBLhAXs3eAg6znzCiTTDYB2nmei2FsvTYQei3zWL/IcRQoZ+Ek9
+   qr9RadIk2bQ6zBdktgV9KG9BFras9fSE0FbsOEw7L1uGHmrp2pQMINeu6
+   86WVr93SKybCjH6db26fzq8MsuNwMQ6BJwdQ51K6ZYyGukXe6OM58fMg2
+   HFRE8r6v/KTpnB9/EUlVblnk8HSulpJ3mJw1/noMJkYi5RwD1VbuDeCDa
+   Q==;
+X-CSE-ConnectionGUID: GcMXU5r1RNKQ8Ia12x5QXg==
+X-CSE-MsgGUID: xg4RDX3MQLOWWLc6REn03w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="22489982"
+X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
+   d="scan'208";a="22489982"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2024 01:05:00 -0700
+X-CSE-ConnectionGUID: tj1nqfCfRZaaoIrsX3mpdw==
+X-CSE-MsgGUID: ZmcisiiRSQeizrFvnZT1zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
+   d="scan'208";a="61717198"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Aug 2024 01:04:57 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1shllX-000ELb-0a;
+	Sat, 24 Aug 2024 08:04:55 +0000
+Date: Sat, 24 Aug 2024 16:04:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, chenhuacai@kernel.org,
+	Kevin Wheatfox <enkerewpo@hotmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] of_reserved_mem: Save region name string into struct
+ reserved_mem
+Message-ID: <202408241510.Rk14q8Rg-lkp@intel.com>
+References: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
 
-On Fri, Aug 23 2024 at 18:33, Tianyang Zhang wrote:
-> From: Huacai Chen <chenhuacai@loongson.cn>
->
-> Currently we call irq_set_noprobe() in a loop for all IRQs, but indeed
-> it only works for IRQs below NR_IRQS_LEGACY because at init_IRQ() only
-> legacy interrupts have been allocated.
->
-> Instead, we can define ARCH_IRQ_INIT_FLAGS as IRQ_NOPROBE in asm/hwirq.h
-> and the core will automatically set the flag for all interrupts.
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Hi Jiaxun,
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on bb1b0acdcd66e0d8eedee3570d249e076b89ab32]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiaxun-Yang/of_reserved_mem-Save-region-name-string-into-struct-reserved_mem/20240821-215235
+base:   bb1b0acdcd66e0d8eedee3570d249e076b89ab32
+patch link:    https://lore.kernel.org/r/20240821-save_resv_name-v1-1-b9c17f103ffb%40flygoat.com
+patch subject: [PATCH] of_reserved_mem: Save region name string into struct reserved_mem
+config: i386-buildonly-randconfig-002-20240824 (https://download.01.org/0day-ci/archive/20240824/202408241510.Rk14q8Rg-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240824/202408241510.Rk14q8Rg-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408241510.Rk14q8Rg-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/of/of_reserved_mem.c:467:12: warning: address of array 'rmem->name' will always evaluate to 'true' [-Wpointer-bool-conversion]
+     467 |                                         rmem->name ? rmem->name : "unknown");
+         |                                         ~~~~~~^~~~ ~
+   include/linux/printk.h:538:34: note: expanded from macro 'pr_info'
+     538 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |                                         ^~~~~~~~~~~
+   include/linux/printk.h:465:60: note: expanded from macro 'printk'
+     465 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                                                            ^~~~~~~~~~~
+   include/linux/printk.h:437:19: note: expanded from macro 'printk_index_wrap'
+     437 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   1 warning generated.
+
+
+vim +467 drivers/of/of_reserved_mem.c
+
+ae1add247bf8c2 Mitchel Humpherys  2015-09-15  426  
+3f0c8206644836 Marek Szyprowski   2014-02-28  427  /**
+c8813f7ec01c67 chenqiwu           2020-05-11  428   * fdt_init_reserved_mem() - allocate and init all saved reserved memory regions
+3f0c8206644836 Marek Szyprowski   2014-02-28  429   */
+3f0c8206644836 Marek Szyprowski   2014-02-28  430  void __init fdt_init_reserved_mem(void)
+3f0c8206644836 Marek Szyprowski   2014-02-28  431  {
+3f0c8206644836 Marek Szyprowski   2014-02-28  432  	int i;
+ae1add247bf8c2 Mitchel Humpherys  2015-09-15  433  
+ae1add247bf8c2 Mitchel Humpherys  2015-09-15  434  	/* check for overlapping reserved regions */
+ae1add247bf8c2 Mitchel Humpherys  2015-09-15  435  	__rmem_check_for_overlap();
+ae1add247bf8c2 Mitchel Humpherys  2015-09-15  436  
+3f0c8206644836 Marek Szyprowski   2014-02-28  437  	for (i = 0; i < reserved_mem_count; i++) {
+3f0c8206644836 Marek Szyprowski   2014-02-28  438  		struct reserved_mem *rmem = &reserved_mem[i];
+3f0c8206644836 Marek Szyprowski   2014-02-28  439  		unsigned long node = rmem->fdt_node;
+3f0c8206644836 Marek Szyprowski   2014-02-28  440  		int err = 0;
+6f1188b4ac7577 Yue Hu             2020-07-30  441  		bool nomap;
+3f0c8206644836 Marek Szyprowski   2014-02-28  442  
+d0b8ed47e83a22 pierre Kuo         2019-02-19  443  		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+9dcfee01930e6c Marek Szyprowski   2014-07-14  444  
+3f0c8206644836 Marek Szyprowski   2014-02-28  445  		if (rmem->size == 0)
+3f0c8206644836 Marek Szyprowski   2014-02-28  446  			err = __reserved_mem_alloc_size(node, rmem->name,
+3f0c8206644836 Marek Szyprowski   2014-02-28  447  						 &rmem->base, &rmem->size);
+d0b8ed47e83a22 pierre Kuo         2019-02-19  448  		if (err == 0) {
+d0b8ed47e83a22 pierre Kuo         2019-02-19  449  			err = __reserved_mem_init_node(rmem);
+d0b8ed47e83a22 pierre Kuo         2019-02-19  450  			if (err != 0 && err != -ENOENT) {
+d0b8ed47e83a22 pierre Kuo         2019-02-19  451  				pr_info("node %s compatible matching fail\n",
+d0b8ed47e83a22 pierre Kuo         2019-02-19  452  					rmem->name);
+d0b8ed47e83a22 pierre Kuo         2019-02-19  453  				if (nomap)
+7b25995f5319ad Dong Aisheng       2021-06-11  454  					memblock_clear_nomap(rmem->base, rmem->size);
+3c6867a12a224d Dong Aisheng       2021-06-11  455  				else
+3ecc68349bbab6 Mike Rapoport      2021-11-05  456  					memblock_phys_free(rmem->base,
+3ecc68349bbab6 Mike Rapoport      2021-11-05  457  							   rmem->size);
+aeb9267eb6b1df Martin Liu         2023-02-10  458  			} else {
+aeb9267eb6b1df Martin Liu         2023-02-10  459  				phys_addr_t end = rmem->base + rmem->size - 1;
+aeb9267eb6b1df Martin Liu         2023-02-10  460  				bool reusable =
+aeb9267eb6b1df Martin Liu         2023-02-10  461  					(of_get_flat_dt_prop(node, "reusable", NULL)) != NULL;
+aeb9267eb6b1df Martin Liu         2023-02-10  462  
+6ee7afbabcee4d Geert Uytterhoeven 2023-02-16  463  				pr_info("%pa..%pa (%lu KiB) %s %s %s\n",
+aeb9267eb6b1df Martin Liu         2023-02-10  464  					&rmem->base, &end, (unsigned long)(rmem->size / SZ_1K),
+aeb9267eb6b1df Martin Liu         2023-02-10  465  					nomap ? "nomap" : "map",
+aeb9267eb6b1df Martin Liu         2023-02-10  466  					reusable ? "reusable" : "non-reusable",
+aeb9267eb6b1df Martin Liu         2023-02-10 @467  					rmem->name ? rmem->name : "unknown");
+d0b8ed47e83a22 pierre Kuo         2019-02-19  468  			}
+d0b8ed47e83a22 pierre Kuo         2019-02-19  469  		}
+3f0c8206644836 Marek Szyprowski   2014-02-28  470  	}
+3f0c8206644836 Marek Szyprowski   2014-02-28  471  }
+9dcfee01930e6c Marek Szyprowski   2014-07-14  472  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
