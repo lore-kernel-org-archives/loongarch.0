@@ -1,161 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC1E1F94D;
-	Sat, 24 Aug 2024 08:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 461C87462
+	for <loongarch@lists.linux.dev>; Sun, 25 Aug 2024 03:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724486702; cv=none; b=VzI0eVVXm/Q0L2tSMFibC/+yvvPABXMmEGZtqIxwjoV3ahO5SMeRCn/PMsAe8uEcngzppti1/n1e0uHN3ku6E/enTHnZTsvU19/ewHG+acjiEmeA3BHcUMzWsvC/1hd8k+VOQFoWR3tVNLewO8DtKUlTdokN32rwMvpUEcFODng=
+	t=1724556871; cv=none; b=FboT0LZNg5HQdK41pdG/bIbDMF2q7DukTeumxVCeaSyakVRZBz0kLSpbBqfefjMK2gn7ya65LJGG5ZuMilFnxTnI7eOqKlB2OZUo32GghSUDsAc88TuU/k/z2Z3KYVyaj/MF9kkcxS/rZL4SeCu51lJ9ht66mf02tDhda8sZgBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724486702; c=relaxed/simple;
-	bh=foS8KQkUxVxkulvd5nUBkVF0PXcyoL+M3U6ZzApzLw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Krj4sEKG0Mu0QysOC8jviAPGaX4Q/9gQGLJllyGAzTHugHiWS01XRmPJrc9hle3N9drENf9uGBbUBpV91CPKWxBx7XaptdnNCTm2Ju7piXdcU4Q9bE8svJtoArs96h7BPF5vHoeav1tiaJHfVM9sB16fSpSjH1m71qhY/N1LthE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HI5TDGrd; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HI5TDGrd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724486700; x=1756022700;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=foS8KQkUxVxkulvd5nUBkVF0PXcyoL+M3U6ZzApzLw8=;
-  b=HI5TDGrdGKPYD5z3vdNmzEcTvbmRxhWAPdV/62jxNz/QA9Q+SD0mbtXq
-   jtS38QVkVvzgoN5+1bMK1jBnarPhXmF8rYAv7XuExQBgU47Rcf/Ei+ad1
-   w/OtsybBLhAXs3eAg6znzCiTTDYB2nmei2FsvTYQei3zWL/IcRQoZ+Ek9
-   qr9RadIk2bQ6zBdktgV9KG9BFras9fSE0FbsOEw7L1uGHmrp2pQMINeu6
-   86WVr93SKybCjH6db26fzq8MsuNwMQ6BJwdQ51K6ZYyGukXe6OM58fMg2
-   HFRE8r6v/KTpnB9/EUlVblnk8HSulpJ3mJw1/noMJkYi5RwD1VbuDeCDa
-   Q==;
-X-CSE-ConnectionGUID: GcMXU5r1RNKQ8Ia12x5QXg==
-X-CSE-MsgGUID: xg4RDX3MQLOWWLc6REn03w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="22489982"
-X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
-   d="scan'208";a="22489982"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2024 01:05:00 -0700
-X-CSE-ConnectionGUID: tj1nqfCfRZaaoIrsX3mpdw==
-X-CSE-MsgGUID: ZmcisiiRSQeizrFvnZT1zA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
-   d="scan'208";a="61717198"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 24 Aug 2024 01:04:57 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1shllX-000ELb-0a;
-	Sat, 24 Aug 2024 08:04:55 +0000
-Date: Sat, 24 Aug 2024 16:04:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, chenhuacai@kernel.org,
-	Kevin Wheatfox <enkerewpo@hotmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH] of_reserved_mem: Save region name string into struct
- reserved_mem
-Message-ID: <202408241510.Rk14q8Rg-lkp@intel.com>
-References: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
+	s=arc-20240116; t=1724556871; c=relaxed/simple;
+	bh=GLh0c4J0+6QysF3awcYBVB6C1NnBKgCQzHe7q4s8x9k=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HmVB3LCYU1IugzqL/PbItILkNZHoPhHBJdyQitJd6iYbvPGYL4l+0PBEhePpjb8lh12djPYChaOuZYzUA1praX+R/00crzPWAVcJlKU6oPQMQR5ZYJMF/teem9/UIiJmd1wbe8oQuR0i3L2hTXIiKszqHLDhwWQtEXh2GVdTcyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.4.132])
+	by gateway (Coremail) with SMTP id _____8Dx+5o7pspmUisfAA--.28148S3;
+	Sun, 25 Aug 2024 11:34:19 +0800 (CST)
+Received: from [10.20.4.132] (unknown [10.20.4.132])
+	by front1 (Coremail) with SMTP id qMiowMAx62Y5pspm62shAA--.6265S2;
+	Sun, 25 Aug 2024 11:34:17 +0800 (CST)
+Message-ID: <778e50bc-58db-42e6-aee3-3b1e01ca227d@loongson.cn>
+Date: Sun, 25 Aug 2024 11:34:17 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?B?6YOR6LGq5aiB?= <zhenghaowei@loongson.cn>
+Subject: Re: [PATCH v2 1/3] dt-bindings: serial: Add Loongson UART controller
+To: Krzysztof Kozlowski <krzk@kernel.org>, gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ p.zabel@pengutronix.de, zhuyinbo <zhuyinbo@loongson.cn>,
+ Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang <wanghongliang@loongson.cn>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20240804063834.70022-1-zhenghaowei@loongson.cn>
+ <4d1f2426-b43c-4727-8387-f18edf937163@kernel.org>
+ <f31609c4-1e47-49bc-9231-5b0353d35dc9@loongson.cn>
+ <601adbfd-fbb6-48c6-b755-da1b5d321d6b@kernel.org>
+ <89e71573-9365-2e61-bb38-759363df1b8b@loongson.cn>
+ <5fdf6810-f729-42bf-a5fd-a2de02d0a894@kernel.org>
+ <32ff2c9b-1d34-4637-80ff-e8eefe253a95@loongson.cn>
+ <d9d76a4a-1552-462b-b946-6475645c6f59@kernel.org>
+Content-Language: en-US
+In-Reply-To: <d9d76a4a-1552-462b-b946-6475645c6f59@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAx62Y5pspm62shAA--.6265S2
+X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAgEABGbJzRsCPAAAsA
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr1DJryDtrWkCr15CFyfAFc_yoWrKw17pF
+	4rGanrGryUtr10vr4Ut3W8Jr95t3s8Jw1DXr48XF17Gayqqw1jqr1rZF4jgryfXr48Jryj
+	qr1UKFy7ZF47Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-Hi Jiaxun,
 
-kernel test robot noticed the following build warnings:
+在 2024/8/12 16:25, Krzysztof Kozlowski 写道:
+> On 12/08/2024 10:09, 郑豪威 wrote:
+>> 在 2024/8/9 18:05, Krzysztof Kozlowski 写道:
+>>> On 09/08/2024 11:55, 郑豪威 wrote:
+>>>>>>>> +    description: Enables fractional-N division. Currently,
+>>>>>>>> +      only LS2K1500 and LS2K2000 support this feature.
+>>>>>>>> +
+>>>>>>>> +  rts-invert:
+>>>>>>>> +    description: Inverts the RTS value in the MCR register.
+>>>>>>>> +      This should be used on Loongson-3 series CPUs, Loongson-2K
+>>>>>>>> +      series CPUs, and Loongson LS7A bridge chips.
+>>>>>>>> +
+>>>>>>>> +  dtr-invert:
+>>>>>>>> +    description: Inverts the DTR value in the MCR register.
+>>>>>>>> +      This should be used on Loongson-3 series CPUs, Loongson-2K
+>>>>>>>> +      series CPUs, and Loongson LS7A bridge chips.
+>>>>>>>> +
+>>>>>>>> +  cts-invert:
+>>>>>>>> +    description: Inverts the CTS value in the MSR register.
+>>>>>>>> +      This should be used on Loongson-2K0500, Loongson-2K1000,
+>>>>>>>> +      and Loongson LS7A bridge chips.
+>>>>>>>> +
+>>>>>>>> +  dsr-invert:
+>>>>>>>> +    description: Inverts the DSR value in the MSR register.
+>>>>>>>> +      This should be used on Loongson-2K0500, Loongson-2K1000,
+>>>>>>>> +      and Loongson LS7A bridge chips.
+>>>>> Same questions for all these. Why choosing invert is a board level
+>>>>> decision? If it "should be used" then why it is not used always?
+>>>>>
+>>>> Because these features are not applicable to all chips, such as
+>>>> 'fractional-division',
+>>> Hm?
+>>>
+>>>> which is currently supported only by 2K1500 and 2K2000, and for
+>>>> Loongson-3 series
+>>> These are SoCs. Compatible defines that. Please align with your
+>>> colleagues, because *we talked about this* already.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>> I consulted with my colleagues and would like to confirm with you. For
+>> the five
+>>
+>> properties provided, fractional-division is offered as a new feature,
+>> supported by
+>>
+>> 2K1500 and 2K2000. As for the invert property, it is due to a bug in our
+>> controller,
+>>
+>> and its usage may vary across different chips. Should we add different
+>> compatible
+>>
+>> values to address these issues for different chips, whether they are new
+>> features or
+>>
+>> controller bugs?
+> How did you align? We had already talks with you about this problem -
+> you need specific compatibles. How you explain above properties, all of
+> them are deducible from the compatible, so drop them.
+>
+> Your entire argument above does not address at all my concerns, so
+> before you respond repeating the same, really talk with your colleagues.
+>
+> One of many previous discussions:
+> https://lore.kernel.org/linux-devicetree/25c30964-6bd3-c7eb-640a-ba1f513b7675@linaro.org/
+>
+> https://lore.kernel.org/linux-devicetree/20230526-dolly-reheat-06c4d5658415@wendy/
+>
+> I wish we do not have to keep repeating the same to Loongson. Please
+> STORE the feedback for any future submissions, so you will not repeat
+> the same mistakes over and over.
+>
+> Best regards,
+> Krzysztof
 
-[auto build test WARNING on bb1b0acdcd66e0d8eedee3570d249e076b89ab32]
+Hi:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiaxun-Yang/of_reserved_mem-Save-region-name-string-into-struct-reserved_mem/20240821-215235
-base:   bb1b0acdcd66e0d8eedee3570d249e076b89ab32
-patch link:    https://lore.kernel.org/r/20240821-save_resv_name-v1-1-b9c17f103ffb%40flygoat.com
-patch subject: [PATCH] of_reserved_mem: Save region name string into struct reserved_mem
-config: i386-buildonly-randconfig-002-20240824 (https://download.01.org/0day-ci/archive/20240824/202408241510.Rk14q8Rg-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240824/202408241510.Rk14q8Rg-lkp@intel.com/reproduce)
+I have been aligning with my colleagues over the past few days and
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408241510.Rk14q8Rg-lkp@intel.com/
+reviewing previous discussions. Based on these, I have made the
 
-All warnings (new ones prefixed by >>):
+following modifications according to the differences in the controller:
 
->> drivers/of/of_reserved_mem.c:467:12: warning: address of array 'rmem->name' will always evaluate to 'true' [-Wpointer-bool-conversion]
-     467 |                                         rmem->name ? rmem->name : "unknown");
-         |                                         ~~~~~~^~~~ ~
-   include/linux/printk.h:538:34: note: expanded from macro 'pr_info'
-     538 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
-         |                                         ^~~~~~~~~~~
-   include/linux/printk.h:465:60: note: expanded from macro 'printk'
-     465 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
-         |                                                            ^~~~~~~~~~~
-   include/linux/printk.h:437:19: note: expanded from macro 'printk_index_wrap'
-     437 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                                 ^~~~~~~~~~~
-   1 warning generated.
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - loongson,ls7a-uart
++          - loongson,ls3a5000-uart
++          - loongson,ls2k2000-uart
++      - items:
++          - enum:
++              - loongson,ls2k1000-uart
++              - loongson,ls2k0500-uart
++          - const: loongson,ls7a-uart
++      - items:
++          - enum:
++              - loongson,ls2k1500-uart
++          - const: loongson,ls2k2000-uart
++      - items:
++          - enum:
++              - loongson,ls3a6000-uart
++          - const: loongson,ls3a5000-uart
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-frequency: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-frequency
++
++allOf:
++  - $ref: serial.yaml
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++
++    serial@1fe20000 {
++        compatible = "loongson,ls2k1000-uart", "loongson,ls7a-uart";
++        reg = <0x1fe20000 0x10>;
++        clock-frequency = <125000000>;
++        interrupt-parent = <&liointc0>;
++        interrupts = <0x0 IRQ_TYPE_LEVEL_HIGH>;
++    };
 
+Does this modification meet the expectation?
 
-vim +467 drivers/of/of_reserved_mem.c
+Best regards,
 
-ae1add247bf8c2 Mitchel Humpherys  2015-09-15  426  
-3f0c8206644836 Marek Szyprowski   2014-02-28  427  /**
-c8813f7ec01c67 chenqiwu           2020-05-11  428   * fdt_init_reserved_mem() - allocate and init all saved reserved memory regions
-3f0c8206644836 Marek Szyprowski   2014-02-28  429   */
-3f0c8206644836 Marek Szyprowski   2014-02-28  430  void __init fdt_init_reserved_mem(void)
-3f0c8206644836 Marek Szyprowski   2014-02-28  431  {
-3f0c8206644836 Marek Szyprowski   2014-02-28  432  	int i;
-ae1add247bf8c2 Mitchel Humpherys  2015-09-15  433  
-ae1add247bf8c2 Mitchel Humpherys  2015-09-15  434  	/* check for overlapping reserved regions */
-ae1add247bf8c2 Mitchel Humpherys  2015-09-15  435  	__rmem_check_for_overlap();
-ae1add247bf8c2 Mitchel Humpherys  2015-09-15  436  
-3f0c8206644836 Marek Szyprowski   2014-02-28  437  	for (i = 0; i < reserved_mem_count; i++) {
-3f0c8206644836 Marek Szyprowski   2014-02-28  438  		struct reserved_mem *rmem = &reserved_mem[i];
-3f0c8206644836 Marek Szyprowski   2014-02-28  439  		unsigned long node = rmem->fdt_node;
-3f0c8206644836 Marek Szyprowski   2014-02-28  440  		int err = 0;
-6f1188b4ac7577 Yue Hu             2020-07-30  441  		bool nomap;
-3f0c8206644836 Marek Szyprowski   2014-02-28  442  
-d0b8ed47e83a22 pierre Kuo         2019-02-19  443  		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
-9dcfee01930e6c Marek Szyprowski   2014-07-14  444  
-3f0c8206644836 Marek Szyprowski   2014-02-28  445  		if (rmem->size == 0)
-3f0c8206644836 Marek Szyprowski   2014-02-28  446  			err = __reserved_mem_alloc_size(node, rmem->name,
-3f0c8206644836 Marek Szyprowski   2014-02-28  447  						 &rmem->base, &rmem->size);
-d0b8ed47e83a22 pierre Kuo         2019-02-19  448  		if (err == 0) {
-d0b8ed47e83a22 pierre Kuo         2019-02-19  449  			err = __reserved_mem_init_node(rmem);
-d0b8ed47e83a22 pierre Kuo         2019-02-19  450  			if (err != 0 && err != -ENOENT) {
-d0b8ed47e83a22 pierre Kuo         2019-02-19  451  				pr_info("node %s compatible matching fail\n",
-d0b8ed47e83a22 pierre Kuo         2019-02-19  452  					rmem->name);
-d0b8ed47e83a22 pierre Kuo         2019-02-19  453  				if (nomap)
-7b25995f5319ad Dong Aisheng       2021-06-11  454  					memblock_clear_nomap(rmem->base, rmem->size);
-3c6867a12a224d Dong Aisheng       2021-06-11  455  				else
-3ecc68349bbab6 Mike Rapoport      2021-11-05  456  					memblock_phys_free(rmem->base,
-3ecc68349bbab6 Mike Rapoport      2021-11-05  457  							   rmem->size);
-aeb9267eb6b1df Martin Liu         2023-02-10  458  			} else {
-aeb9267eb6b1df Martin Liu         2023-02-10  459  				phys_addr_t end = rmem->base + rmem->size - 1;
-aeb9267eb6b1df Martin Liu         2023-02-10  460  				bool reusable =
-aeb9267eb6b1df Martin Liu         2023-02-10  461  					(of_get_flat_dt_prop(node, "reusable", NULL)) != NULL;
-aeb9267eb6b1df Martin Liu         2023-02-10  462  
-6ee7afbabcee4d Geert Uytterhoeven 2023-02-16  463  				pr_info("%pa..%pa (%lu KiB) %s %s %s\n",
-aeb9267eb6b1df Martin Liu         2023-02-10  464  					&rmem->base, &end, (unsigned long)(rmem->size / SZ_1K),
-aeb9267eb6b1df Martin Liu         2023-02-10  465  					nomap ? "nomap" : "map",
-aeb9267eb6b1df Martin Liu         2023-02-10  466  					reusable ? "reusable" : "non-reusable",
-aeb9267eb6b1df Martin Liu         2023-02-10 @467  					rmem->name ? rmem->name : "unknown");
-d0b8ed47e83a22 pierre Kuo         2019-02-19  468  			}
-d0b8ed47e83a22 pierre Kuo         2019-02-19  469  		}
-3f0c8206644836 Marek Szyprowski   2014-02-28  470  	}
-3f0c8206644836 Marek Szyprowski   2014-02-28  471  }
-9dcfee01930e6c Marek Szyprowski   2014-07-14  472  
+Haowei Zheng
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
