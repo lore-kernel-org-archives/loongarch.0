@@ -1,136 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E4D18F2FF
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 14:49:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4755146A71
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 15:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724683755; cv=none; b=FIr9YxOPjLTMuoYeLQNzsLHn7jd67G4yqxCyk868GhgiSQZ9KpfrEuVWfNTVTvKyml7HGMlxKNuZ0uWLeCqPqPpmJ7bIuMDf62EZZp6qeMMBIoroUEBHa5kMLJbltDODiikCdFG9Hv8Jern26IBzms+W99pK9LoZPe7dFQ8bUnU=
+	t=1724685285; cv=none; b=FjKz9/7iPSc+rR+pfhekk2cpPPm0tTTEH0XxlOyOHwY/UqVBkICoKVHwKWOQ9XyoziS9w6/17QKOSKfmFrDSy/CP76+gAd4+XnZaDAwnyxqMAO4phvOPbRoOukB3beMbsoyrdVFAz0qZhuOUkIRykULKSxek0p59iae1PM/HRoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724683755; c=relaxed/simple;
-	bh=uJYKJP5u52gdFIEA/SVCvB+nGTPXrfaICxlVLoVHi2s=;
+	s=arc-20240116; t=1724685285; c=relaxed/simple;
+	bh=o3AayVgPDQ/fox0ISFsYAhB9fqQj/kPZyYVlO4sDUHg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rECpEEpTnEcgs4wJzkwgtKN2uLDsf9nXbAxmwCxh6KRdMTxXIZ/JPO+n53BjmTVVCuFdKfcPfCicYz82slGkcMyGXBgB2+TvaBjU035U7SBgvAzK6jYg1F2aiOmQWU10P/pxX82YnxwC+JJL+y5du9zqfTDT4vMWusyEkeoQdEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BKFV+e3n; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=s1sExDdpEbu3EPlCRnkrV++C9o38wR9iyWuNqK0YVlRsYsu1C5fRDo/AwkC7A8TssN/8qQq+a7AnwXTaRx8hyT3KSaCQt/wc/SP/DAIYT52VDDp7lSfFMHBewGmln9PtUEzZ0nlDgRE5TvDq0UGnim+WwGZkg4m+RMdO1ufdHwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZziDy4YE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKFV+e3n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E918C52FD3
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 14:49:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZziDy4YE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80311C567F0
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 15:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724683755;
-	bh=uJYKJP5u52gdFIEA/SVCvB+nGTPXrfaICxlVLoVHi2s=;
+	s=k20201202; t=1724685285;
+	bh=o3AayVgPDQ/fox0ISFsYAhB9fqQj/kPZyYVlO4sDUHg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BKFV+e3nTLbba7IfKYx158sxITogkHLfTfOtpil0XHPhMV9Zmrrx7saeH7i0FatzN
-	 pH4dfnLKKDajT5BGfYPv6qcGfjsJrfwLUZfbMQ3VX9HqBHvG3++Km3rXSREFYrRu69
-	 QAz/VWsd3lp2t44BXlXvVpapyjkrh7f3xlFSXRSWjxzG4LomGQvcuwmmUe4wwbhBmR
-	 lXlwydJITijynzn75CON8Gn6S65QzsmWK/Sy8QF+cWZIjWyJYuTVIihgh+rBGPh7eH
-	 yNWTCXrqyzC3/QTg397PRzCCNfbol+NWeq+FLFX7brKLCUwH7DlqjN+ee/rjV6Spyg
-	 K4Du7yX91obcA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5bed83488b6so5031259a12.2
-        for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 07:49:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUdf3o0plZnH9DV0R09Vs8xF0NvdeC0+g9EDLBELwuX9Xv8D3B59isowb2P01wawRKbHivZO87Srcg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwuqIuj6nt6G4A2OBy+krYUX/c/KEHFrHB8sumOeT9ZCnudwkVE
-	6tT8oHd3vzCBe2AxqSzLFTQNstgxmUrHiUEdmalBY6gWpGNa0VQwNk4ziZi1bryPjWm3N1GmbMa
-	uCK3KtE3U0nm2GosJPnbrxibsVrY=
-X-Google-Smtp-Source: AGHT+IEKLWSILwx6ptoGTQB05HFx+Gqpr+sIMMEXlrHqdZkcGukYw7IXUkPbpM5O4I3GA/JSm4pX8x1fFvrSKY7gjU4=
-X-Received: by 2002:a05:6402:5cc:b0:5bf:50:266b with SMTP id
- 4fb4d7f45d1cf-5c089171b3fmr6351964a12.19.1724683753967; Mon, 26 Aug 2024
- 07:49:13 -0700 (PDT)
+	b=ZziDy4YEOHUWNQO+QUizoZNYSJRMoBiH8SIfNm84pma0oFlCfpM0uv5LLW4Og98m3
+	 8INiZ8+C+LtgRavQ6ql7jzEedyovlePUngdr3VvBpiUMhqW63DXKTUN085iNJDsK/K
+	 n1NCdMQ9wOgbfYe0ALWmA/ftHLfuHx4Uyz+Xx1ihnHS8N+4+6dTzV/WaBRBJ5UrQ+U
+	 SAL1gcUUadvSFGbOC/4JHM9cBJSASMkTeXBCwrsoSTkpYscYkepXTrNyD2NlcHBPEC
+	 E2yjVM7FpuUeQlhAQELHiqKVw4114OVH4XVJnwQ2gjwZstAfT+epuDCdIskYIN/TDr
+	 bdaCELiI4mtBw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-533496017f8so5938451e87.0
+        for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 08:14:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUy6zqmmLIpcoikUMzEycZs57/mvvn0tzKVERwvuGPmbRjTeKAqm13SM70LErk5v/YZKPPH6kO8DRs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZhetJk1M7cjB38d+e0qG+bStrmrwq5Rp/9EzI3lqZeoagzxn6
+	6FuyIXIkiFXjN85z/hfiDaDwSrBJ/KcOcDFg3QDsEmVZQutNG6yhNwMgRRSfstxYlyIvKISGP9q
+	guyofyi/YeLXmxyzOGcqrlGP4Ow==
+X-Google-Smtp-Source: AGHT+IH+fKCQFUE4FScy/Z+auyBZ3EA1T76xBgwCZosuSWBo7h2RErteaofa1l0foA1ZuPS1tDMsDFOkzMo5SOouT9s=
+X-Received: by 2002:a05:6512:3056:b0:52e:97b3:42a1 with SMTP id
+ 2adb3069b0e04-53438831f6cmr6690306e87.24.1724685283873; Mon, 26 Aug 2024
+ 08:14:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240815071545.925867-1-maobibo@loongson.cn> <20240815071545.925867-3-maobibo@loongson.cn>
-In-Reply-To: <20240815071545.925867-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 26 Aug 2024 22:49:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5_xrmDVTiB=un7LzdLHQDjD564tVmVcHLrgGhhX6Omaw@mail.gmail.com>
-Message-ID: <CAAhV-H5_xrmDVTiB=un7LzdLHQDjD564tVmVcHLrgGhhX6Omaw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] LoongArch: KVM: Invalid guest steal time address
- on vCPU reset
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
+ <CAL_JsqLeVPBz4mEedXEm=rb6ghWwROB7jr-PDw3qVsNRz20Z_A@mail.gmail.com> <c0df4919-21b4-4526-8861-f74234ffd390@app.fastmail.com>
+In-Reply-To: <c0df4919-21b4-4526-8861-f74234ffd390@app.fastmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 26 Aug 2024 10:14:31 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+=KPKqkjd1JFNGJRKgF-FQPM=+we+09EnY3AQVGkP-6g@mail.gmail.com>
+Message-ID: <CAL_Jsq+=KPKqkjd1JFNGJRKgF-FQPM=+we+09EnY3AQVGkP-6g@mail.gmail.com>
+Subject: Re: [PATCH] of_reserved_mem: Save region name string into struct reserved_mem
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Huacai Chen <chenhuacai@kernel.org>, Kevin Wheatfox <enkerewpo@hotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+On Mon, Aug 26, 2024 at 9:22=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+>
+>
+> =E5=9C=A82024=E5=B9=B48=E6=9C=8826=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=
+=E5=8D=883:09=EF=BC=8CRob Herring=E5=86=99=E9=81=93=EF=BC=9A
+> > On Wed, Aug 21, 2024 at 8:51=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoa=
+t.com> wrote:
+> >>
+> >> Previously only a pointer to fdt string pool is saved to struct
+> >> reserved_mem as region name.
+> >>
+> >> As on some architectures booting FDT will be wiped at later initialisa=
+tion
+> >> stages, this is breaking reserved_mem users.
+> >
+> > What architectures? Be specific.
+>
+> It's LoongArch and MIPS, I'll expand commit message.
+>
+> FDT might be placed in .init sections or memory not managed by kernel, th=
+us
+> it may be wiped out.
+>
+> >
+> > Why is the FDT wiped? It should be preserved and you need it later to
+> > implement kexec.
+>
+> So KEXEC is using kernel's self copy of FDT created by unflatten_and_copy=
+_device_tree(),
+> while reserved-mem scan is performed before copy to ensure that reserved =
+memory
+> are being tracked by memblock before possible memblock_alloc in unflatten=
+_and_copy_device_tree().
 
-Huacai
+The FDT being copied is not the same as 'wiped out'.
 
-On Thu, Aug 15, 2024 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> If paravirt steal time feature is enabled, there is percpu gpa address
-> passed from guest vcpu and host modified guest memory space with this gpa
-> address. When vcpu is reset normally, it will notify host and invalidate
-> gpa address.
->
-> However if VM is crashed and VMM reboots VM forcely, vcpu reboot
-> notification callback will not be called in VM, host needs invalid the
-> gpa address, else host will modify guest memory during VM reboots. Here i=
-t
-> is invalidated from vCPU KVM_REG_LOONGARCH_VCPU_RESET ioctl interface.
->
-> Also funciton kvm_reset_timer() is removed at vCPU reset stage, since SW
-> emulated timer is only used in vCPU block state. When vCPU is removed
-> from block waiting queue, kvm_restore_timer() is called and SW timer
-> is cancelled. And timer register is cleared at VMM when vCPU is reset.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/kvm_vcpu.h | 1 -
->  arch/loongarch/kvm/timer.c            | 7 -------
->  arch/loongarch/kvm/vcpu.c             | 2 +-
->  3 files changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/inclu=
-de/asm/kvm_vcpu.h
-> index c416cb7125c0..86570084e05a 100644
-> --- a/arch/loongarch/include/asm/kvm_vcpu.h
-> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
-> @@ -76,7 +76,6 @@ static inline void kvm_restore_lasx(struct loongarch_fp=
-u *fpu) { }
->  #endif
->
->  void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
-> -void kvm_reset_timer(struct kvm_vcpu *vcpu);
->  void kvm_save_timer(struct kvm_vcpu *vcpu);
->  void kvm_restore_timer(struct kvm_vcpu *vcpu);
->
-> diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-> index bcc6b6d063d9..74a4b5c272d6 100644
-> --- a/arch/loongarch/kvm/timer.c
-> +++ b/arch/loongarch/kvm/timer.c
-> @@ -188,10 +188,3 @@ void kvm_save_timer(struct kvm_vcpu *vcpu)
->         kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
->         preempt_enable();
->  }
-> -
-> -void kvm_reset_timer(struct kvm_vcpu *vcpu)
-> -{
-> -       write_gcsr_timercfg(0);
-> -       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG, 0);
-> -       hrtimer_cancel(&vcpu->arch.swtimer);
-> -}
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 16756ffb55e8..6905283f535b 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -647,7 +647,7 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
->                                 vcpu->kvm->arch.time_offset =3D (signed l=
-ong)(v - drdtime());
->                         break;
->                 case KVM_REG_LOONGARCH_VCPU_RESET:
-> -                       kvm_reset_timer(vcpu);
-> +                       vcpu->arch.st.guest_addr =3D 0;
->                         memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->a=
-rch.irq_pending));
->                         memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arc=
-h.irq_clear));
->                         break;
-> --
-> 2.39.3
->
+I'd rather update the pointers when copied or eliminate the need to
+store them than introduce an arbitrary max length. Though if name
+comes from the node name, then that has a max of 63 already.
+
+Rob
