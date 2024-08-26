@@ -1,129 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB1413A250;
-	Mon, 26 Aug 2024 08:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAD013FD84;
+	Mon, 26 Aug 2024 08:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724660309; cv=none; b=cw/AsF5tSxIA7jsd7J2K7mir76gTHF3DHXl2Zi68znQKu/k9uuV0MHe3FN+OMyGV+IljmLzXZfII46qMVtU6FyVAMAPe3qFtaUopgJDAu8D5kDlp3LXiOOzntdQyirC2hBkX+QkfFfwucgyzebjgQuBDmlOpKQRGT2RnseJvUGg=
+	t=1724662466; cv=none; b=VHeiEQ/YjCNHri2e/zljacQrlXrXzZgsi91HberUlugVCQ5AqHbEsvv/bqElRZ8WBR1YwDGwoeo9QMGFXCpVEV68T5USJEsHaaFt0ZaqH2uJb9Z/yY6cqhwrOEBq0qlmNEGJaTKb/svkXeI2Y9PBKI3ivkwe7MDRIzVJ6M13YMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724660309; c=relaxed/simple;
-	bh=Dm5wSQzz2CuSqJ8YdyeT008XPz/ymqN7Z/p6cNYZBz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3esfiB8h9cD+YhabxGLRwjVUf7NXvLzeViVg87WoLD6JJSfYfhL1igDYYiFdBB4TwYnjNBBYD4T6xwjTNH7WRu07yAQJhw2sJp9D/j4dfDetu1pFYalItaEnwmyhlXfrVHJ4mka7+ditRrL2KpsTGMSg98xebbVA1lCWmEGUX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MprAI4R2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724662466; c=relaxed/simple;
+	bh=rR9SM/nBlqlqKsdKY9O/8t2YAXbtoNLDK4wyVeQBQ74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WGLE/87PDv/tiMjb+HIcvp+vP+JUYMRQhIBrBWCoE77O27iDpUvscLE4XgTaxNCYyt6EYGzw+CKWGbdnkOSLfi4y2jb8dq4nULH+YKDaZJ016z1D5TY8PnGO4WoBf6Wj0HD5L3ElccDBn4RRpIyAIVJMwTRRHPEwZGkrHf82NV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=jGFPOdTQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MprAI4R2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A658FC8CDD6;
-	Mon, 26 Aug 2024 08:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724660308;
-	bh=Dm5wSQzz2CuSqJ8YdyeT008XPz/ymqN7Z/p6cNYZBz8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MprAI4R2UE/etg6qsOB2NZXyEzULVqsFjAy3v4cHeYts0OtWjs8WtMEhPNM7u0Rk3
-	 rUJwnAw1l/59/Uk+cxax7unctw0D3Tqba4ZKyojRHva/7sa7BVUHX8YllS0uH0fzG2
-	 Uq4VvnIwtC4O1W/8MGlTp0hevmEx4+lyWnvqwOfKTqXQmxvtVknVc7jXf7jNIU5LTY
-	 AfO6Y4+Wt3E6BcKq2SdtFCwTqNkgWw8nCxAgapK05qVfkZLwhC4e9yFJPIOs3rwrh5
-	 jnnznEA6O+fUDWNs+tzFqs3hCweqbu9JJAZCOLgwAwol950Mwk40KeO2RayQ2uNsPN
-	 vyi1txXHico0Q==
-Message-ID: <51f564ea-9507-40b4-a943-23bdd330e6d6@kernel.org>
-Date: Mon, 26 Aug 2024 10:18:21 +0200
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jGFPOdTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C4AC4E696;
+	Mon, 26 Aug 2024 08:54:25 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jGFPOdTQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1724662464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AF81dAGwjtoyy9T08zoVHtx/QpSDpioe8XEVyMBlDxI=;
+	b=jGFPOdTQ2tKl1v/SItPmVwABTErg9P4ahKTWxhM0XGcy4WilGBSWg5cAP59fRtVjqNpCn2
+	2i20abVs1gPQNp4B3Bu0dPCCTC+UBg7sI+zL1CchuLcBxlVEG24LniL4piECyrEmjVI9Sl
+	w9M+CbiYG5OpW0jSs2eeL0jDzR5CL5M=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 4ea437a1 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Mon, 26 Aug 2024 08:54:23 +0000 (UTC)
+Date: Mon, 26 Aug 2024 10:54:18 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 0/2] LoongArch: Implement getrandom() in vDSO
+Message-ID: <ZsxCuvkJLDrS1qX1@zx2c4.com>
+References: <20240815133357.35829-1-xry111@xry111.site>
+ <Zr4K77uPi3CMfE-S@zx2c4.com>
+ <b39ba1dea300c905f377af4cf3702ce4226cabc7.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] LoongArch: Update dts to support Loongson UART
- driver.
-To: =?UTF-8?B?6YOR6LGq5aiB?= <zhenghaowei@loongson.cn>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, chenhuacai@kernel.org,
- kernel@xen0n.name, p.zabel@pengutronix.de, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20240826024705.55474-1-zhenghaowei@loongson.cn>
- <20240826024705.55474-4-zhenghaowei@loongson.cn>
- <gtbaqcnk4g3f4achlyiixu2bbb2rxoxoitbltqxavexjoyqxlf@furbr4zsirkz>
- <fb0ddbe0-8613-40ac-a3fb-9e544c50088d@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <fb0ddbe0-8613-40ac-a3fb-9e544c50088d@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b39ba1dea300c905f377af4cf3702ce4226cabc7.camel@xry111.site>
 
-On 26/08/2024 08:54, 郑豪威 wrote:
+On Mon, Aug 26, 2024 at 02:32:05PM +0800, Xi Ruoyao wrote:
+> On Thu, 2024-08-15 at 14:04 +0000, Jason A. Donenfeld wrote:
+> > Thanks for posting this! That's very nice to see.
+> > 
+> > I'm currently traveling without my laptop (actually in Yunnan, China!),
+> > so I'll be able to take a look at this for real starting the 26th, as
+> > right now I'm just on my cellphone using lore+mutt.
 > 
-> 在 2024/8/26 14:00, Krzysztof Kozlowski 写道:
->> On Mon, Aug 26, 2024 at 10:47:05AM +0800,zhenghaowei@loongson.cn wrote:
->>> From: Haowei Zheng<zhenghaowei@loongson.cn>
->>>
->>> Change to use the Loongson UART driver for Loongson-2K2000,
->>> Loongson-2K1000 and Loongson-2K0500.
->> Why?
->>
->> That's what commit msg should explain.  This is not bisectable and
->> breaks users without any reasonable need/explanation.
->>
->> Best regards,
->> Krzysztof
+> Hi Jason,
 > 
-> I got it, and I will provide detailed explanations like this:
-> 
-> We have provided separate UART drivers for ls2k0500,  ls2k1000, and
-> 
-> ls2k2000, which solves the issue of the full-featured serial port being
-> 
-> unusable. Additionally, we have implemented fractional division
-> 
-> functionality for ls2k2000.
+> When you start the reviewing I guess you can check out the powerpc
+> implementation first and add me into the Cc of your reply.  There seems
+> something useful to me in the powerpc implementation (avoiding memset,
+> adding __arch_get_k_vdso_data so I wouldn't need the inline asm trick
+> for the _vdso_rng_data symbol, and the selftest support).
 
-You still break the users. Explain the problem you are fixing. NAK.
+Indeed, I just committed a bit of those fixups to the random.git tree,
+if you want to base your work on that for the time being:
 
-Best regards,
-Krzysztof
-
+   https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git/log/
