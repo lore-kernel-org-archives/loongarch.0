@@ -1,43 +1,56 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 895C847A4C
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 02:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA68229CE7
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 05:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724640438; cv=none; b=HCZDZi+4bcC9c04IfJ/NiX8ejV2H8gzog+QPQ49F0vuLJoOll8Q6qBVz55YmEPmP5KsTmGpAsn0XKXGMe/LSPl4YdItERt8a0IZ/LDfUmeBDG73QQK9Wm87BMfEd9Zxyo4xluEDVsHb8rvK3ahKTVC0vqg0EUFFzosHFa74onpI=
+	t=1724651384; cv=none; b=fifXwNormaPimMjLgT56zpsUD9R5EHZyg1T27ZsD15xGoY+QJIbthd+wNeUu265ECNgse3i70ljgEZBvKK6mG7LtpT58iDbXMVaz5X0mIVE8tH0yrGJPvFALX/mDlbNBzEU3tXfvKMlq3DmWOv8PztFYs3xDTus8/aqJkKo9HrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724640438; c=relaxed/simple;
-	bh=NTag6DfiSup4A8d5wT7W3XcBTqLLuhqAIuBc8GckCTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oEwhNtlLrKwqIT7vo0s2Qu++StVyA/5/O9Vp7a+lTm7MLObJIHFxwdAMtquhVN7l5gsBqZCmF7i9oO+ggy/o8rC9NAUQiQx2KsJ60cL8ofMLR+aOmqGId8MKEosFGICxk26m5y3pf0Hc17J9o6XibLAV8qIR2R/DCBrhijaYYSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.4.132])
-	by gateway (Coremail) with SMTP id _____8DxfZuz7Mtm6_ofAA--.39817S3;
-	Mon, 26 Aug 2024 10:47:15 +0800 (CST)
-Received: from haword-linux.loongson.cn (unknown [10.20.4.132])
-	by front1 (Coremail) with SMTP id qMiowMCxC2er7MtmDH4iAA--.51899S5;
-	Mon, 26 Aug 2024 10:47:14 +0800 (CST)
-From: zhenghaowei@loongson.cn
-To: zhenghaowei@loongson.cn,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	p.zabel@pengutronix.de
-Cc: linux-serial@vger.kernel.org,
+	s=arc-20240116; t=1724651384; c=relaxed/simple;
+	bh=nQVe4pkTC4GGqwvv0hQiEOdQUahpl9ZfcNGHajNVUyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nqueGipUIbGqAQ/yfSgy5IxdJ2alrIM7sYVM3GOL3+FGQzaIe91T2mG84Glq25IGmdk7Pz9YEYhKnwOm/7z7C6EJr76G1SS+G6sWYK7jYNiGDYgqorU/8VcSuYd8u+t/f+DX56c2uYbbHigU454E8JXFKieHT9fFe5pIm0KHGTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GgAtEZAG; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GgAtEZAG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1724651323;
+	bh=LcnF3lEzDOs24/S93gLZ8vPRLn3bYdD6AON3DPimukw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=GgAtEZAGzhULzh9BYhbEAqeyiNaTyStwJA7gBgCWNDPOeoB1WO8vxVoR4SCLjpQ/U
+	 6v1ZlIkzUAsrBurtcEjkEfUEhXAj9pEH9ynqECjJ5YM5kPPpdUQIpwDu4qIyOr2BN8
+	 rsF2mmIlsKOSnMEGNJmOLNjX/ymqW1VyplHhCTzA=
+X-QQ-mid: bizesmtp78t1724651296tfspfpab
+X-QQ-Originating-IP: v1Cbbgnlqo89WuZQdgXld1WIjaie1C4oGPQIMjd/6pA=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 26 Aug 2024 13:48:14 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7317953918435259740
+From: Dandan Zhang <zhangdandan@uniontech.com>
+To: pbonzini@redhat.com,
+	corbet@lwn.net,
+	zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3 3/3] LoongArch: Update dts to support Loongson UART driver.
-Date: Mon, 26 Aug 2024 10:47:05 +0800
-Message-ID: <20240826024705.55474-4-zhenghaowei@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240826024705.55474-1-zhenghaowei@loongson.cn>
-References: <20240826024705.55474-1-zhenghaowei@loongson.cn>
+	guanwentao@uniontech.com,
+	wangyuli@uniontech.com,
+	baimingcong@uniontech.com,
+	Xianglai Li <lixianglai@loongson.cn>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Dandan Zhang <zhangdandan@uniontech.com>
+Subject: [PATCH v2] Loongarch: KVM: Add KVM hypercalls documentation for LoongArch
+Date: Mon, 26 Aug 2024 13:47:27 +0800
+Message-ID: <DE6B1B9EAC9BEF4C+20240826054727.24166-1-zhangdandan@uniontech.com>
+X-Mailer: git-send-email 2.43.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,87 +58,161 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxC2er7MtmDH4iAA--.51899S5
-X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAgEBBGbLHpsD+AACsX
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1xKF13Xr4kXF4fKF13ZFc_yoW8Kr1Dp3
-	9Iv39rGr4Igr1xCryDJFyUJr4DZF98GFnFga13C34UJwsIq3yjvr1rJF9IqF4rXw4rX3y0
-	grnYgrW2gF4UZabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwAKzVCY07xG64
-	k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4nYwUUUU
-	U
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-From: Haowei Zheng <zhenghaowei@loongson.cn>
+From: Bibo Mao <maobibo@loongson.cn>
 
-Change to use the Loongson UART driver for Loongson-2K2000,
-Loongson-2K1000 and Loongson-2K0500.
+Add documentation topic for using pv_virt when running as a guest
+on KVM hypervisor.
 
-Signed-off-by: Haowei Zheng <zhenghaowei@loongson.cn>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+Link: https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
+Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
 ---
- arch/loongarch/boot/dts/loongson-2k0500.dtsi | 2 +-
- arch/loongarch/boot/dts/loongson-2k1000.dtsi | 2 +-
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ Documentation/virt/kvm/index.rst              |  1 +
+ .../virt/kvm/loongarch/hypercalls.rst         | 86 +++++++++++++++++++
+ Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+ MAINTAINERS                                   |  1 +
+ 4 files changed, 98 insertions(+)
+ create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+ create mode 100644 Documentation/virt/kvm/loongarch/index.rst
 
-Changes in V2:
-
-- The compatible property for the UART is changed from "ns16650,loongson"
-
-    to "loongson,ls7a-uart".
-
-Changes in V3:
-
-- Compatible has been modified for a specific SoC.
-
-diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-index 3b38ff8853a7..63c77d70639c 100644
---- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-@@ -220,7 +220,7 @@ tsensor: thermal-sensor@1fe11500 {
- 		};
+diff --git a/Documentation/virt/kvm/index.rst b/Documentation/virt/kvm/index.rst
+index ad13ec55ddfe..9ca5a45c2140 100644
+--- a/Documentation/virt/kvm/index.rst
++++ b/Documentation/virt/kvm/index.rst
+@@ -14,6 +14,7 @@ KVM
+    s390/index
+    ppc-pv
+    x86/index
++   loongarch/index
  
- 		uart0: serial@1ff40800 {
--			compatible = "ns16550a";
-+			compatible = "loongson,ls2k0500-uart", "loongson,ls7a-uart";
- 			reg = <0x0 0x1ff40800 0x0 0x10>;
- 			clock-frequency = <100000000>;
- 			interrupt-parent = <&eiointc>;
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-index 92180140eb56..cafb8d13c065 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -297,7 +297,7 @@ dma-controller@1fe00c40 {
- 		};
- 
- 		uart0: serial@1fe20000 {
--			compatible = "ns16550a";
-+			compatible = "loongson,ls2k1000-uart", "loongson,ls7a-uart";
- 			reg = <0x0 0x1fe20000 0x0 0x10>;
- 			clock-frequency = <125000000>;
- 			interrupt-parent = <&liointc0>;
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index 0953c5707825..d4fe91af8c07 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -174,7 +174,7 @@ rtc0: rtc@100d0100 {
- 		};
- 
- 		uart0: serial@1fe001e0 {
--			compatible = "ns16550a";
-+			compatible = "loongson,ls2k2000-uart";
- 			reg = <0x0 0x1fe001e0 0x0 0x10>;
- 			clock-frequency = <100000000>;
- 			interrupt-parent = <&liointc>;
+    locking
+    vcpu-requests
+diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst b/Documentation/virt/kvm/loongarch/hypercalls.rst
+new file mode 100644
+index 000000000000..58168dc7166c
+--- /dev/null
++++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
+@@ -0,0 +1,86 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===================================
++The LoongArch paravirtual interface
++===================================
++
++KVM hypercalls use the HVCL instruction with code 0x100 and the hypercall
++number is put in a0. Up to five arguments may be placed in registers a1 - a5.
++The return value is placed in v0 (an alias of a0).
++
++Source code for this interface can be found in arch/loongarch/kvm*.
++
++Querying for existence
++======================
++
++To determine if the host is running on KVM, we can utilize the cpucfg()
++function at index CPUCFG_KVM_BASE (0x40000000).
++
++The CPUCPU_KVM_BASE range, spanning from 0x40000000 to 0x400000FF, The
++CPUCPU_KVM_BASE range between 0x40000000 - 0x400000FF is marked as reserved.
++Consequently, all current and future processors will not implement any
++feature within this range.
++
++On a KVM-virtualized Linux system, a read operation on cpucfg() at index
++CPUCFG_KVM_BASE (0x40000000) returns the magic string 'KVM\0'.
++
++Once you have determined that your host is running on a paravirtualization-
++capable KVM, you may now use hypercalls as described below.
++
++KVM hypercall ABI
++=================
++
++The KVM hypercall ABI is simple, with one scratch register a0 (v0) and at most
++five generic registers (a1 - a5) used as input parameters. The FP (Floating-
++point) and vector registers are not utilized as input registers and must
++remain unmodified during a hypercall.
++
++Hypercall functions can be inlined as it only uses one scratch register.
++
++The parameters are as follows:
++
++        ========	================	================
++	Register	IN			OUT
++        ========	================	================
++	a0		function number		Return code
++	a1		1st parameter		-
++	a2		2nd parameter		-
++	a3		3rd parameter		-
++	a4		4th parameter		-
++	a5		5th parameter		-
++        ========	================	================
++
++The return codes may be one of the following:
++
++	====		=========================
++	Code		Meaning
++	====		=========================
++	0		Success
++	-1		Hypercall not implemented
++	-2		Bad Hypercall parameter
++	====		=========================
++
++KVM Hypercalls Documentation
++============================
++
++The template for each hypercall is as follows:
++
++1. Hypercall name
++2. Purpose
++
++1. KVM_HCALL_FUNC_PV_IPI
++------------------------
++
++:Purpose: Send IPIs to multiple vCPUs.
++
++- a0: KVM_HCALL_FUNC_PV_IPI
++- a1: Lower part of the bitmap for destination physical CPUIDs
++- a2: Higher part of the bitmap for destination physical CPUIDs
++- a3: The lowest physical CPUID in the bitmap
++
++The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) with
++at most 128 destinations per hypercall.The destinations are represented in a
++bitmap contained in the first two input registers (a1 and a2).
++
++Bit 0 of a1 corresponds to the physical CPUID in the third input register (a3)
++and bit 1 corresponds to the physical CPUID in a3+1 (a4), and so on.
+diff --git a/Documentation/virt/kvm/loongarch/index.rst b/Documentation/virt/kvm/loongarch/index.rst
+new file mode 100644
+index 000000000000..83387b4c5345
+--- /dev/null
++++ b/Documentation/virt/kvm/loongarch/index.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================
++KVM for LoongArch systems
++=========================
++
++.. toctree::
++   :maxdepth: 2
++
++   hypercalls.rst
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c94ec0ca478..ae0fa8aa26f8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12294,6 +12294,7 @@ L:	kvm@vger.kernel.org
+ L:	loongarch@lists.linux.dev
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
++F:	Documentation/virt/kvm/loongarch/
+ F:	arch/loongarch/include/asm/kvm*
+ F:	arch/loongarch/include/uapi/asm/kvm*
+ F:	arch/loongarch/kvm/
 -- 
-2.43.0
+2.43.4
 
