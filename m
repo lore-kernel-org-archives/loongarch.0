@@ -1,72 +1,155 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F7C82C8E
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 06:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C7B4F215
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 06:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724653941; cv=none; b=j1eGpKlFPfcg26WXyle8pdAMCgAusGCUMfZySW85rVLuxA80bqAhrYmpvRkbiaZQHIoeTQ3WSeoLhMwCP24NvlEP4Dx9G5FGbjtYfN6Ng9qXZ7a93R0I/ytOjiTh1Is6kTUnPo2N8ZTGCEB/azCEhmwR7R4frWCX0UeszCGMpQ0=
+	t=1724655289; cv=none; b=OHyUkDmdgyvGs43dZRnfEOyIwxx25j6pIBH0WBjb2CGd0jHDZ3+b+KHoMRmwdbz111iwBHcsgL98UOkqM/c+kmVgi71T/AGhkpoDSbD4M5p1qhtZWNTuyI103iB76llywZgnm3RzYQc0JMzWKa3zgkxcnztwNIsfCvcJaYiYGeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724653941; c=relaxed/simple;
-	bh=Qqw12gOE5t5+HwsG7UDTIuSe8eJhHJpLrGlNWWhZ16E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=o+qzOugYwNXOYg7SZUQD5Rp7ZQrnKJBhBWXX23CulCDfCOXoR19N14ArZGUcC6KZjqS/8tlg1bY0MqLMepztFnin1hEG7vz9n1CrHm+rnAmtKAMm1wfXTVS9ym6FjBAdhq2pfIHOE+gPc+6FgRN498lT7k35/bN4lHs9XN+9zBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=RztfmOtQ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="RztfmOtQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1724653939;
-	bh=Qqw12gOE5t5+HwsG7UDTIuSe8eJhHJpLrGlNWWhZ16E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RztfmOtQ57ty/49FHgXo9c1/rnZSwxvkrChBrSX8+wGZrHfUaYUsOuSkdwGsPpqI4
-	 NG0l5HCuYk7XNOSuXyUDbw7aX8tFpfs6mTIIKtIEmKYxUE8W868Fd0XyljnThQP6gh
-	 TGAqxs8Wl0g9Q36Dh6GSShc19y6ATszf+T129beY=
-Received: from [IPv6:240e:358:115d:1f00:dc73:854d:832e:2] (unknown [IPv6:240e:358:115d:1f00:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C349766F26;
-	Mon, 26 Aug 2024 02:32:11 -0400 (EDT)
-Message-ID: <b39ba1dea300c905f377af4cf3702ce4226cabc7.camel@xry111.site>
-Subject: Re: [PATCH v2 0/2] LoongArch: Implement getrandom() in vDSO
-From: Xi Ruoyao <xry111@xry111.site>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-crypto@vger.kernel.org, loongarch@lists.linux.dev, Jinyang He
- <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd
- Bergmann <arnd@arndb.de>
-Date: Mon, 26 Aug 2024 14:32:05 +0800
-In-Reply-To: <Zr4K77uPi3CMfE-S@zx2c4.com>
-References: <20240815133357.35829-1-xry111@xry111.site>
-	 <Zr4K77uPi3CMfE-S@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	s=arc-20240116; t=1724655289; c=relaxed/simple;
+	bh=WnelEQkz9msN7SegJG/9eJhWytSzJccHwwXnNHJPbSQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AYFrEWUnImmYZAK3eW/D+jLrtC80+vI6gV46wJ3luE6cIJ5fWox4/3MhhVF5NiD5jLsDfuEeyIXGsU6t83sAvOtfIhEfH31GIdT90L6EvZ6uLhcYoVo+ULegekIizBQ8g45YxZ7GWGr5GRLZTXF0nlzaYPBIFJDJtooLn9+BVZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.4.132])
+	by gateway (Coremail) with SMTP id _____8DxfZuuJsxmvyMgAA--.40058S3;
+	Mon, 26 Aug 2024 14:54:38 +0800 (CST)
+Received: from [10.20.4.132] (unknown [10.20.4.132])
+	by front1 (Coremail) with SMTP id qMiowMCxTGetJsxmAK8iAA--.12952S2;
+	Mon, 26 Aug 2024 14:54:37 +0800 (CST)
+Message-ID: <e0f40e93-a325-4db2-86af-5d2d29fb0095@loongson.cn>
+Date: Mon, 26 Aug 2024 14:54:37 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?B?6YOR6LGq5aiB?= <zhenghaowei@loongson.cn>
+Subject: Re: [PATCH v3 1/3] dt-bindings: serial: Add Loongson UART controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, p.zabel@pengutronix.de, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20240826024705.55474-1-zhenghaowei@loongson.cn>
+ <20240826024705.55474-2-zhenghaowei@loongson.cn>
+ <7346m2dmduzdrhzmhlnms24bltoczbajfxfh6wcxxplzydqskc@2xey7pdc24t3>
+Content-Language: en-US
+In-Reply-To: <7346m2dmduzdrhzmhlnms24bltoczbajfxfh6wcxxplzydqskc@2xey7pdc24t3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxTGetJsxmAK8iAA--.12952S2
+X-CM-SenderInfo: x2kh0w5kdr4v3l6o00pqjv00gofq/1tbiAgEBBGbLHpsHKwABsD
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr1DAFyxWr45ur4kuFWUZFc_yoW5Wry8pr
+	13C3ZrCw10qF17u390qFy8Ga1rZrZ5GanIqF47tw12kasYgas3Xr4fKr1UX3y3Ar18Xryj
+	va4FgF47K3WUArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnUUUUUUUU=
 
-On Thu, 2024-08-15 at 14:04 +0000, Jason A. Donenfeld wrote:
-> Thanks for posting this! That's very nice to see.
->=20
-> I'm currently traveling without my laptop (actually in Yunnan, China!),
-> so I'll be able to take a look at this for real starting the 26th, as
-> right now I'm just on my cellphone using lore+mutt.
 
-Hi Jason,
+在 2024/8/26 13:59, Krzysztof Kozlowski 写道:
+> On Mon, Aug 26, 2024 at 10:47:03AM +0800,zhenghaowei@loongson.cn wrote:
+>> From: Haowei Zheng<zhenghaowei@loongson.cn>
+>>
+>> Add Loongson UART controller binding with DT schema format using
+>> json-schema.
+>>
+>> Signed-off-by: Haowei Zheng<zhenghaowei@loongson.cn>
+>> ---
+>>   .../bindings/serial/loongson,uart.yaml        | 63 +++++++++++++++++++
+>>   1 file changed, 63 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>>
+>> Changes in V2:
+>>
+>> - Correct the schema formatting errors.
+>>
+>> - file name changed from 'loongson-uart.yaml' to 'loongson,ls7a-uart.yaml'
+>>
+>> - Replace 'loongson,loongson-uart' with 'loongson,ls7a-uart'.
+>>
+>> Changes in V3:
+>>
+>> - Change the filename from 'loongson,ls7a-uart.yaml' to 'loongson,uart.yaml'.
+>>
+>> - Drop newly defined features: fractional-division, rts-invert, dtr-invert,
+>>    cts-invert and dsr-invert.
+>>
+>> - Add three specific SoC: 'loongson,ls7a-uart', 'loongson,ls3a5000-uart' and
+>>    'loongson,ls2k2000-uart'.
+>>
+>> - Drop 'LOONGSON UART DRIVER' description in MAINTAINERS.
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/loongson,uart.yaml b/Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>> new file mode 100644
+>> index 000000000000..19a65dd5be9f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>> @@ -0,0 +1,63 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id:http://devicetree.org/schemas/loongson,uart.yaml#
+>> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson UART
+>> +
+>> +maintainers:
+>> +  - Haowei Zheng<zhenghaowei@loongson.cn>
+>> +
+>> +allOf:
+>> +  - $ref: serial.yaml
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - enum:
+>> +          - loongson,ls7a-uart
+> Quick look tells me there is no such soc like ls7a. If there is such,
+> please point me to the DTSI.
+>
+I had a problem with my description of ls7a, it's just a bridge chip, but
 
-When you start the reviewing I guess you can check out the powerpc
-implementation first and add me into the Cc of your reply.  There seems
-something useful to me in the powerpc implementation (avoiding memset,
-adding __arch_get_k_vdso_data so I wouldn't need the inline asm trick
-for the _vdso_rng_data symbol, and the selftest support).
+both ls2k0500 and ls2k1000 share the same UART controller as it.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>> +          - loongson,ls3a5000-uart
+>> +          - loongson,ls2k2000-uart
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls2k1000-uart
+>> +              - loongson,ls2k0500-uart
+>> +          - const: loongson,ls7a-uart
+> Just use real SoC names.
+
+The ls7a is not an SoC; it is typically used in conjunction with 
+Loongson 3 series
+
+processors and boots via ACPI. Currently, there is no corresponding DTSI 
+provided.
+
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls2k1500-uart
+>> +          - const: loongson,ls2k2000-uart
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls3a6000-uart
+>> +          - const: loongson,ls3a5000-uart
+> Best regards,
+> Krzysztof
+
