@@ -1,164 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B06512DD90;
-	Mon, 26 Aug 2024 06:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59713E8B6
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 07:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724655476; cv=none; b=YMkLpCxXPavIHKu/ycHjQFEI6uKwWVY+JHFxUjL6rQ3ciFcl1EnQcUlcSZR9R1bnhNGmr6ZG+MzNmFnIBq66/kT8Apz+Gq0LT8T7Rhb+NHzNxCcxzTl+Qr3uG9qf0R1RxhLfJORXqvdCsGhDt6RuI/fim37aKaQoO6pO1v5dG5c=
+	t=1724658823; cv=none; b=SuzmxVzi7g1dfXrsdM+qWp9ys/Z0m0QNE4ws9Fo+7Nwf7/f/tjJ0Mb0aNMFtEmEOnNyEmA4yQxYwkkDj2LXYQq0GeAlJi797U8aovbYhJPzi5s6PZGrXliu2t46gNpjX2MwAlZubGmuSVCO6+zgtE9a2hZRBuz+umKUt4PEciYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724655476; c=relaxed/simple;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kunc9VoxvlwS7MLqhnAYX+KLDgH1Fdu/yMHgDRe/aegAuOuu7bLsThdCWpycdo9b0PK7O0+hEEwBvJZuSKRPXAJBZ2+01ckfb8G/G+yOIMgFIByn5onF+gVX/v4GCt7NcHie4CCWtqtA29ODq4nBILD3jskA4bdugQmn7pwyNUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9brm9ff; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9brm9ff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0D5C567EB;
-	Mon, 26 Aug 2024 06:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724655475;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u9brm9ffBKJJy0lQBqVUmOtRsmRW1o2mBFKA4EhD7/nH8h2gv+M7lKVr7gSQptliB
-	 hbOarsMop4k9H3WwY7Yn4SDp1vUrBJIaGRD3L7h2LyBRLq6p3w2M+aMtu5fF8yUiOT
-	 JzgM/Mh7LerNq33JfGbB0R6dXwMiZvlBUPNF03eoh1GhN4IuDSdJxnUg45kUvxXE/S
-	 I1P3qHXaDeHHHmN8Cm9t03nsqNN6vCskEjl1NxrPzvke5fbuCG5/WnwkhujA6NhoOt
-	 p9raTRTUjWPVS0MKDT5Lhfx819pdvVyaXynnIIS3xdhWfXB7iG8JbUVNzrCj5nDxC0
-	 KwcaUZEBkiEAw==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1724658823; c=relaxed/simple;
+	bh=Pzeast/KuQTsUx/8UNRiLKWBfOfCRK1vLZpSERoh2pU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O+NxnJ7v57kVQ477MQyGePA6LP4wBdUs7kftpImCHlHbVtalkfYXrTwtBnxOJ2UuBGi0oIXheVzuh02jI/chdWEtqKz8fQaWHtZL3gpUtC1k0x24v6wKScGINZDLhxSMurH6JX6C8tXGOGQ3/SdT8V+ytG9RlFdaE6PggXkFuFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1siUVR-0006mO-Jk; Mon, 26 Aug 2024 09:51:17 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1siUVK-0038Ph-Cg; Mon, 26 Aug 2024 09:51:10 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1siUVK-006xmZ-0b;
+	Mon, 26 Aug 2024 09:51:10 +0200
+Date: Mon, 26 Aug 2024 09:51:10 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v2 8/8] x86/module: enable ROX caches for module text
-Date: Mon, 26 Aug 2024 09:55:32 +0300
-Message-ID: <20240826065532.2618273-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240826065532.2618273-1-rppt@kernel.org>
-References: <20240826065532.2618273-1-rppt@kernel.org>
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH 0/9] AT24 EEPROM MTD Support
+Message-ID: <20240826075110.u3cxc6dootou72eq@pengutronix.de>
+References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
+ <Zsi3s9XithGEROwX@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zsi3s9XithGEROwX@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: loongarch@lists.linux.dev
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Hi Andy,
 
-Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-text allocations.
+On 24-08-23, Andy Shevchenko wrote:
+> On Mon, Jul 01, 2024 at 03:53:39PM +0200, Marco Felsch wrote:
+> > This series adds the intial support to handle EEPROMs via the MTD layer
+> > as well. This allow the user-space to have separate paritions since
+> > EEPROMs can become quite large nowadays.
+> > 
+> > With this patchset applied EEPROMs can be accessed via:
+> >   - legacy 'eeprom' device
+> >   - nvmem device
+> >   - mtd device(s)
+> > 
+> > The patchset targets only the AT24 (I2C) EEPROMs since I have no access
+> > to AT25 (SPI) EEPROMs nor to one of the other misc/eeprom/* devices.
+> > 
+> > Note: I'm not familiar with Kconfig symbol migration so I don't know if
+> > the last patch is required at the moment. Please be notified that the
+> > list of recipients is quite large due to the defconfig changes.
+> 
+> FWIW, I think that MTD is *not* the place for EEPROMs.
+> 
+> Yeah, we have the driver spread over the kernel for EEPROMs (mostly due to
+> historical reasons and absence an umbrella subsystem for them), but it's not
+> the reason to hack them into something which is not quite suitable.
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/mm/init.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Thank you for you input. There are two things to mention:
+ 1st) I send a RFC patch and asked for feedback and all I got was: looks
+      okay, please send a proper patch [1] which I did.
+ 2nd) I don't see the hacky part in this patchset.
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index eb503f53c319..a0ec99fb9385 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1053,6 +1053,15 @@ unsigned long arch_max_swapfile_size(void)
- #ifdef CONFIG_EXECMEM
- static struct execmem_info execmem_info __ro_after_init;
- 
-+static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
-+{
-+	/* fill memory with INT3 instructions */
-+	if (writeable)
-+		memset(ptr, INT3_INSN_OPCODE, size);
-+	else
-+		text_poke_set(ptr, INT3_INSN_OPCODE, size);
-+}
-+
- struct execmem_info __init *execmem_arch_setup(void)
- {
- 	unsigned long start, offset = 0;
-@@ -1063,8 +1072,23 @@ struct execmem_info __init *execmem_arch_setup(void)
- 	start = MODULES_VADDR + offset;
- 
- 	execmem_info = (struct execmem_info){
-+		.fill_trapping_insns = execmem_fill_trapping_insns,
- 		.ranges = {
--			[EXECMEM_DEFAULT] = {
-+			[EXECMEM_MODULE_TEXT] = {
-+				.flags	= EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL_ROX,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_KPROBES ... EXECMEM_BPF] = {
-+				.flags	= EXECMEM_KASAN_SHADOW,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_MODULE_DATA] = {
- 				.flags	= EXECMEM_KASAN_SHADOW,
- 				.start	= start,
- 				.end	= MODULES_END,
--- 
-2.43.0
+Anyway the customer doesn't need the nvmem-partitions anymore and
+therefore this patchset can be seen as obsolote.
 
+Regards,
+  Marco
+
+[1] https://lore.kernel.org/lkml/20231201144441.imk7rrjnv2dugo7p@pengutronix.de/T/#m1e0e5778448971b50a883f62bd95622f6422b9a2
+
+> 
+> If NVMEM needs to be updated and may cover these cases after all (and do not
+> forget about *small* size EEPROMs that most likely appear on the devices with
+> limited amount of resources!) in a reasonable size and performance, why not?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+> 
