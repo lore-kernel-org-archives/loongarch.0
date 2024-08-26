@@ -1,126 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682AE17E01E
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 14:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B338C1E864
+	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 14:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724681386; cv=none; b=tH8eMEwSbawP7Gz/WIrx8HFOMpWJ/u+uqXWk20dnMlQ/2LRh+D0UwZ1BQAZMSXf/2CuJv9OaSQ85aDKldS9jiQnFzByEA0RmUWywtLdlyrfGRhdb7nbAt9PIzUspWLntA+aOUZrccJ9D4OZ2zavA890zYbz3joRNudfipohKp5M=
+	t=1724682129; cv=none; b=cU9bmz1iRfaT1HKZRV6CWs0eiMNNhlBfYVlo0laLBC0u88zczuI5yfkTHHCYYndRI3cw6n9OVoXAcxkkUMNP4N4xFf+idxU45Tj13YsD+YmTxcKSf+2a0pZQ2L/4rbWjQsJ7X7lyWOSScK3zhoog7heOGQlbxKRVKy6E7NNk874=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724681386; c=relaxed/simple;
-	bh=zqGmo8gp2JteG5/sJycf0vqTzJavG7LNENMm46BKWiw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aaSV0WRO54/rYuIbRmZIP8lxowSRUICY+XLzFYSQIU1qzYIfebQVwXPZVa2zBnN6eEL1Igw/v8WAo5ZSq8gMSh4XjlU5mmpA1FrL2Ph2Zoud0n89bXawlhdgw4mrTsXccgVrs9XuQEHz1cLZ7cluiP4FwJKYb5OQpP+gdTLTItI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgXrMpo+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724682129; c=relaxed/simple;
+	bh=CYbj1j7FjoELrxn0RAajPNibHiZ38GUK7VqfvUgDIA0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=tg1/s04ppuuM85UOo+GcyQFAqjVllfKOSTRcM0oRKdHsgrldAqY7fYUV3KgGilWAVp8Vrkw6BDTZYtpYxDrU7CBnyvgxEorGxSXmAQfmaOaetHIAPrv0jjF0wDpOdejpGJeZ6q7zpIKPyXOMLC2qjRA+CcsISzKt8+NTFbRCVDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=xluqtBuL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pb0j8WMO; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgXrMpo+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0090CC52FC7
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 14:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724681386;
-	bh=zqGmo8gp2JteG5/sJycf0vqTzJavG7LNENMm46BKWiw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OgXrMpo+k7M8awKO3dLNI4I99rF1PnEPU/C+VJYBx4bL6s4bgs3KtjZ5ogXYI64lb
-	 +74O5aXDrjfwg2kJtoNgt0Gc8SSNjR7ViC9BJoUKZ+cKAC7yuNw+Pk1TUBtAjr74TG
-	 nPqRJ6X0VZg8C0tbIMeGbhvp9rajcMyYlqW1AUJdt4vYtaWs27ySjPf4xh1DGbYVr4
-	 TpGNghI075+/JUKOz8n6ZFLDRprmarrUGy19FGKzqDc1P9NwIRdnftlcQqvWxCJr4h
-	 k75rxuKphaHKm66NDr35rYjJv1skNIFR9YZRnT3rgvYSYPsb+u5vVI2MjGPFAePKq+
-	 a7msM6Rybxk/A==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f3cb747fafso45378111fa.3
-        for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 07:09:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWUrRC/X0Mlabdi/Th6ZXKHdj6/McYyiQ0KuIFYMv7QIrl/ynxoEK7RZzM9o4gnDUgeNKpNrY6gbmo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzDx3fvsQ4yKY4MbZ1Z/wNWK01VRhXLa2Fi70IU3+s9r+cEP6DT
-	UKgn8uymg36gtdRH49xmzcTE/qbG9EDiMIdCGk8fWrdEfTIikV3Arg4es98Z9xPMKlQuVDsyXEs
-	TaglrvkAfHlYhct2zajgRMGZ8Qw==
-X-Google-Smtp-Source: AGHT+IEOI9RkXGDHQ0R1klTXWvPrZf9KdyM+dg+7Mg6CbVkQs7/RuK/OfxzhwRlPodx0+cOynU86XcFDul/kY+SaL8s=
-X-Received: by 2002:a05:6512:3b27:b0:52f:288:5664 with SMTP id
- 2adb3069b0e04-534387c47c8mr6660019e87.51.1724681384244; Mon, 26 Aug 2024
- 07:09:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="xluqtBuL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pb0j8WMO"
+Received: from phl-compute-05.internal (phl-compute-05.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id E41BE1151AA9;
+	Mon, 26 Aug 2024 10:22:06 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Mon, 26 Aug 2024 10:22:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1724682126;
+	 x=1724768526; bh=ASEjOFtcIjkhF5bkMjqXjN8mcsXwNaXpIL2eHm4tIjc=; b=
+	xluqtBuLZNvJPbpIJabYMEVgvEfIecBY4topuzyZssk2Nui0A6zlN+klU4ZuN9Hr
+	s1yVM1NV3JLa8Y+wKwiwc3rrChbmhFwqy0txAmd8OkAEziDAH/6cAoEQEdOLoIe3
+	RNqi678ccIp22JpdtcA6Vi3pjzs4HNKFVdJS38JcMiD3ZPgHv7tq1ewX6Oi97B0Q
+	aRf3JJL/ta1cMgsFf4Ql81pKtPOhU3s2e5Cr509ZmUlP+7dsIevWqPtY6BnIac8E
+	M51+UaOlKk8fhR1B4plsyUDzhzDvHQdI4v7Bf/lntO0hc0/ZAj1NnHlqP6T+UNio
+	wIWxpfGcyFQgt9W6BXE/aA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1724682126; x=
+	1724768526; bh=ASEjOFtcIjkhF5bkMjqXjN8mcsXwNaXpIL2eHm4tIjc=; b=P
+	b0j8WMOdX6tFGg8l80rhzOBXm7rDlvBicl5TITD54lAbSGS6EeVUzllm8l/hfO3H
+	jfqXvR1SWqMcEowXHinKftY3jStGR//ueM451Do3Yrb0VqzHhbh6qNbvDSNIIJEp
+	RMOYCZKWfmGo6cLbKRyOuGORu/RQbWoin71pVo0PnrxXl6Guh6N1lhKzp+hEQbl6
+	HhGjGvIeNDiz425JAJgUEzTWDEzp4lCr81s6pzjmdDa1b67Uz+yaDchYAvx3fSzC
+	qeQGT+iaxddg4XLbIaVhK1DkLM6PfJQEn6GU0Ig9zHXLJoUHvT9n9l+HTm1TcVib
+	3DY8wuRpMldLjBSJXk1QQ==
+X-ME-Sender: <xms:jo_MZpD4PeXsE4--zX3DCy-u5tHZuReh8Zx2CqClDVr65o7d4N2jlw>
+    <xme:jo_MZnhRapWA_MVjce7TAT1nGhvt9IbWZOe25kpsiGI2t2NxjB_kDw0zSZpFOQ19R
+    jwq73KypojjuQqb5uI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddvkedgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
+    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepffekveettdeuveefhfekhfdu
+    gfegteejffejudeuheeujefgleduveekuddtueehnecuffhomhgrihhnpehkvghrnhgvlh
+    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhope
+    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsrghrrghvrghnrghksehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopegvnhhkvghrvgifphhosehhohhtmhgrihhlrdgtoh
+    hmpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthh
+    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopeguvghvihgtvghtrhgvvges
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:jo_MZknYdkUJWPqqIP9gEcWj82_PWzUPxQMRUhfa58PFFA16zwtPyA>
+    <xmx:jo_MZjwZG1A-AGUiecrxmEUZNe3Bgw7BM4VR5D9NRQXFT_r6vEUfsA>
+    <xmx:jo_MZuRqyfuD-f4Bm1HhLcqiGCc6eHhsZ7MT3Mz2Z_xYHB0N9apcgw>
+    <xmx:jo_MZmb34e0yCBDZ27D0U1ng0LjAVaDxK6OWSwvnJP8jMS8w0wYlKQ>
+    <xmx:jo_MZtGhWv3rhutNT_PjpC3QXJyuO6sU2kVYh-90OtIFyLVZ9wGIxHkn>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 794AB1C20064; Mon, 26 Aug 2024 10:22:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Date: Mon, 26 Aug 2024 15:21:45 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Rob Herring" <robh@kernel.org>
+Cc: "Saravana Kannan" <saravanak@google.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Kevin Wheatfox" <enkerewpo@hotmail.com>
+Message-Id: <c0df4919-21b4-4526-8861-f74234ffd390@app.fastmail.com>
+In-Reply-To: 
+ <CAL_JsqLeVPBz4mEedXEm=rb6ghWwROB7jr-PDw3qVsNRz20Z_A@mail.gmail.com>
 References: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
-In-Reply-To: <20240821-save_resv_name-v1-1-b9c17f103ffb@flygoat.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 26 Aug 2024 09:09:31 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLeVPBz4mEedXEm=rb6ghWwROB7jr-PDw3qVsNRz20Z_A@mail.gmail.com>
-Message-ID: <CAL_JsqLeVPBz4mEedXEm=rb6ghWwROB7jr-PDw3qVsNRz20Z_A@mail.gmail.com>
+ <CAL_JsqLeVPBz4mEedXEm=rb6ghWwROB7jr-PDw3qVsNRz20Z_A@mail.gmail.com>
 Subject: Re: [PATCH] of_reserved_mem: Save region name string into struct reserved_mem
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	chenhuacai@kernel.org, Kevin Wheatfox <enkerewpo@hotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 21, 2024 at 8:51=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
-m> wrote:
->
-> Previously only a pointer to fdt string pool is saved to struct
-> reserved_mem as region name.
->
-> As on some architectures booting FDT will be wiped at later initialisatio=
-n
-> stages, this is breaking reserved_mem users.
 
-What architectures? Be specific.
 
-Why is the FDT wiped? It should be preserved and you need it later to
-implement kexec.
+=E5=9C=A82024=E5=B9=B48=E6=9C=8826=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
+=8D=883:09=EF=BC=8CRob Herring=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, Aug 21, 2024 at 8:51=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygo=
+at.com> wrote:
+>>
+>> Previously only a pointer to fdt string pool is saved to struct
+>> reserved_mem as region name.
+>>
+>> As on some architectures booting FDT will be wiped at later initialis=
+ation
+>> stages, this is breaking reserved_mem users.
+>
+> What architectures? Be specific.
+
+It's LoongArch and MIPS, I'll expand commit message.
+
+FDT might be placed in .init sections or memory not managed by kernel, t=
+hus
+it may be wiped out.
 
 >
-> Copy and save the whole string into struct reserved_mem to avoid
-> FDT lifecycle problem.
+> Why is the FDT wiped? It should be preserved and you need it later to
+> implement kexec.
+
+So KEXEC is using kernel's self copy of FDT created by unflatten_and_cop=
+y_device_tree(),
+while reserved-mem scan is performed before copy to ensure that reserved=
+ memory
+are being tracked by memblock before possible memblock_alloc in unflatte=
+n_and_copy_device_tree().
+
+Thanks
+- Jiaxun
+
 >
-> Reported-by: Kevin Wheatfox <enkerewpo@hotmail.com>
-> Closes: https://lore.kernel.org/loongarch/ME4P282MB1397447C3C094554C7AF2E=
-37B58E2@ME4P282MB1397.AUSP282.PROD.OUTLOOK.COM/
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/of/of_reserved_mem.c    | 2 +-
->  include/linux/of_reserved_mem.h | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 46e1c3fbc769..22841599cd83 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -70,7 +70,7 @@ static void __init fdt_reserved_mem_save_node(unsigned =
-long node, const char *un
->         }
->
->         rmem->fdt_node =3D node;
-> -       rmem->name =3D uname;
-> +       strscpy(rmem->name, uname, RESERVED_MEM_NAME_LEN);
->         rmem->base =3D base;
->         rmem->size =3D size;
->
-> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_=
-mem.h
-> index e338282da652..ed9de36c9cc9 100644
-> --- a/include/linux/of_reserved_mem.h
-> +++ b/include/linux/of_reserved_mem.h
-> @@ -8,8 +8,10 @@
->  struct of_phandle_args;
->  struct reserved_mem_ops;
->
-> +#define RESERVED_MEM_NAME_LEN  128
-> +
->  struct reserved_mem {
-> -       const char                      *name;
-> +       char                            name[RESERVED_MEM_NAME_LEN];
->         unsigned long                   fdt_node;
->         const struct reserved_mem_ops   *ops;
->         phys_addr_t                     base;
->
-> ---
-> base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
-> change-id: 20240821-save_resv_name-4f2e2cb8883b
->
-> Best regards,
-> --
-> Jiaxun Yang <jiaxun.yang@flygoat.com>
->
+>>
+>> Copy and save the whole string into struct reserved_mem to avoid
+>> FDT lifecycle problem.
+>>
+>> Reported-by: Kevin Wheatfox <enkerewpo@hotmail.com>
+>> Closes: https://lore.kernel.org/loongarch/ME4P282MB1397447C3C094554C7=
+AF2E37B58E2@ME4P282MB1397.AUSP282.PROD.OUTLOOK.COM/
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>  drivers/of/of_reserved_mem.c    | 2 +-
+>>  include/linux/of_reserved_mem.h | 4 +++-
+>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_me=
+m.c
+>> index 46e1c3fbc769..22841599cd83 100644
+>> --- a/drivers/of/of_reserved_mem.c
+>> +++ b/drivers/of/of_reserved_mem.c
+>> @@ -70,7 +70,7 @@ static void __init fdt_reserved_mem_save_node(unsig=
+ned long node, const char *un
+>>         }
+>>
+>>         rmem->fdt_node =3D node;
+>> -       rmem->name =3D uname;
+>> +       strscpy(rmem->name, uname, RESERVED_MEM_NAME_LEN);
+>>         rmem->base =3D base;
+>>         rmem->size =3D size;
+>>
+>> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reser=
+ved_mem.h
+>> index e338282da652..ed9de36c9cc9 100644
+>> --- a/include/linux/of_reserved_mem.h
+>> +++ b/include/linux/of_reserved_mem.h
+>> @@ -8,8 +8,10 @@
+>>  struct of_phandle_args;
+>>  struct reserved_mem_ops;
+>>
+>> +#define RESERVED_MEM_NAME_LEN  128
+>> +
+>>  struct reserved_mem {
+>> -       const char                      *name;
+>> +       char                            name[RESERVED_MEM_NAME_LEN];
+>>         unsigned long                   fdt_node;
+>>         const struct reserved_mem_ops   *ops;
+>>         phys_addr_t                     base;
+>>
+>> ---
+>> base-commit: bb1b0acdcd66e0d8eedee3570d249e076b89ab32
+>> change-id: 20240821-save_resv_name-4f2e2cb8883b
+>>
+>> Best regards,
+>> --
+>> Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>
+
+--=20
+- Jiaxun
