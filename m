@@ -1,139 +1,193 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59713E8B6
-	for <loongarch@lists.linux.dev>; Mon, 26 Aug 2024 07:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5FA286A8;
+	Mon, 26 Aug 2024 08:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724658823; cv=none; b=SuzmxVzi7g1dfXrsdM+qWp9ys/Z0m0QNE4ws9Fo+7Nwf7/f/tjJ0Mb0aNMFtEmEOnNyEmA4yQxYwkkDj2LXYQq0GeAlJi797U8aovbYhJPzi5s6PZGrXliu2t46gNpjX2MwAlZubGmuSVCO6+zgtE9a2hZRBuz+umKUt4PEciYo=
+	t=1724660271; cv=none; b=ogfgGvMmEY5ouxitHXh/eYXrsLPoMQTjhg98OxY1l/U5uxOfhBYzi4/WSIakXA4o9s2BrZhx+oPPH95fOvG5ZzViD6xXu0yXhKrLvVQvHTCa97Y3bB7EmXJNjzDKVMxkSCHxfuhenvvXSi2HKHDJ9UnTLZrAwj2CgP6mwFjNCFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724658823; c=relaxed/simple;
-	bh=Pzeast/KuQTsUx/8UNRiLKWBfOfCRK1vLZpSERoh2pU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O+NxnJ7v57kVQ477MQyGePA6LP4wBdUs7kftpImCHlHbVtalkfYXrTwtBnxOJ2UuBGi0oIXheVzuh02jI/chdWEtqKz8fQaWHtZL3gpUtC1k0x24v6wKScGINZDLhxSMurH6JX6C8tXGOGQ3/SdT8V+ytG9RlFdaE6PggXkFuFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1siUVR-0006mO-Jk; Mon, 26 Aug 2024 09:51:17 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1siUVK-0038Ph-Cg; Mon, 26 Aug 2024 09:51:10 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1siUVK-006xmZ-0b;
-	Mon, 26 Aug 2024 09:51:10 +0200
-Date: Mon, 26 Aug 2024 09:51:10 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 0/9] AT24 EEPROM MTD Support
-Message-ID: <20240826075110.u3cxc6dootou72eq@pengutronix.de>
-References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <Zsi3s9XithGEROwX@smile.fi.intel.com>
+	s=arc-20240116; t=1724660271; c=relaxed/simple;
+	bh=0UQMiKlAxZBABv9BZU1DcaWz3EixG0WaoKmBDiXqLVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQLzzaQCrbY4OW1bGe9znZK+le2Ruvu14fZHe3BWhkbpJpC/BsLl8jeg3FCoM903rq58/lHSZQTJZSdiv+wTToFQUa/6MNONbnkqDb4sUv/N65CtSQZVDe3QHMPKTS4rksgVt/fZmHKzH6MZ+6CGXsZVYZluiuw8Tsi96tEtzEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1ayR5uu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1ayR5uu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943DAC8CDD6;
+	Mon, 26 Aug 2024 08:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724660271;
+	bh=0UQMiKlAxZBABv9BZU1DcaWz3EixG0WaoKmBDiXqLVE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j1ayR5uuhzhwDWtCD9OiJaZxjJUwHxN5U67VG0/OrcKakdCoxzSduPysV66IzuNd/
+	 gUZackooW5cC6n8wYUzBTl/0PkpGuYaCUP+SXnwl4FZmMm5HU+PJtBMw6dSc9iP4RF
+	 b1MjOKPLT1kleLl2RvRvCS4vJMtf3G43v+N8K9Gq+3WgrAG5OAVd/nQv97zQAsLgh9
+	 DTUwbnezDOxJzj+gnQqK0YFTMkyB9eC9XCughrsztzezpUhkvxjItIBhwIyZxAjmCz
+	 orObf5Uf2DDqX7ABe3HyzjoWje+JoEkw3XTlF6lM59IzDj2FbM3JONvmFzXd+7GCki
+	 PD5w99BGnu/qQ==
+Message-ID: <8b908c2b-c8bc-4b46-b6ff-e23f0ceaa92a@kernel.org>
+Date: Mon, 26 Aug 2024 10:17:44 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zsi3s9XithGEROwX@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: loongarch@lists.linux.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: serial: Add Loongson UART controller
+To: =?UTF-8?B?6YOR6LGq5aiB?= <zhenghaowei@loongson.cn>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, p.zabel@pengutronix.de, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20240826024705.55474-1-zhenghaowei@loongson.cn>
+ <20240826024705.55474-2-zhenghaowei@loongson.cn>
+ <7346m2dmduzdrhzmhlnms24bltoczbajfxfh6wcxxplzydqskc@2xey7pdc24t3>
+ <e0f40e93-a325-4db2-86af-5d2d29fb0095@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <e0f40e93-a325-4db2-86af-5d2d29fb0095@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+On 26/08/2024 08:54, 郑豪威 wrote:
+> 
+> 在 2024/8/26 13:59, Krzysztof Kozlowski 写道:
+>> On Mon, Aug 26, 2024 at 10:47:03AM +0800,zhenghaowei@loongson.cn wrote:
+>>> From: Haowei Zheng<zhenghaowei@loongson.cn>
+>>>
+>>> Add Loongson UART controller binding with DT schema format using
+>>> json-schema.
+>>>
+>>> Signed-off-by: Haowei Zheng<zhenghaowei@loongson.cn>
+>>> ---
+>>>   .../bindings/serial/loongson,uart.yaml        | 63 +++++++++++++++++++
+>>>   1 file changed, 63 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>>>
+>>> Changes in V2:
+>>>
+>>> - Correct the schema formatting errors.
+>>>
+>>> - file name changed from 'loongson-uart.yaml' to 'loongson,ls7a-uart.yaml'
+>>>
+>>> - Replace 'loongson,loongson-uart' with 'loongson,ls7a-uart'.
+>>>
+>>> Changes in V3:
+>>>
+>>> - Change the filename from 'loongson,ls7a-uart.yaml' to 'loongson,uart.yaml'.
+>>>
+>>> - Drop newly defined features: fractional-division, rts-invert, dtr-invert,
+>>>    cts-invert and dsr-invert.
+>>>
+>>> - Add three specific SoC: 'loongson,ls7a-uart', 'loongson,ls3a5000-uart' and
+>>>    'loongson,ls2k2000-uart'.
+>>>
+>>> - Drop 'LOONGSON UART DRIVER' description in MAINTAINERS.
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/serial/loongson,uart.yaml b/Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>>> new file mode 100644
+>>> index 000000000000..19a65dd5be9f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/serial/loongson,uart.yaml
+>>> @@ -0,0 +1,63 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id:http://devicetree.org/schemas/loongson,uart.yaml#
+>>> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Loongson UART
+>>> +
+>>> +maintainers:
+>>> +  - Haowei Zheng<zhenghaowei@loongson.cn>
+>>> +
+>>> +allOf:
+>>> +  - $ref: serial.yaml
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - enum:
+>>> +          - loongson,ls7a-uart
+>> Quick look tells me there is no such soc like ls7a. If there is such,
+>> please point me to the DTSI.
+>>
+> I had a problem with my description of ls7a, it's just a bridge chip, but
+> 
+> both ls2k0500 and ls2k1000 share the same UART controller as it.
 
-On 24-08-23, Andy Shevchenko wrote:
-> On Mon, Jul 01, 2024 at 03:53:39PM +0200, Marco Felsch wrote:
-> > This series adds the intial support to handle EEPROMs via the MTD layer
-> > as well. This allow the user-space to have separate paritions since
-> > EEPROMs can become quite large nowadays.
-> > 
-> > With this patchset applied EEPROMs can be accessed via:
-> >   - legacy 'eeprom' device
-> >   - nvmem device
-> >   - mtd device(s)
-> > 
-> > The patchset targets only the AT24 (I2C) EEPROMs since I have no access
-> > to AT25 (SPI) EEPROMs nor to one of the other misc/eeprom/* devices.
-> > 
-> > Note: I'm not familiar with Kconfig symbol migration so I don't know if
-> > the last patch is required at the moment. Please be notified that the
-> > list of recipients is quite large due to the defconfig changes.
-> 
-> FWIW, I think that MTD is *not* the place for EEPROMs.
-> 
-> Yeah, we have the driver spread over the kernel for EEPROMs (mostly due to
-> historical reasons and absence an umbrella subsystem for them), but it's not
-> the reason to hack them into something which is not quite suitable.
+I do not know what is a bridge chip, but anyway: provide DTSI.
 
-Thank you for you input. There are two things to mention:
- 1st) I send a RFC patch and asked for feedback and all I got was: looks
-      okay, please send a proper patch [1] which I did.
- 2nd) I don't see the hacky part in this patchset.
+No DTSI? Then how is it a chip?
 
-Anyway the customer doesn't need the nvmem-partitions anymore and
-therefore this patchset can be seen as obsolote.
-
-Regards,
-  Marco
-
-[1] https://lore.kernel.org/lkml/20231201144441.imk7rrjnv2dugo7p@pengutronix.de/T/#m1e0e5778448971b50a883f62bd95622f6422b9a2
 
 > 
-> If NVMEM needs to be updated and may cover these cases after all (and do not
-> forget about *small* size EEPROMs that most likely appear on the devices with
-> limited amount of resources!) in a reasonable size and performance, why not?
+>>> +          - loongson,ls3a5000-uart
+>>> +          - loongson,ls2k2000-uart
+>>> +      - items:
+>>> +          - enum:
+>>> +              - loongson,ls2k1000-uart
+>>> +              - loongson,ls2k0500-uart
+>>> +          - const: loongson,ls7a-uart
+>> Just use real SoC names.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
+> The ls7a is not an SoC; it is typically used in conjunction with 
+> Loongson 3 series
+
+So no, drop. "Not a SoC" cannot be a standalone compatible and makes
+little sense to have it here while all others use specific compatibles.
+
+We keep repeating the same for Loongson and we are getting tired. There
+is not much improvements from you. Who in Loongson is responsible for
+managing your contributions so he/she/they will assure us you understand
+what we ask you?
+
+Best regards,
+Krzysztof
+
