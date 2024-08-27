@@ -1,160 +1,71 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AED21A0AF4
-	for <loongarch@lists.linux.dev>; Tue, 27 Aug 2024 14:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23041E520;
+	Tue, 27 Aug 2024 14:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724768820; cv=none; b=Qi4SJfnN+y7v4Xox3+nuV92jYMkzGjhPTmhAN5KK5ThyZ/VP4Jbj/22tnAVbKxeEkiby0VoJLSR1jgbiEx3H4m2DSHq62f5+rqTHAUMU1TElEsGz/ShpSWRB2vzgLkPAtdAdSEXquGKLw/JJQ3MPV4P0os//ZyQnkzTCpcfl0Uw=
+	t=1724769061; cv=none; b=OdZiVB5nEIlCkszolCY9mD5upiKL+APTrBigc+VoAXKFwSaF+CUFnuaJkUR96D5XFQOG3X14/mlVoAbXENcZuYx00h+p35dgw9vPhqmW6rHUDtMa0HGfT6lkGLis7M4Nh4BMjxW+8ZJKpNVUYU/0IwXCcEautishdtprDU1HXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724768820; c=relaxed/simple;
-	bh=+q2+LZWCWXtLQCcNQ3ibvgIQp4F3rZIVxQwsHCBGARY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VP3jNA68ilJ9kaMKpqwif6VUcBMryjTJqHKKqRmX8Eh+zkHien0+WtMq7VL3Nr/JVk1i4BxqNba2rhUsfbq4VdM4DJnn/0QmVxIpyQGSXPysP8NrrXmS8Mic95ct4rOBZAnGt9Lx/Z3xlxxwYwZm+ML4ki7KqlnUaFrALoEkE/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=M4qZwCN1; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1724769061; c=relaxed/simple;
+	bh=I/g4Mgsnqu0wOZhORD+sLLYWz00xbECb0lXOYoALqc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1l7gm/rVUEhjGDgevJFyJiWUff4KejgTqnOg1xoxt18h3G4P4BxG8wCEIUbUOVPj5Sgvkneh9oGf4sjFbI75wXmRZxGYmfJbtkKXcNd/cYaTFa+Q2eFh8wzc9c3sXZmdmWcDQxLEZmrTNbgK0c5ryE7eeejiaexeCOnoy2K9ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=DVBFZT7F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="M4qZwCN1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1724768818;
-	bh=+q2+LZWCWXtLQCcNQ3ibvgIQp4F3rZIVxQwsHCBGARY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=M4qZwCN1nUoS8g8eiWSSfchqgF0ZC2KS+LtJVgtOwBaAAm7bYKOZuT+BAuR3sze90
-	 Cx7H6PXSEu1mB4jRiy7pANWpxT2k9BYrul+nzQq4k2tUeOuF+BkmzBpzjXxQU4iSAQ
-	 c1dE0AzP3dOupf+pU3bWFV6YVQOSj27Auw427z4w=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9D3F766F26;
-	Tue, 27 Aug 2024 10:26:55 -0400 (EDT)
-Message-ID: <f404ae352a8cba3e035c9d5a10b553fb4497bb02.camel@xry111.site>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DVBFZT7F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991A7C4AF1C;
+	Tue, 27 Aug 2024 14:30:59 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DVBFZT7F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1724769058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lHEV/tYg5CgsRIEkox+e5xHFtM7hGGs4lfdCumcD7W4=;
+	b=DVBFZT7FmogJh/83PD5AwPyfYVBDvj/+HRn4tZJ8r+W3BY/Kw7d1RB+oA8739w39tKppEe
+	6kctRkGme40/JKchGzItYECwjnH6DItd9ZWSlA40CGTAdUMUvBAf3MLgdbICgf8qCs0+Aw
+	DBCGUZMgEytcZfqRodpIL7rxTADpLM0=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 55bdd37f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 27 Aug 2024 14:30:58 +0000 (UTC)
+Date: Tue, 27 Aug 2024 16:30:52 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v4 1/4] LoongArch: vDSO: Wire up getrandom() vDSO
  implementation
-From: Xi Ruoyao <xry111@xry111.site>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-crypto@vger.kernel.org, loongarch@lists.linux.dev, Jinyang He
- <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd
- Bergmann <arnd@arndb.de>
-Date: Tue, 27 Aug 2024 22:26:53 +0800
-In-Reply-To: <Zs3ZWm-218Cb_ir0@zx2c4.com>
+Message-ID: <Zs3jHMxpR_jUFg9o@zx2c4.com>
 References: <20240827132018.88854-1-xry111@xry111.site>
-	 <20240827132018.88854-2-xry111@xry111.site> <Zs3ZWm-218Cb_ir0@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+ <20240827132018.88854-2-xry111@xry111.site>
+ <Zs3ZWm-218Cb_ir0@zx2c4.com>
+ <f404ae352a8cba3e035c9d5a10b553fb4497bb02.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f404ae352a8cba3e035c9d5a10b553fb4497bb02.camel@xry111.site>
 
-On Tue, 2024-08-27 at 15:49 +0200, Jason A. Donenfeld wrote:
-> On Tue, Aug 27, 2024 at 09:20:14PM +0800, Xi Ruoyao wrote:
-> > +	register long ret asm("a0");
-> > +	register long int nr asm("a7") =3D __NR_getrandom;
->=20
-> The first line is `long` and the second line is `long int` here. Just
-> call them both `long` like usual?
+On Tue, Aug 27, 2024 at 10:26:53PM +0800, Xi Ruoyao wrote:
+> > And then use addi.w here with the integer literals instead?
+> 
+> LoongArch addi.w can only handle 12-bit signed immediate values (such a
+> limitation is very common in RISC machines).  On my processor I can
+> avoid using a register to materialize the constant with addu16i.d +
+> addu12i.w + addi.w.  But there would be 3 instructions, and addu12i.w is
+> a part of the Loongson Binary Translation extension which is not
+> available on some processors.  Also LBT isn't intended for general use,
+> so most LBT instructions have a lower throughput than the basic
+> instructions.
 
-I'll change it.
->=20
-> > =C2=A0struct loongarch_vdso_data {
-> > =C2=A0	struct vdso_pcpu_data pdata[NR_CPUS];
-> > +#ifdef CONFIG_VDSO_GETRANDOM
-> > +	struct vdso_rng_data rng_data;
-> > +#endif
->=20
-> If VSO_GETRANDOM is selected unconditionally for the arch, why the
-> ifdef
-> here?
->=20
-> > +obj-vdso-$(CONFIG_VDSO_GETRANDOM) +=3D vgetrandom.o vgetrandom-
-> > chacha.o
->=20
-> Likewise, same question here.
+Very interesting, thanks for the explanation.
 
-I'll remove the ifdef and just add them into obj-vdso-y.
-
-> > +	/* copy[3] =3D "expa" */
-> > +	li.w		copy3, 0x6b206574
->=20
-> Might want to mention why you're doing this.
->=20
-> =C2=A0=C2=A0=C2=A0 /* copy[3] =3D "expa", because it was clobbered by the=
- i index. */
-
-I'll add it.
-
-> Or something like that.
->=20
-> But on the topic of those constants,
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 copy0, 0x61707865
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 copy1, 0x3320646e
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 copy2, 0x79622d32
->=20
-> What if you avoid doing this,
->=20
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ld.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cnt_lo, counter, 0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ld.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cnt_hi, counter, 4
-> > +
-> > +.Lblock:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* state[0,1,2,3] =3D "expand 32-=
-byte k" */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 move=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state0, copy0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 move=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state1, copy1
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 move=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state2, copy2
->=20
-> Use li.w here with the integer literals,
-
-li.w is expanded to two instructions (lu12i.w + addi.w) by the
-assembler.
-
-> > +	/* copy[3] =3D "expa" */
-> > +	li.w		copy3, 0x6b206574
->=20
-> Skip this,
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 add.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state0, state0, copy0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 add.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state1, state1, copy1
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 add.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state2, state2, copy2
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 add.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state3, state3, copy3
->=20
-> And then use addi.w here with the integer literals instead?
-
-LoongArch addi.w can only handle 12-bit signed immediate values (such a
-limitation is very common in RISC machines).  On my processor I can
-avoid using a register to materialize the constant with addu16i.d +
-addu12i.w + addi.w.  But there would be 3 instructions, and addu12i.w is
-a part of the Loongson Binary Translation extension which is not
-available on some processors.  Also LBT isn't intended for general use,
-so most LBT instructions have a lower throughput than the basic
-instructions.
-
-> I don't know anything about loongarch, so just guessing.
-
-> BTW, can you confirm that this passes the test in test_vdso_chacha?
-
-Yes, it has passed the test.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Jason
