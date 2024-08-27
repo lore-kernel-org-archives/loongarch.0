@@ -1,59 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFA41714B8;
-	Tue, 27 Aug 2024 09:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB3819ADB0;
+	Tue, 27 Aug 2024 09:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724751118; cv=none; b=jS7VOEKwk+TGbQNfgPssDUo+BdADNEbu1l2/WtO87+XVA0eby24E39OkZHiu9EUHS7tofcht9VrJfcLKK8iTOWss6Gw2W3TCQG/0xN7E8ZpPPSPxhL2htpfXSdK9Gv1ARM4RtzEQ0rrEsRVQ+kHPhyNJ4SVHJV76eNngkOjdXL4=
+	t=1724751940; cv=none; b=RX13CTw/wK2pyx1qijh1BmQm1RA/Ig6+jgo2fBsRNwNQMhw5MxIs2uwLeMbnt0Prv22DrD9oH5h6FuDXjYRiC3v/sxdXFihRNtfAtfxkUo11qKkIx5gA8cB5PttWkMlNVrnZmLDSNfr4sQfwsFoFi02b1Y4pM7OdKBhuElCXp68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724751118; c=relaxed/simple;
-	bh=v5la12xuZlpJAHBwKesqG3ct7vbuw4Dwscy40oiBezU=;
+	s=arc-20240116; t=1724751940; c=relaxed/simple;
+	bh=eVclaBJ2YxjTVTaOSTbmAnw0uz4jKUu4DqgThpqOVSs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXZXHBKbFxio7amxifvsto4gD/RExVzGPVwdoVERrJ/jsknJUx24GeM0Ukx4+/QZ89JetBZt+/B3RiFEGhS9VsWpGb5hJvIdZzcVvDfmtN4/OYqf6BpHIri2vHfGbRGKL2sBbX2K7ibnkX1acthQf48BAPwSOxekvEgpZLBhnPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=DxHa9hxJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k6wpw9DOIz37+RpSG6rqPop3m77nFE1Y+JA8c5nhbwsjs4Tgu3dQYCObOn8rxZ1gBROZ4vKeHyb11inMoX/s185EdGqDdk18Y2Jdvp4rqgpsl5I3KpVDxNlaZh/MkxaN87vhJ4Ny92smZuNGFq5cs/gUBnPoBlvBSETCrSK/zJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=caeQWXgN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DxHa9hxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94408C8B7CD;
-	Tue, 27 Aug 2024 09:31:54 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="caeQWXgN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC586C8B7A0;
+	Tue, 27 Aug 2024 09:45:38 +0000 (UTC)
 Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DxHa9hxJ"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="caeQWXgN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1724751112;
+	t=1724751937;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JdIowXx5hArmXp0irpZ89oIJDLeZuVLuZPGcLtq5hgU=;
-	b=DxHa9hxJdBbjx/iowG23VxSZyG/CGmRspd62YsjFHqw0za1fqkq/Nd7+a80kDZL2Tm7peD
-	o/We6F+5fwEzQZMoosma4XFBPFOH2qWxrLQ/P73o66d8kChstBj6lF3d8wi2fZxcpqCXkw
-	uIFnWdSd9qKW1JqXm2PC/smuCa0IZ5c=
+	bh=eVclaBJ2YxjTVTaOSTbmAnw0uz4jKUu4DqgThpqOVSs=;
+	b=caeQWXgNoSnvlrNwSSAl9nDQtEgPn3bBXDq8o5gn1N4Vsm04CP8AWk2HGYIQzMNDv5qcdq
+	EdthTkWpCfF5SjJTVU1SohO2gJE28IVfBv7rJjCEhqtEDSixWUFLmpZdv62Lok4ZcAlLnX
+	+/MRHP4ZxCjpJoFfIlmnoInaSx6WorU=
 Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ecb5f7c9 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 27 Aug 2024 09:31:50 +0000 (UTC)
-Date: Tue, 27 Aug 2024 11:31:43 +0200
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id aa222d56 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 27 Aug 2024 09:45:36 +0000 (UTC)
+Date: Tue, 27 Aug 2024 11:45:31 +0200
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>,
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
 	Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Theodore Ts'o <tytso@mit.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev
-Subject: getrandom() vDSO archs (arm64, ppc, loongarch) for 6.12 [Was: Re:
- [PATCH v2 00/17] Wire up getrandom() vDSO implementation on powerpc]
-Message-ID: <Zs2c_9Z6sFMNJs1O@zx2c4.com>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
- <Zswsennpw6fvigVh@zx2c4.com>
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re:
+Message-ID: <Zs2gO0NQwOuK8Bmu@zx2c4.com>
+References: <20240816110717.10249-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,62 +48,12 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zswsennpw6fvigVh@zx2c4.com>
+In-Reply-To: <20240816110717.10249-1-xry111@xry111.site>
 
-Hey again,
+Hey,
 
-On Mon, Aug 26, 2024 at 09:19:22AM +0200, Jason A. Donenfeld wrote:
-> Thanks for this series. There are quite a few preliminary patches in it,
-> before you get to the PPC part, which fix up general build system or test
-> harness correctness issues. Since some of those affect all architectures
-> that are adding vDSO getrandom() support for 6.12, I'm going to take
-> those into my random.git tree as a fix for 6.11 now, in hopes that the
-> new archs can mostly go into arch trees without too many tree
-> interdependencies.
-> 
-> So I'll reply to individual patches for that, mentioning which ones I
-> extract.
-
-Seeing the volume of these and the amount of ground they touch, I'm now
-having second thoughts about rushing this into 6.11. Particularly with
-the header changes, I think it might be smart to let it cook in
-linux-next for a bit before sending it to Linus.
-
-  $ git --no-pager diff --name-only linus/master
-  arch/x86/entry/vdso/vma.c
-  arch/x86/include/asm/pvclock.h
-  arch/x86/include/asm/vdso/vsyscall.h
-  drivers/char/random.c
-  include/asm-generic/unaligned.h
-  include/vdso/helpers.h
-  include/vdso/unaligned.h
-  lib/vdso/Makefile
-  lib/vdso/getrandom.c
-  tools/arch/x86/vdso
-  tools/include/linux/linkage.h
-  tools/testing/selftests/vDSO/Makefile
-  tools/testing/selftests/vDSO/vdso_config.h
-  tools/testing/selftests/vDSO/vdso_test_getrandom.c
-
-So I think what I'll do is, for 6.11-rc6, send in the real bug fixes,
-which right now amount to:
-
-  - random: vDSO: reject unknown getrandom() flags
-  - random: vDSO: don't use 64-bit atomics on 32-bit architectures
-
-  $ git --no-pager diff --name-only linus/master..a90592ab7cad
-  drivers/char/random.c
-  lib/vdso/getrandom.c
-
-And then for the pending aarm64, ppc64(/32?), and loongarch enablement
-patches for 6.12, I'll just take those through my random.git tree, which
-have all of these build-system preliminaries. And then we'll obviously
-require acks from the maintainers of the archs for each of those arch
-enablement patches.
-
-If that sounds like an acceptable plan, you might want to mention in the
-cover letter that you're basing your arch-specific patches on
-https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git/ and
-want an ack from the arch maintainer, etc.
+Per https://lore.kernel.org/all/Zs2c_9Z6sFMNJs1O@zx2c4.com/ , you may
+want to rebase on random.git and send a v4 series. Hopefully now it's
+just a single patch.
 
 Jason
