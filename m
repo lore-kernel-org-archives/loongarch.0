@@ -1,222 +1,244 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B3414A4C1
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 05:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8527315278E
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 05:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724821254; cv=none; b=Uu2GtJ2dHIYjgvlVZU9bqL+iwvZjivseQX2+HtRxE/Tqs6+TFimAPZiI+BrFLdzj/5jql6VIbCRS6ZC1KG3t6xidg+SIMFesjM3EsptVOstHqOzXUZ4bHscgAO0PZhQKV5xNsWeo48DqrAZquk9d0AZs93Yze8evaYLOdoiAqqY=
+	t=1724824169; cv=none; b=B4/LC60fLWsjC/st+kIXWXsZlJtupwiEX7RI/FIvA0LRent1v16mQDb5MI2lg37xnMxoAxNC7agjqvs41TAbIP6w1JzbpNCe3OzErNf0mVT41zXAdCi9lViovVD7bj08HKKM2F4T8mST7mYOdgfNG9tLeQMTjqWK8BppQvKn9FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724821254; c=relaxed/simple;
-	bh=VEDhVTVnY0zuzhewz0zm/PuilM0PMpgznKb+DAM1Xo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cT18XzV6UKX1y3jy85ViCNPCnN/5zRjn+6cUm/fqznFuWAVxzYILZo0eVTgC8lJaBJJSH1xkAMNDWDMvqzAgUNACHrmdaN/2PiUZpGcaNWRAryF3pTvFNMMLuaROS6MwBP6+fnwSg+233NWpY2rp1VCcoSQKeZS9R3DOEjXQXSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gC8Pm1kK; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1724824169; c=relaxed/simple;
+	bh=rybnxgXRfasNksP5lSU1TnJeqx+66siNWRNOd7Jshtg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NFGiAb8t+0o6lS5AMQnnwde5adN1EYcPYSZCSU+tXXRmatXeFxyan5FlHJ681EUFLJ+zMzgq/GzMHe82nuelwSFcGG+97Txg93Ycd+zpt8Vd7X/147Wwo0xR+WmhNM125DZ0gd+4vJLZKU40F1eh9/VRQbxUPxvkdc9S77icrUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qL9QsPyy; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gC8Pm1kK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1724821214;
-	bh=oVU55GyPUEvEL9hcGrB07XoY0OBZbqxfBQ2u9guts1c=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gC8Pm1kKkr9NTpnN/+63p7eTsKFYkkwkdFvZxpv+qboTg2W/DsZF9MCMWPi6Xqllk
-	 s/VM4jWdODE5Pkwanj328AcG1wknwvpO3AgVp61NRARHWxzcKzoPWFkHziImkZdv90
-	 UcZMAuombw9Vn/2Dh1vXHrfyzKW3nyb+UWrrkoec=
-X-QQ-mid: bizesmtp79t1724821209tmjq0y8y
-X-QQ-Originating-IP: HSvd97IkU+jxIjPcvdHxQdd/9fxSsft1/zQzGcj2AoM=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 28 Aug 2024 13:00:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15732336081589095938
-From: Dandan Zhang <zhangdandan@uniontech.com>
-To: pbonzini@redhat.com,
-	corbet@lwn.net,
-	zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
-	chenhuacai@kernel.org,
-	zenghui.yu@linux.dev
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guanwentao@uniontech.com,
-	wangyuli@uniontech.com,
-	baimingcong@uniontech.com,
-	Xianglai Li <lixianglai@loongson.cn>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Dandan Zhang <zhangdandan@uniontech.com>
-Subject: [PATCH v3] Loongarch: KVM: Add KVM hypercalls documentation for LoongArch
-Date: Wed, 28 Aug 2024 12:59:50 +0800
-Message-ID: <4769C036576F8816+20240828045950.3484113-1-zhangdandan@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qL9QsPyy"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71423273c62so4612332b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 27 Aug 2024 22:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724824166; x=1725428966; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUFbDMgjzsoT48Z/N2yqe2kry93QHxmitnGNSfp0h7M=;
+        b=qL9QsPyyHVhphpZqND6UZiOzHsrBwVSD/WpUnDNOkyyy9gVc1RPz5o6PefGWdQ9pxp
+         j3u7eXFDoJoKWCGE533+wMyKXdCqz+RdxgakY3aPq1cgk2t/dAVDokOIdjXXZyc84SkP
+         dseLu6MRoxWCTg7FJgMqwURRj1gvF3ToPb3SEY41F7fjUIH7j0D3wTGE1v0nN4kkfPkv
+         BaYtmQ53iBKhiMfMmVUQY2F/2oav7sgVMNr1vvex7GVFaWnt2k4j7ajxHHHJA/vtVki7
+         D1ex0SBtsiTiNSdPLIEL2AHNJmS7CHSERo5FN8gpkDUpM3YdHyNGlzIxVpCnrkLV2O1l
+         nl8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724824166; x=1725428966;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IUFbDMgjzsoT48Z/N2yqe2kry93QHxmitnGNSfp0h7M=;
+        b=ARLeOvfXLjblkVAwegp8yZqaGG4BRjbQeqaULQt9D94sKpPFufP9WXgciXQys6eE17
+         q6CnRQpLeEPPHQ3SCQG+T86SA1KpaAHLRzkHFeWdnXT0zGDPhFsr87BkqEUqGg/oEwOC
+         9aJsCACN1JnI+SlthPsJc0XbWo5ohm+huy2jlUwwHphIl43+4Zxs3xnM/y0A1R+dR9ii
+         jKKmFai046Tr0cEMdAZTMvVdfYb/DojUXtnqEHVC738UCIv9/LReki8h8tDiminF1kQQ
+         sXvMUEzz8iIXNfEvdIX3S5YcSayrmhGhngyqg9VNjKYSBDhzGwmDhe5dEPfyVN9x6p6z
+         xeQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdToYtbBdE5lGEIruPxK93HD4c6PZDI/hbHUVvXvN9KW2ZjUQVfUhWxKz033q4LrWckgThy/d5DWI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYk3CE7f5B+X7kYYZqkyzbKRG9+puQI2FuNKhH0sU3PM7U56LH
+	e9/HQerCJG5QHOkc1fHDuf8vLt/5DDM8XEQnGG4MCFIjd952reibAvaVa0KORSw=
+X-Google-Smtp-Source: AGHT+IF6T5IRS6PI9ffePkiTGEXwg74qwFWRmO3+h509ZqjZl31p2gGXC6rr0MOwZENhtWiyWe3S3w==
+X-Received: by 2002:a05:6a21:78e:b0:1c0:eba5:e192 with SMTP id adf61e73a8af0-1cc8b49d8abmr14865175637.27.1724824165540;
+        Tue, 27 Aug 2024 22:49:25 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-203855df0c4sm92092495ad.157.2024.08.27.22.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2024 22:49:24 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH 00/16] mm: Introduce MAP_BELOW_HINT
+Date: Tue, 27 Aug 2024 22:49:06 -0700
+Message-Id: <20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFK6zmYC/x3MTQqAIBBA4avErBPSkn6uEhFmUw6UiUYF4d2Tl
+ t/ivRcCesIAXfaCx4sCHTaB5xloo+yKjOZkEIWoikbUzKlTGwxswu24R0P2HPddOTbxcq5bhVx
+ LCal2Hhd6/nM/xPgBQKT3MGkAAAA=
+To: Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Shuah Khan <shuah@kernel.org>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-mm@kvack.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6044; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=rybnxgXRfasNksP5lSU1TnJeqx+66siNWRNOd7Jshtg=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9q5XSH3lM7XXzj5QFjW4OtX+60nZ+rMb1N2D9F5e2t+8
+ tuSp8uiOkpZGMQ4GGTFFFl4rjUwt97RLzsqWjYBZg4rE8gQBi5OAZjIkUMMf8WSWp0unDgcOEl5
+ 8kUJVXP5KYyTLI0KMiNvKmnOTI5taWBk2Cj+dkXn/qc3T0v2+U/SXhD+ZpOA/e/6H56BP2LNukr
+ 5GQE=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-From: Bibo Mao <maobibo@loongson.cn>
+Some applications rely on placing data in free bits addresses allocated
+by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+address returned by mmap to be less than the maximum address space,
+unless the hint address is greater than this value.
 
-Add documentation topic for using pv_virt when running as a guest
-on KVM hypervisor.
+On arm64 this barrier is at 52 bits and on x86 it is at 56 bits. This
+flag allows applications a way to specify exactly how many bits they
+want to be left unused by mmap. This eliminates the need for
+applications to know the page table hierarchy of the system to be able
+to reason which addresses mmap will be allowed to return.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-Link: https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
-Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
 ---
- Documentation/virt/kvm/index.rst              |  1 +
- .../virt/kvm/loongarch/hypercalls.rst         | 89 +++++++++++++++++++
- Documentation/virt/kvm/loongarch/index.rst    | 10 +++
- MAINTAINERS                                   |  1 +
- 4 files changed, 101 insertions(+)
- create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
- create mode 100644 Documentation/virt/kvm/loongarch/index.rst
+riscv made this feature of mmap returning addresses less than the hint
+address the default behavior. This was in contrast to the implementation
+of x86/arm64 that have a single boundary at the 5-level page table
+region. However this restriction proved too great -- the reduced
+address space when using a hint address was too small.
 
-diff --git a/Documentation/virt/kvm/index.rst b/Documentation/virt/kvm/index.rst
-index ad13ec55ddfe..9ca5a45c2140 100644
---- a/Documentation/virt/kvm/index.rst
-+++ b/Documentation/virt/kvm/index.rst
-@@ -14,6 +14,7 @@ KVM
-    s390/index
-    ppc-pv
-    x86/index
-+   loongarch/index
- 
-    locking
-    vcpu-requests
-diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst b/Documentation/virt/kvm/loongarch/hypercalls.rst
-new file mode 100644
-index 000000000000..dd96ded5d17d
---- /dev/null
-+++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
-@@ -0,0 +1,89 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+The LoongArch paravirtual interface
-+===================================
-+
-+KVM hypercalls use the HVCL instruction with code 0x100 and the hypercall
-+number is put in a0. Up to five arguments may be placed in registers a1 - a5.
-+The return value is placed in v0 (an alias of a0).
-+
-+Source code for this interface can be found in arch/loongarch/kvm*.
-+
-+Querying for existence
-+======================
-+
-+To determine if the host is running on KVM, we can utilize the cpucfg()
-+function at index CPUCFG_KVM_BASE (0x40000000).
-+
-+The CPUCFG_KVM_BASE range, spanning from 0x40000000 to 0x400000FF, The
-+CPUCFG_KVM_BASE range between 0x40000000 - 0x400000FF is marked as reserved.
-+Consequently, all current and future processors will not implement any
-+feature within this range.
-+
-+On a KVM-virtualized Linux system, a read operation on cpucfg() at index
-+CPUCFG_KVM_BASE (0x40000000) returns the magic string 'KVM\0'.
-+
-+Once you have determined that your host is running on a paravirtualization-
-+capable KVM, you may now use hypercalls as described below.
-+
-+KVM hypercall ABI
-+=================
-+
-+The KVM hypercall ABI is simple, with one scratch register a0 (v0) and at most
-+five generic registers (a1 - a5) used as input parameters. The FP (Floating-
-+point) and vector registers are not utilized as input registers and must
-+remain unmodified during a hypercall.
-+
-+Hypercall functions can be inlined as it only uses one scratch register.
-+
-+The parameters are as follows:
-+
-+	========	================	================
-+	Register	IN			OUT
-+	========	================	================
-+	a0		function number		Return	code
-+	a1		1st	parameter	-
-+	a2		2nd	parameter	-
-+	a3		3rd	parameter	-
-+	a4		4th	parameter	-
-+	a5		5th	parameter	-
-+	========	================	================
-+
-+The return codes may be one of the following:
-+
-+	====		=========================
-+	Code		Meaning
-+	====		=========================
-+	0		Success
-+	-1		Hypercall not implemented
-+	-2		Bad Hypercall parameter
-+	====		=========================
-+
-+KVM Hypercalls Documentation
-+============================
-+
-+The template for each hypercall is as follows:
-+
-+1. Hypercall name
-+2. Purpose
-+
-+1. KVM_HCALL_FUNC_IPI
-+------------------------
-+
-+:Purpose: Send IPIs to multiple vCPUs.
-+
-+- a0: KVM_HCALL_FUNC_IPI
-+- a1: Lower part of the bitmap for destination physical CPUIDs
-+- a2: Higher part of the bitmap for destination physical CPUIDs
-+- a3: The lowest physical CPUID in the bitmap
-+
-+The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) with
-+at most 128 destinations per hypercall. The destinations are represented in a
-+bitmap contained in the first two input registers (a1 and a2).
-+
-+Bit 0 of a1 corresponds to the physical CPUID in the third input register (a3)
-+and bit 1 corresponds to the physical CPUID in a3+1, and so on.
-+
-+PV IPI on LoongArch includes both PV IPI multicast sending and PV IPI receiving,
-+and SWI is used for PV IPI inject since there is no VM-exits accessing SWI registers.
-diff --git a/Documentation/virt/kvm/loongarch/index.rst b/Documentation/virt/kvm/loongarch/index.rst
-new file mode 100644
-index 000000000000..83387b4c5345
---- /dev/null
-+++ b/Documentation/virt/kvm/loongarch/index.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
-+KVM for LoongArch systems
-+=========================
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   hypercalls.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 878dcd23b331..c267ad7cc2c5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12294,6 +12294,7 @@ L:	kvm@vger.kernel.org
- L:	loongarch@lists.linux.dev
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-+F:	Documentation/virt/kvm/loongarch/
- F:	arch/loongarch/include/asm/kvm*
- F:	arch/loongarch/include/uapi/asm/kvm*
- F:	arch/loongarch/kvm/
+A patch for riscv [1] reverts the behavior that broke userspace. This
+series serves to make this feature available to all architectures.
+
+I have only tested on riscv and x86. There is a tremendous amount of
+duplicated code in mmap so the implementations across architectures I
+believe should be mostly consistent. I added this feature to all
+architectures that implement either
+arch_get_mmap_end()/arch_get_mmap_base() or
+arch_get_unmapped_area_topdown()/arch_get_unmapped_area(). I also added
+it to the default behavior for arch_get_mmap_end()/arch_get_mmap_base().
+
+Link: https://lore.kernel.org/lkml/20240826-riscv_mmap-v1-2-cd8962afe47f@rivosinc.com/T/ [1]
+
+To: Arnd Bergmann <arnd@arndb.de>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+To: Albert Ou <aou@eecs.berkeley.edu>
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+To: Michael Ellerman <mpe@ellerman.id.au>
+To: Nicholas Piggin <npiggin@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Naveen N Rao <naveen@kernel.org>
+To: Muchun Song <muchun.song@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Liam R. Howlett <Liam.Howlett@oracle.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+To: x86@kernel.org
+To: H. Peter Anvin <hpa@zytor.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+To: WANG Xuerui <kernel@xen0n.name>
+To: Russell King <linux@armlinux.org.uk>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+To: Helge Deller <deller@gmx.de>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+To: Vasily Gorbik <gor@linux.ibm.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+To: Sven Schnelle <svens@linux.ibm.com>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+To: Rich Felker <dalias@libc.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: David S. Miller <davem@davemloft.net>
+To: Andreas Larsson <andreas@gaisler.com>
+To: Shuah Khan <shuah@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-mm@kvack.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+
+---
+Charlie Jenkins (16):
+      mm: Add MAP_BELOW_HINT
+      riscv: mm: Do not restrict mmap address based on hint
+      mm: Add flag and len param to arch_get_mmap_base()
+      mm: Add generic MAP_BELOW_HINT
+      riscv: mm: Support MAP_BELOW_HINT
+      arm64: mm: Support MAP_BELOW_HINT
+      powerpc: mm: Support MAP_BELOW_HINT
+      x86: mm: Support MAP_BELOW_HINT
+      loongarch: mm: Support MAP_BELOW_HINT
+      arm: mm: Support MAP_BELOW_HINT
+      mips: mm: Support MAP_BELOW_HINT
+      parisc: mm: Support MAP_BELOW_HINT
+      s390: mm: Support MAP_BELOW_HINT
+      sh: mm: Support MAP_BELOW_HINT
+      sparc: mm: Support MAP_BELOW_HINT
+      selftests/mm: Create MAP_BELOW_HINT test
+
+ arch/arm/mm/mmap.c                           | 10 ++++++++
+ arch/arm64/include/asm/processor.h           | 34 ++++++++++++++++++++++----
+ arch/loongarch/mm/mmap.c                     | 11 +++++++++
+ arch/mips/mm/mmap.c                          |  9 +++++++
+ arch/parisc/include/uapi/asm/mman.h          |  1 +
+ arch/parisc/kernel/sys_parisc.c              |  9 +++++++
+ arch/powerpc/include/asm/task_size_64.h      | 36 +++++++++++++++++++++++-----
+ arch/riscv/include/asm/processor.h           | 32 -------------------------
+ arch/s390/mm/mmap.c                          | 10 ++++++++
+ arch/sh/mm/mmap.c                            | 10 ++++++++
+ arch/sparc/kernel/sys_sparc_64.c             |  8 +++++++
+ arch/x86/kernel/sys_x86_64.c                 | 25 ++++++++++++++++---
+ fs/hugetlbfs/inode.c                         |  2 +-
+ include/linux/sched/mm.h                     | 34 ++++++++++++++++++++++++--
+ include/uapi/asm-generic/mman-common.h       |  1 +
+ mm/mmap.c                                    |  2 +-
+ tools/arch/parisc/include/uapi/asm/mman.h    |  1 +
+ tools/include/uapi/asm-generic/mman-common.h |  1 +
+ tools/testing/selftests/mm/Makefile          |  1 +
+ tools/testing/selftests/mm/map_below_hint.c  | 29 ++++++++++++++++++++++
+ 20 files changed, 216 insertions(+), 50 deletions(-)
+---
+base-commit: 5be63fc19fcaa4c236b307420483578a56986a37
+change-id: 20240827-patches-below_hint_mmap-b13d79ae1c55
 -- 
-2.43.4
+- Charlie
 
