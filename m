@@ -1,59 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9E4187FFE;
-	Wed, 28 Aug 2024 14:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014BC1A76AD
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 17:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724855607; cv=none; b=OxIMuggM4i9JNJZoQEg8YUMH3IWTvCnDXshSrUJrYRa0xzmVJEO6RMIqhXjh7aZ0ZKjZtZp4UcbibPooHtRsb6m+zMIa52QcAnAj9z3WzBCBic2sCP9toJwByjyqmvOY70x1mhHUdym9ZUjvyV3c6+XPwHMN1KdgGZo0sCMCHkU=
+	t=1724866205; cv=none; b=LZjhwiC1TSGEPzcBRgbvcTwT9wo6w9oIHoGWJ//SLrHOkhMTT1EKCFeBWcsc7ot3g0DjFBqCovqXgmIA7Xxc00WFOy2W4RLlRDZ/VQ3UIfgKqKR/i8o0n/S7HYKaNQM8IMh/cwPPllhVg/BalPqaxul9K7kAMhJGCDvOyuG7D7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724855607; c=relaxed/simple;
-	bh=PF6UF1fn9hMI8JR/Cy+zzGr4iIff+A46TvVgp9cEggQ=;
+	s=arc-20240116; t=1724866205; c=relaxed/simple;
+	bh=OmO27VpmrhU31qsKclIqtL8TYK6eYIyOBD8Nc1b6/sY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjoXjY7ezl0H9u0/iQISOL5yjGQBmg5KWGDXLJZ5qYuWDt8P41xsSyJcECDnFE2nkTeBdoTl/qq+WkyK9gVyF+oBwFogqthz/OFYvs01aD59+GGxknk5ghC8S3uHeG3hNzoHpYHuP7EpIWhDeTaztxX25j2W8sBOUXBASS6bvU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=SCPpGUve; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gArZmXZ6f2AZp58ZnpNAtIzwSIOksjfcN0IIEB7kLeXLWLRIBAQWC2t8Qb3PTJkA7Ws2Hi7S/ywJf8l58b8dcNDT4QSLd9qRo9r2cKQXqNAd55U7ykF0VIT8esgzM1/83jQbmpGZOJSF+SX0YsIDsR/Sc0//XZ9HM7yHwgtMyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SnpamAER; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SCPpGUve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A396AC51A85;
-	Wed, 28 Aug 2024 14:33:25 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SCPpGUve"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1724855603;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sj8wnYnfQbOIZ6p5fQLvU8adgvsiFvV+DlxgShrGCK0=;
-	b=SCPpGUvevfCrWoju4NgLvGSiajbpC2Pqm0pb/81FOhuQhvognSNNP9UxM+jjBQjF1mnspl
-	dmUra7fc++56EyPxvNpqIVuPuennXds0Me+c2fj71luJR4MOsaga8OBrpzfLvUr6IOo2P8
-	ranNJeNFYDiiTOic7b1FUhn9ihjDKQo=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 3f7cb780 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 28 Aug 2024 14:33:23 +0000 (UTC)
-Date: Wed, 28 Aug 2024 16:33:20 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/4] LoongArch: vDSO: Wire up getrandom() vDSO
- implementation
-Message-ID: <Zs81MFn93DRfhjq_@zx2c4.com>
-References: <20240827132018.88854-1-xry111@xry111.site>
- <20240827132018.88854-2-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SnpamAER"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-202089e57d8so6019955ad.0
+        for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 10:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724866201; x=1725471001; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=izEx2iGerEnX7WB/2Mpvv+y1MVG/tbs1FdX9CKEIcSg=;
+        b=SnpamAERNSfES7BiyrJ/wGUHqACEp/DZnIc/aAwhXJVPmnofIzmkPltdwKqF2rsdv7
+         h+wC4eqZL5TjEmossRatdmwkMXJJAscvK6XpwLUaZMJyX+ER7cEC+yNWmuFoNhP78iVQ
+         XQy6Yur+FXDnGYBk1TAc4W/rfuIU92KtZoaLZb0xi2O3V1XPw7hpCFHnqDlZeS0lYxpM
+         BnZEzfS4VMHSXGVnMzUb/IPwuI9Qub4HeBGRw/c1ZyRAiLnSq0DFJJ/CQsM3JufihKsm
+         cj2+0Fqt6/r65dFeOWIAAxHg5MFIB8d71u4tAjupSvxh4ByhGOcB6wHfsDG4nkiXZEFl
+         UCLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724866201; x=1725471001;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=izEx2iGerEnX7WB/2Mpvv+y1MVG/tbs1FdX9CKEIcSg=;
+        b=sbd+uK6fqJTI3Bi/0JmFMAX/x9NivoTqHK8SnBwWHhtnrKhWzDPQULr4AVx6RtDiAw
+         6C8tBQU7SpWVtg8lRezjrI1KJ6dN6HylzUiBY1PehgDwBPfJ314zhTarFJSVZlPdIgyG
+         NyyctkjFj4ZN7SdqxoWtOqd81coucgSZvS3tzOc2k9ft9NBo0C2vC9WY/F6b7TvWgw7u
+         HmD4BykBU+dhkm/bZog1kFIeCYDY0JCUSmeqL2EnIUJarokm6BfLVOjIsFZBIjkfbm31
+         Sv+ruzE5fUfUmUJ7yFCfpH/y8FBllLa0tC7x0L9kpoVHlSbgNXM30HQsCvAaZw+vjHy4
+         DpKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuc8QPxSH4P5DIfF8z436uwIdva5j8IK4I4vYw2RssE8wUkzdz237lllkDA7AuNdLamK7jKw/ineQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzSCGCgDgumYQ9R6lvGoUUnbvkU2OJZkqVLy4tOP/Ne/+vAiXSj
+	X7nPuotsIrfKE2TuVF42e4BaaXI2yWcH/pYgghUw4CzaJjnrOagK5nCEbPDSGlQ=
+X-Google-Smtp-Source: AGHT+IHMsuvXLfTW+bLvG1ZAGccaibo4i2N0hBI/JcHNn1qd40DIOjpRRFBts/vAK3nn3l/ntjAfHA==
+X-Received: by 2002:a17:903:1210:b0:1fb:2ebc:d16b with SMTP id d9443c01a7336-204f9bb4194mr38041435ad.7.1724866201061;
+        Wed, 28 Aug 2024 10:30:01 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385581393sm101427625ad.102.2024.08.28.10.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 10:30:00 -0700 (PDT)
+Date: Wed, 28 Aug 2024 10:29:55 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-mm@kvack.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 07/16] powerpc: mm: Support MAP_BELOW_HINT
+Message-ID: <Zs9ek1Cr1SaQzSqg@ghost>
+References: <20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com>
+ <20240827-patches-below_hint_mmap-v1-7-46ff2eb9022d@rivosinc.com>
+ <a43c52c6-c1ac-4ef3-b511-08f0459bddad@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240827132018.88854-2-xry111@xry111.site>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a43c52c6-c1ac-4ef3-b511-08f0459bddad@csgroup.eu>
 
-On Tue, Aug 27, 2024 at 09:20:14PM +0800, Xi Ruoyao wrote:
-> +extern void __arch_chacha20_blocks_nostack(u8 *dst_bytes, const u32 *key,
-> +					   u32 *counter, size_t nblocks);
+On Wed, Aug 28, 2024 at 08:34:49AM +0200, Christophe Leroy wrote:
+> Hi Charlie,
+> 
+> Le 28/08/2024 à 07:49, Charlie Jenkins a écrit :
+> > Add support for MAP_BELOW_HINT to arch_get_mmap_base() and
+> > arch_get_mmap_end().
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >   arch/powerpc/include/asm/task_size_64.h | 36 +++++++++++++++++++++++++++------
+> >   1 file changed, 30 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/task_size_64.h b/arch/powerpc/include/asm/task_size_64.h
+> > index 239b363841aa..a37a5a81365d 100644
+> > --- a/arch/powerpc/include/asm/task_size_64.h
+> > +++ b/arch/powerpc/include/asm/task_size_64.h
+> > @@ -72,12 +72,36 @@
+> >   #define STACK_TOP_MAX TASK_SIZE_USER64
+> >   #define STACK_TOP (is_32bit_task() ? STACK_TOP_USER32 : STACK_TOP_USER64)
+> > -#define arch_get_mmap_base(addr, len, base, flags) \
+> > -	(((addr) > DEFAULT_MAP_WINDOW) ? (base) + TASK_SIZE - DEFAULT_MAP_WINDOW : (base))
+> > +#define arch_get_mmap_base(addr, len, base, flags)					\
+> 
+> This macro looks quite big for a macro, can it be a static inline function
+> instead ? Same for the other macro below.
+> 
 
-As of the latest master, the forward declaration here isn't necessary.
+I had overlooked that possibility, I think that's a great solution, I
+will change that.
+
+> > +({											\
+> > +	unsigned long mmap_base;							\
+> > +	typeof(flags) _flags = (flags);							\
+> > +	typeof(addr) _addr = (addr);							\
+> > +	typeof(base) _base = (base);							\
+> > +	typeof(len) _len = (len);							\
+> > +	unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base);				\
+> > +	if (_flags & MAP_BELOW_HINT && _addr != 0 && ((_addr + _len) > BIT(VA_BITS - 1)))\
+> > +		mmap_base = (_addr + _len) - rnd_gap;					\
+> > +	else										\
+> > +		mmap_end = ((_addr > DEFAULT_MAP_WINDOW) ?				\
+> > +				_base + TASK_SIZE - DEFAULT_MAP_WINDOW :		\
+> > +				_base);							\
+> > +	mmap_end;									\
+> 
+> mmap_end doesn't exist, did you mean mmap_base ?
+
+Oh whoops, thank you!
+
+- Charlie
+
+> 
+> > +})
+> > -#define arch_get_mmap_end(addr, len, flags) \
+> > -	(((addr) > DEFAULT_MAP_WINDOW) || \
+> > -	 (((flags) & MAP_FIXED) && ((addr) + (len) > DEFAULT_MAP_WINDOW)) ? TASK_SIZE : \
+> > -									    DEFAULT_MAP_WINDOW)
+> > +#define arch_get_mmap_end(addr, len, flags)							\
+> > +({												\
+> > +	unsigned long mmap_end;									\
+> > +	typeof(flags) _flags = (flags);								\
+> > +	typeof(addr) _addr = (addr);								\
+> > +	typeof(len) _len = (len);								\
+> > +	if (_flags & MAP_BELOW_HINT && _addr != 0 && ((_addr + _len) > BIT(VA_BITS - 1)))	\
+> > +		mmap_end = (_addr + _len);							\
+> > +	else											\
+> > +		mmap_end = (((_addr) > DEFAULT_MAP_WINDOW) ||					\
+> > +				(((_flags) & MAP_FIXED) && ((_addr) + (_len) > DEFAULT_MAP_WINDOW))\
+> > +				? TASK_SIZE : DEFAULT_MAP_WINDOW)				\
+> > +	mmap_end;										\
+> > +})
+> >   #endif /* _ASM_POWERPC_TASK_SIZE_64_H */
+> > 
