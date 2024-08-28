@@ -1,271 +1,222 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8760B145FFF
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 04:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B3414A4C1
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 05:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724820335; cv=none; b=DET9o0vdC225WYMTqQKoSymmEgxxXIuMw6jci5SFP4y8UrZnZ43XEnacDPTNhw44L249QIGIzfPrOCCNCDfXILTnjAFmqwngNjffPz0Tkk6gcSWvle66vlQSMqrpz4v4gsPQRz9AG0pTXxwenc4xPND7Z+tc7iqZhiHeDZQPJgE=
+	t=1724821254; cv=none; b=Uu2GtJ2dHIYjgvlVZU9bqL+iwvZjivseQX2+HtRxE/Tqs6+TFimAPZiI+BrFLdzj/5jql6VIbCRS6ZC1KG3t6xidg+SIMFesjM3EsptVOstHqOzXUZ4bHscgAO0PZhQKV5xNsWeo48DqrAZquk9d0AZs93Yze8evaYLOdoiAqqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724820335; c=relaxed/simple;
-	bh=5EN/U7WmEttawiw0CzO4Sg2M++/dOYJaQjMmsL3uuHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XlzfqKFiYtLNdXzO6GUxflZisb6DpqM1a5IOK66OY6k+EiFg1T4FrB+LYSTBNFCoVsWb23B0ziqrnwBA8owfmfPnaXE3YL068AOHGCCxIZIKott3hSyDqFIgapibtMPPu1PaOSl75Nd1mLGh7f35FbDKTgh0m8Pd35z0QIHudgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ebwf0Xui; arc=none smtp.client-ip=54.243.244.52
+	s=arc-20240116; t=1724821254; c=relaxed/simple;
+	bh=VEDhVTVnY0zuzhewz0zm/PuilM0PMpgznKb+DAM1Xo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cT18XzV6UKX1y3jy85ViCNPCnN/5zRjn+6cUm/fqznFuWAVxzYILZo0eVTgC8lJaBJJSH1xkAMNDWDMvqzAgUNACHrmdaN/2PiUZpGcaNWRAryF3pTvFNMMLuaROS6MwBP6+fnwSg+233NWpY2rp1VCcoSQKeZS9R3DOEjXQXSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gC8Pm1kK; arc=none smtp.client-ip=54.254.200.128
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ebwf0Xui"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gC8Pm1kK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1724820294;
-	bh=UEItIcioovAv5Ci1nI+0tCkJjAr8eoE2rmmGVwKzl4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=ebwf0Xui4AMVJ4AgO5hkt+M7X1phVIOYpt2uqHS/YA2+XcAFjQjP/XOrcKg52zsSY
-	 s6zXJUTfIDz4Llk2dwp2n/S9WUUpRY7oGuzrY6fk1JTVhgY3e7Ivt2ulyZfxaEoID0
-	 998eP/WqjJFP40TBK00KkONQNAGJc2OOallAvQcU=
-X-QQ-mid: bizesmtp80t1724820289tg8p19uc
-X-QQ-Originating-IP: qn/TZvWSOmwD8CP02Kvtub3A0oRA/VUMXkfWHBbXxuY=
-Received: from [10.20.53.89] ( [113.57.152.160])
+	s=onoh2408; t=1724821214;
+	bh=oVU55GyPUEvEL9hcGrB07XoY0OBZbqxfBQ2u9guts1c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=gC8Pm1kKkr9NTpnN/+63p7eTsKFYkkwkdFvZxpv+qboTg2W/DsZF9MCMWPi6Xqllk
+	 s/VM4jWdODE5Pkwanj328AcG1wknwvpO3AgVp61NRARHWxzcKzoPWFkHziImkZdv90
+	 UcZMAuombw9Vn/2Dh1vXHrfyzKW3nyb+UWrrkoec=
+X-QQ-mid: bizesmtp79t1724821209tmjq0y8y
+X-QQ-Originating-IP: HSvd97IkU+jxIjPcvdHxQdd/9fxSsft1/zQzGcj2AoM=
+Received: from localhost.localdomain ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 28 Aug 2024 12:44:47 +0800 (CST)
+	id ; Wed, 28 Aug 2024 13:00:07 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2718462679820382276
-Message-ID: <F7E458B77CD6B30A+554b04f1-7716-4a81-8755-c5a4f138ae71@uniontech.com>
-Date: Wed, 28 Aug 2024 12:44:47 +0800
+X-BIZMAIL-ID: 15732336081589095938
+From: Dandan Zhang <zhangdandan@uniontech.com>
+To: pbonzini@redhat.com,
+	corbet@lwn.net,
+	zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	zenghui.yu@linux.dev
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	guanwentao@uniontech.com,
+	wangyuli@uniontech.com,
+	baimingcong@uniontech.com,
+	Xianglai Li <lixianglai@loongson.cn>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Dandan Zhang <zhangdandan@uniontech.com>
+Subject: [PATCH v3] Loongarch: KVM: Add KVM hypercalls documentation for LoongArch
+Date: Wed, 28 Aug 2024 12:59:50 +0800
+Message-ID: <4769C036576F8816+20240828045950.3484113-1-zhangdandan@uniontech.com>
+X-Mailer: git-send-email 2.43.4
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Loongarch: KVM: Add KVM hypercalls documentation for
- LoongArch
-To: maobibo <maobibo@loongson.cn>, Zenghui Yu <zenghui.yu@linux.dev>,
- Dandan Zhang <zhangdandan@uniontech.com>
-Cc: pbonzini@redhat.com, corbet@lwn.net, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, guanwentao@uniontech.com,
- baimingcong@uniontech.com, Xianglai Li <lixianglai@loongson.cn>,
- Mingcong Bai <jeffbai@aosc.io>
-References: <DE6B1B9EAC9BEF4C+20240826054727.24166-1-zhangdandan@uniontech.com>
- <804a804c-f62d-4814-a174-51d19e3ea094@linux.dev>
- <29999cfc-6ec1-d881-277a-19f51f5c7b96@loongson.cn>
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <29999cfc-6ec1-d881-277a-19f51f5c7b96@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-Thanks for review.
+From: Bibo Mao <maobibo@loongson.cn>
 
-We'll get these problems sorted out as soon as possible.
+Add documentation topic for using pv_virt when running as a guest
+on KVM hypervisor.
 
-On 2024/8/28 09:07, maobibo wrote:
-> Zenghui,
->
-> On 2024/8/27 1:00AM, Zenghui Yu wrote:
->> [ Trivial comments inline.  You can feel free to ignore them since I
->>    know almost nothing about loongarch. ]
-> Thanks for reviewing the hypercall document, we all know that you have 
-> strong background knowledge with both kernel and architecture.
->
->>
->> On 2024/8/26 13:47, Dandan Zhang wrote:
->>> From: Bibo Mao <maobibo@loongson.cn>
->>>
->>> Add documentation topic for using pv_virt when running as a guest
->>> on KVM hypervisor.
->>>
->>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
->>> Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
->>> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
->>> Link: 
->>> https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
->>> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
->>> ---
->>>   Documentation/virt/kvm/index.rst              |  1 +
->>>   .../virt/kvm/loongarch/hypercalls.rst         | 86 
->>> +++++++++++++++++++
->>>   Documentation/virt/kvm/loongarch/index.rst    | 10 +++
->>>   MAINTAINERS                                   |  1 +
->>>   4 files changed, 98 insertions(+)
->>>   create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
->>>   create mode 100644 Documentation/virt/kvm/loongarch/index.rst
->>>
->>> diff --git a/Documentation/virt/kvm/index.rst 
->>> b/Documentation/virt/kvm/index.rst
->>> index ad13ec55ddfe..9ca5a45c2140 100644
->>> --- a/Documentation/virt/kvm/index.rst
->>> +++ b/Documentation/virt/kvm/index.rst
->>> @@ -14,6 +14,7 @@ KVM
->>>      s390/index
->>>      ppc-pv
->>>      x86/index
->>> +   loongarch/index
->>>        locking
->>>      vcpu-requests
->>> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst 
->>> b/Documentation/virt/kvm/loongarch/hypercalls.rst
->>> new file mode 100644
->>> index 000000000000..58168dc7166c
->>> --- /dev/null
->>> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
->>> @@ -0,0 +1,86 @@
->>> +.. SPDX-License-Identifier: GPL-2.0
->>> +
->>> +===================================
->>> +The LoongArch paravirtual interface
->>> +===================================
->>> +
->>> +KVM hypercalls use the HVCL instruction with code 0x100 and the 
->>> hypercall
->>> +number is put in a0. Up to five arguments may be placed in 
->>> registers a1 - a5.
->>> +The return value is placed in v0 (an alias of a0).
->>> +
->>> +Source code for this interface can be found in arch/loongarch/kvm*.
->>> +
->>> +Querying for existence
->>> +======================
->>> +
->>> +To determine if the host is running on KVM, we can utilize the 
->>> cpucfg()
->>> +function at index CPUCFG_KVM_BASE (0x40000000).
->>> +
->>> +The CPUCPU_KVM_BASE range, spanning from 0x40000000 to 0x400000FF, The
->>> +CPUCPU_KVM_BASE range between 0x40000000 - 0x400000FF is marked as 
->>> reserved.
->>
->> What is CPUCPU_KVM_BASE? Grepping it in the code shows nothing.
->>
->>> +Consequently, all current and future processors will not implement any
->>> +feature within this range.
->>> +
->>> +On a KVM-virtualized Linux system, a read operation on cpucfg() at 
->>> index
->>> +CPUCFG_KVM_BASE (0x40000000) returns the magic string 'KVM\0'.
->>> +
->>> +Once you have determined that your host is running on a 
->>> paravirtualization-
->>> +capable KVM, you may now use hypercalls as described below.
->>> +
->>> +KVM hypercall ABI
->>> +=================
->>> +
->>> +The KVM hypercall ABI is simple, with one scratch register a0 (v0) 
->>> and at most
->>> +five generic registers (a1 - a5) used as input parameters. The FP 
->>> (Floating-
->>> +point) and vector registers are not utilized as input registers and 
->>> must
->>> +remain unmodified during a hypercall.
->>> +
->>> +Hypercall functions can be inlined as it only uses one scratch 
->>> register.
->>> +
->>> +The parameters are as follows:
->>> +
->>> +        ========    ================    ================
->>> +    Register    IN            OUT
->>> +        ========    ================    ================
->>> +    a0        function number        Return code
->>> +    a1        1st parameter        -
->>> +    a2        2nd parameter        -
->>> +    a3        3rd parameter        -
->>> +    a4        4th parameter        -
->>> +    a5        5th parameter        -
->>> +        ========    ================    ================
->>
->> Please consistently use tab.
->>
->>> +
->>> +The return codes may be one of the following:
->>> +
->>> +    ====        =========================
->>> +    Code        Meaning
->>> +    ====        =========================
->>> +    0        Success
->>> +    -1        Hypercall not implemented
->>> +    -2        Bad Hypercall parameter
->>> +    ====        =========================
->>> +
->>> +KVM Hypercalls Documentation
->>> +============================
->>> +
->>> +The template for each hypercall is as follows:
->>> +
->>> +1. Hypercall name
->>> +2. Purpose
->>> +
->>> +1. KVM_HCALL_FUNC_PV_IPI
->>
->> Is it still a work-in-progress thing? I don't see it in mainline.
-> It should be KVM_HCALL_FUNC_IPI here.
->
->>
->>> +------------------------
->>> +
->>> +:Purpose: Send IPIs to multiple vCPUs.
->>> +
->>> +- a0: KVM_HCALL_FUNC_PV_IPI
->>> +- a1: Lower part of the bitmap for destination physical CPUIDs
->>> +- a2: Higher part of the bitmap for destination physical CPUIDs
->>> +- a3: The lowest physical CPUID in the bitmap
->>
->> - Is it a feature that implements IPI broadcast with a PV method?
->> - Don't you need to *at least* specify which IPI to send by issuing this
->>    hypercall?
-> Good question. It should be documented here. PV IPI on LoongArch 
-> includes both PV IPI multicast sending and PV IPI receiving, and SWI 
-> is used for PV IPI inject since there is no VM-exits accessing SWI 
-> registers.
->
->>
->> But again, as I said I know nothing about loongarch.  I might have
->> missed some obvious points.
->>
->>> +
->>> +The hypercall lets a guest send multiple IPIs (Inter-Process 
->>> Interrupts) with
->>> +at most 128 destinations per hypercall.The destinations are 
->>> represented in a
->>                                            ^
->> Add a blank space.
->>
->>> +bitmap contained in the first two input registers (a1 and a2).
->>> +
->>> +Bit 0 of a1 corresponds to the physical CPUID in the third input 
->>> register (a3)
->>> +and bit 1 corresponds to the physical CPUID in a3+1 (a4), and so on.
->>
->> This looks really confusing.  "Bit 63 of a1 corresponds to the physical
->> CPUID in a3+63 (a66)"?
-> The description is problematic, thanks for pointing it out.
-> It should be value of register a3 plus 1, rather than a4, how about 
-> *"the physical CPUID in a3 + 1"*  here?
->
-> Regards
-> Bibo Mao
->>
->> Zenghui
->>
->
->
-Thanks
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+Link: https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
+Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
+---
+ Documentation/virt/kvm/index.rst              |  1 +
+ .../virt/kvm/loongarch/hypercalls.rst         | 89 +++++++++++++++++++
+ Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+ MAINTAINERS                                   |  1 +
+ 4 files changed, 101 insertions(+)
+ create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+ create mode 100644 Documentation/virt/kvm/loongarch/index.rst
+
+diff --git a/Documentation/virt/kvm/index.rst b/Documentation/virt/kvm/index.rst
+index ad13ec55ddfe..9ca5a45c2140 100644
+--- a/Documentation/virt/kvm/index.rst
++++ b/Documentation/virt/kvm/index.rst
+@@ -14,6 +14,7 @@ KVM
+    s390/index
+    ppc-pv
+    x86/index
++   loongarch/index
+ 
+    locking
+    vcpu-requests
+diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst b/Documentation/virt/kvm/loongarch/hypercalls.rst
+new file mode 100644
+index 000000000000..dd96ded5d17d
+--- /dev/null
++++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
+@@ -0,0 +1,89 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===================================
++The LoongArch paravirtual interface
++===================================
++
++KVM hypercalls use the HVCL instruction with code 0x100 and the hypercall
++number is put in a0. Up to five arguments may be placed in registers a1 - a5.
++The return value is placed in v0 (an alias of a0).
++
++Source code for this interface can be found in arch/loongarch/kvm*.
++
++Querying for existence
++======================
++
++To determine if the host is running on KVM, we can utilize the cpucfg()
++function at index CPUCFG_KVM_BASE (0x40000000).
++
++The CPUCFG_KVM_BASE range, spanning from 0x40000000 to 0x400000FF, The
++CPUCFG_KVM_BASE range between 0x40000000 - 0x400000FF is marked as reserved.
++Consequently, all current and future processors will not implement any
++feature within this range.
++
++On a KVM-virtualized Linux system, a read operation on cpucfg() at index
++CPUCFG_KVM_BASE (0x40000000) returns the magic string 'KVM\0'.
++
++Once you have determined that your host is running on a paravirtualization-
++capable KVM, you may now use hypercalls as described below.
++
++KVM hypercall ABI
++=================
++
++The KVM hypercall ABI is simple, with one scratch register a0 (v0) and at most
++five generic registers (a1 - a5) used as input parameters. The FP (Floating-
++point) and vector registers are not utilized as input registers and must
++remain unmodified during a hypercall.
++
++Hypercall functions can be inlined as it only uses one scratch register.
++
++The parameters are as follows:
++
++	========	================	================
++	Register	IN			OUT
++	========	================	================
++	a0		function number		Return	code
++	a1		1st	parameter	-
++	a2		2nd	parameter	-
++	a3		3rd	parameter	-
++	a4		4th	parameter	-
++	a5		5th	parameter	-
++	========	================	================
++
++The return codes may be one of the following:
++
++	====		=========================
++	Code		Meaning
++	====		=========================
++	0		Success
++	-1		Hypercall not implemented
++	-2		Bad Hypercall parameter
++	====		=========================
++
++KVM Hypercalls Documentation
++============================
++
++The template for each hypercall is as follows:
++
++1. Hypercall name
++2. Purpose
++
++1. KVM_HCALL_FUNC_IPI
++------------------------
++
++:Purpose: Send IPIs to multiple vCPUs.
++
++- a0: KVM_HCALL_FUNC_IPI
++- a1: Lower part of the bitmap for destination physical CPUIDs
++- a2: Higher part of the bitmap for destination physical CPUIDs
++- a3: The lowest physical CPUID in the bitmap
++
++The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) with
++at most 128 destinations per hypercall. The destinations are represented in a
++bitmap contained in the first two input registers (a1 and a2).
++
++Bit 0 of a1 corresponds to the physical CPUID in the third input register (a3)
++and bit 1 corresponds to the physical CPUID in a3+1, and so on.
++
++PV IPI on LoongArch includes both PV IPI multicast sending and PV IPI receiving,
++and SWI is used for PV IPI inject since there is no VM-exits accessing SWI registers.
+diff --git a/Documentation/virt/kvm/loongarch/index.rst b/Documentation/virt/kvm/loongarch/index.rst
+new file mode 100644
+index 000000000000..83387b4c5345
+--- /dev/null
++++ b/Documentation/virt/kvm/loongarch/index.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================
++KVM for LoongArch systems
++=========================
++
++.. toctree::
++   :maxdepth: 2
++
++   hypercalls.rst
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 878dcd23b331..c267ad7cc2c5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12294,6 +12294,7 @@ L:	kvm@vger.kernel.org
+ L:	loongarch@lists.linux.dev
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
++F:	Documentation/virt/kvm/loongarch/
+ F:	arch/loongarch/include/asm/kvm*
+ F:	arch/loongarch/include/uapi/asm/kvm*
+ F:	arch/loongarch/kvm/
 -- 
-WangYuli
+2.43.4
 
