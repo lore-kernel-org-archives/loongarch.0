@@ -1,261 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E82A282E1
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 13:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999EB189900;
+	Wed, 28 Aug 2024 14:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724853426; cv=none; b=OL0HzQEZDn0kBA6uM3fJnUe5WGQphH294+GFFHJ62Tt7wlQx0G/j0u7MlKEYWvs/EH/Si/faV4ftc8onDijCO0kHJH0+xKaQmjdQVjJsZFUERrs1Rmfa5KYmB/4gR4oEx232D5lffHZlRiUic+8OT/KKlUPVDtD7b9yKqY6zel4=
+	t=1724855174; cv=none; b=Rv2miX3Cf0rMiM5w91rt8E3rrK8kldT16sNyUFsFagmcFswCFv9VtR4+3gB5Gq15zvAnWdq/5Ug1hwYl8e2Fmyk25Y0Fl8cvTeiDn9eHO/enFBPgF0VO81t5RY6feulkKxjMRoyQQCnkNDhvl7pEopVZ23Qj6pqk9xGSZXPTQUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724853426; c=relaxed/simple;
-	bh=zCVlon7UUPRrzx7JrU1yIZKF6ATndroXF11LNmHJuEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KDDHzdMidsf/wfpvYVxU5VfB4gizwUiemfafhWhrAa/ckJn+me9mVGOBtKEmz81jkWJESaAAhUAatoCMtSdznaMPc3eXHVIRc7T+iatFIFlRZkF/B6JhNfhq+RLKlFLnSKOLrAUP2Av5e7Rqy/domFHyuMkaXxjbTbdVKy1Z46A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HO2e7C+z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724855174; c=relaxed/simple;
+	bh=ntWBtU0LxavRuCqVpYA1JLpHXD8k/GlRirf2mXQ6TV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s9JX2srPYnZ8WlxxY2ryU2ScwX/gQaNOoB621NWN9yABhURw+MoZIpnIEK1T/2YXOMlVYXhcu/fMBgDhrSBvkbT25UexpTPXMweei9hmYjPrD6Sw3RrTYc76wTZwotn8E+KY1FwMbvB9SXAY299DbXT6EKdpP8W6b/GMVThxK1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=RyhV1h1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HO2e7C+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2359AC98EE7
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 13:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724853426;
-	bh=zCVlon7UUPRrzx7JrU1yIZKF6ATndroXF11LNmHJuEw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HO2e7C+zXTrJkgE8FeqOrCflSlL0+CQX/mWTWEn4erv0XkmjD5ompunutnPi0M4TM
-	 iPP8DnFOHBgoOvwE0/+b+XpPo9kuJ/1Z3jGYStzji0O5/huOrR3cTmIj67hSypkw6n
-	 CbBOLhUfJvCn7oEcJG5GGWw0bEhnqIVs8lT3Vt2A0P7BpYcBxJ78q8kTBCEuLxGN5P
-	 yBB1hu5G/q1sfP1jx34Eb+mJPkEC0ZJFQHdrxNe3O1MQNbOBzXxb30+Mtw9MV2Pe5Q
-	 5Uj83nK4MD/5M85YkGv6O8mfQirdVqX5tjedzzhBSeO0m0/ToQxjijAx/QSnt51S6/
-	 fFD8EKCZf0juA==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso10017422a12.1
-        for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 06:57:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/KJDlnDfn3GbL88YlY3wg/1ns9miHJ0UXFxoifZTV1QOVmB+O0QlwC9+4zapNQlI7D9ySo1FYDjQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx57rNAhYTncQKDNddtQ1sCR9pz3pxZnAsh1NcscGHS829da889
-	aBmVmGUFdMm/bIb/iMYOfb9tNoyCcD88PqZI25iZ5wZU5p39RHW9K/Yz/4VhYkZuSLSoJJAYTcL
-	FRj3tZYgSJJj4VSCfPvtEBaKpwPo=
-X-Google-Smtp-Source: AGHT+IE2F1TGQZ7B8fpOxCVYD4rUH8OtSZILeyUjMPksD0NB0GDDhVKTJiUZ/JqoUCjZ+mZEQdXOWfsrNSTWRqleYhU=
-X-Received: by 2002:a05:6402:1941:b0:5bf:dd0:93ad with SMTP id
- 4fb4d7f45d1cf-5c0891a293amr9515577a12.27.1724853424723; Wed, 28 Aug 2024
- 06:57:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="RyhV1h1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4833DC4CEE1;
+	Wed, 28 Aug 2024 14:26:13 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="RyhV1h1T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1724855171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=du+xceswDXlbktWATgQZJXZ9xdKcBi7Wp3qaqXDfzeA=;
+	b=RyhV1h1ToMsAKGBKVqGsMClc9ZWYDbjalfZLiPEDjveqMAOHP7CzFL1omPwRxEdZjGwLiq
+	O4UJw/r2gNRGjlGi12OpLy6W3DEWeaFocFOshEzB1ja+xg8g79i8v9s9cby3+wJHWb3PbL
+	hE7cWC8bgG5O4+Y+BIirXixDnc92Z8g=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6fa3f4ce (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 28 Aug 2024 14:26:11 +0000 (UTC)
+Date: Wed, 28 Aug 2024 16:26:07 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/4] LoongArch: vDSO: Wire up getrandom() vDSO
+ implementation
+Message-ID: <Zs8zf5SWLUVgbu1q@zx2c4.com>
+References: <20240827132018.88854-1-xry111@xry111.site>
+ <20240827132018.88854-2-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240828070603.3518753-1-maobibo@loongson.cn> <20240828070603.3518753-3-maobibo@loongson.cn>
-In-Reply-To: <20240828070603.3518753-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 Aug 2024 21:56:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
-Message-ID: <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
-Subject: Re: [RFC v2 2/2] irqchip/loongson-eiointc: Add multiple interrupt pin
- routing support
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240827132018.88854-2-xry111@xry111.site>
 
-Hi, Bibo,
-
-On Wed, Aug 28, 2024 at 3:06=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Eiointc interrupt controller support 256 interrupt vectors at most,
-> and irq handler gets interrupt status from base register group
-> EIOINTC_REG_ISR plus specific offset. It needs to read register group
-> EIOINTC_REG_ISR four times to get all 256 interrupt vectors status.
->
-> Eiointc registers including EIOINTC_REG_ISR is software emulated for
-> VMs, there will be VM-exits when accessing eiointc registers. Here one
-> method is introduced so that eiointc interrupt controller can route
-> to different cpu interrupt pins for every 64 interrupt vectors. So
-> irq handler needs read only relative 64 interrupt vector, it  reduces
-> VM-exits.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongson-eiointc.c | 72 ++++++++++++++++++++++----
->  1 file changed, 63 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq=
--loongson-eiointc.c
-> index e9ec63d85ee8..c6bcb6625e6d 100644
-> --- a/drivers/irqchip/irq-loongson-eiointc.c
-> +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> @@ -30,11 +30,20 @@
->  #define VEC_REG_IDX(irq_id)    ((irq_id) / VEC_COUNT_PER_REG)
->  #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
->  #define EIOINTC_ALL_ENABLE     0xffffffff
-> +#define EIOINTC_ROUTE_MULTIPLE_IP      BIT(0)
->
->  #define MAX_EIO_NODES          (NR_CPUS / CORES_PER_EIO_NODE)
->
->  static int nr_pics;
->
-> +struct eiointc_priv;
-> +struct eiointc_ip_route {
-> +       struct eiointc_priv     *priv;
-> +       /* Routed destination IP offset */
-> +       int                     start;
-> +       int                     end;
-> +};
+On Tue, Aug 27, 2024 at 09:20:14PM +0800, Xi Ruoyao wrote:
+> diff --git a/arch/loongarch/vdso/vgetrandom-chacha.S b/arch/loongarch/vdso/vgetrandom-chacha.S
+> new file mode 100644
+> index 000000000000..2e42198f2faf
+> --- /dev/null
+> +++ b/arch/loongarch/vdso/vgetrandom-chacha.S
+> @@ -0,0 +1,239 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
+> + */
 > +
->  struct eiointc_priv {
->         u32                     node;
->         u32                     vec_count;
-> @@ -43,6 +52,8 @@ struct eiointc_priv {
->         struct fwnode_handle    *domain_handle;
->         struct irq_domain       *eiointc_domain;
->         int                     parent_hwirq;
-> +       int                     flags;
-> +       struct eiointc_ip_route route_info[4];
->  };
->
->  static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-> @@ -145,12 +156,20 @@ static int eiointc_router_init(unsigned int cpu)
->         uint32_t data;
->         uint32_t node =3D cpu_to_eio_node(cpu);
->         int index =3D eiointc_index(node);
-> +       int hwirq, mask;
->
->         if (index < 0) {
->                 pr_err("Error: invalid nodemap!\n");
->                 return -1;
->         }
->
-> +       /* Enable cpu interrupt pin routed from eiointc */
-> +       hwirq =3D eiointc_priv[index]->parent_hwirq;
-> +       mask =3D BIT(hwirq);
-> +       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULTIPLE_IP)
-> +               mask |=3D BIT(hwirq + 1) | BIT(hwirq + 2) | BIT(hwirq + 3=
-);
-> +       set_csr_ecfg(mask);
+> +#include <asm/asm.h>
+> +#include <asm/regdef.h>
+> +#include <linux/linkage.h>
 > +
->         if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) =3D=3D 0) {
->                 eiointc_enable();
->
-> @@ -161,12 +180,23 @@ static int eiointc_router_init(unsigned int cpu)
->
->                 for (i =3D 0; i < eiointc_priv[0]->vec_count / 32 / 4; i+=
-+) {
->                         /*
-> -                        * Route to interrupt pin, using offset minus INT=
-_HWI0
-> -                        * Offset 0 means IP0 and so on
-> -                        * Every 32 vector routing to one interrupt pin
-> +                        * Route to interrupt pin, minus INT_HWI0 as offs=
-et
-> +                        * Offset 0 means IP0 and so on, every 32 vector
-> +                        * routing to one interrupt pin
-> +                        *
-> +                        * If flags is set with EIOINTC_ROUTE_MULTIPLE_IP=
-,
-> +                        * every 64 vector routes to different consecutiv=
-e
-> +                        * IPs, otherwise all vector routes to the same I=
-P
->                          */
-> -                       bit =3D BIT(eiointc_priv[index]->parent_hwirq - I=
-NT_HWI0);
-> -                       data =3D bit | (bit << 8) | (bit << 16) | (bit <<=
- 24);
-> +                       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MU=
-LTIPLE_IP) {
-> +                               bit =3D BIT(hwirq++ - INT_HWI0);
-> +                               data =3D bit | (bit << 8);
-> +                               bit =3D BIT(hwirq++ - INT_HWI0);
-> +                               data |=3D (bit << 16) | (bit << 24);
-> +                       } else  {
-> +                               bit =3D BIT(hwirq - INT_HWI0);
-> +                               data =3D bit | (bit << 8) | (bit << 16) |=
- (bit << 24);
-> +                       }
->                         iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
->                 }
->
-> @@ -197,11 +227,18 @@ static void eiointc_irq_dispatch(struct irq_desc *d=
-esc)
->         u64 pending;
->         bool handled =3D false;
->         struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> -       struct eiointc_priv *priv =3D irq_desc_get_handler_data(desc);
-> +       struct eiointc_ip_route *info =3D irq_desc_get_handler_data(desc)=
-;
->
->         chained_irq_enter(chip, desc);
->
-> -       for (i =3D 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG;=
- i++) {
-> +       /*
-> +        * If EIOINTC_ROUTE_MULTIPLE_IP is set, every 64 interrupt vector=
-s in
-> +        * eiointc interrupt controller routes to different cpu interrupt=
- pins
-> +        *
-> +        * Every cpu interrupt pin has its own irq handler, it is ok to
-> +        * read ISR for these 64 interrupt vectors rather than all vector=
-s
-> +        */
-> +       for (i =3D info->start; i < info->end; i++) {
->                 pending =3D iocsr_read64(EIOINTC_REG_ISR + (i << 3));
->
->                 /* Skip handling if pending bitmap is zero */
-> @@ -214,7 +251,7 @@ static void eiointc_irq_dispatch(struct irq_desc *des=
-c)
->                         int bit =3D __ffs(pending);
->                         int irq =3D bit + VEC_COUNT_PER_REG * i;
->
-> -                       generic_handle_domain_irq(priv->eiointc_domain, i=
-rq);
-> +                       generic_handle_domain_irq(info->priv->eiointc_dom=
-ain, irq);
->                         pending &=3D ~BIT(bit);
->                         handled =3D true;
->                 }
-> @@ -397,8 +434,25 @@ static int __init eiointc_init(struct eiointc_priv *=
-priv, int parent_irq,
->         }
->
->         eiointc_priv[nr_pics++] =3D priv;
-> +       if (cpu_has_hypervisor) {
-> +               priv->parent_hwirq =3D INT_HWI0;
-> +               for (i =3D 0; i < priv->vec_count / VEC_COUNT_PER_REG; i+=
-+) {
-> +                       priv->route_info[i].start  =3D priv->parent_hwirq=
- - INT_HWI0 + i;
-> +                       priv->route_info[i].end    =3D priv->route_info[i=
-].start + 1;
-> +                       priv->route_info[i].priv   =3D priv;
-> +                       parent_irq =3D get_percpu_irq(priv->parent_hwirq =
-+ i);
-> +                       irq_set_chained_handler_and_data(parent_irq, eioi=
-ntc_irq_dispatch,
-> +                                                               &priv->ro=
-ute_info[i]);
-> +               }
-> +               priv->flags |=3D EIOINTC_ROUTE_MULTIPLE_IP;
-Can real machines also use EIOINTC_ROUTE_MULTIPLE_IP?
+> +.text
+> +
+> +/* Salsa20 quarter-round */
+> +.macro	QR	a b c d
+> +	add.w		\a, \a, \b
+> +	xor		\d, \d, \a
+> +	rotri.w		\d, \d, 16
+> +
+> +	add.w		\c, \c, \d
+> +	xor		\b, \b, \c
+> +	rotri.w		\b, \b, 20
+> +
+> +	add.w		\a, \a, \b
+> +	xor		\d, \d, \a
+> +	rotri.w		\d, \d, 24
+> +
+> +	add.w		\c, \c, \d
+> +	xor		\b, \b, \c
+> +	rotri.w		\b, \b, 25
+> +.endm
+> +
+> +/*
+> + * Very basic LoongArch implementation of ChaCha20. Produces a given positive
+> + * number of blocks of output with a nonce of 0, taking an input key and
+> + * 8-byte counter. Importantly does not spill to the stack. Its arguments
+> + * are:
+> + *
+> + *	a0: output bytes
+> + *	a1: 32-byte key input
+> + *	a2: 8-byte counter input/output
+> + *	a3: number of 64-byte blocks to write to output
+> + */
+> +SYM_FUNC_START(__arch_chacha20_blocks_nostack)
 
-Huacai
+I can confirm this works:
 
-> +       } else {
-> +               priv->route_info[0].start  =3D 0;
-> +               priv->route_info[0].end    =3D priv->vec_count / VEC_COUN=
-T_PER_REG;
-> +               priv->route_info[0].priv   =3D priv;
-> +               irq_set_chained_handler_and_data(parent_irq, eiointc_irq_=
-dispatch,
-> +                                                       &priv->route_info=
-[0]);
-> +       }
->         eiointc_router_init(0);
-> -       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch=
-, priv);
->
->         if (nr_pics =3D=3D 1) {
->                 register_syscore_ops(&eiointc_syscore_ops);
-> --
-> 2.39.3
->
+    $ loongarch64-unknown-linux-gnu-gcc -std=gnu99 -D_GNU_SOURCE= -idirafter tools/testing/selftests/../../../tools/include -idirafter tools/testing/selftests/../../../arch/loongarch/include -idirafter tools/testing/selftests/../../../include -D__ASSEMBLY__ -Wa,--noexecstack    vdso_test_chacha.c tools/testing/selftests/../../../tools/arch/loongarch/vdso/vgetrandom-chacha.S  -o tools/testing/selftests/vDSO/vdso_test_chacha -static
+    $ qemu-loongarch64 ./vdso_test_chacha
+    TAP version 13
+    1..1
+    ok 1 chacha: PASS
+    
+Just waiting now on a v5 as discussed and acks from the LoongArch maintainers on that v5.
+
+Jason
