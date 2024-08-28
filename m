@@ -1,150 +1,134 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119FC1BC2F
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 01:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC361B969
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 02:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724808855; cv=none; b=o4KWfjT0Um+tT1ru9IETbGCVXtEMeuXkRDngbJBbB5/V1RUNG35cVSS7AdGo7kw+L+VNC5aZdXoqTNkWp4R398dAukZwLC22MaCdF/jR8bITLkmyA9Ll9TwPTjBYTcCrLZ4wpxS92UHHZdtwO3q0mHDScnYxycpwv0wLSWgWHuI=
+	t=1724810925; cv=none; b=dLeHGNpR/P2lAneZKvmcVdJmjfQp0ORIaTvi7FrU4GMUPXNhWICMYCnbENTy3pU1KfZ2N6Rhl/2WAoB8djYvnRpc9kB6viK9vdDWyJ6V6nh3ZuRKwzrf/jr4jva6rnixIm3/ZOhlm6azM1u2EBLUCY1GE0i+/+9209Vg5zcNXzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724808855; c=relaxed/simple;
-	bh=jXJwKIxwjynFk0lSDadFNFFEdN2d17y6EP185A9AB/w=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=A3+tsaiWym/oII8/9EZUadcWqH9VTkP/O2wdr0fEii8/9dXCd9LpdjTtubgZyKQ+02QEmRosBkegGaNNRUQXVUTj2pkuLRo5zHRmeMzXWxRvq1I605BNaeypFaJQkW8YweuhSyT9qjFqqCUShCZLeUi+fhj3OKWE/t0SUh8p6+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxrOqSfs5m5EEiAA--.4381S3;
-	Wed, 28 Aug 2024 09:34:10 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxiWaSfs5mSAslAA--.1685S3;
-	Wed, 28 Aug 2024 09:34:10 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] LoongArch: Fix AP booting issue in VM mode
-From: maobibo <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240815071545.925867-1-maobibo@loongson.cn>
- <20240815071545.925867-2-maobibo@loongson.cn>
-Message-ID: <3e88f855-5edc-9416-0348-ea16cd860a1f@loongson.cn>
-Date: Wed, 28 Aug 2024 09:33:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1724810925; c=relaxed/simple;
+	bh=PyXAgK3hCiX7g/AOrmr8UOJ62EPFkWTDqV8Km9Rnf+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NgDo7+WgOlbt+11LCBDcyN1ja8zvrQkAa9HVQ3znJZzfLbTEPN2KI7CGmcbHaWqpFzUjvzpgCS1/h8qgQMGPq0B4vIPfFyyahchC22uFxhoD3hn0/ekvMHsH0X2GBvBLP/CkRIekNlY8yJ4t4UzZI4mLWBSbFj15v5dq2bnnF0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFYDvnZl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFYDvnZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5ACFC4AF0C
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 02:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724810924;
+	bh=PyXAgK3hCiX7g/AOrmr8UOJ62EPFkWTDqV8Km9Rnf+o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IFYDvnZl8QfL0eYewOPH9pAFZg928JTAGdsKSLjzsAi017dZgL4t+JBn/VmLFJrvu
+	 Lgm0rCjVQj1Lfy3chePtDNPsSK9SVlCCHfgvEeQ5yimynRaQdgPY4uVRUtSr0QDDMu
+	 Kl+YDOicjyAGC9RebteQwf3ruHa/drLwEl4bZ301oNvrkM/05SQyGdTMSmzInOvacr
+	 wj14ZCr9JQRQy2x/1IPtXA2v0djX9T4eBov6MBJGwOCJhiPZtfvnn/5Qo5BFA02kx4
+	 /juiP5Mv7Rwi95lYDzRRvOyAhUcNvddBU4ZE/reBai7fa53Jbfb4+oMXPNnvIYWRiG
+	 uGv/otRB6z+2g==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5bef295a429so7259187a12.2
+        for <loongarch@lists.linux.dev>; Tue, 27 Aug 2024 19:08:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVDemMaFJQmi/a2vsce3RAlzU2ezG+USBHMsM1GeyyH8nFJdMK2wqOgUOYADycJyBDPvD22vra/JHw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyjSJFIVa9OoKDy27Xy6514YHBU36Q0YbTFlivbx3+ptSxuxRAA
+	C1/f9tndVBsQp6rvDuE59nJR3Vhlk97/1nxR/H8p3mJKozbMlWJlsTBMsBGt39rlmuj79yIyC7m
+	/r62PMVo+jwV8i6N94z7X0qV3BBA=
+X-Google-Smtp-Source: AGHT+IH7Jrq69vMjEx8udMHOd9V1G865e3s2FI6Xp4dfpGdJMTTiwR4c6hfXXHPr/VEf5xug5BLkyMppDjkJPlSn4ew=
+X-Received: by 2002:a05:6402:d06:b0:5bf:2577:32b8 with SMTP id
+ 4fb4d7f45d1cf-5c089163827mr10647025a12.9.1724810923248; Tue, 27 Aug 2024
+ 19:08:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240815071545.925867-2-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxiWaSfs5mSAslAA--.1685S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGryxtry5CrW7AF4DAw13trc_yoW5AFW7pF
-	W7ZrsYgF48Ka1kX3s8GayDur15ur9aqrWxuayUKryFyFZIgFnYqF1DGrW3XF18G3yIk3W0
-	qFnY9F4jga1DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOF4_U
-	UUUU=
+References: <20240730075744.1215856-1-maobibo@loongson.cn>
+In-Reply-To: <20240730075744.1215856-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 28 Aug 2024 10:08:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6dFBJ+dQE7qzK8aiTjx8NFJtzPWzEGpJ8dm7v4ExD8Ow@mail.gmail.com>
+Message-ID: <CAAhV-H6dFBJ+dQE7qzK8aiTjx8NFJtzPWzEGpJ8dm7v4ExD8Ow@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] LoongArch: KVM: Add Binary Translation extension support
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ping.
+Hi, Bibo,
 
+I have consulted with Jiaxun offline, and he has tried his best to
+propose a "scratch vcpu" solution. But unfortunately that solution is
+too difficult to implement and he has nearly given up.
 
-On 2024/8/15 下午3:15, Bibo Mao wrote:
-> Native IPI is used for AP booting, it is booting interface between
-> OS and BIOS firmware. The paravirt ipi is only used inside OS, native
-> IPI is necessary to boot AP.
-> 
-> When booting AP, BP writes kernel entry address in the HW mailbox of
-> AP and send IPI interrupt to AP. AP executes idle instruction and
-> waits for interrupt or SW events, and clears IPI interrupt and jumps
-> to kernel entry from HW mailbox.
-> 
-> Between BP writes HW mailbox and is ready to send IPI to AP, AP is woken
-> up by SW events and jumps to kernel entry, so ACTION_BOOT_CPU IPI
-> interrupt will keep pending during AP booting. And native IPI interrupt
-> handler needs be registered so that it can clear pending native IPI, else
-> there will be endless IRQ handling during AP booting stage.
-> 
-> Here native ipi interrupt is initialized even if paravirt IPI is used.
-> 
-> Fixes: 74c16b2e2b0c ("LoongArch: KVM: Add PV IPI support on guest side")
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+So the solution in this series seems the best one, and I will queue it
+for loongarch-kvm now.
+
+Huacai
+
+On Tue, Jul 30, 2024 at 3:57=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> Loongson Binary Translation (LBT) is used to accelerate binary
+> translation, which contains 4 scratch registers (scr0 to scr3), x86/ARM
+> eflags (eflags) and x87 fpu stack pointer (ftop).
+>
+> Like FPU extension, here lately enabling method is used for LBT. LBT
+> context is saved/restored during vcpu context switch path.
+>
+> Also this patch set LBT capability detection, and LBT register get and se=
+t
+> interface for userspace vmm, so that vm supports migration with BT
+> extension.
+>
 > ---
->   arch/loongarch/kernel/paravirt.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-> index 9c9b75b76f62..348920b25460 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -13,6 +13,9 @@ static int has_steal_clock;
->   struct static_key paravirt_steal_enabled;
->   struct static_key paravirt_steal_rq_enabled;
->   static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-> +#ifdef CONFIG_SMP
-> +static struct smp_ops old_ops;
-> +#endif
->   
->   static u64 native_steal_clock(int cpu)
->   {
-> @@ -55,6 +58,11 @@ static void pv_send_ipi_single(int cpu, unsigned int action)
->   	int min, old;
->   	irq_cpustat_t *info = &per_cpu(irq_stat, cpu);
->   
-> +	if (unlikely(action == ACTION_BOOT_CPU)) {
-> +		old_ops.send_ipi_single(cpu, action);
-> +		return;
-> +	}
-> +
->   	old = atomic_fetch_or(BIT(action), &info->message);
->   	if (old)
->   		return;
-> @@ -71,6 +79,12 @@ static void pv_send_ipi_mask(const struct cpumask *mask, unsigned int action)
->   	__uint128_t bitmap = 0;
->   	irq_cpustat_t *info;
->   
-> +	if (unlikely(action == ACTION_BOOT_CPU)) {
-> +		/* Use native IPI to boot AP */
-> +		old_ops.send_ipi_mask(mask, action);
-> +		return;
-> +	}
-> +
->   	if (cpumask_empty(mask))
->   		return;
->   
-> @@ -141,6 +155,8 @@ static void pv_init_ipi(void)
->   {
->   	int r, swi;
->   
-> +	/* Init native ipi irq since AP booting uses it */
-> +	old_ops.init_ipi();
->   	swi = get_percpu_irq(INT_SWI0);
->   	if (swi < 0)
->   		panic("SWI0 IRQ mapping failed\n");
-> @@ -179,6 +195,9 @@ int __init pv_ipi_init(void)
->   		return 0;
->   
->   #ifdef CONFIG_SMP
-> +	old_ops.init_ipi	= mp_ops.init_ipi;
-> +	old_ops.send_ipi_single = mp_ops.send_ipi_single;
-> +	old_ops.send_ipi_mask	= mp_ops.send_ipi_mask;
->   	mp_ops.init_ipi		= pv_init_ipi;
->   	mp_ops.send_ipi_single	= pv_send_ipi_single;
->   	mp_ops.send_ipi_mask	= pv_send_ipi_mask;
-> 
-
+> v5 ... v6:
+>   1. Solve compiling issue with function kvm_get_one_reg() and
+>      kvm_set_one_reg().
+>
+> v4 ... v5:
+>   1. Add feature detection for LSX/LASX from vm side, previously
+>      LSX/LASX feature is detected from vcpu ioctl command, now both
+>      methods are supported.
+>
+> v3 ... v4:
+>   1. Merge LBT feature detection for VM and VCPU into one patch.
+>   2. Move function declaration such as kvm_lose_lbt()/kvm_check_fcsr()/
+>      kvm_enable_lbt_fpu() from header file to c file, since it is only
+>      used in one c file.
+>
+> v2 ... v3:
+>   1. Split KVM_LOONGARCH_VM_FEAT_LBT capability checking into three
+>      sub-features, KVM_LOONGARCH_VM_FEAT_X86BT/KVM_LOONGARCH_VM_FEAT_ARMB=
+T
+>      and KVM_LOONGARCH_VM_FEAT_MIPSBT. Return success only if host
+>      supports the sub-feature.
+>
+> v1 ... v2:
+>   1. With LBT register read or write interface to userpace, replace
+>      device attr method with KVM_GET_ONE_REG method, since lbt register i=
+s
+>      vcpu register and can be added in kvm_reg_list in future.
+>   2. Add vm device attr ctrl marcro KVM_LOONGARCH_VM_FEAT_CTRL, it is
+>      used to get supported LBT feature before vm or vcpu is created.
+> ---
+> Bibo Mao (3):
+>   LoongArch: KVM: Add HW Binary Translation extension support
+>   LoongArch: KVM: Add LBT feature detection function
+>   LoongArch: KVM: Add vm migration support for LBT registers
+>
+>  arch/loongarch/include/asm/kvm_host.h |   8 ++
+>  arch/loongarch/include/asm/kvm_vcpu.h |   6 ++
+>  arch/loongarch/include/uapi/asm/kvm.h |  17 ++++
+>  arch/loongarch/kvm/exit.c             |   9 ++
+>  arch/loongarch/kvm/vcpu.c             | 128 +++++++++++++++++++++++++-
+>  arch/loongarch/kvm/vm.c               |  52 ++++++++++-
+>  6 files changed, 218 insertions(+), 2 deletions(-)
+>
+>
+> base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+> --
+> 2.39.3
+>
+>
