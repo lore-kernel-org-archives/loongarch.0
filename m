@@ -1,69 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC171BC2F;
-	Wed, 28 Aug 2024 06:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C995513210D
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 06:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724826319; cv=none; b=UXhGF3WoeZ1AKwX1opLIzezqMjWxZsGlmnkm9p0+1ZDgjGPcO0H5m7CRW3Rj+9G4yrYzm6B1RlFv2p0eRbRkqtBirGJaWp37qb/OKgvzvrEL8s1MtLs9uMfHefux+HAa0avTroonZH9x29NIgfETeCnCW/LxVu9OrCqY1WY2b9Y=
+	t=1724826895; cv=none; b=IgFiwJfoCqVWBw9vkaUmscXTgqUO9ZXbcfEOGm4ShSooG+V1qmgNE3y7aNf3vb1dD4rmeTdtNrK14KNMGwBNkXzfIkC3RcnfDDiUtNnVkZEv4Xz7R0zDU7O6KVEa6rwls6gIXN5+HZCToCyJclyZQde+djxYZfxqYIzejIHaoYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724826319; c=relaxed/simple;
-	bh=MEuMtdmGcnCXCBbyeF3r94mGLyQW7MccMHMw4Wd22i4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uTpj7RQbWXq4hg5gXBC6laiPxKEzCznW+4e9P4rpzuK1qKgzW0YoQDJg84hMtuAYhV7ktyPdl1l/C7v5WBsa3kBAARYYVIGTbjS4TcjBwm3O4HJMHj4EqyiAdXrQvBRF7izjwYd+iRlLVin6BIQkCumrDyCICJi/taDhUAgZ3nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92576C5813C;
-	Wed, 28 Aug 2024 06:25:16 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH] cpufreq: loongson3: Use raw_smp_processor_id() in do_service_request()
-Date: Wed, 28 Aug 2024 14:24:59 +0800
-Message-ID: <20240828062459.1853837-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1724826895; c=relaxed/simple;
+	bh=aWGAxpMZHWrJ/BUyhvBfXZeExfTSMuVVk0d9vk2wP/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvGPVJgl5s+wtzOO6FNg8KqOfAYqo57oNbo2qkfkB6M1sixpxoYvNZbffvnlZ26MCbdi0xPzxnbWqtmzN0oGU2L4kxobNjKT7x84mEzt2akie/dmH4WyJCW+USp0ga2yil3AAOXUdQKMaJ49eGqZ+inPEGpS5swyfsCYkhZNH1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Wtvlv5gSRz9sRs;
+	Wed, 28 Aug 2024 08:34:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 6jPb3ZkzpTtP; Wed, 28 Aug 2024 08:34:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Wtvlt44Xsz9sRy;
+	Wed, 28 Aug 2024 08:34:50 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 72A688B77E;
+	Wed, 28 Aug 2024 08:34:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id vzIG7P3XR8ze; Wed, 28 Aug 2024 08:34:50 +0200 (CEST)
+Received: from [172.25.230.108] (unknown [172.25.230.108])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C02CD8B764;
+	Wed, 28 Aug 2024 08:34:49 +0200 (CEST)
+Message-ID: <a43c52c6-c1ac-4ef3-b511-08f0459bddad@csgroup.eu>
+Date: Wed, 28 Aug 2024 08:34:49 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/16] powerpc: mm: Support MAP_BELOW_HINT
+To: Charlie Jenkins <charlie@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Russell King <linux@armlinux.org.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Shuah Khan <shuah@kernel.org>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-mm@kvack.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com>
+ <20240827-patches-below_hint_mmap-v1-7-46ff2eb9022d@rivosinc.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240827-patches-below_hint_mmap-v1-7-46ff2eb9022d@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Use raw_smp_processor_id() instead of plain smp_processor_id() in
-do_service_request(), otherwise we may get some errors with the driver
-enabled:
+Hi Charlie,
 
- BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/208
- caller is loongson3_cpufreq_probe+0x5c/0x250 [loongson3_cpufreq]
+Le 28/08/2024 à 07:49, Charlie Jenkins a écrit :
+> Add support for MAP_BELOW_HINT to arch_get_mmap_base() and
+> arch_get_mmap_end().
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>   arch/powerpc/include/asm/task_size_64.h | 36 +++++++++++++++++++++++++++------
+>   1 file changed, 30 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/task_size_64.h b/arch/powerpc/include/asm/task_size_64.h
+> index 239b363841aa..a37a5a81365d 100644
+> --- a/arch/powerpc/include/asm/task_size_64.h
+> +++ b/arch/powerpc/include/asm/task_size_64.h
+> @@ -72,12 +72,36 @@
+>   #define STACK_TOP_MAX TASK_SIZE_USER64
+>   #define STACK_TOP (is_32bit_task() ? STACK_TOP_USER32 : STACK_TOP_USER64)
+>   
+> -#define arch_get_mmap_base(addr, len, base, flags) \
+> -	(((addr) > DEFAULT_MAP_WINDOW) ? (base) + TASK_SIZE - DEFAULT_MAP_WINDOW : (base))
+> +#define arch_get_mmap_base(addr, len, base, flags)					\
 
-Reported-by: Xi Ruoyao <xry111@xry111.site>
-Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/cpufreq/loongson3_cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This macro looks quite big for a macro, can it be a static inline 
+function instead ? Same for the other macro below.
 
-diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
-index 5f79b6de127c..6b5e6798d9a2 100644
---- a/drivers/cpufreq/loongson3_cpufreq.c
-+++ b/drivers/cpufreq/loongson3_cpufreq.c
-@@ -176,7 +176,7 @@ static DEFINE_PER_CPU(struct loongson3_freq_data *, freq_data);
- static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
- {
- 	int retries;
--	unsigned int cpu = smp_processor_id();
-+	unsigned int cpu = raw_smp_processor_id();
- 	unsigned int package = cpu_data[cpu].package;
- 	union smc_message msg, last;
- 
--- 
-2.43.5
+> +({											\
+> +	unsigned long mmap_base;							\
+> +	typeof(flags) _flags = (flags);							\
+> +	typeof(addr) _addr = (addr);							\
+> +	typeof(base) _base = (base);							\
+> +	typeof(len) _len = (len);							\
+> +	unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base);				\
+> +	if (_flags & MAP_BELOW_HINT && _addr != 0 && ((_addr + _len) > BIT(VA_BITS - 1)))\
+> +		mmap_base = (_addr + _len) - rnd_gap;					\
+> +	else										\
+> +		mmap_end = ((_addr > DEFAULT_MAP_WINDOW) ?				\
+> +				_base + TASK_SIZE - DEFAULT_MAP_WINDOW :		\
+> +				_base);							\
+> +	mmap_end;									\
 
+mmap_end doesn't exist, did you mean mmap_base ?
+
+> +})
+>   
+> -#define arch_get_mmap_end(addr, len, flags) \
+> -	(((addr) > DEFAULT_MAP_WINDOW) || \
+> -	 (((flags) & MAP_FIXED) && ((addr) + (len) > DEFAULT_MAP_WINDOW)) ? TASK_SIZE : \
+> -									    DEFAULT_MAP_WINDOW)
+> +#define arch_get_mmap_end(addr, len, flags)							\
+> +({												\
+> +	unsigned long mmap_end;									\
+> +	typeof(flags) _flags = (flags);								\
+> +	typeof(addr) _addr = (addr);								\
+> +	typeof(len) _len = (len);								\
+> +	if (_flags & MAP_BELOW_HINT && _addr != 0 && ((_addr + _len) > BIT(VA_BITS - 1)))	\
+> +		mmap_end = (_addr + _len);							\
+> +	else											\
+> +		mmap_end = (((_addr) > DEFAULT_MAP_WINDOW) ||					\
+> +				(((_flags) & MAP_FIXED) && ((_addr) + (_len) > DEFAULT_MAP_WINDOW))\
+> +				? TASK_SIZE : DEFAULT_MAP_WINDOW)				\
+> +	mmap_end;										\
+> +})
+>   
+>   #endif /* _ASM_POWERPC_TASK_SIZE_64_H */
+> 
