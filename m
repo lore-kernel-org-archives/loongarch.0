@@ -1,161 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA3A1C5792;
-	Tue, 27 Aug 2024 15:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62B518B04
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 01:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724773409; cv=none; b=YZKizRVOkzZX5ds3msz1Z6gczEMA4tLMXkoZpKfXZQDPLCJnnkiHAuAetuszhW599cDH4z+B0bQqRJmtgqpiVm1fNEOBWfvpXF5rr4Rj8GF3XK+8a7Xh+LBl8AMz2aoif5kFr+YM+bcYYhSk6rkesG2IFQdv/m7jayKpd6BmP3o=
+	t=1724807275; cv=none; b=XQKH1godlQqT864Doxu/gEGqfE/hxb2iKW4h8rkWGRjjE/kS3lwTMk5kj4VJnzfitOvZ8un4qEn5X4qzplERVKwjWwVEVJaj/ygj1/O7pWTCSgwJ80oFMSkQwV12O8MORQuNxDCD3M6U28swS2J1ctnYq4BGoxFcaXyPkdODd+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724773409; c=relaxed/simple;
-	bh=gLN6XrXPe8lnOYBY+qE6Br7q9z15uQyViI2cYvrjDUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Od33bOhcw1GpRXUEH88TvMilofZpTVAkWCKcAPdYK8wv/VqJrhchShe8pqCo19CVmveCY7goFnVNymTMihw6msAlyZXjuHiEkPIxR49duSk9PgU9+SnMPabgm7rfAluJtcVTXEYP2OGTAcEeJBmDDCEms8GXOA1tz4UayaH0Gz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJjeZGdR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJjeZGdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C93C4DE0D;
-	Tue, 27 Aug 2024 15:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724773408;
-	bh=gLN6XrXPe8lnOYBY+qE6Br7q9z15uQyViI2cYvrjDUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pJjeZGdRlRZciwiSds7ncOoFJeP+wPAbVUVeY1LlTa56La6oD/XycPb3ju2I/Si6N
-	 bNsP9pfRPVziKGgn/Q7CZW62Bt7rl9iXHC+NkqAHxIdvlozlUPOn7DKQtQl24SAAKo
-	 NVAJkyrxO3xLQShBOmpHzZcPcSpDnuVLQLFIjp6TCSAVJcQE/Q6oni4wO6fU4ZsrHD
-	 4ovVIvkGw6loTWaFlHze4az9iCCc+TXdBuzKzGsuhZ4ATm4q785T8iPGoGLrAdyrZK
-	 3tUYk2k2P5uZy+/qiIPItAj2gx6xlt89fXh5S1kblIuw6KS4FNa+7dzFK9H80hz+VW
-	 wYQnWN9qfNMIA==
-Date: Tue, 27 Aug 2024 18:40:35 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 5/8] ftrace: Add swap_func to ftrace_process_locs()
-Message-ID: <Zs3zcwyygUk4_X8y@kernel.org>
-References: <20240826065532.2618273-1-rppt@kernel.org>
- <20240826065532.2618273-6-rppt@kernel.org>
- <20240826132909.306b08fc@gandalf.local.home>
+	s=arc-20240116; t=1724807275; c=relaxed/simple;
+	bh=nKcdKsFSS+WJ1q91i22amOCmzc4CBR3u4lbnt/wEA8I=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MBZj8noqg9yT1pkRiOKBsy04ulX8bLGPjygwC+mF4yeD5x311rRC7IBIDI6RsRu30mcsdSijjRilz9hEMhZLujtvzWjhRaIoatQNQIvbAYjlp/0y9VM72FWxNp6x6KA7zF1rBUG99kfe8wtVZux3XgJoCjF4QG7x/TM9GBgiKe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Bx7epeeM5mTjwiAA--.3809S3;
+	Wed, 28 Aug 2024 09:07:42 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxkeFbeM5mywElAA--.26480S3;
+	Wed, 28 Aug 2024 09:07:40 +0800 (CST)
+Subject: Re: [PATCH v2] Loongarch: KVM: Add KVM hypercalls documentation for
+ LoongArch
+To: Zenghui Yu <zenghui.yu@linux.dev>,
+ Dandan Zhang <zhangdandan@uniontech.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, kernel@xen0n.name, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, guanwentao@uniontech.com,
+ wangyuli@uniontech.com, baimingcong@uniontech.com,
+ Xianglai Li <lixianglai@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>
+References: <DE6B1B9EAC9BEF4C+20240826054727.24166-1-zhangdandan@uniontech.com>
+ <804a804c-f62d-4814-a174-51d19e3ea094@linux.dev>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <29999cfc-6ec1-d881-277a-19f51f5c7b96@loongson.cn>
+Date: Wed, 28 Aug 2024 09:07:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240826132909.306b08fc@gandalf.local.home>
+In-Reply-To: <804a804c-f62d-4814-a174-51d19e3ea094@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxkeFbeM5mywElAA--.26480S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw43CFW5Cw1DKFW7ZF47Awc_yoWxJrW7pa
+	s5JayfKr4kXry7Aw17tw15Xryjk3s7tF47JF18tr18Xryqvr1fJr4Utr1YkF18G348AFy0
+	qF1jqw1j9F1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-On Mon, Aug 26, 2024 at 01:29:09PM -0400, Steven Rostedt wrote:
-> On Mon, 26 Aug 2024 09:55:29 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: Song Liu <song@kernel.org>
-> > 
-> > ftrace_process_locs sorts module mcount, which is inside RO memory. Add a
-> > ftrace_swap_func so that archs can use RO-memory-poke function to do the
-> > sorting.
-> 
-> Can you add the above as a comment above the ftrace_swap_func() function?
+Zenghui,
 
-Sure.
- 
-> Thanks,
+On 2024/8/27 上午1:00, Zenghui Yu wrote:
+> [ Trivial comments inline.  You can feel free to ignore them since I
+>    know almost nothing about loongarch. ]
+Thanks for reviewing the hypercall document, we all know that you have 
+strong background knowledge with both kernel and architecture.
+
 > 
-> -- Steve
+> On 2024/8/26 13:47, Dandan Zhang wrote:
+>> From: Bibo Mao <maobibo@loongson.cn>
+>>
+>> Add documentation topic for using pv_virt when running as a guest
+>> on KVM hypervisor.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+>> Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
+>> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+>> Link: https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
+>> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
+>> ---
+>>   Documentation/virt/kvm/index.rst              |  1 +
+>>   .../virt/kvm/loongarch/hypercalls.rst         | 86 +++++++++++++++++++
+>>   Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+>>   MAINTAINERS                                   |  1 +
+>>   4 files changed, 98 insertions(+)
+>>   create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+>>   create mode 100644 Documentation/virt/kvm/loongarch/index.rst
+>>
+>> diff --git a/Documentation/virt/kvm/index.rst b/Documentation/virt/kvm/index.rst
+>> index ad13ec55ddfe..9ca5a45c2140 100644
+>> --- a/Documentation/virt/kvm/index.rst
+>> +++ b/Documentation/virt/kvm/index.rst
+>> @@ -14,6 +14,7 @@ KVM
+>>      s390/index
+>>      ppc-pv
+>>      x86/index
+>> +   loongarch/index
+>>   
+>>      locking
+>>      vcpu-requests
+>> diff --git a/Documentation/virt/kvm/loongarch/hypercalls.rst b/Documentation/virt/kvm/loongarch/hypercalls.rst
+>> new file mode 100644
+>> index 000000000000..58168dc7166c
+>> --- /dev/null
+>> +++ b/Documentation/virt/kvm/loongarch/hypercalls.rst
+>> @@ -0,0 +1,86 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +===================================
+>> +The LoongArch paravirtual interface
+>> +===================================
+>> +
+>> +KVM hypercalls use the HVCL instruction with code 0x100 and the hypercall
+>> +number is put in a0. Up to five arguments may be placed in registers a1 - a5.
+>> +The return value is placed in v0 (an alias of a0).
+>> +
+>> +Source code for this interface can be found in arch/loongarch/kvm*.
+>> +
+>> +Querying for existence
+>> +======================
+>> +
+>> +To determine if the host is running on KVM, we can utilize the cpucfg()
+>> +function at index CPUCFG_KVM_BASE (0x40000000).
+>> +
+>> +The CPUCPU_KVM_BASE range, spanning from 0x40000000 to 0x400000FF, The
+>> +CPUCPU_KVM_BASE range between 0x40000000 - 0x400000FF is marked as reserved.
 > 
-> > 
-> > Signed-off-by: Song Liu <song@kernel.org>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  include/linux/ftrace.h |  2 ++
-> >  kernel/trace/ftrace.c  | 13 ++++++++++++-
-> >  2 files changed, 14 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index fd5e84d0ec47..b794dcb7cae8 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -1188,4 +1188,6 @@ unsigned long arch_syscall_addr(int nr);
-> >  
-> >  #endif /* CONFIG_FTRACE_SYSCALLS */
-> >  
-> > +void ftrace_swap_func(void *a, void *b, int n);
-> > +
-> >  #endif /* _LINUX_FTRACE_H */
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 4c28dd177ca6..9829979f3a46 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -6989,6 +6989,17 @@ static void test_is_sorted(unsigned long *start,
-> > unsigned long count) }
-> >  #endif
-> >  
-> > +void __weak ftrace_swap_func(void *a, void *b, int n)
-> > +{
-> > +	unsigned long t;
-> > +
-> > +	WARN_ON_ONCE(n != sizeof(t));
-> > +
-> > +	t = *((unsigned long *)a);
-> > +	*(unsigned long *)a = *(unsigned long *)b;
-> > +	*(unsigned long *)b = t;
-> > +}
-> > +
-> >  static int ftrace_process_locs(struct module *mod,
-> >  			       unsigned long *start,
-> >  			       unsigned long *end)
-> > @@ -7016,7 +7027,7 @@ static int ftrace_process_locs(struct module *mod,
-> >  	 */
-> >  	if (!IS_ENABLED(CONFIG_BUILDTIME_MCOUNT_SORT) || mod) {
-> >  		sort(start, count, sizeof(*start),
-> > -		     ftrace_cmp_ips, NULL);
-> > +		     ftrace_cmp_ips, ftrace_swap_func);
-> >  	} else {
-> >  		test_is_sorted(start, count);
-> >  	}
+> What is CPUCPU_KVM_BASE? Grepping it in the code shows nothing.
+> 
+>> +Consequently, all current and future processors will not implement any
+>> +feature within this range.
+>> +
+>> +On a KVM-virtualized Linux system, a read operation on cpucfg() at index
+>> +CPUCFG_KVM_BASE (0x40000000) returns the magic string 'KVM\0'.
+>> +
+>> +Once you have determined that your host is running on a paravirtualization-
+>> +capable KVM, you may now use hypercalls as described below.
+>> +
+>> +KVM hypercall ABI
+>> +=================
+>> +
+>> +The KVM hypercall ABI is simple, with one scratch register a0 (v0) and at most
+>> +five generic registers (a1 - a5) used as input parameters. The FP (Floating-
+>> +point) and vector registers are not utilized as input registers and must
+>> +remain unmodified during a hypercall.
+>> +
+>> +Hypercall functions can be inlined as it only uses one scratch register.
+>> +
+>> +The parameters are as follows:
+>> +
+>> +        ========	================	================
+>> +	Register	IN			OUT
+>> +        ========	================	================
+>> +	a0		function number		Return code
+>> +	a1		1st parameter		-
+>> +	a2		2nd parameter		-
+>> +	a3		3rd parameter		-
+>> +	a4		4th parameter		-
+>> +	a5		5th parameter		-
+>> +        ========	================	================
+> 
+> Please consistently use tab.
+> 
+>> +
+>> +The return codes may be one of the following:
+>> +
+>> +	====		=========================
+>> +	Code		Meaning
+>> +	====		=========================
+>> +	0		Success
+>> +	-1		Hypercall not implemented
+>> +	-2		Bad Hypercall parameter
+>> +	====		=========================
+>> +
+>> +KVM Hypercalls Documentation
+>> +============================
+>> +
+>> +The template for each hypercall is as follows:
+>> +
+>> +1. Hypercall name
+>> +2. Purpose
+>> +
+>> +1. KVM_HCALL_FUNC_PV_IPI
+> 
+> Is it still a work-in-progress thing? I don't see it in mainline.
+It should be KVM_HCALL_FUNC_IPI here.
+
+> 
+>> +------------------------
+>> +
+>> +:Purpose: Send IPIs to multiple vCPUs.
+>> +
+>> +- a0: KVM_HCALL_FUNC_PV_IPI
+>> +- a1: Lower part of the bitmap for destination physical CPUIDs
+>> +- a2: Higher part of the bitmap for destination physical CPUIDs
+>> +- a3: The lowest physical CPUID in the bitmap
+> 
+> - Is it a feature that implements IPI broadcast with a PV method?
+> - Don't you need to *at least* specify which IPI to send by issuing this
+>    hypercall?
+Good question. It should be documented here. PV IPI on LoongArch 
+includes both PV IPI multicast sending and PV IPI receiving, and SWI is 
+used for PV IPI inject since there is no VM-exits accessing SWI registers.
+
+> 
+> But again, as I said I know nothing about loongarch.  I might have
+> missed some obvious points.
+> 
+>> +
+>> +The hypercall lets a guest send multiple IPIs (Inter-Process Interrupts) with
+>> +at most 128 destinations per hypercall.The destinations are represented in a
+>                                            ^
+> Add a blank space.
+> 
+>> +bitmap contained in the first two input registers (a1 and a2).
+>> +
+>> +Bit 0 of a1 corresponds to the physical CPUID in the third input register (a3)
+>> +and bit 1 corresponds to the physical CPUID in a3+1 (a4), and so on.
+> 
+> This looks really confusing.  "Bit 63 of a1 corresponds to the physical
+> CPUID in a3+63 (a66)"?
+The description is problematic, thanks for pointing it out.
+It should be value of register a3 plus 1, rather than a4, how about 
+*"the physical CPUID in a3 + 1"*  here?
+
+Regards
+Bibo Mao
+> 
+> Zenghui
 > 
 
--- 
-Sincerely yours,
-Mike.
