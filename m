@@ -1,37 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C489D21A1C
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 02:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8649C487BE
+	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 02:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724811906; cv=none; b=ZJ4+Bf3AqMA2H4ykotB9a15Fs3gd+KjK1zl66zo4aEzVCknBh2Vo337zuzsHmwNlhkZSUFQdO0yCqoHrsqxrAUncLc6dNIUdlBeYZNWVm/nM+o7Tuo2rIHmQvXu6+/HgJ6ZtxoIvitJVfruMJxgNDVen2PR6cIOoSK+kETXIhHk=
+	t=1724812135; cv=none; b=i8mbzguPRTvQ45P/RCPUpoCW3CuxcOfiXwN+cgVvmKQPE0NevVfOkbi7za+XcfqkBE1LwlXb0bQ5VqbPrLsO0sjDYdWWxuriNZ06MzBSC2kgetmrgg8Zfr28fSppTPo41VMAKJRhz52X4iHjgOZA4QqQT9gT4XPX48R2Fgnns8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724811906; c=relaxed/simple;
-	bh=B5dtz9Yqh1A1+UtV12K1RcsbRpJNT05gSeVQzG9YFqU=;
+	s=arc-20240116; t=1724812135; c=relaxed/simple;
+	bh=GJGug1cbipJCGXYCINJRJWPR2jdTKUmsQFbGCnb6MhQ=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tMmvTQUADSQX9x+yx7NGNWkYvxSjBkJgbgdB9v9DgrIURhbZXXMJXkGFo+tI5oQg6WEGB/5UI/++EvyeBWr4WZTYkJYt4fftHz3gwiKOcTFins7P/hZnsnWjftSNL46vMTXO9JDo5pa3uILL3f/JRjpwOQAqtOxPtO8R6EXn5Lk=
+	 In-Reply-To:Content-Type; b=axm03KWviuX+JV0NsCVeBBnjdxD00Fk1K8fXGILDdt3ZwczuBnC1OrYO+CkOh7PAfi9SK29OAz9zvYdUz6rA6XuTivDyW+Z/peqOG79cq9BZIrdKkS4I92ikpDe6Ojn1RF2c/aVvvHXyD5QC5b8oV11x9Ec1kUQYdiMEXzIJXK8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8Bx25p8is5mAVEiAA--.32722S3;
-	Wed, 28 Aug 2024 10:25:00 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMAxE+B4is5mChwlAA--.41799S2;
-	Wed, 28 Aug 2024 10:24:58 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] dt-bindings: EDAC for loongson memory controller
-To: Krzysztof Kozlowski <krzk@kernel.org>, chenhuacai@kernel.org,
- kernel@xen0n.name, bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
- mchehab@kernel.org, rric@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240821064728.8642-1-zhaoqunqin@loongson.cn>
- <20240821064728.8642-3-zhaoqunqin@loongson.cn>
- <de5ffcd8-0f2a-4cca-a7a0-0c4fc0158392@kernel.org>
-From: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Message-ID: <eaeb61e0-ab13-c33f-a42e-c592ef345efa@loongson.cn>
-Date: Wed, 28 Aug 2024 10:24:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxeZphi85mwlEiAA--.32468S3;
+	Wed, 28 Aug 2024 10:28:49 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxkeFei85m9RwlAA--.26737S3;
+	Wed, 28 Aug 2024 10:28:48 +0800 (CST)
+Subject: Re: [PATCH v6 0/3] LoongArch: KVM: Add Binary Translation extension
+ support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20240730075744.1215856-1-maobibo@loongson.cn>
+ <CAAhV-H6dFBJ+dQE7qzK8aiTjx8NFJtzPWzEGpJ8dm7v4ExD8Ow@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <e898b732-71d5-c16f-93a5-de630820f06d@loongson.cn>
+Date: Wed, 28 Aug 2024 10:28:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -39,121 +37,111 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <de5ffcd8-0f2a-4cca-a7a0-0c4fc0158392@kernel.org>
+In-Reply-To: <CAAhV-H6dFBJ+dQE7qzK8aiTjx8NFJtzPWzEGpJ8dm7v4ExD8Ow@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:qMiowMAxE+B4is5mChwlAA--.41799S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw1DKFy7Kw1DAw4kZw17twc_yoW5Xr17pr
-	n3Aan5Jryjqr1xGrs0gFy8JFWrt348J3ZrJrsrt3W7JFyq9F1YqFya9ryjgFn5Ar48Xry3
-	ZFyfWw429F47ArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxkeFei85m9RwlAA--.26737S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXF4Uur45Kry7KFW8KryUArc_yoW5CF4kp3
+	y5C3Z3CFWkGr1fAw4agw4jgF1YqrWxKF4xWF9xG345trZrWryUKr48KFZ5uFyDZw4rAry0
+	vayvy395u3WDAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU866wJUUUU
-	U==
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8PC
+	zJUUUUU==
 
 
-在 2024/8/21 下午4:20, Krzysztof Kozlowski 写道:
-> On 21/08/2024 08:47, Zhao Qunqin wrote:
->> From: zhaoqunqin <zhaoqunqin@loongson.cn>
+
+On 2024/8/28 上午10:08, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> I have consulted with Jiaxun offline, and he has tried his best to
+> propose a "scratch vcpu" solution. But unfortunately that solution is
+> too difficult to implement and he has nearly given up.
+> 
+> So the solution in this series seems the best one, and I will queue it
+> for loongarch-kvm now.
+Thanks. There may be requirement such as there is different capability 
+for different vCPUs, only that it is a little far from now. We can 
+discuss and add that if there is such requirement. Because of limitation 
+of human resource and ability, the implementation is not perfect however 
+it can be used.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+> On Tue, Jul 30, 2024 at 3:57 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->> Add: drivers/edac/loongson_edac.c
+>> Loongson Binary Translation (LBT) is used to accelerate binary
+>> translation, which contains 4 scratch registers (scr0 to scr3), x86/ARM
+>> eflags (eflags) and x87 fpu stack pointer (ftop).
 >>
->> Signed-off-by: zhaoqunqin <zhaoqunqin@loongson.cn>
-> Please use full name, not login.
->
+>> Like FPU extension, here lately enabling method is used for LBT. LBT
+>> context is saved/restored during vcpu context switch path.
+>>
+>> Also this patch set LBT capability detection, and LBT register get and set
+>> interface for userspace vmm, so that vm supports migration with BT
+>> extension.
+>>
 >> ---
->>   .../bindings/edac/loongson,ls-mc-edac.yaml    | 35 +++++++++++++++++++
-> Bindings are before users.
-dt-bindings is 0001-*.patch and driver is 0002-*.patch ?
->
->>   MAINTAINERS                                   |  7 ++++
->>   2 files changed, 42 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
+>> v5 ... v6:
+>>    1. Solve compiling issue with function kvm_get_one_reg() and
+>>       kvm_set_one_reg().
 >>
->> diff --git a/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml b/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
->> new file mode 100644
->> index 000000000..29e5b8381
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/loongson,ls-mc-edac.yaml
->> @@ -0,0 +1,35 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/edac/loongson,ls-mc-edac.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Loongson Memory Controller EDAC
->> +
->> +maintainers:
->> +  - Zhao Qunqin <zhaoqunqin@loongson.cn>
->> +
->> +description: |
->> +  EDAC node is defined to describe on-chip error detection and correction for
->> +  Loongson Memory Controller.
->> +
->> +properties:
->> +
->> +  compatible:
->> +    const: loongson,ls-mc-edac
-> Missing soc part. And then adjust filename to match proper (new) compatible.
-
-ls3c5000l, ls3c5000, ls3d5000, ls3a6000 and ls3c6000 are compatible with 
-ls3a5000.
-
-Can i write compatible string this way:
-
-properties:
-   compatible:
-     oneOf:
-       - enum:
-           - loongson,ls3a5000-mc-edac
-       - items:
-           - enum:
-               - loongson,ls3c5000l-mc-edac
-               - loongson,ls3c5000-mc-edac
-               - loongson,ls3d5000-mc-edac
-               - loongson,ls3a6000-mc-edac
-               - loongson,ls3c6000-mc-edac
-           - const: loongson,ls3a5000-mc-edac
-
->
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    edac: mc0@1fe00600 {
-> memory-controller@
->
-> and drop unused label.
->
->
->> +        compatible = "loongson,ls-mc-edac";
->> +        reg = <0x0 0x1fe00600 0x0 0x50>;
->> +    };
-> Best regards,
-> Krzysztof
-Thanks for your suggestions,
-
-Zhao Qunqin
+>> v4 ... v5:
+>>    1. Add feature detection for LSX/LASX from vm side, previously
+>>       LSX/LASX feature is detected from vcpu ioctl command, now both
+>>       methods are supported.
+>>
+>> v3 ... v4:
+>>    1. Merge LBT feature detection for VM and VCPU into one patch.
+>>    2. Move function declaration such as kvm_lose_lbt()/kvm_check_fcsr()/
+>>       kvm_enable_lbt_fpu() from header file to c file, since it is only
+>>       used in one c file.
+>>
+>> v2 ... v3:
+>>    1. Split KVM_LOONGARCH_VM_FEAT_LBT capability checking into three
+>>       sub-features, KVM_LOONGARCH_VM_FEAT_X86BT/KVM_LOONGARCH_VM_FEAT_ARMBT
+>>       and KVM_LOONGARCH_VM_FEAT_MIPSBT. Return success only if host
+>>       supports the sub-feature.
+>>
+>> v1 ... v2:
+>>    1. With LBT register read or write interface to userpace, replace
+>>       device attr method with KVM_GET_ONE_REG method, since lbt register is
+>>       vcpu register and can be added in kvm_reg_list in future.
+>>    2. Add vm device attr ctrl marcro KVM_LOONGARCH_VM_FEAT_CTRL, it is
+>>       used to get supported LBT feature before vm or vcpu is created.
+>> ---
+>> Bibo Mao (3):
+>>    LoongArch: KVM: Add HW Binary Translation extension support
+>>    LoongArch: KVM: Add LBT feature detection function
+>>    LoongArch: KVM: Add vm migration support for LBT registers
+>>
+>>   arch/loongarch/include/asm/kvm_host.h |   8 ++
+>>   arch/loongarch/include/asm/kvm_vcpu.h |   6 ++
+>>   arch/loongarch/include/uapi/asm/kvm.h |  17 ++++
+>>   arch/loongarch/kvm/exit.c             |   9 ++
+>>   arch/loongarch/kvm/vcpu.c             | 128 +++++++++++++++++++++++++-
+>>   arch/loongarch/kvm/vm.c               |  52 ++++++++++-
+>>   6 files changed, 218 insertions(+), 2 deletions(-)
+>>
+>>
+>> base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+>> --
+>> 2.39.3
+>>
+>>
 
