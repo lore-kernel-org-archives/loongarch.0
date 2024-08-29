@@ -1,35 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAAE4C9D
-	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 01:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C11226AC2;
+	Thu, 29 Aug 2024 01:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724894174; cv=none; b=TbsrRn3MKGlP4nS1O/9aLI3WKyicDgQVK6gLEalKjLezCi+sJuhVto7MQsbf73Bm3b6Ukc+wIPWv+eHn8SG55ui0skl7TuKT0RU/8vKA3MOI2xEPb3layGPfNwfAWnC0pnIB+Oljp7ErHDQeLqbM4pYL6YvER2QgBft5dSJKiZk=
+	t=1724896004; cv=none; b=I8SmIyIhtJyBGx0DlxZ+EqfrJhTkBkDpwxvpgPHWqwjvcDVxYqdmqfapG7OKryXjb+3RYyxvKnTMmYAin5ZXIjyxVjZRdPcGrwdRIm+U9Nwn64XvTKzyTw8XhracOySOE0Cry67JGgSmPuYJvAVs/GqDybG+sDAvM/t1icWco6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724894174; c=relaxed/simple;
-	bh=Yl3jprZvOrk15IBj+m4V20ifNWGPILknOIKdQ8lCNfU=;
+	s=arc-20240116; t=1724896004; c=relaxed/simple;
+	bh=5tXE1IB8XrXb9djQaDdkDHzizaaQ2e/cIchdZVsLffI=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pKjuzkLXtyAyT3PJLBCt3syzbgY4Uk+YbDRL5E55IO7ufAegrb9VLNoRgnTalno5l6HfYe+N1Q+bT059I9GV2PJvtD/IrSjzcC3axUCyIDdW9Du7EXIzwlYj5J1BRLOkO2efR351Jf9dFt/yDfgiy0SYsKJkFtpTUQIeqYiszvE=
+	 In-Reply-To:Content-Type; b=Ttna0noarMRBrRauvb2RjtkYvtmrs2FJ8axA97BLQGORmPnKCanxSYnkQsj99gDhh9Is4BaYkgIKwHJhtfpOj6S3xOT+zMJwXJ6cR1Opf/q+7LPJNKRS37QS0CHs8VqNnN8B/Vwllsoe0FZIQMOQXUHhsIn+P+vCsUwbh4jXOb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Cxe+rQy89m01cjAA--.5775S3;
-	Thu, 29 Aug 2024 09:16:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxGur80s9mA14jAA--.6040S3;
+	Thu, 29 Aug 2024 09:46:36 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxmWbOy89mfg4mAA--.4212S3;
-	Thu, 29 Aug 2024 09:15:58 +0800 (CST)
-Subject: Re: [RFC v2 2/2] irqchip/loongson-eiointc: Add multiple interrupt pin
- routing support
+	by front1 (Coremail) with SMTP id qMiowMCxC2f50s9myhMmAA--.63780S3;
+	Thu, 29 Aug 2024 09:46:36 +0800 (CST)
+Subject: Re: [PATCH v7 3/3] irqchip/loongson-eiointc: Add extioi virt
+ extension support
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20240828070603.3518753-1-maobibo@loongson.cn>
- <20240828070603.3518753-3-maobibo@loongson.cn>
- <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Thomas Gleixner <tglx@linutronix.de>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ x86@kernel.org, Song Gao <gaosong@loongson.cn>
+References: <20240823063943.2618675-1-maobibo@loongson.cn>
+ <20240823063943.2618675-4-maobibo@loongson.cn>
+ <CAAhV-H7t0Bn=iK7UygG6ym=hsCJqZAFVJHqDupm7mL9rVAm0GA@mail.gmail.com>
 From: maobibo <maobibo@loongson.cn>
-Message-ID: <819bb7b2-cbbf-ea47-7bae-3a0902d48096@loongson.cn>
-Date: Thu, 29 Aug 2024 09:15:28 +0800
+Message-ID: <b2722073-a74d-0540-18bb-ae6f450ef123@loongson.cn>
+Date: Thu, 29 Aug 2024 09:46:04 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -38,215 +40,432 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
+In-Reply-To: <CAAhV-H7t0Bn=iK7UygG6ym=hsCJqZAFVJHqDupm7mL9rVAm0GA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxmWbOy89mfg4mAA--.4212S3
+X-CM-TRANSID:qMiowMCxC2f50s9myhMmAA--.63780S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWrtF15Ar13GFWruFWrtFc_yoWxur4kpF
-	W0kF98tFW5JFyUWr9Iqa1DtF1Syrn8XrWjkan3Gayxta1qkw1kGF4rAa4YkwnFkr48Ar4a
-	vF4Yyw1Uu3Z8C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+X-Coremail-Antispam: 1Uk129KBj9fXoW3urWDWrWfJw15Gr4fGr4xKrX_yoW8WF4xJo
+	WfZF4a934fJw13ZayDG34xWry7Zw1j9rs7tw47Cw4fGr17t3WUKF47Kw1jgr4rCF45GF4f
+	Aa4fWr1DJFWDJFn5l-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUY27kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
+	UUUU=
 
+Huacai,
 
-
-On 2024/8/28 下午9:56, Huacai Chen wrote:
+On 2024/8/28 下午10:27, Huacai Chen wrote:
 > Hi, Bibo,
 > 
-> On Wed, Aug 28, 2024 at 3:06 PM Bibo Mao <maobibo@loongson.cn> wrote:
+> On Fri, Aug 23, 2024 at 2:39 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->> Eiointc interrupt controller support 256 interrupt vectors at most,
->> and irq handler gets interrupt status from base register group
->> EIOINTC_REG_ISR plus specific offset. It needs to read register group
->> EIOINTC_REG_ISR four times to get all 256 interrupt vectors status.
+>> Interrupts can be routed to maximal four virtual CPUs with one HW
+>> EIOINTC interrupt controller model, since interrupt routing is encoded with
+>> CPU bitmap and EIOINTC node combined method. Here add the EIOINTC virt
+>> extension support so that interrupts can be routed to 256 vCPUs on
+>> hypervisor mode. CPU bitmap is replaced with normal encoding and EIOINTC
+>> node type is removed, so there are 8 bits for cpu selection, at most 256
+>> vCPUs are supported for interrupt routing.
 >>
->> Eiointc registers including EIOINTC_REG_ISR is software emulated for
->> VMs, there will be VM-exits when accessing eiointc registers. Here one
->> method is introduced so that eiointc interrupt controller can route
->> to different cpu interrupt pins for every 64 interrupt vectors. So
->> irq handler needs read only relative 64 interrupt vector, it  reduces
->> VM-exits.
->>
+>> Co-developed-by: Song Gao <gaosong@loongson.cn>
+>> Signed-off-by: Song Gao <gaosong@loongson.cn>
 >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 >> ---
->>   drivers/irqchip/irq-loongson-eiointc.c | 72 ++++++++++++++++++++++----
->>   1 file changed, 63 insertions(+), 9 deletions(-)
+>>   .../arch/loongarch/irq-chip-model.rst         |  64 +++++++++++
+>>   .../zh_CN/arch/loongarch/irq-chip-model.rst   |  55 +++++++++
+>>   arch/loongarch/include/asm/irq.h              |   1 +
+>>   drivers/irqchip/irq-loongson-eiointc.c        | 106 ++++++++++++++----
+>>   4 files changed, 205 insertions(+), 21 deletions(-)
 >>
+>> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+>> index 7988f4192363..d2350780ad1d 100644
+>> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+>> @@ -85,6 +85,70 @@ to CPUINTC directly::
+>>       | Devices |
+>>       +---------+
+>>
+>> +Virtual extended IRQ model
+>> +==========================
+>> +
+>> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt
+>> +go to CPUINTC directly, CPU UARTS interrupts go to PCH-PIC, while all other
+>> +devices interrupts go to PCH-PIC/PCH-MSI and gathered by V-EIOINTC (Virtual
+>> +Extended I/O Interrupt Controller), and then go to CPUINTC directly::
+>> +
+>> +       +-----+    +-------------------+     +-------+
+>> +       | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
+>> +       +-----+    +-------------------+     +-------+
+>> +                            ^
+>> +                            |
+>> +                      +-----------+
+>> +                      | V-EIOINTC |
+>> +                      +-----------+
+>> +                       ^         ^
+>> +                       |         |
+>> +                +---------+ +---------+
+>> +                | PCH-PIC | | PCH-MSI |
+>> +                +---------+ +---------+
+>> +                  ^      ^          ^
+>> +                  |      |          |
+>> +           +--------+ +---------+ +---------+
+>> +           | UARTs  | | Devices | | Devices |
+>> +           +--------+ +---------+ +---------+
+>> +
+>> +
+>> +Description
+>> +-----------
+>> +V-EIOINTC (Virtual Extended I/O Interrupt Controller) is an extension of
+>> +EIOINTC, it only works in VM mode which runs in KVM hypervisor. Interrupts can
+>> +be routed to up to four vCPUs via standard EIOINTC, however with V-EIOINTC
+>> +interrupts can be routed to up to 256 virtual cpus.
+>> +
+>> +With standard EIOINTC, interrupt routing setting includes two parts: eight
+>> +bits for CPU selection and four bits for CPU IP (Interrupt Pin) selection.
+>> +For CPU selection there is four bits for EIOINTC node selection, four bits
+>> +for EIOINTC CPU selection. Bitmap method is used for CPU selection and
+>> +CPU IP selection, so interrupt can only route to CPU0 - CPU3 and IP0-IP3 in
+>> +one EIOINTC node.
+>> +
+>> +With V-EIOINTC it supports to route more CPUs and CPU IP (Interrupt Pin),
+>> +there are two newly added registers with V-EIOINTC.
+>> +
+>> +EXTIOI_VIRT_FEATURES
+>> +--------------------
+>> +This register is read-only register, which indicates supported features with
+>> +V-EIOINTC. Feature EXTIOI_HAS_INT_ENCODE and EXTIOI_HAS_CPU_ENCODE is added.
+>> +
+>> +Feature EXTIOI_HAS_INT_ENCODE is part of standard EIOINTC. If it is 1, it
+>> +indicates that CPU Interrupt Pin selection can be normal method rather than
+>> +bitmap method, so interrupt can be routed to IP0 - IP15.
+>> +
+>> +Feature EXTIOI_HAS_CPU_ENCODE is entension of V-EIOINTC. If it is 1, it
+>> +indicates that CPU selection can be normal method rather than bitmap method,
+>> +so interrupt can be routed to CPU0 - CPU255.
+>> +
+>> +EXTIOI_VIRT_CONFIG
+>> +------------------
+>> +This register is read-write register, for compatibility intterupt routed uses
+>> +the default method which is the same with standard EIOINTC. If the bit is set
+>> +with 1, it indicated HW to use normal method rather than bitmap method.
+>> +
+>>   ACPI-related definitions
+>>   ========================
+>>
+>> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> index f1e9ab18206c..d696bd394c02 100644
+>> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> @@ -87,6 +87,61 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
+>>       | Devices |
+>>       +---------+
+>>
+>> +虚拟扩展IRQ模型
+>> +===============
+>> +
+>> +在这种模型里面, IPI(Inter-Processor Interrupt) 和CPU本地时钟中断直接发送到CPUINTC,
+>> +CPU串口 (UARTs) 中断发送到PCH-PIC, 而其他所有设备的中断则分别发送到所连接的PCH_PIC/
+>> +PCH-MSI, 然后V-EIOINTC统一收集，再直接到达CPUINTC::
+>> +
+>> +        +-----+    +-------------------+     +-------+
+>> +        | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
+>> +        +-----+    +-------------------+     +-------+
+>> +                             ^
+>> +                             |
+>> +                       +-----------+
+>> +                       | V-EIOINTC |
+>> +                       +-----------+
+>> +                        ^         ^
+>> +                        |         |
+>> +                 +---------+ +---------+
+>> +                 | PCH-PIC | | PCH-MSI |
+>> +                 +---------+ +---------+
+>> +                   ^      ^          ^
+>> +                   |      |          |
+>> +            +--------+ +---------+ +---------+
+>> +            | UARTs  | | Devices | | Devices |
+>> +            +--------+ +---------+ +---------+
+>> +
+>> +V-EIOINTC 是EIOINTC的扩展, 仅工作在hyperisor模式下, 中断经EIOINTC最多可个路由到４个
+>> +虚拟cpu. 但中断经V-EIOINTC最多可个路由到256个虚拟cpu.
+>> +
+>> +传统的EIOINTC中断控制器，中断路由分为两个部分：8比特用于控制路由到哪个CPU，
+>> +4比特用于控制路由到特定CPU的哪个中断管脚.控制CPU路由的8比特前4比特用于控制
+>> +路由到哪个EIOINTC节点，后4比特用于控制此节点哪个CPU。中断路由在选择CPU路由
+>> +和CPU中断管脚路由时，使用bitmap编码方式而不是正常编码方式，所以对于一个
+>> +EIOINTC中断控制器节点，中断只能路由到CPU0 - CPU3，中断管教IP0-IP3。
+>> +
+>> +V-EIOINTC新增了两个寄存器，支持中断路由到更多CPU个和中断管脚。
+>> +
+>> +V-EIOINTC功能寄存器
+>> +-------------------
+>> +功能寄存器是只读寄存器，用于显示V-EIOINTC支持的特性，目前两个支持两个特性
+>> +EXTIOI_HAS_INT_ENCODE 和 EXTIOI_HAS_CPU_ENCODE。
+>> +
+>> +特性EXTIOI_HAS_INT_ENCODE是传统EIOINTC中断控制器的一个特性，如果此比特为1，
+>> +显示CPU中断管脚路由方式支持正常编码，而不是bitmap编码，所以中断可以路由到
+>> +管脚IP0 - IP15。
+>> +
+>> +特性EXTIOI_HAS_CPU_ENCODE是V-EIOINTC新增特性，如果此比特为1，表示CPU路由
+>> +方式支持正常编码，而不是bitmap编码，所以中断可以路由到CPU0 - CPU255。
+>> +
+>> +V-EIOINTC配置寄存器
+>> +-------------------
+>> +配置寄存器是可读写寄存器，为了兼容性考虑，如果不写此寄存器，中断路由采用
+>> +和传统EIOINTC相同的路由设置。如果对应比特设置为1，表示采用正常路由方式而
+>> +不是bitmap编码的路由方式。
+>> +
+>>   ACPI相关的定义
+>>   ==============
+>>
+>> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+>> index 480418bc5071..ce85d4c7d225 100644
+>> --- a/arch/loongarch/include/asm/irq.h
+>> +++ b/arch/loongarch/include/asm/irq.h
+>> @@ -54,6 +54,7 @@ extern struct acpi_vector_group pch_group[MAX_IO_PICS];
+>>   extern struct acpi_vector_group msi_group[MAX_IO_PICS];
+>>
+>>   #define CORES_PER_EIO_NODE     4
+>> +#define CORES_PER_VEIO_NODE    256
+>>
+>>   #define LOONGSON_CPU_UART0_VEC         10 /* CPU UART0 */
+>>   #define LOONGSON_CPU_THSENS_VEC                14 /* CPU Thsens */
 >> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
->> index e9ec63d85ee8..c6bcb6625e6d 100644
+>> index b1f2080be2be..bc54f81ec129 100644
 >> --- a/drivers/irqchip/irq-loongson-eiointc.c
 >> +++ b/drivers/irqchip/irq-loongson-eiointc.c
->> @@ -30,11 +30,20 @@
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/irqdomain.h>
+>>   #include <linux/irqchip/chained_irq.h>
+>>   #include <linux/kernel.h>
+>> +#include <linux/kvm_para.h>
+>>   #include <linux/syscore_ops.h>
+>>   #include <asm/numa.h>
+>>
+>> @@ -24,15 +25,37 @@
+>>   #define EIOINTC_REG_ISR                0x1800
+>>   #define EIOINTC_REG_ROUTE      0x1c00
+>>
+>> +#define EXTIOI_VIRT_FEATURES           0x40000000
+>> +#define  EXTIOI_HAS_VIRT_EXTENSION     BIT(0)
+>> +#define  EXTIOI_HAS_ENABLE_OPTION      BIT(1)
+>> +#define  EXTIOI_HAS_INT_ENCODE         BIT(2)
+>> +#define  EXTIOI_HAS_CPU_ENCODE         BIT(3)
+>> +#define EXTIOI_VIRT_CONFIG             0x40000004
+>> +#define  EXTIOI_ENABLE                 BIT(1)
+>> +#define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
+>> +#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
+> I think qemu hasn't release with v-eiointc? So we still have a chance
+> to modify qemu and this driver to simplify registers:
+It is already merged in qemu mainline, code is frozen and qemu 9.1 will 
+release soon. Once it is merged in mainline and even if code is not 
+frozen, I will modify it only if it is bug.
+> 
+> +#define EXTIOI_VIRT_FEATS             0x40000000
+> +#define  EXTIOI_HAS_INT_ENCODE         BIT(0)
+> +#define  EXTIOI_HAS_CPU_ENCODE         BIT(1)
+> +#define EXTIOI_VIRT_CONFIG             0x40000004
+> +#define  EXTIOI_ENABLE_INT_ENCODE      BIT(0)
+> +#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(1)
+> 
+>> +
+>>   #define VEC_REG_COUNT          4
+>>   #define VEC_COUNT_PER_REG      64
+>>   #define VEC_COUNT              (VEC_REG_COUNT * VEC_COUNT_PER_REG)
 >>   #define VEC_REG_IDX(irq_id)    ((irq_id) / VEC_COUNT_PER_REG)
 >>   #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
 >>   #define EIOINTC_ALL_ENABLE     0xffffffff
->> +#define EIOINTC_ROUTE_MULTIPLE_IP      BIT(0)
+>> +#define EIOINTC_ALL_ENABLE_VEC_MASK(vector)    (EIOINTC_ALL_ENABLE & ~BIT(vector & 0x1F))
+>> +#define EIOINTC_REG_ENABLE_VEC(vector)         (EIOINTC_REG_ENABLE + ((vector >> 5) << 2))
+>> +#define EIOINTC_USE_CPU_ENCODE                 BIT(0)
 >>
 >>   #define MAX_EIO_NODES          (NR_CPUS / CORES_PER_EIO_NODE)
 >>
+>> +/*
+>> + * Routing registers are 32bit, and there is 8-bit route setting for every
+>> + * interrupt vector. So one Route register contains four vectors routing
+>> + * information.
+>> + */
+>> +#define EIOINTC_REG_ROUTE_VEC(vector)          (EIOINTC_REG_ROUTE + (vector & ~0x03))
+>> +#define EIOINTC_REG_ROUTE_VEC_SHIFT(vector)    ((vector & 0x03) << 3)
+>> +#define EIOINTC_REG_ROUTE_VEC_MASK(vector)     (0xff << EIOINTC_REG_ROUTE_VEC_SHIFT(vector))
+>> +
 >>   static int nr_pics;
 >>
->> +struct eiointc_priv;
->> +struct eiointc_ip_route {
->> +       struct eiointc_priv     *priv;
->> +       /* Routed destination IP offset */
->> +       int                     start;
->> +       int                     end;
->> +};
->> +
 >>   struct eiointc_priv {
->>          u32                     node;
->>          u32                     vec_count;
->> @@ -43,6 +52,8 @@ struct eiointc_priv {
+>> @@ -42,6 +65,7 @@ struct eiointc_priv {
+>>          cpumask_t               cpuspan_map;
 >>          struct fwnode_handle    *domain_handle;
 >>          struct irq_domain       *eiointc_domain;
->>          int                     parent_hwirq;
 >> +       int                     flags;
->> +       struct eiointc_ip_route route_info[4];
 >>   };
 >>
 >>   static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
->> @@ -145,12 +156,20 @@ static int eiointc_router_init(unsigned int cpu)
->>          uint32_t data;
->>          uint32_t node = cpu_to_eio_node(cpu);
->>          int index = eiointc_index(node);
->> +       int hwirq, mask;
+>> @@ -57,7 +81,13 @@ static void eiointc_enable(void)
 >>
->>          if (index < 0) {
->>                  pr_err("Error: invalid nodemap!\n");
->>                  return -1;
->>          }
->>
->> +       /* Enable cpu interrupt pin routed from eiointc */
->> +       hwirq = eiointc_priv[index]->parent_hwirq;
->> +       mask = BIT(hwirq);
->> +       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULTIPLE_IP)
->> +               mask |= BIT(hwirq + 1) | BIT(hwirq + 2) | BIT(hwirq + 3);
->> +       set_csr_ecfg(mask);
+>>   static int cpu_to_eio_node(int cpu)
+>>   {
+>> -       return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
+>> +       int cores;
 >> +
->>          if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
->>                  eiointc_enable();
+>> +       if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI))
+>> +               cores = CORES_PER_VEIO_NODE;
+>> +       else
+>> +               cores = CORES_PER_EIO_NODE;
+>> +       return cpu_logical_map(cpu) / cores;
+>>   }
 >>
->> @@ -161,12 +180,23 @@ static int eiointc_router_init(unsigned int cpu)
+>>   #ifdef CONFIG_SMP
+>> @@ -89,6 +119,16 @@ static void eiointc_set_irq_route(int pos, unsigned int cpu, unsigned int mnode,
 >>
->>                  for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
->>                          /*
->> -                        * Route to interrupt pin, using offset minus INT_HWI0
->> -                        * Offset 0 means IP0 and so on
->> -                        * Every 32 vector routing to one interrupt pin
->> +                        * Route to interrupt pin, minus INT_HWI0 as offset
->> +                        * Offset 0 means IP0 and so on, every 32 vector
->> +                        * routing to one interrupt pin
->> +                        *
->> +                        * If flags is set with EIOINTC_ROUTE_MULTIPLE_IP,
->> +                        * every 64 vector routes to different consecutive
->> +                        * IPs, otherwise all vector routes to the same IP
->>                           */
->> -                       bit = BIT(eiointc_priv[index]->parent_hwirq - INT_HWI0);
->> -                       data = bit | (bit << 8) | (bit << 16) | (bit << 24);
->> +                       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULTIPLE_IP) {
->> +                               bit = BIT(hwirq++ - INT_HWI0);
->> +                               data = bit | (bit << 8);
->> +                               bit = BIT(hwirq++ - INT_HWI0);
->> +                               data |= (bit << 16) | (bit << 24);
->> +                       } else  {
->> +                               bit = BIT(hwirq - INT_HWI0);
->> +                               data = bit | (bit << 8) | (bit << 16) | (bit << 24);
->> +                       }
->>                          iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
->>                  }
+>>   static DEFINE_RAW_SPINLOCK(affinity_lock);
 >>
->> @@ -197,11 +227,18 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
->>          u64 pending;
->>          bool handled = false;
->>          struct irq_chip *chip = irq_desc_get_chip(desc);
->> -       struct eiointc_priv *priv = irq_desc_get_handler_data(desc);
->> +       struct eiointc_ip_route *info = irq_desc_get_handler_data(desc);
->>
->>          chained_irq_enter(chip, desc);
->>
->> -       for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
->> +       /*
->> +        * If EIOINTC_ROUTE_MULTIPLE_IP is set, every 64 interrupt vectors in
->> +        * eiointc interrupt controller routes to different cpu interrupt pins
->> +        *
->> +        * Every cpu interrupt pin has its own irq handler, it is ok to
->> +        * read ISR for these 64 interrupt vectors rather than all vectors
->> +        */
->> +       for (i = info->start; i < info->end; i++) {
->>                  pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
->>
->>                  /* Skip handling if pending bitmap is zero */
->> @@ -214,7 +251,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
->>                          int bit = __ffs(pending);
->>                          int irq = bit + VEC_COUNT_PER_REG * i;
->>
->> -                       generic_handle_domain_irq(priv->eiointc_domain, irq);
->> +                       generic_handle_domain_irq(info->priv->eiointc_domain, irq);
->>                          pending &= ~BIT(bit);
->>                          handled = true;
->>                  }
->> @@ -397,8 +434,25 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+>> +static void virt_extioi_set_irq_route(unsigned int vector, unsigned int cpu)
+> Use veiointc_set_irq_route() can keep consistency with real machines.
+yes, veiointc_set_irq_route will be added here.
+
+> 
+>> +{
+>> +       unsigned long reg = EIOINTC_REG_ROUTE_VEC(vector);
+>> +       u32 data = iocsr_read32(reg);
+>> +
+>> +       data &= ~EIOINTC_REG_ROUTE_VEC_MASK(vector);
+>> +       data |= cpu_logical_map(cpu) << EIOINTC_REG_ROUTE_VEC_SHIFT(vector);
+>> +       iocsr_write32(data, reg);
+>> +}
+>> +
+>>   static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *affinity, bool force)
+>>   {
+>>          unsigned int cpu;
+>> @@ -105,18 +145,24 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
 >>          }
 >>
->>          eiointc_priv[nr_pics++] = priv;
->> +       if (cpu_has_hypervisor) {
->> +               priv->parent_hwirq = INT_HWI0;
->> +               for (i = 0; i < priv->vec_count / VEC_COUNT_PER_REG; i++) {
->> +                       priv->route_info[i].start  = priv->parent_hwirq - INT_HWI0 + i;
->> +                       priv->route_info[i].end    = priv->route_info[i].start + 1;
->> +                       priv->route_info[i].priv   = priv;
->> +                       parent_irq = get_percpu_irq(priv->parent_hwirq + i);
->> +                       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
->> +                                                               &priv->route_info[i]);
->> +               }
->> +               priv->flags |= EIOINTC_ROUTE_MULTIPLE_IP;
-> Can real machines also use EIOINTC_ROUTE_MULTIPLE_IP?
-In theory it is possible on real machine also. Now there are potential 
-problems which needs more code modification.
+>>          vector = d->hwirq;
+>> -       regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
+>> -
+>> -       /* Mask target vector */
+>> -       csr_any_send(regaddr, EIOINTC_ALL_ENABLE & (~BIT(vector & 0x1F)),
+>> -                       0x0, priv->node * CORES_PER_EIO_NODE);
+>> -
+>> -       /* Set route for target vector */
+>> -       eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
+>> -
+>> -       /* Unmask target vector */
+>> -       csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
+>> -                       0x0, priv->node * CORES_PER_EIO_NODE);
+>> +       regaddr = EIOINTC_REG_ENABLE_VEC(vector);
+>> +
+>> +       if (priv->flags & EIOINTC_USE_CPU_ENCODE) {
+>> +               iocsr_write32(EIOINTC_ALL_ENABLE_VEC_MASK(vector), regaddr);
+>> +               virt_extioi_set_irq_route(vector, cpu);
+>> +               iocsr_write32(EIOINTC_ALL_ENABLE, regaddr);
+> We can add the same comments as real machines here.
+Similar comments will be added, otherwise there will be duplicated comments.
 
-1. On real machine, liointc uses one or two IPs, 
-EIOINTC_ROUTE_MULTIPLE_IP requires four IPs. eiointc uses bitmap IP map 
-method now, only IP0-IP3 can be used.
-
-2. For multiple eiointc support, instead IP0-IP3 can be used for 
-multiple eiointc support since IPs is per-cpu.
-
-On the other hand, what is the benefit doing such thing on real machine, 
-we need cost about accessing iocsr register on real machine, there is 
-such data from my side.
+Hope to this the last review comments about grammar and name -:), else I 
+will think it is on deliberate. we know every architecture has multiple 
+maintainers to prevent arbitrary except LoongArch.
 
 Regards
 Bibo Mao
+
 > 
 > Huacai
 > 
 >> +       } else {
->> +               priv->route_info[0].start  = 0;
->> +               priv->route_info[0].end    = priv->vec_count / VEC_COUNT_PER_REG;
->> +               priv->route_info[0].priv   = priv;
->> +               irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
->> +                                                       &priv->route_info[0]);
+>> +               /* Mask target vector */
+>> +               csr_any_send(regaddr, EIOINTC_ALL_ENABLE_VEC_MASK(vector),
+>> +                            0x0, priv->node * CORES_PER_EIO_NODE);
+>> +
+>> +               /* Set route for target vector */
+>> +               eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
+>> +
+>> +               /* Unmask target vector */
+>> +               csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
+>> +                            0x0, priv->node * CORES_PER_EIO_NODE);
 >> +       }
->>          eiointc_router_init(0);
->> -       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
 >>
->>          if (nr_pics == 1) {
->>                  register_syscore_ops(&eiointc_syscore_ops);
+>>          irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>>
+>> @@ -140,17 +186,23 @@ static int eiointc_index(int node)
+>>
+>>   static int eiointc_router_init(unsigned int cpu)
+>>   {
+>> -       int i, bit;
+>> -       uint32_t data;
+>> -       uint32_t node = cpu_to_eio_node(cpu);
+>> -       int index = eiointc_index(node);
+>> +       int i, bit, cores, index, node;
+>> +       unsigned int data;
+>> +
+>> +       node = cpu_to_eio_node(cpu);
+>> +       index = eiointc_index(node);
+>>
+>>          if (index < 0) {
+>>                  pr_err("Error: invalid nodemap!\n");
+>> -               return -1;
+>> +               return -EINVAL;
+>>          }
+>>
+>> -       if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
+>> +       if (eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE)
+>> +               cores = CORES_PER_VEIO_NODE;
+>> +       else
+>> +               cores = CORES_PER_EIO_NODE;
+>> +
+>> +       if ((cpu_logical_map(cpu) % cores) == 0) {
+>>                  eiointc_enable();
+>>
+>>                  for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
+>> @@ -166,7 +218,9 @@ static int eiointc_router_init(unsigned int cpu)
+>>
+>>                  for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
+>>                          /* Route to Node-0 Core-0 */
+>> -                       if (index == 0)
+>> +                       if (eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE)
+>> +                               bit = cpu_logical_map(0);
+>> +                       else if (index == 0)
+>>                                  bit = BIT(cpu_logical_map(0));
+>>                          else
+>>                                  bit = (eiointc_priv[index]->node << 4) | 1;
+>> @@ -370,7 +424,7 @@ static int __init acpi_cascade_irqdomain_init(void)
+>>   static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+>>                                 u64 node_map)
+>>   {
+>> -       int i;
+>> +       int i, val;
+>>
+>>          node_map = node_map ? node_map : -1ULL;
+>>          for_each_possible_cpu(i) {
+>> @@ -390,6 +444,16 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+>>                  return -ENOMEM;
+>>          }
+>>
+>> +       if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI)) {
+>> +               val = iocsr_read32(EXTIOI_VIRT_FEATURES);
+>> +               if (val & EXTIOI_HAS_CPU_ENCODE) {
+>> +                       val = iocsr_read32(EXTIOI_VIRT_CONFIG);
+>> +                       val |= EXTIOI_ENABLE_CPU_ENCODE;
+>> +                       iocsr_write32(val, EXTIOI_VIRT_CONFIG);
+>> +                       priv->flags = EIOINTC_USE_CPU_ENCODE;
+>> +               }
+>> +       }
+>> +
+>>          eiointc_priv[nr_pics++] = priv;
+>>          eiointc_router_init(0);
+>>          irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
 >> --
 >> 2.39.3
 >>
