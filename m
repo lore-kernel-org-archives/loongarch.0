@@ -1,61 +1,61 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C431891A4
-	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 07:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C825189916
+	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 07:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724915783; cv=none; b=T5D33nr+NtrA1ZKSXr8zXKEzAR2X12mvnaTgvSZ5Q21jytfv6i1jouydE2Q7MLTo6mkMMfwBrv4nPqRXg2N7+304dUBTWk33823I5h7nIe9Ahs8nqQOtdovtis6QKlD1DbP/0kpHUNxEgR92SPd/IZkLlnCfEdKOVVr11teBKMk=
+	t=1724915786; cv=none; b=SRh2f+jGeOGz/lQ6o6obQ2crs3bCVqTcNiWOIwRIKoxV91Y+M+Mi6uShuHdZRnShC1y0di6DihnVMlM2cHJAO6RwoGSxLED5TY7qrUSLaJba7mx7vB2xW9Qr9p7rwBU847VGLzgOfMG3TWTi6sW7PYYRvlvsUSCWhMOfPiqzgtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724915783; c=relaxed/simple;
-	bh=cJo+DjHYKAKtcF7uVNq5Hkp7bg1tB/ALtneNIYjVApc=;
+	s=arc-20240116; t=1724915786; c=relaxed/simple;
+	bh=awlA0FQ8vwXq3Nn6i3BedGsUxTSd4n1W8+rk6Ti/shY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u/LGObRjKc35RSA9iRWPPC1zrTDrRsTWQjySErYvTnsEErk34ECcIBOvPy4a/KbU9/cGGIH5fvizlPboZpN461QUHkLKisrbb4/K7KIjPM6KRagQz1V63XnA7fS5c1GRxZ4Njle/bUSBjgBigvZToZSOKbu43d2q9qWd+jcakrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=atkZ+zIe; arc=none smtp.client-ip=209.85.166.44
+	 In-Reply-To:To:Cc; b=t/S1qh86OevMVzteq77kWHbK7+b+oCpFJzfLcjJv/VYqFx+WKJFkqy45/q4Ls3hZ9tYVyq5Plz3Ff75Zy2Sy+f4VzPwqlR9QayLuIxJpbTOangL5CnWySzUVPVGpQKVT+V70oM7wPvrzNbufOghXTM1K6rIPCocDf+cTbJ2yYM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bRS/JqaV; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="atkZ+zIe"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-82a20593e53so1476639f.2
-        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 00:16:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bRS/JqaV"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-714287e4083so326951b3a.2
+        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 00:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724915780; x=1725520580; darn=lists.linux.dev;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724915783; x=1725520583; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Sbwm6yYi8fii0SQTFAzAiKdXxaRuHZnv4HbMCIc+vRk=;
-        b=atkZ+zIe3uj3HhYvGN8gGh+05njnFGve4hNgIzA8sdKkYU/BU1DBcRg2nAoq9Pxl1a
-         cLUh7A1KQOetKSgRLgxC+9skyAkh4hMkX6HnrDLrLodP/QcoIoH4GhMylctufYftsmAz
-         S2Kw9zRPfFgJDLZznZYvkLxp98wezE6kueuNB4+WVO577TMo1OFPr5DHVE7MpQpsYCqc
-         HdrJJuqWaA/QvA28vb/I02GVgnjyHWvr63YUUyffpACG1EcpU5HpHKIHPHDpJkn/Ku7u
-         nvCxU47UW2vFNGA3EPCLWuCJFU0OCjteQC3CjdqkkbtBK5zBxNClOyBtn8PkvngJ2kzR
-         xEpg==
+        bh=eRZz0v4roamBPZuEY8lRo6reatKDFS+11+O4EIK+5eU=;
+        b=bRS/JqaVjIT84TbFcz0ZZg1a9pvTo6UyYRQ3NK+EWnfNqyBWD3dh0CHeyJCaoOUwhx
+         LAxfdNPaRQtFHzfzU1KU1L12gkVnaM+EQUR3joD7gz6+WHwt+7Ni8gxmp1kOVJshivwN
+         zWPzslFMu+LjDCRi2Qn+v3LaPR4gNWi0TEV9ejDKrXzjO/krpmVsidm9b5QwL77ftwym
+         xYlG0MBZO9iqplfR0F31CEtuJXTjtKsOWJg7BR5jSYTKbrv859WHRClCxTTctp2/hO41
+         8clzpHdGgaNi1Z0nCWBoC5vcMDVKvrG6y2UCfeCf9NWGD2zgmi1lxZXJXZQU0jwKIDdT
+         u1FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724915780; x=1725520580;
+        d=1e100.net; s=20230601; t=1724915783; x=1725520583;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Sbwm6yYi8fii0SQTFAzAiKdXxaRuHZnv4HbMCIc+vRk=;
-        b=abR/vIQ4tjaJvJyf1Eai8ZQK2NGrpT5YOE1i9Waev6oIgKx+JAeVRECaRRial0jQKA
-         7/9mDv6n/vT1qJ/1HrQ6NmKhb1nHbdYIzdUWj+p2YE5FBqSVzr+TnxPth78Vzccpn4+T
-         gb2+MZPeO2SQKBev4gLJpji7oa/a3pONSt15Zdm7BLBCHKrbql/h7pcyxEwjxwmCSfKE
-         X5biIBX8nhcSQo1SN9/GOK6LSHWfzVNRKFlnjkZk6BMkz1CrP6ylEcMn9QxNXGJmGr1z
-         8+TjCzaaKaVcGyspjfl6aJtcVARPCFVbUr9e8L+vks9BMEhgUajkPV1oRl0phOjz+0R8
-         CnZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VpwiR0SWqsd7HP/Ge+0o/7jPpaHS/TxXKVM8Iih2OVBL0godZsQaHMrdghFQMd4lbYpHFdtiGAg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyHVDQP0Jt3sPamAOWux8T9f1upXGnLhnOXDzBFq5TjXwp9T8+r
-	RrqXgfG8DnERrU4EPuspzOCkzu2AjMQVI6yEItB8V6P9kQ5hKv7GMstE8k+S3Vw=
-X-Google-Smtp-Source: AGHT+IGgPVGnJtoSfqPS27dHBhsP9wE8tGpecq2SA+TpeFejfd/21/ZqZVX0hSOoHcWSmw9m6xWNXw==
-X-Received: by 2002:a05:6602:150e:b0:803:c955:eda8 with SMTP id ca18e2360f4ac-82a11010e13mr213412239f.6.1724915779989;
-        Thu, 29 Aug 2024 00:16:19 -0700 (PDT)
+        bh=eRZz0v4roamBPZuEY8lRo6reatKDFS+11+O4EIK+5eU=;
+        b=tWKMF+Y4AA9i6DunL0vJJd6jKZBuCG8UyNg8KYpbTnQY/x5+8arlaVPT+4Sejk7dBI
+         /PxZgY998s0u+gbl1g3jUsI662FkXFE3yApr8lWCuz81Zp1T+LPhLUqMFuG/Lfk+wgFc
+         lLvCn4W2hPuq2hAW64BKY3I3T6/nurAuArBfuGdb1327vRXvxfJ8wUvaYm1XCu/RYq8+
+         MSVd0yrGBN9eoxyR91ZlFi+NC2eABfkTRaKFvd2hS24zTK+hXltlbI6XgljFOot202wv
+         ksVeYiSkVYDL9EzkJx/fePssKglY0/C5A74FZn9XibI5EwucNF+JqyKi67dFcvG5nBd3
+         Jcjw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0UawCELZODs57dLDJDW9At27dAY8k65nJsl8/SarrE+Fxmm83yU887fbGl4ITAVnMFAWnvxjwvvc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqSC0gpBP580KP21+/bDlskCAJ2ShfMrxD+hDNTv1bM8FyiiyH
+	QHb4PsOLS/omGHHk3+pX2yCtYwCcHIlUHUnnqJB6DW7XjUMeVf1q67XLbK7eTSQ=
+X-Google-Smtp-Source: AGHT+IESlo3+HNMz8Vyf9gnK2kr34iORO0t8ZckMgQQJOrmm4rJ0EngcQswLax6rU2xQbGZPh7/0eg==
+X-Received: by 2002:a05:6a20:6f88:b0:1c4:7dbc:d21a with SMTP id adf61e73a8af0-1cce104dce4mr1887803637.32.1724915783368;
+        Thu, 29 Aug 2024 00:16:23 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e9bef08sm581976a12.58.2024.08.29.00.16.16
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e9bef08sm581976a12.58.2024.08.29.00.16.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 00:16:19 -0700 (PDT)
+        Thu, 29 Aug 2024 00:16:22 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 29 Aug 2024 00:15:59 -0700
-Subject: [PATCH RFC v2 2/4] mm: Add hint and mmap_flags to struct
- vm_unmapped_area_info
+Date: Thu, 29 Aug 2024 00:16:00 -0700
+Subject: [PATCH RFC v2 3/4] mm: Support MAP_BELOW_HINT in
+ vm_unmapped_area()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240829-patches-below_hint_mmap-v2-2-638a28d9eae0@rivosinc.com>
+Message-Id: <20240829-patches-below_hint_mmap-v2-3-638a28d9eae0@rivosinc.com>
 References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
 In-Reply-To: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
 To: Arnd Bergmann <arnd@arndb.de>, 
@@ -105,416 +105,41 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  sparclinux@vger.kernel.org, linux-mm@kvack.org, 
  linux-kselftest@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13798; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=cJo+DjHYKAKtcF7uVNq5Hkp7bg1tB/ALtneNIYjVApc=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9oFBYsZBaJsp/MFz8f+MGk86RnpUeMrsf76l5QvfwVzH
- bi3fE/oKGVhEONgkBVTZOG51sDceke/7Kho2QSYOaxMIEMYuDgFYCJhqQx/pZw4Kv/yqWcskTot
- +DC45Z2Xbmt3sqXCfbPzz4uE9X7UMvyPfD0x5fXhZqutguJLblpd/5tsrJGyOK/8zPKTp3N1Txs
- xAQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=991; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=awlA0FQ8vwXq3Nn6i3BedGsUxTSd4n1W8+rk6Ti/shY=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9oFBUtNRaX7W4IPbnI+Ms3hivNnCcHEiLSn/wN2Mfr8Y
+ bUwSP3TUcrCIMbBICumyMJzrYG59Y5+2VHRsgkwc1iZQIYwcHEKwES8tjMyvNn0V3yhfGTAnNVL
+ rI6JakxSy1zhtaNTK7Nm7eOzb9jnWDIy3NjktX5Wn9/XRXLVu44d2/Xri3n+zz1GZcf0P1w88Pv
+ nEX4A
 X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
  fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-The hint address and mmap_flags are necessary to determine if
-MAP_BELOW_HINT requirements are satisfied.
+To ensure that all memory allocations comply with the new MAP_BELOW_HINT
+flag, set the high_limit in vm_unmapped_area() to the hint address +
+length at most. All callers to this function set the high_limit to
+something reasonable, usually with space for a random offset and a gap
+for the stack. To respect the provided high_limit, take the minimum of
+hint+length and the given high_limit.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/alpha/kernel/osf_sys.c      | 2 ++
- arch/arc/mm/mmap.c               | 3 +++
- arch/arm/mm/mmap.c               | 7 +++++++
- arch/csky/abiv1/mmap.c           | 3 +++
- arch/loongarch/mm/mmap.c         | 3 +++
- arch/mips/mm/mmap.c              | 3 +++
- arch/parisc/kernel/sys_parisc.c  | 3 +++
- arch/powerpc/mm/book3s64/slice.c | 7 +++++++
- arch/s390/mm/hugetlbpage.c       | 4 ++++
- arch/s390/mm/mmap.c              | 6 ++++++
- arch/sh/mm/mmap.c                | 6 ++++++
- arch/sparc/kernel/sys_sparc_32.c | 3 +++
- arch/sparc/kernel/sys_sparc_64.c | 6 ++++++
- arch/sparc/mm/hugetlbpage.c      | 4 ++++
- arch/x86/kernel/sys_x86_64.c     | 6 ++++++
- arch/x86/mm/hugetlbpage.c        | 4 ++++
- fs/hugetlbfs/inode.c             | 4 ++++
- include/linux/mm.h               | 2 ++
- mm/mmap.c                        | 6 ++++++
- 19 files changed, 82 insertions(+)
+ mm/mmap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-index e5f881bc8288..6903700afd12 100644
---- a/arch/alpha/kernel/osf_sys.c
-+++ b/arch/alpha/kernel/osf_sys.c
-@@ -1223,6 +1223,8 @@ arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
- 	info.length = len;
- 	info.low_limit = addr;
- 	info.high_limit = limit;
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	return vm_unmapped_area(&info);
- }
- 
-diff --git a/arch/arc/mm/mmap.c b/arch/arc/mm/mmap.c
-index 69a915297155..5922cb51e029 100644
---- a/arch/arc/mm/mmap.c
-+++ b/arch/arc/mm/mmap.c
-@@ -29,6 +29,9 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 	struct vm_area_struct *vma;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * We enforce the MAP_FIXED case.
- 	 */
-diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
-index d65d0e6ed10a..04d9234f049a 100644
---- a/arch/arm/mm/mmap.c
-+++ b/arch/arm/mm/mmap.c
-@@ -36,6 +36,9 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 	int aliasing = cache_is_vipt_aliasing();
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * We only need to do colour alignment if either the I or D
- 	 * caches alias.
-@@ -56,6 +59,7 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
- 
-+
- 	if (addr) {
- 		if (do_align)
- 			addr = COLOUR_ALIGN(addr, pgoff);
-@@ -88,6 +92,9 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	int aliasing = cache_is_vipt_aliasing();
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * We only need to do colour alignment if either the I or D
- 	 * caches alias.
-diff --git a/arch/csky/abiv1/mmap.c b/arch/csky/abiv1/mmap.c
-index 7f826331d409..0be4913c6cf3 100644
---- a/arch/csky/abiv1/mmap.c
-+++ b/arch/csky/abiv1/mmap.c
-@@ -35,6 +35,9 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 		.align_offset = pgoff << PAGE_SHIFT
- 	};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * We only need to do colour alignment if either the I or D
- 	 * caches alias.
-diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
-index 889030985135..7d1e8be20519 100644
---- a/arch/loongarch/mm/mmap.c
-+++ b/arch/loongarch/mm/mmap.c
-@@ -27,6 +27,9 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
- 	int do_color_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (unlikely(len > TASK_SIZE))
- 		return -ENOMEM;
- 
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index 7e11d7b58761..22e8f9c8eaa0 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -36,6 +36,9 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
- 	int do_color_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (unlikely(len > TASK_SIZE))
- 		return -ENOMEM;
- 
-diff --git a/arch/parisc/kernel/sys_parisc.c b/arch/parisc/kernel/sys_parisc.c
-index f7722451276e..2ac53f148624 100644
---- a/arch/parisc/kernel/sys_parisc.c
-+++ b/arch/parisc/kernel/sys_parisc.c
-@@ -108,6 +108,9 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
- 		.length = len
- 	};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (unlikely(len > TASK_SIZE))
- 		return -ENOMEM;
- 
-diff --git a/arch/powerpc/mm/book3s64/slice.c b/arch/powerpc/mm/book3s64/slice.c
-index ef3ce37f1bb3..f0e2550af6d0 100644
---- a/arch/powerpc/mm/book3s64/slice.c
-+++ b/arch/powerpc/mm/book3s64/slice.c
-@@ -286,6 +286,10 @@ static unsigned long slice_find_area_bottomup(struct mm_struct *mm,
- 		.length = len,
- 		.align_mask = PAGE_MASK & ((1ul << pshift) - 1),
- 	};
-+
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * Check till the allow max value for this mmap request
- 	 */
-@@ -331,6 +335,9 @@ static unsigned long slice_find_area_topdown(struct mm_struct *mm,
- 	};
- 	unsigned long min_addr = max(PAGE_SIZE, mmap_min_addr);
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/*
- 	 * If we are trying to allocate above DEFAULT_MAP_WINDOW
- 	 * Add the different to the mmap_base.
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index ded0eff58a19..dc38f7022037 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -254,6 +254,8 @@ static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
- 	info.low_limit = current->mm->mmap_base;
- 	info.high_limit = TASK_SIZE;
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	return vm_unmapped_area(&info);
- }
- 
-@@ -270,6 +272,8 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
- 	info.low_limit = PAGE_SIZE;
- 	info.high_limit = current->mm->mmap_base;
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	addr = vm_unmapped_area(&info);
- 
- 	/*
-diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
-index 206756946589..001345df61b6 100644
---- a/arch/s390/mm/mmap.c
-+++ b/arch/s390/mm/mmap.c
-@@ -88,6 +88,9 @@ unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 	struct vm_area_struct *vma;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (len > TASK_SIZE - mmap_min_addr)
- 		return -ENOMEM;
- 
-@@ -123,6 +126,9 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp, unsigned long ad
- 	struct mm_struct *mm = current->mm;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/* requested length too big for entire address space */
- 	if (len > TASK_SIZE - mmap_min_addr)
- 		return -ENOMEM;
-diff --git a/arch/sh/mm/mmap.c b/arch/sh/mm/mmap.c
-index bee329d4149a..ab1f5613b5e2 100644
---- a/arch/sh/mm/mmap.c
-+++ b/arch/sh/mm/mmap.c
-@@ -59,6 +59,9 @@ unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 	int do_colour_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (flags & MAP_FIXED) {
- 		/* We do not accept a shared mapping if it would violate
- 		 * cache aliasing constraints.
-@@ -107,6 +110,9 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	int do_colour_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (flags & MAP_FIXED) {
- 		/* We do not accept a shared mapping if it would violate
- 		 * cache aliasing constraints.
-diff --git a/arch/sparc/kernel/sys_sparc_32.c b/arch/sparc/kernel/sys_sparc_32.c
-index 08a19727795c..bcc3242e003d 100644
---- a/arch/sparc/kernel/sys_sparc_32.c
-+++ b/arch/sparc/kernel/sys_sparc_32.c
-@@ -43,6 +43,9 @@ unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr, unsi
- {
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (flags & MAP_FIXED) {
- 		/* We do not accept a shared mapping if it would violate
- 		 * cache aliasing constraints.
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index d9c3b34ca744..05de444d66f6 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -95,6 +95,9 @@ unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr, unsi
- 	int do_color_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (flags & MAP_FIXED) {
- 		/* We do not accept a shared mapping if it would violate
- 		 * cache aliasing constraints.
-@@ -155,6 +158,9 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	int do_color_align;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/* This should only ever run for 32-bit processes.  */
- 	BUG_ON(!test_thread_flag(TIF_32BIT));
- 
-diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
-index cc91ca7a1e18..148064142628 100644
---- a/arch/sparc/mm/hugetlbpage.c
-+++ b/arch/sparc/mm/hugetlbpage.c
-@@ -40,6 +40,8 @@ static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *filp,
- 	info.low_limit = TASK_UNMAPPED_BASE;
- 	info.high_limit = min(task_size, VA_EXCLUDE_START);
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	addr = vm_unmapped_area(&info);
- 
- 	if ((addr & ~PAGE_MASK) && task_size > VA_EXCLUDE_END) {
-@@ -71,6 +73,8 @@ hugetlb_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	info.low_limit = PAGE_SIZE;
- 	info.high_limit = mm->mmap_base;
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	addr = vm_unmapped_area(&info);
- 
- 	/*
-diff --git a/arch/x86/kernel/sys_x86_64.c b/arch/x86/kernel/sys_x86_64.c
-index 01d7cd85ef97..248a210c2b0b 100644
---- a/arch/x86/kernel/sys_x86_64.c
-+++ b/arch/x86/kernel/sys_x86_64.c
-@@ -129,6 +129,9 @@ arch_get_unmapped_area_vmflags(struct file *filp, unsigned long addr, unsigned l
- 	struct vm_unmapped_area_info info = {};
- 	unsigned long begin, end;
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	if (flags & MAP_FIXED)
- 		return addr;
- 
-@@ -167,6 +170,9 @@ arch_get_unmapped_area_topdown_vmflags(struct file *filp, unsigned long addr0,
- 	unsigned long addr = addr0;
- 	struct vm_unmapped_area_info info = {};
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/* requested length too big for entire address space */
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 807a5859a3c4..d3f8cec4895d 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -29,6 +29,8 @@ static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
- 
- 	info.length = len;
- 	info.low_limit = get_mmap_base(1);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 
- 	/*
- 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
-@@ -52,6 +54,8 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
- 	info.length = len;
- 	info.low_limit = PAGE_SIZE;
- 	info.high_limit = get_mmap_base(0);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 
- 	/*
- 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 9f6cff356796..4b35eadd2ad8 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -182,6 +182,8 @@ hugetlb_get_unmapped_area_bottomup(struct file *file, unsigned long addr,
- 	info.low_limit = current->mm->mmap_base;
- 	info.high_limit = arch_get_mmap_end(addr, len, flags);
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	return vm_unmapped_area(&info);
- }
- 
-@@ -197,6 +199,8 @@ hugetlb_get_unmapped_area_topdown(struct file *file, unsigned long addr,
- 	info.low_limit = PAGE_SIZE;
- 	info.high_limit = arch_get_mmap_base(addr, current->mm->mmap_base);
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.hint = addr;
-+	info.mmap_flags = flags;
- 	addr = vm_unmapped_area(&info);
- 
- 	/*
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6549d0979b28..b5fcb9dfb942 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3445,6 +3445,8 @@ struct vm_unmapped_area_info {
- 	unsigned long align_mask;
- 	unsigned long align_offset;
- 	unsigned long start_gap;
-+	unsigned long hint;
-+	unsigned long mmap_flags;
- };
- 
- extern unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info);
 diff --git a/mm/mmap.c b/mm/mmap.c
-index d0dfc85b209b..34ba0db23678 100644
+index 34ba0db23678..459ad380c673 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -1796,6 +1796,9 @@ generic_get_unmapped_area(struct file *filp, unsigned long addr,
- 	struct vm_unmapped_area_info info = {};
- 	const unsigned long mmap_end = arch_get_mmap_end(addr, len, flags);
+@@ -1766,6 +1766,9 @@ unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
+ {
+ 	unsigned long addr;
  
-+	info.hint = addr;
-+	info.mmap_flags = flags;
++	if (info->hint != 0 && info->mmap_flags & MAP_BELOW_HINT)
++		info->high_limit = MIN(info->high_limit, info->hint + info->length);
 +
- 	if (len > mmap_end - mmap_min_addr)
- 		return -ENOMEM;
- 
-@@ -1841,6 +1844,9 @@ generic_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
- 	struct vm_unmapped_area_info info = {};
- 	const unsigned long mmap_end = arch_get_mmap_end(addr, len, flags);
- 
-+	info.hint = addr;
-+	info.mmap_flags = flags;
-+
- 	/* requested length too big for entire address space */
- 	if (len > mmap_end - mmap_min_addr)
- 		return -ENOMEM;
+ 	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
+ 		addr = unmapped_area_topdown(info);
+ 	else
 
 -- 
 2.45.0
