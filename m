@@ -1,49 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5081AE854;
-	Thu, 29 Aug 2024 13:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1968D1B250D;
+	Thu, 29 Aug 2024 14:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724938674; cv=none; b=ipmVKFD2dXGk2zLRJQRurM1ACorChXK52GfgvaGvBr4NZvHvt3BaX5WLOhDn8CiNypSNo5hcU2aWu14Rs+31OKJRZD5CqDdQd6TvCoAE44zQmlXkytBZP4IMi0YBquoXOIcsNQ71Q4gWvy9jVdEJuY76otuPN9cyzpiAu/7kq9c=
+	t=1724940274; cv=none; b=LTUGSuJ0hKUjaKfu8OoE/0jIOtpcSWHCkF5MF1PQiZlNc0OJf559arCokcG9p9SOrkaDiQmbys8s4ghkg0Uitxld5994E5o+iarA8TktGe6utmpnlTimFbi/2+jdfOTOD6XCQEIJ+IaoX0pGB87N8CV6z3d8+C6hlOio2zfd6Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724938674; c=relaxed/simple;
-	bh=5j+pCu/063iK1q0f2lIBnWsUUADZMQILRbJ/J12nbOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNr4wvf+j5GSyZ4m7V97b0MkNT06PwcqaVWTfYAIPCDNy2dqiwnNbtFawPggLhndVszNrgTKH2MuzqxjGzAtPX6MXMvavt3OF2wq/un7DwEaakM7eKu2h4qTvIZ8lvLZnQA1zALJSMSEuZK0o7Cq9Pvn8F6fT3XZheos8/7qHDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=OXv9i1KY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724940274; c=relaxed/simple;
+	bh=Iy3rr4lTi7gvxiZbkZ8fGrFuuRZAf0GwZeBS02I6fhI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=s/3DteTq53Xjc9tNe+sBmasqfnkKvq/k+ygHi7y65oKoUCklwBET8Wrz2YAVaibmxtN2UIe45tEEJ1plUBO6aBOWAT5xXjZDHF/yBQ6H4bWr5XXpMXNq1PDafHJLTU4CF6x4MG01qPCnVZK4U3DfH3OR6kdy/YxscPIhrchyE1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pWksMAGx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a2ymgWm1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="OXv9i1KY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00B4C4CEC7;
-	Thu, 29 Aug 2024 13:37:52 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="OXv9i1KY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1724938670;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pWksMAGx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a2ymgWm1"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1724940271;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DgOsAY+IzUzI2LVe8MyPw3usnxayg4MxSPg3sYPdlME=;
-	b=OXv9i1KY5QeZZTYveePJOryfkIKWmKvFq3/LUkOyROXCUcvRHQ8fi89gGDI9UUGydvSqLA
-	J6g+Jez3wfR4VBLZZmsAd0xZPFSr8K6ccj+mgODzlLL4xYT1RrwlPL0NOMx4W3CpwkyRGY
-	b5+AUQWIwtbVTeUwyglJrSj3QPZ6tL8=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ba520353 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 29 Aug 2024 13:37:50 +0000 (UTC)
-Date: Thu, 29 Aug 2024 15:37:42 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH v5] LoongArch: vDSO: Wire up getrandom() vDSO
- implementation
-Message-ID: <ZtB5pqfp0Lg6lzz6@zx2c4.com>
-References: <20240829125656.19017-1-xry111@xry111.site>
- <ZtB3RczHN00XDO52@zx2c4.com>
+	bh=Iy3rr4lTi7gvxiZbkZ8fGrFuuRZAf0GwZeBS02I6fhI=;
+	b=pWksMAGxGdVbcQ+BGtxY7ybXr6LbJ5KARkSear+fdAiDnvtCwVcAwHpIuI8i3Pn8BpE3pV
+	q8nu9SjBr3aDcoqaBoLNDos/SlHFS2R5ykfK9TX3BlBGRu1jEbxa5TMGIrIW9hkKYtME/3
+	D3h+Tf0x2s1jWhxR/xCijCuLv8xQpI6qGHEHXWah6oG7hC2Qz+RjEYplrLcrzXkYHogw2F
+	jGGxHzAHiAoiSokJ4hNBrXNBNOAeW7MR4YBLUqzSOgosOHUvfi469ACq8KmQQcjL0ZQejn
+	mafZXr6ZTEXDWMIX9kRhfpekclTn2dEErCQfemKabDxzSQeiHWNzpehqaKaRVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1724940271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iy3rr4lTi7gvxiZbkZ8fGrFuuRZAf0GwZeBS02I6fhI=;
+	b=a2ymgWm1IofddEW390AKixeeMdlX5IA5hk7CDAhBJ33JH0RiPeMVmpo7b5t8dMgZO6DiW7
+	uaqpv0jMxsjhYZDw==
+To: Huacai Chen <chenhuacai@kernel.org>, maobibo <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ x86@kernel.org, Song Gao <gaosong@loongson.cn>
+Subject: Re: [PATCH v7 3/3] irqchip/loongson-eiointc: Add extioi virt
+ extension support
+In-Reply-To: <CAAhV-H6zBgaTpirE30_q8pxrZ_zkeNWe_696PNZqCWugC+FKrw@mail.gmail.com>
+References: <20240823063943.2618675-1-maobibo@loongson.cn>
+ <20240823063943.2618675-4-maobibo@loongson.cn>
+ <CAAhV-H7t0Bn=iK7UygG6ym=hsCJqZAFVJHqDupm7mL9rVAm0GA@mail.gmail.com>
+ <b2722073-a74d-0540-18bb-ae6f450ef123@loongson.cn>
+ <CAAhV-H6zBgaTpirE30_q8pxrZ_zkeNWe_696PNZqCWugC+FKrw@mail.gmail.com>
+Date: Thu, 29 Aug 2024 16:04:31 +0200
+Message-ID: <87ikvja0i8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,75 +61,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZtB3RczHN00XDO52@zx2c4.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2024 at 03:27:33PM +0200, Jason A. Donenfeld wrote:
-> One small question just occurred to me:
-> 
-> > +static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(
-> > +	void)
-> > +{
-> > +	return (const struct vdso_rng_data *)(
-> > +		get_vdso_data() +
-> > +		VVAR_LOONGARCH_PAGES_START * PAGE_SIZE +
-> > +		offsetof(struct loongarch_vdso_data, rng_data));
-> > +}
-> 
-> Did you test this in a TIMENS? On x86, I had to deal with the page
-> offsets switching around depending on whether there was a TIMENS. I
-> tested this in my test harness with some basic code like:
-> 
->        if (argc == 1) {
->                if (unshare(CLONE_NEWTIME))
->                        panic("unshare(CLONE_NEWTIME)");
->                if (!fork()) {
->                        if (execl(argv[0], argv[0], "now-in-timens"))
->                                panic("execl");
->                }
->                wait(NULL);
->                poweroff();
->        }
-> 
-> Because unlike other namespaces, the time one only becomes active after
-> fork/exec.
-> 
-> But maybe loongarch is more organized and you don't need any special
-> handling in __arch_get_vdso...data() functions like I needed on x86.
-> Just thought I should check.
+On Thu, Aug 29 2024 at 20:29, Huacai Chen wrote:
+> On Thu, Aug 29, 2024 at 9:46=E2=80=AFAM maobibo <maobibo@loongson.cn> wro=
+te:
+>> > I think qemu hasn't release with v-eiointc? So we still have a chance
+>> > to modify qemu and this driver to simplify registers:
+>> It is already merged in qemu mainline, code is frozen and qemu 9.1 will
+>> release soon. Once it is merged in mainline and even if code is not
+>> frozen, I will modify it only if it is bug.
+> If Thomas think the register definition is OK, then I have no objections.
 
-Normal results:
-
-   vdso: 25000000 times in 0.287330836 seconds
-   libc: 25000000 times in 4.480710835 seconds
-syscall: 25000000 times in 4.411098048 seconds
-
-After applying
-
-diff --git a/arch/x86/include/asm/vdso/getrandom.h b/arch/x86/include/asm/vdso/getrandom.h
-index ff5334ad32a0..5cb1b318ebe3 100644
---- a/arch/x86/include/asm/vdso/getrandom.h
-+++ b/arch/x86/include/asm/vdso/getrandom.h
-@@ -32,8 +32,6 @@ static __always_inline ssize_t getrandom_syscall(void *buffer, size_t len, unsig
-
- static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(void)
- {
--	if (IS_ENABLED(CONFIG_TIME_NS) && __vdso_data->clock_mode == VDSO_CLOCKMODE_TIMENS)
--		return (void *)&__vdso_rng_data + ((void *)&__timens_vdso_data - (void *)&__vdso_data);
- 	return &__vdso_rng_data;
- }
-
-the results are:
-
-   vdso: 25000000 times in 4.403789593 seconds
-   libc: 25000000 times in 4.466771093 seconds
-syscall: 25000000 times in 4.428145416 seconds
-
-The difference is that when it finds the shared data in the wrong place,
-it thinks the RNG is uninitialized, so it always falls back to the
-syscall, hence all three times being the same.
-
-If you're unsure how timens handling works on loongarch, try this test
-yourself and see what you get.
-
-Jason
+No objections
