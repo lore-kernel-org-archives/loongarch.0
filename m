@@ -1,61 +1,60 @@
 Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C825189916
-	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 07:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75451189B85
+	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 07:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724915786; cv=none; b=SRh2f+jGeOGz/lQ6o6obQ2crs3bCVqTcNiWOIwRIKoxV91Y+M+Mi6uShuHdZRnShC1y0di6DihnVMlM2cHJAO6RwoGSxLED5TY7qrUSLaJba7mx7vB2xW9Qr9p7rwBU847VGLzgOfMG3TWTi6sW7PYYRvlvsUSCWhMOfPiqzgtI=
+	t=1724915789; cv=none; b=OcAnoJ8Ge37IDPeaiwi+kalaAGrlOn06pLDVMYZu3/C37Jlo3iJYSGPGA6QqNeuwJYi8EtjHi3KSSlDFqQ2EurLMOiXdTlmjeouYnpwgO2FKr1KzI5Y52ol4kdMcWqHenoTky/g0HOZ26fYBn3/m7iHvv+KIS9ZsreHIFcHLPgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724915786; c=relaxed/simple;
-	bh=awlA0FQ8vwXq3Nn6i3BedGsUxTSd4n1W8+rk6Ti/shY=;
+	s=arc-20240116; t=1724915789; c=relaxed/simple;
+	bh=s/V5Z34t4dT0xkb/r9QmO4zmTWyR+OmvwZt8Wf5I9yo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t/S1qh86OevMVzteq77kWHbK7+b+oCpFJzfLcjJv/VYqFx+WKJFkqy45/q4Ls3hZ9tYVyq5Plz3Ff75Zy2Sy+f4VzPwqlR9QayLuIxJpbTOangL5CnWySzUVPVGpQKVT+V70oM7wPvrzNbufOghXTM1K6rIPCocDf+cTbJ2yYM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bRS/JqaV; arc=none smtp.client-ip=209.85.210.170
+	 In-Reply-To:To:Cc; b=UfnJeUTE7xjmQ+gOPc6NUoBsvkqKFG2Wt8PHybiTEkmulFFU3fZ4iaEgJQVnmjg82eQ2hL3eDOK5B5AiX0AMvef9o/5FGbs5BfS+S8KA1R7kQJ7T5R/F5SJ0nlF+SQFLozg3nBRnlGEDZMLrsyAbKQ8BLTb0MlJBgPtKB6hJvDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=q+JARcvL; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bRS/JqaV"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-714287e4083so326951b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 00:16:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="q+JARcvL"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-715c160e231so304500b3a.0
+        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 00:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724915783; x=1725520583; darn=lists.linux.dev;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724915787; x=1725520587; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eRZz0v4roamBPZuEY8lRo6reatKDFS+11+O4EIK+5eU=;
-        b=bRS/JqaVjIT84TbFcz0ZZg1a9pvTo6UyYRQ3NK+EWnfNqyBWD3dh0CHeyJCaoOUwhx
-         LAxfdNPaRQtFHzfzU1KU1L12gkVnaM+EQUR3joD7gz6+WHwt+7Ni8gxmp1kOVJshivwN
-         zWPzslFMu+LjDCRi2Qn+v3LaPR4gNWi0TEV9ejDKrXzjO/krpmVsidm9b5QwL77ftwym
-         xYlG0MBZO9iqplfR0F31CEtuJXTjtKsOWJg7BR5jSYTKbrv859WHRClCxTTctp2/hO41
-         8clzpHdGgaNi1Z0nCWBoC5vcMDVKvrG6y2UCfeCf9NWGD2zgmi1lxZXJXZQU0jwKIDdT
-         u1FQ==
+        bh=9klKwS2bfsiGNUk5X0TeI2il7xQjjU59nEcVHrUHGMg=;
+        b=q+JARcvLt4coY/Oe+6IxIKPztqcOmRjNIcEV779yi5k29UCTVrcyljQE+0Hstdinl5
+         qjx3XauuKh3zM9KVXVhFBK2jpX56IWUETLGC0u0J+l2N1x/QqeNHbH5HFy8KtGEg6TdM
+         D4mLILpl9v8GHwVziwFosbtPdHfZZGSfkH4xPUOe+L18xM547ltf95jH3GzuvvaOHA2b
+         kXrP9/J1Pai0NTU/0qE3mNUlekylMzwnDC/GM/9vOsldyTdtv6zpqKrnNft9thXYuz11
+         pJ5mI7s9Xr3uKOtTDtXdMi37a86Bctt2Vl/ELJ9/DX/3A9pb88xTp1/l2hUMhZrrDf2F
+         YZfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724915783; x=1725520583;
+        d=1e100.net; s=20230601; t=1724915787; x=1725520587;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eRZz0v4roamBPZuEY8lRo6reatKDFS+11+O4EIK+5eU=;
-        b=tWKMF+Y4AA9i6DunL0vJJd6jKZBuCG8UyNg8KYpbTnQY/x5+8arlaVPT+4Sejk7dBI
-         /PxZgY998s0u+gbl1g3jUsI662FkXFE3yApr8lWCuz81Zp1T+LPhLUqMFuG/Lfk+wgFc
-         lLvCn4W2hPuq2hAW64BKY3I3T6/nurAuArBfuGdb1327vRXvxfJ8wUvaYm1XCu/RYq8+
-         MSVd0yrGBN9eoxyR91ZlFi+NC2eABfkTRaKFvd2hS24zTK+hXltlbI6XgljFOot202wv
-         ksVeYiSkVYDL9EzkJx/fePssKglY0/C5A74FZn9XibI5EwucNF+JqyKi67dFcvG5nBd3
-         Jcjw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0UawCELZODs57dLDJDW9At27dAY8k65nJsl8/SarrE+Fxmm83yU887fbGl4ITAVnMFAWnvxjwvvc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyqSC0gpBP580KP21+/bDlskCAJ2ShfMrxD+hDNTv1bM8FyiiyH
-	QHb4PsOLS/omGHHk3+pX2yCtYwCcHIlUHUnnqJB6DW7XjUMeVf1q67XLbK7eTSQ=
-X-Google-Smtp-Source: AGHT+IESlo3+HNMz8Vyf9gnK2kr34iORO0t8ZckMgQQJOrmm4rJ0EngcQswLax6rU2xQbGZPh7/0eg==
-X-Received: by 2002:a05:6a20:6f88:b0:1c4:7dbc:d21a with SMTP id adf61e73a8af0-1cce104dce4mr1887803637.32.1724915783368;
-        Thu, 29 Aug 2024 00:16:23 -0700 (PDT)
+        bh=9klKwS2bfsiGNUk5X0TeI2il7xQjjU59nEcVHrUHGMg=;
+        b=q4KdP24mlsYua778K8SBWngRApz0IHzaAEsGb5+OZBzsQWLMHhwL4DNCVLC+W8seBU
+         mA4UYfByRiiOm5ZyusjdpKRn+z21ivFJKKbe34+9zlg12MTcrjyVsxBCaRaXlx+lPj9a
+         CANDUXLdpOEAtv1i9MkxOYXlimd9WCo9JLr6xqvbkMJ89IT9reJtfFZe0ceB21xzHigm
+         Brln0x1I0zxgmtQu8U9BDzSGz7yIh5muzXEuuLAmPCkgikib1bNRkkG3A7BvwBJ2VXlj
+         WpB/JsQSSKXJaVHy9PPS2D+ICmif/zyy3SNoZGxfApkqQ//aaasrcpFtgDawBhfCRm5s
+         OkUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX13SAKZzha58KJKJKv1Wtu6lajskSXxUkASD3sw6ehUaztSAK7F8xd/zN0t+mHR/MgRoUrQEF6ES0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwTSbcOm91COX6CiUy+Q78Xw15avKWT8AjbHAotO8XmuCFWrhvo
+	0iExe68r3KPkr7vZYsPUAF5HipJKh1FVlBzVTJ0cBJDlqZO7yY7GR5tegE086Do=
+X-Google-Smtp-Source: AGHT+IF3t2cjexZNLvhhEG5lVGM8VXbW+pDj1JAzDu87zeFwskGcSX3PJG32Vb5o0zHIzYY5Gmbt2A==
+X-Received: by 2002:a05:6a20:e196:b0:1be:c4bb:6f31 with SMTP id adf61e73a8af0-1cce1011dd6mr2308343637.18.1724915786799;
+        Thu, 29 Aug 2024 00:16:26 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e9bef08sm581976a12.58.2024.08.29.00.16.20
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e9bef08sm581976a12.58.2024.08.29.00.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 00:16:22 -0700 (PDT)
+        Thu, 29 Aug 2024 00:16:26 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 29 Aug 2024 00:16:00 -0700
-Subject: [PATCH RFC v2 3/4] mm: Support MAP_BELOW_HINT in
- vm_unmapped_area()
+Date: Thu, 29 Aug 2024 00:16:01 -0700
+Subject: [PATCH RFC v2 4/4] selftests/mm: Create MAP_BELOW_HINT test
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240829-patches-below_hint_mmap-v2-3-638a28d9eae0@rivosinc.com>
+Message-Id: <20240829-patches-below_hint_mmap-v2-4-638a28d9eae0@rivosinc.com>
 References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
 In-Reply-To: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
 To: Arnd Bergmann <arnd@arndb.de>, 
@@ -105,41 +104,74 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  sparclinux@vger.kernel.org, linux-mm@kvack.org, 
  linux-kselftest@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=991; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=awlA0FQ8vwXq3Nn6i3BedGsUxTSd4n1W8+rk6Ti/shY=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9oFBUtNRaX7W4IPbnI+Ms3hivNnCcHEiLSn/wN2Mfr8Y
- bUwSP3TUcrCIMbBICumyMJzrYG59Y5+2VHRsgkwc1iZQIYwcHEKwES8tjMyvNn0V3yhfGTAnNVL
- rI6JakxSy1zhtaNTK7Nm7eOzb9jnWDIy3NjktX5Wn9/XRXLVu44d2/Xri3n+zz1GZcf0P1w88Pv
- nEX4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1995; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=s/V5Z34t4dT0xkb/r9QmO4zmTWyR+OmvwZt8Wf5I9yo=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9oFBcsP6+L/Tm5SuNTuoL5vd1CHFePmle9+1/Le0d5Yp
+ 3hVY8XNjlIWBjEOBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACYikcjwz6bDSmrzHWPjp6+e
+ zUhZGF3tGZgzRbFMebrXzej5O9YXpDH8j7Z7ceLNKc+79Xs9s7LbGbZefbF4gvgksf23zjP3/b/
+ +jhkA
 X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
  fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-To ensure that all memory allocations comply with the new MAP_BELOW_HINT
-flag, set the high_limit in vm_unmapped_area() to the hint address +
-length at most. All callers to this function set the high_limit to
-something reasonable, usually with space for a random offset and a gap
-for the stack. To respect the provided high_limit, take the minimum of
-hint+length and the given high_limit.
+Add a selftest for MAP_BELOW_HINT that maps until it runs out of space
+below the hint address.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- mm/mmap.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/mm/Makefile         |  1 +
+ tools/testing/selftests/mm/map_below_hint.c | 32 +++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 34ba0db23678..459ad380c673 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1766,6 +1766,9 @@ unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
- {
- 	unsigned long addr;
- 
-+	if (info->hint != 0 && info->mmap_flags & MAP_BELOW_HINT)
-+		info->high_limit = MIN(info->high_limit, info->hint + info->length);
+diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+index cfad627e8d94..4e2de85267b5 100644
+--- a/tools/testing/selftests/mm/Makefile
++++ b/tools/testing/selftests/mm/Makefile
+@@ -50,6 +50,7 @@ TEST_GEN_FILES += hugepage-shm
+ TEST_GEN_FILES += hugepage-vmemmap
+ TEST_GEN_FILES += khugepaged
+ TEST_GEN_FILES += madv_populate
++TEST_GEN_FILES += map_below_hint
+ TEST_GEN_FILES += map_fixed_noreplace
+ TEST_GEN_FILES += map_hugetlb
+ TEST_GEN_FILES += map_populate
+diff --git a/tools/testing/selftests/mm/map_below_hint.c b/tools/testing/selftests/mm/map_below_hint.c
+new file mode 100644
+index 000000000000..55d6cbf90645
+--- /dev/null
++++ b/tools/testing/selftests/mm/map_below_hint.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Test the MAP_BELOW_HINT mmap flag.
++ */
++#include <sys/mman.h>
++#include <errno.h>
++#include "../kselftest.h"
 +
- 	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
- 		addr = unmapped_area_topdown(info);
- 	else
++#define ADDR (1 << 20)
++#define LENGTH (ADDR / 10000)
++
++#define MAP_BELOW_HINT	  0x8000000	/* Not defined in all libc */
++
++/*
++ * Map memory with MAP_BELOW_HINT until no memory left. Ensure that all returned
++ * addresses are below the hint.
++ */
++int main(int argc, char **argv)
++{
++	void *addr;
++
++	do {
++		addr = mmap((void *)ADDR, LENGTH, PROT_READ | PROT_WRITE,
++			    MAP_PRIVATE | MAP_ANONYMOUS | MAP_BELOW_HINT, -1, 0);
++	} while (addr != MAP_FAILED && (unsigned long)addr <= ADDR);
++
++	if (errno == ENOMEM)
++		ksft_test_result_pass("MAP_BELOW_HINT works\n");
++	else
++		ksft_test_result_fail("mmap returned address above hint with MAP_BELOW_HINT with error: %s\n",
++				      strerror(errno));
++}
 
 -- 
 2.45.0
