@@ -1,592 +1,631 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A0A195FD5;
-	Thu, 29 Aug 2024 12:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D718E021
+	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 12:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724934572; cv=none; b=LxnI3//Sthshsjtg0O/EstU6UUQ2VoWZnS/3mNgaZL+on/AlfSS29t+YumQ4wxKmcLfA/oiGkKCrC9z9Z80eQZl3T5LIU6qKyin30ReABSmOEm+Jbu+9YTbitafmYk6EY7YjtWJapui680HDPRG9I2HJSm6fieAd+qk1d2Pxdf8=
+	t=1724936297; cv=none; b=R/4jhe5+cjd5KahVyLpl35VsheZchHL3WeOsyLk09W1aRbemmS9Cuck58APD2iDlwkwwwQ4H4/k4kmwaWsptN2mcPiwzfYV3pextD52jsE3lAfmccHyUrUhBkyRJgZS7tyT9nq8xqnsZ3BJE14eLFToN8wk0NE4qFw0Bxr9P/9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724934572; c=relaxed/simple;
-	bh=oqmwYZTMONTxBcDiocovfKqft8MEnbmIIE9XjRoGAh8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KvZFq49EN4tayV1agjz6UZiG4fWE5l9y+mky6PX9K+xcZf/KbVBlrSxqQqGLImWYssjxISQwMmHE7VsC8512jjyokRKCVemi+RvNMBupQbCiqraO7PC32nAENLTJYvOlKtyRB+L+r6tHXPcl+h2fJElkJy3s/F6peb98m864fKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUcHpd41; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724936297; c=relaxed/simple;
+	bh=hNKu2Wzm5D+Pfqt9sfH62oJ93NopedSXYf2+Hh48+48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ukm7GPonuyF68j/rcXwy8eRW9mlx35caGvzqzHrdHDxsRNtLeLClgiQNiwseZnbkYySILs1WjZWgYFWemR7o+J+Icbho9V1em6i32inFCDQFm6JymFB3w3OEjPRNK6bAa8ZvBFGGDu0Ix9ODZQ7tFTyD2dGFQHmi0+xAPMx0UBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hcTCr9ga; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUcHpd41"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A944EC4CEC3;
-	Thu, 29 Aug 2024 12:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724934571;
-	bh=oqmwYZTMONTxBcDiocovfKqft8MEnbmIIE9XjRoGAh8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uUcHpd411q/5vStHtbgA6G3pKc1+MydIN6GtsqemeFRTu/okBS4ICOxLidQ/JEGP5
-	 XbP/P+nQjQGTRDBoIo3ZXEYldnNH7p2UfoT5K3xCnuOvrmgVBCt3IFt9fs3DQWkBO/
-	 yfFM88mz/odY8kM1mCja8ukRxRa6zdnU3OFQBUssUh5ybI3Fe0oPZkYdUpn/6oJd/f
-	 kAJBZ+j4KY+twR4wMaz2bxyHj01yjyxShI9gcJ8vTHuoIqYvRosy0ix1P9M4I+AnRZ
-	 qEazX5SkNXNstM6D1diVSrgg+3fQMkmfMGUl3TQXWI5eJda4p0vFR8ekpGvMLAZrHW
-	 u07cA+96RYRdA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a869f6ce2b9so57788366b.2;
-        Thu, 29 Aug 2024 05:29:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVs3gGjNtce/TY5s7EO0L5icQM/SZSRnMAFGp4VImA152U+gq+r4L2sTHrPpCHRj/P9kuRJQfyMcRY=@lists.linux.dev, AJvYcCX79oj6l364R0DU/jQol4OhCNDZo1Tohev3l44qAfzq5zz65nllhs7E8bYzKS5sBCwpD+FVvAQbTuLWZAeUBoo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8rBZ+HhTf9UvapAKhPQbJng+CVS3LdCyT2PaZ0BD2me2G2Gux
-	scRdaNoUgZgurLE3fdfORw5JUznBMHzQq1NUtvgoN3mNq9SigBdyh8FE279ad116WOD32AkA403
-	tYE+9uUZmt5XWXzKQgMt8Tliaejs=
-X-Google-Smtp-Source: AGHT+IGpTmiaMkRRP0VPss8OEY9gCzdYdVjFkf1QxcTT0uNWdSiw/P8W8k6QdeA5RSwkn+23i+TTdsl6ZiaqQR63djY=
-X-Received: by 2002:a17:907:d8c:b0:a7a:aa35:409e with SMTP id
- a640c23a62f3a-a897f875407mr238284966b.25.1724934570162; Thu, 29 Aug 2024
- 05:29:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hcTCr9ga"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1724936288;
+	bh=hNKu2Wzm5D+Pfqt9sfH62oJ93NopedSXYf2+Hh48+48=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hcTCr9gaz2RK27B/i92ZXUiooI032V0S1egf6VWN+pp07uPZp654zGWyXjiSL+Fa1
+	 KQuCXxIFjmtZgSVbUnFXvZEKxNk7uMWYd2DMqN4e4DHEWiKoP2Qd+mdgGR623cTEM5
+	 Iq6LyKG3AbUGrrKCb3RvKxWrU+xqZGPRguBN31Go=
+Received: from stargazer.. (unknown [113.200.174.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0413866F26;
+	Thu, 29 Aug 2024 08:58:04 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v5] LoongArch: vDSO: Wire up getrandom() vDSO implementation
+Date: Thu, 29 Aug 2024 20:56:55 +0800
+Message-ID: <20240829125656.19017-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240823063943.2618675-1-maobibo@loongson.cn> <20240823063943.2618675-4-maobibo@loongson.cn>
- <CAAhV-H7t0Bn=iK7UygG6ym=hsCJqZAFVJHqDupm7mL9rVAm0GA@mail.gmail.com> <b2722073-a74d-0540-18bb-ae6f450ef123@loongson.cn>
-In-Reply-To: <b2722073-a74d-0540-18bb-ae6f450ef123@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 29 Aug 2024 20:29:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6zBgaTpirE30_q8pxrZ_zkeNWe_696PNZqCWugC+FKrw@mail.gmail.com>
-Message-ID: <CAAhV-H6zBgaTpirE30_q8pxrZ_zkeNWe_696PNZqCWugC+FKrw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] irqchip/loongson-eiointc: Add extioi virt
- extension support
-To: maobibo <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>, 
-	WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, x86@kernel.org, 
-	Song Gao <gaosong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 29, 2024 at 9:46=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
-:
->
-> Huacai,
->
-> On 2024/8/28 =E4=B8=8B=E5=8D=8810:27, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Fri, Aug 23, 2024 at 2:39=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> Interrupts can be routed to maximal four virtual CPUs with one HW
-> >> EIOINTC interrupt controller model, since interrupt routing is encoded=
- with
-> >> CPU bitmap and EIOINTC node combined method. Here add the EIOINTC virt
-> >> extension support so that interrupts can be routed to 256 vCPUs on
-> >> hypervisor mode. CPU bitmap is replaced with normal encoding and EIOIN=
-TC
-> >> node type is removed, so there are 8 bits for cpu selection, at most 2=
-56
-> >> vCPUs are supported for interrupt routing.
-> >>
-> >> Co-developed-by: Song Gao <gaosong@loongson.cn>
-> >> Signed-off-by: Song Gao <gaosong@loongson.cn>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   .../arch/loongarch/irq-chip-model.rst         |  64 +++++++++++
-> >>   .../zh_CN/arch/loongarch/irq-chip-model.rst   |  55 +++++++++
-> >>   arch/loongarch/include/asm/irq.h              |   1 +
-> >>   drivers/irqchip/irq-loongson-eiointc.c        | 106 ++++++++++++++--=
---
-> >>   4 files changed, 205 insertions(+), 21 deletions(-)
-> >>
-> >> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documen=
-tation/arch/loongarch/irq-chip-model.rst
-> >> index 7988f4192363..d2350780ad1d 100644
-> >> --- a/Documentation/arch/loongarch/irq-chip-model.rst
-> >> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
-> >> @@ -85,6 +85,70 @@ to CPUINTC directly::
-> >>       | Devices |
-> >>       +---------+
-> >>
-> >> +Virtual extended IRQ model
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> >> +
-> >> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer in=
-terrupt
-> >> +go to CPUINTC directly, CPU UARTS interrupts go to PCH-PIC, while all=
- other
-> >> +devices interrupts go to PCH-PIC/PCH-MSI and gathered by V-EIOINTC (V=
-irtual
-> >> +Extended I/O Interrupt Controller), and then go to CPUINTC directly::
-> >> +
-> >> +       +-----+    +-------------------+     +-------+
-> >> +       | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
-> >> +       +-----+    +-------------------+     +-------+
-> >> +                            ^
-> >> +                            |
-> >> +                      +-----------+
-> >> +                      | V-EIOINTC |
-> >> +                      +-----------+
-> >> +                       ^         ^
-> >> +                       |         |
-> >> +                +---------+ +---------+
-> >> +                | PCH-PIC | | PCH-MSI |
-> >> +                +---------+ +---------+
-> >> +                  ^      ^          ^
-> >> +                  |      |          |
-> >> +           +--------+ +---------+ +---------+
-> >> +           | UARTs  | | Devices | | Devices |
-> >> +           +--------+ +---------+ +---------+
-> >> +
-> >> +
-> >> +Description
-> >> +-----------
-> >> +V-EIOINTC (Virtual Extended I/O Interrupt Controller) is an extension=
- of
-> >> +EIOINTC, it only works in VM mode which runs in KVM hypervisor. Inter=
-rupts can
-> >> +be routed to up to four vCPUs via standard EIOINTC, however with V-EI=
-OINTC
-> >> +interrupts can be routed to up to 256 virtual cpus.
-> >> +
-> >> +With standard EIOINTC, interrupt routing setting includes two parts: =
-eight
-> >> +bits for CPU selection and four bits for CPU IP (Interrupt Pin) selec=
-tion.
-> >> +For CPU selection there is four bits for EIOINTC node selection, four=
- bits
-> >> +for EIOINTC CPU selection. Bitmap method is used for CPU selection an=
-d
-> >> +CPU IP selection, so interrupt can only route to CPU0 - CPU3 and IP0-=
-IP3 in
-> >> +one EIOINTC node.
-> >> +
-> >> +With V-EIOINTC it supports to route more CPUs and CPU IP (Interrupt P=
-in),
-> >> +there are two newly added registers with V-EIOINTC.
-> >> +
-> >> +EXTIOI_VIRT_FEATURES
-> >> +--------------------
-> >> +This register is read-only register, which indicates supported featur=
-es with
-> >> +V-EIOINTC. Feature EXTIOI_HAS_INT_ENCODE and EXTIOI_HAS_CPU_ENCODE is=
- added.
-> >> +
-> >> +Feature EXTIOI_HAS_INT_ENCODE is part of standard EIOINTC. If it is 1=
-, it
-> >> +indicates that CPU Interrupt Pin selection can be normal method rathe=
-r than
-> >> +bitmap method, so interrupt can be routed to IP0 - IP15.
-> >> +
-> >> +Feature EXTIOI_HAS_CPU_ENCODE is entension of V-EIOINTC. If it is 1, =
-it
-> >> +indicates that CPU selection can be normal method rather than bitmap =
-method,
-> >> +so interrupt can be routed to CPU0 - CPU255.
-> >> +
-> >> +EXTIOI_VIRT_CONFIG
-> >> +------------------
-> >> +This register is read-write register, for compatibility intterupt rou=
-ted uses
-> >> +the default method which is the same with standard EIOINTC. If the bi=
-t is set
-> >> +with 1, it indicated HW to use normal method rather than bitmap metho=
-d.
-> >> +
-> >>   ACPI-related definitions
-> >>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> >>
-> >> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-=
-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.=
-rst
-> >> index f1e9ab18206c..d696bd394c02 100644
-> >> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.r=
-st
-> >> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.r=
-st
-> >> @@ -87,6 +87,61 @@ PCH-LPC/PCH-MSI=EF=BC=8C=E7=84=B6=E5=90=8E=E8=A2=AB=
-EIOINTC=E7=BB=9F=E4=B8=80=E6=94=B6=E9=9B=86=EF=BC=8C=E5=86=8D=E7=9B=B4=E6=
-=8E=A5=E5=88=B0=E8=BE=BECPUINTC::
-> >>       | Devices |
-> >>       +---------+
-> >>
-> >> +=E8=99=9A=E6=8B=9F=E6=89=A9=E5=B1=95IRQ=E6=A8=A1=E5=9E=8B
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +=E5=9C=A8=E8=BF=99=E7=A7=8D=E6=A8=A1=E5=9E=8B=E9=87=8C=E9=9D=A2, IPI(=
-Inter-Processor Interrupt) =E5=92=8CCPU=E6=9C=AC=E5=9C=B0=E6=97=B6=E9=92=9F=
-=E4=B8=AD=E6=96=AD=E7=9B=B4=E6=8E=A5=E5=8F=91=E9=80=81=E5=88=B0CPUINTC,
-> >> +CPU=E4=B8=B2=E5=8F=A3 (UARTs) =E4=B8=AD=E6=96=AD=E5=8F=91=E9=80=81=E5=
-=88=B0PCH-PIC, =E8=80=8C=E5=85=B6=E4=BB=96=E6=89=80=E6=9C=89=E8=AE=BE=E5=A4=
-=87=E7=9A=84=E4=B8=AD=E6=96=AD=E5=88=99=E5=88=86=E5=88=AB=E5=8F=91=E9=80=81=
-=E5=88=B0=E6=89=80=E8=BF=9E=E6=8E=A5=E7=9A=84PCH_PIC/
-> >> +PCH-MSI, =E7=84=B6=E5=90=8EV-EIOINTC=E7=BB=9F=E4=B8=80=E6=94=B6=E9=9B=
-=86=EF=BC=8C=E5=86=8D=E7=9B=B4=E6=8E=A5=E5=88=B0=E8=BE=BECPUINTC::
-> >> +
-> >> +        +-----+    +-------------------+     +-------+
-> >> +        | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
-> >> +        +-----+    +-------------------+     +-------+
-> >> +                             ^
-> >> +                             |
-> >> +                       +-----------+
-> >> +                       | V-EIOINTC |
-> >> +                       +-----------+
-> >> +                        ^         ^
-> >> +                        |         |
-> >> +                 +---------+ +---------+
-> >> +                 | PCH-PIC | | PCH-MSI |
-> >> +                 +---------+ +---------+
-> >> +                   ^      ^          ^
-> >> +                   |      |          |
-> >> +            +--------+ +---------+ +---------+
-> >> +            | UARTs  | | Devices | | Devices |
-> >> +            +--------+ +---------+ +---------+
-> >> +
-> >> +V-EIOINTC =E6=98=AFEIOINTC=E7=9A=84=E6=89=A9=E5=B1=95, =E4=BB=85=E5=
-=B7=A5=E4=BD=9C=E5=9C=A8hyperisor=E6=A8=A1=E5=BC=8F=E4=B8=8B, =E4=B8=AD=E6=
-=96=AD=E7=BB=8FEIOINTC=E6=9C=80=E5=A4=9A=E5=8F=AF=E4=B8=AA=E8=B7=AF=E7=94=
-=B1=E5=88=B0=EF=BC=94=E4=B8=AA
-> >> +=E8=99=9A=E6=8B=9Fcpu. =E4=BD=86=E4=B8=AD=E6=96=AD=E7=BB=8FV-EIOINTC=
-=E6=9C=80=E5=A4=9A=E5=8F=AF=E4=B8=AA=E8=B7=AF=E7=94=B1=E5=88=B0256=E4=B8=AA=
-=E8=99=9A=E6=8B=9Fcpu.
-> >> +
-> >> +=E4=BC=A0=E7=BB=9F=E7=9A=84EIOINTC=E4=B8=AD=E6=96=AD=E6=8E=A7=E5=88=
-=B6=E5=99=A8=EF=BC=8C=E4=B8=AD=E6=96=AD=E8=B7=AF=E7=94=B1=E5=88=86=E4=B8=BA=
-=E4=B8=A4=E4=B8=AA=E9=83=A8=E5=88=86=EF=BC=9A8=E6=AF=94=E7=89=B9=E7=94=A8=
-=E4=BA=8E=E6=8E=A7=E5=88=B6=E8=B7=AF=E7=94=B1=E5=88=B0=E5=93=AA=E4=B8=AACPU=
-=EF=BC=8C
-> >> +4=E6=AF=94=E7=89=B9=E7=94=A8=E4=BA=8E=E6=8E=A7=E5=88=B6=E8=B7=AF=E7=
-=94=B1=E5=88=B0=E7=89=B9=E5=AE=9ACPU=E7=9A=84=E5=93=AA=E4=B8=AA=E4=B8=AD=E6=
-=96=AD=E7=AE=A1=E8=84=9A.=E6=8E=A7=E5=88=B6CPU=E8=B7=AF=E7=94=B1=E7=9A=848=
-=E6=AF=94=E7=89=B9=E5=89=8D4=E6=AF=94=E7=89=B9=E7=94=A8=E4=BA=8E=E6=8E=A7=
-=E5=88=B6
-> >> +=E8=B7=AF=E7=94=B1=E5=88=B0=E5=93=AA=E4=B8=AAEIOINTC=E8=8A=82=E7=82=
-=B9=EF=BC=8C=E5=90=8E4=E6=AF=94=E7=89=B9=E7=94=A8=E4=BA=8E=E6=8E=A7=E5=88=
-=B6=E6=AD=A4=E8=8A=82=E7=82=B9=E5=93=AA=E4=B8=AACPU=E3=80=82=E4=B8=AD=E6=96=
-=AD=E8=B7=AF=E7=94=B1=E5=9C=A8=E9=80=89=E6=8B=A9CPU=E8=B7=AF=E7=94=B1
-> >> +=E5=92=8CCPU=E4=B8=AD=E6=96=AD=E7=AE=A1=E8=84=9A=E8=B7=AF=E7=94=B1=E6=
-=97=B6=EF=BC=8C=E4=BD=BF=E7=94=A8bitmap=E7=BC=96=E7=A0=81=E6=96=B9=E5=BC=8F=
-=E8=80=8C=E4=B8=8D=E6=98=AF=E6=AD=A3=E5=B8=B8=E7=BC=96=E7=A0=81=E6=96=B9=E5=
-=BC=8F=EF=BC=8C=E6=89=80=E4=BB=A5=E5=AF=B9=E4=BA=8E=E4=B8=80=E4=B8=AA
-> >> +EIOINTC=E4=B8=AD=E6=96=AD=E6=8E=A7=E5=88=B6=E5=99=A8=E8=8A=82=E7=82=
-=B9=EF=BC=8C=E4=B8=AD=E6=96=AD=E5=8F=AA=E8=83=BD=E8=B7=AF=E7=94=B1=E5=88=B0=
-CPU0 - CPU3=EF=BC=8C=E4=B8=AD=E6=96=AD=E7=AE=A1=E6=95=99IP0-IP3=E3=80=82
-> >> +
-> >> +V-EIOINTC=E6=96=B0=E5=A2=9E=E4=BA=86=E4=B8=A4=E4=B8=AA=E5=AF=84=E5=AD=
-=98=E5=99=A8=EF=BC=8C=E6=94=AF=E6=8C=81=E4=B8=AD=E6=96=AD=E8=B7=AF=E7=94=B1=
-=E5=88=B0=E6=9B=B4=E5=A4=9ACPU=E4=B8=AA=E5=92=8C=E4=B8=AD=E6=96=AD=E7=AE=A1=
-=E8=84=9A=E3=80=82
-> >> +
-> >> +V-EIOINTC=E5=8A=9F=E8=83=BD=E5=AF=84=E5=AD=98=E5=99=A8
-> >> +-------------------
-> >> +=E5=8A=9F=E8=83=BD=E5=AF=84=E5=AD=98=E5=99=A8=E6=98=AF=E5=8F=AA=E8=AF=
-=BB=E5=AF=84=E5=AD=98=E5=99=A8=EF=BC=8C=E7=94=A8=E4=BA=8E=E6=98=BE=E7=A4=BA=
-V-EIOINTC=E6=94=AF=E6=8C=81=E7=9A=84=E7=89=B9=E6=80=A7=EF=BC=8C=E7=9B=AE=E5=
-=89=8D=E4=B8=A4=E4=B8=AA=E6=94=AF=E6=8C=81=E4=B8=A4=E4=B8=AA=E7=89=B9=E6=80=
-=A7
-> >> +EXTIOI_HAS_INT_ENCODE =E5=92=8C EXTIOI_HAS_CPU_ENCODE=E3=80=82
-> >> +
-> >> +=E7=89=B9=E6=80=A7EXTIOI_HAS_INT_ENCODE=E6=98=AF=E4=BC=A0=E7=BB=9FEIO=
-INTC=E4=B8=AD=E6=96=AD=E6=8E=A7=E5=88=B6=E5=99=A8=E7=9A=84=E4=B8=80=E4=B8=
-=AA=E7=89=B9=E6=80=A7=EF=BC=8C=E5=A6=82=E6=9E=9C=E6=AD=A4=E6=AF=94=E7=89=B9=
-=E4=B8=BA1=EF=BC=8C
-> >> +=E6=98=BE=E7=A4=BACPU=E4=B8=AD=E6=96=AD=E7=AE=A1=E8=84=9A=E8=B7=AF=E7=
-=94=B1=E6=96=B9=E5=BC=8F=E6=94=AF=E6=8C=81=E6=AD=A3=E5=B8=B8=E7=BC=96=E7=A0=
-=81=EF=BC=8C=E8=80=8C=E4=B8=8D=E6=98=AFbitmap=E7=BC=96=E7=A0=81=EF=BC=8C=E6=
-=89=80=E4=BB=A5=E4=B8=AD=E6=96=AD=E5=8F=AF=E4=BB=A5=E8=B7=AF=E7=94=B1=E5=88=
-=B0
-> >> +=E7=AE=A1=E8=84=9AIP0 - IP15=E3=80=82
-> >> +
-> >> +=E7=89=B9=E6=80=A7EXTIOI_HAS_CPU_ENCODE=E6=98=AFV-EIOINTC=E6=96=B0=E5=
-=A2=9E=E7=89=B9=E6=80=A7=EF=BC=8C=E5=A6=82=E6=9E=9C=E6=AD=A4=E6=AF=94=E7=89=
-=B9=E4=B8=BA1=EF=BC=8C=E8=A1=A8=E7=A4=BACPU=E8=B7=AF=E7=94=B1
-> >> +=E6=96=B9=E5=BC=8F=E6=94=AF=E6=8C=81=E6=AD=A3=E5=B8=B8=E7=BC=96=E7=A0=
-=81=EF=BC=8C=E8=80=8C=E4=B8=8D=E6=98=AFbitmap=E7=BC=96=E7=A0=81=EF=BC=8C=E6=
-=89=80=E4=BB=A5=E4=B8=AD=E6=96=AD=E5=8F=AF=E4=BB=A5=E8=B7=AF=E7=94=B1=E5=88=
-=B0CPU0 - CPU255=E3=80=82
-> >> +
-> >> +V-EIOINTC=E9=85=8D=E7=BD=AE=E5=AF=84=E5=AD=98=E5=99=A8
-> >> +-------------------
-> >> +=E9=85=8D=E7=BD=AE=E5=AF=84=E5=AD=98=E5=99=A8=E6=98=AF=E5=8F=AF=E8=AF=
-=BB=E5=86=99=E5=AF=84=E5=AD=98=E5=99=A8=EF=BC=8C=E4=B8=BA=E4=BA=86=E5=85=BC=
-=E5=AE=B9=E6=80=A7=E8=80=83=E8=99=91=EF=BC=8C=E5=A6=82=E6=9E=9C=E4=B8=8D=E5=
-=86=99=E6=AD=A4=E5=AF=84=E5=AD=98=E5=99=A8=EF=BC=8C=E4=B8=AD=E6=96=AD=E8=B7=
-=AF=E7=94=B1=E9=87=87=E7=94=A8
-> >> +=E5=92=8C=E4=BC=A0=E7=BB=9FEIOINTC=E7=9B=B8=E5=90=8C=E7=9A=84=E8=B7=
-=AF=E7=94=B1=E8=AE=BE=E7=BD=AE=E3=80=82=E5=A6=82=E6=9E=9C=E5=AF=B9=E5=BA=94=
-=E6=AF=94=E7=89=B9=E8=AE=BE=E7=BD=AE=E4=B8=BA1=EF=BC=8C=E8=A1=A8=E7=A4=BA=
-=E9=87=87=E7=94=A8=E6=AD=A3=E5=B8=B8=E8=B7=AF=E7=94=B1=E6=96=B9=E5=BC=8F=E8=
-=80=8C
-> >> +=E4=B8=8D=E6=98=AFbitmap=E7=BC=96=E7=A0=81=E7=9A=84=E8=B7=AF=E7=94=B1=
-=E6=96=B9=E5=BC=8F=E3=80=82
-> >> +
-> >>   ACPI=E7=9B=B8=E5=85=B3=E7=9A=84=E5=AE=9A=E4=B9=89
-> >>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include=
-/asm/irq.h
-> >> index 480418bc5071..ce85d4c7d225 100644
-> >> --- a/arch/loongarch/include/asm/irq.h
-> >> +++ b/arch/loongarch/include/asm/irq.h
-> >> @@ -54,6 +54,7 @@ extern struct acpi_vector_group pch_group[MAX_IO_PIC=
-S];
-> >>   extern struct acpi_vector_group msi_group[MAX_IO_PICS];
-> >>
-> >>   #define CORES_PER_EIO_NODE     4
-> >> +#define CORES_PER_VEIO_NODE    256
-> >>
-> >>   #define LOONGSON_CPU_UART0_VEC         10 /* CPU UART0 */
-> >>   #define LOONGSON_CPU_THSENS_VEC                14 /* CPU Thsens */
-> >> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/=
-irq-loongson-eiointc.c
-> >> index b1f2080be2be..bc54f81ec129 100644
-> >> --- a/drivers/irqchip/irq-loongson-eiointc.c
-> >> +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> >> @@ -14,6 +14,7 @@
-> >>   #include <linux/irqdomain.h>
-> >>   #include <linux/irqchip/chained_irq.h>
-> >>   #include <linux/kernel.h>
-> >> +#include <linux/kvm_para.h>
-> >>   #include <linux/syscore_ops.h>
-> >>   #include <asm/numa.h>
-> >>
-> >> @@ -24,15 +25,37 @@
-> >>   #define EIOINTC_REG_ISR                0x1800
-> >>   #define EIOINTC_REG_ROUTE      0x1c00
-> >>
-> >> +#define EXTIOI_VIRT_FEATURES           0x40000000
-> >> +#define  EXTIOI_HAS_VIRT_EXTENSION     BIT(0)
-> >> +#define  EXTIOI_HAS_ENABLE_OPTION      BIT(1)
-> >> +#define  EXTIOI_HAS_INT_ENCODE         BIT(2)
-> >> +#define  EXTIOI_HAS_CPU_ENCODE         BIT(3)
-> >> +#define EXTIOI_VIRT_CONFIG             0x40000004
-> >> +#define  EXTIOI_ENABLE                 BIT(1)
-> >> +#define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
-> >> +#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
-> > I think qemu hasn't release with v-eiointc? So we still have a chance
-> > to modify qemu and this driver to simplify registers:
-> It is already merged in qemu mainline, code is frozen and qemu 9.1 will
-> release soon. Once it is merged in mainline and even if code is not
-> frozen, I will modify it only if it is bug.
-If Thomas think the register definition is OK, then I have no objections.
+Hook up the generic vDSO implementation to the LoongArch vDSO data page
+by providing the required __arch_chacha20_blocks_nostack,
+__arch_get_k_vdso_rng_data, and getrandom_syscall implementations.
 
-Huacai
+Also enable the vDSO getrandom tests for LoongArch: create the symlink
+to the arch/loongarch/vdso directory, and correctly set the ARCH
+variable for LoongArch.
 
-> >
-> > +#define EXTIOI_VIRT_FEATS             0x40000000
-> > +#define  EXTIOI_HAS_INT_ENCODE         BIT(0)
-> > +#define  EXTIOI_HAS_CPU_ENCODE         BIT(1)
-> > +#define EXTIOI_VIRT_CONFIG             0x40000004
-> > +#define  EXTIOI_ENABLE_INT_ENCODE      BIT(0)
-> > +#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(1)
-> >
-> >> +
-> >>   #define VEC_REG_COUNT          4
-> >>   #define VEC_COUNT_PER_REG      64
-> >>   #define VEC_COUNT              (VEC_REG_COUNT * VEC_COUNT_PER_REG)
-> >>   #define VEC_REG_IDX(irq_id)    ((irq_id) / VEC_COUNT_PER_REG)
-> >>   #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
-> >>   #define EIOINTC_ALL_ENABLE     0xffffffff
-> >> +#define EIOINTC_ALL_ENABLE_VEC_MASK(vector)    (EIOINTC_ALL_ENABLE & =
-~BIT(vector & 0x1F))
-> >> +#define EIOINTC_REG_ENABLE_VEC(vector)         (EIOINTC_REG_ENABLE + =
-((vector >> 5) << 2))
-> >> +#define EIOINTC_USE_CPU_ENCODE                 BIT(0)
-> >>
-> >>   #define MAX_EIO_NODES          (NR_CPUS / CORES_PER_EIO_NODE)
-> >>
-> >> +/*
-> >> + * Routing registers are 32bit, and there is 8-bit route setting for =
-every
-> >> + * interrupt vector. So one Route register contains four vectors rout=
-ing
-> >> + * information.
-> >> + */
-> >> +#define EIOINTC_REG_ROUTE_VEC(vector)          (EIOINTC_REG_ROUTE + (=
-vector & ~0x03))
-> >> +#define EIOINTC_REG_ROUTE_VEC_SHIFT(vector)    ((vector & 0x03) << 3)
-> >> +#define EIOINTC_REG_ROUTE_VEC_MASK(vector)     (0xff << EIOINTC_REG_R=
-OUTE_VEC_SHIFT(vector))
-> >> +
-> >>   static int nr_pics;
-> >>
-> >>   struct eiointc_priv {
-> >> @@ -42,6 +65,7 @@ struct eiointc_priv {
-> >>          cpumask_t               cpuspan_map;
-> >>          struct fwnode_handle    *domain_handle;
-> >>          struct irq_domain       *eiointc_domain;
-> >> +       int                     flags;
-> >>   };
-> >>
-> >>   static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-> >> @@ -57,7 +81,13 @@ static void eiointc_enable(void)
-> >>
-> >>   static int cpu_to_eio_node(int cpu)
-> >>   {
-> >> -       return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-> >> +       int cores;
-> >> +
-> >> +       if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI))
-> >> +               cores =3D CORES_PER_VEIO_NODE;
-> >> +       else
-> >> +               cores =3D CORES_PER_EIO_NODE;
-> >> +       return cpu_logical_map(cpu) / cores;
-> >>   }
-> >>
-> >>   #ifdef CONFIG_SMP
-> >> @@ -89,6 +119,16 @@ static void eiointc_set_irq_route(int pos, unsigne=
-d int cpu, unsigned int mnode,
-> >>
-> >>   static DEFINE_RAW_SPINLOCK(affinity_lock);
-> >>
-> >> +static void virt_extioi_set_irq_route(unsigned int vector, unsigned i=
-nt cpu)
-> > Use veiointc_set_irq_route() can keep consistency with real machines.
-> yes, veiointc_set_irq_route will be added here.
->
-> >
-> >> +{
-> >> +       unsigned long reg =3D EIOINTC_REG_ROUTE_VEC(vector);
-> >> +       u32 data =3D iocsr_read32(reg);
-> >> +
-> >> +       data &=3D ~EIOINTC_REG_ROUTE_VEC_MASK(vector);
-> >> +       data |=3D cpu_logical_map(cpu) << EIOINTC_REG_ROUTE_VEC_SHIFT(=
-vector);
-> >> +       iocsr_write32(data, reg);
-> >> +}
-> >> +
-> >>   static int eiointc_set_irq_affinity(struct irq_data *d, const struct=
- cpumask *affinity, bool force)
-> >>   {
-> >>          unsigned int cpu;
-> >> @@ -105,18 +145,24 @@ static int eiointc_set_irq_affinity(struct irq_d=
-ata *d, const struct cpumask *af
-> >>          }
-> >>
-> >>          vector =3D d->hwirq;
-> >> -       regaddr =3D EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
-> >> -
-> >> -       /* Mask target vector */
-> >> -       csr_any_send(regaddr, EIOINTC_ALL_ENABLE & (~BIT(vector & 0x1F=
-)),
-> >> -                       0x0, priv->node * CORES_PER_EIO_NODE);
-> >> -
-> >> -       /* Set route for target vector */
-> >> -       eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map=
-);
-> >> -
-> >> -       /* Unmask target vector */
-> >> -       csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
-> >> -                       0x0, priv->node * CORES_PER_EIO_NODE);
-> >> +       regaddr =3D EIOINTC_REG_ENABLE_VEC(vector);
-> >> +
-> >> +       if (priv->flags & EIOINTC_USE_CPU_ENCODE) {
-> >> +               iocsr_write32(EIOINTC_ALL_ENABLE_VEC_MASK(vector), reg=
-addr);
-> >> +               virt_extioi_set_irq_route(vector, cpu);
-> >> +               iocsr_write32(EIOINTC_ALL_ENABLE, regaddr);
-> > We can add the same comments as real machines here.
-> Similar comments will be added, otherwise there will be duplicated commen=
-ts.
->
-> Hope to this the last review comments about grammar and name -:), else I
-> will think it is on deliberate. we know every architecture has multiple
-> maintainers to prevent arbitrary except LoongArch.
->
-> Regards
-> Bibo Mao
->
-> >
-> > Huacai
-> >
-> >> +       } else {
-> >> +               /* Mask target vector */
-> >> +               csr_any_send(regaddr, EIOINTC_ALL_ENABLE_VEC_MASK(vect=
-or),
-> >> +                            0x0, priv->node * CORES_PER_EIO_NODE);
-> >> +
-> >> +               /* Set route for target vector */
-> >> +               eiointc_set_irq_route(vector, cpu, priv->node, &priv->=
-node_map);
-> >> +
-> >> +               /* Unmask target vector */
-> >> +               csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
-> >> +                            0x0, priv->node * CORES_PER_EIO_NODE);
-> >> +       }
-> >>
-> >>          irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> >>
-> >> @@ -140,17 +186,23 @@ static int eiointc_index(int node)
-> >>
-> >>   static int eiointc_router_init(unsigned int cpu)
-> >>   {
-> >> -       int i, bit;
-> >> -       uint32_t data;
-> >> -       uint32_t node =3D cpu_to_eio_node(cpu);
-> >> -       int index =3D eiointc_index(node);
-> >> +       int i, bit, cores, index, node;
-> >> +       unsigned int data;
-> >> +
-> >> +       node =3D cpu_to_eio_node(cpu);
-> >> +       index =3D eiointc_index(node);
-> >>
-> >>          if (index < 0) {
-> >>                  pr_err("Error: invalid nodemap!\n");
-> >> -               return -1;
-> >> +               return -EINVAL;
-> >>          }
-> >>
-> >> -       if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) =3D=3D 0) {
-> >> +       if (eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE)
-> >> +               cores =3D CORES_PER_VEIO_NODE;
-> >> +       else
-> >> +               cores =3D CORES_PER_EIO_NODE;
-> >> +
-> >> +       if ((cpu_logical_map(cpu) % cores) =3D=3D 0) {
-> >>                  eiointc_enable();
-> >>
-> >>                  for (i =3D 0; i < eiointc_priv[0]->vec_count / 32; i+=
-+) {
-> >> @@ -166,7 +218,9 @@ static int eiointc_router_init(unsigned int cpu)
-> >>
-> >>                  for (i =3D 0; i < eiointc_priv[0]->vec_count / 4; i++=
-) {
-> >>                          /* Route to Node-0 Core-0 */
-> >> -                       if (index =3D=3D 0)
-> >> +                       if (eiointc_priv[index]->flags & EIOINTC_USE_C=
-PU_ENCODE)
-> >> +                               bit =3D cpu_logical_map(0);
-> >> +                       else if (index =3D=3D 0)
-> >>                                  bit =3D BIT(cpu_logical_map(0));
-> >>                          else
-> >>                                  bit =3D (eiointc_priv[index]->node <<=
- 4) | 1;
-> >> @@ -370,7 +424,7 @@ static int __init acpi_cascade_irqdomain_init(void=
-)
-> >>   static int __init eiointc_init(struct eiointc_priv *priv, int parent=
-_irq,
-> >>                                 u64 node_map)
-> >>   {
-> >> -       int i;
-> >> +       int i, val;
-> >>
-> >>          node_map =3D node_map ? node_map : -1ULL;
-> >>          for_each_possible_cpu(i) {
-> >> @@ -390,6 +444,16 @@ static int __init eiointc_init(struct eiointc_pri=
-v *priv, int parent_irq,
-> >>                  return -ENOMEM;
-> >>          }
-> >>
-> >> +       if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI)) {
-> >> +               val =3D iocsr_read32(EXTIOI_VIRT_FEATURES);
-> >> +               if (val & EXTIOI_HAS_CPU_ENCODE) {
-> >> +                       val =3D iocsr_read32(EXTIOI_VIRT_CONFIG);
-> >> +                       val |=3D EXTIOI_ENABLE_CPU_ENCODE;
-> >> +                       iocsr_write32(val, EXTIOI_VIRT_CONFIG);
-> >> +                       priv->flags =3D EIOINTC_USE_CPU_ENCODE;
-> >> +               }
-> >> +       }
-> >> +
-> >>          eiointc_priv[nr_pics++] =3D priv;
-> >>          eiointc_router_init(0);
-> >>          irq_set_chained_handler_and_data(parent_irq, eiointc_irq_disp=
-atch, priv);
-> >> --
-> >> 2.39.3
-> >>
->
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+
+Cc: linux-crypto@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Cc: Jinyang He <hejinyang@loongson.cn>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+Passed vdso_test_getrandom and vdso_test_chacha tests.  Benchmark
+results:
+
+vdso_test_getrandom bench-single:
+
+       vdso: 25000000 times in 0.499490289 seconds
+       libc: 25000000 times in 6.963829873 seconds
+    syscall: 25000000 times in 6.983413486 seconds
+
+vdso_test_getrandom bench-multi:
+       vdso: 25000000 x 256 times in 28.703710823 seconds
+       libc: 25000000 x 256 times in 356.835801784 seconds
+       syscall: 25000000 x 256 times in 338.525837197 seconds
+
+[v4]->v5:
+- Rebase onto crng/random.git:
+  - Remove two selftest patches.
+  - Remove __arch_chacha20_blocks_nostack forward declaration.
+- Squash the remaining selftest patch into the vDSO getrandom
+  implementation patch.
+- Remove ifdef CONFIG_VDSO_GETRANDOM and $(CONFIG_VDSO_GETRANDOM) as
+  they are always true in arch/loongarch.
+- Remove asm-offsets.c change which has been already unneeded in v4.
+- Add comment about rematerializing the constant in the assembly code.
+- Add prototype for __vdso_getrandom to silence a -Wmissing-prototype
+  warning.
+
+[v3]->v4:
+- Remove LSX implementation, which isn't much faster than the generic
+  implementaion.
+- Rebase onto crng/random.git:
+  - Define __arch_get_k_vdso_rng_data instead of using inline asm to
+    provide the _vdso_rng_data symbol in a magic way.
+  - Remove memset.S.
+  - Use c-getrandom-y to easily include the generic C code.
+  - The benchmark results seem better than v3, maybe related to the TLS
+    refactoring in random.git.
+- Add patches for selftests.
+
+[v2]->v3:
+- Add a generic LoongArch implementation for which LSX isn't needed.
+
+v1->v2:
+- Properly send the series to the list.
+
+[v4]:https://lore.kernel.org/all/20240827132018.88854-1-xry111@xry111.site/
+[v3]:https://lore.kernel.org/all/20240816110717.10249-1-xry111@xry111.site/
+[v2]:https://lore.kernel.org/all/20240815133357.35829-1-xry111@xry111.site/
+
+ arch/loongarch/Kconfig                      |   1 +
+ arch/loongarch/include/asm/vdso/getrandom.h |  44 ++++
+ arch/loongarch/include/asm/vdso/vdso.h      |   6 +
+ arch/loongarch/include/asm/vdso/vsyscall.h  |   8 +
+ arch/loongarch/kernel/asm-offsets.c         |   1 +
+ arch/loongarch/kernel/vdso.c                |   2 +
+ arch/loongarch/vdso/Makefile                |   7 +-
+ arch/loongarch/vdso/vdso.lds.S              |   1 +
+ arch/loongarch/vdso/vgetrandom-chacha.S     | 242 ++++++++++++++++++++
+ arch/loongarch/vdso/vgetrandom.c            |  15 ++
+ tools/arch/loongarch/vdso                   |   1 +
+ tools/testing/selftests/vDSO/Makefile       |   4 +-
+ 12 files changed, 329 insertions(+), 3 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/vdso/getrandom.h
+ create mode 100644 arch/loongarch/vdso/vgetrandom-chacha.S
+ create mode 100644 arch/loongarch/vdso/vgetrandom.c
+ create mode 120000 tools/arch/loongarch/vdso
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 70f169210b52..14821c2aba5b 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -190,6 +190,7 @@ config LOONGARCH
+ 	select TRACE_IRQFLAGS_SUPPORT
+ 	select USE_PERCPU_NUMA_NODE_ID
+ 	select USER_STACKTRACE_SUPPORT
++	select VDSO_GETRANDOM
+ 	select ZONE_DMA32
+ 
+ config 32BIT
+diff --git a/arch/loongarch/include/asm/vdso/getrandom.h b/arch/loongarch/include/asm/vdso/getrandom.h
+new file mode 100644
+index 000000000000..04c991f6921d
+--- /dev/null
++++ b/arch/loongarch/include/asm/vdso/getrandom.h
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ */
++#ifndef __ASM_VDSO_GETRANDOM_H
++#define __ASM_VDSO_GETRANDOM_H
++
++#ifndef __ASSEMBLY__
++
++#include <asm/unistd.h>
++#include <asm/vdso/vdso.h>
++
++static __always_inline ssize_t getrandom_syscall(void *_buffer,
++						 size_t _len,
++						 unsigned int _flags)
++{
++	register long ret asm("a0");
++	register long nr asm("a7") = __NR_getrandom;
++	register void *buffer asm("a0") = _buffer;
++	register size_t len asm("a1") = _len;
++	register unsigned int flags asm("a2") = _flags;
++
++	asm volatile(
++	"      syscall 0\n"
++	: "+r" (ret)
++	: "r" (nr), "r" (buffer), "r" (len), "r" (flags)
++	: "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8",
++	  "memory");
++
++	return ret;
++}
++
++static __always_inline const struct vdso_rng_data *__arch_get_vdso_rng_data(
++	void)
++{
++	return (const struct vdso_rng_data *)(
++		get_vdso_data() +
++		VVAR_LOONGARCH_PAGES_START * PAGE_SIZE +
++		offsetof(struct loongarch_vdso_data, rng_data));
++}
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_GETRANDOM_H */
+diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
+index 5a12309d9fb5..e31ac7474513 100644
+--- a/arch/loongarch/include/asm/vdso/vdso.h
++++ b/arch/loongarch/include/asm/vdso/vdso.h
+@@ -4,6 +4,9 @@
+  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+  */
+ 
++#ifndef _ASM_VDSO_VDSO_H
++#define _ASM_VDSO_VDSO_H
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <asm/asm.h>
+@@ -16,6 +19,7 @@ struct vdso_pcpu_data {
+ 
+ struct loongarch_vdso_data {
+ 	struct vdso_pcpu_data pdata[NR_CPUS];
++	struct vdso_rng_data rng_data;
+ };
+ 
+ /*
+@@ -63,3 +67,5 @@ static inline unsigned long get_vdso_data(void)
+ }
+ 
+ #endif /* __ASSEMBLY__ */
++
++#endif
+diff --git a/arch/loongarch/include/asm/vdso/vsyscall.h b/arch/loongarch/include/asm/vdso/vsyscall.h
+index 5de615383a22..b1273ce6f140 100644
+--- a/arch/loongarch/include/asm/vdso/vsyscall.h
++++ b/arch/loongarch/include/asm/vdso/vsyscall.h
+@@ -8,6 +8,7 @@
+ #include <vdso/datapage.h>
+ 
+ extern struct vdso_data *vdso_data;
++extern struct vdso_rng_data *vdso_rng_data;
+ 
+ /*
+  * Update the vDSO data page to keep in sync with kernel timekeeping.
+@@ -19,6 +20,13 @@ struct vdso_data *__loongarch_get_k_vdso_data(void)
+ }
+ #define __arch_get_k_vdso_data __loongarch_get_k_vdso_data
+ 
++static __always_inline
++struct vdso_rng_data *__loongarch_get_k_vdso_rng_data(void)
++{
++	return vdso_rng_data;
++}
++#define __arch_get_k_vdso_rng_data __loongarch_get_k_vdso_rng_data
++
+ /* The asm-generic header needs to be included after the definitions above */
+ #include <asm-generic/vdso/vsyscall.h>
+ 
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index bee9f7a3108f..ab258878d551 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -14,6 +14,7 @@
+ #include <asm/ptrace.h>
+ #include <asm/processor.h>
+ #include <asm/ftrace.h>
++#include <asm/vdso/vdso.h>
+ 
+ static void __used output_ptreg_defines(void)
+ {
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 90dfccb41c14..2af05ba5f121 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -22,6 +22,7 @@
+ #include <vdso/helpers.h>
+ #include <vdso/vsyscall.h>
+ #include <vdso/datapage.h>
++#include <generated/asm-offsets.h>
+ #include <generated/vdso-offsets.h>
+ 
+ extern char vdso_start[], vdso_end[];
+@@ -37,6 +38,7 @@ static union {
+ static struct page *vdso_pages[] = { NULL };
+ struct vdso_data *vdso_data = generic_vdso_data.data;
+ struct vdso_pcpu_data *vdso_pdata = loongarch_vdso_data.vdata.pdata;
++struct vdso_rng_data *vdso_rng_data = &loongarch_vdso_data.vdata.rng_data;
+ 
+ static int vdso_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
+ {
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index d724d46b07c8..19249d4b3542 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -4,7 +4,8 @@
+ # Include the generic Makefile to check the built vdso.
+ include $(srctree)/lib/vdso/Makefile
+ 
+-obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o
++obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o vgetrandom.o \
++              vgetrandom-chacha.o
+ 
+ # Common compiler flags between ABIs.
+ ccflags-vdso := \
+@@ -29,6 +30,10 @@ ifneq ($(c-gettimeofday-y),)
+   CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
+ endif
+ 
++ifneq ($(c-getrandom-y),)
++  CFLAGS_vgetrandom.o += -include $(c-getrandom-y)
++endif
++
+ # VDSO linker flags.
+ ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+ 	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
+diff --git a/arch/loongarch/vdso/vdso.lds.S b/arch/loongarch/vdso/vdso.lds.S
+index 56ad855896de..2c965a597d9e 100644
+--- a/arch/loongarch/vdso/vdso.lds.S
++++ b/arch/loongarch/vdso/vdso.lds.S
+@@ -63,6 +63,7 @@ VERSION
+ 		__vdso_clock_gettime;
+ 		__vdso_gettimeofday;
+ 		__vdso_rt_sigreturn;
++		__vdso_getrandom;
+ 	local: *;
+ 	};
+ }
+diff --git a/arch/loongarch/vdso/vgetrandom-chacha.S b/arch/loongarch/vdso/vgetrandom-chacha.S
+new file mode 100644
+index 000000000000..7e86a50f6e85
+--- /dev/null
++++ b/arch/loongarch/vdso/vgetrandom-chacha.S
+@@ -0,0 +1,242 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ */
++
++#include <asm/asm.h>
++#include <asm/regdef.h>
++#include <linux/linkage.h>
++
++.text
++
++/* Salsa20 quarter-round */
++.macro	QR	a b c d
++	add.w		\a, \a, \b
++	xor		\d, \d, \a
++	rotri.w		\d, \d, 16
++
++	add.w		\c, \c, \d
++	xor		\b, \b, \c
++	rotri.w		\b, \b, 20
++
++	add.w		\a, \a, \b
++	xor		\d, \d, \a
++	rotri.w		\d, \d, 24
++
++	add.w		\c, \c, \d
++	xor		\b, \b, \c
++	rotri.w		\b, \b, 25
++.endm
++
++/*
++ * Very basic LoongArch implementation of ChaCha20. Produces a given positive
++ * number of blocks of output with a nonce of 0, taking an input key and
++ * 8-byte counter. Importantly does not spill to the stack. Its arguments
++ * are:
++ *
++ *	a0: output bytes
++ *	a1: 32-byte key input
++ *	a2: 8-byte counter input/output
++ *	a3: number of 64-byte blocks to write to output
++ */
++SYM_FUNC_START(__arch_chacha20_blocks_nostack)
++
++/* We don't need a frame pointer */
++#define s9		fp
++
++#define output		a0
++#define key		a1
++#define counter		a2
++#define nblocks		a3
++#define i		a4
++#define state0		s0
++#define state1		s1
++#define state2		s2
++#define state3		s3
++#define state4		s4
++#define state5		s5
++#define state6		s6
++#define state7		s7
++#define state8		s8
++#define state9		s9
++#define state10		a5
++#define state11		a6
++#define state12		a7
++#define state13		t0
++#define state14		t1
++#define state15		t2
++#define cnt_lo		t3
++#define cnt_hi		t4
++#define copy0		t5
++#define copy1		t6
++#define copy2		t7
++
++/* Reuse i as copy3 */
++#define copy3		i
++
++	/*
++	 * The ABI requires s0-s9 saved, and sp aligned to 16-byte.
++	 * This does not violate the stack-less requirement: no sensitive data
++	 * is spilled onto the stack.
++	 */
++	PTR_ADDI	sp, sp, (-SZREG * 10) & STACK_ALIGN
++	REG_S		s0, sp, 0
++	REG_S		s1, sp, SZREG
++	REG_S		s2, sp, SZREG * 2
++	REG_S		s3, sp, SZREG * 3
++	REG_S		s4, sp, SZREG * 4
++	REG_S		s5, sp, SZREG * 5
++	REG_S		s6, sp, SZREG * 6
++	REG_S		s7, sp, SZREG * 7
++	REG_S		s8, sp, SZREG * 8
++	REG_S		s9, sp, SZREG * 9
++
++	li.w		copy0, 0x61707865
++	li.w		copy1, 0x3320646e
++	li.w		copy2, 0x79622d32
++
++	ld.w		cnt_lo, counter, 0
++	ld.w		cnt_hi, counter, 4
++
++.Lblock:
++	/* state[0,1,2,3] = "expand 32-byte k" */
++	move		state0, copy0
++	move		state1, copy1
++	move		state2, copy2
++	li.w		state3, 0x6b206574
++
++	/* state[4,5,..,11] = key */
++	ld.w		state4, key, 0
++	ld.w		state5, key, 4
++	ld.w		state6, key, 8
++	ld.w		state7, key, 12
++	ld.w		state8, key, 16
++	ld.w		state9, key, 20
++	ld.w		state10, key, 24
++	ld.w		state11, key, 28
++
++	/* state[12,13] = counter */
++	move		state12, cnt_lo
++	move		state13, cnt_hi
++
++	/* state[14,15] = 0 */
++	move		state14, zero
++	move		state15, zero
++
++	li.w		i, 10
++.Lpermute:
++	/* odd round */
++	QR		state0, state4, state8, state12
++	QR		state1, state5, state9, state13
++	QR		state2, state6, state10, state14
++	QR		state3, state7, state11, state15
++
++	/* even round */
++	QR		state0, state5, state10, state15
++	QR		state1, state6, state11, state12
++	QR		state2, state7, state8, state13
++	QR		state3, state4, state9, state14
++
++	addi.w		i, i, -1
++	bnez		i, .Lpermute
++
++	/*
++	 * copy[3] = "expa", materialize it here because copy[3] shares the
++	 * same register with i which just became dead.
++	 */
++	li.w		copy3, 0x6b206574
++
++	/* output[0,1,2,3] = copy[0,1,2,3] + state[0,1,2,3] */
++	add.w		state0, state0, copy0
++	add.w		state1, state1, copy1
++	add.w		state2, state2, copy2
++	add.w		state3, state3, copy3
++	st.w		state0, output, 0
++	st.w		state1, output, 4
++	st.w		state2, output, 8
++	st.w		state3, output, 12
++
++	/* from now on state[0,1,2,3] are scratch registers  */
++
++	/* state[0,1,2,3] = lo32(key) */
++	ld.w		state0, key, 0
++	ld.w		state1, key, 4
++	ld.w		state2, key, 8
++	ld.w		state3, key, 12
++
++	/* output[4,5,6,7] = state[0,1,2,3] + state[4,5,6,7] */
++	add.w		state4, state4, state0
++	add.w		state5, state5, state1
++	add.w		state6, state6, state2
++	add.w		state7, state7, state3
++	st.w		state4, output, 16
++	st.w		state5, output, 20
++	st.w		state6, output, 24
++	st.w		state7, output, 28
++
++	/* state[0,1,2,3] = hi32(key) */
++	ld.w		state0, key, 16
++	ld.w		state1, key, 20
++	ld.w		state2, key, 24
++	ld.w		state3, key, 28
++
++	/* output[8,9,10,11] = state[0,1,2,3] + state[8,9,10,11] */
++	add.w		state8, state8, state0
++	add.w		state9, state9, state1
++	add.w		state10, state10, state2
++	add.w		state11, state11, state3
++	st.w		state8, output, 32
++	st.w		state9, output, 36
++	st.w		state10, output, 40
++	st.w		state11, output, 44
++
++	/* output[12,13,14,15] = state[12,13,14,15] + [cnt_lo, cnt_hi, 0, 0] */
++	add.w		state12, state12, cnt_lo
++	add.w		state13, state13, cnt_hi
++	st.w		state12, output, 48
++	st.w		state13, output, 52
++	st.w		state14, output, 56
++	st.w		state15, output, 60
++
++	/* ++counter  */
++	addi.w		cnt_lo, cnt_lo, 1
++	sltui		state0, cnt_lo, 1
++	add.w		cnt_hi, cnt_hi, state0
++
++	/* output += 64 */
++	PTR_ADDI	output, output, 64
++	/* --nblocks */
++	PTR_ADDI	nblocks, nblocks, -1
++	bnez		nblocks, .Lblock
++
++	/* counter = [cnt_lo, cnt_hi] */
++	st.w		cnt_lo, counter, 0
++	st.w		cnt_hi, counter, 4
++
++	/*
++	 * Zero out the potentially sensitive regs, in case nothing uses these
++	 * again. As at now copy[0,1,2,3] just contains "expand 32-byte k" and
++	 * state[0,...,9] are s0-s9 those we'll restore in the epilogue, so we
++	 * only need to zero state[11,...,15].
++	 */
++	move		state10, zero
++	move		state11, zero
++	move		state12, zero
++	move		state13, zero
++	move		state14, zero
++	move		state15, zero
++
++	REG_L		s0, sp, 0
++	REG_L		s1, sp, SZREG
++	REG_L		s2, sp, SZREG * 2
++	REG_L		s3, sp, SZREG * 3
++	REG_L		s4, sp, SZREG * 4
++	REG_L		s5, sp, SZREG * 5
++	REG_L		s6, sp, SZREG * 6
++	REG_L		s7, sp, SZREG * 7
++	REG_L		s8, sp, SZREG * 8
++	REG_L		s9, sp, SZREG * 9
++	PTR_ADDI	sp, sp, -((-SZREG * 10) & STACK_ALIGN)
++
++	jr		ra
++SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+diff --git a/arch/loongarch/vdso/vgetrandom.c b/arch/loongarch/vdso/vgetrandom.c
+new file mode 100644
+index 000000000000..68e44b3f1d49
+--- /dev/null
++++ b/arch/loongarch/vdso/vgetrandom.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ */
++#include <linux/types.h>
++
++ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags,
++			 void *opaque_state, size_t opaque_len);
++
++ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags,
++			 void *opaque_state, size_t opaque_len)
++{
++	return __cvdso_getrandom(buffer, len, flags, opaque_state,
++				 opaque_len);
++}
+diff --git a/tools/arch/loongarch/vdso b/tools/arch/loongarch/vdso
+new file mode 120000
+index 000000000000..ebda43a82db7
+--- /dev/null
++++ b/tools/arch/loongarch/vdso
+@@ -0,0 +1 @@
++../../../arch/loongarch/vdso
+\ No newline at end of file
+diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+index e21e78aae24d..606ce5f5c2a4 100644
+--- a/tools/testing/selftests/vDSO/Makefile
++++ b/tools/testing/selftests/vDSO/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ uname_M := $(shell uname -m 2>/dev/null || echo not)
+-ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
++ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/ -e /loongarch/s/[0-9]//g)
+ 
+ TEST_GEN_PROGS := vdso_test_gettimeofday
+ TEST_GEN_PROGS += vdso_test_getcpu
+@@ -10,7 +10,7 @@ ifeq ($(ARCH),$(filter $(ARCH),x86 x86_64))
+ TEST_GEN_PROGS += vdso_standalone_test_x86
+ endif
+ TEST_GEN_PROGS += vdso_test_correctness
+-ifeq ($(uname_M),x86_64)
++ifeq ($(uname_M),$(filter $(uname_M),x86_64 loongarch64))
+ TEST_GEN_PROGS += vdso_test_getrandom
+ TEST_GEN_PROGS += vdso_test_chacha
+ endif
+
+base-commit: ec309dd126280ca4ef4087e02246a6f61f36c8d1
+-- 
+2.46.0
+
