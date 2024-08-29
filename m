@@ -1,71 +1,118 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7658178376
-	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 07:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DB218C027
+	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 08:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724916806; cv=none; b=kLbmKFS8vXR9DNkj+554/vYm0F5nnB+JkPmclqGwPljmcD7qk9hD+/Ij5aD6Upue0pDT55t62vG1TSSSVj3qIvCIJpplgYmk6G77ZAJAS1CTAC0oCy3HxgDLNM+qL3335wiRnMwWxhY42PtfjT822AKp8j7KSsrv0idnU+yZQ8g=
+	t=1724920018; cv=none; b=NwNcVw/ARWgRIvnyHG3YbERRVxSdtdlys9o7zTHZbacILKTanlN6u3ehMWzKpbn28ZXew0+LgzPrdMuaXvgte4t+JEqgPFqEzeMggeMuWE0oUcxfTZCbUDiC+wVD/UBwQ8OxF2eYKeymTUL8AYb1aXoOBqmVTHl9nDuKm4MuqiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724916806; c=relaxed/simple;
-	bh=E5OX7HAxlA8Vy2WfcHLUZm0GlAKyn3CH/vbK54+PYkc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kM/nzJ5vWkzkOXVKDEk18NG07pMdfkBm41xcoM7Lv6bTf2Nay13uCUNd4IGSh+yMND2JYMTX/CM8Vm25IfOQN8FywkopdTyfwaxd/iAJ6fOG0H61AfixqIpM0ZD5cYra1RJVXkwiAYl6VvigCSz8ZEVck+NK8nSkL4kx0Is6TQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=IZ/gks+F; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1724920018; c=relaxed/simple;
+	bh=FDBLvL3b/XCdjS0adlnE6hBgdXNcogXnYATjW3mX3Gs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uXmVC7JJ4KvSLqNNyyriQlYR1BbU487M8vPw/k0mkW1FcCZxhVwtgsUiHRlmzbjgGrpiHVDHOuV9OB1zvVjC8E/9JmwPKvZCjGQSk1lQBhH6rVbFYiAmWjPyjW4QAofOhDdsTzj4W9GI4YmjUB2KUU2ELMYrybuVbGiyLPKspks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=ifdmLA2Z; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="IZ/gks+F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1724916803;
-	bh=E5OX7HAxlA8Vy2WfcHLUZm0GlAKyn3CH/vbK54+PYkc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IZ/gks+FRZKpPJaQKWCETYPWQCPq0sGc9qSkO4VCu3B5QhLUZccBjOBnyJQkcbDpH
-	 qwHMUglivZjQJZEvzrcDX/pMqs2tg51tlO1uKBVWgqxrDuQ1SpDAW8A/sgJ6o0L1FY
-	 RKch1WJBmHdsYSYQkbw0wIcWog4/73bzqYZ2nNwE=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ifdmLA2Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1724920014;
+	bh=CzX6lvuIolyjXVJmi/cVG/X6CAC23HjxHju8uHsztN0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ifdmLA2ZirGiQQ8DKH6A6ZHgCMR1ss7zyDFp3CptPsdwMvp/3YGG5gBHGQUEUKUzg
+	 ITO14BjJMTtMSVhv+OWGvxvVRuqV/uDr1qMTHrjCXpCA4AhG+fXdppjYRKj1SYalDA
+	 c5OEvTytT2HGK7FuARoCOz0vu+NPkuwhztoGR1vEusip5cUw9u2oaNaTthykDEP4om
+	 aG2SxS1UuJhaWBae0UnoEaKnIcych9qgh1+wLPD/3IrbnzUQZgDwgKUPmcIv0mATKK
+	 PtmYiyKLMkmTsA/rAyMlTUsbJAoexgEIiM3ollUIPnJsv6rs7t3Jl4HY46paJVrakT
+	 7gCuXwLBau9iw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0F7BF66F26;
-	Thu, 29 Aug 2024 03:33:20 -0400 (EDT)
-Message-ID: <baba6eec7a1f66dc8b82d5e16612d0703dd33c81.camel@xry111.site>
-Subject: Re: [PATCH] cpufreq: loongson3: Use raw_smp_processor_id() in
- do_service_request()
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki"
-	 <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	loongarch@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, Binbin Zhou <zhoubinbin@loongson.cn>
-Date: Thu, 29 Aug 2024 15:33:19 +0800
-In-Reply-To: <CAAhV-H6YLg1ipUf-45-0zF6HRcCfkVikwQM5cAD7_VSYyAsfoQ@mail.gmail.com>
-References: <20240828062459.1853837-1-chenhuacai@loongson.cn>
-	 <affff6410e681152c3fdcf3512df76d734f29aeb.camel@xry111.site>
-	 <CAAhV-H6YLg1ipUf-45-0zF6HRcCfkVikwQM5cAD7_VSYyAsfoQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WvZBV0vd6z4wd6;
+	Thu, 29 Aug 2024 18:26:42 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Charlie Jenkins <charlie@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
+ Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Vineet Gupta
+ <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
+ Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
+ <dalias@libc.org>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Lorenzo
+ Stoakes <lorenzo.stoakes@oracle.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH RFC v2 1/4] mm: Add MAP_BELOW_HINT
+In-Reply-To: <20240829-patches-below_hint_mmap-v2-1-638a28d9eae0@rivosinc.com>
+References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
+ <20240829-patches-below_hint_mmap-v2-1-638a28d9eae0@rivosinc.com>
+Date: Thu, 29 Aug 2024 18:26:41 +1000
+Message-ID: <87mskvenum.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, 2024-08-28 at 21:55 +0800, Huacai Chen wrote:
-> > Do I need to modify some firmware setting to make it work?
-> You should update your firmware.
+Charlie Jenkins <charlie@rivosinc.com> writes:
+> Some applications rely on placing data in free bits addresses allocated
+> by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+> address returned by mmap to be less than the 48-bit address space,
+> unless the hint address uses more than 47 bits (the 48th bit is reserved
+> for the kernel address space).
+>
+> To make this behavior explicit and more versatile across all
+> architectures, define a mmap flag that allows users to define an
+> arbitrary upper limit on addresses returned by mmap.
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  include/uapi/asm-generic/mman-common.h       | 1 +
+>  tools/include/uapi/asm-generic/mman-common.h | 1 +
+  
+You're not meant to update the headers in tools/ directly. There's a
+mail somewhere from acme somewhere describing the proper process, but
+the tldr is leave it up to him.
 
-I've already updated to UDK2018-3A6000-
-7A2000_EVB_V4.0.05756_prestable2405_0523dbg.fd on a XA61200 before
-trying CPUFreq.
+> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> index 6ce1f1ceb432..03ac13d9aa37 100644
+> --- a/include/uapi/asm-generic/mman-common.h
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -32,6 +32,7 @@
+>  
+>  #define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
+>  					 * uninitialized */
+> +#define MAP_BELOW_HINT	  0x8000000	/* give out address that is below (inclusive) hint address */
 
-And I also tried enabling DVFS in the firmware setting, and disabling
-the overclocking.  Both didn't work.
+IMHO the API would be clearer if this actually forced the address to be
+below the hint. That's what the flag name implies after all.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+It would also mean the application doesn't need to take into account the
+length of the mapping when passing the hint.
+
+cheers
