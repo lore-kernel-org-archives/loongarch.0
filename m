@@ -1,360 +1,253 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1131AB528
-	for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 21:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAAE4C9D
+	for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 01:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724881204; cv=none; b=eKpA3Diy9qPSXWf4LfYoOZS9L9EU4Jc82bYMfeFKQKXsinB17fdQ1QOwkQwnL0q76gB1elmy4lWthF8uEkyE6E3+cISPbW+qAfHCbKl1KT15Y43ZxHDjJ25Lt4NdhnaSeQDDO/ud8N7B3SZ6Yg2XpSRJ2EvY7sPdz23ZQVFAVis=
+	t=1724894174; cv=none; b=TbsrRn3MKGlP4nS1O/9aLI3WKyicDgQVK6gLEalKjLezCi+sJuhVto7MQsbf73Bm3b6Ukc+wIPWv+eHn8SG55ui0skl7TuKT0RU/8vKA3MOI2xEPb3layGPfNwfAWnC0pnIB+Oljp7ErHDQeLqbM4pYL6YvER2QgBft5dSJKiZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724881204; c=relaxed/simple;
-	bh=PjNUGL92xmeOpwvBaXbghjKwroCzTSHxKfeh9WaJjJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMWMwee+LJGU6ZChL5JkD/jdHKNfblDc/M6A2U09sI+eLs9relN4zPA5NECfVBgudsilzYLvctPhvu3WTR+cvb6jGUOWtXS6HgSZzGDVxE8yRDqy9yQzYihrxKuSDiYDwLvg01QnrvsCv9s+2jOWjq0L2qleaosESqEw5mBNPWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=akJm5tPs; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="akJm5tPs"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7106cf5771bso181b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 28 Aug 2024 14:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724881200; x=1725486000; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XeNJBfO0ja/8g6kzTOhNFElQs2waKVPJgdUV/DsW4nc=;
-        b=akJm5tPsdkH9Y3sQokgyTlHE47/WtrMa1JW4Lxq7HIylSpvVh52m25055kGRJEEmDg
-         IT7XGuEUCNDdaJj6ubIKtlF1vqUBkQVqBlrBXw3IB6GSr5uLGxsP/dRdkLyKh54ebIxj
-         gbu49iy2S1hQ03sGY2Vw7X09FlekXiqzSfw2b29Xb+jPYTm7hY5z6pQ+SYJZMaRpPORj
-         ffELwvp6SHxMyU57iVMBH7/+6lPrjpMbZDJr0XpqFgFs1TmhE3XlaYSxMnNtjQxla29T
-         SBxw+OHVRA8Id8bQBbcwTbGf9P4HhrwVwlW7ibcvG4K972sJK0Xfu5YFF6OohUjfmgky
-         DtaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724881200; x=1725486000;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XeNJBfO0ja/8g6kzTOhNFElQs2waKVPJgdUV/DsW4nc=;
-        b=VJCTq4zTjUPD+YvKPC+aFg64Jl3HarjXqqpM4tmgchnmmYwj3cTnSZh8eK2EfnKWHB
-         mL0VikW4kMpTgN89gSO82sl6RkGQB70FHyKRmoQfA+L4wt8UY3aDo95OEJFJ6U1PD4S5
-         Xlf/yQ1wgAUsolclsSwKSleRD+mlcvCR0u2V70+CVxRl5vL7oP24HfiDHdNJNEketjyF
-         e/t2dPVGf1j4W0QPpuVFUabYoBGl/9gqwty/umxN3/MozeiWxbsrWNFd7CiQvFj2ebuR
-         htnemmd/EN1TTwS4am71z9El4Gi/yZ6LUeNn0UNyTAW3fyIXu626kGex8VPGPCIl065t
-         rCzw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+QtaTzIFhojox+1VM3Ijw2o3F5q1CBJHkCrDSUDDst2Osvip4UQZuu2mhGrRvbaxX8ox9rFFMY6g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzAe3Tqyw/RQ+njZPnp90L6ixdgkGu8CpBTzg8KiQLIqXmO4XFv
-	r9mVbG679s3giwLDaRhWbwsP496yni9k54PKUVL4Wg9mZaJP4muIH2dEuWV8M7M=
-X-Google-Smtp-Source: AGHT+IFaC7yLAKucAQ+jfC2ojeS1SzrNuL0Qf0TeCvZ+3dsJBG9fozmVtsZvCPOeq6REFPvrFRD1LQ==
-X-Received: by 2002:a05:6a00:2e87:b0:714:2ba6:e5c9 with SMTP id d2e1a72fcca58-715dfaf1fddmr1045535b3a.7.1724881200137;
-        Wed, 28 Aug 2024 14:40:00 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7cd9ac98286sm9939173a12.5.2024.08.28.14.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 14:39:59 -0700 (PDT)
-Date: Wed, 28 Aug 2024 14:39:55 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-mm@kvack.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 00/16] mm: Introduce MAP_BELOW_HINT
-Message-ID: <Zs+ZK6Q2U9dm19yR@ghost>
-References: <20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com>
- <dbqqojpvqodfxavt4fxugoj3a2ppk5b4b3sp77qsmbg33sc2em@fhjccbxaihrh>
- <Zs+Ppk0ANaUah7p9@ghost>
+	s=arc-20240116; t=1724894174; c=relaxed/simple;
+	bh=Yl3jprZvOrk15IBj+m4V20ifNWGPILknOIKdQ8lCNfU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pKjuzkLXtyAyT3PJLBCt3syzbgY4Uk+YbDRL5E55IO7ufAegrb9VLNoRgnTalno5l6HfYe+N1Q+bT059I9GV2PJvtD/IrSjzcC3axUCyIDdW9Du7EXIzwlYj5J1BRLOkO2efR351Jf9dFt/yDfgiy0SYsKJkFtpTUQIeqYiszvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cxe+rQy89m01cjAA--.5775S3;
+	Thu, 29 Aug 2024 09:16:00 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxmWbOy89mfg4mAA--.4212S3;
+	Thu, 29 Aug 2024 09:15:58 +0800 (CST)
+Subject: Re: [RFC v2 2/2] irqchip/loongson-eiointc: Add multiple interrupt pin
+ routing support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+References: <20240828070603.3518753-1-maobibo@loongson.cn>
+ <20240828070603.3518753-3-maobibo@loongson.cn>
+ <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <819bb7b2-cbbf-ea47-7bae-3a0902d48096@loongson.cn>
+Date: Thu, 29 Aug 2024 09:15:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zs+Ppk0ANaUah7p9@ghost>
+In-Reply-To: <CAAhV-H6+GYjbJbZjKUVvHJ7sTnRhMqBOun149OqO8WEL7xF8Aw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxmWbOy89mfg4mAA--.4212S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3WFWrtF15Ar13GFWruFWrtFc_yoWxur4kpF
+	W0kF98tFW5JFyUWr9Iqa1DtF1Syrn8XrWjkan3Gayxta1qkw1kGF4rAa4YkwnFkr48Ar4a
+	vF4Yyw1Uu3Z8C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
-On Wed, Aug 28, 2024 at 01:59:18PM -0700, Charlie Jenkins wrote:
-> On Wed, Aug 28, 2024 at 02:31:42PM -0400, Liam R. Howlett wrote:
-> > * Charlie Jenkins <charlie@rivosinc.com> [240828 01:49]:
-> > > Some applications rely on placing data in free bits addresses allocated
-> > > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
-> > > address returned by mmap to be less than the maximum address space,
-> > > unless the hint address is greater than this value.
-> > 
-> > Wait, what arch(s) allows for greater than the max?  The passed hint
-> > should be where we start searching, but we go to the lower limit then
-> > start at the hint and search up (or vice-versa on the directions).
-> > 
-> 
-> I worded this awkwardly. On arm64 there is a page-table boundary at 48
-> bits and at 52 bits. On x86 the boundaries are at 48 bits and 57 bits.
-> The max value mmap is able to return on arm64 is 48 bits if the hint
-> address uses 48 bits or less, even if the architecture supports 5-level
-> paging and thus addresses can be 52 bits. Applications can opt-in to
-> using up to 52-bits in an address by using a hint address greater than
-> 48 bits. x86 has the same behavior but with 57 bits instead of 52.
-> 
-> This reason this exists is because some applications arbitrarily replace
-> bits in virtual addresses with data with an assumption that the address
-> will not be using any of the bits above bit 48 in the virtual address.
-> As hardware with larger address spaces was released, x86 decided to
-> build safety guards into the kernel to allow the applications that made
-> these assumptions to continue to work on this different hardware.
-> 
-> This causes all application that use a hint address to silently be
-> restricted to 48-bit addresses. The goal of this flag is to have a way
-> for applications to explicitly request how many bits they want mmap to
-> use.
-> 
-> > I don't understand how unmapping works on a higher address; we would
-> > fail to free it on termination of the application.
-> > 
-> > Also, there are archs that map outside of the VMAs, which are freed by
-> > freeing from the prev->vm_end to next->vm_start, so I don't understand
-> > what that looks like in this reality as well.
-> > 
-> > > 
-> > > On arm64 this barrier is at 52 bits and on x86 it is at 56 bits. This
-> > > flag allows applications a way to specify exactly how many bits they
-> > > want to be left unused by mmap. This eliminates the need for
-> > > applications to know the page table hierarchy of the system to be able
-> > > to reason which addresses mmap will be allowed to return.
-> > 
-> > But, why do they need to know today?  We have a limit for this don't we?
-> 
-> The limit is different for different architectures. On x86 the limit is
-> 57 bits, and on arm64 it is 52 bits. So in the theoretical case that an
-> application requires 10 bits free in a virtual address, the application
-> would always work on arm64 regardless of the hint address, but on x86 if
-> the hint address is greater than 48 bits then the application will not
-> work.
-> 
-> The goal of this flag is to have consistent and tunable behavior of
-> mmap() when it is desired to ensure that mmap() only returns addresses
-> that use some number of bits.
-> 
-> > 
-> > Also, these upper limits are how some archs use the upper bits that you
-> > are trying to use.
-> > 
-> 
-> It does not eliminate the existing behavior of the architectures to
-> place this upper limits, it instead provides a way to have consistent
-> behavior across all architectures.
-> 
-> > > 
-> > > ---
-> > > riscv made this feature of mmap returning addresses less than the hint
-> > > address the default behavior. This was in contrast to the implementation
-> > > of x86/arm64 that have a single boundary at the 5-level page table
-> > > region. However this restriction proved too great -- the reduced
-> > > address space when using a hint address was too small.
-> > 
-> > Yes, the hint is used to group things close together so it would
-> > literally be random chance on if you have enough room or not (aslr and
-> > all).
-> > 
-> > > 
-> > > A patch for riscv [1] reverts the behavior that broke userspace. This
-> > > series serves to make this feature available to all architectures.
-> > 
-> > I don't fully understand this statement, you say it broke userspace so
-> > now you are porting it to everyone?  This reads as if you are braking
-> > the userspace on all architectures :)
-> 
-> It was the default for mmap on riscv. The difference here is that it is now
-> enabled by a flag instead. Instead of making the flag specific to riscv,
-> I figured that other architectures might find it useful as well.
-> 
-> > 
-> > If you fail to find room below, then your application fails as there is
-> > no way to get the upper bits you need.  It would be better to fix this
-> > in userspace - if your application is returned too high an address, then
-> > free it and exit because it's going to fail anyways.
-> > 
-> 
-> This flag is trying to define an API that is more robust than the
-> current behavior on that x86 and arm64 which implicitly restricts mmap()
-> addresses to 48 bits. A solution could be to just write in the docs that
-> mmap() will always exhaust all addresses below the hint address before
-> returning an address that is above the hint address. However a flag that
-> defines this behavior seems more intuitive.
-> 
-> > > 
-> > > I have only tested on riscv and x86.
-> > 
-> > This should be an RFC then.
-> 
-> Fair enough.
-> 
-> > 
-> > > There is a tremendous amount of
-> > > duplicated code in mmap so the implementations across architectures I
-> > > believe should be mostly consistent. I added this feature to all
-> > > architectures that implement either
-> > > arch_get_mmap_end()/arch_get_mmap_base() or
-> > > arch_get_unmapped_area_topdown()/arch_get_unmapped_area(). I also added
-> > > it to the default behavior for arch_get_mmap_end()/arch_get_mmap_base().
-> > 
-> > Way too much duplicate code.  We should be figuring out how to make this
-> > all work with the same code.
-> > 
-> > This is going to make the cloned code problem worse.
-> 
-> That would require standardizing every architecture with the generic
-> mmap() framework that arm64 has developed. That is far outside the scope
-> of this patch, but would be a great area to research for each of the
-> architectures that do not use the generic framework.
 
-Thinking about this again, I could drop support for all architectures
-that do not implement arch_get_mmap_base()/arch_get_mmap_end().
 
+On 2024/8/28 下午9:56, Huacai Chen wrote:
+> Hi, Bibo,
 > 
-> - Charlie
+> On Wed, Aug 28, 2024 at 3:06 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Eiointc interrupt controller support 256 interrupt vectors at most,
+>> and irq handler gets interrupt status from base register group
+>> EIOINTC_REG_ISR plus specific offset. It needs to read register group
+>> EIOINTC_REG_ISR four times to get all 256 interrupt vectors status.
+>>
+>> Eiointc registers including EIOINTC_REG_ISR is software emulated for
+>> VMs, there will be VM-exits when accessing eiointc registers. Here one
+>> method is introduced so that eiointc interrupt controller can route
+>> to different cpu interrupt pins for every 64 interrupt vectors. So
+>> irq handler needs read only relative 64 interrupt vector, it  reduces
+>> VM-exits.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   drivers/irqchip/irq-loongson-eiointc.c | 72 ++++++++++++++++++++++----
+>>   1 file changed, 63 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+>> index e9ec63d85ee8..c6bcb6625e6d 100644
+>> --- a/drivers/irqchip/irq-loongson-eiointc.c
+>> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+>> @@ -30,11 +30,20 @@
+>>   #define VEC_REG_IDX(irq_id)    ((irq_id) / VEC_COUNT_PER_REG)
+>>   #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
+>>   #define EIOINTC_ALL_ENABLE     0xffffffff
+>> +#define EIOINTC_ROUTE_MULTIPLE_IP      BIT(0)
+>>
+>>   #define MAX_EIO_NODES          (NR_CPUS / CORES_PER_EIO_NODE)
+>>
+>>   static int nr_pics;
+>>
+>> +struct eiointc_priv;
+>> +struct eiointc_ip_route {
+>> +       struct eiointc_priv     *priv;
+>> +       /* Routed destination IP offset */
+>> +       int                     start;
+>> +       int                     end;
+>> +};
+>> +
+>>   struct eiointc_priv {
+>>          u32                     node;
+>>          u32                     vec_count;
+>> @@ -43,6 +52,8 @@ struct eiointc_priv {
+>>          struct fwnode_handle    *domain_handle;
+>>          struct irq_domain       *eiointc_domain;
+>>          int                     parent_hwirq;
+>> +       int                     flags;
+>> +       struct eiointc_ip_route route_info[4];
+>>   };
+>>
+>>   static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
+>> @@ -145,12 +156,20 @@ static int eiointc_router_init(unsigned int cpu)
+>>          uint32_t data;
+>>          uint32_t node = cpu_to_eio_node(cpu);
+>>          int index = eiointc_index(node);
+>> +       int hwirq, mask;
+>>
+>>          if (index < 0) {
+>>                  pr_err("Error: invalid nodemap!\n");
+>>                  return -1;
+>>          }
+>>
+>> +       /* Enable cpu interrupt pin routed from eiointc */
+>> +       hwirq = eiointc_priv[index]->parent_hwirq;
+>> +       mask = BIT(hwirq);
+>> +       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULTIPLE_IP)
+>> +               mask |= BIT(hwirq + 1) | BIT(hwirq + 2) | BIT(hwirq + 3);
+>> +       set_csr_ecfg(mask);
+>> +
+>>          if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
+>>                  eiointc_enable();
+>>
+>> @@ -161,12 +180,23 @@ static int eiointc_router_init(unsigned int cpu)
+>>
+>>                  for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
+>>                          /*
+>> -                        * Route to interrupt pin, using offset minus INT_HWI0
+>> -                        * Offset 0 means IP0 and so on
+>> -                        * Every 32 vector routing to one interrupt pin
+>> +                        * Route to interrupt pin, minus INT_HWI0 as offset
+>> +                        * Offset 0 means IP0 and so on, every 32 vector
+>> +                        * routing to one interrupt pin
+>> +                        *
+>> +                        * If flags is set with EIOINTC_ROUTE_MULTIPLE_IP,
+>> +                        * every 64 vector routes to different consecutive
+>> +                        * IPs, otherwise all vector routes to the same IP
+>>                           */
+>> -                       bit = BIT(eiointc_priv[index]->parent_hwirq - INT_HWI0);
+>> -                       data = bit | (bit << 8) | (bit << 16) | (bit << 24);
+>> +                       if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULTIPLE_IP) {
+>> +                               bit = BIT(hwirq++ - INT_HWI0);
+>> +                               data = bit | (bit << 8);
+>> +                               bit = BIT(hwirq++ - INT_HWI0);
+>> +                               data |= (bit << 16) | (bit << 24);
+>> +                       } else  {
+>> +                               bit = BIT(hwirq - INT_HWI0);
+>> +                               data = bit | (bit << 8) | (bit << 16) | (bit << 24);
+>> +                       }
+>>                          iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
+>>                  }
+>>
+>> @@ -197,11 +227,18 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+>>          u64 pending;
+>>          bool handled = false;
+>>          struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -       struct eiointc_priv *priv = irq_desc_get_handler_data(desc);
+>> +       struct eiointc_ip_route *info = irq_desc_get_handler_data(desc);
+>>
+>>          chained_irq_enter(chip, desc);
+>>
+>> -       for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
+>> +       /*
+>> +        * If EIOINTC_ROUTE_MULTIPLE_IP is set, every 64 interrupt vectors in
+>> +        * eiointc interrupt controller routes to different cpu interrupt pins
+>> +        *
+>> +        * Every cpu interrupt pin has its own irq handler, it is ok to
+>> +        * read ISR for these 64 interrupt vectors rather than all vectors
+>> +        */
+>> +       for (i = info->start; i < info->end; i++) {
+>>                  pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
+>>
+>>                  /* Skip handling if pending bitmap is zero */
+>> @@ -214,7 +251,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+>>                          int bit = __ffs(pending);
+>>                          int irq = bit + VEC_COUNT_PER_REG * i;
+>>
+>> -                       generic_handle_domain_irq(priv->eiointc_domain, irq);
+>> +                       generic_handle_domain_irq(info->priv->eiointc_domain, irq);
+>>                          pending &= ~BIT(bit);
+>>                          handled = true;
+>>                  }
+>> @@ -397,8 +434,25 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+>>          }
+>>
+>>          eiointc_priv[nr_pics++] = priv;
+>> +       if (cpu_has_hypervisor) {
+>> +               priv->parent_hwirq = INT_HWI0;
+>> +               for (i = 0; i < priv->vec_count / VEC_COUNT_PER_REG; i++) {
+>> +                       priv->route_info[i].start  = priv->parent_hwirq - INT_HWI0 + i;
+>> +                       priv->route_info[i].end    = priv->route_info[i].start + 1;
+>> +                       priv->route_info[i].priv   = priv;
+>> +                       parent_irq = get_percpu_irq(priv->parent_hwirq + i);
+>> +                       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
+>> +                                                               &priv->route_info[i]);
+>> +               }
+>> +               priv->flags |= EIOINTC_ROUTE_MULTIPLE_IP;
+> Can real machines also use EIOINTC_ROUTE_MULTIPLE_IP?
+In theory it is possible on real machine also. Now there are potential 
+problems which needs more code modification.
+
+1. On real machine, liointc uses one or two IPs, 
+EIOINTC_ROUTE_MULTIPLE_IP requires four IPs. eiointc uses bitmap IP map 
+method now, only IP0-IP3 can be used.
+
+2. For multiple eiointc support, instead IP0-IP3 can be used for 
+multiple eiointc support since IPs is per-cpu.
+
+On the other hand, what is the benefit doing such thing on real machine, 
+we need cost about accessing iocsr register on real machine, there is 
+such data from my side.
+
+Regards
+Bibo Mao
 > 
-> > 
-> > > 
-> > > Link: https://lore.kernel.org/lkml/20240826-riscv_mmap-v1-2-cd8962afe47f@rivosinc.com/T/ [1]
-> > > 
-> > > To: Arnd Bergmann <arnd@arndb.de>
-> > > To: Paul Walmsley <paul.walmsley@sifive.com>
-> > > To: Palmer Dabbelt <palmer@dabbelt.com>
-> > > To: Albert Ou <aou@eecs.berkeley.edu>
-> > > To: Catalin Marinas <catalin.marinas@arm.com>
-> > > To: Will Deacon <will@kernel.org>
-> > > To: Michael Ellerman <mpe@ellerman.id.au>
-> > > To: Nicholas Piggin <npiggin@gmail.com>
-> > > To: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > > To: Naveen N Rao <naveen@kernel.org>
-> > > To: Muchun Song <muchun.song@linux.dev>
-> > > To: Andrew Morton <akpm@linux-foundation.org>
-> > > To: Liam R. Howlett <Liam.Howlett@oracle.com>
-> > > To: Vlastimil Babka <vbabka@suse.cz>
-> > > To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > To: Thomas Gleixner <tglx@linutronix.de>
-> > > To: Ingo Molnar <mingo@redhat.com>
-> > > To: Borislav Petkov <bp@alien8.de>
-> > > To: Dave Hansen <dave.hansen@linux.intel.com>
-> > > To: x86@kernel.org
-> > > To: H. Peter Anvin <hpa@zytor.com>
-> > > To: Huacai Chen <chenhuacai@kernel.org>
-> > > To: WANG Xuerui <kernel@xen0n.name>
-> > > To: Russell King <linux@armlinux.org.uk>
-> > > To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > To: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-> > > To: Helge Deller <deller@gmx.de>
-> > > To: Alexander Gordeev <agordeev@linux.ibm.com>
-> > > To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> > > To: Heiko Carstens <hca@linux.ibm.com>
-> > > To: Vasily Gorbik <gor@linux.ibm.com>
-> > > To: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > > To: Sven Schnelle <svens@linux.ibm.com>
-> > > To: Yoshinori Sato <ysato@users.sourceforge.jp>
-> > > To: Rich Felker <dalias@libc.org>
-> > > To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > > To: David S. Miller <davem@davemloft.net>
-> > > To: Andreas Larsson <andreas@gaisler.com>
-> > > To: Shuah Khan <shuah@kernel.org>
-> > > To: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > > Cc: linux-arch@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: Palmer Dabbelt <palmer@rivosinc.com>
-> > > Cc: linux-riscv@lists.infradead.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linuxppc-dev@lists.ozlabs.org
-> > > Cc: linux-mm@kvack.org
-> > > Cc: loongarch@lists.linux.dev
-> > > Cc: linux-mips@vger.kernel.org
-> > > Cc: linux-parisc@vger.kernel.org
-> > > Cc: linux-s390@vger.kernel.org
-> > > Cc: linux-sh@vger.kernel.org
-> > > Cc: sparclinux@vger.kernel.org
-> > > Cc: linux-kselftest@vger.kernel.org
-> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > 
-> > > ---
-> > > Charlie Jenkins (16):
-> > >       mm: Add MAP_BELOW_HINT
-> > >       riscv: mm: Do not restrict mmap address based on hint
-> > >       mm: Add flag and len param to arch_get_mmap_base()
-> > >       mm: Add generic MAP_BELOW_HINT
-> > >       riscv: mm: Support MAP_BELOW_HINT
-> > >       arm64: mm: Support MAP_BELOW_HINT
-> > >       powerpc: mm: Support MAP_BELOW_HINT
-> > >       x86: mm: Support MAP_BELOW_HINT
-> > >       loongarch: mm: Support MAP_BELOW_HINT
-> > >       arm: mm: Support MAP_BELOW_HINT
-> > >       mips: mm: Support MAP_BELOW_HINT
-> > >       parisc: mm: Support MAP_BELOW_HINT
-> > >       s390: mm: Support MAP_BELOW_HINT
-> > >       sh: mm: Support MAP_BELOW_HINT
-> > >       sparc: mm: Support MAP_BELOW_HINT
-> > >       selftests/mm: Create MAP_BELOW_HINT test
-> > > 
-> > >  arch/arm/mm/mmap.c                           | 10 ++++++++
-> > >  arch/arm64/include/asm/processor.h           | 34 ++++++++++++++++++++++----
-> > >  arch/loongarch/mm/mmap.c                     | 11 +++++++++
-> > >  arch/mips/mm/mmap.c                          |  9 +++++++
-> > >  arch/parisc/include/uapi/asm/mman.h          |  1 +
-> > >  arch/parisc/kernel/sys_parisc.c              |  9 +++++++
-> > >  arch/powerpc/include/asm/task_size_64.h      | 36 +++++++++++++++++++++++-----
-> > >  arch/riscv/include/asm/processor.h           | 32 -------------------------
-> > >  arch/s390/mm/mmap.c                          | 10 ++++++++
-> > >  arch/sh/mm/mmap.c                            | 10 ++++++++
-> > >  arch/sparc/kernel/sys_sparc_64.c             |  8 +++++++
-> > >  arch/x86/kernel/sys_x86_64.c                 | 25 ++++++++++++++++---
-> > >  fs/hugetlbfs/inode.c                         |  2 +-
-> > >  include/linux/sched/mm.h                     | 34 ++++++++++++++++++++++++--
-> > >  include/uapi/asm-generic/mman-common.h       |  1 +
-> > >  mm/mmap.c                                    |  2 +-
-> > >  tools/arch/parisc/include/uapi/asm/mman.h    |  1 +
-> > >  tools/include/uapi/asm-generic/mman-common.h |  1 +
-> > >  tools/testing/selftests/mm/Makefile          |  1 +
-> > >  tools/testing/selftests/mm/map_below_hint.c  | 29 ++++++++++++++++++++++
-> > >  20 files changed, 216 insertions(+), 50 deletions(-)
-> > > ---
-> > > base-commit: 5be63fc19fcaa4c236b307420483578a56986a37
-> > > change-id: 20240827-patches-below_hint_mmap-b13d79ae1c55
-> > > -- 
-> > > - Charlie
-> > > 
+> Huacai
+> 
+>> +       } else {
+>> +               priv->route_info[0].start  = 0;
+>> +               priv->route_info[0].end    = priv->vec_count / VEC_COUNT_PER_REG;
+>> +               priv->route_info[0].priv   = priv;
+>> +               irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
+>> +                                                       &priv->route_info[0]);
+>> +       }
+>>          eiointc_router_init(0);
+>> -       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
+>>
+>>          if (nr_pics == 1) {
+>>                  register_syscore_ops(&eiointc_syscore_ops);
+>> --
+>> 2.39.3
+>>
+
