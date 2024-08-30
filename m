@@ -1,59 +1,59 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B015726281
-	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 01:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBB228DD0
+	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 01:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724980284; cv=none; b=EBlKspQSDfd00/m58Bx65Y/8fSwmDYhxYn6T2em31NjTtkgv3zqDPJld5Xp6f2sOQPoQYQCykf97DgLOmihggfd8S8uELrsyDBDdDw3uRjwe9/H6aS4Z3B49nL5oXu2eV6c7c/1deGHEfmLgxajs+3KWgf/rCbO62LSAIje+ug4=
+	t=1724980611; cv=none; b=pT6dIWdkxzPsQExxliwv8Ndk8TLH1MAIjTlaLTtkb4Eymz7ZESWIfT9eOvcrqgkhLM8jVm2y86SAKlL8VWKdnwhdJ7QcNLtEbNfBScAumZwCN4s120M5sv1Qv/3DcswycZffilVbl7DPCEjooyZAOFvzp8h5HgEXmShtLEzWqX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724980284; c=relaxed/simple;
-	bh=MrgzYaNv9tfxCz/b25set1/A6ngJCYD0Yc3OqKIklYc=;
+	s=arc-20240116; t=1724980611; c=relaxed/simple;
+	bh=O19E6wddJJJyBiqtf0WyxrT1W9vHMvm3yZWRAq+bKOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxCC9wz5NDKuXpuhkU+YvK3va/7/MriS6zxtfn3pmfhsEjciTY3jGTS5FpWPlukqzGpnd/M8inIaJNZniZEmghAoYWlDKgyEx6GREldxROE4QI4PSOBh6KQ5RwkbEdC9OAVS/pl7y3b9Uj2f77X/yp9zFMifli2LpeF5Fgo4ktw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=UuuSr3Qf; arc=none smtp.client-ip=209.85.210.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yav8oSd7V+YmrgQfAa8pdQDFTPtZh8CSPkCx0WHIzgMfDC6yZOgse0gZ34vqBj6hsQhO0VG9K3PqpUZC+cQ3MBaROXgwg/fF826uyazr2qzT+aIyULkAPNHjVpcD6QJZPY2WHZkbQk16u3jreslbFKmAUpcAnbriI05fkVE0/2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aMCjFlIa; arc=none smtp.client-ip=209.85.161.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="UuuSr3Qf"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-714262f1bb4so1066369b3a.3
-        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 18:11:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aMCjFlIa"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5da686531d3so830547eaf.3
+        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 18:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724980282; x=1725585082; darn=lists.linux.dev;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724980608; x=1725585408; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tq7LnGnCY31W8p33KfA4sDocR34ueQ+QZ1h3PRF4p6w=;
-        b=UuuSr3QfaFl2E7AeBBP2TRZx/xB/PY8QThgDh198Lct/3xgrgZDcPSfscjRd/FDMtH
-         upJDWbKzBHxfLObaPUdBU4Gfed8yX59M+CnT8UN1NdOwTAg/Y3dbzsrgC04kF6NTZjbf
-         SYMe/64dLNMaxFN5RsEega2YuS2B5FPhsjSZzhCZzYmd004z4XxkKq9Ojq4keO17E1Z+
-         X028EB9CnscYjCFX2smgc7lGYeQsn+xIUh12JARdg+mSe/tBJ0LfSsGgvpofG0R5VqZn
-         x2H0M4nrr5k6uDlpRQ5o1CWeryrIoMDTG7KdADSm2k5roOPaPdx3IBzm10BERW6QwdxN
-         gQzQ==
+        bh=Y7xDP+Z9ioGU1Ej/VigLqskETGN0WUiHvrKI/4LF5a8=;
+        b=aMCjFlIafHeEVtCGJFYo1Vj7w9nwxNSSxxHkTbcSEaowG/pH0gCuZwJhJW6VbyHyB8
+         oPpwYN4LEz2+9M6KwZ2WVTlHzzQfNLEyOEJnD5zPXZg9fBoMYiB09oqUM9tqmX/uZmsH
+         vIXh7JDglSQpMX+Ziyc2FLtC7W7HCS7oAqnH/wH1F8lypYyBmeYyyFrR+l3RLSWDAlws
+         OWqs6NaQ7PYgKM7cAW/wqqbbiKsnaWP019n9ZBL0eajQ04uS+nHnSvi/R0FH8f2/mBWK
+         33l9Bhgur1I7WH3o8kXBn8iFYFur+dKtI4Jn7HnrfUZ7JrEe8v7BnwVOtSZwt6CEJK2T
+         4Q0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724980282; x=1725585082;
+        d=1e100.net; s=20230601; t=1724980608; x=1725585408;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tq7LnGnCY31W8p33KfA4sDocR34ueQ+QZ1h3PRF4p6w=;
-        b=UeaDJMrQ6OwSsygmn45benEaXlsJ49izEzEszVr0Oofo2nr7QqoRWouVQO5HDDTezO
-         nKD8fdYNH7e55OMM4K37QDp1Px3z9KWbbD2uTYL2qCdD0jB884PHc3oFgO33XCLm2065
-         Eeaanz++uiFHz1VNyJPnpovN+M+fqzy0532uxEloaLbiIWnLbHRRV4Wyq1xtK0NA3jpk
-         CTOBqoluobLYTS28IeMuyOc3dSi3UrDjiLEtvqGcXCZWcLUEXWMgBjdEqHegrl8o69Yr
-         jAmwqVQAhI5bDs580jKtX8owRSsERo9MWd5w0+e+bLLL+MzSHG4OJ1aBJuoXf/044/XT
-         aI0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXUHzs2RdGEmx5IirGI8u36GwKdc3939/doSiBUCC1BYvQ34t8rYWe8jTozNotA0naLMFRSO3BwP7Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyTlwHabEi3C0v4OYX4B6DjnEtkWE4OAixxXXiPPTAMyonovT+1
-	k2fsH0yDINNsTkOFRImicdo52n8tz5Pf0YlcSnGweMZosiEVqewnVHhQdrcRzCo=
-X-Google-Smtp-Source: AGHT+IE/hxSbHJa0ey/qUAU4qMZr2Egy89hZiorh32Md7TMXE2itSwqfJ21BnW0A2NKOMSU/XYMAJQ==
-X-Received: by 2002:a05:6a20:c78e:b0:1c0:e49a:6900 with SMTP id adf61e73a8af0-1cce0fea52bmr4390650637.7.1724980281696;
-        Thu, 29 Aug 2024 18:11:21 -0700 (PDT)
+        bh=Y7xDP+Z9ioGU1Ej/VigLqskETGN0WUiHvrKI/4LF5a8=;
+        b=AJ5gLTq5PrJ5QOL9ThLKLOH74cL85RjXJBzJA1TwnwEQiV4fByd9X1csKV/iovjP9P
+         scp545fHbpdI+9Bb7IvGfgyEOpoeB9od2hDu6H8FgqmqvLUT1xKw0oNny9qFmjhgHSRE
+         QBCjGmoFOmx8gLmfWS6SlbcjP5nU2HQmrgyF551YRO7X8x23OYoCw7dYEz3KfMGYOf+q
+         SBJVhZUinR/6AZEeX3acS2dpXQg2JPP82V6hzehsLdvDHD6nmsO6rNYYp0YoZd9BRavg
+         mhkYhdTp3esLo+6PVP1LtPLnxAztMVOROQwPH6WInvpcSJcBscqTAfAV+RXXRt7UA/SV
+         HE4g==
+X-Forwarded-Encrypted: i=1; AJvYcCW/1t7RiUA0kNec1N1GD7fgYEg7aIPFfyD/i42nxWfU/vE9RGz3flvpEGOv/o15E0rVwH5OEMpwHfA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwmCOAi7NHz+qADrWPAXFrdwMZ+AFw1g7/V6eMqXv4JDWiCN3X3
+	ZUvyX8nLixmsJ0gQMHPeFCJW2eSoJ7KUBCnpCWcQKD+Hp6BaWZhwNfnYmNP6ApE=
+X-Google-Smtp-Source: AGHT+IH958S4ePdwDnUiHubyspadJoOLZkUZCeioopGjkAA0KkZUXlfkSz3mG+kkmopghBfnyH6A6g==
+X-Received: by 2002:a05:6358:2803:b0:1ac:f109:e248 with SMTP id e5c5f4694b2df-1b603c00435mr551866655d.2.1724980607523;
+        Thu, 29 Aug 2024 18:16:47 -0700 (PDT)
 Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8445e8f72sm4900654a91.20.2024.08.29.18.11.18
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e55a5961sm1734132b3a.63.2024.08.29.18.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 18:11:21 -0700 (PDT)
-Date: Thu, 29 Aug 2024 18:11:17 -0700
+        Thu, 29 Aug 2024 18:16:46 -0700 (PDT)
+Date: Thu, 29 Aug 2024 18:16:42 -0700
 From: Charlie Jenkins <charlie@rivosinc.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Arnd Bergmann <arnd@arndb.de>,
 	Richard Henderson <richard.henderson@linaro.org>,
 	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
@@ -63,8 +63,7 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
+	Helge Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Naveen N Rao <naveen@kernel.org>,
 	Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -86,21 +85,22 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	Muchun Song <muchun.song@linux.dev>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
 	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
 	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
 	sparclinux@vger.kernel.org, linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC v2 2/4] mm: Add hint and mmap_flags to struct
- vm_unmapped_area_info
-Message-ID: <ZtEcNfNMfNTzkHEF@ghost>
+Subject: Re: [PATCH RFC v2 1/4] mm: Add MAP_BELOW_HINT
+Message-ID: <ZtEdevUWzplteQWv@ghost>
 References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
- <20240829-patches-below_hint_mmap-v2-2-638a28d9eae0@rivosinc.com>
- <0454187e-3e01-4af7-b193-07468ffa8934@lucifer.local>
+ <20240829-patches-below_hint_mmap-v2-1-638a28d9eae0@rivosinc.com>
+ <87mskvenum.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -109,49 +109,54 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0454187e-3e01-4af7-b193-07468ffa8934@lucifer.local>
+In-Reply-To: <87mskvenum.fsf@mail.lhotse>
 
-On Thu, Aug 29, 2024 at 09:48:44AM +0100, Lorenzo Stoakes wrote:
-> On Thu, Aug 29, 2024 at 12:15:59AM GMT, Charlie Jenkins wrote:
-> 
-> [snip]
-> 
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index d0dfc85b209b..34ba0db23678 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -1796,6 +1796,9 @@ generic_get_unmapped_area(struct file *filp, unsigned long addr,
-> >  	struct vm_unmapped_area_info info = {};
-> >  	const unsigned long mmap_end = arch_get_mmap_end(addr, len, flags);
+On Thu, Aug 29, 2024 at 06:26:41PM +1000, Michael Ellerman wrote:
+> Charlie Jenkins <charlie@rivosinc.com> writes:
+> > Some applications rely on placing data in free bits addresses allocated
+> > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+> > address returned by mmap to be less than the 48-bit address space,
+> > unless the hint address uses more than 47 bits (the 48th bit is reserved
+> > for the kernel address space).
 > >
-> > +	info.hint = addr;
-> > +	info.mmap_flags = flags;
-> > +
-> >  	if (len > mmap_end - mmap_min_addr)
-> >  		return -ENOMEM;
+> > To make this behavior explicit and more versatile across all
+> > architectures, define a mmap flag that allows users to define an
+> > arbitrary upper limit on addresses returned by mmap.
 > >
-> > @@ -1841,6 +1844,9 @@ generic_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
-> >  	struct vm_unmapped_area_info info = {};
-> >  	const unsigned long mmap_end = arch_get_mmap_end(addr, len, flags);
-> >
-> > +	info.hint = addr;
-> > +	info.mmap_flags = flags;
-> > +
-> >  	/* requested length too big for entire address space */
-> >  	if (len > mmap_end - mmap_min_addr)
-> >  		return -ENOMEM;
-> >
-> 
-> These line numbers suggest you're working against Linus's tree, mm/mmap.c
-> has changed a lot recently, so to avoid conflicts please base your changes
-> on mm-unstable in Andrew's tree (if looking to go through that) or at least
-> -next.
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  include/uapi/asm-generic/mman-common.h       | 1 +
+> >  tools/include/uapi/asm-generic/mman-common.h | 1 +
+>   
+> You're not meant to update the headers in tools/ directly. There's a
+> mail somewhere from acme somewhere describing the proper process, but
+> the tldr is leave it up to him.
 
-I will make sure that I base off of mm-unstable for future revisions.
+Oh okay, thank you.
+
+> 
+> > diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> > index 6ce1f1ceb432..03ac13d9aa37 100644
+> > --- a/include/uapi/asm-generic/mman-common.h
+> > +++ b/include/uapi/asm-generic/mman-common.h
+> > @@ -32,6 +32,7 @@
+> >  
+> >  #define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
+> >  					 * uninitialized */
+> > +#define MAP_BELOW_HINT	  0x8000000	/* give out address that is below (inclusive) hint address */
+> 
+> IMHO the API would be clearer if this actually forced the address to be
+> below the hint. That's what the flag name implies after all.
+> 
+> It would also mean the application doesn't need to take into account the
+> length of the mapping when passing the hint.
+> 
+> cheers
+
+That's a good point. The reason I did it this way was to allow mmap the
+possibility of returning the same address as the hint. If it must be
+strictly less than the hint then the hint address can never be returned.
+Maybe that doesn't matter though.
 
 - Charlie
 
-> 
-> > --
-> > 2.45.0
-> >
