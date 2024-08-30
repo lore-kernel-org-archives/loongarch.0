@@ -1,425 +1,527 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C493A17B510;
-	Fri, 30 Aug 2024 09:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725010366; cv=none; b=EktwZmXH1mr3F2PMcDOHRTS0E1j2iye+QRcbqVUMUABb8fR1oVnKAh7lQTAS7TxH2+oGL1Mch3SoGLw4+Uqev1EEQVUU+5LjN3EWTA/2PHIazBKzcueQHGpgqo6zTkE9K5+DNrKfCe9wqQc47LN5ay+drgzq1uw0ySbEbHNZ4Kg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725010366; c=relaxed/simple;
-	bh=AmU8VNcmg+Cto045+r2iEM83JCCDd+dm1i8zbDflc9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D/XGkE8OcA8PFcyj+tHmswSIoFgjz7c7pGjquJSY+NkYB2IVFngn76NH/z8aeGAhGl+3i/1UJE9thnMqceOyZweuZeKwLaHPrdsXq3dm5/OEAcfnjlMn02OEOeWdLROvnNQcszxa7qj/UkJF8yXrWVPgMbMRPOMQszvRM5V5LMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxvpuykdFmcAIlAA--.47735S3;
-	Fri, 30 Aug 2024 17:32:34 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxrt6tkdFmizAAAA--.1421S5;
-	Fri, 30 Aug 2024 17:32:33 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	x86@kernel.org,
-	Song Gao <gaosong@loongson.cn>
-Subject: [PATCH v8 3/3] irqchip/loongson-eiointc: Add extioi virt extension support
-Date: Fri, 30 Aug 2024 17:32:29 +0800
-Message-Id: <20240830093229.4088354-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240830093229.4088354-1-maobibo@loongson.cn>
-References: <20240830093229.4088354-1-maobibo@loongson.cn>
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA65C17C7B6
+	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 09:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725011612; cv=fail; b=BPaS+0k3Xd7ly6gmJaNL7q56+YWE3VkQDtTQmwic/NWm8HM2K4SbYUZor0EJod5iDZp8Re+gpOAPEw12t4uaQkrb3il0rMzgI47kIHVLEgAyHcHXk4w4sNA8yvawX+WsYVfX4L8kXKictSONs3PhbvYjYWnVdLCm2wh+RR6Lm7Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725011612; c=relaxed/simple;
+	bh=hqNEcd0+gZBmyjQukjB/xbHJhaOmusztk04aOE5/uxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kxHWKNP7CPdjuTQVxHW8oAZkAJmKvBhR/w6bdbjUPpjBvppUd9j3xJIPiUom0cNNtl9Py+cy+nFgQagzB/Y5eSEyCDEdJ4l/LcXSwZc4rSQevojx1NLMQHdQEWeRrbIrjoF38GPy22ULAt/g/vICRws/C6cLth7oQvvDZV4qpOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=e5Qw2Pp6; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FOnk77RF; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e5Qw2Pp6";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FOnk77RF"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47U996bJ008933;
+	Fri, 30 Aug 2024 09:52:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=corp-2023-11-20; bh=ZO/z0VSZTX01uvY
+	2vRGWI6PSHLebnvQsYp7WAyj3g5c=; b=e5Qw2Pp6Cz9V0QDQNJ8RORBld9wmNde
+	5YzT7X50SkMSvSC2SRew+o1iAOQvH+0RaGMYYNEJdxp0iWSxKZYRnmxqi0fSbqPY
+	Ga/+bP9gA5PoUBC8UPGJt2P3GjSIB9S0OfyYTcAE2JK+xEdWv35AzqttYZnTJ2ve
+	NozBY+S9pawhbbhjYtcLne2GzAY1s9sXT6qgXsJP5RBcu46FNugcIjO/fYtLPTHh
+	L5LxZAo/+MBCO1tZDdAKsHEivqRgtnBDrswW+0KjHnrNbGnTuyvkCgCk0MyBqN7d
+	kpmlEUyTT4Zpx3kJafoV7Rx6VGj7pKGEPLRNtSBZnutaA6tOdyUn4zQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41bb6dg28q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 Aug 2024 09:52:09 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47U8eBxA016846;
+	Fri, 30 Aug 2024 09:52:09 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2042.outbound.protection.outlook.com [104.47.74.42])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5w8pjs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 Aug 2024 09:52:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MwZlaNuATC7DiTxYwOGr89usuWLhJfj14hn3YMPcvnuPLAoFrYYrWAY30sH6Meavb0X5Ao8SL2jYo1PTozBkxhVa7iDCdKcqndkWZWFXpMqbYb2OI7I4NkPUXTqixL0tu+nEnGrzzT9glHExfu7yiZqCGjH/B/C6Xb2YKQRjVMl3hAW2y1/zeu8jozmG4SF8kc6Szy7i0MP20bdZmJqREcHBp9j05LvrriW1mLmJby3As9XclG+rr1+2y2JjDMuzaQxZAzXv4AQ4tamTpp39Bx0H2rwnRNVz+FWsyH1n9QiVSy8j3yjk7dXFty5Pp+nWsgHV5XWOHy9RjaN1a26iMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZO/z0VSZTX01uvY2vRGWI6PSHLebnvQsYp7WAyj3g5c=;
+ b=pVNMPvRukvMzIayJQI9CDkIld3/FiTesrQrh9pI7eGg9vabZ+Qmr/cLfdoJCB6KxZxzmzAFq86GZ3cioZLn/DX9XU2NAcZP9nyYZCK5DJgChp28pMrnKliCqySi/3YrviRxH3vuO3R21ppqHoEAYgUk23cE0VWxtZuYXuF43MIV86ErTgV6i5133m7E24uqyI4+ZRXFIH05iut1Ifb5WNABiXSZh1b4iDU7Diptr9dDKrX8p2KR/b8lovGOUFv3JVpacx/MWI6XYZULRJYI0VeAZ3YLPBKrPI36VG9eUJlLkVu8m105sbD/PU+lCCVugkqxxh7q8mPtviRKVUwCtoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZO/z0VSZTX01uvY2vRGWI6PSHLebnvQsYp7WAyj3g5c=;
+ b=FOnk77RFCgXK675hPoWdfPv6M3JH16/rOzZpWRYT1Zvw9zrnHVjIM6XFQwLiRCn0LeUCZIG4QzAy+auv6Mg8A0tQpepvkDSaZIUmcdsgnsQNS3F2/PBGtTGZNQk7BisJVl1KzQwr+ZX2Sxxb4J+uoQ7ubqWXYkIH/HSyk/E7cjw=
+Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
+ by IA0PR10MB6796.namprd10.prod.outlook.com (2603:10b6:208:438::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.19; Fri, 30 Aug
+ 2024 09:52:05 +0000
+Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
+ ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
+ ([fe80::4239:cf6f:9caa:940e%5]) with mapi id 15.20.7918.019; Fri, 30 Aug 2024
+ 09:52:05 +0000
+Date: Fri, 30 Aug 2024 10:52:01 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC v2 0/4] mm: Introduce MAP_BELOW_HINT
+Message-ID: <b31a2c87-0c90-4062-9feb-6d6b813c0bde@lucifer.local>
+References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
+ <ab90ff3b-67dc-4195-89a7-54e394da1aa0@lucifer.local>
+ <4e1e9f49-8da4-4832-972b-2024d623a7bb@lucifer.local>
+ <ZtDzVZLrcbiKRium@ghost>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZtDzVZLrcbiKRium@ghost>
+X-ClientProxiedBy: LO2P265CA0494.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:13a::19) To SJ0PR10MB5613.namprd10.prod.outlook.com
+ (2603:10b6:a03:3d0::5)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxrt6tkdFmizAAAA--.1421S5
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|IA0PR10MB6796:EE_
+X-MS-Office365-Filtering-Correlation-Id: f703d2ea-c962-4b51-520f-08dcc8d96753
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+AIg5RFZ2SL+O9QVZMB/FJKKtdwiVTQQjWCnzCtC+m3Yrafy24eFu5fNCS3J?=
+ =?us-ascii?Q?uUo1veKZIpWiHLA7gI0uDJmEktzztKRehFl90ILfTjNkV3rCqPMtIulzjNJ1?=
+ =?us-ascii?Q?gUTcyd7KgNW/0yfb9q4nIhuNtCHMmXCSiL9U5MY9vYWhC0Hh/BIbdkGbsh59?=
+ =?us-ascii?Q?lkt/Rz8ud71HAdcyXmyhdohD+UOOAkI2zJkBDacbuPTFxgovrJxQA6T3CliN?=
+ =?us-ascii?Q?nOwMx9v//r4eNjwOxBHhOiKHjQpJYARKyzCQYxWoVeu0CuMW2g1dBUOwuPRA?=
+ =?us-ascii?Q?fWw2BFMsadMBH/Rd+BmVqUbCTGr4FlACZJ87qAz5JSlsYfUULFG0ksVmo7nT?=
+ =?us-ascii?Q?qTFA5coShJFpGB+b60mDeLGGUVt57N0BB7U7diMu172pbhhLGRsSIU6gm5YV?=
+ =?us-ascii?Q?GKTPGFWBeZOTmb+KVCQYoqkrCA/wLTgrss3WI1VJPwE8YLjfyQWNTzsrhwdS?=
+ =?us-ascii?Q?/BlfS/SDTWZJLJqLRqMlzbcYmL5E0eD1Rj1rNia1H62cct/6dleDutl4h4zI?=
+ =?us-ascii?Q?AED2JJSyO3iCAZlKZv+HEA2yd2qb1u62pxoVujd8Zc6NVNOHTDojxVE6t/ij?=
+ =?us-ascii?Q?rlPvFmbO4pQcsrwguCMjhK82uJBSnlTqh+ZoxQ3lv3e/cXO2rABwnvSiPKuA?=
+ =?us-ascii?Q?V7jHdSu3pUdvv77m8kbyCtIlM0ChFIhC+5qecyG2FEShHrWsgFsan5F5RGss?=
+ =?us-ascii?Q?lTq+P+So0kTzDLr5A7BK/4RIH1KBrWXodKat8lIDiL0jPfy0yJm/ui0nWYN9?=
+ =?us-ascii?Q?qsBEgXB4/+uIJ+TJNZms8eOzSYijTTU7B0Ce9aMEFdiobbQkB50332KZ65Ij?=
+ =?us-ascii?Q?OkKrTTohXg4FRm3BmoOVV669AyHJgd68Y5mey5C2g8MdB/z41Obw1go1k6Xz?=
+ =?us-ascii?Q?6CpDVWMw1VDb/MFn96epjklP1iZ3zid2IePfMOozTRTfc4gkxQUs1DHb5BSd?=
+ =?us-ascii?Q?i5ZlfAR0fx8JpWrFpyTrXQEGsg8wt5/4aN1AJzFZqSUf/49rSWbdYO6CDJN0?=
+ =?us-ascii?Q?D5UiMPrE9Ui6FXRVqSf7DfAbCg4mJfUyAVOPESeB/EKTEfuEfFsliK6AK1pM?=
+ =?us-ascii?Q?zHu+NXvJS/Z64XwnBYAtydmjSFF8y+H96iuj7us4xNR/CrZ6oigNQhq89Nzu?=
+ =?us-ascii?Q?HzxFLzueb7QBAXoc6is0y+6PSxL4cGgj1/fbY5WJQEMQwsJRpVfHY8toIG0U?=
+ =?us-ascii?Q?G1rL6Oa0iey/K0DpHgXeZ5EUyQso/qtroVgSktl55SwR0Rq8GhRQ7sONZasA?=
+ =?us-ascii?Q?BCz/IMVxIPeMgLCW4fLm/wrPoYt3NqAZlCv2kQhE3CFie3pfjGZZ2YzT2FZH?=
+ =?us-ascii?Q?J3QCDX/+tw5+HWgdNSReOil6EFevgREBAT/nu/Kmc81b+Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?F3jAJO10bfpAGWMwANAiMlWB50sSiIr91zWtvvYUdCgTzfSpeyFd8iSftFzt?=
+ =?us-ascii?Q?g7EhTODFppK9VQrGO2NR2j/AvFVP8GZe1oztMjkGC+vQmwQge+aLcqe4TA36?=
+ =?us-ascii?Q?XLidSUoh28hBnaG1qtmKEknJDqNqcxUdLUgR0xWs4H/ezHpgHwoqNhjZFoSl?=
+ =?us-ascii?Q?IkSWf9/r8ZF6jo/0s3OJWR5YQd++hDhZue9TkE1NupOOBZL2dDt6QT2zXKtu?=
+ =?us-ascii?Q?KvPLvZW0Rdc1fTT1PI1AHQwyVe+Q7QPjjv8SVP08U6b7Lh+Rsp0Ltaezgtzv?=
+ =?us-ascii?Q?Zf98eKI6H/WsHTh6t0Y61aWqnoZlPyYN4muiNtopzKIvw3kM2EbZmn6gMVOW?=
+ =?us-ascii?Q?3PLSBArQGIaEAIxfLM9PPO2IG8sOJMMFl6o/5B88840Btyb+0O1JqLPaw/jX?=
+ =?us-ascii?Q?yJHhfaj9tHMuHowDyQZhfPlFGeniwuTodkfn/SgIw9jELLwMEe3ERKvIbyhi?=
+ =?us-ascii?Q?3X4nVXft1hGWWrt1ISN6zOURsGi5Q/MxfCLmljbMGu3zUZcH7sOeD/+qGWPi?=
+ =?us-ascii?Q?6De+lKHu1UC7RtEz1uBiTDgejRBygLECmJeFP2wxDCwiRa7lGlgbFJJWjjMx?=
+ =?us-ascii?Q?uHLkUcwCb8mliWb7Dexx+KAkaFwe736dje5AvgF277aatb5mU6C6f0AltasC?=
+ =?us-ascii?Q?yFzIS4Lk+Tu/O9Nua5vbUTjyWv/DZtGN41Rng1uqwv03IcqVLasa6AcMafD0?=
+ =?us-ascii?Q?iUPdD4wVbv3Htg4gFHkC+av/3KA5rht/kzk3qAfPPowzJrAy6UWhjE0tlgAe?=
+ =?us-ascii?Q?Y/EDJX1Q5eAlg2xiMYuSSWocd9+Z0kLen2togVQimO5Vn1qJmB5qwd2+auGt?=
+ =?us-ascii?Q?jf77X3+DM66dIzyNb/e5ZXOxbdxkeyHeqMYudZDqQezBz/XhFDh3+MEI4hLZ?=
+ =?us-ascii?Q?ZGuH0HeUVEtvd/bQJ8KheHNr3rh03vPhUD9hS33bTYFhDhhP9OyZHglquVR+?=
+ =?us-ascii?Q?Q2IDZApwsTwZq5feMP7KGp5Qg8fiBWRBOK8uOIPfRcCDx6zvK6CFo1nsu7Hd?=
+ =?us-ascii?Q?pzi8761J+tmKYlLuzhAVDalYfgM60zppscuNDVs0wfpWoEHaAxBvwMFu0/zy?=
+ =?us-ascii?Q?cPSTuSOb97Ghpt29eli0QyqjmoyBVGLvpfz9/GGnQb28pjmJHyFuN3JZGqUw?=
+ =?us-ascii?Q?toqvF19VLv4XrfcgOF5yphrMO+3QUanW5pE1sl5xfmGwicLIaOkRMSYtW7/N?=
+ =?us-ascii?Q?LDoHERMYymRx+2YdOb/jKiOmEG/aznNzW4SOcVVr6RjWsevjxiC3TAb2Pw/d?=
+ =?us-ascii?Q?Nb65bnpy/gYcUEXjNQKrYarweHS8xd2wyXYVF/DELB76wB8Tvy8luq7Li92X?=
+ =?us-ascii?Q?8412sf92TNocPw80FT9x43xcu1ytZpLopnkjIkSMDO0PSo8BbdD9SmJJbqIu?=
+ =?us-ascii?Q?X43eStPGMriDprAcm1RRnXQh7Kw4+evZ6wgNrqDZBRzQx14qEfL9v2uUs7+a?=
+ =?us-ascii?Q?ZIIhBRBKziAU3HV+6kQH8QpmEDtRR/uGmBJWtrHwpdTpK4Z245fCDCmt22tg?=
+ =?us-ascii?Q?XDCuf8VoQnkxageuGWy8RVCX6eRH++T1E+yF0ITIJBMt9jPzwYoDYMh8Y3ug?=
+ =?us-ascii?Q?ZNNJCW2l7sEpDTNgjubgCuDRiM31Kt1Iu1c9IAqd70rPkiO06jTOf/eBAWmJ?=
+ =?us-ascii?Q?EZCJ4Xq4V0lQtBrktRJHXm2xlFuvjk740JDk7MZZL4BLXcT4K6ICw5x40KTH?=
+ =?us-ascii?Q?xfoEqw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0qU9QtNKAdMSQI11Q+cpef20P56HG5UYPfcpT3UWozxmwRu3XPTpY3uR5TB9h/IMoCzPjEyVyknYrIP+8eV+PeZwvMft0uZgg23oMAPrxtcN2Mu5nFe8EYbcE+zTNFNYZHh6nfPymyEZwZb/YqFz/DjTal+NI/I9OA9d+OGmnJbbd1ErZci1GakkvxbuKDbn9OjCnYkf5SE4PJ5yZO4gezeDGTswUg/oio+64VvJCqO3WnDh9Fzi3E7UCXjW1tzopmWeJiAwzwkEX671F56otA73Ae9uUz7noidRVliJLk28KjmjcjW4zysRs8aLJSfSKIV9h1jOgj+G84TpatZJVJoEl2yQevAdTrIlgRzZtAKE8lmljRSmzWFCFCn9HRLh2rjqj1aVpbIi9Sx0O1QPONLBwTRvHlucqRUyr9OJjlocF4nzXPFeYDUgOgiwlql6Il+HfiNXlqhxWSzDWDx3pLH+b+eDGuGjhUFoz5OPZL8yjz/6vBFBIcE5B02JrbT151O9c8pi0xUgfhangfb5q4NhXVN3IO2osoZ5QyepuOAQ+t5EpJddkyP2HIxkEJWJBdh+ddX4Y+tjJC4lpX+QAX/KiWa133uIVyHQJd26VEQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f703d2ea-c962-4b51-520f-08dcc8d96753
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2024 09:52:04.9478
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rNiqPdqm2MJsKp5Cluu6BOFKOwSzocGWe5+YSwJrHLpo434GWkdoVZgwB8ScyStYBEduAARPZSqAtnCljmeOCSpKKfucgX0MKHi24aRhhSo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6796
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-30_04,2024-08-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408300073
+X-Proofpoint-GUID: 2qHYM9UYSx-jLkIcGYiHdSUQ4okdPQCb
+X-Proofpoint-ORIG-GUID: 2qHYM9UYSx-jLkIcGYiHdSUQ4okdPQCb
 
-Interrupts can be routed to maximal four virtual CPUs with one HW
-EIOINTC interrupt controller model, since interrupt routing is encoded with
-CPU bitmap and EIOINTC node combined method. Here add the EIOINTC virt
-extension support so that interrupts can be routed to 256 vCPUs on
-hypervisor mode. CPU bitmap is replaced with normal encoding and EIOINTC
-node type is removed, so there are 8 bits for cpu selection, at most 256
-vCPUs are supported for interrupt routing.
+On Thu, Aug 29, 2024 at 03:16:53PM GMT, Charlie Jenkins wrote:
+> On Thu, Aug 29, 2024 at 10:54:25AM +0100, Lorenzo Stoakes wrote:
+> > On Thu, Aug 29, 2024 at 09:42:22AM GMT, Lorenzo Stoakes wrote:
+> > > On Thu, Aug 29, 2024 at 12:15:57AM GMT, Charlie Jenkins wrote:
+> > > > Some applications rely on placing data in free bits addresses allocated
+> > > > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+> > > > address returned by mmap to be less than the 48-bit address space,
+> > > > unless the hint address uses more than 47 bits (the 48th bit is reserved
+> > > > for the kernel address space).
+> > >
+> > > I'm still confused as to why, if an mmap flag is desired, and thus programs
+> > > are having to be heavily modified and controlled to be able to do this, why
+> > > you can't just do an mmap() with PROT_NONE early, around a hinted address
+> > > that, sits below the required limit, and then mprotect() or mmap() over it?
+> > >
+> > > Your feature is a major adjustment to mmap(), it needs to be pretty
+> > > significantly justified, especially if taking up a new flag.
+> > >
+> > > >
+> > > > The riscv architecture needs a way to similarly restrict the virtual
+> > > > address space. On the riscv port of OpenJDK an error is thrown if
+> > > > attempted to run on the 57-bit address space, called sv57 [1].  golang
+> > > > has a comment that sv57 support is not complete, but there are some
+> > > > workarounds to get it to mostly work [2].
+> > > >
+> > > > These applications work on x86 because x86 does an implicit 47-bit
+> > > > restriction of mmap() address that contain a hint address that is less
+> > > > than 48 bits.
+> > >
+> > > You mean x86 _has_ to limit to physically available bits in a canonical
+> > > format :) this will not be the case for 5-page table levels though...
+>
+> I might be misunderstanding but I am not talking about pointer masking
+> or canonical addresses here. I am referring to the pattern of:
+>
+> 1. Getting an address from mmap()
+> 2. Writing data into bits assumed to be unused in the address
+> 3. Using the data stored in the address
+> 4. Clearing the data from the address and sign extending
+> 5. Dereferencing the now sign-extended address to conform to canonical
+>    addresses
+>
+> I am just talking about step 1 and 2 here -- getting an address from
+> mmap() that only uses bits that will allow your application to not
+> break. How canonicalization happens is a a separate conversation, that
+> can be handled by LAM for x86, TBI for arm64, or Ssnpm for riscv.
+> While LAM for x86 is only capable of masking addresses to 48 or 57 bits,
+> Ssnpm for riscv allow an arbitrary number of bits to be masked out.
+> A design goal here is to be able to support all of the pointer masking
+> flavors, and not just x86.
 
-Co-developed-by: Song Gao <gaosong@loongson.cn>
-Signed-off-by: Song Gao <gaosong@loongson.cn>
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- .../arch/loongarch/irq-chip-model.rst         |  64 ++++++++++
- .../zh_CN/arch/loongarch/irq-chip-model.rst   |  55 +++++++++
- arch/loongarch/include/asm/irq.h              |   1 +
- drivers/irqchip/irq-loongson-eiointc.c        | 112 ++++++++++++++----
- 4 files changed, 211 insertions(+), 21 deletions(-)
+Right I get that, I was just saying that the implicit limitation in x86 is
+due to virtual addresses _having_ to be less than 48 bits. So that's why
+that is right? I mean perhaps I'm mistaken?
 
-diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-index 7988f4192363..d2350780ad1d 100644
---- a/Documentation/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/arch/loongarch/irq-chip-model.rst
-@@ -85,6 +85,70 @@ to CPUINTC directly::
-     | Devices |
-     +---------+
- 
-+Virtual extended IRQ model
-+==========================
-+
-+In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt
-+go to CPUINTC directly, CPU UARTS interrupts go to PCH-PIC, while all other
-+devices interrupts go to PCH-PIC/PCH-MSI and gathered by V-EIOINTC (Virtual
-+Extended I/O Interrupt Controller), and then go to CPUINTC directly::
-+
-+       +-----+    +-------------------+     +-------+
-+       | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
-+       +-----+    +-------------------+     +-------+
-+                            ^
-+                            |
-+                      +-----------+
-+                      | V-EIOINTC |
-+                      +-----------+
-+                       ^         ^
-+                       |         |
-+                +---------+ +---------+
-+                | PCH-PIC | | PCH-MSI |
-+                +---------+ +---------+
-+                  ^      ^          ^
-+                  |      |          |
-+           +--------+ +---------+ +---------+
-+           | UARTs  | | Devices | | Devices |
-+           +--------+ +---------+ +---------+
-+
-+
-+Description
-+-----------
-+V-EIOINTC (Virtual Extended I/O Interrupt Controller) is an extension of
-+EIOINTC, it only works in VM mode which runs in KVM hypervisor. Interrupts can
-+be routed to up to four vCPUs via standard EIOINTC, however with V-EIOINTC
-+interrupts can be routed to up to 256 virtual cpus.
-+
-+With standard EIOINTC, interrupt routing setting includes two parts: eight
-+bits for CPU selection and four bits for CPU IP (Interrupt Pin) selection.
-+For CPU selection there is four bits for EIOINTC node selection, four bits
-+for EIOINTC CPU selection. Bitmap method is used for CPU selection and
-+CPU IP selection, so interrupt can only route to CPU0 - CPU3 and IP0-IP3 in
-+one EIOINTC node.
-+
-+With V-EIOINTC it supports to route more CPUs and CPU IP (Interrupt Pin),
-+there are two newly added registers with V-EIOINTC.
-+
-+EXTIOI_VIRT_FEATURES
-+--------------------
-+This register is read-only register, which indicates supported features with
-+V-EIOINTC. Feature EXTIOI_HAS_INT_ENCODE and EXTIOI_HAS_CPU_ENCODE is added.
-+
-+Feature EXTIOI_HAS_INT_ENCODE is part of standard EIOINTC. If it is 1, it
-+indicates that CPU Interrupt Pin selection can be normal method rather than
-+bitmap method, so interrupt can be routed to IP0 - IP15.
-+
-+Feature EXTIOI_HAS_CPU_ENCODE is entension of V-EIOINTC. If it is 1, it
-+indicates that CPU selection can be normal method rather than bitmap method,
-+so interrupt can be routed to CPU0 - CPU255.
-+
-+EXTIOI_VIRT_CONFIG
-+------------------
-+This register is read-write register, for compatibility intterupt routed uses
-+the default method which is the same with standard EIOINTC. If the bit is set
-+with 1, it indicated HW to use normal method rather than bitmap method.
-+
- ACPI-related definitions
- ========================
- 
-diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-index f1e9ab18206c..d696bd394c02 100644
---- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-@@ -87,6 +87,61 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
-     | Devices |
-     +---------+
- 
-+虚拟扩展IRQ模型
-+===============
-+
-+在这种模型里面, IPI(Inter-Processor Interrupt) 和CPU本地时钟中断直接发送到CPUINTC,
-+CPU串口 (UARTs) 中断发送到PCH-PIC, 而其他所有设备的中断则分别发送到所连接的PCH_PIC/
-+PCH-MSI, 然后V-EIOINTC统一收集，再直接到达CPUINTC::
-+
-+        +-----+    +-------------------+     +-------+
-+        | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
-+        +-----+    +-------------------+     +-------+
-+                             ^
-+                             |
-+                       +-----------+
-+                       | V-EIOINTC |
-+                       +-----------+
-+                        ^         ^
-+                        |         |
-+                 +---------+ +---------+
-+                 | PCH-PIC | | PCH-MSI |
-+                 +---------+ +---------+
-+                   ^      ^          ^
-+                   |      |          |
-+            +--------+ +---------+ +---------+
-+            | UARTs  | | Devices | | Devices |
-+            +--------+ +---------+ +---------+
-+
-+V-EIOINTC 是EIOINTC的扩展, 仅工作在hyperisor模式下, 中断经EIOINTC最多可个路由到４个
-+虚拟cpu. 但中断经V-EIOINTC最多可个路由到256个虚拟cpu.
-+
-+传统的EIOINTC中断控制器，中断路由分为两个部分：8比特用于控制路由到哪个CPU，
-+4比特用于控制路由到特定CPU的哪个中断管脚.控制CPU路由的8比特前4比特用于控制
-+路由到哪个EIOINTC节点，后4比特用于控制此节点哪个CPU。中断路由在选择CPU路由
-+和CPU中断管脚路由时，使用bitmap编码方式而不是正常编码方式，所以对于一个
-+EIOINTC中断控制器节点，中断只能路由到CPU0 - CPU3，中断管教IP0-IP3。
-+
-+V-EIOINTC新增了两个寄存器，支持中断路由到更多CPU个和中断管脚。
-+
-+V-EIOINTC功能寄存器
-+-------------------
-+功能寄存器是只读寄存器，用于显示V-EIOINTC支持的特性，目前两个支持两个特性
-+EXTIOI_HAS_INT_ENCODE 和 EXTIOI_HAS_CPU_ENCODE。
-+
-+特性EXTIOI_HAS_INT_ENCODE是传统EIOINTC中断控制器的一个特性，如果此比特为1，
-+显示CPU中断管脚路由方式支持正常编码，而不是bitmap编码，所以中断可以路由到
-+管脚IP0 - IP15。
-+
-+特性EXTIOI_HAS_CPU_ENCODE是V-EIOINTC新增特性，如果此比特为1，表示CPU路由
-+方式支持正常编码，而不是bitmap编码，所以中断可以路由到CPU0 - CPU255。
-+
-+V-EIOINTC配置寄存器
-+-------------------
-+配置寄存器是可读写寄存器，为了兼容性考虑，如果不写此寄存器，中断路由采用
-+和传统EIOINTC相同的路由设置。如果对应比特设置为1，表示采用正常路由方式而
-+不是bitmap编码的路由方式。
-+
- ACPI相关的定义
- ==============
- 
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index 480418bc5071..ce85d4c7d225 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -54,6 +54,7 @@ extern struct acpi_vector_group pch_group[MAX_IO_PICS];
- extern struct acpi_vector_group msi_group[MAX_IO_PICS];
- 
- #define CORES_PER_EIO_NODE	4
-+#define CORES_PER_VEIO_NODE	256
- 
- #define LOONGSON_CPU_UART0_VEC		10 /* CPU UART0 */
- #define LOONGSON_CPU_THSENS_VEC		14 /* CPU Thsens */
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index b1f2080be2be..763306cdbdfe 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -14,6 +14,7 @@
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/kernel.h>
-+#include <linux/kvm_para.h>
- #include <linux/syscore_ops.h>
- #include <asm/numa.h>
- 
-@@ -24,15 +25,37 @@
- #define EIOINTC_REG_ISR		0x1800
- #define EIOINTC_REG_ROUTE	0x1c00
- 
-+#define EXTIOI_VIRT_FEATURES           0x40000000
-+#define  EXTIOI_HAS_VIRT_EXTENSION     BIT(0)
-+#define  EXTIOI_HAS_ENABLE_OPTION      BIT(1)
-+#define  EXTIOI_HAS_INT_ENCODE         BIT(2)
-+#define  EXTIOI_HAS_CPU_ENCODE         BIT(3)
-+#define EXTIOI_VIRT_CONFIG             0x40000004
-+#define  EXTIOI_ENABLE                 BIT(1)
-+#define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
-+#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
-+
- #define VEC_REG_COUNT		4
- #define VEC_COUNT_PER_REG	64
- #define VEC_COUNT		(VEC_REG_COUNT * VEC_COUNT_PER_REG)
- #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
- #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
- #define EIOINTC_ALL_ENABLE	0xffffffff
-+#define EIOINTC_ALL_ENABLE_VEC_MASK(vector)	(EIOINTC_ALL_ENABLE & ~BIT(vector & 0x1F))
-+#define EIOINTC_REG_ENABLE_VEC(vector)		(EIOINTC_REG_ENABLE + ((vector >> 5) << 2))
-+#define EIOINTC_USE_CPU_ENCODE			BIT(0)
- 
- #define MAX_EIO_NODES		(NR_CPUS / CORES_PER_EIO_NODE)
- 
-+/*
-+ * Routing registers are 32bit, and there is 8-bit route setting for every
-+ * interrupt vector. So one Route register contains four vectors routing
-+ * information.
-+ */
-+#define EIOINTC_REG_ROUTE_VEC(vector)		(EIOINTC_REG_ROUTE + (vector & ~0x03))
-+#define EIOINTC_REG_ROUTE_VEC_SHIFT(vector)	((vector & 0x03) << 3)
-+#define EIOINTC_REG_ROUTE_VEC_MASK(vector)	(0xff << EIOINTC_REG_ROUTE_VEC_SHIFT(vector))
-+
- static int nr_pics;
- 
- struct eiointc_priv {
-@@ -42,6 +65,7 @@ struct eiointc_priv {
- 	cpumask_t		cpuspan_map;
- 	struct fwnode_handle	*domain_handle;
- 	struct irq_domain	*eiointc_domain;
-+	int			flags;
- };
- 
- static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-@@ -57,7 +81,13 @@ static void eiointc_enable(void)
- 
- static int cpu_to_eio_node(int cpu)
- {
--	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-+	int cores;
-+
-+	if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI))
-+		cores = CORES_PER_VEIO_NODE;
-+	else
-+		cores = CORES_PER_EIO_NODE;
-+	return cpu_logical_map(cpu) / cores;
- }
- 
- #ifdef CONFIG_SMP
-@@ -89,6 +119,17 @@ static void eiointc_set_irq_route(int pos, unsigned int cpu, unsigned int mnode,
- 
- static DEFINE_RAW_SPINLOCK(affinity_lock);
- 
-+static void veiointc_set_irq_route(unsigned int vector, unsigned int cpu)
-+{
-+	unsigned long reg = EIOINTC_REG_ROUTE_VEC(vector);
-+	unsigned int data;
-+
-+	data = iocsr_read32(reg);
-+	data &= ~EIOINTC_REG_ROUTE_VEC_MASK(vector);
-+	data |= cpu_logical_map(cpu) << EIOINTC_REG_ROUTE_VEC_SHIFT(vector);
-+	iocsr_write32(data, reg);
-+}
-+
- static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *affinity, bool force)
- {
- 	unsigned int cpu;
-@@ -105,18 +146,25 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
- 	}
- 
- 	vector = d->hwirq;
--	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
--
--	/* Mask target vector */
--	csr_any_send(regaddr, EIOINTC_ALL_ENABLE & (~BIT(vector & 0x1F)),
--			0x0, priv->node * CORES_PER_EIO_NODE);
--
--	/* Set route for target vector */
--	eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
--
--	/* Unmask target vector */
--	csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
--			0x0, priv->node * CORES_PER_EIO_NODE);
-+	regaddr = EIOINTC_REG_ENABLE_VEC(vector);
-+
-+	if (priv->flags & EIOINTC_USE_CPU_ENCODE) {
-+		/* Disable target irq before updating its interrupt routing */
-+		iocsr_write32(EIOINTC_ALL_ENABLE_VEC_MASK(vector), regaddr);
-+		veiointc_set_irq_route(vector, cpu);
-+		iocsr_write32(EIOINTC_ALL_ENABLE, regaddr);
-+	} else {
-+		/* Mask target vector */
-+		csr_any_send(regaddr, EIOINTC_ALL_ENABLE_VEC_MASK(vector),
-+			     0x0, priv->node * CORES_PER_EIO_NODE);
-+
-+		/* Set route for target vector */
-+		eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
-+
-+		/* Unmask target vector */
-+		csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
-+			     0x0, priv->node * CORES_PER_EIO_NODE);
-+	}
- 
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
-@@ -140,17 +188,23 @@ static int eiointc_index(int node)
- 
- static int eiointc_router_init(unsigned int cpu)
- {
--	int i, bit;
--	uint32_t data;
--	uint32_t node = cpu_to_eio_node(cpu);
--	int index = eiointc_index(node);
-+	int i, bit, cores, index, node;
-+	unsigned int data;
-+
-+	node = cpu_to_eio_node(cpu);
-+	index = eiointc_index(node);
- 
- 	if (index < 0) {
- 		pr_err("Error: invalid nodemap!\n");
--		return -1;
-+		return -EINVAL;
- 	}
- 
--	if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
-+	if (eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE)
-+		cores = CORES_PER_VEIO_NODE;
-+	else
-+		cores = CORES_PER_EIO_NODE;
-+
-+	if ((cpu_logical_map(cpu) % cores) == 0) {
- 		eiointc_enable();
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
-@@ -166,7 +220,9 @@ static int eiointc_router_init(unsigned int cpu)
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
- 			/* Route to Node-0 Core-0 */
--			if (index == 0)
-+			if (eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE)
-+				bit = cpu_logical_map(0);
-+			else if (index == 0)
- 				bit = BIT(cpu_logical_map(0));
- 			else
- 				bit = (eiointc_priv[index]->node << 4) | 1;
-@@ -370,7 +426,7 @@ static int __init acpi_cascade_irqdomain_init(void)
- static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
- 			       u64 node_map)
- {
--	int i;
-+	int i, val;
- 
- 	node_map = node_map ? node_map : -1ULL;
- 	for_each_possible_cpu(i) {
-@@ -390,6 +446,20 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
- 		return -ENOMEM;
- 	}
- 
-+	if (kvm_para_has_feature(KVM_FEATURE_VIRT_EXTIOI)) {
-+		val = iocsr_read32(EXTIOI_VIRT_FEATURES);
-+		if (val & EXTIOI_HAS_CPU_ENCODE) {
-+			/*
-+			 * With EXTIOI_ENABLE_CPU_ENCODE set, interrupt can
-+			 * route to 256 CPUs
-+			 */
-+			val = iocsr_read32(EXTIOI_VIRT_CONFIG);
-+			val |= EXTIOI_ENABLE_CPU_ENCODE;
-+			iocsr_write32(val, EXTIOI_VIRT_CONFIG);
-+			priv->flags = EIOINTC_USE_CPU_ENCODE;
-+		}
-+	}
-+
- 	eiointc_priv[nr_pics++] = priv;
- 	eiointc_router_init(0);
- 	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
--- 
-2.39.3
+Or is it such that x86 can provide a space for tagging for CPU technology
+that supports it (UAI perhaps?).
 
+I agree with what Michal and others said about the decision to default to
+the reduced address space size and opt-in for higher bits. Your series
+doesn't do this...
+
+>
+> > >
+> > > >
+> > > > Instead of implicitly restricting the address space on riscv (or any
+> > > > current/future architecture), a flag would allow users to opt-in to this
+> > > > behavior rather than opt-out as is done on other architectures. This is
+> > > > desirable because it is a small class of applications that do pointer
+> > > > masking.
+> > >
+> > > I raised this last time and you didn't seem to address it so to be more
+> > > blunt:
+> > >
+> > > I don't understand why this needs to be an mmap() flag. From this it seems
+> > > the whole process needs allocations to be below a certain limit.
+>
+> Yeah making it per-process does seem logical, as it would help with
+> pointer masking.
+
+To me it's the only feasible way forward, you can't control all libraries,
+a map flag continues to seem a strange way to implement this, and I
+understand that your justification is that it is the _least invasive_ way
+of doing this, but as I've said below, it's actually pretty invasive if you
+think about it, the current implementation seems to me to be insufficient
+without having VMA flags etc.
+
+>
+> > >
+> > > That _could_ be achieved through a 'personality' or similar (though a
+> > > personality is on/off, rather than allowing configuration so maybe
+> > > something else would be needed).
+> > >
+> > > From what you're saying 57-bit is all you really need right? So maybe
+> > > ADDR_LIMIT_57BIT?
+>
+> Addresses will always be limited to 57 bits on riscv and x86 (but not
+> necessarily on other architectures). A flag like that would have no
+> impact, I do not understand what you are suggesting. This patch is to
+> have a configurable number of bits be restricted.
+
+I get that, but as I say below, I don't think a customisable limit is
+workable.
+
+So I was trying to find a compromise that _might_ be more workable.
+
+>
+> If anything, a personality that was ADDR_LIMIT_48BIT would be the
+> closest to what I am trying to achieve. Since the issue is that
+> applications fail to work when the address space is greater than 48
+> bits.
+
+OK so this is at least some possible road forward given there is quite a
+bit of push-back to alternatives.
+
+>
+> > >
+> > > I don't see how you're going to actually enforce this in a process either
+> > > via an mmap flag, as a library might decide not to use it, so you'd need to
+> > > control the allocator, the thread library implementation, and everything
+> > > that might allocate.
+>
+> It is reasonable to change the implementation to be per-process but that
+> is not the current proposal.
+
+I mean maybe I wasn't direct enough - I oppose the current proposal as-is.
+
+>
+> This flag was designed for applications which already directly manage
+> all of their addresses like OpenJDK and Go.
+>
+> This flag implementation was an attempt to make this feature as least
+> invasive as possible to reduce maintainence burden and implementation
+> complexity.
+
+I realise, and as I said below, I don't think your implementation is
+correct in this form.
+
+Also if you can control everything + for whatever reason can _absolutely
+know_ no program will use a FFI or a 3rd party library or whatever that
+mremap()'s, I don't see why you can't use mmap() in a creative way to solve
+this rather than adding maintenance burden.
+
+A couple ideas:
+
+1. mmap(high_address - domain_size - buffer, ..., PROT_NONE, MAP_FIXED,
+   ...) a vast domain. You will almost certainly get the hint you
+   want. Then mprotect() regions to PROT_READ | PROT_WRITE as you use (or
+   even mmap() with MAP_FIXED_REPLACE over them), all will have high bits
+   clear.
+
+2. (suggested by Liam separately) mmap() with PROT_NONE addresses in the
+   higher range, which prevents mmap() or any other means of allocating
+   memory from allocating there. Acting as a 'huge guard page'.
+
+Neither require any changes.
+
+You kinda can't have it both ways - if you are absolutely controlling all
+allocations with no risk of a 3rd party library doing an allocation outside
+of this - then you can just use existing mechanics.
+
+If you don't, then MAP_BELOW_HINT is insufficient.
+
+>
+> > >
+> > > Liam also raised various points about VMA particulars that I'm not sure are
+> > > addressed either.
+> > >
+> > > I just find it hard to believe that everything will fit together.
+> > >
+> > > I'd _really_ need to be convinced that this MAP_ flag is justified, and I"m
+> > > just not.
+> > >
+> > > >
+> > > > This flag will also allow seemless compatibility between all
+> > > > architectures, so applications like Go and OpenJDK that use bits in a
+> > > > virtual address can request the exact number of bits they need in a
+> > > > generic way. The flag can be checked inside of vm_unmapped_area() so
+> > > > that this flag does not have to be handled individually by each
+> > > > architecture.
+> > >
+> > > I'm still very unconvinced and feel the bar needs to be high for making
+> > > changes like this that carry maintainership burden.
+> > >
+>
+> I may be naive but what is the burden here? It's two lines of code to
+> check MAP_BELOW_HINT and restrict the address. There are the additional
+> flags for hint and mmap_addr but those are also trivial to implement.
+
+You're taking up a MAP_ flag (in short supply) which we have to maintain
+forever across all arches and have to respect a limited map range.
+
+And everything in this realm has edge cases. I don't see how you can
+implement this correctly or usefully without a VMA flag, and see below for
+my concerns on that.
+
+This is UAPI (and really UABI) so this is _forever_. The bar is high. To me
+this proposal does not hit that, and as you keep saying this isn't even
+what you want.
+
+You want something per-process so I think the correct proposal is
+per-process.
+
+A configurable per-process thing is horrible in itself, so I think the only
+workable proposal is a fixed personality.
+
+>
+> > > So for me, it's a no really as an overall concept.
+> > >
+> > > Happy to be convinced otherwise, however... (I may be missing details or
+> > > context that provide more justification).
+> > >
+> >
+> > Some more thoughts:
+> >
+> > * If you absolutely must keep allocations below a certain limit, you'd
+> >   probably need to actually associate this information with the VMA so the
+> >   memory can't be mremap()'d somewhere invalid (you might not control all
+> >   code so you can't guarantee this won't happen).
+> > * Keeping a map limit associated with a VMA would be horrid and keeping
+> >   VMAs as small as possible is a key aim, so that'd be a no go. VMA flags
+> >   are in limited supply also.
+>
+> Yes that does seem like it would be challenging.
+
+Right so to me this rules out the MAP_BELOW_HINT. And makes this
+implementation invalid.
+
+>
+> > * If we did implement a per-process thing, but it were arbitrary, we'd then
+> >   have to handle all kinds of corner cases forever (this is UAPI, can't
+> >   break it etc.) with crazy-low values, or determine a minimum that might
+> >   vary by arch...
+>
+> Throwing an error if the value is determined to be "too low" seems
+> reasonable.
+
+What's "too low"? This will vary by arch too right? Keep in mind this is
+'forever'...
+
+>
+> > * If we did this we'd absolutely have to implement a check in the brk()
+> >   implementation, which is a very very sensitive bit of code. And of
+> >   course, in mmap() and mremap()... and any arch-specific code that might
+> >   interface with this stuff (these functions are hooked).
+> > * A fixed address limit would make more sense, but it seems difficult to
+> >   know what would work for everybody, and again we'd have to deal with edge
+> >   cases and having a permanent maintenance burden.
+>
+> A fixed value is not ideal, since a single size probably would not be
+> suffiecient for every application. However if necessary we could fix it
+> to 48-bits since arm64 and x86 already do that, and that would still
+> allow a generic way of defining this behavior.
+
+This is more acceptable. It avoids pretty much all of the rest of the
+issues.
+
+>
+> > * If you did have a map flag what about merging between VMAs above the
+> >   limit and below it? To avoid that you'd need to implement some kind of a
+> >   'VMA flag that has an arbitrary characteristic' or a 'limit' field,
+> >   adjust all the 'can VMA merge' functions and write extensive testing and
+> >   none of that is frankly acceptable.
+> > * We have some 'weird' arches that might have problem with certain virtual
+> >   address ranges or require arbitrary mappings at a certain address range
+> >   that a limit might not be able to account for.
+> >
+> > I'm absolutely opposed to a new MAP_ flag for this, but even if you
+> > implemented that, it implies a lot of complexity.
+> >
+> > It implies even more complexity if you implement something per-process
+> > except if it were a fixed limit.
+> >
+> > And if you implement a fixed limit, it's hard to see that it'll be
+> > acceptable to everybody, and I suspect we'd still run into some possible
+> > weirdness.
+
+> >
+> > So again, I'm struggling to see how this concept can be justified in any
+> > form.
+>
+> The piece I am missing here is that this idea is already being used by
+> x86 and arm64. They implicitly force all allocations to be below the
+> 47-bit boundary if the hint address is below 47 bits. This flag is much
+> less invasive because it is opt-in and will not impact any existing
+> code. I am not familiar enough with all of the interactions spread
+> throughout mm to know how these architectures have managed to ensure
+> that this 48-bit limit is enforced across things like mremap() as well.
+>
+
+I just wrote a bunch above about this and did in the original email.
+
+The 48-bit limit is much more workable and is across-the-board so it's easy
+to implement. It's the variable thing or map flag thing that's the problem.
+
+> Are you against the idea that there should be a standard way for
+> applications to consistently obtain address that have free bits, or are
+> you just against this implementation? From your statement I assume you
+> mean that every architecture should continue to have varying behavior
+> and separate implementations for supporting larger address spaces.
+>
+
+I'm against this implementation, or one with a variable limit.
+
+An ADDR_LIMIT_48BIT personality I think is the most workable form of
+this. Others may have opinions on this also, but it avoids pretty much all
+of the aforementioned issues and is the least invasive.
+
+> - Charlie
+>
+
+Sorry to push back so much on your series, your efforts are appreciated, I
+am simply trying to head off issues in the future especially those that end
+up exposed to userland! :)
