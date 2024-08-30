@@ -1,162 +1,168 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBB228DD0
-	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 01:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5CD1411C8
+	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 04:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724980611; cv=none; b=pT6dIWdkxzPsQExxliwv8Ndk8TLH1MAIjTlaLTtkb4Eymz7ZESWIfT9eOvcrqgkhLM8jVm2y86SAKlL8VWKdnwhdJ7QcNLtEbNfBScAumZwCN4s120M5sv1Qv/3DcswycZffilVbl7DPCEjooyZAOFvzp8h5HgEXmShtLEzWqX0=
+	t=1724992568; cv=none; b=QecScc8X7uNnQgO8UHqT0CWXrdpwjBtFXy52Svk1qxVEB0E9DCxp67ZZA2gdFAH2KkwnAFLN+zHKok8/b+LN9dg+m9JJ+8+/Y9GAmdXBk9nf+im+IaPqu0G2oacI4croC9mujnK7KSoZLQN5gt9hpFOErYn5du6Z2OKGWo8uYYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724980611; c=relaxed/simple;
-	bh=O19E6wddJJJyBiqtf0WyxrT1W9vHMvm3yZWRAq+bKOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yav8oSd7V+YmrgQfAa8pdQDFTPtZh8CSPkCx0WHIzgMfDC6yZOgse0gZ34vqBj6hsQhO0VG9K3PqpUZC+cQ3MBaROXgwg/fF826uyazr2qzT+aIyULkAPNHjVpcD6QJZPY2WHZkbQk16u3jreslbFKmAUpcAnbriI05fkVE0/2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aMCjFlIa; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1724992568; c=relaxed/simple;
+	bh=Led2wy/kfxWSht1BA326pNMoaxCFzvQe40FiQLSX4f0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZT4jNfHHf2LR/vJvxKVggw4NnLIy5WN6CSVOLqYdCWb6oII0jNsTmq8mMXk6dEy2IC9IQOqCtt/KVBSi18kOuPu7ONsCdB9x3jNXH1uinlGjW7BXMvAdw4KPJFTIS8Ykahq+Q4TtInl2YLb9WauYdBkS1bIibx4YcBLWSMPJc1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N9/n5vJd; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aMCjFlIa"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5da686531d3so830547eaf.3
-        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 18:16:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9/n5vJd"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e164ceba5ffso2476811276.3
+        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 21:36:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724980608; x=1725585408; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7xDP+Z9ioGU1Ej/VigLqskETGN0WUiHvrKI/4LF5a8=;
-        b=aMCjFlIafHeEVtCGJFYo1Vj7w9nwxNSSxxHkTbcSEaowG/pH0gCuZwJhJW6VbyHyB8
-         oPpwYN4LEz2+9M6KwZ2WVTlHzzQfNLEyOEJnD5zPXZg9fBoMYiB09oqUM9tqmX/uZmsH
-         vIXh7JDglSQpMX+Ziyc2FLtC7W7HCS7oAqnH/wH1F8lypYyBmeYyyFrR+l3RLSWDAlws
-         OWqs6NaQ7PYgKM7cAW/wqqbbiKsnaWP019n9ZBL0eajQ04uS+nHnSvi/R0FH8f2/mBWK
-         33l9Bhgur1I7WH3o8kXBn8iFYFur+dKtI4Jn7HnrfUZ7JrEe8v7BnwVOtSZwt6CEJK2T
-         4Q0g==
+        d=google.com; s=20230601; t=1724992564; x=1725597364; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0RRTA1H5OtG+8qgMxGB5BU8t5Dbb6+roBouJjwlrdgk=;
+        b=N9/n5vJdmSX0s38ypRVhWtRwEJwzGy/3WN8Z/Odpzzp3ABQHCpOY+XQdv6f/qTf+mE
+         UqlLBAv1MJRz+8cj5zBjFJ5NUIEE2QlP6TlNu5vF8Sb1HsvBMRVst+e7n5E1d0HUvG10
+         4nmfP9kFNlEoaYFK2uUyspH9GZrSw7BshmLMcfIpjJpvoF/y0BMnOH8YjAhLv4ngDrD3
+         dJ1bF0BqpxDcWNTsgPyRaTa/SIufFgSitlLEJvXktDR0vqTZcNBpNXpcrua5NaQ4HcoD
+         4TQKD9jzeGFjOXM5XJdpoXn9On7SWCLkmW43dZzHC6JdFBrGdCcVbm2+RJCKP6T+x6BR
+         T0tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724980608; x=1725585408;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y7xDP+Z9ioGU1Ej/VigLqskETGN0WUiHvrKI/4LF5a8=;
-        b=AJ5gLTq5PrJ5QOL9ThLKLOH74cL85RjXJBzJA1TwnwEQiV4fByd9X1csKV/iovjP9P
-         scp545fHbpdI+9Bb7IvGfgyEOpoeB9od2hDu6H8FgqmqvLUT1xKw0oNny9qFmjhgHSRE
-         QBCjGmoFOmx8gLmfWS6SlbcjP5nU2HQmrgyF551YRO7X8x23OYoCw7dYEz3KfMGYOf+q
-         SBJVhZUinR/6AZEeX3acS2dpXQg2JPP82V6hzehsLdvDHD6nmsO6rNYYp0YoZd9BRavg
-         mhkYhdTp3esLo+6PVP1LtPLnxAztMVOROQwPH6WInvpcSJcBscqTAfAV+RXXRt7UA/SV
-         HE4g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/1t7RiUA0kNec1N1GD7fgYEg7aIPFfyD/i42nxWfU/vE9RGz3flvpEGOv/o15E0rVwH5OEMpwHfA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwmCOAi7NHz+qADrWPAXFrdwMZ+AFw1g7/V6eMqXv4JDWiCN3X3
-	ZUvyX8nLixmsJ0gQMHPeFCJW2eSoJ7KUBCnpCWcQKD+Hp6BaWZhwNfnYmNP6ApE=
-X-Google-Smtp-Source: AGHT+IH958S4ePdwDnUiHubyspadJoOLZkUZCeioopGjkAA0KkZUXlfkSz3mG+kkmopghBfnyH6A6g==
-X-Received: by 2002:a05:6358:2803:b0:1ac:f109:e248 with SMTP id e5c5f4694b2df-1b603c00435mr551866655d.2.1724980607523;
-        Thu, 29 Aug 2024 18:16:47 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e55a5961sm1734132b3a.63.2024.08.29.18.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 18:16:46 -0700 (PDT)
-Date: Thu, 29 Aug 2024 18:16:42 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC v2 1/4] mm: Add MAP_BELOW_HINT
-Message-ID: <ZtEdevUWzplteQWv@ghost>
-References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
- <20240829-patches-below_hint_mmap-v2-1-638a28d9eae0@rivosinc.com>
- <87mskvenum.fsf@mail.lhotse>
+        d=1e100.net; s=20230601; t=1724992564; x=1725597364;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0RRTA1H5OtG+8qgMxGB5BU8t5Dbb6+roBouJjwlrdgk=;
+        b=Hadi7jS9+Ka9TylnfmV8OZ0nkg/YGh8K3A2opyI7Fbv/FPl0hGxyhLkwqdKUkr+fIY
+         4gTo6dmRuYcjslUS+U5jhw4OxkB4GkodvcfdaBAej6DhX7+VkNLuRKa6J5KtwbjRDhgS
+         Z2jk5hSZz9zakSja470Ho+wKqh8LjuZwfRAll3WFS0rxCTp9/7uKjBJMrf4TI4M4R+4s
+         sQGfazgMsC4XGX+StP4BMR7MGcilPzD+YBglS369Or1fTI00/gvgt+BY3rxfo00i0dHh
+         XfRa2AVcQIE9GhuoPn+uOAcG3bHLtIehdSJdkzXPTdyt0dun/4pQqo8BQEi0oZOvhzeI
+         WxYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmFEy6eRehBfduR60zRoAjfKv7yN7QlUjNROxTQzpwug0MCPGr3+ufsK96oUBMphBpWu+1XUgPbEQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwoHCHXHIUaHkoFWDVXmPJ0h/PmJ4z7y2h6YZrF4DDMexyODKpc
+	N5aSdh7fPexT5e5TblhplvrfiUXD3I1T43n7AOIPRKlaABhmGuiADDDh0DUmSMiHSNCaer4HKSt
+	h7Q==
+X-Google-Smtp-Source: AGHT+IG+hqynsJ7hdgdKV9gAtkROKS2qGVXayEmYSbfKtO5Jo9FgRfejcOxvLz+XMdzoh9wRJFEwtKQxRPs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:278a:0:b0:e0b:a712:2ceb with SMTP id
+ 3f1490d57ef6-e1a79ff35c5mr30969276.5.1724992564279; Thu, 29 Aug 2024 21:36:04
+ -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 29 Aug 2024 21:35:50 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mskvenum.fsf@mail.lhotse>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
+Message-ID: <20240830043600.127750-1-seanjc@google.com>
+Subject: [PATCH v4 00/10] KVM: Register cpuhp/syscore callbacks when enabling virt
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Farrah Chen <farrah.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 29, 2024 at 06:26:41PM +1000, Michael Ellerman wrote:
-> Charlie Jenkins <charlie@rivosinc.com> writes:
-> > Some applications rely on placing data in free bits addresses allocated
-> > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
-> > address returned by mmap to be less than the 48-bit address space,
-> > unless the hint address uses more than 47 bits (the 48th bit is reserved
-> > for the kernel address space).
-> >
-> > To make this behavior explicit and more versatile across all
-> > architectures, define a mmap flag that allows users to define an
-> > arbitrary upper limit on addresses returned by mmap.
-> >
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >  include/uapi/asm-generic/mman-common.h       | 1 +
-> >  tools/include/uapi/asm-generic/mman-common.h | 1 +
->   
-> You're not meant to update the headers in tools/ directly. There's a
-> mail somewhere from acme somewhere describing the proper process, but
-> the tldr is leave it up to him.
+Register KVM's cpuhp and syscore callbacks when enabling virtualization in
+hardware, as the sole purpose of said callbacks is to disable and re-enable
+virtualization as needed.
 
-Oh okay, thank you.
+The primary motivation for this series is to simplify dealing with enabling
+virtualization for Intel's TDX, which needs to enable virtualization
+when kvm-intel.ko is loaded, i.e. long before the first VM is created.
 
-> 
-> > diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-> > index 6ce1f1ceb432..03ac13d9aa37 100644
-> > --- a/include/uapi/asm-generic/mman-common.h
-> > +++ b/include/uapi/asm-generic/mman-common.h
-> > @@ -32,6 +32,7 @@
-> >  
-> >  #define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
-> >  					 * uninitialized */
-> > +#define MAP_BELOW_HINT	  0x8000000	/* give out address that is below (inclusive) hint address */
-> 
-> IMHO the API would be clearer if this actually forced the address to be
-> below the hint. That's what the flag name implies after all.
-> 
-> It would also mean the application doesn't need to take into account the
-> length of the mapping when passing the hint.
-> 
-> cheers
+That said, this is a nice cleanup on its own.  By registering the callbacks
+on-demand, the callbacks themselves don't need to check kvm_usage_count,
+because their very existence implies a non-zero count.
 
-That's a good point. The reason I did it this way was to allow mmap the
-possibility of returning the same address as the hint. If it must be
-strictly less than the hint then the hint address can never be returned.
-Maybe that doesn't matter though.
+Patch 1 (re)adds a dedicated lock for kvm_usage_count.  Hopefully it's a
+temporary lock, as we can likely fix the cpus_read_lock() vs. kvm_lock mess
+for good by switching vm_list to an (S)RCU-protected list.
 
-- Charlie
+v4:
+ - Collect more reviews.
+ - Fix documentation for kvm_usage_lock. [Kai]
+ - Add a blurb in locking.rst to call out that cpus_read_lock() vs kvm_lock is
+   a general problem.
+ - Add a paragraph in the locking patch to suggest switching vm_list to an
+   (S)RCU-protected list, so that walkers don't need to take kvm_lock.
+ - Add an example call chain for the other cpus_read_lock() vs kvm_lock issues
+   that are lurking.
+ - Enable the module param by default from the get-go. [Paolo]
+ - Rename even more APIs/symbols (all of 'em I could find). [Paolo]
+ - Clarify that it's the 0=>1 VM creation that's problematic, not simply the
+   creation of the very first VM. [Paolo]
+ - Document enable_virt_at_load, and call out the (dis)advantages of enabling
+   virtualization when KVM is loaded.
+ - Drop the WARN on kvm_usage_count being elevated at the end of
+   kvm_uninit_virtualization(), as it's annoyingly difficult to keep the WARN
+   and still allow arch code (i.e. TDX) to enable virtualization during setup.
+
+v3:
+ - https://lore.kernel.org/all/20240608000639.3295768-1-seanjc@google.com
+ - Collect reviews/acks.
+ - Switch to kvm_usage_lock in a dedicated patch, Cc'd for stable@. [Chao]
+ - Enable virt at load by default. [Chao]
+ - Add comments to document how kvm_arch_{en,dis}able_virtualization() fit
+   into the overall flow. [Kai]
+
+v2:
+ - https://lore.kernel.org/all/20240522022827.1690416-1-seanjc@google.com
+ - Use a dedicated mutex to avoid lock inversion issues between kvm_lock and
+   the cpuhp lock.
+ - Register emergency disable callbacks on-demand. [Kai]
+ - Drop an unintended s/junk/ign rename. [Kai]
+ - Decrement kvm_usage_count on failure. [Chao]
+
+v1: https://lore.kernel.org/all/20240425233951.3344485-1-seanjc@google.com
+
+Sean Christopherson (10):
+  KVM: Use dedicated mutex to protect kvm_usage_count to avoid deadlock
+  KVM: Register cpuhp and syscore callbacks when enabling hardware
+  KVM: Rename symbols related to enabling virtualization hardware
+  KVM: Rename arch hooks related to per-CPU virtualization enabling
+  KVM: MIPS: Rename virtualization {en,dis}abling APIs to match common
+    KVM
+  KVM: x86: Rename virtualization {en,dis}abling APIs to match common
+    KVM
+  KVM: Add a module param to allow enabling virtualization when KVM is
+    loaded
+  KVM: Add arch hooks for enabling/disabling virtualization
+  x86/reboot: Unconditionally define cpu_emergency_virt_cb typedef
+  KVM: x86: Register "emergency disable" callbacks when virt is enabled
+
+ .../admin-guide/kernel-parameters.txt         |  17 ++
+ Documentation/virt/kvm/locking.rst            |  31 +-
+ arch/arm64/kvm/arm.c                          |   6 +-
+ arch/loongarch/kvm/main.c                     |   4 +-
+ arch/mips/include/asm/kvm_host.h              |   4 +-
+ arch/mips/kvm/mips.c                          |   8 +-
+ arch/mips/kvm/vz.c                            |   8 +-
+ arch/riscv/kvm/main.c                         |   4 +-
+ arch/x86/include/asm/kvm-x86-ops.h            |   4 +-
+ arch/x86/include/asm/kvm_host.h               |   7 +-
+ arch/x86/include/asm/reboot.h                 |   2 +-
+ arch/x86/kvm/svm/svm.c                        |  19 +-
+ arch/x86/kvm/vmx/main.c                       |   6 +-
+ arch/x86/kvm/vmx/vmx.c                        |  10 +-
+ arch/x86/kvm/vmx/x86_ops.h                    |   5 +-
+ arch/x86/kvm/x86.c                            |  26 +-
+ include/linux/kvm_host.h                      |  18 +-
+ virt/kvm/kvm_main.c                           | 270 +++++++++---------
+ 18 files changed, 251 insertions(+), 198 deletions(-)
+
+
+base-commit: 15e1c3d65975524c5c792fcd59f7d89f00402261
+-- 
+2.46.0.469.g59c65b2a67-goog
 
