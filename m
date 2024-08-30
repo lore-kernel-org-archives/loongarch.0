@@ -1,57 +1,57 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E22614F9F3
-	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 04:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BED1531CA
+	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 04:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724992573; cv=none; b=kn+bT2XDRFQrh3ejqJi20P5C5OQ89kAEGUarqp7sSnpRIEVBPzapy+Md1SJJAw+iyU0XwkIIbZiJIMa93Elkn3QBtruv7Rx1ZHr1NfyJokHSDsToYxsAQ6btaziyUPQdXidWG4D7wHfveleH74B1i99paLA/p+L3h+hQbOtiDn4=
+	t=1724992575; cv=none; b=Wo9Vlj8YkIB4TRk5CfW/FXGZtw2fm6/PFMGe/MLAErPEmgZjrxGChSYN0dHqAptxl30gI1FmKc3e+WCN/d+tmjLZ2MLhb5uWW4sJrreJPMm2wO4rHm/Z6ETWeeUnpX7NHTRROyBiVfBgKl5/+7xm22tpE4lXnBOG10CXH0gtWLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724992573; c=relaxed/simple;
-	bh=SkdkZeFX/OYBPHicii+69oTq+aUN0l4hd2UZEocYL2Y=;
+	s=arc-20240116; t=1724992575; c=relaxed/simple;
+	bh=Ay9SwyBhQKf/bJhFYzZ+fphWlTDNZl+aCWQe7lQ9kpE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M8h99RS0Simtd1TaK3GMrG2WNhfTQ6F/rWCp3sPiUZ2tre1AOCZuR5CoMcVBYB28TGbvfpHkEa5pN1/V4b39IY50jlCyMQFQrguG0LAqGsvApO0vNk/ADs0qCWkMWIY2M02eHx36DZ16JP8cwx3G913cA4NF544S4Vf6divodpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JTwDvn2H; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=S0XHnqRz8lEAFMN4DLma4wLVPzFIDos5GkGNLQ4W0FwjfQX78GpAh0Ky7RR9NWjh7f6CCy4A27zu0mxCAv3hZ06JLK9u7dfU6r/9PUUsInL4JlMPN1Sv9iv+S3e6foUpsgKR0itAIMkzhJQLd0BuuKmsV1SRsONVctU8fNgXe0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EoBlqAxt; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JTwDvn2H"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-778702b9f8fso878980a12.1
-        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 21:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EoBlqAxt"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6b2249bf2d0so30948127b3.2
+        for <loongarch@lists.linux.dev>; Thu, 29 Aug 2024 21:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724992571; x=1725597371; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1724992572; x=1725597372; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=9rj6vLr2Zw9u+tL14LjoFTcNuQx6nMKbwDhD6S7zy4M=;
-        b=JTwDvn2HMJEHFurCb2q1oLiuBMpMVKq5LCTQMk8lipoDguYgCfnMLCsz7gxJC9RvSu
-         X5oGoJ2eZmlUd/Ur3gXgWAvYbZMHdDx/2SywTfkNdzjNlrFcsB60GxSIZvAUE4wJICT6
-         /u/uYQQBKuyx1jM/R6Im4meeqlAaf04h2E1/YfBFk8r7w2g2WG+5Mv843ID2yhUmU7vF
-         ZKrh8T+E7StuuDYfzrq+OBrbLMqZmqSmvpIlMFAAzOaiDGYeQNjsjuffdhneSowmT/8M
-         dWbX7AUgGYme69m0tPWsCLYNE5Le6Dc0EqrXJmqWJf0QVuAs6y8B3LmliBJ1PxnaLjHR
-         vhDg==
+        bh=4AvpSvtVzfUJU2EyYm3Go6nn4YoocTvqWptP53nqH8c=;
+        b=EoBlqAxtcHqP3UZ/C8PpOIxKUr6J1IDnvzj0rtEtdtMi6s5c9aFLrODHGLklKNv1Gl
+         hrH99tvFDFQpYeEP/aYFe58KHJHsbFP9Dy/vUvgiEsZSpnLMSI063f81g99tBiUc6bss
+         +RO4BVa2NYzwLgO0o1hwI6bVZCuk/gKuvHDCUbzMV/UKJZnIrAhW8ycqkJ8N9MhZOnHq
+         FCqXNzd2/90/dEGRWKR5bs21rnkGI0otNYRiHrX794mZK6Zc56Fr/nFu8j4xiYSXRw65
+         Xl8bxzf2LgtmvHNWVoV5fu+rXGLcdMMu7Hc8PvuqMvfBX7xsoGN21lUPiKfZpwgpbUCR
+         xf/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724992571; x=1725597371;
+        d=1e100.net; s=20230601; t=1724992572; x=1725597372;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9rj6vLr2Zw9u+tL14LjoFTcNuQx6nMKbwDhD6S7zy4M=;
-        b=Wc/dzE5zRDuv5TUo/LdWHxCFIXxtwPXK1bRqav2RjMxCbpmhrMsQH1Go4GkyUrKyfN
-         RO0L3blUkKaw7PGpFUBhy1oyjseuumFQQk5rO2zAuecT0N0LtZIg9pUWjOIPMLS/+jkJ
-         Lve9LnRT2zzsmN1yzeKZiprk29tWBsxYWEt+hTuklAcOUATzPzjbzK/LJM8DGldRD6q1
-         tzRCJTe0JN+oFECG6ncRW346gJy8s1Cl3wTMxvM9Fnn3j1YETkshPTkm6Q5WWCULCJLe
-         zM3OneI84mKYfpcQ2MjmhvW+AL8F5B6Mzs1EefZl0rOWf5tPMROOQFsY/y9dNW3WUjMO
-         Or6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUZXaulNo/J1UPVeZY6c+Oy8wtqdZ+620b89akJu7bsQ/DuuX+ieu+xYY7QKcPe0oq9Dk7pN8iO/1Y=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnHBJpu3w0HXqv791ToctZ+Mv2Q0VVLROzt4WPOEZWJbSD3xRo
-	Exdgs/4FW3SI9r1L5JFTE6FnNsFcP9ZTkQNFKy0QHME+kS1KBXpY+5QJGWv8O+7uO+1zMlHIgZk
-	GuQ==
-X-Google-Smtp-Source: AGHT+IFzNLMOWxStSOb6dz4OqO52HXYFy1OXZpfuDNQs7ORrcRcLluFbTSNdD7idfuIi2MeqpuxkFW/WSPs=
+        bh=4AvpSvtVzfUJU2EyYm3Go6nn4YoocTvqWptP53nqH8c=;
+        b=kTcb2beqF/omqAkFlYtNi4WV48+tuaNG+T+AqxP+2Y5RTik8ROfWx3b5nMyYnrv0+4
+         h9RTotuErA+ptEoQSRAIRVI0Bfa51vGtJhjfAcfCj73k+jhFontef5vAqrBWERG0R2iu
+         vv41WgM6jjS/2l5z9rL6wjdJdsCirqxVRP240Dt5geyL0HqP+d3MQWC9qqndneGnMJME
+         TpMkKG1mqh+pS4+41r1hG+paxPOEKGgn0MTqIeUdHEcL9LB9AEC4DbjUK/SCLoXUUAiP
+         JjJZkAF1W8VAKeX98pE4UlK+jW1RcLHpqgToRgMeQfenz1HgyOhBakILmhZVYEK0neKR
+         r5/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUj+M56aQdyNPsCCu3/5CEaxwt2ecG9FmwGWecmP6BpqSPkUffQw64/UBn/UnMWGvG87Yw1tWh9xJ4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwbIO5XFwODdU8307EzbvFUDwWKJL45vqGjgTGV2mM4+4sAub6e
+	mVblx8wfxqUj1Nc2jtIoO4abav14625ChkdACl6s+AYlr4vwFuZ3caLzj6UpvSLw5GSGwYnR1RC
+	BWg==
+X-Google-Smtp-Source: AGHT+IEqi40cTWXbweDgNMrKLwg/O/OjOvSbekL8sfwlxBmHg+Y/0Rt/XOEiqVKMWjM4o4ZWNOIk2YltGh0=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:4303:b0:1f9:e5e4:494b with SMTP id
- d9443c01a7336-2050e9aaf54mr110245ad.2.1724992570417; Thu, 29 Aug 2024
- 21:36:10 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a5b:18d:0:b0:e11:6fcc:b656 with SMTP id
+ 3f1490d57ef6-e1a7a197ademr2073276.6.1724992572547; Thu, 29 Aug 2024 21:36:12
+ -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 29 Aug 2024 21:35:53 -0700
+Date: Thu, 29 Aug 2024 21:35:54 -0700
 In-Reply-To: <20240830043600.127750-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20240830043600.127750-1-seanjc@google.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Message-ID: <20240830043600.127750-4-seanjc@google.com>
-Subject: [PATCH v4 03/10] KVM: Rename symbols related to enabling
- virtualization hardware
+Message-ID: <20240830043600.127750-5-seanjc@google.com>
+Subject: [PATCH v4 04/10] KVM: Rename arch hooks related to per-CPU
+ virtualization enabling
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -78,196 +78,185 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Kai Huang <kai.huang@intel.com>, Farrah Chen <farrah.chen@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename the various functions (and a variable) that enable virtualization
-to prepare for upcoming changes, and to clean up artifacts of KVM's
-previous behavior, which required manually juggling locks around
-kvm_usage_count.
+Rename the per-CPU hooks used to enable virtualization in hardware to
+align with the KVM-wide helpers in kvm_main.c, and to better capture that
+the callbacks are invoked on every online CPU.
 
-Drop the "nolock" qualifier from per-CPU functions now that there are no
-"nolock" implementations of the "all" variants, i.e. now that calling a
-non-nolock function from a nolock function isn't confusing (unlike this
-sentence).
+No functional change intended.
 
-Drop "all" from the outer helpers as they no longer manually iterate
-over all CPUs, and because it might not be obvious what "all" refers to.
-
-In lieu of the above qualifiers, append "_cpu" to the end of the functions
-that are per-CPU helpers for the outer APIs.
-
-Opportunistically prepend "kvm" to all functions to help make it clear
-that they are KVM helpers, but mostly because there's no reason not to.
-
-Lastly, use "virtualization" instead of "hardware", because while the
-functions do enable virtualization in hardware, there are a _lot_ of
-things that KVM enables in hardware.
-
-Defer renaming the arch hooks to future patches, purely to reduce the
-amount of churn in a single commit.
-
-Reviewed-by: Chao Gao <chao.gao@intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Acked-by: Kai Huang <kai.huang@intel.com>
-Tested-by: Farrah Chen <farrah.chen@intel.com>
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/kvm_main.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ arch/arm64/kvm/arm.c      | 6 +++---
+ arch/loongarch/kvm/main.c | 4 ++--
+ arch/mips/kvm/mips.c      | 4 ++--
+ arch/riscv/kvm/main.c     | 4 ++--
+ arch/x86/kvm/x86.c        | 6 +++---
+ include/linux/kvm_host.h  | 4 ++--
+ virt/kvm/kvm_main.c       | 4 ++--
+ 7 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 9bef7638342e..9c8f5390ec63 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -2163,7 +2163,7 @@ static void cpu_hyp_uninit(void *discard)
+ 	}
+ }
+ 
+-int kvm_arch_hardware_enable(void)
++int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	/*
+ 	 * Most calls to this function are made with migration
+@@ -2183,7 +2183,7 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-void kvm_arch_hardware_disable(void)
++void kvm_arch_disable_virtualization_cpu(void)
+ {
+ 	kvm_timer_cpu_down();
+ 	kvm_vgic_cpu_down();
+@@ -2379,7 +2379,7 @@ static int __init do_pkvm_init(u32 hyp_va_bits)
+ 
+ 	/*
+ 	 * The stub hypercalls are now disabled, so set our local flag to
+-	 * prevent a later re-init attempt in kvm_arch_hardware_enable().
++	 * prevent a later re-init attempt in kvm_arch_enable_virtualization_cpu().
+ 	 */
+ 	__this_cpu_write(kvm_hyp_initialized, 1);
+ 	preempt_enable();
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 844736b99d38..27e9b94c0a0b 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -261,7 +261,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 	return -ENOIOCTLCMD;
+ }
+ 
+-int kvm_arch_hardware_enable(void)
++int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	unsigned long env, gcfg = 0;
+ 
+@@ -300,7 +300,7 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-void kvm_arch_hardware_disable(void)
++void kvm_arch_disable_virtualization_cpu(void)
+ {
+ 	write_csr_gcfg(0);
+ 	write_csr_gstat(0);
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index b5de770b092e..52e1f275351e 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -125,12 +125,12 @@ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
+ 	return 1;
+ }
+ 
+-int kvm_arch_hardware_enable(void)
++int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	return kvm_mips_callbacks->hardware_enable();
+ }
+ 
+-void kvm_arch_hardware_disable(void)
++void kvm_arch_disable_virtualization_cpu(void)
+ {
+ 	kvm_mips_callbacks->hardware_disable();
+ }
+diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+index bab2ec34cd87..f3427f6de608 100644
+--- a/arch/riscv/kvm/main.c
++++ b/arch/riscv/kvm/main.c
+@@ -20,7 +20,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 	return -EINVAL;
+ }
+ 
+-int kvm_arch_hardware_enable(void)
++int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	csr_write(CSR_HEDELEG, KVM_HEDELEG_DEFAULT);
+ 	csr_write(CSR_HIDELEG, KVM_HIDELEG_DEFAULT);
+@@ -35,7 +35,7 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-void kvm_arch_hardware_disable(void)
++void kvm_arch_disable_virtualization_cpu(void)
+ {
+ 	kvm_riscv_aia_disable();
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 70219e406987..1182baf0d487 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -355,7 +355,7 @@ static void kvm_on_user_return(struct user_return_notifier *urn)
+ 
+ 	/*
+ 	 * Disabling irqs at this point since the following code could be
+-	 * interrupted and executed through kvm_arch_hardware_disable()
++	 * interrupted and executed through kvm_arch_disable_virtualization_cpu()
+ 	 */
+ 	local_irq_save(flags);
+ 	if (msrs->registered) {
+@@ -12512,7 +12512,7 @@ void kvm_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_deliver_sipi_vector);
+ 
+-int kvm_arch_hardware_enable(void)
++int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	struct kvm *kvm;
+ 	struct kvm_vcpu *vcpu;
+@@ -12608,7 +12608,7 @@ int kvm_arch_hardware_enable(void)
+ 	return 0;
+ }
+ 
+-void kvm_arch_hardware_disable(void)
++void kvm_arch_disable_virtualization_cpu(void)
+ {
+ 	kvm_x86_call(hardware_disable)();
+ 	drop_user_return_notifiers();
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 79a6b1a63027..63e46a5f3812 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1514,8 +1514,8 @@ static inline void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu) {}
+ #endif
+ 
+ #ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
+-int kvm_arch_hardware_enable(void);
+-void kvm_arch_hardware_disable(void);
++int kvm_arch_enable_virtualization_cpu(void);
++void kvm_arch_disable_virtualization_cpu(void);
+ #endif
+ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
+ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index a5826e16a106..fbdd2e46e65b 100644
+index fbdd2e46e65b..b000f221abfb 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -136,8 +136,8 @@ static int kvm_no_compat_open(struct inode *inode, struct file *file)
- #define KVM_COMPAT(c)	.compat_ioctl	= kvm_no_compat_ioctl,	\
- 			.open		= kvm_no_compat_open
- #endif
--static int hardware_enable_all(void);
--static void hardware_disable_all(void);
-+static int kvm_enable_virtualization(void);
-+static void kvm_disable_virtualization(void);
- 
- static void kvm_io_bus_destroy(struct kvm_io_bus *bus);
- 
-@@ -1220,7 +1220,7 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
- 	if (r)
- 		goto out_err_no_arch_destroy_vm;
- 
--	r = hardware_enable_all();
-+	r = kvm_enable_virtualization();
- 	if (r)
- 		goto out_err_no_disable;
- 
-@@ -1263,7 +1263,7 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
- 		mmu_notifier_unregister(&kvm->mmu_notifier, current->mm);
- #endif
- out_err_no_mmu_notifier:
--	hardware_disable_all();
-+	kvm_disable_virtualization();
- out_err_no_disable:
- 	kvm_arch_destroy_vm(kvm);
- out_err_no_arch_destroy_vm:
-@@ -1360,7 +1360,7 @@ static void kvm_destroy_vm(struct kvm *kvm)
- #endif
- 	kvm_arch_free_vm(kvm);
- 	preempt_notifier_dec();
--	hardware_disable_all();
-+	kvm_disable_virtualization();
- 	mmdrop(mm);
- }
- 
-@@ -5575,13 +5575,13 @@ static struct miscdevice kvm_dev = {
- __visible bool kvm_rebooting;
- EXPORT_SYMBOL_GPL(kvm_rebooting);
- 
--static DEFINE_PER_CPU(bool, hardware_enabled);
-+static DEFINE_PER_CPU(bool, virtualization_enabled);
- static DEFINE_MUTEX(kvm_usage_lock);
- static int kvm_usage_count;
- 
--static int hardware_enable_nolock(void)
-+static int kvm_enable_virtualization_cpu(void)
- {
--	if (__this_cpu_read(hardware_enabled))
-+	if (__this_cpu_read(virtualization_enabled))
+@@ -5584,7 +5584,7 @@ static int kvm_enable_virtualization_cpu(void)
+ 	if (__this_cpu_read(virtualization_enabled))
  		return 0;
  
- 	if (kvm_arch_hardware_enable()) {
-@@ -5590,7 +5590,7 @@ static int hardware_enable_nolock(void)
+-	if (kvm_arch_hardware_enable()) {
++	if (kvm_arch_enable_virtualization_cpu()) {
+ 		pr_info("kvm: enabling virtualization on CPU%d failed\n",
+ 			raw_smp_processor_id());
  		return -EIO;
- 	}
- 
--	__this_cpu_write(hardware_enabled, true);
-+	__this_cpu_write(virtualization_enabled, true);
- 	return 0;
- }
- 
-@@ -5601,22 +5601,22 @@ static int kvm_online_cpu(unsigned int cpu)
- 	 * be enabled. Otherwise running VMs would encounter unrecoverable
- 	 * errors when scheduled to this CPU.
- 	 */
--	return hardware_enable_nolock();
-+	return kvm_enable_virtualization_cpu();
- }
- 
--static void hardware_disable_nolock(void *junk)
-+static void kvm_disable_virtualization_cpu(void *ign)
- {
--	if (!__this_cpu_read(hardware_enabled))
-+	if (!__this_cpu_read(virtualization_enabled))
+@@ -5609,7 +5609,7 @@ static void kvm_disable_virtualization_cpu(void *ign)
+ 	if (!__this_cpu_read(virtualization_enabled))
  		return;
  
- 	kvm_arch_hardware_disable();
+-	kvm_arch_hardware_disable();
++	kvm_arch_disable_virtualization_cpu();
  
--	__this_cpu_write(hardware_enabled, false);
-+	__this_cpu_write(virtualization_enabled, false);
- }
- 
- static int kvm_offline_cpu(unsigned int cpu)
- {
--	hardware_disable_nolock(NULL);
-+	kvm_disable_virtualization_cpu(NULL);
- 	return 0;
- }
- 
-@@ -5635,7 +5635,7 @@ static void kvm_shutdown(void)
- 	 */
- 	pr_info("kvm: exiting hardware virtualization\n");
- 	kvm_rebooting = true;
--	on_each_cpu(hardware_disable_nolock, NULL, 1);
-+	on_each_cpu(kvm_disable_virtualization_cpu, NULL, 1);
- }
- 
- static int kvm_suspend(void)
-@@ -5651,7 +5651,7 @@ static int kvm_suspend(void)
- 	lockdep_assert_not_held(&kvm_usage_lock);
- 	lockdep_assert_irqs_disabled();
- 
--	hardware_disable_nolock(NULL);
-+	kvm_disable_virtualization_cpu(NULL);
- 	return 0;
- }
- 
-@@ -5660,7 +5660,7 @@ static void kvm_resume(void)
- 	lockdep_assert_not_held(&kvm_usage_lock);
- 	lockdep_assert_irqs_disabled();
- 
--	WARN_ON_ONCE(hardware_enable_nolock());
-+	WARN_ON_ONCE(kvm_enable_virtualization_cpu());
- }
- 
- static struct syscore_ops kvm_syscore_ops = {
-@@ -5669,7 +5669,7 @@ static struct syscore_ops kvm_syscore_ops = {
- 	.shutdown = kvm_shutdown,
- };
- 
--static int hardware_enable_all(void)
-+static int kvm_enable_virtualization(void)
- {
- 	int r;
- 
-@@ -5712,7 +5712,7 @@ static int hardware_enable_all(void)
- 	return r;
- }
- 
--static void hardware_disable_all(void)
-+static void kvm_disable_virtualization(void)
- {
- 	guard(mutex)(&kvm_usage_lock);
- 
-@@ -5723,12 +5723,12 @@ static void hardware_disable_all(void)
- 	cpuhp_remove_state(CPUHP_AP_KVM_ONLINE);
- }
- #else /* CONFIG_KVM_GENERIC_HARDWARE_ENABLING */
--static int hardware_enable_all(void)
-+static int kvm_enable_virtualization(void)
- {
- 	return 0;
- }
- 
--static void hardware_disable_all(void)
-+static void kvm_disable_virtualization(void)
- {
- 
+ 	__this_cpu_write(virtualization_enabled, false);
  }
 -- 
 2.46.0.469.g59c65b2a67-goog
