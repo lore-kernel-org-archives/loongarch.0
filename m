@@ -1,99 +1,164 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E48915852C
-	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 13:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3F326281
+	for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 15:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725026238; cv=none; b=qtMrIKxuQcga9GgDG38vZiSrqw2NJjO/ia8xc7pY3zMXPPw2rqH3XzZ7zzh5HrkzNr7tKqsG4i18yoUbwLo4iFBzWtl9TCUcjyHdwqxiWCiMN6Vukf7eCUkjbFkESctIyfgmnaEXjVCOUaKgjXHAjnpQN6ZTYuq+CC2M/vckJsI=
+	t=1725030225; cv=none; b=Ca1du02F6ckHl6xQwYUvQ7KxTj9L02o4ssJBttbFqxvDK3Mb9TAkfwX20MmK6EN7r2FiyQzFn7HJo/7jgfJDQS5gnAoL9QpTIwP+PrLPMUfLYY+AjVvgQ+vc/DT9GhpoDFsnoUrdPG06Ykb3ONiZkazAZtDTu6xREZKOzC0pwvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725026238; c=relaxed/simple;
-	bh=NUlKGhIyCsQGFAYIgqP91JPxVHe0dLUWSGpMcalpvoU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aJC1Svr0cbgBMm5JEJEXydmcO4MnUFBtGnC0jWcIlH6IwbKhTYd3ysw6BuWQoh9D3hnSSEglrSbiO6dH/gu/8DdLQhLgEQHtfWYhf0h2OrZSvg64h/hKks0Vy2rX3J1PoLMyAb1V1Q68Q+6gXWiVmlbXJ2l1IGuTI77QAefij1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vMh+sm6Q; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1725030225; c=relaxed/simple;
+	bh=6o7JyR5HGx7yBW/bLFYB5UEEz+m8g4pL6Cmsk6vGPS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X8STISgjhD4uUT+JeQVi0PNzVrPzSXUZ1vtd1XLFWgj4itgnZf00QhQJpSbkWW32O41fKfDqkVAXc1w6Ni9WuNxUYDUl9L7iW4pCsIAxr9mjzYaXxuZXkvWGk/fr3d6T3vwIg3F5QLbu29wM1HeToM3CdDDhhx98+jUflBp075A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I+r9et+T; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vMh+sm6Q"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2053f4938c7so1334945ad.2
-        for <loongarch@lists.linux.dev>; Fri, 30 Aug 2024 06:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725026236; x=1725631036; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=58CvTL6COAyoekWQp05GB8r3Lb0Xc+vxoLW2O7LrDWY=;
-        b=vMh+sm6QtmfVIxNYxov/sRAQaoUS1IreRIZIKzAzP14Mv9a3WTi02trVqFJph4ZnH+
-         DqmJmwd7d8dLadHY7BcmuSHlYrhTmKUU7wdldxXPJy300plDwkBRmhNkt+kIeTi7muUX
-         wWI0Omuf60BEhHOuHKaOkEQMLy775FtPKIpF5KED9hJ5lD9D/rqZ5uNejr+dIi8IANyE
-         wv0zjbq80Z1oJ3wuu/HxSxOy2pblIRSh7+OInmNE8ZirI/sfu7pVmUqFhTmoGga99gmk
-         Czj7qJIs2VPHHEj+JnwbLqnQI5RW/5IOcKYhKv04sxI+7xXxCMlc0SOO8ygwU/zS2aFz
-         47UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725026236; x=1725631036;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=58CvTL6COAyoekWQp05GB8r3Lb0Xc+vxoLW2O7LrDWY=;
-        b=emC6yOQQCfXGp7P3EH6l2UKy3BpjMJ9dDCwz89JhG7FGTv2olAxd3Kf5Rbh/If48n6
-         uz8qoIE9LOO5sPqjOb5Vz6/lpeKarijaaHaUvpDLVdy9PO7iHQPVYcGWQqO7Oeb2o5I5
-         7rAslyb9iTb8tBvpUcoz7fN51mlHYJzA4IQBO8M9JEr1IB+EF534BsX3zsUKakt6zORT
-         9G9BZnD+N2I+spGkgkxqyZeFWxixY3BYCaTa/rbwi9nxDIyQ3I1h80ehBOQIDBTs5T29
-         VIk+/ET76h+2EkkDLuBu65B+S3tBP+QLJfsUMNyIxSr3SYuDLzjm4y7qwAQtN10mIR8q
-         BTew==
-X-Forwarded-Encrypted: i=1; AJvYcCXTwpR4dxzjwLZa3EG1iSyClsi8a54xG2LvPt8JjEntKWnY3bp1AGKFSgxviC4PvEYxS2N74UoBAJM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwW7kccEiq9O9dqJQJcG1HC21SG9Oh3YVHcht3HHXj2d1WrgCl8
-	XI4tKRthgOJDOyX1ez8UnEUn0BUurSNe4hPfHoSt+DTBiMmhEUIS93+an/zbiTdfoIecSd333Zb
-	GGQ==
-X-Google-Smtp-Source: AGHT+IExGR2RCNKu/4M4z4IiNUcplAydPr67v3iYUD8ZfSJDuu52D1tVexWQwhZuKUP8XxVYEYjpc6MqNEc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f90b:b0:1fd:9d0c:999e with SMTP id
- d9443c01a7336-2052857ddfamr344725ad.9.1725026235523; Fri, 30 Aug 2024
- 06:57:15 -0700 (PDT)
-Date: Fri, 30 Aug 2024 06:57:14 -0700
-In-Reply-To: <1f037b5604deb5f83f05e709b2edf3063372518f.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I+r9et+T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725030223; x=1756566223;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6o7JyR5HGx7yBW/bLFYB5UEEz+m8g4pL6Cmsk6vGPS4=;
+  b=I+r9et+T2ui29UPygIdypI2WVcOza7b6BQcMzxnxFQsgrucVn3gKoJog
+   jehtI5N81G0TgC7Ro477RtovJFEhyosKsxaPp1pvK1Ze4RdZRLE3Gav86
+   0f927APLEegIZVIJZgASLBRN7lGxSoaCVB3AVkhfF+bP805TL/Ii0xCEK
+   R5OZx8Y+Q2uq5eMsJgN3ctBY5KAh4Oxbhvu1YPvpujbuxYsx2meygYwOO
+   hIEkYpgcqYV+o9Ybzr5JHbGKg5Q3g5UpZKSgezU7Q7To+jZJa09O+VaSo
+   V4QUUEVjRC/yYA7uj6AHhC7bWomlLPL+E0arH5Iw5SzVoM5hslCLCfY5Y
+   g==;
+X-CSE-ConnectionGUID: huNKge05RDyPzrBPLWlB1g==
+X-CSE-MsgGUID: Hquz4+6KQCa2uQ2W3lUmlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="23859111"
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="23859111"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 08:03:41 -0700
+X-CSE-ConnectionGUID: r7q0CKUlTQC3x1miP8LLtw==
+X-CSE-MsgGUID: eXfyfPtHSKSD6y5ZoE14uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="64273994"
+Received: from cmdeoliv-mobl.amr.corp.intel.com (HELO [10.125.108.69]) ([10.125.108.69])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 08:03:40 -0700
+Message-ID: <a922737b-be1a-4ae9-b2d8-fefc44bb6419@intel.com>
+Date: Fri, 30 Aug 2024 08:03:25 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20240830043600.127750-1-seanjc@google.com> <20240830043600.127750-2-seanjc@google.com>
- <1f037b5604deb5f83f05e709b2edf3063372518f.camel@intel.com>
-Message-ID: <ZtHPusyTNkQ_a1Y-@google.com>
-Subject: Re: [PATCH v4 01/10] KVM: Use dedicated mutex to protect
- kvm_usage_count to avoid deadlock
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "zhaotianrui@loongson.cn" <zhaotianrui@loongson.cn>, 
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"maobibo@loongson.cn" <maobibo@loongson.cn>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"maz@kernel.org" <maz@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"anup@brainfault.org" <anup@brainfault.org>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Chao Gao <chao.gao@intel.com>, 
-	"kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, Farrah Chen <farrah.chen@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 0/4] mm: Introduce MAP_BELOW_HINT
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Charlie Jenkins <charlie@rivosinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+ Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naveen N Rao <naveen@kernel.org>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
+ <ab90ff3b-67dc-4195-89a7-54e394da1aa0@lucifer.local>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <ab90ff3b-67dc-4195-89a7-54e394da1aa0@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 30, 2024, Kai Huang wrote:
-> 
-> > Reviewed-by: Kai Huang <kai.huang@intel.com>
-> > Acked-by: Kai Huang <kai.huang@intel.com>
-> > 
-> 
-> Hmm I must have done a lot for me to receive two credits (and for most patches
-> in this series) :-)
-> 
-> I think one Reviewed-by tag is good enough :-)
+On 8/29/24 01:42, Lorenzo Stoakes wrote:
+>> These applications work on x86 because x86 does an implicit 47-bit
+>> restriction of mmap() address that contain a hint address that is less
+>> than 48 bits.
+> You mean x86 _has_ to limit to physically available bits in a canonical
+> format 🙂 this will not be the case for 5-page table levels though...
 
-Heh, indeed.  b4 has made me very lazy; I just `b4 am` the patches and let b4
-grab all the trailers.  I'm guessing something went awry in that flow (or maybe
-you acked a previous version or something?)
+By "physically available bits" are you referring to the bits that can be
+used as a part of the virtual address?  "Physically" may not have been
+the best choice of words. ;)
 
-Anyways, one of Paolo or I can clean this up when applying, assuming we remember
-to do so...
+There's a canonical hole in 4-level paging and 5-level paging on x86.
+The 5-level canonical hole is just smaller.
+
+Also, I should probably say that the >47-bit mmap() access hint was more
+of a crutch than something that we wanted to make ABI forever.  We knew
+that high addresses might break some apps and we hoped that the list of
+things it would break would go down over time so that we could
+eventually just let mmap() access the whole address space by default.
+
+That optimism may have been misplaced.
