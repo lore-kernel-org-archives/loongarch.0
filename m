@@ -1,114 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAAD1D12E6
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 07:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E8616F0CA
+	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 07:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725088738; cv=none; b=QU+gBrMVLg8+MXIOQtDp50GSOCBxxZfd5Csi1BKCprp6iUEQhQPRQj0+/bCMxf8nTSYrXFWJuJHbUdttosu373z2aNdBbHcSqF1FLtcbcrAsBgv0FYefBsUME1JYaX34yAKbWxPSqJ3xiefiaZ64Q7P6UO/hfIXATo/BHdyboQA=
+	t=1725089451; cv=none; b=s5YJqIaDB5g/O5dnOqhtXkn5au34V/Zb3vG0VpIy8FjIPxB2w/OtXuVqI7oe40ITH+uxkLCb6YUTSfP4vKGBi3lKRlSDe4SPCz5ACssM+tDccGF9zHqJcPz2/GANK1AAjKODUlP6RrHMMXisQzObWyz09f+CAyImXovfxY5PnOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725088738; c=relaxed/simple;
-	bh=+Li4JYHmlc0m2Jpsk4OmpL6Gm5XCVPtAY5DKJ4HWX0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SYfmvB55dbQ1PdTyH9YBkv1KP4JjGiHxXWn1MSr1614vTxHbNZKMa0nTUJThAd9GOEZosslz9p3N8ZmP7LzxtYga+qBf6srh4U8NUNqRLSvyHHlex1UqE2Jl9Y4s2LofEEWBg67zu8e2sSxs7rwWZj9Bnwk3qn/D+tzLsDgkHSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpiOx21x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725089451; c=relaxed/simple;
+	bh=Gkra1YiN/w/SiSVPP8T77PQM1c0ma4c1DIP7FLEARtg=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=dTQ7HyBpTFa8+LCyz932SwzX1puy8OtYoLg8pCRogkcFhjlBwwh6PYpmfNYrf8XTL8/0wCWHL/dntB5pup4B+cEJ53KYAnVAbCotQ32cPD4kQsDdcNwN9WfwgeI9Tztun96MZ8z7Jyq01XEWZ8pFCDooPSazDwD/SxB7xGWY2UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=igESTTyU; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpiOx21x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B2CC4CEC8
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 07:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725088737;
-	bh=+Li4JYHmlc0m2Jpsk4OmpL6Gm5XCVPtAY5DKJ4HWX0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lpiOx21xxgiomI5A2jGRK3190FGd7rgUHc/qQ3cJXH+gaItG/IvNdFszi9jfexZTw
-	 jtzAhN4asksCQJfpEzeCm2EQ/YklvI9GokGDcsvW0fxHL8Wvgkb8zsvK+/wNdfCcj+
-	 idsMZ3i1opg/vjjAVB5fizi2WpTjZAgg8IRHkOenaReNeOsBVa2tLsmUTTw3B9ykEN
-	 utPOVAAL84QqH0t6RMTm/85hBHuxq4InVGLq16r5rczBTiUodEuCATsnsLUGnrVL0m
-	 xazk4tUFPstpfoOjNzra+cE5czUm+tSkqnfavPe16z4ZHdiWdN4Rpi8uuG0NHoLvmU
-	 a9/CFwgIMY/rg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f3f25a1713so29425331fa.2
-        for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 00:18:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLqwU3pXD/eJuHK6cfJATuH52Ao5B08qWtE/VOpbUZ2c9oPEd3Moz16HfS8/gwb7+1FP+5jlesmTs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwgDG8x2WZ+cXGiCbidAiVTn+AmFLU+CucP2+Xww9fsbPzaF1j5
-	/ltTdSmlWs3wMdIHil/R7sQ3eE7WGpx2UvVq1EP3SfxsLpq3+A+7VXiG00WT1GGstaUGku5nQvT
-	GJlQtVSZaSWLDthErSAGEOk/TW9Q=
-X-Google-Smtp-Source: AGHT+IE3Va6gLap4UlxPvqg9ICLyHHD8IlhWZu1pPlzygqJuherO9PBYOHB2LrTvALJromzeS2DCgA7ZQCxsoBTo+Qk=
-X-Received: by 2002:a2e:b8c2:0:b0:2f4:f1d2:c6b with SMTP id
- 38308e7fff4ca-2f626567525mr9603571fa.12.1725088735986; Sat, 31 Aug 2024
- 00:18:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="igESTTyU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1725089423;
+	bh=Gkra1YiN/w/SiSVPP8T77PQM1c0ma4c1DIP7FLEARtg=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=igESTTyUD/s3UqdTSn6Hb2FkkE4BnbaNqzFb9plblaURzFB1dmhNyvz//UQtK/oxs
+	 4A9JoKmgDfEKFs7SoFbdFIJrvI+KnS1+EyTpCyjP5gh1bLPJEz4hBMq/Q3Gn6u01Qu
+	 XIaYgVsTvIrKCf8l8MAzcV4H89y1wc2O5MMo2e7I=
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-XMAILINFO: Mf2c2cXG8XEiUih0wcAqWP57XOAsJfGo1jk3RHuaBV5V6ndPJl0NdvbE
+	9/iqfVcoeJvIiWS9plL1k+jSnnP/c+YnHbWLF9d2Jq44QZ5728zyGziFrmpxKFaFGJW5tBY
+	lVF7Ymowd2yB56GwjF7LQjtGgpK/0JnF1flcH3tgopCn5bRObCzSQwI99kdepXEnhzwhTuo
+	Jpl6C34mfPzXvNalRUv4L7nDQhBvqJTIeu4SSJXmxFbVTFPnu5rGTPgcLFzoqzKg08xqBZl
+	Pmww+sMxBVFPZjZolcHKWdeTA3t4cLctEXEqjCHD/sfTkuTz/jypnZ6JySm5wmGHC+/sTuT
+	TesqiQGPrie7cZepmxxR4+SEMNvPGDQ79Egnh3HODvVcPLe4wIv3+ebFygNLw9nSSflc5xA
+	l1No1WvzSS++qAf8f+Ywob8ojR9HoJgqsK5wHVYL6EuZXmapHKsAeMwmSsZrHggrrOY4JzQ
+	1D9W4T+xFhXg0sbZDxNIl6RYnrwmfiVYKS/5W4Sw0O454qJPXrSFKw8dx4kcgZ+HSGx8PgG
+	3Z3qB8u/CGI/dgYCPjwBF52zKbuymHnVDJnXuS7CxUNL8nzKu8yoQ6I4PfNCSqCyjmY6g/q
+	/2GxkqZUXpwZ3pnewstTBkAF7pBuQ3tH5ISHBOxrfEKcKmUViuL6o5AzPuDqRqoaYBP4qhR
+	k7eP4bxYvF3Kl/oetMWUMMwRzl7UkvOfTo+SHHxfR/9rL7ZWczoCn7IrvkQaSiyBpfZyBzj
+	ZBDMsd2q9gAJFeVzf4y3sH22yIoVREgIvhGLSoAVpZdXpS4lm2GHLsaKCPRat100MPLwzZB
+	wdAlhEiuzusCxkVwuxRTnNGMM+OEOKvMQKdfLCxGjaS4mGqp1+MeqkyXkMxmGTIW/CQPJBT
+	0MiBvHU7wP6yMsZnFcJzGYTErbzsQVjVCCHcnBkIrwsSm8Htshnzh15MwDlj9CKr9Wo7Et8
+	6OsHTcn2M2BncNvXvfHI0B+CeGQQxC7Eru+CR0s7yuUICNg==
+X-QQ-FEAT: D4aqtcRDiqRprBrzF3WAKrTVkjK5ocIr1dSI9KzQHZY=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: N7aDhGZZwp9WjsKwwbS5R4bvGsxcZTf/E9G0BxNpJr4=
+X-QQ-STYLE: 
+X-QQ-mid: t5gz7a-2t1725089410t8633867
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?SHVhY2FpIENoZW4=?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>
+Subject: Re: [PATCH] Loongarch64: pci: fix memleak in pci_acpi_scan_root
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Sat, 31 Aug 2024 15:30:10 +0800
+X-Priority: 3
+Message-ID: <tencent_3F6931DF7E765EB870FD970A@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
 References: <20240831052157.13532-1-guanwentao@uniontech.com>
-In-Reply-To: <20240831052157.13532-1-guanwentao@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 31 Aug 2024 15:18:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
-Message-ID: <CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
-Subject: Re: [PATCH] Loongarch64: pci: fix memleak in pci_acpi_scan_root
-To: Wentao Guan <guanwentao@uniontech.com>
-Cc: henhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Wangyuli <wangyuli@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	<CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
+In-Reply-To: <CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
+X-QQ-ReplyHash: 3505280181
+X-BIZMAIL-ID: 3004264844035363075
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Sat, 31 Aug 2024 15:30:11 +0800 (CST)
+Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-Hi, Wentao,
+SGVsbG8gSHVhY2FpOg0KDQpPa2F5Li4uIEl0IGlzIG15IGNvZGUgc21lbGwsIGhlcmUgaXMg
+dGhlIHBhdGNoIGFmdGVyIGNoYW5nZS4NCg0KRnJvbSA3MzQyNjAxOWE4M2E3N2I0NTAyNDkx
+ZmM5NmQxNDVlNjY2YjE2OTM2IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogV2Vu
+dGFvIEd1YW4gPGd1YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCkRhdGU6IFNhdCwgMzEgQXVn
+IDIwMjQgMDA6MTc6MTAgKzA4MDANClN1YmplY3Q6IFtQQVRDSF0gTG9vbmdhcmNoNjQ6IHBj
+aTogZml4IG1lbWxlYWsgaW4gcGNpX2FjcGlfc2Nhbl9yb290DQoNCkFkZCBrZnJlZShyb290
+X29wcykgaW4gdGhpcyBjYXNlIHRvIGF2b2lkIG1lbWxlYWsgcm9vdF9vcHMsDQpsZWFrcyB3
+aGVuIHBjaV9maW5kX2J1cygpICE9IDAuDQoNClNpZ25lZC1vZmYtYnk6IFdhbmd5dWxpIDx3
+YW5neXVsaUB1bmlvbnRlY2guY29tPg0KU2lnbmVkLW9mZi1ieTogV2VudGFvIEd1YW4gPGd1
+YW53ZW50YW9AdW5pb250ZWNoLmNvbT4NCi0tLQ0KIGFyY2gvbG9vbmdhcmNoL3BjaS9hY3Bp
+LmMgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdp
+dCBhL2FyY2gvbG9vbmdhcmNoL3BjaS9hY3BpLmMgYi9hcmNoL2xvb25nYXJjaC9wY2kvYWNw
+aS5jDQppbmRleCAzZWI2MWI4Y2Q1ZTMuLmY0MDU0MDlhMzQ5MSAxMDA2NDQNCi0tLSBhL2Fy
+Y2gvbG9vbmdhcmNoL3BjaS9hY3BpLmMNCisrKyBiL2FyY2gvbG9vbmdhcmNoL3BjaS9hY3Bp
+LmMNCkBAIC0yMjcsNiArMjI3LDcgQEAgc3RydWN0IHBjaV9idXMgKnBjaV9hY3BpX3NjYW5f
+cm9vdChzdHJ1Y3QgYWNwaV9wY2lfcm9vdCAqcm9vdCkNCiAgICAgICAgaWYgKGJ1cykgew0K
+ICAgICAgICAgICAgICAgIG1lbWNweShidXMtPnN5c2RhdGEsIGluZm8tPmNmZywgc2l6ZW9m
+KHN0cnVjdCBwY2lfY29uZmlnX3dpbmRvdykpOw0KICAgICAgICAgICAgICAgIGtmcmVlKGlu
+Zm8pOw0KKyAgICAgICAgICAgICAgIGtmcmVlKHJvb3Rfb3BzKTsNCiAgICAgICAgfSBlbHNl
+IHsNCiAgICAgICAgICAgICAgICBzdHJ1Y3QgcGNpX2J1cyAqY2hpbGQ7DQogDQotLSANCjIu
+MjAuMQ==
 
-On Sat, Aug 31, 2024 at 1:24=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
-om> wrote:
->
-> Add kfree(root_ops) in this case to avoid memleak root_ops,
-> leaks when pci_find_bus() !=3D 0.
-> Also delay assign root_ops when used for making code read clean.
-> Found by code review
->
-> Signed-off-by: Wangyuli <wangyuli@uniontech.com>
-This should be Yuli Wang <wangyuli@uniontech.com>
-
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> ---
->  arch/loongarch/pci/acpi.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-> index 3eb61b8cd5e3..7f3539f5fa23 100644
-> --- a/arch/loongarch/pci/acpi.c
-> +++ b/arch/loongarch/pci/acpi.c
-> @@ -219,17 +219,18 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_=
-root *root)
->                 return NULL;
->         }
->
-> -       root_ops->release_info =3D acpi_release_root_info;
-> -       root_ops->prepare_resources =3D acpi_prepare_root_resources;
-> -       root_ops->pci_ops =3D (struct pci_ops *)&info->cfg->ops->pci_ops;
-> -
->         bus =3D pci_find_bus(domain, busnum);
->         if (bus) {
->                 memcpy(bus->sysdata, info->cfg, sizeof(struct pci_config_=
-window));
->                 kfree(info);
-> +               kfree(root_ops);
-Add kfree() is fine, but move root_ops assignment is unnecessary.
-
-Huacai
-
->         } else {
->                 struct pci_bus *child;
->
-> +               root_ops->release_info =3D acpi_release_root_info;
-> +               root_ops->prepare_resources =3D acpi_prepare_root_resourc=
-es;
-> +               root_ops->pci_ops =3D (struct pci_ops *)&info->cfg->ops->=
-pci_ops;
-> +
->                 bus =3D acpi_pci_root_create(root, root_ops,
->                                            &info->common, info->cfg);
->                 if (!bus) {
-> --
-> 2.20.1
->
->
