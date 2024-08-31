@@ -1,83 +1,89 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6F421364
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 08:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEBE14D449
+	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 08:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725093402; cv=none; b=UKCZgzmbSvq7mBI+GxbFtKviAwUqy4qYp0VkTtBO9+4/mqcTdET5Geef0osJPeRNfLKr/hugmAHrwdfncArHM9p9/+3OFa4pjathUdGfrkxUZvucOp+ZqcTy2HccdT04P7OvMYOrlDSdRcuQarsL0fVamVMQrYvpMh7MRZcjoE4=
+	t=1725094460; cv=none; b=aI/8IkyByAJrGwuYeRq6VZ9B5tEwfprUDlIW3fCwpxdS/uBSnr9Y64Qp0laWSoeQjZw7ss/kbUK8fJfxQmxt1b4os+57kREInbcqQOguKQIn4WtGRouU3klmEOs1Mx1Iidga7fGquIk4X5g6J8roavnmXdWO+sHfcbRQ0lYir7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725093402; c=relaxed/simple;
-	bh=cl0Ox4KOziAzBMAA/oSEeqrN00rD+vC5icUHDP5gYtI=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=lbD/tmHqIm/6tgguvy8rZyX9J8WcyGwRVSbeaSnLoyGxylt3Ln5TFJA8se2UEfLi6YrkHKF+AZTxqiHbjiZJEMmDwJAPmVMgyDbMZZElWxBUehOw5+GVWXnu3rG2tmXk9pRibg7xDPwU+5r5DtLG22p3Z6qCt3i5AnDKjm993vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=TLOsX17U; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="TLOsX17U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1725093372;
-	bh=cl0Ox4KOziAzBMAA/oSEeqrN00rD+vC5icUHDP5gYtI=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=TLOsX17UmpsitGdeeHdy7Gc4S4wcHbiJOmnvSESg011aO7M5CdDk1QTRVEcINXScQ
-	 RsqR5FFDxoDn+GHQ0pz8wMVeYsquzdGG/eSGO8GqTyYax8BfH8slAguf8k8BAEA1u7
-	 TT50r+9FqAqdLlc1NSmsinq/EKWDapMGyox99sCU=
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-XMAILINFO: NyPaQtJYQgeoFqXPUdxfVHJcEgn/ytUp/itUvvfFPFKI39ezSC4k8QUu
-	WFa51a6evSSSsFMYbJI8j11nvk7pUcOjEvbeUMO1MXUIeSYMHAA2NkkenuAzjQ8BEUJJ/Mx
-	YbIp7vUTS5UWKEikK7Zc+pfk5Umss8LnhLBbaklEU5FlvzDNHrXq6qqVUNIML/q2OYEtcRx
-	Tl/tCo/BZR0phfMjI/C3Pf0iBVKTnOatGgR/tZgsZlkxLfsg/bdxHHds6z2dlpufMudhfl/
-	vXAfUDqbv89y9PWH2huGbCkJsGsi22BZmxuFPRzZ1soJXQHpLVItiNg8rwLgDC8/09MPLwC
-	LNBShBHoROueXnyOWBWNW1q83TfibftdWE5kKpDZalO9gqny5oGiCc3cPVBAiiwXW15htKI
-	z2UooWG1m0fXisCVoErZZcNQxSkreddyKlPRUFVmAVrDgwYPrjhhm/zmPUjhgWr/SPP92VW
-	eMTzT4jfdUjsA+tPnuRsqriZPYopBGrVPmIVWzL+nwljdQ8gKhQufYggo89fion7HZectre
-	cBjixpyDCyJ8+RbF/bhuqVpzroou94yFg3tkC2iCIxHx/lIlTOpZ1R0DWlSrUKu7G8Qry7I
-	G5k2NAMRP0z1zX2c6mosMN+pBvr4odB3rI0cRhizdW3SpYrukjE9/ooIx0lfQE/CNrMglBo
-	VNMZTYinAy7nLEe8EjjK0AaXRsjeYAFrwvPpn1zS8bt7JizZMoiT7/jTMdmZ22j/wpkmbFR
-	F7hA9dF93a9ju578BliBdnAP81eusRt2ItdyS8sz3MWajgb/diNVLcl5YblZl0qAC0MKhwx
-	i/qRKQKPr4USTm2IBQafR6E0ZMSsVXfMGEhWSBkr+OBzC0w1HnE35RT9WPfxzyaP35PSWrX
-	dPg/dX1Z67LSOCLVrOUpmFdLzianv2RCQ8F/sD15a6ida9hof+QZH70hT4onT+G90zTUkW4
-	CC6hE2nLKqrhMXEF3EAQdaXEz
-X-QQ-FEAT: D4aqtcRDiqRprBrzF3WAKrTVkjK5ocIr1dSI9KzQHZY=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: Ckn6AHmDYfq0V5APyRAFb4Pw+UYUu4pvz9Uro+fdP3k=
-X-QQ-STYLE: 
-X-QQ-mid: t5gz7a-2t1725093360t637318
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
-Cc: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>
-Subject: Re: [PATCH] Loongarch64: pci: fix memleak in pci_acpi_scan_root
+	s=arc-20240116; t=1725094460; c=relaxed/simple;
+	bh=BCXHaE7OJDlB4tgitxbJMg23VXydDQugT53Pzm60vqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tiYlwm83hPsdPtV6MzjkjdiN2JQdwFTvfY5L5MUzkJRVTUEQ3XwzhjKlLG/6m5rEEMWUUObFb7uCIhsrptCdOmisHF+F2F7i5dctxYnbIlVgRxr/MAFYXSzWpgdgOxgVCABXhgQYktt49h3Sz9Qwpgdlcbr609QhwDDrMACoGYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WwpjN4LNJz9sSN;
+	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 5wI910mZmxra; Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwpjN3KgBz9sSK;
+	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5C9408B76C;
+	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id dO7Fs0TtgoVO; Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
+Received: from [192.168.234.150] (unknown [192.168.234.150])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CCEFA8B764;
+	Sat, 31 Aug 2024 10:54:15 +0200 (CEST)
+Message-ID: <302f203a-088c-431f-beef-86b10ae9b284@csgroup.eu>
+Date: Sat, 31 Aug 2024 10:54:14 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Sat, 31 Aug 2024 16:35:59 +0800
-X-Priority: 3
-Message-ID: <tencent_3A814C6056AE06E21CE86A92@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20240831052157.13532-1-guanwentao@uniontech.com>
-	<CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
-	<tencent_3F6931DF7E765EB870FD970A@qq.com>
-In-Reply-To: <tencent_3F6931DF7E765EB870FD970A@qq.com>
-X-QQ-ReplyHash: 2900214901
-X-BIZMAIL-ID: 6513285501017925691
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Sat, 31 Aug 2024 16:36:01 +0800 (CST)
-Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] LoongArch: vDSO: Wire up getrandom() vDSO
+ implementation
+To: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>, WANG Xuerui <kernel@xen0n.name>,
+ linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>
+References: <20240829125656.19017-1-xry111@xry111.site>
+ <CAAhV-H5Srpno_m+_dPS=Z-sdRrdXS3xEoG8tEaAB=8QqswTK9w@mail.gmail.com>
+ <1bd7a61241f09331d27d8ad0df04726941c45f85.camel@xry111.site>
+ <CAAhV-H6es9x3rA5ZeSMjqYLQsTU3h-_QOa2siA770pY7Ju8rRw@mail.gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <CAAhV-H6es9x3rA5ZeSMjqYLQsTU3h-_QOa2siA770pY7Ju8rRw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-SGVsbG8gSHVhY2FpOg0KDQpJIGZvdW5kIGEgbWlzdGFrZSB0aGF0IG15IFBBVENIIGNvbW1p
-dCBtc2cgbmVlZCBjaGFuZ2UgdG8gIkxvb25nYXJjaDogcGNpOiBmaXggbWVtbGVhayBpbiBw
-Y2lfYWNwaV9zY2FuX3Jvb3QiDQpOZWVkIHRvIHNlbmQgcGF0Y2ggdjI/
 
+
+Le 31/08/2024 à 09:10, Huacai Chen a écrit :
+> [Vous ne recevez pas souvent de courriers de chenhuacai@kernel.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> On Sat, Aug 31, 2024 at 2:40 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>>
+>> On Thu, 2024-08-29 at 21:18 +0800, Huacai Chen wrote:
+>>>> -obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o
+>>>> +obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o vgetrandom.o \
+>>>> +              vgetrandom-chacha.o
+>>
+>> Huacai: do you prefer to remove this line break as well, or Makefile
+>> still has a line width limit?
+> Also no limit, but Makefile is more or less different because there is
+> no "statement" and doesn't affect our understanding.
+> 
+> So, line break is fine here (but for my own preference I like to keep
+> sigreturn.o at last).
+
+To avoid line break you can leave the first line unmodified and add:
+
+obj-vdso-y += vgetrandom.o vgetrandom-chacha.o
+
+Christophe
