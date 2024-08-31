@@ -1,94 +1,70 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05049763F8
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 05:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD7813B2B1
+	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 06:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725081845; cv=none; b=pASHosv66Zj4dsspTa8HS8dG/KDQLkXfAXoPfMyXkASQJdk0CGZDo2ZVkeD+zfyQAQyFOLIqPbCgaLl920TBtbVb1zbUf868YZawlc1YcIfuP1DG2ajYJ7n+9H+mAqZ4Fo68p/DiSJWIdNpTz08bbMYBA9nPAaRdDCxHhsUz3N0=
+	t=1725086451; cv=none; b=fKiB0pKYHc7+8tgN4PJN1ZVTlQeug202YqW2pLKRI42ThreXBlSwdYdDStdgjKz47qDE2B8fZrNc6cMXHR+YvyQ0jWTGQBWqrX0ZPBVji2KK9f09N7+4HVaFrQ/ShHpqfenpxE7ztD5G7bu97C/A9P3AImhjV/GQqpst0TbI+KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725081845; c=relaxed/simple;
-	bh=Qrydd6FpfGREKFpUumfU+PND9ypJPQ0rvGA5gim0Y0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MyI5bC5mfoPhzEZpgY++H8FfSSc1rQNCwANN6JqRyepxcmpe5pa60as1lHiZjEhsf4Q5iCQ6HUA3ABC6CGMfx46UFvw/gFy8/sIQwaPm0dve0Gf27CITZtj3mWuNqXsZN36bfNAMBdZiK1sREDcbXypeth8JVRi6/tdTPQR1Qm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=lS6+8Lqe; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1725086451; c=relaxed/simple;
+	bh=RFKkWahrHogOFYvG9oZhWec6joqLXHhuYXPdlQEfWx8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sZnEfawSJhFPnV78f2+z048DxNOiZ9EV+6tYN4jAgT5dCNBvwr+L/PLyItWKzpayORriV1Mhujloqu6aKsLOfOqqKmz51RcyyV4vEuL9bUkhcRpCntPS6tRx7qJURUOvfRa4aX9geQl5MF82U0ZWbo65K6N2IIvoQelzupzylak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hHPb2PII; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="lS6+8Lqe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1725081795;
-	bh=BeFS78svjvX4dgZ/pXmTXrW3I/8Ubt/o8uwqmQay4rc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=lS6+8LqeCYg27XDxF6TuwCvzN6M0aLM/fliy5tWtRFWZa268/Xxk0s6vg9uKjveLA
-	 CGvctqtcpp0hNI3VUkz2Q6msqowr961ol/zxRbA3g5Anp5vk011EDaX9a5WRA7ro/p
-	 ZuvpwkJLiaAtcXaoGUcFIVsqDakXw0nXNy3nQixs=
-X-QQ-mid: bizesmtp85t1725081789tfeka6ky
-X-QQ-Originating-IP: E3dMKFpfvXJ0xiShuJTZplZjy33NIhkzA8HM6/RTArs=
-Received: from localhost.localdomain ( [111.172.4.23])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 31 Aug 2024 13:23:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2311621511106180187
-From: Wentao Guan <guanwentao@uniontech.com>
-To: henhuacai@kernel.org,
-	kernel@xen0n.name,
-	loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	Wentao Guan <guanwentao@uniontech.com>,
-	Wangyuli <wangyuli@uniontech.com>
-Subject: [PATCH] Loongarch64: pci: fix memleak in pci_acpi_scan_root
-Date: Sat, 31 Aug 2024 13:21:57 +0800
-Message-Id: <20240831052157.13532-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hHPb2PII"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1725086440;
+	bh=RFKkWahrHogOFYvG9oZhWec6joqLXHhuYXPdlQEfWx8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hHPb2PIITHcMqB2stg4nNQPqJqEX2RVQWzRkTeooT5vdIgWwWpRody3qEK/XP76Mr
+	 bMmbfbxm+Fh95l1l09kwe/BXvjusm2Df0s1sC0eh6dcdKbH+fopep3TtzKOgkZ+9n4
+	 H/5Td7PBxaDKIj8Q9rHkpSUi3wAByuGWXs/AGWSU=
+Received: from [IPv6:240e:358:11f9:d100:dc73:854d:832e:2] (unknown [IPv6:240e:358:11f9:d100:dc73:854d:832e:2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 91F1D66F26;
+	Sat, 31 Aug 2024 02:40:33 -0400 (EDT)
+Message-ID: <1bd7a61241f09331d27d8ad0df04726941c45f85.camel@xry111.site>
+Subject: Re: [PATCH v5] LoongArch: vDSO: Wire up getrandom() vDSO
+ implementation
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>, WANG Xuerui
+ <kernel@xen0n.name>,  linux-crypto@vger.kernel.org,
+ loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org, Jinyang He
+ <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd
+ Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>
+Date: Sat, 31 Aug 2024 14:40:25 +0800
+In-Reply-To: <CAAhV-H5Srpno_m+_dPS=Z-sdRrdXS3xEoG8tEaAB=8QqswTK9w@mail.gmail.com>
+References: <20240829125656.19017-1-xry111@xry111.site>
+	 <CAAhV-H5Srpno_m+_dPS=Z-sdRrdXS3xEoG8tEaAB=8QqswTK9w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
 
-Add kfree(root_ops) in this case to avoid memleak root_ops,
-leaks when pci_find_bus() != 0.
-Also delay assign root_ops when used for making code read clean.
-Found by code review
+On Thu, 2024-08-29 at 21:18 +0800, Huacai Chen wrote:
+> > -obj-vdso-y :=3D elf.o vgetcpu.o vgettimeofday.o sigreturn.o
+> > +obj-vdso-y :=3D elf.o vgetcpu.o vgettimeofday.o sigreturn.o vgetrandom=
+.o \
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 vgetrandom-chacha.o
 
-Signed-off-by: Wangyuli <wangyuli@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
- arch/loongarch/pci/acpi.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Huacai: do you prefer to remove this line break as well, or Makefile
+still has a line width limit?
 
-diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-index 3eb61b8cd5e3..7f3539f5fa23 100644
---- a/arch/loongarch/pci/acpi.c
-+++ b/arch/loongarch/pci/acpi.c
-@@ -219,17 +219,18 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 		return NULL;
- 	}
- 
--	root_ops->release_info = acpi_release_root_info;
--	root_ops->prepare_resources = acpi_prepare_root_resources;
--	root_ops->pci_ops = (struct pci_ops *)&info->cfg->ops->pci_ops;
--
- 	bus = pci_find_bus(domain, busnum);
- 	if (bus) {
- 		memcpy(bus->sysdata, info->cfg, sizeof(struct pci_config_window));
- 		kfree(info);
-+		kfree(root_ops);
- 	} else {
- 		struct pci_bus *child;
- 
-+		root_ops->release_info = acpi_release_root_info;
-+		root_ops->prepare_resources = acpi_prepare_root_resources;
-+		root_ops->pci_ops = (struct pci_ops *)&info->cfg->ops->pci_ops;
-+
- 		bus = acpi_pci_root_create(root, root_ops,
- 					   &info->common, info->cfg);
- 		if (!bus) {
--- 
-2.20.1
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
