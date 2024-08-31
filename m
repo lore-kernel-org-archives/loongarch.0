@@ -1,89 +1,70 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEBE14D449
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 08:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1181791ED
+	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 12:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725094460; cv=none; b=aI/8IkyByAJrGwuYeRq6VZ9B5tEwfprUDlIW3fCwpxdS/uBSnr9Y64Qp0laWSoeQjZw7ss/kbUK8fJfxQmxt1b4os+57kREInbcqQOguKQIn4WtGRouU3klmEOs1Mx1Iidga7fGquIk4X5g6J8roavnmXdWO+sHfcbRQ0lYir7A=
+	t=1725107842; cv=none; b=qT/1Hahsf8Gl6ZmTTTcYloLAdrCv80X+NSWLRpOpGebLjxCJKiuCtAjsktBPX2g+W1AxpQVbh9AVeovt1AMugZ6gXCE61DTBLSNtm7u0EJ62mRuifCWpfb35/PjB7b4H8y+5gULi9o3bqYo8DIF07vFBRai3WbZxEjw0PNhYKYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725094460; c=relaxed/simple;
-	bh=BCXHaE7OJDlB4tgitxbJMg23VXydDQugT53Pzm60vqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tiYlwm83hPsdPtV6MzjkjdiN2JQdwFTvfY5L5MUzkJRVTUEQ3XwzhjKlLG/6m5rEEMWUUObFb7uCIhsrptCdOmisHF+F2F7i5dctxYnbIlVgRxr/MAFYXSzWpgdgOxgVCABXhgQYktt49h3Sz9Qwpgdlcbr609QhwDDrMACoGYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WwpjN4LNJz9sSN;
-	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 5wI910mZmxra; Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwpjN3KgBz9sSK;
-	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5C9408B76C;
-	Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id dO7Fs0TtgoVO; Sat, 31 Aug 2024 10:54:16 +0200 (CEST)
-Received: from [192.168.234.150] (unknown [192.168.234.150])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CCEFA8B764;
-	Sat, 31 Aug 2024 10:54:15 +0200 (CEST)
-Message-ID: <302f203a-088c-431f-beef-86b10ae9b284@csgroup.eu>
-Date: Sat, 31 Aug 2024 10:54:14 +0200
+	s=arc-20240116; t=1725107842; c=relaxed/simple;
+	bh=Noby7El9z0c63e41wu6AhQcfLUuk4A1lf0hrYdgifns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nJL7gfZZwxSPCfCOi/gUajvz1FdFwjDjCkKVc67x/FAaBumjRO1KzoT57unI2ACkgCxC5taP5sg72pu3pSm2q3j7rg9Nx+4pMOMRr8KB1nF/ug6oYsU3CUBpQ5WwqpF+By6gdNjj8Yj0Kwpiy0Cc2JyEEW7I5WHJUIG9iNJyZ30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fA//wwn+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fA//wwn+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F593C4CEC0
+	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 12:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725107842;
+	bh=Noby7El9z0c63e41wu6AhQcfLUuk4A1lf0hrYdgifns=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fA//wwn+sB7SCym7eddwh3+Fv1gfwYSRnlrrR2y5soCmAKWVYIdYjNhCmTQlMPJPn
+	 TkhucRSJDINL3UFw4wZq3bdJYB/Ae4Sgv37SivAJ/oYI90IhMTDATck/I4/P3I5NVN
+	 mFv61uUKD2Vxe8/2PwxM6cDrrKhwnfsV1VQSM1WvRp+U/WGhn+MkWlQ5pC3KViQbJu
+	 v9OWTruS+OmHWm45/GYq8QjHU8u7xvndTzepaQxjrfR1iEZGBaVcWKDxwPsR3wAV+y
+	 OJppyv5xBU4sEquspqngzJW6XwQRIFkb9hUx2p9sv7/r1Tz9fZH1kM6j23vESffzfz
+	 eHKwqrBfXSY8g==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5a108354819so3497387a12.0
+        for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 05:37:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVNyEYZO6fT3nWd5WTyJNrPyQy9hiV6L0iqy09vyMW9dUXTFRrOydGc35e69ZpZJuXb/L6cmLc8qOs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxnpkoXoONyWDV/WB4uQRUle6CRi9EzwhrQ/77kNsEEIsQGq7WC
+	VrUcsfQZNV+PxDZEk8lEyDuu5jMC9NmldLQ3ZH1slPRdtm+Z0ZxWxGDE3RdFhFz1Jb0NKROVceN
+	QOppjomgi7Esiuh3eo/1Zs+8I02g=
+X-Google-Smtp-Source: AGHT+IFzorRshPsuDJ8XEzT9wq3sbRSknfWJS/lfjEMrPElt1JbMx7hESBdAu8CIv3grlpOZ228FUCX0BNuT7BOAG1I=
+X-Received: by 2002:a05:6402:40c1:b0:5c2:17b7:5a7e with SMTP id
+ 4fb4d7f45d1cf-5c21ed9fcbcmr6622190a12.36.1725107841040; Sat, 31 Aug 2024
+ 05:37:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] LoongArch: vDSO: Wire up getrandom() vDSO
- implementation
-To: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
-Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>, WANG Xuerui <kernel@xen0n.name>,
- linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- Christophe Leroy <christophe.leroy@csgroup.eu>
-References: <20240829125656.19017-1-xry111@xry111.site>
- <CAAhV-H5Srpno_m+_dPS=Z-sdRrdXS3xEoG8tEaAB=8QqswTK9w@mail.gmail.com>
- <1bd7a61241f09331d27d8ad0df04726941c45f85.camel@xry111.site>
- <CAAhV-H6es9x3rA5ZeSMjqYLQsTU3h-_QOa2siA770pY7Ju8rRw@mail.gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <CAAhV-H6es9x3rA5ZeSMjqYLQsTU3h-_QOa2siA770pY7Ju8rRw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240831052157.13532-1-guanwentao@uniontech.com>
+ <CAAhV-H7GptUdpKScV1AuZZm7w-F5oUXHRmaT9BFCZV4HuQExJg@mail.gmail.com>
+ <tencent_3F6931DF7E765EB870FD970A@qq.com> <tencent_3A814C6056AE06E21CE86A92@qq.com>
+In-Reply-To: <tencent_3A814C6056AE06E21CE86A92@qq.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 31 Aug 2024 20:37:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4wNc+747nZPzT714KzGRSnbye==WXdxckVG1nTxEfLjQ@mail.gmail.com>
+Message-ID: <CAAhV-H4wNc+747nZPzT714KzGRSnbye==WXdxckVG1nTxEfLjQ@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch64: pci: fix memleak in pci_acpi_scan_root
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch <loongarch@lists.linux.dev>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, =?UTF-8?B?546L5pix5Yqb?= <wangyuli@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Aug 31, 2024 at 4:36=E2=80=AFPM Wentao Guan <guanwentao@uniontech.c=
+om> wrote:
+>
+> Hello Huacai:
+>
+> I found a mistake that my PATCH commit msg need change to "Loongarch: pci=
+: fix memleak in pci_acpi_scan_root"
+> Need to send patch v2?
+No need.
 
-
-Le 31/08/2024 à 09:10, Huacai Chen a écrit :
-> [Vous ne recevez pas souvent de courriers de chenhuacai@kernel.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> On Sat, Aug 31, 2024 at 2:40 PM Xi Ruoyao <xry111@xry111.site> wrote:
->>
->> On Thu, 2024-08-29 at 21:18 +0800, Huacai Chen wrote:
->>>> -obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o
->>>> +obj-vdso-y := elf.o vgetcpu.o vgettimeofday.o sigreturn.o vgetrandom.o \
->>>> +              vgetrandom-chacha.o
->>
->> Huacai: do you prefer to remove this line break as well, or Makefile
->> still has a line width limit?
-> Also no limit, but Makefile is more or less different because there is
-> no "statement" and doesn't affect our understanding.
-> 
-> So, line break is fine here (but for my own preference I like to keep
-> sigreturn.o at last).
-
-To avoid line break you can leave the first line unmodified and add:
-
-obj-vdso-y += vgetrandom.o vgetrandom-chacha.o
-
-Christophe
+Huacai
