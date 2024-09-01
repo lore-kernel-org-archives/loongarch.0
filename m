@@ -1,143 +1,152 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B78A3B290
-	for <loongarch@lists.linux.dev>; Sat, 31 Aug 2024 16:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537AC33D8
+	for <loongarch@lists.linux.dev>; Sun,  1 Sep 2024 06:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725121882; cv=none; b=dAI8m3OLwDpxyS5Fi+4sGPsNU0jR27hJv3HGaKknQUvqzsC5TmNya6oq9vEfHZhjZl6V3PLqXwJlcsph3VoajGiEhCAeU0HFWSBAXshlv4uTKgP8Y7mGK3+t6SXiBygm6Q01zxGMjeGQT1Cp2WP0G3SkjaAonxi6eztxrhPZkHQ=
+	t=1725171227; cv=none; b=uYwQCvecv2TutXF+e4U4bpH/xdMnLzh8rWK9+svXYhmW5R/UNuixCnMXMUPr03r93FkO3F4Uwwl0bimiuxq0nRO/hTzPJdPZMdfmdItI4BkiUfq1DQyhinIgyinJQ3yyNPbXoOByIzUuLriM5f5JDofDarhwkz8KZqYBsT0klYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725121882; c=relaxed/simple;
-	bh=AuLfZzUmtglWqwz48TCd9lAiPu5sOPRAyVJ52ZHkrxk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=DgOJA5A98akRETQFWQqGaKq6uM5QlNL9dhDWq80ravwPE31BSh9FGeZa/hmVlJ7pPdBC1hHbPZGE42AtjjRmAjwR7pbp11zirqFxdlnYEKp32FPIN9KGCuAOuZWkReP0KNQ9L8j8uUPJDzyIFvSSg9o13vDdBaJsOKhkOtNG6Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-262-wK_tsTO6PIqyGgtMlXpe8w-1; Sat, 31 Aug 2024 17:31:14 +0100
-X-MC-Unique: wK_tsTO6PIqyGgtMlXpe8w-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 31 Aug
- 2024 17:30:28 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 31 Aug 2024 17:30:28 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Christophe Leroy' <christophe.leroy@csgroup.eu>, Charlie Jenkins
-	<charlie@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Catalin Marinas <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, "Nicholas
- Piggin" <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Muchun Song
-	<muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
-	"Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Russell King
-	<linux@armlinux.org.uk>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller
-	<deller@gmx.de>, Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
-	<gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "Yoshinori
- Sato" <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, "John Paul
- Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, "David S. Miller"
-	<davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Shuah Khan
-	<shuah@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>
-CC: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt
-	<palmer@rivosinc.com>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH 07/16] powerpc: mm: Support MAP_BELOW_HINT
-Thread-Topic: [PATCH 07/16] powerpc: mm: Support MAP_BELOW_HINT
-Thread-Index: AQHa+RRTN/GnVgA7wEmCsX6Cdbuah7JBk7Rw
-Date: Sat, 31 Aug 2024 16:30:28 +0000
-Message-ID: <7011cb340586473dac83efbbe84c4a05@AcuMS.aculab.com>
-References: <20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com>
- <20240827-patches-below_hint_mmap-v1-7-46ff2eb9022d@rivosinc.com>
- <a43c52c6-c1ac-4ef3-b511-08f0459bddad@csgroup.eu>
-In-Reply-To: <a43c52c6-c1ac-4ef3-b511-08f0459bddad@csgroup.eu>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1725171227; c=relaxed/simple;
+	bh=CzldQ8R74KRGEZMr+wtIlJ54mQi4+DTTVEIXhU8MinY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XF/otv3GAsTreob8cPbrB3ARnzD+TnhtWrQu7KAbJh461B8Mof4bD7+29ROnudtoRQMVhLqyfmg0huK5YV8KVDkqIIOlZB068VHzOr2eMdm2ydKrbcstJo6PEgEDNInFysmvdFOxSwVh2LC+tzEuNEKTj0DGu4gu2/b10xuLGcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Received: from stargazer.. (unknown [IPv6:240e:358:11b0:f100:dc73:854d:832e:2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 819CA1A3FE1;
+	Sun,  1 Sep 2024 02:13:39 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v6 0/3] LoongArch: Implement getrandom() in vDSO
+Date: Sun,  1 Sep 2024 14:13:09 +0800
+Message-ID: <20240901061315.15693-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogQ2hyaXN0b3BoZSBMZXJveQ0KPiBTZW50OiAyOCBBdWd1c3QgMjAyNCAwNzozNQ0KPiBI
-aSBDaGFybGllLA0KPiANCj4gTGUgMjgvMDgvMjAyNCDDoCAwNzo0OSwgQ2hhcmxpZSBKZW5raW5z
-IGEgw6ljcml0wqA6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIE1BUF9CRUxPV19ISU5UIHRvIGFyY2hf
-Z2V0X21tYXBfYmFzZSgpIGFuZA0KPiA+IGFyY2hfZ2V0X21tYXBfZW5kKCkuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBDaGFybGllIEplbmtpbnMgPGNoYXJsaWVAcml2b3NpbmMuY29tPg0KPiA+
-IC0tLQ0KPiA+ICAgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL3Rhc2tfc2l6ZV82NC5oIHwgMzYg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwg
-MzAgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vdGFza19zaXplXzY0LmggYi9hcmNoL3Bvd2VycGMvaW5j
-bHVkZS9hc20vdGFza19zaXplXzY0LmgNCj4gPiBpbmRleCAyMzliMzYzODQxYWEuLmEzN2E1YTgx
-MzY1ZCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vdGFza19zaXpl
-XzY0LmgNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vdGFza19zaXplXzY0LmgN
-Cj4gPiBAQCAtNzIsMTIgKzcyLDM2IEBADQo+ID4gICAjZGVmaW5lIFNUQUNLX1RPUF9NQVggVEFT
-S19TSVpFX1VTRVI2NA0KPiA+ICAgI2RlZmluZSBTVEFDS19UT1AgKGlzXzMyYml0X3Rhc2soKSA/
-IFNUQUNLX1RPUF9VU0VSMzIgOiBTVEFDS19UT1BfVVNFUjY0KQ0KPiA+DQo+ID4gLSNkZWZpbmUg
-YXJjaF9nZXRfbW1hcF9iYXNlKGFkZHIsIGxlbiwgYmFzZSwgZmxhZ3MpIFwNCj4gPiAtCSgoKGFk
-ZHIpID4gREVGQVVMVF9NQVBfV0lORE9XKSA/IChiYXNlKSArIFRBU0tfU0laRSAtIERFRkFVTFRf
-TUFQX1dJTkRPVyA6IChiYXNlKSkNCj4gPiArI2RlZmluZSBhcmNoX2dldF9tbWFwX2Jhc2UoYWRk
-ciwgbGVuLCBiYXNlLCBmbGFncykJCQkJCVwNCj4gDQo+IFRoaXMgbWFjcm8gbG9va3MgcXVpdGUg
-YmlnIGZvciBhIG1hY3JvLCBjYW4gaXQgYmUgYSBzdGF0aWMgaW5saW5lDQo+IGZ1bmN0aW9uIGlu
-c3RlYWQgPyBTYW1lIGZvciB0aGUgb3RoZXIgbWFjcm8gYmVsb3cuDQoNCk9yIGV2ZW4gYSByZWFs
-IGZ1bmN0aW9uPw0KR2l2ZW4gdGhlIGFjdHVhbCBjb3N0IG9mIG1hcHBpbmcgbWVtb3J5IGFuIGV4
-dHJhIGZ1bmN0aW9uIGNhbGwNCmlzbid0IGdvaW5nIHRvIGJlIG1hc3VyYWJsZS4NCg0KCURhdmlk
-DQoNCj4gDQo+ID4gKyh7CQkJCQkJCQkJCQlcDQo+ID4gKwl1bnNpZ25lZCBsb25nIG1tYXBfYmFz
-ZTsJCQkJCQkJXA0KPiA+ICsJdHlwZW9mKGZsYWdzKSBfZmxhZ3MgPSAoZmxhZ3MpOwkJCQkJCQlc
-DQo+ID4gKwl0eXBlb2YoYWRkcikgX2FkZHIgPSAoYWRkcik7CQkJCQkJCVwNCj4gPiArCXR5cGVv
-ZihiYXNlKSBfYmFzZSA9IChiYXNlKTsJCQkJCQkJXA0KPiA+ICsJdHlwZW9mKGxlbikgX2xlbiA9
-IChsZW4pOwkJCQkJCQlcDQo+ID4gKwl1bnNpZ25lZCBsb25nIHJuZF9nYXAgPSBERUZBVUxUX01B
-UF9XSU5ET1cgLSAoX2Jhc2UpOwkJCQlcDQo+ID4gKwlpZiAoX2ZsYWdzICYgTUFQX0JFTE9XX0hJ
-TlQgJiYgX2FkZHIgIT0gMCAmJiAoKF9hZGRyICsgX2xlbikgPiBCSVQoVkFfQklUUyAtIDEpKSlc
-DQo+ID4gKwkJbW1hcF9iYXNlID0gKF9hZGRyICsgX2xlbikgLSBybmRfZ2FwOwkJCQkJXA0KPiA+
-ICsJZWxzZQkJCQkJCQkJCQlcDQo+ID4gKwkJbW1hcF9lbmQgPSAoKF9hZGRyID4gREVGQVVMVF9N
-QVBfV0lORE9XKSA/CQkJCVwNCj4gPiArCQkJCV9iYXNlICsgVEFTS19TSVpFIC0gREVGQVVMVF9N
-QVBfV0lORE9XIDoJCVwNCj4gPiArCQkJCV9iYXNlKTsJCQkJCQkJXA0KPiA+ICsJbW1hcF9lbmQ7
-CQkJCQkJCQkJXA0KPiANCj4gbW1hcF9lbmQgZG9lc24ndCBleGlzdCwgZGlkIHlvdSBtZWFuIG1t
-YXBfYmFzZSA/DQo+IA0KPiA+ICt9KQ0KPiA+DQo+ID4gLSNkZWZpbmUgYXJjaF9nZXRfbW1hcF9l
-bmQoYWRkciwgbGVuLCBmbGFncykgXA0KPiA+IC0JKCgoYWRkcikgPiBERUZBVUxUX01BUF9XSU5E
-T1cpIHx8IFwNCj4gPiAtCSAoKChmbGFncykgJiBNQVBfRklYRUQpICYmICgoYWRkcikgKyAobGVu
-KSA+IERFRkFVTFRfTUFQX1dJTkRPVykpID8gVEFTS19TSVpFIDogXA0KPiA+IC0JCQkJCQkJCQkg
-ICAgREVGQVVMVF9NQVBfV0lORE9XKQ0KPiA+ICsjZGVmaW5lIGFyY2hfZ2V0X21tYXBfZW5kKGFk
-ZHIsIGxlbiwgZmxhZ3MpCQkJCQkJCVwNCj4gPiArKHsJCQkJCQkJCQkJCQlcDQo+ID4gKwl1bnNp
-Z25lZCBsb25nIG1tYXBfZW5kOwkJCQkJCQkJCVwNCj4gPiArCXR5cGVvZihmbGFncykgX2ZsYWdz
-ID0gKGZsYWdzKTsJCQkJCQkJCVwNCj4gPiArCXR5cGVvZihhZGRyKSBfYWRkciA9IChhZGRyKTsJ
-CQkJCQkJCVwNCj4gPiArCXR5cGVvZihsZW4pIF9sZW4gPSAobGVuKTsJCQkJCQkJCVwNCj4gPiAr
-CWlmIChfZmxhZ3MgJiBNQVBfQkVMT1dfSElOVCAmJiBfYWRkciAhPSAwICYmICgoX2FkZHIgKyBf
-bGVuKSA+IEJJVChWQV9CSVRTIC0gMSkpKQlcDQo+ID4gKwkJbW1hcF9lbmQgPSAoX2FkZHIgKyBf
-bGVuKTsJCQkJCQkJXA0KPiA+ICsJZWxzZQkJCQkJCQkJCQkJXA0KPiA+ICsJCW1tYXBfZW5kID0g
-KCgoX2FkZHIpID4gREVGQVVMVF9NQVBfV0lORE9XKSB8fAkJCQkJXA0KPiA+ICsJCQkJKCgoX2Zs
-YWdzKSAmIE1BUF9GSVhFRCkgJiYgKChfYWRkcikgKyAoX2xlbikgPiBERUZBVUxUX01BUF9XSU5E
-T1cpKVwNCj4gPiArCQkJCT8gVEFTS19TSVpFIDogREVGQVVMVF9NQVBfV0lORE9XKQkJCQlcDQo+
-ID4gKwltbWFwX2VuZDsJCQkJCQkJCQkJXA0KPiA+ICt9KQ0KPiA+DQo+ID4gICAjZW5kaWYgLyog
-X0FTTV9QT1dFUlBDX1RBU0tfU0laRV82NF9IICovDQo+ID4NCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
-ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
-MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Implement stack-less ChaCha20 and wire it with the generic vDSO
+getrandom code.  It passes vdso_test_chacha test, and the
+vdso_test_getrandom results:
+
+bench-single:
+
+   vdso: 25000000 times in 0.527882568 seconds
+   libc: 25000000 times in 6.963153452 seconds
+syscall: 25000000 times in 6.980286094 seconds
+
+bench-multi:
+
+   vdso: 25000000 x 256 times in 29.405172862 seconds
+   libc: 25000000 x 256 times in 355.692605551 seconds
+   syscall: 25000000 x 256 times in 338.481559154 seconds
+
+bench-single in an unshared time namespace:
+
+   vdso: 25000000 times in 0.528282411 seconds
+   libc: 25000000 times in 6.966410240 seconds
+syscall: 25000000 times in 6.976614579 seconds
+
+Cc: linux-crypto@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Cc: Jinyang He <hejinyang@loongson.cn>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:	Thomas Gleixner <tglx@linutronix.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+
+[v5]->v6:
+- Rebase onto crng/random.git.
+- Separate selftest patch from the implementation patch again (both I
+  and Huacai perfer this way).
+- Add a patch to provide a __vdso_getrandom prototype shared by all
+  ports, similar to the __vdso_gettimeofday prototype added by Arnd in
+  commit 42874e4eb35b ("arch: vdso: consolidate gettime prototypes").
+- Stop breaking lines at 80 characters for C code.
+- In vdso.lds.S and Makefile, keep sigreturn the last in the lists.
+
+[v4]->v5:
+- Rebase onto crng/random.git:
+  - Remove two selftest patches.
+  - Remove __arch_chacha20_blocks_nostack forward declaration.
+- Squash the remaining selftest patch into the vDSO getrandom
+  implementation patch.
+- Remove ifdef CONFIG_VDSO_GETRANDOM and $(CONFIG_VDSO_GETRANDOM) as
+  they are always true in arch/loongarch.
+- Remove asm-offsets.c change which has been already unneeded in v4.
+- Add comment about rematerializing the constant in the assembly code.
+- Add prototype for __vdso_getrandom to silence a -Wmissing-prototype
+  warning.
+
+[v3]->v4:
+- Remove LSX implementation, which isn't much faster than the generic
+  implementaion.
+- Rebase onto crng/random.git:
+  - Define __arch_get_k_vdso_rng_data instead of using inline asm to
+    provide the _vdso_rng_data symbol in a magic way.
+  - Remove memset.S.
+  - Use c-getrandom-y to easily include the generic C code.
+  - The benchmark results seem better than v3, maybe related to the TLS
+    refactoring in random.git.
+- Add patches for selftests.
+
+[v2]->v3:
+- Add a generic LoongArch implementation for which LSX isn't needed.
+
+v1->v2:
+- Properly send the series to the list.
+
+[v5]:https://lore.kernel.org/all/20240829125656.19017-1-xry111@xry111.site/
+[v4]:https://lore.kernel.org/all/20240827132018.88854-1-xry111@xry111.site/
+[v3]:https://lore.kernel.org/all/20240816110717.10249-1-xry111@xry111.site/
+[v2]:https://lore.kernel.org/all/20240815133357.35829-1-xry111@xry111.site/
+
+Xi Ruoyao (3):
+  arch: vDSO: Add a __vdso_getrandom prototype for all architectures
+  LoongArch: vDSO: Wire up getrandom() vDSO implementation
+  selftests/vDSO: Enable vdso getrandom tests for LoongArch
+
+ arch/loongarch/Kconfig                      |   1 +
+ arch/loongarch/include/asm/vdso/getrandom.h |  38 +++
+ arch/loongarch/include/asm/vdso/vdso.h      |   6 +
+ arch/loongarch/include/asm/vdso/vsyscall.h  |   8 +
+ arch/loongarch/kernel/vdso.c                |   1 +
+ arch/loongarch/vdso/Makefile                |   7 +-
+ arch/loongarch/vdso/vdso.lds.S              |   1 +
+ arch/loongarch/vdso/vgetrandom-chacha.S     | 242 ++++++++++++++++++++
+ arch/loongarch/vdso/vgetrandom.c            |  10 +
+ arch/x86/entry/vdso/vgetrandom.c            |   2 -
+ include/vdso/getrandom.h                    |   5 +
+ tools/arch/loongarch/vdso                   |   1 +
+ tools/testing/selftests/vDSO/Makefile       |   4 +-
+ 13 files changed, 321 insertions(+), 5 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/vdso/getrandom.h
+ create mode 100644 arch/loongarch/vdso/vgetrandom-chacha.S
+ create mode 100644 arch/loongarch/vdso/vgetrandom.c
+ create mode 120000 tools/arch/loongarch/vdso
+
+
+base-commit: 0dfed8092247b5e179f52d27b93533bce3eaf5ba
+-- 
+2.46.0
 
