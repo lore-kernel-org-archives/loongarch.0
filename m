@@ -1,65 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E6514B08C;
-	Sun,  1 Sep 2024 13:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D9C17B50B
+	for <loongarch@lists.linux.dev>; Sun,  1 Sep 2024 18:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725198768; cv=none; b=dLj1gYGYypuhZNsFtPyvnZOM1YJmYci/GMrLhi5GHXfV08J6lrWLbjbeZvEVrIQ19zia8SUw3bXr4wgjFInc4MSwVQy8DRWto/vKQzGb32aLn52BbRoralB+HoIHh6rDDSPImQ0/F7QSEIlzWx8j+j44dOwFKgZaIUWARAveFKs=
+	t=1725214016; cv=none; b=R5b0txrHgBQJTbNQYMIVXjnNCNeiYmXFUM5WuRo8V88XDD9Se8Ctube6cNIQmIU9TwII5IXl+mHlPGgKmbPk2BIOAD4ypmBI2rcPwVNgpHqtAkySkUNO8Ot0KPPf8UndhWf0s8HVy/AHUu+DdYh42bbnD2Bq0rzjq05UdzhP5AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725198768; c=relaxed/simple;
-	bh=0y9K93UXwjJsnbCt45ij1skIhcCJfrm/4S4x14vT7/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sd44b0CrX3ntXaJIpial/ZEYCUumj4s2MbHBVcd6aNo+3TBbOMpbJDpWxjLcHCxGmW7lIxQzPHaR9axk4mRLPkt1aObM0JKIVo3kG3eiICby7BjJ+gd0TSOgFvktA1B/wXhk6awLz1fI5q+YjXR7YjcoaQm+s/QWbyIhmECJP9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=GDHW4TeE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="GDHW4TeE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AE28C4CEC7;
-	Sun,  1 Sep 2024 13:52:47 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="GDHW4TeE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1725198765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=etCXFA7FgpS49ISdfZUHG9OzdfOQOU8I699EsHvxUFE=;
-	b=GDHW4TeEXUUXCNXahhp2AvhU30mV3fDnpc9IoxrCMM6cDDAQ4B14kHCCUL1UlxlGBNfx3B
-	vfxZk0pwVozNlbNpZFWXP3xIZcHE3WdF0ULKlLTqvl0m6z7XF7WXMCA2bG7wshisOVnd/S
-	jxTwpMAhrbQLrcHHDkhmg2bpjMij94Y=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 410e3d40 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Sun, 1 Sep 2024 13:52:45 +0000 (UTC)
-Date: Sun, 1 Sep 2024 15:52:42 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/3] LoongArch: vDSO: Wire up getrandom() vDSO
- implementation
-Message-ID: <ZtRxqspL856yVgz9@zx2c4.com>
-References: <20240901061315.15693-1-xry111@xry111.site>
- <20240901061315.15693-3-xry111@xry111.site>
+	s=arc-20240116; t=1725214016; c=relaxed/simple;
+	bh=BPLrJN3UMpNuXgRmPmDcj2geSPj996SWXjtw9iHJaKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FcBp9l47l3MySGABMWXpF5ytNg2JAbHBjDbr367mF0aFZ6QS4FT6ed0L3dn/G1aoVhpdSpUwlp5FAChZ/1V4fRoSu1rJQPM233LhYaQFa9wo2mSfC+/cbJpgungDHdKU7Cmrb4LT/6vmjHMdSdsinVNxuN7gV1LzyYfRVsWxvMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WxfwX1D6zz9sSN;
+	Sun,  1 Sep 2024 20:06:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id hNS5A6He75iU; Sun,  1 Sep 2024 20:06:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WxfwX0N6Nz9sSK;
+	Sun,  1 Sep 2024 20:06:52 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id EE2908B767;
+	Sun,  1 Sep 2024 20:06:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id tZRK63f112yO; Sun,  1 Sep 2024 20:06:51 +0200 (CEST)
+Received: from [192.168.234.154] (unknown [192.168.234.154])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7A6918B763;
+	Sun,  1 Sep 2024 20:06:51 +0200 (CEST)
+Message-ID: <88982e01-9d69-4ac6-a423-ecfe700abc1b@csgroup.eu>
+Date: Sun, 1 Sep 2024 20:06:51 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240901061315.15693-3-xry111@xry111.site>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/3] arch: vDSO: Add a __vdso_getrandom prototype for
+ all architectures
+To: Xi Ruoyao <xry111@xry111.site>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+References: <20240901061315.15693-1-xry111@xry111.site>
+ <20240901061315.15693-2-xry111@xry111.site>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240901061315.15693-2-xry111@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 01, 2024 at 02:13:11PM +0800, Xi Ruoyao wrote:
-> Hook up the generic vDSO implementation to the LoongArch vDSO data page
-> by providing the required __arch_chacha20_blocks_nostack,
-> __arch_get_k_vdso_rng_data, and getrandom_syscall implementations.
- 
-Applied, thanks! Congrats on being the first implementation after x86 to
-do this.
 
-Jason
+
+Le 01/09/2024 à 08:13, Xi Ruoyao a écrit :
+> Without a prototype, we'll have to add a prototype for each architecture
+> implementing vDSO getrandom.  As most architectures will likely have the
+> vDSO getrandom implemented in a near future, and we'd like to keep the
+> declarations compatible everywhere (to ease the Glibc work), we should
+> really just have one copy of the prototype.
+
+It is a good idea but it have to handle all architectures, not only half 
+of them. If you look into vdso_config.h in selftests, you can see that 
+there are two names:
+
+__kernel_getrandom is used on arm64, powerpc, s390,
+
+__vdso_getrandom is used on arm, mips, sparc, x86, riscv, loongarch
+
+Christophe
+
+
+
+> 
+> Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>   arch/x86/entry/vdso/vgetrandom.c | 2 --
+>   include/vdso/getrandom.h         | 5 +++++
+>   2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/entry/vdso/vgetrandom.c b/arch/x86/entry/vdso/vgetrandom.c
+> index 52d3c7faae2e..430862b8977c 100644
+> --- a/arch/x86/entry/vdso/vgetrandom.c
+> +++ b/arch/x86/entry/vdso/vgetrandom.c
+> @@ -6,8 +6,6 @@
+>   
+>   #include "../../../../lib/vdso/getrandom.c"
+>   
+> -ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len);
+> -
+>   ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len)
+>   {
+>   	return __cvdso_getrandom(buffer, len, flags, opaque_state, opaque_len);
+> diff --git a/include/vdso/getrandom.h b/include/vdso/getrandom.h
+> index 4cf02e678f5e..08b47b002bf7 100644
+> --- a/include/vdso/getrandom.h
+> +++ b/include/vdso/getrandom.h
+> @@ -56,4 +56,9 @@ struct vgetrandom_state {
+>    */
+>   extern void __arch_chacha20_blocks_nostack(u8 *dst_bytes, const u32 *key, u32 *counter, size_t nblocks);
+>   
+> +/**
+> + * __vdso_getrandom: Prototype of vDSO getrandom.
+> + */
+> +extern ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len);
+> +
+>   #endif /* _VDSO_GETRANDOM_H */
