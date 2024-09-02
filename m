@@ -1,239 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B91A1865F6
-	for <loongarch@lists.linux.dev>; Mon,  2 Sep 2024 16:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EC51A3A98;
+	Mon,  2 Sep 2024 19:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725295199; cv=none; b=Ls5iSdsN8IdTUfj0GhG2Vupw7Ayj8/0V2rIQ40lwUVcqyvilASwalvnS59s1Y0BS6pxpL2cKZLuWwF2rA0RFn/wCtTuCIZwfMldKyxzhAaYSX07UV4cUAkGPu8NyXlh9LFyfA+3XkugsvB8szLq0jph6sdgF7fZO5apACfXs+TI=
+	t=1725304123; cv=none; b=HNI02RN8c1QE+AXVQkLZdbwCbSP4CVoIdYMmPT/xDJxIbuy0tVwcYVGUEpDAWGjdn83XwZbG8YR8joRj7tJQVbk2HQZlAnP5VbCEARJuTLClmt5VHkfLYT5zj2BOZbzr8boE5RRhCtC9fTYXE4qGe+o3bN5QeoiJJsSaKZqBkZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725295199; c=relaxed/simple;
-	bh=TWQWTjb2bHDNoyq7Qb4nnNTNgORAKZgIpkkOeqVlH6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDGBzyFfMMhgD4nsw3lIvQiaesWS+Re/M2rv5BWv3RFYGEOXkLIc5a6NdEYblPcyfA2bTYsyfvi73TmdnXXWeTfq4WAzwq/DdxbPsGZE8F587ImDI1hSHI5XjOnUVYyFqpdbfCkxSlpii0Mm54LNYsdqNhGgwru7lj+COFMpUTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gvl5QXoz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1725304123; c=relaxed/simple;
+	bh=Oas/y5WsR2uek3LQJA53gCtjxNPODnZnDS04Vmdm0SM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=b/WMa/2TFxKHea4O9WQAbVW0NV9tp402DA96pKn4RSt2M1OcsaUPgpX6qejmin6xK55vqZj+GNmvWygm1X04xmN3iE5gx8UYo/0X11/g3+S35shSG1WUirG4IGC902ybnsdOznu2kO8XidxDLUz8eDf60Hagdd3rHSxDX4YREnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8jxrlHN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvl5QXoz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725295197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=sN52cpHdRrdru0pCcK4JXKDfBVCF3QpRMNtiOqVdu9M=;
-	b=gvl5QXozY/cufezESXJvbCWidX+RoY+pxTIRVb0XM1+rSsKzqLSGLCPaNMoJeEL0D3a4Mg
-	4Z9qdNbpARb+unx5EWgWxq+CCaLZ7k/Nz+wEPEuaQLI2FRE/Z7LtVNaaqbItve7doJL2Qg
-	rP3i+uR9K92CYaWPMTV1eGUGXqymPOY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-mIEdk20oNGOxaxRpSxwVQg-1; Mon, 02 Sep 2024 12:39:56 -0400
-X-MC-Unique: mIEdk20oNGOxaxRpSxwVQg-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42c7b39e953so10257865e9.0
-        for <loongarch@lists.linux.dev>; Mon, 02 Sep 2024 09:39:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725295195; x=1725899995;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sN52cpHdRrdru0pCcK4JXKDfBVCF3QpRMNtiOqVdu9M=;
-        b=VV4KMayCIuZ5h3815DdsJZIvGQtok3o+d+xWq5LK/pp9JI6DiEKOIT6WYpP4terCTd
-         I8QaA+fJqSh0ZI1DuZhmXh58SsVwjmg1T7L1+gEpZJlq8QVP3TDjVlClkIRJQchl/qVl
-         0+8n5ANu/L0P1Ihk0kGbIaLYkjwIxaRnBqo0Coyi+csRf7WUP2za3vRffsXoGNhBM2gj
-         pz/fPNR+maxAdemqplBiOth2WcYdyPO0xxiRKRP2SNnJBIDYd2vIr/PXU0m7BA64hPEg
-         H0hKPi5cTtsEsqfe5POokNITVaTJh3D1DDeLZuADScJSRQKrsgMA5sefAk4Sw1MX4xE5
-         GBMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVn8Fp3N1+WuTwmwSo9YsSZpkXPCavEq8S1QRUtAYEVi1mHJP1ROipNepOBU+RSOzorrwCcD/bk8TQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YysB0260zP3E/SKk+oYxbV4tqpYZiY02dhPkmZh0Dmvc3vepnVp
-	8PsiaUQ82wChQFJbF14v+Ufdx0MG5F854GmXQoKRcnUHu8UytPhgV1YlbtIqY80P1u8i46X7gRO
-	HrWQKmK74jBpXJlHaTjXUrBIuPvE4lUo8QlD5NOJsGGOg15s9jYjKJazekA==
-X-Received: by 2002:a05:600c:3ba3:b0:42a:a92b:8e06 with SMTP id 5b1f17b1804b1-42bb4c3e51bmr97930495e9.4.1725295194789;
-        Mon, 02 Sep 2024 09:39:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG9phZGFO80qt7wZJU2JQ9lMT8p4KQA1ByjuceIs5a81ZoCFG/S1B+NhesIR8p82ymaNDcdGw==
-X-Received: by 2002:a05:600c:3ba3:b0:42a:a92b:8e06 with SMTP id 5b1f17b1804b1-42bb4c3e51bmr97930195e9.4.1725295193873;
-        Mon, 02 Sep 2024 09:39:53 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c72d:6500:849a:c1af:a5bb:ba9d? (p200300cbc72d6500849ac1afa5bbba9d.dip0.t-ipconnect.de. [2003:cb:c72d:6500:849a:c1af:a5bb:ba9d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ba63abea3sm180516415e9.28.2024.09.02.09.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Sep 2024 09:39:53 -0700 (PDT)
-Message-ID: <995d18bb-16f1-4843-92bc-6c4a386a811d@redhat.com>
-Date: Mon, 2 Sep 2024 18:39:52 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8jxrlHN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCAEC4CEC2;
+	Mon,  2 Sep 2024 19:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725304122;
+	bh=Oas/y5WsR2uek3LQJA53gCtjxNPODnZnDS04Vmdm0SM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=t8jxrlHNVdQXEDhwqdc20wAj+gPH80qUonuGgv2lMOAereLM62SZkpGPh6RAw9Q9b
+	 cBNdNdELgobbYczEeegAXNuBmkG7+MBKa3Udw2wp+tjLbthGJxD6C/atbKR7nQEKwI
+	 NAVDsSjvSJZ9+1oRX/kkvqkAIgsWJCEN3vAjweczQiDR8G8rv2/iGBjY0OqiwXsYOC
+	 1YZQ4+Nhih70PVTlXd97kseJ3xxY4C8apxLBnSHWiBfctlrlY5bLTNsKDQhWc4cvZV
+	 gw+pLSbt1GGlFl6jRG9lXzrbyPWAt8owB6/wy3UdR0nEgwgZKF32T6/tL0RJDOum7q
+	 AtI7A5Vf8oy6Q==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/3] mm: Care about shadow stack guard gap when getting an
+ unmapped area
+Date: Mon, 02 Sep 2024 20:08:12 +0100
+Message-Id: <20240902-mm-generic-shadow-stack-guard-v1-0-9acda38b3dd3@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: make copy_to_kernel_nofault() not fault on user
- addresses
-To: Omar Sandoval <osandov@osandov.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
- kernel-team@fb.com
-References: <cover.1725223574.git.osandov@fb.com>
- <5fa50d78-6764-4f99-87b3-7bd7edbeea5a@csgroup.eu>
- <ZtVbrM4rQsGFJo_t@telecaster>
- <861d448c-ce1d-4b74-87eb-9b211dfebbb1@redhat.com>
- <ZtXZFc9kZAUMD4e0@telecaster>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZtXZFc9kZAUMD4e0@telecaster>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABwN1mYC/x3MQQqDMBBA0avIrDuQqgHtVUoXSWaMgxhLplVBv
+ LvB5Vv8f4ByFlZ4VQdkXkVlSQXPRwVhdCkyChVDberWdI3BecbIqUQBdXS0bKg/FyaMf5cJrQ/
+ Wd2S4twTl8c08yH7/35/zvADZttxrbwAAAA==
+To: Richard Henderson <richard.henderson@linaro.org>, 
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+ Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+ Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, 
+ Max Filippov <jcmvbkbc@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Deepak Gupta <debug@rivosinc.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
+ Mark Brown <broonie@kernel.org>, 
+ Rick Edgecombe <rick.p.edgecombe@intel.com>
+X-Mailer: b4 0.15-dev-37811
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2921; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=Oas/y5WsR2uek3LQJA53gCtjxNPODnZnDS04Vmdm0SM=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBm1g0tzzAYejDFf/YyyXU75xxYTOzlmhmKdU7A0Mjv
+ QTPoE+GJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZtYNLQAKCRAk1otyXVSH0DS/B/
+ 9wL/O0zfApTjzan3whOoMvydnSM37kQyhnnpfHRjUqEv3U+31o7LNZtf8cgkcFnfvN/mcjg6zqfUbL
+ sgE3gILwU/gP0rpIIqOBcdMi0yW/6RMxDx3KYAXsoMcW+HgREp4Jmstlc5mrqGzeY9D8bRILVJSjtt
+ CxzlZDYaBGUyD6JX4rA4vmDkKdsx+ZsnFmkTKKS4DYRkMaU9mg1/cG7jWJa8t7opzkAXW5a9k1msEw
+ fa0BXHW/LfCE9M6grMvRbR+VL7UOyIE9Bsha8/dsbR6EJN8gbJiRaqql1/7PoOt5/VXpmT+GO8cCfj
+ ebeheDgkstF5WtU2RPgxVpDKwWWfI3
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 02.09.24 17:26, Omar Sandoval wrote:
-> On Mon, Sep 02, 2024 at 10:56:27AM +0200, David Hildenbrand wrote:
->> On 02.09.24 08:31, Omar Sandoval wrote:
->>> On Mon, Sep 02, 2024 at 08:19:33AM +0200, Christophe Leroy wrote:
->>>>
->>>>
->>>> Le 02/09/2024 à 07:31, Omar Sandoval a écrit :
->>>>> [Vous ne recevez pas souvent de courriers de osandov@osandov.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
->>>>>
->>>>> From: Omar Sandoval <osandov@fb.com>
->>>>>
->>>>> Hi,
->>>>>
->>>>> I hit a case where copy_to_kernel_nofault() will fault (lol): if the
->>>>> destination address is in userspace and x86 Supervisor Mode Access
->>>>> Prevention is enabled. Patch 2 has the details and the fix. Patch 1
->>>>> renames a helper function so that its use in patch 2 makes more sense.
->>>>> If the rename is too intrusive, I can drop it.
->>>>
->>>> The name of the function is "copy_to_kernel". If the destination is a user
->>>> address, it is not a copy to kernel but a copy to user and you already have
->>>> the function copy_to_user() for that. copy_to_user() properly handles SMAP.
->>>
->>> I'm not trying to copy to user. I am (well, KDB is) trying to copy to an
->>> arbitrary address, and I want it to return an error instead of crashing
->>> if the address is not a valid kernel address. As far as I can tell, that
->>> is the whole point of copy_to_kernel_nofault().
->>
->> The thing is that you (well, KDB) triggers something that would be
->> considered a real BUG when triggered from "ordinary" (non-debugging) code.
-> 
-> If that's the case, then it's a really weird inconsistency that it's OK
-> to call copy_from_kernel_nofault() with an invalid address but a bug to
-> call copy_to_kernel_nofault() on the same address. Again, isn't the
-> whole point of these functions to fail gracefully instead of crashing on
-> invalid addresses? (Modulo the offline and hwpoison cases you mention
-> for /proc/kcore.)
+As covered in the commit log for c44357c2e76b ("x86/mm: care about shadow
+stack guard gap during placement") our current mmap() implementation does
+not take care to ensure that a new mapping isn't placed with existing
+mappings inside it's own guard gaps. This is particularly important for
+shadow stacks since if two shadow stacks end up getting placed adjacent to
+each other then they can overflow into each other which weakens the
+protection offered by the feature.
 
-I assume the difference is mostly historically, because usually, when 
-modifying something (ftrace, live patch, kdb) you better know what you 
-want to modify actually exist and can be modified. IOW, you usually 
-read-before-weite.
+On x86 there is a custom arch_get_unmapped_area() which was updated by the
+above commit to cover this case by specifying a start_gap for allocations
+with VM_SHADOW_STACK. Both arm64 and RISC-V have equivalent features and
+use the generic implementation of arch_get_unmapped_area() so let's make
+the equivalent change there so they also don't get shadow stack pages
+placed without guard pages. The arm64 and RISC-V shadow stack
+implementations are currently on the list:
 
-In contrast, things like /proc/kcore, (I think) while limiting it to 
-sane addresses, might still read from areas where we remove entries from 
-the directmap (e.g., secretmem), I think.
+   https://lore.kernel.org/r/20240829-arm64-gcs-v12-0-42fec94743
+   https://lore.kernel.org/lkml/20240403234054.2020347-1-debug@rivosinc.com/
 
-Like, in a compiler, modifying a variable you didn't read before is 
-rather rare as well. If you would have tried to read it, the 
-copy_from_kernel_nofault() would have failed.
+Given the addition of the use of vm_flags in the generic implementation
+we also simplify the set of possibilities that have to be dealt with in
+the core code by making arch_get_unmapped_area() take vm_flags as
+standard. This is a bit invasive since the prototype change touches
+quite a few architectures but since the parameter is ignored the change
+is straightforward, the simplification for the generic code seems worth
+it.
 
-I agree that the difference is weird, and likely really "nobody ran into 
-this before in sane use cases".
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (3):
+      mm: Make arch_get_unmapped_area() take vm_flags by default
+      mm: Pass vm_flags to generic_get_unmapped_area()
+      mm: Care about shadow stack guard gap when getting an unmapped area
 
-> 
->> But now I am confused: "if the destination address is in userspace" does not
->> really make sense in the context of KDB, no?
->>
->>    [15]kdb> mm 0 1234
->>    [   94.652476] BUG: kernel NULL pointer dereference, address:
->> 0000000000000000
->>
->> Why is address 0 in "user space"? "Which" user space?
-> 
-> Sure, it's not really user space, but it's below TASK_SIZE_MAX, so
-> things like handle_page_fault() and fault_in_kernel_space() treat it as
-> if it were a user address. I could
-> s/userspace address/address that is less than TASK_SIZE_MAX or is_vsyscall_vaddr(address)/.
+ arch/alpha/kernel/osf_sys.c       |  2 +-
+ arch/arc/mm/mmap.c                |  3 ++-
+ arch/arm/mm/mmap.c                |  7 +++---
+ arch/csky/abiv1/mmap.c            |  3 ++-
+ arch/loongarch/mm/mmap.c          |  5 ++--
+ arch/mips/mm/mmap.c               |  2 +-
+ arch/parisc/kernel/sys_parisc.c   |  5 ++--
+ arch/parisc/mm/hugetlbpage.c      |  2 +-
+ arch/powerpc/mm/book3s64/slice.c  | 10 +++++---
+ arch/s390/mm/mmap.c               |  4 +--
+ arch/sh/mm/mmap.c                 |  5 ++--
+ arch/sparc/kernel/sys_sparc_32.c  |  2 +-
+ arch/sparc/kernel/sys_sparc_64.c  |  4 +--
+ arch/x86/include/asm/pgtable_64.h |  1 -
+ arch/x86/kernel/sys_x86_64.c      | 21 +++-------------
+ arch/xtensa/kernel/syscall.c      |  3 ++-
+ include/linux/sched/mm.h          | 27 ++++++++-------------
+ mm/mmap.c                         | 51 ++++++++++++++++++---------------------
+ 18 files changed, 69 insertions(+), 88 deletions(-)
+---
+base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+change-id: 20240830-mm-generic-shadow-stack-guard-5bc5b8d0e95d
 
-Ah, okay, that's x86 specifics detail in 
-copy_from_kernel_nofault_allowed(), thanks.
-
-> 
->> Isn't the problem here that KDB lets you blindly write to any non-existing
->> memory address?
->>
->>
->> Likely it should do some proper filtering like we do in fs/proc/kcore.c:
->>
->> Take a look at the KCORE_RAM case where we make sure the page exists, is
->> online and may be accessed. Only then, we trigger a
->> copy_from_kernel_nofault(). Note that the KCORE_USER is a corner case only
->> for some special thingies on x86 (vsyscall), and can be ignored for our case
->> here.
-> 
-> Sure, it would be better to harden KDB against all of these special
-> cases. But you can break things in all sorts of fun ways with a
-> debugger, anyways. The point of this patch is that it's nonsense that a
-> function named copy_to_kernel_nofault() does indeed fault in a trivial
-> case like address < TASK_SIZE_MAX.
-
-Yes, because the write-without-read to kernel memory "you don't know 
-even exists" is rather ... weird :)
-
-Anyhow, no strong opinion here. Patches look simple enough.
-
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Mark Brown <broonie@kernel.org>
 
