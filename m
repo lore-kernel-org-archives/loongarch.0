@@ -1,100 +1,141 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10C41D6792
-	for <loongarch@lists.linux.dev>; Tue,  3 Sep 2024 19:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ADC1D5CCA;
+	Tue,  3 Sep 2024 19:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725390084; cv=none; b=cooyTbtaUxciuzULuKQsqu7F3+yxnT6T8V5zEetv3qUvrRpI79zuFrXjo79L/Mz9EYzS5e2jX5wPTTRLEJSGMYV6TnP1AFxqvmtBKmMAYLYaTZ3xW9GSj9DnNiw8HTphoHP7bBas3uc0XHPB5NTBjDlqo7NukBwimq8Unm/0Few=
+	t=1725390872; cv=none; b=UE4DzzIkM1p1GU3lq4P8lUDK9uOqD6W2w+gGJmNiH2csmHCHtGpPD7/skII9W2En7SJYNBuCIldgH0CaNaDxmj/6DX7miKPC1u7sPZ4pGCUeete1Ofo1dI5Wai3Zmx9kbCaC8xh4RweeLEjGHOz+WDULnxb/HKnpGifVvMKaZHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725390084; c=relaxed/simple;
-	bh=UvKaRrOw7SizEU+Eg3t01fFMiofBkP5X9mkQBRTB/EE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bvRBszzW/6HsgAh9yYa7Nt/ISLTmg/YDEOjmnG2N22PdtDmQ/cqaCx3aCk3tGv6Ib44YcxqUp8bdCtew4aRNIvpDrPZSFliMTIPE7ctQb7nABiWd27zgBOHy+Dy6Ad+mLxkh6OC1lQIeVRxr9dA+6gVU6Iw8JCY/PMdA/bS5YwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhzvEHCy; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725390872; c=relaxed/simple;
+	bh=or6X0wP8ozeFggLTdXEFslaB29MDKtBAB44XcYasXF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DmHChVCgvTYU5t3m7uCiEEqv2Ft5g2xQWTtxmFGA7tXEBKIIFGG7OZ6tsBXhe0EshbISle7fskpUnfI6jN1q7+uMhI9l185W50BA8Fa0N1/vgpJ6HbR11asstOUTmlJ2OJe8RNT6BICIgjxF/8N7V2EJCDsUlqQGAnxNqi8rMk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btG6/m82; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhzvEHCy"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f50966c478so60623191fa.1
-        for <loongarch@lists.linux.dev>; Tue, 03 Sep 2024 12:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725390081; x=1725994881; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=luh7BfYLwX/7YYvz9h2M0t/wGSBnpzt8TNRH/XIw5PA=;
-        b=FhzvEHCyC8y+V6a2tIxNJIpYcZx8c7YAlSv2StObxrW71t5HH150bpa3M1mL4kvkH/
-         4OiqCGnpbWtaJTFPYTTYlm3dsi0M+xm4HVyxs4U1MfmUtwVxGYOh5fbGTWaPqpTrjBGi
-         wP6FSPOxOr5DNZM7MQC+/CKdDrks9Hi5aNbUib01wzFa4XGJX7aKdFjnhSb3+3C7YXPN
-         gEFEbBZFVe3uc8XId/G004D/hD6i9L7ojiXMX+jkIgevDCnblC/fXHwn+np0Kwt3Bd0E
-         c+PuZk8leGfbi7MefwE0dQuBx/w5cCOiy+50t2RckopNGDn+FHmoAv/aji12ov6XsVxo
-         bI1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725390081; x=1725994881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=luh7BfYLwX/7YYvz9h2M0t/wGSBnpzt8TNRH/XIw5PA=;
-        b=fBm08o79wKAb1XaDVQ0VuzSLmW/a3743+tui2Po+gvLl1AOvG1BZuH1PPcoqrm3H8Z
-         8MSRB9B4x0Cl7lhaKQ/bZ2g/VPPftISfTqYXlPVxCB72rDrH8Jhu8FuyBgV4EcH0TdER
-         6q7ZBm/riTC9pkIID4unHxZVxrwRON3FbT7/6PeTBWmGEarE27ZWJXCpnXq/WLZ2H2tN
-         PjSxrQljBF/J19r6uWMeMQEaQPLSjPhzLkLZp5nnvX6CtTLW/rqxKyYDF/75xvQ8AE40
-         XJOmH7zouJehH5ngYL/w66UUX37R7gArwolAUs1Y/kBNUMdGaPWmtoVF+eHQEw9UuevB
-         qR+A==
-X-Gm-Message-State: AOJu0Yzdy2/zCx0pNTmQzyQSiOkKC4vt8zmsGZYYNOQbRJJAPCIb/pA3
-	wyQTAKWwRG4PjhHaqoJKb5QKWNDkPIXmKYAPq+w7ODncRlZS4gEYWSnZgGP8jRDArmfjhDGqBou
-	BmzRsqQXUe8yFSNwodSGH6lFVPw8=
-X-Google-Smtp-Source: AGHT+IFNPZESYuAGmVCQP5ePJ9Xq8JiFFCbwpggP3rkZ0vrJ4cVFwPxC/xT0SxglEUhnoCT9NtCA0Bn4vkbwyIqm5tU=
-X-Received: by 2002:a05:651c:1545:b0:2f1:6821:d15c with SMTP id
- 38308e7fff4ca-2f61e0b268bmr89081621fa.38.1725390080108; Tue, 03 Sep 2024
- 12:01:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btG6/m82"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725390870; x=1756926870;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=or6X0wP8ozeFggLTdXEFslaB29MDKtBAB44XcYasXF8=;
+  b=btG6/m82J/LYRmEm3LRjHp8v5QYMmO2QOCMH/5xxp2NYfkWnTm+DrUGp
+   9iDf0mqyjPnZepiqcRgu5SUyZEvD7DNK77uywTIWo9wnSry07RP7pVWeC
+   zH0eh8K3lpnGMbzAamy7F3BmR2XmWe++vGZOF7kKc2UbzJSHCCD73UkMA
+   dvkBfOeUqJd06xcVqCK1WI+whpMWklzyjWYEezWLyEcqdNme2BhtfGefA
+   VZsxqWGfuNZmt5B1BTeMOPGCXp2p4YUou5kDwNL4/8cO+hzY8p7RdIKy1
+   EXUrO/e0A+wUgYL0AVN3wIFlO8R/mHhIXqOHrgckzb3WmGOFIhwy3UcTw
+   w==;
+X-CSE-ConnectionGUID: ENH2NyKHSSaamS7aTyGjlA==
+X-CSE-MsgGUID: WoV+4Qk/TmOdIesmB+8Pug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="35404409"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="35404409"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 12:14:29 -0700
+X-CSE-ConnectionGUID: oS05bFeQT766fMIexoXYvw==
+X-CSE-MsgGUID: tDw2CiK5TbWhr9HnYR3D5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="95746745"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 03 Sep 2024 12:14:28 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1slYyu-00074L-25;
+	Tue, 03 Sep 2024 19:14:24 +0000
+Date: Wed, 4 Sep 2024 03:13:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Uros Bizjak <ubizjak@gmail.com>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Uros Bizjak <ubizjak@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] longsoon/percpu: Simplify _percpu_read() and
+ _percpu_write()
+Message-ID: <202409040319.2mRdIGd2-lkp@intel.com>
+References: <20240903102342.36957-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240903102342.36957-1-ubizjak@gmail.com> <e01dcb5fc34b4686c7fb32d1644802c164910ecb.camel@xry111.site>
-In-Reply-To: <e01dcb5fc34b4686c7fb32d1644802c164910ecb.camel@xry111.site>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 3 Sep 2024 21:01:12 +0200
-Message-ID: <CAFULd4b_vemxT_6dWRWmjwZKyVSKyojY0Sw77hppsC+--qbZZQ@mail.gmail.com>
-Subject: Re: [PATCH] longsoon/percpu: Simplify _percpu_read() and _percpu_write()
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903102342.36957-1-ubizjak@gmail.com>
 
-On Tue, Sep 3, 2024 at 8:57=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
-:
->
-> On Tue, 2024-09-03 at 12:23 +0200, Uros Bizjak wrote:
-> > +#define _percpu_write(size, _pcp, _val)                               =
-       \
-> > +do {                                                                 \
-> > +     unsigned long __pcp_val =3D __pcpu_cast_##size(_val);            =
- \
-> > +                                                                     \
-> > +     __asm__ __volatile__ (__pcpu_op_##size("stx") "%[val] $r21, %[ptr=
-]      \n" \
->
-> Missing a comma before $r21 (as the bot already pointed out).
+Hi Uros,
 
-Oh, indeed... I triple checked the patch and missed the most obvious thing =
-:(
+kernel test robot noticed the following build errors:
 
-BR,
-Uros.
+[auto build test ERROR on dennis-percpu/for-next]
+[also build test ERROR on linus/master v6.11-rc6 next-20240903]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> > +             :                                                       \
-> > +             : [val] "r"(__pcp_val), [ptr] "r"(&(_pcp))              \
-> > +             : "memory");                                            \
-> > +} while (0)
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+url:    https://github.com/intel-lab-lkp/linux/commits/Uros-Bizjak/longsoon-percpu-Simplify-_percpu_read-and-_percpu_write/20240903-182524
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-next
+patch link:    https://lore.kernel.org/r/20240903102342.36957-1-ubizjak%40gmail.com
+patch subject: [PATCH] longsoon/percpu: Simplify _percpu_read() and _percpu_write()
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240904/202409040319.2mRdIGd2-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240904/202409040319.2mRdIGd2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409040319.2mRdIGd2-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/irqflags.h:19,
+                    from include/linux/spinlock.h:59,
+                    from include/linux/sched.h:2134,
+                    from arch/loongarch/kernel/asm-offsets.c:8:
+   include/linux/sched/mm.h: In function 'set_active_memcg':
+>> arch/loongarch/include/asm/percpu.h:85:33: error: initialization of 'long unsigned int' from 'struct mem_cgroup *' makes integer from pointer without a cast [-Wint-conversion]
+      85 | #define __pcpu_cast_8(val)      (val)
+         |                                 ^
+   arch/loongarch/include/asm/percpu.h:89:35: note: in expansion of macro '__pcpu_cast_8'
+      89 |         unsigned long __pcp_val = __pcpu_cast_##size(_val);             \
+         |                                   ^~~~~~~~~~~~
+   arch/loongarch/include/asm/percpu.h:171:36: note: in expansion of macro '_percpu_write'
+     171 | #define this_cpu_write_8(pcp, val) _percpu_write(8, pcp, val)
+         |                                    ^~~~~~~~~~~~~
+   include/linux/percpu-defs.h:368:25: note: in expansion of macro 'this_cpu_write_8'
+     368 |                 case 8: stem##8(variable, __VA_ARGS__);break;           \
+         |                         ^~~~
+   include/linux/percpu-defs.h:490:41: note: in expansion of macro '__pcpu_size_call'
+     490 | #define this_cpu_write(pcp, val)        __pcpu_size_call(this_cpu_write_, pcp, val)
+         |                                         ^~~~~~~~~~~~~~~~
+   include/linux/sched/mm.h:420:17: note: in expansion of macro 'this_cpu_write'
+     420 |                 this_cpu_write(int_active_memcg, memcg);
+         |                 ^~~~~~~~~~~~~~
+   make[3]: *** [scripts/Makefile.build:116: arch/loongarch/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1199: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +85 arch/loongarch/include/asm/percpu.h
+
+    81	
+    82	#define __pcpu_cast_1(val)	(((unsigned long) val) & 0xff)
+    83	#define __pcpu_cast_2(val)	(((unsigned long) val) & 0xffff)
+    84	#define __pcpu_cast_4(val)	(((unsigned long) val) & 0xffffffff)
+  > 85	#define __pcpu_cast_8(val)	(val)
+    86	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
