@@ -1,124 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF8A1DC72A;
-	Tue,  3 Sep 2024 19:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1991D0177;
+	Tue,  3 Sep 2024 20:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725393453; cv=none; b=Y1eprk6gJuR8I2zWEkKC0yqlKocHiSAPNTZ5XfEZg+WeX9ebwEcDdgVZ4KbzXSZSdnW2GM9TMC18Qs6chbiJuzT2jQxk3WdwGuGd1eK3te9OnN2hRLPKK0e1gskFAUkJEuDxZZNDqr/BmyRkVyf/s/YRakOAkTYm77Oq1FxEpbM=
+	t=1725396157; cv=none; b=bMijiNgb2dsGaRq7CQiaGHfLEqqY49O8Hy0jFZdFbEeQdgaC3PLwM5EwWjjge1bJBd0Ased6Ie5eBnb2LkihMjl6ASRmq0v3bQkNmyCBUikWVsk0GlhHni1qibwuCJrGEA8oXIf/jcf2hQ/EFFcUTpM+YcDKxtLYA4F8DN62qLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725393453; c=relaxed/simple;
-	bh=NTkAihUq8wJ3QQyD2jsoOFW0fG+0732f5lSDZtBgAPI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3KsK8kljEB6KtexukcRBwe38u8xBeFcxAYf48eeki06+7POEHLqHs6uxC3ccIU5uq8MaUaF5+osYf0Aw+qIrfvOp1YHQtkWcaAyDRaYnr+iX653Bu7eJTNRu/v5lB43GsMsqlirIfmLBckCMoQYj+UutS6vyWXCpk3RGYm8FBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibTzt+Zg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725396157; c=relaxed/simple;
+	bh=D79/0a6QlmtzBsbzw+AByUvzS5BoygBrnbpfafEmks0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mCU2pj6Hgrv9Ay+izoddPkIYxLalnUrBx5wwWXSnj/YwfWxQIpHy1CLd84OwoI7jMg1HF+mLBEwTajaQYRDaSBoBe8h+R0ctltP0f/cCa0MnEsKgU7EPM1G2QgwRavXG3LCpdj6t/R3CkVR0o9GtDBtuu6qVT1bByJV68jS/RWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmOKG2Px; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibTzt+Zg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C7EC4CEC4;
-	Tue,  3 Sep 2024 19:57:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmOKG2Px"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF7FC4CEC5;
+	Tue,  3 Sep 2024 20:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725393453;
-	bh=NTkAihUq8wJ3QQyD2jsoOFW0fG+0732f5lSDZtBgAPI=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=ibTzt+ZgEdTELo0NowH5uGIH2Wtx8O6oChkl1Q28nqiyWxDTqR8tphBxYgCay32pV
-	 1hPna6pOCaS45hl+sLTuFw+Pl79mj27SkX+HpLxKECYJlYBG0h7SaAkMmPwDx6njIE
-	 2rYYbxd/PvXGm8b5i0aeQaggLGjHy5i+JmHGE7xq/T4LZ5poYfToPT4ar4DwnZ6LFz
-	 xUVGuklq6NgdHhkMPsoZgMeus69wEVzDTS4x9rtvNNbP5iGQfDm+My7uvbaZprUrQJ
-	 oMpGYNsaV408haO9OPNGCb7dBVZJWkElUMT/UHks93JFjH0pu162EUYzIc/cTsD9Sg
-	 qFv2tPt1j4P1g==
-Date: Tue, 3 Sep 2024 20:57:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
+	s=k20201202; t=1725396157;
+	bh=D79/0a6QlmtzBsbzw+AByUvzS5BoygBrnbpfafEmks0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LmOKG2PxpaWWFQyH6GEW3tV0kz/FtPe8OhdUx0cWQkaK4Wlpr7/meh+2kY433QPjM
+	 1uZrYY75rB0HrVwr3w2631XNIVtO2OvmlqVkQku6o3OdCAuTaD1ZJixwtXWWzeK4wC
+	 vs81Tuyy9mMxhl7+cSq4uDGr8LaC0aZkrv9andEl279z0C9CCekpHShCVTa6HDveUa
+	 X69XuN2FVUMjqUxkNK3UkG9kP6wbtcutBdsYk0pb7EY8wOd5a9ngIEHpSdDhYDXd+r
+	 i6vhNxKDTqzyOGPPFXWAz+KVGO/2eUCsVow5EOd+AXiMZG2tgHOxuRAeVrmL43MPRp
+	 5YsEfbc8Jqvtw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Deepak Gupta <debug@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-mm@kvack.org,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: Re: [PATCH 3/3] mm: Care about shadow stack guard gap when getting
- an unmapped area
-Message-ID: <dbaf5653-df46-4e17-bce1-aec7fb168197@sirena.org.uk>
-References: <20240902-mm-generic-shadow-stack-guard-v1-0-9acda38b3dd3@kernel.org>
- <20240902-mm-generic-shadow-stack-guard-v1-3-9acda38b3dd3@kernel.org>
- <is6ewj3bhtqy3zadj6lbdv6maupx4kmduvhny66ntifkji6hoj@xmhcf5jt4o66>
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	lvjianmin@loongson.cn,
+	wangliupu@loongson.cn,
+	maobibo@loongson.cn,
+	yangtiezhu@loongson.cn,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.10 14/22] LoongArch: Define ARCH_IRQ_INIT_FLAGS as IRQ_NOPROBE
+Date: Tue,  3 Sep 2024 15:22:01 -0400
+Message-ID: <20240903192243.1107016-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240903192243.1107016-1-sashal@kernel.org>
+References: <20240903192243.1107016-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IPVQox5bvuHO+FID"
-Content-Disposition: inline
-In-Reply-To: <is6ewj3bhtqy3zadj6lbdv6maupx4kmduvhny66ntifkji6hoj@xmhcf5jt4o66>
-X-Cookie: Words must be weighed, not counted.
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.7
+Content-Transfer-Encoding: 8bit
 
+From: Huacai Chen <chenhuacai@loongson.cn>
 
---IPVQox5bvuHO+FID
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 274ea3563e5ab9f468c15bfb9d2492803a66d9be ]
 
-On Tue, Sep 03, 2024 at 03:41:49PM -0400, Liam R. Howlett wrote:
-> * Mark Brown <broonie@kernel.org> [240902 15:09]:
+Currently we call irq_set_noprobe() in a loop for all IRQs, but indeed
+it only works for IRQs below NR_IRQS_LEGACY because at init_IRQ() only
+legacy interrupts have been allocated.
 
-> > +static inline unsigned long stack_guard_placement(vm_flags_t vm_flags)
-> > +{
-> > +	if (vm_flags & VM_SHADOW_STACK)
-> > +		return PAGE_SIZE;
+Instead, we can define ARCH_IRQ_INIT_FLAGS as IRQ_NOPROBE in asm/hwirq.h
+and the core will automatically set the flag for all interrupts.
 
-> Is PAGE_SIZE is enough?
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/include/asm/hw_irq.h | 2 ++
+ arch/loongarch/kernel/irq.c         | 3 ---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-It's what x86 currently uses so it'll be no worse off if it gets moved
-to the generic code (there's a comment in the arch code explaing what's
-needed there) and it's enough for arm64, we only do single record
-pushes/pops or (optionally) writes to unconstrained addresses.
+diff --git a/arch/loongarch/include/asm/hw_irq.h b/arch/loongarch/include/asm/hw_irq.h
+index af4f4e8fbd858..8156ffb674159 100644
+--- a/arch/loongarch/include/asm/hw_irq.h
++++ b/arch/loongarch/include/asm/hw_irq.h
+@@ -9,6 +9,8 @@
+ 
+ extern atomic_t irq_err_count;
+ 
++#define ARCH_IRQ_INIT_FLAGS	IRQ_NOPROBE
++
+ /*
+  * interrupt-retrigger: NOP for now. This may not be appropriate for all
+  * machines, we'll see ...
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index f4991c03514f4..adac8fcbb2aca 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -102,9 +102,6 @@ void __init init_IRQ(void)
+ 	mp_ops.init_ipi();
+ #endif
+ 
+-	for (i = 0; i < NR_IRQS; i++)
+-		irq_set_noprobe(i);
+-
+ 	for_each_possible_cpu(i) {
+ 		page = alloc_pages_node(cpu_to_node(i), GFP_KERNEL, order);
+ 
+-- 
+2.43.0
 
---IPVQox5bvuHO+FID
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbXah8ACgkQJNaLcl1U
-h9C2Awf/e7PKpZHkmToVtr07IL4qcZTgpwJkRcA4S8aF/OKy2aVmo+pW2nNnK5sc
-/MpaZW0Ms2eiZxaG4R3y3oBshdiHLdMS1qimFTuewZWtDAJ9lE9Zubq1rr+onqIw
-z7QLTklFTJhwJLiv4r822HjfHqW872zY7tA8OQKs18OmYzyGFWnMuKcdZwQWf/Wl
-S0krgEkvPgYV5FyIP9SeyBVfAnRbH3u2q0dDWORZ7e3pVwZ+0huL1DYzlgP/Nx4a
-EUb0rRhFG8tHp5EwazuvDfdaQyfqtytNRDe6NTrqVdsrqXi7QzkjglFsx44oMBFK
-rSdl35QkF7WXDFsXE2sd4O+m2ZbJFQ==
-=a8UG
------END PGP SIGNATURE-----
-
---IPVQox5bvuHO+FID--
