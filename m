@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3721E2007;
-	Tue,  3 Sep 2024 20:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD451E4903;
+	Tue,  3 Sep 2024 20:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725396258; cv=none; b=plcgTVPZjpT5hm/iVQiFLSwjkod3byq0RIdf7ZxEt4fTYl4hPLTPTXpqn78+RSwGOFXoBIt8OHB2Jt3vDJ4D0/OMpK0YXVdJpjz+F4t3CESbtq+10NCn/mLq606F2evaQ5VcNTAnoYwhe6SvvmPa5zIFwO7UV7T13PPMxrY/eLk=
+	t=1725396347; cv=none; b=VhwTdUwBj4D7QhFsmtit2gbgql3N1FnWfPsIH+kjsEjItEP9kZiFos8CStsvbp9aGVmJs/3P90w8Stin3lQMohX7ABjYAVspCTRmrwYnQjpyRgnDZobG6jz6wvsH7h5YzOqrfUtfCTCq+ikcFPsrY4d5qQzJ3+4oSMRgzPIwwhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725396258; c=relaxed/simple;
-	bh=ky9ftaUxkSesozZKWnlXMOrWN1O1XEkEhRKllSxMpj8=;
+	s=arc-20240116; t=1725396347; c=relaxed/simple;
+	bh=xTPZ7PYuVdWpNG1mNPzohvAPpXevJQ2JRBXnJW4/ff4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PHNTGDHJFXoPDU+Yo5hR5EJ6Ofjb6yLZISzxqjCRJVsN5vkh9AoDQ8tyii4Lu4WjE406dOOdKxyRB3oJF78GLpnKgBPGqDf7wc5dOu3cPCpQsfe5rvI48OhEQuBOgeIKv/5grYYzXFN7lj/ThCnZ2ral391PdjcG92VIYvazQYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fABitcoN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jfRykz/87S0hnaSR6ORiwm9Llx/DYos4Zeo6xspAJXJpestDo/JzOjFx1NnQ9QmgbWKqf20Wbj5cYIabcS30kaYTS74lIYTFc+wKw0PmEgm0tyy3uT8kYUQny95j4GkH3M19/btzQv20vaGJJCUPZ48MD1hnErhVt9upvX0gJkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGqAOZWO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fABitcoN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 705FBC4CEC4;
-	Tue,  3 Sep 2024 20:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGqAOZWO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F295DC4CEC5;
+	Tue,  3 Sep 2024 20:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725396257;
-	bh=ky9ftaUxkSesozZKWnlXMOrWN1O1XEkEhRKllSxMpj8=;
+	s=k20201202; t=1725396347;
+	bh=xTPZ7PYuVdWpNG1mNPzohvAPpXevJQ2JRBXnJW4/ff4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fABitcoNKh+idsKjzOCff5aWs29fvyjX0Bhz25gtxfeVkyu3oa+dfZh3mP1xlYHLL
-	 Aag390qTTPxdCkR0mgQKL9s95D7KVnnHp4Gju/2jfAWxp0kJMBzRLOhu4M3nEBkH9c
-	 VAB2dA/eqk/XhphcRF99aPxvmnoqMlyvh8nJzCzHOKXgI3OP8fL3KcKObVME9y9pRo
-	 mw0Xagc/Ve7Ca/TC+Eq/C4m/zcRkiDiRH/l6mRVPtwhFCMU/8zOeHUKJhORoUWgzc1
-	 GtWGAtbs0GVJZHlioLk1jaeb+SZDoKkWPHCQ0SoxWGw+s4ZZpz8QDvBOGqvN5ybkMY
-	 ACIatyJ3EN8Fw==
+	b=rGqAOZWOnH3jW9KiitfrodEUM+75rmNSveqIVyHvRltAVLuzNZHlCrIumOkIKVTnM
+	 KqYxz2Z3TW/zx6zrqTrREyTpovcUEiyuSLc8KfcTi8Bcj01XZshHwoHibXl+gdc+D8
+	 2UgSr20zoypbKbnF5TifeFocUyqncBqwsfEUBHVs0mfwRe+PpDbrA09m0FBadpf7AC
+	 TdgJJ9FwVkJ/OejIMQdsUL85TojWz0/fRV6GilwqNFVmwa6eXz9fijbjgYRJT9wr7d
+	 7QLfKuOmkLKS0juLJbNwctduranxmAzb4n33BE1YBLVxDtx0mTmqcc/C9/7shsgf8A
+	 gZ0RbC860J1qQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -39,12 +39,12 @@ Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	maobibo@loongson.cn,
 	yangtiezhu@loongson.cn,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 13/20] LoongArch: Define ARCH_IRQ_INIT_FLAGS as IRQ_NOPROBE
-Date: Tue,  3 Sep 2024 15:23:45 -0400
-Message-ID: <20240903192425.1107562-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 11/17] LoongArch: Define ARCH_IRQ_INIT_FLAGS as IRQ_NOPROBE
+Date: Tue,  3 Sep 2024 15:25:25 -0400
+Message-ID: <20240903192600.1108046-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240903192425.1107562-1-sashal@kernel.org>
-References: <20240903192425.1107562-1-sashal@kernel.org>
+In-Reply-To: <20240903192600.1108046-1-sashal@kernel.org>
+References: <20240903192600.1108046-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.48
+X-stable-base: Linux 6.1.107
 Content-Transfer-Encoding: 8bit
 
 From: Huacai Chen <chenhuacai@loongson.cn>
@@ -90,7 +90,7 @@ index af4f4e8fbd858..8156ffb674159 100644
   * interrupt-retrigger: NOP for now. This may not be appropriate for all
   * machines, we'll see ...
 diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 883e5066ae445..df42c063f6c43 100644
+index 0524bf1169b74..4496649c9e68b 100644
 --- a/arch/loongarch/kernel/irq.c
 +++ b/arch/loongarch/kernel/irq.c
 @@ -122,9 +122,6 @@ void __init init_IRQ(void)
