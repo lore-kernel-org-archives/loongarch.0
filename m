@@ -1,96 +1,179 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BE419F431
-	for <loongarch@lists.linux.dev>; Tue,  3 Sep 2024 09:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205441A0BC6
+	for <loongarch@lists.linux.dev>; Tue,  3 Sep 2024 09:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725354098; cv=none; b=PoN5o14ofKGAOkG0SPxfKFTdbCT61iw6V6BdWdV3LK64ZrCwK3TsGeT1HiPQFji8mboGZmKxMHIZaJmN1rmeP8ZDHShOOnm9a4xsXmwafvfDEvZs2nzHk5NuVUnzIf1/iQfcFJk83TnoCuhIJOAgC1VREMwUVA6TjauAhzeiXPc=
+	t=1725357591; cv=none; b=XeQ6FYLYoERTLkVOnTA6MvGHuJw3K8B9EBUVlJQNy7W/DPkaFfzyq/N22sFm7jZav7We9BvUJnFxSvOvLOsojIoQ41H6OKuAt76AmN/knUkh+x2I3+r7tnIB72TfP6jpoq6hVt827WHiM7PRoYB2HwiM04EtGy0kPPP1yRuesyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725354098; c=relaxed/simple;
-	bh=XXc/crLCNHxzSDDZAy6Ddze/85mA/zk8QXL4gwHqt3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/wJ1yPhQR1tCG4vmmmErpxauNPuFoIIt+3h7lADvYqrPm8FfuTWn2Yzq8i+qcwyioRzccG2+5o98OzO1eoFYjf2A7kt+kaTYWmgxP/AqvJOVpXJB+IWIQ3FVcuON6gtGmU3vRf3fqO/2eoI9fg0RNYVZgV9ElWgiHTg3e2WZwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K5XCc2uf; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5XCc2uf"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2d88c0f8e79so2278676a91.3
-        for <loongarch@lists.linux.dev>; Tue, 03 Sep 2024 02:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725354096; x=1725958896; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cwokYJJ36zRTwb7Es++/p8+iOX4crE17pq6UetC4fjY=;
-        b=K5XCc2ufwR9lbmY0NMW3RUhni9QsSV69jmLcePpRJsZtk8/4rBecR2pCMf7Q7lFmEU
-         ilr+mVUsWtX+tS2rQGT/SVFs+Nygj0KX+rR4iAQYOZEu3KGjiLB5a3fphYYxmOhFiInC
-         L0W8UiUbny7ye92Mv9711LF/yscGriuKwh+5qgnn3lHdfcTtckmBvRfS/SNJhHsj8pQF
-         aRIi1PGX0yPRvZhVi7gvBNsIQVcMY3uv5+OtSsdQIrRFba7LF9xEuVHcnZtD3xwvxGOs
-         CbjWLfI83QOU9epDqsye5ToImhHSc7ComMEH/GoSmxaD9WegO/Ix399X21W8bS3KVxWJ
-         grdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725354096; x=1725958896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cwokYJJ36zRTwb7Es++/p8+iOX4crE17pq6UetC4fjY=;
-        b=oMP/BRyFGT+jcK+PCELsIUxa+U9hUqwR+ER2lZS++EvbC1ZMiSGtQ2br2xLwYeejoh
-         pbwSxIv6jva7I1mbhPwFhOiKxGqgSriWhskf4nawgkHeHTEX7dsga9+K1Ilt2s/DDnMH
-         j1vjKBnIiGirHGtcDllA9Skwb5RQMipvo+e65Hdo2hSuCG4VWh2TZ4/4Ud+KcwsF63of
-         BGoud8mJpz6NatJmhGStihvckbmlAmgtqtomZm3RB1womWzaq5U4Bd/OBaJ6/xBGbzw6
-         OKYSfOgtYtMofBXUgPCbHMCxk7FzvGN2rp3u+EnY3PYGlir/QA1bgoPiRDfvBJPHNpD3
-         xdEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7WieT+HX8kifqxoFvx0YAQUpb2hZ1xh50mEolGH1mzJK1sBj2MrBGo0ECHxCZKwZXfSohlzOASkU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZ/kshnWxoTZIrmtCOzL1vx+1g0HhHp+twhm5I4EkaWag/oOOk
-	S9DVxALuwCohcsPg4+j99DlRonAjHqOy1yRUuGxJYWjj1g1M+Pz2ZPn2mOvXoHU=
-X-Google-Smtp-Source: AGHT+IHpyFwad5VKly9RnWl8Lsn1HCK4hUN/kvD8gp4deaWLKbgiLnxTpU8gsD2DZXdwowBQlTervw==
-X-Received: by 2002:a17:90b:4b0a:b0:2d8:99c4:3cd9 with SMTP id 98e67ed59e1d1-2da7482c876mr189982a91.3.1725354096268;
-        Tue, 03 Sep 2024 02:01:36 -0700 (PDT)
-Received: from localhost ([122.172.83.237])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d85b119b3dsm10803545a91.13.2024.09.03.02.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 02:01:35 -0700 (PDT)
-Date: Tue, 3 Sep 2024 14:31:33 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH] cpufreq: loongson3: Use raw_smp_processor_id() in
- do_service_request()
-Message-ID: <20240903090133.tqmsitybuutzsup5@vireshk-i7>
-References: <20240828062459.1853837-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1725357591; c=relaxed/simple;
+	bh=kpYh5Vbgr2QEdHEMAjI5GDUKDsowxzPMpAQCAPZxGKs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Qi6dYAtg9AR7Kl4YXLIsF3H6gXCynRwZi9hH9RoVHZSqo5K539CzHxJqEHtC48RmoVZMFZJY+rlhpb+XIsAwvm0OiOHSAKhhZxZoSIVbDatYrBH63ljmOKBXfDAIynJX2jt0aCUr/m3E2fSrrZ1gHlFUPJ09Bko1LOEugOoamUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8Axy5oP3tZmexApAA--.43051S3;
+	Tue, 03 Sep 2024 17:59:43 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front2 (Coremail) with SMTP id qciowMBxjcUO3tZmeMEEAA--.12849S2;
+	Tue, 03 Sep 2024 17:59:43 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] Loongarch: EDAC driver for loongson memory
+ controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@xen0n.name,
+ bp@alien8.de, tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+ rric@kernel.org, loongarch@lists.linux.dev
+References: <20240903015354.9443-1-zhaoqunqin@loongson.cn>
+ <20240903015354.9443-3-zhaoqunqin@loongson.cn>
+ <jkdyayyjrzuhhfaueiessntfdof2m55xjxedkl3zp2jalf4sii@3fo65j64c6rv>
+ <549969b7-26c4-a203-b5a0-2e89ab7e7d79@loongson.cn>
+ <979d67cc-cbd2-408c-a8ca-a063030bcec2@kernel.org>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <cca91e87-ea98-5b16-0503-4d51fd524f24@loongson.cn>
+Date: Tue, 3 Sep 2024 17:59:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828062459.1853837-1-chenhuacai@loongson.cn>
+In-Reply-To: <979d67cc-cbd2-408c-a8ca-a063030bcec2@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qciowMBxjcUO3tZmeMEEAA--.12849S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGr1DCr4Dur45ur1kCF48GrX_yoWrGF48pr
+	n7Aa1fCr47Ka13Jrsav34jgFnIqwn7tr43Wrn3Ka4qgryqyFy3uFy8Xry29FyDur1kGrW8
+	ZFyFka4akF45JacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU43xhDU
+	UUU
 
-On 28-08-24, 14:24, Huacai Chen wrote:
-> Use raw_smp_processor_id() instead of plain smp_processor_id() in
-> do_service_request(), otherwise we may get some errors with the driver
-> enabled:
-> 
->  BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/208
->  caller is loongson3_cpufreq_probe+0x5c/0x250 [loongson3_cpufreq]
-> 
-> Reported-by: Xi Ruoyao <xry111@xry111.site>
-> Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/cpufreq/loongson3_cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied. Thanks.
+在 2024/9/3 下午3:58, Krzysztof Kozlowski 写道:
+> On 03/09/2024 09:24, Zhao Qunqin wrote:
+>> 在 2024/9/3 下午2:47, Krzysztof Kozlowski 写道:
+>>> On Tue, Sep 03, 2024 at 09:53:54AM +0800, Zhao Qunqin wrote:
+>>>> Report single bit errors (CE) only.
+>>>>
+>>>> Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+>>>> ---
+>>>>    MAINTAINERS                  |   1 +
+>>>>    arch/loongarch/Kconfig       |   1 +
+>>>>    drivers/edac/Kconfig         |   8 ++
+>>>>    drivers/edac/Makefile        |   1 +
+>>>>    drivers/edac/ls3a5000_edac.c | 187 +++++++++++++++++++++++++++++++++++
+>>>>    5 files changed, 198 insertions(+)
+>>>>    create mode 100644 drivers/edac/ls3a5000_edac.c
+>>>>
+>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>> index 6cc8cfc8f..b43f82279 100644
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -13242,6 +13242,7 @@ M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>>>>    L:	linux-edac@vger.kernel.org
+>>>>    S:	Maintained
+>>>>    F:	Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+>>>> +F:	drivers/edac/ls3a5000_edac.c
+>>>>    
+>>>>    LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>>>>    M:	Sathya Prakash <sathya.prakash@broadcom.com>
+>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>>>> index 70f169210..348030c24 100644
+>>>> --- a/arch/loongarch/Kconfig
+>>>> +++ b/arch/loongarch/Kconfig
+>>>> @@ -182,6 +182,7 @@ config LOONGARCH
+>>>>    	select PCI_QUIRKS
+>>>>    	select PERF_USE_VMALLOC
+>>>>    	select RTC_LIB
+>>>> +	select EDAC_SUPPORT
+>>> I think you got here comment before. How did you address it?
+>> I just randomly found a spot, and I will put it at the end(next version
+>> patch).
+> No, the comment was different. You must not select user-visible symbols.
 
--- 
-viresh
+Last version patch is:
+
+@@ -182,6 +182,7 @@ config LOONGARCH
+   	select PCI_QUIRKS
+   	select PERF_USE_VMALLOC
+   	select RTC_LIB
++	select EDAC_SUPPORT
++	select EDAC
+
+I delet "select EDAC" in this version patch. Other arch's Kconfig has "select EDAC_SUPPORT", such as arch/x86/Kconfig and arch/arm64/Kconfig
+.
+
+>
+>>>>    	select SPARSE_IRQ
+>>>>    	select SYSCTL_ARCH_UNALIGN_ALLOW
+>>>>    	select SYSCTL_ARCH_UNALIGN_NO_WARN
+>>>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>>>> index 16c8de505..2d10256f0 100644
+>>>> --- a/drivers/edac/Kconfig
+>>>> +++ b/drivers/edac/Kconfig
+>>>> @@ -573,5 +573,13 @@ config EDAC_VERSAL
+>>>>    	  Support injecting both correctable and uncorrectable errors
+>>>>    	  for debugging purposes.
+>>>>    
+>>> ...
+>>>
+>>>    +
+>>>> +static int loongson_edac_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct resource *rs;
+>>>> +	struct mem_ctl_info *mci;
+>>>> +	struct edac_mc_layer layers[2];
+>>>> +	struct loongson_edac_pvt *pvt;
+>>>> +	u64 *vbase = NULL;
+>>>> +
+>>>> +	rs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +	/* not return if can not find resource or resource start equals NULL */
+>>> Why?
+>> Because there are multiple memory controllers in the ls3x soc,
+>>
+>> but the ECC function of some memory controllers cannot be used.
+> Then what does the driver do for such memory controllers? Your binding
+> is quite clear here that above code is just bogus. It is not possible to
+> have node without reg.
+
+I will rewrite the code above.
+
+> Please point us to your DTS and results of dtbs_check.
+>
+>> But in any case, a node must be created in /sys/devices/system/edac/mc/
+>> through edac_mc_add_mc(mci).
+>>
+>> Then if the ECC function of the memory controller cannot be used, set
+>> start to NULL or do not pass mem resource,
+>>
+>> which is equivalent to enumeration of memory controller, and the CE
+>> count will always be zero.
+>>
+>>>> +	if (rs && rs->start) {
+>>>> +		vbase = devm_ioremap_resource(&pdev->dev, rs);
+>>>> +		if (IS_ERR(vbase))
+>>>> +			return PTR_ERR(vbase);
+>>>> +	}
+>
+> Best regards,
+> Krzysztof
+
