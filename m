@@ -1,116 +1,159 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5D9DDCD
-	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 15:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66B31DA31D;
+	Wed,  4 Sep 2024 17:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725463470; cv=none; b=sz4KxpTDpMEfQusGGHIb2bG6LB2NB+BNAxXz6hnZGl+J9gaXKkAf/rfzPod+SqZYpzRR4y9XbzMCxIHJ0r7BS8YafuJziar+NIeh6z3oA/AoT81EtZvcwSAyhZStiilTIG3/BE4uwOQFK/Rp35z2aPVwSjVzXKzKOoqgvgWrLso=
+	t=1725469429; cv=none; b=ZIydnDbmKnJa6Hw5ITRylyhl9bqSOoqXFiRfVHWgqypY5I4StwDlD5jFIrdEPi6jhEHcVY8WXRPQcUJ9tr5GNqi9b0QIdQRCsq0DTsTwWG9wn+zl2SVSiHIUOmmwnukTyw1TJkmmF6HOMuYFx2mR2LTzpN5inh4kR4LY4lfi2JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725463470; c=relaxed/simple;
-	bh=k4s71oW9moOCsdFZlopjnSjXbz5WCfMgT+KvfPUYXQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uBtSuNqfhntyOEPa2OvdR1DPcZxmqzPPdlaSnX3TyZ3HJN0AdufRJoWbZxwaR4iY00o62qY6KDd80DTBNbF2EcOgtL9dwmQ15YmH1q98r0hH3vG8CLGqenFf9QLWKq2cgZYrdEEN++3ihTVD7yfb+ywgt5+/c29vXP8dxjULbKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+xK7gA4; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725469429; c=relaxed/simple;
+	bh=bULBmEyxTuexdIoDddURy1JjGZM6ZRxX3SqU1u9O/JQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IyFhX/BtuSqRowXLEQXdJR6nr0b5gXAT6wOCu/35oSuNbB5BUoB5i/A3MzufNHb4NPIuHT7LIox+UqLgxldamk8CuL/cs5u9zC0yUyyCz4SsPMrgYQ8ZI3a8SeK7Dgnr/cC31YhryLDJMMpMtbkfJv4Iyn9RQXSEUrFs4LRTl/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTaxHHza; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+xK7gA4"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-535694d67eeso561223e87.0
-        for <loongarch@lists.linux.dev>; Wed, 04 Sep 2024 08:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725463467; x=1726068267; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k4s71oW9moOCsdFZlopjnSjXbz5WCfMgT+KvfPUYXQw=;
-        b=B+xK7gA4VKQ05Tb8/70cbmDpTVrekUcGaDPWG7X0FB2LG0rk3yFvxEpq36Ot2eBKwy
-         mhlS5m3RY5pv7aFyT+g/NXgbpmsO0Tng3+ypSfzBT1z70TKWe4Z2KLNUd8OPgjuZtNsi
-         lBmifb0M8jpH82MmgW2CYwJZw8LSE8p49JU2LLC4xpsERH7yhf9Fzny0GlfvaNFiGx9B
-         jK8uaT9NmUzjDOp4CgK/sl98l4f1vnpBhhAZSSHrx1siHKpeERvIFHhjZ2EqhZ/i3Dh7
-         K1QFoWAX4+mdYLKix0R85pQLsowVfmMEQ6HpWCMmMPVKahxEh7JIJ277PwWw6gCsn1sN
-         tm+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725463467; x=1726068267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k4s71oW9moOCsdFZlopjnSjXbz5WCfMgT+KvfPUYXQw=;
-        b=uegOl0B8kQ9dMbLesiLHrMlfv8GD7gG46/K/f9q7Ry771Qs+NAcS8ooJzF/IZMJ3u1
-         zaCJC/AiBPrEjhcqUKT+StBho+OBQa7zhUsBpslGxzUXEInrTmBhrDHDBftAn+/sLctA
-         mqAKqjVynvSAXui8elHWEqH2vbrjLGaJVd+c4Bmpt720iKa84Cgplzlcrtm1beiKh+ek
-         COK64mMPkfVPbgBuLMppY7uK3ZFDR6R/7KfCdjuAYtlFXojKSgkFrKD4xwvOXVsSX9jL
-         X6wQmnFThFprB1/UzyqdQnpktyGwl9EE82d+4StCAiV8kDD21yI/inHO4vJsOoVOV0hP
-         3L3g==
-X-Gm-Message-State: AOJu0YwM2kl1gTVFSzhoUCazrHcx/hYqxWO1DMomw5rnP2BfCI7aWb3Q
-	0WApajxZiks8vq4gcKHTOmkIymBv1Dj6367dyNNs8WzhQrRcGSwE+c1qz/Vn09OjIc9S2pcn01k
-	UM6U+b7n7bnonAI3XJxu8c2GamW0=
-X-Google-Smtp-Source: AGHT+IFZR3MLtznpkuUk2W+vfgapW1m/zYiHRXTV7QKkHUEzrgRx2bld4Et4sniTdM4ewEqOtObr9aJ8g993PFBLQNo=
-X-Received: by 2002:a05:6512:b90:b0:533:4191:fa4a with SMTP id
- 2adb3069b0e04-53567790bd5mr880356e87.15.1725463465795; Wed, 04 Sep 2024
- 08:24:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTaxHHza"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EDBEC4CEC2;
+	Wed,  4 Sep 2024 17:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725469428;
+	bh=bULBmEyxTuexdIoDddURy1JjGZM6ZRxX3SqU1u9O/JQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FTaxHHzaSOfcI3YLDnf/RnK9wC9qPyShM2HHxP3ePgjXB4NzyW2MkLMNNnsY+7v4Z
+	 1BqEDPvdwMr5k02sgsmIGDZzMKjOcEsh9tA142jKOFo1P8ZjN/n52sA4C0wtgY18zF
+	 5V5febs0O1ZTA3zWdh8wxr3emx0HgY+VfvCXQQ0XFPkideKAHE4KMLxvNDMJwttmeP
+	 APk3LE8irqsbcVBm3HqujP64qpo/YdVuUUvJohvWjWIzT6T3qn8/4A85zZhTf7Ye/F
+	 2jIlctaoy6DYrQlGVrAcChy6U0YmO9LTnt160G1xK9EBP6+2LceZefaqQEqp7fNoYI
+	 FD/7ShoBEL8oQ==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2 0/3] mm: Care about shadow stack guard gap when getting
+ an unmapped area
+Date: Wed, 04 Sep 2024 17:57:58 +0100
+Message-Id: <20240904-mm-generic-shadow-stack-guard-v2-0-a46b8b6dc0ed@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240904095205.739422-1-ubizjak@gmail.com> <CAAhV-H5WX7KXXpLkLm_4L-y5J-4fx-72uN+cvFGOZZh2NXUbHw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5WX7KXXpLkLm_4L-y5J-4fx-72uN+cvFGOZZh2NXUbHw@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 4 Sep 2024 17:24:13 +0200
-Message-ID: <CAFULd4abR8Upu5UecVes-sEc9his2yWL7pg8hwKSJ+ORSNL5Ag@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch/percpu: Simplify _percpu_read() and _percpu_write()
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJeR2GYC/4XNQQ6CMBCF4auQrh1TWknAlfcwLEpnLA3Skimih
+ nB3Kx7A5f+S+WYVidhTEudiFUyLTz6GHOpQCNub4Ag85hZKqpOstYRxBEchH1lIvcH4hDQbO4B
+ 7GEaoOlt1NUpqKhTZmJhu/rX71zZ379Mc+b2/W8rv+pMbqf7ISwkSGmPR6LrTiPoyEAe6HyM70
+ W7b9gEGbzW4ywAAAA==
+To: Richard Henderson <richard.henderson@linaro.org>, 
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+ Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+ Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, 
+ Max Filippov <jcmvbkbc@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
+ "Liam R. Howlett" <Liam.Howlett@Oracle.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Rick Edgecombe <rick.p.edgecombe@intel.com>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3075; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=bULBmEyxTuexdIoDddURy1JjGZM6ZRxX3SqU1u9O/JQ=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBm2JLn9sSIWk3S99ZcZ0LBwVX5IdsXF8juyr4Cy5E1
+ KFq4s/aJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZtiS5wAKCRAk1otyXVSH0LHiB/
+ 9nkgQUOVTlUbAmWo/1GWPj3aVUvDcv0pj9B7z3NcU9N9R9JzbgMMFLrWdQk5jwpTGfHHXkRNANVuvF
+ yKig8+IRVvSpGuFpKpsLmegPvrQX1McoVCR659thVX2oLIf6wpdg0LRsBXocswHT36RDNsVfpdTsJM
+ X1S72+e1Jt9HIYt4so8I0Zdga/Mt9VqrIg4QrfUtNDzNMYv7a8/AtVY7saHIjeiEwSOdKShaIlDBPV
+ aMyaeN6XQhDtvIJQopnxBZsr+uDpt9WM/iq/kDuIa1U6F5kpoObcPaMG4EfjQ3fobknmo/jMH0lBSh
+ O0wNT8iXCGWSoD2Q3fN3Rp0pOZQAOP
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Wed, Sep 4, 2024 at 5:02=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
->
-> Hi, Uros,
->
-> Thank you for your patch.
->
-> On Wed, Sep 4, 2024 at 5:52=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wr=
-ote:
-> >
-> > _percpu_read() and _percpu_write() macros call __percpu_read()
-> > and __percpu_write() static inline functions that result in a single
-> > assembly instruction. Percpu infrastructure expects its leaf
-> > definitions to encode the size of their percpu variable, so the patch
-> > merges asm clauses from the static inline function into the
-> > corresponding leaf macros.
-> It seems in some other places we prefer inline functions rather than
-> macros, but this patch is the opposite...
+As covered in the commit log for c44357c2e76b ("x86/mm: care about shadow
+stack guard gap during placement") our current mmap() implementation does
+not take care to ensure that a new mapping isn't placed with existing
+mappings inside it's own guard gaps. This is particularly important for
+shadow stacks since if two shadow stacks end up getting placed adjacent to
+each other then they can overflow into each other which weakens the
+protection offered by the feature.
 
-Please note that these are leaf macros (functions), always used
-through the upper level macro (see e.g. the definition of
-raw_cpu_read() and __pcpu_size_call_return() in
-include/linux/percpu-defs.h). These upper level macros do type check
-on the pointer, so there is no need to do it again in the leaf macro.
-The percpu address space checks on x86 depend on the presence of these
-checks.
+On x86 there is a custom arch_get_unmapped_area() which was updated by the
+above commit to cover this case by specifying a start_gap for allocations
+with VM_SHADOW_STACK. Both arm64 and RISC-V have equivalent features and
+use the generic implementation of arch_get_unmapped_area() so let's make
+the equivalent change there so they also don't get shadow stack pages
+placed without guard pages. The arm64 and RISC-V shadow stack
+implementations are currently on the list:
 
-> >
-> > The secondary effect of this change is to avoid explicit __percpu
-> > function arguments. Currently, __percpu macro is defined in
-> > include/linux/compiler_types.h, but with proposed patch [1],
-> > __percpu definition will need macros from include/asm-generic/percpu.h,
-> > creating forward dependency loop.
-> Macros don't check types, so use macros to drop "__percpu" checking?
-> Seems a little strange.
+   https://lore.kernel.org/r/20240829-arm64-gcs-v12-0-42fec94743
+   https://lore.kernel.org/lkml/20240403234054.2020347-1-debug@rivosinc.com/
 
-As explained above, types are checked in the upper level macro (that
-uses these leaf macros) through __verify_pcpu_ptr(). These checks
-currently use sparse to check __percpu tag, but x86 will soon use the
-compiler infrastructure with much more powerful checks in this place.
+Given the addition of the use of vm_flags in the generic implementation
+we also simplify the set of possibilities that have to be dealt with in
+the core code by making arch_get_unmapped_area() take vm_flags as
+standard. This is a bit invasive since the prototype change touches
+quite a few architectures but since the parameter is ignored the change
+is straightforward, the simplification for the generic code seems worth
+it.
 
-So, there is really no need to type check percpu pointer also in leaf funct=
-ions.
+Changes in v2:
+- Add comment to stack_guard_placement()
+- Build fixes for xtensa and MIPS.
+- Link to v1: https://lore.kernel.org/r/20240902-mm-generic-shadow-stack-guard-v1-0-9acda38b3dd3@kernel.org
+
+---
+Mark Brown (3):
+      mm: Make arch_get_unmapped_area() take vm_flags by default
+      mm: Pass vm_flags to generic_get_unmapped_area()
+      mm: Care about shadow stack guard gap when getting an unmapped area
+
+ arch/alpha/kernel/osf_sys.c       |  2 +-
+ arch/arc/mm/mmap.c                |  3 ++-
+ arch/arm/mm/mmap.c                |  7 ++---
+ arch/csky/abiv1/mmap.c            |  3 ++-
+ arch/loongarch/mm/mmap.c          |  5 ++--
+ arch/mips/mm/mmap.c               |  5 ++--
+ arch/parisc/kernel/sys_parisc.c   |  5 ++--
+ arch/parisc/mm/hugetlbpage.c      |  2 +-
+ arch/powerpc/mm/book3s64/slice.c  | 10 ++++---
+ arch/s390/mm/mmap.c               |  4 +--
+ arch/sh/mm/mmap.c                 |  5 ++--
+ arch/sparc/kernel/sys_sparc_32.c  |  2 +-
+ arch/sparc/kernel/sys_sparc_64.c  |  4 +--
+ arch/x86/include/asm/pgtable_64.h |  1 -
+ arch/x86/kernel/sys_x86_64.c      | 21 +++------------
+ arch/xtensa/kernel/syscall.c      |  3 ++-
+ include/linux/sched/mm.h          | 27 +++++++------------
+ mm/mmap.c                         | 55 +++++++++++++++++++--------------------
+ 18 files changed, 75 insertions(+), 89 deletions(-)
+---
+base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+change-id: 20240830-mm-generic-shadow-stack-guard-5bc5b8d0e95d
 
 Best regards,
-Uros.
+-- 
+Mark Brown <broonie@kernel.org>
+
