@@ -1,162 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBFC1E0B86;
-	Wed,  4 Sep 2024 17:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CE71E1A2F
+	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 18:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725469459; cv=none; b=W+p7WJ1O3bz4E/W0RCv5D/IEQDRDZJ9OODBaLFs7DjTuD2AiH+mBXCU73qNYTMxsACa0M3Ajfd42f2QcMyzHISSY9qH+gk/UieX7qsDXGazcZ9DF1EHNsv0qbn9a8w28wjAoKqdIlUUW83sf9o7Rt0h5BLuVGWMhctleE9nJcYY=
+	t=1725475086; cv=none; b=RVujNi91cf7d9l1ZBH/+P3e+dNOIOT4NALhXQUb093MtSgOdFNzvKz1OCkOdNfEh2Ho9JEMGb9wKiJmO++NTWA4nzU2cR3gDbZDcSUWM6pe7Tk5sisU7deG55ijRMxAVW9F6ycYSAnNfiNfyFCF+0R0JHqaupFeR71o2EiceOpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725469459; c=relaxed/simple;
-	bh=6l7d6i2Hr/t16H3e0PM6ntsqOX0xtByvRrAFpx2RPdc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kESPip5BobWZIhi9sdTWSUOLp0o3/V7ELFNUx8a3i7S4lx6VE9ILANOyBUCfsP0xt+IBslYSwVHKKuOm8hEYvtKdmwepAGKHd0aq/8Aao8j9ZNZxc4NqXYgeXOjUOpBlZDGKRe+INadF43Acih7pUdSG2lK171zZcdSkPfkM4Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMng1+N5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725475086; c=relaxed/simple;
+	bh=9pQAMVTSR3f24Wv5nWW5VXl+yfFf1TzPSaWfMAL7FMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LUvdGW6YaOFIXB4HAIsQfIxJzuoSrROhamLaCs3MHO3BVWwifb3+56vza3ARpW9ggTRQl8P/rNOcvo1PD2al3qNNNARLZ9GEK5CXA8ftHORZashGBxX47Xqx7i7dszb8Fta5KPTzkgfKcFljJcgqULiJYr8D3g5aBy2aymcFp+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWtiiRms; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMng1+N5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2ECC4CECB;
-	Wed,  4 Sep 2024 17:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725469458;
-	bh=6l7d6i2Hr/t16H3e0PM6ntsqOX0xtByvRrAFpx2RPdc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XMng1+N5KmI2Uyam4ahGOmJ7SA6LJYTXKVjx7qG8VnUZ/zUuGhRBCUkXKze2d/h2W
-	 qvk9lXkZAy6Y05LO0D8t2nFprSfQ7TcDWzQJu8SE80qNBE+/r6k3g83BIKWOzMfOt/
-	 Dvpd5qWmKHpFvZ2SytdtRA/ewzxfCdXGeHxRiiWyHN4p2CWQTl0lHTEU4UgysXWzN2
-	 eTOvyqyDhTsz/6ctIBuFArpRcUT1qm+ZYrAJVgsZe+irs/+81QH88lWveZJX5wrZrg
-	 OTOm7mY8GpWO9fbBe5Sz+TeGAp/qLFj/uFen9cZ5SvcQauQXuNRCmgGBYLVs1L2zqm
-	 CIGueYv9nSccQ==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 04 Sep 2024 17:58:01 +0100
-Subject: [PATCH v2 3/3] mm: Care about shadow stack guard gap when getting
- an unmapped area
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWtiiRms"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f4f2868710so75775641fa.1
+        for <loongarch@lists.linux.dev>; Wed, 04 Sep 2024 11:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725475083; x=1726079883; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y31lgc5K/TFTdDqrtgkkfI0qYZcr/9voUjOlhV0p688=;
+        b=ZWtiiRmsqyjEgqaQTxVIuBcKT24q8aOiPafCWkWPPGszpcQr0m7zIQwS78/c4Hl1Ly
+         enq2QPxxOzrhRP9xEZtC3//O/5kqLrqQykU4zWG36JDWg39OsEbWL4Y1zD8GW3OpIAmo
+         AQACWxzbAkjAyEC+Aw99YHmqbowDOIKjq6/5E4lizSdwFaenriq+TdFjNZb1fScBasPF
+         bvHVTAFvJYFmo6S9/a/MZ+IQ7nMPWVUD1u9zPp3UbkANaAwVe3dTb5OiXRYUz7V5hMV7
+         YXjCF2ZV9uaTlo20Ntvdw/jJa1PRKfo3G1qiz3Vr+7rCrQfhOVvklRA13sRdwixKBQh0
+         flrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725475083; x=1726079883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y31lgc5K/TFTdDqrtgkkfI0qYZcr/9voUjOlhV0p688=;
+        b=ddocMv6dkve7uiPP1d7lTHzkPUS9aeVvIUrFXvQCdMAmIP7a6jbKIcS9zzEOLw+UFX
+         2fwHiDEhApRLAgDaophefOl6kxszHqcoOiaZF93mGaN/bKMU5B5VEs7RTFhNWo5EeZDM
+         rZD4I8mWuxL6Qsrsr8JchwwCDMAFB6ikzs+IQao9DHSMmrEzLV8Mt+aB/jMbMH7Q2XHl
+         MBYU5hcnHLuB5Ko+XqPs+UmEWZ/M9fig8iAFV/dOeF/cG9Jw0v5Edd/GkFhscifElKvt
+         RiPUABDJhk12J5wrhyQhLQpaMrRhxcyzaf4vysq0knuDH+CoGtiyynWCwP6ejCKNJ2tq
+         dyJg==
+X-Gm-Message-State: AOJu0Yyon/9s9U0I/Vkm47EzgYF90YrI7W58n+hireMiExUeq40ew6up
+	ur/5XkyOouhPN98JjVrQKC+bYLH6XNdqndFOhUsA0fgrC7PCmRGxnUNr/1+7JCkx72CsCx+4eUh
+	D4hLq4lY65mVKaKLfzjd3FRt9BEw=
+X-Google-Smtp-Source: AGHT+IHOD/qVjP74cwcaPb9AH3vCXXXPLx8qzk1Y6mjszbD4Yf1Rdx4oFVIt+pjia83lYkqaJWA1TysRkId7avhN3k8=
+X-Received: by 2002:a05:651c:2110:b0:2f5:c4f:ddbe with SMTP id
+ 38308e7fff4ca-2f64446e056mr56640191fa.38.1725475082596; Wed, 04 Sep 2024
+ 11:38:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240904-mm-generic-shadow-stack-guard-v2-3-a46b8b6dc0ed@kernel.org>
-References: <20240904-mm-generic-shadow-stack-guard-v2-0-a46b8b6dc0ed@kernel.org>
-In-Reply-To: <20240904-mm-generic-shadow-stack-guard-v2-0-a46b8b6dc0ed@kernel.org>
-To: Richard Henderson <richard.henderson@linaro.org>, 
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
- Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
- Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, 
- Max Filippov <jcmvbkbc@gmail.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
- Rick Edgecombe <rick.p.edgecombe@intel.com>, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-99b12
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2551; i=broonie@kernel.org;
- h=from:subject:message-id; bh=6l7d6i2Hr/t16H3e0PM6ntsqOX0xtByvRrAFpx2RPdc=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBm2JLp8oAy9lYwTYiPgligR57zoDd7L+at5nOq93BI
- UyufcpKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZtiS6QAKCRAk1otyXVSH0OADB/
- 0ch6Ppo1cUyP74KOdaZaA30djq+AGYfXlBTOUWViXVC9fGK3bpaqsBB0Cfo7Fu6OsGVc21oO0/yUH1
- YrAVYn6NPOHjgywpcI1TnkgqUaxfBOur+h4alPeKfO22P8IGuFmDQWUyfu/9w5PhhvsetXQF8HjY3+
- VA0L3qH2XKq516PsycNgfFI7aYDz9EL8tCzzuTsMp8jhgeTHcVNNcxzbWDDBDU5qQBsU5P9IwQfOAx
- OuEH/w/+Xqho79dLxhqBNChGpSjBv7foaNTf0PLA9gi1zV9CAxhWJ6oVaByM60hUmP9mC93njCQXlg
- DUm9swJvc4113Ub/xAIxFMCk0q1OCk
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20240904095205.739422-1-ubizjak@gmail.com> <CAAhV-H5WX7KXXpLkLm_4L-y5J-4fx-72uN+cvFGOZZh2NXUbHw@mail.gmail.com>
+ <CAFULd4abR8Upu5UecVes-sEc9his2yWL7pg8hwKSJ+ORSNL5Ag@mail.gmail.com>
+In-Reply-To: <CAFULd4abR8Upu5UecVes-sEc9his2yWL7pg8hwKSJ+ORSNL5Ag@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 4 Sep 2024 20:37:50 +0200
+Message-ID: <CAFULd4aZcWcX5J==n7N_AQJre13Jeh6eJRK1eHmdSzRS3ZagCw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch/percpu: Simplify _percpu_read() and _percpu_write()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As covered in the commit log for c44357c2e76b ("x86/mm: care about shadow
-stack guard gap during placement") our current mmap() implementation does
-not take care to ensure that a new mapping isn't placed with existing
-mappings inside it's own guard gaps. This is particularly important for
-shadow stacks since if two shadow stacks end up getting placed adjacent to
-each other then they can overflow into each other which weakens the
-protection offered by the feature.
+On Wed, Sep 4, 2024 at 5:24=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
+>
+> On Wed, Sep 4, 2024 at 5:02=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
+> >
+> > Hi, Uros,
+> >
+> > Thank you for your patch.
+> >
+> > On Wed, Sep 4, 2024 at 5:52=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> =
+wrote:
+> > >
+> > > _percpu_read() and _percpu_write() macros call __percpu_read()
+> > > and __percpu_write() static inline functions that result in a single
+> > > assembly instruction. Percpu infrastructure expects its leaf
+> > > definitions to encode the size of their percpu variable, so the patch
+> > > merges asm clauses from the static inline function into the
+> > > corresponding leaf macros.
+> > It seems in some other places we prefer inline functions rather than
+> > macros, but this patch is the opposite...
+>
+> Please note that these are leaf macros (functions), always used
+> through the upper level macro (see e.g. the definition of
+> raw_cpu_read() and __pcpu_size_call_return() in
+> include/linux/percpu-defs.h). These upper level macros do type check
+> on the pointer, so there is no need to do it again in the leaf macro.
+> The percpu address space checks on x86 depend on the presence of these
+> checks.
+>
+> > >
+> > > The secondary effect of this change is to avoid explicit __percpu
+> > > function arguments. Currently, __percpu macro is defined in
+> > > include/linux/compiler_types.h, but with proposed patch [1],
+> > > __percpu definition will need macros from include/asm-generic/percpu.=
+h,
+> > > creating forward dependency loop.
+> > Macros don't check types, so use macros to drop "__percpu" checking?
+> > Seems a little strange.
+>
+> As explained above, types are checked in the upper level macro (that
+> uses these leaf macros) through __verify_pcpu_ptr(). These checks
+> currently use sparse to check __percpu tag, but x86 will soon use the
+> compiler infrastructure with much more powerful checks in this place.
+>
+> So, there is really no need to type check percpu pointer also in leaf fun=
+ctions.
 
-On x86 there is a custom arch_get_unmapped_area() which was updated by the
-above commit to cover this case by specifying a start_gap for allocations
-with VM_SHADOW_STACK. Both arm64 and RISC-V have equivalent features and
-use the generic implementation of arch_get_unmapped_area() so let's make
-the equivalent change there so they also don't get shadow stack pages
-placed without guard pages. x86 uses a single page guard, this is also
-sufficient for arm64 where we either do single word pops and pushes or
-unconstrained writes.
+OTOH, you are right, we should also typecheck _val in case of
+_percpu_write(). We need to add:
 
-Architectures which do not have this feature will define VM_SHADOW_STACK
-to VM_NONE and hence be unaffected.
+    if (0) {                                                \
+        typeof(_var) pto_tmp__;                    \
+        pto_tmp__ =3D (_val);                    \
+        (void)pto_tmp__;                    \
+    }                                \
 
-Suggested-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- mm/mmap.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+to the _percpu_write() macro.
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index b06ba847c96e..050c5ae2f80f 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1753,6 +1753,18 @@ static unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info)
- 	return gap;
- }
- 
-+/*
-+ * Determine if the allocation needs to ensure that there is no
-+ * existing mapping within it's guard gaps, for use as start_gap.
-+ */
-+static inline unsigned long stack_guard_placement(vm_flags_t vm_flags)
-+{
-+	if (vm_flags & VM_SHADOW_STACK)
-+		return PAGE_SIZE;
-+
-+	return 0;
-+}
-+
- /*
-  * Search for an unmapped address range.
-  *
-@@ -1814,6 +1826,7 @@ generic_get_unmapped_area(struct file *filp, unsigned long addr,
- 	info.length = len;
- 	info.low_limit = mm->mmap_base;
- 	info.high_limit = mmap_end;
-+	info.start_gap = stack_guard_placement(vm_flags);
- 	return vm_unmapped_area(&info);
- }
- 
-@@ -1863,6 +1876,7 @@ generic_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
- 	info.length = len;
- 	info.low_limit = PAGE_SIZE;
- 	info.high_limit = arch_get_mmap_base(addr, mm->mmap_base);
-+	info.start_gap = stack_guard_placement(vm_flags);
- 	addr = vm_unmapped_area(&info);
- 
- 	/*
+Let me test this amendment a bit, please expect the V3 patch tomorrow.
 
--- 
-2.39.2
-
+Thanks,
+Uros.
