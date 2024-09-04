@@ -1,360 +1,133 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216E7146D6F
-	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 07:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE92155A26
+	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 07:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725433230; cv=none; b=PpbFWQfosh/Zr3SNcEBUr+dOWpodZ4CIEYW95bD9ZaSQJKJg0EKADg8uWBAG4IgwRaanjpivVbCKaO3Df+n9av3D7DRiW5/dwShjbYfNbEjUPCCrRJnckHzHMZmcAjzhvgqM35QMHx3cSR3HQswuzbeDRO2LUZuzcbB6hDhTptI=
+	t=1725436267; cv=none; b=daXw8GcdYBFyvaOWjQ2nXA0MO1Y4Nd/K6eLfoFkHeSdvDLfqVHaUqT7hoIULI1OcyKsQP10ZJvjf+hXyPpXjnEAXKmHlAnDYocDAXsao9pqA0sy8qrrazpi5XQzuHQgM7UvWFlIZBNME4MPJGRIpCT22ivOFGf0XRHAiQdbb6I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725433230; c=relaxed/simple;
-	bh=XhRyrIUnx0vcUn1794mXXJ04+1nZfUPFAUbgPQOeGlc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fIUAwyfTTbB1BZ4pVLJK1tXQppAHsa1kXJml01V8Sip36jB7/d3FMOtkYJbMa9aYJNbj9H3kVWsUovoYQ3ITIQND98oXnc7pqwAlm/IBxZiBCSXLWiRXtRgLcOQEp9fXJn4RLVlmdC8eTnMyzIkRJaQ3NfzpFPVxSdHxMGvcZHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lE0LMpjq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lE0LMpjq"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4846HBfX016570;
-	Wed, 4 Sep 2024 06:59:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=folkEIJqstNzu
-	7lwREFA/To2vbOIgoI9Y7HXfVt2L+U=; b=lE0LMpjqff+1mmFkHrSz4fklZ5X+5
-	iBqjQRbetoP8n+C+7ngNmnp+awphLL0vlg84xB25xHnDJ2f66lwui/k2DAtlNNg/
-	P91ynPjf8WHxkt5Z7IRFm+5IAkLz7u+ADKaknng+M/flQ6Dr+T+2PLif7E3UNOv1
-	IfzQ+CrYh88BCVLi1OL88XCywOiH6Cs2Vnt2XZ+scTsDa7YYPYmQ1psJ7KcN0tmY
-	o5EpEgn16MpCatVoZWMrwUl1CCpujfbpbX839/a05o5v3dleyO2mQ9yJZBh38WaL
-	FXFHPty7ghqYDiPxbGrYtFxyhRW8hF451vjRrMOsjpOuKux3F5cSMfYHw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9hn91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:59:24 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4846xNXk004735;
-	Wed, 4 Sep 2024 06:59:23 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9hn8r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:59:23 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48430pfD000413;
-	Wed, 4 Sep 2024 06:59:21 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cdgupq5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:59:21 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4846xHm534931168
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Sep 2024 06:59:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CC49C20043;
-	Wed,  4 Sep 2024 06:59:17 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A500320040;
-	Wed,  4 Sep 2024 06:59:17 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  4 Sep 2024 06:59:17 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-	id 7AC54E0297; Wed,  4 Sep 2024 08:59:17 +0200 (CEST)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [PATCH 1/7] tracing: add ftrace_regs to function_graph_enter()
-Date: Wed,  4 Sep 2024 08:58:55 +0200
-Message-ID: <20240904065908.1009086-2-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240904065908.1009086-1-svens@linux.ibm.com>
-References: <20240904065908.1009086-1-svens@linux.ibm.com>
+	s=arc-20240116; t=1725436267; c=relaxed/simple;
+	bh=VbH+uuzHIKkUDK9nfnyaqfHG1YqgtauHPGQsXtiUDDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IJll9V8JADdMArqeBp+l6XjM/fNQlwdt3SaSb3J9qXZxeP/YUeKfwzAm1sR9Kp2kG6yif+Nj+vxmk0wGV1KV/HVLAi0i2+a4XbCJmjxvLc2ZwfOIQxMcv4ne759cxQsjPNukaof2yM5TUdPZiHuOyDBJ0GlgkACGvgQK/bd0nVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WzF6T6FRvz9sSC;
+	Wed,  4 Sep 2024 09:50:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id MyT5AqoNw1ah; Wed,  4 Sep 2024 09:50:57 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WzF6T53SRz9sS7;
+	Wed,  4 Sep 2024 09:50:57 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D7618B77A;
+	Wed,  4 Sep 2024 09:50:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id XVy8Rvp824KA; Wed,  4 Sep 2024 09:50:57 +0200 (CEST)
+Received: from [192.168.234.246] (unknown [192.168.234.246])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id EC5188B778;
+	Wed,  4 Sep 2024 09:50:56 +0200 (CEST)
+Message-ID: <64e74f4d-948d-442e-9810-69907915401c@csgroup.eu>
+Date: Wed, 4 Sep 2024 09:50:56 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: make copy_to_kernel_nofault() not fault on user
+ addresses
+To: Omar Sandoval <osandov@osandov.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Benjamin Gray <bgray@linux.ibm.com>,
+ "Christopher M. Riedl" <cmr@bluescreens.de>
+Cc: Christoph Hellwig <hch@lst.de>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-um@lists.infradead.org, kernel-team@fb.com
+References: <cover.1725223574.git.osandov@fb.com>
+ <f0e171cbae576758d9387cee374dd65088e75b07.1725223574.git.osandov@fb.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <f0e171cbae576758d9387cee374dd65088e75b07.1725223574.git.osandov@fb.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4SIE32AwU4OcPAwAEJmTo-vtL9wXompT
-X-Proofpoint-ORIG-GUID: 562DU-xMxw4EVrNelRokSilhcXaDg0Dm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-04_04,2024-09-03_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
- malwarescore=0 mlxlogscore=861 adultscore=0 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409040049
 
-Will be used later for showing function arguments in the function
-graph tracer.
+Hi,
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
----
- arch/arm/kernel/ftrace.c           | 2 +-
- arch/arm64/kernel/ftrace.c         | 2 +-
- arch/csky/kernel/ftrace.c          | 2 +-
- arch/loongarch/kernel/ftrace.c     | 2 +-
- arch/loongarch/kernel/ftrace_dyn.c | 2 +-
- arch/microblaze/kernel/ftrace.c    | 2 +-
- arch/mips/kernel/ftrace.c          | 2 +-
- arch/parisc/kernel/ftrace.c        | 2 +-
- arch/powerpc/kernel/trace/ftrace.c | 2 +-
- arch/riscv/kernel/ftrace.c         | 2 +-
- arch/s390/kernel/ftrace.c          | 2 +-
- arch/sh/kernel/ftrace.c            | 2 +-
- arch/sparc/kernel/ftrace.c         | 2 +-
- arch/x86/kernel/ftrace.c           | 2 +-
- include/linux/ftrace.h             | 3 ++-
- kernel/trace/fgraph.c              | 3 ++-
- 16 files changed, 18 insertions(+), 16 deletions(-)
+Le 02/09/2024 à 07:31, Omar Sandoval a écrit :
+> [Vous ne recevez pas souvent de courriers de osandov@osandov.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> From: Omar Sandoval <osandov@fb.com>
+> 
+> I found that on x86, copy_to_kernel_nofault() still faults on addresses
+> outside of the kernel address range (including NULL):
+> 
+>    # echo ttyS0 > /sys/module/kgdboc/parameters/kgdboc
+>    # echo g > /proc/sysrq-trigger
+>    ...
+>    [15]kdb> mm 0 1234
+>    [   94.652476] BUG: kernel NULL pointer dereference, address: 0000000000000000
+...
+> 
+> Note that copy_to_kernel_nofault() uses pagefault_disable(), but it
+> still faults. This is because with Supervisor Mode Access Prevention
+> (SMAP) enabled, do_user_addr_fault() Oopses on a fault for a user
+> address from kernel space _before_ checking faulthandler_disabled().
+> 
+> copy_from_kernel_nofault() avoids this by checking that the address is
+> in the kernel before doing the actual memory access. Do the same in
+> copy_to_kernel_nofault() so that we get an error as expected:
+> 
+>    # echo ttyS0 > /sys/module/kgdboc/parameters/kgdboc
+>    # echo g > /proc/sysrq-trigger
+>    ...
+>    [17]kdb> mm 0 1234
+>    kdb_putarea_size: Bad address 0x0
+>    diag: -21: Invalid address
+> 
+> Signed-off-by: Omar Sandoval <osandov@fb.com>
+> ---
+>   mm/maccess.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/mm/maccess.c b/mm/maccess.c
+> index 72e9c03ea37f..d67dee51a1cc 100644
+> --- a/mm/maccess.c
+> +++ b/mm/maccess.c
+> @@ -61,6 +61,9 @@ long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
+>          if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
+>                  align = (unsigned long)dst | (unsigned long)src;
+> 
+> +       if (!copy_kernel_nofault_allowed(dst, size))
+> +               return -ERANGE;
+> +
+>          pagefault_disable();
+>          if (!(align & 7))
+>                  copy_to_kernel_nofault_loop(dst, src, size, u64, Efault);
+> --
+> 2.46.0
+> 
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index e61591f33a6c..1f8802439e34 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -267,7 +267,7 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- 	old = *parent;
- 	*parent = return_hooker;
- 
--	if (function_graph_enter(old, self_addr, frame_pointer, NULL))
-+	if (function_graph_enter(old, self_addr, frame_pointer, NULL, NULL))
- 		*parent = old;
- }
- 
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index a650f5e11fc5..686fbebb0432 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -472,7 +472,7 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
- 	old = *parent;
- 
- 	if (!function_graph_enter(old, self_addr, frame_pointer,
--	    (void *)frame_pointer)) {
-+	    (void *)frame_pointer, NULL)) {
- 		*parent = return_hooker;
- 	}
- }
-diff --git a/arch/csky/kernel/ftrace.c b/arch/csky/kernel/ftrace.c
-index 50bfcf129078..c12af268c1cb 100644
---- a/arch/csky/kernel/ftrace.c
-+++ b/arch/csky/kernel/ftrace.c
-@@ -156,7 +156,7 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- 	old = *parent;
- 
- 	if (!function_graph_enter(old, self_addr,
--			*(unsigned long *)frame_pointer, parent)) {
-+			*(unsigned long *)frame_pointer, parent, NULL)) {
- 		/*
- 		 * For csky-gcc function has sub-call:
- 		 * subi	sp,	sp, 8
-diff --git a/arch/loongarch/kernel/ftrace.c b/arch/loongarch/kernel/ftrace.c
-index 8c3ec1bc7aad..43d908b01718 100644
---- a/arch/loongarch/kernel/ftrace.c
-+++ b/arch/loongarch/kernel/ftrace.c
-@@ -61,7 +61,7 @@ void prepare_ftrace_return(unsigned long self_addr,
- 	if (ftrace_get_parent_ra_addr(self_addr, &ra_off))
- 		goto out;
- 
--	if (!function_graph_enter(old, self_addr, 0, NULL))
-+	if (!function_graph_enter(old, self_addr, 0, NULL, NULL))
- 		*(unsigned long *)(callsite_sp + ra_off) = return_hooker;
- 
- 	return;
-diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index bff058317062..eab16231d09d 100644
---- a/arch/loongarch/kernel/ftrace_dyn.c
-+++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -233,7 +233,7 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent)
- 
- 	old = *parent;
- 
--	if (!function_graph_enter(old, self_addr, 0, parent))
-+	if (!function_graph_enter(old, self_addr, 0, parent, NULL))
- 		*parent = return_hooker;
- }
- 
-diff --git a/arch/microblaze/kernel/ftrace.c b/arch/microblaze/kernel/ftrace.c
-index 188749d62709..009800d7e54f 100644
---- a/arch/microblaze/kernel/ftrace.c
-+++ b/arch/microblaze/kernel/ftrace.c
-@@ -62,7 +62,7 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr)
- 		return;
- 	}
- 
--	if (function_graph_enter(old, self_addr, 0, NULL))
-+	if (function_graph_enter(old, self_addr, 0, NULL, NULL))
- 		*parent = old;
- }
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
-index 8c401e42301c..65f29de35a59 100644
---- a/arch/mips/kernel/ftrace.c
-+++ b/arch/mips/kernel/ftrace.c
-@@ -362,7 +362,7 @@ void prepare_ftrace_return(unsigned long *parent_ra_addr, unsigned long self_ra,
- 	insns = core_kernel_text(self_ra) ? 2 : MCOUNT_OFFSET_INSNS + 1;
- 	self_ra -= (MCOUNT_INSN_SIZE * insns);
- 
--	if (function_graph_enter(old_parent_ra, self_ra, fp, NULL))
-+	if (function_graph_enter(old_parent_ra, self_ra, fp, NULL, NULL))
- 		*parent_ra_addr = old_parent_ra;
- 	return;
- out:
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index c91f9c2e61ed..c8d926f057a6 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -45,7 +45,7 @@ static void __hot prepare_ftrace_return(unsigned long *parent,
- 
- 	old = *parent;
- 
--	if (!function_graph_enter(old, self_addr, 0, NULL))
-+	if (!function_graph_enter(old, self_addr, 0, NULL, NULL))
- 		/* activate parisc_return_to_handler() as return point */
- 		*parent = (unsigned long) &parisc_return_to_handler;
- }
-diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
-index d8d6b4fd9a14..8a24d6eabb64 100644
---- a/arch/powerpc/kernel/trace/ftrace.c
-+++ b/arch/powerpc/kernel/trace/ftrace.c
-@@ -434,7 +434,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 	if (bit < 0)
- 		goto out;
- 
--	if (!function_graph_enter(parent_ip, ip, 0, (unsigned long *)sp))
-+	if (!function_graph_enter(parent_ip, ip, 0, (unsigned long *)sp, NULL))
- 		parent_ip = ppc_function_entry(return_to_handler);
- 
- 	ftrace_test_recursion_unlock(bit);
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 4b95c574fd04..b45985265b29 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -205,7 +205,7 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- 	 */
- 	old = *parent;
- 
--	if (!function_graph_enter(old, self_addr, frame_pointer, parent))
-+	if (!function_graph_enter(old, self_addr, frame_pointer, parent, NULL))
- 		*parent = return_hooker;
- }
- 
-diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-index 0b6e62d1d8b8..cf9ee90ae216 100644
---- a/arch/s390/kernel/ftrace.c
-+++ b/arch/s390/kernel/ftrace.c
-@@ -273,7 +273,7 @@ unsigned long prepare_ftrace_return(unsigned long ra, unsigned long sp,
- 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
- 		goto out;
- 	ip -= MCOUNT_INSN_SIZE;
--	if (!function_graph_enter(ra, ip, 0, (void *) sp))
-+	if (!function_graph_enter(ra, ip, 0, (void *) sp, NULL))
- 		ra = (unsigned long) return_to_handler;
- out:
- 	return ra;
-diff --git a/arch/sh/kernel/ftrace.c b/arch/sh/kernel/ftrace.c
-index 930001bb8c6a..a9a0a1238214 100644
---- a/arch/sh/kernel/ftrace.c
-+++ b/arch/sh/kernel/ftrace.c
-@@ -359,7 +359,7 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr)
- 		return;
- 	}
- 
--	if (function_graph_enter(old, self_addr, 0, NULL))
-+	if (function_graph_enter(old, self_addr, 0, NULL, NULL))
- 		__raw_writel(old, parent);
- }
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-diff --git a/arch/sparc/kernel/ftrace.c b/arch/sparc/kernel/ftrace.c
-index eaead3da8e03..9ad77a2d9bc4 100644
---- a/arch/sparc/kernel/ftrace.c
-+++ b/arch/sparc/kernel/ftrace.c
-@@ -125,7 +125,7 @@ unsigned long prepare_ftrace_return(unsigned long parent,
- 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
- 		return parent + 8UL;
- 
--	if (function_graph_enter(parent, self_addr, frame_pointer, NULL))
-+	if (function_graph_enter(parent, self_addr, frame_pointer, NULL, NULL))
- 		return parent + 8UL;
- 
- 	return return_hooker;
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 8da0e66ca22d..b325f7e7e39a 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -637,7 +637,7 @@ void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
- 	if (bit < 0)
- 		return;
- 
--	if (!function_graph_enter(*parent, ip, frame_pointer, parent))
-+	if (!function_graph_enter(*parent, ip, frame_pointer, parent, NULL))
- 		*parent = return_hooker;
- 
- 	ftrace_test_recursion_unlock(bit);
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index fd5e84d0ec47..56d91041ecd2 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1083,7 +1083,8 @@ extern void return_to_handler(void);
- 
- extern int
- function_graph_enter(unsigned long ret, unsigned long func,
--		     unsigned long frame_pointer, unsigned long *retp);
-+		     unsigned long frame_pointer, unsigned long *retp,
-+		     struct ftrace_regs *fregs);
- 
- struct ftrace_ret_stack *
- ftrace_graph_get_ret_stack(struct task_struct *task, int skip);
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index d1d5ea2d0a1b..fa62ebfa0711 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -613,7 +613,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 
- /* If the caller does not use ftrace, call this function. */
- int function_graph_enter(unsigned long ret, unsigned long func,
--			 unsigned long frame_pointer, unsigned long *retp)
-+			 unsigned long frame_pointer, unsigned long *retp,
-+			struct ftrace_regs *fregs)
- {
- 	struct ftrace_graph_ent trace;
- 	unsigned long bitmap = 0;
--- 
-2.43.0
+This patch leads to the following errors on ppc64le_defconfig:
 
+[    2.423930][    T1] Running code patching self-tests ...
+[    2.428912][    T1] code-patching: test failed at line 395
+[    2.429085][    T1] code-patching: test failed at line 398
+[    2.429561][    T1] code-patching: test failed at line 432
+[    2.429679][    T1] code-patching: test failed at line 435
+
+This seems to be linked to commit c28c15b6d28a ("powerpc/code-patching: 
+Use temporary mm for Radix MMU"), copy_from_kernel_nofault_allowed() 
+returns false for the patching area.
+
+Christophe
