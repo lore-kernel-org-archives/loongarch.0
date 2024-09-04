@@ -1,156 +1,192 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E64316EC19
-	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 22:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29011155A5D
+	for <loongarch@lists.linux.dev>; Wed,  4 Sep 2024 23:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725490570; cv=none; b=ZtsgyQboB7iZcyCvB0nS90JFUCHkXNLhb9WHghCdOF9T8lcAhhzARys3c1gzviluu8JW4xuCWJ4FIDQT8SrAyn932vpVagNorWzy9KFV85s8ABfcQs6rbfQAFVv9ngnJHGLj3m58lFP5m9Kb5DSVHytoBMUhVtF6LZyIyAxPk7c=
+	t=1725492828; cv=none; b=CTDzRQ2FTfPODZ8QIyMmGup75BIGtq3a/kPVw9L06zG0MCWvbPcvWH35DsaOuY33Pptq1gAnm1JWmQ1nG/01fpcFpqg+BMR3SPQenadCEpS8I/QI8koeUf7oP0bLHJfiXikBV4OGtKLFYB0j0pCr2iHkEsDP1JAE1Z7ZJ4FF+Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725490570; c=relaxed/simple;
-	bh=szdO1vb9faSGYA2Jc6crUSmefcYSz1qzFB4PGRjDfLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ri9d8Iyd6MI/lxU7TOBP7eRZUJUYjeO/AUHE2Z0QfGOlxkPHmDLROCXO9ePZ2CT1HbAg2t5pF0fh/KvYzRWTh/d0zqOR1G7nTTPU6mjnmffJcGylj7tzW9mgCu/flJj1Z6sy8SbaV6zhXNbwvLCd8Lp1BmOwqAS/1hjxnWvGk2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=E8sxc72D; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
+	s=arc-20240116; t=1725492828; c=relaxed/simple;
+	bh=0MV2v82CQOXMeR06j1K0EUveZL9YXnH6HgSg3iOOQPw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=NA2FHh1N4udllfvdtjrJ6bS0FGx594OZK8oOhGQ2UVB9PvkY0GkxPRCEJo/kH2RPDdKQifp/xI2F+J7BLyGmLSahdJvNGhUuGbAo2Ciyi/ZZFcrYg39k+uKbuSmgkhqI1lt4rCp8WhgNcceqWAHaG6xSzIKsshnBz7ekL6VbkM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3IIY4bwJ; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="E8sxc72D"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-714269f312fso10453b3a.3
-        for <loongarch@lists.linux.dev>; Wed, 04 Sep 2024 15:56:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3IIY4bwJ"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02a4de4f4eso448061276.1
+        for <loongarch@lists.linux.dev>; Wed, 04 Sep 2024 16:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1725490568; x=1726095368; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=35/vvYnjYcTahPnX2Ak6JC2o1aEV4aWjtE37kGrVzrs=;
-        b=E8sxc72DkHRxO06C+Z7v7Nqg3rOB2f0x+NrP6o5p8JaRDmbicS9WXQZfV5kvDJTB/f
-         1Vx5Sp9JThQTJSbK79hFD3hzX9QYGHWmwqNgQk5JePsvne46ZGOnlaD6Lx7N7AmZm0wo
-         qzbInhTAM/haKhvB0DvG2IpjhyqstgaBLO10ospefI7Za1EakcXourTJVGsxIwAXjR1j
-         r7RgVTEtFu1y07V14NlCFDdrarOJTwyfvFJbKI0/OlFAB217Lu6HT5mjDsVLpaxZR3XU
-         R4YwGeZWhV4YnXKEx9M7MduUQhBAnPhhIffU/UHRnOc65/HGELIcFuBMWRJ669tCtIdC
-         zx2A==
+        d=google.com; s=20230601; t=1725492826; x=1726097626; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uykNh/T0V9CAowhkC/wpCZl/aNMVHh9r5kx7pi77vV0=;
+        b=3IIY4bwJgPxIJQ3DIjNJPAUX5raHQQR67RRzFH3ydDhxWQOda6IumbHZBBwxWjXzag
+         R+LRXNfFzyN4tXpgHH0X1OQgaTwLyTD973AlJcbyuIaXfKPjqDPb40C9PgrNDCvSttv+
+         JzeFYXnOvvjtsdNJP0n04vDiPKZd0HIwrglVe9IlCC2/gk2QxpISEthtKihlykt5z2Dm
+         fhQ2o+k0CMqfPoFFMpRv9TiM0OJRmGGBofZsBKxcl7aqKKNDNQ/5Of6KyuhH0E4OOsII
+         k1MxBX8v0UZmPrT0go7n2YF1j4DssNwGEfjod++96vt4ibSnJ1X0TpTDednopIwf+b2m
+         90uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725490568; x=1726095368;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=35/vvYnjYcTahPnX2Ak6JC2o1aEV4aWjtE37kGrVzrs=;
-        b=MzfFUmdCBSHHnhZzVWdWib2tEGOdHTwMdpMXMjG+oDWJWMno9msFIxmX/KPawpngGV
-         OGjZ1Jm9iJrpCySOiKeuS9xOzQ7jJlBCCmYx7uK+3XKmiPcYoD/XxeV0HC03gcDafpba
-         6BhOzgjqXt6XR4nxmSMTJVvSdphKMj7da/7uec1iQYSl6MSPLs874Wc5wzp8LLfjTSCQ
-         Iq0E/AG0If/3HHsoGail8fh6UqtoQp7sPXjqC4e7rYgVaAlf2gQiYb30Qdhqv+9kdWux
-         w/zHPTNhIDcqvEnb1HUVRTRXACogZvQuwsAx67ybQzfQtOt8f9HTFKC6HkqjnKOBEfyY
-         A1bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfwB5Bqvx0pdHVoaqHR22/R9/qsA7AEgKkCUz7NjYCCchwQJl+hHJ23xKmgDAGVBk5/ngmgNyGHmw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5FZhj+rYaroU/huuDAhAVu0q7FAQOKy/F0EJ8HmDWYy8I8+fT
-	zYs/2F6n52/2918P/xtHpo2V7yRr1dlHkifHBLhpxhnK6doNseZkuu54gG5bO9Q=
-X-Google-Smtp-Source: AGHT+IGJMJTzWYcjGTZbRrQ6IDaoYzbHR/wGLI0wH+MKCl8eX8iKTnn29gVdjQTwsOFAi2AC/JBGeg==
-X-Received: by 2002:a17:902:f545:b0:206:b618:1d8f with SMTP id d9443c01a7336-206b6182580mr23287495ad.11.1725490567622;
-        Wed, 04 Sep 2024 15:56:07 -0700 (PDT)
-Received: from telecaster.dhcp.thefacebook.com ([2620:10d:c090:500::4:761e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206ae9525cbsm18305395ad.99.2024.09.04.15.56.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 15:56:07 -0700 (PDT)
-Date: Wed, 4 Sep 2024 15:56:04 -0700
-From: Omar Sandoval <osandov@osandov.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Benjamin Gray <bgray@linux.ibm.com>,
-	"Christopher M. Riedl" <cmr@bluescreens.de>,
-	Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-um@lists.infradead.org, kernel-team@fb.com
-Subject: Re: [PATCH 2/2] mm: make copy_to_kernel_nofault() not fault on user
- addresses
-Message-ID: <ZtjlhFbeFZtxzmTb@telecaster.dhcp.thefacebook.com>
-References: <cover.1725223574.git.osandov@fb.com>
- <f0e171cbae576758d9387cee374dd65088e75b07.1725223574.git.osandov@fb.com>
- <64e74f4d-948d-442e-9810-69907915401c@csgroup.eu>
+        d=1e100.net; s=20230601; t=1725492826; x=1726097626;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uykNh/T0V9CAowhkC/wpCZl/aNMVHh9r5kx7pi77vV0=;
+        b=uy5ZqJhop5GXIwWJUUZ7MCUZarZsM89LplwVev5KYq4g+rh8b0YP+sQWayRtU4GVBo
+         himLoHHIQlsm6XbYsloTy+cCQV1NpjUEl8LjXLLXgTpLMQBIBDUg/3+GlMIKWZmkqVVk
+         lxeKxWsOTvxm4cRQ1YF+hGqMjRPwciYuih8ZL0jvVcPewFU9bD/vCSBDcuypbTOrmrEj
+         oU+IQUhO/jVZgsjDsu9fLtrIUr6rqzWAkmd3HSWa0TV4hJsqW5DqJtrY85jdQVW6ajSW
+         6r4JUz7/KsO81zOTSmFqzR51KePfAZPDth6sFh/O6+GQ/tqg0Mum3vURJmDlfYlbVs2X
+         FnWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNHjxbssWKjzGxLbbgdyV09s7vT0PGDsL4e+xnT3/UNZ00cs1bLFOY3qKr6rwy4HhHPIl6LFTQxwg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXquMaYJkLYgN4M7UqOndvPkHyv0fbNM9XB9cHr+IUg9hJF5UF
+	0Qci1vHfLOzC1dW6xGu499W/l9Mln26Hv/q2YgK68tVQeIMDkjOBNzPwloFDbrq3wQSh7x3nZ4X
+	B0UTsr7b3nSX0er+/RQ==
+X-Google-Smtp-Source: AGHT+IHlWubTx6E8VrUfQXTNNaZkLgFaN+lTCKP4pMLyXKpV+FgOVAlLsacWjKzs0BxCPS5/R97jnhWicwTPqmYJ
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a25:8592:0:b0:e0e:c9bc:3206 with SMTP
+ id 3f1490d57ef6-e1d0e78ad12mr5832276.5.1725492825962; Wed, 04 Sep 2024
+ 16:33:45 -0700 (PDT)
+Date: Wed,  4 Sep 2024 23:33:43 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <64e74f4d-948d-442e-9810-69907915401c@csgroup.eu>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
+Message-ID: <20240904233343.933462-1-yosryahmed@google.com>
+Subject: [PATCH v2] mm: z3fold: deprecate CONFIG_Z3FOLD
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Christoph Hellwig <hch@infradead.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Chris Down <chris@chrisdown.name>, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 04, 2024 at 09:50:56AM +0200, Christophe Leroy wrote:
-> Hi,
-> 
-> Le 02/09/2024 à 07:31, Omar Sandoval a écrit :
-> > [Vous ne recevez pas souvent de courriers de osandov@osandov.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > From: Omar Sandoval <osandov@fb.com>
-> > 
-> > I found that on x86, copy_to_kernel_nofault() still faults on addresses
-> > outside of the kernel address range (including NULL):
-> > 
-> >    # echo ttyS0 > /sys/module/kgdboc/parameters/kgdboc
-> >    # echo g > /proc/sysrq-trigger
-> >    ...
-> >    [15]kdb> mm 0 1234
-> >    [   94.652476] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> ...
-> > 
-> > Note that copy_to_kernel_nofault() uses pagefault_disable(), but it
-> > still faults. This is because with Supervisor Mode Access Prevention
-> > (SMAP) enabled, do_user_addr_fault() Oopses on a fault for a user
-> > address from kernel space _before_ checking faulthandler_disabled().
-> > 
-> > copy_from_kernel_nofault() avoids this by checking that the address is
-> > in the kernel before doing the actual memory access. Do the same in
-> > copy_to_kernel_nofault() so that we get an error as expected:
-> > 
-> >    # echo ttyS0 > /sys/module/kgdboc/parameters/kgdboc
-> >    # echo g > /proc/sysrq-trigger
-> >    ...
-> >    [17]kdb> mm 0 1234
-> >    kdb_putarea_size: Bad address 0x0
-> >    diag: -21: Invalid address
-> > 
-> > Signed-off-by: Omar Sandoval <osandov@fb.com>
-> > ---
-> >   mm/maccess.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/mm/maccess.c b/mm/maccess.c
-> > index 72e9c03ea37f..d67dee51a1cc 100644
-> > --- a/mm/maccess.c
-> > +++ b/mm/maccess.c
-> > @@ -61,6 +61,9 @@ long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
-> >          if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
-> >                  align = (unsigned long)dst | (unsigned long)src;
-> > 
-> > +       if (!copy_kernel_nofault_allowed(dst, size))
-> > +               return -ERANGE;
-> > +
-> >          pagefault_disable();
-> >          if (!(align & 7))
-> >                  copy_to_kernel_nofault_loop(dst, src, size, u64, Efault);
-> > --
-> > 2.46.0
-> > 
-> 
-> This patch leads to the following errors on ppc64le_defconfig:
-> 
-> [    2.423930][    T1] Running code patching self-tests ...
-> [    2.428912][    T1] code-patching: test failed at line 395
-> [    2.429085][    T1] code-patching: test failed at line 398
-> [    2.429561][    T1] code-patching: test failed at line 432
-> [    2.429679][    T1] code-patching: test failed at line 435
-> 
-> This seems to be linked to commit c28c15b6d28a ("powerpc/code-patching: Use
-> temporary mm for Radix MMU"), copy_from_kernel_nofault_allowed() returns
-> false for the patching area.
+The z3fold compressed pages allocator is rarely used, most users use
+zsmalloc. The only disadvantage of zsmalloc in comparison is the
+dependency on MMU, and zbud is a more common option for !MMU as it was
+the default zswap allocator for a long time.
 
-Thanks for testing. This patch isn't worth the trouble, so we can drop
-it.
+Historically, zsmalloc had worse latency than zbud and z3fold but
+offered better memory savings. This is no longer the case as shown by
+a simple recent analysis [1]. That analysis showed that z3fold does not
+have any advantage over zsmalloc or zbud considering both performance
+and memory usage. In a kernel build test on tmpfs in a limited cgroup,
+z3fold took 3% more time and used 1.8% more memory. The latency of
+zswap_load() was 7% higher, and that of zswap_store() was 10% higher.
+Zsmalloc is better in all metrics.
 
-Thanks,
-Omar
+Moreover, z3fold apparently has latent bugs, which was made noticeable
+by a recent soft lockup bug report with z3fold [2]. Switching to
+zsmalloc not only fixed the problem, but also reduced the swap usage
+from 6~8G to 1~2G. Other users have also reported being bitten by
+mistakenly enabling z3fold.
+
+Other than hurting users, z3fold is repeatedly causing wasted
+engineering effort. Apart from investigating the above bug, it came up
+in multiple development discussions (e.g. [3]) as something we need to
+handle, when there aren't any legit users (at least not intentionally).
+
+The natural course of action is to deprecate z3fold, and remove in a few
+cycles if no objections are raised from active users. Next on the list
+should be zbud, as it offers marginal latency gains at the cost of huge
+memory waste when compared to zsmalloc. That one will need to wait until
+zsmalloc does not depend on MMU.
+
+Rename the user-visible config option from CONFIG_Z3FOLD to
+CONFIG_Z3FOLD_DEPRECATED so that users with CONFIG_Z3FOLD=y get a new
+prompt with explanation during make oldconfig. Also, remove
+CONFIG_Z3FOLD=y from defconfigs.
+
+[1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
+[2]https://lore.kernel.org/lkml/EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmail.com/
+[3]https://lore.kernel.org/lkml/CAJD7tkbnmeVugfunffSovJf9FAgy9rhBVt_tx=nxUveLUfqVsA@mail.gmail.com/
+
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Nhat Pham <nphamcs@gmail.com>
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+---
+
+I think it should actually be fine to remove z3fold without deprecating
+it first, but I am doing the due diligence.
+
+v1: https://lore.kernel.org/linux-mm/20240112193103.3798287-1-yosryahmed@google.com/
+v1 -> v2:
+- Make CONFIG_Z3FOLD_DEPRECATED a tristate option to match
+  CONFIG_Z3FOLD.
+- Update commit subject and log.
+
+---
+ arch/loongarch/configs/loongson3_defconfig |  1 -
+ arch/powerpc/configs/ppc64_defconfig       |  1 -
+ mm/Kconfig                                 | 14 ++++++++++++--
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index b4252c357c8e2..75b366407a60a 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -96,7 +96,6 @@ CONFIG_ZPOOL=y
+ CONFIG_ZSWAP=y
+ CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=y
+ CONFIG_ZBUD=y
+-CONFIG_Z3FOLD=y
+ CONFIG_ZSMALLOC=m
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_MEMORY_HOTPLUG=y
+diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+index 544a65fda77bc..d39284489aa26 100644
+--- a/arch/powerpc/configs/ppc64_defconfig
++++ b/arch/powerpc/configs/ppc64_defconfig
+@@ -81,7 +81,6 @@ CONFIG_MODULE_SIG_SHA512=y
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_BINFMT_MISC=m
+ CONFIG_ZSWAP=y
+-CONFIG_Z3FOLD=y
+ CONFIG_ZSMALLOC=y
+ # CONFIG_SLAB_MERGE_DEFAULT is not set
+ CONFIG_SLAB_FREELIST_RANDOM=y
+diff --git a/mm/Kconfig b/mm/Kconfig
+index b23913d4e47e2..536679d726417 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -177,15 +177,25 @@ config ZBUD
+ 	  deterministic reclaim properties that make it preferable to a higher
+ 	  density approach when reclaim will be used.
+ 
+-config Z3FOLD
+-	tristate "3:1 compression allocator (z3fold)"
++config Z3FOLD_DEPRECATED
++	tristate "3:1 compression allocator (z3fold) (DEPRECATED)"
+ 	depends on ZSWAP
+ 	help
++	  Deprecated and scheduled for removal in a few cycles. If you have
++	  a good reason for using Z3FOLD over ZSMALLOC, please contact
++	  linux-mm@kvack.org and the zswap maintainers.
++
+ 	  A special purpose allocator for storing compressed pages.
+ 	  It is designed to store up to three compressed pages per physical
+ 	  page. It is a ZBUD derivative so the simplicity and determinism are
+ 	  still there.
+ 
++config Z3FOLD
++	tristate
++	default y if Z3FOLD_DEPRECATED=y
++	default m if Z3FOLD_DEPRECATED=m
++	depends on Z3FOLD_DEPRECATED
++
+ config ZSMALLOC
+ 	tristate
+ 	prompt "N:1 compression allocator (zsmalloc)" if ZSWAP
+-- 
+2.46.0.469.g59c65b2a67-goog
+
