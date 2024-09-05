@@ -1,106 +1,181 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5517719D89E
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 16:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DBC1A3022
+	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 17:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725552188; cv=none; b=jg5o6umjzQOl9TngzLRbxTX6sMIQT1+3wV4dHshdjXgejsSj2HpVQ7JsuJiciakvGOKwWfNYsld4ZhB1W6PvAo/m3XvlCoUtfHpHnJYaUpdVbdK8Gkx3TPIIHwr6NTPAzKfe+wf0np+zoYC0yjfpsP4K2atf5FHaIIijx4M/UwU=
+	t=1725557221; cv=none; b=Y+ktzA5+IuCejVCtrNbTCgX2tPRubY1xHg8N1+cPTNPDm1Qbj9rnfjt4dQgg12RO/c4xy7896aeRfOocIMnlay+bj06LY+uoKUUixxlVnVGVNG4eGnsYvZt9wYpi7mN+jOD8P5MfxI5dK2U9Ju5cRicrKBulsSiUycsL5H/KTNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725552188; c=relaxed/simple;
-	bh=dxdoE+Tc69+QIWnRgHImPXkCDL2I7LUw0KJGtL4nNOo=;
+	s=arc-20240116; t=1725557221; c=relaxed/simple;
+	bh=h9V6gwSALxoQh2n6tyi2ux0NqTNkpRulrrb7ZNYpQ6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Irr3Z5wBTw2Jb5dHQ9kTwcSN2MDTrB+BUY4R3eyNp0YaLDBJ/CmWYewJ4NLhoRz1wKE52FZWBNDyJ06FOxTJgVlZqeRxn9okTQzmFbmk7o0x+kH3ctZyLXUd1pzQS3EM3pZlhVrQsdFXbTod19wQc71xtqq0DafjU2ZhABudTV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=GFrTHFeE; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEmfno/hXH9Kg0SzfTuFu6w0epXM5PC4DgWfzzVfYuorklz2gjU/vYMOIiyr5xq6paeSfE3xUf0jtYL7JZmiICiXASaTSzkUDBkZZiXghLfDfNzr9KuC2xEnfbaew9GSWJDfm92tNWDrwoRGHlyL1cjEF8wUrfHmvYtHooovd0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x+Zx6WJr; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="GFrTHFeE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1725552184; bh=dxdoE+Tc69+QIWnRgHImPXkCDL2I7LUw0KJGtL4nNOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GFrTHFeEIgyFKXRi3Fk+VbCAleTAzFk68KT5e6YKmmqVzxLQtYguti0fUUqD3m2Hf
-	 SLsFMzZruLmV7xlvNUwGMACKScw07jR3DClTzkSvl05JiH5XubgBVumxANN0v1Ts+2
-	 0rYOLVm38nXXEXo7CUEtOVekUbx3F9V32xkYA2BU=
-Date: Thu, 5 Sep 2024 18:03:03 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: maobibo <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
-	qemu-devel@nongnu.org, xry111@xry111.site
-Subject: Re: qemu direct kernel boot on LoongArch
-Message-ID: <7311f2fa-2353-48ad-85f5-5eae1f6cb65f@t-8ch.de>
-References: <49432aed-3ed7-2f07-7f65-311faef96197@loongson.cn>
- <ZtkhtxcJUK-JediY@zx2c4.com>
- <f50c4868-7c2e-1ede-ab19-c67ea0acaab3@loongson.cn>
- <CAHmME9rRJjJ5tHf_xtprkHtWz-ButOOZXVo=E9y8qSyQ-qu6ew@mail.gmail.com>
- <ccc7db47-d065-4e78-bf67-c4e8855c9be4@t-8ch.de>
- <ZtnGA4mH0I2hdx4N@zx2c4.com>
- <ea52a89c-449f-4aed-8138-f81ad20a1a79@t-8ch.de>
- <CAHmME9pPvk4s9JnEPmc9w71hkeHD_1U-fAy0+8MQNmO_9Gh3=g@mail.gmail.com>
- <b11ba2f4-ba4b-40fb-860e-e10e760562fe@t-8ch.de>
- <CAHmME9pjokr=ahBbJA9Ljf8jjOyfyRAk0Qo4YeDYO_gs78GGzg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x+Zx6WJr"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2d87176316eso1658975a91.0
+        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 10:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725557218; x=1726162018; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzHtjVKsvMG2J+VEdT3JJ4mY+8euHciuRxZ037YJyIs=;
+        b=x+Zx6WJrDtOHRSNOfWnoPhYBOzPxEpg1hPZCQq/1qt/iMISJf73ZiIyMp7rVHiOim4
+         drpjGwOlmIFYcE/6kh5hJ0xQ2qJQwqHacuuyDlLs7q9kCQSAO8yNGAGZHdIF9ipSvoW1
+         y4THyAlVrbcWk5NV5eMlFG1lNVodnunFMP+BWNwv33wAZcKB5k8vuYWyqC8Beaf7eJ1r
+         NMPFrMaqJMMInXKdYxUlYn2MmPQrsitvVkVX47fGfQfkIPNgRJQvXq7d3y6A5oYvwHxc
+         Ggemg+j43OKMxrzXO3jFskjeEA+Kfekq2Qp5z46aYZYQ36GTv5GQKGNjchKvgNdC4tD8
+         mmSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725557218; x=1726162018;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TzHtjVKsvMG2J+VEdT3JJ4mY+8euHciuRxZ037YJyIs=;
+        b=eJsxvGbSclEmGi6vcv2MpaHitTEXXDmZLXy2Pt9tJ46Ai3hzg8ddp1kgWzq31iwRAO
+         Z2Xr2EuFkijV5clpQWqyO7G320Ni+cHFBJ2GQuUzrTLCctkivzPLQm8ttCkXNK1tf4Ng
+         JHR7tpxpNE3va8v4McV9gQ6S0kvMg4Nacz8IAcSc3aQJFjFrbM7umIfT3Xo0yuPmxwLm
+         xPHiLrkSBqHJWKy9F5mq+tqdVKOvsXWfAhJRHWTykH301HbaeDrF1rN3h/rI3uY+UR+J
+         gCs8+IGgxWCTvxIEhN7Uth8pR0ksuNtI6m58XyFhU2aZ4WoDVARu5Hpl7JUEmC5B5EDe
+         KqWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0RCbdiNsGMwrdPFlGaoRGpmubPMLH2hJnJOMkSzRtvIU1U7gt5HMrmVwoEIB3AE8XRzSgyEk5H7I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxzW73U0WNgY5GGtNArov0Tlz07vAYlKSZXsrvGwCGUl0I+X2Cg
+	Qn6e8NPNQX5gCvpvncx3MNZaU5/u1sV7JCckuxc5lonbXoeXwI0Y5O5HxRFZa8A=
+X-Google-Smtp-Source: AGHT+IFxrgWNtdxCWG0RBGHbyeqfO4T1K/TMURzEB4vAspGF/eaSh/6stCCkbbdo5V+yBGPBQxqCJA==
+X-Received: by 2002:a17:90b:3d2:b0:2d8:9fbe:6727 with SMTP id 98e67ed59e1d1-2dad4f0e4damr67155a91.4.1725557218097;
+        Thu, 05 Sep 2024 10:26:58 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2da5932d1ecsm6506552a91.43.2024.09.05.10.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 10:26:57 -0700 (PDT)
+Date: Thu, 5 Sep 2024 10:26:52 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC v2 0/4] mm: Introduce MAP_BELOW_HINT
+Message-ID: <Ztnp3OAIRz/daj7s@ghost>
+References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
+ <yu7um2tcxg2apoz372rmzpkrfgbb42ndvabvrsp4usb2e3bkrf@huaucjsp5vlj>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHmME9pjokr=ahBbJA9Ljf8jjOyfyRAk0Qo4YeDYO_gs78GGzg@mail.gmail.com>
+In-Reply-To: <yu7um2tcxg2apoz372rmzpkrfgbb42ndvabvrsp4usb2e3bkrf@huaucjsp5vlj>
 
-On 2024-09-05 17:18:07+0000, Jason A. Donenfeld wrote:
-> On Thu, Sep 5, 2024 at 5:16 PM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> >
-> > On 2024-09-05 17:07:22+0000, Jason A. Donenfeld wrote:
-> > > On Thu, Sep 5, 2024 at 5:05 PM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> > > >
-> > > > On 2024-09-05 16:53:55+0000, Jason A. Donenfeld wrote:
-> > > > > On Thu, Sep 05, 2024 at 07:25:05AM +0200, Thomas Weißschuh wrote:
-> > > > > > On 2024-09-05 06:04:12+0000, Jason A. Donenfeld wrote:
-> > > > > > > On Thu, Sep 5, 2024 at 5:45 AM maobibo <maobibo@loongson.cn> wrote:
-> > > > > > > >
-> > > > > > > > Jason,
-> > > > > > > >
-> > > > > > > > With the latest qemu 9.1 version, elf format booting is supported.
-> > > > > > >
-> > > > > > > Thanks, I just figured this out too, about 4 minutes ago. Excellent.
-> > > > > > > And the 1G minimum ram limit is gone too.
-> > > > > > >
-> > > > > > > Now working on how to trigger resets.
-> > > > > >
-> > > > > > With "reset" do you mean normal (non-panic) system shutdown/poweroff?
-> > > > > > Since QEMU 9.1 and a recent kernel you can use the pvpanic device for
-> > > > > > that in a cross-architecture way.
-> > > > >
-> > > > > What I mean is that I need for userspace calling `reboot(RB_AUTOBOOT);`
-> > > > > to actually result in QEMU being told to reboot the system. Sounds like
-> > > > > that's not possible (yet?) in 9.1?
-> > > >
-> > > > With reboot(RB_POWER_OFF) this is indeed the exact usecase for pvpanic
-> > >
-> > > I'm actually using reboot(RB_AUTOBOOT) wth QEMU's -no-reboot, because
-> > > that tends to be far more compatible with a greater number of
-> > > platforms, for example, x86 without acpi. Shucks.
-> >
-> > You can check that both QEMU and the kernel support pvpanic shutdown
-> > through sysfs and if so use reboot(RB_POWER_OFF); and
-> > reboot(RB_AUTOBOOT) otherwise.
+On Thu, Sep 05, 2024 at 09:47:47AM +0300, Kirill A. Shutemov wrote:
+> On Thu, Aug 29, 2024 at 12:15:57AM -0700, Charlie Jenkins wrote:
+> > Some applications rely on placing data in free bits addresses allocated
+> > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+> > address returned by mmap to be less than the 48-bit address space,
+> > unless the hint address uses more than 47 bits (the 48th bit is reserved
+> > for the kernel address space).
+> > 
+> > The riscv architecture needs a way to similarly restrict the virtual
+> > address space. On the riscv port of OpenJDK an error is thrown if
+> > attempted to run on the 57-bit address space, called sv57 [1].  golang
+> > has a comment that sv57 support is not complete, but there are some
+> > workarounds to get it to mostly work [2].
+> > 
+> > These applications work on x86 because x86 does an implicit 47-bit
+> > restriction of mmap() address that contain a hint address that is less
+> > than 48 bits.
+> > 
+> > Instead of implicitly restricting the address space on riscv (or any
+> > current/future architecture), a flag would allow users to opt-in to this
+> > behavior rather than opt-out as is done on other architectures. This is
+> > desirable because it is a small class of applications that do pointer
+> > masking.
 > 
-> I guess. But the whole idea is to bloat the code as little as possible
-> and use one interface for everything. Pushing that all up into
-> userspace is pretty icky.
+> This argument looks broken to me.
+> 
+> The "small class of applications" is going to be broken unless they got
+> patched to use your new mmap() flag. You are asking for bugs.
+> 
+> Consider the case when you write, compile and validate a piece of software
+> on machine that has <=47bit VA. The binary got shipped to customers.
+> Later, customer gets a new shiny machine that supports larger address
+> space and your previously working software is broken. Such binaries might
+> exist today.
+> 
+> It is bad idea to use >47bit VA by default. Most of software got tested on
+> x86 with 47bit VA.
+> 
+> We can consider more options to opt-in into wider address space like
+> personality or prctl() handle. But opt-out is no-go from what I see.
+> 
+> -- 
+>   Kiryl Shutsemau / Kirill A. Shutemov
 
-If it works through ACPI everywhere then sure.
+riscv is in an interesting state in regards to this because the software
+ecosystem is much less mature than other architectures. The existing
+riscv hardware supports either 38 or 47 bit userspace VAs, but a lot of
+people test on QEMU which defaults to 56 bit. As a result, a lot of
+code is tested with the larger address space. Applications that don't
+work on the larger address space, like OpenJDK, currently throw an error
+and exit.
 
-> It sounds like LoongArch already supports this via ACPI GED, but
-> there's some plumbing that needs to be done still. So maybe I'll just
-> wait for that.
+Since riscv does not currently have the address space default to 47
+bits, some applications just don't work on 56 bits. We could change the
+kernel so that these applications start working without the need for
+them to change their code, but that seems like the kernel is
+overstepping and fixing binaries rather than providing users tools to
+fix the binaries themselves.
 
-Also sounds reasonable.
+This mmap flag was an attempt to provide a tool for these applications
+that work on the existing 47 bit VA hardware to also work on different
+hardware that supports a 56 bit VA space. After feedback, it looks like
+a better solution than the mmap flag is to use the personality syscall
+to set a process wide restriction to 47 bits instead, which matches the
+32 bit flag that already exists.
 
-> Meanwhile, any idea about adding a second serial to the platform? I've
-> been futzing with it for a bit now to no avail.
+- Charlie
 
-No idea, sorry.
