@@ -1,181 +1,101 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DBC1A3022
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 17:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7157217BEA5
+	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 20:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725557221; cv=none; b=Y+ktzA5+IuCejVCtrNbTCgX2tPRubY1xHg8N1+cPTNPDm1Qbj9rnfjt4dQgg12RO/c4xy7896aeRfOocIMnlay+bj06LY+uoKUUixxlVnVGVNG4eGnsYvZt9wYpi7mN+jOD8P5MfxI5dK2U9Ju5cRicrKBulsSiUycsL5H/KTNQ=
+	t=1725568232; cv=none; b=RJZM1ZAPkC+k5XhH3AA9n3chJj76KRZvLGyH/XKVQGkaF4jpNWvSq1kNDnHl+G2p9MYny1IBIghv0Xw6K0SE8MMy6AiSDmhz+X9Q6Gc1MlLmeU/RufaXoFSyPWsilntAhKy/WneJoU5tbbsH0D9BcjZvvbrj8H265rILi23qfFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725557221; c=relaxed/simple;
-	bh=h9V6gwSALxoQh2n6tyi2ux0NqTNkpRulrrb7ZNYpQ6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fEmfno/hXH9Kg0SzfTuFu6w0epXM5PC4DgWfzzVfYuorklz2gjU/vYMOIiyr5xq6paeSfE3xUf0jtYL7JZmiICiXASaTSzkUDBkZZiXghLfDfNzr9KuC2xEnfbaew9GSWJDfm92tNWDrwoRGHlyL1cjEF8wUrfHmvYtHooovd0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x+Zx6WJr; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1725568232; c=relaxed/simple;
+	bh=hLlYloO5J1K9pI8X2i8QN3FuAA9tOJN5UUnlOrlCvd4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kOCx+rQ9MIj26s+8sMX+dffmVnLPIvesWHLqw2kSxQ3c/k5uobMS3a7CwNCnx94Oe+UeOioRqRJZKQ0w/HicTSD97ROlYVGUoA7nKQijkJfG5DaTtk/qBjXSin/UM5ok4P6+iLu4oTDEap3weDvJGJ04oeq/RrKtDyoYCScSNZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=XjDGhJQS; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x+Zx6WJr"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2d87176316eso1658975a91.0
-        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 10:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725557218; x=1726162018; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzHtjVKsvMG2J+VEdT3JJ4mY+8euHciuRxZ037YJyIs=;
-        b=x+Zx6WJrDtOHRSNOfWnoPhYBOzPxEpg1hPZCQq/1qt/iMISJf73ZiIyMp7rVHiOim4
-         drpjGwOlmIFYcE/6kh5hJ0xQ2qJQwqHacuuyDlLs7q9kCQSAO8yNGAGZHdIF9ipSvoW1
-         y4THyAlVrbcWk5NV5eMlFG1lNVodnunFMP+BWNwv33wAZcKB5k8vuYWyqC8Beaf7eJ1r
-         NMPFrMaqJMMInXKdYxUlYn2MmPQrsitvVkVX47fGfQfkIPNgRJQvXq7d3y6A5oYvwHxc
-         Ggemg+j43OKMxrzXO3jFskjeEA+Kfekq2Qp5z46aYZYQ36GTv5GQKGNjchKvgNdC4tD8
-         mmSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725557218; x=1726162018;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TzHtjVKsvMG2J+VEdT3JJ4mY+8euHciuRxZ037YJyIs=;
-        b=eJsxvGbSclEmGi6vcv2MpaHitTEXXDmZLXy2Pt9tJ46Ai3hzg8ddp1kgWzq31iwRAO
-         Z2Xr2EuFkijV5clpQWqyO7G320Ni+cHFBJ2GQuUzrTLCctkivzPLQm8ttCkXNK1tf4Ng
-         JHR7tpxpNE3va8v4McV9gQ6S0kvMg4Nacz8IAcSc3aQJFjFrbM7umIfT3Xo0yuPmxwLm
-         xPHiLrkSBqHJWKy9F5mq+tqdVKOvsXWfAhJRHWTykH301HbaeDrF1rN3h/rI3uY+UR+J
-         gCs8+IGgxWCTvxIEhN7Uth8pR0ksuNtI6m58XyFhU2aZ4WoDVARu5Hpl7JUEmC5B5EDe
-         KqWw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0RCbdiNsGMwrdPFlGaoRGpmubPMLH2hJnJOMkSzRtvIU1U7gt5HMrmVwoEIB3AE8XRzSgyEk5H7I=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxzW73U0WNgY5GGtNArov0Tlz07vAYlKSZXsrvGwCGUl0I+X2Cg
-	Qn6e8NPNQX5gCvpvncx3MNZaU5/u1sV7JCckuxc5lonbXoeXwI0Y5O5HxRFZa8A=
-X-Google-Smtp-Source: AGHT+IFxrgWNtdxCWG0RBGHbyeqfO4T1K/TMURzEB4vAspGF/eaSh/6stCCkbbdo5V+yBGPBQxqCJA==
-X-Received: by 2002:a17:90b:3d2:b0:2d8:9fbe:6727 with SMTP id 98e67ed59e1d1-2dad4f0e4damr67155a91.4.1725557218097;
-        Thu, 05 Sep 2024 10:26:58 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2da5932d1ecsm6506552a91.43.2024.09.05.10.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 10:26:57 -0700 (PDT)
-Date: Thu, 5 Sep 2024 10:26:52 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC v2 0/4] mm: Introduce MAP_BELOW_HINT
-Message-ID: <Ztnp3OAIRz/daj7s@ghost>
-References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
- <yu7um2tcxg2apoz372rmzpkrfgbb42ndvabvrsp4usb2e3bkrf@huaucjsp5vlj>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="XjDGhJQS"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7712542B29
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1725568230; bh=EYICUJzOiUjxu7bcKA/cuRv1FEZYbIes1M0Y/sxIaLQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=XjDGhJQS4LQ1RUBIbVt3VSqicyb3MsLCo/MgCmHxJJXYTfYFGFQXBPdoXyjGLlxzs
+	 TxLX0QimyBhKdV7lcR8Xkk5GMbPpy7Kj2ejpXAHSyr3MvRv31sUIQaIT8YvaBZITdM
+	 NOf9Xwrz9syxrdVwc9ZLO4WURVEc84AkVg0VGU9qszUFPia3Sf2UqweeDJNKDDty9e
+	 4CapLoNKzvF45yvTzWCdH3TToDy+/Cvd2TrlsF1jIzN7GjF3LVSKRaKFrdYkg4m4Rv
+	 oA46MYzAzPmWUCQJ7fE9IxGWc7cc7FNewzDK1oWS0EVO+BvLwlD7DCKVJkeptsETA8
+	 4kx799LXzOV1A==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 7712542B29;
+	Thu,  5 Sep 2024 20:30:30 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Dandan Zhang <zhangdandan@uniontech.com>, pbonzini@redhat.com,
+ zhaotianrui@loongson.cn, maobibo@loongson.cn, chenhuacai@kernel.org,
+ zenghui.yu@linux.dev
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ guanwentao@uniontech.com, wangyuli@uniontech.com,
+ baimingcong@uniontech.com, Xianglai Li <lixianglai@loongson.cn>, Mingcong
+ Bai <jeffbai@aosc.io>, Dandan Zhang <zhangdandan@uniontech.com>
+Subject: Re: [PATCH v3] Loongarch: KVM: Add KVM hypercalls documentation for
+ LoongArch
+In-Reply-To: <4769C036576F8816+20240828045950.3484113-1-zhangdandan@uniontech.com>
+References: <4769C036576F8816+20240828045950.3484113-1-zhangdandan@uniontech.com>
+Date: Thu, 05 Sep 2024 14:30:29 -0600
+Message-ID: <877cbphmhm.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yu7um2tcxg2apoz372rmzpkrfgbb42ndvabvrsp4usb2e3bkrf@huaucjsp5vlj>
+Content-Type: text/plain
 
-On Thu, Sep 05, 2024 at 09:47:47AM +0300, Kirill A. Shutemov wrote:
-> On Thu, Aug 29, 2024 at 12:15:57AM -0700, Charlie Jenkins wrote:
-> > Some applications rely on placing data in free bits addresses allocated
-> > by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
-> > address returned by mmap to be less than the 48-bit address space,
-> > unless the hint address uses more than 47 bits (the 48th bit is reserved
-> > for the kernel address space).
-> > 
-> > The riscv architecture needs a way to similarly restrict the virtual
-> > address space. On the riscv port of OpenJDK an error is thrown if
-> > attempted to run on the 57-bit address space, called sv57 [1].  golang
-> > has a comment that sv57 support is not complete, but there are some
-> > workarounds to get it to mostly work [2].
-> > 
-> > These applications work on x86 because x86 does an implicit 47-bit
-> > restriction of mmap() address that contain a hint address that is less
-> > than 48 bits.
-> > 
-> > Instead of implicitly restricting the address space on riscv (or any
-> > current/future architecture), a flag would allow users to opt-in to this
-> > behavior rather than opt-out as is done on other architectures. This is
-> > desirable because it is a small class of applications that do pointer
-> > masking.
-> 
-> This argument looks broken to me.
-> 
-> The "small class of applications" is going to be broken unless they got
-> patched to use your new mmap() flag. You are asking for bugs.
-> 
-> Consider the case when you write, compile and validate a piece of software
-> on machine that has <=47bit VA. The binary got shipped to customers.
-> Later, customer gets a new shiny machine that supports larger address
-> space and your previously working software is broken. Such binaries might
-> exist today.
-> 
-> It is bad idea to use >47bit VA by default. Most of software got tested on
-> x86 with 47bit VA.
-> 
-> We can consider more options to opt-in into wider address space like
-> personality or prctl() handle. But opt-out is no-go from what I see.
-> 
-> -- 
->   Kiryl Shutsemau / Kirill A. Shutemov
+Dandan Zhang <zhangdandan@uniontech.com> writes:
 
-riscv is in an interesting state in regards to this because the software
-ecosystem is much less mature than other architectures. The existing
-riscv hardware supports either 38 or 47 bit userspace VAs, but a lot of
-people test on QEMU which defaults to 56 bit. As a result, a lot of
-code is tested with the larger address space. Applications that don't
-work on the larger address space, like OpenJDK, currently throw an error
-and exit.
+> From: Bibo Mao <maobibo@loongson.cn>
+>
+> Add documentation topic for using pv_virt when running as a guest
+> on KVM hypervisor.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> Link: https://lore.kernel.org/all/5c338084b1bcccc1d57dce9ddb1e7081@aosc.io/
+> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
+> ---
+>  Documentation/virt/kvm/index.rst              |  1 +
+>  .../virt/kvm/loongarch/hypercalls.rst         | 89 +++++++++++++++++++
+>  Documentation/virt/kvm/loongarch/index.rst    | 10 +++
+>  MAINTAINERS                                   |  1 +
+>  4 files changed, 101 insertions(+)
+>  create mode 100644 Documentation/virt/kvm/loongarch/hypercalls.rst
+>  create mode 100644 Documentation/virt/kvm/loongarch/index.rst
 
-Since riscv does not currently have the address space default to 47
-bits, some applications just don't work on 56 bits. We could change the
-kernel so that these applications start working without the need for
-them to change their code, but that seems like the kernel is
-overstepping and fixing binaries rather than providing users tools to
-fix the binaries themselves.
+So this generates a nifty build error:
 
-This mmap flag was an attempt to provide a tool for these applications
-that work on the existing 47 bit VA hardware to also work on different
-hardware that supports a 56 bit VA space. After feedback, it looks like
-a better solution than the mmap flag is to use the personality syscall
-to set a process wide restriction to 47 bits instead, which matches the
-32 bit flag that already exists.
+> Documentation/virt/kvm/loongarch/hypercalls.rst:46: ERROR: Malformed table.
+> Text in column margin in table line 5.
+> 
+> ========        ================        ================
+> Register        IN                      OUT
+> ========        ================        ================
+> a0              function number         Return  code
+> a1              1st     parameter       -
+> a2              2nd     parameter       -
+> a3              3rd     parameter       -
+> a4              4th     parameter       -
+> a5              5th     parameter       -
+> ========        ================        ================
 
-- Charlie
+The "====" bar for the middle column is too short.  *Please* be sure
+that the documentation actually builds after you make a change.
 
+I have fixed this and applied the patch.
+
+jon
