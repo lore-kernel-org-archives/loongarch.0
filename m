@@ -1,209 +1,223 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3AE191F7E
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 10:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB3A194A60;
+	Thu,  5 Sep 2024 11:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725531593; cv=none; b=iP5V24/qQq2NgaLWoYVjfPc0N3sCVWlsFx38vZK+afdq3bkWs5iPIAT1ROlOLABi3HDk3w3auRPcNbRQ8e42jpQmDXmEAEmoQvdTW+Gb++a0fvFbSrxQBXVdjwOYDzy87Alml1ll34LJL+tfkVSav8S9J+P4UMB2gTNaerkVTj4=
+	t=1725534569; cv=none; b=WojObSFA1B2zy3WIikLVTuRv24nPglzOsEjr7qrHtkelb4GuUi0m9HckRDISnwCDPnO8FXl+WfadcnPi1yF6iLO4fW5P4yd1l8KREistFegTrbQPNmoDi8ohQCAcl3shKZ86NJmdgtcNTP37Bfl3CjndsA29n6SolSL911PXDrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725531593; c=relaxed/simple;
-	bh=h7rWohIA/QX82EMwsi8586ME9pJ0kxgRqfxC7F2NNIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uNuRi+Hk7n2mfNdN/fHaKpy1TeppqUe72YHMFPsuMnz48+W6gM1MxZfyQ39u3iF58GU0A46mAnhqbZ0Z0M2aq5SOsBd6bC2C9zQ2FtcwSrC/CnWdWn1fGbQEb7gkJ4k7Mpw6nkkaWUIQ0tyh+PFs08lrCnT/OyQrOtldApLbm14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=konsulko.com; spf=pass smtp.mailfrom=konsulko.com; dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b=uiJ5t3zi; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=konsulko.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=konsulko.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="uiJ5t3zi"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2d88edf1340so415557a91.1
-        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 03:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1725531591; x=1726136391; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PA7JIemCyiEdqILj6UaKRiRobVb7jaWwTSUCykQJ3Wk=;
-        b=uiJ5t3ziGhct+hfkVw/31C1V1g5rVuW5blkjSj9U26xkNEoAfYD4m/kai9yyxqpNQd
-         4jueQNalWbN9yg2cBkhRmR62nrSJ+wwY+Dy3XUWKBiJPDJsDRj2nxROpmgKlYz4gYjj/
-         AAIsKYA+cSArjAJiRdu4VWy9qSdYsS8cTQWNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725531591; x=1726136391;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PA7JIemCyiEdqILj6UaKRiRobVb7jaWwTSUCykQJ3Wk=;
-        b=F183Wor+loiyFZ1kF1i4Bkx0SQqDwkJM12aCpr0qiJC6DkrWXb+mxFn9Whqi/aaKFD
-         Bvtqi5cAgJhvKt+dyghBUI8gZkwkJrIj6pIveD0FTm9vKPLVcxYdrBafo9py+9nV2gOU
-         gUrIohfqsxekC/QkGIwKi+sTBvGjuJBPDpkT+Ym5K4rbqHQOmpj474zwHgsLHf1IraRR
-         FC3jOnJb7a1bgPrAYGmkgSB5ps07xcY1xK+//0p4F2O4p2kn9Ki91Z7YLzDHkAAsFHrQ
-         JbWPySIP2FRwxT134+ry2dY5Xs5ec9KG0cZW9BBuSXA73xZgoilutFQo4023KT+O1Cca
-         GgWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTED8DtQCtuT0FkB7+9G8OLLNkTYmsUSLEpP6x5kgejnTkfMe2zPjsI3yETCTs2jUs7NDO83OhWXw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4rToG/or0AWSoreMFZ6QMj5Z2KhKjY+6jT15brShMcv7/CfVI
-	I4OhpklrotatfXk5JjDnWW0KS22MgeQws0+Dm1/w6IOtfA2jOu3v/CvqxNUtb4U27o9ndSIoyIt
-	RkqqjplS299FHMTvt/+jrCnBBj1AovFxZlyiq/g==
-X-Google-Smtp-Source: AGHT+IHyTnBl3/mA7BCy8C7Mdrgi4kraU3T2YISEDkiQ+C22fRtuX7dRpdTavjnbTJxnBQ32e09vaczZ2IZyJiMaQuo=
-X-Received: by 2002:a17:90a:ba94:b0:2d8:cd04:c8f0 with SMTP id
- 98e67ed59e1d1-2da55a78cb0mr10646151a91.39.1725531590333; Thu, 05 Sep 2024
- 03:19:50 -0700 (PDT)
+	s=arc-20240116; t=1725534569; c=relaxed/simple;
+	bh=7FzOATlUdnA8x/joYv3T7DNPeyQm+4xp7x3a8N5qNxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d9I8ZsZvF9lhWc8+B7vLs8TLxEZtg49mZ5EERH1E0c1bJ0lB//hMXTDjC/bD7y95tr+tBklKSayqQmi/tpCBgSWGEKge9gCcXhstkxJQc3sXfPFSllAfq4NYJZNEgQcS07sNbAu06L4nmPTQmamBfQCmAZI4PUk8jgp3Ijk99AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2830C4CEC3;
+	Thu,  5 Sep 2024 11:09:26 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Improve hardware page table walker
+Date: Thu,  5 Sep 2024 19:09:07 +0800
+Message-ID: <20240905110907.2919268-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240904233343.933462-1-yosryahmed@google.com>
-In-Reply-To: <20240904233343.933462-1-yosryahmed@google.com>
-From: Vitaly Wool <vitaly.wool@konsulko.com>
-Date: Thu, 5 Sep 2024 12:19:38 +0200
-Message-ID: <CAM4kBBKotR4qc3jTsp3McgDCj18FTL6VETWRkfL-FgSYkFbiXg@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: z3fold: deprecate CONFIG_Z3FOLD
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Christoph Hellwig <hch@infradead.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Chris Down <chris@chrisdown.name>, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 5, 2024 at 1:33=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com> =
-wrote:
->
-> The z3fold compressed pages allocator is rarely used, most users use
-> zsmalloc. The only disadvantage of zsmalloc in comparison is the
-> dependency on MMU, and zbud is a more common option for !MMU as it was
-> the default zswap allocator for a long time.
->
-> Historically, zsmalloc had worse latency than zbud and z3fold but
-> offered better memory savings. This is no longer the case as shown by
-> a simple recent analysis [1]. That analysis showed that z3fold does not
-> have any advantage over zsmalloc or zbud considering both performance
-> and memory usage. In a kernel build test on tmpfs in a limited cgroup,
-> z3fold took 3% more time and used 1.8% more memory. The latency of
-> zswap_load() was 7% higher, and that of zswap_store() was 10% higher.
-> Zsmalloc is better in all metrics.
->
-> Moreover, z3fold apparently has latent bugs, which was made noticeable
-> by a recent soft lockup bug report with z3fold [2]. Switching to
-> zsmalloc not only fixed the problem, but also reduced the swap usage
-> from 6~8G to 1~2G. Other users have also reported being bitten by
-> mistakenly enabling z3fold.
->
-> Other than hurting users, z3fold is repeatedly causing wasted
-> engineering effort. Apart from investigating the above bug, it came up
-> in multiple development discussions (e.g. [3]) as something we need to
-> handle, when there aren't any legit users (at least not intentionally).
->
-> The natural course of action is to deprecate z3fold, and remove in a few
-> cycles if no objections are raised from active users. Next on the list
-> should be zbud, as it offers marginal latency gains at the cost of huge
-> memory waste when compared to zsmalloc. That one will need to wait until
-> zsmalloc does not depend on MMU.
->
-> Rename the user-visible config option from CONFIG_Z3FOLD to
-> CONFIG_Z3FOLD_DEPRECATED so that users with CONFIG_Z3FOLD=3Dy get a new
-> prompt with explanation during make oldconfig. Also, remove
-> CONFIG_Z3FOLD=3Dy from defconfigs.
->
-> [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=3D2Ww13sCj4S3i4=
-bNndqF+3+_Vg@mail.gmail.com/
-> [2]https://lore.kernel.org/lkml/EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmai=
-l.com/
-> [3]https://lore.kernel.org/lkml/CAJD7tkbnmeVugfunffSovJf9FAgy9rhBVt_tx=3D=
-nxUveLUfqVsA@mail.gmail.com/
->
-> Acked-by: Chris Down <chris@chrisdown.name>
-> Acked-by: Nhat Pham <nphamcs@gmail.com>
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+LoongArch has similar problems explained in commit 7f0b1bf04511348995d6
+("arm64: Fix barriers used for page table modifications"), when hardware
+page table walker (PTW) enabled, speculative accesses may cause spurious
+page fault in kernel space. Theoretically, in order to completely avoid
+spurious page fault we need a "dbar + ibar" pair between the page table
+modifications and the subsequent memory accesses using the corresponding
+virtual address. But "ibar" is too heavy for performace, so we only use
+a "dbar 0b11000" in set_pte(). And let spurious_fault() filter the rest
+rare spurious page faults which should be avoided by "ibar".
 
-Acked-by: Vitaly Wool <vitaly.wool@konsulko.com>
+Besides, we replace the llsc loop with amo in set_pte() which has better
+performace, and adjust switch_mm_irqs_off() to avoid branch instructions
+between the writing of CSR.ASID and CSR.PGDL.
 
-> ---
->
-> I think it should actually be fine to remove z3fold without deprecating
-> it first, but I am doing the due diligence.
->
-> v1: https://lore.kernel.org/linux-mm/20240112193103.3798287-1-yosryahmed@=
-google.com/
-> v1 -> v2:
-> - Make CONFIG_Z3FOLD_DEPRECATED a tristate option to match
->   CONFIG_Z3FOLD.
-> - Update commit subject and log.
->
-> ---
->  arch/loongarch/configs/loongson3_defconfig |  1 -
->  arch/powerpc/configs/ppc64_defconfig       |  1 -
->  mm/Kconfig                                 | 14 ++++++++++++--
->  3 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
-configs/loongson3_defconfig
-> index b4252c357c8e2..75b366407a60a 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -96,7 +96,6 @@ CONFIG_ZPOOL=3Dy
->  CONFIG_ZSWAP=3Dy
->  CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=3Dy
->  CONFIG_ZBUD=3Dy
-> -CONFIG_Z3FOLD=3Dy
->  CONFIG_ZSMALLOC=3Dm
->  # CONFIG_COMPAT_BRK is not set
->  CONFIG_MEMORY_HOTPLUG=3Dy
-> diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/=
-ppc64_defconfig
-> index 544a65fda77bc..d39284489aa26 100644
-> --- a/arch/powerpc/configs/ppc64_defconfig
-> +++ b/arch/powerpc/configs/ppc64_defconfig
-> @@ -81,7 +81,6 @@ CONFIG_MODULE_SIG_SHA512=3Dy
->  CONFIG_PARTITION_ADVANCED=3Dy
->  CONFIG_BINFMT_MISC=3Dm
->  CONFIG_ZSWAP=3Dy
-> -CONFIG_Z3FOLD=3Dy
->  CONFIG_ZSMALLOC=3Dy
->  # CONFIG_SLAB_MERGE_DEFAULT is not set
->  CONFIG_SLAB_FREELIST_RANDOM=3Dy
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index b23913d4e47e2..536679d726417 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -177,15 +177,25 @@ config ZBUD
->           deterministic reclaim properties that make it preferable to a h=
-igher
->           density approach when reclaim will be used.
->
-> -config Z3FOLD
-> -       tristate "3:1 compression allocator (z3fold)"
-> +config Z3FOLD_DEPRECATED
-> +       tristate "3:1 compression allocator (z3fold) (DEPRECATED)"
->         depends on ZSWAP
->         help
-> +         Deprecated and scheduled for removal in a few cycles. If you ha=
-ve
-> +         a good reason for using Z3FOLD over ZSMALLOC, please contact
-> +         linux-mm@kvack.org and the zswap maintainers.
-> +
->           A special purpose allocator for storing compressed pages.
->           It is designed to store up to three compressed pages per physic=
-al
->           page. It is a ZBUD derivative so the simplicity and determinism=
- are
->           still there.
->
-> +config Z3FOLD
-> +       tristate
-> +       default y if Z3FOLD_DEPRECATED=3Dy
-> +       default m if Z3FOLD_DEPRECATED=3Dm
-> +       depends on Z3FOLD_DEPRECATED
-> +
->  config ZSMALLOC
->         tristate
->         prompt "N:1 compression allocator (zsmalloc)" if ZSWAP
-> --
-> 2.46.0.469.g59c65b2a67-goog
->
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/atomic.h      |  2 ++
+ arch/loongarch/include/asm/mmu_context.h | 17 +++++++---
+ arch/loongarch/include/asm/pgtable.h     | 32 ++++++++----------
+ arch/loongarch/mm/fault.c                | 41 ++++++++++++++++++++++++
+ 4 files changed, 69 insertions(+), 23 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/atomic.h b/arch/loongarch/include/asm/atomic.h
+index 99af8b3160a8..c86f0ab922ec 100644
+--- a/arch/loongarch/include/asm/atomic.h
++++ b/arch/loongarch/include/asm/atomic.h
+@@ -15,6 +15,7 @@
+ #define __LL		"ll.w	"
+ #define __SC		"sc.w	"
+ #define __AMADD		"amadd.w	"
++#define __AMOR		"amor.w		"
+ #define __AMAND_DB	"amand_db.w	"
+ #define __AMOR_DB	"amor_db.w	"
+ #define __AMXOR_DB	"amxor_db.w	"
+@@ -22,6 +23,7 @@
+ #define __LL		"ll.d	"
+ #define __SC		"sc.d	"
+ #define __AMADD		"amadd.d	"
++#define __AMOR		"amor.d		"
+ #define __AMAND_DB	"amand_db.d	"
+ #define __AMOR_DB	"amor_db.d	"
+ #define __AMXOR_DB	"amxor_db.d	"
+diff --git a/arch/loongarch/include/asm/mmu_context.h b/arch/loongarch/include/asm/mmu_context.h
+index 9f97c3453b9c..97c7a64d0d9a 100644
+--- a/arch/loongarch/include/asm/mmu_context.h
++++ b/arch/loongarch/include/asm/mmu_context.h
+@@ -74,6 +74,17 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
+ }
+ 
++static inline void atomic_update_pgd_asid(unsigned long asid, unsigned long pgdl)
++{
++	__asm__ __volatile__(
++	"csrwr %[pgdl_val], %[pgdl_reg] \n\t"
++	"csrwr %[asid_val], %[asid_reg] \n\t"
++	: [asid_val] "+r" (asid), [pgdl_val] "+r" (pgdl)
++	: [asid_reg] "i" (LOONGARCH_CSR_ASID), [pgdl_reg] "i" (LOONGARCH_CSR_PGDL)
++	: "memory"
++	);
++}
++
+ static inline void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 				      struct task_struct *tsk)
+ {
+@@ -83,12 +94,10 @@ static inline void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *
+ 	if (!asid_valid(next, cpu))
+ 		get_new_mmu_context(next, cpu);
+ 
+-	write_csr_asid(cpu_asid(cpu, next));
+-
+ 	if (next != &init_mm)
+-		csr_write64((unsigned long)next->pgd, LOONGARCH_CSR_PGDL);
++		atomic_update_pgd_asid(cpu_asid(cpu, next), (unsigned long)next->pgd);
+ 	else
+-		csr_write64((unsigned long)invalid_pg_dir, LOONGARCH_CSR_PGDL);
++		atomic_update_pgd_asid(cpu_asid(cpu, next), (unsigned long)invalid_pg_dir);
+ 
+ 	/*
+ 	 * Mark current->active_mm as not "active" anymore.
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 85431f20a14d..9965f52ef65b 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -331,29 +331,23 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 		 * Make sure the buddy is global too (if it's !none,
+ 		 * it better already be global)
+ 		 */
++		if (pte_none(ptep_get(buddy))) {
+ #ifdef CONFIG_SMP
+-		/*
+-		 * For SMP, multiple CPUs can race, so we need to do
+-		 * this atomically.
+-		 */
+-		unsigned long page_global = _PAGE_GLOBAL;
+-		unsigned long tmp;
+-
+-		__asm__ __volatile__ (
+-		"1:"	__LL	"%[tmp], %[buddy]		\n"
+-		"	bnez	%[tmp], 2f			\n"
+-		"	 or	%[tmp], %[tmp], %[global]	\n"
+-			__SC	"%[tmp], %[buddy]		\n"
+-		"	beqz	%[tmp], 1b			\n"
+-		"	nop					\n"
+-		"2:						\n"
+-		__WEAK_LLSC_MB
+-		: [buddy] "+m" (buddy->pte), [tmp] "=&r" (tmp)
+-		: [global] "r" (page_global));
++			/*
++			 * For SMP, multiple CPUs can race, so we need
++			 * to do this atomically.
++			 */
++			__asm__ __volatile__(
++			__AMOR "$zero, %[global], %[buddy] \n"
++			: [buddy] "+ZB" (buddy->pte)
++			: [global] "r" (_PAGE_GLOBAL)
++			: "memory");
++
++			DBAR(0b11000); /* o_wrw = 0b11000 */
+ #else /* !CONFIG_SMP */
+-		if (pte_none(ptep_get(buddy)))
+ 			WRITE_ONCE(*buddy, __pte(pte_val(ptep_get(buddy)) | _PAGE_GLOBAL));
+ #endif /* CONFIG_SMP */
++		}
+ 	}
+ }
+ 
+diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
+index 97b40defde06..deefd9617d00 100644
+--- a/arch/loongarch/mm/fault.c
++++ b/arch/loongarch/mm/fault.c
+@@ -31,11 +31,52 @@
+ 
+ int show_unhandled_signals = 1;
+ 
++static int __kprobes spurious_fault(unsigned long write, unsigned long address)
++{
++	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++	pte_t *pte;
++
++	if (!(address & __UA_LIMIT))
++		return 0;
++
++	pgd = pgd_offset_k(address);
++	if (!pgd_present(pgdp_get(pgd)))
++		return 0;
++
++	p4d = p4d_offset(pgd, address);
++	if (!p4d_present(p4dp_get(p4d)))
++		return 0;
++
++	pud = pud_offset(p4d, address);
++	if (!pud_present(pudp_get(pud)))
++		return 0;
++
++	pmd = pmd_offset(pud, address);
++	if (!pmd_present(pmdp_get(pmd)))
++		return 0;
++
++	if (pmd_leaf(*pmd)) {
++		return write ? pmd_write(pmdp_get(pmd)) : 1;
++	} else {
++		pte = pte_offset_kernel(pmd, address);
++		if (!pte_present(ptep_get(pte)))
++			return 0;
++
++		return write ? pte_write(ptep_get(pte)) : 1;
++	}
++}
++
+ static void __kprobes no_context(struct pt_regs *regs,
+ 			unsigned long write, unsigned long address)
+ {
+ 	const int field = sizeof(unsigned long) * 2;
+ 
++	if (spurious_fault(write, address))
++		return;
++
+ 	/* Are we prepared to handle this kernel fault?	 */
+ 	if (fixup_exception(regs))
+ 		return;
+-- 
+2.43.5
+
