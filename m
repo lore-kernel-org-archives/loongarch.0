@@ -1,179 +1,140 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCB0194A60
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 08:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E9719413B
+	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 10:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725526213; cv=none; b=JVJ0JNSXXVqJlUAjjKzxO1k1ftTExbWkSeIFb7pMfKklfFLYerwKiH6snwofC9owSSZLrElaMfDDmZKhzfh62if43bJD+7ECVVBvRj9iZAmjB8hV+kwpphnWc3pBzR2wtavFv+stB3/SM26Cwb5SS9rH+o8FuRWyLwygcJcqN9g=
+	t=1725530768; cv=none; b=loFb5kLuY63Koa+Dz+rS25VL8kLGtrocJJVu+7OLikpB+Bk3YM5mrU3kZukHZ0Lsb4U6C7VxDXvWWaTDgWRcR11CBOoTBoN6mZt3pkDh5OL/frsmabwj6BVmOasxNgCm7IpX20Tyb9iSjMifKdXAxgZAdo7hkHRhgKB1Uu9OgEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725526213; c=relaxed/simple;
-	bh=oJsRqGbUv7zV4DSlVrEki66Rp/lc1XySOlXe5UNgeHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YKTQprrXRwNZnDk/9YC6/f0xHk49k0dfyZCJLlBrsLqqhuEkrrQzFSVDaPxu/JIkdNIhrS3DnYn4aCZvWNdQWb7HgAAC5TNBO8oFG3io2m6gT+Db/AbNE77C/PN+7A5Yr9LXenXvpAs5mMBqGTEqtxoF/WntkLLjUHjmTxm25Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QCPkAR/d; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1725530768; c=relaxed/simple;
+	bh=ZlbdctOsUdrPdNxFA4u0cAuMT1cQ038QEqSiHn+sz3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQjJhGwtN7MRlFlJuud113K6XMIVdwOow/gPjV6Rrk8Zc0xsQqStvDdQi8Z5RMO7Ev9RdxGtN+Y4pZPixFA999FEjUAzCPlUop9EZgliaedIBKxK2FvkIkvguqAY9EzTgI7gn4Da2mYr3r/tVIfZP0gV7wsgWKwE8eyJ+ecnrts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=L0ef/LSk; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QCPkAR/d"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42baecbd4fbso613035e9.2
-        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 01:50:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="L0ef/LSk"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6c51d1df755so2993966d6.1
+        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 03:06:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725526208; x=1726131008; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=A+kzOOCalxHLc68HF2HD0WosOI3DFfQ3f96z76/2pDg=;
-        b=QCPkAR/dgxTdWX/eIDBVqs7Msx22+1XXhdmWzsbQHhN/A+U/SpG7klNR7XJ/eRafjp
-         mezvjNAfR4WpfTO5DHSbdXh4W/BC1wu5hrrieHCidNsLQcwL6yJi390Rcv+ls5T6L9rT
-         vhyGrBioHWkOop9uuF4/08803uwv6udxoo6JXIjci0IoFiznGF0ykLRXFpSrPhxjbJnW
-         Q6kz38w29Qzm9lQZHKgdZbZax1sEzm9obovJ+CbZYcqcXU1JFFfuUF+sQtCfA4aqZ6lP
-         /4urSC/MIUQJ7VKUDwI2jHR5uD1/SCQve112c5Ak+5aM1oAvuV7pPB0Mz7Y8myD5ItDX
-         Fn8Q==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1725530764; x=1726135564; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FssOZMkL4EI9Dg7029SIMlcBVh5AI88igqnT1wzgpi8=;
+        b=L0ef/LSkFKUSYX4lPL51Etg162QKBqbGdtaNdY4A1xSJENaSPJxuC6XDtgHu+Ys9sF
+         d36p1NBN74yxnuNsWV7fnZXEtQ2L1tTA8ZvpM5jUufyCs2yDwzM2r0tkGueRyMiMUaYW
+         apnDkHxiF52p8ZLaLr19bVyVkTmK+vLucFqI6GWXAicaQ2Qd/J9XNBdEUuhKmINZo73C
+         o4+A8ZeBR2bnAub8PY6BXQVIR3GgwD4Q7B/KjPbhMb7AW1C28HvZwSlidfjLquJ5rskq
+         JvJdajFeOesxgASVt0L5Ts1nMDtRY1jlX5tL+zAKQcGPqH1+drQGlaoLln0G73xjLpzp
+         Kd1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725526208; x=1726131008;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A+kzOOCalxHLc68HF2HD0WosOI3DFfQ3f96z76/2pDg=;
-        b=GV2X1KPGkEzPwRJ1r1i31XXWT6rKwz/5UB+PWBKZVkWVZO1lfefzX8zJ6Mdy04d60I
-         2oxR5uZLQNR6YEllLbt2sOeJtBepOT/8upXubMPsgfup5dYZhYOEhcM7zyDL+KM9Hkte
-         E8dU9BAV8ucJPgclGwBwaygsIIvD4D2wJy1/FQtsTPTQzKGJZyL8J8hiOfnJES8Znb95
-         9q6ANAGdELhWgQf2hNTuvwRDHOkAJFMy9/EuepEgVMV2u4/vXifMS/Dfjoc8M5HCcngx
-         Da/Y298eoGyVcY5pDsPPDy/L+HtEvW4gxw4epIoFGIJBz/U4xskL1DiY8ykxWEDK9yUg
-         ktEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIenFKx4T5enpLEOt8hdzsowXpStnmK0qGb1eJ5YpRZD7Yn387KPEVMoOT/ttOZi9zAsMx5AWSGOg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXe/t8Zds8DH/dd4qIe9Q2xddZCsWlliuOgxcpVb138QTaq1Lq
-	ope+vzZTwKuccnID+U/aoiM4fBtAkbRhUS2wbv2QZTxsDuS2LTguwBA7Pu/qqIpUzL8OkhtKAoi
-	h
-X-Google-Smtp-Source: AGHT+IFLlFIBQ3Oz7FeSxG7gin+H07tdnOHkNUNe8fBPGEf9pt9BrQkq4L/4b026jgr+qr2r6oQE6g==
-X-Received: by 2002:a5d:64ae:0:b0:374:cd01:8b73 with SMTP id ffacd0b85a97d-374cd018ecamr4388242f8f.10.1725526208077;
-        Thu, 05 Sep 2024 01:50:08 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.82])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42c99b5c66fsm18638755e9.31.2024.09.05.01.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2024 01:50:07 -0700 (PDT)
-Message-ID: <b7ab5953-3dcb-4e19-a776-4ebfb1343c13@linaro.org>
-Date: Thu, 5 Sep 2024 10:50:05 +0200
+        d=1e100.net; s=20230601; t=1725530764; x=1726135564;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FssOZMkL4EI9Dg7029SIMlcBVh5AI88igqnT1wzgpi8=;
+        b=PgLJmb66+wt5Xht1Agiuq1tovc8eYySdXVPvCktimnItAiU1C3VCmObeKsAYql58z/
+         AOfnJ39QaU7zEOG7VggLZx0oy4+HlHdXjNwG+JMXuR2eUJCuKo48qRcUomhdLBpFMl4U
+         jZ2jiBSj8VNt7+bQjma/WH2465zuIZlqS7lKeahU0CyEktEB7L+HiSUDK2jQOYhZMLma
+         LEhMzz4ME0sYsUroJ+2GmGkPjjbAuIJobMjvQeTpi+w3wrAHo7alNRgNwjGyNzEb4sZB
+         2sru8EI77dJUqebUTaOMsp5Wvhz82UCudRKxiW4wXw72NOQMxAYeTH6/YuvVi6k8CfmQ
+         7jCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWh9bbM6CihKYYTMZwsp+/+1wvdVZBaOWCnxELywD+PV7zkb3J6NtYneCa744BVCB7TctKxrGHJw6Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxb5kX650JOsmhDGxTBAaOmka7F70NZ1XoMiEKgrHeao7FonuMr
+	boZhNbWlQxo+kpsXoMWaFEzExNLHV7Lwfr8V5PboYWaGdl0V/llreLD/ggN/Esc=
+X-Google-Smtp-Source: AGHT+IFqlUnb0R4Tnf7fLDfR9u43Xt0rwLhVu8SYQjcg8VJmKtyiXjLAvjhl0Q1+nPJDIOI+VCzqpQ==
+X-Received: by 2002:a05:6214:5b09:b0:6c5:1707:7159 with SMTP id 6a1803df08f44-6c517077d53mr70665036d6.33.1725530764171;
+        Thu, 05 Sep 2024 03:06:04 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c52019407fsm6350906d6.0.2024.09.05.03.06.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 03:06:03 -0700 (PDT)
+Date: Thu, 5 Sep 2024 06:05:57 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vitaly Wool <vitaly.wool@konsulko.com>,
+	Miaohe Lin <linmiaohe@huawei.com>, Nhat Pham <nphamcs@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Chris Down <chris@chrisdown.name>, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: z3fold: deprecate CONFIG_Z3FOLD
+Message-ID: <20240905100557.GA2748692@cmpxchg.org>
+References: <20240904233343.933462-1-yosryahmed@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/10] ASoC: Some issues about loongson i2s
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>,
- devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <f581c749-999f-44a3-94a8-a39d355c32c5@linaro.org>
- <CAMpQs4Jqx56NRkdVPztPe+xXcY-A=WDxGua-pc1OyYG8kD2Q0Q@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAMpQs4Jqx56NRkdVPztPe+xXcY-A=WDxGua-pc1OyYG8kD2Q0Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240904233343.933462-1-yosryahmed@google.com>
 
-On 05/09/2024 10:34, Binbin Zhou wrote:
-> On Thu, Sep 5, 2024 at 2:14 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 05/09/2024 09:02, Binbin Zhou wrote:
->>> Hi all:
->>>
->>> This patch set is mainly about Loongson i2s related issues.
->>>
->>> Please allow me to briefly explain this patch set:
->>> Patch 1-2: Add ES8323 codec required on Loongson-2K2000
->>> Patch 3-4: Add uda1342 codec required on Loongson-2K1000
->>> Patch 5: Improve code readability
->>> Patch 6: Fix the problem of unable to detect codec under FDT system.
->>> Patch 7-8: Add Loongson i2s platform device support
->>> Patch 9-10: Related DTS support.
->>
->> This was based on some old tree... or you do not use get_maintainers.pl.
+On Wed, Sep 04, 2024 at 11:33:43PM +0000, Yosry Ahmed wrote:
+> The z3fold compressed pages allocator is rarely used, most users use
+> zsmalloc. The only disadvantage of zsmalloc in comparison is the
+> dependency on MMU, and zbud is a more common option for !MMU as it was
+> the default zswap allocator for a long time.
 > 
-> Hi Krzysztof:
+> Historically, zsmalloc had worse latency than zbud and z3fold but
+> offered better memory savings. This is no longer the case as shown by
+> a simple recent analysis [1]. That analysis showed that z3fold does not
+> have any advantage over zsmalloc or zbud considering both performance
+> and memory usage. In a kernel build test on tmpfs in a limited cgroup,
+> z3fold took 3% more time and used 1.8% more memory. The latency of
+> zswap_load() was 7% higher, and that of zswap_store() was 10% higher.
+> Zsmalloc is better in all metrics.
 > 
-> I used the following method to obtain the email address I need to copy:
+> Moreover, z3fold apparently has latent bugs, which was made noticeable
+> by a recent soft lockup bug report with z3fold [2]. Switching to
+> zsmalloc not only fixed the problem, but also reduced the swap usage
+> from 6~8G to 1~2G. Other users have also reported being bitten by
+> mistakenly enabling z3fold.
 > 
-> scripts/get_maintainer.pl sound/soc/
-
-That's not how you run get_maintainer.pl in typical process. You run it
-on the patches.
-
-> Liam Girdwood <lgirdwood@gmail.com> (supporter:SOUND - SOC LAYER /
-> DYNAMIC AUDIO POWER MANAGEM...)
-> Mark Brown <broonie@kernel.org> (supporter:SOUND - SOC LAYER / DYNAMIC
-> AUDIO POWER MANAGEM...)
-> Jaroslav Kysela <perex@perex.cz> (maintainer:SOUND)
-> Takashi Iwai <tiwai@suse.com> (maintainer:SOUND)
-> linux-sound@vger.kernel.org (open list:SOUND - SOC LAYER / DYNAMIC
-> AUDIO POWER MANAGEM...)
-> linux-kernel@vger.kernel.org (open list)
+> Other than hurting users, z3fold is repeatedly causing wasted
+> engineering effort. Apart from investigating the above bug, it came up
+> in multiple development discussions (e.g. [3]) as something we need to
+> handle, when there aren't any legit users (at least not intentionally).
 > 
-> The code repository from MAINTAINERS:
+> The natural course of action is to deprecate z3fold, and remove in a few
+> cycles if no objections are raised from active users. Next on the list
+> should be zbud, as it offers marginal latency gains at the cost of huge
+> memory waste when compared to zsmalloc. That one will need to wait until
+> zsmalloc does not depend on MMU.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/log/?h=for-next
-> base commit: 097a44db5747403b19d05a9664e8ec6adba27e3b
+> Rename the user-visible config option from CONFIG_Z3FOLD to
+> CONFIG_Z3FOLD_DEPRECATED so that users with CONFIG_Z3FOLD=y get a new
+> prompt with explanation during make oldconfig. Also, remove
+> CONFIG_Z3FOLD=y from defconfigs.
 > 
-> Is there anything I'm missing, or where I'm going wrong?
+> [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
+> [2]https://lore.kernel.org/lkml/EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmail.com/
+> [3]https://lore.kernel.org/lkml/CAJD7tkbnmeVugfunffSovJf9FAgy9rhBVt_tx=nxUveLUfqVsA@mail.gmail.com/
+> 
+> Acked-by: Chris Down <chris@chrisdown.name>
+> Acked-by: Nhat Pham <nphamcs@gmail.com>
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 
+zsmalloc's CONFIG_MMU requirement was a concern in the past, but
+z3fold appears so bitrotted at this point that it's simply not a
+usable option anymore.
 
-Yeah, the list is incomplete and wrong emails are used.
+> I think it should actually be fine to remove z3fold without deprecating
+> it first, but I am doing the due diligence.
 
-Best regards,
-Krzysztof
+Yeah, you never know for sure if users exist. Deprecating it for a few
+cycles is the safer option.
 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
