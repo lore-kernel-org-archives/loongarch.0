@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655FE192B6E
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 07:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD3D192B89
+	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 07:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725519788; cv=none; b=RJk45/y+Dktt1SkizKY9Qztwsx9lkirHH/LTKYJJfXNrIGF7T8VN6ASeY4b61Y3x7t32L8tFari4jgOzWn+Oqtj+59D4CXVlroJBSbNMq/btbG9OhxvzFDTdZNreK/+W27HuuSa6b+yXeAC9tIzw9UT/vO5j/nxtdOZQj/9D1r4=
+	t=1725519792; cv=none; b=ZjHr9JwWXOnEJiqiTbaUg+wZg4PwYL6yD1nlPzJ9YDrRpGZzeEnLVIGSO5cgp4uRD0EM8zI7J4gGvfm34NTyWyuupIW/DmzC3pRTt+62MuxRl5RxgA5zsa4ImXMzZ/xCqGiHmLjXhXmT0ZRdvMjgXnf1fiFipE+uayCG6oTN/5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725519788; c=relaxed/simple;
-	bh=dXhA2ziw63DKd2N/UEJBZxw11Xyk26YoJf1e0TflXMY=;
+	s=arc-20240116; t=1725519792; c=relaxed/simple;
+	bh=3/CBZR6pzcmP47JzOTvZKGUcRW4mYPP9XpvPFsXbmdk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M5gC199EKcqBBO/VFIlne7nRUcFha+pQhfqVdfRxCm9h9vxoC18uMW3GsZ94Y9o8f+Gs0tER6dBhtHr1JcWJX/y6oGG6bZEDVMF0F5893Tu3sipW7emSO19sKvVS2GQ9yoOfMtLfNQk9hZdItm8TCgYmaeXJNDLio0Yk7X/lUuA=
+	 MIME-Version; b=d+P6eCmUjqibuPYeSv6OnicE+NqCCHryoQ7Bs3TMOL9QhIoRDGxtumrBH+ze6MEuIktlBzhS3SUJEhMSikvKmNx3CdpqMDTOv73y6GZBvLG0/IUjRwPRZku4pTsVaX0d1RUanyBrGboJbU8HZXEBJDuztrSfyA3bun0LMDJ6VcU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.71])
-	by gateway (Coremail) with SMTP id _____8Dx+5qnV9lm5xkrAA--.46676S3;
-	Thu, 05 Sep 2024 15:03:03 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx+emsV9lm9BkrAA--.17505S3;
+	Thu, 05 Sep 2024 15:03:08 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.71])
-	by front1 (Coremail) with SMTP id qMiowMBxbNyhV9lmDcMEAA--.21040S2;
-	Thu, 05 Sep 2024 15:03:00 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxbNyhV9lmDcMEAA--.21040S3;
+	Thu, 05 Sep 2024 15:03:04 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -34,9 +34,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 04/10] ASoC: codecs: Add uda1342 codec driver
-Date: Thu,  5 Sep 2024 15:02:53 +0800
-Message-ID: <3fd0c3a04f5f3bd293168732db457f6854db706e.1725518229.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v1 05/10] ASoC: loongson: Improve code readability
+Date: Thu,  5 Sep 2024 15:02:54 +0800
+Message-ID: <c54fbc2582702689c005e1ba528ab2318b1adde6.1725518229.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1725518229.git.zhoubinbin@loongson.cn>
 References: <cover.1725518229.git.zhoubinbin@loongson.cn>
@@ -47,570 +47,595 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxbNyhV9lmDcMEAA--.21040S2
+X-CM-TRANSID:qMiowMBxbNyhV9lmDcMEAA--.21040S3
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfJFy8KFWfGryfJw1UXF1kWFX_yoW8Wr1xKo
-	W3KFnYvr1rXryxZFW5X3WkWFW7ZF15Cay8J3WDZ3ykJ3yrJan8GrWDGr1Uua4aqFsYgFWj
-	yFyIy3s3ArW2yr9rl-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
+X-Coremail-Antispam: 1Uk129KBj9fXoW3CFWkCr1xGw4fJF18Zr43Arc_yoW8CFWfZo
+	W0vF93X3y5Xr18CFs0g34rWrnrZa15CF9Iyr92yrWqkw1jyF18W3y5ur47uFyfWay5Krs5
+	JF9xtFs3GanxArWxl-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
 	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
 	UjIYCTnIWjp_UUUYn7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
 	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
 	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
 	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
 	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2
 	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
 	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
 	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
-	AIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF
+	AIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF
 	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
 	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsdb1UUUUU
 
-The UDA1342 is an NXP audio codec, support 2x Stereo audio ADC (4x PGA
-mic inputs), stereo audio DAC, with basic audio processing.
+This patch attempts to clean up driver code formatting issues.
+Mainly as follows:
+1. Use the BIT macro;
+2. Use dev_err_probe() in every error path in probe in loongson_card
+   driver;
+3. Introduce loongson_card_acpi_find_device() to streamlined code.
+
+No functional change intended.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- sound/soc/codecs/Kconfig   |   8 +
- sound/soc/codecs/Makefile  |   2 +
- sound/soc/codecs/uda1342.c | 397 +++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/uda1342.h |  77 +++++++
- 4 files changed, 484 insertions(+)
- create mode 100644 sound/soc/codecs/uda1342.c
- create mode 100644 sound/soc/codecs/uda1342.h
+ sound/soc/loongson/loongson_card.c    | 144 +++++++++++++-------------
+ sound/soc/loongson/loongson_dma.c     |  10 +-
+ sound/soc/loongson/loongson_i2s.c     | 110 ++++++++++----------
+ sound/soc/loongson/loongson_i2s.h     |  24 ++---
+ sound/soc/loongson/loongson_i2s_pci.c |  51 ++++-----
+ 5 files changed, 166 insertions(+), 173 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 85270aa43512..347ac5e8eca7 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -281,6 +281,7 @@ config SND_SOC_ALL_CODECS
- 	imply SND_SOC_TWL4030
- 	imply SND_SOC_TWL6040
- 	imply SND_SOC_UDA1334
-+	imply SND_SOC_UDA1342
- 	imply SND_SOC_UDA1380
- 	imply SND_SOC_WCD9335
- 	imply SND_SOC_WCD934X
-@@ -2118,6 +2119,13 @@ config SND_SOC_UDA1334
- 	  and has basic features such as de-emphasis (at 44.1 kHz sampling
- 	  rate) and mute.
+diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
+index 2c8dbdba27c5..a25287efdd5c 100644
+--- a/sound/soc/loongson/loongson_card.c
++++ b/sound/soc/loongson/loongson_card.c
+@@ -24,27 +24,27 @@ static int loongson_card_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+-	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+-	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
+ 	struct loongson_card_data *ls_card = snd_soc_card_get_drvdata(rtd->card);
++	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
++	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	int ret, mclk;
  
-+config SND_SOC_UDA1342
-+	tristate "NXP UDA1342 CODEC"
-+	depends on I2C
-+	help
-+	  The UDA1342 is an NXP audio codec, support 2x Stereo audio ADC (4x PGA mic inputs),
-+	  stereo audio DAC, with basic audio processing.
+-	if (ls_card->mclk_fs) {
+-		mclk = ls_card->mclk_fs * params_rate(params);
+-		ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
+-					     SND_SOC_CLOCK_OUT);
+-		if (ret < 0) {
+-			dev_err(codec_dai->dev, "cpu_dai clock not set\n");
+-			return ret;
+-		}
++	if (!ls_card->mclk_fs)
++		return 0;
+ 
+-		ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
+-					     SND_SOC_CLOCK_IN);
+-		if (ret < 0) {
+-			dev_err(codec_dai->dev, "codec_dai clock not set\n");
+-			return ret;
+-		}
++	mclk = ls_card->mclk_fs * params_rate(params);
++	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk, SND_SOC_CLOCK_OUT);
++	if (ret < 0) {
++		dev_err(codec_dai->dev, "cpu_dai clock not set\n");
++		return ret;
+ 	}
 +
- config SND_SOC_UDA1380
- 	tristate
- 	depends on I2C
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 00ff3fdf0133..f5b1c8499d6c 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -319,6 +319,7 @@ snd-soc-ts3a227e-y := ts3a227e.o
- snd-soc-twl4030-y := twl4030.o
- snd-soc-twl6040-y := twl6040.o
- snd-soc-uda1334-y := uda1334.o
-+snd-soc-uda1342-y := uda1342.o
- snd-soc-uda1380-y := uda1380.o
- snd-soc-wcd-classh-y := wcd-clsh-v2.o
- snd-soc-wcd-mbhc-y := wcd-mbhc-v2.o
-@@ -723,6 +724,7 @@ obj-$(CONFIG_SND_SOC_TS3A227E)	+= snd-soc-ts3a227e.o
- obj-$(CONFIG_SND_SOC_TWL4030)	+= snd-soc-twl4030.o
- obj-$(CONFIG_SND_SOC_TWL6040)	+= snd-soc-twl6040.o
- obj-$(CONFIG_SND_SOC_UDA1334)	+= snd-soc-uda1334.o
-+obj-$(CONFIG_SND_SOC_UDA1342)	+= snd-soc-uda1342.o
- obj-$(CONFIG_SND_SOC_UDA1380)	+= snd-soc-uda1380.o
- obj-$(CONFIG_SND_SOC_WCD_CLASSH)	+= snd-soc-wcd-classh.o
- obj-$(CONFIG_SND_SOC_WCD_MBHC)	+= snd-soc-wcd-mbhc.o
-diff --git a/sound/soc/codecs/uda1342.c b/sound/soc/codecs/uda1342.c
-new file mode 100644
-index 000000000000..e26aa4148434
---- /dev/null
-+++ b/sound/soc/codecs/uda1342.c
-@@ -0,0 +1,397 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * uda1342.c  --  UDA1342 ALSA SoC Codec driver
-+ *
-+ * Modifications by Christian Pellegrin <chripell@evolware.org>
-+ *
-+ * Copyright 2007 Dension Audio Systems Ltd.
-+ * Author: Zoltan Devai
-+ *
-+ * Based on the WM87xx drivers by Liam Girdwood and Richard Purdie
-+ */
++	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk, SND_SOC_CLOCK_IN);
++	if (ret < 0) {
++		dev_err(codec_dai->dev, "codec_dai clock not set\n");
++		return ret;
++	}
 +
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/slab.h>
-+#include <sound/core.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/initval.h>
-+#include <sound/tlv.h>
+ 	return 0;
+ }
+ 
+@@ -68,54 +68,61 @@ static struct snd_soc_dai_link loongson_dai_links[] = {
+ 	},
+ };
+ 
+-static int loongson_card_parse_acpi(struct loongson_card_data *data)
++static struct acpi_device *
++loongson_card_acpi_find_device(struct snd_soc_card *card, const char *name)
+ {
+-	struct snd_soc_card *card = &data->snd_card;
+ 	struct fwnode_handle *fwnode = card->dev->fwnode;
+ 	struct fwnode_reference_args args;
++	int status;
 +
-+#include "uda1342.h"
++	memset(&args, 0, sizeof(args));
++	status = acpi_node_get_property_reference(fwnode, name, 0, &args);
++	if (ACPI_FAILURE(status) || !is_acpi_device_node(args.fwnode)) {
++		dev_err(card->dev, "No matching phy in ACPI table\n");
++		return NULL;
++	}
 +
-+#define UDA134X_FORMATS	(SNDRV_PCM_FMTBIT_S8 | SNDRV_PCM_FMTBIT_S16_LE | \
-+			 SNDRV_PCM_FMTBIT_S18_3LE | SNDRV_PCM_FMTBIT_S20_3LE)
-+
-+struct uda1342_priv {
-+	int sysclk;
-+	int dai_fmt;
-+
-+	struct snd_pcm_substream *master_substream;
-+	struct snd_pcm_substream *slave_substream;
-+
-+	struct regmap *regmap;
-+	struct i2c_client *i2c;
-+};
-+
-+static const struct reg_default uda1342_reg_defaults[] = {
-+	{ 0x00, 0x1042 },
-+	{ 0x01, 0x0000 },
-+	{ 0x10, 0x0088 },
-+	{ 0x11, 0x0000 },
-+	{ 0x12, 0x0000 },
-+	{ 0x20, 0x0080 },
-+	{ 0x21, 0x0080 },
-+};
-+
-+static inline void uda1342_reset(struct uda1342_priv *uda1342)
-+{
-+	unsigned int mask = BIT(15);
-+
-+	regmap_write(uda1342->regmap, 0x00, mask);
++	return to_acpi_device_node(args.fwnode);
 +}
 +
-+static int uda1342_mute(struct snd_soc_dai *dai, int mute, int direction)
++static int loongson_card_parse_acpi(struct loongson_card_data *data)
 +{
-+	struct snd_soc_component *component = dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
++	struct snd_soc_card *card = &data->snd_card;
+ 	const char *codec_dai_name;
+ 	struct acpi_device *adev;
+ 	struct device *phy_dev;
+-	int ret, i;
++	int i;
+ 
+ 	/* fixup platform name based on reference node */
+-	memset(&args, 0, sizeof(args));
+-	ret = acpi_node_get_property_reference(fwnode, "cpu", 0, &args);
+-	if (ret || !is_acpi_device_node(args.fwnode)) {
+-		dev_err(card->dev, "No matching phy in ACPI table\n");
+-		return ret ?: -ENOENT;
+-	}
+-	adev = to_acpi_device_node(args.fwnode);
++	adev = loongson_card_acpi_find_device(card, "cpu");
++	if (!adev)
++		return -ENOENT;
++
+ 	phy_dev = acpi_get_first_physical_node(adev);
+ 	if (!phy_dev)
+ 		return -EPROBE_DEFER;
+-	for (i = 0; i < card->num_links; i++)
+-		loongson_dai_links[i].platforms->name = dev_name(phy_dev);
+ 
+ 	/* fixup codec name based on reference node */
+-	memset(&args, 0, sizeof(args));
+-	ret = acpi_node_get_property_reference(fwnode, "codec", 0, &args);
+-	if (ret || !is_acpi_device_node(args.fwnode)) {
+-		dev_err(card->dev, "No matching phy in ACPI table\n");
+-		return ret ?: -ENOENT;
+-	}
+-	adev = to_acpi_device_node(args.fwnode);
++	adev = loongson_card_acpi_find_device(card, "codec");
++	if (!adev)
++		return -ENOENT;
+ 	snprintf(codec_name, sizeof(codec_name), "i2c-%s", acpi_dev_name(adev));
+-	for (i = 0; i < card->num_links; i++)
+-		loongson_dai_links[i].codecs->name = codec_name;
+ 
+-	device_property_read_string(card->dev, "codec-dai-name",
+-				    &codec_dai_name);
+-	for (i = 0; i < card->num_links; i++)
++	device_property_read_string(card->dev, "codec-dai-name", &codec_dai_name);
++
++	for (i = 0; i < card->num_links; i++) {
++		loongson_dai_links[i].platforms->name = dev_name(phy_dev);
++		loongson_dai_links[i].codecs->name = codec_name;
+ 		loongson_dai_links[i].codecs->dai_name = codec_dai_name;
++	}
+ 
+ 	return 0;
+ }
+ 
+ static int loongson_card_parse_of(struct loongson_card_data *data)
+ {
+-	struct device_node *cpu, *codec;
+ 	struct snd_soc_card *card = &data->snd_card;
++	struct device_node *cpu, *codec;
+ 	struct device *dev = card->dev;
+ 	int ret, i;
+ 
+@@ -124,77 +131,68 @@ static int loongson_card_parse_of(struct loongson_card_data *data)
+ 		dev_err(dev, "platform property missing or invalid\n");
+ 		return -EINVAL;
+ 	}
++
+ 	codec = of_get_child_by_name(dev->of_node, "codec");
+ 	if (!codec) {
+ 		dev_err(dev, "audio-codec property missing or invalid\n");
+-		of_node_put(cpu);
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto free_cpu;
+ 	}
+ 
+ 	for (i = 0; i < card->num_links; i++) {
+ 		ret = snd_soc_of_get_dlc(cpu, NULL, loongson_dai_links[i].cpus, 0);
+-		if (ret < 0) {
++		if (ret) {
+ 			dev_err(dev, "getting cpu dlc error (%d)\n", ret);
+-			goto err;
++			goto free_codec;
+ 		}
+ 
+ 		ret = snd_soc_of_get_dlc(codec, NULL, loongson_dai_links[i].codecs, 0);
+-		if (ret < 0) {
++		if (ret) {
+ 			dev_err(dev, "getting codec dlc error (%d)\n", ret);
+-			goto err;
++			goto free_codec;
+ 		}
+ 	}
+ 
+-	of_node_put(cpu);
++free_codec:
+ 	of_node_put(codec);
+-
+-	return 0;
+-
+-err:
++free_cpu:
+ 	of_node_put(cpu);
+-	of_node_put(codec);
+ 	return ret;
+ }
+ 
+ static int loongson_asoc_card_probe(struct platform_device *pdev)
+ {
+ 	struct loongson_card_data *ls_priv;
++	struct device *dev = &pdev->dev;
+ 	struct snd_soc_card *card;
+ 	int ret;
+ 
+-	ls_priv = devm_kzalloc(&pdev->dev, sizeof(*ls_priv), GFP_KERNEL);
++	ls_priv = devm_kzalloc(dev, sizeof(*ls_priv), GFP_KERNEL);
+ 	if (!ls_priv)
+ 		return -ENOMEM;
+ 
+ 	card = &ls_priv->snd_card;
+ 
+-	card->dev = &pdev->dev;
++	card->dev = dev;
+ 	card->owner = THIS_MODULE;
+ 	card->dai_link = loongson_dai_links;
+ 	card->num_links = ARRAY_SIZE(loongson_dai_links);
+ 	snd_soc_card_set_drvdata(card, ls_priv);
+ 
+-	ret = device_property_read_string(&pdev->dev, "model", &card->name);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Error parsing card name: %d\n", ret);
+-		return ret;
+-	}
+-	ret = device_property_read_u32(&pdev->dev, "mclk-fs", &ls_priv->mclk_fs);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Error parsing mclk-fs: %d\n", ret);
+-		return ret;
+-	}
++	ret = device_property_read_string(dev, "model", &card->name);
++	if (ret)
++		dev_err_probe(dev, ret, "Error parsing card name.\n");
+ 
+-	if (has_acpi_companion(&pdev->dev))
+-		ret = loongson_card_parse_acpi(ls_priv);
+-	else
+-		ret = loongson_card_parse_of(ls_priv);
+-	if (ret < 0)
+-		return ret;
++	ret = device_property_read_u32(dev, "mclk-fs", &ls_priv->mclk_fs);
++	if (ret)
++		dev_err_probe(dev, ret, "Error parsing mclk-fs.\n");
+ 
+-	ret = devm_snd_soc_register_card(&pdev->dev, card);
++	ret = has_acpi_companion(dev) ? loongson_card_parse_acpi(ls_priv)
++				      : loongson_card_parse_of(ls_priv);
++	if (ret)
++		dev_err_probe(dev, ret, "Error parsing acpi/of properties.\n");
+ 
+-	return ret;
++	return devm_snd_soc_register_card(dev, card);
+ }
+ 
+ static const struct of_device_id loongson_asoc_dt_ids[] = {
+diff --git a/sound/soc/loongson/loongson_dma.c b/sound/soc/loongson/loongson_dma.c
+index 0238f88bc674..20e4a0641340 100644
+--- a/sound/soc/loongson/loongson_dma.c
++++ b/sound/soc/loongson/loongson_dma.c
+@@ -17,11 +17,11 @@
+ #include "loongson_i2s.h"
+ 
+ /* DMA dma_order Register */
+-#define DMA_ORDER_STOP          (1 << 4) /* DMA stop */
+-#define DMA_ORDER_START         (1 << 3) /* DMA start */
+-#define DMA_ORDER_ASK_VALID     (1 << 2) /* DMA ask valid flag */
+-#define DMA_ORDER_AXI_UNCO      (1 << 1) /* Uncache access */
+-#define DMA_ORDER_ADDR_64       (1 << 0) /* 64bits address support */
++#define DMA_ORDER_STOP          BIT(4) /* DMA stop */
++#define DMA_ORDER_START         BIT(3) /* DMA start */
++#define DMA_ORDER_ASK_VALID     BIT(2) /* DMA ask valid flag */
++#define DMA_ORDER_AXI_UNCO      BIT(1) /* Uncache access */
++#define DMA_ORDER_ADDR_64       BIT(0) /* 64bits address support */
+ 
+ #define DMA_ORDER_ASK_MASK      (~0x1fUL) /* Ask addr mask */
+ #define DMA_ORDER_CTRL_MASK     (0x0fUL)  /* Control mask  */
+diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
+index 3b9786076501..40bbf3205391 100644
+--- a/sound/soc/loongson/loongson_i2s.c
++++ b/sound/soc/loongson/loongson_i2s.c
+@@ -21,34 +21,33 @@
+ 			SNDRV_PCM_FMTBIT_S20_3LE | \
+ 			SNDRV_PCM_FMTBIT_S24_LE)
+ 
++#define LOONGSON_I2S_TX_ENABLE	(I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN)
++#define LOONGSON_I2S_RX_ENABLE	(I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN)
++
++#define LOONGSON_I2S_DEF_DELAY		10
++#define LOONGSON_I2S_DEF_TIMEOUT	500000
++
+ static int loongson_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 				struct snd_soc_dai *dai)
+ {
+ 	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
 +	unsigned int mask;
-+	unsigned int val = 0;
-+
-+	dev_info(&uda1342->i2c->dev, "mute: %d\n", mute);
-+
-+	/* Master mute */
-+	mask = BIT(5);
-+	val = mute ? mask : 0;
-+
-+	return regmap_update_bits(uda1342->regmap, 0x10, mask, val);
-+}
-+
-+static int uda1342_startup(struct snd_pcm_substream *substream,
-+			   struct snd_soc_dai *dai)
+ 	int ret = 0;
+ 
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN,
+-					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN);
+-		else
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN,
+-					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN);
++		mask = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
++		       LOONGSON_I2S_TX_ENABLE : LOONGSON_I2S_RX_ENABLE;
++		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, mask, mask);
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN, 0);
+-		else
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN, 0);
++		mask = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
++		       LOONGSON_I2S_TX_ENABLE : LOONGSON_I2S_RX_ENABLE;
++		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, mask, 0);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -123,10 +122,40 @@ static int loongson_i2s_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+ 	return 0;
+ }
+ 
++static int loongson_i2s_enable_mclk(struct loongson_i2s *i2s)
 +{
-+	struct snd_soc_component *component = dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
-+	struct snd_pcm_runtime *master_runtime;
++	u32 val;
 +
-+	if (uda1342->master_substream) {
-+		master_runtime = uda1342->master_substream->runtime;
-+
-+		snd_pcm_hw_constraint_single(substream->runtime,
-+					     SNDRV_PCM_HW_PARAM_RATE, master_runtime->rate);
-+		snd_pcm_hw_constraint_single(substream->runtime,
-+					     SNDRV_PCM_HW_PARAM_SAMPLE_BITS,
-+					     master_runtime->sample_bits);
-+
-+		uda1342->slave_substream = substream;
-+	} else {
-+		uda1342->master_substream = substream;
-+	}
-+
-+	return 0;
-+}
-+
-+static void uda1342_shutdown(struct snd_pcm_substream *substream,
-+			     struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
-+
-+	if (uda1342->master_substream == substream)
-+		uda1342->master_substream = uda1342->slave_substream;
-+
-+	uda1342->slave_substream = NULL;
-+}
-+
-+static int uda1342_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
-+	struct device *dev = &uda1342->i2c->dev;
-+	unsigned int hw_params = 0;
-+
-+	if (substream == uda1342->slave_substream) {
-+		dev_info(dev, "ignoring hw_params for slave substream\n");
++	if (i2s->rev_id == 0)
 +		return 0;
-+	}
 +
-+	/* set SYSCLK / fs ratio */
-+	switch (uda1342->sysclk / params_rate(params)) {
-+	case 512:
-+		break;
-+	case 384:
-+		hw_params |= BIT(4);
-+		break;
-+	case 256:
-+		hw_params |= BIT(5);
-+		break;
-+	default:
-+		dev_err(dev, "unsupported frequency\n");
-+		return -EINVAL;
-+	}
++	regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
++			   I2S_CTRL_MCLK_EN, I2S_CTRL_MCLK_EN);
 +
-+	/* set DAI format and word length */
-+	switch (uda1342->dai_fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		switch (params_width(params)) {
-+		case 16:
-+			hw_params |= BIT(1);
-+			break;
-+		case 18:
-+			hw_params |= BIT(2);
-+			break;
-+		case 20:
-+			hw_params |= BIT(2) | BIT(1);
-+			break;
-+		default:
-+			dev_err(dev, "unsupported format (right)\n");
-+			return -EINVAL;
-+		}
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		hw_params |= BIT(3);
-+		break;
-+	default:
-+		dev_err(dev, "unsupported format\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	return regmap_read_poll_timeout_atomic(i2s->regmap,
++					       LS_I2S_CTRL, val,
++					       val & I2S_CTRL_MCLK_READY,
++					       LOONGSON_I2S_DEF_DELAY,
++					       LOONGSON_I2S_DEF_TIMEOUT);
 +}
 +
-+static int uda1342_set_dai_sysclk(struct snd_soc_dai *codec_dai,
-+				  int clk_id, unsigned int freq, int dir)
++static int loongson_i2s_enable_bclk(struct loongson_i2s *i2s)
 +{
-+	struct snd_soc_component *component = codec_dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
-+	struct device *dev = &uda1342->i2c->dev;
++	u32 val;
 +
-+	/*
-+	 * Anything between 256fs*8Khz and 512fs*48Khz should be acceptable
-+	 * because the codec is slave. Of course limitations of the clock
-+	 * master (the IIS controller) apply.
-+	 * We'll error out on set_hw_params if it's not OK
-+	 */
-+	if ((freq >= (256 * 8000)) && (freq <= (512 * 48000))) {
-+		uda1342->sysclk = freq;
++	if (i2s->rev_id == 0)
 +		return 0;
-+	}
 +
-+	dev_err(dev, "unsupported sysclk\n");
-+
-+	return -EINVAL;
++	return regmap_read_poll_timeout_atomic(i2s->regmap,
++					       LS_I2S_CTRL, val,
++					       val & I2S_CTRL_CLK_READY,
++					       LOONGSON_I2S_DEF_DELAY,
++					       LOONGSON_I2S_DEF_TIMEOUT);
 +}
 +
-+static int uda1342_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
-+{
-+	struct snd_soc_component *component = codec_dai->component;
-+	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
-+	struct device *dev = &uda1342->i2c->dev;
+ static int loongson_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ {
+ 	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+-	u32 val;
+ 	int ret;
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+@@ -148,54 +177,29 @@ static int loongson_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		/* Enable master mode */
+ 		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_MASTER,
+ 				   I2S_CTRL_MASTER);
+-		if (i2s->rev_id == 1) {
+-			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
+-						LS_I2S_CTRL, val,
+-						val & I2S_CTRL_CLK_READY,
+-						10, 500000);
+-			if (ret < 0)
+-				dev_warn(dai->dev, "wait BCLK ready timeout\n");
+-		}
++		ret = loongson_i2s_enable_bclk(i2s);
++		if (ret < 0)
++			dev_warn(dai->dev, "wait BCLK ready timeout\n");
+ 		break;
+ 	case SND_SOC_DAIFMT_BC_FP:
+ 		/* Enable MCLK */
+-		if (i2s->rev_id == 1) {
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					   I2S_CTRL_MCLK_EN,
+-					   I2S_CTRL_MCLK_EN);
+-			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
+-						LS_I2S_CTRL, val,
+-						val & I2S_CTRL_MCLK_READY,
+-						10, 500000);
+-			if (ret < 0)
+-				dev_warn(dai->dev, "wait MCLK ready timeout\n");
+-		}
++		ret = loongson_i2s_enable_mclk(i2s);
++		if (ret < 0)
++			dev_warn(dai->dev, "wait MCLK ready timeout\n");
+ 		break;
+ 	case SND_SOC_DAIFMT_BP_FP:
+ 		/* Enable MCLK */
+-		if (i2s->rev_id == 1) {
+-			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
+-					   I2S_CTRL_MCLK_EN,
+-					   I2S_CTRL_MCLK_EN);
+-			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
+-						LS_I2S_CTRL, val,
+-						val & I2S_CTRL_MCLK_READY,
+-						10, 500000);
+-			if (ret < 0)
+-				dev_warn(dai->dev, "wait MCLK ready timeout\n");
+-		}
++		ret = loongson_i2s_enable_mclk(i2s);
++		if (ret < 0)
++			dev_warn(dai->dev, "wait MCLK ready timeout\n");
+ 
+ 		/* Enable master mode */
+ 		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_MASTER,
+ 				   I2S_CTRL_MASTER);
+-		if (i2s->rev_id == 1) {
+-			ret = regmap_read_poll_timeout_atomic(i2s->regmap,
+-						LS_I2S_CTRL, val,
+-						val & I2S_CTRL_CLK_READY,
+-						10, 500000);
+-			if (ret < 0)
+-				dev_warn(dai->dev, "wait BCLK ready timeout\n");
+-		}
 +
-+	/* codec supports only full slave mode */
-+	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBS_CFS) {
-+		dev_err(dev, "unsupported slave mode.\n");
-+		return -EINVAL;
-+	}
++		ret = loongson_i2s_enable_bclk(i2s);
++		if (ret < 0)
++			dev_warn(dai->dev, "wait BCLK ready timeout\n");
+ 		break;
+ 	default:
+ 		return -EINVAL;
+diff --git a/sound/soc/loongson/loongson_i2s.h b/sound/soc/loongson/loongson_i2s.h
+index 89492eebf834..c8052a762c1b 100644
+--- a/sound/soc/loongson/loongson_i2s.h
++++ b/sound/soc/loongson/loongson_i2s.h
+@@ -27,18 +27,18 @@
+ #define LS_I2S_RX_ORDER 0x110 /* RX DMA Order */
+ 
+ /* Loongson I2S Control Register */
+-#define I2S_CTRL_MCLK_READY	(1 << 16) /* MCLK ready */
+-#define I2S_CTRL_MASTER		(1 << 15) /* Master mode */
+-#define I2S_CTRL_MSB		(1 << 14) /* MSB bit order */
+-#define I2S_CTRL_RX_EN		(1 << 13) /* RX enable */
+-#define I2S_CTRL_TX_EN		(1 << 12) /* TX enable */
+-#define I2S_CTRL_RX_DMA_EN	(1 << 11) /* DMA RX enable */
+-#define I2S_CTRL_CLK_READY	(1 << 8)  /* BCLK ready */
+-#define I2S_CTRL_TX_DMA_EN	(1 << 7)  /* DMA TX enable */
+-#define I2S_CTRL_RESET		(1 << 4)  /* Controller soft reset */
+-#define I2S_CTRL_MCLK_EN	(1 << 3)  /* Enable MCLK */
+-#define I2S_CTRL_RX_INT_EN	(1 << 1)  /* RX interrupt enable */
+-#define I2S_CTRL_TX_INT_EN	(1 << 0)  /* TX interrupt enable */
++#define I2S_CTRL_MCLK_READY	BIT(16) /* MCLK ready */
++#define I2S_CTRL_MASTER		BIT(15) /* Master mode */
++#define I2S_CTRL_MSB		BIT(14) /* MSB bit order */
++#define I2S_CTRL_RX_EN		BIT(13) /* RX enable */
++#define I2S_CTRL_TX_EN		BIT(12) /* TX enable */
++#define I2S_CTRL_RX_DMA_EN	BIT(11) /* DMA RX enable */
++#define I2S_CTRL_CLK_READY	BIT(8)  /* BCLK ready */
++#define I2S_CTRL_TX_DMA_EN	BIT(7)  /* DMA TX enable */
++#define I2S_CTRL_RESET		BIT(4)  /* Controller soft reset */
++#define I2S_CTRL_MCLK_EN	BIT(3)  /* Enable MCLK */
++#define I2S_CTRL_RX_INT_EN	BIT(1)  /* RX interrupt enable */
++#define I2S_CTRL_TX_INT_EN	BIT(0)  /* TX interrupt enable */
+ 
+ #define LS_I2S_DRVNAME		"loongson-i2s"
+ 
+diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
+index ec18b122cd79..3872b1d8fce0 100644
+--- a/sound/soc/loongson/loongson_i2s_pci.c
++++ b/sound/soc/loongson/loongson_i2s_pci.c
+@@ -75,34 +75,34 @@ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
+ {
+ 	const struct fwnode_handle *fwnode = pdev->dev.fwnode;
+ 	struct loongson_dma_data *tx_data, *rx_data;
++	struct device *dev = &pdev->dev;
+ 	struct loongson_i2s *i2s;
+ 	int ret;
+ 
+ 	if (pcim_enable_device(pdev)) {
+-		dev_err(&pdev->dev, "pci_enable_device failed\n");
++		dev_err(dev, "pci_enable_device failed\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
++	i2s = devm_kzalloc(dev, sizeof(*i2s), GFP_KERNEL);
+ 	if (!i2s)
+ 		return -ENOMEM;
+ 
+ 	i2s->rev_id = pdev->revision;
+-	i2s->dev = &pdev->dev;
++	i2s->dev = dev;
+ 	pci_set_drvdata(pdev, i2s);
+ 
+-	ret = pcim_iomap_regions(pdev, 1 << 0, dev_name(&pdev->dev));
++	ret = pcim_iomap_regions(pdev, 1 << 0, dev_name(dev));
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "iomap_regions failed\n");
++		dev_err(dev, "iomap_regions failed\n");
+ 		return ret;
+ 	}
 +
-+	/*
-+	 * We can't setup DAI format here as it depends on the word bit num,
-+	 * so let's just store the value for later
-+	 */
-+	uda1342->dai_fmt = fmt;
-+
-+	return 0;
-+}
-+
-+static int uda1342_set_bias_level(struct snd_soc_component *component,
-+				  enum snd_soc_bias_level level)
-+{
-+	switch (level) {
-+	case SND_SOC_BIAS_ON:
-+		break;
-+	case SND_SOC_BIAS_PREPARE:
-+		break;
-+	case SND_SOC_BIAS_STANDBY:
-+		break;
-+	case SND_SOC_BIAS_OFF:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static const char *const uda1342_deemph[] = {"None", "32Khz", "44.1Khz", "48Khz"};
-+static const char *const uda1342_mixmode[] = {"Differential", "Analog1", "Analog2", "Both"};
-+
-+static const struct soc_enum uda1342_mixer_enum[] = {
-+	SOC_ENUM_SINGLE(0x10, 3, 0x04, uda1342_deemph),
-+	SOC_ENUM_SINGLE(0x10, 0, 0x04, uda1342_mixmode),
-+};
-+
-+static const struct snd_kcontrol_new uda1342_snd_controls[] = {
-+	SOC_SINGLE("Master Playback Volume", 0x11, 0, 0x3F, 1),
-+	SOC_SINGLE("Analog1 Volume", 0x12, 0, 0x1F, 1),
-+};
-+
-+/* Common DAPM widgets */
-+static const struct snd_soc_dapm_widget uda1342_dapm_widgets[] = {
-+	SND_SOC_DAPM_INPUT("VINL1"),
-+	SND_SOC_DAPM_INPUT("VINR1"),
-+	SND_SOC_DAPM_INPUT("VINL2"),
-+	SND_SOC_DAPM_INPUT("VINR2"),
-+
-+	SND_SOC_DAPM_DAC("DAC", "Playback", 0, 1, 0),
-+	SND_SOC_DAPM_ADC("ADC", "Capture", 0, 9, 0),
-+
-+	SND_SOC_DAPM_OUTPUT("VOUTL"),
-+	SND_SOC_DAPM_OUTPUT("VOUTR"),
-+};
-+
-+static const struct snd_soc_dapm_route uda1342_dapm_routes[] = {
-+	{ "ADC", NULL, "VINL1" },
-+	{ "ADC", NULL, "VINR1" },
-+	{ "ADC", NULL, "VINL2" },
-+	{ "ADC", NULL, "VINR2" },
-+	{ "VOUTL", NULL, "DAC" },
-+	{ "VOUTR", NULL, "DAC" },
-+};
-+
-+static const struct snd_soc_dai_ops uda1342_dai_ops = {
-+	.startup	= uda1342_startup,
-+	.shutdown	= uda1342_shutdown,
-+	.hw_params	= uda1342_hw_params,
-+	.mute_stream	= uda1342_mute,
-+	.set_sysclk	= uda1342_set_dai_sysclk,
-+	.set_fmt	= uda1342_set_dai_fmt,
-+};
-+
-+static struct snd_soc_dai_driver uda1342_dai = {
-+	.name = "uda1342-hifi",
-+	/* playback capabilities */
-+	.playback = {
-+		.stream_name = "Playback",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = UDA134X_FORMATS,
-+	},
-+	/* capture capabilities */
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = UDA134X_FORMATS,
-+	},
-+	/* pcm operations */
-+	.ops = &uda1342_dai_ops,
-+};
-+
-+static int uda1342_soc_probe(struct snd_soc_component *component)
-+{
-+	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
-+
-+	snd_soc_add_component_controls(component, uda1342_snd_controls,
-+				       ARRAY_SIZE(uda1342_snd_controls));
-+	snd_soc_dapm_new_controls(dapm, uda1342_dapm_widgets,
-+				  ARRAY_SIZE(uda1342_dapm_widgets));
-+	snd_soc_dapm_add_routes(dapm, uda1342_dapm_routes,
-+				ARRAY_SIZE(uda1342_dapm_routes));
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_component_driver soc_component_dev_uda1342 = {
-+	.probe			= uda1342_soc_probe,
-+	.set_bias_level		= uda1342_set_bias_level,
-+	.suspend_bias_off	= 1,
-+	.idle_bias_on		= 1,
-+	.use_pmdown_time	= 1,
-+	.endianness		= 1,
-+};
-+
-+static const struct regmap_config uda1342_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.max_register = 0x21,
-+	.reg_defaults = uda1342_reg_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(uda1342_reg_defaults),
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int uda1342_i2c_probe(struct i2c_client *i2c)
-+{
-+	struct uda1342_priv *uda1342;
-+	int ret;
-+
-+	uda1342 = devm_kzalloc(&i2c->dev, sizeof(*uda1342), GFP_KERNEL);
-+	if (!uda1342)
-+		return -ENOMEM;
-+
-+	uda1342->regmap = devm_regmap_init_i2c(i2c, &uda1342_regmap);
-+	if (IS_ERR(uda1342->regmap))
-+		return PTR_ERR(uda1342->regmap);
-+
-+	i2c_set_clientdata(i2c, uda1342);
-+	uda1342->i2c = i2c;
-+
-+	return devm_snd_soc_register_component(&i2c->dev,
-+					       &soc_component_dev_uda1342,
-+					       &uda1342_dai, 1);
-+}
-+
-+static int uda1342_suspend(struct device *dev)
-+{
-+	struct uda1342_priv *uda1342 = dev_get_drvdata(dev);
-+
-+	regcache_cache_only(uda1342->regmap, true);
-+
-+	return 0;
-+}
-+
-+static int uda1342_resume(struct device *dev)
-+{
-+	struct uda1342_priv *uda1342 = dev_get_drvdata(dev);
-+
-+	regcache_mark_dirty(uda1342->regmap);
-+	regcache_sync(uda1342->regmap);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops uda1342_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(uda1342_suspend, uda1342_resume)
-+};
-+
-+static const struct i2c_device_id uda1342_i2c_id[] = {
-+	 { "uda1342", 0 },
-+	 { }
-+};
-+MODULE_DEVICE_TABLE(i2c, uda1342_i2c_id);
-+
-+static const struct of_device_id uda1342_of_match[] = {
-+	 { .compatible = "nxp,uda1342" },
-+	 { }
-+};
-+MODULE_DEVICE_TABLE(of, uda1342_of_match);
-+
-+static struct i2c_driver uda1342_i2c_driver = {
-+	.driver = {
-+		.name =  "uda1342",
-+		.of_match_table = uda1342_of_match,
-+		.pm = pm_sleep_ptr(&uda1342_pm),
-+	 },
-+	.probe = uda1342_i2c_probe,
-+	.id_table = uda1342_i2c_id,
-+};
-+module_i2c_driver(uda1342_i2c_driver);
-+
-+MODULE_DESCRIPTION("UDA1342 ALSA soc codec driver");
-+MODULE_AUTHOR("Zoltan Devai, Christian Pellegrin <chripell@evolware.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/uda1342.h b/sound/soc/codecs/uda1342.h
-new file mode 100644
-index 000000000000..1f4632643ddd
---- /dev/null
-+++ b/sound/soc/codecs/uda1342.h
-@@ -0,0 +1,77 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Audio support for NXP UDA1342
-+ *
-+ * Copyright (c) 2005 Giorgio Padrin <giorgio@mandarinlogiq.org>
-+ * Copyright (c) 2024 Loongson Technology Corporation Limited.
-+ */
-+
-+#ifndef _UDA1342_H
-+#define _UDA1342_H
-+
-+#define UDA1342_CLK	0x00
-+#define UDA1342_IFACE	0x01
-+#define UDA1342_PM	0x02
-+#define UDA1342_AMIX	0x03
-+#define UDA1342_HP	0x04
-+#define UDA1342_MVOL	0x11
-+#define UDA1342_MIXVOL	0x12
-+#define UDA1342_MODE	0x12
-+#define UDA1342_DEEMP	0x13
-+#define UDA1342_MIXER	0x14
-+#define UDA1342_INTSTAT	0x18
-+#define UDA1342_DEC	0x20
-+#define UDA1342_PGA	0x21
-+#define UDA1342_ADC	0x22
-+#define UDA1342_AGC	0x23
-+#define UDA1342_DECSTAT	0x28
-+#define UDA1342_RESET	0x7f
-+
-+#define UDA1342_CACHEREGNUM 0x24
-+
-+/* Register flags */
-+#define R00_EN_ADC	0x0800
-+#define R00_EN_DEC	0x0400
-+#define R00_EN_DAC	0x0200
-+#define R00_EN_INT	0x0100
-+#define R00_DAC_CLK	0x0010
-+#define R01_SFORI_I2S   0x0000
-+#define R01_SFORI_LSB16 0x0100
-+#define R01_SFORI_LSB18 0x0200
-+#define R01_SFORI_LSB20 0x0300
-+#define R01_SFORI_MSB   0x0500
-+#define R01_SFORI_MASK  0x0700
-+#define R01_SFORO_I2S   0x0000
-+#define R01_SFORO_LSB16 0x0001
-+#define R01_SFORO_LSB18 0x0002
-+#define R01_SFORO_LSB20 0x0003
-+#define R01_SFORO_LSB24 0x0004
-+#define R01_SFORO_MSB   0x0005
-+#define R01_SFORO_MASK  0x0007
-+#define R01_SEL_SOURCE  0x0040
-+#define R01_SIM		0x0010
-+#define R02_PON_PLL	0x8000
-+#define R02_PON_HP	0x2000
-+#define R02_PON_DAC	0x0400
-+#define R02_PON_BIAS	0x0100
-+#define R02_EN_AVC	0x0080
-+#define R02_PON_AVC	0x0040
-+#define R02_PON_LNA	0x0010
-+#define R02_PON_PGAL	0x0008
-+#define R02_PON_ADCL	0x0004
-+#define R02_PON_PGAR	0x0002
-+#define R02_PON_ADCR	0x0001
-+#define R13_MTM		0x4000
-+#define R14_SILENCE	0x0080
-+#define R14_SDET_ON	0x0040
-+#define R21_MT_ADC	0x8000
-+#define R22_SEL_LNA	0x0008
-+#define R22_SEL_MIC	0x0004
-+#define R22_SKIP_DCFIL	0x0002
-+#define R23_AGC_EN	0x0001
-+
-+#define UDA1342_DAI_DUPLEX	0 /* playback and capture on single DAI */
-+#define UDA1342_DAI_PLAYBACK	1 /* playback DAI */
-+#define UDA1342_DAI_CAPTURE	2 /* capture DAI */
-+
-+#endif /* _UDA1342_H */
+ 	i2s->reg_base = pcim_iomap_table(pdev)[0];
+-	i2s->regmap = devm_regmap_init_mmio(&pdev->dev, i2s->reg_base,
++	i2s->regmap = devm_regmap_init_mmio(dev, i2s->reg_base,
+ 					    &loongson_i2s_regmap_config);
+-	if (IS_ERR(i2s->regmap)) {
+-		dev_err(&pdev->dev, "regmap_init_mmio failed\n");
+-		return PTR_ERR(i2s->regmap);
+-	}
++	if (IS_ERR(i2s->regmap))
++		dev_err_probe(dev, PTR_ERR(i2s->regmap), "regmap_init_mmio failed\n");
+ 
+ 	tx_data = &i2s->tx_dma_data;
+ 	rx_data = &i2s->rx_dma_data;
+@@ -114,37 +114,28 @@ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
+ 	rx_data->order_addr = i2s->reg_base + LS_I2S_RX_ORDER;
+ 
+ 	tx_data->irq = fwnode_irq_get_byname(fwnode, "tx");
+-	if (tx_data->irq < 0) {
+-		dev_err(&pdev->dev, "dma tx irq invalid\n");
+-		return tx_data->irq;
+-	}
++	if (tx_data->irq < 0)
++		dev_err_probe(dev, tx_data->irq, "dma tx irq invalid\n");
+ 
+ 	rx_data->irq = fwnode_irq_get_byname(fwnode, "rx");
+-	if (rx_data->irq < 0) {
+-		dev_err(&pdev->dev, "dma rx irq invalid\n");
+-		return rx_data->irq;
+-	}
++	if (rx_data->irq < 0)
++		dev_err_probe(dev, rx_data->irq, "dma rx irq invalid\n");
+ 
+-	device_property_read_u32(&pdev->dev, "clock-frequency", &i2s->clk_rate);
+-	if (!i2s->clk_rate) {
+-		dev_err(&pdev->dev, "clock-frequency property invalid\n");
+-		return -EINVAL;
+-	}
++	ret = device_property_read_u32(dev, "clock-frequency", &i2s->clk_rate);
++	if (ret)
++		dev_err_probe(dev, ret, "clock-frequency property invalid\n");
+ 
+-	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+ 
+ 	if (i2s->rev_id == 1) {
+ 		regmap_write(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_RESET);
+ 		udelay(200);
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					      &loongson_i2s_component,
++	ret = devm_snd_soc_register_component(dev, &loongson_i2s_component,
+ 					      &loongson_i2s_dai, 1);
+-	if (ret) {
+-		dev_err(&pdev->dev, "register DAI failed %d\n", ret);
+-		return ret;
+-	}
++	if (ret)
++		dev_err_probe(dev, ret, "register DAI failed\n");
+ 
+ 	return 0;
+ }
 -- 
 2.43.5
 
