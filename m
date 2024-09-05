@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A5519DF68;
-	Thu,  5 Sep 2024 14:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263C61DFD8;
+	Thu,  5 Sep 2024 14:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725545143; cv=none; b=B+qw5pTpXCpsKf/qMnL4SidRxFlMHel5rDNbg8N2XcYyZNDiAaATgm6PfsTGrjyy79qxgmCWsdxtxhYF7Zl1Hwi5vo3wC84o16Vz7nJ72EAhJl8YlEyOn4qnacvtDb70eRAayumULrpdh+kRCluYD1slOfZ5Vj/3JzTODxglyiM=
+	t=1725546499; cv=none; b=jlIdgogtGVAq5vlyXChN41jOgqcRM8oF4dkYXweMulW7avwL+Hr++vb7uBON1wrYbKF6W8zfzwBti36+8FXS8lKZdYtcmN3kU69gnK+ERNTTCGc5sJ6XytkxJ6tKQoqyMl9z/FzNqtW+MO6f0KIH3IKzBVbssJHXAKvlaGKQIkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725545143; c=relaxed/simple;
-	bh=0Paimslxn1yATioZQ83kmsOB3LEleAVxkHfs+MspNkk=;
+	s=arc-20240116; t=1725546499; c=relaxed/simple;
+	bh=jmpTA9CV4UGTVFIuI2bK6R46aJZEAijyOaM3bYcYd9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YmVddCLtB/OXrSTxfsRDWc2yipBZFbpfIak1hdb2mhrqvnwsRfUx4D4CCVidFQI7NwAyoGMj6A3lq9MW/z0Db2pTK/ImKkD7N1agW/YGvLRSkjLlW5BaoBSEvEueBL+3+NBa/D4rQ+bKZDF5OCFIJjVvkkSna7PnRAwSCxUuJSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDexJRFt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhYIMQCxhOoRooKnMMOdO7jFfkFbUm7bogtAdl2XyKL6BjTkE/Csjb6Y7FNRgM1CrVWqhCnEpWjSjUi6fJG591HM8c/jDW+edisTMrqhbIKvOxmGwDlCMuK+cMPFaBYkLDgQoV6JzxXIv7a3d8+89n6Kl6D0Zsz22iCEDTcb3Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+f2y3Yv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDexJRFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CE5C4CEC5;
-	Thu,  5 Sep 2024 14:05:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+f2y3Yv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDFAFC4CEC5;
+	Thu,  5 Sep 2024 14:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725545142;
-	bh=0Paimslxn1yATioZQ83kmsOB3LEleAVxkHfs+MspNkk=;
+	s=k20201202; t=1725546498;
+	bh=jmpTA9CV4UGTVFIuI2bK6R46aJZEAijyOaM3bYcYd9Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HDexJRFtK+lFiPyku3P+8nWS30sNzCaktc7n8MK0jhAFl/3xP1+KJh/R/oacpUbpi
-	 1+pc0qG6A/FZfFMJxv7BGfbggv/97b6mQaGdVo49D7+s+YAlwesqymbBvbtoA6Vh/X
-	 3QJ05HyoWQ8mrDTjb9xm5+zA8Zg5GxURwnuWJ7T8JZus1Y1ILztKBRoUv15EUY8JtT
-	 Ili+bTfkQXK/nsSmd4t43LK1VkvA3bQczRHaj3VbNjdGwa0OSEnc1HohNG18BxlzSd
-	 2EFj7rl1O9qr5UGICJNYrcHDqn1xt3lamfeegEg1Y2CT2UPek5sj635TBxhYran0IN
-	 rEFax9vvMolWg==
-Date: Thu, 5 Sep 2024 15:05:35 +0100
+	b=X+f2y3YvknqA4KhuxIVOSxOqi0O3i7f/quNW1tyHXKi9hi3SxoM22uER1+QscGM77
+	 jkX2idPRqJChH5Fz3ORExm3/LTuG3ZzR7ie6doiUjoaIwFY0w15ABobKXL4Tw1tgNP
+	 Hrr/qFeEktuLIZOA9YfwLTzwtbXdckPHzvBQux86YM+weryqod8YSxvzol/e47X7KG
+	 nHAGZ82GMSoaWZctZPn8FjhC8ou39hoN5NRf61Sa9DVWGgKOm2MMhMuDs5o1k7KkKz
+	 SfLx5RyrxCtb4OTui+TVbSvzItpc99ad6DFPkG41gIkFsvPWM9yYTzkFnNN0S80MHw
+	 jD4iIU7zDkXqQ==
+Date: Thu, 5 Sep 2024 15:28:13 +0100
 From: Mark Brown <broonie@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
@@ -39,10 +39,10 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org,
 	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 02/10] ASoC: codecs: Add support for ES8323
-Message-ID: <5a7357f7-da3b-4532-b055-ad33eb93fe1c@sirena.org.uk>
+Subject: Re: [PATCH v1 04/10] ASoC: codecs: Add uda1342 codec driver
+Message-ID: <eaeb0113-785c-4a41-b093-b352122b20ca@sirena.org.uk>
 References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
+ <3fd0c3a04f5f3bd293168732db457f6854db706e.1725518229.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,172 +50,162 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WZrniv5M0HT7TQNR"
+	protocol="application/pgp-signature"; boundary="CWe5TonQavQeUXc/"
 Content-Disposition: inline
-In-Reply-To: <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
+In-Reply-To: <3fd0c3a04f5f3bd293168732db457f6854db706e.1725518229.git.zhoubinbin@loongson.cn>
 X-Cookie: The horror... the horror!
 
 
---WZrniv5M0HT7TQNR
+--CWe5TonQavQeUXc/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 05, 2024 at 03:02:15PM +0800, Binbin Zhou wrote:
+On Thu, Sep 05, 2024 at 03:02:53PM +0800, Binbin Zhou wrote:
 
-This looks like it was based on some *extremely* old code and needs
-quite a few updates to bring it up to modern standards.
+> The UDA1342 is an NXP audio codec, support 2x Stereo audio ADC (4x PGA
+> mic inputs), stereo audio DAC, with basic audio processing.
 
-> + * Author: Mark Brown <will@everset-semi.com>
+This looks basically fine overall, there's some issues below but they're
+mostly fairly small and stylistic rather than anything major.
 
-Oh?
-
+> --- /dev/null
+> +++ b/sound/soc/codecs/uda1342.c
+> @@ -0,0 +1,397 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * es8323 register cache
-> + * We can't read the es8323 register space when we
-> + * are using 2 wire for device control, so we cache them instead.
-> + */
-> +static u16 es8323_reg[] = {
-> +	0x06, 0x1C, 0xC3, 0xFC,	/*  0 */
-> +	0xC0, 0x00, 0x00, 0x7C,	/*  4 */
+> + * uda1342.c  --  UDA1342 ALSA SoC Codec driver
 
-There's a bunch of regmap reimplementation in the driver, the cache and
-I/O code all looks totally generic.  Just use regmap.
+Please keep the entire comment a C++ one so things look more
+intentional.
 
-> +static const struct soc_enum es8323_enum[] = {
-> +	SOC_VALUE_ENUM_SINGLE(ES8323_DACCONTROL16, 3, 7, ARRAY_SIZE(es8323_line_texts),
-> +			      es8323_line_texts, es8323_line_values),	/* LLINE */
-> +	SOC_VALUE_ENUM_SINGLE(ES8323_DACCONTROL16, 0, 7, ARRAY_SIZE(es8323_line_texts),
-> +			      es8323_line_texts, es8323_line_values),	/* RLINE */
-
-Use named variables for the enums rather than putting them into an array
-that's not otherwise used...
-
-> +static const struct snd_kcontrol_new es8323_snd_controls[] = {
-> +	SOC_ENUM("3D Mode", es8323_enum[4]),
-> +	SOC_ENUM("ALC Capture Function", es8323_enum[5]),
-
-...it's *vastly* more readable and maintainable.
-
-> +	SOC_SINGLE("Capture Mute", ES8323_ADC_MUTE, 2, 1, 0),
-
-On/off switches should end in Switch, see control-names.rst.
-
-> +	/* gModify.Cmmt Implement when suspend/startup */
-> +	SND_SOC_DAPM_DAC("Right DAC", "Right Playback", SND_SOC_NOPM, 6, 1),
-
-gModify.Cmmt?
-
-> +/*
-> + * Note that this should be called from init rather than from hw_params.
-> + */
-> +static int es8323_set_dai_sysclk(struct snd_soc_dai *codec_dai,
-> +				 int clk_id, unsigned int freq, int dir)
-
-Why?
-
-> +	/* set master/slave audio interface */
-> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> +	case SND_SOC_DAIFMT_CBM_CFM:	/* MASTER MODE */
-> +		iface |= 0x80;
-> +		break;
-> +	case SND_SOC_DAIFMT_CBS_CFS:	/* SLAVE MODE */
-
-Please use the modern naming with _CBP_CFP and so on.
-
-> +static int es8323_mute(struct snd_soc_dai *dai, int mute,  int stream)
+> +static int uda1342_mute(struct snd_soc_dai *dai, int mute, int direction)
 > +{
 > +	struct snd_soc_component *component = dai->component;
-> +	struct es8323_priv *es8323 = snd_soc_component_get_drvdata(component);
+> +	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
+> +	unsigned int mask;
+> +	unsigned int val = 0;
 > +
-> +	if (mute) {
-> +		es8323_set_gpio(ES8323_CODEC_SET_SPK,
-> +				!es8323->spk_gpio_level, es8323->spk_ctl_gpio);
-> +		usleep_range(2000, 3000);
-> +		snd_soc_component_write(component, ES8323_DAC_MUTE, 0x06);
-> +	} else {
-> +		snd_soc_component_write(component, ES8323_DAC_MUTE, 0x02);
-> +		usleep_range(2000, 3000);
-> +		if (!es8323->hp_inserted)
-> +			es8323_set_gpio(ES8323_CODEC_SET_SPK,
-> +					es8323->spk_gpio_level, es8323->spk_ctl_gpio);
+> +	dev_info(&uda1342->i2c->dev, "mute: %d\n", mute);
 
-This appears to be controlling the speaker based on jack detection.
-Unless there is some hardware restriction this should be done via DAPM
-and the user allowed to manage when the speaker is used depending on
-their use case.
+This is far too noisy to be logged and will DoS the logs, please just
+remove it.
 
-> +static int es8323_suspend(struct snd_soc_component *component)
+> +
+> +	/* Master mute */
+> +	mask = BIT(5);
+> +	val = mute ? mask : 0;
+
+Please use normal conditional statements to improve legibility.
+
+> +static void uda1342_shutdown(struct snd_pcm_substream *substream,
+> +			     struct snd_soc_dai *dai)
 > +{
-> +	snd_soc_component_write(component, ES8323_DAC_MUTE, 0x06);
-> +	snd_soc_component_write(component, ES8323_LOUT1_VOL, 0x00);
-> +	snd_soc_component_write(component, ES8323_ROUT1_VOL, 0x00);
-> +	snd_soc_component_write(component, ES8323_LOUT2_VOL, 0x00);
-> +	snd_soc_component_write(component, ES8323_ROUT2_VOL, 0x00);
+> +	struct snd_soc_component *component = dai->component;
+> +	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
+> +
+> +	if (uda1342->master_substream == substream)
+> +		uda1342->master_substream = uda1342->slave_substream;
 
-This will overwrite user settings when suspending, the controls should
-be unaffected by suspend.  If the device needs this then use cache
-bypass to do the writes during suspend and resync the cache on resume.
+Please avoid using master/slave terminology, we've tended to go for
+provider/consumer in ASoC.
 
-> +	snd_soc_component_write(component, ES8323_CONTROL1, 0x06);
-> +	snd_soc_component_write(component, ES8323_CONTROL2, 0x58);
-> +	usleep_range(18000, 20000);
-
-Use fsleep().
-
-> +static void es8323_init_component_regs(struct snd_soc_component *component)
+> +static int uda1342_hw_params(struct snd_pcm_substream *substream,
+> +			     struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
 > +{
+> +	struct snd_soc_component *component = dai->component;
+> +	struct uda1342_priv *uda1342 = snd_soc_component_get_drvdata(component);
+> +	struct device *dev = &uda1342->i2c->dev;
+> +	unsigned int hw_params = 0;
+> +
+> +	if (substream == uda1342->slave_substream) {
+> +		dev_info(dev, "ignoring hw_params for slave substream\n");
+> +		return 0;
+> +	}
 
-> +	snd_soc_component_write(component, ES8323_ADCCONTROL1, 0x88);
-> +	snd_soc_component_write(component, ES8323_ADCCONTROL2, 0xF0);
-> +	snd_soc_component_write(component, ES8323_ADCCONTROL3, 0x02);
-> +	snd_soc_component_write(component, ES8323_ADCCONTROL4, 0x0C);
-> +	snd_soc_component_write(component, ES8323_ADCCONTROL5, 0x02);
-> +	snd_soc_component_write(component, ES8323_LADC_VOL, 0x00);
-> +	snd_soc_component_write(component, ES8323_RADC_VOL, 0x00);
+This is also too noisy, it should be _dbg() at most.
 
-User visible controls should use the chip defaults as standard,
-userspace can configure what it needs and this avoids us worrying about
-individual use cases in the driver.
+> +	/* codec supports only full slave mode */
+> +	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBS_CFS) {
+> +		dev_err(dev, "unsupported slave mode.\n");
+> +		return -EINVAL;
+> +	}
 
-> +static int es8323_resume(struct snd_soc_component *component)
+Use the more modern _CBC_CFC.
+
+> +	/*
+> +	 * We can't setup DAI format here as it depends on the word bit num,
+> +	 * so let's just store the value for later
+> +	 */
+> +	uda1342->dai_fmt = fmt;
+
+No need to even store it if only one value is supported.
+
+> +static int uda1342_set_bias_level(struct snd_soc_component *component,
+> +				  enum snd_soc_bias_level level)
 > +{
-> +	es8323_init_component_regs(component);
-> +	/* open dac output */
-> +	snd_soc_component_write(component, ES8323_DACPOWER, 0x3c);
+> +	switch (level) {
+> +	case SND_SOC_BIAS_ON:
+> +		break;
+> +	case SND_SOC_BIAS_PREPARE:
+> +		break;
+> +	case SND_SOC_BIAS_STANDBY:
+> +		break;
+> +	case SND_SOC_BIAS_OFF:
+> +		break;
+> +	}
 > +
 > +	return 0;
 > +}
 
-This doesn't restore any user settings.
+This does nothing so it can just be removed.
 
-> +static int es8323_i2c_probe(struct i2c_client *i2c)
+> +static const struct soc_enum uda1342_mixer_enum[] = {
+> +	SOC_ENUM_SINGLE(0x10, 3, 0x04, uda1342_deemph),
+> +	SOC_ENUM_SINGLE(0x10, 0, 0x04, uda1342_mixmode),
+> +};
+
+This doesn't seem to be referenced anywhere so can be removed, or should
+be added to the controls or DAPM?
+
+> +static int uda1342_soc_probe(struct snd_soc_component *component)
 > +{
-> +	struct es8323_priv *es8323;
-> +	struct i2c_adapter *adapter = to_i2c_adapter(i2c->dev.parent);
+> +	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
 > +
-> +	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C)) {
-> +		dev_warn(&adapter->dev,
-> +			 "I2C-Adapter doesn't support I2C_FUNC_I2C\n");
-> +		return -EIO;
-> +	}
+> +	snd_soc_add_component_controls(component, uda1342_snd_controls,
+> +				       ARRAY_SIZE(uda1342_snd_controls));
+> +	snd_soc_dapm_new_controls(dapm, uda1342_dapm_widgets,
+> +				  ARRAY_SIZE(uda1342_dapm_widgets));
+> +	snd_soc_dapm_add_routes(dapm, uda1342_dapm_routes,
+> +				ARRAY_SIZE(uda1342_dapm_routes));
 
-Does the device really need this?  It seems to be doing very basic I/O
-which should be SMBus compatible.  In any case when you move to regmap
-this should be redundant.
+You can point to these arrays from the component struct and have the
+core register them for you.
 
---WZrniv5M0HT7TQNR
+> +static const struct regmap_config uda1342_regmap = {
+> +	.reg_bits = 8,
+> +	.val_bits = 16,
+> +	.max_register = 0x21,
+> +	.reg_defaults = uda1342_reg_defaults,
+> +	.num_reg_defaults = ARRAY_SIZE(uda1342_reg_defaults),
+> +	.cache_type = REGCACHE_RBTREE,
+
+In general _MAPLE is preferred for new things unless you have a specific
+reason to use _RBTREE, it uses a more modern data structure and should
+generally do better.
+
+--CWe5TonQavQeUXc/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbZuq8ACgkQJNaLcl1U
-h9Dcigf7By7JCYwoVnf6y8vJJ5aPDCumCrSV9oqSrliNd3ALjNC9GrtaYdZwbn6x
-5/vPKOhiD+0wXX/hPxlErJ5xORBMbjUEeMvCa001/uzJOYHWmnTT3jD1IGpB2aOO
-4TLhkibjRBk40/+Y/5ZiPs7Kw/QWtpgrvq7zyjdC+u+bklc8pGpGbvfsj/5t/Sa2
-86cRVO9xzCmDA49wzZvjRCF7X0fup6ilHjMmbRol8BsXKumQjCLHCd3GT+jXxDgp
-W1V5tB7fJ/jvKEcw5T0NF/4ddZy6D0UKhElAdtix+g1Kxw2YG+Iicc7ra7co7KYV
-21u9Nb9xIgIlqsdTWAWx2zPHzASOTg==
-=9ntq
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbZv/wACgkQJNaLcl1U
+h9AWpQf+OvU5BHMDujrsStEk2jVQC9boM8kZySnVRUVicG2vV2zf1wzqShttlQYH
++GAmQyCaoKCDwJw3Y1wXWOckeej8HrB1qGHaaPsWxpeY/wN/qrXFZz5FYrjHolwO
+OYJUxyxUhlbLDDL9FFbptj+ZGLHDv3L8lAyELr5bDIUoeoogmwjGEXKuBgk83LaF
+6JXLlsGnChDF1kK7vpp92MdRTd7GyaYyhutGYhrAVhyYeviMqX4eEuAwhtUcxa1p
+82vGWKwR1U3e9+1zO0T21p6nYyj0WSKCQWeBEz8151KBDtlDFveGAenaNNFMtNCo
+EufV4T8/oDAK432FlAyMwOAaZImg3g==
+=JqnU
 -----END PGP SIGNATURE-----
 
---WZrniv5M0HT7TQNR--
+--CWe5TonQavQeUXc/--
