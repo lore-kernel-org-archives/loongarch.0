@@ -1,182 +1,247 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A43D17BEA5;
-	Thu,  5 Sep 2024 20:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26962186E40
+	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 21:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725568313; cv=none; b=hcOc0anToLnU1ZNWGxe5V5spAlNXNrDSUZd67cNh3qk1FvIq+SwGgOZymupksZIZBQM9WKCnwd17rG9CWNzSSucIlO5V+MIFElyZC+geu50sgZ4eWxoaVIgO9DRsTXRjdcX7iP/f1itlx/reuI6UV+x85FK/NZ5XQvTrMEIQ0sg=
+	t=1725570975; cv=none; b=JPTedkypHuI5RkP3jodmXMJNybQyU/wxLJeOO606g9QJn1ZgLK/ZcXBe+QUl7Icb/nSgTX60tgD9n+XuoVe/dGjQFLFmOQoKkNHFswgKBZ/wUDCKgQWuFs4BwUHMlHzpnCLzNitS/Kakj4aOrtWP74jMbH3Ou8zrt5NHPLALnDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725568313; c=relaxed/simple;
-	bh=5ylFWuf2Xbu91p6fl7AUsu4kYqMyJufe/dYoary0pno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1ZTrvbPjzHGWvHNHtTIaCeF8gSF9S4u/dDJnioCFPuYFsZg6og3OuEc/IdNVuHrw1TgDYDKWyKxTdL6qppvMch+koCC+pXjjZbJcEEGnSKpa7Yoyqu1R5bVABaEFQuzuOH3tk5YPEOOIZi/lUDLYDciPETf/sXFpSodYU3PmKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kR9IxBaD; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725570975; c=relaxed/simple;
+	bh=8yDjUN3v9pzHbAJkU962KdEeNCXYhTKg/kSM+xczGS8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=seaDX4YB/1amTVErdQqkTGuvyU5b6SkuOXTPd87Xn0Lq2He+RZMa8ep3PLJA/xZSoGYLppleaqpp9+WXslC9eM0KIdSqUaNDz6QH+eVw5hIFN94+k2Mjy+qLJsTHlXmNj8KKOGHA7RiKQDG/9juZKAIbxEtU36XM0H6nRrbPwnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=LlxEXTzx; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kR9IxBaD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725568312; x=1757104312;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5ylFWuf2Xbu91p6fl7AUsu4kYqMyJufe/dYoary0pno=;
-  b=kR9IxBaDcNnOFfuzy4Xa0lvqO3WBRH8X/kFzhg2lMGyLhVWCqz0OI88Q
-   siGVmG6PU8kYByFpW4Ox97K02lCDVhwnpD2jIxZp3POVfMC2W5bmEwGeC
-   kBWqT+E0jf7eurralIV67pDh5QskezN58O9mhItuDsA3/2HbEMhJR1iT7
-   QR3OO5fNbY4X1+5nfW3bFV2BFOZW2EFHWvKSxsb2uxfFrXk2nBychzmzn
-   3GeYchJrFxCwBQ7QYUNDHDLNPUcTLFhMOWSemJQN1Zw5o65HXq0GXSAI0
-   ZUQdYL166EYRuJU5LL8a/UPha6REGQvmXxwk57w9CQXsMDXpYNUBf5ury
-   g==;
-X-CSE-ConnectionGUID: b8aWKsBIQFSLAstIY2m1WQ==
-X-CSE-MsgGUID: lNGp+vHmRiu5LsUdrFpmHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="24476451"
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="24476451"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 13:31:51 -0700
-X-CSE-ConnectionGUID: O9sNw/MWSjWmfUR4g3/YRw==
-X-CSE-MsgGUID: Y6y+wGCCQD67NyTRkqM/OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="66072224"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 05 Sep 2024 13:31:48 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smJ8r-000AI3-1m;
-	Thu, 05 Sep 2024 20:31:45 +0000
-Date: Fri, 6 Sep 2024 04:31:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 02/10] ASoC: codecs: Add support for ES8323
-Message-ID: <202409060459.dJs4SsBG-lkp@intel.com>
-References: <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="LlxEXTzx"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5df9433ac0cso875401eaf.3
+        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 14:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725570972; x=1726175772; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h1RxVlhkB8p72E7vZJvb+Ijp4614DvwE9gm+Vso2ack=;
+        b=LlxEXTzx/pQ3CKDbYZoKTCK3wloqVdmoUncLUJd5vHgfkWePMCLUuthyJ4i+gRLeKL
+         dwdWgNT38T2KEapL6gRW8eeWtkvd4qE1nybVYUZkSgxZpoCBvkwh3bw75aSCH9Ktdodo
+         1WFP1myxPxy0EqymnEkUAI3tbp5NFi4ge48ANWhSJLugKhoPkhV+zuncINxy+v+u/BAF
+         NXfNxqoL2hKRLCUGZB+DXCsKSHiYfU/uKfJMv54fR2ZSDu6TotsTZDCR9BXUlWLeByCy
+         TmfY/f9mA1NsfBQG0t4mx/Dvj6oMWHl7pqOXUPdHH/lUgZ9ZMFRjKeXF7ftjwwQMZDIH
+         mj0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725570972; x=1726175772;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h1RxVlhkB8p72E7vZJvb+Ijp4614DvwE9gm+Vso2ack=;
+        b=GRYbPy/5BaWODtyqDEe184okTxTt3Lw0lIM4pdE9XJ8k5H8gzvpq0Q4+ey3FZ/ySEi
+         fuxe08ereexpyD+5v8DxezY1Ym3dThrHduk2jagbm4enjqPiUMIENJpNtd1TS0eZ5TNv
+         Gh+f0uQ+8+8Vqx+xFl/6DJXIdtIIt4+npvyzipNHGHa6CleN0QsHweXpQGKrX1sBrrSr
+         HZZ6b29CFPt+5D1+vUMVGlQ/UP8AeZ7Agy67vO+4v0R9ZNvRoojzgv/sxSR7wLI17Wjv
+         USXjOGuUnyWD12WZDYmtVOk/otftRnNFdoC4fgXti4XyQcfKYJUvRPI8JxsjKelAsFh6
+         DkJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiXlMSZBviR+wXmBn/sDrRXvUrJpNAuUzAUYldexlCoi+VBasAzl9KhTVAdQKxEEJdt1CZdFKb71I=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwyNJVUMBTQCjz2tPyP1+Jo47hnLi3Qt8Y7clWsTNGZf6l/jnRs
+	tZYfP0t+R6+/5NsTjvKKo9tpHesfxk63UqXHK5kEDfu2nLOxRlHdGu4QkbyVgto=
+X-Google-Smtp-Source: AGHT+IFUGglg1gI40db05Oyw57X6jum9/dYSwirPMN5y+AFduyw81mLgzW8++XC4iGt5jarfSGqHMg==
+X-Received: by 2002:a05:6358:4709:b0:1b8:3498:5ab2 with SMTP id e5c5f4694b2df-1b8386e10e6mr71603755d.18.1725570972065;
+        Thu, 05 Sep 2024 14:16:12 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbda7abesm3775746a12.61.2024.09.05.14.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 14:16:11 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH RFC v3 0/2] mm: Introduce ADDR_LIMIT_47BIT personality flag
+Date: Thu, 05 Sep 2024 14:15:50 -0700
+Message-Id: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIYf2mYC/4XNTQrCMBAF4KtI1kaS6b8rQfAAbkVKmk7NgG1KU
+ qJSendDVyKIyzeP+d7MPDpCz/abmTkM5MkOMSTbDdNGDTfk1MbMQEAqSij4qCZt0PMG7/ZRGxq
+ muu/VyBuZtEWlUOosY/F7dNjRc5Uv7Hw6sms8GvKTda91Lci1+gsHyQVP864DbCoB0B4cBetp0
+ Dtt+5UN8ElVvymIVJ6UCsq2QoXii1qW5Q0BYjuXEQEAAA==
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+ Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+ Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Shuah Khan <shuah@kernel.org>, 
+ Christoph Hellwig <hch@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+ "Kirill A. Shutemov" <kirill@shutemov.name>, 
+ Chris Torek <chris.torek@gmail.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+ sparclinux@vger.kernel.org, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5488; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=8yDjUN3v9pzHbAJkU962KdEeNCXYhTKg/kSM+xczGS8=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9ot+f6nvpcl97tY5XM5HRGwunrS/1hN4Jrc4J63aWdPl
+ kkz5fzoKGVhEONgkBVTZOG51sDceke/7Kho2QSYOaxMIEMYuDgFYCIbvBgZfjQZPtnyo0T8l+3r
+ pTc0r/6LOCzwZu3XBXX7mfYvU6k4cI2R4YF4V0iLZoGQYvmDbN1ZIvanHjMsmvbgwI2pnto/ozc
+ e4gMA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Hi Binbin,
+Some applications rely on placing data in free bits addresses allocated
+by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+address returned by mmap to be less than the 48-bit address space,
+unless the hint address uses more than 47 bits (the 48th bit is reserved
+for the kernel address space).
 
-kernel test robot noticed the following build warnings:
+The riscv architecture needs a way to similarly restrict the virtual
+address space. On the riscv port of OpenJDK an error is thrown if
+attempted to run on the 57-bit address space, called sv57 [1].  golang
+has a comment that sv57 support is not complete, but there are some
+workarounds to get it to mostly work [2].
 
-[auto build test WARNING on 097a44db5747403b19d05a9664e8ec6adba27e3b]
+These applications work on x86 because x86 does an implicit 47-bit
+restriction of mmap() address that contain a hint address that is less
+than 48 bits.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/ASoC-dt-bindings-Add-Everest-ES8323-Codec/20240905-150958
-base:   097a44db5747403b19d05a9664e8ec6adba27e3b
-patch link:    https://lore.kernel.org/r/c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v1 02/10] ASoC: codecs: Add support for ES8323
-config: parisc-randconfig-r071-20240906 (https://download.01.org/0day-ci/archive/20240906/202409060459.dJs4SsBG-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240906/202409060459.dJs4SsBG-lkp@intel.com/reproduce)
+Instead of implicitly restricting the address space on riscv (or any
+current/future architecture), provide a flag to the personality syscall
+that can be used to ensure an application works in any arbitrary VA
+space. A similar feature has already been implemented by the personality
+syscall in ADDR_LIMIT_32BIT.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409060459.dJs4SsBG-lkp@intel.com/
+This flag will also allow seemless compatibility between all
+architectures, so applications like Go and OpenJDK that use bits in a
+virtual address can request the exact number of bits they need in a
+generic way. The flag can be checked inside of vm_unmapped_area() so
+that this flag does not have to be handled individually by each
+architecture. 
 
-All warnings (new ones prefixed by >>):
+Link:
+https://github.com/openjdk/jdk/blob/f080b4bb8a75284db1b6037f8c00ef3b1ef1add1/src/hotspot/cpu/riscv/vm_version_riscv.cpp#L79
+[1]
+Link:
+https://github.com/golang/go/blob/9e8ea567c838574a0f14538c0bbbd83c3215aa55/src/runtime/tagptr_64bit.go#L47
+[2]
 
->> sound/soc/codecs/es8323.c:173:38: warning: 'es8323_right_pga_controls' defined but not used [-Wunused-const-variable=]
-     173 | static const struct snd_kcontrol_new es8323_right_pga_controls =
-         |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from include/sound/tlv.h:10,
-                    from sound/soc/codecs/es8323.c:25:
->> sound/soc/codecs/es8323.c:114:35: warning: 'pga_tlv' defined but not used [-Wunused-const-variable=]
-     114 | static const DECLARE_TLV_DB_SCALE(pga_tlv, 0, 300, 0);
-         |                                   ^~~~~~~
-   include/uapi/sound/tlv.h:53:22: note: in definition of macro 'SNDRV_CTL_TLVD_DECLARE_DB_SCALE'
-      53 |         unsigned int name[] = { \
-         |                      ^~~~
-   sound/soc/codecs/es8323.c:114:14: note: in expansion of macro 'DECLARE_TLV_DB_SCALE'
-     114 | static const DECLARE_TLV_DB_SCALE(pga_tlv, 0, 300, 0);
-         |              ^~~~~~~~~~~~~~~~~~~~
+To: Arnd Bergmann <arnd@arndb.de>
+To: Richard Henderson <richard.henderson@linaro.org>
+To: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+To: Matt Turner <mattst88@gmail.com>
+To: Vineet Gupta <vgupta@kernel.org>
+To: Russell King <linux@armlinux.org.uk>
+To: Guo Ren <guoren@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+To: WANG Xuerui <kernel@xen0n.name>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+To: Helge Deller <deller@gmx.de>
+To: Michael Ellerman <mpe@ellerman.id.au>
+To: Nicholas Piggin <npiggin@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Naveen N Rao <naveen@kernel.org>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+To: Vasily Gorbik <gor@linux.ibm.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+To: Sven Schnelle <svens@linux.ibm.com>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+To: Rich Felker <dalias@libc.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: David S. Miller <davem@davemloft.net>
+To: Andreas Larsson <andreas@gaisler.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+To: x86@kernel.org
+To: H. Peter Anvin <hpa@zytor.com>
+To: Andy Lutomirski <luto@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Muchun Song <muchun.song@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Liam R. Howlett <Liam.Howlett@oracle.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Shuah Khan <shuah@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+To: Michal Hocko <mhocko@suse.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Chris Torek <chris.torek@gmail.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-abi-devel@lists.sourceforge.net
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
+Changes in v2:
+- Added much greater detail to cover letter
+- Removed all code that touched architecture specific code and was able
+  to factor this out into all generic functions, except for flags that
+  needed to be added to vm_unmapped_area_info
+- Made this an RFC since I have only tested it on riscv and x86
+- Link to v1: https://lore.kernel.org/r/20240827-patches-below_hint_mmap-v1-0-46ff2eb9022d@rivosinc.com
 
-vim +/es8323_right_pga_controls +173 sound/soc/codecs/es8323.c
+Changes in v3:
+- Use a personality flag instead of an mmap flag
+- Link to v2: https://lore.kernel.org/r/20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com
 
-   113	
- > 114	static const DECLARE_TLV_DB_SCALE(pga_tlv, 0, 300, 0);
-   115	static const DECLARE_TLV_DB_SCALE(adc_tlv, -9600, 50, 1);
-   116	static const DECLARE_TLV_DB_SCALE(dac_tlv, -9600, 50, 1);
-   117	static const DECLARE_TLV_DB_SCALE(out_tlv, -4500, 150, 0);
-   118	static const DECLARE_TLV_DB_SCALE(bypass_tlv, 0, 300, 0);
-   119	static const DECLARE_TLV_DB_SCALE(bypass_tlv2, -15, 300, 0);
-   120	
-   121	static const struct snd_kcontrol_new es8323_snd_controls[] = {
-   122		SOC_ENUM("3D Mode", es8323_enum[4]),
-   123		SOC_ENUM("ALC Capture Function", es8323_enum[5]),
-   124		SOC_SINGLE("ALC Capture ZC Switch", ES8323_ADCCONTROL13, 6, 1, 0),
-   125		SOC_SINGLE("ALC Capture Decay Time", ES8323_ADCCONTROL12, 4, 15, 0),
-   126		SOC_SINGLE("ALC Capture Attack Time", ES8323_ADCCONTROL12, 0, 15, 0),
-   127		SOC_SINGLE("ALC Capture NG Threshold", ES8323_ADCCONTROL14, 3, 31, 0),
-   128		SOC_ENUM("ALC Capture NG Type", es8323_enum[6]),
-   129		SOC_SINGLE("ALC Capture NG Switch", ES8323_ADCCONTROL14, 0, 1, 0),
-   130		SOC_SINGLE("ZC Timeout Switch", ES8323_ADCCONTROL13, 6, 1, 0),
-   131		SOC_DOUBLE_R_TLV("Capture Digital Volume", ES8323_LADC_VOL,
-   132				 ES8323_RADC_VOL, 0, 192, 1, adc_tlv),
-   133		SOC_SINGLE("Capture Mute", ES8323_ADC_MUTE, 2, 1, 0),
-   134		SOC_SINGLE_TLV("Left Channel Capture Volume", ES8323_ADCCONTROL1, 4, 8,
-   135			       0, bypass_tlv),
-   136		SOC_SINGLE_TLV("Right Channel Capture Volume", ES8323_ADCCONTROL1, 0,
-   137			       8, 0, bypass_tlv),
-   138		SOC_ENUM("Playback De-emphasis", es8323_enum[7]),
-   139		SOC_ENUM("Capture Polarity", es8323_enum[8]),
-   140		SOC_DOUBLE_R_TLV("PCM Volume", ES8323_LDAC_VOL, ES8323_RDAC_VOL,
-   141				 0, 192, 1, dac_tlv),
-   142		SOC_SINGLE_TLV("Left Mixer Left Bypass Volume", ES8323_DACCONTROL17, 3,
-   143			       7, 1, bypass_tlv2),
-   144		SOC_SINGLE_TLV("Right Mixer Right Bypass Volume", ES8323_DACCONTROL20,
-   145			       3, 7, 1, bypass_tlv2),
-   146		SOC_DOUBLE_R_TLV("Output 1 Playback Volume", ES8323_LOUT1_VOL,
-   147				 ES8323_ROUT1_VOL, 0, 33, 0, out_tlv),
-   148		SOC_DOUBLE_R_TLV("Output 2 Playback Volume", ES8323_LOUT2_VOL,
-   149				 ES8323_ROUT2_VOL, 0, 33, 0, out_tlv),
-   150	};
-   151	
-   152	static const struct snd_kcontrol_new es8323_left_dac_mux_controls =
-   153		SOC_DAPM_ENUM("Route", es8323_left_dac_enum);
-   154	
-   155	static const struct snd_kcontrol_new es8323_right_dac_mux_controls =
-   156		SOC_DAPM_ENUM("Route", es8323_right_dac_enum);
-   157	
-   158	static const struct snd_kcontrol_new es8323_left_line_controls =
-   159		SOC_DAPM_ENUM("LLIN Mux", es8323_llin_enum);
-   160	
-   161	static const struct snd_kcontrol_new es8323_right_line_controls =
-   162		SOC_DAPM_ENUM("RLIN Mux", es8323_rlin_enum);
-   163	
-   164	/* Differential Mux */
-   165	static const struct snd_kcontrol_new es8323_diffmux_controls =
-   166		SOC_DAPM_ENUM("Route2", es8323_diff_enum);
-   167	
-   168	/* Mono ADC Mux */
-   169	static const struct snd_kcontrol_new es8323_monomux_controls =
-   170		SOC_DAPM_ENUM("Mono Mux", es8323_mono_enum);
-   171	
-   172	/* Right PGA Mux */
- > 173	static const struct snd_kcontrol_new es8323_right_pga_controls =
-   174		SOC_DAPM_ENUM("Route", es8323_enum[3]);
-   175	
+---
+Charlie Jenkins (2):
+      mm: Add personality flag to limit address to 47 bits
+      selftests/mm: Create ADDR_LIMIT_47BIT test
 
+ include/uapi/linux/personality.h                   |  1 +
+ mm/mmap.c                                          |  3 ++
+ tools/testing/selftests/mm/.gitignore              |  1 +
+ tools/testing/selftests/mm/Makefile                |  1 +
+ tools/testing/selftests/mm/map_47bit_personality.c | 34 ++++++++++++++++++++++
+ 5 files changed, 40 insertions(+)
+---
+base-commit: 5be63fc19fcaa4c236b307420483578a56986a37
+change-id: 20240827-patches-below_hint_mmap-b13d79ae1c55
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Charlie
+
