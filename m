@@ -1,131 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455771401C;
-	Fri,  6 Sep 2024 01:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6EC14286
+	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 01:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725584920; cv=none; b=KzZDiYs3q1qcrKUnTprJQhIiby25uAYsB+Z3hfcyxqfFrRQh2O8ecjs4+3hvtW83ZLqgLAsU2S6oVEWQ2yqP6VTFqxkGr+PXQxzhlUk1u1qNVKlroleUfT1Z1jGGKRJ8ENxRreJP2Z6DJo3agjOzu/Z7Z3tC4rmSyJDELLa0gKw=
+	t=1725584986; cv=none; b=q9pCJPq/9XNdqfwAaxtoOWUb7+Pd+GZGGruUAvLXB6rL34w4qKd9XPeWWiLGB9UR4Lu+s0KBvhT/Cx3zITdXJgK6EX1W4L1lY/IVn44/nHfc7iSTSNzTM30FCNWIaY+FWpOLzSxfNsSW2zC5+WzkPEG/nYigmskN48TlOJujXF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725584920; c=relaxed/simple;
-	bh=9pan4tYDMpwflzlvEiNlU/CmxyFNsYISO5mIYewLskk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvvPOV0IjIG4GFGOSNeFqify9CYPtfciDD9VTzrENItiS7pUDsBTMUJQkagkKvjNiVZDBZuIuWLBWk71v64gXSEzzVyXQD0EUE1rk7ezyG5WrMjL1FeZOXt9+fJ0mSm9aSB5/E9zJxbJh7xP0vVuRn8Um1++IXuTOJ2ERex7uOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qq4qQnaM; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qq4qQnaM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725584918; x=1757120918;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9pan4tYDMpwflzlvEiNlU/CmxyFNsYISO5mIYewLskk=;
-  b=Qq4qQnaMgUQWYQrM17L+z6rW88oZRj29CS/gXeXS2vhUMmNArg5YeY+q
-   shKstTEIe8LEETi3aMgMBV6J9Y5KqzjisRtBLEFDa+LrCiSHg1FXQ92Mr
-   X/sH9HGhcHsTrHfWA97aNQbMhs8EK9KRX0wQ5D3DAxplIZsDoUABRMKid
-   Werf88kA6h5MMRS7bIRh7TxiJcAdsxjEb+v+dMqZSdXMOkCrH1vlMnZ/2
-   kOMp1QTE2sk5yOmUx0nzw9sCEFFFDQCD6Ew3H9oexdCozveE0OcRoSjmm
-   i/FpRx2h7ZK9EJQqhgJFNzBzd8HhXA3hMT5V9Ymlt8n813Dx5wtFMosX1
-   g==;
-X-CSE-ConnectionGUID: 6Fbg9Yb7T8uxDF9N1OHsrw==
-X-CSE-MsgGUID: 4RitijyyQFm/PVn66b54jw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="28217710"
-X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
-   d="scan'208";a="28217710"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 18:08:37 -0700
-X-CSE-ConnectionGUID: k5u21ZQISRWcbhEsxyoPNQ==
-X-CSE-MsgGUID: JD0YrFvqRuCa+UruNd9DCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
-   d="scan'208";a="65850260"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Sep 2024 18:08:34 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smNSh-000ATX-2t;
-	Fri, 06 Sep 2024 01:08:31 +0000
-Date: Fri, 6 Sep 2024 09:08:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as
- platform device
-Message-ID: <202409060840.Rm0gPgE4-lkp@intel.com>
-References: <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1725584986; c=relaxed/simple;
+	bh=LtNg6ycv4/uFQaEvHdpclnfZ/4AyyXXHUYx4T2ZWhXY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=obe3wOGAlpmAW9gR43Q0ZcpywhzOqdT0ePKCMY5e5dvxJGyEhy3AD3e1/CMtM9pPQeK9LAdMDUsV/MuRiGrZNoHHMCzcWSGz6LPP0WFu3E4l2sWXSkFiMTSoFBSeYD8O8Z9cbdOY1uwx1Lixr37QFPP8pyd7qksEYcfBi+bwK9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxHJtNVtpmCvIrAA--.47990S3;
+	Fri, 06 Sep 2024 09:09:33 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front2 (Coremail) with SMTP id qciowMDx_8dNVtpmfEQHAA--.22932S3;
+	Fri, 06 Sep 2024 09:09:33 +0800 (CST)
+Subject: Re: qemu direct kernel boot on LoongArch
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@t-8ch.de>,
+ loongarch@lists.linux.dev, qemu-devel@nongnu.org, xry111@xry111.site
+References: <1738d60a-df3a-4102-b1da-d16a29b6e06a@t-8ch.de>
+ <49432aed-3ed7-2f07-7f65-311faef96197@loongson.cn>
+ <ZtkhtxcJUK-JediY@zx2c4.com>
+ <f50c4868-7c2e-1ede-ab19-c67ea0acaab3@loongson.cn>
+ <CAHmME9rRJjJ5tHf_xtprkHtWz-ButOOZXVo=E9y8qSyQ-qu6ew@mail.gmail.com>
+ <ccc7db47-d065-4e78-bf67-c4e8855c9be4@t-8ch.de>
+ <95da2e9e-0905-ad61-6bf9-c2636f2cc5f1@loongson.cn>
+ <ZtnGMdFRpTAVPnym@zx2c4.com> <ZtnS9_xoPrXCWWln@zx2c4.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <8382893e-b990-24cf-5411-005f1251143a@loongson.cn>
+Date: Fri, 6 Sep 2024 09:09:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
-
-Hi Binbin,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 097a44db5747403b19d05a9664e8ec6adba27e3b]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/ASoC-dt-bindings-Add-Everest-ES8323-Codec/20240905-150958
-base:   097a44db5747403b19d05a9664e8ec6adba27e3b
-patch link:    https://lore.kernel.org/r/282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as platform device
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240906/202409060840.Rm0gPgE4-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240906/202409060840.Rm0gPgE4-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409060840.Rm0gPgE4-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> sound/soc/loongson/loongson_i2s_pci.c:157:1: warning: data definition has no type or storage class
-     157 | module_pci_driver(loongson_i2s_driver);
-         | ^~~~~~~~~~~~~~~~~
->> sound/soc/loongson/loongson_i2s_pci.c:157:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Wimplicit-int]
->> sound/soc/loongson/loongson_i2s_pci.c:157:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
->> sound/soc/loongson/loongson_i2s_pci.c:149:26: warning: 'loongson_i2s_driver' defined but not used [-Wunused-variable]
-     149 | static struct pci_driver loongson_i2s_driver = {
-         |                          ^~~~~~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for SND_SOC_LOONGSON_I2S_PCI
-   Depends on [n]: SOUND [=m] && SND [=m] && SND_SOC [=m] && (LOONGARCH || COMPILE_TEST [=y]) && PCI [=n]
-   Selected by [m]:
-   - SND_SOC_LOONGSON_CARD [=m] && SOUND [=m] && SND [=m] && SND_SOC [=m] && (LOONGARCH || COMPILE_TEST [=y])
+In-Reply-To: <ZtnS9_xoPrXCWWln@zx2c4.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qciowMDx_8dNVtpmfEQHAA--.22932S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFW8Xry3XFyDAry7Xry3WrX_yoW8WrWfpF
+	yjkFWqkrsYqrWDAF9agw1jkFyFywsrtw4rXw18Ar98WwsIyryavF12grW7Ca45Kw1xJF1j
+	vFnrX347X3yUJrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUU
+	UUU==
 
 
-vim +/loongson_i2s_driver +149 sound/soc/loongson/loongson_i2s_pci.c
 
-d84881e06836dc1 Yingkun Meng 2023-06-15  148  
-d84881e06836dc1 Yingkun Meng 2023-06-15 @149  static struct pci_driver loongson_i2s_driver = {
-d84881e06836dc1 Yingkun Meng 2023-06-15  150  	.name = "loongson-i2s-pci",
-d84881e06836dc1 Yingkun Meng 2023-06-15  151  	.id_table = loongson_i2s_ids,
-d84881e06836dc1 Yingkun Meng 2023-06-15  152  	.probe = loongson_i2s_pci_probe,
-d84881e06836dc1 Yingkun Meng 2023-06-15  153  	.driver = {
-d84881e06836dc1 Yingkun Meng 2023-06-15  154  		.pm = pm_sleep_ptr(&loongson_i2s_pm),
-d84881e06836dc1 Yingkun Meng 2023-06-15  155  	},
-d84881e06836dc1 Yingkun Meng 2023-06-15  156  };
-d84881e06836dc1 Yingkun Meng 2023-06-15 @157  module_pci_driver(loongson_i2s_driver);
-d84881e06836dc1 Yingkun Meng 2023-06-15  158  
+On 2024/9/5 下午11:49, Jason A. Donenfeld wrote:
+> On Thu, Sep 05, 2024 at 04:54:41PM +0200, Jason A. Donenfeld wrote:
+>> On Thu, Sep 05, 2024 at 02:11:32PM +0800, maobibo wrote:
+>>>
+>>>
+>>> On 2024/9/5 下午1:25, Thomas Weißschuh wrote:
+>>>> On 2024-09-05 06:04:12+0000, Jason A. Donenfeld wrote:
+>>>>> On Thu, Sep 5, 2024 at 5:45 AM maobibo <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Jason,
+>>>>>>
+>>>>>> With the latest qemu 9.1 version, elf format booting is supported.
+>>>>>
+>>>>> Thanks, I just figured this out too, about 4 minutes ago. Excellent.
+>>>>> And the 1G minimum ram limit is gone too.
+>>>>>
+>>>>> Now working on how to trigger resets.
+>>>>
+>>>> With "reset" do you mean normal (non-panic) system shutdown/poweroff?
+>>>> Since QEMU 9.1 and a recent kernel you can use the pvpanic device for
+>>>> that in a cross-architecture way.
+>>> LoongArch uses acpi GED device to reboot machine. Now there is no FDT
+>>> table description and FDT driver for acpi GED device :(
+>>
+>> So you mean that QEMU exposes it via ACPI, but not via FDT, and the
+>> kernel doesn't know how to recognize it, even with ACPI?
+> 
+> Ahh, it looks like QEMU exposes it via ACPI, but ACPI is broken (?) when
+> booting directly from ELF. So it needs to be exposed via FDT instead? Or
+> ACPI needs to be fixed with direct ELF boot?
+We plant to expose ACPI GED via FDT interface with syscon method, and 
+the reboot driver in linux kernel side is
+drivers/power/reset/syscon-reboot.c.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The only difference is that ACPI GED register is accessed with 
+byte-mode, it seems that it works well with draft version.
+
+Regards
+Bibo Mao
+> 
+
