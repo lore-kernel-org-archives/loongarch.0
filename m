@@ -1,135 +1,119 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737741C9EC7
-	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 11:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A041CB33E;
+	Fri,  6 Sep 2024 11:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725622637; cv=none; b=kZ8nZDtxyAZeTD0bxfiUzJzGMDRL0Gj4kHe37mINECnnByLGmiJ2OAzCSfFIZ8Mjy6cDNVcCeHWYLkguGglTjtV7UvAt/QQ1B3Y4F4BweR32XfcuWeu+vUoHXv7GNP7FwVcqz4pZfGmwPgaoBcMJz+vl+3+vO5Pk4k4yECNFZQ0=
+	t=1725623036; cv=none; b=BIV2S24x1CoKvzaDJ0Oi4QynN0eCgLgo5sqLBMB4lKol4rWM95bnwBI4IxUlKQQWrzUOg9r46CUerC/ZNoDgBXkXUBeIqB4SZhLj8Pmt9KVJOPagr5z5AFbEHt0Cq85cwEdePNwj0OtfxG+7m9Z8xMrUimIy/SK8gvgzSLN+fgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725622637; c=relaxed/simple;
-	bh=lqxOlJQgWQl22rUCJh2s6jVJRGmlJQYQOFRPj2vMNII=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EwRhyd4CBHL8lCOcInq2VrxemBVw+Ng7tpKlP+GnVfiv1s2MonAh9jVTFcn3ML+Teu+GJx0gemSIs7Pb+JgmvRl+SOUGox0OljttPoGpniotis4hUl5qGdrEXFj4xYhcYubmKi5+S7wDcwPDkwx5SRDZmgAZyHzU9Ip07k656cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e1a989bd17aso1999879276.1
-        for <loongarch@lists.linux.dev>; Fri, 06 Sep 2024 04:37:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725622634; x=1726227434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kjnr2492P/BcID81zdCH2qFdKNtp4VQucHhzLNMBu9w=;
-        b=eT0SNAgqrW35CxhQ/lcdssGOkspuB91gOdew44lIjwhCvVsCXQlYJmcVsoukqHlgKE
-         SwGWUW0Lf4zBakrkhijFtW3QqGCIOetNYsgnNrI7SId6Z36XGOdG/5V8hXP6Zo8pjwJW
-         +1p8soSJpz5v1h2eyfcZH8W1VduUinUaiWWkiCVRdANMi8FGGGmTN+p83f9uJClKxDaH
-         +NxcBWlbYea9aYQB9+EEGLuat2cmRjR4Yo0Hyyr2ocXj9e2lPqjePSBrQgKZ4+hir9Ad
-         2EaVSgX2+7DCJcfIJ5SQd2O6F3x4atHgvnQOdb/2L2PifMiLTQFicpEaImTsn3YgbM17
-         O/7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVfgOs/G6Al1Vwhlo8VRFt3gVsSW9XkcQufL4KtT8/Orqh9FLsduqRWOYkYi0imsSIFjEurBd2Y36o=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxpYcHuFTxGM7K9Z9BDXY1ai1jDzCUPQrdtA1zhZ8Vyu5eCyodZ
-	CBzyJQdyTsmrjuLrF0POeZXv3skwqR54ZmAFd87SSPXrzI+8cMQQqAvLxd5G
-X-Google-Smtp-Source: AGHT+IHOV0zL4hmQbH/mEkNYf/DbBxuWswaIFYtCMPbi1gxCT5W+9Z7xW3J9vxmrqIj0z0FjVoTBuQ==
-X-Received: by 2002:a05:6902:238a:b0:e1d:14d1:8624 with SMTP id 3f1490d57ef6-e1d34883063mr2605659276.19.1725622633986;
-        Fri, 06 Sep 2024 04:37:13 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e1d41c94c65sm9656276.53.2024.09.06.04.37.13
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2024 04:37:13 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6daf46ee332so18843267b3.0
-        for <loongarch@lists.linux.dev>; Fri, 06 Sep 2024 04:37:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAZqIPHvTDJmrBieuKsbQJ5Pq03ernZang7Ws/Rk3GIa8arBqJyRusfK8XagcWH5gnKpA/AlGedDA=@lists.linux.dev
-X-Received: by 2002:a05:690c:fd4:b0:62c:e939:2ffe with SMTP id
- 00721157ae682-6db44d6c68fmr28000367b3.7.1725622633634; Fri, 06 Sep 2024
- 04:37:13 -0700 (PDT)
+	s=arc-20240116; t=1725623036; c=relaxed/simple;
+	bh=i5Vj6pTtqAFcekgqdft2a7YaCzfD36iQZL5KAInZPtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+CLoLxfdcUJacooRDfKkXx+HC3//KklOx+ovesDoCFmHXW9CnLcPHN5+n6fgzChtDbfaGKIUcEiR77IlVgKhsAw2iw5VFP5f63qyOyh8IVaf8lyQalQPUP4Rj51A1IaRTr3I9YTzZrQKF7eA+zvgJjHSHjGjVXWL9EM94P9bPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE75C4CEC4;
+	Fri,  6 Sep 2024 11:43:46 +0000 (UTC)
+Date: Fri, 6 Sep 2024 12:43:44 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: guoren <guoren@kernel.org>, Charlie Jenkins <charlie@rivosinc.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	shuah <shuah@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	Michal Hocko <mhocko@suse.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>,
+	Chris Torek <chris.torek@gmail.com>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-abi-devel@lists.sourceforge.net
+Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
+ 47 bits
+Message-ID: <Ztrq8PBLJ3QuFJz7@arm.com>
+References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
+ <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
+ <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
+ <CAJF2gTTVX9CFM3oRZZP3hGExwVwA_=n1Lrq_0DQKWA+-ZbOekg@mail.gmail.com>
+ <f23b18c6-1856-4b59-9ba3-59809b425c81@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1725518229.git.zhoubinbin@loongson.cn> <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
-In-Reply-To: <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 6 Sep 2024 13:37:01 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVLErqWPDs27yeRc96Ly1ukds1-id1KNy=aWvNmffWicg@mail.gmail.com>
-Message-ID: <CAMuHMdVLErqWPDs27yeRc96Ly1ukds1-id1KNy=aWvNmffWicg@mail.gmail.com>
-Subject: Re: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as
- platform device
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f23b18c6-1856-4b59-9ba3-59809b425c81@app.fastmail.com>
 
-Hi Binbin,
+On Fri, Sep 06, 2024 at 09:55:42AM +0000, Arnd Bergmann wrote:
+> On Fri, Sep 6, 2024, at 09:14, Guo Ren wrote:
+> > On Fri, Sep 6, 2024 at 3:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >> It's also unclear to me how we want this flag to interact with
+> >> the existing logic in arch_get_mmap_end(), which attempts to
+> >> limit the default mapping to a 47-bit address space already.
+> >
+> > To optimize RISC-V progress, I recommend:
+> >
+> > Step 1: Approve the patch.
+> > Step 2: Update Go and OpenJDK's RISC-V backend to utilize it.
+> > Step 3: Wait approximately several iterations for Go & OpenJDK
+> > Step 4: Remove the 47-bit constraint in arch_get_mmap_end()
+> 
+> I really want to first see a plausible explanation about why
+> RISC-V can't just implement this using a 47-bit DEFAULT_MAP_WINDOW
+> like all the other major architectures (x86, arm64, powerpc64),
 
-On Thu, Sep 5, 2024 at 9:07=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn>=
- wrote:
-> The Loongson I2S controller exists not only in PCI form (LS7A bridge
-> chip), but also in platform device form (Loongson-2K1000 SoC).
->
-> This patch adds support for platform device I2S controller.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+FWIW arm64 actually limits DEFAULT_MAP_WINDOW to 48-bit in the default
+configuration. We end up with a 47-bit with 16K pages but for a
+different reason that has to do with LPA2 support (I doubt we need this
+for the user mapping but we need to untangle some of the macros there;
+that's for a separate discussion).
 
-Thanks for your patch!
+That said, we haven't encountered any user space problems with a 48-bit
+DEFAULT_MAP_WINDOW. So I also think RISC-V should follow a similar
+approach (47 or 48 bit default limit). Better to have some ABI
+consistency between architectures. One can still ask for addresses above
+this default limit via mmap().
 
-> --- a/sound/soc/loongson/Kconfig
-> +++ b/sound/soc/loongson/Kconfig
-> @@ -13,10 +13,20 @@ config SND_SOC_LOONGSON_I2S_PCI
->           The controller is found in loongson bridge chips or SoCs,
->           and work as a PCI device.
->
-> +config SND_SOC_LOONGSON_I2S_PLATFORM
-> +       tristate "Loongson I2S controller as platform device"
-
-depends on LOONGARCH || COMPILE_TEST
-
-> +       select SND_SOC_GENERIC_DMAENGINE_PCM
-> +       help
-> +         Say Y or M if you want to add support for I2S driver for
-> +         Loongson I2S controller.
-> +
-> +         The controller work as a platform device, found in loongson
-> +         SoCs.
-> +
->  config SND_SOC_LOONGSON_CARD
->         tristate "Loongson Sound Card Driver"
->         select SND_SOC_LOONGSON_I2S_PCI
-> -       depends on PCI
-
-"select SND_SOC_LOONGSON_I2S_PCI if PCI"?
-
-> +       select SND_SOC_LOONGSON_I2S_PLATFORM
-
-Or perhaps do it the other way around, i,e. let
-SND_SOC_LOONGSON_I2S_{PCI,PLATFORM} select SND_SOC_LOONGSON_CARD?
-That would be similar to SPI_LOONGSON_{PCI,PLATFORM}, which select
-SPI_LOONGSON_CORE.
-
->         help
->           Say Y or M if you want to add support for SoC audio using
->           loongson I2S controller.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+Catalin
