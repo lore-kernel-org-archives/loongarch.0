@@ -1,141 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE3F1C7B82
-	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 09:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D991C86F3
+	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 09:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725614085; cv=none; b=pCQ1PSXc/MA4hsd52ob7nomPry1xbTjaEAxyYrttU/TFBWTXWxRQV72K5KoqSdXbwxV5zhY94J/+vCRzY4xADktwwOfS2XDcs4crI1Lc5z8EWN1jrLtAolz4hsr62o8KRYTOPw9BkY7d84WETS9GVh4Z5Xs0ApS31KeZTJmziE8=
+	t=1725615461; cv=none; b=WoqqFGvw49jwiIBI0+X5j/A7J/hIvimqZOh+Zo/rjUK9XJX8IdUwTM+oRGcnQt3TLLP2bHV0CVSkCIdX5QVfjfxaDkjyzFcS+5xA/0mfOw0tqOsgRbRxiPGwjGYbb1r4BQ76X8D9oF49Q6ruJjBgxbR3p1fC9W2AL2WAXT1qtE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725614085; c=relaxed/simple;
-	bh=CMKQqQlBAwt7nyxZopr8LzhXpjpqLG+zrRS2vHgL2CU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F9xu9O3HXHVpEm/VQo6G0gzzUYBTndURmF85cSooadt4GbaAiK90dV9An9OwFOe7AMHqlZXYhVP+t4X1rjddwc9e7tAI4IQ9Ywb3hsY6QRA1OguHs3EzcWqQfpMXMbNMhpEVUngXnzrYh/m5GG27UzpbN0191vR1ikvaOOu2tFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0IYQIoe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0IYQIoe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66BD5C4AF17
-	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 09:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725614085;
-	bh=CMKQqQlBAwt7nyxZopr8LzhXpjpqLG+zrRS2vHgL2CU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=U0IYQIoeba7I86BlQCZUgY7cG6HJp2P8pN16E+8wtS4NA3f0A+QxJeNxfzeNHFQRM
-	 37U8ndFZhrAIL5QhPbz7SVsS5n/Cob/pfNWiElVqKitYODD+w8EZ9qN2D3O1hXN4gK
-	 BReAbislBv+hctHTQsXiB52hgiPOhjk+c8Z3eHPaI4iP3mEoJ+fd7rjqCshX2nqnqK
-	 L3bRBzqKdvUGneVtGV0fYDl9qZOknFbiib428EGpUegM6MEAyR35NfQSVEh07hLw4W
-	 YBmV84Au2oR3CGbwDaNWeyykhwf5vXAVAASu7T19lQ5frIbc7Bw1YDbAv76E/JfKLw
-	 3czemgjWisuDQ==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5365392cfafso1611520e87.0
-        for <loongarch@lists.linux.dev>; Fri, 06 Sep 2024 02:14:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZsVazKBLodQamoGOQWTVnbmSLkJGCrxTknulyoZiqNzdjBji6bUCtcne9d5v8Jsfh6bkTJyYi9CE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywe2YflGAwyJ1rA/cj4dXCSZzoyVw4UOwcinlhEsY8LyP+EyguA
-	EEcVyYAUz6ajs/IHcyLjOtLU7NBx0fQpE890e5cwFu1pH9VOZafSlm6uas+2j89NuMZMy03W1jj
-	cfMRrWkKGvwB3ChAiBnhoS0IrrBA=
-X-Google-Smtp-Source: AGHT+IG36wbIRnT1Ou+S3dPUzuz2yggKLEtxdYmatoEi0v4jKJk+IlFZ4GYCNU3aoE7cv9QcH4wQMa5emUdk1dRhZxo=
-X-Received: by 2002:a05:6512:33cf:b0:52c:df6f:a66 with SMTP id
- 2adb3069b0e04-53658815a6cmr1065929e87.58.1725614083466; Fri, 06 Sep 2024
- 02:14:43 -0700 (PDT)
+	s=arc-20240116; t=1725615461; c=relaxed/simple;
+	bh=A27GPoNCqeEblNkD35Q5FEOM7mXI18FF4Q+F+Be5xBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tgyZ6gwF8jQLNa0YIIKIui3WcCM5qO5OCc5f+9vroDLcpWuV0piAGj1r+3FfzqwQQUgYtn26aruZhmzL/kUi5alqTXwh6ohBXbVY4gGWE70cZ5YPWb2/wHFJdHu9BP68nXIy92cMKv2D4z+00BF2MMiQIbOhVvQck/osWDZ/wtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4X0WNf1FhNz9sRs;
+	Fri,  6 Sep 2024 11:37:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id fKy3LdL3k-CP; Fri,  6 Sep 2024 11:37:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4X0WNc6RQfz9sRy;
+	Fri,  6 Sep 2024 11:37:36 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C3BE58B77C;
+	Fri,  6 Sep 2024 11:37:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id of0oryN1Xdlh; Fri,  6 Sep 2024 11:37:36 +0200 (CEST)
+Received: from [192.168.235.70] (unknown [192.168.235.70])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 65D348B764;
+	Fri,  6 Sep 2024 11:37:34 +0200 (CEST)
+Message-ID: <7c3720ff-b763-44b0-9b57-a2fbff3c7f56@csgroup.eu>
+Date: Fri, 6 Sep 2024 11:37:34 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
- <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com> <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
-In-Reply-To: <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Fri, 6 Sep 2024 17:14:31 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTVX9CFM3oRZZP3hGExwVwA_=n1Lrq_0DQKWA+-ZbOekg@mail.gmail.com>
-Message-ID: <CAJF2gTTVX9CFM3oRZZP3hGExwVwA_=n1Lrq_0DQKWA+-ZbOekg@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
- 47 bits
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Charlie Jenkins <charlie@rivosinc.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S . Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, shuah <shuah@kernel.org>, 
-	Christoph Hellwig <hch@infradead.org>, Michal Hocko <mhocko@suse.com>, 
-	"Kirill A. Shutemov" <kirill@shutemov.name>, Chris Torek <chris.torek@gmail.com>, 
-	Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 6, 2024 at 3:18=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Sep 5, 2024, at 21:15, Charlie Jenkins wrote:
-> > Create a personality flag ADDR_LIMIT_47BIT to support applications
-> > that wish to transition from running in environments that support at
-> > most 47-bit VAs to environments that support larger VAs. This
-> > personality can be set to cause all allocations to be below the 47-bit
-> > boundary. Using MAP_FIXED with mmap() will bypass this restriction.
-> >
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
->
-> I think having an architecture-independent mechanism to limit the size
-> of the 64-bit address space is useful in general, and we've discussed
-> the same thing for arm64 in the past, though we have not actually
-> reached an agreement on the ABI previously.
->
-> > @@ -22,6 +22,7 @@ enum {
-> >       WHOLE_SECONDS =3D         0x2000000,
-> >       STICKY_TIMEOUTS =3D       0x4000000,
-> >       ADDR_LIMIT_3GB =3D        0x8000000,
-> > +     ADDR_LIMIT_47BIT =3D      0x10000000,
-> > };
->
-> I'm a bit worried about having this done specifically in the
-> personality flag bits, as they are rather limited. We obviously
-> don't want to add many more such flags when there could be
-> a way to just set the default limit.
->
-> It's also unclear to me how we want this flag to interact with
-> the existing logic in arch_get_mmap_end(), which attempts to
-> limit the default mapping to a 47-bit address space already.
-
-To optimize RISC-V progress, I recommend:
-
-Step 1: Approve the patch.
-Step 2: Update Go and OpenJDK's RISC-V backend to utilize it.
-Step 3: Wait approximately several iterations for Go & OpenJDK
-Step 4: Remove the 47-bit constraint in arch_get_mmap_end()
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] execmem: add support for cache of large ROX pages
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+ Brian Cain <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen
+ <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
+ Song Liu <song@kernel.org>, Stafford Horne <shorne@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, x86@kernel.org
+References: <20240826065532.2618273-1-rppt@kernel.org>
+ <20240826065532.2618273-8-rppt@kernel.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240826065532.2618273-8-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
->
-> For some reason, it appears that the arch_get_mmap_end()
-> logic on RISC-V defaults to the maximum address
-> space for the 'addr=3D=3D0' case which is inconsistentn with
-> the other architectures, so we should probably fix that
-> part first, possibly moving more of that logic into a
-> shared implementation.
->
->       Arnd
->
 
+Le 26/08/2024 à 08:55, Mike Rapoport a écrit :
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Using large pages to map text areas reduces iTLB pressure and improves
+> performance.
+> 
+> Extend execmem_alloc() with an ability to use PMD_SIZE'ed pages with ROX
+> permissions as a cache for smaller allocations.
 
---=20
-Best Regards
- Guo Ren
+Why only PMD_SIZE ?
+
+On power 8xx, PMD_SIZE is 4M and the 8xx doesn't have such a page size. 
+When you call vmalloc() with VM_ALLOW_HUGE_VMAP you get 16k pages or 
+512k pages depending on the size you ask for, see function 
+arch_vmap_pte_supported_shift()
+
+> 
+> To populate the cache, a writable large page is allocated from vmalloc with
+> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
+> ROX.
+> 
+> Portions of that large page are handed out to execmem_alloc() callers
+> without any changes to the permissions.
+> 
+> When the memory is freed with execmem_free() it is invalidated again so
+> that it won't contain stale instructions.
+> 
+> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
+> definition of an execmem_range.
+> 
+
+Christophe
