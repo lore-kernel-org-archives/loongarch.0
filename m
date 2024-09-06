@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224AE1CF290;
-	Fri,  6 Sep 2024 10:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9441CB134;
+	Fri,  6 Sep 2024 10:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725618138; cv=none; b=Ag0hwi/zPsKCqg4FVczc8lErJzG9eRgiGdRx3s25NHIPdatu7SZndeaiOSgm+/QQgh9OsPLafT4+FRjRGLNqLKijlyZJZG4l8I83MVLQB05jxS/+UziItSe3Tb1HAjXgDGwA2NAdVE3qjClu14rpVikyWW0p5QWc+uh2/CCzwgA=
+	t=1725618222; cv=none; b=jESTBjEwqPTK7P8XYxcj/8MbhBZ4IQpLvrilOq7RqWgDw3iUwmLHdkrsCDr7BQGeNqQSAHgQfCAK3HJGw386GJpkX2DJx0lVso/b6g7sEmXL928g4F9yZ8JBZWOQl7jNRFAm91j2j3WV/3vF/TC1JWhpGSgQwwdON2wmtA5vTS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725618138; c=relaxed/simple;
-	bh=m14t71qdCAaVXPd9YNm1S59eIPvXqJWgl3rEf7KbkBQ=;
+	s=arc-20240116; t=1725618222; c=relaxed/simple;
+	bh=6bOj2FVCTWmkpLPRDibSAoyfiVk2TeFdHzcEQbNyEqQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JipE1dAF6/ISigYEo0Il30m8rtsRNoR2jdg7I0ldiXPqyf654YdFBQ+uNEF/ZafgzUu1K6Fbo0zAQwaCpEfP4tJO/spf65Jc+bZ3Mu3XVNuSA6R8/L/B12x3mfcBYu/M9rfdwdw/OLsjlZeGAQlu9/QUb/Aw8BGwZaR1NTeM528=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBo/yc7M; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IeOHm4KGe70B2YCnfNN1Xm9JFqZZMPk3gKY/7Px5G3oGwKAGG6+YnlSWswi9w+8mfdPsNMBDWeD7meNWdXSmwjpM0w2En4Jc0ItyBY7KR2BKNluifUn1xz7hWkF/LLzV1NL9X+b/pyaGRQMXzLtBtZd+ndN/x36qMOMotJSVUaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kf2IRPCf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBo/yc7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70A7C4CEC8;
-	Fri,  6 Sep 2024 10:22:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kf2IRPCf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7F4C4CEC4;
+	Fri,  6 Sep 2024 10:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725618137;
-	bh=m14t71qdCAaVXPd9YNm1S59eIPvXqJWgl3rEf7KbkBQ=;
+	s=k20201202; t=1725618221;
+	bh=6bOj2FVCTWmkpLPRDibSAoyfiVk2TeFdHzcEQbNyEqQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nBo/yc7Mk28ZlUXpamOaE/Oz3RwfGnoQ+i74BUamnLZp77i6/lBo/YId35IlrbI/M
-	 dCadGx8hApY3Fw61OAYKkbB8T7GGkpXF1gkVXRLRMBRNXK+SCdgubGENYt/nE9QJXA
-	 z4bCfVOm5Orxu7cIjWPjlg78deM8/Fx85e3b+CWFfW9/aBE5xfH0IdciB1kT2wRBQo
-	 XGkJywgcD842PXMDc106z4BD59It/Y06MuiTXmDSvPw/gP8PdXvrgH/n+VSBS96J0B
-	 wZ7+Fi3SCBdOtFHEL4SOjNmvOM8pmkFtFxXMqg4gTo+l/NAsf1PPm9OVBSZjdvRJB3
-	 TE/WYureCsGGA==
-Date: Fri, 6 Sep 2024 12:22:14 +0200
+	b=Kf2IRPCfUfZ4YjXdw8k22q8R25bcabtihwDG71BT54Sjzd4FKbnl1Agm5FnR/ZEI4
+	 Tib17JtCqAV7nKKicdap+jCxBt2ipF3a7v/NkvI0acuM0srObiYolyMSY3Woroaa+R
+	 ga1UkUMPLdFxITrjCsUnNUEpeAYVhP1nWhil9NZtgFvlR06KY7/aBX/+krGXOodTD9
+	 /nsSQ49hR2WVaHzPigo2gosrD/1MDH2e+kodLEOIU+BeHNfpfw4e7D+hTiAdX3dj3J
+	 rCKAPedoKz7XG3Fk3fD9acEQ63kRZlih39qfLWIywiDPRSMxJKRSxeuKqvfwP+OmYv
+	 O/V2p6CdTwegQ==
+Date: Fri, 6 Sep 2024 12:23:37 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
@@ -36,10 +36,10 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
 	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 03/10] ASoC: dt-bindings: Add NXP uda1342 Codec
-Message-ID: <l46u7nb2zzbfrk7dlcj4phtsqfypdrk3gqlch46pguvorrgsu3@i7egyw76br4s>
+Subject: Re: [PATCH v1 07/10] ASoC: dt-bindings: Add Loongson I2S controller
+Message-ID: <2bel2spvqvuqyyvuv32wevxmf7tv6w336f7zfj3uq3wslwgr32@weiqjaqitqt5>
 References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <563dc4c3738d6c5e211bc0c4f0a0386adb44eb22.1725518229.git.zhoubinbin@loongson.cn>
+ <ca09352c70c8e69d95dc085c8b479bec21560309.1725518229.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,18 +48,81 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <563dc4c3738d6c5e211bc0c4f0a0386adb44eb22.1725518229.git.zhoubinbin@loongson.cn>
+In-Reply-To: <ca09352c70c8e69d95dc085c8b479bec21560309.1725518229.git.zhoubinbin@loongson.cn>
 
-On Thu, Sep 05, 2024 at 03:02:16PM +0800, Binbin Zhou wrote:
-> Add NXP uda1342 CODEC binding with DT schema format using json-schema.
+On Thu, Sep 05, 2024 at 03:02:56PM +0800, Binbin Zhou wrote:
+> Add Loongson I2S controller binding with DT schema format using
+> json-schema.
 > 
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
->  .../bindings/sound/nxp,uda1342.yaml           | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/nxp,uda1342.yaml
+>  .../bindings/sound/loongson,ls2k-i2s.yaml     | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml b/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml
+> new file mode 100644
+> index 000000000000..a2e3bbe00dab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Filename matching compatible.
+
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/loongson,ls2k-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-2K I2S controller
+> +
+> +maintainers:
+> +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,ls2k1000-i2s
+> +
+> +  reg:
+> +    maxItems: 2
+
+List and describe items instead.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    maxItems: 2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx
+> +
+> +  '#sound-dai-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - dmas
+> +  - dma-names
+> +  - '#sound-dai-cells'
+> +
+> +additionalProperties: false
+
+Instead:
+unevaluatedProperties: false
 
 Best regards,
 Krzysztof
