@@ -1,199 +1,131 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CA61B12C0
-	for <loongarch@lists.linux.dev>; Thu,  5 Sep 2024 21:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455771401C;
+	Fri,  6 Sep 2024 01:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725570982; cv=none; b=DXTMbOWP7NWPsLHUH/nE5Vd80puZmK79Z2JrFrGpfhLfY2rQCUeNdtqxchyGixAs0O8BpU5q0uZTE9HCnRCLLpQPA1dsMcuSBMD8GOEGpeL/x1E5zPv+Dv1J4Q8rfc76AOP9FLmGvsB2VwTwaJvB0zEJBUCZAqQ7OmYHeOfOCew=
+	t=1725584920; cv=none; b=KzZDiYs3q1qcrKUnTprJQhIiby25uAYsB+Z3hfcyxqfFrRQh2O8ecjs4+3hvtW83ZLqgLAsU2S6oVEWQ2yqP6VTFqxkGr+PXQxzhlUk1u1qNVKlroleUfT1Z1jGGKRJ8ENxRreJP2Z6DJo3agjOzu/Z7Z3tC4rmSyJDELLa0gKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725570982; c=relaxed/simple;
-	bh=v+6JyaTNEum7sQVRfCLlZa2h0GjRhYNybjctqPTjXjI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=knqn7kmbR36e//w+6piXGbSbjzT6WD3qZvKN7xR0LQFm6jyvVOLF1N5Memfiktg2Q5PqNmALrf/r3EjDBKnfU4YYNWzGjvZBUKVdl86RsFqH/I3YarOOMIUwY0MHXJdiW0mFup/wbOKN/rpM5bLqTHULMNfpqsLiSzPntDwy/Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=b78AVIlR; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1725584920; c=relaxed/simple;
+	bh=9pan4tYDMpwflzlvEiNlU/CmxyFNsYISO5mIYewLskk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FvvPOV0IjIG4GFGOSNeFqify9CYPtfciDD9VTzrENItiS7pUDsBTMUJQkagkKvjNiVZDBZuIuWLBWk71v64gXSEzzVyXQD0EUE1rk7ezyG5WrMjL1FeZOXt9+fJ0mSm9aSB5/E9zJxbJh7xP0vVuRn8Um1++IXuTOJ2ERex7uOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qq4qQnaM; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="b78AVIlR"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6c5bcb8e8edso985249a12.2
-        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 14:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725570979; x=1726175779; darn=lists.linux.dev;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BC+wwN1fePLvWLzJkRJwUgtVdOqgdkSuyAR2hC6nLRw=;
-        b=b78AVIlRuoygu0UY9WGcwpuuy3gmbwvaIXrdVNmI9ZqeUxSL5i7bK2HN9Ot+biGr2r
-         yCQbPA34hrLP6T4bdw+Ty3EcZi9+ypoPBm6oieC8weSkMVTtO7hNwbIqWqfMTilETVNy
-         Oki0GXWzZwDoTGtLC5CzfRGLkh7rjFTtr9XseoAMfLAuvcmDDJQxmfUUFcShmO3jv61C
-         l4E6XBF456DI3u0Cp6OTKGYgdAdrVqkshF8S84jhVfF/G/wg12Xoruc4VJM+/EIqoG+G
-         AXWlDkM39nREprzwqmeDxjRf8qf455yrMdEbXg3nMTPYL+mk33DXy5szlmkI/7/C5N1T
-         kcsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725570979; x=1726175779;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BC+wwN1fePLvWLzJkRJwUgtVdOqgdkSuyAR2hC6nLRw=;
-        b=siG8FdLVxhX4JeWn7Q/NMxNd8aQ9uQXICfkO5vOWbAp6QixCQNhBha+WBGrpMRDft/
-         Dig7WTkb5e33vzrfW9tkO2wbAFpRbnXxmAxdkjWk0RujpIDym6DNQw0yqbuepiDPmv5G
-         CFRQ1x+NMGVtPBeE93qkaroOIGtVQuga2KN237qNmPCcIE4MhIst9ANxiKSk/KlgQF4Z
-         7lln3kNidbhpsmq8fwlrbRQoWvGABYH20et5ymkqJSZoVbIgWSCExC5S5cgu9C8K3l64
-         1eZu/N34dJI+c3ZmAhV0PnJajfkFEgqPVxxPyPp3qW7MUPrMgU6oASekmOn2/7gVPYmG
-         ft8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWeiI1VWRDAJz2k983dL5Y185Gu7gKUvkT54RlWlRAweBKiX26ToFovkULdcwxqWSB9EjPgFQ30wSs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwASQfQ1TkY2L2NNieRy1fUaalPHYwEdwCRJXT7bRe58mmhEhNi
-	k76d7OBRgZqgbeWxLxWas+RoClosfmjXl9hSwPz/9TdfMZFlPDRrGYtTrkCiXEa77CE+wHoZEz5
-	E
-X-Google-Smtp-Source: AGHT+IEZNTxfv2Eh4MhBvC/nCmC/+9uGBr1mJ2SunSW5zA4oMdQE9dzvz6pYsZBAUp5dcakacvTYeg==
-X-Received: by 2002:a05:6a20:6f08:b0:1c6:a680:ef3d with SMTP id adf61e73a8af0-1cf1d13329emr317665637.28.1725570979059;
-        Thu, 05 Sep 2024 14:16:19 -0700 (PDT)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbda7abesm3775746a12.61.2024.09.05.14.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 14:16:18 -0700 (PDT)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 05 Sep 2024 14:15:52 -0700
-Subject: [PATCH RFC v3 2/2] selftests/mm: Create ADDR_LIMIT_47BIT test
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qq4qQnaM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725584918; x=1757120918;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9pan4tYDMpwflzlvEiNlU/CmxyFNsYISO5mIYewLskk=;
+  b=Qq4qQnaMgUQWYQrM17L+z6rW88oZRj29CS/gXeXS2vhUMmNArg5YeY+q
+   shKstTEIe8LEETi3aMgMBV6J9Y5KqzjisRtBLEFDa+LrCiSHg1FXQ92Mr
+   X/sH9HGhcHsTrHfWA97aNQbMhs8EK9KRX0wQ5D3DAxplIZsDoUABRMKid
+   Werf88kA6h5MMRS7bIRh7TxiJcAdsxjEb+v+dMqZSdXMOkCrH1vlMnZ/2
+   kOMp1QTE2sk5yOmUx0nzw9sCEFFFDQCD6Ew3H9oexdCozveE0OcRoSjmm
+   i/FpRx2h7ZK9EJQqhgJFNzBzd8HhXA3hMT5V9Ymlt8n813Dx5wtFMosX1
+   g==;
+X-CSE-ConnectionGUID: 6Fbg9Yb7T8uxDF9N1OHsrw==
+X-CSE-MsgGUID: 4RitijyyQFm/PVn66b54jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="28217710"
+X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
+   d="scan'208";a="28217710"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 18:08:37 -0700
+X-CSE-ConnectionGUID: k5u21ZQISRWcbhEsxyoPNQ==
+X-CSE-MsgGUID: JD0YrFvqRuCa+UruNd9DCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
+   d="scan'208";a="65850260"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Sep 2024 18:08:34 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1smNSh-000ATX-2t;
+	Fri, 06 Sep 2024 01:08:31 +0000
+Date: Fri, 6 Sep 2024 09:08:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as
+ platform device
+Message-ID: <202409060840.Rm0gPgE4-lkp@intel.com>
+References: <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240905-patches-below_hint_mmap-v3-2-3cd5564efbbb@rivosinc.com>
-References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
-In-Reply-To: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
-To: Arnd Bergmann <arnd@arndb.de>, 
- Richard Henderson <richard.henderson@linaro.org>, 
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
- Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
- Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Shuah Khan <shuah@kernel.org>, 
- Christoph Hellwig <hch@infradead.org>, Michal Hocko <mhocko@suse.com>, 
- "Kirill A. Shutemov" <kirill@shutemov.name>, 
- Chris Torek <chris.torek@gmail.com>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
- sparclinux@vger.kernel.org, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net, 
- Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2582; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=v+6JyaTNEum7sQVRfCLlZa2h0GjRhYNybjctqPTjXjI=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9ot+RkaGxaJ/61aKCWQFuW4/RLXZ/ZytuJlXCePW/lm/
- BEMfPmgo5SFQYyDQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgIl8VmJkmJ40y3j9/d1mFyvf
- My3sVpqs+9/6YNER2ftWy07b31r7azfDfzfJmfzFLLNYSxYW7GExLQoUvbVs9j2GHob0FXfdby4
- 9wwcA
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
 
-Add a selftest for the ADDR_LIMIT_47BIT personality flag that mmaps
-until it runs out of space and ensures no addresses are allocated above
-47 bits.
+Hi Binbin,
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- tools/testing/selftests/mm/.gitignore              |  1 +
- tools/testing/selftests/mm/Makefile                |  1 +
- tools/testing/selftests/mm/map_47bit_personality.c | 34 ++++++++++++++++++++++
- 3 files changed, 36 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-index da030b43e43b..918ef05e180d 100644
---- a/tools/testing/selftests/mm/.gitignore
-+++ b/tools/testing/selftests/mm/.gitignore
-@@ -32,6 +32,7 @@ mlock-random-test
- virtual_address_range
- gup_test
- va_128TBswitch
-+map_47bit_personality
- map_fixed_noreplace
- write_to_hugetlbfs
- hmm-tests
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index cfad627e8d94..2e95fd545409 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -50,6 +50,7 @@ TEST_GEN_FILES += hugepage-shm
- TEST_GEN_FILES += hugepage-vmemmap
- TEST_GEN_FILES += khugepaged
- TEST_GEN_FILES += madv_populate
-+TEST_GEN_FILES += map_47bit_personality
- TEST_GEN_FILES += map_fixed_noreplace
- TEST_GEN_FILES += map_hugetlb
- TEST_GEN_FILES += map_populate
-diff --git a/tools/testing/selftests/mm/map_47bit_personality.c b/tools/testing/selftests/mm/map_47bit_personality.c
-new file mode 100644
-index 000000000000..453412990c21
---- /dev/null
-+++ b/tools/testing/selftests/mm/map_47bit_personality.c
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test the ADDR_LIMIT_47BIT personality flag.
-+ */
-+#include <sys/syscall.h>
-+#include <sys/mman.h>
-+#include <errno.h>
-+#include "../kselftest.h"
-+
-+#define LENGTH (100000000)
-+
-+#define ADDR_LIMIT_47BIT	0x10000000
-+#define BIT47			1UL << 47
-+
-+/*
-+ * Map memory with ADDR_LIMIT_47BIT until no memory left. Ensure that all returned
-+ * addresses are below 47 bits.
-+ */
-+int main(int argc, char **argv)
-+{
-+	void *addr;
-+
-+	syscall(__NR_personality, ADDR_LIMIT_47BIT);
-+
-+	do {
-+		addr = mmap(0, LENGTH, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	} while (addr != MAP_FAILED && (unsigned long)addr < BIT47);
-+
-+	if (errno == ENOMEM)
-+		ksft_test_result_pass("ADDR_LIMIT_47BIT works\n");
-+	else
-+		ksft_test_result_fail("mmap returned address above 47 bits with ADDR_LIMIT_47BIT with addr: %p and err: %s\n",
-+				      addr, strerror(errno));
-+}
+[auto build test ERROR on 097a44db5747403b19d05a9664e8ec6adba27e3b]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/ASoC-dt-bindings-Add-Everest-ES8323-Codec/20240905-150958
+base:   097a44db5747403b19d05a9664e8ec6adba27e3b
+patch link:    https://lore.kernel.org/r/282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as platform device
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240906/202409060840.Rm0gPgE4-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240906/202409060840.Rm0gPgE4-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409060840.Rm0gPgE4-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> sound/soc/loongson/loongson_i2s_pci.c:157:1: warning: data definition has no type or storage class
+     157 | module_pci_driver(loongson_i2s_driver);
+         | ^~~~~~~~~~~~~~~~~
+>> sound/soc/loongson/loongson_i2s_pci.c:157:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Wimplicit-int]
+>> sound/soc/loongson/loongson_i2s_pci.c:157:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+>> sound/soc/loongson/loongson_i2s_pci.c:149:26: warning: 'loongson_i2s_driver' defined but not used [-Wunused-variable]
+     149 | static struct pci_driver loongson_i2s_driver = {
+         |                          ^~~~~~~~~~~~~~~~~~~
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for SND_SOC_LOONGSON_I2S_PCI
+   Depends on [n]: SOUND [=m] && SND [=m] && SND_SOC [=m] && (LOONGARCH || COMPILE_TEST [=y]) && PCI [=n]
+   Selected by [m]:
+   - SND_SOC_LOONGSON_CARD [=m] && SOUND [=m] && SND [=m] && SND_SOC [=m] && (LOONGARCH || COMPILE_TEST [=y])
+
+
+vim +/loongson_i2s_driver +149 sound/soc/loongson/loongson_i2s_pci.c
+
+d84881e06836dc1 Yingkun Meng 2023-06-15  148  
+d84881e06836dc1 Yingkun Meng 2023-06-15 @149  static struct pci_driver loongson_i2s_driver = {
+d84881e06836dc1 Yingkun Meng 2023-06-15  150  	.name = "loongson-i2s-pci",
+d84881e06836dc1 Yingkun Meng 2023-06-15  151  	.id_table = loongson_i2s_ids,
+d84881e06836dc1 Yingkun Meng 2023-06-15  152  	.probe = loongson_i2s_pci_probe,
+d84881e06836dc1 Yingkun Meng 2023-06-15  153  	.driver = {
+d84881e06836dc1 Yingkun Meng 2023-06-15  154  		.pm = pm_sleep_ptr(&loongson_i2s_pm),
+d84881e06836dc1 Yingkun Meng 2023-06-15  155  	},
+d84881e06836dc1 Yingkun Meng 2023-06-15  156  };
+d84881e06836dc1 Yingkun Meng 2023-06-15 @157  module_pci_driver(loongson_i2s_driver);
+d84881e06836dc1 Yingkun Meng 2023-06-15  158  
 
 -- 
-2.45.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
