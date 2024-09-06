@@ -1,145 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5072145FFF
-	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 06:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA71141987
+	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 06:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725603961; cv=none; b=ePHr+nR3FGChQOgBX00AsSEk8cJPqAA/MrNbCr30Mc/PUdTlx9THexerTGY/JWgWdLt6B6uDycs8ROzVX4qZ58Z7RJwJdH/O5k3kHE2axn5XS6d3mGmEk4Rrz4loWXQoDdrufJJy0I3UH9KRJ/mAKwwad1E5I59VsnRIp1tz7ow=
+	t=1725605895; cv=none; b=bwJLQk7shARHZfYuRmE+F0Mw6RAEDAWdBtzAHupdsoQfJMPdA/CDF3KjmYr4TGqKefN7vDG+CZzSgJoDHGCMTBAXKvXMUcUrT3hn3s+GpzMbXFlnxxOUIuauDxg3FmRN4ZENFb3jyJFgGOz2n+rIxT/5YWi99Pef03fb/59ldO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725603961; c=relaxed/simple;
-	bh=DREQymudoG/EclRSLEM6OUkORODDaXonihhOL6WMI7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QDtfrPjhJLT8sXkrRmqZJyK/+1lVQusneEY//uMyD5GXYwMtinAEgXFiaKTljtSb72WnrKLc4ygBCWjQntdvuEP7NUB/fgRlBL0SY+afzyc72+XQUJjPJcfKYqnM8aC39L54vwGFKuBiEydeEWw6bnXJ/zDJNC7zsHSzhvuHbUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFQT8E7z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725605895; c=relaxed/simple;
+	bh=iyZLeCErRRVCM118tHhidzOmBpbdS6KX4+/vAwz4h3g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jm9l8Im83bzXkDIqcNUizX6+/nKCHJ/kdtZPmb8qD5Sx8PEuEo9CMkCP20wNQ8xSOQiocMGQr8tfizHGmWlRaFBt0Y1zOGEmJX2XAmePEtZtBoSWcFalV8WNlacpwh04tMFF0/RSKY3JMGiIw9k+Zhqxyv1gzaDj9cUGfuOZrd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEFEIdiB; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFQT8E7z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65EEEC4CEC9
-	for <loongarch@lists.linux.dev>; Fri,  6 Sep 2024 06:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725603961;
-	bh=DREQymudoG/EclRSLEM6OUkORODDaXonihhOL6WMI7c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MFQT8E7z4OtHWIHiRUNkyPbRsfjwy3ZtsHEpb6pjBbT4GIgHNgIAydU3NYWknnFaS
-	 vFv3w6B2pJJ9/+uW+m6XV7y+ohs2JzEd8QXwU0rPXjrfE7Iifr6nFrlRcVZP5/LQxj
-	 RbFAVPKTnmXTAjOK4UQ6Obvg+af3WjQfzMhz0PNaVsfbwBYFX36ur5iKhCiOj5w0m2
-	 wveqymALYzJvlPifXfUohZuNTlfP54lquQcXZpb0Sjjvo0mpCNVqEWvqiBwOGyzIY/
-	 FByKgJgk/oDZMtyso0NPbwTedWZtF8tujfMMFwJRpPu1OtvDH9js9QV89L86K3GcSx
-	 ib1Jb4X/7fT6Q==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c3c3b63135so1760370a12.3
-        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 23:26:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXYeJr6/eedjbwCoDolgxDzHWFHaq/0mA4Ppb9AiIo4gvHsxwMzhnMvtJ9801+EGNUI9RJBBzfr+Tg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy3yLKcCooVrwoqbgQGcz35tZ2xSI/UifE/GkWgdBM/4+A3wLC9
-	Pe1sVZUbY1jBjZhHL7JgYztrVjWxzaREjeL7VKwoZb0l1m+GKThH/if/vfluhHCTYSUW1HhURO8
-	aYF/EKFPAu1crgZdKSKZUmy4MeDI=
-X-Google-Smtp-Source: AGHT+IF3JZ7EToPYAGiMK2zl1U8V3c8koOzFtJkPKb+SmZt58sDoO9N3lPQeBHEbROqfiRxe5jlqTsDqjtyTj1q9ZgA=
-X-Received: by 2002:a05:6402:13d3:b0:5c2:5141:8488 with SMTP id
- 4fb4d7f45d1cf-5c3dc78512bmr848572a12.5.1725603959969; Thu, 05 Sep 2024
- 23:25:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEFEIdiB"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-374c1e5fe79so971118f8f.1
+        for <loongarch@lists.linux.dev>; Thu, 05 Sep 2024 23:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725605892; x=1726210692; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rSsbgZ07HMll75bsRy7iLPZ/YB3oKw1wz+dcZF7g3q0=;
+        b=EEFEIdiBxkwEqHB6l7++kZpBHXpw1MqVLXAT+p7PiDOqXHR/ROO2XHtta7IXH0EYOS
+         lztnZ00V5BTzGqaY0nUokBrtIsiXPQvJeAJ0bI7mFwwwMyAUEJwrPFYdF0nuN02PT5na
+         8k6gpwO+A6L6bbotUDbGut0g5bI2zu9TvxoWxgSXTNENarTvSsFBvMV8ZNbWTGxmt/p0
+         refVFjDFvd1eVJa4eGCrK/5r6de3DO8Amt8vK9RvAeokLbzy53VHnf0vykeW0CA6mm8s
+         6w/cV3kyPD/XPQKoVEvKvZrPzaif8QKXzsEECDXDD8WIigIQPd5aIyMqfmbjRUXj1YwY
+         imKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725605892; x=1726210692;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rSsbgZ07HMll75bsRy7iLPZ/YB3oKw1wz+dcZF7g3q0=;
+        b=PzwDY2zR4JMJ95d6P9d3JjNnoxJG4FlbYO0byjQ8zQ/12K7tWFtuiCpmUkS0CFOxoN
+         kgetf/FIK6QlkOPY0n2Z3l6HK9wN5Eg6UZR2ukD5JK24Bd1OOoPf574gXB8WEF7MKlbw
+         RKM1W0RMcd6GQNJVnH9lP2dyM4u+bBiBSiDXLMpy6XqLKpFnDFMxQEOLtd/RFEUNIR8J
+         vqz+1DoIXk/QFsXgKeEg/SKYwyaHxbXXVYmVNR1yCE0VQ0iPK48qhKK2tlP4bFQuRwCh
+         7grUAL2nWDdMBd36b4bWBbWA77MHsQsHCel1ftFPycKsBtygOGwxeNHCANbKGZvUydKR
+         gp1g==
+X-Gm-Message-State: AOJu0YxSuTnjUGXWQQb6hWmXvs2Bu0p9uy0Vuo60HoW1SC5TFWKdsfIK
+	3RAm7kLshfUnIOx7pYXmS5AsNT2oyIkgMyzt0evAzsXl8cHi7rsugPrIgBXTe3E=
+X-Google-Smtp-Source: AGHT+IGrAksHcNrKI3rBAHsYnPIBhUHGuDza2sIIfw/+RgIxhqfnNhF90uhKKTYlWQlDara/0i8XHA==
+X-Received: by 2002:adf:f345:0:b0:374:bf1b:1c20 with SMTP id ffacd0b85a97d-378895d5070mr852293f8f.23.1725605890805;
+        Thu, 05 Sep 2024 23:58:10 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374ca0cef22sm12702367f8f.106.2024.09.05.23.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 23:58:10 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4] LoongArch/percpu: Simplify _percpu_read() and _percpu_write()
+Date: Fri,  6 Sep 2024 08:57:05 +0200
+Message-ID: <20240906065807.1103275-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240905065438.802898-1-ubizjak@gmail.com> <CAAhV-H7LtPja5K6ZoEbNTgjwjEL_uj-V11Y6Vq9HqTu1+2YMHw@mail.gmail.com>
- <CAFULd4Z4QzS0J_BztD7jDSNwoXM2vF9PWNX5eJBrQZsUbu-gJQ@mail.gmail.com>
- <361bf35ccf308d2fbce14f69f156cb42eef0f095.camel@xry111.site>
- <CAFULd4ZqD2L=B5YfKjGR4s0mOM-fABb5+83Z5KfmX0YRaxWw-A@mail.gmail.com>
- <CAFULd4b9pV2Rpb+X8gTsDdePtcAppmh7jDVcXBQsk39sicRbhw@mail.gmail.com>
- <CAAhV-H5eLXcAQ_GpEcO7rPZ2iJ7gqRxhXvGg=__p6+XcRK-gCQ@mail.gmail.com> <CAFULd4bSHM9j11N8b3+V8N-pQTconan53THeme4p3UR3COCTLQ@mail.gmail.com>
-In-Reply-To: <CAFULd4bSHM9j11N8b3+V8N-pQTconan53THeme4p3UR3COCTLQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 6 Sep 2024 14:25:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5e=fOuAngxkUpuosveCOEUcY03Our2=H-fGPCO6L51Ag@mail.gmail.com>
-Message-ID: <CAAhV-H5e=fOuAngxkUpuosveCOEUcY03Our2=H-fGPCO6L51Ag@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch/percpu: Simplify _percpu_read() and _percpu_write()
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 5, 2024 at 11:09=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wro=
-te:
->
-> On Thu, Sep 5, 2024 at 5:04=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
-> >
-> > On Thu, Sep 5, 2024 at 8:46=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> =
-wrote:
-> > >
-> > > On Thu, Sep 5, 2024 at 2:16=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com=
-> wrote:
-> > > >
-> > > > On Thu, Sep 5, 2024 at 2:09=E2=80=AFPM Xi Ruoyao <xry111@xry111.sit=
-e> wrote:
-> > > > >
-> > > > > On Thu, 2024-09-05 at 14:02 +0200, Uros Bizjak wrote:
-> > > > > > > If the input value is less than 0xff, then "& 0xff" is meanin=
-gless, if
-> > > > > > > the input value is more than 0xff, this conversion still cann=
-ot give a
-> > > > > > > correct result for the caller. So I think for all sizes it is=
- enough
-> > > > > > > to just use "((unsigned long) val)".
-> > > > > >
-> > > > > > This part is used to force unsigned extension, otherwise the co=
-mpiler
-> > > > > > will use sign-extension of the possibly signed variable.
-> > > > >
-> > > > > It's not relevant.  For example when size is 2 __pcpu_op_##size("=
-stx")
-> > > > > is expanded to stx.h, and stx.h only stores the lower 16 bits of =
-a
-> > > > > register into MEM[r21 + ptr], the high bits are ignored anyway.
-> > > > >
-> > > > > Thus we can just have
-> > > > >
-> > > > > +#define _percpu_write(size, _pcp, _val)                         =
-               \
-> > > > > +do {                                                            =
-       \
-> > > > > +       if (0) {                                                 =
-       \
-> > > > > +               typeof(_pcp) pto_tmp__;                          =
-       \
-> > > > > +               pto_tmp__ =3D (_val);                            =
-         \
-> > > > > +               (void)pto_tmp__;                                 =
-       \
-> > > > > +       }                                                        =
-       \
-> > > > > +       __asm__ __volatile__(                                    =
-       \
-> > > > > +               __pcpu_op_##size("stx") "%[val], $r21, %[ptr]   \=
-n"     \
-> > > > > +               :                                                =
-       \
-> > > > > +               : [val] "r"(_val), [ptr] "r"(&(_pcp))           \
-> > > > > +               : "memory");                                     =
-       \
-> > > > > +} while (0)
-> > > >
-> > > > Nice, the less code, the better. If it works for loongson target, t=
-hen
-> > > > we don't need this paranoia.
-> > > >
-> > > > I just played safe and took the approach that x86 took.
-> > >
-> > > Please note that the original code extended the value to a long type.
-> > > If the simplified macro works, then the usage of macros will result i=
-n
-> > > a better assembly code, where zero-extends will be omitted.
-> > OK, please send a simplified V4, remember to remove the if(0)
-> > checking, which is the same as V2, thanks.
->
-> Are you sure we want to remove type checking on _val ? I'd rather
-> leave the if(0) part, but remove forcing zero-extension.
-Yes, please, the checking is not very useful.
+_percpu_read() and _percpu_write() macros call __percpu_read()
+and __percpu_write() static inline functions that result in a single
+assembly instruction. Percpu infrastructure expects its leaf
+definitions to encode the size of their percpu variable, so the patch
+merges asm clauses from the static inline function into the
+corresponding leaf macros.
 
-Huacai
+The secondary effect of this change is to avoid explicit __percpu
+function arguments. Currently, __percpu macro is defined in
+include/linux/compiler_types.h, but with proposed patch [1],
+__percpu definition will need macros from include/asm-generic/percpu.h,
+creating forward dependency loop.
 
->
-> Uros.
+The proposed solution is the same as x86 architecture uses.
+
+Patch is compile tested only.
+
+[1] https://lore.kernel.org/lkml/20240812115945.484051-4-ubizjak@gmail.com/
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+v2: Add a missing cast and a missing coma in the asm template,
+    reported by kernel test robot. Some formatting changes.
+v3: Check the type of _val in _percpu_write().
+v4: Remove type ckecking of _val. Remove unnecessary zero-extensions
+    and truncations.
+---
+ arch/loongarch/include/asm/percpu.h | 124 ++++++++--------------------
+ 1 file changed, 35 insertions(+), 89 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
+index 8f290e5546cf..87be9b14e9da 100644
+--- a/arch/loongarch/include/asm/percpu.h
++++ b/arch/loongarch/include/asm/percpu.h
+@@ -68,75 +68,6 @@ PERCPU_OP(and, and, &)
+ PERCPU_OP(or, or, |)
+ #undef PERCPU_OP
+ 
+-static __always_inline unsigned long __percpu_read(void __percpu *ptr, int size)
+-{
+-	unsigned long ret;
+-
+-	switch (size) {
+-	case 1:
+-		__asm__ __volatile__ ("ldx.b %[ret], $r21, %[ptr]	\n"
+-		: [ret] "=&r"(ret)
+-		: [ptr] "r"(ptr)
+-		: "memory");
+-		break;
+-	case 2:
+-		__asm__ __volatile__ ("ldx.h %[ret], $r21, %[ptr]	\n"
+-		: [ret] "=&r"(ret)
+-		: [ptr] "r"(ptr)
+-		: "memory");
+-		break;
+-	case 4:
+-		__asm__ __volatile__ ("ldx.w %[ret], $r21, %[ptr]	\n"
+-		: [ret] "=&r"(ret)
+-		: [ptr] "r"(ptr)
+-		: "memory");
+-		break;
+-	case 8:
+-		__asm__ __volatile__ ("ldx.d %[ret], $r21, %[ptr]	\n"
+-		: [ret] "=&r"(ret)
+-		: [ptr] "r"(ptr)
+-		: "memory");
+-		break;
+-	default:
+-		ret = 0;
+-		BUILD_BUG();
+-	}
+-
+-	return ret;
+-}
+-
+-static __always_inline void __percpu_write(void __percpu *ptr, unsigned long val, int size)
+-{
+-	switch (size) {
+-	case 1:
+-		__asm__ __volatile__("stx.b %[val], $r21, %[ptr]	\n"
+-		:
+-		: [val] "r" (val), [ptr] "r" (ptr)
+-		: "memory");
+-		break;
+-	case 2:
+-		__asm__ __volatile__("stx.h %[val], $r21, %[ptr]	\n"
+-		:
+-		: [val] "r" (val), [ptr] "r" (ptr)
+-		: "memory");
+-		break;
+-	case 4:
+-		__asm__ __volatile__("stx.w %[val], $r21, %[ptr]	\n"
+-		:
+-		: [val] "r" (val), [ptr] "r" (ptr)
+-		: "memory");
+-		break;
+-	case 8:
+-		__asm__ __volatile__("stx.d %[val], $r21, %[ptr]	\n"
+-		:
+-		: [val] "r" (val), [ptr] "r" (ptr)
+-		: "memory");
+-		break;
+-	default:
+-		BUILD_BUG();
+-	}
+-}
+-
+ static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned long val, int size)
+ {
+ 	switch (size) {
+@@ -157,6 +88,33 @@ static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
+ 	return 0;
+ }
+ 
++#define __pcpu_op_1(op)		op ".b "
++#define __pcpu_op_2(op)		op ".h "
++#define __pcpu_op_4(op)		op ".w "
++#define __pcpu_op_8(op)		op ".d "
++
++#define _percpu_read(size, _pcp)					\
++({									\
++	typeof(_pcp) __pcp_ret;						\
++									\
++	__asm__ __volatile__(						\
++		__pcpu_op_##size("ldx") "%[ret], $r21, %[ptr]	\n"	\
++		: [ret] "=&r"(__pcp_ret)				\
++		: [ptr] "r"(&(_pcp))					\
++		: "memory");						\
++									\
++	__pcp_ret;							\
++})
++
++#define _percpu_write(size, _pcp, _val)					\
++do {									\
++	__asm__ __volatile__(						\
++		__pcpu_op_##size("stx") "%[val], $r21, %[ptr]	\n"	\
++		:							\
++		: [val] "r"(_val), [ptr] "r"(&(_pcp))			\
++		: "memory");						\
++} while (0)
++
+ /* this_cpu_cmpxchg */
+ #define _protect_cmpxchg_local(pcp, o, n)			\
+ ({								\
+@@ -167,18 +125,6 @@ static __always_inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
+ 	__ret;							\
+ })
+ 
+-#define _percpu_read(pcp)						\
+-({									\
+-	typeof(pcp) __retval;						\
+-	__retval = (typeof(pcp))__percpu_read(&(pcp), sizeof(pcp));	\
+-	__retval;							\
+-})
+-
+-#define _percpu_write(pcp, val)						\
+-do {									\
+-	__percpu_write(&(pcp), (unsigned long)(val), sizeof(pcp));	\
+-} while (0)								\
+-
+ #define _pcp_protect(operation, pcp, val)			\
+ ({								\
+ 	typeof(pcp) __retval;					\
+@@ -215,15 +161,15 @@ do {									\
+ #define this_cpu_or_4(pcp, val) _percpu_or(pcp, val)
+ #define this_cpu_or_8(pcp, val) _percpu_or(pcp, val)
+ 
+-#define this_cpu_read_1(pcp) _percpu_read(pcp)
+-#define this_cpu_read_2(pcp) _percpu_read(pcp)
+-#define this_cpu_read_4(pcp) _percpu_read(pcp)
+-#define this_cpu_read_8(pcp) _percpu_read(pcp)
++#define this_cpu_read_1(pcp) _percpu_read(1, pcp)
++#define this_cpu_read_2(pcp) _percpu_read(2, pcp)
++#define this_cpu_read_4(pcp) _percpu_read(4, pcp)
++#define this_cpu_read_8(pcp) _percpu_read(8, pcp)
+ 
+-#define this_cpu_write_1(pcp, val) _percpu_write(pcp, val)
+-#define this_cpu_write_2(pcp, val) _percpu_write(pcp, val)
+-#define this_cpu_write_4(pcp, val) _percpu_write(pcp, val)
+-#define this_cpu_write_8(pcp, val) _percpu_write(pcp, val)
++#define this_cpu_write_1(pcp, val) _percpu_write(1, pcp, val)
++#define this_cpu_write_2(pcp, val) _percpu_write(2, pcp, val)
++#define this_cpu_write_4(pcp, val) _percpu_write(4, pcp, val)
++#define this_cpu_write_8(pcp, val) _percpu_write(8, pcp, val)
+ 
+ #define this_cpu_xchg_1(pcp, val) _percpu_xchg(pcp, val)
+ #define this_cpu_xchg_2(pcp, val) _percpu_xchg(pcp, val)
+-- 
+2.46.0
+
