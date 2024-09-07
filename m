@@ -1,82 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5689DDA0
-	for <loongarch@lists.linux.dev>; Sat,  7 Sep 2024 01:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635CC134B1;
+	Sat,  7 Sep 2024 02:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725673672; cv=none; b=dPbmUJTUZ8kFDxfWP+b5v1TjBusNWIKJNCyOaeYUr/+FtZ0qI2WRwJh2FcOdYvr/OkhMT1VgD9y1Sx+tNoOeUuHQeIy/RFFh4mbEeZV5xGWlW5GStVGT0/gglU9OUCzEMKF66bpgehSTGUoOt4ti5u4hKtb3c20OJbmxW1UCOfk=
+	t=1725677309; cv=none; b=VUNRq/HAqQZPRdkpB+gdQV0rZaeevehMShlGGANXU4WoXCKA6CFYewjMyt4AFwXS4YQTtwrFVLIm+SHacTSItI9GN6hbjwhiZ6ccVPFGpAuzQATJ3xr9Af3JttJmkmGv4dlYRwcfuMQHCmTB5AEKA9Z2KBKasBCEVgSMQsTKhRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725673672; c=relaxed/simple;
-	bh=KaK41JPOiwkTi9ta791J8wS37yAgctFiFMaLNuuZ/y0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q1Z3w97JKBQM0oCQ0tKg01/cMifZaajPqIDnzxahk3WWRMdbulyDKnwjxV/56/GlEFWPW+FvhOuhKZgAkROH8KWBtxtkDvn4dI1teZvqIvlbmkRICbxP6xLDAmxX3KZEtekhKkuU1p7nk3+ICglR9kip5K4CeyDRIwwrSmLgecc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja7P/h1R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725677309; c=relaxed/simple;
+	bh=3tEnVSgl4KWu1DsgL0C8TGbUh8FjzR6eAkgRRbuiFhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1Hsegbttny769I5nldjFJoHQXV6ozcNMsAm4UP43JgbKImUMQUoURywsz+WAnBv7fK5640vp6X96i5uX7gXjIdnPTzGMhiMqcaJ0a6+h9/zsbWb8zys3e9KI0Ri2JAbFXJkqrbFQeGmN0DjTxQ+zFyqmi1Chy8yEDXC1EDMxzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=fqO02YY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja7P/h1R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAD3C4CEC9
-	for <loongarch@lists.linux.dev>; Sat,  7 Sep 2024 01:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725673672;
-	bh=KaK41JPOiwkTi9ta791J8wS37yAgctFiFMaLNuuZ/y0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ja7P/h1Rik8bso2VeBsPNO38kUZ0kWeIIQcLp+37wbHG6PfM0cQJxvklf5lJXOmHw
-	 K1zK90HEKY7dn9Ms3pOy/zrdxWWNJW18Kz82/vtVy2G0suYAtQ3QMGBxKdoA8QzxK8
-	 1ZzvkK7u6n9zLz5pnvkNMBN2XpOyjMe7/TIvEshNaDAc1NAd5HL1VxfbWRnM9nYmL+
-	 FnLRwRwdBZUxvHsJxzzG57l+RvUX8Avk1XrsDDH4EPirCwSrWmpKTvsshwT1aW4PCk
-	 8qs9bYkZuREQYydjqWbGxGjM0mMZT24j71lcxPGzn5urSLpG+/cnSCEc9FxjOTU69C
-	 +Ija1Qd0zJCzQ==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f66423686bso23142911fa.3
-        for <loongarch@lists.linux.dev>; Fri, 06 Sep 2024 18:47:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW8xWzzMAYvKS5MQAf3DAGBgcC9oUrW8AODLMoaWpa2iJu+fodklI37XK5Jt9/UidfI+91giC++qEs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzQ2ZpbR49C9MJsCIVvHc0cBWmqhl65nsFZ4b6/D5FNm2FJrGcd
-	h4cPQ6QRfq9lVM6rbsBkvW/mMNhu/PYDX36PG60tGYuDEZ5h6qKktXyqafFFdBLWI26PVtZ+5AD
-	hLdJuSGpvBpOxHXECZkmMTphZMoY=
-X-Google-Smtp-Source: AGHT+IEAbN9Eqzj7/94jpm3ZQGTLWu4waEvFkSByhRyNjqTPy8Lz34CNrAmcTOD6tEPOYyD0XNKDboxR4rC3W+hfagk=
-X-Received: by 2002:a2e:a983:0:b0:2f6:63d1:166e with SMTP id
- 38308e7fff4ca-2f751eaee26mr34366321fa.3.1725673670870; Fri, 06 Sep 2024
- 18:47:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="fqO02YY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78FEFC4CEC4;
+	Sat,  7 Sep 2024 02:48:27 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="fqO02YY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1725677304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3tEnVSgl4KWu1DsgL0C8TGbUh8FjzR6eAkgRRbuiFhw=;
+	b=fqO02YY5HU2dzIXH4LOY7waP1KOWEKEq+VK2fi3DFd0ALf2jlq4EUKGsxhcXb8luexzVoh
+	ln7+wBl1ecMkfj7zz+xVXxfFN25l7W2561YA50qHpmhc1r6x0u0AU+BLvbUUH7ezTwXtNP
+	geFkd0DFal/qrafG/iixh225s5PpreI=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b2310a09 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sat, 7 Sep 2024 02:48:24 +0000 (UTC)
+Date: Sat, 7 Sep 2024 04:48:22 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo <maobibo@loongson.cn>, gaosong@loongson.cn,
+	jiaxun.yang@flygoat.com, qemu-devel@nongnu.org, thomas@t-8ch.de,
+	xry111@xry111.site, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: LoongArch without CONFIG_ACPI and CONFIG_EFI
+Message-ID: <Ztu-9qgiKS98c0hl@zx2c4.com>
+References: <ZtsX_tcEuOjktUl9@zx2c4.com>
+ <84a8ee9c-7781-c474-c394-d1498dc00050@loongson.cn>
+ <CAAhV-H5CbyemhjoYLXqW3pLPtp4Ne3wcOZXzv2k5=jJCpi3rfg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZtsX_tcEuOjktUl9@zx2c4.com> <84a8ee9c-7781-c474-c394-d1498dc00050@loongson.cn>
-In-Reply-To: <84a8ee9c-7781-c474-c394-d1498dc00050@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 7 Sep 2024 09:47:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5CbyemhjoYLXqW3pLPtp4Ne3wcOZXzv2k5=jJCpi3rfg@mail.gmail.com>
-Message-ID: <CAAhV-H5CbyemhjoYLXqW3pLPtp4Ne3wcOZXzv2k5=jJCpi3rfg@mail.gmail.com>
-Subject: Re: LoongArch without CONFIG_ACPI and CONFIG_EFI
-To: maobibo <maobibo@loongson.cn>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, gaosong@loongson.cn, jiaxun.yang@flygoat.com, 
-	qemu-devel@nongnu.org, thomas@t-8ch.de, xry111@xry111.site, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Jinyang He <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H5CbyemhjoYLXqW3pLPtp4Ne3wcOZXzv2k5=jJCpi3rfg@mail.gmail.com>
 
-On Sat, Sep 7, 2024 at 9:44=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote:
->
-> Add huacai who is maintainer of Loongarch Linux kernel.
->
-> On 2024/9/6 =E4=B8=8B=E5=8D=8810:55, Jason A. Donenfeld wrote:
-> > Hi,
+On Sat, Sep 07, 2024 at 09:47:38AM +0800, Huacai Chen wrote:
+> On Sat, Sep 7, 2024 at 9:44 AM maobibo <maobibo@loongson.cn> wrote:
 > >
-> > It appears that as of QEMU 9.1, it's possible to boot LoongArch machine=
-s
-> > that don't provide EFI or ACPI.
+> > Add huacai who is maintainer of Loongarch Linux kernel.
 > >
-> > Would you consider removing the `select ACPI` and `select EFI` from the
-> > arch Kconfig, so that kernels built for this minimal QEMU environment
-> > can be a bit leaner and quicker to build?
-Very difficult, at least removing EFI is difficult. Even if booting to
-a FDT environment, we still get information from EFI now.
+> > On 2024/9/6 下午10:55, Jason A. Donenfeld wrote:
+> > > Hi,
+> > >
+> > > It appears that as of QEMU 9.1, it's possible to boot LoongArch machines
+> > > that don't provide EFI or ACPI.
+> > >
+> > > Would you consider removing the `select ACPI` and `select EFI` from the
+> > > arch Kconfig, so that kernels built for this minimal QEMU environment
+> > > can be a bit leaner and quicker to build?
+> Very difficult, at least removing EFI is difficult. Even if booting to
+> a FDT environment, we still get information from EFI now.
 
-Huacai
-
-> >
-> > Jason
-> >
->
+Makes sense. !ACPI is the more interesting one for me, anyway, as that
+takes a while to build.
