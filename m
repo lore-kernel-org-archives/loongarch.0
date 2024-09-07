@@ -1,171 +1,116 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBB6D29E
-	for <loongarch@lists.linux.dev>; Sat,  7 Sep 2024 08:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 265A8D29E
+	for <loongarch@lists.linux.dev>; Sat,  7 Sep 2024 08:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725697621; cv=none; b=GVG3zeXj0uw9/lW5DjMETdDixA1fMYPyzmxCR+lPIQ+I+kOIlGUMIzPQb6hy3YtQj7t48S8tkBHpJL90oq7FBLMlVLiKWLs6ymLGSDK4fSp9Z2rTAV8zPMb8s94WolAmNElkjQmh87jc3TNXFO4lQ5AVwLD+y9i+P8kSL2kpP3E=
+	t=1725697648; cv=none; b=bD01U0AKtTlUw1d3Szh7JofTND3i6u+1ZQWOyaE7dxCDScUshzvNdYYGieTmOtN1pvEhCkRQnBA79yT9LJB6Tjr0L4wvRu22gQ2wcUE9vXWXKx0e6ejV/TXcg0kfFyd+1KcTlAKkaqV/lcgcxOFOWa2zyEhrtgQJAjwBz+Y+SwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725697621; c=relaxed/simple;
-	bh=FYQ8VwUdwnULFKJxaP8IG3aHPu6C4xVkNHPGnNEz/TQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JITIrDZ5AgQdu+gfdfujdXR6pn9S7sJXWJt/b3gq06KovJmi4sXAQkiO3d45TvHVZnLJX8JOGF1IDDpue5p9X76A3nglZ33i+VB01gG1y3vRL3gJqqhvdoNAhpc4HpGYAcaHaJ0EG0c1nWqnVjCPy4RYW3Jz7wvYgPhsVgmLBbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyMdeyYr; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyMdeyYr"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f4f24263acso1154481fa.0
-        for <loongarch@lists.linux.dev>; Sat, 07 Sep 2024 01:26:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725697618; x=1726302418; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VqyzkpHLHrWtDycv18ymB8QgfohFB/0/rJM4KU0imW4=;
-        b=OyMdeyYrmej+PTmjTXChqhe+Yx3FyNKVfsXQ4I+DZ9MBwckBEDIjnvG26DrwQi7vyX
-         ddpERomQTa4LATsyoy2edUvM7Z1WMF+dDwCdI5UCwhc/6znJzLDx3io2uQJmaBmTcFTv
-         GmMRzitfIf9l4CL2q8YxjRlAy+M2tAUCn9OZIe45kFKVXPBjLLZ7DDG9n5as7Yt5DhPg
-         KHNM47jLUHCnay0YF73mOsb5vhraYXxtTAsyDU1quv9bRUK6g+NOsv0/iQguoFf52a8b
-         TfjmWzB7JZv/e/eo+S9UyE5dSQJw0RVj6mW8XaPCsQsVpevYfY3jFEjEFVM/A6OYmW2Y
-         GhmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725697618; x=1726302418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VqyzkpHLHrWtDycv18ymB8QgfohFB/0/rJM4KU0imW4=;
-        b=OCvusIOy0A+iSfJjgpcaFhVnUAZaY6IRm3s4xs3IJM/ISdu59ioVyKZrVlDFX5YvpO
-         4PnYb4KO0IimSYgDYVtBbuhpsNgXbRVa/UTVVW/gKNLKV7e032M39xCONvbZnP47pPAy
-         y3g31kZZy2Jvs/6SM01q+4VSDoW6b4qHPJv5xijOr+i7JAxOePvzEPGPytSpSE49e1KK
-         BVX1OzXOB3kMgm23T8z99pI5Q4xOfzPin5o7GMkeYhK6ujNjY+45tXe63FYpWtZUPJfu
-         lAiTVAh2Bx6XaI9E4pG9jDjH6MS4FrQP3ODoicqAYtA54614JTDGpTFKbab3z0GdVvj2
-         bsCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBo0rKtBKwJjnO6BOPAxxYmBQAzuOOY1ZfECWAVH+YA0/UxqpQmeOH3ddWRJe4jeprNhzYyCR/0ro=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/u75bEcfGezjigUm0oAL4ybq21KxsB9TGPJmVxlxbwvCS/Vvm
-	csrdRu9cQPM8QEG2hh+AQMCO+NiGOPuNOIQTbtSQyXd3VbRqmsi+GE7rX9Z62443YcYOiQzZXkk
-	+vOYhz3OpujU2fN/5YYWDKF2TxnQ=
-X-Google-Smtp-Source: AGHT+IET3d9NRhbKeldMGFos0aLckCZuN7TRfuI0EgD71XrMV6VDi4eoRvEwgUlcnNyrnfDH+RE5Maj+e7OXvGYplkc=
-X-Received: by 2002:a2e:9c95:0:b0:2f6:62a1:25ff with SMTP id
- 38308e7fff4ca-2f75a99f825mr10427181fa.28.1725697617377; Sat, 07 Sep 2024
- 01:26:57 -0700 (PDT)
+	s=arc-20240116; t=1725697648; c=relaxed/simple;
+	bh=i+dsDE/I0D1lKf66AAYYx0gu5rFBsU18yAz5QAfMXdc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n6m1t7Wkmye/0ZQgKO266/9kLJisv6FdMSF9oGTr8zB9OgVavFE8/DsU/acHyQ0YWRkRX5xE5zjSbAOs43GdnPuwIwOsOS+gRwXAqtEJquAHmsdyZK9dDiqbF0GAWc/fepGE3m0DQAq55if1igQbif/1cLzTJQsOv1R8lExQEIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxneppDtxmxRMBAA--.3612S3;
+	Sat, 07 Sep 2024 16:27:21 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMDxcNZoDtxmd+0AAA--.5018S2;
+	Sat, 07 Sep 2024 16:27:21 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Naveen N Rao <naveen@kernel.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] smp: Mark smp_prepare_boot_cpu() __init
+Date: Sat,  7 Sep 2024 16:27:20 +0800
+Message-Id: <20240907082720.452148-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1725518229.git.zhoubinbin@loongson.cn> <ca09352c70c8e69d95dc085c8b479bec21560309.1725518229.git.zhoubinbin@loongson.cn>
- <2bel2spvqvuqyyvuv32wevxmf7tv6w336f7zfj3uq3wslwgr32@weiqjaqitqt5>
-In-Reply-To: <2bel2spvqvuqyyvuv32wevxmf7tv6w336f7zfj3uq3wslwgr32@weiqjaqitqt5>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 7 Sep 2024 14:26:43 +0600
-Message-ID: <CAMpQs4LO1hQpnQvVTqTs66F4J2rMGasfoszJKcDBgWkVvuVz4g@mail.gmail.com>
-Subject: Re: [PATCH v1 07/10] ASoC: dt-bindings: Add Loongson I2S controller
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxcNZoDtxmd+0AAA--.5018S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Krzysztof:
+Function smp_prepare_boot_cpu() is only called at boot stage, here
+mark it as __init.
 
-Thanks for your reply.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kernel/smp.c | 2 +-
+ arch/mips/kernel/smp.c      | 2 +-
+ arch/powerpc/kernel/smp.c   | 2 +-
+ include/linux/smp.h         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-On Fri, Sep 6, 2024 at 4:23=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On Thu, Sep 05, 2024 at 03:02:56PM +0800, Binbin Zhou wrote:
-> > Add Loongson I2S controller binding with DT schema format using
-> > json-schema.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../bindings/sound/loongson,ls2k-i2s.yaml     | 66 +++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls=
-2k-i2s.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.=
-yaml b/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml
-> > new file mode 100644
-> > index 000000000000..a2e3bbe00dab
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/loongson,ls2k-i2s.yaml
->
-> Filename matching compatible.
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index ca405ab86aae..be2655c4c414 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -476,7 +476,7 @@ core_initcall(ipi_pm_init);
+ #endif
+ 
+ /* Preload SMP state for boot cpu */
+-void smp_prepare_boot_cpu(void)
++void __init smp_prepare_boot_cpu(void)
+ {
+ 	unsigned int cpu, node, rr_node;
+ 
+diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+index 0362fc5df7b0..39e193cad2b9 100644
+--- a/arch/mips/kernel/smp.c
++++ b/arch/mips/kernel/smp.c
+@@ -439,7 +439,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ }
+ 
+ /* preload SMP state for boot cpu */
+-void smp_prepare_boot_cpu(void)
++void __init smp_prepare_boot_cpu(void)
+ {
+ 	if (mp_ops->prepare_boot_cpu)
+ 		mp_ops->prepare_boot_cpu();
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 46e6d2cd7a2d..4ab9b8cee77a 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1166,7 +1166,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 	cpu_smt_set_num_threads(num_threads, threads_per_core);
+ }
+ 
+-void smp_prepare_boot_cpu(void)
++void __init smp_prepare_boot_cpu(void)
+ {
+ 	BUG_ON(smp_processor_id() != boot_cpuid);
+ #ifdef CONFIG_PPC64
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index fcd61dfe2af3..6a0813c905d0 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -109,7 +109,7 @@ static inline void on_each_cpu_cond(smp_cond_func_t cond_func,
+  * Architecture specific boot CPU setup.  Defined as empty weak function in
+  * init/main.c. Architectures can override it.
+  */
+-void smp_prepare_boot_cpu(void);
++void __init smp_prepare_boot_cpu(void);
+ 
+ #ifdef CONFIG_SMP
+ 
 
-I will rename it as loongson,ls2k1000-i2s.yaml
->
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/sound/loongson,ls2k-i2s.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Loongson-2K I2S controller
-> > +
-> > +maintainers:
-> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> > +
-> > +allOf:
-> > +  - $ref: dai-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: loongson,ls2k1000-i2s
-> > +
-> > +  reg:
-> > +    maxItems: 2
->
-> List and describe items instead.
+base-commit: b31c4492884252a8360f312a0ac2049349ddf603
+-- 
+2.39.3
 
-OK..
->
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  dmas:
-> > +    maxItems: 2
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: tx
-> > +      - const: rx
-> > +
-> > +  '#sound-dai-cells':
-> > +    const: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - dmas
-> > +  - dma-names
-> > +  - '#sound-dai-cells'
-> > +
-> > +additionalProperties: false
->
-> Instead:
-> unevaluatedProperties: false
-
-OK...
-
-Thanks.
-Binbin
->
-> Best regards,
-> Krzysztof
->
