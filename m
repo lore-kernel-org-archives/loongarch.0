@@ -1,98 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728BD14B967;
-	Sat,  7 Sep 2024 12:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26622F9F5
+	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 02:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725711301; cv=none; b=ituW8XHxPWF8dWzxqkdFOK93yuFRJ5OfwyPRdLDBP5OwgM4/C/Rr/UckM262JbQV8V9X3fi3JRl6qA9xXnOqiPjj7nVuEB1g1DkRA8vXch7Af1LUeMMTioOmsa32O2nto38KbrpypieS55pDdEVITLA3K5ObhPMEtrvC+PeME0g=
+	t=1725763095; cv=none; b=J1B4XnTLRI1QaeUJFBdG+l2MN2s5FX1HWw7Tzdt1A6W6v8evO98jVx7tcC6gGRnGWyD4s+qDuw11h8Lbp2IrlUv6+Rz+f2phu1kGFQ6Dx6qyDRBKNb8g7ClgaQS+/57FRdKxUxo4pyPijO5INBaxGFSPl9fhjsnxtm0uM1SYjVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725711301; c=relaxed/simple;
-	bh=xWO+HlGp+Ve2s3sZZmNAp1zEuVQsJubnUVeY4rbyAQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gft/6UNqMML9ngtPbpffy2hJho3r8xsbAP7v/IRMtbdi5EytTGUzAsaYKssT7NWL4IwOHh0OhBq8EuKARJcYaiVUvGhDgKYvPJugaUWzMNwObhXiZoN74KRwOHR2ClfOHSDwEgMhjOtJJ5mL69zJDFxWC/EglDQxUmGSmLZZHBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzbfqhg5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725763095; c=relaxed/simple;
+	bh=QRLowZOK063HZ8aCZ32C9grtYQV6cWDgqk9akduwUjM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t9aCuWhxlH3sXXXFruvj8lEfBTsURpdl1O+k5tZShAQAhh7uhQYqZNHW0nVALO0q5UFZ72YlJa6MgTILsf/CU9grXtTKZLRevCoftjU+v9TUwO1IBfliubzWtmSKf6L4TTQkvp0xv7NgnJTM0U5ESA8UiFplsEE+HaVsDobGoYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pfw+5l2G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzbfqhg5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27697C4CEC2;
-	Sat,  7 Sep 2024 12:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pfw+5l2G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D744C4CECC
+	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 02:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725711300;
-	bh=xWO+HlGp+Ve2s3sZZmNAp1zEuVQsJubnUVeY4rbyAQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uzbfqhg5Z8lxpJsTVPNtuI8sRVjR/PCl3Wuf5//SDZl+W6JLHEj51gZAN0H2vZjh8
-	 QpQrOXDYq7ir49iVlIbyhtqbGWRxuiOjZF4Pq/n0JJ9RHXdK/O9tODmOLTADcQ5fJT
-	 5ZafgASy/XSj0MOe5mtKgt/mbNYRr62XkkHqLDG1qHqJQFTcJg9xAfIhnL21eRFiH1
-	 3/SMY9hJuZfj2hXiRRgSW1PKYEkPdVgcwNhH7cIbGc9iLNdAaVoiny/+lLfO//hjV1
-	 QosfG3WWbbZfvwRkNWJhDoxQql/Gv3OjAGrr6L9N7rrRmT6n6Rb11p5ni7TcV58WR0
-	 YpwMyjBOWlfdQ==
-Date: Sat, 7 Sep 2024 13:14:41 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 08/10] ASoC: loongson: Add I2S controller driver as
- platform device
-Message-ID: <ZtxDsc9hTiDbKQ0v@finisterre.sirena.org.uk>
-References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <282dadefdaac7917fd681a6e84a5f0f07d0557bc.1725518229.git.zhoubinbin@loongson.cn>
- <76612fdc-996c-4cfd-b5f7-04acb5b717be@sirena.org.uk>
- <CAMpQs4KedjHVK=Y87beuc0M_DadrXWWgcC5ob+wXfdy4XtCdWw@mail.gmail.com>
+	s=k20201202; t=1725763094;
+	bh=QRLowZOK063HZ8aCZ32C9grtYQV6cWDgqk9akduwUjM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Pfw+5l2GeOPPyWuqs9BNFXOTTj16lFZ+PFrQ7ZYtTaKeFaG6WOxJVE41svVzhXrsb
+	 Kb7OJYTghOJhm3QNvduiPXCV8EwtBRMdUMtBuuNI2MwGo7afpIO0DPxR8zgpOIiIro
+	 PjyQ+sNJJXYoce07yxsvDnsn0bxispffHGywP3unKsCVYH+a3Y4nkPFHwzV0talOa9
+	 I/9P30awNAU5XSN5a18O3OQ2wBAeAcvUkyuAxAUvnzz6YuUWsWfyD1c6RGAAY6fxvH
+	 WKZHWo/tJqUHHb2QRh6E1LHqjyZBRW54zLARr5V3j6TxZ2//YDzMoPH7v4eSRnJFmw
+	 CKFzqP2TvWVSg==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c3d209da98so4954051a12.1
+        for <loongarch@lists.linux.dev>; Sat, 07 Sep 2024 19:38:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVg552emAdrD9DJalnQGWSWNDWQNcuJn3IbZHZZIrnEwXGnR7tkU/szlge/XS8jaDc2WmRzxXxPyOc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxkhk+TKCTXF7WHOF/Ibv75J9rVaKOI3jw60cmJVRATy6/7KM8g
+	fKckXhCOikoqA0BBJcnQoZsPEB0ot4y94dEU06JzKlxMARYT63mqs3mDMEEDD2jtmYjPtqNjr0c
+	oPcAoemfm3s6tclouH/iUn7eHIqA=
+X-Google-Smtp-Source: AGHT+IGrmEb6wjce45DDeIXQI62sW6ehBa4TumudW+Xqf5CX2GvNkX+QBM4cqNClCBuXL95+M0TaZ+7xljM4dw9T+wE=
+X-Received: by 2002:a05:6402:3549:b0:5c2:5f31:8888 with SMTP id
+ 4fb4d7f45d1cf-5c3c1f9cbd4mr13982347a12.15.1725763093152; Sat, 07 Sep 2024
+ 19:38:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="E73tOL5tCpfB6UED"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4KedjHVK=Y87beuc0M_DadrXWWgcC5ob+wXfdy4XtCdWw@mail.gmail.com>
-X-Cookie: Your love life will be... interesting.
-
-
---E73tOL5tCpfB6UED
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20240907-iocsr-v1-0-0c99b3334444@flygoat.com> <20240907-iocsr-v1-1-0c99b3334444@flygoat.com>
+In-Reply-To: <20240907-iocsr-v1-1-0c99b3334444@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 8 Sep 2024 10:38:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H64tf8=XekeBKwR3w65ofjUrbgeqPngNxiT-11EHMKwdA@mail.gmail.com>
+Message-ID: <CAAhV-H64tf8=XekeBKwR3w65ofjUrbgeqPngNxiT-11EHMKwdA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] LoongArch: Rename cpu_has_csr as cpu_has_iocsr
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-mips@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 07, 2024 at 02:08:08PM +0600, Binbin Zhou wrote:
-> On Thu, Sep 5, 2024 at 8:36=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
+Hi, Jiaxun,
 
-> > Can some of this be shared with the PCI version - is it the same IP in a
-> > different wrapper, or is it a new IP?
+On Sat, Sep 7, 2024 at 6:17=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
+> wrote:
+>
+> It meant to be IOCSR as CSR is not optional for LoongArch.
+Keep the CSR definition and add IOCSR definition after it, OK? This
+also means the 1st patch can be dropped.
 
-> To be exact, they are similar, such as the definition of the
-> controller registers.
-> But for example, DMA data processing is different. In the pci version
-> of i2s, the DMA controller is built-in, while the DMA controller here
-> is external, using ls2x-apbdma (drivers/dma/ls2x-apb-dma.c)
+And it is just OK to change the values after CPU_FEATURE_CSR, because
+they are only for internal use.
 
-OK, if all the registers are the same it might be worth trying to share
-that code but possibly not with the DMA being split like this.
-
---E73tOL5tCpfB6UED
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbcQ64ACgkQJNaLcl1U
-h9Bi9gf/S56VR8NSVcSfBm4HsSJTfqUcsRL8KbAYJ7wGx7qtMb6TF6UGWzd9+g54
-kLRS3ijQBf5yRU01wbAa2ZbrVEqdj3LvXJqBcuUzKI3dR51BQCd5c++vgGtuV4X3
-tpHuupcX1fCwq2I071gdWeb7qbjmg8DgwPqAoHqyaUc5BXk5jyK2Sac5dM3sbIcv
-C3Uqn61JiGDSDtmjZcLnCD2D3klVv6mJoUybe5Zgu5/j2z9cE+Hwyg4XZ146zwX1
-6KzV9HGH/NnjsCIVZxnAzEKqSZQSUX/8CxBAlj0trPYhYpUQoCVPhQ+LWLZjCOzI
-vHLmZ06fTPK84rWNfttMzKRfOEjXTw==
-=cZxO
------END PGP SIGNATURE-----
-
---E73tOL5tCpfB6UED--
+Huacai
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/loongarch/include/asm/cpu-features.h | 2 +-
+>  arch/loongarch/include/asm/cpu.h          | 2 +-
+>  arch/loongarch/kernel/cpu-probe.c         | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/i=
+nclude/asm/cpu-features.h
+> index 16a716f88a5c..0190ed28a647 100644
+> --- a/arch/loongarch/include/asm/cpu-features.h
+> +++ b/arch/loongarch/include/asm/cpu-features.h
+> @@ -50,7 +50,7 @@
+>  #define cpu_has_lbt_arm                cpu_opt(LOONGARCH_CPU_LBT_ARM)
+>  #define cpu_has_lbt_mips       cpu_opt(LOONGARCH_CPU_LBT_MIPS)
+>  #define cpu_has_lbt            (cpu_has_lbt_x86|cpu_has_lbt_arm|cpu_has_=
+lbt_mips)
+> -#define cpu_has_csr            cpu_opt(LOONGARCH_CPU_CSR)
+> +#define cpu_has_iocsr          cpu_opt(LOONGARCH_CPU_IOCSR)
+>  #define cpu_has_tlb            cpu_opt(LOONGARCH_CPU_TLB)
+>  #define cpu_has_watch          cpu_opt(LOONGARCH_CPU_WATCH)
+>  #define cpu_has_vint           cpu_opt(LOONGARCH_CPU_VINT)
+> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/as=
+m/cpu.h
+> index 843f9c4ec980..7c44f4ede3a2 100644
+> --- a/arch/loongarch/include/asm/cpu.h
+> +++ b/arch/loongarch/include/asm/cpu.h
+> @@ -115,7 +115,7 @@ enum cpu_type_enum {
+>  #define LOONGARCH_CPU_LBT_ARM          BIT_ULL(CPU_FEATURE_LBT_ARM)
+>  #define LOONGARCH_CPU_LBT_MIPS         BIT_ULL(CPU_FEATURE_LBT_MIPS)
+>  #define LOONGARCH_CPU_TLB              BIT_ULL(CPU_FEATURE_TLB)
+> -#define LOONGARCH_CPU_CSR              BIT_ULL(CPU_FEATURE_CSR)
+> +#define LOONGARCH_CPU_IOCSR            BIT_ULL(CPU_FEATURE_IOCSR)
+>  #define LOONGARCH_CPU_WATCH            BIT_ULL(CPU_FEATURE_WATCH)
+>  #define LOONGARCH_CPU_VINT             BIT_ULL(CPU_FEATURE_VINT)
+>  #define LOONGARCH_CPU_CSRIPI           BIT_ULL(CPU_FEATURE_CSRIPI)
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
+u-probe.c
+> index 14f0449f5452..4446616d497c 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -91,7 +91,7 @@ static void cpu_probe_common(struct cpuinfo_loongarch *=
+c)
+>         unsigned int config;
+>         unsigned long asid_mask;
+>
+> -       c->options =3D LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
+> +       c->options =3D LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_IOCSR |
+>                      LOONGARCH_CPU_TLB | LOONGARCH_CPU_VINT | LOONGARCH_C=
+PU_WATCH;
+>
+>         elf_hwcap =3D HWCAP_LOONGARCH_CPUCFG;
+>
+> --
+> 2.46.0
+>
