@@ -1,95 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C916E4B5AE
-	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 12:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18D454670
+	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 14:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725796876; cv=none; b=CmjSfSjcVS3Iaj78uft49v9QN4sqIIgZwy0tCvf0TbF4j8hZfS+SV5YVlxtvF/xOA2+noJ10SFD/NNkKQiID+CaJA75hzEjDKHcPBtHOBhM1Q/KKTocv6wenH2TQxPsncvP9V3WWRavYp0Ovat/rT0ftHid+TRv12UP64qXnVIA=
+	t=1725806938; cv=none; b=ZxICpN96oZfdbpQfXJePBKe0oeEKpiNWAtP71UwYRFTpy78WFi39T0USlF3PVUQsQC1ngeS/2FylyOvlLnC2SpP3uMHKilDehgHzJyVVbWpEYDB66ymJZgXSVAYxXhqQV7XjJ+cytqsJ2h9gv5hGVarVszzYTbPMbSFFjj0G53U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725796876; c=relaxed/simple;
-	bh=E2kGZ2T//UW2vgOICNlYkKZ3r+8PPlyrpexRqfBuAVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aBgsa8FEQ0iNAuvjO+OhRwzRHqTFqFjMgx7XZA1XyO9+L6gAIgYoNXuupY5L74uxtxR/AWkdXPOZfDStckvUVwQe7nkvi5Ke7Bfw0Jrw4eFVwVd/3yE+3KGGY+sV/g6RWCTv9J83XJGKOOBRteASTHni1wJl+TsdUV6fCAD5GXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPpwQqFQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725806938; c=relaxed/simple;
+	bh=b9ZHpPU7fHgDP46JdtdbnVn5kDILGONuZcMcJ+8oFAU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=a8uWZ3wBjqTFSAmhZ1XaITKyw5Abvy8l4KuMSzSuEO1k27qgs9m30ylS4P7zsifUnqUSbNfVGdFboK7NQTwpkr5Hi/oPr+dvtCcb7HZybNQpHrsVpcxyfMXOQkkXHikVhdCYl7PgzCLbi8d7KpBVQDHseyHPomoJJaHQGlEWc18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=NG2S5lLm; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPpwQqFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B93C4CEC8
-	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 12:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725796876;
-	bh=E2kGZ2T//UW2vgOICNlYkKZ3r+8PPlyrpexRqfBuAVs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HPpwQqFQi3BxQ80EmOAanlCAJzyXejWk8EzQQtPr/a81DCjLoP8WyrWVnpN6Zdqso
-	 DEhw4N0/BDnuzKzYLCGV7bHyOJZxwcFRvaeOvfnmQAXrzpKNQcveE3dZ0OVar8VZX6
-	 g7XBlYv3URgqC/h49ShYaB9gCPrEvobM6gbCJceQ1x8XdKJjlLMcg7jF5P1Sc2qipx
-	 Dp5TpMboAhYSwTsKW8vqgIwPVEeakQCiAB3j82UY4D1Rhwb8MULTupXWrjRNLXmWK/
-	 AGxfDnnkp8E4QzYqXgWWU27w8PGOfZAwBfHCGOp2TmanRfvI3w1nVjBhzYZ7pV+gMp
-	 vZM7ABbuLlRag==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c3c34e3c39so5069491a12.2
-        for <loongarch@lists.linux.dev>; Sun, 08 Sep 2024 05:01:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/y+hCtNp+4LVE3UTa8UZwt8oC29hPhnXR/FwFH4oTJlERXoFEj+4i03JRtSDQ2lNLECMah5hlehQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMNHrcaF2gxa5znKkWU8GxHNBBOzpDPG3LzH/tljE0GLlc7H+N
-	R+tO7jr6l5xw22wfJAt02Ucrz0wbscWR8zIHU9dCgBMtRvqjrEc181lcmFP0Npz+MlVxa5E9mwe
-	k5cIL54XZwetxxGjIbYW0UZMTt+g=
-X-Google-Smtp-Source: AGHT+IHIOqQMKgpHqPO7CPiHzCYy5Y8gpOstO6S+JWaYRfPsox9vVuv7uftoo0pmDs0+GF1loXf2AvjMXpIDIAOEKTg=
-X-Received: by 2002:a05:6402:84e:b0:5c3:d9ce:4199 with SMTP id
- 4fb4d7f45d1cf-5c3dc7c4625mr5025549a12.29.1725796874893; Sun, 08 Sep 2024
- 05:01:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="NG2S5lLm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1725806569;
+	bh=0nBvIXI1Xrh+4qFlXlqkpL124CaVlEGXUIHWyQUvX/Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NG2S5lLmOLYyQt9beGGyX8udhsnnxLlHDkox/MJxR5iD2XfMc5/XRZPdPlZvrsuSL
+	 pcDe7KKZFj4f7GI4G8esCbVTfNPwtlZfYaKOoHi+KaXsEpBJV+7ewmK6UT8o0RMjUI
+	 ngEBCGNdNsmg/UPsM5TOHNOCYEk749TydgR7pwbo=
+Received: from [192.168.124.11] (unknown [113.200.174.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 87182673D9;
+	Sun,  8 Sep 2024 10:42:48 -0400 (EDT)
+Message-ID: <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
+Subject: Re: [PATCH v3 3/4] LoongArch: Set AS_HAS_THIN_ADD_SUB as y if
+ AS_IS_LLVM
+From: Xi Ruoyao <xry111@xry111.site>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
+ <jpoimboe@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Huacai Chen
+ <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Sun, 08 Sep 2024 22:42:45 +0800
+In-Reply-To: <20240807085906.27397-4-yangtiezhu@loongson.cn>
+References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
+	 <20240807085906.27397-4-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20240807085906.27397-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 8 Sep 2024 20:01:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Q33XpE308JsiHAJuN2uEu7Rccp1FEtofBZn=GAVOS=g@mail.gmail.com>
-Message-ID: <CAAhV-H7Q33XpE308JsiHAJuN2uEu7Rccp1FEtofBZn=GAVOS=g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Fix objtool issues about do_syscall() and Clang on LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Xi Ruoyao <xry111@xry111.site>, 
-	Jinyang He <hejinyang@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Ruoyao and Jinyang,
+On Wed, 2024-08-07 at 16:59 +0800, Tiezhu Yang wrote:
+> When building kernel with "make CC=3Dclang defconfig", LLVM Assembler
+> is used due to LLVM_IAS=3D0 is not specified, then AS_HAS_THIN_ADD_SUB
+> is not set, thus objtool can not be built after enable it for Clang.
+>=20
+> config AS_HAS_THIN_ADD_SUB is to check whether -mthin-add-sub option is
+> available to know R_LARCH_{32,64}_PCREL are supported for GNU Assembler,
+> there is no this option for LLVM Assembler. The minimal version of Clang
+> is 18 for building LoongArch kernel, and Clang >=3D 17 already supports
+> R_LARCH_{32,64}_PCREL, that is to say, there is no need to depend on
+> AS_HAS_THIN_ADD_SUB for Clang, so just set AS_HAS_THIN_ADD_SUB as y if
+> AS_IS_LLVM.
+>=20
+> Fixes: 120dd4118e58 ("LoongArch: Only allow OBJTOOL & ORC unwinder if too=
+lchain supports -mthin-add-sub")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-On Wed, Aug 7, 2024 at 4:59=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> With this series, there is no objtool warning about do_syscall() and
-> there is handle_syscall() which is the previous frame of do_syscall()
-> in the call trace when running "echo l > /proc/sysrq-trigger".
->
-> Compiled with GCC and Clang, tested with the following two configs:
->
-> (1) CONFIG_RANDOMIZE_KSTACK_OFFSET=3Dy &&
->     CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=3Dn
-> (2) CONFIG_RANDOMIZE_KSTACK_OFFSET=3Dy &&
->     CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=3Dy
-Please review this series. If you have no objections, I will apply to
-loongarch-next.
+This is what I wanted in
+https://lore.kernel.org/all/20240604150741.30252-1-xry111@xry111.site/.
 
-Huacai
+Reviewed-by: Xi Ruoyao <xry111@xry111.site>
 
->
-> Tiezhu Yang (4):
->   objtool: Handle frame pointer related instructions
->   LoongArch: Remove STACK_FRAME_NON_STANDARD(do_syscall)
->   LoongArch: Set AS_HAS_THIN_ADD_SUB as y if AS_IS_LLVM
->   LoongArch: Enable objtool for Clang
->
->  arch/loongarch/Kconfig                |  4 ++--
->  arch/loongarch/kernel/syscall.c       |  4 ----
->  tools/objtool/arch/loongarch/decode.c | 11 ++++++++++-
->  tools/objtool/check.c                 | 23 ++++++++++++++++++++---
->  tools/objtool/include/objtool/elf.h   |  1 +
->  5 files changed, 33 insertions(+), 10 deletions(-)
->
-> --
-> 2.42.0
->
+> ---
+> =C2=A0arch/loongarch/Kconfig | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 70f169210b52..e1b6cb306d4d 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -265,7 +265,7 @@ config AS_HAS_FCSR_CLASS
+> =C2=A0	def_bool $(as-instr,movfcsr2gr \$t0$(comma)\$fcsr0)
+> =C2=A0
+> =C2=A0config AS_HAS_THIN_ADD_SUB
+> -	def_bool $(cc-option,-Wa$(comma)-mthin-add-sub)
+> +	def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || AS_IS_LLVM
+> =C2=A0
+> =C2=A0config AS_HAS_LSX_EXTENSION
+> =C2=A0	def_bool $(as-instr,vld \$vr0$(comma)\$a0$(comma)0)
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
