@@ -1,55 +1,55 @@
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+Received: from flow4-smtp.messagingengine.com (flow4-smtp.messagingengine.com [103.168.172.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A9912C814
-	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 10:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952FD1531EF
+	for <loongarch@lists.linux.dev>; Sun,  8 Sep 2024 11:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725789673; cv=none; b=EKZBHiLZej/7voYnTbZGGYLSnm62D4culMLL/uUjkuYbcrVvSLYw02dRRheBDJV3PkctVPjdIrh7Yc77Yl7ExDRCCrIaPwGAx5ar4v7a4oEwO2VJBaS9teLAYfle+kKWMVsiz2saPOk4mBtKmrLfvGLa3eg8LACAfFYSlnDXp7U=
+	t=1725794796; cv=none; b=LE6oV78uGyy0KjU3wsMUZtEs+NKsBmSrKl77yhuwF2wIBMynXj5iqCtsjnA1aoc/6YbqPNEDp0b28soTmW4kyUk0kKczxEsuPn9z/lKwnUoAPH1HFX7oOOGapgIDKt1zB7bMHlhuTQjZ1hnk4LjWzpZl4utat9JU9Ggig6BNNTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725789673; c=relaxed/simple;
-	bh=bHer9k9FqetYzp1LXRd154U8yglaVwUhfSbpANomuu4=;
+	s=arc-20240116; t=1725794796; c=relaxed/simple;
+	bh=s22LiCvHg5GCcJ/0gjfyATBl5wTKkAzg5feHIKI+9mg=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FZ2e9DGv1ovEMKsMBBDHXLnlCC2le9XZNjnjkGqdIX+9Cqb3q8v68qsp5x/0ipdMsKF/tOJrvyBvurHdUklU9x450P44d7HWEesMYjmJR6GlH4jAoF+ddkHCosIEAVIHvmmP9XVHJdBmadxIUdPKUfEZTh8Zce4KdgfyKOvYCCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=PbBrs4Be; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SSDL4jPd; arc=none smtp.client-ip=103.168.172.153
+	 Subject:Content-Type; b=WBJcTB5Bz+ehfwtGWKyTgswicYvGEcb8eMifFBpj5ay2dTaultEDBKLbgOvz/Z/yOXsLutaSyYAbVIiaD5TqsYospmtCx607vjF7K+IP3lHud2I0Fz+lESbCwxaJDYUY7HI+78F+5/NmZlEyKWcoBrIM1/+zwj7NFnaaDZc+4Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=1RqsBYWn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cdsqc3O9; arc=none smtp.client-ip=103.168.172.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="PbBrs4Be";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SSDL4jPd"
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="1RqsBYWn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Cdsqc3O9"
 Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 679A51140060;
-	Sun,  8 Sep 2024 06:01:09 -0400 (EDT)
+	by mailflow.phl.internal (Postfix) with ESMTP id 7520620010F;
+	Sun,  8 Sep 2024 07:26:33 -0400 (EDT)
 Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-09.internal (MEProxy); Sun, 08 Sep 2024 06:01:09 -0400
+  by phl-compute-09.internal (MEProxy); Sun, 08 Sep 2024 07:26:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1725789669;
-	 x=1725876069; bh=bHer9k9FqetYzp1LXRd154U8yglaVwUhfSbpANomuu4=; b=
-	PbBrs4BebfNgbn+MHf+d2+EDi1PR2Lwtki95yZy32RqKvTzfuTsQUZrypWdFRDIS
-	tmZEZXq8ThlIjapPJ6XYYWCYi91jBCsde4nepISD19hdo/Rzq3FTz2Eu4R5Pr/4u
-	j7UfkTfjummDeLmvw440W7KCHasEZ3qswvtMsI4Y/+XqhIBsR5Tx2L43C4qEL6oH
-	x+GLQvtQNN5fV35aMSI9rK8qfRuJnklTomCVabPndk5h/cDfOnRNUnX012/fp5hy
-	vf7uakaGbe07GDam1HnX/MmaXFK8aRov2VDc1lRStKj3h6yN/umHkNtiAJp2rJQj
-	ab+MRnRese+0qFnFxxwOrg==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1725794793;
+	 x=1725801993; bh=XEUlxjTawgkGJUbuV5995m7w7A2+JrHLDxzMf66rOFU=; b=
+	1RqsBYWnwT4FfoKwD8HOSHteOOT9ciPyjmBQqMyvcr6+a49w9ITDGHReCqlKQ2QA
+	w6LflN5n1R32xrU1xq2pIQUhw2YtNSZPREepgs7fFh/JiqskWgBI2q1oyrafoAoX
+	OXv3Od7eW2mwOR/prATgt5rOF/YnKFqclBTHKg1I7fgB/KzYIhNfna0/I1Kkkkix
+	Cw/j32+Ac/ao6JT1NOKot7uC14h4ncceMxC0oG8lad9utiOysG+JubQG2QCO42FN
+	aaB/C7qy6BW/s3Y/XAsoNS4kMzEF8v05z3j3XR2ciLA88taJPIrCv19JmVh4IYaC
+	e/1tkYDVneKs0oixOgexAg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725789669; x=
-	1725876069; bh=bHer9k9FqetYzp1LXRd154U8yglaVwUhfSbpANomuu4=; b=S
-	SDL4jPdRUbwPgv89PaU1gF6x/0SVrHab0dgHixWieP2qoPpyVsZORI/Djdfm5Bqh
-	7ACz2Py9samQeG2I/B0t0nOHFZojDXLyhlGh3WVjxjw3QuIwmAh757FIsrL4uF18
-	bOfXCjJ35JBtdAU6T2zhcfnEq+YcZaspGgwJjgYxCntU8QA3YmIU0L1rXjf2nqKD
-	68T12HsOTfQcQ6gHoXQd8VMeHtD95Y/2Zw948dalm5oK/Z8YbH6PCffiQFZDuBlU
-	IxbK75JK/fx9X7Z6LKlBp7VewZEHTbfvagBS9rCpKgqoUWg4SwIHtoXSYw1s49V4
-	3kEQ43wwBK10PHCOVPweg==
-X-ME-Sender: <xms:5HXdZpwlDS1mhMA8aJz8KbtxNhasqKCZ0G97rShSAESZgkxFeC11AA>
-    <xme:5HXdZpRHKTo3kr9AGcpesKSwhZ2qoFNoWUsv2WIfY6gDfPmND3dvBJrhRCZKC637q
-    P1Yc4NsZchuHFlUxV8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeihedgvddvucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725794793; x=
+	1725801993; bh=XEUlxjTawgkGJUbuV5995m7w7A2+JrHLDxzMf66rOFU=; b=C
+	dsqc3O9g9+P1uvJEQHGHAFH+WsHowmjhRVy+cqRNjQG++7x02Zs6YEtS3Z8WE9Q7
+	aU7Iyt8RK34PG634m7GdOLdc65TjyLlQ1FMnVcQDrKU1vzx9ZRt7CF5ubdgXZ5hD
+	LICkHzbR+VU5TW8gyNRRA+8tUrQ1gyDD4AgYcSft7m1DT4wa5iXfOq6TFoHseKlc
+	ZKKjp2fzBKD4C5Vg6N/L2WyPaWaSk/D/xDvTo+QbGyz1c5LwQ598Z1zUm1qYi2TI
+	Yo/X4zL4wxVl7PWyB6MPPrBNBLnV9cGyPZwCbCyxnslwXC+24EdDff0OvF6bpxbo
+	vqgoQPXgllSGln8FDDRng==
+X-ME-Sender: <xms:5ondZv4zT1mzhUMUTQzG10IJfddGHJ0zWNQriMXqeMVE9T6_YZ50HA>
+    <xme:5ondZk5zjak4Ydo9XQEC5_iAquMrOd_atPoKQ96BVfMT2YYDx9vqgHiwWixrtNewg
+    G1Ny6-v0uoneFUa_bQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeihedgfeelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
     htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
@@ -57,23 +57,22 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeihedgvddvucetufdoteggod
     hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdffkeet
     hefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivgeptd
     enucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgr
-    thdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthht
-    oheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrg
-    gvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhgvshhhrdhkuhhmrghrsehl
-    ihhnrghrohdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvg
-    dprhgtphhtthhopehlohhonhhgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghvpdhr
-    tghpthhtohepkhhvmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
-    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
-    ihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:5HXdZjXKsiVg0w6__LUADfJytMeo5A4WoNQvia67yR5kq9W8Jmoi0A>
-    <xmx:5HXdZrgii1I_h-w-gR8wS3hexx2c9NS-vXSzX9kWSFdDgFOkwBGozQ>
-    <xmx:5HXdZrDcUvQhwymXVqk5VPhjCz17hA7wRmgyDKLspEsJUf4QY_OiRA>
-    <xmx:5HXdZkKztAxFwWu28RgDAE4gSSV_LYzj3kFiwO7qG8pSOTuVzODCvw>
-    <xmx:5XXdZv766T5NvtEyKkiP7RLpIB-HYvrQDJZ-KN3MvjO9rf6m-9PJ-lIF>
+    thdrtghomhdpnhgspghrtghpthhtohephedtpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopehtshgsohhgvghnugesrghl
+    phhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuh
+    igrdhorhhgrdhukhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthht
+    oheptghhrhhishhtohhphhgvrdhlvghrohihsegtshhgrhhouhhprdgvuhdprhgtphhtth
+    hopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhhpvgesvghl
+    lhgvrhhmrghnrdhiugdrrghupdhrtghpthhtoheprghnughrvggrshesghgrihhslhgvrh
+    drtghomhdprhgtphhtthhopegthhhrihhsrdhtohhrvghksehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:5ondZmeEGi7Zphdy-TIo3rqIOR8NdWAWLW97nTHVkixQm2hr7zi_lg>
+    <xmx:5ondZgJWFhoAhESpgoV8HqH0WSt1SGQGzDYdrSWWUBYB0eOSXRYfyg>
+    <xmx:5ondZjIv5G778Hr5ut3xkDDBdWEw4LkqLddMC19cVit9ESab8p1oRA>
+    <xmx:5ondZpygjZgzfq9YzCe6vFMmqD7cPQFQugI3PiJsvCSf-xhZMXrz0w>
+    <xmx:6YndZpZiu9HbuzT5oVUkok3yUEmNCf2gNYQHj65nIEn4Qe-iJ9a104zM>
 Feedback-ID: ifd894703:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 97D501C20066; Sun,  8 Sep 2024 06:01:08 -0400 (EDT)
+	id 900D51C20065; Sun,  8 Sep 2024 07:26:30 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -81,68 +80,104 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sun, 08 Sep 2024 11:00:48 +0100
+Date: Sun, 08 Sep 2024 12:26:09 +0100
 From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Xuerui Wang" <kernel@xen0n.name>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+To: "Charlie Jenkins" <charlie@rivosinc.com>,
+ "Arnd Bergmann" <arnd@arndb.de>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Matt Turner" <mattst88@gmail.com>, "Vineet Gupta" <vgupta@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>, "Guo Ren" <guoren@kernel.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "Xuerui Wang" <kernel@xen0n.name>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Andy Lutomirski" <luto@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+ "Shuah Khan" <shuah@kernel.org>, "Christoph Hellwig" <hch@infradead.org>,
+ "Michal Hocko" <mhocko@suse.com>,
+ "Kirill A. Shutemov" <kirill@shutemov.name>,
+ "Chris Torek" <chris.torek@gmail.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev,
  "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- kvm@vger.kernel.org
-Message-Id: <5d32c242-2854-4687-876a-312bf24e6aeb@app.fastmail.com>
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net
+Message-Id: <53384dc9-38c9-4d05-bcde-a3552fbed7ac@app.fastmail.com>
 In-Reply-To: 
- <CAAhV-H5xejfimHedCpLfh2CRheHJmAXpvcmWpLacyrg5m4EPJA@mail.gmail.com>
-References: <20240907-iocsr-v1-0-0c99b3334444@flygoat.com>
- <20240907-iocsr-v1-3-0c99b3334444@flygoat.com>
- <CAAhV-H5xejfimHedCpLfh2CRheHJmAXpvcmWpLacyrg5m4EPJA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] LoongArch: cpu-probe: Move IOCSR probing out of
- cpu_probe_common
+ <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
+References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
+Subject: Re: [PATCH RFC v3 0/2] mm: Introduce ADDR_LIMIT_47BIT personality flag
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 
 
-=E5=9C=A82024=E5=B9=B49=E6=9C=888=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8A=E5=
-=8D=883:47=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> Hi, Jiaxun,
+=E5=9C=A82024=E5=B9=B49=E6=9C=885=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=E5=
+=8D=8810:15=EF=BC=8CCharlie Jenkins=E5=86=99=E9=81=93=EF=BC=9A
+> Some applications rely on placing data in free bits addresses allocated
+> by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
+> address returned by mmap to be less than the 48-bit address space,
+> unless the hint address uses more than 47 bits (the 48th bit is reserv=
+ed
+> for the kernel address space).
 >
-> On Sat, Sep 7, 2024 at 6:17=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoa=
-t.com> wrote:
->>
->> IOCSR register definition appears to be a platform specific
->> spec instead of architecture spec, even for Loongson CPUs
->> there is no guarantee that IOCSR will always present.
->>
->> Thus it's dangerous to perform IOCSR probing without checking
->> CPU type and instruction availability.
-> I don't think this is necessary. Loongson's Chip engineers confirm
-> that IOCSR is always present in Loongson processors. If other
-> LoongArch (not Loongson) processors have no IOCSR, they should
-> implement their own cpu_probe_abc() instead of cpu_probe_loongson().
-
-Hi Huacai,
-
-IOCSR_FEATURE probing process is now in cpu_probe_common, which is shared
-among all PRIDs, that's why it needs to be moved out.
-
-It also prepares for different IOCSR definitions, as you said before IOC=
-SR
-definitions are not guaranteed to be compatible, so if an incompatible
-implementation arise, you can just introduce a new CPU_TYPE for it and
-create a new iocsr_probe function.
-
-Thanks
-- Jiaxun
-
+> The riscv architecture needs a way to similarly restrict the virtual
+> address space. On the riscv port of OpenJDK an error is thrown if
+> attempted to run on the 57-bit address space, called sv57 [1].  golang
+> has a comment that sv57 support is not complete, but there are some
+> workarounds to get it to mostly work [2].
 >
-> Huacai
+> These applications work on x86 because x86 does an implicit 47-bit
+> restriction of mmap() address that contain a hint address that is less
+> than 48 bits.
 >
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Instead of implicitly restricting the address space on riscv (or any
+> current/future architecture), provide a flag to the personality syscall
+> that can be used to ensure an application works in any arbitrary VA
+> space. A similar feature has already been implemented by the personali=
+ty
+> syscall in ADDR_LIMIT_32BIT.
+>
+> This flag will also allow seemless compatibility between all
+> architectures, so applications like Go and OpenJDK that use bits in a
+> virtual address can request the exact number of bits they need in a
+> generic way. The flag can be checked inside of vm_unmapped_area() so
+> that this flag does not have to be handled individually by each
+> architecture.=20
 
+Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
+Tested on MIPS VA 48 system, fixed pointer tagging on mozjs!
+
+Thanks!
+
+[...]
 --=20
 - Jiaxun
