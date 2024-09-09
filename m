@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AAF81AE863
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 07:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C361AE050
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 07:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725866394; cv=none; b=pL9Jp2nPLnGyxdQBaSM/Exl8ljCzMNNXTKNZVRoW3pOtdA9B+Sb9dM7fMnznIcTOJW2sWrVQAnS6QO3dC+a5hiw03j6B+gMBSGngxWC0TcZrJaP6HKdKNDZFEA+hKWB129tz/xCyKkLP1798C/OLSWM1m9WXsZlPry3gXZsK8JU=
+	t=1725866395; cv=none; b=pM9H3d04wpLYcWK01Y76E4D7kSeSJgmIUJCg4xj4oRHo1GR1KNVmsWJC2tvz0YLw+EOriMRzxtNg/uOmg7uzVCPt1Z0nzPFNWeCk0jfvqYC9a7IHfLY0UY75hvueVujom/YYi1V5WQtyWisWnbgxqkbFd2f4cf11XOaGHSH5ZyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725866394; c=relaxed/simple;
-	bh=bGNreym3kW0bK7GMlgJ3cxOdk41TKb47ybJgVoM2Isw=;
+	s=arc-20240116; t=1725866395; c=relaxed/simple;
+	bh=iZ0f0XnWDazREs9NOwhn8jGxiZOjDi5eh+OSniQcX5s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IM2NflGMD3OqHEIBrlVO4FbwtzZiZccvT4rsyS3Mnx5hrHebTFXISnMdmQzUivsFEFZP8iA4U4Y4DTcCFFLFPWKm25iQfB+Sa8E3Pvb1Hvt42OVN4lkpHaZ0stSEfZ+4rM9jXCnL8fCY4rNdUptWXKRGOfJCHSmUDsVthwAKW6o=
+	 MIME-Version; b=ASXiyWs7kLfLYNocyVoGU+zS1yuv+YVBg1ap9IHV5zGjYKDTN/qfNSyLtEts16gvVk2at9z/m+Mz1i1EI+07K7ZbTH/mVMTjp+BWF8MdZGfgMvL61Plxo8EIL1EMY+p1p70CGrRtXUHnjxU4uhWwnTGDQpSKPqpqBdbV8OYDn0w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.147])
-	by gateway (Coremail) with SMTP id _____8DxF+mWod5maJkCAA--.4995S3;
-	Mon, 09 Sep 2024 15:19:50 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxheiXod5meJkCAA--.5038S3;
+	Mon, 09 Sep 2024 15:19:51 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.147])
-	by front1 (Coremail) with SMTP id qMiowMAxQNaQod5msioCAA--.7431S4;
-	Mon, 09 Sep 2024 15:19:49 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxQNaQod5msioCAA--.7431S5;
+	Mon, 09 Sep 2024 15:19:50 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -34,9 +34,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 6/8] ASoC: loongson: Replace if with ternary operator
-Date: Mon,  9 Sep 2024 15:19:36 +0800
-Message-ID: <94ec2ac178610f50af4815ef5b719695915bba31.1725844530.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v1 7/8] ASoC: loongson: Factor out loongson_card_acpi_find_device() function
+Date: Mon,  9 Sep 2024 15:19:37 +0800
+Message-ID: <3b7da05e5fd4326e7944aa749bf06dd44e964f6c.1725844530.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1725844530.git.zhoubinbin@loongson.cn>
 References: <cover.1725844530.git.zhoubinbin@loongson.cn>
@@ -47,83 +47,117 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxQNaQod5msioCAA--.7431S4
+X-CM-TRANSID:qMiowMAxQNaQod5msioCAA--.7431S5
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF4xAFy7Kr43uw47WF13Jrc_yoW8trWDpr
-	93u3yrWr9xXF4Iv3sIv3W8Jr1UJryftF9xWFsrtwn7Xr9rXF10gr1rJFs5Wr4xArW7K3yx
-	uF4kA3yrGa4DurcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxGF15Zw48AF1DJr48Cr4Utrc_yoW5uF1xpF
+	4aya909r98tF1SkrnYqrW5Crya93yxuw47JayxGwn7K3s3Z345X34I9F1UZrWFy34DAa1U
+	ZrW3Kay8Ka4DJrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	ZF0_GryDMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
-	kI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUx_HUUUUUU
+	0xBIdaVrnRJUUUBlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
+	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6Fy26r45twAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0aLvJUUUUU==
 
-Replace an if statement with a ternary operator, making the code a tiny
-bit shorter.
+The operations for reading the cpu and codec nodes in
+loongson_card_parse_acpi() are similar, so we convert them into a simple
+helper function called loongson_card_acpi_find_device().
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- sound/soc/loongson/loongson_i2s.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ sound/soc/loongson/loongson_card.c | 55 +++++++++++++++++-------------
+ 1 file changed, 31 insertions(+), 24 deletions(-)
 
-diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
-index 3b9786076501..8bb38e418333 100644
---- a/sound/soc/loongson/loongson_i2s.c
-+++ b/sound/soc/loongson/loongson_i2s.c
-@@ -21,34 +21,30 @@
- 			SNDRV_PCM_FMTBIT_S20_3LE | \
- 			SNDRV_PCM_FMTBIT_S24_LE)
+diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
+index 4033cd7f09f6..e55ad52ff43b 100644
+--- a/sound/soc/loongson/loongson_card.c
++++ b/sound/soc/loongson/loongson_card.c
+@@ -68,46 +68,53 @@ static struct snd_soc_dai_link loongson_dai_links[] = {
+ 	},
+ };
  
-+#define LOONGSON_I2S_TX_ENABLE	(I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN)
-+#define LOONGSON_I2S_RX_ENABLE	(I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN)
-+
- static int loongson_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 				struct snd_soc_dai *dai)
+-static int loongson_card_parse_acpi(struct loongson_card_data *data)
++static struct acpi_device *loongson_card_acpi_find_device(struct snd_soc_card *card,
++							  const char *name)
  {
- 	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+	unsigned int mask;
- 	int ret = 0;
+-	struct snd_soc_card *card = &data->snd_card;
+ 	struct fwnode_handle *fwnode = card->dev->fwnode;
+ 	struct fwnode_reference_args args;
++	int status;
++
++	memset(&args, 0, sizeof(args));
++	status = acpi_node_get_property_reference(fwnode, name, 0, &args);
++	if (status || !is_acpi_device_node(args.fwnode)) {
++		dev_err(card->dev, "No matching phy in ACPI table\n");
++		return NULL;
++	}
++
++	return to_acpi_device_node(args.fwnode);
++}
++
++static int loongson_card_parse_acpi(struct loongson_card_data *data)
++{
++	struct snd_soc_card *card = &data->snd_card;
+ 	const char *codec_dai_name;
+ 	struct acpi_device *adev;
+ 	struct device *phy_dev;
+-	int ret, i;
++	int i;
  
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
--					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN,
--					   I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN);
--		else
--			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
--					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN,
--					   I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN);
-+		mask = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
-+		       LOONGSON_I2S_TX_ENABLE : LOONGSON_I2S_RX_ENABLE;
-+		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, mask, mask);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
--					I2S_CTRL_TX_EN | I2S_CTRL_TX_DMA_EN, 0);
--		else
--			regmap_update_bits(i2s->regmap, LS_I2S_CTRL,
--					I2S_CTRL_RX_EN | I2S_CTRL_RX_DMA_EN, 0);
-+		mask = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
-+		       LOONGSON_I2S_TX_ENABLE : LOONGSON_I2S_RX_ENABLE;
-+		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, mask, 0);
- 		break;
- 	default:
- 		ret = -EINVAL;
+ 	/* fixup platform name based on reference node */
+-	memset(&args, 0, sizeof(args));
+-	ret = acpi_node_get_property_reference(fwnode, "cpu", 0, &args);
+-	if (ret || !is_acpi_device_node(args.fwnode)) {
+-		dev_err(card->dev, "No matching phy in ACPI table\n");
+-		return ret ?: -ENOENT;
+-	}
+-	adev = to_acpi_device_node(args.fwnode);
++	adev = loongson_card_acpi_find_device(card, "cpu");
++	if (!adev)
++		return -ENOENT;
++
+ 	phy_dev = acpi_get_first_physical_node(adev);
+ 	if (!phy_dev)
+ 		return -EPROBE_DEFER;
+-	for (i = 0; i < card->num_links; i++)
+-		loongson_dai_links[i].platforms->name = dev_name(phy_dev);
+ 
+ 	/* fixup codec name based on reference node */
+-	memset(&args, 0, sizeof(args));
+-	ret = acpi_node_get_property_reference(fwnode, "codec", 0, &args);
+-	if (ret || !is_acpi_device_node(args.fwnode)) {
+-		dev_err(card->dev, "No matching phy in ACPI table\n");
+-		return ret ?: -ENOENT;
+-	}
+-	adev = to_acpi_device_node(args.fwnode);
++	adev = loongson_card_acpi_find_device(card, "codec");
++	if (!adev)
++		return -ENOENT;
+ 	snprintf(codec_name, sizeof(codec_name), "i2c-%s", acpi_dev_name(adev));
+-	for (i = 0; i < card->num_links; i++)
+-		loongson_dai_links[i].codecs->name = codec_name;
+ 
+-	device_property_read_string(card->dev, "codec-dai-name",
+-				    &codec_dai_name);
+-	for (i = 0; i < card->num_links; i++)
++	device_property_read_string(card->dev, "codec-dai-name", &codec_dai_name);
++
++	for (i = 0; i < card->num_links; i++) {
++		loongson_dai_links[i].platforms->name = dev_name(phy_dev);
++		loongson_dai_links[i].codecs->name = codec_name;
+ 		loongson_dai_links[i].codecs->dai_name = codec_dai_name;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.43.5
 
