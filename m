@@ -1,184 +1,244 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtpout42.security-mail.net (smtpout42.security-mail.net [85.31.212.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999FE1B4C32
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 13:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725887722; cv=none; b=WoDaLsRQiVg5AHmlU5OS41dij3ez+xzkxYatkcE83Ql0yOOe7XM/HnHjEN9wIevYg5VDttwn2DGMQU3Tr6O82JEnEz5rmASHI8xeUj5WHRjwRU/+XS20am1hn94DHmEhCKGAYDjrmG27ett4b3RTYFHBnBo5+u+GXZGZ4FAmFg4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725887722; c=relaxed/simple;
-	bh=6mdNTEsjiQN5pqvgQZf5ZMa+SrjewyKRq3O8UeBPb4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KJDKXMHpKVXAlCiKbwgDJaDQrijl5P8fJTGDvLTTGFgf2AfxEQ+YZVpuYhYz6nIbMasCYnV4HxrcD5ruKXPNnX0dEAa8xZJlskx80YrEE1PbUs/FiHfbPtVtbJ1jNfIZZ4+aVahc3AJKJUQrU6wAgA+FQJ5W2uIKbW0XCIln5bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=RaC2kV8F; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E04817A59B
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 13:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725888745; cv=fail; b=UbW+lTyfmq+zGuudNIbquVOnEJvgTy++Tq8yrBymgPdc/yfHOkvMXUzOExCTVKP6grAuGzsadPfxHcz3MBF2qd4EsdgIHN2ux4+aWfxTWfzjLj328umZGxQJlkbx0RC237WXHJQ+wpnAVxwtG+fvKF3EORWb+auXSmHv5fV7oqQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725888745; c=relaxed/simple;
+	bh=fm74sZv+wQupqd1aA35tAP0V73LJDMRwcbwSpgpGSEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N/r3xXi7QYSTtuIoTAE9JsOkGwe+cW70AMoUwnQmBPfEab42TU8kobGstPF+LjDN7xmZ6YnCjkZU/9sU/DwA6/OI4M5DF6mhyP71jC6z3mGWxrzN1DFt+isRtCXdFZZTC2zUEifd5LCNDVKMDek2oIIx4ASRqv3ipEWnTy6f8Dw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=bUsFJNLz; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=grfeIMZa reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="RaC2kV8F"
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F34763F758
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 13:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1725887710;
-	bh=u1n/O2W+LcrKETL5zYIpc+SVEc0AbjVbXS3O8zNwBEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=RaC2kV8FRAp0NebZtt6VIjt99Cah1FaqGFpHL2x3mdROTNdlZcDTfss/l4KdlyGow
-	 AaDBr2iscNXt/aEOWmZv3wZ/8xC3mJCE4kCGUCi9MD0A7wmumLAB6pg8A4yrhPnWCl
-	 pPuSC3d1wjom1ECAuKH3198Fyn2Yx8YBvq0BAH+sXeqb3wLwUbrVGUYwc0Z7/jMgwc
-	 5HuD+/kT1wv9n5EeB/DulE7Ua1Qho6XbV8BZUNG7+j+bu5dXDZbzAgCWbpeyUFHR+H
-	 JpQ5gFJY6cbKadXL+zXm6+Do9K0yktdi3fNroXcwVr3Fuz3/IpTCO26RCkQjcm+Mlq
-	 8+61EEIIDIKvg==
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42cbcf60722so362095e9.1
-        for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 06:15:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725887700; x=1726492500;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u1n/O2W+LcrKETL5zYIpc+SVEc0AbjVbXS3O8zNwBEk=;
-        b=dXHWPKqj0hD4ycE8HMhsQu0nN4OToQ8Y1ogNqo2qnulB8dHGzilGMdNax5KdNQycgH
-         PyCKKu8sY/8iBpKYcXumVPFKhP0c+LaAI8lwXW86BQlYMbRmOmxz7dgdSGccRusmxcrj
-         EYYDjs+hTDx6WEewYfZD30q//KqG4ufaGu8/61pof/IufhV9KNok0HWZkLRKva8l0JF1
-         mM5yOehOxKE3l9BjFClIobOJkR/tKETcfriPwTrNcoyBI5A2EAbQz/jP4dZAe73Qpd/J
-         xzwoQiBKuV96Resj/P0A9w9ljuZpwSptTvQJ89pbRuTKAmIh4ok0p3H5DwRBdCp9bI/K
-         wTVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+n7bRs3LfXYfFRIzCqY8cX7rD8pGBOZeZXSezwg00wPHzeBUWrMCvm3QD5pR4SUeJB/6SxOPf9Gk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxERmlwJP2fvbQCqJ9s5hVs3E8wk7jhekRkEAHzB7bvMek0hijZ
-	6twX454/kueoYASNhRsmJZZwWwlFavxyDzB1Ybr/lO3A9qdQ40zhIfrggkW4cedbDqO6FaSc0St
-	mSnLUzmNFTtVBvLqTkm4jD9suBaedpLKuWqw6JXiVFq/b74uMNIlOiWD1Hbzhi90Zg8kSxdETAg
-	==
-X-Received: by 2002:a05:600c:1d22:b0:42c:baf9:bee7 with SMTP id 5b1f17b1804b1-42cbaf9c20dmr9334115e9.12.1725887699784;
-        Mon, 09 Sep 2024 06:14:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEOh5t4UDivktvUt6K0PPRZ2R1nhw2jQHB3U8gDmn4MVIqBX9sh6eOQO6zR51vh8x/9pGonlw==
-X-Received: by 2002:a05:600c:1d22:b0:42c:baf9:bee7 with SMTP id 5b1f17b1804b1-42cbaf9c20dmr9333485e9.12.1725887698729;
-        Mon, 09 Sep 2024 06:14:58 -0700 (PDT)
-Received: from [192.168.103.101] (dynamic-046-114-195-052.46.114.pool.telefonica.de. [46.114.195.52])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b7f1sm77309945e9.48.2024.09.09.06.14.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2024 06:14:58 -0700 (PDT)
-Message-ID: <139cd6c2-45e7-46c9-ad17-4d617673fc80@canonical.com>
-Date: Mon, 9 Sep 2024 15:14:53 +0200
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="bUsFJNLz";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="grfeIMZa"
+Received: from localhost (localhost [127.0.0.1])
+	by fx302.security-mail.net (Postfix) with ESMTP id E3C40BFBDE
+	for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 15:32:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1725888734;
+	bh=fm74sZv+wQupqd1aA35tAP0V73LJDMRwcbwSpgpGSEc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bUsFJNLz4Y7LBsGYrfR53UrKPNnKEpe75aQoo9qWVff2Qxb5GRCYjPv+N0eRFRkzv
+	 B9XRYkeRjxbNioWf0I79uGsCuNzx/EYlhggWDDsWn2BcKuH5hsgpUf3yuXLeaJMmIS
+	 gEm3DLV3AbaWDGbOC46nlhPDlFot6KS3cBwRwCdc=
+Received: from fx302 (localhost [127.0.0.1]) by fx302.security-mail.net
+ (Postfix) with ESMTP id 871B9C0066; Mon, 09 Sep 2024 15:32:14 +0200 (CEST)
+Received: from PR0P264CU014.outbound.protection.outlook.com
+ (mail-francecentralazlp17012051.outbound.protection.outlook.com
+ [40.93.76.51]) by fx302.security-mail.net (Postfix) with ESMTPS id
+ E3642BFAEB; Mon, 09 Sep 2024 15:32:13 +0200 (CEST)
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:118::6)
+ by MR1P264MB2580.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:35::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.23; Mon, 9 Sep
+ 2024 13:32:12 +0000
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626]) by PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626%4]) with mapi id 15.20.7939.022; Mon, 9 Sep 2024
+ 13:32:12 +0000
+X-Secumail-id: <bde6.66def8dd.e17d3.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KWjv4DYHlHpZVQH7VzeDCs+828PD37TTOUoaz9IREIecXVl7jkzRNqng0DYSi1smI7xNf61SzHIEXIYiHa9z116SNYfhGxWHHTX8KTiyy2qDgm4cpbL+u0xNl7qgrVuaGgW+UhhDJLyAKJ9QuL8s5KRPWqfDM7HIZjKWCw7WM7ckPFJwc3ExYYWDX39T8u4cprn6jT9/DXisS4iYFK7vVwCnMIOsly/w9eAO9b4Zx8xLIf6KHQAAhsrDYUzP8onecmQbCnGh8hxpxbfdTP9HkXdiPQ1ax/JlD78KYYy82SAu2yEpeXAKZWFFrD1VGyN86Rcia+uADO2UvorOW6iMrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SVUX+6s45Z0ge65VzI3FZt7ZlDdHSX5oJ+Km/4ciA+s=;
+ b=J5GCjBYt8HbB28NjMbmFqHXI+XXTPFUW+isNOJD++JUoYPS+0VqPmclnFb7OHfOfMFtWAB+PGEJdpYshIreNTxyY+ZRS3r4dMiqFgx7DkREnnDlbnkVUFczoML8iVUpn2mXzFTbt7tsNtoc+XJ3Md8ob3IPFOw+oE3BiNesiKLRQ+FYSMRl7FHnWjVbhcNJFbqg2ZWq1QkJi6/XPexW7KcunlwRKkCosYKwQDDCT3X0ZwTGCxAkkg3zwVUpGon7OlhzxD+SFFIjL/8mUCcH9e7NokKvsd7E74v/uXs8dLa1BIzlLWMwey/mBLcvCJRnRYo4PydFNkcsnPOLGRvGNeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SVUX+6s45Z0ge65VzI3FZt7ZlDdHSX5oJ+Km/4ciA+s=;
+ b=grfeIMZax3zk8DiOduqxwkZOCJTPrVNo6ll9G99jJZ4TMJn3p4J43H/3/eqBb4iRTu4MPJbYOhAwi6hCQaEtlwI+YtQ8ejR/R9THI+PnGi5+ic8XTFJvQ0O6BzbcjQ14XfwbSnprSOybJFyhw/9gVK5ekTCvDwP3+s3fapvoFjurzyrZJFbNgc1aagfMXfJJR7K9qbijLTH1MfPQoxuFtO20069eaiSUFFbmEXPibtcY4vxXIjCrdSp9luqdeSBcaUbe5G0xzMd52pykVDnqfATDvG88PSU35g5/8RAE0OVoJ4q6DXo0rDHKMAgIZipY8ogwVGHnMJUtGNuLtrmoMQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+From: Julian Vetter <jvetter@kalrayinc.com>
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev, Yann Sionneau
+ <ysionneau@kalrayinc.com>, Julian Vetter <jvetter@kalrayinc.com>
+Subject: [PATCH v2 2/4] Use generic io memcpy functions on the arm64
+ architecture
+Date: Mon,  9 Sep 2024 15:31:57 +0200
+Message-ID: <20240909133159.2024688-3-jvetter@kalrayinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240909133159.2024688-1-jvetter@kalrayinc.com>
+References: <20240909133159.2024688-1-jvetter@kalrayinc.com>
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PR0P264CA0106.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:19::22) To PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:118::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] riscv: defconfig: drop RT_GROUP_SCHED=y
-To: Celeste Liu <coelacanthushex@gmail.com>,
- Conor Dooley <conor.dooley@microchip.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>, Anup Patel <anup@brainfault.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Russell King <linux@armlinux.org.uk>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Tony Lindgren <tony@atomide.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Palmer Dabbelt
- <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-tegra@vger.kernel.org
-References: <20240823-fix-riscv-rt_group_sched-v2-0-e4dbae24f7e1@gmail.com>
- <20240823-fix-riscv-rt_group_sched-v2-1-e4dbae24f7e1@gmail.com>
- <20240909-gave-celtic-af2ea8bc38d5@wendy>
- <9e364ae4-dc2c-4efa-8611-462218402a5d@gmail.com>
-Content-Language: en-US
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <9e364ae4-dc2c-4efa-8611-462218402a5d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAYP264MB3766:EE_|MR1P264MB2580:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3386f99f-5534-4836-e451-08dcd0d3d008
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|52116014|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info: hOIToskQQwTquixe7ZyknEDO61S+BH0/UFT+eigrrIT+Gy+3CDiH8L4hyEgq8x22Kxb6yMLAShWjvgfXaUazxK7GIBW2wCEOTplln3mUuDjGVlVKbLMdBA5clNCQGfSullKJw54/B3VxBbfyYicVxang0SJ2cR5QtuykA3DdAlifDQIOeaQVtWeeiaJdYCIj7mMdeVdQV3GkxCxOTIA3gzdRa3qP+5hhP6mqHRBu7oxXq1D/ObSEZQ1t/aExuyI/ye6v92sdgogD20tlkDKvyU9lhyRS2bM0dkIsdwwn32jRnYl2386+C2C4PtmgAF6dKxc5YayUCkvJUPbgA8SAoiG/dAX36XOc7JQi6kfRgj5zGrE+cJb7Z8PX6xawsB6nsN/gY9U53PVhoJ2oGKS61uwpBKZ6GHaLdCFgc0tRORgLDFELZ8+TJwEk1o0eIDu5Mdi2AhIToTTaE3LPpdNyciMQuvEXGENSbLKXMVo+3Ag2RXgyYw1MKssOdUWGpQ55bps5FtaJWLYzHqNLKNU2ZoVf3nghSOCWLfGyJqyKHC6Xbe9kxUu7ohroOUhDyk5ARVQIb3tHR6Lz0Pe3F7rm18jgeqO7Ijbpx/5zLZ5wI9NfQmrsDYOHbY2KMbzZhh9GnddwQHfItoYfilQDtfxFYLWsphLjscnhnVGWeTQxgjnblc2GJGDfmNUC75p+Dw4xsolZLjnyI2d+ujKWmhw4oQLdYI8QAwi5Kb5kQ1ujWsuwNspkmNbYf0DJRc/VBmNgnkM2wxK6QocZEMTU3QhUZYhYO+/a95N1mfdryJpVPkjemC303Hau4yEEA6kvxba/T7ez2MhUNSV0VMPf4KdR6tC5JGOwsVQgzvPiGFHSsDrdbNnc1PvdrMgzkMYrlE99lpqnCfjW4LGE61o2VsrYC56HMCV3ZKi8MpJJH20HWd9PFyrx40z+o01b9yJh5AbAsyb
+ TlxK96kIR2jR60xYpcuUsgRDKsR/BBdEfgz3Sr364nGhwFF1WgL7vrtSUlo3RWNaOllL/Qg10QMiVksSvBYPisYFDGuF/YRicOfFYdi3w7KrqjDzPMoildl8cofrkSjh9yi4RGY5w2lSoeuHQwRxgTBCLFSfJlLIu8pgGW/7aDADkACo98XZLmktQ+Ntft+s4/n68jLtioNNuvMNrNFs2alJvo5dmPXR+M+W/IbdIP5yrBGM+jqO3ZIFTjqTSov+E9/F5n9eXrQgg/+ypTkT5qvgqgyuHLoM/7ule2EmOLOPJiFLZLVFHOJTssJP1PRUIC3oSQ6W9Z2WleicbbuHwdi/BVFuwgxN3ouxS4krz3vXSFHhXjVsNprlwB6OpRuR0udvzj4D2PTz4oIVlvM+zvzL0JOdO0YU/pYR3BWUR6O/XUn1clJa1ZNq9FTwl8BSio/e9xw9EB5DjE/FTHw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: QNOIDnp30BHxCy6YTTlXBTzZnf+yIKn0zi5zcZpPFKiGD2fWB5EkW4TYU/iN9483vDnmQWRP9bq7gWVqidaGyNRBkGiGjmFtufUCP8U3vx1/55kHSOK3aubixYkWoILfnz2HPgqIlZDAqRRTDfKzjDOtd/3iEfbutjMAjQ+XxE38AjWExce2Vs8h54dX65X3UxGXNLd31t5nXd7e1AZRcBC1tUe8P5rOwrC4vxsYwXTka5P/b0NlbQ2+nIxzciNgMzZ56Zb2yF6/DzW6Dodk/fmwoBRd29AEsoD8pgG0UljJ7zcJa4/Y5BlhuhJrOe8zDBa6KgfW5ubF8Do0wD+m0/cJEq50wHA3rF0cc8x5qjCAh6vpbt6J13rty/r74gA+jUNcaAw06a+pU5Fxpp/YBU7/7YfboKZa0ZTNmAB8yo75+2tPbxm7OVy2/8hwbkGPX6JKjO5UHMdc1rC/V14EsfSAeZmKJppPGMESXEEci0fIfoVcpabLlL3o4ifph5oMeR/gKrc06wIXq1GPSFWunLxJkKkgNE+rshBwXCf9Rr9Oc/BzIIWt9H3hFewYfmrFI2isi+bn+QDKDhodpSO6J9yACyWI8r3tgSs4ZkaASp2t1NqMHo1UunF1m0OuqtiHGL68bkoZ+XaRy5pvO1+ImMXRTuLmom89I9EpLTRKSM1saZQyLRrLt6krKbKwDJKc8kiyFRvRYOTO6b4ut9y8A/XkdHT5bbZC7CxcuVqzgWQxS+04RyRAGQLhV3CVAm0BzIHtKn498wFrsvJ64SNGKqTenuUThChGaWvTIsJrt4iuvcBphBSITWOkLjmLnEhIWBvkvjNUjSn1ly0/iGy8niXpuQtT1HBDjgnDachhrHZXzL6cpOGan5hBD7QMHxcDhlrvbu2xxDJAoLSxhaeqf2FA7YxiFRIn2TeYnZ31TRtDXIIeFo41QblxDiYSx/J0
+ GXe+Dyu7RqD1CsCDpZFBgkucV+xQcW4ZL5gQo/ld8Nc0Gejz8Ldgr7Xz/pbrj8xjN8o+UpLcYFFFUumv4NN0CZJFVyh0BiFDpyRSQF3z6RQYHmjbdk7CiM7aSS3R/eJpubhGbyx/tb7tDH1kljIlp5vGuV54S0xKTStDnEQFN4Vyvf/efnF78tj5HGdFSc83N73o7QU/MvT4dUzTT3RmGQ9U3UTYnLRLSOsYTV3SORGus8qddEFjacWTxWF74HQ9EAC8knpXdOpKIIHcuJY1G+LH9Z/avhLYZdGL34Q9Tthkyrk4syO7CABVDJE8FApy5YCErK3xTsexOb0u5p94Ml5MLjOIvv3MBzwDlzLGfftJPZNuXLu+Z7X5vODiT+LTdJeStrcvSRLhgpNJ+6MYVPNYOLEy0bDxiLstoL4y+FPPn5ANlaYgwyQr9fRfqJA/tvgjI9HaS/gYV5FvUCLkufuChM/G43akBCc+k1anCkVPE08ZFw1UiXrLDCwfMYizq7XdqJzGdi9uqgmWe2LBc8c0Zip6v/Dg5mMmXOCLi24PDdTGgvpMFR6+tqE3InvW62g4d9HaMDrag5R9X12m1un+etzvUzlvByQNypDge+Iy5JnqJRnd+glnHhOa+we1
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3386f99f-5534-4836-e451-08dcd0d3d008
+X-MS-Exchange-CrossTenant-AuthSource: PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 13:32:12.7946
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t9lZEfMDVHAsCGG37qPh7/CkSuDYWd/MNRRoSUGavv03t6VoRy2KgUqknqhT4BokUUkeyfLLM9TzIADFDDeeAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB2580
+Content-Type: text/plain; charset=utf-8
+X-ALTERMIMEV2_out: done
 
-On 09.09.24 14:14, Celeste Liu wrote:
-> On 2024-09-09 19:53, Conor Dooley wrote:
-> 
->> On Fri, Aug 23, 2024 at 01:43:26AM +0800, Celeste Liu wrote:
->>> Commit ba6cfef057e1 ("riscv: enable Docker requirements in defconfig")
->>> introduced it because of Docker, but Docker has removed this requirement
->>> since [1] (2023-04-19).
->>>
->>> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
->>> needs an RT budget assigned, otherwise the processes in it will not be able to
->>> get RT at all. The problem with RT group scheduling is that it requires the
->>> budget assigned but there's no way we could assign a default budget, since the
->>> values to assign are both upper and lower time limits, are absolute, and need to
->>> be sum up to < 1 for each individal cgroup. That means we cannot really come up
->>> with values that would work by default in the general case.[2]
->>>
->>> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
->>> can only be enabled when all RT processes are in the root cgroup. But it will
->>> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
->>>
->>> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
->>> support it.[3]
->>>
->>> [1]: https://github.com/moby/moby/commit/005150ed69c540fb0b5323e0f2208608c1204536
->>> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
->>> [3]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
->>>
->>> Fixes: ba6cfef057e1 ("riscv: enable Docker requirements in defconfig")
->>
->> I don't think this fixes tag is suitable, the commit you cite in
->> moby/docker is a year younger than the one in the fixes tag, so it was
->> correct at the time it was written. I think the fixes tag should just be
->> removed, since that commit was not wrong. Or am I missing something?
-> 
-> The Docker commit I cited introduce the fix, not the bug. So it should be later
-> than commit in fixes tag, otherwise Heinrich Schuchardt won't pick the wrong
-> config from upstream.
-> 
-> Timeline is:
-> 1) 2015-06-19 Qiang Huang introduce RT_GROUP_SCHED check in Docker.[1]
-> 2) 2022-06-08 Heinrich Schuchardt pick this to defconfig in commit
->                in fixes tag.
-> 3) 2023-04-19 Florian Schmaus remove this requirement from Docker in
->                commit I cited.
-> 
-> [1]: https://github.com/moby/moby/commit/fb85a99f5899df7475ba6b1ac4b2e1d32974eca2
+Use the generic __memcpy_{from,to}io and __memset_io functions on the
+arm64 processor architecture.
 
-I experience no problems running Docker without CONFIG_RT_GROUP_SCHED on 
-Ubuntu 24.04.
+Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
+Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+---
+ arch/arm64/Kconfig     |  1 +
+ arch/arm64/kernel/io.c | 87 ------------------------------------------
+ 2 files changed, 1 insertion(+), 87 deletions(-)
 
-The Docker patch is only for contrib/check-config.sh. Probably Docker at 
-the time of my patch would have worked without CONFIG_RT_GROUP_SCHED, 
-too. I have no issue with the Fixes: tag in this patch.
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index a2f8ff354ca6..cfb1c729c9a1 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -140,6 +140,7 @@ config ARM64
+ 	select GENERIC_CPU_VULNERABILITIES
+ 	select GENERIC_EARLY_IOREMAP
+ 	select GENERIC_IDLE_POLL_SETUP
++	select GENERIC_IO_COPY
+ 	select GENERIC_IOREMAP
+ 	select GENERIC_IRQ_IPI
+ 	select GENERIC_IRQ_PROBE
+diff --git a/arch/arm64/kernel/io.c b/arch/arm64/kernel/io.c
+index ef48089fbfe1..fe86ada23c7d 100644
+--- a/arch/arm64/kernel/io.c
++++ b/arch/arm64/kernel/io.c
+@@ -9,34 +9,6 @@
+ #include <linux/types.h>
+ #include <linux/io.h>
+ 
+-/*
+- * Copy data from IO memory space to "real" memory space.
+- */
+-void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+-{
+-	while (count && !IS_ALIGNED((unsigned long)from, 8)) {
+-		*(u8 *)to = __raw_readb(from);
+-		from++;
+-		to++;
+-		count--;
+-	}
+-
+-	while (count >= 8) {
+-		*(u64 *)to = __raw_readq(from);
+-		from += 8;
+-		to += 8;
+-		count -= 8;
+-	}
+-
+-	while (count) {
+-		*(u8 *)to = __raw_readb(from);
+-		from++;
+-		to++;
+-		count--;
+-	}
+-}
+-EXPORT_SYMBOL(__memcpy_fromio);
+-
+ /*
+  * This generates a memcpy that works on a from/to address which is aligned to
+  * bits. Count is in terms of the number of bits sized quantities to copy. It
+@@ -78,62 +50,3 @@ void __iowrite32_copy_full(void __iomem *to, const void *from, size_t count)
+ 	dgh();
+ }
+ EXPORT_SYMBOL(__iowrite32_copy_full);
+-
+-/*
+- * Copy data from "real" memory space to IO memory space.
+- */
+-void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
+-{
+-	while (count && !IS_ALIGNED((unsigned long)to, 8)) {
+-		__raw_writeb(*(u8 *)from, to);
+-		from++;
+-		to++;
+-		count--;
+-	}
+-
+-	while (count >= 8) {
+-		__raw_writeq(*(u64 *)from, to);
+-		from += 8;
+-		to += 8;
+-		count -= 8;
+-	}
+-
+-	while (count) {
+-		__raw_writeb(*(u8 *)from, to);
+-		from++;
+-		to++;
+-		count--;
+-	}
+-}
+-EXPORT_SYMBOL(__memcpy_toio);
+-
+-/*
+- * "memset" on IO memory space.
+- */
+-void __memset_io(volatile void __iomem *dst, int c, size_t count)
+-{
+-	u64 qc = (u8)c;
+-
+-	qc |= qc << 8;
+-	qc |= qc << 16;
+-	qc |= qc << 32;
+-
+-	while (count && !IS_ALIGNED((unsigned long)dst, 8)) {
+-		__raw_writeb(c, dst);
+-		dst++;
+-		count--;
+-	}
+-
+-	while (count >= 8) {
+-		__raw_writeq(qc, dst);
+-		dst += 8;
+-		count -= 8;
+-	}
+-
+-	while (count) {
+-		__raw_writeb(c, dst);
+-		dst++;
+-		count--;
+-	}
+-}
+-EXPORT_SYMBOL(__memset_io);
+-- 
+2.34.1
 
-Acked-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 
-> 
->>
->>> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
->>> ---
->>>   arch/riscv/configs/defconfig | 1 -
->>>   1 file changed, 1 deletion(-)
->>>
->>> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
->>> index 12dc8c73a8ac..de85c3ab261e 100644
->>> --- a/arch/riscv/configs/defconfig
->>> +++ b/arch/riscv/configs/defconfig
->>> @@ -9,7 +9,6 @@ CONFIG_CGROUPS=y
->>>   CONFIG_MEMCG=y
->>>   CONFIG_CGROUP_SCHED=y
->>>   CONFIG_CFS_BANDWIDTH=y
->>> -CONFIG_RT_GROUP_SCHED=y
->>>   CONFIG_CGROUP_PIDS=y
->>>   CONFIG_CGROUP_FREEZER=y
->>>   CONFIG_CGROUP_HUGETLB=y
->>>
->>> -- 
->>> 2.46.0
->>>
-> 
+
+
 
