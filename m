@@ -1,128 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022601B0131;
-	Mon,  9 Sep 2024 07:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15BB1B14F7
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 08:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725868433; cv=none; b=JhTVicgjUsDhB1NIpYqiHFqwXVEHgGAEYwhN352Z9Fmo6PR4EEWnGo+nLCZ+PpduuUfZdWQBkVnf4k4J35SlnkwiPkViGk9YkpJ67Z+mVRn+VLPwcUYV8z0euu5LFs4KPHw9p6X7qZ8zAlBdq798RRdw8ZEvIv3SRwbugQkJA20=
+	t=1725869577; cv=none; b=cJDwcc9PXOmVCpLqzIehHjLU1v7RmFLa4cIjN2b4tNdHb/2RFsCd8S/nyc/x81XzGx4FWfg2raRTwhz64pEksLpboQu9EFiV+TuidoLuz4wY3DHfC8j46XqIlDFfBC2K6Oo/8MZAsP4t1r7CJl9XxivKk552saisPsNyPX9+Cus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725868433; c=relaxed/simple;
-	bh=ahLJCzH38r4amWW2OkSmwBXliEUmYNpHeiVErh4CIIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=agjxGij2aXL88mezbWWcTbu2UuaDfoWot7BJ1/n5O8HQFWsReqr2R7CRF+0rlYrLiLYV+dcBBBGX6xzTX9UYz6+JdMPjbt9/mKTxIRoN75MXBChJ3MyKUtc9F9m3BKJYxGij49HoFVKKOtNxh+Do7Ag/m2Kia393X5yFENutC4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPm6VSh6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725869577; c=relaxed/simple;
+	bh=qn1o8Intnk0JCIq1CUGzHv/zXzVk+ma3u3ksckHSnV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y0jk+0k/inUp0pNhhj1s2yi8rrRZmnPvd8tGiJdgGb7g8bE3TJSEzCk/9hUmnfZNTF8sgm7sSo1Y284m6x4gW3hrhmIfcIGwEJqRUbx4f1Cj6M7qdZHsoTs2V0uVqVz15xq/O+wCfm3Sv7J1L73iyMhOQXOkUhqohDC+DX/XoMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxmK3ykd; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPm6VSh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A40C4CEC5;
-	Mon,  9 Sep 2024 07:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725868432;
-	bh=ahLJCzH38r4amWW2OkSmwBXliEUmYNpHeiVErh4CIIo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RPm6VSh6M/WpCkCX9Jc14cJ+kH6OlULTKpiRNukROhDXrJIP1KOw8mapxyd/cg/KS
-	 gbpD6HAg/3LY3uxdgO35x5tuqq0AVbSH2HO0CGHl3ih0qOcpSjsJSLR4ILCrp4nHWs
-	 pc5R6ghcf2w53LyW2lgb4GF9q6q1vOj1IvpiQUTo9BGm2odQz8qp+QzaK2teY8kmuj
-	 iX8azkoAhpDueJZPdB9lNLaKNB2q68KgMpYqDPgBPKVjnUrVcNIQqiOgHFT/48606r
-	 70FCJd/Ek8RSqsgJGLq4mR+h4ajO2MowodcKyByGVE8uSyGx/ydyqHLcB8FzsLxuAr
-	 JNHbsnBmfIcnA==
-Message-ID: <d31d7f30-5b6b-4d3f-85fa-62835e1e9b6c@kernel.org>
-Date: Mon, 9 Sep 2024 09:53:43 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxmK3ykd"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5365aa568ceso3293927e87.0
+        for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 01:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725869574; x=1726474374; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mKbJpq6YIA11aEfz21wae3H60/ixEHXlJ4hbELPq0J4=;
+        b=mxmK3ykdWwT/Bl58u4nJFuJs7dtJvJ1KH+Aqp/jamaLvyIxWJKjmwuHsXq7LBsoxYd
+         uH8DC2tGgj4NvdSx1ngMZq94Z7PBdZfu3ZgF3ccO0MLOx7a21+H1QADTeeRiy5/7Zu2L
+         6ah5zAetmOcDdkVtEJn78FSHWN9yVum9h05bJAyq3h+DcRmkWzG8Q2F49vASf/BDftWL
+         PUFEXEiAjILR0Z6/TRsWnYsq8UtdtyU++RB7DEZgQohXgrGHzXva93oerImMeUwak455
+         Npv1kU6oLhLUoEIhM6ra8U+Q+D5VvLIZmqTavWe4XUn6CvXhGNGfL+pF38/HRkhPVyDB
+         lSyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725869574; x=1726474374;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mKbJpq6YIA11aEfz21wae3H60/ixEHXlJ4hbELPq0J4=;
+        b=RufiVHDrUKonFsQgjQtSAikOJIpYkm4dbsQGQ3uPaf+6SSlvaQgib75KaOpxC8P5ck
+         yIhp2N5uBP3eldKQd8GomVzapdUV+mabE/r+rMrsKAIR6/tE/1lDPnetWdPIDl1nnaLD
+         I/9bhrfSgsVtPJmekRV3T0hnKB4QDWVhNs8No9LcY4GUMrfX++UBJJgPILE6bl5AUwL1
+         ogx2x92KjODqnmfGFa6scVErrgv9qKBeqjcMxLUC6b1aAlhzrlFc1QEzyc/dB8ScwqI1
+         g2ve0HY7ZFB6ArcivepWnAyDjJao/qJl8niu/GJskKw/KB6O530SLAl4+xG5Oe10IeqR
+         qaBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXp7xlGe8PFvu/maAaZSf8eTy81DRZ8oHz9cpwuzkQ1mMCMt+Yok1jcwm5cFz0Eht4Qcx2v+5Sky3s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxJLQJ9WtCyIcRqayFFdzYVPEeiO+yLY000iQ6PLynpduycZIIZ
+	/5GD47g2DCocoEgZSmrvdOoBbw0Uvj70QRjAE/f25Tst/u14wzKy/nAdulQhINbelYNgsepB8AY
+	xA97s6sDsaftPU8wYeG94ehwE8aM=
+X-Google-Smtp-Source: AGHT+IHnQ8xuztnsBBgMvF4HoqhobltRiRUWVc47gSpztUAjtDauIHerV4oHBCZhp65S/wW7OsWE+NRnD31fY1WpNhQ=
+X-Received: by 2002:a05:6512:1245:b0:536:54bd:8374 with SMTP id
+ 2adb3069b0e04-53658818949mr5167330e87.60.1725869573576; Mon, 09 Sep 2024
+ 01:12:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 06/10] ASoC: loongson: Fix codec detection failure on
- FDT systems
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>,
- devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <f9111564acc6c9ac011318a7eb3c6843ea0529ce.1725518229.git.zhoubinbin@loongson.cn>
- <x2vcgpjlamobnlsj7ty5aekj35kjzpraizqd2zhvbwi7mhputx@snxtfb3hgznb>
- <CAMpQs4JsbodfscgQPYVz0K99mYAQzZp3pvhmHuvddsw3YWvQEA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAMpQs4JsbodfscgQPYVz0K99mYAQzZp3pvhmHuvddsw3YWvQEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1725518229.git.zhoubinbin@loongson.cn> <e987b0beabba169577c8923557690984f226b29b.1725518229.git.zhoubinbin@loongson.cn>
+ <zes7kfwmz57lhyfvxuyk64n7eykb52txxatbqgqnue7e3yab7g@d7cg7ql4gyl4>
+In-Reply-To: <zes7kfwmz57lhyfvxuyk64n7eykb52txxatbqgqnue7e3yab7g@d7cg7ql4gyl4>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 9 Sep 2024 14:12:40 +0600
+Message-ID: <CAMpQs4Jwms+P7Uu-N1koT8WYKW8KCdMoo7pkPkdaO2aY7TAD+A@mail.gmail.com>
+Subject: Re: [PATCH v1 01/10] ASoC: dt-bindings: Add Everest ES8323 Codec
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/09/2024 09:51, Binbin Zhou wrote:
->>
->>> +     return ret;
->>> +}
->>> +
->>> +static int loongson_parse_codec(struct device *dev, struct device_node **dai_node,
->>> +                             const char **dai_name)
->>> +{
->>> +     struct of_phandle_args args;
->>> +     struct device_node *codec;
->>> +     int ret = 0;
->>>
->>>       codec = of_get_child_by_name(dev->of_node, "codec");
->>> -     if (!codec) {
->>> -             dev_err(dev, "audio-codec property missing or invalid\n");
->>> +     if (!codec)
->>
->> Hm? So you exit here and then caller does of_node_put on stack value.
->> This is buggy.
-> 
-> Sorry, I can not get your point, I think there is nothing that should be put.
+Hi Krzysztof:
 
-You drop reference from a pointer which is a random stack value.
+Thanks for your review.
 
-Best regards,
-Krzysztof
+On Fri, Sep 6, 2024 at 4:21=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On Thu, Sep 05, 2024 at 03:02:14PM +0800, Binbin Zhou wrote:
+> > Add Everest Semiconductor ES8316 low power audio CODEC binding with DT
+> > schema format using json-schema.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../bindings/sound/everest,es8323.yaml        | 49 +++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/everest,es8=
+323.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/everest,es8323.yam=
+l b/Documentation/devicetree/bindings/sound/everest,es8323.yaml
+> > new file mode 100644
+> > index 000000000000..0450d0f49d03
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/everest,es8323.yaml
+> > @@ -0,0 +1,49 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/everest,es8323.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Everest ES8323 audio CODECs
+> > +
+> > +maintainers:
+> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> > +
+> > +allOf:
+> > +  - $ref: dai-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: everest,es8323
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    description: clock for master clock (MCLK)
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: mclk
+> > +
+> > +  '#sound-dai-cells':
+> > +    const: 0
+>
+> No audio-graph-port? Are you sure? It looks exactly like
+> everest,es8316...
 
+I checked and they are indeed very similar and it seems I just need to
+add to everest,es8316.yaml instead of a new file.
+
+Thanks.
+Binbin
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - '#sound-dai-cells'
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <0>;
+> > +      codec@10 {
+> > +        compatible =3D "everest,es8323";
+> > +        reg =3D <0x10>;
+> > +        #sound-dai-cells =3D <0>;
+>
+> Make the example complete. Assuming this binding stays...
+>
+> Best regards,
+> Krzysztof
+>
