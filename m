@@ -1,86 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CF4219F3;
-	Mon,  9 Sep 2024 15:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F99189B95
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 19:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725895347; cv=none; b=O5gyQPjIREp/oMyT3i+Tha/oMl2QAAuTAEJU/+aVkipU6i5R4n5cdiatfnxHzUs6w8ZueYPMRlyhbtW4JgTKeormCBYigx6KByKuC4+qHUqBJ9glM1SoMQy9fZltRv+9BYbfLPlXEO/BMS/+MTDtLfeEFehpVLBj3XKksCzf3cg=
+	t=1725908856; cv=none; b=S0XuK9aS91F99z1gSfPgZrEW8KoQ87AQ0/DktlNBOFVnyRjrqW7HwUnTxckAEujk7YnAKex4wHA7xPBIJy96EovfjWLWQb3j/e8gtPmhg9GTBxTOtstpgBEvrq74GKNZsCnbiTanNNF8sTcZv7dj2NNdHTUvNoz5ymroEcLvABM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725895347; c=relaxed/simple;
-	bh=a0m/5gYTMMr3TP9ud5tLv9VqBwaNZswxyqbniOZHCQ8=;
+	s=arc-20240116; t=1725908856; c=relaxed/simple;
+	bh=b5qblVINKWpCxCCHs3yo0m2YOZxorXz/O91qn7T/Zoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkYbfA051u0tCRVs/jxZiPmwyGGVDzBNQ8X7VC/ziD+9zUfDmxROYZUXTEu2LPImbWqviKXlyIU0ZD1AgUXLC230DEezeD+OkDQhZ1ZWh9w/UlFj1fAjBR2EHct8ZsZieLS0pM7sglH9BOdGTxBN6NqCAtUu4Uh09u6bHkCjEu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unt0WybB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTzIHW8LABAbmA+fxfovZAW/MIO0GsRMaLjjWvLhTx8eLZu9TABa+9n8eAUYZfGV+PqRD1GLF7sPWdCWsABGguDKu6HRO1Ol6ulsOznCcUoyRvlF6P8eeBp7HPaZJ+pq/unnBGfz5vyGTSvtjUPDOla/JrtXE38c9T/N6nPHT04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=t0htwVoB; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unt0WybB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62B4C4CEC5;
-	Mon,  9 Sep 2024 15:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725895346;
-	bh=a0m/5gYTMMr3TP9ud5tLv9VqBwaNZswxyqbniOZHCQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=unt0WybBK1c56qotLnhdCBv4cNzhVPiyykAsGmY2oCnLTXEW/lNPismYC3lpfObwx
-	 XEYuQr9eF/rlsq6EzRVFsWekxpMQDIamMjsdagf7LOLsoDGfVJHWJpEQrodZNDu8Yw
-	 Rc1rQUMyHLx3Oj3zqxWFrRL3Pl+nS8yvYU9/9C1T0zHSG2H/0xW6WmW42bci8pNtUK
-	 4vyvTr7/ugIsqRkuu79Vh0I2AY/sz2IDjNTROPNoKdnqMwETeTWa/t44aPuRidID6F
-	 WS3id3EU3n4PJT2WZrgDva/wXJjFmBYJnUKEonJZy/vJHxqS4/3uvvYRiV/vAq525C
-	 fhZ4j9okHJuFw==
-Date: Mon, 9 Sep 2024 16:22:21 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="t0htwVoB"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-206f9b872b2so25486385ad.3
+        for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 12:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725908852; x=1726513652; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KeQ2Et/fFCRS76/RDVc52ODWIM932uTGcPwA4XQOW3E=;
+        b=t0htwVoBwFWEKrsndLLIraF4TkLsNYg7DsQxlsMz9vckMwp46Xr0PMJ3sUJyfrrs8u
+         5eiVWBjwMRpJnMqJslu0NgajT0BRYX28QVAFO4Tt/cQuHG+b/yw20SoWwbNfrKbDX4Rk
+         MAd0Ma3bd6Mp8cnhY1MkKJqjQmDgtgf5ZsZAqMa6oawxSHTVMgCta0/WmDfGE6nTyUDS
+         nNGkCAbcLB4/HTFqEjLeujMhXxLfwxTR0iXAfTalCaFYA95FsXrG1rmAvXG8ZeqrhYY1
+         tTstHR5d5EnREBUey/R8dTcUQ1wydFja5kwNcjmP6TT7demtVxKeVHwkiwunYUK9H6g2
+         QE9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725908852; x=1726513652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KeQ2Et/fFCRS76/RDVc52ODWIM932uTGcPwA4XQOW3E=;
+        b=UUBBI0mcqo/gUzrcPUlojlNjtcM88wZabXHiI6+ycZZl4d81r34DnPc5ugDkK0RJwS
+         73rQmiTQLoxUITPz30/ZfzhIVyCDPYIGCd5trNvJ0BmuXyg7ONnkOv9a5PiSNODZ7Q/7
+         uuepuLbn+ivh3zsMCDgR5RdLq2G3lDCpRS8UDLjeoQ+E/KB79SHhIH0rIqXBBz1jpE1B
+         gIXBFCtYSG97rl2lBBjZrYDE9gGZO4/KAzjUXdzsiaGBX/UIdkE9B+B6UCuNYlCv81rj
+         FZee/PSLQZoxlSAeT8xbGEmaE+QOQvvOLFTF+hvY+/7r1OkImk25qbGCJDnQAzTG90v6
+         l2sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMgnJxCinzIFGrmr3C7biqWCe//6yk05drG41DuXlNBLijukul9D7lFD3yvR5ZH6SktoBjS6u3pRY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyNaCdgcSi4bPbCi7Cd1f5y6zOMiWShIzC/+PYJ/TwtG4npnPkb
+	DFtMFjCNdhPc57Ut7Fzgb7xUXQGZRLNgPhlKJRfE9f3fh8oW9r0PCTkJOjwaLSc=
+X-Google-Smtp-Source: AGHT+IFr8qMBk49qQaWgQwdEeSwPNLRpIJ6+/NqAAdbEE2n6wWPI3+1ojCwWs7k3VHGjnw2a54FzLg==
+X-Received: by 2002:a17:903:22c9:b0:205:5fb6:2aba with SMTP id d9443c01a7336-206f0539d1amr123273675ad.30.1725908851946;
+        Mon, 09 Sep 2024 12:07:31 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20710f31729sm37014315ad.261.2024.09.09.12.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2024 12:07:31 -0700 (PDT)
+Date: Mon, 9 Sep 2024 12:07:26 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Tang Bin <tangbin@cmss.chinamobile.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 6/8] ASoC: loongson: Replace if with ternary operator
-Message-ID: <cd232028-952e-493b-82a2-aa4814f35444@sirena.org.uk>
-References: <cover.1725844530.git.zhoubinbin@loongson.cn>
- <94ec2ac178610f50af4815ef5b719695915bba31.1725844530.git.zhoubinbin@loongson.cn>
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Michal Hocko <mhocko@suse.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>,
+	Chris Torek <chris.torek@gmail.com>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-abi-devel@lists.sourceforge.net
+Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
+ 47 bits
+Message-ID: <Zt9HboH/PmPlRPmH@ghost>
+References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
+ <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
+ <87zfol468z.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="guOFxhnOqcwoFxkX"
-Content-Disposition: inline
-In-Reply-To: <94ec2ac178610f50af4815ef5b719695915bba31.1725844530.git.zhoubinbin@loongson.cn>
-X-Cookie: Anything is possible, unless it's not.
-
-
---guOFxhnOqcwoFxkX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <87zfol468z.fsf@mail.lhotse>
 
-On Mon, Sep 09, 2024 at 03:19:36PM +0800, Binbin Zhou wrote:
+On Fri, Sep 06, 2024 at 04:59:40PM +1000, Michael Ellerman wrote:
+> Charlie Jenkins <charlie@rivosinc.com> writes:
+> > Create a personality flag ADDR_LIMIT_47BIT to support applications
+> > that wish to transition from running in environments that support at
+> > most 47-bit VAs to environments that support larger VAs. This
+> > personality can be set to cause all allocations to be below the 47-bit
+> > boundary. Using MAP_FIXED with mmap() will bypass this restriction.
+> >
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  include/uapi/linux/personality.h | 1 +
+> >  mm/mmap.c                        | 3 +++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/personality.h b/include/uapi/linux/personality.h
+> > index 49796b7756af..cd3b8c154d9b 100644
+> > --- a/include/uapi/linux/personality.h
+> > +++ b/include/uapi/linux/personality.h
+> > @@ -22,6 +22,7 @@ enum {
+> >  	WHOLE_SECONDS =		0x2000000,
+> >  	STICKY_TIMEOUTS	=	0x4000000,
+> >  	ADDR_LIMIT_3GB = 	0x8000000,
+> > +	ADDR_LIMIT_47BIT = 	0x10000000,
+> >  };
+> 
+> I wonder if ADDR_LIMIT_128T would be clearer?
+> 
 
-> Replace an if statement with a ternary operator, making the code a tiny
-> bit shorter.
+I don't follow, what does 128T represent?
 
-Please don't, it's shorter but not great for legibility.
+> Have you looked at writing an update for the personality(2) man page? :)
 
---guOFxhnOqcwoFxkX
-Content-Type: application/pgp-signature; name="signature.asc"
+I will write an update to the man page if this patch is approved!
 
------BEGIN PGP SIGNATURE-----
+> 
+> cheers
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbfEqwACgkQJNaLcl1U
-h9BNtwf/dMNKIiMpkKm3SnU6R4F4rRON+ltP+PGUtZyqQReZaiaYY4FZqPEaM1wH
-Q1tSzkHSDSd7V/92ywgXBYwTofalPcK9uAIP72Lt4KWXKnEQEgN45blaTYrxSlZC
-6Ew+RzmGDjOnRrX5GforAQ62dIWXMvYV/lkVEAatcANVJEs4PwkZ8UyjC8J8M/jV
-6OgJIpo3o8ZxQMg7xkqsGmMWzWEe5FGtH6s+IqcivVD/97AClZocnJ62ujeIAWwL
-tAXvn88jcQbHD5AUJS5HrP+je4ZGVC3y13IVfWjl+jm7F5xRihItj+35OB7432Zg
-ALWDB/dQNH2NE5YjhymZkg8Wt/A98Q==
-=dDfb
------END PGP SIGNATURE-----
+- Charlie
 
---guOFxhnOqcwoFxkX--
