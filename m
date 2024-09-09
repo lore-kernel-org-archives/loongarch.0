@@ -1,195 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7FC148828;
-	Sun,  8 Sep 2024 16:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF23E28EF
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 01:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725814652; cv=none; b=HUvTCFyUGMPcimWa6uJCCDkBFJFl4mOo3NNUgtv18t9VVSgpGfbGgpG5v8jdC2LKgldrpnMU22OCKgTDVGAnQEM8OBxBeat45GS0U2z5Oq5Ed1B6wVsBefvrEB2DqRprA0UfHZwmpW7Mn01okuduAi/x+g/nIRqLMvK/eiPqrvA=
+	t=1725843929; cv=none; b=Sn2vt1gXFzx6fn7F6qY5607oWKscQmutuizpgAetb/Aoae0O7Fseufsumws6T8VCyERRfgyqJVpvRhPCbj5db/CwOIGimP+6F4RekhNFkZXPJxM/At5rKeesJ2ExPgZKV7aary/MPe62gb3F14eetw0avJJPuMYgiKNM+Pu/sFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725814652; c=relaxed/simple;
-	bh=gFpZpGEkhVcZmvpYlYMlw1TLTYXTJ+SJ6Et27zpaRkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EnwjEeFg4742/6sxw5zNC7+oaZ/QPx5JOy+qulJVodvNjBoJtxjvzjHBYRQVGDgOmO4eifqr9FfevXHWBhYcf8TM0XHV74zgZko1HBZzxNoI9LEbBhcpmrXEmr+8BITAbWVAfuXmstTTpKjRaYpvj7EMe22yE4PCjIbq9vax+yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqJpxSrF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725843929; c=relaxed/simple;
+	bh=KbGXoddUMv8tVgpHOzuLsp1Y9f2+g1Z2mKD35eOsmG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gf5cAuAmDoH9XnhTNlQjoP4uLBlxwg/fVjbKg/uvcXip0Q0igSNc3Na1R/M2WmCLyVhCxwEAuTWtBwV7HLvLsEYSDNyI4fTM0rsa9dNnkTZI5dujhIKb48brrQKPp6E0CO2Ttrm8ZyyxQfCHV757+bty69U0MVyEir+EXdaIOAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+ao+fkS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqJpxSrF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725814651; x=1757350651;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gFpZpGEkhVcZmvpYlYMlw1TLTYXTJ+SJ6Et27zpaRkE=;
-  b=CqJpxSrF1+yRVTUN571v6kg5lxYESL8X/X/3Or3qjVG4eGcCMQHuQ4Er
-   6SLVkHZrX2iEzTDf5GKkKtXBMPaorgOfR/vh2OZXprY5xoXs19zNSXyoD
-   qB69YU8B6wQ3HdpZhqnY6WhhXVMp5eJGW2iQSXG1pJH9Acxncd7yy4nn8
-   +6+H0kmaF+E4aSdvvQ4ueh4Icei8Lq7mz4SwXEAZRFDK0/nCG+8YXTVsw
-   2ura7t76wIyYy8UonZX/T6uM8tMYIiHTzBRpMr7zIj8AMTg79p/bDscDq
-   dmAewWR4GTskkiyQ7BA3Bp/JVR4grEYOMKkdpnxNAmkq058kwXs4PpUyJ
-   A==;
-X-CSE-ConnectionGUID: sHfrUSAjQNW2B105PWRRQw==
-X-CSE-MsgGUID: lj7n4SQVSOaY9KDUQFX8dA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="24006794"
-X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
-   d="scan'208";a="24006794"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2024 09:57:29 -0700
-X-CSE-ConnectionGUID: /aVMb7qWTuSucpJIB32DwA==
-X-CSE-MsgGUID: 0EMBbu5/TJGp7yLL1NeXfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
-   d="scan'208";a="67173237"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 Sep 2024 09:57:26 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1snLE3-000Dk7-2l;
-	Sun, 08 Sep 2024 16:57:23 +0000
-Date: Mon, 9 Sep 2024 00:56:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 4/5] LoongArch: Extract IOCSR definitions to standalone
- header
-Message-ID: <202409090054.D3vEaTqr-lkp@intel.com>
-References: <20240907-iocsr-v1-4-0c99b3334444@flygoat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+ao+fkS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9122BC4CECB
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 01:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725843928;
+	bh=KbGXoddUMv8tVgpHOzuLsp1Y9f2+g1Z2mKD35eOsmG4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M+ao+fkSdbvSR1LKrZhO5JYsBGM7L2G4woKI9M6bYrJ3527PG/YSKr0xbTcavU5zl
+	 Cb3Fy8yAdtBpHOA1AwHwconcskAKU6YAgmbeA5EIQ1Hx4/zA74INMf0U198kNzVfRI
+	 tbGWYs7yhEa9a8JpdzAB+TohVbKJc0IPHeCu+F6QGKJQWHEtT0t8vHkGOpV/s5pldh
+	 pOROC+YtPORF6OZZcAdxBrclpgh2WPnFYqOcOLDK4VlhbVwpmrkuJ7MJy/HiqJp+Hr
+	 7g1/SGn6XOrIcsdCRZ9iANpbyIL7R0r4gBlpd//Wlib+qN3FXmchRMqh1CAbLMsymn
+	 YB29ezBnj5Udg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5c3d8d3ebbdso5301383a12.0
+        for <loongarch@lists.linux.dev>; Sun, 08 Sep 2024 18:05:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXeERPJ76wW7jrlOBtJSedH6vxy6g3nBQc6NhgwZSoIapmQzvqtvloEqA3YO8zhSmUdaHZd5E5E9Ws=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwdlMBN/dPj6lY7xvJUX12z1L602ENI1S+2u6JQB0sa7gIPm9pJ
+	20Ru1vdhf25QFSPGorJzcASUdwnRvKUJDWbc13C1quaZguPvyjYziOUdqtSWY9Ovl9DcNioAVEx
+	IDVEihHzGqAzbw30jV6GlhItUBnc=
+X-Google-Smtp-Source: AGHT+IH8AH63UqVrIu0Y9NxMorp0PRx7ZvVEGeC9k+LaQZ5PSWisHqpL3cJh9I7v5UvkrtJwSJlAEEBiruEGhQgMYJY=
+X-Received: by 2002:a05:6402:2808:b0:5bf:256a:a19e with SMTP id
+ 4fb4d7f45d1cf-5c3c1f74315mr19393826a12.4.1725843927158; Sun, 08 Sep 2024
+ 18:05:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240907-iocsr-v1-4-0c99b3334444@flygoat.com>
+References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
+ <20240807085906.27397-4-yangtiezhu@loongson.cn> <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
+In-Reply-To: <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 9 Sep 2024 09:04:58 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
+Message-ID: <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] LoongArch: Set AS_HAS_THIN_ADD_SUB as y if AS_IS_LLVM
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jiaxun,
+On Sun, Sep 8, 2024 at 10:43=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> On Wed, 2024-08-07 at 16:59 +0800, Tiezhu Yang wrote:
+> > When building kernel with "make CC=3Dclang defconfig", LLVM Assembler
+> > is used due to LLVM_IAS=3D0 is not specified, then AS_HAS_THIN_ADD_SUB
+> > is not set, thus objtool can not be built after enable it for Clang.
+> >
+> > config AS_HAS_THIN_ADD_SUB is to check whether -mthin-add-sub option is
+> > available to know R_LARCH_{32,64}_PCREL are supported for GNU Assembler=
+,
+> > there is no this option for LLVM Assembler. The minimal version of Clan=
+g
+> > is 18 for building LoongArch kernel, and Clang >=3D 17 already supports
+> > R_LARCH_{32,64}_PCREL, that is to say, there is no need to depend on
+> > AS_HAS_THIN_ADD_SUB for Clang, so just set AS_HAS_THIN_ADD_SUB as y if
+> > AS_IS_LLVM.
+> >
+> > Fixes: 120dd4118e58 ("LoongArch: Only allow OBJTOOL & ORC unwinder if t=
+oolchain supports -mthin-add-sub")
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>
+> This is what I wanted in
+> https://lore.kernel.org/all/20240604150741.30252-1-xry111@xry111.site/.
+Then which one is better?  AS_IS_LLVM or CC_IS_CLANG?
 
-kernel test robot noticed the following build errors:
+Huacai
 
-[auto build test ERROR on 9aaeb87ce1e966169a57f53a02ba05b30880ffb8]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiaxun-Yang/LoongArch-Rename-cpu_has_csr-as-cpu_has_iocsr/20240907-181959
-base:   9aaeb87ce1e966169a57f53a02ba05b30880ffb8
-patch link:    https://lore.kernel.org/r/20240907-iocsr-v1-4-0c99b3334444%40flygoat.com
-patch subject: [PATCH 4/5] LoongArch: Extract IOCSR definitions to standalone header
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240909/202409090054.D3vEaTqr-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240909/202409090054.D3vEaTqr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409090054.D3vEaTqr-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/loongarch/include/asm/cpu-info.h:11,
-                    from arch/loongarch/include/asm/processor.h:13,
-                    from arch/loongarch/include/asm/thread_info.h:15,
-                    from include/linux/thread_info.h:60,
-                    from include/asm-generic/current.h:6,
-                    from ./arch/loongarch/include/generated/asm/current.h:1,
-                    from include/linux/mutex.h:14,
-                    from include/linux/notifier.h:14,
-                    from include/linux/clk.h:14,
-                    from include/linux/cpufreq.h:11,
-                    from drivers/cpufreq/loongson3_cpufreq.c:10:
-   drivers/cpufreq/loongson3_cpufreq.c: In function 'do_service_request':
->> drivers/cpufreq/loongson3_cpufreq.c:185:35: error: 'LOONGSON_IOCSR_SMCMBX' undeclared (first use in this function)
-     185 |         last.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-         |                                   ^~~~~~~~~~~~~~~~~~~~~
-   drivers/cpufreq/loongson3_cpufreq.c:185:22: note: in expansion of macro 'iocsr_read32'
-     185 |         last.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-         |                      ^~~~~~~~~~~~
-   drivers/cpufreq/loongson3_cpufreq.c:185:35: note: each undeclared identifier is reported only once for each function it appears in
-     185 |         last.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-         |                                   ^~~~~~~~~~~~~~~~~~~~~
-   drivers/cpufreq/loongson3_cpufreq.c:185:22: note: in expansion of macro 'iocsr_read32'
-     185 |         last.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-         |                      ^~~~~~~~~~~~
->> drivers/cpufreq/loongson3_cpufreq.c:199:36: error: 'LOONGSON_IOCSR_MISC_FUNC' undeclared (first use in this function)
-     199 |         iocsr_write32(iocsr_read32(LOONGSON_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
-         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~
-   arch/loongarch/include/asm/loongarch.h:187:45: note: in definition of macro 'iocsr_write32'
-     187 | #define iocsr_write32(val, reg) __iocsrwr_w(val, reg)
-         |                                             ^~~
-   drivers/cpufreq/loongson3_cpufreq.c:199:23: note: in expansion of macro 'iocsr_read32'
-     199 |         iocsr_write32(iocsr_read32(LOONGSON_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
-         |                       ^~~~~~~~~~~~
->> drivers/cpufreq/loongson3_cpufreq.c:199:64: error: 'IOCSR_MISC_FUNC_SOFT_INT' undeclared (first use in this function)
-     199 |         iocsr_write32(iocsr_read32(LOONGSON_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
-         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~
-   arch/loongarch/include/asm/loongarch.h:187:45: note: in definition of macro 'iocsr_write32'
-     187 | #define iocsr_write32(val, reg) __iocsrwr_w(val, reg)
-         |                                             ^~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for OMAP2PLUS_MBOX
-   Depends on [n]: MAILBOX [=y] && (ARCH_OMAP2PLUS || ARCH_K3)
-   Selected by [m]:
-   - TI_K3_M4_REMOTEPROC [=m] && REMOTEPROC [=y] && (ARCH_K3 || COMPILE_TEST [=y])
-
-
-vim +/LOONGSON_IOCSR_SMCMBX +185 drivers/cpufreq/loongson3_cpufreq.c
-
-   175	
-   176	static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 extra)
-   177	{
-   178		int retries;
-   179		unsigned int cpu = raw_smp_processor_id();
-   180		unsigned int package = cpu_data[cpu].package;
-   181		union smc_message msg, last;
-   182	
-   183		mutex_lock(&cpufreq_mutex[package]);
-   184	
- > 185		last.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-   186		if (!last.complete) {
-   187			mutex_unlock(&cpufreq_mutex[package]);
-   188			return -EPERM;
-   189		}
-   190	
-   191		msg.id		= id;
-   192		msg.info	= info;
-   193		msg.cmd		= cmd;
-   194		msg.val		= val;
-   195		msg.extra	= extra;
-   196		msg.complete	= 0;
-   197	
-   198		iocsr_write32(msg.value, LOONGSON_IOCSR_SMCMBX);
- > 199		iocsr_write32(iocsr_read32(LOONGSON_IOCSR_MISC_FUNC) | IOCSR_MISC_FUNC_SOFT_INT,
-   200			      LOONGSON_IOCSR_MISC_FUNC);
-   201	
-   202		for (retries = 0; retries < 10000; retries++) {
-   203			msg.value = iocsr_read32(LOONGSON_IOCSR_SMCMBX);
-   204			if (msg.complete)
-   205				break;
-   206	
-   207			usleep_range(8, 12);
-   208		}
-   209	
-   210		if (!msg.complete || msg.cmd != CMD_OK) {
-   211			mutex_unlock(&cpufreq_mutex[package]);
-   212			return -EPERM;
-   213		}
-   214	
-   215		mutex_unlock(&cpufreq_mutex[package]);
-   216	
-   217		return msg.val;
-   218	}
-   219	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Reviewed-by: Xi Ruoyao <xry111@xry111.site>
+>
+> > ---
+> >  arch/loongarch/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> > index 70f169210b52..e1b6cb306d4d 100644
+> > --- a/arch/loongarch/Kconfig
+> > +++ b/arch/loongarch/Kconfig
+> > @@ -265,7 +265,7 @@ config AS_HAS_FCSR_CLASS
+> >       def_bool $(as-instr,movfcsr2gr \$t0$(comma)\$fcsr0)
+> >
+> >  config AS_HAS_THIN_ADD_SUB
+> > -     def_bool $(cc-option,-Wa$(comma)-mthin-add-sub)
+> > +     def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || AS_IS_LLVM
+> >
+> >  config AS_HAS_LSX_EXTENSION
+> >       def_bool $(as-instr,vld \$vr0$(comma)\$a0$(comma)0)
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
