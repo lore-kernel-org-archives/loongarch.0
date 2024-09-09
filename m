@@ -1,216 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DBF1741C3
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 05:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D535D1741F8
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 06:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725860298; cv=none; b=OxaIMNwCJ0iQQunjPQFXoKFMAdmKn96kl//zEw5SxE4sxkWWXyluUeL6DWDNTqj3NpCNU+jYPNENOAlxPNC7noc3Z3OzlN0J5n5ltl46pldEzPjuHUDOAfatdJvdqsl2CIqFLrvr2d97Qbjd7FLr3QrhPWcM4yjsRFHBuCog68M=
+	t=1725862446; cv=none; b=gp7GfsGF3lwZeyes58AdKk3fDj7n5OvdrgPSxDGmZGL/4cFxIDKPukAPPrcyQJl+S2/KZKyqcCZMbAJILrwfAXgLkNfw4Nk87YqMJvt200bg+bGugGJSZFEfXujOWItjZGS4tFbuG9vg4IyyQLEEGkU2o3tCC1bSYTJBfHffef8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725860298; c=relaxed/simple;
-	bh=248ziiTVCRGbM5LmN8AO7b96LuuBfqOH7lAwbsdPjxE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mVDmMXAMPp/0G8wmQrK09TnR64/3AHkxiMd5dfjBc/2+9zdag/wUb7ynaAPm7JWKJ6lKdjV93dpCHWa3zdn+e+LaMgNtX7rGyjABTT3Kbo51qBAiogCjgIYhK+n80W1GdybA0MDKKcrbUjkNVdZL1QUKFrc/R4n99pjw80rM0Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lqk9+8fN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725862446; c=relaxed/simple;
+	bh=fmzElHuSLUBfIJGFvFgAeN9qQ+wZsIfefnRlpynSBv8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jJqMhY4dy6QEE/nbKYmCT8ClPv1IoAH97Aja2W5ff7E3O09pdcyWNARgS3InMXmzlDckvayz9qIyOSCAz8yted2WYKXnjRnIWj0ZqP72cSDeO67wApl5okIpXXDFe5On6VKk7QCZAACG0mQMIcRqeZXKON+BIQLAZJ5wCE/978U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=H1+IEvuu; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lqk9+8fN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4198EC4AF09
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 05:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725860298;
-	bh=248ziiTVCRGbM5LmN8AO7b96LuuBfqOH7lAwbsdPjxE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Lqk9+8fNiAJZsLmJZfNjOcJJrbex0CFOVOdjWsTc910wOK86Qm4pLowAw5rr5eeB+
-	 wo9r+pJbFpgOffoaExZP4OAp91aCK7r73u492I3hZeWJDNXSMTFJNS9M+FRo+3MzzD
-	 K44EA65vVaR5h8BqtrHvgLf15QhZs13OSz4ZUut5PrICZaAXuMm+u13n0g3x2UR/WP
-	 viN9fQwVPKtuNovaGECTam2aoE3V05ijvMtgo/m8mieZxCYVHH0GdiSDqx9mRwELw5
-	 9rXtc1IS19Qnh4VwtzwMC/AijM3ZIT6r47iyjhPMKbqbzezQfCm7xOeMQEeJDtPIR8
-	 N+bxt61PaH3AA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8a789c4fc5so567962866b.0
-        for <loongarch@lists.linux.dev>; Sun, 08 Sep 2024 22:38:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV51txkSmv6isEE1iRphXiGNutJp9UfGpO7EiZvc8SRkCFzM0xX1qB59IoC/y63mPFRpV+LbJczL+E=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx84MlUNRhB0Dsobi9wMlVd8UHNM/ciKjjuYYVAENqfGNag+J08
-	SDv3KSVRMbW7A5JKvTOgJ69iHBbkmf4GidtzK+jNoMxf6xZghYmGmPB2LKfWljYSUTdjQX/rsqm
-	1B18eH6PvmiSNrykXnODUvGdzQJQ=
-X-Google-Smtp-Source: AGHT+IHjBN35NmKR1OI5li20cLHkx9049W05deSAnLeL3Dhe+9B6DZKPW9onBE/+E2iLUZA1jWuOyBcAVE2WJG31aWA=
-X-Received: by 2002:a17:906:eece:b0:a77:c051:36a9 with SMTP id
- a640c23a62f3a-a8a85f9af7cmr1134497066b.9.1725860296616; Sun, 08 Sep 2024
- 22:38:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="H1+IEvuu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1725862443;
+	bh=fmzElHuSLUBfIJGFvFgAeN9qQ+wZsIfefnRlpynSBv8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=H1+IEvuugsbp9AkeDlieaLMjybuy5Rd6CfgJUM15EexYB/M/cFgwkzcdbOY55I+qT
+	 rJqZcmQZTabl0w810yZjgklk6ZaJp4h7Mv+wn8Du2LuetbdQy7jjvqTUAjlDU0NthI
+	 qcqb5NqUuZ/JvK0BBqtGx89tuSxRCWTxpd5dvxxQ=
+Received: from [IPv6:240e:358:1197:300:dc73:854d:832e:2] (unknown [IPv6:240e:358:1197:300:dc73:854d:832e:2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A95F666D29;
+	Mon,  9 Sep 2024 02:14:00 -0400 (EDT)
+Message-ID: <79f74b9c3df579fb8f22276c8dfe7196221e806e.camel@xry111.site>
+Subject: Re: [PATCH v3 3/4] LoongArch: Set AS_HAS_THIN_ADD_SUB as y if
+ AS_IS_LLVM
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
+ <jpoimboe@kernel.org>,  Peter Zijlstra <peterz@infradead.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 09 Sep 2024 14:13:55 +0800
+In-Reply-To: <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
+References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
+	 <20240807085906.27397-4-yangtiezhu@loongson.cn>
+	 <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
+	 <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240906114151.519028-1-jvetter@kalrayinc.com> <20240906114151.519028-4-jvetter@kalrayinc.com>
-In-Reply-To: <20240906114151.519028-4-jvetter@kalrayinc.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 9 Sep 2024 13:38:05 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQHkdgNRBg+fGkKre1zdCXfC57YUGDU-GrMJOTRyCQzZg@mail.gmail.com>
-Message-ID: <CAJF2gTQHkdgNRBg+fGkKre1zdCXfC57YUGDU-GrMJOTRyCQzZg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] Activate GENERIC_IO for the csky architecture
-To: Julian Vetter <jvetter@kalrayinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, 
-	loongarch@lists.linux.dev, Yann Sionneau <ysionneau@kalrayinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 6, 2024 at 7:47=E2=80=AFPM Julian Vetter <jvetter@kalrayinc.com=
-> wrote:
->
-> Use the generic __memcpy_{from,to}io and __memset_io for the csky
-> processor architecture.
->
-> Reviewed by: Yann Sionneau <ysionneau@kalrayinc.com>
-> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
-I'm okay with moving it into GENERIC_IO
+On Mon, 2024-09-09 at 09:04 +0800, Huacai Chen wrote:
+> On Sun, Sep 8, 2024 at 10:43=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+ote:
+> >=20
+> > On Wed, 2024-08-07 at 16:59 +0800, Tiezhu Yang wrote:
+> > > When building kernel with "make CC=3Dclang defconfig", LLVM Assembler
+> > > is used due to LLVM_IAS=3D0 is not specified, then AS_HAS_THIN_ADD_SU=
+B
+> > > is not set, thus objtool can not be built after enable it for Clang.
+> > >=20
+> > > config AS_HAS_THIN_ADD_SUB is to check whether -mthin-add-sub option =
+is
+> > > available to know R_LARCH_{32,64}_PCREL are supported for GNU Assembl=
+er,
+> > > there is no this option for LLVM Assembler. The minimal version of Cl=
+ang
+> > > is 18 for building LoongArch kernel, and Clang >=3D 17 already suppor=
+ts
+> > > R_LARCH_{32,64}_PCREL, that is to say, there is no need to depend on
+> > > AS_HAS_THIN_ADD_SUB for Clang, so just set AS_HAS_THIN_ADD_SUB as y i=
+f
+> > > AS_IS_LLVM.
+> > >=20
+> > > Fixes: 120dd4118e58 ("LoongArch: Only allow OBJTOOL & ORC unwinder if=
+ toolchain supports -mthin-add-sub")
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >=20
+> > This is what I wanted in
+> > https://lore.kernel.org/all/20240604150741.30252-1-xry111@xry111.site/.
+> Then which one is better?=C2=A0 AS_IS_LLVM or CC_IS_CLANG?
 
-Acked-by: Guo Ren <guoren@kernel.org>
-
-> ---
->  arch/csky/Kconfig         |  1 +
->  arch/csky/kernel/Makefile |  2 +-
->  arch/csky/kernel/io.c     | 91 ---------------------------------------
->  3 files changed, 2 insertions(+), 92 deletions(-)
->  delete mode 100644 arch/csky/kernel/io.c
->
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index 5479707eb5d1..d64329b691f7 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -48,6 +48,7 @@ config CSKY
->         select DMA_DIRECT_REMAP
->         select IRQ_DOMAIN
->         select DW_APB_TIMER_OF
-> +       select GENERIC_IO
->         select GENERIC_IOREMAP
->         select GENERIC_LIB_ASHLDI3
->         select GENERIC_LIB_ASHRDI3
-> diff --git a/arch/csky/kernel/Makefile b/arch/csky/kernel/Makefile
-> index 8a868316b912..de1c3472e8f0 100644
-> --- a/arch/csky/kernel/Makefile
-> +++ b/arch/csky/kernel/Makefile
-> @@ -2,7 +2,7 @@
->  extra-y :=3D vmlinux.lds
->
->  obj-y +=3D head.o entry.o atomic.o signal.o traps.o irq.o time.o vdso.o =
-vdso/
-> -obj-y +=3D power.o syscall.o syscall_table.o setup.o io.o
-> +obj-y +=3D power.o syscall.o syscall_table.o setup.o
->  obj-y +=3D process.o cpu-probe.o ptrace.o stacktrace.o
->  obj-y +=3D probes/
->
-> diff --git a/arch/csky/kernel/io.c b/arch/csky/kernel/io.c
-> deleted file mode 100644
-> index 5883f13fa2b1..000000000000
-> --- a/arch/csky/kernel/io.c
-> +++ /dev/null
-> @@ -1,91 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -
-> -#include <linux/export.h>
-> -#include <linux/types.h>
-> -#include <linux/io.h>
-> -
-> -/*
-> - * Copy data from IO memory space to "real" memory space.
-> - */
-> -void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t=
- count)
-> -{
-> -       while (count && !IS_ALIGNED((unsigned long)from, 4)) {
-> -               *(u8 *)to =3D __raw_readb(from);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               *(u32 *)to =3D __raw_readl(from);
-> -               from +=3D 4;
-> -               to +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               *(u8 *)to =3D __raw_readb(from);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memcpy_fromio);
-> -
-> -/*
-> - * Copy data from "real" memory space to IO memory space.
-> - */
-> -void __memcpy_toio(volatile void __iomem *to, const void *from, size_t c=
-ount)
-> -{
-> -       while (count && !IS_ALIGNED((unsigned long)to, 4)) {
-> -               __raw_writeb(*(u8 *)from, to);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               __raw_writel(*(u32 *)from, to);
-> -               from +=3D 4;
-> -               to +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               __raw_writeb(*(u8 *)from, to);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memcpy_toio);
-> -
-> -/*
-> - * "memset" on IO memory space.
-> - */
-> -void __memset_io(volatile void __iomem *dst, int c, size_t count)
-> -{
-> -       u32 qc =3D (u8)c;
-> -
-> -       qc |=3D qc << 8;
-> -       qc |=3D qc << 16;
-> -
-> -       while (count && !IS_ALIGNED((unsigned long)dst, 4)) {
-> -               __raw_writeb(c, dst);
-> -               dst++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               __raw_writel(qc, dst);
-> -               dst +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               __raw_writeb(c, dst);
-> -               dst++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memset_io);
-> --
-> 2.34.1
->
->
->
->
->
-
+AS_IS_LLVM should be better because when "make LLVM=3D1 LLVM_IAS=3D0" we
+still need to check against gas from binutils.
 
 --=20
-Best Regards
- Guo Ren
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
