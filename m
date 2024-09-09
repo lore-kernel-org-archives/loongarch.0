@@ -1,101 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4FB1AC8B0;
-	Mon,  9 Sep 2024 06:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDBA01ACE03
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 07:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725864597; cv=none; b=B1dnDYq/bCtw6hqM9WsEt9lCY0+ugmTFSHODPJbgny8WHCpS2+2M7pfbYI/dMprJZqCpiofiH/p44T4Nkz2FnbZIt5TcjGlQ5ROpEzUw+FgEPMROq2hbzAbFA1rc/gLNYVOgFXfMR/qXwHK4/c/g3204OndfJK796ZKdp2nqBPI=
+	t=1725866374; cv=none; b=jh7SU04AvZalTWlxyENKJKzsNhjuYYGp3abFfHO+zdD3Q/uW7IUR0m0K2JaD2eUB0AW3DUvTcA6EoFjrA3xmxP1CFTupBzlYtrU3SxVM6n7SuHtS/8OOil2YvgYMWZDzsRq48IYGcOr31L53Mxy8KXw/W6xUkm8SyPRToLCyjHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725864597; c=relaxed/simple;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=liw9dugMCqYMNm8zUZX6JVuQRsz3Qj3Q91EwEnMF6RG8zNO2pl9LYRUKGcmBSJw6PuShvAUPSrdhiA4JhEY7G4+nqyIIlo+AfhKqXhvf6hPEaxH/1QVbmV722cGFoJ9HzH4d4clM9VYrL6YfQwdaAmdbSwtoey/6x+31Vxxu+WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkZCp3fS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkZCp3fS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62106C4CECB;
-	Mon,  9 Sep 2024 06:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725864597;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BkZCp3fShQXfTG1Nn+VMmuW0LYueTyrn7acbRvvboJKcY6YjPoDDx968iFpKR1CWC
-	 aF/p0o4PzZ/eloW/K8mvH2s9aJhYiRq+CLA/Z6C5cf0zaOL7QYXEhZf0/TByS50AhI
-	 bJWZ0vLimK/FFtaJwXD9Yjc4jTIfHrr3Tv5YRIoRd3fkkJvNyNI486dzezhXOWgnQJ
-	 HbPC0BW8QqdHVqqtZvDGdZd2DLKkW13q6h3MOVdLTl2ijRdrSJoovSlNGk+YE1vLSL
-	 MY6Kf9lXc+klIMZqkADFnytoN8MKNCrTtrBVamTW4DGupk55fMoWoan0CIHDPihKAp
-	 1QrOM6cpJNDWA==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
+	s=arc-20240116; t=1725866374; c=relaxed/simple;
+	bh=smjF/m6JANvq+YSLnpImJwdWkSLA7dYeYW0ThCs6CqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iwzaLv6ff70enWStbOUGiXQsAIf9KLJSQbQ2erdzVapHaK2O1WBtAyDWngTRpgvUW9+8Av7Nos1iZdqyO9Aqb8NJJof6tPs1fjB/Fm8lyzZ0CGXmnFzcSI2hZWaIjmCbSuPg8/D1yNdKANxYofbN7HcVeYYvZwJA6zCO8mGUkuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.147])
+	by gateway (Coremail) with SMTP id _____8AxpuiBod5m7JgCAA--.4815S3;
+	Mon, 09 Sep 2024 15:19:29 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.147])
+	by front1 (Coremail) with SMTP id qMiowMCxodZ+od5mqyoCAA--.12416S2;
+	Mon, 09 Sep 2024 15:19:27 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Tang Bin <tangbin@cmss.chinamobile.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	linux-sound@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 8/8] x86/module: enable ROX caches for module text
-Date: Mon,  9 Sep 2024 09:47:30 +0300
-Message-ID: <20240909064730.3290724-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240909064730.3290724-1-rppt@kernel.org>
-References: <20240909064730.3290724-1-rppt@kernel.org>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v1 0/8] ASoC: loongson: Simplify code formatting
+Date: Mon,  9 Sep 2024 15:19:04 +0800
+Message-ID: <cover.1725844530.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -103,62 +44,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxodZ+od5mqyoCAA--.12416S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWruFy3tF15XFyDurW3uFW8Zrc_yoWkWrb_Wa
+	y2ga4rGryDXFy3Aa47Xr45KrW7WrWxAa4rC3WDtw4xWw1ayr13XF4UurWUW3W7XryDArn8
+	Xa18ur48ZryxKosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jepB-UUUUU=
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Hi all:
 
-Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-text allocations.
+This patchset attempts to improve code readability by simplifying code
+formatting.
+No functional changes.
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/mm/init.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Original link:
+https://lore.kernel.org/all/c54fbc2582702689c005e1ba528ab2318b1adde6.1725518229.git.zhoubinbin@loongson.cn/
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index eb503f53c319..a0ec99fb9385 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1053,6 +1053,15 @@ unsigned long arch_max_swapfile_size(void)
- #ifdef CONFIG_EXECMEM
- static struct execmem_info execmem_info __ro_after_init;
- 
-+static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
-+{
-+	/* fill memory with INT3 instructions */
-+	if (writeable)
-+		memset(ptr, INT3_INSN_OPCODE, size);
-+	else
-+		text_poke_set(ptr, INT3_INSN_OPCODE, size);
-+}
-+
- struct execmem_info __init *execmem_arch_setup(void)
- {
- 	unsigned long start, offset = 0;
-@@ -1063,8 +1072,23 @@ struct execmem_info __init *execmem_arch_setup(void)
- 	start = MODULES_VADDR + offset;
- 
- 	execmem_info = (struct execmem_info){
-+		.fill_trapping_insns = execmem_fill_trapping_insns,
- 		.ranges = {
--			[EXECMEM_DEFAULT] = {
-+			[EXECMEM_MODULE_TEXT] = {
-+				.flags	= EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL_ROX,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_KPROBES ... EXECMEM_BPF] = {
-+				.flags	= EXECMEM_KASAN_SHADOW,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_MODULE_DATA] = {
- 				.flags	= EXECMEM_KASAN_SHADOW,
- 				.start	= start,
- 				.end	= MODULES_END,
+Thanks.
+
+Binbin Zhou (8):
+  ASoC: loongson: Use BIT() macro
+  ASoC: loongson: Simplify probe() with local dev variable
+  ASoC: loongson: Simplify with dev_err_probe()
+  ASoC: loongson: Simplify if statment in loongson_card_hw_params()
+  ASoC: loongson: Simplify of_node_put() reference
+  ASoC: loongson: Replace if with ternary operator
+  ASoC: loongson: Factor out loongson_card_acpi_find_device() function
+  ASoC: loongson: Factor out loongson i2s enable clock functions
+
+ sound/soc/loongson/loongson_card.c    | 142 +++++++++++++-------------
+ sound/soc/loongson/loongson_dma.c     |  10 +-
+ sound/soc/loongson/loongson_i2s.c     | 110 ++++++++++----------
+ sound/soc/loongson/loongson_i2s.h     |  24 ++---
+ sound/soc/loongson/loongson_i2s_pci.c |  51 ++++-----
+ 5 files changed, 166 insertions(+), 171 deletions(-)
+
 -- 
-2.43.0
+2.43.5
 
