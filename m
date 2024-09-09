@@ -1,111 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF23E28EF
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 01:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC9FA932
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 01:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725843929; cv=none; b=Sn2vt1gXFzx6fn7F6qY5607oWKscQmutuizpgAetb/Aoae0O7Fseufsumws6T8VCyERRfgyqJVpvRhPCbj5db/CwOIGimP+6F4RekhNFkZXPJxM/At5rKeesJ2ExPgZKV7aary/MPe62gb3F14eetw0avJJPuMYgiKNM+Pu/sFc=
+	t=1725844233; cv=none; b=jC5SsgKsViI0odxu8ExJ13kIeGZ9htJJ4zPCNlGTd9ge5WtpPWB+T90BAdTqF5VFYC8T7Yyuh85gHluq6YPKq4HUjzIf/LOGnRAFR4U5yg6xFYyezDpjgzr9cJwGbRUOen/ahVYiNekS+xHat9asnmxglbv8+2FwLeWBPCZq6Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725843929; c=relaxed/simple;
-	bh=KbGXoddUMv8tVgpHOzuLsp1Y9f2+g1Z2mKD35eOsmG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gf5cAuAmDoH9XnhTNlQjoP4uLBlxwg/fVjbKg/uvcXip0Q0igSNc3Na1R/M2WmCLyVhCxwEAuTWtBwV7HLvLsEYSDNyI4fTM0rsa9dNnkTZI5dujhIKb48brrQKPp6E0CO2Ttrm8ZyyxQfCHV757+bty69U0MVyEir+EXdaIOAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+ao+fkS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+ao+fkS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9122BC4CECB
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 01:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725843928;
-	bh=KbGXoddUMv8tVgpHOzuLsp1Y9f2+g1Z2mKD35eOsmG4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M+ao+fkSdbvSR1LKrZhO5JYsBGM7L2G4woKI9M6bYrJ3527PG/YSKr0xbTcavU5zl
-	 Cb3Fy8yAdtBpHOA1AwHwconcskAKU6YAgmbeA5EIQ1Hx4/zA74INMf0U198kNzVfRI
-	 tbGWYs7yhEa9a8JpdzAB+TohVbKJc0IPHeCu+F6QGKJQWHEtT0t8vHkGOpV/s5pldh
-	 pOROC+YtPORF6OZZcAdxBrclpgh2WPnFYqOcOLDK4VlhbVwpmrkuJ7MJy/HiqJp+Hr
-	 7g1/SGn6XOrIcsdCRZ9iANpbyIL7R0r4gBlpd//Wlib+qN3FXmchRMqh1CAbLMsymn
-	 YB29ezBnj5Udg==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5c3d8d3ebbdso5301383a12.0
-        for <loongarch@lists.linux.dev>; Sun, 08 Sep 2024 18:05:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXeERPJ76wW7jrlOBtJSedH6vxy6g3nBQc6NhgwZSoIapmQzvqtvloEqA3YO8zhSmUdaHZd5E5E9Ws=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwdlMBN/dPj6lY7xvJUX12z1L602ENI1S+2u6JQB0sa7gIPm9pJ
-	20Ru1vdhf25QFSPGorJzcASUdwnRvKUJDWbc13C1quaZguPvyjYziOUdqtSWY9Ovl9DcNioAVEx
-	IDVEihHzGqAzbw30jV6GlhItUBnc=
-X-Google-Smtp-Source: AGHT+IH8AH63UqVrIu0Y9NxMorp0PRx7ZvVEGeC9k+LaQZ5PSWisHqpL3cJh9I7v5UvkrtJwSJlAEEBiruEGhQgMYJY=
-X-Received: by 2002:a05:6402:2808:b0:5bf:256a:a19e with SMTP id
- 4fb4d7f45d1cf-5c3c1f74315mr19393826a12.4.1725843927158; Sun, 08 Sep 2024
- 18:05:27 -0700 (PDT)
+	s=arc-20240116; t=1725844233; c=relaxed/simple;
+	bh=WUPM9kGn7iFj0OtzA3e7mvMUSa0p7JLz5/rRv8fyaw8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kIX8TGLStLpKsBHvBN8gsgxTBHwORr2RYFSqv/eo73HApBvHH97QcQegHgrGkAtuMjktKuVhCYh/HMV/i+zU1a31RY8lPlmqBEWr6zSiYHJGIS8zV3jX3jH0C1TVS5x5WSiWtyXJAvy3ROxitx+foX8ubFm3GdAUfiPAU4e2PpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxB+n8St5mYFgCAA--.4342S3;
+	Mon, 09 Sep 2024 09:10:20 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMCxLeT6St5mAwACAA--.12156S3;
+	Mon, 09 Sep 2024 09:10:19 +0800 (CST)
+Subject: Re: [PATCH v3 1/4] objtool: Handle frame pointer related instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
+ <20240807085906.27397-2-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <bc40b6c0-17e9-9fac-5ebc-55d1d06b888d@loongson.cn>
+Date: Mon, 9 Sep 2024 09:10:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240807085906.27397-1-yangtiezhu@loongson.cn>
- <20240807085906.27397-4-yangtiezhu@loongson.cn> <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
-In-Reply-To: <c75a2de763dc8ea42a734490936f198a6ad07349.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 9 Sep 2024 09:04:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
-Message-ID: <CAAhV-H79ToM4t_=b-teWT=2HVF8JcrwHYC+OeepXm51QjTw_eA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] LoongArch: Set AS_HAS_THIN_ADD_SUB as y if AS_IS_LLVM
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240807085906.27397-2-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxLeT6St5mAwACAA--.12156S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3GF4UXw1UGry7Xry8Zw18Zwc_yoWxJryfpF
+	Zxu3W5GrZ8urn3uwnFqa1UWrZ8Cws7Wry0gF93J34xAr9Iqrn3WF1SqF1YyFn2qrs5WayI
+	gFWSyry29F1qvagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Sun, Sep 8, 2024 at 10:43=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On Wed, 2024-08-07 at 16:59 +0800, Tiezhu Yang wrote:
-> > When building kernel with "make CC=3Dclang defconfig", LLVM Assembler
-> > is used due to LLVM_IAS=3D0 is not specified, then AS_HAS_THIN_ADD_SUB
-> > is not set, thus objtool can not be built after enable it for Clang.
-> >
-> > config AS_HAS_THIN_ADD_SUB is to check whether -mthin-add-sub option is
-> > available to know R_LARCH_{32,64}_PCREL are supported for GNU Assembler=
-,
-> > there is no this option for LLVM Assembler. The minimal version of Clan=
-g
-> > is 18 for building LoongArch kernel, and Clang >=3D 17 already supports
-> > R_LARCH_{32,64}_PCREL, that is to say, there is no need to depend on
-> > AS_HAS_THIN_ADD_SUB for Clang, so just set AS_HAS_THIN_ADD_SUB as y if
-> > AS_IS_LLVM.
-> >
-> > Fixes: 120dd4118e58 ("LoongArch: Only allow OBJTOOL & ORC unwinder if t=
-oolchain supports -mthin-add-sub")
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
-> This is what I wanted in
-> https://lore.kernel.org/all/20240604150741.30252-1-xry111@xry111.site/.
-Then which one is better?  AS_IS_LLVM or CC_IS_CLANG?
+On 2024-08-07 16:59, Tiezhu Yang wrote:
 
-Huacai
+> After commit a0f7085f6a63 ("LoongArch: Add RANDOMIZE_KSTACK_OFFSET
+> support"), there are three new instructions "addi.d $fp, $sp, 32",
+> "sub.d $sp, $sp, $t0" and "addi.d $sp, $fp, -32" for the secondary
+> stack in do_syscall(), then there is a objtool warning "return with
+> modified stack frame" and no handle_syscall() which is the previous
+> frame of do_syscall() in the call trace when executing the command
+> "echo l > /proc/sysrq-trigger".
+>
+> objdump shows something like this:
+>
+> 0000000000000000 <do_syscall>:
+>     0:   02ff8063        addi.d          $sp, $sp, -32
+>     4:   29c04076        st.d            $fp, $sp, 16
+>     8:   29c02077        st.d            $s0, $sp, 8
+>     c:   29c06061        st.d            $ra, $sp, 24
+>    10:   02c08076        addi.d          $fp, $sp, 32
+>    ...
+>    74:   0011b063        sub.d           $sp, $sp, $t0
+>    ...
+>    a8:   4c000181        jirl            $ra, $t0, 0
+>    ...
+>    dc:   02ff82c3        addi.d          $sp, $fp, -32
+>    e0:   28c06061        ld.d            $ra, $sp, 24
+>    e4:   28c04076        ld.d            $fp, $sp, 16
+>    e8:   28c02077        ld.d            $s0, $sp, 8
+>    ec:   02c08063        addi.d          $sp, $sp, 32
+>    f0:   4c000020        jirl            $zero, $ra, 0
+>
+> The instruction "sub.d $sp, $sp, $t0" changes the stack bottom
+> and the new stack size is a random value, in order to find the
+> return address of do_syscall() which is stored in the original
+> stack frame after executing "jirl $ra, $t0, 0", it should use
+> fp which points to the original stack top.
+>
+> At the beginning, the thought is tended to decode the secondary
+> stack instruction "sub.d $sp, $sp, $t0" and set it as a label,
+> then check this label for the two frame pointer instructions to
+> change the cfa base and cfa offset during the period of secondary
+> stack in update_cfi_state(). This is valid for GCC rather than
+> Clang due to there are different secondary stack instructions for
+> ClangBuiltLinux on LoongArch, something like this:
+>
+> 0000000000000000 <do_syscall>:
+>    ...
+>    88:   00119064        sub.d           $a0, $sp, $a0
+>    8c:   00150083        or              $sp, $a0, $zero
+>    ...
+>
+> Actually, it equals to a single instruction "sub.d $sp, $sp, $a0",
+> but there is no proper condition to check it as a label like GCC,
+> so the beginning thought is not a good way.
+>
+> Essentially, there are two special frame pointer instructions
+> "addi.d $fp, $sp, imm" and "addi.d $sp, $fp, imm", the first one
+> points fp to the original stack top and the second one restores
+> the original stack bottom from fp.
+>
+> Based on the above analysis, in order to not add a arch specified
+> update_cfi_state(), just add a member "frame_pointer" in the struct
+> symbol as a label to avoid affecting the current normal case, then
+> set it as true only if there is "addi.d $sp, $fp, imm", the last is
+> to check this label for the two frame pointer instructions to change
+> the cfa base and cfa offset in update_cfi_state().
+>
+> Tested with the following two configs:
+> (1) CONFIG_RANDOMIZE_KSTACK_OFFSET=y &&
+>      CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=n
+> (2) CONFIG_RANDOMIZE_KSTACK_OFFSET=y &&
+>      CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+>
+> By the way, there is no effect for x86 with this patch, tested on
+> the x86 machine with Fedora 40 system.
+>
+> Cc: stable@vger.kernel.org # 6.9+
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   tools/objtool/arch/loongarch/decode.c | 11 ++++++++++-
+>   tools/objtool/check.c                 | 23 ++++++++++++++++++++---
+>   tools/objtool/include/objtool/elf.h   |  1 +
+>   3 files changed, 31 insertions(+), 4 deletions(-)
+LGTM.
+Thanks!
 
->
-> Reviewed-by: Xi Ruoyao <xry111@xry111.site>
->
-> > ---
-> >  arch/loongarch/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 70f169210b52..e1b6cb306d4d 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -265,7 +265,7 @@ config AS_HAS_FCSR_CLASS
-> >       def_bool $(as-instr,movfcsr2gr \$t0$(comma)\$fcsr0)
-> >
-> >  config AS_HAS_THIN_ADD_SUB
-> > -     def_bool $(cc-option,-Wa$(comma)-mthin-add-sub)
-> > +     def_bool $(cc-option,-Wa$(comma)-mthin-add-sub) || AS_IS_LLVM
-> >
-> >  config AS_HAS_LSX_EXTENSION
-> >       def_bool $(as-instr,vld \$vr0$(comma)\$a0$(comma)0)
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+Jinyang
+
+> diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+> index aee479d2191c..69b66994f2a1 100644
+> --- a/tools/objtool/arch/loongarch/decode.c
+> +++ b/tools/objtool/arch/loongarch/decode.c
+> @@ -122,7 +122,7 @@ static bool decode_insn_reg2i12_fomat(union loongarch_instruction inst,
+>   	switch (inst.reg2i12_format.opcode) {
+>   	case addid_op:
+>   		if ((inst.reg2i12_format.rd == CFI_SP) || (inst.reg2i12_format.rj == CFI_SP)) {
+> -			/* addi.d sp,sp,si12 or addi.d fp,sp,si12 */
+> +			/* addi.d sp,sp,si12 or addi.d fp,sp,si12 or addi.d sp,fp,si12 */
+>   			insn->immediate = sign_extend64(inst.reg2i12_format.immediate, 11);
+>   			ADD_OP(op) {
+>   				op->src.type = OP_SRC_ADD;
+> @@ -132,6 +132,15 @@ static bool decode_insn_reg2i12_fomat(union loongarch_instruction inst,
+>   				op->dest.reg = inst.reg2i12_format.rd;
+>   			}
+>   		}
+> +		if ((inst.reg2i12_format.rd == CFI_SP) && (inst.reg2i12_format.rj == CFI_FP)) {
+> +			/* addi.d sp,fp,si12 */
+> +			struct symbol *func = find_func_containing(insn->sec, insn->offset);
+> +
+> +			if (!func)
+> +				return false;
+> +
+> +			func->frame_pointer = true;
+> +		}
+>   		break;
+>   	case ldd_op:
+>   		if (inst.reg2i12_format.rj == CFI_SP) {
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 01237d167223..af9cfed7f4ec 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -2993,10 +2993,27 @@ static int update_cfi_state(struct instruction *insn,
+>   				break;
+>   			}
+>   
+> -			if (op->dest.reg == CFI_SP && op->src.reg == CFI_BP) {
+> +			if (op->dest.reg == CFI_BP && op->src.reg == CFI_SP &&
+> +			    insn->sym->frame_pointer) {
+> +				/* addi.d fp,sp,imm on LoongArch */
+> +				if (cfa->base == CFI_SP && cfa->offset == op->src.offset) {
+> +					cfa->base = CFI_BP;
+> +					cfa->offset = 0;
+> +				}
+> +				break;
+> +			}
+>   
+> -				/* lea disp(%rbp), %rsp */
+> -				cfi->stack_size = -(op->src.offset + regs[CFI_BP].offset);
+> +			if (op->dest.reg == CFI_SP && op->src.reg == CFI_BP) {
+> +				/* addi.d sp,fp,imm on LoongArch */
+> +				if (cfa->base == CFI_BP && cfa->offset == 0) {
+> +					if (insn->sym->frame_pointer) {
+> +						cfa->base = CFI_SP;
+> +						cfa->offset = -op->src.offset;
+> +					}
+> +				} else {
+> +					/* lea disp(%rbp), %rsp */
+> +					cfi->stack_size = -(op->src.offset + regs[CFI_BP].offset);
+> +				}
+>   				break;
+>   			}
+>   
+> diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
+> index 2b8a69de4db8..d7e815c2fd15 100644
+> --- a/tools/objtool/include/objtool/elf.h
+> +++ b/tools/objtool/include/objtool/elf.h
+> @@ -68,6 +68,7 @@ struct symbol {
+>   	u8 warned	     : 1;
+>   	u8 embedded_insn     : 1;
+>   	u8 local_label       : 1;
+> +	u8 frame_pointer     : 1;
+>   	struct list_head pv_target;
+>   	struct reloc *relocs;
+>   };
+
