@@ -1,186 +1,116 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124831B1D4D
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 08:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23CD1B372C;
+	Mon,  9 Sep 2024 09:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725870992; cv=none; b=g6Ru2FHFlGqGxmvG33hZQqbqGxHbmATo/GnVoFWz1TYEeyEbP6uFtHSV4NEmd1moqAHzdI2MqhxMzSbg9p2bW81Kx8KCCG/YBRRYBe0AcYL/xgA0ujaamg1KgwESv2WSjUmpj+abo8dNoZSrP8psur3gnHMBaPhPnLHMDCjTfFY=
+	t=1725874208; cv=none; b=p3M8vy1NnkgDvZk43AxAU8zpOz1DemVzfz5/986LrqBiDir/WOChEuDxWG2KuUKIu4wPwNaeiqt9vZjH89ZO/m/CrvG5LtlFM+ZeOaoL3Iqs+gGToeUG/Rs2nUyzffUj2BwTLFQJB4mJj7IWVPmAGXSsKKkVXP+8BbYz+hyHdiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725870992; c=relaxed/simple;
-	bh=BRd7iguuq3YS6+3Jho+aSkFhAaF4SJbpROvfc/0ETRU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qJC++U/3Q1meaGaXIUV1YlWlIITEOFD7PB4ubQ+fmd0GBrVZiO1vGzWct6CMLeHclv0YB0JeLil0WShM9LBuV77jcVcwefom4bHhLCwdLSpKRqwt25ryja9oazg7lew5M3xQSHWrTyxUY6Bo61Tyex887XpyKDKBHPNARN4/x4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BMT/Vy3r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=COEduUZQ; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1725874208; c=relaxed/simple;
+	bh=o/hjh/Sq8hcMxZEgqMKb/vs7eiHDdZcNb8ZaB2phBzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fj6ge70W9ULCsNSaEKMy/UdaQO6PdZXGysYem0R5jX70Hjg3L+nXrsmNJzZbUurC5MiqsW12DqL92DBtekgUulfRioFNDE2OTQS1sW6QfwYs6YyA/CvBc0O1vae4lcdDf1T7blRWeBWfIQyeAp2VYFRRmU6nPJnk7rzyzDp+OvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PHcK1SUW; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BMT/Vy3r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="COEduUZQ"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 266AB1140236;
-	Mon,  9 Sep 2024 04:36:29 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Mon, 09 Sep 2024 04:36:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1725870989;
-	 x=1725957389; bh=eUXvZi3N7syICvlD+Ix540Dah1pJESMT13JfPSWJwLM=; b=
-	BMT/Vy3rmsncpWkN+25cU3Fi2M574TZpnDkkEQ0dXHMrdljRr2koq2Eitvx1MP/h
-	DeuL7oMQEkXgWGI8KvIHzN9xvGH7Nx6YWa4WuhfHQiXWeiU3JK6WyRs8aVdG8OG2
-	CgnsAEJcTWJET/XzD4k51wyAQAElmjguczWbwspd0GwBqxMlgegQkFZwbbWL9vtf
-	a3N+HuY12tKPIdIuv7175EgXdrus/Xh0NZJLjFoJCnYFGIi190Wn/Sq+3vFI/XDW
-	BOgta8vJ53T5DJEUPi4xlb9ppTggJzujsHzJv8jvCYp9apt2O83GqzZPkE7YjCMO
-	cLtLOgUyvG3Mn5aNUtCqDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725870989; x=
-	1725957389; bh=eUXvZi3N7syICvlD+Ix540Dah1pJESMT13JfPSWJwLM=; b=C
-	OEduUZQk+zgxb+1igY55Tx9mTQEkWQKCzfcBYBv8Uh71s0iI2aDU+hng2NTurZfM
-	2rHQO5pty7bRfJKv2iVSGOHXADFvDlXlrsrxwxFj8NqMTTdy++UBV+MuH2FlDo5v
-	jU0LMJJ31SMqmFvPf4opzqUNl7A2oYlmja+gVnE/DAyBC4XcQcJ2HL3ZssPFhJQ+
-	J3E6J0SNl855lUqn3AzpldS0ZvemI83EPgiChjkoad1vLHZaT+yxxHUqk43jjsPT
-	j7Y+dCGfB59F5mc4i1twt3OPcC+7cKDCdAhsgFsmRcLVU/wRSsd5Nz6OXl5mM889
-	N4nez7k2ueKQ8Jm/WSUiw==
-X-ME-Sender: <xms:jLPeZhUyLAkdryxEs3c0hraB1VvLhrnUZ_lD1-E8tj9irAhMjSQXhw>
-    <xme:jLPeZhlNIkYmZwLfqGo5IRfY2bioFLOLaX77nhMdvoZG8UXSBMZNKnq3hG3XB4Umc
-    a8xOPYc3C5ipYdTyWQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiiedgleeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddv
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
-    hssegrrhhmrdgtohhmpdhrtghpthhtohepjhhvvghtthgvrheskhgrlhhrrgihihhntgdr
-    tghomhdprhgtphhtthhopeihshhiohhnnhgvrghusehkrghlrhgrhihinhgtrdgtohhmpd
-    hrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehguhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhlsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishht
-    shdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:jLPeZtahS2ZLyg3YkDbQyoWcrJFkGknCRxl_wd3kBJ4WkFmu-9Hiyw>
-    <xmx:jLPeZkWYxYsozfaIpozex_S5D_NobsRXJ7aQK0dUQ-fYWYplAr_NFA>
-    <xmx:jLPeZrmXz3snPfgI1_4ioqEImXXW3ZaB4lGhBJ0VhMJKt60-OgDqLw>
-    <xmx:jLPeZhdsJgdACef-6CPyGF_ka-bcGaW_9D45aLR9BrvDAVHuV_eXHQ>
-    <xmx:jbPeZpeym_a4JGjP8qaz6EpICL5aHSbqNRjfxQaXaglw2LUgDzFwiccs>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 48B4C222006F; Mon,  9 Sep 2024 04:36:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PHcK1SUW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=f16Hum48X2/PRv+OYRnrqWvXhbLKUUXP4MBg4DPZdlQ=; b=PHcK1SUWaNK+mGL/l3LU81VEdD
+	D9nBb1lF9fC+k5KduxINliKCuQNtwOV9r3VV7JhDFojWrMZqtjtzwsWQR7ymjqHMdZK4/Tzo1krQG
+	l72L0TWbRaFKsNxIJEvL02K4akN/vihdxELVqTsQPMZh102jhI0PE6Yrqkpm+R5bTxUWvCjPykmtq
+	WlbddJH0odsLTU/9pMOdxn+PkTNa49n7N5ZvM4UD0maObK3Zd9qj9kNJXbjqHQeNmT1JTuolvrtNi
+	Vpta2pPXprvf8lrp/xLulCdRHeE9tzU/AQ/jRdr1yi09xwhjfkgynp4ly+k7LQoKGQqGefX9PFflQ
+	rxIuTYAw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1snai3-0000000AlXL-0vBQ;
+	Mon, 09 Sep 2024 09:29:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 80F5330047C; Mon,  9 Sep 2024 11:29:23 +0200 (CEST)
+Date: Mon, 9 Sep 2024 11:29:23 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 6/8] x86/module: perpare module loading for ROX
+ allocations of text
+Message-ID: <20240909092923.GB4723@noisy.programming.kicks-ass.net>
+References: <20240909064730.3290724-1-rppt@kernel.org>
+ <20240909064730.3290724-7-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 09 Sep 2024 10:35:58 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Julian Vetter" <jvetter@kalrayinc.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>,
- "Andrew Morton" <akpm@linux-foundation.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- loongarch@lists.linux.dev, "Yann Sionneau" <ysionneau@kalrayinc.com>
-Message-Id: <3c56dbee-241c-4742-a586-254e10b98cbb@app.fastmail.com>
-In-Reply-To: <20240906114151.519028-2-jvetter@kalrayinc.com>
-References: <20240906114151.519028-1-jvetter@kalrayinc.com>
- <20240906114151.519028-2-jvetter@kalrayinc.com>
-Subject: Re: [PATCH 1/4] Consolidate __memcpy_{to,from}io and __memset_io into a single
- lib
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240909064730.3290724-7-rppt@kernel.org>
 
-On Fri, Sep 6, 2024, at 11:41, Julian Vetter wrote:
-> Various architectures have almost the same implementations for
-> __memcpy_{to,from}io and __memset_io functions. So, consolidate them and
-> introduce a CONFIG_GENERIC_IO flag to build the given lib/io.c.
->
-> Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
-> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+On Mon, Sep 09, 2024 at 09:47:28AM +0300, Mike Rapoport wrote:
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 8da0e66ca22d..563d9a890ce2 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
 
-Thanks for working on this. The implementation looks correct
-to me and we should be able to use this on most architectures,
-but since this is a shared file, it would be good to make it
-as polished as possible.
-
->  lib/Kconfig  |   3 ++
->  lib/Makefile |   2 +
->  lib/io.c     | 101 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 106 insertions(+)
->  create mode 100644 lib/io.c
-
-I feel the name is a little too geneal, maybe use io_copy.c and
-CONFIG_GENERIC_IO_COPY for the name?
-
-Alternatively, this could be part of lib/iomap_copy.c,
-which already has some related helper functions. In that
-case, I think we would rely on the per-architecture "#define
-__memcpy_fromio __memcpy_fromio" etc macros instead of a
-Kconfig symbol.
-
-> +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+> @@ -654,4 +656,15 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  }
+>  #endif
+>  
+> +void ftrace_swap_func(void *a, void *b, int n)
 > +{
-> +	while (count && !IS_ALIGNED((unsigned long)from, NATIVE_STORE_SIZE)) {
-> +		*(u8 *)to = __raw_readb(from);
-> +		from++;
-> +		to++;
-> +		count--;
-> +	}
-
-There is a corner case that this bit actually misses (same in the
-existing implementation): If the __iomem buffer is aligned, but
-the 'to' buffer is not, this may cause an alignment fault on
-architectures without native unaligned stores. At the moment
-I think both csky and some configurations of loongarch64 can
-run into this. I think the best way to deal with this is to
-use get_unaligned()/put_unaligned() in place of the pointer
-dereference. This has no effect on architectures that have
-native unaligned access but otherwise uses byte access on the
-kernel buffer, which I think is a good tradeoff.
-
-> +	while (count >= NATIVE_STORE_SIZE) {
-> +		*(uintptr_t *)to = __raw_read_native(from);
-> +		from += NATIVE_STORE_SIZE;
-> +		to += NATIVE_STORE_SIZE;
-> +		count -= NATIVE_STORE_SIZE;
-> +	}
-
-The use of __raw_read_native() somehow bothers me, it seems
-a little more complicated than open-coding the two
-possibles paths, or even using the aligned-access
-helpers like
-
-      if (IS_ENABLED(CONFIG_64BIT))
-             __iowrite64_copy(to, from, count & WORD_MASK)
-      else
-             __iowrite32_copy(to, from, count & WORD_MASK)
-
-Those helpers do require the kernel buffer to be naturally
-aligned though.
-
-> +void __memset_io(volatile void __iomem *dst, int c, size_t count)
-> +{
-> +	uintptr_t qc = (u8)c;
+> +	unsigned long t;
 > +
-> +	qc |= qc << 8;
-> +	qc |= qc << 16;
-> +#if IS_ENABLED(CONFIG_64BIT)
-> +	qc |= qc << 32;
-> +#endif
+> +	WARN_ON_ONCE(n != sizeof(t));
+> +
+> +	t = *((unsigned long *)a);
+> +	text_poke_copy(a, b, sizeof(t));
+> +	text_poke_copy(b, &t, sizeof(t));
+> +}
 
-If you use IS_ENABLED() here, please do it like
-
-       if (IS_ENABLED(CONFIG_64BIT)
-              qc |= qc << 32;
-
-      Arnd
+This is insane, just force BUILDTIME_MCOUNT_SORT
