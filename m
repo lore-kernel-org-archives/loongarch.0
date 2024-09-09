@@ -1,164 +1,186 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15BB1B14F7
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 08:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124831B1D4D
+	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 08:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725869577; cv=none; b=cJDwcc9PXOmVCpLqzIehHjLU1v7RmFLa4cIjN2b4tNdHb/2RFsCd8S/nyc/x81XzGx4FWfg2raRTwhz64pEksLpboQu9EFiV+TuidoLuz4wY3DHfC8j46XqIlDFfBC2K6Oo/8MZAsP4t1r7CJl9XxivKk552saisPsNyPX9+Cus=
+	t=1725870992; cv=none; b=g6Ru2FHFlGqGxmvG33hZQqbqGxHbmATo/GnVoFWz1TYEeyEbP6uFtHSV4NEmd1moqAHzdI2MqhxMzSbg9p2bW81Kx8KCCG/YBRRYBe0AcYL/xgA0ujaamg1KgwESv2WSjUmpj+abo8dNoZSrP8psur3gnHMBaPhPnLHMDCjTfFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725869577; c=relaxed/simple;
-	bh=qn1o8Intnk0JCIq1CUGzHv/zXzVk+ma3u3ksckHSnV0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y0jk+0k/inUp0pNhhj1s2yi8rrRZmnPvd8tGiJdgGb7g8bE3TJSEzCk/9hUmnfZNTF8sgm7sSo1Y284m6x4gW3hrhmIfcIGwEJqRUbx4f1Cj6M7qdZHsoTs2V0uVqVz15xq/O+wCfm3Sv7J1L73iyMhOQXOkUhqohDC+DX/XoMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxmK3ykd; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725870992; c=relaxed/simple;
+	bh=BRd7iguuq3YS6+3Jho+aSkFhAaF4SJbpROvfc/0ETRU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qJC++U/3Q1meaGaXIUV1YlWlIITEOFD7PB4ubQ+fmd0GBrVZiO1vGzWct6CMLeHclv0YB0JeLil0WShM9LBuV77jcVcwefom4bHhLCwdLSpKRqwt25ryja9oazg7lew5M3xQSHWrTyxUY6Bo61Tyex887XpyKDKBHPNARN4/x4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BMT/Vy3r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=COEduUZQ; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxmK3ykd"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5365aa568ceso3293927e87.0
-        for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 01:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725869574; x=1726474374; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mKbJpq6YIA11aEfz21wae3H60/ixEHXlJ4hbELPq0J4=;
-        b=mxmK3ykdWwT/Bl58u4nJFuJs7dtJvJ1KH+Aqp/jamaLvyIxWJKjmwuHsXq7LBsoxYd
-         uH8DC2tGgj4NvdSx1ngMZq94Z7PBdZfu3ZgF3ccO0MLOx7a21+H1QADTeeRiy5/7Zu2L
-         6ah5zAetmOcDdkVtEJn78FSHWN9yVum9h05bJAyq3h+DcRmkWzG8Q2F49vASf/BDftWL
-         PUFEXEiAjILR0Z6/TRsWnYsq8UtdtyU++RB7DEZgQohXgrGHzXva93oerImMeUwak455
-         Npv1kU6oLhLUoEIhM6ra8U+Q+D5VvLIZmqTavWe4XUn6CvXhGNGfL+pF38/HRkhPVyDB
-         lSyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725869574; x=1726474374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mKbJpq6YIA11aEfz21wae3H60/ixEHXlJ4hbELPq0J4=;
-        b=RufiVHDrUKonFsQgjQtSAikOJIpYkm4dbsQGQ3uPaf+6SSlvaQgib75KaOpxC8P5ck
-         yIhp2N5uBP3eldKQd8GomVzapdUV+mabE/r+rMrsKAIR6/tE/1lDPnetWdPIDl1nnaLD
-         I/9bhrfSgsVtPJmekRV3T0hnKB4QDWVhNs8No9LcY4GUMrfX++UBJJgPILE6bl5AUwL1
-         ogx2x92KjODqnmfGFa6scVErrgv9qKBeqjcMxLUC6b1aAlhzrlFc1QEzyc/dB8ScwqI1
-         g2ve0HY7ZFB6ArcivepWnAyDjJao/qJl8niu/GJskKw/KB6O530SLAl4+xG5Oe10IeqR
-         qaBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXp7xlGe8PFvu/maAaZSf8eTy81DRZ8oHz9cpwuzkQ1mMCMt+Yok1jcwm5cFz0Eht4Qcx2v+5Sky3s=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxJLQJ9WtCyIcRqayFFdzYVPEeiO+yLY000iQ6PLynpduycZIIZ
-	/5GD47g2DCocoEgZSmrvdOoBbw0Uvj70QRjAE/f25Tst/u14wzKy/nAdulQhINbelYNgsepB8AY
-	xA97s6sDsaftPU8wYeG94ehwE8aM=
-X-Google-Smtp-Source: AGHT+IHnQ8xuztnsBBgMvF4HoqhobltRiRUWVc47gSpztUAjtDauIHerV4oHBCZhp65S/wW7OsWE+NRnD31fY1WpNhQ=
-X-Received: by 2002:a05:6512:1245:b0:536:54bd:8374 with SMTP id
- 2adb3069b0e04-53658818949mr5167330e87.60.1725869573576; Mon, 09 Sep 2024
- 01:12:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BMT/Vy3r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="COEduUZQ"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 266AB1140236;
+	Mon,  9 Sep 2024 04:36:29 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Mon, 09 Sep 2024 04:36:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1725870989;
+	 x=1725957389; bh=eUXvZi3N7syICvlD+Ix540Dah1pJESMT13JfPSWJwLM=; b=
+	BMT/Vy3rmsncpWkN+25cU3Fi2M574TZpnDkkEQ0dXHMrdljRr2koq2Eitvx1MP/h
+	DeuL7oMQEkXgWGI8KvIHzN9xvGH7Nx6YWa4WuhfHQiXWeiU3JK6WyRs8aVdG8OG2
+	CgnsAEJcTWJET/XzD4k51wyAQAElmjguczWbwspd0GwBqxMlgegQkFZwbbWL9vtf
+	a3N+HuY12tKPIdIuv7175EgXdrus/Xh0NZJLjFoJCnYFGIi190Wn/Sq+3vFI/XDW
+	BOgta8vJ53T5DJEUPi4xlb9ppTggJzujsHzJv8jvCYp9apt2O83GqzZPkE7YjCMO
+	cLtLOgUyvG3Mn5aNUtCqDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725870989; x=
+	1725957389; bh=eUXvZi3N7syICvlD+Ix540Dah1pJESMT13JfPSWJwLM=; b=C
+	OEduUZQk+zgxb+1igY55Tx9mTQEkWQKCzfcBYBv8Uh71s0iI2aDU+hng2NTurZfM
+	2rHQO5pty7bRfJKv2iVSGOHXADFvDlXlrsrxwxFj8NqMTTdy++UBV+MuH2FlDo5v
+	jU0LMJJ31SMqmFvPf4opzqUNl7A2oYlmja+gVnE/DAyBC4XcQcJ2HL3ZssPFhJQ+
+	J3E6J0SNl855lUqn3AzpldS0ZvemI83EPgiChjkoad1vLHZaT+yxxHUqk43jjsPT
+	j7Y+dCGfB59F5mc4i1twt3OPcC+7cKDCdAhsgFsmRcLVU/wRSsd5Nz6OXl5mM889
+	N4nez7k2ueKQ8Jm/WSUiw==
+X-ME-Sender: <xms:jLPeZhUyLAkdryxEs3c0hraB1VvLhrnUZ_lD1-E8tj9irAhMjSQXhw>
+    <xme:jLPeZhlNIkYmZwLfqGo5IRfY2bioFLOLaX77nhMdvoZG8UXSBMZNKnq3hG3XB4Umc
+    a8xOPYc3C5ipYdTyWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiiedgleeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
+    hssegrrhhmrdgtohhmpdhrtghpthhtohepjhhvvghtthgvrheskhgrlhhrrgihihhntgdr
+    tghomhdprhgtphhtthhopeihshhiohhnnhgvrghusehkrghlrhgrhihinhgtrdgtohhmpd
+    hrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehguhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhlsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
+    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
+    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishht
+    shdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:jLPeZtahS2ZLyg3YkDbQyoWcrJFkGknCRxl_wd3kBJ4WkFmu-9Hiyw>
+    <xmx:jLPeZkWYxYsozfaIpozex_S5D_NobsRXJ7aQK0dUQ-fYWYplAr_NFA>
+    <xmx:jLPeZrmXz3snPfgI1_4ioqEImXXW3ZaB4lGhBJ0VhMJKt60-OgDqLw>
+    <xmx:jLPeZhdsJgdACef-6CPyGF_ka-bcGaW_9D45aLR9BrvDAVHuV_eXHQ>
+    <xmx:jbPeZpeym_a4JGjP8qaz6EpICL5aHSbqNRjfxQaXaglw2LUgDzFwiccs>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 48B4C222006F; Mon,  9 Sep 2024 04:36:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1725518229.git.zhoubinbin@loongson.cn> <e987b0beabba169577c8923557690984f226b29b.1725518229.git.zhoubinbin@loongson.cn>
- <zes7kfwmz57lhyfvxuyk64n7eykb52txxatbqgqnue7e3yab7g@d7cg7ql4gyl4>
-In-Reply-To: <zes7kfwmz57lhyfvxuyk64n7eykb52txxatbqgqnue7e3yab7g@d7cg7ql4gyl4>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 9 Sep 2024 14:12:40 +0600
-Message-ID: <CAMpQs4Jwms+P7Uu-N1koT8WYKW8KCdMoo7pkPkdaO2aY7TAD+A@mail.gmail.com>
-Subject: Re: [PATCH v1 01/10] ASoC: dt-bindings: Add Everest ES8323 Codec
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Mon, 09 Sep 2024 10:35:58 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Julian Vetter" <jvetter@kalrayinc.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ loongarch@lists.linux.dev, "Yann Sionneau" <ysionneau@kalrayinc.com>
+Message-Id: <3c56dbee-241c-4742-a586-254e10b98cbb@app.fastmail.com>
+In-Reply-To: <20240906114151.519028-2-jvetter@kalrayinc.com>
+References: <20240906114151.519028-1-jvetter@kalrayinc.com>
+ <20240906114151.519028-2-jvetter@kalrayinc.com>
+Subject: Re: [PATCH 1/4] Consolidate __memcpy_{to,from}io and __memset_io into a single
+ lib
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof:
+On Fri, Sep 6, 2024, at 11:41, Julian Vetter wrote:
+> Various architectures have almost the same implementations for
+> __memcpy_{to,from}io and __memset_io functions. So, consolidate them and
+> introduce a CONFIG_GENERIC_IO flag to build the given lib/io.c.
+>
+> Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
+> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
 
-Thanks for your review.
+Thanks for working on this. The implementation looks correct
+to me and we should be able to use this on most architectures,
+but since this is a shared file, it would be good to make it
+as polished as possible.
 
-On Fri, Sep 6, 2024 at 4:21=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On Thu, Sep 05, 2024 at 03:02:14PM +0800, Binbin Zhou wrote:
-> > Add Everest Semiconductor ES8316 low power audio CODEC binding with DT
-> > schema format using json-schema.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../bindings/sound/everest,es8323.yaml        | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/everest,es8=
-323.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/everest,es8323.yam=
-l b/Documentation/devicetree/bindings/sound/everest,es8323.yaml
-> > new file mode 100644
-> > index 000000000000..0450d0f49d03
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/everest,es8323.yaml
-> > @@ -0,0 +1,49 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/sound/everest,es8323.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Everest ES8323 audio CODECs
-> > +
-> > +maintainers:
-> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> > +
-> > +allOf:
-> > +  - $ref: dai-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: everest,es8323
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description: clock for master clock (MCLK)
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    const: mclk
-> > +
-> > +  '#sound-dai-cells':
-> > +    const: 0
->
-> No audio-graph-port? Are you sure? It looks exactly like
-> everest,es8316...
+>  lib/Kconfig  |   3 ++
+>  lib/Makefile |   2 +
+>  lib/io.c     | 101 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 106 insertions(+)
+>  create mode 100644 lib/io.c
 
-I checked and they are indeed very similar and it seems I just need to
-add to everest,es8316.yaml instead of a new file.
+I feel the name is a little too geneal, maybe use io_copy.c and
+CONFIG_GENERIC_IO_COPY for the name?
 
-Thanks.
-Binbin
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#sound-dai-cells'
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <0>;
-> > +      codec@10 {
-> > +        compatible =3D "everest,es8323";
-> > +        reg =3D <0x10>;
-> > +        #sound-dai-cells =3D <0>;
->
-> Make the example complete. Assuming this binding stays...
->
-> Best regards,
-> Krzysztof
->
+Alternatively, this could be part of lib/iomap_copy.c,
+which already has some related helper functions. In that
+case, I think we would rely on the per-architecture "#define
+__memcpy_fromio __memcpy_fromio" etc macros instead of a
+Kconfig symbol.
+
+> +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+> +{
+> +	while (count && !IS_ALIGNED((unsigned long)from, NATIVE_STORE_SIZE)) {
+> +		*(u8 *)to = __raw_readb(from);
+> +		from++;
+> +		to++;
+> +		count--;
+> +	}
+
+There is a corner case that this bit actually misses (same in the
+existing implementation): If the __iomem buffer is aligned, but
+the 'to' buffer is not, this may cause an alignment fault on
+architectures without native unaligned stores. At the moment
+I think both csky and some configurations of loongarch64 can
+run into this. I think the best way to deal with this is to
+use get_unaligned()/put_unaligned() in place of the pointer
+dereference. This has no effect on architectures that have
+native unaligned access but otherwise uses byte access on the
+kernel buffer, which I think is a good tradeoff.
+
+> +	while (count >= NATIVE_STORE_SIZE) {
+> +		*(uintptr_t *)to = __raw_read_native(from);
+> +		from += NATIVE_STORE_SIZE;
+> +		to += NATIVE_STORE_SIZE;
+> +		count -= NATIVE_STORE_SIZE;
+> +	}
+
+The use of __raw_read_native() somehow bothers me, it seems
+a little more complicated than open-coding the two
+possibles paths, or even using the aligned-access
+helpers like
+
+      if (IS_ENABLED(CONFIG_64BIT))
+             __iowrite64_copy(to, from, count & WORD_MASK)
+      else
+             __iowrite32_copy(to, from, count & WORD_MASK)
+
+Those helpers do require the kernel buffer to be naturally
+aligned though.
+
+> +void __memset_io(volatile void __iomem *dst, int c, size_t count)
+> +{
+> +	uintptr_t qc = (u8)c;
+> +
+> +	qc |= qc << 8;
+> +	qc |= qc << 16;
+> +#if IS_ENABLED(CONFIG_64BIT)
+> +	qc |= qc << 32;
+> +#endif
+
+If you use IS_ENABLED() here, please do it like
+
+       if (IS_ENABLED(CONFIG_64BIT)
+              qc |= qc << 32;
+
+      Arnd
