@@ -1,197 +1,199 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC2217B4FF
-	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 07:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAAA17C7A3;
+	Tue, 10 Sep 2024 07:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725951652; cv=none; b=E/4GAQjG7+M5APR6XqaJ6ZbgjkDbZhjZpyQ3MnM3ARREpfsw3y/nzr1VbIkEPU23EXUALppdUl3PxigMhKnyMf6hFc8apyMGZP56bu55CyhSCY/V2jA390jBueF48POK9cMTEANi6k22a8scJCRyIjAcBBM8vX/RR4VchijWyD0=
+	t=1725953328; cv=none; b=ffXC9c7/8X1R1bOg9f7KLK1oKSJbcwM9RRlh7gm1GP7tUrc72QNenoJRatZd3jtqNapHOkQc2e/o1ogApuD7M7EhH9If4rlTpMzeFf/QM7Ma6sQKMmoJRmT67pUore/XD6STWDzB0NbvS8j5H2P9IVNU3Uus/BHYtM4PcmgUUwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725951652; c=relaxed/simple;
-	bh=fKFDtJX6H4J4ft9KA8cVnAC7FeDdliRD0lLCvf/mcpo=;
+	s=arc-20240116; t=1725953328; c=relaxed/simple;
+	bh=oHfOiuXeROeapZx5nV1VqUqUHQVGGiRVnhF4ET0GNEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ExCiaUpsGOh3yyXOf4rilL4COnDQEnS+bqKrFvcQrM5ygwysvh/uBfE45S+X8wGGlPNEQy1/nn2daXlaOmKLw9r0Sa2IHXQugTOou/+4Vj9BmK7aoSWFsNrEnLwDv4NeoB3LFm9hgBTGFDGikCtA/qgUuJOKRNxuZYzkwMwqA5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VlyKD2zw; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q/RwH1oaJJhxWgt0c0n8Gv7orXkY2UE9TvLJYS7PlmxFQ6E1vazMoeRoUCey7amK1fzls4kpgtAlMexFtutjDKE3oFTarrii9MXm0triKS/lMUmQ/YKJ9ehr+hqGf6/6AAI7H7jrKhJx+acW1JqvpuoOyuH2/avRdMOnNsCqcs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XbqbDyR9; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VlyKD2zw"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-374c6187b6eso3150010f8f.0
-        for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 00:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725951649; x=1726556449; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MLdy1HqCe/P/wfI/U0dXpj5UGtLrwYaUul2f80rYcsE=;
-        b=VlyKD2zwUZVoCbJ7qbihrNKoyvzULOV40X5FhDL8xoskNunihCE++ba+AzXOhtfYbv
-         09Stf5+lwAA1FYiTfHGNXeEGfi8Ga7FWX4wb1O9nLjdrhQKetyTE0hwu6BvgHQW1t5Uu
-         d810mdquwjEYsXUDqU9rRkLKAgZF6CdrbleqUEAx5UdoVcFsy5bffKmIVACnRKYOyiBT
-         BjGTN27IM9SvQ/JVm8/8Sq6NihxKkL+hsVsAvKoliFcPpfUYpQEh7YCeq5IN39vb2FRl
-         NSSRPfcuv/dqFp9qACmdl5R4wzEV0ZNFQoQS7d1mvnxjOQIzaALtjX/Xh5/vp2Kvf04P
-         JRJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725951649; x=1726556449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MLdy1HqCe/P/wfI/U0dXpj5UGtLrwYaUul2f80rYcsE=;
-        b=PKNE13U73yY7p+cgPfToC1ElfzHay8uotU7lEPxbUOD5YymlRTjAk3F0DKd7Lxj5O2
-         pg0cbAe/wE9rhGOKE1jU/gzGghfnnBp50v8FJm2b5H/2ME1meLunrH6TcUl0dXcB44+J
-         ffIkJkiiZv9Y5rtWBCVqhhPQZOoINkz7LsW3Fak8Uf/F/1j7/7mimZrQC3F3sY9BR1BC
-         W6fIo7UbLv6vYXvvSbbbDp0HxUNVuXtCPra1F1Y4JP7aU8kbELBhfB4w137rWFTammDJ
-         Zedhkg8RE89l5x7DmufkgNohzGfpfMqIHLJ6zphTAvBj878+0yDgdoWgosyqK71hdS1T
-         WfCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHGpiunG2vxt+OuB3OmzBVTRoHNpZ35CiIt9VkI7TGJWCJKBpHUcY7sx4Nd/Th5Z4yqkbGdv0sreg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZoqNJyyY2vwJyo/vbgl5lZ5mhLR7oQJk2ndJ7FiMIy1+idpkz
-	kMQzLU3d2mNT4+rEpVvztls0Y8Opq2nAeotSVmXIxAKf3TEBCkC5sGiT4TZ81PQ=
-X-Google-Smtp-Source: AGHT+IGSpgZGxNJQq/Qo4D8JhGcF7UkYtWKkqi99YliN+/1ihfgtjS4RGuaumEGAlmzP201Le1guqQ==
-X-Received: by 2002:a5d:4386:0:b0:374:bb2b:e7c4 with SMTP id ffacd0b85a97d-378896b1c82mr8978817f8f.57.1725951648885;
-        Tue, 10 Sep 2024 00:00:48 -0700 (PDT)
-Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b2f4sm100972925e9.45.2024.09.10.00.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2024 00:00:48 -0700 (PDT)
-Date: Tue, 10 Sep 2024 09:00:46 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v5 2/2] pwm: Add Loongson PWM controller support
-Message-ID: <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
-References: <cover.1720516327.git.zhoubinbin@loongson.cn>
- <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XbqbDyR9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725953326; x=1757489326;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oHfOiuXeROeapZx5nV1VqUqUHQVGGiRVnhF4ET0GNEs=;
+  b=XbqbDyR9YaKE4djmkY1KkVhEXu1s3mVYuCWNb5C9DBw5fgCQq3iE0ARk
+   WnGr+iYyKz0UHjL8GL0SeQ19y6LSYNvNUnqfQCOLAFqiyvGG0opOAGL2D
+   zKzY1cK9FYdyiMvpdywfCbz0etBrF2albw9uLmX8YPhE9/rdOUG5CX/HS
+   g2y+rHzC41QAmjPAjtA+c3yD/IixUB67WND+YQqx87g2EQfyy1JviE5nV
+   I26OQBZka4ataa+VCbxHMSeMSU9yN9TGMzYRVoNvqjWHrdA3qtmMhSEr8
+   PUbc7Gv5XP+GQLvo2OU9dbIRLxSYBBHIt/SPtH2pUyxCl5gq8i8MqckVh
+   Q==;
+X-CSE-ConnectionGUID: nuXGeij6SkO5tNSQzt3SsQ==
+X-CSE-MsgGUID: bsRAYOpiRTeu+iTlNSOINg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="35822076"
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="35822076"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 00:28:09 -0700
+X-CSE-ConnectionGUID: ku3WCRXqRQGfm8cvnjYRrA==
+X-CSE-MsgGUID: tvhMKvAkT4+uKOGx3IKQvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="71539619"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 10 Sep 2024 00:27:54 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1snvI0-0000E6-0U;
+	Tue, 10 Sep 2024 07:27:52 +0000
+Date: Tue, 10 Sep 2024 15:27:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Julian Vetter <jvetter@kalrayinc.com>, Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	Yann Sionneau <ysionneau@kalrayinc.com>,
+	Julian Vetter <jvetter@kalrayinc.com>
+Subject: Re: [PATCH v2 3/4] Use generic io memcpy functions on the csky
+ architecture
+Message-ID: <202409101549.CyV0mJ2S-lkp@intel.com>
+References: <20240909133159.2024688-4-jvetter@kalrayinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w4t66meuz2x6g6x5"
-Content-Disposition: inline
-In-Reply-To: <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
-
-
---w4t66meuz2x6g6x5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240909133159.2024688-4-jvetter@kalrayinc.com>
 
-Hello,
+Hi Julian,
 
-On Wed, Jul 10, 2024 at 10:04:07AM +0800, Binbin Zhou wrote:
-> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> new file mode 100644
-> index 000000000000..17ab2a2f48ad
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-loongson.c
-> @@ -0,0 +1,285 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Loongson PWM driver
-> + *
-> + * Author: Juxin Gao <gaojuxin@loongson.cn>
-> + * Further cleanup and restructuring by:
-> + *         Binbin Zhou <zhoubinbin@loongson.cn>
-> + *
-> + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-> + *
-> + * Limitations:
-> + * - The buffer register value should be written before the CTRL register.
-> + * - When disabled the output is driven to 0 independent of the configured
-> + *   polarity.
+kernel test robot noticed the following build errors:
 
-An info about possible glitches and if a period is completed on
-reconfiguration or when the PWM is disabled would be great.
+[auto build test ERROR on akpm-mm/mm-nonmm-unstable]
+[also build test ERROR on arm64/for-next/core soc/for-next linus/master v6.11-rc7 next-20240909]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Also if there is a publically available manual, please add a link here.
+url:    https://github.com/intel-lab-lkp/linux/commits/Julian-Vetter/Consolidate-__memcpy_-to-from-io-and-__memset_io-into-a-single-lib/20240909-213659
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
+patch link:    https://lore.kernel.org/r/20240909133159.2024688-4-jvetter%40kalrayinc.com
+patch subject: [PATCH v2 3/4] Use generic io memcpy functions on the csky architecture
+config: csky-allnoconfig (https://download.01.org/0day-ci/archive/20240910/202409101549.CyV0mJ2S-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240910/202409101549.CyV0mJ2S-lkp@intel.com/reproduce)
 
-> + */
-> +
-> [...]
-> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      const struct pwm_state *state)
-> +{
-> +	int ret;
-> +	u64 period, duty_cycle;
-> +	bool enabled = pwm->state.enabled;
-> +
-> +	if (enabled && !state->enabled) {
-> +		pwm_loongson_disable(chip, pwm);
-> +		return 0;
-> +	}
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409101549.CyV0mJ2S-lkp@intel.com/
 
-You can also shortcut if !pwm->state.enabled. Something like:
+All error/warnings (new ones prefixed by >>):
 
-	if (!state->enabled) {
-		if (enabled)
-			pwm_loongson_disable(chip, pwm);
-		return 0;
-	}
+   In file included from ./arch/csky/include/generated/asm/unaligned.h:1,
+                    from lib/io_copy.c:9:
+   lib/io_copy.c: In function '__memcpy_fromio':
+>> lib/io_copy.c:28:39: error: implicit declaration of function '__raw_readq'; did you mean '__raw_readl'? [-Wimplicit-function-declaration]
+      28 |                         put_unaligned(__raw_readq(from), (uintptr_t *)to);
+         |                                       ^~~~~~~~~~~
+   include/asm-generic/unaligned.h:19:22: note: in definition of macro '__put_unaligned_t'
+      19 |         __pptr->x = (val);                                                      \
+         |                      ^~~
+   lib/io_copy.c:28:25: note: in expansion of macro 'put_unaligned'
+      28 |                         put_unaligned(__raw_readq(from), (uintptr_t *)to);
+         |                         ^~~~~~~~~~~~~
+   lib/io_copy.c: In function '__memcpy_toio':
+>> lib/io_copy.c:57:25: error: implicit declaration of function '__raw_writeq'; did you mean '__raw_writel'? [-Wimplicit-function-declaration]
+      57 |                         __raw_writeq(get_unaligned((uintptr_t *)from), to);
+         |                         ^~~~~~~~~~~~
+         |                         __raw_writel
+   lib/io_copy.c: In function '__memset_io':
+>> lib/io_copy.c:83:26: warning: left shift count >= width of type [-Wshift-count-overflow]
+      83 |                 qc |= qc << 32;
+         |                          ^~
 
-> +	if (state->polarity != pwm->state.polarity) {
-> +		ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-> +		if (ret)
-> +			return ret;
-> +	}
 
-Together with the shortcut above this is buggy. Consider:
+vim +28 lib/io_copy.c
 
-	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
-			.period = A,
-			.duty_cycle = B,
-			.polarity = PWM_POLARITY_NORMAL,
-			.enabled = true});
-	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
-			.period = A,
-			.duty_cycle = B,
-			.polarity = PWM_POLARITY_INVERSED,
-			.enabled = false});
-	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
-			.period = A,
-			.duty_cycle = B,
-			.polarity = PWM_POLARITY_INVERSED,
-			.enabled = true});
+6a9bfa83709a84e Julian Vetter 2024-09-09  16  
+6a9bfa83709a84e Julian Vetter 2024-09-09  17  void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+6a9bfa83709a84e Julian Vetter 2024-09-09  18  {
+6a9bfa83709a84e Julian Vetter 2024-09-09  19  	while (count && !IS_ALIGNED((unsigned long)from, NATIVE_STORE_SIZE)) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  20  		*(u8 *)to = __raw_readb(from);
+6a9bfa83709a84e Julian Vetter 2024-09-09  21  		from++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  22  		to++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  23  		count--;
+6a9bfa83709a84e Julian Vetter 2024-09-09  24  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  25  
+6a9bfa83709a84e Julian Vetter 2024-09-09  26  	while (count >= NATIVE_STORE_SIZE) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  27  		if (IS_ENABLED(CONFIG_64BIT))
+6a9bfa83709a84e Julian Vetter 2024-09-09 @28  			put_unaligned(__raw_readq(from), (uintptr_t *)to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  29  		else
+6a9bfa83709a84e Julian Vetter 2024-09-09  30  			put_unaligned(__raw_readl(from), (uintptr_t *)to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  31  
+6a9bfa83709a84e Julian Vetter 2024-09-09  32  		from += NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  33  		to += NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  34  		count -= NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  35  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  36  
+6a9bfa83709a84e Julian Vetter 2024-09-09  37  	while (count) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  38  		*(u8 *)to = __raw_readb(from);
+6a9bfa83709a84e Julian Vetter 2024-09-09  39  		from++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  40  		to++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  41  		count--;
+6a9bfa83709a84e Julian Vetter 2024-09-09  42  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  43  }
+6a9bfa83709a84e Julian Vetter 2024-09-09  44  EXPORT_SYMBOL(__memcpy_fromio);
+6a9bfa83709a84e Julian Vetter 2024-09-09  45  
+6a9bfa83709a84e Julian Vetter 2024-09-09  46  void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
+6a9bfa83709a84e Julian Vetter 2024-09-09  47  {
+6a9bfa83709a84e Julian Vetter 2024-09-09  48  	while (count && !IS_ALIGNED((unsigned long)to, NATIVE_STORE_SIZE)) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  49  		__raw_writeb(*(u8 *)from, to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  50  		from++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  51  		to++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  52  		count--;
+6a9bfa83709a84e Julian Vetter 2024-09-09  53  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  54  
+6a9bfa83709a84e Julian Vetter 2024-09-09  55  	while (count >= NATIVE_STORE_SIZE) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  56  		if (IS_ENABLED(CONFIG_64BIT))
+6a9bfa83709a84e Julian Vetter 2024-09-09 @57  			__raw_writeq(get_unaligned((uintptr_t *)from), to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  58  		else
+6a9bfa83709a84e Julian Vetter 2024-09-09  59  			__raw_writel(get_unaligned((uintptr_t *)from), to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  60  
+6a9bfa83709a84e Julian Vetter 2024-09-09  61  		from += NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  62  		to += NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  63  		count -= NATIVE_STORE_SIZE;
+6a9bfa83709a84e Julian Vetter 2024-09-09  64  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  65  
+6a9bfa83709a84e Julian Vetter 2024-09-09  66  	while (count) {
+6a9bfa83709a84e Julian Vetter 2024-09-09  67  		__raw_writeb(*(u8 *)from, to);
+6a9bfa83709a84e Julian Vetter 2024-09-09  68  		from++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  69  		to++;
+6a9bfa83709a84e Julian Vetter 2024-09-09  70  		count--;
+6a9bfa83709a84e Julian Vetter 2024-09-09  71  	}
+6a9bfa83709a84e Julian Vetter 2024-09-09  72  }
+6a9bfa83709a84e Julian Vetter 2024-09-09  73  EXPORT_SYMBOL(__memcpy_toio);
+6a9bfa83709a84e Julian Vetter 2024-09-09  74  
+6a9bfa83709a84e Julian Vetter 2024-09-09  75  void __memset_io(volatile void __iomem *dst, int c, size_t count)
+6a9bfa83709a84e Julian Vetter 2024-09-09  76  {
+6a9bfa83709a84e Julian Vetter 2024-09-09  77  	uintptr_t qc = (u8)c;
+6a9bfa83709a84e Julian Vetter 2024-09-09  78  
+6a9bfa83709a84e Julian Vetter 2024-09-09  79  	qc |= qc << 8;
+6a9bfa83709a84e Julian Vetter 2024-09-09  80  	qc |= qc << 16;
+6a9bfa83709a84e Julian Vetter 2024-09-09  81  
+6a9bfa83709a84e Julian Vetter 2024-09-09  82  	if (IS_ENABLED(CONFIG_64BIT))
+6a9bfa83709a84e Julian Vetter 2024-09-09 @83  		qc |= qc << 32;
 
-After the 2nd call you left pwm_loongson_apply() early without writing
-the inversed polarity to the register space. In the 3rd call you have
-state->polarity == pwm->state.polarity and so skip configuring the
-polarity again.
-
-I suggest to just do pwm_loongson_set_polarity() unconditionally if
-state->enabled = true.
-
-> +	period = min(state->period, NANOHZ_PER_HZ);
-> +	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
-> +
-> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!enabled && state->enabled)
-> +		ret = pwm_loongson_enable(chip, pwm);
-> +
-> +	return ret;
-> +}
-
-Best regards
-Uwe
-
---w4t66meuz2x6g6x5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbf7pMACgkQj4D7WH0S
-/k5t/QgAofx2pNsRH3IuK4/XzJXnm6mE1nKFc6tbO+Z+q4IJ6d74I4YvT2+XoYBp
-efq6UR+1TTL2e0kkaoKhqIEfhA2ol371vVbsK9GXbFcnb4hfJFF4K9XD62oynakN
-FgdMByd4DxiLTY2m5HJiLFNgUHHWQ23o6QPJ3GrLfA4nHXTpNHiBRSPiXHfMSqSH
-TtqZELnnIadnGXE8DZbmxKims3D/Lg/nJoPggcYRtjXpJ0cY5PVaB2JULjb9Ul87
-fGC7GdAEYYnRMly5inlY/1UqPUw9aWirjsp1/7vaxorgoe+Rc9l4z1V0BdT/q1tp
-bOJo74ocmKhmUdMIJx5XraMrtFYcKw==
-=rDRR
------END PGP SIGNATURE-----
-
---w4t66meuz2x6g6x5--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
