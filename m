@@ -1,248 +1,222 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow3-smtp.messagingengine.com (flow3-smtp.messagingengine.com [103.168.172.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352ED18308E
-	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 07:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACE6187862
+	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 09:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725953835; cv=none; b=FhjMQgP9qSrLuIpPJ+DykjTpeKFRR0UcJYSb/kUkk8P73koCIeAJ3Haw0SosJ6Y7OhYAjbHW43JeQo3U+wxYOpLmTpwfi4mplpHr4Oe5d6NF/QK+4SwoUQXYeyNTgMrSrHyerhGBuUPsvFw644P6SRRhj6Vufr/N2FL/lcv5S28=
+	t=1725959664; cv=none; b=WqIAmOj/CrRhSeD1Z8zvhVg/fMMZnmCNkcKBZeGsqRnurShiO90dukLZWsq3UnJq0se91Dub71FvehUZ+X1SiyYbrnU2nxOEYkUb7oVlsi3NkaEc70/caMr3xSrPxNR6nAbbZ8GFBHuXTku2muM6Wuh0tUJ1RFx1vwRdXZQA/v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725953835; c=relaxed/simple;
-	bh=uL94oOPhR2uwajOdSxBzXW91Gbt1fLjYjFku5Rxlpd8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hSBp36cCz++fOVgEKJBF5sch5HprH0RnTBmYATIypbpCeMMrCLY6YqBEmQDPEFnbtGd+vBSG/D4RyPjpR0lotZWCdnEBuyP8vi7Uiq7jFzUAoa0ARtU7WfqZ0Yf/J7D1E6mPfpNTORq8WcrDJlsEyunTF06sNlaTbfe/JBpzsiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R53bvNmq; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725959664; c=relaxed/simple;
+	bh=ofDWqCs41OUr2oUiMhBqPf9Yy+vN58jzrJOk+Qtpsvs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Yat5CJtDEG39TZw3Gc6wi0+diSduo5U6kIfYfUOzk/bfQndkHWRgb9dPAdIz1ZxbH1rgmJkxUc5NFYHmsyTl9iFXi/vTFHdvt8K+BsUs3sFKGMDdE83xfjEUuHnLg/4Kl81gleZBUBRCLFRlXzIDLLkP0jeRZVNql5xtmEmDkrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gDz+28Ep; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rWap/EB3; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R53bvNmq"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a8d2b4a5bf1so56077566b.2
-        for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 00:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725953830; x=1726558630; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JvWiuTWFvMPcDlEcoADtQiBJ85qEz5AdFMmQSQGM8Uo=;
-        b=R53bvNmqg3n5GIpFlu8dyO2VgJWuNH7LAm7Bne5ax4pMGBJ/UUsckHdHWcpJHOGvCd
-         ZaGzPNfNotnbVLBgWtOYsrh6jCzz6mxIKiVSfX9WKxdj8Hl1BJIKP8xxitFKICjKMALo
-         39wpFXhrWUFHhN12w8pQ9by9Ost6MWTfPkRY3wvL8/ztsSmw9ghmUnFyOQSscwP6T6pW
-         tVOueNvhGFIyYt+whlkPCqnrCAqLjowJXuRrU+W1Vi4tjS2010Xgbt0PJV+BofgzUp2R
-         z0S/XrnWJBv/SueWYmEooojYKrx4xbRGnZu1u79pcjMdbg8VB7bMuqHZbCqNfVuZZmyz
-         bw4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725953830; x=1726558630;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JvWiuTWFvMPcDlEcoADtQiBJ85qEz5AdFMmQSQGM8Uo=;
-        b=thOYpb8Y/RWMGGBVjpaXBoTmtCMSymV0zS/ObkCXU79Y265UnViFt7N+iuqVZHJ2Lv
-         lG7tDUGml5m6GP0SVEurJ1guws2pengCdXI8TzH9K7l/cgs9jlAZkexnlDbzeAZ8Knti
-         Fz+eoGkR/XVYk5V3rpHKlMfMbSyYWfVzm8cssZmT2gHCiGzoDZbF3L8zfhBZg873TOx5
-         l1n1Bm+bdBOTzXWvkUN2WmCxChk/cNGbUT8dVTaZVg7EYi/AdlZ3tWhYY5WUuW/o3WLj
-         UeKMb36ec56BRYTufdc4u6oxp2tW/mf0k4Sgu+irzwWlACNNES2doBMiSgTWkZiURrr0
-         7tnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTjYMe42LaAx2bxDovNSDeXB+09QyFYZVeMftCj0T5bBouVxqBqs+BkCn2+ZYgqvLUAXpmyohekWo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxgr44ytSNmgWMIdg/GwcJgxc26IwVwTl77v3Hg2YpHgONUIAm6
-	Bt8+iTBNa+s9eHPC2uROeF0llqJByTueZcZbehbs6xdmVs6SoTHF++MwJPSjpcDNo5vojt5ewLh
-	SSj6Dvks8vIn16ZS8p1XX8PeY00U=
-X-Google-Smtp-Source: AGHT+IEnQh/fa4IE7ZagE7qLvLFgvwd1HWUxsftYL8OPLg+rC+19mM7cwdluLYSIUMKePWXEWmJvrz5j90iPF0Zctmg=
-X-Received: by 2002:a17:906:db07:b0:a86:9776:ef40 with SMTP id
- a640c23a62f3a-a8a88667b5bmr1249364066b.36.1725953830116; Tue, 10 Sep 2024
- 00:37:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gDz+28Ep";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rWap/EB3"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailflow.phl.internal (Postfix) with ESMTP id 72BC5200351;
+	Tue, 10 Sep 2024 05:14:21 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 10 Sep 2024 05:14:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1725959661;
+	 x=1725966861; bh=0bAs8GYS7XnporkOcRS5T4HRjTKpKe/QReainQI38Rk=; b=
+	gDz+28EpjBqcJxXIpE07fsC74DAIbGxqo+wO/HvSw2cBjD0C4R6ZpUDaWI8whYgB
+	Uou5tC2Ba2wAK+EqftPNq2n28JERnlqyobUzsSO7FOGcG9ZiHwpfeJASHNlk/d4X
+	5WiSttpIB5Eir9pgs0kvpEK0oEXGwRcZGRDrgUdP8vFhxfezO3ZRebg6KxQY8DB+
+	Uhf5KhhI6mL50jLO0daKWiHfpjmqkQas8EX/yg3llN0VUKg/Stthb0rDw6zcxqPY
+	hlQQwIDg5uokWvMGZ5nIpVqoej/xmK+OuzWbc01t+AIEgASbJhDVMG1M0JMEeFDW
+	72pPfdCEMdc8thjma5PNPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725959661; x=
+	1725966861; bh=0bAs8GYS7XnporkOcRS5T4HRjTKpKe/QReainQI38Rk=; b=r
+	Wap/EB3CA7vwicHILWXH6WMegg0FjR1Y0PbkSlHz6bdN930Oik8Wzk0mX3oX3Dcf
+	mgJex09u2n+JG/FORnOd62+EaW184geOkclWYSUlgQn8nU841vhkp+eh4R+ZLYk7
+	DrXAGb6hkGTp5ublWeGD9m4c/xVj/Mak9mwuU7MvtygsYDeDF+kcsBRlQbRYQPY8
+	fUF+xTxPfulNUbAFbGAzpDkalWbBpwaOe3FDeFX0A25/64tjJrpUw5GkeufjRD7V
+	NNqgO+ua3k+FdgEB7he2co98A/HrB++MPt6MD+fMHIqTQJpQcTBj2Aey7tX4yR1y
+	Qda9OdbsMwbeGeP9pgQAw==
+X-ME-Sender: <xms:6w3gZtSNigwJbM4kq3Ho3lz6Oyxs7tmCSsiSxXHZ1gWG3xLgjltsRg>
+    <xme:6w3gZmz30LEeOyALW1olDfDteOenIRlWDAxhJJLR8EqdfxeQSGx_mOP6lWh8qZwIG
+    mGAzeEUWvS9rB01ltA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiledguddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedt
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprh
+    gtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghp
+    thhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegthh
+    hrihhsthhophhhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdhrtghpthhtohepuggr
+    vhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmphgvsegvlhhlvghrmh
+    grnhdrihgurdgruhdprhgtphhtthhopegrnhgurhgvrghssehgrghishhlvghrrdgtohhm
+    pdhrtghpthhtoheptghhrhhishdrthhorhgvkhesghhmrghilhdrtghomhdprhgtphhtth
+    hopehmrghtthhsthekkeesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:6w3gZi25NCuMYsHvF4JPJ5-Hsx2gk93DZNkK5pJU4nxaCreHeSGRXw>
+    <xmx:6w3gZlCyMMRfwGGvEKVgxWZ3M-1Ey3cenNfMfzJzIgKOfMHnT6AIrA>
+    <xmx:6w3gZmiQ80aB7sHrPICA36rJejIl4DPGoBMWO4CM1C6uPQJRJXf-MA>
+    <xmx:6w3gZpqIONrFxQiuso8dhcouvVRtfzvSTIDT18bekI9WMbAHfJmS_g>
+    <xmx:7Q3gZqx1eEmFAKZo4yINUBS6CDSl30x6UdV96JYbm1dLqVF0ba9ZAB3I>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 02253222006F; Tue, 10 Sep 2024 05:14:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1725518229.git.zhoubinbin@loongson.cn> <3fd0c3a04f5f3bd293168732db457f6854db706e.1725518229.git.zhoubinbin@loongson.cn>
- <eaeb0113-785c-4a41-b093-b352122b20ca@sirena.org.uk>
-In-Reply-To: <eaeb0113-785c-4a41-b093-b352122b20ca@sirena.org.uk>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 10 Sep 2024 13:36:57 +0600
-Message-ID: <CAMpQs4LAsQhfrFnh_ABr4NqLbSMW532xyh991sLp9QsiwB2XsQ@mail.gmail.com>
-Subject: Re: [PATCH v1 04/10] ASoC: codecs: Add uda1342 codec driver
-To: Mark Brown <broonie@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org, 
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Sep 2024 09:13:33 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Charlie Jenkins" <charlie@rivosinc.com>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>
+Cc: "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Matt Turner" <mattst88@gmail.com>, "Vineet Gupta" <vgupta@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>, guoren <guoren@kernel.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Andy Lutomirski" <luto@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, shuah <shuah@kernel.org>,
+ "Christoph Hellwig" <hch@infradead.org>,
+ "Michal Hocko" <mhocko@suse.com>,
+ "Kirill A. Shutemov" <kirill@shutemov.name>,
+ "Chris Torek" <chris.torek@gmail.com>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net
+Message-Id: <89d21669-8daa-4225-b6d2-33d439ebd746@app.fastmail.com>
+In-Reply-To: <Zt+DGHZrHFxfq7xo@ghost>
+References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
+ <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
+ <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
+ <58f39d58-579e-4dd3-8084-baebf86f1ae0@lucifer.local>
+ <7be08ea9-f343-42da-805f-e5f0d61bde26@app.fastmail.com>
+ <016c7857-9ea8-4333-96e6-3ae3870f375f@lucifer.local> <Zt+DGHZrHFxfq7xo@ghost>
+Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to 47 bits
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Mark:
+On Mon, Sep 9, 2024, at 23:22, Charlie Jenkins wrote:
+> On Fri, Sep 06, 2024 at 10:52:34AM +0100, Lorenzo Stoakes wrote:
+>> On Fri, Sep 06, 2024 at 09:14:08AM GMT, Arnd Bergmann wrote:
+>> The intent is to optionally be able to run a process that keeps higher bits
+>> free for tagging and to be sure no memory mapping in the process will
+>> clobber these (correct me if I'm wrong Charlie! :)
+>> 
+>> So you really wouldn't want this if you are using tagged pointers, you'd
+>> want to be sure literally nothing touches the higher bits.
 
-Thanks for your detailed review.
+My understanding was that the purpose of the existing design
+is to allow applications to ask for a high address without having
+to resort to the complexity of MAP_FIXED.
 
-On Thu, Sep 5, 2024 at 8:28=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Thu, Sep 05, 2024 at 03:02:53PM +0800, Binbin Zhou wrote:
->
-> > The UDA1342 is an NXP audio codec, support 2x Stereo audio ADC (4x PGA
-> > mic inputs), stereo audio DAC, with basic audio processing.
->
-> This looks basically fine overall, there's some issues below but they're
-> mostly fairly small and stylistic rather than anything major.
->
-> > --- /dev/null
-> > +++ b/sound/soc/codecs/uda1342.c
-> > @@ -0,0 +1,397 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * uda1342.c  --  UDA1342 ALSA SoC Codec driver
->
-> Please keep the entire comment a C++ one so things look more
-> intentional.
->
-> > +static int uda1342_mute(struct snd_soc_dai *dai, int mute, int directi=
-on)
-> > +{
-> > +     struct snd_soc_component *component =3D dai->component;
-> > +     struct uda1342_priv *uda1342 =3D snd_soc_component_get_drvdata(co=
-mponent);
-> > +     unsigned int mask;
-> > +     unsigned int val =3D 0;
-> > +
-> > +     dev_info(&uda1342->i2c->dev, "mute: %d\n", mute);
->
-> This is far too noisy to be logged and will DoS the logs, please just
-> remove it.
+In particular, I'm sure there is precedent for applications that
+want both tagged pointers (for most mappings) and untagged pointers
+(for large mappings). With a per-mm_struct or per-task_struct
+setting you can't do that.
 
-OK, I will drop it.
->
-> > +
-> > +     /* Master mute */
-> > +     mask =3D BIT(5);
-> > +     val =3D mute ? mask : 0;
->
-> Please use normal conditional statements to improve legibility.
+> Various architectures handle the hint address differently, but it
+> appears that the only case across any architecture where an address
+> above 47 bits will be returned is if the application had a hint address
+> with a value greater than 47 bits and was using the MAP_FIXED flag.
+> MAP_FIXED bypasses all other checks so I was assuming that it would be
+> logical for MAP_FIXED to bypass this as well. If MAP_FIXED is not set,
+> then the intent is for no hint address to cause a value greater than 47
+> bits to be returned.
 
-OK, the code as following:
+I don't think the MAP_FIXED case is that interesting here because
+it has to work in both fixed and non-fixed mappings.
 
-if (mute)
-                val =3D mask;
+>> This would be more consistent vs. other arches.
 >
-> > +static void uda1342_shutdown(struct snd_pcm_substream *substream,
-> > +                          struct snd_soc_dai *dai)
-> > +{
-> > +     struct snd_soc_component *component =3D dai->component;
-> > +     struct uda1342_priv *uda1342 =3D snd_soc_component_get_drvdata(co=
-mponent);
-> > +
-> > +     if (uda1342->master_substream =3D=3D substream)
-> > +             uda1342->master_substream =3D uda1342->slave_substream;
->
-> Please avoid using master/slave terminology, we've tended to go for
-> provider/consumer in ASoC.
+> Yes riscv is an outlier here. The reason I am pushing for something like
+> a flag to restrict the address space rather than setting it to be the
+> default is it seems like if applications are relying on upper bits to be
+> free, then they should be explicitly asking the kernel to keep them free
+> rather than assuming them to be free.
 
-OK, I see, I will  rename it.
->
-> > +static int uda1342_hw_params(struct snd_pcm_substream *substream,
-> > +                          struct snd_pcm_hw_params *params, struct snd=
-_soc_dai *dai)
-> > +{
-> > +     struct snd_soc_component *component =3D dai->component;
-> > +     struct uda1342_priv *uda1342 =3D snd_soc_component_get_drvdata(co=
-mponent);
-> > +     struct device *dev =3D &uda1342->i2c->dev;
-> > +     unsigned int hw_params =3D 0;
-> > +
-> > +     if (substream =3D=3D uda1342->slave_substream) {
-> > +             dev_info(dev, "ignoring hw_params for slave substream\n")=
-;
-> > +             return 0;
-> > +     }
->
-> This is also too noisy, it should be _dbg() at most.
+Let's see what the other architectures do and then come up with
+a way that fixes the pointer tagging case first on those that are
+broken. We can see if there needs to be an extra flag after that.
+Here is what I found:
 
-OK, I will drop it.
->
-> > +     /* codec supports only full slave mode */
-> > +     if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) !=3D SND_SOC_DAIFMT_CBS_CF=
-S) {
-> > +             dev_err(dev, "unsupported slave mode.\n");
-> > +             return -EINVAL;
-> > +     }
->
-> Use the more modern _CBC_CFC.
+- x86_64 uses DEFAULT_MAP_WINDOW of BIT(47), uses a 57 bit
+  address space when an addr hint is passed.
+- arm64 uses DEFAULT_MAP_WINDOW of BIT(47) or BIT(48), returns
+  higher 52-bit addresses when either a hint is passed or
+  CONFIG_EXPERT and CONFIG_ARM64_FORCE_52BIT is set (this
+  is a debugging option)
+- ppc64 uses a DEFAULT_MAP_WINDOW of BIT(47) or BIT(48),
+  returns 52 bit address when an addr hint is passed
+- riscv uses a DEFAULT_MAP_WINDOW of BIT(47) but only uses
+  it for allocating the stack below, ignoring it for normal
+  mappings
+- s390 has no DEFAULT_MAP_WINDOW but tried to allocate in
+  the current number of pgtable levels and only upgrades to
+  the next level (31, 42, 53, 64 bits) if a hint is passed or
+  the current level is exhausted.
+- loongarch64 has no DEFAULT_MAP_WINDOW, and a default VA
+  space of 47 bits (16K pages, 3 levels), but can support
+  a 55 bit space (64K pages, 3 levels).
+- sparc has no DEFAULT_MAP_WINDOW and up to 52 bit VA space.
+  It may allocate both positive and negative addresses in
+  there. (?)
+- mips64, parisc64 and alpha have no DEFAULT_MAP_WINDOW and
+  at most 48, 41 or 39 address bits, respectively.
 
-OK, it should be replaced by SND_SOC_DAIFMT_BC_FC.
->
-> > +     /*
-> > +      * We can't setup DAI format here as it depends on the word bit n=
-um,
-> > +      * so let's just store the value for later
-> > +      */
-> > +     uda1342->dai_fmt =3D fmt;
->
-> No need to even store it if only one value is supported.
+I would suggest these changes:
 
-Emm, I will put the fmt setting here from the hw_param function.
-Also, the dai_fmt could be dropped.
->
-> > +static int uda1342_set_bias_level(struct snd_soc_component *component,
-> > +                               enum snd_soc_bias_level level)
-> > +{
-> > +     switch (level) {
-> > +     case SND_SOC_BIAS_ON:
-> > +             break;
-> > +     case SND_SOC_BIAS_PREPARE:
-> > +             break;
-> > +     case SND_SOC_BIAS_STANDBY:
-> > +             break;
-> > +     case SND_SOC_BIAS_OFF:
-> > +             break;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> This does nothing so it can just be removed.
+- make riscv enforce DEFAULT_MAP_WINDOW like x86_64, arm64
+   and ppc64, leave it at 47
 
-I will drop it.
->
-> > +static const struct soc_enum uda1342_mixer_enum[] =3D {
-> > +     SOC_ENUM_SINGLE(0x10, 3, 0x04, uda1342_deemph),
-> > +     SOC_ENUM_SINGLE(0x10, 0, 0x04, uda1342_mixmode),
-> > +};
->
-> This doesn't seem to be referenced anywhere so can be removed, or should
-> be added to the controls or DAPM?
+- add DEFAULT_MAP_WINDOW on loongarch64 (47/48 bits
+  based on page size), sparc (48 bits) and s390 (unsure if
+  42, 53, 47 or 48 bits)
 
-I will drop it.
->
-> > +static int uda1342_soc_probe(struct snd_soc_component *component)
-> > +{
-> > +     struct snd_soc_dapm_context *dapm =3D snd_soc_component_get_dapm(=
-component);
-> > +
-> > +     snd_soc_add_component_controls(component, uda1342_snd_controls,
-> > +                                    ARRAY_SIZE(uda1342_snd_controls));
-> > +     snd_soc_dapm_new_controls(dapm, uda1342_dapm_widgets,
-> > +                               ARRAY_SIZE(uda1342_dapm_widgets));
-> > +     snd_soc_dapm_add_routes(dapm, uda1342_dapm_routes,
-> > +                             ARRAY_SIZE(uda1342_dapm_routes));
->
-> You can point to these arrays from the component struct and have the
-> core register them for you.
+- leave the rest unchanged.
 
-OK, I will do it.
-
-Thanks.
-Binbin
->
-> > +static const struct regmap_config uda1342_regmap =3D {
-> > +     .reg_bits =3D 8,
-> > +     .val_bits =3D 16,
-> > +     .max_register =3D 0x21,
-> > +     .reg_defaults =3D uda1342_reg_defaults,
-> > +     .num_reg_defaults =3D ARRAY_SIZE(uda1342_reg_defaults),
-> > +     .cache_type =3D REGCACHE_RBTREE,
->
-> In general _MAPLE is preferred for new things unless you have a specific
-> reason to use _RBTREE, it uses a more modern data structure and should
-> generally do better.
+       Arnd
