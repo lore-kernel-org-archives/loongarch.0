@@ -1,177 +1,153 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2255C1EB2F
-	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 12:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9BF191F73;
+	Tue, 10 Sep 2024 13:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725973082; cv=none; b=po8Ocd0J/BYg3Ng040XcDXxusSlThWP0ofkc/hS8HzYb5NLlfVpmAamqINVqUxigBEtAK18iX4Fxk0GkIhT8mSXhAsqok2Pc6W/3ZNjMBFfxoDaTdzORbKQYGSxPXYiHygSwll0Mk64QlQ1lodgPA0aBcUcvx05uegym9V4e4oA=
+	t=1725973603; cv=none; b=PWK28H2JMuS/Dj99vHecKRvAKdRLWaqqVG3Q+rnFvcGDr5jNCR/5Ni90zrT/D+BxWULq/36VPdMHOfK6naMnD7kuhbhm48Mt14Wc/bRD0JN6B57NJsa5pacv8Y00tZZMyNmK0C+PzQ1dGyEmWYGsbd9RdLXPdWtD9PoCBMkix8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725973082; c=relaxed/simple;
-	bh=MsNLxlVpQKT2DOWHrlifclyuixuA5bd8tUg2MRcn+Is=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SvDOdrCo7SmcKKk+8bHkscR9MoMi+6FMdz11kXMRMd3a4tHOdZEe800qdZCiYS5rjmTpFRQtILPO1b/SBMFmHyfg8ECSDIO3uf2xOI8GJHsEViJ0RjK+Sg62RBcYAK8aD0PH6VBRgrnHRxFNlC83WT43cr6Bt6D2KjKqycUrlTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGHZxY9+; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725973603; c=relaxed/simple;
+	bh=Yz/kpha3wBkhE6LIgb99aDoBkB6GQjW3qis7RjJNGvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAHD0V8IgF5xk9NKe+HalfqAKKxGxnzvtAg8fh3894AxizOx6+dJYqlr6ia8bud7YGcnSFgcvmGPvbXRdtlJIuB3GZyKLBHnF8+wZa1Fgm6Z1PykGpKEMtV5niD3v/kUL39qqpo6z4o/dNpnw6K9EoIAD08D8nnp83rcGs6jP/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fLxD+SZH; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGHZxY9+"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-20551e2f1f8so55087885ad.2
-        for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 05:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725973080; x=1726577880; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JUS8mhUC58UDTChTn2sVU5TFkIV/hDV8RxXUMtAqKrM=;
-        b=iGHZxY9+XGCVj/qbVEJ1gxZgL/x0fjghCOCuSwGmPUivP+0fo7ygw7/n+g0te185sH
-         F4QUnXSr2mQaqmakvRsDIKkjOwWmhLwDe1imLiXbGfs0JJ4Bu65uSfcP+P4ed0rUrXSU
-         gVXIyoi8CWMylALc18KhGBOPUI2w9j1JyHmCUtrJytUM46pQG31nHFosK6xcqgXelWId
-         IZ8vTvjpZloxfJm/HeIGarl9mhXQ9zb/NL7ckUt8EZgv/rzOHEWqqzX6bURa73e7Dcgp
-         06n8QzhQ4wlWv+qjlbCrPSnqBOyjDWys8vF4O7PIWRSZyX+CS+RvKZ1xEJGWNLhKQ9qp
-         lyUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725973080; x=1726577880;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JUS8mhUC58UDTChTn2sVU5TFkIV/hDV8RxXUMtAqKrM=;
-        b=VfsFZaa28k7IzZokqe2k8MaNt88WVm+g5LMTC6C5ESRlLyC3/EEnMKX7UuiUwzaKjn
-         ild/Nn9eI4n5gVjPMy/ZmqUuy3LNcox3iIfvsC92rB4QwvcQFuLCYbDJLk/1GiRUK2oB
-         naf8BSzY64w8Aa1kkNj9f+d7nlMSLZ914WGHw6VVWI5plCvOotMwtXlhDjYAs2aL0H/R
-         ZiYG+7CAqru+wD/tTOKSc0Vjq4tMjeJuBV67QPQwESNpkhg+Rg5bos/G8ZIiphO2Oawu
-         +tzh49/M+rntPCLHwJdbhFbmYV8XHunfiCfBPDXkhwBij/POGkj9Z+Q1IhPhWQnV1W41
-         FdCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSFu4McNxEFhfMFaAECTANKYejfXP53nuwvb83TOY8P+9mOKkztqN3soFegwH5UqNmMWqe2Seh/Fg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4Ix0OrJ/5sGNdwJd9L9cdk06f4IuLykcglyvcH3TJPZI/a/Pr
-	oDqq3aiJTnj7hry/Uqs9XiPB3rhitIQFJXQaEXkTuq16BEg6XsK8
-X-Google-Smtp-Source: AGHT+IFGOZoCTNJB6c6BA89kFJoOYl1hzlJ0q3P1FoFkG4+ZNZX+8ts0DZlupnsG6oCf2CltnXPNZQ==
-X-Received: by 2002:a17:903:11d0:b0:205:5eaf:99e7 with SMTP id d9443c01a7336-2074c70eaa1mr8420315ad.38.1725973080350;
-        Tue, 10 Sep 2024 05:58:00 -0700 (PDT)
-Received: from localhost ([212.107.28.55])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20710e10ee4sm48347315ad.12.2024.09.10.05.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2024 05:57:59 -0700 (PDT)
-From: Celeste Liu <coelacanthushex@gmail.com>
-X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-To: conor.dooley@microchip.com
-Cc: anup@brainfault.org,
-	aou@eecs.berkeley.edu,
-	bcm-kernel-feedback-list@broadcom.com,
-	chenhuacai@kernel.org,
-	coelacanthushex@gmail.com,
-	dalias@libc.org,
-	florian.fainelli@broadcom.com,
-	glaubitz@physik.fu-berlin.de,
-	guoren@kernel.org,
-	heinrich.schuchardt@canonical.com,
-	jonathanh@nvidia.com,
-	kernel@xen0n.name,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-sh@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux@armlinux.org.uk,
-	loongarch@lists.linux.dev,
-	palmer@dabbelt.com,
-	palmer@rivosinc.com,
-	paul.walmsley@sifive.com,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	thierry.reding@gmail.com,
-	tony@atomide.com,
-	ysato@users.sourceforge.jp,
-	Celeste Liu <CoelacanthusHex@gmail.com>
-Subject: Re: [PATCH v2 1/4] riscv: defconfig: drop RT_GROUP_SCHED=y
-Date: Tue, 10 Sep 2024 20:57:30 +0800
-Message-ID: <20240910125729.480594-2-CoelacanthusHex@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240909-arguable-detection-02445bd1cc89@wendy>
-References: <20240909-arguable-detection-02445bd1cc89@wendy>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fLxD+SZH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725973602; x=1757509602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yz/kpha3wBkhE6LIgb99aDoBkB6GQjW3qis7RjJNGvk=;
+  b=fLxD+SZHzqPbeQF3kZNw81lHoWhXOSZbM3j6ctVCGpvKKjUq5+wRmPz8
+   w6tqvAQ4bfQXN13rMuKKw7v/N14NHBmclh/RCVi8DF425MAYu8sL2Ciu7
+   MjaamJwCNgc6+gYkIBHPjHOXOp6MESPt016nPUce8y1YjzTG/xcBY2zqi
+   Rs+1lM4PddZceqA3FYSHhXu/C98ebGv+s9cyhLOF5tPOA1qmPCsMhy2R4
+   bCBfqD8vfhTy3W2EMmXMsdpfsJxNNufLOY7uHSVe51vXA0kBniThgs7jq
+   YWQRhBL1DMBZydWKTdNIhmJlaKQSK2bf7DHeNb8dlyggRAO5CICGMd4F5
+   g==;
+X-CSE-ConnectionGUID: iirkbUYNQHWMZKAuR3zlgg==
+X-CSE-MsgGUID: TyL/v9PhTNmVn36qWhU2Yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="24822641"
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="24822641"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 06:06:41 -0700
+X-CSE-ConnectionGUID: UBmpZ3GcT4KjmRobpQCIzw==
+X-CSE-MsgGUID: fGF6n0NGR/2IbP3iOG/jOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="66820124"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 10 Sep 2024 06:06:40 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1so0Zp-00026o-0d;
+	Tue, 10 Sep 2024 13:06:37 +0000
+Date: Tue, 10 Sep 2024 21:06:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Len Brown <lenb@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Enable ACPI BGRT handling
+Message-ID: <202409102056.DNqh6zzA-lkp@intel.com>
+References: <20240909015514.597253-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2887; i=CoelacanthusHex@gmail.com; h=from:subject; bh=6nGHo0lCtESeld3ret04gh/vnDvSoID5OBGgjnB5oXg=; b=owJ4nJvAy8zAJfY4pvNJRPo6U8bTakkMaQ+cLLeU3+q4sXJjayZnHpd9X/KFC6qHNZ0WLPp3p vaYSqSFeVhHKQuDGBeDrJgii9jOp6+XlT76sIzXZAbMHFYmkCEMXJwCMBGpo4wMCzdbR819rrNh F0PLsqgLuV+EkvbEW2QueDjP0ZO7L/PWcUaGJvErL110T2cvKbabdudw3cITiU0XTzhYze07spC xyuEoLwAho0yn
-X-Developer-Key: i=CoelacanthusHex@gmail.com; a=openpgp; fpr=892EBC7DC392DFF9C9C03F1D15F4180E73787863
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240909015514.597253-1-maobibo@loongson.cn>
 
-On 2024-09-09 20:16, Conor Dooley wrote:=0D
-> On Mon, Sep 09, 2024 at 08:14:16PM +0800, Celeste Liu wrote:=0D
-> > On 2024-09-09 19:53, Conor Dooley wrote:=0D
-> > =0D
-> > > On Fri, Aug 23, 2024 at 01:43:26AM +0800, Celeste Liu wrote:=0D
-> > >> Commit ba6cfef057e1 ("riscv: enable Docker requirements in defconfig=
-")=0D
-> > >> introduced it because of Docker, but Docker has removed this require=
-ment=0D
-> > >> since [1] (2023-04-19).=0D
-> > >>=0D
-> > >> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hie=
-rarchy it=0D
-> > >> needs an RT budget assigned, otherwise the processes in it will not =
-be able to=0D
-> > >> get RT at all. The problem with RT group scheduling is that it requi=
-res the=0D
-> > >> budget assigned but there's no way we could assign a default budget,=
- since the=0D
-> > >> values to assign are both upper and lower time limits, are absolute,=
- and need to=0D
-> > >> be sum up to < 1 for each individal cgroup. That means we cannot rea=
-lly come up=0D
-> > >> with values that would work by default in the general case.[2]=0D
-> > >>=0D
-> > >> For cgroup v2, it's almost unusable as well. If it turned on, the cp=
-u controller=0D
-> > >> can only be enabled when all RT processes are in the root cgroup. Bu=
-t it will=0D
-> > >> lose the benefits of cgroup v2 if all RT process were placed in the =
-same cgroup.=0D
-> > >>=0D
-> > >> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also =
-doesn't=0D
-> > >> support it.[3]=0D
-> > >>=0D
-> > >> [1]: https://github.com/moby/moby/commit/005150ed69c540fb0b5323e0f22=
-08608c1204536=0D
-> > >> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=3D1229700=0D
-> > >> [3]: https://github.com/systemd/systemd/issues/13781#issuecomment-54=
-9164383=0D
-> > >>=0D
-> > >> Fixes: ba6cfef057e1 ("riscv: enable Docker requirements in defconfig=
-")=0D
-> > > =0D
-> > > I don't think this fixes tag is suitable, the commit you cite in=0D
-> > > moby/docker is a year younger than the one in the fixes tag, so it wa=
-s=0D
-> > > correct at the time it was written. I think the fixes tag should just=
- be=0D
-> > > removed, since that commit was not wrong. Or am I missing something?=
-=0D
-> > =0D
-> > The Docker commit I cited introduce the fix, not the bug. So it should =
-be later=0D
-> > than commit in fixes tag, otherwise Heinrich Schuchardt won't pick the =
-wrong=0D
-> > config from upstream.=0D
-> > =0D
-> > Timeline is:=0D
-> > 1) 2015-06-19 Qiang Huang introduce RT_GROUP_SCHED check in Docker.[1]=
-=0D
-> > 2) 2022-06-08 Heinrich Schuchardt pick this to defconfig in commit=0D
-> >               in fixes tag.=0D
-> > 3) 2023-04-19 Florian Schmaus remove this requirement from Docker in=0D
-> >               commit I cited.=0D
-> =0D
-> Yes, this is the way I understood things to be. IOW, when Heinrich wrote=
-=0D
-> ba6cfef057e1 ("riscv: enable Docker requirements in defconfig"), it was=0D
-> a requirement for docker. The requirement later being removed doesn't=0D
-> make his patch incorrect, which is why I don't think this is a fix.=0D
-=0D
-v3 has been sent.=0D
+Hi Bibo,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on b31c4492884252a8360f312a0ac2049349ddf603]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Enable-ACPI-BGRT-handling/20240909-095705
+base:   b31c4492884252a8360f312a0ac2049349ddf603
+patch link:    https://lore.kernel.org/r/20240909015514.597253-1-maobibo%40loongson.cn
+patch subject: [PATCH] LoongArch: Enable ACPI BGRT handling
+config: loongarch-randconfig-r133-20240910 (https://download.01.org/0day-ci/archive/20240910/202409102056.DNqh6zzA-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.1.0
+reproduce: (https://download.01.org/0day-ci/archive/20240910/202409102056.DNqh6zzA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409102056.DNqh6zzA-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/firmware/efi/efi-bgrt.c:69:15: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *image @@     got void [noderef] __iomem * @@
+   drivers/firmware/efi/efi-bgrt.c:69:15: sparse:     expected void *image
+   drivers/firmware/efi/efi-bgrt.c:69:15: sparse:     got void [noderef] __iomem *
+>> drivers/firmware/efi/efi-bgrt.c:76:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __iomem *addr @@     got void *image @@
+   drivers/firmware/efi/efi-bgrt.c:76:24: sparse:     expected void [noderef] __iomem *addr
+   drivers/firmware/efi/efi-bgrt.c:76:24: sparse:     got void *image
+
+vim +69 drivers/firmware/efi/efi-bgrt.c
+
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  26  
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  27  void __init efi_bgrt_init(struct acpi_table_header *table)
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  28  {
+50a0cb565246f2 arch/x86/platform/efi/efi-bgrt.c Sai Praneeth  2015-12-09  29  	void *image;
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  30  	struct bmp_header bmp_header;
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  31  	struct acpi_table_bgrt *bgrt = &bgrt_tab;
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  32  
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  33  	if (acpi_disabled)
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  34  		return;
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  35  
+792ef14df5c585 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-06-09  36  	if (!efi_enabled(EFI_MEMMAP))
+7425826f4f7ac6 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-05-26  37  		return;
+7425826f4f7ac6 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-05-26  38  
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  39  	if (table->length < sizeof(bgrt_tab)) {
+7f9b474c927130 arch/x86/platform/efi/efi-bgrt.c Josh Boyer    2016-05-03  40  		pr_notice("Ignoring BGRT: invalid length %u (expected %zu)\n",
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  41  		       table->length, sizeof(bgrt_tab));
+5d6d578c170bb2 arch/x86/platform/efi/efi-bgrt.c Jan Beulich   2012-11-07  42  		return;
+1282278ee00b41 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2014-07-30  43  	}
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  44  	*bgrt = *(struct acpi_table_bgrt *)table;
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  45  	/*
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  46  	 * Only version 1 is defined but some older laptops (seen on Lenovo
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  47  	 * Ivy Bridge models) have a correct version 1 BGRT table with the
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  48  	 * version set to 0, so we accept version 0 and 1.
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  49  	 */
+55087c5713dcf1 drivers/firmware/efi/efi-bgrt.c  Hans de Goede 2020-01-31  50  	if (bgrt->version > 1) {
+7f9b474c927130 arch/x86/platform/efi/efi-bgrt.c Josh Boyer    2016-05-03  51  		pr_notice("Ignoring BGRT: invalid version %u (expected 1)\n",
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  52  		       bgrt->version);
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  53  		goto out;
+1282278ee00b41 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2014-07-30  54  	}
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  55  	if (bgrt->image_type != 0) {
+7f9b474c927130 arch/x86/platform/efi/efi-bgrt.c Josh Boyer    2016-05-03  56  		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  57  		       bgrt->image_type);
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  58  		goto out;
+1282278ee00b41 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2014-07-30  59  	}
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  60  	if (!bgrt->image_address) {
+7f9b474c927130 arch/x86/platform/efi/efi-bgrt.c Josh Boyer    2016-05-03  61  		pr_notice("Ignoring BGRT: null image address\n");
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  62  		goto out;
+1282278ee00b41 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2014-07-30  63  	}
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  64  
+6de47a5e371f75 drivers/firmware/efi/efi-bgrt.c  Jan Beulich   2017-08-25  65  	if (efi_mem_type(bgrt->image_address) != EFI_BOOT_SERVICES_DATA) {
+792ef14df5c585 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-06-09  66  		pr_notice("Ignoring BGRT: invalid image address\n");
+792ef14df5c585 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-06-09  67  		goto out;
+792ef14df5c585 drivers/firmware/efi/efi-bgrt.c  Dave Young    2017-06-09  68  	}
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31 @69  	image = early_memremap(bgrt->image_address, sizeof(bmp_header));
+1282278ee00b41 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2014-07-30  70  	if (!image) {
+7f9b474c927130 arch/x86/platform/efi/efi-bgrt.c Josh Boyer    2016-05-03  71  		pr_notice("Ignoring BGRT: failed to map image header memory\n");
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31  72  		goto out;
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  73  	}
+2223af38903242 arch/x86/platform/efi/efi-bgrt.c Josh Triplett 2012-09-28  74  
+50a0cb565246f2 arch/x86/platform/efi/efi-bgrt.c Sai Praneeth  2015-12-09  75  	memcpy(&bmp_header, image, sizeof(bmp_header));
+7b0a911478c74c arch/x86/platform/efi/efi-bgrt.c Dave Young    2017-01-31 @76  	early_memunmap(image, sizeof(bmp_header));
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
