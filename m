@@ -1,275 +1,197 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C99918DF84
-	for <loongarch@lists.linux.dev>; Mon,  9 Sep 2024 23:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC2217B4FF
+	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 07:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725924128; cv=none; b=EIYb9vVorvWKvbpet2H3rLdCWs1hnUwQKMtwIqsiOJW+TD0PB3zXgPGJ7W/9xSujijoEKoQTok2huS/yX2K0mftM9u8+sJ8WtDdqpgHMBZC2vCjpQLvMVunMIMD/gy3HAJEiwbEp2SDYgKhOlFjleaQ29YfLTH6VSbgc9FPNBcM=
+	t=1725951652; cv=none; b=E/4GAQjG7+M5APR6XqaJ6ZbgjkDbZhjZpyQ3MnM3ARREpfsw3y/nzr1VbIkEPU23EXUALppdUl3PxigMhKnyMf6hFc8apyMGZP56bu55CyhSCY/V2jA390jBueF48POK9cMTEANi6k22a8scJCRyIjAcBBM8vX/RR4VchijWyD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725924128; c=relaxed/simple;
-	bh=8JJzaGF9CaNmZI+aPwyqFsGvd7V3za2/MLB2npErI2I=;
+	s=arc-20240116; t=1725951652; c=relaxed/simple;
+	bh=fKFDtJX6H4J4ft9KA8cVnAC7FeDdliRD0lLCvf/mcpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oH90IorHV+s6t9mzRghtSgd6f7BOoKC0CJ5SleNStRU85KbwGwej0z5AGYT51axU88aUDpN8UXnzOapjYhhMprWgNSsec3Pk00/mhlVMpnZIPnODl86GR6ntdewTlng4fSItUHrao+hXuCVRShlf5UQokdbA788e/9EU7OzFQxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x2oxuhO0; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExCiaUpsGOh3yyXOf4rilL4COnDQEnS+bqKrFvcQrM5ygwysvh/uBfE45S+X8wGGlPNEQy1/nn2daXlaOmKLw9r0Sa2IHXQugTOou/+4Vj9BmK7aoSWFsNrEnLwDv4NeoB3LFm9hgBTGFDGikCtA/qgUuJOKRNxuZYzkwMwqA5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VlyKD2zw; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x2oxuhO0"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-205722ba00cso41710835ad.0
-        for <loongarch@lists.linux.dev>; Mon, 09 Sep 2024 16:22:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VlyKD2zw"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-374c6187b6eso3150010f8f.0
+        for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 00:00:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725924126; x=1726528926; darn=lists.linux.dev;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725951649; x=1726556449; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgysOd8aiDKhjc+ONWU9mJizPo8eq1lAJG8bEbfR9J4=;
-        b=x2oxuhO0OiXf4uILng6jEWu08SQQvMP2P6Fr1ZlBtryMcqJx+ugZxNOWpibI/dJSWr
-         0MGuoNOOfkyu99ZRtIGH9WfggMkEVW9oRWoUpa3W9am9mfNhXVqZplKaTO3tGuWu0KYx
-         FBX8h7KEz8a6Uggoxn5Y0mSawbu/gmS8VqN3Pk93ZATeLiBO7h7muhw2aslDfjsKXlQb
-         6GXbEbYDztrhdwg7jtPAL0wu42a6DW2NJ5h3Vur/N57caWcpy5mTgPjvtB7Koduj9qNT
-         Ez7MdoNiI9ASXDi4oJRSC42GX/d+1OPk4EI46XIWqb5td9BP3JRVIoP0yF3DnwldIRhS
-         fhfg==
+        bh=MLdy1HqCe/P/wfI/U0dXpj5UGtLrwYaUul2f80rYcsE=;
+        b=VlyKD2zwUZVoCbJ7qbihrNKoyvzULOV40X5FhDL8xoskNunihCE++ba+AzXOhtfYbv
+         09Stf5+lwAA1FYiTfHGNXeEGfi8Ga7FWX4wb1O9nLjdrhQKetyTE0hwu6BvgHQW1t5Uu
+         d810mdquwjEYsXUDqU9rRkLKAgZF6CdrbleqUEAx5UdoVcFsy5bffKmIVACnRKYOyiBT
+         BjGTN27IM9SvQ/JVm8/8Sq6NihxKkL+hsVsAvKoliFcPpfUYpQEh7YCeq5IN39vb2FRl
+         NSSRPfcuv/dqFp9qACmdl5R4wzEV0ZNFQoQS7d1mvnxjOQIzaALtjX/Xh5/vp2Kvf04P
+         JRJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725924126; x=1726528926;
+        d=1e100.net; s=20230601; t=1725951649; x=1726556449;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vgysOd8aiDKhjc+ONWU9mJizPo8eq1lAJG8bEbfR9J4=;
-        b=SkOzjV7hyy6/gZxkxT+KBNS5h3jnAKzWDgNFVLGRwy6Ywzih4/oNU3qZnaUQ7wLLvu
-         OAnyNsCuxeAdblsSPW6zBB6wRqnM3ZavRsjpl9ozmwkRnIZRFv4Fp80WVRclCQ28mBdO
-         CeSiLo4c1wyFMwAXFuyjbLdE9tfZRc1QOTPI0qqu6lcFXyJ5jZhQTLnHecxZao5slrgD
-         evglMXXFFKP39qnE48WuONsluXw18XG7Ehj/oAvXNKMlLU3XVrJp9HZSGD+8qnEOUSjH
-         p/uA+y6BdY3fFOvWxmNRFZcmYaYY7bJaaidmvDbpfvZoGGues23uqKd3pUpDKJC7YD6V
-         QCVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdYag2E71KtG09USkj6UtwkZTMuBGB1tbrcvWRms4vcs0J5YHOPFeax/dO0/Fx6HteRGXkPEj7bj8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywg2odOZTvYUtlKaxyCWqOh2hYJT3NDoluoUm/JKsfH8TLPEoFe
-	PYekY3sXUQMe9d444QpxE9+JaXYcCDUl6W1MTnP3erwlsxvpbjhcdXWBBBkxLao=
-X-Google-Smtp-Source: AGHT+IG9NuFtuhb2UjO8QtL3roig2p+Iq+0iRU2PXdKFn/RkpU7K/aJcE1bC5gzUXkPWX2WgO7Qkcg==
-X-Received: by 2002:a17:903:22c1:b0:1fd:5eab:8c76 with SMTP id d9443c01a7336-206f05e7881mr125620865ad.41.1725924125300;
-        Mon, 09 Sep 2024 16:22:05 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20710e326d6sm38663045ad.66.2024.09.09.16.22.01
+        bh=MLdy1HqCe/P/wfI/U0dXpj5UGtLrwYaUul2f80rYcsE=;
+        b=PKNE13U73yY7p+cgPfToC1ElfzHay8uotU7lEPxbUOD5YymlRTjAk3F0DKd7Lxj5O2
+         pg0cbAe/wE9rhGOKE1jU/gzGghfnnBp50v8FJm2b5H/2ME1meLunrH6TcUl0dXcB44+J
+         ffIkJkiiZv9Y5rtWBCVqhhPQZOoINkz7LsW3Fak8Uf/F/1j7/7mimZrQC3F3sY9BR1BC
+         W6fIo7UbLv6vYXvvSbbbDp0HxUNVuXtCPra1F1Y4JP7aU8kbELBhfB4w137rWFTammDJ
+         Zedhkg8RE89l5x7DmufkgNohzGfpfMqIHLJ6zphTAvBj878+0yDgdoWgosyqK71hdS1T
+         WfCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHGpiunG2vxt+OuB3OmzBVTRoHNpZ35CiIt9VkI7TGJWCJKBpHUcY7sx4Nd/Th5Z4yqkbGdv0sreg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZoqNJyyY2vwJyo/vbgl5lZ5mhLR7oQJk2ndJ7FiMIy1+idpkz
+	kMQzLU3d2mNT4+rEpVvztls0Y8Opq2nAeotSVmXIxAKf3TEBCkC5sGiT4TZ81PQ=
+X-Google-Smtp-Source: AGHT+IGSpgZGxNJQq/Qo4D8JhGcF7UkYtWKkqi99YliN+/1ihfgtjS4RGuaumEGAlmzP201Le1guqQ==
+X-Received: by 2002:a5d:4386:0:b0:374:bb2b:e7c4 with SMTP id ffacd0b85a97d-378896b1c82mr8978817f8f.57.1725951648885;
+        Tue, 10 Sep 2024 00:00:48 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b2f4sm100972925e9.45.2024.09.10.00.00.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2024 16:22:04 -0700 (PDT)
-Date: Mon, 9 Sep 2024 16:22:00 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, guoren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, shuah <shuah@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Michal Hocko <mhocko@suse.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>,
-	Chris Torek <chris.torek@gmail.com>,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-abi-devel@lists.sourceforge.net
-Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
- 47 bits
-Message-ID: <Zt+DGHZrHFxfq7xo@ghost>
-References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
- <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
- <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
- <58f39d58-579e-4dd3-8084-baebf86f1ae0@lucifer.local>
- <7be08ea9-f343-42da-805f-e5f0d61bde26@app.fastmail.com>
- <016c7857-9ea8-4333-96e6-3ae3870f375f@lucifer.local>
+        Tue, 10 Sep 2024 00:00:48 -0700 (PDT)
+Date: Tue, 10 Sep 2024 09:00:46 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v5 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
+References: <cover.1720516327.git.zhoubinbin@loongson.cn>
+ <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="w4t66meuz2x6g6x5"
+Content-Disposition: inline
+In-Reply-To: <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
+
+
+--w4t66meuz2x6g6x5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <016c7857-9ea8-4333-96e6-3ae3870f375f@lucifer.local>
 
-On Fri, Sep 06, 2024 at 10:52:34AM +0100, Lorenzo Stoakes wrote:
-> (Sorry having issues with my IPv6 setup that duplicated the original email...
-> 
-> On Fri, Sep 06, 2024 at 09:14:08AM GMT, Arnd Bergmann wrote:
-> > On Fri, Sep 6, 2024, at 08:14, Lorenzo Stoakes wrote:
-> > > On Fri, Sep 06, 2024 at 07:17:44AM GMT, Arnd Bergmann wrote:
-> > >> On Thu, Sep 5, 2024, at 21:15, Charlie Jenkins wrote:
-> > >> > Create a personality flag ADDR_LIMIT_47BIT to support applications
-> > >> > that wish to transition from running in environments that support at
-> > >> > most 47-bit VAs to environments that support larger VAs. This
-> > >> > personality can be set to cause all allocations to be below the 47-bit
-> > >> > boundary. Using MAP_FIXED with mmap() will bypass this restriction.
-> > >> >
-> > >> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > >>
-> > >> I think having an architecture-independent mechanism to limit the size
-> > >> of the 64-bit address space is useful in general, and we've discussed
-> > >> the same thing for arm64 in the past, though we have not actually
-> > >> reached an agreement on the ABI previously.
-> > >
-> > > The thread on the original proposals attests to this being rather a fraught
-> > > topic, and I think the weight of opinion was more so in favour of opt-in
-> > > rather than opt-out.
-> >
-> > You mean opt-in to using the larger addresses like we do on arm64 and
-> > powerpc, while "opt-out" means a limit as Charlie suggested?
-> 
-> I guess I'm not using brilliant terminology here haha!
-> 
-> To clarify - the weight of opinion was for a situation where the address
-> space is limited, except if you set a hint above that (you could call that
-> opt-out or opt-in depending which way you look at it, so yeah ok very
-> unclear sorry!).
-> 
-> It was against the MAP_ flag and also I think a _flexible_ per-process
-> limit is also questionable as you might end up setting a limit which breaks
-> something else, and this starts getting messy quick.
-> 
-> To be clear, the ADDR_LIMIT_47BIT suggestion is absolutely a compromise and
-> practical suggestion.
-> 
-> >
-> > >> > @@ -22,6 +22,7 @@ enum {
-> > >> >  	WHOLE_SECONDS =		0x2000000,
-> > >> >  	STICKY_TIMEOUTS	=	0x4000000,
-> > >> >  	ADDR_LIMIT_3GB = 	0x8000000,
-> > >> > +	ADDR_LIMIT_47BIT = 	0x10000000,
-> > >> > };
-> > >>
-> > >> I'm a bit worried about having this done specifically in the
-> > >> personality flag bits, as they are rather limited. We obviously
-> > >> don't want to add many more such flags when there could be
-> > >> a way to just set the default limit.
-> > >
-> > > Since I'm the one who suggested it, I feel I should offer some kind of
-> > > vague defence here :)
-> > >
-> > > We shouldn't let perfect be the enemy of the good. This is a relatively
-> > > straightforward means of achieving the aim (assuming your concern about
-> > > arch_get_mmap_end() below isn't a blocker) which has the least impact on
-> > > existing code.
-> > >
-> > > Of course we can end up in absurdities where we start doing
-> > > ADDR_LIMIT_xxBIT... but again - it's simple, shouldn't represent an
-> > > egregious maintenance burden and is entirely opt-in so has things going for
-> > > it.
-> >
-> > I'm more confused now, I think most importantly we should try to
-> > handle this consistently across all architectures. The proposed
-> > implementation seems to completely block addresses above BIT(47)
-> > even for applications that opt in by calling mmap(BIT(47), ...),
-> > which seems to break the existing applications.
-> 
-> Hm, I thought the commit message suggested the hint overrides it still?
-> 
-> The intent is to optionally be able to run a process that keeps higher bits
-> free for tagging and to be sure no memory mapping in the process will
-> clobber these (correct me if I'm wrong Charlie! :)
-> 
-> So you really wouldn't want this if you are using tagged pointers, you'd
-> want to be sure literally nothing touches the higher bits.
+Hello,
 
-Various architectures handle the hint address differently, but it
-appears that the only case across any architecture where an address
-above 47 bits will be returned is if the application had a hint address
-with a value greater than 47 bits and was using the MAP_FIXED flag.
-MAP_FIXED bypasses all other checks so I was assuming that it would be
-logical for MAP_FIXED to bypass this as well. If MAP_FIXED is not set,
-then the intent is for no hint address to cause a value greater than 47
-bits to be returned.
+On Wed, Jul 10, 2024 at 10:04:07AM +0800, Binbin Zhou wrote:
+> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+> new file mode 100644
+> index 000000000000..17ab2a2f48ad
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-loongson.c
+> @@ -0,0 +1,285 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Loongson PWM driver
+> + *
+> + * Author: Juxin Gao <gaojuxin@loongson.cn>
+> + * Further cleanup and restructuring by:
+> + *         Binbin Zhou <zhoubinbin@loongson.cn>
+> + *
+> + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
+> + *
+> + * Limitations:
+> + * - The buffer register value should be written before the CTRL register.
+> + * - When disabled the output is driven to 0 independent of the configured
+> + *   polarity.
 
-This does have the issue that if MAP_FIXED is used then an address can
-be returned above 47-bits, but if an application does not want addresses
-above 47-bits then they shouldn't ask for a fixed address above that
-range.
+An info about possible glitches and if a period is completed on
+reconfiguration or when the PWM is disabled would be great.
 
-> 
-> >
-> > If we want this flag for RISC-V and also keep the behavior of
-> > defaulting to >BIT(47) addresses for mmap(0, ...) how about
-> > changing arch_get_mmap_end() to return the limit based on
-> > ADDR_LIMIT_47BIT and then make this default to enabled on
-> > arm64 and powerpc but disabled on riscv?
-> 
-> But you wouldn't necessarily want all processes to be so restricted, I
-> think this is what Charlie's trying to avoid :)
-> 
-> On the ohter hand - I'm not sure there are many processes on any arch
-> that'd want the higher mappings.
-> 
-> So that'd push us again towards risc v just limiting to 48-bits and only
-> mapping above this if a hint is provided like x86-64 does (and as you
-> mentioned via irc - it seems risc v is an outlier in that
-> DEFAULT_MAP_WINDOW == TASK_SIZE).
-> 
-> This would be more consistent vs. other arches.
+Also if there is a publically available manual, please add a link here.
 
-Yes riscv is an outlier here. The reason I am pushing for something like
-a flag to restrict the address space rather than setting it to be the
-default is it seems like if applications are relying on upper bits to be
-free, then they should be explicitly asking the kernel to keep them free
-rather than assuming them to be free.
+> + */
+> +
+> [...]
+> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      const struct pwm_state *state)
+> +{
+> +	int ret;
+> +	u64 period, duty_cycle;
+> +	bool enabled = pwm->state.enabled;
+> +
+> +	if (enabled && !state->enabled) {
+> +		pwm_loongson_disable(chip, pwm);
+> +		return 0;
+> +	}
 
-> 
-> >
-> > >> It's also unclear to me how we want this flag to interact with
-> > >> the existing logic in arch_get_mmap_end(), which attempts to
-> > >> limit the default mapping to a 47-bit address space already.
-> > >
-> > > How does ADDR_LIMIT_3GB presently interact with that?
-> >
-> > That is x86 specific and only relevant to compat tasks, limiting
-> > them to 3 instead of 4 GB. There is also ADDR_LIMIT_32BIT, which
-> > on arm32 is always set in practice to allow 32-bit addressing
-> > as opposed to ARMv2 style 26-bit addressing (IIRC ARMv3 supported
-> > both 26-bit and 32-bit addressing, while ARMv4 through ARMv7 are
-> > 32-bit only.
-> 
-> OK, I understand what it's for, I missed it was arch-specific bit, urgh.
-> 
-> I'd say this limit should be min of the arch-specific limit vs. the 48-bit
-> limit. If you have a 36-bit address space obviously it'd be rather unwise
-> to try to provide 48 bit addresses..
+You can also shortcut if !pwm->state.enabled. Something like:
 
-In this patch I set the high limit to be the minimum of the provided
-high limit and 47 bits so I think that should cover this case?
+	if (!state->enabled) {
+		if (enabled)
+			pwm_loongson_disable(chip, pwm);
+		return 0;
+	}
 
-- Charlie
+> +	if (state->polarity != pwm->state.polarity) {
+> +		ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
+> +		if (ret)
+> +			return ret;
+> +	}
 
-> 
-> >
-> >       Arnd
+Together with the shortcut above this is buggy. Consider:
+
+	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+			.period = A,
+			.duty_cycle = B,
+			.polarity = PWM_POLARITY_NORMAL,
+			.enabled = true});
+	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+			.period = A,
+			.duty_cycle = B,
+			.polarity = PWM_POLARITY_INVERSED,
+			.enabled = false});
+	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+			.period = A,
+			.duty_cycle = B,
+			.polarity = PWM_POLARITY_INVERSED,
+			.enabled = true});
+
+After the 2nd call you left pwm_loongson_apply() early without writing
+the inversed polarity to the register space. In the 3rd call you have
+state->polarity == pwm->state.polarity and so skip configuring the
+polarity again.
+
+I suggest to just do pwm_loongson_set_polarity() unconditionally if
+state->enabled = true.
+
+> +	period = min(state->period, NANOHZ_PER_HZ);
+> +	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
+> +
+> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!enabled && state->enabled)
+> +		ret = pwm_loongson_enable(chip, pwm);
+> +
+> +	return ret;
+> +}
+
+Best regards
+Uwe
+
+--w4t66meuz2x6g6x5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbf7pMACgkQj4D7WH0S
+/k5t/QgAofx2pNsRH3IuK4/XzJXnm6mE1nKFc6tbO+Z+q4IJ6d74I4YvT2+XoYBp
+efq6UR+1TTL2e0kkaoKhqIEfhA2ol371vVbsK9GXbFcnb4hfJFF4K9XD62oynakN
+FgdMByd4DxiLTY2m5HJiLFNgUHHWQ23o6QPJ3GrLfA4nHXTpNHiBRSPiXHfMSqSH
+TtqZELnnIadnGXE8DZbmxKims3D/Lg/nJoPggcYRtjXpJ0cY5PVaB2JULjb9Ul87
+fGC7GdAEYYnRMly5inlY/1UqPUw9aWirjsp1/7vaxorgoe+Rc9l4z1V0BdT/q1tp
+bOJo74ocmKhmUdMIJx5XraMrtFYcKw==
+=rDRR
+-----END PGP SIGNATURE-----
+
+--w4t66meuz2x6g6x5--
