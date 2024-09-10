@@ -1,36 +1,43 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D79418C340
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9190A18F2FD
 	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 11:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725969539; cv=none; b=SvLg+2jva7zWBv8azgcGlt0cIPPHucP+SbNsmAPPtE/EzUaAGtn4RyClpA3iRkyTZKQCK0OKUNMFoNuSau2lAuTQEBVVIiIXJAqxcMjXA8Zc2Zq3ilW5JEsU9+JJTyxRO6fpxe+Bfr3JVlBdfo+4ukN3Dr3B6fmCLJ2VPgzfJdM=
+	t=1725969539; cv=none; b=WdgUQe9NuxOHDILSMOmqoKLNYQ6xTWVHX+mcra0+9cyu3W5Y0p3E+bjv12DuEeXKUx2gkZExrQdQF1mkQgcBVrTGjMOIjrsPHXAcTRzjRZWRQ7ahsQYoJPxZ2gry2zNobAKPb0ynOM7OFs9qcYsWWmJJrES5+9bhFuBiCZhEHh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1725969539; c=relaxed/simple;
-	bh=MVGA51egBnHRQ28a/BV+aqFmJLRJM1TC1uppm6jiYuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VLiZxXVFjS69RDg+ho1xRteO3PcTJ9BLT4nKJVeyCCpArPclerrhmQCqznktiZWhcxwm7rmg+EtwRpgAbo3rn4Q9Dp+pwryryNIks4v2JFwFbBvjIUqH1CH7dQ2uV2Fb55jF+o9oeREhmo0gA4tvKw2EigXv2luW3C4k1ygPZ0Q=
+	bh=gHhJj44TFnwnn3LKe2pgq/DGHUgtk0PS7iURQKWtR3I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oFsSzjST6Dgs8ZD49as7OOohdfQ7ccUPNdOcbWyLsgQUMmgkHDdwq7U6+XAwWbMX3z27+VLUetmw++9BcTIOmj+btqxBznwcHNUawSjAs+bgBy59VLRxTMX0ofyOnPAn91fpeSphK9xE9Ld37/8CVD4l1iPs7fGIHD/sE8zi+wM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxTOp1NOBm3K0DAA--.8606S3;
-	Tue, 10 Sep 2024 19:58:46 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axrup+NOBm9a0DAA--.9199S3;
+	Tue, 10 Sep 2024 19:58:54 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front2 (Coremail) with SMTP id qciowMCxSsZwNOBm+GEDAA--.16096S2;
-	Tue, 10 Sep 2024 19:58:42 +0800 (CST)
+	by front2 (Coremail) with SMTP id qciowMCxSsZwNOBm+GEDAA--.16096S6;
+	Tue, 10 Sep 2024 19:58:54 +0800 (CST)
 From: Xianglai Li <lixianglai@loongson.cn>
 To: linux-kernel@vger.kernel.org
-Cc: Bibo Mao <maobibo@loongson.cn>,
+Cc: Min Zhou <zhoumin@loongson.cn>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Paolo Bonzini <pbonzini@redhat.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Xianglai li <lixianglai@loongson.cn>
-Subject: [PATCH V3 00/11] Added Interrupt controller emulation for loongarch kvm
-Date: Tue, 10 Sep 2024 19:40:54 +0800
-Message-Id: <20240910114105.4062286-1-lixianglai@loongson.cn>
+Subject: [PATCH V3 04/11] LoongArch: KVM: Add IPI user mode read and write function
+Date: Tue, 10 Sep 2024 19:40:58 +0800
+Message-Id: <20240910114105.4062286-5-lixianglai@loongson.cn>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240910114105.4062286-4-lixianglai@loongson.cn>
+References: <20240910114105.4062286-1-lixianglai@loongson.cn>
+ <20240910114105.4062286-2-lixianglai@loongson.cn>
+ <20240910114105.4062286-3-lixianglai@loongson.cn>
+ <20240910114105.4062286-4-lixianglai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,90 +45,22 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qciowMCxSsZwNOBm+GEDAA--.16096S2
+X-CM-TRANSID:qciowMCxSsZwNOBm+GEDAA--.16096S6
 X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Before this, the interrupt controller simulation has been completed
-in the user mode program. In order to reduce the loss caused by frequent
-switching of the virtual machine monitor from kernel mode to user mode
-when the guest accesses the interrupt controller, we add the interrupt
-controller simulation in kvm.
+Implements the communication interface between the user mode
+program and the kernel in IPI interrupt control simulation,
+which is used to obtain or send the simulation data of the
+interrupt controller in the user mode process, and is used
+in VM migration or VM saving and restoration.
 
-The following is a virtual machine simulation diagram of interrupted
-connections:
-  +-----+    +---------+     +-------+
-  | IPI |--> | CPUINTC | <-- | Timer |
-  +-----+    +---------+     +-------+
-                 ^
-                 |
-           +---------+
-           | EIOINTC |
-           +---------+
-            ^       ^
-            |       |
-     +---------+ +---------+
-     | PCH-PIC | | PCH-MSI |
-     +---------+ +---------+
-       ^      ^          ^
-       |      |          |
-+--------+ +---------+ +---------+
-| UARTs  | | Devices | | Devices |
-+--------+ +---------+ +---------+
-
-In this series of patches, we mainly realized the simulation of
-IPI EIOINTC PCH-PIC interrupt controller.
-
-The simulation of IPI EIOINTC PCH-PIC interrupt controller mainly
-completes the creation simulation of the interrupt controller,
-the register address space read and write simulation,
-and the interface with user mode to obtain and set the interrupt
-controller state for the preservation,
-recovery and migration of virtual machines.
-
-IPI simulation implementation reference:
-https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongson-3A5000-usermanual-EN/inter-processor-interrupts-and-communication
-
-EIOINTC simulation implementation reference:
-https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongson-3A5000-usermanual-EN/io-interrupts/extended-io-interrupts
-
-PCH-PIC simulation implementation reference:
-https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongson-7A1000-usermanual-EN/interrupt-controller.adoc
-
-For PCH-MSI, we used irqfd mechanism to send the interrupt signal
-generated by user state to kernel state and then to EIOINTC without
-maintaining PCH-MSI state in kernel state.
-
-You can easily get the code from the link below:
-the kernel:
-https://github.com/lixianglai/linux
-the branch is: interrupt
-
-the qemu:
-https://github.com/lixianglai/qemu
-the branch is: interrupt
-
-Please note that the code above is regularly updated based on community
-reviews.
-
-change log:
-V2->V3:
-1.Modify the macro definition name:
-KVM_DEV_TYPE_LA_* ->  KVM_DEV_TYPE_LOONGARCH_*
-2.Change the short name for "Extended I/O Interrupt Controller" from EXTIOI to EIOINTC
-Rename file extioi.c to eiointc.c
-Rename file extioi.h to eiointc.h
-
-V1->V2:
-1.Remove redundant blank lines according to community comments
-2.Remove simplified redundant code
-3.Adds 16 bits of read/write interface to the eiointc iocsr address space
-4.Optimize user - and kernel-mode data access interfaces: Access
-fixed length data each time to prevent memory overruns
-5.Added virtual eiointc, where interrupts can be routed to cpus other than cpu 4
-
+Signed-off-by: Min Zhou <zhoumin@loongson.cn>
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+---
 Cc: Bibo Mao <maobibo@loongson.cn> 
 Cc: Huacai Chen <chenhuacai@kernel.org> 
 Cc: kvm@vger.kernel.org 
@@ -131,48 +70,130 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name> 
 Cc: Xianglai li <lixianglai@loongson.cn> 
 
-Xianglai Li (11):
-  LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
-  LoongArch: KVM: Add IPI device support
-  LoongArch: KVM: Add IPI read and write function
-  LoongArch: KVM: Add IPI user mode read and write function
-  LoongArch: KVM: Add EIOINTC device support
-  LoongArch: KVM: Add EIOINTC read and write functions
-  LoongArch: KVM: Add EIOINTC user mode read and write functions
-  LoongArch: KVM: Add PCHPIC device support
-  LoongArch: KVM: Add PCHPIC read and write functions
-  LoongArch: KVM: Add PCHPIC user mode read and write functions
-  LoongArch: KVM: Add irqfd support
+ arch/loongarch/include/uapi/asm/kvm.h |  2 +
+ arch/loongarch/kvm/intc/ipi.c         | 90 ++++++++++++++++++++++++++-
+ 2 files changed, 90 insertions(+), 2 deletions(-)
 
- arch/loongarch/include/asm/kvm_eiointc.h |  122 +++
- arch/loongarch/include/asm/kvm_host.h    |   32 +-
- arch/loongarch/include/asm/kvm_ipi.h     |   52 ++
- arch/loongarch/include/asm/kvm_pch_pic.h |   61 ++
- arch/loongarch/include/uapi/asm/kvm.h    |   19 +
- arch/loongarch/kvm/Kconfig               |    3 +
- arch/loongarch/kvm/Makefile              |    4 +
- arch/loongarch/kvm/exit.c                |   86 +-
- arch/loongarch/kvm/intc/eiointc.c        | 1056 ++++++++++++++++++++++
- arch/loongarch/kvm/intc/ipi.c            |  510 +++++++++++
- arch/loongarch/kvm/intc/pch_pic.c        |  521 +++++++++++
- arch/loongarch/kvm/irqfd.c               |   87 ++
- arch/loongarch/kvm/main.c                |   18 +-
- arch/loongarch/kvm/vcpu.c                |    3 +
- arch/loongarch/kvm/vm.c                  |   53 +-
- include/linux/kvm_host.h                 |    1 +
- include/trace/events/kvm.h               |   35 +
- include/uapi/linux/kvm.h                 |    8 +
- 18 files changed, 2642 insertions(+), 29 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kvm_eiointc.h
- create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
- create mode 100644 arch/loongarch/include/asm/kvm_pch_pic.h
- create mode 100644 arch/loongarch/kvm/intc/eiointc.c
- create mode 100644 arch/loongarch/kvm/intc/ipi.c
- create mode 100644 arch/loongarch/kvm/intc/pch_pic.c
- create mode 100644 arch/loongarch/kvm/irqfd.c
-
-
-base-commit: bc83b4d1f08695e85e85d36f7b803da58010161d
+diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+index ddc5cab0ffd0..ec9fe4cbf949 100644
+--- a/arch/loongarch/include/uapi/asm/kvm.h
++++ b/arch/loongarch/include/uapi/asm/kvm.h
+@@ -112,4 +112,6 @@ struct kvm_iocsr_entry {
+ #define KVM_IRQCHIP_NUM_PINS	64
+ #define KVM_MAX_CORES		256
+ 
++#define KVM_DEV_LOONGARCH_IPI_GRP_REGS			0x40000001
++
+ #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index 2620c1500078..22f05fdbae84 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -323,16 +323,102 @@ static const struct kvm_io_device_ops kvm_loongarch_mail_ops = {
+ 	.write	= kvm_loongarch_mail_write,
+ };
+ 
++static int kvm_ipi_regs_access(struct kvm_device *dev,
++				struct kvm_device_attr *attr,
++				bool is_write)
++{
++	uint64_t val;
++	int cpu, addr;
++	void *p = NULL;
++	int len = 4;
++	struct kvm_vcpu *vcpu;
++
++	cpu = (attr->attr >> 16) & 0x3ff;
++	addr = attr->attr & 0xff;
++
++	vcpu = kvm_get_vcpu(dev->kvm, cpu);
++	if (unlikely(vcpu == NULL)) {
++		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
++		return -EINVAL;
++	}
++	switch (addr) {
++	case CORE_STATUS_OFF:
++		p = &vcpu->arch.ipi_state.status;
++		break;
++	case CORE_EN_OFF:
++		p = &vcpu->arch.ipi_state.en;
++		break;
++	case CORE_SET_OFF:
++		p = &vcpu->arch.ipi_state.set;
++		break;
++	case CORE_CLEAR_OFF:
++		p = &vcpu->arch.ipi_state.clear;
++		break;
++	case CORE_BUF_20:
++		p = &vcpu->arch.ipi_state.buf[0];
++		len = 8;
++		break;
++	case CORE_BUF_28:
++		p = &vcpu->arch.ipi_state.buf[1];
++		len = 8;
++		break;
++	case CORE_BUF_30:
++		p = &vcpu->arch.ipi_state.buf[2];
++		len = 8;
++		break;
++	case CORE_BUF_38:
++		p = &vcpu->arch.ipi_state.buf[3];
++		len = 8;
++		break;
++	default:
++		kvm_err("%s: unknown ipi register, addr = %d\n", __func__, addr);
++		return -EINVAL;
++	}
++
++	if (is_write) {
++		if (len == 4) {
++			if (get_user(val, (uint32_t __user *)attr->addr))
++				return -EFAULT;
++			*(uint32_t *)p = (uint32_t)val;
++		} else if (len == 8) {
++			if (get_user(val, (uint64_t __user *)attr->addr))
++				return -EFAULT;
++			*(uint64_t *)p = val;
++		}
++	} else {
++		if (len == 4) {
++			val = *(uint32_t *)p;
++			return put_user(val, (uint32_t __user *)attr->addr);
++		} else if (len == 8) {
++			val = *(uint64_t *)p;
++			return put_user(val, (uint64_t __user *)attr->addr);
++		}
++	}
++	return 0;
++}
++
+ static int kvm_ipi_get_attr(struct kvm_device *dev,
+ 			struct kvm_device_attr *attr)
+ {
+-	return 0;
++	switch (attr->group) {
++	case KVM_DEV_LOONGARCH_IPI_GRP_REGS:
++		return kvm_ipi_regs_access(dev, attr, false);
++	default:
++		kvm_err("%s: unknown group (%d)\n", __func__, attr->group);
++		return -EINVAL;
++	}
+ }
+ 
+ static int kvm_ipi_set_attr(struct kvm_device *dev,
+ 			struct kvm_device_attr *attr)
+ {
+-	return 0;
++	switch (attr->group) {
++	case KVM_DEV_LOONGARCH_IPI_GRP_REGS:
++		return kvm_ipi_regs_access(dev, attr, true);
++	default:
++		kvm_err("%s: unknown group (%d)\n", __func__, attr->group);
++		return -EINVAL;
++	}
+ }
+ 
+ static void kvm_ipi_destroy(struct kvm_device *dev)
 -- 
 2.39.1
 
