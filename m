@@ -1,115 +1,271 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3506118801B
-	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 09:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E46818C340
+	for <loongarch@lists.linux.dev>; Tue, 10 Sep 2024 11:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725960058; cv=none; b=BZr6Q5kY4NlLLi/aB/gHAYcaDTw4iuwUzuXR8rx/RTouWyE2WaoTQq6ABdK+sDf+JejpFvhHu3CjFVKXFEQ3hAeM0vSPPYaEhmuPlXYPhoHs236ZgX8HVLrguNL4911PzNAa+k4d71Mi4pr3friuv5bd1ns+RLn/hgoMuPnHONg=
+	t=1725969537; cv=none; b=TOZgw7BGgKAysUdEC27Wk053qcUFownTkvt8YkQPmHZ985jmYRT2Bv/0Nt/6rN/WCr0ivm6fhVPvp3pL9IY4k8jbMphihVs8HwXR6+bdZO/P02iV9/Mkj19uPmrejNK8cqfOb6p7aDlovbwBaq086IGLSk1OmgVfHNU5S/GOaJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725960058; c=relaxed/simple;
-	bh=t7RstencTxbPCax7NqKjh0Q/O//hJkQzy/Uio3Lz6vE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C7ba3tuFPMQym+ahQC2WgbkwlBn1IQW/iqMpdUq4aij3x0P2XbE6I6tlIyZ2d6/LZQHxVUwcghzPZIkLd+6y9iX2c976l8ou7h5bFEvrWwrsAZeIsbxd7ASfpOq9h7RZqlGMNbAujGmCVZEU76Wqp7na/OO8o7eD62CZSD3rc+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4X2yqW1tPjz9sRr;
-	Tue, 10 Sep 2024 11:20:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Dnho_jJb4vl9; Tue, 10 Sep 2024 11:20:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4X2yqM6ht6z9sSf;
-	Tue, 10 Sep 2024 11:20:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CEFAC8B773;
-	Tue, 10 Sep 2024 11:20:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 94Smq4dlZKGe; Tue, 10 Sep 2024 11:20:47 +0200 (CEST)
-Received: from [192.168.232.177] (unknown [192.168.232.177])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 089D78B766;
-	Tue, 10 Sep 2024 11:20:44 +0200 (CEST)
-Message-ID: <1aca8e4c-1c12-4624-a689-147ff60b75d6@csgroup.eu>
-Date: Tue, 10 Sep 2024 11:20:44 +0200
+	s=arc-20240116; t=1725969537; c=relaxed/simple;
+	bh=7Z6oj8tec7G+l6Fi7f4VQ2bYnwgurw5JBRAmZfQoYHI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MJnNG/VUQkFy7fiDFyw0LZr/Oou+q/vBuaGIiWRn3o287ab6qmC0UuPvitpc+qRLm28ChPXOYTTyb3rC1na+7vm14PSkdqRTjiGRjaUMxrKQ9I4FHn5sQLtCGyuHsyxQEWP7MMRMIb/y3HzcZVnhSWwsWwOEKP/XqCMhP3dnv+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Cxheh3NOBm4q0DAA--.7601S3;
+	Tue, 10 Sep 2024 19:58:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front2 (Coremail) with SMTP id qciowMCxSsZwNOBm+GEDAA--.16096S3;
+	Tue, 10 Sep 2024 19:58:46 +0800 (CST)
+From: Xianglai Li <lixianglai@loongson.cn>
+To: linux-kernel@vger.kernel.org
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Xianglai li <lixianglai@loongson.cn>
+Subject: [PATCH V3 01/11] LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+Date: Tue, 10 Sep 2024 19:40:55 +0800
+Message-Id: <20240910114105.4062286-2-lixianglai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240910114105.4062286-1-lixianglai@loongson.cn>
+References: <20240910114105.4062286-1-lixianglai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
- 47 bits
-To: Charlie Jenkins <charlie@rivosinc.com>,
- Michael Ellerman <mpe@ellerman.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Shuah Khan <shuah@kernel.org>, Christoph Hellwig <hch@infradead.org>,
- Michal Hocko <mhocko@suse.com>, "Kirill A. Shutemov" <kirill@shutemov.name>,
- Chris Torek <chris.torek@gmail.com>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net
-References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
- <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
- <87zfol468z.fsf@mail.lhotse> <Zt9HboH/PmPlRPmH@ghost>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <Zt9HboH/PmPlRPmH@ghost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qciowMCxSsZwNOBm+GEDAA--.16096S3
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
->>> diff --git a/include/uapi/linux/personality.h b/include/uapi/linux/personality.h
->>> index 49796b7756af..cd3b8c154d9b 100644
->>> --- a/include/uapi/linux/personality.h
->>> +++ b/include/uapi/linux/personality.h
->>> @@ -22,6 +22,7 @@ enum {
->>>   	WHOLE_SECONDS =		0x2000000,
->>>   	STICKY_TIMEOUTS	=	0x4000000,
->>>   	ADDR_LIMIT_3GB = 	0x8000000,
->>> +	ADDR_LIMIT_47BIT = 	0x10000000,
->>>   };
->>
->> I wonder if ADDR_LIMIT_128T would be clearer?
->>
-> 
-> I don't follow, what does 128T represent?
-> 
+Add iocsr and mmio memory read and write simulation to the kernel.
+When the VM accesses the device address space through iocsr
+instructions or mmio, it does not need to return to the qemu
+user mode but directly completes the access in the kernel mode.
 
-128T is 128 Terabytes, that's the maximum size achievable with a 47BIT 
-address, that naming would be more consistant with the ADDR_LIMIT_3GB 
-just above that means a 3 Gigabytes limit.
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+---
+Cc: Bibo Mao <maobibo@loongson.cn> 
+Cc: Huacai Chen <chenhuacai@kernel.org> 
+Cc: kvm@vger.kernel.org 
+Cc: loongarch@lists.linux.dev 
+Cc: Paolo Bonzini <pbonzini@redhat.com> 
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn> 
+Cc: WANG Xuerui <kernel@xen0n.name> 
+Cc: Xianglai li <lixianglai@loongson.cn> 
 
-Christophe
+ arch/loongarch/kvm/exit.c  | 86 +++++++++++++++++++++++++++-----------
+ include/linux/kvm_host.h   |  1 +
+ include/trace/events/kvm.h | 35 ++++++++++++++++
+ 3 files changed, 97 insertions(+), 25 deletions(-)
+
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index ea73f9dc2cc6..6b15117106f9 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -151,7 +151,7 @@ static int kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+ int kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
+ {
+ 	int ret;
+-	unsigned long val;
++	unsigned long *val;
+ 	u32 addr, rd, rj, opcode;
+ 
+ 	/*
+@@ -164,6 +164,7 @@ int kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
+ 	ret = EMULATE_DO_IOCSR;
+ 	run->iocsr_io.phys_addr = addr;
+ 	run->iocsr_io.is_write = 0;
++	val = &vcpu->arch.gprs[rd];
+ 
+ 	/* LoongArch is Little endian */
+ 	switch (opcode) {
+@@ -196,18 +197,30 @@ int kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
+ 		run->iocsr_io.is_write = 1;
+ 		break;
+ 	default:
+-		ret = EMULATE_FAIL;
+-		break;
++		return EMULATE_FAIL;
+ 	}
+ 
+-	if (ret == EMULATE_DO_IOCSR) {
+-		if (run->iocsr_io.is_write) {
+-			val = vcpu->arch.gprs[rd];
+-			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
+-		}
+-		vcpu->arch.io_gpr = rd;
++	if (run->iocsr_io.is_write) {
++		if (!kvm_io_bus_write(vcpu,
++				KVM_IOCSR_BUS, addr, run->iocsr_io.len, val))
++			ret = EMULATE_DONE;
++		else
++			/* Save data and let user space to write it */
++			memcpy(run->iocsr_io.data, val, run->iocsr_io.len);
++		trace_kvm_iocsr(KVM_TRACE_IOCSR_WRITE,
++				run->iocsr_io.len,
++				addr, val);
++	} else {
++		if (!kvm_io_bus_read(vcpu,
++				KVM_IOCSR_BUS, addr, run->iocsr_io.len, val))
++			ret = EMULATE_DONE;
++		else
++			/* Save register id for iocsr read completion */
++			vcpu->arch.io_gpr = rd;
++		trace_kvm_iocsr(KVM_TRACE_IOCSR_READ,
++				run->iocsr_io.len,
++				addr, NULL);
+ 	}
+-
+ 	return ret;
+ }
+ 
+@@ -441,19 +454,32 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
+ 	}
+ 
+ 	if (ret == EMULATE_DO_MMIO) {
++		trace_kvm_mmio(KVM_TRACE_MMIO_READ, run->mmio.len,
++				run->mmio.phys_addr, NULL);
++		/*
++		 * if mmio device such as pch pic is emulated in KVM,
++		 * it need not return to user space to handle the mmio
++		 * exception.
++		 */
++		ret = kvm_io_bus_read(vcpu, KVM_MMIO_BUS, vcpu->arch.badv,
++				run->mmio.len, &vcpu->arch.gprs[rd]);
++		if (!ret) {
++			update_pc(&vcpu->arch);
++			vcpu->mmio_needed = 0;
++			return EMULATE_DONE;
++		}
++
+ 		/* Set for kvm_complete_mmio_read() use */
+ 		vcpu->arch.io_gpr = rd;
+ 		run->mmio.is_write = 0;
+ 		vcpu->mmio_is_write = 0;
+-		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, run->mmio.len,
+-				run->mmio.phys_addr, NULL);
+-	} else {
+-		kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+-			inst.word, vcpu->arch.pc, vcpu->arch.badv);
+-		kvm_arch_vcpu_dump_regs(vcpu);
+-		vcpu->mmio_needed = 0;
++		return EMULATE_DO_MMIO;
+ 	}
+ 
++	kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++	kvm_arch_vcpu_dump_regs(vcpu);
++	vcpu->mmio_needed = 0;
+ 	return ret;
+ }
+ 
+@@ -594,19 +620,29 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+ 	}
+ 
+ 	if (ret == EMULATE_DO_MMIO) {
++		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
++				run->mmio.phys_addr, data);
++		/*
++		 * if mmio device such as pch pic is emulated in KVM,
++		 * it need not return to user space to handle the mmio
++		 * exception.
++		 */
++		ret = kvm_io_bus_write(vcpu, KVM_MMIO_BUS, vcpu->arch.badv,
++				run->mmio.len, data);
++		if (!ret)
++			return EMULATE_DONE;
++
+ 		run->mmio.is_write = 1;
+ 		vcpu->mmio_needed = 1;
+ 		vcpu->mmio_is_write = 1;
+-		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
+-				run->mmio.phys_addr, data);
+-	} else {
+-		vcpu->arch.pc = curr_pc;
+-		kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
+-			inst.word, vcpu->arch.pc, vcpu->arch.badv);
+-		kvm_arch_vcpu_dump_regs(vcpu);
+-		/* Rollback PC if emulation was unsuccessful */
++		return EMULATE_DO_MMIO;
+ 	}
+ 
++	vcpu->arch.pc = curr_pc;
++	kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++	kvm_arch_vcpu_dump_regs(vcpu);
++	/* Rollback PC if emulation was unsuccessful */
+ 	return ret;
+ }
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 0d5125a3e31a..1149cc6a9dde 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -219,6 +219,7 @@ enum kvm_bus {
+ 	KVM_PIO_BUS,
+ 	KVM_VIRTIO_CCW_NOTIFY_BUS,
+ 	KVM_FAST_MMIO_BUS,
++	KVM_IOCSR_BUS,
+ 	KVM_NR_BUSES
+ };
+ 
+diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
+index 74e40d5d4af4..2391cb257636 100644
+--- a/include/trace/events/kvm.h
++++ b/include/trace/events/kvm.h
+@@ -236,6 +236,41 @@ TRACE_EVENT(kvm_mmio,
+ 		  __entry->len, __entry->gpa, __entry->val)
+ );
+ 
++#define KVM_TRACE_IOCSR_READ_UNSATISFIED 0
++#define KVM_TRACE_IOCSR_READ 1
++#define KVM_TRACE_IOCSR_WRITE 2
++
++#define kvm_trace_symbol_iocsr \
++	({ KVM_TRACE_IOCSR_READ_UNSATISFIED, "unsatisfied-read" }, \
++	{ KVM_TRACE_IOCSR_READ, "read" }, \
++	{ KVM_TRACE_IOCSR_WRITE, "write" })
++
++TRACE_EVENT(kvm_iocsr,
++	TP_PROTO(int type, int len, u64 gpa, void *val),
++	TP_ARGS(type, len, gpa, val),
++
++	TP_STRUCT__entry(
++		__field(u32,	type)
++		__field(u32,	len)
++		__field(u64,	gpa)
++		__field(u64,	val)
++	),
++
++	TP_fast_assign(
++		__entry->type		= type;
++		__entry->len		= len;
++		__entry->gpa		= gpa;
++		__entry->val		= 0;
++		if (val)
++			memcpy(&__entry->val, val,
++			       min_t(u32, sizeof(__entry->val), len));
++	),
++
++	TP_printk("iocsr %s len %u gpa 0x%llx val 0x%llx",
++		  __print_symbolic(__entry->type, kvm_trace_symbol_iocsr),
++		  __entry->len, __entry->gpa, __entry->val)
++);
++
+ #define kvm_fpu_load_symbol	\
+ 	{0, "unload"},		\
+ 	{1, "load"}
+-- 
+2.39.1
+
