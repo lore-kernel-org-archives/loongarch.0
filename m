@@ -1,430 +1,147 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9817C1C2DC2
-	for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 20:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E187E15098A
+	for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 20:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726174592; cv=none; b=jj5zAvunVG9IgkvpOQoXp2mXaHvInVqC8CnPSow15VkYAFJuFXpLoQosWd+i4GABXGW6VqJf5PjChlL4+LCqyyoLEh5Cjy4oRGY+fJ0PBPH0t58ZKFMn+TN7YxMLamb8iND/P7tyVuTMCCdw0KQxiNgklWRci0X8qCQWOPxjUi0=
+	t=1726174692; cv=none; b=uE6g7Xwm4R8wT4ntt6QIJO5YXtQ22WE4FCwYUI+AL9koizN7fMqpX3DiAXeZwd9ZPCmImv7bfFw66ZOY0dTbtAuyEaSIGSAXpIG5F4gIDfnMOBAb0AiEc9zYhY+jj6HoZ4dJeW9vBUd5rmGDs74/eAcmKN+RhQfp3RiahnXMaFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726174592; c=relaxed/simple;
-	bh=QR4DGLMUsuXkjf1A1LS7CFLwhFvqzfkt5ophtTS3Iko=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZV2zzVcOrbKiiEphsF9aDgLOK80GvdXK/8v9gW8QTMGfWniBV1+4ycVSTtz87hN4PAxNKlIoUFbQRFamipc05sHBAgVZvaIhGfMVv9gSkW+5q2RufeM6dpi9XKVXEBo3VUdEQmGE9SXO1lDU6KHQKqnOkOYHL/XIrfPnCUqaudI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=UuH378WG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BWZYYv+v; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1726174692; c=relaxed/simple;
+	bh=MYDZvrqlWEpmfJ0PC8MrAJxxkqkqQuxjGFHhVbXAtYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ufi5Cfv5hCBhz1UyLCAinuhqqXLLVzdKecDzAuOW4UCgGs5OE4EoGcMDduzDhMit37ljUOOHBtUQ94KoojPd7L52rIpQSfHCWMVFSlJfYWqB0KC5sMMKfeKDt6teiFlIzbqJ0VJzbBaxAoSO/cPOa0Y2LJuPHeqypVqBbWo3TMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sQrukHgp; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="UuH378WG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BWZYYv+v"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id B742E114044D;
-	Thu, 12 Sep 2024 16:56:29 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 12 Sep 2024 16:56:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1726174589;
-	 x=1726260989; bh=5yZhMf1etdNhnGTjDvT1Dwa0rJtLOxEPY0uZSbNmmL4=; b=
-	UuH378WGhYaansjooUJItT0p1jyMeQxPmimgDtAQTP6i/k/p0eUWkN+Zg15gU4Me
-	HFQWiAMB4oeFAnHbe6gYdZU81A+rRt0QpOFKBLBh/VaQtu5BXPb4/MPB+kXe3dFE
-	utRYL9U99MBAXhhmIfJWJ8i9GdLgyASG/9h9qBUL22C+Uo5vwo7Uw6X9pGAUQaiU
-	Kg+QQcUTTQFKHqDkMusP6oead5/e99rB89lpYczFfLijZstX2wHUlncVDVrHHypE
-	ckGj9C7IZ2LZtyg6KRbmj0SSGbbgulmJix+tpyC+YEGhnLeJt6vlxiGFgdMRcYcx
-	G2Sqv02kip4vH1E5euTPrQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726174589; x=
-	1726260989; bh=5yZhMf1etdNhnGTjDvT1Dwa0rJtLOxEPY0uZSbNmmL4=; b=B
-	WZYYv+vdi+6BUcd5ASYNeJhrfdPhalKgSx36/ldxR/lb9G6UGhNqdOJCB0Apb3H3
-	ymwIIFwN/vTbPY5jFnfeoRtXywwNJLtGddnhisCAVaNlVN6blaXevW4rb1aG5yEk
-	PqI6nIi15XcQ6Rh+ImwHcfrH4BKXXub+Nh0aqZ6OODllYHF1nBdmsi3WywCt3ppv
-	elGOLGhem3sBWyy+FX36VzP7yDGXr2+OwUtZcsIuG617Lpx7NmvtP4LrNiYuCFfd
-	Fnn1gA+xa88Vf9C2MaSuFvRMaD+I1hDaR7ebDDU/fZBm5m3CAD1Fi0adEfelECrF
-	14eBAuVRwam8IeoDp1k0g==
-X-ME-Sender: <xms:fVXjZsrzNZ5jB4Cw74LU0LI4CQA8Did_52TYbwLexAWQRpjy5KvU3g>
-    <xme:fVXjZiplLghTMH3tu4nlzhrpjXOIC0hNjNev7nCOV5-k1jIHEFcDVTVqCa6T5JEJI
-    2ucmwZISM_IJlijfCg>
-X-ME-Received: <xmr:fVXjZhMnvdCN2KKzxBw5bOmisWMgLPPsmsayCxJe8-Hb6cEJxUP2KPEMY7bmSMpf0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudejfedgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredt
-    jeenucfhrhhomheplfhirgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflh
-    ihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleff
-    keegudeghfdtuddugefhueevgeffgedukeejleenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorght
-    rdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoheplhhoohhngh
-    grrhgthheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhp
-    mhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgr
-    nhhkvghnrdguvgdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrd
-    gtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:fVXjZj4hDJZLyeXHHdwZ6pDN5mDKiZ3fiGeBSfEhax-p5g39F1btlQ>
-    <xmx:fVXjZr6fc26syNjF9D_8IwS5sFwTEkeATg5hdWItkBE70_YB3r0XHQ>
-    <xmx:fVXjZjhUznDNrSqVk0ACnAccerZNw0pnV7s2F4o2_ppLQr4t4clg6g>
-    <xmx:fVXjZl69wQ2ckgvDHfXqkWLemZFeW8Bt7iOae58OaP6g96qkTYeaEA>
-    <xmx:fVXjZjzR77Yt9V6vZib6OYvhKg6OG78A5yAm8WQ7ynfrIBemZnN9lUIh>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Sep 2024 16:56:28 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Thu, 12 Sep 2024 21:55:57 +0100
-Subject: [PATCH v2 4/4] MIPS: Loongson64: Use shared IOCSR header
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sQrukHgp"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20551e2f1f8so2221525ad.2
+        for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 13:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1726174689; x=1726779489; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=awElkTLWK6u37rMcH6vV+9dmrRY/uH5yY9ycJ6GvqvQ=;
+        b=sQrukHgpODbFx/SLa+M8r2hOgHpZQewdq8iYNAXpc2NMc+xdqgtE5iltiJp3XyuL8K
+         iwsTlVXP6OeqKW3pCmWV4igV8jMqqm4+kv4gRusasEduwTwsx2tmx0/3B/zeMJM5xALG
+         OKSB2g1r+aLMishTppnb/Vznv6Opd9HXjlAtcIvWTQc8lFCna/+apyPf2y8jfFlEtXQS
+         7bBIFCHV1NmmTPrefSAjW81kpWZtJo1YP9uJrxSfKMcYFQraGi0Z3oF9IzT5HHudNafj
+         j/U0vx6iVculG+H5Pe72sDsDRK0n9PxYy1MBqXNcj0Dr1FkAgtQp1f0drWxDsQCg/dQU
+         9g1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726174689; x=1726779489;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=awElkTLWK6u37rMcH6vV+9dmrRY/uH5yY9ycJ6GvqvQ=;
+        b=f1m3KPmxaIOHK/gZY7B1oX3jozClQefJEgUkk5mXDdui17v9Ejt4yJ7fYuNqXEIcNr
+         xcxII43bcfeBvQQDqtummiOuQEBMgItZjPsjYcNG0N9R9DojuKtkO/3VlxechIxVnj9X
+         LJ4tDwAChjOdZTphVr7Y2chXhj9iEUP4iR5TibTsxFTR7mA+j/mTnesfTnGE5VUT89Zx
+         CmtC5LdFglKcL8yB0W2snrX6Y7f/gBfQWCMh1Gko+LUMiUY6pIAbV7L2UwoM+aMupcQs
+         2oRVn1JggQNOGZaxEg9qGs62lKwK964EnvoWi5DnnB7xfuOHMRenFaJgWvRaf0vb4MHB
+         Nt2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqv4HjmUiuShT41R8dfAXrXEtjZBd/Cl2R3poIoFSqTf/uSo3BubuecMpxDxZ1x3udMaimfc2qFVk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMkC12LnV6LC8qRoVJz6BCSRt6vYXkHeeIynpRpr8gYj22FlmB
+	xc3RanlGTvqOm8MG6nFUSvUfxsncRoA2tYIvhI1WKt9wgGdjNJ25mfWnEt3Nbx4=
+X-Google-Smtp-Source: AGHT+IFNbFNRlMUVnmzvIAqMYOHLNoYiu39w2cW+++5PhbuKhP72IpMktdJxCrIrvKb5Z0jSCotKrw==
+X-Received: by 2002:a17:902:f60e:b0:205:809c:d490 with SMTP id d9443c01a7336-20781d61d67mr8439965ad.16.1726174689001;
+        Thu, 12 Sep 2024 13:58:09 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2076b0097desm18030445ad.247.2024.09.12.13.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 13:58:08 -0700 (PDT)
+Date: Thu, 12 Sep 2024 13:58:05 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Celeste Liu <coelacanthushex@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] riscv: defconfig: drop RT_GROUP_SCHED=y
+Message-ID: <ZuNV3ewTH63lb972@ghost>
+References: <20240910-fix-riscv-rt_group_sched-v3-0-486e75e5ae6d@gmail.com>
+ <20240910-fix-riscv-rt_group_sched-v3-1-486e75e5ae6d@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240912-iocsr-v2-4-e88f75b37da4@flygoat.com>
-References: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com>
-In-Reply-To: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-mips@vger.kernel.org, kvm@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10190;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=QR4DGLMUsuXkjf1A1LS7CFLwhFvqzfkt5ophtTS3Iko=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTHocVP7fIVr3WcKGKUOnN1j47Yg9LUipUPazQXvK2Sl
- Y390fyuo5SFQYyLQVZMkSVEQKlvQ+PFBdcfZP2BmcPKBDKEgYtTACby0YmR4VvctRnfd1yTfXot
- +y9/0TlLlglBG9ijFs+YtTmp4lPddHOG/xlu02edaTKxdCmXizpWPH81n9uxoJnXb62YsVHZZ1a
- 3AjcA
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240910-fix-riscv-rt_group_sched-v3-1-486e75e5ae6d@gmail.com>
 
-MIPS and LoongArch Loongson CPUs are sharing definition of
-IOCSR registers, so it makes sense to use the same header
-as well.
+On Tue, Sep 10, 2024 at 08:51:07PM +0800, Celeste Liu wrote:
+> Commit ba6cfef057e1 ("riscv: enable Docker requirements in defconfig")
+> introduced it because of Docker, but Docker has removed this requirement
+> since [1] (2023-04-19).
+> 
+> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+> needs an RT budget assigned, otherwise the processes in it will not be able to
+> get RT at all. The problem with RT group scheduling is that it requires the
+> budget assigned but there's no way we could assign a default budget, since the
+> values to assign are both upper and lower time limits, are absolute, and need to
+> be sum up to < 1 for each individal cgroup. That means we cannot really come up
+> with values that would work by default in the general case.[2]
+> 
+> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
+> can only be enabled when all RT processes are in the root cgroup. But it will
+> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
+> 
+> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
+> support it.[3]
+> 
+> [1]: https://github.com/moby/moby/commit/005150ed69c540fb0b5323e0f2208608c1204536
+> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
+> [3]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
+> 
+> Acked-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
 
-Align function names in loongson_regs.h with it's loongarch
-equivalent and fix up macro names everywhere.
+Acked-by: Charlie Jenkins <charlie@rivosinc.com>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../include/asm/mach-loongson64/loongson_regs.h    | 58 ++++++----------------
- arch/mips/kvm/vz.c                                 |  2 +-
- arch/mips/loongson64/smp.c                         | 44 ++++++++--------
- drivers/platform/mips/cpu_hwmon.c                  |  7 ++-
- include/linux/loongson/iocsr.h                     |  5 +-
- 5 files changed, 46 insertions(+), 70 deletions(-)
-
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson_regs.h b/arch/mips/include/asm/mach-loongson64/loongson_regs.h
-index fec767507604..d8af16796dbe 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson_regs.h
-+++ b/arch/mips/include/asm/mach-loongson64/loongson_regs.h
-@@ -5,12 +5,13 @@
- #ifndef _LOONGSON_REGS_H_
- #define _LOONGSON_REGS_H_
- 
--#include <linux/types.h>
- #include <linux/bits.h>
-+#include <linux/types.h>
- 
- #include <asm/mipsregs.h>
- #include <asm/cpu.h>
- 
-+#ifndef __ASSEMBLY__
- static inline bool cpu_has_cfg(void)
- {
- 	return ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64G);
-@@ -33,6 +34,7 @@ static inline u32 read_cpucfg(u32 reg)
- 		);
- 	return __res;
- }
-+#endif
- 
- /* Bit Domains for CFG registers */
- #define LOONGSON_CFG0	0x0
-@@ -131,6 +133,7 @@ static inline u32 read_cpucfg(u32 reg)
- #define LOONGSON_CFG7_GCCAEQRP	BIT(0)
- #define LOONGSON_CFG7_UCAWINP	BIT(1)
- 
-+#ifndef __ASSEMBLY__
- static inline bool cpu_has_csr(void)
- {
- 	if (cpu_has_cfg())
-@@ -139,7 +142,10 @@ static inline bool cpu_has_csr(void)
- 	return false;
- }
- 
--static inline u32 csr_readl(u32 reg)
-+#define cpu_has_iocsr()	cpu_has_csr()
-+
-+/* For MIPS/Loongson IOCSR and Core CSR are accessed same way */
-+static inline u32 csr_read32(u32 reg)
- {
- 	u32 __res;
- 
-@@ -158,7 +164,7 @@ static inline u32 csr_readl(u32 reg)
- 	return __res;
- }
- 
--static inline u64 csr_readq(u32 reg)
-+static inline u64 csr_read64(u32 reg)
- {
- 	u64 __res;
- 
-@@ -177,7 +183,7 @@ static inline u64 csr_readq(u32 reg)
- 	return __res;
- }
- 
--static inline void csr_writel(u32 val, u32 reg)
-+static inline void csr_write32(u32 val, u32 reg)
- {
- 	/* WRCSR reg, val */
- 	__asm__ __volatile__(
-@@ -193,7 +199,7 @@ static inline void csr_writel(u32 val, u32 reg)
- 		);
- }
- 
--static inline void csr_writeq(u64 val, u32 reg)
-+static inline void csr_write64(u64 val, u32 reg)
- {
- 	/* DWRCSR reg, val */
- 	__asm__ __volatile__(
-@@ -209,43 +215,10 @@ static inline void csr_writeq(u64 val, u32 reg)
- 		);
- }
- 
--/* Public CSR Register can also be accessed with regular addresses */
--#define CSR_PUBLIC_MMIO_BASE 0x1fe00000
--
--#define MMIO_CSR(x)		(void *)TO_UNCAC(CSR_PUBLIC_MMIO_BASE + x)
--
--#define LOONGSON_CSR_FEATURES	0x8
--#define LOONGSON_CSRF_TEMP	BIT(0)
--#define LOONGSON_CSRF_NODECNT	BIT(1)
--#define LOONGSON_CSRF_MSI	BIT(2)
--#define LOONGSON_CSRF_EXTIOI	BIT(3)
--#define LOONGSON_CSRF_IPI	BIT(4)
--#define LOONGSON_CSRF_FREQ	BIT(5)
--
--#define LOONGSON_CSR_VENDOR	0x10 /* Vendor name string, should be "Loongson" */
--#define LOONGSON_CSR_CPUNAME	0x20 /* Processor name string */
--#define LOONGSON_CSR_NODECNT	0x408
--#define LOONGSON_CSR_CPUTEMP	0x428
--
--/* PerCore CSR, only accessible by local cores */
--#define LOONGSON_CSR_IPI_STATUS	0x1000
--#define LOONGSON_CSR_IPI_EN	0x1004
--#define LOONGSON_CSR_IPI_SET	0x1008
--#define LOONGSON_CSR_IPI_CLEAR	0x100c
--#define LOONGSON_CSR_IPI_SEND	0x1040
--#define CSR_IPI_SEND_IP_SHIFT	0
--#define CSR_IPI_SEND_CPU_SHIFT	16
--#define CSR_IPI_SEND_BLOCK	BIT(31)
--
--#define LOONGSON_CSR_MAIL_BUF0		0x1020
--#define LOONGSON_CSR_MAIL_SEND		0x1048
--#define CSR_MAIL_SEND_BLOCK		BIT_ULL(31)
--#define CSR_MAIL_SEND_BOX_LOW(box)	(box << 1)
--#define CSR_MAIL_SEND_BOX_HIGH(box)	((box << 1) + 1)
--#define CSR_MAIL_SEND_BOX_SHIFT		2
--#define CSR_MAIL_SEND_CPU_SHIFT		16
--#define CSR_MAIL_SEND_BUF_SHIFT		32
--#define CSR_MAIL_SEND_H32_MASK		0xFFFFFFFF00000000ULL
-+#define iocsr_read32(reg)	csr_read32(reg)
-+#define iocsr_read64(reg)	csr_read64(reg)
-+#define iocsr_write32(val, reg)	csr_write32(val, reg)
-+#define iocsr_write64(val, reg)	csr_write64(val, reg)
- 
- static inline u64 drdtime(void)
- {
-@@ -264,5 +237,6 @@ static inline u64 drdtime(void)
- 		);
- 	return val;
- }
-+#endif
- 
- #endif
-diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-index 99d5a71e4300..4964c1922b23 100644
---- a/arch/mips/kvm/vz.c
-+++ b/arch/mips/kvm/vz.c
-@@ -2977,7 +2977,7 @@ static int kvm_vz_hardware_enable(void)
- #ifdef CONFIG_CPU_LOONGSON64
- 	/* Control guest CCA attribute */
- 	if (cpu_has_csr())
--		csr_writel(csr_readl(0xffffffec) | 0x1, 0xffffffec);
-+		csr_write32(csr_read32(0xffffffec) | 0x1, 0xffffffec);
- #endif
- 
- 	return 0;
-diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-index 147acd972a07..0cf03377edf0 100644
---- a/arch/mips/loongson64/smp.c
-+++ b/arch/mips/loongson64/smp.c
-@@ -7,6 +7,7 @@
- #include <irq.h>
- #include <linux/init.h>
- #include <linux/cpu.h>
-+#include <linux/loongson/iocsr.h>
- #include <linux/sched.h>
- #include <linux/sched/hotplug.h>
- #include <linux/sched/task_stack.h>
-@@ -19,7 +20,6 @@
- #include <asm/tlbflush.h>
- #include <asm/cacheflush.h>
- #include <loongson.h>
--#include <loongson_regs.h>
- #include <workarounds.h>
- 
- #include "smp.h"
-@@ -45,19 +45,19 @@ static void csr_mail_send(uint64_t data, int cpu, int mailbox)
- {
- 	uint64_t val;
- 
--	/* send high 32 bits */
--	val = CSR_MAIL_SEND_BLOCK;
--	val |= (CSR_MAIL_SEND_BOX_HIGH(mailbox) << CSR_MAIL_SEND_BOX_SHIFT);
--	val |= (cpu << CSR_MAIL_SEND_CPU_SHIFT);
--	val |= (data & CSR_MAIL_SEND_H32_MASK);
--	csr_writeq(val, LOONGSON_CSR_MAIL_SEND);
--
--	/* send low 32 bits */
--	val = CSR_MAIL_SEND_BLOCK;
--	val |= (CSR_MAIL_SEND_BOX_LOW(mailbox) << CSR_MAIL_SEND_BOX_SHIFT);
--	val |= (cpu << CSR_MAIL_SEND_CPU_SHIFT);
--	val |= (data << CSR_MAIL_SEND_BUF_SHIFT);
--	csr_writeq(val, LOONGSON_CSR_MAIL_SEND);
-+	/* Send high 32 bits */
-+	val = IOCSR_MBUF_SEND_BLOCKING;
-+	val |= (IOCSR_MBUF_SEND_BOX_HI(mailbox) << IOCSR_MBUF_SEND_BOX_SHIFT);
-+	val |= (cpu << IOCSR_MBUF_SEND_CPU_SHIFT);
-+	val |= (data & IOCSR_MBUF_SEND_H32_MASK);
-+	iocsr_write64(val, LOONGSON_IOCSR_MBUF_SEND);
-+
-+	/* Send low 32 bits */
-+	val = IOCSR_MBUF_SEND_BLOCKING;
-+	val |= (IOCSR_MBUF_SEND_BOX_LO(mailbox) << IOCSR_MBUF_SEND_BOX_SHIFT);
-+	val |= (cpu << IOCSR_MBUF_SEND_CPU_SHIFT);
-+	val |= (data << IOCSR_MBUF_SEND_BUF_SHIFT);
-+	iocsr_write64(val, LOONGSON_IOCSR_MBUF_SEND);
- };
- 
- static u32 csr_ipi_read_clear(int cpu)
-@@ -65,9 +65,9 @@ static u32 csr_ipi_read_clear(int cpu)
- 	u32 action;
- 
- 	/* Load the ipi register to figure out what we're supposed to do */
--	action = csr_readl(LOONGSON_CSR_IPI_STATUS);
-+	action = iocsr_read32(LOONGSON_IOCSR_IPI_STATUS);
- 	/* Clear the ipi register to clear the interrupt */
--	csr_writel(action, LOONGSON_CSR_IPI_CLEAR);
-+	iocsr_write32(action, LOONGSON_IOCSR_IPI_CLEAR);
- 
- 	return action;
- }
-@@ -77,22 +77,22 @@ static void csr_ipi_write_action(int cpu, u32 action)
- 	unsigned int irq = 0;
- 
- 	while ((irq = ffs(action))) {
--		uint32_t val = CSR_IPI_SEND_BLOCK;
-+		uint32_t val = IOCSR_IPI_SEND_BLOCKING;
- 		val |= (irq - 1);
--		val |= (cpu << CSR_IPI_SEND_CPU_SHIFT);
--		csr_writel(val, LOONGSON_CSR_IPI_SEND);
-+		val |= (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
-+		iocsr_write32(val, LOONGSON_IOCSR_IPI_SEND);
- 		action &= ~BIT(irq - 1);
- 	}
- }
- 
- static void csr_ipi_write_enable(int cpu)
- {
--	csr_writel(0xffffffff, LOONGSON_CSR_IPI_EN);
-+	iocsr_write32(0xffffffff, LOONGSON_IOCSR_IPI_EN);
- }
- 
- static void csr_ipi_clear_buf(int cpu)
- {
--	csr_writeq(0, LOONGSON_CSR_MAIL_BUF0);
-+	iocsr_write64(0, LOONGSON_IOCSR_MBUF0);
- }
- 
- static void csr_ipi_write_buf(int cpu, struct task_struct *idle)
-@@ -169,7 +169,7 @@ static void legacy_ipi_write_buf(int cpu, struct task_struct *idle)
- 
- static void csr_ipi_probe(void)
- {
--	if (cpu_has_csr() && csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_IPI) {
-+	if (cpu_has_iocsr() && iocsr_read32(LOONGSON_IOCSR_FEATURES) & IOCSRF_CSRIPI) {
- 		ipi_read_clear = csr_ipi_read_clear;
- 		ipi_write_action = csr_ipi_write_action;
- 		ipi_write_enable = csr_ipi_write_enable;
-diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-index 2ac2f31090f9..9b0b39a39d13 100644
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/err.h>
-+#include <linux/loongson/iocsr.h>
- #include <linux/module.h>
- #include <linux/reboot.h>
- #include <linux/jiffies.h>
-@@ -9,7 +10,6 @@
- #include <loongson.h>
- #include <boot_param.h>
- #include <loongson_hwmon.h>
--#include <loongson_regs.h>
- 
- static int csr_temp_enable;
- 
-@@ -24,7 +24,7 @@ int loongson3_cpu_temp(int cpu)
- 	u32 reg, prid_rev;
- 
- 	if (csr_temp_enable) {
--		reg = (csr_readl(LOONGSON_CSR_CPUTEMP) & 0xff);
-+		reg = (iocsr_read32(LOONGSON_IOCSR_CPUTEMP) & 0xff);
- 		goto out;
- 	}
- 
-@@ -136,8 +136,7 @@ static int __init loongson_hwmon_init(void)
- 	pr_info("Loongson Hwmon Enter...\n");
- 
- 	if (cpu_has_csr())
--		csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) &
--				  LOONGSON_CSRF_TEMP;
-+		csr_temp_enable = iocsr_read32(LOONGSON_IOCSR_FEATURES) & IOCSRF_TEMP;
- 
- 	if (!csr_temp_enable && !loongson_chiptemp[0])
- 		return -ENODEV;
-diff --git a/include/linux/loongson/iocsr.h b/include/linux/loongson/iocsr.h
-index 6654a904bcbe..15e70e6e132e 100644
---- a/include/linux/loongson/iocsr.h
-+++ b/include/linux/loongson/iocsr.h
-@@ -10,9 +10,12 @@
- #include <linux/bits.h>
- #include <linux/types.h>
- 
--#ifdef CONFIG_LOONGARCH
-+#if defined(CONFIG_LOONGARCH)
- #include <asm/loongarch.h>
- #endif
-+#if defined(CONFIG_MIPS) && defined(CONFIG_MACH_LOONGSON64)
-+#include <loongson_regs.h>
-+#endif
- 
- #define LOONGSON_IOCSR_FEATURES	0x8
- #define  IOCSRF_TEMP			BIT_ULL(0)
-
--- 
-2.46.0
-
+> ---
+>  arch/riscv/configs/defconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 12dc8c73a8acfaa5c8f442968a807de303428d9e..de85c3ab261e6d62b2089a3c89bdc9d1b34fa792 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -9,7 +9,6 @@ CONFIG_CGROUPS=y
+>  CONFIG_MEMCG=y
+>  CONFIG_CGROUP_SCHED=y
+>  CONFIG_CFS_BANDWIDTH=y
+> -CONFIG_RT_GROUP_SCHED=y
+>  CONFIG_CGROUP_PIDS=y
+>  CONFIG_CGROUP_FREEZER=y
+>  CONFIG_CGROUP_HUGETLB=y
+> 
+> -- 
+> 2.46.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
