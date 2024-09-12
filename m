@@ -1,24 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEFE19EEC8;
-	Wed, 11 Sep 2024 18:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D36C18890E
+	for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 06:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726078900; cv=none; b=ADxxuzWT9kup5+yhfqr9bgy7WdBQdJg57MMADQ11vdPc8Sst1N2lMRHpBJcsn0+JQq55oD6sKqHCdtig5ePBU92NQwMjHv4Lpg9STS+e0grMY25piFwuZCXZYAnJ6ITAmRPKbwOtzguP6lI/QWpqNj1B42kYks1MTlPX61hc/TU=
+	t=1726121215; cv=none; b=DAUYHn6YbRUqv009hZF06jd6NZFO3SjbYxUnubV0y1JSmwETpbkmTIeE/5GD8s1PUhKOec3pz92Ldbj2e6kT7lpiaAsEZIGJhoGx6ot/RxdJCVVoleOqJodiEFgAIkoW/MRpgg6H0yoFPlsWGmPpWF4u0Pi20Op767Xb0RpVhWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726078900; c=relaxed/simple;
-	bh=2cZas4SimbOELK54ILhf2k9/V2LxmAALpH5ubeNMXEs=;
+	s=arc-20240116; t=1726121215; c=relaxed/simple;
+	bh=8VMhfxsEEjCM7EFz4nzoCAQ/THTIdB3CL+j9lCXOfzo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kP/hclgiLFbxRWj91GNSHxe6sYCCLMux96HnYWTDvZ9NcocJKq5MrCWckIlfIN0+rhF6hZS2dNmpTyqSvL0GYdB/cUnozR6jSj1UIKg5oqxS3nCZlLjqPEGY6+EDB0qqzgw+lUkRDPPDYV6pzJKLGTkQBD/HD3VtyscqUWQhlGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB7BC4CEC0;
-	Wed, 11 Sep 2024 18:21:30 +0000 (UTC)
-Date: Wed, 11 Sep 2024 19:21:27 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hc4CNdG9tYoVB9aLW/VsxSwdlKrvX4BGWTcz4bsFzz3z+XuQmhgQfEOJnEsidx15OdqnxKlZ886GXLl7NVQ3WKa9qaKSP6FcvI3gDNzhLcBOjmIUpD8sXnh34t43ikY8PRAYnzuCzylNVC2yguKNe79yEC6IBhvhsknsNDcd4UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=H7ia6hC9; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="H7ia6hC9"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2053f6b8201so5741095ad.2
+        for <loongarch@lists.linux.dev>; Wed, 11 Sep 2024 23:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1726121213; x=1726726013; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UDJaA5Y9npfkWPEOnJeHdGlQ/o0X1HQ/Q2gtdhbnZuk=;
+        b=H7ia6hC9XU3H9UERPIaSQFFqnPGFr3IAD2n5t7C2v/M3QPexuzUUia+ySRabo1SKfk
+         gQsmSuUqEfoDQbVsPuQndgLlurTBjVrssVaxP1X5fHhSbj9T/bBN3f8uJPNBEWIUl+1f
+         yeErhaX6cNTIUfHT7MpX4AajxuKsmv9yMe2FBar14lv2bIl+J5c8b0o0PhfMCgH6IlnQ
+         4zzwvh9VptdTNJiEVKptaaMh/9WX0ssFqs8fmduGbAW14NiJzCjX2p51w/P0kGXeBKcu
+         Q5XFkPCL+ZBhJdfO7ujS3a+XNw3psUQmGgn2KMa7NE7CCn4pWpcUSXAMEPm4czypNIcl
+         L6PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726121213; x=1726726013;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UDJaA5Y9npfkWPEOnJeHdGlQ/o0X1HQ/Q2gtdhbnZuk=;
+        b=gzGueB5D3o9l0G/sf912zz7d5dBI/wCl4f2a911TRhOs1iqGQHLH6dWRluk6H/VcF6
+         yH1LkPhJLCgo/b1XYe7bUvXuNqe07jMHi1Pi12+63SvFxmyyuFsIak2VyOMvghIAP+Df
+         AcPHSCVlYiDtDqMrLq46FTsjI1op2mOpuWCYGLHOjzPDVK2oyson8ZLD/odBgN4lbgh2
+         MgYB5Ny3aWGww2hUML6VlnT8QHb7dm5Z4vaQRjkv/hzNr6HAJqD6d5ZSCXPW4PS9leed
+         5j0BBREkE+VDisgvo/2axZzQGf9YnAwuNd2IoEgMZ9fpnzTdN+3AbSIgpvpZRKZtE9Kh
+         MlmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUX1vyruIMfNEFUq3zEzKjRS7n+HgR3H5RishKbPmIMDg6UeSPISe/ylO8DxWIJiD65LdviUkm2Tyg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw7xnxlMeFAQcInIUkqcepsVKoQWfoEkZwxTp1QwiljJl/PRRIa
+	RhFvawK/TpvLEdufaON7BItdvzkwrQjnwp1+PcCBdDjf5nfbgkd1dPyI9wJGpnA=
+X-Google-Smtp-Source: AGHT+IGKXy/6JapHeAVjChHUI6qH3tbjA0GPIxSDVxSa+LImRNXpcKvZ6AKB4gkH/Tg4GRKQ5PFIHQ==
+X-Received: by 2002:a17:902:d2ca:b0:206:c2f4:afb7 with SMTP id d9443c01a7336-2076e36db8cmr23914475ad.26.1726121212752;
+        Wed, 11 Sep 2024 23:06:52 -0700 (PDT)
+Received: from ghost ([2601:647:6700:64d0:7acc:9910:2c1d:4e65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2076b01a39esm8052185ad.287.2024.09.11.23.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2024 23:06:52 -0700 (PDT)
+Date: Wed, 11 Sep 2024 23:06:46 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Arnd Bergmann <arnd@arndb.de>
 Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, guoren <guoren@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	guoren <guoren@kernel.org>,
 	Richard Henderson <richard.henderson@linaro.org>,
 	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
 	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
@@ -68,7 +106,7 @@ Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
 	linux-abi-devel@lists.sourceforge.net
 Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
  47 bits
-Message-ID: <ZuHfp0_tAQhaymdy@arm.com>
+Message-ID: <ZuKE9nnNGR/5fHh/@ghost>
 References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
  <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
  <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
@@ -77,74 +115,56 @@ References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
  <Ztrq8PBLJ3QuFJz7@arm.com>
  <oshwto46wbbgneiayj63umllyozm3c4267rvpszqzaopwnt2l7@6mxl5vydtons>
  <ZuDoExckq21fePoe@ghost>
+ <8130e50c-01e2-45c3-a516-45f5499311f2@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZuDoExckq21fePoe@ghost>
+In-Reply-To: <8130e50c-01e2-45c3-a516-45f5499311f2@app.fastmail.com>
 
-On Tue, Sep 10, 2024 at 05:45:07PM -0700, Charlie Jenkins wrote:
-> On Tue, Sep 10, 2024 at 03:08:14PM -0400, Liam R. Howlett wrote:
-> > * Catalin Marinas <catalin.marinas@arm.com> [240906 07:44]:
-> > > On Fri, Sep 06, 2024 at 09:55:42AM +0000, Arnd Bergmann wrote:
-> > > > On Fri, Sep 6, 2024, at 09:14, Guo Ren wrote:
-> > > > > On Fri, Sep 6, 2024 at 3:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > >> It's also unclear to me how we want this flag to interact with
-> > > > >> the existing logic in arch_get_mmap_end(), which attempts to
-> > > > >> limit the default mapping to a 47-bit address space already.
-> > > > >
-> > > > > To optimize RISC-V progress, I recommend:
-> > > > >
-> > > > > Step 1: Approve the patch.
-> > > > > Step 2: Update Go and OpenJDK's RISC-V backend to utilize it.
-> > > > > Step 3: Wait approximately several iterations for Go & OpenJDK
-> > > > > Step 4: Remove the 47-bit constraint in arch_get_mmap_end()
-
-Point 4 is an ABI change. What guarantees that there isn't still
-software out there that relies on the old behaviour?
-
-> > > > I really want to first see a plausible explanation about why
-> > > > RISC-V can't just implement this using a 47-bit DEFAULT_MAP_WINDOW
-> > > > like all the other major architectures (x86, arm64, powerpc64),
-> > > 
-> > > FWIW arm64 actually limits DEFAULT_MAP_WINDOW to 48-bit in the default
-> > > configuration. We end up with a 47-bit with 16K pages but for a
-> > > different reason that has to do with LPA2 support (I doubt we need this
-> > > for the user mapping but we need to untangle some of the macros there;
-> > > that's for a separate discussion).
-> > > 
-> > > That said, we haven't encountered any user space problems with a 48-bit
-> > > DEFAULT_MAP_WINDOW. So I also think RISC-V should follow a similar
-> > > approach (47 or 48 bit default limit). Better to have some ABI
-> > > consistency between architectures. One can still ask for addresses above
-> > > this default limit via mmap().
-> > 
-> > I think that is best as well.
-> > 
-> > Can we please just do what x86 and arm64 does?
+On Wed, Sep 11, 2024 at 07:25:08AM +0000, Arnd Bergmann wrote:
+> On Wed, Sep 11, 2024, at 00:45, Charlie Jenkins wrote:
+> > On Tue, Sep 10, 2024 at 03:08:14PM -0400, Liam R. Howlett wrote:
+> >
+> > I responded to Arnd in the other thread, but I am still not convinced
+> > that the solution that x86 and arm64 have selected is the best solution.
+> > The solution of defaulting to 47 bits does allow applications the
+> > ability to get addresses that are below 47 bits. However, due to
+> > differences across architectures it doesn't seem possible to have all
+> > architectures default to the same value. Additionally, this flag will be
+> > able to help users avoid potential bugs where a hint address is passed
+> > that causes upper bits of a VA to be used.
+> >
+> > The other issue I have with this is that if there is not a hint address
+> > specified to be greater than 47 bits on x86, then mmap() may return an
+> > address that is greater than 47-bits. The documentation in
+> > Documentation/arch/x86/x86_64/5level-paging.rst says:
+> >
+> > "If hint address set above 47-bit, but MAP_FIXED is not specified, we try
+> > to look for unmapped area by specified address. If it's already
+> > occupied, we look for unmapped area in *full* address space, rather than
+> > from 47-bit window."
 > 
-> I responded to Arnd in the other thread, but I am still not convinced
-> that the solution that x86 and arm64 have selected is the best solution.
-> The solution of defaulting to 47 bits does allow applications the
-> ability to get addresses that are below 47 bits. However, due to
-> differences across architectures it doesn't seem possible to have all
-> architectures default to the same value. Additionally, this flag will be
-> able to help users avoid potential bugs where a hint address is passed
-> that causes upper bits of a VA to be used.
+> This is also in the commit message of b569bab78d8d ("x86/mm: Prepare
+> to expose larger address space to userspace"), which introduced it.
+> However, I don't actually see the fallback to the full address space,
+> instead the actual behavior seems to be the same as arm64.
+> 
+> Am I missing something in the x86 implementation, or do we just
+> need to update the documentation?
+> 
+>       Arnd
 
-The reason we added this limit on arm64 is that we noticed programs
-using the top 8 bits of a 64-bit pointer for additional information.
-IIRC, it wasn't even openJDK but some JavaScript JIT. We could have
-taught those programs of a new flag but since we couldn't tell how many
-are out there, it was the safest to default to a smaller limit and opt
-in to the higher one. Such opt-in is via mmap() but if you prefer a
-prctl() flag, that's fine by me as well (though I think this should be
-opt-in to higher addresses rather than opt-out of the higher addresses).
+Yeah I guess it is incorrect documentation then? It seems more
+reasonable to me to have a hint address fall back onto the larger
+address space because otherwise the "hint" address can cause allocations
+to fail even if there is space above the 47-bit limit. This is another
+reason I wanted to avoid having this default behavior on riscv, to not
+have this abuse of the hint address.
 
--- 
-Catalin
+- Charlie
+
