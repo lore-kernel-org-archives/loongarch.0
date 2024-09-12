@@ -1,147 +1,150 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E187E15098A
-	for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 20:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056074AEF4
+	for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 20:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726174692; cv=none; b=uE6g7Xwm4R8wT4ntt6QIJO5YXtQ22WE4FCwYUI+AL9koizN7fMqpX3DiAXeZwd9ZPCmImv7bfFw66ZOY0dTbtAuyEaSIGSAXpIG5F4gIDfnMOBAb0AiEc9zYhY+jj6HoZ4dJeW9vBUd5rmGDs74/eAcmKN+RhQfp3RiahnXMaFQ=
+	t=1726174763; cv=none; b=dhaJPGHGb6Ieel/kdVBBkYgut5+aryBOMkffLESIQ38mY0KUKb6hAYHKt5xGhPuoahotMQPztyuM/Oc35GTWRlhyrBz7X5GsEJIC+rsyNuZPmXfJx6LUm3sA4Lfn0Bv+ImrE2gdt0yV1vn4pZgR1NfFU9qNtPOT8sZqK7N9ZbjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726174692; c=relaxed/simple;
-	bh=MYDZvrqlWEpmfJ0PC8MrAJxxkqkqQuxjGFHhVbXAtYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufi5Cfv5hCBhz1UyLCAinuhqqXLLVzdKecDzAuOW4UCgGs5OE4EoGcMDduzDhMit37ljUOOHBtUQ94KoojPd7L52rIpQSfHCWMVFSlJfYWqB0KC5sMMKfeKDt6teiFlIzbqJ0VJzbBaxAoSO/cPOa0Y2LJuPHeqypVqBbWo3TMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sQrukHgp; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1726174763; c=relaxed/simple;
+	bh=qr1Df2OoDZPLJ69NWzli/7RsKLfj4rBzJ3FhmLOg1hs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bwmrm1uCAz8ddPr0q5fWwrxiE/HrqKQ/v9zjyYONPzLZdeA+h3JXcq1cQeV76Ei/Bxv9I9Aj4pJSamvzO/Y3my6HFsTOKZXBTeUccdISiqIbZw/QcqGt4d6t/1f8S3oDS4duK8OYX6NMKlsfc30KMwqVrOTh90PsvPXrHsyc1HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ReM/YMkp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PYGH24lp; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sQrukHgp"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20551e2f1f8so2221525ad.2
-        for <loongarch@lists.linux.dev>; Thu, 12 Sep 2024 13:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1726174689; x=1726779489; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=awElkTLWK6u37rMcH6vV+9dmrRY/uH5yY9ycJ6GvqvQ=;
-        b=sQrukHgpODbFx/SLa+M8r2hOgHpZQewdq8iYNAXpc2NMc+xdqgtE5iltiJp3XyuL8K
-         iwsTlVXP6OeqKW3pCmWV4igV8jMqqm4+kv4gRusasEduwTwsx2tmx0/3B/zeMJM5xALG
-         OKSB2g1r+aLMishTppnb/Vznv6Opd9HXjlAtcIvWTQc8lFCna/+apyPf2y8jfFlEtXQS
-         7bBIFCHV1NmmTPrefSAjW81kpWZtJo1YP9uJrxSfKMcYFQraGi0Z3oF9IzT5HHudNafj
-         j/U0vx6iVculG+H5Pe72sDsDRK0n9PxYy1MBqXNcj0Dr1FkAgtQp1f0drWxDsQCg/dQU
-         9g1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726174689; x=1726779489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awElkTLWK6u37rMcH6vV+9dmrRY/uH5yY9ycJ6GvqvQ=;
-        b=f1m3KPmxaIOHK/gZY7B1oX3jozClQefJEgUkk5mXDdui17v9Ejt4yJ7fYuNqXEIcNr
-         xcxII43bcfeBvQQDqtummiOuQEBMgItZjPsjYcNG0N9R9DojuKtkO/3VlxechIxVnj9X
-         LJ4tDwAChjOdZTphVr7Y2chXhj9iEUP4iR5TibTsxFTR7mA+j/mTnesfTnGE5VUT89Zx
-         CmtC5LdFglKcL8yB0W2snrX6Y7f/gBfQWCMh1Gko+LUMiUY6pIAbV7L2UwoM+aMupcQs
-         2oRVn1JggQNOGZaxEg9qGs62lKwK964EnvoWi5DnnB7xfuOHMRenFaJgWvRaf0vb4MHB
-         Nt2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWqv4HjmUiuShT41R8dfAXrXEtjZBd/Cl2R3poIoFSqTf/uSo3BubuecMpxDxZ1x3udMaimfc2qFVk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxMkC12LnV6LC8qRoVJz6BCSRt6vYXkHeeIynpRpr8gYj22FlmB
-	xc3RanlGTvqOm8MG6nFUSvUfxsncRoA2tYIvhI1WKt9wgGdjNJ25mfWnEt3Nbx4=
-X-Google-Smtp-Source: AGHT+IFNbFNRlMUVnmzvIAqMYOHLNoYiu39w2cW+++5PhbuKhP72IpMktdJxCrIrvKb5Z0jSCotKrw==
-X-Received: by 2002:a17:902:f60e:b0:205:809c:d490 with SMTP id d9443c01a7336-20781d61d67mr8439965ad.16.1726174689001;
-        Thu, 12 Sep 2024 13:58:09 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2076b0097desm18030445ad.247.2024.09.12.13.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2024 13:58:08 -0700 (PDT)
-Date: Thu, 12 Sep 2024 13:58:05 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Celeste Liu <coelacanthushex@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] riscv: defconfig: drop RT_GROUP_SCHED=y
-Message-ID: <ZuNV3ewTH63lb972@ghost>
-References: <20240910-fix-riscv-rt_group_sched-v3-0-486e75e5ae6d@gmail.com>
- <20240910-fix-riscv-rt_group_sched-v3-1-486e75e5ae6d@gmail.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ReM/YMkp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PYGH24lp"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 47F3B114012B;
+	Thu, 12 Sep 2024 16:59:21 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-09.internal (MEProxy); Thu, 12 Sep 2024 16:59:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1726174761;
+	 x=1726261161; bh=z9RyMeYnaCpJjL5NRxfd4gM6cPZLEzjGh1sm47Fz4fU=; b=
+	ReM/YMkpzLgrnxitYaJbJI8wvFkkU+WBRml2AmADWw/xJIdcrYBQcZqESacdPqLZ
+	PBS7b/qKuvxCAchFgu6AfJ2ihfqDoj6mefKm1BGVeXzLcecSEJd3D7BUpAtCVAZw
+	2QsZ0cWbTWY2LK5oSWro6Fo8c4uxjiVFmh8QFU8FSZsp28AKI6vZ0DnxgXrzoYzI
+	nSA03gxElsAMAmErBJ3jTIYlm7bWg7CzGTUN3km1mR/bE5v7LmgiEiXkH3WppAf3
+	1vZEeElRMGQIXKYn7oBNPV8ECYREJmdwkmI7bv+VvAPmrEkFumLA3Qr/AzrdGcad
+	/E/vU36AUR6YRSiOQAMAhA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726174761; x=
+	1726261161; bh=z9RyMeYnaCpJjL5NRxfd4gM6cPZLEzjGh1sm47Fz4fU=; b=P
+	YGH24lpXVjiOxGgkZlx51jOtPc475IvnJkaUSJ30/969MismK00XfaOOZssIj0+B
+	m8pWKPctI1Fl4oYF7lfP/UsqHvYuz6/mFNKLIMDraLFQFi1H6vp6wjd1SDsfnDQI
+	0JurWsYizqj+/HXa8vC4kr2WmjYqrkRVlwJTl0Adi50jkmbGT2vG7sZ6lJH90tEp
+	RXbjKOVjWmOJ27VvIpQYlJhj53Idbfk6lyMRWq9E9rS/2yK/VBH1KSuxQQVPOf7P
+	GcAe5Uy44aHQ7pFQUgURC9SmfbRPfZ/f2cREZf73iWOsWyiabPFZR2/fbtd/S6yw
+	wxpjbYcj4RCk0I+ZTbIsg==
+X-ME-Sender: <xms:KVbjZtAeprkZeyYcuyzTRRu5Vb_EaC4d6T7nNY2o98CyKF6a9PwWfw>
+    <xme:KVbjZrgaIFvIQ0dxG2XAKZLCatYNwvx1BwsZEcPPfcB-te5wfYzgjeetHJ8jOo6Zt
+    4gUzyhD6hOL8cS9f2A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudejfedgudehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdflihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgse
+    hflhihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffek
+    teehhfelgfdvvedvkeeuffefkeehheegvefhveetjeenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghho
+    rghtrdgtohhmpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphht
+    thhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfh
+    grvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrhes
+    lhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidrug
+    gvpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdp
+    rhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:KVbjZokIrc3L0xm36htY1eEFyXuC3F_Z-TxQCwXCmq1BlKg3M-axJQ>
+    <xmx:KVbjZnwkh_lkFc5d-d77ZOllCysaaR1jOqhFz5DZvi6hU2pW-cECHg>
+    <xmx:KVbjZiS15Q-P5hCAfA-QJH8EtwbWTsgTqIJii7Jer02l4sf286lFyQ>
+    <xmx:KVbjZqYUo9u-vOMzqbVAHc-MNPNYF-numoMTXGGza8SiYyZgz9V85A>
+    <xmx:KVbjZnLYc_nRyVRP3_dfJowA1Uyk5CWcfKVF6h2KEm2UJntAErRXEFgj>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 072B31C20065; Thu, 12 Sep 2024 16:59:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240910-fix-riscv-rt_group_sched-v3-1-486e75e5ae6d@gmail.com>
+Date: Thu, 12 Sep 2024 21:59:00 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Huacai Chen" <chenhuacai@kernel.org>, "Xuerui Wang" <kernel@xen0n.name>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ kvm@vger.kernel.org
+Message-Id: <4f631f4a-eeb8-4b57-8424-4f5e970f0b69@app.fastmail.com>
+In-Reply-To: <20240912-iocsr-v2-2-e88f75b37da4@flygoat.com>
+References: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com>
+ <20240912-iocsr-v2-2-e88f75b37da4@flygoat.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: cpu-probe: Move IOCSR probing out of
+ cpu_probe_common
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2024 at 08:51:07PM +0800, Celeste Liu wrote:
-> Commit ba6cfef057e1 ("riscv: enable Docker requirements in defconfig")
-> introduced it because of Docker, but Docker has removed this requirement
-> since [1] (2023-04-19).
-> 
-> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
-> needs an RT budget assigned, otherwise the processes in it will not be able to
-> get RT at all. The problem with RT group scheduling is that it requires the
-> budget assigned but there's no way we could assign a default budget, since the
-> values to assign are both upper and lower time limits, are absolute, and need to
-> be sum up to < 1 for each individal cgroup. That means we cannot really come up
-> with values that would work by default in the general case.[2]
-> 
-> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
-> can only be enabled when all RT processes are in the root cgroup. But it will
-> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
-> 
-> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
-> support it.[3]
-> 
-> [1]: https://github.com/moby/moby/commit/005150ed69c540fb0b5323e0f2208608c1204536
-> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
-> [3]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
-> 
-> Acked-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
 
-Acked-by: Charlie Jenkins <charlie@rivosinc.com>
 
-> ---
->  arch/riscv/configs/defconfig | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 12dc8c73a8acfaa5c8f442968a807de303428d9e..de85c3ab261e6d62b2089a3c89bdc9d1b34fa792 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -9,7 +9,6 @@ CONFIG_CGROUPS=y
->  CONFIG_MEMCG=y
->  CONFIG_CGROUP_SCHED=y
->  CONFIG_CFS_BANDWIDTH=y
-> -CONFIG_RT_GROUP_SCHED=y
->  CONFIG_CGROUP_PIDS=y
->  CONFIG_CGROUP_FREEZER=y
->  CONFIG_CGROUP_HUGETLB=y
-> 
-> -- 
+=E5=9C=A82024=E5=B9=B49=E6=9C=8812=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=E5=
+=8D=889:55=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
+[...]
+> +
+> +	if (c->options & LOONGARCH_CPU_IOCSR)
+> +		return;
+Oops, typo here, there should be a not :-(
+
+Huacai, if the series is ok for you please fix this when applying
+the patch. I only tested against NEMU so didn't catch this :-(
+
+Thanks
+- Jiaxun
+
+> +
+> +	*vendor =3D iocsr_read64(LOONGARCH_IOCSR_VENDOR);
+> +	*cpuname =3D iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
+> +
+> +	if (!__cpu_full_name[cpu])
+> +		__cpu_full_name[cpu] =3D cpu_full_name;
+> +
+> +	config =3D iocsr_read32(LOONGARCH_IOCSR_FEATURES);
+> +	if (config & IOCSRF_CSRIPI)
+> +		c->options |=3D LOONGARCH_CPU_CSRIPI;
+> +	if (config & IOCSRF_EXTIOI)
+> +		c->options |=3D LOONGARCH_CPU_EXTIOI;
+> +	if (config & IOCSRF_FREQSCALE)
+> +		c->options |=3D LOONGARCH_CPU_SCALEFREQ;
+> +	if (config & IOCSRF_FLATMODE)
+> +		c->options |=3D LOONGARCH_CPU_FLATMODE;
+> +	if (config & IOCSRF_EIODECODE)
+> +		c->options |=3D LOONGARCH_CPU_EIODECODE;
+> +	if (config & IOCSRF_AVEC)
+> +		c->options |=3D LOONGARCH_CPU_AVECINT;
+> +	if (config & IOCSRF_VM)
+> +		c->options |=3D LOONGARCH_CPU_HYPERVISOR;
+>  }
+>=20
+>  #ifdef CONFIG_64BIT
+>
+> --=20
 > 2.46.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+--=20
+- Jiaxun
