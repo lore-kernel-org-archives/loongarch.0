@@ -1,210 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED7238385
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 15:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC216F077;
+	Fri, 13 Sep 2024 16:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726239656; cv=none; b=sUKX2K7Dpzqa/W3KGt2R/KXYqSn3fCI6UMijHIen9hj7Vhkq6oHD9chYicPGpna+A1GcuGxBaaWJM/DO+VH77ziFKalEYfHGlBxoWz1NxflOnV9HUCksCBHblHnXIHQDGmpf6mbu+NzvT7jRdv+c83zcY+kyZzil8mrq4JgwFGQ=
+	t=1726245892; cv=none; b=V4z576D5mJoznLiMWp4kGgjW6QC3yVnTOiizLw4jFxom6C4WnEhfX9UEyb7fz7GCJtY0qWhPPJhD/2F87w/DR4M40DzlpqdMXmKCdOiA1JtDC5t9+gE/cAk4zCusSAbvJoHyxSTrZJC0pRJasKQ/1SuAOS7X4BIlJKo+wk/gelk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726239656; c=relaxed/simple;
-	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=co7cmp9Uu7WupKwSJaX6VxtjpoYw4H0P0ZNW5kprOfFR6Eo/5yoCYsQtsiB0hOm+5ff8UvkTig6mE+lPtTZRwfpA9JyVBHZUiC2u7h/UUFPYpFb1k9xCj+S6TaXnUIRiCUiktbwdvTjxXGWIEJHhsqKVCC4yKI5MopNfb50WT1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAJMkQFc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726245892; c=relaxed/simple;
+	bh=s26bQZzJ3df3LTgBAKbXOf7FXaKcvwCGSPy7vTjdMI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=INSjaDpkQjLN2kjXAKKo1/VaRTZpTz8esrYCChO5mGGqXTfdemHjBFB3xiM1YTKan4GU7Nt9Gw09MS70Za+EV8lJ9ElMF30AM4wRrCz7VHcTU9z1Zy4lq+xX2R1VkthSCe4WmkHU6IEZrj7vHE+N5NYvgAsYFL7J0QYo/qAn21E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkuwIQTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAJMkQFc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794B9C4AF0B
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 15:00:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkuwIQTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E0EC4CEC0;
+	Fri, 13 Sep 2024 16:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726239656;
-	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YAJMkQFcS9yQrD3CD9uf2YDAnPedZRu2sdG3Uq7zy8+8g4fHsdnaV9YMu/zLJ/1tj
-	 EDiCdYnV0pGG/cGSGCoqzc1yz3NAQwdRBBLRfL0AaT5mhRSd5SqOtQjToavlsk96bb
-	 oKdYkALvWRv8THfAoHVYOAKmMboDnCW5qhSOfsTXSAkiRSZcMGaGh7XxCBtwPbd5yo
-	 iYcY5nqsZThg8+lFTkl4wHHIxP84VsBur9fkHWLMiLx+uY355fMP3Bd0gFRq3KpUT4
-	 TIJSScKe0wBqYY1i+xFQfTmvYKL4lkyD4Paj6wDyvXKCliGwP8nsVtdZV47PWrdook
-	 qWRlseRXwzJPA==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f75129b3a3so25818251fa.2
-        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:00:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVL45gaRYMeuweCvPj28UYYz69arVpZU5RpzbT1M32jxxxyvRIkrQAJ8Hek1SrrRWjZ5F73j48dnhI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy3mDZZmU9a4yfmKUqG3erbP4WALc3fRxveI5eatDQu1oF85XmQ
-	R+pP19NpFxtPAI2kI3zWAJF/1MMcvakHB4r7/87fNJnuqLbYXxgOpLNLJG+WGdUPC/N7fesX77g
-	A0TW0Sdx0RQlOZliHELAPU8ME7w8=
-X-Google-Smtp-Source: AGHT+IEIp2MygUsW5Tc1gnqrEXhSi4Y5LfaJ7pDs2t1FcVSY61BEs2pVKMYAU/+O+nJIsawLe6NqpBRTPpsi7cWLSzQ=
-X-Received: by 2002:a05:651c:1a0c:b0:2f0:1e0a:4696 with SMTP id
- 38308e7fff4ca-2f787dabe7emr39035411fa.7.1726239653924; Fri, 13 Sep 2024
- 08:00:53 -0700 (PDT)
+	s=k20201202; t=1726245891;
+	bh=s26bQZzJ3df3LTgBAKbXOf7FXaKcvwCGSPy7vTjdMI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nkuwIQTlu1zMARvz3BfZ2qy0vB7dmtz/4TR0N1+4nvauXlPW4HaLfX381rXRk9Vsf
+	 IqrtwMipvSHRH8DrDkOMnuZ92aFa0lCcYwWxM4GwAG3+wm7MbYSCsHawauOebKU82p
+	 GL77NRpbm0FMnqZ1UQB41zQb7LKNw5NeHYQ6CurtzQ3aoI4cjSYyJmhwIQf5D+US1j
+	 ImWtR7+HjgMOIoXuPv+OtD97KysrJu+DKACM5rMu1T8mPMdunlWCQDsA6Ga5/SWrFR
+	 ZvBEfKgnJGaL/7W9JhUuY34OlAr5nKhy966hY2ckxtvjvG9jmHZLnVTXhLa5UfFBrp
+	 liFTt5kJSINXA==
+Date: Fri, 13 Sep 2024 17:44:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 02/10] ASoC: codecs: Add support for ES8323
+Message-ID: <eaa0b894-b4f7-4e4e-927d-216ff87e6f14@sirena.org.uk>
+References: <cover.1725518229.git.zhoubinbin@loongson.cn>
+ <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
+ <5a7357f7-da3b-4532-b055-ad33eb93fe1c@sirena.org.uk>
+ <CAMpQs4JRz8x=zfB-DuDSxbcYDR=mtVET_AwawU+J9Vn=sx9LNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240909064730.3290724-1-rppt@kernel.org> <20240909064730.3290724-8-rppt@kernel.org>
-In-Reply-To: <20240909064730.3290724-8-rppt@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 13 Sep 2024 17:00:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
-Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] execmem: add support for cache of large ROX pages
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	Brian Cain <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Christoph Hellwig <hch@infradead.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, 
-	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c3I7//ljyRVcTArV"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4JRz8x=zfB-DuDSxbcYDR=mtVET_AwawU+J9Vn=sx9LNw@mail.gmail.com>
+X-Cookie: In space, no one can hear you fart.
 
-Hi Mike,
 
-On Mon, 9 Sept 2024 at 08:51, Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Using large pages to map text areas reduces iTLB pressure and improves
-> performance.
->
-> Extend execmem_alloc() with an ability to use huge pages with ROX
-> permissions as a cache for smaller allocations.
->
-> To populate the cache, a writable large page is allocated from vmalloc with
-> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
-> ROX.
->
-> Portions of that large page are handed out to execmem_alloc() callers
-> without any changes to the permissions.
->
-> When the memory is freed with execmem_free() it is invalidated again so
-> that it won't contain stale instructions.
->
-> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
-> definition of an execmem_range.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  include/linux/execmem.h |   2 +
->  mm/execmem.c            | 289 +++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 286 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-> index dfdf19f8a5e8..7436aa547818 100644
-> --- a/include/linux/execmem.h
-> +++ b/include/linux/execmem.h
-> @@ -77,12 +77,14 @@ struct execmem_range {
->
->  /**
->   * struct execmem_info - architecture parameters for code allocations
-> + * @fill_trapping_insns: set memory to contain instructions that will trap
->   * @ranges: array of parameter sets defining architecture specific
->   * parameters for executable memory allocations. The ranges that are not
->   * explicitly initialized by an architecture use parameters defined for
->   * @EXECMEM_DEFAULT.
->   */
->  struct execmem_info {
-> +       void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
->         struct execmem_range    ranges[EXECMEM_TYPE_MAX];
->  };
->
-> diff --git a/mm/execmem.c b/mm/execmem.c
-> index 0f6691e9ffe6..f547c1f3c93d 100644
-> --- a/mm/execmem.c
-> +++ b/mm/execmem.c
-> @@ -7,28 +7,88 @@
->   */
->
->  #include <linux/mm.h>
-> +#include <linux/mutex.h>
->  #include <linux/vmalloc.h>
->  #include <linux/execmem.h>
-> +#include <linux/maple_tree.h>
->  #include <linux/moduleloader.h>
->  #include <linux/text-patching.h>
->
-> +#include <asm/tlbflush.h>
-> +
-> +#include "internal.h"
-> +
->  static struct execmem_info *execmem_info __ro_after_init;
->  static struct execmem_info default_execmem_info __ro_after_init;
->
-> -static void *__execmem_alloc(struct execmem_range *range, size_t size)
-> +#ifdef CONFIG_MMU
-> +struct execmem_cache {
-> +       struct mutex mutex;
-> +       struct maple_tree busy_areas;
-> +       struct maple_tree free_areas;
-> +};
-> +
-> +static struct execmem_cache execmem_cache = {
-> +       .mutex = __MUTEX_INITIALIZER(execmem_cache.mutex),
-> +       .busy_areas = MTREE_INIT_EXT(busy_areas, MT_FLAGS_LOCK_EXTERN,
-> +                                    execmem_cache.mutex),
-> +       .free_areas = MTREE_INIT_EXT(free_areas, MT_FLAGS_LOCK_EXTERN,
-> +                                    execmem_cache.mutex),
-> +};
-> +
-> +static void execmem_cache_clean(struct work_struct *work)
-> +{
-> +       struct maple_tree *free_areas = &execmem_cache.free_areas;
-> +       struct mutex *mutex = &execmem_cache.mutex;
-> +       MA_STATE(mas, free_areas, 0, ULONG_MAX);
-> +       void *area;
-> +
-> +       mutex_lock(mutex);
-> +       mas_for_each(&mas, area, ULONG_MAX) {
-> +               size_t size;
-> +
-> +               if (!xa_is_value(area))
-> +                       continue;
-> +
-> +               size = xa_to_value(area);
-> +
-> +               if (IS_ALIGNED(size, PMD_SIZE) &&
-> +                   IS_ALIGNED(mas.index, PMD_SIZE)) {
-> +                       void *ptr = (void *)mas.index;
-> +
-> +                       mas_erase(&mas);
-> +                       vfree(ptr);
-> +               }
-> +       }
-> +       mutex_unlock(mutex);
-> +}
-> +
-> +static DECLARE_WORK(execmem_cache_clean_work, execmem_cache_clean);
-> +
-> +static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable)
-> +{
-> +       if (execmem_info->fill_trapping_insns)
-> +               execmem_info->fill_trapping_insns(ptr, size, writable);
-> +       else
-> +               memset(ptr, 0, size);
+--c3I7//ljyRVcTArV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Does this really have to be a function pointer with a runtime check?
+On Fri, Sep 13, 2024 at 08:02:02AM +0600, Binbin Zhou wrote:
+> On Thu, Sep 5, 2024 at 8:05=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
 
-This could just be a __weak definition, with the arch providing an
-override if the memset() is not appropriate.
+> > > +/*
+> > > + * es8323 register cache
+> > > + * We can't read the es8323 register space when we
+> > > + * are using 2 wire for device control, so we cache them instead.
+> > > + */
+> > > +static u16 es8323_reg[] =3D {
+> > > +     0x06, 0x1C, 0xC3, 0xFC, /*  0 */
+> > > +     0xC0, 0x00, 0x00, 0x7C, /*  4 */
+
+> > There's a bunch of regmap reimplementation in the driver, the cache and
+> > I/O code all looks totally generic.  Just use regmap.
+
+> Sorry, I don't really understand this point.
+> Do you mean to use regmap_read()/regmap_write() instead of
+> snd_soc_component_read()/snd_soc_component_write()?
+
+> If so, are there any rules for using snd_soc_component_xxx()?
+
+No, it's fine to use the component wrappers if you happen to have a
+component to hand.  What's an issue is things like writing your own
+register cache code (the above bit is part of an open coded cache
+implementation), or I2C read/write functions if there's not something
+unusual with how the device does I/O.
+
+--c3I7//ljyRVcTArV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbka/0ACgkQJNaLcl1U
+h9BwNgf9EnOeRrl9jmhM2rPn+w+HO6+EuVqEi4X2xj7eNVP4f3bmm5rHrYwwa97E
+nEVoHyVqI5DNP6VDk+PZgODFsKW8Lomij/n3CCCgH04XGm5/uWVMNsT3h9Q0n4CX
+MhIw8ClD1QMuVipBaqyMkFS0gxo6K8OOp0a4JudlzIzGYCo3oSVQ1b7Zm3ovizjj
+ib/begFQFAJwkkMKgo02o16aZ19Nt+F4ewVByk5r86qQK+zZxwUoKSQlz6U9MIo1
+53zM59C9wMXkjw3MKlpnNcPtB46FGHWI3Uo/A+Lk1RDoPNYZWOxTYclElvlq1NUG
+ZHf5eh9li5yiQyHN2osCqhkVEAXUwQ==
+=5u7U
+-----END PGP SIGNATURE-----
+
+--c3I7//ljyRVcTArV--
