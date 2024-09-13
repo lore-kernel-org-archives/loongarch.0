@@ -1,201 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B0E15575F
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D1628EE
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726214802; cv=none; b=gACHTFs6M4DDRHS/A3bJoVAoQdiIAfOjqdDeLIepS0TNrdoVqI88T0HJSVcy77wK0yqsXfDDCe+r3DIWfdA+WEeRTNNKlGH4AqBG9bG1SQ/c45o35iDW7Pp0zxthYTqvFTQtXxjthHkWGyiv05giaiW49MBXSlLw3FCK8o267TU=
+	t=1726215962; cv=none; b=jQoID0gTP1m/2TFMxXD7l13ooeLsxtYaiL1l94RUM3hGaLdwyMUMn6Zw6f+cLJOtiIh0yC7iDfJaVPNwWeTDj8UJKhBI38LT07fkhZQNuYDnMu5x5yahtiAcNznSHK9gWKY2yDO0QGcNQrzv2Sa3TH8ZE7yfdbq97QAd2v+sefk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726214802; c=relaxed/simple;
-	bh=MD2l9SNyu3ZBsypMQ+/IoqBO3U05pD4HilLDqHU29Co=;
+	s=arc-20240116; t=1726215962; c=relaxed/simple;
+	bh=7a7WJ2r0b6hRO6CMep05vOcO8PK2KvNTPoIJIsnqAjQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6n7t564UkEhvmLnQu9J7uPLUivDjq9XyJp+H3ziayFLPGxUcPPS0y9I+z7keImWPxDuG5pycAatQaZpkJOpf1NhMY6/MbsJ0Min1LFND4Z3PuIn+ifZz1smfJg/JN4ll2OM3u+LUDPHYqPeY+xsfvuw+mHHkUIPqGypEABCl5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGvGZp99; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=k5OnXzqAOySCC5XZoFw2fI4+lVwsWeHIWV9D+GoV0ptrBbE5z3wlM2KLKjqlRVIxweSq2nB7a/HvzruFtactdMXqUvymIsLHh5t9kox7MSYmB8QqAJiGHcdc0BXJp2tmeOjHNcweaR4uj5Cpq6gcZGInaeh3tjLL3qjrjHcd5FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVn9cBn4; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGvGZp99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C91C0C4CEC0
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726214801;
-	bh=MD2l9SNyu3ZBsypMQ+/IoqBO3U05pD4HilLDqHU29Co=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bGvGZp99SbVtQpeHaM7zdcP57XEMMLY97hYIa0gJd9KxqkGK9e83aRzmj3bH53b/K
-	 do6e8l1Xt26qdOow90ho6hqT8u+fy2dyZ5n0V2o/CFJ/3+Hm1HmnfkVyCdzEEzQuY0
-	 psfVXPxVsSQ/HFg36bB9hnwOBhSLo3EBYsxuVZo6SzwBRlLNdm2lD5D8BXxIbF7htn
-	 sRh7dkoEmXhCYJ66fFRZHeFn+GhBGbafhP5nNumGj7F494p9nXXzPWnPv8B/B5qpxR
-	 xD1HbVOkgUMHflJAL4/SMtwfHuiP1mmD/nmgRxJgOWPy11alGmcQiQ7cebIovrGy5Z
-	 XJUS1ADh8XZjg==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5365d3f9d34so773858e87.3
-        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:06:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXlJAgS8UoJWkG0PrH7XNW54i42HR3B5nWsNnLhxNmhSU28nmQwPjYNGdWdM70mb01jeS+u7OigOxA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx7iRsxEhFN2ALuEzu2tWU42JH2YYIyw0vl4wZbiVzBV7crIdDw
-	MR72fCvZV7zPD/Z9HqDxF0qwhQVD3aV3NWJEcxMrO858i70MxeSfCfAxCZ3ubI4eBNbr0bXA34Q
-	8EEUIjxywFhFNxZCiJCnuwm9SmDY=
-X-Google-Smtp-Source: AGHT+IE+ew2Mze9IQbmxClloe150YR5hrRkN14wPCpHG6zdeQ278SlShgZBB2SsagYMEaI/XbGylMVtilhQJI+JUBlg=
-X-Received: by 2002:a05:6512:10d0:b0:536:5515:e9b5 with SMTP id
- 2adb3069b0e04-5367ff3230fmr1083447e87.52.1726214800188; Fri, 13 Sep 2024
- 01:06:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVn9cBn4"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-374c3400367so563000f8f.2
+        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726215959; x=1726820759; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e1U3m6JcetIPiZdTK0Yjh2Sbb/vfGdhku0JpIn5i9K0=;
+        b=KVn9cBn4CP81apACOr1/1nIsOhbjBtlAHR/sp3r8jzbB3pTcMz+OsY1UxMSeuABVkL
+         IhoP3YVvSYVuktU69b/B/NZHObiaGAh5Fq3vSVGjCY/Ki/u2SgFdL6PgxQ4ZLYEuBcKl
+         ueUOt44eq02g41G9JHI87GCxP41Bt/gQPT39sdINHZKNZ+xwIq2mdfizbPhqma9gC97p
+         LRD6tpyw5euFBMlieIvoT6waQDcJD43A7K8vbaL9DWSonZnXZPc6IdDmAFoB1UL0j7rC
+         nMuPI+hDiwmCneCTqD2cA0NwUvyrkgLt0yspq6KQ7mKaSkY9Xou2jr6Jc/+STPXcFl/V
+         k33g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726215959; x=1726820759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e1U3m6JcetIPiZdTK0Yjh2Sbb/vfGdhku0JpIn5i9K0=;
+        b=E6cHUeYd+wvBSzGZ+YJ1P10pM1DGP3QK6sDE9LV+bHZbYRxK1Bw/CT6395a/OhXYxk
+         O+HvwVe/Vl/OFrZSOsEG7XiJtVk1nMWk6yHK9SqxcBXNe65YS7rIsJcnSfqpf3q0OawQ
+         dQD+8q+bl0o/9Q98CAZA/K6q5f716QgNgJsaR/ch4S9ehqyYmKMmvB35wWaK7HDW+Cda
+         UcbMHm1Qw9RmJUBBI57WCBY4dCChiHAk59ZmS0e+UFhI/BqH8T7m2yiQ0lHztiJK/eg+
+         4XmuWV0QMbo+fhnEjeI9O1ous2a+Bgts25JUUWmrz25Vm3ZHc87QKiHAiXneVJqXT/mW
+         cN5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV18aXtwNqDtwTFM83ymYnhLR2pm8IlLBdtM8rwLlCI3zh2LCeFbfzrGIIO8VWZMZL2rMExRpaX/XU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YySrgyD9ivVjSuxGCCFSOCbqefYzgEN6xVhVDsXFMb/tyykPuuF
+	vSHiI2V2P8L53j1dtNbygWLsQcyG12Q9AHzZnQowft1bsnck6YTYUbPmVo99cA4EId99u3hP08/
+	VjawFuwjXG+du2wol2JKN2pgh630=
+X-Google-Smtp-Source: AGHT+IEwVBE2KEcxHxmWBTHi12u4QfNYS1NaDUvGBrJYbk+9ILHQxGC0dT6D3EuYJE8DAuuQmPEfh3hUAIl1Qx1j1mU=
+X-Received: by 2002:adf:ee47:0:b0:371:8e3c:5c with SMTP id ffacd0b85a97d-378d61d4d8dmr1733060f8f.7.1726215958909;
+ Fri, 13 Sep 2024 01:25:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
- <a50b3865-8a04-4a9a-8d27-b317619a75c0@linux.intel.com> <7340a27e-67c1-c0c3-9304-77710dc44f7f@loongson.cn>
- <670927f1-42d8-40bc-bd79-55e178bd907a@linux.intel.com> <0052b62b-aafe-e2eb-6d66-4ad0178bdae1@loongson.cn>
- <db628499-6faf-43c8-93e5-c24208ca0578@linux.intel.com> <ea5a5c52-69ca-9504-dd80-a90c3000d9c6@loongson.cn>
-In-Reply-To: <ea5a5c52-69ca-9504-dd80-a90c3000d9c6@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 13 Sep 2024 16:06:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4KAnqCFDQ8Lg=9jBdQ3CNOLU8CKe8_7Px4VCmgKG_b5w@mail.gmail.com>
-Message-ID: <CAAhV-H4KAnqCFDQ8Lg=9jBdQ3CNOLU8CKe8_7Px4VCmgKG_b5w@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when
- selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>, Markus Elfring <Markus.Elfring@web.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Alex Belits <abelits@marvell.com>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Nitesh Narayan Lal <nitesh@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+References: <cover.1720516327.git.zhoubinbin@loongson.cn> <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
+ <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
+In-Reply-To: <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 13 Sep 2024 14:25:43 +0600
+Message-ID: <CAMpQs4K+hx36TpYupByGaVcCh=jFsOKvD584QJQs=Z8Qt3p6EQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ping?
+Hi Uwe:
 
-On Wed, Jul 24, 2024 at 3:05=E2=80=AFPM Hongchen Zhang
-<zhanghongchen@loongson.cn> wrote:
+Thanks for your review.
+
+On Tue, Sep 10, 2024 at 1:00=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
 >
-> On 2024/7/24 =E4=B8=8B=E5=8D=882:40, Ethan Zhao wrote:
-> > On 7/24/2024 11:09 AM, Hongchen Zhang wrote:
-> >> Hi Ethan,
-> >>
-> >> On 2024/7/24 =E4=B8=8A=E5=8D=8810:47, Ethan Zhao wrote:
-> >>> On 7/24/2024 9:58 AM, Hongchen Zhang wrote:
-> >>>> Hi Ethan,
-> >>>> On 2024/7/22 PM 3:39, Ethan Zhao wrote:
-> >>>>>
-> >>>>> On 6/13/2024 3:42 PM, Hongchen Zhang wrote:
-> >>>>>> Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argum=
-ent
-> >>>>>> @cpu is a offline cpu would cause system stuck forever.
-> >>>>>>
-> >>>>>> This can be happen if a node is online while all its CPUs are
-> >>>>>> offline (We can use "maxcpus=3D1" without "nr_cpus=3D1" to reprodu=
-ce it).
-> >>>>>>
-> >>>>>> So, in the above case, let pci_call_probe() call local_pci_probe()
-> >>>>>> instead of work_on_cpu() when the best selected cpu is offline.
-> >>>>>>
-> >>>>>> Fixes: 69a18b18699b ("PCI: Restrict probe functions to
-> >>>>>> housekeeping CPUs")
-> >>>>>> Cc: <stable@vger.kernel.org>
-> >>>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >>>>>> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> >>>>>> ---
-> >>>>>> v2 -> v3: Modify commit message according to Markus's suggestion
-> >>>>>> v1 -> v2: Add a method to reproduce the problem
-> >>>>>> ---
-> >>>>>>   drivers/pci/pci-driver.c | 2 +-
-> >>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> >>>>>> index af2996d0d17f..32a99828e6a3 100644
-> >>>>>> --- a/drivers/pci/pci-driver.c
-> >>>>>> +++ b/drivers/pci/pci-driver.c
-> >>>>>> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver
-> >>>>>> *drv, struct pci_dev *dev,
-> >>>>>>           free_cpumask_var(wq_domain_mask);
-> >>>>>>       }
-> >>>>>> -    if (cpu < nr_cpu_ids)
-> >>>>>
-> >>>>> Why not choose the right cpu to callwork_on_cpu() ? the one that is
-> >>>>> online. Thanks, Ethan
-> >>>> Yes, let housekeeping_cpumask() return online cpu is a good idea,
-> >>>> but it may be changed by command line. so the simplest way is to
-> >>>> call local_pci_probe when the best selected cpu is offline.
-> >>>
-> >>> Hmm..... housekeeping_cpumask() should never return offline CPU, so
-> >>> I guess you didn't hit issue with the CPU isolation, but the followin=
-g
-> >>> code seems not good.
-> >> The issue is the dev node is online but the best selected cpu is
-> >> offline, so it seems that there is no better way to directly set the
-> >> cpu to nr_cpu_ids.
-> >
-> > I mean where the bug is ? you should debug more about that.
-> > just add one cpu_online(cpu) check there might suggest there
-> > is bug in the cpu selection stage.
-> >
-> >
-> > if (node < 0 || node >=3D MAX_NUMNODES || !node_online(node) ||
-> >          pci_physfn_is_probed(dev)) {
-> >          cpu =3D nr_cpu_ids; // <----- if you hit here, then
-> > local_pci_probe() should be called.
-> >      } else {
-> >          cpumask_var_t wq_domain_mask;
-> >
-> >          if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
-> >              error =3D -ENOMEM;
-> >              goto out;
-> >          }
-> >          cpumask_and(wq_domain_mask,
-> >                  housekeeping_cpumask(HK_TYPE_WQ),
-> >                  housekeeping_cpumask(HK_TYPE_DOMAIN));
-> >
-> >          cpu =3D cpumask_any_and(cpumask_of_node(node),
-> >                        wq_domain_mask);
-> >          free_cpumask_var(wq_domain_mask);
-> >                  // <----- if you hit here, then work_on_cpu(cpu,
-> > local_pci_probe, &ddi) should be called.
-> Yes, but if the offline cpu is selected, local_pci_probe should be called=
-.
-> >                  // do you mean there one offline cpu is selected ?
-> Yes, the offline cpu is selected.
-> >
-> >      }
-> >
-> >      if (cpu < nr_cpu_ids)
-> >          error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
-> >      else
-> >          error =3D local_pci_probe(&ddi);
-> >
-> >
-> > Thanks,
-> > Ethan
-> >
-> >>>
-> >>> ...
-> >>>
-> >>> if (node < 0 || node >=3D MAX_NUMNODES || !node_online(node) ||
-> >>>          pci_physfn_is_probed(dev)) {
-> >>>          cpu =3D nr_cpu_ids;
-> >>>      } else {
-> >>>
-> >>> ....
-> >>>
-> >>> perhaps you could change the logic there and fix it  ?
-> >>>
-> >>> Thanks
-> >>> Ethan
-> >>>
-> >>>
-> >>>
-> >>>>>
-> >>>>>> +    if ((cpu < nr_cpu_ids) && cpu_online(cpu))
-> >>>>>>           error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
-> >>>>>>       else
-> >>>>>>           error =3D local_pci_probe(&ddi);
-> >>>>
-> >>>>
-> >>
-> >>
+> Hello,
 >
+> On Wed, Jul 10, 2024 at 10:04:07AM +0800, Binbin Zhou wrote:
+> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+> > new file mode 100644
+> > index 000000000000..17ab2a2f48ad
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-loongson.c
+> > @@ -0,0 +1,285 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Loongson PWM driver
+> > + *
+> > + * Author: Juxin Gao <gaojuxin@loongson.cn>
+> > + * Further cleanup and restructuring by:
+> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
+> > + *
+> > + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
+> > + *
+> > + * Limitations:
+> > + * - The buffer register value should be written before the CTRL regis=
+ter.
+> > + * - When disabled the output is driven to 0 independent of the config=
+ured
+> > + *   polarity.
 >
-> --
-> Best Regards
-> Hongchen Zhang
+> An info about possible glitches and if a period is completed on
+> reconfiguration or when the PWM is disabled would be great.
 >
+> Also if there is a publically available manual, please add a link here.
+
+The descriptions related to our PWM controllers are in the CPU
+manuals, e.g. for the Loongson-2K series CPUs. but unfortunately we
+only have the Chinese manuals right now, so I don't have a link to
+them here.
 >
+> > + */
+> > +
+> > [...]
+> > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > +                           const struct pwm_state *state)
+> > +{
+> > +     int ret;
+> > +     u64 period, duty_cycle;
+> > +     bool enabled =3D pwm->state.enabled;
+> > +
+> > +     if (enabled && !state->enabled) {
+> > +             pwm_loongson_disable(chip, pwm);
+> > +             return 0;
+> > +     }
+>
+> You can also shortcut if !pwm->state.enabled. Something like:
+>
+>         if (!state->enabled) {
+>                 if (enabled)
+>                         pwm_loongson_disable(chip, pwm);
+>                 return 0;
+>         }
+>
+> > +     if (state->polarity !=3D pwm->state.polarity) {
+> > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->polar=
+ity);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+>
+> Together with the shortcut above this is buggy. Consider:
+>
+>         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+>                         .period =3D A,
+>                         .duty_cycle =3D B,
+>                         .polarity =3D PWM_POLARITY_NORMAL,
+>                         .enabled =3D true});
+>         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+>                         .period =3D A,
+>                         .duty_cycle =3D B,
+>                         .polarity =3D PWM_POLARITY_INVERSED,
+>                         .enabled =3D false});
+>         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+>                         .period =3D A,
+>                         .duty_cycle =3D B,
+>                         .polarity =3D PWM_POLARITY_INVERSED,
+>                         .enabled =3D true});
+>
+> After the 2nd call you left pwm_loongson_apply() early without writing
+> the inversed polarity to the register space. In the 3rd call you have
+> state->polarity =3D=3D pwm->state.polarity and so skip configuring the
+> polarity again.
+>
+> I suggest to just do pwm_loongson_set_polarity() unconditionally if
+> state->enabled =3D true.
+
+I check code and try to do it like:
+
+        if (!state->enabled) {
+                if (enabled)
+                        pwm_loongson_disable(chip, pwm);
+                return 0;
+        }
+
+        ret =3D pwm_loongson_set_polarity(chip, pwm, state->polarity);
+        if (ret)
+                return ret;
+
+Thanks.
+Binbin
+>
+> > +     period =3D min(state->period, NANOHZ_PER_HZ);
+> > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
+> > +
+> > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (!enabled && state->enabled)
+> > +             ret =3D pwm_loongson_enable(chip, pwm);
+> > +
+> > +     return ret;
+> > +}
+>
+> Best regards
+> Uwe
