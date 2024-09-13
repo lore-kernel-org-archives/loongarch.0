@@ -1,203 +1,251 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D1628EE
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30671BF324
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726215962; cv=none; b=jQoID0gTP1m/2TFMxXD7l13ooeLsxtYaiL1l94RUM3hGaLdwyMUMn6Zw6f+cLJOtiIh0yC7iDfJaVPNwWeTDj8UJKhBI38LT07fkhZQNuYDnMu5x5yahtiAcNznSHK9gWKY2yDO0QGcNQrzv2Sa3TH8ZE7yfdbq97QAd2v+sefk=
+	t=1726217206; cv=none; b=AZetuNPUtN1AzAZgw76Bs7bG57icyWIdnl1qy/4zaryUTfVv7rbFZehT2CwhUfpAj9bnETNPSeD2PUo8gLRPq95rMnB9Y7Cmhp2Wtd74dJzPpwPpOD2YfYEezrEfIT+m8wcHknkynpfkQ+yne4iSE80lVt3oaGIjKIKkXkbbWd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726215962; c=relaxed/simple;
-	bh=7a7WJ2r0b6hRO6CMep05vOcO8PK2KvNTPoIJIsnqAjQ=;
+	s=arc-20240116; t=1726217206; c=relaxed/simple;
+	bh=fHBdOkgM55iaY/S8npbPQsIUufU7yCfyV/mVvkbgAjs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k5OnXzqAOySCC5XZoFw2fI4+lVwsWeHIWV9D+GoV0ptrBbE5z3wlM2KLKjqlRVIxweSq2nB7a/HvzruFtactdMXqUvymIsLHh5t9kox7MSYmB8QqAJiGHcdc0BXJp2tmeOjHNcweaR4uj5Cpq6gcZGInaeh3tjLL3qjrjHcd5FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVn9cBn4; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=dzYpJAdBcKr3pf6pmB9iNujdw217xrDg5mJmrrEx+eDNVHSQlDAwjKHSL2NKomdHc1WqXxD4CvsmznSmhSvbugb+TiG/yekqEgP6sUMOuqzdf5xZNP0Srn6wHV/fAYNve5CM5dpLZAab0qG2BmnpD9SY1j6tiAIjC5tNsd+f86I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibhShwqN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVn9cBn4"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-374c3400367so563000f8f.2
-        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726215959; x=1726820759; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e1U3m6JcetIPiZdTK0Yjh2Sbb/vfGdhku0JpIn5i9K0=;
-        b=KVn9cBn4CP81apACOr1/1nIsOhbjBtlAHR/sp3r8jzbB3pTcMz+OsY1UxMSeuABVkL
-         IhoP3YVvSYVuktU69b/B/NZHObiaGAh5Fq3vSVGjCY/Ki/u2SgFdL6PgxQ4ZLYEuBcKl
-         ueUOt44eq02g41G9JHI87GCxP41Bt/gQPT39sdINHZKNZ+xwIq2mdfizbPhqma9gC97p
-         LRD6tpyw5euFBMlieIvoT6waQDcJD43A7K8vbaL9DWSonZnXZPc6IdDmAFoB1UL0j7rC
-         nMuPI+hDiwmCneCTqD2cA0NwUvyrkgLt0yspq6KQ7mKaSkY9Xou2jr6Jc/+STPXcFl/V
-         k33g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726215959; x=1726820759;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e1U3m6JcetIPiZdTK0Yjh2Sbb/vfGdhku0JpIn5i9K0=;
-        b=E6cHUeYd+wvBSzGZ+YJ1P10pM1DGP3QK6sDE9LV+bHZbYRxK1Bw/CT6395a/OhXYxk
-         O+HvwVe/Vl/OFrZSOsEG7XiJtVk1nMWk6yHK9SqxcBXNe65YS7rIsJcnSfqpf3q0OawQ
-         dQD+8q+bl0o/9Q98CAZA/K6q5f716QgNgJsaR/ch4S9ehqyYmKMmvB35wWaK7HDW+Cda
-         UcbMHm1Qw9RmJUBBI57WCBY4dCChiHAk59ZmS0e+UFhI/BqH8T7m2yiQ0lHztiJK/eg+
-         4XmuWV0QMbo+fhnEjeI9O1ous2a+Bgts25JUUWmrz25Vm3ZHc87QKiHAiXneVJqXT/mW
-         cN5A==
-X-Forwarded-Encrypted: i=1; AJvYcCV18aXtwNqDtwTFM83ymYnhLR2pm8IlLBdtM8rwLlCI3zh2LCeFbfzrGIIO8VWZMZL2rMExRpaX/XU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YySrgyD9ivVjSuxGCCFSOCbqefYzgEN6xVhVDsXFMb/tyykPuuF
-	vSHiI2V2P8L53j1dtNbygWLsQcyG12Q9AHzZnQowft1bsnck6YTYUbPmVo99cA4EId99u3hP08/
-	VjawFuwjXG+du2wol2JKN2pgh630=
-X-Google-Smtp-Source: AGHT+IEwVBE2KEcxHxmWBTHi12u4QfNYS1NaDUvGBrJYbk+9ILHQxGC0dT6D3EuYJE8DAuuQmPEfh3hUAIl1Qx1j1mU=
-X-Received: by 2002:adf:ee47:0:b0:371:8e3c:5c with SMTP id ffacd0b85a97d-378d61d4d8dmr1733060f8f.7.1726215958909;
- Fri, 13 Sep 2024 01:25:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibhShwqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD25C4CEC0
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726217206;
+	bh=fHBdOkgM55iaY/S8npbPQsIUufU7yCfyV/mVvkbgAjs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ibhShwqNJb1ftehLkoydRozvCRJOBLHMb+QiHcrcqUfdGnaPqFIQFivp/mry26DGt
+	 yI/X+Do9dafmONqxJ1Os7EIeRlqGJLP1tr3Q/6lcnzBNlKQo9XBni7rpFAkMxTPfs+
+	 ZBDUC9FF8ZTxySMu+xe2VvW9CjVgR5IObsWoVhnlexmEdmwbXcSQIS6Gvuoq7CJ57z
+	 MugNM506sgPoA76NYsg1CMWWIIlTBQSzFsMtvvs+WmaCX84n5Hp384OdpJo8ZbtAIX
+	 NkhH9b/DvOQm/1mKkGzC91ateqbrGLNU+hK0jIJ2sInVWlBHCeZv3GwvpB//nXbtvg
+	 seAUm4+9VwA6w==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c260b19f71so2142618a12.1
+        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:46:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUxVDZJx1LqobXoEB2aXvB+qUoeRrvUcfqFGSWzz79l8+qANPEeQM9iGtD1QMYm6TpchDlQb8dUSsI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyQKOY9N2+t1KYrsVgue8LianD50KAzVfF6ds2ALy9fLgjHyw/h
+	AZS9eMXhhsR+zFcrhXgMMkht3NWGNu9qK7pgyzK+QQUmZ472Z+PnQZxLMmkdlG44WhKQkSER20y
+	wOz1qQS5tPeqkauPPvLnFI1TadwU=
+X-Google-Smtp-Source: AGHT+IGNp027nTbHlTE2+lVVIpSFUbo7vKhoxeMzMWbqcS/ESl6nYt1xkz8sfPFDEnqnBHbrCVG69gj/E32o+XIqrAc=
+X-Received: by 2002:a05:6402:35d6:b0:5c3:c51b:9bdd with SMTP id
+ 4fb4d7f45d1cf-5c413e1ff03mr3574240a12.18.1726217204696; Fri, 13 Sep 2024
+ 01:46:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1720516327.git.zhoubinbin@loongson.cn> <63a540e93147eff5e7c942133c462530689f707c.1720516327.git.zhoubinbin@loongson.cn>
- <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
-In-Reply-To: <awru62rcjkkb6n4sa2abmilzmu5ddxiv5s52tnkm2jcwi4isnt@djpzrj6asxok>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 13 Sep 2024 14:25:43 +0600
-Message-ID: <CAMpQs4K+hx36TpYupByGaVcCh=jFsOKvD584QJQs=Z8Qt3p6EQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] pwm: Add Loongson PWM controller support
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+References: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com> <20240912-iocsr-v2-1-e88f75b37da4@flygoat.com>
+In-Reply-To: <20240912-iocsr-v2-1-e88f75b37da4@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 13 Sep 2024 16:46:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H74OCxnRQjHXtu-CuVaEb5bsMQ4vR4wCOvztZdV-HWEVg@mail.gmail.com>
+Message-ID: <CAAhV-H74OCxnRQjHXtu-CuVaEb5bsMQ4vR4wCOvztZdV-HWEVg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] LoongArch: Probe more CPU features from CPUCFG
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-mips@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe:
+Hi, Jiaxun,
 
-Thanks for your review.
+On Fri, Sep 13, 2024 at 4:56=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+> Probe ISA level, TLB, IOCSR information from CPUCFG to
+> improve kernel resilience to different core implementations.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/loongarch/include/asm/cpu.h       |  4 +++
+>  arch/loongarch/include/asm/loongarch.h |  3 +-
+>  arch/loongarch/kernel/cpu-probe.c      | 54 ++++++++++++++++++++++++----=
+------
+>  3 files changed, 44 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/as=
+m/cpu.h
+> index 843f9c4ec980..251a15439cff 100644
+> --- a/arch/loongarch/include/asm/cpu.h
+> +++ b/arch/loongarch/include/asm/cpu.h
+> @@ -100,6 +100,8 @@ enum cpu_type_enum {
+>  #define CPU_FEATURE_HYPERVISOR         25      /* CPU has hypervisor (ru=
+nning in VM) */
+>  #define CPU_FEATURE_PTW                        26      /* CPU has hardwa=
+re page table walker */
+>  #define CPU_FEATURE_AVECINT            27      /* CPU has avec interrupt=
+ */
+> +#define CPU_FEATURE_IOCSR              28      /* CPU has IOCSR */
+> +#define CPU_FEATURE_LSPW               29      /* CPU has LSPW */
+I don't see LSPW being used, so just remove it now?
 
-On Tue, Sep 10, 2024 at 1:00=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
 >
-> Hello,
+>  #define LOONGARCH_CPU_CPUCFG           BIT_ULL(CPU_FEATURE_CPUCFG)
+>  #define LOONGARCH_CPU_LAM              BIT_ULL(CPU_FEATURE_LAM)
+> @@ -129,5 +131,7 @@ enum cpu_type_enum {
+>  #define LOONGARCH_CPU_HYPERVISOR       BIT_ULL(CPU_FEATURE_HYPERVISOR)
+>  #define LOONGARCH_CPU_PTW              BIT_ULL(CPU_FEATURE_PTW)
+>  #define LOONGARCH_CPU_AVECINT          BIT_ULL(CPU_FEATURE_AVECINT)
+> +#define LOONGARCH_CPU_IOCSR            BIT_ULL(CPU_FEATURE_IOCSR)
+> +#define LOONGARCH_CPU_LSPW             BIT_ULL(CPU_FEATURE_LSPW)
 >
-> On Wed, Jul 10, 2024 at 10:04:07AM +0800, Binbin Zhou wrote:
-> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> > new file mode 100644
-> > index 000000000000..17ab2a2f48ad
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-loongson.c
-> > @@ -0,0 +1,285 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Loongson PWM driver
-> > + *
-> > + * Author: Juxin Gao <gaojuxin@loongson.cn>
-> > + * Further cleanup and restructuring by:
-> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
-> > + *
-> > + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-> > + *
-> > + * Limitations:
-> > + * - The buffer register value should be written before the CTRL regis=
-ter.
-> > + * - When disabled the output is driven to 0 independent of the config=
-ured
-> > + *   polarity.
+>  #endif /* _ASM_CPU_H */
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 631d249b3ef2..23af28f00c3c 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -60,8 +60,7 @@
+>  #define  CPUCFG0_PRID                  GENMASK(31, 0)
 >
-> An info about possible glitches and if a period is completed on
-> reconfiguration or when the PWM is disabled would be great.
+>  #define LOONGARCH_CPUCFG1              0x1
+> -#define  CPUCFG1_ISGR32                        BIT(0)
+> -#define  CPUCFG1_ISGR64                        BIT(1)
+> +#define  CPUCFG1_ISA                   GENMASK(1, 0)
+>  #define  CPUCFG1_PAGING                        BIT(2)
+>  #define  CPUCFG1_IOCSR                 BIT(3)
+>  #define  CPUCFG1_PABITS                        GENMASK(11, 4)
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
+u-probe.c
+> index 14f0449f5452..5dc8ca3c4387 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -92,11 +92,29 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
+ *c)
+>         unsigned long asid_mask;
 >
-> Also if there is a publically available manual, please add a link here.
-
-The descriptions related to our PWM controllers are in the CPU
-manuals, e.g. for the Loongson-2K series CPUs. but unfortunately we
-only have the Chinese manuals right now, so I don't have a link to
-them here.
+>         c->options =3D LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
+> -                    LOONGARCH_CPU_TLB | LOONGARCH_CPU_VINT | LOONGARCH_C=
+PU_WATCH;
+> +                    LOONGARCH_CPU_VINT | LOONGARCH_CPU_WATCH;
 >
-> > + */
-> > +
-> > [...]
-> > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device=
- *pwm,
-> > +                           const struct pwm_state *state)
-> > +{
-> > +     int ret;
-> > +     u64 period, duty_cycle;
-> > +     bool enabled =3D pwm->state.enabled;
-> > +
-> > +     if (enabled && !state->enabled) {
-> > +             pwm_loongson_disable(chip, pwm);
-> > +             return 0;
-> > +     }
+>         elf_hwcap =3D HWCAP_LOONGARCH_CPUCFG;
 >
-> You can also shortcut if !pwm->state.enabled. Something like:
->
->         if (!state->enabled) {
->                 if (enabled)
->                         pwm_loongson_disable(chip, pwm);
->                 return 0;
+>         config =3D read_cpucfg(LOONGARCH_CPUCFG1);
+> +
+> +       switch (config & CPUCFG1_ISA) {
+> +       case 0:
+> +               set_isa(c, LOONGARCH_CPU_ISA_LA32R);
+> +               break;
+> +       case 1:
+> +               set_isa(c, LOONGARCH_CPU_ISA_LA32S);
+> +               break;
+> +       case 2:
+> +               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+> +               break;
+> +       default:
+> +               pr_warn("Warning: unknown ISA level\n");
+> +       }
+> +       if (config & CPUCFG1_PAGING)
+> +               c->options |=3D LOONGARCH_CPU_TLB;
+> +       if (config & CPUCFG1_IOCSR)
+> +               c->options |=3D LOONGARCH_CPU_IOCSR;
+>         if (config & CPUCFG1_UAL) {
+>                 c->options |=3D LOONGARCH_CPU_UAL;
+>                 elf_hwcap |=3D HWCAP_LOONGARCH_UAL;
+> @@ -157,6 +175,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
+ *c)
+>                 elf_hwcap |=3D HWCAP_LOONGARCH_LBT_MIPS;
 >         }
+>  #endif
+> +       if (config & CPUCFG2_LSPW)
+> +               c->options |=3D LOONGARCH_CPU_LSPW;
 >
-> > +     if (state->polarity !=3D pwm->state.polarity) {
-> > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->polar=
-ity);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
+>         config =3D read_cpucfg(LOONGARCH_CPUCFG6);
+>         if (config & CPUCFG6_PMP)
+> @@ -222,6 +242,7 @@ static inline void cpu_probe_loongson(struct cpuinfo_=
+loongarch *c, unsigned int
+>  {
+>         uint64_t *vendor =3D (void *)(&cpu_full_name[VENDOR_OFFSET]);
+>         uint64_t *cpuname =3D (void *)(&cpu_full_name[CPUNAME_OFFSET]);
+> +       const char *core_name =3D "Unknown";
 >
-> Together with the shortcut above this is buggy. Consider:
->
->         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
->                         .period =3D A,
->                         .duty_cycle =3D B,
->                         .polarity =3D PWM_POLARITY_NORMAL,
->                         .enabled =3D true});
->         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
->                         .period =3D A,
->                         .duty_cycle =3D B,
->                         .polarity =3D PWM_POLARITY_INVERSED,
->                         .enabled =3D false});
->         pwm_apply_might_sleep(mypwm, &(struct pwm_state){
->                         .period =3D A,
->                         .duty_cycle =3D B,
->                         .polarity =3D PWM_POLARITY_INVERSED,
->                         .enabled =3D true});
->
-> After the 2nd call you left pwm_loongson_apply() early without writing
-> the inversed polarity to the register space. In the 3rd call you have
-> state->polarity =3D=3D pwm->state.polarity and so skip configuring the
-> polarity again.
->
-> I suggest to just do pwm_loongson_set_polarity() unconditionally if
-> state->enabled =3D true.
+>         if (!__cpu_full_name[cpu])
+>                 __cpu_full_name[cpu] =3D cpu_full_name;
+> @@ -232,40 +253,43 @@ static inline void cpu_probe_loongson(struct cpuinf=
+o_loongarch *c, unsigned int
+>         switch (c->processor_id & PRID_SERIES_MASK) {
+>         case PRID_SERIES_LA132:
+>                 c->cputype =3D CPU_LOONGSON32;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA32S);
+>                 __cpu_family[cpu] =3D "Loongson-32bit";
+> -               pr_info("32-bit Loongson Processor probed (LA132 Core)\n"=
+);
+> +               core_name =3D "LA132";
+>                 break;
+>         case PRID_SERIES_LA264:
+>                 c->cputype =3D CPU_LOONGSON64;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+>                 __cpu_family[cpu] =3D "Loongson-64bit";
+> -               pr_info("64-bit Loongson Processor probed (LA264 Core)\n"=
+);
+> +               core_name =3D "LA264";
+>                 break;
+>         case PRID_SERIES_LA364:
+>                 c->cputype =3D CPU_LOONGSON64;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+>                 __cpu_family[cpu] =3D "Loongson-64bit";
+> -               pr_info("64-bit Loongson Processor probed (LA364 Core)\n"=
+);
+> +               core_name =3D "LA364";
+>                 break;
+>         case PRID_SERIES_LA464:
+>                 c->cputype =3D CPU_LOONGSON64;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+>                 __cpu_family[cpu] =3D "Loongson-64bit";
+> -               pr_info("64-bit Loongson Processor probed (LA464 Core)\n"=
+);
+> +               core_name =3D "LA464";
+>                 break;
+>         case PRID_SERIES_LA664:
+>                 c->cputype =3D CPU_LOONGSON64;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+>                 __cpu_family[cpu] =3D "Loongson-64bit";
+> -               pr_info("64-bit Loongson Processor probed (LA664 Core)\n"=
+);
+> +               core_name =3D "LA664";
+>                 break;
+>         default: /* Default to 64 bit */
+> -               c->cputype =3D CPU_LOONGSON64;
+> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
+> -               __cpu_family[cpu] =3D "Loongson-64bit";
+> -               pr_info("64-bit Loongson Processor probed (Unknown Core)\=
+n");
+> +               if (c->isa_level & LOONGARCH_CPU_ISA_LA64) {
+> +                       c->cputype =3D CPU_LOONGSON64;
+> +                       __cpu_family[cpu] =3D "Loongson-64bit";
+> +               } else if (c->isa_level & LOONGARCH_CPU_ISA_LA32S) {
+> +                       c->cputype =3D CPU_LOONGSON32;
+> +                       __cpu_family[cpu] =3D "Loongson-32bit";
+> +               } else if (c->isa_level & LOONGARCH_CPU_ISA_LA32R) {
+> +                       c->cputype =3D CPU_LOONGSON32;
+> +                       __cpu_family[cpu] =3D "Loongson-32bit Reduced";
+> +               }
+I prefer to move this part before the switch-case of PRID (and it is
+better to convert to a switch-case too), then the switch-case of PRID
+can be only used for probing core-name.
 
-I check code and try to do it like:
+Huacai
 
-        if (!state->enabled) {
-                if (enabled)
-                        pwm_loongson_disable(chip, pwm);
-                return 0;
-        }
-
-        ret =3D pwm_loongson_set_polarity(chip, pwm, state->polarity);
-        if (ret)
-                return ret;
-
-Thanks.
-Binbin
+>         }
+> +
+> +       pr_info("%s Processor probed (%s Core)\n", __cpu_family[cpu], cor=
+e_name);
+>  }
 >
-> > +     period =3D min(state->period, NANOHZ_PER_HZ);
-> > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
-> > +
-> > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (!enabled && state->enabled)
-> > +             ret =3D pwm_loongson_enable(chip, pwm);
-> > +
-> > +     return ret;
-> > +}
+>  #ifdef CONFIG_64BIT
 >
-> Best regards
-> Uwe
+> --
+> 2.46.0
+>
