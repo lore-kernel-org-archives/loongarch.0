@@ -1,109 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC216F077;
-	Fri, 13 Sep 2024 16:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17521465BB
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 20:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726245892; cv=none; b=V4z576D5mJoznLiMWp4kGgjW6QC3yVnTOiizLw4jFxom6C4WnEhfX9UEyb7fz7GCJtY0qWhPPJhD/2F87w/DR4M40DzlpqdMXmKCdOiA1JtDC5t9+gE/cAk4zCusSAbvJoHyxSTrZJC0pRJasKQ/1SuAOS7X4BIlJKo+wk/gelk=
+	t=1726258545; cv=none; b=kJBmjm64JY5/gzu7inQ4qxnLYMTfXgztk3b6ut0AD12OJkdQHTvHFEofblbfWmDfsn8g6RMIdENT3UiUinPu8B0WU1/6KVxRUECNWU7mEgYtoPgQItwdeCAURa4yMP83MdZidN/qEJ4iEXLu5BcScelsGa0ZetXd5kOtUHoYNiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726245892; c=relaxed/simple;
-	bh=s26bQZzJ3df3LTgBAKbXOf7FXaKcvwCGSPy7vTjdMI0=;
+	s=arc-20240116; t=1726258545; c=relaxed/simple;
+	bh=wfj+NyO2O/69MLo77jEarnaBvuUhTtqSf9r0p1hDvRY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INSjaDpkQjLN2kjXAKKo1/VaRTZpTz8esrYCChO5mGGqXTfdemHjBFB3xiM1YTKan4GU7Nt9Gw09MS70Za+EV8lJ9ElMF30AM4wRrCz7VHcTU9z1Zy4lq+xX2R1VkthSCe4WmkHU6IEZrj7vHE+N5NYvgAsYFL7J0QYo/qAn21E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkuwIQTl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iHVemlTV7VVGWmYlSYOmukYEr0PWiw5t0WlhvYe/znzMXMP662IKxL4Jg+jw3WnFXnQRFgGa49tPNi+xPbqfB235RZlkyI1FYIsMTmQq5cfrd8qenaLsT7cKxxYz+Dl+Ua019xEZ6n92G80Nvm/WM2y63PIunCt5uNGl0TIFPvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=l7XhMZgW; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkuwIQTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E0EC4CEC0;
-	Fri, 13 Sep 2024 16:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726245891;
-	bh=s26bQZzJ3df3LTgBAKbXOf7FXaKcvwCGSPy7vTjdMI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nkuwIQTlu1zMARvz3BfZ2qy0vB7dmtz/4TR0N1+4nvauXlPW4HaLfX381rXRk9Vsf
-	 IqrtwMipvSHRH8DrDkOMnuZ92aFa0lCcYwWxM4GwAG3+wm7MbYSCsHawauOebKU82p
-	 GL77NRpbm0FMnqZ1UQB41zQb7LKNw5NeHYQ6CurtzQ3aoI4cjSYyJmhwIQf5D+US1j
-	 ImWtR7+HjgMOIoXuPv+OtD97KysrJu+DKACM5rMu1T8mPMdunlWCQDsA6Ga5/SWrFR
-	 ZvBEfKgnJGaL/7W9JhUuY34OlAr5nKhy966hY2ckxtvjvG9jmHZLnVTXhLa5UfFBrp
-	 liFTt5kJSINXA==
-Date: Fri, 13 Sep 2024 17:44:46 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Huacai Chen <chenhuacai@kernel.org>, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 02/10] ASoC: codecs: Add support for ES8323
-Message-ID: <eaa0b894-b4f7-4e4e-927d-216ff87e6f14@sirena.org.uk>
-References: <cover.1725518229.git.zhoubinbin@loongson.cn>
- <c44a6525d77941ef235825a58a9ea91f9f7d7042.1725518229.git.zhoubinbin@loongson.cn>
- <5a7357f7-da3b-4532-b055-ad33eb93fe1c@sirena.org.uk>
- <CAMpQs4JRz8x=zfB-DuDSxbcYDR=mtVET_AwawU+J9Vn=sx9LNw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="l7XhMZgW"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20688fbaeafso15483335ad.0
+        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 13:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1726258542; x=1726863342; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=w1FIyAVC28uVndIDT9MHoNGdB/uDnM+DRyhrjJeTBk0=;
+        b=l7XhMZgWn/+CF39SX9r87+zTgFJCC5Jh/F1uisTnAzMBh2YHUo2AdG+BY78Ty2Ez5U
+         4jKA5Sl/5wgakFL8fDLAuDW4QabmS3ZEMHfgZRuc4TzeZACz+YFEHkZ/byWNxXoayk+U
+         VudQySl9TcENv1BvXe1p3zQ7hpmPgRTMPFxvYUTCkDTsUejh2FMBjMZqcADNweBfSj2f
+         1UwuGEatzDq/vORBc6dAI1ISFvSBKJpqXI8LXps2RdyonTr8EeDBmtKa1O4h+MxUkOBG
+         WHqYx9wibv7JdxstGAi0q3/vLdouVnMHwEEpp9LX99lhIGSxEDdvdkiSHKBK/IIfHDiZ
+         htjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726258542; x=1726863342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w1FIyAVC28uVndIDT9MHoNGdB/uDnM+DRyhrjJeTBk0=;
+        b=JWctVBFFlP50Pza1QJ2y4F3ZEjJFNN/sy9ElqKPuYVvVVGfMYtMPM/cppKS4A09/RO
+         935lYn7Q1dwmPknlgO7qV1sqzodEo9+bjqrVKyEoyj6aYRhNIcL+tWOpOZdwn83IS2aw
+         HVaoO4daHbF7TSGF3AsfcNnQIi+igPGZR0n9Zz2aSV6DVogjkg7TiAqJzu+NgMjnpSLq
+         con/mBq28LnQCbLZz5pphsfYPDIbSQtyBt8qgM4U+yymjgO23S7b3dcYsYMIMA6wS8ah
+         c4tC8hzBqLEII3PKBlOf0THtblUKSqHSDgM0BKyyKk4816AO5bWGAAErfEYW1fChM4YZ
+         2QaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQSMVAuwPBy8okiyBZFTqc7kJxkuOK7U4ioB9sqUJChF51JbGIABqQncbTSU6+72TK0HE60d6150E=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwwGn5EJnvwCr1q06W9sIForet5RdRlavoWxuczpOUlAgUmfzku
+	x9T3LpkeXZfOdNo42cIbh8Bbg1zqeaaUBS7l9vInc5bKUYRLc3lARSPWgCvCrjQ=
+X-Google-Smtp-Source: AGHT+IF+aNQZr3gdahRoQqk9W7f54mB5JjUQKc3RHBzDdb3qrFRnfek72JEtbqkZMIR2o3KSJzgpeA==
+X-Received: by 2002:a17:902:dad1:b0:205:8407:6321 with SMTP id d9443c01a7336-20781b4740dmr63844425ad.9.1726258541784;
+        Fri, 13 Sep 2024 13:15:41 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-207945db10csm315195ad.53.2024.09.13.13.15.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2024 13:15:41 -0700 (PDT)
+Date: Fri, 13 Sep 2024 13:15:35 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, guoren <guoren@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	shuah <shuah@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	Michal Hocko <mhocko@suse.com>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>,
+	Chris Torek <chris.torek@gmail.com>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-abi-devel@lists.sourceforge.net
+Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
+ 47 bits
+Message-ID: <ZuSdZ2bi1JvLJVYe@ghost>
+References: <CAJF2gTTVX9CFM3oRZZP3hGExwVwA_=n1Lrq_0DQKWA+-ZbOekg@mail.gmail.com>
+ <f23b18c6-1856-4b59-9ba3-59809b425c81@app.fastmail.com>
+ <Ztrq8PBLJ3QuFJz7@arm.com>
+ <oshwto46wbbgneiayj63umllyozm3c4267rvpszqzaopwnt2l7@6mxl5vydtons>
+ <ZuDoExckq21fePoe@ghost>
+ <ZuHfp0_tAQhaymdy@arm.com>
+ <ZuKHpFB+uWuJe2xm@ghost>
+ <ZuLIPZId9aHcAY2j@arm.com>
+ <ZuNaD+zAXiAulc0n@ghost>
+ <ZuQPF7Gbcqzq0U6N@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c3I7//ljyRVcTArV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpQs4JRz8x=zfB-DuDSxbcYDR=mtVET_AwawU+J9Vn=sx9LNw@mail.gmail.com>
-X-Cookie: In space, no one can hear you fart.
+In-Reply-To: <ZuQPF7Gbcqzq0U6N@arm.com>
 
+On Fri, Sep 13, 2024 at 11:08:23AM +0100, Catalin Marinas wrote:
+> On Thu, Sep 12, 2024 at 02:15:59PM -0700, Charlie Jenkins wrote:
+> > On Thu, Sep 12, 2024 at 11:53:49AM +0100, Catalin Marinas wrote:
+> > > On Wed, Sep 11, 2024 at 11:18:12PM -0700, Charlie Jenkins wrote:
+> > > > Opting-in to the higher address space is reasonable. However, it is not
+> > > > my preference, because the purpose of this flag is to ensure that
+> > > > allocations do not exceed 47-bits, so it is a clearer ABI to have the
+> > > > applications that want this guarantee to be the ones setting the flag,
+> > > > rather than the applications that want the higher bits setting the flag.
+> > > 
+> > > Yes, this would be ideal. Unfortunately those applications don't know
+> > > they need to set a flag in order to work.
+> > 
+> > It's not a regression, the applications never worked (on platforms that
+> > do not have this default). The 47-bit default would allow applications
+> > that didn't work to start working at the cost of a non-ideal ABI. That
+> > doesn't seem like a reasonable tradeoff to me.  If applications want to
+> > run on new hardware that has different requirements, shouldn't they be
+> > required to update rather than expect the kernel will solve their
+> > problems for them?
+> 
+> That's a valid point but it depends on the application and how much you
+> want to spend updating user-space. OpenJDK is fine, if you need a JIT
+> you'll have to add support for that architecture anyway. But others are
+> arch-agnostic, you just recompile to your target. It's not an ABI
+> problem, more of an API one.
 
---c3I7//ljyRVcTArV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The arch-agnosticism is my hope with this personality flag, it can be
+added arch-agnostic userspace code and allow the application to work
+everywhere, but it does have the downside of requiring that change to
+user-space code.
 
-On Fri, Sep 13, 2024 at 08:02:02AM +0600, Binbin Zhou wrote:
-> On Thu, Sep 5, 2024 at 8:05=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
+> 
+> The x86 case (and powerpc/arm64) was different, the 47-bit worked for a
+> long time before expanding it. So it made a lot of sense to keep the
+> same default.
 
-> > > +/*
-> > > + * es8323 register cache
-> > > + * We can't read the es8323 register space when we
-> > > + * are using 2 wire for device control, so we cache them instead.
-> > > + */
-> > > +static u16 es8323_reg[] =3D {
-> > > +     0x06, 0x1C, 0xC3, 0xFC, /*  0 */
-> > > +     0xC0, 0x00, 0x00, 0x7C, /*  4 */
+Yes it is very reasonable that this solution was selected for those
+architectures since the support for higher address spaces evolved in the
+manner that it did!
 
-> > There's a bunch of regmap reimplementation in the driver, the cache and
-> > I/O code all looks totally generic.  Just use regmap.
+- Charlie
 
-> Sorry, I don't really understand this point.
-> Do you mean to use regmap_read()/regmap_write() instead of
-> snd_soc_component_read()/snd_soc_component_write()?
-
-> If so, are there any rules for using snd_soc_component_xxx()?
-
-No, it's fine to use the component wrappers if you happen to have a
-component to hand.  What's an issue is things like writing your own
-register cache code (the above bit is part of an open coded cache
-implementation), or I2C read/write functions if there's not something
-unusual with how the device does I/O.
-
---c3I7//ljyRVcTArV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbka/0ACgkQJNaLcl1U
-h9BwNgf9EnOeRrl9jmhM2rPn+w+HO6+EuVqEi4X2xj7eNVP4f3bmm5rHrYwwa97E
-nEVoHyVqI5DNP6VDk+PZgODFsKW8Lomij/n3CCCgH04XGm5/uWVMNsT3h9Q0n4CX
-MhIw8ClD1QMuVipBaqyMkFS0gxo6K8OOp0a4JudlzIzGYCo3oSVQ1b7Zm3ovizjj
-ib/begFQFAJwkkMKgo02o16aZ19Nt+F4ewVByk5r86qQK+zZxwUoKSQlz6U9MIo1
-53zM59C9wMXkjw3MKlpnNcPtB46FGHWI3Uo/A+Lk1RDoPNYZWOxTYclElvlq1NUG
-ZHf5eh9li5yiQyHN2osCqhkVEAXUwQ==
-=5u7U
------END PGP SIGNATURE-----
-
---c3I7//ljyRVcTArV--
+> 
+> Anyway, the prctl() can go both ways, either expanding or limiting the
+> default address space. So I'd be fine with such interface.
+> 
+> -- 
+> Catalin
