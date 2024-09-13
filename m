@@ -1,251 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30671BF324
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4FA187849
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726217206; cv=none; b=AZetuNPUtN1AzAZgw76Bs7bG57icyWIdnl1qy/4zaryUTfVv7rbFZehT2CwhUfpAj9bnETNPSeD2PUo8gLRPq95rMnB9Y7Cmhp2Wtd74dJzPpwPpOD2YfYEezrEfIT+m8wcHknkynpfkQ+yne4iSE80lVt3oaGIjKIKkXkbbWd0=
+	t=1726217317; cv=none; b=kDv5CvDM/conk08D0X59EcKEG3MESovxziGfrmgxnn+1eUM8mzShgZHOnkK64WgwFt9FfCxsYAjEdRf092sfY6+j5PD30X3OywWXWSDMe63Hn2jOaLrG3Qa72H9s/+xbOkJ5rHZdfLKMzuHPaPKYLhiLj4Vz8pl6xgQdZxzieRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726217206; c=relaxed/simple;
-	bh=fHBdOkgM55iaY/S8npbPQsIUufU7yCfyV/mVvkbgAjs=;
+	s=arc-20240116; t=1726217317; c=relaxed/simple;
+	bh=RyDvqS2FL5Hm0TH9N1rF42ZS5UKm2nTFiqjSkozNOUM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dzYpJAdBcKr3pf6pmB9iNujdw217xrDg5mJmrrEx+eDNVHSQlDAwjKHSL2NKomdHc1WqXxD4CvsmznSmhSvbugb+TiG/yekqEgP6sUMOuqzdf5xZNP0Srn6wHV/fAYNve5CM5dpLZAab0qG2BmnpD9SY1j6tiAIjC5tNsd+f86I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibhShwqN; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=au2rIkw/CC+ncFxhhvqK18LfHrvC4lnnRw1MpqlkBNPrBn48KAC5i/3rQHf9NlTht+MZ+ZsJ7L9PqsJq45d21O+iPDPeU8TJif7W1aJU4s4h+yBRwvHTg2TwsFsy1BhmOIxtY4wIOAuLDVBPNopYjMH4Ia5hDJzwCJGds0D+TyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzYBXrOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibhShwqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD25C4CEC0
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzYBXrOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63C43C4CEC6
+	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 08:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726217206;
-	bh=fHBdOkgM55iaY/S8npbPQsIUufU7yCfyV/mVvkbgAjs=;
+	s=k20201202; t=1726217317;
+	bh=RyDvqS2FL5Hm0TH9N1rF42ZS5UKm2nTFiqjSkozNOUM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ibhShwqNJb1ftehLkoydRozvCRJOBLHMb+QiHcrcqUfdGnaPqFIQFivp/mry26DGt
-	 yI/X+Do9dafmONqxJ1Os7EIeRlqGJLP1tr3Q/6lcnzBNlKQo9XBni7rpFAkMxTPfs+
-	 ZBDUC9FF8ZTxySMu+xe2VvW9CjVgR5IObsWoVhnlexmEdmwbXcSQIS6Gvuoq7CJ57z
-	 MugNM506sgPoA76NYsg1CMWWIIlTBQSzFsMtvvs+WmaCX84n5Hp384OdpJo8ZbtAIX
-	 NkhH9b/DvOQm/1mKkGzC91ateqbrGLNU+hK0jIJ2sInVWlBHCeZv3GwvpB//nXbtvg
-	 seAUm4+9VwA6w==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c260b19f71so2142618a12.1
-        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:46:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUxVDZJx1LqobXoEB2aXvB+qUoeRrvUcfqFGSWzz79l8+qANPEeQM9iGtD1QMYm6TpchDlQb8dUSsI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyQKOY9N2+t1KYrsVgue8LianD50KAzVfF6ds2ALy9fLgjHyw/h
-	AZS9eMXhhsR+zFcrhXgMMkht3NWGNu9qK7pgyzK+QQUmZ472Z+PnQZxLMmkdlG44WhKQkSER20y
-	wOz1qQS5tPeqkauPPvLnFI1TadwU=
-X-Google-Smtp-Source: AGHT+IGNp027nTbHlTE2+lVVIpSFUbo7vKhoxeMzMWbqcS/ESl6nYt1xkz8sfPFDEnqnBHbrCVG69gj/E32o+XIqrAc=
-X-Received: by 2002:a05:6402:35d6:b0:5c3:c51b:9bdd with SMTP id
- 4fb4d7f45d1cf-5c413e1ff03mr3574240a12.18.1726217204696; Fri, 13 Sep 2024
- 01:46:44 -0700 (PDT)
+	b=pzYBXrOPE3tm8OeMXF/owUcFqavpGKMiVHzPx2KzNDY+yxJuSRCGq8xE1NHyyPGqE
+	 gMXCYzEQriv+HbGivtJts+NXBWHFNkDJRkBS6B8qrm2oPXWWsNclnuoSjheshE/dhf
+	 1vS+Kp/xhTNQNSHp8OaPMyRuwggIW8Dyung/rwcwZmopctdcQMKWuvqb0mpiWnj352
+	 DG8XyztitSjIRH6FT8ZegJb49mpqEC05As+naogkq+Mo2kFKOuCPmd7FcxzN16Z78e
+	 p18lupWLV3dHofKysowO/WUAJ4Sl/tcLFT7tSV6hrtfDaTtKzugqHRIdlM2LA9OZh5
+	 wRP7x5ZNbadqA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5becfd14353so765888a12.1
+        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 01:48:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrijewH37jWL89NkVJhJSucHhC5HadVoUSHwk2/cqCCbYwPcZY47OAK1zQURURqy1RociIyTj3TnQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/qOrQ6TVTZ/b9kRPHpNkewtF5/XtGNQq7UFuRyRBUtueP+vkj
+	NQOMsaRmAebctr9a8ZNq4vntggu2yAsv5UmF0sW2eCkv2uVo18uRKg9rSgRA89s9OdqmX566J9b
+	D1L++QqUygnL+20gRalapjG69fXo=
+X-Google-Smtp-Source: AGHT+IGxaU84H2rJpTKm+AdI3/GYF1ZX56p+WMUPH/a1hpMzs1gVjtnJn7uMkTUBM9lkKw3rEE/fFLQKHJ4EoG1Gffw=
+X-Received: by 2002:a05:6402:234f:b0:5c4:136c:ee53 with SMTP id
+ 4fb4d7f45d1cf-5c41d5bc591mr2038704a12.0.1726217315937; Fri, 13 Sep 2024
+ 01:48:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com> <20240912-iocsr-v2-1-e88f75b37da4@flygoat.com>
-In-Reply-To: <20240912-iocsr-v2-1-e88f75b37da4@flygoat.com>
+References: <20240912-iocsr-v2-0-e88f75b37da4@flygoat.com> <20240912-iocsr-v2-2-e88f75b37da4@flygoat.com>
+ <4f631f4a-eeb8-4b57-8424-4f5e970f0b69@app.fastmail.com>
+In-Reply-To: <4f631f4a-eeb8-4b57-8424-4f5e970f0b69@app.fastmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 13 Sep 2024 16:46:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H74OCxnRQjHXtu-CuVaEb5bsMQ4vR4wCOvztZdV-HWEVg@mail.gmail.com>
-Message-ID: <CAAhV-H74OCxnRQjHXtu-CuVaEb5bsMQ4vR4wCOvztZdV-HWEVg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] LoongArch: Probe more CPU features from CPUCFG
+Date: Fri, 13 Sep 2024 16:48:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5JQSg3PTWBJ862-xjX87q5+fx72Dq0Wk+bsJxiC88wEQ@mail.gmail.com>
+Message-ID: <CAAhV-H5JQSg3PTWBJ862-xjX87q5+fx72Dq0Wk+bsJxiC88wEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: cpu-probe: Move IOCSR probing out of cpu_probe_common
 To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+Cc: Xuerui Wang <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>, 
 	Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-mips@vger.kernel.org, kvm@vger.kernel.org
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi, Jiaxun,
 
-On Fri, Sep 13, 2024 at 4:56=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
+On Fri, Sep 13, 2024 at 4:59=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
 m> wrote:
 >
-> Probe ISA level, TLB, IOCSR information from CPUCFG to
-> improve kernel resilience to different core implementations.
 >
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/loongarch/include/asm/cpu.h       |  4 +++
->  arch/loongarch/include/asm/loongarch.h |  3 +-
->  arch/loongarch/kernel/cpu-probe.c      | 54 ++++++++++++++++++++++++----=
-------
->  3 files changed, 44 insertions(+), 17 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/as=
-m/cpu.h
-> index 843f9c4ec980..251a15439cff 100644
-> --- a/arch/loongarch/include/asm/cpu.h
-> +++ b/arch/loongarch/include/asm/cpu.h
-> @@ -100,6 +100,8 @@ enum cpu_type_enum {
->  #define CPU_FEATURE_HYPERVISOR         25      /* CPU has hypervisor (ru=
-nning in VM) */
->  #define CPU_FEATURE_PTW                        26      /* CPU has hardwa=
-re page table walker */
->  #define CPU_FEATURE_AVECINT            27      /* CPU has avec interrupt=
- */
-> +#define CPU_FEATURE_IOCSR              28      /* CPU has IOCSR */
-> +#define CPU_FEATURE_LSPW               29      /* CPU has LSPW */
-I don't see LSPW being used, so just remove it now?
-
+> =E5=9C=A82024=E5=B9=B49=E6=9C=8812=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=
+=E5=8D=889:55=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
+> [...]
+> > +
+> > +     if (c->options & LOONGARCH_CPU_IOCSR)
+> > +             return;
+> Oops, typo here, there should be a not :-(
 >
->  #define LOONGARCH_CPU_CPUCFG           BIT_ULL(CPU_FEATURE_CPUCFG)
->  #define LOONGARCH_CPU_LAM              BIT_ULL(CPU_FEATURE_LAM)
-> @@ -129,5 +131,7 @@ enum cpu_type_enum {
->  #define LOONGARCH_CPU_HYPERVISOR       BIT_ULL(CPU_FEATURE_HYPERVISOR)
->  #define LOONGARCH_CPU_PTW              BIT_ULL(CPU_FEATURE_PTW)
->  #define LOONGARCH_CPU_AVECINT          BIT_ULL(CPU_FEATURE_AVECINT)
-> +#define LOONGARCH_CPU_IOCSR            BIT_ULL(CPU_FEATURE_IOCSR)
-> +#define LOONGARCH_CPU_LSPW             BIT_ULL(CPU_FEATURE_LSPW)
->
->  #endif /* _ASM_CPU_H */
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
-ude/asm/loongarch.h
-> index 631d249b3ef2..23af28f00c3c 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -60,8 +60,7 @@
->  #define  CPUCFG0_PRID                  GENMASK(31, 0)
->
->  #define LOONGARCH_CPUCFG1              0x1
-> -#define  CPUCFG1_ISGR32                        BIT(0)
-> -#define  CPUCFG1_ISGR64                        BIT(1)
-> +#define  CPUCFG1_ISA                   GENMASK(1, 0)
->  #define  CPUCFG1_PAGING                        BIT(2)
->  #define  CPUCFG1_IOCSR                 BIT(3)
->  #define  CPUCFG1_PABITS                        GENMASK(11, 4)
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
-u-probe.c
-> index 14f0449f5452..5dc8ca3c4387 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -92,11 +92,29 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
- *c)
->         unsigned long asid_mask;
->
->         c->options =3D LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
-> -                    LOONGARCH_CPU_TLB | LOONGARCH_CPU_VINT | LOONGARCH_C=
-PU_WATCH;
-> +                    LOONGARCH_CPU_VINT | LOONGARCH_CPU_WATCH;
->
->         elf_hwcap =3D HWCAP_LOONGARCH_CPUCFG;
->
->         config =3D read_cpucfg(LOONGARCH_CPUCFG1);
-> +
-> +       switch (config & CPUCFG1_ISA) {
-> +       case 0:
-> +               set_isa(c, LOONGARCH_CPU_ISA_LA32R);
-> +               break;
-> +       case 1:
-> +               set_isa(c, LOONGARCH_CPU_ISA_LA32S);
-> +               break;
-> +       case 2:
-> +               set_isa(c, LOONGARCH_CPU_ISA_LA64);
-> +               break;
-> +       default:
-> +               pr_warn("Warning: unknown ISA level\n");
-> +       }
-> +       if (config & CPUCFG1_PAGING)
-> +               c->options |=3D LOONGARCH_CPU_TLB;
-> +       if (config & CPUCFG1_IOCSR)
-> +               c->options |=3D LOONGARCH_CPU_IOCSR;
->         if (config & CPUCFG1_UAL) {
->                 c->options |=3D LOONGARCH_CPU_UAL;
->                 elf_hwcap |=3D HWCAP_LOONGARCH_UAL;
-> @@ -157,6 +175,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
- *c)
->                 elf_hwcap |=3D HWCAP_LOONGARCH_LBT_MIPS;
->         }
->  #endif
-> +       if (config & CPUCFG2_LSPW)
-> +               c->options |=3D LOONGARCH_CPU_LSPW;
->
->         config =3D read_cpucfg(LOONGARCH_CPUCFG6);
->         if (config & CPUCFG6_PMP)
-> @@ -222,6 +242,7 @@ static inline void cpu_probe_loongson(struct cpuinfo_=
-loongarch *c, unsigned int
->  {
->         uint64_t *vendor =3D (void *)(&cpu_full_name[VENDOR_OFFSET]);
->         uint64_t *cpuname =3D (void *)(&cpu_full_name[CPUNAME_OFFSET]);
-> +       const char *core_name =3D "Unknown";
->
->         if (!__cpu_full_name[cpu])
->                 __cpu_full_name[cpu] =3D cpu_full_name;
-> @@ -232,40 +253,43 @@ static inline void cpu_probe_loongson(struct cpuinf=
-o_loongarch *c, unsigned int
->         switch (c->processor_id & PRID_SERIES_MASK) {
->         case PRID_SERIES_LA132:
->                 c->cputype =3D CPU_LOONGSON32;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA32S);
->                 __cpu_family[cpu] =3D "Loongson-32bit";
-> -               pr_info("32-bit Loongson Processor probed (LA132 Core)\n"=
-);
-> +               core_name =3D "LA132";
->                 break;
->         case PRID_SERIES_LA264:
->                 c->cputype =3D CPU_LOONGSON64;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
->                 __cpu_family[cpu] =3D "Loongson-64bit";
-> -               pr_info("64-bit Loongson Processor probed (LA264 Core)\n"=
-);
-> +               core_name =3D "LA264";
->                 break;
->         case PRID_SERIES_LA364:
->                 c->cputype =3D CPU_LOONGSON64;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
->                 __cpu_family[cpu] =3D "Loongson-64bit";
-> -               pr_info("64-bit Loongson Processor probed (LA364 Core)\n"=
-);
-> +               core_name =3D "LA364";
->                 break;
->         case PRID_SERIES_LA464:
->                 c->cputype =3D CPU_LOONGSON64;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
->                 __cpu_family[cpu] =3D "Loongson-64bit";
-> -               pr_info("64-bit Loongson Processor probed (LA464 Core)\n"=
-);
-> +               core_name =3D "LA464";
->                 break;
->         case PRID_SERIES_LA664:
->                 c->cputype =3D CPU_LOONGSON64;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
->                 __cpu_family[cpu] =3D "Loongson-64bit";
-> -               pr_info("64-bit Loongson Processor probed (LA664 Core)\n"=
-);
-> +               core_name =3D "LA664";
->                 break;
->         default: /* Default to 64 bit */
-> -               c->cputype =3D CPU_LOONGSON64;
-> -               set_isa(c, LOONGARCH_CPU_ISA_LA64);
-> -               __cpu_family[cpu] =3D "Loongson-64bit";
-> -               pr_info("64-bit Loongson Processor probed (Unknown Core)\=
-n");
-> +               if (c->isa_level & LOONGARCH_CPU_ISA_LA64) {
-> +                       c->cputype =3D CPU_LOONGSON64;
-> +                       __cpu_family[cpu] =3D "Loongson-64bit";
-> +               } else if (c->isa_level & LOONGARCH_CPU_ISA_LA32S) {
-> +                       c->cputype =3D CPU_LOONGSON32;
-> +                       __cpu_family[cpu] =3D "Loongson-32bit";
-> +               } else if (c->isa_level & LOONGARCH_CPU_ISA_LA32R) {
-> +                       c->cputype =3D CPU_LOONGSON32;
-> +                       __cpu_family[cpu] =3D "Loongson-32bit Reduced";
-> +               }
-I prefer to move this part before the switch-case of PRID (and it is
-better to convert to a switch-case too), then the switch-case of PRID
-can be only used for probing core-name.
+> Huacai, if the series is ok for you please fix this when applying
+> the patch. I only tested against NEMU so didn't catch this :-(
+Since the first patch can also be improved, you can improve this one
+by yourself. And from my point of view the two patches can be combined
+to one.
 
 Huacai
 
->         }
-> +
-> +       pr_info("%s Processor probed (%s Core)\n", __cpu_family[cpu], cor=
-e_name);
->  }
 >
->  #ifdef CONFIG_64BIT
+> Thanks
+> - Jiaxun
+>
+> > +
+> > +     *vendor =3D iocsr_read64(LOONGARCH_IOCSR_VENDOR);
+> > +     *cpuname =3D iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
+> > +
+> > +     if (!__cpu_full_name[cpu])
+> > +             __cpu_full_name[cpu] =3D cpu_full_name;
+> > +
+> > +     config =3D iocsr_read32(LOONGARCH_IOCSR_FEATURES);
+> > +     if (config & IOCSRF_CSRIPI)
+> > +             c->options |=3D LOONGARCH_CPU_CSRIPI;
+> > +     if (config & IOCSRF_EXTIOI)
+> > +             c->options |=3D LOONGARCH_CPU_EXTIOI;
+> > +     if (config & IOCSRF_FREQSCALE)
+> > +             c->options |=3D LOONGARCH_CPU_SCALEFREQ;
+> > +     if (config & IOCSRF_FLATMODE)
+> > +             c->options |=3D LOONGARCH_CPU_FLATMODE;
+> > +     if (config & IOCSRF_EIODECODE)
+> > +             c->options |=3D LOONGARCH_CPU_EIODECODE;
+> > +     if (config & IOCSRF_AVEC)
+> > +             c->options |=3D LOONGARCH_CPU_AVECINT;
+> > +     if (config & IOCSRF_VM)
+> > +             c->options |=3D LOONGARCH_CPU_HYPERVISOR;
+> >  }
+> >
+> >  #ifdef CONFIG_64BIT
+> >
+> > --
+> > 2.46.0
 >
 > --
-> 2.46.0
->
+> - Jiaxun
