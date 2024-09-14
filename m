@@ -1,263 +1,245 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DE714883C
-	for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 21:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8AD89473
+	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 02:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726261455; cv=none; b=VxM8RLvxArC/e03tX1wSzl/fSveCuEGuZZI5fN/PSfaXs7DdgUbjYPgXU2fKPViykVkFfWQR3iZbnQpdBH/Qt2Yd4kS7lr2rvLmcXfiioSdCB4raMqeDdD31c7gTNwwbNTx7jAMlndTzqCRajd+WYIUghnrsHhE/pkFQ2nhxLSc=
+	t=1726280335; cv=none; b=N7jBFW3tyYeBfVEoHYsOFBVN/aqmyEIu6AJ0bmYPZZzNiLos75CwY8j+Wn/oxo1XsqtKjEZbwJLZuw0eygNGTWw2s4nfk9/aHSBFuGRxsZgDco0G0vCWQ9phpaG5bywuPYV1Lt17ZOP5k9J7miibsHRd9Ql6dvrWgCRG0rJ/Rqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726261455; c=relaxed/simple;
-	bh=UTbmMbiOdPh2p8MAam907C+8IKVqjc0gQ8Sb2U1VqF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mn2n54pDHm9ObPSS8yE5RYCRhYhoCOe1DLBMSo9/jn+BcJVoXfXrrLPas5TD/SgQZEl7UVedKEwZx5at4y4nqeS6BxDhnRd+adPgdYgZK/xfIAgjPjW6LN2kyqpA33SzmMZ7OsZJsdeYJNKUcoryh9tu9T9OQ5swKhzi/aK8e78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=LOA1jyTV; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="LOA1jyTV"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-206aee40676so12118295ad.0
-        for <loongarch@lists.linux.dev>; Fri, 13 Sep 2024 14:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1726261452; x=1726866252; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pGN098PfFZ1p39RZKtno/bb1iGOxyKkQDSILC8HyAbs=;
-        b=LOA1jyTVUFoVfA/rR7Va23LX8KDeWws6XlC3H4BtmKzGn+4LCAs3Zi0LYFVNqiFlie
-         zVdYGBq1YbUj/Eu61CWNiY16DrC5WQFftJOu2EcFQSVcwG9j4amtN3USPq+Xp8N8duQu
-         zHob3iCNdlK7OST3ZabMRThAR6bzDgGNaIEdfqTv+s0FCSjGxNPNLvf21Ph3Z96cB4y9
-         QI3h3DigekxtjVIvj8ABSFMQIF8e3z/Oyp572Qp6nlGdJg/XDxWbn6mY7R1ZFlE2wTkG
-         Zsu3L8u1z3E9W/i0wiPt60tbwgRuAooKZkaCstv3ILpOC05uZ+Uf7gT03HF5Pwtnv7zH
-         6Qbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726261452; x=1726866252;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pGN098PfFZ1p39RZKtno/bb1iGOxyKkQDSILC8HyAbs=;
-        b=ieQT8RTq6YAAg0rAbMN+kF+M5LM92Cmb+8ZKQbN1CH9QPavS2Qyur7fMakLjSp7ENf
-         aGB8a7nLshHUVmH4xQPLUokAKC0kmsljKCvX5TLo8X+BRbpBthxuasLlXrtJXRzeI40L
-         ZUEe1bHZw7G/3bmvfSpimvUkIceuGy9p2M8nX23ufzli25NuvIz6dC3y5U7hVvpMPSs7
-         h7Y0tFQSg8epI/11w8YP+r6KPmblqo2RZrCRPp3TLcdEZHgTGXoOYtTn03upO/UwScNy
-         K+P0GCsWMUY58GeM3sK+mDCbxQJQ3sIO/tKrWJlmzjH6khnt0jVvYo/yXlEIkVhdBVvi
-         W5Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXw2nC3NCN2TDd3MTNIisoc3bYywHJlANaJRtO35jQ1tQTd8q0G6VrZtWpPhdOYBI8IxSD0CtStFSs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1OrO8XPbSIYVSZTnwxm5gnF8Wtswc1JZm/HTnovG3YfImsZR8
-	wCvyzua6JpRH6jlodWxx3w2FJRjXHCJGc1lSRnowpKA0rFWY7no+OjbibaG8Yqc=
-X-Google-Smtp-Source: AGHT+IHQy68+7/4em5wfAX0phJQ7a7VsNC8xlp5lvUp2N1zpKPOlth6aUECbhTSHxYBYBN7icOc/wA==
-X-Received: by 2002:a17:902:f54f:b0:207:457f:b8a6 with SMTP id d9443c01a7336-2078262ccc1mr54571405ad.12.1726261452005;
-        Fri, 13 Sep 2024 14:04:12 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-207945da8c9sm608475ad.17.2024.09.13.14.04.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 14:04:11 -0700 (PDT)
-Date: Fri, 13 Sep 2024 14:04:06 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, guoren <guoren@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, shuah <shuah@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Michal Hocko <mhocko@suse.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>,
-	Chris Torek <chris.torek@gmail.com>,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-abi-devel@lists.sourceforge.net
-Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
- 47 bits
-Message-ID: <ZuSoxh5U3Kj1XgGq@ghost>
-References: <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
- <9fc4746b-8e9d-4a75-b966-e0906187e6b7@app.fastmail.com>
- <CAJF2gTTVX9CFM3oRZZP3hGExwVwA_=n1Lrq_0DQKWA+-ZbOekg@mail.gmail.com>
- <f23b18c6-1856-4b59-9ba3-59809b425c81@app.fastmail.com>
- <Ztrq8PBLJ3QuFJz7@arm.com>
- <oshwto46wbbgneiayj63umllyozm3c4267rvpszqzaopwnt2l7@6mxl5vydtons>
- <ZuDoExckq21fePoe@ghost>
- <ZuHfp0_tAQhaymdy@arm.com>
- <ZuKHpFB+uWuJe2xm@ghost>
- <d873a994-4efa-4d3a-bdae-5d9a3eff29f2@lucifer.local>
+	s=arc-20240116; t=1726280335; c=relaxed/simple;
+	bh=ZTEcpdbnmUfr1X64bF3TIuqOhdRmJceHg9z2xV2RnJU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mcnVvLjISWwa+NqnAqwXqZr8jWyAh65m/8j3Y/pyqVramlOyDqXw0M3W3gCxgbfvCRtvi8Ujg+SSTIV4PH71BfJ3qALkXuYeqfqCeQX85SL1f58NPCwOCLj2fLLj0S19f8Z174t7j9gx8S5YSKM2zpIXwwTc1M1uzRCGz2CqxJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxaemJ8uRm7JwHAA--.16568S3;
+	Sat, 14 Sep 2024 10:18:49 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front2 (Coremail) with SMTP id qciowMBxOsaI8uRmhrYHAA--.34198S2;
+	Sat, 14 Sep 2024 10:18:48 +0800 (CST)
+Subject: Re: [PATCH v4 2/2] Loongarch: EDAC driver for loongson memory
+ controller
+To: Borislav Petkov <bp@alien8.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@xen0n.name,
+ tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+ rric@kernel.org, loongarch@lists.linux.dev
+References: <20240909032124.18819-1-zhaoqunqin@loongson.cn>
+ <20240909032124.18819-3-zhaoqunqin@loongson.cn>
+ <20240913101137.GHZuQP2WzlkvJ5gG2F@fat_crate.local>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <2ca97c7c-2fd4-3ce5-9e8c-426c418ebcf5@loongson.cn>
+Date: Sat, 14 Sep 2024 10:18:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20240913101137.GHZuQP2WzlkvJ5gG2F@fat_crate.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d873a994-4efa-4d3a-bdae-5d9a3eff29f2@lucifer.local>
+Content-Language: en-US
+X-CM-TRANSID:qciowMBxOsaI8uRmhrYHAA--.34198S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF15GrW3ZrWxJryxtryruFX_yoWrWry8pF
+	15C3WqyFs8tryUK34vvwn8ZF9avrZ3tF12yrW3t343Aa4qywn3ur9agF129r1kAr1jkr12
+	va4UKrZ3uFn0kFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8VwZ7UUUUU==
 
-On Fri, Sep 13, 2024 at 08:41:34AM +0100, Lorenzo Stoakes wrote:
-> On Wed, Sep 11, 2024 at 11:18:12PM GMT, Charlie Jenkins wrote:
-> > On Wed, Sep 11, 2024 at 07:21:27PM +0100, Catalin Marinas wrote:
-> > > On Tue, Sep 10, 2024 at 05:45:07PM -0700, Charlie Jenkins wrote:
-> > > > On Tue, Sep 10, 2024 at 03:08:14PM -0400, Liam R. Howlett wrote:
-> > > > > * Catalin Marinas <catalin.marinas@arm.com> [240906 07:44]:
-> > > > > > On Fri, Sep 06, 2024 at 09:55:42AM +0000, Arnd Bergmann wrote:
-> > > > > > > On Fri, Sep 6, 2024, at 09:14, Guo Ren wrote:
-> > > > > > > > On Fri, Sep 6, 2024 at 3:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > >> It's also unclear to me how we want this flag to interact with
-> > > > > > > >> the existing logic in arch_get_mmap_end(), which attempts to
-> > > > > > > >> limit the default mapping to a 47-bit address space already.
-> > > > > > > >
-> > > > > > > > To optimize RISC-V progress, I recommend:
-> > > > > > > >
-> > > > > > > > Step 1: Approve the patch.
-> > > > > > > > Step 2: Update Go and OpenJDK's RISC-V backend to utilize it.
-> > > > > > > > Step 3: Wait approximately several iterations for Go & OpenJDK
-> > > > > > > > Step 4: Remove the 47-bit constraint in arch_get_mmap_end()
-> > >
-> > > Point 4 is an ABI change. What guarantees that there isn't still
-> > > software out there that relies on the old behaviour?
-> >
-> > Yeah I don't think it would be desirable to remove the 47 bit
-> > constraint in architectures that already have it.
-> >
-> > >
-> > > > > > > I really want to first see a plausible explanation about why
-> > > > > > > RISC-V can't just implement this using a 47-bit DEFAULT_MAP_WINDOW
-> > > > > > > like all the other major architectures (x86, arm64, powerpc64),
-> > > > > >
-> > > > > > FWIW arm64 actually limits DEFAULT_MAP_WINDOW to 48-bit in the default
-> > > > > > configuration. We end up with a 47-bit with 16K pages but for a
-> > > > > > different reason that has to do with LPA2 support (I doubt we need this
-> > > > > > for the user mapping but we need to untangle some of the macros there;
-> > > > > > that's for a separate discussion).
-> > > > > >
-> > > > > > That said, we haven't encountered any user space problems with a 48-bit
-> > > > > > DEFAULT_MAP_WINDOW. So I also think RISC-V should follow a similar
-> > > > > > approach (47 or 48 bit default limit). Better to have some ABI
-> > > > > > consistency between architectures. One can still ask for addresses above
-> > > > > > this default limit via mmap().
-> > > > >
-> > > > > I think that is best as well.
-> > > > >
-> > > > > Can we please just do what x86 and arm64 does?
-> > > >
-> > > > I responded to Arnd in the other thread, but I am still not convinced
-> > > > that the solution that x86 and arm64 have selected is the best solution.
-> > > > The solution of defaulting to 47 bits does allow applications the
-> > > > ability to get addresses that are below 47 bits. However, due to
-> > > > differences across architectures it doesn't seem possible to have all
-> > > > architectures default to the same value. Additionally, this flag will be
-> > > > able to help users avoid potential bugs where a hint address is passed
-> > > > that causes upper bits of a VA to be used.
-> > >
-> > > The reason we added this limit on arm64 is that we noticed programs
-> > > using the top 8 bits of a 64-bit pointer for additional information.
-> > > IIRC, it wasn't even openJDK but some JavaScript JIT. We could have
-> > > taught those programs of a new flag but since we couldn't tell how many
-> > > are out there, it was the safest to default to a smaller limit and opt
-> > > in to the higher one. Such opt-in is via mmap() but if you prefer a
-> > > prctl() flag, that's fine by me as well (though I think this should be
-> > > opt-in to higher addresses rather than opt-out of the higher addresses).
-> >
-> > The mmap() flag was used in previous versions but was decided against
-> > because this feature is more useful if it is process-wide. A
-> > personality() flag was chosen instead of a prctl() flag because there
-> > existed other flags in personality() that were similar. I am tempted to
-> > use prctl() however because then we could have an additional arg to
-> > select the exact number of bits that should be reserved (rather than
-> > being fixed at 47 bits).
-> 
-> I am very much not in favour of a prctl(), it would require us to add state
-> limiting the address space and the timing of it becomes critical. Then we
-> have the same issue we do with the other proposals as to - what happens if
-> this is too low?
-> 
-> What is 'too low' varies by architecture, and for 32-bit architectures
-> could get quite... problematic.
-> 
-> And again, wha is the RoI here - we introducing maintenance burden and edge
-> cases vs. the x86 solution in order to... accommodate things that need more
-> than 128 TiB of address space? A problem that does not appear to exist in
-> reality?
-> 
-> I suggested the personality approach as the least impactful compromise way
-> of this series working, but I think after what Arnd has said (and please
-> forgive me if I've missed further discussion have been dipping in and out
-> of this!) - adapting risc v to the approach we take elsewhere seems the
-> most sensible solution to me.
+
+在 2024/9/13 下午6:11, Borislav Petkov 写道:
+> On Mon, Sep 09, 2024 at 11:21:24AM +0800, Zhao Qunqin wrote:
+>> Subject: Re: [PATCH v4 2/2] Loongarch: EDAC driver for loongson memory controller
+> 			EDAC/loongson: Add EDAC driver ...
 >
-> This remains something we can revisit in future if this turns out to be
-> egregious.
+>> Reports single bit errors (CE) only.
+>>
+>> Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+>> ---
+> ...
+>
+>> diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+>> new file mode 100644
+>> index 000000000..b89d6e0e7
+>> --- /dev/null
+>> +++ b/drivers/edac/loongson_edac.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
+>> + */
+>> +
+>> +#include <linux/edac.h>
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "edac_module.h"
+>> +
+>> +enum ecc_index {
+>> +	ECC_SET = 0,
+>> +	ECC_RESERVED,
+>> +	ECC_COUNT,
+>> +	ECC_CS_COUNT,
+>> +	ECC_CODE,
+>> +	ECC_ADDR,
+>> +	ECC_DATA0,
+>> +	ECC_DATA1,
+>> +	ECC_DATA2,
+>> +	ECC_DATA3,
+>> +};
+>> +
+>> +struct loongson_edac_pvt {
+>> +	u64 *ecc_base;
+>> +	int last_ce_count;
+>> +};
+>> +
+>> +static void loongson_update_ce_count(struct mem_ctl_info *mci,
+> Drop the loongson_ prefix from all static functions.
+>
+> Also, align function arguments on the opening brace.
+>
+>> +					int chan,
+>> +					int new)
+>> +{
+>> +	int add;
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+> The EDAC tree preferred ordering of variable declarations at the
+> beginning of a function is reverse fir tree order::
+>
+> 	struct long_struct_name *descriptive_name;
+> 	unsigned long foo, bar;
+> 	unsigned int tmp;
+> 	int ret;
+>
+> The above is faster to parse than the reverse ordering::
+>
+> 	int ret;
+> 	unsigned int tmp;
+> 	unsigned long foo, bar;
+> 	struct long_struct_name *descriptive_name;
+>
+> And even more so than random ordering::
+>
+> 	unsigned long foo, bar;
+> 	int ret;
+> 	struct long_struct_name *descriptive_name;
+> 	unsigned int tmp;
+>
+>> +
+>> +	add = new - pvt->last_ce_count;
+>> +
+>> +	/* Store the new value */
+> Drop all those obvious comments.
+>
+>> +	pvt->last_ce_count = new;
+>> +
+>> +	/* device resume or any other exceptions*/
+> No clue what that means.
+
+The CE value of the memory controller should only increase,
+
+but it will return to its initial value when resuming from S3 or S4 
+sleep state,
+
+then the new ce count may be smaller than the last ce count.
+
+>
+> Also,  the check goes right under the assignment.
+>
+>> +	if (add < 0)
+>> +		return;
+>> +
+>> +	/*updated the edac core */
+> Useless comment.
+>
+>> +	if (add != 0) {
+> 	if (!add)
+> 		return;
+>
+> and now you can save yourself an indentation level:
+>
+> 	edac_mc_...(
+>
+>> +		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+>> +					0, 0, 0,
+>> +					chan, 0, -1, "error", "");
+>> +		edac_mc_printk(mci, KERN_INFO, "add: %d", add);
+>> +	}
+>> +}
+>> +
+>> +static int loongson_read_ecc(struct mem_ctl_info *mci)
+>> +{
+>> +	u64 ecc;
+>> +	int cs = 0;
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +
+>> +	if (!pvt->ecc_base)
+>> +		return pvt->last_ce_count;
+>> +
+>> +	ecc = pvt->ecc_base[ECC_CS_COUNT];
+>> +	cs += ecc & 0xff;		// cs0
+>> +	cs += (ecc >> 8) & 0xff;	// cs1
+>> +	cs += (ecc >> 16) & 0xff;	// cs2
+>> +	cs += (ecc >> 24) & 0xff;	// cs3
+> No side comments pls - put them over the line.
+>
+>> +
+>> +	return cs;
+>> +}
+>> +
+>> +static void loongson_edac_check(struct mem_ctl_info *mci)
+>> +{
+>> +	loongson_update_ce_count(mci, 0, loongson_read_ecc(mci));
+> Drop this silly wrapper.
+>
+>> +}
+>> +
+>> +static int get_dimm_config(struct mem_ctl_info *mci)
+>> +{
+>> +	u32 size, npages;
+>> +	struct dimm_info *dimm;
+>> +
+>> +	/* size not used */
+>> +	size = -1;
+>> +	npages = MiB_TO_PAGES(size);
+>> +
+>> +	dimm = edac_get_dimm(mci, 0, 0, 0);
+>> +	dimm->nr_pages = npages;
+>> +	snprintf(dimm->label, sizeof(dimm->label),
+>> +			"MC#%uChannel#%u_DIMM#%u",
+>> +			mci->mc_idx, 0, 0);
+> Align arguments on the opening brace.
+>
+>> +	dimm->grain = 8;
+>> +
+>> +	return 0;
+>> +}
+
+Will address above comments. Thanks for taking the time to review.
+
+Best regards,
+
+Zhao Qunqin.
+
+>
 >
 
-I appreciate Arnd's comments, but I do not think that making 47-bit the
-default is the best solution for riscv. On riscv, support for 48-bit
-address spaces was merged in 5.17 and support for 57-bit address spaces
-was merged in 5.18 without changing the default addresses provided by
-mmap(). It could be argued that this was a mistake, however since at the
-time there didn't exist hardware with larger address spaces it wasn't an
-issue. The applications that existed at the time that relied on the
-smaller address spaces have not been able to move to larger address
-spaces. Making a 47-bit user-space address space default solves the
-problem, but that is not arch agnostic, and can't be since of the
-varying differences in page table sizes across architectures, which is
-the other part of the problem I am trying to solve.
-
-> >
-> > Opting-in to the higher address space is reasonable. However, it is not
-> > my preference, because the purpose of this flag is to ensure that
-> > allocations do not exceed 47-bits, so it is a clearer ABI to have the
-> > applications that want this guarantee to be the ones setting the flag,
-> > rather than the applications that want the higher bits setting the flag.
-> 
-> Perfect is the enemy of the good :) and an idealised solution may not end
-> up being something everybody can agree on.
-
-Yes you are totally right! Although this is not my ideal solution, it
-sufficiently accomplishes the goal so I think it is reasonable to
-implement this as a personality flag.
-
-> 
-> >
-> > - Charlie
-> >
-> > >
-> > > --
-> > > Catalin
-> >
-> >
-> >
