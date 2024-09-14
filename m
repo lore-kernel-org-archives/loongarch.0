@@ -1,209 +1,146 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEE519DF46
-	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 10:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8939C1CF5C1
+	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 13:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726309696; cv=none; b=ksS3DD0E/E2guzdUee3cIwfpCPg1SCra8Qej5S8ww2eycLeYHSo6gsHy5rnT5qQX7etAydz2qBtgsvbL6fiX0drT+rkYRWMTmIoym9tYfm6m5ScSaAE6IodXYGuhqAEwIB7JDfXPDzU7eHkjThAIagNiTy5vUHFbkg/kYCehdYQ=
+	t=1726320858; cv=none; b=Ip16cXQFx1CG1I2IbkafUw3zC1zNTEBQEEhMETFG2wBQsC7iavSH+Ui1P0IWQqH5WCLXDgbaouASFin72QDf/VeneGEHnYjJS6sMH+L9N80AXeKkWD0JpH93NOREg/IYrhbKTxZ1aIcOGlWmcGYHG/qD/eyQghxnPTqPmQue8xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726309696; c=relaxed/simple;
-	bh=CCWTWrL1CydY3BbMjeEC6jRmI5josYSow3PV8jabXok=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VmPuzogiY/k00/AlqQpcbRHSsPQKjpujTBn2LQWMLYZ3wvczhB8ImYgcxWjz5ANNlV7PI69Tcww3CsWuB7qx3ItGULx9RuV5KGwd1t34h/59Tg4vC09jP1S5Xik6zma3T4ceP4/9q/j+4mqZZZ7P+geNGv6Gm56UdY0NKEMAdec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ZTVwrOwg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kFl6aUv0; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1726320858; c=relaxed/simple;
+	bh=Bo9HHMH/7VGecfGqlAkHXUQ0PAaQ8egvSPQACg+ewKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTmBIzihcUNRxw7LZLcE0ME0WxVm+689hi1rSJxXUsVah5nfQUwrxNKjxovUrhyaTji2vv75fK6cshAW6VCkNjyvZVwrumgy5+l29OdX1PLTkzP0jqkAyadxVg/6mihWLutK2qR7V0lxT9Gn3YXa1vlo4sZkixbO+IxkVN3bkOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CdDCwxPb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ZTVwrOwg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kFl6aUv0"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id B95F4138035C;
-	Sat, 14 Sep 2024 06:28:13 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-09.internal (MEProxy); Sat, 14 Sep 2024 06:28:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1726309693;
-	 x=1726396093; bh=danSfcBwMUd//FTPPuU989iGYB86QAvoXE8dOeG4wXc=; b=
-	ZTVwrOwgqQj1oaNZ6vQsYLGEDIiMibXeMKUibdQr/F9UGUGEkyhPXVjTmeBQEi8R
-	WWkBXXKDVgyJRnqAF8yiFLqYAoayqJbDWkZH9O73nmGNa+bluHUZcSLZU0q5fjPD
-	DXC0G4YmHInw5FQ9Ziy6lv/Twxp//jxJh+Y2bvBnEoS7KtgJZYURRe/n1xS3qrx1
-	aQMhwlQs2HTrQO23RtaBo++CMosTYhTlljtsc/+uyUsdvk0QDfqqn5WMM9ntYtjZ
-	0pC3w0R6nXuLix9dpKv7IATtCHZ87UYv+g+g+L+dW8OnkV0ndMI5n0fziIwtI8XI
-	iLaVNAwZntxag4oC3/HI/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726309693; x=
-	1726396093; bh=danSfcBwMUd//FTPPuU989iGYB86QAvoXE8dOeG4wXc=; b=k
-	Fl6aUv0OJNzQxZLZ/e/zWD3Kj75p/b2EuAMu4Rwaa08/g+Wep+AWD94xhAa3mMcP
-	nGCIonKLiW5/vCzfrCkZCKnkEzRM4XIixuRolWC7Zhv+IrnKhOC1j5WLYKjRjzGR
-	xTcgZoWz3W/CuZZ4E6VLYU+6+FmrGN7eao8NZh4aCu0c5jmXhoQSMTEwdoDVA52L
-	wY+mUpA5thnT+9HzlkEU3f6oJV90whfbSbp6bk69jNnJKxyrWBl7R3ETm577w2W/
-	OoAirIDOmhbTr3QosTnd2AVSQ+hWevSBv4LKT5aTHBagxY9yAzgGv4/GgmGHDhjV
-	ObHaAyBLnV477dcwQsn/g==
-X-ME-Sender: <xms:PGXlZp69WOKZC4OhV9RaLoXqsomDZPaYzdpB_Ua5a0RYOfFIWaNffQ>
-    <xme:PGXlZm7MwjPvquLh8fLVJHoSzjUQ3PS-R8kuS5aJG2eUfSG_2C8gnoBGmy5mtDmEi
-    RDFyeqQ12cE0y2rw90>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudektddgfedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepveeuffetfeekhefhtdfhleef
-    ffejvdffkefgieeuudegkeegjeevtdffieeltdeunecuffhomhgrihhnpehgihhthhhusg
-    drtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhope
-    duvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhssghoghgvnhgusegrlhhp
-    hhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtoh
-    epthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoheplhhoohhnghgrrhgt
-    hheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehmrghosghisghosehloh
-    honhhgshhonhdrtghnpdhrtghpthhtohepkhhvmhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrgh
-X-ME-Proxy: <xmx:PGXlZgc3ZN7_Pjo63NJkLxrPCUkqa6z_LrJy4zvDJ1NSfJVIJ9H7hw>
-    <xmx:PGXlZiIkc8u6wH2xMrn61miU9lfUdbhj6Vs8mFjuEGeg9JTWoOaubQ>
-    <xmx:PGXlZtKyGBpNJCoYIqkeG0h_cbVN2FKf7WoElEw0Fy8tfCzncvGxdQ>
-    <xmx:PGXlZrxrq8NpE_QddsrbFkvwIduad_oqokN9lgvWr6kHl0_yCJEeRQ>
-    <xmx:PWXlZnzlI5XCaFmxr3Io9Glca9KA9BwlajY3wj45qQPC5tlsl5rM06iV>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4D1671C20065; Sat, 14 Sep 2024 06:28:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdDCwxPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726320855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=INwlJ0XvfL4HQTe5EqAskgvpw/m/mm4hcWt9RMaUHIY=;
+	b=CdDCwxPbLKYGPZIGTct2pQd/MIGxXvpzMEZx68qFOr5T87asYDGVZNmWVG41WG/soNhrJo
+	pGFLsvBHOLXO4a0yNiLHOvcAMzNxfDAYUnTOdxADwY3hqWLJ2w/8kxu65G9ri6rBo3XMnm
+	8Gl6efNE6Uqo1A/PArleHfSf9vkYvKU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-632-a_4sOvZBOJCrTIInxMPgNA-1; Sat, 14 Sep 2024 09:34:12 -0400
+X-MC-Unique: a_4sOvZBOJCrTIInxMPgNA-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-374bfc57e2aso1753814f8f.3
+        for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 06:34:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726320851; x=1726925651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=INwlJ0XvfL4HQTe5EqAskgvpw/m/mm4hcWt9RMaUHIY=;
+        b=Jizu9o7NNntBzj3vyvDEZwf7nfxhj5shfkYLa710GJlTETczRTKhM/JP2/cYp2Qlbe
+         Fb6SMm8Ue7GEcD9+3zMsNtI3LKj5Fd9veSQ+jmy8Ctcbh9klxQk4WgW15NA/Fmm0r/eo
+         Rs9IZ6LNVO+uy9dQ+OaFm6Nujnqb8mCpbhXUCu3hUJG9xSqG3hrDh9zfcK0NnrKCiQQJ
+         80G7rRfjarnhVoVK5PC56AGBWfodHR9MXE2jYkACNWE3wHAtymhKTVk48zzWTnBcuj02
+         JN9CD9Q/GQiVqZUghcgzWJ+RG2ohTxR8Vuvgvd8WeeLzA0vPtDdsrkqsJw+4wdRLaXvI
+         NRpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsJytfgbqIjY12DdvqIMy24knkd+DdlJfERP+iHB20Gg72I/g96oMCce59xpoB/4Bjla4YhG5bsEE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx8gZvYei/rZK7JqHDXz48zbnFdohBa/xA/TsJuZNj7w2hzUr5Y
+	l40Sup6ql7hVCMzus/zf1v7rIAg+FNUEM4BC9BX7Qss76FKiNn8mzDHN3d0si8sy0FoGA+cnS65
+	6fNdNJ3NIJscbafYd2AmIxqHPip42stljqE/1iWImJ4BGfisDgkAMFH5hp6Dv1F/8ZOlg0qR3wH
+	hnZbflZzPttGZdC4HI9zaHthRwH90KKuH1ZLpCQC1VY44=
+X-Received: by 2002:a5d:50c5:0:b0:374:b35e:ea6c with SMTP id ffacd0b85a97d-378c2d515cemr5395088f8f.40.1726320850956;
+        Sat, 14 Sep 2024 06:34:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFb6HtPkwGnd8GM7d/KRiyJlB1NATkocV9vkbyr817E3RiHieIGR5imtJW33zVee0ZnqWkWEGQp1XYS+1SQiKY=
+X-Received: by 2002:a5d:50c5:0:b0:374:b35e:ea6c with SMTP id
+ ffacd0b85a97d-378c2d515cemr5395071f8f.40.1726320850544; Sat, 14 Sep 2024
+ 06:34:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 14 Sep 2024 11:27:44 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Xuerui Wang" <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- kvm@vger.kernel.org
-Message-Id: <5e29630b-36ec-4f9e-a7d8-d8afa29150d1@app.fastmail.com>
-In-Reply-To: <147e72c9-8177-9c03-8baf-df7362143cd6@loongson.cn>
-References: <20240913-iocsr-v3-0-81a57f60350d@flygoat.com>
- <20240913-iocsr-v3-3-81a57f60350d@flygoat.com>
- <147e72c9-8177-9c03-8baf-df7362143cd6@loongson.cn>
-Subject: Re: [PATCH v3 3/4] LoongArch: Extract IOCSR definitions to standalone header
-Content-Type: text/plain; charset=utf-8
+References: <20240913085812.1030686-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240913085812.1030686-1-chenhuacai@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Sat, 14 Sep 2024 15:33:59 +0200
+Message-ID: <CABgObfaNgSX=3RJjksLq+g9qq6r6HO=YgAXRE4UQdPPL0XKifw@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch KVM changes for v6.12
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-=E5=9C=A82024=E5=B9=B49=E6=9C=8814=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8A=E5=
-=8D=889:56=EF=BC=8Cmaobibo=E5=86=99=E9=81=93=EF=BC=9A
-> Hi jiaxun,
-Hi Bibo,
-
-Thanks for your comments.
-
-[...]
->> +
->> +#define LOONGSON_IOCSR_FEATURES	0x8
->> +#define  IOCSRF_TEMP			BIT_ULL(0)
->> +#define  IOCSRF_NODECNT			BIT_ULL(1)
->> +#define  IOCSRF_MSI			BIT_ULL(2)
->> +#define  IOCSRF_EXTIOI			BIT_ULL(3)
->> +#define  IOCSRF_CSRIPI			BIT_ULL(4)
->> +#define  IOCSRF_FREQCSR			BIT_ULL(5)
->> +#define  IOCSRF_FREQSCALE		BIT_ULL(6)
->> +#define  IOCSRF_DVFSV1			BIT_ULL(7)
->> +#define  IOCSRF_EIODECODE		BIT_ULL(9)
->> +#define  IOCSRF_FLATMODE		BIT_ULL(10)
->> +#define  IOCSRF_VM			BIT_ULL(11)
->> +#define  IOCSRF_AVEC			BIT_ULL(15)
-> Is these definiton the same between Loongson3 mips and LoongArch machi=
-ne=20
-> such as IOCSRF_FLATMODE/IOCSRF_AVEC?
-
-Those bits are only defined on LoongArch based loongson3, and will be ze=
-ro
-on MIPS loongson3 systems. Zero means hardware doesn't have such feature,
-this is still semantically correct.
-
-Given that there will be no more future MIPS loongson3 it makes sense to
-just define them in common header.
-
+On Fri, Sep 13, 2024 at 11:07=E2=80=AFAM Huacai Chen <chenhuacai@loongson.c=
+n> wrote:
 >
-[...]
->> +
->> +/* PerCore CSR, only accessible by local cores */
->> +#define LOONGSON_IOCSR_IPI_STATUS	0x1000
->> +#define LOONGSON_IOCSR_IPI_EN		0x1004
->> +#define LOONGSON_IOCSR_IPI_SET		0x1008
->> +#define LOONGSON_IOCSR_IPI_CLEAR	0x100c
->> +#define LOONGSON_IOCSR_MBUF0		0x1020
->> +#define LOONGSON_IOCSR_MBUF1		0x1028
->> +#define LOONGSON_IOCSR_MBUF2		0x1030
->> +#define LOONGSON_IOCSR_MBUF3		0x1038
-> It seems that it is only used with arch/loongarch/kernel/smp.c,
-> and file smp.c is arch specific. No generic driver uses this.
-
-Yes, but arch/mips/loongson64/smp.c are using those bits as well,
-and will be converted in next patch.
-
-Just FYI, I'm now trying to implement a common SMP IPI driver for
-MIPS/LoongArch Loongson chips, there is a preview [1].
-
+> The following changes since commit da3ea35007d0af457a0afc87e84fddaebc4e0b=
+63:
 >
->> +
-[...]
->> +
->> +/* Register offset and bit definition for CSR access */
->> +#define LOONGSON_IOCSR_TIMER_CFG       0x1060
->> +#define LOONGSON_IOCSR_TIMER_TICK      0x1070
->> +#define  IOCSR_TIMER_CFG_RESERVED       (_ULCAST_(1) << 63)
->> +#define  IOCSR_TIMER_CFG_PERIODIC       (_ULCAST_(1) << 62)
->> +#define  IOCSR_TIMER_CFG_EN             (_ULCAST_(1) << 61)
->> +#define  IOCSR_TIMER_MASK		0x0ffffffffffffULL
->> +#define  IOCSR_TIMER_INITVAL_RST        (_ULCAST_(0xffff) << 48)
-> I do not find any use about IOCSR_TIMER macro, which does ip driver us=
-e=20
-> this?
-
-So IOCSR timer is obsoleted by LoongArch's architecture timer, but still
-present on at least 3A5000 for compatibility reason. We may write a driv=
-er
-for it at some point.
-
-It is common practice that hardware headers contains those bits that are=
- not used
-by drivers yet to serve as a document to the hardware.
-
+>   Linux 6.11-rc7 (2024-09-08 14:50:28 -0700)
 >
->> +
->> +#define LOONGSON_IOCSR_EXTIOI_NODEMAP_BASE	0x14a0
->> +#define LOONGSON_IOCSR_EXTIOI_IPMAP_BASE	0x14c0
->> +#define LOONGSON_IOCSR_EXTIOI_EN_BASE		0x1600
->> +#define LOONGSON_IOCSR_EXTIOI_BOUNCE_BASE	0x1680
->> +#define LOONGSON_IOCSR_EXTIOI_ISR_BASE		0x1800
->> +#define LOONGSON_IOCSR_EXTIOI_ROUTE_BASE	0x1c00
->> +#define IOCSR_EXTIOI_VECTOR_NUM			256
-> Is it better to define these macro in common header file or in extioi=20
-> driver?  It seems that only extioi use it.
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
+.git tags/loongarch-kvm-6.12
+>
+> for you to fetch changes up to 3abb708ec0be25da16a1ee9f1ab5cbc93f3256f3:
+>
+>   LoongArch: KVM: Implement function kvm_para_has_feature() (2024-09-12 2=
+2:56:14 +0800)
 
-Maybe :-) This is a little bit out of scope of this series but I can try
-later.
+Pulled, thanks.
 
-Thanks
-[...]
+Paolo
 
-[1]: https://github.com/FlyGoat/linux/commit/0a5ee611529d359b4d22eaae22c=
-2b9835c63c63f
+> ----------------------------------------------------------------
+> LoongArch KVM changes for v6.12
+>
+> 1. Revert qspinlock to test-and-set simple lock on VM.
+> 2. Add Loongson Binary Translation extension support.
+> 3. Add PMU support for guest.
+> 4. Enable paravirt feature control from VMM.
+> 5. Implement function kvm_para_has_feature().
+>
+> ----------------------------------------------------------------
+> Bibo Mao (6):
+>       LoongArch: Revert qspinlock to test-and-set simple lock on VM
+>       LoongArch: KVM: Add VM feature detection function
+>       LoongArch: KVM: Add Binary Translation extension support
+>       LoongArch: KVM: Add vm migration support for LBT registers
+>       LoongArch: KVM: Enable paravirt feature control from VMM
+>       LoongArch: KVM: Implement function kvm_para_has_feature()
+>
+> Song Gao (1):
+>       LoongArch: KVM: Add PMU support for guest
+>
+>  arch/loongarch/include/asm/Kbuild          |   1 -
+>  arch/loongarch/include/asm/kvm_csr.h       |   6 +
+>  arch/loongarch/include/asm/kvm_host.h      |  37 +++-
+>  arch/loongarch/include/asm/kvm_para.h      |  12 +
+>  arch/loongarch/include/asm/kvm_vcpu.h      |  11 +
+>  arch/loongarch/include/asm/loongarch.h     |  11 +-
+>  arch/loongarch/include/asm/paravirt.h      |   7 +
+>  arch/loongarch/include/asm/qspinlock.h     |  41 ++++
+>  arch/loongarch/include/uapi/asm/Kbuild     |   2 -
+>  arch/loongarch/include/uapi/asm/kvm.h      |  20 ++
+>  arch/loongarch/include/uapi/asm/kvm_para.h |  21 ++
+>  arch/loongarch/kernel/paravirt.c           |  47 ++--
+>  arch/loongarch/kernel/setup.c              |   2 +
+>  arch/loongarch/kernel/smp.c                |   4 +-
+>  arch/loongarch/kvm/exit.c                  |  46 ++--
+>  arch/loongarch/kvm/vcpu.c                  | 340 +++++++++++++++++++++++=
++++++-
+>  arch/loongarch/kvm/vm.c                    |  69 +++++-
+>  17 files changed, 616 insertions(+), 61 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/qspinlock.h
+>  create mode 100644 arch/loongarch/include/uapi/asm/kvm_para.h
+>
 
---=20
-- Jiaxun
