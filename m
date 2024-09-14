@@ -1,560 +1,162 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65B2A1862F
-	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 03:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F511CCEF6
+	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 06:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726285369; cv=none; b=N8i4MsaCmYFyPnfT803Um7vbfeA5keDP+pGdbfQiry8/ji75ga3pnsi22GYmzVFhAbO7evLTGp+t93+3tJ/Urt5c4X8JNJyPnIuV9+YDaVZwK4EexiL8jc8qOyxYb8HkwxxyqQ4fsuQOIQSepS6AJ/4ZdM7WjI1d3W/OQ56PwuM=
+	t=1726296805; cv=none; b=hFkyAnufcIXi/jN+k7HubhBySKrBJNltYZK57ftLkUz5N0sR/FhqlwjbGAh6PeakDHXF3TBJyIekZkUryuMPyED3AS7OsGnt5NS019fnO8u44VtWR4VcrugEF3Dgid7JIlCPbeqoK5Ztvj+p2ZkdepQdj3keFrBZIr5dtpNjorw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726285369; c=relaxed/simple;
-	bh=lBiaqH9un8KG0gpPx0kvI5NAKncEnABf+jVDZpdfrfE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XhJjuKSEk5fk9HpPPHWS4x4CCLsb3zzrKDP6L1K863/usOXfVxHgiqGK53W5iJfiKUTwn9N6Rh9i+oY+WsSexkvMAG2uqbLXUb72nNODz8I7XEMpZtMX/HzUqUnxWaXzkfw/W3MI4Q+rIt5UotdkQ1zdCAH+3/phsCwqvlcahNU=
+	s=arc-20240116; t=1726296805; c=relaxed/simple;
+	bh=l+/346QSa7QIjAv6+GoFPf58pN0bicn9uc/P6Cd3Y/E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aiZnzKFJSQLgZCKy+UVKmm9+35STanICRL8uJgBNNfoFHHN/rpP/usXpbbrAKA8XkC/mrqq7pDq3EYZ23GsSwwa969JD0u6UowOh6LHO7eYsFF4vFbMnJVwBDqhL+cl8f5GX2lCt3LNMa6gUo8vEhEDHVXR1YNz526tAHy8W8sM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxyukzBuVmY64HAA--.17557S3;
-	Sat, 14 Sep 2024 11:42:44 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxcNYyBuVm9XwGAA--.35887S3;
-	Sat, 14 Sep 2024 11:42:42 +0800 (CST)
-Subject: Re: [PATCH V3 09/11] LoongArch: KVM: Add PCHPIC read and write
- functions
-To: Xianglai Li <lixianglai@loongson.cn>, linux-kernel@vger.kernel.org
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>,
- WANG Xuerui <kernel@xen0n.name>
-References: <20240910114501.4062476-1-lixianglai@loongson.cn>
- <20240910114501.4062476-4-lixianglai@loongson.cn>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <6013af5d-5d35-3ecf-5bd0-2c557ace3fe8@loongson.cn>
-Date: Sat, 14 Sep 2024 11:42:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Bx++nhMuVmFsgHAA--.17883S3;
+	Sat, 14 Sep 2024 14:53:21 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMAxSebfMuVmy50GAA--.37863S2;
+	Sat, 14 Sep 2024 14:53:19 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] LoongArch: Enable ACPI BGRT handling
+Date: Sat, 14 Sep 2024 14:53:18 +0800
+Message-Id: <20240914065318.2099448-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240910114501.4062476-4-lixianglai@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxcNYyBuVm9XwGAA--.35887S3
+X-CM-TRANSID:qMiowMAxSebfMuVmy50GAA--.37863S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3Cw15ZF13uw4rtF4xAF4DWrX_yoW8XF43Co
-	WfJF1F93W8Kw1rCrWjkr9rJF4jyrs2k3yUZa9Yv398AF4xX3s8KF17K34Utr13X395Kr1f
-	C3yIqr4kXa92ywnrl-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUO07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcqXdUU
-	UUU
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+Add ACPI BGRT support on LoongArch so it can display image provied by
+acpi table at boot stage and switch to graphical UI smoothly.
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202409102056.DNqh6zzA-lkp@intel.com/
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+v1 ... v2:
+  1. Solve compile warning issue reported from lkp, return type of
+     function early_memunmap() is void *, that of function early_ioremap()
+     is void __iomem *, force type conversion is added.
+---
+ arch/loongarch/include/asm/io.h | 4 +---
+ arch/loongarch/kernel/acpi.c    | 8 ++++++--
+ arch/loongarch/mm/ioremap.c     | 9 +++++++++
+ drivers/acpi/Kconfig            | 2 +-
+ 4 files changed, 17 insertions(+), 6 deletions(-)
 
-On 2024/9/10 下午7:44, Xianglai Li wrote:
-> Implementation of IPI interrupt controller address
-> space read and write function simulation.
-> 
-> Implement interrupt injection interface under loongarch.
-> 
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> ---
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: kvm@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Xianglai li <lixianglai@loongson.cn>
-> 
->   arch/loongarch/include/asm/kvm_host.h    |  18 ++
->   arch/loongarch/include/asm/kvm_pch_pic.h |  31 +++
->   arch/loongarch/include/uapi/asm/kvm.h    |   1 +
->   arch/loongarch/kvm/intc/pch_pic.c        | 290 ++++++++++++++++++++++-
->   arch/loongarch/kvm/vm.c                  |  34 +++
->   5 files changed, 372 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index a4feb1b9c816..1259636d7ead 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -34,6 +34,22 @@
->   #define KVM_REQ_TLB_FLUSH_GPA		KVM_ARCH_REQ(0)
->   #define KVM_REQ_STEAL_UPDATE		KVM_ARCH_REQ(1)
->   
-> +/* KVM_IRQ_LINE irq field index values */
-> +#define KVM_LOONGARCH_IRQ_TYPE_SHIFT	24
-> +#define KVM_LOONGARCH_IRQ_TYPE_MASK	0xff
-> +#define KVM_LOONGARCH_IRQ_VCPU_SHIFT	16
-> +#define KVM_LOONGARCH_IRQ_VCPU_MASK	0xff
-> +#define KVM_LOONGARCH_IRQ_NUM_SHIFT	0
-> +#define KVM_LOONGARCH_IRQ_NUM_MASK	0xffff
-> +
-> +/* irq_type field */
-> +#define KVM_LOONGARCH_IRQ_TYPE_CPU_IP	0
-> +#define KVM_LOONGARCH_IRQ_TYPE_CPU_IO	1
-> +#define KVM_LOONGARCH_IRQ_TYPE_HT	2
-> +#define KVM_LOONGARCH_IRQ_TYPE_MSI	3
-> +#define KVM_LOONGARCH_IRQ_TYPE_IOAPIC	4
-> +#define KVM_LOONGARCH_IRQ_TYPE_ROUTE	5
-> +
->   #define KVM_GUESTDBG_SW_BP_MASK		\
->   	(KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
->   #define KVM_GUESTDBG_VALID_MASK		\
-> @@ -50,6 +66,8 @@ struct kvm_vm_stat {
->   	u64 ipi_write_exits;
->   	u64 eiointc_read_exits;
->   	u64 eiointc_write_exits;
-> +	u64 pch_pic_read_exits;
-> +	u64 pch_pic_write_exits;
->   };
->   
->   struct kvm_vcpu_stat {
-> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
-> index c320f66c2004..7a6625fdeab9 100644
-> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> @@ -8,6 +8,35 @@
->   
->   #include <kvm/iodev.h>
->   
-> +#define PCH_PIC_SIZE			0x3e8
-> +
-> +#define PCH_PIC_INT_ID_START		0x0
-> +#define PCH_PIC_INT_ID_END		0x7
-> +#define PCH_PIC_MASK_START		0x20
-> +#define PCH_PIC_MASK_END		0x27
-> +#define PCH_PIC_HTMSI_EN_START		0x40
-> +#define PCH_PIC_HTMSI_EN_END		0x47
-> +#define PCH_PIC_EDGE_START		0x60
-> +#define PCH_PIC_EDGE_END		0x67
-> +#define PCH_PIC_CLEAR_START		0x80
-> +#define PCH_PIC_CLEAR_END		0x87
-> +#define PCH_PIC_AUTO_CTRL0_START	0xc0
-> +#define PCH_PIC_AUTO_CTRL0_END		0xc7
-> +#define PCH_PIC_AUTO_CTRL1_START	0xe0
-> +#define PCH_PIC_AUTO_CTRL1_END		0xe7
-> +#define PCH_PIC_ROUTE_ENTRY_START	0x100
-> +#define PCH_PIC_ROUTE_ENTRY_END		0x13f
-> +#define PCH_PIC_HTMSI_VEC_START		0x200
-> +#define PCH_PIC_HTMSI_VEC_END		0x23f
-> +#define PCH_PIC_INT_IRR_START		0x380
-> +#define PCH_PIC_INT_IRR_END		0x38f
-> +#define PCH_PIC_INT_ISR_START		0x3a0
-> +#define PCH_PIC_INT_ISR_END		0x3af
-> +#define PCH_PIC_POLARITY_START		0x3e0
-> +#define PCH_PIC_POLARITY_END		0x3e7
-> +#define PCH_PIC_INT_ID_VAL		0x7000000UL
-> +#define PCH_PIC_INT_ID_VER		0x1UL
-> +
->   struct loongarch_pch_pic {
->   	spinlock_t lock;
->   	struct kvm *kvm;
-> @@ -26,5 +55,7 @@ struct loongarch_pch_pic {
->   	uint64_t pch_pic_base;
->   };
->   
-> +void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level);
-> +void pch_msi_set_irq(struct kvm *kvm, int irq, int level);
->   int kvm_loongarch_register_pch_pic_device(void);
->   #endif /* LOONGARCH_PCH_PIC_H */
-> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-> index d019f88b6286..acf8db9e3dfb 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> @@ -16,6 +16,7 @@
->   
->   #define KVM_COALESCED_MMIO_PAGE_OFFSET	1
->   #define KVM_DIRTY_LOG_PAGE_OFFSET	64
-> +#define __KVM_HAVE_IRQ_LINE
->   
->   #define KVM_GUESTDBG_USE_SW_BP		0x00010000
->   
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-> index 1888be1c9a8e..25a10bc3fff0 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -8,18 +8,304 @@
->   #include <asm/kvm_vcpu.h>
->   #include <linux/count_zeros.h>
->   
-> +/* update the isr according to irq level and route irq to eiointc */
-> +static void pch_pic_update_irq(struct loongarch_pch_pic *s, int irq, int level)
-> +{
-> +	u64 mask = BIT(irq);
-> +
-> +	/*
-> +	 * set isr and route irq to eiointc and
-> +	 * the route table is in htmsi_vector[]
-> +	 */
-> +	if (level) {
-> +		if (mask & s->irr & ~s->mask) {
-> +			s->isr |= mask;
-> +			irq = s->htmsi_vector[irq];
-> +			eiointc_set_irq(s->kvm->arch.eiointc, irq, level);
-> +		}
-> +	} else {
-> +		if (mask & s->isr & ~s->irr) {
-> +			s->isr &= ~mask;
-> +			irq = s->htmsi_vector[irq];
-> +			eiointc_set_irq(s->kvm->arch.eiointc, irq, level);
-> +		}
-> +	}
-> +}
-> +
-> +/* msi irq handler */
-> +void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
-> +{
-> +	eiointc_set_irq(kvm->arch.eiointc, irq, level);
-> +}
-> +
-> +/* called when a irq is triggered in pch pic */
-> +void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
-> +{
-> +	u64 mask = BIT(irq);
-> +
-> +	spin_lock(&s->lock);
-> +	if (level)
-> +		/* set irr */
-> +		s->irr |= mask;
-> +	else {
-> +		/* 0 level signal in edge triggered irq does not mean to clear irq
-> +		 * The irr register variable is cleared when the cpu writes to the
-> +		 * PCH_PIC_CLEAR_START address area
-> +		 */
-> +		if (s->edge & mask) {
-> +			spin_unlock(&s->lock);
-> +			return;
-> +		}
-> +		s->irr &= ~mask;
-> +	}
-> +	pch_pic_update_irq(s, irq, level);
-> +	spin_unlock(&s->lock);
-> +}
-> +
-> +/* update batch irqs, the irq_mask is a bitmap of irqs */
-> +static void pch_pic_update_batch_irqs(struct loongarch_pch_pic *s, u64 irq_mask, int level)
-> +{
-> +	int irq, bits;
-> +
-> +	/* find each irq by irqs bitmap and update each irq */
-> +	bits = sizeof(irq_mask) * 8;
-> +	irq = find_first_bit((void *)&irq_mask, bits);
-> +	while (irq < bits) {
-> +		pch_pic_update_irq(s, irq, level);
-> +		bitmap_clear((void *)&irq_mask, irq, 1);
-> +		irq = find_first_bit((void *)&irq_mask, bits);
-> +	}
-> +}
-> +
-> +/*
-> + * pch pic register is 64-bit, but it is accessed by 32-bit,
-> + * so we use high to get whether low or high 32 bits we want
-> + * to read.
-> + */
-> +static u32 pch_pic_read_reg(u64 *s, int high)
-> +{
-> +	u64 val = *s;
-> +
-> +	/* read the high 32 bits when the high is 1 */
-> +	return high ? (u32)(val >> 32) : (u32)val;
-> +}
-> +
-> +/*
-> + * pch pic register is 64-bit, but it is accessed by 32-bit,
-> + * so we use high to get whether low or high 32 bits we want
-> + * to write.
-> + */
-> +static u32 pch_pic_write_reg(u64 *s, int high, u32 v)
-> +{
-> +	u64 val = *s, data = v;
-> +
-> +	if (high) {
-> +		/*
-> +		 * Clear val high 32 bits
-> +		 * write the high 32 bits when the high is 1
-> +		 */
-> +		*s = (val << 32 >> 32) | (data << 32);
-> +		val >>= 32;
-> +	} else
-> +		/*
-> +		 * Clear val low 32 bits
-> +		 * write the low 32 bits when the high is 0
-> +		 */
-> +		*s = (val >> 32 << 32) | v;
-> +
-> +	return (u32)val;
-> +}
-> +
-> +static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
-> +					int len, const void *val)
-> +{
-> +	u32 old, data, offset, index;
-> +	u64 irq;
-> +	int ret;
-> +
-> +	ret = 0;
-> +	data = *(u32 *)val;
-> +	offset = addr - s->pch_pic_base;
-> +
-> +	spin_lock(&s->lock);
-> +	switch (offset) {
-> +	case PCH_PIC_MASK_START ... PCH_PIC_MASK_END:
-> +		offset -= PCH_PIC_MASK_START;
-> +		/* get whether high or low 32 bits we want to write */
-> +		index = offset >> 2;
-> +		old = pch_pic_write_reg(&s->mask, index, data);
-> +
-> +		/* enable irq when mask value change to 0 */
-> +		irq = (old & ~data) << (32 * index);
-> +		pch_pic_update_batch_irqs(s, irq, 1);
-> +
-> +		/* disable irq when mask value change to 1 */
-> +		irq = (~old & data) << (32 * index);
-> +		pch_pic_update_batch_irqs(s, irq, 0);
-> +		break;
-> +	case PCH_PIC_HTMSI_EN_START ... PCH_PIC_HTMSI_EN_END:
-> +		offset -= PCH_PIC_HTMSI_EN_START;
-> +		index = offset >> 2;
-> +		pch_pic_write_reg(&s->htmsi_en, index, data);
-> +		break;
-> +	case PCH_PIC_EDGE_START ... PCH_PIC_EDGE_END:
-> +		offset -= PCH_PIC_EDGE_START;
-> +		index = offset >> 2;
-> +		/* 1: edge triggered, 0: level triggered */
-> +		pch_pic_write_reg(&s->edge, index, data);
-> +		break;
-> +	case PCH_PIC_CLEAR_START ... PCH_PIC_CLEAR_END:
-> +		offset -= PCH_PIC_CLEAR_START;
-> +		index = offset >> 2;
-> +		/* write 1 to clear edge irq */
-> +		old = pch_pic_read_reg(&s->irr, index);
-> +		/*
-> +		 * get the irq bitmap which is edge triggered and
-> +		 * already set and to be cleared
-> +		 */
-> +		irq = old & pch_pic_read_reg(&s->edge, index) & data;
-> +		/* write irr to the new state where irqs have been cleared */
-> +		pch_pic_write_reg(&s->irr, index, old & ~irq);
-> +		/* update cleared irqs */
-> +		pch_pic_update_batch_irqs(s, irq, 0);
-> +		break;
-> +	case PCH_PIC_AUTO_CTRL0_START ... PCH_PIC_AUTO_CTRL0_END:
-> +		offset -= PCH_PIC_AUTO_CTRL0_START;
-> +		index = offset >> 2;
-> +		/* we only use default mode: fixed interrupt distribution mode */
-> +		pch_pic_write_reg(&s->auto_ctrl0, index, 0);
-> +		break;
-> +	case PCH_PIC_AUTO_CTRL1_START ... PCH_PIC_AUTO_CTRL1_END:
-> +		offset -= PCH_PIC_AUTO_CTRL1_START;
-> +		index = offset >> 2;
-> +		/* we only use default mode: fixed interrupt distribution mode */
-> +		pch_pic_write_reg(&s->auto_ctrl1, index, 0);
-> +		break;
-> +	case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
-> +		offset -= PCH_PIC_ROUTE_ENTRY_START;
-> +		/* only route to int0: eiointc */
-> +		s->route_entry[offset] = 1;
-> +		break;
-> +	case PCH_PIC_HTMSI_VEC_START ... PCH_PIC_HTMSI_VEC_END:
-> +		/* route table to eiointc */
-> +		offset -= PCH_PIC_HTMSI_VEC_START;
-> +		s->htmsi_vector[offset] = (u8)data;
-> +		break;
-> +	case PCH_PIC_POLARITY_START ... PCH_PIC_POLARITY_END:
-> +		offset -= PCH_PIC_POLARITY_START;
-> +		index = offset >> 2;
-> +
-> +		/* we only use defalut value 0: high level triggered */
-> +		pch_pic_write_reg(&s->polarity, index, 0);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +	spin_unlock(&s->lock);
-> +	return ret;
-> +}
-> +
->   static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
->   			struct kvm_io_device *dev,
->   			gpa_t addr, int len, const void *val)
->   {
-> -	return 0;
-> +	int ret;
-> +	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
-> +
-> +	if (!s) {
-> +		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* statistics of pch pic writing */
-> +	vcpu->kvm->stat.pch_pic_write_exits++;
-> +	ret = loongarch_pch_pic_write(s, addr, len, val);
-> +	return ret;
-> +}
-> +
-> +static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
-> +{
-> +	int offset, index, ret = 0;
-> +	u32 data = 0;
-> +	u64 int_id = 0;
-> +
-> +	offset = addr - s->pch_pic_base;
-> +
-> +	spin_lock(&s->lock);
-> +	switch (offset) {
-> +	case PCH_PIC_INT_ID_START ... PCH_PIC_INT_ID_END:
-> +		/* int id version */
-> +		int_id |= (u64)PCH_PIC_INT_ID_VER << 32;
-> +		/* irq number */
-> +		int_id |= (u64)31 << (32 + 16);
-> +		/* int id value */
-> +		int_id |= PCH_PIC_INT_ID_VAL;
-> +		*(u64 *)val = int_id;
-> +		break;
-> +	case PCH_PIC_MASK_START ... PCH_PIC_MASK_END:
-> +		offset -= PCH_PIC_MASK_START;
-> +		index = offset >> 2;
-> +		/* read mask reg */
-> +		data = pch_pic_read_reg(&s->mask, index);
-> +		*(u32 *)val = data;
-> +		break;
-> +	case PCH_PIC_HTMSI_EN_START ... PCH_PIC_HTMSI_EN_END:
-> +		offset -= PCH_PIC_HTMSI_EN_START;
-> +		index = offset >> 2;
-> +		/* read htmsi enable reg */
-> +		data = pch_pic_read_reg(&s->htmsi_en, index);
-> +		*(u32 *)val = data;
-> +		break;
-> +	case PCH_PIC_EDGE_START ... PCH_PIC_EDGE_END:
-> +		offset -= PCH_PIC_EDGE_START;
-> +		index = offset >> 2;
-> +		/* read edge enable reg */
-> +		data = pch_pic_read_reg(&s->edge, index);
-> +		*(u32 *)val = data;
-> +		break;
-> +	case PCH_PIC_AUTO_CTRL0_START ... PCH_PIC_AUTO_CTRL0_END:
-> +	case PCH_PIC_AUTO_CTRL1_START ... PCH_PIC_AUTO_CTRL1_END:
-> +		/* we only use default mode: fixed interrupt distribution mode */
-> +		*(u32 *)val = 0;
-> +		break;
-> +	case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
-> +		/* only route to int0: eiointc */
-> +		*(u8 *)val = 1;
-> +		break;
-> +	case PCH_PIC_HTMSI_VEC_START ... PCH_PIC_HTMSI_VEC_END:
-> +		offset -= PCH_PIC_HTMSI_VEC_START;
-> +		/* read htmsi vector */
-> +		data = s->htmsi_vector[offset];
-> +		*(u8 *)val = data;
-> +		break;
-> +	case PCH_PIC_POLARITY_START ... PCH_PIC_POLARITY_END:
-> +		/* we only use defalut value 0: high level triggered */
-> +		*(u32 *)val = 0;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +	spin_unlock(&s->lock);
-> +	return ret;
->   }
->   
->   static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
->   			struct kvm_io_device *dev,
->   			gpa_t addr, int len, void *val)
->   {
-> -	return 0;
-> +	int ret;
-> +	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
-> +
-> +	if (!s) {
-> +		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* statistics of pch pic reading */
-> +	vcpu->kvm->stat.pch_pic_read_exits++;
-> +	ret = loongarch_pch_pic_read(s, addr, len, val);
-> +	return ret;
->   }
->   
->   static const struct kvm_io_device_ops kvm_pch_pic_ops = {
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 6b2e4f66ad26..5a60474bb933 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -5,6 +5,8 @@
->   
->   #include <linux/kvm_host.h>
->   #include <asm/kvm_mmu.h>
-> +#include <asm/kvm_eiointc.h>
-> +#include <asm/kvm_pch_pic.h>
->   
->   const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
->   	KVM_GENERIC_VM_STATS(),
-> @@ -103,3 +105,35 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->   {
->   	return -ENOIOCTLCMD;
->   }
-> +
-> +int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *data,
-> +			  bool line_status)
-> +{
-> +	bool level;
-> +	struct loongarch_pch_pic *s;
-> +	int type, vcpu, irq, vcpus, val, ret = 0;
-> +
-Had better check whether irqchip_in_kernel is enabled for ioctl 
-interface from userspace, such as:
-         if (!kvm_arch_irqchip_in_kernel(kvm))
-                 return -ENXIO;
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 5e95a60df180..3049bccec693 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -10,6 +10,7 @@
+ 
+ #include <asm/addrspace.h>
+ #include <asm/cpu.h>
++#include <asm/early_ioremap.h>
+ #include <asm/page.h>
+ #include <asm/pgtable-bits.h>
+ #include <asm/string.h>
+@@ -17,9 +18,6 @@
+ extern void __init __iomem *early_ioremap(u64 phys_addr, unsigned long size);
+ extern void __init early_iounmap(void __iomem *addr, unsigned long size);
+ 
+-#define early_memremap early_ioremap
+-#define early_memunmap early_iounmap
+-
+ #ifdef CONFIG_ARCH_IOREMAP
+ 
+ static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 929a497c987e..2993d7921198 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/acpi.h>
++#include <linux/efi-bgrt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/memblock.h>
+@@ -39,14 +40,14 @@ void __init __iomem * __acpi_map_table(unsigned long phys, unsigned long size)
+ 	if (!phys || !size)
+ 		return NULL;
+ 
+-	return early_memremap(phys, size);
++	return (void __iomem *)early_memremap(phys, size);
+ }
+ void __init __acpi_unmap_table(void __iomem *map, unsigned long size)
+ {
+ 	if (!map || !size)
+ 		return;
+ 
+-	early_memunmap(map, size);
++	early_memunmap((void *)map, size);
+ }
+ 
+ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+@@ -212,6 +213,9 @@ void __init acpi_boot_table_init(void)
+ 	/* Do not enable ACPI SPCR console by default */
+ 	acpi_parse_spcr(earlycon_acpi_spcr_enable, false);
+ 
++	if (IS_ENABLED(CONFIG_ACPI_BGRT))
++		acpi_table_parse(ACPI_SIG_BGRT, acpi_parse_bgrt);
++
+ 	return;
+ 
+ fdt_earlycon:
+diff --git a/arch/loongarch/mm/ioremap.c b/arch/loongarch/mm/ioremap.c
+index 70ca73019811..28562ac510c8 100644
+--- a/arch/loongarch/mm/ioremap.c
++++ b/arch/loongarch/mm/ioremap.c
+@@ -16,6 +16,15 @@ void __init early_iounmap(void __iomem *addr, unsigned long size)
+ 
+ }
+ 
++void __init *early_memremap(resource_size_t phys_addr, unsigned long size)
++{
++	return (__force void *)early_ioremap(phys_addr, size);
++}
++
++void __init early_memunmap(void *addr, unsigned long size)
++{
++}
++
+ void *early_memremap_ro(resource_size_t phys_addr, unsigned long size)
+ {
+ 	return early_memremap(phys_addr, size);
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index e3a7c2aedd5f..d67f63d93b2a 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -451,7 +451,7 @@ config ACPI_HED
+ 
+ config ACPI_BGRT
+ 	bool "Boottime Graphics Resource Table support"
+-	depends on EFI && (X86 || ARM64)
++	depends on EFI && (X86 || ARM64 || LOONGARCH)
+ 	help
+ 	  This driver adds support for exposing the ACPI Boottime Graphics
+ 	  Resource Table, which allows the operating system to obtain
 
-> +	level = data->level;
-> +	val = data->irq;
-> +	s = kvm->arch.pch_pic;
-> +	vcpus = atomic_read(&kvm->online_vcpus);
-> +
-> +	type = (val >> KVM_LOONGARCH_IRQ_TYPE_SHIFT) & KVM_LOONGARCH_IRQ_TYPE_MASK;
-> +	vcpu = (val >> KVM_LOONGARCH_IRQ_VCPU_SHIFT) & KVM_LOONGARCH_IRQ_VCPU_MASK;
-> +	irq = (val >> KVM_LOONGARCH_IRQ_NUM_SHIFT) & KVM_LOONGARCH_IRQ_NUM_MASK;
-> +
-> +	switch (type) {
-> +	case KVM_LOONGARCH_IRQ_TYPE_IOAPIC:
-> +		if (irq < KVM_IRQCHIP_NUM_PINS)
-> +			pch_pic_set_irq(s, irq, level);
-> +		else if (irq < 256)
-> +			pch_msi_set_irq(kvm, irq, level);
-Can we use interface kvm_set_irq() to inject msi or irqline interrupt here?
-
-Regards
-Bibo Mao
-
-> +		else
-> +			ret = -EINVAL;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> 
+base-commit: 196145c606d0f816fd3926483cb1ff87e09c2c0b
+-- 
+2.39.3
 
