@@ -1,146 +1,528 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8939C1CF5C1
-	for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 13:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3271B85CF;
+	Sun, 15 Sep 2024 08:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726320858; cv=none; b=Ip16cXQFx1CG1I2IbkafUw3zC1zNTEBQEEhMETFG2wBQsC7iavSH+Ui1P0IWQqH5WCLXDgbaouASFin72QDf/VeneGEHnYjJS6sMH+L9N80AXeKkWD0JpH93NOREg/IYrhbKTxZ1aIcOGlWmcGYHG/qD/eyQghxnPTqPmQue8xA=
+	t=1726390251; cv=none; b=CPhiTI8EH22JCAf5xL2SxU8MyWudGa3zyur61U9GKwgBmTiq7dEX1Be7B98/1nSs6aj7cIFiCm/qhPH4FwNyxKSfd8HOqd503l1B6w3QwYLE96AErEO4eJUk6R21yrL1ANqX1ZspBEy9Go0Mt/GLf4pH06cnHO1zjtgBpsV7zhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726320858; c=relaxed/simple;
-	bh=Bo9HHMH/7VGecfGqlAkHXUQ0PAaQ8egvSPQACg+ewKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qTmBIzihcUNRxw7LZLcE0ME0WxVm+689hi1rSJxXUsVah5nfQUwrxNKjxovUrhyaTji2vv75fK6cshAW6VCkNjyvZVwrumgy5+l29OdX1PLTkzP0jqkAyadxVg/6mihWLutK2qR7V0lxT9Gn3YXa1vlo4sZkixbO+IxkVN3bkOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CdDCwxPb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdDCwxPb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726320855;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INwlJ0XvfL4HQTe5EqAskgvpw/m/mm4hcWt9RMaUHIY=;
-	b=CdDCwxPbLKYGPZIGTct2pQd/MIGxXvpzMEZx68qFOr5T87asYDGVZNmWVG41WG/soNhrJo
-	pGFLsvBHOLXO4a0yNiLHOvcAMzNxfDAYUnTOdxADwY3hqWLJ2w/8kxu65G9ri6rBo3XMnm
-	8Gl6efNE6Uqo1A/PArleHfSf9vkYvKU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-632-a_4sOvZBOJCrTIInxMPgNA-1; Sat, 14 Sep 2024 09:34:12 -0400
-X-MC-Unique: a_4sOvZBOJCrTIInxMPgNA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-374bfc57e2aso1753814f8f.3
-        for <loongarch@lists.linux.dev>; Sat, 14 Sep 2024 06:34:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726320851; x=1726925651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=INwlJ0XvfL4HQTe5EqAskgvpw/m/mm4hcWt9RMaUHIY=;
-        b=Jizu9o7NNntBzj3vyvDEZwf7nfxhj5shfkYLa710GJlTETczRTKhM/JP2/cYp2Qlbe
-         Fb6SMm8Ue7GEcD9+3zMsNtI3LKj5Fd9veSQ+jmy8Ctcbh9klxQk4WgW15NA/Fmm0r/eo
-         Rs9IZ6LNVO+uy9dQ+OaFm6Nujnqb8mCpbhXUCu3hUJG9xSqG3hrDh9zfcK0NnrKCiQQJ
-         80G7rRfjarnhVoVK5PC56AGBWfodHR9MXE2jYkACNWE3wHAtymhKTVk48zzWTnBcuj02
-         JN9CD9Q/GQiVqZUghcgzWJ+RG2ohTxR8Vuvgvd8WeeLzA0vPtDdsrkqsJw+4wdRLaXvI
-         NRpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsJytfgbqIjY12DdvqIMy24knkd+DdlJfERP+iHB20Gg72I/g96oMCce59xpoB/4Bjla4YhG5bsEE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8gZvYei/rZK7JqHDXz48zbnFdohBa/xA/TsJuZNj7w2hzUr5Y
-	l40Sup6ql7hVCMzus/zf1v7rIAg+FNUEM4BC9BX7Qss76FKiNn8mzDHN3d0si8sy0FoGA+cnS65
-	6fNdNJ3NIJscbafYd2AmIxqHPip42stljqE/1iWImJ4BGfisDgkAMFH5hp6Dv1F/8ZOlg0qR3wH
-	hnZbflZzPttGZdC4HI9zaHthRwH90KKuH1ZLpCQC1VY44=
-X-Received: by 2002:a5d:50c5:0:b0:374:b35e:ea6c with SMTP id ffacd0b85a97d-378c2d515cemr5395088f8f.40.1726320850956;
-        Sat, 14 Sep 2024 06:34:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFb6HtPkwGnd8GM7d/KRiyJlB1NATkocV9vkbyr817E3RiHieIGR5imtJW33zVee0ZnqWkWEGQp1XYS+1SQiKY=
-X-Received: by 2002:a5d:50c5:0:b0:374:b35e:ea6c with SMTP id
- ffacd0b85a97d-378c2d515cemr5395071f8f.40.1726320850544; Sat, 14 Sep 2024
- 06:34:10 -0700 (PDT)
+	s=arc-20240116; t=1726390251; c=relaxed/simple;
+	bh=4QCxCBDL9rz/dp8NnzUFShSV8QpsfhZEi4gu69vMOUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZIya2c50R1sNARoQdbrlqeam+60zpXSVyfzy8Qmf5qGu5tGOVbLf+zYhYIJvo4u4eULg2SdqwmII8IAHuENup+PQf2MVsQAKuUrzUkjWxiyUwCgC08T9hPyHz8qv/5vUR9LFImgD+P2OKDR64P72Uve46Z61As9fPSATfYtpOVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB415C4CEC3;
+	Sun, 15 Sep 2024 08:50:47 +0000 (UTC)
+Date: Sun, 15 Sep 2024 04:50:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v14 03/19] function_graph: Pass ftrace_regs to entryfunc
+Message-ID: <20240915045042.434d7619@rorschach.local.home>
+In-Reply-To: <172615372005.133222.15797801841635819220.stgit@devnote2>
+References: <172615368656.133222.2336770908714920670.stgit@devnote2>
+ <172615372005.133222.15797801841635819220.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240913085812.1030686-1-chenhuacai@loongson.cn>
-In-Reply-To: <20240913085812.1030686-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Sat, 14 Sep 2024 15:33:59 +0200
-Message-ID: <CABgObfaNgSX=3RJjksLq+g9qq6r6HO=YgAXRE4UQdPPL0XKifw@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v6.12
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 13, 2024 at 11:07=E2=80=AFAM Huacai Chen <chenhuacai@loongson.c=
-n> wrote:
->
-> The following changes since commit da3ea35007d0af457a0afc87e84fddaebc4e0b=
-63:
->
->   Linux 6.11-rc7 (2024-09-08 14:50:28 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-6.12
->
-> for you to fetch changes up to 3abb708ec0be25da16a1ee9f1ab5cbc93f3256f3:
->
->   LoongArch: KVM: Implement function kvm_para_has_feature() (2024-09-12 2=
-2:56:14 +0800)
 
-Pulled, thanks.
+Can I get an Acked-by from the LOONGARCH maintainers for this patch?
 
-Paolo
+Thanks!
 
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v6.12
->
-> 1. Revert qspinlock to test-and-set simple lock on VM.
-> 2. Add Loongson Binary Translation extension support.
-> 3. Add PMU support for guest.
-> 4. Enable paravirt feature control from VMM.
-> 5. Implement function kvm_para_has_feature().
->
-> ----------------------------------------------------------------
-> Bibo Mao (6):
->       LoongArch: Revert qspinlock to test-and-set simple lock on VM
->       LoongArch: KVM: Add VM feature detection function
->       LoongArch: KVM: Add Binary Translation extension support
->       LoongArch: KVM: Add vm migration support for LBT registers
->       LoongArch: KVM: Enable paravirt feature control from VMM
->       LoongArch: KVM: Implement function kvm_para_has_feature()
->
-> Song Gao (1):
->       LoongArch: KVM: Add PMU support for guest
->
->  arch/loongarch/include/asm/Kbuild          |   1 -
->  arch/loongarch/include/asm/kvm_csr.h       |   6 +
->  arch/loongarch/include/asm/kvm_host.h      |  37 +++-
->  arch/loongarch/include/asm/kvm_para.h      |  12 +
->  arch/loongarch/include/asm/kvm_vcpu.h      |  11 +
->  arch/loongarch/include/asm/loongarch.h     |  11 +-
->  arch/loongarch/include/asm/paravirt.h      |   7 +
->  arch/loongarch/include/asm/qspinlock.h     |  41 ++++
->  arch/loongarch/include/uapi/asm/Kbuild     |   2 -
->  arch/loongarch/include/uapi/asm/kvm.h      |  20 ++
->  arch/loongarch/include/uapi/asm/kvm_para.h |  21 ++
->  arch/loongarch/kernel/paravirt.c           |  47 ++--
->  arch/loongarch/kernel/setup.c              |   2 +
->  arch/loongarch/kernel/smp.c                |   4 +-
->  arch/loongarch/kvm/exit.c                  |  46 ++--
->  arch/loongarch/kvm/vcpu.c                  | 340 +++++++++++++++++++++++=
-+++++-
->  arch/loongarch/kvm/vm.c                    |  69 +++++-
->  17 files changed, 616 insertions(+), 61 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/qspinlock.h
->  create mode 100644 arch/loongarch/include/uapi/asm/kvm_para.h
->
+-- Steve
+
+
+On Fri, 13 Sep 2024 00:08:40 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
+> available, it passes a NULL instead. User callback function can access
+> some registers (including return address) via this ftrace_regs.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v11:
+>   - Update for the latest for-next branch.
+>  Changes in v8:
+>   - Just pass ftrace_regs to the handler instead of adding a new
+>     entryregfunc.
+>   - Update riscv ftrace_graph_func().
+>  Changes in v3:
+>   - Update for new multiple fgraph.
+> ---
+>  arch/arm64/kernel/ftrace.c               |   20 +++++++++++-
+>  arch/loongarch/kernel/ftrace_dyn.c       |   10 +++++-
+>  arch/powerpc/kernel/trace/ftrace.c       |    2 +
+>  arch/powerpc/kernel/trace/ftrace_64_pg.c |   10 ++++--
+>  arch/riscv/kernel/ftrace.c               |   17 ++++++++++
+>  arch/x86/kernel/ftrace.c                 |   50 +++++++++++++++++++++---------
+>  include/linux/ftrace.h                   |   18 ++++++++---
+>  kernel/trace/fgraph.c                    |   23 ++++++++------
+>  kernel/trace/ftrace.c                    |    3 +-
+>  kernel/trace/trace.h                     |    3 +-
+>  kernel/trace/trace_functions_graph.c     |    3 +-
+>  kernel/trace/trace_irqsoff.c             |    3 +-
+>  kernel/trace/trace_sched_wakeup.c        |    3 +-
+>  kernel/trace/trace_selftest.c            |    8 +++--
+>  14 files changed, 128 insertions(+), 45 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+> index a650f5e11fc5..bc647b725e6a 100644
+> --- a/arch/arm64/kernel/ftrace.c
+> +++ b/arch/arm64/kernel/ftrace.c
+> @@ -481,7 +481,25 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
+>  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+>  {
+> -	prepare_ftrace_return(ip, &fregs->lr, fregs->fp);
+> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> +	unsigned long frame_pointer = fregs->fp;
+> +	unsigned long *parent = &fregs->lr;
+> +	unsigned long old;
+> +
+> +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+> +		return;
+> +
+> +	/*
+> +	 * Note:
+> +	 * No protection against faulting at *parent, which may be seen
+> +	 * on other archs. It's unlikely on AArch64.
+> +	 */
+> +	old = *parent;
+> +
+> +	if (!function_graph_enter_regs(old, ip, frame_pointer,
+> +				       (void *)frame_pointer, fregs)) {
+> +		*parent = return_hooker;
+> +	}
+>  }
+>  #else
+>  /*
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+> index bff058317062..966e0f7f7aca 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -243,8 +243,16 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  {
+>  	struct pt_regs *regs = &fregs->regs;
+>  	unsigned long *parent = (unsigned long *)&regs->regs[1];
+> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> +	unsigned long old;
+> +
+> +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+> +		return;
+> +
+> +	old = *parent;
+>  
+> -	prepare_ftrace_return(ip, (unsigned long *)parent);
+> +	if (!function_graph_enter_regs(old, ip, 0, parent, fregs))
+> +		*parent = return_hooker;
+>  }
+>  #else
+>  static int ftrace_modify_graph_caller(bool enable)
+> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
+> index d8d6b4fd9a14..a1a0e0b57662 100644
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -434,7 +434,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		goto out;
+>  
+> -	if (!function_graph_enter(parent_ip, ip, 0, (unsigned long *)sp))
+> +	if (!function_graph_enter_regs(parent_ip, ip, 0, (unsigned long *)sp, fregs))
+>  		parent_ip = ppc_function_entry(return_to_handler);
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.c b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> index 12fab1803bcf..4ae9eeb1c8f1 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> +++ b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> @@ -800,7 +800,8 @@ int ftrace_disable_ftrace_graph_caller(void)
+>   * in current thread info. Return the address we want to divert to.
+>   */
+>  static unsigned long
+> -__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp)
+> +__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp,
+> +			struct ftrace_regs *fregs)
+>  {
+>  	unsigned long return_hooker;
+>  	int bit;
+> @@ -817,7 +818,7 @@ __prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp
+>  
+>  	return_hooker = ppc_function_entry(return_to_handler);
+>  
+> -	if (!function_graph_enter(parent, ip, 0, (unsigned long *)sp))
+> +	if (!function_graph_enter_regs(parent, ip, 0, (unsigned long *)sp, fregs))
+>  		parent = return_hooker;
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> @@ -829,13 +830,14 @@ __prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp
+>  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+>  {
+> -	fregs->regs.link = __prepare_ftrace_return(parent_ip, ip, fregs->regs.gpr[1]);
+> +	fregs->regs.link = __prepare_ftrace_return(parent_ip, ip,
+> +						   fregs->regs.gpr[1], fregs);
+>  }
+>  #else
+>  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long ip,
+>  				    unsigned long sp)
+>  {
+> -	return __prepare_ftrace_return(parent, ip, sp);
+> +	return __prepare_ftrace_return(parent, ip, sp, NULL);
+>  }
+>  #endif
+>  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4b95c574fd04..f5c3b5a752b0 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -214,7 +214,22 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
+>  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+>  {
+> -	prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
+> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> +	unsigned long frame_pointer = fregs->s0;
+> +	unsigned long *parent = &fregs->ra;
+> +	unsigned long old;
+> +
+> +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+> +		return;
+> +
+> +	/*
+> +	 * We don't suffer access faults, so no extra fault-recovery assembly
+> +	 * is needed here.
+> +	 */
+> +	old = *parent;
+> +
+> +	if (!function_graph_enter_regs(old, ip, frame_pointer, parent, fregs))
+> +		*parent = return_hooker;
+>  }
+>  #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+>  extern void ftrace_graph_call(void);
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 8da0e66ca22d..decf4c11dcf3 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -605,16 +605,8 @@ int ftrace_disable_ftrace_graph_caller(void)
+>  }
+>  #endif /* CONFIG_DYNAMIC_FTRACE && !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
+>  
+> -/*
+> - * Hook the return address and push it in the stack of return addrs
+> - * in current thread info.
+> - */
+> -void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+> -			   unsigned long frame_pointer)
+> +static inline bool skip_ftrace_return(void)
+>  {
+> -	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> -	int bit;
+> -
+>  	/*
+>  	 * When resuming from suspend-to-ram, this function can be indirectly
+>  	 * called from early CPU startup code while the CPU is in real mode,
+> @@ -624,13 +616,28 @@ void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+>  	 * This check isn't as accurate as virt_addr_valid(), but it should be
+>  	 * good enough for this purpose, and it's fast.
+>  	 */
+> -	if (unlikely((long)__builtin_frame_address(0) >= 0))
+> -		return;
+> +	if ((long)__builtin_frame_address(0) >= 0)
+> +		return true;
+>  
+> -	if (unlikely(ftrace_graph_is_dead()))
+> -		return;
+> +	if (ftrace_graph_is_dead())
+> +		return true;
+> +
+> +	if (atomic_read(&current->tracing_graph_pause))
+> +		return true;
+> +	return false;
+> +}
+> +
+> +/*
+> + * Hook the return address and push it in the stack of return addrs
+> + * in current thread info.
+> + */
+> +void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+> +			   unsigned long frame_pointer)
+> +{
+> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> +	int bit;
+>  
+> -	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+> +	if (unlikely(skip_ftrace_return()))
+>  		return;
+>  
+>  	bit = ftrace_test_recursion_trylock(ip, *parent);
+> @@ -649,8 +656,21 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  {
+>  	struct pt_regs *regs = &fregs->regs;
+>  	unsigned long *stack = (unsigned long *)kernel_stack_pointer(regs);
+> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> +	unsigned long *parent = (unsigned long *)stack;
+> +	int bit;
+>  
+> -	prepare_ftrace_return(ip, (unsigned long *)stack, 0);
+> +	if (unlikely(skip_ftrace_return()))
+> +		return;
+> +
+> +	bit = ftrace_test_recursion_trylock(ip, *parent);
+> +	if (bit < 0)
+> +		return;
+> +
+> +	if (!function_graph_enter_regs(*parent, ip, 0, parent, fregs))
+> +		*parent = return_hooker;
+> +
+> +	ftrace_test_recursion_unlock(bit);
+>  }
+>  #endif
+>  
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index f84fb9635fb0..1fe49a28de2d 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -1063,9 +1063,12 @@ struct fgraph_ops;
+>  typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *,
+>  				       struct fgraph_ops *); /* return */
+>  typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *,
+> -				      struct fgraph_ops *); /* entry */
+> +				      struct fgraph_ops *,
+> +				      struct ftrace_regs *); /* entry */
+>  
+> -extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
+> +extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
+> +				   struct fgraph_ops *gops,
+> +				   struct ftrace_regs *fregs);
+>  bool ftrace_pids_enabled(struct ftrace_ops *ops);
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> @@ -1108,8 +1111,15 @@ struct ftrace_ret_stack {
+>  extern void return_to_handler(void);
+>  
+>  extern int
+> -function_graph_enter(unsigned long ret, unsigned long func,
+> -		     unsigned long frame_pointer, unsigned long *retp);
+> +function_graph_enter_regs(unsigned long ret, unsigned long func,
+> +			  unsigned long frame_pointer, unsigned long *retp,
+> +			  struct ftrace_regs *fregs);
+> +
+> +static inline int function_graph_enter(unsigned long ret, unsigned long func,
+> +				       unsigned long fp, unsigned long *retp)
+> +{
+> +	return function_graph_enter_regs(ret, func, fp, retp, NULL);
+> +}
+>  
+>  struct ftrace_ret_stack *
+>  ftrace_graph_get_ret_stack(struct task_struct *task, int skip);
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index d7d4fb403f6f..0322c5723748 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -290,7 +290,8 @@ static inline unsigned long make_data_type_val(int idx, int size, int offset)
+>  }
+>  
+>  /* ftrace_graph_entry set to this to tell some archs to run function graph */
+> -static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops)
+> +static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops,
+> +		     struct ftrace_regs *fregs)
+>  {
+>  	return 0;
+>  }
+> @@ -484,7 +485,7 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
+>  #endif
+>  
+>  int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
+> -			    struct fgraph_ops *gops)
+> +			    struct fgraph_ops *gops, struct ftrace_regs *fregs)
+>  {
+>  	return 0;
+>  }
+> @@ -612,8 +613,9 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+>  #endif
+>  
+>  /* If the caller does not use ftrace, call this function. */
+> -int function_graph_enter(unsigned long ret, unsigned long func,
+> -			 unsigned long frame_pointer, unsigned long *retp)
+> +int function_graph_enter_regs(unsigned long ret, unsigned long func,
+> +			      unsigned long frame_pointer, unsigned long *retp,
+> +			      struct ftrace_regs *fregs)
+>  {
+>  	struct ftrace_graph_ent trace;
+>  	unsigned long bitmap = 0;
+> @@ -631,7 +633,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+>  	if (static_branch_likely(&fgraph_do_direct)) {
+>  		int save_curr_ret_stack = current->curr_ret_stack;
+>  
+> -		if (static_call(fgraph_func)(&trace, fgraph_direct_gops))
+> +		if (static_call(fgraph_func)(&trace, fgraph_direct_gops, fregs))
+>  			bitmap |= BIT(fgraph_direct_gops->idx);
+>  		else
+>  			/* Clear out any saved storage */
+> @@ -649,7 +651,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+>  
+>  			save_curr_ret_stack = current->curr_ret_stack;
+>  			if (ftrace_ops_test(&gops->ops, func, NULL) &&
+> -			    gops->entryfunc(&trace, gops))
+> +			    gops->entryfunc(&trace, gops, fregs))
+>  				bitmap |= BIT(i);
+>  			else
+>  				/* Clear out any saved storage */
+> @@ -925,7 +927,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+>  
+>  static struct ftrace_ops graph_ops = {
+>  	.func			= ftrace_graph_func,
+> -	.flags			= FTRACE_OPS_GRAPH_STUB,
+> +	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+>  #ifdef FTRACE_GRAPH_TRAMP_ADDR
+>  	.trampoline		= FTRACE_GRAPH_TRAMP_ADDR,
+>  	/* trampoline_size is only needed for dynamically allocated tramps */
+> @@ -935,7 +937,8 @@ static struct ftrace_ops graph_ops = {
+>  void fgraph_init_ops(struct ftrace_ops *dst_ops,
+>  		     struct ftrace_ops *src_ops)
+>  {
+> -	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB;
+> +	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB |
+> +			 FTRACE_OPS_FL_SAVE_ARGS;
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  	if (src_ops) {
+> @@ -1119,7 +1122,7 @@ void ftrace_graph_exit_task(struct task_struct *t)
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  static int fgraph_pid_func(struct ftrace_graph_ent *trace,
+> -			   struct fgraph_ops *gops)
+> +			   struct fgraph_ops *gops, struct ftrace_regs *fregs)
+>  {
+>  	struct trace_array *tr = gops->ops.private;
+>  	int pid;
+> @@ -1133,7 +1136,7 @@ static int fgraph_pid_func(struct ftrace_graph_ent *trace,
+>  			return 0;
+>  	}
+>  
+> -	return gops->saved_func(trace, gops);
+> +	return gops->saved_func(trace, gops, fregs);
+>  }
+>  
+>  void fgraph_update_pid_func(void)
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 4c28dd177ca6..775040a9f541 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -821,7 +821,8 @@ void ftrace_graph_graph_time_control(bool enable)
+>  }
+>  
+>  static int profile_graph_entry(struct ftrace_graph_ent *trace,
+> -			       struct fgraph_ops *gops)
+> +			       struct fgraph_ops *gops,
+> +			       struct ftrace_regs *fregs)
+>  {
+>  	struct ftrace_ret_stack *ret_stack;
+>  
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index bd3e3069300e..28d8ad5e31e6 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -683,7 +683,8 @@ void trace_default_header(struct seq_file *m);
+>  void print_trace_header(struct seq_file *m, struct trace_iterator *iter);
+>  
+>  void trace_graph_return(struct ftrace_graph_ret *trace, struct fgraph_ops *gops);
+> -int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
+> +int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
+> +		      struct ftrace_regs *fregs);
+>  
+>  void tracing_start_cmdline_record(void);
+>  void tracing_stop_cmdline_record(void);
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+> index 13d0387ac6a6..b9785fc919c9 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
+> @@ -128,7 +128,8 @@ static inline int ftrace_graph_ignore_irqs(void)
+>  }
+>  
+>  int trace_graph_entry(struct ftrace_graph_ent *trace,
+> -		      struct fgraph_ops *gops)
+> +		      struct fgraph_ops *gops,
+> +		      struct ftrace_regs *fregs)
+>  {
+>  	unsigned long *task_var = fgraph_get_task_var(gops);
+>  	struct trace_array *tr = gops->private;
+> diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+> index fce064e20570..ad739d76fc86 100644
+> --- a/kernel/trace/trace_irqsoff.c
+> +++ b/kernel/trace/trace_irqsoff.c
+> @@ -176,7 +176,8 @@ static int irqsoff_display_graph(struct trace_array *tr, int set)
+>  }
+>  
+>  static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
+> -			       struct fgraph_ops *gops)
+> +			       struct fgraph_ops *gops,
+> +			       struct ftrace_regs *fregs)
+>  {
+>  	struct trace_array *tr = irqsoff_trace;
+>  	struct trace_array_cpu *data;
+> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+> index 130ca7e7787e..23360a2700de 100644
+> --- a/kernel/trace/trace_sched_wakeup.c
+> +++ b/kernel/trace/trace_sched_wakeup.c
+> @@ -113,7 +113,8 @@ static int wakeup_display_graph(struct trace_array *tr, int set)
+>  }
+>  
+>  static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+> -			      struct fgraph_ops *gops)
+> +			      struct fgraph_ops *gops,
+> +			      struct ftrace_regs *fregs)
+>  {
+>  	struct trace_array *tr = wakeup_trace;
+>  	struct trace_array_cpu *data;
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> index c4ad7cd7e778..89067f02094a 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -773,7 +773,8 @@ struct fgraph_fixture {
+>  };
+>  
+>  static __init int store_entry(struct ftrace_graph_ent *trace,
+> -			      struct fgraph_ops *gops)
+> +			      struct fgraph_ops *gops,
+> +			      struct ftrace_regs *fregs)
+>  {
+>  	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
+>  	const char *type = fixture->store_type_name;
+> @@ -1024,7 +1025,8 @@ static unsigned int graph_hang_thresh;
+>  
+>  /* Wrap the real function entry probe to avoid possible hanging */
+>  static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
+> -				      struct fgraph_ops *gops)
+> +				      struct fgraph_ops *gops,
+> +				      struct ftrace_regs *fregs)
+>  {
+>  	/* This is harmlessly racy, we want to approximately detect a hang */
+>  	if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
+> @@ -1038,7 +1040,7 @@ static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
+>  		return 0;
+>  	}
+>  
+> -	return trace_graph_entry(trace, gops);
+> +	return trace_graph_entry(trace, gops, fregs);
+>  }
+>  
+>  static struct fgraph_ops fgraph_ops __initdata  = {
 
