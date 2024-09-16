@@ -1,69 +1,94 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1964D131BDD;
-	Mon, 16 Sep 2024 07:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AF95FB9C
+	for <loongarch@lists.linux.dev>; Mon, 16 Sep 2024 09:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726471682; cv=none; b=iWRmh7W7qfOvB4ioCu9nIZAa1CNuVkT8sdJRHuo93JnybrJ+FB547n+DoAs9phFJa8Sn5VUWdRFCnllACKB82pywJnPWpZIzQHPstPLqSXER7N8eJWtuoULLt4kbk6Uspv0a7pSUMw2xQfgSpoFremnRNpI4vJTRUJxIYlxB7bU=
+	t=1726478503; cv=none; b=An78tqfJ00xEFmZJ6Dk6J+OfryW+gMLj9avynFl3et3Y3WIn5j8fpIl/GhnGllVAbPPJHqVml9S9g00ycKAQB8fECIY8eRplm/ubY15B2BojsynyxB/SlZJiU/fL4YVce1K3zXuzovCv4k+7X1TqIinIZL5dfhr7jt8I9H1v6xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726471682; c=relaxed/simple;
-	bh=D0J8bq1hRTOBXFb5iovbIYDlPoQwSOXHlrwNR6EunrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GDWm08/kmPUKTdrVWBLE2mfifHtZAlUhb+3o9p492ek01XPKPVQgHzzL0c32fTRvPgFq3BsUhgebT6a/9s6dy3GNi0ReM8VummnbJ8IXbNo6NrSPUho6YxNorHDR1qIZX1YI8Ck5UKOFp2Ex4HFkn4zo7B8PjIDhrhJvuOG+ieU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VGDvtlm0; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1726478503; c=relaxed/simple;
+	bh=Pn4Mb45YuQUUz8lez6aSq4b1LZilNyAo+E6GTIEbwcI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZcpyI/yuLBDnozNqvs5i0HA/FRvun/kAJcaEMz/hXizJmsdXiw3QRyi5TTWklakofg+lYcgiUT/N63oT4WRp8dPpWFRtPkKc4jQS7WtsL+InIPhQdwvNMMYg1f0ivzK5R4oGmwCYTbqQmXo4RCuBZI0ifkEE+vvi/RYBxJxFtJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=KuNOC/Sg; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VGDvtlm0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=D0J8bq1hRTOBXFb5iovbIYDlPoQwSOXHlrwNR6EunrM=; b=VGDvtlm0oNGCXGmTyAJdP1L+ef
-	P2O/G5PxBNyNUBgO1BYpCk1Htk8NNf/GSTaRn2wP2lFs7JJxCCctGmE8qj7WWxjP7tmX6krA/l9JA
-	F5MAfTq5LXE293xygHzdQ7ogIizEcAG2SdWv4orlUnpXx4bqfr/U4vtyHPaxaCohLqMM2RKGm/9nx
-	c2FHH0/AiIsGCVxnqHnoRBF3qQfTWeJ//RePFlTm7Uq6x42oo0QVIpYWPP1FZLe3WVI72mgU6yGHC
-	wL9uEP/9dAepBPi3dXXdFFH44jCWLUoGeBKwsbXSiRIJ5KHz+VdpjIjgn4I6MkTy7krDQTp+q1luK
-	//LQrMAw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sq69D-00000003JTe-1CkF;
-	Mon, 16 Sep 2024 07:27:47 +0000
-Date: Mon, 16 Sep 2024 00:27:47 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vitaly Wool <vitaly.wool@konsulko.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Chris Down <chris@chrisdown.name>, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="KuNOC/Sg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1726478470;
+	bh=FF2mH2iaHnQrrYcfAju7qxAlGrPt1j84vZARlsclC5I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=KuNOC/Sgj4Psd1ZV9gbpsNsknhiXwAt4DtWktvEaU0PHFQw2necj7H866Z5jQyeV4
+	 QLwD3I8AI/QmyzSMDMWEUkW5ltiuRYq7FAt3P+5ARFWp7tHl8K+VZYBa2YbR2x0sMY
+	 iqyjqfdNNmfwwjfpF7TCMpq1zmqeqoUZXVcrZc7I=
+X-QQ-mid: bizesmtpip4t1726478463t5ngxjr
+X-QQ-Originating-IP: BaCeIgj2n06C8T+oUrEoS915inZDaCMbjGl6EasPm5o=
+Received: from avenger-OMEN-by-HP-Gaming-Lapto ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 16 Sep 2024 17:21:01 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 573196331074452442
+From: WangYuli <wangyuli@uniontech.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	maobibo@loongson.cn,
+	guanwentao@uniontech.com,
+	wangyuli@uniontech.com,
+	chenhuacai@loongson.cn
+Cc: zhaotianrui@loongson.cn,
+	kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: z3fold: deprecate CONFIG_Z3FOLD
-Message-ID: <Zufd8wD1xBBJI3MN@infradead.org>
-References: <20240904233343.933462-1-yosryahmed@google.com>
+Subject: [PATCH 6.10] LoongArch: KVM: Remove unnecessary definition of KVM_PRIVATE_MEM_SLOTS
+Date: Mon, 16 Sep 2024 17:20:52 +0800
+Message-ID: <796C6F09389EF61B+20240916092052.422948-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240904233343.933462-1-yosryahmed@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-I'd still prefer to just kill it right away, but as the second best
-option I'm ok with this:
+From: Yuli Wang <wangyuli@uniontech.com>
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit 296b03ce389b4f7b3d7ea5664e53d432fb17e745 ]
+
+1. "KVM_PRIVATE_MEM_SLOTS" is renamed as "KVM_INTERNAL_MEM_SLOTS".
+
+2. "KVM_INTERNAL_MEM_SLOTS" defaults to zero, so it is not necessary to
+define it in LoongArch's asm/kvm_host.h.
+
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=bdd1c37a315bc50ab14066c4852bc8dcf070451e
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b075450868dbc0950f0942617f222eeb989cad10
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index c87b6ea0ec47..d348005d143e 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -26,8 +26,6 @@
+ 
+ #define KVM_MAX_VCPUS			256
+ #define KVM_MAX_CPUCFG_REGS		21
+-/* memory slots that does not exposed to userspace */
+-#define KVM_PRIVATE_MEM_SLOTS		0
+ 
+ #define KVM_HALT_POLL_NS_DEFAULT	500000
+ 
+-- 
+2.43.0
 
