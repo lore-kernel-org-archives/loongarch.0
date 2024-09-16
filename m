@@ -1,106 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7315B119;
-	Mon, 16 Sep 2024 11:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5680813A89B;
+	Mon, 16 Sep 2024 11:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726484978; cv=none; b=m9OZFgnXIS6tklPmfn+vcqszrsB4/xfmzdzgjyC8bW5RDwswYXV6r1Vv/MUL6diweGpnQdOnEvSY8z/v5b6kHWkmzqdqL4Rw4QCDkyW2M+I1lvpJOMpmL6L97LFMCF2PPHs3TwmWwEYC5+uAPktLCe3bWFe1MeaS9PmfwExQ9ZQ=
+	t=1726486724; cv=none; b=S/BTYM9puEG4AR+3L9HEcAwXsGFTKIuH5rckeCOGHtbDjNMfeoyzhJUzwt0/DdAlIHlHwHzTgcfGOabU7gSZjMjWaDy6wjgmYRBkvC1ZrjWBhdLjuC6Cx4MXkJ/hLBFnxfTJWSmtD/IG+mPBfefYfU34cNFFRYzwzvyihUGA2RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726484978; c=relaxed/simple;
-	bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=djCGzwUolaej4h4JoGQm52mo/x/I9NyU/zCHUQrOEz89/5PUAY9GINtXqnwjfO6zV2CVTGIblSy4AQYLXEcrASIuFGhK7QXIB/heAG2JJwchbbN4LE5PcHXPcC3iRCzfwNy6KO7ftjq/0QDDqsq8oX4878vtY6tj3+Qzpu6kcNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5bqhJlQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726486724; c=relaxed/simple;
+	bh=064gb9l0g0swz2X7Fk6lnmve2IFc+u8+yCp3Jb8Kk/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQZaeWqn2KlFAU10YaivbeWT600VLFhGQ4qZdXTnuvqTtpWh+suQSGol5zsyQHMgG+cu3cWzR2/qxqwj+8JGMrRYSIBFQJjCIHFX7NKbkjFbCgGYDFqGEpI5r6BPu2p07c/Rcs5W+DqIWJoDaZJVEF5P4DlzCjXq9u0UGXgIUsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yKNrUKt/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5bqhJlQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7718C4CECF;
-	Mon, 16 Sep 2024 11:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726484978;
-	bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=l5bqhJlQQGDTcvead/WTHbt1AguDOLjEIb1zPTeDP1V2TuiM+cO1ZpHqDNhcB2w2I
-	 XRLikS6azFs4aCk+Jfw4bqhRaxmTTTiYgPM8qYwre0pf1UXsvFEmoSzThC+dLtyNtE
-	 8NVnV0ptk/lJAqx+cbS+8fIHeakq2IWV3SgEDak1s4J5U6rGjKhovkDcTos9icKzyy
-	 uD4aZxg6RhAmnn1zEgeJrlYv9OWHaOM0GDH7OuvfHBAEYoFKjyu/yWcZAgX+OiBLYE
-	 +o3xtoux9IPvhlqMGIhn40tDYBXfaY3tGb1eIc3dL+P7WNkMKaioQM5hxQMlQpX7R5
-	 iUpgudL+mAo7w==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 16 Sep 2024 04:09:31 -0700
-Subject: [PATCH] LoongArch: KVM: Ensure ret is always initialized in
- kvm_eiointc_{read,write}()
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yKNrUKt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B995DC4CEC4;
+	Mon, 16 Sep 2024 11:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1726486724;
+	bh=064gb9l0g0swz2X7Fk6lnmve2IFc+u8+yCp3Jb8Kk/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yKNrUKt/sxtsystZjRsNQXsC6xsYpiGjj5B62w8RfpVzKxpFibPK8yUCBiD7zRxgx
+	 Ql2PooFqZm60RttG1cQ1lt+M5Ay6UNuBSYZBejjOylTtEVXGhRlo1LRbg+aQrQL1kj
+	 xchsFXSk1YczxNl8GllBMEMY+ys2wuzdRAu8zACs=
+Date: Mon, 16 Sep 2024 13:38:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: stable@vger.kernel.org, sashal@kernel.org, maobibo@loongson.cn,
+	guanwentao@uniontech.com, chenhuacai@loongson.cn,
+	zhaotianrui@loongson.cn, kernel@xen0n.name, kvm@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.10] LoongArch: KVM: Remove unnecessary definition of
+ KVM_PRIVATE_MEM_SLOTS
+Message-ID: <2024091628-gigantic-filth-b7b7@gregkh>
+References: <796C6F09389EF61B+20240916092052.422948-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-v1-1-85142dcb2274@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAOoR6GYC/x2NQQrCMBQFr1Ky9kOSilqvIl3E5Ns+bH4kiUUsv
- bvB5cAws6nCGVzUtdtU5hUFSRqYQ6f87GRiQmisrLZHPZgTLSnJ5LKf6blGYiRI9fTAh0qKXBG
- 50FsgqHALvhyIzfmu+yHYi+lV674yN/3/vI37/gNDAhrSgwAAAA==
-X-Change-ID: 20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-e17b039d2813
-To: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
- loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1823; i=nathan@kernel.org;
- h=from:subject:message-id; bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDGkvBD9+zKpiZPCZ9I318oWF/9dznjG8xRNy+UXEmtsXz
- r0WE+3c1VHKwiDGxSArpshS/Vj1uKHhnLOMN05NgpnDygQyhIGLUwAm4tzDyHCF9b+/u9pko0j5
- 3efdSo19y8SrfVMTP8+1WDyzTcnuxCWG/6kz3h9I9F/OYHPYKF7j05o9YUWz73/V/r4wQOpGiMF
- UbX4A
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <796C6F09389EF61B+20240916092052.422948-1-wangyuli@uniontech.com>
 
-Clang warns (or errors with CONFIG_WERROR=y):
+On Mon, Sep 16, 2024 at 05:20:52PM +0800, WangYuli wrote:
+> From: Yuli Wang <wangyuli@uniontech.com>
+> 
+> [ Upstream commit 296b03ce389b4f7b3d7ea5664e53d432fb17e745 ]
+> 
+> 1. "KVM_PRIVATE_MEM_SLOTS" is renamed as "KVM_INTERNAL_MEM_SLOTS".
+> 
+> 2. "KVM_INTERNAL_MEM_SLOTS" defaults to zero, so it is not necessary to
+> define it in LoongArch's asm/kvm_host.h.
+> 
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=bdd1c37a315bc50ab14066c4852bc8dcf070451e
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b075450868dbc0950f0942617f222eeb989cad10
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_host.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index c87b6ea0ec47..d348005d143e 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -26,8 +26,6 @@
+>  
+>  #define KVM_MAX_VCPUS			256
+>  #define KVM_MAX_CPUCFG_REGS		21
+> -/* memory slots that does not exposed to userspace */
+> -#define KVM_PRIVATE_MEM_SLOTS		0
+>  
+>  #define KVM_HALT_POLL_NS_DEFAULT	500000
 
-  arch/loongarch/kvm/intc/eiointc.c:512:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
-    512 |         default:
-        |         ^~~~~~~
-  arch/loongarch/kvm/intc/eiointc.c:716:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
-    716 |         default:
-        |         ^~~~~~~
+Why is this needed in the stable tree?
 
-Set ret to -EINVAL in the default case to resolve the warning, as len
-was not a valid value for the functions to handle.
+thanks,
 
-Fixes: f810ef038c66 ("LoongArch: KVM: Add EIOINTC read and write functions")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- arch/loongarch/kvm/intc/eiointc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 414e4ffd69173dc248ba0042bed3bebdc11700e3..e5d23f0da055c97c0e4ba6705f6b71d89846f42a 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -512,6 +512,7 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 	default:
- 		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
- 						__func__, addr, len);
-+		ret = -EINVAL;
- 	}
- 	loongarch_ext_irq_unlock(eiointc, flags);
- 	return ret;
-@@ -716,6 +717,7 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 	default:
- 		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
- 						__func__, addr, len);
-+		ret = -EINVAL;
- 	}
- 	loongarch_ext_irq_unlock(eiointc, flags);
- 	return ret;
-
----
-base-commit: 357da696640e1db8fc8829a4dd1bb2d0402169b5
-change-id: 20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-e17b039d2813
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+greg k-h
