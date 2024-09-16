@@ -1,40 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7505F145B0C;
-	Mon, 16 Sep 2024 11:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736B815A876;
+	Mon, 16 Sep 2024 16:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726486747; cv=none; b=fr9rTpSYN18tyBY2wuiHsh5FNaMpV5tsqyv3Hhf6N774b5nkhLtZj8aTQN8BZkpFQeDn6BFgsY7i7jgHC9CczJYdKIVYzCW64LAPRlrUe9Q6wQWQl+xKwEY3fi3qsqc6gb7uMK2DDAhQZp4fttV2gVB/u5d0e9n0RWSfi3e4sEM=
+	t=1726502808; cv=none; b=rfGFiZOGke/RtHr3k9KiBeRFlIVpGH6sUEmuaEgDsV2DmWlFYAdFTTSG8dviyPlPuRXZbyDwumBj5P/3fsSsoZ7cDfsj0oFtNMbZhJ2LAgG3GC1G1FpKW5kJI/SgT+CycRpfxVooHQhyvBN78R/JmUBdLZhWGkJwUVVvyfZ15AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726486747; c=relaxed/simple;
-	bh=B4POFSJV8VB5Kr5o010X/Du2R1CtR5kqeZrqDxL9QAQ=;
+	s=arc-20240116; t=1726502808; c=relaxed/simple;
+	bh=hhus5HA0OQNV9tB/IzLXvfJrYy1c5KgPeSHi+94cWn8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=edfYT3IRVtOOPdkUTuiAa6j+flp84ke5IJIIRqCF4Kd8ZKkUo5O8nDQABMXZFbAcBi3ieilPW36ACOQlEcjeqU3lfPNvrgcN3D96VFXN/yngSIQRzmnW/fC+guM8jtLV/TPe0/BKfyrwaJ7BLFGTx0QLAyMHqUvxNIwu7gZsuos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GOYAGf+O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GOYAGf+O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD19EC4CEC4;
-	Mon, 16 Sep 2024 11:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1726486747;
-	bh=B4POFSJV8VB5Kr5o010X/Du2R1CtR5kqeZrqDxL9QAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GOYAGf+ODsqdkGZubVl7Qn6eUqZPb1IpeIPywRU9/1AyxQBOL3gBWR4cdxUmyaPUt
-	 O4yqnFs0kgFKdQ2WcN7xzSSrmnA7plQsEYR0ePZb2iR6X4lMpxFsTSfdI7iwmPIEZc
-	 oGQbHF/c73S/1K7fPmbz4T7Rwla9xXfMWfLsrAW0=
-Date: Mon, 16 Sep 2024 13:39:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: stable@vger.kernel.org, sashal@kernel.org, maobibo@loongson.cn,
-	guanwentao@uniontech.com, zhangdandan@uniontech.com,
-	chenhuacai@loongson.cn, zhaotianrui@loongson.cn, kernel@xen0n.name,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6.10] LoongArch: KVM: Remove undefined a6 argument
- comment for kvm_hypercall()
-Message-ID: <2024091647-absolve-wharf-f271@gregkh>
-References: <5B13B2AF7C2779A7+20240916092857.433334-1-wangyuli@uniontech.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAQikCHjobetnWVWzKxE4yrdduJgJGMMoMeKpM3PLm7jhg8W19aegHZnGOI3FBijaNNZuQ1SngI9oG+7Ni0XeVG5xu96NV5qydmtXAB36UZSlb1KbFJQ9RUgn3EnNzwhF7razLib0EOIG6G8SSBV6cMxWUSstRQmxGbw/xnmF8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3126C4AF09;
+	Mon, 16 Sep 2024 16:06:45 +0000 (UTC)
+Date: Mon, 16 Sep 2024 17:06:43 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Julian Vetter <jvetter@kalrayinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	Yann Sionneau <ysionneau@kalrayinc.com>
+Subject: Re: [PATCH v3 1/4] Consolidate __memcpy_{to,from}io and __memset_io
+ into a single lib
+Message-ID: <ZuhXkzGJ6QHpdXVp@arm.com>
+References: <20240910134341.2537407-1-jvetter@kalrayinc.com>
+ <20240910134341.2537407-2-jvetter@kalrayinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,51 +37,17 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5B13B2AF7C2779A7+20240916092857.433334-1-wangyuli@uniontech.com>
+In-Reply-To: <20240910134341.2537407-2-jvetter@kalrayinc.com>
 
-On Mon, Sep 16, 2024 at 05:28:57PM +0800, WangYuli wrote:
-> From: Dandan Zhang <zhangdandan@uniontech.com>
+On Tue, Sep 10, 2024 at 03:43:38PM +0200, Julian Vetter wrote:
+> Various architectures have almost the same implementations for
+> __memcpy_{to,from}io and __memset_io functions. So, consolidate them and
+> introduce a CONFIG_GENERIC_IO_COPY flag to build the given
+> lib/io_copy.c.
 > 
-> [ Upstream commit 494b0792d962e8efac72b3a5b6d9bcd4e6fa8cf0 ]
-> 
-> The kvm_hypercall() set for LoongArch is limited to a1-a5. So the
-> mention of a6 in the comment is undefined that needs to be rectified.
-> 
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> --
-> Changlog:
->  *v1 -> v2: Correct the commit-msg format.
-> ---
->  arch/loongarch/include/asm/kvm_para.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-> index 4ba2312e5f8c..6d5e9b6c5714 100644
-> --- a/arch/loongarch/include/asm/kvm_para.h
-> +++ b/arch/loongarch/include/asm/kvm_para.h
-> @@ -28,9 +28,9 @@
->   * Hypercall interface for KVM hypervisor
->   *
->   * a0: function identifier
-> - * a1-a6: args
-> + * a1-a5: args
->   * Return value will be placed in a0.
-> - * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
-> + * Up to 5 arguments are passed in a1, a2, a3, a4, a5.
->   */
->  static __always_inline long kvm_hypercall0(u64 fid)
->  {
-> -- 
-> 2.43.0
-> 
-> 
+> Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
+> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
 
-Again, why is this needed?
+The code looks correct:
 
-thanks,
-
-greg k-h
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
