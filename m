@@ -1,98 +1,106 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2404314659B
-	for <loongarch@lists.linux.dev>; Mon, 16 Sep 2024 09:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7315B119;
+	Mon, 16 Sep 2024 11:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726478962; cv=none; b=A0S9p/AlpaCu3iXcKkWwZBgtEdY8yq1TuUHRi+OS3ODDaskXRurYdTVP2F2JFOcMXFlLl3iRgthggI/j5OVgV462/Vs8GVSyZI2kN6h4Y3h7W+NHIDgWsU0QxvUvQEipZrkB/d+Y4vA0JPXNbUnJ7jklPSfgDnzbl2waZCS2AUw=
+	t=1726484978; cv=none; b=m9OZFgnXIS6tklPmfn+vcqszrsB4/xfmzdzgjyC8bW5RDwswYXV6r1Vv/MUL6diweGpnQdOnEvSY8z/v5b6kHWkmzqdqL4Rw4QCDkyW2M+I1lvpJOMpmL6L97LFMCF2PPHs3TwmWwEYC5+uAPktLCe3bWFe1MeaS9PmfwExQ9ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726478962; c=relaxed/simple;
-	bh=LurvBMAZgV5vSM0HyPmLqsMnwdCNy2bUJ7ttWHTaj4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n3wZM3yaaZ+4tUQdwbri6Ai2DEvHs33wXS0YOyOIWekXY+r3T/PwNDNaVHSlE5lPlc8ZcYqI3rk+b/zMurBNQ1vhtaviQbUIrK9rP8nG318MIqjAUkZz+L3qVRTN2L5J+RDJJGJt5ESOYQnVyI0NFtP9f9JaYitfkMS6kmhtvEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=HJt+5vCG; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1726484978; c=relaxed/simple;
+	bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=djCGzwUolaej4h4JoGQm52mo/x/I9NyU/zCHUQrOEz89/5PUAY9GINtXqnwjfO6zV2CVTGIblSy4AQYLXEcrASIuFGhK7QXIB/heAG2JJwchbbN4LE5PcHXPcC3iRCzfwNy6KO7ftjq/0QDDqsq8oX4878vtY6tj3+Qzpu6kcNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5bqhJlQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="HJt+5vCG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1726478949;
-	bh=/J9ycsKmev+JnOkYZ8ZrOJcZ2sdXEpc0VMnSBiYWn1k=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=HJt+5vCGYboMfqLXq0kOzJkQ0ZblHKn2fM/FqN+6Riqm1nYMT3v/vN3c4aKk4uN9u
-	 7Z7uY9maZPH7bzSVeZDVI/VFZV1yq/dGg4IzVG7PDE+CyxkM7fkE7ek/1iDE3y+1uF
-	 zFti9t+/w7iGp1wEYkDNVD2fujsZ7AhzD49UNNYc=
-X-QQ-mid: bizesmtpip3t1726478942tk58g1r
-X-QQ-Originating-IP: +2qEEGnAhCVxuAAwv4tZUJOrInBum+BnrvEqM8e9iaw=
-Received: from avenger-OMEN-by-HP-Gaming-Lapto ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 16 Sep 2024 17:29:00 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13749986778819452041
-From: WangYuli <wangyuli@uniontech.com>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	maobibo@loongson.cn,
-	guanwentao@uniontech.com,
-	zhangdandan@uniontech.com,
-	wangyuli@uniontech.com,
-	chenhuacai@loongson.cn
-Cc: zhaotianrui@loongson.cn,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6.10] LoongArch: KVM: Remove undefined a6 argument comment for kvm_hypercall()
-Date: Mon, 16 Sep 2024 17:28:57 +0800
-Message-ID: <5B13B2AF7C2779A7+20240916092857.433334-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5bqhJlQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7718C4CECF;
+	Mon, 16 Sep 2024 11:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726484978;
+	bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=l5bqhJlQQGDTcvead/WTHbt1AguDOLjEIb1zPTeDP1V2TuiM+cO1ZpHqDNhcB2w2I
+	 XRLikS6azFs4aCk+Jfw4bqhRaxmTTTiYgPM8qYwre0pf1UXsvFEmoSzThC+dLtyNtE
+	 8NVnV0ptk/lJAqx+cbS+8fIHeakq2IWV3SgEDak1s4J5U6rGjKhovkDcTos9icKzyy
+	 uD4aZxg6RhAmnn1zEgeJrlYv9OWHaOM0GDH7OuvfHBAEYoFKjyu/yWcZAgX+OiBLYE
+	 +o3xtoux9IPvhlqMGIhn40tDYBXfaY3tGb1eIc3dL+P7WNkMKaioQM5hxQMlQpX7R5
+	 iUpgudL+mAo7w==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 16 Sep 2024 04:09:31 -0700
+Subject: [PATCH] LoongArch: KVM: Ensure ret is always initialized in
+ kvm_eiointc_{read,write}()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-v1-1-85142dcb2274@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOoR6GYC/x2NQQrCMBQFr1Ky9kOSilqvIl3E5Ns+bH4kiUUsv
+ bvB5cAws6nCGVzUtdtU5hUFSRqYQ6f87GRiQmisrLZHPZgTLSnJ5LKf6blGYiRI9fTAh0qKXBG
+ 50FsgqHALvhyIzfmu+yHYi+lV674yN/3/vI37/gNDAhrSgwAAAA==
+X-Change-ID: 20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-e17b039d2813
+To: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+ loongarch@lists.linux.dev, llvm@lists.linux.dev, patches@lists.linux.dev, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1823; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=ESu+Y3NLrw6nKtLSnksNQ2p6EDkLCi+HsWc7u+Z6WTs=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDGkvBD9+zKpiZPCZ9I318oWF/9dznjG8xRNy+UXEmtsXz
+ r0WE+3c1VHKwiDGxSArpshS/Vj1uKHhnLOMN05NgpnDygQyhIGLUwAm4tzDyHCF9b+/u9pko0j5
+ 3efdSo19y8SrfVMTP8+1WDyzTcnuxCWG/6kz3h9I9F/OYHPYKF7j05o9YUWz73/V/r4wQOpGiMF
+ UbX4A
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-From: Dandan Zhang <zhangdandan@uniontech.com>
+Clang warns (or errors with CONFIG_WERROR=y):
 
-[ Upstream commit 494b0792d962e8efac72b3a5b6d9bcd4e6fa8cf0 ]
+  arch/loongarch/kvm/intc/eiointc.c:512:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
+    512 |         default:
+        |         ^~~~~~~
+  arch/loongarch/kvm/intc/eiointc.c:716:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
+    716 |         default:
+        |         ^~~~~~~
 
-The kvm_hypercall() set for LoongArch is limited to a1-a5. So the
-mention of a6 in the comment is undefined that needs to be rectified.
+Set ret to -EINVAL in the default case to resolve the warning, as len
+was not a valid value for the functions to handle.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Dandan Zhang <zhangdandan@uniontech.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
---
-Changlog:
- *v1 -> v2: Correct the commit-msg format.
+Fixes: f810ef038c66 ("LoongArch: KVM: Add EIOINTC read and write functions")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- arch/loongarch/include/asm/kvm_para.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/kvm/intc/eiointc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index 4ba2312e5f8c..6d5e9b6c5714 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -28,9 +28,9 @@
-  * Hypercall interface for KVM hypervisor
-  *
-  * a0: function identifier
-- * a1-a6: args
-+ * a1-a5: args
-  * Return value will be placed in a0.
-- * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
-+ * Up to 5 arguments are passed in a1, a2, a3, a4, a5.
-  */
- static __always_inline long kvm_hypercall0(u64 fid)
- {
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 414e4ffd69173dc248ba0042bed3bebdc11700e3..e5d23f0da055c97c0e4ba6705f6b71d89846f42a 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -512,6 +512,7 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+ 	default:
+ 		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
+ 						__func__, addr, len);
++		ret = -EINVAL;
+ 	}
+ 	loongarch_ext_irq_unlock(eiointc, flags);
+ 	return ret;
+@@ -716,6 +717,7 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+ 	default:
+ 		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
+ 						__func__, addr, len);
++		ret = -EINVAL;
+ 	}
+ 	loongarch_ext_irq_unlock(eiointc, flags);
+ 	return ret;
+
+---
+base-commit: 357da696640e1db8fc8829a4dd1bb2d0402169b5
+change-id: 20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-e17b039d2813
+
+Best regards,
 -- 
-2.43.0
+Nathan Chancellor <nathan@kernel.org>
 
