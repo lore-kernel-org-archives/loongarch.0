@@ -1,116 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 442C419A;
-	Wed, 18 Sep 2024 02:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B688641C79;
+	Wed, 18 Sep 2024 02:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726625146; cv=none; b=eDwgvXBTwcNkFmRRQcMqrgqF1g3I2URnB/N0IbzL9Xq9YDnk/99Rz4Yk7XtyAn0C/DdnHxb1Mos5uZLusuWQRT/AetzPA/2j4iWSiY4EWcbktaK+3WNb0eodDhTezxxxRZLpCEuJI644lrbgqw1swkmYbtpWoXFU5nF16WopPpk=
+	t=1726626414; cv=none; b=FSskMDCgGpqS63J1I24DTHTl5SCYfmCi0FaxDNmcHasQt/cm7n3oaJagy/a1w3GVCU11qHGeKy31jOTdU/P+rJ9e17f/DhdC4pCFx55WVpLzcYMxwPa7vEvYRsYMF2LQd3Gw9fLa0WoFT9pHI53/tPwVl60eO2auj1TNGtdKTRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726625146; c=relaxed/simple;
-	bh=ja0bMnkN4tal4/Qm2vECx9zbDlKn9vDet4Fh//EDTdM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PcC3yAgPeuHhoT+TAHAUDvs2WIw8qy9gqsYfV1Las8aE2ybr4US9v+qY6O7E75DajEABynoUXObso+n/ejJXRk7hINYEPWEzzCjF/WgdKcXuhEtpgCV7e79xUHE8pbv9O2r/t7rA1Pu+1TpzE1hXObHTFMUVhUJqlgaQxvsWZKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.184])
-	by gateway (Coremail) with SMTP id _____8BxfeptNepmmmUKAA--.24559S3;
-	Wed, 18 Sep 2024 10:05:34 +0800 (CST)
-Received: from [10.20.42.184] (unknown [10.20.42.184])
-	by front1 (Coremail) with SMTP id qMiowMBxHeRpNepmN0EJAA--.53205S3;
-	Wed, 18 Sep 2024 10:05:32 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Ensure ret is always initialized in
- kvm_eiointc_{read,write}()
-To: Nathan Chancellor <nathan@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, llvm@lists.linux.dev,
- patches@lists.linux.dev
-References: <20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-v1-1-85142dcb2274@kernel.org>
-From: lixianglai <lixianglai@loongson.cn>
-Message-ID: <9c7e4360-3f77-035f-edb9-61dcfe239a29@loongson.cn>
-Date: Wed, 18 Sep 2024 10:05:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1726626414; c=relaxed/simple;
+	bh=zHccpoxi6k4rCaf90hrPUWrqkjxWOnkOK309CcwZhEc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bNej4/H6xYlAgr7dzgyWIqT3S5q4i3l2sE8AquteEfgjrHaZjzwprfRNWoiiosAyPz7GRz8RajQ2O37C+w40T4GyQRODfcRfo4Olg5OM5m269VlEfr48t7RRIfr7f0fLW2UFfhaxkt4gLOrWvrM2Sj4Q0iVyfg39R6GaJC9Rv1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDEwFnJ+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDEwFnJ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27930C4CED1;
+	Wed, 18 Sep 2024 02:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726626414;
+	bh=zHccpoxi6k4rCaf90hrPUWrqkjxWOnkOK309CcwZhEc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aDEwFnJ+CBmnRkq0efo1uoM/5w8WPq8XhShZi8zzVS3l4J7/TYt6OUuKGqzEympMO
+	 EXdc/Bqm8NzRkqPE62JloRoG69evhbRjzOMjD4HKnNkn7UxdJstSOhknwd0a1c47xl
+	 edYHbmefS47ilUXnBTZaowr5aAC0RfcEGC3B4/eCdszr0tOFjGa+stIg22SRtIcQ6F
+	 7GrAydc27cZzTOARgi8ySKX9n750voWIEP/MhugQpUJuTrLb+S5989+tvR1ywcI4ec
+	 VQZCmUmE4njOGNcrpFVmxbyxzeHY+yvL9wucE+j0fzA7in5T4IFdyPvI3TmTDeh4hx
+	 ApqVC9s5yT79w==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d64b27c45so817619566b.3;
+        Tue, 17 Sep 2024 19:26:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVryODtsGHfHiDoEVegwXv6qdk4lJQuBUgeU7vbUvrDidAoptI0FXe7Cj4Y7T8LNz2PIEIO3+jrDvs=@lists.linux.dev, AJvYcCWzQblP/Q1paOvQ2+wrfmmCNC5JgQua0ZZmUu0A1PV6BkH2CujDLU7P/B5HD2+eRb6ybjAVod+Enh9vLafc6Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTz5Ubs7sfQtfENjFTSh1MhzUWAmlsSPFdq1+OI8A9jupP3u/x
+	Jm0zKa/DOa2N6EJ/2iyqniLvDGDOQhMFirSqpZVN94EZO8GDdXfYss5CBMxnTKeMVOlEUeFOErq
+	nQJRFB4BQ0bPdsJj5m2vfKpDPtvM=
+X-Google-Smtp-Source: AGHT+IHdH78oOHxe4W0yPL8blfmsq1Fswk5TE5U6eoGCMbCOPlWVAd6hKOZYEBwjJguzK50lsYiLmKhC5icAgnuVfY8=
+X-Received: by 2002:a17:907:2d87:b0:a8d:7046:a1bd with SMTP id
+ a640c23a62f3a-a9047d03d80mr1407013366b.28.1726626412527; Tue, 17 Sep 2024
+ 19:26:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-v1-1-85142dcb2274@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBxHeRpNepmN0EJAA--.53205S3
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFW7KrykZw4xJFyxurW3urX_yoW8ZrW5pF
-	1UZw4kCrs5Xrykta4Dt3WrWF4jqa95Gr17uFyYqFW2kF4UZF9xZ340yrZIgFyYkws7Jr40
-	qF1F93WYvan0y3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UU
-	UUU==
+References: <20240909133159.2024688-4-jvetter@kalrayinc.com>
+ <202409101549.CyV0mJ2S-lkp@intel.com> <c78987ba-6b54-4433-b5dc-3b3b9f98354a@app.fastmail.com>
+In-Reply-To: <c78987ba-6b54-4433-b5dc-3b3b9f98354a@app.fastmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Wed, 18 Sep 2024 10:26:41 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTaQugaXoUWEVgrJ_3i9z4tep05BF1wQ9QQifgqw5B+vQ@mail.gmail.com>
+Message-ID: <CAJF2gTTaQugaXoUWEVgrJ_3i9z4tep05BF1wQ9QQifgqw5B+vQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] Use generic io memcpy functions on the csky architecture
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kernel test robot <lkp@intel.com>, Julian Vetter <jvetter@kalrayinc.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Andrew Morton <akpm@linux-foundation.org>, oe-kbuild-all@lists.linux.dev, 
+	Linux Memory Management List <linux-mm@kvack.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Yann Sionneau <ysionneau@kalrayinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nathan Chancellor :
+On Tue, Sep 10, 2024 at 5:16=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Tue, Sep 10, 2024, at 07:27, kernel test robot wrote:
+>
+> > 6a9bfa83709a84e Julian Vetter 2024-09-09  55          while (count >=3D
+> > NATIVE_STORE_SIZE) {
+> > 6a9bfa83709a84e Julian Vetter 2024-09-09  56                  if
+> > (IS_ENABLED(CONFIG_64BIT))
+> > 6a9bfa83709a84e Julian Vetter 2024-09-09 @57
+> >                       __raw_writeq(get_unaligned((uintptr_t *)from), to=
+);
+> > 6a9bfa83709a84e Julian Vetter 2024-09-09  58                  else
+>
+> Right, this one actually has to be a preprocessor conditional
+> because __raw_writeq is not defined.
+All 32-bit ISAs didn't support __raw_writeq.
 
-Thank you very much for pointing out the problem,
-I will integrate this patch in the next version.
+e.g.: include/asm-generic/io.h
+#ifdef CONFIG_64BIT
+#ifndef __raw_writeq
+#define __raw_writeq __raw_writeq
+static inline void __raw_writeq(u64 value, volatile void __iomem *addr)
+{
+        *(volatile u64 __force *)addr =3D value;
+}
+#endif
+#endif /* CONFIG_64BIT */
 
-Thanks!
-Xianglai.
+e.g.: arch/riscv/include/asm/mmio.h
+#ifdef CONFIG_64BIT
+#define __raw_writeq __raw_writeq
+static inline void __raw_writeq(u64 val, volatile void __iomem *addr)
+{
+        asm volatile("sd %0, 0(%1)" : : "r" (val), "r" (addr));
+}
+#endif
 
-> Clang warns (or errors with CONFIG_WERROR=y):
 >
->    arch/loongarch/kvm/intc/eiointc.c:512:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
->      512 |         default:
->          |         ^~~~~~~
->    arch/loongarch/kvm/intc/eiointc.c:716:2: error: variable 'ret' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
->      716 |         default:
->          |         ^~~~~~~
->
-> Set ret to -EINVAL in the default case to resolve the warning, as len
-> was not a valid value for the functions to handle.
->
-> Fixes: f810ef038c66 ("LoongArch: KVM: Add EIOINTC read and write functions")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->   arch/loongarch/kvm/intc/eiointc.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-> index 414e4ffd69173dc248ba0042bed3bebdc11700e3..e5d23f0da055c97c0e4ba6705f6b71d89846f42a 100644
-> --- a/arch/loongarch/kvm/intc/eiointc.c
-> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> @@ -512,6 +512,7 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->   	default:
->   		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
->   						__func__, addr, len);
-> +		ret = -EINVAL;
->   	}
->   	loongarch_ext_irq_unlock(eiointc, flags);
->   	return ret;
-> @@ -716,6 +717,7 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->   	default:
->   		WARN_ONCE(1, "%s: Abnormal address access:addr 0x%llx,size %d\n",
->   						__func__, addr, len);
-> +		ret = -EINVAL;
->   	}
->   	loongarch_ext_irq_unlock(eiointc, flags);
->   	return ret;
->
-> ---
-> base-commit: 357da696640e1db8fc8829a4dd1bb2d0402169b5
-> change-id: 20240916-loongarch-kvm-eiointc-fix-sometimes-uninitialized-e17b039d2813
->
-> Best regards,
+>      Arnd
 
+
+
+--=20
+Best Regards
+ Guo Ren
