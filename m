@@ -1,84 +1,46 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4041B3398B
-	for <loongarch@lists.linux.dev>; Fri, 20 Sep 2024 05:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BEE17C7C9;
+	Fri, 20 Sep 2024 15:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726809047; cv=none; b=MgBN6GiCBe//e5zNuni0uItBiPt1xqSGkfJCLW85YFV6w1YrEaAnsvG1cJemRiqEhGMJ98hQ4MiaYBO5lX7YBPrfLfinqM357+UBVsXCwRCGgGPoK0r3zum1UeuKiavhE1BMNC6z1/DzLPI9thz71eqBXyG1cG68tkkWv4wJo0A=
+	t=1726845072; cv=none; b=Au3kpZrD0fypGOr1iAL8kh7WHtB0YCoGtbOWMW7XLvxE+/5UgPirVFyJuKiGjjlO3xhWBsIkxP/SgbEh5OhWx+o3bAWU/nxdkmmeA7GdE5X3vf0yvXbijBhT4UCyqMZjeiHtho/bJoI5WP8vMCKrYynQ0a9yB22sxzjnDf5yrbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726809047; c=relaxed/simple;
-	bh=SIZ1Q/wo1mQfB+zST0x4uvKH29iwuWl1MayRDNCIRcM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jIcL/uXYAR5xFXML85VzFo/F4NoGu8bOXeprKeJ27TuWshRKSSvJshTmo3dMf/27jXJpJ0UEKoFZwJLNkA9G3NYNSF1J6ZXSyHy4syDenNpS6YfEszzwsMNRo6O0vyt25mKoc4fZ1AIDJY/ICqhS+3bBncjLsRhRewfXL1//OSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=SMnj41MD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1726845072; c=relaxed/simple;
+	bh=LHIrL4+IOK7TTq6FT8QQMFr9RgfnqS9Hr5wbe/S6Epw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZQVME6Ob7ZoqGnK0cfWsdkNOxIo5X0YysruvwwuZkV6lJUxPPHIHEGvpeMUanMO6V7Cw8+djMSqaJ6cTG7bn4pGOowpsgTe+7mFzC2Qw8+bqDYCN5wZJmvHtmacTxWtuwKE0FS3hDrPVDfdjKuf6/UWF+LgaBW5fZSrqTwuwNoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=A8Qs13nH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SMnj41MD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1726809043;
-	bh=rRnqIQfUKl5hMqMziAAuyLYljr0XWCtIu8tELgZL7Kk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=SMnj41MDT0Lf3PfeIXIT3YwHOI0uAuuDLjE0t47tRZRaNTFGPp7CmsiqP5xtDHrve
-	 GQpxRf3WsppyZZ4VsMpffig95QUjZAZcDTfAYoQRqb1kT/tFerPynOIHTZHPuzrIZ0
-	 6IUod3m4WM+YcquTxyACp+qQoBmzjqHxZaUgk+jSzmb/iMutuZKenA1h2ctddPY4VB
-	 zq+UuDefISa1ohGSToaZ++xjvfQUbK1tokALiwcAwa1KGWQEeHrE7fds5GO8aUidii
-	 ZlBYq9K3KPr01kqIlLozoiNa0r5uQQx7O30KTZoarDO3+tCBmjhV32YlfcEEOMpICG
-	 jWz/PZdm+HR7A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4X90nx2nGtz4xD3;
-	Fri, 20 Sep 2024 15:10:29 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Arnd Bergmann <arnd@arndb.de>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Vineet Gupta
- <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Guo Ren
- <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge
- Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao
- <naveen@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, Gerald
- Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich
- Felker <dalias@libc.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Lorenzo
- Stoakes <lorenzo.stoakes@oracle.com>, Shuah Khan <shuah@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Michal Hocko <mhocko@suse.com>,
- "Kirill A. Shutemov" <kirill@shutemov.name>, Chris Torek
- <chris.torek@gmail.com>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-abi-devel@lists.sourceforge.net
-Subject: Re: [PATCH RFC v3 1/2] mm: Add personality flag to limit address to
- 47 bits
-In-Reply-To: <ZuKIMz7U8rDrq8jA@ghost>
-References: <20240905-patches-below_hint_mmap-v3-0-3cd5564efbbb@rivosinc.com>
- <20240905-patches-below_hint_mmap-v3-1-3cd5564efbbb@rivosinc.com>
- <87zfol468z.fsf@mail.lhotse> <Zt9HboH/PmPlRPmH@ghost>
- <1aca8e4c-1c12-4624-a689-147ff60b75d6@csgroup.eu>
- <CAMuHMdURgy6NPthHhfOv_h=C_gw2hEpnGQ7iBGoDE=ZazUPRHA@mail.gmail.com>
- <8734m6s428.fsf@mail.lhotse> <ZuKIMz7U8rDrq8jA@ghost>
-Date: Fri, 20 Sep 2024 15:10:28 +1000
-Message-ID: <87y13mnc57.fsf@mail.lhotse>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A8Qs13nH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A68C4CEC3;
+	Fri, 20 Sep 2024 15:11:10 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A8Qs13nH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1726845068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/sgZZCfozFmaQM131uVRt5yID4XaoLqKTLeHDmO9BnM=;
+	b=A8Qs13nHy5gGuOu7rsPLfBuYvzqkgOUO79+5OW9ZnrGY8ya/EZywhrSla32AH6zmPanvc9
+	t3Jy+cXb5R+rxElnj19IFpADdrajDNayV8G2SlrIVPnjyT3krU8DF0aLM5ynKvKn3fGp8v
+	8YOG77L+lXvC0My1wHfu3/PbDCO3Nbo=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 81ef0f0a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 20 Sep 2024 15:11:08 +0000 (UTC)
+Date: Fri, 20 Sep 2024 17:11:05 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] LoongArch: vDSO: Tune the chacha20 implementation
+Message-ID: <Zu2Qif3n7oIMweJ2@zx2c4.com>
+References: <20240919091359.7023-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,49 +48,31 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20240919091359.7023-1-xry111@xry111.site>
 
-Charlie Jenkins <charlie@rivosinc.com> writes:
-> On Wed, Sep 11, 2024 at 11:38:55PM +1000, Michael Ellerman wrote:
->> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->> > Hi Christophe,
->> >
->> > On Tue, Sep 10, 2024 at 11:21=E2=80=AFAM Christophe Leroy
->> > <christophe.leroy@csgroup.eu> wrote:
->> >> >>> diff --git a/include/uapi/linux/personality.h b/include/uapi/linu=
-x/personality.h
->> >> >>> index 49796b7756af..cd3b8c154d9b 100644
->> >> >>> --- a/include/uapi/linux/personality.h
->> >> >>> +++ b/include/uapi/linux/personality.h
->> >> >>> @@ -22,6 +22,7 @@ enum {
->> >> >>>     WHOLE_SECONDS =3D         0x2000000,
->> >> >>>     STICKY_TIMEOUTS =3D       0x4000000,
->> >> >>>     ADDR_LIMIT_3GB =3D        0x8000000,
->> >> >>> +   ADDR_LIMIT_47BIT =3D      0x10000000,
->> >> >>>   };
->> >> >>
->> >> >> I wonder if ADDR_LIMIT_128T would be clearer?
->> >> >>
->> >> >
->> >> > I don't follow, what does 128T represent?
->> >>
->> >> 128T is 128 Terabytes, that's the maximum size achievable with a 47BIT
->> >> address, that naming would be more consistant with the ADDR_LIMIT_3GB
->> >> just above that means a 3 Gigabytes limit.
->> >
->> > Hence ADDR_LIMIT_128TB?
->>=20
->> Yes it should be 128TB. Typo by me.
->
-> 47BIT was selected because the usecase for this flag is for applications
-> that want to store data in the upper bits of a virtual address space. In
-> this case, how large the virtual address space is irrelevant, and only
-> the number of bits that are being used, and hence the number of bits
-> that are free.
+On Thu, Sep 19, 2024 at 05:13:59PM +0800, Xi Ruoyao wrote:
+> As Christophe pointed out, tuning the chacha20 implementation by
+> scheduling the instructions like what GCC does can improve the
+> performance.
+> 
+> The tuning does not introduce too much complexity (basically it's just
+> reordering some instructions).  And the tuning does not hurt readibility
+> too much: actually the tuned code looks even more similar to a
+> textbook-style implementation based on 128-bit vectors.  So overall it's
+> a good deal to me.
+> 
+> Tested with vdso_test_getchacha and benched with vdso_test_getrandom.
+> On a LA664 the speedup is 5%, and I expect a larger speedup on LA[2-4]64
+> with a lower issue rate.
+> 
+> Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Link: https://lore.kernel.org/all/77655d9e-fc05-4300-8f0d-7b2ad840d091@csgroup.eu/
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 
-Yeah I understand that's how you came to the problem.
+That seems like a reasonable optimization to me. I'll queue it up in
+random.git and send it in my pull next week.
 
-But for the user API I think using the size of the address space is
-clearer, easier to explain, and matches the existing ADDR_LIMIT_3GB.
+Thanks.
 
-cheers
+Jason
