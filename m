@@ -1,78 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BEE17C7C9;
-	Fri, 20 Sep 2024 15:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F016A23
+	for <loongarch@lists.linux.dev>; Sun, 22 Sep 2024 13:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726845072; cv=none; b=Au3kpZrD0fypGOr1iAL8kh7WHtB0YCoGtbOWMW7XLvxE+/5UgPirVFyJuKiGjjlO3xhWBsIkxP/SgbEh5OhWx+o3bAWU/nxdkmmeA7GdE5X3vf0yvXbijBhT4UCyqMZjeiHtho/bJoI5WP8vMCKrYynQ0a9yB22sxzjnDf5yrbA=
+	t=1727010722; cv=none; b=NPmDwK0rtIH71XZE7js2dwLFXy8WvPgyvmK3qzoe0Hl5dvJ04QLrICQYSQxzFYQFGdRI1F92L3Z6nf2yfnpKZ+p0rr5Utr9qDp58facgVtcNZljX2zMpS21du0ymvQ98p988CDIWGUbmd2zflyyYfT1w4JxVe2nrb+gllpYlK9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726845072; c=relaxed/simple;
-	bh=LHIrL4+IOK7TTq6FT8QQMFr9RgfnqS9Hr5wbe/S6Epw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQVME6Ob7ZoqGnK0cfWsdkNOxIo5X0YysruvwwuZkV6lJUxPPHIHEGvpeMUanMO6V7Cw8+djMSqaJ6cTG7bn4pGOowpsgTe+7mFzC2Qw8+bqDYCN5wZJmvHtmacTxWtuwKE0FS3hDrPVDfdjKuf6/UWF+LgaBW5fZSrqTwuwNoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=A8Qs13nH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727010722; c=relaxed/simple;
+	bh=K69oMExutIbqq5vLU3cF9g+1TZsKEYU7QDt+mrwggMU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uM+31BW1DXrLWeagRNvqd5Y3OC2NX29poT2mBanr9smvz2hxnwTMcdUT6cowZYvu8baIO3HMZRYQnjRGQtENaNC/N73OrH+za69ZNxFryfcYxqg7WWGkSUnH7xsYeAH8slVNKa3En3JSeaz7hdbsfOsgVTTJBxIbmcXoh9s+tzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MY8uB7qy; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A8Qs13nH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A68C4CEC3;
-	Fri, 20 Sep 2024 15:11:10 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="A8Qs13nH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1726845068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/sgZZCfozFmaQM131uVRt5yID4XaoLqKTLeHDmO9BnM=;
-	b=A8Qs13nHy5gGuOu7rsPLfBuYvzqkgOUO79+5OW9ZnrGY8ya/EZywhrSla32AH6zmPanvc9
-	t3Jy+cXb5R+rxElnj19IFpADdrajDNayV8G2SlrIVPnjyT3krU8DF0aLM5ynKvKn3fGp8v
-	8YOG77L+lXvC0My1wHfu3/PbDCO3Nbo=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 81ef0f0a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Fri, 20 Sep 2024 15:11:08 +0000 (UTC)
-Date: Fri, 20 Sep 2024 17:11:05 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] LoongArch: vDSO: Tune the chacha20 implementation
-Message-ID: <Zu2Qif3n7oIMweJ2@zx2c4.com>
-References: <20240919091359.7023-1-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MY8uB7qy"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2da516e6940so673646a91.3
+        for <loongarch@lists.linux.dev>; Sun, 22 Sep 2024 06:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727010720; x=1727615520; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K4l4J7IsYFxdmsYbyBoKStS5kUAi9gU5DhoPh14DwxE=;
+        b=MY8uB7qyRKNGZgMzIS6FZ3+UHJvsmBbBCXzYnJIwIaQZ2Uyv555OLUcUdCwXDynRFM
+         gTgX7GwfvNAHhyAhYItBA3hbJLqbkNcyJRBodqdX6XGdLiHl8PoLtX1qYA2zjqqa9Odt
+         IcXRQfU6hauEi6GB7ikhvcfVbITMeBn5uKEzgGUNg9Wk5Bw2FJLaorVil0KUwt/H3ODi
+         YWF9kw8L5itfX+bgITJpsW8iNxLxAwlSXY5EJ/iEuiubN9NmDtOzR0g7Sm/ANh6+SUXX
+         QkAc71ztxfC5754GjvN3IWGXTqyhbZ3+BRg/bozC0XlqI/7BS/NQN5ySVz+B+Zc+T4Nx
+         csPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727010720; x=1727615520;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K4l4J7IsYFxdmsYbyBoKStS5kUAi9gU5DhoPh14DwxE=;
+        b=k0cAgpBFSV4+KzLL91FLMTnzkW5b1yDgmf7A6iq0Ntx2gyWSmWReXP4txXVdVcXFBH
+         G8lC08bLvtI5xjV86GZIh/meOfItOB9EQzoIpWqoGOJ+CGiknGnY3lp4WYzSEvQjrOWG
+         Eq/Ncjxkdg82YaGj8630I1hOLl+ZvzBkLgQaH6psmRAlzdGfwV3zy/tBPCWLe0XQEfWl
+         k3BuCWjfvvvsGb5lAf692kDNOUi1034l0efXYau3K1kfJHWf8vOIpRD4qDzj7j+5f4OE
+         HLwzVU9KsPzTuQKJnfHag2zZHLTWYwsinjwDta0FISE+1AjDSHU+4VF5tqfkW6MtPOxS
+         TgtA==
+X-Gm-Message-State: AOJu0YwKE/8hDbuR/XtTq4SIHo92Crc8g+msC3wnbUcr4rf+JlPsUVPD
+	140s5oMKGU/RyzPitkCNb9uNBqFpJS04WiC7XnSztcGFeOnxh+9Jx6HdcajkkZeTxh2EZAF+x2k
+	3LWLcH687UeZ7tpom7OSOBZZiU90=
+X-Google-Smtp-Source: AGHT+IFgJvOEYzDiSQevwVI0ocEtX4pZRyLmwpZoc27d86h9KeAVitKFyZgmqaloHsUiNThTj06x3Jfar9zOMemY22k=
+X-Received: by 2002:a17:90a:46cc:b0:2db:60b:9be5 with SMTP id
+ 98e67ed59e1d1-2dd7f761e5dmr4284749a91.8.1727010720403; Sun, 22 Sep 2024
+ 06:12:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240919091359.7023-1-xry111@xry111.site>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 22 Sep 2024 15:11:48 +0200
+Message-ID: <CANiq72mNeCuPkCDrG2db3w=AX+O-zYrfprisDPmRac_qh65Dmg@mail.gmail.com>
+Subject: objtool warnings in Rust defconfig -next
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, rust-for-linux <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Sep 19, 2024 at 05:13:59PM +0800, Xi Ruoyao wrote:
-> As Christophe pointed out, tuning the chacha20 implementation by
-> scheduling the instructions like what GCC does can improve the
-> performance.
-> 
-> The tuning does not introduce too much complexity (basically it's just
-> reordering some instructions).  And the tuning does not hurt readibility
-> too much: actually the tuned code looks even more similar to a
-> textbook-style implementation based on 128-bit vectors.  So overall it's
-> a good deal to me.
-> 
-> Tested with vdso_test_getchacha and benched with vdso_test_getrandom.
-> On a LA664 the speedup is 5%, and I expect a larger speedup on LA[2-4]64
-> with a lower issue rate.
-> 
-> Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Link: https://lore.kernel.org/all/77655d9e-fc05-4300-8f0d-7b2ad840d091@csgroup.eu/
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Hi LoongArch,
 
-That seems like a reasonable optimization to me. I'll queue it up in
-random.git and send it in my pull next week.
+I noticed objtool warnings in a Rust-enabled defconfig build in
+linux-next, e.g.:
 
-Thanks.
+    rust/core.o: warning: objtool:
+_RNvXs1_NtNtCs5QSdWC790r4_4core5ascii10ascii_charNtB5_9AsciiCharNtNtB9_3fmt5Debug3fmt+0x54:
+sibling call from callable instruction with modified stack frame
 
-Jason
+Thanks!
+
+Cheers,
+Miguel
