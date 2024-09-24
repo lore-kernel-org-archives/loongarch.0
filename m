@@ -1,97 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout144.security-mail.net (smtpout144.security-mail.net [85.31.212.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55980154BEA;
-	Tue, 24 Sep 2024 09:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727169562; cv=none; b=rBQzHfJzqkcbS+Nn5wmsVoUTFwQZGTA6DuT87btVtWEj6Aw0CGk2AvaA0OsIfI5zIJyPjbcn3gjpIp8EZn12JtAotbZ+OPHPP3XZjdlYM9xolFFJdd/IsPPU9bie4KPwhTetVMkVlJpiIs8Cjc7J0gzyOPUZy4cs46g3TLTPapU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727169562; c=relaxed/simple;
-	bh=6iOYxHvNr/wgmXefsXjNWJsCi0eJkiZ+32MSb7rhrQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+DfjJTLTn5JqWeOcf5YaOPc/uflh0kuF5bEwzmifTrEu4Awzl9G6bw8T8qHAUxSvviKnAatarez4yJmUB5H+mSkrKtRJvqrl6KKVYb9mQEa17N9y1fut7iSOqEHWL76Ha47c+sQ5dQvHDsjttbMVAQqBHca6MltHTHFNKT5j5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFmeIXAY; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512A415623A
+	for <loongarch@lists.linux.dev>; Tue, 24 Sep 2024 09:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.144
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727169906; cv=fail; b=S7/w5gCZAGTMrmlnZGSz/hLknhCvr/b9VBFYiNMhrPxoBzJuk22eKMhxV2EiSKCjd2/JuKn3oZkKcyKZM6Jp0ru7rFNbUW+2ijEYgeGQ47qwbFjYQuzpwqp2/R149Cx0g/fRCCOgkTo6Ze/faI8ATHTSW2G+mI1Jy+ICUft9QPI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727169906; c=relaxed/simple;
+	bh=uHDwACn0oq0R87FWS7YdHeucD3CxZyAJGngfuIzYS5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WEOpO3587+0r2GXW8iQM64ixsCGE8BDGmxaKoYNoP5LyzxWzW4XJEDQkBJ91cg2+N58kjczK3xVbEMxCGDF2T+taeoMNTZMKnb1tLk8o9a32TDSooaZbOJbPac9TUoBJ8sEoGWJeeApUGOwBJRz9w8oL+8PV6wmNcXcgAihdcRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=GOpx3E1z; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=Pbc+lq5U reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFmeIXAY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3147AC4CEC4;
-	Tue, 24 Sep 2024 09:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727169561;
-	bh=6iOYxHvNr/wgmXefsXjNWJsCi0eJkiZ+32MSb7rhrQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cFmeIXAY8WGXmieCJk1wVJ7A06GDzKitbT0GEiDOnzJP94P9nz6Fg7ZjN/b5WvviV
-	 kgnkg9zHNXzA9PECeH0kznvxLdapC/M0zyMqm24HRmwidpTXh3xZzAWiL3BpTyntAP
-	 xMqeQ1yB7m1GZmGPTyjSuJCl9NhqLjKXOL9Di/pEFvD6WQIPzwfikS8DLjZWTwmK0w
-	 C+9Yt/YqapAjACXMMaoOBFzgGEKmItr02TfBuRG5Rz2r+0ViSxcaJ7rrN0zcoVZ2zH
-	 MKX/SfD+o+2Yjt4ePF7sUJBgA1scJRFC9PwGzbv5dGpUPUKa6ym/s3ML1oO+WSS3jn
-	 LYwF3WTkr2Xxg==
-Date: Tue, 24 Sep 2024 11:19:18 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Shuming Fan <shumingf@realtek.com>
-Subject: Re: [PATCH v2 5/9] ASoC: loongson: Fix codec detection failure on
- FDT systems
-Message-ID: <ZvKEFlARvbFFWI83@finisterre.sirena.org.uk>
-References: <cover.1727056789.git.zhoubinbin@loongson.cn>
- <9a286537a20f0f96597090f59165b4532e41bdb8.1727056789.git.zhoubinbin@loongson.cn>
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="GOpx3E1z";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="Pbc+lq5U"
+Received: from localhost (fx601.security-mail.net [127.0.0.1])
+	by fx601.security-mail.net (Postfix) with ESMTP id EB238349502
+	for <loongarch@lists.linux.dev>; Tue, 24 Sep 2024 11:23:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1727169781;
+	bh=uHDwACn0oq0R87FWS7YdHeucD3CxZyAJGngfuIzYS5U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GOpx3E1zLMBXoq0yndwO0NEkv8bmfYKK7gP7bHjoCob3W623c5yV7c+/QI4HqjKBY
+	 L4qUo7wmThGtUcMrYBpJnEZsgd3ygn/ddi1gllprRpY1i/olWW9rqSuPN5D9n68gxD
+	 bbF2nKetSg5THqs/0lJvU8vVjxRgp13vEK9nlzLA=
+Received: from fx601 (fx601.security-mail.net [127.0.0.1]) by
+ fx601.security-mail.net (Postfix) with ESMTP id 9DC1A34948E; Tue, 24 Sep
+ 2024 11:23:00 +0200 (CEST)
+Received: from PAUP264CU001.outbound.protection.outlook.com
+ (mail-francecentralazlp17011027.outbound.protection.outlook.com
+ [40.93.76.27]) by fx601.security-mail.net (Postfix) with ESMTPS id
+ B7F0A34946A; Tue, 24 Sep 2024 11:22:59 +0200 (CEST)
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:118::6)
+ by MR1P264MB3073.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.22; Tue, 24 Sep
+ 2024 09:22:58 +0000
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626]) by PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626%4]) with mapi id 15.20.7982.022; Tue, 24 Sep
+ 2024 09:22:58 +0000
+X-Secumail-id: <17991.66f284f3.b4edf.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SeTUZ92rMqppuXO29glCu9hGhuRg/Z4JXdCksE0f4gZn0BczjVNKDWEUcl0j2iPcDeRqIkOAFARNZvovfq+NQu6PVRoRIxQ+A+wNYjZf/aG7lbt+JPEtiGUdfB6s0ZrAR2e0Yp3qH5/S2uttif+OAEDsMlIhsbNRsc8tIXAoCOyFH4ydOyzadvc5VraZO4cqQb/eNj1L6Ji/zmZzrlnpT6UjZ7RQV7Avo8Jz7rxA2lml8fpMXTJIff0y7U2Pk1BdKBA0Dkqki3hjE2kkAs4CC/y4oJZohnx5oTjwORZhxv9XkbMiSuIe+y1z0u9muYUXoz78hC408R1IryMGDWx71w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LsCe7cUeho25XXzvkTKqw78HiJM39gQK+E6IL4W/sGk=;
+ b=XXCqdCrNeOQy0V4zuxDU/f1dpte9b25wcdt8VO0CuXLpXUxorZbpfK3AoDnbJAIaJdkm8ygdWImxl/cHBmOC6FiKO88BTl8wofdrVgfkmv3ih9KIccvuztmLMQjSSpL3SbVYN0DZGMFihZYKp3eoM3PBlsOdc0QS5AkedXlKunCN0Bamo5Oul7tZXSfPyD0Nsv1D5enTaFuWuPEaxOPsJOG8BXlzCuSrSaLKNNOCugL+D9R+iZxA1fi+sNXuTVRFYTuvPmiyosotk8SldHArS9n6e6lVXF0OaVloxVJp/ijOLw6DnTtB07PiqRLvMaDs7fNeLXuDdZiKWnsKvI4quA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LsCe7cUeho25XXzvkTKqw78HiJM39gQK+E6IL4W/sGk=;
+ b=Pbc+lq5UYNq6FQMIvng7w50NIT4UaYl3UmQpfa7yenFjrnfRd0T96zTM/QhpgFXRksDic+ga9fuLnkuCoB3vdvg+dwqiTREuv/QzRgdif4JEj/VsMyNcXZ3Rx/RXluvYT5H8lOeo4A8/fzFN93kaPfN/1vxuQoJtMhjTDP8NLIv5jy17PCrJzjWY8eIxIOQI99gozafSJKlclU1Kq2NCk3ZMzAM13CfulAGBz+yvu0xSVe+SyBn0o4KuvM4IFMuz/377Vf4yvlXRvChGP5+okwqOeGplKb+DMb3AXrDjcaZL3zLOknnrJhGr437ISvK7+k/nuQ7RnwQMhE24mt+a/g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+From: Julian Vetter <jvetter@kalrayinc.com>
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev, Yann Sionneau
+ <ysionneau@kalrayinc.com>, Julian Vetter <jvetter@kalrayinc.com>
+Subject: [PATCH v4 2/5] Replace generic memcpy and memset by IO memcpy
+ functions
+Date: Tue, 24 Sep 2024 11:22:20 +0200
+Message-ID: <20240924092223.534040-3-jvetter@kalrayinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240924092223.534040-1-jvetter@kalrayinc.com>
+References: <20240924092223.534040-1-jvetter@kalrayinc.com>
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS4P191CA0028.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d9::20) To PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:118::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WRx0WlcwrTnJod4i"
-Content-Disposition: inline
-In-Reply-To: <9a286537a20f0f96597090f59165b4532e41bdb8.1727056789.git.zhoubinbin@loongson.cn>
-X-Cookie: Editing is a rewording activity.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAYP264MB3766:EE_|MR1P264MB3073:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07867b9e-32f5-419b-d3c1-08dcdc7a7adb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|52116014|1800799024|376014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info: kfe7wXRonbDz2+mezFc4rHKWjTZjjrLkVRRhCGUc357i0Zdrm3qt48x+uk6phQgkU/bxBwjRErFTkE3giFgUxLbT74SnQL7CGu8Ldy3G0PmYj72LFwelGAAdg5Ij4cISL5SWtPOrcKGWdZ8Ebm7iwVpg5Zrz1hucSMSuqnCUooFGfpxOVlboiUzp6MlheQl6ZyxUNh+dxZ/Mk2sIi3JMG9idM5BGMt4TeK+HzP4HhBlHumtC+YNKK7cNS06plilkAlrNAnzubrHn4LWmJEFELL1kWMr0D0s32j3BMudI3tqulDKzgOzcpZQaLJyCTfKs7cDXZ04J9f0PwoNi4Ghuj/FdpIDYMjnt3wUmum+LzrETeufP47P2ADxFAKEc2VXdtjxsrrCV4wUFC31dwwzUnHf3IrkRDvrSa5TuHF900yVOJCidtgHTikKLhdBjDPX54azjZjDtDN65GLtdEunRPc3tdfotwN5ji3Njt+zrlrsoYG9Fg90hmWnOAnOO1lphMp/nbhB3TGXV1pB7OD1PZ+USlB5xMs4/RCW7DqqIp6Ep0wo4wnJDmBSUqy1gAtx+uSP8jvg8dQBhQABgM+ox69lzjRyFMAMKu3OKlpTbOSrmyo+9Rm3zyhhiQAdD+34Upuut5A1Y1txEy7eroY2VM7h0nh71Zk+VROwQuvQ2T9efNbZXdJmhi4GVJAaiSLJnlXABYK5vlfIaizoBnfLTgTo2HXva3inzXLZr4DBdwDLsfgNis6qMlORBlzPlvcbIazUhnJ4JOFrFJs4JgLhjgUdmVOfL65u4hyu3TftK9kPPkGJyDTGls2vWu4IUi9e2fD8YBir1jUfQ+vZRP08Q/zjz3ehkt/Ng4MtfTtZCD2+8bXqqaAD8FWd3Q1Wb/QlNVVS0U4XxnrSZpGOwTzDtGXzKxyhJzRQ36UKvDTsBssUf8XoQvntxKPV3i5c8emqVt+3
+ gYsIux389BPpERHqBSuEBH/8Jmti3QsbLioXSTeFDTqguW9/KAu3ewa9EqRdEV2MtTdvqYVbDtKA5raPrQphm16xJNp/+B7yBBY1puiNR+9JUWqwbpiByNs9/Jkyt7qld/irUOy0FZHG7s99t9COrkeuv0eqQeycPdDllSMlHEoZXZOE595m/vO4ToqQ6mLKCrbFY4shox3SLp4Mz8xWCO77L+rYSJZ2T8WPOgWySR3PXfyRTydjs1PeHrxz9vZBoy0BOgfloDm/pHnPKdQlyL3SRCOBKuNGLdgsoOmY8xZUu5WHcKHXsnmjTohc6SISHQFcmAuh+/gpEcRDeidzp+TNbUryh1wnSBg4/3lE4KT9fA/+Tk0fY7PAgW8yTsQo42cMWd9uRogqL3Wj+Mw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: oiKq4H9htI6IJPVWNp9DcvEX7gekG47MpRCuvjg+WyDb/YvNSCC1whUbOR3bKYJ284bRJC1aCubTcpRZVRgxQ0h6cli5qdBE5bQu4lPPiCaWSXAUMHOGdBsRJcjfy1fAts8CiJJqnd/+45fowgD48Y8BlmJXRwK2R7KUNJ6+YcCp58eBeSvBJzUVp22D6LJ89l9+ODCZlNOC2jbpnKCWy9X1gzch1VuDhASqx5HgHcF3FGpHAA2aIq3Vbm97FMZ1qLqlF2ZJHAUiWKkGF60F4/O33f6Jt9VNfgC06or5jMFyIOX89q9LxSObSCIHRX3EKe7jbCoa6cyJNTOq4escGSpBeAEJ+7hWIrwudX8Tk6QRAdGN/YtC7K4xUggdn+bbk2Fcr6kY8sBhttkyESiI7hEgskzm0NV4zdZNVJLABFthrf+SyVuIoSCbYCNWfc7DC+/qvpXMq1Wsmzgt4nlnUr/FXFbU4Y0K4ltcNV1CJ2jdmataKSMNLhZ3I4CNOgVngEgub+V/y/eyL01YqbD0Bl22e0meuNLENvHltahbgjt6JeIIag7fXBO6dSSTmd4t1oKi3gWdZHFZAJ3ueFx4o84ERaS0Om0/6xe16qATNGRiVNw7owVqdPYOIrswSUJvXdiX2CEEeUIpa8SW5xsY7gMVAjuu/9k1IJBwaQEJszX1XxYpRN+Hu0xzJf0i2aPX94d214XcHyJiXLqPIZP8Jhpx+sMMLCVPoOmV7t68qpHAn/r0oJZVAA/wW5MATdtTFGbGFS9XfUspEQvdDLVQ54ppNBSzLyss+XlRF7/vNw7MJe6uKP6+E/0gV3C6V/CfAEPCkX+e7JDFXh9IPAJYpAB0Ij9drhUS87IHvMFRGZsTgV2u0rE2PbwR+hK1t2D9ZdbucCo+dU8wUR6Bq6MY9YSVjoP+rXL+KLLdyuCcHLVZWuy+kU5WUzquIs3m5I4T
+ TvsWoxDJ+Geb6/K1QJcvU6SSFxkoFSeV4PBFOvftYKkFFt4mn5lw1wTb7z/Y7pq0e0q9ckvP8w9E5ub38QhCAz3AElUb0OYVH30ejxjrtimtiDP62EZY2BYe0oNVMYG7esSRfMTpMIDgdMonxkCvBAd8Y0w4s4JujC3TnatHMTdRClskasPYeZbwAGQtVpE4dHxEoqfAKtlmWzg1blWHlOOPPaM7KnYbiz/WbB4mB7J6Lgls6gp40xgnRDFcoRBiez7hNOQbI70xOtxODNr8fHreIrcVxV4aAFlfXJbo3Sb02uBoro4SZ0mGhPNgDl6OjNBTQ+TPx2mkGuRD8BAuWP1J1zt+fqkUa31Tf7d15qmcK0xexctyE5lXUPWIZ3Ps0M6JGD/C8vtINBv+Q5QvlkQ3xWXrNHZa+a77lZC4Md96SONoi2q6eW3lpMP3QlCt6u5g+8ly3gMMNmBXaV+YlzMhfSMKZ1miFZbVbWFMERcSfFmCSuwrh/nEhrlCwEfA3p2w2aJ9GA1IbI8z5E5V4ebyuNfh7/LYjsnJI+3aAhKTHZmBFvoEzC7wCqbsUj5mdHt+r8M7sz+kFkxm1OorCuVAnB8h3/9qRv51QQ7+Yu3z9ZDznHxg4AQEb3oS5Mom
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07867b9e-32f5-419b-d3c1-08dcdc7a7adb
+X-MS-Exchange-CrossTenant-AuthSource: PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 09:22:58.6062
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mwTPX9vtj7+PkmmXi7Tp3CjwDLaVrAa9sQU1Icx2W9KeGfPmzMxzIFiZgfMdz7igDm1y2fWqVFHySp0KL93U2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB3073
+Content-Type: text/plain; charset=utf-8
+X-ALTERMIMEV2_out: done
+
+Some architectures implement their own memcpy_{to,from}io and memset_io
+functions, because the generic memcpy_{to,from}io and memset_io just use
+memcpy/memset.This commit replaces the generic memcpy/memset functions
+by IO memcpy/memset functions that respect the given architectures
+alignment constraints. So, later we can get rid of the individual
+implementations and use the generic ones.
+
+Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
+Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+---
+ include/asm-generic/io.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index 80de699bf6af..0f05d2399938 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -1163,7 +1163,7 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ static inline void memset_io(volatile void __iomem *addr, int value,
+ 			     size_t size)
+ {
+-	memset(__io_virt(addr), value, size);
++	__memset_io(__io_virt(addr), value, size);
+ }
+ #endif
+ 
+@@ -1181,7 +1181,7 @@ static inline void memcpy_fromio(void *buffer,
+ 				 const volatile void __iomem *addr,
+ 				 size_t size)
+ {
+-	memcpy(buffer, __io_virt(addr), size);
++	__memcpy_fromio(buffer, __io_virt(addr), size);
+ }
+ #endif
+ 
+@@ -1198,7 +1198,7 @@ static inline void memcpy_fromio(void *buffer,
+ static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
+ 			       size_t size)
+ {
+-	memcpy(__io_virt(addr), buffer, size);
++	__memcpy_toio(__io_virt(addr), buffer, size);
+ }
+ #endif
+ 
+-- 
+2.34.1
 
 
---WRx0WlcwrTnJod4i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Sep 24, 2024 at 03:00:32PM +0800, Binbin Zhou wrote:
 
-> When the Codec is compiled into a module, we can't use
-> snd_soc_of_get_dlc() to get the codec dai_name, use
-> snd_soc_get_dai_name() instead.
 
-What is the issue with using snd_soc_of_get_dlc()?  Shouldn't we fix the
-helper instead?
-
---WRx0WlcwrTnJod4i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmbyhBUACgkQJNaLcl1U
-h9AF1Qf/S6TCXCVYvTjfPMnqAt9Ckbi7amFA3aouVJV47NCFFu6e54CYy4Pw6xI8
-uJyZFDO4ZGSPZxM9K/4iezTElW3VxYNZtqaSViiTSQew2+bzC8cTNjqhd7gWjUY8
-LtS/2uZ9ry3ttXK5zfjMDYljGcBgIj89KZkYn2WnRoHG6CO9m6sUcCZpjyJJxYSJ
-JZiDWlaG0USGu/n5stJJ/QeN3MHh4tZvepGPDX2reB288F4zLPiVV8FM6atI1ndX
-2IIUwnZa2VsvGypQy1imMUDw7QohnFaEjntezYYJEpWJR2bHT7/k04s+dVcHxBnt
-oP3ahosEgY+YRXv6wuWDs9CRhKb0HQ==
-=VxTZ
------END PGP SIGNATURE-----
-
---WRx0WlcwrTnJod4i--
