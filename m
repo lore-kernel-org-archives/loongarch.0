@@ -1,106 +1,360 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25284156222
-	for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 09:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04514C5A7
+	for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 09:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727255126; cv=none; b=Q51krkli0YNjnHYJwOnQuNFuqTn2jf8By9pRGcs98A4rhEK4SU9DDp8SQzw3AWY0PKh9ahCbIPnEojr/qq6RkiYLnoRNZk4gwTFcOa2mV4chehNqZPoQPC0ke+XZU3FFKuH4TF7JK4penFhWPd9s34ondHvYjAaBzvOn0LxEfaI=
+	t=1727255618; cv=none; b=WTMbFxTdxutNBuOpMYWHHkCsI8mmWuIYdYjVs8LL7gZFE9TdTBpeN08PxttCydCuP57n9h0kue9TkF7dA+cv4TYcA4nE7yhByGlPTWlOpcJ3BPbDnbKdgpywsb6I2JK80QL86J3IhW03uGNox2QqQOXWgGKlWREF4BRKPbIDXow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727255126; c=relaxed/simple;
-	bh=1QZUsUnnAE3WSKe8mRvALmjWQTDijRw4NHVHntQSucE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=caWvEO0BiH6o4mgezTusNLd1pNLt9SgbiY6jtPZZU9MPTSNwLuHoSI9is9nCrWy5aIn1AbxxBO9CZICl3V8XnwSe8yaXZTpi8HslT90C1qmxcwR/09qahroZOEYmP1guWvO2z8lfZgus6rZFM/8hUouWXysqPVNxVDt0HNPj7Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/GVtCTz; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/GVtCTz"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c26815e174so8011243a12.0
-        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 02:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727255123; x=1727859923; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OpSxoOSH8sGRYYBVpsIkEfJWqz3E/EfZFQTLjHzT1H0=;
-        b=Q/GVtCTzq59QevYvQ18bJCMlAh0YgJJZYOzX3bGk+YcIwPZKrryi6yCFqE4QL62SDv
-         nasfK5uDiJfMrqBwgd4CKC5Uzil1c2r5F932fcJZ0uRnfFCZF4T/cjL4i4F4wjQ4J68J
-         l5KjQdhqtv4LYQzAk2VT49xv/3Thc5bj/718r6MoIEVnWB9xoD+3NKO2jaro9pwBilGq
-         EJgZTOvpsm7/e+w+J4k527RgjtP+52cYr69uLp25piEZqzIM/rz0J4LcJW0fHUfxG5dp
-         BKEsQzcyzIdGCM/4FhGM8Z2iSDCzcXNIFtMRJdXcee0KpobPQ1MV/S39702oT0mFYRZa
-         HHTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727255123; x=1727859923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OpSxoOSH8sGRYYBVpsIkEfJWqz3E/EfZFQTLjHzT1H0=;
-        b=OPAHhOKftqbe3Jyh7zpPbN2+fFVEsPGDp9XOtut07r+AMIUVkGBMXscs0NuMBw2aPI
-         +JEzFj8z2af/q89VmT/tyyC6n1d8qH0PAqVEwZny3qTD9D9/aI2XMv7UZr1g99bBR+qf
-         DbPw7Xqx/XnhRA6kt7pXSqaBRUqSvJulkqXAb2ik0TJr3QZC7ZfdHxpU/ieyZnWnPfom
-         IjWCibYd/s/cR0VKmwpb4n5MPXwmfwAxWCidh7WM/e7aAXDxyx4NXeAj69A79+FXH1fr
-         EBox6RBh2q/EpTEuL22vaoY0dsQ8X9b1TdUz79c8oE1KexSRg+8STXLsn4ku/DPO/yG0
-         Khmw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+rvV7+0Fj7zKt3UmaR4OM5Cvrk9Y6mwr25MMAaLtYv2loNuPDR1Due2BmjQehAOLM1ikmm9SKbMM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXIJOMRbrfGe7NkDlYTpQfm9X10n8nZded+aeV77mzIaJfgSck
-	BDJkVukhoKbiJt/eByQMjY3/qEyo255+FmMRqb6Ux483I2qozrs7HWH2jOv2t9IpZokq/nKWMNV
-	hJTcpyploHnvtHY7RuIl0fHlcq6s=
-X-Google-Smtp-Source: AGHT+IHMhDBD4VbH/gs1euQafiviuUglJ4RhEofIOUHa7Z/aaoxmzI3ZTPxOSwo9aMR6U646AGZcuD6vs83g04COppE=
-X-Received: by 2002:a05:6402:40c5:b0:5c0:c10c:7c1d with SMTP id
- 4fb4d7f45d1cf-5c72073c6bfmr1772969a12.23.1727255123097; Wed, 25 Sep 2024
- 02:05:23 -0700 (PDT)
+	s=arc-20240116; t=1727255618; c=relaxed/simple;
+	bh=d6JLoUbDwBjIKDx20ZTHvHtdpUWvWpheRHW6XLbj/t0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PWEXCad6xrCbIlxwEnpU4+OvV7u8w6jXUO2TWJaQK9dI2tE7EEkhGbmK+2ht6HNwWTCKzd+4TpnMSsbAqwmiS2O0boIhkv0HgeTRzXx7dT6S4ptxNmgNZ5bGGDhUzNBhwu2ZTW9OIiYRgqu4iN3DEd/Pw8qM+JANbpLXUrjdkR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XD9xV3L9jz6GBkj;
+	Wed, 25 Sep 2024 17:13:02 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CBD0E140EDF;
+	Wed, 25 Sep 2024 17:13:33 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Sep
+ 2024 11:13:33 +0200
+Date: Wed, 25 Sep 2024 10:13:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<chenhuacai@kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@xen0n.name>, <james.morse@arm.com>,
+	<mchehab@kernel.org>, <rric@kernel.org>, <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v5 2/2] Loongarch: EDAC driver for loongson memory
+ controller
+Message-ID: <20240925101331.00000e63@Huawei.com>
+In-Reply-To: <20240925024038.9844-3-zhaoqunqin@loongson.cn>
+References: <20240925024038.9844-1-zhaoqunqin@loongson.cn>
+	<20240925024038.9844-3-zhaoqunqin@loongson.cn>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1727056789.git.zhoubinbin@loongson.cn> <9a286537a20f0f96597090f59165b4532e41bdb8.1727056789.git.zhoubinbin@loongson.cn>
- <ZvKEFlARvbFFWI83@finisterre.sirena.org.uk>
-In-Reply-To: <ZvKEFlARvbFFWI83@finisterre.sirena.org.uk>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 25 Sep 2024 15:05:09 +0600
-Message-ID: <CAMpQs4KW7P0soeTw0Bi_OpcGXjk8EBjcNmHFeAi=MCauhwanYA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/9] ASoC: loongson: Fix codec detection failure on FDT systems
-To: Mark Brown <broonie@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Neil Armstrong <neil.armstrong@linaro.org>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Weidong Wang <wangweidong.a@awinic.com>, Prasad Kumpatla <quic_pkumpatl@quicinc.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Shuming Fan <shumingf@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Mark:
+On Wed, 25 Sep 2024 10:40:38 +0800
+Zhao Qunqin <zhaoqunqin@loongson.cn> wrote:
 
-On Tue, Sep 24, 2024 at 3:19=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Tue, Sep 24, 2024 at 03:00:32PM +0800, Binbin Zhou wrote:
->
-> > When the Codec is compiled into a module, we can't use
-> > snd_soc_of_get_dlc() to get the codec dai_name, use
-> > snd_soc_get_dai_name() instead.
->
-> What is the issue with using snd_soc_of_get_dlc()?  Shouldn't we fix the
-> helper instead?
+> Reports single bit errors (CE) only.
+> 
+> Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Hi. A few quick comments inline
 
-I'm very sorry for this part, I checked and tested it again and I
-should have over-modified it as well as the use of
-snd_soc_of_get_dlc() is correct.
+Jonathan
 
-In fact, what's really being missed here is the assignment of
-snd_soc_dai_link.platforms->of_node, which causes component_empty for
-soc_dai_link_sanity_check().
+> ---
+> Changes in v5:
+> 	- Drop the loongson_ prefix from all static functions.
+> 	- Align function arguments on the opening brace.
+> 	- Drop useless comments and useless wrapper. Drop side comments.
+> 	- Reorder variable declarations.
+> 
+> Changes in v4:
+> 	- None
+> 
+> Changes in v3:
+> 	- Addressed review comments raised by Krzysztof and Huacai
+> 
+> Changes in v2:
+> 	- Addressed review comments raised by Krzysztof
+> 
+>  MAINTAINERS                  |   1 +
+>  arch/loongarch/Kconfig       |   1 +
+>  drivers/edac/Kconfig         |   8 ++
+>  drivers/edac/Makefile        |   1 +
+>  drivers/edac/loongson_edac.c | 168 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 179 insertions(+)
+>  create mode 100644 drivers/edac/loongson_edac.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6cc8cfc8f..5b4526638 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13242,6 +13242,7 @@ M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>  L:	linux-edac@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+> +F:	drivers/edac/loongson_edac.c
+>  
+>  LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>  M:	Sathya Prakash <sathya.prakash@broadcom.com>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 70f169210..9c135f1a2 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -181,6 +181,7 @@ config LOONGARCH
+>  	select PCI_MSI_ARCH_FALLBACKS
+>  	select PCI_QUIRKS
+>  	select PERF_USE_VMALLOC
+> +	select EDAC_SUPPORT
+>  	select RTC_LIB
+>  	select SPARSE_IRQ
+>  	select SYSCTL_ARCH_UNALIGN_ALLOW
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 81af6c344..719bb6ca7 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -564,5 +564,13 @@ config EDAC_VERSAL
+>  	  Support injecting both correctable and uncorrectable errors
+>  	  for debugging purposes.
+>  
+> +config EDAC_LOONGSON3
+> +	tristate "Loongson-3 Memory Controller"
+> +	depends on LOONGARCH || COMPILE_TEST
+> +	help
+> +	  Support for error detection and correction on the Loongson-3
+> +	  family memory controller. This driver reports single bit
+> +	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3C5000L/3A6000/3C6000
+> +	  are compatible.
+>  
+>  endif # EDAC
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index faf310eec..e72ca1be4 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+>  obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
+>  obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+>  obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
+> +obj-$(CONFIG_EDAC_LOONGSON3)		+= loongson_edac.o
+> diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+> new file mode 100644
+> index 000000000..2721dfba5
+> --- /dev/null
+> +++ b/drivers/edac/loongson_edac.c
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
+> + */
+> +
+> +#include <linux/edac.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "edac_module.h"
+> +
+> +enum ecc_index {
+> +	ECC_SET = 0,
+> +	ECC_RESERVED,
+> +	ECC_COUNT,
+> +	ECC_CS_COUNT,
+> +	ECC_CODE,
+> +	ECC_ADDR,
+> +	ECC_DATA0,
+> +	ECC_DATA1,
+> +	ECC_DATA2,
+> +	ECC_DATA3,
+> +};
+> +
+> +struct loongson_edac_pvt {
+> +	u64 *ecc_base;
+> +	int last_ce_count;
+> +};
+> +
+> +static int read_ecc(struct mem_ctl_info *mci)
+> +{
+> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+> +	u64 ecc;
+> +	int cs;
+> +
+> +	if (!pvt->ecc_base)
+> +		return pvt->last_ce_count;
+> +
+> +	ecc = pvt->ecc_base[ECC_CS_COUNT];
+> +	/* cs0 -- cs3 */
+> +	cs = ecc & 0xff;
+> +	cs += (ecc >> 8) & 0xff;
+> +	cs += (ecc >> 16) & 0xff;
+> +	cs += (ecc >> 24) & 0xff;
 
-I'll rewrite this part in the next patch set.
+This smells like an endian swap.
+swab32() or is this fixing a wrong endian register?
+In which case b32_to_cpu()
 
-Thanks.
-Binbin
+> +
+> +	return cs;
+> +}
+> +
+> +static void edac_check(struct mem_ctl_info *mci)
+> +{
+> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+> +	int new, add;
+> +
+> +	new = read_ecc(mci);
+> +	add = new - pvt->last_ce_count;
+> +	pvt->last_ce_count = new;
+> +	if (add <= 0)
+
+This has be a little confused. Either this counter can
+wrap in which case why drop out here, or it can't in which case
+does < occur?
+
+> +		return;
+> +
+> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+> +			     0, 0, 0, 0, 0, -1, "error", "");
+> +	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
+> +}
+> +
+> +static int get_dimm_config(struct mem_ctl_info *mci)
+> +{
+> +	struct dimm_info *dimm;
+> +	u32 size, npages;
+> +
+> +	/* size not used */
+> +	size = -1;
+> +	npages = MiB_TO_PAGES(size);
+> +
+> +	dimm = edac_get_dimm(mci, 0, 0, 0);
+> +	dimm->nr_pages = npages;
+> +	snprintf(dimm->label, sizeof(dimm->label),
+> +		 "MC#%uChannel#%u_DIMM#%u", mci->mc_idx, 0, 0);
+> +	dimm->grain = 8;
+> +
+> +	return 0;
+> +}
+> +
+> +static void pvt_init(struct mem_ctl_info *mci, u64 *vbase)
+> +{
+> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+> +
+> +	pvt->ecc_base = vbase;
+> +	pvt->last_ce_count = read_ecc(mci);
+> +}
+> +
+> +static int edac_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_mc_layer layers[2];
+> +	struct loongson_edac_pvt *pvt;
+> +	struct mem_ctl_info *mci;
+> +	u64 *vbase;
+> +	int ret;
+> +
+> +	vbase = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(vbase))
+> +		return PTR_ERR(vbase);
+> +
+> +	/* allocate a new MC control structure */
+> +	layers[0].type = EDAC_MC_LAYER_CHANNEL;
+> +	layers[0].size = 1;
+> +	layers[0].is_virt_csrow = false;
+> +	layers[1].type = EDAC_MC_LAYER_SLOT;
+> +	layers[1].size = 1;
+> +	layers[1].is_virt_csrow = true;
+Could move this to a c99 style
+
+	struct edac_mc_layer layers[2] = {
+		{
+			.type = EDAC_MC_LAYER_CHANNEL,
+			.size = 1,
+			.is_virt_csrow = false,
+		}, {
+			.type = EDAC_MC_LAYER_SLOT,
+			.size = 1,
+			is_virt_csrow = true,
+		}
+	};
+Not particularly important though.
+
+> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(*pvt));
+> +	if (mci == NULL)
+
+Probably !mci is sufficient but I'm not sure on local edac style.
+
+> +		return -ENOMEM;
+> +
+> +	mci->mc_idx = edac_device_alloc_index();
+> +	mci->mtype_cap = MEM_FLAG_RDDR4;
+> +	mci->edac_ctl_cap = EDAC_FLAG_NONE;
+> +	mci->edac_cap = EDAC_FLAG_NONE;
+> +	mci->mod_name = "loongson_edac.c";
+> +	mci->ctl_name = "loongson_edac_ctl";
+> +	mci->dev_name = "loongson_edac_dev";
+> +	mci->ctl_page_to_phys = NULL;
+> +	mci->pdev = &pdev->dev;
+> +	mci->error_desc.grain = 8;
+> +	/* Set the function pointer to an actual operation function */
+> +	mci->edac_check = edac_check;
+
+Similar to above, can initialize this structure more cleanly
+using 
+
+	*mci = (struct mem_ctl_info) {
+		.mc_idx = edac_device_alloc_index,
+	...
+	};
+> +
+> +	pvt_init(mci, vbase);
+> +	get_dimm_config(mci);
+> +
+> +	ret = edac_mc_add_mc(mci);
+
+I'd be tempted to use devm_add_action_or_cleanup() for this and the
+alloc above, but not common in edac but it is done in al_mc_edac.c if
+you want an example.
+
+> +	if (ret) {
+> +		edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
+> +		edac_mc_free(mci);
+> +		return ret;
+> +	}
+> +	edac_op_state = EDAC_OPSTATE_POLL;
+> +
+> +	return 0;
+> +}
+> +
+> +static void edac_remove(struct platform_device *pdev)
+> +{
+> +	struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
+> +
+> +	if (mci)
+> +		edac_mc_free(mci);
+
+Very odd if you got to remove and edac_mc_del_mc() failed.
+Do we need this check?  At least some drivers (I checked a few
+at random) don't check this.
+
+
+> +}
+> +
+> +static const struct of_device_id loongson_edac_of_match[] = {
+> +	{ .compatible = "loongson,ls3a5000-mc-edac", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, loongson_edac_of_match);
+> +
+> +static struct platform_driver loongson_edac_driver = {
+> +	.probe		= edac_probe,
+> +	.remove		= edac_remove,
+> +	.driver		= {
+> +		.name	= "loongson-mc-edac",
+> +		.of_match_table = loongson_edac_of_match,
+> +	},
+> +};
+> +module_platform_driver(loongson_edac_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Zhao Qunqin <zhaoqunqin@loongson.cn>");
+> +MODULE_DESCRIPTION("EDAC driver for loongson memory controller");
+
