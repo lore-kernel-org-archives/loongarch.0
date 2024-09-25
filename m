@@ -1,68 +1,68 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE53E15B13B
-	for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 08:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25284156222
+	for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 09:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727253917; cv=none; b=kFzwYayZ/amWfaOxNJRt3Fu4nCWWdfPr0u1ziS+0G5oTHCljvcrromTEsQBRq/9ypvVhKmYChp1ZTXR1sQbt4tqrTl7EMD8Lm7qsV5tWzwIT1XwxLHGFeAFkt95CN9hZt5jt3O5yWtJM3ehTHiT1h9Qmwkh3+7ip3P6PKzi1s3Y=
+	t=1727255126; cv=none; b=Q51krkli0YNjnHYJwOnQuNFuqTn2jf8By9pRGcs98A4rhEK4SU9DDp8SQzw3AWY0PKh9ahCbIPnEojr/qq6RkiYLnoRNZk4gwTFcOa2mV4chehNqZPoQPC0ke+XZU3FFKuH4TF7JK4penFhWPd9s34ondHvYjAaBzvOn0LxEfaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727253917; c=relaxed/simple;
-	bh=mP7Uq00AVwR3Zp5r1zKaElCF0y2R9K7EPxhbb9x/wn0=;
+	s=arc-20240116; t=1727255126; c=relaxed/simple;
+	bh=1QZUsUnnAE3WSKe8mRvALmjWQTDijRw4NHVHntQSucE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kGfF+/ihx6xMzzGih07wYiIQvA5Po9hPAK4AtBdAT0+udoJEa4LZSI7NmUHcCTc5rr+l5cAfQztkOOlw+yj7qFf8Lrq0AMciCfyg6JRZe+5A4SmX2nsgs2lcq/Sff8vF+i20S4ufXKOH0qKXtcOLLC4Fn47XtJ8M10Iv9CaETLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F84n4dOF; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=caWvEO0BiH6o4mgezTusNLd1pNLt9SgbiY6jtPZZU9MPTSNwLuHoSI9is9nCrWy5aIn1AbxxBO9CZICl3V8XnwSe8yaXZTpi8HslT90C1qmxcwR/09qahroZOEYmP1guWvO2z8lfZgus6rZFM/8hUouWXysqPVNxVDt0HNPj7Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/GVtCTz; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F84n4dOF"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a8d60e23b33so857914166b.0
-        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 01:45:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/GVtCTz"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c26815e174so8011243a12.0
+        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 02:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727253914; x=1727858714; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1727255123; x=1727859923; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/s0lV7K7xGqyp7HGObiTsi5felYAY5nYIVCT3Xgv5ag=;
-        b=F84n4dOFb+2+WSDXpR+tIhRlvQSOSWqxqXElMZf/Ef/5u0vuC0MbrzKcGyB1IN5NTW
-         wIZtqGwisT3O0YaZOBKwf02hVPGMpQ89frOtcaAW7P36Xd37DAtKyABYK+0ZQz8NvqFs
-         dNOhgffaCWU+Q3ljKuHMpaHlo/iZ5YbpPjApj8ISpzDPdWZgENHFmfyH5rrvlHQFMJPf
-         /SXrV5wPg7QKVG/i8Zo11iReFHLIN6p01AY3W66ToRz++0JQBthiJys1RRqRLmB8wAok
-         BgtbPnszmQG5jg33qaeYnTxglH5RgWc8OOkO97ZqqA2Ju21zKGe+vuzfl1mbeALuidBW
-         yRTg==
+        bh=OpSxoOSH8sGRYYBVpsIkEfJWqz3E/EfZFQTLjHzT1H0=;
+        b=Q/GVtCTzq59QevYvQ18bJCMlAh0YgJJZYOzX3bGk+YcIwPZKrryi6yCFqE4QL62SDv
+         nasfK5uDiJfMrqBwgd4CKC5Uzil1c2r5F932fcJZ0uRnfFCZF4T/cjL4i4F4wjQ4J68J
+         l5KjQdhqtv4LYQzAk2VT49xv/3Thc5bj/718r6MoIEVnWB9xoD+3NKO2jaro9pwBilGq
+         EJgZTOvpsm7/e+w+J4k527RgjtP+52cYr69uLp25piEZqzIM/rz0J4LcJW0fHUfxG5dp
+         BKEsQzcyzIdGCM/4FhGM8Z2iSDCzcXNIFtMRJdXcee0KpobPQ1MV/S39702oT0mFYRZa
+         HHTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727253914; x=1727858714;
+        d=1e100.net; s=20230601; t=1727255123; x=1727859923;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/s0lV7K7xGqyp7HGObiTsi5felYAY5nYIVCT3Xgv5ag=;
-        b=G53piGMTkP7gYbYnv2xTdxFlqzDaAXN0F09UAD/dSFnffmQZnucbvoSiOUvlgpqQJX
-         2h4hnWyeEyaCZfwbtBr0w363fdPABwf3Em1DWckh2nEbSPdGihYqJgZj666DyrePmr/g
-         7WZDGUGAXD6P0abwhRLpJ+cbSqXrUVKjfQZYhoXrqRdMLTTV4AUKxIrXHjUjQq8TAJvP
-         Q9m/rPAs5S8jbb1Gs+O4x933GGQ7++whC0wgivBSn+1xuQPOOtDzSgNT8EznYSxkaziY
-         7l7dNKvtJ18S5hVJ0zuhGw0fd+JgejOlqt7VFXBRHv+Cnlfa7jUtCSishOMTanNbc9Rk
-         7HWA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3F7w4BQMv5uM4RwHyp2XM5T+aDnccHL/IDvSARL6/wqdMCfMm1eYq6Cil/BwfdzNVxOOkPx32uLQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz1YDc/Vm69DovSrR/T/wHaiFmpkj8BV6RoUi/vCK7kkw6NSXEx
-	7dr3vvnZNBJBe2N7UyuisMmsTFBBl+C5CDFio+hbZmuQ6MtuKdhGTFo67NR01DshE41PHa+cUhE
-	cMqCygsKNHvhYnVo2YEe3U0DqZ54=
-X-Google-Smtp-Source: AGHT+IHJ9p2T25h1DGXmt5kZkVT5WxVXm73sAkzVAymu155m5T37TOCSBpmD3N4Nbx2vxCxHdTsuLyonZ/MLSAshO7w=
-X-Received: by 2002:a17:907:9487:b0:a7a:8586:d36b with SMTP id
- a640c23a62f3a-a93a03305a3mr173259766b.3.1727253913924; Wed, 25 Sep 2024
- 01:45:13 -0700 (PDT)
+        bh=OpSxoOSH8sGRYYBVpsIkEfJWqz3E/EfZFQTLjHzT1H0=;
+        b=OPAHhOKftqbe3Jyh7zpPbN2+fFVEsPGDp9XOtut07r+AMIUVkGBMXscs0NuMBw2aPI
+         +JEzFj8z2af/q89VmT/tyyC6n1d8qH0PAqVEwZny3qTD9D9/aI2XMv7UZr1g99bBR+qf
+         DbPw7Xqx/XnhRA6kt7pXSqaBRUqSvJulkqXAb2ik0TJr3QZC7ZfdHxpU/ieyZnWnPfom
+         IjWCibYd/s/cR0VKmwpb4n5MPXwmfwAxWCidh7WM/e7aAXDxyx4NXeAj69A79+FXH1fr
+         EBox6RBh2q/EpTEuL22vaoY0dsQ8X9b1TdUz79c8oE1KexSRg+8STXLsn4ku/DPO/yG0
+         Khmw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+rvV7+0Fj7zKt3UmaR4OM5Cvrk9Y6mwr25MMAaLtYv2loNuPDR1Due2BmjQehAOLM1ikmm9SKbMM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyXIJOMRbrfGe7NkDlYTpQfm9X10n8nZded+aeV77mzIaJfgSck
+	BDJkVukhoKbiJt/eByQMjY3/qEyo255+FmMRqb6Ux483I2qozrs7HWH2jOv2t9IpZokq/nKWMNV
+	hJTcpyploHnvtHY7RuIl0fHlcq6s=
+X-Google-Smtp-Source: AGHT+IHMhDBD4VbH/gs1euQafiviuUglJ4RhEofIOUHa7Z/aaoxmzI3ZTPxOSwo9aMR6U646AGZcuD6vs83g04COppE=
+X-Received: by 2002:a05:6402:40c5:b0:5c0:c10c:7c1d with SMTP id
+ 4fb4d7f45d1cf-5c72073c6bfmr1772969a12.23.1727255123097; Wed, 25 Sep 2024
+ 02:05:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1727056789.git.zhoubinbin@loongson.cn> <df28fd5784de4d18929c03c43309f095ae4f4860.1727056789.git.zhoubinbin@loongson.cn>
- <ZvKAfZH-uaxzY0hh@finisterre.sirena.org.uk>
-In-Reply-To: <ZvKAfZH-uaxzY0hh@finisterre.sirena.org.uk>
+References: <cover.1727056789.git.zhoubinbin@loongson.cn> <9a286537a20f0f96597090f59165b4532e41bdb8.1727056789.git.zhoubinbin@loongson.cn>
+ <ZvKEFlARvbFFWI83@finisterre.sirena.org.uk>
+In-Reply-To: <ZvKEFlARvbFFWI83@finisterre.sirena.org.uk>
 From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 25 Sep 2024 14:44:59 +0600
-Message-ID: <CAMpQs4+pEXiNknyVEWKY=POS7kk7ow7SBuuF6R+G5EcGAd42jA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] ASoC: codecs: Add support for ES8323
+Date: Wed, 25 Sep 2024 15:05:09 +0600
+Message-ID: <CAMpQs4KW7P0soeTw0Bi_OpcGXjk8EBjcNmHFeAi=MCauhwanYA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] ASoC: loongson: Fix codec detection failure on FDT systems
 To: Mark Brown <broonie@kernel.org>
 Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
 	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
@@ -80,30 +80,27 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Mark:
 
-On Tue, Sep 24, 2024 at 3:04=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+On Tue, Sep 24, 2024 at 3:19=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
 te:
 >
-> On Tue, Sep 24, 2024 at 03:00:19PM +0800, Binbin Zhou wrote:
+> On Tue, Sep 24, 2024 at 03:00:32PM +0800, Binbin Zhou wrote:
 >
-> > +     /* interface format */
-> > +     switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> > +     case SND_SOC_DAIFMT_I2S:
-> > +             adciface &=3D 0xFC;
-> > +             daciface &=3D 0xF9;
-> > +             break;
-> > +     case SND_SOC_DAIFMT_RIGHT_J:
-> > +     case SND_SOC_DAIFMT_LEFT_J:
-> > +     case SND_SOC_DAIFMT_DSP_A:
-> > +     case SND_SOC_DAIFMT_DSP_B:
-> > +             break;
+> > When the Codec is compiled into a module, we can't use
+> > snd_soc_of_get_dlc() to get the codec dai_name, use
+> > snd_soc_get_dai_name() instead.
 >
-> This results in an identical configuration for everything except I2S
-> which must be buggy, these are distinct formats in ways that are visible
-> on the bus.
+> What is the issue with using snd_soc_of_get_dlc()?  Shouldn't we fix the
+> helper instead?
 
-Ok, I checked the datasheet for the ES8323 and it has set bits for
-LEFT_J/RIGHT_J etc.
-In the next version, I'll patch it all.
+I'm very sorry for this part, I checked and tested it again and I
+should have over-modified it as well as the use of
+snd_soc_of_get_dlc() is correct.
+
+In fact, what's really being missed here is the assignment of
+snd_soc_dai_link.platforms->of_node, which causes component_empty for
+soc_dai_link_sanity_check().
+
+I'll rewrite this part in the next patch set.
 
 Thanks.
 Binbin
