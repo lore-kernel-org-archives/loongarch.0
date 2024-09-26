@@ -1,203 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCADF145FEB
-	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 03:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8B318EFC6
+	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 07:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727320992; cv=none; b=SRruFuz6xpSVwZ4U6Isbj77ligVWTJUjxSXMQrPNZ7eWS44kZX5mF0UPKvTFgfPCHj/DstPcEZSK6spc7AbK2f9NT/u3Q6eqTdhKiISSAH9DjxQiQ2l2GlvIRGve5nOtgvWqtMPu6RPYo4hQpWI7dthd0e9UuUFhYTaD9FnSyzs=
+	t=1727334891; cv=none; b=ZXAh6rDYu7uwma9qt1dwcW+E+iqo+QmZ+FGUoopU6m4XgBhNU0zeLG0wzGj86dLgrdsjt7BVpbb3DK45vmpiChOX42bkvpXDRhOEdX+1fq7cDLVuu9jVIlxRI/XJKa0+x0V7LoE2rMYvOJ1sG5eihP3tavRJmx3/Oc06tauUKGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727320992; c=relaxed/simple;
-	bh=fx8pZLczVjXeMg2rh9SYwd31ohW/5zVjlWO7j2A5L1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K1fxR8ltlkvtUs5GXgAoPrfbM9NucpTwU8xNjoJ1qR8QYCV89DNod4x2cdLMJpDg9JkBGeh0CdImcQTq6gkQrPcWwZ3Fw+DY2OnX7clF0az8e5S0IC+lVNeNfLN7oL+/AA+mnpT0xz3ND0X1SunzXrVdt4mhxWu9VsuuiPuY9So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYWjXQDZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727334891; c=relaxed/simple;
+	bh=WlY3d7SLr1N+C4pY/PP84LyM8TYT0prgnbu6pk4uLws=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=DSdNBmT6oWE/7opwBQWqzSF7VQAcF0KQIvB6nprRDI4oA1z0tmzWo4PyB/V+BbErKjiGC5HyToQYLyK3QOaKY7Xyu9ngl+Z/IRHfKsXmLG5/10tiNJHx/JER7ml6nyCedlu6YIzhovVKzYlXwbmYJ2yFwQ9mHMMwqbjsyx2/xZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PMoB2KNR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WLetWrJ+; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYWjXQDZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B7FBC4CED2
-	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 03:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727320992;
-	bh=fx8pZLczVjXeMg2rh9SYwd31ohW/5zVjlWO7j2A5L1Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EYWjXQDZvPjfSLqN3QuWR1Ioppqi01WopwbMklWpJ5EvhHefAqLRpftZPJ/85fNau
-	 OzBtgoxghQoZkG1W2aBedUQdy9VXQ4kCRGiCKew/cnrxNv7LhtBePsUsfGrauaoX2z
-	 k6x5sobtQ5JG34qbmqsTBcH9UX8mpKC8yk2QUFMU8TrngWELCwkPfvAhufyrrqSTnb
-	 LJkmFfNNzSBhXpG87PGZNJ3u4GhaEcs04fKxIQ2CZamQx2amkOwWRbn7Ke8/JJfKed
-	 URFy+2nO85b8N6xaOfnPwuCuN1D2q/Zgr+uI1OJfo8aGWutMS5B+9mX5+LuzAt2a3A
-	 gw3SmHiHFhUNw==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f752d9ab62so5245061fa.3
-        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 20:23:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNysMsgr4zVvP7DZeC/kTemgB9sEWmjYw+SNUVq+4Cpgc6i6DwUG3E06lizVtw0fGPVDDrMzb/LQw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyFMtZ8osPb3aUCZJK4dXJikFMENsuRmDoweBhTRBs9dxehAZb+
-	vjMmCqi1vCRXJZYk5xLHgKhbLi4+cvSjWWDFIvzyKfHDadPeoeGdUpatuTVuGF9Z3TJara8xVNV
-	dgPbTwQHxS8tyOvCZJOkXFaJyvxs=
-X-Google-Smtp-Source: AGHT+IEVHn4SeOlm814f8v2WMfQzmUdfbYxE9ZZ+RDruflT0pl0gMYBsSeJIa+1mWZAwcNA8/DmrDT6J0t/IiRM9RwU=
-X-Received: by 2002:a05:6512:138a:b0:52c:9e25:978d with SMTP id
- 2adb3069b0e04-5387755c9bdmr2742508e87.45.1727320990548; Wed, 25 Sep 2024
- 20:23:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PMoB2KNR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WLetWrJ+"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1CDF41140253;
+	Thu, 26 Sep 2024 03:14:49 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Thu, 26 Sep 2024 03:14:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1727334889;
+	 x=1727421289; bh=/T6ar3F0gXR/zaU63AYT1uaAqMFPYcSq6bUl+9VYhuk=; b=
+	PMoB2KNRK9uvldBimKptBz1a/ORdeC/+Gxczc773IY6wYopp2EcC1/sEN9DA6p0N
+	2fxL2DNJwCKxKwhZrc6EjD7WL6wXEO8O+zdNkwIKs53mZre2IlNt/VE+/zd5jyUI
+	O50fDTunzBE2W14JSglvOTdJs2IjH8fM0P/VGARZjdO69tRDp8yefmbv83EB9hCS
+	dsURRAWGVZHDxxA39oapMPieNrqWMRcUjeFtLq0xCkof8ZhUGH0Cj7BIt8txVHth
+	r4tlHRAofzbcl+JqC/JZRQzYVctZemqBbbDCUQ4TzrJi6gYUkHO+jBDved8X2ck1
+	y5k+6uz6Hv7+ztiEqd/Byw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727334889; x=
+	1727421289; bh=/T6ar3F0gXR/zaU63AYT1uaAqMFPYcSq6bUl+9VYhuk=; b=W
+	LetWrJ+UEuB+QV3R8zA+ndQHa/X8JiMW000u2v3zKIbNdwZJ7dCrydDwSK9qw3nf
+	C/f0Wmdl1L7xiXMRJZ8W8Y8lRvQVd6E0NOhBqqUmbO7S0DaH3+EN0hdXuI4GhjZW
+	JvbYgFF4VS+gFtcXXWI98+9EuVufxnOBrah+HCKBtHp/tDHWix36qy74VKnLzuny
+	VcS+bCfM5vSXNmVWIDW+89NOibk25D7hCIC2tlkysAWRbTb9rb94miMJkCfd1PVr
+	yTXR+60BaKmVdnYBq9ZMmreyQs3i76fG1NWSKnd9Gveyv31n5uFIc/QAGmPATPJ0
+	X4Ts3OHE50gojGoU6/ooQ==
+X-ME-Sender: <xms:6An1Zt_8OU-jE5gqCRt953O8HbkA53-0EtwRHk08x352CPjcoZ6IZA>
+    <xme:6An1Zhsha5yiVnlFd719MH1sktDIbDxF0-h3yjFyDdNyvoffY0lQX8j4v857VxlNU
+    j_8MPtkvV1kcMZxZeY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtiedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinh
+    grshesrghrmhdrtghomhdprhgtphhtthhopehjvhgvthhtvghrsehkrghlrhgrhihinhgt
+    rdgtohhmpdhrtghpthhtohephihsihhonhhnvggruheskhgrlhhrrgihihhntgdrtghomh
+    dprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepghhuohhrvghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihho
+    nhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtsh
+    drihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhs
+    thhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:6An1ZrCyn79DMvSAuCcgCq6i_t4gnthLW4in2IXB3c4NIZKg1EOy-w>
+    <xmx:6An1ZhehrLA4MoqEwTf2EophW8Qe17hKoVYNoFMqnTTJxvviG3M07A>
+    <xmx:6An1ZiMFswFt_m-jCYqNHf3vdlKihK4C50z0YrL_H_tKz2CyfGlDoA>
+    <xmx:6An1Zjk-ASdXuvHyok7bvh6S-q-BvtZDgg_VnQzxoTeWJ5ZlDG4NJA>
+    <xmx:6Qn1ZjlRN7popDqYqT9mNyGxuA75CHGpFDWh-avqB8KQkTZErTQ-4pT0>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2B2142220071; Thu, 26 Sep 2024 03:14:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240925132420.821473-1-jvetter@kalrayinc.com> <20240925132420.821473-5-jvetter@kalrayinc.com>
-In-Reply-To: <20240925132420.821473-5-jvetter@kalrayinc.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 26 Sep 2024 11:22:59 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSuueSutg7tnYfrRbvY40AidnfZh4=ujEKye3sust1sXA@mail.gmail.com>
-Message-ID: <CAJF2gTSuueSutg7tnYfrRbvY40AidnfZh4=ujEKye3sust1sXA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] csky: Use generic io memcpy functions
-To: Julian Vetter <jvetter@kalrayinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, 
-	loongarch@lists.linux.dev, Yann Sionneau <ysionneau@kalrayinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Thu, 26 Sep 2024 07:14:16 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Julian Vetter" <jvetter@kalrayinc.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ loongarch@lists.linux.dev, "Yann Sionneau" <ysionneau@kalrayinc.com>
+Message-Id: <f47e66f9-ec20-4e75-b88f-d412339e797d@app.fastmail.com>
+In-Reply-To: <20240925132420.821473-2-jvetter@kalrayinc.com>
+References: <20240925132420.821473-1-jvetter@kalrayinc.com>
+ <20240925132420.821473-2-jvetter@kalrayinc.com>
+Subject: Re: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io into
+ iomap_copy.c
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 25, 2024 at 9:24=E2=80=AFPM Julian Vetter <jvetter@kalrayinc.co=
-m> wrote:
->
-> Use the generic __memcpy_{from,to}io and __memset_io functions.
+On Wed, Sep 25, 2024, at 13:24, Julian Vetter wrote:
+> Various architectures have almost the same implementations for
+> __memcpy_{to,from}io and __memset_io functions. So, consolidate them
+> into the existing lib/iomap_copy.c.
 >
 > Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
 > Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
 > ---
-> Changes for v6:
-> - Added proper commit header suffix: 'csky: ...'
-> ---
->  arch/csky/kernel/Makefile |  2 +-
->  arch/csky/kernel/io.c     | 91 ---------------------------------------
->  2 files changed, 1 insertion(+), 92 deletions(-)
->  delete mode 100644 arch/csky/kernel/io.c
->
-> diff --git a/arch/csky/kernel/Makefile b/arch/csky/kernel/Makefile
-> index 8a868316b912..de1c3472e8f0 100644
-> --- a/arch/csky/kernel/Makefile
-> +++ b/arch/csky/kernel/Makefile
-> @@ -2,7 +2,7 @@
->  extra-y :=3D vmlinux.lds
->
->  obj-y +=3D head.o entry.o atomic.o signal.o traps.o irq.o time.o vdso.o =
-vdso/
-> -obj-y +=3D power.o syscall.o syscall_table.o setup.o io.o
-> +obj-y +=3D power.o syscall.o syscall_table.o setup.o
->  obj-y +=3D process.o cpu-probe.o ptrace.o stacktrace.o
->  obj-y +=3D probes/
->
-> diff --git a/arch/csky/kernel/io.c b/arch/csky/kernel/io.c
-> deleted file mode 100644
-> index 5883f13fa2b1..000000000000
-> --- a/arch/csky/kernel/io.c
-> +++ /dev/null
-> @@ -1,91 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -
-> -#include <linux/export.h>
-> -#include <linux/types.h>
-> -#include <linux/io.h>
-> -
-> -/*
-> - * Copy data from IO memory space to "real" memory space.
-> - */
-> -void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t=
- count)
-> -{
-> -       while (count && !IS_ALIGNED((unsigned long)from, 4)) {
-> -               *(u8 *)to =3D __raw_readb(from);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               *(u32 *)to =3D __raw_readl(from);
-> -               from +=3D 4;
-> -               to +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               *(u8 *)to =3D __raw_readb(from);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memcpy_fromio);
-> -
-> -/*
-> - * Copy data from "real" memory space to IO memory space.
-> - */
-> -void __memcpy_toio(volatile void __iomem *to, const void *from, size_t c=
-ount)
-> -{
-> -       while (count && !IS_ALIGNED((unsigned long)to, 4)) {
-> -               __raw_writeb(*(u8 *)from, to);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               __raw_writel(*(u32 *)from, to);
-> -               from +=3D 4;
-> -               to +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               __raw_writeb(*(u8 *)from, to);
-> -               from++;
-> -               to++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memcpy_toio);
-> -
-> -/*
-> - * "memset" on IO memory space.
-> - */
-> -void __memset_io(volatile void __iomem *dst, int c, size_t count)
-> -{
-> -       u32 qc =3D (u8)c;
-> -
-> -       qc |=3D qc << 8;
-> -       qc |=3D qc << 16;
-> -
-> -       while (count && !IS_ALIGNED((unsigned long)dst, 4)) {
-> -               __raw_writeb(c, dst);
-> -               dst++;
-> -               count--;
-> -       }
-> -
-> -       while (count >=3D 4) {
-> -               __raw_writel(qc, dst);
-> -               dst +=3D 4;
-> -               count -=3D 4;
-> -       }
-> -
-> -       while (count) {
-> -               __raw_writeb(c, dst);
-> -               dst++;
-> -               count--;
-> -       }
-> -}
-> -EXPORT_SYMBOL(__memset_io);
-> --
-> 2.34.1
->
->
->
->
->
-Thx for the clean-up.
+> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
 
-Acked-by: Guo Ren <guoren@kernel.org>
+You have a duplicated signoff here.
 
---=20
-Best Regards
- Guo Ren
+
+> +#ifndef __memcpy_fromio
+> +void __memcpy_fromio(void *to, const volatile void __iomem *from, 
+> size_t count);
+> +#endif
+> +
+> +#ifndef __memcpy_toio
+> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t 
+> count);
+> +#endif
+> +
+> +#ifndef __memset_io
+> +void __memset_io(volatile void __iomem *dst, int c, size_t count);
+> +#endif
+
+I'm not entirely sure about the purpose of the #ifdef here, since
+nothing ever overrides the double-underscore versions, both before
+and after your patches.
+
+Unless I'm missing something here, I think a more logical
+sequence would be:
+
+1. add the definitions in this file without the underscores,
+   as memcpy_fromio/memcpy_toio/memset_io, with the #ifdef
+   for that name that is always set at this point
+
+2. replace the default implementation in asm-generic/io.h
+   with extern prototypes, remove the #define from those
+
+3. convert the other architectures, removing both the
+   implementations and the prototypes.
+
+     Arnd
