@@ -1,134 +1,203 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9722C18C
-	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 02:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCADF145FEB
+	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 03:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727316252; cv=none; b=aeIpgOwaSHhMunFmsT5ztgupmNOBIIQ/VA78bP8+SEaQa7MckJ1KSHYqnEr6QJrtBLy2LNIfx9o4AkoafBfDKz14OZjT9tA6ONxiGv2EctJOuSzNx3RkxyxOc3HNJRinFD2diZDy4rlZuzTKVYCqi92trDHxNmmu7zS7ggohunA=
+	t=1727320992; cv=none; b=SRruFuz6xpSVwZ4U6Isbj77ligVWTJUjxSXMQrPNZ7eWS44kZX5mF0UPKvTFgfPCHj/DstPcEZSK6spc7AbK2f9NT/u3Q6eqTdhKiISSAH9DjxQiQ2l2GlvIRGve5nOtgvWqtMPu6RPYo4hQpWI7dthd0e9UuUFhYTaD9FnSyzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727316252; c=relaxed/simple;
-	bh=rnTEbCFDOfXQfDY6AbPrrjGrFyYYn0angyCoGJOYUws=;
+	s=arc-20240116; t=1727320992; c=relaxed/simple;
+	bh=fx8pZLczVjXeMg2rh9SYwd31ohW/5zVjlWO7j2A5L1Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=op937NKa5RtrC/4zcVDM9gqPi0Qro+1nuX5LlfJ+2X2WaYHhUVBadHf99BeLpm/EEsmF1+ix0MKVWOS5ixR4TA3y71lN8iOwbXUaIEz5cT3fEavge2oj85GfH3joR8x9KN9KpIjM27W+RXyb7+Xzpf4Dc2wT2sMzJrIk5aGPuwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAZZxt33; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=K1fxR8ltlkvtUs5GXgAoPrfbM9NucpTwU8xNjoJ1qR8QYCV89DNod4x2cdLMJpDg9JkBGeh0CdImcQTq6gkQrPcWwZ3Fw+DY2OnX7clF0az8e5S0IC+lVNeNfLN7oL+/AA+mnpT0xz3ND0X1SunzXrVdt4mhxWu9VsuuiPuY9So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYWjXQDZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAZZxt33"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c42e7adbe0so350769a12.2
-        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 19:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727316249; x=1727921049; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uepY68ZxdZEGIoFno1fijjUOFz/iGyTi+j8yAIgrbRI=;
-        b=hAZZxt338uXzpX+kPa53zaDazT1ghST+xfmG+eIdxwnLKbHxnJon4BY4cOlxyt7GBH
-         W/hwkSj6Kl0IE3Lw44sHYGM87D67iTukvDZzMxCcdDcorh8jpEqScojEw1TqmufuOy02
-         wqlHTEGb83hV3iwDwcpa71ZHLnlDmlvZGRoqH1PEqLnSCk0Q6hnx+nntmqnibombzZtA
-         hsIAeLVhboYThWUExG8qRn9vp4ZOP9VkD6UbJtGJ2a4Lln4I70JJqnqD8+5QfjdTXi8F
-         iA9Ui64eHG284skEDmB4BSPSJ+W0XNlXMkwIPPRKYo1Hwvu8ETqt9OEFbEsKGlLdVKRu
-         nXXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727316249; x=1727921049;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uepY68ZxdZEGIoFno1fijjUOFz/iGyTi+j8yAIgrbRI=;
-        b=iXGs8tj1OvqX59QF6H7blUaN2BG0J8NWMUi+o+/01ZKfwUfd7yBSG1fYM/Xykk9Ksj
-         R3bgvNXUKUE+qIb+kot8Vf/DNmLpiCVTRgsQs95LmYQBr6xDaJETlk77gywuMeA20VwR
-         RSBRUMwUf0DsDTA73+SSQZlIWj50UBuRvZHNbgq42AEaKoAvZTNTBm6qlZ9baLjbnYEe
-         n2rKeNIZdua+dFaX3iZrK7cpotPmwL2TYsl+MMcnLMy4AdoCb/LlqU3WGYOTvt7C4d8b
-         7F5Wnn+7N6wf+MjL9M/s702Ka9r/JLxF/Ytsg6/M91vF/iCTuX+sVsOaKV8UFMLHmH+U
-         /xkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUc0YA7tqRRsQdGRtvZVhx5dqrnECNi2QtwhRNWMXd7IVoZoE0oTX6hrsZhRDklqa050oiJk5Jjy3Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwP+UxwJ9mzMPDUmJsdBM9T6beHl5X0YwaDbnIcfzzPUiXbyh3m
-	nZ+2gH7gMvkhtk8rj5kY/dZgrtwWttcogMiwKAjyD5fABq088V4/UtzmxMmLUEq2AsOvxcVLE/+
-	K3OiKguP/9QgBzNRTni7uC2uRAD4=
-X-Google-Smtp-Source: AGHT+IF/KR6xfiJUHZTvUsIZhDO8sCqMLIEb2EKea2TOgeoogE/KiWFUQoO3906Czfj1LCNIJA3yZnmbbMqvgBY0WnU=
-X-Received: by 2002:a05:6402:254a:b0:5c5:cf0b:b515 with SMTP id
- 4fb4d7f45d1cf-5c72060a5bfmr3234419a12.1.1727316249172; Wed, 25 Sep 2024
- 19:04:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYWjXQDZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B7FBC4CED2
+	for <loongarch@lists.linux.dev>; Thu, 26 Sep 2024 03:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727320992;
+	bh=fx8pZLczVjXeMg2rh9SYwd31ohW/5zVjlWO7j2A5L1Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EYWjXQDZvPjfSLqN3QuWR1Ioppqi01WopwbMklWpJ5EvhHefAqLRpftZPJ/85fNau
+	 OzBtgoxghQoZkG1W2aBedUQdy9VXQ4kCRGiCKew/cnrxNv7LhtBePsUsfGrauaoX2z
+	 k6x5sobtQ5JG34qbmqsTBcH9UX8mpKC8yk2QUFMU8TrngWELCwkPfvAhufyrrqSTnb
+	 LJkmFfNNzSBhXpG87PGZNJ3u4GhaEcs04fKxIQ2CZamQx2amkOwWRbn7Ke8/JJfKed
+	 URFy+2nO85b8N6xaOfnPwuCuN1D2q/Zgr+uI1OJfo8aGWutMS5B+9mX5+LuzAt2a3A
+	 gw3SmHiHFhUNw==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f752d9ab62so5245061fa.3
+        for <loongarch@lists.linux.dev>; Wed, 25 Sep 2024 20:23:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNysMsgr4zVvP7DZeC/kTemgB9sEWmjYw+SNUVq+4Cpgc6i6DwUG3E06lizVtw0fGPVDDrMzb/LQw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyFMtZ8osPb3aUCZJK4dXJikFMENsuRmDoweBhTRBs9dxehAZb+
+	vjMmCqi1vCRXJZYk5xLHgKhbLi4+cvSjWWDFIvzyKfHDadPeoeGdUpatuTVuGF9Z3TJara8xVNV
+	dgPbTwQHxS8tyOvCZJOkXFaJyvxs=
+X-Google-Smtp-Source: AGHT+IEVHn4SeOlm814f8v2WMfQzmUdfbYxE9ZZ+RDruflT0pl0gMYBsSeJIa+1mWZAwcNA8/DmrDT6J0t/IiRM9RwU=
+X-Received: by 2002:a05:6512:138a:b0:52c:9e25:978d with SMTP id
+ 2adb3069b0e04-5387755c9bdmr2742508e87.45.1727320990548; Wed, 25 Sep 2024
+ 20:23:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1727056789.git.zhoubinbin@loongson.cn> <fd3989d15546502b47f580e6a2c3a59cb628ce93.1727056789.git.zhoubinbin@loongson.cn>
- <ZvKDBc2Kohx9kPfQ@finisterre.sirena.org.uk>
-In-Reply-To: <ZvKDBc2Kohx9kPfQ@finisterre.sirena.org.uk>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 26 Sep 2024 08:03:55 +0600
-Message-ID: <CAMpQs4+xP7wMSm4wgE97hnbmrS5oVtQTQWXNLvK=O+SkeZnEsw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] ASoC: loongson: Add I2S controller driver as
- platform device
-To: Mark Brown <broonie@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Neil Armstrong <neil.armstrong@linaro.org>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Weidong Wang <wangweidong.a@awinic.com>, Prasad Kumpatla <quic_pkumpatl@quicinc.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Shuming Fan <shumingf@realtek.com>
+References: <20240925132420.821473-1-jvetter@kalrayinc.com> <20240925132420.821473-5-jvetter@kalrayinc.com>
+In-Reply-To: <20240925132420.821473-5-jvetter@kalrayinc.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Thu, 26 Sep 2024 11:22:59 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSuueSutg7tnYfrRbvY40AidnfZh4=ujEKye3sust1sXA@mail.gmail.com>
+Message-ID: <CAJF2gTSuueSutg7tnYfrRbvY40AidnfZh4=ujEKye3sust1sXA@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] csky: Use generic io memcpy functions
+To: Julian Vetter <jvetter@kalrayinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, 
+	loongarch@lists.linux.dev, Yann Sionneau <ysionneau@kalrayinc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark:
-
-Thanks for your reply.
-
-On Tue, Sep 24, 2024 at 3:14=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Wed, Sep 25, 2024 at 9:24=E2=80=AFPM Julian Vetter <jvetter@kalrayinc.co=
+m> wrote:
 >
-> On Tue, Sep 24, 2024 at 03:00:48PM +0800, Binbin Zhou wrote:
+> Use the generic __memcpy_{from,to}io and __memset_io functions.
 >
-> >  config SND_SOC_LOONGSON_I2S_PCI
-> >       tristate "Loongson I2S-PCI Device Driver"
-> > -     select REGMAP_MMIO
-> >       depends on PCI
-> > +     select REGMAP_MMIO
-> > +     select SND_SOC_LOONGSON_CARD
-> >       help
-> >         Say Y or M if you want to add support for I2S driver for
-> >         Loongson I2S controller.
+> Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
+> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+> ---
+> Changes for v6:
+> - Added proper commit header suffix: 'csky: ...'
+> ---
+>  arch/csky/kernel/Makefile |  2 +-
+>  arch/csky/kernel/io.c     | 91 ---------------------------------------
+>  2 files changed, 1 insertion(+), 92 deletions(-)
+>  delete mode 100644 arch/csky/kernel/io.c
 >
-> You shouldn't select the card from the DAI drivers, some system might
-> use the driver with a different card for some reason.  If anything a
-> select from the card to the DAI driver is more appropriate, cards are
-> the main user thing.
-
-I will rewrite the dependency between the card and the DAI driver, as follo=
-ws:
-
-config SND_SOC_LOONGSON_CARD
-        tristate "Loongson Sound Card Driver"
-        depends on LOONGARCH || COMPILE_TEST
-        select SND_SOC_LOONGSON_I2S_PCI if PCI
-        select SND_SOC_LOONGSON_I2S_PLATFORM if OF
-
-config SND_SOC_LOONGSON_I2S_PCI
-        tristate "Loongson I2S-PCI Device Driver"
-        select REGMAP_MMIO
-
-config SND_SOC_LOONGSON_I2S_PLATFORM
-        tristate "Loongson I2S controller as platform device"
-        select REGMAP_MMIO
-        select SND_SOC_GENERIC_DMAENGINE_PCM
-
-Thanks.
-Binbin
+> diff --git a/arch/csky/kernel/Makefile b/arch/csky/kernel/Makefile
+> index 8a868316b912..de1c3472e8f0 100644
+> --- a/arch/csky/kernel/Makefile
+> +++ b/arch/csky/kernel/Makefile
+> @@ -2,7 +2,7 @@
+>  extra-y :=3D vmlinux.lds
 >
-> > +++ b/sound/soc/loongson/loongson_i2s_plat.c
-> > @@ -0,0 +1,186 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Loongson I2S controller master mode dirver(platform device)
+>  obj-y +=3D head.o entry.o atomic.o signal.o traps.o irq.o time.o vdso.o =
+vdso/
+> -obj-y +=3D power.o syscall.o syscall_table.o setup.o io.o
+> +obj-y +=3D power.o syscall.o syscall_table.o setup.o
+>  obj-y +=3D process.o cpu-probe.o ptrace.o stacktrace.o
+>  obj-y +=3D probes/
 >
-> Please use C++ style for the whole comment block so things look more
-> intentional.
+> diff --git a/arch/csky/kernel/io.c b/arch/csky/kernel/io.c
+> deleted file mode 100644
+> index 5883f13fa2b1..000000000000
+> --- a/arch/csky/kernel/io.c
+> +++ /dev/null
+> @@ -1,91 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -
+> -#include <linux/export.h>
+> -#include <linux/types.h>
+> -#include <linux/io.h>
+> -
+> -/*
+> - * Copy data from IO memory space to "real" memory space.
+> - */
+> -void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t=
+ count)
+> -{
+> -       while (count && !IS_ALIGNED((unsigned long)from, 4)) {
+> -               *(u8 *)to =3D __raw_readb(from);
+> -               from++;
+> -               to++;
+> -               count--;
+> -       }
+> -
+> -       while (count >=3D 4) {
+> -               *(u32 *)to =3D __raw_readl(from);
+> -               from +=3D 4;
+> -               to +=3D 4;
+> -               count -=3D 4;
+> -       }
+> -
+> -       while (count) {
+> -               *(u8 *)to =3D __raw_readb(from);
+> -               from++;
+> -               to++;
+> -               count--;
+> -       }
+> -}
+> -EXPORT_SYMBOL(__memcpy_fromio);
+> -
+> -/*
+> - * Copy data from "real" memory space to IO memory space.
+> - */
+> -void __memcpy_toio(volatile void __iomem *to, const void *from, size_t c=
+ount)
+> -{
+> -       while (count && !IS_ALIGNED((unsigned long)to, 4)) {
+> -               __raw_writeb(*(u8 *)from, to);
+> -               from++;
+> -               to++;
+> -               count--;
+> -       }
+> -
+> -       while (count >=3D 4) {
+> -               __raw_writel(*(u32 *)from, to);
+> -               from +=3D 4;
+> -               to +=3D 4;
+> -               count -=3D 4;
+> -       }
+> -
+> -       while (count) {
+> -               __raw_writeb(*(u8 *)from, to);
+> -               from++;
+> -               to++;
+> -               count--;
+> -       }
+> -}
+> -EXPORT_SYMBOL(__memcpy_toio);
+> -
+> -/*
+> - * "memset" on IO memory space.
+> - */
+> -void __memset_io(volatile void __iomem *dst, int c, size_t count)
+> -{
+> -       u32 qc =3D (u8)c;
+> -
+> -       qc |=3D qc << 8;
+> -       qc |=3D qc << 16;
+> -
+> -       while (count && !IS_ALIGNED((unsigned long)dst, 4)) {
+> -               __raw_writeb(c, dst);
+> -               dst++;
+> -               count--;
+> -       }
+> -
+> -       while (count >=3D 4) {
+> -               __raw_writel(qc, dst);
+> -               dst +=3D 4;
+> -               count -=3D 4;
+> -       }
+> -
+> -       while (count) {
+> -               __raw_writeb(c, dst);
+> -               dst++;
+> -               count--;
+> -       }
+> -}
+> -EXPORT_SYMBOL(__memset_io);
+> --
+> 2.34.1
+>
+>
+>
+>
+>
+Thx for the clean-up.
+
+Acked-by: Guo Ren <guoren@kernel.org>
+
+--=20
+Best Regards
+ Guo Ren
