@@ -1,200 +1,214 @@
-Received: from smtpout147.security-mail.net (smtpout147.security-mail.net [85.31.212.147])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0F17E01D
-	for <loongarch@lists.linux.dev>; Fri, 27 Sep 2024 08:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.147
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727425508; cv=fail; b=N2eMDJq1vYvIiRH3fZ7YOIfB8K3mdF6dNFlfAZJ1rVfglAWHnP2LonWkIiF6k7ckXaRWwmRYdNEak1s39DXvKUHsKAwR8ZqEuv14m1Yt0MUkbXw/lNrFr7kMff5BJwxRQVhJy193s1DcyPVPr75W/TyridoGU+5EeiC70mbY4pA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727425508; c=relaxed/simple;
-	bh=JfUfzdCcv3RO8SvMeEQ+/D1bPtYt59mq89aOVg5vxo4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QV+TsKgFubuIqfcB22bySh8G9pPsvATNoCTugeKO3+oEu0X81Lcgaeu+1vi5ezkZAXoTM2XYpJOD79A1WGB/2pZy1AyXE4BWYqaojIGR92FfPNldAJ/7lLcUltuJcAcg6Yg/u/LnV/xsOf+3DJcGR5CN1PpdhhsQK1Yk7aW3xNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=hXdbxO04; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=L0n4eNj6 reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434AE18A959;
+	Fri, 27 Sep 2024 09:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727428021; cv=none; b=RH7HXmH54XhHh8fKv96ZY+f01Bd2cDIs+/nahwYQdSTS+IqGlvCBjves/mVBYEisSDpPXEkkXGuDowQrAVJqsap2vVkQ8Zw7icAWXlN5yQuUClbsj71BC7f4ox9GZ4XXi5jIF+TfGc5hS/pigoU2twh7JzESu/FI4VTNKJgX5lM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727428021; c=relaxed/simple;
+	bh=Eu20caTVDuYFkjSNbtlsKZAt0thZ1W9gzLCf/RaCc6M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=vAmaqK7KX8jpbLfYDcOVSFJ53iqWtXoGn8rcb4WIOvWNyLTWcp+rN5kG97mOXsa5h9gn3tzVyVr6lCuCFp+lUvvlKnI9AfWls+U8mcIF12Q70TzguAmO0IoG7qh0wuIDJs3Lak3GLoFxk11lMDaJoAeGMQfPVPC/gfBbCuAb0sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=VtGT/OA1; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="hXdbxO04";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="L0n4eNj6"
-Received: from localhost (fx409.security-mail.net [127.0.0.1])
-	by fx409.security-mail.net (Postfix) with ESMTP id C85BA349C87
-	for <loongarch@lists.linux.dev>; Fri, 27 Sep 2024 10:19:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
-	s=sec-sig-email; t=1727425175;
-	bh=JfUfzdCcv3RO8SvMeEQ+/D1bPtYt59mq89aOVg5vxo4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hXdbxO04vdcGVieDt2WZ2EJSkW8mgbYxWKcel3GbLFW5sMyyUdfryv9FwY4IcI5Ph
-	 kv4/mrcBUdCuh8eqw+pWQbTqTu2plfyA/ECqbqOa3zZTnJRkP469kZkk81I54n+W38
-	 Wf08P8AX1kH/Un6MG1kJKMor53tO29KAwe7d2EhE=
-Received: from fx409 (fx409.security-mail.net [127.0.0.1]) by
- fx409.security-mail.net (Postfix) with ESMTP id 8C743349BCF; Fri, 27 Sep
- 2024 10:19:35 +0200 (CEST)
-Received: from PA5P264CU001.outbound.protection.outlook.com
- (mail-francecentralazlp17010004.outbound.protection.outlook.com
- [40.93.76.4]) by fx409.security-mail.net (Postfix) with ESMTPS id
- 654D7349C2E; Fri, 27 Sep 2024 10:19:34 +0200 (CEST)
-Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:118::6)
- by PAZP264MB3608.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:141::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.22; Fri, 27 Sep
- 2024 08:19:32 +0000
-Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
- ([fe80::6fc2:2c8c:edc1:f626]) by PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
- ([fe80::6fc2:2c8c:edc1:f626%4]) with mapi id 15.20.8005.020; Fri, 27 Sep
- 2024 08:19:32 +0000
-X-Secumail-id: <164f7.66f66a96.64623.0>
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pIjM6ANKn/PcgQoCGf2MEAwH9+AkgmCbLvxHP1LDK5YCkgSWFV9GMc9urNDQHnBti7mlP0UbA/m4nqU1U4rSrci6PnUjCiJyz3bgFDEPpPeyZ/hgAYjaXouttfClMDi5EnAt3CKvXWVmDfx9EoCD69ZHROGkVLLsJod187h7ItCrvblFH8zSzzL7nTh+6CVmUv69SJgxsPdhUwId/AanB9rwBSI5BQ6/7CVvGQsz0JW38Oay1kaebF/XWeahwlF73Y4Zu3yunMRh0ehtcxkFb4P6HDo0KLC6dYFHZl85EQqw5GDMyhzZ+5fnXkUdfadesyNUQD9cGKkUYIkK67ewsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microsoft.com; s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=af2NV92BK69A2g6DXL0TL0Tt3ZZMMoqVpubgjbLWTJE=;
- b=zTUfRc/AssL8Qm+fFwStsSXlnp8R+VBbd8vuSw87wjTWOXg2DBePmXfrEoM5VgTg2FvCOASMZ1yrT3l8VncNA3grwMC5mOjf2RDnCXxfWsPb6A2/xf57FJ12bK9tp2OAIf95IsvrET9R7Vw9uWzbF15A29SWGI6ioBLtWZQ0/S7s6Q8rCArq5GIAFUQHblyG2O8qtPsmk4bqWeTCw1U75iNyicJKfpOuzQJ/UVwV3IbAaDiaqV1T7k3qBsy7Ot8QbYvE+KbsAWFz0DVVPMBujbohFmEudfv3CqF8JsEybNe1Qis0Rpg7mSS316skMp4oCrrsIqFRVj69e8VA302MkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
- header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=af2NV92BK69A2g6DXL0TL0Tt3ZZMMoqVpubgjbLWTJE=;
- b=L0n4eNj6uPiWh8WtG4bFX/cqEv4g8xxjVU/r61QIcyhX83/6dxp6XwI+81Q/FIS9ZsFWaGmtf47jH4HwYXQaPjwVPOqIZfmzk5zo5HwtngXOGAuCllWnREDw5XwSWhdE/bvN/LOML8THPxde2hCUgng978lgpQPGS2fgvD9WrXZr9qT8xT1f6VaHQlCkeFfLy7CMZ1+H3tQqbUF3r/p5EdUaoCiShXF7LwwBe5mJobsdl0e3383jBDKhbDOPmfpgPTceTHjwx1NvNJZSw5ar9qgydyLR7YCT5YnzcYU2jlfqVicBEqUMqSR9QWmFpncADlJIyXgLKuEC14AUVwzLuA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kalrayinc.com;
-Message-ID: <b9f3f692-d4fa-473b-9bdf-4ea73b22ccde@kalrayinc.com>
-Date: Fri, 27 Sep 2024 10:19:31 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io
- into iomap_copy.c
-To: Arnd Bergmann <arnd@arndb.de>, Julian Vetter <jvetter@kalrayinc.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- guoren <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev, Yann Sionneau
- <ysionneau@kalrayinc.com>
-References: <20240925132420.821473-1-jvetter@kalrayinc.com>
- <20240925132420.821473-2-jvetter@kalrayinc.com>
- <f47e66f9-ec20-4e75-b88f-d412339e797d@app.fastmail.com>
-Content-Language: en-us
-From: Julian Vetter <jvetter@kalrayinc.com>
-In-Reply-To: <f47e66f9-ec20-4e75-b88f-d412339e797d@app.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MR1P264CA0146.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:54::7) To PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:118::6)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="VtGT/OA1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XeUc6G+ijEKJod2eAolRc/0pDu+4naba5TZ9vLUildU=; t=1727428018; x=1728032818; 
+	b=VtGT/OA1B9TATzpKxHZc6QRrY/kCjyitI2Iy9O8Mbt4oWI8z7nDYWzP53EtSOLYx3q1G6XMkkYI
+	K1wquzz8XITNK806PlpxPzHf5eG6UtpccWhvt3jPbC2J11VVh6rnOAv+8UPdIKQMBHqk6JPMPmy5o
+	Im2abz+NXGHe9B7JtAU8fyBgwfMnibtNc08/63E3MkNGtCb+zp1P9RHMS90uZgAcWTClXKGCrsY3X
+	DbEJOze0ZRrPHKpVd/8fM1quHCe4uuvnuFlzjNdW+qqaWt8E0oUBj5JIbK+dkUFvOAraDzj27cHN1
+	XJBWwLgjADfW+ENyAXceQKnWJ7MewbXJC3Ug==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1su6w4-00000003BAD-3bb0; Fri, 27 Sep 2024 11:06:48 +0200
+Received: from p57bd904e.dip0.t-ipconnect.de ([87.189.144.78] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1su6w4-00000001TWj-2adp; Fri, 27 Sep 2024 11:06:48 +0200
+Message-ID: <fbc1dde6650a3e729fab57decbb5bf4ef14436ce.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH V2 3/3] SH: cpuinfo: Fix a warning for
+ CONFIG_CPUMASK_OFFSTACK
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Kexy Biscuit <kexybiscuit@aosc.io>, Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang
+ <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, stable@vger.kernel.org
+Date: Fri, 27 Sep 2024 11:06:47 +0200
+In-Reply-To: <a45f1209-ff29-4010-b035-921cb136d58d@aosc.io>
+References: <20220714084136.570176-1-chenhuacai@loongson.cn>
+	 <20220714084136.570176-3-chenhuacai@loongson.cn>
+	 <3a5a4bee5c0739a3b988a328376a6eed3c385fda.camel@physik.fu-berlin.de>
+	 <CAAhV-H5bw3xcym2-GpyntQEad1h2eB8xDQGwVr_bRRKAOakzoQ@mail.gmail.com>
+	 <8947f91ba1a10f98723a5982f0fc13ee589d3bf7.camel@physik.fu-berlin.de>
+	 <a45f1209-ff29-4010-b035-921cb136d58d@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAYP264MB3766:EE_|PAZP264MB3608:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c4df8ab-1203-401c-0636-08dcdecd1d30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|10070799003|366016;
-X-Microsoft-Antispam-Message-Info: 21XWDCN+LcHwBqlaWNs0S3aW6zDGB5kbf8w6TdpwJzgot2DssiaoKWYnRveusyC8aFUcJP30wnNkxVbHJOWGEWj8r2sQ8bOTLYPnN7TIUVB144lD0l/SqzOlaTAecMNRtrVQOth2V60IuJQN+oJMqpvrcDfYwjq9dYQmOF3OVyvmqM6aDlABK4SUTQuBCyV+lDoexb6YT7PS8jHC0cFvJxjx4njK+DnPWHQhW6U/IpCDseajSqoVaJebRAugJJ4xohyFJsc57gfbJerwYGvvEuxt9D+PHclXTO29OfwNEo4r5CH2NJBH8U4pK2pApmswdLzdMGqA9ce1wTQqSU62WJAJ56GgZyPj5gsHQStdIP88WI3kXoAW5UeaaRO6hGVuC01cXmy3nb/NQ06BX6h/qB4sTwkZZk3WB7Ph6jLLIu7ZaCXbjIyOJAuEt/PC3Yx4yeASvLNjIl5vIbkyaeDuQNcvLN1akv2pSDSOqKKJHGhcSOAHN9Q+xATOS5IuDxErLu2lw2VCOi0Hn+9mrccETLGjChVlBJ37A1s5OTI19Gzs4DYFtbvn7x6xFDKlPWMMlZHXhKDA9xjY214A5EgFwk/+zAhjA0/fAkXp05APWLvjjwei1AHz0MshaVWQVBoJEivHanaX5P4BdD1uESmhGI15TNWXqpWc3H+tPCL8RmXAuHA7wKvEfroj02vvQeuFpjHgKaoIoq+s7+WptB4aFlhL0y+/4Lv7Z/X7SRWGM903CPhmoDfgpxzEcTPSSVr33qtNLlAqaAxynavAwC576/GomAlyvKPDN7nc/206ES5P4NzfyBX8EFBNM+N5qzMbwZkP0XN7Zuom90YSiAnhyh0KFcCHYrLXBUSDkDK3brtQXDKOD80pCMI0nQmfkalyNo4dWJWnqMwY7mi/g4mSXFysghpTfFhAK4moSURhevFW34GbC5Md7RT5uJzBVUIJEyd
- nZz1iGp4bV5wq6vsIDjInG9BEz36R3XDUctoREbkprsydSiDFR1BXIAqYfiUlVjjeURibAkaGjmMf6b3h7Kyd3XLRHEF/Blf1v723EM2eReldSDVRikeuISI3IQMsZ4g2tSNTseYUYypRWnGGjZaU+jWLQoP2B0tFbm3unpC3qlUxxTJcptOsM1j17pxfsnTnbBqkmkjzxqf8TPzIhI1PEkyyT+impHk/SkdtWCeOicmw19nJvZsdH29KqMmwy4qqtsokoh+BEuSQ5sBoNvakznlbyJA1Wk8eqJDtrcWTlWOktsSL2E/7vvD+fpxXhVqupFxJdwTh9xl6QhpluSCRlP4Nce81VMP7fakbRV7kBz8MJ88Lb2GD7XFQFjn4W1RbkfHa9SeI0aAu3RKyQw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(10070799003)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: OiJkmhW1rOH5hwzPFZgWF/p5Sbvx4EVyCrWvg59GTwR7nL5lkv1YhsilEJa2XV4tsGWt1Y5HH0UYJj6Fhu0asDqO76wtUvsGS7VNCkFEoEc60oCNyBjwkXxv27fFKFBqK7hfZqzlipRs1y978PUkdxIyJR4/pmWYTlTZm6IYDWQoF+eCcUI1r3IZ4hP6o6PWncIL9A/pW+HsgjdhoapzqphVmVasMRUW7E797kDGpYGD7SqQyM6PkOpmscuOOukMR+xnrXuEeZcW3c/FqCH96s7KL/GgdxXqWRS4vaYBDBET/VwpQVKm3CuU2+lbKaKFoeODOf7E1FsF6ouPoM1It0z3xBlDmzA2iPyCN5MjwMu5pUBKzGCqSuwwhRxNfY4R7dZyOnbtIfeplvKLMfwaiIU8Y3Dt0waSk91FYgDNnNBQfZqBll3L/p2mJMxgWoFBYM19aTE9iN7abf571If/7Qmm/m/OLZZVWiCHy4m3jsHLVwkuZkMdHvON/h/LYcCZ70JQhvexyhgKsLWWIl4A2gEtWCguVnCnvrrqZVPUcoUEfaCGYs+o4ZaUV9K0BJKYbAjkn38ybrLwiGDj9JzWdZW49SyoO/ksnyWNg6SJBtiU+aNO9EtnlQ83VZ1R+X8eZOGJ9mRtOQzdAKklXoGo3+x0OrSfgPz48tCZjbDxbjr5IWJ2kmQJYGSIEzkWuMSPKGvkEMuVc0fcZOZ4LorD1k1q4YajzYXBq3NcBfbEJ+4HpA+Gluaem2uFMN+fpGJ1aRntPS+Q22Egqc8bSZKo3bR05MVt++Qpd+iGI41etfK51NKCSt92rt2tV+Xafr3p2W4rvubD/4X5tRi9oGUjeCreTQszhI0lqDrWAMZQtrgRl6BNQA6hSWFQlksv1jwbKJjwZkh+Xh60Sjq39P1iZeuL+bqpVghCmShGF2Z85O3fGfao/ekXzmnQCrwBOv9D
- gsT0PE5u64feWZj9+t9Gw3jOxeo2gCa5LJbyY5evhj4C/FOKUXNxm2fAlmIHbdXHokWuRprprP6eQZtVvvz0PQMx345TXAetsIdtDdDPgdC5cu/uRXpPH2+KR0Iq4WJsyrGNrdflB5+d+NEkqPXn5lUUXMBVZg6DCYPWQ28Hex7YixmVQLRVgWHnfD/w/VLEf/FsWgjuHrQ0IxMRZafhclXB4yBZwsxG1URsnaxo0ZVP+kDHq00I7XL66ilZ02j1uk2GqZadcKWwm8DVkR0ve3hCd2fC2erPBQcm1MrGTNKm11ZdgWCr7q5ck2hECNrlpbVEMPBn/nTskNW9YiA0ERQ9Z+QPx7CL6BY2JVn7AlMl65OswQtEoSsfzHKWxUMOApUsV74CQNyStFZOAyqds4h3KtWHO7dT+zmq3cUfytYNEZIwk3UnLW84aEOxo9jsQsGS8N5drrmMH42znXcDQZc2CF5f18EJF3QeBVc+NZXvnPT+KeoMk/KIvAuq/dyyfxBGLW1/h1aw9kxZjI5LfRL/peHqVxTTDDAR2JBCax4bL0yhriSwR+3AxKzWWBU2MhkevhZIBaINDGAeoPn3tWKf3cQ/VqGrIY988T9I75PAWaa6JToSsgj5du4/Rd7Koyuv/SIf+SQZFrui/XqSIPlyfKUpsx/y/P7Npvb3EK+XgF+ri9Y9cPusN96XX3Y4
-X-OriginatorOrg: kalrayinc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c4df8ab-1203-401c-0636-08dcdecd1d30
-X-MS-Exchange-CrossTenant-AuthSource: PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2024 08:19:31.9852
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /41/oV7VEAIRXv5t7NGowjkK2RUxqUR0obez6VcYN+HRPuQkwXftyXxa2RwkSfsHRCxQ/M9FGWThqEugxbcbHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3608
-X-ALTERMIMEV2_out: done
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On 26.09.24 09:14, Arnd Bergmann wrote:
-> On Wed, Sep 25, 2024, at 13:24, Julian Vetter wrote:
->> Various architectures have almost the same implementations for
->> __memcpy_{to,from}io and __memset_io functions. So, consolidate them
->> into the existing lib/iomap_copy.c.
->>
->> Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
->> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
->> ---
->> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
-> 
-> You have a duplicated signoff here.
+Hi,
 
-Yes, thank you. I will remove it in the next patch revision.
+On Fri, 2024-09-27 at 13:31 +0800, Kexy Biscuit wrote:
+> On 3/19/2024 1:12 AM, John Paul Adrian Glaubitz wrote:
+> > Hi Hucai,
+> >=20
+> > On Mon, 2024-03-18 at 22:21 +0800, Huacai Chen wrote:
+> > > Hi, SuperH maintainers,
+> > >=20
+> > > On Wed, Feb 8, 2023 at 8:59=E2=80=AFPM John Paul Adrian Glaubitz
+> > > <glaubitz@physik.fu-berlin.de> wrote:
+> > > >=20
+> > > > On Thu, 2022-07-14 at 16:41 +0800, Huacai Chen wrote:
+> > > > > When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is sel=
+ected,
+> > > > > cpu_max_bits_warn() generates a runtime warning similar as below =
+while
+> > > > > we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime =
+limit)
+> > > > > instead of NR_CPUS to iterate CPUs.
+> > > > >=20
+> > > > > [    3.052463] ------------[ cut here ]------------
+> > > > > [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:=
+108 show_cpuinfo+0x5e8/0x5f0
+> > > > > [    3.070072] Modules linked in: efivarfs autofs4
+> > > > > [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ =
+#1052
+> > > > > [    3.099465] Stack : 9000000100157b08 9000000000f18530 90000000=
+00cf846c 9000000100154000
+> > > > > [    3.109127]         9000000100157a50 0000000000000000 90000001=
+00157a58 9000000000ef7430
+> > > > > [    3.118774]         90000001001578e8 0000000000000040 00000000=
+00000020 ffffffffffffffff
+> > > > > [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 90000001=
+0021de80 900000000101c890
+> > > > > [    3.138056]         0000000000000000 0000000000000000 00000000=
+00000000 0000000000aaaaaa
+> > > > > [    3.147711]         ffff8000339dc220 0000000000000001 00000000=
+06ab4000 0000000000000000
+> > > > > [    3.157364]         900000000101c998 0000000000000004 90000000=
+00ef7430 0000000000000000
+> > > > > [    3.167012]         0000000000000009 000000000000006c 00000000=
+00000000 0000000000000000
+> > > > > [    3.176641]         9000000000d3de08 9000000001639390 90000000=
+002086d8 00007ffff0080286
+> > > > > [    3.186260]         00000000000000b0 0000000000000004 00000000=
+00000000 0000000000071c1c
+> > > > > [    3.195868]         ...
+> > > > > [    3.199917] Call Trace:
+> > > > > [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
+> > > > > [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
+> > > > > [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
+> > > > > [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
+> > > > > [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
+> > > > > [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
+> > > > > [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
+> > > > > [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
+> > > > > [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
+> > > > > [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
+> > > > > [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
+> > > > > [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
+> > > > >=20
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > ---
+> > > > >   arch/sh/kernel/cpu/proc.c | 2 +-
+> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/arch/sh/kernel/cpu/proc.c b/arch/sh/kernel/cpu/proc.=
+c
+> > > > > index a306bcd6b341..5f6d0e827bae 100644
+> > > > > --- a/arch/sh/kernel/cpu/proc.c
+> > > > > +++ b/arch/sh/kernel/cpu/proc.c
+> > > > > @@ -132,7 +132,7 @@ static int show_cpuinfo(struct seq_file *m, v=
+oid *v)
+> > > > >=20
+> > > > >   static void *c_start(struct seq_file *m, loff_t *pos)
+> > > > >   {
+> > > > > -     return *pos < NR_CPUS ? cpu_data + *pos : NULL;
+> > > > > +     return *pos < nr_cpu_ids ? cpu_data + *pos : NULL;
+> > > > >   }
+> > > > >   static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+> > > > >   {
+> > > >=20
+> > > > I build-tested the patch and also booted the patched kernel success=
+fully
+> > > > on my SH-7785LCR board.
+> > > >=20
+> > > > Showing the contents of /proc/cpuinfo works fine, too:
+> > > >=20
+> > > > root@tirpitz:~> cat /proc/cpuinfo
+> > > > machine         : SH7785LCR
+> > > > processor       : 0
+> > > > cpu family      : sh4a
+> > > > cpu type        : SH7785
+> > > > cut             : 7.x
+> > > > cpu flags       : fpu perfctr llsc
+> > > > cache type      : split (harvard)
+> > > > icache size     : 32KiB (4-way)
+> > > > dcache size     : 32KiB (4-way)
+> > > > address sizes   : 32 bits physical
+> > > > bogomips        : 599.99
+> > > > root@tirpitz:~>
+> > > >=20
+> > > > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > > >=20
+> > > > I am not sure yet whether the change is also correct as I don't kno=
+w whether
+> > > > it's possible to change the number of CPUs at runtime on SuperH.
+> > > Can this patch be merged? This is the only one still unmerged in the
+> > > whole series.
+> >=20
+> > Thanks for the reminder. I will pick it up for 6.10.
+> >=20
+> > Got sick this week, so I can't pick up anymore patches for 6.9 and will=
+ just
+> > send Linus a PR later this week.
+> >=20
+> > Adrian
+> >=20
+>=20
+> Gentle ping on this, can we get this patch merged into 6.12?
 
-> 
-> 
->> +#ifndef __memcpy_fromio
->> +void __memcpy_fromio(void *to, const volatile void __iomem *from,
->> size_t count);
->> +#endif
->> +
->> +#ifndef __memcpy_toio
->> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t
->> count);
->> +#endif
->> +
->> +#ifndef __memset_io
->> +void __memset_io(volatile void __iomem *dst, int c, size_t count);
->> +#endif
-> 
-> I'm not entirely sure about the purpose of the #ifdef here, since
-> nothing ever overrides the double-underscore versions, both before
-> and after your patches.
-> 
-> Unless I'm missing something here, I think a more logical
-> sequence would be:
-> 
-> 1. add the definitions in this file without the underscores,
+Thanks a lot for the reminder. Since the merge window is about to close, I'=
+ll
+pick this up for 6.13 as it hasn't been reviewed yet from what I can see.
 
-by: "...in this file..." you mean the 'lib/iomap_copy.c' file, right? 
-But what if an architecture does not select 'CONFIG_HAS_IOMEM'. Then 
-'iomap_copy.c' is not compiled and we don't have an implementation, 
-right? I tried to compile with ARCH=um, with some MTD chip driver, like 
-the robot did and it indeed fails, because um has 'NO_IOMEM' set. and 
-the driver uses memcpy_fromio. I mean it's a strange combination, 
-because apparently we try to use IO memory? Is this an invalid 
-combination? But shouldn't the driver then 'depends on HAS_IOMEM'?
+I will definitely pick it up for 6.13 and I'm sorry for the very long delay=
+.
 
->     as memcpy_fromio/memcpy_toio/memset_io, with the #ifdef
->     for that name that is always set at this point
-> 
-Right. I will remove it in my next patch revision.
+However, when this patch got posted back then, I wasn't a kernel maintainer=
+ yet.
 
+Adrian
 
-> 2. replace the default implementation in asm-generic/io.h
->     with extern prototypes, remove the #define from those
-> 
-Yes, I have done this now.
-
-> 3. convert the other architectures, removing both the
->     implementations and the prototypes.
-> 
-
-I have removed the prototypes and have aligned the function arguments in 
-m68k, alpha, parisc, and sh, which all have their own implementation, 
-but had slightly different function arguments. Btw, I have not removed 
-their implementations because some of them seem to have optimized 
-implementations (e.g., alpha and m68k), that I didn't want to touch. But 
-you're right others (e.g., sh) just do byte wise accesses and have a 
-comment "This needs to be optimized." Maybe I should remove these and 
-let them use the new version?!
-
->       Arnd
-> 
-> 
-> 
-> 
-
-
-
-
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
