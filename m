@@ -1,214 +1,168 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434AE18A959;
-	Fri, 27 Sep 2024 09:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19635188A19
+	for <loongarch@lists.linux.dev>; Fri, 27 Sep 2024 11:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727428021; cv=none; b=RH7HXmH54XhHh8fKv96ZY+f01Bd2cDIs+/nahwYQdSTS+IqGlvCBjves/mVBYEisSDpPXEkkXGuDowQrAVJqsap2vVkQ8Zw7icAWXlN5yQuUClbsj71BC7f4ox9GZ4XXi5jIF+TfGc5hS/pigoU2twh7JzESu/FI4VTNKJgX5lM=
+	t=1727434810; cv=none; b=b82/j6oyl2marpwpKisQHb+d4FYqo7RBD997pt0Bd+6PvW3rtoCN44yM/K1FL7/GWVEXGvVCvJBkhkupSjk1/ltQ8SEfIYKelcdSSyWXmRYX9WQ31W9EHa8wD97IR67OCWF+DCi8tAizDTP1na05ZZEbex9p6yFxQtCoahpM5Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727428021; c=relaxed/simple;
-	bh=Eu20caTVDuYFkjSNbtlsKZAt0thZ1W9gzLCf/RaCc6M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=vAmaqK7KX8jpbLfYDcOVSFJ53iqWtXoGn8rcb4WIOvWNyLTWcp+rN5kG97mOXsa5h9gn3tzVyVr6lCuCFp+lUvvlKnI9AfWls+U8mcIF12Q70TzguAmO0IoG7qh0wuIDJs3Lak3GLoFxk11lMDaJoAeGMQfPVPC/gfBbCuAb0sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=VtGT/OA1; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1727434810; c=relaxed/simple;
+	bh=lcNikPtKAxq/dN0ibeXX8gwGwA4AaxcYAE0tjk+fG1c=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=gsgnIv/A0HUhZEjDkXCz2b6w4LOOO4hiuewFcUGJ+nlHyY1hyVvjRaJxAKeKVHnp7Sf/pdrxukw0SarlxdC9pYCCw80JxTyeN6WnmRCH67W8qwBMJ6iU/zwmFDH6b8+BZr1JyspDrE7I76Lly0KDddPZ1pyLS8tsEOQkM6pA0OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Sa0op7Dr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HaO1PFwd; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="VtGT/OA1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XeUc6G+ijEKJod2eAolRc/0pDu+4naba5TZ9vLUildU=; t=1727428018; x=1728032818; 
-	b=VtGT/OA1B9TATzpKxHZc6QRrY/kCjyitI2Iy9O8Mbt4oWI8z7nDYWzP53EtSOLYx3q1G6XMkkYI
-	K1wquzz8XITNK806PlpxPzHf5eG6UtpccWhvt3jPbC2J11VVh6rnOAv+8UPdIKQMBHqk6JPMPmy5o
-	Im2abz+NXGHe9B7JtAU8fyBgwfMnibtNc08/63E3MkNGtCb+zp1P9RHMS90uZgAcWTClXKGCrsY3X
-	DbEJOze0ZRrPHKpVd/8fM1quHCe4uuvnuFlzjNdW+qqaWt8E0oUBj5JIbK+dkUFvOAraDzj27cHN1
-	XJBWwLgjADfW+ENyAXceQKnWJ7MewbXJC3Ug==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1su6w4-00000003BAD-3bb0; Fri, 27 Sep 2024 11:06:48 +0200
-Received: from p57bd904e.dip0.t-ipconnect.de ([87.189.144.78] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1su6w4-00000001TWj-2adp; Fri, 27 Sep 2024 11:06:48 +0200
-Message-ID: <fbc1dde6650a3e729fab57decbb5bf4ef14436ce.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH V2 3/3] SH: cpuinfo: Fix a warning for
- CONFIG_CPUMASK_OFFSTACK
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Kexy Biscuit <kexybiscuit@aosc.io>, Huacai Chen <chenhuacai@gmail.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang
- <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, stable@vger.kernel.org
-Date: Fri, 27 Sep 2024 11:06:47 +0200
-In-Reply-To: <a45f1209-ff29-4010-b035-921cb136d58d@aosc.io>
-References: <20220714084136.570176-1-chenhuacai@loongson.cn>
-	 <20220714084136.570176-3-chenhuacai@loongson.cn>
-	 <3a5a4bee5c0739a3b988a328376a6eed3c385fda.camel@physik.fu-berlin.de>
-	 <CAAhV-H5bw3xcym2-GpyntQEad1h2eB8xDQGwVr_bRRKAOakzoQ@mail.gmail.com>
-	 <8947f91ba1a10f98723a5982f0fc13ee589d3bf7.camel@physik.fu-berlin.de>
-	 <a45f1209-ff29-4010-b035-921cb136d58d@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Sa0op7Dr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HaO1PFwd"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 18FDF1380712;
+	Fri, 27 Sep 2024 07:00:07 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Fri, 27 Sep 2024 07:00:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1727434807;
+	 x=1727521207; bh=pM2APWPqWSep6TrEUhdTADKW01Hs8FHzTKdjsf1tTCg=; b=
+	Sa0op7Dr+YKcZT4oSmDjVDjyMXp++/lhg9SG1pk3fix1TZsDR1PQWsO3JOSQ7ZTE
+	TG+bn6JASXdbNtP2wemJRrtSYzFtLA0j+/QrA4V/JcTksSDprGBDgx7jJdcAvAF5
+	bvMbk+FESfTZzdv2Wl6E0oUr1i2mpmwCb0/AmMhqu57jWG48qSo5cjfOiXdO9Oqp
+	MRpgpIrqaDx/SLmVkP+nX6NwQ/EfrptteLz2XeTOgt7ANclRlZVb8oiRlzJwcf+g
+	z9Qtq0qarFNckTLUBu0a8kFxg3KwpIrFH6MTfFXfVmNCTq5vh08Ehlwe/npM5eB5
+	XvDNY1hp7zYHB0A/0om7MQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727434807; x=
+	1727521207; bh=pM2APWPqWSep6TrEUhdTADKW01Hs8FHzTKdjsf1tTCg=; b=H
+	aO1PFwdJbcwb/BehiJ5iwCUUWbl9Htv1oPV7KPmK+sSA4EgddZMkdtohxsYgpu5O
+	DR+Q0Dz2HG67E3K5tLab2uGGg3gq2PmzXu1ebKzBHtmHORuXSJrmrwenqajM5gRk
+	Ee9DeYsfwljro3NMVgJoROOsELCctNMwdDLI+Y2fH4DqGcThMKi6b0M49G4IkqpG
+	Q0MKDbXwloEJ2ic68aHg5sTn9RSQvrrz2LuCFxoYvtFmnELPcYBzkmPU0ggpv+gW
+	eAyZCfBQOKlFMIqE5TtmnVQkuLwbqPyZ3nbNQtHvRz3DD0jsGbkt0QrvvHLhm+kU
+	m8lLxabveKBu30AwKHZUw==
+X-ME-Sender: <xms:NpD2ZqeoXQiUdMM4N8bET5a2qBVYW_jNcmmobJya1kyF0ZzAQheh6g>
+    <xme:NpD2ZkP1UElTwyTzTPb6rPqh-VwWjpMkNUMzzD8Axor6jBICpWo1SYJkPPbd03moo
+    E_w8vagQGjFgCEvsY8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtledgfeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
+    hssegrrhhmrdgtohhmpdhrtghpthhtohepjhhvvghtthgvrheskhgrlhhrrgihihhntgdr
+    tghomhdprhgtphhtthhopeihshhiohhnnhgvrghusehkrghlrhgrhihinhgtrdgtohhmpd
+    hrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehguhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhlsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
+    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
+    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishht
+    shdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:NpD2Zrj39h4VXYFaMgI8sVlcLpAxmyDOujVyG1ZgjUZ3BT1CGw1SlQ>
+    <xmx:NpD2Zn81OkRaBTLxkF_TIr7PeiNMt_LEThqUoLdGK4t0gQ1yr3D7eg>
+    <xmx:NpD2ZmulMAj_Gpr4hsFXlDcuEbDVjnHZrWLGKMLnPdfXSbCQskLxvw>
+    <xmx:NpD2ZuEs3_rbzNrhVBC-fy7VEXLVJNrvXFvYi3hodc8RvZeUmHKIHg>
+    <xmx:N5D2ZuE5jmWpEuas5KCvyuGrRCcFCPV7idgmVmfWNgU5dFBTyKnkVfC5>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 661A92220071; Fri, 27 Sep 2024 07:00:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Date: Fri, 27 Sep 2024 10:59:43 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Julian Vetter" <jvetter@kalrayinc.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ loongarch@lists.linux.dev, "Yann Sionneau" <ysionneau@kalrayinc.com>
+Message-Id: <7100d48e-2b11-4d7a-8c5d-48900e8d4916@app.fastmail.com>
+In-Reply-To: <b9f3f692-d4fa-473b-9bdf-4ea73b22ccde@kalrayinc.com>
+References: <20240925132420.821473-1-jvetter@kalrayinc.com>
+ <20240925132420.821473-2-jvetter@kalrayinc.com>
+ <f47e66f9-ec20-4e75-b88f-d412339e797d@app.fastmail.com>
+ <b9f3f692-d4fa-473b-9bdf-4ea73b22ccde@kalrayinc.com>
+Subject: Re: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io into
+ iomap_copy.c
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri, Sep 27, 2024, at 08:19, Julian Vetter wrote:
+> On 26.09.24 09:14, Arnd Bergmann wrote:
+>>> +#ifndef __memcpy_fromio
+>>> +void __memcpy_fromio(void *to, const volatile void __iomem *from,
+>>> size_t count);
+>>> +#endif
+>>> +
+>>> +#ifndef __memcpy_toio
+>>> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t
+>>> count);
+>>> +#endif
+>>> +
+>>> +#ifndef __memset_io
+>>> +void __memset_io(volatile void __iomem *dst, int c, size_t count);
+>>> +#endif
+>> 
+>> I'm not entirely sure about the purpose of the #ifdef here, since
+>> nothing ever overrides the double-underscore versions, both before
+>> and after your patches.
+>> 
+>> Unless I'm missing something here, I think a more logical
+>> sequence would be:
+>> 
+>> 1. add the definitions in this file without the underscores,
+>
+> by: "...in this file..." you mean the 'lib/iomap_copy.c' file, right? 
 
-On Fri, 2024-09-27 at 13:31 +0800, Kexy Biscuit wrote:
-> On 3/19/2024 1:12 AM, John Paul Adrian Glaubitz wrote:
-> > Hi Hucai,
-> >=20
-> > On Mon, 2024-03-18 at 22:21 +0800, Huacai Chen wrote:
-> > > Hi, SuperH maintainers,
-> > >=20
-> > > On Wed, Feb 8, 2023 at 8:59=E2=80=AFPM John Paul Adrian Glaubitz
-> > > <glaubitz@physik.fu-berlin.de> wrote:
-> > > >=20
-> > > > On Thu, 2022-07-14 at 16:41 +0800, Huacai Chen wrote:
-> > > > > When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is sel=
-ected,
-> > > > > cpu_max_bits_warn() generates a runtime warning similar as below =
-while
-> > > > > we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime =
-limit)
-> > > > > instead of NR_CPUS to iterate CPUs.
-> > > > >=20
-> > > > > [    3.052463] ------------[ cut here ]------------
-> > > > > [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:=
-108 show_cpuinfo+0x5e8/0x5f0
-> > > > > [    3.070072] Modules linked in: efivarfs autofs4
-> > > > > [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ =
-#1052
-> > > > > [    3.099465] Stack : 9000000100157b08 9000000000f18530 90000000=
-00cf846c 9000000100154000
-> > > > > [    3.109127]         9000000100157a50 0000000000000000 90000001=
-00157a58 9000000000ef7430
-> > > > > [    3.118774]         90000001001578e8 0000000000000040 00000000=
-00000020 ffffffffffffffff
-> > > > > [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 90000001=
-0021de80 900000000101c890
-> > > > > [    3.138056]         0000000000000000 0000000000000000 00000000=
-00000000 0000000000aaaaaa
-> > > > > [    3.147711]         ffff8000339dc220 0000000000000001 00000000=
-06ab4000 0000000000000000
-> > > > > [    3.157364]         900000000101c998 0000000000000004 90000000=
-00ef7430 0000000000000000
-> > > > > [    3.167012]         0000000000000009 000000000000006c 00000000=
-00000000 0000000000000000
-> > > > > [    3.176641]         9000000000d3de08 9000000001639390 90000000=
-002086d8 00007ffff0080286
-> > > > > [    3.186260]         00000000000000b0 0000000000000004 00000000=
-00000000 0000000000071c1c
-> > > > > [    3.195868]         ...
-> > > > > [    3.199917] Call Trace:
-> > > > > [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
-> > > > > [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
-> > > > > [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
-> > > > > [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
-> > > > > [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
-> > > > > [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
-> > > > > [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
-> > > > > [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
-> > > > > [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
-> > > > > [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
-> > > > > [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
-> > > > > [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
-> > > > >=20
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > ---
-> > > > >   arch/sh/kernel/cpu/proc.c | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >=20
-> > > > > diff --git a/arch/sh/kernel/cpu/proc.c b/arch/sh/kernel/cpu/proc.=
-c
-> > > > > index a306bcd6b341..5f6d0e827bae 100644
-> > > > > --- a/arch/sh/kernel/cpu/proc.c
-> > > > > +++ b/arch/sh/kernel/cpu/proc.c
-> > > > > @@ -132,7 +132,7 @@ static int show_cpuinfo(struct seq_file *m, v=
-oid *v)
-> > > > >=20
-> > > > >   static void *c_start(struct seq_file *m, loff_t *pos)
-> > > > >   {
-> > > > > -     return *pos < NR_CPUS ? cpu_data + *pos : NULL;
-> > > > > +     return *pos < nr_cpu_ids ? cpu_data + *pos : NULL;
-> > > > >   }
-> > > > >   static void *c_next(struct seq_file *m, void *v, loff_t *pos)
-> > > > >   {
-> > > >=20
-> > > > I build-tested the patch and also booted the patched kernel success=
-fully
-> > > > on my SH-7785LCR board.
-> > > >=20
-> > > > Showing the contents of /proc/cpuinfo works fine, too:
-> > > >=20
-> > > > root@tirpitz:~> cat /proc/cpuinfo
-> > > > machine         : SH7785LCR
-> > > > processor       : 0
-> > > > cpu family      : sh4a
-> > > > cpu type        : SH7785
-> > > > cut             : 7.x
-> > > > cpu flags       : fpu perfctr llsc
-> > > > cache type      : split (harvard)
-> > > > icache size     : 32KiB (4-way)
-> > > > dcache size     : 32KiB (4-way)
-> > > > address sizes   : 32 bits physical
-> > > > bogomips        : 599.99
-> > > > root@tirpitz:~>
-> > > >=20
-> > > > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > > >=20
-> > > > I am not sure yet whether the change is also correct as I don't kno=
-w whether
-> > > > it's possible to change the number of CPUs at runtime on SuperH.
-> > > Can this patch be merged? This is the only one still unmerged in the
-> > > whole series.
-> >=20
-> > Thanks for the reminder. I will pick it up for 6.10.
-> >=20
-> > Got sick this week, so I can't pick up anymore patches for 6.9 and will=
- just
-> > send Linus a PR later this week.
-> >=20
-> > Adrian
-> >=20
->=20
-> Gentle ping on this, can we get this patch merged into 6.12?
+Yes
 
-Thanks a lot for the reminder. Since the merge window is about to close, I'=
-ll
-pick this up for 6.13 as it hasn't been reviewed yet from what I can see.
+> But what if an architecture does not select 'CONFIG_HAS_IOMEM'. Then 
+> 'iomap_copy.c' is not compiled and we don't have an implementation, 
+> right?
+> I tried to compile with ARCH=um, with some MTD chip driver, like 
+> the robot did and it indeed fails, because um has 'NO_IOMEM' set. and 
+> the driver uses memcpy_fromio. I mean it's a strange combination, 
+> because apparently we try to use IO memory? Is this an invalid 
+> combination? But shouldn't the driver then 'depends on HAS_IOMEM'?
 
-I will definitely pick it up for 6.13 and I'm sorry for the very long delay=
-.
+Yes, I think that would be the best way to do it. Alternatively,
+arch/um could provide a dummy implementation of these.
 
-However, when this patch got posted back then, I wasn't a kernel maintainer=
- yet.
+>> 3. convert the other architectures, removing both the
+>>     implementations and the prototypes.
+>> 
+>
+> I have removed the prototypes and have aligned the function arguments in 
+> m68k, alpha, parisc, and sh, which all have their own implementation, 
+> but had slightly different function arguments.
 
-Adrian
+Sorry for being unclear, I meant only the architectures that
+you are already touching.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> Btw, I have not removed 
+> their implementations because some of them seem to have optimized 
+> implementations (e.g., alpha and m68k), that I didn't want to touch. But 
+> you're right others (e.g., sh) just do byte wise accesses and have a 
+> comment "This needs to be optimized." Maybe I should remove these and 
+> let them use the new version?!
+
+Ideally we should end up with only one copy, but I'd leave the
+rest for a future cleanup. In particular, alpha probably still
+needs a custom function.
+
+      Arnd
