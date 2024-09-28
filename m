@@ -1,63 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807A31714B8;
-	Fri, 27 Sep 2024 17:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F3AC139
+	for <loongarch@lists.linux.dev>; Sat, 28 Sep 2024 12:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727457897; cv=none; b=jYihs+2tPaOKoLdVyyFHI6elDstfezT5GmaOsPTxPlSWdiuix2iDI0XWi8wQzzZNp+ld8hlaKMmflPRpQsnIh0S8uHF7VIQH+K7gjYrKLEQtTm0xDDkHUuIk12wqDw4J6BeNJqWI8szXpi3oa27OhIFTnB5+osZ6rSjykAZRCI4=
+	t=1727526570; cv=none; b=IKPk0Aei1ib1w35EyQkpVsoHxfIXmZveODAC/1bTByjw1VLL/7DyR4gnBNIHbTVK68W3055Bcm18V4TrK5b6EnMmBJqmZ5PSfw7BoOfeN+e7JePzn8qg6dq5DcRc/Sa00YJbUsLyiKlHMiPi8bZD+Fahm8Q96ec+v3zNu+TZpb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727457897; c=relaxed/simple;
-	bh=CIOcRkI5PSg0AJNUdw+NMCW2SFvCLDXu5df8u0Jeg4k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KWCyM0ZOp18+vKnalhaNwh/nVljAAOQaTp6o0vF+VpAgfDW6BGWHm5wR183xhI8LfPUp2i9dzF0kYgOEeYtHL0W3nGe5Gm624VnyUML0fCZ94h6BMogWFWcHTNk2H8KSLXNoiY4nnAoj5MXAOfkcobp7oN7HsR24B+ytx4Kd84k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irmwQ0ZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727526570; c=relaxed/simple;
+	bh=PIPOQV5MlwU2RVHtw0BN/7aQnZ/vufiz0PMYcF8RlJk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OL7b1bGgqPtk+tHvRh7mMJVzBiSp+JoJQZ52ZCIwwqy5dQra/FtH3DcGy9PEaOaypXJpGjsiUfZn1G7uauIwm61swVNLcQZNxu4hXSBqXe1DT9TtpN17AX+LbpzY49HJ3vZG52waVKYeHUBzYgjUbcQ2GtGbgBDr+mPmEOeP4lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmFtiBc6; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irmwQ0ZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506DAC4CEC4;
-	Fri, 27 Sep 2024 17:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727457897;
-	bh=CIOcRkI5PSg0AJNUdw+NMCW2SFvCLDXu5df8u0Jeg4k=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=irmwQ0ZAm0iJtnH/Rg7sYzOAn4A/JsOE+Z7aX0OGkXtxcs5chJgRAdArwySyzmsjD
-	 KRB4d9MwuqPUeQ5exUbISfLOP/1koAHqQrVgtiHXS8RkdBaTY+oMK7p5F7dCsiEamC
-	 hVwsYgDOcT5BgEYVz4RDm2ID2vF/X2IHP5OWF71Sg9jcgMSyqtqZyhG2L+LAenKVx1
-	 BUgpH2lMBZZmgi+udKy4O9o6i06kZvIGY1PjEDeHGFIJ/Bd69DMEL1dslMO55TDthh
-	 bHkj3YKaCjthSPPQLPxTiPcS9z3QCNvPQ70GruM9GS4lJJ5XrSBG1A6ffJZVGNwOTH
-	 h7axmotxVmbfw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E9E3809A80;
-	Fri, 27 Sep 2024 17:25:01 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.12
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240927142320.2144898-1-chenhuacai@loongson.cn>
-References: <20240927142320.2144898-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240927142320.2144898-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.12
-X-PR-Tracked-Commit-Id: f339bd3b51dac675fbbc08b861d2371ae3df0c0b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3630400697a3d334a391c1dba1b601d852145f2c
-Message-Id: <172745789970.2030610.6201608111296713701.pr-tracker-bot@kernel.org>
-Date: Fri, 27 Sep 2024 17:24:59 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmFtiBc6"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e09a36f54eso251104a91.1
+        for <loongarch@lists.linux.dev>; Sat, 28 Sep 2024 05:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727526568; x=1728131368; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aJ8WWUuKvf9GTwro0OMwJuCEfHPckI7kPW/dWv3QOLk=;
+        b=GmFtiBc6T5EsRAkAxsuu0JBgIjNE6HuGrcgMm+5JqhXBhic85Rcyj1vNimbP0RVKA3
+         pI51+mEQGABDzxNLohZJO2CXFtYpnucS0FVPBJ34+jki29hpJtHqMaTtOTqcBZTXoDNO
+         fp7WZQUrKFXraks19lP4Qy/WOMUNGyM6tCQiwPQ8RtNANGJ2Z9rkDdK8YWgAK7nPCHxw
+         Jdn0LMwEGhpJp33pgjV2nM1kMDp/vtcU48Qe7ujC3pDVJAxiVtsfD8wn6SKlonIAP6UO
+         YsqyQXfGed1yKS8P4bS2vdfF1/CoeYX6vjQNaGwQYkBGdglUqr14HY8qp63XDpqDO6ia
+         8blQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727526568; x=1728131368;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aJ8WWUuKvf9GTwro0OMwJuCEfHPckI7kPW/dWv3QOLk=;
+        b=CbjXwJge2qylvPvanqd2IZWdP+rUnuTwPOEO3i21+PKEIlFokMt/WyeayiIGQ092qy
+         idrKvE0YmUqWinXr0X/D5/TLMj5Gy2b5x4heP77knv4HS1oyWBSgP8daSFIz/7bxUDvI
+         fEieSL/ZaAkRkfwd5FCF4PrR5L8gE/spAY4/i8IXsWimYxO4aJ4dkXNMZYbcWvA1Yvrl
+         bCBwV7LGmNShD8/7vhw1AtQ4y9W0OBl0S4nUrvtHQMpK6DEXReLCxvj4s2RQYgnpvHj2
+         w12d7juxtJZMqCEodBD1rliY9z5rgDa0euU+euq+McfUvr2u9n/RqlZw3vldL70fJtJ+
+         UCoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUVPWrQdYWuASBqXzq3h++yy6kyamXu4mI8WBMPsaQtVcWonekVQB/TqQuqOx8RgVGH0K9O+XOu3s=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw9OQtv646BJTJWDeXppLqHElOWcLLsR4Uo9NQ2ig54j3cpjh/9
+	gtRotV+1GeBEFGk5RmON1anid0Z2mlleKr9wH5aVS82WZW2mut1iLmcSMseYpqacqYqUblKInLj
+	YAz4TgiU/SCYZXpa/VvABPsJuEvY=
+X-Google-Smtp-Source: AGHT+IGrsUANfVoELlzbzZj9rBQitM411Hn/UBFZLk+pIRQJmK6O2cia7wFzai2ecugfJm8Cq7orrx/FJvs+zVCFuQI=
+X-Received: by 2002:a17:90a:db56:b0:2da:74ed:b35 with SMTP id
+ 98e67ed59e1d1-2e0b89a68e2mr3049595a91.1.1727526568175; Sat, 28 Sep 2024
+ 05:29:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 28 Sep 2024 14:29:16 +0200
+Message-ID: <CANiq72mHQ0eKJoZeRxB5h1eHza8nERA_DtWUMKecyQuivH7SXw@mail.gmail.com>
+Subject: stable-rc/linux-6.10.y: error: no member named 'st' in 'struct kvm_vcpu_arch'
+To: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>
+Cc: Greg KH <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 27 Sep 2024 22:23:20 +0800:
+Hi Sasha, LoongArch,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.12
+In a stable-rc/linux-6.10.y build-test today, I got:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3630400697a3d334a391c1dba1b601d852145f2c
+    arch/loongarch/kvm/vcpu.c:575:15: error: no member named 'st' in
+'struct kvm_vcpu_arch'
+      575 |                         vcpu->arch.st.guest_addr = 0;
 
-Thank you!
+which I guess is triggered by missing prerequisites for commit
+56f7eeae40de ("LoongArch: KVM: Invalidate guest steal time address on
+vCPU reset").
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+HTH!
+
+Cheers,
+Miguel
