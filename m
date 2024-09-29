@@ -1,82 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECED936D
-	for <loongarch@lists.linux.dev>; Sun, 29 Sep 2024 01:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF41D18641;
+	Sun, 29 Sep 2024 07:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727571765; cv=none; b=WKUkbtUFjiJe3qLb3OLlYxsW4bhsNhdMo/5FKQUd7XrLf2KSzkfLOhbZ5fO3JQMVh6YLGP9Ko6j5Yab8H2uUsZwTFFPZXr/95qjVxmSwrB/uRZKPJlAk1hUlLgSZI7XrO5eR5q6jnYet1koSSSKRUwadLUsZel/4rUA8u4SNwpk=
+	t=1727596204; cv=none; b=qJM9W/1dBaHqXa1/JxUAbILWFYCzggAKKTs/2QFq7m/c1nnI/KychEhSuOljKt1ojQpsJ3OIeh/VX1lGj0VhBHuVrNk5supreWQrKg5l+rfPgu6hpR87XO86U8tqrM4nRXkr46VfZc78kI0U1WRpDflwh5axyELQ+VGEX/mCckc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727571765; c=relaxed/simple;
-	bh=Pj0IxshIJH6Bggjnx49qbtJiJxEhuYQSEgzZl4oKhS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=furQ1xj5vwURBvHAdWWHwURrzdBIKqb0DEP5m4m/ytTbx8B8SOapbxDdjmWZ9aBdKHrEeG+IrRHvV5SLO145w805SS2+WCWYxYYKjMC4148bYC9lRUmiGn7xXg+xFi3UYaWI+NtzN4a7QFDi4xmrPJvK8hD74fmizKIPOfip8x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xwfki/Mh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xwfki/Mh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80294C4AF0C
-	for <loongarch@lists.linux.dev>; Sun, 29 Sep 2024 01:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727571764;
-	bh=Pj0IxshIJH6Bggjnx49qbtJiJxEhuYQSEgzZl4oKhS0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Xwfki/MhV+NFusCevh6/X8WDjnXeQRxIR+09rWdRW1FrmaGYRtCY/2iASS/4J9ZaO
-	 0bdxoMt4Q80YdOU9kv7Drf6hCm7znKfegstHcDL6XcOwKdoJdEaAGlCDvt7lYOqOG/
-	 qXTfqs9XJW8dYrR4dUx10D6R/QVSI2T+Ma4hcXjmg4KvkBoBuH3a9WvZFyWKHgByB7
-	 wjqvzYSeTsm89f0fgcqkaEnu2C8Ts4fS6zkjUQ73pjDWk+xsllfbYapl214HQ89qmj
-	 4VBHfjzYgTBQ89IOG8c7G0S0p6CKhQrKO5TfDRPAY1AuznowBXiF9zv/PIXm78IRHQ
-	 9U+ryU9cUntfA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a83562f9be9so351072966b.0
-        for <loongarch@lists.linux.dev>; Sat, 28 Sep 2024 18:02:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2ChzyeygUwQNoU4CbBKWXjhCTLC1R6pfu/8BfGaaXNw3cLiZNtok100qWvWLhvWD931QItXlkrd8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJyF1d1Apxns9xegpBN3JrV2SAS3lCpPVFe4m0MzCmmm7vApGn
-	V/HNKrXJLS0bJYMBQaAtOGTY9BnkvdqoroN4Ee9FtinL6K/F1isl2JjjGrvjEDjmbRWptFlmYX0
-	hmMCog4rev/fsy7JMRO08J7FwByg=
-X-Google-Smtp-Source: AGHT+IFulUaiTzbDzWhIekoRSyHL9cv4w5EfjVkBn3/A+jBxIi5vo2uzOBESt2XlGAwVDBeydtr2ZzrttRMogE4v5Oo=
-X-Received: by 2002:a17:907:86a5:b0:a7a:b4bd:d0eb with SMTP id
- a640c23a62f3a-a93c492185bmr769522766b.24.1727571763077; Sat, 28 Sep 2024
- 18:02:43 -0700 (PDT)
+	s=arc-20240116; t=1727596204; c=relaxed/simple;
+	bh=fQjZbCs7b9iz8SZA/Ixj59N7GOi1PjKi0funL5JIrrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XJYfUedktwmAx0YC+n2SMSs5Tzri1Ym+UQ41YlPE2kJrPDwH74C70dyGPiiMTE/w8B3I/Vb0/ZXHnE4BAbcTk8DSl4nrVSYLcF7v/fsHKZHdniLTWl4YLLZ3gYIMkls1AXfP8LyC+D24nnDOANckR382NjhTX8sS+entFxzuzt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB79BC4CEC5;
+	Sun, 29 Sep 2024 07:50:01 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Set correct size for VDSO code mapping
+Date: Sun, 29 Sep 2024 15:49:44 +0800
+Message-ID: <20240929074944.3540514-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANiq72mHQ0eKJoZeRxB5h1eHza8nERA_DtWUMKecyQuivH7SXw@mail.gmail.com>
-In-Reply-To: <CANiq72mHQ0eKJoZeRxB5h1eHza8nERA_DtWUMKecyQuivH7SXw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 29 Sep 2024 09:02:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4WLByJ53oqQgEnVjy4bT0pS77fT5BA4NaCp8AOn+cyJw@mail.gmail.com>
-Message-ID: <CAAhV-H4WLByJ53oqQgEnVjy4bT0pS77fT5BA4NaCp8AOn+cyJw@mail.gmail.com>
-Subject: Re: stable-rc/linux-6.10.y: error: no member named 'st' in 'struct kvm_vcpu_arch'
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Sasha Levin <sashal@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Greg KH <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 28, 2024 at 8:29=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Hi Sasha, LoongArch,
->
-> In a stable-rc/linux-6.10.y build-test today, I got:
->
->     arch/loongarch/kvm/vcpu.c:575:15: error: no member named 'st' in
-> 'struct kvm_vcpu_arch'
->       575 |                         vcpu->arch.st.guest_addr =3D 0;
->
-> which I guess is triggered by missing prerequisites for commit
-> 56f7eeae40de ("LoongArch: KVM: Invalidate guest steal time address on
-> vCPU reset").
-Hmm, please drop the backported patch "LoongArch: KVM: Invalidate
-guest steal time address on vCPU reset".
+The current size of VDSO code mapping is hardcoded to PAGE_SIZE. This
+cannot work for 4KB page size after commit 18efd0b10e0fd77 ("LoongArch:
+vDSO: Wire up getrandom() vDSO implementation") because the code size
+increases to 8KB. Thus set the code mapping size to its real size, i.e.
+PAGE_ALIGN(vdso_end - vdso_start).
 
-Huacai
+Fixes: 18efd0b10e0fd77 ("LoongArch: vDSO: Wire up getrandom() vDSO implementation")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/vdso.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
->
-> HTH!
->
-> Cheers,
-> Miguel
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index f6fcc52aefae..7e0cc7f5e1ed 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -85,7 +85,6 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 
+ struct loongarch_vdso_info vdso_info = {
+ 	.vdso = vdso_start,
+-	.size = PAGE_SIZE,
+ 	.code_mapping = {
+ 		.name = "[vdso]",
+ 		.pages = vdso_pages,
+@@ -103,7 +102,7 @@ static int __init init_vdso(void)
+ 	unsigned long i, cpu, pfn;
+ 
+ 	BUG_ON(!PAGE_ALIGNED(vdso_info.vdso));
+-	BUG_ON(!PAGE_ALIGNED(vdso_info.size));
++	vdso_info.size = PAGE_ALIGN(vdso_end - vdso_start);
+ 
+ 	for_each_possible_cpu(cpu)
+ 		vdso_pdata[cpu].node = cpu_to_node(cpu);
+-- 
+2.43.5
+
