@@ -1,113 +1,176 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AF01F60A
-	for <loongarch@lists.linux.dev>; Sun, 29 Sep 2024 08:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F33045C18
+	for <loongarch@lists.linux.dev>; Sun, 29 Sep 2024 20:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727597963; cv=none; b=N90z+uaxJP653WETO9rTSToJVN+MZFPQpaE8sKKFzibZAEZzNML6g8NxbYysyznPP8zONuEQ9WGfHo5FlxL6MGGg7gof8z/RbwyaoUCgYJnVLG/LNTTBVKBA9iFAod98Geu3MNVaKGeoiwGnfouKxMOZii8IZ41HHeSaYDb6arw=
+	t=1727642302; cv=none; b=ZtBS+JCfcB5NpFu4pbHY3TGVXz0oqdoI9/tFycNMl0XHXBb9Lg3w99D0Vmz0La1/xrTpyZ3AEjM1CYjHe8PKeS+GC5Qhf4+VNPYYldjYQ8p1ySu5AWijS/iLsw5Rjg9t7oTm/W5alAJwGYm0tftrh6EUNfBo/xuHQO1wSm7v1Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727597963; c=relaxed/simple;
-	bh=cnhloMqw0YF6ToVDxEGJW10wSajal1rzWAvAuR6UIqU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j/ItKHKABTrltPtrJF/2H6p2tSjFRAi+NGfCx02Mwb978E1AMZyI8QVOPfznl5p0YpzWa6keDdGw/86ptkl+JJU09xodIkavJ5JlYTxYoDo9reHhitNGR3HlSRiprNDwmHCfXCmKHE5ISe2LOhNuiYaiqNMhu2W2+MZy2OkKBIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=az8tEgoO; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="az8tEgoO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1727597954;
-	bh=WPPtQ5yDugA9LY+gtCKLFK+aPbUmYYdCZ2ipS0rcb4A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=az8tEgoOTJVe/T1XdSuNR3acTUMsj1MCTHq6JruKGkaHXqb7AswsWzwzwOtAorKej
-	 Cm8jo1+RrUKsESddLCR5jSbepPRVJA3RFmO1B8Z5hmbPWkECMJTkMbOFlMq96nchhs
-	 apGsxM+R0ADGsVQIe+cy1Z6mBVH99Fwr9kqLUbnw=
-Received: from [IPv6:240e:358:11fd:c900:dc73:854d:832e:6] (unknown [IPv6:240e:358:11fd:c900:dc73:854d:832e:6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7E9AB1A4038;
-	Sun, 29 Sep 2024 04:19:08 -0400 (EDT)
-Message-ID: <8fb18e4166be8ef59ed0ccb7fa2f79844220aec2.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Set correct size for VDSO code mapping
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
-	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Date: Sun, 29 Sep 2024 16:19:03 +0800
-In-Reply-To: <20240929074944.3540514-1-chenhuacai@loongson.cn>
-References: <20240929074944.3540514-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0 
+	s=arc-20240116; t=1727642302; c=relaxed/simple;
+	bh=kDZ8DiveU6qQT4mghaV/wgrhMD9g1V+Rww0fBIDGViI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=rovom2x8TozBzP2sdJa3WFY0Kov9VqV7LTiSFuAWPbjIoyeZN8aT3kkwJGmOMcmD9R9DVMIXSC9erY9sBj8amC0sIC4UIXyRc2LqGPCt+vVqSpMiJDoR7ASVMoYBW1QFgrjZo4A/Tih+7B57CgbFSAMOIoSVqO8bcfTFoyOxU28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-249-b7mGYlNsMQO2oFNBFFPGaA-1; Sun, 29 Sep 2024 21:38:10 +0100
+X-MC-Unique: b7mGYlNsMQO2oFNBFFPGaA-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 29 Sep
+ 2024 21:37:17 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 29 Sep 2024 21:37:17 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Julian Vetter' <jvetter@kalrayinc.com>, Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	"Guo Ren" <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-csky@vger.kernel.org"
+	<linux-csky@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, Yann Sionneau <ysionneau@kalrayinc.com>
+Subject: RE: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io
+ into iomap_copy.c
+Thread-Topic: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io
+ into iomap_copy.c
+Thread-Index: AQHbD1eMTwS2+51gCUupXjyBebLx9rJvHKbg
+Date: Sun, 29 Sep 2024 20:37:17 +0000
+Message-ID: <f1673602e3f246cf92f3453f0c13911b@AcuMS.aculab.com>
+References: <20240925132420.821473-1-jvetter@kalrayinc.com>
+ <20240925132420.821473-2-jvetter@kalrayinc.com>
+In-Reply-To: <20240925132420.821473-2-jvetter@kalrayinc.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Sun, 2024-09-29 at 15:49 +0800, Huacai Chen wrote:
-> The current size of VDSO code mapping is hardcoded to PAGE_SIZE. This
-> cannot work for 4KB page size after commit 18efd0b10e0fd77 ("LoongArch:
-> vDSO: Wire up getrandom() vDSO implementation") because the code size
-> increases to 8KB. Thus set the code mapping size to its real size, i.e.
-> PAGE_ALIGN(vdso_end - vdso_start).
+RnJvbTogSnVsaWFuIFZldHRlcg0KPiBTZW50OiAyNSBTZXB0ZW1iZXIgMjAyNCAxNDoyNA0KPiAN
+Cj4gVmFyaW91cyBhcmNoaXRlY3R1cmVzIGhhdmUgYWxtb3N0IHRoZSBzYW1lIGltcGxlbWVudGF0
+aW9ucyBmb3INCj4gX19tZW1jcHlfe3RvLGZyb219aW8gYW5kIF9fbWVtc2V0X2lvIGZ1bmN0aW9u
+cy4gU28sIGNvbnNvbGlkYXRlIHRoZW0NCj4gaW50byB0aGUgZXhpc3RpbmcgbGliL2lvbWFwX2Nv
+cHkuYy4NCj4gDQo+IFJldmlld2VkLWJ5OiBZYW5uIFNpb25uZWF1IDx5c2lvbm5lYXVAa2FscmF5
+aW5jLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSnVsaWFuIFZldHRlciA8anZldHRlckBrYWxyYXlp
+bmMuY29tPg0KPiAtLS0NCj4gU2lnbmVkLW9mZi1ieTogSnVsaWFuIFZldHRlciA8anZldHRlckBr
+YWxyYXlpbmMuY29tPg0KPiAtLS0NCj4gQ2hhbmdlcyBmb3IgdjY6DQo+IC0gSW5jbHVkZWQgbGlu
+dXgvYXNsaWduLmgNCj4gLSBSZXBsYWNlZCBjb21waWxlIHRpbWUgY2hlY2sgYnkgaWZkZWYgdG8g
+cmVtb3ZlIGNvbXBpbGVyIHdhcm5pbmcNCj4gLS0tDQo+ICBpbmNsdWRlL2FzbS1nZW5lcmljL2lv
+LmggfCAgMTIgKysrKysNCj4gIGxpYi9pb21hcF9jb3B5LmMgICAgICAgICB8IDEwOSArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTIx
+IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2FzbS1nZW5lcmljL2lv
+LmggYi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgNCj4gaW5kZXggODBkZTY5OWJmNmFmLi45Yjhl
+MDQ0OWRhMjggMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvYXNtLWdlbmVyaWMvaW8uaA0KPiArKysg
+Yi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgNCj4gQEAgLTEwMiw2ICsxMDIsMTggQEAgc3RhdGlj
+IGlubGluZSB2b2lkIGxvZ19wb3N0X3JlYWRfbW1pbyh1NjQgdmFsLCB1OCB3aWR0aCwgY29uc3Qg
+dm9sYXRpbGUgdm9pZCBfX2kNCj4gDQo+ICAjZW5kaWYgLyogQ09ORklHX1RSQUNFX01NSU9fQUND
+RVNTICovDQo+IA0KPiArI2lmbmRlZiBfX21lbWNweV9mcm9taW8NCj4gK3ZvaWQgX19tZW1jcHlf
+ZnJvbWlvKHZvaWQgKnRvLCBjb25zdCB2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmZyb20sIHNpemVf
+dCBjb3VudCk7DQo+ICsjZW5kaWYNCj4gKw0KPiArI2lmbmRlZiBfX21lbWNweV90b2lvDQo+ICt2
+b2lkIF9fbWVtY3B5X3RvaW8odm9sYXRpbGUgdm9pZCBfX2lvbWVtICp0bywgY29uc3Qgdm9pZCAq
+ZnJvbSwgc2l6ZV90IGNvdW50KTsNCj4gKyNlbmRpZg0KPiArDQo+ICsjaWZuZGVmIF9fbWVtc2V0
+X2lvDQo+ICt2b2lkIF9fbWVtc2V0X2lvKHZvbGF0aWxlIHZvaWQgX19pb21lbSAqZHN0LCBpbnQg
+Yywgc2l6ZV90IGNvdW50KTsNCj4gKyNlbmRpZg0KPiArDQo+ICAvKg0KPiAgICogX19yYXdfe3Jl
+YWQsd3JpdGV9e2IsdyxsLHF9KCkgYWNjZXNzIG1lbW9yeSBpbiBuYXRpdmUgZW5kaWFubmVzcy4N
+Cj4gICAqDQo+IGRpZmYgLS1naXQgYS9saWIvaW9tYXBfY29weS5jIGIvbGliL2lvbWFwX2NvcHku
+Yw0KPiBpbmRleCAyZmQ1NzEyZmI3YzAuLmMyY2VlNjQxMDE1MSAxMDA2NDQNCj4gLS0tIGEvbGli
+L2lvbWFwX2NvcHkuYw0KPiArKysgYi9saWIvaW9tYXBfY29weS5jDQo+IEBAIC0zLDkgKzMsMTUg
+QEANCj4gICAqIENvcHlyaWdodCAyMDA2IFBhdGhTY2FsZSwgSW5jLiAgQWxsIFJpZ2h0cyBSZXNl
+cnZlZC4NCj4gICAqLw0KPiANCj4gKyNpbmNsdWRlIDxhc20vdW5hbGlnbmVkLmg+DQo+ICsNCj4g
+KyNpbmNsdWRlIDxsaW51eC9hbGlnbi5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2V4cG9ydC5oPg0K
+PiArI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4g
+DQo+ICsjZGVmaW5lIE5BVElWRV9TVE9SRV9TSVpFCShCSVRTX1BFUl9MT05HLzgpDQoNCihzaXpl
+b2YgKGxvbmcpKQ0KDQo+ICsNCj4gIC8qKg0KPiAgICogX19pb3dyaXRlMzJfY29weSAtIGNvcHkg
+ZGF0YSB0byBNTUlPIHNwYWNlLCBpbiAzMi1iaXQgdW5pdHMNCj4gICAqIEB0bzogZGVzdGluYXRp
+b24sIGluIE1NSU8gc3BhY2UgKG11c3QgYmUgMzItYml0IGFsaWduZWQpDQo+IEBAIC03NiwzICs4
+MiwxMDYgQEAgdm9pZCBfX2lvd3JpdGU2NF9jb3B5KHZvaWQgX19pb21lbSAqdG8sIGNvbnN0IHZv
+aWQgKmZyb20sIHNpemVfdCBjb3VudCkNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0xfR1BMKF9faW93
+cml0ZTY0X2NvcHkpOw0KPiAgI2VuZGlmDQo+ICsNCj4gKw0KPiArI2lmbmRlZiBfX21lbWNweV9m
+cm9taW8NCj4gK3ZvaWQgX19tZW1jcHlfZnJvbWlvKHZvaWQgKnRvLCBjb25zdCB2b2xhdGlsZSB2
+b2lkIF9faW9tZW0gKmZyb20sIHNpemVfdCBjb3VudCkNCj4gK3sNCj4gKwl3aGlsZSAoY291bnQg
+JiYgIUlTX0FMSUdORUQoKHVuc2lnbmVkIGxvbmcpZnJvbSwgTkFUSVZFX1NUT1JFX1NJWkUpKSB7
+DQo+ICsJCSoodTggKil0byA9IF9fcmF3X3JlYWRiKGZyb20pOw0KPiArCQlmcm9tKys7DQo+ICsJ
+CXRvKys7DQo+ICsJCWNvdW50LS07DQo+ICsJfQ0KPiArDQo+ICsJd2hpbGUgKGNvdW50ID49IE5B
+VElWRV9TVE9SRV9TSVpFKSB7DQo+ICsjaWZkZWYgQ09ORklHXzY0QklUDQo+ICsJCQlwdXRfdW5h
+bGlnbmVkKF9fcmF3X3JlYWRxKGZyb20pLCAodWludHB0cl90ICopdG8pOw0KPiArI2Vsc2UNCj4g
+KwkJCXB1dF91bmFsaWduZWQoX19yYXdfcmVhZGwoZnJvbSksICh1aW50cHRyX3QgKil0byk7DQo+
+ICsjZW5kaWYNCg0KVGhhdCBsb29rcyBob3JyaWQgdG8gbWUuDQpZb3Ugc2VlbSB0byBiZSBtaXhp
+bmcgc2V2ZXJhbCBkaWZmZXJlbnQgdHlwZXMgYW5kIHRlc3RzLg0KTkFUSVZFX1NUT1JFX1NJWkUg
+aXMgYmFzZWQgb24gdGhlICdsb25nICcgdHlwZSAoaW5kaXJlY3RseSBhbmQgYnkgYXNzdW1wdGlv
+bikuDQpDT05GSUdfNjRCaUlUIChwcm9iYWJseSkgaW1wbGllcyBMUDY0Lg0KcmVhZGwoKSByZWFk
+cyA0IGJ5dGVzIGFuZCByZWFkcSgpIDggKGZvciBib3RoIDMyYml0IGFuZCA2NGJpdCBrZXJuZWxz
+KQ0KdWludHB0ciBpcyBhbiB1bnNpZ25lZCBpbnRlZ2VyIGxhcmdlIGVub3VnaCB0byBob2xkIGEg
+cG9pbnRlci4NClRoZSBzaXplcyBtaWdodCBhbGwgaGFwcGVuIHRvIG1hdGNoLCBidXQgdGhlcmUg
+aXMgbm8gbmVlZCB0byByZWx5IG9uIGFsbCBvZiB0aGVtLg0KDQpJIG1pZ2h0IGJlIGJlc3QgdG8g
+anVzdCB1c2UgJ3NpemVvZiAobG9uZyknIGV4Y2VwdCB0aGF0IHlvdSBtaWdodA0KZ2V0IGEgY29t
+cGlsZSBlcnJvciBvbiBzb21lIDMyYml0IGFyY2hzIGZvciB0aGU6DQoJbG9uZyB2YWwgPSBzaXpl
+b2YgKHZhbCkgPT0gOCkgPyByZWFkcShmcm9tKSA6IHJlYWRsKGZyb20pOw0KCXB1dF91bmFsaWdu
+ZWQodmFsLCAobG9uZyAqKXRvKTsNCihkdWUgdG8gdGhlcmUgYmVpbmcgbm8gZGVjbGFyYXRpb24g
+cmVhZHEoKSkNCnNvIGl0IG1pZ2h0IG5lZWQgYSAjaWYgc29tZXdoZXJlLg0KT1RPSCB0aGVyZSBt
+aWdodCBhbHdheXMgYmUgYW4gJ2V4dGVybicgZm9yIHJlYWRxKCkuDQoNCklmIHlvdSBhcmUgdXNp
+bmcgdGhlIF9fcmF3X3JlYWR4KCkgZnVuY3Rpb25zIGRvbid0IHlvdSBuZWVkIHRoZQ0Kc3luY2hy
+b25pc2F0aW9uIGJhcnJpZXJzIHRvcCBhbmQgYm90dG9tPw0KDQpBbHNvIGlmIHB1dF91bmFsaWdu
+ZWQoKSBpcyBub24tdHJpdmlhbCB0aGUgY29kZSB3aWxsIGJlIGhvcnJpZC4NCkFuIGluaXRpYWwg
+dGVzdCBmb3IgKCh0byB8IGZyb20pICYgKHNpemVvZiAobG9uZykgLSAxKSA9PSAwKSBmb3IgYW4N
+CmFsaWduZWQgY29weSBtYXkgYmUgd29ydGh3aGlsZS4NCg0KVGhlcmUgaXMgdGhlIHF1ZXN0aW9u
+IG9mIHdoZXRoZXIgdGhlIGNvZGUgaXMgYWxsb3dlZCB0byBkbyBmdWxsDQp3b3JkIHJlYWRzIC0g
+dmFsaWQgaWYgdGhlIGlvIGFyZWEgYmVoYXZlcyBsaWtlIG1lbW9yeS4NCkluIHdoaWNoIGNhc2Ug
+eW91IGRvbid0IHdhbnQgdG8gZG8gYnl0ZSB0cmFuc2ZlcnMgZm9yIGFsaWdubWVudA0KYW5kIHRh
+aWwgdHJhbnNmZXJzIC0ganVzdCByZWFkIHRoZSBmdWxsIHdvcmQgdGhhdCBjb250YWlucyB0aGUg
+ZGF0YS4NCg0KUENJZSByZWFkcyBjYW4gYmUgaG9ycmlibHkgc2xvdyAod3JpdGVzIGFyZSAncG9z
+dGVkJyBzbyBtdWNoIGJldHRlcikuDQpJJ20gbm90IHN1cmUgaG93IGxvbmcgdGhleSB0YWtlIGlu
+dG8gYSAnbm9ybWFsJyB0YXJnZXQsIGJ1dCBiYWNrIHRvDQpiYWNrIHJlYWRzIGludG8gb3VyIGZw
+Z2EgYXJlIGFib3V0IDEyOCBjbG9ja3MgYXBhcnQgb24gaXRzIGludGVybmFsDQoxMjVNaHogY2xv
+Y2sgLSB0aGUgaG9zdCBjcHUgd2lsbCBzdGFsbCBmb3IgdGhlIGVudGlyZSBwZXJpb2QuDQpTbyB5
+b3UgZGVmaW5pdGVseSB3YW50IHRvIHVzZSB0aGUgbGFyZ2VzdCByZWdpc3RlciBwb3NzaWJsZS4N
+CihPciB0cnkgdmVyeSBoYXJkIHRvIG5ldmVyIGRvIG5vbi1kbWEgcmVhZHMgaW4gZWl0aGVyIGRp
+cmVjdGlvbi4pDQoNCglEYXZpZA0KDQo+ICsNCj4gKwkJZnJvbSArPSBOQVRJVkVfU1RPUkVfU0la
+RTsNCj4gKwkJdG8gKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+ICsJCWNvdW50IC09IE5BVElWRV9T
+VE9SRV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChjb3VudCkgew0KPiArCQkqKHU4ICop
+dG8gPSBfX3Jhd19yZWFkYihmcm9tKTsNCj4gKwkJZnJvbSsrOw0KPiArCQl0bysrOw0KPiArCQlj
+b3VudC0tOw0KPiArCX0NCj4gK30NCj4gK0VYUE9SVF9TWU1CT0woX19tZW1jcHlfZnJvbWlvKTsN
+Cj4gKyNlbmRpZg0KPiArDQo+ICsjaWZuZGVmIF9fbWVtY3B5X3RvaW8NCj4gK3ZvaWQgX19tZW1j
+cHlfdG9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKnRvLCBjb25zdCB2b2lkICpmcm9tLCBzaXpl
+X3QgY291bnQpDQo+ICt7DQo+ICsJd2hpbGUgKGNvdW50ICYmICFJU19BTElHTkVEKCh1bnNpZ25l
+ZCBsb25nKXRvLCBOQVRJVkVfU1RPUkVfU0laRSkpIHsNCj4gKwkJX19yYXdfd3JpdGViKCoodTgg
+Kilmcm9tLCB0byk7DQo+ICsJCWZyb20rKzsNCj4gKwkJdG8rKzsNCj4gKwkJY291bnQtLTsNCj4g
+Kwl9DQo+ICsNCj4gKwl3aGlsZSAoY291bnQgPj0gTkFUSVZFX1NUT1JFX1NJWkUpIHsNCj4gKyNp
+ZmRlZiBDT05GSUdfNjRCSVQNCj4gKwkJCV9fcmF3X3dyaXRlcShnZXRfdW5hbGlnbmVkKCh1aW50
+cHRyX3QgKilmcm9tKSwgdG8pOw0KPiArI2Vsc2UNCj4gKwkJCV9fcmF3X3dyaXRlbChnZXRfdW5h
+bGlnbmVkKCh1aW50cHRyX3QgKilmcm9tKSwgdG8pOw0KPiArI2VuZGlmDQo+ICsNCj4gKwkJZnJv
+bSArPSBOQVRJVkVfU1RPUkVfU0laRTsNCj4gKwkJdG8gKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+
+ICsJCWNvdW50IC09IE5BVElWRV9TVE9SRV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChj
+b3VudCkgew0KPiArCQlfX3Jhd193cml0ZWIoKih1OCAqKWZyb20sIHRvKTsNCj4gKwkJZnJvbSsr
+Ow0KPiArCQl0bysrOw0KPiArCQljb3VudC0tOw0KPiArCX0NCj4gK30NCj4gK0VYUE9SVF9TWU1C
+T0woX19tZW1jcHlfdG9pbyk7DQo+ICsjZW5kaWYNCj4gKw0KPiArI2lmbmRlZiBfX21lbXNldF9p
+bw0KPiArdm9pZCBfX21lbXNldF9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmRzdCwgaW50IGMs
+IHNpemVfdCBjb3VudCkNCj4gK3sNCj4gKwl1aW50cHRyX3QgcWMgPSAodTgpYzsNCj4gKw0KPiAr
+CXFjIHw9IHFjIDw8IDg7DQo+ICsJcWMgfD0gcWMgPDwgMTY7DQo+ICsNCj4gKyNpZmRlZiBDT05G
+SUdfNjRCSVQNCj4gKwlxYyB8PSBxYyA8PCAzMjsNCj4gKyNlbmRpZg0KPiArDQo+ICsJd2hpbGUg
+KGNvdW50ICYmICFJU19BTElHTkVEKCh1bnNpZ25lZCBsb25nKWRzdCwgTkFUSVZFX1NUT1JFX1NJ
+WkUpKSB7DQo+ICsJCV9fcmF3X3dyaXRlYihjLCBkc3QpOw0KPiArCQlkc3QrKzsNCj4gKwkJY291
+bnQtLTsNCj4gKwl9DQo+ICsNCj4gKwl3aGlsZSAoY291bnQgPj0gTkFUSVZFX1NUT1JFX1NJWkUp
+IHsNCj4gKyNpZmRlZiBDT05GSUdfNjRCSVQNCj4gKwkJCV9fcmF3X3dyaXRlcShxYywgZHN0KTsN
+Cj4gKyNlbHNlDQo+ICsJCQlfX3Jhd193cml0ZWwocWMsIGRzdCk7DQo+ICsjZW5kaWYNCj4gKw0K
+PiArCQlkc3QgKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+ICsJCWNvdW50IC09IE5BVElWRV9TVE9S
+RV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChjb3VudCkgew0KPiArCQlfX3Jhd193cml0
+ZWIoYywgZHN0KTsNCj4gKwkJZHN0Kys7DQo+ICsJCWNvdW50LS07DQo+ICsJfQ0KPiArfQ0KPiAr
+RVhQT1JUX1NZTUJPTChfX21lbXNldF9pbyk7DQo+ICsjZW5kaWYNCj4gLS0NCj4gMi4zNC4xDQo+
+IA0KPiANCj4gDQo+IA0KPiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFt
+bGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3Ry
+YXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-I get:
-
-$ size vdso.so
-   text	   data	    bss	    dec	  =20
-hex	filename
-   3716	    328	      0	   4044	  =20
-fcc	vdso.so
-
-So it "just" fits in 4 KiB, and of course it may exceed 4 KiB with a
-different compiler or some kernel configuration affecting code
-generation like CONFIG_INIT_STACK_ALL_ZERO or
-CONFIG_ZERO_CALL_USED_REGS).
-
-I remember I've checked `size vdso.so` before but I cannot remember why
-I didn't realize a problem here.  Sorry for the stupidity.
-
-Reviewed-by: Xi Ruoyao <xry111@xry111.site>
-
->=20
-> Fixes: 18efd0b10e0fd77 ("LoongArch: vDSO: Wire up getrandom() vDSO implem=
-entation")
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/kernel/vdso.c | 3 +--
-> =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-> index f6fcc52aefae..7e0cc7f5e1ed 100644
-> --- a/arch/loongarch/kernel/vdso.c
-> +++ b/arch/loongarch/kernel/vdso.c
-> @@ -85,7 +85,6 @@ static vm_fault_t vvar_fault(const struct vm_special_ma=
-pping *sm,
-> =C2=A0
-> =C2=A0struct loongarch_vdso_info vdso_info =3D {
-> =C2=A0	.vdso =3D vdso_start,
-> -	.size =3D PAGE_SIZE,
-> =C2=A0	.code_mapping =3D {
-> =C2=A0		.name =3D "[vdso]",
-> =C2=A0		.pages =3D vdso_pages,
-> @@ -103,7 +102,7 @@ static int __init init_vdso(void)
-> =C2=A0	unsigned long i, cpu, pfn;
-> =C2=A0
-> =C2=A0	BUG_ON(!PAGE_ALIGNED(vdso_info.vdso));
-> -	BUG_ON(!PAGE_ALIGNED(vdso_info.size));
-> +	vdso_info.size =3D PAGE_ALIGN(vdso_end - vdso_start);
-> =C2=A0
-> =C2=A0	for_each_possible_cpu(cpu)
-> =C2=A0		vdso_pdata[cpu].node =3D cpu_to_node(cpu);
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
