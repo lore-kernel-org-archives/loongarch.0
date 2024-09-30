@@ -1,176 +1,383 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F33045C18
-	for <loongarch@lists.linux.dev>; Sun, 29 Sep 2024 20:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 668E636AEC
+	for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 03:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727642302; cv=none; b=ZtBS+JCfcB5NpFu4pbHY3TGVXz0oqdoI9/tFycNMl0XHXBb9Lg3w99D0Vmz0La1/xrTpyZ3AEjM1CYjHe8PKeS+GC5Qhf4+VNPYYldjYQ8p1ySu5AWijS/iLsw5Rjg9t7oTm/W5alAJwGYm0tftrh6EUNfBo/xuHQO1wSm7v1Ao=
+	t=1727666703; cv=none; b=KYebt052jsLvFtgwWlTrhNEVxBpsbBcBvFhRmZcLTEyjVVnZRl33HZUd9VedSIhV+Q4F1vU5M1cvJER8OYVQ6r8nKs2PrCc3iaoIMkFH19AGcOexTyfJC12DoDi5HKu53/YlDpmN/74JO1bqF55GkkV0fnX+9uVcPoOGzd5oYos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727642302; c=relaxed/simple;
-	bh=kDZ8DiveU6qQT4mghaV/wgrhMD9g1V+Rww0fBIDGViI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=rovom2x8TozBzP2sdJa3WFY0Kov9VqV7LTiSFuAWPbjIoyeZN8aT3kkwJGmOMcmD9R9DVMIXSC9erY9sBj8amC0sIC4UIXyRc2LqGPCt+vVqSpMiJDoR7ASVMoYBW1QFgrjZo4A/Tih+7B57CgbFSAMOIoSVqO8bcfTFoyOxU28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-249-b7mGYlNsMQO2oFNBFFPGaA-1; Sun, 29 Sep 2024 21:38:10 +0100
-X-MC-Unique: b7mGYlNsMQO2oFNBFFPGaA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 29 Sep
- 2024 21:37:17 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 29 Sep 2024 21:37:17 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Julian Vetter' <jvetter@kalrayinc.com>, Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	"Guo Ren" <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-csky@vger.kernel.org"
-	<linux-csky@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, Yann Sionneau <ysionneau@kalrayinc.com>
-Subject: RE: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io
- into iomap_copy.c
-Thread-Topic: [PATCH v6 1/5] Consolidate __memcpy_{to,from}io and __memset_io
- into iomap_copy.c
-Thread-Index: AQHbD1eMTwS2+51gCUupXjyBebLx9rJvHKbg
-Date: Sun, 29 Sep 2024 20:37:17 +0000
-Message-ID: <f1673602e3f246cf92f3453f0c13911b@AcuMS.aculab.com>
-References: <20240925132420.821473-1-jvetter@kalrayinc.com>
- <20240925132420.821473-2-jvetter@kalrayinc.com>
-In-Reply-To: <20240925132420.821473-2-jvetter@kalrayinc.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1727666703; c=relaxed/simple;
+	bh=L74EFNmBJ+BoRuTlV9M9pl97yZnpubHkwY2PpjTKtvo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=NL7OuQSXTAh16c5LoEhEiCWMss2lbQBf9I1ZgTY6lIOJHy44mKjS9Y+1czCNh9eFQ3uhoaI/2AjhZhzv4N+NAr9JKp3TOcKaV8idKHIZrPaGKaaBA0XhWtblo/x4Zi34Y3NHe8FOKeenkuG3bpBrpGS9wKzRJbFtN1yLe+qTmXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxjmsIGvpmDV8EAA--.4172S3;
+	Mon, 30 Sep 2024 11:24:56 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front2 (Coremail) with SMTP id qciowMBxOsYGGvpmLtcYAA--.22697S2;
+	Mon, 30 Sep 2024 11:24:54 +0800 (CST)
+Subject: Re: [PATCH v5 2/2] Loongarch: EDAC driver for loongson memory
+ controller
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ chenhuacai@kernel.org, bp@alien8.de, tony.luck@intel.com,
+ linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@xen0n.name, james.morse@arm.com,
+ mchehab@kernel.org, rric@kernel.org, loongarch@lists.linux.dev
+References: <20240925024038.9844-1-zhaoqunqin@loongson.cn>
+ <20240925024038.9844-3-zhaoqunqin@loongson.cn>
+ <20240925101331.00000e63@Huawei.com>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <2b8b6384-4c6b-b49d-b88e-93c1390017e4@loongson.cn>
+Date: Mon, 30 Sep 2024 11:24:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+In-Reply-To: <20240925101331.00000e63@Huawei.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-CM-TRANSID:qciowMBxOsYGGvpmLtcYAA--.22697S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3AryrCF1kWF48Xry7ZFykXrc_yoWfAF43pF
+	98Aa15Cr48tr17AwsYvryUuF1Yvws7KF12k3y3tay29r9Fyrykur9Yqry2kFn7CryDGrW0
+	va4rKwsruF4YkrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0mhrUUU
+	UU=
 
-RnJvbTogSnVsaWFuIFZldHRlcg0KPiBTZW50OiAyNSBTZXB0ZW1iZXIgMjAyNCAxNDoyNA0KPiAN
-Cj4gVmFyaW91cyBhcmNoaXRlY3R1cmVzIGhhdmUgYWxtb3N0IHRoZSBzYW1lIGltcGxlbWVudGF0
-aW9ucyBmb3INCj4gX19tZW1jcHlfe3RvLGZyb219aW8gYW5kIF9fbWVtc2V0X2lvIGZ1bmN0aW9u
-cy4gU28sIGNvbnNvbGlkYXRlIHRoZW0NCj4gaW50byB0aGUgZXhpc3RpbmcgbGliL2lvbWFwX2Nv
-cHkuYy4NCj4gDQo+IFJldmlld2VkLWJ5OiBZYW5uIFNpb25uZWF1IDx5c2lvbm5lYXVAa2FscmF5
-aW5jLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSnVsaWFuIFZldHRlciA8anZldHRlckBrYWxyYXlp
-bmMuY29tPg0KPiAtLS0NCj4gU2lnbmVkLW9mZi1ieTogSnVsaWFuIFZldHRlciA8anZldHRlckBr
-YWxyYXlpbmMuY29tPg0KPiAtLS0NCj4gQ2hhbmdlcyBmb3IgdjY6DQo+IC0gSW5jbHVkZWQgbGlu
-dXgvYXNsaWduLmgNCj4gLSBSZXBsYWNlZCBjb21waWxlIHRpbWUgY2hlY2sgYnkgaWZkZWYgdG8g
-cmVtb3ZlIGNvbXBpbGVyIHdhcm5pbmcNCj4gLS0tDQo+ICBpbmNsdWRlL2FzbS1nZW5lcmljL2lv
-LmggfCAgMTIgKysrKysNCj4gIGxpYi9pb21hcF9jb3B5LmMgICAgICAgICB8IDEwOSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTIx
-IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2FzbS1nZW5lcmljL2lv
-LmggYi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgNCj4gaW5kZXggODBkZTY5OWJmNmFmLi45Yjhl
-MDQ0OWRhMjggMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvYXNtLWdlbmVyaWMvaW8uaA0KPiArKysg
-Yi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgNCj4gQEAgLTEwMiw2ICsxMDIsMTggQEAgc3RhdGlj
-IGlubGluZSB2b2lkIGxvZ19wb3N0X3JlYWRfbW1pbyh1NjQgdmFsLCB1OCB3aWR0aCwgY29uc3Qg
-dm9sYXRpbGUgdm9pZCBfX2kNCj4gDQo+ICAjZW5kaWYgLyogQ09ORklHX1RSQUNFX01NSU9fQUND
-RVNTICovDQo+IA0KPiArI2lmbmRlZiBfX21lbWNweV9mcm9taW8NCj4gK3ZvaWQgX19tZW1jcHlf
-ZnJvbWlvKHZvaWQgKnRvLCBjb25zdCB2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmZyb20sIHNpemVf
-dCBjb3VudCk7DQo+ICsjZW5kaWYNCj4gKw0KPiArI2lmbmRlZiBfX21lbWNweV90b2lvDQo+ICt2
-b2lkIF9fbWVtY3B5X3RvaW8odm9sYXRpbGUgdm9pZCBfX2lvbWVtICp0bywgY29uc3Qgdm9pZCAq
-ZnJvbSwgc2l6ZV90IGNvdW50KTsNCj4gKyNlbmRpZg0KPiArDQo+ICsjaWZuZGVmIF9fbWVtc2V0
-X2lvDQo+ICt2b2lkIF9fbWVtc2V0X2lvKHZvbGF0aWxlIHZvaWQgX19pb21lbSAqZHN0LCBpbnQg
-Yywgc2l6ZV90IGNvdW50KTsNCj4gKyNlbmRpZg0KPiArDQo+ICAvKg0KPiAgICogX19yYXdfe3Jl
-YWQsd3JpdGV9e2IsdyxsLHF9KCkgYWNjZXNzIG1lbW9yeSBpbiBuYXRpdmUgZW5kaWFubmVzcy4N
-Cj4gICAqDQo+IGRpZmYgLS1naXQgYS9saWIvaW9tYXBfY29weS5jIGIvbGliL2lvbWFwX2NvcHku
-Yw0KPiBpbmRleCAyZmQ1NzEyZmI3YzAuLmMyY2VlNjQxMDE1MSAxMDA2NDQNCj4gLS0tIGEvbGli
-L2lvbWFwX2NvcHkuYw0KPiArKysgYi9saWIvaW9tYXBfY29weS5jDQo+IEBAIC0zLDkgKzMsMTUg
-QEANCj4gICAqIENvcHlyaWdodCAyMDA2IFBhdGhTY2FsZSwgSW5jLiAgQWxsIFJpZ2h0cyBSZXNl
-cnZlZC4NCj4gICAqLw0KPiANCj4gKyNpbmNsdWRlIDxhc20vdW5hbGlnbmVkLmg+DQo+ICsNCj4g
-KyNpbmNsdWRlIDxsaW51eC9hbGlnbi5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2V4cG9ydC5oPg0K
-PiArI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4g
-DQo+ICsjZGVmaW5lIE5BVElWRV9TVE9SRV9TSVpFCShCSVRTX1BFUl9MT05HLzgpDQoNCihzaXpl
-b2YgKGxvbmcpKQ0KDQo+ICsNCj4gIC8qKg0KPiAgICogX19pb3dyaXRlMzJfY29weSAtIGNvcHkg
-ZGF0YSB0byBNTUlPIHNwYWNlLCBpbiAzMi1iaXQgdW5pdHMNCj4gICAqIEB0bzogZGVzdGluYXRp
-b24sIGluIE1NSU8gc3BhY2UgKG11c3QgYmUgMzItYml0IGFsaWduZWQpDQo+IEBAIC03NiwzICs4
-MiwxMDYgQEAgdm9pZCBfX2lvd3JpdGU2NF9jb3B5KHZvaWQgX19pb21lbSAqdG8sIGNvbnN0IHZv
-aWQgKmZyb20sIHNpemVfdCBjb3VudCkNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0xfR1BMKF9faW93
-cml0ZTY0X2NvcHkpOw0KPiAgI2VuZGlmDQo+ICsNCj4gKw0KPiArI2lmbmRlZiBfX21lbWNweV9m
-cm9taW8NCj4gK3ZvaWQgX19tZW1jcHlfZnJvbWlvKHZvaWQgKnRvLCBjb25zdCB2b2xhdGlsZSB2
-b2lkIF9faW9tZW0gKmZyb20sIHNpemVfdCBjb3VudCkNCj4gK3sNCj4gKwl3aGlsZSAoY291bnQg
-JiYgIUlTX0FMSUdORUQoKHVuc2lnbmVkIGxvbmcpZnJvbSwgTkFUSVZFX1NUT1JFX1NJWkUpKSB7
-DQo+ICsJCSoodTggKil0byA9IF9fcmF3X3JlYWRiKGZyb20pOw0KPiArCQlmcm9tKys7DQo+ICsJ
-CXRvKys7DQo+ICsJCWNvdW50LS07DQo+ICsJfQ0KPiArDQo+ICsJd2hpbGUgKGNvdW50ID49IE5B
-VElWRV9TVE9SRV9TSVpFKSB7DQo+ICsjaWZkZWYgQ09ORklHXzY0QklUDQo+ICsJCQlwdXRfdW5h
-bGlnbmVkKF9fcmF3X3JlYWRxKGZyb20pLCAodWludHB0cl90ICopdG8pOw0KPiArI2Vsc2UNCj4g
-KwkJCXB1dF91bmFsaWduZWQoX19yYXdfcmVhZGwoZnJvbSksICh1aW50cHRyX3QgKil0byk7DQo+
-ICsjZW5kaWYNCg0KVGhhdCBsb29rcyBob3JyaWQgdG8gbWUuDQpZb3Ugc2VlbSB0byBiZSBtaXhp
-bmcgc2V2ZXJhbCBkaWZmZXJlbnQgdHlwZXMgYW5kIHRlc3RzLg0KTkFUSVZFX1NUT1JFX1NJWkUg
-aXMgYmFzZWQgb24gdGhlICdsb25nICcgdHlwZSAoaW5kaXJlY3RseSBhbmQgYnkgYXNzdW1wdGlv
-bikuDQpDT05GSUdfNjRCaUlUIChwcm9iYWJseSkgaW1wbGllcyBMUDY0Lg0KcmVhZGwoKSByZWFk
-cyA0IGJ5dGVzIGFuZCByZWFkcSgpIDggKGZvciBib3RoIDMyYml0IGFuZCA2NGJpdCBrZXJuZWxz
-KQ0KdWludHB0ciBpcyBhbiB1bnNpZ25lZCBpbnRlZ2VyIGxhcmdlIGVub3VnaCB0byBob2xkIGEg
-cG9pbnRlci4NClRoZSBzaXplcyBtaWdodCBhbGwgaGFwcGVuIHRvIG1hdGNoLCBidXQgdGhlcmUg
-aXMgbm8gbmVlZCB0byByZWx5IG9uIGFsbCBvZiB0aGVtLg0KDQpJIG1pZ2h0IGJlIGJlc3QgdG8g
-anVzdCB1c2UgJ3NpemVvZiAobG9uZyknIGV4Y2VwdCB0aGF0IHlvdSBtaWdodA0KZ2V0IGEgY29t
-cGlsZSBlcnJvciBvbiBzb21lIDMyYml0IGFyY2hzIGZvciB0aGU6DQoJbG9uZyB2YWwgPSBzaXpl
-b2YgKHZhbCkgPT0gOCkgPyByZWFkcShmcm9tKSA6IHJlYWRsKGZyb20pOw0KCXB1dF91bmFsaWdu
-ZWQodmFsLCAobG9uZyAqKXRvKTsNCihkdWUgdG8gdGhlcmUgYmVpbmcgbm8gZGVjbGFyYXRpb24g
-cmVhZHEoKSkNCnNvIGl0IG1pZ2h0IG5lZWQgYSAjaWYgc29tZXdoZXJlLg0KT1RPSCB0aGVyZSBt
-aWdodCBhbHdheXMgYmUgYW4gJ2V4dGVybicgZm9yIHJlYWRxKCkuDQoNCklmIHlvdSBhcmUgdXNp
-bmcgdGhlIF9fcmF3X3JlYWR4KCkgZnVuY3Rpb25zIGRvbid0IHlvdSBuZWVkIHRoZQ0Kc3luY2hy
-b25pc2F0aW9uIGJhcnJpZXJzIHRvcCBhbmQgYm90dG9tPw0KDQpBbHNvIGlmIHB1dF91bmFsaWdu
-ZWQoKSBpcyBub24tdHJpdmlhbCB0aGUgY29kZSB3aWxsIGJlIGhvcnJpZC4NCkFuIGluaXRpYWwg
-dGVzdCBmb3IgKCh0byB8IGZyb20pICYgKHNpemVvZiAobG9uZykgLSAxKSA9PSAwKSBmb3IgYW4N
-CmFsaWduZWQgY29weSBtYXkgYmUgd29ydGh3aGlsZS4NCg0KVGhlcmUgaXMgdGhlIHF1ZXN0aW9u
-IG9mIHdoZXRoZXIgdGhlIGNvZGUgaXMgYWxsb3dlZCB0byBkbyBmdWxsDQp3b3JkIHJlYWRzIC0g
-dmFsaWQgaWYgdGhlIGlvIGFyZWEgYmVoYXZlcyBsaWtlIG1lbW9yeS4NCkluIHdoaWNoIGNhc2Ug
-eW91IGRvbid0IHdhbnQgdG8gZG8gYnl0ZSB0cmFuc2ZlcnMgZm9yIGFsaWdubWVudA0KYW5kIHRh
-aWwgdHJhbnNmZXJzIC0ganVzdCByZWFkIHRoZSBmdWxsIHdvcmQgdGhhdCBjb250YWlucyB0aGUg
-ZGF0YS4NCg0KUENJZSByZWFkcyBjYW4gYmUgaG9ycmlibHkgc2xvdyAod3JpdGVzIGFyZSAncG9z
-dGVkJyBzbyBtdWNoIGJldHRlcikuDQpJJ20gbm90IHN1cmUgaG93IGxvbmcgdGhleSB0YWtlIGlu
-dG8gYSAnbm9ybWFsJyB0YXJnZXQsIGJ1dCBiYWNrIHRvDQpiYWNrIHJlYWRzIGludG8gb3VyIGZw
-Z2EgYXJlIGFib3V0IDEyOCBjbG9ja3MgYXBhcnQgb24gaXRzIGludGVybmFsDQoxMjVNaHogY2xv
-Y2sgLSB0aGUgaG9zdCBjcHUgd2lsbCBzdGFsbCBmb3IgdGhlIGVudGlyZSBwZXJpb2QuDQpTbyB5
-b3UgZGVmaW5pdGVseSB3YW50IHRvIHVzZSB0aGUgbGFyZ2VzdCByZWdpc3RlciBwb3NzaWJsZS4N
-CihPciB0cnkgdmVyeSBoYXJkIHRvIG5ldmVyIGRvIG5vbi1kbWEgcmVhZHMgaW4gZWl0aGVyIGRp
-cmVjdGlvbi4pDQoNCglEYXZpZA0KDQo+ICsNCj4gKwkJZnJvbSArPSBOQVRJVkVfU1RPUkVfU0la
-RTsNCj4gKwkJdG8gKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+ICsJCWNvdW50IC09IE5BVElWRV9T
-VE9SRV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChjb3VudCkgew0KPiArCQkqKHU4ICop
-dG8gPSBfX3Jhd19yZWFkYihmcm9tKTsNCj4gKwkJZnJvbSsrOw0KPiArCQl0bysrOw0KPiArCQlj
-b3VudC0tOw0KPiArCX0NCj4gK30NCj4gK0VYUE9SVF9TWU1CT0woX19tZW1jcHlfZnJvbWlvKTsN
-Cj4gKyNlbmRpZg0KPiArDQo+ICsjaWZuZGVmIF9fbWVtY3B5X3RvaW8NCj4gK3ZvaWQgX19tZW1j
-cHlfdG9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKnRvLCBjb25zdCB2b2lkICpmcm9tLCBzaXpl
-X3QgY291bnQpDQo+ICt7DQo+ICsJd2hpbGUgKGNvdW50ICYmICFJU19BTElHTkVEKCh1bnNpZ25l
-ZCBsb25nKXRvLCBOQVRJVkVfU1RPUkVfU0laRSkpIHsNCj4gKwkJX19yYXdfd3JpdGViKCoodTgg
-Kilmcm9tLCB0byk7DQo+ICsJCWZyb20rKzsNCj4gKwkJdG8rKzsNCj4gKwkJY291bnQtLTsNCj4g
-Kwl9DQo+ICsNCj4gKwl3aGlsZSAoY291bnQgPj0gTkFUSVZFX1NUT1JFX1NJWkUpIHsNCj4gKyNp
-ZmRlZiBDT05GSUdfNjRCSVQNCj4gKwkJCV9fcmF3X3dyaXRlcShnZXRfdW5hbGlnbmVkKCh1aW50
-cHRyX3QgKilmcm9tKSwgdG8pOw0KPiArI2Vsc2UNCj4gKwkJCV9fcmF3X3dyaXRlbChnZXRfdW5h
-bGlnbmVkKCh1aW50cHRyX3QgKilmcm9tKSwgdG8pOw0KPiArI2VuZGlmDQo+ICsNCj4gKwkJZnJv
-bSArPSBOQVRJVkVfU1RPUkVfU0laRTsNCj4gKwkJdG8gKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+
-ICsJCWNvdW50IC09IE5BVElWRV9TVE9SRV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChj
-b3VudCkgew0KPiArCQlfX3Jhd193cml0ZWIoKih1OCAqKWZyb20sIHRvKTsNCj4gKwkJZnJvbSsr
-Ow0KPiArCQl0bysrOw0KPiArCQljb3VudC0tOw0KPiArCX0NCj4gK30NCj4gK0VYUE9SVF9TWU1C
-T0woX19tZW1jcHlfdG9pbyk7DQo+ICsjZW5kaWYNCj4gKw0KPiArI2lmbmRlZiBfX21lbXNldF9p
-bw0KPiArdm9pZCBfX21lbXNldF9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmRzdCwgaW50IGMs
-IHNpemVfdCBjb3VudCkNCj4gK3sNCj4gKwl1aW50cHRyX3QgcWMgPSAodTgpYzsNCj4gKw0KPiAr
-CXFjIHw9IHFjIDw8IDg7DQo+ICsJcWMgfD0gcWMgPDwgMTY7DQo+ICsNCj4gKyNpZmRlZiBDT05G
-SUdfNjRCSVQNCj4gKwlxYyB8PSBxYyA8PCAzMjsNCj4gKyNlbmRpZg0KPiArDQo+ICsJd2hpbGUg
-KGNvdW50ICYmICFJU19BTElHTkVEKCh1bnNpZ25lZCBsb25nKWRzdCwgTkFUSVZFX1NUT1JFX1NJ
-WkUpKSB7DQo+ICsJCV9fcmF3X3dyaXRlYihjLCBkc3QpOw0KPiArCQlkc3QrKzsNCj4gKwkJY291
-bnQtLTsNCj4gKwl9DQo+ICsNCj4gKwl3aGlsZSAoY291bnQgPj0gTkFUSVZFX1NUT1JFX1NJWkUp
-IHsNCj4gKyNpZmRlZiBDT05GSUdfNjRCSVQNCj4gKwkJCV9fcmF3X3dyaXRlcShxYywgZHN0KTsN
-Cj4gKyNlbHNlDQo+ICsJCQlfX3Jhd193cml0ZWwocWMsIGRzdCk7DQo+ICsjZW5kaWYNCj4gKw0K
-PiArCQlkc3QgKz0gTkFUSVZFX1NUT1JFX1NJWkU7DQo+ICsJCWNvdW50IC09IE5BVElWRV9TVE9S
-RV9TSVpFOw0KPiArCX0NCj4gKw0KPiArCXdoaWxlIChjb3VudCkgew0KPiArCQlfX3Jhd193cml0
-ZWIoYywgZHN0KTsNCj4gKwkJZHN0Kys7DQo+ICsJCWNvdW50LS07DQo+ICsJfQ0KPiArfQ0KPiAr
-RVhQT1JUX1NZTUJPTChfX21lbXNldF9pbyk7DQo+ICsjZW5kaWYNCj4gLS0NCj4gMi4zNC4xDQo+
-IA0KPiANCj4gDQo+IA0KPiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFt
-bGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3Ry
-YXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+
+ÔÚ 2024/9/25 ÏÂÎç5:13, Jonathan Cameron Ð´µÀ:
+> On Wed, 25 Sep 2024 10:40:38 +0800
+> Zhao Qunqin <zhaoqunqin@loongson.cn> wrote:
+>
+>> Reports single bit errors (CE) only.
+>>
+>> Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+> Hi. A few quick comments inline
+>
+> Jonathan
+>
+>> ---
+>> Changes in v5:
+>> 	- Drop the loongson_ prefix from all static functions.
+>> 	- Align function arguments on the opening brace.
+>> 	- Drop useless comments and useless wrapper. Drop side comments.
+>> 	- Reorder variable declarations.
+>>
+>> Changes in v4:
+>> 	- None
+>>
+>> Changes in v3:
+>> 	- Addressed review comments raised by Krzysztof and Huacai
+>>
+>> Changes in v2:
+>> 	- Addressed review comments raised by Krzysztof
+>>
+>>   MAINTAINERS                  |   1 +
+>>   arch/loongarch/Kconfig       |   1 +
+>>   drivers/edac/Kconfig         |   8 ++
+>>   drivers/edac/Makefile        |   1 +
+>>   drivers/edac/loongson_edac.c | 168 +++++++++++++++++++++++++++++++++++
+>>   5 files changed, 179 insertions(+)
+>>   create mode 100644 drivers/edac/loongson_edac.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 6cc8cfc8f..5b4526638 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13242,6 +13242,7 @@ M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>>   L:	linux-edac@vger.kernel.org
+>>   S:	Maintained
+>>   F:	Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+>> +F:	drivers/edac/loongson_edac.c
+>>   
+>>   LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>>   M:	Sathya Prakash <sathya.prakash@broadcom.com>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index 70f169210..9c135f1a2 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -181,6 +181,7 @@ config LOONGARCH
+>>   	select PCI_MSI_ARCH_FALLBACKS
+>>   	select PCI_QUIRKS
+>>   	select PERF_USE_VMALLOC
+>> +	select EDAC_SUPPORT
+>>   	select RTC_LIB
+>>   	select SPARSE_IRQ
+>>   	select SYSCTL_ARCH_UNALIGN_ALLOW
+>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>> index 81af6c344..719bb6ca7 100644
+>> --- a/drivers/edac/Kconfig
+>> +++ b/drivers/edac/Kconfig
+>> @@ -564,5 +564,13 @@ config EDAC_VERSAL
+>>   	  Support injecting both correctable and uncorrectable errors
+>>   	  for debugging purposes.
+>>   
+>> +config EDAC_LOONGSON3
+>> +	tristate "Loongson-3 Memory Controller"
+>> +	depends on LOONGARCH || COMPILE_TEST
+>> +	help
+>> +	  Support for error detection and correction on the Loongson-3
+>> +	  family memory controller. This driver reports single bit
+>> +	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3C5000L/3A6000/3C6000
+>> +	  are compatible.
+>>   
+>>   endif # EDAC
+>> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+>> index faf310eec..e72ca1be4 100644
+>> --- a/drivers/edac/Makefile
+>> +++ b/drivers/edac/Makefile
+>> @@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+>>   obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
+>>   obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+>>   obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
+>> +obj-$(CONFIG_EDAC_LOONGSON3)		+= loongson_edac.o
+>> diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+>> new file mode 100644
+>> index 000000000..2721dfba5
+>> --- /dev/null
+>> +++ b/drivers/edac/loongson_edac.c
+>> @@ -0,0 +1,168 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
+>> + */
+>> +
+>> +#include <linux/edac.h>
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "edac_module.h"
+>> +
+>> +enum ecc_index {
+>> +	ECC_SET = 0,
+>> +	ECC_RESERVED,
+>> +	ECC_COUNT,
+>> +	ECC_CS_COUNT,
+>> +	ECC_CODE,
+>> +	ECC_ADDR,
+>> +	ECC_DATA0,
+>> +	ECC_DATA1,
+>> +	ECC_DATA2,
+>> +	ECC_DATA3,
+>> +};
+>> +
+>> +struct loongson_edac_pvt {
+>> +	u64 *ecc_base;
+>> +	int last_ce_count;
+>> +};
+>> +
+>> +static int read_ecc(struct mem_ctl_info *mci)
+>> +{
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +	u64 ecc;
+>> +	int cs;
+>> +
+>> +	if (!pvt->ecc_base)
+>> +		return pvt->last_ce_count;
+>> +
+>> +	ecc = pvt->ecc_base[ECC_CS_COUNT];
+>> +	/* cs0 -- cs3 */
+>> +	cs = ecc & 0xff;
+>> +	cs += (ecc >> 8) & 0xff;
+>> +	cs += (ecc >> 16) & 0xff;
+>> +	cs += (ecc >> 24) & 0xff;
+> This smells like an endian swap.
+> swab32() or is this fixing a wrong endian register?
+> In which case b32_to_cpu()
+Not an endian swap. Just add up the values of the lowest four bytes.
+>
+>> +
+>> +	return cs;
+>> +}
+>> +
+>> +static void edac_check(struct mem_ctl_info *mci)
+>> +{
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +	int new, add;
+>> +
+>> +	new = read_ecc(mci);
+>> +	add = new - pvt->last_ce_count;
+>> +	pvt->last_ce_count = new;
+>> +	if (add <= 0)
+> This has be a little confused. Either this counter can
+> wrap in which case why drop out here, or it can't in which case
+> does < occur?
+The ce count of loongson memory controller should only increase.
+>
+>> +		return;
+>> +
+>> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+>> +			     0, 0, 0, 0, 0, -1, "error", "");
+>> +	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
+>> +}
+>> +
+>> +static int get_dimm_config(struct mem_ctl_info *mci)
+>> +{
+>> +	struct dimm_info *dimm;
+>> +	u32 size, npages;
+>> +
+>> +	/* size not used */
+>> +	size = -1;
+>> +	npages = MiB_TO_PAGES(size);
+>> +
+>> +	dimm = edac_get_dimm(mci, 0, 0, 0);
+>> +	dimm->nr_pages = npages;
+>> +	snprintf(dimm->label, sizeof(dimm->label),
+>> +		 "MC#%uChannel#%u_DIMM#%u", mci->mc_idx, 0, 0);
+>> +	dimm->grain = 8;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void pvt_init(struct mem_ctl_info *mci, u64 *vbase)
+>> +{
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +
+>> +	pvt->ecc_base = vbase;
+>> +	pvt->last_ce_count = read_ecc(mci);
+>> +}
+>> +
+>> +static int edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_mc_layer layers[2];
+>> +	struct loongson_edac_pvt *pvt;
+>> +	struct mem_ctl_info *mci;
+>> +	u64 *vbase;
+>> +	int ret;
+>> +
+>> +	vbase = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(vbase))
+>> +		return PTR_ERR(vbase);
+>> +
+>> +	/* allocate a new MC control structure */
+>> +	layers[0].type = EDAC_MC_LAYER_CHANNEL;
+>> +	layers[0].size = 1;
+>> +	layers[0].is_virt_csrow = false;
+>> +	layers[1].type = EDAC_MC_LAYER_SLOT;
+>> +	layers[1].size = 1;
+>> +	layers[1].is_virt_csrow = true;
+> Could move this to a c99 style
+>
+> 	struct edac_mc_layer layers[2] = {
+> 		{
+> 			.type = EDAC_MC_LAYER_CHANNEL,
+> 			.size = 1,
+> 			.is_virt_csrow = false,
+> 		}, {
+> 			.type = EDAC_MC_LAYER_SLOT,
+> 			.size = 1,
+> 			is_virt_csrow = true,
+> 		}
+> 	};
+> Not particularly important though.
+>
+>> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(*pvt));
+>> +	if (mci == NULL)
+> Probably !mci is sufficient but I'm not sure on local edac style.
+>
+>> +		return -ENOMEM;
+>> +
+>> +	mci->mc_idx = edac_device_alloc_index();
+>> +	mci->mtype_cap = MEM_FLAG_RDDR4;
+>> +	mci->edac_ctl_cap = EDAC_FLAG_NONE;
+>> +	mci->edac_cap = EDAC_FLAG_NONE;
+>> +	mci->mod_name = "loongson_edac.c";
+>> +	mci->ctl_name = "loongson_edac_ctl";
+>> +	mci->dev_name = "loongson_edac_dev";
+>> +	mci->ctl_page_to_phys = NULL;
+>> +	mci->pdev = &pdev->dev;
+>> +	mci->error_desc.grain = 8;
+>> +	/* Set the function pointer to an actual operation function */
+>> +	mci->edac_check = edac_check;
+> Similar to above, can initialize this structure more cleanly
+> using
+>
+> 	*mci = (struct mem_ctl_info) {
+> 		.mc_idx = edac_device_alloc_index,
+> 	...
+> 	};
+>> +
+>> +	pvt_init(mci, vbase);
+>> +	get_dimm_config(mci);
+>> +
+>> +	ret = edac_mc_add_mc(mci);
+> I'd be tempted to use devm_add_action_or_cleanup() for this and the
+> alloc above, but not common in edac but it is done in al_mc_edac.c if
+> you want an example.
+Your idea is great, but I don't think it's necessary to make things so 
+complicated
+>> +	if (ret) {
+>> +		edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
+>> +		edac_mc_free(mci);
+>> +		return ret;
+>> +	}
+>> +	edac_op_state = EDAC_OPSTATE_POLL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void edac_remove(struct platform_device *pdev)
+>> +{
+>> +	struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
+>> +
+>> +	if (mci)
+>> +		edac_mc_free(mci);
+> Very odd if you got to remove and edac_mc_del_mc() failed.
+> Do we need this check?  At least some drivers (I checked a few
+> at random) don't check this.
+
+Yes, odd if edac_mc_del_mc() failed. Dose it better to add a check just 
+in case
+
+edac_mc_del_mc() failed ?
+
+
+Thanks,
+
+Zhao Qunqin
+
+>
+>> +}
+>> +
+>> +static const struct of_device_id loongson_edac_of_match[] = {
+>> +	{ .compatible = "loongson,ls3a5000-mc-edac", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, loongson_edac_of_match);
+>> +
+>> +static struct platform_driver loongson_edac_driver = {
+>> +	.probe		= edac_probe,
+>> +	.remove		= edac_remove,
+>> +	.driver		= {
+>> +		.name	= "loongson-mc-edac",
+>> +		.of_match_table = loongson_edac_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(loongson_edac_driver);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Zhao Qunqin <zhaoqunqin@loongson.cn>");
+>> +MODULE_DESCRIPTION("EDAC driver for loongson memory controller");
 
