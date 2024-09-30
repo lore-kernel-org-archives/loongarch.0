@@ -1,63 +1,63 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9F718C31
-	for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 17:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C391A198A0D
+	for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 17:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727718673; cv=none; b=O6H5MH+V+cyGK1M2YHLUNjjCHK0uJTcVvkkXPLkpGw+92ZDAWuOv1s3B8qjpVOa7HUwP6LW+4T0cDHB22D69SzE2QhEsoVLt0uXNkDZ5SbiiIdv3ngno4jKvtk+99qPWqi/aW6LAMqwTS7YXBp9incnt65E7VoIWf2bSKhoZJd4=
+	t=1727718792; cv=none; b=aNhqt2woVOsArTwnpe24hMkaKQq+qigMrQniuD4thDiMTPIGhabhixcyCiqX8UyJuVc4Rmn4k39FToXmhQq118ZpZFhYeqdxStQh1WBAu71gBTjrwSaCX7HFYxBRNVYNrjVNkkK5aPyISBpzGNsUS3W1bfALJ0/dLEdAdPm+psE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727718673; c=relaxed/simple;
-	bh=x0pDw+4SzE1MkSrrBfzhcseWxrldz0hn0pxuu1IaAPA=;
+	s=arc-20240116; t=1727718792; c=relaxed/simple;
+	bh=PQ2VgHYe0Ngojxr8nNlQI/+nPbwGo4g+HQCTJc64GP8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nHGIAnMvR6gdPSkMsB1157Tilnr23fbEuRAQI7EHlbM0DugwU6EdZF5jTQqgZNTL6lUNocTCl33cAQZ0g2S/e+HC3AKHTMtN5XGlwrQiXNol6kAJQrYIbwtuEIy1GhqtIm1ZIBJgEKPBnDl7szkSBvGNQ3h7y6YO7zcqtqUTc+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
+	 To:Cc:Content-Type; b=LhMMZgW59hdz6Xtbsaqdy+uxDvfjRr/cdtl0rRYzkBTSvErru4NW3X3MnPJzy5l0s1xayFQaHjBVq/GRvHcwoPCyZBF6HHo5XRdY4XOv92uxu1843lfa1DQdaxKwg0CMruuOOe2JBGItqxaDq56miSS67aINWYLVidOV8s26ZvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6ddfdeed0c9so36308377b3.2
-        for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 10:51:11 -0700 (PDT)
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-50abc034f6aso384851e0c.1
+        for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 10:53:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727718668; x=1728323468;
+        d=1e100.net; s=20230601; t=1727718789; x=1728323589;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ERWUip0Hd+3xSPGc5KF+LIvmSrz8p98q0i+WVSFZa2o=;
-        b=WfWHNvHdrfh0PdAPMPNW0CLY8ecQJAg/iWotHHcS/Qju3r9DMrNudgcNonTgK3PyLj
-         LO4P0J5lDn3NHlQSJ9NL5gheLv83DtuA7wf34SPTUXV4pcOy9cvkNla3nfbr06I+I66c
-         zCGRQe46BLRs9Rc9Ecj+RHxMvak8GCGOcIUQReul+pGCSSL3g7oGcTEViZHmAQ6icxuy
-         iG5nmGjnkF3iWyvrvkIgPslvJL0ebG7qAZaCkkeFfB5iuD8XlOjMGU+dsGJpn1cMoyQn
-         zL+97WevdMofHF2ddij6T1kSgqa5Zqo7WZt44dKejIzi3nHvF1OI9V8o9PSsLs2ZASkY
-         +uvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUnVFLSAYfBpq+O4CxPPEgNZOm3ydWryqI/qK0xb5E1T79WaagnKkhrYh2ofvflE0n6wBNmDKYIPc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz9czCparwm/O7m5ZYpD9ZJ6sT7W34T/3qswtQN2Lp9u0zWmBj8
-	evjcN9jFTbyp0gDgm908ek1noJ5Lgy9aBETWKkc02p0ZW2kSNPduNpRVw82N
-X-Google-Smtp-Source: AGHT+IF/E0V1qCIEBCdBDicE3NjiWVMVEwDDS6WzmTKQx8v4tm7Q/7anHdANNqDD7QlCgPEbOTx1Mg==
-X-Received: by 2002:a05:690c:dc4:b0:643:92a8:ba00 with SMTP id 00721157ae682-6e2473aba3bmr113898257b3.0.1727718668087;
-        Mon, 30 Sep 2024 10:51:08 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e24530aeeesm15305957b3.47.2024.09.30.10.51.07
+        bh=ZoyzlnnLRNj4i2u5Dgn44nDbhn4MB5fS72eP0TVQdtc=;
+        b=jrF+Dp2cWW1dnXuOLfO6Pong2w1NsceNMvud8uLJ1mEZPkmUJwA4fr1opFiXOjVlAr
+         JyrnMBUmyVLbDJWnnk7p5K09I18bMHwh7GQ4XR3yfNlgZBDXoAp4U7vbobChpdAJaEif
+         0ZYOaekmfeV7rhZT0PPzsrJKUdwWunEYTqPVrhUwI0VkeCxCuQvkaXPWChoGnyqc7fsk
+         E9Ui3noKmBkaUiXhcRfnVJSsJ0WD5JT7NNm2FMvpF3YN5ijhw/Xzf+/xOVTQK64/6uA2
+         xrFQ9HqKmGkLTdcrR5LrL4R1UZ74E521O0mIeeuwVFCwmfahBPhr5csrgdM7nBoxz27K
+         1Vfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWosOeG90wEJy+zRPKzvARPYUZfNvE8tASYJ9IbSXHn5hHyRwCkwNwj0zJfdzNZkiExEoFbysW5tGA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyhNLmPf9O+L/w7CCMZNY8ynnKNSewOXqD274QpqxnDIm4azgef
+	tuzgAlCd7yoa8dzg5I3A9K1Cm5Bv6TgkG95N2WGu/wchZUFiXGG87ijotQRf
+X-Google-Smtp-Source: AGHT+IEZBhDqdKV7EiGkVejBP0T5evma5mNffzbA4zG1LDGDSfHIPF68EwhqbNMqc2QqiZdCvwGKZA==
+X-Received: by 2002:a05:6122:2a0b:b0:50a:c31b:33d6 with SMTP id 71dfb90a1353d-50ac31b36famr2795767e0c.9.1727718789364;
+        Mon, 30 Sep 2024 10:53:09 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-507804635aasm1011823e0c.24.2024.09.30.10.53.08
         for <loongarch@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2024 10:51:07 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6e232e260c2so36865967b3.0
-        for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 10:51:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/PThvYHXqO9zte66OOXtiSjGx/mLp2dp9ePNvWTbYdAw8aIRURkMa2oANNJ8nlmxOONtfVLhuMyg=@lists.linux.dev
-X-Received: by 2002:a05:690c:c0f:b0:6d3:d842:5733 with SMTP id
- 00721157ae682-6e2475e3050mr104508727b3.35.1727718666765; Mon, 30 Sep 2024
- 10:51:06 -0700 (PDT)
+        Mon, 30 Sep 2024 10:53:09 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-84e962c9a99so1333601241.2
+        for <loongarch@lists.linux.dev>; Mon, 30 Sep 2024 10:53:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXXyljGo8LRtNUYVlbQjhQmVUfTp4lCM8aa9B9NhWuB/dEB/8KMOW04/uxnRtLaoUchqjLMHS9DJLE=@lists.linux.dev
+X-Received: by 2002:a05:690c:60c3:b0:6dd:bbb4:bcc7 with SMTP id
+ 00721157ae682-6e2476334f2mr105898897b3.44.1727718393293; Mon, 30 Sep 2024
+ 10:46:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240930132321.2785718-1-jvetter@kalrayinc.com> <20240930132321.2785718-11-jvetter@kalrayinc.com>
-In-Reply-To: <20240930132321.2785718-11-jvetter@kalrayinc.com>
+References: <20240930132321.2785718-1-jvetter@kalrayinc.com> <20240930132321.2785718-6-jvetter@kalrayinc.com>
+In-Reply-To: <20240930132321.2785718-6-jvetter@kalrayinc.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 30 Sep 2024 19:50:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX03ornwefrTfSYfH-XoEE4CHN+u5m7ay5_LrTq8XHOJA@mail.gmail.com>
-Message-ID: <CAMuHMdX03ornwefrTfSYfH-XoEE4CHN+u5m7ay5_LrTq8XHOJA@mail.gmail.com>
-Subject: Re: [PATCH v7 10/10] arm: Align prototype of IO memset
+Date: Mon, 30 Sep 2024 19:46:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVnb-fo2MP7ERwSj-sPNU3-QyikNinfhvgVa2DnR9jJrQ@mail.gmail.com>
+Message-ID: <CAMuHMdVnb-fo2MP7ERwSj-sPNU3-QyikNinfhvgVa2DnR9jJrQ@mail.gmail.com>
+Subject: Re: [PATCH v7 05/10] m68k: Align prototypes of IO memcpy/memset
 To: Julian Vetter <jvetter@kalrayinc.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, 
 	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
@@ -80,8 +80,8 @@ Content-Transfer-Encoding: quoted-printable
 
 On Mon, Sep 30, 2024 at 3:25=E2=80=AFPM Julian Vetter <jvetter@kalrayinc.co=
 m> wrote:
-> Align prototype of the memset_io function with the new one from
-> iomap_copy.c
+> Align the prototypes of the memcpy_{from,to}io and memset_io functions
+> with the new ones from iomap_copy.c.
 >
 > Reviewed-by: Yann Sionneau <ysionneau@kalrayinc.com>
 > Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
@@ -89,7 +89,8 @@ m> wrote:
 > Changes for v7:
 > - New patch
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
