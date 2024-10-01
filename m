@@ -1,57 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D8D1E4AF;
-	Tue,  1 Oct 2024 07:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942F55589B;
+	Tue,  1 Oct 2024 08:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727769364; cv=none; b=HmHc0XBNelNpA56bcIGIEi2SvLQHmQA4q8ZK4205Els6x3xabrIDReQXU6Bux5Pjsi7kqHWBSESUT7RNktL1+9rbW7PIrrTuijN4CbTFRh5HgG05QdZq34Uf7AQi8dQzccAUuoUowRxawWt1RM2BpMyPTCq00TbB8OrSYOpEiew=
+	t=1727772940; cv=none; b=jm/OwrPVlrE8dLgh16eFVVJ4fGGWszzWA+Yv+ARLs/gbA0W+vbAhXJhS289uHTqohoRH/hVw85jBXr8ntiAF9FILIfa1zeTD2nS4WuCfRa9Mm1MTz/3m/MRMRaa7+mR/0x+PrJUP1Fb2NHUCxf5/T3064UcOMczWPzVfL+SvgWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727769364; c=relaxed/simple;
-	bh=DUSla1FAPzb+LNDyXiPJO2AqdEAllX4YCcHfZCCWlRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XIs+IOx8mH1LJWRaEH1bFwGsHhd6CkRYVcQZlaVpHnkjRzXAa5vBnboFlEFpRzYFTGQRKi7w5u+crSk4ga5BbnKuko8oVPsKFEtDC91/V9mN5l1rbELzsbA8kf5/dItRMCg86fuFRljavAxoYgqEiVg5zcHgJjJGqZHXLXn9o00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qog9oh6p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qog9oh6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E604CC4CEC6;
-	Tue,  1 Oct 2024 07:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727769364;
-	bh=DUSla1FAPzb+LNDyXiPJO2AqdEAllX4YCcHfZCCWlRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qog9oh6pMmi/iiUp/eg9Hl5FLD8BkWdz7FS4DfcEFy6oLaV6FBPBTYFjW9hP4G/93
-	 c8tM1DpRFoRdYj678AP9PsmMoupzFgIkn3AtG52xqjFquZUni1ulEsqcU3Z09c/cbx
-	 6DxW3R4detlf5A3PsrZmRK+bCFmqNUuZFprCyP64=
-Date: Tue, 1 Oct 2024 09:56:01 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	s=arc-20240116; t=1727772940; c=relaxed/simple;
+	bh=Q9IWqw0jPvOLwMDbSkL/6NzXAa1aunw7reKWoBqQDLY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EHA0E90bUzV4T00+MQ9XrFRyLXcydKCZO6F/Wl9W8wR5lDvlo48CLk0f6HXl1DJXwdR8pzemdE+nHz9/EjKkYQO7KeRopsozxN9LO19hew6mK+aPGM1KMFmjCOqjm5oX6sNHJCxbsQzU3w6J6krSxJVKmk3NlTY5CLcWQb82Wdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C84C4CEC6;
+	Tue,  1 Oct 2024 08:55:37 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, Bibo Mao <maobibo@loongson.cn>,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org
-Subject: Re: [PATCH 6.10.y] Revert "LoongArch: KVM: Invalidate guest steal
- time address on vCPU reset"
-Message-ID: <2024100152-ruse-congested-d132@gregkh>
+	Greg KH <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Cc: Bibo Mao <maobibo@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.10.y] Revert "LoongArch: KVM: Invalidate guest steal time address on vCPU reset"
+Date: Tue,  1 Oct 2024 16:55:21 +0800
+Message-ID: <20241001085521.102817-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <CAAhV-H4WLByJ53oqQgEnVjy4bT0pS77fT5BA4NaCp8AOn+cyJw@mail.gmail.com>
 References: <CAAhV-H4WLByJ53oqQgEnVjy4bT0pS77fT5BA4NaCp8AOn+cyJw@mail.gmail.com>
- <20241001072511.17953-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241001072511.17953-1-chenhuacai@loongson.cn>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 01, 2024 at 03:25:11PM +0800, Huacai Chen wrote:
-> This reverts commit 05969a6944713f159e8f28be2388500174521818.
-> 
-> LoongArch's PV steal time support is add after 6.10, so 6.10.y doesn't
-> need this fix.
-> ---
+This reverts commit 05969a6944713f159e8f28be2388500174521818.
 
-No signed-off-by line :(
+LoongArch's PV steal time support is add after 6.10, so 6.10.y doesn't
+need this fix.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_vcpu.h | 1 +
+ arch/loongarch/kvm/timer.c            | 7 +++++++
+ arch/loongarch/kvm/vcpu.c             | 2 +-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index d7e8f7d50ee0..f468450b24ab 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -82,6 +82,7 @@ static inline int kvm_own_lbt(struct kvm_vcpu *vcpu) { return -EINVAL; }
+ #endif
+ 
+ void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long hz);
++void kvm_reset_timer(struct kvm_vcpu *vcpu);
+ void kvm_save_timer(struct kvm_vcpu *vcpu);
+ void kvm_restore_timer(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+index 74a4b5c272d6..bcc6b6d063d9 100644
+--- a/arch/loongarch/kvm/timer.c
++++ b/arch/loongarch/kvm/timer.c
+@@ -188,3 +188,10 @@ void kvm_save_timer(struct kvm_vcpu *vcpu)
+ 	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
+ 	preempt_enable();
+ }
++
++void kvm_reset_timer(struct kvm_vcpu *vcpu)
++{
++	write_gcsr_timercfg(0);
++	kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG, 0);
++	hrtimer_cancel(&vcpu->arch.swtimer);
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 0697b1064251..16ad19a09660 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -869,7 +869,7 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+ 				vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
+ 			break;
+ 		case KVM_REG_LOONGARCH_VCPU_RESET:
+-			vcpu->arch.st.guest_addr = 0;
++			kvm_reset_timer(vcpu);
+ 			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+ 			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
+ 			break;
+-- 
+2.43.5
 
