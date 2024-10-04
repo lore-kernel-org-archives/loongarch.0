@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9696821D2CF;
-	Fri,  4 Oct 2024 18:23:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEED209F20;
+	Fri,  4 Oct 2024 18:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728066221; cv=none; b=SptBCr6ODZv0eFNHaRpYe5EJin6qoLHTPY35yXx0yFy+Xj1+7lVmshFQC1P9SfZ+t93A9vseJR5U3+Q+waxsPbrGcSehcnNn7Ku2EoaoSZrZCPDCwqKZ+L7dhoSKMvk+DssWw7qKFeMMvsszOnl3YdTCC2/jPEZF/iUyvjYbehs=
+	t=1728066386; cv=none; b=t8RooAII5A+d5SRpyaDS0oWi9ZYozejPmN9WPxHWQBNNc2+oe0fFlgA1OMXoe78a9EP43uWewi1rvEGE3QSftQoYlUohbA5Q30egwOrxU2bUDxl6pL1cu7KyhGEZPwbZro3N2OyL1j2uZnVJEFJXDtNYoZdenXUyBC0LGxMeX2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728066221; c=relaxed/simple;
+	s=arc-20240116; t=1728066386; c=relaxed/simple;
 	bh=1sspyqVTgvIpKwxU5N9E0sOh0QrLdF27x0qAoEIqpa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hL+51AlC8vCACkbiqZnm0mAsdANvUtJ0u4BQ6yzKuGtjymgNEBgqfLzTk5cGq+svBiNoRIVz4OHoYS6b0V+knXHXRC8oN8eOZUVKujVnfkgY3rzz2ezKD5rL6jAW4z4hSph6mz9G3QcnsnQPE39phpoLePI9u/hqFBktEIJk5yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ifi+TRLB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=crCDn7Pskl1GUml6J6rZ8AqHLYJ3p7jRwnAxAgGEfq3KnNIlgR6od8NpoGEKnZqyJ24LGYa1JhCZYOiM9XZyxI3lNAIx9pJrcvkMkC7+f0zpktZONQIM3yDFXMqCR9UmVJuSU5HpoJZNEPrC7nUhrYRKQJ2lXEHLQJZDJ3yxTrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BbQTxo6P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ifi+TRLB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A49C4CECD;
-	Fri,  4 Oct 2024 18:23:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BbQTxo6P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1EEAC4CECD;
+	Fri,  4 Oct 2024 18:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728066221;
+	s=k20201202; t=1728066385;
 	bh=1sspyqVTgvIpKwxU5N9E0sOh0QrLdF27x0qAoEIqpa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ifi+TRLBBDoW+wtgORBcnEcTCABhzhKoHkb9H+3HJ++QzWcwhPz5sWhKYe0OiVrhD
-	 /tkI5ofFRceoeHhBdnn2OhcyyFD/AT7c5lFza4xZHBDLuiufyQvclW9NWvFcpI+9pu
-	 k0+xMqae+YOAS6Us+NEGswhLCOK2l027U/5+cMziHfXmWeD5s1mtL4cwNwMDjwTEPi
-	 WWqSWn2TO9Y57uNLWkUOmeba6amQPDLt5CzB82Zt8EPqMHibA0vwgBHHK2EsQTIFHk
-	 pDZUU774pmU0LllI6H8tIFnevJtD2HUZoMdxMR9o0ttOHfp/oxOmL0DDy9YEtIsGfI
-	 x1ReU6dUQBIhw==
+	b=BbQTxo6Py9636iz5d9SGvBcxOTcEBPn0h7MAYgzB4heTNf8m//kp1Cxac4T2T0Qth
+	 p7pQUHAYr6yMN1MDm5Rka32s/60ZQA5CXY7F0u2ClpPXCmbDaXV/yMkl0f19aFlYPC
+	 wbJnVWe8VfFsAromBG4ry1TCBaxzV4+m5lhS7gYNEIMJhiA77C8jsBmCZidK46njVT
+	 jPJUkV8sYMfCmdaQHcZoXGww4kIs+lJbdIoqHstkuEL87oDxNfCmQ9w0fWmS9RyUWQ
+	 rrc+aQhgxnkwHypQt3DXfUZvi8oSvfEwyyYtVb46O5C88DUQjdJHjZV0b3smzuBxH9
+	 ge+hgGOW6WX4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -35,12 +35,12 @@ Cc: Wentao Guan <guanwentao@uniontech.com>,
 	Sasha Levin <sashal@kernel.org>,
 	chenhuacai@kernel.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.10 52/70] LoongArch: Fix memleak in pci_acpi_scan_root()
-Date: Fri,  4 Oct 2024 14:20:50 -0400
-Message-ID: <20241004182200.3670903-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 45/58] LoongArch: Fix memleak in pci_acpi_scan_root()
+Date: Fri,  4 Oct 2024 14:24:18 -0400
+Message-ID: <20241004182503.3672477-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241004182200.3670903-1-sashal@kernel.org>
-References: <20241004182200.3670903-1-sashal@kernel.org>
+In-Reply-To: <20241004182503.3672477-1-sashal@kernel.org>
+References: <20241004182503.3672477-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.13
+X-stable-base: Linux 6.6.54
 Content-Transfer-Encoding: 8bit
 
 From: Wentao Guan <guanwentao@uniontech.com>
