@@ -1,84 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E55021502C;
-	Fri,  4 Oct 2024 18:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8AE18A6B5
+	for <loongarch@lists.linux.dev>; Sun,  6 Oct 2024 18:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728066496; cv=none; b=fnz0dd7Qn9nBV6+lboMKRRbDq+BPxeDzald8E7RKMFaXog0scpGumo/W4fSCgowkCZ6qUTA/Pmg5LU0bcLSxU+hmBeIjSnITd3wKubGYP2F5MzCSf3Jors3PU86nY7gdAP1d1Y+fCMuQQ17wncVUgrzMaa8fGePqt9GKm8ce0WE=
+	t=1728240707; cv=none; b=ZcqOL+4Gh7r8irZo84Znqtg5IFHscJRTNMocwNavVHqEHTipb52uhTWyXKzlTzv7BcOUKN9rpdXNtX1Wp6tSSqKU3RKkpRWxo+vUz6iXqk3KMkzujpvNpo1LKsrdclkL7uMMZqp1YCcgtFvybV5qjARkh/zNUURJMVr9P73vqug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728066496; c=relaxed/simple;
-	bh=GDDV5dWyR0EA3ZKDqa7HCB32qQhj2xtV+yIkI0XifAQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pYiH3soXQlKUq8hawlGnYXjcbmJAwE24e8rHa+tpldOH2iemxDCZeERazf8rcy61n0G04xETatCHxy3qYeNfrmiDZcyXg1Fr+29a5FiIxAAVAjEJPuGNtNTbP8anEKMii07Ro8S0ljB0QMTUzHfoLmEULhwzWI0wl8EkQJn55xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXOdpNHD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXOdpNHD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EF5C4CECD;
-	Fri,  4 Oct 2024 18:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728066495;
-	bh=GDDV5dWyR0EA3ZKDqa7HCB32qQhj2xtV+yIkI0XifAQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MXOdpNHDQa1kQPPPV9fklhbvns4r4cL+L6KswVHsh8ExZ0tBp3l1OabtXS8nrhG5I
-	 5jGF/+FHXOA8m68lEckW6fyaExV43zYSD3A8PImdQ1HdZvxGauCLzHDS723JG5fmYn
-	 VXDfrmZGebk6qoV5ZAU2Xw1SdatX9xzhHFKBIwjXZMHhY/zAOXIEBkXwrhHtcHMlmx
-	 TXfMHAyE6Wyt/E8A34VLXC2NmPxhojhkyIftz/qrLiShKrAayWCv7NGDzAG5TCU1EO
-	 qfopX1f3x9FIEsmKmrRTTOOz4RaQn6gqlxk2jtjAPLBjd6acZSaeefpOvIY6vDurbe
-	 7wOPNcsJAcaRA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Wentao Guan <guanwentao@uniontech.com>,
-	Yuli Wang <wangyuli@uniontech.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 32/42] LoongArch: Fix memleak in pci_acpi_scan_root()
-Date: Fri,  4 Oct 2024 14:26:43 -0400
-Message-ID: <20241004182718.3673735-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241004182718.3673735-1-sashal@kernel.org>
-References: <20241004182718.3673735-1-sashal@kernel.org>
+	s=arc-20240116; t=1728240707; c=relaxed/simple;
+	bh=aZwIzvlOJcv/ji8nAJdTx51gC2Ws1xeuOlP3sOSFvS0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=l99pVtihWMp6DAxF30mQFwAHYsQ+oqmVPl59EkcvY2dPxCni9A4YGgW/Q+GOyAOwJyaw9qf0UFa7ojlYkZqUU5cbqV24KTgD2S7EjsFgKZZl1/cKQZKEopq+KvVahFrdTJgrplgXSMWPjt1wb59+5Iqa5whmWF04Ri8agccfFxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-136-9bgpC3x0OgWrMeD0Qb2vqQ-1; Sun, 06 Oct 2024 19:51:42 +0100
+X-MC-Unique: 9bgpC3x0OgWrMeD0Qb2vqQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 6 Oct
+ 2024 19:50:48 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 6 Oct 2024 19:50:48 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Richard Henderson' <richard.henderson@linaro.org>, Julian Vetter
+	<jvetter@kalrayinc.com>, Arnd Bergmann <arnd@arndb.de>, Russell King
+	<linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, "Will
+ Deacon" <will@kernel.org>, Guo Ren <guoren@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Andrew Morton
+	<akpm@linux-foundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "Ivan
+ Kokshaysky" <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, "Helge
+ Deller" <deller@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, "Rich
+ Felker" <dalias@libc.org>, John Paul Adrian Glaubitz
+	<glaubitz@physik.fu-berlin.de>, Richard Weinberger <richard@nod.at>, "Anton
+ Ivanov" <anton.ivanov@cambridgegreys.com>, Johannes Berg
+	<johannes@sipsolutions.net>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-csky@vger.kernel.org"
+	<linux-csky@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-m68k@lists.linux-m68k.org"
+	<linux-m68k@lists.linux-m68k.org>, "linux-alpha@vger.kernel.org"
+	<linux-alpha@vger.kernel.org>, "linux-parisc@vger.kernel.org"
+	<linux-parisc@vger.kernel.org>, "linux-sh@vger.kernel.org"
+	<linux-sh@vger.kernel.org>, "linux-um@lists.infradead.org"
+	<linux-um@lists.infradead.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, Yann Sionneau <ysionneau@kalrayinc.com>
+Subject: RE: [PATCH v7 01/10] Consolidate IO memcpy/memset into iomap_copy.c
+Thread-Topic: [PATCH v7 01/10] Consolidate IO memcpy/memset into iomap_copy.c
+Thread-Index: AQHbFbPJWS6K2t1cH0OJGabOTiBjIbJ6FaUQ
+Date: Sun, 6 Oct 2024 18:50:48 +0000
+Message-ID: <5bbdbf01d4584a14ae1e16281eb95837@AcuMS.aculab.com>
+References: <20240930132321.2785718-1-jvetter@kalrayinc.com>
+ <20240930132321.2785718-2-jvetter@kalrayinc.com>
+ <a4f85184-73d4-44e4-bddd-0c1775ed9f50@linaro.org>
+In-Reply-To: <a4f85184-73d4-44e4-bddd-0c1775ed9f50@linaro.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.112
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-From: Wentao Guan <guanwentao@uniontech.com>
-
-[ Upstream commit 5016c3a31a6d74eaf2fdfdec673eae8fcf90379e ]
-
-Add kfree(root_ops) in this case to avoid memleak of root_ops,
-leaks when pci_find_bus() != 0.
-
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/pci/acpi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-index 8235ec92b41fe..debd79f712860 100644
---- a/arch/loongarch/pci/acpi.c
-+++ b/arch/loongarch/pci/acpi.c
-@@ -222,6 +222,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 	if (bus) {
- 		memcpy(bus->sysdata, info->cfg, sizeof(struct pci_config_window));
- 		kfree(info);
-+		kfree(root_ops);
- 	} else {
- 		struct pci_bus *child;
- 
--- 
-2.43.0
+RnJvbTogUmljaGFyZCBIZW5kZXJzb24NCj4gU2VudDogMDMgT2N0b2JlciAyMDI0IDE3OjQ3DQo+
+IA0KPiBPbiA5LzMwLzI0IDA2OjIzLCBKdWxpYW4gVmV0dGVyIHdyb3RlOg0KPiA+ICt2b2lkIG1l
+bXNldF9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmRzdCwgaW50IGMsIHNpemVfdCBjb3VudCkN
+Cj4gPiArew0KPiA+ICsJdWludHB0cl90IHFjID0gKHU4KWM7DQo+IA0KPiBNaXNzZWQgb25lIGNo
+YW5nZSB0byAnbG9uZycNCj4gDQo+ID4gKw0KPiA+ICsJcWMgfD0gcWMgPDwgODsNCj4gPiArCXFj
+IHw9IHFjIDw8IDE2Ow0KPiA+ICsNCj4gPiArI2lmZGVmIENPTkZJR182NEJJVA0KPiA+ICsJcWMg
+fD0gcWMgPDwgMzI7DQo+ID4gKyNlbmRpZg0KPiANCj4gQ291bGQgYmUgJ3FjICo9IC0xdWwgLyAw
+eGZmOycNCg0KCXFjICo9IH4wdWwgLyAweGZmOw0KDQp3b3VsZCBiZSBzbGlnaHRseSBiZXR0ZXIu
+DQoNCglEYXZpZA0KDQo+IA0KPiANCj4gcn4NCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
+aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
+DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
