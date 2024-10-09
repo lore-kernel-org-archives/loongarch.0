@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60DD185B77
-	for <loongarch@lists.linux.dev>; Wed,  9 Oct 2024 07:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDF8183CA9
+	for <loongarch@lists.linux.dev>; Wed,  9 Oct 2024 07:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728460358; cv=none; b=MheuNDoB0q2dJ27afDiGo3sQDJ9ti2fZFLFhR4fFU6mFhEy87px7SmtjzhUl4JIJOokRkBhEg3ul0LK0Pxm05GU7vky/z9PZe2QiRQ9S9nd2yMafZiFQ14U6dfpRYRlamO+kM0Afot5usZ72o1UyKinczCpuNj9j7II+ShZEIYw=
+	t=1728460375; cv=none; b=fMxmyNvQlTJniqCaMXylA/2Zi6LJxF8eoqdhy6E6i+EwL9Txu1JlNwKpd6bxTjzj0r6cRjmB8lNy9HCDwSL8gma1e6oC2j2Fm7f9ujvt7383EsOFs8BqrUfQu7u5bCyb25r/8OEsVW66IsgSR53YWseGR/FCRpT2vOKN6Xuh0Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728460358; c=relaxed/simple;
-	bh=Zi99jQdFstst+vAd865WwNWecwtynvGvS1itGFMg/5s=;
+	s=arc-20240116; t=1728460375; c=relaxed/simple;
+	bh=D74mvb6b5g6ztdkGVjt0dJ1k5IuZejqW/D3kVo+Ehdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BCkey7xlq5cJePkojWYmqFAP4s5Ek8ou0PQXZ6D7DKj1oft8Vzldqm2SE/X0rpJo4l1OEuyRo/VAZNFyXwsXrWUg5NDS8Nl/Cw8nSt/2DXwjUZcVChneCA09Be0DGPAJI2fOc0dtSuE4nixyIHSANolqAbc2B+06Vt9GRyzzbPU=
+	 MIME-Version; b=a5SYGhzAVQB95R8C6xOf2HWVxVduVd05v/JUAqQXDq1USLrxZ/K4iIX4DOEKUr2rXdPpHJC/I5SGN+R1UEac2ShS6BajlsgmjqjsCmlj/4yHuMxaZUu3hNZqhsf7HEscxV95bh+K77mrmEQJG1ErCp/b2rXUasxODcCkcujhp5I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8AxjnNCNgZnVLIQAA--.23587S3;
-	Wed, 09 Oct 2024 15:52:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxxrBUNgZnhLIQAA--.23719S3;
+	Wed, 09 Oct 2024 15:52:52 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMBxn+Q9NgZniRYhAA--.37100S3;
-	Wed, 09 Oct 2024 15:52:33 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMDxL9ZSNgZnqxYhAA--.30729S2;
+	Wed, 09 Oct 2024 15:52:51 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -42,10 +42,11 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Herve Codina <herve.codina@bootlin.com>,
 	Masahiro Yamada <masahiroy@kernel.org>,
 	Shuming Fan <shumingf@realtek.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 5/9] ASoC: loongson: Fix component check failed on FDT systems
-Date: Wed,  9 Oct 2024 15:52:27 +0800
-Message-ID: <6645888f2f9e8a1d8d799109f867d0f97fd78c58.1728459624.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 6/9] ASoC: dt-bindings: Add Loongson I2S controller
+Date: Wed,  9 Oct 2024 15:52:37 +0800
+Message-ID: <91e49509f1aaa70e635b6662ed9fffaf31165799.1728459624.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1728459624.git.zhoubinbin@loongson.cn>
 References: <cover.1728459624.git.zhoubinbin@loongson.cn>
@@ -56,47 +57,110 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxn+Q9NgZniRYhAA--.37100S3
+X-CM-TRANSID:qMiowMDxL9ZSNgZnqxYhAA--.30729S2
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xr45XF1rWw48Jw4rtry5Awc_yoWfZFX_Ja
-	42g34rurW5JF43t3yDXrWUCr1IqryfG3W5C3WUtr4kX3W2yw4SqryrAr13CFnrXr10vwn8
-	Xws2gr4Iy340yosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb6xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	ZF0_GryDMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
-	kI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jwSdgUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw1xKw4fKFWDKr18Aw1fGrX_yoW8uF15pF
+	srCay7GrWIqF17u398Ja48Cw1fX393A3ZrXF47Jw17K3sIga10vw4akF15Z3W3Cry2gFW7
+	uFWfK3y8Ka47AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
+	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6Fy26r45twAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vY0x0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42
+	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUx2Q6DUUUU
 
-Add missing snd_soc_dai_link.platforms assignment to avoid
-soc_dai_link_sanity_check() failure.
+Add Loongson I2S controller binding with DT schema format using
+json-schema.
 
-Fixes: d24028606e76 ("ASoC: loongson: Add Loongson ASoC Sound Card Support")
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- sound/soc/loongson/loongson_card.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/sound/loongson,ls2k1000-i2s.yaml | 68 +++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yaml
 
-diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
-index 7379f24d385c..7910d5d9ac4f 100644
---- a/sound/soc/loongson/loongson_card.c
-+++ b/sound/soc/loongson/loongson_card.c
-@@ -144,6 +144,7 @@ static int loongson_card_parse_of(struct loongson_card_data *data)
- 			dev_err(dev, "getting cpu dlc error (%d)\n", ret);
- 			goto err;
- 		}
-+		loongson_dai_links[i].platforms->of_node = loongson_dai_links[i].cpus->of_node;
- 
- 		ret = snd_soc_of_get_dlc(codec, NULL, loongson_dai_links[i].codecs, 0);
- 		if (ret < 0) {
+diff --git a/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yaml b/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yaml
+new file mode 100644
+index 000000000000..da79510bb2d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/loongson,ls2k1000-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson-2K1000 I2S controller
++
++maintainers:
++  - Binbin Zhou <zhoubinbin@loongson.cn>
++
++allOf:
++  - $ref: dai-common.yaml#
++
++properties:
++  compatible:
++    const: loongson,ls2k1000-i2s
++
++  reg:
++    items:
++      - description: Loongson I2S controller Registers.
++      - description: APB DMA config register for Loongson I2S controller.
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  dmas:
++    maxItems: 2
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++  '#sound-dai-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - dmas
++  - dma-names
++  - '#sound-dai-cells'
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2s@1fe2d000 {
++        compatible = "loongson,ls2k1000-i2s";
++        reg = <0x1fe2d000 0x14>,
++              <0x1fe00438 0x8>;
++        interrupt-parent = <&liointc0>;
++        interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
++        dmas = <&apbdma2 0>, <&apbdma3 0>;
++        dma-names = "tx", "rx";
++        #sound-dai-cells = <0>;
++    };
++...
 -- 
 2.43.5
 
