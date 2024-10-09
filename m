@@ -1,182 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E287199FB4;
-	Wed,  9 Oct 2024 15:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5791991B6
+	for <loongarch@lists.linux.dev>; Wed,  9 Oct 2024 16:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728487873; cv=none; b=Fisl0RbntehJvCOc22bs8oFKTKVeCNj9NGE1zOeNTGm0HbCrNTpywRYu+DkOh7kn4vsQjs1uYhJJ6VEmab1PMZZMdujacjLdAF2ApK6wGoxqrwXwgQK1dedRMEg0aeApwvM4NCnsXi2ywP/veAlRZMjyCQ/Rd4dwAsSkIewZkVY=
+	t=1728492522; cv=none; b=fAhjvhW4kTQXfrUAZestsjq+VrbXKPcB7cG13y+Y0K5QgRKL4uYYkfQLuSi4qHba8b3QxgK31GtjFRC6BrH5edq5634r/E+1Nugt7aFz4G01ixPvknxkWd0o+RjZTUpxIWe+Y1a3HoxlugXSLBzEEZmApez0W+cup+uJZAPh2Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728487873; c=relaxed/simple;
-	bh=o17P+55KsrlNUzByYpVtjAhlHKstGPAq6g6HHrOJ/f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f3yX3PBXfVtn/mx0w1eUNRVUhryECoR7ulD3tV70BkgF1KByBqJ90HgfK+aSPaFqOfrradGVOxjuesRgCgD1uiq89k8KhFTTMs5dcuj8ssfoNmCo6tahvXp7tkeH87QLyMYyQrEyb5EZH93wXHRCDyd9g57Efu2Yg1VSnjqhbS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35537C4CEC3;
-	Wed,  9 Oct 2024 15:31:09 +0000 (UTC)
-Date: Wed, 9 Oct 2024 11:31:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, "linux-arch@vger.kernel.org"
- <linux-arch@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
- <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul 
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas 
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav 
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] ftrace: Consolidate ftrace_regs accessor
- functions for archs using pt_regs
-Message-ID: <20241009113114.1da0d84d@gandalf.local.home>
-In-Reply-To: <20241008230629.118325673@goodmis.org>
-References: <20241008230527.674939311@goodmis.org>
-	<20241008230629.118325673@goodmis.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728492522; c=relaxed/simple;
+	bh=gdKn2odBMpIYhY6Ml1GXd8IVWbn6t3Iuh+kBokXDOdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EwODYvi3/56oy9OifQPKzs1PmDvcDcQnWKouSeB4YtD/UFXxekyiN31Jsuk7kP50SgZwtvRAClPdt1bf6FGZy2wDTd6sI/tA54hbvAmLxShkwuZ6+Jyw0sqkBh7p9nXUnZ3xj4PJ5r79xza6Ei/33Nm9+XY2F9eCKSnXR008jV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ujG8EliV; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ujG8EliV"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4601a471aecso3101cf.1
+        for <loongarch@lists.linux.dev>; Wed, 09 Oct 2024 09:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728492520; x=1729097320; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdKn2odBMpIYhY6Ml1GXd8IVWbn6t3Iuh+kBokXDOdM=;
+        b=ujG8EliV23UW/pM99Q14D4XzBfETkxQSCI7FqHst6tHu0xF1+HE2gfTx9R+s29Cg6i
+         jPN2d9k/4lWoeX4wB7Q8VdqkxsSSRVYXa1Zg+Fu0zW6tkrDcPy+x2PW9sWgQ/MlRWBfZ
+         V5LGQ0jf4m1CtssvIuSHpiCvrXxBJZsD7OCWdrk5bqp/9KmvwMWMY32nh79nqoNtQSfc
+         lJGI8A8VCs5e42Poanlv1uRI7pD/MdNGnvOd/+1KBOHV3OY5celKaNOgfyiqP53ba9K1
+         R4pZdatm5DTPVoTuFpX5eWYoMxPzciI9bU7dVu5Vt2T/jByC80tUHGa6LMUuLo2uU6zh
+         1pRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728492520; x=1729097320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gdKn2odBMpIYhY6Ml1GXd8IVWbn6t3Iuh+kBokXDOdM=;
+        b=e0HiSoibLCK34BWO137SZE6ZfIc9mw4WDQBsfpnk3t8jL9WKDoQNf50TfqInicuy4k
+         aHQAuMJMal5qGh5CZBC/X1CEq4DNubwzPHp00mBnbwzd8XdVDKp49VCjOJqnQ1oxMFuy
+         yGg4BjOogKapm6KY+dG/BsNbORKfj8B5ccF+c9ljNUfmi88rOQsSY3ybWZBHbICd9hVw
+         wf7bwNO4S5qn/LI+Uvc+DDFzuNRa2TeUEIk+W1duUWB0Yv+TP+U9jPbhB97Y5LlXDrwM
+         7awSBIkL2TxQ2pH82QLzwE5JUtvBawZ3XthfiQaFMpOt+WG3eBGP5H8I1qfWwikGdA9c
+         H7LA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAES2VnI6NldiJjGLEK4q9Hwp9a8Tg24sOSGsXyEJ4AIJeY5YhfLPnttzYzVd0C6tSV05z/Rk6E6Q=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwFziCEycHE7U+5t2d/k8QWf9CyFe5JHMyOsNXcucAm/9kHWBPr
+	08fPPl9QmGILWlCKtAxc5PrQ15zHsX4bWxPs/jC1pHzYO1O2QhjdNVnNlIt46B7j9Ik8w3yE7Ak
+	875w1nr+L3hTLP7JSjEppLIAscQEhkJN5AOqA
+X-Google-Smtp-Source: AGHT+IFU2+kjwmtE/tnFQrIWgevFZ6/YDFYn29RzthvZHDHMDNxdPEj2AOVBL4hcHNKv+c2nCcFEUJDPNG9SsF97388=
+X-Received: by 2002:a05:622a:5612:b0:447:dbac:facd with SMTP id
+ d75a77b69052e-45f0a1537fbmr4407531cf.24.1728492519801; Wed, 09 Oct 2024
+ 09:48:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+In-Reply-To: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 9 Oct 2024 09:48:03 -0700
+Message-ID: <CABCJKuf83gywnbtkJ3d2VfDRH9f6kcf1Bn1Zau5re=4YoV6E8g@mail.gmail.com>
+Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all architectures
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, Matthew Maurer <mmaurer@google.com>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Oct 8, 2024 at 10:37=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> The KCFI sanitizer stores the CFI tag of a function just before its
+> machine code. However, the patchable-function-entry flag can be used to
+> introduce additional nop instructions before the machine code, taking up
+> the space that normally holds the CFI tag. In this case, a backwards
+> offset is applied to the CFI tag to move them out of the way of the nop
+> instructions. To ensure that C and Rust agree on the offset used by CFI
+> tags, pass the -Zpatchable-function-entry to rustc whenever it is passed
+> to the C compiler.
+>
+> The required rustc version is bumped to 1.81.0 to ensure that the
+> -Zpatchable-function-entry flag is available when CFI is used.
+>
+> Fixes: ca627e636551 ("rust: cfi: add support for CFI_CLANG with Rust")
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
 
-Loongarch maintainers, please note the below comments!
-
-
-On Tue, 08 Oct 2024 19:05:29 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index bbb69c7751b9..5ccff4de7f09 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -54,6 +54,7 @@ extern void return_to_handler(void);
->  unsigned long ftrace_call_adjust(unsigned long addr);
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-> +#define HAVE_ARCH_FTRACE_REGS
->  struct dyn_ftrace;
->  struct ftrace_ops;
->  struct ftrace_regs;
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> index 0e15d36ce251..8f13eaeaa325 100644
-> --- a/arch/loongarch/include/asm/ftrace.h
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -43,43 +43,20 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent);
->  
->  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
->  struct ftrace_ops;
-> -struct ftrace_regs;
-> -#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
->  
-> -struct __arch_ftrace_regs {
-> -	struct pt_regs regs;
-> -};
-> +#include <linux/ftrace_regs.h>
->  
->  static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  {
->  	return &arch_ftrace_regs(fregs)->regs;
->  }
-
-The above function is incorrect. I know I just added the comment about how
-it is to work below, but if pt_regs is not fully filled, then
-arch_ftrace_get_regs() must return NULL.
-
-This is because if a callback is registered with ftrace, and forgets to add
-the FTRACE_OPS_FL_SAVE_REGS flag, then when it does:
-
-	regs = ftrace_get_regs(fregs);
-
-it should get NULL and not a partially filled pt_regs set. Because the API
-is that ftrace_get_regs() will return either a full pt_regs (where the
-caller can know that it has all the correct registers) or NULL where it
-does not have any registers.
-
-It's an all or nothing approach.
-
-You can see x86 has:
-
-static __always_inline struct pt_regs *
-arch_ftrace_get_regs(struct ftrace_regs *fregs)
-{
-	/* Only when FL_SAVE_REGS is set, cs will be non zero */
-	if (!arch_ftrace_regs(fregs)->regs.cs)
-		return NULL;
-	return &arch_ftrace_regs(fregs)->regs;
-}
-
-Where it checks if regs.cs is set to determine if it has all the regs or
-not.
-
-Please do something similar for your architecture.
-
->  
-> -static __always_inline unsigned long
-> -ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
-> -{
-> -	return instruction_pointer(&arch_ftrace_regs(fregs)->regs);
-> -}
-> -
->  static __always_inline void
->  ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
->  {
->  	instruction_pointer_set(&arch_ftrace_regs(fregs)->regs, ip);
->  }
->  
-> 
-
-
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index f7d4f152f84d..c96f9b0eb86e 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -113,6 +113,8 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
->  
->  #ifdef CONFIG_FUNCTION_TRACER
->  
-> +#include <linux/ftrace_regs.h>
-> +
->  extern int ftrace_enabled;
->  
->  /**
-> @@ -150,14 +152,11 @@ struct ftrace_regs {
->  #define ftrace_regs_size()	sizeof(struct __arch_ftrace_regs)
->  
->  #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> -
-> -struct __arch_ftrace_regs {
-> -	struct pt_regs		regs;
-> -};
-> -
-> -struct ftrace_regs;
-> -#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
-> -
-> +/*
-> + * Architectures that define HAVE_DYNAMIC_FTRACE_WITH_ARGS must define their own
-> + * arch_ftrace_get_regs() where it only returns pt_regs *if* it is fully
-> + * populated. It should return NULL otherwise.
-> + */
-
-I'm adding the above comment to help other architectures know of this requirement.
-
->  static inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  {
->  	return &arch_ftrace_regs(fregs)->regs;
-
-
--- Steve
+Sami
