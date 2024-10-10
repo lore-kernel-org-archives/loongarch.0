@@ -1,103 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091461C7B6A;
-	Thu, 10 Oct 2024 14:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC131CB523
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 14:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728568990; cv=none; b=NLIvosuDEIGiT1jAYrk7m1M1th4e2ZLPV9NPiSqk/gfzCA0yG7cQ66e6QWvT2amRvepZKxvd2FmyMlGWYIQeBkdNbdJICXd+vBuVXMvJPFXvmC9txDrotpooqOC1FFZKw/JNoljtPqVaG4Urp1LbDeeEkdM47cu+Lk92hd+0HR4=
+	t=1728571736; cv=none; b=HZPEDwIFJKtwc2zRJ20F6b1s/Qs+YDDP7LiZdQG9nFr2tQansvfI0S+Q1+7NhAscbgw7nzpfFoL9nNTeBknXwqHBBl5K7qj9amHhD36WXHoNYj8fjrcU7LoKnZpzvAZwJvuXbhU0K2T8teGWOCLlCUJpIfi9M2rtx5pwUoXJZhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728568990; c=relaxed/simple;
-	bh=BygIAlplpuoaa5rCG5EvJhHrt41vr/Z+Nx1Wiya21Ro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euomGw+KMSRodJsGdXhpq4aNEhxLKF6fw+bTLDJQw5l9nlDsHyd2OELPZHTQF2d1Bai91JDJTAvRgxCFMuolrc5ImTH92gDmspI5g3HKRQk44zWRhHj0+VSdGzK2e1cdCmAcRFjpXtNU1WRs82Fuad7ejWGBh9UKQAaAD/FuJ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO1lKsVO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728571736; c=relaxed/simple;
+	bh=MD5Y1JFSub7m+UPd21beBuvfhWy8eN9Icl2C2agrsAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z1fV4369kSldhWkeGM+aaDhD0wG0puQTFr5DoZ0fniUPThxgw1dD8fA36Ln9pFbr1ur07Iky536Hv69YNPovBQlu8dhGgxQ2tTVhAXsJKVG35bKrVl+MiSF7KGgvZmG+jTU8z2+bqUAM7d9NZjrqqRvoXI1fGcWbzkDdBYnuwu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ONhuYHh7; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO1lKsVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B181BC4CEC5;
-	Thu, 10 Oct 2024 14:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728568989;
-	bh=BygIAlplpuoaa5rCG5EvJhHrt41vr/Z+Nx1Wiya21Ro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FO1lKsVOX5UNb4ZAVIk6Ma/WGoLBEd/tTa6/1edNYR7b/8105Vy6BC/Qhv2tv2cOX
-	 RZ6h6U3Bfr6+iYnvjBGJ41Wzu5tEpnx5WzFPgUp1amyRnnBAsWVWaH1DdeOTrkIkde
-	 HQyPXFk4nuKQUQlLgyY1QSjsANFlA1VvfLZBZ0w9NOravPh812MISdE2DHOcBOJ4Qv
-	 n/iQ+XDqHqSrK45hF7oP0XjIV29YxcVXGSMQeX+fAfNjJdStF8l5oh2PYktOwixMBY
-	 Myu+/ljnXnj6LI56F4DKIFyckJJMX8jL0HNzbNSkIQs8jOHxYtJRfGdHnfkg7ALhJb
-	 VvPnA2OK+6Bzg==
-Date: Thu, 10 Oct 2024 15:03:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Shuming Fan <shumingf@realtek.com>
-Subject: Re: (subset) [PATCH v3 0/9] ASoC: Some issues about loongson i2s
-Message-ID: <ZwfemUEfFHJRiCr9@finisterre.sirena.org.uk>
-References: <cover.1728459624.git.zhoubinbin@loongson.cn>
- <172855884981.3258793.17729935826036139739.b4-ty@kernel.org>
- <CAMpQs4+0_P0ExcU7O12XvKPQ+CoP8KpAWUJpL2wP4--+gWQ6hA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONhuYHh7"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71e01eff868so86512b3a.1
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728571734; x=1729176534; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wk8mOEtaS0st9RtIbPiyvPicjXJuaraec7PuPjhsQZk=;
+        b=ONhuYHh7Nyu3ioKbAqLliWVTTIAly7/f3g9VKJwkWET6A/g/8xUz04bQlBZLCAb3b/
+         q7SLNrraKnfU+67VeHShPO20HtcKmOiMariCtcxUknWDLNW9XEppusEMVWAJZ1NohNw1
+         gopXJqfj/sfgDMiLr07JIliFIlu0ScxQhbnAOR4Fr38brcJKem8vuAnoVbRk/4jhNCeE
+         gytH03KBXutrXahE02lzeQrrEfUJgwRu1/4WOa6PsUW2CF8L4TaTtxjWJbGSUqHKquVa
+         RJrMUfZj9El9fWgXL+l66mZ2Dq/bwEraMNCnjcJCOeffYd9hz1i1m9tacTdSbU+nc6+O
+         JpHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728571734; x=1729176534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wk8mOEtaS0st9RtIbPiyvPicjXJuaraec7PuPjhsQZk=;
+        b=uTqoMWGtG1G2h9ItwxjgA6QBRZmmLzBgSigAGL1KcwvAytSFjUVnhVArJ7GIqg/NEN
+         vCkft9MKTeMVcTd9dCGKIMJM85j+gA3/RxMcUChB6EFK1CPe7CCu4HZBPXtCFRgJIyaW
+         IaMWmWN/qeLoduOmnOOi+MIldyQhj1naYpMxpbaKqDgEPVtPuSBqfyQzL38QEcQXSAfY
+         csPU13LSMJ1CHQSuvV5aphuv9twW7tBum4hAis3aXA/exGWw5iaYBX4RS/aZz8ntce1q
+         TBisnndOAFw5qKrFG1p26XuaJ1fwPff35+lIORwm37F04dFeiCJIPymkzuAuuYkRQCVw
+         f30w==
+X-Forwarded-Encrypted: i=1; AJvYcCWx6y6c3a8en8OiqnWO+Izi8f48w06G4cysLY1afL1CqdSolfcoMYtgFO3JUM686JFpifVu8/Gvh4c=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzyEaKljpm/PtFpyjuA9fj4aP+bEwu9qYjdiSfuP4NHH9gJFijK
+	BTeBrTTIGR/0urIxyeVfRR4VOEsyEKyupJis59EnQswvbbdCsT/wBr4j9eVGiQpacUsNQ7FyBVK
+	dWpwd5ptEt7rZAuApqDLm4JkMSnY=
+X-Google-Smtp-Source: AGHT+IEljzpMu1ACQ6sQRA8RzgwL3HdCJr8K4MQxtTnAtECkzV3J/8bQwyLAxm6Zuns2qv11cRQg+5TXDKwx0rMQsBI=
+X-Received: by 2002:a05:6a21:3397:b0:1cf:2be2:5e5b with SMTP id
+ adf61e73a8af0-1d8a3c59cb2mr3823983637.11.1728571733800; Thu, 10 Oct 2024
+ 07:48:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="elDH6aAabrlLvot5"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4+0_P0ExcU7O12XvKPQ+CoP8KpAWUJpL2wP4--+gWQ6hA@mail.gmail.com>
-X-Cookie: Editing is a rewording activity.
-
-
---elDH6aAabrlLvot5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+ <ZwbAvEnrzu6UUgGl@J2N7QTR9R3> <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
+ <ZwewMw8jBh6OU-L_@J2N7QTR9R3> <20241010110344.GL14587@noisy.programming.kicks-ass.net>
+ <20241010113748.GL33184@noisy.programming.kicks-ass.net> <CANiq72=kT9RFcQ3h5U+wAY0pDQQqGU7BTtiPJ-oiHNUG00z3=w@mail.gmail.com>
+ <20241010130421.GG17263@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241010130421.GG17263@noisy.programming.kicks-ass.net>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 10 Oct 2024 16:48:41 +0200
+Message-ID: <CANiq72kbApTtdLeow5L6G6t4Q_L-0zkDwfwyWcSb_e6P=kO06g@mail.gmail.com>
+Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all architectures
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Matthew Maurer <mmaurer@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 10, 2024 at 06:15:22PM +0600, Binbin Zhou wrote:
-> On Thu, Oct 10, 2024 at 5:14=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
+On Thu, Oct 10, 2024 at 3:04=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> Also not rust-src, because for some reason you're not actually
+> freestanding :/
 
-> > [5/9] ASoC: loongson: Fix component check failed on FDT systems
-> >       (no commit info)
+It is there, but it is a suggested package, so I think you would need
+e.g. `--install-suggests`:
 
-> Thanks for applying this patchset.
+    https://packages.debian.org/trixie/rust-all
 
-> But I don't seem to see the 5th patch in the for-next branch, what
-> other questions do you have about that patch?
-> On FDT systems we need this patch, otherwise the component check will fai=
-l.
+Regarding freestanding, we use `no_std`, which one could argue is
+similar to C's freestanding. That is, we use `core`, which is a subset
+of the full (hosted) standard library, just like C requires some
+headers even in freestanding.
 
-That's a bugfix so is going as such.
+However, I think you mean not even using those
+headers/sources/libraries, which is fair. Rust calls that `no_core`,
+but it is currently impractical to use/maintain and there are a lot of
+useful things in `core` we want to use anyway, such as the `Result`
+type:
 
---elDH6aAabrlLvot5
-Content-Type: application/pgp-signature; name="signature.asc"
+    https://doc.rust-lang.org/core/
 
------BEGIN PGP SIGNATURE-----
+There are some things that we could remove, though, which is why I
+asked long ago for ways to remove unneeded things for the kernel
+("modularization of `core`"). We got `no_fp_fmt_parse`, implemented by
+Gary back in 2021, and we could perhaps get more in the future if
+really needed.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmcH3pEACgkQJNaLcl1U
-h9Dgzgf+JGDkp2/NsV0ZjdHREp4keQ6HGjDH37shxHpVA1zHNQvVwqlqgdkKjhZR
-sC0i1zIb1NJe+2214yDGwKfJf+quKJ/uBsvoD5UmR1+rYLGuhiQ0SS/NtjtC5w19
-Gk5PJUmHn3dKqNV07yLPulOuJ7Yv7373IUO8IqvWzjDShc5n5ThHSoT7F953vArf
-WH4S7M83Zvef5NqplBTcfensCgiC+P6OMDQhLvZkFtQvaUC73VjsHuB3MT8bg3dN
-r9O9bWWrAY6RsN8hFZb6ZHn/sP2kA5dHUr9uwxlZtJ+fjPSexkPfh0RpC2zJO1Mr
-VYZJpu0Eclb8nxbcV7C7P2L8aJkDQg==
-=MHlW
------END PGP SIGNATURE-----
+> Yeah, but then you have to first know that we have this file to begin
+> with.
 
---elDH6aAabrlLvot5--
+That is fair, but hard to fix. We try our best though: the "Rust"
+entry is in the front page of the kernel docs already, and the first
+paragraph of that page links to the "Quick Start" guide.
+
+Cheers,
+Miguel
