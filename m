@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DFA20A5D5
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5089220ADCD
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728584825; cv=none; b=mby6yhw7nWrSAWFQAH+UkELcYhGRY/8/HmL8MpxECWJJx3v6CWJg7HMIq3xuBwqHw+2R8Z81aXqz6ZQaFu7ix5vbGfAs6uV4pL4aep9wspWldKWd/3LoSzl4wLMuQxTgbcaGcsS+LDKFcq3nSoolnXx6DkHvwWioEB6fHVpwcto=
+	t=1728584827; cv=none; b=AiPd0SLqpI31qksWUHT7icDDqYEg4swG3/cUf6BNmqr52IPCCH509SYgcVEN0AcNF1iYhIUIqKLLBy1YnmgvwbXrdWRVtmbKrS2T03c7zAAHXYUxQP+osZspswJxfI8XPMSYhF/PY1h7Si+gVyGI6YowmFaA8XttrVS8TaR4eEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728584825; c=relaxed/simple;
-	bh=lnamoAhiaB2k3D/cv0luJANVeCRwGvcQfaabdaB/y4g=;
+	s=arc-20240116; t=1728584827; c=relaxed/simple;
+	bh=PLrYiBlw82beEM6tLfodLLTPBglt9VZ+TVoJtuJPFlg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=F2U+uFv5g1dkR6yQS6W7rkasMJizqPxJvGscx0dLuKc9ZjD8q/+Wpwpgk8EWJYKbiGmTO8bfi3BIPwoPPgiNkGQ+srswKNf6d94p15XPlCi6w4F7kELTe3jCyoSG8OCYgNJBolK609aL/E16v6O28TRQkv5xMm8wdxzjGcpW0mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZLEkcwHN; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=oUAP0sW2jZ4Ldb5IpKHai+wGAYcY3x42BIlESZPay3j3B3K0JF0oiwyjBKehBz7+hPPHplX9CCx2F+9QZ9IcP2DD0ZBbeaaCeot+jAv0+XNIQppIBNxHQ+9Df8zs9cGnPzY3S3jUDUqdD9zl4kovP3r28fr0JluR7dJDsTFy9FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sxLMZ1H3; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZLEkcwHN"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-71e1e989aa2so1656077b3a.3
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:27:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sxLMZ1H3"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-7c6a4d99dbdso298033a12.0
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728584824; x=1729189624; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728584826; x=1729189626; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=8JV5lSZeo1By1ou6uwDGqoH8kmaYenoeIxSHz9El/d0=;
-        b=ZLEkcwHNylyS9nigmfhMgxkL5gWlczp21gA2l0n24BeuoP7nHS+SCim6OtGdIEPV6b
-         6h2rTW3A5pa29cj4QpBjznrQDEeVexMjmRZUP3DPk3Y1Xt4m5nJpZUjLBLHG+uC5Ur4/
-         nA3dWVmixu9bJxzd0A2odgbUM65IEKwVZGQIDGE4YRV8lXImT81Pj9Q1NA16Kox/cJ+8
-         IPY+i8N/l9MhsAZ04RxjYb4Y6ArCEzQnRQrYp+d4GkpCjxa6qUSFBfTGy7m4qlCwtAW0
-         CG/6MAsDMsXPYKwzOe6WW3ZazeGLb/zGOs7hW9PN5r+Aa68mDHOTTYDWYgLomX0QTi/B
-         uvFg==
+        bh=I+2gp5vLlKRJWMtv7YF+IvP9h9YjJXEpCIK4AMigCis=;
+        b=sxLMZ1H3ZUAHlcbtzuhSJMClLc1zD+k4rTudd2nVByrJShXsvIoTCkhuy1av0HIqZT
+         LUfuiY2psHKwPXv4oNPmAEXxKLaTGa2l/feLJMuhMW62Mn52323nqLs82iN9a9R8nDUm
+         u+jfnfiRDhsrS45I0JFHwKI/pDjybOwP6TOogX76dYy1PCgV3iFla+KI/rnx3luxDdAB
+         sTKotoRxxGCfdNjBvb2QrH2BLNbwnDZd9Wb5X6Vg7xo2Oc8GhfnFzQyC9NLA52y4A60+
+         dCfvgYNYiI8bHermL5SK8vcjoVQERxE0a8MuN9I5QB6QIkhu3OgqTF3dHwtDAqUq4DKH
+         qk2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728584824; x=1729189624;
+        d=1e100.net; s=20230601; t=1728584826; x=1729189626;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8JV5lSZeo1By1ou6uwDGqoH8kmaYenoeIxSHz9El/d0=;
-        b=AaRduHkbHraI1ogB4yjCogCU/5OLmsmh11dhuqvHK8pbSqwASd5nSsuaEPXsdy2lGS
-         qYsGxU19oxPQCPCAUzSlvP6vJq8L9CLtiJw/G4gTXA9yehLtdER1hWkl6M69oZosH+qh
-         ccg86adWGVe1aFgo//dZm+gPU1psIXrKNcgIuF60HWTNg5Q1xXYP/HdP+liT5pHP9i2p
-         ZXGMi5Z9WAgDtunWHXU0tcGFQ8kopHt0paQDDBDn4Qti7J99SvP028bIHJRSD1gMajXe
-         nc78hgjeIXHVLxVlX1a4Ao3FSgZJ+6sJn1zrFX1Tt8VyHyKLt4vFqj4ro1h23MeHd/Tp
-         /zXw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7flsHSt2smZoH2SRpv31AEoVJXUb+Uoy/2n6sGkAiheDp1xQjHUF6eopqfw6Xy9ENTpBH/AGfKUY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzsKijkPoKxmd8UcaZXl1a8+oI6fF8F622JInHRiZGIqxBntTH6
-	Sk4BTI69qv6bKHQ91Ty5x9OYGqOhBnsE5JD0NT4D10TmOtMRWISENPHMJL5yE/9d7HDN9vuiy6c
-	6XA==
-X-Google-Smtp-Source: AGHT+IFev0i08WnhWXOHYVCiDa8hDSrBgilu3q+XI+BXP7ns5qqyHbYBrSKz+aJVjoCmfpAuiTEXvCWN4KQ=
+        bh=I+2gp5vLlKRJWMtv7YF+IvP9h9YjJXEpCIK4AMigCis=;
+        b=n6RY0wZRgOgga/tqVwuFUkkSNifiOYnqREK1sf/0LS2Icaco9Yj68LbRKn4033b+Bl
+         SzvhBrLfXDQGLJx/4em4oYwQuWoMn2R4JJFv1kEsifCW073vZyg2vOG5R4S9j0yloTYj
+         toTvEMClt7diWbI+k/8CoxPuOzQMYGQhV+X+UUuPJAiZnnbs5B+MbFmpgFoUBeoJ3CaF
+         7nfT22etQPjDvYc5XP2CV/bKycFQGzeDv2cUNkc7f+Z2bWdMmwx0b7Kk33jGyJlAevo2
+         nYusMdVcaaPaBhjGagZZFpiwGekTiP7FXcmSl7m3a4WRaRRC56Zat4cDeQ6/LOvPW8f+
+         AWAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGs3G9vc5NhzE0wgE7HUY8POKOW+hAhw44kzCLsGtlUszaGb4P0WV60uSDebIA2v6F+fWb5wBhqis=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyW88L2YlTJo2kk6M85tldIntej8DM3A2yCD1kgumeBTF0CN8i6
+	p9FIMmsQL15HbOYPZ+D+K4VHYmeftcoz2v7McfRJjn173KI2f6G6F0sFX9kuAdpziGLGeEeoYZu
+	DaQ==
+X-Google-Smtp-Source: AGHT+IEBzxfSdV5URAWtipQSxApJSdWqJAcjcFibIBQs32g4G2eVPMYjVJgo5zFwBPuTEySHq4oumcdrCOE=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2daa:b0:71e:401:6580 with SMTP id
- d2e1a72fcca58-71e1dbf2587mr27202b3a.6.1728584823552; Thu, 10 Oct 2024
- 11:27:03 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a63:e546:0:b0:684:6543:719 with SMTP id
+ 41be03b00d2f7-7ea535307afmr40a12.4.1728584825522; Thu, 10 Oct 2024 11:27:05
+ -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 10 Oct 2024 11:24:04 -0700
+Date: Thu, 10 Oct 2024 11:24:05 -0700
 In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20241010182427.1434605-1-seanjc@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Message-ID: <20241010182427.1434605-63-seanjc@google.com>
-Subject: [PATCH v13 62/85] KVM: PPC: Drop unused @kvm_ro param from kvmppc_book3s_instantiate_page()
+Message-ID: <20241010182427.1434605-64-seanjc@google.com>
+Subject: [PATCH v13 63/85] KVM: PPC: Book3S: Mark "struct page" pfns
+ dirty/accessed after installing PTE
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -81,98 +82,54 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Andrew Jones <ajones@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Drop @kvm_ro from kvmppc_book3s_instantiate_page() as it is now only
-written, and never read.
+Mark pages/folios dirty/accessed after installing a PTE, and more
+specifically after acquiring mmu_lock and checking for an mmu_notifier
+invalidation.  Marking a page/folio dirty after it has been written back
+can make some filesystems unhappy (backing KVM guests will such filesystem
+files is uncommon, and the race is minuscule, hence the lack of complaints).
+See the link below for details.
 
-No functional change intended.
+This will also allow converting Book3S to kvm_release_faultin_page(),
+which requires that mmu_lock be held (for the aforementioned reason).
 
+Link: https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/powerpc/include/asm/kvm_book3s.h  | 2 +-
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 6 ++----
- arch/powerpc/kvm/book3s_hv_nested.c    | 4 +---
- 3 files changed, 4 insertions(+), 8 deletions(-)
+ arch/powerpc/kvm/book3s_64_mmu_host.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_book3s.h b/arch/powerpc/include/asm/kvm_book3s.h
-index 10618622d7ef..3d289dbe3982 100644
---- a/arch/powerpc/include/asm/kvm_book3s.h
-+++ b/arch/powerpc/include/asm/kvm_book3s.h
-@@ -203,7 +203,7 @@ extern bool kvmppc_hv_handle_set_rc(struct kvm *kvm, bool nested,
- extern int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
- 				unsigned long gpa,
- 				struct kvm_memory_slot *memslot,
--				bool writing, bool kvm_ro,
-+				bool writing,
- 				pte_t *inserted_pte, unsigned int *levelp);
- extern int kvmppc_init_vm_radix(struct kvm *kvm);
- extern void kvmppc_free_radix(struct kvm *kvm);
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 14891d0a3b73..b3e6e73d6a08 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -821,7 +821,7 @@ bool kvmppc_hv_handle_set_rc(struct kvm *kvm, bool nested, bool writing,
- int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
- 				   unsigned long gpa,
- 				   struct kvm_memory_slot *memslot,
--				   bool writing, bool kvm_ro,
-+				   bool writing,
- 				   pte_t *inserted_pte, unsigned int *levelp)
- {
- 	struct kvm *kvm = vcpu->kvm;
-@@ -931,7 +931,6 @@ int kvmppc_book3s_radix_page_fault(struct kvm_vcpu *vcpu,
- 	struct kvm_memory_slot *memslot;
- 	long ret;
- 	bool writing = !!(dsisr & DSISR_ISSTORE);
--	bool kvm_ro = false;
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_host.c b/arch/powerpc/kvm/book3s_64_mmu_host.c
+index bc6a381b5346..d0e4f7bbdc3d 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_host.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_host.c
+@@ -121,13 +121,10 @@ int kvmppc_mmu_map_page(struct kvm_vcpu *vcpu, struct kvmppc_pte *orig_pte,
  
- 	/* Check for unusual errors */
- 	if (dsisr & DSISR_UNSUPP_MMU) {
-@@ -984,7 +983,6 @@ int kvmppc_book3s_radix_page_fault(struct kvm_vcpu *vcpu,
- 					ea, DSISR_ISSTORE | DSISR_PROTFAULT);
- 			return RESUME_GUEST;
- 		}
--		kvm_ro = true;
+ 	vpn = hpt_vpn(orig_pte->eaddr, map->host_vsid, MMU_SEGSIZE_256M);
+ 
+-	kvm_set_pfn_accessed(pfn);
+ 	if (!orig_pte->may_write || !writable)
+ 		rflags |= PP_RXRX;
+-	else {
++	else
+ 		mark_page_dirty(vcpu->kvm, gfn);
+-		kvm_set_pfn_dirty(pfn);
+-	}
+ 
+ 	if (!orig_pte->may_execute)
+ 		rflags |= HPTE_R_N;
+@@ -202,8 +199,11 @@ int kvmppc_mmu_map_page(struct kvm_vcpu *vcpu, struct kvmppc_pte *orig_pte,
  	}
  
- 	/* Failed to set the reference/change bits */
-@@ -1002,7 +1000,7 @@ int kvmppc_book3s_radix_page_fault(struct kvm_vcpu *vcpu,
+ out_unlock:
++	if (!orig_pte->may_write || !writable)
++		kvm_release_pfn_clean(pfn);
++	else
++		kvm_release_pfn_dirty(pfn);
+ 	spin_unlock(&kvm->mmu_lock);
+-	kvm_release_pfn_clean(pfn);
+ 	if (cpte)
+ 		kvmppc_mmu_hpte_cache_free(cpte);
  
- 	/* Try to insert a pte */
- 	ret = kvmppc_book3s_instantiate_page(vcpu, gpa, memslot, writing,
--					     kvm_ro, NULL, NULL);
-+					     NULL, NULL);
- 
- 	if (ret == 0 || ret == -EAGAIN)
- 		ret = RESUME_GUEST;
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-index 05f5220960c6..771173509617 100644
---- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -1527,7 +1527,6 @@ static long int __kvmhv_nested_page_fault(struct kvm_vcpu *vcpu,
- 	unsigned long n_gpa, gpa, gfn, perm = 0UL;
- 	unsigned int shift, l1_shift, level;
- 	bool writing = !!(dsisr & DSISR_ISSTORE);
--	bool kvm_ro = false;
- 	long int ret;
- 
- 	if (!gp->l1_gr_to_hr) {
-@@ -1607,7 +1606,6 @@ static long int __kvmhv_nested_page_fault(struct kvm_vcpu *vcpu,
- 					ea, DSISR_ISSTORE | DSISR_PROTFAULT);
- 			return RESUME_GUEST;
- 		}
--		kvm_ro = true;
- 	}
- 
- 	/* 2. Find the host pte for this L1 guest real address */
-@@ -1629,7 +1627,7 @@ static long int __kvmhv_nested_page_fault(struct kvm_vcpu *vcpu,
- 	if (!pte_present(pte) || (writing && !(pte_val(pte) & _PAGE_WRITE))) {
- 		/* No suitable pte found -> try to insert a mapping */
- 		ret = kvmppc_book3s_instantiate_page(vcpu, gpa, memslot,
--					writing, kvm_ro, &pte, &level);
-+					writing, &pte, &level);
- 		if (ret == -EAGAIN)
- 			return RESUME_GUEST;
- 		else if (ret)
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
