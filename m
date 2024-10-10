@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EFF1EF0A6
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00E61EF093
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728584724; cv=none; b=D8+93QfCRzMR5b2FhpbFfqXtoawI9muah9R1zL3BQdf1I1KZdZGePdkC+yQOUY3AAamchDlBPMPweQx/J7E5Jsus3zoBeO0K61zL4rezOvrE/wSS601U973nEOjmUipninPPM66NEafBIEo9CrvwnLJz90sGBf/McxJXXfZRSs0=
+	t=1728584726; cv=none; b=gm++8qrQE5JHasS/Ne1IDDZaD3I4yisxBh/jfesBq4sTGXhxMuaxgA/QoGygGlAu1jP4LKQuKWUu+udcuSErw+U5+4yZSTttA/dutYP1WmdViisLZ8xP+SHOg5ncWr6CPGmg67HGpmsQHjDb3ZC53Y1IuS3kDwZaQisT2dxJCPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728584724; c=relaxed/simple;
-	bh=rFmsStC1d1lztIwj7oxh4zyq4MQj9meeqHdDcxeq/wk=;
+	s=arc-20240116; t=1728584726; c=relaxed/simple;
+	bh=xKxLUn1wM/pJucT4/ZxvVNmNhzhyHMbiLj3YVf1FNHQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BAe34OgeFBISsS2CLsGpS9Z0wFraAdc+uncTXnArcvK/7ur9OX/yE2Lp3VUp25JAWZOD5phr6Mvo++gL7OpLt4Do7nDr05O6Jpcv03P0WLvuwlRvC+CMXh8ZE7ER+HlOO78+YQRgPBB9PoitINGszHxu1B1zLxdrEevBETZU1f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dnVcK4CI; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=hIF4vwXmjczPA+1dll0kHaeh5kgazP1q6uL3i5pTc0MzEgKw6quKNj9hT3KWnJ6Z6zrQGfRxL9FMEEMJqtGz1nBJWStdRnb39ECFAqVQKEtm84uIvXkT2bTvuAMnUi6SAARTMNPmYukZuOsQi+M3wcGT/d+dZmqE6+a9QFRjMjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WnEEChNM; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dnVcK4CI"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2e2bb354e91so1314014a91.2
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:25:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WnEEChNM"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e26046ed465so1741160276.3
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728584722; x=1729189522; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728584724; x=1729189524; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdgAxVyxp31c7WibHLiyIF43paER00mxZOAIHhsdwhk=;
-        b=dnVcK4CInxga8Vwk5pi9602RjkaaWEkHTXGgR5bB8stuIAyy4XP5hNhILg1fqb9ITi
-         tSWgDzOZ+0/40DiTsTctrYnwxFGl66mIyHTQTNbETw0NNzku8KRmSeUkeckff+fhcTg1
-         ArpaRPz7KD4yFXtXcmwmxlV2ZXYVX/zlTsWWPhuTDRV7G/fdrY7HNU7GLGJRBx6Lfu8I
-         eShiqaKRnRo3nDg4aN0iXTayGctbzVl7jp7rUjp3XvT+9vBSHtNAZlB+bxBs6fB+oYEi
-         qqupQLFXmrBMmrT6yO90meWjU5KpPV/pmoMlc0e6KdkOttBBDdH39zOYpFii7IEzCrF2
-         OqmQ==
+        bh=86tNdlyX8HXR/WHFYCj/131p34DPDBwWgQrhOuSjETM=;
+        b=WnEEChNML0i+2Pm79LHDzrObFzzujV1aFChHlRR6Dl3iJtmmxx1q0swB/KK/GtOUeA
+         sayy0+jVrkqAPLtg9p67snN9cVO4OCg2P8b/qv2sQZiTxVnV/xJg3HaRRJO8S5rmf8z4
+         guS4mjYDPdmdSfVCKzQIe88IVEWWZaHO8+m3PDd/ZjU/J8RgV6bWwObAtwO+PcU5anlX
+         ByNMygCRxOJHTK5UuKJbzOyqv/q1n6QuJoGJ4ZPeAtFJ+CZ1xJQ/+bHn3kGcazXZXirx
+         vM7LMnLV6VEYZpHXIiGK8eQEpi21teybwlx24aDcNYRVWLj4i4GZze+rQoFSXvlisiwb
+         mubQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728584722; x=1729189522;
+        d=1e100.net; s=20230601; t=1728584724; x=1729189524;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RdgAxVyxp31c7WibHLiyIF43paER00mxZOAIHhsdwhk=;
-        b=xRgaZN/EhXcc2HFkB5LfWP2T+uYEG2i1CJLYRMP1XTYZ3v9Fib3mOTt5lltca2vEZb
-         d0j/Xh3kAu9T3wXnukZWEySP8hH4AplYAP4L/uYygorOcpLYDo+oWwqKTv0+qpBMrowe
-         bVYQOnUzCRtXO8/OvP/KmVunQ10JLlkEi5xT8D9kAP0Ohokr0ZPOi0EBexok6r93tLQw
-         Z8DWT0JVxsbOYOLvfsVSzw5eRZQwySggPT+BcBrTcg0t3AWM+Oq+VscoLErlJpOUOH/+
-         8Hv6cE7z26L6aRxgMHjDYLZMwPhYVUc58J0R9xOhCbcigxsFOiTYPWnwRAhvqHZtELSK
-         V5lw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpYIsXnSh4J/w9J8sdbwTvTqB245DSkog3KqbLS9bieVLi0kYHTadNuuBTif4SIkpa5kYwvHsfjHI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyqSeG13yPbiLmccqvhitxzRGE+nKYcGaxOPsuRsuDSgvJX/Msf
-	1/pU3TUSVHDeO78s5VoLznpGnSTvtuWefMhqRwoXx/uzjFj1ySo9580SIJRyvZ34slVYad+WPRq
-	lig==
-X-Google-Smtp-Source: AGHT+IH031wjBK6zBugJiyQwbgM1S3WkZumhuZG0/47H7WWzE24O4tbIqX0eqBdD0TzKWzHgCchY3qP4ics=
+        bh=86tNdlyX8HXR/WHFYCj/131p34DPDBwWgQrhOuSjETM=;
+        b=tfl5bSb5aJt0yBALd9kZbMx+zBm0O8gjCKInLeJwvx5hHOOUbEulKmfuSRikWIQaaz
+         PZelKdJplhu4cCYUQV9oZK92Ego5CbpR/r/9gQu8btYlyCZfIBYAjIqUjvSvsfBKozT3
+         O0XZPVODoLMe+fkBB3l+zEDHJN/5VaWxm2POqXw7FZJfvuuflDoP1X2thxqPSpojjkNa
+         vaJ2Q59hQujqMv0amAurD12Lp9gE/JW7UeojPDMMOanQUyMPYrM+Ic6E4FOTWZ8cNwj2
+         3BFYM1+6NgJhcprWjPFLGQSz+pQBmOMHP0PwG1678AJ7/wm8ogcCPo2RD9g6SHEM5P7A
+         GyAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa/hkTO54QsaxaLg6owXbGcpDyPOB0gDPt+2WacMBtX9QEARpONjEfeezGE0WxbLt2wyXQvWr+yK4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwSCdrCeAvoB/IOOZ8fzi81N9r6cpq0B+uiDv1AbOLRg3o80Bh1
+	Wr1Me/hv3zJ9ulkd/Br0G02QNwyumNfMoMRL7BvL0YN/E5fawvAK/V3Nr1X7VCxbw8strixVO4U
+	oZw==
+X-Google-Smtp-Source: AGHT+IGf82b/hxj2IWFe54/TAnEDS4XyhakmYGUWxryxrCLTzb83+cUU5J1DZhSXbLBNZQvipdjBbhmVkR8=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a17:90a:9a94:b0:2e2:da81:40c1 with SMTP id
- 98e67ed59e1d1-2e2f09f2280mr107a91.1.1728584720854; Thu, 10 Oct 2024 11:25:20
- -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a25:8e09:0:b0:e28:ef25:5f13 with SMTP id
+ 3f1490d57ef6-e28fe0e7352mr200743276.0.1728584723790; Thu, 10 Oct 2024
+ 11:25:23 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 10 Oct 2024 11:23:16 -0700
+Date: Thu, 10 Oct 2024 11:23:17 -0700
 In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20241010182427.1434605-1-seanjc@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Message-ID: <20241010182427.1434605-15-seanjc@google.com>
-Subject: [PATCH v13 14/85] KVM: Return ERR_SIGPENDING from hva_to_pfn() if GUP
- returns -EGAIN
+Message-ID: <20241010182427.1434605-16-seanjc@google.com>
+Subject: [PATCH v13 15/85] KVM: Drop extra GUP (via check_user_page_hwpoison())
+ to detect poisoned page
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -82,36 +82,75 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Andrew Jones <ajones@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Treat an -EAGAIN return from GUP the same as -EINTR and immediately report
-to the caller that a signal is pending.  GUP only returns -EAGAIN if
-the _initial_ mmap_read_lock_killable() fails, which in turn onnly fails
-if a signal is pending
+Remove check_user_page_hwpoison() as it's effectively dead code.  Prior to
+commit 234b239bea39 ("kvm: Faults which trigger IO release the mmap_sem"),
+hva_to_pfn_slow() wasn't actually a slow path in all cases, i.e. would do
+get_user_pages_fast() without ever doing slow GUP with FOLL_HWPOISON.
 
-Note, rwsem_down_read_slowpath() actually returns -EINTR, so GUP is really
-just making life harder than it needs to be.  And the call to
-mmap_read_lock_killable() in the retry path returns its -errno verbatim,
-i.e. GUP (and thus KVM) is already handling locking failure this way, but
-only some of the time.
+Now that hva_to_pfn_slow() is a straight shot to get_user_pages_unlocked(),
+and unconditionally passes FOLL_HWPOISON, it is impossible for hva_to_pfn()
+to get an -errno that needs to be morphed to -EHWPOISON.
+
+There are essentially four cases in KVM:
+
+  - npages == 0, then FOLL_NOWAIT, a.k.a. @async, must be true, and thus
+    check_user_page_hwpoison() will not be called
+  - npages == 1 || npages == -EHWPOISON, all good
+  - npages == -EINTR || npages == -EAGAIN, bail early, all good
+  - everything else, including -EFAULT, can go down the vma_lookup() path,
+    as npages < 0 means KVM went through hva_to_pfn_slow() which passes
+    FOLL_HWPOISON
 
 Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ virt/kvm/kvm_main.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 17acc75990a5..ebba5d22db2d 100644
+index ebba5d22db2d..87f81e74cbc0 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2946,7 +2946,7 @@ kvm_pfn_t hva_to_pfn(unsigned long addr, bool interruptible, bool *async,
- 				 writable, &pfn);
- 	if (npages == 1)
+@@ -2746,14 +2746,6 @@ unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *w
+ 	return gfn_to_hva_memslot_prot(slot, gfn, writable);
+ }
+ 
+-static inline int check_user_page_hwpoison(unsigned long addr)
+-{
+-	int rc, flags = FOLL_HWPOISON | FOLL_WRITE;
+-
+-	rc = get_user_pages(addr, 1, flags, NULL);
+-	return rc == -EHWPOISON;
+-}
+-
+ /*
+  * The fast path to get the writable pfn which will be stored in @pfn,
+  * true indicates success, otherwise false is returned.
+@@ -2948,14 +2940,10 @@ kvm_pfn_t hva_to_pfn(unsigned long addr, bool interruptible, bool *async,
  		return pfn;
--	if (npages == -EINTR)
-+	if (npages == -EINTR || npages == -EAGAIN)
+ 	if (npages == -EINTR || npages == -EAGAIN)
  		return KVM_PFN_ERR_SIGPENDING;
++	if (npages == -EHWPOISON)
++		return KVM_PFN_ERR_HWPOISON;
  
  	mmap_read_lock(current->mm);
+-	if (npages == -EHWPOISON ||
+-	      (!async && check_user_page_hwpoison(addr))) {
+-		pfn = KVM_PFN_ERR_HWPOISON;
+-		goto exit;
+-	}
+-
+ retry:
+ 	vma = vma_lookup(current->mm, addr);
+ 
+@@ -2972,7 +2960,6 @@ kvm_pfn_t hva_to_pfn(unsigned long addr, bool interruptible, bool *async,
+ 			*async = true;
+ 		pfn = KVM_PFN_ERR_FAULT;
+ 	}
+-exit:
+ 	mmap_read_unlock(current->mm);
+ 	return pfn;
+ }
 -- 
 2.47.0.rc1.288.g06298d1525-goog
 
