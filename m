@@ -1,112 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E410F1C7B8F;
-	Thu, 10 Oct 2024 13:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC67F1C8FC3;
+	Thu, 10 Oct 2024 13:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728565284; cv=none; b=DcyQ2lBwhdjZpkOtJ0PVBCmjCGD1FVEdtBoY+Vt9YOPmefsw6xtUGEpcUQcKlY/F1m1LCJ42gQTfWMLWkVo3ylensI4c5KES77YOTlZs/JBfFqhWp+FaARZRjeerXjRxiyenDdvjG8bSTRX6jYFCdXBg/b9QZ2geR0losu8w+RE=
+	t=1728565473; cv=none; b=YRS02UqU6JY+9LNnLDQC3pVOn/J1xYNFkmPRLXiG6WzpU6Mo7dKtvywsB6TXtpUdUsiXs8jN+uKKqUq7OdsVwR1nw9oLQ1+5xmqlS9znEo9yX3PZQ9KqxylyGBEiv467tEJ8o8bhDAndY9pph8o4GDweG2bY6NdK533LFFsAEAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728565284; c=relaxed/simple;
-	bh=0gFND+MAHX6q3fPU9Dm7aa3AX+VkNdk2ZdK9663ePGM=;
+	s=arc-20240116; t=1728565473; c=relaxed/simple;
+	bh=WmQqPMxSNZ6YczRgUz2bES9bcAWOfMKyvH7tdA/rjDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rPeAz5Ni8C8daLh6FKYFhAMiYN0TD/1HqsU8wbKvJe0Z96mlV4S/cQ4aA9JGIWhDCQX+fFSmqLW1kHLjy1Cmhn4zUraIWN9+Brw1aE5Qxw1vW6bJpPnhVMnzUg/0rvwT+mhs8pNzO7S5K0Em/Lmvh+wR4pwb5oeMN9aCafu4rkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i15xpEq/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2MSXibyI4F1wa2DMpSeOXaay0QDYDRF4eTAU0vyDFvUNsRO/H8YOV/iQsQUi6lpCnIR9Lw+BiDobgY4yg3KdunuCLZl/zjo2rlh5vN79gBhvJnFqMqC/GNXT4uaAaQlcohH82K9r7j/Q50zSfcttpeVOCL02YrSSDZ2fyoI9yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cXB7wkFL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i15xpEq/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F0EC4CEC5;
-	Thu, 10 Oct 2024 13:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728565283;
-	bh=0gFND+MAHX6q3fPU9Dm7aa3AX+VkNdk2ZdK9663ePGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i15xpEq/kuFAv6DlXG15A1e80Zkeyfpm7KcH2z/4b7LHy0huNtJIfhTPl8l4m2Thz
-	 DrC+EerzAtj77QkSwvdLuoM9HsdVcSXAYblfY52ni7z3rWCwNvYecLnzzamyv05TxQ
-	 MvyRQw4iBhqZGVncP0l5I4u44ZK9GkUbVv2NjZJ1KmbX6KkRkPzCVKd/P5aEdD5W04
-	 r/juMpxct8TYbYtPQygo8mwFvlF95PkeOYNJV8aiyjpOL0HlbI0t0P6KYVnwxFYXRs
-	 bP4FdthxlHe3zfpEHTln3UXCWui5XHPdWaBkcJjwrkqkqBVwNb4EXbX5FI3Wx8W6oT
-	 ueyyZehAwF8+A==
-Date: Thu, 10 Oct 2024 15:57:33 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cXB7wkFL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=wMnFvbWqz9ropUMoiz6qWqM0+CHEQh7yRoQngEhXc1s=; b=cXB7wkFLBivDS3yBosTgcBVjU6
+	lMPFx3K7BkWFhNLTa16uFn6XlZU0eHjss6Ee8gkUFIsapaHNiTK6YpSuHALbpfDhGYjj77gU4bMT9
+	pU+GTrH25gyFcySYj67rPaKKI/ZJ7U5VzengieZwvzMk9jmn16Pv6McPaZKwbFfTaYyh9saZTLL3n
+	WpiIp+LPfiahsmV19nxBYwB8bJSvJlVuOD+abV1ApyZu26RucMtFLZo+fLh0jIm4v6ga18+kb2Dk1
+	FqZGGVAxFR/BjIR82IthqADcUKulfUiQJLcw7mEPBjAR3vOli2BxKdhib0ev/Ra/zJ+THUdNvIxs2
+	8sVA23KA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1sysq5-00000007dHZ-31rL;
+	Thu, 10 Oct 2024 13:04:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 93A3030088D; Thu, 10 Oct 2024 15:04:21 +0200 (CEST)
+Date: Thu, 10 Oct 2024 15:04:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alice Ryhl <aliceryhl@google.com>,
+	Matthew Maurer <mmaurer@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <ZwfPPZrxHzQgYfx7@kernel.org>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-8-rppt@kernel.org>
- <Zwd7GRyBtCwiAv1v@infradead.org>
+	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all
+ architectures
+Message-ID: <20241010130421.GG17263@noisy.programming.kicks-ass.net>
+References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+ <ZwbAvEnrzu6UUgGl@J2N7QTR9R3>
+ <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
+ <ZwewMw8jBh6OU-L_@J2N7QTR9R3>
+ <20241010110344.GL14587@noisy.programming.kicks-ass.net>
+ <20241010113748.GL33184@noisy.programming.kicks-ass.net>
+ <CANiq72=kT9RFcQ3h5U+wAY0pDQQqGU7BTtiPJ-oiHNUG00z3=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zwd7GRyBtCwiAv1v@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=kT9RFcQ3h5U+wAY0pDQQqGU7BTtiPJ-oiHNUG00z3=w@mail.gmail.com>
 
-On Wed, Oct 09, 2024 at 11:58:33PM -0700, Christoph Hellwig wrote:
-> On Wed, Oct 09, 2024 at 09:08:15PM +0300, Mike Rapoport wrote:
-> >  /**
-> >   * struct execmem_info - architecture parameters for code allocations
-> > + * @fill_trapping_insns: set memory to contain instructions that will trap
-> >   * @ranges: array of parameter sets defining architecture specific
-> >   * parameters for executable memory allocations. The ranges that are not
-> >   * explicitly initialized by an architecture use parameters defined for
-> >   * @EXECMEM_DEFAULT.
-> >   */
-> >  struct execmem_info {
-> > +	void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
-> >  	struct execmem_range	ranges[EXECMEM_TYPE_MAX];
+On Thu, Oct 10, 2024 at 01:44:14PM +0200, Miguel Ojeda wrote:
+> On Thu, Oct 10, 2024 at 1:37 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > So much for the debian 'rust-all' package actually including all. Thanks
+> > Boqun for telling me about the rustavailable make target.
 > 
-> Why is the filler an indirect function call and not an architecture
-> hook?
+> Yeah, `rust-all` does not seem to include `bindgen`, which I guess was
+> the issue (?).
 
-The idea is to keep everything together and have execmem_info describe all
-that architecture needs. 
+Also not rust-src, because for some reason you're not actually
+freestanding :/
 
--- 
-Sincerely yours,
-Mike.
+> I guess you have it working now, but for the next time / others, we
+> have the `apt` line for Debian at
+> https://docs.kernel.org/rust/quick-start.html#debian.
+
+Yeah, but then you have to first know that we have this file to begin
+with.
