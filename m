@@ -1,122 +1,143 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1709319AD73
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EC11BBBCD
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728545315; cv=none; b=ulvhR/8ROO+0GIA/8UQLQmPkZAPjk1RgYvhXRL2oFl79MQfpj7ffr5osClPd8T1vUCK01fqef25jdr/hGzVHZt7U5mxegQPusWSbmPHG0kFBF487aMsD+/4wZZ49awnAF4WA41YxdpehSyeTVRxKoc6qZqG4Nirezen/x4cPeRs=
+	t=1728546967; cv=none; b=j+7XcaKWfWPYXdFqmnHDRmQ5IWxy2LKiGOy2dm7b2rKNWj2EDRZMF/mQkVBAMb9ZEy/NemhihZ26K96nExpG90nmEkGTMDpIofo+NFv9XE4Msu9+ep4XB9Lc14nfLX/lU0gY2dFMOnLreL8eeSY4Hhz7mUyJGgKXv0iBXqgie1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728545315; c=relaxed/simple;
-	bh=l3tvN995WrTW85WorpTc0P1WzFKQ+3NtgLmALeDmXf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RuEyChFf6OMkhKEkU900A4dTgdzQAMgNENQAMyx8oMFV3J4J/l/NcJqFW+Phzo/x/Tmpr+/LrUoF4wK35Wb9caLaR8+eQ8VCsB33ZdIhTWCEOjwy05SuKJRWpUqrcTE8Fugks7GGv9uSF63RI/xARVPXCqs/kxYNcIszzaYPtCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c693b68f5so5747645ad.1
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 00:28:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728545313; x=1729150113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7cEkDPRbXErPkgoWEGdbZCw32b468GFBk0qa08gpGWY=;
-        b=ViA3SybXbV25qHOEXPllmeeAyvOJAOcVuVTt2f14qBfs5HJ6/s+Oxbk286EnQ+Kvrs
-         Cn1ERzTGgCJk/2U5lUOmkhvFny77F+Kp9sByOMAi/XupX1aK0G9EboGXp3BTGFDzGE+c
-         gdgTYM0SI3rNWaQw+Wz3vCzQKYVoMgdQk28EXwpoF2HIZ9ZF/Cd97pPQxJqzIpezd5/6
-         5NlN+K35Rq2VagTmX3xuGzYTweMMW1S1t1yMhNrGBMuGoE2XX6rVFGHBJPj0dgvXx7Ua
-         fyJlI2Yke7j7r0MbJiUp/dqlxWnD/wbBZXt5BujeC1J4+/MEOtaeID3S4ImiEXChrpw6
-         EjlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrZSOxbd8TLKa5ihJP40217eBbydn7FFHBFlzfZKnOQanvvTfPeDKdZDBkrPSPQOlWTfDqYnoVLAk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/YMplxupdFTYSZ+y7thslrTh+mDCqOi1SeX1eBGE1ewnJZ8c8
-	eiRG9aCN/LjzJDZfVZcMV5SdzFXqkichamoyyAt8pVRnsGlVXS4m9FyOogFO
-X-Google-Smtp-Source: AGHT+IGuWtqHnNJvHiHpLVzSTqBfuOfL7NOOMFsD4B39E38+6p6fq5+1aceoEwa8kAi1xiG0RnehJg==
-X-Received: by 2002:a17:903:2450:b0:20b:433c:5833 with SMTP id d9443c01a7336-20c63734942mr66149025ad.26.1728545313006;
-        Thu, 10 Oct 2024 00:28:33 -0700 (PDT)
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com. [209.85.214.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c0f1cbasm4543445ad.169.2024.10.10.00.28.32
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 00:28:32 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20b7259be6fso6396835ad.0
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 00:28:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfvQV3UtX26B1FptvPz04bBdHpnexEvtIsJav2P8dFpUF1bkQerqw1Jyx5byGlX+mJvh2kfU19jkc=@lists.linux.dev
-X-Received: by 2002:a05:690c:60c2:b0:6b3:a6ff:7676 with SMTP id
- 00721157ae682-6e3221867cemr55553697b3.3.1728544955686; Thu, 10 Oct 2024
- 00:22:35 -0700 (PDT)
+	s=arc-20240116; t=1728546967; c=relaxed/simple;
+	bh=RIxzWDo6Kxs1DyGz/2Ns/C4Sj7jBRuNfdZi5GGDFnV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwhKhL7rTgWvSNtZvYbUEUv3MfnC2XHgCUiIogBGd0BIeFiM6N9jlHVeQ54IlpHL+SoOSzImvhdekJsPZWbl0U0bxpzb79T/BuTKjXf/sK2qUrY9DTam1TDdmBh+TP0ROkAN3D2TvXNB1LJyShP3ZYf05ENhBMgkh/sg0zrJKvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q5pjE1ER; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q5pjE1ER"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49A7YT0q005037;
+	Thu, 10 Oct 2024 07:55:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=0
+	yVn8tI3lyhXM3ZeiBQKCb5kXwilQgq2bp9dwcfLyYI=; b=Q5pjE1ERdXenpwSx9
+	H+3tZabSr8DH7Beyxy8drvLqU3Ht7Ga5XyW6C2PTL3fPAuIoZz3HzJyiSMoG5gdj
+	JjsNnDX89G4/TG2MQ2BW0D7oNe96JjJi5G8uZ9mB/IapFOPGaPI969vLuEtTw6gE
+	D6w8jekAr6Nzp3HaTEja4FUr8tp1ftTFqMfyfMTZNpMqVCBoXY9zpXfp1OYNxpHv
+	kbP2c54yz9Ep1Dqaj3eGZkuA+jhRxDx4QQwAhzA66Rkp22oRkrTbO5vLbuYRFTlL
+	+Pd5u72MCl/j+dMSEbRW7gnpYCpEOaMHPSE7LD2eBuG5IA3bgsjtNp/LMzgsdAiG
+	yYq+A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 426anb82uq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 07:55:18 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49A7tHik016153;
+	Thu, 10 Oct 2024 07:55:17 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 426anb82uf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 07:55:17 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49A544L3013784;
+	Thu, 10 Oct 2024 07:55:16 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 423fssen8b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Oct 2024 07:55:16 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49A7tCoY59048420
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Oct 2024 07:55:13 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AC8702004B;
+	Thu, 10 Oct 2024 07:55:12 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BCECD2004E;
+	Thu, 10 Oct 2024 07:55:11 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 10 Oct 2024 07:55:11 +0000 (GMT)
+Date: Thu, 10 Oct 2024 09:55:10 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Guo Ren <guoren@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Russell King <linux@armlinux.org.uk>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 28/28] vdso: Rename struct arch_vdso_data to
+ arch_vdso_time_data
+Message-ID: <20241010075510.6997-C-hca@linux.ibm.com>
+References: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
+ <20241010-vdso-generic-base-v1-28-b64f0842d512@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241009180816.83591-1-rppt@kernel.org> <20241009180816.83591-4-rppt@kernel.org>
-In-Reply-To: <20241009180816.83591-4-rppt@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Oct 2024 09:22:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV9TPH+mDJvvuRO3RBYfgWRwvv1kwyr_iLNju+iumb96Q@mail.gmail.com>
-Message-ID: <CAMuHMdV9TPH+mDJvvuRO3RBYfgWRwvv1kwyr_iLNju+iumb96Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/8] asm-generic: introduce text-patching.h
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@infradead.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, 
-	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241010-vdso-generic-base-v1-28-b64f0842d512@linutronix.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: txKjIm6oMyh-bYlrWVbJ8zIUfT6c90P5
+X-Proofpoint-GUID: EzJFZF0xHPJktynCv2z269EPy5OXcKam
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-10_04,2024-10-09_02,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 mlxscore=0 mlxlogscore=644 priorityscore=1501
+ clxscore=1011 phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410100049
 
-On Wed, Oct 9, 2024 at 8:09=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
-e:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Several architectures support text patching, but they name the header
-> files that declare patching functions differently.
->
-> Make all such headers consistently named text-patching.h and add an empty
-> header in asm-generic for architectures that do not support text patching=
-.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Thu, Oct 10, 2024 at 09:01:30AM +0200, Thomas Weißschuh wrote:
+> From: Nam Cao <namcao@linutronix.de>
+> 
+> The struct arch_vdso_data is only about vdso time data. So rename it to
+> arch_vdso_time_data to make it obvious.
+> Non time-related data will be migrated out of these structs soon.
+> 
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+>  arch/Kconfig                                        |  2 +-
+>  arch/riscv/Kconfig                                  |  2 +-
+>  arch/riscv/include/asm/vdso/{data.h => time_data.h} |  8 ++++----
+>  arch/riscv/kernel/sys_hwprobe.c                     |  2 +-
+>  arch/riscv/kernel/vdso/hwprobe.c                    |  4 ++--
+>  arch/s390/Kconfig                                   |  2 +-
+>  arch/s390/include/asm/vdso/data.h                   | 12 ------------
+>  arch/s390/include/asm/vdso/time_data.h              | 12 ++++++++++++
+>  include/vdso/datapage.h                             |  8 ++++----
+>  9 files changed, 26 insertions(+), 26 deletions(-)
 
->  arch/m68k/include/asm/Kbuild                      |  1 +
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
