@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA52718BBA9
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 03:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33CF1179A3
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 03:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728532255; cv=none; b=Tif8l2KmSlb2bNpJ57jriKgySciRAA+E0uIeVedHYcLSG/46sZJGM3R9mqArEfcxyMB8FkS1NVUW2NgU0NxEaCDwMcNwkkEYnrYyVQjG1kiKuXbLtVCzjm/plVNZyCoKGJsVavThsB0siuCcHiYheB1+RftTQOdKTozXu10MnuM=
+	t=1728532255; cv=none; b=HwxLL0JhVqQ1Yc3SllEOVHmxQqkKVSkR0+rKoWEvXChvJuQUHq/NTZ8tinZT4hTysTU4PPfXsuix5QK3O+3n6M/EoKgth+hxSH8ikWdCscawVPKfOLuMX1IaQZDZKwZtoouBjLLhEIqaUGyMQ64q23N8jUKDd46rBaXxDKYwfnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728532255; c=relaxed/simple;
-	bh=t2KrUGZIDFgaKdCUSV0kybkLwE+kNnGsx3HNHyOYu5E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZdgYqgklA3L+4x07aOSQ6uE2T7K0MROPwOqsztR77BiNLOZ0tXW3VrgC2kAXWARxT358XsjuRnppqJtWzOjS30gQNRxbeLzs+ZzhFWeaFeg5JeeLPdfIQ/9PcxWB7oWrmQrgIe74sO9L6DW9+xQRuVQ/Ejr15nETmejZPURwghI=
+	bh=DEH5sLqV98/CSF+ZFh0bp8j4baZyz1B5ZwDF/lhjHHw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WZkod0a8gzQNIA9XQXjuoN0FNb8td/Srp21TCBobS7nbaw8DeKN0AJuy1ZjCCyI9DZYR8aOMu3edUgTtAJ8h5k9U+mcb+ZVxrg2dXilQKFtlj5zhdBNrygWUhzCdCCEwE8cDVflH2P2f+xZtAOJgNCybdC8m6X+SAK7Y6yIsVVE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxjmsbTwdn2LsRAA--.25301S3;
-	Thu, 10 Oct 2024 11:50:51 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axy3IZTwdnwLsRAA--.25454S3;
+	Thu, 10 Oct 2024 11:50:49 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDx7tUZTwdnFP8hAA--.52915S5;
-	Thu, 10 Oct 2024 11:50:50 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMDx7tUZTwdnFP8hAA--.52915S2;
+	Thu, 10 Oct 2024 11:50:49 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
@@ -28,12 +27,10 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	kasan-dev@googlegroups.com,
 	linux-mm@kvack.org
-Subject: [PATCH 3/4] LoongArch: Add barrier between set_pte and memory access
-Date: Thu, 10 Oct 2024 11:50:47 +0800
-Message-Id: <20241010035048.3422527-4-maobibo@loongson.cn>
+Subject: [PATCH 0/4] LoongArch: Fix vmalloc test issue
+Date: Thu, 10 Oct 2024 11:50:44 +0800
+Message-Id: <20241010035048.3422527-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20241010035048.3422527-1-maobibo@loongson.cn>
-References: <20241010035048.3422527-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,57 +38,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx7tUZTwdnFP8hAA--.52915S5
+X-CM-TRANSID:qMiowMDx7tUZTwdnFP8hAA--.52915S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-It is possible to return a spurious fault if memory is accessed
-right after the pte is set. For user address space, pte is set
-in kernel space and memory is accessed in user space, there is
-long time for synchronization, no barrier needed. However for
-kernel address space, it is possible that memory is accessed
-right after the pte is set.
+On LoongArch 3C5000 Dual-Way machine, there are 32 CPUs and 128G RAM,
+there are some errors with run vmalloc test with command like this
+  insmod test_vmalloc.ko   nr_threads=32  run_test_mask=0x3af
 
-Here flush_cache_vmap/flush_cache_vmap_early is used for
-synchronization.
+Here is part of error message,
+ WARNING: CPU: 13 PID: 1457 at mm/vmalloc.c:503 vmap_small_pages_range_noflush+0x388/0x510
+ CPU: 13 UID: 0 PID: 1457 Comm: vmalloc_test/15 Not tainted 6.12.0-rc2+ #93
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ Trying to vfree() nonexistent vm area (000000004dec9ced)
+ WARNING: CPU: 3 PID: 1444 at mm/vmalloc.c:3345 vfree+0x1e8/0x4c8
+ CPU: 3 UID: 0 PID: 1444 Comm: vmalloc_test/2
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index f8754d08a31a..53be231319ef 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
- #define flush_cache_dup_mm(mm)				do { } while (0)
- #define flush_cache_range(vma, start, end)		do { } while (0)
- #define flush_cache_page(vma, vmaddr, pfn)		do { } while (0)
--#define flush_cache_vmap(start, end)			do { } while (0)
- #define flush_cache_vunmap(start, end)			do { } while (0)
- #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
- #define flush_dcache_mmap_lock(mapping)			do { } while (0)
- #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
- 
-+/*
-+ * It is possible for a kernel virtual mapping access to return a spurious
-+ * fault if it's accessed right after the pte is set. The page fault handler
-+ * does not expect this type of fault. flush_cache_vmap is not exactly the
-+ * right place to put this, but it seems to work well enough.
-+ */
-+static inline void flush_cache_vmap(unsigned long start, unsigned long end)
-+{
-+	smp_mb();
-+}
-+#define flush_cache_vmap flush_cache_vmap
-+#define flush_cache_vmap_early	flush_cache_vmap
-+
- #define cache_op(op, addr)						\
- 	__asm__ __volatile__(						\
- 	"	cacop	%0, %1					\n"	\
+ Trying to vfree() bad address (00000000fc7c9da5)
+ WARNING: CPU: 10 PID: 1552 at mm/vmalloc.c:3210 remove_vm_area+0x88/0x98
+ CPU: 10 UID: 0 PID: 1552 Comm: kworker/u144:3
+
+The mainly problem is that function set_pte() and pte_free() is atomic,
+there is contension between them. Since these functions need modify
+two consecutive pte entries for kernel space area, to assure that both
+pte entries with PAGE_GLOBAL bit set.
+
+With this patchset, vmalloc test case passes to run with command
+  insmod test_vmalloc.ko   nr_threads=32  run_test_mask=0x3af
+
+Bibo Mao (4):
+  LoongArch: Set pte entry with PAGE_GLOBAL for kernel space
+  mm/sparse-vmemmap: set pte_init when vmemmap is created
+  LoongArch: Add barrier between set_pte and memory access
+  LoongArch: Use atomic operation with set_pte and pte_clear function
+
+ arch/loongarch/include/asm/cacheflush.h | 14 +++++++-
+ arch/loongarch/include/asm/pgalloc.h    | 13 +++++++
+ arch/loongarch/include/asm/pgtable.h    | 45 +++++++++----------------
+ arch/loongarch/mm/init.c                |  4 ++-
+ arch/loongarch/mm/kasan_init.c          |  4 ++-
+ arch/loongarch/mm/pgtable.c             | 22 ++++++++++++
+ mm/sparse-vmemmap.c                     |  5 +++
+ 7 files changed, 75 insertions(+), 32 deletions(-)
+
+
+base-commit: 87d6aab2389e5ce0197d8257d5f8ee965a67c4cd
 -- 
 2.39.3
 
