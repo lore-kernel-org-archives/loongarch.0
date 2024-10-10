@@ -1,180 +1,152 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369AA1E882F
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 08:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819B71E8847
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 08:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728549051; cv=none; b=T/ZAxGZwzw+ayTGSccDMY/OD1GKTyGJQHBx1z6mh29RIG9IjD3j/TtP6h6R2hDj6VhjC7j73w3Wa9jXCCTmRQdVEKd7XyqU46co2EFuU3TGilfnljXfhDHpyUxevWMv0cxj/6kzS9XxJO7HR5k8pRsEmAhr7iLoEwlW3WP+ogVM=
+	t=1728549053; cv=none; b=dqFYcd3W0t2I0o5aMTN8ygZM0tGeA0KG0Y/nY1deGmE7VIRsUeGbWRP0KatdywlXRWKDielPmqGyNzRV1Xw2Dmh+REIS2Rmn+lWbNRgLw/8iev1XSEtHEtYA9ojBQdQbcs3tC5hsIk1E7A6M8t18BRxH7xxjp+q1n9x6V5dUGDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728549051; c=relaxed/simple;
-	bh=ciGEzLPrN7XbFB5cK/viPY+fgmysJA4dkt9WpJTF0yc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ISu8AjmhNLXM7JYr249B8z6B1ukBZltBZxh8pdA/YTVQ6IdAp0I9uILSDvtrnaeV+mxu8yt2ew8L6Cz/lPmaGG3wzW+Y0Id5/HWa+/J5iNxdf+FoLos8um5Pxddbme8fZrlQECu3UtDIByiTasJGofVEdR25mQS2AGJlBq7lf0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FywsAx02; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FywsAx02"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2e0d9b70455so562549a91.3
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 01:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1728549047; x=1729153847; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xjRgM2erkgK9qh8AbT3u9Jz1xqlQ+SHokymxxsnkwPs=;
-        b=FywsAx022Ig2deg7DM+VBfbCbHapLn3pXUl6biQSmuAuWrIhMwn4k91+Upyv7/GkEl
-         JUc2LyyJgQCXmftcDU+yg+Xzdx6JAaDVO8NV+eNHug8Ho/dA1srdGMHZxyTVHym7iFoD
-         Wx9h3+QILgY5zoxWIsKyHaDSD3AQl8EY9h7gs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728549047; x=1729153847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xjRgM2erkgK9qh8AbT3u9Jz1xqlQ+SHokymxxsnkwPs=;
-        b=c3NVYrrK2yTWXx74gbhmbY+i3DlAaZSYSRGnHHpKG90+QfRttuLhCuMVb9SWzlyvml
-         SsDfWfNZFm75FKLTeHGBFWcU5rMZvhOf11UAqR8egLgVJfIyGCi/9pSpBU0aJbJG6lHE
-         hdkacmxnDad9y0IWC0QOyZt4pW34bACBBpX17qvzQtok0uVjujnDNYGp5UMgNONRO4B/
-         XiqnyNhea+zyp1jF3sv9LbFZVnXtZMlu84dI767yG3bzgC/iQr0YytmZGiYw2VoAIdWi
-         4rs1AYFoZljDdRXr9/d+UWjoDbSZ6pBfFmVHyA4TjEd73WmZ/zi/stWu7vnjRZCPkQFq
-         XLHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGEw1/3iDWKJj/TvaHNN9lWFo5LwXySxzM6kuibTunGTlA4/3VMjAdzqr5HC0pofPf/2PDqFr0mYw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw2ybF1YXUOcl0jCKUubS9OGjRg7yj7Gr3NJHVqi4QyiCFmmqY0
-	I+rS+q6c8Cf9jsT+dpUn/B0WDz4TSWXCZoHlnm744iJzSqQg57bXs4YfdvdgYQ==
-X-Google-Smtp-Source: AGHT+IGiHJLVn7EEJZoiHDg1IHJwEmo5BKI2W3X+EqMqHJDA19Xi8bq+M3epyy60EICvZVegJa7iQQ==
-X-Received: by 2002:a17:90a:178e:b0:2e2:cc47:ce1a with SMTP id 98e67ed59e1d1-2e2cc47ce65mr2245610a91.1.1728549047177;
-        Thu, 10 Oct 2024 01:30:47 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c13a:abb0:1c8:a3c3])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2d5f0a424sm730808a91.28.2024.10.10.01.30.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 01:30:46 -0700 (PDT)
-Date: Thu, 10 Oct 2024 17:30:33 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Bisected: [PATCH v5 8/8] x86/module: enable ROX caches for module
- text
-Message-ID: <20241010083033.GA1279924@google.com>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-9-rppt@kernel.org>
+	s=arc-20240116; t=1728549053; c=relaxed/simple;
+	bh=RIj8eNPhrvk8RqByzZaZPSSvoB2BaeF/z8NMet8EQac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZKBFvbMrT1pgD52vVzGRCcsjNzZ2mbLbAsX0Y93gRSaZc46ZWP0pl+Y+vcuTQg/Z50uDbu1Dnf0cutEqfGkVdFRn7v9DyBKPaiSVTvu476gbhK5K38IENfBGXQ1NpGkXr8tCww5q6d0RoCHzk/kPWT+vP7PQb34gRHHEnT7jANY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8BxTPCxkAdnGPcRAA--.30216S3;
+	Thu, 10 Oct 2024 16:30:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMBxHeSukAdnjDciAA--.42807S2;
+	Thu, 10 Oct 2024 16:30:39 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v6 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Thu, 10 Oct 2024 16:30:24 +0800
+Message-ID: <cover.1728463622.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241009180816.83591-9-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxHeSukAdnjDciAA--.42807S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWxuFyrZF45CrWrZryUXFc_yoW5XFW3pF
+	ZxCw13Kr10qr12yrs3Ja48CF1SqayrJFnrGFsay348XayDC34jqw4Sga15AFsrAr12qrW2
+	vrZ3CF4jka4UuFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
 
-On (24/10/09 21:08), Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-> text allocations.
-> 
+Hi all:
 
-With this modprobe disappoints kmemleak
+This patchset introduce a generic PWM framework driver for Loongson family.
+Each PWM has one pulse width output signal and one pulse input signal to be measured.
 
-[   12.700128] kmemleak: Found object by alias at 0xffffffffa000a000
-[   12.702179] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
-[   12.704656] Tainted: [N]=TEST
-[   12.705526] Call Trace:
-[   12.706250]  <TASK>
-[   12.706888]  dump_stack_lvl+0x3e/0xdb
-[   12.707961]  __find_and_get_object+0x100/0x110
-[   12.709256]  kmemleak_no_scan+0x2e/0xb0
-[   12.710354]  kmemleak_load_module+0xad/0xe0
-[   12.711557]  load_module+0x2391/0x45a0
-[   12.712507]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.713599]  do_syscall_64+0x54/0xf0
-[   12.714477]  ? irqentry_exit_to_user_mode+0x33/0x100
-[   12.715696]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.716931] RIP: 0033:0x7fc7af51f059
-[   12.717816] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
-[   12.722324] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[   12.724173] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
-[   12.725884] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
-[   12.727617] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
-[   12.729361] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
-[   12.731101] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
-[   12.732814]  </TASK>
-[   12.733362] kmemleak: Object 0xffffffffa0000000 (size 2097152):
-[   12.734800] kmemleak:   comm "modprobe", pid 410, jiffies 4294880489
-[   12.736334] kmemleak:   min_count = 2
-[   12.737228] kmemleak:   count = 0
-[   12.738043] kmemleak:   flags = 0x5
-[   12.738917] kmemleak:   checksum = 0
-[   12.739783] kmemleak:   backtrace:
-[   12.740606]  kmemleak_vmalloc+0x29/0xc0
-[   12.741532]  kasan_alloc_module_shadow+0xbe/0xe0
-[   12.742649]  execmem_vmalloc+0x116/0x220
-[   12.743596]  execmem_alloc+0xfb/0x3d0
-[   12.744479]  load_module+0x1e84/0x45a0
-[   12.745383]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.746452]  do_syscall_64+0x54/0xf0
-[   12.747319]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.748772] kmemleak: Not scanning unknown object at 0xffffffffa000a000
-[   12.750364] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
-[   12.752441] Tainted: [N]=TEST
-[   12.753165] Call Trace:
-[   12.753760]  <TASK>
-[   12.754279]  dump_stack_lvl+0x3e/0xdb
-[   12.755165]  kmemleak_load_module+0xad/0xe0
-[   12.756165]  load_module+0x2391/0x45a0
-[   12.757068]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.758135]  do_syscall_64+0x54/0xf0
-[   12.759099]  ? irqentry_exit_to_user_mode+0x33/0x100
-[   12.760292]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.761508] RIP: 0033:0x7fc7af51f059
-[   12.762372] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
-[   12.772361] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[   12.774957] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
-[   12.776635] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
-[   12.778283] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
-[   12.779949] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
-[   12.781619] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
-[   12.783319]  </TASK>
+It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
+
+Thanks.
+
+-------
+V6:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Add Reference Manual;
+ - Shortcut if !pwm->state.enabled;
+ - When state->enabled is true, unconditionally execute
+   pwm_loongson_set_polarity() to avoid that the polarity register is
+not set correctly.
+
+Link to V5:
+https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
+
+V5:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Test with PWM_DEBUG enabled.
+ - In pwm_loongson_apply(), the pwm state is determined before the pwm
+   polarity, avoid test failures when PWM_DEBUG is enabled;
+ - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
+   precision loss and to avoid test failures when PWM_DEBUG is enabled.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
+
+V4:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Addressed Uwe's review comments:
+   - Make use of devm_pwmchip_alloc() function;
+   - Add Limitations description;
+   - Add LOONGSON_ prefix for Loongson pwm register defines;
+   - Keep regs written only once;
+   - Rewrite duty/period calculation;
+   - Add dev_err_probe() in .probe();
+   - Fix some code style.
+
+Link to V3:
+https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongson.cn/
+
+V3:
+patch (1/2):
+ - Add Reviewed-by tag from Krzysztof, thanks.
+patch (2/2):
+ - Several code stlye adjustments, such as line breaks.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
+
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 287 ++++++++++++++++++
+ 5 files changed, 373 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
+
+
+base-commit: ff25451372ee1aa4c4f4401dc96516782a00dd4d
+-- 
+2.43.5
+
