@@ -1,148 +1,74 @@
-Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2207D1CEAD8
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56BD19DFA2;
+	Thu, 10 Oct 2024 19:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728585361; cv=none; b=u7Ql8ntfI4ENQ6FwedmKeARW8WT7KnuFSy3FDhsy9DrElAQOdNAynXw1pr3BaW4q3D9F/pq6oAuBsrXTU/2EDZW20YQgD2brOHwQgA+D03Ym6HjhJKqfg48du/PbYTc9L3qt9vHfsu8QecLw8alvwJy+cqjpXUlSNoNVc+ESHn8=
+	t=1728589123; cv=none; b=B5EpfkwaQrsX3qqiapaNGLG5tLceu4G9Ly7+a15jGm/jJxdK0wAjW5W8QXSM4cCbpHxgSQRdEpCidkg6YAghuJGj50kMpdWUdrKMdn/brDJmFqvIt6lEqS7omOWKFq0lTFsJ7TEtvw4JzgK5nXF4Zb+EhsypdQZRQlp6I+Kd7uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728585361; c=relaxed/simple;
-	bh=eO8i66PrBt/aJfIHr67M2yWYkbNNStHt47cJJCQ8lLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VYOlaYCQ752DemtzTEnNOtjSkmtHbFXY6VPRob2J5W235Z1dqoxcmIH+IvPbLRe0ohX+sg8q/4UypjXEXYIRkDXIUF5kZv3dS0cUz7K/oRG009RHGVcy0wHoQkptbgaLlw1QCCuoDA9LsudLclxdU6R9tiNOh2f8NeCdpdAlgyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=TnwSfC3B; arc=none smtp.client-ip=136.144.140.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="TnwSfC3B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
-	t=1728585350; bh=eO8i66PrBt/aJfIHr67M2yWYkbNNStHt47cJJCQ8lLg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TnwSfC3B0BzzbrbBXfYCTvLzIQE1VFcC2vDoODjZOiRbhCpvxs+nfBrgLRAmHbBcp
-	 5nDkTl4JQCQ0Wy/pLIF9/vFfww5UJ7PllGdlDfCRY4FgF60cuMAONiSY28SXpZ/fah
-	 ofsTg0sJAj3lUJpCxa6onaZfbwwGyEE3F+sIl/MzmrdHNasu+qZYD2CQrQKKnIrTre
-	 jEGUntoI51WphR4XjRXlRX68PsX4ZEqW4Lig8ApC7stf8X5g23ZhKSrvK2T2Yg2D5A
-	 bDv/1YoYnX+4WK7gSe7xgNsbMfMhOH2hPirF455+QlQzq1JgcpZmps0ommzymfrvIp
-	 q2yGRxotng1Sc5OlnXZIYfIyoPLe78QPg5yomWhS/7EpKy8gm5XCv2fZL2X1/G4BTR
-	 HL2kBhQM874WRNw9Pe4sCOauh/y6zMseb5uFaaTGvb5Bwf1+uMfTKAYUXYiqB6xWHZ
-	 FMRiB8gbs1uwwHzedLTctQNTtkBO6P4IZltp+SoRTwdUBuk2Am+I+Y/c5xNGGQwcTo
-	 dfQXGkuiHFMt18pGbziRX9AoIhYRkcXuQB6IdBahXiHe06KoZakmU5fKhn5ggdgeZF
-	 sIwBjRHZR9oCPZjKzUyfzG6lTzteD6iFNQ1wWMF1seN66YAyRB45H5n//oQ2UNHpBx
-	 anTYx1ofeL2gjEtOuPaxF2ZM=
-Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
-	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id DF155167DD7;
-	Thu, 10 Oct 2024 20:35:47 +0200 (CEST)
-Message-ID: <936057f4-e461-4977-85e7-6100127c9574@ijzerbout.nl>
-Date: Thu, 10 Oct 2024 20:35:44 +0200
+	s=arc-20240116; t=1728589123; c=relaxed/simple;
+	bh=+VV1OcAs7SYBgxgmtH80ZSp/jRy+TfN7Ux/bIggdl54=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QgxSVPyW4cQiFCTWJ1/DF5eVihss2uuXnFjf83IhqlLNB0a5/6cIPTS12L3xrxGNZr5QT+3Fn7oLk+6Z95ECvaCcn2reKzke/FrLI88icdpaLARnxbbnRG4i99U5TrMBbr4VH8Bk8CKQIfatNmGmt6Ai07AUrG44qa/wOOOyrkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789EBC4CEC5;
+	Thu, 10 Oct 2024 19:38:37 +0000 (UTC)
+Date: Thu, 10 Oct 2024 15:38:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, "=?UTF-8?B?Qmo=?=
+ =?UTF-8?B?w7Zybg==?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin
+ <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak
+ <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Samuel Holland
+ <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
+ <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH v9 4/5] jump_label: adjust inline asm to be consistent
+Message-ID: <20241010153845.5a4f3ec5@gandalf.local.home>
+In-Reply-To: <20241001101404.29388dd0@gandalf.local.home>
+References: <20241001-tracepoint-v9-0-1ad3b7d78acb@google.com>
+	<20241001-tracepoint-v9-4-1ad3b7d78acb@google.com>
+	<20241001101404.29388dd0@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Christoph Hellwig <hch@infradead.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen
- <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Song Liu <song@kernel.org>, Stafford Horne <shorne@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
- Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
- bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org, x86@kernel.org
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-8-rppt@kernel.org>
-Content-Language: en-US
-From: Kees Bakker <kees@ijzerbout.nl>
-In-Reply-To: <20241009180816.83591-8-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Op 09-10-2024 om 20:08 schreef Mike Rapoport:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Using large pages to map text areas reduces iTLB pressure and improves
-> performance.
->
-> Extend execmem_alloc() with an ability to use huge pages with ROX
-> permissions as a cache for smaller allocations.
->
-> To populate the cache, a writable large page is allocated from vmalloc with
-> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
-> ROX.
->
-> Portions of that large page are handed out to execmem_alloc() callers
-> without any changes to the permissions.
->
-> When the memory is freed with execmem_free() it is invalidated again so
-> that it won't contain stale instructions.
->
-> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
-> definition of an execmem_range.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->   include/linux/execmem.h |   2 +
->   mm/execmem.c            | 317 +++++++++++++++++++++++++++++++++++++++-
->   mm/internal.h           |   1 +
->   mm/vmalloc.c            |   5 +
->   4 files changed, 320 insertions(+), 5 deletions(-)
-> [...]
-> +static void execmem_cache_clean(struct work_struct *work)
-> +{
-> +	struct maple_tree *free_areas = &execmem_cache.free_areas;
-> +	struct mutex *mutex = &execmem_cache.mutex;
-> +	MA_STATE(mas, free_areas, 0, ULONG_MAX);
-> +	void *area;
-> +
-> +	mutex_lock(mutex);
-> +	mas_for_each(&mas, area, ULONG_MAX) {
-> +		size_t size;
-> +
-No need to check for !area, because it is already guaranteed by the 
-while loop condition (mas_for_each)
-> +		if (!area)
-> +			continue;
-> +
-> +		size = mas_range_len(&mas);
-> +
-> +		if (IS_ALIGNED(size, PMD_SIZE) &&
-> +		    IS_ALIGNED(mas.index, PMD_SIZE)) {
-> +			struct vm_struct *vm = find_vm_area(area);
-> +
-> +			execmem_set_direct_map_valid(vm, true);
-> +			mas_store_gfp(&mas, NULL, GFP_KERNEL);
-> +			vfree(area);
-> +		}
-> +	}
-> +	mutex_unlock(mutex);
-> +}
->
+On Tue, 1 Oct 2024 10:14:04 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> Can I get some more acks from the arch maintainers? So far there's only one
+> ack from Peter Zijlstra for x86. But this touches arm, arm64, loongarch and
+> riscv too.
+
+I have an ack from arm64, but since I'm just hearing crickets from the
+rest, I'm going to just take this through my tree.
+
+-- Steve
