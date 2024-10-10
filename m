@@ -1,44 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FD71B6556
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DA61BBBC3
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728543724; cv=none; b=HetEq3k1Inv0qrXlkzep4RRx1rDtjWdT15T4O1woP0JtnicGhF9GqPuxSIVRHxazxCUX2PcP5xfg8Mk0E4bjjkYalDBpaeB36h1Wwc98NgKGEsMHgt5yJYCcrFNDUbaJB9Jste4jIjVIP2KWPphoy7799AWmRpvRwkOmwH8aw5k=
+	t=1728543725; cv=none; b=GzIBE/eDbP/K/5NELqnEaFGmlmzTStjpI9fgkERGa+DYGNKrl9ifxy8ZqVsK+/hallPWlEdAda2FbW2QjYhR5GLLi1DVGH+5NdkJyHK9kTiS/4zERqLCxgR+RKtNzBSH48W8ZNQkwlhzGl6e/bON5GDEFQ2zDP0/KWjAnhWaSZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728543724; c=relaxed/simple;
-	bh=QNcCT8xdhsRdpIEe1ZjNJ7WuU4tLNw9Mj2qA/M/7NLg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XEkO00c9iY3sb2hYbQJd4ZKp3sS1tW1xTrZwzDlzAP0biotCntQc/haAggTGu64w3iTVZxIKg7Kb/GLrOXMJCJaIWCWRnh3f7E5DrC16Mb0GXJB7urufDlp7bsXmofh3wICkQLWykokPwMd+CzKVTCRO+qT1t4YHIAoi+16FsNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lmsrwGd/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jky3v+I1; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1728543725; c=relaxed/simple;
+	bh=M1UHCDZZZ5fXWxxT1qvNaxpIVftl+fGBVImNfA2mkLk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jPIddcmrbFlgl09kSqun9ixFV+Ppd6PdjBqNtRWmlZkmHJ4zSb4BujHuDemLg/m/nXa4bTWSRVqeGCqXl6hjgqc1YCzycrE5WxPCN8anXIZQg3xwXlGaXLGrvspJbv4PxwsthexxqG/sbgNTFaeB8vpLzCIvH+3AgR5Sz08i9RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lTa7tpZP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/CAqjPr6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lmsrwGd/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jky3v+I1"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lTa7tpZP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/CAqjPr6"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728543719;
+	s=2020; t=1728543721;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=E4T95t+t5uIUSPRmbXi3insr6gkvL1A7vX9/M6uzeAI=;
-	b=lmsrwGd/o99KSttwJ8sgkfe3ORDOYVzQtieE7kyC4+m+vRZ/tzWpxPQ8ePTZNQ19EFjx5I
-	u3jGvagoJGW/qx9g2bUpnmEq8JoWczBHMUhDC79C1JomHxY98uotRFX+A96CPPno1gMwIu
-	LyvrdSpMcdSsFeE5AWm4OzXxE/cIgCQiWE+WdzqZBRdbXLSt+FADnIPVu13PJJKh43s3lM
-	jr/MVOD7fv5IDZjXZMEa9QSGaKAlyNTcMqwQmtVyZLRsNdOIMbYmcRsayg4uNcNoVlIB15
-	aYyMd6cpaCwNPFx2oScFtCmRqL8D8perF6lVmPIECmor4hdzn03+zzeo55ZhLA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PTaWPH0GsoC/f/xHFuh5G2lj04S9r5qi58p+jYQJPbk=;
+	b=lTa7tpZPSMpYqBOTXcrRlaMExCnwkTH8H6hYeS3O+dLE/v1NII2D+NfhOrHIM/HjIOvpKb
+	iEjMp5s35jvJ1C4i20pMv9eIftSeqdclfqgPGFKkr5ZBz18rM6WABeHbt9yiQ9AqlEnxB7
+	cOL0uzuhW7R/2qz2vnSxj8qEdmiqiCSsllD8wq48lRHWoat4L3iQIcath9RHzcvDXo7mjh
+	BcCUk8KDuyaeuMnv+LdLXC0kSp+eoC1/f1Ti3YZNb2ryOJ2A1BebUstcmNJVT/sFAx+eyA
+	gjJVwe9Jfig5ovQyz3D9CMKNH5QprqbdDcOdMMVExYTTXiJSBoTqKNoxJVsWCw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728543719;
+	s=2020e; t=1728543721;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=E4T95t+t5uIUSPRmbXi3insr6gkvL1A7vX9/M6uzeAI=;
-	b=jky3v+I1IC+JVC8fX81ewpslVewnrQMUfSlcSSaPKvbXwS/AgvfDy+/FHxXQi6ThcgvJUH
-	9VEhGdOBmWvD01CA==
-Subject: [PATCH 00/28] vdso: Preparations for generic data storage
-Date: Thu, 10 Oct 2024 09:01:02 +0200
-Message-Id: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PTaWPH0GsoC/f/xHFuh5G2lj04S9r5qi58p+jYQJPbk=;
+	b=/CAqjPr6rxtw1rBkGjYlFRS7wVbrerb1tE7vy4nq86qESK/0YxyCNEBt22Mml7Xgziyxv2
+	FQKOjqD3bM9qTdBg==
+Date: Thu, 10 Oct 2024 09:01:05 +0200
+Subject: [PATCH 03/28] s390/vdso: Drop LBASE_VDSO
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,10 +49,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAK57B2cC/x3MMQqAMAxA0atIZgNRa0WvIg5qY83SSgMiFO9uc
- fzD+xmUk7DCVGVIfItKDCWauoL9XINnFFcaWmpNQzTi7TSi51DYjtuqjLYjaw9nBrP1UNyV+JD
- nf87L+37En2/PYwAAAA==
-X-Change-ID: 20241009-vdso-generic-base-63066fd474b5
+Message-Id: <20241010-vdso-generic-base-v1-3-b64f0842d512@linutronix.de>
+References: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
+In-Reply-To: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
 To: Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
  Vasily Gorbik <gor@linux.ibm.com>, 
  Alexander Gordeev <agordeev@linux.ibm.com>, 
@@ -77,142 +78,68 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
  linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Nam Cao <namcao@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1728543717; l=6636;
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728543717; l=1973;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=QNcCT8xdhsRdpIEe1ZjNJ7WuU4tLNw9Mj2qA/M/7NLg=;
- b=sQhdCAF4J2xGSbM7JksLHLhcrVflNnqDCh5fiBcZROnY5OCOWlamlaJcSOTO9oiyIYtO50MPw
- 565h0NVu1OkDw1F3hJlaEbk39HsimcY4lNzgNEvSbhPhR8U0cTPGVTN
+ bh=M1UHCDZZZ5fXWxxT1qvNaxpIVftl+fGBVImNfA2mkLk=;
+ b=hG1gakiEm8cjk7VRIpvdmQlN9QnPXDvcOtIcU7k1TMbtC8u2E2IXfzi6S1RfiCNX3R9MIKgXJ
+ cPnWnTEKA5CC4LuIt9YAXlYWgz716XqXk1/Gb4r134/tWzKtZxY7Eb7
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Historically each architecture defined their own datapage to store the
-VDSO data. This stands in contrast to the generic nature of the VDSO
-code itself.
-We plan to introduce a generic framework for the management of the VDSO
-data storage that can be used by all architectures and which works
-together with the existing generic VDSO code.
-
-Before that is possible align the different architectures by
-standardizing on the existing generic infrastructure and moving things
-out of the VDSO data page which does not belong there.
-
-Patches	 1- 2:	csky
-Patch	    3:	s390
-Patches	 4- 5:	arm64
-Patch	    6:	riscv
-Patch	    7:	arm
-Patch	    8:	LoongArch
-Patch	    9:	MIPS
-Patches 10-20:	x86
-Patches 21-27:	powerpc
-Patch      28: 	Renamings to avoid a name clash with the new code.
-
-These patches are intended to be merged via the tip tree,
-so the following patches can be based on a unified base.
-
-The queue, including the full generic storage, is available at
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linux.git vdso/store
+This constant is always "0", providing no value and making the logic
+harder to understand.
+Also prepare for a consolidation of the vdso linkerscript logic by
+aligning it with other architectures.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Nam Cao (1):
-      vdso: Rename struct arch_vdso_data to arch_vdso_time_data
+ arch/s390/include/asm/vdso.h         | 3 ---
+ arch/s390/kernel/vdso32/vdso32.lds.S | 2 +-
+ arch/s390/kernel/vdso64/vdso64.lds.S | 2 +-
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
-Thomas Weißschuh (27):
-      csky/vdso: Remove gettimeofday() and friends from VDSO
-      csky/vdso: Remove arch_vma_name()
-      s390/vdso: Drop LBASE_VDSO
-      arm64: vdso: Drop LBASE_VDSO
-      arm64: vdso: Use only one single vvar mapping
-      riscv: vdso: Use only one single vvar mapping
-      arm: vdso: Remove assembly for datapage access
-      LoongArch: vDSO: Use vdso/datapage.h to access vDSO data
-      MIPS: vdso: Avoid name conflict around "vdso_data"
-      x86/mm/mmap: Remove arch_vma_name()
-      x86: vdso: Use __arch_get_vdso_data() to access vdso data
-      x86: vdso: Place vdso_data at beginning of vvar page
-      x86: vdso: Access rng data from kernel without vvar
-      x86: vdso: Allocate vvar page from C code
-      x86: vdso: Access timens vdso data without vvar.h
-      x86: vdso: Access rng vdso data without vvar.h
-      x86: vdso: Move the rng offset to vsyscall.h
-      x86: vdso: Access vdso data without vvar.h
-      x86: vdso: Delete vvar.h
-      x86: vdso: Split virtual clock pages into dedicated mapping
-      powerpc: vdso: Remove offset comment from 32bit vdso_arch_data
-      powerpc: procfs: Propagate error of remap_pfn_range()
-      powerpc/pseries/lparcfg: Fix printing of system_active_processors
-      powerpc/pseries/lparcfg: Use num_possible_cpus() for potential processors
-      powerpc: Add kconfig option for the systemcfg page
-      powerpc: Split systemcfg data out of vdso data page
-      powerpc: Split systemcfg struct definitions out from vdso
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 91061f0279be4521a2b5470bcf8de6780b7d6806..92c73e4d97a93a90cb640d44fca9856f93e0be14 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -12,9 +12,6 @@ int vdso_getcpu_init(void);
+ 
+ #endif /* __ASSEMBLY__ */
+ 
+-/* Default link address for the vDSO */
+-#define VDSO_LBASE	0
+-
+ #define __VVAR_PAGES	2
+ 
+ #define VDSO_VERSION_STRING	LINUX_2.6.29
+diff --git a/arch/s390/kernel/vdso32/vdso32.lds.S b/arch/s390/kernel/vdso32/vdso32.lds.S
+index 65b9513a5a0ee2a7e3508a1d919f826c4b4184ca..c916c4f73f766ebcc9328b189e46015e67393b0d 100644
+--- a/arch/s390/kernel/vdso32/vdso32.lds.S
++++ b/arch/s390/kernel/vdso32/vdso32.lds.S
+@@ -16,7 +16,7 @@ SECTIONS
+ #ifdef CONFIG_TIME_NS
+ 	PROVIDE(_timens_data = _vdso_data + PAGE_SIZE);
+ #endif
+-	. = VDSO_LBASE + SIZEOF_HEADERS;
++	. = SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+ 	.gnu.hash	: { *(.gnu.hash) }
+diff --git a/arch/s390/kernel/vdso64/vdso64.lds.S b/arch/s390/kernel/vdso64/vdso64.lds.S
+index 753040a4b5ab271c432d4abcaa04d69a88d54b17..ec42b7d9cb53094b783c6b0492962af7e5027831 100644
+--- a/arch/s390/kernel/vdso64/vdso64.lds.S
++++ b/arch/s390/kernel/vdso64/vdso64.lds.S
+@@ -18,7 +18,7 @@ SECTIONS
+ #ifdef CONFIG_TIME_NS
+ 	PROVIDE(_timens_data = _vdso_data + PAGE_SIZE);
+ #endif
+-	. = VDSO_LBASE + SIZEOF_HEADERS;
++	. = SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+ 	.gnu.hash	: { *(.gnu.hash) }
 
- arch/Kconfig                                       |   2 +-
- arch/arm/include/asm/vdso/gettimeofday.h           |   4 +-
- arch/arm/vdso/Makefile                             |   2 +-
- arch/arm/vdso/datapage.S                           |  16 ---
- arch/arm/vdso/vdso.lds.S                           |   3 +-
- arch/arm64/include/asm/vdso.h                      |   9 +-
- arch/arm64/kernel/vdso.c                           |  43 +++-----
- arch/arm64/kernel/vdso/vdso.lds.S                  |   2 +-
- arch/arm64/kernel/vdso32/vdso.lds.S                |   2 +-
- arch/csky/Kconfig                                  |   4 -
- arch/csky/include/asm/vdso/clocksource.h           |   9 --
- arch/csky/include/asm/vdso/gettimeofday.h          | 114 ---------------------
- arch/csky/include/asm/vdso/processor.h             |  12 ---
- arch/csky/include/asm/vdso/vsyscall.h              |  22 ----
- arch/csky/kernel/vdso.c                            |  31 +-----
- arch/csky/kernel/vdso/Makefile                     |   1 -
- arch/csky/kernel/vdso/vdso.lds.S                   |   4 -
- arch/csky/kernel/vdso/vgettimeofday.c              |  30 ------
- arch/loongarch/include/asm/vdso/getrandom.h        |   3 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h     |   4 +-
- arch/loongarch/include/asm/vdso/vdso.h             |  18 +---
- arch/loongarch/kernel/asm-offsets.c                |   9 ++
- arch/loongarch/vdso/vdso.lds.S                     |   8 +-
- arch/loongarch/vdso/vgetcpu.c                      |   2 +-
- arch/mips/vdso/genvdso.c                           |   4 +-
- arch/powerpc/Kconfig                               |   8 ++
- arch/powerpc/include/asm/systemcfg.h               |  52 ++++++++++
- arch/powerpc/include/asm/vdso_datapage.h           |  61 +----------
- arch/powerpc/kernel/proc_powerpc.c                 |  37 +++++--
- arch/powerpc/kernel/setup-common.c                 |   5 +-
- arch/powerpc/kernel/smp.c                          |  11 +-
- arch/powerpc/kernel/time.c                         |   4 +
- arch/powerpc/kernel/vdso.c                         |  20 ----
- arch/powerpc/platforms/powernv/smp.c               |   5 +-
- arch/powerpc/platforms/pseries/hotplug-cpu.c       |   5 +-
- arch/powerpc/platforms/pseries/lparcfg.c           |   5 +-
- arch/riscv/Kconfig                                 |   2 +-
- .../riscv/include/asm/vdso/{data.h => time_data.h} |   8 +-
- arch/riscv/kernel/sys_hwprobe.c                    |   2 +-
- arch/riscv/kernel/vdso.c                           |  52 +++-------
- arch/riscv/kernel/vdso/hwprobe.c                   |   4 +-
- arch/s390/Kconfig                                  |   2 +-
- arch/s390/include/asm/vdso.h                       |   3 -
- arch/s390/include/asm/vdso/data.h                  |  12 ---
- arch/s390/include/asm/vdso/time_data.h             |  12 +++
- arch/s390/kernel/vdso32/vdso32.lds.S               |   2 +-
- arch/s390/kernel/vdso64/vdso64.lds.S               |   2 +-
- arch/x86/entry/vdso/vdso-layout.lds.S              |  20 ++--
- arch/x86/entry/vdso/vma.c                          |  87 ++++++++++------
- arch/x86/include/asm/vdso/getrandom.h              |  10 +-
- arch/x86/include/asm/vdso/gettimeofday.h           |  12 ++-
- arch/x86/include/asm/vdso/vsyscall.h               |  14 ++-
- arch/x86/include/asm/vvar.h                        |  71 -------------
- arch/x86/kernel/vmlinux.lds.S                      |  23 -----
- arch/x86/mm/mmap.c                                 |   5 -
- arch/x86/tools/relocs.c                            |   1 -
- include/vdso/datapage.h                            |   8 +-
- 57 files changed, 295 insertions(+), 628 deletions(-)
----
-base-commit: 8cf0b93919e13d1e8d4466eb4080a4c4d9d66d7b
-change-id: 20241009-vdso-generic-base-63066fd474b5
-
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.47.0
 
