@@ -1,146 +1,171 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75521C579C
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 12:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20E1C5783
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 12:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728562540; cv=none; b=TKvJC53GWwhwlB1eNQEpL9bQnZVAEV1Z7W++95Ai0LnMM8gSyNTyhOIiZ1VU7l6a9KB8XxLCm7ha/u3qQ4Gn2BAwnp4DAW6iybXcoUwj5OuTjg4+QXrRXxlgkUgujV5W0JbkoDsZX02VoL0RHjNYMYo+ulfnd1fcFpSMhZpEfFM=
+	t=1728563374; cv=none; b=jgwvepnF9/YkoHr7SSeqgZD7wneQKzOTY+HInE+k3f0jLRXg+fWz+d5nksegwJ5y9h1BFaih9utKawiii16UcgouYKCeD12y55MPAq5jfeudHiKoObeN3YsL5RqdpHxLhpOzD17Loi093v1pJvijdHmXT6kRAWlScyZylF4MjwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728562540; c=relaxed/simple;
-	bh=5VJgFYrRqUn6q6H26eMzLtMtVpybti1EcGRLCarbIDI=;
+	s=arc-20240116; t=1728563374; c=relaxed/simple;
+	bh=7xvMbYMm9wWbmsflgMl5yPpAedwshWLdYVA6SaZwnPw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VKeLizXgXj/b2CjXqwnD62JUHef0YSlU+IW0FiSIybsZFU+/Zd0G0H0tQE4Mr6ZiHAUxvHZc/+skNMlmjAMVB3LJPekX1ivklAxV8d/2PDIwSt6mjDH6czqQbDzDMcQJ/iZ7Zq3s40YBlXLpwPZrWWTZ5B7mkqbtdprbZ3R/6k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flZNupk/; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=L2hHS1Zk8G2XNzO3sW/VT4JVYJ3o1H2gwBdezvVbmhVKB0McQC7H3qbSDjLX920lUMg3l3MqffK3KCo3257/e1aDa9hwjQwB+ueiAz/aD0lCogWVaBX28T/AfPAayZjA/nKH/8K3pG2vL5TQ88V3r6+ch7Z7OberznkG6Wj9nfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UjB0Tkg/; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flZNupk/"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a991fedbd04so65953666b.3
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 05:15:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UjB0Tkg/"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d39d9f782so504470f8f.1
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 05:29:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728562537; x=1729167337; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728563371; x=1729168171; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8/gfnI2SBhHwah5Wl7yD0ISsvU/I+TP7Ml1kxxMymlo=;
-        b=flZNupk/s1XOj0zEWxTQKIZuvicVeEn6CZeNhH+fRQX7CfuSnQougrM4quA2Tq3/yY
-         TwvJ8IU5gUWFqqHy1wocuBLYLs5FYe2oDCPgFtFyDYlULQ/34kSVlLMb0d4v+F6PFuZU
-         uy05ONCbjqJe8RIrto0TqXdEuXy5IDs1Lcuq2gb8CjNOsrcEsj9WHxUIBVAUXrziopQP
-         25n5orRqVIzPVKw/KWKlM7Mfp/2m9wepoBZKX8BvqghZgjxfzWXjoIiYpBUnbNQO0ekB
-         SdAb+L6ZF4SYOfCfE85q3gfX8BvmTSsQbzb5nUzLyrfQBhPmadATo84MIdUaypXxv9Ne
-         9RZA==
+        bh=7xvMbYMm9wWbmsflgMl5yPpAedwshWLdYVA6SaZwnPw=;
+        b=UjB0Tkg/Ju+M53r94rf/pm8kTdORfuEAxZZ2AJ4b8gl6teIpw88UHj/PoMcGb+cd1B
+         bd5hWLX0otpfE8573y3u5j7yLOWGsMjBsxMLCYGcNJNCZjRsRl6bS3dWgLIw8B51s6FP
+         31Fu6CP3wqgJp5rgRlj7WDNfUOaqWbJQBiYWbgL3cYBHel8CBlvAy1etl8vMOPEclzCz
+         aWOik+4+1r2S5lX6GoP5PCrw+nB1ccn/HRiMD+e5PNgQV+CYqec3sCxRUTl4RChiLzb2
+         9shwhMg+hN2kkAnETVHKn5sQ+qApUapttyIseb3MOCCXHK/IpO7UjsA9SeuGyNeY5WiO
+         bvdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728562537; x=1729167337;
+        d=1e100.net; s=20230601; t=1728563371; x=1729168171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8/gfnI2SBhHwah5Wl7yD0ISsvU/I+TP7Ml1kxxMymlo=;
-        b=JMxX8zdhWn/DShdxgRmXzNYtpwDkZDGwDRs8f7DkMd9iggyQVhrk4BI2qLgvYgFm28
-         946YxfQXQu0TAfige+410EgrqvVTooRgy1bHweiSW/EcVz6IjIfDVYtB8Acz/5+47v11
-         XKACcHr0VqUFgkdFeBYy7XgHuZhjZgqqp7ryxpzpNt5299Qhs6kHZefiahSluMVXjVyF
-         JgducW31KZFNMkUnABNw4pk/JykoltIfHHRoowlmXRMQXUuD/0vGCmdgghXQLmkx6fGb
-         A44Xpn5I7dtkrFf8dqrOPHeK0p8/NEOiNXBnIi1gLkC1uzl8Gz4vP46QjXZ6n+BijTcm
-         p6Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWRmxXS/+bujo9vt30RWvcB5jPnu6yMYkm3WhX2AkVlQOgV+CxNfbwRUiQc7EjBtFcHWE3DqfALQ3I=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzwLUhtq6iy7pGjS2XtSj/WvmQTcNppyVhRVsFBacrxoJ3Ff4mx
-	oBG94BP2NP46unVgRbR8QZKcBpkNvOcdaZzN6s4K9BkgILjEanNOonRsBR8DsHlwJi35llJO2+n
-	ZlE9rEq0ueYop19EXONAm0Q6jxtw=
-X-Google-Smtp-Source: AGHT+IEiYRJRB+HkFMOeRqY1TKBP80bIZBEqHDnrqmizaC4i1QreztoqIqB9+SJ0fIqKMwJiVZrFvtR1VgO8tJ6JNyg=
-X-Received: by 2002:a05:6402:249f:b0:5c7:202f:ec9b with SMTP id
- 4fb4d7f45d1cf-5c91d58ecf9mr7898995a12.16.1728562536143; Thu, 10 Oct 2024
- 05:15:36 -0700 (PDT)
+        bh=7xvMbYMm9wWbmsflgMl5yPpAedwshWLdYVA6SaZwnPw=;
+        b=WSRq1H2VPvr1MCot0fXl9uSDf14FasDpOE+Dovd+NEoehPydTEFWCqsxqNziYbKedk
+         VO9Xgja3N8XDtpYZgkW/zBITqzoEO1E35TNinKXUEpPYNW5cKjRAY7NH6FP0+LK59AyI
+         mjtJP7gere5+DzST8WcxIUjJrATA+lpLenvSQASQmLc/35J++2/3Ayd52A8NIvAHAqQq
+         l3ITnnOBScAylwXsrWnINrya/318pjvWjHtnkJEjGTBZBZLFP96MUgolKnWsRstISRhM
+         qJlO7/a14cRbXe4cNjqAwq+iM6Y+rAFC8+6qSax47edIRNwSwTkQQi8f+WNo3mRKCsNm
+         4gNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjhCSwGvXVqItbaqRs849FLqsOeTon+pb+cH0FEDxoMsmwMVZUI2E9EEwq61vdI6okHTAIih7AaEc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx4UsxTJWDTpJvjG77fUP35eAAhKQfO781oIJNsQJk7F0xTWEuw
+	9d1KMGmau2tNedJ+iMlcTvZrDxb9O5TMqzRKwor9fZ75NPJXPPd6343VipTLPlcGgPgbivievjj
+	jfdQi+pmVH2YsS/pCUYi0HmrB2Hq/WPa8LrCt
+X-Google-Smtp-Source: AGHT+IFiEOCz+4oYVsNQrtIRYCVjfwTQ+GKkrbG7vHFiSh58inIZVKcmGsdJT2LV421GZQdW2+IWPpPAN1a2dPbCsIs=
+X-Received: by 2002:adf:facd:0:b0:37d:39c8:ecca with SMTP id
+ ffacd0b85a97d-37d3ab23165mr3640257f8f.55.1728563370779; Thu, 10 Oct 2024
+ 05:29:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1728459624.git.zhoubinbin@loongson.cn> <172855884981.3258793.17729935826036139739.b4-ty@kernel.org>
-In-Reply-To: <172855884981.3258793.17729935826036139739.b4-ty@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 10 Oct 2024 18:15:22 +0600
-Message-ID: <CAMpQs4+0_P0ExcU7O12XvKPQ+CoP8KpAWUJpL2wP4--+gWQ6hA@mail.gmail.com>
-Subject: Re: (subset) [PATCH v3 0/9] ASoC: Some issues about loongson i2s
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Neil Armstrong <neil.armstrong@linaro.org>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Weidong Wang <wangweidong.a@awinic.com>, Prasad Kumpatla <quic_pkumpatl@quicinc.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Shuming Fan <shumingf@realtek.com>
+References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+ <ZwbAvEnrzu6UUgGl@J2N7QTR9R3> <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
+ <ZwewMw8jBh6OU-L_@J2N7QTR9R3>
+In-Reply-To: <ZwewMw8jBh6OU-L_@J2N7QTR9R3>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 10 Oct 2024 14:29:18 +0200
+Message-ID: <CAH5fLgi_Dg_a+-+KfKgzoo0z8vF5h7JT9DrFccx9C80qitsg7Q@mail.gmail.com>
+Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all architectures
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Matthew Maurer <mmaurer@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, rust-for-linux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark:
-
-On Thu, Oct 10, 2024 at 5:14=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Thu, Oct 10, 2024 at 12:45=E2=80=AFPM Mark Rutland <mark.rutland@arm.com=
+> wrote:
 >
-> On Wed, 09 Oct 2024 15:51:42 +0800, Binbin Zhou wrote:
-> > This patch set is mainly about Loongson i2s related issues.
+> On Wed, Oct 09, 2024 at 10:15:35PM +0200, Alice Ryhl wrote:
+> > On Wed, Oct 9, 2024 at 7:43=E2=80=AFPM Mark Rutland <mark.rutland@arm.c=
+om> wrote:
+> > >
+> > > Hi Alice,
+> > >
+> > > On Tue, Oct 08, 2024 at 05:37:16PM +0000, Alice Ryhl wrote:
+> > > > The KCFI sanitizer stores the CFI tag of a function just before its
+> > > > machine code. However, the patchable-function-entry flag can be use=
+d to
+> > > > introduce additional nop instructions before the machine code, taki=
+ng up
+> > > > the space that normally holds the CFI tag.
+> > >
+> > > To clarify, when you say "before the machine code", do you mean when
+> > > NOPs are placed before the function entry point? e.g. if we compiled
+> > > with -fpatchable-function-entry=3DM,N where N > 0? I'll refer tho thi=
+s as
+> > > "pre-function NOPs" below.
+> > >
+> > > There's an existing incompatibility between CFI and pre-function NOPs
+> > > for C code, because we override -fpatchable-function-entry on a
+> > > per-function basis (e.g. for noinstr and notrace), and we don't
+> > > currently have a mechanism to ensure the CFI tag is in the same place
+> > > regardless. This is why arm64 has CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
+> > > depend on !CFI.
+> > >
+> > > For C code at least, just using regular -fpatchable-function-entry=3D=
+M or
+> > > -fpatchable-function-entry=3DM,0 shouldn't change the location of the=
+ CFI
+> > > tag relative to the function entrypoint, and so should have no advers=
+e
+> > > effect on CFI.
+> > >
+> > > Is Rust any different here?
 > >
-> > Please allow me to briefly explain this patch set:
-> > Patch 1-2: Add ES8323 codec required on Loongson-2K2000
-> > Patch 3-4: Add uda1342 codec required on Loongson-2K1000
-> > Patch 5: Fix the problem of unable to detect codec under FDT system.
-> > Patch 6-7: Add Loongson i2s platform device support
-> > Patch 8-9: Related DTS support.
+> > Ah, no it shouldn't be. Sami can you confirm?
 > >
-> > [...]
+> > > > In this case, a backwards offset is applied to the CFI tag to move
+> > > > them out of the way of the nop instructions. To ensure that C and R=
+ust
+> > > > agree on the offset used by CFI tags, pass the
+> > > > -Zpatchable-function-entry to rustc whenever it is passed to the C
+> > > > compiler.
+> > >
+> > > As above, I suspect this isn't necessary to make CFI work, for any ca=
+se
+> > > that works with C today, due to -fpatchable-funtion-entry being
+> > > overridden on a per-function basis. Are you seeing a problem in
+> > > practice, or was this found by inspection?
+> > >
+> > > However IIUC this will allow rust to be traced via ftrace (assuming r=
+ust
+> > > records the instrumented locations as gcc and clang do); is that the
+> > > case? Assuming so, is there any ABI difference that might bite us? On
+> > > arm64 we require that anything marked instrumented with
+> > > patchable-function-entry strictly follows the AAPCS64 calling convent=
+ion
+> > > and our ftrace trampolines save/restore the minimal set of necessary
+> > > registers, and I don't know how rust whether rust will behave the sam=
+e
+> > > or e.g. use specialized calling conventions internally.
+> >
+> > Well, I was told that it's a problem and was able to trigger a failure
+> > on x86. I didn't manage to trigger one on arm64, but I wasn't sure
+> > whether that was me doing something wrong, or whether the problem only
+> > exists on x86. We already have the flag on x86 for FINEIBT,
 >
-> Applied to
+> I believe that hte problem only exists on x86, becaause they use
+> patchable-function-entry for their FINEIBT patching (and use -mfentry
+> for ftrace), whereas everyone else uses patchable-function-entry for
+> ftrace.
 >
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-=
-next
+> > but I thought on the off chance that it's not a problem in practice on
+> > arm, it still doesn't hurt to add the flag.
 >
-> Thanks!
+> It won't adversely affect CFI, but it will open up rust code for ftrace,
+> so I'm not sure that "it doesn't hurt".
 >
-> [1/9] ASoC: dt-bindings: Add Everest ES8323 Codec
->       commit: 5bf2bea8a8b3d0255953868c7bf652235a17a65d
-> [2/9] ASoC: codecs: Add support for ES8323
->       commit: b97391a604b9e259c6a983fc1b715d205d9da505
-> [3/9] ASoC: dt-bindings: Add NXP uda1342 Codec
->       commit: de567431596a8163a9441407fdab315f12bc2769
-> [4/9] ASoC: codecs: Add uda1342 codec driver
->       commit: de0fb25e37aae7aae133d6c3d0b0e1e31a79878d
-> [5/9] ASoC: loongson: Fix component check failed on FDT systems
->       (no commit info)
+> AFAICT at the moment this isn't necessary for CFI, so can we drop this
+> patch for now?
 
-Thanks for applying this patchset.
+I'm okay with dropping this patch for now.
 
-But I don't seem to see the 5th patch in the for-next branch, what
-other questions do you have about that patch?
-On FDT systems we need this patch, otherwise the component check will fail.
-
-Thanks.
-Binbin
-> [6/9] ASoC: dt-bindings: Add Loongson I2S controller
->       commit: d4c2e9e33a0c903cc3a00114d6c02aa2cf403d33
-> [7/9] ASoC: loongson: Add I2S controller driver as platform device
->       commit: ba4c5fad598c07492844e514add3ccda467063b2
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
->
+Alice
