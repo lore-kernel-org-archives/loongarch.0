@@ -1,116 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E16919F41D;
-	Thu, 10 Oct 2024 09:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EDD2119
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 10:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728552807; cv=none; b=qPbpPVDQ+a8w6ozik17wcF4sHnzlSlMtYbOOBirI1CMQ7+FaASMvxnkQT84rDIHBrntHdnO4iEosLxOUZQa8SmUQGYr9DaJv+xEzR3v4/zcN8qEY9NRQaAZsDCe73IqkOWfDbNaxYTazOrc7k0bSNL6zeym/myyb35m2V6Bfp5A=
+	t=1728557119; cv=none; b=JCq8efy5UCiFt4lq1/GhJJhk8C34RI+fOdX3hc6h1TXtK2+HSfySvCZMQfKICbHw/lMI24eMnWvgkDH+tDZbkyvVZMWw+gF1XhttgihRaU/XUi5CruprrYC9Fjj0zj0kqeZxDZOnVUelfSMcxRrJetMwF7Fk5cQI7pY3wOcWXMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728552807; c=relaxed/simple;
-	bh=IHjj8Pm1cvim8ImsaUaQl0ADY0QKS9kDKJZxcyI9510=;
+	s=arc-20240116; t=1728557119; c=relaxed/simple;
+	bh=JcYGggWCVH3dTIk5TqTj9id32NOF4sFLETCNsN9i/v8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/kr7K7j/QChCjIu/QlHZg+ZRwrQVwQxKsyHLxgkTbFOEYPnBEgIqKDJxaMzUqyKWyjV/9jfdPxGIV2KeMOft14D/2mFu75sW25ifO3tF+kcunTi0J88LrnA4YI+JF9sL/alYVzkHMgepippNUT45QyNC9v5b6Aey+zKF7CbpTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOVNNKtr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOVNNKtr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18111C4CEC5;
-	Thu, 10 Oct 2024 09:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728552807;
-	bh=IHjj8Pm1cvim8ImsaUaQl0ADY0QKS9kDKJZxcyI9510=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TOVNNKtrf8daQuuMacjY7pAlRlt/k4vb7wjQCQYF0aVuw/4MxtY1IEDmecYy869WA
-	 eL70bjSLCWzeSg87onzBIfUU+BSv9+MhwYkC/eIJ924jg8Lyc5Ubk1r7GreDoZptDJ
-	 teVpdajxre4MsBPJA9mql4sRA7irY3J0uloNZaSVW+zDmxt4CzZVh6D1UOnW7YD45l
-	 /XMlYCHBMS9YgkvBhtdnENr2FDWIvohUoNzgrqIpRpXIOWraQQuc8IrP9OJlfmnsWJ
-	 /Y7TcehyVVbI3ky02lFC2Bu9TlmKaTridXnO8cdxvFKPK24cuDB2/RZZ9PsqYrxZV2
-	 Py4W9D9Jti/XA==
-Date: Thu, 10 Oct 2024 12:29:39 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=jDRFBxKlmvlbQ8zqguYBPOYolTMRjgsepRpIl5IRtHlcOPTTbbD8MUTYsWmLluw9MEJewQCAYpxHTSXhmLOgtfviUCOGwbFsNvf2mbOS4H3O/vB2omLxHL5de/CHbq0lJ3rtEP1zbW0jtxSpzKdo4MC2Uk5BwLFuk30RkqrUQ/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31F8B497;
+	Thu, 10 Oct 2024 03:45:46 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1225C3F58B;
+	Thu, 10 Oct 2024 03:45:11 -0700 (PDT)
+Date: Thu, 10 Oct 2024 11:45:07 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Matthew Maurer <mmaurer@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <Zweeg3oc-zrrG_D9@kernel.org>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-8-rppt@kernel.org>
- <20241009132427.5c94fb5942bae3832446bca5@linux-foundation.org>
+	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all
+ architectures
+Message-ID: <ZwewMw8jBh6OU-L_@J2N7QTR9R3>
+References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
+ <ZwbAvEnrzu6UUgGl@J2N7QTR9R3>
+ <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241009132427.5c94fb5942bae3832446bca5@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
 
-On Wed, Oct 09, 2024 at 01:24:27PM -0700, Andrew Morton wrote:
-> On Wed,  9 Oct 2024 21:08:15 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+On Wed, Oct 09, 2024 at 10:15:35PM +0200, Alice Ryhl wrote:
+> On Wed, Oct 9, 2024 at 7:43 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > Hi Alice,
+> >
+> > On Tue, Oct 08, 2024 at 05:37:16PM +0000, Alice Ryhl wrote:
+> > > The KCFI sanitizer stores the CFI tag of a function just before its
+> > > machine code. However, the patchable-function-entry flag can be used to
+> > > introduce additional nop instructions before the machine code, taking up
+> > > the space that normally holds the CFI tag.
+> >
+> > To clarify, when you say "before the machine code", do you mean when
+> > NOPs are placed before the function entry point? e.g. if we compiled
+> > with -fpatchable-function-entry=M,N where N > 0? I'll refer tho this as
+> > "pre-function NOPs" below.
+> >
+> > There's an existing incompatibility between CFI and pre-function NOPs
+> > for C code, because we override -fpatchable-function-entry on a
+> > per-function basis (e.g. for noinstr and notrace), and we don't
+> > currently have a mechanism to ensure the CFI tag is in the same place
+> > regardless. This is why arm64 has CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
+> > depend on !CFI.
+> >
+> > For C code at least, just using regular -fpatchable-function-entry=M or
+> > -fpatchable-function-entry=M,0 shouldn't change the location of the CFI
+> > tag relative to the function entrypoint, and so should have no adverse
+> > effect on CFI.
+> >
+> > Is Rust any different here?
 > 
-> > Using large pages to map text areas reduces iTLB pressure and improves
-> > performance.
+> Ah, no it shouldn't be. Sami can you confirm?
 > 
-> Are there any measurable performance improvements?
-
-I don't have any numbers, I just followed the common sense of "less TLB
-entries is better" and relied on Thomas comments from previous discussions.
- 
-> What are the effects of this series upon overall memory consumption?
- 
-There will be some execmem cache fragmentation and an increase in memory
-consumption. It depends on the actual modules loaded and how large it the
-fragmentation.
-
-For a set of pretty randomly chosen modules where most come from
-net/netfilter I see an increase from 19M to 25M.
-
-> The lack of acks is a bit surprising for a v5 patch, but I'll add all
-> this to mm.git for some testing, thanks.
+> > > In this case, a backwards offset is applied to the CFI tag to move
+> > > them out of the way of the nop instructions. To ensure that C and Rust
+> > > agree on the offset used by CFI tags, pass the
+> > > -Zpatchable-function-entry to rustc whenever it is passed to the C
+> > > compiler.
+> >
+> > As above, I suspect this isn't necessary to make CFI work, for any case
+> > that works with C today, due to -fpatchable-funtion-entry being
+> > overridden on a per-function basis. Are you seeing a problem in
+> > practice, or was this found by inspection?
+> >
+> > However IIUC this will allow rust to be traced via ftrace (assuming rust
+> > records the instrumented locations as gcc and clang do); is that the
+> > case? Assuming so, is there any ABI difference that might bite us? On
+> > arm64 we require that anything marked instrumented with
+> > patchable-function-entry strictly follows the AAPCS64 calling convention
+> > and our ftrace trampolines save/restore the minimal set of necessary
+> > registers, and I don't know how rust whether rust will behave the same
+> > or e.g. use specialized calling conventions internally.
 > 
+> Well, I was told that it's a problem and was able to trigger a failure
+> on x86. I didn't manage to trigger one on arm64, but I wasn't sure
+> whether that was me doing something wrong, or whether the problem only
+> exists on x86. We already have the flag on x86 for FINEIBT, 
 
--- 
-Sincerely yours,
-Mike.
+I believe that hte problem only exists on x86, becaause they use 
+patchable-function-entry for their FINEIBT patching (and use -mfentry
+for ftrace), whereas everyone else uses patchable-function-entry for
+ftrace.
+
+> but I thought on the off chance that it's not a problem in practice on
+> arm, it still doesn't hurt to add the flag.
+
+It won't adversely affect CFI, but it will open up rust code for ftrace,
+so I'm not sure that "it doesn't hurt".
+
+AFAICT at the moment this isn't necessary for CFI, so can we drop this
+patch for now?
+
+If we want to pass these flags for !x86, the justification should be to
+enable ftrace for rust code, and we should test that actually works
+(e.g. by testing ftrace with rust code).
+
+What happens on x86 for ftrace and rust?
+
+> Regarding the AAPCS64 calling convention thing ... rustc uses the Rust
+> calling convention for functions internally in Rust code and I don't
+> know whether that changes anything relevant for what you mention.
+> Matthew/Sami do you know?
+
+From their replies it sounds like that happens to be true in practice
+today, but as above I think we should go test this actually works.
+
+Mark.
