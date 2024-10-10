@@ -1,58 +1,58 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A4420604F
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D045206940
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728584797; cv=none; b=IZdhE7MqNKJXhW54qkZDDIYBCL0oTBlplHUtNfWUTh3JLr3+Gg+Ys7LQytery9XDgWKz7Xjmj31aiyR8e1uUpUyUcvkkSOvNRQIJJJ3iSVVg5LpfRs5PglxQSlfE2Ap9InBhlF3hr+YfYAAXZ6fBmjmsIouQThg/8B50W0RpFVk=
+	t=1728584798; cv=none; b=J+ytwgcq6dkGDTA1pcLsxONsCoGqwJUAReR1mMRPJkCk6GB9KsW+ZLFcV20apqouth+e3CAkUcZtxEYdOh2Y22ERrC9fisKnx7UUbNKlbTWz7AVJDjuMxbNC8MPUwTqrtugbTaZ2tLvePK6IabSipivZbRjrFEdPpNS0+UDG2WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728584797; c=relaxed/simple;
-	bh=aOhxn0fpApYS19RFll+QfwBJLF7yF1QDDa2KZCpFRDw=;
+	s=arc-20240116; t=1728584798; c=relaxed/simple;
+	bh=7Japh8LNPjEnA4nandXvXnjfnzZjLu2hqYfo+wet/X8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kf+/iTOTzVmg1C7le+O1q4QYig0spaNR1c4OP2v/5MsUVbjDBH5yqsalbJNpYsmU/kXeUJJ8wf+ZtD8SV+8nl4BCXw9IDi0pbt86WG5KnUDdS1Cb6pozbOgCBzCQoek0+PAwKGVoi7Li5d9RxdTAS68XaK60daKOoQO5aokkTrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2o7jarV; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=GvHP/uRSbre5kyMZOu+0OE/9H3h35fms8iAxlzfujk41gcrkM4r/3cd3C2AIf2xYFbbTJ43Gh1ctH2IKNme9v3PTIJmTBQvfT0KI20cNDfSi78HziKYEsNxD2h2sTEOuL4By+dfGqnfyr1ZqxW2p6OrEU1V4/ss3J8ILRI/fQ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iubZGgaw; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2o7jarV"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e1fbe2a6b1so23282167b3.2
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:26:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iubZGgaw"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-7d4f9974c64so899744a12.1
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728584794; x=1729189594; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728584796; x=1729189596; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:reply-to:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BN+hsHae4h8wzhzshUJRGKM30XxzO0F311sC9z4rUGc=;
-        b=j2o7jarVtvzjp0AT5RDwQJuJvwlBpxIS/FuwYJ7Dnyj9qOUYMFHSLDjv54l7/HeA2w
-         e4wExH+0+9gCmPp1kH51uwz2qCOUBfUaMp7DdIsctPKqhXt/9TqBl34Rw5x2O/svCy7r
-         H3NZ/J0lnoyAlmuwHl5y2dUDqzSjKEFLOLuHrnFSiNPtDkjTEc7mI/xxB0XPIPy7aZML
-         r1M55xniB6e+4hqRbti/9oleVOzRB0RvM9Puj9EH8BzyyGwqyyxnejhh3XDFz2Lpvx4n
-         N+rTONu5oBa96NPSo0UE7moCSY04saInnNzWkcWvff/BvjEBF621zSVsqbddpNYvgsfg
-         O93w==
+        bh=Ndpfmsd07O3XHkbROvy9SWySHpmtrF0LUOG5EHCQjAE=;
+        b=iubZGgawn73CkwV1h+qXsqo+H7iNtSCS/mw2SizsCWTNofHXkOllQx/hQ+4g8zWzmf
+         DcUy3vKX1djOP2GwVzoEY8P50KlxvIZLW5HlGZy0OPkJ1Ks8r5fO1nNRlC1ByAdzvg6+
+         Aa0ICg0KqG+LP4PnXKjQjWHkzYmqh8VpGgaGuUeKiIujKJemK54U5Qrrfish1CmYCabx
+         5nG2+GSy913bm39Ydgv5TbyA7PzkYOHF1njMBW4eCB2g17HdRptbRlCepqN9KZrJHuft
+         YgC3jc13Xjd2fhUZY1DKXQtTurdjymDAoeFefaItGJ+EFEBY5AXGx5tITpgfbvFdDc71
+         OR+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728584794; x=1729189594;
+        d=1e100.net; s=20230601; t=1728584796; x=1729189596;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:reply-to:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=BN+hsHae4h8wzhzshUJRGKM30XxzO0F311sC9z4rUGc=;
-        b=DV/uxBHhNVQvv/okO/L3T726/1YvzUlgd/KT6OAtTNsZA00xGgOk1pfNgMSkGecl5g
-         hRdPzuTmBcCk75KrM76w2MYLBmFFnUK8acOSSHw4SwqrKkcvWB/tmo1nCh9qa1NNdfH3
-         y8BVdNFLD4qftTsqUwpDrsMoVCwBcgrk1jrJ01P6ka3OdP9ucwK2fDplEcOMLOH7J1xW
-         VD35RT2eZPo2SAD91sHYy8T+UAif31ijXUzHYzh0XCFQ2QUGzL2UYPBRdA05aeEJIcQ0
-         Uieb8t420q650VYV1jP8Sj0iJzbDjML2Ax39b1Q86W6CAIPphInngj3F3ANSdRi0eNWw
-         S/hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRsEdUiEcVeqlTCwX4GujgrhkLcDtJGjbJqN1mAzO5ixjOlfF0YGCRcESFYCxOcx4X1M9Mczf17Xo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyY/S8F08fAYBYdv347WwdUVDoLVxZiPgRCQVX7ne1UxaMU6qyU
-	lBh9jI1owoW2O1MgOdBRDyZaYawwGc9bL0QSR+Tb8eRxsOcoJ7sZMQGMLHrOYakcfj/CpAYFEX9
-	YYQ==
-X-Google-Smtp-Source: AGHT+IEjw5s9ln5Mmco0bHKHDYNNIWwRc71SIREcZZABOz/fcRYPRAU5+BeNEqASF/uZrX6+QTap8C7eoHE=
+        bh=Ndpfmsd07O3XHkbROvy9SWySHpmtrF0LUOG5EHCQjAE=;
+        b=dWDZre/0jbsdP3tKGu1KZO4OdaC48rxSSZ4fgoDyxG57Z8xGaZ9jIG3BHZNh2GV75U
+         km0LP9A+IAtlN+8i9MAnU3xx+F4N4a1OcaReVd9uCW6TkMNeFZJT3PpK2ZMHBxO+0yLE
+         Hhd4dguwaHtXJFiTuHD1bDaIxVS4Zbl1Rie9WrmbZtQPvbwvlRrexVFpRSl+rOeZV7Yb
+         zR0soD0HNX3gyZYE6oBEPdC3ROb45XTIODGD2gyFouzeU3wOWkciV1TZLZpdF0dggNeU
+         eTekbJgcRWPVE4tb9yFsHiMfUbADP7b4BQOtPhFzeXuYoB3WO7riIrbuO0048w6LOOr9
+         FlFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWb9gcnvbC3Ci9yeCf9/Xze/zd6vaSeRD2Tdj9nnyEieesnDwpkfEYk+qvmysJxG/FtOi/HLU92Ago=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx5hErVAlSemDjq0yH93dLCSHAPtTYvVyaVqKreJKWOPXYHaMR8
+	e+JrXtuZGDg2vdsBMXHEbBKnfemgzJyB/v5dnrY8seMW+A5qRXfTAox/uP0ccInL9kpVKDRwal/
+	dyQ==
+X-Google-Smtp-Source: AGHT+IGJc8hgBZq6lOovV4Dgly5ctIXEs7jDnJfEupYxVqninaLorgqTg5WNW0BPJZYnJnHdEtp0yWaf7UM=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a05:690c:2c01:b0:6e2:3e17:1838 with SMTP id
- 00721157ae682-6e3221407b0mr440167b3.1.1728584793806; Thu, 10 Oct 2024
- 11:26:33 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a65:450a:0:b0:717:a912:c302 with SMTP id
+ 41be03b00d2f7-7ea53525e73mr49a12.1.1728584796119; Thu, 10 Oct 2024 11:26:36
+ -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 10 Oct 2024 11:23:50 -0700
+Date: Thu, 10 Oct 2024 11:23:51 -0700
 In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -62,8 +62,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20241010182427.1434605-1-seanjc@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Message-ID: <20241010182427.1434605-49-seanjc@google.com>
-Subject: [PATCH v13 48/85] KVM: x86/mmu: Don't mark unused faultin pages as accessed
+Message-ID: <20241010182427.1434605-50-seanjc@google.com>
+Subject: [PATCH v13 49/85] KVM: Move x86's API to release a faultin page to
+ common KVM
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -83,36 +84,93 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-When finishing guest page faults, don't mark pages as accessed if KVM
-is resuming the guest _without_ installing a mapping, i.e. if the page
-isn't being used.  While it's possible that marking the page accessed
-could avoid minor thrashing due to reclaiming a page that the guest is
-about to access, it's far more likely that the gfn=3D>pfn mapping was
-was invalidated, e.g. due a memslot change, or because the corresponding
-VMA is being modified.
+Move KVM x86's helper that "finishes" the faultin process to common KVM
+so that the logic can be shared across all architectures.  Note, not all
+architectures implement a fast page fault path, but the gist of the
+comment applies to all architectures.
 
 Tested-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c   | 24 ++----------------------
+ include/linux/kvm_host.h | 26 ++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 22 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index f9b7e3a7370f..e14b84d2f55b 100644
+index e14b84d2f55b..5acdaf3b1007 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4386,7 +4386,9 @@ static void kvm_mmu_finish_page_fault(struct kvm_vcpu=
- *vcpu,
- 	 * fault handler, and so KVM must (somewhat) speculatively mark the
- 	 * folio dirty if KVM could locklessly make the SPTE writable.
- 	 */
--	if (!fault->map_writable || r =3D=3D RET_PF_RETRY)
-+	if (r =3D=3D RET_PF_RETRY)
-+		kvm_release_page_unused(fault->refcounted_page);
-+	else if (!fault->map_writable)
- 		kvm_release_page_clean(fault->refcounted_page);
- 	else
- 		kvm_release_page_dirty(fault->refcounted_page);
+@@ -4370,28 +4370,8 @@ static u8 kvm_max_private_mapping_level(struct kvm *=
+kvm, kvm_pfn_t pfn,
+ static void kvm_mmu_finish_page_fault(struct kvm_vcpu *vcpu,
+ 				      struct kvm_page_fault *fault, int r)
+ {
+-	lockdep_assert_once(lockdep_is_held(&vcpu->kvm->mmu_lock) ||
+-			    r =3D=3D RET_PF_RETRY);
+-
+-	if (!fault->refcounted_page)
+-		return;
+-
+-	/*
+-	 * If the page that KVM got from the *primary MMU* is writable, and KVM
+-	 * installed or reused a SPTE, mark the page/folio dirty.  Note, this
+-	 * may mark a folio dirty even if KVM created a read-only SPTE, e.g. if
+-	 * the GFN is write-protected.  Folios can't be safely marked dirty
+-	 * outside of mmu_lock as doing so could race with writeback on the
+-	 * folio.  As a result, KVM can't mark folios dirty in the fast page
+-	 * fault handler, and so KVM must (somewhat) speculatively mark the
+-	 * folio dirty if KVM could locklessly make the SPTE writable.
+-	 */
+-	if (r =3D=3D RET_PF_RETRY)
+-		kvm_release_page_unused(fault->refcounted_page);
+-	else if (!fault->map_writable)
+-		kvm_release_page_clean(fault->refcounted_page);
+-	else
+-		kvm_release_page_dirty(fault->refcounted_page);
++	kvm_release_faultin_page(vcpu->kvm, fault->refcounted_page,
++				 r =3D=3D RET_PF_RETRY, fault->map_writable);
+ }
+=20
+ static int kvm_mmu_faultin_pfn_private(struct kvm_vcpu *vcpu,
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 504483d35197..9f7682ece4a1 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1231,6 +1231,32 @@ static inline void kvm_release_page_unused(struct pa=
+ge *page)
+ void kvm_release_page_clean(struct page *page);
+ void kvm_release_page_dirty(struct page *page);
+=20
++static inline void kvm_release_faultin_page(struct kvm *kvm, struct page *=
+page,
++					    bool unused, bool dirty)
++{
++	lockdep_assert_once(lockdep_is_held(&kvm->mmu_lock) || unused);
++
++	if (!page)
++		return;
++
++	/*
++	 * If the page that KVM got from the *primary MMU* is writable, and KVM
++	 * installed or reused a SPTE, mark the page/folio dirty.  Note, this
++	 * may mark a folio dirty even if KVM created a read-only SPTE, e.g. if
++	 * the GFN is write-protected.  Folios can't be safely marked dirty
++	 * outside of mmu_lock as doing so could race with writeback on the
++	 * folio.  As a result, KVM can't mark folios dirty in the fast page
++	 * fault handler, and so KVM must (somewhat) speculatively mark the
++	 * folio dirty if KVM could locklessly make the SPTE writable.
++	 */
++	if (unused)
++		kvm_release_page_unused(page);
++	else if (dirty)
++		kvm_release_page_dirty(page);
++	else
++		kvm_release_page_clean(page);
++}
++
+ kvm_pfn_t __kvm_faultin_pfn(const struct kvm_memory_slot *slot, gfn_t gfn,
+ 			    unsigned int foll, bool *writable,
+ 			    struct page **refcounted_page);
 --=20
 2.47.0.rc1.288.g06298d1525-goog
 
