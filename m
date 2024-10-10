@@ -1,58 +1,58 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2645200112
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D22201243
+	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 18:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728584772; cv=none; b=jG25wzymlaZbHGbtWCNLC5jKYl5kRpwnTS6NZYUdki5N5e9A0AD9MXsPJpQ5qmncXwm5siFHFJ6oazKs8S/zaPRkBJew7V3MzJaHalBdrYT20sn5cchMKw7Pl69ndjTxVyBNzTT5s0uIUNuAgD4LdUJUwoCcg9lWGiS4Ze9W/Sc=
+	t=1728584774; cv=none; b=CAkHVZlUQqGbEww2fvCxjaEm8p6iUTD7/VF7ESDCk2OeDZfuZvSSKJTYTdI32A6KYPEZur190qmrw131m3/cFyTM0NRCQ7Z4xQCQtZAvosztRsl+hwsDf72temS02HLHGuw8Rizu6PBM+3KEvkk8lHaMQtHwjYoSARilsPc5GXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728584772; c=relaxed/simple;
-	bh=FOrzmk+4dQuoAh6BJ51EHAqwvBR4fq2vz5+jTHFfYUI=;
+	s=arc-20240116; t=1728584774; c=relaxed/simple;
+	bh=t32hhiDzmz/KF55Q/3vtmKLh+T++3xGW8zC+Y7mhAxY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WfhTqrAF4Ba2FJztTLDOEvQIi5JzuGTIjerpvo9oGc/bGb9tRWPkxqEQTwJO3YvbJ+8yLjwrlonGmmm8wpZOio9nHC744VoYjenn9YwcJolWmDj2c/oa9V1/JMe5zmzJfed08HRB46r+yBzCsXvEDWBoUHO/5yg5GXOl8ohfc1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nyOdPXPq; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=WeTrhex4v0u1gPanCcL15a9ihylm50Ht28eSfd/mKFg7V5zgQielucb0DlS53qbWAyeXu1496fs0HaUZqpdXyZHsyqmrnJIPrdf864zqfsjUm9mZwZW7jDQI8ESWq3opKb70vXufSqGIvU3Oo5IQ/RZZuioEsT8xNBviZjmgRFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xXcF6s5i; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nyOdPXPq"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-205425b7e27so11055635ad.0
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:26:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xXcF6s5i"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-7ea38f581c9so1274181a12.0
+        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 11:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728584769; x=1729189569; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728584772; x=1729189572; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:reply-to:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=551DSOChXG5A+yDanUyc1gC1jxg9ryEf27npUXDW1CE=;
-        b=nyOdPXPqVt/0IH+i/8V6rL0MkXAa8Wla0VX1ldsTEwf0kqJetwRaligHq3fD6nJBdH
-         3aQ/wouppXNFzWVu5X+5XAPKyY/MdOTQM9vHNsFe22LYVOymxUiAcJrbjmH17lhc4/bN
-         UmHCxI8WGdAzLHxPM1B+h/xwzc9H5xaay14G72g/QY6PJgPfvwHvO8hU76liQsXKIzY0
-         fPan8vCzo4BzXAWPGQDUC7TMa2OhHlqYGS+a/ZIxiZm28+VxE1CbDypjICAS4WBCYkl7
-         z3Okr5DfRmEEMETKk1yZbHnDSB9s2zP9oW+V1zgA324qbT5tb9vPEK0QMX7ZQYLzVeBf
-         zFaQ==
+        bh=UQkfEcPm4BCGA2NCPxYbIcRTjXNaFQKnzNzKtIM0PSc=;
+        b=xXcF6s5i4CazMN1f9c1RAKn4hx+gCARyfGcPnwc7Joh6SF/pzNuonwOGjyHUgM5zQx
+         3fqXBxZG9L/i+TscCPL1AEbt8qCIPS4nrWAQprkfLhbx8TKoPP/KuDOPacDQPwIUvReD
+         jgwYpEtMhXVQT5iA/jQy5KEa320ybmvTfA6/PwWv2KKpJvLaUMiT1n3HugzNIawtAv77
+         RbL0dSXvVM9Y9Hh6zKaQFOxJJAsqX9MqKHNU7sqpNhbKjybcviy1aCpNVN8iJSgruxe9
+         2E+RKvZumFYsLlvctllXay5C9b5rwzDTkeCSyDg6NuUB12lx2NaMQXtXunM3ZtHOTLPg
+         CfOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728584769; x=1729189569;
+        d=1e100.net; s=20230601; t=1728584772; x=1729189572;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:reply-to:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=551DSOChXG5A+yDanUyc1gC1jxg9ryEf27npUXDW1CE=;
-        b=QkaMWHH1kDF4vakxpQEi3He1wyB0GvISsEHJVmM3hu5Btlh701FQmOzm3LZ1e+O5eZ
-         LH3Nw5p5M18GyncUqZ2ws4mRvqAj70x/2CZt9N+wVBRNhAKi1VeQyzM/c2ICQG6CMflL
-         3tM8/YOd9+Sm5E7wqVG8XxHzbq/YVC7Jy7R7OLTLK7X4t97G27uq9hZioDQQnImfKF5O
-         8TC/Ul3QAJiTrcGInFqaX8iFMM18D7KJ1kUqlOwKccl6P2EXjKE7xh2vtxrzSVNBoH0G
-         KdQXIP/TImAw59XJ+UQq0JULHvErqxipM31vF3C1w/HDARCtO/5RolpSbMKcHOMJeuSp
-         gHcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfXq5K8uHDQeu3jXXo6A/AVQgy85flxn2smcKB4gQ/nAcZnRWKdtJ38D2NOYBb66CWXOrW4FxQnzw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwKk2iBNOxm4/+jqqRatOKjLKNbfq+3cXSmrG88vcbFJmXYh+PV
-	0gM/MAalSb+H0ZV1bZ+n9JQ/OnTFXTt8KVGaWv7U7+2sdBV9cxRQozbrjxJybbTjTFxOZeb+Dph
-	zkQ==
-X-Google-Smtp-Source: AGHT+IGKm7yq47izgr1FmkV+xWCQVhrzT+Qt86SXT8qqzZ7digIfsw6vfVxyVo72E4861BiCHpsXRIV5BzI=
+        bh=UQkfEcPm4BCGA2NCPxYbIcRTjXNaFQKnzNzKtIM0PSc=;
+        b=H3NUIdLyrL5VK4e6nnlDvPFCJI+eICqNR8kRtgLWiJUsRUBa3onr84ak6kusgCUCd2
+         HN/xmeSSL2FUG2QzsuPO2NMga2eqDqnTLbp1f2tFnGmr5FWiuD1Fi3dVyYEvE1LfU8+W
+         F8qSx6XaN1h+3sFXLuO7XOTiaooy4zcx0zf+BXk2gKQR9KTHjTaynXTKJKuOh2SMF7ld
+         czPH6rCPemlqWeAU95ni5EIOsEhHfOcDAfUoUJZW1P+FLYIQ44FSMRy/4lW5PiuZt98W
+         kqHss0keoHmpBLkGHCkzk8eIR7N3jcnLp7tZ4ovyX4QZQ9Pcb3HoN54LRmv2VziqypxE
+         o2pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZn2CprgAJmqrtfe+Bu8kM53kjEkUlC2X+SqmvM5Is6nGu7vhW0E3zQLeg4OJSqcjos4ngGO2iEbk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzp1r3/aQDeG2lc/0w19N5bAhDZicM2zvP7TbhAAZJ/Q8PKroQ5
+	OqDI4tf1B8jPXBmdy7DxFEweFfp58S3w00rvBA74oWV4UUTGEyV602w/Cp4Vh0pfsMvK81+/5n3
+	7KA==
+X-Google-Smtp-Source: AGHT+IHq9hr54ORGaKAudrJMY0Hy9bRYjmUvRYz8zAm0RAj3x+bD9YD3f2uWGLgDblXeQYOnnP141duUJXA=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:9d:3983:ac13:c240])
- (user=seanjc job=sendgmr) by 2002:a17:902:e80f:b0:1fa:2ae7:cc6a with SMTP id
- d9443c01a7336-20c63722d7fmr648865ad.4.1728584768900; Thu, 10 Oct 2024
- 11:26:08 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a63:1d03:0:b0:7db:539:893c with SMTP id
+ 41be03b00d2f7-7ea535a65c6mr17a12.9.1728584770873; Thu, 10 Oct 2024 11:26:10
+ -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 10 Oct 2024 11:23:39 -0700
+Date: Thu, 10 Oct 2024 11:23:40 -0700
 In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -62,9 +62,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20241010182427.1434605-1-seanjc@google.com>
 X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
-Message-ID: <20241010182427.1434605-38-seanjc@google.com>
-Subject: [PATCH v13 37/85] KVM: x86/mmu: Add "mmu" prefix fault-in helpers to
- free up generic names
+Message-ID: <20241010182427.1434605-39-seanjc@google.com>
+Subject: [PATCH v13 38/85] KVM: x86/mmu: Put direct prefetched pages via kvm_release_page_clean()
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
@@ -84,124 +83,37 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Prefix x86's faultin_pfn helpers with "mmu" so that the mmu-less names can
-be used by common KVM for similar APIs.
+Use kvm_release_page_clean() to put prefeteched pages instead of calling
+put_page() directly.  This will allow de-duplicating the prefetch code
+between indirect and direct MMUs.
 
-No functional change intended.
+Note, there's a small functional change as kvm_release_page_clean() marks
+the page/folio as accessed.  While it's not strictly guaranteed that the
+guest will access the page, KVM won't intercept guest accesses, i.e. won't
+mark the page accessed if it _is_ accessed by the guest (unless A/D bits
+are disabled, but running without A/D bits is effectively limited to
+pre-HSW Intel CPUs).
 
 Tested-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/mmu/mmu.c          | 19 ++++++++++---------
- arch/x86/kvm/mmu/mmu_internal.h |  2 +-
- arch/x86/kvm/mmu/paging_tmpl.h  |  2 +-
- 3 files changed, 12 insertions(+), 11 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 28f2b842d6ca..e451e1b9a55a 100644
+index e451e1b9a55a..62924f95a398 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4347,8 +4347,8 @@ static u8 kvm_max_private_mapping_level(struct kvm *k=
-vm, kvm_pfn_t pfn,
- 	return max_level;
- }
+@@ -2965,7 +2965,7 @@ static int direct_pte_prefetch_many(struct kvm_vcpu *=
+vcpu,
+ 	for (i =3D 0; i < ret; i++, gfn++, start++) {
+ 		mmu_set_spte(vcpu, slot, start, access, gfn,
+ 			     page_to_pfn(pages[i]), NULL);
+-		put_page(pages[i]);
++		kvm_release_page_clean(pages[i]);
+ 	}
 =20
--static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
--				   struct kvm_page_fault *fault)
-+static int kvm_mmu_faultin_pfn_private(struct kvm_vcpu *vcpu,
-+				       struct kvm_page_fault *fault)
- {
- 	int max_order, r;
-=20
-@@ -4371,10 +4371,11 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu =
-*vcpu,
- 	return RET_PF_CONTINUE;
- }
-=20
--static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault =
-*fault)
-+static int __kvm_mmu_faultin_pfn(struct kvm_vcpu *vcpu,
-+				 struct kvm_page_fault *fault)
- {
- 	if (fault->is_private)
--		return kvm_faultin_pfn_private(vcpu, fault);
-+		return kvm_mmu_faultin_pfn_private(vcpu, fault);
-=20
- 	fault->pfn =3D __gfn_to_pfn_memslot(fault->slot, fault->gfn, false, true,
- 					  fault->write, &fault->map_writable);
-@@ -4409,8 +4410,8 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, s=
-truct kvm_page_fault *fault
- 	return RET_PF_CONTINUE;
- }
-=20
--static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *f=
-ault,
--			   unsigned int access)
-+static int kvm_mmu_faultin_pfn(struct kvm_vcpu *vcpu,
-+			       struct kvm_page_fault *fault, unsigned int access)
- {
- 	struct kvm_memory_slot *slot =3D fault->slot;
- 	int ret;
-@@ -4493,7 +4494,7 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, str=
-uct kvm_page_fault *fault,
- 	if (mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn=
-))
- 		return RET_PF_RETRY;
-=20
--	ret =3D __kvm_faultin_pfn(vcpu, fault);
-+	ret =3D __kvm_mmu_faultin_pfn(vcpu, fault);
- 	if (ret !=3D RET_PF_CONTINUE)
- 		return ret;
-=20
-@@ -4570,7 +4571,7 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, s=
-truct kvm_page_fault *fault
- 	if (r)
- 		return r;
-=20
--	r =3D kvm_faultin_pfn(vcpu, fault, ACC_ALL);
-+	r =3D kvm_mmu_faultin_pfn(vcpu, fault, ACC_ALL);
- 	if (r !=3D RET_PF_CONTINUE)
- 		return r;
-=20
-@@ -4661,7 +4662,7 @@ static int kvm_tdp_mmu_page_fault(struct kvm_vcpu *vc=
-pu,
- 	if (r)
- 		return r;
-=20
--	r =3D kvm_faultin_pfn(vcpu, fault, ACC_ALL);
-+	r =3D kvm_mmu_faultin_pfn(vcpu, fault, ACC_ALL);
- 	if (r !=3D RET_PF_CONTINUE)
- 		return r;
-=20
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_interna=
-l.h
-index 633aedec3c2e..59e600f6ff9d 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -235,7 +235,7 @@ struct kvm_page_fault {
- 	/* The memslot containing gfn. May be NULL. */
- 	struct kvm_memory_slot *slot;
-=20
--	/* Outputs of kvm_faultin_pfn.  */
-+	/* Outputs of kvm_mmu_faultin_pfn().  */
- 	unsigned long mmu_seq;
- 	kvm_pfn_t pfn;
- 	bool map_writable;
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.=
-h
-index 143b7e9f26dc..9bd3d6f5db91 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -812,7 +812,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, str=
-uct kvm_page_fault *fault
- 	if (r)
- 		return r;
-=20
--	r =3D kvm_faultin_pfn(vcpu, fault, walker.pte_access);
-+	r =3D kvm_mmu_faultin_pfn(vcpu, fault, walker.pte_access);
- 	if (r !=3D RET_PF_CONTINUE)
- 		return r;
-=20
+ 	return 0;
 --=20
 2.47.0.rc1.288.g06298d1525-goog
 
