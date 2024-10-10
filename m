@@ -1,124 +1,146 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC131CB523
-	for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 14:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAC71CC146;
+	Thu, 10 Oct 2024 15:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728571736; cv=none; b=HZPEDwIFJKtwc2zRJ20F6b1s/Qs+YDDP7LiZdQG9nFr2tQansvfI0S+Q1+7NhAscbgw7nzpfFoL9nNTeBknXwqHBBl5K7qj9amHhD36WXHoNYj8fjrcU7LoKnZpzvAZwJvuXbhU0K2T8teGWOCLlCUJpIfi9M2rtx5pwUoXJZhw=
+	t=1728573883; cv=none; b=eGuiKwfNt5EeK2L+p3GpJvpvhjOCDQd8f2FvlFZK+oNh6Yyln98htJS7xhllkqSK96MDO4RVrPLnCQ3OODE0JJVEzvBzmprYJu0twqWeUnMj8pCVx13Gvwzcwiq1XVzh8w8FnvRojIvtjGcgpXVyMlNOh65ay4RZEsRP0EJPI2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728571736; c=relaxed/simple;
-	bh=MD5Y1JFSub7m+UPd21beBuvfhWy8eN9Icl2C2agrsAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z1fV4369kSldhWkeGM+aaDhD0wG0puQTFr5DoZ0fniUPThxgw1dD8fA36Ln9pFbr1ur07Iky536Hv69YNPovBQlu8dhGgxQ2tTVhAXsJKVG35bKrVl+MiSF7KGgvZmG+jTU8z2+bqUAM7d9NZjrqqRvoXI1fGcWbzkDdBYnuwu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ONhuYHh7; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728573883; c=relaxed/simple;
+	bh=gnTehr7qrLMKw/pUpKhTMaCY3tpDIt6F6aFobT96HoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jH4/QwYdMYSRHgNrkotABtQpbYoq36PP1zZrVAMHMH/BrigC0mQ3WPBRfCDGKC5uYCSHibLw6MWil3ENOwGHkkXp3Ab0iCgO/KFE4EQtoEUIjSS8aVxYFfcXRyklCG/w8YapZ65fM/iUqWy6hXh+0kxtuuILYCj6NtnWD0M86os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekagPdIZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONhuYHh7"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71e01eff868so86512b3a.1
-        for <loongarch@lists.linux.dev>; Thu, 10 Oct 2024 07:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728571734; x=1729176534; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wk8mOEtaS0st9RtIbPiyvPicjXJuaraec7PuPjhsQZk=;
-        b=ONhuYHh7Nyu3ioKbAqLliWVTTIAly7/f3g9VKJwkWET6A/g/8xUz04bQlBZLCAb3b/
-         q7SLNrraKnfU+67VeHShPO20HtcKmOiMariCtcxUknWDLNW9XEppusEMVWAJZ1NohNw1
-         gopXJqfj/sfgDMiLr07JIliFIlu0ScxQhbnAOR4Fr38brcJKem8vuAnoVbRk/4jhNCeE
-         gytH03KBXutrXahE02lzeQrrEfUJgwRu1/4WOa6PsUW2CF8L4TaTtxjWJbGSUqHKquVa
-         RJrMUfZj9El9fWgXL+l66mZ2Dq/bwEraMNCnjcJCOeffYd9hz1i1m9tacTdSbU+nc6+O
-         JpHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728571734; x=1729176534;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wk8mOEtaS0st9RtIbPiyvPicjXJuaraec7PuPjhsQZk=;
-        b=uTqoMWGtG1G2h9ItwxjgA6QBRZmmLzBgSigAGL1KcwvAytSFjUVnhVArJ7GIqg/NEN
-         vCkft9MKTeMVcTd9dCGKIMJM85j+gA3/RxMcUChB6EFK1CPe7CCu4HZBPXtCFRgJIyaW
-         IaMWmWN/qeLoduOmnOOi+MIldyQhj1naYpMxpbaKqDgEPVtPuSBqfyQzL38QEcQXSAfY
-         csPU13LSMJ1CHQSuvV5aphuv9twW7tBum4hAis3aXA/exGWw5iaYBX4RS/aZz8ntce1q
-         TBisnndOAFw5qKrFG1p26XuaJ1fwPff35+lIORwm37F04dFeiCJIPymkzuAuuYkRQCVw
-         f30w==
-X-Forwarded-Encrypted: i=1; AJvYcCWx6y6c3a8en8OiqnWO+Izi8f48w06G4cysLY1afL1CqdSolfcoMYtgFO3JUM686JFpifVu8/Gvh4c=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzyEaKljpm/PtFpyjuA9fj4aP+bEwu9qYjdiSfuP4NHH9gJFijK
-	BTeBrTTIGR/0urIxyeVfRR4VOEsyEKyupJis59EnQswvbbdCsT/wBr4j9eVGiQpacUsNQ7FyBVK
-	dWpwd5ptEt7rZAuApqDLm4JkMSnY=
-X-Google-Smtp-Source: AGHT+IEljzpMu1ACQ6sQRA8RzgwL3HdCJr8K4MQxtTnAtECkzV3J/8bQwyLAxm6Zuns2qv11cRQg+5TXDKwx0rMQsBI=
-X-Received: by 2002:a05:6a21:3397:b0:1cf:2be2:5e5b with SMTP id
- adf61e73a8af0-1d8a3c59cb2mr3823983637.11.1728571733800; Thu, 10 Oct 2024
- 07:48:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekagPdIZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D86C4CEC5;
+	Thu, 10 Oct 2024 15:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728573883;
+	bh=gnTehr7qrLMKw/pUpKhTMaCY3tpDIt6F6aFobT96HoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ekagPdIZxqT4SWWRuS6VjAHAzc6oWKEW/4hsSTRm4pLygcR/K/5nYo1MRhIB1W8Bi
+	 WhUInbNKfRaSZHzNuMbNo/gh/Dm11IzVkhHlBcuZvhkOJMQBELbJP+QR/GYDeVHSby
+	 +1ODj4I12HqiH5y8g34fzvrSEzf2u/HDRwYAX/nNnTn9iTEhJxcxooLVqAwIKD6FZv
+	 b3fbK7YHQj8tX05PEVkLu2GJn3pxXz8GTYW1p2sF1xOis1mXNPjG1oTG9dYByuOZVe
+	 q0nYNSfpcIxt1MrmJaX80Vmf5bsmJaexf7/nT75nIm1VGT6H7a1RxSwQLd/ELhYVan
+	 63H6TXss7XvhQ==
+Date: Thu, 10 Oct 2024 18:20:53 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: Bisected: [PATCH v5 8/8] x86/module: enable ROX caches for
+ module text
+Message-ID: <Zwfw1bC-muLe6I9-@kernel.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-9-rppt@kernel.org>
+ <20241010083033.GA1279924@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
- <ZwbAvEnrzu6UUgGl@J2N7QTR9R3> <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
- <ZwewMw8jBh6OU-L_@J2N7QTR9R3> <20241010110344.GL14587@noisy.programming.kicks-ass.net>
- <20241010113748.GL33184@noisy.programming.kicks-ass.net> <CANiq72=kT9RFcQ3h5U+wAY0pDQQqGU7BTtiPJ-oiHNUG00z3=w@mail.gmail.com>
- <20241010130421.GG17263@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241010130421.GG17263@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 10 Oct 2024 16:48:41 +0200
-Message-ID: <CANiq72kbApTtdLeow5L6G6t4Q_L-0zkDwfwyWcSb_e6P=kO06g@mail.gmail.com>
-Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all architectures
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Matthew Maurer <mmaurer@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241010083033.GA1279924@google.com>
 
-On Thu, Oct 10, 2024 at 3:04=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> Also not rust-src, because for some reason you're not actually
-> freestanding :/
+On Thu, Oct 10, 2024 at 05:30:33PM +0900, Sergey Senozhatsky wrote:
+> On (24/10/09 21:08), Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
+> > text allocations.
+> > 
+> 
+> With this modprobe disappoints kmemleak
+> 
+> [   12.700128] kmemleak: Found object by alias at 0xffffffffa000a000
+> [   12.702179] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
+> [   12.704656] Tainted: [N]=TEST
+> [   12.705526] Call Trace:
+> [   12.706250]  <TASK>
+> [   12.706888]  dump_stack_lvl+0x3e/0xdb
+> [   12.707961]  __find_and_get_object+0x100/0x110
+> [   12.709256]  kmemleak_no_scan+0x2e/0xb0
+> [   12.710354]  kmemleak_load_module+0xad/0xe0
+> [   12.711557]  load_module+0x2391/0x45a0
+> [   12.712507]  __se_sys_finit_module+0x4e0/0x7a0
+> [   12.713599]  do_syscall_64+0x54/0xf0
+> [   12.714477]  ? irqentry_exit_to_user_mode+0x33/0x100
+> [   12.715696]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> [   12.716931] RIP: 0033:0x7fc7af51f059
+> [   12.717816] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
+> [   12.722324] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [   12.724173] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
+> [   12.725884] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
+> [   12.727617] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
+> [   12.729361] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
+> [   12.731101] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
+> [   12.732814]  </TASK>
 
-It is there, but it is a suggested package, so I think you would need
-e.g. `--install-suggests`:
+Below is a quick fix, I'll revisit module - kmemleak interaction in v6
 
-    https://packages.debian.org/trixie/rust-all
 
-Regarding freestanding, we use `no_std`, which one could argue is
-similar to C's freestanding. That is, we use `core`, which is a subset
-of the full (hosted) standard library, just like C requires some
-headers even in freestanding.
+diff --git a/kernel/module/debug_kmemleak.c b/kernel/module/debug_kmemleak.c
+index b4cc03842d70..df873dad049d 100644
+--- a/kernel/module/debug_kmemleak.c
++++ b/kernel/module/debug_kmemleak.c
+@@ -14,7 +14,8 @@ void kmemleak_load_module(const struct module *mod,
+ {
+ 	/* only scan writable, non-executable sections */
+ 	for_each_mod_mem_type(type) {
+-		if (type != MOD_DATA && type != MOD_INIT_DATA)
++		if (type != MOD_DATA && type != MOD_INIT_DATA &&
++		    !mod->mem[type].is_rox)
+ 			kmemleak_no_scan(mod->mem[type].base);
+ 	}
+ }
 
-However, I think you mean not even using those
-headers/sources/libraries, which is fair. Rust calls that `no_core`,
-but it is currently impractical to use/maintain and there are a lot of
-useful things in `core` we want to use anyway, such as the `Result`
-type:
-
-    https://doc.rust-lang.org/core/
-
-There are some things that we could remove, though, which is why I
-asked long ago for ways to remove unneeded things for the kernel
-("modularization of `core`"). We got `no_fp_fmt_parse`, implemented by
-Gary back in 2021, and we could perhaps get more in the future if
-really needed.
-
-> Yeah, but then you have to first know that we have this file to begin
-> with.
-
-That is fair, but hard to fix. We try our best though: the "Rust"
-entry is in the front page of the kernel docs already, and the first
-paragraph of that page links to the "Quick Start" guide.
-
-Cheers,
-Miguel
+-- 
+Sincerely yours,
+Mike.
