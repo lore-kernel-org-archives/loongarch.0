@@ -1,188 +1,229 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5674920FAA0
-	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 09:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8ED210C2E
+	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 10:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728639213; cv=none; b=RmgzLAIJZj+pMMKGZQbfbPZSw+lPrt309oxTsESWVdYxOMRcvXb2HiOpQitlZtx1+ZeWVWe3N1u7AFD6OLnAhs0+JZG844vbL9sqmW1SkzERlNNWO8f6cfP2T3G6Iqu3KCebGzd7nu676buDPYTweaKZxp+Goy8umiC/cXD5q6s=
+	t=1728641655; cv=none; b=q9v27ILzKsarSrmJ80vGNGSWfZ4bIskafPRyL33Buzy3HD+D7L1XFcsezKuOu7+DgV0POw7gnhGqiOYUReFgw0zxdFpyAwjVWjcM/JxQeb+5O2EIXrdLbL4Tl64lyKoRk6VRUqjaHYyGeHcv4gsxYkkKniNKOXj2IZNVPFgmpII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728639213; c=relaxed/simple;
-	bh=M0d+ANDehZEebyJHx2IcY4rTbs80ZSrqNjo1Xmet/O4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BWfHK4j6Q+pzWsV5CRuHQMc4fO6GEXETZNMs8CMQxStV4VFWih8QhveOQ8YkGgWk7tT6chJmZVuHmDJy/ohIpfaz2BOxDbV1YHot4sctvs1QqBvNkp5B8YieQMspV+8yVXto3tOO3zGEgk6c7S/5h/Jo+hf4qV4+v5MTgVR/CsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxrnPg8AhnsGQTAA--.29027S3;
-	Fri, 11 Oct 2024 17:33:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxXuTf8AhnWK8jAA--.48225S2;
-	Fri, 11 Oct 2024 17:33:19 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	kasan-dev@googlegroups.com,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH] mm: Define general function pXd_init()
-Date: Fri, 11 Oct 2024 17:33:18 +0800
-Message-Id: <20241011093318.519432-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1728641655; c=relaxed/simple;
+	bh=FP3RovVjR4irGr3jP6vUXxndvpuA7NEv0/txLET0mHQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fRZ+E+noFLssVVwU03QyLG4MsbHedzzzDKrEMRc3z+LCwhumZDp7qsSMDgA8+3vL6mSOsz+k8QORNNo4zZ34yXLcBentfU9Ct6fi0s+GRj9JMW2STKCf9SRzhOlvEMSRK5kLahWeufUfi7f3rOlnRADZJu6CWGwzRbxpBRY5xYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4i/ib9Re; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4i/ib9Re"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-37d43e7acd9so821271f8f.2
+        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 03:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728641652; x=1729246452; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YqmLw89kv+70r2n1GZXjvAu/2a/8pOGUjfwht5K81kA=;
+        b=4i/ib9Rek05DN9hgNRDwCOPbBK4a8YH5fKya7oGRgxJTeLCPiizWOexprNY/Zt88UW
+         rPTfNsmKUxeQJFyJKUIGpcqYV2aX4Fjw+is5i8skXXTzxKOwb2GPnsUi+w765cm114QA
+         8K7CHBxFetlHCPJUJs3SwpxQm5mKSUoZdCi3qMtFELWG11oolpfuvFHO3qCWZqLkUf2g
+         lZJaPBrCV7B4oU8U9mKkt/s02zgDYHd9UAbyrAPVOZuXHwAeMU0wLj/U33apePgfMRXC
+         1hgm4BZ00ALu4t3W9qG71lm5bEzNB0MsILwqO6Unp/8xH79U4Y9y14q+xKSOzaS+xQxl
+         hWVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728641652; x=1729246452;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YqmLw89kv+70r2n1GZXjvAu/2a/8pOGUjfwht5K81kA=;
+        b=Mi83UQcdY/q23g6e+eYtGYRGI0xX6CYXjxBDn++sg6peQ4OlXK2WXtkg4NuFDRWmRV
+         KU4LIZbdyFVCCcxB2dc1vj+61FdoRGWrGPP6lShg1+237TFrZjkURzyvjeSFTaWoLYKr
+         svaBE4zn4r6eAaWpemp6/KzYtCyXcpwIR4oI9ABloGagokTgFKq3xx0Ugc6UTUf5ARld
+         7PkXhv7TsvD8okXL1h48SDVzGiomMtOSOXmpGjYaedck4nfeojWP0cq1AV9iTXk0gnRR
+         XBicToZkOhilfAtP/Z0iEecrWJwb5yhsCGrn82wqco+XOaiMJIUIUoMogo0zALB5tLNb
+         MLDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgON0S4pmQSfpdBkhr3K+FeS2QtQKb1e+SYhAUQWRfiRhOB3arZTdRgGO0ihkJtZ6HKVRtvxBArn4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzta6IWp9WUVCc1N8fpLZo4mSzI0qbxDai4Bh/ZtV4EOOqkgp0l
+	jphqapzziiYFEV5J1yYlIugvfOcFyZvANGbju3w7kPnnx4+d8SIVadgeiyKkKoLgIwftpPgE8ve
+	iOvCtt0gCt52WJA==
+X-Google-Smtp-Source: AGHT+IFtgnpEUW2ZoJRODr8N1xgS5hqcNtu1XqDpceEGhPx4xKUwvMd2IcN0XcaRHW0T1BjDO8MrG3v//BSqW8A=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
+ (user=aliceryhl job=sendgmr) by 2002:a5d:53d0:0:b0:37d:4f54:78b0 with SMTP id
+ ffacd0b85a97d-37d54e0a2e0mr1254f8f.0.1728641652009; Fri, 11 Oct 2024 03:14:12
+ -0700 (PDT)
+Date: Fri, 11 Oct 2024 10:13:33 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxXuTf8AhnWK8jAA--.48225S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAE36CGcC/23QzU6EMBAH8FfZ9Cxmpl+0e/I9jIeWDmwTpRsgR
+ LPh3S0clFqPM8nvPx8PNtMUaWbXy4NNtMY5pjEXCE8X1t3cOFATQ24wDlyCBt0sk+vonuK4NAI
+ JlbdAskWWwX2iPn4eaa9vub7FeUnT1xG+4t79N2bFBhqtFGre+l6hfxlSGt7puUsfbM9Z+ckiF
+ JZn2zvyLhj0QqnKipPlWFiRrSUpichxb2orz9YUVmYrlAiKC2c7rK36tQZ4YdWxs0MtpZWhq+/
+ VZ1vO1dk6LnoD0CMaW9n2ZLH8c5tt0GC9Re0N1tacLC93NvvO0CljLek+iMraH4sA5Z9ttuiC8 G1ojftz77Zt3+NIQT2GAgAA
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5548; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=FP3RovVjR4irGr3jP6vUXxndvpuA7NEv0/txLET0mHQ=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnCPpniPeIwqgEuk/wGxh0598bU5Q9DgyAgYKpm
+ MX2oWO4t36JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZwj6ZwAKCRAEWL7uWMY5
+ RhWwEACs0OXBFfJtW43IKHvGkXLy+mvxx7t667jbK4AkGgh6baxutrhEOvj5dzw9CiM2vBo8Jo5
+ bV84js4+G00haOO8izLKJOR9HIGw3gn3V86/Tm87/cAxN1vwueznoUsWb268jq4Jl9qZgcMp8HC
+ h2sk2atFc7Q8TBUkdh9I7zDPb/GNmaVMrGGzDMXN6HKCkGQBs7BJFu58vKRXZxltDuIlTupP4ao
+ 7EJdMM4Okshvsihp5Gf6ob2WbwRTzngdWXENZIZEX1QiV8ld33m6NeyzV2n75MPCKkbEr4U4xuA
+ 8CMeRvsAQ/sd9a7J5T0mfF+sGN62NreShpQMUGl76wDXYBHY6OGMgKSg4jZffEXFtQpYFUkuYpy
+ 7PdYA6bU8keCh54L0O2HJ8bKHPpCB47CffHjVYtYoQ39TZLXfkMtic/+G7+CNApvh9BeXU4/sfm
+ LmngShoTXxglA/gvC7EZMNd6kmomEUAPiqHsdPfZzJ2ByEBe/2/LbXKQBw4LO8fHCqFQuyXAn0+
+ nHFy1c4klz3yenA9pnhwoWXj6L2ZRJiJM2pRoX1sHwdr76deQ3msQJ7UCPs2VZPK/9mFJb4dZQl
+ u6InmXsHrd6AKRU9I4DjFrjDxBoO0eQ7HqrskkvqxBYAsBRtBMQOqpIHdjjd7mVQMLjmMlLbK5H 7hu9n/3xEhnyScw==
+X-Mailer: b4 0.13.0
+Message-ID: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
+Subject: [PATCH v10 0/5] Tracepoints and static branch in Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	Alice Ryhl <aliceryhl@google.com>, Carlos Llamas <cmllamas@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Function pmd_init() and pud_init() are duplicated defined in file kasan.c
-and sparse-vmemmap.c as weak function. Now move them to generic header
-file pgtable.h, architecture can redefine them.
+An important part of a production ready Linux kernel driver is
+tracepoints. So to write production ready Linux kernel drivers in Rust,
+we must be able to call tracepoints from Rust code. This patch series
+adds support for calling tracepoints declared in C from Rust.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+This series includes a patch that adds a user of tracepoits to the
+rust_print sample. Please see that sample for details on what is needed
+to use this feature in Rust code.
+
+This is intended for use in the Rust Binder driver, which was originally
+sent as an RFC [1]. The RFC did not include tracepoint support, but you
+can see how it will be used in Rust Binder at [2]. The author has
+verified that the tracepoint support works on Android devices.
+
+This implementation implements support for static keys in Rust so that
+the actual static branch happens in the Rust object file. However, the
+__DO_TRACE body remains in C code. See v1 for an implementation where
+__DO_TRACE is also implemented in Rust.
+
+Based on top of commit eb887c4567d1 ("tracing: Use atomic64_inc_return()
+in trace_clock_counter()") from trace/for-next, which is in turn based
+on top of v6.12-rc2.
+
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Link: https://r.android.com/3119993 [2]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- arch/loongarch/include/asm/pgtable.h |  2 ++
- arch/mips/include/asm/pgtable-64.h   |  2 ++
- include/linux/mm.h                   |  2 --
- include/linux/pgtable.h              | 14 ++++++++++++++
- mm/kasan/init.c                      |  8 --------
- mm/sparse-vmemmap.c                  |  8 --------
- 6 files changed, 18 insertions(+), 18 deletions(-)
+Changes in v10:
+- Rebase on trace/for-next.
+- Use static_branch_unlikely as of [PATCH] tracepoints: Use new static branch API.
+- Update second patch as of [PATCH] tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL.
+- Link to v9: https://lore.kernel.org/r/20241001-tracepoint-v9-0-1ad3b7d78acb@google.com
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 9965f52ef65b..8bd653a6fa70 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -267,7 +267,9 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-  */
- extern void pgd_init(void *addr);
-+#define pud_init pud_init
- extern void pud_init(void *addr);
-+#define pmd_init pmd_init
- extern void pmd_init(void *addr);
- 
- /*
-diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
-index 401c1d9e4409..45c8572a0462 100644
---- a/arch/mips/include/asm/pgtable-64.h
-+++ b/arch/mips/include/asm/pgtable-64.h
-@@ -316,7 +316,9 @@ static inline pmd_t *pud_pgtable(pud_t pud)
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-  */
- extern void pgd_init(void *addr);
-+#define pud_init pud_init
- extern void pud_init(void *addr);
-+#define pmd_init pmd_init
- extern void pmd_init(void *addr);
- 
- /*
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ecf63d2b0582..651bdc1bef48 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3818,8 +3818,6 @@ void *sparse_buffer_alloc(unsigned long size);
- struct page * __populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
- 		struct dev_pagemap *pgmap);
--void pmd_init(void *addr);
--void pud_init(void *addr);
- pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
- p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
- pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index e8b2ac6bd2ae..bec5356ee644 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -90,6 +90,20 @@ static inline unsigned long pud_index(unsigned long address)
- #define pgd_index(a)  (((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
- #endif
- 
-+#ifndef pmd_init
-+static inline void pmd_init(void *addr)
-+{
-+}
-+#define pmd_init pmd_init
-+#endif
-+
-+#ifndef pud_init
-+static inline void pud_init(void *addr)
-+{
-+}
-+#define pud_init pud_init
-+#endif
-+
- #ifndef pte_offset_kernel
- static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
- {
-diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-index 89895f38f722..6b2dac62e63a 100644
---- a/mm/kasan/init.c
-+++ b/mm/kasan/init.c
-@@ -139,10 +139,6 @@ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
- 	return 0;
- }
- 
--void __weak __meminit pmd_init(void *addr)
--{
--}
--
- static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 				unsigned long end)
- {
-@@ -181,10 +177,6 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 	return 0;
- }
- 
--void __weak __meminit pud_init(void *addr)
--{
--}
--
- static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
- 				unsigned long end)
- {
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index edcc7a6b0f6f..a0c884947861 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -196,10 +196,6 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
- 	return pmd;
- }
- 
--void __weak __meminit pmd_init(void *addr)
--{
--}
--
- pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
- {
- 	pud_t *pud = pud_offset(p4d, addr);
-@@ -213,10 +209,6 @@ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
- 	return pud;
- }
- 
--void __weak __meminit pud_init(void *addr)
--{
--}
--
- p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
- {
- 	p4d_t *p4d = p4d_offset(pgd, addr);
+Changes in v9:
+- Rebase on v6.12-rc1.
+- Add some Reviewed-by tags from Boqun.
+- Link to v8: https://lore.kernel.org/r/20240822-tracepoint-v8-0-f0c5899e6fd3@google.com
 
-base-commit: 87d6aab2389e5ce0197d8257d5f8ee965a67c4cd
+Changes in v8:
+- Use OBJTREE instead of SRCTREE for temporary asm file.
+- Adjust comments on `asm!` wrapper to be less confusing.
+- Include resolution of conflict with helpers splitting.
+- Link to v7: https://lore.kernel.org/r/20240816-tracepoint-v7-0-d609b916b819@google.com
+
+Changes in v7:
+- Fix spurious file included in first patch.
+- Fix issue with riscv asm.
+- Fix tags on fourth patch to match fifth patch.
+- Add Reviewed-by/Acked-by tags where appropriate.
+- Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
+
+Changes in v6:
+- Add support for !CONFIG_JUMP_LABEL.
+- Add tracepoint to rust_print sample.
+- Deduplicate inline asm.
+- Require unsafe inside `declare_trace!`.
+- Fix bug on x86 due to use of intel syntax.
+- Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
+
+Changes in v5:
+- Update first patch regarding inline asm duplication.
+- Add __rust_do_trace helper to support conditions.
+- Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
+- Get rid of glob-import in tracepoint macro.
+- Address safety requirements on tracepoints in docs.
+- Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
+
+Changes in v4:
+- Move arch-specific code into rust/kernel/arch.
+- Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
+- Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
+
+Changes in v3:
+- Support for Rust static_key on loongarch64 and riscv64.
+- Avoid failing compilation on architectures that are missing Rust
+  static_key support when the archtectures does not actually use it.
+- Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
+
+Changes in v2:
+- Call into C code for __DO_TRACE.
+- Drop static_call patch, as it is no longer needed.
+- Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
+
+---
+Alice Ryhl (5):
+      rust: add static_branch_unlikely for static_key_false
+      rust: add tracepoint support
+      rust: samples: add tracepoint to Rust sample
+      jump_label: adjust inline asm to be consistent
+      rust: add arch_static_branch
+
+ MAINTAINERS                             |  1 +
+ arch/arm/include/asm/jump_label.h       | 14 +++--
+ arch/arm64/include/asm/jump_label.h     | 20 ++++---
+ arch/loongarch/include/asm/jump_label.h | 16 +++---
+ arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
+ arch/x86/include/asm/jump_label.h       | 39 ++++++--------
+ include/linux/tracepoint.h              | 28 +++++++++-
+ include/trace/define_trace.h            | 12 +++++
+ include/trace/events/rust_sample.h      | 31 +++++++++++
+ rust/Makefile                           |  5 +-
+ rust/bindings/bindings_helper.h         |  3 ++
+ rust/helpers/helpers.c                  |  1 +
+ rust/helpers/jump_label.c               | 15 ++++++
+ rust/kernel/.gitignore                  |  3 ++
+ rust/kernel/arch_static_branch_asm.rs.S |  7 +++
+ rust/kernel/jump_label.rs               | 92 +++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs                      | 37 +++++++++++++
+ rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
+ samples/rust/Makefile                   |  3 +-
+ samples/rust/rust_print.rs              | 18 +++++++
+ samples/rust/rust_print_events.c        |  8 +++
+ scripts/Makefile.build                  |  9 +++-
+ 22 files changed, 394 insertions(+), 67 deletions(-)
+---
+base-commit: eb887c4567d1b0e7684c026fe7df44afa96589e6
+change-id: 20240606-tracepoint-31e15b90e471
+
+Best regards,
 -- 
-2.39.3
+Alice Ryhl <aliceryhl@google.com>
 
