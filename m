@@ -1,55 +1,55 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E781D0DFC
-	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 19:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D11D1311
+	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 21:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728676128; cv=none; b=Eebfjyv+bxqCa3LSJMLhsOGxoDYo9TFzb0HtPDFUfRoNh4mRvdQ0xCd6qZWcEHcomUYuCUiA7Zp3TOiGjY7mBNbxpi8tx+LP4vX/wGyoIdG2vtSCr/jilm0RNlBTOi0xl1EBsEivnaOj+X6sc0Eywj6Ca3Oqsaf5nk3PnnhZXW0=
+	t=1728681990; cv=none; b=YIO0C6xO1U7xkSNkpxY5Q/KYRYlhzLVK0QndsR3bpQtLJtjT36oboCeb94tNdOhyqYT52HKq1MBo4t6C/MT6KDo+vo3AM4pWq3NbPCS7gA/vSRuSIQJGQ+Zs3Bv1d52ZouRifKjhfLqD5o4C9OhhEW5G9XXc+rl/ZD2GF0XeO10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728676128; c=relaxed/simple;
-	bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
+	s=arc-20240116; t=1728681990; c=relaxed/simple;
+	bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lIEblLOYoNyBrx2TBFhlVY8DmDGhN4nSsmWDVGK/nxd+QDPrNMnP2BvebZ7Oe0kYOrtnkt1pxOk+GpeJaJlfJx44Myl4g3e176XFkamLcoXhe5jwC/7sD9eBrbY2aMjo/fKLSiYv+ZhyUjvdCSI57WYUc/5zFcAuVKW8KRsBqL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PG9Ios+h; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=BRcJTtjvw31HGwnoIk0KLEYohTPl6J/tS34W2odC2UR9X5IJ56SBFWya3FqX5LCB4B2W26iMlUk0pq9cj9+qxKAe1bQaDhOux9qT08KzCRel23HtssBYljOvmoeWs14UoGRZvUmSU5AJEpF/Uhtwk80KVnOUR1EU/4dFksm7dUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2rkzOWHm; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG9Ios+h"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71e02ceccd0so294913b3a.0
-        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 12:48:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2rkzOWHm"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-460395fb1acso71311cf.0
+        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 14:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728676126; x=1729280926; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728681988; x=1729286788; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
-        b=PG9Ios+hUBk7GEbQd9SEAZG6N+YNlxCQRqpAGJxftc6acUSMuEH4L3/jiLsSfcHll8
-         ZK/6ypQVrtPiX+t7dHXadaF+ifj1WjUsYvw6kOQ4a0uQRNseaI/M8GbnSsap6H8I0+75
-         dJRK3j2mpuhxlHrURjQ7hdGiOsjz6r2TkgNd3a2G7+NiYCneaEuggdK6dI6eeZAaSk5t
-         j/bs9JanGtF1GbMfXk+v4wnNdFhorKs/rLP9pZ0XtiYtQU7jEPliWD7N86pzl5KYBf5D
-         rMRuZUXdddRtxvuZHm9US6nyjeZ4tGY/6AM2MWnmO2MR4H6ePhP73OnJC1DFDlUfXsl2
-         gTtQ==
+        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+        b=2rkzOWHmfgro8rf1CT7vsHeg1bhV8dpoTrX2uxIwOxbkzGVSfrTF+tF+o4Fy+hjHj5
+         v49MYq86EMSzxUsaLuNHwohu/m0WX06FaZZGYQrIiIgo9aDQ6GHgioqCyycvfxo+z5bR
+         ziZpJjzAQUZEWLuNYr7FeeDpOYUAX1tKIwACEM3b1Yc9WCmMrjjwvGabB7NsvrpRfUy1
+         XzPwQGrdcFNjm9joVuvjBhZTG5e75l22lEXDdaMHTlel7E3Bhqgy4L/as6r4MKmZ7HkL
+         yVKlyOdwg5eqfmvRqiSHti7agEhvAHORzmG9fSVwReV+/fWflEpF6NMZGd8qqtyRNFty
+         BbeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728676126; x=1729280926;
+        d=1e100.net; s=20230601; t=1728681988; x=1729286788;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
-        b=uQ8f6CxyfWeXYFD9M93+6v1VeRqQj6c2tDk1twnt6vcWVW3mViLvzYvChXxHcXJRlr
-         Z6phffydr9Qn58VJt4D2yWmPJKpqtlwvn+oxPYB65FqRgs1ZN/t0ZI6CGlUlQ1PcK0hF
-         5KRYKm+AWxbeyEjZ4qeaKILqzu0inWHwT1ktxqqLYNN/F2L+TP1U6+GUQCrnf3JCSgWW
-         tRorXpCqMNuawjcKkzwdkyS8GDHBEvBs0PeQVSKrL+CbSr96kFc+C15uTljUeh+uT9qG
-         zPVL2VgrMiu7t8t4EDFRcuLNKz9onEiGAFpPENmaI45SIyb2O6t2pK0DnBj7/Hvbe3Ah
-         nnRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0z8LxuahAuLVfPboZwDJ+P8YLWntiTvc/kmPwEA8XgVu+NFPXTE5wax6t11U+gpVa7PPDd3yIxPE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxEbwTCvcEBJ48Nom6GjgtcMK9jY1xnBowCZ0Dn4xHnU6UNVgzc
-	Ba7YApJyvnA0eLy/xyPeRBnfmQ7D5H4CaqQcTaWUbMZSdIMoF00I6R6ExmQdu5j4qWe2yg8+Xmj
-	MqlyncQYrGl1pXdv3UkdOE5+QfkA=
-X-Google-Smtp-Source: AGHT+IFm+UwkG6WIg1AqvuqnbDwrR2uK/LvnAOy5vxbnvuoTMa/HQ5sfAKze/sYR1OTnuhhXIrv49b/1Hp/O75r3s04=
-X-Received: by 2002:a05:6a00:9494:b0:71e:3ee6:f8a8 with SMTP id
- d2e1a72fcca58-71e3ee6f918mr1949743b3a.1.1728676125868; Fri, 11 Oct 2024
- 12:48:45 -0700 (PDT)
+        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+        b=f/JxrYauQOTanvZODHtcJwlL1E2OTXX3DS4tdrCK2cDZxDHo9EpH4l9By0L5R97oqm
+         jI+LAQAVzvAQwD3w76ZR7b3mENYk99ubacfgGYPR/z+dmsvLrObWPPlCY29DKMr5rqr5
+         YnLlxybDyvt8Ii4KqVSky/PxBeWK1sj0TyaBG3iD8EzyyRkmPIzRGgckhy6NPhdohB2p
+         +6OLSbwWhSqBEtb9IHLLRH2V+uH2Wt/7jhN3xDoWA7c6b2JGi/dGNbOCpgNXbsuMyPpw
+         p2JqvQsN7gzbBqJDHuM8k5j+wqNRzCnMz6LGzESqQ7R36+tvcohFCQLaInPmC3qDJNCd
+         kGCg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6RkRx1xrDx92S0SSocWTGg6HdGde6PrARBjbd7Q3q+/HFE2ds/1UU04tvPyuphwXmMjz4a3aGXYo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyEf1SNlDMxV83xcLUXEevV7AACFz4toPhM/F7fFo/V00LgtLfN
+	H98S6vMWp9Xf4ta36JuJnk2WtQmxiREExsMz466XsmgGFvohXPJuaYQjCAblQB/hRYSbwJKyumH
+	M0lh9odXJN9kfqxY3Md4IMC3gafkFTvUdg3CZ
+X-Google-Smtp-Source: AGHT+IEKEmVjWoOqBswBr3NiTYKK5Z9SghdMPP5nc66QbnU8P8zaScBXP/19wKkNBoIcY46P8FQCMYQuouKvAahW2eQ=
+X-Received: by 2002:a05:622a:a60d:b0:460:48fc:3cd8 with SMTP id
+ d75a77b69052e-46059bf45e5mr189701cf.5.1728681987767; Fri, 11 Oct 2024
+ 14:26:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -60,12 +60,13 @@ References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
  <20241011-tracepoint-v10-1-7fbde4d6b525@google.com> <20241011131316.5d6e5d10@eugeo>
  <CABCJKuesYQWvfScFaqv_rW5ZqAJNn4zK9iOFAmyTaYKO3S5hgw@mail.gmail.com>
  <20241011171251.0bd53f01@eugeo> <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
-In-Reply-To: <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 11 Oct 2024 21:48:32 +0200
-Message-ID: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+ <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+In-Reply-To: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Fri, 11 Oct 2024 14:25:49 -0700
+Message-ID: <CABCJKuduZJ4aogg4A6idcMAPMa2N0d4f9aJgbR8HL0YEyTONmA@mail.gmail.com>
 Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for static_key_false
-To: Sami Tolvanen <samitolvanen@google.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
 	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -94,15 +95,25 @@ Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@google.=
-com> wrote:
+On Fri, Oct 11, 2024 at 12:48=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> It's just one line per helper, but sure, I do see your point.
+> On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@googl=
+e.com> wrote:
+> >
+> > It's just one line per helper, but sure, I do see your point.
+>
+> I guess we will have a lot of helpers added over time, so even if it
+> is one line, it may end up being a lot of lines in total. The rules
+> should stay constant, which would be better. Having said that, it is
+> true the extra complexity of the rules isn't great either.
 
-I guess we will have a lot of helpers added over time, so even if it
-is one line, it may end up being a lot of lines in total. The rules
-should stay constant, which would be better. Having said that, it is
-true the extra complexity of the rules isn't great either.
+My only concern is that custom C build rules must be kept in sync with
+Makefile.build changes, while EXPORT_SYMBOL lines should be basically
+maintenance-free. However, perhaps this isn't really an issue since
+most of the complexity is already contained in rule_cc_o_c that we can
+conveniently reuse. Anyway, I think this is something we can worry
+about later if we actually run into problems. I was mostly interested
+in the reasoning behind these changes.
 
-Cheers,
-Miguel
+Sami
