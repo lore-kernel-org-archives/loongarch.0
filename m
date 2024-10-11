@@ -1,111 +1,297 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from GBR01-LO4-obe.outbound.protection.outlook.com (mail-lo4gbr01on2114.outbound.protection.outlook.com [40.107.122.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC13B197A9A
-	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 11:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728646379; cv=none; b=kd8BQQd46R/22KhGH5M7yw6OzMfFCURdM51mi48qyEDLdeU/mvCkAv776iUWk7ZaGODrNS59b/LgyXB34xrrAkbHeJziLW8iFKExx8WrNI9Rl+D7GmqpL+XMbzWpkNXH3alHV/mFeATfUQFnkYvWjlsXeGsY1ZpYJRlj1C1zpQs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728646379; c=relaxed/simple;
-	bh=az4hS+NK8zBr5UCFhRFct2ksVmIL42/RJE4tgtHk2Hg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OStks4/0o6mNrMyM5pryphE6dvtuV7U7d93o7zOi7DasIof1CCPSpFpU7elRCeDuTcSUfsNdH0JhOst+ORAH9kByjB0iX0mVuXWvZmytb0/zp99f3PMm9tBkPa03Br9uqZvrIdSFzqY1TqiYu8XIOgon5cCfDaGb7/eecQvlzB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atNoa3t3; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A9A2141C6
+	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 12:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.122.114
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728648809; cv=fail; b=UFhyFpc5yDZ/8QsXk8lA0QHOSrFhtJp2pQdxzOYWqimiL+CbANXWFMOa19ruSJPvDd6WLFBQBE0zJh27ZT2CQ497JvCuDmctMhz4ZSkuiDCC+mlgC+mzkLraLvm8yfhzQqpnIu3WLsmP2KENxIOcAtu674gtvdq4Le9ZrQtZy7M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728648809; c=relaxed/simple;
+	bh=N6kBlFnhxHbzzRLvy2n0TO0HMSJSC/kk/oHPglWikRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MR78ImdvcpAkDDRPT2v5qMTx3deUfaiaj4A8rDj5VvYp0hJNU6KB1Ry6sRQdlfX02v9ePrmHJha9hxt7kAlJIYPFuzEhCLH9fpM/1Pj5IBHOIux5li8+ALIRD2ShZxq8DJBZeKpSJqBJcmGDlMlw4Q5fUVOgBlRmIbn3VKQaAWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=qnVAhyz1; arc=fail smtp.client-ip=40.107.122.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atNoa3t3"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7e9f377a3c9so149180a12.3
-        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 04:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728646377; x=1729251177; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=az4hS+NK8zBr5UCFhRFct2ksVmIL42/RJE4tgtHk2Hg=;
-        b=atNoa3t3gjAMrQqX9TU97kRNsfrWZo/oheVOWjT0yQ1mhz+LOIshy55w0czBexTOO1
-         8cx4LWgHy5iE8KmKP8oyVGNApoXU4UowjOONddN1fU9iQQoy2zsyIjKcLIpZwGK/OeGs
-         Iz/xfcxW0q0XMWQehyXQIjrtQCy5WAyfu804nGMEKMBrx3LLvtE6VZIvIF2rx5taqMzw
-         pdM5p23JqxRhRj/FDPVbP31Yy8B+a0MiY5IKJA1rDlEgUa7cSHw3tCayx6bfSWT8ZFuq
-         e5yjKEMcSf2mGub8/hxCPE94uXkVbi8nkVr0V1jWMYlU/5wgXhUqJceXdF4J1GjDJ0uf
-         Ck2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728646377; x=1729251177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=az4hS+NK8zBr5UCFhRFct2ksVmIL42/RJE4tgtHk2Hg=;
-        b=Ee9JmEbup0vL/C8qPUvAGOd+KcVve/A7DeqKvHo6ntf4c+4BDiBFAdwN3fXD1ZLqLj
-         yEAB8/wyLzlHHO9I7vUvL+xl41nO5MF45TIi3gkRUxxKxV/pLyZ0JnIMQtK3k688XxUy
-         xq+6jGHvbZMbf+mCjE3LJ25YxgS4SplzYo+EaX5APfWr5cwOq/RuUynjT/T+ksAB72F2
-         pUtVNfa4ru1MRVT/RDit2F0N5pYcKLHY5a2aiOUNdUzEHl9wHHmjNbAYXrRI6pnjKj1Y
-         eRyui42isIyYH32He8o92XGHn6D4BKT6AQgyr9VuEiV5x4MfI5XLBCduwsBcXCwK+61L
-         wmjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9mNyb2jQrV7YnxD9sVed/jr7sJodomiULpvtAUksVWvGc0i/eP3ooLRLkvCH8MxpwQpgks7OUQa0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwgCg0AIUCmiP0hIwqBayWyucI7l63LdfOeRnJGLgkzn2MdRCI4
-	+TuD+b3GAb4Fvsh5dZQpZNoq9fjrwK34KElidFr7K+Z5EGKCt0HmRFiOOu3TIiorhLhJl+6s7nu
-	83XHKbqPDcL75dn+sBUbKlrNfGy0=
-X-Google-Smtp-Source: AGHT+IECMXVvn0oo1MNjapLxNu2xErXjaCUcD29N0fsc68U7YJSRkD+W8Re/vBWLXWMsFfWDHfD0zZ1hSdE8Z8CiYOg=
-X-Received: by 2002:a05:6a00:3e1d:b0:714:2051:89ea with SMTP id
- d2e1a72fcca58-71e37e25dedmr1609379b3a.1.1728646377173; Fri, 11 Oct 2024
- 04:32:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="qnVAhyz1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EzYC0uPxcOlWNviNH7x9xIWyTraI2XgloWvh3c8Gloom7etjsN03lV9zIGh2EEkEUK+2RhbOpIuV6wp5dPEakLpsdwjYNUHei6uzP1XGrqGwnQH5O9ARdjDVrD06XrsXIRQkdz4GEV/J+0OYl/UeRrIp7HvyfYcgyRWdC0NFPzV/cb1glPxUMY85xjgsMJytXY1pQnXl84xHRRVBSNKoy3rPvJP53BkQvo1ssLxQOzKYnmJheHBIXffl4E+2eeNawCXKxOuHLeJ8pfqPXwJAObHWGTsc9myPjbvtd3qEGjdRVuac/Mx712Xu/XgbXdGvoR76ggyz7OdsgCGp46FdEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4DDq+WoksRSvViNEEuG0Aq4sek7ulKuTsXTctEeA4ds=;
+ b=VutUZ6OC5TPcAq8vwuXBg5hrdHkShEU3+f9MiLLTy/6eyGuWZaepJleJYhUJs/kNTaIZ+q9pggxyPlzhhn88R7AjKLpPeSF1PAnWP98zRZyBexJkPnq3ENFIXXMS6x/VswKLyJn7P/HXLgmZ1HqLwdaRtcRXKuFUMuPMe1y3TAGuEfBujG9p40k+pB+7bQkRBszF4DdQjMzs6iIn3jBNt+l147/4FEBMnIyLsdTOmazM2hWHzOTsgiUHHvJYl+P5wGdT1eJXvU1sxIdvpx9Qz484kMVxx0L7sq0HXJBtIiXaQJ4gNdBDLZ05pl3VBsmSjZ5gCVjnDp9IQHV4SvDzcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4DDq+WoksRSvViNEEuG0Aq4sek7ulKuTsXTctEeA4ds=;
+ b=qnVAhyz17o0GN+MJ/M1UCcjojgVCA4OuJOWs2C2BT4AfboW+qLLo+nYrjRF4UdsVJeJ2lC7UZs0vSgx9iq9aZGkGoO7H3Jbcnt/R8W0bPcVo6jw8CfnO+Dqb+arbp2xrBfWHjqLq8z6AVTy8KuR+wpUMTta/q6o7uKpgPnmVUyc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
+ by LO2P265MB7220.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:31d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Fri, 11 Oct
+ 2024 12:13:20 +0000
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7%3]) with mapi id 15.20.8048.013; Fri, 11 Oct 2024
+ 12:13:20 +0000
+Date: Fri, 11 Oct 2024 13:13:16 +0100
+From: Gary Guo <gary@garyguo.net>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
+ <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>,
+ Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Samuel Holland
+ <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
+ <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for
+ static_key_false
+Message-ID: <20241011131316.5d6e5d10@eugeo>
+In-Reply-To: <20241011-tracepoint-v10-1-7fbde4d6b525@google.com>
+References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
+	<20241011-tracepoint-v10-1-7fbde4d6b525@google.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0147.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c4::20) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:253::10)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241008-cfi-patchable-all-v1-1-512481fd731d@google.com>
- <ZwbAvEnrzu6UUgGl@J2N7QTR9R3> <CAH5fLgipBfd5pNKqniXqFudruyGaJG=LDc5MEf3Yxq1yRMmQcw@mail.gmail.com>
- <ZwewMw8jBh6OU-L_@J2N7QTR9R3> <20241010110344.GL14587@noisy.programming.kicks-ass.net>
- <20241010113748.GL33184@noisy.programming.kicks-ass.net> <CANiq72=kT9RFcQ3h5U+wAY0pDQQqGU7BTtiPJ-oiHNUG00z3=w@mail.gmail.com>
- <20241010130421.GG17263@noisy.programming.kicks-ass.net> <CANiq72kbApTtdLeow5L6G6t4Q_L-0zkDwfwyWcSb_e6P=kO06g@mail.gmail.com>
- <20241011105136.GP17263@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241011105136.GP17263@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 11 Oct 2024 13:32:44 +0200
-Message-ID: <CANiq72mYEbGxFZHQ_vfHTybuYO62As-23VR9yASo-b4LcZ_pkg@mail.gmail.com>
-Subject: Re: [PATCH] cfi: rust: pass -Zpatchable-function-entry on all architectures
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Matthew Maurer <mmaurer@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO2P265MB7220:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3c607e1f-375d-4803-d0ab-08dce9ee1888
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4KmlhvFrBP+lj8H48hDcT2TITHOKv8hRseuNwNm2hRXEveDdPzHhzxsH2CdF?=
+ =?us-ascii?Q?xH7zrifqryJ9IqKjf0UNUBzsF+ibsOd4j5Keo82JkRxlgNi3e2NvBquWSVTP?=
+ =?us-ascii?Q?tQALpF1hKYLEZjavxJSzYA032BgL3zmD43CPLR4DSZkMS3IAgiTyodg/tn8m?=
+ =?us-ascii?Q?fM+q0FOjm7A+lMVIN3VvoLwKs6Fc8sWEWWgJ0dM2A0eAsakxEzCeePzlKlgl?=
+ =?us-ascii?Q?d3sVpUHlW4EDz55yI449jRmRhH5wX0falpS3DpBbd9bZs/HJnCa8x8emzP11?=
+ =?us-ascii?Q?+cycVBccsxr+9FwXYSLaf4NKsedQWxuLyj+bAW0tsfK8dbgFzjirTmQSzWdW?=
+ =?us-ascii?Q?ygLrzc+aa3+VsHxA0N13glIqqIN1LJA/Dlz/Je+hQGxJo1BJpE3H5mo1AfiM?=
+ =?us-ascii?Q?dyIQpyQ6UNQDx7d6lZxZBUnMF0nAQ04oDXjC9a8cdKF+sI5OCLfk5NR/6XWh?=
+ =?us-ascii?Q?VfWongQ5iCTE5NdPPFwgv1aPy0GhXkfn7q+vFMSmOSJcrH1dxh4e+KbBn7pl?=
+ =?us-ascii?Q?REzGg76+0QfTph3oLvi8rl13sWaxU4FjNddkpRVQA04LIEIe4WSebw55frSq?=
+ =?us-ascii?Q?mbsTQeeGUtksyW3wpVeywtPgZLMmbiGPJShwMHW397/hmY3cFLFFeEQ8XN5k?=
+ =?us-ascii?Q?2kT5D9EEL81r+G+V4rmE9D1PjrN7Dp42bKzlUNgYqC08T7EwVRGiyer+upCc?=
+ =?us-ascii?Q?Hk+/GXTNo3QUapo9NwUnfpzy8PaJV9lD6ojlZDr8pqqPM4vGl+dE370scUJ9?=
+ =?us-ascii?Q?DdOMlhpYGxJUQ8IEjV51BiqRF3ARV/HeqLjLYdfBAeG4hcTeS73iKI+ZzLg/?=
+ =?us-ascii?Q?UY7gi+MCEDOmBNbhgZcfVWBdJ3PysMaByyp/5LwjwaP+vV3HG5m2uo3ASejI?=
+ =?us-ascii?Q?xbcX3FmP0DXQWLrqifgnBxkQJYfTTCTaYWffZjtsFBcKqG0K2jDEJzn7ngwM?=
+ =?us-ascii?Q?/MOV34smDdl0EzB5qRwZLNsJa5NdvqkRW+k99kSG5YxB8ftTxtWYPos/x2ek?=
+ =?us-ascii?Q?y96P4tMHlayNO0A66jjZdarsadl2x5b3NozAatiFIf8+UY0a7Hldc4/jEq2Y?=
+ =?us-ascii?Q?qoxdD/MVNMkmkiYQ2X05LEjudjwSNr07HhCtVEMZ16QTQkI1rD5r7PM0QnzP?=
+ =?us-ascii?Q?McWNeHVDLgJVn9uFLL0/SEuN7jMOwtpYRwXtKtQvNSe1Bo8QdpCekV+pE3Rs?=
+ =?us-ascii?Q?uWux4h3sl5mv74lgc57XTFm9215zYI8hYyTJ8eV+hfTOcsX2eJtyvSucAGO2?=
+ =?us-ascii?Q?H+En+ONv1J256CFLG9VYOcON2ussfTN8w4vYC4qREA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(10070799003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?j91FfNDrTiFiRpiVXy2lWKofa/oTZHu3IkvBmMmuHU5lNac290UkOWCR9AOV?=
+ =?us-ascii?Q?xrhmR/W+WdEk+qVYsn8wD9xVkFbIIqHMoA7KYUvmwTJyYoNCkbolMppekQzl?=
+ =?us-ascii?Q?HqyirYc8oKHEDe1zngxKVxObEHtOpsZssXpkxJu/WJx/a3jNHYz+lYAlVgfH?=
+ =?us-ascii?Q?HaCW14OA4XXZQqlRy75UoILqmlbRIUASOdLPOgKsigD1W3Rrd9Gtg6WUZjT7?=
+ =?us-ascii?Q?ZO5dPNg4rh0GovoWlkFe6jR7ACcqqGo4/P0ipWopjoFgz7IxrKUC1gLOASM4?=
+ =?us-ascii?Q?GVhiu3aM9ygQ31kb/yNyoi+cHskFYRMVQI8cCHRLyE40cFpn9B+wBBO4C3Ng?=
+ =?us-ascii?Q?/ZphUT9IPL81W7TTFSOEA1LLdlYjqfsiTsaBl3PB0PTakC8IbE8NdVP7l9TY?=
+ =?us-ascii?Q?YHH7EfvuWpSkv9PyH7QtfGH+6E1orcA5bOGmZ1PuVLBmTGSobpF0seI6rbQm?=
+ =?us-ascii?Q?L5PKHejWEn9UxYGK/g9dLuf8j0E1ZdZjuGrXX2PMbiONub5rzreTZ+MJWC/F?=
+ =?us-ascii?Q?kn7netWg2aF1DoXTNPiCksOim9N8bLJVUJZOd3jUHVGf7FNo+KPKgmI433D/?=
+ =?us-ascii?Q?EAC/2Mo3X44KppThGpgU/gI3O7F7m8U9asvtKn8S83oMdQkJr5/dpSnmBO8a?=
+ =?us-ascii?Q?2TkPOHfedtZtk13FGPpI/HcOEvxvKRTnb982Rye6q4Kxmtbm3jLlwO83UCXs?=
+ =?us-ascii?Q?oT5neN7Vh+PhRCj1pcLvqXGZTkGBu2cp2lzNHHnzPZkPVDzxRR7AnnQbjKWf?=
+ =?us-ascii?Q?J5V9PuG6bFkmN8v9FXGposERROnTzoxnIURp/DYjbz5JE0ijreiPnoJnuc5U?=
+ =?us-ascii?Q?ZglaZLBkL1oqX2fVOLGDAFnlKTCk7hhK0LVraW+C78uXMnx5OyZjd63bsVMy?=
+ =?us-ascii?Q?0RStUOyrhZAgo1ID95reyVpWU262XM0Qq7IKX7LpTOf4O7Zuc13ua0UI1PyJ?=
+ =?us-ascii?Q?mgUMS/f+zFnSvqLQHFEqsMH5Wcq+k176WXL0K8aV48zRQQvxIrjkZF6UeOlt?=
+ =?us-ascii?Q?kTpj5M7euc8ieV+tWtRAsEsMIt9nkNBRSBUGkvGe1N9hJ+/wVZuf09gcB3/7?=
+ =?us-ascii?Q?jjI7TcYPhHjdc//p2LJ5AAb2jU6Wx6o4azx+ZtG83sXRIWpC3zjZ3u2+1cBZ?=
+ =?us-ascii?Q?CuUSQJmV1/BcHHUyAMP9qUPxr5EI/jtlerWh3WrR5CUQiLu5xcn6R1n3bgti?=
+ =?us-ascii?Q?JSZziZDBN7FZziex/fszn4QNNfDOy9faXhk/iQFrZ0Ku5OnJO+J1MKfhOAdw?=
+ =?us-ascii?Q?F12GkWCYZ8kNUKLhV55dd9ptqFXIC0pwcmXBJpH68ns80pr7WqXPmKhmmH69?=
+ =?us-ascii?Q?lPnJmGnkaSt/nEZD7moQW76HReAo8uc/X3tK9ymIjD3fw+NyQp17J/hYdMYi?=
+ =?us-ascii?Q?WR+A75qwMD3KDYcoQR1Ia1d9RUsXFZoYIqFGuBKA8iDGfb/TI4gd0z4qF/VZ?=
+ =?us-ascii?Q?aou2DNiO+UqPuK/9si5gRHml1yFgiq8M0fDMS/SV8Ztd/+AalRofXMgY/4qG?=
+ =?us-ascii?Q?RvsCCDg6btT2UYH72hmCSBPgiHfufTkIZffTumoDM/42SVz1Xd1J6SSDtl5P?=
+ =?us-ascii?Q?y+/9G6tmhLjbQOimPiD3InDQyaBphSFyZs9hbqZ7Wjs/byOwOfJyVupMoaO6?=
+ =?us-ascii?Q?2YlOy3Lw3rY2UcnMjyt7172YPE89IUmx8Ofuy62lsMLj?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c607e1f-375d-4803-d0ab-08dce9ee1888
+X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 12:13:20.4375
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2iCnu3LGOlsfDjHddHxOIqzT/oSYetllUbLhkmG76LI+BaTdHOuI+OePGmQ0GWJG6UQFt6hiPw7Wohb4SSLLXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB7220
 
-On Fri, Oct 11, 2024 at 12:51=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> So you could just copy the bits from core you need into the kernel tree
-> and leave out those bits you do not, and ocassionally update them when
-> needed, right?
+On Fri, 11 Oct 2024 10:13:34 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-Yes, but in practice it is a substantial amount of non-trivial code to
-maintain and some of it is too tied to the compiler (e.g. using
-compiler internal features), thus it would likely require maintaining
-several variations in-tree to make it work across compiler versions.
+> Add just enough support for static key so that we can use it from
+> tracepoints. Tracepoints rely on `static_branch_unlikely` with a `struct
+> static_key_false`, so we add the same functionality to Rust.
+> 
+> This patch only provides a generic implementation without code patching
+> (matching the one used when CONFIG_JUMP_LABEL is disabled). Later
+> patches add support for inline asm implementations that use runtime
+> patching.
+> 
+> When CONFIG_JUMP_LABEL is unset, `static_key_count` is a static inline
+> function, so a Rust helper is defined for `static_key_count` in this
+> case. If Rust is compiled with LTO, this call should get inlined. The
+> helper can be eliminated once we have the necessary inline asm to make
+> atomic operations from Rust.
+> 
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/helpers/helpers.c          |  1 +
+>  rust/helpers/jump_label.c       | 15 +++++++++++++++
+>  rust/kernel/jump_label.rs       | 30 ++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs              |  1 +
+>  5 files changed, 48 insertions(+)
+> 
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> index ae82e9c941af..e0846e7e93e6 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -14,6 +14,7 @@
+>  #include <linux/ethtool.h>
+>  #include <linux/firmware.h>
+>  #include <linux/jiffies.h>
+> +#include <linux/jump_label.h>
+>  #include <linux/mdio.h>
+>  #include <linux/phy.h>
+>  #include <linux/refcount.h>
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 30f40149f3a9..17e1b60d178f 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -12,6 +12,7 @@
+>  #include "build_assert.c"
+>  #include "build_bug.c"
+>  #include "err.c"
+> +#include "jump_label.c"
+>  #include "kunit.c"
+>  #include "mutex.c"
+>  #include "page.c"
+> diff --git a/rust/helpers/jump_label.c b/rust/helpers/jump_label.c
+> new file mode 100644
+> index 000000000000..6948cae5738f
+> --- /dev/null
+> +++ b/rust/helpers/jump_label.c
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (C) 2024 Google LLC.
+> + */
+> +
+> +#include <linux/jump_label.h>
+> +
+> +#ifndef CONFIG_JUMP_LABEL
+> +int rust_helper_static_key_count(struct static_key *key)
+> +{
+> +	return static_key_count(key);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_static_key_count);
 
-Maybe when kernel has been compiling with stable Rust for a while, and
-especially if `core` is split into "really tied to the compiler" and
-"the rest", we could consider something like that. Personally I would
-like to be in a position where we can try. Perhaps it could even help
-to simplify gccrs' life compiling a smaller `core`.
+^ Explicit export should be removed. This only works because we didn't
+remove export.h from all helpers.c yet, but there's a patch to do
+that and this will stop working.
 
-Even then, we would need to see whether the tradeoff is worth it: we
-may be able to customize `core` here and there, yes, but, for
-instance, we could lose the ability to easily import other code out
-there (virtually all Rust code uses `core`).
+You can add a Reviewed-by from me with this fixed.
 
-Cheers,
-Miguel
+> +#endif
+> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+> new file mode 100644
+> index 000000000000..4b7655b2a022
+> --- /dev/null
+> +++ b/rust/kernel/jump_label.rs
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024 Google LLC.
+> +
+> +//! Logic for static keys.
+> +//!
+> +//! C header: [`include/linux/jump_label.h`](srctree/include/linux/jump_label.h).
+> +
+> +/// Branch based on a static key.
+> +///
+> +/// Takes three arguments:
+> +///
+> +/// * `key` - the path to the static variable containing the `static_key`.
+> +/// * `keytyp` - the type of `key`.
+> +/// * `field` - the name of the field of `key` that contains the `static_key`.
+> +///
+> +/// # Safety
+> +///
+> +/// The macro must be used with a real static key defined by C.
+> +#[macro_export]
+> +macro_rules! static_branch_unlikely {
+> +    ($key:path, $keytyp:ty, $field:ident) => {{
+> +        let _key: *const $keytyp = ::core::ptr::addr_of!($key);
+> +        let _key: *const $crate::bindings::static_key_false = ::core::ptr::addr_of!((*_key).$field);
+> +        let _key: *const $crate::bindings::static_key = _key.cast();
+> +
+> +        $crate::bindings::static_key_count(_key.cast_mut()) > 0
+> +    }};
+> +}
+> +pub use static_branch_unlikely;
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index b5f4b3ce6b48..708ff817ccc3 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -36,6 +36,7 @@
+>  pub mod firmware;
+>  pub mod init;
+>  pub mod ioctl;
+> +pub mod jump_label;
+>  #[cfg(CONFIG_KUNIT)]
+>  pub mod kunit;
+>  pub mod list;
+> 
+
