@@ -1,66 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D8328EB;
-	Fri, 11 Oct 2024 04:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CF20ADF7;
+	Fri, 11 Oct 2024 07:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728621780; cv=none; b=GYjIzolxON8aB8iNqsdExlvrbcmsEsd/kjBJavH5jAfqpp1WekENiIP4ukRCHKegeu07yFaL4qgvitP+6bnpp+GplaEjNlDiD7/HQskCMEacGQXrR4esXZHKGEG3i7H+BsHNZRvQrCS+AZuvp5u0Cd+NavCZ2wf8oMOh4lPxyXE=
+	t=1728632817; cv=none; b=EwtJMNgEZXS7b3TkSK0ceUIqB7HqhaOWMA8VhsJD1ArT2feFxe7xbvxGgdQgZQOt3tP8HVGafP+biFA/lutrI+7sjaF1alR14IYl7t3F6OwI6UPQD/puTO7WR01dNVq55mkrhYvW4c0zGKm37ffodSUhCwTDz+EcUjsX3K9rHqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728621780; c=relaxed/simple;
-	bh=xq2xYxCeEvzyDD2ePxSl33QtiL+L//1dLF/xG9ewvDY=;
+	s=arc-20240116; t=1728632817; c=relaxed/simple;
+	bh=HQSSCIywenQzOJiT5UPu5auwm7k09dThmwbWbEkcmME=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEYxwvCYENKF749T5gfDOEey/UPjDE62IHuI8Clrq35NEYV9RqjM5D4i0S0RmmrVzVXhwa7H7fjMFqP3A8J6ylv0ZQXbbnkykDTnSA/pnJhdEinl7wxAkHt0wq5gdgbc8c905jxiJisFU8TmRHB725c65qwWs4bovm0pTKJzCS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=atp8cQGB; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRVVmLHA6vlvg3GNNwU29K8s4zKY5o6vpQCX7BHujj6SixX8gEFBWHnkKCdYg1X7HDeFdJTjnftzCKfqFxVUvnenynNZLFTTY/Jj8C03I12Cc/AfuSCNvc13VW2jb5e269zErDTpESQl0IDKuxG5gXwNur1l6CYClUQtIvhNsgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RNzRRI+j; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="atp8cQGB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728621779; x=1760157779;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xq2xYxCeEvzyDD2ePxSl33QtiL+L//1dLF/xG9ewvDY=;
-  b=atp8cQGBnaXZD94EGyNjUFBhGdxLN9wU/slXctT6mftbVYSfAQkimm5L
-   GgC8M6hmhJKE/txmuIHMBBWWkk9Jh/ckudzvF7EXkUT67OKtNXdDkCMDQ
-   4GSIRGBbuFiS5rg3MyWJNqFPli/ko0fiyRx2xZRfwA/9pDPGioD3YhNE4
-   2O8uiKao7jt+uJCN5SPzUemwT8136FbTSn+lDW9yTqiMLa4kiAA3UdXH8
-   ZQ4NDXoq+kR0B8V22DuOJwYj3npmQT9HrjrjKa9gwlUMmdsSbuz7R2jM5
-   pQ5SCGDOeFTaf3ItLBmxPpDydJyME+22BrCNtmC3+i5kkT8UHwM8FDXwo
-   A==;
-X-CSE-ConnectionGUID: +s20Rls7TOilnNCq+IYzwg==
-X-CSE-MsgGUID: QZuKZKPzQCGTC+7FpSP1Dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="27959202"
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="27959202"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 21:42:58 -0700
-X-CSE-ConnectionGUID: pbRcFdqLRZmQX/JmBKPFNg==
-X-CSE-MsgGUID: /8q1Oky7SJmnO1TALXDWhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="76712344"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 10 Oct 2024 21:42:56 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sz7UL-000Bod-0J;
-	Fri, 11 Oct 2024 04:42:53 +0000
-Date: Fri, 11 Oct 2024 12:42:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>,
-	Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH 2/4] mm/sparse-vmemmap: set pte_init when vmemmap is
- created
-Message-ID: <202410111254.kon5pPzX-lkp@intel.com>
-References: <20241010035048.3422527-3-maobibo@loongson.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RNzRRI+j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HlhUCBO2cgAocJ0jal2+odmhS3fEGMT9ApCG3YBalmk=; b=RNzRRI+jS+E41pEvv2tM/PBMQr
+	SQs+GEy9wRlJQS7LgwXIlsLPiOEfZ0lcfVl/LZAzCmJERr/wrGQx/6Jkm+z665nLQ1YxAvvKLbZgJ
+	K836flQdGWfRcahrgPWsGgbE2Kv46RlU2j9210RhGvDmBYmeahOdJixtpW4jFIpXAj2/1kuIqVUzm
+	9UeGFlwfEh13tOOBCEhTCdOmFs+NkVHulOmWBcYiyIrEdETWz96sC8sQ5hitRuikUOylqpHtAubjX
+	bIdwQSiSdX8D+zYfq6nK2YaptkNRLX5ebrdQ9hI/fijT9vdqmXxkPzbZ/e0uearFNRK9I5GNV8P5M
+	+7qkIbyw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1szALv-0000000Faln-258j;
+	Fri, 11 Oct 2024 07:46:23 +0000
+Date: Fri, 11 Oct 2024 00:46:23 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <ZwjXz0dz-RldVNx0@infradead.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+ <Zwd7GRyBtCwiAv1v@infradead.org>
+ <ZwfPPZrxHzQgYfx7@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -69,115 +90,30 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241010035048.3422527-3-maobibo@loongson.cn>
+In-Reply-To: <ZwfPPZrxHzQgYfx7@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Bibo,
+On Thu, Oct 10, 2024 at 03:57:33PM +0300, Mike Rapoport wrote:
+> On Wed, Oct 09, 2024 at 11:58:33PM -0700, Christoph Hellwig wrote:
+> > On Wed, Oct 09, 2024 at 09:08:15PM +0300, Mike Rapoport wrote:
+> > >  /**
+> > >   * struct execmem_info - architecture parameters for code allocations
+> > > + * @fill_trapping_insns: set memory to contain instructions that will trap
+> > >   * @ranges: array of parameter sets defining architecture specific
+> > >   * parameters for executable memory allocations. The ranges that are not
+> > >   * explicitly initialized by an architecture use parameters defined for
+> > >   * @EXECMEM_DEFAULT.
+> > >   */
+> > >  struct execmem_info {
+> > > +	void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
+> > >  	struct execmem_range	ranges[EXECMEM_TYPE_MAX];
+> > 
+> > Why is the filler an indirect function call and not an architecture
+> > hook?
+> 
+> The idea is to keep everything together and have execmem_info describe all
+> that architecture needs. 
 
-kernel test robot noticed the following build warnings:
+But why?  That's pretty different from our normal style of arch hooks,
+and introduces an indirect call in a security sensitive area.
 
-[auto build test WARNING on 87d6aab2389e5ce0197d8257d5f8ee965a67c4cd]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-Set-pte-entry-with-PAGE_GLOBAL-for-kernel-space/20241010-115120
-base:   87d6aab2389e5ce0197d8257d5f8ee965a67c4cd
-patch link:    https://lore.kernel.org/r/20241010035048.3422527-3-maobibo%40loongson.cn
-patch subject: [PATCH 2/4] mm/sparse-vmemmap: set pte_init when vmemmap is created
-config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20241011/202410111254.kon5pPzX-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 70e0a7e7e6a8541bcc46908c592eed561850e416)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241011/202410111254.kon5pPzX-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410111254.kon5pPzX-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from mm/sparse-vmemmap.c:21:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from mm/sparse-vmemmap.c:23:
-   In file included from include/linux/memblock.h:13:
-   In file included from arch/s390/include/asm/dma.h:5:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from mm/sparse-vmemmap.c:23:
-   In file included from include/linux/memblock.h:13:
-   In file included from arch/s390/include/asm/dma.h:5:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from mm/sparse-vmemmap.c:23:
-   In file included from include/linux/memblock.h:13:
-   In file included from arch/s390/include/asm/dma.h:5:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> mm/sparse-vmemmap.c:187:23: warning: no previous prototype for function 'kernel_pte_init' [-Wmissing-prototypes]
-     187 | void __weak __meminit kernel_pte_init(void *addr)
-         |                       ^
-   mm/sparse-vmemmap.c:187:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     187 | void __weak __meminit kernel_pte_init(void *addr)
-         | ^
-         | static 
-   14 warnings generated.
-
-
-vim +/kernel_pte_init +187 mm/sparse-vmemmap.c
-
-   186	
- > 187	void __weak __meminit kernel_pte_init(void *addr)
-   188	{
-   189	}
-   190	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
