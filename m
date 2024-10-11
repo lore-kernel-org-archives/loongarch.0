@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D04213EDE
-	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 10:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3426921503F
+	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 10:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728641665; cv=none; b=YzNY14XlIY8m7MMwJJ5YTl0GJPSQgGG2qCajZL9ECVFe7gbidCxeoo8bGGcLEUm6ii688wZtNFGgcugJ0Skf/2GpDeCFpnl4nGgU4c9bs/rmb2y+Ca63Af2iMi/GzXcQZLrOYCOmBBre8v4syviqB76y5XiHzBXuqhM306VgOXE=
+	t=1728641670; cv=none; b=RtmZCTmgD3GM803wOX9fqrx9MG8ciWUuNJH/pW6PE0s5IpWBmCmDNRiRQNCSZUMw4xNOtqwSX/iP7XsOTSQy+mM2l9z/KRy2U1mj8ZuXig0gbrEX0eQn4ZLArP4U69D+adkV9uoWNFLTcy/vzHGXFk1/Sho3kZkECVHqmIo5ET0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728641665; c=relaxed/simple;
-	bh=x+2TpPh6Q9mhzvH+1qwbasEJPp51grTVVIsRN6jzHM0=;
+	s=arc-20240116; t=1728641670; c=relaxed/simple;
+	bh=OvzSr4VFrX1KtK2UXFthBCdVxqArCAH6SA7+jizJ+V0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wg/wFMs1HT9orLZpg60ob7ygdU/+tVMfy5i05wvc905mI56UFBFhC2OV2uEpIkkPWZBDzaG5B+/1+qF9dH2Mp6Y4F1+XMamxQoFBjLdNMdLsudREcTMkf1M+7egO9qBNX1Sa/B3FTqhfwO6czzgpwqdQX186RkfuRlykxqs0Fq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=20oJlKUj; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=fKIZVUQ5YTzJLVXORntDTMzrxrMRuwBhtd0Cl3avueeplwJQY+qMZLIIJJ1LFOIyDmHYL3XPw0CToQ4mkdqyBfC7LdClhD4RSYJLx/UxlGU5juH+xtAUyrbd3t8LPRx9zWIxcaTyP2Z0lyKSCepoNkXfYSkUZllWEz/VHM95QhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3IIRSkbn; arc=none smtp.client-ip=209.85.218.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="20oJlKUj"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e2270a147aso30186287b3.0
-        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 03:14:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3IIRSkbn"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-a996c29edabso119233866b.1
+        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 03:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728641663; x=1729246463; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1728641665; x=1729246465; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bzMQG0VAhnXz5sWFufxYB1YE8eJN4onDe7TcZljM5AU=;
-        b=20oJlKUjR1imoMzWny4owKuLnf1ejax5n5lSVy9COYeaLeY5PalgRgiEFLRBxFbH6d
-         p1APSgTEaw/SKB3XmJPJtde+z5r90EkBm8jgozvM629giLIOuC/Sdh/o7LAifGeNz4UV
-         TAhkzUGp8wfy4E9rZ0q/C3ot14Wf6mbjaLT3LkO7pHI2noqJIWLSyL5H2dqvUUd/67TT
-         +yDVuQ7lO3Eq15XNOE2W+xmTCxMWfrgaMCkEU0tsqlXM9oy3rj1vS2R+0VbICfL31xWF
-         MEMcl3wRNU6fduUVsuiz1z9czck15ou+3g2/WZHDWHC7g+5HoQQU/3Bi9K2bi7KGhyAv
-         Khag==
+        bh=dXlYt/oa+7NEzDWWVPyKVNY96AVLFROe93mGWbsR7r0=;
+        b=3IIRSkbnWuaLoaZBg4yCU21EYsciLAcDb4IkW2NM1Q/AcMRRlULDeRATatfMKDLMNX
+         GWvMZuoXETvohM7G7yyp/Lyl23wZhONiYTFyhg1vywm7MweopD8RCBMribTnlSoKeQAu
+         nZrgbjTgSrc5WuGIdn61iI43I446j5riR92MBiwt9R9orNDUhNUhQvxo3BTl0PCr03ST
+         ZKQZjlTcPUAeC9FwJntMjX+YbzG/GaoLVPiX5xkw2AdvyToJ3FgUhm+yNeXIL9vAFAQU
+         Axe4r3xm5QeNPwnDCGKyXWCw6PGlfikenZGFSWffePQa7VzQEoyd9Jr5li24QUtUuKvb
+         ik5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728641663; x=1729246463;
+        d=1e100.net; s=20230601; t=1728641665; x=1729246465;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bzMQG0VAhnXz5sWFufxYB1YE8eJN4onDe7TcZljM5AU=;
-        b=gFN0ff4i+g7OaOhzytWtNg9qJAve/IYVpB69wDEGs/TuvP/+QaXDfCrOqjNn3nFgMb
-         lXZ01S0K6fL00h7Qsq7RId4HRnOETQ8f9RUOIH3stfwwz/kM0+B3uKnVYEy06zMajARx
-         wvjl6I0kCH+VJUe4RBhYIm1hyftHYoOEJgyc1SvNJyi6aYj+QfiXdvZjwuP9XJDqQStj
-         mn1qnfWqwSxv6Vt+9ouOotpHHnoD3gvmCVRiwAkxolU8DO8+36f21tXRyamt/x3cJb37
-         hIk1yqtSNwlQy77HryWv6DORtz0cyZeJsD7WDI/idouT2qn8EhZZIs5KrX7lxhlQ/kaG
-         ZKpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6JQ5EEQOHWQQefWQU1Qj8hZCqNC2p0FPb2JWAntYOhWScJIhaWo7gOXLe9NDZaFskry8Ks+vYpVE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxXv3/alHK3s7XYHftVySOdlnuaNOwCOqP1F/+Uyn+Emh+qRRjQ
-	unwgR1IYt5q29yRkdy4NRptHMNdh4uymwr9f8d8MpCRv/RwsVz6qLcjAq9AUopFof4UjAaGf9Af
-	/0lVE96NLzLB+6w==
-X-Google-Smtp-Source: AGHT+IHsv8sEJN4AIiET5JbLxpm+hFJMNSEGzbjaN8LZvGlycWMyxdCfV9eP/NWSkHk7nBBqlH0pGInTOOmCZuc=
+        bh=dXlYt/oa+7NEzDWWVPyKVNY96AVLFROe93mGWbsR7r0=;
+        b=DMZX96RI3kL3owrPsgR+NkjwKVS71qoM5KLQQOySe63c8s6qRWsNNR3Nsd5EthBiTz
+         ghO7pX9X408kEgfSNyd5jaHP0evankdYgiH9J3HU+z4dbQQ+DOaUtBAwZ0DjoLQFE+HW
+         ywJu6xJxXWj/NHDb43qgd7b8RCMve7tExKF8ajh4P0HGnaDNiUpLTB9HGEX2r0C9LIIh
+         qM4oBDb2d5FEnhVdFHMG/2YN2FbntSXJ59wXrND/Rcte19MM/z2vKBXonrAum0LJdwUD
+         GaX75GXNABW1o10yPGI3QV+X4ex17+N3AlfTGQHoBQtDxyGLBJSxR6GiwuRBDxm0csd+
+         rgVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1X+Avfug2m7T5R3T8kBho9IAqBdt5eHXjFjtGzu0II3rp7gUyZi85envdHr0x2FBBKLOzVXJfRtk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzOAf3JvVw1awSwm4/SOZ+sM+TfyV6iT+/PISYVK+9+gihDrzaQ
+	+RKIC/qHPGJKr9EmRvuSFOefQvEK1remi6h15lB9sJM0If+R0kWSCBiS1wjKwyXHSqkKsspp7a6
+	hY+velOZykqFuOw==
+X-Google-Smtp-Source: AGHT+IFUZk2XvsvMj6Wc3yCHDL1hoT/VWhngxWmpV68U6xzKMORLk/rDkjmoUsncuiuiUYkc5ZtZnBPBoMLMN2Q=
 X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
- (user=aliceryhl job=sendgmr) by 2002:a05:690c:48c1:b0:6e3:14c3:379f with SMTP
- id 00721157ae682-6e3471eaeb7mr409527b3.0.1728641662754; Fri, 11 Oct 2024
- 03:14:22 -0700 (PDT)
-Date: Fri, 11 Oct 2024 10:13:37 +0000
+ (user=aliceryhl job=sendgmr) by 2002:a17:907:7e8e:b0:a99:3a34:5cae with SMTP
+ id a640c23a62f3a-a99b92d148emr46766b.2.1728641665077; Fri, 11 Oct 2024
+ 03:14:25 -0700 (PDT)
+Date: Fri, 11 Oct 2024 10:13:38 +0000
 In-Reply-To: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9432; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=x+2TpPh6Q9mhzvH+1qwbasEJPp51grTVVIsRN6jzHM0=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnCPpw3rfTwqfruL8nYs7nQbcxxYzY32CMbXSgd
- 7b1T97skFCJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZwj6cAAKCRAEWL7uWMY5
- RpKOD/9f5yHmrNaDpJ6gfWbhjcjirp2P/xWrPzug/BSW3T+7qd2gMXen9+5ya6ts/D1qfZFRNhS
- RkII9zBitOiGgLUGB40HsQUH0CqcF6MjVo/J+/vmUP0KiwGUJtI6MSgW6yRqthrcm18akgIeIIa
- lIjoDMcqsmIDc/lJ7yzOQkPBKtt7N+1gFeHC8OngnDTgCI5HYc//XIfobPYEMVzt5UeYtd9canc
- csKoOkY85I+yEK+HsG04++GBytxTWr2w8nn0oRzb6lp1IDEynjS+CA+syA8fh6d4P2mhzLTJQEv
- OB18Vkpp8LBBJFBRxZit+uTNSKYzONTcauAvlpaMi2itmNY5GrfWpXHzyJiDue3McadOYVkNz5W
- P9Cit4G25moS7I2hgLRNrYXJ3N4nuWnsKwLzxHFGagGq+acWggZIa75VTQ+vNXRcpjOEou2hv0p
- 6uY/iPIckhMbtt3+0akbAReELFDCHs35x3/EOA2jsWfTxMVOJO6yLO8Pjw82FG2Ragffu70gQth
- UcrymhiEd8JbqhwZ9l7hCBblbrqMuptLRXWjfvfCZU+JgCAMTuB/dweCdf8SGBBR5PNMFHRgw0s
- xn6sLDcGUhSRTTPgCsWJyzjJooS2pyEaR+UhYoYN/kcGBpPdf5Xbz6FdQye+Ej/bSxVYsZuu4Qe VpUL7D6t4ePwVXQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8525; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=OvzSr4VFrX1KtK2UXFthBCdVxqArCAH6SA7+jizJ+V0=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnCPpx+Q1CTMK1zq1TvBDRV65hgxAf2+JhbNWSq
+ 9VSnEym5kWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZwj6cQAKCRAEWL7uWMY5
+ RqAlEACRKcilZAk3daKUNVB69XPd0ba36+SjExxjWIeNqFcCXa/txKr36QlmH0UAaoHDzHjqlVh
+ xQTBWY9Iey+UMsJ9H78It7nCP53ylbcZd5YV2U2QZMxAdmKiP6ZF4aG0GZGx9MmlcCxtFsD+B1x
+ X72KQi90T94oyyMiyTWI0i7vEx5FWYljYDU7OVCvEtVrHqdqxEa/XVGGmzt0xGM6HZ0R6Fqle7h
+ uaHZyn5XOwLJ9jlfpdVCpold8x1IJDwx1NzokTVEWLPIISmdsKw76UumqYFiMth9FELCCH5h9zd
+ ZiDQACwvtCFi4UShoCsTNEdmkg7KQPYbu9ZWYTeAgi1bnEHkzDh6iNHrhM2kydaC155iwO0QEu+
+ zfOZUWbqiH2+a6TCzPHdOuQCzmxmfY+FkA+OeIVQKREERe92SXetc2I1QRcKEheJ+Rl79bjqvGI
+ Dc4DiMB/QxGOxKVe3WpJHHGZWKnf/+sYEr8a78usmQqkrgCx2mToZQLvkWKgVM/laa5oag1bAkZ
+ rqwH/jNzMoaVXsfbEGVByX+kwbZmBtPcAWr9/guV1Y9/jHEKYONhQTkudCU2/gSBAuYym/Xf2S/
+ v4+uEtlf0wCnoKx5eSSu8WciQvPYrAHT8dpj2PYinx13xVhv/4c9sGWGN+tfIiFrZ0Ylc5Ck25p PXXvORodchFSF4A==
 X-Mailer: b4 0.13.0
-Message-ID: <20241011-tracepoint-v10-4-7fbde4d6b525@google.com>
-Subject: [PATCH v10 4/5] jump_label: adjust inline asm to be consistent
+Message-ID: <20241011-tracepoint-v10-5-7fbde4d6b525@google.com>
+Subject: [PATCH v10 5/5] rust: add arch_static_branch
 From: Alice Ryhl <aliceryhl@google.com>
 To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
@@ -103,290 +103,229 @@ Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-To avoid duplication of inline asm between C and Rust, we need to
-import the inline asm from the relevant `jump_label.h` header into Rust.
-To make that easier, this patch updates the header files to expose the
-inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
+To allow the Rust implementation of static_key_false to use runtime code
+patching instead of the generic implementation, pull in the relevant
+inline assembly from the jump_label.h header by running the C
+preprocessor on a .rs.S file. Build rules are added for .rs.S files.
 
-The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
-takes the same arguments in a consistent order so that Rust can use the
-same logic for every architecture.
+Since the relevant inline asm has been adjusted to export the inline asm
+via the ARCH_STATIC_BRANCH_ASM macro in a consistent way, the Rust side
+does not need architecture specific code to pull in the asm.
+
+It is not possible to use the existing C implementation of
+arch_static_branch via a Rust helper because it passes the argument
+`key` to inline assembly as an 'i' parameter. Any attempt to add a C
+helper for this function will fail to compile because the value of `key`
+must be known at compile-time.
 
 Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
 Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- arch/arm/include/asm/jump_label.h       | 14 +++++----
- arch/arm64/include/asm/jump_label.h     | 20 ++++++++-----
- arch/loongarch/include/asm/jump_label.h | 16 +++++++----
- arch/riscv/include/asm/jump_label.h     | 50 ++++++++++++++++++---------------
- arch/x86/include/asm/jump_label.h       | 39 +++++++++++--------------
- 5 files changed, 76 insertions(+), 63 deletions(-)
+ rust/Makefile                           |  5 ++-
+ rust/kernel/.gitignore                  |  3 ++
+ rust/kernel/arch_static_branch_asm.rs.S |  7 ++++
+ rust/kernel/jump_label.rs               | 64 ++++++++++++++++++++++++++++++++-
+ rust/kernel/lib.rs                      | 35 ++++++++++++++++++
+ scripts/Makefile.build                  |  9 ++++-
+ 6 files changed, 120 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/include/asm/jump_label.h b/arch/arm/include/asm/jump_label.h
-index e4eb54f6cd9f..a35aba7f548c 100644
---- a/arch/arm/include/asm/jump_label.h
-+++ b/arch/arm/include/asm/jump_label.h
-@@ -9,13 +9,17 @@
+diff --git a/rust/Makefile b/rust/Makefile
+index b5e0a73b78f3..09ea07cc4001 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -36,6 +36,8 @@ always-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.c
+ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
+ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
  
- #define JUMP_LABEL_NOP_SIZE 4
- 
-+/* This macro is also expanded on the Rust side. */
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"1:\n\t"					\
-+	WASM(nop) "\n\t"				\
-+	".pushsection __jump_table,  \"aw\"\n\t"	\
-+	".word 1b, " label ", " key "\n\t"		\
-+	".popsection\n\t"				\
++always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/arch_static_branch_asm.rs
 +
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
--	asm goto("1:\n\t"
--		 WASM(nop) "\n\t"
--		 ".pushsection __jump_table,  \"aw\"\n\t"
--		 ".word 1b, %l[l_yes], %c0\n\t"
--		 ".popsection\n\t"
-+	asm goto(ARCH_STATIC_BRANCH_ASM("%c0", "%l[l_yes]")
- 		 : :  "i" (&((char *)key)[branch]) :  : l_yes);
+ # Avoids running `$(RUSTC)` for the sysroot when it may not be available.
+ ifdef CONFIG_RUST
  
- 	return false;
-diff --git a/arch/arm64/include/asm/jump_label.h b/arch/arm64/include/asm/jump_label.h
-index a0a5bbae7229..424ed421cd97 100644
---- a/arch/arm64/include/asm/jump_label.h
-+++ b/arch/arm64/include/asm/jump_label.h
-@@ -19,10 +19,14 @@
- #define JUMP_TABLE_ENTRY(key, label)			\
- 	".pushsection	__jump_table, \"aw\"\n\t"	\
- 	".align		3\n\t"				\
--	".long		1b - ., %l["#label"] - .\n\t"	\
--	".quad		%c0 - .\n\t"			\
--	".popsection\n\t"				\
--	:  :  "i"(key) :  : label
-+	".long		1b - ., " label " - .\n\t"	\
-+	".quad		" key " - .\n\t"		\
-+	".popsection\n\t"
+@@ -421,7 +423,8 @@ $(obj)/uapi.o: $(src)/uapi/lib.rs \
+ $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
+     --extern build_error --extern macros --extern bindings --extern uapi
+ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
+-    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
++    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o \
++	$(obj)/kernel/arch_static_branch_asm.rs FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ endif # CONFIG_RUST
+diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
+new file mode 100644
+index 000000000000..d082731007c6
+--- /dev/null
++++ b/rust/kernel/.gitignore
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+/* This macro is also expanded on the Rust side. */
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"1:	nop\n\t"				\
-+	JUMP_TABLE_ENTRY(key, label)
- 
- static __always_inline bool arch_static_branch(struct static_key * const key,
- 					       const bool branch)
-@@ -30,8 +34,8 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
- 	char *k = &((char *)key)[branch];
- 
- 	asm goto(
--		"1:	nop					\n\t"
--		JUMP_TABLE_ENTRY(k, l_yes)
-+		ARCH_STATIC_BRANCH_ASM("%c0", "%l[l_yes]")
-+		:  :  "i"(k) :  : l_yes
- 		);
- 
- 	return false;
-@@ -43,9 +47,11 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
- 						    const bool branch)
- {
- 	char *k = &((char *)key)[branch];
++/arch_static_branch_asm.rs
+diff --git a/rust/kernel/arch_static_branch_asm.rs.S b/rust/kernel/arch_static_branch_asm.rs.S
+new file mode 100644
+index 000000000000..2afb638708db
+--- /dev/null
++++ b/rust/kernel/arch_static_branch_asm.rs.S
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
- 	asm goto(
- 		"1:	b		%l[l_yes]		\n\t"
--		JUMP_TABLE_ENTRY(k, l_yes)
-+		JUMP_TABLE_ENTRY("%c0", "%l[l_yes]")
-+		:  :  "i"(k) :  : l_yes
- 		);
- 	return false;
- l_yes:
-diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-index 29acfe3de3fa..8a924bd69d19 100644
---- a/arch/loongarch/include/asm/jump_label.h
-+++ b/arch/loongarch/include/asm/jump_label.h
-@@ -13,18 +13,22 @@
- 
- #define JUMP_LABEL_NOP_SIZE	4
- 
--#define JUMP_TABLE_ENTRY				\
-+/* This macro is also expanded on the Rust side. */
-+#define JUMP_TABLE_ENTRY(key, label)			\
- 	 ".pushsection	__jump_table, \"aw\"	\n\t"	\
- 	 ".align	3			\n\t"	\
--	 ".long		1b - ., %l[l_yes] - .	\n\t"	\
--	 ".quad		%0 - .			\n\t"	\
-+	 ".long		1b - ., " label " - .	\n\t"	\
-+	 ".quad		" key " - .		\n\t"	\
- 	 ".popsection				\n\t"
- 
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"1:	nop				\n\t"	\
-+	JUMP_TABLE_ENTRY(key, label)
++#include <linux/jump_label.h>
 +
- static __always_inline bool arch_static_branch(struct static_key * const key, const bool branch)
- {
- 	asm goto(
--		"1:	nop			\n\t"
--		JUMP_TABLE_ENTRY
-+		ARCH_STATIC_BRANCH_ASM("%0", "%l[l_yes]")
- 		:  :  "i"(&((char *)key)[branch]) :  : l_yes);
- 
- 	return false;
-@@ -37,7 +41,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
- {
- 	asm goto(
- 		"1:	b	%l[l_yes]	\n\t"
--		JUMP_TABLE_ENTRY
-+		JUMP_TABLE_ENTRY("%0", "%l[l_yes]")
- 		:  :  "i"(&((char *)key)[branch]) :  : l_yes);
- 
- 	return false;
-diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
-index 1c768d02bd0c..87a71cc6d146 100644
---- a/arch/riscv/include/asm/jump_label.h
-+++ b/arch/riscv/include/asm/jump_label.h
-@@ -16,21 +16,28 @@
- 
- #define JUMP_LABEL_NOP_SIZE 4
- 
-+#define JUMP_TABLE_ENTRY(key, label)			\
-+	".pushsection	__jump_table, \"aw\"	\n\t"	\
-+	".align		" RISCV_LGPTR "		\n\t"	\
-+	".long		1b - ., " label " - .	\n\t"	\
-+	"" RISCV_PTR "	" key " - .		\n\t"	\
-+	".popsection				\n\t"
++// Cut here.
 +
-+/* This macro is also expanded on the Rust side. */
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"	.align		2		\n\t"	\
-+	"	.option push			\n\t"	\
-+	"	.option norelax			\n\t"	\
-+	"	.option norvc			\n\t"	\
-+	"1:	nop				\n\t"	\
-+	"	.option pop			\n\t"	\
-+	JUMP_TABLE_ENTRY(key, label)
-+
- static __always_inline bool arch_static_branch(struct static_key * const key,
- 					       const bool branch)
- {
- 	asm goto(
--		"	.align		2			\n\t"
--		"	.option push				\n\t"
--		"	.option norelax				\n\t"
--		"	.option norvc				\n\t"
--		"1:	nop					\n\t"
--		"	.option pop				\n\t"
--		"	.pushsection	__jump_table, \"aw\"	\n\t"
--		"	.align		" RISCV_LGPTR "		\n\t"
--		"	.long		1b - ., %l[label] - .	\n\t"
--		"	" RISCV_PTR "	%0 - .			\n\t"
--		"	.popsection				\n\t"
-+		ARCH_STATIC_BRANCH_ASM("%0", "%l[label]")
- 		:  :  "i"(&((char *)key)[branch]) :  : label);
++::kernel::concat_literals!(ARCH_STATIC_BRANCH_ASM("{symb} + {off} + {branch}", "{l_yes}"))
+diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+index 4b7655b2a022..cbd0ec00f0c5 100644
+--- a/rust/kernel/jump_label.rs
++++ b/rust/kernel/jump_label.rs
+@@ -24,7 +24,69 @@ macro_rules! static_branch_unlikely {
+         let _key: *const $crate::bindings::static_key_false = ::core::ptr::addr_of!((*_key).$field);
+         let _key: *const $crate::bindings::static_key = _key.cast();
  
- 	return false;
-@@ -38,21 +45,20 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
- 	return true;
+-        $crate::bindings::static_key_count(_key.cast_mut()) > 0
++        #[cfg(not(CONFIG_JUMP_LABEL))]
++        {
++            $crate::bindings::static_key_count(_key) > 0
++        }
++
++        #[cfg(CONFIG_JUMP_LABEL)]
++        $crate::jump_label::arch_static_branch! { $key, $keytyp, $field, false }
+     }};
  }
- 
-+#define ARCH_STATIC_BRANCH_JUMP_ASM(key, label)		\
-+	"	.align		2		\n\t"	\
-+	"	.option push			\n\t"	\
-+	"	.option norelax			\n\t"	\
-+	"	.option norvc			\n\t"	\
-+	"1:	j	" label "		\n\t" \
-+	"	.option pop			\n\t"	\
-+	JUMP_TABLE_ENTRY(key, label)
+ pub use static_branch_unlikely;
 +
- static __always_inline bool arch_static_branch_jump(struct static_key * const key,
- 						    const bool branch)
- {
- 	asm goto(
--		"	.align		2			\n\t"
--		"	.option push				\n\t"
--		"	.option norelax				\n\t"
--		"	.option norvc				\n\t"
--		"1:	j		%l[label]		\n\t"
--		"	.option pop				\n\t"
--		"	.pushsection	__jump_table, \"aw\"	\n\t"
--		"	.align		" RISCV_LGPTR "		\n\t"
--		"	.long		1b - ., %l[label] - .	\n\t"
--		"	" RISCV_PTR "	%0 - .			\n\t"
--		"	.popsection				\n\t"
-+		ARCH_STATIC_BRANCH_JUMP_ASM("%0", "%l[label]")
- 		:  :  "i"(&((char *)key)[branch]) :  : label);
- 
- 	return false;
-diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-index cbbef32517f0..ffd0d1a1a4af 100644
---- a/arch/x86/include/asm/jump_label.h
-+++ b/arch/x86/include/asm/jump_label.h
-@@ -12,49 +12,42 @@
- #include <linux/stringify.h>
- #include <linux/types.h>
- 
--#define JUMP_TABLE_ENTRY				\
-+#define JUMP_TABLE_ENTRY(key, label)			\
- 	".pushsection __jump_table,  \"aw\" \n\t"	\
- 	_ASM_ALIGN "\n\t"				\
- 	".long 1b - . \n\t"				\
--	".long %l[l_yes] - . \n\t"			\
--	_ASM_PTR "%c0 + %c1 - .\n\t"			\
-+	".long " label " - . \n\t"			\
-+	_ASM_PTR " " key " - . \n\t"			\
- 	".popsection \n\t"
- 
-+/* This macro is also expanded on the Rust side. */
- #ifdef CONFIG_HAVE_JUMP_LABEL_HACK
--
--static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
--{
--	asm goto("1:"
--		"jmp %l[l_yes] # objtool NOPs this \n\t"
--		JUMP_TABLE_ENTRY
--		: :  "i" (key), "i" (2 | branch) : : l_yes);
--
--	return false;
--l_yes:
--	return true;
--}
--
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"1: jmp " label " # objtool NOPs this \n\t"	\
-+	JUMP_TABLE_ENTRY(key, label)
- #else /* !CONFIG_HAVE_JUMP_LABEL_HACK */
-+#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-+	"1: .byte " __stringify(BYTES_NOP5) "\n\t"	\
-+	JUMP_TABLE_ENTRY(key, label)
-+#endif /* CONFIG_HAVE_JUMP_LABEL_HACK */
- 
- static __always_inline bool arch_static_branch(struct static_key * const key, const bool branch)
- {
--	asm goto("1:"
--		".byte " __stringify(BYTES_NOP5) "\n\t"
--		JUMP_TABLE_ENTRY
--		: :  "i" (key), "i" (branch) : : l_yes);
-+	int hack_bit = IS_ENABLED(CONFIG_HAVE_JUMP_LABEL_HACK) ? 2 : 0;
++/// Assert that the assembly block evaluates to a string literal.
++#[cfg(CONFIG_JUMP_LABEL)]
++const _: &str = include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
 +
-+	asm goto(ARCH_STATIC_BRANCH_ASM("%c0 + %c1", "%l[l_yes]")
-+		: :  "i" (key), "i" (hack_bit | branch) : : l_yes);
- 
- 	return false;
- l_yes:
- 	return true;
++#[macro_export]
++#[doc(hidden)]
++#[cfg(CONFIG_JUMP_LABEL)]
++#[cfg(not(CONFIG_HAVE_JUMP_LABEL_HACK))]
++macro_rules! arch_static_branch {
++    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
++        $crate::asm!(
++            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
++            l_yes = label {
++                break 'my_label true;
++            },
++            symb = sym $key,
++            off = const ::core::mem::offset_of!($keytyp, $field),
++            branch = const $crate::jump_label::bool_to_int($branch),
++        );
++
++        break 'my_label false;
++    }};
++}
++
++#[macro_export]
++#[doc(hidden)]
++#[cfg(CONFIG_JUMP_LABEL)]
++#[cfg(CONFIG_HAVE_JUMP_LABEL_HACK)]
++macro_rules! arch_static_branch {
++    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
++        $crate::asm!(
++            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
++            l_yes = label {
++                break 'my_label true;
++            },
++            symb = sym $key,
++            off = const ::core::mem::offset_of!($keytyp, $field),
++            branch = const 2 | $crate::jump_label::bool_to_int($branch),
++        );
++
++        break 'my_label false;
++    }};
++}
++
++#[cfg(CONFIG_JUMP_LABEL)]
++pub use arch_static_branch;
++
++/// A helper used by inline assembly to pass a boolean to as a `const` parameter.
++///
++/// Using this function instead of a cast lets you assert that the input is a boolean, and not some
++/// other type that can also be cast to an integer.
++#[doc(hidden)]
++pub const fn bool_to_int(b: bool) -> i32 {
++    b as i32
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 55f81f49024e..c0ae9ddd9468 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -148,3 +148,38 @@ macro_rules! container_of {
+         ptr.sub(offset) as *const $type
+     }}
  }
++
++/// Helper for `.rs.S` files.
++#[doc(hidden)]
++#[macro_export]
++macro_rules! concat_literals {
++    ($( $asm:literal )* ) => {
++        ::core::concat!($($asm),*)
++    };
++}
++
++/// Wrapper around `asm!` configured for use in the kernel.
++///
++/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
++/// syntax.
++// For x86, `asm!` uses intel syntax by default, but we want to use at&t syntax in the kernel.
++#[cfg(target_arch = "x86_64")]
++#[macro_export]
++macro_rules! asm {
++    ($($asm:expr),* ; $($rest:tt)*) => {
++        ::core::arch::asm!( $($asm)*, options(att_syntax), $($rest)* )
++    };
++}
++
++/// Wrapper around `asm!` configured for use in the kernel.
++///
++/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
++/// syntax.
++// For non-x86 arches we just pass through to `asm!`.
++#[cfg(not(target_arch = "x86_64"))]
++#[macro_export]
++macro_rules! asm {
++    ($($asm:expr),* ; $($rest:tt)*) => {
++        ::core::arch::asm!( $($asm)*, $($rest)* )
++    };
++}
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 8f423a1faf50..03ee558fcd4d 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -248,12 +248,13 @@ $(obj)/%.lst: $(obj)/%.c FORCE
+ # Compile Rust sources (.rs)
+ # ---------------------------------------------------------------------------
  
--#endif /* CONFIG_HAVE_JUMP_LABEL_HACK */
--
- static __always_inline bool arch_static_branch_jump(struct static_key * const key, const bool branch)
- {
- 	asm goto("1:"
- 		"jmp %l[l_yes]\n\t"
--		JUMP_TABLE_ENTRY
-+		JUMP_TABLE_ENTRY("%c0 + %c1", "%l[l_yes]")
- 		: :  "i" (key), "i" (branch) : : l_yes);
+-rust_allowed_features := new_uninit
++rust_allowed_features := asm_const,asm_goto,new_uninit
  
- 	return false;
+ # `--out-dir` is required to avoid temporaries being created by `rustc` in the
+ # current working directory, which may be not accessible in the out-of-tree
+ # modules case.
+ rust_common_cmd = \
++	OBJTREE=$(abspath $(objtree)) \
+ 	RUST_MODFILE=$(modfile) $(RUSTC_OR_CLIPPY) $(rust_flags) \
+ 	-Zallow-features=$(rust_allowed_features) \
+ 	-Zcrate-attr=no_std \
+@@ -303,6 +304,12 @@ quiet_cmd_rustc_ll_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+ $(obj)/%.ll: $(obj)/%.rs FORCE
+ 	+$(call if_changed_dep,rustc_ll_rs)
+ 
++quiet_cmd_rustc_rs_rs_S = RSCPP $(quiet_modtag) $@
++      cmd_rustc_rs_rs_S = $(CPP) $(c_flags) -xc -C -P $< | sed '1,/^\/\/ Cut here.$$/d' >$@
++
++$(obj)/%.rs: $(obj)/%.rs.S FORCE
++	+$(call if_changed_dep,rustc_rs_rs_S)
++
+ # Compile assembler sources (.S)
+ # ---------------------------------------------------------------------------
+ 
 
 -- 
 2.47.0.rc1.288.g06298d1525-goog
