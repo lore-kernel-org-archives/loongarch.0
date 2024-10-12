@@ -1,119 +1,219 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D11D1311
-	for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 21:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADF63D68
+	for <loongarch@lists.linux.dev>; Sat, 12 Oct 2024 02:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728681990; cv=none; b=YIO0C6xO1U7xkSNkpxY5Q/KYRYlhzLVK0QndsR3bpQtLJtjT36oboCeb94tNdOhyqYT52HKq1MBo4t6C/MT6KDo+vo3AM4pWq3NbPCS7gA/vSRuSIQJGQ+Zs3Bv1d52ZouRifKjhfLqD5o4C9OhhEW5G9XXc+rl/ZD2GF0XeO10=
+	t=1728699366; cv=none; b=puBA5q0d/XEiTfdSXWdgvInK64EVqhmxOUP3PStj+NOF8I0fV+iuTRBYFFMVvFmRhQnBzSYbYV0OXY5Iy4xZNJZnWJNHuUYlkgxhrzXTDfV6ikcifp139KOc1NddfyJV7pBJvcf2RcEx0f0w1pP6PmbBmX9NDy6xSLkCj288xa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728681990; c=relaxed/simple;
-	bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+	s=arc-20240116; t=1728699366; c=relaxed/simple;
+	bh=ipLevwVho6xfPxzQepi7i+HFT0CrMqTtqbhSK3Ab2sI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BRcJTtjvw31HGwnoIk0KLEYohTPl6J/tS34W2odC2UR9X5IJ56SBFWya3FqX5LCB4B2W26iMlUk0pq9cj9+qxKAe1bQaDhOux9qT08KzCRel23HtssBYljOvmoeWs14UoGRZvUmSU5AJEpF/Uhtwk80KVnOUR1EU/4dFksm7dUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2rkzOWHm; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=GxibI/VS9PI0JKGZVsOci1pZyB24VyyhnUkLFvgkxoGAU3Kcj0jo2PFK6fKniKJym1ENq1vMlyVHWULfVE72K2TgpmqC63iDAK1y24dkOMZ9fmw5in6vyd0gcRCm5hsalKVDVdd7F3Ppe/zG8WDFTUrkpyQ9363f8kC3sDdS0mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iu0MTPvZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2rkzOWHm"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-460395fb1acso71311cf.0
-        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 14:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728681988; x=1729286788; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
-        b=2rkzOWHmfgro8rf1CT7vsHeg1bhV8dpoTrX2uxIwOxbkzGVSfrTF+tF+o4Fy+hjHj5
-         v49MYq86EMSzxUsaLuNHwohu/m0WX06FaZZGYQrIiIgo9aDQ6GHgioqCyycvfxo+z5bR
-         ziZpJjzAQUZEWLuNYr7FeeDpOYUAX1tKIwACEM3b1Yc9WCmMrjjwvGabB7NsvrpRfUy1
-         XzPwQGrdcFNjm9joVuvjBhZTG5e75l22lEXDdaMHTlel7E3Bhqgy4L/as6r4MKmZ7HkL
-         yVKlyOdwg5eqfmvRqiSHti7agEhvAHORzmG9fSVwReV+/fWflEpF6NMZGd8qqtyRNFty
-         BbeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728681988; x=1729286788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
-        b=f/JxrYauQOTanvZODHtcJwlL1E2OTXX3DS4tdrCK2cDZxDHo9EpH4l9By0L5R97oqm
-         jI+LAQAVzvAQwD3w76ZR7b3mENYk99ubacfgGYPR/z+dmsvLrObWPPlCY29DKMr5rqr5
-         YnLlxybDyvt8Ii4KqVSky/PxBeWK1sj0TyaBG3iD8EzyyRkmPIzRGgckhy6NPhdohB2p
-         +6OLSbwWhSqBEtb9IHLLRH2V+uH2Wt/7jhN3xDoWA7c6b2JGi/dGNbOCpgNXbsuMyPpw
-         p2JqvQsN7gzbBqJDHuM8k5j+wqNRzCnMz6LGzESqQ7R36+tvcohFCQLaInPmC3qDJNCd
-         kGCg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6RkRx1xrDx92S0SSocWTGg6HdGde6PrARBjbd7Q3q+/HFE2ds/1UU04tvPyuphwXmMjz4a3aGXYo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyEf1SNlDMxV83xcLUXEevV7AACFz4toPhM/F7fFo/V00LgtLfN
-	H98S6vMWp9Xf4ta36JuJnk2WtQmxiREExsMz466XsmgGFvohXPJuaYQjCAblQB/hRYSbwJKyumH
-	M0lh9odXJN9kfqxY3Md4IMC3gafkFTvUdg3CZ
-X-Google-Smtp-Source: AGHT+IEKEmVjWoOqBswBr3NiTYKK5Z9SghdMPP5nc66QbnU8P8zaScBXP/19wKkNBoIcY46P8FQCMYQuouKvAahW2eQ=
-X-Received: by 2002:a05:622a:a60d:b0:460:48fc:3cd8 with SMTP id
- d75a77b69052e-46059bf45e5mr189701cf.5.1728681987767; Fri, 11 Oct 2024
- 14:26:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iu0MTPvZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A1EC4CECE
+	for <loongarch@lists.linux.dev>; Sat, 12 Oct 2024 02:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728699366;
+	bh=ipLevwVho6xfPxzQepi7i+HFT0CrMqTtqbhSK3Ab2sI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iu0MTPvZfNsm2olrMaH7g7ncBPxOpgvKVWTUHa9ZaOsWhCaMRZPvmFvyxqE1ngrLT
+	 z3HyjRz8oXXB6Hncjyj96HSy3c47VHRx0gplYI2Kg2jawPkOl2/RPvt5+VSXjtr91i
+	 RfJhK4XO5nzd3wSrqfeOYg6H0j0pTyu+MVg0d9h/bpLcHDzkGauGPGOZJ1XbBDSqho
+	 mrgyEjUCd5hWLPBl88JywTqW24EuhDOi/Bqws+LiHecWXsXrPxdH/oSyloXTpEvPCc
+	 j4N6W4QfK8O1RlvtSRRDp191T++Kr8n6F+MOiZPVwKp+lqi0hkCjy4/dV1UJi0Qd0B
+	 58y+hf0Uj5g+g==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c9150f9ed4so3216197a12.0
+        for <loongarch@lists.linux.dev>; Fri, 11 Oct 2024 19:16:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmju5x+9Gr1L+gyRNjCLuSfQ9VKh0RnvW6ybcjfGs6OduGfqqtLoqvSrgsALuWFB1M9zQOZWILYbI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxn0tOTXxflR5zm5vsn+VceH0Xn5IBL1rWhOImdbzJhIGAJs2Wr
+	u/29P1qvjLOEkwZbKUtihpRTkPBh/lcKYr/7sjDafIuLHTuCqT6xI5wVljqMelqyYISX3Skcpkd
+	21shXFwQvVJ1fs9vRAkr+ASqI520=
+X-Google-Smtp-Source: AGHT+IFj/Gftu3mO/DwZxwaVooTnN2cbu/tWKknPFAqTcJHrOb/oJCsQc9HNnK+icjEcA28LkqkuHkNJsQl4A8usx9Q=
+X-Received: by 2002:a17:907:368d:b0:a99:5466:2556 with SMTP id
+ a640c23a62f3a-a99b966b636mr417240566b.61.1728699364644; Fri, 11 Oct 2024
+ 19:16:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
- <20241011-tracepoint-v10-1-7fbde4d6b525@google.com> <20241011131316.5d6e5d10@eugeo>
- <CABCJKuesYQWvfScFaqv_rW5ZqAJNn4zK9iOFAmyTaYKO3S5hgw@mail.gmail.com>
- <20241011171251.0bd53f01@eugeo> <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
- <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
-In-Reply-To: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Fri, 11 Oct 2024 14:25:49 -0700
-Message-ID: <CABCJKuduZJ4aogg4A6idcMAPMa2N0d4f9aJgbR8HL0YEyTONmA@mail.gmail.com>
-Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for static_key_false
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+References: <20241010035048.3422527-1-maobibo@loongson.cn> <20241010035048.3422527-2-maobibo@loongson.cn>
+In-Reply-To: <20241010035048.3422527-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 12 Oct 2024 10:15:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4q_P1HL74k5k+er9QEvZjMaa2kTYz8N+7aJ1vDii=GKQ@mail.gmail.com>
+Message-ID: <CAAhV-H4q_P1HL74k5k+er9QEvZjMaa2kTYz8N+7aJ1vDii=GKQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] LoongArch: Set pte entry with PAGE_GLOBAL for kernel space
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 12:48=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@googl=
-e.com> wrote:
-> >
-> > It's just one line per helper, but sure, I do see your point.
->
-> I guess we will have a lot of helpers added over time, so even if it
-> is one line, it may end up being a lot of lines in total. The rules
-> should stay constant, which would be better. Having said that, it is
-> true the extra complexity of the rules isn't great either.
+Hi, Bibo,
 
-My only concern is that custom C build rules must be kept in sync with
-Makefile.build changes, while EXPORT_SYMBOL lines should be basically
-maintenance-free. However, perhaps this isn't really an issue since
-most of the complexity is already contained in rule_cc_o_c that we can
-conveniently reuse. Anyway, I think this is something we can worry
-about later if we actually run into problems. I was mostly interested
-in the reasoning behind these changes.
+On Thu, Oct 10, 2024 at 11:50=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
+>
+> Unlike general architectures, there are two pages for one TLB entry
+> on LoongArch system. For kernel space, it requires both two pte
+> entries with PAGE_GLOBAL set, else HW treats it as non-global tlb,
+> there will be potential problems if tlb entry for kernel space is
+> not global. Such as fail to flush kernel tlb with function
+> local_flush_tlb_kernel_range() which only flush tlb with global bit.
+>
+> Here function kernel_pte_init() is added, it can be used to init
+> pte table when it is created, so the default inital pte is
+> PAGE_GLOBAL rather than zero at beginning.
+I think kernel_pte_init() is also needed in zero_pmd_populate() in
+mm/kasan/init.c. And moreover, the second patch should be squashed in
+this one because they should be as a whole. Though the second one
+touches the common code, I can merge it with mm maintainer's acked-by.
 
-Sami
+
+Huacai
+
+>
+> Kernel space areas includes fixmap, percpu, vmalloc and kasan areas
+> set default pte entry with PAGE_GLOBAL set.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/pgalloc.h | 13 +++++++++++++
+>  arch/loongarch/include/asm/pgtable.h |  1 +
+>  arch/loongarch/mm/init.c             |  4 +++-
+>  arch/loongarch/mm/kasan_init.c       |  4 +++-
+>  arch/loongarch/mm/pgtable.c          | 22 ++++++++++++++++++++++
+>  5 files changed, 42 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/includ=
+e/asm/pgalloc.h
+> index 4e2d6b7ca2ee..b2698c03dc2c 100644
+> --- a/arch/loongarch/include/asm/pgalloc.h
+> +++ b/arch/loongarch/include/asm/pgalloc.h
+> @@ -10,8 +10,21 @@
+>
+>  #define __HAVE_ARCH_PMD_ALLOC_ONE
+>  #define __HAVE_ARCH_PUD_ALLOC_ONE
+> +#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
+>  #include <asm-generic/pgalloc.h>
+>
+> +static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+> +{
+> +       pte_t *pte;
+> +
+> +       pte =3D (pte_t *) __get_free_page(GFP_KERNEL);
+> +       if (!pte)
+> +               return NULL;
+> +
+> +       kernel_pte_init(pte);
+> +       return pte;
+> +}
+> +
+>  static inline void pmd_populate_kernel(struct mm_struct *mm,
+>                                        pmd_t *pmd, pte_t *pte)
+>  {
+> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
+e/asm/pgtable.h
+> index 9965f52ef65b..22e3a8f96213 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -269,6 +269,7 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned=
+ long addr, pmd_t *pmdp, pm
+>  extern void pgd_init(void *addr);
+>  extern void pud_init(void *addr);
+>  extern void pmd_init(void *addr);
+> +extern void kernel_pte_init(void *addr);
+>
+>  /*
+>   * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
+> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> index 8a87a482c8f4..9f26e933a8a3 100644
+> --- a/arch/loongarch/mm/init.c
+> +++ b/arch/loongarch/mm/init.c
+> @@ -198,9 +198,11 @@ pte_t * __init populate_kernel_pte(unsigned long add=
+r)
+>         if (!pmd_present(pmdp_get(pmd))) {
+>                 pte_t *pte;
+>
+> -               pte =3D memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+> +               pte =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
+>                 if (!pte)
+>                         panic("%s: Failed to allocate memory\n", __func__=
+);
+> +
+> +               kernel_pte_init(pte);
+>                 pmd_populate_kernel(&init_mm, pmd, pte);
+>         }
+>
+> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_ini=
+t.c
+> index 427d6b1aec09..34988573b0d5 100644
+> --- a/arch/loongarch/mm/kasan_init.c
+> +++ b/arch/loongarch/mm/kasan_init.c
+> @@ -152,6 +152,8 @@ static void __init kasan_pte_populate(pmd_t *pmdp, un=
+signed long addr,
+>                 phys_addr_t page_phys =3D early ?
+>                                         __pa_symbol(kasan_early_shadow_pa=
+ge)
+>                                               : kasan_alloc_zeroed_page(n=
+ode);
+> +               if (!early)
+> +                       kernel_pte_init(__va(page_phys));
+>                 next =3D addr + PAGE_SIZE;
+>                 set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERN=
+EL));
+>         } while (ptep++, addr =3D next, addr !=3D end && __pte_none(early=
+, ptep_get(ptep)));
+> @@ -287,7 +289,7 @@ void __init kasan_init(void)
+>                 set_pte(&kasan_early_shadow_pte[i],
+>                         pfn_pte(__phys_to_pfn(__pa_symbol(kasan_early_sha=
+dow_page)), PAGE_KERNEL_RO));
+>
+> -       memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+> +       kernel_pte_init(kasan_early_shadow_page);
+>         csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_PGDH);
+>         local_flush_tlb_all();
+>
+> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+> index eb6a29b491a7..228ffc1db0a3 100644
+> --- a/arch/loongarch/mm/pgtable.c
+> +++ b/arch/loongarch/mm/pgtable.c
+> @@ -38,6 +38,28 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+>  }
+>  EXPORT_SYMBOL_GPL(pgd_alloc);
+>
+> +void kernel_pte_init(void *addr)
+> +{
+> +       unsigned long *p, *end;
+> +       unsigned long entry;
+> +
+> +       entry =3D (unsigned long)_PAGE_GLOBAL;
+> +       p =3D (unsigned long *)addr;
+> +       end =3D p + PTRS_PER_PTE;
+> +
+> +       do {
+> +               p[0] =3D entry;
+> +               p[1] =3D entry;
+> +               p[2] =3D entry;
+> +               p[3] =3D entry;
+> +               p[4] =3D entry;
+> +               p +=3D 8;
+> +               p[-3] =3D entry;
+> +               p[-2] =3D entry;
+> +               p[-1] =3D entry;
+> +       } while (p !=3D end);
+> +}
+> +
+>  void pgd_init(void *addr)
+>  {
+>         unsigned long *p, *end;
+> --
+> 2.39.3
+>
