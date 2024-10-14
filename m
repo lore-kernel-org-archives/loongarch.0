@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CAE013AA31
-	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 03:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11EF1A7240
+	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 03:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728878342; cv=none; b=ou22oUGKxwcOp2WkGri8xm5prn6phA5tScLNtKKmaXuN4xM2BtiybMBYJvAbm1v0z1jHtZ8wL2sCbBpvISvC+95WK7ZYnglwo5mtrloKfc1JyZc2yblkkpIEqKG5/pAXy+jkdP29p98gcvkcdx/9BralwI5gcAmRTzyhoiOpSbM=
+	t=1728878342; cv=none; b=aKEXsYdivyDUW3Jw6qe2xi8LfnCIrN01rXQJVrJtuTEZoPTJCI1raEe/evbRnYmBWSysVoe2CQHp6CKxhz6QKaeUr6e2LdJEt1tK2+5BjdT3OQLZFgPxUQRf5posiTYXo+zVrWcpfev66nSIHw3ney/H05JdR4HezGoeHVrhLEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728878342; c=relaxed/simple;
-	bh=ptzeV/KUkyoX894HxvO+FYV/s0m195mvVeaeLYKJ5W4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EUEGQvY6g9E9U7JP0DtijoucVhVOp66pfY5oQdh0hLE6MkyKTnVS5+lnUp8UG0+c6tPfgOEYydf1F7S69B8KTflNbVXCp7OZK3gz/2weqSsBze/bbVUYh+DJDILrXaxUCczMfhdyL1tHLw6uPy+/Glxm5DEIx0BTPbXe+i8/0mg=
+	bh=WYGTl5mmeDx0+8Wta7iE4Bc8JxUtrPtFOoyKZLU8/98=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RHGVUwoyF8x5XgdC3boTw8299vL+oCyUax4g4Wwl3FOjpKZGnlbs3gF8aLWDLJeH5FxknEUij/dJW3TWli+/IzOUjjkBxyJ+hdK5ptSTIqj5xl+CDfIgZVc2EP5v3BMx28QmuRC/v/LLVQW/kgQazljsP7TByQ0xyBqQXcXgAz8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxHLMClwxnkAIaAA--.39056S3;
-	Mon, 14 Oct 2024 11:58:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxWbEAlwxndQIaAA--.37677S3;
+	Mon, 14 Oct 2024 11:58:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxXuT_lgxnc6EoAA--.1717S5;
-	Mon, 14 Oct 2024 11:58:57 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxXuT_lgxnc6EoAA--.1717S2;
+	Mon, 14 Oct 2024 11:58:56 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
@@ -28,12 +27,10 @@ Cc: David Hildenbrand <david@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	kasan-dev@googlegroups.com,
 	linux-mm@kvack.org
-Subject: [PATCH v2 3/3] LoongArch: Remove pte buddy set with set_pte and pte_clear function
-Date: Mon, 14 Oct 2024 11:58:55 +0800
-Message-Id: <20241014035855.1119220-4-maobibo@loongson.cn>
+Subject: [PATCH v2 0/3] LoongArch: Fix vmalloc test issue
+Date: Mon, 14 Oct 2024 11:58:52 +0800
+Message-Id: <20241014035855.1119220-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20241014035855.1119220-1-maobibo@loongson.cn>
-References: <20241014035855.1119220-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,77 +38,89 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxXuT_lgxnc6EoAA--.1717S5
+X-CM-TRANSID:qMiowMBxXuT_lgxnc6EoAA--.1717S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-For kernel address space area on LoongArch system, both two consecutive
-page table entries should be enabled with PAGE_GLOBAL bit. So with
-function set_pte() and pte_clear(), pte buddy entry is checked and set
-besides its own pte entry. However it is not atomic operation to set both
-two pte entries, there is problem with test_vmalloc test case.
+On LoongArch 3C5000 Dual-Way machine, there are 32 CPUs and 128G RAM,
+there are some errors with run vmalloc test with command like this
+  insmod test_vmalloc.ko   nr_threads=32  run_test_mask=0x3af
 
-With previous patch, all page table entries are set with PAGE_GLOBAL
-bit at beginning. Only its own pte entry need update with function
-set_pte() and pte_clear(), nothing to do with pte buddy entry.
+Here is part of error message and summary test report for failed cases:
+ WARNING: CPU: 13 PID: 1457 at mm/vmalloc.c:503 vmap_small_pages_range_noflush+0x388/0x510
+ CPU: 13 UID: 0 PID: 1457 Comm: vmalloc_test/15 Not tainted 6.12.0-rc2+ #93
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+ Trying to vfree() nonexistent vm area (000000004dec9ced)
+ WARNING: CPU: 3 PID: 1444 at mm/vmalloc.c:3345 vfree+0x1e8/0x4c8
+ CPU: 3 UID: 0 PID: 1444 Comm: vmalloc_test/2
+
+ Trying to vfree() bad address (00000000fc7c9da5)
+ WARNING: CPU: 10 PID: 1552 at mm/vmalloc.c:3210 remove_vm_area+0x88/0x98
+ CPU: 10 UID: 0 PID: 1552 Comm: kworker/u144:3
+
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_align_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: kvfree_rcu_2_arg_vmalloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_align_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: fix_size_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_align_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_align_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: kvfree_rcu_2_arg_vmalloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: random_size_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: kvfree_rcu_1_arg_vmalloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: fix_size_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+Summary: long_busy_list_alloc_test passed: 0 failed: 1 repeat: 1 loops: 1000000
+
+The mainly problem is that function set_pte() and pte_free() is not atomic,
+since these functions need modify two consecutive pte entries for kernel
+space area to assure that both pte entries with PAGE_GLOBAL bit set. And
+there is contension problem between them.
+
+With this patchset, vmalloc test case passes to run with command
+  insmod test_vmalloc.ko   nr_threads=32  run_test_mask=0x3af
+
 ---
- arch/loongarch/include/asm/pgtable.h | 35 ++++------------------------
- 1 file changed, 5 insertions(+), 30 deletions(-)
+  v1 ... v2:
+    1. Solve compile warning issue by declaring function
+       kernel_pte_init() in header file include/linux/mm.h
+    2. Add kernel_pte_init() in function zero_pmd_populate() called by
+       file mm/kasan/init.c
+    3. Merge the first two patches into one since both these two patches
+       set pte entry with PAGE_GLOBAL in different modules
+    4. Remove amotic operation with pte_clear(), using generic read and
+       clear operation, vmalloc test pass to run also
+    5. refresh some comments description
+---
+Bibo Mao (3):
+  LoongArch: Set initial pte entry with PAGE_GLOBAL for kernel space
+  LoongArch: Add barrier between set_pte and memory access
+  LoongArch: Remove pte buddy set with set_pte and pte_clear function
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 22e3a8f96213..bc29c95b1710 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -325,40 +325,15 @@ extern void paging_init(void);
- static inline void set_pte(pte_t *ptep, pte_t pteval)
- {
- 	WRITE_ONCE(*ptep, pteval);
--
--	if (pte_val(pteval) & _PAGE_GLOBAL) {
--		pte_t *buddy = ptep_buddy(ptep);
--		/*
--		 * Make sure the buddy is global too (if it's !none,
--		 * it better already be global)
--		 */
--		if (pte_none(ptep_get(buddy))) {
--#ifdef CONFIG_SMP
--			/*
--			 * For SMP, multiple CPUs can race, so we need
--			 * to do this atomically.
--			 */
--			__asm__ __volatile__(
--			__AMOR "$zero, %[global], %[buddy] \n"
--			: [buddy] "+ZB" (buddy->pte)
--			: [global] "r" (_PAGE_GLOBAL)
--			: "memory");
--
--			DBAR(0b11000); /* o_wrw = 0b11000 */
--#else /* !CONFIG_SMP */
--			WRITE_ONCE(*buddy, __pte(pte_val(ptep_get(buddy)) | _PAGE_GLOBAL));
--#endif /* CONFIG_SMP */
--		}
--	}
- }
- 
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
- {
--	/* Preserve global status for the pair */
--	if (pte_val(ptep_get(ptep_buddy(ptep))) & _PAGE_GLOBAL)
--		set_pte(ptep, __pte(_PAGE_GLOBAL));
--	else
--		set_pte(ptep, __pte(0));
-+	pte_t pte;
-+
-+	pte = ptep_get(ptep);
-+	pte_val(pte) &= _PAGE_GLOBAL;
-+	set_pte(ptep, pte);
- }
- 
- #define PGD_T_LOG2	(__builtin_ffs(sizeof(pgd_t)) - 1)
+ arch/loongarch/include/asm/cacheflush.h | 14 +++++++++-
+ arch/loongarch/include/asm/pgalloc.h    | 13 +++++++++
+ arch/loongarch/include/asm/pgtable.h    | 36 +++++--------------------
+ arch/loongarch/mm/init.c                |  4 ++-
+ arch/loongarch/mm/kasan_init.c          |  4 ++-
+ arch/loongarch/mm/pgtable.c             | 22 +++++++++++++++
+ include/linux/mm.h                      |  1 +
+ mm/kasan/init.c                         |  8 +++++-
+ mm/sparse-vmemmap.c                     |  5 ++++
+ 9 files changed, 73 insertions(+), 34 deletions(-)
+
+
+base-commit: 6485cf5ea253d40d507cd71253c9568c5470cd27
 -- 
 2.39.3
 
