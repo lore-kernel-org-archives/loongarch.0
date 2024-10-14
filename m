@@ -1,132 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D11146D45
-	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 06:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDE8C33C9
+	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 06:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728887475; cv=none; b=mCwrE336XhmsQAJp/iGsN8O7FZfz63m5B1wmvcbxJwQJoBA42nAX0p5Ic8/SRSr3rdgIsVBjC7rdaBJMgpALx3tzBPli96ZCgT11c8nmX5Crs/Rok6ezuny53o50W7wQMev7r/F41Uqll/mK0xcl59gQPQ1fYkOwB9pcrhbEwBQ=
+	t=1728887613; cv=none; b=JbLKdy3TxLxyXlqFJ19XcCJVXhy4NajKq2rt9e2jsFy3XZAF3VGEeqLxnmbp28Mqyx/0v7y83sEBW+dghrihFo/nOJXPL9DakwVJzLife6zbyfJ/GGz51vld0KupjhPCAQXXNccWtybDNHq91mZgrkGYYkSLOeDSDXEZL3Ds6qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728887475; c=relaxed/simple;
-	bh=gtdpBTeQLmr18gVrhQkVp+R+fm5FD66vp+1RtcWutpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lT9UG0pn9P/dD9lCrQE7eDhlhDgdB9dGodDosfkZ+UnNiQqra8XGbIEkM7psCBDG6JxqNCI88gGGl0fkGK/G3VEtlgqyb3J46k2TlVX0fi5MJrgR8fVsZitmUnE+//JIwJEudIONci87Y6NHEiRUGlmxFJ+vG/C2mqPbcgKAJjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuQhmyUs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuQhmyUs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68400C4AF0B
-	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 06:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728887475;
-	bh=gtdpBTeQLmr18gVrhQkVp+R+fm5FD66vp+1RtcWutpI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HuQhmyUsxHFQosKnFrRPoQFxO3qFr4NwggE3ksPLx9oycfgViN4ZTGJhLXWsXjIU8
-	 ntd66f/prdD5VrSjGyi8nFxZJ7bsfnabc/eF6nTwdYcCayDM+k3NnFSi4wMVAcgj6s
-	 wFPB2arEtAtaA6TIH3dwaiS+ZTflir5FESdte65uqM3CA6BRjq4Ka/ZL8RMydvqYb9
-	 M/6a5G6LyV3jlpHLZfwQwqi0L7ufQpe9rT+tni85EGxSDpe2l4DzkPzvZpbTLGsclq
-	 HDxhLzrC78sANOS0fHx+dcoJ/mWVzdGfzwrQX6y8K0lu+y+O9TlqQbdbs5OGg38xKg
-	 jOBE/IrYJZI4w==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fac6b3c220so48219781fa.2
-        for <loongarch@lists.linux.dev>; Sun, 13 Oct 2024 23:31:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXEk1GWQQjhN3fJYYDhjs3Ms1wcfRnlNAAic6SqcpDzEErbqGT0VJNxpEFvCbtR/sfGht3O9SCnrKk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyPI9BK8FJqDf36eGQmH7TFHXZObCc4wAdX0tDg+/x03sbz8ff+
-	Rp4gPTSrHz0YHbWozMmCg7P9cbT0iXr77WESmFzTwroeonhkTvyci+8jmpiBnCTG5xnT6v7uZSa
-	sFtSgHkW2TLdZJJBK5REHazZTX7I=
-X-Google-Smtp-Source: AGHT+IE2ikZfTCj1ldIG4d5HvpoPlo2JvKFiNjMNNj8Hkiza0u+9foosUHeMoLBWDVDJbRUUk8gLgI7f1jDWzR6Lh6E=
-X-Received: by 2002:a05:6512:1598:b0:530:b773:b4ce with SMTP id
- 2adb3069b0e04-539e551a25emr2964252e87.33.1728887473738; Sun, 13 Oct 2024
- 23:31:13 -0700 (PDT)
+	s=arc-20240116; t=1728887613; c=relaxed/simple;
+	bh=ATFJB2+9v9R3OXCyxBrZXx1J0y4hgsTiPnESDstLL6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dzjPK4VT6fOSkUYZaemKBEP4JQ7g8iv4uqeibr2FKzd2ir0xvbNmSkRVhdNffqj/zokhJ31+R2JlON6kJpBGeAI4NP6BCApkV/Axn5wS3fWy1D24qmCJ1IQzGafVX5iVeKHmIfGgAuaqU8VRdhZmE/9bKVujV4wWHHc9Tob5ANs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxFOk5uwxnR0caAA--.39437S3;
+	Mon, 14 Oct 2024 14:33:29 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxXuQ4uwxn09AoAA--.2444S2;
+	Mon, 14 Oct 2024 14:33:28 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lixianglai@loongson.cn,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: [PATCH] LoongArch: Fix cpu hotplug issue
+Date: Mon, 14 Oct 2024 14:33:28 +0800
+Message-Id: <20241014063328.1216497-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014035855.1119220-1-maobibo@loongson.cn> <20241014035855.1119220-3-maobibo@loongson.cn>
-In-Reply-To: <20241014035855.1119220-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 14 Oct 2024 14:31:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
-Message-ID: <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] LoongArch: Add barrier between set_pte and memory access
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxXuQ4uwxn09AoAA--.2444S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Bibo,
+On LoongArch system, there are two places to set cpu numa node. One
+is in arch specified function smp_prepare_boot_cpu(), the other is
+in generic function early_numa_node_init(). The latter will overwrite
+the numa node information.
 
-On Mon, Oct 14, 2024 at 11:59=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
->
-> It is possible to return a spurious fault if memory is accessed
-> right after the pte is set. For user address space, pte is set
-> in kernel space and memory is accessed in user space, there is
-> long time for synchronization, no barrier needed. However for
-> kernel address space, it is possible that memory is accessed
-> right after the pte is set.
->
-> Here flush_cache_vmap/flush_cache_vmap_early is used for
-> synchronization.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/inc=
-lude/asm/cacheflush.h
-> index f8754d08a31a..53be231319ef 100644
-> --- a/arch/loongarch/include/asm/cacheflush.h
-> +++ b/arch/loongarch/include/asm/cacheflush.h
-> @@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long start, un=
-signed long end);
->  #define flush_cache_dup_mm(mm)                         do { } while (0)
->  #define flush_cache_range(vma, start, end)             do { } while (0)
->  #define flush_cache_page(vma, vmaddr, pfn)             do { } while (0)
-> -#define flush_cache_vmap(start, end)                   do { } while (0)
->  #define flush_cache_vunmap(start, end)                 do { } while (0)
->  #define flush_icache_user_page(vma, page, addr, len)   do { } while (0)
->  #define flush_dcache_mmap_lock(mapping)                        do { } wh=
-ile (0)
->  #define flush_dcache_mmap_unlock(mapping)              do { } while (0)
->
-> +/*
-> + * It is possible for a kernel virtual mapping access to return a spurio=
-us
-> + * fault if it's accessed right after the pte is set. The page fault han=
-dler
-> + * does not expect this type of fault. flush_cache_vmap is not exactly t=
-he
-> + * right place to put this, but it seems to work well enough.
-> + */
-> +static inline void flush_cache_vmap(unsigned long start, unsigned long e=
-nd)
-> +{
-> +       smp_mb();
-> +}
-> +#define flush_cache_vmap flush_cache_vmap
-> +#define flush_cache_vmap_early flush_cache_vmap
-From the history of flush_cache_vmap_early(), It seems only archs with
-"virtual cache" (VIVT or VIPT) need this API, so LoongArch can be a
-no-op here.
+However for hot-added cpu, cpu_logical_map() fails to its physical
+cpuid at beginning since it is not enabled in ACPI MADT table. So
+function early_cpu_to_node() also fails to get its numa node for
+hot-added cpu, and generic function early_numa_node_init() will
+overwrite incorrect numa node.
 
-And I still think flush_cache_vunmap() should be a smp_mb(). A
-smp_mb() in flush_cache_vmap() prevents subsequent accesses be
-reordered before pte_set(), and a smp_mb() in flush_cache_vunmap()
-prevents preceding accesses be reordered after pte_clear(). This
-potential problem may not be seen from experiment, but it is needed in
-theory.
+Here static array __cpu_to_node and api set_early_cpu_to_node()
+is added, so that early_cpu_to_node is consistent with function
+cpu_to_node() for hot-added cpu.
 
-Huacai
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/numa.h |  2 ++
+ arch/loongarch/kernel/numa.c      | 10 +++++++++-
+ arch/loongarch/kernel/smp.c       |  1 +
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-> +
->  #define cache_op(op, addr)                                             \
->         __asm__ __volatile__(                                           \
->         "       cacop   %0, %1                                  \n"     \
-> --
-> 2.39.3
->
->
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..e8e6fcfb006a 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -50,6 +50,7 @@ static inline void set_cpuid_to_node(int cpuid, s16 node)
+ }
+ 
+ extern int early_cpu_to_node(int cpu);
++extern void set_early_cpu_to_node(int cpu, s16 node);
+ 
+ #else
+ 
+@@ -57,6 +58,7 @@ static inline void early_numa_add_cpu(int cpuid, s16 node)	{ }
+ static inline void numa_add_cpu(unsigned int cpu)		{ }
+ static inline void numa_remove_cpu(unsigned int cpu)		{ }
+ static inline void set_cpuid_to_node(int cpuid, s16 node)	{ }
++static inline void set_early_cpu_to_node(int cpu, s16 node)	{ }
+ 
+ static inline int early_cpu_to_node(int cpu)
+ {
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 84fe7f854820..62508aace644 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -34,6 +34,9 @@ static struct numa_meminfo numa_meminfo;
+ cpumask_t cpus_on_node[MAX_NUMNODES];
+ cpumask_t phys_cpus_on_node[MAX_NUMNODES];
+ EXPORT_SYMBOL(cpus_on_node);
++static s16 __cpu_to_node[NR_CPUS] = {
++	[0 ... CONFIG_NR_CPUS - 1] = NUMA_NO_NODE
++};
+ 
+ /*
+  * apicid, cpu, node mappings
+@@ -117,11 +120,16 @@ int early_cpu_to_node(int cpu)
+ 	int physid = cpu_logical_map(cpu);
+ 
+ 	if (physid < 0)
+-		return NUMA_NO_NODE;
++		return __cpu_to_node[cpu];
+ 
+ 	return __cpuid_to_node[physid];
+ }
+ 
++void set_early_cpu_to_node(int cpu, s16 node)
++{
++	__cpu_to_node[cpu] = node;
++}
++
+ void __init early_numa_add_cpu(int cpuid, s16 node)
+ {
+ 	int cpu = __cpu_number_map[cpuid];
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 9afc2d8b3414..998668be858c 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -512,6 +512,7 @@ void __init smp_prepare_boot_cpu(void)
+ 			set_cpu_numa_node(cpu, node);
+ 		else {
+ 			set_cpu_numa_node(cpu, rr_node);
++			set_early_cpu_to_node(cpu, rr_node);
+ 			rr_node = next_node_in(rr_node, node_online_map);
+ 		}
+ 	}
+
+base-commit: 6485cf5ea253d40d507cd71253c9568c5470cd27
+-- 
+2.39.3
+
