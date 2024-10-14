@@ -1,105 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B5D17C227
-	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 11:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101C81A76C4;
+	Mon, 14 Oct 2024 13:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728905821; cv=none; b=RXpqn/ridAXNq9qW/yEPWRiy4soSpH2ocihaDNl+/zETe7tL0VFG/j4ThWzEdAoC15v3Tc8x0C96dFcBmQlO5EMhPj8vyn73uXRPZxLCsv046xCwAvOHqBz5s+NXV4i8+gOwg9IIULnty7s6YNrz9IqROi+58LkbPeuNieHr3Ew=
+	t=1728911493; cv=none; b=eeSDxrQk8+xnUIpvuq8HzU3azwQnUMgTfDrdPo3SYqPXwfqlqDT81IzPVd/o7BVdsx4JHuKXwhrJaVot0Gqs+ZstH+NxABCTTSrgYa7FnLfD2HK6PVY9Yd/ESKetxgglUMTbXoOOgN6zsM+MzOe0/m2XiGbNh8KQIuc9/14YR+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728905821; c=relaxed/simple;
-	bh=L2g9um9oivjoyxdDxHIjYJE+3H3VkzceTni0Q/yD3cw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k7GhaS884uUlZUGrLfzadTusfH5RzzdlN9jCvZbVY9pmehw/ROt0Gs1gMJ6sodn2DpSuc7uC/sCRT57awZQFWV1VTz913K7cOIBGGIxPIw838KZ7y5STJBDiDptZbywhnmmVGMbBvHFh4ZaiFZLk4CqZmouQF0qIKZeHngEnFl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j2xo15mJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w5lO+OBI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1728911493; c=relaxed/simple;
+	bh=Rj0DDOED5iD2FdGYxYV+4r4tEXYq4n6Xi/0d9QAVLUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jv2BjvjRfhADX1K/7e1XCYeM8/kImi6/9tkXEXk90RWuefHEx1UKDuIKqtLoLMJtswZNCFzyyX9AWJ5xlJK6FwhmVYwpsev9aq9ezQwygKULDJGSLuKtF+T1pLtgxNgi25DatM6G0qfaITvVGe7t+ga4lYgeJ6HObxENxVjug6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMvBZJVO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j2xo15mJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w5lO+OBI"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728905817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZWjQkkdi8HSm2h1+TS/T+pWxvqm9LlF9rGfeZByhFs=;
-	b=j2xo15mJirgy1wRhLsvcZBiHaaoUN/Z9ZLITThaskd1RNdFiZUSdA/kY7q28m2KQrXRlMR
-	ZbwV+7O26CjKGKR49JTtsSihLIWzA5gtTawjLAyZtHMKxn736gyTHIPE6E9ZwTsNjdPyRt
-	nHKEzxh7b7nZc8cE8PgrGjk5RXfm4fvoDBCkfpreN9Mil2VPsq00VZr3RlbLwQAyfcttl/
-	D/XKObNBLKRvKJ/GjdjrYcS0xr76lsa2Z8vsam27IBhc1i3KT21dRTgyag3eyMtSkmmPMp
-	7nzM3bncXNFQq9BuNPOjeyZFzxO45Ayk1NWF3cj3V6QUz2eVpQyfjRw8vLCNEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728905817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZWjQkkdi8HSm2h1+TS/T+pWxvqm9LlF9rGfeZByhFs=;
-	b=w5lO+OBIralzMDIkhgE0hCSQRWJXYi4hIozL22ikZ0V5EuOCc/VV97LiYFQVvorAbZ2/aV
-	CiVF8skM+UWiEnBQ==
-Date: Mon, 14 Oct 2024 13:36:45 +0200
-Subject: [PATCH 4/4] kunit: qemu_configs: loongarch: Enable shutdown
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMvBZJVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D95C4CEC3;
+	Mon, 14 Oct 2024 13:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728911492;
+	bh=Rj0DDOED5iD2FdGYxYV+4r4tEXYq4n6Xi/0d9QAVLUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vMvBZJVOinxsLsrPPXzSxPojzLbDfnzNQ55w0X0QwTjcMMxar0CDAK08E2JThkQpb
+	 4cpioov/cqx2XJwdmLwC1BTnXl3vfXvrgA1ETi3RHPPFn/KFa3uZAW+joXD5HEZg+c
+	 4U5ok631tPzwPd7hoGyNRL5ynGDynUSOamB6K2RiHfHSi/erCk9kHqPS+1U5lBuMVB
+	 r0jU8Sa0yR3rOlG2WDCJ68+YmRHtYreB6qz66TSlQdG0YMQVcdBysszRX2pWrQ1lN4
+	 ziJbkceFmXn8rCIwx79sxsDKS6SGBNY9GisCIBFcBwGbEy+4gMh7VJcsFjn3AG+8KF
+	 uacBBUphpSFpQ==
+Date: Mon, 14 Oct 2024 16:07:40 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <Zw0XnDHbpHDwFDHy@kernel.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+ <Zwd7GRyBtCwiAv1v@infradead.org>
+ <ZwfPPZrxHzQgYfx7@kernel.org>
+ <ZwjXz0dz-RldVNx0@infradead.org>
+ <ZwuIPZkjX0CfzhjS@kernel.org>
+ <ZwyyTetoLX7aXhGg@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
-In-Reply-To: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1728905811; l=1335;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=L2g9um9oivjoyxdDxHIjYJE+3H3VkzceTni0Q/yD3cw=;
- b=G11ZFpQbnm6r+Vm9sYeV6cF810ymPsjl0nNNeRoZEJKTfYsIqaOmVHK+KjOAyctIcSN/hgjsA
- QKD2fT9tArUDWYiF8IUca3hB0N89AoStT5ObkrUnJu2Yv822Z74Pt4X
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZwyyTetoLX7aXhGg@infradead.org>
 
-QEMU for LoongArch does not yet support shutdown/restart through ACPI.
-Use the pvpanic driver to enable shutdowns.
-This requires 9.1.0 for shutdown support in pvpanic, but that is the
-requirement of kunit on LoongArch anyways.
+On Sun, Oct 13, 2024 at 10:55:25PM -0700, Christoph Hellwig wrote:
+> On Sun, Oct 13, 2024 at 11:43:41AM +0300, Mike Rapoport wrote:
+> > > But why?  That's pretty different from our normal style of arch hooks,
+> > > and introduces an indirect call in a security sensitive area.
+> > 
+> > Will change to __weak hook. 
+> 
+> Isn't the callback required when using the large ROX page?  I.e.
+> shouldn't it be an unconditional callback and not a weak override?
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- tools/testing/kunit/qemu_configs/loongarch.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
-index e7bb7c07819677dfdefac012821a732555813cae..1d2b780fbd5c0bde20aa6a5cd1217d0b3b443a93 100644
---- a/tools/testing/kunit/qemu_configs/loongarch.py
-+++ b/tools/testing/kunit/qemu_configs/loongarch.py
-@@ -4,13 +4,16 @@ QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
- 			   kconfig='''
- CONFIG_EFI_STUB=n
- CONFIG_PCI_HOST_GENERIC=y
-+CONFIG_PVPANIC=y
-+CONFIG_PVPANIC_PCI=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- ''',
- 			   qemu_arch='loongarch64',
- 			   kernel_path='arch/loongarch/boot/vmlinux.elf',
--			   kernel_command_line='console=ttyS0',
-+			   kernel_command_line='console=ttyS0 kunit_shutdown=poweroff',
- 			   extra_qemu_params=[
- 					   '-machine', 'virt',
-+					   '-device', 'pvpanic-pci',
- 					   '-cpu', 'max',])
+I'll add a Kconfig option to ensure that an architecture that wants to use
+large ROX pages has explicit callback for that.
 
 -- 
-2.47.0
-
+Sincerely yours,
+Mike.
