@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5691374D1
-	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 08:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD60314B077
+	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 08:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728892914; cv=none; b=moWfHKwiKvxWMxbxHEEuSZrFnhqI1Dlxw3ih5cz+8x6eSIydDHjqGBjWy4tC/BofFauWcl2SnC1uiWgAtTiGL6al3nzsPgrTGV/TZbyQvCI4qSzNMYEkRLyyJ69i6GtvMbvQ7ChADvv4DLGwRsu42Pho1zfgJdB7czPyeVZtuDU=
+	t=1728893870; cv=none; b=XYgkR+UTFunyVRc8EK3y4g86rJmFIjbmP3YQ584r7YtxxpoNWmyjgu0XZBq9SBoCiqzMlFKk1Bd4k21IGMv8PxPEyDN809vyepgkmFNmm+2MrVLaDezD9W5GGOSJhqnHwEWUDQPpyNWWMQH+wi309eWTiZ6xDeSxj7bZBi+mmRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728892914; c=relaxed/simple;
-	bh=Kw7GynnEkanF/JPpXaa6lx4LGWMPBWTWxzAH5aQ2ce8=;
+	s=arc-20240116; t=1728893870; c=relaxed/simple;
+	bh=Gr1SYZSyNBk+njTfNcRGtDHMMWw/2RMQguFMM0e72aw=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=J7OARpv5xH3mTwknX/UXbhmnnq5MNA6ImwDFvPbQ2+aW7xQPn++VEEizJxuoNoWvcePqwyfzo2FGqZG4k5mXEM0zN/fRzIX1wclkwTweGkg6ZJ1T1E/sXyuPPhDS3O4GPvQvMq7zg6kejtvsNPmbCl5VZIvP100hY9iIv0sLDdY=
+	 In-Reply-To:Content-Type; b=dKpR8rLoYTkzsNOJFmfcsa9gmr6BQfHEzoxBDDIk1POwvYT/49tdfAi1/XQqI29yNdoEVwoijrQ0m+V6rZh/6cU9P64qlV1AzpCI/JHHg0eXkCM9Q+VQ3DknFnq4E2qgp4A3EWlTBJ+/YaAO+uhSUaYthJvtidSNHv9eibL+/fE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx14nszwxnjnMaAA--.38327S3;
-	Mon, 14 Oct 2024 16:01:49 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxLOuo0wxnBHsaAA--.38208S3;
+	Mon, 14 Oct 2024 16:17:44 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAx_9XqzwxnW_EoAA--.15186S3;
-	Mon, 14 Oct 2024 16:01:48 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxLeSl0wxng_coAA--.3597S3;
+	Mon, 14 Oct 2024 16:17:43 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: Fix cpu hotplug issue
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
@@ -27,8 +27,8 @@ References: <20241014063328.1216497-1-maobibo@loongson.cn>
  <24ea8b02-8c94-d561-cef0-01044b610a1e@loongson.cn>
  <CAAhV-H7NqzO-FLmYoUySp5KYKJM+aN_s7g4i+qBixx5jwnbW=Q@mail.gmail.com>
 From: maobibo <maobibo@loongson.cn>
-Message-ID: <5c1e0199-24ce-50d2-1cbc-5c9949a17563@loongson.cn>
-Date: Mon, 14 Oct 2024 16:01:27 +0800
+Message-ID: <6b2b3e89-5a46-2d20-3dfb-7aae33839f49@loongson.cn>
+Date: Mon, 14 Oct 2024 16:17:23 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -41,27 +41,27 @@ In-Reply-To: <CAAhV-H7NqzO-FLmYoUySp5KYKJM+aN_s7g4i+qBixx5jwnbW=Q@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx_9XqzwxnW_EoAA--.15186S3
+X-CM-TRANSID:qMiowMCxLeSl0wxng_coAA--.3597S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKFWrGrykGrykKryxKrWfZwc_yoWxXF4xpr
-	y8CFZ5CwsxXFyDG34Fq3ykWr90yr1DGrsrX3W3KFZ8CFn8trnrJr4kWr98uFy8Kw40yr1F
-	vF4rWF42qF48J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxKFWrGrykGrykKryxKrWfZwc_yoW7ZF43pr
+	W8CFZ5CwsxWFyDG340q3yrGr9Yyr1DGrsxX3W3KFWrCFn8trnrJr4kXr98uF18Kw48CF1F
+	vF4Fga1aqF48J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2L05UUUUU
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jnUUUUUUUU=
 
-Huacai,
+
 
 On 2024/10/14 下午3:39, Huacai Chen wrote:
 > On Mon, Oct 14, 2024 at 3:21 PM maobibo <maobibo@loongson.cn> wrote:
@@ -100,8 +100,6 @@ On 2024/10/14 下午3:39, Huacai Chen wrote:
 >>
 >> <<<<<<<<<<< Here physid is -1.
 > early_cpu_to_node() is not supposed to be called after boot, and if it
-Which calls early_cpu_to_node() after boot?
-
 > is really needed, I think a better solution is:
 > 
 > diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
@@ -112,46 +110,18 @@ Which calls early_cpu_to_node() after boot?
 > handle, int cpu, int physid)
 > 
 >          nid = acpi_get_node(handle);
->          if (nid != NUMA_NO_NODE) {
-> +               __cpu_number_map[physid] = cpu;
-> +               __cpu_logical_map[cpu] = physid;
-This does not solve the problem. The above has been done in function
-cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
+If there is no "_PXM" acpi table information, return value about 
+function acpi_get_node() is NUMA_NO_NODE.
 
-static int set_processor_mask(u32 id, u32 flags)
-{
-...
-         if (flags & ACPI_MADT_ENABLED) {
-                 num_processors++;
-                 set_cpu_present(cpu, true);
-                 __cpu_number_map[cpuid] = cpu;
-                 __cpu_logical_map[cpu] = cpuid;
-         }
-
-The problem is that
-         smp_prepare_boot_cpu(); /* arch-specific boot-cpu hooks */
-<<<<<<<<<<<<<<<<
-set_cpu_numa_node() is called in function smp_prepare_boot_cpu()
-
-         early_numa_node_init();
-
-static void __init early_numa_node_init(void)
-{
-#ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
-#ifndef cpu_to_node
-         int cpu;
-
-         /* The early_cpu_to_node() should be ready here. */
-         for_each_possible_cpu(cpu)
-                 set_cpu_numa_node(cpu, early_cpu_to_node(cpu));
-<<<<<<<<<<<<<<<<
-* however here early_cpu_to_node is -1, so that cpu_to_node(cpu) will 
-always return -1 in late. *, which causes cpu hotadd problem.
+There are two kinds cpu to numaid tables, one is MADT table and the 
+other is "_PXM" information in acpi table. "_PXM" information may be 
+missing in acpi table, MADT table can be used.
 
 Regards
 Bibo Mao
-
-
+>          if (nid != NUMA_NO_NODE) {
+> +               __cpu_number_map[physid] = cpu;
+> +               __cpu_logical_map[cpu] = physid;
 >                  set_cpuid_to_node(physid, nid);
 >                  node_set(nid, numa_nodes_parsed);
 >                  set_cpu_numa_node(cpu, nid);
