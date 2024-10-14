@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FB117BECA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B5D17C227
 	for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 11:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728905820; cv=none; b=Iwa8li9bmOj7Qr8J3lz+3XuqDbIIJYhuoRQGv06otMzKBnxGLeb1zTC9LtRJv19UjgDXeQhMvqlU8GoQxEtTVmBg24o3T8ZzBquleD7AG9RiUVaaQZJjDVC22nVTaE9wf0wMQfifoAnVQW7GtZVgbcrfnFpI+t13eODg+BhV7a0=
+	t=1728905821; cv=none; b=RXpqn/ridAXNq9qW/yEPWRiy4soSpH2ocihaDNl+/zETe7tL0VFG/j4ThWzEdAoC15v3Tc8x0C96dFcBmQlO5EMhPj8vyn73uXRPZxLCsv046xCwAvOHqBz5s+NXV4i8+gOwg9IIULnty7s6YNrz9IqROi+58LkbPeuNieHr3Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728905820; c=relaxed/simple;
-	bh=iV9iYcnvXEvBIGYtw1XBB2r0gTapDMBeog8rfya7C0o=;
+	s=arc-20240116; t=1728905821; c=relaxed/simple;
+	bh=L2g9um9oivjoyxdDxHIjYJE+3H3VkzceTni0Q/yD3cw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K/2wSadcgscsBvXBSAyXu+Dh+q6TGoK+n92U1sdLgHEthjdilbYW5+1FBY+MFMOj54MaW2sV39YlV0Ocs/bFzObKY+B9uHhg3pMjh7gfxT+JgAkTeIb9if222G1COykGkZNC9/JnZXMIk2coc5ogml/DsApGSJTgESKPNbZZiZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e4CTyyOx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zg14PZAl; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=k7GhaS884uUlZUGrLfzadTusfH5RzzdlN9jCvZbVY9pmehw/ROt0Gs1gMJ6sodn2DpSuc7uC/sCRT57awZQFWV1VTz913K7cOIBGGIxPIw838KZ7y5STJBDiDptZbywhnmmVGMbBvHFh4ZaiFZLk4CqZmouQF0qIKZeHngEnFl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j2xo15mJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w5lO+OBI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e4CTyyOx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zg14PZAl"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j2xo15mJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w5lO+OBI"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728905816;
+	s=2020; t=1728905817;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GLsVtAZb2EYpxmn9symEBJzk9S6QfVhcbYEMjgcfIsg=;
-	b=e4CTyyOxYILPG30h7pyThAUs8wD14RA0jZPAGrDei0jOty3abXFwa3AbDtsH5+pbP9MN+J
-	5Mlnl3UO2PNYTVtvJlfiSJqJgvOPYq7TDEQLDU/K0qsa42msfKyG3w4LVG6arYrZzH/IrG
-	KF2QvMOGdyGyz7JKsRju6a2YahsQv5lwwdxXok3wOYdrpq8gtqvn1396EmmlXafUNCw4/g
-	ZkqwDpSkFGNXvdylwH6mMjiZiGWEvzoFKO7/vT+rTEZFxiQOWnZTaOjenwy/rOXq92YNM1
-	7O7/KRdotpPYTdM/Ssxp8kn4zewI2/x2gL9di4nTsMR54KHhQfGMakVw5hv3qQ==
+	bh=0ZWjQkkdi8HSm2h1+TS/T+pWxvqm9LlF9rGfeZByhFs=;
+	b=j2xo15mJirgy1wRhLsvcZBiHaaoUN/Z9ZLITThaskd1RNdFiZUSdA/kY7q28m2KQrXRlMR
+	ZbwV+7O26CjKGKR49JTtsSihLIWzA5gtTawjLAyZtHMKxn736gyTHIPE6E9ZwTsNjdPyRt
+	nHKEzxh7b7nZc8cE8PgrGjk5RXfm4fvoDBCkfpreN9Mil2VPsq00VZr3RlbLwQAyfcttl/
+	D/XKObNBLKRvKJ/GjdjrYcS0xr76lsa2Z8vsam27IBhc1i3KT21dRTgyag3eyMtSkmmPMp
+	7nzM3bncXNFQq9BuNPOjeyZFzxO45Ayk1NWF3cj3V6QUz2eVpQyfjRw8vLCNEQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728905816;
+	s=2020e; t=1728905817;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GLsVtAZb2EYpxmn9symEBJzk9S6QfVhcbYEMjgcfIsg=;
-	b=Zg14PZAlJEQcDEen6OHbhXImV/XxL1LGb2tNHCVB9g3JtdLOjgV5KwECbFsjohAmVMyGts
-	D4dBHaj5SMX+bDCA==
-Date: Mon, 14 Oct 2024 13:36:44 +0200
-Subject: [PATCH 3/4] kunit: tool: Allow overriding the shutdown mode from
- qemu config
+	bh=0ZWjQkkdi8HSm2h1+TS/T+pWxvqm9LlF9rGfeZByhFs=;
+	b=w5lO+OBIralzMDIkhgE0hCSQRWJXYi4hIozL22ikZ0V5EuOCc/VV97LiYFQVvorAbZ2/aV
+	CiVF8skM+UWiEnBQ==
+Date: Mon, 14 Oct 2024 13:36:45 +0200
+Subject: [PATCH 4/4] kunit: qemu_configs: loongarch: Enable shutdown
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241014-kunit-loongarch-v1-3-1699b2ad6099@linutronix.de>
+Message-Id: <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
 References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
 In-Reply-To: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
 To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
@@ -60,39 +59,46 @@ To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1728905811; l=1298;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728905811; l=1335;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=iV9iYcnvXEvBIGYtw1XBB2r0gTapDMBeog8rfya7C0o=;
- b=RSxObr6NF8M25HxJfwEBRbSNlGHQZpyR+R6RVKYbEeiHcGbJOEzHt2uPWVZk0Kfd0cNnEvyMH
- DrroxlD65g+AUZOqsRA84e8zEx/BlWQnwvnAYAOT0sybIrB0hExU1Dt
+ bh=L2g9um9oivjoyxdDxHIjYJE+3H3VkzceTni0Q/yD3cw=;
+ b=G11ZFpQbnm6r+Vm9sYeV6cF810ymPsjl0nNNeRoZEJKTfYsIqaOmVHK+KjOAyctIcSN/hgjsA
+ QKD2fT9tArUDWYiF8IUca3hB0N89AoStT5ObkrUnJu2Yv822Z74Pt4X
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Not all platforms support machine reboot.
-If it a proper reboot is not supported the machine will hang.
-Allow the QEMU configuration to override the necessary shutdown mode for
-the specific system under test.
+QEMU for LoongArch does not yet support shutdown/restart through ACPI.
+Use the pvpanic driver to enable shutdowns.
+This requires 9.1.0 for shutdown support in pvpanic, but that is the
+requirement of kunit on LoongArch anyways.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/kunit/kunit_kernel.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/kunit/qemu_configs/loongarch.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index 61931c4926fd6645f2c62dd13f9842a432ec4167..e76d7894b6c5195ece49f0d8c7ac35130df428a9 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -105,7 +105,9 @@ class LinuxSourceTreeOperationsQemu(LinuxSourceTreeOperations):
- 		self._kconfig = qemu_arch_params.kconfig
- 		self._qemu_arch = qemu_arch_params.qemu_arch
- 		self._kernel_path = qemu_arch_params.kernel_path
--		self._kernel_command_line = qemu_arch_params.kernel_command_line + ' kunit_shutdown=reboot'
-+		self._kernel_command_line = qemu_arch_params.kernel_command_line
-+		if 'kunit_shutdown=' not in self._kernel_command_line:
-+			self._kernel_command_line += ' kunit_shutdown=reboot'
- 		self._extra_qemu_params = qemu_arch_params.extra_qemu_params
- 		self._serial = qemu_arch_params.serial
- 
+diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
+index e7bb7c07819677dfdefac012821a732555813cae..1d2b780fbd5c0bde20aa6a5cd1217d0b3b443a93 100644
+--- a/tools/testing/kunit/qemu_configs/loongarch.py
++++ b/tools/testing/kunit/qemu_configs/loongarch.py
+@@ -4,13 +4,16 @@ QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
+ 			   kconfig='''
+ CONFIG_EFI_STUB=n
+ CONFIG_PCI_HOST_GENERIC=y
++CONFIG_PVPANIC=y
++CONFIG_PVPANIC_PCI=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ ''',
+ 			   qemu_arch='loongarch64',
+ 			   kernel_path='arch/loongarch/boot/vmlinux.elf',
+-			   kernel_command_line='console=ttyS0',
++			   kernel_command_line='console=ttyS0 kunit_shutdown=poweroff',
+ 			   extra_qemu_params=[
+ 					   '-machine', 'virt',
++					   '-device', 'pvpanic-pci',
+ 					   '-cpu', 'max',])
 
 -- 
 2.47.0
