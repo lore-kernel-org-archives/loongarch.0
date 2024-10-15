@@ -1,120 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6202F34;
-	Mon, 14 Oct 2024 19:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0E179CD
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728933384; cv=none; b=cegl1BPXxppRW+41dCHi4URIL/7h7UWCtx3dEusPGgu0lK5uOtYsd0vXEv3SYq196pZc5UYYUX35xTCZqi1loe6+uq5C973RpUhkwpidnsd7NpT+22gAbmg+NeWHv9SA81S+W3TJukmRz1uOwnJ3pEjJ00CgH+KEyX2H8hRQ7wY=
+	t=1728958552; cv=none; b=r0MAWqd/TYdhddkqgGXt1Tc+uDl6El5hsuEk0xI5zjP8jQj7fd48W3VV3WI2i8HZqTUW2UyEvYrnUuuhzTS78tqbIR9MHwMMgaoP2tkmvwNg9d3SRb1X/pI17gXOW0lU+i3agKQbw1+ZWpLaGIBrGI+mZqCUxgWlM/YX7DKbGKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728933384; c=relaxed/simple;
-	bh=UuppSLaM0kOzMrDSh2RloHR9IgCcKKb57FBSLEkEUWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FFCOuTgz8sD7Ed/Kud9QCetDjIUNalCJp7fx5uHw1Lmy9rz4nHQDEuyQ/Js8mUYGIu7NDMob76aKmnNJiOi2L4O9SXpk56EaNsy0we+WKWwieq1Sco/q44kKRl8QMxa9zBx62PKRSDUFlxYPAUQCHyOzRrL463Nm1OvZadSbpoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjG/5WZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728958552; c=relaxed/simple;
+	bh=zj+yKT66Ya6lE8e0vnuh5UqbKInuSzhnI7Xg6h665bc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CtTvetEwlvy8ZsAmNwcQr02/GY4AvtbkDLB4GtiYTx1OGVzOnt1M4n3IYq/nOv5L4j3uxcfY2wvrpzrOwYpooLhVB0vTkDA9Y2IniAQnRVnsVzyhLhToJdmQQAo2KKy6g0RlC1Zm/nZxImaOQf92RDMtxXyJzQhfDfPaWdT8sXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAVxhODn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjG/5WZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC60C4CEC3;
-	Mon, 14 Oct 2024 19:16:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAVxhODn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7641AC4CED2
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728933383;
-	bh=UuppSLaM0kOzMrDSh2RloHR9IgCcKKb57FBSLEkEUWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EjG/5WZADaXhvwARHnqKg67eiuXX7gTWxPoitBNELLTxxDNviuMSsmlu/en6P6ED8
-	 zpJ52uHjqiz/g2IcIGwuziTngHnAXDzicRERzVAAIDP4l2L6y33KAuyIagMcpMXzl4
-	 9dBRK2tjgLlrX3Ons9R5vBST3i3yiewblKFLfAI64WB5+23Fn5KkJljDLeTWRKDZ84
-	 jnexNcW9vYFK3px9crwCiVYgH/8ctiyb/DdHjxU96pqWdOL1lwHrwqpz6qzLtvvsU8
-	 7pmIeyrMmskmV1mcXKss65BVVX6VBxafQdYx2gdNsA2KwzhcBEiTj2VcG0YSmjPMmN
-	 oCmkdGtrERExg==
-Date: Mon, 14 Oct 2024 12:16:20 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <Zw1uBBcG-jAgxF_t@bombadil.infradead.org>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-8-rppt@kernel.org>
- <Zwd7GRyBtCwiAv1v@infradead.org>
- <ZwfPPZrxHzQgYfx7@kernel.org>
- <ZwjXz0dz-RldVNx0@infradead.org>
- <ZwuIPZkjX0CfzhjS@kernel.org>
- <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
+	s=k20201202; t=1728958552;
+	bh=zj+yKT66Ya6lE8e0vnuh5UqbKInuSzhnI7Xg6h665bc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pAVxhODn/epIL4ZAHa1mqm+0EvAFdiIKLAHgRb8EeTeYRlzGp2hki6/gQu9q9/ZK/
+	 L32dYXlMN/0H4hTby7cwdCQK4ruiQglk1nAC6YYFkANsAi5FZvESPkfbaAYbtTUWlU
+	 F4jd+j9P8RoeD4ew/6b5kSmqAsNNcn8XjaDGKN/9MMnEEPT3zo7+AEEN0iHD2HGhVl
+	 wc/xLoieYSW7Ulmw4JJrJwBir2vUwJZxb8URdvUubbM75dGd7VSZcd3dJgA6C4mdkR
+	 O+oFPwSNpOLdgVKws1nCnU/yM50BHZwS3zTVB2hebvwesey8NSepoEP+jeHh1lnXZw
+	 uL1/nKKDSKzlg==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5c941623a5aso6822856a12.0
+        for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 19:15:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWyptxMiETjG39Fkd9mwvIlrC0K+zncqtihAtvLjhKxLZjBnEfaTsstIhxlWVvAPq9CLDQy8epFb2I=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw5YzjXqz+QYBni/VbaS3Jo1k6V7WSUaPttkBfSDH9HyoCWSW/X
+	aeMuBBbFIbk1n9H5pi5uvikkTTG6ak41azwykXR5nCgymMKThYXuPMRyoSb0ltpa9Hyt6rt6tZN
+	DoL9g5CNNugVRKWsQQipu0AsKdhw=
+X-Google-Smtp-Source: AGHT+IHB9ev+VUIapJ7FJ/lYxOacP14DRgTA+8WKy/oS+q4Ei90J54hQUfqyaSpYCMxhQAA7jAhetAjk7RTHQwBSNdc=
+X-Received: by 2002:a17:907:7204:b0:a99:6958:a8ba with SMTP id
+ a640c23a62f3a-a99a10ede1emr1682134466b.12.1728958550924; Mon, 14 Oct 2024
+ 19:15:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
+References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de> <20241014-kunit-loongarch-v1-1-1699b2ad6099@linutronix.de>
+In-Reply-To: <20241014-kunit-loongarch-v1-1-1699b2ad6099@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 15 Oct 2024 10:15:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4GvYVphn+srVFEdPboxCz-z04vXa-=e5ptJpdJZgPp=g@mail.gmail.com>
+Message-ID: <CAAhV-H4GvYVphn+srVFEdPboxCz-z04vXa-=e5ptJpdJZgPp=g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] LoongArch: Don't crash in stack_top() for tasks
+ without vDSO
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 13, 2024 at 08:26:26PM -0700, Andrew Morton wrote:
-> On Sun, 13 Oct 2024 11:43:41 +0300 Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > > > The idea is to keep everything together and have execmem_info describe all
-> > > > that architecture needs. 
-> > > 
-> > > But why?  That's pretty different from our normal style of arch hooks,
-> > > and introduces an indirect call in a security sensitive area.
-> > 
-> > Will change to __weak hook. 
-> > 
-> 
-> Thanks, I'll drop the v1 series;
-> 
-> The todos which I collected are:
-> 
-> https://lkml.kernel.org/r/CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com
-> https://lkml.kernel.org/r/Zwd6vH0rz0PVedLI@infradead.org
-> https://lkml.kernel.org/r/ZwjXz0dz-RldVNx0@infradead.org
-> https://lkml.kernel.org/r/202410111408.8fe6f604-lkp@intel.com
+Hi, Thomas,
 
-BTW Andrew I'd like to pick this up through the modules tree, and while
-at it, also beat it up with some more testing as we're expanding also
-with the modversions stuff for Rust modules.
+I can take this patch to the loongarch tree, but I think others should
+get upstream via kselftests tree?
 
-  Luis
+Huacai
+
+On Mon, Oct 14, 2024 at 7:36=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> Not all tasks have a vDSO mapped, for example kthreads never do.
+> If such a task ever ends up calling stack_top(), it will derefence the
+> NULL vdso pointer and crash.
+>
+> This can for example happen when using kunit:
+>
+>         [<9000000000203874>] stack_top+0x58/0xa8
+>         [<90000000002956cc>] arch_pick_mmap_layout+0x164/0x220
+>         [<90000000003c284c>] kunit_vm_mmap_init+0x108/0x12c
+>         [<90000000003c1fbc>] __kunit_add_resource+0x38/0x8c
+>         [<90000000003c2704>] kunit_vm_mmap+0x88/0xc8
+>         [<9000000000410b14>] usercopy_test_init+0xbc/0x25c
+>         [<90000000003c1db4>] kunit_try_run_case+0x5c/0x184
+>         [<90000000003c3d54>] kunit_generic_run_threadfn_adapter+0x24/0x48
+>         [<900000000022e4bc>] kthread+0xc8/0xd4
+>         [<9000000000200ce8>] ret_from_kernel_thread+0xc/0xa4
+>
+> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  arch/loongarch/kernel/process.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
+ess.c
+> index f2ff8b5d591e4fd638109d2c98d75543c01a112c..6e58f65455c7ca3eae2e88ed8=
+52c8655a6701e5c 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -293,13 +293,15 @@ unsigned long stack_top(void)
+>  {
+>         unsigned long top =3D TASK_SIZE & PAGE_MASK;
+>
+> -       /* Space for the VDSO & data page */
+> -       top -=3D PAGE_ALIGN(current->thread.vdso->size);
+> -       top -=3D VVAR_SIZE;
+> -
+> -       /* Space to randomize the VDSO base */
+> -       if (current->flags & PF_RANDOMIZE)
+> -               top -=3D VDSO_RANDOMIZE_SIZE;
+> +       if (current->thread.vdso) {
+> +               /* Space for the VDSO & data page */
+> +               top -=3D PAGE_ALIGN(current->thread.vdso->size);
+> +               top -=3D VVAR_SIZE;
+> +
+> +               /* Space to randomize the VDSO base */
+> +               if (current->flags & PF_RANDOMIZE)
+> +                       top -=3D VDSO_RANDOMIZE_SIZE;
+> +       }
+>
+>         return top;
+>  }
+>
+> --
+> 2.47.0
+>
