@@ -1,201 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFF3208217
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 12:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12DE1D042D
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 13:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728995280; cv=none; b=YX56aja4W8PtgABncRPCsNl25P1cvZnQigRqp1Rj2qREeYNm0IJ0OxEjwRo/nWChwQ38uXVqCMR8Rv8Xd7M6CNDzhQ6iveQjNsnDgq4uH3oA375e96S4ATQ8FG4taiZlh5u0fHPQgvW9A3Sn6hUhjtynvF5uh2kzvHiCyvA7Kn4=
+	t=1728997565; cv=none; b=V94xOEeTRZe6iaoNb5zsbDjv0Mxya5nsm5CCCHBIufueOw2UjtSXvO+KCi6xMd5RxqYl+Ggbv3mw9E/FufODWiQr+qID3rD7aAZr0zYe1PKTm20KiW/RNyc1lV2XQtbixysTAcBK1luqytsP53kZO1tZvhS9j/80tY/wZlu52WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728995280; c=relaxed/simple;
-	bh=PNLn1/pCtXUyStU0U2BVMLfpIt+9X20DAEgGORY0iH4=;
+	s=arc-20240116; t=1728997565; c=relaxed/simple;
+	bh=UVrKYOv7Wne8Pbm7/twfB1U4G+wKmoSCClCmoMN2kAo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nyv4S111gQJt3ZpE+L+NwRY6TCoIAtPBEWTnQNynOCcQM22ogJDw6E25bUztpUUFpq3FQZO8X00aELN1YO3mkRqJZ7G/mtZXzMNskm4v0VzDJj2QrWe3pOC8YoIadOm1m/8gBsfRGIGE2+z9dgIekqg5eP675O1idzumdyXIz3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKRcuqPu; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=MFlj5YVrBoPoeiR1TK9XU/7uPodkv9xSaoI4pAgzIgm5P6PyIVC6B3kx5hXHh1gZ1WQhyFJeLG4RzdQPQ+wHL4zdEKQpu4RBvFSqia0aZcBUzMX78y4w+/bayFbb5o0C/1Kvt8EEDtVwcpB2RIkvLzvUvw0kEZLKq2kNlr6Gmso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Khx6rkvJ; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKRcuqPu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A90C4CECE
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 12:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728995280;
-	bh=PNLn1/pCtXUyStU0U2BVMLfpIt+9X20DAEgGORY0iH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DKRcuqPufglS2KDcdgst9CtDv9nI0ZLxzJ6tvHWGLDLJ0fQDbK31YVylSYaLqcq0i
-	 Uxkg+ll5WZV+HMnHSv1bqOEcntWVPdennBVpf/oiBeaMyR+ysDH+0ceixuwOJrgl3G
-	 veEGqMZEuNR3/dTgJqknrlBGhyLsp4om/nl9FPotEgoDsp0VCuai7u4F/RU+K8OYlj
-	 rJL6/ZwRQ5ucGp5CCwd+9gfcAPKwH49ZGqZE/j6gwrCko1vhQkkXGfXEA7Gs/Xkw9a
-	 XEqI1cNbTm9KN78ga0Y86dynyneFcuGeDqb22sjVSAsk6uphgCXGDOBpqbQhQw6fD9
-	 3tLgDjQ999qsg==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a99c0beaaa2so696367466b.1
-        for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 05:28:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUyVbEkXBvWV8Wb8z7rzyRagLnGhTWlsO9qYrexCH0xoIeLbQDt9NjyzPc/IXM4Cl0JYvngJUxaJks=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz46A98IWhf9xn+SP3T3N2wXrCK9Bh65vorQqhrIwJxJQPcRM2i
-	cq1wD6Zr5jK1MEIiQ/vcWL8s5LwjtzXWOHa74kbRYWx89kI7wugSScBw+uOzTtrPbwndXjzJzs4
-	S9TzunCrXwjDffQ8dSWrNCkJyPJI=
-X-Google-Smtp-Source: AGHT+IF7wVxa4z12T17CxaCFQcgsO/SFzkpZWZ6Gldwe9M2owZr6r0gxkCYAZsQRGltQQSnQfoF0tccs3lOOlaBOnJY=
-X-Received: by 2002:a17:907:934e:b0:a9a:26dd:16bc with SMTP id
- a640c23a62f3a-a9a34d3b5dcmr396366b.5.1728995278707; Tue, 15 Oct 2024 05:27:58
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Khx6rkvJ"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37d447de11dso3878395f8f.1
+        for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 06:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728997562; x=1729602362; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9UYUP5eDoCpJlZIv+2MviNVABJNyofFegvCIyfWDvSM=;
+        b=Khx6rkvJHhmMbmv941fNRIMuWZ0pQ3SY9AVtsEp9eImXKVeDr+9Vkn40yewqxVoLCM
+         qkxQJoh5LJnujYVq+H7gWZ8L5IeGbmRcWDcW0M4qxGIHVAoUJ8ylRN8GPg5tZcFbDe0d
+         6OQYiKCQh00vIlPTOdiIEEnKU1e2ca3hFGgOB96kRgndQYGyicy0mfxy6HAmwgVF8V16
+         ibJuMS0y+NPYfM5sY4ZdWIhzH9wavnyHNQu/SalO1tEDsMfIJTV+fLRwE4wVuW2OhceP
+         NIH90xr0tBo1c1B1k4Lz0OoMU8AtuJFl2pAjR5b5Vu1RvS6pcy9Zzk578F/tLYUr+dQ4
+         VR7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728997562; x=1729602362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9UYUP5eDoCpJlZIv+2MviNVABJNyofFegvCIyfWDvSM=;
+        b=pm6rZQ/0N+rt4H2RSupQIRV3igFGvMVuFAVp65GA2P72jFTCZoMmjp5PTB2qThKp4l
+         ZcIWbjIgg2ouTOpV8M0ZiogRoIT5/lCsRqYM2y/bMtggTkeWzYu8Jwgeoak2UIGqMOVz
+         3OTsqF8D187Q1e1gLrwWdTxR38gmsYj2DMZxFzd2rpigDhR/j2WC7fWFncRbiAuNKzcd
+         lOt76KLIB5nhQHb3vD79ksIfZjRJvo732PJVztwvOQOeIO4nH1BARtN5LV+YNuIWHuzl
+         c9Mb0jm+k3HvqxEf09baU2T3lu20sY9z6O2wFlUhHlxT9BxB3kvCRXm+44unht32NRYt
+         wklw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoCtIbhWeqisN/EOndqZkZYTET0/2WPytP3LGDXAWZ5d22gzE42uQfoBmRfZN0bH/7b55rHeiR4vc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx9+HubRd+xrJyvy0QBqyyM20M186qO8dTs/XEtEQ1Pw//WEKVQ
+	d3Y/WkZkE0bGM0K3pFkXdpJjwVWkfFIzwdNcW+90Es+LBo7zTbM8wVBAOENRHaUcIwrJnSGam+o
+	XB+hG0akpyq2yFww7hXNKCMc0CgHX3lA7yUPE
+X-Google-Smtp-Source: AGHT+IEIAKlwW8UiEFpPs4Fcbd4nUGuOBW7hWDjxjph18K+ejeS+IZz53ZJefCSDaToXnGBf3Uc6jj4wb7rxRNzd/8k=
+X-Received: by 2002:adf:e98c:0:b0:37c:d4f8:3f2e with SMTP id
+ ffacd0b85a97d-37d552d8b43mr9076130f8f.55.1728997561878; Tue, 15 Oct 2024
+ 06:06:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014035855.1119220-1-maobibo@loongson.cn> <20241014035855.1119220-3-maobibo@loongson.cn>
- <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com> <e7c06bf4-897a-7060-61f9-97435d2af16e@loongson.cn>
-In-Reply-To: <e7c06bf4-897a-7060-61f9-97435d2af16e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 15 Oct 2024 20:27:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6H=Q=1KN5q8kR3j55Ky--FRNifCT93axhqE=vNMArDaQ@mail.gmail.com>
-Message-ID: <CAAhV-H6H=Q=1KN5q8kR3j55Ky--FRNifCT93axhqE=vNMArDaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] LoongArch: Add barrier between set_pte and memory access
-To: maobibo <maobibo@loongson.cn>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
+References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
+ <20241011-tracepoint-v10-5-7fbde4d6b525@google.com> <20241011152312.r5sy7k7hsunmmbfo@treble>
+In-Reply-To: <20241011152312.r5sy7k7hsunmmbfo@treble>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 15 Oct 2024 15:05:49 +0200
+Message-ID: <CAH5fLgh5EbHFn+47LpdVWjdYaq8fEm0Okm8fd1GwLprLqzt2pg@mail.gmail.com>
+Subject: Re: [PATCH v10 5/5] rust: add arch_static_branch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 15, 2024 at 10:54=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
-e:
+On Fri, Oct 11, 2024 at 5:24=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
 >
+> On Fri, Oct 11, 2024 at 10:13:38AM +0000, Alice Ryhl wrote:
+> > +#[cfg(CONFIG_JUMP_LABEL)]
+> > +#[cfg(not(CONFIG_HAVE_JUMP_LABEL_HACK))]
+> > +macro_rules! arch_static_branch {
+> > +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) =3D> {'my_labe=
+l: {
+> > +        $crate::asm!(
+> > +            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_stati=
+c_branch_asm.rs"));
+> > +            l_yes =3D label {
+> > +                break 'my_label true;
+> > +            },
+> > +            symb =3D sym $key,
+> > +            off =3D const ::core::mem::offset_of!($keytyp, $field),
+> > +            branch =3D const $crate::jump_label::bool_to_int($branch),
+> > +        );
+> > +
+> > +        break 'my_label false;
+> > +    }};
+> > +}
+> > +
+> > +#[macro_export]
+> > +#[doc(hidden)]
+> > +#[cfg(CONFIG_JUMP_LABEL)]
+> > +#[cfg(CONFIG_HAVE_JUMP_LABEL_HACK)]
+> > +macro_rules! arch_static_branch {
+> > +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) =3D> {'my_labe=
+l: {
+> > +        $crate::asm!(
+> > +            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_stati=
+c_branch_asm.rs"));
+> > +            l_yes =3D label {
+> > +                break 'my_label true;
+> > +            },
+> > +            symb =3D sym $key,
+> > +            off =3D const ::core::mem::offset_of!($keytyp, $field),
+> > +            branch =3D const 2 | $crate::jump_label::bool_to_int($bran=
+ch),
+> > +        );
+> > +
+> > +        break 'my_label false;
+> > +    }};
 >
->
-> On 2024/10/14 =E4=B8=8B=E5=8D=882:31, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Mon, Oct 14, 2024 at 11:59=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >> It is possible to return a spurious fault if memory is accessed
-> >> right after the pte is set. For user address space, pte is set
-> >> in kernel space and memory is accessed in user space, there is
-> >> long time for synchronization, no barrier needed. However for
-> >> kernel address space, it is possible that memory is accessed
-> >> right after the pte is set.
-> >>
-> >> Here flush_cache_vmap/flush_cache_vmap_early is used for
-> >> synchronization.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
-> >>   1 file changed, 13 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/=
-include/asm/cacheflush.h
-> >> index f8754d08a31a..53be231319ef 100644
-> >> --- a/arch/loongarch/include/asm/cacheflush.h
-> >> +++ b/arch/loongarch/include/asm/cacheflush.h
-> >> @@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long start,=
- unsigned long end);
-> >>   #define flush_cache_dup_mm(mm)                         do { } while =
-(0)
-> >>   #define flush_cache_range(vma, start, end)             do { } while =
-(0)
-> >>   #define flush_cache_page(vma, vmaddr, pfn)             do { } while =
-(0)
-> >> -#define flush_cache_vmap(start, end)                   do { } while (=
-0)
-> >>   #define flush_cache_vunmap(start, end)                 do { } while =
-(0)
-> >>   #define flush_icache_user_page(vma, page, addr, len)   do { } while =
-(0)
-> >>   #define flush_dcache_mmap_lock(mapping)                        do { =
-} while (0)
-> >>   #define flush_dcache_mmap_unlock(mapping)              do { } while =
-(0)
-> >>
-> >> +/*
-> >> + * It is possible for a kernel virtual mapping access to return a spu=
-rious
-> >> + * fault if it's accessed right after the pte is set. The page fault =
-handler
-> >> + * does not expect this type of fault. flush_cache_vmap is not exactl=
-y the
-> >> + * right place to put this, but it seems to work well enough.
-> >> + */
-> >> +static inline void flush_cache_vmap(unsigned long start, unsigned lon=
-g end)
-> >> +{
-> >> +       smp_mb();
-> >> +}
-> >> +#define flush_cache_vmap flush_cache_vmap
-> >> +#define flush_cache_vmap_early flush_cache_vmap
-> >  From the history of flush_cache_vmap_early(), It seems only archs with
-> > "virtual cache" (VIVT or VIPT) need this API, so LoongArch can be a
-> > no-op here.
-OK,  flush_cache_vmap_early() also needs smp_mb().
+> Ouch... could we get rid of all this duplication by containing the hack
+> bit to ARCH_STATIC_BRANCH_ASM() like so?
 
->
-> Here is usage about flush_cache_vmap_early in file linux/mm/percpu.c,
-> map the page and access it immediately. Do you think it should be noop
-> on LoongArch.
->
-> rc =3D __pcpu_map_pages(unit_addr, &pages[unit * unit_pages],
->                                       unit_pages);
-> if (rc < 0)
->      panic("failed to map percpu area, err=3D%d\n", rc);
->      flush_cache_vmap_early(unit_addr, unit_addr + ai->unit_size);
->      /* copy static data */
->      memcpy((void *)unit_addr, __per_cpu_load, ai->static_size);
-> }
->
->
-> >
-> > And I still think flush_cache_vunmap() should be a smp_mb(). A
-> > smp_mb() in flush_cache_vmap() prevents subsequent accesses be
-> > reordered before pte_set(), and a smp_mb() in flush_cache_vunmap()
-> smp_mb() in flush_cache_vmap() does not prevent reorder. It is to flush
-> pipeline and let page table walker HW sync with data cache.
->
-> For the following example.
->    rb =3D vmap(pages, nr_meta_pages + 2 * nr_data_pages,
->                    VM_MAP | VM_USERMAP, PAGE_KERNEL);
->    if (rb) {
-> <<<<<<<<<<< * the sentence if (rb) can prevent reorder. Otherwise with
-> any API kmalloc/vmap/vmalloc and subsequent memory access, there will be
-> reorder issu. *
->        kmemleak_not_leak(pages);
->        rb->pages =3D pages;
->        rb->nr_pages =3D nr_pages;
->        return rb;
->    }
->
-> > prevents preceding accesses be reordered after pte_clear(). This
-> Can you give an example about such usage about flush_cache_vunmap()? and
-> we can continue to talk about it, else it is just guessing.
-Since we cannot reach a consensus, and the flush_cache_* API look very
-strange for this purpose (Yes, I know PowerPC does it like this, but
-ARM64 doesn't). I prefer to still use the ARM64 method which means add
-a dbar in set_pte(). Of course the performance will be a little worse,
-but still better than the old version, and it is more robust.
+Good idea, thanks.
 
-I know you are very busy, so if you have no time you don't need to
-send V3, I can just do a small modification on the 3rd patch.
-
-
-Huacai
-
->
-> Regards
-> Bibo Mao
-> > potential problem may not be seen from experiment, but it is needed in
-> > theory.
-> >
-> > Huacai
-> >
-> >> +
-> >>   #define cache_op(op, addr)                                          =
-   \
-> >>          __asm__ __volatile__(                                        =
-   \
-> >>          "       cacop   %0, %1                                  \n"  =
-   \
-> >> --
-> >> 2.39.3
-> >>
-> >>
->
->
+Alice
