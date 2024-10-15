@@ -1,103 +1,175 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0544116CD1D
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 07:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ACF17335E;
+	Tue, 15 Oct 2024 08:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728977525; cv=none; b=s5GtwVtuFgxkWtUTBbXaXepy3FlcQO8YjUqFbJFeYKc8qvp6AL6BgzEUq+dj+8L0H8KiN5Wk+5kToh3Z+ib5VAp8suXqjmmwmaHYpQCwzyZ8RCv9/uGcokq01es1+/RJA7FyHNkcCs5TlVZxobpZbu+7KqVE8khzYXNv7bxmBoE=
+	t=1728980951; cv=none; b=BpGslpAjb/SScjF6F21OPKp+TH/nP5BXNhVm3OJC5e3DzloFNGYTrPaIPnn0Dk7o7T9A2nycDD/vwTKmZSI2CKBmmH6b/kkhIH1D6IN8DAE4N+qJwXMHLdhVE1es9xCY1Ve2RQwxYhxEKgbdSQecTTMFHsgdsr6ArDr2XY2z9MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728977525; c=relaxed/simple;
-	bh=XvC7Z8cSiXh6eCoO1h2M5BikZzrqcBMKoBxig6SJup4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JQinUIpuIV6mZYWIRdQAJTaKc70Jb8m9lCStKRUBctdni75EgsIn+qgVh8O2nbFQP4tTLTtKbJxkoBXN4JE80OcBVTjqQZD8K9l8L/NQBKUX1OF1WNGkJ7WR7H9E11CjlDK7LfUhfQWbr45cGPGMcQEyfxHsSXOTui3VlcuL160=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxrnNtGg5nAAgdAA--.42704S3;
-	Tue, 15 Oct 2024 15:31:57 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxL9ZsGg5ntKAqAA--.3118S3;
-	Tue, 15 Oct 2024 15:31:56 +0800 (CST)
-Subject: Re: [PATCH 4/4] kunit: qemu_configs: loongarch: Enable shutdown
-To: =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas.weissschuh@linutronix.de>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Brendan Higgins <brendan.higgins@linux.dev>, David Gow
- <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
- <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <1fde4047-45cf-f6f2-7fd4-f0d6eb5d6de3@loongson.cn>
-Date: Tue, 15 Oct 2024 15:31:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1728980951; c=relaxed/simple;
+	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXgvpzrUod20Noaa/8bLii5yxXW7uUaTmt925QivCJv8uQa6AikUCy3ZpfBJTKGT101k50Ih3SSxzVl5Hyzzprfk5FOq4MYDpyqpSLeM8erfL/Ek5qxul1RTIPsZUkbrF0f0xwW7lF6b937+FxTcq83N2lZgk/fmnsEzCciKrdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egqvVNG6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egqvVNG6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFDFC4CEC7;
+	Tue, 15 Oct 2024 08:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728980950;
+	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egqvVNG6q9wlgpkO2ihI5nbC6bmr+MKMXS2UkyLdtZUnRa2mJjPhb/GoHeE8B3JIV
+	 VDOtfy1iCH02B47+vC2mLdYrhXPmRCcdJ1+Qf6WXe8/wfp0qMu9/oa8S2JtMyqJO/O
+	 ZmBQkqH3b1vcstwGj/aIQZ/QJ/x/VWHD7oxFh+9oQa2EPZRfC0PAr1bUMSRbgTw0WX
+	 C7Lug7jeKA6ulz3nyHPgkg0UGzQL6Atd/tuR2Y2ST5aOa7GcMnBjH9MVS3YMhP6L1x
+	 3BVwGozDPiF2n6afO7840UO9nN2SDmvcqv5gq/FNe0QhCmwM6wOayqIt/j1N459swo
+	 /mUI7oPo31iJQ==
+Date: Tue, 15 Oct 2024 01:29:05 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 6/8] x86/module: perpare module loading for ROX
+ allocations of text
+Message-ID: <20241015082905.GA1235948@thelio-3990X>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-7-rppt@kernel.org>
+ <20241010225411.GA922684@thelio-3990X>
+ <Zwkg3LwlNJOwNWZh@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxL9ZsGg5ntKAqAA--.3118S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF43tF4rZr47JF4fZrWkAFc_yoW8XF1kpr
-	Z7ZF90gF1rGF1fXr4xGryqgFZ5WrsrArW2gFW3JryrurZ3Jw1rur18t3sFqasFga98tayF
-	qFZ2q3WYgF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-	xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_
-	Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j873
-	kUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zwkg3LwlNJOwNWZh@kernel.org>
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+On Fri, Oct 11, 2024 at 03:58:04PM +0300, Mike Rapoport wrote:
+> I overlooked how cfi_*_callers routines update addr.
+> This patch should fix it:
 
-On 2024/10/14 下午7:36, Thomas Weißschuh wrote:
-> QEMU for LoongArch does not yet support shutdown/restart through ACPI.
-> Use the pvpanic driver to enable shutdowns.
-> This requires 9.1.0 for shutdown support in pvpanic, but that is the
-> requirement of kunit on LoongArch anyways.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->   tools/testing/kunit/qemu_configs/loongarch.py | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
-> index e7bb7c07819677dfdefac012821a732555813cae..1d2b780fbd5c0bde20aa6a5cd1217d0b3b443a93 100644
-> --- a/tools/testing/kunit/qemu_configs/loongarch.py
-> +++ b/tools/testing/kunit/qemu_configs/loongarch.py
-> @@ -4,13 +4,16 @@ QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
->   			   kconfig='''
->   CONFIG_EFI_STUB=n
->   CONFIG_PCI_HOST_GENERIC=y
-> +CONFIG_PVPANIC=y
-> +CONFIG_PVPANIC_PCI=y
->   CONFIG_SERIAL_8250=y
->   CONFIG_SERIAL_8250_CONSOLE=y
->   CONFIG_SERIAL_OF_PLATFORM=y
->   ''',
->   			   qemu_arch='loongarch64',
->   			   kernel_path='arch/loongarch/boot/vmlinux.elf',
-> -			   kernel_command_line='console=ttyS0',
-> +			   kernel_command_line='console=ttyS0 kunit_shutdown=poweroff',
->   			   extra_qemu_params=[
->   					   '-machine', 'virt',
-> +					   '-device', 'pvpanic-pci',
->   					   '-cpu', 'max',])
-> 
+Thanks, can confirm. My boot is working again and LKDTM's
+CFI_FORWARD_PROTO test properly fails.
 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 3b3fa93af3b1..cf782f431110 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -1148,11 +1148,13 @@ static int cfi_disable_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+> +
+>  		if (!hash) /* nocfi callers */
+>  			continue;
+>  
+> @@ -1172,11 +1174,12 @@ static int cfi_enable_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (!hash) /* nocfi callers */
+>  			continue;
+>  
+> @@ -1249,11 +1252,12 @@ static int cfi_rand_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (hash) {
+>  			hash = -cfi_rehash(hash);
+>  			text_poke_early(wr_addr + 2, &hash, 4);
+> @@ -1269,14 +1273,15 @@ static int cfi_rewrite_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (hash) {
+>  			text_poke_early(wr_addr, fineibt_caller_start, fineibt_caller_size);
+> -			WARN_ON(*(u32 *)(addr + fineibt_caller_hash) != 0x12345678);
+> +			WARN_ON(*(u32 *)(wr_addr + fineibt_caller_hash) != 0x12345678);
+>  			text_poke_early(wr_addr + fineibt_caller_hash, &hash, 4);
+>  		}
+>  		/* rely on apply_retpolines() */
+>  
+> > Cheers,
+> > Nathan
+> 
+> -- 
+> Sincerely yours,
+> Mike.
