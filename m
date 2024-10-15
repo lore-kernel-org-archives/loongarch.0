@@ -1,172 +1,235 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 762A36AB8
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5CC16EB56
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 03:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728960847; cv=none; b=Dc4B4JCYHNXXCpz1eiAh7np4mLUk+rFcjvcWj55oiL0rr8GDmWsJDZfcHAekl25fkeeG1A7ahdHO0ERGPvc3L2tMl/ssa3BaC2wDU0vbBzclo/0TWV8vNtYGMys5KzSRrKlSMD5Q3tDbNVBTtzKtj5aqHHROpiH02UlS2SeKEKM=
+	t=1728961478; cv=none; b=b6kfcZESHdCWkZkZ0hRMkp1nTJNIA3cGzklDKZR2TsZAQGTjkGaCMkkjpFLwsiEEqA+OF8azsMMI1ox1IyNMqYkOETKNXqI5e2Q/fra/XRJSJtCiWjlJ62G/DYcTXH8AxURJK8lAfw1csql1XG8KGv4XeiX1MGU3K6LH+no3FNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728960847; c=relaxed/simple;
-	bh=0v38X+P0bkrXw5mBZzXsi+J2x6dVtZM3Gva1z9FdAaQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DvyvSH5cbQFubBUYdOo5BFAxm6XlyCXAZgQdllpBLdsnhC1DMjgENPw5MgwU0Rg16agC2olsJijIf6vPPcGYStWREJ7MnC9GHqBdoPxZX2B8xaIx2TinldZru1IrmrwxScc3TvsWuP0Wwg+/g5VbM9dSPP+vcZEtFs54grfoTIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxTPBE2Q1njYkcAA--.45534S3;
-	Tue, 15 Oct 2024 10:53:56 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxSeZB2Q1nClAqAA--.8242S3;
-	Tue, 15 Oct 2024 10:53:56 +0800 (CST)
-Subject: Re: [PATCH v2 2/3] LoongArch: Add barrier between set_pte and memory
- access
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-mm@kvack.org
-References: <20241014035855.1119220-1-maobibo@loongson.cn>
- <20241014035855.1119220-3-maobibo@loongson.cn>
- <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <e7c06bf4-897a-7060-61f9-97435d2af16e@loongson.cn>
-Date: Tue, 15 Oct 2024 10:53:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1728961478; c=relaxed/simple;
+	bh=J9AXBLqUsBJ/yA85UVfPqaFq4TQ2jxzhw2ers6Fj2jQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rv3/Au62VqyWdPMDdbH4FI3nBAo1IcaD9sRGzP0WupqNd3ZI6VaQcTi6Hnw8CYSgQJulmRhGZshp9wGx12YP5Mv4U+iAWFYBLSj7XQiJLoCdn5ONUIlxtXlpmKGz8CVEKWglqdVe21uYZfPa7Sd1dLfgkHN2kWIG4ipCQq6e5bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LhA+lqqx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LhA+lqqx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728961476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2LILJl12FRTprkZPDsnRty3i0K05AFLZzsWu9wwpXxI=;
+	b=LhA+lqqx/PRbhSL0UIHw5uB90tDsym+Z6OdeYNQFLJNAAUIhlNm6MGLDsPrfN95J5JJ6pW
+	Z4BGCguoysuS/C5Csi8zOk5hDjzDUk+8LUsPaaMT1umkDrFjbzmhNjONTS6CKfBx09FMbX
+	aYBF6ECAiCSKzK9vZvLzkcwJTP58E+s=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-ezh-_vKUNW-YKWf7_D-QmA-1; Mon, 14 Oct 2024 23:04:33 -0400
+X-MC-Unique: ezh-_vKUNW-YKWf7_D-QmA-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6cbf039dccfso77512116d6.0
+        for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 20:04:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728961472; x=1729566272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2LILJl12FRTprkZPDsnRty3i0K05AFLZzsWu9wwpXxI=;
+        b=HAyxI2sZTpXmEvMDb13Ge+DPnErG3U8M1kIdy5yWRcDQD/pOg6ww5l6k9d+Q4H4yu+
+         MPAauH7l4WnTHApAoWHFGHF43cxFI7whsgw7h1Wu4+w9655qQtoPN6mzqjxQFDvGIRDq
+         SZUdVwMs8XuX15czVbLoUERTuwdgvQDmU394m4INX9HLPQ8TQdAEQgm8WCNaEgjLXBE+
+         WEFGl+G/8rs35Fveu/FgRzNWmna67JtmGS34pfdDROMd+rpo9gcA1jkCj3N0sBPQze2d
+         V7CQsaJE3t3sZOn+Jl8t4x7yOLlRo8DhMkPM+F4x6pvR+fARoL1WFfrpa5mpHWDpjFxd
+         Nsig==
+X-Forwarded-Encrypted: i=1; AJvYcCUCKxjQvVxw1WnebRXAq9570cXc430iLH0ZcnoJupu73U52hh+cCKUztia9xqD6EONs83d6D2IXSZo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwL/kknDEcpFJ9M1JD4S4k0WiknmQ7FmX0G+l5WZjqjv5WMLkGM
+	ni5pxnRFQQkKmeWOskAoilcPBnxuxV02WKL2ziTKrcueUKH8Y8mII2r+Li9M59/KR4zQ+rki9lY
+	4G/3YN9yi3gZQIRQVA7lR3iry/ds6scGFOn4ehUqrIDjYSSdeGIGiPRRdh+fAGWFpKlAoWfiuKF
+	PyAh0MTSUpcU+vUJvAmB6BzdkLNddUBkWL
+X-Received: by 2002:a05:6214:5347:b0:6cb:e9eb:1b24 with SMTP id 6a1803df08f44-6cbeff63948mr208010326d6.24.1728961472396;
+        Mon, 14 Oct 2024 20:04:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGp3T4Yepy5h5DQueUeaIl2hWfHF7EpApBAxl9jBnWIq5Z+upYe1XYSqd8+UMzLGOwXgyDg2kobb+ggSdFvo7w=
+X-Received: by 2002:a05:6214:5347:b0:6cb:e9eb:1b24 with SMTP id
+ 6a1803df08f44-6cbeff63948mr208010076d6.24.1728961472016; Mon, 14 Oct 2024
+ 20:04:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxSeZB2Q1nClAqAA--.8242S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw1ktw1kAFykJrWfWw15GFX_yoWrXF1Dpr
-	W2kas8Krs7WF4fXw1jvr13Wr1kX3srWF18Jw1FvryDCwsrXFy29ryxWrW8Wry3Xa4rJa1x
-	Cw4UKw15WFWUXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com> <Zw0iegwMp5ZVGypy@fedora> <9b7e4f65-a171-4574-bd53-580e79527fbc@arm.com>
+In-Reply-To: <9b7e4f65-a171-4574-bd53-580e79527fbc@arm.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Tue, 15 Oct 2024 11:04:21 +0800
+Message-ID: <CAF+s44QbdPBN-8EcPiWiZgYgZY4v8RK-wA0VEaVXbfnc9_HQ9Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 01/57] mm: Add macros ahead of supporting boot-time
+ page size selection
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Andreas Larsson <andreas@gaisler.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Chris Zankel <chris@zankel.net>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Greg Marsden <greg.marsden@oracle.com>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Ivan Ivanov <ivan.ivanov@suse.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonas Bonn <jonas@southpole.se>, 
+	Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Miroslav Benes <mbenes@suse.cz>, Rich Felker <dalias@libc.org>, 
+	Richard Weinberger <richard@nod.at>, Stafford Horne <shorne@gmail.com>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Will Deacon <will@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	sparclinux@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Oct 14, 2024 at 10:07=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com=
+> wrote:
+>
+> On 14/10/2024 14:54, Pingfan Liu wrote:
+> > Hello Ryan,
+> >
+> > On Mon, Oct 14, 2024 at 11:58:08AM +0100, Ryan Roberts wrote:
+> >> arm64 can support multiple base page sizes. Instead of selecting a pag=
+e
+> >> size at compile time, as is done today, we will make it possible to
+> >> select the desired page size on the command line.
+> >>
+> >> In this case PAGE_SHIFT and it's derivatives, PAGE_SIZE and PAGE_MASK
+> >> (as well as a number of other macros related to or derived from
+> >> PAGE_SHIFT, but I'm not worrying about those yet), are no longer
+> >> compile-time constants. So the code base needs to cope with that.
+> >>
+> >> As a first step, introduce MIN and MAX variants of these macros, which
+> >> express the range of possible page sizes. These are always compile-tim=
+e
+> >> constants and can be used in many places where PAGE_[SHIFT|SIZE|MASK]
+> >> were previously used where a compile-time constant is required.
+> >> (Subsequent patches will do that conversion work). When the arch/build
+> >> doesn't support boot-time page size selection, the MIN and MAX variant=
+s
+> >> are equal and everything resolves as it did previously.
+> >>
+> >
+> > MIN and MAX appear to construct a boundary, but it may be not enough.
+> > Please see the following comment inline.
+> >
+> >> Additionally, introduce DEFINE_GLOBAL_PAGE_SIZE_VAR[_CONST]() which wr=
+ap
+> >> global variable defintions so that for boot-time page size selection
+> >> builds, the variable being wrapped is initialized at boot-time, instea=
+d
+> >> of compile-time. This is done by defining a function to do the
+> >> assignment, which has the "constructor" attribute. Constructor is
+> >> preferred over initcall, because when compiling a module, the module i=
+s
+> >> limited to a single initcall but constructors are unlimited. For
+> >> built-in code, constructors are now called earlier to guarrantee that
+> >> the variables are initialized by the time they are used. Any arch that
+> >> wants to enable boot-time page size selection will need to select
+> >> CONFIG_CONSTRUCTORS.
+> >>
+> >> These new macros need to be available anywhere PAGE_SHIFT and friends
+> >> are available. Those are defined via asm/page.h (although some arches
+> >> have a sub-include that defines them). Unfortunately there is no
+> >> reliable asm-generic header we can easily piggy-back on, so let's defi=
+ne
+> >> a new one, pgtable-geometry.h, which we include near where each arch
+> >> defines PAGE_SHIFT. Ugh.
+> >>
+> >> -------
+> >>
+> >> Most of the problems that need to be solved over the next few patches
+> >> fall into these broad categories, which are all solved with the help o=
+f
+> >> these new macros:
+> >>
+> >> 1. Assignment of values derived from PAGE_SIZE in global variables
+> >>
+> >>   For boot-time page size builds, we must defer the initialization of
+> >>   these variables until boot-time, when the page size is known. See
+> >>   DEFINE_GLOBAL_PAGE_SIZE_VAR[_CONST]() as described above.
+> >>
+> >> 2. Define static storage in units related to PAGE_SIZE
+> >>
+> >>   This static storage will be defined according to PAGE_SIZE_MAX.
+> >>
+> >> 3. Define size of struct so that it is related to PAGE_SIZE
+> >>
+> >>   The struct often contains an array that is sized to fill the page. I=
+n
+> >>   this case, use a flexible array with dynamic allocation. In other
+> >>   cases, the struct fits exactly over a page, which is a header (e.g.
+> >>   swap file header). In this case, remove the padding, and manually
+> >>   determine the struct pointer within the page.
+> >>
+> >
+> > About two years ago, I tried to do similar thing in your series, but ra=
+n
+> > into problem at this point, or maybe not exactly as the point you list
+> > here. I consider this as the most challenged part.
+> >
+> > The scenario is
+> > struct X {
+> >       a[size_a];
+> >       b[size_b];
+> >       c;
+> > };
+> >
+> > Where size_a =3D f(PAGE_SHIFT), size_b=3Dg(PAGE_SHIFT). One of f() and =
+g()
+> > is proportional to PAGE_SHIFT, the other is inversely proportional.
+> >
+> > How can you fix the reference of X.a and X.b?
+>
+> If you need to allocate static memory, then in this scenario, assuming f(=
+) is
+> proportional and g() is inversely-proportional, then I guess you need
+> size_a=3Df(PAGE_SIZE_MAX) and size_b=3Dg(PAGE_SIZE_MIN). Or if you can al=
+locate the
 
+My point is that such stuff can not be handled by scripts
+automatically and needs manual intervention.
 
-On 2024/10/14 下午2:31, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Mon, Oct 14, 2024 at 11:59 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> It is possible to return a spurious fault if memory is accessed
->> right after the pte is set. For user address space, pte is set
->> in kernel space and memory is accessed in user space, there is
->> long time for synchronization, no barrier needed. However for
->> kernel address space, it is possible that memory is accessed
->> right after the pte is set.
->>
->> Here flush_cache_vmap/flush_cache_vmap_early is used for
->> synchronization.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
->>   1 file changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
->> index f8754d08a31a..53be231319ef 100644
->> --- a/arch/loongarch/include/asm/cacheflush.h
->> +++ b/arch/loongarch/include/asm/cacheflush.h
->> @@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
->>   #define flush_cache_dup_mm(mm)                         do { } while (0)
->>   #define flush_cache_range(vma, start, end)             do { } while (0)
->>   #define flush_cache_page(vma, vmaddr, pfn)             do { } while (0)
->> -#define flush_cache_vmap(start, end)                   do { } while (0)
->>   #define flush_cache_vunmap(start, end)                 do { } while (0)
->>   #define flush_icache_user_page(vma, page, addr, len)   do { } while (0)
->>   #define flush_dcache_mmap_lock(mapping)                        do { } while (0)
->>   #define flush_dcache_mmap_unlock(mapping)              do { } while (0)
->>
->> +/*
->> + * It is possible for a kernel virtual mapping access to return a spurious
->> + * fault if it's accessed right after the pte is set. The page fault handler
->> + * does not expect this type of fault. flush_cache_vmap is not exactly the
->> + * right place to put this, but it seems to work well enough.
->> + */
->> +static inline void flush_cache_vmap(unsigned long start, unsigned long end)
->> +{
->> +       smp_mb();
->> +}
->> +#define flush_cache_vmap flush_cache_vmap
->> +#define flush_cache_vmap_early flush_cache_vmap
->  From the history of flush_cache_vmap_early(), It seems only archs with
-> "virtual cache" (VIVT or VIPT) need this API, so LoongArch can be a
-> no-op here.
+> memory dynamically, then make a and b pointers to dynamically allocated b=
+uffers.
+>
 
-Here is usage about flush_cache_vmap_early in file linux/mm/percpu.c,
-map the page and access it immediately. Do you think it should be noop 
-on LoongArch.
+This seems a better way out.
 
-rc = __pcpu_map_pages(unit_addr, &pages[unit * unit_pages],
-                                      unit_pages);
-if (rc < 0)
-     panic("failed to map percpu area, err=%d\n", rc);
-     flush_cache_vmap_early(unit_addr, unit_addr + ai->unit_size);
-     /* copy static data */
-     memcpy((void *)unit_addr, __per_cpu_load, ai->static_size);
-}
+> Is there a specific place in the source where this pattern is used today?=
+ It
+> might be easier to discuss in the context of the code if so.
+>
 
+No such code at hand. Just throw out the potential issue and be
+curious about it which frustrates me.
+I hope people can reach an agreement on it and turn this useful series
+into reality.
 
-> 
-> And I still think flush_cache_vunmap() should be a smp_mb(). A
-> smp_mb() in flush_cache_vmap() prevents subsequent accesses be
-> reordered before pte_set(), and a smp_mb() in flush_cache_vunmap()
-smp_mb() in flush_cache_vmap() does not prevent reorder. It is to flush 
-pipeline and let page table walker HW sync with data cache.
+Thanks,
 
-For the following example.
-   rb = vmap(pages, nr_meta_pages + 2 * nr_data_pages,
-                   VM_MAP | VM_USERMAP, PAGE_KERNEL);
-   if (rb) {
-<<<<<<<<<<< * the sentence if (rb) can prevent reorder. Otherwise with 
-any API kmalloc/vmap/vmalloc and subsequent memory access, there will be 
-reorder issu. *
-       kmemleak_not_leak(pages);
-       rb->pages = pages;
-       rb->nr_pages = nr_pages;
-       return rb;
-   }
-
-> prevents preceding accesses be reordered after pte_clear(). This
-Can you give an example about such usage about flush_cache_vunmap()? and 
-we can continue to talk about it, else it is just guessing.
-
-Regards
-Bibo Mao
-> potential problem may not be seen from experiment, but it is needed in
-> theory.
-> 
-> Huacai
-> 
->> +
->>   #define cache_op(op, addr)                                             \
->>          __asm__ __volatile__(                                           \
->>          "       cacop   %0, %1                                  \n"     \
->> --
->> 2.39.3
->>
->>
+Pingfan
 
