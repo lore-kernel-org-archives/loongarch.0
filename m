@@ -1,156 +1,128 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6D2203711
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 18:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC27D1B3936;
+	Tue, 15 Oct 2024 20:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729017377; cv=none; b=ki4vRuSM54fmvTjPhlHU1swuugoYEHUsjxwCU/BrodRU8bbf8zTE3YVMWg0vC3UVNZt9ed0GwxgKxZEI3jFTxnZsTHQQTIHYjMs9GzAF76bunbBiI0wqKYlhc2BL/vWG3CWy9TAJIWDwgYyaP42DNrLXkGb19olmfx9yzi65Wys=
+	t=1729023120; cv=none; b=flCsEz+TU8eycGVeQoWJkRTr17a7UmKJZislmuBLfNA6sjQytuSJx6B3nGQUtgkdN+hfwDAWid6sszyIMUBwUYClyMFrF42Fyhu1byCCiPDAHKSXeCWx+8G8kEdXu9tryTz0c6KxW+OLVzyyxWiiACa2569OXbdYWfVyZ+ywkfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729017377; c=relaxed/simple;
-	bh=yNKksyNGQRjEC8ytyREQ7iMJkDnpET9UN4Qt41xw7dI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IKwzrVni7lStPBKZl0tRs8APXvelo91zGBMaZu1qVM+5P6W9thW/Xqbrdu7IT+BunIxgbKyVzxvHMfZ0x3SSpGpbKKpwrEynC1LtKwiDtEnSMPPfokcNj9dyUAIjlf9pXFS+k1gfLmYTzqgrH8ZEyB6fMc4lRE3eUWMbcmCiZsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZ0EE0g1; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729023120; c=relaxed/simple;
+	bh=Y6PhmBa/nN+iDUxTFqcR/Mb33RbOlJl9A4RsS6bV0b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vh7lmVVpJqvfT2SuyTn01QJQPSrNqOINo1fmqe0P++7LKpc+a7oe7d2sBQw0SCHjpZfwrGDP+Vqtlu6EVwfKHSZN3mGjoCyaqag5LelnjsPyKKzYBJcSPjHWwBpPiy/sZZb8tMw7v2E3jk9A0vxXbRHdO0Jjadx65pR0YDiQrNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeA6yj5h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZ0EE0g1"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d325beee2so3462814f8f.2
-        for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 11:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729017374; x=1729622174; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7q5eEEdHL0dWI89V6py6cPKMvtj8RQmT2g6+quRNSkY=;
-        b=GZ0EE0g1KcPCRZMIWAGw8vxMI2x6rmmTnhNozUS8iYJnrTNFDqmBGs9zfZoeQggp/2
-         iJr5Xx+GlyOzNydQchJd9njVRLS+45B6OWAjkzmsZBdj/Gp1uDN6EqmsiFqMu1eS7lCv
-         ZbIUS8xadCJVhwr2EpKeL9QEPcboTWqLtKab9Pj8eEhmyIgcppKnQe77G59uq+Sbhk2t
-         aS3D2PH434YS9saD8eNRge+w2PQf2i3RAuijLGRiwF82yxxZkJIIgrHkt7GD1glXBkxf
-         B6jnPR/H2rVWRedUlz1SmGLG1FzjZztn7U99MJc1Ovkxo2zZMiLFGUnvkLb+9bcXosS/
-         5kIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729017374; x=1729622174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7q5eEEdHL0dWI89V6py6cPKMvtj8RQmT2g6+quRNSkY=;
-        b=tC7LWy+P9AtLFX2ERYW2HvuG34UnJSWlPFScOIDawl+Bo3eIIxKS0qOUWTLJjAwH1m
-         CvIyz+5d9yyzvPZoa4nVttI1uL+MGHlGyS+SSigQnvLKFwR1ZhUT6gpwkqv9n1RJWGps
-         gkpxuqC3WWIPcC+0JE6DeVph4NPVnTa7S+ZAG4LFk17/xpKK/M9MAGDd+kAgTgJWqkRv
-         FJmofScVPie9dDuYqidHISJcigDZJOMwqf9QKkMP1ZMCyAI8rLJqOghfErjeXZ/V7b8G
-         3+UJGIVN45jXx4FihVjY7Ynz2EZQTPL3vNkc2jWGFZHBfBMQkyOyocmbzb3aRh4jsSn5
-         1PUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpfFtvRdE8RPJHTwMS2/h4C6EKNpiWee8WfTDJCQ4u4dFh7qYxZEsOa60qwDmXxWwDaWBxKbdf14s=@lists.linux.dev
-X-Gm-Message-State: AOJu0YygSSgSiNtLQS3PeFqyTGHyFxDHQQotI7dc0xM7pQeTokmX/1IF
-	s9Ncp18aqtJzuWN8/ko++MEjKc//phEapX0NWOuJP6t/V0g9kEN3C6vm33ohCQibS774fXxjROc
-	Jv5RSrc9m8eZsNym55cpataYO0fUyMo53
-X-Google-Smtp-Source: AGHT+IE4tZcwjlIK0ZjoV3mK8y4/qf2Rvzx5itXTUvqKcrWs9eCIHm3hSbg6OoA8/znTqDqElp2h5eztY73UyfpqyFY=
-X-Received: by 2002:a5d:4d8c:0:b0:37d:33ab:de30 with SMTP id
- ffacd0b85a97d-37d5fec99e4mr8386614f8f.8.1729017373640; Tue, 15 Oct 2024
- 11:36:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeA6yj5h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB4EC4CEC6;
+	Tue, 15 Oct 2024 20:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729023118;
+	bh=Y6PhmBa/nN+iDUxTFqcR/Mb33RbOlJl9A4RsS6bV0b4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NeA6yj5hajfLYEdkGLWG8XB5N4aid73nUjDZb/ugsyZ3AQoALVnXt8x2U69teh7bp
+	 +Jxn6eME2rpnC6+5s7BU9sn0TueSyVekqQmYatz9jkvCTO794aSB0wivMugKOyBQcF
+	 f12fUI4D7cG8AqwuNBz90ooW8BLJGSzfYerkziVJS4gVWwzpr6llRoBCSoxKz8d+Fs
+	 0rPGTZgvQEw9IByGG03TdQUKWcviEE7gexwsotoi1Pu3fbgseCJrzYVZZZHzQHsDOS
+	 xg878mky4sIBNDtU8Y7CZD0UtD4jLkQQWx+cO7Oq3WKQ8DmXAZc3hC28g+NG7SbCgU
+	 uBbk2RUOwLABQ==
+Date: Tue, 15 Oct 2024 13:11:54 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org, kdevops@lists.linux.dev
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <Zw7MirnsHnhRveBB@bombadil.infradead.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+ <Zwd7GRyBtCwiAv1v@infradead.org>
+ <ZwfPPZrxHzQgYfx7@kernel.org>
+ <ZwjXz0dz-RldVNx0@infradead.org>
+ <ZwuIPZkjX0CfzhjS@kernel.org>
+ <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
+ <Zw1uBBcG-jAgxF_t@bombadil.infradead.org>
+ <Zw3rDS3GRWZe4CBu@bombadil.infradead.org>
+ <Zw4DlTTbz4QwhOvU@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241015113915.12623-1-yangtiezhu@loongson.cn> <20241015113915.12623-5-yangtiezhu@loongson.cn>
-In-Reply-To: <20241015113915.12623-5-yangtiezhu@loongson.cn>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 15 Oct 2024 11:36:02 -0700
-Message-ID: <CAADnVQK6wgy0e5nW220sSDXzxkKcga8zpCDqKmDd=8xdooP37g@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] bpf, core: Add weak arch_prepare_goto()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zw4DlTTbz4QwhOvU@kernel.org>
 
-On Tue, Oct 15, 2024 at 4:50=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> The objtool program needs to analysis the control flow of each
-> object file generated by compiler toolchain, it needs to know
-> all the locations that a branch instruction may jump into.
->
-> In the past, objtool only works on x86, where objtool can find
-> the relocation against the nearest instruction before the jump
-> instruction, which points to the goto table, because there is
-> only one table jump instruction even if there is more than one
-> computed goto in a function such as ___bpf_prog_run().
->
-> In fact, the compiler behaviors are different for various archs.
-> On RISC machines (for example LoongArch) this approach does not
-> work: with -fsection-anchors (often enabled at -O1 or above) the
-> relocation entry may actually points to the section anchor instead
-> of the table. Furthermore, objdump kernel/bpf/core.o shows that
-> there are many table jump instructions in ___bpf_prog_run() with
-> more than one computed gotos, but there are no relocations which
-> actually points to the table for some table jump instructions on
-> LoongArch.
->
-> For the jump table of switch cases, a GCC patch "LoongArch: Add
-> support to annotate tablejump" has been merged into the upstream
-> mainline, it makes life much easier with the additional section
-> ".discard.tablejump_annotate" which stores the jump info as pairs
-> of addresses, each pair contains the address of jump instruction
-> and the address of jump table.
->
-> For the jump table of computed gotos, it is indeed not so easy
-> to implement in the compiler, especially if there is more than
-> one computed goto in a function.
->
-> Without the help of compiler, in order to figure out the address
-> of goto table by interpreting the LoongArch machine code, add a
-> function arch_prepare_goto() for goto table, it is an empty weak
-> definition and is only overridden by archs that have special
-> requirements.
->
-> This is preparation for later patch on LoongArch, there is no any
-> effect for the other archs with this patch.
->
-> Suggested-by: Xi Ruoyao <xry111@xry111.site>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  kernel/bpf/core.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 5e77c58e0601..81e5d42619d5 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -1706,6 +1706,14 @@ bool bpf_opcode_in_insntable(u8 code)
->  }
->
->  #ifndef CONFIG_BPF_JIT_ALWAYS_ON
-> +/*
-> + * This symbol is an empty weak definition and is only overridden
-> + * by archs that have special requirements.
-> + */
-> +#ifndef arch_prepare_goto
-> +#define arch_prepare_goto()
-> +#endif
-> +
->  /**
->   *     ___bpf_prog_run - run eBPF program on a given context
->   *     @regs: is the array of MAX_BPF_EXT_REG eBPF pseudo-registers
-> @@ -1743,6 +1751,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct =
-bpf_insn *insn)
->  #define CONT_JMP ({ insn++; goto select_insn; })
->
->  select_insn:
-> +       arch_prepare_goto();
->         goto *jumptable[insn->code];
+On Tue, Oct 15, 2024 at 08:54:29AM +0300, Mike Rapoport wrote:
+> On Mon, Oct 14, 2024 at 09:09:49PM -0700, Luis Chamberlain wrote:
+> > Mike, please run this with kmemleak enabled and running, and also try to get
+> > tools/testing/selftests/kmod/kmod.sh to pass.
+> 
+> There was an issue with kmemleak, I fixed it here:
+> 
+> https://lore.kernel.org/linux-mm/20241009180816.83591-1-rppt@kernel.org/T/#m020884c1795218cc2be245e8091fead1cda3f3e4
 
-That looks fragile. There is no guarantee that compiler will keep
-asm statement next to indirect goto.
-It has all rights to move/copy such goto around.
-There are other parts in the kernel which are not annotated either:
-drm_exec_retry_on_contention(),
-drivers/misc/lkdtm/cfi.c
+Ah, so this was a side fix, not part of this series, thanks.
 
-You're arguing that it's hard to properly in the compiler,
-but that's the only option. It has to be done by the compiler.
+> > I run into silly boot issues with just a guest.
+> 
+> Was it kmemleak or something else?
+
+Both kmemleak and the kmod selftest failed, here is a run of the test
+with this patch series:
+
+https://github.com/linux-kdevops/linux-modules-kpd/actions/runs/11352286624/job/31574722735
+
+We now have automated tests generated when people post patches to
+linux-modules, but if you give me your github username you can push
+onto the linux-kdevops/linux-modules-kpd [0] repo a random branch once you
+have it ready, just cp -a the linux-ci-modules/.github [1] directory onto
+your branch before a push and that'll trigger a test run (you need to
+git add -f .github on your Linux branch) with our self-hosted runners.
+
+[0] https://github.com/linux-kdevops/linux-modules-kpd
+[1] https://github.com/linux-kdevops/kdevops-ci-modules
+
+  Luis
