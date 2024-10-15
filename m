@@ -1,126 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0E179CD
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 762A36AB8
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728958552; cv=none; b=r0MAWqd/TYdhddkqgGXt1Tc+uDl6El5hsuEk0xI5zjP8jQj7fd48W3VV3WI2i8HZqTUW2UyEvYrnUuuhzTS78tqbIR9MHwMMgaoP2tkmvwNg9d3SRb1X/pI17gXOW0lU+i3agKQbw1+ZWpLaGIBrGI+mZqCUxgWlM/YX7DKbGKY=
+	t=1728960847; cv=none; b=Dc4B4JCYHNXXCpz1eiAh7np4mLUk+rFcjvcWj55oiL0rr8GDmWsJDZfcHAekl25fkeeG1A7ahdHO0ERGPvc3L2tMl/ssa3BaC2wDU0vbBzclo/0TWV8vNtYGMys5KzSRrKlSMD5Q3tDbNVBTtzKtj5aqHHROpiH02UlS2SeKEKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728958552; c=relaxed/simple;
-	bh=zj+yKT66Ya6lE8e0vnuh5UqbKInuSzhnI7Xg6h665bc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CtTvetEwlvy8ZsAmNwcQr02/GY4AvtbkDLB4GtiYTx1OGVzOnt1M4n3IYq/nOv5L4j3uxcfY2wvrpzrOwYpooLhVB0vTkDA9Y2IniAQnRVnsVzyhLhToJdmQQAo2KKy6g0RlC1Zm/nZxImaOQf92RDMtxXyJzQhfDfPaWdT8sXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAVxhODn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAVxhODn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7641AC4CED2
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 02:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728958552;
-	bh=zj+yKT66Ya6lE8e0vnuh5UqbKInuSzhnI7Xg6h665bc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pAVxhODn/epIL4ZAHa1mqm+0EvAFdiIKLAHgRb8EeTeYRlzGp2hki6/gQu9q9/ZK/
-	 L32dYXlMN/0H4hTby7cwdCQK4ruiQglk1nAC6YYFkANsAi5FZvESPkfbaAYbtTUWlU
-	 F4jd+j9P8RoeD4ew/6b5kSmqAsNNcn8XjaDGKN/9MMnEEPT3zo7+AEEN0iHD2HGhVl
-	 wc/xLoieYSW7Ulmw4JJrJwBir2vUwJZxb8URdvUubbM75dGd7VSZcd3dJgA6C4mdkR
-	 O+oFPwSNpOLdgVKws1nCnU/yM50BHZwS3zTVB2hebvwesey8NSepoEP+jeHh1lnXZw
-	 uL1/nKKDSKzlg==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5c941623a5aso6822856a12.0
-        for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 19:15:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWyptxMiETjG39Fkd9mwvIlrC0K+zncqtihAtvLjhKxLZjBnEfaTsstIhxlWVvAPq9CLDQy8epFb2I=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5YzjXqz+QYBni/VbaS3Jo1k6V7WSUaPttkBfSDH9HyoCWSW/X
-	aeMuBBbFIbk1n9H5pi5uvikkTTG6ak41azwykXR5nCgymMKThYXuPMRyoSb0ltpa9Hyt6rt6tZN
-	DoL9g5CNNugVRKWsQQipu0AsKdhw=
-X-Google-Smtp-Source: AGHT+IHB9ev+VUIapJ7FJ/lYxOacP14DRgTA+8WKy/oS+q4Ei90J54hQUfqyaSpYCMxhQAA7jAhetAjk7RTHQwBSNdc=
-X-Received: by 2002:a17:907:7204:b0:a99:6958:a8ba with SMTP id
- a640c23a62f3a-a99a10ede1emr1682134466b.12.1728958550924; Mon, 14 Oct 2024
- 19:15:50 -0700 (PDT)
+	s=arc-20240116; t=1728960847; c=relaxed/simple;
+	bh=0v38X+P0bkrXw5mBZzXsi+J2x6dVtZM3Gva1z9FdAaQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DvyvSH5cbQFubBUYdOo5BFAxm6XlyCXAZgQdllpBLdsnhC1DMjgENPw5MgwU0Rg16agC2olsJijIf6vPPcGYStWREJ7MnC9GHqBdoPxZX2B8xaIx2TinldZru1IrmrwxScc3TvsWuP0Wwg+/g5VbM9dSPP+vcZEtFs54grfoTIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxTPBE2Q1njYkcAA--.45534S3;
+	Tue, 15 Oct 2024 10:53:56 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMAxSeZB2Q1nClAqAA--.8242S3;
+	Tue, 15 Oct 2024 10:53:56 +0800 (CST)
+Subject: Re: [PATCH v2 2/3] LoongArch: Add barrier between set_pte and memory
+ access
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-mm@kvack.org
+References: <20241014035855.1119220-1-maobibo@loongson.cn>
+ <20241014035855.1119220-3-maobibo@loongson.cn>
+ <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <e7c06bf4-897a-7060-61f9-97435d2af16e@loongson.cn>
+Date: Tue, 15 Oct 2024 10:53:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de> <20241014-kunit-loongarch-v1-1-1699b2ad6099@linutronix.de>
-In-Reply-To: <20241014-kunit-loongarch-v1-1-1699b2ad6099@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 15 Oct 2024 10:15:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4GvYVphn+srVFEdPboxCz-z04vXa-=e5ptJpdJZgPp=g@mail.gmail.com>
-Message-ID: <CAAhV-H4GvYVphn+srVFEdPboxCz-z04vXa-=e5ptJpdJZgPp=g@mail.gmail.com>
-Subject: Re: [PATCH 1/4] LoongArch: Don't crash in stack_top() for tasks
- without vDSO
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxSeZB2Q1nClAqAA--.8242S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw1ktw1kAFykJrWfWw15GFX_yoWrXF1Dpr
+	W2kas8Krs7WF4fXw1jvr13Wr1kX3srWF18Jw1FvryDCwsrXFy29ryxWrW8Wry3Xa4rJa1x
+	Cw4UKw15WFWUXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
 
-Hi, Thomas,
 
-I can take this patch to the loongarch tree, but I think others should
-get upstream via kselftests tree?
 
-Huacai
+On 2024/10/14 下午2:31, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Mon, Oct 14, 2024 at 11:59 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> It is possible to return a spurious fault if memory is accessed
+>> right after the pte is set. For user address space, pte is set
+>> in kernel space and memory is accessed in user space, there is
+>> long time for synchronization, no barrier needed. However for
+>> kernel address space, it is possible that memory is accessed
+>> right after the pte is set.
+>>
+>> Here flush_cache_vmap/flush_cache_vmap_early is used for
+>> synchronization.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
+>>   1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+>> index f8754d08a31a..53be231319ef 100644
+>> --- a/arch/loongarch/include/asm/cacheflush.h
+>> +++ b/arch/loongarch/include/asm/cacheflush.h
+>> @@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+>>   #define flush_cache_dup_mm(mm)                         do { } while (0)
+>>   #define flush_cache_range(vma, start, end)             do { } while (0)
+>>   #define flush_cache_page(vma, vmaddr, pfn)             do { } while (0)
+>> -#define flush_cache_vmap(start, end)                   do { } while (0)
+>>   #define flush_cache_vunmap(start, end)                 do { } while (0)
+>>   #define flush_icache_user_page(vma, page, addr, len)   do { } while (0)
+>>   #define flush_dcache_mmap_lock(mapping)                        do { } while (0)
+>>   #define flush_dcache_mmap_unlock(mapping)              do { } while (0)
+>>
+>> +/*
+>> + * It is possible for a kernel virtual mapping access to return a spurious
+>> + * fault if it's accessed right after the pte is set. The page fault handler
+>> + * does not expect this type of fault. flush_cache_vmap is not exactly the
+>> + * right place to put this, but it seems to work well enough.
+>> + */
+>> +static inline void flush_cache_vmap(unsigned long start, unsigned long end)
+>> +{
+>> +       smp_mb();
+>> +}
+>> +#define flush_cache_vmap flush_cache_vmap
+>> +#define flush_cache_vmap_early flush_cache_vmap
+>  From the history of flush_cache_vmap_early(), It seems only archs with
+> "virtual cache" (VIVT or VIPT) need this API, so LoongArch can be a
+> no-op here.
 
-On Mon, Oct 14, 2024 at 7:36=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Not all tasks have a vDSO mapped, for example kthreads never do.
-> If such a task ever ends up calling stack_top(), it will derefence the
-> NULL vdso pointer and crash.
->
-> This can for example happen when using kunit:
->
->         [<9000000000203874>] stack_top+0x58/0xa8
->         [<90000000002956cc>] arch_pick_mmap_layout+0x164/0x220
->         [<90000000003c284c>] kunit_vm_mmap_init+0x108/0x12c
->         [<90000000003c1fbc>] __kunit_add_resource+0x38/0x8c
->         [<90000000003c2704>] kunit_vm_mmap+0x88/0xc8
->         [<9000000000410b14>] usercopy_test_init+0xbc/0x25c
->         [<90000000003c1db4>] kunit_try_run_case+0x5c/0x184
->         [<90000000003c3d54>] kunit_generic_run_threadfn_adapter+0x24/0x48
->         [<900000000022e4bc>] kthread+0xc8/0xd4
->         [<9000000000200ce8>] ret_from_kernel_thread+0xc/0xa4
->
-> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
->  arch/loongarch/kernel/process.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
-ess.c
-> index f2ff8b5d591e4fd638109d2c98d75543c01a112c..6e58f65455c7ca3eae2e88ed8=
-52c8655a6701e5c 100644
-> --- a/arch/loongarch/kernel/process.c
-> +++ b/arch/loongarch/kernel/process.c
-> @@ -293,13 +293,15 @@ unsigned long stack_top(void)
->  {
->         unsigned long top =3D TASK_SIZE & PAGE_MASK;
->
-> -       /* Space for the VDSO & data page */
-> -       top -=3D PAGE_ALIGN(current->thread.vdso->size);
-> -       top -=3D VVAR_SIZE;
-> -
-> -       /* Space to randomize the VDSO base */
-> -       if (current->flags & PF_RANDOMIZE)
-> -               top -=3D VDSO_RANDOMIZE_SIZE;
-> +       if (current->thread.vdso) {
-> +               /* Space for the VDSO & data page */
-> +               top -=3D PAGE_ALIGN(current->thread.vdso->size);
-> +               top -=3D VVAR_SIZE;
-> +
-> +               /* Space to randomize the VDSO base */
-> +               if (current->flags & PF_RANDOMIZE)
-> +                       top -=3D VDSO_RANDOMIZE_SIZE;
-> +       }
->
->         return top;
->  }
->
-> --
-> 2.47.0
->
+Here is usage about flush_cache_vmap_early in file linux/mm/percpu.c,
+map the page and access it immediately. Do you think it should be noop 
+on LoongArch.
+
+rc = __pcpu_map_pages(unit_addr, &pages[unit * unit_pages],
+                                      unit_pages);
+if (rc < 0)
+     panic("failed to map percpu area, err=%d\n", rc);
+     flush_cache_vmap_early(unit_addr, unit_addr + ai->unit_size);
+     /* copy static data */
+     memcpy((void *)unit_addr, __per_cpu_load, ai->static_size);
+}
+
+
+> 
+> And I still think flush_cache_vunmap() should be a smp_mb(). A
+> smp_mb() in flush_cache_vmap() prevents subsequent accesses be
+> reordered before pte_set(), and a smp_mb() in flush_cache_vunmap()
+smp_mb() in flush_cache_vmap() does not prevent reorder. It is to flush 
+pipeline and let page table walker HW sync with data cache.
+
+For the following example.
+   rb = vmap(pages, nr_meta_pages + 2 * nr_data_pages,
+                   VM_MAP | VM_USERMAP, PAGE_KERNEL);
+   if (rb) {
+<<<<<<<<<<< * the sentence if (rb) can prevent reorder. Otherwise with 
+any API kmalloc/vmap/vmalloc and subsequent memory access, there will be 
+reorder issu. *
+       kmemleak_not_leak(pages);
+       rb->pages = pages;
+       rb->nr_pages = nr_pages;
+       return rb;
+   }
+
+> prevents preceding accesses be reordered after pte_clear(). This
+Can you give an example about such usage about flush_cache_vunmap()? and 
+we can continue to talk about it, else it is just guessing.
+
+Regards
+Bibo Mao
+> potential problem may not be seen from experiment, but it is needed in
+> theory.
+> 
+> Huacai
+> 
+>> +
+>>   #define cache_op(op, addr)                                             \
+>>          __asm__ __volatile__(                                           \
+>>          "       cacop   %0, %1                                  \n"     \
+>> --
+>> 2.39.3
+>>
+>>
+
