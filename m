@@ -1,146 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F148188717
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 06:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BB2C4C7E
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 07:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728973321; cv=none; b=jf9ubu8gB8Rg6zwAZjknmZyzSSKOwwDJmXePNJjOfl2TIpTaxTvhXQtUz8RV3I+5Xy52zvrrmOXhhKl8aURc557gqm6sCTbRkD2i3R3Hok4nRS5VQ83aGmm17TYgNITf4Lj/XdFPM0RllsIUeVT27+M52UzI6ZL5z41xh2Nq6uw=
+	t=1728977492; cv=none; b=fQmNKYN2Uh2XxbUvNXFGGgWRkRzqmlC0O43DWF0z4QAyksxaF5MuB7T82j5/8fOWphq7ytiA8iIq/3e2Qdig4M5FGb2cOUnesaXBjjjeU3jZFsPv5O+Q6IApO+75NEJl/xWMx9D9F/ZNFueXLuXzT5VD8T5TpQ6xhwgonQzlHVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728973321; c=relaxed/simple;
-	bh=r5ep8hIPLUp2ScoS8ec6XyMv9qekWzYDO4+6DZumzBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B360GmrQCXEJojDPfooL6ZM0soqLVAT1RcJf6xb3jbOJhCKV7eWVynAJq7tKF7db/+ed6nnEGNqC87JpkcDHoaOJTlkuHuN6Mdg771y+RF0V+mMdjFXosvP8tP6oVSfkyhYz1YYgl08eXnRbdW/430QaAO1Vn/QKMCaJi7nsOuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMHCvaTi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMHCvaTi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0DAC4CECD
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 06:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728973321;
-	bh=r5ep8hIPLUp2ScoS8ec6XyMv9qekWzYDO4+6DZumzBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MMHCvaTiithCmF4iISJ01BpIykfMiZ1jTLPl52MadFMosF35ki0T5JBc3rtKJmCJd
-	 /GH+0/01QPfjGX92liEykNHxvDNauURUc1G5ffhBIjnXf1tn/UkXktWZ8SKLNsP+Z+
-	 In+gaVprZuEBnXVMfGicqNBnGxhI0J3jGL13TKdEk8eTMduf8uaWT099q6TbyiTYjj
-	 eN7pHTQDEKJ+Rtptm/baBzuY+ubxpcgOnfzoGRZZ0dF3w94hisdiG2DfDNVxjvuKeA
-	 SUeaFYrQAZQvMRIfm5y0/JqunHwWNepnfIkAq709OikXvsBqCOO/7SoMs4nrIfRFjn
-	 a4B6dxMVJM+Zw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c42f406e29so6596014a12.2
-        for <loongarch@lists.linux.dev>; Mon, 14 Oct 2024 23:22:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfEkNvdGY0YSNVR1M9zeWOJPIGKT7NQZnYvdDLlicoFpxeDQsN+z8hJTYMRsbCQN9mem7P46D6tEo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+ch/aziTdZCev9M8dHWoS+SZM1fRdu54nVn4805LgdzuYG0p6
-	ay22xXWC+qzAbDlj19+QaESgbwSIq2wC+1+R9rAZu5/pFVTBtfn78vEIU+ghjvobijFF5MF4gWf
-	XooSRwdp/QUwNr/edk3+4SwMAp0E=
-X-Google-Smtp-Source: AGHT+IEAHX0yv7nr41knRcL/+W4g7qIAlul1M/cWLQg0bRbep2uEoaWBGSQFmWwljmm7lhuCdCGyCBV4ZVTl7N15/qM=
-X-Received: by 2002:a17:907:9722:b0:a9a:1f:12db with SMTP id
- a640c23a62f3a-a9a001f259fmr740373466b.16.1728973319696; Mon, 14 Oct 2024
- 23:21:59 -0700 (PDT)
+	s=arc-20240116; t=1728977492; c=relaxed/simple;
+	bh=qkl07GsDAQF6Pr/zHIiOpWct36waJvB8FxgzPaEqV0o=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=G1b5zTnpVAcaKSyN+qxx1CLJFlm/0fmuRtMB7p9O8LYaWLa804et3QD7mLAIX3q8OopzQ7xf+PmKXjSGISsQ3EqVpnAeKZ/kskp+UKiwilwk7Q/9EjfFZU+pymKNw2anAxEuMpW4oxYzpKjI32yH+/INSYyvrur7VOoZskSnpmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxFHFNGg5nqwcdAA--.41754S3;
+	Tue, 15 Oct 2024 15:31:25 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMCx3tVLGg5nbKAqAA--.21873S3;
+	Tue, 15 Oct 2024 15:31:23 +0800 (CST)
+Subject: Re: [PATCH 2/4] kunit: qemu_configs: add LoongArch config
+To: =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas.weissschuh@linutronix.de>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Brendan Higgins <brendan.higgins@linux.dev>, David Gow
+ <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
+ <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <0de2d738-0ace-3c17-8ee5-cc307725e27b@loongson.cn>
+Date: Tue, 15 Oct 2024 15:31:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
- <20241014-kunit-loongarch-v1-1-1699b2ad6099@linutronix.de>
- <CAAhV-H4GvYVphn+srVFEdPboxCz-z04vXa-=e5ptJpdJZgPp=g@mail.gmail.com> <20241015080942-1c451e52-39b4-473d-9919-6b03dbfb7008@linutronix.de>
-In-Reply-To: <20241015080942-1c451e52-39b4-473d-9919-6b03dbfb7008@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 15 Oct 2024 14:21:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5COGAgav6-u2oxMDnET466TiA61Zz00Uav-2JnKwkT9w@mail.gmail.com>
-Message-ID: <CAAhV-H5COGAgav6-u2oxMDnET466TiA61Zz00Uav-2JnKwkT9w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] LoongArch: Don't crash in stack_top() for tasks
- without vDSO
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	maobibo <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx3tVLGg5nbKAqAA--.21873S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZFWfAF4fKryfuF1ruFyUArc_yoW8Gr1xpr
+	WxZay5Kr48KF1fXws7Gryq9FWrGrs2kF42gFW3JryrWrZ8G348uw10g342vFnFy398t3WF
+	qFWvqFn0qF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDU
+	UUU
 
-On Tue, Oct 15, 2024 at 2:14=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Hi Huacai,
->
-> On Tue, Oct 15, 2024 at 10:15:39AM +0800, Huacai Chen wrote:
-> > I can take this patch to the loongarch tree, but I think others should
-> > get upstream via kselftests tree?
->
-> Yes, sounds good.
-> Could you take a look at patches 2 and 4, too?
+Hi Thomas,
 
-Bibo is more familiar with those, so +CC Bibo.
-This one is queued in the loongarch tree. Thanks.
+Thanks for work it out on LoongArch.
 
-Huacai
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
->
-> Thanks,
-> Thomas
->
-> > On Mon, Oct 14, 2024 at 7:36=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > Not all tasks have a vDSO mapped, for example kthreads never do.
-> > > If such a task ever ends up calling stack_top(), it will derefence th=
-e
-> > > NULL vdso pointer and crash.
-> > >
-> > > This can for example happen when using kunit:
-> > >
-> > >         [<9000000000203874>] stack_top+0x58/0xa8
-> > >         [<90000000002956cc>] arch_pick_mmap_layout+0x164/0x220
-> > >         [<90000000003c284c>] kunit_vm_mmap_init+0x108/0x12c
-> > >         [<90000000003c1fbc>] __kunit_add_resource+0x38/0x8c
-> > >         [<90000000003c2704>] kunit_vm_mmap+0x88/0xc8
-> > >         [<9000000000410b14>] usercopy_test_init+0xbc/0x25c
-> > >         [<90000000003c1db4>] kunit_try_run_case+0x5c/0x184
-> > >         [<90000000003c3d54>] kunit_generic_run_threadfn_adapter+0x24/=
-0x48
-> > >         [<900000000022e4bc>] kthread+0xc8/0xd4
-> > >         [<9000000000200ce8>] ret_from_kernel_thread+0xc/0xa4
-> > >
-> > > Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-> > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
->
-> > > ---
-> > >  arch/loongarch/kernel/process.c | 16 +++++++++-------
-> > >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/=
-process.c
-> > > index f2ff8b5d591e4fd638109d2c98d75543c01a112c..6e58f65455c7ca3eae2e8=
-8ed852c8655a6701e5c 100644
-> > > --- a/arch/loongarch/kernel/process.c
-> > > +++ b/arch/loongarch/kernel/process.c
-> > > @@ -293,13 +293,15 @@ unsigned long stack_top(void)
-> > >  {
-> > >         unsigned long top =3D TASK_SIZE & PAGE_MASK;
-> > >
-> > > -       /* Space for the VDSO & data page */
-> > > -       top -=3D PAGE_ALIGN(current->thread.vdso->size);
-> > > -       top -=3D VVAR_SIZE;
-> > > -
-> > > -       /* Space to randomize the VDSO base */
-> > > -       if (current->flags & PF_RANDOMIZE)
-> > > -               top -=3D VDSO_RANDOMIZE_SIZE;
-> > > +       if (current->thread.vdso) {
-> > > +               /* Space for the VDSO & data page */
-> > > +               top -=3D PAGE_ALIGN(current->thread.vdso->size);
-> > > +               top -=3D VVAR_SIZE;
-> > > +
-> > > +               /* Space to randomize the VDSO base */
-> > > +               if (current->flags & PF_RANDOMIZE)
-> > > +                       top -=3D VDSO_RANDOMIZE_SIZE;
-> > > +       }
-> > >
-> > >         return top;
-> > >  }
-> > >
-> > > --
-> > > 2.47.0
-> > >
+On 2024/10/14 下午7:36, Thomas Weißschuh wrote:
+> Add a basic config to run kunit tests on LoongArch.
+> This requires QEMU 9.1.0 or later for the necessary direct kernel boot
+> support.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>   tools/testing/kunit/qemu_configs/loongarch.py | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+> 
+> diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e7bb7c07819677dfdefac012821a732555813cae
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/loongarch.py
+> @@ -0,0 +1,16 @@
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
+> +			   kconfig='''
+> +CONFIG_EFI_STUB=n
+> +CONFIG_PCI_HOST_GENERIC=y
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_SERIAL_OF_PLATFORM=y
+> +''',
+> +			   qemu_arch='loongarch64',
+> +			   kernel_path='arch/loongarch/boot/vmlinux.elf',
+> +			   kernel_command_line='console=ttyS0',
+> +			   extra_qemu_params=[
+> +					   '-machine', 'virt',
+> +					   '-cpu', 'max',])
+> 
+
