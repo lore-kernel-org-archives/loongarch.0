@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 174EA1E8834
-	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 11:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5239A1E7C33
+	for <loongarch@lists.linux.dev>; Tue, 15 Oct 2024 11:39:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728992363; cv=none; b=Y3TWjeDHprUJVaHXp8RIHjIfr4Czx1Pv3X6ivAYmkZV1+wWOjHgI6bxEfE06K/2IuGsxDXlWjpSLRC0Ws1cF+yaxodnYnNeq/wj0SfvcTXdLJtebm5Luou0R+DZVX8aEgCX1V2CSO5Efdqc2eES0zrrgSyhHW3mae8Wxz/qJBT0=
+	t=1728992363; cv=none; b=bcYSyRaeYjQE+exvr5Mdp99RvinddfcJWJJUkVU6tsUv3XqI4sc3ER+JFHdoUfu0xJk+0E4e++qccu/N8NNjGgRK5bIiLY8PGP7MvZnhEwkGZY+K/IFp+o4Gww3C3jsBNaKCkEGfMWemzd2manBlelzmreGsZ1ynG90XXNsHlKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728992363; c=relaxed/simple;
-	bh=+QVfX6uapABdVeCjMpgWmzX0OQSpPJMdLuTtOhOojko=;
+	bh=BMzaHd/KZvfQw6XtDmSYagMqPYpWkf/ORu4doTVMsno=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nd77opW9tQspoz3qKFz6dn4rq/BgRBagLlgeiC9IjQ+6xSi2KjF1KAojHLzzkYAuuBa0ctJa+KcdK446ETAZBmbg8g/U46C83ETRNwxkOh7j01nD+f1D9xR9rl+AWyrKuuA5/6BpTpMuq+lr2FcR1HN1u3K/SuHHx6Hnz0VXUnA=
+	 MIME-Version; b=EcxmjV0ITSXUMTQ/udDylns6Skn8aVaQoze9Xwkcict5KSsNX3v7BBgJb/8x3OL1ys2O2AMuUCWNycr+pLuHlLV/5Fraw6zOn+XGbijE7kQODt4ipuv1N4RIvTnX2L6QII5DwYLH19oEiBTu6R5b5MB3yPuvJGlNiiPEVl+EggI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxjmtmVA5n538dAA--.42426S3;
-	Tue, 15 Oct 2024 19:39:18 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxFOlnVA5n7X8dAA--.43928S3;
+	Tue, 15 Oct 2024 19:39:19 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front2 (Coremail) with SMTP id qciowMCxbcdkVA5n6E0uAA--.9583S3;
-	Tue, 15 Oct 2024 19:39:17 +0800 (CST)
+	by front2 (Coremail) with SMTP id qciowMCxbcdkVA5n6E0uAA--.9583S4;
+	Tue, 15 Oct 2024 19:39:18 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -25,9 +25,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/6] objtool: Check various symbol types for jump table
-Date: Tue, 15 Oct 2024 19:39:10 +0800
-Message-ID: <20241015113915.12623-2-yangtiezhu@loongson.cn>
+Subject: [PATCH v1 2/6] objtool/LoongArch: Add support for jump table
+Date: Tue, 15 Oct 2024 19:39:11 +0800
+Message-ID: <20241015113915.12623-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241015113915.12623-1-yangtiezhu@loongson.cn>
 References: <20241015113915.12623-1-yangtiezhu@loongson.cn>
@@ -38,94 +38,128 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qciowMCxbcdkVA5n6E0uAA--.9583S3
+X-CM-TRANSID:qciowMCxbcdkVA5n6E0uAA--.9583S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFWDKF4kAF4kGrW3Aw4xGrX_yoW5GFykpF
-	sxG345Kr4Yqr1xWwnrtFZY9Fy3Gws7WFnrJrZrKr4Fv3sFvr1rKFWakw1ay3WDGr1Svw47
-	XF4Ygry7uF4UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw4rWw4UXF1UCw1xXr4fJFc_yoW5KrWkpF
+	W7C345Kr45XryfWw43ta18uryakws7WFy7Gry3Kr93Aw4aqF1rtFsayFn0yF15ursYyr4I
+	qr4fKr4UCF4DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-In the relocation section ".rela.rodata" of each .o file compiled with
-LoongArch toolchain, there are various symbol types such as STT_NOTYPE,
-STT_OBJECT, STT_FUNC in addition to the usual STT_SECTION, it needs to
-use reloc symbol offset instead of reloc addend to find the destination
-instruction in find_jump_table() and add_jump_table().
+The objtool program needs to analysis the control flow of each object
+file generated by compiler toolchain, if a jump table is used, objtool
+has to correlate the jump instruction with the table.
 
-This is preparation for later patch on LoongArch, there is no effect
-for the other archs with this patch.
+On x86 which is the only port supported by objtool before LoongArch,
+the relocation is directly on the jump instruction and to the table.
+But on LoongArch, the relocation is on some kind of instruction prior
+to the jump instruction, with scheduling it is not easy to tell the
+offset of that instruction from the jump instruction. Furthermore,
+because LoongArch has -fsection-anchors the relocation may actually
+points to a section anchor instead of the table itself. So it needs
+some non-trivial data flow analysis in objtool without special support
+of compiler.
 
+The good news is that the GCC patch "LoongArch: Add support to annotate
+tablejump" has been merged into the upstream mainline, the changes are
+very trivial in GCC, it makes life much easier for jump table support
+of objtool on LoongArch.
+
+By now, there is an additional section ".discard.tablejump_annotate" to
+store the jump info as pairs of addresses, each pair contains the address
+of jump instruction and the address of jump table.
+
+In order to find switch table, it is easy to parse the relocation section
+".rela.discard.tablejump_annotate" to get table_sec and table_offset, the
+rest process is somehow like x86.
+
+Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=0ee028f55640
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/objtool/check.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ tools/objtool/arch/loongarch/special.c | 53 +++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 6604f5d038aa..cda7306d07c2 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2079,6 +2079,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 	unsigned int prev_offset = 0;
- 	struct reloc *reloc = table;
- 	struct alternative *alt;
-+	unsigned long offset;
- 
- 	/*
- 	 * Each @reloc is a switch table relocation which points to the target
-@@ -2094,12 +2095,16 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
- 			break;
- 
-+		if (reloc->sym->type == STT_SECTION)
-+			offset = reloc_addend(reloc);
-+		else
-+			offset = reloc->sym->offset;
+diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
+index 9bba1e9318e0..65b1ed297d57 100644
+--- a/tools/objtool/arch/loongarch/special.c
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -1,4 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
++#include <string.h>
 +
- 		/* Detect function pointers from contiguous objects: */
--		if (reloc->sym->sec == pfunc->sec &&
--		    reloc_addend(reloc) == pfunc->offset)
-+		if (reloc->sym->sec == pfunc->sec && offset == pfunc->offset)
- 			break;
+ #include <objtool/special.h>
  
--		dest_insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
-+		dest_insn = find_insn(file, reloc->sym->sec, offset);
- 		if (!dest_insn)
- 			break;
+ bool arch_support_alt_relocation(struct special_alt *special_alt,
+@@ -8,8 +10,57 @@ bool arch_support_alt_relocation(struct special_alt *special_alt,
+ 	return false;
+ }
  
-@@ -2137,6 +2142,7 @@ static struct reloc *find_jump_table(struct objtool_file *file,
++static struct reloc *find_reloc_by_table_annotate(struct objtool_file *file,
++						  struct instruction *insn)
++{
++	struct section *rsec;
++	struct reloc *reloc;
++	unsigned long offset;
++
++	rsec = find_section_by_name(file->elf, ".rela.discard.tablejump_annotate");
++	if (!rsec)
++		return NULL;
++
++	for_each_reloc(rsec, reloc) {
++		if (reloc->sym->sec->rodata)
++			continue;
++
++		if (strcmp(insn->sec->name, reloc->sym->sec->name))
++			continue;
++
++		offset = reloc->sym->offset;
++		if (insn->offset == offset) {
++			reloc++;
++			return reloc;
++		}
++	}
++
++	return NULL;
++}
++
+ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 				     struct instruction *insn)
  {
- 	struct reloc *table_reloc;
- 	struct instruction *dest_insn, *orig_insn = insn;
-+	unsigned long offset;
- 
- 	/*
- 	 * Backward search using the @first_jump_src links, these help avoid
-@@ -2160,7 +2166,13 @@ static struct reloc *find_jump_table(struct objtool_file *file,
- 		table_reloc = arch_find_switch_table(file, insn);
- 		if (!table_reloc)
- 			continue;
--		dest_insn = find_insn(file, table_reloc->sym->sec, reloc_addend(table_reloc));
+-	return NULL;
++	struct reloc *annotate_reloc;
++	struct reloc *rodata_reloc;
++	struct section *table_sec;
++	unsigned long table_offset;
 +
-+		if (table_reloc->sym->type == STT_SECTION)
-+			offset = reloc_addend(table_reloc);
-+		else
-+			offset = table_reloc->sym->offset;
++	annotate_reloc = find_reloc_by_table_annotate(file, insn);
++	if (!annotate_reloc)
++		return NULL;
 +
-+		dest_insn = find_insn(file, table_reloc->sym->sec, offset);
- 		if (!dest_insn || !insn_func(dest_insn) || insn_func(dest_insn)->pfunc != func)
- 			continue;
- 
++	table_sec = annotate_reloc->sym->sec;
++	table_offset = annotate_reloc->sym->offset;
++
++	/*
++	 * Each table entry has a rela associated with it.  The rela
++	 * should reference text in the same function as the original
++	 * instruction.
++	 */
++	rodata_reloc = find_reloc_by_dest(file->elf, table_sec, table_offset);
++	if (!rodata_reloc)
++		return NULL;
++
++	return rodata_reloc;
+ }
 -- 
 2.42.0
 
