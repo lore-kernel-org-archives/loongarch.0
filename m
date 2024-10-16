@@ -1,242 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109571C175C
-	for <loongarch@lists.linux.dev>; Wed, 16 Oct 2024 07:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2C41C9DC8;
+	Wed, 16 Oct 2024 10:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729063848; cv=none; b=UL7jDPEsU7vOqmRddpQEsrSserEMMQ1wGZyWMm9P00uP7bkXCZVAX0d4LisxF0a5H5VpYWJIkEq7w/QCKZ032XV6SXEVL58ivogLuzyEYcqlYp+MJgP8Q7vAxrbnnvPsLs4I4PruJpfxsI7jSoRD6R5b1PaGhf76grBmEmsYaMo=
+	t=1729075491; cv=none; b=aVJRpJeeuCfA088n8apUXU0J5NhbVjFC9mVuT2HJGHLyYg6mnblpCpdRvSAw9GhAd1joR7jWlTKI+mvLjXF30seoUMpqAT5CzOpijDDdcDSoYMOi2005uf17czDoaIAmSBs0ZVkaabazWsQ/eSy86ou5vq3CnfZOg5JlQ7MuPq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729063848; c=relaxed/simple;
-	bh=BiGEJtQfZvYa4sIn+ELPpiWdnPMj6XIZ6gDNFCL2g7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nyt65lb85o8NEPDG803XCEG+rkaHD/Hpa+jahrNVcNgDA9abM3jZvqNRezeNvcvnFR3PK/idRDX66jfBnecT0s8ixaDe/HbhCx2RhPO8B5VDX6Bj62pZNPqzCAGnURChrgG6x+xlxV5RS1HUVF7WpqONbXuJtAFsDPIaYpkjajs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwGflVpJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729075491; c=relaxed/simple;
+	bh=REY0yUs/eb8jGqS7iPmNLu0O7M3zjCPm2K1uOQnlIfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YfWqYCZ0cda3DGVYPs/1s0FKMi5bcMzksfVhVb4m9JqnkyLoKypMooWDasO+QH4lkeuomcSO3EsCGRhsBuK76A/7ZWyq3+1BRSR4FxRaGOAZQKiK4RJSp3s/O4dcYZhMj5IIAIvpfwBHMQ5W/pJ1MHu50HBhB8mFYDHZZsHrQl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tu7R+TE5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwGflVpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2038C4CECE
-	for <loongarch@lists.linux.dev>; Wed, 16 Oct 2024 07:30:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tu7R+TE5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A439EC4CEC5;
+	Wed, 16 Oct 2024 10:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729063847;
-	bh=BiGEJtQfZvYa4sIn+ELPpiWdnPMj6XIZ6gDNFCL2g7c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CwGflVpJh7LdN4I9Xl1gO9GtAJ5sp/Pj1wWtRWj7AZTJYOMBiJ7hI7Gfs0OezN/s+
-	 5eVdehTpV2kEIcdASKxhe0En5amuWbF33nVlKx1OPj2hAjHSH5fgOxdtaPmJaZKcHx
-	 QKLhexut+hS98/UIPBKZNOWnlrHCkgbQFKeUb/wJhfYsqV2kGJmLHli9F/G1UTxok1
-	 cpRHSwO1u5hAizGJeoTjVdXj2C+gBjT7Skz+qXqBoApopamoYqPu7/CqLq1SI+VAaS
-	 uBAEpM77Ft7SeUElZMfTdtCNfFXeDxiTw7wZtC7QVa4yrCkvoMckE2v/miyicXQ9oq
-	 ZMYpA5mmsg3QA==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c96b2a11e7so4719051a12.3
-        for <loongarch@lists.linux.dev>; Wed, 16 Oct 2024 00:30:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXIp7mOxaZjEImSqLuVWwbdUe2tND2pgZKdfhFMnsDfh5hLj72gjFeWHf5BxUMlbPQ3nQ3FBDvJyE8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyJcIWhyMFqolCeVmh4qamp/5g0ISReBmtE+GxKUbEJFvBdO6RQ
-	/g4ml2/3S7NTKpbDK59JKGAMc5+aU+DBcqGc1wfq7pwuO5WSJB+jG1HunVq728DuGBgJ9mG4EZt
-	SUToTuO7UOn48cJu2BaiKUf64GSI=
-X-Google-Smtp-Source: AGHT+IGGgI/RALmibbLHEgiBVUT9M21MDnSkFq4Au5DeP01Xn6lKa0uHZWLkvAovFIylEUT/MwPrEjLDn03ZvFDfMUs=
-X-Received: by 2002:a17:907:848:b0:a99:3318:e7c3 with SMTP id
- a640c23a62f3a-a99e3e4c294mr1543126666b.43.1729063846118; Wed, 16 Oct 2024
- 00:30:46 -0700 (PDT)
+	s=k20201202; t=1729075491;
+	bh=REY0yUs/eb8jGqS7iPmNLu0O7M3zjCPm2K1uOQnlIfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tu7R+TE5l4rMjxEyzDDIH6fpt5ZNmC1c7xJx7SQDlI9CzDxMt5yOQnVYNAW9hdV8J
+	 OeaDo9Hr12xvhUKQgId1tm4/CewmMpWCLOk3wgiUJwXyvWq4QlFB+Uh/pOgd95q0F1
+	 zyNekZpzro5oJZ2JEUpyorUNUZLep/wgUFWwzFdkGHL+BF7JNIRifDS33KF/5qGC2v
+	 jYrUvBLfr/xZZ4LfL7bWflm1YPeuIUzgGbLP+eWNj7AbuOUcsPGdhrgXCl4uUGrO38
+	 j9PqqivnqqmoYQsjfU9edkgWUJ3Ic8/MVLUiY8xlv+pKvbZQmwKQdokHEcp8hCdCUB
+	 nLnfE4mx3UK6g==
+Date: Wed, 16 Oct 2024 13:40:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org, kdevops@lists.linux.dev
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <Zw-YN4JIltntY52Y@kernel.org>
+References: <20241009180816.83591-8-rppt@kernel.org>
+ <Zwd7GRyBtCwiAv1v@infradead.org>
+ <ZwfPPZrxHzQgYfx7@kernel.org>
+ <ZwjXz0dz-RldVNx0@infradead.org>
+ <ZwuIPZkjX0CfzhjS@kernel.org>
+ <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
+ <Zw1uBBcG-jAgxF_t@bombadil.infradead.org>
+ <Zw3rDS3GRWZe4CBu@bombadil.infradead.org>
+ <Zw4DlTTbz4QwhOvU@kernel.org>
+ <Zw7MirnsHnhRveBB@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014035855.1119220-1-maobibo@loongson.cn> <20241014035855.1119220-3-maobibo@loongson.cn>
- <CAAhV-H6nkiw_eOS3jFdojJsCJOA2yiprQmaT5c=SnPhJTOyKkQ@mail.gmail.com>
- <e7c06bf4-897a-7060-61f9-97435d2af16e@loongson.cn> <CAAhV-H6H=Q=1KN5q8kR3j55Ky--FRNifCT93axhqE=vNMArDaQ@mail.gmail.com>
- <1b4070c9-921e-65e3-c2a7-dab486d4f17f@loongson.cn>
-In-Reply-To: <1b4070c9-921e-65e3-c2a7-dab486d4f17f@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Oct 2024 15:30:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5fx14iUM_5e36sO-kd8VWpFLG_Qmi5JUHKiPRqrPQsoA@mail.gmail.com>
-Message-ID: <CAAhV-H5fx14iUM_5e36sO-kd8VWpFLG_Qmi5JUHKiPRqrPQsoA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] LoongArch: Add barrier between set_pte and memory access
-To: maobibo <maobibo@loongson.cn>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zw7MirnsHnhRveBB@bombadil.infradead.org>
 
-On Wed, Oct 16, 2024 at 2:09=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/10/15 =E4=B8=8B=E5=8D=888:27, Huacai Chen wrote:
-> > On Tue, Oct 15, 2024 at 10:54=E2=80=AFAM maobibo <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2024/10/14 =E4=B8=8B=E5=8D=882:31, Huacai Chen wrote:
-> >>> Hi, Bibo,
-> >>>
-> >>> On Mon, Oct 14, 2024 at 11:59=E2=80=AFAM Bibo Mao <maobibo@loongson.c=
-n> wrote:
-> >>>>
-> >>>> It is possible to return a spurious fault if memory is accessed
-> >>>> right after the pte is set. For user address space, pte is set
-> >>>> in kernel space and memory is accessed in user space, there is
-> >>>> long time for synchronization, no barrier needed. However for
-> >>>> kernel address space, it is possible that memory is accessed
-> >>>> right after the pte is set.
-> >>>>
-> >>>> Here flush_cache_vmap/flush_cache_vmap_early is used for
-> >>>> synchronization.
-> >>>>
-> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>> ---
-> >>>>    arch/loongarch/include/asm/cacheflush.h | 14 +++++++++++++-
-> >>>>    1 file changed, 13 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarc=
-h/include/asm/cacheflush.h
-> >>>> index f8754d08a31a..53be231319ef 100644
-> >>>> --- a/arch/loongarch/include/asm/cacheflush.h
-> >>>> +++ b/arch/loongarch/include/asm/cacheflush.h
-> >>>> @@ -42,12 +42,24 @@ void local_flush_icache_range(unsigned long star=
-t, unsigned long end);
-> >>>>    #define flush_cache_dup_mm(mm)                         do { } whi=
-le (0)
-> >>>>    #define flush_cache_range(vma, start, end)             do { } whi=
-le (0)
-> >>>>    #define flush_cache_page(vma, vmaddr, pfn)             do { } whi=
-le (0)
-> >>>> -#define flush_cache_vmap(start, end)                   do { } while=
- (0)
-> >>>>    #define flush_cache_vunmap(start, end)                 do { } whi=
-le (0)
-> >>>>    #define flush_icache_user_page(vma, page, addr, len)   do { } whi=
-le (0)
-> >>>>    #define flush_dcache_mmap_lock(mapping)                        do=
- { } while (0)
-> >>>>    #define flush_dcache_mmap_unlock(mapping)              do { } whi=
-le (0)
-> >>>>
-> >>>> +/*
-> >>>> + * It is possible for a kernel virtual mapping access to return a s=
-purious
-> >>>> + * fault if it's accessed right after the pte is set. The page faul=
-t handler
-> >>>> + * does not expect this type of fault. flush_cache_vmap is not exac=
-tly the
-> >>>> + * right place to put this, but it seems to work well enough.
-> >>>> + */
-> >>>> +static inline void flush_cache_vmap(unsigned long start, unsigned l=
-ong end)
-> >>>> +{
-> >>>> +       smp_mb();
-> >>>> +}
-> >>>> +#define flush_cache_vmap flush_cache_vmap
-> >>>> +#define flush_cache_vmap_early flush_cache_vmap
-> >>>   From the history of flush_cache_vmap_early(), It seems only archs w=
-ith
-> >>> "virtual cache" (VIVT or VIPT) need this API, so LoongArch can be a
-> >>> no-op here.
-> > OK,  flush_cache_vmap_early() also needs smp_mb().
-> >
-> >>
-> >> Here is usage about flush_cache_vmap_early in file linux/mm/percpu.c,
-> >> map the page and access it immediately. Do you think it should be noop
-> >> on LoongArch.
-> >>
-> >> rc =3D __pcpu_map_pages(unit_addr, &pages[unit * unit_pages],
-> >>                                        unit_pages);
-> >> if (rc < 0)
-> >>       panic("failed to map percpu area, err=3D%d\n", rc);
-> >>       flush_cache_vmap_early(unit_addr, unit_addr + ai->unit_size);
-> >>       /* copy static data */
-> >>       memcpy((void *)unit_addr, __per_cpu_load, ai->static_size);
-> >> }
-> >>
-> >>
-> >>>
-> >>> And I still think flush_cache_vunmap() should be a smp_mb(). A
-> >>> smp_mb() in flush_cache_vmap() prevents subsequent accesses be
-> >>> reordered before pte_set(), and a smp_mb() in flush_cache_vunmap()
-> >> smp_mb() in flush_cache_vmap() does not prevent reorder. It is to flus=
-h
-> >> pipeline and let page table walker HW sync with data cache.
-> >>
-> >> For the following example.
-> >>     rb =3D vmap(pages, nr_meta_pages + 2 * nr_data_pages,
-> >>                     VM_MAP | VM_USERMAP, PAGE_KERNEL);
-> >>     if (rb) {
-> >> <<<<<<<<<<< * the sentence if (rb) can prevent reorder. Otherwise with
-> >> any API kmalloc/vmap/vmalloc and subsequent memory access, there will =
-be
-> >> reorder issu. *
-> >>         kmemleak_not_leak(pages);
-> >>         rb->pages =3D pages;
-> >>         rb->nr_pages =3D nr_pages;
-> >>         return rb;
-> >>     }
-> >>
-> >>> prevents preceding accesses be reordered after pte_clear(). This
-> >> Can you give an example about such usage about flush_cache_vunmap()? a=
-nd
-> >> we can continue to talk about it, else it is just guessing.
-> > Since we cannot reach a consensus, and the flush_cache_* API look very
-> > strange for this purpose (Yes, I know PowerPC does it like this, but
-> > ARM64 doesn't). I prefer to still use the ARM64 method which means add
-> > a dbar in set_pte(). Of course the performance will be a little worse,
-> > but still better than the old version, and it is more robust.
-> >
-> > I know you are very busy, so if you have no time you don't need to
-> > send V3, I can just do a small modification on the 3rd patch.
-> No, I will send V3 by myself. And I will drop the this patch in this
-> patchset since by actual test vmalloc_test works well even without this
-> patch on 3C5000 Dual-way, also weak function kernel_pte_init will be
-> replaced with inline function rebased on
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patc=
-hes/mm-define-general-function-pxd_init.patch
-This patch is in Andrew's mm-unstable branch. As far I know,
-mm-unstable is for next (6.13) and mm-stable is for current (6.12).
+On Tue, Oct 15, 2024 at 01:11:54PM -0700, Luis Chamberlain wrote:
+> On Tue, Oct 15, 2024 at 08:54:29AM +0300, Mike Rapoport wrote:
+> > On Mon, Oct 14, 2024 at 09:09:49PM -0700, Luis Chamberlain wrote:
+> > > Mike, please run this with kmemleak enabled and running, and also try to get
+> > > tools/testing/selftests/kmod/kmod.sh to pass.
+> > 
+> > There was an issue with kmemleak, I fixed it here:
+> > 
+> > https://lore.kernel.org/linux-mm/20241009180816.83591-1-rppt@kernel.org/T/#m020884c1795218cc2be245e8091fead1cda3f3e4
+> 
+> Ah, so this was a side fix, not part of this series, thanks.
+> 
+> > > I run into silly boot issues with just a guest.
+> > 
+> > Was it kmemleak or something else?
+> 
+> Both kmemleak and the kmod selftest failed, here is a run of the test
+> with this patch series:
+> 
+> https://github.com/linux-kdevops/linux-modules-kpd/actions/runs/11352286624/job/31574722735
 
-But this series is bugfix, so it is for current (6.12).
+Is there a kernel log to look at? Could not find it in the run report
+ 
+>   Luis
 
->
-> I dislike the copy-paste method without further understanding :(,
-> although I also copy and paste code, but as least I try best to
-> understand it.
-
-I dislike too. But in order to make this series be in 6.12, it is
-better to keep copy-paste, and then update the refactoring patch to V2
-for Andrew (rebase and drop is normal for mm-unstable).
-
-
-Huacai
-
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>> potential problem may not be seen from experiment, but it is needed i=
-n
-> >>> theory.
-> >>>
-> >>> Huacai
-> >>>
-> >>>> +
-> >>>>    #define cache_op(op, addr)                                       =
-      \
-> >>>>           __asm__ __volatile__(                                     =
-      \
-> >>>>           "       cacop   %0, %1                                  \n=
-"     \
-> >>>> --
-> >>>> 2.39.3
-> >>>>
-> >>>>
-> >>
-> >>
->
+-- 
+Sincerely yours,
+Mike.
