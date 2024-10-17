@@ -1,417 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F22770FE
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 03:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9268E194A4B
+	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 07:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729137409; cv=none; b=EQs5E67iWgQPyB0fnQPGPDzxAnS83QPNZJdiFwPbrnsqTdV7QGtIR/k/1mraOzReCDDd7fF0BhqnDv5Len73AGSgp6RiQa0F1JZzUWfC3g8KqodhH6TTZLVLIVlzDaEyIS8PvB0FQOJxxVtyg9IblWtRbTUIQz89p5Al3DlvK/Q=
+	t=1729149875; cv=none; b=pM0gKKT+9A/105wUuvhTInPFamkSwwWQ91aZpoaM+b5b6D27EJ4qGadULKLFZISuYy4oZuWe11FViIfUO3rPuFK7Gzw7pSm7nPtiJw+OPnzkm1fhkkq4gCzn2wyjzu68NSKuuXBj5nqWRVXq/XtvrLtDKPLkY0YnSyES9cAwiWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729137409; c=relaxed/simple;
-	bh=6hr70Ag3kxYqybM4nhHqAbarsyTCbyztPp4eZJbnTQ4=;
+	s=arc-20240116; t=1729149875; c=relaxed/simple;
+	bh=x66cSWBny6IJkXQEExzI20gFGhKd45eSLF/nX4QufjQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cAqgXoRJ+TM8zBT+k1gVMbQUQc7iChZhAT9eUM7h2tHSS1cIkumqsi3ROzSt2xuQ0cJqT2rDJUKWKgkBle4sPn4hEFxScKVdzIy9m2eL7AQEy8FDLDwVQCDIo6QNIlX96SWKXKbmpOa1pKhz9LzZQzRuAqf/DO4D7JTqfJk+WYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQhAEA/w; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=EZQ6Y6eGH3hDo7yAHsTo1pn0KPxNWxHmdeoYxV8F0se2mRYgT9zAPDy7/lVSickMsF/H0Hl25xblChwJJSmQ+Lj6laKxfUHNtSuuzdGKBMMnKQCmaZ0M7KQbDo4qbSrDEGrfkjnfMB6n+Pyvv192CJKKNJD16f3Zir1T5WFUqig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A15bgglN; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQhAEA/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACC89C4CECE
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 03:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729137408;
-	bh=6hr70Ag3kxYqybM4nhHqAbarsyTCbyztPp4eZJbnTQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lQhAEA/w2qo4Gpux3Qocs0K5IlcvWSLC0M6oR3GmSPgnVBK554UZLJpke048MWNod
-	 JZMm2bJWRRWniddJgaAqfoPDjXC+bqt2kO3hHYQY8mhWesZmtZUSk4OEgZjoMXTN/u
-	 dsaYV0F9R5RMPDKTjcxzIvjgS/QiWDBM6gZLwZnprXW7Ey4FhwxcKs7rea5izq/VjE
-	 7oY+83PbJdk//UDQUckm2eCqe10RQI5dtFEzatvA2h4OMdF8scn4VIsAp0w2Qv0/tk
-	 5BCxhlrj3Kvd5gN12JY6LlNa2ZLhV5TbCnrygILqHT2yhFcbvsBl3O0fM4bKtkUwYv
-	 KvLLXQjP3cxWA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a99f646ff1bso59917366b.2
-        for <loongarch@lists.linux.dev>; Wed, 16 Oct 2024 20:56:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIJdwGYSnWdTf2YdrzEo9+AQkSTs4FERXKFuRca0pQ1NosIwpTce9L4tQhysYn1dnw/wdV7TMnsgE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxsQ9qIsz69vUpiuc9K4k/+81Q4+c43c+0jYlqLe+5Vnx38sIVy
-	p3rrhfiEor6aeI/343t0VjScEBEMG5avCDPzoYEWr+BmDATQMTQbJ0hkPA4aUeuoS2nYV+8KPAv
-	aPS03uj8dBcJVtwtKZPECzIY4ugU=
-X-Google-Smtp-Source: AGHT+IFEmYckEe4cFjjwNKv3PxQ1KcXgg+SxFe7ocJ9nuhNmruQMXEUZ3ODDz7HXgNRxni1rVoyDbA9nFPZtVnKFtIM=
-X-Received: by 2002:a17:907:d1a:b0:a9a:72c:f36f with SMTP id
- a640c23a62f3a-a9a072cf878mr1375357366b.50.1729137407046; Wed, 16 Oct 2024
- 20:56:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A15bgglN"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6cbe700dcc3so4304126d6.3
+        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 00:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729149871; x=1729754671; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GQUO9ICL5y1/6xMw9VC3baMJpfMo7grfZAsEi9VMxMY=;
+        b=A15bgglNHm/Vz6mDtbyTSwnkE/K0MZ0QnuOLFE5rd/JcS0YK7mxhiLKSinRiVK04zo
+         2VTeHkf11vCKpa+mFSi7Uqf9ggUWtv0lAUgnBK1nSMCEdb7VWtU61oPuTSN3hTy7WqGa
+         FukKy57O5yIjpF86XsrSoTxWGoSpJrlciRDTZJkFtjN2rlBWfwzWc9nY56toeyLNJw67
+         aYXIBCGIX2edj/CEQ+/FyGggO2xzDlmwPusUCkTDpLgo6TT2PtWb8lUVa/0KlsvOWd5A
+         ibSzhILz0ynWCd8he5lg1Sf+h8mAjZKM3p+X75aY31s+ooHp6oc2jijBt4X3856+DL38
+         iiTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729149871; x=1729754671;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GQUO9ICL5y1/6xMw9VC3baMJpfMo7grfZAsEi9VMxMY=;
+        b=H9yc6ET/4QHZQOtKPnrlFAHuHCLKFRI5spNlKXp1ZI2zClbKz5oIEbckJ+onYqkCKZ
+         AUtc92xmDujGZ2LBFj5Cp8o8Jqd/lTi1erlV2NjSjD4Eyv8EEKRaJJfyKmXuSDWo2Hc8
+         m5zTiauGY3jU79Jumd9QgUDIGHTQi20eHrY69rd594b+RS6QAGmZbS/CBHcqnwh0Eldr
+         JVZdMDTzEv3ebMjkCRHfQSiZKP7cNm9pZs4maLzYd9vrPQCovlr8JGnQb0xDgnOwTGgd
+         EAC7siPHPGtLz6qYOCLhHJyharHdzrtxG1dqN8nDb5uWhrKPhPclpZIWaa0XCzgtnu+4
+         mBLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDXtLoDbrnK/WiSrjVMWLeOwZKDk1aV6J41aXn/4TZKcL5xddHBogGp/wFryCYMJo5q+NDzODwaME=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz94gjZ70eX7Az5FDgf1kQvN8veNHH3lh4vXAMFJ9iiYXHJ1wQV
+	GHc/Ws4ICKS6AJJFwmnjL9M9ULxgiec8c2NkNRdKvVA5ahmN4WNMt4ZICTQFD4MDCPM0ESwN3Z3
+	Ranzf921b2JG90LJZdPGwc8IdAM2Zu37vWYEb
+X-Google-Smtp-Source: AGHT+IEnWC2rmwzmldSNPXviP268N87DK/6rkHgkqCe0pQbXrKOXgWJjhjLS5e43IJIKNz7FzzMZLLVceTPD6CZpmZU=
+X-Received: by 2002:a05:6214:4410:b0:6cb:e9b3:626c with SMTP id
+ 6a1803df08f44-6cc2b8bc8d9mr83896166d6.7.1729149871377; Thu, 17 Oct 2024
+ 00:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014063328.1216497-1-maobibo@loongson.cn> <CAAhV-H5_SUnrf0PwOUFOA0EumKvGOmgqUq=Cx61Ub5AW=MPo=A@mail.gmail.com>
- <24ea8b02-8c94-d561-cef0-01044b610a1e@loongson.cn> <CAAhV-H7NqzO-FLmYoUySp5KYKJM+aN_s7g4i+qBixx5jwnbW=Q@mail.gmail.com>
- <5c1e0199-24ce-50d2-1cbc-5c9949a17563@loongson.cn> <CAAhV-H6JKNBgsLdAsKHp3rttpY+0KGabac2m87-PsT4FH_H=Ew@mail.gmail.com>
- <035be759-3adc-d224-43f8-1888822f6492@loongson.cn> <CAAhV-H4esrPeWAM1ExA2xAsUQ_Aitncro-i31e4wJO5OOVcwEQ@mail.gmail.com>
- <0cccad0d-8632-5e3f-ba07-3e96ad5d8263@loongson.cn> <CAAhV-H73s=vdremKcJRc_xAcyN2_qZMHvM_aVmzX619Jb52B-Q@mail.gmail.com>
- <28523dc2-5fae-cf0f-0bd7-5a1978406356@loongson.cn>
-In-Reply-To: <28523dc2-5fae-cf0f-0bd7-5a1978406356@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 17 Oct 2024 11:56:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7+4xg3R-JJhRgVfvnj4Yy_BRBe3-2H8Jf5xwz9_oj9CQ@mail.gmail.com>
-Message-ID: <CAAhV-H7+4xg3R-JJhRgVfvnj4Yy_BRBe3-2H8Jf5xwz9_oj9CQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix cpu hotplug issue
-To: maobibo <maobibo@loongson.cn>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, lixianglai@loongson.cn, 
-	WANG Xuerui <kernel@xen0n.name>
+References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de> <20241014-kunit-loongarch-v1-3-1699b2ad6099@linutronix.de>
+In-Reply-To: <20241014-kunit-loongarch-v1-3-1699b2ad6099@linutronix.de>
+From: David Gow <davidgow@google.com>
+Date: Thu, 17 Oct 2024 15:24:19 +0800
+Message-ID: <CABVgOSnKyXMAm5ZG+v4QLMyduf-ftv=fsp9ET9orvTCgwETwsA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] kunit: tool: Allow overriding the shutdown mode from
+ qemu config
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Rae Moar <rmoar@google.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000df4a7a0624a713e1"
+
+--000000000000df4a7a0624a713e1
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 17, 2024 at 11:02=E2=80=AFAM maobibo <maobibo@loongson.cn> wrot=
-e:
+On Mon, 14 Oct 2024 at 19:37, Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
 >
+> Not all platforms support machine reboot.
+> If it a proper reboot is not supported the machine will hang.
+> Allow the QEMU configuration to override the necessary shutdown mode for
+> the specific system under test.
 >
->
-> On 2024/10/14 =E4=B8=8B=E5=8D=886:11, Huacai Chen wrote:
-> > On Mon, Oct 14, 2024 at 6:01=E2=80=AFPM maobibo <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2024/10/14 =E4=B8=8B=E5=8D=885:29, Huacai Chen wrote:
-> >>> On Mon, Oct 14, 2024 at 5:12=E2=80=AFPM maobibo <maobibo@loongson.cn>=
- wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2024/10/14 =E4=B8=8B=E5=8D=884:23, Huacai Chen wrote:
-> >>>>> On Mon, Oct 14, 2024 at 4:01=E2=80=AFPM maobibo <maobibo@loongson.c=
-n> wrote:
-> >>>>>>
-> >>>>>> Huacai,
-> >>>>>>
-> >>>>>> On 2024/10/14 =E4=B8=8B=E5=8D=883:39, Huacai Chen wrote:
-> >>>>>>> On Mon, Oct 14, 2024 at 3:21=E2=80=AFPM maobibo <maobibo@loongson=
-.cn> wrote:
-> >>>>>>>>
-> >>>>>>>> Huacai,
-> >>>>>>>>
-> >>>>>>>> On 2024/10/14 =E4=B8=8B=E5=8D=883:05, Huacai Chen wrote:
-> >>>>>>>>> Hi, Bibo,
-> >>>>>>>>>
-> >>>>>>>>> I'm a little confused, so please correct me if I'm wrong.
-> >>>>>>>>>
-> >>>>>>>>> On Mon, Oct 14, 2024 at 2:33=E2=80=AFPM Bibo Mao <maobibo@loong=
-son.cn> wrote:
-> >>>>>>>>>>
-> >>>>>>>>>> On LoongArch system, there are two places to set cpu numa node=
-. One
-> >>>>>>>>>> is in arch specified function smp_prepare_boot_cpu(), the othe=
-r is
-> >>>>>>>>>> in generic function early_numa_node_init(). The latter will ov=
-erwrite
-> >>>>>>>>>> the numa node information.
-> >>>>>>>>>>
-> >>>>>>>>>> However for hot-added cpu, cpu_logical_map() fails to its phys=
-ical
-> >>>>>>>>>> cpuid at beginning since it is not enabled in ACPI MADT table.=
- So
-> >>>>>>>>>> function early_cpu_to_node() also fails to get its numa node f=
-or
-> >>>>>>>>>> hot-added cpu, and generic function early_numa_node_init() wil=
-l
-> >>>>>>>>>> overwrite incorrect numa node.
-> >>>>>>>>> For hot-added cpus, we will call acpi_map_cpu() -->
-> >>>>>>>>> acpi_map_cpu2node() --> set_cpuid_to_node(), and set_cpuid_to_n=
-ode()
-> >>>>>>>>> operates on __cpuid_to_node[]. So I think early_cpu_to_node() s=
-hould
-> >>>>>>>>> be correct?
-> >>>>>>>>
-> >>>>>>>> __cpuid_to_node[] is correct which is physical cpuid to numa nod=
-e,
-> >>>>>>>> however cpu_logical_map(cpu) is not set. It fails to get physica=
-l cpuid
-> >>>>>>>> from logic cpu.
-> >>>>>>>>
-> >>>>>>>> int early_cpu_to_node(int cpu)
-> >>>>>>>> {
-> >>>>>>>>              int physid =3D cpu_logical_map(cpu);
-> >>>>>>>>
-> >>>>>>>> <<<<<<<<<<< Here physid is -1.
-> >>>>>>> early_cpu_to_node() is not supposed to be called after boot, and =
-if it
-> >>>>>> Which calls early_cpu_to_node() after boot?
-> >>>>>>
-> >>>>>>> is really needed, I think a better solution is:
-> >>>>>>>
-> >>>>>>> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel=
-/acpi.c
-> >>>>>>> index f1a74b80f22c..998cf45fd3b7 100644
-> >>>>>>> --- a/arch/loongarch/kernel/acpi.c
-> >>>>>>> +++ b/arch/loongarch/kernel/acpi.c
-> >>>>>>> @@ -311,6 +311,8 @@ static int __ref acpi_map_cpu2node(acpi_handl=
-e
-> >>>>>>> handle, int cpu, int physid)
-> >>>>>>>
-> >>>>>>>             nid =3D acpi_get_node(handle);
-> >>>>>>>             if (nid !=3D NUMA_NO_NODE) {
-> >>>>>>> +               __cpu_number_map[physid] =3D cpu;
-> >>>>>>> +               __cpu_logical_map[cpu] =3D physid;
-> >>>>>> This does not solve the problem. The above has been done in functi=
-on
-> >>>>>> cpu =3D set_processor_mask(physid, ACPI_MADT_ENABLED);
-> >>>>>>
-> >>>>>> static int set_processor_mask(u32 id, u32 flags)
-> >>>>>> {
-> >>>>>> ...
-> >>>>>>             if (flags & ACPI_MADT_ENABLED) {
-> >>>>>>                     num_processors++;
-> >>>>>>                     set_cpu_present(cpu, true);
-> >>>>>>                     __cpu_number_map[cpuid] =3D cpu;
-> >>>>>>                     __cpu_logical_map[cpu] =3D cpuid;
-> >>>>>>             }
-> >>>>>>
-> >>>>>> The problem is that
-> >>>>>>             smp_prepare_boot_cpu(); /* arch-specific boot-cpu hook=
-s */
-> >>>>>> <<<<<<<<<<<<<<<<
-> >>>>>> set_cpu_numa_node() is called in function smp_prepare_boot_cpu()
-> >>>>>>
-> >>>>>>             early_numa_node_init();
-> >>>>>>
-> >>>>>> static void __init early_numa_node_init(void)
-> >>>>>> {
-> >>>>>> #ifdef CONFIG_USE_PERCPU_NUMA_NODE_ID
-> >>>>>> #ifndef cpu_to_node
-> >>>>>>             int cpu;
-> >>>>>>
-> >>>>>>             /* The early_cpu_to_node() should be ready here. */
-> >>>>>>             for_each_possible_cpu(cpu)
-> >>>>>>                     set_cpu_numa_node(cpu, early_cpu_to_node(cpu))=
-;
-> >>>>>> <<<<<<<<<<<<<<<<
-> >>>>>> * however here early_cpu_to_node is -1, so that cpu_to_node(cpu) w=
-ill
-> >>>>>> always return -1 in late. *, which causes cpu hotadd problem.
-> >>>>> Still confused. For ACPI_MADT_ENABLED cpus, everything is right aft=
-er
-> >>>>> early_numa_node_init(). For !ACPI_MADT_ENABLED cpus, cpu_to_node()
-> >>>>> returns -1 after early_numa_node_init() and before hot-add, but if
-> >>>>> acpi_map_cpu() do things right, cpu_to_node() should still work wel=
-l
-> >>>>> after hot-add.
-> >>>> yes, if "_PXM" information for hot-add cpu handle exist, it works we=
-ll.
-> >>>>
-> >>>> However if "_PXM" information does not exist, it falls back to legac=
-y
-> >>>> method from smp_prepare_boot_cpu(). However cpu_numa_node informatio=
-n is
-> >>>> overwritten with -1 by later function early_numa_node_init().
-> >>> OK, now I finally get the key point. But no _PXM should be treated as
-> >>> a BIOS bug, right?
-> >> Currently if no numa information is added in qemu command line, there
-> >> will be no "_PXM" information for hot-added cpu. Such as for this comm=
-and:
-> >>     qemu-system-loongarch64 -m 4096 -smp
-> >> 1,maxcpus=3D4,sockets=3D1,cores=3D4,threads=3D1
-> >>>
-> >>>   From comments we can see:
-> >>>
-> >>>                    * If possible cpus > present cpus here (e.g. some =
-possible
-> >>>                    * cpus will be added by cpu-hotplug later), for po=
-ssible but
-> >>>                    * not present cpus, early_cpu_to_node will return =
-NUMA_NO_NODE,
-> >>>                    * and we just map them to online nodes in round-ro=
-bin way.
-> >>>                    * Once hotplugged, new correct mapping will be bui=
-lt for them.
-> >>>
-> >>> This means even with this patch, cpu_to_node() can return a "valid"
-> >>> node rather than NUMA_NO_NODE, but this round-robin node is still an
-> >>> incorrect node.
-> >> The round-robin node is not standard, may it is copied from x86, I do
-> >> not know how to use it however. At least SRAT tables provides numa
-> >> information only that there is not logical cpu allocated in SRAT table
-> >> parsing. How about something like this?
-> > This looks better, but maybe Jianmin has a best solution?
-> >
-> >>
-> >> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi=
-.c
-> >> index f1a74b80f22c..bb9fdd318998 100644
-> >> --- a/arch/loongarch/kernel/acpi.c
-> >> +++ b/arch/loongarch/kernel/acpi.c
-> >> @@ -310,6 +310,12 @@ static int __ref acpi_map_cpu2node(acpi_handle
-> >> handle, int cpu, int physid)
-> >>           int nid;
-> >>
-> >>           nid =3D acpi_get_node(handle);
-> >> +       /*
-> >> +        * Fall back to srat numa node information if _PXM is not prov=
-ided
-> > The comments may be wrong? I think SRAT node information is equal to _P=
-XM.
->
-> "_PXM" information does not belong to SRAT table, it is in DSDT CPU
-> device table.
-> For numa system "_PXM" information is required, however for uma system
-> "_PXM" information is not required since there is only one memory node.
->
-> X86 linux uses SRAT table for present cpus and _PXM information in cpu
-> device for hot-added cpus. For uma system, _PXM is absent and rr method
-> is used for online nodes, its value is correct still since there is only
-> one memory node.
-OK, then you can send this modification as V2, and we can wait for
-Jianmin's comments.
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
 
-Huacai
+I suspect there's a cleaner way of doing this, but it'd involve
+changing all of the architectures over, so this looks good for now.
 
+Reviewed-by: David Gow <davidgow@google.com>
+
+Cheers,
+-- David
+
+
+>  tools/testing/kunit/kunit_kernel.py | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> Regards
-> Bibo Mao
+> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/ku=
+nit_kernel.py
+> index 61931c4926fd6645f2c62dd13f9842a432ec4167..e76d7894b6c5195ece49f0d8c=
+7ac35130df428a9 100644
+> --- a/tools/testing/kunit/kunit_kernel.py
+> +++ b/tools/testing/kunit/kunit_kernel.py
+> @@ -105,7 +105,9 @@ class LinuxSourceTreeOperationsQemu(LinuxSourceTreeOp=
+erations):
+>                 self._kconfig =3D qemu_arch_params.kconfig
+>                 self._qemu_arch =3D qemu_arch_params.qemu_arch
+>                 self._kernel_path =3D qemu_arch_params.kernel_path
+> -               self._kernel_command_line =3D qemu_arch_params.kernel_com=
+mand_line + ' kunit_shutdown=3Dreboot'
+> +               self._kernel_command_line =3D qemu_arch_params.kernel_com=
+mand_line
+> +               if 'kunit_shutdown=3D' not in self._kernel_command_line:
+> +                       self._kernel_command_line +=3D ' kunit_shutdown=
+=3Dreboot'
+>                 self._extra_qemu_params =3D qemu_arch_params.extra_qemu_p=
+arams
+>                 self._serial =3D qemu_arch_params.serial
 >
-> >> +        */
-> >> +       if (nid !=3D NUMA_NO_NODE)
-> >> +               nid =3D __cpuid_to_node[physid];
-> >> +
-> >>           if (nid !=3D NUMA_NO_NODE) {
-> > Maybe this condition can be removed now?
-> >
-> > Huacai
-> >
-> >>                   set_cpuid_to_node(physid, nid);
-> >>                   node_set(nid, numa_nodes_parsed);
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>>
-> >>>>> Huacai
-> >>>>>>
-> >>>>>> Regards
-> >>>>>> Bibo Mao
-> >>>>>>
-> >>>>>>
-> >>>>>>>                     set_cpuid_to_node(physid, nid);
-> >>>>>>>                     node_set(nid, numa_nodes_parsed);
-> >>>>>>>                     set_cpu_numa_node(cpu, nid);
-> >>>>>>>
-> >>>>>>> Huacai
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>>              if (physid < 0)
-> >>>>>>>>                      return NUMA_NO_NODE;
-> >>>>>>>>
-> >>>>>>>>              return __cpuid_to_node[physid];
-> >>>>>>>> }
-> >>>>>>>>
-> >>>>>>>> Regards
-> >>>>>>>> Bibo Mao
-> >>>>>>>>>
-> >>>>>>>>> Huacai
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Here static array __cpu_to_node and api set_early_cpu_to_node(=
-)
-> >>>>>>>>>> is added, so that early_cpu_to_node is consistent with functio=
-n
-> >>>>>>>>>> cpu_to_node() for hot-added cpu.
-> >>>>>>>>>>
-> >>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>>>>> ---
-> >>>>>>>>>>       arch/loongarch/include/asm/numa.h |  2 ++
-> >>>>>>>>>>       arch/loongarch/kernel/numa.c      | 10 +++++++++-
-> >>>>>>>>>>       arch/loongarch/kernel/smp.c       |  1 +
-> >>>>>>>>>>       3 files changed, 12 insertions(+), 1 deletion(-)
-> >>>>>>>>>>
-> >>>>>>>>>> diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarc=
-h/include/asm/numa.h
-> >>>>>>>>>> index b5f9de9f102e..e8e6fcfb006a 100644
-> >>>>>>>>>> --- a/arch/loongarch/include/asm/numa.h
-> >>>>>>>>>> +++ b/arch/loongarch/include/asm/numa.h
-> >>>>>>>>>> @@ -50,6 +50,7 @@ static inline void set_cpuid_to_node(int cpu=
-id, s16 node)
-> >>>>>>>>>>       }
-> >>>>>>>>>>
-> >>>>>>>>>>       extern int early_cpu_to_node(int cpu);
-> >>>>>>>>>> +extern void set_early_cpu_to_node(int cpu, s16 node);
-> >>>>>>>>>>
-> >>>>>>>>>>       #else
-> >>>>>>>>>>
-> >>>>>>>>>> @@ -57,6 +58,7 @@ static inline void early_numa_add_cpu(int cp=
-uid, s16 node)    { }
-> >>>>>>>>>>       static inline void numa_add_cpu(unsigned int cpu)       =
-       { }
-> >>>>>>>>>>       static inline void numa_remove_cpu(unsigned int cpu)    =
-       { }
-> >>>>>>>>>>       static inline void set_cpuid_to_node(int cpuid, s16 node=
-)      { }
-> >>>>>>>>>> +static inline void set_early_cpu_to_node(int cpu, s16 node)  =
-  { }
-> >>>>>>>>>>
-> >>>>>>>>>>       static inline int early_cpu_to_node(int cpu)
-> >>>>>>>>>>       {
-> >>>>>>>>>> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/ker=
-nel/numa.c
-> >>>>>>>>>> index 84fe7f854820..62508aace644 100644
-> >>>>>>>>>> --- a/arch/loongarch/kernel/numa.c
-> >>>>>>>>>> +++ b/arch/loongarch/kernel/numa.c
-> >>>>>>>>>> @@ -34,6 +34,9 @@ static struct numa_meminfo numa_meminfo;
-> >>>>>>>>>>       cpumask_t cpus_on_node[MAX_NUMNODES];
-> >>>>>>>>>>       cpumask_t phys_cpus_on_node[MAX_NUMNODES];
-> >>>>>>>>>>       EXPORT_SYMBOL(cpus_on_node);
-> >>>>>>>>>> +static s16 __cpu_to_node[NR_CPUS] =3D {
-> >>>>>>>>>> +       [0 ... CONFIG_NR_CPUS - 1] =3D NUMA_NO_NODE
-> >>>>>>>>>> +};
-> >>>>>>>>>>
-> >>>>>>>>>>       /*
-> >>>>>>>>>>        * apicid, cpu, node mappings
-> >>>>>>>>>> @@ -117,11 +120,16 @@ int early_cpu_to_node(int cpu)
-> >>>>>>>>>>              int physid =3D cpu_logical_map(cpu);
-> >>>>>>>>>>
-> >>>>>>>>>>              if (physid < 0)
-> >>>>>>>>>> -               return NUMA_NO_NODE;
-> >>>>>>>>>> +               return __cpu_to_node[cpu];
-> >>>>>>>>>>
-> >>>>>>>>>>              return __cpuid_to_node[physid];
-> >>>>>>>>>>       }
-> >>>>>>>>>>
-> >>>>>>>>>> +void set_early_cpu_to_node(int cpu, s16 node)
-> >>>>>>>>>> +{
-> >>>>>>>>>> +       __cpu_to_node[cpu] =3D node;
-> >>>>>>>>>> +}
-> >>>>>>>>>> +
-> >>>>>>>>>>       void __init early_numa_add_cpu(int cpuid, s16 node)
-> >>>>>>>>>>       {
-> >>>>>>>>>>              int cpu =3D __cpu_number_map[cpuid];
-> >>>>>>>>>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kern=
-el/smp.c
-> >>>>>>>>>> index 9afc2d8b3414..998668be858c 100644
-> >>>>>>>>>> --- a/arch/loongarch/kernel/smp.c
-> >>>>>>>>>> +++ b/arch/loongarch/kernel/smp.c
-> >>>>>>>>>> @@ -512,6 +512,7 @@ void __init smp_prepare_boot_cpu(void)
-> >>>>>>>>>>                              set_cpu_numa_node(cpu, node);
-> >>>>>>>>>>                      else {
-> >>>>>>>>>>                              set_cpu_numa_node(cpu, rr_node);
-> >>>>>>>>>> +                       set_early_cpu_to_node(cpu, rr_node);
-> >>>>>>>>>>                              rr_node =3D next_node_in(rr_node,=
- node_online_map);
-> >>>>>>>>>>                      }
-> >>>>>>>>>>              }
-> >>>>>>>>>>
-> >>>>>>>>>> base-commit: 6485cf5ea253d40d507cd71253c9568c5470cd27
-> >>>>>>>>>> --
-> >>>>>>>>>> 2.39.3
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>
-> >>>>
-> >>
 >
+> --
+> 2.47.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/kunit-dev/20241014-kunit-loongarch-v1-3-1699b2ad6099%40linutronix.de.
+
+--000000000000df4a7a0624a713e1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
+4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
+mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
+KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
+VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
+ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
+vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
+BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
+OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
+1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
+ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
+BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
+18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
+bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
+AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
+BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
+A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
+MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
+jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
+0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
+jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
+jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
+C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
+NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
+zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
+A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
+hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
+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
+erg7AgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
+/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFKFQnbTpSq0q
+cOYnlrbegXJIIvA6MFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
+BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
+MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
+LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
+bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
+FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQBR
+nRJBmUP+IpudtmSQ/R55Sv0qv8TO9zHTlIdsIf2Gc/zeCi0SamUQkFWb01d7Q+20kcpxNzwV6M7y
+hDRk5uuVFvtVxOrmbhflCo0uBpD9vz/symtfJYZLNyvSDi1PIVrwGNpyRrD0W6VQJxzzsBTwsO+S
+XWN3+x70+QDf7+zovW7KF0/y8QYD6PIN7Y9LRUXct0HKhatkHmO3w6MSJatnqSvsjffIwpNecUMo
+h10c6Etz17b7tbGdxdxLw8njN+UnfoFp3v4irrafB6jkArRfsR5TscZUUKej0ihl7mXEKUBmClkP
+ndcbXHFxS6WTkpjvl7Jjja8DdWJSJmdEWUnFjnQnDrqLqvYjeVMS/8IBF57eyT6yEPrMzA+Zd+f5
+hnM7HuBSGvVHv+c/rlHVp0S364DBGXj11obl7nKgL9D59QwC5/kNJ1whoKwsATUSepanzALdOTn3
+BavXUVE38e4c90il44T1bphqtLfmHZ1T5ZwxjtjzNMKy0Mb9j/jcFxfibCISYbnk661FBe38bhYj
+0DhqINx2fw0bwhpfFGADOZDe5DVhI7AIW/kEMHuIgAJ/HPgyn1+tldOPWiFLQbTNNBnfGv9sDPz0
+hWV2vSAXq35i+JS06BCkbGfE5ci6zFy4pt8fmqMGKFH/t3ELCTYo116lqUTDcVC8DAWN8E55aDGC
+AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
+BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAZ6Vqszmp/3gGFW0sCFu
+eDANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgr77llRbM3SScDQ2OKpuGGZkbKZkP
+B8KplKG4i+wOFkAwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQx
+MDE3MDcyNDMxWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
+BAIBMA0GCSqGSIb3DQEBAQUABIIBAJlYiSsGWUvV85KGJBQ3jduLI2j0whpj7++dEtOnuQY1ljqx
+VU18L4uD6kVOP8Uet0fleGQgpLrAZ3Bis2yDm9EOX2B63aHzUA9N7t4YWyTSBWp31paqt+6kp8/p
+j4RiGQfbelUOwZmTOyJ6MkdaDUAwDfHhJC/Hdi+jPDlXIbge8G9GQ4qg26mXF6cbkuR40h1lBKOp
+EE7Pd+c3hK6VJho4+Be29ERNIbUA+jHlmfz7Lm2e9pbfNXk4YLFQSuSSsAVpJYLu7pvTkuE8g48J
+F0sa0OTleJSA3J8SxmE0Lhx5pC4puwwbZ3rYZ4sDyXjF2QSF5WxokobztSlCVYZPfVE=
+--000000000000df4a7a0624a713e1--
