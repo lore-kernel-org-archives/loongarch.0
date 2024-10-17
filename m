@@ -1,132 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C821DF98C
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 17:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F25322738A
+	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 19:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729186825; cv=none; b=KddG8Hd/ahBIUcUOYQAY1tl+FRQ+lhyTvJTpEaxR5BmIANTygcxbAc5bbAdN9hSF+HbFe62ysu0nGjCpJHO255XGxcTq3K5Gw8i60bJlM01f7PnhjmHcBAykdHvkuZvB++81opHwlYf9r/eJ1p7Ck8IjRyqKsD0Qs2ZWOomfpWc=
+	t=1729193539; cv=none; b=pnTuaBJOZPzwHNJPFvoprsM6GVEVx/PtiYsvReVhsQGnsNoccDmTFoFNXBpc5SnPQdxT6LyD0NclM2XTcUGunWeJSd30r4i7WDnaofwUBtLuP/YBBsDj/2ZJ3ByDGAxoqSoLXnCeMIlqJ39TtL4Mct9Mv9Y1Y+1YAPYv3DKyB9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729186825; c=relaxed/simple;
-	bh=dLn9d36dm2CDpdmYI4TuowHAHoMiQT1DP6ItK2LTOeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VuKd316A7y1fXyJtunV+xGZbhjL5zYKTnZ7KqoJLQyj9KwLGKH9L0sOv2tNZArsib9KYlKd+KRSyDt+v6qguKKu3ajGBsCdnGlllcMSxQmvqgvQCgXZ1I7atW6w43i0O2lcF9FwyPjrqkR+5kopsxgb5H5jyNzTh98C69SYjKVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JfDKBTN7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729193539; c=relaxed/simple;
+	bh=vcUXd5tt9utnmCVe/nP6iWVCPF6al6ngb6a3ypPbz8U=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=EkSTrxF5koE9gPkP8EQpCq16vRZ868laPMKwhgETj5/4GxXxsuj9z/XoMl9VsPv3fO2dhL1Z0ILNPtZlpu8m+5ixm2GCzT6SQT9gGVf/Pql2vGgiBgrTNAg9xrhZqT3+WgS0JIpRGHL7mzVq5VMr/qOx+QfMRCkG8gk7HMo0Ero=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=13DL5/IV; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JfDKBTN7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729186820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Me+6kqYD5L+igZgkevVfUHfhQZBz6G5zZyQw2Dfa0gs=;
-	b=JfDKBTN7EKK/7g00ZbFVAOFGAj+sX09EJtPKbT1THPVZu04ZswRCfPXhcSzgAHfWsJdEmo
-	+7We6LKORBxOOwyFJOnzKJqG4ivYQ08lR1n3IEFl+JuOni0sHCZqcDyWTjNRj2eVqB6vOa
-	xwMQ/v1Rer+86A6jIrUtOByGNFJNPmQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-356-TfZZk39ZPsOuI6ww6Da2mg-1; Thu, 17 Oct 2024 13:40:18 -0400
-X-MC-Unique: TfZZk39ZPsOuI6ww6Da2mg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43151e4ef43so8349235e9.3
-        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 10:40:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="13DL5/IV"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71e579abb99so932009b3a.2
+        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 12:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1729193535; x=1729798335; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
+        b=13DL5/IVcdKiwK3SMjdrH45M4ZanjiadF/+UlqxfErARTd4usAsuEdyt1wSrk/2wc/
+         sITmrwVReX9tll3UbIgb20u5ersBLwmZogaaNIz+CKVGbUQQ6P8IDDLgO1tpxciAYx6f
+         eTZiW51IxijbpeLvH/Vudu5QaHn/Ue1x4Td3Z++xRCYlwLJTKmiTK59pcBirU4cPixr5
+         Y9NVl3Zi/eLUsJdl8YgVezBkSUyP7f+1IgwYxUFsTUIONY8A0cKTKJeeY9NkMnlQdHTr
+         EZG8L6RBm1UyLXJyg9bv1uEv0l0ZSmODoByyGL7a+buDNjdNz2CRKoGY91rQh1dE3IYZ
+         Kvxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729186817; x=1729791617;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Me+6kqYD5L+igZgkevVfUHfhQZBz6G5zZyQw2Dfa0gs=;
-        b=f4GWsofqg5Jp5Cpp/HT/GrC1anTR3R6JAWwa68TnikHTRG8RUQY1tVIkt4XWqXTmCj
-         jBPWYWDjp9tsTtItw3ifAgoOK4ntR6sULwgME1pPxhnV9NzbGKvaeElYSL9Cp7eD4kVO
-         bh9fEGJD7gvN2lZarPqRnb82XErttyS3+aRFsA5Rzakrc/VReyxBtXLthq0vXNikRXKs
-         FG6h0EiyZYB7sxQKYowKk8UcGe0P8+x/MFXBTUSI5KBlERM1d5BugML+jaumjIbb89B4
-         QfSRyFobgGfRLC+72p5wZzUEq0jPX8wETzrU4S/Xm+YsGVAyo0nzBd13a80+Naz+m8oP
-         vxqw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6nX7fJKWOiTH29pYmxefi1OHuWJZGIgJJ5BlCxVfjI9OZ1gCi8QOpq7tKt3KwiLZfMscNDn+Ho08=@lists.linux.dev
-X-Gm-Message-State: AOJu0YydkmbcnIVR/7kMCJ1VObvauq21PfiE65hldT2z2mAgwH6ZOIeJ
-	y1nwcxCbBDPu5OqJM6Djl0ioE6KRiLDWFN2YtyVWeOpYiZ+TS2c33PgmuSm0S6aPuTfMiTGe3tN
-	WJ7nfuhGixT1Ws0ohxv56Yq73Ig8D9x995RatC3b3j/FSnb/xqTW1HvuD0Z/c0QR2q2n+dZ1QaN
-	tQWf0uyJ/K9G+ASRC0bM+5ne4S+uHL/Eif
-X-Received: by 2002:a05:600c:1d8e:b0:431:57d2:d7b4 with SMTP id 5b1f17b1804b1-43157d2d7b9mr36507045e9.26.1729186817334;
-        Thu, 17 Oct 2024 10:40:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJXjIUBFBzWhc81QoCH/SVoEivw8XmjKVFXrcy86zA+s4Bvx/9zH7hnQ9Z4/zbRof1LT4xgUF82luj5UeBHDI=
-X-Received: by 2002:a05:600c:1d8e:b0:431:57d2:d7b4 with SMTP id
- 5b1f17b1804b1-43157d2d7b9mr36506735e9.26.1729186816975; Thu, 17 Oct 2024
- 10:40:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729193535; x=1729798335;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
+        b=vhOuLLGn/kSNf89LvJ3FESw/mqnwMCPXUmiySkMueUlP2HMqWSxefxY+rjC7eLede1
+         oA/5nUjhEDsHHeUQkLSa5jSjZ+0GR+sKmLul8F7UtD3swuGW/vG/mMm1O3UU3REBekKh
+         RjfSVCBK7EaM/TlGQLViliELv6EfZ/zDfChpishrxsVU2UN61xa2v/+Qht1PLBOwLb9r
+         BO+F7EiisSaF1z5S4bRR4Zoy1Z8RTSh//LEbHSXmRdrRLLmXuZo6T54UPncm+UI5Xpwi
+         GgYn9loW7732Yq8ZUp7QY4i3Jg8LF1Y96bgkGKwL7ZBJbrqNKjUjJfBtTXF6UTm/t11f
+         GpXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ6FXuna2E7zIR2OxXSTqx03BZp/ynAL0AOjska7/AGBzt3LvhkyNG5cci7L9u6hzHDvwuYnB6d+k=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy17LgJENFPKm/Rw313VszizOLyJuQcKiSPDQwu6XKxK/69lNqM
+	QR8M384fvp7LJmac0qNCupiqlFfcRHfs4bPdSRYaEOha+X1VeATWxqYBbV07KzY=
+X-Google-Smtp-Source: AGHT+IEYQqSWyT9DM1JblvCRXie6c7wEQ7WCCMd8WOwGbnCY29CemQ9nchGTw3++94PPWZqamrgDPA==
+X-Received: by 2002:a05:6a00:2d25:b0:71e:5950:97d2 with SMTP id d2e1a72fcca58-71ea3328e08mr68611b3a.17.1729193534443;
+        Thu, 17 Oct 2024 12:32:14 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea34a7fa8sm9965b3a.184.2024.10.17.12.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
+Date: Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
+X-Google-Original-Date: Thu, 17 Oct 2024 12:32:02 PDT (-0700)
+Subject:     Re: [PATCH v11 4/5] jump_label: adjust inline asm to be consistent
+In-Reply-To: <20241015-tracepoint-v11-4-cceb65820089@google.com>
+CC: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+  peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, Ard Biesheuvel <ardb@kernel.org>,
+  ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+  gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+  linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+  Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, ubizjak@gmail.com,
+  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+  oliver.upton@linux.dev, Mark Rutland <mark.rutland@arm.com>, ryan.roberts@arm.com, tabba@google.com,
+  linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  apatel@ventanamicro.com, ajones@ventanamicro.com, alexghiti@rivosinc.com,
+  Conor Dooley <conor.dooley@microchip.com>, samuel.holland@sifive.com, linux-riscv@lists.infradead.org,
+  chenhuacai@kernel.org, kernel@xen0n.name, maobibo@loongson.cn, yangtiezhu@loongson.cn,
+  akpm@linux-foundation.org, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, aliceryhl@google.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: aliceryhl@google.com
+Message-ID: <mhng-0614da52-c420-4be1-a5b9-64dacae91d0e@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20241010182427.1434605-1-seanjc@google.com>
-In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Thu, 17 Oct 2024 19:40:04 +0200
-Message-ID: <CABgObfbQW-3vp=mNcR4giUGZ_gxhuRykvKj8gzBDY7pOg6xdBQ@mail.gmail.com>
-Subject: Re: [PATCH v13 00/85] KVM: Stop grabbing references to PFNMAP'd pages
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Yan Zhao <yan.y.zhao@intel.com>, David Matlack <dmatlack@google.com>, 
-	David Stevens <stevensd@chromium.org>, Andrew Jones <ajones@ventanamicro.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 10, 2024 at 8:24=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
-> v13:
->  - Rebased onto v6.12-rc2
->  - Collect reviews. [Alex and others]
->  - Fix a transient bug in arm64 and RISC-V where KVM would leak a page
->    refcount. [Oliver]
->  - Fix a dangling comment. [Alex]
->  - Drop kvm_lookup_pfn(), as the x86 that "needed" it was stupid and is (=
-was?)
->    eliminated in v6.12.
->  - Drop check_user_page_hwpoison(). [Paolo]
->  - Drop the arm64 MTE fixes that went into 6.12.
->  - Slightly redo the guest_memfd interaction to account for 6.12 changes.
+On Tue, 15 Oct 2024 06:14:58 PDT (-0700), aliceryhl@google.com wrote:
+> To avoid duplication of inline asm between C and Rust, we need to
+> import the inline asm from the relevant `jump_label.h` header into Rust.
+> To make that easier, this patch updates the header files to expose the
+> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
+>
+> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
+> takes the same arguments in a consistent order so that Rust can use the
+> same logic for every architecture.
+>
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  arch/arm/include/asm/jump_label.h       | 14 +++++----
+>  arch/arm64/include/asm/jump_label.h     | 20 ++++++++-----
+>  arch/loongarch/include/asm/jump_label.h | 16 +++++++----
+>  arch/riscv/include/asm/jump_label.h     | 50 ++++++++++++++++++---------------
+>  arch/x86/include/asm/jump_label.h       | 35 +++++++++--------------
+>  5 files changed, 73 insertions(+), 62 deletions(-)
 
-Here is my own summary of the changes:
+[...]
 
-patches removed from v12:
-01/02 - already upstream
-09 - moved to separate A/D series [1]
-34 - not needed due to new patch 36
-35 - gone after 620525739521376a65a690df899e1596d56791f8
+> diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
+> index 1c768d02bd0c..87a71cc6d146 100644
+> --- a/arch/riscv/include/asm/jump_label.h
+> +++ b/arch/riscv/include/asm/jump_label.h
+> @@ -16,21 +16,28 @@
+>
+>  #define JUMP_LABEL_NOP_SIZE 4
+>
+> +#define JUMP_TABLE_ENTRY(key, label)			\
+> +	".pushsection	__jump_table, \"aw\"	\n\t"	\
+> +	".align		" RISCV_LGPTR "		\n\t"	\
+> +	".long		1b - ., " label " - .	\n\t"	\
+> +	"" RISCV_PTR "	" key " - .		\n\t"	\
+> +	".popsection				\n\t"
+> +
+> +/* This macro is also expanded on the Rust side. */
+> +#define ARCH_STATIC_BRANCH_ASM(key, label)		\
+> +	"	.align		2		\n\t"	\
+> +	"	.option push			\n\t"	\
+> +	"	.option norelax			\n\t"	\
+> +	"	.option norvc			\n\t"	\
+> +	"1:	nop				\n\t"	\
+> +	"	.option pop			\n\t"	\
+> +	JUMP_TABLE_ENTRY(key, label)
+> +
+>  static __always_inline bool arch_static_branch(struct static_key * const key,
+>  					       const bool branch)
+>  {
+>  	asm goto(
+> -		"	.align		2			\n\t"
+> -		"	.option push				\n\t"
+> -		"	.option norelax				\n\t"
+> -		"	.option norvc				\n\t"
+> -		"1:	nop					\n\t"
+> -		"	.option pop				\n\t"
+> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
+> -		"	.align		" RISCV_LGPTR "		\n\t"
+> -		"	.long		1b - ., %l[label] - .	\n\t"
+> -		"	" RISCV_PTR "	%0 - .			\n\t"
+> -		"	.popsection				\n\t"
+> +		ARCH_STATIC_BRANCH_ASM("%0", "%l[label]")
+>  		:  :  "i"(&((char *)key)[branch]) :  : label);
+>
+>  	return false;
+> @@ -38,21 +45,20 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
+>  	return true;
+>  }
+>
+> +#define ARCH_STATIC_BRANCH_JUMP_ASM(key, label)		\
+> +	"	.align		2		\n\t"	\
+> +	"	.option push			\n\t"	\
+> +	"	.option norelax			\n\t"	\
+> +	"	.option norvc			\n\t"	\
+> +	"1:	j	" label "		\n\t" \
+> +	"	.option pop			\n\t"	\
+> +	JUMP_TABLE_ENTRY(key, label)
+> +
+>  static __always_inline bool arch_static_branch_jump(struct static_key * const key,
+>  						    const bool branch)
+>  {
+>  	asm goto(
+> -		"	.align		2			\n\t"
+> -		"	.option push				\n\t"
+> -		"	.option norelax				\n\t"
+> -		"	.option norvc				\n\t"
+> -		"1:	j		%l[label]		\n\t"
+> -		"	.option pop				\n\t"
+> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
+> -		"	.align		" RISCV_LGPTR "		\n\t"
+> -		"	.long		1b - ., %l[label] - .	\n\t"
+> -		"	" RISCV_PTR "	%0 - .			\n\t"
+> -		"	.popsection				\n\t"
+> +		ARCH_STATIC_BRANCH_JUMP_ASM("%0", "%l[label]")
+>  		:  :  "i"(&((char *)key)[branch]) :  : label);
+>
+>  	return false;
 
-patches added or substantially changed in v13:
-05/06/07 - new, suggested by Yan Zhao
-08 - code was folded from mmu_spte_age into kvm_rmap_age_gfn_range
-14 - new, suggested by me in reply to 84/84 (yuck)
-15 - new, suggested by me in reply to 84/84
-19 - somewhat rewritten for new follow_pfnmap API
-27 - smaller changes due to new follow_pfnmap API
-36 - rewritten, suggested by me
-45 - new, cleanup
-46 - much simplified due to new patch 45
-
-Looks good to me, thanks and congratulations!! Should we merge it in
-kvm/next asap?
-
-Paolo
-
-[1] https://patchew.org/linux/20241011021051.1557902-1-seanjc@google.com/20=
-241011021051.1557902-5-seanjc@google.com/
-
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
