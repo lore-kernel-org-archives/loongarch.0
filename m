@@ -1,97 +1,97 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32D517965E
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 07:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C81C194A4B
+	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 07:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729149888; cv=none; b=PIrhE+J8aKJDLcsai17pjV9sLzAM2oMcipGBpbadgEhlvEDVjt28AeqD83QM8hemxib6rk46DEBwFp+ZvjKhsTyQmWOj/idZ02BxWJGOgtG2zlsZ1hVQwvU/OwK7KQPvXFUuXqX4b8/lv5oK625l9kt51m1/QBbai27lEjgWTGQ=
+	t=1729149921; cv=none; b=gms8KWZZ75lkTaXuw9+CxJqzcM/u8bAElG7YoAWlmN3M231KqiIei1qkplSz3Sw2jRgNmi0AxBl0Bl3MgQFP0W1s6k7GzpLt/I9VXQnTNYVZ60pJZrYSiQfMCv9KtK8QsqhO2sSrnfZun7BtA0vfjBtJpcRAcM+D2otO7sfhZJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729149888; c=relaxed/simple;
-	bh=4LENFT9Irlzhz7Q0uJo2pIJ0DFPBKF+REhCg2TzyeXc=;
+	s=arc-20240116; t=1729149921; c=relaxed/simple;
+	bh=JNzQlfJGLz9zylJXFBBY4rOsZ5JO5SrYiTiCCUVyC9A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p66sSQbPCzER2PiDWP3pnTDNODq2TKF0wzlFmOVtI/XBvowl6weIpjmalcK8jik9N+Dh5ojjYI7YYJ+cDQ2nbuO3s5S2eg+h9kz/VqlS1KFmfDwWC71oknGqpmDnx6JoWlrBzl9VSyZVpSkuEGuoDgt4ESNBy6ewrIUxIOj5EP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITjuaJ/8; arc=none smtp.client-ip=209.85.219.48
+	 To:Cc:Content-Type; b=h1N6a5JPFeHuPiQ7a8jkbEhCRfnmZCj20EbExU24EzDSAmx8zQrYWeKa/pnu0OBuRP9YQO8XR7DDaGyx2kfNTMoa0SpagzraJi47eprgRNN1DhuKIfNx3zHHzgjioxPB69mbGkPTTD3dwL78rU6EnqYv02UG2VdKcsj2o5n3HbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MX/Ca16c; arc=none smtp.client-ip=209.85.219.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITjuaJ/8"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6cbf2fc28feso4423006d6.0
-        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 00:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MX/Ca16c"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6cbcd8ce5f9so5114766d6.2
+        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 00:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729149883; x=1729754683; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1729149916; x=1729754716; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4LENFT9Irlzhz7Q0uJo2pIJ0DFPBKF+REhCg2TzyeXc=;
-        b=ITjuaJ/8HU7TPJXzozmBC9ih+uVvYVj0YpiQ1oouQXVs9vHyciu/I5/S5XmYi1BmLM
-         EoW0gQD6UaCq2ApieAKVKM5op6C5IRXAFMaHQt0qHe9Np3NIYgzCdq/XlUfT0PH17FfG
-         votQPByTtMvAIipA1vvZPlbPGKKd6C4FdmOWdaae82K7k2pM1VpQ1xG6K7Yfe2KJK9oP
-         bZ+R9PTGS0I/vlK99ppb0phICvCgxb3Iu1op9HVoYhtK1F77Hgq1JKPwuQTuxSm359qh
-         bnbOvCFNF21Ec566kf6GlpJ12A3m1PEBVNpkMGPhG3n7ItfpWgG2cBBMv+k/xgzUwnHm
-         E/+w==
+        bh=JNzQlfJGLz9zylJXFBBY4rOsZ5JO5SrYiTiCCUVyC9A=;
+        b=MX/Ca16cZX01geQS8gw+maXwgaOrXrp8FjKUre1SVQB2JYY+1iPyp89mdI7kXEWYnT
+         rNGnVbIxaEnouAZsi0ua2xYtJhAISVgc0YMCv+Uq8PQGIGxkJasw7ItG0yU7/+VMBCAP
+         ntmtozA1dETaJNayRf7WPhVZxqseAQs42TEeuxbbXt6VLszEaXTqeXEAaMtV5TWqo1bZ
+         JguP6qDB7+TyvypC82yf7KRXE55yKP+2WxV2JVz1O71+E31pm6BXdsJgewFB/RITwGqM
+         0cf1XmDoDlYXuMoMAInot9Cy2y9j7TQIrmjdpiVCoJAsL5xwm3wF1vNaud2fIJgPBAYc
+         xl0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729149883; x=1729754683;
+        d=1e100.net; s=20230601; t=1729149916; x=1729754716;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4LENFT9Irlzhz7Q0uJo2pIJ0DFPBKF+REhCg2TzyeXc=;
-        b=vzYxZRg89TknC3oaqmztyYMksK1ooCLp9oWHZnmQcPW5KEf2WsAfSEHA4xUoIJor/n
-         vnPTmZrcYDY8ThA0auv3Gvxnb56X42MY8TkQFQ3c2x8p2vpzZTHbvqQ+xOavpUB2kE22
-         Ijk1zpHgsRXmDWFcDcm5QWKlUuuOre3UhwGdQ4+hxxaI0jKj6TMfpvboF6JQfu4p4ZyP
-         45FM1bGVjwnegLvk+TCkiGJrxGKjmTAiRYlSuVOKoq/UuroVAgYeE0ZOUzAJVNAlSu18
-         l0HoMCPuu5IBMo28Uqql9l2m3YkV6Nj40ZtcOnKyy1pDQsR+gUaP81MHAo6KRo0n/3v2
-         itcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/j0BkwY0GoPj7/LIjwMUuCsDzJLOO468SlsiD9VWLWJ6U88f0hBxLHqmCrkmWh4zTrl0eDG8KYSc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxeVoImc1nAkHacG5hJcJ8PXoUtc4e09+QtT1m8Qs9vRbvEcXqJ
-	OR54j/NRl6PTtw8OjTYbuhDV7icze5R9iDU8H8QbW3Rwxc4Z/HPSyGSU1H4CyQdwwvCl/MJTOYz
-	j3OAr81x+cOwIUyr7QzMmIOCoEGKNNsCHVqHS
-X-Google-Smtp-Source: AGHT+IFWzJjAlh3NGRZQHpsaEeogWwxDSjV3adK9A7eQKHmgyG1G+R6tywH/eHYz8VDEZbSzKurBL7fooSIoGQ60v20=
-X-Received: by 2002:a05:6214:53c7:b0:6cb:f907:ae4b with SMTP id
- 6a1803df08f44-6cc2b8d1dcemr87059346d6.20.1729149883028; Thu, 17 Oct 2024
- 00:24:43 -0700 (PDT)
+        bh=JNzQlfJGLz9zylJXFBBY4rOsZ5JO5SrYiTiCCUVyC9A=;
+        b=qSOTmf13iCVXM+RkdFjpb3zc82z1GJdOnVKqyyhi5xVb4zfYowNxrYHbtsyOXT8Wwf
+         lCwppGBb6Zn0ddJUw7G8GzAIsBQ0jV19rWKWH/WhPR7jghrmOKekD0Wc0FDOQS0nGvRy
+         hMY6aWCdP7rfPoO6DQdJ+gs2dW220j1Dv053L/z/fWdmJBLY4pgTaJpEpyA1eIOokkkb
+         i13BCmV8yvvwY2E6uchbweTlJPxhS/aQJylunKcyEEDLpfDLig+XLphegCdmumVxBxsX
+         pzvV7I+krdX9ml/v+R7uZwnnijk5ndvxo3+KVVlUNPkpYWDGrEjUDqAGfsnhqwnBaoH3
+         cODw==
+X-Forwarded-Encrypted: i=1; AJvYcCU27mEKAREP3tIte2Lru9GT6dMhrop9BBNoNVxXttph0Bn8/uox65TnlNspeV8UqZ4BKWSKmujrGq8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwsYO79W879+Q+wjntmNNG+jBTbx1scK/DDFVQtn7fvmw01u5Jy
+	vCvDIVaeItyXMCAMaWZT5jyrqNm2LAQ3tVYYTB6OZbpqeyLMPSW6ozK7YOaD5oFwRf1kA+MxmdE
+	xKg5O0Y5fUjiFuAOY0e3hlB89UKCVYuCo0mJO
+X-Google-Smtp-Source: AGHT+IEpvyOypMbR20xOQO6GoIiYKGKRQ+/aEFxgQpQZIQ5B+tnnd5JFnEmCKVxmZySbPEejgfpOd9Et4F6MIo51smM=
+X-Received: by 2002:a05:6214:5983:b0:6cb:7de8:feb9 with SMTP id
+ 6a1803df08f44-6cbf9e76f75mr323484596d6.34.1729149916131; Thu, 17 Oct 2024
+ 00:25:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de> <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
-In-Reply-To: <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
+References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de> <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
+In-Reply-To: <20241014-kunit-loongarch-v1-4-1699b2ad6099@linutronix.de>
 From: David Gow <davidgow@google.com>
-Date: Thu, 17 Oct 2024 15:24:31 +0800
-Message-ID: <CABVgOSmM3mxA1e9Fy1D39iiDe9H3ycJ3dWPf9WnZej9i4C+u-g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] kunit: qemu_configs: add LoongArch config
+Date: Thu, 17 Oct 2024 15:25:04 +0800
+Message-ID: <CABVgOSkHoynPERssZ6TfNxnmdF5KCUvvd6OuL-dkno-CoV+Z+A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] kunit: qemu_configs: loongarch: Enable shutdown
 To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
 	Rae Moar <rmoar@google.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000092f0a00624a71437"
+	boundary="0000000000008ac9660624a71609"
 
---00000000000092f0a00624a71437
+--0000000000008ac9660624a71609
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Oct 2024 at 19:36, Thomas Wei=C3=9Fschuh
+On Mon, 14 Oct 2024 at 19:37, Thomas Wei=C3=9Fschuh
 <thomas.weissschuh@linutronix.de> wrote:
 >
-> Add a basic config to run kunit tests on LoongArch.
-> This requires QEMU 9.1.0 or later for the necessary direct kernel boot
-> support.
+> QEMU for LoongArch does not yet support shutdown/restart through ACPI.
+> Use the pvpanic driver to enable shutdowns.
+> This requires 9.1.0 for shutdown support in pvpanic, but that is the
+> requirement of kunit on LoongArch anyways.
 >
 > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
 
-Thanks a lot. I've confirmed that this works with the kernel.org
-gcc-14.2.0 toolchains and qemu 9.1.0.
+Looks fine to me.
 
 Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
---00000000000092f0a00624a71437
+--0000000000008ac9660624a71609
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -181,13 +181,13 @@ BavXUVE38e4c90il44T1bphqtLfmHZ1T5ZwxjtjzNMKy0Mb9j/jcFxfibCISYbnk661FBe38bhYj
 hWV2vSAXq35i+JS06BCkbGfE5ci6zFy4pt8fmqMGKFH/t3ELCTYo116lqUTDcVC8DAWN8E55aDGC
 AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAZ6Vqszmp/3gGFW0sCFu
-eDANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgYNf5LREJ/ktJAZXlC4+bbapJo4SK
-CxjLOKf1A30LW0IwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQx
-MDE3MDcyNDQzWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+eDANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgRRBcIrqND6jrtiSqZqpj0qT1Vjex
+F4hrLyVP4GdumDIwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQx
+MDE3MDcyNTE2WjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAN7bg9ZvlCUAb1RqfQYGUbiJZYh+dAikhAg6hZRd7RMfxS9Q
-utsoDMZ7RpqNDJaDpvjPtX2HtjgELWzum04uiA3Hxe0lstHz7d4yDm6hwcuhbmY/V1Zm1NF8+oqj
-ghL0JxPzowuxU1Cto+pwhvbEAa2DywMjUJ4T6DkpqRo7Hsoy1TFlm2E4wHK7wLtJq2ZbrxKi/HtZ
-TgnKexD8dJqxG2UZmNbfmnyjCPcvu9N7PyrDj/5vohC9Hy/f+ScZtXvJESTA9aP53hcWZR6x69sD
-Ho+c0Iinofe8CdWFUhQG+/cT1rgQk0WF8zx+qYPtJ6RFSNakjFjBr4tKEfGpDR0PzQk=
---00000000000092f0a00624a71437--
+BAIBMA0GCSqGSIb3DQEBAQUABIIBABHyLsdQhd9TrtEYdtttZe0TYoiD7ULVzOld7rUO1/UmdgCB
+6fPWEzzqRFjWaZmq7Q7o7XmbstPslSFTzEqKqg0vO1i8zdDtjU4R5Y/tZIKak21n5wY/v11ndJZx
+DXv4wDL9v4nmyyUWHBbH1O7CTZDn0GO8ZpoyPdexBmlqoHnKLTyfrH9s5slJRDzoDxwuZ758D4tL
+A7Jq8gL7ZriWqJ1m5IpSWpWCKVl1j0a7fQvm6DrIYJkVR9ViS52lPKiyhQgOS53YwD2qKp+ro5A2
+bXvxdh8JFIJsTBpcBacX3HFRbVCEk6dyaayeDSnMy9v9Y2UDyjm07ijwVAuzfUOwrx0=
+--0000000000008ac9660624a71609--
