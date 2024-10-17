@@ -1,188 +1,122 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F25322738A
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 19:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82FD2194BF
+	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 20:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729193539; cv=none; b=pnTuaBJOZPzwHNJPFvoprsM6GVEVx/PtiYsvReVhsQGnsNoccDmTFoFNXBpc5SnPQdxT6LyD0NclM2XTcUGunWeJSd30r4i7WDnaofwUBtLuP/YBBsDj/2ZJ3ByDGAxoqSoLXnCeMIlqJ39TtL4Mct9Mv9Y1Y+1YAPYv3DKyB9Y=
+	t=1729196846; cv=none; b=sg49Lz07XJrol2dODlwFQ03u1ZFPnW+P5h2vkdXPjNtd1frCo7UCx5IYuKVw7yVOYKeGPYJIm9tb++l1Xgk+DSyxQXOqSkO1bDYKTKK0CLk97cCaWdLzAJi46CQWdu5dFVKMpsb2R3csi/ivZ3tvMUYKGi54EaCSrqEOImDwrJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729193539; c=relaxed/simple;
-	bh=vcUXd5tt9utnmCVe/nP6iWVCPF6al6ngb6a3ypPbz8U=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=EkSTrxF5koE9gPkP8EQpCq16vRZ868laPMKwhgETj5/4GxXxsuj9z/XoMl9VsPv3fO2dhL1Z0ILNPtZlpu8m+5ixm2GCzT6SQT9gGVf/Pql2vGgiBgrTNAg9xrhZqT3+WgS0JIpRGHL7mzVq5VMr/qOx+QfMRCkG8gk7HMo0Ero=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=13DL5/IV; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1729196846; c=relaxed/simple;
+	bh=XQQrB+BqmcD4LcSj1KMeDy2opfoF996hSV6qgCl8kak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MWNA25VdFfBTiMU2xjatxPbvcExTt2y2qRhaLwZB82bE7e/hq78iB1B92CX4GKC6TGylVpk7t7kT8n3fmmMax8BvCXgA6pbNf2Lnh82ZDqPnkIJ3F1Xfngsfnz5VedDsx+321sH7BXO/bltPJ4WoCNTB2itQCGjjCxwn4g3HZ20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SaPUCidQ; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="13DL5/IV"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71e579abb99so932009b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 12:32:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SaPUCidQ"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-8323b555a6aso80710639f.3
+        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 13:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1729193535; x=1729798335; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
-        b=13DL5/IVcdKiwK3SMjdrH45M4ZanjiadF/+UlqxfErARTd4usAsuEdyt1wSrk/2wc/
-         sITmrwVReX9tll3UbIgb20u5ersBLwmZogaaNIz+CKVGbUQQ6P8IDDLgO1tpxciAYx6f
-         eTZiW51IxijbpeLvH/Vudu5QaHn/Ue1x4Td3Z++xRCYlwLJTKmiTK59pcBirU4cPixr5
-         Y9NVl3Zi/eLUsJdl8YgVezBkSUyP7f+1IgwYxUFsTUIONY8A0cKTKJeeY9NkMnlQdHTr
-         EZG8L6RBm1UyLXJyg9bv1uEv0l0ZSmODoByyGL7a+buDNjdNz2CRKoGY91rQh1dE3IYZ
-         Kvxg==
+        d=linuxfoundation.org; s=google; t=1729196840; x=1729801640; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0S5MPorG8STFHi4ZHKupmmCHSXBZxKErXkagXcshGng=;
+        b=SaPUCidQE5juBZO+0gN/6kEGRgTITX6xpEtvCdO8jCxaRQ/n/1ngpj2ZkwwZm1d3b7
+         BeWg7tw9gq7qHd8FIYrlYh7ASTt06mvsH42C20Hh575COtt/HQof6E0JYsOmMfEcfX38
+         RZ2eu8kOb1xEgv7oa5lSbJWgbeWdByQogg9Gg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729193535; x=1729798335;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
-        b=vhOuLLGn/kSNf89LvJ3FESw/mqnwMCPXUmiySkMueUlP2HMqWSxefxY+rjC7eLede1
-         oA/5nUjhEDsHHeUQkLSa5jSjZ+0GR+sKmLul8F7UtD3swuGW/vG/mMm1O3UU3REBekKh
-         RjfSVCBK7EaM/TlGQLViliELv6EfZ/zDfChpishrxsVU2UN61xa2v/+Qht1PLBOwLb9r
-         BO+F7EiisSaF1z5S4bRR4Zoy1Z8RTSh//LEbHSXmRdrRLLmXuZo6T54UPncm+UI5Xpwi
-         GgYn9loW7732Yq8ZUp7QY4i3Jg8LF1Y96bgkGKwL7ZBJbrqNKjUjJfBtTXF6UTm/t11f
-         GpXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ6FXuna2E7zIR2OxXSTqx03BZp/ynAL0AOjska7/AGBzt3LvhkyNG5cci7L9u6hzHDvwuYnB6d+k=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy17LgJENFPKm/Rw313VszizOLyJuQcKiSPDQwu6XKxK/69lNqM
-	QR8M384fvp7LJmac0qNCupiqlFfcRHfs4bPdSRYaEOha+X1VeATWxqYBbV07KzY=
-X-Google-Smtp-Source: AGHT+IEYQqSWyT9DM1JblvCRXie6c7wEQ7WCCMd8WOwGbnCY29CemQ9nchGTw3++94PPWZqamrgDPA==
-X-Received: by 2002:a05:6a00:2d25:b0:71e:5950:97d2 with SMTP id d2e1a72fcca58-71ea3328e08mr68611b3a.17.1729193534443;
-        Thu, 17 Oct 2024 12:32:14 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea34a7fa8sm9965b3a.184.2024.10.17.12.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
-Date: Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
-X-Google-Original-Date: Thu, 17 Oct 2024 12:32:02 PDT (-0700)
-Subject:     Re: [PATCH v11 4/5] jump_label: adjust inline asm to be consistent
-In-Reply-To: <20241015-tracepoint-v11-4-cceb65820089@google.com>
-CC: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-  peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, Ard Biesheuvel <ardb@kernel.org>,
-  ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-  gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
-  linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-  Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, ubizjak@gmail.com,
-  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-  oliver.upton@linux.dev, Mark Rutland <mark.rutland@arm.com>, ryan.roberts@arm.com, tabba@google.com,
-  linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  apatel@ventanamicro.com, ajones@ventanamicro.com, alexghiti@rivosinc.com,
-  Conor Dooley <conor.dooley@microchip.com>, samuel.holland@sifive.com, linux-riscv@lists.infradead.org,
-  chenhuacai@kernel.org, kernel@xen0n.name, maobibo@loongson.cn, yangtiezhu@loongson.cn,
-  akpm@linux-foundation.org, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, aliceryhl@google.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: aliceryhl@google.com
-Message-ID: <mhng-0614da52-c420-4be1-a5b9-64dacae91d0e@palmer-ri-x1c9a>
+        d=1e100.net; s=20230601; t=1729196840; x=1729801640;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0S5MPorG8STFHi4ZHKupmmCHSXBZxKErXkagXcshGng=;
+        b=c4F1MMiroel+pUPkaab2HEczoyjvhy1SuzVkbmDXFzkZ8yr6QNDWsD5ZvNp4niysbi
+         qKH7RZGOX8zmvrNkQHsWjcqyEyG8qKqK+aBzZp+mnUvuqvTzfdNSJy0i0OBJ+kY2T6bJ
+         6cu1gNk8LnjH1iwC+8QtH2g8RdDtkLqTJORhlMPFRORj+4pKBf/w/D7q3FiGxqhHTUrS
+         rFnkIDz9/jQDeiTz4OOWaMDzsbBpeOpjqz7SV/rsKQCisLLI5bkAn1GTXpBvHHUbSq3e
+         tWYAqlZqmOPh0bbApwKJQhnV6PB9BH+bBh671oUaw3M/n1NUT9gPyn+jJCPmOctv2emG
+         RJAA==
+X-Gm-Message-State: AOJu0YyExO+ulv3tj7Oj5viP1G6NriKq+WWRPdAzz8k6G97LThW48sEY
+	iWRvwaaeqgZCwp5bGge7l5tWGSaXxl5bbPO2FoH2zkmueyzIYtFur7gh5YOTTFk=
+X-Google-Smtp-Source: AGHT+IGDaL6jHQzbs+8GZfOyqS4uzH8LkR/xzgp5DkEAqRKTqgwzskUM+ylwLNVAshxcMDeXjcSh1Q==
+X-Received: by 2002:a05:6602:6007:b0:83a:b188:7a4d with SMTP id ca18e2360f4ac-83aba3054b7mr10651939f.0.1729196839721;
+        Thu, 17 Oct 2024 13:27:19 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dc10c67b05sm41578173.157.2024.10.17.13.27.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2024 13:27:19 -0700 (PDT)
+Message-ID: <878d5f26-ef05-44f4-93e8-01f66088c0cc@linuxfoundation.org>
+Date: Thu, 17 Oct 2024 14:27:18 -0600
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] kunit: qemu_configs: add LoongArch config
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Brendan Higgins <brendan.higgins@linux.dev>, David Gow
+ <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
+ <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue, 15 Oct 2024 06:14:58 PDT (-0700), aliceryhl@google.com wrote:
-> To avoid duplication of inline asm between C and Rust, we need to
-> import the inline asm from the relevant `jump_label.h` header into Rust.
-> To make that easier, this patch updates the header files to expose the
-> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
->
-> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
-> takes the same arguments in a consistent order so that Rust can use the
-> same logic for every architecture.
->
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Hi Thomas,
+
+On 10/14/24 05:36, Thomas Weißschuh wrote:
+> Add a basic config to run kunit tests on LoongArch.
+> This requires QEMU 9.1.0 or later for the necessary direct kernel boot
+> support.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 > ---
->  arch/arm/include/asm/jump_label.h       | 14 +++++----
->  arch/arm64/include/asm/jump_label.h     | 20 ++++++++-----
->  arch/loongarch/include/asm/jump_label.h | 16 +++++++----
->  arch/riscv/include/asm/jump_label.h     | 50 ++++++++++++++++++---------------
->  arch/x86/include/asm/jump_label.h       | 35 +++++++++--------------
->  5 files changed, 73 insertions(+), 62 deletions(-)
+>   tools/testing/kunit/qemu_configs/loongarch.py | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+> 
+> diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e7bb7c07819677dfdefac012821a732555813cae
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/loongarch.py
 
-[...]
+Missing SPDX-License-Identifier.
 
-> diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
-> index 1c768d02bd0c..87a71cc6d146 100644
-> --- a/arch/riscv/include/asm/jump_label.h
-> +++ b/arch/riscv/include/asm/jump_label.h
-> @@ -16,21 +16,28 @@
->
->  #define JUMP_LABEL_NOP_SIZE 4
->
-> +#define JUMP_TABLE_ENTRY(key, label)			\
-> +	".pushsection	__jump_table, \"aw\"	\n\t"	\
-> +	".align		" RISCV_LGPTR "		\n\t"	\
-> +	".long		1b - ., " label " - .	\n\t"	\
-> +	"" RISCV_PTR "	" key " - .		\n\t"	\
-> +	".popsection				\n\t"
+> @@ -0,0 +1,16 @@
+> +from ..qemu_config import QemuArchParams
 > +
-> +/* This macro is also expanded on the Rust side. */
-> +#define ARCH_STATIC_BRANCH_ASM(key, label)		\
-> +	"	.align		2		\n\t"	\
-> +	"	.option push			\n\t"	\
-> +	"	.option norelax			\n\t"	\
-> +	"	.option norvc			\n\t"	\
-> +	"1:	nop				\n\t"	\
-> +	"	.option pop			\n\t"	\
-> +	JUMP_TABLE_ENTRY(key, label)
-> +
->  static __always_inline bool arch_static_branch(struct static_key * const key,
->  					       const bool branch)
->  {
->  	asm goto(
-> -		"	.align		2			\n\t"
-> -		"	.option push				\n\t"
-> -		"	.option norelax				\n\t"
-> -		"	.option norvc				\n\t"
-> -		"1:	nop					\n\t"
-> -		"	.option pop				\n\t"
-> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
-> -		"	.align		" RISCV_LGPTR "		\n\t"
-> -		"	.long		1b - ., %l[label] - .	\n\t"
-> -		"	" RISCV_PTR "	%0 - .			\n\t"
-> -		"	.popsection				\n\t"
-> +		ARCH_STATIC_BRANCH_ASM("%0", "%l[label]")
->  		:  :  "i"(&((char *)key)[branch]) :  : label);
->
->  	return false;
-> @@ -38,21 +45,20 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
->  	return true;
->  }
->
-> +#define ARCH_STATIC_BRANCH_JUMP_ASM(key, label)		\
-> +	"	.align		2		\n\t"	\
-> +	"	.option push			\n\t"	\
-> +	"	.option norelax			\n\t"	\
-> +	"	.option norvc			\n\t"	\
-> +	"1:	j	" label "		\n\t" \
-> +	"	.option pop			\n\t"	\
-> +	JUMP_TABLE_ENTRY(key, label)
-> +
->  static __always_inline bool arch_static_branch_jump(struct static_key * const key,
->  						    const bool branch)
->  {
->  	asm goto(
-> -		"	.align		2			\n\t"
-> -		"	.option push				\n\t"
-> -		"	.option norelax				\n\t"
-> -		"	.option norvc				\n\t"
-> -		"1:	j		%l[label]		\n\t"
-> -		"	.option pop				\n\t"
-> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
-> -		"	.align		" RISCV_LGPTR "		\n\t"
-> -		"	.long		1b - ., %l[label] - .	\n\t"
-> -		"	" RISCV_PTR "	%0 - .			\n\t"
-> -		"	.popsection				\n\t"
-> +		ARCH_STATIC_BRANCH_JUMP_ASM("%0", "%l[label]")
->  		:  :  "i"(&((char *)key)[branch]) :  : label);
->
->  	return false;
+> +QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
+> +			   kconfig='''
+> +CONFIG_EFI_STUB=n
+> +CONFIG_PCI_HOST_GENERIC=y
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_SERIAL_OF_PLATFORM=y
+> +''',
+> +			   qemu_arch='loongarch64',
+> +			   kernel_path='arch/loongarch/boot/vmlinux.elf',
+> +			   kernel_command_line='console=ttyS0',
+> +			   extra_qemu_params=[
+> +					   '-machine', 'virt',
+> +					   '-cpu', 'max',])
+> 
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
+Please send v2 with all the reviewed by tags. If there
+is a resend 3.4 and 4/4 in this series, send them.
+
+thanks,
+-- Shuah
+
+
