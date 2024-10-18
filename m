@@ -1,134 +1,89 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9721E0B63
-	for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 20:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6591E493
+	for <loongarch@lists.linux.dev>; Fri, 18 Oct 2024 01:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729197374; cv=none; b=cGWrBuhDVV1Q5wIjFsW/FONnZGexVenGj7Wv1N04bMqnbVr2yx6Uni1yvsRiS/iiEPzUF2WaIFCcNDecD4wSReebUq81ORb34E+6s7PZDocdfQi8QW3rD++n7m/UNfz73EOunEZbh8mZtoJnfQhzyO1a+pj/X2x+q1bJ0QAsO8k=
+	t=1729215944; cv=none; b=AZahwgTxZq2wSYTrOp/ydALwuSUTbROAan4b9ADrnqT/ooOjr/hx+XpvN0UZ1yMdIDvmdgMwcmHqW5UrNK8OULM9jAKG4L3RX0CzrkbMeMKio4Em99sUzkrcUdRf8XHRVoaE3zb+uMeFtld1yGmNbssA/yogosp9JE5vTz1u71Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729197374; c=relaxed/simple;
-	bh=AORgYkSEpqScrRJBsDbxUjNY993eTA7X1chV49DsV3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qFhTZiPKpvTix1EPx5kz362O5Rszmsd3MrEGw8fwIC7WeOIPsrn9tqjlN90BMPge0NUsqcjJmZJ1xardVthA6Z4pgG+rXHZW8y3tedJpL+Hj/O942PKEUJHT5ebkRrTVgtidnZU0FR56R/lEk5QAE1jUbXtwCi6FnbHmEy1R0OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OEMmEsie; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OEMmEsie"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-83ab00438acso33118339f.0
-        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 13:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1729197367; x=1729802167; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=11ToTU7vsMi2SSsjzOsYplAbVYXVrOxGmHdlQUxuJOM=;
-        b=OEMmEsienrMChOA53IjVjZrF7DL+RFlh41HjxkxFPPtnJ7zgBgDH+jtNVThyds5fpJ
-         rlmQahrw5A6j0mXmsBTblGtY4KJuzlsa55tMRYZANwyj1yJ4J4SVxaeN/Bn/FETPab2e
-         L9EMHmFQH92cNgfbpE06fkuqZwFtWCJ9b2Y1o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729197367; x=1729802167;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=11ToTU7vsMi2SSsjzOsYplAbVYXVrOxGmHdlQUxuJOM=;
-        b=Wmb/67JZExbTy3w5ZoFXXBlIY1SrOi2+y/tmAZ2g4rQ9SuoV7XDWBquR5KhUYJwOMI
-         9P/ghm5lv4nWvPXacLAQOhhqfGa9vpcmXo7ivAycB4PLzEs86IPTk3oVOhJiInFcqZSJ
-         6y+88TmMdVW5ee86eyoJWYingD8tqv8rc7HzQVtmA59/Ki5UrgCPkuhELjPqbv+ze1cC
-         jfUufBiJNeOC3VcC91ExkLLOvXyzsQnc/+kWgd3GANBuhA+rMOoFQW8qszrtHLealAyc
-         zyJM04Attnc2hWRJX+7eGGbibVQXhaXEgtuJswOxMhKRwbA55tB/sVIAFe/aVAmfqY/+
-         q74w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHA7UL9WVCQjmbNd3OLuijrUGxOR14F91IihSOYRmBMZcTX5HIPNa52edMfJzm0dS8ofYsr19tYjY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz70l8JRSUB5sgKn2rA7Nh2Oxjp8OZB+UMr2PKuXAKiDSb3+R1t
-	B2V5aaSi3bORV2S3B1D4muptHhWG4FJCrS6QAWA8st3Hp1xvBDULltu5Clb9e94=
-X-Google-Smtp-Source: AGHT+IEWVBCgEov4mw1J/kJN0ZwoTJEWDfnh4NgHTLEZFUbsmenZRhqLbReeBnLs3cdVCJsyxaShVQ==
-X-Received: by 2002:a05:6e02:1808:b0:3a3:dadc:12f7 with SMTP id e9e14a558f8ab-3a3e5294a27mr33585585ab.3.1729197367437;
-        Thu, 17 Oct 2024 13:36:07 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dc10b83e9dsm49449173.56.2024.10.17.13.36.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Oct 2024 13:36:07 -0700 (PDT)
-Message-ID: <56133d31-c94c-4c4c-9ae4-86f06b463a7d@linuxfoundation.org>
-Date: Thu, 17 Oct 2024 14:36:06 -0600
+	s=arc-20240116; t=1729215944; c=relaxed/simple;
+	bh=ZvLeRG4Ms+AsQQg8nv2hbnbMnmitMejRAfLCvTgiTT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Meo6EvBOcnUPIEwZZO9Ha61tL7YbiTxt+5yUlQbQq2urQdJ49r+k5PJuyoqzSPhRgwFCuEOf11wkmAK6XV3gVyQuB9ZKAI7BwGpab5lmPytWzkPbLRfnhx0K/Da+sFFkGRuVKDcYA2FtRIYyrKyvVNTySoWbo53chVDObo1a1/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8Bxkui8vRFnNTcjAA--.51036S3;
+	Fri, 18 Oct 2024 09:45:32 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front2 (Coremail) with SMTP id qciowMCxSsa7vRFngI0yAA--.18897S2;
+	Fri, 18 Oct 2024 09:45:32 +0800 (CST)
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	chenhuacai@kernel.org,
+	bp@alien8.de,
+	tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org
+Cc: linux-edac@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	Jonathan.Cameron@Huawei.com,
+	Zhao Qunqin <zhaoqunqin@loongson.cn>
+Subject: [PATCH v6 RESEND 0/2] Add EDAC driver for loongson memory controller
+Date: Fri, 18 Oct 2024 09:45:40 +0800
+Message-Id: <20241018014542.27283-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] kunit: qemu_configs: add LoongArch config
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Brendan Higgins <brendan.higgins@linux.dev>, David Gow
- <davidgow@google.com>, Rae Moar <rmoar@google.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de>
- <20241014-kunit-loongarch-v1-2-1699b2ad6099@linutronix.de>
- <878d5f26-ef05-44f4-93e8-01f66088c0cc@linuxfoundation.org>
- <3a49d3e2-2d76-458f-a0fd-fe52a413f376@linutronix.de>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <3a49d3e2-2d76-458f-a0fd-fe52a413f376@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qciowMCxSsa7vRFngI0yAA--.18897S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JFyDtrWDJw1rur4xuF4kGrX_yoWxtFg_Ca
+	17Aay8Jr4vyFyDJay2qr18ZFW5tF4UKasYkF1qgw15Xr4avr13Wr97Xa4UCF17Jw1DWFn3
+	ZrZ5KryxA3W8tosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jYpB-UUUUU=
 
-On 10/17/24 14:31, Thomas Weißschuh wrote:
-> Hi Shuah,
-> 
-> Oct 17, 2024 22:27:29 Shuah Khan <skhan@linuxfoundation.org>:
-> 
->> On 10/14/24 05:36, Thomas Weißschuh wrote:
->>> Add a basic config to run kunit tests on LoongArch.
->>> This requires QEMU 9.1.0 or later for the necessary direct kernel boot
->>> support.
->>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
->>> ---
->>>    tools/testing/kunit/qemu_configs/loongarch.py | 16 ++++++++++++++++
->>>    1 file changed, 16 insertions(+)
->>> diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..e7bb7c07819677dfdefac012821a732555813cae
->>> --- /dev/null
->>> +++ b/tools/testing/kunit/qemu_configs/loongarch.py
->>
->> Missing SPDX-License-Identifier.
-> 
-> Tue others configs don't have one either.
-> 
->>> @@ -0,0 +1,16 @@
->>> +from ..qemu_config import QemuArchParams
->>> +
->>> +QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
->>> +              kconfig='''
->>> +CONFIG_EFI_STUB=n
->>> +CONFIG_PCI_HOST_GENERIC=y
->>> +CONFIG_SERIAL_8250=y
->>> +CONFIG_SERIAL_8250_CONSOLE=y
->>> +CONFIG_SERIAL_OF_PLATFORM=y
->>> +''',
->>> +              qemu_arch='loongarch64',
->>> +              kernel_path='arch/loongarch/boot/vmlinux.elf',
->>> +              kernel_command_line='console=ttyS0',
->>> +              extra_qemu_params=[
->>> +                      '-machine', 'virt',
->>> +                      '-cpu', 'max',])
->>>
->>
->> Please send v2 with all the reviewed by tags. If there
->> is a resend 3.4 and 4/4 in this series, send them.
-> 
-> I'll do that. But it will take some weeks, as I just went on vacation.
-> 
+Add a simple EDAC driver which report single bit errors (CE) only on
+loongson platform.
 
-Sounds good. Enjoy your vacation.
+Zhao Qunqin (2):
+  dt-bindings: EDAC for ls3a5000 memory controller
+  EDAC: Add EDAC driver for loongson memory controller
 
-thanks,
--- Shuah
+ .../edac/loongson,ls3a5000-mc-edac.yaml       |  44 +++++
+ MAINTAINERS                                   |   7 +
+ arch/loongarch/Kconfig                        |   1 +
+ drivers/edac/Kconfig                          |   8 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/loongson_edac.c                  | 168 ++++++++++++++++++
+ 6 files changed, 229 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+ create mode 100644 drivers/edac/loongson_edac.c
 
 
+base-commit: 61124f42dcaa30f58a8b47a2b69ddb80260677c7
+-- 
+2.43.0
 
