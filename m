@@ -1,415 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECB320E30E
-	for <loongarch@lists.linux.dev>; Fri, 18 Oct 2024 06:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5B91E0495;
+	Sat, 19 Oct 2024 12:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729233190; cv=none; b=ioNRM6jnOhI9gUG9TOw43CBQqx22TZb2pmXGdrIgKAt0vvf0cCaqa13PtYwrlVd1p+jRZ/OwnVo3ILsyYi28BSXfd5LsJo7GwVgfuB09DPg7XfaLCHo75Mvaat/Uo7aj7PFxol61J/+15eO2/Q3pigaUnd8u0GOpAbU+SARSvM4=
+	t=1729339862; cv=none; b=CgUq0NlakXJjLmJQWF+3GgyodcqHmQ3X3iyntOtSBYqgYQC7Err53cQBaSWR2kHJo6Z2lmKxd6JZkoM9hmzIHRNs0+BG+WqgCDDbWcNBp1hPKkdT8DcQEXc9+gfdudl/e0fXB3A6SsPk89NxrtpHNEyh9aWCOoKfwTkF0KrTWFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729233190; c=relaxed/simple;
-	bh=f+x5lXmxjJX7JyvH/HMn+eYqW5wCrYa0iB338xS0QEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T2YSTME7YTf1Y3eTIl2LZEZjwoZdkKWQFAbfa4koJEtVktbaJIK/DBsfErR1PSMl8+QeI629Iwa1ZqDUhd2VhHaK3CwqbaeTFLKfANYLtF6iQ0d7DfKJYo/BenSp4pbdowbyV54S9iW6IO6nuBmIq1JxWlFMmRPPF3wmDjzWZ8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6w08C7i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729339862; c=relaxed/simple;
+	bh=FSuVpxp8ZC8+I9iOSenx9AlHNi52QSz7zz+w4xwBZFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KryTlx4mafgLlC1YKfp/w1oQ98hpeR/aM7v3aBYXQN59lXBaS6wFv3O8haz+YLJq9zqgiHAoWJgTZ8EzumQvhHd5BA9yWOIIzxn+tX1JPgV6rczZ2q51pnLbsbqco51xipOXItaYd6Xg1ABwAUiKEd8uZj0YBa6jN+Q7CXD9zlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ji+u5mIf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6w08C7i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3FFAC4CEC3
-	for <loongarch@lists.linux.dev>; Fri, 18 Oct 2024 06:33:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ji+u5mIf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C444C4CEC5;
+	Sat, 19 Oct 2024 12:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729233189;
-	bh=f+x5lXmxjJX7JyvH/HMn+eYqW5wCrYa0iB338xS0QEw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J6w08C7i/h9ZPPr3Nz/xM0mXGFQtFxmEZREOMskO2IafZFylwCwtfqfI3j66hWGL1
-	 OGXLRrPoqtfbggMfOfCECixfPEV6JeZMM1m3UazcZFXHaXmcAHK1GIFCzr85xHhUz3
-	 jeDiHuBENQa+ZV8l59MagAX728hf1ww1fpZtitBMpgY87/ogQsl7a6W5vHd2o99fc8
-	 DfLDMoMIBF8pG/7JDT2V5oiVPkt9ANwk9ywKIhtZ7dNRU0Z27oZk9z9RZ1ys7HxMno
-	 gkehyKiJ4e85cefQjwlinAnenQpEZ6+nNPm1f8W8PeGNRrzMAZvEBnpVWPpC6DP04z
-	 AMULdFMwWIwow==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a99c0beaaa2so273044166b.1
-        for <loongarch@lists.linux.dev>; Thu, 17 Oct 2024 23:33:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWVN8eA5GTiA7DBiWa4mhxYz4smnA686Aq7g74u4jM39svmj3hL4jgmKi4UY1dLAFqUfk/jVgFT2rw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx600tPYUDh3s3hm+8GS0mjlaJVmBCRNt15g5E0MuQ2pJ3nE3c8
-	nKU2IMVXE6zgeLq8ISB+dzkF1vFi1j4fWgs/gsH+R0FDVC+dbncTy/glpd1SR61jiUqVcq7YrA4
-	4/8BBsNRkp2XCX9ojNp+mMT7aPo8=
-X-Google-Smtp-Source: AGHT+IGBGbvDGWhwfQDKz+VFSjXUY+hKa89N6yjf3e+e3r5WO+cS3/fWFX1PKGndjUNPovBoJ9B0Y1DctAt1wOFyf80=
-X-Received: by 2002:a17:907:1c24:b0:a9a:6d7:9c4 with SMTP id
- a640c23a62f3a-a9a69a63af8mr114144866b.12.1729233188396; Thu, 17 Oct 2024
- 23:33:08 -0700 (PDT)
+	s=k20201202; t=1729339862;
+	bh=FSuVpxp8ZC8+I9iOSenx9AlHNi52QSz7zz+w4xwBZFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ji+u5mIf1nBg2Nj6gLisAF5MRqi/wx3vBw5aJxxyqXCZq6i3mNEIjudfG3JajAqFI
+	 WJRVPOIUQSQMsfw+JO35XVRk0koV9Zi9I3YAvvjqBLsmrQOq5ay1ac5pdb0lvGGzR1
+	 j08uXL+V5r/xzvXwZInMDzkCPiTd8EFrbVzmdTCt/13Ip6ENRmE+El1EXUc14T5/hg
+	 fuuSACJI10Sa/jG2tlc11AxV3tkbudw+OnnTaatlKtiS8TlF8dKP0jJBWpV4zxhOjz
+	 kxntgxyzd/tCBOSTcO89LQ6Xv/hweCp+LHVMbTjkYPRC9v5XPDgpwR4Gn2FpyhtFiC
+	 QsF+azFAwnoMg==
+Date: Sat, 19 Oct 2024 15:07:00 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 6/8] x86/module: prepare module loading for ROX
+ allocations of text
+Message-ID: <ZxOg5MEXzH4qPq-s@kernel.org>
+References: <20241016122424.1655560-1-rppt@kernel.org>
+ <20241016122424.1655560-7-rppt@kernel.org>
+ <20241016170128.7afeb8b0@gandalf.local.home>
+ <20241017101712.5a052712@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014035855.1119220-1-maobibo@loongson.cn> <20241014035855.1119220-2-maobibo@loongson.cn>
- <CAAhV-H5QkULWp6fciR1Lnds0r00fUdrmj86K_wBuxd0D=RkaXQ@mail.gmail.com>
- <f3089991-fd49-8d55-9ede-62ab1555c9fa@loongson.cn> <CAAhV-H7yX6qinPL5E5tmNVpJk_xdKqFaSicUYy2k8NGM1owucw@mail.gmail.com>
- <a4c6b89e-4ffe-4486-4ccd-7ebc28734f6f@loongson.cn> <CAAhV-H6FkJZwa-pALUhucrU5OXxsHg+ByM+4NN0wPQgOJTqOXA@mail.gmail.com>
- <5f76ede6-e8be-c7a9-f957-479afa2fb828@loongson.cn>
-In-Reply-To: <5f76ede6-e8be-c7a9-f957-479afa2fb828@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 18 Oct 2024 14:32:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H51W3ZRNxUjeAx52j6Tq18CEhB3_YeSH=psjAbEJUdwgg@mail.gmail.com>
-Message-ID: <CAAhV-H51W3ZRNxUjeAx52j6Tq18CEhB3_YeSH=psjAbEJUdwgg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] LoongArch: Set initial pte entry with PAGE_GLOBAL
- for kernel space
-To: maobibo <maobibo@loongson.cn>
-Cc: wuruiyang@loongson.cn, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241017101712.5a052712@gandalf.local.home>
 
-On Fri, Oct 18, 2024 at 2:23=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/10/18 =E4=B8=8B=E5=8D=8812:23, Huacai Chen wrote:
-> > On Fri, Oct 18, 2024 at 12:16=E2=80=AFPM maobibo <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2024/10/18 =E4=B8=8B=E5=8D=8812:11, Huacai Chen wrote:
-> >>> On Fri, Oct 18, 2024 at 11:44=E2=80=AFAM maobibo <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2024/10/18 =E4=B8=8A=E5=8D=8811:14, Huacai Chen wrote:
-> >>>>> Hi, Bibo,
-> >>>>>
-> >>>>> I applied this patch but drop the part of arch/loongarch/mm/kasan_i=
-nit.c:
-> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-lo=
-ongson.git/commit/?h=3Dloongarch-next&id=3D15832255e84494853f543b4c70ced50a=
-fc403067
-> >>>>>
-> >>>>> Because kernel_pte_init() should operate on page-table pages, not o=
-n
-> >>>>> data pages. You have already handle page-table page in
-> >>>>> mm/kasan/init.c, and if we don't drop the modification on data page=
-s
-> >>>>> in arch/loongarch/mm/kasan_init.c, the kernel fail to boot if KASAN=
- is
-> >>>>> enabled.
-> >>>>>
-> >>>> static inline void set_pte(pte_t *ptep, pte_t pteval)
-> >>>>     {
-> >>>>           WRITE_ONCE(*ptep, pteval);
-> >>>> -
-> >>>> -       if (pte_val(pteval) & _PAGE_GLOBAL) {
-> >>>> -               pte_t *buddy =3D ptep_buddy(ptep);
-> >>>> -               /*
-> >>>> -                * Make sure the buddy is global too (if it's !none,
-> >>>> -                * it better already be global)
-> >>>> -                */
-> >>>> -               if (pte_none(ptep_get(buddy))) {
-> >>>> -#ifdef CONFIG_SMP
-> >>>> -                       /*
-> >>>> -                        * For SMP, multiple CPUs can race, so we ne=
-ed
-> >>>> -                        * to do this atomically.
-> >>>> -                        */
-> >>>> -                       __asm__ __volatile__(
-> >>>> -                       __AMOR "$zero, %[global], %[buddy] \n"
-> >>>> -                       : [buddy] "+ZB" (buddy->pte)
-> >>>> -                       : [global] "r" (_PAGE_GLOBAL)
-> >>>> -                       : "memory");
-> >>>> -
-> >>>> -                       DBAR(0b11000); /* o_wrw =3D 0b11000 */
-> >>>> -#else /* !CONFIG_SMP */
-> >>>> -                       WRITE_ONCE(*buddy, __pte(pte_val(ptep_get(bu=
-ddy)) | _PAGE_GLOBAL));
-> >>>> -#endif /* CONFIG_SMP */
-> >>>> -               }
-> >>>> -       }
-> >>>> +       DBAR(0b11000); /* o_wrw =3D 0b11000 */
-> >>>>     }
-> >>>>
-> >>>> No, please hold on. This issue exists about twenty years, Do we need=
- be
-> >>>> in such a hurry now?
-> >>>>
-> >>>> why is DBAR(0b11000) added in set_pte()?
-> >>> It exists before, not added by this patch. The reason is explained in
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
-mmit/?h=3Dv6.12-rc3&id=3Df93f67d06b1023313ef1662eac490e29c025c030
-> >> why speculative accesses may cause spurious page fault in kernel space
-> >> with PTE enabled?  speculative accesses exists anywhere, it does not
-> >> cause spurious page fault.
-> > Confirmed by Ruiyang Wu, and even if DBAR(0b11000) is wrong, that
-> > means another patch's mistake, not this one. This one just keeps the
-> > old behavior.
-> > +CC Ruiyang Wu here.
-> Also from Ruiyang Wu, the information is that speculative accesses may
-> insert stale TLB, however no page fault exception.
->
-> So adding barrier in set_pte() does not prevent speculative accesses.
-> And you write patch here, however do not know the actual reason?
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?h=3Dv6.12-rc3&id=3Df93f67d06b1023313ef1662eac490e29c025c030
-I have CCed Ruiyang, whether the description is correct can be judged by hi=
-m.
+On Thu, Oct 17, 2024 at 10:17:12AM -0400, Steven Rostedt wrote:
+> On Wed, 16 Oct 2024 17:01:28 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > If this is only needed for module load, can we at least still use the
+> > text_poke_early() at boot up?
+> > 
+> >  	if (ftrace_poke_late) {
+> >  		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
+> > 	} else if (system_state == SYSTEM_BOOTING) {
+> > 		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+> >  	} else {
+> >  		mutex_lock(&text_mutex);
+> >  		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
+> >  		mutex_unlock(&text_mutex);
+> >  	}
+> > 
+> > ?
+> > 
+> > The above if statement looks to slow things down just slightly, but only by
+> > 2ms, which is more reasonable.
+> 
+> I changed the above to this (yes it's a little hacky) and got my 2ms back!
+> 
+> -- Steve
+> 
+> DEFINE_STATIC_KEY_TRUE(ftrace_modify_boot);
+> 
+> static int __init ftrace_boot_init_done(void)
+> {
+> 	static_branch_disable(&ftrace_modify_boot);
+> 	return 0;
+> }
+> /* Ftrace updates happen before core init */
+> core_initcall(ftrace_boot_init_done);
 
-Huacai
+We can also pass mod to ftrace_modify_code_direct() and use that to
+distinguish early boot and ftrace_module_init.
+With this I get very similar numbers like with the static branch
 
->
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>
-> >> Obvious you do not it and you write wrong patch.
-> >>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>> Huacai
-> >>>>>
-> >>>>> On Mon, Oct 14, 2024 at 11:59=E2=80=AFAM Bibo Mao <maobibo@loongson=
-.cn> wrote:
-> >>>>>>
-> >>>>>> Unlike general architectures, there are two pages in one TLB entry
-> >>>>>> on LoongArch system. For kernel space, it requires both two pte
-> >>>>>> entries with PAGE_GLOBAL bit set, else HW treats it as non-global
-> >>>>>> tlb, there will be potential problems if tlb entry for kernel spac=
-e
-> >>>>>> is not global. Such as fail to flush kernel tlb with function
-> >>>>>> local_flush_tlb_kernel_range() which only flush tlb with global bi=
-t.
-> >>>>>>
-> >>>>>> With function kernel_pte_init() added, it can be used to init pte
-> >>>>>> table when it is created for kernel address space, and the default
-> >>>>>> initial pte value is PAGE_GLOBAL rather than zero at beginning.
-> >>>>>>
-> >>>>>> Kernel address space areas includes fixmap, percpu, vmalloc, kasan
-> >>>>>> and vmemmap areas set default pte entry with PAGE_GLOBAL set.
-> >>>>>>
-> >>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>> ---
-> >>>>>>     arch/loongarch/include/asm/pgalloc.h | 13 +++++++++++++
-> >>>>>>     arch/loongarch/include/asm/pgtable.h |  1 +
-> >>>>>>     arch/loongarch/mm/init.c             |  4 +++-
-> >>>>>>     arch/loongarch/mm/kasan_init.c       |  4 +++-
-> >>>>>>     arch/loongarch/mm/pgtable.c          | 22 ++++++++++++++++++++=
-++
-> >>>>>>     include/linux/mm.h                   |  1 +
-> >>>>>>     mm/kasan/init.c                      |  8 +++++++-
-> >>>>>>     mm/sparse-vmemmap.c                  |  5 +++++
-> >>>>>>     8 files changed, 55 insertions(+), 3 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch=
-/include/asm/pgalloc.h
-> >>>>>> index 4e2d6b7ca2ee..b2698c03dc2c 100644
-> >>>>>> --- a/arch/loongarch/include/asm/pgalloc.h
-> >>>>>> +++ b/arch/loongarch/include/asm/pgalloc.h
-> >>>>>> @@ -10,8 +10,21 @@
-> >>>>>>
-> >>>>>>     #define __HAVE_ARCH_PMD_ALLOC_ONE
-> >>>>>>     #define __HAVE_ARCH_PUD_ALLOC_ONE
-> >>>>>> +#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-> >>>>>>     #include <asm-generic/pgalloc.h>
-> >>>>>>
-> >>>>>> +static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
-> >>>>>> +{
-> >>>>>> +       pte_t *pte;
-> >>>>>> +
-> >>>>>> +       pte =3D (pte_t *) __get_free_page(GFP_KERNEL);
-> >>>>>> +       if (!pte)
-> >>>>>> +               return NULL;
-> >>>>>> +
-> >>>>>> +       kernel_pte_init(pte);
-> >>>>>> +       return pte;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>>     static inline void pmd_populate_kernel(struct mm_struct *mm,
-> >>>>>>                                           pmd_t *pmd, pte_t *pte)
-> >>>>>>     {
-> >>>>>> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch=
-/include/asm/pgtable.h
-> >>>>>> index 9965f52ef65b..22e3a8f96213 100644
-> >>>>>> --- a/arch/loongarch/include/asm/pgtable.h
-> >>>>>> +++ b/arch/loongarch/include/asm/pgtable.h
-> >>>>>> @@ -269,6 +269,7 @@ extern void set_pmd_at(struct mm_struct *mm, u=
-nsigned long addr, pmd_t *pmdp, pm
-> >>>>>>     extern void pgd_init(void *addr);
-> >>>>>>     extern void pud_init(void *addr);
-> >>>>>>     extern void pmd_init(void *addr);
-> >>>>>> +extern void kernel_pte_init(void *addr);
-> >>>>>>
-> >>>>>>     /*
-> >>>>>>      * Encode/decode swap entries and swap PTEs. Swap PTEs are all=
- PTEs that
-> >>>>>> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> >>>>>> index 8a87a482c8f4..9f26e933a8a3 100644
-> >>>>>> --- a/arch/loongarch/mm/init.c
-> >>>>>> +++ b/arch/loongarch/mm/init.c
-> >>>>>> @@ -198,9 +198,11 @@ pte_t * __init populate_kernel_pte(unsigned l=
-ong addr)
-> >>>>>>            if (!pmd_present(pmdp_get(pmd))) {
-> >>>>>>                    pte_t *pte;
-> >>>>>>
-> >>>>>> -               pte =3D memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-> >>>>>> +               pte =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE);
-> >>>>>>                    if (!pte)
-> >>>>>>                            panic("%s: Failed to allocate memory\n"=
-, __func__);
-> >>>>>> +
-> >>>>>> +               kernel_pte_init(pte);
-> >>>>>>                    pmd_populate_kernel(&init_mm, pmd, pte);
-> >>>>>>            }
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/ka=
-san_init.c
-> >>>>>> index 427d6b1aec09..34988573b0d5 100644
-> >>>>>> --- a/arch/loongarch/mm/kasan_init.c
-> >>>>>> +++ b/arch/loongarch/mm/kasan_init.c
-> >>>>>> @@ -152,6 +152,8 @@ static void __init kasan_pte_populate(pmd_t *p=
-mdp, unsigned long addr,
-> >>>>>>                    phys_addr_t page_phys =3D early ?
-> >>>>>>                                            __pa_symbol(kasan_early=
-_shadow_page)
-> >>>>>>                                                  : kasan_alloc_zer=
-oed_page(node);
-> >>>>>> +               if (!early)
-> >>>>>> +                       kernel_pte_init(__va(page_phys));
-> >>>>>>                    next =3D addr + PAGE_SIZE;
-> >>>>>>                    set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys),=
- PAGE_KERNEL));
-> >>>>>>            } while (ptep++, addr =3D next, addr !=3D end && __pte_=
-none(early, ptep_get(ptep)));
-> >>>>>> @@ -287,7 +289,7 @@ void __init kasan_init(void)
-> >>>>>>                    set_pte(&kasan_early_shadow_pte[i],
-> >>>>>>                            pfn_pte(__phys_to_pfn(__pa_symbol(kasan=
-_early_shadow_page)), PAGE_KERNEL_RO));
-> >>>>>>
-> >>>>>> -       memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-> >>>>>> +       kernel_pte_init(kasan_early_shadow_page);
-> >>>>>>            csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_=
-PGDH);
-> >>>>>>            local_flush_tlb_all();
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtab=
-le.c
-> >>>>>> index eb6a29b491a7..228ffc1db0a3 100644
-> >>>>>> --- a/arch/loongarch/mm/pgtable.c
-> >>>>>> +++ b/arch/loongarch/mm/pgtable.c
-> >>>>>> @@ -38,6 +38,28 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> >>>>>>     }
-> >>>>>>     EXPORT_SYMBOL_GPL(pgd_alloc);
-> >>>>>>
-> >>>>>> +void kernel_pte_init(void *addr)
-> >>>>>> +{
-> >>>>>> +       unsigned long *p, *end;
-> >>>>>> +       unsigned long entry;
-> >>>>>> +
-> >>>>>> +       entry =3D (unsigned long)_PAGE_GLOBAL;
-> >>>>>> +       p =3D (unsigned long *)addr;
-> >>>>>> +       end =3D p + PTRS_PER_PTE;
-> >>>>>> +
-> >>>>>> +       do {
-> >>>>>> +               p[0] =3D entry;
-> >>>>>> +               p[1] =3D entry;
-> >>>>>> +               p[2] =3D entry;
-> >>>>>> +               p[3] =3D entry;
-> >>>>>> +               p[4] =3D entry;
-> >>>>>> +               p +=3D 8;
-> >>>>>> +               p[-3] =3D entry;
-> >>>>>> +               p[-2] =3D entry;
-> >>>>>> +               p[-1] =3D entry;
-> >>>>>> +       } while (p !=3D end);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>>     void pgd_init(void *addr)
-> >>>>>>     {
-> >>>>>>            unsigned long *p, *end;
-> >>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> >>>>>> index ecf63d2b0582..6909fe059a2c 100644
-> >>>>>> --- a/include/linux/mm.h
-> >>>>>> +++ b/include/linux/mm.h
-> >>>>>> @@ -3818,6 +3818,7 @@ void *sparse_buffer_alloc(unsigned long size=
-);
-> >>>>>>     struct page * __populate_section_memmap(unsigned long pfn,
-> >>>>>>                    unsigned long nr_pages, int nid, struct vmem_al=
-tmap *altmap,
-> >>>>>>                    struct dev_pagemap *pgmap);
-> >>>>>> +void kernel_pte_init(void *addr);
-> >>>>>>     void pmd_init(void *addr);
-> >>>>>>     void pud_init(void *addr);
-> >>>>>>     pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
-> >>>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-> >>>>>> index 89895f38f722..ac607c306292 100644
-> >>>>>> --- a/mm/kasan/init.c
-> >>>>>> +++ b/mm/kasan/init.c
-> >>>>>> @@ -106,6 +106,10 @@ static void __ref zero_pte_populate(pmd_t *pm=
-d, unsigned long addr,
-> >>>>>>            }
-> >>>>>>     }
-> >>>>>>
-> >>>>>> +void __weak __meminit kernel_pte_init(void *addr)
-> >>>>>> +{
-> >>>>>> +}
-> >>>>>> +
-> >>>>>>     static int __ref zero_pmd_populate(pud_t *pud, unsigned long a=
-ddr,
-> >>>>>>                                    unsigned long end)
-> >>>>>>     {
-> >>>>>> @@ -126,8 +130,10 @@ static int __ref zero_pmd_populate(pud_t *pud=
-, unsigned long addr,
-> >>>>>>
-> >>>>>>                            if (slab_is_available())
-> >>>>>>                                    p =3D pte_alloc_one_kernel(&ini=
-t_mm);
-> >>>>>> -                       else
-> >>>>>> +                       else {
-> >>>>>>                                    p =3D early_alloc(PAGE_SIZE, NU=
-MA_NO_NODE);
-> >>>>>> +                               kernel_pte_init(p);
-> >>>>>> +                       }
-> >>>>>>                            if (!p)
-> >>>>>>                                    return -ENOMEM;
-> >>>>>>
-> >>>>>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> >>>>>> index edcc7a6b0f6f..c0388b2e959d 100644
-> >>>>>> --- a/mm/sparse-vmemmap.c
-> >>>>>> +++ b/mm/sparse-vmemmap.c
-> >>>>>> @@ -184,6 +184,10 @@ static void * __meminit vmemmap_alloc_block_z=
-ero(unsigned long size, int node)
-> >>>>>>            return p;
-> >>>>>>     }
-> >>>>>>
-> >>>>>> +void __weak __meminit kernel_pte_init(void *addr)
-> >>>>>> +{
-> >>>>>> +}
-> >>>>>> +
-> >>>>>>     pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned lo=
-ng addr, int node)
-> >>>>>>     {
-> >>>>>>            pmd_t *pmd =3D pmd_offset(pud, addr);
-> >>>>>> @@ -191,6 +195,7 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *=
-pud, unsigned long addr, int node)
-> >>>>>>                    void *p =3D vmemmap_alloc_block_zero(PAGE_SIZE,=
- node);
-> >>>>>>                    if (!p)
-> >>>>>>                            return NULL;
-> >>>>>> +               kernel_pte_init(p);
-> >>>>>>                    pmd_populate_kernel(&init_mm, pmd, p);
-> >>>>>>            }
-> >>>>>>            return pmd;
-> >>>>>> --
-> >>>>>> 2.39.3
-> >>>>>>
-> >>>>
-> >>>>
-> >>
-> >>
->
->
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 8da0e66ca22d..859902dd06fc 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -111,17 +111,22 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+  */
+ static int __ref
+ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+-			  const char *new_code)
++			  const char *new_code, struct module *mod)
+ {
+ 	int ret = ftrace_verify_code(ip, old_code);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* replace the text with the new text */
+-	if (ftrace_poke_late)
++	if (ftrace_poke_late) {
+ 		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
+-	else
++	} else if (!mod) {
+ 		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
++	} else {
++		mutex_lock(&text_mutex);
++		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
++		mutex_unlock(&text_mutex);
++	}
+ 	return 0;
+ }
+ 
+@@ -142,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+ 	 * just modify the code directly.
+ 	 */
+ 	if (addr == MCOUNT_ADDR)
+-		return ftrace_modify_code_direct(ip, old, new);
++		return ftrace_modify_code_direct(ip, old, new, mod);
+ 
+ 	/*
+ 	 * x86 overrides ftrace_replace_code -- this function will never be used
+@@ -161,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 	new = ftrace_call_replace(ip, addr);
+ 
+ 	/* Should only be called when module is loaded */
+-	return ftrace_modify_code_direct(rec->ip, old, new);
++	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
+ }
+ 
+ /*
+ 
+
+-- 
+Sincerely yours,
+Mike.
