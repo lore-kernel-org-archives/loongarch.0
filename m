@@ -1,172 +1,217 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BA91EF94A
-	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 13:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729516994; cv=none; b=omH/Fpy0pf5+Q6oeWXVYQH/eSoVtlvzC7U0AxhKt0tc1zVt19Fe/3hHUk5U9VFw6WkRX7cKhJXIyXBEYFCHcVEsO0mAVcJDqLJTg+32FB0xhxzag6hTdT4J9QE675+ggvclvg3YEDK2E/O+Ixs26ht3bspcw9utZBN8TesgDfkw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729516994; c=relaxed/simple;
-	bh=sZVT35tPktjswObqMzDeNjpp8MfKEIT8nIy1KCQbxUQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TJYhFx7AoH6Z2t4vyN5zK0ARPPRsB8eft0WLlZQ/zQZpU2zTdue+MGxb9Xdkzmv1QjmwrW7IXya3JMvILVxJCAcFGlOO8uWRHJqgvOw9dZf49kUtHRPWvKRDXNTgy0wD+H1uqhXLY2KXRLuAQ4chinRqY7F49yLDsavnwVP5I8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1B4ADA7;
-	Mon, 21 Oct 2024 06:23:40 -0700 (PDT)
-Received: from [10.57.24.27] (unknown [10.57.24.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8DCB3F73B;
-	Mon, 21 Oct 2024 06:22:59 -0700 (PDT)
-Message-ID: <b6ca55b7-4de2-4085-97bd-619f91d9fcb8@arm.com>
-Date: Mon, 21 Oct 2024 14:22:56 +0100
+Received: from smtpout144.security-mail.net (smtpout144.security-mail.net [85.31.212.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB0E1E7C0D
+	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 13:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.144
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729517604; cv=fail; b=mZU3TBDXctBG7OsfjBroIyduGZgeEXMdVp9Is/c7tu8cwL7a8Etdue1xWuMhd75qNEPZwIDjeVZLEwhzLh64SMFZhOAuNqrzQzLtdpVWVB/BNywXlG1hs7hUV+N/K7YrMXX8QeS/KVnK/N1V9ood4c9czE3rmMYB86c/9XMQDVo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729517604; c=relaxed/simple;
+	bh=w8lHspuafD0AH9HslKXyIp4SbJ251EihCRXteTVreYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tFUQBo5evfKMEY476KeMIzr1o8RW+dYv1bREdzxnV1wQQ3piYTdkxYy9CFDqhinpn1NQmT2q2aJW5Ue5rHz97aP2vsvOOFcCwpZbORHBtI3aRY8B78LbhLp1L9VBQwJJOENKujo0JpNALfGO99e5kfIdbKERNPUb9nqn9pwd6gk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=XmIv0z3T; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=NO++And6 reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="XmIv0z3T";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="NO++And6"
+Received: from localhost (fx601.security-mail.net [127.0.0.1])
+	by fx601.security-mail.net (Postfix) with ESMTP id 280663495B4
+	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 15:33:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1729517588;
+	bh=w8lHspuafD0AH9HslKXyIp4SbJ251EihCRXteTVreYo=;
+	h=From:To:Cc:Subject:Date;
+	b=XmIv0z3TI7l0GzavW7rrpP2CMISDzRLctke0bjxq29ELPCwpTfneG8gszqJjkOFjF
+	 QeCudnKs8OtcJfB/dm7ySZ0spZd5Fm7l+JXgiru/Si3ewPkopBfr1ZQ8wdrfTEbTly
+	 HnZH47t+SajBIr4HFlNNzGTdnlZeSzqOIACERHUI=
+Received: from fx601 (fx601.security-mail.net [127.0.0.1]) by
+ fx601.security-mail.net (Postfix) with ESMTP id AD2BC3493D9; Mon, 21 Oct
+ 2024 15:33:07 +0200 (CEST)
+Received: from PAUP264CU001.outbound.protection.outlook.com
+ (mail-francecentralazlp17011030.outbound.protection.outlook.com
+ [40.93.76.30]) by fx601.security-mail.net (Postfix) with ESMTPS id
+ ADEFA3496C7; Mon, 21 Oct 2024 15:33:06 +0200 (CEST)
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:118::6)
+ by MR1P264MB2339.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:34::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.29; Mon, 21 Oct
+ 2024 13:33:05 +0000
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626]) by PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626%3]) with mapi id 15.20.8069.027; Mon, 21 Oct
+ 2024 13:33:05 +0000
+X-Secumail-id: <d8dd.67165812.a9338.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KH7as+UstBqEFhqfFUHYj0WYhIx93rtnG24ro6QgiQzWe8LFs9onILwy5nsiewmq+7QL6Pzpan0zKmkopfE5/LSGhyBc3/+IOChHpvfv+0o4FjisX784wyQ4S6fd6T9UqFZOgHPIc5ly3/Pt5rAzK2zJcdIGuhnhJ/pVPhO9a39P2TLBd0qFMXjomrw1IfgqhwH/Mw311y1K026uYmLisxBFsw6ag1HQxjJ/HCURSJrukpVmkJEJi74i1iuf07geTOasxH9m4SVdTlXW2G6ZfejB11W0NKhu+b0/2BLVmOgsKE+yhRsewqVHLPZ7IRpgpgtm9PJ3EK4CVEK4ohGnXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+NVIvkoKG8xDCqZTuSKM/Ypx5a94z7KHzKS38wlN8xI=;
+ b=snSODrRlVabg7TmF21spx2Hmt6wWUaDDEyBvJW/0dSU5Y9xIxSaVtKOXaLFAh72NUXOUWmFO2xAGUbQ5Q4VKb/Ht0Cs1mTQmutLZR8tONLHwJ9tKM/y2fE8yKg/bJprqw0eHySQF9g3xZjljvAIz1sccNmDbiw3KII7otcJGMIl84zqtaogj6c7nJXq2p3fqSxALY5Kvnf1yycCn0eDk3SMao0ZcjuN+yMDmlRcUUdWLTwCbsdfLmAmmWRCSUy09ZafZnGXE1tPYYHBGYeS4Tb0WJsvHhumO6vqB2L39NkmyQeJxVI+q+9AaJhUAeLfMPrJWn8lr6uDwD+xZoDE0Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+NVIvkoKG8xDCqZTuSKM/Ypx5a94z7KHzKS38wlN8xI=;
+ b=NO++And6ib1A+LNRInxvwjNVffa/PQODlz8+hOC8HqIlK8Du44PUuuFMeL63vb93bjpptHUzVrVQsvDgVIc/8iGoR1mgTt/CnYhRu+IvD8SM4tajgLzYFJdPPN8grxD1R2iqX4Z3NNEsmVxeDl5g/kNu1WoAsv5J3VOYXfsL8lVVDVJbFy0XzOdj83L/fKVBuxMlGqf7uEsO1sVR4wfTsCLoLFiq99MHYVoXnFU6aczV894mqxcXvyGImWaCwNjkFtDx2HguyWbdtBcJV6dPeurYkGCo7UQhVPI3cFpBJQwceoydqdbUfvBHq5uT/TQS/dq3lVVY+/GaZ0wb+EepSw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+From: Julian Vetter <jvetter@kalrayinc.com>
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Richard Henderson
+ <richard.henderson@linaro.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ Takashi Iwai <tiwai@suse.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ David Laight <David.Laight@aculab.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Christoph Hellwig <hch@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-arch@vger.kernel.org, Yann Sionneau <ysionneau@kalrayinc.com>, Julian
+ Vetter <jvetter@kalrayinc.com>
+Subject: [PATCH v10 0/4] Replace fallback for IO memcpy and IO memset
+Date: Mon, 21 Oct 2024 15:31:50 +0200
+Message-ID: <20241021133154.516847-1-jvetter@kalrayinc.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS4P192CA0012.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5da::20) To PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:118::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH RFC v2 0/4] mm: Introduce MAP_BELOW_HINT
-To: "Kirill A. Shutemov" <kirill@shutemov.name>,
- Charlie Jenkins <charlie@rivosinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Guo Ren <guoren@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org
-References: <20240829-patches-below_hint_mmap-v2-0-638a28d9eae0@rivosinc.com>
- <yu7um2tcxg2apoz372rmzpkrfgbb42ndvabvrsp4usb2e3bkrf@huaucjsp5vlj>
- <Ztnp3OAIRz/daj7s@ghost>
- <pbotlphw77fkfacldtpxfjcs2w5nhb2uvxszv5rmlrhjm42akd@4pvcqb7ojq4v>
-Content-Language: en-GB
-In-Reply-To: <pbotlphw77fkfacldtpxfjcs2w5nhb2uvxszv5rmlrhjm42akd@4pvcqb7ojq4v>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAYP264MB3766:EE_|MR1P264MB2339:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8dbff9ac-02da-4c15-851c-08dcf1d4e48f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|921020|38350700014;
+X-Microsoft-Antispam-Message-Info: OUBxvrKN575Oug1dyNlHDPwKZPPpPeYxRb3qZ/ZytrqdrGDpZTxFa7RzWm/fenM/TA/R2+edST2ZbqS8+f+g9NkueZcf2U8ETjtGMgsTdjCt6jV28SbgKo6WDtQEXE43My1hWWNtR3afaKxnYGjDiUyOgTYUoOlN53ReViTLPY3+5yxmx2SmNumemRFkiU5TOOpPmaye/LkWdkLFOFPKWgbMFBghHkQrTz1SVOrl8Wz3rkivpvAAf/RCcW7eKYkjFwIcXRUh0GF3eTugG2EWUDUFCvwyMquuzTJRO4AKZI0ZK95Ya3O7eTubxYnw77w1y6qaK4TOtVHMpEb56qgK/WEF5ehKTiup7ofGTqHPFqnG60GDQy5MBUTq1fxP8+wVRaYfvxKyDdU49Z1UBm1YUD3hY3ihlYPI7+hjMt5K07LhUTdAWvl19KE3qluxDJ0ys8qcMyuDugBGQImIf6D82bQuAIF5smeuwOJNjHpRlVwk8WXp018I8eO/BPf3AMLqaH3+a150tVANONe/MsqFeGgEKEvRWWbd/D2RZiB0Z8mHC+X4pEbwZ1wc1bsgFqZAEXe9YMPM6keuN22OJrBXBHkt+t1IL0ypXRVza5cvoBtqqmLMqOqOlAOewVwqqTwPdcohRBSwIHGcr6NLPXZhPQVMjtOC8KCNEoQSotKmAGhvynJVf+D0JRKP1AXod5WM0c4glf1v1Jfu0jJP/VKXKDCnHG1C8poFzu95GJydvU90ILJOXxiqKhgI0a64W/6+VhB+TAASO1O84p7LKMUF634PopiKjf5/i5uyztWk1WOpN1UOvyRviHRq0p7u5YQUZGO2ogGybbhjINNWo8fRN5BpVIUScRCx2++jbSTt5Zb6zXBwJYS6i2Jk5/oKgeHAyZks0nE5riodWCv19glvJm1P1ECzz44XDhXH9TpJIhPiliVCqfjMRSuFgKVpDKbAmXC
+ nu5D8VT1DsdYYa09VNA6ptf9+5Qj1T8sxC3PGaYAycvGdiiUDlw3yNGffCO6ZABdaUSBX94037JbA59NOCFePofm2vPyzNOmepBI/PtfQh8HcKuAgQkE0zuOggVQAEY7NkFgmvwnl+YUPzHbvA1u3WdP76tMC/6vrkHXrsHS1hX4ytnIn+u0vasQ61VwypS5uSORWUUQcyFEAx6MPjhaQBw9sJzqkC83UaaE4VwLn4QIf3ExY6gAUcsA5apa3+NsKpqRchhAo8idazgpCqRq3vhF25bdY2CtUzSrW69rUrpFSHd0ZNmS36HHLkbK8bt97oLIOSFJjxyvvsTLYOhmLL0uoUwr0Ow6Rv9wqjA3Z37asFkehZ+mv2LaSoqKAn+oDtX+xLnF7Zg4dtXHezjLjbO356ZF2cc7guUOT9bxKqssyO7mcUAfPSBSYNSet
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: /Fn4yexOvOhI7DtK2+tDgoyvHKF8pCF00OIB076GFjlUA61OFpDt/OSyQuofAKuPdHJcGQTFKje1x7iRB5AgQ1nuE/4U53m+jxnhbfOsr0wxyBGmHlLt4i59oGaamNtV9iWLy5mbJerzV6C9g2PZy+Trj5loHHthsuFpAoYASVFdPDFUo8qxN0VYL5qSBc6gQXFoR+7J7LnvQskYwH8QFn0WzQUDiRSBxzTmHxktIEycpezKPqctnCD+vjtmlsLdjC3AKaHcA5pawrxpjC/LUEmLhQBmfsTZZfDOYQ4el7pwLU031tfj2BVeNsoKy+xDn8u/ksIASP7g968e2VEmUXMRf3wPHDOjlgZp6gEmzMa0gAiHx25g+STqjl3yH94MU/y4RHDzFgGR4tU3ogusGn6ievb+xSOYJSB9/dn72ZxdKN8pUMSxMHOi+0Fxd6+V21+Z57so7TZcvd7orTKHAhFJo5mi6qJITWJWADzY1UZcMqPULIfnEDiow6t8KgGIRaKBMGrqyMgN5jy5RtsEhi/SH1yAUdtRIRutBsbnn09+OHXXORFP4Ss1HDRnXeZpKvp+eT1lcTJ+b0BtJilsmmJvKQey8CHlrSNL7s1M3ybdZuch15zqiqeilzZyn8zyN/sECcuwHxAL+1qzJJrbx+F8X5RUE4jZajR4XxXpvMWeFPALgvnPE2Zu8GXMV9mqKWsK/1xnZhl6/xAPdrjl6biWVbstCdCwbjdYnEa5SZXkEmBGQu72F9kquBtvupjLBQ0KA/TnHsMbjjlm+B6WJvwGwgt6mDB/Fpa2Kqwi/gfYk8dvfUycjyKnqP9RBI5C0BnnwxjwRO+MuOdWb1VYYkG9nY9LIj5L7aYsz9gqOj6QkzDz5y4/zmK2t7l2VpimB1eqERwXAFdeCH9/SjzK6Ja2IxYL5fBDvbKX7AbLjezlkaVcsHvh9w3/deq2UJRK
+ MAVs3nU+06C2yVML/ESf7AFTkuwN1YiC0IIGHwb5Fb96W5OeF5gTeRqbRnQKZzPlizHXAnQZ88ILbrvMH/fdmuJdrqu4driOvvbf5DaNO90w1QP6Mbx5UEB922pmcLdfTIctFJKryeAfO5al4f4bKsoxoT7cWAZl0RfQzv9x2m+A3E/p6+hKr6a/Vmsjn+CeSnyyhpCPtzgOrz11cuhDKVP26MfIf/GYQgqCAyRyhPqjzVhLedW4176ELZpNZ2UPt8DvbGFSbFzG/oyQKvBm+VTaIQsNzGAxNzqZh/+UdX+Y/bMZBnj+8xoXkaZyL/ttU6vEWc69k9VBiAXqfHXmrw2XjRxw4Vv3AioeqTmV+lDbmcXQhF0YZkq09WSfegL2K6aplrnQn6rvDeQsCKHPnJH+LEueColcwiAsjtpARmVmKPW8fhhe86+KCn48SWdAUfkN7i8Gl+FPUYSaVYARnFunUpt1s55sv5SCHI3rGKA7F/PuldCkUOBgXG4CILD33MUBDJ2p2jZOWLNhDles4R7i3vdg8dabJ3NhDjTX7Y5RMtlEsuSb0UpGY1JzsEg+5O5aeU9HqwiOBEcqgf1iT/8b89AGn6w1TS2SPxe1gf4I23DMulAYXTTX8vjWwzTsewlFFZIDzyi4Hd0yWshd0w==
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dbff9ac-02da-4c15-851c-08dcf1d4e48f
+X-MS-Exchange-CrossTenant-AuthSource: PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2024 13:33:05.0903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K8PnMctSz9zzkr8tF8wTBv3wMF3JidB2DfUH5pQnEK5r7DCKWFCzvrqfYsxYBlGrXWyfxHFw+N7EoruIIzqSzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB2339
+Content-Type: text/plain; charset=utf-8
+X-ALTERMIMEV2_out: done
 
-On 09/09/2024 10:46, Kirill A. Shutemov wrote:
-> On Thu, Sep 05, 2024 at 10:26:52AM -0700, Charlie Jenkins wrote:
->> On Thu, Sep 05, 2024 at 09:47:47AM +0300, Kirill A. Shutemov wrote:
->>> On Thu, Aug 29, 2024 at 12:15:57AM -0700, Charlie Jenkins wrote:
->>>> Some applications rely on placing data in free bits addresses allocated
->>>> by mmap. Various architectures (eg. x86, arm64, powerpc) restrict the
->>>> address returned by mmap to be less than the 48-bit address space,
->>>> unless the hint address uses more than 47 bits (the 48th bit is reserved
->>>> for the kernel address space).
->>>>
->>>> The riscv architecture needs a way to similarly restrict the virtual
->>>> address space. On the riscv port of OpenJDK an error is thrown if
->>>> attempted to run on the 57-bit address space, called sv57 [1].  golang
->>>> has a comment that sv57 support is not complete, but there are some
->>>> workarounds to get it to mostly work [2].
-> 
-> I also saw libmozjs crashing with 57-bit address space on x86.
-> 
->>>> These applications work on x86 because x86 does an implicit 47-bit
->>>> restriction of mmap() address that contain a hint address that is less
->>>> than 48 bits.
->>>>
->>>> Instead of implicitly restricting the address space on riscv (or any
->>>> current/future architecture), a flag would allow users to opt-in to this
->>>> behavior rather than opt-out as is done on other architectures. This is
->>>> desirable because it is a small class of applications that do pointer
->>>> masking.
-> 
-> You reiterate the argument about "small class of applications". But it
-> makes no sense to me.
+Thank you again for your remarks Arnd and Christoph! I have updated the
+patchset, and placed the functions directly in asm-generic/io.h. I have
+dropped the libs/iomem_copy.c and have updated/clarified the commit
+message in the first patch.
 
-Sorry to chime in late on this - I had been considering implementing
-something like MAP_BELOW_HINT and found this thread.
+Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+---
+Changes for v10:
+- Removed libs/iomem_copy.c again
+- Replaced the three functions in asm-generic/io.h directly
+- Updated description for the first patch to clarify the matter
+- Slightly updated description in patches 2 to 4
 
-While the examples of applications that want to use high VA bits and get
-bitten by future upgrades is not very persuasive. It's worth pointing
-out that there are a variety of somewhat horrid hacks out there to work
-around this feature not existing.
+Changes for v9:
+- Moved functions into a new file iomem_copy.c which is built
+  unconditionally
+- Guard prototypes with '#ifndef memcpy_fromio', etc.
+- Dropped patches 5 to 14 for now. I will send some of the changes in
+  separate patches or patchsets to the appropriate mailinglists
+- Added proper reviewed-by and acked-by to arm64 and csky patches
 
-E.g. from my brief research into other code:
+Changes for v8:
+- Dropped the arch/um patch that adds dummy implementations for IO
+  memcpy functions
+- Added 3 new patches that fix the dependency problem for UM (added
+  dependencies on HAS_IOMEM || INDIRECT_IOMEM)
+- Added new patch for s390 to internally call the zpci_memcpy functions
+  and not the generic ones from libs/iomap_copy.c
+- Addressed reviewer comments and replaced 2 or 3 shifts by
+  'qc *= ~0UL / 0xff;'
+- Addressed reviewer comments on pasrisc (masking the int value)
+- Addressed reviewer comments on alpha (masking the int value)
 
-  * Box64 seems to have a custom allocator based on reading 
-    /proc/self/maps to allocate a block of VA space with a low enough 
-    address [1]
+Changes for v7:
+- Added dummy implementations for memcpy_{to,from}io and memset_io on um
+  architecture so drivers that use these functions build for um
+- Replaced all accesses and checks by long type
+- Added function prototypes as extern to asm-generic/io.h
+- Removed '__' from the 3 new function names
+- Some archs implement their own version of these IO functions with
+  slightly different prototypes. So, I added 3 new patches to align
+  prototypes with new ones in iomap_copy.c + io.h
 
-  * PHP has code reading /proc/self/maps - I think this is to find a 
-    segment which is close enough to the text segment [2]
+Changes for v6:
+- Added include of linux/align.h to fix build on arm arch
+- Replaced compile-time check by ifdef for the CONFIG_64BIT otherwise we
+  get a warning for the 'qc << 32' for archs with 32bit int types
+- Suffixed arch commits by arch name
 
-  * FEX-Emu mmap()s the upper 128TB of VA on Arm to avoid full 48 bit
-    addresses [3][4]
+Changes for v5:
+- Added functions to iomap_copy.c as proposed by Arndt
+- Removed again the new io_copy.c and related objects
+- Removed GENERIC_IO_COPY symbol and instead rely on the existing
+  HAS_IOMEM symbol
+- Added prototypes of __memcpy_{to,from}io and __memset_io functions to
+  asm-generic/io.h
 
-  * pmdk has some funky code to find the lowest address that meets 
-    certain requirements - this does look like an ALSR alternative and 
-    probably couldn't directly use MAP_BELOW_HINT, although maybe this 
-    suggests we need a mechanism to map without a VA-range? [5]
+Changes for v4:
+- Replaced memcpy/memset in asm-generic/io.h by the new
+  __memcpy_{to,from}io and __memset_io, so individual architectures can
+  use it instead of using their own implementation.
 
-  * MIT-Scheme parses /proc/self/maps to find the lowest mapping within 
-    a range [6]
+Changes for v3:
+- Replaced again 'if(IS_ENABLED(CONFIG_64BIT))' by '#ifdef CONFIG_64BIT'
+  because on 32bit architectures (e.g., csky), __raw_{read,write}q are
+  not defined. So, it leads to compilation errors
 
-  * LuaJIT uses an approach to 'probe' to find a suitable low address 
-    for allocation [7]
+Changes for v2:
+- Renamed io.c -> io_copy.c
+- Updated flag to 'GENERIC_IO_COPY'
+- Replaced pointer dereferences by 'put_unaligned()'/'get_unaligned()'
+- Replaced '#ifdef CONFIG_64BIT' by 'if(IS_ENABLED(CONFIG_64BIT))'
+- Removed '__raw_{read,write}_native' and replaced by
+  'if(IS_ENABLED(CONFIG_64BIT))' -> '__raw_write{l,q}'
+---
+Julian Vetter (4):
+  Replace fallback for IO memcpy and IO memset
+  arm64: Use new fallback IO memcpy/memset
+  csky: Use new fallback IO memcpy/memset
+  loongarch: Use new fallback IO memcpy/memset
 
-The biggest benefit I see of MAP_BELOW_HINT is that it would allow a
-library to get low addresses without causing any problems for the rest
-of the application. The use case I'm looking at is in a library and 
-therefore a personality mode wouldn't be appropriate (because I don't 
-want to affect the rest of the application). Reading /proc/self/maps
-is also problematic because other threads could be allocating/freeing
-at the same time.
+ arch/arm64/include/asm/io.h     |  11 ---
+ arch/arm64/kernel/io.c          |  87 ------------------------
+ arch/csky/include/asm/io.h      |  11 ---
+ arch/csky/kernel/Makefile       |   2 +-
+ arch/csky/kernel/io.c           |  91 -------------------------
+ arch/loongarch/include/asm/io.h |  10 ---
+ arch/loongarch/kernel/Makefile  |   2 +-
+ arch/loongarch/kernel/io.c      |  94 --------------------------
+ include/asm-generic/io.h        | 116 ++++++++++++++++++++++++++------
+ 9 files changed, 98 insertions(+), 326 deletions(-)
+ delete mode 100644 arch/csky/kernel/io.c
+ delete mode 100644 arch/loongarch/kernel/io.c
 
-Thanks,
-Steve
+-- 
+2.34.1
 
 
-[1] https://sources.debian.org/src/box64/0.3.0+dfsg-1/src/custommem.c/
-[2] https://sources.debian.org/src/php8.2/8.2.24-1/ext/opcache/shared_alloc_mmap.c/#L62
-[3] https://github.com/FEX-Emu/FEX/blob/main/FEXCore/Source/Utils/Allocator.cpp
-[4] https://github.com/FEX-Emu/FEX/commit/df2f1ad074e5cdfb19a0bd4639b7604f777fb05c
-[5] https://sources.debian.org/src/pmdk/1.13.1-1.1/src/common/mmap_posix.c/?hl=29#L29
-[6] https://sources.debian.org/src/mit-scheme/12.1-3/src/microcode/ux.c/#L826
-[7] https://sources.debian.org/src/luajit/2.1.0+openresty20240815-1/src/lj_alloc.c/
 
-> With full address space by default, this small class of applications is
-> going to *broken* unless they would handle RISC-V case specifically.
-> 
-> On other hand, if you limit VA to 128TiB by default (like many
-> architectures do[1]) everything would work without intervention.
-> And if an app needs wider address space it would get it with hint opt-in,
-> because it is required on x86-64 anyway. Again, no RISC-V-specific code.
-> 
-> I see no upside with your approach. Just worse user experience.
-> 
-> [1] See va_high_addr_switch test case in https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/mm/Makefile#n115
-> 
+
 
