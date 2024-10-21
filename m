@@ -1,261 +1,214 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB611E1A1F
-	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 08:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729497866; cv=none; b=JSU3k735ET8tlu1vCOOoBESa7lVVJd6CHCWfsnQR70JIAAgqKzO5UErW2wIOeUu/bTCTnNT/w0SfC/xD7cQL9ITFJV55i5xoYLTWB2BM1Ify0cSK7NMRbbVLRX4YG+XQ+oo4tWLRgK+azpHFNZWPe1NfPH3Dg1dCZ8mxjsrLm7U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729497866; c=relaxed/simple;
-	bh=vstX315IIpoVbrYFM3sNoFE437DJvGOfjow7ypYzYUI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rZLh3CphQ65E8yCh0qAhz652tP02ZX2vfzw/jJa2uvXmo5Roktcdv/hWujU+l+pdqaFoDGZM5GUegT6AMxSbj4SOQDdOpQ56Sp8qoggkY0RF5r+SXgliRtXEXCFyLMk3jKuCe/H7tIq74f1Yx+uEIystsJLMwdx8oIvybi26wYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxDeMDCxZn5XoBAA--.3571S3;
-	Mon, 21 Oct 2024 16:04:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCxyOIDCxZnVIECAA--.14813S2;
-	Mon, 21 Oct 2024 16:04:19 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lixianglai@loongson.cn,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH v2] LoongArch: Fix cpu hotplug issue
-Date: Mon, 21 Oct 2024 16:04:18 +0800
-Message-Id: <20241021080418.644342-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144611E105F;
+	Mon, 21 Oct 2024 08:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729500730; cv=fail; b=NZPUPo6rlfLj4iPC9FJwVgTif45bN7VQHPwMEMK6fzIZximTEIbE2KfvjIBTxf3K7EkMWR1ppBeXYNv+sbPSW7YqQeQHUytyYhwvSjSEjQvUWmzkyrsGOkaEmC/cL9kpBXfBNkHk/DQzgsGeiv618M8vSttO8XTvISRYE4J+sOA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729500730; c=relaxed/simple;
+	bh=UmCVUadY0XQbAouwg12mm2XIFYAcniWP+ODeqm1h7vs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KLd9CTHeilXkX8avb8sGeku7hCNt4by81AAwtOKdk+7NN+0ERpn3Q5Nxqs6at6pvJq8etRT2PDET87edEEw5QzF3Q3EN3VWwvZLtS41eKBk9BTjRGTGRvOFgnY8dO18uVJCdJWge6e2L5roCtPgj8VFeIqggCiyGw33LBszQDoQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZwSkRb1/; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZwSkRb1/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729500726; x=1761036726;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=UmCVUadY0XQbAouwg12mm2XIFYAcniWP+ODeqm1h7vs=;
+  b=ZwSkRb1/J2O57m5wqaG+NN1nK1FXT4QtIDo5K31xkPg7l/zyQ9FcB4/T
+   DtphCqBipY7XzYv18fjej74We9clatemC5khhFUFMcswiKh9zUTGmdb+f
+   vB2/aXpviDv5NEbZmlkk12EiKBqPN5aSyk/SbFpcJiOm/6shjum3ioBnZ
+   2Ya5KoF9SavGCLm+yM1YvqQ9T5RaeElZFJjTlv/2BIYWDcZBJ72sFNBfO
+   R8WsbJQc538jat+3tRdNw1hzAYrXm/AtJvuIxl026MakLrIPKjlfWZscR
+   MJcNaZ5KAyfh7Lsn6HU11MVvafD8qC7Q6qDAJ0Nqna3FNOgAfY480TKgB
+   w==;
+X-CSE-ConnectionGUID: rZ6GHSYRSxCeqq/YZDxlxg==
+X-CSE-MsgGUID: RHE4Gdp7Slqh/HUF3F2Syg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="46439784"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="46439784"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 01:52:05 -0700
+X-CSE-ConnectionGUID: mLOKVX9pR0GT+kqfQbMnKg==
+X-CSE-MsgGUID: VBAgJVY9SriF6Y4+RQgLYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="84062020"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Oct 2024 01:52:04 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 21 Oct 2024 01:52:03 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 21 Oct 2024 01:52:03 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 21 Oct 2024 01:52:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LZM3EyV0zYvOpYT3nPzsVeLKXeXDPeijKKaprxuOjvVZiCOAU3GU3jQYFFW8SEvSM1JeScz/3B5mqMt0GKB8hsYoSfud+QxT8OvbdbezI1ySh7WVP89dXWdaY+gtM7dEvVnNrPmwVv9AxgfywQN0KQVfY7nu53GggIpKk/4wg9eulusiL25F1ZgKZClBZ0htnQYs/LfGPh5KoZKBSc9aj3fXTTOGZeO4Nw3vwBxyGfLY2YwP1th0j6iOtz+7fOn5jBnjKY3OcOg5hvCUuoRumJEONvOeZ8h3EQxqu8Nu3WxMgJNgiVCe5s8uzI52CFz+kJgFn5KJzP7SEJcGmjEjsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uCzohcyqGktLOLCuYw2UV1L3LqWuQ1djso/efRtphes=;
+ b=Kb/aQep5zWuSRKxIUXMIgdivFwOa0uaiP7VLBGNCjVUnjPX9ix0DYCoPhJQqBq25CvdU6Wsoklb2x4Ouio6gPqiHXErN7HtYbcr6uTCQMd5bwKuVeYbS5qNGMYoLBBRiV/igTb6vAKo3nm+HQxtW4UXnMSd1Cj67cmBM7xd/fIsRZRG/URRK0tHQyh54/x+wFTSh0Hwt4kfY5cwsUBaczrvu8QCHLU0xhXTrRx6GobwYJCfbnFNRWEvVZe3HEbWPVwIcXxV54p1AAmRJl+fikYuhNfs9FgEKNAOQNu8MGJaQZ5/Lnh63Gk2wextC/1oiDLg9T0snMTEKv+CW5n1ozQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ DM4PR11MB5232.namprd11.prod.outlook.com (2603:10b6:5:38b::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.28; Mon, 21 Oct 2024 08:52:01 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%5]) with mapi id 15.20.8069.027; Mon, 21 Oct 2024
+ 08:52:00 +0000
+Date: Mon, 21 Oct 2024 16:49:34 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	"Oliver Upton" <oliver.upton@linux.dev>, Tianrui Zhao
+	<zhaotianrui@loongson.cn>, "Bibo Mao" <maobibo@loongson.cn>, Huacai Chen
+	<chenhuacai@kernel.org>, "Michael Ellerman" <mpe@ellerman.id.au>, Anup Patel
+	<anup@brainfault.org>, "Paul Walmsley" <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Christian
+ Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank
+	<frankja@linux.ibm.com>, "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
+	<kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <loongarch@lists.linux.dev>,
+	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Alex =?iso-8859-1?Q?Benn=E9e?=
+	<alex.bennee@linaro.org>, David Matlack <dmatlack@google.com>, David Stevens
+	<stevensd@chromium.org>, Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [PATCH v13 19/85] KVM: Introduce kvm_follow_pfn() to eventually
+ replace "gfn_to_pfn" APIs
+Message-ID: <ZxYVnsW9WF1Wp8mx@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20241010182427.1434605-1-seanjc@google.com>
+ <20241010182427.1434605-20-seanjc@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20241010182427.1434605-20-seanjc@google.com>
+X-ClientProxiedBy: SG2PR06CA0214.apcprd06.prod.outlook.com
+ (2603:1096:4:68::22) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxyOIDCxZnVIECAA--.14813S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM4PR11MB5232:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc71a198-2077-47d5-a00f-08dcf1ada0b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?0SfGABlpa4UgrHE0r9T+W2of9GjDJ6z+/yh5sNLtiYPBm2EmZEt3MoLDBAJw?=
+ =?us-ascii?Q?GrHPFKOfY4zbT16w+skIEv7qkJWauu4vBnWFMWh2dbGmb9CEqzdzBA0W0fJo?=
+ =?us-ascii?Q?SumX75IfhIO6hOmKLWYq0WN5MMI4GQ3UfkPoKf1ZiQkNIx9wxoqjE+J0xHnM?=
+ =?us-ascii?Q?o5ioA8raK5kg+0BvmzK61tdi1H+hfTuN94fITvQPfLabbl799X0sMuD5ITRY?=
+ =?us-ascii?Q?xEVZ7mziobXE4Vw4dlWCT3qZwFg5oVR1cgd4A0t6iFlKkcTN8Hrsjs1SBRVe?=
+ =?us-ascii?Q?FQVlxsHy0aH0xfYgESZqVc8t7l0ASAjiNNMIZVXWB4M0n3ipabRWzi8svBfq?=
+ =?us-ascii?Q?1uwBdTtkzoaiGRPDUQvfD/bBUCGN+hNo2/Jz5IXFrnfPrkw4l1jEoJW+hpDY?=
+ =?us-ascii?Q?1Aothrl6qe9pxUMl7TYJBPF4pOK6oDqECq/12ROFdCIIdV1yFxEqHqIwuieM?=
+ =?us-ascii?Q?JXkqPpOQQgDIKGWFAjYRWTwcNvcwS6zn+3daDd0x3wGJPvsi0GslRZOrF3F6?=
+ =?us-ascii?Q?bysaZDGnCyXkJL0EAfU41iS6nMr+yPG89xcsNa3k3fB3ftlxyGj9klNPb+AT?=
+ =?us-ascii?Q?f6riAHA6q6c/HpGjvdRdXvs8jyM4hHYp2YO97460eCi2L824Goifwnz3/P5z?=
+ =?us-ascii?Q?Vswavz5NKvklN9w36rqhrLcARgkPap+1JDG3FqbcitAHX9RjUwkW+uVVKbbV?=
+ =?us-ascii?Q?p0Hj78Vf76/od8Y6kvUYzd9a09q6/gv4ktuByxpL6MBINfi6x9FI/TJhGu/c?=
+ =?us-ascii?Q?IKc+dGhuhf3mtVjjGlw8R0mcPpr89aZYdbe4QFthZ3XW5KxsorRPStrX/HEP?=
+ =?us-ascii?Q?uqIyYlQ6dQchSQZYmExFsSojrxV1oFKuUTNpn6DyjagnprVz1BhBvhTANDza?=
+ =?us-ascii?Q?Ej01A3o5/92lrHLTxYM43kwihfJ7zeLqhkCP/OUdU0vzsdixDFBmW1Nult2Z?=
+ =?us-ascii?Q?4w+eCUgGLV3ZPv89wTiDr+pDWSd7m4kbwiVspzGqUkTcuO5776hG9rWi52/f?=
+ =?us-ascii?Q?wRU6zRFX82WdTYcWxEATPTCbBAn45xwf10or28pDxePuITiDd/q9fi3iQrpw?=
+ =?us-ascii?Q?j/avV05nPYTVPX1nC1tHtQzHRnXnXcaRwevMMk/GxpzlFMLhO+y7I5qFZWAJ?=
+ =?us-ascii?Q?YlChG/Iae5kYluV5TyogYCuwjNF4tykWGV89YNi62RcDO9tT9SANT34qb6hv?=
+ =?us-ascii?Q?SpmAKx18P6kHwvVOhfBrQmWM0oNjuHpGU5l/A37OWcrW6ti7kD4m1UAmXINz?=
+ =?us-ascii?Q?Jn+b8VjK+3F+Y3JouF99m/z5wbA35j0vmfMdEj+G8saTqf0L8KDKlFbN7naH?=
+ =?us-ascii?Q?XfVa4CCD+aw2JdAlxs+bpCuV?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KZqcq2YOUXwvkW7+3nSXxYahTb8YHYxxlhycqz/nYmFQex/N9JWtscpO4q3U?=
+ =?us-ascii?Q?BkBp8bvB7xsyU7lSpKKbkkPIu0BuE7aqo5uYvC5zLBUeDLeZZHW4uTRZKTfu?=
+ =?us-ascii?Q?kMbrzaeaW/7l+haU4LvMCJvhRyS55+aYcuWV3Ym9ajKX1VaPyhRN9rdczruc?=
+ =?us-ascii?Q?BgkjHXEv5pioizS49CPCfFCwoBV9fdVs4hcpaS9Q4JzqMA5NAw4pAol+C0m3?=
+ =?us-ascii?Q?VNVrNVvzqFJy3QS/8KzQA/A8BzFyNT4hGZIsFl7S0SIcP50nJ2GwsqlENk8K?=
+ =?us-ascii?Q?YCqXOhVAXAvUxvuZfo8/iFX54BA3am5orMtbT0QQNuixQuKnJLw7Zyf2KI4F?=
+ =?us-ascii?Q?rGuG9e9z1u2V4Ue1+s5L2NmTw1iwNeBsZDZws+hwCX5gNNS528PLXJ6JQ9Q6?=
+ =?us-ascii?Q?Szg1Eo/YoWqDsTUVk+g6Eq+wKygTmR71TJ/FR9Dk5PBFlIcIR6eaCvgFcfIg?=
+ =?us-ascii?Q?DbI8qF10yG582Wqve9deRf6+q1RuTBQDpIFW/nOYPi+hlhrdvlWoS3bsefzn?=
+ =?us-ascii?Q?p6bA1a0u5FhJd9N/uQNsdTeBuTkoswNu7OioWbAN/iswuoifgtk2Dvv8wCSl?=
+ =?us-ascii?Q?p4g+MhcPbg6omwJzmZyfXlCuDl1eooSQPnrKVEMdcKNyw6v2AnQ5fNykv6M6?=
+ =?us-ascii?Q?lz5TGeCfVRjm02oETCJLnFMLPfULBaet6WzNPweRfiUTY7o6mo6UsEUqD0s+?=
+ =?us-ascii?Q?RCAg+AX7KOVGwhLKTSXKp942cS+8fyvGQdyp6xLxAO22GfhxTctKPgjh1EDl?=
+ =?us-ascii?Q?MwyE7yM2DcF1nl2nWD3lU2AI9rBnO1o0a4YwpiXfDmJ4RnvSVqUDl+RJ27ku?=
+ =?us-ascii?Q?ySpr0aq+b9HWj76jI4sqFjxUXNLvuZbjPrxY5lmlWh0OC2A5NmDPM6jmWQlV?=
+ =?us-ascii?Q?Jox9DkAJaowzDvKut/9TuYwUBxbzIg9GXIGgWhc1HfNKyNkyK4z7o1Lfb510?=
+ =?us-ascii?Q?0SOckGtyyo1LAlEpuCNP2rAdxAJqZng4Aohb7wIukYkWNqjQnzp7rzniDxS4?=
+ =?us-ascii?Q?YGsJQ47JEysB3/4lpVEAbX4bvXA5yf/xf8s9mLa9GgsqNsI45ixOByQTPMBg?=
+ =?us-ascii?Q?atXNWxiWiRsu0agDJyY62fjlbKGCgk/8B6385pLYFmrr5r5z55ioXI8XzcN7?=
+ =?us-ascii?Q?7tbfmVEfZ/hJYVCKFZqjNbygbgTg0vPjdDdvZGRDNuJG9Q4tlXXoRxDI6WIM?=
+ =?us-ascii?Q?ZYCn1pG2zrXuz+VIHMAh/HoKzPx9oLpvJLZPf2GSD2t+JHAxS9rYrSRiA1h2?=
+ =?us-ascii?Q?vV+J6wavuRkmq4g0SCjM2sj7Q9++5Vm935ZU1FVUUw0ALVbQKAssCUmX1Q0L?=
+ =?us-ascii?Q?yG9c9yGKmhIANZxuezVKn0qDysiPpH5ptijp+zuy2EOnE0iB6dHKKvn+v6Up?=
+ =?us-ascii?Q?iat0jywpdv2cBx6o9v/zUpqrrHw+7L+7giAAMeCFNPZKxRulBCOPqDBn8NtK?=
+ =?us-ascii?Q?pzMHQFBg4UiEGQonfVOiySxmuG0cVFk2G/kzZtkaEJwaI7WcSUCBKt1xM7Ym?=
+ =?us-ascii?Q?WIlz4Jc9Hvguy/OHDACdvugOZeICG6BvDGCfH1yNNwCFgYfG7G840WgBB046?=
+ =?us-ascii?Q?ERfJ3ZKVrJz+ht4g1w9oYmIVEgdnHgpCOY4mMt8Z?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc71a198-2077-47d5-a00f-08dcf1ada0b6
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2024 08:52:00.9317
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yPgRRSuW79sPeyx02EjaF6nJg2lN1TfuMgXInPjg2JAPhAosYNfjoR5HJOT+GlijUlFlda8mjdmwqXChq6iyOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5232
+X-OriginatorOrg: intel.com
 
-On LoongArch system, there are two places to set cpu numa node. One
-is in arch specified function smp_prepare_boot_cpu(), the other is
-in generic function early_numa_node_init(). The latter will overwrite
-the numa node information.
+On Thu, Oct 10, 2024 at 11:23:21AM -0700, Sean Christopherson wrote:
+> --- a/virt/kvm/pfncache.c
+> +++ b/virt/kvm/pfncache.c
+> @@ -159,6 +159,12 @@ static kvm_pfn_t hva_to_pfn_retry(struct gfn_to_pfn_cache *gpc)
+>  	kvm_pfn_t new_pfn = KVM_PFN_ERR_FAULT;
+>  	void *new_khva = NULL;
+>  	unsigned long mmu_seq;
+> +	struct kvm_follow_pfn kfp = {
+> +		.slot = gpc->memslot,
+> +		.gfn = gpa_to_gfn(gpc->gpa),
+> +		.flags = FOLL_WRITE,
+> +		.hva = gpc->uhva,
+> +	};
+Is .map_writable uninitialized?
 
-With hot-added cpu without numa information, cpu_logical_map() fails
-to its physical cpuid at beginning since it is not enabled in ACPI
-MADT table. So function early_cpu_to_node() also fails to get its
-numa node for hot-added cpu, and generic function
-early_numa_node_init() will overwrite with incorrect numa node.
-
-APIs topo_get_cpu() and topo_add_cpu() is added here, like other
-architectures logic cpu is allocated when parsing MADT table. When
-parsing SRAT table or hot-add cpu, logic cpu is acquired by searching
-all allocated logical cpu with matched physical id. It solves such
-problems such as:
-  1. Boot cpu is not the first entry in MADT table, the first entry
-will be overwritten with later boot cpu.
-  2. Physical cpu id not presented in MADT table is invalid, in later
-SRAT/hot-add cpu parsing, invalid physical cpu detected is added
-  3. For hot-add cpu, its logic cpu is allocated in MADT table parsing,
-so early_cpu_to_node() can be used for hot-add cpu and cpu_to_node()
-is correct for hot-add cpu.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-v1 ... v2:
-  1. Like other architectures, allocate logic cpu when parsing MADT table.
-  2. Add invalid or duplicated physical cpuid parsing with SRAT table or
-hot-add cpu DSDT information.
----
- arch/loongarch/include/asm/smp.h |  3 ++
- arch/loongarch/kernel/acpi.c     | 24 ++++++++++------
- arch/loongarch/kernel/setup.c    | 47 ++++++++++++++++++++++++++++++++
- arch/loongarch/kernel/smp.c      |  9 +++---
- 4 files changed, 70 insertions(+), 13 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 3383c9d24e94..c61b75937a77 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -119,4 +119,7 @@ static inline void __cpu_die(unsigned int cpu)
- #define cpu_logical_map(cpu)	0
- #endif /* CONFIG_SMP */
- 
-+int topo_add_cpu(int physid);
-+int topo_get_cpu(int physid);
-+
- #endif /* __ASM_SMP_H */
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index f1a74b80f22c..84d9812d5f38 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -78,10 +78,10 @@ static int set_processor_mask(u32 id, u32 flags)
- 		return -ENODEV;
- 
- 	}
--	if (cpuid == loongson_sysconf.boot_cpu_id)
--		cpu = 0;
--	else
--		cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
-+
-+	cpu = topo_add_cpu(cpuid);
-+	if (cpu < 0)
-+		return -EEXIST;
- 
- 	if (!cpu_enumerated)
- 		set_cpu_possible(cpu, true);
-@@ -203,8 +203,6 @@ void __init acpi_boot_table_init(void)
- 		goto fdt_earlycon;
- 	}
- 
--	loongson_sysconf.boot_cpu_id = read_csr_cpuid();
--
- 	/*
- 	 * Process the Multiple APIC Description Table (MADT), if present
- 	 */
-@@ -257,7 +255,7 @@ void __init numa_set_distance(int from, int to, int distance)
- void __init
- acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
- {
--	int pxm, node;
-+	int pxm, node, cpu;
- 
- 	if (srat_disabled())
- 		return;
-@@ -286,6 +284,11 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
- 		return;
- 	}
- 
-+	cpu = topo_get_cpu(pa->apic_id);
-+	/* Check whether apic_id exists in MADT table */
-+	if (cpu < 0)
-+		return;
-+
- 	early_numa_add_cpu(pa->apic_id, node);
- 
- 	set_cpuid_to_node(pa->apic_id, node);
-@@ -324,12 +327,17 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *pcpu
- {
- 	int cpu;
- 
--	cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
-+	cpu = topo_get_cpu(physid);
-+	/* Check whether apic_id exists in MADT table */
- 	if (cpu < 0) {
- 		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
- 		return cpu;
- 	}
- 
-+	num_processors++;
-+	set_cpu_present(cpu, true);
-+	__cpu_number_map[physid] = cpu;
-+	__cpu_logical_map[cpu] = physid;
- 	acpi_map_cpu2node(handle, cpu, physid);
- 
- 	*pcpu = cpu;
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 00e307203ddb..649e98640076 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -65,6 +65,8 @@ EXPORT_SYMBOL(cpu_data);
- 
- struct loongson_board_info b_info;
- static const char dmi_empty_string[] = "        ";
-+static int possible_cpus;
-+static bool bsp_added;
- 
- /*
-  * Setup information
-@@ -346,10 +348,55 @@ static void __init bootcmdline_init(char **cmdline_p)
- 	*cmdline_p = boot_command_line;
- }
- 
-+int topo_get_cpu(int physid)
-+{
-+	int i;
-+
-+	for (i = 0; i < possible_cpus; i++)
-+		if (cpu_logical_map(i) == physid)
-+			break;
-+
-+	if (i == possible_cpus)
-+		return -ENOENT;
-+
-+	return i;
-+}
-+
-+int topo_add_cpu(int physid)
-+{
-+	int cpu;
-+
-+	if (!bsp_added && (physid == loongson_sysconf.boot_cpu_id)) {
-+		bsp_added = true;
-+		return 0;
-+	}
-+
-+	cpu = topo_get_cpu(physid);
-+	if (cpu >= 0) {
-+		pr_warn("Adding duplicated physical cpuid 0x%x\n", physid);
-+		return -EEXIST;
-+	}
-+
-+	if (possible_cpus >= nr_cpu_ids)
-+		return -ERANGE;
-+
-+	__cpu_logical_map[possible_cpus] = physid;
-+	cpu = possible_cpus++;
-+	return cpu;
-+}
-+
-+static void __init topo_init(void)
-+{
-+	loongson_sysconf.boot_cpu_id = read_csr_cpuid();
-+	__cpu_logical_map[0] = loongson_sysconf.boot_cpu_id;
-+	possible_cpus++;
-+}
-+
- void __init platform_init(void)
- {
- 	arch_reserve_vmcore();
- 	arch_reserve_crashkernel();
-+	topo_init();
- 
- #ifdef CONFIG_ACPI
- 	acpi_table_upgrade();
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 9afc2d8b3414..a3f466b89179 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -291,10 +291,9 @@ static void __init fdt_smp_setup(void)
- 		if (cpuid >= nr_cpu_ids)
- 			continue;
- 
--		if (cpuid == loongson_sysconf.boot_cpu_id)
--			cpu = 0;
--		else
--			cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
-+		cpu = topo_add_cpu(cpuid);
-+		if (cpu < 0)
-+			continue;
- 
- 		num_processors++;
- 		set_cpu_possible(cpu, true);
-@@ -302,7 +301,7 @@ static void __init fdt_smp_setup(void)
- 		__cpu_number_map[cpuid] = cpu;
- 		__cpu_logical_map[cpu] = cpuid;
- 
--		early_numa_add_cpu(cpu, 0);
-+		early_numa_add_cpu(cpuid, 0);
- 		set_cpuid_to_node(cpuid, 0);
- 	}
- 
-
-base-commit: 42f7652d3eb527d03665b09edac47f85fb600924
--- 
-2.39.3
-
+>  
+>  	lockdep_assert_held(&gpc->refresh_lock);
+>  
+> @@ -197,8 +203,7 @@ static kvm_pfn_t hva_to_pfn_retry(struct gfn_to_pfn_cache *gpc)
+>  			cond_resched();
+>  		}
+>  
+> -		/* We always request a writable mapping */
+> -		new_pfn = hva_to_pfn(gpc->uhva, false, false, true, NULL);
+> +		new_pfn = hva_to_pfn(&kfp);
+>  		if (is_error_noslot_pfn(new_pfn))
+>  			goto out_error;
+>  
+> -- 
+> 2.47.0.rc1.288.g06298d1525-goog
+> 
