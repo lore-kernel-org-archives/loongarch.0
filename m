@@ -1,518 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F6B1E2834
-	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 10:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729505618; cv=none; b=tg5dW7h4qQ7pcY7PHMkopivAkPY0Gcw4q/WKfVv1YJ92V3bRKorQKknkwkeLdf6jvfbAxTDclcgYXTfwjQnkNMgx00lEdWKZgtK6lZtauVfUVcDMwRHk7r6poKQCAuC+nqfnWqqIG5de1GEXJASRPnULBgHv788IFYlsjTW7OiE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729505618; c=relaxed/simple;
-	bh=jgibUuUlmzffYqsQkg5W+yVcI04OIHEGmRwn6NuO/wU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=axLLeVhHbspfLM6Nmy8yLItWODgyUuN9yhu8UNNggeuzC1B2jEeGWexfRN6iPK9j2INfJ2WR+aElHdQtvbazAsXT4N7jdoBxJExCyH7v5c5PlEBkzXZUfauWl29NFv9AH5DdOxn0fT/scq2gtg9DG9AwsyCht0WR7/NQOQOETXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8CVaWgK; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63ADB1E47AA;
+	Mon, 21 Oct 2024 10:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729506330; cv=fail; b=OHGTILo4k6Jf2fH/q2Ex+TgdyXMsfN1SlDNzGtprVWcb0SYYw1mf6zgZXh93cJLu65t1inmBm8QYnnPIaih5L9k3GQWlJNntBV6ta0cgUQN/Db3VU7ngLXN4vVotFt+c5p4inZY+UbXBi+gUMU5MoDgNUty97YB4yGwAb3dIstw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729506330; c=relaxed/simple;
+	bh=5zB52uVuqlzAAFYguBNLLglR2Vd/St7NN8j7fLUatVU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HS1mVclUD8sVrC4VmORJ5oNCp0OPaSWMZitYxiDLLRSyREbBlbReibBnTOFceOFuqumkaaefpkFdca9wjxaArWWry+OWJ2oPUb/iMf63GSxh18oD+SzLMsgOe2NyzYYlXYjvvknjjuAfidCvcGTpg7g9qm7opUdxbfaq0H18GgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JsDdiR8r; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8CVaWgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06EAC4CEEA
-	for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 10:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729505617;
-	bh=jgibUuUlmzffYqsQkg5W+yVcI04OIHEGmRwn6NuO/wU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=O8CVaWgKGMhB0cBPkApEVVEUDRMYrD7xqVCOt0yoZtyt6QGgwVQ3ptHt0jB7djrkB
-	 /mlbBfaR2RXCgCKzS25NVvzir/j4HKgSlEoKlHOzDW+xePTLFusb6wI0Cv80FyMkFI
-	 8OTUo0f4qHR3syPBXiYCDPCToRNIQP0iwdsz/TFvZCpnfLEfrsnKbFzrMnCIHlUr8j
-	 8gqpGl3AoPfp3a2+ejLi4UKG1bh0GpFt1mCu9/TfA7f2E4CLXNK4q5UfREhRAE08Ur
-	 LQXANATocN1JCmkfbwpA3a5SgUBtqbtChK+nOY9tIF6e+GsoD6rmvYXgP4H9Lq33fq
-	 X3UGYlLa4/2ZQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a0ef5179dso636019766b.1
-        for <loongarch@lists.linux.dev>; Mon, 21 Oct 2024 03:13:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU32kdKi9empXz65/34IPpMLIkiKyEdMlmdSSFIM6sFyc782mCd1W0RMTlm+Owv0Q/YpBuadBwFDP0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwEpzueLjZ1NrCFOeye7yNa1cjICo5xTSb2f8cA8F0cGMdNxsHs
-	l9lZC5qijrPdVck1zbaAnkxrkP8FbncMTJogCRNRh4tO4IsM49FtlH49W9UXq/e+iQtD6zoWe/e
-	2kWEfTPrTusuMC17DoRGPD0FWIVY=
-X-Google-Smtp-Source: AGHT+IGkScV1UZ4+JsX1t5mnmGxuvMdzS/NJr4OXeJMsMFge9N+OTDfUV2GMn59vK/I6+b7B/D8r6K8TkoU1q96HgQc=
-X-Received: by 2002:a17:906:478b:b0:a99:4025:82e1 with SMTP id
- a640c23a62f3a-a9a69c55c81mr1013062566b.41.1729505615843; Mon, 21 Oct 2024
- 03:13:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JsDdiR8r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729506326; x=1761042326;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=5zB52uVuqlzAAFYguBNLLglR2Vd/St7NN8j7fLUatVU=;
+  b=JsDdiR8rDn/rBYEM9TDPdGc+jJR0gByPkRIJJSIKzU7kH1W0UbZ6C09C
+   Mp1CEJLIypQ+qRl1nPcvkXGt8T//+/uSFLL8gVF9FFB8+HXtk7Jka4QAD
+   yvZhkVtl1aIfGElqcgZS5/qeE6xWJ6M6tZR2xP9VrcRxwM3ET15N+HpHG
+   S2LjNmtplAcpdJRzq+w69f0S8N6a+luTsnUFJii8fwIKCfY2TYKtHyhfy
+   ixnZlBys5RzCpvcGVEvfkV6XeZCKVC7hXUtHxzT1AJYEEHXfjU2ZCSKrB
+   yoi2Ga1qQn6zPDxo7oWW7QOA4UxiGcUMJVIJVjo4mJ9C8hGE+IJ1GRW5K
+   Q==;
+X-CSE-ConnectionGUID: CLnoRdOuQrS2tuf2+vQGJA==
+X-CSE-MsgGUID: WrjQCHf+QdmXC//IgxXjSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="29102519"
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="29102519"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 03:25:25 -0700
+X-CSE-ConnectionGUID: Pyk3IXmWTJmNNWUaiDmshA==
+X-CSE-MsgGUID: W5qzy+hDTHGRSWW8Pp7f1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="79836880"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Oct 2024 03:25:24 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 21 Oct 2024 03:25:24 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 21 Oct 2024 03:25:24 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 21 Oct 2024 03:24:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ERN7lO3pF4FK++tIzzZvgACZmutQBjJu/JVTw+TWxcUeTXgwvDdu+x1sHJvNTXetOE8j8U3hE5WV0HYSMK3TkxX3P2ukWIsOa41VLXEl0oUArMqPKPiIjKwf+8x4U8ZlYB1LQkdShXkdk/r7skstGOmjtY55hAkfO8hEmbMWlueoV6ErG3mZ13jhwgNk7XC7VMhbQNFEUqkLmS98T7VUz1hi9y2+JnUL1CDkQNixbZ+ux51wGK1t77BukJFCUQCsN+UVuu8GOiYr/3nnON9Sx01eAIRdw/X31FGUhuQhtaQ4+PI36DiJwhlY9eOhbKau8sH2IEaa48bZhTyTDW8VTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wzKT1U+HIyCR98Km/N+kI/D88MO23aC04lBxvwoUu5I=;
+ b=pa12i13Nfge0Y8wA/67y8ZkA30hvU88ICsIxGwMbT9cB1wInKbBejqj/0aDVQQN2jXuuuvcwMU1zWF72+0BuGrKaI8yGBTpLPEDJo6euKrbBiYTrCTBiMIGGqk8xFkDlIMu2nWIwEIfIKHczvJMCAdQJ869KYC/CGXTrZSe/CtEPzTEFr0QxK9a++uF/tS++Qv1cfhJpjxI1PxoddrhfOWdV1b7e4qzK+8pBsOYlq6WqOXJOFy4kS4bETjToWO+ACZ4sKjf/HhVFQNh+/D9AqwV9Zne+FQm3nDsqFnw9MSc4GWP+1jo2WeSDd2vMW0l2BT2mREx7xgQ466r4oQVx9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ MW5PR11MB5787.namprd11.prod.outlook.com (2603:10b6:303:192::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.26; Mon, 21 Oct 2024 10:24:51 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%5]) with mapi id 15.20.8069.027; Mon, 21 Oct 2024
+ 10:24:51 +0000
+Date: Mon, 21 Oct 2024 18:22:25 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	"Oliver Upton" <oliver.upton@linux.dev>, Tianrui Zhao
+	<zhaotianrui@loongson.cn>, "Bibo Mao" <maobibo@loongson.cn>, Huacai Chen
+	<chenhuacai@kernel.org>, "Michael Ellerman" <mpe@ellerman.id.au>, Anup Patel
+	<anup@brainfault.org>, "Paul Walmsley" <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Christian
+ Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank
+	<frankja@linux.ibm.com>, "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
+	<kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <loongarch@lists.linux.dev>,
+	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Alex =?iso-8859-1?Q?Benn=E9e?=
+	<alex.bennee@linaro.org>, David Matlack <dmatlack@google.com>, David Stevens
+	<stevensd@chromium.org>, Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [PATCH v13 51/85] KVM: VMX: Use __kvm_faultin_page() to get APIC
+ access page/pfn
+Message-ID: <ZxYrYe/WN8XoB+fI@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20241010182427.1434605-1-seanjc@google.com>
+ <20241010182427.1434605-52-seanjc@google.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241010182427.1434605-52-seanjc@google.com>
+X-ClientProxiedBy: SG2PR02CA0121.apcprd02.prod.outlook.com
+ (2603:1096:4:188::21) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241014035855.1119220-1-maobibo@loongson.cn> <20241014035855.1119220-2-maobibo@loongson.cn>
- <CAAhV-H5QkULWp6fciR1Lnds0r00fUdrmj86K_wBuxd0D=RkaXQ@mail.gmail.com>
- <f3089991-fd49-8d55-9ede-62ab1555c9fa@loongson.cn> <CAAhV-H7yX6qinPL5E5tmNVpJk_xdKqFaSicUYy2k8NGM1owucw@mail.gmail.com>
- <a4c6b89e-4ffe-4486-4ccd-7ebc28734f6f@loongson.cn> <CAAhV-H6FkJZwa-pALUhucrU5OXxsHg+ByM+4NN0wPQgOJTqOXA@mail.gmail.com>
- <5f76ede6-e8be-c7a9-f957-479afa2fb828@loongson.cn> <CAAhV-H51W3ZRNxUjeAx52j6Tq18CEhB3_YeSH=psjAbEJUdwgg@mail.gmail.com>
- <f727e384-6989-0942-1cc8-7188f558ee39@loongson.cn>
-In-Reply-To: <f727e384-6989-0942-1cc8-7188f558ee39@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 21 Oct 2024 18:13:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5CADad2EGv0zMQrgrvpNRtBTWDoXFj=j+zXEJdy7HkAQ@mail.gmail.com>
-Message-ID: <CAAhV-H5CADad2EGv0zMQrgrvpNRtBTWDoXFj=j+zXEJdy7HkAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] LoongArch: Set initial pte entry with PAGE_GLOBAL
- for kernel space
-To: maobibo <maobibo@loongson.cn>
-Cc: wuruiyang@loongson.cn, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Barry Song <baohua@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|MW5PR11MB5787:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83fad6aa-02b4-4f11-cc7c-08dcf1ba98eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?CC3/gPQ3Sylem/JbmWsvUD5zbCSXtIA/1nmLm3ZPpX2vT3G72oEjoCJwW5?=
+ =?iso-8859-1?Q?4J5jBgTiEO+wnn+mNg396m9qlzBgiO8LyQNq9c0Wu31obME614UZkFifIw?=
+ =?iso-8859-1?Q?9FxWjNiVtrBFclr2s8kNnxEcXCew0dS67BweKZk47muyR9DiUBm+He2YLY?=
+ =?iso-8859-1?Q?hWzVooFm/t7CEK8c31UMsFbfvAygcVhkGxOZVd1QPKJUWelV59Ex+OYa2Z?=
+ =?iso-8859-1?Q?UWwMHGY+nMV5R4RPDNjR4rc6Wtz0wYDHIdlfT5GhQOYrhcySCueXcWYOHl?=
+ =?iso-8859-1?Q?yJw0ApJV0BfHGLpQkJXKXgI2xe6ZLntuw18fCRqq1CtetEGwpmwLHN4KAj?=
+ =?iso-8859-1?Q?DvYXJG9NTKF3a+iA3wooiOfRt3u/uXlKBGCmslGUk8eveeS3aBHkqnqvk7?=
+ =?iso-8859-1?Q?KQX6dy/14CVsrYgRQp1fB8degNy074tlvvi7arVnYG4IPWbKq5zr/QFfQo?=
+ =?iso-8859-1?Q?ziJ/ELiqjG4RP39BhEe+h63bYU+e7etzUJh8X1BgCARXygmSXqTJ+sOqAZ?=
+ =?iso-8859-1?Q?ohO8h0J8kzyeI7KQXlJ+YOGuBjOjsRknG6Edg1MwfE0EWwgofHSauEq8Y6?=
+ =?iso-8859-1?Q?mm5iSxQPh3TNujjSS/q9TV5h3wDRzVmbDt08722ulykjeBmzXhB9SGi89b?=
+ =?iso-8859-1?Q?5CGrWaX8m7FpfefL+uAtvdhUBwFfW1kxJCj48oiONkzEv1Dv0tF+6DWvxq?=
+ =?iso-8859-1?Q?kfsvkXSRiLiDX+K8N+RyOjECRtVTnxgPq0PcbcIDpKLrsbM8AAvErF2Zzh?=
+ =?iso-8859-1?Q?FW9uDi8QUEI/0uonajeQMwfcc/g7maEfrr7BVN8vQEHpNSzqi+yV9YlfCU?=
+ =?iso-8859-1?Q?I8CaKAyxC4hmhBiMUSF9ju0zRppPOpKoUXAiAsGDdNcHR42aYZ1raCs22I?=
+ =?iso-8859-1?Q?6Hq/Eryd3rfdELYjRZaVklgZENsEQcLikjJCFiAuoBVipdlab++XqLnyl1?=
+ =?iso-8859-1?Q?WwapfejuNlNCtYZSPuYTpnECUL4qdowyM/R+Vt4SZbx6gsCCn5OiU2edNW?=
+ =?iso-8859-1?Q?DUB7jcwl0OW4jVDMmusatmPY9vBVjxSUgg5/92c2dY2zsPbXgRfjjtW+ks?=
+ =?iso-8859-1?Q?r3d9n7AZDzy+51OrxG2AAckxVi//NH0TCwizDOicDTkFsQZfP5n40F3qmS?=
+ =?iso-8859-1?Q?vfI+7dQUY8jgwzQ7350nKjAzXBgt+/G38Z07+ZoBs5Qab5juV+yYdq07q6?=
+ =?iso-8859-1?Q?D/sj8euosTUIRMvo+RvD7VDG5kXujiPCzmGgDrOzS8f/Oi7cEY6+Dyp5O8?=
+ =?iso-8859-1?Q?kRAa1Nc3DIXD2HUe1qGx0i+6LxZbK3vqYsDntTPJSMcYHtm+qzOGyv5ZUT?=
+ =?iso-8859-1?Q?0e07h8j6GLGEAyAxYefEil/OH8c0T+MODLEuzpVaKTXOuEHcGUCgYWkokG?=
+ =?iso-8859-1?Q?FLA5SL6Yd8?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?VgxrhVOsB+wPkEyYfVRi/3lujZtYpufDb29iBmlzc6DSeJTjfUfcZ46SJ9?=
+ =?iso-8859-1?Q?4g1o7GS74T9II7ssuAtelF4EO18l4aZGyRYKSDGdG0X/uZsodYtSynw1zm?=
+ =?iso-8859-1?Q?SUAeEBhhQ7KpJoHFa9mylsJYy8jygAQQEQJBoB90CUh938Yq4ffUS8U5tS?=
+ =?iso-8859-1?Q?oqdWIr0xONvzOuPvvniamXtw4/Zsi/P7g71qIphRS3i0UzVWwpcKd/hklI?=
+ =?iso-8859-1?Q?dbH/a2IIKIoPbk0QaCjqkl1XkmOcNm2MZWuSfs2AUcJ1piPscru94J9mHB?=
+ =?iso-8859-1?Q?GyyI9mrKOjvMfieXJ0jHywY4Zei8+7hxE1WRAAC+yc7BMeSimbl8LvSYie?=
+ =?iso-8859-1?Q?TK8Drujd/R/uEe0rfgRSuAXO1gxQwyku7Kq3k8oDkadLMreGiiwqrXDx8s?=
+ =?iso-8859-1?Q?BweIL51SmwBP5r/bY3291aV8gBHcrCpv7ZNyc2CtYz+zcpJqP64MxEo+EB?=
+ =?iso-8859-1?Q?b88iOqPPHvH2JWvJ3iytiIwqmpVfjIJXQSAbTTUrsvy0FYt3nfuJ5q41Sa?=
+ =?iso-8859-1?Q?Ez1wOHI2SmHccnJN7M3ZomQFJooB75yR5r5yCzC29v2HLsc/hT1VBgk5Tk?=
+ =?iso-8859-1?Q?KHLJVPAKIETqYiCDaBjwLLUo2IY+AJpNE+Ib3qKl6oOC305WbQmGKnKC3g?=
+ =?iso-8859-1?Q?7FjceEkxz3hqhEv8BMoGQ2p0jPLuhVo7TZHdCYV797dQB4ToC6gQYCRMa8?=
+ =?iso-8859-1?Q?01i0mk6gUjtim+btlnFuhEwD4tTLkiRFUeqbuITViT0hxk1W17Y3eu42+J?=
+ =?iso-8859-1?Q?VzlXTCnl22HLTEebj/lO8v5wb/MA2V2/N7VuxFrJFo7ZL7LlJbWOP0Ra9Z?=
+ =?iso-8859-1?Q?5FEUhBeQ3fii08K8qRwts7u1mEkuH7t6vStvYLgomZmo8WL/PHuawK0K4u?=
+ =?iso-8859-1?Q?aIrWserGrtcP8oW4Dht2fy/2mowq0xBT+G1YfJHCj/sTMVfiZyv7Z3Z3Le?=
+ =?iso-8859-1?Q?ZP2sETc2w6QmIXYXuangpHnfPQ9K7mn51EoLnAZ1DXIGhqZJgnROU41s0/?=
+ =?iso-8859-1?Q?3M6OrvygbJgwGK7frFo9lgQqWEiuyx5aKVWOq5ZBWoz5X1E7PvATQxo7dE?=
+ =?iso-8859-1?Q?EwbbJyvDDbPl2vQSJdmI9z3OZkVllNK6D/7aYzaPynT4GfQZZbebpgzGNr?=
+ =?iso-8859-1?Q?uJCpnGidxRaBTu1v04OiqcXm8YK1UqSUAyuORhNlBZ6xgyLo7biqAnZlF7?=
+ =?iso-8859-1?Q?+6BoAqs4BzChtRu5M5AwnTX2rGtci4Ry9IhwMevmox5Z9NmcLlY/t90FAm?=
+ =?iso-8859-1?Q?FAp2bEysEyVcUW/4LMokehXtzbIcQ4M2eWfKS2HKmgDF9/ah12JrwmA/86?=
+ =?iso-8859-1?Q?CC+ja6dPzNrztuNJfNbI2SsA1Uu2aRfg5Q5pN6qSWAfAwLdrFqn7OL3a58?=
+ =?iso-8859-1?Q?ACU4nf8zGcaKlclkD+CvU2eWp9nibja7ci4UBD2nlURWKLg0uaefAKs6FJ?=
+ =?iso-8859-1?Q?fYcfh8euEb1VkKhFQO9JdYQWifW1IexBXI/VELuB6D0U/rmtEUCsfTMu/Q?=
+ =?iso-8859-1?Q?J146jKKhsiURA5W7lqPm9TXWHLSaijtAYINRKM3CRmcCoAUPEAyoRkTNKV?=
+ =?iso-8859-1?Q?uWZLCVS0wSEekkxknBqJNo+cpGJdXLeXoBJXohYnpaUIs85hEwFc9mnWDj?=
+ =?iso-8859-1?Q?N4YyIvm2OzX6W5B9Zbl0NvD5TfMh+IGubm?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83fad6aa-02b4-4f11-cc7c-08dcf1ba98eb
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2024 10:24:51.3381
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wd4azTrwl9MNS+uxVQUVLUHgMnC/iQJBpjIHQDy0EcdtcFVZYmGna/hxjLWVGWW7z9OXbPjhrQw2Q8eMgV4ppg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5787
+X-OriginatorOrg: intel.com
 
-On Mon, Oct 21, 2024 at 9:23=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/10/18 =E4=B8=8B=E5=8D=882:32, Huacai Chen wrote:
-> > On Fri, Oct 18, 2024 at 2:23=E2=80=AFPM maobibo <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2024/10/18 =E4=B8=8B=E5=8D=8812:23, Huacai Chen wrote:
-> >>> On Fri, Oct 18, 2024 at 12:16=E2=80=AFPM maobibo <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2024/10/18 =E4=B8=8B=E5=8D=8812:11, Huacai Chen wrote:
-> >>>>> On Fri, Oct 18, 2024 at 11:44=E2=80=AFAM maobibo <maobibo@loongson.=
-cn> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2024/10/18 =E4=B8=8A=E5=8D=8811:14, Huacai Chen wrote:
-> >>>>>>> Hi, Bibo,
-> >>>>>>>
-> >>>>>>> I applied this patch but drop the part of arch/loongarch/mm/kasan=
-_init.c:
-> >>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-=
-loongson.git/commit/?h=3Dloongarch-next&id=3D15832255e84494853f543b4c70ced5=
-0afc403067
-> >>>>>>>
-> >>>>>>> Because kernel_pte_init() should operate on page-table pages, not=
- on
-> >>>>>>> data pages. You have already handle page-table page in
-> >>>>>>> mm/kasan/init.c, and if we don't drop the modification on data pa=
-ges
-> >>>>>>> in arch/loongarch/mm/kasan_init.c, the kernel fail to boot if KAS=
-AN is
-> >>>>>>> enabled.
-> >>>>>>>
-> >>>>>> static inline void set_pte(pte_t *ptep, pte_t pteval)
-> >>>>>>      {
-> >>>>>>            WRITE_ONCE(*ptep, pteval);
-> >>>>>> -
-> >>>>>> -       if (pte_val(pteval) & _PAGE_GLOBAL) {
-> >>>>>> -               pte_t *buddy =3D ptep_buddy(ptep);
-> >>>>>> -               /*
-> >>>>>> -                * Make sure the buddy is global too (if it's !non=
-e,
-> >>>>>> -                * it better already be global)
-> >>>>>> -                */
-> >>>>>> -               if (pte_none(ptep_get(buddy))) {
-> >>>>>> -#ifdef CONFIG_SMP
-> >>>>>> -                       /*
-> >>>>>> -                        * For SMP, multiple CPUs can race, so we =
-need
-> >>>>>> -                        * to do this atomically.
-> >>>>>> -                        */
-> >>>>>> -                       __asm__ __volatile__(
-> >>>>>> -                       __AMOR "$zero, %[global], %[buddy] \n"
-> >>>>>> -                       : [buddy] "+ZB" (buddy->pte)
-> >>>>>> -                       : [global] "r" (_PAGE_GLOBAL)
-> >>>>>> -                       : "memory");
-> >>>>>> -
-> >>>>>> -                       DBAR(0b11000); /* o_wrw =3D 0b11000 */
-> >>>>>> -#else /* !CONFIG_SMP */
-> >>>>>> -                       WRITE_ONCE(*buddy, __pte(pte_val(ptep_get(=
-buddy)) | _PAGE_GLOBAL));
-> >>>>>> -#endif /* CONFIG_SMP */
-> >>>>>> -               }
-> >>>>>> -       }
-> >>>>>> +       DBAR(0b11000); /* o_wrw =3D 0b11000 */
-> >>>>>>      }
-> >>>>>>
-> >>>>>> No, please hold on. This issue exists about twenty years, Do we ne=
-ed be
-> >>>>>> in such a hurry now?
-> >>>>>>
-> >>>>>> why is DBAR(0b11000) added in set_pte()?
-> >>>>> It exists before, not added by this patch. The reason is explained =
-in
-> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?h=3Dv6.12-rc3&id=3Df93f67d06b1023313ef1662eac490e29c025c030
-> >>>> why speculative accesses may cause spurious page fault in kernel spa=
-ce
-> >>>> with PTE enabled?  speculative accesses exists anywhere, it does not
-> >>>> cause spurious page fault.
-> >>> Confirmed by Ruiyang Wu, and even if DBAR(0b11000) is wrong, that
-> >>> means another patch's mistake, not this one. This one just keeps the
-> >>> old behavior.
-> >>> +CC Ruiyang Wu here.
-> >> Also from Ruiyang Wu, the information is that speculative accesses may
-> >> insert stale TLB, however no page fault exception.
-> >>
-> >> So adding barrier in set_pte() does not prevent speculative accesses.
-> >> And you write patch here, however do not know the actual reason?
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
-mit/?h=3Dv6.12-rc3&id=3Df93f67d06b1023313ef1662eac490e29c025c030
-> > I have CCed Ruiyang, whether the description is correct can be judged b=
-y him.
->
-> There are some problems to add barrier() in set_pte():
->
-> 1. There is such issue only for HW ptw enabled and kernel address space,
-> is that? Also it may be two heavy to add barrier in set_pte(), comparing
-> to do this in flush_cache_vmap().
-So adding a barrier in set_pte() may not be the best solution for
-performance, but you cannot say it is a wrong solution. And yes, we
-can only care the kernel space, which is also the old behavior before
-this patch, so set_pte() should be:
-
-static inline void set_pte(pte_t *ptep, pte_t pteval)
-{
-        WRITE_ONCE(*ptep, pteval);
-#ifdef CONFIG_SMP
-        if (pte_val(pteval) & _PAGE_GLOBAL)
-                DBAR(0b11000); /* o_wrw =3D 0b11000 */
-#endif
+On Thu, Oct 10, 2024 at 11:23:53AM -0700, Sean Christopherson wrote:
+> Use __kvm_faultin_page() get the APIC access page so that KVM can
+> precisely release the refcounted page, i.e. to remove yet another user
+> of kvm_pfn_to_refcounted_page().  While the path isn't handling a guest
+> page fault, the semantics are effectively the same; KVM just happens to
+> be mapping the pfn into a VMCS field instead of a secondary MMU.
+> 
+> Tested-by: Alex Bennée <alex.bennee@linaro.org>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 851be0820e04..44cc25dfebba 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6790,8 +6790,10 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
+>  	struct kvm *kvm = vcpu->kvm;
+>  	struct kvm_memslots *slots = kvm_memslots(kvm);
+>  	struct kvm_memory_slot *slot;
+> +	struct page *refcounted_page;
+>  	unsigned long mmu_seq;
+>  	kvm_pfn_t pfn;
+> +	bool writable;
+>  
+>  	/* Defer reload until vmcs01 is the current VMCS. */
+>  	if (is_guest_mode(vcpu)) {
+> @@ -6827,7 +6829,7 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
+>  	 * controls the APIC-access page memslot, and only deletes the memslot
+>  	 * if APICv is permanently inhibited, i.e. the memslot won't reappear.
+>  	 */
+> -	pfn = gfn_to_pfn_memslot(slot, gfn);
+> +	pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &refcounted_page);
+>  	if (is_error_noslot_pfn(pfn))
+>  		return;
+>  
+> @@ -6838,10 +6840,13 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
+>  		vmcs_write64(APIC_ACCESS_ADDR, pfn_to_hpa(pfn));
+>  
+>  	/*
+> -	 * Do not pin apic access page in memory, the MMU notifier
+> -	 * will call us again if it is migrated or swapped out.
+> +	 * Do not pin the APIC access page in memory so that it can be freely
+> +	 * migrated, the MMU notifier will call us again if it is migrated or
+> +	 * swapped out.  KVM backs the memslot with anonymous memory, the pfn
+> +	 * should always point at a refcounted page (if the pfn is valid).
+>  	 */
+> -	kvm_release_pfn_clean(pfn);
+> +	if (!WARN_ON_ONCE(!refcounted_page))
+> +		kvm_release_page_clean(refcounted_page);
+Why it's not
+if (!WARN_ON_ONCE(!refcounted_page)) {
+	if (writable)
+		kvm_release_page_dirty(refcounted_page)
+	else
+		kvm_release_page_clean(refcounted_page)
 }
 
-Putting a dbar unconditionally in set_pte() is my mistake, I'm sorry for  t=
-hat.
+or simply not pass "writable" to __kvm_faultin_pfn() as we know the slot is
+not read-only and then set dirty ?
 
->
-> 2. LoongArch is different with other other architectures, two pages are
-> included in one TLB entry. If there is two consecutive page mapped and
-> memory access, there will page fault for the second memory access. Such
-> as:
->     addr1 =3Dpercpu_alloc(pagesize);
->     val1 =3D *(int *)addr1;
->       // With page table walk, addr1 is present and addr2 is pte_none
->       // TLB entry includes valid pte for addr1, invalid pte for addr2
->     addr2 =3Dpercpu_alloc(pagesize); // will not flush tlb in first time
->     val2 =3D *(int *)addr2;
->       // With page table walk, addr1 is present and addr2 is present also
->       // TLB entry includes valid pte for addr1, invalid pte for addr2
->     So there will be page fault when accessing address addr2
->
-> There there is the same problem with user address space. By the way,
-> there is HW prefetching technology, negative effective of HW prefetching
-> technology will be tlb added. So there is potential page fault if memory
-> is allocated and accessed in the first time.
-As discussed internally, there may be three problems related to
-speculative access in detail: 1) a load/store after set_pte() is
-prioritized before, which can be prevented by dbar, 2) a instruction
-fetch after set_pte() is prioritized before, which can be prevented by
-ibar, 3) the buddy tlb problem you described here, if I understand
-Ruiyang's explanation correctly this can only be prevented by the
-filter in do_page_fault().
+if (!WARN_ON_ONCE(!refcounted_page))
+	kvm_release_page_dirty(refcounted_page)
 
-From experiments, without the patch "LoongArch: Improve hardware page
-table walker", there are about 80 times of spurious page faults during
-boot, and increases continually during stress tests. And after that
-patch which adds a dbar to set_pte(), we cannot observe spurious page
-faults anymore. Of course this doesn't mean 2) and 3) don't exist, but
-we can at least say 1) is the main case. On this basis, in "LoongArch:
-Improve hardware page table walker" we use a relatively cheap dbar
-(compared to ibar) to prevent the main case, and add a filter to
-handle 2) and 3). Such a solution is reasonable.
-
-
->
-> 3. For speculative execution, if it is user address, there is eret from
-> syscall. eret will rollback all speculative execution instruction. So it
-> is only problem for speculative execution. And how to verify whether it
-> is the problem of speculative execution or it is the problem of clause 2?
-As described above, if spurious page faults still exist after adding
-dbar to set_pte(), it may be a problem of clause 2 (case 3 in my
-description), otherwise it is not a problem of clause 2.
-
-At last, this patch itself is attempting to solve the concurrent
-problem about _PAGE_GLOBAL, so adding pte_alloc_one_kernel() and
-removing the buddy stuff in set_pte() are what it needs. However it
-shouldn't touch the logic of dbar in set_pte(), whether "LoongArch:
-Improve hardware page table walker" is right or wrong.
-
-
-Huacai
-
->
-> Regards
-> Bibo Mao
->
->
-> >
-> > Huacai
-> >
-> >>
-> >> Bibo Mao
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Obvious you do not it and you write wrong patch.
-> >>>>
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>>
-> >>>>>> Regards
-> >>>>>> Bibo Mao
-> >>>>>>> Huacai
-> >>>>>>>
-> >>>>>>> On Mon, Oct 14, 2024 at 11:59=E2=80=AFAM Bibo Mao <maobibo@loongs=
-on.cn> wrote:
-> >>>>>>>>
-> >>>>>>>> Unlike general architectures, there are two pages in one TLB ent=
-ry
-> >>>>>>>> on LoongArch system. For kernel space, it requires both two pte
-> >>>>>>>> entries with PAGE_GLOBAL bit set, else HW treats it as non-globa=
-l
-> >>>>>>>> tlb, there will be potential problems if tlb entry for kernel sp=
-ace
-> >>>>>>>> is not global. Such as fail to flush kernel tlb with function
-> >>>>>>>> local_flush_tlb_kernel_range() which only flush tlb with global =
-bit.
-> >>>>>>>>
-> >>>>>>>> With function kernel_pte_init() added, it can be used to init pt=
-e
-> >>>>>>>> table when it is created for kernel address space, and the defau=
-lt
-> >>>>>>>> initial pte value is PAGE_GLOBAL rather than zero at beginning.
-> >>>>>>>>
-> >>>>>>>> Kernel address space areas includes fixmap, percpu, vmalloc, kas=
-an
-> >>>>>>>> and vmemmap areas set default pte entry with PAGE_GLOBAL set.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>>> ---
-> >>>>>>>>      arch/loongarch/include/asm/pgalloc.h | 13 +++++++++++++
-> >>>>>>>>      arch/loongarch/include/asm/pgtable.h |  1 +
-> >>>>>>>>      arch/loongarch/mm/init.c             |  4 +++-
-> >>>>>>>>      arch/loongarch/mm/kasan_init.c       |  4 +++-
-> >>>>>>>>      arch/loongarch/mm/pgtable.c          | 22 +++++++++++++++++=
-+++++
-> >>>>>>>>      include/linux/mm.h                   |  1 +
-> >>>>>>>>      mm/kasan/init.c                      |  8 +++++++-
-> >>>>>>>>      mm/sparse-vmemmap.c                  |  5 +++++
-> >>>>>>>>      8 files changed, 55 insertions(+), 3 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongar=
-ch/include/asm/pgalloc.h
-> >>>>>>>> index 4e2d6b7ca2ee..b2698c03dc2c 100644
-> >>>>>>>> --- a/arch/loongarch/include/asm/pgalloc.h
-> >>>>>>>> +++ b/arch/loongarch/include/asm/pgalloc.h
-> >>>>>>>> @@ -10,8 +10,21 @@
-> >>>>>>>>
-> >>>>>>>>      #define __HAVE_ARCH_PMD_ALLOC_ONE
-> >>>>>>>>      #define __HAVE_ARCH_PUD_ALLOC_ONE
-> >>>>>>>> +#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-> >>>>>>>>      #include <asm-generic/pgalloc.h>
-> >>>>>>>>
-> >>>>>>>> +static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
-> >>>>>>>> +{
-> >>>>>>>> +       pte_t *pte;
-> >>>>>>>> +
-> >>>>>>>> +       pte =3D (pte_t *) __get_free_page(GFP_KERNEL);
-> >>>>>>>> +       if (!pte)
-> >>>>>>>> +               return NULL;
-> >>>>>>>> +
-> >>>>>>>> +       kernel_pte_init(pte);
-> >>>>>>>> +       return pte;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>>      static inline void pmd_populate_kernel(struct mm_struct *mm=
-,
-> >>>>>>>>                                            pmd_t *pmd, pte_t *pt=
-e)
-> >>>>>>>>      {
-> >>>>>>>> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongar=
-ch/include/asm/pgtable.h
-> >>>>>>>> index 9965f52ef65b..22e3a8f96213 100644
-> >>>>>>>> --- a/arch/loongarch/include/asm/pgtable.h
-> >>>>>>>> +++ b/arch/loongarch/include/asm/pgtable.h
-> >>>>>>>> @@ -269,6 +269,7 @@ extern void set_pmd_at(struct mm_struct *mm,=
- unsigned long addr, pmd_t *pmdp, pm
-> >>>>>>>>      extern void pgd_init(void *addr);
-> >>>>>>>>      extern void pud_init(void *addr);
-> >>>>>>>>      extern void pmd_init(void *addr);
-> >>>>>>>> +extern void kernel_pte_init(void *addr);
-> >>>>>>>>
-> >>>>>>>>      /*
-> >>>>>>>>       * Encode/decode swap entries and swap PTEs. Swap PTEs are =
-all PTEs that
-> >>>>>>>> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> >>>>>>>> index 8a87a482c8f4..9f26e933a8a3 100644
-> >>>>>>>> --- a/arch/loongarch/mm/init.c
-> >>>>>>>> +++ b/arch/loongarch/mm/init.c
-> >>>>>>>> @@ -198,9 +198,11 @@ pte_t * __init populate_kernel_pte(unsigned=
- long addr)
-> >>>>>>>>             if (!pmd_present(pmdp_get(pmd))) {
-> >>>>>>>>                     pte_t *pte;
-> >>>>>>>>
-> >>>>>>>> -               pte =3D memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-> >>>>>>>> +               pte =3D memblock_alloc_raw(PAGE_SIZE, PAGE_SIZE)=
-;
-> >>>>>>>>                     if (!pte)
-> >>>>>>>>                             panic("%s: Failed to allocate memory=
-\n", __func__);
-> >>>>>>>> +
-> >>>>>>>> +               kernel_pte_init(pte);
-> >>>>>>>>                     pmd_populate_kernel(&init_mm, pmd, pte);
-> >>>>>>>>             }
-> >>>>>>>>
-> >>>>>>>> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/=
-kasan_init.c
-> >>>>>>>> index 427d6b1aec09..34988573b0d5 100644
-> >>>>>>>> --- a/arch/loongarch/mm/kasan_init.c
-> >>>>>>>> +++ b/arch/loongarch/mm/kasan_init.c
-> >>>>>>>> @@ -152,6 +152,8 @@ static void __init kasan_pte_populate(pmd_t =
-*pmdp, unsigned long addr,
-> >>>>>>>>                     phys_addr_t page_phys =3D early ?
-> >>>>>>>>                                             __pa_symbol(kasan_ea=
-rly_shadow_page)
-> >>>>>>>>                                                   : kasan_alloc_=
-zeroed_page(node);
-> >>>>>>>> +               if (!early)
-> >>>>>>>> +                       kernel_pte_init(__va(page_phys));
-> >>>>>>>>                     next =3D addr + PAGE_SIZE;
-> >>>>>>>>                     set_pte(ptep, pfn_pte(__phys_to_pfn(page_phy=
-s), PAGE_KERNEL));
-> >>>>>>>>             } while (ptep++, addr =3D next, addr !=3D end && __p=
-te_none(early, ptep_get(ptep)));
-> >>>>>>>> @@ -287,7 +289,7 @@ void __init kasan_init(void)
-> >>>>>>>>                     set_pte(&kasan_early_shadow_pte[i],
-> >>>>>>>>                             pfn_pte(__phys_to_pfn(__pa_symbol(ka=
-san_early_shadow_page)), PAGE_KERNEL_RO));
-> >>>>>>>>
-> >>>>>>>> -       memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-> >>>>>>>> +       kernel_pte_init(kasan_early_shadow_page);
-> >>>>>>>>             csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_C=
-SR_PGDH);
-> >>>>>>>>             local_flush_tlb_all();
-> >>>>>>>>
-> >>>>>>>> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgt=
-able.c
-> >>>>>>>> index eb6a29b491a7..228ffc1db0a3 100644
-> >>>>>>>> --- a/arch/loongarch/mm/pgtable.c
-> >>>>>>>> +++ b/arch/loongarch/mm/pgtable.c
-> >>>>>>>> @@ -38,6 +38,28 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> >>>>>>>>      }
-> >>>>>>>>      EXPORT_SYMBOL_GPL(pgd_alloc);
-> >>>>>>>>
-> >>>>>>>> +void kernel_pte_init(void *addr)
-> >>>>>>>> +{
-> >>>>>>>> +       unsigned long *p, *end;
-> >>>>>>>> +       unsigned long entry;
-> >>>>>>>> +
-> >>>>>>>> +       entry =3D (unsigned long)_PAGE_GLOBAL;
-> >>>>>>>> +       p =3D (unsigned long *)addr;
-> >>>>>>>> +       end =3D p + PTRS_PER_PTE;
-> >>>>>>>> +
-> >>>>>>>> +       do {
-> >>>>>>>> +               p[0] =3D entry;
-> >>>>>>>> +               p[1] =3D entry;
-> >>>>>>>> +               p[2] =3D entry;
-> >>>>>>>> +               p[3] =3D entry;
-> >>>>>>>> +               p[4] =3D entry;
-> >>>>>>>> +               p +=3D 8;
-> >>>>>>>> +               p[-3] =3D entry;
-> >>>>>>>> +               p[-2] =3D entry;
-> >>>>>>>> +               p[-1] =3D entry;
-> >>>>>>>> +       } while (p !=3D end);
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>>      void pgd_init(void *addr)
-> >>>>>>>>      {
-> >>>>>>>>             unsigned long *p, *end;
-> >>>>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> >>>>>>>> index ecf63d2b0582..6909fe059a2c 100644
-> >>>>>>>> --- a/include/linux/mm.h
-> >>>>>>>> +++ b/include/linux/mm.h
-> >>>>>>>> @@ -3818,6 +3818,7 @@ void *sparse_buffer_alloc(unsigned long si=
-ze);
-> >>>>>>>>      struct page * __populate_section_memmap(unsigned long pfn,
-> >>>>>>>>                     unsigned long nr_pages, int nid, struct vmem=
-_altmap *altmap,
-> >>>>>>>>                     struct dev_pagemap *pgmap);
-> >>>>>>>> +void kernel_pte_init(void *addr);
-> >>>>>>>>      void pmd_init(void *addr);
-> >>>>>>>>      void pud_init(void *addr);
-> >>>>>>>>      pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
-> >>>>>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-> >>>>>>>> index 89895f38f722..ac607c306292 100644
-> >>>>>>>> --- a/mm/kasan/init.c
-> >>>>>>>> +++ b/mm/kasan/init.c
-> >>>>>>>> @@ -106,6 +106,10 @@ static void __ref zero_pte_populate(pmd_t *=
-pmd, unsigned long addr,
-> >>>>>>>>             }
-> >>>>>>>>      }
-> >>>>>>>>
-> >>>>>>>> +void __weak __meminit kernel_pte_init(void *addr)
-> >>>>>>>> +{
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>>      static int __ref zero_pmd_populate(pud_t *pud, unsigned lon=
-g addr,
-> >>>>>>>>                                     unsigned long end)
-> >>>>>>>>      {
-> >>>>>>>> @@ -126,8 +130,10 @@ static int __ref zero_pmd_populate(pud_t *p=
-ud, unsigned long addr,
-> >>>>>>>>
-> >>>>>>>>                             if (slab_is_available())
-> >>>>>>>>                                     p =3D pte_alloc_one_kernel(&=
-init_mm);
-> >>>>>>>> -                       else
-> >>>>>>>> +                       else {
-> >>>>>>>>                                     p =3D early_alloc(PAGE_SIZE,=
- NUMA_NO_NODE);
-> >>>>>>>> +                               kernel_pte_init(p);
-> >>>>>>>> +                       }
-> >>>>>>>>                             if (!p)
-> >>>>>>>>                                     return -ENOMEM;
-> >>>>>>>>
-> >>>>>>>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> >>>>>>>> index edcc7a6b0f6f..c0388b2e959d 100644
-> >>>>>>>> --- a/mm/sparse-vmemmap.c
-> >>>>>>>> +++ b/mm/sparse-vmemmap.c
-> >>>>>>>> @@ -184,6 +184,10 @@ static void * __meminit vmemmap_alloc_block=
-_zero(unsigned long size, int node)
-> >>>>>>>>             return p;
-> >>>>>>>>      }
-> >>>>>>>>
-> >>>>>>>> +void __weak __meminit kernel_pte_init(void *addr)
-> >>>>>>>> +{
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>>      pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned=
- long addr, int node)
-> >>>>>>>>      {
-> >>>>>>>>             pmd_t *pmd =3D pmd_offset(pud, addr);
-> >>>>>>>> @@ -191,6 +195,7 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t=
- *pud, unsigned long addr, int node)
-> >>>>>>>>                     void *p =3D vmemmap_alloc_block_zero(PAGE_SI=
-ZE, node);
-> >>>>>>>>                     if (!p)
-> >>>>>>>>                             return NULL;
-> >>>>>>>> +               kernel_pte_init(p);
-> >>>>>>>>                     pmd_populate_kernel(&init_mm, pmd, p);
-> >>>>>>>>             }
-> >>>>>>>>             return pmd;
-> >>>>>>>> --
-> >>>>>>>> 2.39.3
-> >>>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>
-> >>>>
-> >>
-> >>
->
+>  
+>  	/*
+>  	 * No need for a manual TLB flush at this point, KVM has already done a
+> -- 
+> 2.47.0.rc1.288.g06298d1525-goog
+> 
