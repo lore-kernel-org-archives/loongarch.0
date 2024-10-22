@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6593A191F65
-	for <loongarch@lists.linux.dev>; Tue, 22 Oct 2024 09:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95615189BA6
+	for <loongarch@lists.linux.dev>; Tue, 22 Oct 2024 09:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729587867; cv=none; b=cC1+92aKyMeCWq4EBEGcKFjMA+RxXXZ29fd+Smn6CaT5vuX0pzxc5NnXSbu5haa8BxWnWXG+DDtvyDVHu51G08DcU2cJ6owBoMzdGXvllr39liWTZbTfs5x8dkUV/T+IHdEcnN3iodpiFHQq2W08nTYIv6qIVWrJEHDSWVhgjG4=
+	t=1729587870; cv=none; b=dBuVs4Rv0tM4VnKw9r7mtQv5irP8p/LgKyIG5hhiShffXXOsFZjlxjo5Xm8azmlMu73N6EQsQznISvg0k/IVkZePo+6iip/6OjIpfR9D+w09t/4NNRHADDjk0mObxB+5YhgU2PfzorcDq1Q8ipOUVYft1E7qnuvGYjuKJ4l0Mi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729587867; c=relaxed/simple;
-	bh=yyJxjE+bsRdN2Q53wjJkNgntCZTyBZUEe6hjZuv190U=;
+	s=arc-20240116; t=1729587870; c=relaxed/simple;
+	bh=bkkRqEC4chAGdzgw6imyLIAC83II43LNtmE4QDFCF7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o+l5IjTMjSgjIy8qJy4mgFyQhOvgTKF0vR+kc3dHgB2YHOhWOwLQDcqaO58paVok0IzVp891bKgdmfMPz7bOEbzZS9nKqzrqR2VSCTXgZrZrpz3bqA/rTIGXoDSwl3bpeyQeCIJNPASAICiRS00WVxmlDudYP7ElMHZvvmc0NDI=
+	 MIME-Version; b=oryMx72EwHeAe0hKNc5/S9VqG2vo8AUv1HORV+fLANYQug1tnrO2m52YzMJ6N38USFmkfFUFWCsPRpgBPxLbhAWHwhH3kLRwver3Ux1UBKYiS1mDAKTdbJc66z+N8ScSu3dzSdYPPd6LYg9hlVBbNy78P3vXQlUlDMgRaedtCZ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.52])
-	by gateway (Coremail) with SMTP id _____8AxLOKWahdnt74EAA--.11169S3;
-	Tue, 22 Oct 2024 17:04:22 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxieGaahdnxL4EAA--.11074S3;
+	Tue, 22 Oct 2024 17:04:26 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.52])
-	by front1 (Coremail) with SMTP id qMiowMAx7uCQahdnKy4HAA--.42603S3;
-	Tue, 22 Oct 2024 17:04:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAx7uCQahdnKy4HAA--.42603S4;
+	Tue, 22 Oct 2024 17:04:23 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -32,11 +32,10 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Sean Young <sean@mess.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 1/2] dt-bindings: pwm: Add Loongson PWM controller
-Date: Tue, 22 Oct 2024 17:04:14 +0800
-Message-ID: <dfc1e51dcf94485d1d7abe3612a0d8216143d32d.1729583747.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v7 2/2] pwm: Add Loongson PWM controller support
+Date: Tue, 22 Oct 2024 17:04:15 +0800
+Message-ID: <66bcb210478df5215e4e31e4f25c25194d6163ca.1729583747.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1729583747.git.zhoubinbin@loongson.cn>
 References: <cover.1729583747.git.zhoubinbin@loongson.cn>
@@ -47,11 +46,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx7uCQahdnKy4HAA--.42603S3
+X-CM-TRANSID:qMiowMAx7uCQahdnKy4HAA--.42603S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxArW8Aw1fAw4fWr1kWryDArc_yoW5ArWfpF
-	sxC3s2kr10qF17u398Wa48Cr1fZ3s5A3W7KFW7Aw1DKF9xJ3WYqw13KF1UZ3y3ur1UXFWU
-	ZF9a9r47KayUCrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3ZF4Uur4xCw1rJryfKFWkXwc_yoWkZF15pF
+	95A34YgryayrWUKws8ZFZ5urn8Z34fZasrJFWfCw1Uur9rtw18Zw1kKF97Gw42yr1kGr1I
+	qFWfCrWrCF4DGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
@@ -62,111 +61,366 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxArW8Aw1fAw4fWr1kWryDArc_yoW5ArWfpF
 	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
 	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-Add Loongson PWM controller binding with DT schema format using
-json-schema.
+This commit adds a generic PWM framework driver for the PWM controller
+found on Loongson family chips.
 
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- .../bindings/pwm/loongson,ls7a-pwm.yaml       | 66 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++
- 2 files changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ MAINTAINERS                |   1 +
+ drivers/pwm/Kconfig        |  12 ++
+ drivers/pwm/Makefile       |   1 +
+ drivers/pwm/pwm-loongson.c | 288 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 drivers/pwm/pwm-loongson.c
 
-diff --git a/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-new file mode 100644
-index 000000000000..46814773e0cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/loongson,ls7a-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson PWM Controller
-+
-+maintainers:
-+  - Binbin Zhou <zhoubinbin@loongson.cn>
-+
-+description:
-+  The Loongson PWM has one pulse width output signal and one pulse input
-+  signal to be measured.
-+  It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: loongson,ls7a-pwm
-+      - items:
-+          - enum:
-+              - loongson,ls2k0500-pwm
-+              - loongson,ls2k1000-pwm
-+              - loongson,ls2k2000-pwm
-+          - const: loongson,ls7a-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#pwm-cells':
-+    description:
-+      The first cell must have a value of 0, which specifies the PWM output signal;
-+      The second cell is the period in nanoseconds;
-+      The third cell flag supported by this binding is PWM_POLARITY_INVERTED.
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-+    pwm@1fe22000 {
-+        compatible = "loongson,ls2k1000-pwm", "loongson,ls7a-pwm";
-+        reg = <0x1fe22000 0x10>;
-+        interrupt-parent = <&liointc0>;
-+        interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk LOONGSON2_APB_CLK>;
-+        #pwm-cells = <3>;
-+    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a506fa4f6825..95b6020c6c97 100644
+index 95b6020c6c97..4e159c1da6b8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -13384,6 +13384,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
- F:	drivers/i2c/busses/i2c-ls2x.c
+@@ -13389,6 +13389,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
+ L:	linux-pwm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
++F:	drivers/pwm/pwm-loongson.c
  
-+LOONGSON PWM DRIVER
-+M:	Binbin Zhou <zhoubinbin@loongson.cn>
-+L:	linux-pwm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-+
  LOONGSON-2 SOC SERIES CLOCK DRIVER
  M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-clk@vger.kernel.org
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 0915c1e7df16..ef02a44d83a7 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -351,6 +351,18 @@ config PWM_KEEMBAY
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-keembay.
+ 
++config PWM_LOONGSON
++	tristate "Loongson PWM support"
++	depends on MACH_LOONGSON64 || COMPILE_TEST
++	depends on COMMON_CLK
++	help
++	  Generic PWM framework driver for Loongson family.
++	  It can be found on Loongson-2K series cpus and Loongson LS7A
++	  bridge chips.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-loongson.
++
+ config PWM_LP3943
+ 	tristate "TI/National Semiconductor LP3943 PWM support"
+ 	depends on MFD_LP3943
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 9081e0c0e9e0..7c18c9be419f 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
++obj-$(CONFIG_PWM_LOONGSON)	+= pwm-loongson.o
+ obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+ obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
+ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+new file mode 100644
+index 000000000000..4c9b14efadc3
+--- /dev/null
++++ b/drivers/pwm/pwm-loongson.c
+@@ -0,0 +1,288 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
++ *
++ * Loongson PWM driver
++ *
++ * For Loongson's PWM IP block documentation please refer Chapter 11 of
++ * Reference Manual: https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanual-EN.pdf
++ *
++ * Author: Juxin Gao <gaojuxin@loongson.cn>
++ * Further cleanup and restructuring by:
++ *         Binbin Zhou <zhoubinbin@loongson.cn>
++ *
++ * Limitations:
++ * - The buffer register value should be written before the CTRL register.
++ * - When disabled the output is driven to 0 independent of the configured
++ *   polarity.
++ */
++
++#include <linux/acpi.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/units.h>
++
++/* Loongson PWM registers */
++#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
++#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
++#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
++
++/* Control register bits */
++#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
++#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
++#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
++#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
++#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
++#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
++#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
++#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
++#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
++
++#define LOONGSON_PWM_FREQ_STD		(50 * HZ_PER_KHZ)
++
++struct pwm_loongson_suspend_store {
++	u32 ctrl;
++	u32 duty;
++	u32 period;
++};
++
++struct pwm_loongson_ddata {
++	struct clk *clk;
++	void __iomem *base;
++	u64 clk_rate;
++	struct pwm_loongson_suspend_store lss;
++};
++
++static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
++{
++	return pwmchip_get_drvdata(chip);
++}
++
++static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata, u32 offset)
++{
++	return readl(ddata->base + offset);
++}
++
++static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddata,
++				       u32 val, u32 offset)
++{
++	writel(val, ddata->base + offset);
++}
++
++static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
++				     enum pwm_polarity polarity)
++{
++	u16 val;
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
++
++	if (polarity == PWM_POLARITY_INVERSED)
++		/* Duty cycle defines LOW period of PWM */
++		val |= LOONGSON_PWM_CTRL_INVERT;
++	else
++		/* Duty cycle defines HIGH period of PWM */
++		val &= ~LOONGSON_PWM_CTRL_INVERT;
++
++	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
++
++	return 0;
++}
++
++static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	u32 val;
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
++	val &= ~LOONGSON_PWM_CTRL_EN;
++	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
++}
++
++static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	u32 val;
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
++	val |= LOONGSON_PWM_CTRL_EN;
++	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
++
++	return 0;
++}
++
++static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			       u64 duty_ns, u64 period_ns)
++{
++	u32 duty, period;
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	/* duty = duty_ns * ddata->clk_rate / NSEC_PER_SEC */
++	duty = mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_SEC);
++	pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
++
++	/* period = period_ns * ddata->clk_rate / NSEC_PER_SEC */
++	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
++	pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
++
++	return 0;
++}
++
++static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			      const struct pwm_state *state)
++{
++	int ret;
++	u64 period, duty_cycle;
++	bool enabled = pwm->state.enabled;
++
++	if (!state->enabled) {
++		if (enabled)
++			pwm_loongson_disable(chip, pwm);
++		return 0;
++	}
++
++	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
++	if (ret)
++		return ret;
++
++	period = min(state->period, NANOHZ_PER_HZ);
++	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
++
++	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
++	if (ret)
++		return ret;
++
++	if (!enabled && state->enabled)
++		ret = pwm_loongson_enable(chip, pwm);
++
++	return ret;
++}
++
++static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				  struct pwm_state *state)
++{
++	u32 duty, period, ctrl;
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
++	period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
++	ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
++
++	/* duty & period have a max of 2^32, so we can't overflow */
++	state->duty_cycle = DIV64_U64_ROUND_UP((u64)duty * NSEC_PER_SEC, ddata->clk_rate);
++	state->period = DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC, ddata->clk_rate);
++	state->polarity = (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POLARITY_INVERSED :
++			  PWM_POLARITY_NORMAL;
++	state->enabled = (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
++
++	return 0;
++}
++
++static const struct pwm_ops pwm_loongson_ops = {
++	.apply = pwm_loongson_apply,
++	.get_state = pwm_loongson_get_state,
++};
++
++static int pwm_loongson_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct pwm_chip *chip;
++	struct pwm_loongson_ddata *ddata;
++	struct device *dev = &pdev->dev;
++
++	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	ddata = to_pwm_loongson_ddata(chip);
++
++	ddata->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ddata->base))
++		return PTR_ERR(ddata->base);
++
++	if (!has_acpi_companion(dev)) {
++		ddata->clk = devm_clk_get_enabled(dev, NULL);
++		if (IS_ERR(ddata->clk))
++			return dev_err_probe(dev, PTR_ERR(ddata->clk),
++					     "failed to get pwm clock\n");
++		ddata->clk_rate = clk_get_rate(ddata->clk);
++	} else {
++		ddata->clk_rate = LOONGSON_PWM_FREQ_STD;
++	}
++
++	chip->ops = &pwm_loongson_ops;
++	chip->atomic = true;
++	dev_set_drvdata(dev, chip);
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
++
++	return 0;
++}
++
++static int pwm_loongson_suspend(struct device *dev)
++{
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	ddata->lss.ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
++	ddata->lss.duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
++	ddata->lss.period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
++
++	clk_disable_unprepare(ddata->clk);
++
++	return 0;
++}
++
++static int pwm_loongson_resume(struct device *dev)
++{
++	int ret;
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
++
++	ret = clk_prepare_enable(ddata->clk);
++	if (ret)
++		return ret;
++
++	pwm_loongson_writel(ddata, ddata->lss.ctrl, LOONGSON_PWM_REG_CTRL);
++	pwm_loongson_writel(ddata, ddata->lss.duty, LOONGSON_PWM_REG_DUTY);
++	pwm_loongson_writel(ddata, ddata->lss.period, LOONGSON_PWM_REG_PERIOD);
++
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(pwm_loongson_pm_ops, pwm_loongson_suspend,
++				pwm_loongson_resume);
++
++static const struct of_device_id pwm_loongson_of_ids[] = {
++	{ .compatible = "loongson,ls7a-pwm" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, pwm_loongson_of_ids);
++
++static const struct acpi_device_id pwm_loongson_acpi_ids[] = {
++	{ "LOON0006" },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, pwm_loongson_acpi_ids);
++
++static struct platform_driver pwm_loongson_driver = {
++	.probe = pwm_loongson_probe,
++	.driver = {
++		.name = "loongson-pwm",
++		.pm = pm_ptr(&pwm_loongson_pm_ops),
++		.of_match_table = pwm_loongson_of_ids,
++		.acpi_match_table = pwm_loongson_acpi_ids,
++	},
++};
++module_platform_driver(pwm_loongson_driver);
++
++MODULE_DESCRIPTION("Loongson PWM driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited.");
++MODULE_LICENSE("GPL");
 -- 
 2.43.5
 
