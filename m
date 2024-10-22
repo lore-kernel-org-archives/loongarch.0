@@ -1,70 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FE15853C;
-	Tue, 22 Oct 2024 05:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0CC13A87E
+	for <loongarch@lists.linux.dev>; Tue, 22 Oct 2024 09:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729575196; cv=none; b=KUP4yqtaVElmpx/UVg/giBiMOjJ5I0Ie0NUZGJ+fIxB7uheij2nVzOYvyikGaqov7i2uh9Q3NxlkkI7nFPPRRV6eutc+wAo0klU8mRR4d20ir3HNPzxLXorMF3ybPlUJUjkF/QhVn8R5lijRKPWIoMHKdNXfRSmv7oE2UMvplaA=
+	t=1729587866; cv=none; b=LtTaz0S6QapcKlZ2U+xaejHS8rA/N/UBmyd1YIXKiSFJzsFul4J/TRWqHFcxKX6+scXiqM0WXmW0QqThkZinHpj5/f/26WXBsm4/MR80ORoZAfsMjriwPveLs8i5nCxxA4zq0L/OY+Wy+XkldlHCrmqK3qrC7vrhFvibqb/tbGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729575196; c=relaxed/simple;
-	bh=wRkfQUF2ISla4/Dyh3GWD4MTMdKciArME+XeWmLBnpQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hg8pmbN1MfgRQO7Q3ypYmRhHPEtnuZblY0JULeHFQ9e3MRedJSa50/RXX86TLLgtWAPlXjbEqHakki8YU2XiRAi22TWMX65bCTAxi0dUqP6cQd1G0vIofg0JiBULnWMo/nwsS3XQuH+Ey7wUb0WkoIr2Q8BcZ2rHYXzuk3pBuHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKyWFXEq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKyWFXEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB6BC4CEC7;
-	Tue, 22 Oct 2024 05:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729575196;
-	bh=wRkfQUF2ISla4/Dyh3GWD4MTMdKciArME+XeWmLBnpQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GKyWFXEqXZ8HPbfwlVVPDgtak0z+GYw+i8o5UPFLoCAM9YYsVpfSh8ft16pfu0+UL
-	 2kMwzFjATiwOF8q5HMPpAjtY5ild2BXbqbkUi7SBN5CdnngzYwxC1n8ds0s/9p509k
-	 eIUsWTblf1voDnVnj5VLUKVNLPuTikU3xtJCv7aWfGarEMbZYD4tUtDncVoxm3SY5m
-	 INJ8t29nK+PeZPKX57w5Jg4UqfzeTWKIfE/MZZKw8KRcM5DD/FY16utZHAldJzqHFv
-	 DZe0ASFdupGSrAY6sCkYflhlTSgi4/sgXvOjApg8JXA73jM11huBCpWlvZTQIaXPY/
-	 8E8w6vnvs+S4Q==
-From: Vinod Koul <vkoul@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, dmaengine@vger.kernel.org, 
- Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
- loongarch@lists.linux.dev
-In-Reply-To: <20240924064241.2414629-1-zhoubinbin@loongson.cn>
-References: <20240924064241.2414629-1-zhoubinbin@loongson.cn>
-Subject: Re: [PATCH] dmaengine: loongson2-apb: Rename the prefix ls2x to
- loongson2
-Message-Id: <172957519493.489113.13854321742926152016.b4-ty@kernel.org>
-Date: Tue, 22 Oct 2024 11:03:14 +0530
+	s=arc-20240116; t=1729587866; c=relaxed/simple;
+	bh=FmDcReTPKUUV7YiJm+WOnQgrY+OEHQUfuIC7c1n0nYk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ueaF+lbRLjGrp9WEy1hMJGimLGP2cZRYIwS7B+GktW6hxiyD/g+mpSa4RoXVDRA5/nDATaAuuj/sV+vnvfufMzJ1zMKLezLVcmU9sSAxDaHf2UVwF/VVtMs6XaRoNaZSI1Bhya3GkdA/mMCpT0ia/+lwBPEeQnQU4CMbh5KxOIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.52])
+	by gateway (Coremail) with SMTP id _____8BxeeGUahdnrr4EAA--.10941S3;
+	Tue, 22 Oct 2024 17:04:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.52])
+	by front1 (Coremail) with SMTP id qMiowMAx7uCQahdnKy4HAA--.42603S2;
+	Tue, 22 Oct 2024 17:04:17 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Sean Young <sean@mess.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v7 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Tue, 22 Oct 2024 17:04:13 +0800
+Message-ID: <cover.1729583747.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAx7uCQahdnKy4HAA--.42603S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr48WF4DXw4DGF4kury7CFX_yoW5Cr47pF
+	ZrC343Kr10qr10yrs3J348Cr1SvayrJF9rGFsay348X3yUCw4jqw4SgF45JFZrAr129F42
+	vrZ3CFWjka4UuFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
+
+Hi all:
+
+This patchset introduce a generic PWM framework driver for Loongson family.
+Each PWM has one pulse width output signal and one pulse input signal to be measured.
+
+It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
+
+Thanks.
+
+-------
+V7:
+Thanks for Sean's advice.
+patch (2/2):
+ - Set chip->atomic to keep pwm_apply_atomic() can be used with the pwm.
+ - Test with CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP enabled.
+
+Link to V6:
+https://lore.kernel.org/all/cover.1728463622.git.zhoubinbin@loongson.cn/
+
+V6:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Add Reference Manual;
+ - Shortcut if !pwm->state.enabled;
+ - When state->enabled is true, unconditionally execute
+   pwm_loongson_set_polarity() to avoid that the polarity register is
+   not set correctly.
+
+Link to V5:
+https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
+
+V5:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Test with PWM_DEBUG enabled.
+ - In pwm_loongson_apply(), the pwm state is determined before the pwm
+   polarity, avoid test failures when PWM_DEBUG is enabled;
+ - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
+   precision loss and to avoid test failures when PWM_DEBUG is enabled.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
+
+V4:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Addressed Uwe's review comments:
+   - Make use of devm_pwmchip_alloc() function;
+   - Add Limitations description;
+   - Add LOONGSON_ prefix for Loongson pwm register defines;
+   - Keep regs written only once;
+   - Rewrite duty/period calculation;
+   - Add dev_err_probe() in .probe();
+   - Fix some code style.
+
+Link to V3:
+https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongson.cn/
+
+V3:
+patch (1/2):
+ - Add Reviewed-by tag from Krzysztof, thanks.
+patch (2/2):
+ - Several code stlye adjustments, such as line breaks.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
+
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 288 ++++++++++++++++++
+ 5 files changed, 374 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
 
 
-On Tue, 24 Sep 2024 14:42:41 +0800, Binbin Zhou wrote:
-> Since commit e06c43231214 ("dmaengine: Loongson1: Add Loongson-1 APB DMA
-> driver"), the Loongson-1 dma controller was added.
-> 
-> Unfortunately their naming has not been standardized, as CPUs belonging
-> to the same Loongson family, we expect to standardize the naming for
-> ease of understanding.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] dmaengine: loongson2-apb: Rename the prefix ls2x to loongson2
-      commit: 73d03c615b9d2d05991691c1f877241105450cfe
-
-Best regards,
+base-commit: c13bce43b32b06f2273c7961940c391cdaf13d1e
 -- 
-~Vinod
-
+2.43.5
 
