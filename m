@@ -1,113 +1,104 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9DF185E53;
-	Tue, 22 Oct 2024 10:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD8E20323;
+	Wed, 23 Oct 2024 05:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729591318; cv=none; b=nvi+lO9BK4K3Z2HyK6OIdEPoCmg06Nhjk7dwsgjEDFluupRpU6INaTfi3EYh5S34CNMhZL9BEwkYbL7vET9uLMagNcSEeyFIjxXOSUyj5e+5EOUrDcllAHxjZ1ODk+sE9PmPd0FjIPKSIjG0c8wAzcykimUwU6HRNgdoWMD9kVk=
+	t=1729661810; cv=none; b=WXm+XzVgq1WHtMhe/z9UCSYR/dOgC64z8kzAVySfy7ANjhfIR7QBibyQ8Q45TFMMNWxNnQpM++e/WPLEYhbYKJ+OlMRDajKWp/sEtVIkvTybbag/tNnaRrCkhgq/mL8RXVsqR+eM21ZZAxUZxmvYDVUkMRqkP/0NZ3wWCoonRJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729591318; c=relaxed/simple;
-	bh=aMHdY6O6EDnpUnBTDu6QR/VsigEjeyLZRSt0+vfKLKs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=A8QN8QChgtTuy4whUCHNKIWGg7yZDEj12UFymN9b2HKv5hlQNWFh6lbGeas6ImMctkM483sDNeLSjJ8Pc0uF6hRgbN9fcFvMdYDmeIiU3cVumdCtqBy564AY5ht9R1/GTMgf/Bzt7lwhDxDUu++NhwIgZYXFWUIOL58PNxKAUVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxmeEReBdn+N4EAA--.11468S3;
-	Tue, 22 Oct 2024 18:01:53 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBx_uAPeBdnmlkHAA--.43333S3;
-	Tue, 22 Oct 2024 18:01:52 +0800 (CST)
-Subject: Re: [PATCH v8 3/3] irqchip/loongson-eiointc: Add extioi virt
- extension support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- x86@kernel.org, Song Gao <gaosong@loongson.cn>
-References: <20240830093229.4088354-1-maobibo@loongson.cn>
- <20240830093229.4088354-4-maobibo@loongson.cn>
- <CAAhV-H4W4LwL3U2HT+-r+6nH5ZSBBbPYL2wdZJqQF7WNkhOgMw@mail.gmail.com>
- <878qv6y631.ffs@tglx> <2fb27579-5a4d-8bcc-db08-8942960dc07e@loongson.cn>
- <CAAhV-H52kC_-ehzxmT5ye+XVNm5Lm=psSfAv6xqnQpkOHTMFdA@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <10de3f46-3f68-d2e6-4b18-fd098b6fec9d@loongson.cn>
-Date: Tue, 22 Oct 2024 18:01:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1729661810; c=relaxed/simple;
+	bh=yyqjrNra2qrWk/SlCt8CsJRxIaNpgya75gxtX8qBAdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VqSddQ+vg3a1tbXKgGnJSmYLFQ7MQTkNa6OfDUEeAS9JtH49EQIZXKXAs5FlB9z6zhfp8v6EmpDdWbtq+tIerOcSd/51z6CKa+h4c66E99fDu9Akjb8M1UhrRxw3sp4XctqbwOxUG+BE3hxwLcBaA/6NlYmxV+Y3dJmojq7HkCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e3yKJui3; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3yKJui3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=fLRpNAyXDIDQIA7HSndcO831t3mGv6BkJWEZG/+8nHM=; b=e3yKJui3E1F31NYxpyaXDU9W7H
+	+UGx5mo0sIV2J4IRe3S0lKmAIwjnMnBQslhfMHmdi/AtNvCPQq8jOwp/ruOtXaFiw4c3pJcP7Slky
+	PbaGDyP3HGNONuiaY/ACmdbI+BgedQmkkMQaSH4AioQhoJ7QRjxFz7MjTi/c01vFbTn9sHdxiMohI
+	6JbxnMeER1pWyG8JXPtFYAEvUzIpMbKe30FHv1KAJDyxneeYpqjBh8LWHkoC5Ijd6IeGCCS15Sz8z
+	Nj2X7+iDJITPMDsaPbrq7AWNeuDcMxHMRhSoEw7840C58hpQ3F3tqw//Ij4z5zduWot2M0oEg5VbW
+	cuU3mdNA==;
+Received: from 2a02-8389-2341-5b80-8c6c-e123-fc47-94a5.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:8c6c:e123:fc47:94a5] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t3U34-0000000D4Ir-2Mk1;
+	Wed, 23 Oct 2024 05:36:47 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Subject: provide generic page_to_phys and phys_to_page implementations v3
+Date: Wed, 23 Oct 2024 07:36:35 +0200
+Message-ID: <20241023053644.311692-1-hch@lst.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H52kC_-ehzxmT5ye+XVNm5Lm=psSfAv6xqnQpkOHTMFdA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx_uAPeBdnmlkHAA--.43333S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zw4ftry8CFWUJw1UGryrKrX_yoW8GrWxpa
-	ySkFn8tF4kJrWayan7t3Z5XF4YvrnxJFsFg3Z5Jr18A3sIvF1Fqr4xJFWUCFZ3W34rGa4j
-	vry0ga47XFyUWrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
-	14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU83UUUUUUUU==
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+page_to_phys is duplicated by all architectures, and from some strange
+reason placed in <asm/io.h> where it doesn't fit at all.  
 
-Got it, thanks.
+phys_to_page is only provided by a few architectures despite having a lot 
+of open coded users.
 
-Regards
-Bibo Mao
+Provide generic versions in <asm-generic/memory_model.h> to make these
+helpers more easily usable.
 
-On 2024/10/22 下午5:45, Huacai Chen wrote:
-> On Tue, Oct 22, 2024 at 5:17 PM maobibo <maobibo@loongson.cn> wrote:
->>
->> Hi Huacai/Thomas,
->>
->> Sorry for the ping message :(
->>
->> Can this patch be applied int next RC version?
-> Queued for the next release.
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>
->> On 2024/10/2 下午9:42, Thomas Gleixner wrote:
->>> On Wed, Sep 11 2024 at 17:11, Huacai Chen wrote:
->>>> Hi, Thomas,
->>>>
->>>> On Fri, Aug 30, 2024 at 5:32 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>
->>>>> Interrupts can be routed to maximal four virtual CPUs with one HW
->>>>> EIOINTC interrupt controller model, since interrupt routing is encoded with
->>>>> CPU bitmap and EIOINTC node combined method. Here add the EIOINTC virt
->>>>> extension support so that interrupts can be routed to 256 vCPUs on
->>>>> hypervisor mode. CPU bitmap is replaced with normal encoding and EIOINTC
->>>>> node type is removed, so there are 8 bits for cpu selection, at most 256
->>>>> vCPUs are supported for interrupt routing.
->>>> This patch is OK for me now, but seems it depends on the first two,
->>>> and the first two will get upstream via loongarch-kvm tree. So is that
->>>> possible to also apply this one to loongarch-kvm with your Acked-by?
->>>
->>> Go ahead.
->>>
->>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->>>
->>
+Changes since v2:
+ - spelling fixes
 
+Changes since v1:
+ - use slightly less nested macros
+ - port a debug check from the old powerpc version to the generic code
+
+Diffstat:
+ arch/alpha/include/asm/io.h         |    1 -
+ arch/arc/include/asm/io.h           |    3 ---
+ arch/arm/include/asm/memory.h       |    6 ------
+ arch/arm64/include/asm/memory.h     |    6 ------
+ arch/csky/include/asm/page.h        |    3 ---
+ arch/hexagon/include/asm/page.h     |    6 ------
+ arch/loongarch/include/asm/page.h   |    3 ---
+ arch/m68k/include/asm/virtconvert.h |    3 ---
+ arch/microblaze/include/asm/page.h  |    1 -
+ arch/mips/include/asm/io.h          |    5 -----
+ arch/nios2/include/asm/io.h         |    3 ---
+ arch/openrisc/include/asm/page.h    |    2 --
+ arch/parisc/include/asm/page.h      |    1 -
+ arch/powerpc/include/asm/io.h       |   12 ------------
+ arch/riscv/include/asm/page.h       |    3 ---
+ arch/s390/include/asm/page.h        |    2 --
+ arch/sh/include/asm/page.h          |    1 -
+ arch/sparc/include/asm/page.h       |    2 --
+ arch/um/include/asm/pgtable.h       |    2 --
+ arch/x86/include/asm/io.h           |    5 -----
+ arch/xtensa/include/asm/page.h      |    1 -
+ include/asm-generic/memory_model.h  |   13 +++++++++++++
+ 22 files changed, 13 insertions(+), 71 deletions(-)
