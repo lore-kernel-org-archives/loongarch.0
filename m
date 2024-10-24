@@ -1,122 +1,212 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B71136E21;
-	Thu, 24 Oct 2024 03:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729741091; cv=pass; b=qcMkIrcPDiUF//G10BoJVmigSY6g1Q2O21rsKj3LyfyNQlCW/i0vf2aGmHIs5VfQP8GLKIoYEGuLNgukmxlDoJTHIOhXGehfXu5rmdZSyc8KMFIFdgGRBw5hBEJ07m2AkGk6qgZGbuIOnfn7Wyl9M1FtnQoEis571mP3E9FAJzc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729741091; c=relaxed/simple;
-	bh=zEQo/QBWu6c6CXzMwktN5QgHMCmbYkc6fV21Y5AEGr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y02QlIKNpxZU0x7S0vTF6DEjlTE1v9LIawYbwOipN1Kg+bD+CU+EFIJ7g+aJOOawBu5QkrNk0nlvIFJYwkoyNrzCUIkeexRc0bdlJCU7+7QvpTJjz6LbeV9ptOUeTF18VEJKh+mWMIGrcdgplFMcYtWbxWKkKdizQp0Vtfq9IX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=cQ8vcj5j; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EAC1C1753;
+	Thu, 24 Oct 2024 08:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729757850; cv=none; b=iVCPWxqAnsujoZZVTrLA9XoEh8jY+P+Y4FRKL9RwSHCfJzhElR55hGw18j4QhIkvySr6DIWKmPB2o74qxyrolG4YFRbMGUmrpqf+wISDiAJ5R0OKuROFoer5YB0zmA8xk6/2f1HyajhCrr/7tAb/UxKlHoQtpnv1lhooIgUGhBc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729757850; c=relaxed/simple;
+	bh=Ox/ZYsBrrmbPK3A2QSUcQ8QfXoa69FGJYXDNNRcdBnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FYHTSMJeMw6+i3oRT/+mzh6oStFV+NEaxc1JpjnyaoZ3xql9AaiFDVtmjVyf93aKXxocZPK10yYFpy5TDBs4jJDoeW953iR2cCJvQYXPNdoDZ1en6MvWbqkbgV4WIA2ROdQ7WO7c8hLjoUqjonmemb32zkAgyV1WMYSuQyqipBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUYTT8Tx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="cQ8vcj5j"
-ARC-Seal: i=1; a=rsa-sha256; t=1729741060; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nX8OPXDW2cthIEqTMyQQblZpQUeRm1tlYext1Oo30sTtYHYcktbP6QkNaRaRkvMdBZhtUx8VMyuOZ1yo+FGGeGS0iCscen2p3GnJ1SyL8u2H85tjngG+AQ708fA/Wbe6xOriUcybgk3FqcZLV5d+YhhpIyUQHTpiQ1V0GZwo2ow=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1729741060; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4wf2lEGNiKikemuz3JoVmC7ikUs3mn2DyQw2oAk/xb4=; 
-	b=XjLhS44GYUwiRMfeiBLSXehbyRQHvo6kaknTjIG114GAewi+zh78rAsKEHBbblqZNUaD0HYnVdKY6QBZ6HfPRPHw1RR+8ptBY9I6yekRvVWAnJN/gZfNwiXZ1CivAP7+qd4eraONzUwIs+Q/hbulsRZ56dZh8+L2v3nWUBAIzd4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1729741060;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=4wf2lEGNiKikemuz3JoVmC7ikUs3mn2DyQw2oAk/xb4=;
-	b=cQ8vcj5jczCZFZamwVhgcpKC2ZP4/1MdOILVTF2hjwXwseYRu8QXQXCHBGN8Z7WZ
-	5WRt1sT0vEYnud2HTzfxLFosZXJPwKulFSBtZYX0ZqRX2NJ5tO7GS2OAuoHhYA9KkpX
-	kVPN3Qtgq2O/ILYUE5VKlxxBj81B828bnHdKV/qo=
-Received: by mx.zohomail.com with SMTPS id 1729741058928285.49991825731297;
-	Wed, 23 Oct 2024 20:37:38 -0700 (PDT)
-Message-ID: <03c316c7-5268-40cd-af1c-4c8454506ab2@collabora.com>
-Date: Thu, 24 Oct 2024 06:37:28 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUYTT8Tx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612D5C4CEC7;
+	Thu, 24 Oct 2024 08:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729757849;
+	bh=Ox/ZYsBrrmbPK3A2QSUcQ8QfXoa69FGJYXDNNRcdBnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kUYTT8Tx/x5v0ueXFlaIbTgM/tC1LFzcQH/Bk/9E/G27ofyIbDJ7VnB94NYJst0cv
+	 rwM3dJS8U0ddWOUUXyYJ5U2DbjwqikH39DsU8Z9vNeIPIaGV5iltmAX+1Y07CtyHuu
+	 qjH8xAIYsTm3k2jYsPE3Yg78rgh4kjznfSO7VPR6GqKUwnNvv6GGqa5UsKhK6x1lWv
+	 w5QasDDvCUMmBgmW/lX8F5rn9hH0iBupLlusSquog8hp4ocLfovmnzNHmy5eiFqmmK
+	 d1E2Of3Az/DoYE4MNq3gGFDCWEofW+6fRLAOpgssfQgrtruzoRtxJno9OxgV2pJlkI
+	 Cl6tQ0r75+5yg==
+Date: Thu, 24 Oct 2024 11:13:11 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 6/8] x86/module: prepare module loading for ROX
+ allocations of text
+Message-ID: <ZxoBlwkh528r-vef@kernel.org>
+References: <20241016122424.1655560-1-rppt@kernel.org>
+ <20241016122424.1655560-7-rppt@kernel.org>
+ <20241021221519.GA3567210@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 00/85] KVM: Stop grabbing references to PFNMAP'd pages
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, =?UTF-8?Q?Alex_Benn=C3=A9e?=
- <alex.bennee@linaro.org>, Yan Zhao <yan.y.zhao@intel.com>,
- David Matlack <dmatlack@google.com>, David Stevens <stevensd@chromium.org>,
- Andrew Jones <ajones@ventanamicro.com>
-References: <20241010182427.1434605-1-seanjc@google.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20241010182427.1434605-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021221519.GA3567210@thelio-3990X>
 
-On 10/10/24 21:23, Sean Christopherson wrote:
-> TL;DR: Eliminate KVM's long-standing (and heinous) behavior of essentially
-> guessing which pfns are refcounted pages (see kvm_pfn_to_refcounted_page()).
-> 
-> Getting there requires "fixing" arch code that isn't obviously broken.
-> Specifically, to get rid of kvm_pfn_to_refcounted_page(), KVM needs to
-> stop marking pages/folios dirty/accessed based solely on the pfn that's
-> stored in KVM's stage-2 page tables.
-> 
-> Instead of tracking which SPTEs correspond to refcounted pages, simply
-> remove all of the code that operates on "struct page" based ona the pfn
-> in stage-2 PTEs.  This is the back ~40-50% of the series.
->  
-> For x86 in particular, which sets accessed/dirty status when that info
-> would be "lost", e.g. when SPTEs are zapped or KVM clears the dirty flag
-> in a SPTE, foregoing the updates provides very measurable performance
-> improvements for related operations.  E.g. when clearing dirty bits as
-> part of dirty logging, and zapping SPTEs to reconstitue huge pages when
-> disabling dirty logging.
-> 
-> The front ~40% of the series is cleanups and prep work, and most of it is
-> x86 focused (purely because x86 added the most special cases, *sigh*).
-> E.g. several of the inputs to hva_to_pfn() (and it's myriad wrappers),
-> can be removed by cleaning up and deduplicating x86 code.
-> 
-> v13:
->  - Rebased onto v6.12-rc2
->  - Collect reviews. [Alex and others]
->  - Fix a transient bug in arm64 and RISC-V where KVM would leak a page
->    refcount. [Oliver]
->  - Fix a dangling comment. [Alex]
->  - Drop kvm_lookup_pfn(), as the x86 that "needed" it was stupid and is (was?)
->    eliminated in v6.12.
->  - Drop check_user_page_hwpoison(). [Paolo]
->  - Drop the arm64 MTE fixes that went into 6.12.
->  - Slightly redo the guest_memfd interaction to account for 6.12 changes.
+Hi Nathan,
 
-Thanks a lot for working on this patchset! I tested it with native
-amdgpu/intel contexts and venus/virgl with dGPU and iGPU, no problems
-spotted. Please merge sooner, this will unblock lots of new virtio-gpu
-features.
+On Mon, Oct 21, 2024 at 03:15:19PM -0700, Nathan Chancellor wrote:
+> Hi Mike,
+> 
+> On Wed, Oct 16, 2024 at 03:24:22PM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > When module text memory will be allocated with ROX permissions, the
+> > memory at the actual address where the module will live will contain
+> > invalid instructions and there will be a writable copy that contains the
+> > actual module code.
+> > 
+> > Update relocations and alternatives patching to deal with it.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
+> Sorry that you have to hear from me again :) It seems that module
+> loading is still broken with this version of the patch, which is
+> something that I missed in my earlier testing since I only test a
+> monolithic kernel with my regular virtual machine testing. If I build
+> and install the kernel and modules in the VM via a distribution package,
+> I get the following splat at boot:
+>
+>   Starting systemd-udevd version 256.7-1-arch
+>   [    0.882312] SMP alternatives: Something went horribly wrong trying to rewrite the CFI implementation.
+>   [    0.883526] CFI failure at do_one_initcall+0x128/0x380 (target: init_module+0x0/0xff0 [crc32c_intel]; expected type: 0x0c7a3a22)
+>   [    0.884802] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+>   [    0.885434] CPU: 3 UID: 0 PID: 157 Comm: modprobe Tainted: G        W          6.12.0-rc3-debug-next-20241021-06324-g63b3ff03d91a #1 291f0fd70f293827edec681d3c5304f5807a3c7b
+>   [    0.887084] Tainted: [W]=WARN
+>   [    0.887409] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
+>   [    0.888241] RIP: 0010:do_one_initcall+0x128/0x380
+>   [    0.888720] Code: f3 0f 1e fa 41 be ff ff ff ff e9 0f 01 00 00 0f 1f 44 00 00 41 81 e7 ff ff ff 7f 49 89 db 41 ba de c5 85 f3 45 03 53 f1 74 02 <0f> 0b 41 ff d3 0f 1f 00 41 89 c6 0f 1f 44 00 00 c6 04 24 00 65 8b
+>   [    0.890598] RSP: 0018:ff3f93e5c052f970 EFLAGS: 00010217
+>   [    0.891129] RAX: ffffffffb4c105b8 RBX: ffffffffc0602010 RCX: 0000000000000000
+>   [    0.891850] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffc0602010
+>   [    0.892588] RBP: ff3f93e5c052fc88 R08: 0000000000000020 R09: 0000000000000000
+>   [    0.893305] R10: 000000002a378b84 R11: ffffffffc0602010 R12: 00000000000069c6
+>   [    0.894003] R13: ff1f0090c5596900 R14: ff1f0090c15a55c0 R15: 0000000000000000
+>   [    0.894693] FS:  00007ffb712c0740(0000) GS:ff1f00942fb80000(0000) knlGS:0000000000000000
+>   [    0.895453] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   [    0.896020] CR2: 00007ffffc4424c8 CR3: 0000000100af4002 CR4: 0000000000771ef0
+>   [    0.896698] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   [    0.897391] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   [    0.898077] PKRU: 55555554
+>   [    0.898337] Call Trace:
+>   [    0.898577]  <TASK>
+>   [    0.898784]  ? __die_body+0x6a/0xb0
+>   [    0.899132]  ? die+0xa4/0xd0
+>   [    0.899413]  ? do_trap+0xa6/0x180
+>   [    0.899740]  ? do_one_initcall+0x128/0x380
+>   [    0.900130]  ? do_one_initcall+0x128/0x380
+>   [    0.900523]  ? handle_invalid_op+0x6a/0x90
+>   [    0.900917]  ? do_one_initcall+0x128/0x380
+>   [    0.901311]  ? exc_invalid_op+0x38/0x60
+>   [    0.901679]  ? asm_exc_invalid_op+0x1a/0x20
+>   [    0.902081]  ? __cfi_init_module+0x10/0x10 [crc32c_intel 5331566c5540f82df397056699bc4ddac8be1306]
+>   [    0.902933]  ? __cfi_init_module+0x10/0x10 [crc32c_intel 5331566c5540f82df397056699bc4ddac8be1306]
+>   [    0.903781]  ? __cfi_init_module+0x10/0x10 [crc32c_intel 5331566c5540f82df397056699bc4ddac8be1306]
+>   [    0.904634]  ? do_one_initcall+0x128/0x380
+>   [    0.905028]  ? idr_alloc_cyclic+0x139/0x1d0
+>   [    0.905437]  ? security_kernfs_init_security+0x54/0x190
+>   [    0.905958]  ? __kernfs_new_node+0x1ba/0x240
+>   [    0.906377]  ? sysfs_create_dir_ns+0x8f/0x140
+>   [    0.906795]  ? kernfs_link_sibling+0xf2/0x110
+>   [    0.907211]  ? kernfs_activate+0x2c/0x110
+>   [    0.907599]  ? kernfs_add_one+0x108/0x150
+>   [    0.907981]  ? __kernfs_create_file+0x75/0xa0
+>   [    0.908407]  ? sysfs_create_bin_file+0xc6/0x120
+>   [    0.908853]  ? __vunmap_range_noflush+0x347/0x420
+>   [    0.909313]  ? _raw_spin_unlock+0xe/0x30
+>   [    0.909692]  ? free_unref_page+0x22c/0x4c0
+>   [    0.910097]  ? __kmalloc_cache_noprof+0x1a8/0x360
+>   [    0.910546]  do_init_module+0x60/0x250
+>   [    0.910910]  __se_sys_finit_module+0x316/0x420
+>   [    0.911351]  do_syscall_64+0x88/0x170
+>   [    0.911699]  ? __x64_sys_lseek+0x68/0xb0
+>   [    0.912077]  ? syscall_exit_to_user_mode+0x97/0xc0
+>   [    0.912538]  ? do_syscall_64+0x94/0x170
+>   [    0.912902]  ? syscall_exit_to_user_mode+0x97/0xc0
+>   [    0.913353]  ? do_syscall_64+0x94/0x170
+>   [    0.913709]  ? clear_bhb_loop+0x45/0xa0
+>   [    0.914071]  ? clear_bhb_loop+0x45/0xa0
+>   [    0.914428]  ? clear_bhb_loop+0x45/0xa0
+>   [    0.914767]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>   [    0.915089] RIP: 0033:0x7ffb713dc1fd
+>   [    0.915316] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e3 fa 0c 00 f7 d8 64 89 01 48
+>   [    0.916491] RSP: 002b:00007ffffc4454a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+>   [    0.916964] RAX: ffffffffffffffda RBX: 000055f28c6a5420 RCX: 00007ffb713dc1fd
+>   [    0.917413] RDX: 0000000000000000 RSI: 000055f26c40cc03 RDI: 0000000000000003
+>   [    0.917858] RBP: 00007ffffc445560 R08: 0000000000000001 R09: 00007ffffc4454f0
+>   [    0.918302] R10: 0000000000000040 R11: 0000000000000246 R12: 000055f26c40cc03
+>   [    0.918748] R13: 0000000000060000 R14: 000055f28c6a4b50 R15: 000055f28c6ac5b0
+>   [    0.919211]  </TASK>
+>   [    0.919356] Modules linked in: crc32c_intel(+)
+>   [    0.919661] ---[ end trace 0000000000000000 ]---
+> 
+> I also see some other WARNs interleaved along the lines of
+> 
+>   [    0.982759] no CFI hash found at: 0xffffffffc0608000 ffffffffc0608000 cc cc cc cc cc
+>   [    0.982767] WARNING: CPU: 5 PID: 170 at arch/x86/kernel/alternative.c:1204 __apply_fineibt+0xa6d/0xab0
+> 
+> The console appears to be a bit of a mess after that initial message.
+> 
+> If there is any more information I can provide or patches I can test, I
+> am more than happy to do so.
+ 
+I've got similar report from kbuild bot a few days ago:
+https://lore.kernel.org/all/202410202257.b7edc376-lkp@intel.com
 
-Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+I fixed fineibt handling in v7:
+https://lore.kernel.org/linux-mm/20241023162711.2579610-1-rppt@kernel.org
+
+> Cheers,
+> Nathan
+> 
 
 -- 
-Best regards,
-Dmitry
-
+Sincerely yours,
+Mike.
