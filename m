@@ -1,210 +1,102 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC91487C8
-	for <loongarch@lists.linux.dev>; Fri, 25 Oct 2024 14:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA6E20C33C
+	for <loongarch@lists.linux.dev>; Fri, 25 Oct 2024 17:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729866033; cv=none; b=cwdkvdrszkHTzpYKFRLKRNWx1195m+WpuvssgKENstA0fn13gp4+hyU94PMkJ2v6HUZuGPUbZ1E8rqEFcxETnKmPEdyHA+gT6mwRhqaIC6B+Ki4C8AhpDsRfyFG5gYyP6vWx3dfKB9MfBUMZQ6Z1cHzQZ7H+CjomLdq0DoLWnDE=
+	t=1729878123; cv=none; b=QQwMmz24I6vcPX/NG/csDKn2QBKadGc3SGFVbYOQ9FIvZ94Rhbh2LqhsSrL+MzU7ikQCOeFXZrLCAvKAyiqAQee6EpRAsgCHO9AJBxbGacfbW3qdjJuFEirSIrmSJ+z8qz1cci4Po8GVyQ8MO4gIQl453zVBuNzgTr1AVvjVCYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729866033; c=relaxed/simple;
-	bh=jO2eJCq3o1UQyWfSIXb4J+AN0Vw5/ZfDFBnPWf9w6Uc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ge8qq4jH44FBoIlk/P5pQSRuZZLFdnq6DSrsL3tAUBYxlZM1oRPoGiBl9GCgG3fHTNvtmUOj9P+ecaZ09+qOsnDH+7hZnD7dCwt7QsZ4orVUq3D2x7vrhBBU5kLbJNc/2ItxOuTwTLBJeAiY6LUWg7fs9nWSA7/Y1R7Om3fdSqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ABY0h0DT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AMDBtAyi; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1729878123; c=relaxed/simple;
+	bh=luHPkXcmkzXARAD1k+1siQ/blVliFRMh2F/pQQLu2Pw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b+zsvzckxD0wkVJgxJWJSHH1eKLE+U48GfKDcsBIlqKh6yLzkqppBWySywJ9pRrwYw9gTwhip1qbz5mDCGyTPdaJjXTJoWqSJpXXx0/mDitz1/VOHV0RFqng86uMrjUA1QdITXZdkkqEUY0rXstsSXljzcz2CC7sYvpsCbF3orI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DUR/GHB/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ABY0h0DT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AMDBtAyi"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id 7146011400DA;
-	Fri, 25 Oct 2024 10:20:29 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 25 Oct 2024 10:20:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1729866029;
-	 x=1729952429; bh=wscwvk+/zfYGrxB9o7ElzO1RcnFw9HTQg1kU47YxPvw=; b=
-	ABY0h0DTDAGctuJpIL6sS/zNH1ENNSmPu1GTEjlpQ5i/MnCrJwqbpzaF8Fzl6SAE
-	ty89srR+XMB3y0GO59LDr1lbqoSGUHF5vYQgUpFuvNnO1I9a4HVWWkekFIh4+iw3
-	++kRrGeULuovgoGE3lEBDVxVt76SyxQs7lrHVSg8RuKA40TCIekZuPf24SgW3VWv
-	y3Go9YZsNXysA0v31RtM5mhjq55MKMYCRF8fvYc4ghnxRT3QD8XS1b9MC2d8P6d6
-	Z8U2JobiENX6AweBG/AEkr2ZKdC++1C11Tmg1u0yUG3X4E9UHQDdWn82DAio4qtN
-	aMp4W5bYIp8Yz6/pab3idg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729866029; x=
-	1729952429; bh=wscwvk+/zfYGrxB9o7ElzO1RcnFw9HTQg1kU47YxPvw=; b=A
-	MDBtAyiMr0utwlTGZ9ahqEfZF+IyfWeBqehZ/0Ns+cmcssE0+i0bkROW05yMQsdU
-	cOTraYDNR+PM39pXp17Q9l9ugknz+vTCTQqT/gZhppAEN6O0InRdGseTWr8j1cze
-	Fh85jShfOWDbEdB0hWDEpn6IEq1jIfU7dSqLAnRoCGh4mEvMa8892HRjDW/qPVrh
-	sqZA/2i1Ti+Bigv3Tveu8uo1Y8isbmRx0sJLqb1tUaroWhRIpYaXvCvPydz38kPd
-	pYcZr+L3SnOemqTzyNUjsUx5qUUrTSGRa8aYrLXmY/VkDwv4EtZ/DOZ7py6b/hVf
-	mW3ecRgZZT5G1a+zLc9rw==
-X-ME-Sender: <xms:LKkbZ6icSWtXOvkpYM87hQ0HLds7qfX9s7056_cXCQ0XSAle9zkPOA>
-    <xme:LKkbZ7C_7DPvl407kdsjlRrFBtoBQJcEsNgwljwRSIMZwcU56VrT5yfDgceTXrYKx
-    0resZ0Qv9r5yzYJWd0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejvddgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvihgurdhlrghighhhthesrg
-    gtuhhlrggsrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghr
-    mhdrtghomhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrd
-    gtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
-    pehjvhgvthhtvghrsehkrghlrhgrhihinhgtrdgtohhmpdhrtghpthhtohephihsihhonh
-    hnvggruheskhgrlhhrrgihihhntgdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggr
-    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:LKkbZyEWph2OfuX5rp36qDXrBJGFeVx6L1j670c9oST-ROWHYLjhYQ>
-    <xmx:LKkbZzR-6CCISyD9v6h5geDwiCkn4rdaBNnAtm7k4SX1CIBqrMUUXQ>
-    <xmx:LKkbZ3w4lJB7XWYZExVb0i0_12fv6iRgHLcVQnpS3OZQYPaEV3l1GQ>
-    <xmx:LKkbZx4REtWx5i2Ye5_3HOyXw3kOW56cp2xiDUXTExtzk2q_YJoAQw>
-    <xmx:LakbZ8y4B_V6lMqvAbM25tHAe9VzZYCl0gf6JwYlrpYjDtQ8-3zK5Ogl>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1E61A2220071; Fri, 25 Oct 2024 10:20:27 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DUR/GHB/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729878120;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=luHPkXcmkzXARAD1k+1siQ/blVliFRMh2F/pQQLu2Pw=;
+	b=DUR/GHB/zU+ENd7g+McH4suIHL5pOTJGuRu8QKQ+h7Un9UEoPuSk+jqrywXWwjDZJhA/no
+	Um3Mj0+A1d7YMQc4ernvQv0RlT4B0xiOSx7Z5Cskx3DQrVpX63ono7Bk7UxENws7HH3N8Q
+	wBz/grDCW1W+wVtmTOOo5d2LS5a1Hio=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-379-UUe3SvryMROKZFeRR7Aulw-1; Fri, 25 Oct 2024 13:41:59 -0400
+X-MC-Unique: UUe3SvryMROKZFeRR7Aulw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37d59ad50f3so1173442f8f.0
+        for <loongarch@lists.linux.dev>; Fri, 25 Oct 2024 10:41:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729878118; x=1730482918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=luHPkXcmkzXARAD1k+1siQ/blVliFRMh2F/pQQLu2Pw=;
+        b=fWqlA5M5r960VkMvfW9STcWrYtoPLLK5bdrGSVg9/TnjVFjNsJzHjkgMr8WdJdbyw6
+         xas5iIffQpBWx97RXLnmQguLyRxrRpzdiA4wlfsSCbGVd6dIDuIEA0hrip9/rF+NIB1a
+         u+TaG/IIRNx8QGSvaa2Jymscq3v7eDaWs1OFfd6PobBisuy2RQrEWrajeX+gT8B+LZJr
+         ZTsqqzc7NVEeouMP0Hobr3A1wk9UdcinuPAcR5kG/Mz3GUBMOrnmBm42lsM6sOCEwtUz
+         0v8oDu/E4khNZiUwGtDr+7FNpDWtNm5L4OOOp7kuCBksgHqytgnrOO2Nxzfrgdt82/eb
+         5CIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwZX/2+CIRUBr+2ZgmWTtIoz/YMx24IkcXQ0din3IPtL0LH4Qc3yDsOSpQFfYTKm/qS7UBj45ohqU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyn/pKhhL8ewezT1M1qjWsI/ZSIEUYxk+bgVVD1vZ3YFO8sOy9E
+	/iAKy1gmgd4v8ZFAfeyu5w1G4JQdV4e9iAByUoq4WDXKQJ/dH+J5FC4ZHPHTQHiTUvCnxjRUNZB
+	/A2gKDOMbrcYbcAX+HfUlv/3XBSWbgnlI5u8nsJ4Hh0OuD18z/0hC/lgsncjqUqhJ4b7L2BJQrT
+	JzrjDEoVH/tQ0aroP/hhLHS+QPUvqUGpwR
+X-Received: by 2002:a5d:410d:0:b0:37d:5436:49b with SMTP id ffacd0b85a97d-3806113a07emr163678f8f.13.1729878118155;
+        Fri, 25 Oct 2024 10:41:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJirsSaLOjUEz6kn7HmxOjIyhE9ZfBrB9GAGHgNcgNSBUFOeNbcRoyDDrANp8n6mxM4gCIddwEWDqpYot15qQ=
+X-Received: by 2002:a5d:410d:0:b0:37d:5436:49b with SMTP id
+ ffacd0b85a97d-3806113a07emr163639f8f.13.1729878117761; Fri, 25 Oct 2024
+ 10:41:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 25 Oct 2024 14:20:06 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "David Laight" <David.Laight@aculab.com>,
- "Julian Vetter" <jvetter@kalrayinc.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>, "Takashi Iwai" <tiwai@suse.com>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Christoph Hellwig" <hch@infradead.org>
-Cc: 
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Yann Sionneau" <ysionneau@kalrayinc.com>
-Message-Id: <a6c524d4-d741-438a-b8ae-2492058a3b3b@app.fastmail.com>
-In-Reply-To: <0577266edb9440acb082c9e02c0a73b9@AcuMS.aculab.com>
-References: <20241021133154.516847-1-jvetter@kalrayinc.com>
- <0577266edb9440acb082c9e02c0a73b9@AcuMS.aculab.com>
-Subject: Re: [PATCH v10 0/4] Replace fallback for IO memcpy and IO memset
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20241010182427.1434605-1-seanjc@google.com> <CABgObfbQW-3vp=mNcR4giUGZ_gxhuRykvKj8gzBDY7pOg6xdBQ@mail.gmail.com>
+ <Zxbw9XcFCHYR1Ald@google.com>
+In-Reply-To: <Zxbw9XcFCHYR1Ald@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 25 Oct 2024 19:41:45 +0200
+Message-ID: <CABgObfayH1x3qFjOiM=rQjxiui5tXJXObgR_qOGV5Hn_2QLEJQ@mail.gmail.com>
+Subject: Re: [PATCH v13 00/85] KVM: Stop grabbing references to PFNMAP'd pages
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	Yan Zhao <yan.y.zhao@intel.com>, David Matlack <dmatlack@google.com>, 
+	David Stevens <stevensd@chromium.org>, Andrew Jones <ajones@ventanamicro.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024, at 14:16, David Laight wrote:
-> From: Julian Vetter
->> Sent: 21 October 2024 14:32
->> 
->> Thank you again for your remarks Arnd and Christoph! I have updated the
->> patchset, and placed the functions directly in asm-generic/io.h. I have
->> dropped the libs/iomem_copy.c and have updated/clarified the commit
->> message in the first patch.
+On Tue, Oct 22, 2024 at 2:25=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
+> > Looks good to me, thanks and congratulations!! Should we merge it in
+> > kvm/next asap?
 >
-> Apart from build 'issues' what is the justification for inlining
-> these functions?
+> That has my vote, though I'm obvious extremely biased :-)
 
-I think I wasn't clear enough with my previous comment, and Julian
-just misunderstood what I was asking him to do. Sorry about causing
-extra work here.
+Your wish is my command... Merged.
 
-> They are quite large for inlining and some drivers could easily
-> call them many times.
->
-> The I/O cycles themselves are likely to be slow enough that
-> the cost of a function call is pretty much likely to be noise.
+Paolo
 
-I'm not overly worried about the this, as the functions are
-not that big and there are not that many callers. If a file
-contains multiple calls to this function, we can expect the
-compiler to be smart enough to keep it out of line, though it
-still gets duplicated in each driver calling it.
-
-The bit that I am worried about however is the extra #include
-for linux/unaligned.h that pulls in fairly large headers
-and may lead to circular header dependencies.
-
-To be clear: what I had expected here was to not have any
-changes to the v9 version of lib/iomem_copy.c and to simplify
-the asm-generic/io.h change to the version below.
-
-       Arnd
-
----
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1211,7 +1211,6 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
- #endif
- 
- #ifndef memset_io
--#define memset_io memset_io
- /**
-  * memset_io   Set a range of I/O memory to a constant value
-  * @addr:      The beginning of the I/O-memory range to set
-@@ -1220,15 +1219,10 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
-  *
-  * Set a range of I/O memory to a given value.
-  */
--static inline void memset_io(volatile void __iomem *addr, int value,
--                            size_t size)
--{
--       memset(__io_virt(addr), value, size);
--}
-+void memset_io(volatile void __iomem *addr, int value, size_t size);
- #endif
- 
- #ifndef memcpy_fromio
--#define memcpy_fromio memcpy_fromio
- /**
-  * memcpy_fromio       Copy a block of data from I/O memory
-  * @dst:               The (RAM) destination for the copy
-@@ -1237,16 +1231,11 @@ static inline void memset_io(volatile void __iomem *addr, int value,
-  *
-  * Copy a block of data from I/O memory.
-  */
--static inline void memcpy_fromio(void *buffer,
--                                const volatile void __iomem *addr,
--                                size_t size)
--{
--       memcpy(buffer, __io_virt(addr), size);
--}
-+void memcpy_fromio(void *buffer, const volatile void __iomem *addr,
-+                  size_t size);
- #endif
- 
- #ifndef memcpy_toio
--#define memcpy_toio memcpy_toio
- /**
-  * memcpy_toio         Copy a block of data into I/O memory
-  * @dst:               The (I/O memory) destination for the copy
-@@ -1255,11 +1244,8 @@ static inline void memcpy_fromio(void *buffer,
-  *
-  * Copy a block of data to I/O memory.
-  */
--static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
--                              size_t size)
--{
--       memcpy(__io_virt(addr), buffer, size);
--}
-+void memcpy_toio(volatile void __iomem *addr, const void *buffer,
-+                size_t size);
- #endif
- 
- extern int devmem_is_allowed(unsigned long pfn);
