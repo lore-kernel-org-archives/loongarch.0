@@ -1,80 +1,78 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E3670819
-	for <loongarch@lists.linux.dev>; Fri, 25 Oct 2024 13:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC91487C8
+	for <loongarch@lists.linux.dev>; Fri, 25 Oct 2024 14:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729863461; cv=none; b=hKnmYldDJ3SBTW80ZEuX7EhMIYOD5vlPVYJNUN/a9q5Mp1BXcZ3W0OpKyOr2fslE/RZXqpHKUrHE0cd7cQ5Zjm/BfElMLVjeYOKtl9XJVXGHnzxxBCF2uSDbdjiB7r0Gx38pW7dAqk64Nu9x65tVFcPOWXPqJW3bQ/7VWqjAdRo=
+	t=1729866033; cv=none; b=cwdkvdrszkHTzpYKFRLKRNWx1195m+WpuvssgKENstA0fn13gp4+hyU94PMkJ2v6HUZuGPUbZ1E8rqEFcxETnKmPEdyHA+gT6mwRhqaIC6B+Ki4C8AhpDsRfyFG5gYyP6vWx3dfKB9MfBUMZQ6Z1cHzQZ7H+CjomLdq0DoLWnDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729863461; c=relaxed/simple;
-	bh=IO5JRAi5QVuzB3nZMKM6uhv+seJAQIBK2VjWW9MTLG0=;
+	s=arc-20240116; t=1729866033; c=relaxed/simple;
+	bh=jO2eJCq3o1UQyWfSIXb4J+AN0Vw5/ZfDFBnPWf9w6Uc=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pO/WSeOhnV4TRJ57ZlTrvjstVsnX9Aew079uu6wd3sLpHpyTJLIZxB3UkYYmGJIn/i6s3jm7kvHwgkwQ31C9mflou6MPdSBoQM4mBTH7c95fOztk9qBw6uC+eSiYfr0crWrVSBKG4giA9AQv6SSy9nPFSx4objkSXvh8maNrWMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nTq77u+Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YYd+CaNQ; arc=none smtp.client-ip=202.12.124.158
+	 Subject:Content-Type; b=ge8qq4jH44FBoIlk/P5pQSRuZZLFdnq6DSrsL3tAUBYxlZM1oRPoGiBl9GCgG3fHTNvtmUOj9P+ecaZ09+qOsnDH+7hZnD7dCwt7QsZ4orVUq3D2x7vrhBBU5kLbJNc/2ItxOuTwTLBJeAiY6LUWg7fs9nWSA7/Y1R7Om3fdSqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ABY0h0DT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AMDBtAyi; arc=none smtp.client-ip=202.12.124.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nTq77u+Y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YYd+CaNQ"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ABY0h0DT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AMDBtAyi"
 Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 54D1325400C4;
-	Fri, 25 Oct 2024 09:37:37 -0400 (EDT)
+	by mailfout.stl.internal (Postfix) with ESMTP id 7146011400DA;
+	Fri, 25 Oct 2024 10:20:29 -0400 (EDT)
 Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 25 Oct 2024 09:37:37 -0400
+  by phl-compute-10.internal (MEProxy); Fri, 25 Oct 2024 10:20:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1729863457;
-	 x=1729949857; bh=mTD/E8mUSNoNp+vtjeW8NYfb5u7ndnKHIytXzDhahwE=; b=
-	nTq77u+YbjEK1oOGqWOEMss4pavBeea5xmfNB5v8n1RQ22NxJIlmfp2TzT4IKpOx
-	caApVTp1/TP1+2AFsH+6DaC7B1jXPpi59lVd0QmK1g4cyigLCbwCjjCU5UZejO28
-	8c3d8AGT1CdV1FpUSe8Ohc2JPaB0EAv7X1aw4eGMMqsDN9QNF4MBCkY7XT7NWXhL
-	O/OEAgSYzhCEctYt3/dxus3LsMgxjvtStf4TUCEi3KDe+iRqYuAwvWG/ws/9TCTb
-	91Febe33d87M4u4RsAc2PSDoS2l7TEXW3ZHH0N9mqk4H/wIO2sYqmM++nNVpXfOu
-	l8mVjbE2Y3ckzB0U2VTGjA==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1729866029;
+	 x=1729952429; bh=wscwvk+/zfYGrxB9o7ElzO1RcnFw9HTQg1kU47YxPvw=; b=
+	ABY0h0DTDAGctuJpIL6sS/zNH1ENNSmPu1GTEjlpQ5i/MnCrJwqbpzaF8Fzl6SAE
+	ty89srR+XMB3y0GO59LDr1lbqoSGUHF5vYQgUpFuvNnO1I9a4HVWWkekFIh4+iw3
+	++kRrGeULuovgoGE3lEBDVxVt76SyxQs7lrHVSg8RuKA40TCIekZuPf24SgW3VWv
+	y3Go9YZsNXysA0v31RtM5mhjq55MKMYCRF8fvYc4ghnxRT3QD8XS1b9MC2d8P6d6
+	Z8U2JobiENX6AweBG/AEkr2ZKdC++1C11Tmg1u0yUG3X4E9UHQDdWn82DAio4qtN
+	aMp4W5bYIp8Yz6/pab3idg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729863457; x=
-	1729949857; bh=mTD/E8mUSNoNp+vtjeW8NYfb5u7ndnKHIytXzDhahwE=; b=Y
-	Yd+CaNQUnHw9YsFM/xsr4EEUnyKUrgtD2vti8QGZood/Hu9648OKjYo4bH7A6Neg
-	jnJDKNvwBYkFvlybTuqF2bH/KaZKDCsMPx9nvXzHCWTKjsCUnllyUHCbFyKAeDhX
-	YNkya00Lwsz0+acBTk9P7pZOFNJx3BvJUubdQClXQQcfFmAJOHzcSMDEsFGYeUz+
-	Jg9HE+6A7ymczxjo7UpkNZEyk9ue5mso6y8MDn4M5ldn8ZNSI/lsZrOwKW2qGN95
-	SK1C5a5uk//QbB1mqxfMZZhPvCEMy7uIU9Opdu0mHCbXfdkyJRO6uRsr50PfJcTO
-	dO3S1hvvUj92Ys457iJAw==
-X-ME-Sender: <xms:IJ8bZxsuj29dJ1vr5lHn5cEFvY6c8AEcCMtZGM1az7Jp64ZRgbF05Q>
-    <xme:IJ8bZ6f_PFYR1VPWQ6NunpU9GXYmb8uTFHK2WzhvwLuyhGpOciB1CBT9pvUeu8GH4
-    UYBuOr6HJ-I4-vOr1Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejvddgieeiucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729866029; x=
+	1729952429; bh=wscwvk+/zfYGrxB9o7ElzO1RcnFw9HTQg1kU47YxPvw=; b=A
+	MDBtAyiMr0utwlTGZ9ahqEfZF+IyfWeBqehZ/0Ns+cmcssE0+i0bkROW05yMQsdU
+	cOTraYDNR+PM39pXp17Q9l9ugknz+vTCTQqT/gZhppAEN6O0InRdGseTWr8j1cze
+	Fh85jShfOWDbEdB0hWDEpn6IEq1jIfU7dSqLAnRoCGh4mEvMa8892HRjDW/qPVrh
+	sqZA/2i1Ti+Bigv3Tveu8uo1Y8isbmRx0sJLqb1tUaroWhRIpYaXvCvPydz38kPd
+	pYcZr+L3SnOemqTzyNUjsUx5qUUrTSGRa8aYrLXmY/VkDwv4EtZ/DOZ7py6b/hVf
+	mW3ecRgZZT5G1a+zLc9rw==
+X-ME-Sender: <xms:LKkbZ6icSWtXOvkpYM87hQ0HLds7qfX9s7056_cXCQ0XSAle9zkPOA>
+    <xme:LKkbZ7C_7DPvl407kdsjlRrFBtoBQJcEsNgwljwRSIMZwcU56VrT5yfDgceTXrYKx
+    0resZ0Qv9r5yzYJWd0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejvddgjeehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
     htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
     necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
     guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
     gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudel
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnh
-    gvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqshhnphhsqdgrrhgtsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhr
-    tghpthhtoheplhhinhhugidquhhmsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkhdr
-    ohhrghdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvg
-    hvpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoiihlrggsshdr
-    ohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopehlihhnuhigqd
-    grlhhphhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:IJ8bZ0w8_fyzDu0Dhxg43egcOQd9fPmeL9IF1HbPQzAPODUmdkywqg>
-    <xmx:IJ8bZ4Ng8v61LIOz9Z6hcNW7TrkYDvZ9-QsNLZ7fNM7Okgrh7sPTiA>
-    <xmx:IJ8bZx-O8B7MlF4JofybzIynmnGJvvLwnq8RLzH_1fknLv9ZsqMu1w>
-    <xmx:IJ8bZ4X5lrN7iDkKbGm85k7BOBq5kmsTovQZ6V9cVszatdT146tmOA>
-    <xmx:IZ8bZ02QO2wzbQXTtXh5NJPoq2r5QyMwBKYu4QPUoTFRk_k35DiZGUWq>
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddu
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvihgurdhlrghighhhthesrg
+    gtuhhlrggsrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghr
+    mhdrtghomhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrd
+    gtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
+    pehjvhgvthhtvghrsehkrghlrhgrhihinhgtrdgtohhmpdhrtghpthhtohephihsihhonh
+    hnvggruheskhgrlhhrrgihihhntgdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggr
+    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:LKkbZyEWph2OfuX5rp36qDXrBJGFeVx6L1j670c9oST-ROWHYLjhYQ>
+    <xmx:LKkbZzR-6CCISyD9v6h5geDwiCkn4rdaBNnAtm7k4SX1CIBqrMUUXQ>
+    <xmx:LKkbZ3w4lJB7XWYZExVb0i0_12fv6iRgHLcVQnpS3OZQYPaEV3l1GQ>
+    <xmx:LKkbZx4REtWx5i2Ye5_3HOyXw3kOW56cp2xiDUXTExtzk2q_YJoAQw>
+    <xmx:LakbZ8y4B_V6lMqvAbM25tHAe9VzZYCl0gf6JwYlrpYjDtQ8-3zK5Ogl>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3B9352220071; Fri, 25 Oct 2024 09:37:36 -0400 (EDT)
+	id 1E61A2220071; Fri, 25 Oct 2024 10:20:27 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -82,39 +80,131 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 25 Oct 2024 13:37:15 +0000
+Date: Fri, 25 Oct 2024 14:20:06 +0000
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christoph Hellwig" <hch@lst.de>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+To: "David Laight" <David.Laight@aculab.com>,
+ "Julian Vetter" <jvetter@kalrayinc.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>, "Takashi Iwai" <tiwai@suse.com>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Christoph Hellwig" <hch@infradead.org>
+Cc: 
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, Linux-Arch <linux-arch@vger.kernel.org>
-Message-Id: <c9f10ee9-697f-4f45-8c82-a6dc61e5a74e@app.fastmail.com>
-In-Reply-To: <20241023053644.311692-1-hch@lst.de>
-References: <20241023053644.311692-1-hch@lst.de>
-Subject: Re: provide generic page_to_phys and phys_to_page implementations v3
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Yann Sionneau" <ysionneau@kalrayinc.com>
+Message-Id: <a6c524d4-d741-438a-b8ae-2492058a3b3b@app.fastmail.com>
+In-Reply-To: <0577266edb9440acb082c9e02c0a73b9@AcuMS.aculab.com>
+References: <20241021133154.516847-1-jvetter@kalrayinc.com>
+ <0577266edb9440acb082c9e02c0a73b9@AcuMS.aculab.com>
+Subject: Re: [PATCH v10 0/4] Replace fallback for IO memcpy and IO memset
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 23, 2024, at 05:36, Christoph Hellwig wrote:
-> page_to_phys is duplicated by all architectures, and from some strange
-> reason placed in <asm/io.h> where it doesn't fit at all.  
+On Mon, Oct 21, 2024, at 14:16, David Laight wrote:
+> From: Julian Vetter
+>> Sent: 21 October 2024 14:32
+>> 
+>> Thank you again for your remarks Arnd and Christoph! I have updated the
+>> patchset, and placed the functions directly in asm-generic/io.h. I have
+>> dropped the libs/iomem_copy.c and have updated/clarified the commit
+>> message in the first patch.
 >
-> phys_to_page is only provided by a few architectures despite having a lot 
-> of open coded users.
+> Apart from build 'issues' what is the justification for inlining
+> these functions?
+
+I think I wasn't clear enough with my previous comment, and Julian
+just misunderstood what I was asking him to do. Sorry about causing
+extra work here.
+
+> They are quite large for inlining and some drivers could easily
+> call them many times.
 >
-> Provide generic versions in <asm-generic/memory_model.h> to make these
-> helpers more easily usable.
->
+> The I/O cycles themselves are likely to be slow enough that
+> the cost of a function call is pretty much likely to be noise.
 
-I've applied this to the asm-generic tree now.
+I'm not overly worried about the this, as the functions are
+not that big and there are not that many callers. If a file
+contains multiple calls to this function, we can expect the
+compiler to be smart enough to keep it out of line, though it
+still gets duplicated in each driver calling it.
 
-Thanks for the cleanup!
+The bit that I am worried about however is the extra #include
+for linux/unaligned.h that pulls in fairly large headers
+and may lead to circular header dependencies.
 
-     Arnd
+To be clear: what I had expected here was to not have any
+changes to the v9 version of lib/iomem_copy.c and to simplify
+the asm-generic/io.h change to the version below.
+
+       Arnd
+
+---
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -1211,7 +1211,6 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ #endif
+ 
+ #ifndef memset_io
+-#define memset_io memset_io
+ /**
+  * memset_io   Set a range of I/O memory to a constant value
+  * @addr:      The beginning of the I/O-memory range to set
+@@ -1220,15 +1219,10 @@ static inline void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+  *
+  * Set a range of I/O memory to a given value.
+  */
+-static inline void memset_io(volatile void __iomem *addr, int value,
+-                            size_t size)
+-{
+-       memset(__io_virt(addr), value, size);
+-}
++void memset_io(volatile void __iomem *addr, int value, size_t size);
+ #endif
+ 
+ #ifndef memcpy_fromio
+-#define memcpy_fromio memcpy_fromio
+ /**
+  * memcpy_fromio       Copy a block of data from I/O memory
+  * @dst:               The (RAM) destination for the copy
+@@ -1237,16 +1231,11 @@ static inline void memset_io(volatile void __iomem *addr, int value,
+  *
+  * Copy a block of data from I/O memory.
+  */
+-static inline void memcpy_fromio(void *buffer,
+-                                const volatile void __iomem *addr,
+-                                size_t size)
+-{
+-       memcpy(buffer, __io_virt(addr), size);
+-}
++void memcpy_fromio(void *buffer, const volatile void __iomem *addr,
++                  size_t size);
+ #endif
+ 
+ #ifndef memcpy_toio
+-#define memcpy_toio memcpy_toio
+ /**
+  * memcpy_toio         Copy a block of data into I/O memory
+  * @dst:               The (I/O memory) destination for the copy
+@@ -1255,11 +1244,8 @@ static inline void memcpy_fromio(void *buffer,
+  *
+  * Copy a block of data to I/O memory.
+  */
+-static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
+-                              size_t size)
+-{
+-       memcpy(__io_virt(addr), buffer, size);
+-}
++void memcpy_toio(volatile void __iomem *addr, const void *buffer,
++                size_t size);
+ #endif
+ 
+ extern int devmem_is_allowed(unsigned long pfn);
