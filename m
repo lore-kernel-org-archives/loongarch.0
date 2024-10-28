@@ -1,157 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D839634545
-	for <loongarch@lists.linux.dev>; Sun, 27 Oct 2024 08:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24DBA17DFF2
+	for <loongarch@lists.linux.dev>; Mon, 28 Oct 2024 09:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730016895; cv=none; b=hVaNU7tKz0mUlan/b1Gtxbl8oZTfz0IEYs7n+USBgtm3ZjGv7tqx32JzzB5KEmEyZeXN6+R/wtysYKwhgazFOBrDOJ0PUHKPw3iojcWJH/UL/8yUVCwNjt5r0kVtEATQfHqRXB57k67I0ONWA74bwJL1t1L1ZTFdj9PzmnIwvIc=
+	t=1730108076; cv=none; b=hD5OAF9j5o+7Jf1y2zd6cNH7T6NWdSz3x1OCZ/79pv14+WWesKYkEjdfIoDMF11n0fVl3sOJkfbn1Uq77LK8bg7jL7a9/M2bx8vZHCT49rf3NLLAeBQcI9vyPLvDWVxoq+IgOQooWUw58Hk+n65KdsZEJlvkB5Lh1E2+wccF3Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730016895; c=relaxed/simple;
-	bh=qSAev/CmbF0LEyj0tVSWN8qmCbJsiIZdku/WjaNmB8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KogwSvOFQJNfDQqkaLa76aVoVOI7/Yq147+DBI/wdnWcMDflWzaNpP28PjkkfFQOCSbs0B1G+dtZpJSppUZP/EOMTNSVzFUbWeQt17O6+AHSnBJnXZWbjBDhXxdOZlAADHxznJbW2LM7LyUSyGAa2PYP8kBpCsTynOIFIiWxGIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZrpP4MR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZrpP4MR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66023C4CEE7
-	for <loongarch@lists.linux.dev>; Sun, 27 Oct 2024 08:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730016895;
-	bh=qSAev/CmbF0LEyj0tVSWN8qmCbJsiIZdku/WjaNmB8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MZrpP4MR25ZJQaUjkXbWvdc5yqspOvJPpoP1laWGfu5qW0Bo5w7+sOKkNN0wFTFc6
-	 PKiAnBHnQLbmymCc6Ix2g32z3lrMLVbYBDbKHRK7wTcnhc0s7TmExnWPBavGFZA2CU
-	 ZxRZ2yQKLbZi954nmodxa3gz2r2765XCY13DTcc/5moZEI1Y5VMl2qOE1/CaCzYfBZ
-	 d0xolS/t0CNAWzjdhJc8/vC18yj/tzng9oiNhW1i1/DM5wimZSMibZgTJJr4RQf+Mz
-	 txNna8i6XM73z7TsjE2DyvvJtyQZu6VY2mWd8g1ZuHlsQxirw+6OUnQuLNMsd9yjTi
-	 Vo6meRtf3emmg==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fb498a92f6so32592121fa.1
-        for <loongarch@lists.linux.dev>; Sun, 27 Oct 2024 01:14:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUhCcEGiArRpzNgLq88B4/7Vu8V2yB+Le1DkjJgP1MC7g0xrwxdGX4D9J45jSSIDu7D8nvX8RRiKL0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyDt5r/LS69tB3/DDp+u0qQdIVJ8Jt7z5dS6rvsGWOkFVhcZ4Me
-	PjGehsxhkWsxFcPkfmgbecUEtSysVkfIt7COy+IxUY5akFWaZgZVtULSYpmei13ev9cnPpJDmI9
-	GrUFPdCRjNpri8AZZl4MR/HyR8uU=
-X-Google-Smtp-Source: AGHT+IG7GbUAQTdcFb1Y8OjbqKjN3ralEO/b0dHGyoLDxr37yV7KwVs1ozIjCmGYYGFlqbwOihVt3NM/p1aqclI347g=
-X-Received: by 2002:a2e:be9a:0:b0:2fb:58c0:de5b with SMTP id
- 38308e7fff4ca-2fcbdfb098emr13787941fa.11.1730016893642; Sun, 27 Oct 2024
- 01:14:53 -0700 (PDT)
+	s=arc-20240116; t=1730108076; c=relaxed/simple;
+	bh=Z3vqjb/orKw8R4teFes9y7ATp36S3tsG7USNV57/Zuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PJAp9vSNuny+PXfdOk1Aq/hl5vhxpp6N22BjVLnWC+hgAw3eCFYmVOs0pKF8o973KgRX2KDftzV9TVBaNLuht4r6hcS9koSGfMgq4LHp377WfOfZbEO9rotD7I74rarsJP/qOO9ubFYOspnfc2SeBDYJ8bJT8xnpOEOMJg6onHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.202])
+	by gateway (Coremail) with SMTP id _____8Bx++GhWh9n2K0YAA--.51358S3;
+	Mon, 28 Oct 2024 17:34:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.202])
+	by front1 (Coremail) with SMTP id qMiowMBxnkegWh9nFzAiAA--.14607S2;
+	Mon, 28 Oct 2024 17:34:25 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] dmaengine: loongson2-apb: Change GENMASK to GENMASK_ULL
+Date: Mon, 28 Oct 2024 17:34:13 +0800
+Message-ID: <20241028093413.1145820-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241025191454.72616-1-ebiggers@kernel.org> <20241025191454.72616-5-ebiggers@kernel.org>
- <CAMj1kXEsq7iJThqZ7WA00ei4m59vpC23wPM+Mrj9W+HXfk-aSg@mail.gmail.com>
- <20241025220239.GB2637569@google.com> <20241026040958.GA34351@sol.localdomain>
-In-Reply-To: <20241026040958.GA34351@sol.localdomain>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 27 Oct 2024 09:14:41 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGGDNmPSH4nZH4r6b4UyrPEYBbTZibjXkmxU9c=16_hhw@mail.gmail.com>
-Message-ID: <CAMj1kXGGDNmPSH4nZH4r6b4UyrPEYBbTZibjXkmxU9c=16_hhw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/18] crypto: crc32 - don't unnecessarily register
- arch algorithms
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxnkegWh9nFzAiAA--.14607S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4xWrW8Xw4kuF4fuF1xZwc_yoW8WF18pF
+	y3W34IgrW5KF17Was5ta4YqFy3AasxJrW7uanFv34Uur93Zwn293s5tFs3XFyUAryUAFW2
+	vF97t345AFZ7WacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Sat, 26 Oct 2024 at 06:10, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Fri, Oct 25, 2024 at 10:02:39PM +0000, Eric Biggers wrote:
-> > On Fri, Oct 25, 2024 at 10:47:15PM +0200, Ard Biesheuvel wrote:
-> > > On Fri, 25 Oct 2024 at 21:15, Eric Biggers <ebiggers@kernel.org> wrote:
-> > > >
-> > > > From: Eric Biggers <ebiggers@google.com>
-> > > >
-> > > > Instead of registering the crc32-$arch and crc32c-$arch algorithms if
-> > > > the arch-specific code was built, only register them when that code was
-> > > > built *and* is not falling back to the base implementation at runtime.
-> > > >
-> > > > This avoids confusing users like btrfs which checks the shash driver
-> > > > name to determine whether it is crc32c-generic.
-> > > >
-> > >
-> > > I think we agree that 'generic' specifically means a C implementation
-> > > that is identical across all architectures, which is why I updated my
-> > > patch to export -arch instead of wrapping the C code in yet another
-> > > driver just for the fuzzing tests.
-> > >
-> > > So why is this a problem? If no optimizations are available at
-> > > runtime, crc32-arch and crc32-generic are interchangeable, and so it
-> > > shouldn't matter whether you use one or the other.
-> > >
-> > > You can infer from the driver name whether the C code is being used,
-> > > not whether or not the implementation is 'fast', and the btrfs hack is
-> > > already broken on arm64.
-> > >
-> > > > (It would also make sense to change btrfs to test the crc32_optimization
-> > > > flags itself, so that it doesn't have to use the weird hack of parsing
-> > > > the driver name.  This change still makes sense either way though.)
-> > > >
-> > >
-> > > Indeed. That hack is very dubious and I'd be inclined just to ignore
-> > > this. On x86 and arm64, it shouldn't make a difference, given that
-> > > crc32-arch will be 'fast' in the vast majority of cases. On other
-> > > architectures, btrfs may use the C implementation while assuming it is
-> > > something faster, and if anyone actually notices the difference, we
-> > > can work with the btrfs devs to do something more sensible here.
-> >
-> > Yes, we probably could get away without this.  It's never really been
-> > appropriate to use the crypto driver names for anything important.  And btrfs
-> > probably should just assume CRC32C == fast unconditionally, like what it does
-> > with xxHash64, or even do a quick benchmark to measure the actual speed of its
-> > hash algorithm (which can also be sha256 or blake2b which can be very fast too).
-> >
-> > Besides the btrfs case, my concern was there may be advice floating around about
-> > checking /proc/crypto to check what optimized code is being used.  Having
-> > crc32-$arch potentially be running the generic code would make that misleading.
-> > It might make sense to keep it working similar to how it did before.
-> >
-> > But I do agree that we could probably get away without this.
->
-> While testing this patchset I notice that none of the crypto API drivers for
-> crc32 or crc32c even need to be loaded on my system anymore, as everything on my
-> system that uses those algorithms (such as ext4) just uses the library APIs now.
-> That makes the "check /proc/crypto" trick stop working anyway.
->
-> I think you're right that we shouldn't bother with patches 3-4, and I'll plan to
-> go back to leaving them out in the next version, unless someone yells.
->
+Fix the following smatch static checker warning:
 
-Agreed.
+drivers/dma/loongson2-apb-dma.c:189 ls2x_dma_write_cmd()
+warn: was expecting a 64 bit value instead of '~(((0)) + (((~((0))) - (((1)) << (0)) + 1) & (~((0)) >> ((8 * 4) - 1 - (4)))))'
 
-If we need to make this distinction, it might be cleaner to use the
-static_call API instead, e.g.,
+The GENMASK macro used "unsigned long", which caused build issues when
+using a 32-bit toolchain because it would try to access bits > 31. This
+patch switches GENMASK to GENMASK_ULL, which uses "unsigned long long".
 
-+DECLARE_STATIC_CALL(crc32_le_arch, crc32_le_base);
-+
- static inline u32 __pure crc32_le(u32 crc, const u8 *p, size_t len)
- {
-        if (IS_ENABLED(CONFIG_CRC32_ARCH))
--               return crc32_le_arch(crc, p, len);
-+               return static_call(crc32_le_arch)(crc, p, len);
-        return crc32_le_base(crc, p, len);
- }
+Fixes: 71e7d3cb6e55 ("dmaengine: ls2x-apb: New driver for the Loongson LS2X APB DMA controller")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/87cdc025-7246-4548-85ca-3d36fdc2be2d@stanley.mountain/
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/dma/loongson2-apb-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-and use static_call_update() to update the target if the feature is
-supported. Then, we could check in the driver whether the static call
-points to the default or not:
+diff --git a/drivers/dma/loongson2-apb-dma.c b/drivers/dma/loongson2-apb-dma.c
+index 367ed34ce4da..c528f02b9f84 100644
+--- a/drivers/dma/loongson2-apb-dma.c
++++ b/drivers/dma/loongson2-apb-dma.c
+@@ -31,7 +31,7 @@
+ #define LDMA_ASK_VALID		BIT(2)
+ #define LDMA_START		BIT(3) /* DMA start operation */
+ #define LDMA_STOP		BIT(4) /* DMA stop operation */
+-#define LDMA_CONFIG_MASK	GENMASK(4, 0) /* DMA controller config bits mask */
++#define LDMA_CONFIG_MASK	GENMASK_ULL(4, 0) /* DMA controller config bits mask */
+ 
+ /* Bitfields in ndesc_addr field of HW descriptor */
+ #define LDMA_DESC_EN		BIT(0) /*1: The next descriptor is valid */
 
-+static bool have_arch;
-+
- static int __init crc32_mod_init(void)
- {
-+       have_arch = IS_ENABLED(CONFIG_CRC32_ARCH) &&
-+                   static_call_query(crc32_le_arch) != crc32_le_base;
-+
-        /* register the arch flavor only if it differs from the generic one */
--       return crypto_register_shashes(algs, 1 + IS_ENABLED(CONFIG_CRC32_ARCH));
-+       return crypto_register_shashes(algs, 1 + have_arch);
- }
+base-commit: 8974f34de2ef173470a596a4dee22f4922583d1b
+-- 
+2.43.5
+
