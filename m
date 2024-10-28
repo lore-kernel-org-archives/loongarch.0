@@ -1,366 +1,226 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF831DA0ED
-	for <loongarch@lists.linux.dev>; Mon, 28 Oct 2024 12:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730119086; cv=none; b=JnmmWEWy6gBgUDayFVuCw6uF0um9QjqbY/9Zshw5T7TvexGTN1rzIVxqBS+mKw0dyGq9Rbxg5fOAm1MSIhYaMjH2BZKE0HxBZX3Ui8AvT9daDrLTBHZZpn1oT/PrFJdKo5SDt2NmvoATa35F7r1kkX4sk0QjnM4MOV4Thf0kTKo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730119086; c=relaxed/simple;
-	bh=LGNHK0G7gWBzl0+QwQfdRNQirGz2Iy9jnNdkAcr6DkE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gbQt6LMrLFncrCyYX+Z0Wj4SIWpCZFj28PrhdP91v+FIHV8g1VmF3A68QL0DGbl6LYJbG7RmaFQSQ15eATaNkWIBjVtVjMZ73b3sPnHxyrHjmZcRJKuR3q4RcCEZPaYJaVPNqYKELF/MXzwSEyIKXQ1ZeBASwI/3ghEAEbNXdFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx++GlhR9nEwwZAA--.52032S3;
-	Mon, 28 Oct 2024 20:37:58 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxvkeihR9nOLUiAA--.15528S3;
-	Mon, 28 Oct 2024 20:37:56 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: Fix cpu hotplug issue
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, lixianglai@loongson.cn,
- WANG Xuerui <kernel@xen0n.name>
-References: <20241021080418.644342-1-maobibo@loongson.cn>
- <CAAhV-H4anpgfiAnPgm9h-m9pKCW0KUio+E72r1Q3F_0vm+zMRg@mail.gmail.com>
- <8c55c680-48c8-0ba3-c2a1-56dc72929a8d@loongson.cn>
- <CAAhV-H4wD5fGVgxwmRVpRgvQ-jyUY0t=ewJANbe50vj9_TZDUQ@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <f7ab6ec1-7a49-2764-7c19-9949ad508e2e@loongson.cn>
-Date: Mon, 28 Oct 2024 20:37:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtpout35.security-mail.net (smtpout35.security-mail.net [85.31.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAAE1DC18F
+	for <loongarch@lists.linux.dev>; Mon, 28 Oct 2024 13:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730122981; cv=fail; b=KyNmVA1899SYdx9dWdvlkKxq8N3C6WGvxvGyayLmQQCc2/QXLVEwM96GJ3HmlVeGFQ/a6A5ZcjTyKj6y3AOpKsQhcnoqfGn+OfD3k69OfDXe08EVR3/E0bKTAyn3hjyKsXtdBNUtXxLn2VZfksmBrHlrPzxC8Hdd0+ap0uek0lg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730122981; c=relaxed/simple;
+	bh=CcLke0tT2HtBF7YkQtdJCT+zh7eYODGYrKXhBNdHxxI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c9QiNSait/B2x9pfYkVrnJcmL7Ob6g9yWVqYh7k7ty5VZYPORJHKzCLGTSA1eThz1t2sZ6a2ObFEI7OHO5VT9+D0hZMvGo57hmE0DvkL+IBwdpzcS14gPVkx45O2roRgCZlk3BQLkAR0c/rqW+s/nNDKygeQccXbgmOPUH0K83k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=g0VIDn4a; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=G+vMkf/T reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="g0VIDn4a";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="G+vMkf/T"
+Received: from localhost (fx305.security-mail.net [127.0.0.1])
+	by fx305.security-mail.net (Postfix) with ESMTP id 763A430F0E6
+	for <loongarch@lists.linux.dev>; Mon, 28 Oct 2024 14:42:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1730122964;
+	bh=CcLke0tT2HtBF7YkQtdJCT+zh7eYODGYrKXhBNdHxxI=;
+	h=From:To:Cc:Subject:Date;
+	b=g0VIDn4aT+ZZ0fWe3GBZOxvtbiUO569KY+EH/iTKNdNIvaKiQTJaEGVnNGrWLIKg3
+	 sk9dZF8GlDb0gDBgr6jSK1PEHtAX1bbGygtMXXyNxQYBbmjJ+hHrCg0WMZw3hr90Dd
+	 LYu3UyzTvcgK3IYZCtTnIYBtE9ubAN+Ma8VMyz4M=
+Received: from fx305 (fx305.security-mail.net [127.0.0.1]) by
+ fx305.security-mail.net (Postfix) with ESMTP id EB87B30EFAF; Mon, 28 Oct
+ 2024 14:42:43 +0100 (CET)
+Received: from PR0P264CU014.outbound.protection.outlook.com
+ (mail-francecentralazlp17012055.outbound.protection.outlook.com
+ [40.93.76.55]) by fx305.security-mail.net (Postfix) with ESMTPS id
+ 0EB8A30F05C; Mon, 28 Oct 2024 14:42:43 +0100 (CET)
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:118::6)
+ by PAZP264MB2397.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1e4::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.23; Mon, 28 Oct
+ 2024 13:42:41 +0000
+Received: from PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626]) by PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::6fc2:2c8c:edc1:f626%3]) with mapi id 15.20.8093.024; Mon, 28 Oct
+ 2024 13:42:40 +0000
+X-Secumail-id: <125b6.671f94d3.d318.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AbtDq8h6NaOB5mvwSQKEeOjgDd3lCKFtz93XobnVECUhJzzO/GQK0uyDVONqsBpYvICYuhnZeCSvekX/N2pTbxmcbKERgHMM+uiR8eRZ+JIIQAwVR2fWxEQ9+AhzwCsUjL1mu6pzGupnP9AN7UYNAZXPMDxNyaiHIHHsnyRjvCvIa3/Cw2rcKvO4jRUcgiAV8z7MKAnOeo9PF55yJdbpVK5yDGgyQIa9SxxT9kOd8ap4tmns9RonPTq3VgeXRM3MAgUXG9v85wFRugexMykL6YtVToHTRg/wX9HCo8+7owFC8bGeGb0CAt+30QXuIuPaOJhBePt61/L+kLkKg0nbMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fw3p9LUCUHelUQwBQU3KBm9n+Jh3/wxgYmp7yA4meIk=;
+ b=EIg1zXyLpgMNZBk+gH0mCRXSrR7P/vANOfPRxTsfBroX4eaCvnHb63rb5ElTRrd6RbAqENR/M3kB4ije3FwqO42CuDheLMK4kkU4utg0fq2p6Z2f4/+sVTiyg9GFuEZBrlYxIK7hK5bmBepuCJUUq3m1yy2DY5YeOBOWOShKctWaJ7qgn94mNdOytX+AXoo2i493bWXaqBD/ghIPqx/3g8f2VQOL3x+GIm9ocG3pr2x0wSsA8fu4CRt8T1RWDo2JJapFLEMQsG2eLQx4o6RSQpD2VFZzJBCDK3BqYCFtcfSslASi0ahRS/GX9oiNYuudT5tUGKop0QuULXvj62mosg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fw3p9LUCUHelUQwBQU3KBm9n+Jh3/wxgYmp7yA4meIk=;
+ b=G+vMkf/TPzqQHH8dOLFrqt2bRlQRnWM008Ey9Pdwt/9MFBrd8hxtJg5ZFAAuZ9YiN4FFOCFvZ+xfGb3X3Dr+1qoTCl3StGj5lOCaJkCRLRHvziPaguttlV9h6fPcLdtM2yNIxRjrctVlZ826slY8DjHMm8XHcRH25LFC2nXezddgU/Qf4o63VFhJNwV+1PgNj9unDh5/HnxZsdf6wCdGXgjGMN7nqo150tNTHDgExs6jUu9m4AWctk6hfZaEf7Qzu4CpKh95zoJtRuqbnNFGvr5jHh7RSttD+GVagAuJwd6vwUWyCK+LItnZqRxT+VX0hqk/1G25O2U18qel2z4U+A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+From: Julian Vetter <jvetter@kalrayinc.com>
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Richard Henderson
+ <richard.henderson@linaro.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ Takashi Iwai <tiwai@suse.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ David Laight <David.Laight@aculab.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Christoph Hellwig <hch@infradead.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-arch@vger.kernel.org, Yann Sionneau <ysionneau@kalrayinc.com>, Julian
+ Vetter <jvetter@kalrayinc.com>
+Subject: [PATCH v11 0/4] Replace fallback for IO memcpy and IO memset
+Date: Mon, 28 Oct 2024 14:42:23 +0100
+Message-ID: <20241028134227.4020894-1-jvetter@kalrayinc.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS4P195CA0037.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:65a::26) To PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:118::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4wD5fGVgxwmRVpRgvQ-jyUY0t=ewJANbe50vj9_TZDUQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxvkeihR9nOLUiAA--.15528S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Zw1UZryDuF18uF1UWr1kCrX_yoWDAr4fpr
-	yUCanxCr4rXry7G34Sq34Fgrn3tr1kKF17W3W3KayrZ3WqvF17Jr4kJry5uFyrWw48GF10
-	vFn5GFZIgFW5J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2L05UUUUU
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAYP264MB3766:EE_|PAZP264MB2397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7439274a-e466-44f9-b867-08dcf7566486
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info: 0AqTOaw4s6pAgL+enS+V5ymJ3f5J7zskAHhshrEa1eJFA7Hvh7hOapnM/pUjjqQb4k5tNRYvAxFH+luhniDHgh8WHz4kymhZCLZ5K/I771cRuOu7mgoOEeKsvBbhQO2fhpxizH+xaXA+52svr/gy5LXaSkdMWfRIMVIYllDgkFPVEOo9hVfNfCSS38FyUaPLeXBLrbxu1OkOqXWXv8o2am2ZF6c4WyheE8NJFdMRJ6KJZLecLwc4jLW9gm7r+r77BR2SlPSKhfxndk0hjJRttEJG3WwDhrKLi3PYfcdLtPWI+SoUL10cr6IbnUqKRkATG0PV4Wuy7qwktffvRFzGNGLj/hj+sn+jlHsXOIAgwZR4M+tYx+udd6dvKQM3PpybXxuYB1ymbEnMv5GHiTU8Fd6+NxAL/lo3+caBBfcQgdSnoMVnkPXtiZ0sEn8z6I80ro7n1fcptVuyOGVYqIk9TRRYQOEn8L99sM2OeyFIk4/WV+nXIxxwYftE5N34MkJCCAkAfpBJS3qD3KR7i1npQRcBAnEc5D/Wa2RL7HPA7C5kQaLmKHZUspQdocobKEoiN0P0Ut5V8XLO6ivOQspcWtD2i8rUBBboIaX+YbQ9JBR49NAtDw4ZT5+erxKVthOoz9WO7t2qs5RpbyRBCgPHPRTsnSQFcAOs4xrhsh29+B7gzDiYQUQZXbaWxuEbVKnQpjdhFjNka/3ebPKtAStSEQx7IE5oLjVyVK6fTeLoOgzCbur8hE7GfRjAzbM8q+1abp3KnQhZ+KwLhscfbUk00ceY3qGDf+aTe+ukbIxwd9AaPu7I+xmaILAeLmJ2lXksdgk8DW7aQrODCZhD181p6lmCnJxjrEnpEFDBPRexj0lggKkL5UrC2EsAyB9OzcghtWAd2hMSz7Pj8gmPBZRh33JfJPMCegc79AzjZWTbkOuePTnRbvcnmnPGjVd4GwKk+EE
+ BaUqUXBtEdEpHmFErs/FnmY/vEkbesTSM6L9I91pdd9Jiq6lBGO89ZFjF2SzYUMbQpOB+sfcx6hoh6df5ZjHU76QLFut1JM5qJXzX99lnOSU8DF9BoROtmgiENuI0eLjIHejisAVutm1ixz1Uz+dWlFjLaOjuOlXkWIipLd1CjY9zH/fQACgmjgERc3Aiu27E5dsXq9DY/ehAsIiB5v2iBb7Uj508LdF9sAHboi1G9Pp5v4qGGvU7fnhKhGfJYpsgBD8/KxNqt0HD9f8oetTFpZfaP/KK84graXlpKtRGNUeNLXXZf3gz0CPGqClGt6tg600216yKsUUeVSVc7V2+8xBX1chgaGp8Odbtp/5UrxHut/TGy4xGPlDg5BcrprZw/g5ZMnbilQQ+zbueEglmDQNVB+vIi744uu6fD2Vq0RoYVnI4OHjd0JlNWTv9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: NW8Qpz7wb5Nlm30YZCYAudjsGwf4aDj95bvySORVyLW11NjpP1cTSAPTWnTqRRyVJY49HJUJJycq/LAncLuvAqeLWLOPjX9fG+OXS7LJs3lyIG/+VCCjotmdrcIk9mLjf/TSXB2vLEW1kJNVHQ1h/4zfGixMuFSW8SXptoV/3tSv88OLs8qkDhnNzY3HhTYyU5XUC5T6KDaOxcrlVqWW9FC2cHtRHILV6tzTzSjwwkNmx8KTFn482Aj9NTiM8U6W1mi6EmE0XoRDgpuL4/I+c1NkLWzcEj2wn9kq1Sa9HkSjn20CFQyzB9Y9brjjlPAcoN3L18v8wadwOew7FD6rHdyS1dPdutxO4kxk3Be42y8qAZLnDlQlcEncY5EDVFjO+DX0F6BjxL9swlN/9p3fPXNqZDYvRw2dFOdDzkBXef1QG9EOxPbCdxCYzTepMOE05mxAPhI/noM73ExnB4j1hYCHV683gEtXs+nabfG2nTFgGZ2nH0U2XnloFV12jc2hJFTdTJEb5gr1UuNS5v6Xpb6CcqOVwQG56Rl7PDuhwBLk/Q6e01RiyuYP06Fw+KxuHTQaupI46ySnsACWh0zx0ZwwmHXazBKPOBbY6sEtove58vCmsnbYsB3A0fg1FkGO8rXA5rPzBD3fUM4s8sNTaw/GrtafapEzDGfBbb3BSOwLHBXMcRKrR98Jf0lhbYU5oVVTYV7FwxaYNECqQPPeh5LrTwElCeCdFbtnwW2UaFVHplMTBiHMyjaCiSqzOUe0IwBifDXlSaMoCEJI1oJnebRo7JJJDKsoelwgGGMYBAEy0lrtc/QJG2FINKQ+563sNMHnhWc5iJ0xyI6IhGFwnn4B4xqXntgbk3J5Gt4lFdiO4cR7xo0VSm3+A2aBIK1psK8Ffqsmc3oSoSoTz6nO/H/V16G6A7ZJ7gSoJur5qSQcUmf7Qt6N1nTZMk3WZfGs
+ Uk8htIYg6TH3VhdHo2lAg1Z6gysI4S9g88KnAp3Bu5AG9K7uS5vaqX3+tpDmwtQTEFiXzw58iImX+jLS6jfozUWZPUl23EbxOkCmMReyaP3UAbIFpcwP4om2Ap/AKn9Bq6+eLgkkSYDOd2v4pOq4+n2ARY0D6ymijOgISOblGhMqbtjdP64dl10Dhyvfx/3btnObbiMaFsQY3C6r2FgybYKNl0ydGemr6GUOVQ7+VbFv815TS2NEz5jgg6IS2a8DXozi+XpWpCM3syP/pBZkWIIwv7gwL1K4OHR/rMrdy0CfnveQbpY8ziBM8G+wQU8emdQ/iZxY6f0RbengZKU1ZXFwiqZL4Eodk5e3TxrBp7J2ekh3b+onC7fpxkR0gGqsNtmbYqBvjcYyTqe+Ezh65QvsfoUu2mgUZ9rMeuQx9cb0S0MrNvBVV2qZT/5/nL+W+x2ER0VBFj53hlZZ9gJfw7+CiBb2cLytdEjT0DltixEliq4V0WbkJXnK/Q/aCm8yb37FR1PfnipIUoZDTUS6sW7OkaRKVGD5xrN66SN9hPEcSXIM9WvKKN2sutJqH7yUIvQGhM2VcPa2o+JWcLXdecNm+NIbIa1DNvsdFgLBt6jkSvJb/MddvpzTkZ6+komd
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7439274a-e466-44f9-b867-08dcf7566486
+X-MS-Exchange-CrossTenant-AuthSource: PAYP264MB3766.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 13:42:40.7623
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JpfUDCGcufyjd7SsW6MvcX+izGlRfeUxgG6mU5PU0EYfybA69iF2Dbh7WjXeqEm8RgDiju45jivz9smMx7sRRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB2397
+Content-Type: text/plain; charset=utf-8
+X-ALTERMIMEV2_out: done
 
-Hi Huacai,
+Thank you Arnd for your feedback and no problem. I should have asked
+before, to clarify what you meant. I have now addressed what you
+proposed. I have kept the iomem_copy.c and only made the minimal changes
+to asm-generic/io.h and kept them in place just modifiying the content.
+Not sure though about the commit message of patch 1. Let me know if I
+should rephrase it.
 
-On 2024/10/22 上午9:31, Huacai Chen wrote:
-> On Tue, Oct 22, 2024 at 9:17 AM maobibo <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2024/10/21 下午10:32, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> This version still doesn't touch the round-robin method, but it
->>> doesn't matter, I think I misunderstood something since V1...
->> I do not understand why round-robin method need be modified, SRAT may be
->> disabled with general function disable_srat(). Then round-robin method
->> is required.
-> I don't mean round-robin should be modified, I mean I misunderstand round-robin.
-> 
->>
->>>
->>> Please correct me if I'm wrong: For cpus without ACPI_MADT_ENABLED, in
->>> smp_prepare_boot_cpu() the round-robin node ids only apply to
->>> cpu_to_node(), but __cpuid_to_node[] still record the right node ids.
->>> early_cpu_to_node() returns NUMA_NO_NODE not because
->>> __cpuid_to_node[] records NUMA_NO_NODE, but because cpu_logical_map()
->>> < 0.
->>>
->>> If the above is correct, we don't need so complicated, because the
->>> correct and simplest way is:
->>> https://lore.kernel.org/loongarch/6b2b3e89-5a46-2d20-3dfb-7aae33839f49@loongson.cn/T/#m950eead5250e5992cc703bbe69622348cecfa465
->>>
->> It works also. Only that LoongArch kernel parsing about SRAT/MADT is
->> badly. If you do not mind, I do not mind neither. It is not my duty for
->> kernel side.
-> Yes, I don't mind, please use that simplest way.
-There is another problem with the simple way. eiointc reports error when 
-cpu is online. The error message is:
-   Loongson-64bit Processor probed (LA464 Core)
-   CPU2 revision is: 0014c010 (Loongson-64bit)
-   FPU2 revision is: 00000001
-   eiointc: Error: invalid nodemap!
-   CPU 2 UP state irqchip/loongarch/eiointc:starting (100) failed (-1)
+Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+---
+Changes for v11:
+- Restored iomem_copy.c
+- Updated asm-generic/io.h to just contain the changes suggested by Arnd
 
-The problem is that node_map of eiointc is problematic,
+Changes for v10:
+- Removed libs/iomem_copy.c again
+- Replaced the three functions in asm-generic/io.h directly
+- Updated description for the first patch to clarify the matter
+- Slightly updated description in patches 2 to 4
+
+Changes for v9:
+- Moved functions into a new file iomem_copy.c which is built
+  unconditionally
+- Guard prototypes with '#ifndef memcpy_fromio', etc.
+- Dropped patches 5 to 14 for now. I will send some of the changes in
+  separate patches or patchsets to the appropriate mailinglists
+- Added proper reviewed-by and acked-by to arm64 and csky patches
+
+Changes for v8:
+- Dropped the arch/um patch that adds dummy implementations for IO
+  memcpy functions
+- Added 3 new patches that fix the dependency problem for UM (added
+  dependencies on HAS_IOMEM || INDIRECT_IOMEM)
+- Added new patch for s390 to internally call the zpci_memcpy functions
+  and not the generic ones from libs/iomap_copy.c
+- Addressed reviewer comments and replaced 2 or 3 shifts by
+  'qc *= ~0UL / 0xff;'
+- Addressed reviewer comments on pasrisc (masking the int value)
+- Addressed reviewer comments on alpha (masking the int value)
+
+Changes for v7:
+- Added dummy implementations for memcpy_{to,from}io and memset_io on um
+  architecture so drivers that use these functions build for um
+- Replaced all accesses and checks by long type
+- Added function prototypes as extern to asm-generic/io.h
+- Removed '__' from the 3 new function names
+- Some archs implement their own version of these IO functions with
+  slightly different prototypes. So, I added 3 new patches to align
+  prototypes with new ones in iomap_copy.c + io.h
+
+Changes for v6:
+- Added include of linux/align.h to fix build on arm arch
+- Replaced compile-time check by ifdef for the CONFIG_64BIT otherwise we
+  get a warning for the 'qc << 32' for archs with 32bit int types
+- Suffixed arch commits by arch name
+
+Changes for v5:
+- Added functions to iomap_copy.c as proposed by Arndt
+- Removed again the new io_copy.c and related objects
+- Removed GENERIC_IO_COPY symbol and instead rely on the existing
+  HAS_IOMEM symbol
+- Added prototypes of __memcpy_{to,from}io and __memset_io functions to
+  asm-generic/io.h
+
+Changes for v4:
+- Replaced memcpy/memset in asm-generic/io.h by the new
+  __memcpy_{to,from}io and __memset_io, so individual architectures can
+  use it instead of using their own implementation.
+
+Changes for v3:
+- Replaced again 'if(IS_ENABLED(CONFIG_64BIT))' by '#ifdef CONFIG_64BIT'
+  because on 32bit architectures (e.g., csky), __raw_{read,write}q are
+  not defined. So, it leads to compilation errors
+
+Changes for v2:
+- Renamed io.c -> io_copy.c
+- Updated flag to 'GENERIC_IO_COPY'
+- Replaced pointer dereferences by 'put_unaligned()'/'get_unaligned()'
+- Replaced '#ifdef CONFIG_64BIT' by 'if(IS_ENABLED(CONFIG_64BIT))'
+- Removed '__raw_{read,write}_native' and replaced by
+  'if(IS_ENABLED(CONFIG_64BIT))' -> '__raw_write{l,q}'
+---
+Julian Vetter (4):
+  New implementation for IO memcpy and IO memset
+  arm64: Use new fallback IO memcpy/memset
+  csky: Use new fallback IO memcpy/memset
+  loongarch: Use new fallback IO memcpy/memset
+
+ arch/arm64/include/asm/io.h     |  11 ---
+ arch/arm64/kernel/io.c          |  87 --------------------
+ arch/csky/include/asm/io.h      |  11 ---
+ arch/csky/kernel/Makefile       |   2 +-
+ arch/csky/kernel/io.c           |  91 ---------------------
+ arch/loongarch/include/asm/io.h |  10 ---
+ arch/loongarch/kernel/Makefile  |   2 +-
+ arch/loongarch/kernel/io.c      |  94 ----------------------
+ include/asm-generic/io.h        |  22 +-----
+ lib/Makefile                    |   2 +-
+ lib/iomem_copy.c                | 136 ++++++++++++++++++++++++++++++++
+ 11 files changed, 142 insertions(+), 326 deletions(-)
+ delete mode 100644 arch/csky/kernel/io.c
+ delete mode 100644 arch/loongarch/kernel/io.c
+ create mode 100644 lib/iomem_copy.c
+
+-- 
+2.34.1
 
 
-static int cpu_to_eio_node(int cpu)
-{
-         return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-}
-
-static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
-                                u64 node_map)
-{
-         int i;
-
-         node_map = node_map ? node_map : -1ULL;
-         for_each_possible_cpu(i) {
-                 if (node_map & (1ULL << (cpu_to_eio_node(i)))) {
-                         node_set(cpu_to_eio_node(i), priv->node_map);
-          ...
-The cause is that for possible not present cpu, *cpu_logical_map(cpu)* 
-is -1, cpu_to_eio_node(i) will be equal to -1, so node_map of eiointc is 
-problematic.
-
-So cpu_logical_map(cpu) should be set during MADT parsing even if it is 
-not enabled at beginning, it should not be set at hotplug runtime.
-
-Regards
-Bibo Mao
 
 
-> 
-> Huacai
-> 
->>
->> Bibo Mao
->>>
->>> Huacai
->>>
->>> On Mon, Oct 21, 2024 at 4:04 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> On LoongArch system, there are two places to set cpu numa node. One
->>>> is in arch specified function smp_prepare_boot_cpu(), the other is
->>>> in generic function early_numa_node_init(). The latter will overwrite
->>>> the numa node information.
->>>>
->>>> With hot-added cpu without numa information, cpu_logical_map() fails
->>>> to its physical cpuid at beginning since it is not enabled in ACPI
->>>> MADT table. So function early_cpu_to_node() also fails to get its
->>>> numa node for hot-added cpu, and generic function
->>>> early_numa_node_init() will overwrite with incorrect numa node.
->>>>
->>>> APIs topo_get_cpu() and topo_add_cpu() is added here, like other
->>>> architectures logic cpu is allocated when parsing MADT table. When
->>>> parsing SRAT table or hot-add cpu, logic cpu is acquired by searching
->>>> all allocated logical cpu with matched physical id. It solves such
->>>> problems such as:
->>>>     1. Boot cpu is not the first entry in MADT table, the first entry
->>>> will be overwritten with later boot cpu.
->>>>     2. Physical cpu id not presented in MADT table is invalid, in later
->>>> SRAT/hot-add cpu parsing, invalid physical cpu detected is added
->>>>     3. For hot-add cpu, its logic cpu is allocated in MADT table parsing,
->>>> so early_cpu_to_node() can be used for hot-add cpu and cpu_to_node()
->>>> is correct for hot-add cpu.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>> v1 ... v2:
->>>>     1. Like other architectures, allocate logic cpu when parsing MADT table.
->>>>     2. Add invalid or duplicated physical cpuid parsing with SRAT table or
->>>> hot-add cpu DSDT information.
->>>> ---
->>>>    arch/loongarch/include/asm/smp.h |  3 ++
->>>>    arch/loongarch/kernel/acpi.c     | 24 ++++++++++------
->>>>    arch/loongarch/kernel/setup.c    | 47 ++++++++++++++++++++++++++++++++
->>>>    arch/loongarch/kernel/smp.c      |  9 +++---
->>>>    4 files changed, 70 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
->>>> index 3383c9d24e94..c61b75937a77 100644
->>>> --- a/arch/loongarch/include/asm/smp.h
->>>> +++ b/arch/loongarch/include/asm/smp.h
->>>> @@ -119,4 +119,7 @@ static inline void __cpu_die(unsigned int cpu)
->>>>    #define cpu_logical_map(cpu)   0
->>>>    #endif /* CONFIG_SMP */
->>>>
->>>> +int topo_add_cpu(int physid);
->>>> +int topo_get_cpu(int physid);
->>>> +
->>>>    #endif /* __ASM_SMP_H */
->>>> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
->>>> index f1a74b80f22c..84d9812d5f38 100644
->>>> --- a/arch/loongarch/kernel/acpi.c
->>>> +++ b/arch/loongarch/kernel/acpi.c
->>>> @@ -78,10 +78,10 @@ static int set_processor_mask(u32 id, u32 flags)
->>>>                   return -ENODEV;
->>>>
->>>>           }
->>>> -       if (cpuid == loongson_sysconf.boot_cpu_id)
->>>> -               cpu = 0;
->>>> -       else
->>>> -               cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
->>>> +
->>>> +       cpu = topo_add_cpu(cpuid);
->>>> +       if (cpu < 0)
->>>> +               return -EEXIST;
->>>>
->>>>           if (!cpu_enumerated)
->>>>                   set_cpu_possible(cpu, true);
->>>> @@ -203,8 +203,6 @@ void __init acpi_boot_table_init(void)
->>>>                   goto fdt_earlycon;
->>>>           }
->>>>
->>>> -       loongson_sysconf.boot_cpu_id = read_csr_cpuid();
->>>> -
->>>>           /*
->>>>            * Process the Multiple APIC Description Table (MADT), if present
->>>>            */
->>>> @@ -257,7 +255,7 @@ void __init numa_set_distance(int from, int to, int distance)
->>>>    void __init
->>>>    acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
->>>>    {
->>>> -       int pxm, node;
->>>> +       int pxm, node, cpu;
->>>>
->>>>           if (srat_disabled())
->>>>                   return;
->>>> @@ -286,6 +284,11 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
->>>>                   return;
->>>>           }
->>>>
->>>> +       cpu = topo_get_cpu(pa->apic_id);
->>>> +       /* Check whether apic_id exists in MADT table */
->>>> +       if (cpu < 0)
->>>> +               return;
->>>> +
->>>>           early_numa_add_cpu(pa->apic_id, node);
->>>>
->>>>           set_cpuid_to_node(pa->apic_id, node);
->>>> @@ -324,12 +327,17 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *pcpu
->>>>    {
->>>>           int cpu;
->>>>
->>>> -       cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
->>>> +       cpu = topo_get_cpu(physid);
->>>> +       /* Check whether apic_id exists in MADT table */
->>>>           if (cpu < 0) {
->>>>                   pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
->>>>                   return cpu;
->>>>           }
->>>>
->>>> +       num_processors++;
->>>> +       set_cpu_present(cpu, true);
->>>> +       __cpu_number_map[physid] = cpu;
->>>> +       __cpu_logical_map[cpu] = physid;
->>>>           acpi_map_cpu2node(handle, cpu, physid);
->>>>
->>>>           *pcpu = cpu;
->>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
->>>> index 00e307203ddb..649e98640076 100644
->>>> --- a/arch/loongarch/kernel/setup.c
->>>> +++ b/arch/loongarch/kernel/setup.c
->>>> @@ -65,6 +65,8 @@ EXPORT_SYMBOL(cpu_data);
->>>>
->>>>    struct loongson_board_info b_info;
->>>>    static const char dmi_empty_string[] = "        ";
->>>> +static int possible_cpus;
->>>> +static bool bsp_added;
->>>>
->>>>    /*
->>>>     * Setup information
->>>> @@ -346,10 +348,55 @@ static void __init bootcmdline_init(char **cmdline_p)
->>>>           *cmdline_p = boot_command_line;
->>>>    }
->>>>
->>>> +int topo_get_cpu(int physid)
->>>> +{
->>>> +       int i;
->>>> +
->>>> +       for (i = 0; i < possible_cpus; i++)
->>>> +               if (cpu_logical_map(i) == physid)
->>>> +                       break;
->>>> +
->>>> +       if (i == possible_cpus)
->>>> +               return -ENOENT;
->>>> +
->>>> +       return i;
->>>> +}
->>>> +
->>>> +int topo_add_cpu(int physid)
->>>> +{
->>>> +       int cpu;
->>>> +
->>>> +       if (!bsp_added && (physid == loongson_sysconf.boot_cpu_id)) {
->>>> +               bsp_added = true;
->>>> +               return 0;
->>>> +       }
->>>> +
->>>> +       cpu = topo_get_cpu(physid);
->>>> +       if (cpu >= 0) {
->>>> +               pr_warn("Adding duplicated physical cpuid 0x%x\n", physid);
->>>> +               return -EEXIST;
->>>> +       }
->>>> +
->>>> +       if (possible_cpus >= nr_cpu_ids)
->>>> +               return -ERANGE;
->>>> +
->>>> +       __cpu_logical_map[possible_cpus] = physid;
->>>> +       cpu = possible_cpus++;
->>>> +       return cpu;
->>>> +}
->>>> +
->>>> +static void __init topo_init(void)
->>>> +{
->>>> +       loongson_sysconf.boot_cpu_id = read_csr_cpuid();
->>>> +       __cpu_logical_map[0] = loongson_sysconf.boot_cpu_id;
->>>> +       possible_cpus++;
->>>> +}
->>>> +
->>>>    void __init platform_init(void)
->>>>    {
->>>>           arch_reserve_vmcore();
->>>>           arch_reserve_crashkernel();
->>>> +       topo_init();
->>>>
->>>>    #ifdef CONFIG_ACPI
->>>>           acpi_table_upgrade();
->>>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
->>>> index 9afc2d8b3414..a3f466b89179 100644
->>>> --- a/arch/loongarch/kernel/smp.c
->>>> +++ b/arch/loongarch/kernel/smp.c
->>>> @@ -291,10 +291,9 @@ static void __init fdt_smp_setup(void)
->>>>                   if (cpuid >= nr_cpu_ids)
->>>>                           continue;
->>>>
->>>> -               if (cpuid == loongson_sysconf.boot_cpu_id)
->>>> -                       cpu = 0;
->>>> -               else
->>>> -                       cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
->>>> +               cpu = topo_add_cpu(cpuid);
->>>> +               if (cpu < 0)
->>>> +                       continue;
->>>>
->>>>                   num_processors++;
->>>>                   set_cpu_possible(cpu, true);
->>>> @@ -302,7 +301,7 @@ static void __init fdt_smp_setup(void)
->>>>                   __cpu_number_map[cpuid] = cpu;
->>>>                   __cpu_logical_map[cpu] = cpuid;
->>>>
->>>> -               early_numa_add_cpu(cpu, 0);
->>>> +               early_numa_add_cpu(cpuid, 0);
->>>>                   set_cpuid_to_node(cpuid, 0);
->>>>           }
->>>>
->>>>
->>>> base-commit: 42f7652d3eb527d03665b09edac47f85fb600924
->>>> --
->>>> 2.39.3
->>>>
->>
->>
 
