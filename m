@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A831E1C36;
-	Mon, 28 Oct 2024 10:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4212A200B8E;
+	Mon, 28 Oct 2024 10:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730112762; cv=none; b=LxDH2W6ZAXS92oAbDIxqaaP9MCgViN1ZJQnaCYGoddDj9LYfEYi+3KAR1rlzUcgl4D0A8lIYDmIgkMwQ2H/sn5bgoPkYmWxU8yxpAXDUXFZuRVw1fEGVNdSDm4vhN7anZYa2JbP3zayYZ9cGgjRcx0M9U1IzFJrK3vMiDqtZm3Q=
+	t=1730112785; cv=none; b=OIWMs6Ug2+UhjQbd3QebnYE2+sIVWkyAi3x22bW6NeBVHdo/UgKbltE5F/Mqq30xYv9ybi9FB/1lC/kEEJ1baux2UMPnnS9PbrAbcOfQKh0BV8D2XReCHYGDKAS9WXlNeDt5yy6zE0rjcSENz7vqFz3g1ZJhA+8+BCl/L5o8AXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730112762; c=relaxed/simple;
-	bh=nA7JpuNjyKZzGET4voArfdhcMlnnrN3Q5PGS+2Ii+Ac=;
+	s=arc-20240116; t=1730112785; c=relaxed/simple;
+	bh=32MnMsbpgABlYs4RbL3vPVXd0eqsEm84FdrjGK51Owk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ia5CqEJb/AhL325LDxBAKalFND/179KK/DNjj3jL3gw1UNuXW9uKOAAxRve/bPdOkyDfVvjDTdxDD9dYQMT1otCOaDmpmvlRR63TpKP9JbkNpcjnNRZpF70cMd01Ph72F98x6Cke0e6jeI3KEVZ2bq70WAhPGRtSOznmaBkFcrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJw4O3k0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l3NQbqa2+cGqulNjiJtEBw7mMs7Sx8M7zKBOxjAqBfMc8ckOPlO5h4eqUBHitxKlEB6RNuV+zZNkaMvZluz3T9K4QY3eWvpqqPkklGX+ecXGKdJfhMxuqdKGk5WiTvHkSJdkrdV+1PHafrdXWeR8ygf/hiZtquswiPYKpDXPYxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5eofh7b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJw4O3k0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D48C4CEC3;
-	Mon, 28 Oct 2024 10:52:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5eofh7b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83ABC4CEC3;
+	Mon, 28 Oct 2024 10:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730112761;
-	bh=nA7JpuNjyKZzGET4voArfdhcMlnnrN3Q5PGS+2Ii+Ac=;
+	s=k20201202; t=1730112785;
+	bh=32MnMsbpgABlYs4RbL3vPVXd0eqsEm84FdrjGK51Owk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XJw4O3k0h1MHmqGYgYktOX4lHbiVtSIUj12EEtnEJ+4EBk6FCXm/iVFkgYqSKmC3E
-	 9H0W4ReJm0dH2fqCU9hH3NmTdNDY/B2BvlvOhVjn6Nii3zsIsz96T2vM9113TkLhS7
-	 48B4WwSsnbQaRzoRjPlFuiWVNVWrvt2gwS1aQrR49uoqTiHfI1d2BYeEXZIlargKIY
-	 4GwbrgGMPNrQRNUPjcxtY8+G3Mq5fl092WJsbm8LUy5yjunOevRQLmJA9h2bh4WPWT
-	 n0x+1dmGgR4QQqVRoP7RrY3Vi6z+TIpD5/AZUW0YT18b0dGXttzlE2v8UjSq54Oh0q
-	 cvBi36nWl3zJA==
+	b=B5eofh7bhznA1DqZwLOKh1APKXMoRd1TZTNojYikJIXeMzlIPzugXSUdlHIdHmAQj
+	 g6lCH5smA2sLgZYp7rzVYgxJ/XxYXTAODM3EPRkIpa9AM2WFQUtcohJBzBZUeaNNEK
+	 KsKcm8Gr3dI4BNMUICkM9xWpXvm4dJxe1FKBXL6WaHLnMZXz97uVnB6MS+5rYu+qo2
+	 KiypwwVUuHv1m8h3nbGCDjNROi5oWMHV5dIhTBhqEktzlA/fAvqmLwq8Qal5ncyJpi
+	 UljYHsyPoBkHmUjaOdUFJiknO4822K8Fq7sOYBEVS5A6djUBZke+IVh52fctZEwQOc
+	 9xXD/b/47e+JA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -35,17 +35,17 @@ Cc: Yanteng Si <siyanteng@cqsoftware.com.cn>,
 	chenhuacai@kernel.org,
 	maobibo@loongson.cn,
 	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
 	zhangtianyang@loongson.cn,
+	jiaxun.yang@flygoat.com,
 	gaosong@loongson.cn,
 	xry111@xry111.site,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 11/15] LoongArch: Use "Exception return address" to comment ERA
-Date: Mon, 28 Oct 2024 06:52:07 -0400
-Message-ID: <20241028105218.3559888-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 6/8] LoongArch: Use "Exception return address" to comment ERA
+Date: Mon, 28 Oct 2024 06:52:47 -0400
+Message-ID: <20241028105252.3560220-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241028105218.3559888-1-sashal@kernel.org>
-References: <20241028105218.3559888-1-sashal@kernel.org>
+In-Reply-To: <20241028105252.3560220-1-sashal@kernel.org>
+References: <20241028105252.3560220-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.58
+X-stable-base: Linux 6.1.114
 Content-Transfer-Encoding: 8bit
 
 From: Yanteng Si <siyanteng@cqsoftware.com.cn>
@@ -73,12 +73,12 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 33531d432b492..23232c7bdb9ff 100644
+index 3d15fa5bef37d..710b005fc8a69 100644
 --- a/arch/loongarch/include/asm/loongarch.h
 +++ b/arch/loongarch/include/asm/loongarch.h
-@@ -242,7 +242,7 @@
- #define  CSR_ESTAT_IS_WIDTH		14
- #define  CSR_ESTAT_IS			(_ULCAST_(0x3fff) << CSR_ESTAT_IS_SHIFT)
+@@ -325,7 +325,7 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+ #define  CSR_ESTAT_IS_WIDTH		15
+ #define  CSR_ESTAT_IS			(_ULCAST_(0x7fff) << CSR_ESTAT_IS_SHIFT)
  
 -#define LOONGARCH_CSR_ERA		0x6	/* ERA */
 +#define LOONGARCH_CSR_ERA		0x6	/* Exception return address */
