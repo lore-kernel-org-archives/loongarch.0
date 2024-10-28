@@ -1,130 +1,138 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EDF1DA309
-	for <loongarch@lists.linux.dev>; Mon, 28 Oct 2024 14:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F82F12F585;
+	Mon, 28 Oct 2024 15:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730124133; cv=none; b=UAgBrybqEjhrG+dQqdkuaMHOhTQh6y5jd0buPk0qsQueI5NEOBgdiLPfxEBoop9xDKzUiMat3wqRQoyCCW+umKWa/mWXeLCfNfXXVW+GssBmb1asWsYFLMkaiKUiG50uaBRlVZp5SawwFPv3895QEyTLQniKdwe6s7NWmQoDJh0=
+	t=1730130063; cv=none; b=ljsHalExoS3ZoyL33m3WSkpNbww62ki3gJ49+O+hFM2F2smoFazctpA3pdUNbjKlZn87C45pJKzvvuWMQeDlS70126g5npN3kCLKr/GuPbyvFxY/xoQxM4ST6HfSjtpWUN5S2yHcVcGCNO0znFOeVaStxciMTziRX4bgTWGQBj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730124133; c=relaxed/simple;
-	bh=pRzYsZTf/6WaLODzzERgIiPto/LwdVPBcgk0H488f7o=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ec9iqg4uA8TGVxl/pCiC+E4CgmTrQTQyL4x0tCZQdUTVf/5T4crU20Ln2cudnCGe8InCSQ/Co2C/pJ9yjctp2V7G36jt+kG0gNdLcxE/VlMNBNa0sf2LdfbAgylUqIPPl7jjWJ3c2/bReUsBhFlMqwHF2zX6L7qyQdJErrcKs0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ea1ZHKin; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hO0xGr3d; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1730130063; c=relaxed/simple;
+	bh=1OnKnskO1uPXHT57ko80fWNSrAKlqsEB3xePdsqM5Vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKcn13sfdS4+xNGnuEme45qOqXjiEKCMETHBc6rdXeHtcq8F4FMnc2oz1hsmFR5XSoj66q61nyIn0GxmJtRrI5EjE6ohaZAwqCv8+NPyJL5c5FcAggOIuRfijG7DNR+4lsbKpVHcgnhoY5ZAJwwKJUhIolJ8aTRuhbytefNUvRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+bslp5n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ea1ZHKin";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hO0xGr3d"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 005041380145;
-	Mon, 28 Oct 2024 10:02:10 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Mon, 28 Oct 2024 10:02:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1730124129;
-	 x=1730210529; bh=r+OiIDFujfOkX27UX0KnwST8oK9dQeo/ifyz/Fg5BH4=; b=
-	ea1ZHKinNqus8IGzLA0oTFE4P8eRvXz95Gu5TPOZKkfCwqi3o86yRLUeKd+xjsV/
-	VAdxqjBHMU4mbZ1NNQIL+AkizkZFo7uPqB4Dhy0dzlTs7C2kOqkJDkkVqKYiTqRQ
-	2sHm3uJd/fNIYWIKiHQpAxXr78IkZuLZf/teNibdYoCgWD/y2xBMWRwAWo7+2kXB
-	mOz2QneV3wkZ9SVACHGRZaSpIuMORxksHPJQTpqREkvsZvMnLqmnqydFlnIE11Ar
-	1zWCeU0jIcyS7FHjICFf9GIVaCcC7WOYoezrJ4p0Pv+VXd/jFCozyvCh+W95kFn5
-	2OjJd4ndjB03ePJdylFrGg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730124129; x=
-	1730210529; bh=r+OiIDFujfOkX27UX0KnwST8oK9dQeo/ifyz/Fg5BH4=; b=h
-	O0xGr3doGLlUkgjlmoh7OqE6Go73AJPRNJ2+M0xnafE48wa5BDYmecI4VeFFd8wy
-	1mR2cyj3hCZ7Vs7addrbq1jmRaWoyV6MWOcq/h/G//pspPLPYi6dbnPKR+GO8lZO
-	exwodB+SzfiurYhUkZ1oEr3hG5WjoMRqCo1locWNOEbi2ww4RTzCyKOP6XJyjhqb
-	UAbp68IQ028mACjJez/rn3Fx9hvzf5AU6cvXtsujM0b+JsjAmfqXkbn/swagzZWM
-	jr8qhlNh5hpPqiNHDl3YQs3hBUBNB5Wdzu5viL726P4ZAdgQac9kcjF+KRExX+48
-	uEbtRzMFWC1CCrC6GXZ2Q==
-X-ME-Sender: <xms:X5kfZyu8FRLBspgYiFbjf8P-xpnCwI95vxq0l8upbbCjWMgcmc1z7w>
-    <xme:X5kfZ3fc6UOl0mPo73rbzhtaeEyYJWp60srptDLhksqRQ00UFj5br5I_aosHE182S
-    EGrJ-S29tHFEYG1EqE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejledgfedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvihgurdhlrghighhhthesrg
-    gtuhhlrggsrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghr
-    mhdrtghomhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrd
-    gtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
-    pehjvhgvthhtvghrsehkrghlrhgrhihinhgtrdgtohhmpdhrtghpthhtohephihsihhonh
-    hnvggruheskhgrlhhrrgihihhntgdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggr
-    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:X5kfZ9wgum0vvTNY1_U0ODv_2hT3VzRXXqsoqGCFXJatAt-kYV9s-Q>
-    <xmx:X5kfZ9MReUmx1MBBGvppBNMDflMti1A1ib7yK1lGTPUhGJaOsGjOmg>
-    <xmx:X5kfZy_tV7OnRqQq6ThR68huUTWAZzMP9XA_XEIB-auxNDKldbHnvw>
-    <xmx:X5kfZ1XTwkUgXd3mnM15tMHPPAFtGGOyXiRe_PgN1W2pD24wGcTU4g>
-    <xmx:YZkfZ1e_9DtjsPEP3MRLaDDdRCCDjyFM2DBoRbPq0Elqbi-AM0p0ROSp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C7E272220071; Mon, 28 Oct 2024 10:02:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+bslp5n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0E1C4CEC3;
+	Mon, 28 Oct 2024 15:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730130062;
+	bh=1OnKnskO1uPXHT57ko80fWNSrAKlqsEB3xePdsqM5Vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p+bslp5nYFB5IdzYlqcPXUe0Deg2tPLvvs4TWlciZJnyPqj4C7msUDWod/mZ74Wbi
+	 V+npdeWkLAM2YaCU68ORi88AWKUdk+SexkhRmxohs3rLk/42hVRfWw3lmcgEXhKfmW
+	 l+9bfe1QEI3TUsTCQUmiCfe1cOZzdBeIsDmI24fTFiyKZwDu9f4TeXEh9Tmi9Z7A4g
+	 RQuSC3lG7y94YkqEIK4qkURF8Scn98uwTY1D6XvZn72zlsfH7cHelHDCN5wkvgpceU
+	 yWqXIdxX1dAjLGXoC7cRczTCjM1LzpGhlbBh2ntrVJVtMMwopnozbfMsplC2SfLpCE
+	 /bnM2cMZeJadg==
+Date: Mon, 28 Oct 2024 15:40:55 +0000
+From: Will Deacon <will@kernel.org>
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: robh@kernel.org, mark.rutland@arm.com, leitao@debian.org,
+	catalin.marinas@arm.com, tglx@linutronix.de, chris@zankel.net,
+	saravanak@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-sh@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-openrisc@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-csky@vger.kernel.org
+Subject: Re: [PATCH v2] of/fdt: add dt_phys arg to early_init_dt_scan and
+ early_init_dt_verify
+Message-ID: <20241028154054.GE2484@willie-the-truck>
+References: <20241023171426.452688-1-usamaarif642@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 28 Oct 2024 14:01:42 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Julian Vetter" <jvetter@kalrayinc.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- guoren <guoren@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>, "Takashi Iwai" <tiwai@suse.com>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "David Laight" <David.Laight@aculab.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Christoph Hellwig" <hch@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
- "Yann Sionneau" <ysionneau@kalrayinc.com>
-Message-Id: <52edd934-a1ca-427f-81f8-7d7dff2d626f@app.fastmail.com>
-In-Reply-To: <20241028134227.4020894-1-jvetter@kalrayinc.com>
-References: <20241028134227.4020894-1-jvetter@kalrayinc.com>
-Subject: Re: [PATCH v11 0/4] Replace fallback for IO memcpy and IO memset
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241023171426.452688-1-usamaarif642@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Oct 28, 2024, at 13:42, Julian Vetter wrote:
-> Thank you Arnd for your feedback and no problem. I should have asked
-> before, to clarify what you meant. I have now addressed what you
-> proposed. I have kept the iomem_copy.c and only made the minimal changes
-> to asm-generic/io.h and kept them in place just modifiying the content.
-> Not sure though about the commit message of patch 1. Let me know if I
-> should rephrase it.
->
-> Signed-off-by: Julian Vetter <jvetter@kalrayinc.com>
+On Wed, Oct 23, 2024 at 06:14:26PM +0100, Usama Arif wrote:
+>  __pa() is only intended to be used for linear map addresses and using
+> it for initial_boot_params which is in fixmap for arm64 will give an
+> incorrect value. Hence save the physical address when it is known at
+> boot time when calling early_init_dt_scan for arm64 and use it at kexec
+> time instead of converting the virtual address using __pa().
+> 
+> Reported-by: Breno Leitao <leitao@debian.org>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> Fixes: ac10be5cdbfa ("arm64: Use common of_kexec_alloc_and_setup_fdt()")
 > ---
-> Changes for v11:
-> - Restored iomem_copy.c
-> - Updated asm-generic/io.h to just contain the changes suggested by Arnd
+> v1 -> 2:
+> - pass dt_phys in early_init_dt_scan instead of creating
+>   anorther arch->dt function (Rob Herring)
+> ---
+>  arch/arc/kernel/devtree.c              |  2 +-
+>  arch/arm/kernel/devtree.c              |  2 +-
+>  arch/arm64/kernel/setup.c              |  6 +++++-
+>  arch/csky/kernel/setup.c               |  4 ++--
+>  arch/loongarch/kernel/setup.c          |  2 +-
+>  arch/microblaze/kernel/prom.c          |  2 +-
+>  arch/mips/kernel/prom.c                |  2 +-
+>  arch/mips/kernel/relocate.c            |  2 +-
+>  arch/nios2/kernel/prom.c               |  4 ++--
+>  arch/openrisc/kernel/prom.c            |  2 +-
+>  arch/powerpc/kernel/dt_cpu_ftrs.c      |  2 +-
+>  arch/powerpc/kernel/prom.c             |  2 +-
+>  arch/powerpc/platforms/pseries/plpks.c |  2 +-
+>  arch/riscv/kernel/setup.c              |  2 +-
+>  arch/sh/kernel/setup.c                 |  2 +-
+>  arch/um/kernel/dtb.c                   |  2 +-
+>  arch/x86/kernel/devicetree.c           |  2 +-
+>  arch/xtensa/kernel/setup.c             |  2 +-
+>  drivers/of/fdt.c                       | 14 ++++++++------
+>  drivers/of/kexec.c                     |  2 +-
+>  include/linux/of_fdt.h                 |  5 +++--
+>  21 files changed, 36 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
+> index 4c9e61457b2f..cc6ac7d128aa 100644
+> --- a/arch/arc/kernel/devtree.c
+> +++ b/arch/arc/kernel/devtree.c
+> @@ -62,7 +62,7 @@ const struct machine_desc * __init setup_machine_fdt(void *dt)
+>  	const struct machine_desc *mdesc;
+>  	unsigned long dt_root;
+>  
+> -	if (!early_init_dt_scan(dt))
+> +	if (!early_init_dt_scan(dt, __pa(dt)))
+>  		return NULL;
+>  
+>  	mdesc = of_flat_dt_match_machine(NULL, arch_get_next_mach);
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index fdb74e64206a..3b78966e750a 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -200,7 +200,7 @@ const struct machine_desc * __init setup_machine_fdt(void *dt_virt)
+>  
+>  	mdesc_best = &__mach_desc_GENERIC_DT;
+>  
+> -	if (!dt_virt || !early_init_dt_verify(dt_virt))
+> +	if (!dt_virt || !early_init_dt_verify(dt_virt, __pa(dt_virt)))
+>  		return NULL;
+>  
+>  	mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index b22d28ec8028..177262739c49 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -175,7 +175,11 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>  	if (dt_virt)
+>  		memblock_reserve(dt_phys, size);
+>  
+> -	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+> +	/*
+> +	 * dt_virt is a fixmap address, hence __pa(dt_virt) can't be used.
+> +	 * Pass dt_phys directly.
+> +	 */
+> +	if (!dt_virt || !early_init_dt_scan(dt_virt, dt_phys)) {
 
-I've applied it to the asm-generic tree now.
+nit: It looks like early_init_dt_verify() will now return false if
+!dt_virt, so we can drop the additional check here.
 
-It's always possible to improve the commit messages, but I'll
-call this good enough, as it's more important to give this some
-time testing in linux-next.
-
-Thanks for your work work on this!
-
-     Arnd
+Will
