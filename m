@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72CF8204082
-	for <loongarch@lists.linux.dev>; Tue, 29 Oct 2024 11:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F98205151
+	for <loongarch@lists.linux.dev>; Tue, 29 Oct 2024 11:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730202545; cv=none; b=HPOF20sRd3TtJpaxBQG8WCaY50yhF6AlHorip8QzRHusBsUTGNmim9rUh13rZPTt/PxEX2C3wBrF7rY68WV08RGM3+zl+IUobAafOwQ1B6OAeIMuuagjzwbppU27vHd3HjP9pCXMjTDNZqcquq+NXZAoKlDrC051+0KnOLHZ8Z0=
+	t=1730202760; cv=none; b=IlmqVmWXdYqcc5ouT3DVhPSG7J+rJukJWXtefhCL4jqQE0MhcJy98fQHY0FfMATbmzrIUdhhsYfPmYMi3tG8uiACuXhJnhsdJJqeKYpchxWSHQLzw9K2X8aaPqZuR2iYeG2eQpbJlZaWCBI6b3pGb6i7111Gx7R99jwfKE+pvi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730202545; c=relaxed/simple;
-	bh=EPTlWgvy2tKiA4SKx1Vw5RaDsHdEypxf59Zm0lb2JgQ=;
+	s=arc-20240116; t=1730202760; c=relaxed/simple;
+	bh=djP76Fqy9PJG18iqYefYIL7kxEBD/pRd0F8pZuOV3hg=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jIymx0mKluWgRwc45lkEC6Rq9wkgujuGj15+5s9BPCE5AlsoeweXIgOV1PeVJoDRwWFGeqWx4i29kog4OdmuoOiMIXPzOJ4gFR/58Uo7tsNjfU9AVEzCmD3B68dOEcyJJ63yOwEKg0c0mGyYr5Sk7STzV1hJSItRS58sEQA7j6s=
+	 In-Reply-To:Content-Type; b=QcBrPY76lZRIko2rvbPzerKOLy3zqFogj7jA/DqQF0jxSxy2QhsaNp34c6XkSNgONmTZ3iLaRa6Gx9j4eaM4h/qpPV+vQ7HxedT0kQ7C9bvjRG+gbJNUTADbFpGR4Su4Hw+sOlk5QToGX4y5eISaSuqNMA6WETRYaSvTpuq4v3E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxYa+lyyBnudAbAA--.57722S3;
-	Tue, 29 Oct 2024 19:48:53 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxTOKCzCBnMNIbAA--.57384S3;
+	Tue, 29 Oct 2024 19:52:34 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxDEejyyBnCoImAA--.20559S3;
-	Tue, 29 Oct 2024 19:48:51 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxrkeBzCBn3oMmAA--.20519S3;
+	Tue, 29 Oct 2024 19:52:33 +0800 (CST)
 Subject: Re: [PATCH v2] LoongArch: Fix cpu hotplug issue
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
@@ -30,8 +30,8 @@ References: <20241021080418.644342-1-maobibo@loongson.cn>
  <f7ab6ec1-7a49-2764-7c19-9949ad508e2e@loongson.cn>
  <CAAhV-H6+rE_7P_C0MaWzXToVcPqZQX0YMPnhyZV7Pp6aQ01mCQ@mail.gmail.com>
 From: maobibo <maobibo@loongson.cn>
-Message-ID: <39330bb8-d267-ef02-e082-388c7bfa3b43@loongson.cn>
-Date: Tue, 29 Oct 2024 19:48:27 +0800
+Message-ID: <4b1bc14b-d937-be80-8b9d-e1a904b26b18@loongson.cn>
+Date: Tue, 29 Oct 2024 19:52:08 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -44,25 +44,26 @@ In-Reply-To: <CAAhV-H6+rE_7P_C0MaWzXToVcPqZQX0YMPnhyZV7Pp6aQ01mCQ@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxDEejyyBnCoImAA--.20559S3
+X-CM-TRANSID:qMiowMCxrkeBzCBn3oMmAA--.20519S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3uFyDZFy5CF4fZr4rZr15WrX_yoWktF1kpr
-	yUGF4DCr4UXr1UJ34Fqw1jgrn5tr1DJF17X3W7Ka45AF1qvF17Jr48Jry5uFyrWr48GF10
-	vF1rJF43WFyUJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3uFyDZFy5CF4fZr4rZr15WrX_yoWktw4Upr
+	yUGF4DCr48XryUJ34Fqw1jgrn5tr1DJF17X3W7Ka45AF1qyF17Jr4kJry5uFy8Wr48JF10
+	vF1rJF4agFy5J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jeq2NUUU
+	UU=
 
 
 
@@ -138,6 +139,13 @@ On 2024/10/29 下午6:36, Huacai Chen wrote:
 > set_processor_mask() to setup logical-physical mapping, so in
 > eiointc_router_init() which is called by cpu_up(), cpu_logical_map()
 > should work well.
+cpu hot-adding works in run-time stage, however eiointc_router_init() 
+runs early in booting stage. Setting cpu_logical_map() in runtime is too 
+late for function eiointc_router_init(), since eiointc_router_init() is 
+only called in early kernel boot stage.
+
+Regards
+Bibo Mao
 > 
 > Maybe in your case a whole node is hot-added? I don't think the
 > eiointc design can work with this case...
@@ -148,14 +156,6 @@ On 2024/10/29 下午6:36, Huacai Chen wrote:
 > This will cause the logical cpu number be not continuous after boot.
 > Physical numbers have no requirement, but logical numbers should be
 > continuous.
-I do not understand such requirement about logical cpu should be 
-continuous. You can check logical cpu allocation method on other 
-architectures, or what does the requirement about logical cpu continuous 
-come from.
-
-Regards
-Bibo Mao
-
 > 
 > Huacai
 > 
