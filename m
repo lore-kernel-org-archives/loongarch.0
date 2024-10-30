@@ -1,41 +1,32 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8511D1F5D
-	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 06:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBADD1990B3;
+	Wed, 30 Oct 2024 08:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730270360; cv=none; b=czb39t4xgKDK9tymp81KlkniwtdYgQKh5hovGYt+wW1sGorIMDJcyC6Pf1nUbNB98+9wEJpI/SFYB6cC72sUyck46p38jYEZcgzufc7qbylKLYOlFwdNOBhLi9WWb8nwWv5Iam9utbjDkTYjmzNvn8aJnOjTmwWOvYhDfI8sazQ=
+	t=1730275866; cv=none; b=C5xoe5n2YIU3q0rItmXV/GdYBrZ4Bg0TSv8JgqC4NjdonxYeeyX02VDpwnGa461z1vPfNBRwfA/+CcwdkKZ3nnnVguABHNPC9f/qJ/VpqxRN/xF6EmffVj/G81sgdVoMV5PPoiHomciDfwjRYCONmPIPiZ6aOdeurtyk+vnZq68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730270360; c=relaxed/simple;
-	bh=3nyyNH5v2uLVnFdxFFD+XNXeHYcJOF9QmL11NuXz+wU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CSjCf10pu6lTvDfstnvOerianVq4UtQHcWYy1yxomqJmD+PgDwGM577v84siWcEoEpCCl4PFS4HC3/BJ0Hh+yyxXfeK/KRAqGZex9KixTb88kevMVNCh81ijV+8SwXLk3X7w/x2j8E0s00fM9Vi+/46SGWNgH88+maQl/vCEifc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxQK+R1CFnAqkdAA--.37544S3;
-	Wed, 30 Oct 2024 14:39:13 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxPEeP1CFntLooAA--.23618S2;
-	Wed, 30 Oct 2024 14:39:12 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+	s=arc-20240116; t=1730275866; c=relaxed/simple;
+	bh=k2/xQ67GrtCbvQxI0S1wkSv7WoJXBjZi9MlpNv07Ex8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MJtm8j0lPmeQbw8ItG5wmUWj8R8aCfGXy5OkKzcJZYYcdU8If4vGFQ7l4OzcpV8kSvFMh2otyUj6kIs6DdZe0nQ7WHJ36107OlwBNtjm/pLomPqTwFku+lCGdVYeXCnsgTJOOJGPVoRMgjjf4mJUS7MFW9S7GrugiXfqhIqamRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DAE1C4CEE4;
+	Wed, 30 Oct 2024 08:11:03 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	kasan-dev@googlegroups.com,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH v2] mm: define general function pXd_init()
-Date: Wed, 30 Oct 2024 14:39:05 +0800
-Message-Id: <20241030063905.2434824-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Make KASAN work with 5-level page-tables
+Date: Wed, 30 Oct 2024 16:10:43 +0800
+Message-ID: <20241030081043.3430381-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,181 +34,79 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPEeP1CFntLooAA--.23618S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Function pud_init(), pmd_init() and kernel_pte_init() are duplicated
-defined in file kasan.c and sparse-vmemmap.c as weak functions. Move
-them to generic header file pgtable.h, architecture can redefine them.
+Make KASAN work with 5-level page-tables, including:
+1. Implement and use __pgd_none() and kasan_p4d_offset().
+2. As done in kasan_pmd_populate() and kasan_pte_populate(), restrict
+   the loop conditions of kasan_p4d_populate() and kasan_pud_populate()
+   to avoid unnecessary population.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-v1 ... v2:
-  1. Add general function definition about kernel_pte_init().
----
- arch/loongarch/include/asm/pgtable.h |  3 +++
- arch/mips/include/asm/pgtable-64.h   |  2 ++
- include/linux/mm.h                   |  3 ---
- include/linux/pgtable.h              | 21 +++++++++++++++++++++
- mm/kasan/init.c                      | 12 ------------
- mm/sparse-vmemmap.c                  | 12 ------------
- 6 files changed, 26 insertions(+), 27 deletions(-)
+ arch/loongarch/mm/kasan_init.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index 20714b73f14c..df5889d995f9 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -267,8 +267,11 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-  */
- extern void pgd_init(void *addr);
-+#define pud_init pud_init
- extern void pud_init(void *addr);
-+#define pmd_init pmd_init
- extern void pmd_init(void *addr);
-+#define kernel_pte_init kernel_pte_init
- extern void kernel_pte_init(void *addr);
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index 427d6b1aec09..4a0d1880dd71 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -13,6 +13,13 @@
  
- /*
-diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
-index 401c1d9e4409..45c8572a0462 100644
---- a/arch/mips/include/asm/pgtable-64.h
-+++ b/arch/mips/include/asm/pgtable-64.h
-@@ -316,7 +316,9 @@ static inline pmd_t *pud_pgtable(pud_t pud)
-  * Initialize a new pgd / pud / pmd table with invalid pointers.
-  */
- extern void pgd_init(void *addr);
-+#define pud_init pud_init
- extern void pud_init(void *addr);
-+#define pmd_init pmd_init
- extern void pmd_init(void *addr);
+ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
  
- /*
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 61fff5d34ed5..651bdc1bef48 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3818,9 +3818,6 @@ void *sparse_buffer_alloc(unsigned long size);
- struct page * __populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
- 		struct dev_pagemap *pgmap);
--void pud_init(void *addr);
--void pmd_init(void *addr);
--void kernel_pte_init(void *addr);
- pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
- p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
- pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index e8b2ac6bd2ae..adee214c21f8 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -90,6 +90,27 @@ static inline unsigned long pud_index(unsigned long address)
- #define pgd_index(a)  (((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
- #endif
- 
-+#ifndef kernel_pte_init
-+static inline void kernel_pte_init(void *addr)
-+{
-+}
-+#define kernel_pte_init kernel_pte_init
++#ifdef __PAGETABLE_P4D_FOLDED
++#define __pgd_none(early, pgd) (0)
++#else
++#define __pgd_none(early, pgd) (early ? (pgd_val(pgd) == 0) : \
++(__pa(pgd_val(pgd)) == (unsigned long)__pa(kasan_early_shadow_p4d)))
 +#endif
 +
-+#ifndef pmd_init
-+static inline void pmd_init(void *addr)
+ #ifdef __PAGETABLE_PUD_FOLDED
+ #define __p4d_none(early, p4d) (0)
+ #else
+@@ -142,6 +149,19 @@ static pud_t *__init kasan_pud_offset(p4d_t *p4dp, unsigned long addr, int node,
+ 	return pud_offset(p4dp, addr);
+ }
+ 
++static p4d_t *__init kasan_p4d_offset(pgd_t *pgdp, unsigned long addr, int node, bool early)
 +{
-+}
-+#define pmd_init pmd_init
-+#endif
++	if (__pgd_none(early, pgdp_get(pgdp))) {
++		phys_addr_t p4d_phys = early ?
++			__pa_symbol(kasan_early_shadow_p4d) : kasan_alloc_zeroed_page(node);
++		if (!early)
++			memcpy(__va(p4d_phys), kasan_early_shadow_p4d, sizeof(kasan_early_shadow_p4d));
++		pgd_populate(&init_mm, pgdp, (p4d_t *)__va(p4d_phys));
++	}
 +
-+#ifndef pud_init
-+static inline void pud_init(void *addr)
-+{
++	return p4d_offset(pgdp, addr);
 +}
-+#define pud_init pud_init
-+#endif
 +
- #ifndef pte_offset_kernel
- static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+ static void __init kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
+ 				      unsigned long end, int node, bool early)
  {
-diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-index ac607c306292..ced6b29fcf76 100644
---- a/mm/kasan/init.c
-+++ b/mm/kasan/init.c
-@@ -106,10 +106,6 @@ static void __ref zero_pte_populate(pmd_t *pmd, unsigned long addr,
- 	}
+@@ -178,19 +198,19 @@ static void __init kasan_pud_populate(p4d_t *p4dp, unsigned long addr,
+ 	do {
+ 		next = pud_addr_end(addr, end);
+ 		kasan_pmd_populate(pudp, addr, next, node, early);
+-	} while (pudp++, addr = next, addr != end);
++	} while (pudp++, addr = next, addr != end && __pud_none(early, READ_ONCE(*pudp)));
  }
  
--void __weak __meminit kernel_pte_init(void *addr)
--{
--}
--
- static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
- 				unsigned long end)
+ static void __init kasan_p4d_populate(pgd_t *pgdp, unsigned long addr,
+ 					    unsigned long end, int node, bool early)
  {
-@@ -145,10 +141,6 @@ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
- 	return 0;
+ 	unsigned long next;
+-	p4d_t *p4dp = p4d_offset(pgdp, addr);
++	p4d_t *p4dp = kasan_p4d_offset(pgdp, addr, node, early);
+ 
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+ 		kasan_pud_populate(p4dp, addr, next, node, early);
+-	} while (p4dp++, addr = next, addr != end);
++	} while (p4dp++, addr = next, addr != end && __p4d_none(early, READ_ONCE(*p4dp)));
  }
  
--void __weak __meminit pmd_init(void *addr)
--{
--}
--
- static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 				unsigned long end)
- {
-@@ -187,10 +179,6 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 	return 0;
- }
- 
--void __weak __meminit pud_init(void *addr)
--{
--}
--
- static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
- 				unsigned long end)
- {
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index c0388b2e959d..cec67c5f37d8 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -184,10 +184,6 @@ static void * __meminit vmemmap_alloc_block_zero(unsigned long size, int node)
- 	return p;
- }
- 
--void __weak __meminit kernel_pte_init(void *addr)
--{
--}
--
- pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
- {
- 	pmd_t *pmd = pmd_offset(pud, addr);
-@@ -201,10 +197,6 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
- 	return pmd;
- }
- 
--void __weak __meminit pmd_init(void *addr)
--{
--}
--
- pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
- {
- 	pud_t *pud = pud_offset(p4d, addr);
-@@ -218,10 +210,6 @@ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
- 	return pud;
- }
- 
--void __weak __meminit pud_init(void *addr)
--{
--}
--
- p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
- {
- 	p4d_t *p4d = p4d_offset(pgd, addr);
-
-base-commit: 81983758430957d9a5cb3333fe324fd70cf63e7e
+ static void __init kasan_pgd_populate(unsigned long addr, unsigned long end,
 -- 
-2.39.3
+2.43.5
 
