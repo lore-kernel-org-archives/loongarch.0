@@ -1,493 +1,548 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0BB1E0E1C
-	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 08:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA891E0DE0
+	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 08:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730277263; cv=none; b=hy1/HPR4+ewt3LzdsUrZvsUXh9bwbxJdCr/CyYZIV4ZbjpT/OFT7fhKXc9Ia+E9iQWhcxWcbLUI42BM9iFqLk0erjZC1vMtMIYUbNcVb9e34uIHEvLZrOQBGZG2VUyMcc59rtue0qwJ0qLMqE8LZ22E3TK0PvNt5ddl9WDRuAPk=
+	t=1730277953; cv=none; b=AKTwdfPRCc3Ijx8x2rkk9RB0wllNwHmSzh9JKIJIqOUduQkmdimqnCjcCUztVq5/wgMEmUgpN6XyZB9pSHG2KcFboXA7Qmw3vO0lROztb59MMqzx3nXruLtQUKpqs2Mwu410TEvF8ipp0UbaJDCzQVHrP84fiWUNTNqx6uO7fqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730277263; c=relaxed/simple;
-	bh=zkVLzGv2uQxKe5kxtF6khU+j66MK312Q/8Z+2lH+J7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dyk82VL7KwDdnGRneO1PTGIKkCShFQEcfdT8j+U3X9HMdnQwUYlklCuYggePzmi898F4XTbBbwTQ/YaZj9aNvordtl3oi9/wsIR8cGTe/fNPxG0HmE8+KGbpQW5XciGzaI1ao8VyhxGGFAMQ4JpY4cgCi/58gYKFZ5pu+2PfRNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eeQIzUIw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eeQIzUIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A227FC4CEE5
-	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 08:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730277262;
-	bh=zkVLzGv2uQxKe5kxtF6khU+j66MK312Q/8Z+2lH+J7c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eeQIzUIwea4mVf+cGezDpr+AakMKJLIiaGoPVm9TayNTPEYEx1obZUhR7czMfWlAP
-	 KtL09dtfIIJqq5WwwfJX+u6ic6kiF4mctAJNDEo4mPF6Vu3E8AEit5OEGW/9xxbLqc
-	 Uo1GmOmGrWKtHtFPLRakRNmY4wASCXu6KjeleKvxvMCh6gcav1sKjxd2k+i6+V7uTv
-	 A7zRfmCMk6dOiAOCnRtWUvX7bwgtaw/ajhjzbCjssTE21aagnB87waSMpTUcaOFLk6
-	 9zzkZZfgiBpqH4X4k1JmZQ+r62cID8oBQAzYwvTzC+LDsdhtHmsDchrXd8X4K327Qq
-	 uqrU4zuDl7QPA==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a86e9db75b9so939919466b.1
-        for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 01:34:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWNPVndGU2t41+aWhM5CjGqWd4/qHwSHgIjPkuRl0OMZ4hxUG+dXt9+7o2m9Mz+c5EEdSUz2BylYXo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyLEVeDOL8tthgIaO3+yogMW3EMJZvJWV6JetcN0zSqC4hBfZmT
-	FYs1S7Qu20DUwY4NGA14ZVL94hh9CLDVXCrzNj0/kMpkZo2KSzCCpKL+ujmToKvll9a3XPPzN2q
-	aekBef9pKhrUXEX1SvSiJsou14qk=
-X-Google-Smtp-Source: AGHT+IHAfundFab+zlTgSCfMF4AIJ95s5XI7euIzReAETenhUn1oRtw2DiaRihUS6fICuTU02epNFtVUXgGZ5kkKDvM=
-X-Received: by 2002:a17:906:c14a:b0:a9a:80bd:2920 with SMTP id
- a640c23a62f3a-a9de61990b1mr1427755466b.53.1730277261023; Wed, 30 Oct 2024
- 01:34:21 -0700 (PDT)
+	s=arc-20240116; t=1730277953; c=relaxed/simple;
+	bh=KiS8/A7H+BpbLA7WifTR9v99Xtw24pJxGu4EYpC8VOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VkkN2wCWEpDid2noMvunb73GTAUzZvpcL3rqcEccg6pwOFsSehuijsGIbQ0D+Lo205cWiM9CCdiG+QlngyzU1ZcmBruEK62uqAhbDXp2faRE4iCZkiPHnJ0Fp9HxqxK1SSdQ6cPHo3VSLCj2NamW1Hy6FmfWWtvdwrqFSDvN9Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A737113E;
+	Wed, 30 Oct 2024 01:46:13 -0700 (PDT)
+Received: from [10.57.89.111] (unknown [10.57.89.111])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B1993F73B;
+	Wed, 30 Oct 2024 01:45:34 -0700 (PDT)
+Message-ID: <e33a8ead-ca36-4570-92ac-b27708f50023@arm.com>
+Date: Wed, 30 Oct 2024 08:45:32 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241021080418.644342-1-maobibo@loongson.cn> <CAAhV-H4anpgfiAnPgm9h-m9pKCW0KUio+E72r1Q3F_0vm+zMRg@mail.gmail.com>
- <8c55c680-48c8-0ba3-c2a1-56dc72929a8d@loongson.cn> <CAAhV-H4wD5fGVgxwmRVpRgvQ-jyUY0t=ewJANbe50vj9_TZDUQ@mail.gmail.com>
- <f7ab6ec1-7a49-2764-7c19-9949ad508e2e@loongson.cn> <CAAhV-H6+rE_7P_C0MaWzXToVcPqZQX0YMPnhyZV7Pp6aQ01mCQ@mail.gmail.com>
- <39330bb8-d267-ef02-e082-388c7bfa3b43@loongson.cn> <CAAhV-H5jGZz2MeCSuLmJb5b-ugaaj3EECD7Z3mvtHW=OQrhLBw@mail.gmail.com>
- <8d2ab78b-6706-c78d-ffad-835ceef7372c@loongson.cn>
-In-Reply-To: <8d2ab78b-6706-c78d-ffad-835ceef7372c@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 30 Oct 2024 16:34:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7bwJwGSyBqY3XZynzGaqamKv3BJjxrqPJ-foaP4dFbAw@mail.gmail.com>
-Message-ID: <CAAhV-H7bwJwGSyBqY3XZynzGaqamKv3BJjxrqPJ-foaP4dFbAw@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Fix cpu hotplug issue
-To: maobibo <maobibo@loongson.cn>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, lixianglai@loongson.cn, 
-	WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/57] mm: Add macros ahead of supporting boot-time
+ page size selection
+Content-Language: en-GB
+To: "David S. Miller" <davem@davemloft.net>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Chris Zankel <chris@zankel.net>, Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Greg Marsden <greg.marsden@oracle.com>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Ivan Ivanov <ivan.ivanov@suse.com>, Johannes Berg
+ <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Jonas Bonn <jonas@southpole.se>, Kalesh Singh <kaleshsingh@google.com>,
+ Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Matthias Brugger <mbrugger@suse.com>, Max Filippov <jcmvbkbc@gmail.com>,
+ Miroslav Benes <mbenes@suse.cz>, Rich Felker <dalias@libc.org>,
+ Richard Weinberger <richard@nod.at>, Stafford Horne <shorne@gmail.com>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org
+Cc: linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241014105912.3207374-1-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 30, 2024 at 4:25=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/10/30 =E4=B8=8B=E5=8D=884:12, Huacai Chen wrote:
-> > On Tue, Oct 29, 2024 at 7:49=E2=80=AFPM maobibo <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2024/10/29 =E4=B8=8B=E5=8D=886:36, Huacai Chen wrote:
-> >>> On Mon, Oct 28, 2024 at 8:38=E2=80=AFPM maobibo <maobibo@loongson.cn>=
- wrote:
-> >>>>
-> >>>> Hi Huacai,
-> >>>>
-> >>>> On 2024/10/22 =E4=B8=8A=E5=8D=889:31, Huacai Chen wrote:
-> >>>>> On Tue, Oct 22, 2024 at 9:17=E2=80=AFAM maobibo <maobibo@loongson.c=
-n> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2024/10/21 =E4=B8=8B=E5=8D=8810:32, Huacai Chen wrote:
-> >>>>>>> Hi, Bibo,
-> >>>>>>>
-> >>>>>>> This version still doesn't touch the round-robin method, but it
-> >>>>>>> doesn't matter, I think I misunderstood something since V1...
-> >>>>>> I do not understand why round-robin method need be modified, SRAT =
-may be
-> >>>>>> disabled with general function disable_srat(). Then round-robin me=
-thod
-> >>>>>> is required.
-> >>>>> I don't mean round-robin should be modified, I mean I misunderstand=
- round-robin.
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> Please correct me if I'm wrong: For cpus without ACPI_MADT_ENABLE=
-D, in
-> >>>>>>> smp_prepare_boot_cpu() the round-robin node ids only apply to
-> >>>>>>> cpu_to_node(), but __cpuid_to_node[] still record the right node =
-ids.
-> >>>>>>> early_cpu_to_node() returns NUMA_NO_NODE not because
-> >>>>>>> __cpuid_to_node[] records NUMA_NO_NODE, but because cpu_logical_m=
-ap()
-> >>>>>>> < 0.
-> >>>>>>>
-> >>>>>>> If the above is correct, we don't need so complicated, because th=
-e
-> >>>>>>> correct and simplest way is:
-> >>>>>>> https://lore.kernel.org/loongarch/6b2b3e89-5a46-2d20-3dfb-7aae338=
-39f49@loongson.cn/T/#m950eead5250e5992cc703bbe69622348cecfa465
-> >>>>>>>
-> >>>>>> It works also. Only that LoongArch kernel parsing about SRAT/MADT =
-is
-> >>>>>> badly. If you do not mind, I do not mind neither. It is not my dut=
-y for
-> >>>>>> kernel side.
-> >>>>> Yes, I don't mind, please use that simplest way.
-> >>>> There is another problem with the simple way. eiointc reports error =
-when
-> >>>> cpu is online. The error message is:
-> >>>>      Loongson-64bit Processor probed (LA464 Core)
-> >>>>      CPU2 revision is: 0014c010 (Loongson-64bit)
-> >>>>      FPU2 revision is: 00000001
-> >>>>      eiointc: Error: invalid nodemap!
-> >>>>      CPU 2 UP state irqchip/loongarch/eiointc:starting (100) failed =
-(-1)
-> >>>>
-> >>>> The problem is that node_map of eiointc is problematic,
-> >>>>
-> >>>>
-> >>>> static int cpu_to_eio_node(int cpu)
-> >>>> {
-> >>>>            return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-> >>>> }
-> >>>>
-> >>>> static int __init eiointc_init(struct eiointc_priv *priv, int parent=
-_irq,
-> >>>>                                   u64 node_map)
-> >>>> {
-> >>>>            int i;
-> >>>>
-> >>>>            node_map =3D node_map ? node_map : -1ULL;
-> >>>>            for_each_possible_cpu(i) {
-> >>>>                    if (node_map & (1ULL << (cpu_to_eio_node(i)))) {
-> >>>>                            node_set(cpu_to_eio_node(i), priv->node_m=
-ap);
-> >>>>             ...
-> >>>> The cause is that for possible not present cpu, *cpu_logical_map(cpu=
-)*
-> >>>> is -1, cpu_to_eio_node(i) will be equal to -1, so node_map of eioint=
-c is
-> >>>> problematic.
-> >>> The error message seems from eiointc_router_init(), but it is a littl=
-e
-> >>> strange. Physical hot-add should be before logical hot-add. So
-> >>> acpi_map_cpu() is before cpu_up(). acpi_map_cpu() calls
-> >>> set_processor_mask() to setup logical-physical mapping, so in
-> >>> eiointc_router_init() which is called by cpu_up(), cpu_logical_map()
-> >>> should work well.
-> >>>
-> >>> Maybe in your case a whole node is hot-added? I don't think the
-> >>> eiointc design can work with this case...
-> >>>
-> >>>>
-> >>>> So cpu_logical_map(cpu) should be set during MADT parsing even if it=
- is
-> >>>> not enabled at beginning, it should not be set at hotplug runtime.
-> >>> This will cause the logical cpu number be not continuous after boot.
-> >>> Physical numbers have no requirement, but logical numbers should be
-> >>> continuous.
-> >> I do not understand such requirement about logical cpu should be
-> >> continuous. You can check logical cpu allocation method on other
-> >> architectures, or what does the requirement about logical cpu continuo=
-us
-> >> come from.
-> > 1, In an internal conference, it is said that non-continuous cpu
-> > numbers make users think our processors have bugs.
-> > 2, See prefill_possible_map(), it assumes logical numbers continuous
-> > cpu_possible_mask and cpu_present_mask, which make it convenient for
-> > "nr_cpus=3Dxxx".
-> > 3, Can you show me an example in a real machine that "processor" in
-> > /proc/cpuinfo non-continues after boot and before soft hotplug?
-> It is really wasting my time to discuss with you. You does not
-> investigating implementation of other architectures, fully thinking in
-> yourself way.
-Totally wrong, I have implemented what you need, but you should make
-other colleagues (not me) agree with your idea.
-https://github.com/chenhuacai/linux/commit/d8dcf2844d5878b3ac5a42d074e781fe=
-2ebfbae7
+Hi all (especially mm people!),
 
-Imagine that the cpu_possible_mask is 0b11111111, cpu_present_mask is
-0b10101010 (non-continuous), how to make "nr_cpus=3D3" work in a simple
-way?
 
->
-> Does the real machines support real cpu hotplug and memory hotplug?
-ACPI_MADT_ENABLED is designed for virtual machines only?
+On 14/10/2024 11:58, Ryan Roberts wrote:
+> arm64 can support multiple base page sizes. Instead of selecting a page
+> size at compile time, as is done today, we will make it possible to
+> select the desired page size on the command line.
+> 
+> In this case PAGE_SHIFT and it's derivatives, PAGE_SIZE and PAGE_MASK
+> (as well as a number of other macros related to or derived from
+> PAGE_SHIFT, but I'm not worrying about those yet), are no longer
+> compile-time constants. So the code base needs to cope with that.
+> 
+> As a first step, introduce MIN and MAX variants of these macros, which
+> express the range of possible page sizes. These are always compile-time
+> constants and can be used in many places where PAGE_[SHIFT|SIZE|MASK]
+> were previously used where a compile-time constant is required.
+> (Subsequent patches will do that conversion work). When the arch/build
+> doesn't support boot-time page size selection, the MIN and MAX variants
+> are equal and everything resolves as it did previously.
+> 
+> Additionally, introduce DEFINE_GLOBAL_PAGE_SIZE_VAR[_CONST]() which wrap
+> global variable defintions so that for boot-time page size selection
+> builds, the variable being wrapped is initialized at boot-time, instead
+> of compile-time. This is done by defining a function to do the
+> assignment, which has the "constructor" attribute. Constructor is
+> preferred over initcall, because when compiling a module, the module is
+> limited to a single initcall but constructors are unlimited. For
+> built-in code, constructors are now called earlier to guarrantee that
+> the variables are initialized by the time they are used. Any arch that
+> wants to enable boot-time page size selection will need to select
+> CONFIG_CONSTRUCTORS.
+> 
+> These new macros need to be available anywhere PAGE_SHIFT and friends
+> are available. Those are defined via asm/page.h (although some arches
+> have a sub-include that defines them). Unfortunately there is no
+> reliable asm-generic header we can easily piggy-back on, so let's define
+> a new one, pgtable-geometry.h, which we include near where each arch
+> defines PAGE_SHIFT. Ugh.
 
-Huacai
+I haven't had any feedback on this particular patch yet. It would be great to
+get this one into v6.13, since once this is in place, the changes in other
+subsystems can go via their respective trees without any dependency issues.
+Although time is getting tight.
 
->
-> Regards
-> Bibo Mao
-> >
-> >
-> >
-> >
-> > Huacai
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>>
-> >>>>>> Bibo Mao
-> >>>>>>>
-> >>>>>>> Huacai
-> >>>>>>>
-> >>>>>>> On Mon, Oct 21, 2024 at 4:04=E2=80=AFPM Bibo Mao <maobibo@loongso=
-n.cn> wrote:
-> >>>>>>>>
-> >>>>>>>> On LoongArch system, there are two places to set cpu numa node. =
-One
-> >>>>>>>> is in arch specified function smp_prepare_boot_cpu(), the other =
-is
-> >>>>>>>> in generic function early_numa_node_init(). The latter will over=
-write
-> >>>>>>>> the numa node information.
-> >>>>>>>>
-> >>>>>>>> With hot-added cpu without numa information, cpu_logical_map() f=
-ails
-> >>>>>>>> to its physical cpuid at beginning since it is not enabled in AC=
-PI
-> >>>>>>>> MADT table. So function early_cpu_to_node() also fails to get it=
-s
-> >>>>>>>> numa node for hot-added cpu, and generic function
-> >>>>>>>> early_numa_node_init() will overwrite with incorrect numa node.
-> >>>>>>>>
-> >>>>>>>> APIs topo_get_cpu() and topo_add_cpu() is added here, like other
-> >>>>>>>> architectures logic cpu is allocated when parsing MADT table. Wh=
-en
-> >>>>>>>> parsing SRAT table or hot-add cpu, logic cpu is acquired by sear=
-ching
-> >>>>>>>> all allocated logical cpu with matched physical id. It solves su=
-ch
-> >>>>>>>> problems such as:
-> >>>>>>>>       1. Boot cpu is not the first entry in MADT table, the firs=
-t entry
-> >>>>>>>> will be overwritten with later boot cpu.
-> >>>>>>>>       2. Physical cpu id not presented in MADT table is invalid,=
- in later
-> >>>>>>>> SRAT/hot-add cpu parsing, invalid physical cpu detected is added
-> >>>>>>>>       3. For hot-add cpu, its logic cpu is allocated in MADT tab=
-le parsing,
-> >>>>>>>> so early_cpu_to_node() can be used for hot-add cpu and cpu_to_no=
-de()
-> >>>>>>>> is correct for hot-add cpu.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>>> ---
-> >>>>>>>> v1 ... v2:
-> >>>>>>>>       1. Like other architectures, allocate logic cpu when parsi=
-ng MADT table.
-> >>>>>>>>       2. Add invalid or duplicated physical cpuid parsing with S=
-RAT table or
-> >>>>>>>> hot-add cpu DSDT information.
-> >>>>>>>> ---
-> >>>>>>>>      arch/loongarch/include/asm/smp.h |  3 ++
-> >>>>>>>>      arch/loongarch/kernel/acpi.c     | 24 ++++++++++------
-> >>>>>>>>      arch/loongarch/kernel/setup.c    | 47 +++++++++++++++++++++=
-+++++++++++
-> >>>>>>>>      arch/loongarch/kernel/smp.c      |  9 +++---
-> >>>>>>>>      4 files changed, 70 insertions(+), 13 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/i=
-nclude/asm/smp.h
-> >>>>>>>> index 3383c9d24e94..c61b75937a77 100644
-> >>>>>>>> --- a/arch/loongarch/include/asm/smp.h
-> >>>>>>>> +++ b/arch/loongarch/include/asm/smp.h
-> >>>>>>>> @@ -119,4 +119,7 @@ static inline void __cpu_die(unsigned int cp=
-u)
-> >>>>>>>>      #define cpu_logical_map(cpu)   0
-> >>>>>>>>      #endif /* CONFIG_SMP */
-> >>>>>>>>
-> >>>>>>>> +int topo_add_cpu(int physid);
-> >>>>>>>> +int topo_get_cpu(int physid);
-> >>>>>>>> +
-> >>>>>>>>      #endif /* __ASM_SMP_H */
-> >>>>>>>> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kerne=
-l/acpi.c
-> >>>>>>>> index f1a74b80f22c..84d9812d5f38 100644
-> >>>>>>>> --- a/arch/loongarch/kernel/acpi.c
-> >>>>>>>> +++ b/arch/loongarch/kernel/acpi.c
-> >>>>>>>> @@ -78,10 +78,10 @@ static int set_processor_mask(u32 id, u32 fl=
-ags)
-> >>>>>>>>                     return -ENODEV;
-> >>>>>>>>
-> >>>>>>>>             }
-> >>>>>>>> -       if (cpuid =3D=3D loongson_sysconf.boot_cpu_id)
-> >>>>>>>> -               cpu =3D 0;
-> >>>>>>>> -       else
-> >>>>>>>> -               cpu =3D find_first_zero_bit(cpumask_bits(cpu_pre=
-sent_mask), NR_CPUS);
-> >>>>>>>> +
-> >>>>>>>> +       cpu =3D topo_add_cpu(cpuid);
-> >>>>>>>> +       if (cpu < 0)
-> >>>>>>>> +               return -EEXIST;
-> >>>>>>>>
-> >>>>>>>>             if (!cpu_enumerated)
-> >>>>>>>>                     set_cpu_possible(cpu, true);
-> >>>>>>>> @@ -203,8 +203,6 @@ void __init acpi_boot_table_init(void)
-> >>>>>>>>                     goto fdt_earlycon;
-> >>>>>>>>             }
-> >>>>>>>>
-> >>>>>>>> -       loongson_sysconf.boot_cpu_id =3D read_csr_cpuid();
-> >>>>>>>> -
-> >>>>>>>>             /*
-> >>>>>>>>              * Process the Multiple APIC Description Table (MADT=
-), if present
-> >>>>>>>>              */
-> >>>>>>>> @@ -257,7 +255,7 @@ void __init numa_set_distance(int from, int =
-to, int distance)
-> >>>>>>>>      void __init
-> >>>>>>>>      acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affi=
-nity *pa)
-> >>>>>>>>      {
-> >>>>>>>> -       int pxm, node;
-> >>>>>>>> +       int pxm, node, cpu;
-> >>>>>>>>
-> >>>>>>>>             if (srat_disabled())
-> >>>>>>>>                     return;
-> >>>>>>>> @@ -286,6 +284,11 @@ acpi_numa_processor_affinity_init(struct ac=
-pi_srat_cpu_affinity *pa)
-> >>>>>>>>                     return;
-> >>>>>>>>             }
-> >>>>>>>>
-> >>>>>>>> +       cpu =3D topo_get_cpu(pa->apic_id);
-> >>>>>>>> +       /* Check whether apic_id exists in MADT table */
-> >>>>>>>> +       if (cpu < 0)
-> >>>>>>>> +               return;
-> >>>>>>>> +
-> >>>>>>>>             early_numa_add_cpu(pa->apic_id, node);
-> >>>>>>>>
-> >>>>>>>>             set_cpuid_to_node(pa->apic_id, node);
-> >>>>>>>> @@ -324,12 +327,17 @@ int acpi_map_cpu(acpi_handle handle, phys_=
-cpuid_t physid, u32 acpi_id, int *pcpu
-> >>>>>>>>      {
-> >>>>>>>>             int cpu;
-> >>>>>>>>
-> >>>>>>>> -       cpu =3D set_processor_mask(physid, ACPI_MADT_ENABLED);
-> >>>>>>>> +       cpu =3D topo_get_cpu(physid);
-> >>>>>>>> +       /* Check whether apic_id exists in MADT table */
-> >>>>>>>>             if (cpu < 0) {
-> >>>>>>>>                     pr_info(PREFIX "Unable to map lapic to logic=
-al cpu number\n");
-> >>>>>>>>                     return cpu;
-> >>>>>>>>             }
-> >>>>>>>>
-> >>>>>>>> +       num_processors++;
-> >>>>>>>> +       set_cpu_present(cpu, true);
-> >>>>>>>> +       __cpu_number_map[physid] =3D cpu;
-> >>>>>>>> +       __cpu_logical_map[cpu] =3D physid;
-> >>>>>>>>             acpi_map_cpu2node(handle, cpu, physid);
-> >>>>>>>>
-> >>>>>>>>             *pcpu =3D cpu;
-> >>>>>>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kern=
-el/setup.c
-> >>>>>>>> index 00e307203ddb..649e98640076 100644
-> >>>>>>>> --- a/arch/loongarch/kernel/setup.c
-> >>>>>>>> +++ b/arch/loongarch/kernel/setup.c
-> >>>>>>>> @@ -65,6 +65,8 @@ EXPORT_SYMBOL(cpu_data);
-> >>>>>>>>
-> >>>>>>>>      struct loongson_board_info b_info;
-> >>>>>>>>      static const char dmi_empty_string[] =3D "        ";
-> >>>>>>>> +static int possible_cpus;
-> >>>>>>>> +static bool bsp_added;
-> >>>>>>>>
-> >>>>>>>>      /*
-> >>>>>>>>       * Setup information
-> >>>>>>>> @@ -346,10 +348,55 @@ static void __init bootcmdline_init(char *=
-*cmdline_p)
-> >>>>>>>>             *cmdline_p =3D boot_command_line;
-> >>>>>>>>      }
-> >>>>>>>>
-> >>>>>>>> +int topo_get_cpu(int physid)
-> >>>>>>>> +{
-> >>>>>>>> +       int i;
-> >>>>>>>> +
-> >>>>>>>> +       for (i =3D 0; i < possible_cpus; i++)
-> >>>>>>>> +               if (cpu_logical_map(i) =3D=3D physid)
-> >>>>>>>> +                       break;
-> >>>>>>>> +
-> >>>>>>>> +       if (i =3D=3D possible_cpus)
-> >>>>>>>> +               return -ENOENT;
-> >>>>>>>> +
-> >>>>>>>> +       return i;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>> +int topo_add_cpu(int physid)
-> >>>>>>>> +{
-> >>>>>>>> +       int cpu;
-> >>>>>>>> +
-> >>>>>>>> +       if (!bsp_added && (physid =3D=3D loongson_sysconf.boot_c=
-pu_id)) {
-> >>>>>>>> +               bsp_added =3D true;
-> >>>>>>>> +               return 0;
-> >>>>>>>> +       }
-> >>>>>>>> +
-> >>>>>>>> +       cpu =3D topo_get_cpu(physid);
-> >>>>>>>> +       if (cpu >=3D 0) {
-> >>>>>>>> +               pr_warn("Adding duplicated physical cpuid 0x%x\n=
-", physid);
-> >>>>>>>> +               return -EEXIST;
-> >>>>>>>> +       }
-> >>>>>>>> +
-> >>>>>>>> +       if (possible_cpus >=3D nr_cpu_ids)
-> >>>>>>>> +               return -ERANGE;
-> >>>>>>>> +
-> >>>>>>>> +       __cpu_logical_map[possible_cpus] =3D physid;
-> >>>>>>>> +       cpu =3D possible_cpus++;
-> >>>>>>>> +       return cpu;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>> +static void __init topo_init(void)
-> >>>>>>>> +{
-> >>>>>>>> +       loongson_sysconf.boot_cpu_id =3D read_csr_cpuid();
-> >>>>>>>> +       __cpu_logical_map[0] =3D loongson_sysconf.boot_cpu_id;
-> >>>>>>>> +       possible_cpus++;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>>      void __init platform_init(void)
-> >>>>>>>>      {
-> >>>>>>>>             arch_reserve_vmcore();
-> >>>>>>>>             arch_reserve_crashkernel();
-> >>>>>>>> +       topo_init();
-> >>>>>>>>
-> >>>>>>>>      #ifdef CONFIG_ACPI
-> >>>>>>>>             acpi_table_upgrade();
-> >>>>>>>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel=
-/smp.c
-> >>>>>>>> index 9afc2d8b3414..a3f466b89179 100644
-> >>>>>>>> --- a/arch/loongarch/kernel/smp.c
-> >>>>>>>> +++ b/arch/loongarch/kernel/smp.c
-> >>>>>>>> @@ -291,10 +291,9 @@ static void __init fdt_smp_setup(void)
-> >>>>>>>>                     if (cpuid >=3D nr_cpu_ids)
-> >>>>>>>>                             continue;
-> >>>>>>>>
-> >>>>>>>> -               if (cpuid =3D=3D loongson_sysconf.boot_cpu_id)
-> >>>>>>>> -                       cpu =3D 0;
-> >>>>>>>> -               else
-> >>>>>>>> -                       cpu =3D find_first_zero_bit(cpumask_bits=
-(cpu_present_mask), NR_CPUS);
-> >>>>>>>> +               cpu =3D topo_add_cpu(cpuid);
-> >>>>>>>> +               if (cpu < 0)
-> >>>>>>>> +                       continue;
-> >>>>>>>>
-> >>>>>>>>                     num_processors++;
-> >>>>>>>>                     set_cpu_possible(cpu, true);
-> >>>>>>>> @@ -302,7 +301,7 @@ static void __init fdt_smp_setup(void)
-> >>>>>>>>                     __cpu_number_map[cpuid] =3D cpu;
-> >>>>>>>>                     __cpu_logical_map[cpu] =3D cpuid;
-> >>>>>>>>
-> >>>>>>>> -               early_numa_add_cpu(cpu, 0);
-> >>>>>>>> +               early_numa_add_cpu(cpuid, 0);
-> >>>>>>>>                     set_cpuid_to_node(cpuid, 0);
-> >>>>>>>>             }
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> base-commit: 42f7652d3eb527d03665b09edac47f85fb600924
-> >>>>>>>> --
-> >>>>>>>> 2.39.3
-> >>>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>
-> >>
-> >>
->
+If anyone has any feedback for this patch it would be great to hear it now. Then
+I'll re-post on it's own in a couple of days time.
+
+Thanks,
+Ryan
+
+
+> 
+> -------
+> 
+> Most of the problems that need to be solved over the next few patches
+> fall into these broad categories, which are all solved with the help of
+> these new macros:
+> 
+> 1. Assignment of values derived from PAGE_SIZE in global variables
+> 
+>   For boot-time page size builds, we must defer the initialization of
+>   these variables until boot-time, when the page size is known. See
+>   DEFINE_GLOBAL_PAGE_SIZE_VAR[_CONST]() as described above.
+> 
+> 2. Define static storage in units related to PAGE_SIZE
+> 
+>   This static storage will be defined according to PAGE_SIZE_MAX.
+> 
+> 3. Define size of struct so that it is related to PAGE_SIZE
+> 
+>   The struct often contains an array that is sized to fill the page. In
+>   this case, use a flexible array with dynamic allocation. In other
+>   cases, the struct fits exactly over a page, which is a header (e.g.
+>   swap file header). In this case, remove the padding, and manually
+>   determine the struct pointer within the page.
+> 
+> 4. BUILD_BUG_ON() with values derived from PAGE_SIZE
+> 
+>   In most cases, we can change these to compare againt the appropriate
+>   limit (either MIN or MAX). In other cases, we must change these to
+>   run-time BUG_ON().
+> 
+> 5. Ensure page alignment of static data structures
+> 
+>   Align instead to PAGE_SIZE_MAX.
+> 
+> 6. #ifdeffery based on PAGE_SIZE
+> 
+>   Often these can be changed to c code constructs. e.g. a macro that
+>   returns a different value depending on page size can be changed to use
+>   the ternary operator and the compiler will dead code strip it for the
+>   compile-time constant case and runtime evaluate it for the non-const
+>   case. Or #if/#else/#endif within a function can be converted to c
+>   if/else blocks, which are also dead code stripped for the const case.
+>   Sometimes we can change the c-preprocessor logic to use the
+>   appropriate MIN/MAX limit.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+> 
+> ***NOTE***
+> Any confused maintainers may want to read the cover note here for context:
+> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+> 
+>  arch/alpha/include/asm/page.h          |  1 +
+>  arch/arc/include/asm/page.h            |  1 +
+>  arch/arm/include/asm/page.h            |  1 +
+>  arch/arm64/include/asm/page-def.h      |  2 +
+>  arch/csky/include/asm/page.h           |  3 ++
+>  arch/hexagon/include/asm/page.h        |  2 +
+>  arch/loongarch/include/asm/page.h      |  2 +
+>  arch/m68k/include/asm/page.h           |  1 +
+>  arch/microblaze/include/asm/page.h     |  1 +
+>  arch/mips/include/asm/page.h           |  1 +
+>  arch/nios2/include/asm/page.h          |  2 +
+>  arch/openrisc/include/asm/page.h       |  1 +
+>  arch/parisc/include/asm/page.h         |  1 +
+>  arch/powerpc/include/asm/page.h        |  2 +
+>  arch/riscv/include/asm/page.h          |  1 +
+>  arch/s390/include/asm/page.h           |  1 +
+>  arch/sh/include/asm/page.h             |  1 +
+>  arch/sparc/include/asm/page.h          |  3 ++
+>  arch/um/include/asm/page.h             |  2 +
+>  arch/x86/include/asm/page_types.h      |  2 +
+>  arch/xtensa/include/asm/page.h         |  1 +
+>  include/asm-generic/pgtable-geometry.h | 71 ++++++++++++++++++++++++++
+>  init/main.c                            |  5 +-
+>  23 files changed, 107 insertions(+), 1 deletion(-)
+>  create mode 100644 include/asm-generic/pgtable-geometry.h
+> 
+> diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.h
+> index 70419e6be1a35..d0096fb5521b8 100644
+> --- a/arch/alpha/include/asm/page.h
+> +++ b/arch/alpha/include/asm/page.h
+> @@ -88,5 +88,6 @@ typedef struct page *pgtable_t;
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* _ALPHA_PAGE_H */
+> diff --git a/arch/arc/include/asm/page.h b/arch/arc/include/asm/page.h
+> index def0dfb95b436..8d56549db7a33 100644
+> --- a/arch/arc/include/asm/page.h
+> +++ b/arch/arc/include/asm/page.h
+> @@ -6,6 +6,7 @@
+>  #define __ASM_ARC_PAGE_H
+>  
+>  #include <uapi/asm/page.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #ifdef CONFIG_ARC_HAS_PAE40
+>  
+> diff --git a/arch/arm/include/asm/page.h b/arch/arm/include/asm/page.h
+> index 62af9f7f9e963..417aa8533c718 100644
+> --- a/arch/arm/include/asm/page.h
+> +++ b/arch/arm/include/asm/page.h
+> @@ -191,5 +191,6 @@ extern int pfn_valid(unsigned long);
+>  
+>  #include <asm-generic/getorder.h>
+>  #include <asm-generic/memory_model.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif
+> diff --git a/arch/arm64/include/asm/page-def.h b/arch/arm64/include/asm/page-def.h
+> index 792e9fe881dcf..d69971cf49cd2 100644
+> --- a/arch/arm64/include/asm/page-def.h
+> +++ b/arch/arm64/include/asm/page-def.h
+> @@ -15,4 +15,6 @@
+>  #define PAGE_SIZE		(_AC(1, UL) << PAGE_SHIFT)
+>  #define PAGE_MASK		(~(PAGE_SIZE-1))
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif /* __ASM_PAGE_DEF_H */
+> diff --git a/arch/csky/include/asm/page.h b/arch/csky/include/asm/page.h
+> index 0ca6c408c07f2..95173d57adc8b 100644
+> --- a/arch/csky/include/asm/page.h
+> +++ b/arch/csky/include/asm/page.h
+> @@ -92,4 +92,7 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+>  #include <asm-generic/getorder.h>
+>  
+>  #endif /* !__ASSEMBLY__ */
+> +
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif /* __ASM_CSKY_PAGE_H */
+> diff --git a/arch/hexagon/include/asm/page.h b/arch/hexagon/include/asm/page.h
+> index 8a6af57274c2d..ba7ad5231695f 100644
+> --- a/arch/hexagon/include/asm/page.h
+> +++ b/arch/hexagon/include/asm/page.h
+> @@ -139,4 +139,6 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+>  #endif /* ifdef __ASSEMBLY__ */
+>  #endif /* ifdef __KERNEL__ */
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif
+> diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
+> index e85df33f11c77..9862e8fb047a6 100644
+> --- a/arch/loongarch/include/asm/page.h
+> +++ b/arch/loongarch/include/asm/page.h
+> @@ -123,4 +123,6 @@ extern int __virt_addr_valid(volatile void *kaddr);
+>  
+>  #endif /* !__ASSEMBLY__ */
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif /* _ASM_PAGE_H */
+> diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
+> index 8cfb84b499751..4df4681b02194 100644
+> --- a/arch/m68k/include/asm/page.h
+> +++ b/arch/m68k/include/asm/page.h
+> @@ -60,5 +60,6 @@ extern unsigned long _ramend;
+>  
+>  #include <asm-generic/getorder.h>
+>  #include <asm-generic/memory_model.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* _M68K_PAGE_H */
+> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include/asm/page.h
+> index 8810f4f1c3b02..abc23c3d743bd 100644
+> --- a/arch/microblaze/include/asm/page.h
+> +++ b/arch/microblaze/include/asm/page.h
+> @@ -142,5 +142,6 @@ static inline const void *pfn_to_virt(unsigned long pfn)
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* _ASM_MICROBLAZE_PAGE_H */
+> diff --git a/arch/mips/include/asm/page.h b/arch/mips/include/asm/page.h
+> index 4609cb0326cf3..3d91021538f02 100644
+> --- a/arch/mips/include/asm/page.h
+> +++ b/arch/mips/include/asm/page.h
+> @@ -227,5 +227,6 @@ static inline unsigned long kaslr_offset(void)
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* _ASM_PAGE_H */
+> diff --git a/arch/nios2/include/asm/page.h b/arch/nios2/include/asm/page.h
+> index 0722f88e63cc7..2e5f93beb42b7 100644
+> --- a/arch/nios2/include/asm/page.h
+> +++ b/arch/nios2/include/asm/page.h
+> @@ -97,4 +97,6 @@ extern struct page *mem_map;
+>  
+>  #endif /* !__ASSEMBLY__ */
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif /* _ASM_NIOS2_PAGE_H */
+> diff --git a/arch/openrisc/include/asm/page.h b/arch/openrisc/include/asm/page.h
+> index 1d5913f67c312..a0da2a9842241 100644
+> --- a/arch/openrisc/include/asm/page.h
+> +++ b/arch/openrisc/include/asm/page.h
+> @@ -88,5 +88,6 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* __ASM_OPENRISC_PAGE_H */
+> diff --git a/arch/parisc/include/asm/page.h b/arch/parisc/include/asm/page.h
+> index 4bea2e95798f0..2a75496237c09 100644
+> --- a/arch/parisc/include/asm/page.h
+> +++ b/arch/parisc/include/asm/page.h
+> @@ -173,6 +173,7 @@ extern int npmem_ranges;
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  #include <asm/pdc.h>
+>  
+>  #define PAGE0   ((struct zeropage *)absolute_pointer(__PAGE_OFFSET))
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index 83d0a4fc5f755..4601c115b6485 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -300,4 +300,6 @@ static inline unsigned long kaslr_offset(void)
+>  #include <asm-generic/memory_model.h>
+>  #endif /* __ASSEMBLY__ */
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif /* _ASM_POWERPC_PAGE_H */
+> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> index 7ede2111c5917..e5af7579e45bf 100644
+> --- a/arch/riscv/include/asm/page.h
+> +++ b/arch/riscv/include/asm/page.h
+> @@ -204,5 +204,6 @@ static __always_inline void *pfn_to_kaddr(unsigned long pfn)
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* _ASM_RISCV_PAGE_H */
+> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+> index 16e4caa931f1f..42157e7690a77 100644
+> --- a/arch/s390/include/asm/page.h
+> +++ b/arch/s390/include/asm/page.h
+> @@ -275,6 +275,7 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #define AMODE31_SIZE		(3 * PAGE_SIZE)
+>  
+> diff --git a/arch/sh/include/asm/page.h b/arch/sh/include/asm/page.h
+> index f780b467e75d7..09533d46ef033 100644
+> --- a/arch/sh/include/asm/page.h
+> +++ b/arch/sh/include/asm/page.h
+> @@ -162,5 +162,6 @@ typedef struct page *pgtable_t;
+>  
+>  #include <asm-generic/memory_model.h>
+>  #include <asm-generic/getorder.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  
+>  #endif /* __ASM_SH_PAGE_H */
+> diff --git a/arch/sparc/include/asm/page.h b/arch/sparc/include/asm/page.h
+> index 5e44cdf2a8f2b..4327fe2bfa010 100644
+> --- a/arch/sparc/include/asm/page.h
+> +++ b/arch/sparc/include/asm/page.h
+> @@ -9,4 +9,7 @@
+>  #else
+>  #include <asm/page_32.h>
+>  #endif
+> +
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif
+> diff --git a/arch/um/include/asm/page.h b/arch/um/include/asm/page.h
+> index 9ef9a8aedfa66..f26011808f514 100644
+> --- a/arch/um/include/asm/page.h
+> +++ b/arch/um/include/asm/page.h
+> @@ -119,4 +119,6 @@ extern unsigned long uml_physmem;
+>  #define __HAVE_ARCH_GATE_AREA 1
+>  #endif
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif	/* __UM_PAGE_H */
+> diff --git a/arch/x86/include/asm/page_types.h b/arch/x86/include/asm/page_types.h
+> index 52f1b4ff0cc16..6d2381342047f 100644
+> --- a/arch/x86/include/asm/page_types.h
+> +++ b/arch/x86/include/asm/page_types.h
+> @@ -71,4 +71,6 @@ extern void initmem_init(void);
+>  
+>  #endif	/* !__ASSEMBLY__ */
+>  
+> +#include <asm-generic/pgtable-geometry.h>
+> +
+>  #endif	/* _ASM_X86_PAGE_DEFS_H */
+> diff --git a/arch/xtensa/include/asm/page.h b/arch/xtensa/include/asm/page.h
+> index 4db56ef052d22..86952cb32af23 100644
+> --- a/arch/xtensa/include/asm/page.h
+> +++ b/arch/xtensa/include/asm/page.h
+> @@ -200,4 +200,5 @@ static inline unsigned long ___pa(unsigned long va)
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #include <asm-generic/memory_model.h>
+> +#include <asm-generic/pgtable-geometry.h>
+>  #endif /* _XTENSA_PAGE_H */
+> diff --git a/include/asm-generic/pgtable-geometry.h b/include/asm-generic/pgtable-geometry.h
+> new file mode 100644
+> index 0000000000000..358e729a6ac37
+> --- /dev/null
+> +++ b/include/asm-generic/pgtable-geometry.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef ASM_GENERIC_PGTABLE_GEOMETRY_H
+> +#define ASM_GENERIC_PGTABLE_GEOMETRY_H
+> +
+> +#if   defined(PAGE_SHIFT_MAX) && defined(PAGE_SIZE_MAX) && defined(PAGE_MASK_MAX) && \
+> +      defined(PAGE_SHIFT_MIN) && defined(PAGE_SIZE_MIN) && defined(PAGE_MASK_MIN)
+> +/* Arch supports boot-time page size selection. */
+> +#elif defined(PAGE_SHIFT_MAX) || defined(PAGE_SIZE_MAX) || defined(PAGE_MASK_MAX) || \
+> +      defined(PAGE_SHIFT_MIN) || defined(PAGE_SIZE_MIN) || defined(PAGE_MASK_MIN)
+> +#error Arch must define all or none of the boot-time page size macros
+> +#else
+> +/* Arch does not support boot-time page size selection. */
+> +#define PAGE_SHIFT_MIN	PAGE_SHIFT
+> +#define PAGE_SIZE_MIN	PAGE_SIZE
+> +#define PAGE_MASK_MIN	PAGE_MASK
+> +#define PAGE_SHIFT_MAX	PAGE_SHIFT
+> +#define PAGE_SIZE_MAX	PAGE_SIZE
+> +#define PAGE_MASK_MAX	PAGE_MASK
+> +#endif
+> +
+> +/*
+> + * Define a global variable (scalar or struct), whose value is derived from
+> + * PAGE_SIZE and friends. When PAGE_SIZE is a compile-time constant, the global
+> + * variable is simply defined with the static value. When PAGE_SIZE is
+> + * determined at boot-time, a pure initcall is registered and run during boot to
+> + * initialize the variable.
+> + *
+> + * @type: Unqualified type. Do not include "const"; implied by macro variant.
+> + * @name: Variable name.
+> + * @...:  Initialization value. May be scalar or initializer.
+> + *
+> + * "static" is declared by placing "static" before the macro.
+> + *
+> + * Example:
+> + *
+> + * struct my_struct {
+> + *         int a;
+> + *         char b;
+> + * };
+> + *
+> + * static DEFINE_GLOBAL_PAGE_SIZE_VAR(struct my_struct, my_variable, {
+> + *         .a = 10,
+> + *         .b = 'e',
+> + * });
+> + */
+> +#if PAGE_SIZE_MIN != PAGE_SIZE_MAX
+> +#define __DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, attrib, ...)		\
+> +	type name attrib;						\
+> +	static int __init __attribute__((constructor)) __##name##_init(void)	\
+> +	{								\
+> +		name = (type)__VA_ARGS__;				\
+> +		return 0;						\
+> +	}
+> +
+> +#define DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, ...)			\
+> +	__DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, , __VA_ARGS__)
+> +
+> +#define DEFINE_GLOBAL_PAGE_SIZE_VAR_CONST(type, name, ...)		\
+> +	__DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, __ro_after_init, __VA_ARGS__)
+> +#else /* PAGE_SIZE_MIN == PAGE_SIZE_MAX */
+> +#define __DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, attrib, ...)		\
+> +	type name attrib = __VA_ARGS__;					\
+> +
+> +#define DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, ...)			\
+> +	__DEFINE_GLOBAL_PAGE_SIZE_VAR(type, name, , __VA_ARGS__)
+> +
+> +#define DEFINE_GLOBAL_PAGE_SIZE_VAR_CONST(type, name, ...)		\
+> +	__DEFINE_GLOBAL_PAGE_SIZE_VAR(const type, name, , __VA_ARGS__)
+> +#endif
+> +
+> +#endif /* ASM_GENERIC_PGTABLE_GEOMETRY_H */
+> diff --git a/init/main.c b/init/main.c
+> index 206acdde51f5a..ba1515eb20b9d 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -899,6 +899,8 @@ static void __init early_numa_node_init(void)
+>  #endif
+>  }
+>  
+> +static __init void do_ctors(void);
+> +
+>  asmlinkage __visible __init __no_sanitize_address __noreturn __no_stack_protector
+>  void start_kernel(void)
+>  {
+> @@ -910,6 +912,8 @@ void start_kernel(void)
+>  	debug_objects_early_init();
+>  	init_vmlinux_build_id();
+>  
+> +	do_ctors();
+> +
+>  	cgroup_init_early();
+>  
+>  	local_irq_disable();
+> @@ -1360,7 +1364,6 @@ static void __init do_basic_setup(void)
+>  	cpuset_init_smp();
+>  	driver_init();
+>  	init_irq_proc();
+> -	do_ctors();
+>  	do_initcalls();
+>  }
+>  
+
