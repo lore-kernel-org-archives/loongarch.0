@@ -1,37 +1,41 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49461171CD
-	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 01:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8511D1F5D
+	for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 06:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730251653; cv=none; b=rFQ/pMpE5URJpQWtqLkq2rQuvyhItygoCVnPRfOpESzhLwuBzUaQB2uEeTc3Kz6+eNiUCjX73RKV2Hb4LOXPEs/OTSShZU4vTpM3WH88D8/kth64UXs4BZxEH7fCd+TpIfjnxvlfhqtRR7yh06/6xe+uCHtYBp+83RYpFbyh2wE=
+	t=1730270360; cv=none; b=czb39t4xgKDK9tymp81KlkniwtdYgQKh5hovGYt+wW1sGorIMDJcyC6Pf1nUbNB98+9wEJpI/SFYB6cC72sUyck46p38jYEZcgzufc7qbylKLYOlFwdNOBhLi9WWb8nwWv5Iam9utbjDkTYjmzNvn8aJnOjTmwWOvYhDfI8sazQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730251653; c=relaxed/simple;
-	bh=VXjTSmpa35j95jRHzL3JtFZVPcnX8EbOQoLeiASouaQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rYFzmVJRnzzBTeuA9rkNjSCYKU5iawLZnvbdcfpZxznh9/gAkdnxHuUexcKXxndC8HyctWpi+yigU5i8P8+TLVeOZGyxaaJr8wE8rLF+KoGm7QHh2mdnVfG0yF9iNRyiR17FEdgRZ3oabZczvfWrk+k0+/9UMMfkc30dKub4VBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XdTx16sBBz20qyQ;
-	Wed, 30 Oct 2024 09:26:29 +0800 (CST)
-Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
-	by mail.maildlp.com (Postfix) with ESMTPS id D2BA31402E1;
-	Wed, 30 Oct 2024 09:27:28 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemg200008.china.huawei.com
- (7.202.181.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 30 Oct
- 2024 09:27:28 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <hejinyang@loongson.cn>,
-	<yangtiezhu@loongson.cn>, <jiaxun.yang@flygoat.com>,
-	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] LoongArch: Remove unused _TIF_SINGLESTEP
-Date: Wed, 30 Oct 2024 09:26:58 +0800
-Message-ID: <20241030012658.358931-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1730270360; c=relaxed/simple;
+	bh=3nyyNH5v2uLVnFdxFFD+XNXeHYcJOF9QmL11NuXz+wU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CSjCf10pu6lTvDfstnvOerianVq4UtQHcWYy1yxomqJmD+PgDwGM577v84siWcEoEpCCl4PFS4HC3/BJ0Hh+yyxXfeK/KRAqGZex9KixTb88kevMVNCh81ijV+8SwXLk3X7w/x2j8E0s00fM9Vi+/46SGWNgH88+maQl/vCEifc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxQK+R1CFnAqkdAA--.37544S3;
+	Wed, 30 Oct 2024 14:39:13 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMDxPEeP1CFntLooAA--.23618S2;
+	Wed, 30 Oct 2024 14:39:12 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	kasan-dev@googlegroups.com,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: [PATCH v2] mm: define general function pXd_init()
+Date: Wed, 30 Oct 2024 14:39:05 +0800
+Message-Id: <20241030063905.2434824-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,31 +43,181 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg200008.china.huawei.com (7.202.181.35)
+X-CM-TRANSID:qMiowMDxPEeP1CFntLooAA--.23618S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Since following commit, _TIF_SINGLESTEP is not used by LoongArch,
-remove it.
+Function pud_init(), pmd_init() and kernel_pte_init() are duplicated
+defined in file kasan.c and sparse-vmemmap.c as weak functions. Move
+them to generic header file pgtable.h, architecture can redefine them.
 
-Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/thread_info.h | 1 -
- 1 file changed, 1 deletion(-)
+v1 ... v2:
+  1. Add general function definition about kernel_pte_init().
+---
+ arch/loongarch/include/asm/pgtable.h |  3 +++
+ arch/mips/include/asm/pgtable-64.h   |  2 ++
+ include/linux/mm.h                   |  3 ---
+ include/linux/pgtable.h              | 21 +++++++++++++++++++++
+ mm/kasan/init.c                      | 12 ------------
+ mm/sparse-vmemmap.c                  | 12 ------------
+ 6 files changed, 26 insertions(+), 27 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-index 8bf0e6f51546..11184d723ef9 100644
---- a/arch/loongarch/include/asm/thread_info.h
-+++ b/arch/loongarch/include/asm/thread_info.h
-@@ -101,7 +101,6 @@ register unsigned long current_stack_pointer __asm__("$sp");
- #define _TIF_32BIT_REGS		(1<<TIF_32BIT_REGS)
- #define _TIF_32BIT_ADDR		(1<<TIF_32BIT_ADDR)
- #define _TIF_LOAD_WATCH		(1<<TIF_LOAD_WATCH)
--#define _TIF_SINGLESTEP		(1<<TIF_SINGLESTEP)
- #define _TIF_LSX_CTX_LIVE	(1<<TIF_LSX_CTX_LIVE)
- #define _TIF_LASX_CTX_LIVE	(1<<TIF_LASX_CTX_LIVE)
- #define _TIF_USEDLBT		(1<<TIF_USEDLBT)
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index 20714b73f14c..df5889d995f9 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -267,8 +267,11 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
+  * Initialize a new pgd / pud / pmd table with invalid pointers.
+  */
+ extern void pgd_init(void *addr);
++#define pud_init pud_init
+ extern void pud_init(void *addr);
++#define pmd_init pmd_init
+ extern void pmd_init(void *addr);
++#define kernel_pte_init kernel_pte_init
+ extern void kernel_pte_init(void *addr);
+ 
+ /*
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index 401c1d9e4409..45c8572a0462 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -316,7 +316,9 @@ static inline pmd_t *pud_pgtable(pud_t pud)
+  * Initialize a new pgd / pud / pmd table with invalid pointers.
+  */
+ extern void pgd_init(void *addr);
++#define pud_init pud_init
+ extern void pud_init(void *addr);
++#define pmd_init pmd_init
+ extern void pmd_init(void *addr);
+ 
+ /*
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 61fff5d34ed5..651bdc1bef48 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3818,9 +3818,6 @@ void *sparse_buffer_alloc(unsigned long size);
+ struct page * __populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+ 		struct dev_pagemap *pgmap);
+-void pud_init(void *addr);
+-void pmd_init(void *addr);
+-void kernel_pte_init(void *addr);
+ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
+ p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
+ pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index e8b2ac6bd2ae..adee214c21f8 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -90,6 +90,27 @@ static inline unsigned long pud_index(unsigned long address)
+ #define pgd_index(a)  (((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+ #endif
+ 
++#ifndef kernel_pte_init
++static inline void kernel_pte_init(void *addr)
++{
++}
++#define kernel_pte_init kernel_pte_init
++#endif
++
++#ifndef pmd_init
++static inline void pmd_init(void *addr)
++{
++}
++#define pmd_init pmd_init
++#endif
++
++#ifndef pud_init
++static inline void pud_init(void *addr)
++{
++}
++#define pud_init pud_init
++#endif
++
+ #ifndef pte_offset_kernel
+ static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+ {
+diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+index ac607c306292..ced6b29fcf76 100644
+--- a/mm/kasan/init.c
++++ b/mm/kasan/init.c
+@@ -106,10 +106,6 @@ static void __ref zero_pte_populate(pmd_t *pmd, unsigned long addr,
+ 	}
+ }
+ 
+-void __weak __meminit kernel_pte_init(void *addr)
+-{
+-}
+-
+ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
+ 				unsigned long end)
+ {
+@@ -145,10 +141,6 @@ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
+ 	return 0;
+ }
+ 
+-void __weak __meminit pmd_init(void *addr)
+-{
+-}
+-
+ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+ 				unsigned long end)
+ {
+@@ -187,10 +179,6 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+ 	return 0;
+ }
+ 
+-void __weak __meminit pud_init(void *addr)
+-{
+-}
+-
+ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+ 				unsigned long end)
+ {
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index c0388b2e959d..cec67c5f37d8 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -184,10 +184,6 @@ static void * __meminit vmemmap_alloc_block_zero(unsigned long size, int node)
+ 	return p;
+ }
+ 
+-void __weak __meminit kernel_pte_init(void *addr)
+-{
+-}
+-
+ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
+ {
+ 	pmd_t *pmd = pmd_offset(pud, addr);
+@@ -201,10 +197,6 @@ pmd_t * __meminit vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node)
+ 	return pmd;
+ }
+ 
+-void __weak __meminit pmd_init(void *addr)
+-{
+-}
+-
+ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
+ {
+ 	pud_t *pud = pud_offset(p4d, addr);
+@@ -218,10 +210,6 @@ pud_t * __meminit vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node)
+ 	return pud;
+ }
+ 
+-void __weak __meminit pud_init(void *addr)
+-{
+-}
+-
+ p4d_t * __meminit vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node)
+ {
+ 	p4d_t *p4d = p4d_offset(pgd, addr);
+
+base-commit: 81983758430957d9a5cb3333fe324fd70cf63e7e
 -- 
-2.34.1
+2.39.3
 
