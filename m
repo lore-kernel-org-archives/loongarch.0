@@ -1,97 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B66450EE
-	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 01:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7615A4C1
+	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 01:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730337221; cv=none; b=XSmDcZ/ooz89/zkm1QcehPh40tWjQHGB33MQi/oEqQ45MJaKsI5GoiVyxocEDCz0mN4JkU9i2JqrUHI9Ck+XhwU4k+N2QuAeZWnDF/fR7QuY7EQiw1fUZmxk47eO1EKQ3EAYrkPHvUz8RNQTVb7wlvpM08A6fKgV45/w8N8atB0=
+	t=1730338206; cv=none; b=ZdXWlnaxBxu7I+NCapHWtiug34IksjC297AKO11rtcz9hqFj2x0QxdwKw+Gz91lobqJK6rSQjpCqPWc5a0LnKshJr5tNnqPwEVQx8/AwUfD+IFNX1jkTwzp2eQq3qR2bxNSVr2H8wPSmusxIfCaBLJ9ZzAQ/CMUsarUxJyQGgPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730337221; c=relaxed/simple;
-	bh=WbRptb7FCqv60HSIIaD84GGUKPtD6/MInRYEUgylKqs=;
+	s=arc-20240116; t=1730338206; c=relaxed/simple;
+	bh=F3CW6MgCDGBSbZPQG4EYQBGr36Y639uygD33OcwKI7w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uRfLYgRqiS8si2HbaglzBGI0AzI/c/UDcIbCPwj+DtadOVnOgu4QfeQdecjiSWVmhWJVjUUEGKgk50mGwm4U4JOhlpacOrwCw03AbsrpAvUSmkU59VbWQwqu77amG0q8JhHa5lZNcBmksJBuIwGwCDnw1EFRSJqC8tossZHbMzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQFnaBIg; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=o1h9yj1DRu5munrQksMsq41CGFkMmYYL9ule+gfRz+rU/ITxjojgBdThkdvfepNCIHyC3IH8slZQLbzZ/heY5VznRbWMRiLLJOId57d0vVY0dyYIi47CPCpixI5Gngw0+ZnBBufEitMnnQZj9g8YelUe0DtjAaM1uUo4SV4/igs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XaFxrc0h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQFnaBIg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF29C4CED5
-	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 01:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XaFxrc0h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1662DC4CED4
+	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 01:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730337221;
-	bh=WbRptb7FCqv60HSIIaD84GGUKPtD6/MInRYEUgylKqs=;
+	s=k20201202; t=1730338206;
+	bh=F3CW6MgCDGBSbZPQG4EYQBGr36Y639uygD33OcwKI7w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CQFnaBIgu2VJo5I+vqPnQnQya2dHbKnwlw4s5esPxZr2KCwiPFuIEHv6DrTdVcG0P
-	 rUmRAxH/fJbdU7KBd/Qy4wplwFFJ27zTgER9Agrvdeve1v8zwMqXCZR1Xnr0Bj5HEq
-	 j40z/03nX6Rp5wiFyV6rMoYEnTtjU3wDXxoBH4c/JJtDjnMj75M+dhyA0JmJMAZm54
-	 dLeFSXOiNPIjFQbimyrT3iQa+E7OFRUt+kvmWcpeAX+EPee1AphnyCYN/E3+genhG3
-	 ZPeC44LCSz7ye3ZMnB/3ys4yN0lfAUY7satO3jS9ItjL8U0V0yav/Bm/V4USZgC4pN
-	 TTe9z+BWh7wpA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a99e3b3a411so237213166b.0
-        for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 18:13:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRwtjZ8g+44siTlq6lf5YIA1ZmFQhWZ+nespN50dksMiz0w8BPfQ3FR8PtRLw1z2ltlk8oT/Ao4qw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwcCuQLIP+tjdK/mdvcMDvfprGAxa45Zszikx0AMH+xMoQu15A0
-	t87bLwt+ohcn3CBkHl/KYVl/Dd8XFHJKehdRFn2svUiz2xTll9bnAePtqr8v05tJqy/5vOy7K+H
-	A3a5jCtjgpkWwOlzmA2xwA/YmuKw=
-X-Google-Smtp-Source: AGHT+IHNI0GAvdwr25dkpNoHJw8i/LubG55Z749FdRTKFrX6ZwKdMY40mOPZLmY7D520K17tiZfHEOM/OqdIomb8BBM=
-X-Received: by 2002:a17:907:97d6:b0:a9a:c57f:964b with SMTP id
- a640c23a62f3a-a9e55a29239mr50707566b.8.1730337219900; Wed, 30 Oct 2024
- 18:13:39 -0700 (PDT)
+	b=XaFxrc0hQxfxAaTDwz22wAC7xgyqcXbewHasugJkhScj0LGN6soj3hIn70HVRoToJ
+	 qR0QJnEjIrlhxUTLJycz6po6DXlLs45ALEfjd0yR+IqoD3KWnexKLR+KfKp2E300G1
+	 TczsFcNwBr124tUPxwwYsuyUQH6T1P8v8I2ZcEOh0Q4Cxy8klpl2QbKDcQcVDMzY1V
+	 /d3/zNYrtYcWlSyGP2YjuTtXB2uFPy54vZJpm7eK4cXwhAEIbm+8BmSyPAf7Cfa92s
+	 ujlUa/iXD81Lya0g5DmeRQr4CvvHqDOeqUwuY5ESmNExPD5efiRw44C+HmOmyBBQlY
+	 JSnbJyxxg9qpQ==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539fb49c64aso686735e87.0
+        for <loongarch@lists.linux.dev>; Wed, 30 Oct 2024 18:30:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXgH8JUqEFna0NLSjXbSBUw5tjKnrubYngS+TfyfQ2vHVzwf392YftJibS+tUDlghVtV7XNZNBbC28=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzO5MLhB10lh9QwuV7UT+AUjPRaFjoZAApWjYFDR7u8BHT4dg9P
+	bveIO7ChscU3YJU1KTsEG0WRDXNNXVvSpKLTfWmolBwhLxH7ncqnjuUaQv185eYutuu6wRyeLQm
+	m9Js6//u8T0/drS90/6ReGtah4P4=
+X-Google-Smtp-Source: AGHT+IES1QEWCyXEfu2GgQIWkNKG5wwIdsKbTeplBpmPclxpxRZ8rjzg8Uh1GIdkLH+yO4jm648v1k5qv5FFrNoYWQg=
+X-Received: by 2002:a05:6512:3b97:b0:533:71f:3a3d with SMTP id
+ 2adb3069b0e04-53b348da746mr13964158e87.24.1730338204411; Wed, 30 Oct 2024
+ 18:30:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241030063905.2434824-1-maobibo@loongson.cn> <20241030164123.ff63a1c0e7666ad1a4f8944e@linux-foundation.org>
-In-Reply-To: <20241030164123.ff63a1c0e7666ad1a4f8944e@linux-foundation.org>
+References: <20241030162930.2111255-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20241030162930.2111255-1-andriy.shevchenko@linux.intel.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 31 Oct 2024 09:13:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7AyjyGT=4pW9X-ZrdN3JThs8ukC3dnoZW_dOxZLQsQtQ@mail.gmail.com>
-Message-ID: <CAAhV-H7AyjyGT=4pW9X-ZrdN3JThs8ukC3dnoZW_dOxZLQsQtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: define general function pXd_init()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	kasan-dev@googlegroups.com, Alexander Potapenko <glider@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>
+Date: Thu, 31 Oct 2024 09:29:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6bOZLur8Eq2CyFaeQp7R1LwiRqf0ODqnftg6+zAbDoYg@mail.gmail.com>
+Message-ID: <CAAhV-H6bOZLur8Eq2CyFaeQp7R1LwiRqf0ODqnftg6+zAbDoYg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] cpufreq: loongson: Check for error code from
+ devm_mutex_init() call
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, loongarch@lists.linux.dev, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Andrew,
+Hi, Andy,
 
-On Thu, Oct 31, 2024 at 7:41=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
+On Thu, Oct 31, 2024 at 12:29=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Wed, 30 Oct 2024 14:39:05 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using devm
+> variant of it. Tomorrow it may even leak something. Add the missed
+> check.
 >
-> > --- a/arch/loongarch/include/asm/pgtable.h
-> > +++ b/arch/loongarch/include/asm/pgtable.h
-> > @@ -267,8 +267,11 @@ extern void set_pmd_at(struct mm_struct *mm, unsig=
-ned long addr, pmd_t *pmdp, pm
-> >   * Initialize a new pgd / pud / pmd table with invalid pointers.
-> >   */
-> >  extern void pgd_init(void *addr);
-> > +#define pud_init pud_init
-> >  extern void pud_init(void *addr);
-> > +#define pmd_init pmd_init
-> >  extern void pmd_init(void *addr);
-> > +#define kernel_pte_init kernel_pte_init
-> >  extern void kernel_pte_init(void *addr);
+> Fixes: ccf51454145b ("cpufreq: Add Loongson-3 CPUFreq driver support")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/cpufreq/loongson3_cpufreq.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 >
-> Nitlet: don't we usually put the #define *after* the definition?
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongs=
+on3_cpufreq.c
+> index 61ebebf69455..bd34bf0fafa5 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -346,8 +346,11 @@ static int loongson3_cpufreq_probe(struct platform_d=
+evice *pdev)
+>  {
+>         int i, ret;
 >
-> void foo(void);
-> #define foo() foo()
-Is there any convention or documents about this? In kernel code there
-are both before definitions and after definitions.
+> -       for (i =3D 0; i < MAX_PACKAGES; i++)
+> -               devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+> +       for (i =3D 0; i < MAX_PACKAGES; i++) {
+> +               ret =3D devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+> +               if (ret)
+Good catch, but I think "if (ret < 0)" is better? Sometimes a positive
+return value is legal, even if not in this case.
+
+And it is better to use loongson3 rather than loongson because there
+is another loongson2 driver.
 
 Huacai
 
+> +                       return ret;
+> +       }
 >
-> ?
->
->
+>         ret =3D do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
+>         if (ret <=3D 0)
+> --
+> 2.43.0.rc1.1336.g36b5255a03ac
 >
 >
