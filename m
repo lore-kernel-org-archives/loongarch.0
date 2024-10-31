@@ -1,73 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903371C4612;
-	Wed, 30 Oct 2024 23:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6133F7
+	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 00:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730331684; cv=none; b=R1BsczbyLyWtAkeky0AamtijmdKZpzKj7qG88m4zjn86HXdBTp1vEOfL7tn8RvFjU3uG02mETB0kfwVZ1cD0yUJVOd0Z3pYIYCQjV8veNTxWb6sloGr0sEZoTc76EaP53MMzpV47saLTOdfcQkEP+WsKDD/UNCNGrpoLwE8ZzlQ=
+	t=1730333551; cv=none; b=XaUz7o8XmZRREYIocQdEFGko+SAY559XQT1zuIkjUYx2RCeazMRwNyk2dN9fWtSK5sxeBj5hsZifYbfDlfBlckyIO7BHHsXuKsgAz4+NdR1cFt3nWZHiFhl2dCqdqJguMocqtddgwrGkYCtjtKRxRUbCOzkFyPVKoitG3yot6lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730331684; c=relaxed/simple;
-	bh=bbGa8L383lbBHyiX3dMUYYHXFwaxWhrTdBBmLqW48J8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gIiHSzo0f5r4TuQCcxSYnYPZUZYVGALetDz7cayf1U+TKhaoI4OM1uwIkPoNQInj1FCTAVlWP+hpIGPy3bJntxYEnuiSvDRASND3kClaFTDqLo5S8dNx/qyXvOoKMIMaL84buEEowRlblqa2H26FLxr6U9IS4VqdhfgKy4g3Wok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KzprbEYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730333551; c=relaxed/simple;
+	bh=Ceq1779UGAl8iOYIzrR6U8YByCcRrYMnJdZdGnLER50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOoq32rCiJn2eLC5RA88oux0Ibu6JpK4XV9134PSyZZaVTGx4R7JEElQ/qWwjtM9UErczdvsTOsLe0HWhie4diLfBawdXdEFXFu/uU5uVKguIITYR7qaTaNB5vs/Banajbx+9KBbRUt+tVS0FuCtIq8JjnKUsb09JZxmGScAlOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=tZusAJI3; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KzprbEYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C40C4E68E;
-	Wed, 30 Oct 2024 23:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1730331684;
-	bh=bbGa8L383lbBHyiX3dMUYYHXFwaxWhrTdBBmLqW48J8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KzprbEYDbxB04AfEtJScziuD6t4EHGGSEhCsnxN8O4l6QWKNUXdr7Z2UyYJqP34dg
-	 Gv7/T4XGD1ziHIKkJA0Jpt/ax0qa2gOv14famm7QpvDe/56jO5X/MOq2sFSKhyPmO7
-	 fFpWpdDYMvLRzlh8ztA/3+aPso7SxopvzMtSbFwc=
-Date: Wed, 30 Oct 2024 16:41:23 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org, kasan-dev@googlegroups.com,
- Alexander Potapenko <glider@google.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, Vincenzo
- Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>
-Subject: Re: [PATCH v2] mm: define general function pXd_init()
-Message-Id: <20241030164123.ff63a1c0e7666ad1a4f8944e@linux-foundation.org>
-In-Reply-To: <20241030063905.2434824-1-maobibo@loongson.cn>
-References: <20241030063905.2434824-1-maobibo@loongson.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tZusAJI3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ADnOlDvSfcc2o2XTsLbJuVcsj8qk7QSX8jkP5KkZ5Mw=; b=tZusAJI37JDe16l2CZBpAGOoEF
+	bwhxtvPkUCgV07xUfbic6dfNujjddnRpFUT28MncKLe8Cf9RmQNEQ2CluZau/8U5ySVsGog8VqShd
+	EFBOOAGnSgY3OCnoxcZfxON8e5KQ8V09Hh3+bH6dtqWaa2OqpYH3DbGXF1WaZX9l4oNY7VJdjWvz0
+	JulQkHoTGHzdnWrphAeFjrxUXwPucq8lnQH/pm3sH0UdPtqKBgsjh0uQgnAxpdSyzr/dvps0alFUp
+	2XKigXu9odZbDzMnWUvymb2OR8E4jOpAAD3qyv2n9sn0Wx4BlrHq0O5BRCP3jFtjBx92Vj2eWcf9S
+	Ynf3jZjA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38846)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1t6ImG-0000qB-0h;
+	Thu, 31 Oct 2024 00:11:06 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1t6Im2-0002OR-10;
+	Thu, 31 Oct 2024 00:10:50 +0000
+Date: Thu, 31 Oct 2024 00:10:50 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alice Ryhl <aliceryhl@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v12 4/5] jump_label: adjust inline asm to be consistent
+Message-ID: <ZyLLCmq9-9BX7GBd@shell.armlinux.org.uk>
+References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+ <20241030-tracepoint-v12-4-eec7f0f8ad22@google.com>
+ <20241030191316.2a27ff1b@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241030191316.2a27ff1b@rorschach.local.home>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, 30 Oct 2024 14:39:05 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+On Wed, Oct 30, 2024 at 07:13:16PM -0400, Steven Rostedt wrote:
+> On Wed, 30 Oct 2024 16:04:27 +0000
+> Alice Ryhl <aliceryhl@google.com> wrote:
+> 
+> > To avoid duplication of inline asm between C and Rust, we need to
+> > import the inline asm from the relevant `jump_label.h` header into Rust.
+> > To make that easier, this patch updates the header files to expose the
+> > inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
+> > 
+> > The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
+> > takes the same arguments in a consistent order so that Rust can use the
+> > same logic for every architecture.
+> > 
+> > Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
+> > Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
+> 
+> Still missing an ack from the ARM maintainer (32 bit, just added) and loongarch.
+> 
+> I'll wait till Monday, if I don't hear anything against these patches
+> I'll pull them in.
 
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -267,8 +267,11 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
->   * Initialize a new pgd / pud / pmd table with invalid pointers.
->   */
->  extern void pgd_init(void *addr);
-> +#define pud_init pud_init
->  extern void pud_init(void *addr);
-> +#define pmd_init pmd_init
->  extern void pmd_init(void *addr);
-> +#define kernel_pte_init kernel_pte_init
->  extern void kernel_pte_init(void *addr);
+As of what has recently happened, I am not participating in technical
+activities until such time that I'm told what is now acceptable. So
+far, that has not been forthcoming, and thus I believe it is unwise to
+engage in technical discussion.
 
-Nitlet: don't we usually put the #define *after* the definition?
-
-void foo(void);
-#define foo() foo()
-
-?
-
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
