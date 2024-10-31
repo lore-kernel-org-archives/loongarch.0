@@ -1,81 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672C1360;
-	Thu, 31 Oct 2024 00:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAD81DFED
+	for <loongarch@lists.linux.dev>; Thu, 31 Oct 2024 01:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730333655; cv=none; b=mWMGN5WFg3mRBrrnTtvciooM+ckgKrGhoiO5Fl2jaIGjR/lLCILDXAiXbqkCTSOpLuH7yslX/E75BC8ADbNkAuis+UM1VTL80asSIZM+RsKROBUdWRZwiyl6i+hGWvgpblaStcdh4jbCkwJLi6Jc+nwjzNId85BfO2MH/sUnsRE=
+	t=1730336935; cv=none; b=ihHv6r9fm1ON6RmskSAenloG4Dw40IMTBrvrC3hR+rFQRDGeXUo4Q/LKMP0WnD6KQzrDRmSwjB+Lvt6htwzo7O3BHpGk8ke2B2AbpOGadMYp6OgklKkQh7VfwuoGdoIK8jWxLOjMUDxT9TFA4z4pyS/6v9C/n0s5JzyC2jh4jfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730333655; c=relaxed/simple;
-	bh=Cb+W+pVunO2LoGhA6b9apl9QwWngOitHlidshvRfXoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OMfS+69VMsfjThzStMbrwdRqfZQSw6pZK1GhA+6LEs2BByI0Bso2F5a2E3Xct3JAm+RzSWXPUyAFAZ7iK7lKhPNnt2Jc8oWXDDOQzf3PUuQ3yj+ka02j2SvLnH/2rrj7ex40OlhruCGAq22YLN3ZoubIH/WbQb+NioHMVQ0U+lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4CFC4CECE;
-	Thu, 31 Oct 2024 00:14:10 +0000 (UTC)
-Date: Wed, 30 Oct 2024 20:14:08 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
- <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
- <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?B?Qmo=?=
- =?UTF-8?B?w7Zybg==?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin
- <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
- linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak
- <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-arm-kernel@lists.infradead.org, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
- <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
- Dooley <conor.dooley@microchip.com>, Samuel Holland
- <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
- <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
- <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev, Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: [PATCH v12 4/5] jump_label: adjust inline asm to be consistent
-Message-ID: <20241030201408.732cebd5@rorschach.local.home>
-In-Reply-To: <ZyLLCmq9-9BX7GBd@shell.armlinux.org.uk>
-References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
-	<20241030-tracepoint-v12-4-eec7f0f8ad22@google.com>
-	<20241030191316.2a27ff1b@rorschach.local.home>
-	<ZyLLCmq9-9BX7GBd@shell.armlinux.org.uk>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730336935; c=relaxed/simple;
+	bh=9Cebry7tKliR9PhYmpGR8QNY5H718CjFL9eBYVRfdK8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FthPyTPChzIGLE0wzMyJCZVoVuRlCang2ShLx/dscoVMsnMIaHthxzkzvEaWUCJCXlKMmDopywTUuJRTsKQ9xNt2cPChZ6q9Hahlp8iVUgoJfdRbri3Y89o7APZuqlFB7XxWLlRyRftLYK/ICADX20PumeBXv2f8hpLf3hEGaZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxCeGa2CJn4N4fAA--.65459S3;
+	Thu, 31 Oct 2024 09:08:42 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMAxreCX2CJn3b8rAA--.6898S3;
+	Thu, 31 Oct 2024 09:08:41 +0800 (CST)
+Subject: Re: [PATCH v2] mm: define general function pXd_init()
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, kasan-dev@googlegroups.com,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ WANG Xuerui <kernel@xen0n.name>
+References: <20241030063905.2434824-1-maobibo@loongson.cn>
+ <20241030164123.ff63a1c0e7666ad1a4f8944e@linux-foundation.org>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <836c4d86-3b93-06fc-8ac1-6f636a244753@loongson.cn>
+Date: Thu, 31 Oct 2024 09:08:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20241030164123.ff63a1c0e7666ad1a4f8944e@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxreCX2CJn3b8rAA--.6898S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKry7ZrykuF13CF18Cry5KFX_yoWfXFg_W3
+	Z7Zws5u3ykGay2gFWqkry5Cr4UGayrJF4vyw1UWr92k3s3tr45Jws0gFyfXrs09Fs2vr9x
+	uayvvan8Zrn8WosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On Thu, 31 Oct 2024 00:10:50 +0000
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-> > Still missing an ack from the ARM maintainer (32 bit, just added) and loongarch.
-> > 
-> > I'll wait till Monday, if I don't hear anything against these patches
-> > I'll pull them in.  
+
+On 2024/10/31 上午7:41, Andrew Morton wrote:
+> On Wed, 30 Oct 2024 14:39:05 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
 > 
-> As of what has recently happened, I am not participating in technical
-> activities until such time that I'm told what is now acceptable. So
-> far, that has not been forthcoming, and thus I believe it is unwise to
-> engage in technical discussion.
+>> --- a/arch/loongarch/include/asm/pgtable.h
+>> +++ b/arch/loongarch/include/asm/pgtable.h
+>> @@ -267,8 +267,11 @@ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pm
+>>    * Initialize a new pgd / pud / pmd table with invalid pointers.
+>>    */
+>>   extern void pgd_init(void *addr);
+>> +#define pud_init pud_init
+>>   extern void pud_init(void *addr);
+>> +#define pmd_init pmd_init
+>>   extern void pmd_init(void *addr);
+>> +#define kernel_pte_init kernel_pte_init
+>>   extern void kernel_pte_init(void *addr);
+> 
+> Nitlet: don't we usually put the #define *after* the definition?
+> 
+> void foo(void);
+> #define foo() foo()
+yes, it should be so. Will modify it in next version.
 
-Oh, OK. Thanks for letting me know.
+Regards
+Bibo Mao
+> 
+> ?
+> 
+> 
 
--- Steve
