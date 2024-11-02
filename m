@@ -1,135 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5763D13B792
-	for <loongarch@lists.linux.dev>; Fri,  1 Nov 2024 19:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F263C3C;
+	Sat,  2 Nov 2024 03:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730489967; cv=none; b=Ig5LQqYSydLedq+dt53aHPZ3Ue82ykI4klhLSFROqkKMmjHV9zDgAuPHaWLbXo8HJMiKHp0eElyua+a62WIs0k+x5VZxyCNy1ho+sa3lS2DrghOpXzsAVP6XHK9GVQnYdQuLWFyLkIBeu7N2V6rHlpD306oFbRusSFh9FBrQqdo=
+	t=1730518609; cv=none; b=UvK/Lmj+ETAzMEY1byX9oMfQk0S8BjBRGGM4CckRIwnQffbf1TXYi1KBL30eUYphjl6LyZDyWXYQsdp+NQjH+imaqdnJ1+dkh/9tUA4IjAlCgtR5kzPlOMdOn6PgoRHy09XBC9/k1y2vcs/xqU2QSNv0+OWn9cPhqIoD19JDFyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730489967; c=relaxed/simple;
-	bh=54QzldtV+oOQ8waAwjCrWq0G6D0V6v+b9usu7SWxFqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k+9SuPnWHLyHOff+Fw77m9bcSk80G9Xiun3/34Q8pBxsvQ8CbipMRuGQdJhxAAf2DnXOu6edE3APkUYB0Sx4dFBlZ+NvfydBaSYqk3EMEu339SVBuo7/lCsDBx+04CLfj/uSC7hsP62WUmBi2ilDNrenbECeTiOtUP0bP59E8QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kM0FfhhT; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kM0FfhhT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730489965; x=1762025965;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=54QzldtV+oOQ8waAwjCrWq0G6D0V6v+b9usu7SWxFqg=;
-  b=kM0FfhhTGcXBC8giwQurecKlK2kmHsKy4lqUjHKGkSL8vZcdtNgeyVeJ
-   1NgpqfZDEThIM3ZSvMcdWZtVXA8PyfnVKIERMdeGobUYVXwqXX15w/zN3
-   8BunwdNoykEqzm7CYrV9VYevwiaEEwIf3OHXIecnQebTmZ7PNmyybSQWz
-   O8wwahUrPneK2FfjP4D+WhvZXqj3nkfGZoexUNTHVWqQlLkVkE5iLwcGc
-   MqU+F3Ib8QTllak/+Zn5Vkrm69a+pQexw+JOBqZ3iPkWKW9SvxbjOo5pw
-   ct8oIl8FvA9HtQqd5uodAO36wvRkhFbavbUf/MwszxYVVI/aiOJ9GfQ69
-   A==;
-X-CSE-ConnectionGUID: P46gBYcDRaKbF09CXsXS1A==
-X-CSE-MsgGUID: fcem3105R2i8OvqDybt5Mg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="47717860"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="47717860"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 12:39:24 -0700
-X-CSE-ConnectionGUID: OHnYS5S6TcuNT3OY7OKdwA==
-X-CSE-MsgGUID: 2dJ9/DffSeuFoRFq5NBtZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,250,1725346800"; 
-   d="scan'208";a="87583065"
-Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO [10.124.220.146]) ([10.124.220.146])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 12:39:22 -0700
-Message-ID: <4a015283-28e2-4459-825a-1fd542b81110@intel.com>
-Date: Fri, 1 Nov 2024 12:39:21 -0700
+	s=arc-20240116; t=1730518609; c=relaxed/simple;
+	bh=z7J2UcHSJYJwMGO1ve6dJe4n/NLLb3+32f+ayIMNZxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=abAAkketefJFHvSKU/j7Lak+NwXlO21yGHotYZA+2fzgj5JSRgRDV0UIqLjivWBjG2dquaMGqmw2gIWUnMOfSqaWQkvBFnZe0NhrooCN+ZWtIXr/Se1T3rEwgj8IZhTAdnuI1SkQr5dvOm3yqhzz+jK1CQKSFu/wetgb/fKz+ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74880C4CEC3;
+	Sat,  2 Nov 2024 03:36:46 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1.y] LoongArch: Fix build errors due to backported TIMENS
+Date: Sat,  2 Nov 2024 11:36:16 +0800
+Message-ID: <20241102033616.3517188-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
-To: "Manwaring, Derek" <derekmn@amazon.com>
-Cc: ackerleytng@google.com, agordeev@linux.ibm.com, aou@eecs.berkeley.edu,
- borntraeger@linux.ibm.com, bp@alien8.de, canellac@amazon.at,
- catalin.marinas@arm.com, chenhuacai@kernel.org, corbet@lwn.net,
- dave.hansen@linux.intel.com, david@redhat.com, elena.reshetova@intel.com,
- gerald.schaefer@linux.ibm.com, gor@linux.ibm.com, graf@amazon.com,
- hca@linux.ibm.com, hpa@zytor.com, jgowans@amazon.com, jthoughton@google.com,
- kalyazin@amazon.com, kernel@xen0n.name, kvm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, luto@kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, mingo@redhat.com, mlipp@amazon.at, palmer@dabbelt.com,
- paul.walmsley@sifive.com, pbonzini@redhat.com, peterz@infradead.org,
- quic_eberman@quicinc.com, rostedt@goodmis.org, roypat@amazon.co.uk,
- rppt@kernel.org, seanjc@google.com, shuah@kernel.org, svens@linux.ibm.com,
- tabba@google.com, tglx@linutronix.de, vannapurve@google.com,
- will@kernel.org, x86@kernel.org, xmarcalx@amazon.com
-References: <d467e6bd-c673-415f-8bb0-91603f06498a@intel.com>
- <71e9b2c8-0cc4-4646-88f0-7780e108e610@amazon.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <71e9b2c8-0cc4-4646-88f0-7780e108e610@amazon.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/1/24 12:29, Manwaring, Derek wrote:
-> As far as performance, are you talking about just the fracturing or
-> something beyond that? The data Mike brought to LSFMMBPF 2023 showed the
-> perf impact from direct map fragmentation for memfd_secret isn't "that
-> bad" [1].
+Commit eb3710efffce1dcff83761db4615f91d93aabfcb ("LoongArch: Add support
+to clone a time namespace") backports the TIMENS support for LoongArch
+(corresponding upstream commit aa5e65dc0818bbf676bf06927368ec46867778fd)
+but causes build errors:
 
-Just the fracturing.
+  CC      arch/loongarch/kernel/vdso.o
+arch/loongarch/kernel/vdso.c: In function ‘vvar_fault’:
+arch/loongarch/kernel/vdso.c:54:36: error: implicit declaration of
+function ‘find_timens_vvar_page’ [-Werror=implicit-function-declaration]
+   54 |         struct page *timens_page = find_timens_vvar_page(vma);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
+arch/loongarch/kernel/vdso.c:54:36: warning: initialization of ‘struct
+page *’ from ‘int’ makes pointer from integer without a cast
+[-Wint-conversion]
+arch/loongarch/kernel/vdso.c: In function ‘vdso_join_timens’:
+arch/loongarch/kernel/vdso.c:143:25: error: implicit declaration of
+function ‘zap_vma_pages’; did you mean ‘zap_vma_ptes’?
+[-Werror=implicit-function-declaration]
+  143 |                         zap_vma_pages(vma);
+      |                         ^~~~~~~~~~~~~
+      |                         zap_vma_ptes
+cc1: some warnings being treated as errors
 
-Mike's data are interesting, but I still think we're pretty far away
-from saying that the kernel doesn't need large mappings.
+Because in 6.1.y we should define find_timens_vvar_page() by ourselves
+and use zap_page_range() instead of zap_vma_pages(), so fix it.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/vdso.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 59aa9dd466e8..64eb5386e7b2 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -40,6 +40,8 @@ static struct page *vdso_pages[] = { NULL };
+ struct vdso_data *vdso_data = generic_vdso_data.data;
+ struct vdso_pcpu_data *vdso_pdata = loongarch_vdso_data.vdata.pdata;
+ 
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma);
++
+ static int vdso_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
+ {
+ 	current->mm->context.vdso = (void *)(new_vma->vm_start);
+@@ -139,13 +141,37 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+ 
+ 	mmap_read_lock(mm);
+ 	for_each_vma(vmi, vma) {
++		unsigned long size = vma->vm_end - vma->vm_start;
++
+ 		if (vma_is_special_mapping(vma, &vdso_info.data_mapping))
+-			zap_vma_pages(vma);
++			zap_page_range(vma, vma->vm_start, size);
+ 	}
+ 	mmap_read_unlock(mm);
+ 
+ 	return 0;
+ }
++
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
++{
++	if (likely(vma->vm_mm == current->mm))
++		return current->nsproxy->time_ns->vvar_page;
++
++	/*
++	 * VM_PFNMAP | VM_IO protect .fault() handler from being called
++	 * through interfaces like /proc/$pid/mem or
++	 * process_vm_{readv,writev}() as long as there's no .access()
++	 * in special_mapping_vmops.
++	 * For more details check_vma_flags() and __access_remote_vm()
++	 */
++	WARN(1, "vvar_page accessed remotely");
++
++	return NULL;
++}
++#else
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
++{
++	return NULL;
++}
+ #endif
+ 
+ static unsigned long vdso_base(void)
+-- 
+2.43.5
+
