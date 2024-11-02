@@ -1,100 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA4F380
-	for <loongarch@lists.linux.dev>; Sat,  2 Nov 2024 06:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D9680034;
+	Sat,  2 Nov 2024 09:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730530507; cv=none; b=e+CTEHs1O9ttdSL0N8hmNjAanJ+IlJwrus96kDwJWFTQi5J1DTANPcnE45msOIomwS/L2SxWtmtnQFXNIG0IzkdZVwRk+rMOAK1LWZaVLfWHdWbqkTvmTuoYIZqcsNWx4ukjOWeNiHLkGEjU8s4846fbW2h7vmzQMvP7M14mvvo=
+	t=1730540757; cv=none; b=okC31q/qda2lwYMJkf2AX75kdALb4fucbPWjmizzis1z2rOB0ce7qcwpxncvpO+ET18KmJdoK+8MqM4jRGlkM9Xz1e4ta02XKqUShSlqi40/yRJmsRsOmC6Cy4Vh4LrXyiGvwhSjL1PxzMz36n0aW5/BGaHBB7hUx+zEfBYWwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730530507; c=relaxed/simple;
-	bh=0I1DQy20ZsN3jGPIaSzE5ehs0uxuG2KmKk+7DTZIQU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h6ZEdYyopt7RBJzj/nwII+1AkWtaMUfG+n20/hu3VDGZ91ow479qHYZ+UU8HlBcs/UbgygbpUo74qa1gA+h8tz9zbvX5yyBVZGxxNYMBVo6/Zt94Bv6qg38RLVIQU+FDHZ4mi3gtV9z8s29sBnDAHvXcjDI+yE/SwRndnbi7kws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZcnIknN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730540757; c=relaxed/simple;
+	bh=3/AKilervyPC21hMELAU0HNgnAeGr1Qn3UgiDLal+ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SRpNAtKgVK+fyDfzK0qP1uWNzw8GJADX5N3e0Fecv13b3OiUgKXXrkDlt9XaVu5M1CpL8P417uGeEKtTa/3BDvCauRsxfpIhHjEMAKkAU/s+PrLiJY6xAolsRL3dgajqLFLcao7MVo9Bp40aQRYB8oHUcQ+/hkqYIvydoFEFRjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Q5Mjntzp; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZcnIknN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBBAC4CED5
-	for <loongarch@lists.linux.dev>; Sat,  2 Nov 2024 06:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730530506;
-	bh=0I1DQy20ZsN3jGPIaSzE5ehs0uxuG2KmKk+7DTZIQU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bZcnIknNjYm1oW8w4JW6/N3KH6J+NOvqzBsPCuq8anT0MuUPr4dADMsFsJf+v0tqo
-	 gQv+P7UIwRpRly9K/JV6K5XzVy8HyzHYARPcYV+KdZXl0JZyzYsR0BOmnsa020Uf9o
-	 /ZWWaP914vJopyKh/xAUmYv/QU/mMkmnZSwNW2ZfKs3UHt8v6YP3/qxpP7+c24MnbS
-	 PLfRYjnlNwHiCfAHjAGLMor+rn42okyJ0LSPUDhK0GNwhAW+2PclN64BvBKrW4uQ5j
-	 R22IqDwCtnouiq45L8y9skTORYOIDlNfFu5y+RzV9NHyJ10EWspqmTPYQZR9uZInxe
-	 ZKY4hzgS/3DNA==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a6acac4c3so438190866b.0
-        for <loongarch@lists.linux.dev>; Fri, 01 Nov 2024 23:55:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVzAlSmvI5VnBcZ99niz1nucYQFnZnYE+ooQblJxPeu+UI19R61HFi13qraz18bgApVLTvdmFD25wc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwjmrPsEXAl9SsES6KiGTfpHRZ965A3p1avqvz9/TI0gkjdi3cL
-	2Lu5y9RD+JVEBlFnJEmeZl5tLkg0EyLzDtx3cxQO44EWzWfoQLoyh2MCBCtZvAJj6BWNQAH0aYL
-	Rsby8sRFcaFX8DdaBxcCN1mPhI6Y=
-X-Google-Smtp-Source: AGHT+IF+kxzrhOPRHXeAvjclibJ4Q6vgFesowad96wUbVa9iR0NfGPakD2U8YVzQWD6mp5KPhRyxe1Hug/ykzu3i0P8=
-X-Received: by 2002:a17:906:f90d:b0:a9e:733f:eaf6 with SMTP id
- a640c23a62f3a-a9e733fffd4mr321831566b.6.1730530505312; Fri, 01 Nov 2024
- 23:55:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Q5Mjntzp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jpcaovD1uzHZkdDMg5tZvb0Z9OfX74OLNrLMh/vslrg=; b=Q5MjntzpHzBvczROcNsYoj+25t
+	CTplAOz4OXNjmKbeHRPSkC2PF8/2CQ+S9+BpzdDOraNgbvJHl1b2XbDV1IX3zldrAMVgbCnIPBjj6
+	0IWTAu3B1HtaRzbcItOeEI76Vhr65Zdrv6Hj7PnTJ9akLQTMtM7LE6EHbcKkj/xmU2QzOxWp4th0u
+	J1y5NQ3M1+7fbEZEPyWTXBC1K0HGtCKB8/SuT1fdvssCL8+XduxOZjD+6GgoigCaoEwTAJWXor6+8
+	4zJNFOI8kfLHoCcjY0lPk4C6G5wnEcy3WATqplhANsESpNXFLLJLZUN4OEO8S1bcBapdvZR08K4kj
+	Lwh8InsQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1t7AhE-00Dxdz-0Y;
+	Sat, 02 Nov 2024 17:45:29 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 02 Nov 2024 17:45:28 +0800
+Date: Sat, 2 Nov 2024 17:45:28 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: ardb@kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-crypto@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v2 04/18] crypto: crc32 - don't unnecessarily register
+ arch algorithms
+Message-ID: <ZyX0uGHg4Cmsk2oz@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1BC681DB785E0181+20241102054042.74847-1-wangyuli@uniontech.com>
-In-Reply-To: <1BC681DB785E0181+20241102054042.74847-1-wangyuli@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 2 Nov 2024 14:54:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4cW3ZhxHULF7BK4j3p2XWMMSeQCQRWV1c-=1=uSY_tKw@mail.gmail.com>
-Message-ID: <CAAhV-H4cW3ZhxHULF7BK4j3p2XWMMSeQCQRWV1c-=1=uSY_tKw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: mm/vma: define a default value for VM_DATA_DEFAULT_FLAGS
-To: WangYuli <wangyuli@uniontech.com>
-Cc: kernel@xen0n.name, tglx@linutronix.de, max.kellermann@ionos.com, 
-	arnd@arndb.de, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	guanwentao@uniontech.com, jiaxun.yang@flygoat.com, zhanjun@uniontech.com, 
-	anshuman.khandual@arm.com, akpm@linux-foundation.org, vbabka@suse.cz, 
-	geert@linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241026040958.GA34351@sol.localdomain>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel,apana.lists.os.linux.scsi
 
-Queued, thanks.
+Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> While testing this patchset I notice that none of the crypto API drivers for
+> crc32 or crc32c even need to be loaded on my system anymore, as everything on my
+> system that uses those algorithms (such as ext4) just uses the library APIs now.
+> That makes the "check /proc/crypto" trick stop working anyway.
 
-Huacai
+What's stopping us from removing them altogether?
 
-On Sat, Nov 2, 2024 at 1:42=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
-ote:
->
-> Commit c62da0c35d58 ("mm/vma: define a default value for
-> VM_DATA_DEFAULT_FLAGS") has unified default values of
-> VM_DATA_DEFAULT_FLAGS across different platforms.
->
-> Apply the same consistency to LoongArch.
->
-> Suggested-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->  arch/loongarch/include/asm/page.h | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/a=
-sm/page.h
-> index e85df33f11c7..8f21567a3188 100644
-> --- a/arch/loongarch/include/asm/page.h
-> +++ b/arch/loongarch/include/asm/page.h
-> @@ -113,10 +113,7 @@ struct page *tlb_virt_to_page(unsigned long kaddr);
->  extern int __virt_addr_valid(volatile void *kaddr);
->  #define virt_addr_valid(kaddr) __virt_addr_valid((volatile void *)(kaddr=
-))
->
-> -#define VM_DATA_DEFAULT_FLAGS \
-> -       (VM_READ | VM_WRITE | \
-> -        ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0) | \
-> -        VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
-> +#define VM_DATA_DEFAULT_FLAGS  VM_DATA_FLAGS_TSK_EXEC
->
->  #include <asm-generic/memory_model.h>
->  #include <asm-generic/getorder.h>
-> --
-> 2.45.2
->
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
