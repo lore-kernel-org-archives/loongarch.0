@@ -1,166 +1,692 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A8A2FC52
-	for <loongarch@lists.linux.dev>; Sat,  2 Nov 2024 17:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0395915443B
+	for <loongarch@lists.linux.dev>; Sun,  3 Nov 2024 08:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730568114; cv=none; b=TE7sECMXODiO/hud06zvZF8UidbxwmNJnb9afVsUR3mWSCW7MBuft2mv3Px58JAQO2wK0vjLS+UTG3bzNL7Tlo2oizmZdnoU3rCIMPHk42Az1PXRRVXdeCxXJNobfAnXSeD3flDfg4Aav88oaq6kQ0VBpsmSivpCDuAuPHK8uvo=
+	t=1730621305; cv=none; b=HonLTBZnImkA3ODss7/6O1+VCIrXpzzHfKGvf7VSM3bBDU3fW9bVFvbnFZ/iMynVP4PJZ/SJyI8+mbqcxWwNzL0VK0Y8B2InF5WqnUfvWKUZ3iXIyaGGZZlCkKJzApx0vBTMkAXInbvrT8jtIUtWre0FZ6aJv6X8ZkISTzk4Fl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730568114; c=relaxed/simple;
-	bh=7CS5N4H9kf7aemeGcQgW3i6MPpmeBBkH4/f6lovOV7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MlwfdARago7WKVaqveWBXkb5SwZAmSZgDKcRuWEE+uHwV+z0NtS+uFlYfkzF/hzTDKwXohhLHMoV3ZwtD7hc1FdCuH9kVkw096gkuzbc/RfnjKLSuiOJshUNOOQzbOxX1wYV3uJZHxMLoIl3C8uI2QjCIKIM/4lV4nTsyuYN84A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GchaX/Y5; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730621305; c=relaxed/simple;
+	bh=A3qFofE2FTeXXptlGj/GbRLYBog9Av63u4PPiTaJfXE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GtDQNAxZwFyTmjD6bC5/QRGyyyiffh3Bl2/lFB0qrCVoWym3VSfQMy9/1VBcsbZaKMXxxHXcsNXAuACSgMz7R+hi7oKeNtXf5tG/YJ809bWp2vPY3YEV8AZHPdk5RaCkfjAIDbNyC8BV8tjeRNzmFH2B+sZOSjB9zJCFYu1qR2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Z8nMehOb; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GchaX/Y5"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d6ff1cbe1so2044609f8f.3
-        for <loongarch@lists.linux.dev>; Sat, 02 Nov 2024 10:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730568112; x=1731172912; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8t9oRS8jqFz7JqVHrKzcZwls154V3gx6wMcbOAYsmHY=;
-        b=GchaX/Y5qExMYmKYQoAzLzHJ5Rg9zAyeFj3ZxKBb0/j/kZgFgyVYTUOUmxVTO7th8P
-         E0O/Qpl9YSa81NHAUqNdrUEwo80Ury28hzKImwSn7GDNTLCpQutkGRecNuosyIYTy3r6
-         Je2YZC5kt/jd5BJo/M1k15vtDuXOf+o6vKMLyskHKb+QHoCDUpTQmyblyunG6Hb2cXzU
-         swA6QjiKYAMsFRf2xsQfmPT2YmBa5Rg2n5q3F+n1o6WhBzvWYhT7R7Xpmqk73T3MvwNY
-         la/velgxPneMDlL7ixXXCo/7Zuj1A08/TNwqexgcPDPbL1NNLUGfQchgEPZO62Zk+UNb
-         hT+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730568112; x=1731172912;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8t9oRS8jqFz7JqVHrKzcZwls154V3gx6wMcbOAYsmHY=;
-        b=pNF2RAaKECvomlkRt5mTXB7iNn7QW/SldwRUscZbs97/qEp8fi0ivFQwQnmyTno0jr
-         b3FXdQXJYk0Z4liTV6d25/YkT7CV3jWkN4jxdOGYGNHd0QImurNmDLRaUNnmsPzwCmsz
-         wiEiNnWCcHxjv2J4fqe1ic1ZMegNf02BgdPL9nRNtE2sn/cbqv5nOfaXR0WceE1UmYHm
-         bS1u6K/D+QdmXJ01tmd5G2YIlOHmHGVLKEoe+I6Cvfa1J83bYEFwCy8GnsktubRB1jmt
-         dakdpE3d9eBoLxDCMsSJfS6et1q+eJ+yQGN8/TT45E/dtaQOaOR+zhHXLGHCITedNqR0
-         7DAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmYpPkScbu68RpuQKFpa35ofmIGrsJqXBF4NZoghppJxns73IWN5xH8GNljekadOq3z9BMgKOm2yo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzKMkQ5MoF53LlVb0rKt6dEvM0tteDt3zYizEJdXYE1ERDAjzIt
-	xDR/RcaTrGIklLbJyIVW2EHaszFHwNp6OHetcdJPnHTbQW/MWQ0P
-X-Google-Smtp-Source: AGHT+IGi2uIS+syMjf4Zb3uVjiFcNrb793MRtp10AmIBh8gU8g/TTGAjyc3KAIibvpjiJFec6IflZQ==
-X-Received: by 2002:a5d:5f96:0:b0:37d:324f:d3a9 with SMTP id ffacd0b85a97d-381be7add20mr8712682f8f.9.1730568111468;
-        Sat, 02 Nov 2024 10:21:51 -0700 (PDT)
-Received: from [192.168.8.100] (89-24-32-122.nat.epc.tmcz.cz. [89.24.32.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7b80sm8686121f8f.10.2024.11.02.10.21.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2024 10:21:50 -0700 (PDT)
-Message-ID: <8784622f-ccdc-4086-83f7-50462d6369df@gmail.com>
-Date: Sat, 2 Nov 2024 18:21:48 +0100
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Z8nMehOb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fjAen
+	LhCq8Xk53K+KNMCvNlQm0rmeCRd+Naft/mV0f8=; b=Z8nMehObtHVNsBHL+JKMH
+	sE6tULkLao0vvKLdWkBz55udo400qH22K1LCSaBqU3T/vrXE60vW3CrzE/YAfXjb
+	uKBp3m7+dBz0Vp6YpPDBauA88jwBJEE2zNnTo7PDHF9ElNIeQpwNN+1rrZfuZmRC
+	0fxwNJSzSk3WrVfUGeNm90=
+Received: from localhost.localdomain (unknown [111.35.191.191])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgCnrQTjLidnai5hAQ--.30987S4;
+	Sun, 03 Nov 2024 16:06:12 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: tglx@linutronix.de,
+	richard.henderson@linaro.org,
+	linux@armlinux.org.uk,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	guoren@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	James.Bottomley@HansenPartnership.com,
+	deller@gmx.de,
+	mpe@ellerman.id.au,
+	paul.walmsley@sifive.com,
+	ysato@users.sourceforge.jp,
+	dalias@libc.org,
+	glaubitz@physik.fu-berlin.de,
+	davem@davemloft.net,
+	andreas@gaisler.com,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	chris@zankel.net,
+	jcmvbkbc@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [PATCH] kernel/irq/proc: performance: replace seq_printf with seq_put_decimal_ull_width
+Date: Sun,  3 Nov 2024 16:05:52 +0800
+Message-Id: <20241103080552.4787-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 04/18] crypto: crc32 - don't unnecessarily register
- arch algorithms
-To: Eric Biggers <ebiggers@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-mips@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-References: <20241026040958.GA34351@sol.localdomain>
- <ZyX0uGHg4Cmsk2oz@gondor.apana.org.au>
- <CAMj1kXFfPtO0vd1KqTa+QNSkRWNR7SUJ_A_zX6-Hz5HVLtLYtw@mail.gmail.com>
- <ZyX8yEqnjXjJ5itO@gondor.apana.org.au>
- <CAMj1kXHje-BwJVffAxN9G96Gy4Gom3Ca7dJ-_K7sgcrz7_k7Kw@mail.gmail.com>
- <CAMj1kXG8Nqw_f8OsFTq_UKRbca6w58g4uyRAZXCoCr=OwC2sWA@mail.gmail.com>
- <ZyYIO6RpjTFteaxH@gondor.apana.org.au>
- <20241102163605.GA28213@sol.localdomain>
-Content-Language: en-US
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- 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
-In-Reply-To: <20241102163605.GA28213@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgCnrQTjLidnai5hAQ--.30987S4
+X-Coremail-Antispam: 1Uf129KBjvAXoWfuF4fJw1rWr4fXFykCw1rWFg_yoW5JrWkJo
+	WkuF4IyrykuFyUX34DZrnayFyqqw42q3W3X34q9w4rWFnFqrWkKry2va4xAry3Aw45C34k
+	WayaqrW5J390qFWkn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjfU8nmRUUUUU
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0heMqmcnKG5ISwAAsm
 
-On 11/2/24 5:36 PM, Eric Biggers wrote:
-> On Sat, Nov 02, 2024 at 07:08:43PM +0800, Herbert Xu wrote:
->> On Sat, Nov 02, 2024 at 12:05:01PM +0100, Ard Biesheuvel wrote:
->>>
->>> The only issue resulting from *not* taking this patch is that btrfs
->>> may misidentify the CRC32 implementation as being 'slow' and take an
->>> alternative code path, which does not necessarily result in worse
->>> performance.
->>
->> If we were removing crc32* (or at least crc32*-arch) from the Crypto
->> API then these patches would be redundant.  But if we're keeping them
->> because btrfs uses them then we should definitely make crc32*-arch
->> do the right thing.  IOW they should not be registered if they're
->> the same as crc32*-generic.
->>
->> Thanks,
-> 
-> I would like to eventually remove crc32 and crc32c from the crypto API, but it
-> will take some time to get all the users converted.  If there are AF_ALG users
-> it could even be impossible, though the usual culprit, iwd, doesn't appear to
-> use any CRCs, so hopefully we are fine there.
+seq_printf is costy, when stress reading /proc/interrupts, profiling indicates
+seq_printf takes about ~47% of show_interrupts samples:
 
-Hi,
+    show_interrupts(94.495% 5166019/5466991)
+	seq_printf(47.429% 2450210/5166019)
+	    vsnprintf(89.232% 2186366/2450210)
+		format_decode(24.005% 524831/2186366)
+		number(19.488% 426084/2186366)
+		memcpy_orig(3.739% 81753/2186366)
+		...
+	_raw_spin_unlock_irqrestore(26.643% 1376379/5166019)
+	mtree_load(8.059% 416304/5166019)
 
-Please do not forget about dm-integrity, it can use crc32/crc32c for non-cryptographic
-integrity through crypto API.
-To test it, cryptsetup testsuite should cover these variants (integrity-compat-test).
+On a system with n CPUs and m interrupts, there will be n*m decimal
+values yielded via seq_printf(.."%10u "..) which is less efficient
+than seq_put_decimal_ull_width, stress reading /proc/interrupts
+indicates ~30% performance improvement with this patch, and profiling
+data shows:
 
-Also, libcryptsetup can be compiled with userspace kernel crypto (AF_ALG) as a crypto backend.
-At least, I think we never used CRC32 though AF_ALG from userspace there...
+	show_interrupts(92.221% 3609371/3913823)
+	    _raw_spin_unlock_irqrestore(39.123% 1412078/3609371)
+	    mtree_load(11.942% 431036/3609371)
+	    seq_put_decimal_ull_width(11.635% 419958/3609371)
+	    seq_printf(9.025% 325754/3609371)
+	    ...
 
-Thanks,
-Milan
+The improvement has pratical significance, considering many monitoring
+tools would read /proc/interrupts periodically.
+
+seq_put_decimal_ull_width(..," ", v, 10) is equivalent to
+seq_printf(.., " %10llu", v), not "%10llu "; Hence there is space
+adjustment along.
+
+Signed-off-by: David Wang <00107082@163.com>
+---
+ arch/alpha/kernel/irq.c     |   8 +--
+ arch/arm/kernel/smp.c       |   4 +-
+ arch/arm64/kernel/smp.c     |   3 +-
+ arch/csky/kernel/smp.c      |   4 +-
+ arch/loongarch/kernel/smp.c |   2 +-
+ arch/parisc/kernel/irq.c    |  34 ++++++------
+ arch/powerpc/kernel/irq.c   |  44 ++++++++--------
+ arch/riscv/kernel/smp.c     |   3 +-
+ arch/sh/kernel/irq.c        |   4 +-
+ arch/sparc/kernel/irq_32.c  |  12 ++---
+ arch/sparc/kernel/irq_64.c  |   4 +-
+ arch/x86/kernel/irq.c       | 100 ++++++++++++++++++------------------
+ arch/xtensa/kernel/irq.c    |   2 +-
+ arch/xtensa/kernel/smp.c    |   4 +-
+ kernel/irq/proc.c           |   6 ++-
+ 15 files changed, 120 insertions(+), 114 deletions(-)
+
+diff --git a/arch/alpha/kernel/irq.c b/arch/alpha/kernel/irq.c
+index c67047c5d830..0dbb8d3ed647 100644
+--- a/arch/alpha/kernel/irq.c
++++ b/arch/alpha/kernel/irq.c
+@@ -72,14 +72,14 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 	int j;
+ 
+ #ifdef CONFIG_SMP
+-	seq_puts(p, "IPI: ");
++	seq_puts(p, "IPI:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10lu ", cpu_data[j].ipi_count);
++		seq_put_decimal_ull_width(p, " ", cpu_data[j].ipi_count, 10);
+ 	seq_putc(p, '\n');
+ #endif
+-	seq_puts(p, "PMI: ");
++	seq_puts(p, "PMI:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10lu ", per_cpu(irq_pmi_count, j));
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_pmi_count, j), 10);
+ 	seq_puts(p, "          Performance Monitoring\n");
+ 	seq_printf(p, "ERR: %10lu\n", irq_err_count);
+ 	return 0;
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 3431c0553f45..1b0680477ae1 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -551,10 +551,10 @@ void show_ipi_list(struct seq_file *p, int prec)
+ 		if (!ipi_desc[i])
+ 			continue;
+ 
+-		seq_printf(p, "%*s%u: ", prec - 1, "IPI", i);
++		seq_printf(p, "%*s%u:", prec - 1, "IPI", i);
+ 
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
++			seq_put_decimal_ull_width(p, " ", irq_desc_kstat_cpu(ipi_desc[i], cpu), 10);
+ 
+ 		seq_printf(p, " %s\n", ipi_types[i]);
+ 	}
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 3b3f6b56e733..35734a30ed8d 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -844,7 +844,8 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+ 			   prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
++			seq_put_decimal_ull_width(p, " ",
++						  irq_desc_kstat_cpu(ipi_desc[i], cpu), 10);
+ 		seq_printf(p, "      %s\n", ipi_types[i]);
+ 	}
+ 
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index 92dbbf3e0205..65f399afc3f0 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -112,8 +112,8 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+ 			   prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10lu ",
+-				per_cpu_ptr(&ipi_data, cpu)->stats[i]);
++			seq_put_decimal_ull_width(p, " ",
++						  per_cpu_ptr(&ipi_data, cpu)->stats[i], 10);
+ 		seq_printf(p, " %s\n", ipi_names[i]);
+ 	}
+ 
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 9afc2d8b3414..86664adfb3cf 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -82,7 +82,7 @@ void show_ipi_list(struct seq_file *p, int prec)
+ 	for (i = 0; i < NR_IPI; i++) {
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i, prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", per_cpu(irq_stat, cpu).ipi_irqs[i]);
++			seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, cpu).ipi_irqs[i], 10);
+ 		seq_printf(p, " LoongArch  %d  %s\n", i + 1, ipi_types[i]);
+ 	}
+ }
+diff --git a/arch/parisc/kernel/irq.c b/arch/parisc/kernel/irq.c
+index dff66be65d29..b060d7e6da46 100644
+--- a/arch/parisc/kernel/irq.c
++++ b/arch/parisc/kernel/irq.c
+@@ -133,40 +133,42 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 	int j;
+ 
+ #ifdef CONFIG_DEBUG_STACKOVERFLOW
+-	seq_printf(p, "%*s: ", prec, "STK");
++	seq_printf(p, "%*s:", prec, "STK");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->kernel_stack_usage);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->kernel_stack_usage, 10);
+ 	seq_puts(p, "  Kernel stack usage\n");
+ # ifdef CONFIG_IRQSTACKS
+-	seq_printf(p, "%*s: ", prec, "IST");
++	seq_printf(p, "%*s:", prec, "IST");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_stack_usage);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_stack_usage, 10);
+ 	seq_puts(p, "  Interrupt stack usage\n");
+ # endif
+ #endif
+ #ifdef CONFIG_SMP
+ 	if (num_online_cpus() > 1) {
+-		seq_printf(p, "%*s: ", prec, "RES");
++		seq_printf(p, "%*s:", prec, "RES");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", irq_stats(j)->irq_resched_count);
++			seq_put_decimal_ull_width(p, " ",
++						  irq_stats(j)->irq_resched_count, 10);
+ 		seq_puts(p, "  Rescheduling interrupts\n");
+-		seq_printf(p, "%*s: ", prec, "CAL");
++		seq_printf(p, "%*s:", prec, "CAL");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", irq_stats(j)->irq_call_count);
++			seq_put_decimal_ull_width(p, " ",
++						  irq_stats(j)->irq_call_count, 10);
+ 		seq_puts(p, "  Function call interrupts\n");
+ 	}
+ #endif
+-	seq_printf(p, "%*s: ", prec, "UAH");
++	seq_printf(p, "%*s:", prec, "UAH");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_unaligned_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_unaligned_count, 10);
+ 	seq_puts(p, "  Unaligned access handler traps\n");
+-	seq_printf(p, "%*s: ", prec, "FPA");
++	seq_printf(p, "%*s:", prec, "FPA");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_fpassist_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_fpassist_count, 10);
+ 	seq_puts(p, "  Floating point assist traps\n");
+-	seq_printf(p, "%*s: ", prec, "TLB");
++	seq_printf(p, "%*s:", prec, "TLB");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_tlb_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_tlb_count, 10);
+ 	seq_puts(p, "  TLB shootdowns\n");
+ 	return 0;
+ }
+@@ -195,10 +197,10 @@ int show_interrupts(struct seq_file *p, void *v)
+ 		action = desc->action;
+ 		if (!action)
+ 			goto skip;
+-		seq_printf(p, "%3d: ", i);
++		seq_printf(p, "%3d:", i);
+ 
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(desc, j));
++			seq_put_decimal_ull_width(p, " ", irq_desc_kstat_cpu(desc, j), 10);
+ 
+ 		seq_printf(p, " %14s", irq_desc_get_chip(desc)->name);
+ #ifndef PARISC_IRQ_CR16_COUNTS
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index 2e1600a8bbbb..a0e8b998c9b5 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -89,69 +89,69 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 
+ #if defined(CONFIG_PPC32) && defined(CONFIG_TAU_INT)
+ 	if (tau_initialized) {
+-		seq_printf(p, "%*s: ", prec, "TAU");
++		seq_printf(p, "%*s:", prec, "TAU");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", tau_interrupts(j));
++			seq_put_decimal_ull_width(p, " ", tau_interrupts(j), 10);
+ 		seq_puts(p, "  PowerPC             Thermal Assist (cpu temp)\n");
+ 	}
+ #endif /* CONFIG_PPC32 && CONFIG_TAU_INT */
+ 
+-	seq_printf(p, "%*s: ", prec, "LOC");
++	seq_printf(p, "%*s:", prec, "LOC");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).timer_irqs_event);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).timer_irqs_event, 10);
+         seq_printf(p, "  Local timer interrupts for timer event device\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "BCT");
++	seq_printf(p, "%*s:", prec, "BCT");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).broadcast_irqs_event);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).broadcast_irqs_event, 10);
+ 	seq_printf(p, "  Broadcast timer interrupts for timer event device\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "LOC");
++	seq_printf(p, "%*s:", prec, "LOC");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).timer_irqs_others);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).timer_irqs_others, 10);
+         seq_printf(p, "  Local timer interrupts for others\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "SPU");
++	seq_printf(p, "%*s:", prec, "SPU");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).spurious_irqs);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).spurious_irqs, 10);
+ 	seq_printf(p, "  Spurious interrupts\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "PMI");
++	seq_printf(p, "%*s:", prec, "PMI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).pmu_irqs);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).pmu_irqs, 10);
+ 	seq_printf(p, "  Performance monitoring interrupts\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "MCE");
++	seq_printf(p, "%*s:", prec, "MCE");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).mce_exceptions);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).mce_exceptions, 10);
+ 	seq_printf(p, "  Machine check exceptions\n");
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	if (cpu_has_feature(CPU_FTR_HVMODE)) {
+-		seq_printf(p, "%*s: ", prec, "HMI");
++		seq_printf(p, "%*s:", prec, "HMI");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", paca_ptrs[j]->hmi_irqs);
++			seq_put_decimal_ull_width(p, " ", paca_ptrs[j]->hmi_irqs, 10);
+ 		seq_printf(p, "  Hypervisor Maintenance Interrupts\n");
+ 	}
+ #endif
+ 
+-	seq_printf(p, "%*s: ", prec, "NMI");
++	seq_printf(p, "%*s:", prec, "NMI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).sreset_irqs);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).sreset_irqs, 10);
+ 	seq_printf(p, "  System Reset interrupts\n");
+ 
+ #ifdef CONFIG_PPC_WATCHDOG
+-	seq_printf(p, "%*s: ", prec, "WDG");
++	seq_printf(p, "%*s:", prec, "WDG");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat, j).soft_nmi_irqs);
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).soft_nmi_irqs, 10);
+ 	seq_printf(p, "  Watchdog soft-NMI interrupts\n");
+ #endif
+ 
+ #ifdef CONFIG_PPC_DOORBELL
+ 	if (cpu_has_feature(CPU_FTR_DBELL)) {
+-		seq_printf(p, "%*s: ", prec, "DBL");
++		seq_printf(p, "%*s:", prec, "DBL");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", per_cpu(irq_stat, j).doorbell_irqs);
++			seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, j).doorbell_irqs, 10);
+ 		seq_printf(p, "  Doorbell interrupts\n");
+ 	}
+ #endif
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index c180a647a30e..f1e9c3db094c 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -226,7 +226,8 @@ void show_ipi_stats(struct seq_file *p, int prec)
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+ 			   prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
++			seq_put_decimal_ull_width(p, " ",
++						  irq_desc_kstat_cpu(ipi_desc[i], cpu), 10);
+ 		seq_printf(p, " %s\n", ipi_names[i]);
+ 	}
+ }
+diff --git a/arch/sh/kernel/irq.c b/arch/sh/kernel/irq.c
+index 4e6835de54cf..9022d8af9d68 100644
+--- a/arch/sh/kernel/irq.c
++++ b/arch/sh/kernel/irq.c
+@@ -43,9 +43,9 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ {
+ 	int j;
+ 
+-	seq_printf(p, "%*s: ", prec, "NMI");
++	seq_printf(p, "%*s:", prec, "NMI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(irq_stat.__nmi_count, j));
++		seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat.__nmi_count, j), 10);
+ 	seq_printf(p, "  Non-maskable interrupts\n");
+ 
+ 	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
+diff --git a/arch/sparc/kernel/irq_32.c b/arch/sparc/kernel/irq_32.c
+index 8605dd710f3c..5210991429d5 100644
+--- a/arch/sparc/kernel/irq_32.c
++++ b/arch/sparc/kernel/irq_32.c
+@@ -199,18 +199,18 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 	int j;
+ 
+ #ifdef CONFIG_SMP
+-	seq_printf(p, "RES: ");
++	seq_printf(p, "RES:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", cpu_data(j).irq_resched_count);
++		seq_put_decimal_ull_width(p, " ", cpu_data(j).irq_resched_count, 10);
+ 	seq_printf(p, "     IPI rescheduling interrupts\n");
+-	seq_printf(p, "CAL: ");
++	seq_printf(p, "CAL:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", cpu_data(j).irq_call_count);
++		seq_put_decimal_ull_width(p, " ", cpu_data(j).irq_call_count, 10);
+ 	seq_printf(p, "     IPI function call interrupts\n");
+ #endif
+-	seq_printf(p, "NMI: ");
++	seq_printf(p, "NMI:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", cpu_data(j).counter);
++		seq_put_decimal_ull_width(p, " ", cpu_data(j).counter, 10);
+ 	seq_printf(p, "     Non-maskable interrupts\n");
+ 	return 0;
+ }
+diff --git a/arch/sparc/kernel/irq_64.c b/arch/sparc/kernel/irq_64.c
+index 01ee800efde3..9ab6e79b617b 100644
+--- a/arch/sparc/kernel/irq_64.c
++++ b/arch/sparc/kernel/irq_64.c
+@@ -304,9 +304,9 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ {
+ 	int j;
+ 
+-	seq_printf(p, "NMI: ");
++	seq_printf(p, "NMI:");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", cpu_data(j).__nmi_count);
++		seq_put_decimal_ull_width(p, " ", cpu_data(j).__nmi_count, 10);
+ 	seq_printf(p, "     Non-maskable interrupts\n");
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 385e3a5fc304..66cc8f001bd0 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -62,103 +62,103 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ {
+ 	int j;
+ 
+-	seq_printf(p, "%*s: ", prec, "NMI");
++	seq_printf(p, "%*s:", prec, "NMI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->__nmi_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->__nmi_count, 10);
+ 	seq_puts(p, "  Non-maskable interrupts\n");
+ #ifdef CONFIG_X86_LOCAL_APIC
+-	seq_printf(p, "%*s: ", prec, "LOC");
++	seq_printf(p, "%*s:", prec, "LOC");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->apic_timer_irqs);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->apic_timer_irqs, 10);
+ 	seq_puts(p, "  Local timer interrupts\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "SPU");
++	seq_printf(p, "%*s:", prec, "SPU");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_spurious_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_spurious_count, 10);
+ 	seq_puts(p, "  Spurious interrupts\n");
+-	seq_printf(p, "%*s: ", prec, "PMI");
++	seq_printf(p, "%*s:", prec, "PMI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->apic_perf_irqs);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->apic_perf_irqs, 10);
+ 	seq_puts(p, "  Performance monitoring interrupts\n");
+-	seq_printf(p, "%*s: ", prec, "IWI");
++	seq_printf(p, "%*s:", prec, "IWI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->apic_irq_work_irqs);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->apic_irq_work_irqs, 10);
+ 	seq_puts(p, "  IRQ work interrupts\n");
+-	seq_printf(p, "%*s: ", prec, "RTR");
++	seq_printf(p, "%*s:", prec, "RTR");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->icr_read_retry_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->icr_read_retry_count, 10);
+ 	seq_puts(p, "  APIC ICR read retries\n");
+ 	if (x86_platform_ipi_callback) {
+-		seq_printf(p, "%*s: ", prec, "PLT");
++		seq_printf(p, "%*s:", prec, "PLT");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ", irq_stats(j)->x86_platform_ipis);
++			seq_put_decimal_ull_width(p, " ", irq_stats(j)->x86_platform_ipis, 10);
+ 		seq_puts(p, "  Platform interrupts\n");
+ 	}
+ #endif
+ #ifdef CONFIG_SMP
+-	seq_printf(p, "%*s: ", prec, "RES");
++	seq_printf(p, "%*s:", prec, "RES");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_resched_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_resched_count, 10);
+ 	seq_puts(p, "  Rescheduling interrupts\n");
+-	seq_printf(p, "%*s: ", prec, "CAL");
++	seq_printf(p, "%*s:", prec, "CAL");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_call_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_call_count, 10);
+ 	seq_puts(p, "  Function call interrupts\n");
+-	seq_printf(p, "%*s: ", prec, "TLB");
++	seq_printf(p, "%*s:", prec, "TLB");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_tlb_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_tlb_count, 10);
+ 	seq_puts(p, "  TLB shootdowns\n");
+ #endif
+ #ifdef CONFIG_X86_THERMAL_VECTOR
+-	seq_printf(p, "%*s: ", prec, "TRM");
++	seq_printf(p, "%*s:", prec, "TRM");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_thermal_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_thermal_count, 10);
+ 	seq_puts(p, "  Thermal event interrupts\n");
+ #endif
+ #ifdef CONFIG_X86_MCE_THRESHOLD
+-	seq_printf(p, "%*s: ", prec, "THR");
++	seq_printf(p, "%*s:", prec, "THR");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_threshold_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_threshold_count, 10);
+ 	seq_puts(p, "  Threshold APIC interrupts\n");
+ #endif
+ #ifdef CONFIG_X86_MCE_AMD
+-	seq_printf(p, "%*s: ", prec, "DFR");
++	seq_printf(p, "%*s:", prec, "DFR");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->irq_deferred_error_count);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->irq_deferred_error_count, 10);
+ 	seq_puts(p, "  Deferred Error APIC interrupts\n");
+ #endif
+ #ifdef CONFIG_X86_MCE
+-	seq_printf(p, "%*s: ", prec, "MCE");
++	seq_printf(p, "%*s:", prec, "MCE");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(mce_exception_count, j));
++		seq_put_decimal_ull_width(p, " ", per_cpu(mce_exception_count, j), 10);
+ 	seq_puts(p, "  Machine check exceptions\n");
+-	seq_printf(p, "%*s: ", prec, "MCP");
++	seq_printf(p, "%*s:", prec, "MCP");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", per_cpu(mce_poll_count, j));
++		seq_put_decimal_ull_width(p, " ", per_cpu(mce_poll_count, j), 10);
+ 	seq_puts(p, "  Machine check polls\n");
+ #endif
+ #ifdef CONFIG_X86_HV_CALLBACK_VECTOR
+ 	if (test_bit(HYPERVISOR_CALLBACK_VECTOR, system_vectors)) {
+-		seq_printf(p, "%*s: ", prec, "HYP");
++		seq_printf(p, "%*s:", prec, "HYP");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ",
+-				   irq_stats(j)->irq_hv_callback_count);
++			seq_put_decimal_ull_width(p, " ",
++						  irq_stats(j)->irq_hv_callback_count, 10);
+ 		seq_puts(p, "  Hypervisor callback interrupts\n");
+ 	}
+ #endif
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	if (test_bit(HYPERV_REENLIGHTENMENT_VECTOR, system_vectors)) {
+-		seq_printf(p, "%*s: ", prec, "HRE");
++		seq_printf(p, "%*s:", prec, "HRE");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ",
+-				   irq_stats(j)->irq_hv_reenlightenment_count);
++			seq_put_decimal_ull_width(p, " ",
++						  irq_stats(j)->irq_hv_reenlightenment_count, 10);
+ 		seq_puts(p, "  Hyper-V reenlightenment interrupts\n");
+ 	}
+ 	if (test_bit(HYPERV_STIMER0_VECTOR, system_vectors)) {
+-		seq_printf(p, "%*s: ", prec, "HVS");
++		seq_printf(p, "%*s:", prec, "HVS");
+ 		for_each_online_cpu(j)
+-			seq_printf(p, "%10u ",
+-				   irq_stats(j)->hyperv_stimer0_count);
++			seq_put_decimal_ull_width(p, " ",
++						  irq_stats(j)->hyperv_stimer0_count, 10);
+ 		seq_puts(p, "  Hyper-V stimer0 interrupts\n");
+ 	}
+ #endif
+@@ -167,28 +167,28 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 	seq_printf(p, "%*s: %10u\n", prec, "MIS", atomic_read(&irq_mis_count));
+ #endif
+ #if IS_ENABLED(CONFIG_KVM)
+-	seq_printf(p, "%*s: ", prec, "PIN");
++	seq_printf(p, "%*s:", prec, "PIN");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", irq_stats(j)->kvm_posted_intr_ipis);
++		seq_put_decimal_ull_width(p, " ", irq_stats(j)->kvm_posted_intr_ipis, 10);
+ 	seq_puts(p, "  Posted-interrupt notification event\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "NPI");
++	seq_printf(p, "%*s:", prec, "NPI");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ",
+-			   irq_stats(j)->kvm_posted_intr_nested_ipis);
++		seq_put_decimal_ull_width(p, " ",
++					  irq_stats(j)->kvm_posted_intr_nested_ipis, 10);
+ 	seq_puts(p, "  Nested posted-interrupt event\n");
+ 
+-	seq_printf(p, "%*s: ", prec, "PIW");
++	seq_printf(p, "%*s:", prec, "PIW");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ",
+-			   irq_stats(j)->kvm_posted_intr_wakeup_ipis);
++		seq_put_decimal_ull_width(p, " ",
++					  irq_stats(j)->kvm_posted_intr_wakeup_ipis, 10);
+ 	seq_puts(p, "  Posted-interrupt wakeup event\n");
+ #endif
+ #ifdef CONFIG_X86_POSTED_MSI
+-	seq_printf(p, "%*s: ", prec, "PMN");
++	seq_printf(p, "%*s:", prec, "PMN");
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ",
+-			   irq_stats(j)->posted_msi_notification_count);
++		seq_put_decimal_ull_width(p, " ",
++					  irq_stats(j)->posted_msi_notification_count, 10);
+ 	seq_puts(p, "  Posted MSI notification event\n");
+ #endif
+ 	return 0;
+diff --git a/arch/xtensa/kernel/irq.c b/arch/xtensa/kernel/irq.c
+index b1e410f6b5ab..c4f46989f9b7 100644
+--- a/arch/xtensa/kernel/irq.c
++++ b/arch/xtensa/kernel/irq.c
+@@ -58,7 +58,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ #if XTENSA_FAKE_NMI
+ 	seq_printf(p, "%*s:", prec, "NMI");
+ 	for_each_online_cpu(cpu)
+-		seq_printf(p, " %10lu", per_cpu(nmi_count, cpu));
++		seq_put_decimal_ull_width(p, " ", per_cpu(nmi_count, cpu), 10);
+ 	seq_puts(p, "   Non-maskable interrupts\n");
+ #endif
+ 	return 0;
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index 94a23f100726..71ec9eced8b9 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -453,8 +453,8 @@ void show_ipi_list(struct seq_file *p, int prec)
+ 	for (i = 0; i < IPI_MAX; ++i) {
+ 		seq_printf(p, "%*s:", prec, ipi_text[i].short_text);
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, " %10lu",
+-					per_cpu(ipi_data, cpu).ipi_count[i]);
++			seq_put_decimal_ull_width(p, " ",
++						  per_cpu(ipi_data, cpu).ipi_count[i], 10);
+ 		seq_printf(p, "   %s\n", ipi_text[i].long_text);
+ 	}
+ }
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 9081ada81c3d..988ce781e813 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -494,9 +494,11 @@ int show_interrupts(struct seq_file *p, void *v)
+ 	if (!desc->action || irq_desc_is_chained(desc) || !desc->kstat_irqs)
+ 		goto outsparse;
+ 
+-	seq_printf(p, "%*d: ", prec, i);
++	seq_printf(p, "%*d:", prec, i);
+ 	for_each_online_cpu(j)
+-		seq_printf(p, "%10u ", desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, j) : 0);
++		seq_put_decimal_ull_width(p, " ",
++					  desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, j) : 0,
++					  10);
+ 
+ 	raw_spin_lock_irqsave(&desc->lock, flags);
+ 	if (desc->irq_data.chip) {
+-- 
+2.39.2
 
