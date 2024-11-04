@@ -1,116 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434337603F
-	for <loongarch@lists.linux.dev>; Mon,  4 Nov 2024 02:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C5E4C6C
+	for <loongarch@lists.linux.dev>; Mon,  4 Nov 2024 02:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730687052; cv=none; b=gPpLkPo95vVn6wLaQJ9l/+5njjVwdscI31bUDHPVR7kpbF6bLjqDyjB1NPxHDQBb8JAqEGxLLtYZ9NeLYWZ0lhzk1ci/qyA8SW+alN1isXrla9MEUa1P8eV4ZzqXmSUMaugxMu/kkQJoI+BYC1MnLWveXnUfaiTzcG5p0pJVohc=
+	t=1730687715; cv=none; b=X0luzksyM+cj3A3dWAMDxmF/VHDBFpXvZIet3yn8w+uboa8uHB8wY9daiWmfaAig9RRZ9CVih4/MpHhvjT3JgtnDb1IrulPHSWcRbBpx2URJ6x93rQJRaI8IbnR7RP5PRqUT1NQNdF3PK1biir7/euPrH3ycueQwRv9h13P3JHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730687052; c=relaxed/simple;
-	bh=I3dhF0x96cZQijUd84kMCiRMDMYW7wG4a8XWx5JVndI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WYvzClmyhiPZ/kcHbSWQnqCgHmgdLoirDCpPs4ufKUUG82mbSFB2oIar4h+dgVosUsPZkYzypzwfJb2ZfTH3xCD45GDuIe+0HJgmSZzgESiindpNTMlxr7hploquZdliBG351FHd+0dzX9y6GBTX+MqSASATUNkq6e+KujtV6TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVuxDgSS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730687715; c=relaxed/simple;
+	bh=LBnwjIu01qb3uMzu5oQLZ1sXef4WJoJ8ZJ5HXkRpTng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QT8UXuSmyX4NwzqhM9o6hLvgHFBW7+AYchvOI544jnYz/2QzjttxixAQU9lsnvXq+f6GF5D55fBiC3yk1/A9gX2zxTR3GLIeDC+Ba3RL8a74uYZRE9hQzp4TDuco3hOTlxkWURlGuSY3Brt6O+Xjw48HHBGt8gWLgfJalwMqP/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=I0gkvfMV; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVuxDgSS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DECC4CED3
-	for <loongarch@lists.linux.dev>; Mon,  4 Nov 2024 02:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730687051;
-	bh=I3dhF0x96cZQijUd84kMCiRMDMYW7wG4a8XWx5JVndI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mVuxDgSSIAL/RMAEj3Sp6P5S+isZ8v0O7xkcThpOUu/SEVmWWxKI8A/Lwh/v6IDQe
-	 wAKoEsUdcL/G/UYlGRVDpQm5/RUO+GTzb+s6QHMtrhAykFJE8cFwcp5eSfKEgCfPDI
-	 F+7d/jtmRcLuRj408s2ix/3xqzVsuwCll0lBxsJKnPlk+G1nDRmyACNcUmwzcFhaW2
-	 rJXFeUfIOHshZwpfENj+SsAUHIDGa//wUMCze7M+bvWeW1z8P94HCaJnSUWuXCJwjS
-	 q0QsYKehHj4ymKEaSIxgSylqA5tqyXb0hRl4rVjZAja9mT/roME5MB69s1c/503Gp+
-	 Ww74UaXzB70oA==
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3807dd08cfcso3219627f8f.1
-        for <loongarch@lists.linux.dev>; Sun, 03 Nov 2024 18:24:11 -0800 (PST)
-X-Gm-Message-State: AOJu0YwndwGPoQjQbnPgAWGorLYTj0mhE8sRnd+UlcbPvOhSftmNHrS8
-	XFHb/0o4aF4AIIReifRZyvblVBpmBcxtLsQyJ+x2tDNIfKzVo6ntJDPoploNVwNWoFyCaD/2Zwc
-	BnNeGB5GFIhPqno+bIpQOKNsVLNg=
-X-Google-Smtp-Source: AGHT+IFJL5udU3JG5ezqtrAgL4b8TH+QFRvhmsTzwBu5lXNxJYYXjU6z+/YJZGy7S28J/hr1MDHNN3EA1VnxtFfuk/E=
-X-Received: by 2002:a05:6000:2ce:b0:37d:52fc:edf9 with SMTP id
- ffacd0b85a97d-381c7a5cf91mr11046198f8f.20.1730687050319; Sun, 03 Nov 2024
- 18:24:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="I0gkvfMV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1730687664;
+	bh=LBnwjIu01qb3uMzu5oQLZ1sXef4WJoJ8ZJ5HXkRpTng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=I0gkvfMVE/MguKNe6G+/LMNLVFqz7dkh0IDG0vDntK4CNMqCoz50Tqhzb3M0pX6yE
+	 GsMB3HypNccbL/ypubSF6JPJFS7ckgk4c83b82I4kXeEhlwYuJQ9JJSgbhKj4ZgSzt
+	 6AVc0wlL51Wy3m4xPQdNrps/E4wW0CWhuFCKwvFc=
+X-QQ-mid: bizesmtp90t1730687661tfnba8nb
+X-QQ-Originating-IP: zCt886bJnOZxcI98vSCU01cM2iwZOisAeH5BvJ3W5y4=
+Received: from [10.20.6.66] ( [61.183.83.60])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 04 Nov 2024 10:34:18 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13360692648225194716
+Message-ID: <E7AED86A89FD886F+263304da-0529-4b4c-9e23-ea2e5e3cef2c@uniontech.com>
+Date: Mon, 4 Nov 2024 10:34:18 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241103224752.190742-1-ebiggers@kernel.org>
-In-Reply-To: <20241103224752.190742-1-ebiggers@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 4 Nov 2024 10:23:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5KaXBr-TdpDbJwcr_L0_mbSw=4J30uwQ2xn2YDs=Hg2Q@mail.gmail.com>
-Message-ID: <CAAhV-H5KaXBr-TdpDbJwcr_L0_mbSw=4J30uwQ2xn2YDs=Hg2Q@mail.gmail.com>
-Subject: Re: [PATCH] loongarch/crc32: add missing dependency on 64BIT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/18] loongarch/crc32: expose CRC32 functions through
+ lib
 To: Eric Biggers <ebiggers@kernel.org>
-Cc: loongarch@lists.linux.dev, Min Zhou <zhoumin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, WangYuli <wangyuli@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc: ardb@kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, kernel@xen0n.name, chenhuacai@kernel.org,
+ xry111@xry111.site, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20241025191454.72616-7-ebiggers@kernel.org>
+ <DA8BCDFFEACDA1C6+20241103133655.217375-1-wangyuli@uniontech.com>
+ <20241103135730.GA813@quark.localdomain>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <20241103135730.GA813@quark.localdomain>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------yPwlqMleUVPPs6iT7orBXJ4O"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MxHu/stL3hVPTyQKEN1I9xOGN+BWMXbxaMOS0j7W+ohxt+jGBkhBGwZ4
+	mKISKoLBEd9DlDyAzvD8Xb+Ak/ELvHSM++rLK6y5TzF3Hf/17WFfm4pm9/k9mLloUcGW+NL
+	8qZ+6cZzrdyjqSgcP1Xp/i5pEffVubQ2dMkyTuu3UHXF84Ui38G5dAI/uAmL5APJ4umWUjs
+	JAlTTcK/ZnDz/dXBv4ZI87pL43bv608+HDpuFePggpjxgGa1kVYzobU5eUZ6LO/uv2RowEK
+	uhKq8QAeAPI+IMf1b6aLSu6P/Fs/km10//7pfxHG6dA+7Km3UUBoxHlM6u2nyaXKFibw80s
+	t4nTGxp0efQ3Pfm9Sz2/C3rkybvwsRFVPfwxyAn/VgcfSodJAMgcZKgqSNpASPGkZXP4lL/
+	k3H1h1FOKBoqUmyu7jUmymrjsrywBPtV49f5MFmBnQwrkwKQHK2oaFRwHbmLcnsoIOHE8Z/
+	deJsmZLHkJlnAaYVaPf54mh8UQNn52S4MGXd5Yk5vLu5eU3kZqeA32eOGldP7Mb0CmmSAS6
+	gtMsyTXIALbDLKcwPkPsXrS6tqgYJTgEau2ZzAxsNWrQjl0sRSIrHUxJSdhmubmgeXccIdZ
+	r1vHGhdkaGTJkGJqM22umnfJNPXVtOLMQ6X5hKtTi5BYe9LhRtqHfXvmVj4p1Vl5eT9hXi2
+	3DIJkAQUebz9E3jx1FLgXjJMHocjcNcEVdhImvslnERXJE1DLgArhO3UEsYiCJtmJYfPDD2
+	aS/b2i0B2kduRaSa48Cb0Of/cdn84PSGqXDObVcHjWZSBNvZ2dpru68Uwhr99TVEG4IGgF1
+	9eOXjq5Z4MrGfy6pZlOmaz4wPAryxd9VvG7ei7E5Aki854L1tCLeSXuBZ3DcVwlhBgs7ZE8
+	TEjRNHBoYPk7hwnmmTNksvuvkSlftSKfeFFGhvbMd9a4Kj8wnwhazWqvsD5X+cHxHbX2zIA
+	QuFp0GZUngV4M0SsIHIumND1dfxBkdyInuyK4vGBQSxCdodYauHuTByUkblV8feBGpEUYBV
+	78cet9pPs1EBpoInNb8RBGGAIOcBBODfCC27xPiQ==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------yPwlqMleUVPPs6iT7orBXJ4O
+Content-Type: multipart/mixed; boundary="------------cIiC60yt0DtrRFabfn26CCc3";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: ardb@kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, kernel@xen0n.name, chenhuacai@kernel.org,
+ xry111@xry111.site, sparclinux@vger.kernel.org, x86@kernel.org
+Message-ID: <263304da-0529-4b4c-9e23-ea2e5e3cef2c@uniontech.com>
+Subject: Re: [PATCH v2 06/18] loongarch/crc32: expose CRC32 functions through
+ lib
+References: <20241025191454.72616-7-ebiggers@kernel.org>
+ <DA8BCDFFEACDA1C6+20241103133655.217375-1-wangyuli@uniontech.com>
+ <20241103135730.GA813@quark.localdomain>
+In-Reply-To: <20241103135730.GA813@quark.localdomain>
+
+--------------cIiC60yt0DtrRFabfn26CCc3
+Content-Type: multipart/mixed; boundary="------------YiihG54060SCpWIarDHBVU6V"
+
+--------------YiihG54060SCpWIarDHBVU6V
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+DQpPbiAyMDI0LzExLzMgMjE6NTcsIEVyaWMgQmlnZ2VycyB3cm90ZToNCj4gT24gU3VuLCBO
+b3YgMDMsIDIwMjQgYXQgMDk6MzY6NTVQTSArMDgwMCwgV2FuZ1l1bGkgd3JvdGU6DQo+PiBF
+dmVuIHRob3VnaCB0aGUgbmFycm93ZXIgQ1JDIGluc3RydWN0aW9ucyBkb2Vzbid0IHJlcXVp
+cmUgR1JMRU49NjQsIHRoZXkgc3RpbGwgKmFyZW4ndCogcGFydCBvZiBMQTMyIChMb29uZ0Fy
+Y2ggcmVmZXJlbmNlIG1hbnVhbCB2MS4xMCwgVm9sdW1lIDEsIFRhYmxlIDItMSkuDQo+PiBM
+aW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMGE3ZDBhOWUtYzU2ZS00ZWUyLWE4
+M2ItMDAxNjRhNDUwYWJlQHhlbjBuLm5hbWUvDQo+Pg0KPj4gVGhlcmVmb3JlLCB3ZSBjb3Vs
+ZCBub3QgZGlyZWN0bHkgYWRkIEFSQ0hfSEFTX0NSQzMyIHRvIGNvbmZpZyBMT09OR0FSQ0gu
+DQo+Pg0KPiBUaGVyZSdzIHN0aWxsIGEgcnVudGltZSBDUFUgZmVhdHVyZSBjaGVjayBvZiBj
+cHVfaGFzKENQVV9GRUFUVVJFX0NSQzMyKS4NCj4gU2VlIGFyY2gvbG9vbmdhcmNoL2xpYi9j
+cmMzMi1sb29uZ2FyY2guYy4gIFNvIGl0J3MgdGhlIHNhbWUgYXMgYmVmb3JlLg0KPiBBUkNI
+X0hBU19DUkMzMiBqdXN0IG1lYW5zIHRoYXQgdGhlIGZpbGUgd2lsbCBiZSBjb21waWxlZC4N
+Cj4NCj4gSWYgeW91J3JlIHRyeWluZyB0byBzYXkgdGhhdCB5b3UgdGhpbmsgdGhpcyBmaWxl
+IHNob3VsZCBiZSBidWlsdCBvbmx5IHdoZW4NCj4gQ09ORklHXzY0QklUPXksIHRoZW4gdGhh
+dCB3b3VsZCBiZSBhbiBleGlzdGluZyBidWcgc2luY2UgdGhlIGV4aXN0aW5nIGZpbGUNCj4g
+YXJjaC9sb29uZ2FyY2gvY3J5cHRvL2NyYzMyLWxvb25nYXJjaC5jIHdhcyBidWlsdCBmb3Ig
+Ym90aCAzMi1iaXQgYW5kIDY0LWJpdC4NCj4gQnV0IGlmIHlvdSB0aGluayB0aGlzIGlzIGEg
+YnVnLCBJIGNhbiBmaXggdGhpcyB0b28uDQo+DQo+IC0gRXJpYw0KPg0KDQpBY3R1YWxseSwg
+bXkgb3JpZ2luYWxseSBtZWFuIGlzIHRoYXQgZGlyZWN0bHkgZGVjbGFyaW5nIExvb25nQXJj
+aCANCkFSQ0hfSEFTX0NSQzMyIHdpdGhvdXQgZGlzdGluZ3Vpc2hpbmcgYmV0d2VlbiAzMi1i
+aXQgYW5kIDY0LWJpdCBtaWdodCANCm1pc2xlYWQgdGhvc2UgcmVhZGluZyB0aGUgY29kZS4g
+QW5kIGl0J3Mgbm90IHJpZ29yb3VzLg0KSG93ZXZlciwgYWNjb3JkaW5nIHRvIEh1YWNhaSBD
+aGVuJ3MgcmVjZW50IHJlcGx5LCB0aGVyZSBhcmUgbWFueSBzaW1pbGFyIA0KaXNzdWVzIGFu
+ZCB0aGV5IHdvbid0IGNhdXNlIGJ1aWxkIGVycm9ycyBmb3Igbm93Lg0KTGluazogDQpodHRw
+czovL2xvcmUua2VybmVsLm9yZy9hbGwvQ0FBaFYtSDVLYVhCci1UZHBEYkp3Y3JfTDBfbWJT
+dz00SjMwdXdRMnhuMllEcz1IZzJRQG1haWwuZ21haWwuY29tLw0KU28sIHRoaXMgY2hhbmdl
+IHNob3VsZCBiZSBmaW5lIGZvciBub3cuDQoNClJldmlld2VkLWJ5OiBXYW5nWXVsaSA8d2Fu
+Z3l1bGlAdW5pb250ZWNoLmNvbT4NCg0KVGhhbmtzLA0KLS0gDQpXYW5nWXVsaQ0K
+--------------YiihG54060SCpWIarDHBVU6V
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Eric and Yuli,
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-On Mon, Nov 4, 2024 at 6:49=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> w=
-rote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> The LoongArch CRC32 instructions are only specified for LA64 (64-bit)
-> and cannot be assembled in 32-bit mode.  Therefore only build the
-> LoongArch-optimized CRC32 functions when CONFIG_64BIT.
-I think there are no build errors, just that it technically depends on 64BI=
-T?
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
-If so, there are a bunch of config options need to depend on 64BIT,
-such as ARCH_HAS_PTE_DEVMAP, ARCH_SUPPORTS_HUGETLBFS,
-HAVE_ARCH_TRANSPARENT_HUGEPAGE, HAVE_ARCH_KASAN, etc.
+--------------YiihG54060SCpWIarDHBVU6V--
 
-However, the dependencies exist at first, but then removed from Arnd's
-suggestion. Because we have no 32BIT support now, so just keep it as
-simple as possible.
+--------------cIiC60yt0DtrRFabfn26CCc3--
 
-This patch can be applied when we add 32BIT support, but not now.
+--------------yPwlqMleUVPPs6iT7orBXJ4O
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Huacai
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZygyqgUDAAAAAAAKCRDF2h8wRvQL7u9/
+AQCzme1hyYUbPe1s4tK4FtfJbQ1qS/eQ5ZNWEjUnEivrLwEA0UMghFUFO/92QNK3/a3a7O8QrCGS
+Ov5jILXFpAVfTgw=
+=fG9N
+-----END PGP SIGNATURE-----
 
->
-> Fixes: 2f1648220214 ("LoongArch: crypto: Add crc32 and crc32c hw accelera=
-tion")
-> Reported-by: WangYuli <wangyuli@uniontech.com>
-> Closes: https://lore.kernel.org/r/DA8BCDFFEACDA1C6+20241103133655.217375-=
-1-wangyuli@uniontech.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  arch/loongarch/crypto/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/crypto/Kconfig b/arch/loongarch/crypto/Kconfi=
-g
-> index 200a6e8b43b1..b68b9a797f83 100644
-> --- a/arch/loongarch/crypto/Kconfig
-> +++ b/arch/loongarch/crypto/Kconfig
-> @@ -2,10 +2,11 @@
->
->  menu "Accelerated Cryptographic Algorithms for CPU (loongarch)"
->
->  config CRYPTO_CRC32_LOONGARCH
->         tristate "CRC32c and CRC32"
-> +       depends on 64BIT
->         select CRC32
->         select CRYPTO_HASH
->         help
->           CRC32c and CRC32 CRC algorithms
->
->
-> base-commit: 886b7e80ab19841f640cafd8b5ab053409b9b931
-> --
-> 2.47.0
->
->
+--------------yPwlqMleUVPPs6iT7orBXJ4O--
