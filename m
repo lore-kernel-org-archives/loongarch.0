@@ -1,114 +1,92 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB30C1D5AD8
-	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9761D515E
+	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730810356; cv=none; b=poAcXIl2zmIC0qnCRDp1+OnseEd+68ESPTJDTXRkTEntURoKn1576/tYfOSsx5deqbgIvpxuAfai837lJoe6D6fIUgiykLvlv4f7wTouH6OMY7qVX+UXNEtoiU2cUy3QL32ZEZZt0M70OX3/kXsFDzixLLzCVkLwveknO9+Ue1g=
+	t=1730810871; cv=none; b=lXwJVS1EFbBEvFEMvG9J/qF24qmL1T9MaO3qE9faGKLXhWm+YG1Zer8FO1ZHTrmtaHoDZq92anvKrIWbC54PFrYqsydu/pz2Ibkz1vLxRLRBeMMmSJ0/0aB4fEqgU+RVRf4g0YeW1aK39+FFNatYcWvdyJyeYgnHTlSOuVHhcM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730810356; c=relaxed/simple;
-	bh=Rwqaw/Ie96v4mk5XllciCpWVfbKETe4TlSqOSrnJlYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DjfcyLpQq/ZekzowgeOM94FLM/ARPYRO5QlYoQ5ff9ZhvOhIu3Vlb42IY9qSh+QBNE6hox7vNu3F011zPdpdgeF5lmwZl1HLXNSTNQQ1j7G6rn5IrTIpf2OAc955NPrKWIJTdA2UI10CnedGmmI28NvrkpS8LK1CGpusplqbu+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxeeDwESpnmrUxAA--.33629S3;
-	Tue, 05 Nov 2024 20:39:12 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxrsLsESpnw4lCAA--.26454S7;
-	Tue, 05 Nov 2024 20:39:12 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] LoongArch: Enable jump table with GCC for objtool
-Date: Tue,  5 Nov 2024 20:39:06 +0800
-Message-ID: <20241105123906.26072-6-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20241105123906.26072-1-yangtiezhu@loongson.cn>
-References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1730810871; c=relaxed/simple;
+	bh=lveH6tT8PYd75EaksRx/fIK3ax0m1rOysCm//zZ0jbY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qlEEmjsziIm4dR8SY5CEfPD14NnM+oZ0MZYvINixw9haWiQZwoT8i2Lalach+f2ZcVM7nComINgRmlWTziOfikziPrcMjD74d/6372XqU2zYNXCsZQrLw03oyCMxiH7433rJ+EHWuA5cVSX8UkMf0jHCzroPK5KUhCAUeaE0ASI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IF7yjyQ0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IF7yjyQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E74AAC4CECF
+	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730810870;
+	bh=lveH6tT8PYd75EaksRx/fIK3ax0m1rOysCm//zZ0jbY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IF7yjyQ0JMG4lqmP309bmGa0ewkjehQ2pSMgcaAm/+j5iSFS4sLxWASfhA773qrGt
+	 N9k6W+RDjVBHK0tolLAgAwpBz+RD/BWQIqLwLkIeTC4ex7Kk+QM2sUPdzqpP3uQfne
+	 7kHqt2YJ9leuqgZX970b67wSvUkyg9EeA3Vg6O2MJMOkAyipQbenJY2rtuIffp9Srb
+	 yg2/3ViNI9LxBLnju6HADDVgPdWBt9vz12C3BHobp3Hkiv6ji96Ay4gn9DJA3lCj70
+	 dIc7S+eKlR2YN3daFnOwgvfPYp+DXQI3sy/uG1DfhCC7+/eap54qWU0+gbQpOJgaa2
+	 lZjsSgJBAcjkw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a99e3b3a411so990656466b.0
+        for <loongarch@lists.linux.dev>; Tue, 05 Nov 2024 04:47:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVDTvFf+mlSAG+KMxg2omoT/OpzJ1NpfvEdg23zCAA07jeK3g+b/1xdj6WeH8XcI8tctOGdCe3ROv0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbE0MeH46fofi/MjdwgXcuHrUBT6yK+ELJF7bnQpoGZ7NOiXvS
+	DP9U9LasE773MFRrmSZHSDvByTfjTDdKTj+yuP2tsthqHU6MkgSur7RrwO5agWe/3fbJNK7jZuv
+	5OfYFAuYoQiPYFG0BtZoYfcXlFgM=
+X-Google-Smtp-Source: AGHT+IFJof42E96idgajIHqchgbc252pqsbEamBR/iwZg6ZGziZCu88uMtfAh0CLeFO7bPYac0zaeGXRXvPRPuhpJDM=
+X-Received: by 2002:a17:907:7205:b0:a99:facf:cfc with SMTP id
+ a640c23a62f3a-a9e55a87862mr1669744566b.17.1730810869475; Tue, 05 Nov 2024
+ 04:47:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxrsLsESpnw4lCAA--.26454S7
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF48AFy5Aw17Kw13Aw4kZrc_yoW8ZF43p3
-	ykur1DKr4kXFs7trZrJrWSgr98Jrnrtr13WF47ta48ArW7Z345Zr4Iya9rWFy5Cws5JrWI
-	qFWfKFyayF4UA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
+References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20241105123906.26072-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 5 Nov 2024 20:47:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7tDvxVeT5nJSVL88_OGzVuE-rJu=YJTjMd6KpenvWbgw@mail.gmail.com>
+Message-ID: <CAAhV-H7tDvxVeT5nJSVL88_OGzVuE-rJu=YJTjMd6KpenvWbgw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Add jump table support for objtool on LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For now, it is time to remove the compiler option -fno-jump-tables
-to enable jump table for objtool if the compiler is GCC and it has
-the compiler option -mannotate-tablejump, otherwise still keep the
-compiler option -fno-jump-tables to maintain compatibility with the
-older compilers.
+Hi, Jinyang,
 
-By the way, the compiler behaviors are different for various archs,
-there are some corner issues after removing -fno-jump-tables if the
-compiler is Clang, so just keep the compiler option -fno-jump-tables
-for Clang at present.
+Could you please take some time to review this series?
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Kconfig  | 3 +++
- arch/loongarch/Makefile | 9 +++++++++
- 2 files changed, 12 insertions(+)
+Huacai
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index bb35c34f86d2..500ee9b2cd88 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -284,6 +284,9 @@ config AS_HAS_LBT_EXTENSION
- config AS_HAS_LVZ_EXTENSION
- 	def_bool $(as-instr,hvcl 0)
- 
-+config CC_HAS_ANNOTATE_TABLEJUMP
-+	def_bool $(cc-option,-mannotate-tablejump)
-+
- menu "Kernel type and options"
- 
- source "kernel/Kconfig.hz"
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index ae3f80622f4c..61484df4eccc 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -101,8 +101,17 @@ KBUILD_AFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)
- KBUILD_CFLAGS			+= $(call cc-option,-mthin-add-sub) $(call cc-option,-Wa$(comma)-mthin-add-sub)
- 
- ifdef CONFIG_OBJTOOL
-+ifdef CONFIG_CC_IS_GCC
-+ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-+KBUILD_CFLAGS			+= $(call cc-option,-mannotate-tablejump)
-+else
- KBUILD_CFLAGS			+= -fno-jump-tables
- endif
-+endif
-+ifdef CONFIG_CC_IS_CLANG
-+KBUILD_CFLAGS			+= -fno-jump-tables
-+endif
-+endif
- 
- KBUILD_RUSTFLAGS		+= --target=loongarch64-unknown-none-softfloat
- KBUILD_RUSTFLAGS_KERNEL		+= -Zdirect-access-external-data=yes
--- 
-2.42.0
-
+On Tue, Nov 5, 2024 at 8:39=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> This series is based on 6.12-rc6, tested with the upstream mainline
+> binutils, GCC and Clang, all the changes are under tools/objtool and
+> arch/loongarch.
+>
+> It is time to remove the compiler option -fno-jump-tables to enable
+> jump table for objtool if the compiler is GCC and it has the compiler
+> option -mannotate-tablejump, the next work is to add the corresponding
+> support with Clang after addressing some corner issues due to different
+> compiler behaviors.
+>
+> Tiezhu Yang (5):
+>   objtool: Handle various symbol types for rodata
+>   objtool: Handle special cases of discard.reachable
+>   objtool/LoongArch: Add support for switch table
+>   objtool/LoongArch: Add support for goto table
+>   LoongArch: Enable jump table with GCC for objtool
+>
+>  arch/loongarch/Kconfig                 |  3 +
+>  arch/loongarch/Makefile                |  9 +++
+>  tools/objtool/arch/loongarch/special.c | 83 +++++++++++++++++++++++++-
+>  tools/objtool/check.c                  | 38 ++++++++++--
+>  4 files changed, 128 insertions(+), 5 deletions(-)
+>
+> --
+> 2.42.0
+>
