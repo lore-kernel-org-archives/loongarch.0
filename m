@@ -1,30 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BD2D1B6CE6
-	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06CE71D5AA5
+	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730809803; cv=none; b=KIfzu9WOoD6j6Myr+Bc7JMfIJZZNIeqE3PZlUppB8DltyNOtNSiw2p5YkvLsqluOE8sl+SDEQtlZDi2hTVznw3W2nPr/cEf2SIwLv8i1DIU0UcE0dltEoa13iw45OhC1Q++OjBV4FDp4AOU5T6dUea6dDHpXXqm7tLYfMvkgGeA=
+	t=1730810354; cv=none; b=pJ/jbpdNF+l22K77XW6/Ag9Rvm9eogFQxzNz29Nrds4zQF3OjyuCRwi87wpaYPYXCYu7R56715hnoP8YMnOf9oYCBy/LM3Y3rIRVhw6THsxzJtNC+xEQEftHy/3dC7b/bRqsq7bHq2Afs4rjTP7vsjWvnnysuxKBt2bvommE/IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730809803; c=relaxed/simple;
-	bh=JcS5tCb+phxSQzQMJehrhVoydruiI6oeuAogtf1sBYk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AnDgwVzpH6LunEMKuKgbdQhYzt60gM5iL15+OEJAiv4m7svU0HXNXo9qhaKAsqo7ZWnB4aMKJV8vlaA2x4b+tn9sjiCVp7ROi0MGD50pKNdiIdsH5lk2+NYDFTsumHqqaW9t2GG5nfM4acz3nfEiQVzmp8LJRQlCuM3BGkVIpc4=
+	s=arc-20240116; t=1730810354; c=relaxed/simple;
+	bh=WQBjV7XvQFc38Q87Jv1cXvfn27Td+pGBvefYsoaVrgk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QHY5yMDdk+zyCxGgXMZANAQWi9GX8cI6V8hw1rIRM5xBXgYJ+HO4kBpsMeLvgHZP7N3PJsXN0r1Vv8En02MfMwjeHSISjdXiBfNmCtDWR/U2gJVI2jmJrNzGVO4SziZ6/394e1rk7nvEY69sUbUZAs9QE0Sm+OyCE0IxKVmWoyk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx2uG_DypnwLExAA--.35743S3;
-	Tue, 05 Nov 2024 20:29:52 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxHEe+Dypno4RCAA--.57194S2;
-	Tue, 05 Nov 2024 20:29:50 +0800 (CST)
-From: Kanglong Wang <wangkanglong@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+	by gateway (Coremail) with SMTP id _____8AxquDtESpngrUxAA--.34567S3;
+	Tue, 05 Nov 2024 20:39:09 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBxrsLsESpnw4lCAA--.26454S3;
+	Tue, 05 Nov 2024 20:39:09 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Add DMW2 shadow mapping in KASAN
-Date: Tue,  5 Nov 2024 20:29:45 +0800
-Message-Id: <20241105122945.21886-1-wangkanglong@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Subject: [PATCH v2 1/5] objtool: Handle various symbol types for rodata
+Date: Tue,  5 Nov 2024 20:39:02 +0800
+Message-ID: <20241105123906.26072-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20241105123906.26072-1-yangtiezhu@loongson.cn>
+References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,101 +37,100 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxHEe+Dypno4RCAA--.57194S2
-X-CM-SenderInfo: 5zdqwyxdqjz0tqj6z05rqj20fqof0/1tbiAQEMAmcpTjsJsQAHsK
-X-Coremail-Antispam: 1Uk129KBj93XoWxGry3JFW7GrWrZw13tr4xuFX_yoWrJF4Dp3
-	93JFyv9rWkKF1xW34Ykr1Utr1DtrnxCanIva45XF4fJF4xu34Igr1DGFWvqa4qqr4UJFyY
-	9r1kuayUX39rAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowMBxrsLsESpnw4lCAA--.26454S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJFWDKF4kAF4kGFWfGw18Xrc_yoW5Ww4xpF
+	sxG3y5Kr45Xr1fWws7tFW0gF9xGws7WrnrJ39rKr1rA3sIqF1rKFWSkr1ay3WDGr1Fva17
+	XF1Y9ry7uF4UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
 	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Currently,the kernel couldn't boot when both CONFIG_ARCH_IOREMAP,
-CONFIG_ARCH_WRITECOMBINE and KASAN are enabled. Because the DMW2 is used
-by kernel now which is configured as 0xa000000000000000, the KASAN has
-no segment mapping. This patch fix this issue.
+In the relocation section ".rela.rodata" of each .o file compiled with
+LoongArch toolchain, there are various symbol types such as STT_NOTYPE,
+STT_OBJECT, STT_FUNC in addition to the usual STT_SECTION, it needs to
+use reloc symbol offset instead of reloc addend to find the destination
+instruction in find_jump_table() and add_jump_table().
 
-Solution: Add the relevant definitions for DMW2 in KASAN.
+This is preparation for later patch on LoongArch, there is no effect for
+the other archs with this patch.
 
-Fixes: 8e02c3b782ec ("LoongArch: Add writecombine support for DMW-based ioremap()")
-Signed-off-by: Kanglong Wang <wangkanglong@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/kasan.h | 11 ++++++++++-
- arch/loongarch/mm/kasan_init.c     |  5 +++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
-index c6bce5fbff57..2636a1160bae 100644
---- a/arch/loongarch/include/asm/kasan.h
-+++ b/arch/loongarch/include/asm/kasan.h
-@@ -25,6 +25,7 @@
- /* 64-bit segment value. */
- #define XKPRANGE_UC_SEG		(0x8000)
- #define XKPRANGE_CC_SEG		(0x9000)
-+#define XKPRANGE_WC_SEG		(0xa000)
- #define XKVRANGE_VC_SEG		(0xffff)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 6604f5d038aa..9601235e908d 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2079,6 +2079,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 	unsigned int prev_offset = 0;
+ 	struct reloc *reloc = table;
+ 	struct alternative *alt;
++	unsigned long offset;
  
- /* Cached */
-@@ -41,10 +42,17 @@
- #define XKPRANGE_UC_SHADOW_SIZE		(XKPRANGE_UC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
- #define XKPRANGE_UC_SHADOW_END		(XKPRANGE_UC_KASAN_OFFSET + XKPRANGE_UC_SHADOW_SIZE)
+ 	/*
+ 	 * Each @reloc is a switch table relocation which points to the target
+@@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
+ 			break;
  
-+/* Weak-ordered UnCached */
-+#define XKPRANGE_WC_START		WRITECOMBINE_BASE
-+#define XKPRANGE_WC_SIZE		XRANGE_SIZE
-+#define XKPRANGE_WC_KASAN_OFFSET	XKPRANGE_UC_SHADOW_END
-+#define XKPRANGE_WC_SHADOW_SIZE		(XKPRANGE_WC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
-+#define XKPRANGE_WC_SHADOW_END		(XKPRANGE_WC_KASAN_OFFSET + XKPRANGE_WC_SHADOW_SIZE)
++		if (reloc->sym->type == STT_SECTION) {
++			/* Addend field in the relocation entry associated with the symbol */
++			offset = reloc_addend(reloc);
++		} else {
++			/* The address of the symbol in the relocation entry */
++			offset = reloc->sym->offset;
++		}
 +
- /* VMALLOC (Cached or UnCached)  */
- #define XKVRANGE_VC_START		MODULES_VADDR
- #define XKVRANGE_VC_SIZE		round_up(KFENCE_AREA_END - MODULES_VADDR + 1, PGDIR_SIZE)
--#define XKVRANGE_VC_KASAN_OFFSET	XKPRANGE_UC_SHADOW_END
-+#define XKVRANGE_VC_KASAN_OFFSET	XKPRANGE_WC_SHADOW_END
- #define XKVRANGE_VC_SHADOW_SIZE		(XKVRANGE_VC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
- #define XKVRANGE_VC_SHADOW_END		(XKVRANGE_VC_KASAN_OFFSET + XKVRANGE_VC_SHADOW_SIZE)
- 
-@@ -55,6 +63,7 @@
- 
- #define XKPRANGE_CC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_CC_KASAN_OFFSET)
- #define XKPRANGE_UC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_UC_KASAN_OFFSET)
-+#define XKPRANGE_WC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_WC_KASAN_OFFSET)
- #define XKVRANGE_VC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKVRANGE_VC_KASAN_OFFSET)
- 
- extern bool kasan_early_stage;
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index 427d6b1aec09..0babfab73448 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -55,6 +55,9 @@ void *kasan_mem_to_shadow(const void *addr)
- 		case XKPRANGE_UC_SEG:
- 			offset = XKPRANGE_UC_SHADOW_OFFSET;
+ 		/* Detect function pointers from contiguous objects: */
+-		if (reloc->sym->sec == pfunc->sec &&
+-		    reloc_addend(reloc) == pfunc->offset)
++		if (reloc->sym->sec == pfunc->sec && offset == pfunc->offset)
  			break;
-+		case XKPRANGE_WC_SEG:
-+			offset = XKPRANGE_WC_SHADOW_OFFSET;
-+			break;
- 		case XKVRANGE_VC_SEG:
- 			offset = XKVRANGE_VC_SHADOW_OFFSET;
- 			break;
-@@ -79,6 +82,8 @@ const void *kasan_shadow_to_mem(const void *shadow_addr)
  
- 	if (addr >= XKVRANGE_VC_SHADOW_OFFSET)
- 		return (void *)(((addr - XKVRANGE_VC_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT) + XKVRANGE_VC_START);
-+	else if (addr >= XKPRANGE_WC_SHADOW_OFFSET)
-+		return (void *)(((addr - XKPRANGE_WC_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT) + XKPRANGE_WC_START);
- 	else if (addr >= XKPRANGE_UC_SHADOW_OFFSET)
- 		return (void *)(((addr - XKPRANGE_UC_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT) + XKPRANGE_UC_START);
- 	else if (addr >= XKPRANGE_CC_SHADOW_OFFSET)
+-		dest_insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
++		dest_insn = find_insn(file, reloc->sym->sec, offset);
+ 		if (!dest_insn)
+ 			break;
+ 
+@@ -2137,6 +2145,7 @@ static struct reloc *find_jump_table(struct objtool_file *file,
+ {
+ 	struct reloc *table_reloc;
+ 	struct instruction *dest_insn, *orig_insn = insn;
++	unsigned long offset;
+ 
+ 	/*
+ 	 * Backward search using the @first_jump_src links, these help avoid
+@@ -2160,7 +2169,16 @@ static struct reloc *find_jump_table(struct objtool_file *file,
+ 		table_reloc = arch_find_switch_table(file, insn);
+ 		if (!table_reloc)
+ 			continue;
+-		dest_insn = find_insn(file, table_reloc->sym->sec, reloc_addend(table_reloc));
++
++		if (table_reloc->sym->type == STT_SECTION) {
++			/* Addend field in the relocation entry associated with the symbol */
++			offset = reloc_addend(table_reloc);
++		} else {
++			/* The address of the symbol in the relocation entry */
++			offset = table_reloc->sym->offset;
++		}
++
++		dest_insn = find_insn(file, table_reloc->sym->sec, offset);
+ 		if (!dest_insn || !insn_func(dest_insn) || insn_func(dest_insn)->pfunc != func)
+ 			continue;
+ 
 -- 
-2.20.1
+2.42.0
 
