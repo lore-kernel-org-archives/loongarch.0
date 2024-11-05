@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06CE71D5AA5
-	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D661D5AA9
+	for <loongarch@lists.linux.dev>; Tue,  5 Nov 2024 12:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730810354; cv=none; b=pJ/jbpdNF+l22K77XW6/Ag9Rvm9eogFQxzNz29Nrds4zQF3OjyuCRwi87wpaYPYXCYu7R56715hnoP8YMnOf9oYCBy/LM3Y3rIRVhw6THsxzJtNC+xEQEftHy/3dC7b/bRqsq7bHq2Afs4rjTP7vsjWvnnysuxKBt2bvommE/IU=
+	t=1730810354; cv=none; b=gYrALtvdCRU8l/bxvhiIwPLkvSbRLtGW6ZAZY58d3y0WtZlENGXpRp3Zt+eg/VBEUKgYSmJM9ZKSJDvvquu7KyfjpBX1L+3cSDWUG1oWsosyoCJbro+nhTzYrV1DJ8V9Ku/HTudie2ogSLDVwkbIdZB9i11qK0lMdXnNpxRfHH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730810354; c=relaxed/simple;
-	bh=WQBjV7XvQFc38Q87Jv1cXvfn27Td+pGBvefYsoaVrgk=;
+	bh=WuYh2QNbB1DXYMDkZ4MpKfVONFKDR2ri1ITDB4mHoqs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QHY5yMDdk+zyCxGgXMZANAQWi9GX8cI6V8hw1rIRM5xBXgYJ+HO4kBpsMeLvgHZP7N3PJsXN0r1Vv8En02MfMwjeHSISjdXiBfNmCtDWR/U2gJVI2jmJrNzGVO4SziZ6/394e1rk7nvEY69sUbUZAs9QE0Sm+OyCE0IxKVmWoyk=
+	 MIME-Version; b=G8M0SVXCBz7cXBk9z8BrFaP07JsGeFhxRbAcdIsqN6Yb0SOFupMBDrgNtROl6IiOo0Euwetw+8a5JWzKnAtwYXx14S8+oDPD7XClHpBAvTSawrpxmzw+EOjfqd2zeEsZz0PQLEqE+SfOM5jXsP8EFK5UD0jIJ/LR9M8F4Bhhti8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxquDtESpngrUxAA--.34567S3;
-	Tue, 05 Nov 2024 20:39:09 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxSOHuESpnibUxAA--.33973S3;
+	Tue, 05 Nov 2024 20:39:10 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxrsLsESpnw4lCAA--.26454S3;
-	Tue, 05 Nov 2024 20:39:09 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxrsLsESpnw4lCAA--.26454S4;
+	Tue, 05 Nov 2024 20:39:10 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] objtool: Handle various symbol types for rodata
-Date: Tue,  5 Nov 2024 20:39:02 +0800
-Message-ID: <20241105123906.26072-2-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 2/5] objtool: Handle special cases of discard.reachable
+Date: Tue,  5 Nov 2024 20:39:03 +0800
+Message-ID: <20241105123906.26072-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241105123906.26072-1-yangtiezhu@loongson.cn>
 References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
@@ -37,13 +37,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxrsLsESpnw4lCAA--.26454S3
+X-CM-TRANSID:qMiowMBxrsLsESpnw4lCAA--.26454S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFWDKF4kAF4kGFWfGw18Xrc_yoW5Ww4xpF
-	sxG3y5Kr45Xr1fWws7tFW0gF9xGws7WrnrJ39rKr1rA3sIqF1rKFWSkr1ay3WDGr1Fva17
-	XF1Y9ry7uF4UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7CF4kuryfGr4DKr17uw47ZFc_yoW8WF4Dpa
+	y5Cay3Jr4DXr48W3W7Wws5WryfKw4fGrW8XryfJ34UK3s8Xwn5KFn3tay2v3Zxua1ag3Wa
+	qFsI934UZF1DArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
@@ -52,85 +52,54 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxJFWDKF4kAF4kGFWfGw18Xrc_yoW5Ww4xpF
 	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-In the relocation section ".rela.rodata" of each .o file compiled with
-LoongArch toolchain, there are various symbol types such as STT_NOTYPE,
-STT_OBJECT, STT_FUNC in addition to the usual STT_SECTION, it needs to
-use reloc symbol offset instead of reloc addend to find the destination
-instruction in find_jump_table() and add_jump_table().
+There are some "unreachable instruction" objtool warnings when compling
+with Clang on LoongArch, this is because the "break" instruction is set
+as dead end due to its type is INSN_BUG in decode_instructions() at the
+beginning, and it does not set insn->dead_end of the "break" instruction
+as false after checking ".rela.discard.reachable" in add_dead_ends(), so
+the next instruction of "break" is marked as unreachable.
+
+Actually, it can find the reachable instruction after parsing the section
+".rela.discard.reachable", in some cases, the "break" instruction may not
+be the first previous instruction with scheduling by Machine Instruction
+Scheduler of LLVM, it should find more times and then set insn->dead_end
+of the "break" instruction as false.
 
 This is preparation for later patch on LoongArch, there is no effect for
 the other archs with this patch.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/objtool/check.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ tools/objtool/check.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 6604f5d038aa..9601235e908d 100644
+index 9601235e908d..6607cd56459b 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2079,6 +2079,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 	unsigned int prev_offset = 0;
- 	struct reloc *reloc = table;
- 	struct alternative *alt;
-+	unsigned long offset;
+@@ -711,6 +711,18 @@ static int add_dead_ends(struct objtool_file *file)
+ 		}
  
- 	/*
- 	 * Each @reloc is a switch table relocation which points to the target
-@@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
- 			break;
- 
-+		if (reloc->sym->type == STT_SECTION) {
-+			/* Addend field in the relocation entry associated with the symbol */
-+			offset = reloc_addend(reloc);
-+		} else {
-+			/* The address of the symbol in the relocation entry */
-+			offset = reloc->sym->offset;
+ 		insn->dead_end = false;
++
++		/* Handle the special cases compiled with Clang on LoongArch */
++		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
++		    reloc->sym->type == STT_SECTION) {
++			while (insn && insn_func(insn)) {
++				insn = prev_insn_same_sym(file, insn);
++				if (insn && insn->dead_end) {
++					insn->dead_end = false;
++					break;
++				}
++			}
 +		}
-+
- 		/* Detect function pointers from contiguous objects: */
--		if (reloc->sym->sec == pfunc->sec &&
--		    reloc_addend(reloc) == pfunc->offset)
-+		if (reloc->sym->sec == pfunc->sec && offset == pfunc->offset)
- 			break;
+ 	}
  
--		dest_insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
-+		dest_insn = find_insn(file, reloc->sym->sec, offset);
- 		if (!dest_insn)
- 			break;
- 
-@@ -2137,6 +2145,7 @@ static struct reloc *find_jump_table(struct objtool_file *file,
- {
- 	struct reloc *table_reloc;
- 	struct instruction *dest_insn, *orig_insn = insn;
-+	unsigned long offset;
- 
- 	/*
- 	 * Backward search using the @first_jump_src links, these help avoid
-@@ -2160,7 +2169,16 @@ static struct reloc *find_jump_table(struct objtool_file *file,
- 		table_reloc = arch_find_switch_table(file, insn);
- 		if (!table_reloc)
- 			continue;
--		dest_insn = find_insn(file, table_reloc->sym->sec, reloc_addend(table_reloc));
-+
-+		if (table_reloc->sym->type == STT_SECTION) {
-+			/* Addend field in the relocation entry associated with the symbol */
-+			offset = reloc_addend(table_reloc);
-+		} else {
-+			/* The address of the symbol in the relocation entry */
-+			offset = table_reloc->sym->offset;
-+		}
-+
-+		dest_insn = find_insn(file, table_reloc->sym->sec, offset);
- 		if (!dest_insn || !insn_func(dest_insn) || insn_func(dest_insn)->pfunc != func)
- 			continue;
- 
+ 	return 0;
 -- 
 2.42.0
 
