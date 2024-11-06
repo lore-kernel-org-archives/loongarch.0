@@ -1,82 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC96A192580;
-	Wed,  6 Nov 2024 07:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2336D20514F
+	for <loongarch@lists.linux.dev>; Wed,  6 Nov 2024 17:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730878074; cv=none; b=ssffImeJigkjW4/1U0NA7ZRBWevAC1pCIKYZ3uHSC/3Pz3xiHhp1E/10zvnjOeFJ1jE0DtMCQZPxe6goibkkr/xf/glzklCeq2+wZwp5pAKs1kJvGdgtzAqXTAtsU/s9dhUsLBqEmEG5Y4oC2sdJkpyz0p//G7zd4KQTO7JwGBg=
+	t=1730912679; cv=none; b=nuts2M49cHJwWJ7WVRrJhBRcesjdojiEhXJMhoySeFfJpLKdOSbVKqd48Jg4t03CSuV2wMCBuxUlG2VRlNhS+f9mLQCW469JqKWDvDp04g6gKdvltQNf6czImhvfovQbDKSJ4iUuXPCv0vB92hfjOPdslQSh2sdlQjW0ahQTee4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730878074; c=relaxed/simple;
-	bh=/A+HW5n513t0yCsOgKDg7mmDaz+/dgCUyIewoSqhw3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZkDM3OXe3jSqYYxx1/pBtsX69bK9qG6jBcguR8x82lmWKePB/kQBKAy7gmFu/rytOsXIX4yF7ONSPBhX+riA0aB0V54VF3fXdxuBWdxWm2g51SIv2tlBEYC6TIgoVINKN9CsOYtKdpWV65bd6C2KrfjZ5XIY0F9i/W7+Iwj2FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UOWQFnyz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730912679; c=relaxed/simple;
+	bh=45lm7teIJIgBDhR6WrM3tTb7cS3pi+iWOg5nbyI7j9s=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=P2OEFf0qVj99/zSGe16l3AyuSQa44eD07dZ4inQQMexq5SEUgEqmvYUFjgiafvqgCH7j5X0eKvWf4lhokwtJYRQT4ijrRtMSnikwFqdGjotLlupaFvH6xnWm6wkGbqj5pkNNW87xBEnmpBdvOSdKNa5YJJu5+TdR+fvZU4g7OAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=A7k3F+xJ; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UOWQFnyz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5000FC4CECD;
-	Wed,  6 Nov 2024 07:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1730878074;
-	bh=/A+HW5n513t0yCsOgKDg7mmDaz+/dgCUyIewoSqhw3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UOWQFnyzskQjvmkwESYXS95F8PYnz43quEZUT0hPx+QHRAcW4FEzQ073OvBqUjNOj
-	 Z4pb0HtFJyigHWmV6ASSqNePBsnCghlHoejx2OExzRPmeb4UCDTZR3prHJ0KnNAlA+
-	 Af9OYw6JYU0sycb4juok7/N5g6h94ysvhF0ytqd0=
-Date: Wed, 6 Nov 2024 08:27:36 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, Sasha Levin <sashal@kernel.org>,
-	stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.1.y] LoongArch: Fix build errors due to backported
- TIMENS
-Message-ID: <2024110622-dejected-underfeed-ac4a@gregkh>
-References: <20241102033616.3517188-1-chenhuacai@loongson.cn>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A7k3F+xJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1730912679; x=1762448679;
+  h=message-id:date:mime-version:to:cc:references:subject:
+   from:in-reply-to:content-transfer-encoding;
+  bh=45lm7teIJIgBDhR6WrM3tTb7cS3pi+iWOg5nbyI7j9s=;
+  b=A7k3F+xJRQ4JU5EpC0BpQYhd5DAqsVT6VVfsTrmkvhwQrnaA/vDfOjme
+   xT8npL4uoabby3nAs2UDBkM2vHwsyBcs7bxNkQDT6XNYORRUZl0VU/7w7
+   D/F6VyU0F0QCiM4S2YFUMgbtbSHkgKvSWVA7byGrjq2CMx/C/rZcOrRsx
+   M=;
+X-IronPort-AV: E=Sophos;i="6.11,263,1725321600"; 
+   d="scan'208";a="2538545"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 17:04:38 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:42869]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.35.42:2525] with esmtp (Farcaster)
+ id 18efcd76-237c-46fb-afb1-2dbc7d25b1d1; Wed, 6 Nov 2024 17:04:37 +0000 (UTC)
+X-Farcaster-Flow-ID: 18efcd76-237c-46fb-afb1-2dbc7d25b1d1
+Received: from EX19D003UWC002.ant.amazon.com (10.13.138.169) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 6 Nov 2024 17:04:37 +0000
+Received: from [192.168.12.4] (10.187.171.30) by EX19D003UWC002.ant.amazon.com
+ (10.13.138.169) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35; Wed, 6 Nov 2024
+ 17:04:34 +0000
+Message-ID: <7ad5d114-3d19-4c33-bb3c-7f8940ad114e@amazon.com>
+Date: Wed, 6 Nov 2024 10:04:27 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241102033616.3517188-1-chenhuacai@loongson.cn>
+User-Agent: Mozilla Thunderbird
+To: <elena.reshetova@intel.com>
+CC: <ackerleytng@google.com>, <agordeev@linux.ibm.com>,
+	<aou@eecs.berkeley.edu>, <borntraeger@linux.ibm.com>, <bp@alien8.de>,
+	<canellac@amazon.at>, <catalin.marinas@arm.com>, <chenhuacai@kernel.org>,
+	<corbet@lwn.net>, <dave.hansen@intel.com>, <dave.hansen@linux.intel.com>,
+	<david@redhat.com>, <derekmn@amazon.com>, <gerald.schaefer@linux.ibm.com>,
+	<gor@linux.ibm.com>, <graf@amazon.com>, <hca@linux.ibm.com>, <hpa@zytor.com>,
+	<jgowans@amazon.com>, <jthoughton@google.com>, <kalyazin@amazon.com>,
+	<kernel@xen0n.name>, <kvm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <luto@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>, <mingo@redhat.com>,
+	<mlipp@amazon.at>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+	<pbonzini@redhat.com>, <peterz@infradead.org>, <quic_eberman@quicinc.com>,
+	<rostedt@goodmis.org>, <roypat@amazon.co.uk>, <rppt@kernel.org>,
+	<seanjc@google.com>, <shuah@kernel.org>, <svens@linux.ibm.com>,
+	<tabba@google.com>, <tglx@linutronix.de>, <vannapurve@google.com>,
+	<will@kernel.org>, <x86@kernel.org>, <xmarcalx@amazon.com>
+References: <DM8PR11MB57509ED04CB0730680735AC9E7512@DM8PR11MB5750.namprd11.prod.outlook.com>
+Subject: RE: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+Content-Language: en-US
+From: "Manwaring, Derek" <derekmn@amazon.com>
+In-Reply-To: <DM8PR11MB57509ED04CB0730680735AC9E7512@DM8PR11MB5750.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D032UWB002.ant.amazon.com (10.13.139.190) To
+ EX19D003UWC002.ant.amazon.com (10.13.138.169)
 
-On Sat, Nov 02, 2024 at 11:36:16AM +0800, Huacai Chen wrote:
-> Commit eb3710efffce1dcff83761db4615f91d93aabfcb ("LoongArch: Add support
-> to clone a time namespace") backports the TIMENS support for LoongArch
-> (corresponding upstream commit aa5e65dc0818bbf676bf06927368ec46867778fd)
-> but causes build errors:
-> 
->   CC      arch/loongarch/kernel/vdso.o
-> arch/loongarch/kernel/vdso.c: In function ‘vvar_fault’:
-> arch/loongarch/kernel/vdso.c:54:36: error: implicit declaration of
-> function ‘find_timens_vvar_page’ [-Werror=implicit-function-declaration]
->    54 |         struct page *timens_page = find_timens_vvar_page(vma);
->       |                                    ^~~~~~~~~~~~~~~~~~~~~
-> arch/loongarch/kernel/vdso.c:54:36: warning: initialization of ‘struct
-> page *’ from ‘int’ makes pointer from integer without a cast
-> [-Wint-conversion]
-> arch/loongarch/kernel/vdso.c: In function ‘vdso_join_timens’:
-> arch/loongarch/kernel/vdso.c:143:25: error: implicit declaration of
-> function ‘zap_vma_pages’; did you mean ‘zap_vma_ptes’?
-> [-Werror=implicit-function-declaration]
->   143 |                         zap_vma_pages(vma);
->       |                         ^~~~~~~~~~~~~
->       |                         zap_vma_ptes
-> cc1: some warnings being treated as errors
-> 
-> Because in 6.1.y we should define find_timens_vvar_page() by ourselves
-> and use zap_page_range() instead of zap_vma_pages(), so fix it.
-> 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/kernel/vdso.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
+On 2024-11-04 at 08:33+0000, Elena Reshetova wrote:
+> This statement *is* for integrity section. We have a separate TDX guidance
+> on side-channels (including speculative) [3] and some speculative attacks
+> that affect confidentiality (for example spectre v1) are listed as not covered
+> by TDX but remaining SW responsibility (as they are now).
 
-Now queued up, thanks!
+Thanks for the additional info, Elena. Given that clarification, I
+definitely see direct map removal and TDX as complementary.
 
-greg k-h
+Derek
