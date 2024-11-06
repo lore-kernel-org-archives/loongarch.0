@@ -1,111 +1,115 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7628F2F50
-	for <loongarch@lists.linux.dev>; Wed,  6 Nov 2024 05:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66119046E
+	for <loongarch@lists.linux.dev>; Wed,  6 Nov 2024 07:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730869421; cv=none; b=g/AnXCXwV17W2FTy7FwAP6HIemkl/sSuL9vet10PWX80aph2Thll/FDSMPYTI7Nz3dcRurm+/JbgyrruoLQ03t8rSkY3rGjttz4ikkM8tzVW1OZys/amPSNQ17j4LH4zAHRJGEprGK7169kGKw/G2NWo7Ff1y9wY8FVzqRYvKhw=
+	t=1730876813; cv=none; b=bL8WSCcwe41hD4FbejvDYUDCpwljpLj8tNPYjbw5lwTelzhN0QwdebF/PD0mrvQ8rJhVosQ3gifU4PoVN59Y3Ph/YBik4qsoZBD/pFj8pLyXJzrp6SpVFAi+GIyL55ipAdONEYWldTSwuexYqVp2QaS1DjdhDWdUQb7cuuuv6Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730869421; c=relaxed/simple;
-	bh=bq1za7JtQZ4gRMhjsjBaZQE1Z4KeDoExvNUwrU5CbWk=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fF+6UpJzVme1gnExKQJRRE9pD2cEH3L78uk6z1rHLU/Uv+965oKuGM0ffG23RSQTHbnGTDBTcXiLhmrEDJVXINcieIEjYTqiLuOx183ipucI1XXiJGiGEO3bEZ72YS1icgy92QXwEwAQJCm6rmPJQK70yPeT844puSmcer7WsLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxG+Ko+CpnUpIzAA--.37281S3;
-	Wed, 06 Nov 2024 13:03:36 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxvken+Cpn0N1EAA--.59848S3;
-	Wed, 06 Nov 2024 13:03:35 +0800 (CST)
-Subject: Re: [PATCH v2 5/5] LoongArch: Enable jump table with GCC for objtool
-To: Peter Zijlstra <peterz@infradead.org>
-References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
- <20241105123906.26072-6-yangtiezhu@loongson.cn>
- <20241105141530.GE10375@noisy.programming.kicks-ass.net>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <62df4c24-68ed-fbfc-ed98-2df796697d89@loongson.cn>
-Date: Wed, 6 Nov 2024 13:03:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1730876813; c=relaxed/simple;
+	bh=mxUa4wXzdvBDGoXNKjPAAdJI49s9TSRxkkDIR/2IP/A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CM/RtJtQnioCElDQVvJY5/UXLAVMSKx8VGl22z3BQNsYr4SBvPhtlqhMrvVQ9UG2FkTdMoTWBNkbAucZrhNCoCk+93/cGmu5DJPh9Rih8LQDqCoj1GbcPxetQlsxc+HwI2Xjt4dxrtmvs7e+TkCCoL6KHSA9Xuhn/pHzvIwt8PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=h80rEgtJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="h80rEgtJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1730876806;
+	bh=yAUFaVAsNQ/ccJyGlmMcytG2+Qr2oEjByXJHlP+rk68=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=h80rEgtJ7qD9jyDyLJcISbRk3INZH8ZPcYosK4VrHHZVogREXxmMdnucgdz5uGIVq
+	 2FKIvnwHaCmTCM5h2wCPV5BHvVPqGtTkGb8EMAQ3QpqRcFOIuuN9J+N+f2mo7sMJe/
+	 dU4VVqU+Z1FcyNgWJiu6rzNqueMfO3e6FKKNop6UZT1IVzPlW79wIw8rl8ikKnhRpJ
+	 +n1/bbdRaP9EQPbjeaxIqHG5JuYMBpoWql3abi4yDgJ1tGm3FhgLFRk5m7yklMr2OW
+	 JsGlZDD1354L3XGFFlQ4dOrEE1hpvtyE9IKa50nyhPWS+nOpSyzlxB/+3KkxmrZtK5
+	 AOEEtdbWDj8jw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Xjx8D1mmSz4x11;
+	Wed,  6 Nov 2024 18:06:36 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>, Thomas Gleixner
+ <tglx@linutronix.de>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+ <thomas.weissschuh@linutronix.de>,
+ Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Russell
+ King <linux@armlinux.org.uk>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, Theodore Ts'o <tytso@mit.edu>, "Jason A.
+ Donenfeld" <Jason@zx2c4.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Nicholas Piggin
+ <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Nam Cao
+ <namcao@linutronix.de>
+Subject: Re: [PATCH 00/28] vdso: Preparations for generic data storage
+In-Reply-To: <e33569c8-1591-462c-9388-4a514e156bfa@csgroup.eu>
+References: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
+ <871pzxzuny.ffs@tglx> <e33569c8-1591-462c-9388-4a514e156bfa@csgroup.eu>
+Date: Wed, 06 Nov 2024 18:06:35 +1100
+Message-ID: <877c9glu2s.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241105141530.GE10375@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxvken+Cpn0N1EAA--.59848S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw17AFyxKFWfXrWfWr4DGFX_yoW8WFWxpF
-	yDGrZ7Kan5XFn7KrZrJw4Ikas0yrZ7Jr48WrsrKr1kAw4rZw42qa1IkanF9a4Duw13JF4I
-	yFWxKr9xCw12yacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24So
-	DUUUU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 11/05/2024 10:15 PM, Peter Zijlstra wrote:
-> On Tue, Nov 05, 2024 at 08:39:06PM +0800, Tiezhu Yang wrote:
->> For now, it is time to remove the compiler option -fno-jump-tables
->> to enable jump table for objtool if the compiler is GCC and it has
->> the compiler option -mannotate-tablejump, otherwise still keep the
->> compiler option -fno-jump-tables to maintain compatibility with the
->> older compilers.
-
-...
-
->>
->>  ifdef CONFIG_OBJTOOL
->> +ifdef CONFIG_CC_IS_GCC
->> +ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
->> +KBUILD_CFLAGS			+= $(call cc-option,-mannotate-tablejump)
->> +else
->>  KBUILD_CFLAGS			+= -fno-jump-tables
->>  endif
->> +endif
->> +ifdef CONFIG_CC_IS_CLANG
->> +KBUILD_CFLAGS			+= -fno-jump-tables
->> +endif
->> +endif
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Le 30/10/2024 =C3=A0 12:39, Thomas Gleixner a =C3=A9crit=C2=A0:
+>> Folks!
+>>=20
+>> On Thu, Oct 10 2024 at 09:01, Thomas Wei=C3=9Fschuh wrote:
+>>> Historically each architecture defined their own datapage to store the
+>>> VDSO data. This stands in contrast to the generic nature of the VDSO
+>>> code itself.
+>>> We plan to introduce a generic framework for the management of the VDSO
+>>> data storage that can be used by all architectures and which works
+>>> together with the existing generic VDSO code.
+>>>
+>>> Before that is possible align the different architectures by
+>>> standardizing on the existing generic infrastructure and moving things
+>>> out of the VDSO data page which does not belong there.
+>>>
+>>> Patches	 1- 2:	csky
+>>> Patch	    3:	s390
+>>> Patches	 4- 5:	arm64
+>>> Patch	    6:	riscv
+>>> Patch	    7:	arm
+>>> Patch	    8:	LoongArch
+>>> Patch	    9:	MIPS
+>>> Patches 10-20:	x86
+>>> Patches 21-27:	powerpc
+>>> Patch      28: 	Renamings to avoid a name clash with the new code.
+>>=20
+>> As this has been sitting for two weeks now without major comments, I'm
+>> planning to merge that through the tip tree tomorrow.
 >
-> This seems excessive. Why split between GCC and Clang, isn't
-> CC_HAS_ANNOTATE_JUMPTABLE sufficient?
+> To avoid any future conflicts with powerpc tree, I suggest you merge=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git=20
+> topic/vdso into your tree before applying this series.
 
-Thanks for your reply.
+I thought the same, but there actually isn't any conflict at the moment
+between the two trees.
 
-In theory, it is sufficient to only check CC_HAS_ANNOTATE_JUMPTABLE
-to use -fno-jump-tables or not, and also this is my initial aim.
+Some of Thomas W's later changes to convert arches to generic VDSO
+storage do conflict, but they look to be destined for the next merge
+window.
 
-In fact, when compling with Clang on LoongArch, if the compiler has
-the option -mannotate-tablejump and config CC_HAS_ANNOTATE_TABLEJUMP
-is set, there still exists some objtool warnings if remove the option
--fno-jump-tables, this is because there are some special cases such
-as different rodata relocation type and rodata entry size generated
-by Clang, I am working in progress to address the corner issues, and
-the final code looks something like this:
-
-ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-KBUILD_CFLAGS                   += $(call cc-option,-mannotate-tablejump)
-else
-KBUILD_CFLAGS                   += -fno-jump-tables
-endif
-
-Thanks,
-Tiezhu
-
+cheers
