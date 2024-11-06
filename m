@@ -1,115 +1,155 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66119046E
-	for <loongarch@lists.linux.dev>; Wed,  6 Nov 2024 07:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876E71CC882;
+	Wed,  6 Nov 2024 07:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730876813; cv=none; b=bL8WSCcwe41hD4FbejvDYUDCpwljpLj8tNPYjbw5lwTelzhN0QwdebF/PD0mrvQ8rJhVosQ3gifU4PoVN59Y3Ph/YBik4qsoZBD/pFj8pLyXJzrp6SpVFAi+GIyL55ipAdONEYWldTSwuexYqVp2QaS1DjdhDWdUQb7cuuuv6Fk=
+	t=1730878061; cv=none; b=Iew3uWS0PqzUW1IQPCWuUApB/Wx8qa/bSe0kP6m0WD711pci30no6c12PDELvn+KKS+Yr5CF/V7W0+RTQmFiSANClVDEdxn2eXnN+yuic4OI/4GYAyLDb9YKcurs9S9U3f+/7tythBgy5mvPQGVswjTwJMAB+/iGJ9lL6+yz/RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730876813; c=relaxed/simple;
-	bh=mxUa4wXzdvBDGoXNKjPAAdJI49s9TSRxkkDIR/2IP/A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CM/RtJtQnioCElDQVvJY5/UXLAVMSKx8VGl22z3BQNsYr4SBvPhtlqhMrvVQ9UG2FkTdMoTWBNkbAucZrhNCoCk+93/cGmu5DJPh9Rih8LQDqCoj1GbcPxetQlsxc+HwI2Xjt4dxrtmvs7e+TkCCoL6KHSA9Xuhn/pHzvIwt8PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=h80rEgtJ; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1730878061; c=relaxed/simple;
+	bh=p7mNA6iu8XWF7HYma1orzvs8JPDyaSivdzr1n+3CBN8=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=iUdikKAkucszh0XMqr6JCreAlpVD15PhKqjLGGxtFwF8PNu4NBpgajGlTKyHZQEMKXtAymLud8riXR6uzITnYDE7V9FxjgMONNxwrtls1Krb4h6Sue9GBV5PhZsA0QdFmfEfbZ7r70KaD8Hr0x9wdqwLDHJj/wPihmWVCc+s1t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZiI12kRB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="h80rEgtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1730876806;
-	bh=yAUFaVAsNQ/ccJyGlmMcytG2+Qr2oEjByXJHlP+rk68=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=h80rEgtJ7qD9jyDyLJcISbRk3INZH8ZPcYosK4VrHHZVogREXxmMdnucgdz5uGIVq
-	 2FKIvnwHaCmTCM5h2wCPV5BHvVPqGtTkGb8EMAQ3QpqRcFOIuuN9J+N+f2mo7sMJe/
-	 dU4VVqU+Z1FcyNgWJiu6rzNqueMfO3e6FKKNop6UZT1IVzPlW79wIw8rl8ikKnhRpJ
-	 +n1/bbdRaP9EQPbjeaxIqHG5JuYMBpoWql3abi4yDgJ1tGm3FhgLFRk5m7yklMr2OW
-	 JsGlZDD1354L3XGFFlQ4dOrEE1hpvtyE9IKa50nyhPWS+nOpSyzlxB/+3KkxmrZtK5
-	 AOEEtdbWDj8jw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Xjx8D1mmSz4x11;
-	Wed,  6 Nov 2024 18:06:36 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, Thomas Gleixner
- <tglx@linutronix.de>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>,
- Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Russell
- King <linux@armlinux.org.uk>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Theodore Ts'o <tytso@mit.edu>, "Jason A.
- Donenfeld" <Jason@zx2c4.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Nam Cao
- <namcao@linutronix.de>
-Subject: Re: [PATCH 00/28] vdso: Preparations for generic data storage
-In-Reply-To: <e33569c8-1591-462c-9388-4a514e156bfa@csgroup.eu>
-References: <20241010-vdso-generic-base-v1-0-b64f0842d512@linutronix.de>
- <871pzxzuny.ffs@tglx> <e33569c8-1591-462c-9388-4a514e156bfa@csgroup.eu>
-Date: Wed, 06 Nov 2024 18:06:35 +1100
-Message-ID: <877c9glu2s.fsf@mpe.ellerman.id.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZiI12kRB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 771A1C4CED0;
+	Wed,  6 Nov 2024 07:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1730878061;
+	bh=p7mNA6iu8XWF7HYma1orzvs8JPDyaSivdzr1n+3CBN8=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=ZiI12kRBnB5RqkrKn5fEQeDBp5uleQeDczBR5Oev9muuC+ejQNMGVmCDaTnyumHED
+	 rIMT0DhZXh6+eOuUBBSOWoZVI7alkYff3qUxHv5TPajr2r/EfI4IECDo0AFnQrnFEn
+	 mxXFEId7LTop5jS3xF3SPLsxUVatqIo1STqE/7mQ=
+Subject: Patch "LoongArch: Fix build errors due to backported TIMENS" has been added to the 6.1-stable tree
+To: chenhuacai@kernel.org,chenhuacai@loongson.cn,gregkh@linuxfoundation.org,jiaxun.yang@flygoat.com,kernel@xen0n.name,loongarch@lists.linux.dev,sashal@kernel.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Wed, 06 Nov 2024 08:27:22 +0100
+In-Reply-To: <20241102033616.3517188-1-chenhuacai@loongson.cn>
+Message-ID: <2024110622-stunning-sierra-01fb@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> Le 30/10/2024 =C3=A0 12:39, Thomas Gleixner a =C3=A9crit=C2=A0:
->> Folks!
->>=20
->> On Thu, Oct 10 2024 at 09:01, Thomas Wei=C3=9Fschuh wrote:
->>> Historically each architecture defined their own datapage to store the
->>> VDSO data. This stands in contrast to the generic nature of the VDSO
->>> code itself.
->>> We plan to introduce a generic framework for the management of the VDSO
->>> data storage that can be used by all architectures and which works
->>> together with the existing generic VDSO code.
->>>
->>> Before that is possible align the different architectures by
->>> standardizing on the existing generic infrastructure and moving things
->>> out of the VDSO data page which does not belong there.
->>>
->>> Patches	 1- 2:	csky
->>> Patch	    3:	s390
->>> Patches	 4- 5:	arm64
->>> Patch	    6:	riscv
->>> Patch	    7:	arm
->>> Patch	    8:	LoongArch
->>> Patch	    9:	MIPS
->>> Patches 10-20:	x86
->>> Patches 21-27:	powerpc
->>> Patch      28: 	Renamings to avoid a name clash with the new code.
->>=20
->> As this has been sitting for two weeks now without major comments, I'm
->> planning to merge that through the tip tree tomorrow.
->
-> To avoid any future conflicts with powerpc tree, I suggest you merge=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git=20
-> topic/vdso into your tree before applying this series.
 
-I thought the same, but there actually isn't any conflict at the moment
-between the two trees.
+This is a note to let you know that I've just added the patch titled
 
-Some of Thomas W's later changes to convert arches to generic VDSO
-storage do conflict, but they look to be destined for the next merge
-window.
+    LoongArch: Fix build errors due to backported TIMENS
 
-cheers
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     loongarch-fix-build-errors-due-to-backported-timens.patch
+and it can be found in the queue-6.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From chenhuacai@loongson.cn  Wed Nov  6 08:26:52 2024
+From: Huacai Chen <chenhuacai@loongson.cn>
+Date: Sat,  2 Nov 2024 11:36:16 +0800
+Subject: LoongArch: Fix build errors due to backported TIMENS
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+Message-ID: <20241102033616.3517188-1-chenhuacai@loongson.cn>
+
+From: Huacai Chen <chenhuacai@loongson.cn>
+
+Commit eb3710efffce1dcff83761db4615f91d93aabfcb ("LoongArch: Add support
+to clone a time namespace") backports the TIMENS support for LoongArch
+(corresponding upstream commit aa5e65dc0818bbf676bf06927368ec46867778fd)
+but causes build errors:
+
+  CC      arch/loongarch/kernel/vdso.o
+arch/loongarch/kernel/vdso.c: In function ‘vvar_fault’:
+arch/loongarch/kernel/vdso.c:54:36: error: implicit declaration of
+function ‘find_timens_vvar_page’ [-Werror=implicit-function-declaration]
+   54 |         struct page *timens_page = find_timens_vvar_page(vma);
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
+arch/loongarch/kernel/vdso.c:54:36: warning: initialization of ‘struct
+page *’ from ‘int’ makes pointer from integer without a cast
+[-Wint-conversion]
+arch/loongarch/kernel/vdso.c: In function ‘vdso_join_timens’:
+arch/loongarch/kernel/vdso.c:143:25: error: implicit declaration of
+function ‘zap_vma_pages’; did you mean ‘zap_vma_ptes’?
+[-Werror=implicit-function-declaration]
+  143 |                         zap_vma_pages(vma);
+      |                         ^~~~~~~~~~~~~
+      |                         zap_vma_ptes
+cc1: some warnings being treated as errors
+
+Because in 6.1.y we should define find_timens_vvar_page() by ourselves
+and use zap_page_range() instead of zap_vma_pages(), so fix it.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/vdso.c |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -40,6 +40,8 @@ static struct page *vdso_pages[] = { NUL
+ struct vdso_data *vdso_data = generic_vdso_data.data;
+ struct vdso_pcpu_data *vdso_pdata = loongarch_vdso_data.vdata.pdata;
+ 
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma);
++
+ static int vdso_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
+ {
+ 	current->mm->context.vdso = (void *)(new_vma->vm_start);
+@@ -139,13 +141,37 @@ int vdso_join_timens(struct task_struct
+ 
+ 	mmap_read_lock(mm);
+ 	for_each_vma(vmi, vma) {
++		unsigned long size = vma->vm_end - vma->vm_start;
++
+ 		if (vma_is_special_mapping(vma, &vdso_info.data_mapping))
+-			zap_vma_pages(vma);
++			zap_page_range(vma, vma->vm_start, size);
+ 	}
+ 	mmap_read_unlock(mm);
+ 
+ 	return 0;
+ }
++
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
++{
++	if (likely(vma->vm_mm == current->mm))
++		return current->nsproxy->time_ns->vvar_page;
++
++	/*
++	 * VM_PFNMAP | VM_IO protect .fault() handler from being called
++	 * through interfaces like /proc/$pid/mem or
++	 * process_vm_{readv,writev}() as long as there's no .access()
++	 * in special_mapping_vmops.
++	 * For more details check_vma_flags() and __access_remote_vm()
++	 */
++	WARN(1, "vvar_page accessed remotely");
++
++	return NULL;
++}
++#else
++static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
++{
++	return NULL;
++}
+ #endif
+ 
+ static unsigned long vdso_base(void)
+
+
+Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
+
+queue-6.1/loongarch-fix-build-errors-due-to-backported-timens.patch
