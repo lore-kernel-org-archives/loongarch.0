@@ -1,159 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C511DDC02
-	for <loongarch@lists.linux.dev>; Thu,  7 Nov 2024 11:18:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573271DBB37
+	for <loongarch@lists.linux.dev>; Thu,  7 Nov 2024 12:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730978301; cv=none; b=Zb7dUo1j+tVbaZeA7NAyeu3dlZJ7dtjnv9XzciI9bXqtUu/OE8+VV2VFY5EjpIUpUb8/rfbWM4dErLI7sJWlABF/QU3oJdtH4JMjugD4FzFOR8WdjhEY0Qi6E6W51j9Vid2MOasT/v8CtEw1tH4nIAXNgqiD0OedLI3nAntniTU=
+	t=1730983025; cv=none; b=oO4B2fYDDGkrIZYdwbCprGrlFMJAg780+EQAZosZCeuZSgWNmZQY3bO51ByphDQ2HEb7ffXShm+bwodSNwLLGvjFrtuP5tU+D2MoSO2Cp5CUs/awJzGR8q4mGJvpXoQG76g2scmYtKoVqhYjOwkinDKXve8rukuXYwPuuya2xwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730978301; c=relaxed/simple;
-	bh=/hqIxR2eh2JD/Nxu9SVoRZslqCCpsKD4JNXRw4d4e3o=;
+	s=arc-20240116; t=1730983025; c=relaxed/simple;
+	bh=MEsj55o4EmkgBfjC1zpGgfB0Zs8cxzdmgxLbp413KQ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qR+qjcp7+lnYZ3oFNKNlUCu4Gbj+bn7Xn+CDuZkxpZknOlIzK+xa9jjS1atg3jxtEETl8F+54iWDlPiP0rleHWfy5wSE7F+lw00PUGGctFrkN2gEkxD62jZJMqvJk1GFUyaWDejgFRmn6oaOp7lwGDO33sJKLAQcWmM7x068YdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rN9hs7cx; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=bCzdezHtNvzg94TGmwLWOrQ7gf4WDiGgvBG/fZ6G8bFY/wuyuVkixGCCb5Nc7MpzyqK6O1KG/JFEU5lof5wnwi1Awu9f7y5XbpB8Iy1Ie91rlEjuFo25udvgZ4vMBkuSm6BOq0D/95KgzDByeIvfy+VfaXayjefYq/B6W20I3V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0uKlMri; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rN9hs7cx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCAEC4CED0
-	for <loongarch@lists.linux.dev>; Thu,  7 Nov 2024 11:18:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0uKlMri"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2B2C4CED0
+	for <loongarch@lists.linux.dev>; Thu,  7 Nov 2024 12:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730978301;
-	bh=/hqIxR2eh2JD/Nxu9SVoRZslqCCpsKD4JNXRw4d4e3o=;
+	s=k20201202; t=1730983025;
+	bh=MEsj55o4EmkgBfjC1zpGgfB0Zs8cxzdmgxLbp413KQ8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rN9hs7cxJhIx0kl7aBEo9LeSkOgDa1dlE1GWTMHEXea64n0hlwtKuiH3AnBGPBNND
-	 GPHLeZoJPvSOtmiGVfppKWk2jdwIiMYrNS5P7sDBJw2pqPvATczBiTxl1ibKUJ/3Mw
-	 +UlRquCcjypkmtPORkml2eaSeStX42eO0/y1kIhM3l3zC8POMqNP+450BxcGPza9wU
-	 Hi7LXFS9GvngW38/OH7XutKeqyNGaWyqCv0Dc7QiB1PB3ey0l9rbwFQUwk90ARwQ7Z
-	 4wY3OqlrI9YMpmoEeUc7Bg/OccFvCMJAYUZVZCpOwB6NCRKk84u553+gqXu41UUq4D
-	 L6qhEQEfQwCSg==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9a4031f69fso136875766b.0
-        for <loongarch@lists.linux.dev>; Thu, 07 Nov 2024 03:18:20 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz6ydKcTK2cmsD0pdeTxfqtjIfsV0TEIrCYSauG0fDtjaWjh/+p
-	ZJymaEXqEnjI4jSA14whsxfYL6pvuG1kbf8DKLfiCPYqMr87tfxCHEow+CsvLKAGUXztVtjS5aJ
-	lcfE6n9rpALv8zibwX0aJeqdhVHU=
-X-Google-Smtp-Source: AGHT+IFodDnflsXg3T0GcW++921aFywCMhsMu1LhQ2VTtzeya+EdeGkNP7P5g5Sq5NSC7AMnxbADYUIAQPopeJjYL1A=
-X-Received: by 2002:a17:907:7f9f:b0:a9a:be:37f8 with SMTP id
- a640c23a62f3a-a9de61675a4mr4574762266b.43.1730978299549; Thu, 07 Nov 2024
- 03:18:19 -0800 (PST)
+	b=D0uKlMrihjD6SH+yHSlQKLZ/lJHqeDkReZLPPHkGv0YJP2cfLD4WVEKWsjke0qunV
+	 9uC5gcfB0GfvVkoiuoF3zePr6BL8R64v7cnbRcrmt5SQmU66lZwKsbV9ZtCJd/xwR3
+	 UpDOEb7AQ9ZO+Pgwy7d4ojuzG1GRdyblaFJmKKjzzFx0DrkCvDtQNEo2d3DLhAwrWU
+	 KzZ7Kh6GgYTaDwvh31iNdQwKDl5nJ9s5hfnODEBrB5RMnhkn9j2juP+K+NXEKcP3l7
+	 soHdrzK2JsBvegwiJsUqxNxRFDon9WeVZZkaAc+uQnyKXmJ7iTRRABGokKez+vhmbz
+	 +gGG7T34rI4Yw==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9a2209bd7fso138093366b.2
+        for <loongarch@lists.linux.dev>; Thu, 07 Nov 2024 04:37:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXbf67T8etaFh0NTYQ6uvzCVseFY2IKzj6epDpdnCX/JJSU077coA1NXf2YepCtFbBl9wib51/6tpI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YztGM9/uceUOyKVF6/PCVOJwmlav8lG2rY+Rp6YgH4Vtg4SEU+8
+	yBcog6L1BKxx9n/tJKnF+Sy992heWAtmklnfAMPM2iin+XalM8WB1SWIblgk4theWWg7+lRjgLo
+	U8JDz5K9k9ot4zAkfQWmHLH+BXZg=
+X-Google-Smtp-Source: AGHT+IF2RysN7UesHkecrcQUjZMLfbPdk1ZD/VYBHVdqfIKntBEjsJMrZFtwhFzLz5Rln5WwAQu3UDOD5S5nng3nnRE=
+X-Received: by 2002:a17:907:6eac:b0:a9a:7f91:8c76 with SMTP id
+ a640c23a62f3a-a9de5a3e0ebmr4598218266b.0.1730983023546; Thu, 07 Nov 2024
+ 04:37:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241105122945.21886-1-wangkanglong@loongson.cn>
-In-Reply-To: <20241105122945.21886-1-wangkanglong@loongson.cn>
+References: <20241107032859.18276-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20241107032859.18276-1-zhaoqunqin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 7 Nov 2024 19:18:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5vreDWbcVfL8+AEAiNdDG_AwQ5Ydwh3-XZe1WY=MmxqQ@mail.gmail.com>
-Message-ID: <CAAhV-H5vreDWbcVfL8+AEAiNdDG_AwQ5Ydwh3-XZe1WY=MmxqQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add DMW2 shadow mapping in KASAN
-To: Kanglong Wang <wangkanglong@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Thu, 7 Nov 2024 20:36:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5A144ubJ6WD68y7f6sN3j=g-eWVqZ6mhko9nzTgM=xYA@mail.gmail.com>
+Message-ID: <CAAhV-H5A144ubJ6WD68y7f6sN3j=g-eWVqZ6mhko9nzTgM=xYA@mail.gmail.com>
+Subject: Re: [PATCH] arch: loongarch: fix loongarch S3 WARNING
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Queued, thanks.
+Hi, Qunqin,
+
+At first, the subject should be "LoongArch: Fix warnings during S3 suspend"=
+.
+
+On Thu, Nov 7, 2024 at 11:29=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+> The enable_gpe_wakeup() function may call the preempt_schedule_common()
+> function, resulting in a thread switch and causing the CPU to be in an
+> interrupt enable state after the enable_gpe_wakeup() function returns,
+> leading to the warning as follow. Calling enable_gap_wakeup() before
+Second, I think enable_gap_wakeup() should be enable_gpe_wakeup() here.
+
+> local_irq_disable() to fix this waring.
+>
+> [ C0] WARNING: ... at kernel/time/timekeeping.c:845 ktime_get+0xbc/0xc8
+> [ C0]         ...
+> [ C0] Call Trace:
+> [ C0] [<90000000002243b4>] show_stack+0x64/0x188
+> [ C0] [<900000000164673c>] dump_stack_lvl+0x60/0x88
+> [ C0] [<90000000002687e4>] __warn+0x8c/0x148
+> [ C0] [<90000000015e9978>] report_bug+0x1c0/0x2b0
+> [ C0] [<90000000016478e4>] do_bp+0x204/0x3b8
+> [ C0] [<90000000025b1924>] exception_handlers+0x1924/0x10000
+> [ C0] [<9000000000343bbc>] ktime_get+0xbc/0xc8
+> [ C0] [<9000000000354c08>] tick_sched_timer+0x30/0xb0
+> [ C0] [<90000000003408e0>] __hrtimer_run_queues+0x160/0x378
+> [ C0] [<9000000000341f14>] hrtimer_interrupt+0x144/0x388
+> [ C0] [<9000000000228348>] constant_timer_interrupt+0x38/0x48
+> [ C0] [<90000000002feba4>] __handle_irq_event_percpu+0x64/0x1e8
+> [ C0] [<90000000002fed48>] handle_irq_event_percpu+0x20/0x80
+> [ C0] [<9000000000306b9c>] handle_percpu_irq+0x5c/0x98
+> [ C0] [<90000000002fd4a0>] generic_handle_domain_irq+0x30/0x48
+> [ C0] [<9000000000d0c7b0>] handle_cpu_irq+0x70/0xa8
+> [ C0] [<9000000001646b30>] handle_loongarch_irq+0x30/0x48
+> [ C0] [<9000000001646bc8>] do_vint+0x80/0xe0
+> [ C0] [<90000000002aea1c>] finish_task_switch.isra.0+0x8c/0x2a8
+> [ C0] [<900000000164e34c>] __schedule+0x314/0xa48
+> [ C0] [<900000000164ead8>] schedule+0x58/0xf0
+> [ C0] [<9000000000294a2c>] worker_thread+0x224/0x498
+> [ C0] [<900000000029d2f0>] kthread+0xf8/0x108
+> [ C0] [<9000000000221f28>] ret_from_kernel_thread+0xc/0xa4
+> [ C0]
+> [ C0] ---[ end trace 0000000000000000 ]---
+Finally, I think you should enable some config options to produce such
+warnings? Because I haven't observed it.
+
 
 Huacai
 
-On Tue, Nov 5, 2024 at 8:30=E2=80=AFPM Kanglong Wang <wangkanglong@loongson=
-.cn> wrote:
 >
-> Currently,the kernel couldn't boot when both CONFIG_ARCH_IOREMAP,
-> CONFIG_ARCH_WRITECOMBINE and KASAN are enabled. Because the DMW2 is used
-> by kernel now which is configured as 0xa000000000000000, the KASAN has
-> no segment mapping. This patch fix this issue.
+> And move enable_pci_wakeup() before local_irq_disable(), just in
+> case interrupt is enabled after the execution of enable_pci_wakeup()
 >
-> Solution: Add the relevant definitions for DMW2 in KASAN.
->
-> Fixes: 8e02c3b782ec ("LoongArch: Add writecombine support for DMW-based i=
-oremap()")
-> Signed-off-by: Kanglong Wang <wangkanglong@loongson.cn>
+> Fixes: 366bb35a8e48 ("LoongArch: Add suspend (ACPI S3) support")
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
 > ---
->  arch/loongarch/include/asm/kasan.h | 11 ++++++++++-
->  arch/loongarch/mm/kasan_init.c     |  5 +++++
->  2 files changed, 15 insertions(+), 1 deletion(-)
+>  arch/loongarch/power/suspend.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/=
-asm/kasan.h
-> index c6bce5fbff57..2636a1160bae 100644
-> --- a/arch/loongarch/include/asm/kasan.h
-> +++ b/arch/loongarch/include/asm/kasan.h
-> @@ -25,6 +25,7 @@
->  /* 64-bit segment value. */
->  #define XKPRANGE_UC_SEG                (0x8000)
->  #define XKPRANGE_CC_SEG                (0x9000)
-> +#define XKPRANGE_WC_SEG                (0xa000)
->  #define XKVRANGE_VC_SEG                (0xffff)
+> diff --git a/arch/loongarch/power/suspend.c b/arch/loongarch/power/suspen=
+d.c
+> index c9e594925..d0dc375b0 100644
+> --- a/arch/loongarch/power/suspend.c
+> +++ b/arch/loongarch/power/suspend.c
+> @@ -28,6 +28,13 @@ struct saved_registers {
+>  };
+>  static struct saved_registers saved_regs;
 >
->  /* Cached */
-> @@ -41,10 +42,17 @@
->  #define XKPRANGE_UC_SHADOW_SIZE                (XKPRANGE_UC_SIZE >> KASA=
-N_SHADOW_SCALE_SHIFT)
->  #define XKPRANGE_UC_SHADOW_END         (XKPRANGE_UC_KASAN_OFFSET + XKPRA=
-NGE_UC_SHADOW_SIZE)
->
-> +/* Weak-ordered UnCached */
-> +#define XKPRANGE_WC_START              WRITECOMBINE_BASE
-> +#define XKPRANGE_WC_SIZE               XRANGE_SIZE
-> +#define XKPRANGE_WC_KASAN_OFFSET       XKPRANGE_UC_SHADOW_END
-> +#define XKPRANGE_WC_SHADOW_SIZE                (XKPRANGE_WC_SIZE >> KASA=
-N_SHADOW_SCALE_SHIFT)
-> +#define XKPRANGE_WC_SHADOW_END         (XKPRANGE_WC_KASAN_OFFSET + XKPRA=
-NGE_WC_SHADOW_SIZE)
+> +void arch_suspend_disable_irqs(void)
+> +{
+> +       enable_gpe_wakeup();
+> +       enable_pci_wakeup();
+> +       local_irq_disable();
+> +}
 > +
->  /* VMALLOC (Cached or UnCached)  */
->  #define XKVRANGE_VC_START              MODULES_VADDR
->  #define XKVRANGE_VC_SIZE               round_up(KFENCE_AREA_END - MODULE=
-S_VADDR + 1, PGDIR_SIZE)
-> -#define XKVRANGE_VC_KASAN_OFFSET       XKPRANGE_UC_SHADOW_END
-> +#define XKVRANGE_VC_KASAN_OFFSET       XKPRANGE_WC_SHADOW_END
->  #define XKVRANGE_VC_SHADOW_SIZE                (XKVRANGE_VC_SIZE >> KASA=
-N_SHADOW_SCALE_SHIFT)
->  #define XKVRANGE_VC_SHADOW_END         (XKVRANGE_VC_KASAN_OFFSET + XKVRA=
-NGE_VC_SHADOW_SIZE)
+>  void loongarch_common_suspend(void)
+>  {
+>         save_counter();
+> @@ -61,9 +68,6 @@ void loongarch_common_resume(void)
 >
-> @@ -55,6 +63,7 @@
+>  int loongarch_acpi_suspend(void)
+>  {
+> -       enable_gpe_wakeup();
+> -       enable_pci_wakeup();
+> -
+>         loongarch_common_suspend();
 >
->  #define XKPRANGE_CC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKPRANGE_CC=
-_KASAN_OFFSET)
->  #define XKPRANGE_UC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKPRANGE_UC=
-_KASAN_OFFSET)
-> +#define XKPRANGE_WC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKPRANGE_WC=
-_KASAN_OFFSET)
->  #define XKVRANGE_VC_SHADOW_OFFSET      (KASAN_SHADOW_START + XKVRANGE_VC=
-_KASAN_OFFSET)
+>         /* processor specific suspend */
 >
->  extern bool kasan_early_stage;
-> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_ini=
-t.c
-> index 427d6b1aec09..0babfab73448 100644
-> --- a/arch/loongarch/mm/kasan_init.c
-> +++ b/arch/loongarch/mm/kasan_init.c
-> @@ -55,6 +55,9 @@ void *kasan_mem_to_shadow(const void *addr)
->                 case XKPRANGE_UC_SEG:
->                         offset =3D XKPRANGE_UC_SHADOW_OFFSET;
->                         break;
-> +               case XKPRANGE_WC_SEG:
-> +                       offset =3D XKPRANGE_WC_SHADOW_OFFSET;
-> +                       break;
->                 case XKVRANGE_VC_SEG:
->                         offset =3D XKVRANGE_VC_SHADOW_OFFSET;
->                         break;
-> @@ -79,6 +82,8 @@ const void *kasan_shadow_to_mem(const void *shadow_addr=
-)
->
->         if (addr >=3D XKVRANGE_VC_SHADOW_OFFSET)
->                 return (void *)(((addr - XKVRANGE_VC_SHADOW_OFFSET) << KA=
-SAN_SHADOW_SCALE_SHIFT) + XKVRANGE_VC_START);
-> +       else if (addr >=3D XKPRANGE_WC_SHADOW_OFFSET)
-> +               return (void *)(((addr - XKPRANGE_WC_SHADOW_OFFSET) << KA=
-SAN_SHADOW_SCALE_SHIFT) + XKPRANGE_WC_START);
->         else if (addr >=3D XKPRANGE_UC_SHADOW_OFFSET)
->                 return (void *)(((addr - XKPRANGE_UC_SHADOW_OFFSET) << KA=
-SAN_SHADOW_SCALE_SHIFT) + XKPRANGE_UC_START);
->         else if (addr >=3D XKPRANGE_CC_SHADOW_OFFSET)
+> base-commit: 73adbd92f3223dc0c3506822b71c6b259d5d537b
 > --
-> 2.20.1
+> 2.43.0
 >
