@@ -1,31 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DDD1D52B;
-	Fri,  8 Nov 2024 06:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7F51D1519;
+	Fri,  8 Nov 2024 09:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731047176; cv=none; b=Ein9uC07LLMffYn3Y3eSGhzaojRRlm7itNavosfqNBo+7ekE0bPOhNIEEqsVsV51sg58C92qLlGYLRC5yC0bDu2sOMOhJdwM9u5QahRUSJR3rZllWofUqARMaTXyGhFhuYPB9D+LtjWbvZ1Bq5yHu4GHkvzEMeUU3KL0lPMFmUs=
+	t=1731057365; cv=none; b=lHfHc9PpI2vkWTL+75ecHbBtA+NjgN88gytWddrlcpcSbaZKUjf/IE6JvdMA0CN8ENnYRqgHDP8fOkG6IJ837JXNcdpD33Mavl+OqtoYzeD8+bHanHnFSvqsPo7lpagSeHKsAJRfQiRGbawq1bu4FQ7IMWUt0dMM+2TeRQnCcGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731047176; c=relaxed/simple;
-	bh=fQK8xTVejBDpIgskcOjO/rL9vdDxvIKWkhvWe05pTwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ocBdz+UCNQ/DoXgthNZKXyVfBp/4JHme7FO+1+SB7VBwiXva5sw+Vy9tfGUzT4lQoq+xp+F21l/rjhTn5ppm7DPDeNZOkJPDGw5fNNnrwOvumV38He+YBO43zOElPXksWA6mcKlXKEkswRG0HZlWQsu4TNVfJD9y8GPYQS4/fxg=
+	s=arc-20240116; t=1731057365; c=relaxed/simple;
+	bh=fsr3qmsrtjSPgPHF0+7cGoOGyCTPieysg3nhWfIKD/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WcdI/vrPJnsKmef2vvT86QdbM/HvtyKSIN50prEB1CqisXF6LL1IlFy+USp2YuhPhPw4IEoOLE9G73hFwu583JDSpYb2fwntQV/xdH3Y4ZH6Tqbl96LsMIax34R1U2BUgSCGTgV1586saEDhrE3TEoR+YRbIADIEDu8T4ns3Tog=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 930B9C4CECE;
-	Fri,  8 Nov 2024 06:26:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86ABBC4CECD;
+	Fri,  8 Nov 2024 09:16:02 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-rt-devel@lists.linux.dev,
 	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2] LoongArch: Disable KASAN if PGDIR_SIZE is too large for cpu_vabits
-Date: Fri,  8 Nov 2024 14:25:56 +0800
-Message-ID: <20241108062556.4138380-1-chenhuacai@loongson.cn>
+Subject: [PATCH 0/3] LoongArch: Add PREEMPT_RT support
+Date: Fri,  8 Nov 2024 17:15:42 +0800
+Message-ID: <20241108091545.4182229-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -35,85 +37,23 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If PGDIR_SIZE is too large for cpu_vabits, KASAN_SHADOW_END will
-overflow UINTPTR_MAX because KASAN_SHADOW_START/KASAN_SHADOW_END are
-aligned up by PGDIR_SIZE. And then the overflowed KASAN_SHADOW_END looks
-like a user space address.
+This series add PREEMPT_RT support for LoongArch.
 
-For example, PGDIR_SIZE of CONFIG_4KB_4LEVEL is 2^39, which is too large
-for Loongson-2K series whose cpu_vabits = 39.
+With the recent printk changes, the last known road block has been
+addressed. The main architectural preparation we need is selecting
+HAVE_POSIX_CPU_TIMERS_TASK_WORK to allow PREEMPT_RT coexist with KVM.
+Then we can also enable PREEMPT_RT as X86, ARM64 and RISC-V.
 
-Since CONFIG_4KB_4LEVEL is completely legal for CPUs with cpu_vabits <=
-39, we just disable KASAN via early return in kasan_init(). Otherwise we
-get a boot failure.
+Huacai Chen(3):
+ LoongArch: Reduce min_delta for the arch clockevent device.
+ LoongArch: Select HAVE_POSIX_CPU_TIMERS_TASK_WORK.
+ LoongArch: Allow to enable PREEMPT_RT.
 
-Moreover, we change KASAN_SHADOW_END from the first address after KASAN
-shadow area to the last address in KASAN shadow area, in order to avoid
-the end address exactly overflow to 0 (which is a legal case). We don't
-need to worry about alignment because pgd_addr_end() can handle it.
-
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-V2: Change KASAN_SHADOW_END definition.
-
- arch/loongarch/include/asm/kasan.h |  2 +-
- arch/loongarch/mm/kasan_init.c     | 15 +++++++++++++--
- 2 files changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
-index c6bce5fbff57..cb74a47f620e 100644
---- a/arch/loongarch/include/asm/kasan.h
-+++ b/arch/loongarch/include/asm/kasan.h
-@@ -51,7 +51,7 @@
- /* KAsan shadow memory start right after vmalloc. */
- #define KASAN_SHADOW_START		round_up(KFENCE_AREA_END, PGDIR_SIZE)
- #define KASAN_SHADOW_SIZE		(XKVRANGE_VC_SHADOW_END - XKPRANGE_CC_KASAN_OFFSET)
--#define KASAN_SHADOW_END		round_up(KASAN_SHADOW_START + KASAN_SHADOW_SIZE, PGDIR_SIZE)
-+#define KASAN_SHADOW_END		(round_up(KASAN_SHADOW_START + KASAN_SHADOW_SIZE, PGDIR_SIZE) - 1)
- 
- #define XKPRANGE_CC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_CC_KASAN_OFFSET)
- #define XKPRANGE_UC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_UC_KASAN_OFFSET)
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index 4a0d1880dd71..7277b7583e1b 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -238,7 +238,7 @@ static void __init kasan_map_populate(unsigned long start, unsigned long end,
- asmlinkage void __init kasan_early_init(void)
- {
- 	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_START, PGDIR_SIZE));
--	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_END, PGDIR_SIZE));
-+	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_END + 1, PGDIR_SIZE));
- }
- 
- static inline void kasan_set_pgd(pgd_t *pgdp, pgd_t pgdval)
-@@ -253,7 +253,7 @@ static void __init clear_pgds(unsigned long start, unsigned long end)
- 	 * swapper_pg_dir. pgd_clear() can't be used
- 	 * here because it's nop on 2,3-level pagetable setups
- 	 */
--	for (; start < end; start += PGDIR_SIZE)
-+	for (; start < end; start = pgd_addr_end(start, end))
- 		kasan_set_pgd((pgd_t *)pgd_offset_k(start), __pgd(0));
- }
- 
-@@ -262,6 +262,17 @@ void __init kasan_init(void)
- 	u64 i;
- 	phys_addr_t pa_start, pa_end;
- 
-+	/*
-+	 * If PGDIR_SIZE is too large for cpu_vabits, KASAN_SHADOW_END will
-+	 * overflow UINTPTR_MAX and then looks like a user space address.
-+	 * For example, PGDIR_SIZE of CONFIG_4KB_4LEVEL is 2^39, which is too
-+	 * large for Loongson-2K series whose cpu_vabits = 39.
-+	 */
-+	if (KASAN_SHADOW_END < vm_map_base) {
-+		pr_warn("PGDIR_SIZE too large for cpu_vabits, KernelAddressSanitizer disabled.\n");
-+		return;
-+	}
-+
- 	/*
- 	 * PGD was populated as invalid_pmd_table or invalid_pud_table
- 	 * in pagetable_init() which depends on how many levels of page
--- 
-2.43.5
+ arch/loongarch/Kconfig       | 2 ++
+ arch/loongarch/kernel/time.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+---
+2.27.0
 
