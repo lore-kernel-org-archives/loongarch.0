@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300617F477
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765651EA80
 	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 06:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731305424; cv=none; b=VI5Wa1/rgemmTRPgPJgVxp4NhiTCIK1kaoaJ5j0ft2zwqE/+h5X4a5EN3zv6xhOJPAqqfZfswC6TmQ+6d61UOU773Fs6DjHWnUsYzfL53zCHp79OLTr4k6I1NbgSW70e8uF+2kLI2YEiubATT3rc6HBLnIIyWCLScskEBr/Rzu4=
+	t=1731305424; cv=none; b=qsaji5rSJCaoT7YjS8qV9PzKqGs6kgC4lIoLxjjnf+I7b6XSNzurB9dpOrNzSD5ywSeVRGZBPOE+SkN/CHEzBqGVwCLM2m9txnOUeU8I91f7Dj003zcsbyKJT2cNsZwYxdkK8tKrzq963l63UvmfTHDqisSOnu7sWB33vwvClUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731305424; c=relaxed/simple;
-	bh=DbnonwvT9+TeoK0pRjgBRHojNOqJMpZZb5XkAwimCk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MnKfVnJeXfSsACn1pYSCNoN0hv5aZEQucnj0k37NGAWI7b4na+XzqTlf2aFpPkGZoNUEwiyw0+X+Jr2OeRRDvlcwQ93cUipED+KI7lJNehl/l0KdG1D6tO9S3EVYJwbNeWfoGlgmVO4pGlnC6w1kKJSMoE+IyeklGAGT+5FOpvY=
+	bh=WdfK2DNMyRJuYkEYLMsteO/EXTHS05aKeXWdEzSu+BM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mY4iwlObnXsnUCfcVvLUMpC06Z6id2SX9UbMvvEkXNA1S33yl1BrmIBQkibRtQJpGtHM0qDjiT/4+YMdSpwjifeLWuG4HulXQwsD0OKDxv8zDpdfoT565wjlR99D5gH/1dcLmrfNP7K1bhovCjzf9+0e8a3ut/K7IQv27do+7Bo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8Ax6+HDnzFnnjw7AA--.50713S3;
-	Mon, 11 Nov 2024 14:10:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxuuHFnzFnpjw7AA--.53139S3;
+	Mon, 11 Nov 2024 14:10:13 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMBxnkfDnzFn0ABRAA--.10185S2;
-	Mon, 11 Nov 2024 14:10:11 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBxnkfDnzFn0ABRAA--.10185S3;
+	Mon, 11 Nov 2024 14:10:12 +0800 (CST)
 From: Zhao Qunqin <zhaoqunqin@loongson.cn>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -32,11 +33,14 @@ Cc: linux-edac@vger.kernel.org,
 	mchehab@kernel.org,
 	rric@kernel.org,
 	loongarch@lists.linux.dev,
-	Zhao Qunqin <zhaoqunqin@loongson.cn>
-Subject: [PATCH v7 0/2] Add EDAC driver for loongson memory controller
-Date: Mon, 11 Nov 2024 14:09:37 +0800
-Message-Id: <20241111060939.5349-1-zhaoqunqin@loongson.cn>
+	Zhao Qunqin <zhaoqunqin@loongson.cn>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/2] dt-bindings: EDAC for ls3a5000 memory controller
+Date: Mon, 11 Nov 2024 14:09:38 +0800
+Message-Id: <20241111060939.5349-2-zhaoqunqin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20241111060939.5349-1-zhaoqunqin@loongson.cn>
+References: <20241111060939.5349-1-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,44 +48,116 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxnkfDnzFn0ABRAA--.10185S2
+X-CM-TRANSID:qMiowMBxnkfDnzFn0ABRAA--.10185S3
 X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JFyDtrWDJw1rur4xuF4kGrX_yoWxtFg_C3
-	WxAFW8Jr4kta4DJay2vr18ZrWayF4UtFn5CFn0gw15XF1avr13Wr97ZF13AFy7tr1DWFy3
-	ZrWkKFyxA3WxtosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoWxWw17Cr1rWr1rur15Ww1xZwc_yoW5GFWrpr
+	s3A3Z3Kr1xK3W7AanYqa4IyF1Fq3s5Z3W7XFs7Kw13KryDWa4FvFyYkryUXan8JrykXFW5
+	ZFySgr42kFsFkwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
 
-Add a simple EDAC driver which report single bit errors (CE) only on
-loongson platform.
+Add device tree bindings for ls3a5000 EDAC driver.
 
-Zhao Qunqin (2):
-  dt-bindings: EDAC for ls3a5000 memory controller
-  EDAC: Add EDAC driver for loongson memory controller
+Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Changes form v5 to v7:
+	- None
 
- .../edac/loongson,ls3a5000-mc-edac.yaml       |  44 +++++
- MAINTAINERS                                   |   7 +
- arch/loongarch/Kconfig                        |   1 +
- drivers/edac/Kconfig                          |   8 +
- drivers/edac/Makefile                         |   1 +
- drivers/edac/loongson_edac.c                  | 156 ++++++++++++++++++
- 6 files changed, 217 insertions(+)
+Changes in v4:
+	- Added tag from Krzysztof (thanks!)
+
+Changes in v3:
+	- None
+
+Changes in v2:
+	- Fixed the errors raised by Rob
+	- Addressed review comments raised by Krzysztof and Conor
+
+ .../edac/loongson,ls3a5000-mc-edac.yaml       | 44 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
- create mode 100644 drivers/edac/loongson_edac.c
 
-
-base-commit: e14232afa94445e03fc3a0291b07a68f3408c120
+diff --git a/Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml b/Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+new file mode 100644
+index 000000000..52f10bc94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/loongson,ls3a5000-mc-edac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson Memory Controller EDAC
++
++maintainers:
++  - Zhao Qunqin <zhaoqunqin@loongson.cn>
++
++description: |
++  EDAC node is defined to describe on-chip error detection and correction for
++  Loongson Memory Controller.
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - loongson,ls3a5000-mc-edac
++      - items:
++          - enum:
++              - loongson,ls3c5000l-mc-edac
++              - loongson,ls3c5000-mc-edac
++              - loongson,ls3d5000-mc-edac
++              - loongson,ls3a6000-mc-edac
++              - loongson,ls3c6000-mc-edac
++          - const: loongson,ls3a5000-mc-edac
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    memory-controller@1fe00600 {
++        compatible = "loongson,ls3a5000-mc-edac";
++        reg = <0x1fe00600 0x50>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e9659a5a7..8c7d565b3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13397,6 +13397,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+ F:	drivers/thermal/loongson2_thermal.c
+ 
++LOONGSON EDAC DRIVER
++M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
++L:	linux-edac@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 -- 
 2.43.0
 
