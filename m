@@ -1,88 +1,120 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51796145B18
-	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 04:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185D149DF4
+	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 05:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731298284; cv=none; b=lsf4KIXGADHdwyVOkeUHx1qlVw4XRmluohGd8QypwQJJsIXXHtijIXvg4bKaQS+9MwLhreD/lublUz/cMbKSwdKLRQxtmDIU/v0TqYFAugmzhILxxTvTiVeR9gSUezig7nP+XepUOHROIObi4TWKo4J0XTTyjtkCdOEOhPBg1nc=
+	t=1731302975; cv=none; b=O6lYQg4chZPZ6+j6Fq2QfgCP9BxIxY1nyAMHvA7B0kaDjBtG0aggP+Yn+KRlKmtC5bBT0rORXlTl9ic3cE0CT+vzooP+YSZWTmt4e2S8qnss2IQrrvO5WLir0toHEzMf+anEEOqN2BJYBOGFLTQFhH59IZ3pw9sC84c+S0cwapU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731298284; c=relaxed/simple;
-	bh=9O0Ab0snlQqU/aOeDbp4uxXowWB39iX0K9xXwo2W1X8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRScw+DgL43TiCFnC+Br4cFnGbDtIJjktKil/nX48GPS3UrJopDdi28/MVxbHIRfsfr0/Cmql7ik3hVaLpg0VEoo8cv+S8K2Q+Y+KgZCxNlVkYYdOTrrBlRf5WJW4sRuTsf7L3JonIbexO8sI3CkcGHnm9UifidXXm9xqfnde3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kYmYvK5g; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1731302975; c=relaxed/simple;
+	bh=0EkOHW/GJxxmU6q0KeBRuqftyEYNIOEqhS9QoTPwRp0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lJXk2wb07fVLTIX687ZnMor0ksPwC7xwxAkDKLmslYqduy7dBhlDOwPCobFawvFIB71oNcjRccSqe8KqMeGIZfzMZCFiSFT5xT9j0Ncw/Afux51ca//i5GbS1PCgDe/yXJhaim2IP7cyO1r5ObB4EfwUE5PwL7MkyS1vw2+Tl10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LU80uqT7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QNCkvie/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kYmYvK5g"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20cb47387ceso41755315ad.1
-        for <loongarch@lists.linux.dev>; Sun, 10 Nov 2024 20:11:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731298282; x=1731903082; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYw7alURWqiNGBAIOXjLelZmQpmzN91EzRD/rQ4H6Os=;
-        b=kYmYvK5gkIynBAZMwaFfOlrCUnw6nmurjO8NNrrIyUkWjSblb1wAlvQKlejGi4EfW7
-         yv2QBtglkuRXapjZhThvH+YtzATf9M/Xld36fdtXKl5ErvUqZ0Y/uuq33xhedntHyO9j
-         levMDdZaJ0VYxowPBK9qGTzS26xcrZLRUlL+qWJ9DGYwrowQHXXUes2GIBFhlBTjporC
-         iKBX0mis//5Jf3/hbkMfEyELlX6VdC4dBKk4J9QysGAdgVRuI8sZkB2AFkyMb1ZzsITW
-         QKaN4pXHX2eJzPNrOlcGYX5QC9fjzqTrLFQZORo5B80oXPnwYgZR6tGreemKOfTC5+Pv
-         8dZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731298282; x=1731903082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYw7alURWqiNGBAIOXjLelZmQpmzN91EzRD/rQ4H6Os=;
-        b=Ky80IUK8Ak/x6/GJ1l9lNnbzaEFkbbpkJG51c3IfwIUjvBkNv6nLtWq+1LKt74LL+x
-         hxjK0yB2EfXlcgn6OYxproNWg6+f8xodZuJRtCpywWUIt7HNMCmdAUO0oxxXHpuS2XAo
-         B2NmTbyBkHnhbiy8MnUEuuPubl0bKgMVvrDX3OwsbtRkxcX5qOrCNa0p48ScOOFEwdDN
-         VW62/jI5XqM8JuUsVdmXy1r55sHUT+17wQv6k5FerjrlMkL5F840d78AVAHhlw7yV6vR
-         NvkdJ8cVkpdwt3AARjxMIDH+Wbfac/EM1+KfMIlTs/1E3+KLoPprrX4oI0AeUheKnow3
-         /DSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvLls50rgpnORYliCVLaH3QnYzevGOq8tlY0pGac5+EFAmbKuWB8rw3ZcJPPUe78Qh3KF+r5KcFzQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwygbnNGpQg6X0hZUB1BZ7Ynu/JCwjsKx9kHS/VWPt4pDibXsyv
-	CTRxjjnBeJr/MZ4662X5wunaDLlrBNnGSE412sx9/j63n2F5jnIv5ccW+lqKaPU=
-X-Google-Smtp-Source: AGHT+IFRGzEI71Hdu+luB1BFZRo3jerd07YG2aEwXqJww2mjVFtZo+80VCzdP3gEwUJj6Och9TmB5w==
-X-Received: by 2002:a17:902:e750:b0:20e:57c8:6ab3 with SMTP id d9443c01a7336-211834e6e10mr139163805ad.4.1731298282609;
-        Sun, 10 Nov 2024 20:11:22 -0800 (PST)
-Received: from localhost ([122.172.86.146])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e6c343sm66805845ad.241.2024.11.10.20.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Nov 2024 20:11:21 -0800 (PST)
-Date: Mon, 11 Nov 2024 09:41:20 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 1/1] cpufreq: loongson3: Check for error code from
- devm_mutex_init() call
-Message-ID: <20241111041120.olx5xcwo6pom5enm@vireshk-i7>
-References: <20241031134719.2508841-1-andriy.shevchenko@linux.intel.com>
- <Zy3Za5JvLjk-OYjp@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LU80uqT7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QNCkvie/"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1731302966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cogWb+w2daVn5OZHdS5AyR304srh7kVKobKMakof5IE=;
+	b=LU80uqT7GWN755odMcZYEWGJ+BZIKwDyx2b7/ikTSrWeKIcZQOCaBgvu6w0j2yj+MvBklG
+	qxZU6gjTH4i+fs1wKKoJ8g6gU6VGtdBnStFHvMbSAnKEKQVlQ5fzpOM4vk2dtiQ41ItJ/c
+	76RG8FQw/ZpgjsVi86V8CuVmLObUkCVmovUhO5Hvfck9YbPKdQg9H3QNQVLP68QWLmmLhn
+	yeeMRUxJreDwasYEFZFHMxnIiECE0UZ6OGYek6qe4FIR45LrhX7pcj2dpXnt8hW2Y5QuqY
+	XRAJbcEkZWqEpLUS7dI9d/9RV79+Ap5Y6wbgZDjdZvkrk1tQani/O0tleZCrCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1731302966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cogWb+w2daVn5OZHdS5AyR304srh7kVKobKMakof5IE=;
+	b=QNCkvie/wz3p6eRKRYYFxz8gPrLWTLGFYWnwWMBcmeKsEGDgMh3K1NNqQNyqop9Eky0LBt
+	hq0YClN/sUnWD/Aw==
+Subject: [PATCH v2 0/3] kunit: Add support for LoongArch
+Date: Mon, 11 Nov 2024 06:29:17 +0100
+Message-Id: <20241111-kunit-loongarch-v2-0-7676eb5f2da3@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zy3Za5JvLjk-OYjp@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAC2WMWcC/3WNQQ6CMBBFr0JmbU3bAFJX3sOwKDDCRNKSaSEY0
+ rtb2bt8L/nvHxCQCQPciwMYNwrkXQZ9KaCfrBtR0JAZtNSlkqoU79VRFLP3brTcT8I0tupuVY2
+ NaiCvFsYX7Wfx2WaeKETPn/NgUz/7v7UpIYWqjem0HWppzGMmt0b2jvbrgNCmlL6W/oGIsgAAA
+ A==
+X-Change-ID: 20241014-kunit-loongarch-98a5b756e818
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: Bibo Mao <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ kunit-dev@googlegroups.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731302965; l=1949;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=0EkOHW/GJxxmU6q0KeBRuqftyEYNIOEqhS9QoTPwRp0=;
+ b=EiVA11RVs0mMF5skCcPmy2ETQ1buIaeIrT4i7PvB3uldPozkU5Eol+g2+FLZ+QZSGu+0kaJYv
+ FyXGpcOWAxyD4qmrj7IbCeCQ71W2NZ4Ol+VEHPNeSXfIG54brf7wAMP
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 08-11-24, 11:27, Andy Shevchenko wrote:
-> On Thu, Oct 31, 2024 at 03:46:34PM +0200, Andy Shevchenko wrote:
-> > Even if it's not critical, the avoidance of checking the error code
-> > from devm_mutex_init() call today diminishes the point of using devm
-> > variant of it. Tomorrow it may even leak something. Add the missed
-> > check.
-> 
-> Any comments? Can this be applied now for fixes, please?
+Enable LoongArch support in kunit.
 
-Applied. Thanks.
+Example:
 
+	$ ./tools/testing/kunit/kunit.py run --arch=loongarch --cross_compile=$CROSS_COMPILE
+	[13:32:45] Configuring KUnit Kernel ...
+	[13:32:45] Building KUnit Kernel ...
+	Populating config with:
+	$ make ARCH=loongarch olddefconfig CROSS_COMPILE=$CROSS_COMPILE
+	Building with:
+	$ make all compile_commands.json ARCH=loongarch --jobs=8 CROSS_COMPILE=$CROSS_COMPILE
+	[13:32:48] Starting KUnit Kernel (1/1)...
+	[13:32:48] ============================================================
+	Running tests with:
+	$ qemu-system-loongarch64 -nodefaults -m 1024 -kernel .kunit/arch/loongarch/boot/vmlinux.elf -append 'kunit.enable=1 console=ttyS0 kunit_shutdown=poweroff' -no-reboot -nographic -serial stdio -machine virt -device pvpanic-pci -cpu max
+
+	...
+
+	[13:33:14] ============================================================
+	[13:33:14] Testing complete. Ran 493 tests: passed: 453, skipped: 40
+	[13:33:14] Elapsed time: 28.862s total, 0.002s configuring, 2.526s building, 26.302s running
+
+This series is meant to be merged through the kselftest tree.
+	
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Drop already applied patch
+- Pick up review tags
+- Add SPDX header
+- Link to v1: https://lore.kernel.org/r/20241014-kunit-loongarch-v1-0-1699b2ad6099@linutronix.de
+
+---
+Thomas Weißschuh (3):
+      kunit: qemu_configs: Add LoongArch config
+      kunit: tool: Allow overriding the shutdown mode from qemu config
+      kunit: qemu_configs: loongarch: Enable shutdown
+
+ tools/testing/kunit/kunit_kernel.py           |  4 +++-
+ tools/testing/kunit/qemu_configs/loongarch.py | 21 +++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+---
+base-commit: 2d5404caa8c7bb5c4e0435f94b28834ae5456623
+change-id: 20241014-kunit-loongarch-98a5b756e818
+
+Best regards,
 -- 
-viresh
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
