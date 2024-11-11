@@ -1,217 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E94A22EED
-	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 02:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D279812EBDB
+	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 03:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731293751; cv=none; b=XLFdUIsWEeq2VUEK8l3Kb+Ai6JUEw7U3rz4jXwy6Wur5jfQkbAuNB/4pjAXRvTsTllbX+nNQQQCD6HX4Gq1D5UOY4ekFBwVd58AWR43OLOMGOYfMkcNY3aNGQAk6tnDZbsD2Zbvku8CxOFqKEZrx+4ZEGmXoijVMvENmPyWIrJU=
+	t=1731297489; cv=none; b=L8eK8aHCRuLi8I9Sk4HZMJUaW7lslDNaUflIb50zu8d/ASHqOEtPu8ezVZK+SCG6tGB/SipiF6CNzFwwr4c+VyzxJVTRKRbCITc/BsPfoIzPFaF4DA6ul5bB7jk1gjZJcrNEMkTm6QMTxxPlHLP2oRWB847fIw6GoGdOs/H6CQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731293751; c=relaxed/simple;
-	bh=HScUf/0mJI0h2P0D1CtSIPUJdAuxe+P+7zYDm1Fxna8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HLUVrMr2HfNDvrCod1mC+2Dt7o70rfRUnJdicLc3f+9YDl8cXXg2PHR714YINo/hET8HL4cyHeRasO2vZRcTR3ol6R6vAWN7d8X9KaB+Ck+B1m7ctOjUsBwTUp95f1nKYSwPxFFqxKkGDFabgvTXojd7gDhY/oMYQSsGukH9dd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBvKOBmS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731297489; c=relaxed/simple;
+	bh=8Uh0uUSImmTy+qzL1Iu5nFKpjUikB4VJwYS9Y1E24Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSBvt59bCKEbZlduelqq/snNhBZtMLiKlhiDlJJnDuuafSLG/4XOBn1gakwb8BD4Ihh8ktkoARbpYdgkDLOUryCOlBKGppXJXNQLGkSkkVhYHYZ3oJ55oOY/nA3zhBjZHoodUi63hByLHp5n8J6IWguOBsk2GGLpev4WS0jYSq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g1eGviAF; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBvKOBmS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5FAC4CED6
-	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 02:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731293750;
-	bh=HScUf/0mJI0h2P0D1CtSIPUJdAuxe+P+7zYDm1Fxna8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bBvKOBmS2SEx2ss/TPyZHvX2/b9bEfNE1orxM5YqSvJBWTjMTk2biN/hmJDZoniiq
-	 JyrOsRMlAZd/KyDuPCDxLjwZrUZgcWxkfs2EBK8Lp9EQyhhrSM/H/ZtDKBMLK+Ag55
-	 YeZS07o01iXHyZfqkcLqQvNv/tUZo6G6mdQavmWxgNUr1orWWkMXEDjhVWMYIekf1k
-	 41pwM+Ldqlf//Dn9T7EHnA7WTwSp/elcY4+O10SzPl0LJU7yTukoewPvwwP610dKGZ
-	 CzPjLHrb28nt4nw7FMjzvtSV8ju17S2pZLCSosGspyIuZxUF2TIJ0jsJVDKkqban/+
-	 CpjgIDnUYPTPw==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a9aa8895facso767811466b.2
-        for <loongarch@lists.linux.dev>; Sun, 10 Nov 2024 18:55:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXivbrsrOkvV4rAqdqPfjMvJKdusWSPWeQ1SmntKnnQFptBML7R9IEhYvMmrVsujRcQ+8wkFGZEVr8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwGJMn2JndslSmMzMlDrybg74x1nd/S2ByK2TNSuTsKJFNXhymD
-	AN5QiRpC9+RLU/9/S/vx9ry1Zwvi3G5v9E09y+K3EtCfuCKiXD+4g/rfQfOgQKXUKOkfCwCKa3e
-	NJRYTmV42SGrNwbbQ5176G+/wJcc=
-X-Google-Smtp-Source: AGHT+IE9ZVU6MUnQyJE3IEZDEKcc4yDVpoQPgjNAf/AzyzceYa7gsBsvYyyHQWmatNCKqPWzX8N5Di7puhbpLxstkDE=
-X-Received: by 2002:a17:907:9603:b0:a99:ed0c:1d6 with SMTP id
- a640c23a62f3a-a9ef000750cmr1066361766b.49.1731293749308; Sun, 10 Nov 2024
- 18:55:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1eGviAF"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20cbcd71012so47304745ad.3
+        for <loongarch@lists.linux.dev>; Sun, 10 Nov 2024 19:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731297487; x=1731902287; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mtCdbHmWUy1kL6nMDSsqmJyY6FPNtwwaaMfxqv080TQ=;
+        b=g1eGviAF5JABtvxbYfS8DxGER9Ns1rK8N5zx2JaGOPbOpDFvzg9+gXNceNeBYvqoPS
+         qqIefEHX6P9wNZiK41rRtSWVXurKuxUZ/ZMMUVZ8aEvp9kAQpbQCt6KgvXHDBxKtXLWC
+         elqrbp8shYxA4rL5is/R/o7YjnJVoVTGgPOlIDg1bA02i9cupdV358DQI9RJBjToX+uh
+         YrvJAS8C7OB2JsLGboTgyL1WPsynBKcu/ZsxjmWMnjbEkn6nMNIu9vpoD/kctei3TUfT
+         CL1zS81S7rcDjRUq7sjyHjwDnvTCyWv0lCfrPFpHY9L28+zXjK8Ei7QTe2SrFmEWS5pR
+         mJ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731297487; x=1731902287;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mtCdbHmWUy1kL6nMDSsqmJyY6FPNtwwaaMfxqv080TQ=;
+        b=cVN8pEGN0TeAyUw6FjcnXl7QmR6ynCIq3NzkR2sn39lyVyn5liIL4t8vAhI/48QXIV
+         zyvst51Nlm83NLSrB1AxD2pKffekrtLfxNushBjAR/JzX5KbpWisK/f4g60qeHL5Gcd3
+         Ht6pMqh5dAgZO1K1Ae1XlNVpVfN10NHwXy9QkOTG4YSgFZffeZSMCKzoU9+5+esCWjdo
+         jJarEL7ZzyPRlFlWXjo3BgZksaTGt1DMI/17giXBLYWuzsLz2ZDonSzF6PpUo9y5sXro
+         bMDDzJyUFGGRSo+fGp2RPmCMV3nvpO/4OByTMfMjfnUFBqqlXR+yFTKdB+auFYXV1FTx
+         xZVw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6B5YH4O3RCyBqfr1Ld/cJBSsZYbZRdoxh7V+YjIjTu9EiHLOFQhtfi/VGlKtO3aBWlNGfDN2NI0s=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyLote+O/2rLp/iOYHXv2gq50KltV3J1A0k4IgFBrqtxq9o44zR
+	NefpUeHZhm3CSzu+A0PnWOqYoWXhoUOlw4gRSZTcUfO5CHiOj4Ys39vaHp3NIkc=
+X-Google-Smtp-Source: AGHT+IHPAn0saGccs4AgqLf8m0L9+JHHSw7AZDB4NvdRcyZctr50eyoVzjWGg/yZrgu0QilvtBenig==
+X-Received: by 2002:a17:902:f641:b0:20b:58f2:e1a0 with SMTP id d9443c01a7336-2118350b048mr170353675ad.18.1731297487182;
+        Sun, 10 Nov 2024 19:58:07 -0800 (PST)
+Received: from localhost ([122.172.86.146])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177dc826fsm66579705ad.11.2024.11.10.19.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2024 19:58:06 -0800 (PST)
+Date: Mon, 11 Nov 2024 09:28:04 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, rafael@kernel.org,
+	zhoubinbin@loongson.cn, loongarch@lists.linux.dev,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: loongson3: Check error for devm_mutex_init()
+Message-ID: <20241111035804.zc3gwtg5ms3bz34h@vireshk-i7>
+References: <20241105032053.1782082-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241108033437.2727574-1-lixianglai@loongson.cn>
-In-Reply-To: <20241108033437.2727574-1-lixianglai@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 11 Nov 2024 10:55:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Tmi8LSn6kDsMj8HkhcUb9zY1EOx2-KnpeTriickbaKQ@mail.gmail.com>
-Message-ID: <CAAhV-H7Tmi8LSn6kDsMj8HkhcUb9zY1EOx2-KnpeTriickbaKQ@mail.gmail.com>
-Subject: Re: [PATCH V4 00/11] Added Interrupt controller emulation for
- loongarch kvm
-To: Xianglai Li <lixianglai@loongson.cn>
-Cc: linux-kernel@vger.kernel.org, Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241105032053.1782082-1-ruanjinjie@huawei.com>
 
-Hi, Xianglai,
+On 05-11-24, 11:20, Jinjie Ruan wrote:
+> devm_mutex_init() may return error, and the avoidance of checking
+> the error code from devm_mutex_init() call diminishes the point of
+> using devm variant of it. Add the missed check.
+> 
+> Fixes: ccf51454145b ("cpufreq: Add Loongson-3 CPUFreq driver support")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  drivers/cpufreq/loongson3_cpufreq.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+> index 6b5e6798d9a2..a923e196ec86 100644
+> --- a/drivers/cpufreq/loongson3_cpufreq.c
+> +++ b/drivers/cpufreq/loongson3_cpufreq.c
+> @@ -346,8 +346,11 @@ static int loongson3_cpufreq_probe(struct platform_device *pdev)
+>  {
+>  	int i, ret;
+>  
+> -	for (i = 0; i < MAX_PACKAGES; i++)
+> -		devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+> +	for (i = 0; i < MAX_PACKAGES; i++) {
+> +		ret = devm_mutex_init(&pdev->dev, &cpufreq_mutex[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	ret = do_service_request(0, 0, CMD_GET_VERSION, 0, 0);
+>  	if (ret <= 0)
 
-I have applied this series with some build fixes and style fixes at:
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/log/?h=3Dloongarch-kvm
+Applied. Thanks.
 
-Please confirm whether it works as expected, thanks.
-
-
-Huacai
-
-On Fri, Nov 8, 2024 at 11:53=E2=80=AFAM Xianglai Li <lixianglai@loongson.cn=
-> wrote:
->
-> Before this, the interrupt controller simulation has been completed
-> in the user mode program. In order to reduce the loss caused by frequent
-> switching of the virtual machine monitor from kernel mode to user mode
-> when the guest accesses the interrupt controller, we add the interrupt
-> controller simulation in kvm.
->
-> The following is a virtual machine simulation diagram of interrupted
-> connections:
->   +-----+    +---------+     +-------+
->   | IPI |--> | CPUINTC | <-- | Timer |
->   +-----+    +---------+     +-------+
->                  ^
->                  |
->            +---------+
->            | EIOINTC |
->            +---------+
->             ^       ^
->             |       |
->      +---------+ +---------+
->      | PCH-PIC | | PCH-MSI |
->      +---------+ +---------+
->        ^      ^          ^
->        |      |          |
-> +--------+ +---------+ +---------+
-> | UARTs  | | Devices | | Devices |
-> +--------+ +---------+ +---------+
->
-> In this series of patches, we mainly realized the simulation of
-> IPI EIOINTC PCH-PIC interrupt controller.
->
-> The simulation of IPI EIOINTC PCH-PIC interrupt controller mainly
-> completes the creation simulation of the interrupt controller,
-> the register address space read and write simulation,
-> and the interface with user mode to obtain and set the interrupt
-> controller state for the preservation,
-> recovery and migration of virtual machines.
->
-> IPI simulation implementation reference:
-> https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongs=
-on-3A5000-usermanual-EN/inter-processor-interrupts-and-communication
->
-> EIOINTC simulation implementation reference:
-> https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongs=
-on-3A5000-usermanual-EN/io-interrupts/extended-io-interrupts
->
-> PCH-PIC simulation implementation reference:
-> https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongs=
-on-7A1000-usermanual-EN/interrupt-controller.adoc
->
-> For PCH-MSI, we used irqfd mechanism to send the interrupt signal
-> generated by user state to kernel state and then to EIOINTC without
-> maintaining PCH-MSI state in kernel state.
->
-> You can easily get the code from the link below:
-> the kernel:
-> https://github.com/lixianglai/linux
-> the branch is: interrupt-v4
->
-> the qemu:
-> https://github.com/lixianglai/qemu
-> the branch is: interrupt-v3
->
-> Please note that the code above is regularly updated based on community
-> reviews.
->
-> change log:
-> V3->V4:
-> 1.Fix some macro definition names and some formatting errors
-> 2.Combine the IPI two device address Spaces into one address device space
-> 3.Optimize the function kvm_vm_ioctl_irq_line implementation, directly ca=
-ll the public function kvm_set_irq for interrupt distribution
-> 4.Optimize the description of the commit log
-> 5.Deleting an interface trace_kvm_iocsr
->
-> V2->V3:
-> 1.Modify the macro definition name:
-> KVM_DEV_TYPE_LA_* ->  KVM_DEV_TYPE_LOONGARCH_*
-> 2.Change the short name for "Extended I/O Interrupt Controller" from EXTI=
-OI to EIOINTC
-> Rename file extioi.c to eiointc.c
-> Rename file extioi.h to eiointc.h
->
-> V1->V2:
-> 1.Remove redundant blank lines according to community comments
-> 2.Remove simplified redundant code
-> 3.Adds 16 bits of read/write interface to the eiointc iocsr address space
-> 4.Optimize user - and kernel-mode data access interfaces: Access
-> fixed length data each time to prevent memory overruns
-> 5.Added virtual eiointc, where interrupts can be routed to cpus other tha=
-n cpu 4
->
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: kvm@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Xianglai li <lixianglai@loongson.cn>
->
-> Xianglai Li (11):
->   LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
->   LoongArch: KVM: Add IPI device support
->   LoongArch: KVM: Add IPI read and write function
->   LoongArch: KVM: Add IPI user mode read and write function
->   LoongArch: KVM: Add EIOINTC device support
->   LoongArch: KVM: Add EIOINTC read and write functions
->   LoongArch: KVM: Add EIOINTC user mode read and write functions
->   LoongArch: KVM: Add PCHPIC device support
->   LoongArch: KVM: Add PCHPIC read and write functions
->   LoongArch: KVM: Add PCHPIC user mode read and write functions
->   LoongArch: KVM: Add irqfd support
->
->  arch/loongarch/include/asm/kvm_eiointc.h |  122 +++
->  arch/loongarch/include/asm/kvm_host.h    |   18 +-
->  arch/loongarch/include/asm/kvm_ipi.h     |   46 +
->  arch/loongarch/include/asm/kvm_pch_pic.h |   61 ++
->  arch/loongarch/include/uapi/asm/kvm.h    |   19 +
->  arch/loongarch/kvm/Kconfig               |    5 +-
->  arch/loongarch/kvm/Makefile              |    4 +
->  arch/loongarch/kvm/exit.c                |   80 +-
->  arch/loongarch/kvm/intc/eiointc.c        | 1055 ++++++++++++++++++++++
->  arch/loongarch/kvm/intc/ipi.c            |  468 ++++++++++
->  arch/loongarch/kvm/intc/pch_pic.c        |  523 +++++++++++
->  arch/loongarch/kvm/irqfd.c               |   97 ++
->  arch/loongarch/kvm/main.c                |   19 +-
->  arch/loongarch/kvm/vcpu.c                |    3 +
->  arch/loongarch/kvm/vm.c                  |   22 +
->  include/linux/kvm_host.h                 |    1 +
->  include/uapi/linux/kvm.h                 |    8 +
->  17 files changed, 2522 insertions(+), 29 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kvm_eiointc.h
->  create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
->  create mode 100644 arch/loongarch/include/asm/kvm_pch_pic.h
->  create mode 100644 arch/loongarch/kvm/intc/eiointc.c
->  create mode 100644 arch/loongarch/kvm/intc/ipi.c
->  create mode 100644 arch/loongarch/kvm/intc/pch_pic.c
->  create mode 100644 arch/loongarch/kvm/irqfd.c
->
->
-> base-commit: 906bd684e4b1e517dd424a354744c5b0aebef8af
-> --
-> 2.39.1
->
+-- 
+viresh
