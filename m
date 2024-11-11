@@ -1,193 +1,217 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAB2148FEB
-	for <loongarch@lists.linux.dev>; Sat,  9 Nov 2024 11:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E94A22EED
+	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 02:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731150463; cv=none; b=uf05iSxY1eIk7WtQt9H8VbUJksVJO0yAFN4LiKNKc67UYEjYeqDkRNAYZhW2sKCVPT3DpehYv+oZ8wlAi8HkFIQXS4K/Spq21KnuMWXmds3MPhjDOoaqcEdZsEbcg4jozTg2WP915uN2s3BcTTimlM2ouzTMuxzcT5+tu24+29I=
+	t=1731293751; cv=none; b=XLFdUIsWEeq2VUEK8l3Kb+Ai6JUEw7U3rz4jXwy6Wur5jfQkbAuNB/4pjAXRvTsTllbX+nNQQQCD6HX4Gq1D5UOY4ekFBwVd58AWR43OLOMGOYfMkcNY3aNGQAk6tnDZbsD2Zbvku8CxOFqKEZrx+4ZEGmXoijVMvENmPyWIrJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731150463; c=relaxed/simple;
-	bh=QS9QXHA9aIA753MlX+rgP6S52wu6QOzrQQPQXLb4Oug=;
+	s=arc-20240116; t=1731293751; c=relaxed/simple;
+	bh=HScUf/0mJI0h2P0D1CtSIPUJdAuxe+P+7zYDm1Fxna8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NqpDCYcQ/KVvotVs/jwP8UqPRxH9c1VCAYRoy4iB9/71MnV/rEiqk3qgza/I1HM0HS9d3x+NjsXGZuTKTab/DiBtklGP1DPTT0nJss1TDVHMY1zsGJ3k8bRtP7YkkOOfx/Aaf14S7kk9UpMIytzeEwBJrGbjOJ47WQebcD8B65Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKhA3kzt; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=HLUVrMr2HfNDvrCod1mC+2Dt7o70rfRUnJdicLc3f+9YDl8cXXg2PHR714YINo/hET8HL4cyHeRasO2vZRcTR3ol6R6vAWN7d8X9KaB+Ck+B1m7ctOjUsBwTUp95f1nKYSwPxFFqxKkGDFabgvTXojd7gDhY/oMYQSsGukH9dd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBvKOBmS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKhA3kzt"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5cebcf96fabso3628212a12.3
-        for <loongarch@lists.linux.dev>; Sat, 09 Nov 2024 03:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731150460; x=1731755260; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awye95iv1yEMNkGuGKMnnPe3aEgESR2qeEte2B8YfLU=;
-        b=nKhA3kztDeyJWefepZaD2dKXyWzZf3vfJo30T+8z210Qca8jjxvj8FCgW+0rM7Zlf3
-         CoWWe4stnJDluShLO3WEWjrye/kozzvu3TbK1QP++2O8ibloJL6uZoHTdvPhwZ+jXLnM
-         5gUD5mgpVEPimlfWBn6pCWchwjA5KoewqoHwXcAYXTVXYU4uqw5VBpLNBiz+Slo75/s/
-         Gw2QJ1lr8LhC0x3qbQj1HgCoMUdsaA9VSJk7HoRyc2iGx9ibMNCcvPoddQ0acOdsKHGO
-         SUvnYyvDJJ2rT/pB7XvCeahVbjAM9dvzuqzWHhXcD8ZHcOaApMu2Mg+9v2NcpZjcV9nU
-         6zyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731150460; x=1731755260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awye95iv1yEMNkGuGKMnnPe3aEgESR2qeEte2B8YfLU=;
-        b=K0luLo0Jrx7KlrEAH1iutEwRJsE139/AkAwzWg6BYq2hzThixG+8x3JkYLjBbMn2uD
-         qWMzT8PNLbp745c4lO9kz3QYxS5CZxBLMKMO7sizjHzmnYUhuiv4T5UmF+42yc6GVaxE
-         23ONCkeAXlBLx778EmD9j7U0KgGOHQzCeIcxT+hfyQy6yL+Rg8kRwQb2Kfc2DKJGjg2q
-         JhhX1oTFHTKT6oD3JeOfBnL87FV5TlWfAHQdzLx4Dgt+PkiVD2gj41l71UmRKhGxwTjN
-         deh/tMYV/FEHDvnjPJ0RZf6zQxPuIE4Ws9Y+x8kZEE+DV5I7lwPWYb8rCUqq5jz3s7js
-         B6mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWepoIx77XHC5eLzslPLJCeRqar47Hfjt8tN4O/ZigFLf1mDMYKn6M55oEcksBVa6SSqruKUu3PWzo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz97zqBN8m97D1k3rH7/GiSI6OUdLY8v98jQiyFaTvUAw6IPT22
-	R2cWt4EFyUpAhW+B5wz2Ptqilb9qhSk0UR9yjdtM3BaGfoT1phDYT0dI7isRGGXmAGjWDBs9IdU
-	822RmTcIp+Lf7y3WcGUgXIb0LQlzTHoK4sySvGnwB
-X-Google-Smtp-Source: AGHT+IE7QnnwmUPJHAhpYjQ53+P2XjG8mYIekPucikrnAm6nBdhxXkmutfFnCQ+ZZUdwIEe3sKpwxcnrh3kFtMAUPPU=
-X-Received: by 2002:a05:6402:40d6:b0:5cf:1b53:1bf4 with SMTP id
- 4fb4d7f45d1cf-5cf1b531cfemr1676430a12.17.1731150459603; Sat, 09 Nov 2024
- 03:07:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBvKOBmS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5FAC4CED6
+	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 02:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731293750;
+	bh=HScUf/0mJI0h2P0D1CtSIPUJdAuxe+P+7zYDm1Fxna8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bBvKOBmS2SEx2ss/TPyZHvX2/b9bEfNE1orxM5YqSvJBWTjMTk2biN/hmJDZoniiq
+	 JyrOsRMlAZd/KyDuPCDxLjwZrUZgcWxkfs2EBK8Lp9EQyhhrSM/H/ZtDKBMLK+Ag55
+	 YeZS07o01iXHyZfqkcLqQvNv/tUZo6G6mdQavmWxgNUr1orWWkMXEDjhVWMYIekf1k
+	 41pwM+Ldqlf//Dn9T7EHnA7WTwSp/elcY4+O10SzPl0LJU7yTukoewPvwwP610dKGZ
+	 CzPjLHrb28nt4nw7FMjzvtSV8ju17S2pZLCSosGspyIuZxUF2TIJ0jsJVDKkqban/+
+	 CpjgIDnUYPTPw==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a9aa8895facso767811466b.2
+        for <loongarch@lists.linux.dev>; Sun, 10 Nov 2024 18:55:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXivbrsrOkvV4rAqdqPfjMvJKdusWSPWeQ1SmntKnnQFptBML7R9IEhYvMmrVsujRcQ+8wkFGZEVr8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGJMn2JndslSmMzMlDrybg74x1nd/S2ByK2TNSuTsKJFNXhymD
+	AN5QiRpC9+RLU/9/S/vx9ry1Zwvi3G5v9E09y+K3EtCfuCKiXD+4g/rfQfOgQKXUKOkfCwCKa3e
+	NJRYTmV42SGrNwbbQ5176G+/wJcc=
+X-Google-Smtp-Source: AGHT+IE9ZVU6MUnQyJE3IEZDEKcc4yDVpoQPgjNAf/AzyzceYa7gsBsvYyyHQWmatNCKqPWzX8N5Di7puhbpLxstkDE=
+X-Received: by 2002:a17:907:9603:b0:a99:ed0c:1d6 with SMTP id
+ a640c23a62f3a-a9ef000750cmr1066361766b.49.1731293749308; Sun, 10 Nov 2024
+ 18:55:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1729583747.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1729583747.git.zhoubinbin@loongson.cn>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 9 Nov 2024 17:07:24 +0600
-Message-ID: <CAMpQs4Lv0_RjoyzJHtrekbHB+OiV5Si6yPEgp_u1ZZKkthGzhw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] pwm: Introduce pwm driver for the Loongson family chips
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Sean Young <sean@mess.org>
+References: <20241108033437.2727574-1-lixianglai@loongson.cn>
+In-Reply-To: <20241108033437.2727574-1-lixianglai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 11 Nov 2024 10:55:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Tmi8LSn6kDsMj8HkhcUb9zY1EOx2-KnpeTriickbaKQ@mail.gmail.com>
+Message-ID: <CAAhV-H7Tmi8LSn6kDsMj8HkhcUb9zY1EOx2-KnpeTriickbaKQ@mail.gmail.com>
+Subject: Re: [PATCH V4 00/11] Added Interrupt controller emulation for
+ loongarch kvm
+To: Xianglai Li <lixianglai@loongson.cn>
+Cc: linux-kernel@vger.kernel.org, Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 3:04=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+Hi, Xianglai,
+
+I have applied this series with some build fixes and style fixes at:
+https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
+it/log/?h=3Dloongarch-kvm
+
+Please confirm whether it works as expected, thanks.
+
+
+Huacai
+
+On Fri, Nov 8, 2024 at 11:53=E2=80=AFAM Xianglai Li <lixianglai@loongson.cn=
 > wrote:
 >
-> Hi all:
+> Before this, the interrupt controller simulation has been completed
+> in the user mode program. In order to reduce the loss caused by frequent
+> switching of the virtual machine monitor from kernel mode to user mode
+> when the guest accesses the interrupt controller, we add the interrupt
+> controller simulation in kvm.
 >
-> This patchset introduce a generic PWM framework driver for Loongson famil=
-y.
-> Each PWM has one pulse width output signal and one pulse input signal to =
-be measured.
+> The following is a virtual machine simulation diagram of interrupted
+> connections:
+>   +-----+    +---------+     +-------+
+>   | IPI |--> | CPUINTC | <-- | Timer |
+>   +-----+    +---------+     +-------+
+>                  ^
+>                  |
+>            +---------+
+>            | EIOINTC |
+>            +---------+
+>             ^       ^
+>             |       |
+>      +---------+ +---------+
+>      | PCH-PIC | | PCH-MSI |
+>      +---------+ +---------+
+>        ^      ^          ^
+>        |      |          |
+> +--------+ +---------+ +---------+
+> | UARTs  | | Devices | | Devices |
+> +--------+ +---------+ +---------+
 >
-> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
-.
+> In this series of patches, we mainly realized the simulation of
+> IPI EIOINTC PCH-PIC interrupt controller.
 >
-> Thanks.
+> The simulation of IPI EIOINTC PCH-PIC interrupt controller mainly
+> completes the creation simulation of the interrupt controller,
+> the register address space read and write simulation,
+> and the interface with user mode to obtain and set the interrupt
+> controller state for the preservation,
+> recovery and migration of virtual machines.
 >
-> -------
-> V7:
-> Thanks for Sean's advice.
-> patch (2/2):
->  - Set chip->atomic to keep pwm_apply_atomic() can be used with the pwm.
->  - Test with CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP enabled.
+> IPI simulation implementation reference:
+> https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongs=
+on-3A5000-usermanual-EN/inter-processor-interrupts-and-communication
 >
-> Link to V6:
-> https://lore.kernel.org/all/cover.1728463622.git.zhoubinbin@loongson.cn/
-
-Hi Uwe:
-
-Gentle ping.
-Any comments about this patchset ?
-
+> EIOINTC simulation implementation reference:
+> https://github.com/loongson/LoongArch-Documentation/tree/main/docs/Loongs=
+on-3A5000-usermanual-EN/io-interrupts/extended-io-interrupts
 >
-> V6:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Add Reference Manual;
->  - Shortcut if !pwm->state.enabled;
->  - When state->enabled is true, unconditionally execute
->    pwm_loongson_set_polarity() to avoid that the polarity register is
->    not set correctly.
+> PCH-PIC simulation implementation reference:
+> https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongs=
+on-7A1000-usermanual-EN/interrupt-controller.adoc
 >
-> Link to V5:
-> https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
+> For PCH-MSI, we used irqfd mechanism to send the interrupt signal
+> generated by user state to kernel state and then to EIOINTC without
+> maintaining PCH-MSI state in kernel state.
 >
-> V5:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Test with PWM_DEBUG enabled.
->  - In pwm_loongson_apply(), the pwm state is determined before the pwm
->    polarity, avoid test failures when PWM_DEBUG is enabled;
->  - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
->    precision loss and to avoid test failures when PWM_DEBUG is enabled.
+> You can easily get the code from the link below:
+> the kernel:
+> https://github.com/lixianglai/linux
+> the branch is: interrupt-v4
 >
-> Link to V4:
-> https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
+> the qemu:
+> https://github.com/lixianglai/qemu
+> the branch is: interrupt-v3
 >
-> V4:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Addressed Uwe's review comments:
->    - Make use of devm_pwmchip_alloc() function;
->    - Add Limitations description;
->    - Add LOONGSON_ prefix for Loongson pwm register defines;
->    - Keep regs written only once;
->    - Rewrite duty/period calculation;
->    - Add dev_err_probe() in .probe();
->    - Fix some code style.
+> Please note that the code above is regularly updated based on community
+> reviews.
 >
-> Link to V3:
-> https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongso=
-n.cn/
+> change log:
+> V3->V4:
+> 1.Fix some macro definition names and some formatting errors
+> 2.Combine the IPI two device address Spaces into one address device space
+> 3.Optimize the function kvm_vm_ioctl_irq_line implementation, directly ca=
+ll the public function kvm_set_irq for interrupt distribution
+> 4.Optimize the description of the commit log
+> 5.Deleting an interface trace_kvm_iocsr
 >
-> V3:
-> patch (1/2):
->  - Add Reviewed-by tag from Krzysztof, thanks.
-> patch (2/2):
->  - Several code stlye adjustments, such as line breaks.
+> V2->V3:
+> 1.Modify the macro definition name:
+> KVM_DEV_TYPE_LA_* ->  KVM_DEV_TYPE_LOONGARCH_*
+> 2.Change the short name for "Extended I/O Interrupt Controller" from EXTI=
+OI to EIOINTC
+> Rename file extioi.c to eiointc.c
+> Rename file extioi.h to eiointc.h
 >
-> Link to V2:
-> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+> V1->V2:
+> 1.Remove redundant blank lines according to community comments
+> 2.Remove simplified redundant code
+> 3.Adds 16 bits of read/write interface to the eiointc iocsr address space
+> 4.Optimize user - and kernel-mode data access interfaces: Access
+> fixed length data each time to prevent memory overruns
+> 5.Added virtual eiointc, where interrupts can be routed to cpus other tha=
+n cpu 4
 >
-> v2:
-> - Remove the dts-related patches and update dts at once after all
-> relevant drivers are complete.
-> patch (1/2):
->  - The dt-binding filename should match compatible, rename it as
->    loongson,ls7a-pwm.yaml;
->  - Update binding description;
->  - Add description for each pwm cell;
->  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
-y.
+> Cc: Bibo Mao <maobibo@loongson.cn>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: kvm@vger.kernel.org
+> Cc: loongarch@lists.linux.dev
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Xianglai li <lixianglai@loongson.cn>
 >
-> Link to v1:
-> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
-n.cn/
+> Xianglai Li (11):
+>   LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+>   LoongArch: KVM: Add IPI device support
+>   LoongArch: KVM: Add IPI read and write function
+>   LoongArch: KVM: Add IPI user mode read and write function
+>   LoongArch: KVM: Add EIOINTC device support
+>   LoongArch: KVM: Add EIOINTC read and write functions
+>   LoongArch: KVM: Add EIOINTC user mode read and write functions
+>   LoongArch: KVM: Add PCHPIC device support
+>   LoongArch: KVM: Add PCHPIC read and write functions
+>   LoongArch: KVM: Add PCHPIC user mode read and write functions
+>   LoongArch: KVM: Add irqfd support
 >
-> Binbin Zhou (2):
->   dt-bindings: pwm: Add Loongson PWM controller
->   pwm: Add Loongson PWM controller support
+>  arch/loongarch/include/asm/kvm_eiointc.h |  122 +++
+>  arch/loongarch/include/asm/kvm_host.h    |   18 +-
+>  arch/loongarch/include/asm/kvm_ipi.h     |   46 +
+>  arch/loongarch/include/asm/kvm_pch_pic.h |   61 ++
+>  arch/loongarch/include/uapi/asm/kvm.h    |   19 +
+>  arch/loongarch/kvm/Kconfig               |    5 +-
+>  arch/loongarch/kvm/Makefile              |    4 +
+>  arch/loongarch/kvm/exit.c                |   80 +-
+>  arch/loongarch/kvm/intc/eiointc.c        | 1055 ++++++++++++++++++++++
+>  arch/loongarch/kvm/intc/ipi.c            |  468 ++++++++++
+>  arch/loongarch/kvm/intc/pch_pic.c        |  523 +++++++++++
+>  arch/loongarch/kvm/irqfd.c               |   97 ++
+>  arch/loongarch/kvm/main.c                |   19 +-
+>  arch/loongarch/kvm/vcpu.c                |    3 +
+>  arch/loongarch/kvm/vm.c                  |   22 +
+>  include/linux/kvm_host.h                 |    1 +
+>  include/uapi/linux/kvm.h                 |    8 +
+>  17 files changed, 2522 insertions(+), 29 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/kvm_eiointc.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
+>  create mode 100644 arch/loongarch/include/asm/kvm_pch_pic.h
+>  create mode 100644 arch/loongarch/kvm/intc/eiointc.c
+>  create mode 100644 arch/loongarch/kvm/intc/ipi.c
+>  create mode 100644 arch/loongarch/kvm/intc/pch_pic.c
+>  create mode 100644 arch/loongarch/kvm/irqfd.c
 >
->  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
->  MAINTAINERS                                   |   7 +
->  drivers/pwm/Kconfig                           |  12 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-loongson.c                    | 288 ++++++++++++++++++
->  5 files changed, 374 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
-wm.yaml
->  create mode 100644 drivers/pwm/pwm-loongson.c
 >
->
-> base-commit: c13bce43b32b06f2273c7961940c391cdaf13d1e
+> base-commit: 906bd684e4b1e517dd424a354744c5b0aebef8af
 > --
-> 2.43.5
+> 2.39.1
 >
-
-
---
-Thanks.
-Binbin
