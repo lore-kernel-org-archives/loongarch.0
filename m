@@ -1,109 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4D014B946
-	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 05:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300617F477
+	for <loongarch@lists.linux.dev>; Mon, 11 Nov 2024 06:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731302977; cv=none; b=FWDtbBRdKDShlcxdtSyUnFvh/sO10dL2GFkntqH6g1kU+YXpQqIOS78ZwYcIkBFCpyXPI1ZoCSOVVV88By2qpmBDphqqFxtv5kw2xTptpHjeBei0DjVmdk0DTL7qP+S2bQbaZSC4A2uSXNGDgSegDx5/stP4jV4JJe7tAVwb91I=
+	t=1731305424; cv=none; b=VI5Wa1/rgemmTRPgPJgVxp4NhiTCIK1kaoaJ5j0ft2zwqE/+h5X4a5EN3zv6xhOJPAqqfZfswC6TmQ+6d61UOU773Fs6DjHWnUsYzfL53zCHp79OLTr4k6I1NbgSW70e8uF+2kLI2YEiubATT3rc6HBLnIIyWCLScskEBr/Rzu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731302977; c=relaxed/simple;
-	bh=1H0lsA1melbP7Mkd+oLrxFN3y7nwa8EVtGO8EFXhi/A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g1RDJbY+BPdWGl1o0/IlV+m/+mCoMuOmn0Tu0tW8h648BWtge50p/cCjQgEHx6A1srcCQGaGfFrNO2u3d1a1dQzpBcOCWX/meAnSls1dT0WC6nmCWd51djJuyMA7FIuDr8Gji9kB4YIofGgt7VIJ/c3BFhgQLOrLeLHM7eRDAtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uzqfr+Hl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d3JIuFLw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uzqfr+Hl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d3JIuFLw"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1731302967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ifoGJMBHZ1DqZx2Obrxr/X5prXUNx0tqWRzJjSaO6kQ=;
-	b=uzqfr+HlV4tT1qhLmCHVKuDJwDUkgECQzV0KEwbpKjqOL5hQSRsODdzI77K1XP+vlvRBjd
-	XIsyuBW2tsdl96XDDkG8rP2AcjZ4dR5hYUz/gJlD4koPvds4PYRYxTzbFqAo7+ryVS7F0L
-	SwFp3k/wk7efTCrgialIo+06i5LdrQTSf+uJfYWnzC+JhcSgZOI6ZTVTzGUAe0Xw/qlJxl
-	m5bmWTY5LSU3nI2mwmoVl0xDOqExZ3ppspE39bMUkWppxYsNLfgnmhWgseX33I0iKfpUUX
-	FwV4iV1jrq9VTwiTOSPbt0CrJDOxxRVva57ZdSREPPOM5ChKAk+gt481OQrMWA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1731302967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ifoGJMBHZ1DqZx2Obrxr/X5prXUNx0tqWRzJjSaO6kQ=;
-	b=d3JIuFLw53tTVosNz6RG79DYTdEndoP8rAy6VJUQOY6vHEBypbCWAx3MDFlr0KN2PTet2r
-	3ZgP7LuWVEvPPxBA==
-Date: Mon, 11 Nov 2024 06:29:18 +0100
-Subject: [PATCH v2 1/3] kunit: qemu_configs: Add LoongArch config
+	s=arc-20240116; t=1731305424; c=relaxed/simple;
+	bh=DbnonwvT9+TeoK0pRjgBRHojNOqJMpZZb5XkAwimCk4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MnKfVnJeXfSsACn1pYSCNoN0hv5aZEQucnj0k37NGAWI7b4na+XzqTlf2aFpPkGZoNUEwiyw0+X+Jr2OeRRDvlcwQ93cUipED+KI7lJNehl/l0KdG1D6tO9S3EVYJwbNeWfoGlgmVO4pGlnC6w1kKJSMoE+IyeklGAGT+5FOpvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8Ax6+HDnzFnnjw7AA--.50713S3;
+	Mon, 11 Nov 2024 14:10:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMBxnkfDnzFn0ABRAA--.10185S2;
+	Mon, 11 Nov 2024 14:10:11 +0800 (CST)
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	chenhuacai@kernel.org,
+	bp@alien8.de
+Cc: linux-edac@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@xen0n.name,
+	tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org,
+	loongarch@lists.linux.dev,
+	Zhao Qunqin <zhaoqunqin@loongson.cn>
+Subject: [PATCH v7 0/2] Add EDAC driver for loongson memory controller
+Date: Mon, 11 Nov 2024 14:09:37 +0800
+Message-Id: <20241111060939.5349-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241111-kunit-loongarch-v2-1-7676eb5f2da3@linutronix.de>
-References: <20241111-kunit-loongarch-v2-0-7676eb5f2da3@linutronix.de>
-In-Reply-To: <20241111-kunit-loongarch-v2-0-7676eb5f2da3@linutronix.de>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: Bibo Mao <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- kunit-dev@googlegroups.com, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731302965; l=1247;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=1H0lsA1melbP7Mkd+oLrxFN3y7nwa8EVtGO8EFXhi/A=;
- b=5qrvr/riA2uB3GHVeHZnLAJB3A6LUapyCXEA+OrrgBheolSZfBFWT/g2Mu2BhB781zEK5t2S8
- LcmfxtQkNXXCdUDk91TIbTFmOfz8zKZqRjdiwveLekIdux27rmgh5UU
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-CM-TRANSID:qMiowMBxnkfDnzFn0ABRAA--.10185S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JFyDtrWDJw1rur4xuF4kGrX_yoWxtFg_C3
+	WxAFW8Jr4kta4DJay2vr18ZrWayF4UtFn5CFn0gw15XF1avr13Wr97ZF13AFy7tr1DWFy3
+	ZrWkKFyxA3WxtosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-Add a basic config to run kunit tests on LoongArch.
-This requires QEMU 9.1.0 or later for the necessary direct kernel boot
-support.
+Add a simple EDAC driver which report single bit errors (CE) only on
+loongson platform.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Reviewed-by: David Gow <davidgow@google.com>
----
- tools/testing/kunit/qemu_configs/loongarch.py | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Zhao Qunqin (2):
+  dt-bindings: EDAC for ls3a5000 memory controller
+  EDAC: Add EDAC driver for loongson memory controller
 
-diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
-new file mode 100644
-index 0000000000000000000000000000000000000000..a874a2156e0f791caaaf30e5f7b17fc175bb55ee
---- /dev/null
-+++ b/tools/testing/kunit/qemu_configs/loongarch.py
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from ..qemu_config import QemuArchParams
-+
-+QEMU_ARCH = QemuArchParams(linux_arch='loongarch',
-+			   kconfig='''
-+CONFIG_EFI_STUB=n
-+CONFIG_PCI_HOST_GENERIC=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+''',
-+			   qemu_arch='loongarch64',
-+			   kernel_path='arch/loongarch/boot/vmlinux.elf',
-+			   kernel_command_line='console=ttyS0',
-+			   extra_qemu_params=[
-+					   '-machine', 'virt',
-+					   '-cpu', 'max',])
+ .../edac/loongson,ls3a5000-mc-edac.yaml       |  44 +++++
+ MAINTAINERS                                   |   7 +
+ arch/loongarch/Kconfig                        |   1 +
+ drivers/edac/Kconfig                          |   8 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/loongson_edac.c                  | 156 ++++++++++++++++++
+ 6 files changed, 217 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/loongson,ls3a5000-mc-edac.yaml
+ create mode 100644 drivers/edac/loongson_edac.c
 
+
+base-commit: e14232afa94445e03fc3a0291b07a68f3408c120
 -- 
-2.47.0
+2.43.0
 
