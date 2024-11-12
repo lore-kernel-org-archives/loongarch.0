@@ -1,66 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E618BBA2;
-	Tue, 12 Nov 2024 06:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1961CD218
+	for <loongarch@lists.linux.dev>; Tue, 12 Nov 2024 12:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731393390; cv=none; b=krmDVIN7Pqkt1F7/EBd7EH2FoDYXDEf0KghYN3u9k172/ukd3YkeBl67EPSuLFgCigmXV5jVScJJDI18bE8LD2uI5lNU5vFWj50Mtzi1M3wEOhFHnf2xX++vVZp83g/pWzH2wB1SfVwYoBs7BMBy+aebbj57V6rVga+N1zwMvks=
+	t=1731414428; cv=none; b=ZuqXsc0n2HDZfoPqW7ij4Z2MNiA2NOODAbcL3RSnyrfQ8aXuNXPXHIaacxTFiDP1BVifzSwsYoWaX3XOXnEVYfAWe+RU8bw0Zx8WmfeG7dLG7KKIseN7/s06iGY4Q3WZ7kn2W9OAIeJjjp7+2Qi7lfYQQ6ISN5aP0exVCfK9sGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731393390; c=relaxed/simple;
-	bh=URwHfk3izC1gRpf2pZy7HuVAGmvFfuhYumBCgJA9vII=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f9CvRaGYICqg7P7qHGAwOwNjQBUw9/J8o46I4OFBhne2msxPyqq6x6dASuPm2Zn8ygRqOwNqe84vbq2U98Z6Hway67CUMQ+NE61BP2vMhAmkd/d1Bci6HCsKPQOweA9pZFcyK0l2Pt6M9btV5pP15RO4gA/E0IzQUru1B3MDOpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 521D6C4CECD;
-	Tue, 12 Nov 2024 06:36:27 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Bibo Mao <maobibo@loongson.cn>
-Subject: [PATCH] LoongArch: Fix early_numa_add_cpu() usage for FDT systems
-Date: Tue, 12 Nov 2024 14:36:10 +0800
-Message-ID: <20241112063610.1135103-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1731414428; c=relaxed/simple;
+	bh=SzoTBuPP8/BKqz/GBTYRShwJP2WYiSoVU+Qpxi08EB4=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DK5C0PY8tAg2GcXtcLluUBho1gUcShr77ghKzB0kwFML56VUiqdrdlzsoJMhZkMEl7Kq7IgosADETaaj7vknwDnD4JNB0PGdNE02MRQ1HscGm4NprynhCFFY/7rsUi3wq4pWcb2xWKXFaih8YXduG+UEImOH/8WLnlbNBJEDhQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxmeGRSTNnk_w7AA--.55097S3;
+	Tue, 12 Nov 2024 20:26:57 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxbUeQSTNn07BSAA--.12703S3;
+	Tue, 12 Nov 2024 20:26:56 +0800 (CST)
+Subject: Re: [PATCH v2 5/5] LoongArch: Enable jump table with GCC for objtool
+To: Xi Ruoyao <xry111@xry111.site>, Peter Zijlstra <peterz@infradead.org>
+References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
+ <20241105123906.26072-6-yangtiezhu@loongson.cn>
+ <20241105141530.GE10375@noisy.programming.kicks-ass.net>
+ <62df4c24-68ed-fbfc-ed98-2df796697d89@loongson.cn>
+ <9589c5b673f45f02e2b0fa9d9a96eff0f0df0920.camel@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <7e8adb0b-e681-72ae-40d8-740dc3f9480b@loongson.cn>
+Date: Tue, 12 Nov 2024 20:26:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9589c5b673f45f02e2b0fa9d9a96eff0f0df0920.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCxbUeQSTNn07BSAA--.12703S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtryktF15CFyfJr48ZFy8tFc_yoWkWrg_Ww
+	18ur1kC3y5Aa97J3WDWr4F93y7GF4UJw48Jw1DJrW3tr15XF98GFn3uasav3W3JFWDXFnx
+	WF4DXasxCFyUuosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HS
+	oJUUUUU==
 
-early_numa_add_cpu() applies on physical CPU id rather than logical CPU
-id, so use cpuid instead of cpu.
+On 11/12/2024 11:15 AM, Xi Ruoyao wrote:
+> On Wed, 2024-11-06 at 13:03 +0800, Tiezhu Yang wrote:
+>> On 11/05/2024 10:15 PM, Peter Zijlstra wrote:
+>>> On Tue, Nov 05, 2024 at 08:39:06PM +0800, Tiezhu Yang wrote:
+>>>> For now, it is time to remove the compiler option -fno-jump-tables
+>>>> to enable jump table for objtool if the compiler is GCC and it has
+>>>> the compiler option -mannotate-tablejump, otherwise still keep the
+>>>> compiler option -fno-jump-tables to maintain compatibility with the
+>>>> older compilers.
 
-Cc: stable@vger.kernel.org
-Fixes: 3de9c42d02a79a5 ("LoongArch: Add all CPUs enabled by fdt to NUMA node 0")
-Reported-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index c0b498467ffa..5d59e9ce2772 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -302,7 +302,7 @@ static void __init fdt_smp_setup(void)
- 		__cpu_number_map[cpuid] = cpu;
- 		__cpu_logical_map[cpu] = cpuid;
- 
--		early_numa_add_cpu(cpu, 0);
-+		early_numa_add_cpu(cpuid, 0);
- 		set_cpuid_to_node(cpuid, 0);
- 	}
- 
--- 
-2.43.5
+>> ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
+>> KBUILD_CFLAGS                   += $(call cc-option,-mannotate-tablejump)
+>> else
+>> KBUILD_CFLAGS                   += -fno-jump-tables
+>> endif
+>
+> Has -mannotate-tablejump been added to Clang?
+
+Yes.
+
+> IMO it's better to add it
+> to Clang first, and add Clang & GCC support at once into objtool.
+
+Looks reasonable, the fact is that there are some corner issues
+compiled with Clang due to different compiler behaviors, most of
+the issues have been addressed and I need to do more test, I will
+send v3 with about 10 patches after the coming merge window.
+
+Thanks,
+Tiezhu
 
