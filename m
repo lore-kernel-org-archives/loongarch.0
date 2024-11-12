@@ -1,112 +1,240 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23D1DFE4
-	for <loongarch@lists.linux.dev>; Tue, 12 Nov 2024 03:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E5318BBA2;
+	Tue, 12 Nov 2024 06:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731381893; cv=none; b=LVzeJwc/F9WRMGs1dT9ax0QnDtII0pjpOIkB7BUIt3ZP0fXRe/7Rdd0vmpioqQjwxZgiOt6jRMw+lcV2fOXOPIa9hKPrNDRuzlBurK5+e94yD9aVKlWryYvhp26VnoAXgGeTWN+dA4PXu1ELcjiU7AhNE5A6eXrrYZ2Cg+lR+YQ=
+	t=1731393362; cv=none; b=fOlF9rWzinmEa4pBMir9oQDqM2aM0yymyKcD9I83DFkGpPbhEZ/fBW2sBE3tu67NdaZwPBQc5wf2U0lfzAYe05qYYFecDlWV6UjziSe01Qsno4FqyTf7n5AR9uwT5unf+IsD57Y7G5VEUIMFnKfhi6kHFfLNYvnDtzbgZYtx+V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731381893; c=relaxed/simple;
-	bh=K6sqA5yqiEr7eaNNdx6WcAiCsF8cbuisbgsN4OB9/YA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UumuBTdpAJpt3JuOH3RUbwWU639kCf4u/MIHF8N/pV5RpfaHj7zZTNVAp78d3YyXImJk1t7+pLkF/9BdYwvTF2hgxBDBmf1MvSO/FCFXFvGP67IGZX7xX2GwHAaRUSzYVR1pVR/Btzrws5PcEDKYwykngiXlHd+mg3W7KCf7VQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=mCDXFkoV; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="mCDXFkoV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1731381350;
-	bh=Og4VNwKYjtqHGB4zxLbfFKUt6m6DLbxtgZ0UXOCq+p4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mCDXFkoVT/ZqSHhTauszPD5+mwUKVgrswTWDOgFcWcGHQhvbOqxWu7Ew6+rWFyZtn
-	 TjEnlvP5q7nWFdfVnrpfJ5hckKKFqbDi/zff99BhXLcm79BVraYTHOHvDOMMZI6XdU
-	 ghCfkMEskHEKPPH4UT2bhGiW2cy+r/sUfyDu7ll0=
-Received: from [IPv6:240e:358:1159:9900:dc73:854d:832e:5] (unknown [IPv6:240e:358:1159:9900:dc73:854d:832e:5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 71EDB66FC9;
-	Mon, 11 Nov 2024 22:15:47 -0500 (EST)
-Message-ID: <9589c5b673f45f02e2b0fa9d9a96eff0f0df0920.camel@xry111.site>
-Subject: Re: [PATCH v2 5/5] LoongArch: Enable jump table with GCC for objtool
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra
- <peterz@infradead.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, 	loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Tue, 12 Nov 2024 11:15:41 +0800
-In-Reply-To: <62df4c24-68ed-fbfc-ed98-2df796697d89@loongson.cn>
-References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
-	 <20241105123906.26072-6-yangtiezhu@loongson.cn>
-	 <20241105141530.GE10375@noisy.programming.kicks-ass.net>
-	 <62df4c24-68ed-fbfc-ed98-2df796697d89@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 
+	s=arc-20240116; t=1731393362; c=relaxed/simple;
+	bh=+Lb/mifrNg/smRm/Odip625EHRUZkjx9ViFBn6wuARY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nGma80tCl/WiAlMf5KmQZI1EMXfD9NfUvd+7IXdA2RFmEEOsu6k6zVKFgrcfZO7j00yVaKnRHaZ946pUyXULcU1vI26xGs67qLNrNIIXHwpDCFnSs3B9QxPLDib7aiWibThw9T1ubcGc6YyKhWiN5LULspKIkZC8Dmuvwy5z++w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025FEC4CECD;
+	Tue, 12 Nov 2024 06:35:58 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Subject: [PATCH] LoongArch: For all possible CPUs setup logical-physical CPU mapping
+Date: Tue, 12 Nov 2024 14:35:40 +0800
+Message-ID: <20241112063540.1135079-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-11-06 at 13:03 +0800, Tiezhu Yang wrote:
-> On 11/05/2024 10:15 PM, Peter Zijlstra wrote:
-> > On Tue, Nov 05, 2024 at 08:39:06PM +0800, Tiezhu Yang wrote:
-> > > For now, it is time to remove the compiler option -fno-jump-tables
-> > > to enable jump table for objtool if the compiler is GCC and it has
-> > > the compiler option -mannotate-tablejump, otherwise still keep the
-> > > compiler option -fno-jump-tables to maintain compatibility with the
-> > > older compilers.
->=20
-> ...
->=20
-> > >=20
-> > > =C2=A0ifdef CONFIG_OBJTOOL
-> > > +ifdef CONFIG_CC_IS_GCC
-> > > +ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-> > > +KBUILD_CFLAGS			+=3D $(call cc-option,-mannotate-tablejump)
-> > > +else
-> > > =C2=A0KBUILD_CFLAGS			+=3D -fno-jump-tables
-> > > =C2=A0endif
-> > > +endif
-> > > +ifdef CONFIG_CC_IS_CLANG
-> > > +KBUILD_CFLAGS			+=3D -fno-jump-tables
-> > > +endif
-> > > +endif
-> >=20
-> > This seems excessive. Why split between GCC and Clang, isn't
-> > CC_HAS_ANNOTATE_JUMPTABLE sufficient?
->=20
-> Thanks for your reply.
->=20
-> In theory, it is sufficient to only check CC_HAS_ANNOTATE_JUMPTABLE
-> to use -fno-jump-tables or not, and also this is my initial aim.
->=20
-> In fact, when compling with Clang on LoongArch, if the compiler has
-> the option -mannotate-tablejump and config CC_HAS_ANNOTATE_TABLEJUMP
-> is set, there still exists some objtool warnings if remove the option
-> -fno-jump-tables, this is because there are some special cases such
-> as different rodata relocation type and rodata entry size generated
-> by Clang, I am working in progress to address the corner issues, and
-> the final code looks something like this:
->=20
-> ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-> KBUILD_CFLAGS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=3D $(call cc-option,-man=
-notate-tablejump)
-> else
-> KBUILD_CFLAGS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=3D -fno-jump-tables
-> endif
+In order to support ACPI-based physical CPU hotplug, we suppose for all
+"possible" CPUs cpu_logical_map() can work. Because some drivers want to
+use cpu_logical_map() for all "possible" CPUs, while currently we only
+setup logical-physical mapping for "present" CPUs. This lack of mapping
+also causes cpu_to_node() cannot work for hot-added CPUs.
 
-Has -mannotate-tablejump been added to Clang?  IMO it's better to add it
-to Clang first, and add Clang & GCC support at once into objtool.
+All "possible" CPUs are listed in MADT, and the "present" subset is
+marked as ACPI_MADT_ENABLED. To setup logical-physical CPU mapping for
+all possible CPUs and keep present CPUs continuous in cpu_present_mask,
+we parse MADT twice. The first pass handles CPUs with ACPI_MADT_ENABLED
+and the second pass handles CPUs without ACPI_MADT_ENABLED.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+The global flag (cpu_enumerated) is removed because acpi_map_cpu() calls
+cpu_number_map() rather than set_processor_mask() now.
+
+Reported-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/acpi.c | 81 +++++++++++++++++++++++-------------
+ arch/loongarch/kernel/smp.c  |  3 +-
+ 2 files changed, 55 insertions(+), 29 deletions(-)
+
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index f1a74b80f22c..382a09a7152c 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -58,48 +58,48 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ 		return ioremap_cache(phys, size);
+ }
+ 
+-static int cpu_enumerated = 0;
+-
+ #ifdef CONFIG_SMP
+-static int set_processor_mask(u32 id, u32 flags)
++static int set_processor_mask(u32 id, u32 pass)
+ {
+-	int nr_cpus;
+-	int cpu, cpuid = id;
+-
+-	if (!cpu_enumerated)
+-		nr_cpus = NR_CPUS;
+-	else
+-		nr_cpus = nr_cpu_ids;
++	int cpu = -1, cpuid = id;
+ 
+-	if (num_processors >= nr_cpus) {
++	if (num_processors >= NR_CPUS) {
+ 		pr_warn(PREFIX "nr_cpus limit of %i reached."
+-			" processor 0x%x ignored.\n", nr_cpus, cpuid);
++			" processor 0x%x ignored.\n", NR_CPUS, cpuid);
+ 
+ 		return -ENODEV;
+ 
+ 	}
++
+ 	if (cpuid == loongson_sysconf.boot_cpu_id)
+ 		cpu = 0;
+-	else
+-		cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
+-
+-	if (!cpu_enumerated)
+-		set_cpu_possible(cpu, true);
+ 
+-	if (flags & ACPI_MADT_ENABLED) {
++	switch (pass) {
++	case 1: /* Pass 1 handle enabled processors */
++		if (cpu < 0)
++			cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
+ 		num_processors++;
+ 		set_cpu_present(cpu, true);
+-		__cpu_number_map[cpuid] = cpu;
+-		__cpu_logical_map[cpu] = cpuid;
+-	} else
++		break;
++	case 2: /* Pass 2 handle disabled processors */
++		if (cpu < 0)
++			cpu = find_first_zero_bit(cpumask_bits(cpu_possible_mask), NR_CPUS);
+ 		disabled_cpus++;
++		break;
++	default:
++		return cpu;
++	}
++
++	set_cpu_possible(cpu, true);
++	__cpu_number_map[cpuid] = cpu;
++	__cpu_logical_map[cpu] = cpuid;
+ 
+ 	return cpu;
+ }
+ #endif
+ 
+ static int __init
+-acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long end)
++acpi_parse_p1_processor(union acpi_subtable_headers *header, const unsigned long end)
+ {
+ 	struct acpi_madt_core_pic *processor = NULL;
+ 
+@@ -110,12 +110,29 @@ acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long en
+ 	acpi_table_print_madt_entry(&header->common);
+ #ifdef CONFIG_SMP
+ 	acpi_core_pic[processor->core_id] = *processor;
+-	set_processor_mask(processor->core_id, processor->flags);
++	if (processor->flags & ACPI_MADT_ENABLED)
++		set_processor_mask(processor->core_id, 1);
+ #endif
+ 
+ 	return 0;
+ }
+ 
++static int __init
++acpi_parse_p2_processor(union acpi_subtable_headers *header, const unsigned long end)
++{
++	struct acpi_madt_core_pic *processor = NULL;
++
++	processor = (struct acpi_madt_core_pic *)header;
++	if (BAD_MADT_ENTRY(processor, end))
++		return -EINVAL;
++
++#ifdef CONFIG_SMP
++	if (!(processor->flags & ACPI_MADT_ENABLED))
++		set_processor_mask(processor->core_id, 2);
++#endif
++
++	return 0;
++}
+ static int __init
+ acpi_parse_eio_master(union acpi_subtable_headers *header, const unsigned long end)
+ {
+@@ -143,12 +160,14 @@ static void __init acpi_process_madt(void)
+ 	}
+ #endif
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
+-			acpi_parse_processor, MAX_CORE_PIC);
++			acpi_parse_p1_processor, MAX_CORE_PIC);
++
++	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
++			acpi_parse_p2_processor, MAX_CORE_PIC);
+ 
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
+ 			acpi_parse_eio_master, MAX_IO_PICS);
+ 
+-	cpu_enumerated = 1;
+ 	loongson_sysconf.nr_cpus = num_processors;
+ }
+ 
+@@ -310,6 +329,10 @@ static int __ref acpi_map_cpu2node(acpi_handle handle, int cpu, int physid)
+ 	int nid;
+ 
+ 	nid = acpi_get_node(handle);
++
++	if (nid != NUMA_NO_NODE)
++		nid = early_cpu_to_node(cpu);
++
+ 	if (nid != NUMA_NO_NODE) {
+ 		set_cpuid_to_node(physid, nid);
+ 		node_set(nid, numa_nodes_parsed);
+@@ -324,12 +347,14 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *pcpu
+ {
+ 	int cpu;
+ 
+-	cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
+-	if (cpu < 0) {
++	cpu = cpu_number_map(physid);
++	if (cpu < 0 || cpu >= nr_cpu_ids) {
+ 		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
+-		return cpu;
++		return -ERANGE;
+ 	}
+ 
++	num_processors++;
++	set_cpu_present(cpu, true);
+ 	acpi_map_cpu2node(handle, cpu, physid);
+ 
+ 	*pcpu = cpu;
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 9afc2d8b3414..c0b498467ffa 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -331,11 +331,11 @@ void __init loongson_prepare_cpus(unsigned int max_cpus)
+ 	int i = 0;
+ 
+ 	parse_acpi_topology();
++	cpu_data[0].global_id = cpu_logical_map(0);
+ 
+ 	for (i = 0; i < loongson_sysconf.nr_cpus; i++) {
+ 		set_cpu_present(i, true);
+ 		csr_mail_send(0, __cpu_logical_map[i], 0);
+-		cpu_data[i].global_id = __cpu_logical_map[i];
+ 	}
+ 
+ 	per_cpu(cpu_state, smp_processor_id()) = CPU_ONLINE;
+@@ -380,6 +380,7 @@ void loongson_init_secondary(void)
+ 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
+ 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
+ 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
++	cpu_data[cpu].global_id = cpu_logical_map(cpu);
+ }
+ 
+ void loongson_smp_finish(void)
+-- 
+2.43.5
+
