@@ -1,18 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E5318BBA2;
-	Tue, 12 Nov 2024 06:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E618BBA2;
+	Tue, 12 Nov 2024 06:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731393362; cv=none; b=fOlF9rWzinmEa4pBMir9oQDqM2aM0yymyKcD9I83DFkGpPbhEZ/fBW2sBE3tu67NdaZwPBQc5wf2U0lfzAYe05qYYFecDlWV6UjziSe01Qsno4FqyTf7n5AR9uwT5unf+IsD57Y7G5VEUIMFnKfhi6kHFfLNYvnDtzbgZYtx+V0=
+	t=1731393390; cv=none; b=krmDVIN7Pqkt1F7/EBd7EH2FoDYXDEf0KghYN3u9k172/ukd3YkeBl67EPSuLFgCigmXV5jVScJJDI18bE8LD2uI5lNU5vFWj50Mtzi1M3wEOhFHnf2xX++vVZp83g/pWzH2wB1SfVwYoBs7BMBy+aebbj57V6rVga+N1zwMvks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731393362; c=relaxed/simple;
-	bh=+Lb/mifrNg/smRm/Odip625EHRUZkjx9ViFBn6wuARY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nGma80tCl/WiAlMf5KmQZI1EMXfD9NfUvd+7IXdA2RFmEEOsu6k6zVKFgrcfZO7j00yVaKnRHaZ946pUyXULcU1vI26xGs67qLNrNIIXHwpDCFnSs3B9QxPLDib7aiWibThw9T1ubcGc6YyKhWiN5LULspKIkZC8Dmuvwy5z++w=
+	s=arc-20240116; t=1731393390; c=relaxed/simple;
+	bh=URwHfk3izC1gRpf2pZy7HuVAGmvFfuhYumBCgJA9vII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f9CvRaGYICqg7P7qHGAwOwNjQBUw9/J8o46I4OFBhne2msxPyqq6x6dASuPm2Zn8ygRqOwNqe84vbq2U98Z6Hway67CUMQ+NE61BP2vMhAmkd/d1Bci6HCsKPQOweA9pZFcyK0l2Pt6M9btV5pP15RO4gA/E0IzQUru1B3MDOpE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025FEC4CECD;
-	Tue, 12 Nov 2024 06:35:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 521D6C4CECD;
+	Tue, 12 Nov 2024 06:36:27 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
@@ -23,10 +23,11 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
 	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
 	Bibo Mao <maobibo@loongson.cn>
-Subject: [PATCH] LoongArch: For all possible CPUs setup logical-physical CPU mapping
-Date: Tue, 12 Nov 2024 14:35:40 +0800
-Message-ID: <20241112063540.1135079-1-chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix early_numa_add_cpu() usage for FDT systems
+Date: Tue, 12 Nov 2024 14:36:10 +0800
+Message-ID: <20241112063610.1135103-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -36,205 +37,30 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to support ACPI-based physical CPU hotplug, we suppose for all
-"possible" CPUs cpu_logical_map() can work. Because some drivers want to
-use cpu_logical_map() for all "possible" CPUs, while currently we only
-setup logical-physical mapping for "present" CPUs. This lack of mapping
-also causes cpu_to_node() cannot work for hot-added CPUs.
+early_numa_add_cpu() applies on physical CPU id rather than logical CPU
+id, so use cpuid instead of cpu.
 
-All "possible" CPUs are listed in MADT, and the "present" subset is
-marked as ACPI_MADT_ENABLED. To setup logical-physical CPU mapping for
-all possible CPUs and keep present CPUs continuous in cpu_present_mask,
-we parse MADT twice. The first pass handles CPUs with ACPI_MADT_ENABLED
-and the second pass handles CPUs without ACPI_MADT_ENABLED.
-
-The global flag (cpu_enumerated) is removed because acpi_map_cpu() calls
-cpu_number_map() rather than set_processor_mask() now.
-
+Cc: stable@vger.kernel.org
+Fixes: 3de9c42d02a79a5 ("LoongArch: Add all CPUs enabled by fdt to NUMA node 0")
 Reported-by: Bibo Mao <maobibo@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/acpi.c | 81 +++++++++++++++++++++++-------------
- arch/loongarch/kernel/smp.c  |  3 +-
- 2 files changed, 55 insertions(+), 29 deletions(-)
+ arch/loongarch/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index f1a74b80f22c..382a09a7152c 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -58,48 +58,48 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
- 		return ioremap_cache(phys, size);
- }
- 
--static int cpu_enumerated = 0;
--
- #ifdef CONFIG_SMP
--static int set_processor_mask(u32 id, u32 flags)
-+static int set_processor_mask(u32 id, u32 pass)
- {
--	int nr_cpus;
--	int cpu, cpuid = id;
--
--	if (!cpu_enumerated)
--		nr_cpus = NR_CPUS;
--	else
--		nr_cpus = nr_cpu_ids;
-+	int cpu = -1, cpuid = id;
- 
--	if (num_processors >= nr_cpus) {
-+	if (num_processors >= NR_CPUS) {
- 		pr_warn(PREFIX "nr_cpus limit of %i reached."
--			" processor 0x%x ignored.\n", nr_cpus, cpuid);
-+			" processor 0x%x ignored.\n", NR_CPUS, cpuid);
- 
- 		return -ENODEV;
- 
- 	}
-+
- 	if (cpuid == loongson_sysconf.boot_cpu_id)
- 		cpu = 0;
--	else
--		cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
--
--	if (!cpu_enumerated)
--		set_cpu_possible(cpu, true);
- 
--	if (flags & ACPI_MADT_ENABLED) {
-+	switch (pass) {
-+	case 1: /* Pass 1 handle enabled processors */
-+		if (cpu < 0)
-+			cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
- 		num_processors++;
- 		set_cpu_present(cpu, true);
--		__cpu_number_map[cpuid] = cpu;
--		__cpu_logical_map[cpu] = cpuid;
--	} else
-+		break;
-+	case 2: /* Pass 2 handle disabled processors */
-+		if (cpu < 0)
-+			cpu = find_first_zero_bit(cpumask_bits(cpu_possible_mask), NR_CPUS);
- 		disabled_cpus++;
-+		break;
-+	default:
-+		return cpu;
-+	}
-+
-+	set_cpu_possible(cpu, true);
-+	__cpu_number_map[cpuid] = cpu;
-+	__cpu_logical_map[cpu] = cpuid;
- 
- 	return cpu;
- }
- #endif
- 
- static int __init
--acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long end)
-+acpi_parse_p1_processor(union acpi_subtable_headers *header, const unsigned long end)
- {
- 	struct acpi_madt_core_pic *processor = NULL;
- 
-@@ -110,12 +110,29 @@ acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long en
- 	acpi_table_print_madt_entry(&header->common);
- #ifdef CONFIG_SMP
- 	acpi_core_pic[processor->core_id] = *processor;
--	set_processor_mask(processor->core_id, processor->flags);
-+	if (processor->flags & ACPI_MADT_ENABLED)
-+		set_processor_mask(processor->core_id, 1);
- #endif
- 
- 	return 0;
- }
- 
-+static int __init
-+acpi_parse_p2_processor(union acpi_subtable_headers *header, const unsigned long end)
-+{
-+	struct acpi_madt_core_pic *processor = NULL;
-+
-+	processor = (struct acpi_madt_core_pic *)header;
-+	if (BAD_MADT_ENTRY(processor, end))
-+		return -EINVAL;
-+
-+#ifdef CONFIG_SMP
-+	if (!(processor->flags & ACPI_MADT_ENABLED))
-+		set_processor_mask(processor->core_id, 2);
-+#endif
-+
-+	return 0;
-+}
- static int __init
- acpi_parse_eio_master(union acpi_subtable_headers *header, const unsigned long end)
- {
-@@ -143,12 +160,14 @@ static void __init acpi_process_madt(void)
- 	}
- #endif
- 	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
--			acpi_parse_processor, MAX_CORE_PIC);
-+			acpi_parse_p1_processor, MAX_CORE_PIC);
-+
-+	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
-+			acpi_parse_p2_processor, MAX_CORE_PIC);
- 
- 	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
- 			acpi_parse_eio_master, MAX_IO_PICS);
- 
--	cpu_enumerated = 1;
- 	loongson_sysconf.nr_cpus = num_processors;
- }
- 
-@@ -310,6 +329,10 @@ static int __ref acpi_map_cpu2node(acpi_handle handle, int cpu, int physid)
- 	int nid;
- 
- 	nid = acpi_get_node(handle);
-+
-+	if (nid != NUMA_NO_NODE)
-+		nid = early_cpu_to_node(cpu);
-+
- 	if (nid != NUMA_NO_NODE) {
- 		set_cpuid_to_node(physid, nid);
- 		node_set(nid, numa_nodes_parsed);
-@@ -324,12 +347,14 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *pcpu
- {
- 	int cpu;
- 
--	cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
--	if (cpu < 0) {
-+	cpu = cpu_number_map(physid);
-+	if (cpu < 0 || cpu >= nr_cpu_ids) {
- 		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
--		return cpu;
-+		return -ERANGE;
- 	}
- 
-+	num_processors++;
-+	set_cpu_present(cpu, true);
- 	acpi_map_cpu2node(handle, cpu, physid);
- 
- 	*pcpu = cpu;
 diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 9afc2d8b3414..c0b498467ffa 100644
+index c0b498467ffa..5d59e9ce2772 100644
 --- a/arch/loongarch/kernel/smp.c
 +++ b/arch/loongarch/kernel/smp.c
-@@ -331,11 +331,11 @@ void __init loongson_prepare_cpus(unsigned int max_cpus)
- 	int i = 0;
+@@ -302,7 +302,7 @@ static void __init fdt_smp_setup(void)
+ 		__cpu_number_map[cpuid] = cpu;
+ 		__cpu_logical_map[cpu] = cpuid;
  
- 	parse_acpi_topology();
-+	cpu_data[0].global_id = cpu_logical_map(0);
- 
- 	for (i = 0; i < loongson_sysconf.nr_cpus; i++) {
- 		set_cpu_present(i, true);
- 		csr_mail_send(0, __cpu_logical_map[i], 0);
--		cpu_data[i].global_id = __cpu_logical_map[i];
+-		early_numa_add_cpu(cpu, 0);
++		early_numa_add_cpu(cpuid, 0);
+ 		set_cpuid_to_node(cpuid, 0);
  	}
  
- 	per_cpu(cpu_state, smp_processor_id()) = CPU_ONLINE;
-@@ -380,6 +380,7 @@ void loongson_init_secondary(void)
- 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
- 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
- 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
-+	cpu_data[cpu].global_id = cpu_logical_map(cpu);
- }
- 
- void loongson_smp_finish(void)
 -- 
 2.43.5
 
