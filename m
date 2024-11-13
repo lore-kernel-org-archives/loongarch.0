@@ -1,330 +1,128 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D260166310
-	for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 03:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD907081C
+	for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 03:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731468213; cv=none; b=rs/NSBQySs4XU13Fwf32nVmyj2NFlVuVwFj7HEhcAIlcUocbAq3U257bG4bWAbK0TBfPeAyYQzPEPBNz9MSUyLimvsd5TMvNL7rNuoAWvUc3afzAo0gfHmzVYhHF18KWqwGYWzf3fIt8XEDaF2jxrZIcw4T8GAPQh2EP/BuveFk=
+	t=1731468704; cv=none; b=ga+IG+mwZ7f59oyHyzcLoHS6vlQuDwBDxuXGRuK7eM3N1jAiBCpifriYESnDW+Tnjw6iPh19KhSxf8Pv4rQPOTVbybeljZdIMve8l86umt8yX5g7uZgXMWn2cNpzISDHkKvf4aBABhFA4e+pdtKqsaMrKkT88/dRtm2oWDjdbmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731468213; c=relaxed/simple;
-	bh=jiElLTSf5+3HdH1u3b03iPhKJrCNq1z1FGndFDLmQmg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X2i8IIPh0c8+dc1w2wesB/XdGDEc9VBk5Vs9qe+pIBuW9/ZA/lVKDWwDZHF/K/sEXU4dE8IS0QfuL+msnc/IT6E5olhawrt+A/t59NXnimAxlUDz3o9RrYk7f1CAtb/2IKS2GVia0psKJNW4Vb47XnORPsGjHB7qIvPnFaooddQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8BxYa+vGzRnJX48AA--.54547S3;
-	Wed, 13 Nov 2024 11:23:27 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMBx30euGzRnvYZTAA--.14877S2;
-	Wed, 13 Nov 2024 11:23:26 +0800 (CST)
-From: Zhao Qunqin <zhaoqunqin@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	bp@alien8.de,
-	tony.luck@intel.com,
-	james.morse@arm.com,
-	mchehab@kernel.org,
-	rric@kernel.org
-Cc: linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	xry111@xry111.site,
-	Markus.Elfring@web.de,
-	krzk@kernel.org,
-	Zhao Qunqin <zhaoqunqin@loongson.cn>
-Subject: [PATCH V8] EDAC: Add EDAC driver for loongson memory controller
-Date: Wed, 13 Nov 2024 11:23:26 +0800
-Message-Id: <20241113032326.14267-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1731468704; c=relaxed/simple;
+	bh=/bYsay7vg1weqenJRpb4pqt79mASw+nrIHAtGk1mYk0=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Ij2SeDRoBWvXHF3CHQWPpp1anQLxbQ36zz9nZXtdmJCJBg5yH5juGXJn6QSrmrtlOzD9cY0iJRl3BmOkz4QjhMrFl88nTxYH9e4b1rrbY0VhqqCs1U8qtwQApWz+wgHtEi/Smy9uBOwKQBUBxnD/Ji5Ym+KD5jwSQ9SGQIbryRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=p2FyNdhI; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="p2FyNdhI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1731468703; x=1763004703;
+  h=message-id:date:mime-version:to:cc:references:subject:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/bYsay7vg1weqenJRpb4pqt79mASw+nrIHAtGk1mYk0=;
+  b=p2FyNdhIAi+6xoWhb29VwwL4rYVU/pPGGnyai28akMRJ0vFNwFs/T6Vj
+   eiueWOUGu4dnJNH5Hny1h8CHvZzYocsG0h16E+FlLNBRa8F3JcaIdqmrJ
+   KCD5NNrIGc573cvqyJrNOyw+0LzZnLf/WD6iGQCHkldT9dIQ+7S1M071M
+   M=;
+X-IronPort-AV: E=Sophos;i="6.12,149,1728950400"; 
+   d="scan'208";a="442195777"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.124.125.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2024 03:31:38 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:35392]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.13.112:2525] with esmtp (Farcaster)
+ id 1975e212-552a-4756-aa4f-791440302fe9; Wed, 13 Nov 2024 03:31:37 +0000 (UTC)
+X-Farcaster-Flow-ID: 1975e212-552a-4756-aa4f-791440302fe9
+Received: from EX19D003UWC002.ant.amazon.com (10.13.138.169) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 13 Nov 2024 03:31:37 +0000
+Received: from [192.168.205.1] (10.106.101.35) by
+ EX19D003UWC002.ant.amazon.com (10.13.138.169) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Wed, 13 Nov 2024 03:31:34 +0000
+Message-ID: <96c24397-b081-4570-adb2-8d4443f3359c@amazon.com>
+Date: Tue, 12 Nov 2024 20:31:29 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx30euGzRnvYZTAA--.14877S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtr1kGFyDGr1kWFyxGrW3Arc_yoW3JFyfpF
-	45Aw13Gr4xKr43uws3ArWUuF15uws7Ka42v3y7A3yY93srAryDXryktFW2yFnrCrWkJrW3
-	Xa4rKw4DCF4UGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
+User-Agent: Mozilla Thunderbird
+To: <elena.reshetova@intel.com>
+CC: <ackerleytng@google.com>, <agordeev@linux.ibm.com>,
+	<aou@eecs.berkeley.edu>, <borntraeger@linux.ibm.com>, <bp@alien8.de>,
+	<canellac@amazon.at>, <catalin.marinas@arm.com>, <chenhuacai@kernel.org>,
+	<corbet@lwn.net>, <dave.hansen@intel.com>, <dave.hansen@linux.intel.com>,
+	<david@redhat.com>, <derekmn@amazon.com>, <gerald.schaefer@linux.ibm.com>,
+	<gor@linux.ibm.com>, <graf@amazon.com>, <hca@linux.ibm.com>, <hpa@zytor.com>,
+	<jgowans@amazon.com>, <jthoughton@google.com>, <kalyazin@amazon.com>,
+	<kernel@xen0n.name>, <kvm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <luto@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>, <mingo@redhat.com>,
+	<mlipp@amazon.at>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+	<pbonzini@redhat.com>, <peterz@infradead.org>, <quic_eberman@quicinc.com>,
+	<rostedt@goodmis.org>, <roypat@amazon.co.uk>, <rppt@kernel.org>,
+	<seanjc@google.com>, <shuah@kernel.org>, <svens@linux.ibm.com>,
+	<tabba@google.com>, <tglx@linutronix.de>, <vannapurve@google.com>,
+	<will@kernel.org>, <x86@kernel.org>, <xmarcalx@amazon.com>
+References: <DM8PR11MB57505F62D149EF153F89B8BAE75D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+Subject: RE: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+Content-Language: en-US
+From: "Manwaring, Derek" <derekmn@amazon.com>
+In-Reply-To: <DM8PR11MB57505F62D149EF153F89B8BAE75D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D038UWB003.ant.amazon.com (10.13.139.157) To
+ EX19D003UWC002.ant.amazon.com (10.13.138.169)
 
-Add ECC support for Loongson SoC DDR controller. This
-driver reports single bit errors (CE) only.
+On 2024-11-08 at 10:36, Elena Reshetova wrote:
+> On 2024-11-06 at 17:04, Derek Manwaring wrote:
+> > On 2024-11-04 at 08:33+0000, Elena Reshetova wrote:
+> > > This statement *is* for integrity section. We have a separate TDX guidance
+> > > on side-channels (including speculative) [3] and some speculative attacks
+> > > that affect confidentiality (for example spectre v1) are listed as not covered
+> > > by TDX but remaining SW responsibility (as they are now).
+> >
+> > Thanks for the additional info, Elena. Given that clarification, I
+> > definitely see direct map removal and TDX as complementary.
+>
+> Jus to clarify to make sure my comment is not misunderstood.
+> What I meant is that we cannot generally assume that confidentiality
+> leaks from CoCo guests to host/VMM via speculative channels
+> are completely impossible. Spectre V1 is a prime example of such a
+> possible leak. Dave also elaborated on other potential vectors earlier.
+>
+> The usefulness of direct map removal for CoCo guests as a concrete
+> mitigation for certain types of memory attacks must be precisely
+> evaluated per each attack vector, attack vector direction (host -> guest,
+> guest ->host, etc) and per each countermeasure that CoCo vendors
+> provide for each such case. I don't know if there is any existing study
+> that examines this for major CoCo vendors. I think this is what must
+> be done for this work in order to have a strong reasoning for its usefulness.
 
-Only ACPI firmware is supported.
+Thanks, that makes sense. I'm a little hyperfocused on guest->host which
+is the opposite direction of what is generally used for the CoCo threat
+model. I think what both cases care about though is guest->guest. For
+me, guest->host matters because it's a route for guest->guest (at least
+in the non-CoCo world). There's some good discussion on this in David's
+series on attack vector controls [1].
 
-Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
----
-Changes in v8:
-	- Used readl() instead of readq()
-	- Used acpi_device_id instead of of_device_id, then removed
-	  dt-bindings
+Like you mention, beyond direction it matters which CoCo countermeasures
+are at play and how far they go during transient execution. That part is
+not clear to me for the host->guest direction involving the direct map,
+but agree any countermeasures like direct map removal should be
+evaluated based on a better understanding of what those existing
+countermeasures already cover and what attack is intended to be
+mitigated.
 
-Changes in v7:
-       	- Fixed sparse's "incorrect type in assignment"
-	- Cleaned up coding style
+Derek
 
-Changes in v6:
-	- Changed the Kconfig name to CONFIG_EDAC_LOONGSON
 
-Changes in v5:
-	- Dropepd the loongson_ prefix from all static functions.
-	- Aligned function arguments on the opening brace.
-	- Dropepd useless comments and useless wrapper. Dropped side
-	  comments.
-	- Reordered variable declarations.
-
-Changes in v4:
-	- None
-
-Changes in v3:
-	- Addressed review comments raised by Krzysztof and Huacai
-
-Changes in v2:
-	- Addressed review comments raised by Krzysztof
-
- MAINTAINERS                  |   6 ++
- arch/loongarch/Kconfig       |   1 +
- drivers/edac/Kconfig         |   8 ++
- drivers/edac/Makefile        |   1 +
- drivers/edac/loongson_edac.c | 155 +++++++++++++++++++++++++++++++++++
- 5 files changed, 171 insertions(+)
- create mode 100644 drivers/edac/loongson_edac.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e9659a5a7..b36a45051 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13397,6 +13397,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
- F:	drivers/thermal/loongson2_thermal.c
- 
-+LOONGSON EDAC DRIVER
-+M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
-+L:	linux-edac@vger.kernel.org
-+S:	Maintained
-+F:	drivers/edac/loongson_edac.c
-+
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
- M:	Sathya Prakash <sathya.prakash@broadcom.com>
- M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index bb35c34f8..10b9ba587 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -185,6 +185,7 @@ config LOONGARCH
- 	select PCI_MSI_ARCH_FALLBACKS
- 	select PCI_QUIRKS
- 	select PERF_USE_VMALLOC
-+	select EDAC_SUPPORT
- 	select RTC_LIB
- 	select SPARSE_IRQ
- 	select SYSCTL_ARCH_UNALIGN_ALLOW
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 81af6c344..4dce2b92a 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -564,5 +564,13 @@ config EDAC_VERSAL
- 	  Support injecting both correctable and uncorrectable errors
- 	  for debugging purposes.
- 
-+config EDAC_LOONGSON
-+	tristate "Loongson Memory Controller"
-+	depends on (LOONGARCH && ACPI) || COMPILE_TEST
-+	help
-+	  Support for error detection and correction on the Loongson
-+	  family memory controller. This driver reports single bit
-+	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
-+	  are compatible.
- 
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index faf310eec..f8bdbc895 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
- obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
-+obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
-new file mode 100644
-index 000000000..340722db1
---- /dev/null
-+++ b/drivers/edac/loongson_edac.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/edac.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include "edac_module.h"
-+
-+#define ECC_CS_COUNT_REG	0x18
-+
-+struct loongson_edac_pvt {
-+	void __iomem *ecc_base;
-+	int last_ce_count;
-+};
-+
-+static int read_ecc(struct mem_ctl_info *mci)
-+{
-+	struct loongson_edac_pvt *pvt = mci->pvt_info;
-+	u32 ecc;
-+	int cs;
-+
-+	if (!pvt->ecc_base)
-+		return pvt->last_ce_count;
-+
-+	ecc = readl(pvt->ecc_base + ECC_CS_COUNT_REG);
-+	/* cs0 -- cs3 */
-+	cs = ecc & 0xff;
-+	cs += (ecc >> 8) & 0xff;
-+	cs += (ecc >> 16) & 0xff;
-+	cs += (ecc >> 24) & 0xff;
-+
-+	return cs;
-+}
-+
-+static void edac_check(struct mem_ctl_info *mci)
-+{
-+	struct loongson_edac_pvt *pvt = mci->pvt_info;
-+	int new, add;
-+
-+	new = read_ecc(mci);
-+	add = new - pvt->last_ce_count;
-+	pvt->last_ce_count = new;
-+	if (add <= 0)
-+		return;
-+
-+	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
-+			     0, 0, 0, 0, 0, -1, "error", "");
-+	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
-+}
-+
-+static void dimm_config_init(struct mem_ctl_info *mci)
-+{
-+	struct dimm_info *dimm;
-+	u32 size, npages;
-+
-+	/* size not used */
-+	size = -1;
-+	npages = MiB_TO_PAGES(size);
-+
-+	dimm = edac_get_dimm(mci, 0, 0, 0);
-+	dimm->nr_pages = npages;
-+	snprintf(dimm->label, sizeof(dimm->label),
-+		 "MC#%uChannel#%u_DIMM#%u", mci->mc_idx, 0, 0);
-+	dimm->grain = 8;
-+}
-+
-+static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase)
-+{
-+	struct loongson_edac_pvt *pvt = mci->pvt_info;
-+
-+	pvt->ecc_base = vbase;
-+	pvt->last_ce_count = read_ecc(mci);
-+}
-+
-+static int edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_mc_layer layers[2];
-+	struct mem_ctl_info *mci;
-+	void __iomem *vbase;
-+	int ret;
-+
-+	vbase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(vbase))
-+		return PTR_ERR(vbase);
-+
-+	/* allocate a new MC control structure */
-+	layers[0].type = EDAC_MC_LAYER_CHANNEL;
-+	layers[0].size = 1;
-+	layers[0].is_virt_csrow = false;
-+	layers[1].type = EDAC_MC_LAYER_SLOT;
-+	layers[1].size = 1;
-+	layers[1].is_virt_csrow = true;
-+	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-+			    sizeof(struct loongson_edac_pvt));
-+	if (mci == NULL)
-+		return -ENOMEM;
-+
-+	mci->mc_idx = edac_device_alloc_index();
-+	mci->mtype_cap = MEM_FLAG_RDDR4;
-+	mci->edac_ctl_cap = EDAC_FLAG_NONE;
-+	mci->edac_cap = EDAC_FLAG_NONE;
-+	mci->mod_name = "loongson_edac.c";
-+	mci->ctl_name = "loongson_edac_ctl";
-+	mci->dev_name = "loongson_edac_dev";
-+	mci->ctl_page_to_phys = NULL;
-+	mci->pdev = &pdev->dev;
-+	mci->error_desc.grain = 8;
-+	/* Set the function pointer to an actual operation function */
-+	mci->edac_check = edac_check;
-+
-+	pvt_init(mci, vbase);
-+	dimm_config_init(mci);
-+
-+	ret = edac_mc_add_mc(mci);
-+	if (ret) {
-+		edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
-+		edac_mc_free(mci);
-+		return ret;
-+	}
-+	edac_op_state = EDAC_OPSTATE_POLL;
-+
-+	return 0;
-+}
-+
-+static void edac_remove(struct platform_device *pdev)
-+{
-+	struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
-+
-+	if (mci)
-+		edac_mc_free(mci);
-+}
-+
-+static const struct acpi_device_id loongson_edac_acpi_match[] = {
-+	{"LOON000G", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, loongson_edac_acpi_match);
-+
-+static struct platform_driver loongson_edac_driver = {
-+	.probe		= edac_probe,
-+	.remove		= edac_remove,
-+	.driver		= {
-+		.name	= "loongson-mc-edac",
-+		.acpi_match_table = loongson_edac_acpi_match,
-+	},
-+};
-+module_platform_driver(loongson_edac_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Zhao Qunqin <zhaoqunqin@loongson.cn>");
-+MODULE_DESCRIPTION("EDAC driver for loongson memory controller");
-
-base-commit: e14232afa94445e03fc3a0291b07a68f3408c120
--- 
-2.43.0
-
+[1] https://lore.kernel.org/lkml/LV3PR12MB92658EA6CCF18F90DAAA168394532@LV3PR12MB9265.namprd12.prod.outlook.com/
