@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C9D2165EE3
-	for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 03:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43105166F06
+	for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 03:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731467854; cv=none; b=WFsDnVq+4h5LM+Yj/UUC5ccRT2Gqcs2q8mv7MznaLoJv2abgzNfrdoUmHgNXWnkUH7UGc6qsgKUxhW82YMdZK1DOQjUuwGBuggIX2XYE0jhpADqo3hdSOJVor8dvaP33eEHQ2Z+c6AXOO1BRzxiCcvCYpBhw9rH04tfeqBHf1Fg=
+	t=1731467854; cv=none; b=Oxwq1RzOT1H/XklFveyAGNXPHqIJ2AogqtiGxg9scowjiUmeFt0Ekjak7WwQQF7JUepBfbC/TKh/78GV7OCEKm/dV7uO0eXrNl+I4f/R3gfWDheAyQfjoTncxbzJWNfpx+VR0K2OKNq+s/rxzPj+aYMdrENEZFXMe7Jgld6uezs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731467854; c=relaxed/simple;
-	bh=4Dk6ZN5yXXy56uvJFbd8k8Z3qHYS9PGMSK0FZg+JjHM=;
+	bh=q5P7swPuEjyp3vJ2hRrjCtBVHumWvilkU8Jd0nUXiDE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MVpheHHYkvTA2dOYM5nkbH6n1NsaVsul0ejYBK+NqUE7N8Cs7ouzro6QDKfykpJUVRc0DP1/RbTXmrtbbZZJa+ETHXAR+ad5G5p+KDE4fl/X7CJlSF66YJWIjTaYd2nCzfTNtNjH6hiAWLZyzTd9DVN9ImanojnW4RshXcIh4GE=
+	 MIME-Version; b=u1d88+EnymR4qFY9cSiWWtJk9CgNqJbRAtaMI7HpECdXUI9hJ+9WWxLZCFxqW2R8eZpZvVujhLDgufi+waIVdRY/oNVC/v1kOPBCMY4vJWa29cGpzgRAbldiEzZG1/FTLMt4jTYoslg5Ln9h5/YzxNougHd+/ZYEXG9EFoztoco=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axjq9KGjRnVH08AA--.30484S3;
-	Wed, 13 Nov 2024 11:17:30 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax6+FJGjRnTX08AA--.53414S3;
+	Wed, 13 Nov 2024 11:17:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxDEdHGjRnX4VTAA--.14727S5;
-	Wed, 13 Nov 2024 11:17:30 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxDEdHGjRnX4VTAA--.14727S3;
+	Wed, 13 Nov 2024 11:17:28 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -25,9 +25,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [RFC 3/5] LoongArch: KVM: implement vmid updating logic
-Date: Wed, 13 Nov 2024 11:17:25 +0800
-Message-Id: <20241113031727.2815628-4-maobibo@loongson.cn>
+Subject: [RFC 1/5] LoongArch: KVM: Add vmid support for stage2 MMU
+Date: Wed, 13 Nov 2024 11:17:23 +0800
+Message-Id: <20241113031727.2815628-2-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20241113031727.2815628-1-maobibo@loongson.cn>
 References: <20241113031727.2815628-1-maobibo@loongson.cn>
@@ -38,113 +38,102 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxDEdHGjRnX4VTAA--.14727S5
+X-CM-TRANSID:qMiowMAxDEdHGjRnX4VTAA--.14727S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-For every physical CPU, there is one vmid calculation method. For
-vCPUs on the same VM, vmid is the same. However for vCPUs on
-different VM, vmid is different. When vCPU is scheduled on the
-physical CPU, it checked vmid of this VM and the global cached
-vmid, and judge whether it is valid or not.
+LoongArch KVM hypervisor supports two-level MMU, vpid index is used
+for stage1 MMU and vmid index is used for stage2 MMU.
+
+On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
+may separate from vpid. If vcpu migrate to different physical CPUs,
+vpid need change however vmid can keep the same with old value. Also
+vmid index of the while VM machine on physical CPU the same, all vCPUs
+on the VM can share the same vmid index on one physical CPU.
+
+Here vmid index is added and it keeps the same with vpid still.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_host.h |  2 ++
- arch/loongarch/kvm/main.c             | 42 ++++++++++++++++++++++++++-
- 2 files changed, 43 insertions(+), 1 deletion(-)
+ arch/loongarch/include/asm/kvm_host.h | 3 +++
+ arch/loongarch/kernel/asm-offsets.c   | 1 +
+ arch/loongarch/kvm/main.c             | 1 +
+ arch/loongarch/kvm/switch.S           | 5 ++---
+ arch/loongarch/kvm/tlb.c              | 5 ++++-
+ 5 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 92ec3660d221..725d9c4e1965 100644
+index d6bb72424027..6151c7c470d5 100644
 --- a/arch/loongarch/include/asm/kvm_host.h
 +++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -64,6 +64,7 @@ struct kvm_arch_memory_slot {
- #define HOST_MAX_PMNUM			16
- struct kvm_context {
- 	unsigned long vpid_cache;
-+	unsigned long vmid_cache;
- 	struct kvm_vcpu *last_vcpu;
- 	/* Host PMU CSR */
- 	u64 perf_ctrl[HOST_MAX_PMNUM];
-@@ -116,6 +117,7 @@ struct kvm_arch {
- 	unsigned long pv_features;
+@@ -166,6 +166,9 @@ struct kvm_vcpu_arch {
+ 	unsigned long host_tp;
+ 	unsigned long host_pgd;
  
- 	s64 time_offset;
-+	unsigned long vmid[NR_CPUS];
- 	struct kvm_context __percpu *vmcs;
- };
- 
++	/* vmid info for guest VM */
++	unsigned long vmid;
++
+ 	/* Host CSRs are used when handling exits from guest */
+ 	unsigned long badi;
+ 	unsigned long badv;
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index bee9f7a3108f..4e9a9311afd3 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -307,6 +307,7 @@ static void __used output_kvm_defines(void)
+ 	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
+ 	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
+ 	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
++	OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, vmid);
+ 	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
+ 	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
+ 	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
 diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index afb2e10eba68..367653b49a35 100644
+index 27e9b94c0a0b..8c16bff80053 100644
 --- a/arch/loongarch/kvm/main.c
 +++ b/arch/loongarch/kvm/main.c
-@@ -252,9 +252,33 @@ static void __kvm_check_vpid(struct kvm_vcpu *vcpu)
- 	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
- }
+@@ -212,6 +212,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
  
--static void __kvm_check_vmid(struct kvm_vcpu *vcpu)
-+static void kvm_update_vmid(struct kvm_vcpu *vcpu, int cpu)
- {
- 	unsigned long vmid;
-+	struct kvm_context *context;
-+
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vmid = context->vmid_cache + 1;
-+	if (!(vmid & vpid_mask)) {
-+		/* finish round of vmid loop */
-+		if (unlikely(!vmid))
-+			vmid = vpid_mask + 1;
-+
-+		++vmid; /* vmid 0 reserved for root */
-+
-+		/* start new vmid cycle */
-+		kvm_flush_tlb_all_stage2();
-+	}
-+
-+	context->vmid_cache = vmid;
-+	vcpu->kvm->arch.vmid[cpu] = vmid;
-+}
-+
-+static void __kvm_check_vmid(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+	unsigned long ver, old, vmid;
-+	struct kvm_context *context;
- 
- 	/* On some machines like 3A5000, vmid needs the same with vpid */
- 	if (!cpu_has_guestid) {
-@@ -265,6 +289,21 @@ static void __kvm_check_vmid(struct kvm_vcpu *vcpu)
- 		}
- 		return;
- 	}
-+
-+	cpu = smp_processor_id();
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+
-+	/*
-+	 * Check if our vmid is of an older version
-+	 */
-+	ver = vcpu->kvm->arch.vmid[cpu] & ~vpid_mask;
-+	old = context->vmid_cache  & ~vpid_mask;
-+	if (ver != old) {
-+		kvm_update_vmid(vcpu, cpu);
-+		kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-+	}
-+
-+	vcpu->arch.vmid = vcpu->kvm->arch.vmid[cpu] & vpid_mask;
+ 	context->vpid_cache = vpid;
+ 	vcpu->arch.vpid = vpid;
++	vcpu->arch.vmid = vcpu->arch.vpid & vpid_mask;
  }
  
  void kvm_check_vpid(struct kvm_vcpu *vcpu)
-@@ -386,6 +425,7 @@ static int kvm_loongarch_env_init(void)
- 	for_each_possible_cpu(cpu) {
- 		context = per_cpu_ptr(vmcs, cpu);
- 		context->vpid_cache = vpid_mask + 1;
-+		context->vmid_cache = vpid_mask + 1;
- 		context->last_vcpu = NULL;
- 	}
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 0c292f818492..2774343f64d3 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -72,9 +72,8 @@
+ 	ldx.d   t0, t1, t0
+ 	csrwr	t0, LOONGARCH_CSR_PGDL
  
+-	/* Mix GID and RID */
+-	csrrd		t1, LOONGARCH_CSR_GSTAT
+-	bstrpick.w	t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
++	/* Set VMID for gpa --> hpa mapping */
++	ld.d		t1, a2, KVM_ARCH_VMID
+ 	csrrd		t0, LOONGARCH_CSR_GTLBC
+ 	bstrins.w	t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+ 	csrwr		t0, LOONGARCH_CSR_GTLBC
+diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+index ebdbe9264e9c..38daf936021d 100644
+--- a/arch/loongarch/kvm/tlb.c
++++ b/arch/loongarch/kvm/tlb.c
+@@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
+ 
+ void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
+ {
++	unsigned int vmid;
++
+ 	lockdep_assert_irqs_disabled();
+ 	gpa &= (PAGE_MASK << 1);
+-	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
++	vmid = (vcpu->arch.vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_GID;
++	invtlb(INVTLB_GID_ADDR, vmid, gpa);
+ }
 -- 
 2.39.3
 
