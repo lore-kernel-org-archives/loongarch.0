@@ -1,104 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38BD1DE2B5;
-	Thu, 14 Nov 2024 09:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F021DC05F;
+	Thu, 14 Nov 2024 10:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731577316; cv=none; b=XVL7podmZtnrZnMIhEptgtugrJumF/aIODcwWXcAIYGbWLgy22kR35RH7cnfWu40wVOo/tYOev5BbY7uKMC37tixezd1VHIFWI3l2U/hG25Kp6fLneIkhy+ddRll/3KseBNQbGwfCW+lAvX2kdGNJ2DfxDyvZOIfsGzjY1inllc=
+	t=1731579700; cv=none; b=FmsGMfTx4uTqPddME+R8AcKstTwEY5/cjH5kb+2QcbMC/rBKnCnFXnBIHuYdDHpigYfLl7QhJa80U5Uo86Z/BHOXvSiy/JRC2We8Ek5Jo48KIEEBtywqem7GXjbwkvQYpr6fUgXztK59ceUG2YwxYfMHQF648E4aCfwnVADKzH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731577316; c=relaxed/simple;
-	bh=i5t5uoZkJk//79g6cG/+3RQtJAGUYWU8qA/tQ9zZyqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BsG+WmNBRzN0pyVeH2hImEooI0586MIVY7vL8swVemtOhoOI3+ZiLoQi1PwFwrD6qFDqGHjITGz/eyrTLO2ImrBq84Y43Y0vaVDT79p7aKm/ae0uicSjhirUaDe96108Y1Dfun+aTtv8bbJzPZPs/mEGAWnU97HQ2PVDWLlOg+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A566C4CECD;
-	Thu, 14 Nov 2024 09:41:52 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.13
-Date: Thu, 14 Nov 2024 17:41:28 +0800
-Message-ID: <20241114094128.2198306-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1731579700; c=relaxed/simple;
+	bh=TEoZNOCdI7xNZCkq1Y3DANMX7RzVOnudyVhuh0ii8i0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=emESROBbjhCeAzc7L+3paYm/PmxnBiEVXvWnET9j4B1tcTIfbeAMc2DmAlaBzWjvsKfSc03oKzCZNdLUqWIbqgIBOz6mmJaJEctioJpAwDhmzmc0HeniGEfmW9OkAmpw2ubIfrcPSNH8tzDsMkZJ1h2MRioeoXKjSW56JPcAN98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jTI42C+s; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kDzQ3aVb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jTI42C+s";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kDzQ3aVb"
+Date: Thu, 14 Nov 2024 11:21:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1731579697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEoZNOCdI7xNZCkq1Y3DANMX7RzVOnudyVhuh0ii8i0=;
+	b=jTI42C+sqxH+U4RZLpRZWPExmJKPrCbbacd6rnECOG7E9Mtv4Rm0+fhep/G05wT29RRQw7
+	6msRNjut7KcEvMFvhy5zcGlnG9X226hGJSDXBgSkInqNlT9xGXtx5kvWygF9NZBeb5alk7
+	2IJdNh9+rt4ype9skt/bPyjOaHTe4WozboL+ogf/hZtNp5+4/4+TBsQeB2oy3sp0dyxnXt
+	5eimBc2LXO47r1UkX5M2AxvNSeyqCBtPq5dmRRMr+X7bTc3YrNwBPFdz1VsHg3EmlywZb4
+	x/KUEGm4pY3BX/ZVhMl/QpizcIgRcg0cmXJz9D1Tq+dgdJu6bgJMaklXz9OK+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1731579697;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEoZNOCdI7xNZCkq1Y3DANMX7RzVOnudyVhuh0ii8i0=;
+	b=kDzQ3aVb4GVo/+ptSTPNFLn+oXo6Fi7B7F0WiQpLNDr9+CiLsgOv/oKmWv9mFRtXlxiMiq
+	ZWbi0Y0nrxu5COCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-rt-devel@lists.linux.dev, Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] LoongArch: Reduce min_delta for the arch clockevent
+ device
+Message-ID: <20241114102136.X-knc36J@linutronix.de>
+References: <20241108091545.4182229-1-chenhuacai@loongson.cn>
+ <20241108091545.4182229-2-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241108091545.4182229-2-chenhuacai@loongson.cn>
 
-The following changes since commit 2d5404caa8c7bb5c4e0435f94b28834ae5456623:
+On 2024-11-08 17:15:43 [+0800], Huacai Chen wrote:
+> Now the min_delta is 0x600 (1536) for LoongArch's constant clockevent
+> device. For a 100MHz hardware timer this means ~15us. This is a little
+> big, especially for PREEMPT_RT enabled kernels. So reduce it to 1000
+> (we don't want too small values to affect performance).
 
-  Linux 6.12-rc7 (2024-11-10 14:19:35 -0800)
+So this reduces it to 10us. Is anything lower than that bad performance
+wise?
 
-are available in the Git repository at:
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.13
-
-for you to fetch changes up to 9899b8201025d00b23aee143594a30c55cc4cc35:
-
-  irqchip/loongson-eiointc: Add virt extension support (2024-11-13 16:18:27 +0800)
-
-----------------------------------------------------------------
-LoongArch KVM changes for v6.13
-
-1. Add iocsr and mmio bus simulation in kernel.
-2. Add in-kernel interrupt controller emulation.
-3. Add virt extension support for eiointc irqchip.
-
-----------------------------------------------------------------
-Bibo Mao (1):
-      irqchip/loongson-eiointc: Add virt extension support
-
-Xianglai Li (11):
-      LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
-      LoongArch: KVM: Add IPI device support
-      LoongArch: KVM: Add IPI read and write function
-      LoongArch: KVM: Add IPI user mode read and write function
-      LoongArch: KVM: Add EIOINTC device support
-      LoongArch: KVM: Add EIOINTC read and write functions
-      LoongArch: KVM: Add EIOINTC user mode read and write functions
-      LoongArch: KVM: Add PCHPIC device support
-      LoongArch: KVM: Add PCHPIC read and write functions
-      LoongArch: KVM: Add PCHPIC user mode read and write functions
-      LoongArch: KVM: Add irqfd support
-
- Documentation/arch/loongarch/irq-chip-model.rst    |   64 ++
- .../zh_CN/arch/loongarch/irq-chip-model.rst        |   55 ++
- arch/loongarch/include/asm/irq.h                   |    1 +
- arch/loongarch/include/asm/kvm_eiointc.h           |  123 +++
- arch/loongarch/include/asm/kvm_host.h              |   18 +-
- arch/loongarch/include/asm/kvm_ipi.h               |   45 +
- arch/loongarch/include/asm/kvm_pch_pic.h           |   62 ++
- arch/loongarch/include/uapi/asm/kvm.h              |   20 +
- arch/loongarch/kvm/Kconfig                         |    5 +-
- arch/loongarch/kvm/Makefile                        |    4 +
- arch/loongarch/kvm/exit.c                          |   82 +-
- arch/loongarch/kvm/intc/eiointc.c                  | 1027 ++++++++++++++++++++
- arch/loongarch/kvm/intc/ipi.c                      |  475 +++++++++
- arch/loongarch/kvm/intc/pch_pic.c                  |  519 ++++++++++
- arch/loongarch/kvm/irqfd.c                         |   89 ++
- arch/loongarch/kvm/main.c                          |   19 +-
- arch/loongarch/kvm/vcpu.c                          |    3 +
- arch/loongarch/kvm/vm.c                            |   21 +
- drivers/irqchip/irq-loongson-eiointc.c             |  108 +-
- include/linux/kvm_host.h                           |    1 +
- include/trace/events/kvm.h                         |   35 +
- include/uapi/linux/kvm.h                           |    8 +
- 22 files changed, 2735 insertions(+), 49 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kvm_eiointc.h
- create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
- create mode 100644 arch/loongarch/include/asm/kvm_pch_pic.h
- create mode 100644 arch/loongarch/kvm/intc/eiointc.c
- create mode 100644 arch/loongarch/kvm/intc/ipi.c
- create mode 100644 arch/loongarch/kvm/intc/pch_pic.c
- create mode 100644 arch/loongarch/kvm/irqfd.c
+Sebastian
