@@ -1,89 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C222905
-	for <loongarch@lists.linux.dev>; Thu, 14 Nov 2024 06:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38BD1DE2B5;
+	Thu, 14 Nov 2024 09:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731565411; cv=none; b=YChHSK2r1mRMVZKscpKpV2EJUMj8xGkkqtZZwvzHpS+6GYVvQQs1xlzqDVDOB/1Q/2Hinmy9WZgWJE0Cchlwwh3hzVytK41k2OSKBHM1tD9ggWCzYLAZ+qhXPl3YUUC1Hw+coKA+8Va3Soy/Xg9tAmEJ+JFWMDDgy0ObQATV63Q=
+	t=1731577316; cv=none; b=XVL7podmZtnrZnMIhEptgtugrJumF/aIODcwWXcAIYGbWLgy22kR35RH7cnfWu40wVOo/tYOev5BbY7uKMC37tixezd1VHIFWI3l2U/hG25Kp6fLneIkhy+ddRll/3KseBNQbGwfCW+lAvX2kdGNJ2DfxDyvZOIfsGzjY1inllc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731565411; c=relaxed/simple;
-	bh=s7Mfdv4GRYa2OR5o4x+wbZZfKOfHszZQimqrnUlWVhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qoiBVOIFlUqZmGk+0kJ1mIlqECgT1SJkA6xOp79CJnwwbmKw2MRb+cy+onRdGYqdZOWCLPYJe2V5hAcV2L+KNhSmVsfQ03n+DE/LUo0nA47D+d1JDjW5b1a5sY5cPhiWZshuSLB5Ivw1doJuq1hg9mns/JQ8OnsCtP1eTNaWitk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeznJqzz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeznJqzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA954C4CEDA
-	for <loongarch@lists.linux.dev>; Thu, 14 Nov 2024 06:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731565410;
-	bh=s7Mfdv4GRYa2OR5o4x+wbZZfKOfHszZQimqrnUlWVhQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KeznJqzzU5jKxFDlGu5NtCxM3WFCgRqWb2XnrIFX2ORpth2eruoL7j5D+ulEPFdcd
-	 j98B12VGtab1OElYE84BNknpqYwFCNzoIATJqs3sZk/CESiB8o1MaoINnxsXgPZBIv
-	 JCP1zkBypluGW8dRKq1lh69Xwm+uThF0qKi4weCnH4wqvFR9W2WEU+cruKRj3KmH5y
-	 0PniR2v4OT8OCC8jwuet9WCW2mVtT5N0/f4YwmMSqmwS05cDr01BgMviDAzN7VOFT5
-	 LqmGT/FZHockIMrnHH7I4pDI8iFBlw7tF0bKXPP+AHELMdk9iyV0b+OSZawaysbBvT
-	 LCB98fjjbMPHw==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a99eb8b607aso28862866b.2
-        for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 22:23:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW4REYPyUf1w3oRT+m2jHSBEoYAFrJo0nFwLpfVgYMT9aCVQJspmW2hLi/MKl3vcdpaQSrTdNzZ8yY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzRB/z278ZAmRlEo2/zq9QnB2Mjt8LxWdmOONH97h600moYt8US
-	gBreIkNC52Rz/6Aj2/PVVhboc9XXN2dhj8awW5/WTVkYV16ROaqZp2MDTfBt/TQUlJEh7/ZPfe9
-	LTC9Kt80pQteuM8xHAo+C38ZBqKE=
-X-Google-Smtp-Source: AGHT+IG+g5gwmqrc+hBmet+m5InXK/ExhZqLxMNhRWbxlJVd2mb6LgxKGdsrgfoA3NRDPjlFKU3UtGWk1LCYXTiCZVg=
-X-Received: by 2002:a17:907:728d:b0:a99:eb94:3e37 with SMTP id
- a640c23a62f3a-a9ef002177amr2359460566b.58.1731565409312; Wed, 13 Nov 2024
- 22:23:29 -0800 (PST)
+	s=arc-20240116; t=1731577316; c=relaxed/simple;
+	bh=i5t5uoZkJk//79g6cG/+3RQtJAGUYWU8qA/tQ9zZyqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BsG+WmNBRzN0pyVeH2hImEooI0586MIVY7vL8swVemtOhoOI3+ZiLoQi1PwFwrD6qFDqGHjITGz/eyrTLO2ImrBq84Y43Y0vaVDT79p7aKm/ae0uicSjhirUaDe96108Y1Dfun+aTtv8bbJzPZPs/mEGAWnU97HQ2PVDWLlOg+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A566C4CECD;
+	Thu, 14 Nov 2024 09:41:52 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v6.13
+Date: Thu, 14 Nov 2024 17:41:28 +0800
+Message-ID: <20241114094128.2198306-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241113124857.1959435-1-chenhuacai@loongson.cn> <CAADWXX9-LY7aaMax6KdtDV+vOkm_WKE76Qmy4n3UHN61O=-2Lg@mail.gmail.com>
-In-Reply-To: <CAADWXX9-LY7aaMax6KdtDV+vOkm_WKE76Qmy4n3UHN61O=-2Lg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 14 Nov 2024 14:23:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=_Nv0N-zXNad2TgOzTgG_BU6TPhN+U4u=+SMQ98BPJw@mail.gmail.com>
-Message-ID: <CAAhV-H6=_Nv0N-zXNad2TgOzTgG_BU6TPhN+U4u=+SMQ98BPJw@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch fixes for v6.12-final
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Linus,
+The following changes since commit 2d5404caa8c7bb5c4e0435f94b28834ae5456623:
 
-On Thu, Nov 14, 2024 at 1:06=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Nov 13, 2024 at 4:49=E2=80=AFAM Huacai Chen <chenhuacai@loongson.=
-cn> wrote:
-> >
-> > LoongArch fixes for v6.12-final
->
-> Hmm. This email was in my spam folder. I'm not seeing anything
-> horribly wrong with it, but I do note that loongson.cn does not seem
-> to enable DKIM, and that does tend to make gmail (understandably) more
-> nervous. Yes, you do have proper SPF, but in this day and age SPF+DKIM
-> (and a proper DMARC policy to enable strict enforcement) really is a
-> good idea.
-Maybe the root cause is that "From" in my patch is loongson.cn but I
-use kernel.org's SMTP server?
+  Linux 6.12-rc7 (2024-11-10 14:19:35 -0800)
 
->
-> Maybe you can talk to your MIS people about setting up DKIM and DMARC too=
-?
-OK, I will try my best to do this.
+are available in the Git repository at:
 
-Huacai
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.13
 
->
-> Yes, it's a bother. But spam is a scourge.
->
->                       Linus
+for you to fetch changes up to 9899b8201025d00b23aee143594a30c55cc4cc35:
+
+  irqchip/loongson-eiointc: Add virt extension support (2024-11-13 16:18:27 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v6.13
+
+1. Add iocsr and mmio bus simulation in kernel.
+2. Add in-kernel interrupt controller emulation.
+3. Add virt extension support for eiointc irqchip.
+
+----------------------------------------------------------------
+Bibo Mao (1):
+      irqchip/loongson-eiointc: Add virt extension support
+
+Xianglai Li (11):
+      LoongArch: KVM: Add iocsr and mmio bus simulation in kernel
+      LoongArch: KVM: Add IPI device support
+      LoongArch: KVM: Add IPI read and write function
+      LoongArch: KVM: Add IPI user mode read and write function
+      LoongArch: KVM: Add EIOINTC device support
+      LoongArch: KVM: Add EIOINTC read and write functions
+      LoongArch: KVM: Add EIOINTC user mode read and write functions
+      LoongArch: KVM: Add PCHPIC device support
+      LoongArch: KVM: Add PCHPIC read and write functions
+      LoongArch: KVM: Add PCHPIC user mode read and write functions
+      LoongArch: KVM: Add irqfd support
+
+ Documentation/arch/loongarch/irq-chip-model.rst    |   64 ++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst        |   55 ++
+ arch/loongarch/include/asm/irq.h                   |    1 +
+ arch/loongarch/include/asm/kvm_eiointc.h           |  123 +++
+ arch/loongarch/include/asm/kvm_host.h              |   18 +-
+ arch/loongarch/include/asm/kvm_ipi.h               |   45 +
+ arch/loongarch/include/asm/kvm_pch_pic.h           |   62 ++
+ arch/loongarch/include/uapi/asm/kvm.h              |   20 +
+ arch/loongarch/kvm/Kconfig                         |    5 +-
+ arch/loongarch/kvm/Makefile                        |    4 +
+ arch/loongarch/kvm/exit.c                          |   82 +-
+ arch/loongarch/kvm/intc/eiointc.c                  | 1027 ++++++++++++++++++++
+ arch/loongarch/kvm/intc/ipi.c                      |  475 +++++++++
+ arch/loongarch/kvm/intc/pch_pic.c                  |  519 ++++++++++
+ arch/loongarch/kvm/irqfd.c                         |   89 ++
+ arch/loongarch/kvm/main.c                          |   19 +-
+ arch/loongarch/kvm/vcpu.c                          |    3 +
+ arch/loongarch/kvm/vm.c                            |   21 +
+ drivers/irqchip/irq-loongson-eiointc.c             |  108 +-
+ include/linux/kvm_host.h                           |    1 +
+ include/trace/events/kvm.h                         |   35 +
+ include/uapi/linux/kvm.h                           |    8 +
+ 22 files changed, 2735 insertions(+), 49 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_eiointc.h
+ create mode 100644 arch/loongarch/include/asm/kvm_ipi.h
+ create mode 100644 arch/loongarch/include/asm/kvm_pch_pic.h
+ create mode 100644 arch/loongarch/kvm/intc/eiointc.c
+ create mode 100644 arch/loongarch/kvm/intc/ipi.c
+ create mode 100644 arch/loongarch/kvm/intc/pch_pic.c
+ create mode 100644 arch/loongarch/kvm/irqfd.c
