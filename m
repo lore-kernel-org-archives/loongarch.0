@@ -1,93 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32E41CAAC;
-	Wed, 13 Nov 2024 21:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C222905
+	for <loongarch@lists.linux.dev>; Thu, 14 Nov 2024 06:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731532281; cv=none; b=K14CihqL5yKzatynojCKIjx0SYWRjQgCCFPjFf+VX03nOpuCYeiYznSAmTSwF+DX5IUUbEk73n1uKaIzAlQQxnX7jKXLUDFdWvJ9myUFTpnRFY8R2l39egTDklxzcBZUQ27zWIOJ1GfYqH/HsAc1qBdSsWaurJ0y1zE5xOD2VSQ=
+	t=1731565411; cv=none; b=YChHSK2r1mRMVZKscpKpV2EJUMj8xGkkqtZZwvzHpS+6GYVvQQs1xlzqDVDOB/1Q/2Hinmy9WZgWJE0Cchlwwh3hzVytK41k2OSKBHM1tD9ggWCzYLAZ+qhXPl3YUUC1Hw+coKA+8Va3Soy/Xg9tAmEJ+JFWMDDgy0ObQATV63Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731532281; c=relaxed/simple;
-	bh=4kQGbjjznEDkNkq4OGvG06vwaYxqZLBJJmMFbCdHpWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDndrqB9DdItTwSM8X+86h9hIrkZBXYAeWCVnSAvuECIVV1cMeGIoyx+GmuZrWM0zFqVCpvSvH3pt9cBzT35wCLthX81860BrxVTSamFdpGXhNHCaQ0ek7C/OsNpvU4F4x9no02NfjFqKv1+G9yNZuxxvEq4J67OUJXWwPM+kV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+AoRXnt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731565411; c=relaxed/simple;
+	bh=s7Mfdv4GRYa2OR5o4x+wbZZfKOfHszZQimqrnUlWVhQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qoiBVOIFlUqZmGk+0kJ1mIlqECgT1SJkA6xOp79CJnwwbmKw2MRb+cy+onRdGYqdZOWCLPYJe2V5hAcV2L+KNhSmVsfQ03n+DE/LUo0nA47D+d1JDjW5b1a5sY5cPhiWZshuSLB5Ivw1doJuq1hg9mns/JQ8OnsCtP1eTNaWitk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeznJqzz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+AoRXnt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF46BC4CECF;
-	Wed, 13 Nov 2024 21:11:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeznJqzz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA954C4CEDA
+	for <loongarch@lists.linux.dev>; Thu, 14 Nov 2024 06:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731532281;
-	bh=4kQGbjjznEDkNkq4OGvG06vwaYxqZLBJJmMFbCdHpWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+AoRXnt+OKNdB/8nMZO9jnokNwGZMgSlSKT3Yx2kx3+Q1MVR+j9Z1Mm39PkE7SES
-	 pqfqnHer65cjdeXHc0xpXsZ7cVm+9WdUNM4WOq6hbiyGDa/nTK6kSVHD54l8Phnrh5
-	 rWZW9lpU74s6WwevH6Xsj5+ZS4nFZWfIgA76csfObZQx7ol5S/v313jjU32nxVJ0yo
-	 EsXAv76y37rPU+QpKH+HaLV/HUqv54oGDWf9FBrYaaw0lXzBybyD+xr4pSCbM5W8Tj
-	 fnPZzRa91X49KC28oheCql4L3XvpdSnsBHHHEFJmERTV2jq9rSvDDU/36nq2eI47Qp
-	 XfSYwVsbS4NcQ==
-Date: Wed, 13 Nov 2024 13:11:19 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Xi Ruoyao <xry111@xry111.site>, Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Jan Beulich <jbeulich@suse.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>, Kees Cook <kees@kernel.org>
-Subject: annotating jump tables (Re: [PATCH v2 5/5] LoongArch: Enable jump
- table with GCC for objtool)
-Message-ID: <20241113211119.lfwlxv2bjyqfqeh2@jpoimboe>
-References: <20241105123906.26072-1-yangtiezhu@loongson.cn>
- <20241105123906.26072-6-yangtiezhu@loongson.cn>
- <20241105141530.GE10375@noisy.programming.kicks-ass.net>
- <62df4c24-68ed-fbfc-ed98-2df796697d89@loongson.cn>
- <9589c5b673f45f02e2b0fa9d9a96eff0f0df0920.camel@xry111.site>
- <7e8adb0b-e681-72ae-40d8-740dc3f9480b@loongson.cn>
+	s=k20201202; t=1731565410;
+	bh=s7Mfdv4GRYa2OR5o4x+wbZZfKOfHszZQimqrnUlWVhQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KeznJqzzU5jKxFDlGu5NtCxM3WFCgRqWb2XnrIFX2ORpth2eruoL7j5D+ulEPFdcd
+	 j98B12VGtab1OElYE84BNknpqYwFCNzoIATJqs3sZk/CESiB8o1MaoINnxsXgPZBIv
+	 JCP1zkBypluGW8dRKq1lh69Xwm+uThF0qKi4weCnH4wqvFR9W2WEU+cruKRj3KmH5y
+	 0PniR2v4OT8OCC8jwuet9WCW2mVtT5N0/f4YwmMSqmwS05cDr01BgMviDAzN7VOFT5
+	 LqmGT/FZHockIMrnHH7I4pDI8iFBlw7tF0bKXPP+AHELMdk9iyV0b+OSZawaysbBvT
+	 LCB98fjjbMPHw==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a99eb8b607aso28862866b.2
+        for <loongarch@lists.linux.dev>; Wed, 13 Nov 2024 22:23:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW4REYPyUf1w3oRT+m2jHSBEoYAFrJo0nFwLpfVgYMT9aCVQJspmW2hLi/MKl3vcdpaQSrTdNzZ8yY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzRB/z278ZAmRlEo2/zq9QnB2Mjt8LxWdmOONH97h600moYt8US
+	gBreIkNC52Rz/6Aj2/PVVhboc9XXN2dhj8awW5/WTVkYV16ROaqZp2MDTfBt/TQUlJEh7/ZPfe9
+	LTC9Kt80pQteuM8xHAo+C38ZBqKE=
+X-Google-Smtp-Source: AGHT+IG+g5gwmqrc+hBmet+m5InXK/ExhZqLxMNhRWbxlJVd2mb6LgxKGdsrgfoA3NRDPjlFKU3UtGWk1LCYXTiCZVg=
+X-Received: by 2002:a17:907:728d:b0:a99:eb94:3e37 with SMTP id
+ a640c23a62f3a-a9ef002177amr2359460566b.58.1731565409312; Wed, 13 Nov 2024
+ 22:23:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7e8adb0b-e681-72ae-40d8-740dc3f9480b@loongson.cn>
+References: <20241113124857.1959435-1-chenhuacai@loongson.cn> <CAADWXX9-LY7aaMax6KdtDV+vOkm_WKE76Qmy4n3UHN61O=-2Lg@mail.gmail.com>
+In-Reply-To: <CAADWXX9-LY7aaMax6KdtDV+vOkm_WKE76Qmy4n3UHN61O=-2Lg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 14 Nov 2024 14:23:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6=_Nv0N-zXNad2TgOzTgG_BU6TPhN+U4u=+SMQ98BPJw@mail.gmail.com>
+Message-ID: <CAAhV-H6=_Nv0N-zXNad2TgOzTgG_BU6TPhN+U4u=+SMQ98BPJw@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch fixes for v6.12-final
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 12, 2024 at 08:26:56PM +0800, Tiezhu Yang wrote:
-> On 11/12/2024 11:15 AM, Xi Ruoyao wrote:
-> > On Wed, 2024-11-06 at 13:03 +0800, Tiezhu Yang wrote:
-> > > On 11/05/2024 10:15 PM, Peter Zijlstra wrote:
-> > > > On Tue, Nov 05, 2024 at 08:39:06PM +0800, Tiezhu Yang wrote:
-> > > > > For now, it is time to remove the compiler option -fno-jump-tables
-> > > > > to enable jump table for objtool if the compiler is GCC and it has
-> > > > > the compiler option -mannotate-tablejump, otherwise still keep the
-> > > > > compiler option -fno-jump-tables to maintain compatibility with the
-> > > > > older compilers.
-> 
-> ...
-> 
-> > > ifdef CONFIG_CC_HAS_ANNOTATE_TABLEJUMP
-> > > KBUILD_CFLAGS                   += $(call cc-option,-mannotate-tablejump)
-> > > else
-> > > KBUILD_CFLAGS                   += -fno-jump-tables
-> > > endif
-> > 
-> > Has -mannotate-tablejump been added to Clang?
-> 
-> Yes.
-> 
-> > IMO it's better to add it
-> > to Clang first, and add Clang & GCC support at once into objtool.
-> 
-> Looks reasonable, the fact is that there are some corner issues
-> compiled with Clang due to different compiler behaviors, most of
-> the issues have been addressed and I need to do more test, I will
-> send v3 with about 10 patches after the coming merge window.
+Hi, Linus,
 
-Hm, I didn't know -mannotate-tablejump existed.  We really need
-something which supports all arches, not just loongarch.
+On Thu, Nov 14, 2024 at 1:06=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Nov 13, 2024 at 4:49=E2=80=AFAM Huacai Chen <chenhuacai@loongson.=
+cn> wrote:
+> >
+> > LoongArch fixes for v6.12-final
+>
+> Hmm. This email was in my spam folder. I'm not seeing anything
+> horribly wrong with it, but I do note that loongson.cn does not seem
+> to enable DKIM, and that does tend to make gmail (understandably) more
+> nervous. Yes, you do have proper SPF, but in this day and age SPF+DKIM
+> (and a proper DMARC policy to enable strict enforcement) really is a
+> good idea.
+Maybe the root cause is that "From" in my patch is loongson.cn but I
+use kernel.org's SMTP server?
 
-Others were looking at adding something similar (adding them to Cc).
+>
+> Maybe you can talk to your MIS people about setting up DKIM and DMARC too=
+?
+OK, I will try my best to do this.
 
--- 
-Josh
+Huacai
+
+>
+> Yes, it's a bother. But spam is a scourge.
+>
+>                       Linus
