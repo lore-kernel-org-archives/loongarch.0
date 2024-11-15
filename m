@@ -1,89 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09253126C17
-	for <loongarch@lists.linux.dev>; Fri, 15 Nov 2024 06:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C067E185924;
+	Fri, 15 Nov 2024 06:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731652811; cv=none; b=r+SbXTCAchN2yJ6d9hHU0kZQzWB4dOcMiwS0u2Dns3aHqZTDIaKEbVUm5x3lkrXY8K7sPoQMJEZ6/HkF+1muopp+eA0L2k24KGeqkO7fbISeDymTnjCm8NqUTT5Fz20jzjK0eCXbFcQh6oN5pTMQdbv7e31E1DanVcek0TmVhIQ=
+	t=1731653109; cv=none; b=os7jnCWHFNKQj1hTRCmRrZG8WcccUEeXHg2bajwrZ992g5aEAycwvd67ikXkI+GdSJEUXHyR0Q20I1oMbaiT6RyJeOlAgcGpZv/kyXBhzF7HWzUwdlvpsOpClJdJhF9EALnltPtI7H1QP4e6DNYRF3f2EiNlO+tOHDXBjXvqMps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731652811; c=relaxed/simple;
-	bh=l1659v1Vhgg9Kq1j8Tk9tX5+AzvH84h16fnYGbm8WC0=;
+	s=arc-20240116; t=1731653109; c=relaxed/simple;
+	bh=uVcm7BxxoK7H3Kj7VhY4WsbhXXCZRM5oZCkE3o6Mhuk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hn/RLyn/PzZMnj9oFYpPQLQoDPZRIY9OHUxN+CT40z3VCbhf84NWDsouIFj2PY4DxLAi558wgFiy0X/r8mEfBtVaJ09OgErWkRC0X6B4Uug8EfURKxndpgzOWD2zSBZM6gS2NgieG1dfo/mVy4Pa3G+AXBDHAA6Nj3eJyzI3fAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uniPW9aT; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=IhrK7PDMk2kvDhlUvtefvLgzk0jtctnJXqxfKbrJ8X+OvmFc9GsaiFw5GcN9JYpPzqPFrDLVSbxE2bJIOHqmp1S/wRFEzzrHU3jTqfxLO+I54NTDJ50jrtpRnhoOcQnqZbtG9vFML2pZUShmja5g79+/rinad7DuqHx8tmAkjm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTOP/ajm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uniPW9aT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC58AC4CEDA
-	for <loongarch@lists.linux.dev>; Fri, 15 Nov 2024 06:40:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTOP/ajm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AAFEC4AF0B;
+	Fri, 15 Nov 2024 06:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731652810;
-	bh=l1659v1Vhgg9Kq1j8Tk9tX5+AzvH84h16fnYGbm8WC0=;
+	s=k20201202; t=1731653109;
+	bh=uVcm7BxxoK7H3Kj7VhY4WsbhXXCZRM5oZCkE3o6Mhuk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uniPW9aTg9/jnLrtt45iCX7+ixFHW9bFtualDvSC43a4rET07uSm0EmPFeLFqz1ku
-	 0d/hCdx9AV49RykBtfu50qyYPojBdij58fDrBsOZTV1R0wdjAiu1NTj3N/JPNkjbJS
-	 VN+Ma3vvSy8SYwbv4swjKbAt39xrPE/V35KFVnE30HHPQzEFJ7YJJsqT07+0GyJMuK
-	 BuU0KSLEDJA7YclnuPYBhRZjwYxf6SH2+cBbFWjda3MrYZHPIGFOkOl2w7bCb658vS
-	 B8Zk9qpeUyLwjqQu/havUuJZsxGKPicpCO9McqEW3efcdsAEYttPcpKCmCS/ePTcvo
-	 3/UaecDBVfo+A==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5cb6ca2a776so2364065a12.0
-        for <loongarch@lists.linux.dev>; Thu, 14 Nov 2024 22:40:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUXIGG/kwYruutxkoc5xxyvlqtzYKVxdnlypU4TiN7ZxG3Wb1wwaD3lsCk/af8OhQeCZQbVKEK7BJQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy408KHM9EcVt1AZGpCV687TRkWN4OdqqekLsQZ6upi//1oHoxf
-	mo7K2cuJzplt4UvFxFTKB4rCMRpi9q7bYw6VM++9LidGT1VZBQ/5/HDSPfZ+Dg0W+x3PqV+xWRZ
-	vs2k3QX3dqpGGDDdpt0kPoMAtWKo=
-X-Google-Smtp-Source: AGHT+IGmsPBnMUtgVMjP+KjPC48xzioF5vWMgugaO+nmVaot/QUTnUueJ3XtlR2QrHu1DgZm0f2HTsNWOPrU2ZPH3hM=
-X-Received: by 2002:a17:907:318b:b0:a99:f0f4:463d with SMTP id
- a640c23a62f3a-aa483440a08mr126645766b.26.1731652809288; Thu, 14 Nov 2024
- 22:40:09 -0800 (PST)
+	b=aTOP/ajmdC2zqBtkFAHyU+FXiiE/dxpOvjSZ0YBF0tWHinQTC/ueAY+onRh9Zfjtz
+	 h5cI0gQYr99zbP/AipK4yDwO2ZLdmUzyiv346DOs6AGsIlZRaiYSX7Kkz9hUjsfk++
+	 SCBV13T/VG8Sg2GcOV774LJT462Y1jPLdfmiKN060mDFPqnD1CryMZp0QyZoUBcrL/
+	 28Yrg7unBkGddf7Q+8uhW14WnoKcTvcxFDtEDAoPDSvHwvG6Xr1jjhT84oFFBtMmBy
+	 h6gGrji5OokbyPgqVoLZYg/W0fuFkzycXWZ9euA1HQyfoOw8tE7R8sB1mJJQllqs/B
+	 DxA/FGLcp5l3A==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so240423066b.0;
+        Thu, 14 Nov 2024 22:45:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUGhOtQwEeVbYzJTaNZX37l1e3qMRRjZyDZB2sN4YsA94Vs97McPR1P+U+qEtdYZFq87uy4V64TzdQdts29CA==@lists.linux.dev, AJvYcCVoBKnw1BRKJHL1KymY7fiaf4gbODLhthXFDAXMgZsfUiEW1uF9Hieg5i6aFdiM2/dyFfCiJcI6N8km@lists.linux.dev
+X-Gm-Message-State: AOJu0YxlhixRMhDK9Ua/UjLY0jyS15WQf0TTmzWf/ZRW2Njocvniv2sY
+	6XLMHfC1cXPsRTY6Wzntv3mfi4phTOM0RGBqLsPJEhdfoGsr20iXxj0w/DFTw+R4Nl7zaWah/O5
+	2tGpjN4ysM76XeoEOEwuUMgjsSnc=
+X-Google-Smtp-Source: AGHT+IGEzue8njdYb9/Yv8+o/LRCA7ZeL1txxLTqIScGAKsOgcAHv7WQdcL1whZ1tdFMEOM+G9dI9M7nb7sfjDyFV5U=
+X-Received: by 2002:a17:907:981:b0:a9e:b0a3:db75 with SMTP id
+ a640c23a62f3a-aa4834544c8mr111103166b.35.1731653107976; Thu, 14 Nov 2024
+ 22:45:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241113124857.1959435-1-chenhuacai@loongson.cn>
- <CAADWXX9-LY7aaMax6KdtDV+vOkm_WKE76Qmy4n3UHN61O=-2Lg@mail.gmail.com>
- <CAAhV-H6=_Nv0N-zXNad2TgOzTgG_BU6TPhN+U4u=+SMQ98BPJw@mail.gmail.com> <CAHk-=wgC===Qx3STDjBWGHuzJ0SNP16gEz3iSc6Ebo_bM-yZtw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgC===Qx3STDjBWGHuzJ0SNP16gEz3iSc6Ebo_bM-yZtw@mail.gmail.com>
+References: <20241108091545.4182229-1-chenhuacai@loongson.cn>
+ <20241108091545.4182229-2-chenhuacai@loongson.cn> <20241114102136.X-knc36J@linutronix.de>
+ <CAAhV-H6vTBwi+t8cPKSo44KZKYj8ubwv2vV4FHrNH+nG=_ZXnw@mail.gmail.com> <20241114132740.NuomQBEN@linutronix.de>
+In-Reply-To: <20241114132740.NuomQBEN@linutronix.de>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 15 Nov 2024 14:39:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H74QH66JG0SrrYzYmKTazMWMs5gxp9kGCfC46B4AQtS8A@mail.gmail.com>
-Message-ID: <CAAhV-H74QH66JG0SrrYzYmKTazMWMs5gxp9kGCfC46B4AQtS8A@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch fixes for v6.12-final
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Fri, 15 Nov 2024 14:44:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7wzTsSE4hUpfW4MaXAUA5xfXhdERke9zW3E+5apnRxfA@mail.gmail.com>
+Message-ID: <CAAhV-H7wzTsSE4hUpfW4MaXAUA5xfXhdERke9zW3E+5apnRxfA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] LoongArch: Reduce min_delta for the arch clockevent device
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-rt-devel@lists.linux.dev, Guo Ren <guoren@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 15, 2024 at 1:21=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Thu, Nov 14, 2024 at 9:27=E2=80=AFPM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> On Wed, 13 Nov 2024 at 22:23, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > Maybe the root cause is that "From" in my patch is loongson.cn but I
-> > use kernel.org's SMTP server?
+> On 2024-11-14 19:46:39 [+0800], Huacai Chen wrote:
+> > Hi, Sebastian,
+> Hi,
 >
-> Ahh, yes, I didn't even notice that you went through mail.kernel.org,
-> I only noticed that loongson.cn did SPF but not DKIM.
+> > On Thu, Nov 14, 2024 at 6:21=E2=80=AFPM Sebastian Andrzej Siewior
+> > <bigeasy@linutronix.de> wrote:
+> > >
+> > > On 2024-11-08 17:15:43 [+0800], Huacai Chen wrote:
+> > > > Now the min_delta is 0x600 (1536) for LoongArch's constant clockeve=
+nt
+> > > > device. For a 100MHz hardware timer this means ~15us. This is a lit=
+tle
+> > > > big, especially for PREEMPT_RT enabled kernels. So reduce it to 100=
+0
+> > > > (we don't want too small values to affect performance).
+> > >
+> > > So this reduces it to 10us. Is anything lower than that bad performan=
+ce
+> > > wise?
+> > Maybe I misunderstood the meaning of min_delta, but if I'm correct,
+> > small min_delta may cause more timers to be triggered, because timers
+> > are aligned by the granularity (min_delta). So I think min_delta
+> > affects performance.
 >
-> Yeah, if loongson had had DKIM and DMARC set up to match, it would
-> have been an even noisier failure about DKIM actively failing, rather
-> than not having DKIM at all.
->
-> If you use mail.kernel.org, using a "From:" with a kernel.org address
-> too to get the full email verification is likely the best option.
-OK, and another option is use loongson.cn for both "From:" and SMTP.
+> They are not aligned. Well they get aligned due to the consequences.
+Then I still think it affects performance (and power
+consumption).Because it is different to fire a timer every 1us and
+fire 10 timers together at the end of 10us.
 
 Huacai
 
 >
-> That said, I went back and looked, and you've clearly been using this
-> mail.kernel.org + loongson.cn model for a long time, and it hasn't
-> been problematic. So your pull request being marked as spam might have
-> been just a one-off.
+> In one-shot mode you program the device for the next timer to expire. It
+> computes the delta between expire-time and now. This delta is then
+> clamped between min & max delta. See clockevents_program_event().
 >
->            Linus
+> This means if your timer is supposed to expire in 5us (from now) but
+> your min delta is set to 15us then the timer device will be programmed
+> to 15us from now. This is 10us after the expire time of your first
+> timer. Once the timer devices fires, it will expire all hrtimers which
+> expired at this point. This includes that timer, that should have fired
+> 10us ago, plus everything else following in the 10us window.
+>
+> > Huacai
+>
+> Sebastian
