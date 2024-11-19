@@ -1,183 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1811DFD90;
-	Mon, 18 Nov 2024 18:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E4612CDAE
+	for <loongarch@lists.linux.dev>; Tue, 19 Nov 2024 06:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731955230; cv=none; b=C65iEmiUVNqCwMaoI0xEolVaaDqIyPk+QR/WbrMk2gxMvPF1NsvExIAEOKa25Bkenyqnc0u+JwtDI56pzF6fQF4fxUEMdPpKR9GP6sx8bLEHjI5oVgQYOs4/6Z2OnpXFrzS/A2Dk7piVDjvhotJBUPuMcSKMnUOmkcgTmEI2W1E=
+	t=1731999091; cv=none; b=ge4sMhh7wgktlhF3NHhm9C+g0NyB3+gUR3jqwcy8t2CnmGM5zX1FJyNpEUA4ca6K5nqqIXzt1wv9T5Oel+tBadvT2Vy/Q737b5u1H/KinTsTMRWyXrwp9aX+JjTXwhfDql6BvhBZQLFjctdaUAtre1i1JoQEdDRr1EbgsD4S0oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731955230; c=relaxed/simple;
-	bh=PgWfk6zhBX25rXxPAwmwUJeghk+GajLkQHlk+OfGUQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUl06Od+kI3Nql2XFM4vsiJo7mK/t6pCi3zKmH/5DldJo9ZraThxrfbpDIvVtVlgZhhXsbn9AS6MLXdjGkmGPVJli7kgfLza/gkK9cBktTW4FYe9EBidYJiAGHvbmSy//lz+zv7VthyoC2689Pzlf/7FSmly5M+R+KDM4FEUzpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeOY29sz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeOY29sz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5AEC4CECC;
-	Mon, 18 Nov 2024 18:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731955229;
-	bh=PgWfk6zhBX25rXxPAwmwUJeghk+GajLkQHlk+OfGUQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GeOY29szPjdxa0xm+vV9DTg2e5TPlxk7huuBMuJbtT+hTn5kPCdRWZ2oKgkC8UpSt
-	 VKEpF1/SK1ceIDW9rYbK4e2lrKnmmaewrajrem/5hOE+eL2aJiJwe2Mq1uUh3lhZ50
-	 bF8KJonZOhyM89MpbuLHVivYouTUSuZbDmGNuIIUU6Sz4PBRF7AffgUgRIMQ22WWof
-	 8/hSFdkboAANibLeqfLmV82IhRXIdNitXrU+lzbag6jN3GbbRMHw4voatyzJmOaEVn
-	 LYCc2cjDCBvkB/fCKjeR1Y3G/eBzyCxZ8foJEVKOfJ+JG689X8AaWtSJSKfiAkucWY
-	 LfgB8UgFNVmrQ==
-Date: Mon, 18 Nov 2024 10:40:26 -0800
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v7 0/8] x86/module: use large ROX pages for text
- allocations
-Message-ID: <ZzuKGoj99rIuMaBE@kernel.org>
-References: <20241023162711.2579610-1-rppt@kernel.org>
- <20241118132501.4eddb46c@gandalf.local.home>
+	s=arc-20240116; t=1731999091; c=relaxed/simple;
+	bh=pQXaoanQc1vO50305oWY4AHRdDTnkO5qKs5Z2mC+6zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lPqkAQ6WV3/aJO3W86ZcQrudN0dHvgMUVJ1uMXSW8cBFGdOMn2OQQ2uzZfzHPL07IGyxMv9tsQdViBlCxP/AGgDVNFpCLuffTvRvKP+uDVXEWQiGBYlwUU6IddJBMNdVmmRKEIlntnK7jGtiKUoVJ+5fRoNSYKno2TstdCm/Tq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxQK1cNTxn5jRCAA--.25473S3;
+	Tue, 19 Nov 2024 14:51:09 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxDEdaNTxnWPxcAA--.28167S2;
+	Tue, 19 Nov 2024 14:51:07 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix build failure with GCC 15 (-std=gnu23)
+Date: Tue, 19 Nov 2024 14:50:51 +0800
+Message-ID: <20241119065051.18449-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241118132501.4eddb46c@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxDEdaNTxnWPxcAA--.28167S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFWxtF1kZr17Cr4DXF1fAFc_yoW8Kw4Dpa
+	nF9r1kGF4UWryIkryDA34avryDX34UGw12gay29Fy8CFyIgr1xXr409F98ZF18tw4jka4I
+	ga43GwnxWayUZwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
-On Mon, Nov 18, 2024 at 01:25:01PM -0500, Steven Rostedt wrote:
-> On Wed, 23 Oct 2024 19:27:03 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > Hi,
-> > 
-> > This is an updated version of execmem ROX caches.
-> > 
-> 
-> FYI, I booted a kernel before and after applying these patches with my
-> change:
-> 
->   https://lore.kernel.org/20241017113105.1edfa943@gandalf.local.home
-> 
-> Before these patches:
-> 
->  # cat /sys/kernel/tracing/dyn_ftrace_total_info
-> 57695 pages:231 groups: 9
-> ftrace boot update time = 14733459 (ns)
-> ftrace module total update time = 449016 (ns)
-> 
-> After:
-> 
->  # cat /sys/kernel/tracing/dyn_ftrace_total_info
-> 57708 pages:231 groups: 9
-> ftrace boot update time = 47195374 (ns)
-> ftrace module total update time = 592080 (ns)
-> 
-> Which caused boot time to slowdown by over 30ms. That may not seem like
-> much, but we are very concerned about boot time and are fighting every ms
-> we can get.
+Whenever I try to build the kernel with upcoming GCC 15 which defaults
+to -std=gnu23 I get a build failure:
 
-Hmm, looks like this change was lost in rebase :/
+  CC      arch/loongarch/vdso/vgetcpu.o
+In file included from ./include/uapi/linux/posix_types.h:5,
+                 from ./include/uapi/linux/types.h:14,
+                 from ./include/linux/types.h:6,
+                 from ./include/linux/kasan-checks.h:5,
+                 from ./include/asm-generic/rwonce.h:26,
+                 from ./arch/loongarch/include/generated/asm/rwonce.h:1,
+                 from ./include/linux/compiler.h:317,
+                 from ./include/asm-generic/bug.h:5,
+                 from ./arch/loongarch/include/asm/bug.h:60,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/mm.h:6,
+                 from ./arch/loongarch/include/asm/vdso.h:10,
+                 from arch/loongarch/vdso/vgetcpu.c:6:
+./include/linux/stddef.h:11:9: error: expected identifier before 'false'
+   11 |         false   = 0,
+      |         ^~~~~
+./include/linux/types.h:35:33: error: two or more data types in declaration specifiers
+   35 | typedef _Bool                   bool;
+      |                                 ^~~~
+./include/linux/types.h:35:1: warning: useless type name in empty declaration
+   35 | typedef _Bool                   bool;
+      | ^~~~~~~
 
-@Andrew, should I send it as a patch on top of mm-stable?
+The kernel builds explicitly with -std=gnu11 in top Makefile, but
+arch/loongarch/vdso does not use KBUILD_CFLAGS from the rest of the
+kernel, just add -std=gnu11 flag to arch/loongarch/vdso/Makefile.
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 8da0e66ca22d..859902dd06fc 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -111,17 +111,22 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
-  */
- static int __ref
- ftrace_modify_code_direct(unsigned long ip, const char *old_code,
--			  const char *new_code)
-+			  const char *new_code, struct module *mod)
- {
- 	int ret = ftrace_verify_code(ip, old_code);
- 	if (ret)
- 		return ret;
- 
- 	/* replace the text with the new text */
--	if (ftrace_poke_late)
-+	if (ftrace_poke_late) {
- 		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
--	else
-+	} else if (!mod) {
- 		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
-+	} else {
-+		mutex_lock(&text_mutex);
-+		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
-+		mutex_unlock(&text_mutex);
-+	}
- 	return 0;
- }
- 
-@@ -142,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
- 	 * just modify the code directly.
- 	 */
- 	if (addr == MCOUNT_ADDR)
--		return ftrace_modify_code_direct(ip, old, new);
-+		return ftrace_modify_code_direct(ip, old, new, mod);
- 
- 	/*
- 	 * x86 overrides ftrace_replace_code -- this function will never be used
-@@ -161,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 	new = ftrace_call_replace(ip, addr);
- 
- 	/* Should only be called when module is loaded */
--	return ftrace_modify_code_direct(rec->ip, old, new);
-+	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
- }
- 
- /*
+By the way, commit e8c07082a810 ("Kbuild: move to -std=gnu11") did a
+similar change for arch/arm64/kernel/vdso32/Makefile.
 
+Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -- Steve
-
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index 40c1175823d6..fdde1bcd4e26 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -19,7 +19,7 @@ ccflags-vdso := \
+ cflags-vdso := $(ccflags-vdso) \
+ 	-isystem $(shell $(CC) -print-file-name=include) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+-	-O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
++	-std=gnu11 -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
 -- 
-Sincerely yours,
-Mike.
+2.42.0
+
