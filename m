@@ -1,799 +1,264 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5A960DCF;
-	Wed, 20 Nov 2024 09:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0D31AAE31;
+	Wed, 20 Nov 2024 14:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732095305; cv=none; b=kuBsspQfU/XiEpEUvLNZdswF+wgt9dkGE6w1oK4eYmSEd05gkWqz3raumZMYCx8fCUMixVYhxramJqC7FxxP+Tvsmru5qd9hu8pu369tkQ99+hiF/tDAG/1BzHjYogLXm+Ov/jINmbrcDSvL2bUT59CJd2SZVeHupBybVf7Hx0M=
+	t=1732111566; cv=none; b=FXJPZvltXSk+AiETHiGV+/DeiizyDqumafGZPpR9pb0BqJ0H6FFVI8Vg3lUvrHTvXXA1F1IDUB07rUj/LDTWRhb/xwqWSPKeAYRufX0Tu4CLpV75mPCs4eL1Dy7XdvTmH6NIK30Uh1EA5ZQUVk6x0THz6X12CX6hvIDxEMHLnGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732095305; c=relaxed/simple;
-	bh=ZWYRGhoKGMSSI03lwUow+TFidI35Xfhe/lKoPFnSKEU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmBAvSkLAB9GWVDYw9HtZNbhhHYWuilYoolthCPEhx6V7GsUfaxKUmfcEKG/+ctta6Z3AIrGvZ0zQP88K8NtdvEN1U6Z0xonw3EHmkEitgXxsxEnf1hfgfJg5X68BwzYTccwr/TN2WUOg2FT/MwvMWFvDuLu//Wq5fbs1NdmMuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8DxGeH1rD1n0YhDAA--.1317S3;
-	Wed, 20 Nov 2024 17:33:41 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMAx7uD1rD1nRv5eAA--.8707S2;
-	Wed, 20 Nov 2024 17:33:41 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: arnd@arndb.de,
-	olof@lixom.net
-Cc: soc@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	xry111@xry111.site,
-	christophe.jaillet@wanadoo.fr,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH V2] soc: loongson: add Loongson Security Module driver
-Date: Wed, 20 Nov 2024 17:31:21 +0800
-Message-Id: <20241120093121.2242-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1732111566; c=relaxed/simple;
+	bh=gH4XVQaIJldKy7qk/dQ4j4jz+UhF9Fbtf8B8y4YDpSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pU3PI8e6m8lRggvbNSnfD+y7THxC1COvUvzi/1L9+aQVqYsZSy+xfG5+1pS4LYNceOBSOvVfMvqeIo2y5CwWBKnRiW1uLB8D8DXW2uzitggolBXKcoQa9h+Rxn5WJG2taW/g4dX1d4y5E9ljltwxKHObMXmRoo6kvSAKAJeRl34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QldUUh87; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QldUUh87"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B398C4CECE;
+	Wed, 20 Nov 2024 14:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732111566;
+	bh=gH4XVQaIJldKy7qk/dQ4j4jz+UhF9Fbtf8B8y4YDpSw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QldUUh87NWzC2nrgBUhKr2b07JFxLQxwkcmWCdWPBIhtYkfmyukmYwwIg4FbZM7JD
+	 2wsgV1M5Y4b62VqK118Hyed0dZkW1G6BMIIKpkehOQhYnE6r4MSmMrZ+0rZ5YyHaSk
+	 xtEch9VMrfAJmz9TLWBx6bGUaj9j5hkdB/Cdts/qf4Dho+0QHglq/VrLAM0rCUN/X+
+	 pYGhI42hRv11vkyORzv9hDwa6fk+JxIVNBniT886yqltS1BsKWCczYZler/9KIywxS
+	 EBON2kjbUlMM3sMvpDpevcpnZcwNo6OxalQz3qGX56z9INWsxJ+De4rdP3WO3V9prZ
+	 SUdIf0XnnUU2A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	tglx@linutronix.de,
+	wangliupu@loongson.cn,
+	zhangtianyang@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.11 03/10] LoongArch: For all possible CPUs setup logical-physical CPU mapping
+Date: Wed, 20 Nov 2024 09:05:28 -0500
+Message-ID: <20241120140556.1768511-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241120140556.1768511-1-sashal@kernel.org>
+References: <20241120140556.1768511-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.11.9
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx7uD1rD1nRv5eAA--.8707S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3uF4DCF4fCFWrAF43Zw15Jrc_yoW8Cw1UKo
-	WIvFn3Za1rJrn7ArW09r1FqrWxZa4YkayYyws3ZrZ293WUJF13tFW8Ww43GFs3uFWrtr15
-	u34YqrWruF4akrn5l-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-This driver supports Loongson Security Module, which
-provides the control for it's hardware encryption
-acceleration child devices.
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-Only ACPI firmware is supported.
+[ Upstream commit a6654a40a852a4ca18aacced4cf5ca87997818d7 ]
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+In order to support ACPI-based physical CPU hotplug, we suppose for all
+"possible" CPUs cpu_logical_map() can work. Because some drivers want to
+use cpu_logical_map() for all "possible" CPUs, while currently we only
+setup logical-physical mapping for "present" CPUs. This lack of mapping
+also causes cpu_to_node() cannot work for hot-added CPUs.
+
+All "possible" CPUs are listed in MADT, and the "present" subset is
+marked as ACPI_MADT_ENABLED. To setup logical-physical CPU mapping for
+all possible CPUs and keep present CPUs continuous in cpu_present_mask,
+we parse MADT twice. The first pass handles CPUs with ACPI_MADT_ENABLED
+and the second pass handles CPUs without ACPI_MADT_ENABLED.
+
+The global flag (cpu_enumerated) is removed because acpi_map_cpu() calls
+cpu_number_map() rather than set_processor_mask() now.
+
+Reported-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v2:
-	- Removed useless memset() in probe.
-	- Cleaned up coding style.
-	- Corrected the spelling.
+ arch/loongarch/kernel/acpi.c | 81 +++++++++++++++++++++++-------------
+ arch/loongarch/kernel/smp.c  |  3 +-
+ 2 files changed, 55 insertions(+), 29 deletions(-)
 
- MAINTAINERS                        |   7 +
- drivers/soc/loongson/Kconfig       |   9 +
- drivers/soc/loongson/Makefile      |   1 +
- drivers/soc/loongson/loongson_se.c | 523 +++++++++++++++++++++++++++++
- include/soc/loongson/se.h          | 135 ++++++++
- 5 files changed, 675 insertions(+)
- create mode 100644 drivers/soc/loongson/loongson_se.c
- create mode 100644 include/soc/loongson/se.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fdeb3d12c..85fff2eb7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13379,6 +13379,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
- F:	drivers/soc/loongson/loongson2_guts.c
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 929a497c987e8..de9e34414e614 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -57,48 +57,48 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ 		return ioremap_cache(phys, size);
+ }
  
-+LOONGSON SECURITY MODULE DRIVER
-+M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
-+L:	loongarch@lists.linux.dev
-+S:	Maintained
-+F:	drivers/soc/loongson/loongson_se.c
-+F:	include/soc/loongson/se.h
-+
- LOONGSON-2 SOC SERIES PM DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
-index 368344943..20a5d90c3 100644
---- a/drivers/soc/loongson/Kconfig
-+++ b/drivers/soc/loongson/Kconfig
-@@ -27,3 +27,12 @@ config LOONGSON2_PM
- 	  Disk), ACPI S5 (Soft Shutdown) and supports multiple wake-up methods
- 	  (USB, GMAC, PWRBTN, etc.). This driver was to add power management
- 	  controller support that base on dts for Loongson-2 series SoCs.
-+
-+config LOONGSON_SE
-+	tristate "Loongson Security Module Interface"
-+	depends on LOONGARCH && ACPI
-+	help
-+	  The Loongson security module provides the control for hardware
-+	  encryption acceleration devices. Each device uses at least one
-+	  channel to interact with security module, and each channel may
-+	  have its own buffer provided by security module.
-diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
-index 4118f50f5..503075042 100644
---- a/drivers/soc/loongson/Makefile
-+++ b/drivers/soc/loongson/Makefile
-@@ -5,3 +5,4 @@
+-static int cpu_enumerated = 0;
+-
+ #ifdef CONFIG_SMP
+-static int set_processor_mask(u32 id, u32 flags)
++static int set_processor_mask(u32 id, u32 pass)
+ {
+-	int nr_cpus;
+-	int cpu, cpuid = id;
+-
+-	if (!cpu_enumerated)
+-		nr_cpus = NR_CPUS;
+-	else
+-		nr_cpus = nr_cpu_ids;
++	int cpu = -1, cpuid = id;
  
- obj-$(CONFIG_LOONGSON2_GUTS)		+= loongson2_guts.o
- obj-$(CONFIG_LOONGSON2_PM)		+= loongson2_pm.o
-+obj-$(CONFIG_LOONGSON_SE)		+= loongson_se.o
-diff --git a/drivers/soc/loongson/loongson_se.c b/drivers/soc/loongson/loongson_se.c
-new file mode 100644
-index 000000000..442593a64
---- /dev/null
-+++ b/drivers/soc/loongson/loongson_se.c
-@@ -0,0 +1,523 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2024 Loongson Technology Corporation Limited
-+ */
+-	if (num_processors >= nr_cpus) {
++	if (num_processors >= NR_CPUS) {
+ 		pr_warn(PREFIX "nr_cpus limit of %i reached."
+-			" processor 0x%x ignored.\n", nr_cpus, cpuid);
++			" processor 0x%x ignored.\n", NR_CPUS, cpuid);
+ 
+ 		return -ENODEV;
+ 
+ 	}
 +
-+#include <linux/acpi.h>
-+#include <linux/cdev.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <soc/loongson/se.h>
+ 	if (cpuid == loongson_sysconf.boot_cpu_id)
+ 		cpu = 0;
+-	else
+-		cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
+-
+-	if (!cpu_enumerated)
+-		set_cpu_possible(cpu, true);
+ 
+-	if (flags & ACPI_MADT_ENABLED) {
++	switch (pass) {
++	case 1: /* Pass 1 handle enabled processors */
++		if (cpu < 0)
++			cpu = find_first_zero_bit(cpumask_bits(cpu_present_mask), NR_CPUS);
+ 		num_processors++;
+ 		set_cpu_present(cpu, true);
+-		__cpu_number_map[cpuid] = cpu;
+-		__cpu_logical_map[cpu] = cpuid;
+-	} else
++		break;
++	case 2: /* Pass 2 handle disabled processors */
++		if (cpu < 0)
++			cpu = find_first_zero_bit(cpumask_bits(cpu_possible_mask), NR_CPUS);
+ 		disabled_cpus++;
++		break;
++	default:
++		return cpu;
++	}
 +
-+/*
-+ * The Loongson Security Module provides the control for hardware
-+ * encryption acceleration child devices. The SE framework is
-+ * shown as follows:
-+ *
-+ *                   +------------+
-+ *                   |    CPU     |
-+ *                   +------------+
-+ *			^	^
-+ *	            DMA |	| IRQ
-+ *			v	v
-+ *        +-----------------------------------+
-+ *        |     Loongson Security Module      |
-+ *        +-----------------------------------+
-+ *             ^                ^
-+ *    channel0 |       channel1 |
-+ *             v                v
-+ *        +-----------+    +----------+
-+ *        | sub-dev0  |    | sub-dev1 |  ..... Max sub-dev31
-+ *        +-----------+    +----------+
-+ *
-+ * The CPU cannot directly communicate with SE's sub devices,
-+ * but sends commands to SE, which processes the commands and
-+ * sends them to the corresponding sub devices.
-+ */
-+
-+static inline u32 se_readl(struct loongson_se *se, u32 off)
++	set_cpu_possible(cpu, true);
++	__cpu_number_map[cpuid] = cpu;
++	__cpu_logical_map[cpu] = cpuid;
+ 
+ 	return cpu;
+ }
+ #endif
+ 
+ static int __init
+-acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long end)
++acpi_parse_p1_processor(union acpi_subtable_headers *header, const unsigned long end)
+ {
+ 	struct acpi_madt_core_pic *processor = NULL;
+ 
+@@ -109,12 +109,29 @@ acpi_parse_processor(union acpi_subtable_headers *header, const unsigned long en
+ 	acpi_table_print_madt_entry(&header->common);
+ #ifdef CONFIG_SMP
+ 	acpi_core_pic[processor->core_id] = *processor;
+-	set_processor_mask(processor->core_id, processor->flags);
++	if (processor->flags & ACPI_MADT_ENABLED)
++		set_processor_mask(processor->core_id, 1);
+ #endif
+ 
+ 	return 0;
+ }
+ 
++static int __init
++acpi_parse_p2_processor(union acpi_subtable_headers *header, const unsigned long end)
 +{
-+	return readl(se->base + off);
-+}
++	struct acpi_madt_core_pic *processor = NULL;
 +
-+static inline void se_writel(struct loongson_se *se, u32 val, u32 off)
-+{
-+	writel(val, se->base + off);
-+}
-+
-+static inline bool se_ch_status(struct loongson_se *se, u32 int_bit)
-+{
-+	return !!(se->ch_status & int_bit);
-+}
-+
-+static void se_enable_int(struct loongson_se *se, u32 int_bit)
-+{
-+	unsigned long flag;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&se->dev_lock, flag);
-+
-+	tmp = se_readl(se, SE_S2LINT_EN);
-+	tmp |= int_bit;
-+	se_writel(se, tmp, SE_S2LINT_EN);
-+
-+	spin_unlock_irqrestore(&se->dev_lock, flag);
-+}
-+
-+static void se_disable_int(struct loongson_se *se, u32 int_bit)
-+{
-+	unsigned long flag;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&se->dev_lock, flag);
-+
-+	tmp = se_readl(se, SE_S2LINT_EN);
-+	tmp &= ~(int_bit);
-+	se_writel(se, tmp, SE_S2LINT_EN);
-+
-+	spin_unlock_irqrestore(&se->dev_lock, flag);
-+}
-+
-+static int se_send_requeset(struct loongson_se *se, struct se_data *req)
-+{
-+	unsigned long flag;
-+	u32 status;
-+	int err;
-+	int i;
-+
-+	if (!se || !req)
++	processor = (struct acpi_madt_core_pic *)header;
++	if (BAD_MADT_ENTRY(processor, end))
 +		return -EINVAL;
 +
-+	if (se_readl(se, SE_L2SINT_STAT) ||
-+	    !(se_readl(se, SE_L2SINT_EN) & req->int_bit))
-+		return -EBUSY;
-+
-+	spin_lock_irqsave(&se->cmd_lock, flag);
-+
-+	for (i = 0; i < ARRAY_SIZE(req->u.data); i++)
-+		se_writel(se, req->u.data[i], SE_DATA_S + i * 4);
-+	se_writel(se, req->int_bit, SE_L2SINT_SET);
-+	err = readl_relaxed_poll_timeout_atomic(se->base + SE_L2SINT_STAT, status,
-+						!(status & req->int_bit), 10, 10000);
-+
-+	spin_unlock_irqrestore(&se->cmd_lock, flag);
-+
-+	return err;
-+}
-+
-+static int se_get_response(struct loongson_se *se, struct se_data *res)
-+{
-+	unsigned long flag;
-+	int i;
-+
-+	if (!se || !res)
-+		return -EINVAL;
-+
-+	if ((se_readl(se, SE_S2LINT_STAT) & res->int_bit) == 0)
-+		return -EBUSY;
-+
-+	spin_lock_irqsave(&se->cmd_lock, flag);
-+
-+	for (i = 0; i < ARRAY_SIZE(res->u.data); i++)
-+		res->u.data[i] = se_readl(se, SE_DATA_L + i * 4);
-+	se_writel(se, res->int_bit, SE_S2LINT_CL);
-+
-+	spin_unlock_irqrestore(&se->cmd_lock, flag);
-+
-+	return 0;
-+}
-+
-+static int loongson_se_get_res(struct loongson_se *se, u32 int_bit, u32 cmd,
-+			       struct se_data *res)
-+{
-+	res->int_bit = int_bit;
-+
-+	if (se_get_response(se, res)) {
-+		dev_err(se->dev, "Int 0x%x get response fail.\n", int_bit);
-+		return -EFAULT;
-+	}
-+
-+	/* Check response */
-+	if (res->u.res.cmd != cmd) {
-+		dev_err(se->dev, "Response cmd is 0x%x, not expect cmd 0x%x.\n",
-+			res->u.res.cmd, cmd);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int se_send_genl_cmd(struct loongson_se *se, struct se_data *req,
-+			    struct se_data *res, int retry)
-+{
-+	int err, cnt = 0;
-+
-+try_again:
-+	if (cnt++ >= retry) {
-+		err = -ETIMEDOUT;
-+		goto out;
-+	}
-+
-+	dev_dbg(se->dev, "%d time send cmd 0x%x\n", cnt, req->u.gcmd.cmd);
-+
-+	err = se_send_requeset(se, req);
-+	if (err)
-+		goto try_again;
-+
-+	if (!wait_for_completion_timeout(&se->cmd_completion, HZ)) {
-+		se_enable_int(se, req->int_bit);
-+		goto try_again;
-+	}
-+	err = loongson_se_get_res(se, req->int_bit, req->u.gcmd.cmd, res);
-+	if (err || res->u.res.cmd_ret) {
-+		se_enable_int(se, req->int_bit);
-+		goto try_again;
-+	}
-+
-+out:
-+	se_enable_int(se, req->int_bit);
-+
-+	return err;
-+}
-+
-+static int loongson_se_set_msg(struct lsse_ch *ch)
-+{
-+	struct loongson_se *se = ch->se;
-+	struct se_data req = {0};
-+	struct se_data res = {0};
-+	int err;
-+
-+	req.int_bit = SE_INT_SETUP;
-+	req.u.gcmd.cmd = SE_CMD_SETMSG;
-+	/* MSG off */
-+	req.u.gcmd.info[0] = ch->id;
-+	req.u.gcmd.info[1] = ch->smsg - se->mem_base;
-+	req.u.gcmd.info[2] = ch->msg_size;
-+
-+	dev_dbg(se->dev, "Set Channel %d msg off 0x%x, msg size %d\n",
-+		ch->id, req.u.gcmd.info[1], req.u.gcmd.info[2]);
-+
-+	err = se_send_genl_cmd(se, &req, &res, 5);
-+	if (res.u.res.cmd_ret)
-+		return res.u.res.cmd_ret;
-+
-+	return err;
-+}
-+
-+static irqreturn_t se_irq(int irq, void *dev_id)
-+{
-+	struct loongson_se *se = (struct loongson_se *)dev_id;
-+	struct lsse_ch *ch;
-+	u32 int_status;
-+
-+	int_status = se_readl(se, SE_S2LINT_STAT);
-+
-+	dev_dbg(se->dev, "%s int status is 0x%x\n", __func__, int_status);
-+
-+	se_disable_int(se, int_status);
-+
-+	if (int_status & SE_INT_SETUP) {
-+		complete(&se->cmd_completion);
-+		int_status &= ~SE_INT_SETUP;
-+	}
-+
-+	while (int_status) {
-+		int id = __ffs(int_status);
-+
-+		ch = &se->chs[id];
-+		if (ch->complete)
-+			ch->complete(ch);
-+		int_status &= ~BIT(id);
-+		se_writel(se, BIT(id), SE_S2LINT_CL);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int se_init_hw(struct loongson_se *se, dma_addr_t addr, int size)
-+{
-+	struct se_data req;
-+	struct se_data res;
-+	int err, retry = 5;
-+
-+	se_enable_int(se, SE_INT_SETUP);
-+
-+	/* Start engine */
-+	memset(&req, 0, sizeof(struct se_data));
-+	memset(&res, 0, sizeof(struct se_data));
-+	req.int_bit = SE_INT_SETUP;
-+	req.u.gcmd.cmd = SE_CMD_START;
-+	err = se_send_genl_cmd(se, &req, &res, retry);
-+	if (err)
-+		return err;
-+
-+	/* Get Version */
-+	memset(&req, 0, sizeof(struct se_data));
-+	memset(&res, 0, sizeof(struct se_data));
-+	req.int_bit = SE_INT_SETUP;
-+	req.u.gcmd.cmd = SE_CMD_GETVER;
-+	err = se_send_genl_cmd(se, &req, &res, retry);
-+	if (err)
-+		return err;
-+	se->version = res.u.res.info[0];
-+
-+	/* Set shared mem */
-+	memset(&req, 0, sizeof(struct se_data));
-+	memset(&res, 0, sizeof(struct se_data));
-+	req.int_bit = SE_INT_SETUP;
-+	req.u.gcmd.cmd = SE_CMD_SETBUF;
-+	/* MMAP */
-+	req.u.gcmd.info[0] = addr & 0xffffffff;
-+	req.u.gcmd.info[1] = addr >> 32;
-+	/* MASK */
-+	req.u.gcmd.info[2] = ~(size - 1);
-+	req.u.gcmd.info[3] = 0xffffffff;
-+	err = se_send_genl_cmd(se, &req, &res, retry);
-+	if (err)
-+		return err;
-+	pr_debug("Set win mmap 0x%llx, mask 0x%llx\n",
-+		 ((u64)req.u.gcmd.info[1] << 32) | req.u.gcmd.info[0],
-+		 ((u64)req.u.gcmd.info[3] << 32) | req.u.gcmd.info[2]);
-+
-+	return err;
-+}
-+
-+static void se_disable_hw(struct loongson_se *se)
-+{
-+	struct se_data req = {0};
-+	struct se_data res = {0};
-+
-+	/* Stop engine */
-+	req.int_bit = SE_INT_SETUP;
-+	req.u.gcmd.cmd = SE_CMD_STOP;
-+	se_send_genl_cmd(se, &req, &res, 5);
-+	se_disable_int(se, SE_INT_ALL);
-+}
-+
-+/*
-+ * Called by SE's child device driver.
-+ */
-+int se_send_ch_requeset(struct lsse_ch *ch)
-+{
-+	struct loongson_se *se;
-+	u32 status, int_bit;
-+
-+	se = ch->se;
-+	int_bit = ch->int_bit;
-+	if ((se_readl(se, SE_L2SINT_STAT) & int_bit) ||
-+	    !(se_readl(se, SE_L2SINT_EN) & int_bit))
-+		return -EBUSY;
-+
-+	se_enable_int(se, int_bit);
-+	se_writel(se, int_bit, SE_L2SINT_SET);
-+
-+	return readl_relaxed_poll_timeout_atomic(se->base + SE_L2SINT_STAT, status,
-+						 !(status & int_bit), 10, 10000);
-+
-+}
-+EXPORT_SYMBOL_GPL(se_send_ch_requeset);
-+
-+/*
-+ * se_init_ch() - Init the channel used by child device.
-+ *
-+ * Allocate the shared memory agreed upon with SE on SE probe,
-+ * and register the callback function when the data processing
-+ * in this channel is completed.
-+ */
-+struct lsse_ch *se_init_ch(struct device *dev, int id, int data_size, int msg_size,
-+			   void *priv, void (*complete)(struct lsse_ch *se_ch))
-+{
-+	struct loongson_se *se = dev_get_drvdata(dev);
-+	struct lsse_ch *ch;
-+	unsigned long flag;
-+	int data_first, data_nr;
-+	int msg_first, msg_nr;
-+
-+	if (!se) {
-+		pr_err("SE has bot been initialized\n");
-+		return NULL;
-+	}
-+
-+	if (id > SE_CH_MAX) {
-+		dev_err(se->dev, "Channel number %d is invalid\n", id);
-+		return NULL;
-+	}
-+
-+	if (se_ch_status(se, BIT(id))) {
-+		dev_err(se->dev, "Channel number %d has been initialized\n", id);
-+		return NULL;
-+	}
-+
-+	spin_lock_irqsave(&se->dev_lock, flag);
-+
-+	ch = &se->chs[id];
-+	ch->se = se;
-+	ch->id = id;
-+	ch->int_bit = BIT(id);
-+	se->ch_status |= BIT(id);
-+
-+	data_nr = round_up(data_size, PAGE_SIZE) / PAGE_SIZE;
-+	data_first = bitmap_find_next_zero_area(se->mem_map, se->mem_map_pages,
-+						0, data_nr, 0);
-+	if (data_first >= se->mem_map_pages) {
-+		dev_err(se->dev, "Insufficient memory space\n");
-+		spin_unlock_irqrestore(&se->dev_lock, flag);
-+		return NULL;
-+	}
-+
-+	bitmap_set(se->mem_map, data_first, data_nr);
-+	ch->data_buffer = se->mem_base + data_first * PAGE_SIZE;
-+	ch->data_addr = se->mem_addr + data_first * PAGE_SIZE;
-+	ch->data_size = data_size;
-+
-+	msg_nr = round_up(msg_size, PAGE_SIZE) / PAGE_SIZE;
-+	msg_first = bitmap_find_next_zero_area(se->mem_map, se->mem_map_pages,
-+					       0, msg_nr, 0);
-+	if (msg_first >= se->mem_map_pages) {
-+		dev_err(se->dev, "Insufficient memory space\n");
-+		bitmap_clear(se->mem_map, data_first, data_nr);
-+		spin_unlock_irqrestore(&se->dev_lock, flag);
-+		return NULL;
-+	}
-+
-+	bitmap_set(se->mem_map, msg_first, msg_nr);
-+	ch->smsg = se->mem_base + msg_first * PAGE_SIZE;
-+	ch->rmsg = ch->smsg + msg_size / 2;
-+	ch->msg_size = msg_size;
-+	ch->complete = complete;
-+	ch->priv = priv;
-+	spin_lock_init(&ch->ch_lock);
-+
-+	spin_unlock_irqrestore(&se->dev_lock, flag);
-+
-+	if (loongson_se_set_msg(ch)) {
-+		dev_err(se->dev, "Channel %d setup message address failed\n", id);
-+		return NULL;
-+	}
-+
-+	se_enable_int(se, ch->int_bit);
-+
-+	return ch;
-+}
-+EXPORT_SYMBOL_GPL(se_init_ch);
-+
-+void se_deinit_ch(struct lsse_ch *ch)
-+{
-+	struct loongson_se *se = ch->se;
-+	unsigned long flag;
-+	int first, nr;
-+	int id = ch->id;
-+
-+	if (!se) {
-+		pr_err("SE has bot been initialized\n");
-+		return;
-+	}
-+
-+	if (id > SE_CH_MAX) {
-+		dev_err(se->dev, "Channel number %d is invalid\n", id);
-+		return;
-+	}
-+
-+	if (!se_ch_status(se, BIT(id))) {
-+		dev_err(se->dev, "Channel number %d has not been initialized\n", id);
-+		return;
-+	}
-+
-+	spin_lock_irqsave(&se->dev_lock, flag);
-+	se->ch_status &= ~BIT(ch->id);
-+
-+	first = (ch->data_buffer - se->mem_base) / PAGE_SIZE;
-+	nr = round_up(ch->data_size, PAGE_SIZE) / PAGE_SIZE;
-+	bitmap_clear(se->mem_map, first, nr);
-+
-+	first = (ch->smsg - se->mem_base) / PAGE_SIZE;
-+	nr = round_up(ch->msg_size, PAGE_SIZE) / PAGE_SIZE;
-+	bitmap_clear(se->mem_map, first, nr);
-+
-+	se_disable_int(se, ch->int_bit);
-+	spin_unlock_irqrestore(&se->dev_lock, flag);
-+
-+}
-+EXPORT_SYMBOL_GPL(se_deinit_ch);
-+
-+static int loongson_se_probe(struct platform_device *pdev)
-+{
-+	struct loongson_se *se;
-+	struct device *dev = &pdev->dev;
-+	int nr_irq, irq, err, size;
-+
-+	se = devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
-+	if (!se)
-+		return -ENOMEM;
-+	se->dev = dev;
-+	dev_set_drvdata(dev, se);
-+	init_completion(&se->cmd_completion);
-+	spin_lock_init(&se->cmd_lock);
-+	spin_lock_init(&se->dev_lock);
-+	/* Setup DMA buffer */
-+	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	if (device_property_read_u32(dev, "dmam_size", &size))
-+		return -ENODEV;
-+	size = roundup_pow_of_two(size);
-+	se->mem_base = dmam_alloc_coherent(dev, size, &se->mem_addr, GFP_KERNEL);
-+	if (!se->mem_base)
-+		return -ENOMEM;
-+	se->mem_map_pages = size / PAGE_SIZE;
-+	se->mem_map = devm_bitmap_zalloc(dev, se->mem_map_pages, GFP_KERNEL);
-+	if (!se->mem_map)
-+		return -ENOMEM;
-+
-+	se->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(se->base))
-+		return PTR_ERR(se->base);
-+
-+	nr_irq = platform_irq_count(pdev);
-+	if (nr_irq <= 0)
-+		return -ENODEV;
-+	while (nr_irq) {
-+		irq = platform_get_irq(pdev, --nr_irq);
-+		if (irq < 0)
-+			return -ENODEV;
-+		/* Use the same interrupt handler address.
-+		 * Determine which irq it is accroding
-+		 * SE_S2LINT_STAT register.
-+		 */
-+		err = devm_request_irq(dev, irq, se_irq, 0,
-+				       "loongson-se", se);
-+		if (err)
-+			dev_err(dev, "failed to request irq: %d\n", err);
-+	}
-+
-+	err = se_init_hw(se, se->mem_addr, size);
-+	if (err)
-+		se_disable_hw(se);
-+
-+	return err;
-+}
-+
-+static const struct acpi_device_id loongson_se_acpi_match[] = {
-+	{"LOON0011", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, loongson_se_acpi_match);
-+
-+static struct platform_driver loongson_se_driver = {
-+	.probe   = loongson_se_probe,
-+	.driver  = {
-+		.name  = "loongson-se",
-+		.acpi_match_table = loongson_se_acpi_match,
-+	},
-+};
-+module_platform_driver(loongson_se_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Loongson Technology Corporation");
-+MODULE_DESCRIPTION("Loongson Security Module driver");
-diff --git a/include/soc/loongson/se.h b/include/soc/loongson/se.h
-new file mode 100644
-index 000000000..825d5b294
---- /dev/null
-+++ b/include/soc/loongson/se.h
-@@ -0,0 +1,135 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* Copyright (C) 2024 Loongson Technology Corporation Limited */
-+
-+#ifndef __LOONGSON_SE_H__
-+#define __LOONGSON_SE_H__
-+
-+#define SE_DATA_S			0x0
-+#define SE_DATA_L			0x20
-+#define SE_S2LINT_STAT			0x88
-+#define SE_S2LINT_EN			0x8c
-+#define SE_S2LINT_SET			0x90
-+#define SE_S2LINT_CL			0x94
-+#define SE_L2SINT_STAT			0x98
-+#define SE_L2SINT_EN			0x9c
-+#define SE_L2SINT_SET			0xa0
-+#define SE_L2SINT_CL			0xa4
-+
-+/* INT bit definition */
-+#define SE_INT_SETUP			BIT(0)
-+#define SE_INT_SM2			BIT(0)
-+#define SE_INT_SM3			BIT(0)
-+#define SE_INT_SM4			BIT(0)
-+#define SE_INT_RNG			BIT(0)
-+#define SE_INT_TPM			BIT(5)
-+#define SE_INT_ALL			0xffffffff
-+
-+#define SE_CMD_START			0x0
-+#define SE_CMD_STOP			0x1
-+#define SE_CMD_GETVER			0x2
-+#define SE_CMD_SETBUF			0x3
-+#define SE_CMD_SETMSG			0x4
-+
-+#define SE_CMD_RNG			0x100
-+
-+#define SE_CMD_SM2_SIGN			0x200
-+#define SE_CMD_SM2_VSIGN		0x201
-+
-+#define SE_CMD_SM3_DIGEST		0x300
-+#define SE_CMD_SM3_UPDATE		0x301
-+#define SE_CMD_SM3_FINISH		0x302
-+
-+#define SE_CMD_SM4_ECB_ENCRY		0x400
-+#define SE_CMD_SM4_ECB_DECRY		0x401
-+#define SE_CMD_SM4_CBC_ENCRY		0x402
-+#define SE_CMD_SM4_CBC_DECRY		0x403
-+#define SE_CMD_SM4_CTR			0x404
-+
-+#define SE_CMD_TPM			0x500
-+#define SE_CMD_ZUC_INIT_READ		0x600
-+#define SE_CMD_ZUC_READ			0x601
-+
-+#define SE_CMD_SDF			0x700
-+
-+#define SE_CH_MAX			32
-+
-+#define SE_CH_RNG			1
-+#define SE_CH_SM2			2
-+#define SE_CH_SM3			3
-+#define SE_CH_SM4			4
-+#define SE_CH_TPM			5
-+#define SE_CH_ZUC			6
-+#define SE_CH_SDF			7
-+
-+struct se_msg {
-+	u32 cmd;
-+	u32 data_off;
-+	u32 data_len;
-+	u32 info[5];
-+};
-+
-+struct se_cmd {
-+	u32 cmd;
-+	u32 info[7];
-+};
-+
-+struct se_res {
-+	u32 cmd;
-+	u32 cmd_ret;
-+	u32 info[6];
-+};
-+
-+struct se_data {
-+	u32 int_bit;
-+	union {
-+		u32 data[8];
-+		struct se_cmd gcmd;
-+		struct se_res res;
-+	} u;
-+};
-+
-+struct lsse_ch {
-+	u32 id;
-+	u32 int_bit;
-+	struct loongson_se *se;
-+	void *priv;
-+	spinlock_t ch_lock;
-+	void *smsg;
-+	void *rmsg;
-+	int msg_size;
-+	void *data_buffer;
-+	dma_addr_t data_addr;
-+	int data_size;
-+
-+	void (*complete)(struct lsse_ch *se_ch);
-+};
-+
-+struct loongson_se {
-+	struct device *dev;
-+	void __iomem *base;
-+	u32 version;
-+	u32 ch_status;
-+	spinlock_t cmd_lock;
-+	spinlock_t dev_lock;
-+
-+	/* Interaction memory */
-+	void *mem_base;
-+	dma_addr_t mem_addr;
-+	unsigned long *mem_map;
-+	int mem_map_pages;
-+	void *smsg;
-+	void *rmsg;
-+
-+	/* Synchronous CMD */
-+	struct completion cmd_completion;
-+
-+	/* Channel */
-+	struct lsse_ch chs[SE_CH_MAX];
-+};
-+
-+struct lsse_ch *se_init_ch(struct device *dev, int id, int data_size, int msg_size,
-+			   void *priv, void (*complete)(struct lsse_ch *se_ch));
-+void se_deinit_ch(struct lsse_ch *ch);
-+int se_send_ch_requeset(struct lsse_ch *ch);
-+
++#ifdef CONFIG_SMP
++	if (!(processor->flags & ACPI_MADT_ENABLED))
++		set_processor_mask(processor->core_id, 2);
 +#endif
-
-base-commit: daa20223dee942ebea45bc72b517480af226c370
++
++	return 0;
++}
+ static int __init
+ acpi_parse_eio_master(union acpi_subtable_headers *header, const unsigned long end)
+ {
+@@ -142,12 +159,14 @@ static void __init acpi_process_madt(void)
+ 	}
+ #endif
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
+-			acpi_parse_processor, MAX_CORE_PIC);
++			acpi_parse_p1_processor, MAX_CORE_PIC);
++
++	acpi_table_parse_madt(ACPI_MADT_TYPE_CORE_PIC,
++			acpi_parse_p2_processor, MAX_CORE_PIC);
+ 
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
+ 			acpi_parse_eio_master, MAX_IO_PICS);
+ 
+-	cpu_enumerated = 1;
+ 	loongson_sysconf.nr_cpus = num_processors;
+ }
+ 
+@@ -306,6 +325,10 @@ static int __ref acpi_map_cpu2node(acpi_handle handle, int cpu, int physid)
+ 	int nid;
+ 
+ 	nid = acpi_get_node(handle);
++
++	if (nid != NUMA_NO_NODE)
++		nid = early_cpu_to_node(cpu);
++
+ 	if (nid != NUMA_NO_NODE) {
+ 		set_cpuid_to_node(physid, nid);
+ 		node_set(nid, numa_nodes_parsed);
+@@ -320,12 +343,14 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id, int *pcpu
+ {
+ 	int cpu;
+ 
+-	cpu = set_processor_mask(physid, ACPI_MADT_ENABLED);
+-	if (cpu < 0) {
++	cpu = cpu_number_map(physid);
++	if (cpu < 0 || cpu >= nr_cpu_ids) {
+ 		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
+-		return cpu;
++		return -ERANGE;
+ 	}
+ 
++	num_processors++;
++	set_cpu_present(cpu, true);
+ 	acpi_map_cpu2node(handle, cpu, physid);
+ 
+ 	*pcpu = cpu;
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index ca405ab86aaef..bb49478f3543a 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -325,11 +325,11 @@ void __init loongson_prepare_cpus(unsigned int max_cpus)
+ 	int i = 0;
+ 
+ 	parse_acpi_topology();
++	cpu_data[0].global_id = cpu_logical_map(0);
+ 
+ 	for (i = 0; i < loongson_sysconf.nr_cpus; i++) {
+ 		set_cpu_present(i, true);
+ 		csr_mail_send(0, __cpu_logical_map[i], 0);
+-		cpu_data[i].global_id = __cpu_logical_map[i];
+ 	}
+ 
+ 	per_cpu(cpu_state, smp_processor_id()) = CPU_ONLINE;
+@@ -374,6 +374,7 @@ void loongson_init_secondary(void)
+ 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
+ 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
+ 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
++	cpu_data[cpu].global_id = cpu_logical_map(cpu);
+ }
+ 
+ void loongson_smp_finish(void)
 -- 
 2.43.0
 
