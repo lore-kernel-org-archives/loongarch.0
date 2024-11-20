@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B901AC438;
-	Wed, 20 Nov 2024 14:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5E11BAEFC;
+	Wed, 20 Nov 2024 14:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732111572; cv=none; b=eSSy817pipPewO1YU3QmnYlx+SfD9od4B/gby8jgmzHgBKl5AOzxTPHT/6nZEPRjxdpEbkgLkWZbINhPgiFakEDQlNv4rqhs64xPvA2UrQyLYSKnqlZFv5x0ZYLOQOGW64DwQA2d9FWL760y03zgSAUz4ze9Q4nabRBDXqOafPc=
+	t=1732111614; cv=none; b=Q2Kkn0sXw9pXts8jRWpCjIgOKL5r620X6pAF/gyP+5zaoL3rlUJmR24RMO3drqtg64URtTIeW9cfDY+m7yi/AE74X3f4UzZK+kv2bjSH32D+IlVdJz2L9QBXy253bOF8IFvhkmwS6Ti3seYW1w+peah9J52Poy2F54InRPxQSPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732111572; c=relaxed/simple;
-	bh=lIAlocuKqS1NJ3w6AEa/UsMB8AexBQJ9zTN26akowPU=;
+	s=arc-20240116; t=1732111614; c=relaxed/simple;
+	bh=uuxKz9LRtwvQ4JVrYt5z5avtxAXuzIKbNIj3+zRSltA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F2N0BprcZJ9GGE4pZDPIlOfAMNxrpJLvt2jNssLQ3iphlgP8DoI2m7061j5PRXnWB/Y5ox+CRkFocTlfSIH7pCc5pj2uuHJVJ1pBg/zdTmdwULUtvHEGrp00OZIWKygragfyIVRv1rpyru1bRdB8XWzHhSGxvKNnsf+qvJtiEiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t14aAPgu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NEPuoN1dJVc0Bn47PLAlllClhTLx9Vd0JBC66R5hmT4qeYnX8cJO3RCvfS1kc2mAWXOZbp3JgHFodH7EuqhDZYxAneyxO6sYOnZZoWe11Y+5MLkZNfZoJZ6ldWM81H+IFTlp433lGPyHVRNorfe0uo9Cqhij/rbkHumYmtzvKVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4iiSxnJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t14aAPgu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169CBC4CED1;
-	Wed, 20 Nov 2024 14:06:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4iiSxnJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A454BC4CECD;
+	Wed, 20 Nov 2024 14:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732111572;
-	bh=lIAlocuKqS1NJ3w6AEa/UsMB8AexBQJ9zTN26akowPU=;
+	s=k20201202; t=1732111614;
+	bh=uuxKz9LRtwvQ4JVrYt5z5avtxAXuzIKbNIj3+zRSltA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t14aAPguzIoWZ6PnnqhwezYX3NJkZjP1PdqMtk7CtC/iQHY6Z5LKYgvYWfjgh5K51
-	 hkKs/C3avpyRrMUfZjbSvJ8N08T+rIo3iKwZBOlhQp8VFUQ/y3WkC32e+Q36TYlcaU
-	 33Z0uhyuHPMz4pyWtNA5YON5IE+DUznvNISa+oGvYmPCNGdIrFqdhLGdBRF8DW16Da
-	 V+qakYXwVC3oEOXH1dfp2LBCrB8BB78Pxad2lPckmsuytrwH0TiG4L+ps0iPEPyCjV
-	 UPCiUsl5nZn3B6Yl6vzat6u/mmbpdgL9XtkCzmfITRPnIAeB6+88Ca4YHzT2hZKbPo
-	 GgSz5SoTkwZ8w==
+	b=S4iiSxnJRLz9JeVGxHxjJMU+fESYoKNM+aaqwEP5qKg1qtErKF8cSKthtHTUrb1ak
+	 mfN21CMZ9A1Rft8TwAp2D+R+zsjmMwL9audXUeKVWnx80k1uCei7HcZLjSmQJR2LE5
+	 pC4enGXsAIher+EW/dhvOuI+s3xkpQPuiA9uMYnajZTeUllGawiIgwwGjzU9MHpVfe
+	 3mmJRiyigbLRgyi9Wg+Rdd2qnCdLyYcZMwnbMRiQ87LcVqBI5BfHwbRFhPWhtiP/0k
+	 8ZND6xQo6LHOkli1eHLKMs+2a2t1pElwB6YKBGuRdbrLvPy9d9dnLLjBFRPp/UUyox
+	 aIQPUT7pNsJ/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -36,15 +36,16 @@ Cc: Yuli Wang <wangyuli@uniontech.com>,
 	chenhuacai@kernel.org,
 	arnd@arndb.de,
 	tglx@linutronix.de,
-	max.kellermann@ionos.com,
+	geert@linux-m68k.org,
 	vincenzo.frascino@arm.com,
+	max.kellermann@ionos.com,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.11 04/10] LoongArch: Define a default value for VM_DATA_DEFAULT_FLAGS
-Date: Wed, 20 Nov 2024 09:05:29 -0500
-Message-ID: <20241120140556.1768511-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 2/6] LoongArch: Define a default value for VM_DATA_DEFAULT_FLAGS
+Date: Wed, 20 Nov 2024 09:06:32 -0500
+Message-ID: <20241120140647.1768984-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241120140556.1768511-1-sashal@kernel.org>
-References: <20241120140556.1768511-1-sashal@kernel.org>
+In-Reply-To: <20241120140647.1768984-1-sashal@kernel.org>
+References: <20241120140647.1768984-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -53,7 +54,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11.9
+X-stable-base: Linux 6.6.62
 Content-Transfer-Encoding: 8bit
 
 From: Yuli Wang <wangyuli@uniontech.com>
@@ -75,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index e85df33f11c77..8f21567a3188b 100644
+index 63f137ce82a41..f49c2782c5c4d 100644
 --- a/arch/loongarch/include/asm/page.h
 +++ b/arch/loongarch/include/asm/page.h
-@@ -113,10 +113,7 @@ struct page *tlb_virt_to_page(unsigned long kaddr);
+@@ -94,10 +94,7 @@ typedef struct { unsigned long pgprot; } pgprot_t;
  extern int __virt_addr_valid(volatile void *kaddr);
  #define virt_addr_valid(kaddr)	__virt_addr_valid((volatile void *)(kaddr))
  
