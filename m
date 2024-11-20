@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5E11BAEFC;
-	Wed, 20 Nov 2024 14:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF801BD4EB;
+	Wed, 20 Nov 2024 14:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732111614; cv=none; b=Q2Kkn0sXw9pXts8jRWpCjIgOKL5r620X6pAF/gyP+5zaoL3rlUJmR24RMO3drqtg64URtTIeW9cfDY+m7yi/AE74X3f4UzZK+kv2bjSH32D+IlVdJz2L9QBXy253bOF8IFvhkmwS6Ti3seYW1w+peah9J52Poy2F54InRPxQSPk=
+	t=1732111650; cv=none; b=p5RJwHtECYOW/in8uwYPhZWZH9z5U0AUWBVKb0ylnDKQ1Yv1YFD4GwRg40f39dvgkdVJTVeHRJMlNF7DQO8hJETN8QgOx1ZsXoKPsGzjLFR3hTCawNOWa7unXzYYR5szF3t9bMEMRHTmfYFF6R1hpx+nqx9q0AVrqcRKjeruhOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732111614; c=relaxed/simple;
-	bh=uuxKz9LRtwvQ4JVrYt5z5avtxAXuzIKbNIj3+zRSltA=;
+	s=arc-20240116; t=1732111650; c=relaxed/simple;
+	bh=WqjuFiHEcg6WRWy7fxL8Sy+36LBCtbIcgCASBJpeiLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NEPuoN1dJVc0Bn47PLAlllClhTLx9Vd0JBC66R5hmT4qeYnX8cJO3RCvfS1kc2mAWXOZbp3JgHFodH7EuqhDZYxAneyxO6sYOnZZoWe11Y+5MLkZNfZoJZ6ldWM81H+IFTlp433lGPyHVRNorfe0uo9Cqhij/rbkHumYmtzvKVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4iiSxnJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KzHQiGqZgwwTigQf6PVqGDua6o8ONDh4OhRjOX/bIE8OSFYKoYj5YqKh2JEGBxP/bIyhLJNnuFdMfto9TzepfQyuocwewMhWou/iJPLNZ0dPxWcpDh748/oeFl81+JWLCQ8PGg2mme0d8oogmWUrCiiNqEbeX0+BsAryIhHXrZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uq9H5H8O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4iiSxnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A454BC4CECD;
-	Wed, 20 Nov 2024 14:06:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uq9H5H8O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58F4C4CECE;
+	Wed, 20 Nov 2024 14:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732111614;
-	bh=uuxKz9LRtwvQ4JVrYt5z5avtxAXuzIKbNIj3+zRSltA=;
+	s=k20201202; t=1732111650;
+	bh=WqjuFiHEcg6WRWy7fxL8Sy+36LBCtbIcgCASBJpeiLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S4iiSxnJRLz9JeVGxHxjJMU+fESYoKNM+aaqwEP5qKg1qtErKF8cSKthtHTUrb1ak
-	 mfN21CMZ9A1Rft8TwAp2D+R+zsjmMwL9audXUeKVWnx80k1uCei7HcZLjSmQJR2LE5
-	 pC4enGXsAIher+EW/dhvOuI+s3xkpQPuiA9uMYnajZTeUllGawiIgwwGjzU9MHpVfe
-	 3mmJRiyigbLRgyi9Wg+Rdd2qnCdLyYcZMwnbMRiQ87LcVqBI5BfHwbRFhPWhtiP/0k
-	 8ZND6xQo6LHOkli1eHLKMs+2a2t1pElwB6YKBGuRdbrLvPy9d9dnLLjBFRPp/UUyox
-	 aIQPUT7pNsJ/g==
+	b=Uq9H5H8OAtn/nmT0myUVWbw/0l2Qsa6p8jyzfU6/BW6aMXZU3RbpGVJ1fv6oLXNaS
+	 aLzzHwZsA1vzQZ2nY8w0MhtsvXpfhNHWCspsocgt4CAk44INmmU5SqfD1ZcZYFWA3u
+	 PpL1KOj1dEYb7CugO7oKCEzq0zIOosYELZ1CHkihkN6IKMcy6Xtd2GgCyie0o4icQa
+	 MXp4zgNjHhSIvQZN9WRUox382zEwFQotyVk4/0EFHlxs9/Hh/G/ABWW//xBgR6Bk+P
+	 urbNmg/YWGXWLjQxpcJuhgg6W8m1BY5c0m1SxBbt9Sevncw6WZN0ZKmuJCk8WlZ9hZ
+	 pEWNF+ntG8CPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -36,16 +36,15 @@ Cc: Yuli Wang <wangyuli@uniontech.com>,
 	chenhuacai@kernel.org,
 	arnd@arndb.de,
 	tglx@linutronix.de,
-	geert@linux-m68k.org,
 	vincenzo.frascino@arm.com,
 	max.kellermann@ionos.com,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 2/6] LoongArch: Define a default value for VM_DATA_DEFAULT_FLAGS
-Date: Wed, 20 Nov 2024 09:06:32 -0500
-Message-ID: <20241120140647.1768984-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 2/6] LoongArch: Define a default value for VM_DATA_DEFAULT_FLAGS
+Date: Wed, 20 Nov 2024 09:07:08 -0500
+Message-ID: <20241120140722.1769147-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241120140647.1768984-1-sashal@kernel.org>
-References: <20241120140647.1768984-1-sashal@kernel.org>
+In-Reply-To: <20241120140722.1769147-1-sashal@kernel.org>
+References: <20241120140722.1769147-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,7 +53,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.62
+X-stable-base: Linux 6.1.118
 Content-Transfer-Encoding: 8bit
 
 From: Yuli Wang <wangyuli@uniontech.com>
@@ -76,10 +75,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index 63f137ce82a41..f49c2782c5c4d 100644
+index bbac81dd73788..9919253804e61 100644
 --- a/arch/loongarch/include/asm/page.h
 +++ b/arch/loongarch/include/asm/page.h
-@@ -94,10 +94,7 @@ typedef struct { unsigned long pgprot; } pgprot_t;
+@@ -102,10 +102,7 @@ static inline int pfn_valid(unsigned long pfn)
  extern int __virt_addr_valid(volatile void *kaddr);
  #define virt_addr_valid(kaddr)	__virt_addr_valid((volatile void *)(kaddr))
  
