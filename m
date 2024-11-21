@@ -1,36 +1,47 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5C8B1C1F35
-	for <loongarch@lists.linux.dev>; Wed, 20 Nov 2024 15:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0A23098E
+	for <loongarch@lists.linux.dev>; Thu, 21 Nov 2024 03:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732115444; cv=none; b=G5719wRR82965dhptaowhOYr+EdCo/XpbNE3Tpw1HoZ8KcmNKMG+0+S55QqYZfcB4lNJzpwPknkb5V+cyEK+EzD8FRC/86OkClPmB9+gtmfsLmX5O+elqj/0/e5mlxHP4RA+/2BF+gYaPwvf+KsGhK3l100uTgcRoe5EWVUHwLI=
+	t=1732160554; cv=none; b=p00S77ms2xszBB5Iup3UAnACTYXSeGYfB7h+Mbnq7D825yHjUdJqrSiQ1ZElbAXftZfEHDi5NS/PnDyX+4dc1QjsTq9u8HDxOMjNRhR+lWwEMeHbCia6ikBnqQqqK7IsCSujg2DROwXNRJR9dnUERn0OaKmXbQCmSTvbvIFKje0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732115444; c=relaxed/simple;
-	bh=SCPGHzzQ2BKPMQKq6ogaqxmB1VFuttE+wlSxcPJR2iM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S2UmFOvINnZWCL82oz9m72Ej2BGLOMrbE61Osga1eOGwmGsRKraXwHsZ1ovm3PqrBpeDFBfRMiS0z3j7OY25k7RBhRukmwUOYzHBxBYnU+EEtvXLgSdmkIKwRtG0Wzdm2a0fdPBJfoDuwPRmAKclPI/qmU+lQyYUj1tsS1kAv50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.202])
-	by gateway (Coremail) with SMTP id _____8Ax6+Hr+z1nKshDAA--.1420S3;
-	Wed, 20 Nov 2024 23:10:35 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.202])
-	by front1 (Coremail) with SMTP id qMiowMCx_8Lm+z1n8m9fAA--.10941S2;
-	Wed, 20 Nov 2024 23:10:35 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	s=arc-20240116; t=1732160554; c=relaxed/simple;
+	bh=v8WDhRD588WyC3JfIza6TUPqo5yDPJGeOfKn/c8vHsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WlhW08ekvTzgRG0jn7/aQNPyC2b53ElMYqTn55bHVTPGHisWeRYJ+DgLIWDpQ06cOoUCSv0vZ50CkBIPgYgCESqEKJ/jLEJzxDN15KP97//qCJNQnV0GezZcjQv0D4Nu34IFceBrZ9rZO2thyIMQWWEtPleVNz2a0nk+8AaXlSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=dOaC+5qo; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="dOaC+5qo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1732160544;
+	bh=+D9hzwSmuDs0d2M01TQ0YU//VDWH5zv+hc9Rt5E5zho=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dOaC+5qoSvxtFF965lM3Z40nK2qen3oXUzPQ9ZV3qaJVUI8904/XS/TrZ85uS0gJF
+	 tN7Gz7bT1MwenCXHM2O+GnmVU8oycJJzGQNxZyFZjuFG9bfGUAZpV0ztxfhIN4zODd
+	 F8RvcyZBRON4IEv6qsOjcf5U5yaATu/gWplRjNRM=
+Received: from stargazer.. (unknown [IPv6:240e:358:1182:2e00:dc73:854d:832e:2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3153B1A3EC3;
+	Wed, 20 Nov 2024 22:42:18 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Haiyong Sun <sunhaiyong@loongson.cn>
-Subject: [PATCH] LoongArch: Explicitly specify code model in Makefile
-Date: Wed, 20 Nov 2024 23:10:26 +0800
-Message-ID: <20241120151026.1683941-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] LoongArch: Add PREEMPT_LAZY support
+Date: Thu, 21 Nov 2024 11:41:28 +0800
+Message-ID: <20241121034127.8325-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,59 +49,57 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_8Lm+z1n8m9fAA--.10941S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zry8Jw4rWF4rKF45uFy8WFX_yoW8JFW3pF
-	Z3Zr1kKr48WrW8tFykJa43WF4DGa1Dtr42vF42q34UAFyrZw13Xr4rJa1kGF1UGasrA3yF
-	gayfKFy3AFyDJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-LoongArch's toolchain may change the default code model from normal to
-medium. This is unnecessary for kernel, and generates some relocations
-which cannot be handled by the module loader. So explicitly specify the
-code model to normal in Makefile (for Rust 'normal' is 'small').
+Like x86 and RISC-V, we are using GENERIC_ENTRY so supporting
+PREEMPT_LAZY just needs to allocate a bit in thread flags.
 
-Cc: stable@vger.kernel.org
-Tested-by: Haiyong Sun <sunhaiyong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/loongarch/Kconfig                   | 1 +
+ arch/loongarch/include/asm/thread_info.h | 8 +++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index ae3f80622f4c..567bd122a9ee 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -59,7 +59,7 @@ endif
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index d9fce0fd475a..b8cc5997d595 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -25,6 +25,7 @@ config LOONGARCH
+ 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PTE_DEVMAP
+ 	select ARCH_HAS_PTE_SPECIAL
++	select ARCH_HAS_PREEMPT_LAZY
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_SET_DIRECT_MAP
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
+index 8bf0e6f51546..fd68a6d81b8e 100644
+--- a/arch/loongarch/include/asm/thread_info.h
++++ b/arch/loongarch/include/asm/thread_info.h
+@@ -66,8 +66,9 @@ register unsigned long current_stack_pointer __asm__("$sp");
+  * - pending work-to-be-done flags are in LSW
+  * - other flags in MSW
+  */
+-#define TIF_SIGPENDING		1	/* signal pending */
+-#define TIF_NEED_RESCHED	2	/* rescheduling necessary */
++#define TIF_NEED_RESCHED	0	/* rescheduling necessary */
++#define TIF_NEED_RESCHED_LAZY	1	/* Lazy rescheduling needed */
++#define TIF_SIGPENDING		2	/* signal pending */
+ #define TIF_NOTIFY_RESUME	3	/* callback before returning to user */
+ #define TIF_NOTIFY_SIGNAL	4	/* signal notifications exist */
+ #define TIF_RESTORE_SIGMASK	5	/* restore signal mask in do_signal() */
+@@ -88,8 +89,9 @@ register unsigned long current_stack_pointer __asm__("$sp");
+ #define TIF_LBT_CTX_LIVE	20	/* LBT context must be preserved */
+ #define TIF_PATCH_PENDING	21	/* pending live patching update */
  
- ifdef CONFIG_64BIT
- ld-emul			= $(64bit-emul)
--cflags-y		+= -mabi=lp64s
-+cflags-y		+= -mabi=lp64s -mcmodel=normal
- endif
- 
- cflags-y			+= -pipe $(CC_FLAGS_NO_FPU)
-@@ -104,7 +104,7 @@ ifdef CONFIG_OBJTOOL
- KBUILD_CFLAGS			+= -fno-jump-tables
- endif
- 
--KBUILD_RUSTFLAGS		+= --target=loongarch64-unknown-none-softfloat
-+KBUILD_RUSTFLAGS		+= --target=loongarch64-unknown-none-softfloat -Ccode-model=small
- KBUILD_RUSTFLAGS_KERNEL		+= -Zdirect-access-external-data=yes
- KBUILD_RUSTFLAGS_MODULE		+= -Zdirect-access-external-data=no
- 
+-#define _TIF_SIGPENDING		(1<<TIF_SIGPENDING)
+ #define _TIF_NEED_RESCHED	(1<<TIF_NEED_RESCHED)
++#define _TIF_NEED_RESCHED_LAZY	(1<<TIF_NEED_RESCHED_LAZY)
++#define _TIF_SIGPENDING		(1<<TIF_SIGPENDING)
+ #define _TIF_NOTIFY_RESUME	(1<<TIF_NOTIFY_RESUME)
+ #define _TIF_NOTIFY_SIGNAL	(1<<TIF_NOTIFY_SIGNAL)
+ #define _TIF_NOHZ		(1<<TIF_NOHZ)
+
+base-commit: 43fb83c17ba2d63dfb798f0be7453ed55ca3f9c2
 -- 
-2.43.5
+2.47.0
 
