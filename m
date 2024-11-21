@@ -1,127 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5556A1D4325
-	for <loongarch@lists.linux.dev>; Thu, 21 Nov 2024 12:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E718E1D958E;
+	Thu, 21 Nov 2024 21:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732193830; cv=none; b=iDNUABwR6NU3SvtJWaKT4BPh3aEDK1KBjML3oRC1rmXGQalIrhj7z4TKX3gpChTgnKs09IrbnaLyhHNL8M2LHGFDfdXfkuAZY6J6bXqNouJBCkEu3lSNyMS4iImpM2PRqTT2VgEQvJwgfOUXfgotZ3J6QWHri+gvrJSbYgaNdzA=
+	t=1732224839; cv=none; b=JIr0xeK6yfAjoWt6rGQxJSwbKIBkDRZGUxubBK617B8rPAmuTn2NKyJyizdp7U8ZUbNbsghb3RYdA50N9e8e6/sI0sunYA59UxpBmWR0UfR9RB/Zi8EixVuOzD0AkQz0t00zNpdMplf5O+kQhQEP3JDPf03tcZ3RWoC72E9vGQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732193830; c=relaxed/simple;
-	bh=LYY/0gO/5DyKnWfzScgnq6I79pY/6xxS/jTgq1IPRuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TQMIz09/gHV3GpNJOkaboyW4BYsj6QWXdezNfBuB11ULJAErkVYXwa4NARh57y5NcOxhrq036GUlR+f3YggGYWc5dXsIKwo4KRi6yPy7rN6i3rrpjDJJGfk8jAhM7zjoU0a5qcWb2urF+t7yk4LLrXcsyMvOmf5ic3fpM70APEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkzw/x8t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732224839; c=relaxed/simple;
+	bh=a3qIDIDkQs2n/l8thtEX67VLQxDdPSytm4WNL2bFcqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IgtfYw6ngsn6ZZeYAXuaBY4orUNMCgMN17DBGXhvbhpL72v70NV5MmdPFD3XDREmmXHK9vRMo9x6DwMcsJ3WkmFWpmGy6Ybr/if7UlF5MbfcKo6SADu3dyB8mN66fBYUJcLMqMqlvg8ATKpdhhj3vvnIY/usnl0VXSunXuYchTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HU12tuye; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkzw/x8t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C409BC4AF09
-	for <loongarch@lists.linux.dev>; Thu, 21 Nov 2024 12:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732193829;
-	bh=LYY/0gO/5DyKnWfzScgnq6I79pY/6xxS/jTgq1IPRuo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dkzw/x8tUGWYqIq+QooajqTdmlbLSZe6X9aNUZm/us8wK3WtPn+e5ZmKnw7DP3m9C
-	 KADyX+6Mp0B+R9lbO1lzoWxigJl6IHhCTx5GzY5N+zhHkEWBAq9qPY33gsiqkVEuXR
-	 DjXdvNDRdfSZlEqiovKPC1kD0teJ9ig0A4tTuas5RGlfIkckp7CFGRATpuIgi8Vvl8
-	 V8QkpWTgT50GUpcCu76czPdog0HfsnWkNBnoaFxc+Oe8xfV2N/2pYL5Iw7eVN76SPo
-	 qhSmeXzXH5UgNPmHUQt9RHW8/ZiAkwAfIF2ebn3lw3XthX0EKB3HVqnBisTNGFum3G
-	 ZjHrPB8UJK2LQ==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9aa8895facso160192966b.2
-        for <loongarch@lists.linux.dev>; Thu, 21 Nov 2024 04:57:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUaoMd6sWRT8Uyf2V0ywbZTxm0pBnNFv25lFe0Qal705e+NKxmIpwium9ehTCbrn7Q6TNdJF0U7+rQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyb8/tJi/zQ0DTU9znhiDCX7UHdyn94LfVt1zmYeDEcGC3zS8EX
-	Zfu0cx7VLMiVVhsGbEPHn+goJtgAVNMsC/75yFI7G47fO9RsPwBLBM78bxZfGbkukyXdGwu7t7U
-	87Zqk8EyCtYXWV5md/gLNX3uNyJY=
-X-Google-Smtp-Source: AGHT+IGSGOgiABiF9MbQE+CEekd/m4kgMGo/J+sBuZ9FLAP9ewe8HCkjDj5sRi2yQqJvv5iig+FNcPNulhLqw5n1PK0=
-X-Received: by 2002:a17:907:2dac:b0:aa4:8186:5bea with SMTP id
- a640c23a62f3a-aa4dd580bb3mr569188866b.35.1732193828220; Thu, 21 Nov 2024
- 04:57:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HU12tuye"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732224838; x=1763760838;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a3qIDIDkQs2n/l8thtEX67VLQxDdPSytm4WNL2bFcqY=;
+  b=HU12tuyeWL8syfUTcPVsmTUoGr9JdfSg7z1+oZ8MgK2hlJyo7xPZfxj1
+   URdm6FS2hM68RxWg8K1z1gSgpAlrKRhEHXQ2wmLoVFhAAY6es0hGRk3G2
+   NREiBfsH8zN9HxAMiFIsFE8qVnHoBVPffTBpxCVfZ1t3lOsGWlJwCueUl
+   TMWukv4TYufC4xbhhpIkIlwbZl7of46qpGz3i63Xpq+XEJU54iAXA2Ija
+   IQ6ML8QYcPs4u8T7G1Mxj4iPPwC4CiKrkGfPmVzkk0xhdCk6cVLpOz1ba
+   gQ2wM9ZHZZ/bWcooEgC1xtUHY7RHFpCS15RhJcFugb2lfEif2+tF9GDE2
+   g==;
+X-CSE-ConnectionGUID: dGgnGNoBRsa2pWNEj37KxA==
+X-CSE-MsgGUID: shVU7+vzRIS4FjvNvN3zVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="32421871"
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="32421871"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 13:33:56 -0800
+X-CSE-ConnectionGUID: UeFKWjvZQf6Q7eNBx7rKHA==
+X-CSE-MsgGUID: 4ozob9HCTkiQRNAo2RYHHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="95323280"
+Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 21 Nov 2024 13:33:53 -0800
+Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tEEoB-0003NK-0U;
+	Thu, 21 Nov 2024 21:33:51 +0000
+Date: Fri, 22 Nov 2024 05:33:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] objtool: Handle different entry size of rodata
+Message-ID: <202411220519.OK6FYVwq-lkp@intel.com>
+References: <20241119065655.21123-4-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241119065655.21123-1-yangtiezhu@loongson.cn>
- <20241119065655.21123-6-yangtiezhu@loongson.cn> <c21f145f-c63d-ca37-b13b-2599d91492e8@loongson.cn>
-In-Reply-To: <c21f145f-c63d-ca37-b13b-2599d91492e8@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 21 Nov 2024 20:56:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5b2=UPzW2W-etkBpCDoRUE+XrTdZNj-L1v2pozHXNmiQ@mail.gmail.com>
-Message-ID: <CAAhV-H5b2=UPzW2W-etkBpCDoRUE+XrTdZNj-L1v2pozHXNmiQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] objtool: Handle unreachable entry of rodata
-To: Jinyang He <hejinyang@loongson.cn>, wanglei@loongson.cn
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241119065655.21123-4-yangtiezhu@loongson.cn>
 
-Hi, Jinyang,
+Hi Tiezhu,
 
-On Tue, Nov 19, 2024 at 6:47=E2=80=AFPM Jinyang He <hejinyang@loongson.cn> =
-wrote:
->
-> On 2024-11-19 14:56, Tiezhu Yang wrote:
->
-> > When compling with Clang on LoongArch, there exists unreachable entry
-> > of rodata which points to a nop instruction after the function return
-> > instruction, this is generated by compiler to fill the non-existent
-> > switch case, just skip the entry when parsing the relocation section
-> > of rodata.
-> >
-> > This is preparation for later patch on LoongArch, there is no effect
-> > for the other archs with this patch.
-> >
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >   tools/objtool/check.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> > index eb4c89501493..17df3738e087 100644
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -2136,6 +2136,14 @@ static int add_jump_table(struct objtool_file *f=
-ile, struct instruction *insn,
-> >               if (!dest_insn)
-> >                       break;
-> >
-> > +             /* Handle the special cases compiled with Clang on LoongA=
-rch */
-> > +             if (file->elf->ehdr.e_machine =3D=3D EM_LOONGARCH &&
-> > +                 reloc->sym->type =3D=3D STT_SECTION && dest_insn->typ=
-e =3D=3D INSN_NOP &&
-> Why it points to NOP, and whether it could be some other instruction
-> (e.g. break)?
-> It seems fragile. I think it should fix in Clang.
+kernel test robot noticed the following build errors:
 
-As discussed with Tiezhu and the developer of Clang compiler (Wang
-Lei), this is just the implementation of Clang, the non-existent
-switch case is filled in the jump table, the table entry points to a
-position after the function return instruction, this is not an issue
-for Clang.
+[auto build test ERROR on v6.12-rc7]
+[also build test ERROR on next-20241121]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Currently, objdump the object files of Linux kernel shows that the
-position is a nop instruction.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tiezhu-Yang/objtool-Handle-various-symbol-types-of-rodata/20241121-131412
+base:   v6.12-rc7
+patch link:    https://lore.kernel.org/r/20241119065655.21123-4-yangtiezhu%40loongson.cn
+patch subject: [PATCH v3 03/10] objtool: Handle different entry size of rodata
+config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20241122/202411220519.OK6FYVwq-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241122/202411220519.OK6FYVwq-lkp@intel.com/reproduce)
 
-But it is not necessary to check the position is a nop instruction, it
-only needs to check whether the position is after the function return
-instruction, so "dest_insn->type =3D=3D INSN_NOP" can be removed. I will
-modify it when applying the patch.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411220519.OK6FYVwq-lkp@intel.com/
 
-Other patches seem to have no fundamental issues.
+All errors (new ones prefixed by >>):
 
-Huacai
+>> check.c:2109:28: error: use of undeclared identifier 'R_LARCH_32_PCREL'
+    2109 |                     reloc_type(reloc) == R_LARCH_32_PCREL)
+         |                                          ^
+   1 error generated.
+   make[5]: *** [tools/build/Makefile.build:105: tools/objtool/check.o] Error 1
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile:70: tools/objtool/objtool-in.o] Error 2
+   make[3]: *** [Makefile:73: objtool] Error 2
+   make[2]: *** [Makefile:1370: tools/objtool] Error 2
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:21:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   1 warning generated.
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:224: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:224: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
-> > +                 (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc=
- !=3D pfunc)) {
-> > +                     prev_offset =3D reloc_offset(reloc);
-> > +                     continue;
-> > +             }
-> > +
-> >               /* Make sure the destination is in the same function: */
-> >               if (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc =
-!=3D pfunc)
-> >                       break;
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
