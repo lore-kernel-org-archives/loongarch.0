@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C628616BE23
-	for <loongarch@lists.linux.dev>; Fri, 22 Nov 2024 04:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B1F2746D
+	for <loongarch@lists.linux.dev>; Fri, 22 Nov 2024 04:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732251103; cv=none; b=eTd1orz+0M74nz+5tOb6moboxBzz8DUyJK2ztA2Cu6Gmkau9GvgxPVgK4KaJ1nux4t8ttPaE4kDES+mfktg9+GMiLLv9QshDfP4VQc8I8g8YzYMxGXRk3Y7LwFPzUCNO5dLQxzv0O8V55Hd9criNrnADPnHv7I7JbbHQM3OkGxI=
+	t=1732251104; cv=none; b=MrmrwABuKsnFBo1sQqCzbr+ljAtQDeqI2tgsiZEfMU+/00YpPACx1th1tQhueflbq0NKexxVWMH8wqR5sPy9Qxvgk/YRUOiK6sUjUb8aDBsDNYXLv92u5peSWfa/lYHo7/Jj9CxRMLBcbXXj/espvM4BoitnT+VtRZSbktsAmts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732251103; c=relaxed/simple;
-	bh=pZll4EsN3g1CnxWFPtzbSrUz+zKAT53GwKlq67qeI8E=;
+	s=arc-20240116; t=1732251104; c=relaxed/simple;
+	bh=c0YOBx3w5JSgJYW2hQNaJGpMTxwwOSL9sdUCHCSGEdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FvjIiQfTq6g+401FQgHeI+z29+r7R1R+6EunMPyX/tZ8Yk52JuIkNOE0KsT+91ZgyRZU8uNpeRjBXcJnxew0DOvmEYKYFChKmMEVziqyu88X+LcXQdi6eeFXlvdo9GBjEl27nqQA0NjfMO80UB3rQiPfohrOrV0kjGJlizzEWW0=
+	 MIME-Version; b=psGITxXN1KpRJR8jjKgTqgi5EPOGRazgw6/fmt5K7ErwgOSMw+zjZfSpQG4pie73BI5vvf6hiow+Gqosl24fShJ97H+Y542LkpiTYCqZRCCBANSBTj56umZ9VPwLRw7u+NlL9/Zz/JHXqRwExHcV3HE0XeY7dsKfvssIbpeNWcQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxyuGNDUBnBr1FAA--.7542S3;
-	Fri, 22 Nov 2024 12:50:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxmeGMDUBnAr1FAA--.8058S3;
+	Fri, 22 Nov 2024 12:50:20 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxdcCIDUBnIJJiAA--.33733S8;
-	Fri, 22 Nov 2024 12:50:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxdcCIDUBnIJJiAA--.33733S7;
+	Fri, 22 Nov 2024 12:50:20 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 06/10] objtool: Handle unsorted table offset of rodata
-Date: Fri, 22 Nov 2024 12:50:01 +0800
-Message-ID: <20241122045005.14617-7-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 05/10] objtool: Handle unreachable entry of rodata
+Date: Fri, 22 Nov 2024 12:50:00 +0800
+Message-ID: <20241122045005.14617-6-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241122045005.14617-1-yangtiezhu@loongson.cn>
 References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
@@ -37,11 +37,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxdcCIDUBnIJJiAA--.33733S8
+X-CM-TRANSID:qMiowMCxdcCIDUBnIJJiAA--.33733S7
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18uFWfGrWfWFWfJr4kKrX_yoW8uF4xpF
-	15C3y8KrWYg34rKwnrt3WFg3y5Gw47GryxJr1xtry0q3sFvrnxtFZaka42kFWDX3y5W3WI
-	va9xKry8CFs2yFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kry8Jw4xGr18ZF13XF15WrX_yoW8JF47pF
+	n8Ww4jkr4vqryIk3ZrKa10gry3Gan7Gry8Jr92yr4UA3sxXrn8tFWSka1avay5Wa1ru3WI
+	vFWY9rWUuF4qyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
@@ -56,58 +56,37 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18uFWfGrWfWFWfJr4kKrX_yoW8uF4xpF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
 	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-When compling with Clang on LoongArch, there are unsorted table offset
-of rodata if there exist many jump tables, it will get the wrong table
-end and find the wrong jump destination instructions in add_jump_table(),
-so it needs to check the table size of rodata to break the process when
-parsing the relocation section of rodata.
+When compling with Clang on LoongArch, there exists unreachable entry of
+rodata which points to a position after the function return instruction,
+this is generated by compiler to fill the non-existent switch case, just
+skip the entry when parsing the relocation section of rodata.
 
 This is preparation for later patch on LoongArch, there is no effect for
 the other archs with this patch.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/objtool/check.c                 | 7 +++++++
- tools/objtool/include/objtool/check.h | 1 +
- 2 files changed, 8 insertions(+)
+ tools/objtool/check.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b21e47d8d3d1..3b2d94c90011 100644
+index 8733ca620cca..b21e47d8d3d1 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2101,6 +2101,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 	struct alternative *alt;
- 	unsigned long offset;
- 	unsigned long rodata_entry_size;
-+	unsigned long rodata_table_size = insn->table_size;
- 
- 	/*
- 	 * Each @reloc is a switch table relocation which points to the target
-@@ -2112,6 +2113,12 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 		if (reloc != table && reloc == next_table)
+@@ -2144,6 +2144,13 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 		if (!dest_insn)
  			break;
  
 +		/* Handle the special cases compiled with Clang on LoongArch */
-+		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
-+		    reloc->sym->type == STT_SECTION && reloc != table &&
-+		    reloc_offset(reloc) == reloc_offset(table) + rodata_table_size)
-+			break;
++		if (file->elf->ehdr.e_machine == EM_LOONGARCH && reloc->sym->type == STT_SECTION &&
++		    (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)) {
++			prev_offset = reloc_offset(reloc);
++			continue;
++		}
 +
- 		/* Handle the special cases compiled with Clang on LoongArch */
- 		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
- 		    reloc_type(reloc) == R_LARCH_32_PCREL)
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index daa46f1f0965..11aafcc7b0c7 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -46,6 +46,7 @@ struct instruction {
- 	struct section *sec;
- 	unsigned long offset;
- 	unsigned long immediate;
-+	unsigned long table_size;
- 
- 	u8 len;
- 	u8 prev_len;
+ 		/* Make sure the destination is in the same function: */
+ 		if (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)
+ 			break;
 -- 
 2.42.0
 
