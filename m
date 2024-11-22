@@ -1,32 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B951158A31
-	for <loongarch@lists.linux.dev>; Fri, 22 Nov 2024 04:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D20E1741C6
+	for <loongarch@lists.linux.dev>; Fri, 22 Nov 2024 04:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732251032; cv=none; b=t4EAMvVhcStAROZzzBC+WsnCcBnUnD8pVig3HE2dmm8whFdBNHMENOGaLXs52F9dMvDym/ckxwf/2TqqRF0rBicc3oeYDYTb8FE9NHNfN6areJA8nNPC0sUOe3hEclgxBGCAdUwPF0MHQJfR5cgkcueik6dUnt+WdFhkN901q7Q=
+	t=1732251033; cv=none; b=tDKYodjcLUufuy1i6YPPQJB/p5pcGJXeBizmODfBQ0FMaDxfCzn7mgtrWsFpxrkIkUGwec90vdxC1zI46uWrwOOea6l8HEDsrHMNhgWuHwTB9YSb7CgHd2vTTcY80Sp+Hh32IzRozdm5e34QbpVG/b5MZTSldmi3w+JwWrQPqk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732251032; c=relaxed/simple;
-	bh=JD5fhBPzeT0CyzSwrSAsbW9I9WzcrYZsAKX3gGjoAbU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZPoLE+6v6+VY7ipJF+WAWvaMFcfHRgkgyivfecl1VTcUHiuX4qu6rAaGa2tJdctXgm1A6pfFJWOJ3EtXvuvBPsvz9KwF6SZrKbUEYdNmb15v5d/qkd+3FbIURkQObm/3FN4Zlb9JGlRFrC+twWOvoioXQJo0gOHmAuAN3Z8bLhQ=
+	s=arc-20240116; t=1732251033; c=relaxed/simple;
+	bh=D1q4dogKpbEe70M0j/62mC1peBu7voO7u8TUcPSfQ74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Gnvl+RxKl/9m7MPMdhDSUNj5LsKdOXE1MiCZABl4WcWnleJWtSUA3j9Uzqk9r3QdlVlOzQnYneqOBrjlr5tNcqvruH8D9wT5v5jiblgENqmEKLGEoV6TvdyziEMwdJoUbxS4v4tRKjwGdIEKZjhIdVLaGx/sodNJVkO+vI1x7uQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxUa+JDUBn7bxFAA--.5887S3;
-	Fri, 22 Nov 2024 12:50:17 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxTOKPDUBnEL1FAA--.4464S3;
+	Fri, 22 Nov 2024 12:50:23 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxdcCIDUBnIJJiAA--.33733S2;
-	Fri, 22 Nov 2024 12:50:17 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxdcCIDUBnIJJiAA--.33733S10;
+	Fri, 22 Nov 2024 12:50:21 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/10] Add jump table support for objtool on LoongArch
-Date: Fri, 22 Nov 2024 12:49:55 +0800
-Message-ID: <20241122045005.14617-1-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 08/10] objtool/LoongArch: Add support for switch table
+Date: Fri, 22 Nov 2024 12:50:03 +0800
+Message-ID: <20241122045005.14617-9-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20241122045005.14617-1-yangtiezhu@loongson.cn>
+References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,55 +37,136 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxdcCIDUBnIJJiAA--.33733S2
+X-CM-TRANSID:qMiowMCxdcCIDUBnIJJiAA--.33733S10
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xr48uFWUWF1rWF4DGr48uFX_yoWkKrc_ZF
-	yxWF95Gr4rXa45ta4xtas5urWjkFs5Jr45JFykXr12vF15Jr15WF42vr1DZrZ5Kry5ZFs8
-	tF4vkryxCwnrWosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw4rWw18Wr1fGr1kCw4kuFX_yoWrXFWDpF
+	W3C345Kr45XryfWw43tFW09ryakws3WFy7JrZrGr95Aw42qF1rtanayr9IyFn5Ars0yr4I
+	qr4fKrW8CF4DAabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j-J5rUUUUU=
 
-This series is based on 6.12-rc7, tested with the latest upstream
-mainline Binutils, GCC and Clang, most of the patches are aim to
-handle the special cases compiled with Clang on LoongArch.
+The objtool program needs to analysis the control flow of each object file
+generated by compiler toolchain, it needs to know all the locations that a
+branch instruction may jump into, if a jump table is used, objtool has to
+correlate the jump instruction with the table.
 
-v4:
-  -- Avoid EM_LOONGARCH and R_LARCH_32_PCREL undeclared error
-     for various compiling environments.
+On x86 which is the only port supported by objtool before LoongArch, there
+is a relocation on the jump instruction and to the table directly. But on
+LoongArch, the relocation is on some kind of instruction prior to the jump
+instruction, and also with scheduling it is not easy to tell the offset of
+that instruction from the jump instruction. Furthermore, because LoongArch
+has -fsection-anchors (often enabled at -O1 or above) the relocation may
+actually points to a section anchor instead of the table itself.
 
-  -- Remove the check condition "dest_insn->type == INSN_NOP"
-     for unreachable entry of rodata.
+The good news is that after continuous analysis and discussions, at last a
+GCC patch "LoongArch: Add support to annotate tablejump" and a Clang patch
+"[LoongArch] Add options for annotate tablejump" have been merged into the
+upstream mainline, the compiler changes make life much easier for switch
+table support of objtool on LoongArch.
 
-Tiezhu Yang (10):
-  objtool: Handle various symbol types of rodata
-  objtool: Handle special cases of dead end insn
-  objtool: Handle different entry size of rodata
-  objtool: Handle PC relative relocation type
-  objtool: Handle unreachable entry of rodata
-  objtool: Handle unsorted table offset of rodata
-  objtool/LoongArch: Get each table size of rodata
-  objtool/LoongArch: Add support for switch table
-  objtool/LoongArch: Add support for goto table
-  LoongArch: Enable jump table for objtool
+By now, there is an additional section ".discard.tablejump_annotate" to
+store the jump info as pairs of addresses, each pair contains the address
+of jump instruction and the address of jump table.
 
- arch/loongarch/Kconfig                 |   3 +
- arch/loongarch/Makefile                |   4 +
- tools/objtool/arch/loongarch/special.c | 156 ++++++++++++++++++++++++-
- tools/objtool/check.c                  |  75 +++++++++++-
- tools/objtool/include/objtool/check.h  |   1 +
- 5 files changed, 233 insertions(+), 6 deletions(-)
+In order to find switch table, it is easy to parse the relocation section
+".rela.discard.tablejump_annotate" to get table_sec and table_offset, the
+rest process is somehow like x86.
 
+Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=0ee028f55640
+Link: https://github.com/llvm/llvm-project/commit/4c2c17756739
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/objtool/arch/loongarch/special.c | 60 +++++++++++++++++++++++++-
+ 1 file changed, 59 insertions(+), 1 deletion(-)
+
+diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
+index 454bd01226a4..366517deb35b 100644
+--- a/tools/objtool/arch/loongarch/special.c
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
++#include <string.h>
+ #include <objtool/special.h>
+ #include <objtool/warn.h>
+ 
+@@ -80,8 +81,65 @@ static void get_rodata_table_size_by_table_annotate(struct objtool_file *file,
+ 	}
+ }
+ 
++static struct reloc *find_reloc_by_table_annotate(struct objtool_file *file,
++						  struct instruction *insn)
++{
++	struct section *rsec;
++	struct reloc *reloc;
++	unsigned long offset;
++
++	rsec = find_section_by_name(file->elf, ".rela.discard.tablejump_annotate");
++	if (!rsec)
++		return NULL;
++
++	for_each_reloc(rsec, reloc) {
++		if (reloc->sym->sec->rodata)
++			continue;
++
++		if (strcmp(insn->sec->name, reloc->sym->sec->name))
++			continue;
++
++		if (reloc->sym->type == STT_SECTION)
++			offset = reloc_addend(reloc);
++		else
++			offset = reloc->sym->offset;
++
++		if (insn->offset == offset) {
++			get_rodata_table_size_by_table_annotate(file, insn);
++			reloc++;
++			return reloc;
++		}
++	}
++
++	return NULL;
++}
++
+ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 				     struct instruction *insn)
+ {
+-	return NULL;
++	struct reloc *annotate_reloc;
++	struct reloc *rodata_reloc;
++	struct section *table_sec;
++	unsigned long table_offset;
++
++	annotate_reloc = find_reloc_by_table_annotate(file, insn);
++	if (!annotate_reloc)
++		return NULL;
++
++	table_sec = annotate_reloc->sym->sec;
++	if (annotate_reloc->sym->type == STT_SECTION)
++		table_offset = reloc_addend(annotate_reloc);
++	else
++		table_offset = annotate_reloc->sym->offset;
++
++	/*
++	 * Each table entry has a rela associated with it.  The rela
++	 * should reference text in the same function as the original
++	 * instruction.
++	 */
++	rodata_reloc = find_reloc_by_dest(file->elf, table_sec, table_offset);
++	if (!rodata_reloc)
++		return NULL;
++
++	return rodata_reloc;
+ }
 -- 
 2.42.0
 
