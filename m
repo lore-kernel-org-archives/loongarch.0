@@ -1,255 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108981CD3F;
-	Fri, 22 Nov 2024 17:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A6F45948
+	for <loongarch@lists.linux.dev>; Sat, 23 Nov 2024 15:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732295991; cv=none; b=Zuv7Gsu6MGrpA4m12phr2qoVIKsH0Q9q9w5dIFyGOI/KYtAbREAw94u6E7LQALgPNu4f3ruvKD7GojW/l09WuCxt+TkCPLT5Tv9v1WQ03nhnX+xavQir8FiY0BzKvbPrO5WDGhIugFfEE7GSmDVDaMTTzvKadKBR3XOYrh5LRYM=
+	t=1732377460; cv=none; b=DQcEBJye1rlgof+lr2qTXmBb1WSjo1ZdJ85E+QextWdznHlK0RKduWm/OMDh5jR6RinNIni5ZiBU7/nYC24J290FCzj0Nnbr/LoZ0Fe5Sp+BmSQf5Wj20Ia6hMuZUo6pfmIdE5B6vThUs/huvAcl8h3WxH363R5QabGop4vc5zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732295991; c=relaxed/simple;
-	bh=waV7+AAb5Y8M9iMdxGMu/fQy+kgyki67VfwPunud9NY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1SGRO0c/HO4hyYoCHxp5zu5V15WEl8C5Eg4oSkGuOCCOhxIAlEOxELWS+jthUFl9SFWzsEuhnjKJflJnN9zC3q+/AZHaYBaXdp67urHrR/3Bc5o+CuZ/kc6odzkETaV2O0d0CNzj6TZ0TRg5+YErNA/e+5a3T7SbbT+xbMRIZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnn2Fsuj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732377460; c=relaxed/simple;
+	bh=hwWmkgrcAPGWl+ptMm1tghlsH4kqOvd4DTCxLptzDFk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=jYtBgmoXUvrDLxfCw+O46F9CSZuoAt68jbX5JSV+Lb8batGgsIaLTkWiRuiimQoH4YVP3OcaZ3qxFMFhsXtdhW6yuRrcQG4fxe0C3B+LZhgkrvhXVFhkbz5tP8hYPezW2oM78DWZbPgA9tR3PmEWhXkscsM+FWSlLKFvxul+LwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mv5jyFhg; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnn2Fsuj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16569C4CECE;
-	Fri, 22 Nov 2024 17:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732295990;
-	bh=waV7+AAb5Y8M9iMdxGMu/fQy+kgyki67VfwPunud9NY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bnn2FsujabL4JDddq3Wo2K6JOzWq2Dm46woRjGDzm/93AOJvQheqzkR2WnAnm/tgp
-	 AUcueINnU9gfCjIxoqwuj4JEaNeByRZnRJU9qBXRfkoBvMXH7joZV08B5Z08tggI+3
-	 bN/g1BTB6BbaSYZpax1gs+al8kRJWTwaDJYY+kJ1MxXa7gpxVe84rUynYCsDue8jim
-	 55nfU/tEBAuMGABCbr6oXXwYHbFRjg+tArOOLQ5wZAym0g/Y+JwIK2Wfp+8He8HMU/
-	 T7Y/C/vXI30E/CTabFzJjyDTbyZ4iyZhNRiQTSDcWuIBQ/v19VFCVu2a8Iv8K3C7u4
-	 Game0E6FnTTHw==
-Date: Fri, 22 Nov 2024 18:19:46 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Sean Young <sean@mess.org>
-Subject: Re: [PATCH v7 2/2] pwm: Add Loongson PWM controller support
-Message-ID: <6hqpifyfbr5ignvtvsz6p7hkje44xlvbdqwgq5t3ef64kufy3p@2tmp4ftiv42c>
-References: <cover.1729583747.git.zhoubinbin@loongson.cn>
- <66bcb210478df5215e4e31e4f25c25194d6163ca.1729583747.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv5jyFhg"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-724e1b08fc7so1554616b3a.0
+        for <loongarch@lists.linux.dev>; Sat, 23 Nov 2024 07:57:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732377458; x=1732982258; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B7GR/93q8vbl1Y02szPjwXhKCJRJHqZnIo22AIrKeYk=;
+        b=mv5jyFhg5Usr7x7Jk070efDHBlbfv34aqvG5m4iVaoABenfS02DQ6SJL7L3OuV+PaN
+         KOvKiXFR0dkob0DGn3FpxvjYTdU2dSlanm93Bw4W2kx7uAg3B9e+lkHqHpo6Kw2jUTYs
+         YFaQVw8a2zxlRK9CgufLCqp8BD336NpFEEX4EFoG+nWJt2A80Vp1qzIXpeKzoyXxmiwz
+         OcgIRgvMYBF/7FeSE5y1bh/6Uv4cPN3m1jrBDG/+pUdOdLrcoECVCGQGjVJ5Qf/bAhku
+         bod7pj4dvRqy6we9sXW1hk71lXSFCiUqpbEVEIwMrPOAPv6sJ3L7h5LnqzPnxESrC8Dx
+         MUfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732377458; x=1732982258;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=B7GR/93q8vbl1Y02szPjwXhKCJRJHqZnIo22AIrKeYk=;
+        b=aHDLyyS+Cc1j7yqlxTytOeqE9DG/O6C5WI4h8XmgZDySMOF2d1Kw3cFDWAZ1Fn5wPv
+         Wb/aO4F8i9Lnt1bgUtYAVtfN2YguM0TDsk2zaoPiikFC7JbY+3QCqT77Hy3fkJ6NPSCt
+         EBcXtYTugNgieh2Y9R1xxnZbk5YZhZ8ItRdsHrVkozfvfoAYyvNqs4uk9968o7lzfTx5
+         tbrG0TNaLPOKJzVgQUG4jU8TrW7hkLho1BUcJ/Bocyi4dWodaof9XxlLhPoRNO9bS8mt
+         xZfal5AjxfGGeOgv5PPADHv4hlk441OAMZ4sfL02JGa/lTgKDp7yTavjag5wT3rWg9Lv
+         5MTA==
+X-Gm-Message-State: AOJu0YybYUPiKP9dPYBD6WeEX1kBotsvoTlWoIHuqmMevxoLcMRIRCmP
+	LLDqNSX8Q0GkynSA/Mo1ZP0TRBUOa0w8IdfJKgEMUyrp5JuviLRv
+X-Gm-Gg: ASbGncvlplxdEMHvYJ4pFCviPi0FL/gK4cA0QmIeQLlXwglDjFHgST1RuZ3r13aMKyi
+	o1efAOWqV0MgovFRkP8xxekPH+YA9Q+tqea2xbUDLkxv+6lLyALMukeb7E2K8wa36EfZzjdYNLz
+	uhNPxFzu3WhmnsHuPHDr1juXCrHdArtNBTsQ9e9zwa3WsfgQzomh5xte4tlrUW3oLBNlUhkPfYW
+	bf/vmnj0PNH+gvQhwiZLjh7DrAoUgnWmb2MfToKctyAnz6CNUg=
+X-Google-Smtp-Source: AGHT+IFMJCfOvYOEF4yxWvSC12dnHHtF5pdzV67OyIXKQZXcx/OHeGlHJ4q3kn0LfBDukmlj77ZR/Q==
+X-Received: by 2002:a05:6a00:10c8:b0:71e:47a2:676 with SMTP id d2e1a72fcca58-724df5d58ffmr9258267b3a.6.1732377456687;
+        Sat, 23 Nov 2024 07:57:36 -0800 (PST)
+Received: from localhost ([98.97.42.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de5762bfsm3505538b3a.184.2024.11.23.07.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Nov 2024 07:57:35 -0800 (PST)
+Date: Sat, 23 Nov 2024 07:57:32 -0800
+From: John Fastabend <john.fastabend@gmail.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, 
+ bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Message-ID: <6741fb6c516cc_c6be20839@john.notmuch>
+In-Reply-To: <4f6c74e0-dd22-8460-96fa-f408291a3ef8@loongson.cn>
+References: <20241119065230.19157-1-yangtiezhu@loongson.cn>
+ <673fd322ce3ac_1118208b3@john.notmuch>
+ <4f6c74e0-dd22-8460-96fa-f408291a3ef8@loongson.cn>
+Subject: Re: [PATCH] LoongArch: BPF: Sign-extend return values
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="b6hccmbwih6ueur4"
-Content-Disposition: inline
-In-Reply-To: <66bcb210478df5215e4e31e4f25c25194d6163ca.1729583747.git.zhoubinbin@loongson.cn>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
+Tiezhu Yang wrote:
+> On 11/22/2024 08:41 AM, John Fastabend wrote:
+> > Tiezhu Yang wrote:
+> >> (1) Description of Problem:
+> >>
+> >> When testing BPF JIT with the latest compiler toolchains on LoongArch,
+> >> there exist some strange failed test cases, dmesg shows something like
+> >> this:
+> >>
+> >>   # dmesg -t | grep FAIL | head -1
+> >>   ... ret -3 != -3 (0xfffffffd != 0xfffffffd)FAIL ...
+> 
+> ...
+> 
+> >>
+> >> (5) Final Solution:
+> >>
+> >> Keep a5 zero-extended, but explicitly sign-extend a0 (which is used
+> >> outside BPF land). Because libbpf currently defines the return value
+> >> of an ebpf program as a 32-bit unsigned integer, just use addi.w to
+> >> extend bit 31 into bits 63 through 32 of a5 to a0. This is similar
+> >> with commit 2f1b0d3d7331 ("riscv, bpf: Sign-extend return values").
+> >>
+> >> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> ---
+> >>  arch/loongarch/net/bpf_jit.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> >> index 7dbefd4ba210..dd350cba1252 100644
+> >> --- a/arch/loongarch/net/bpf_jit.c
+> >> +++ b/arch/loongarch/net/bpf_jit.c
+> >> @@ -179,7 +179,7 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
+> >>
+> >>  	if (!is_tail_call) {
+> >>  		/* Set return value */
+> >> -		move_reg(ctx, LOONGARCH_GPR_A0, regmap[BPF_REG_0]);
+> >> +		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
+> >
+> > Not overly familiar with this JIT but just to check this wont be used
+> > for BPF 2 BPF calls correct?
+> 
+> I am not sure I understand your comment correctly, but with and without
+> this patch, the LoongArch JIT uses a5 as a dedicated register for BPF
+> return values, a5 is kept as zero-extended for bpf2bpf, just make a0
+> (which is used outside BPF land) as sign-extend, all of the test cases
+> in test_bpf.ko passed with "echo 1 > /proc/sys/net/core/bpf_jit_enable".
+> 
+> Thanks,
+> Tiezhu
+> 
 
---b6hccmbwih6ueur4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v7 2/2] pwm: Add Loongson PWM controller support
-MIME-Version: 1.0
+Got it.
 
-Hello,
-
-I now finally comne around to review your patch. Thanks for your
-patience.
-
-On Tue, Oct 22, 2024 at 05:04:15PM +0800, Binbin Zhou wrote:
-> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> new file mode 100644
-> index 000000000000..4c9b14efadc3
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-loongson.c
-> @@ -0,0 +1,288 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-> + *
-> + * Loongson PWM driver
-> + *
-> + * For Loongson's PWM IP block documentation please refer Chapter 11 of
-> + * Reference Manual: https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanual-EN.pdf
-> + *
-> + * Author: Juxin Gao <gaojuxin@loongson.cn>
-> + * Further cleanup and restructuring by:
-> + *         Binbin Zhou <zhoubinbin@loongson.cn>
-> + *
-> + * Limitations:
-> + * - The buffer register value should be written before the CTRL register.
-
-This isn't an interesting point for the high level description. I'd hope
-the driver cares for this implementation detail.
-
-> + * - When disabled the output is driven to 0 independent of the configured
-> + *   polarity.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/units.h>
-> +
-> +/* Loongson PWM registers */
-> +#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
-> +#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
-> +#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
-> +
-> +/* Control register bits */
-> +#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
-> +#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
-> +#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
-> +#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
-> +#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
-> +#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
-> +#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
-> +#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
-> +#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
-
-Most of these are unused. And you only ever access the CTRL register
-using read-modify-write. So I guess the behaviour of the hardware
-depends on how the bootloader (or boot rom) initialized these bits. I
-would prefer if you could this more deterministic.
-
-> +#define LOONGSON_PWM_FREQ_STD		(50 * HZ_PER_KHZ)
-
-Maybe it's just me, but I think the HZ_PER_KHZ doesn't add readability
-and I would have just done:
-
-	/* default input clk frequency for the ACPI case */
-	#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
-
-> [...]
-> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      const struct pwm_state *state)
-> +{
-> +	int ret;
-> +	u64 period, duty_cycle;
-> +	bool enabled = pwm->state.enabled;
-> +
-> +	if (!state->enabled) {
-> +		if (enabled)
-> +			pwm_loongson_disable(chip, pwm);
-> +		return 0;
-> +	}
-> +
-> +	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-> +	if (ret)
-> +		return ret;
-
-Is setting the polarity shadowed in hardware or does it take effect
-immediately? If the latter please mention that the output might glitch
-on reconfiguration in the Limitations section above.. Another
-"opportunity" to glitch is in pwm_loongson_config() above when
-LOONGSON_PWM_REG_DUTY is written but LOONGSON_PWM_REG_PERIOD isn't yet.
-
-> +	period = min(state->period, NANOHZ_PER_HZ);
-> +	duty_cycle = min(state->duty_cycle, NANOHZ_PER_HZ);
-
-period and duty_cycle are measured in nanoseconds. So NSEC_PER_SEC is
-more natural to them than NANOHZ_PER_HZ.
-
-> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!enabled && state->enabled)
-> +		ret = pwm_loongson_enable(chip, pwm);
-> +
-> +	return ret;
-> +}
-> [...]
-> +static int pwm_loongson_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct pwm_chip *chip;
-> +	struct pwm_loongson_ddata *ddata;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	ddata = to_pwm_loongson_ddata(chip);
-> +
-> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(ddata->base))
-> +		return PTR_ERR(ddata->base);
-> +
-> +	if (!has_acpi_companion(dev)) {
-> +		ddata->clk = devm_clk_get_enabled(dev, NULL);
-> +		if (IS_ERR(ddata->clk))
-> +			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-> +					     "failed to get pwm clock\n");
-> +		ddata->clk_rate = clk_get_rate(ddata->clk);
-
-I guess you rely on the clockrate to not change. So please add a call to
-devm_clk_rate_exclusive_get().
-
-> +	} else {
-> +		ddata->clk_rate = LOONGSON_PWM_FREQ_STD;
-
-I thought that clk_get() also works for devices described by ACPI?
-
-Maybe something like this gives more flexibility:
-
-	ddata->clk = devm_clk_get_optional_enabled(dev, NULL);
-	if (IS_ERR(ddata->clk))
-		return dev_err_probe(...);
-
-	if (ddata->clk) {
-		ret = devm_clk_rate_exclusive_get(...);
-		if (ret)
-			return ret;
-
-		ddata->clk_rate = clk_get_rate(ddata->clk);
-	} else {
-		ddata->clk_rate = LOONGSON_PWM_FREQ_STD;
-	}
-
-and it's conceptually easier given that it doesn't have to care about
-the device being described in ACPI or dt.
-
-Just a suggestion.
-
-> +	}
-> +
-> +	chip->ops = &pwm_loongson_ops;
-> +	chip->atomic = true;
-> +	dev_set_drvdata(dev, chip);
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-
---b6hccmbwih6ueur4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAvS8ACgkQj4D7WH0S
-/k4Zagf+NKVWJp2/FdYvO+2gSLIpZplN7HRGHvMTNL4jYXyDA8ssDmfdIhCUbV49
-YqCQCNqA2Dsd+7cRhni8/DStvoUhDbUGus/xq46Ks6rv6yvVATzLYrZUxMNofK9Z
-NqilGnCVeKI4UOB0QHVlGDSioB6Pa4MdGsQtr5WIOZnQtd+OMDmymAqP7BL8SBqp
-7GKCIktuIGXm9AyM4oT2FWBVH2aFnp2l7XMK5JtaVzFyyfOCidbim+QNuUblvO1Q
-8zM5cTA32zksTuNz37hO8kYmnjYcqGamQyCP8SmwFSPfC1bKPAWwVFlbX57LEEgW
-IZddwUrQnikQfN3uVsGM+la0jnOZrQ==
-=qUi3
------END PGP SIGNATURE-----
-
---b6hccmbwih6ueur4--
+Acked-by: John Fastabend <john.fastabend@gmail.com>
