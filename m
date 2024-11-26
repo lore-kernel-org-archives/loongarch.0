@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29141898FC;
-	Tue, 26 Nov 2024 07:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EB6187FE0;
+	Tue, 26 Nov 2024 07:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732605959; cv=none; b=rL/cAPv0/Tt6liYCi/8+3tr1VtOtf41zLMov2oPOdI28QY4KJY11/PTaiNhNOpbMH4dEYI3YfXCoxnb7y8l5hPW55oUcOc2qfDVuqFJqKvQ7t2vqJObHrqGFLLzu8omv0C0gbXIORgx/nAXMhr6QbrTphVnPyPGdjGiOGZA3KJk=
+	t=1732606151; cv=none; b=CfWsrGfOsOwP8A5OG28R46rxEcbzV1Zb3Q25aCCu//0yu2/Ahuxxm0z+SXKplAUl061b7XjUc5kATC7u5WoapTEnMEAPSvNAk/iZsqFCI3NjiBTAwkh7rxOWKodRZDthSbcnxD7j8QwZr3UIqxtTCmOQXdPYJTUc97Gf2oUTBFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732605959; c=relaxed/simple;
-	bh=f5ehmnUa2vX7EetkK/2bvgY3rIIXXmDHK/Z2UJ7tvWM=;
+	s=arc-20240116; t=1732606151; c=relaxed/simple;
+	bh=Mcu/a5c69/Xbyw1swe4mti/DRiZDVPWbHzcwyN7POHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhCx6vJnwdLIEo6glPIYRuPNAh3EjPc438N263MjmvnIy+EzclAUDKAnMl9oM/3l6cJvQyXZTCyQtYvebeX0mjS7l82jlNE88Rm+p8KEjBcX3hUr5eWh1//N+ABThk5MF3Xy58zyHMJ1cvTOshCHCg/Szzz5P+CePQVjosEKAf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uF5l3h4z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xn3q81d8KCgF+S4lsdqCKuY6wEeKKtDMLlEfYtIaya9iQClW1UaR+vi1eokLkYLFdK/lOFjTkV/ycmMSce0xyKZYK6NJpcYc3pDImg/eUS04+boWh/jl93cC4TAhUD37IftNczHlO7QbmGNbPO7NPMTYx3Z1a92ACRupN31f7K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTfEGcwy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uF5l3h4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C2D3C4CECF;
-	Tue, 26 Nov 2024 07:25:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTfEGcwy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A840C4CECF;
+	Tue, 26 Nov 2024 07:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732605959;
-	bh=f5ehmnUa2vX7EetkK/2bvgY3rIIXXmDHK/Z2UJ7tvWM=;
+	s=k20201202; t=1732606151;
+	bh=Mcu/a5c69/Xbyw1swe4mti/DRiZDVPWbHzcwyN7POHM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uF5l3h4z6zGyewhXGZ47Zp5LXtl6tvik7GoxxV6uI6b81yA24LFV8VdUmRUstbrWG
-	 ZjnfWsYJewgbUwHNNqNyBO5WMQjj78fYDDZ7kZp5Dm1e0iJW3j6zcgJ/rP1nIdluWq
-	 gBOIPqhjmbSLkM1iDhDOIt6XYBwQT0guXrAjqtGiKCOycMkuHXqNgvH/dvC6a0Y0C1
-	 +XctH5uAtXuuQ3GDHeYsghIVnVnLNR75rYE2fTnmqboTLgHzwI0HIdg4lB+f8xjyQy
-	 iGnwhzqS8smQt5N0A8Ooi5oCkwTVNTvn4Sb8mZnrqeOX2rO3safUe6FWbLsZOhrYPe
-	 Maj7Kt1z3t6xg==
-Date: Mon, 25 Nov 2024 23:25:57 -0800
+	b=TTfEGcwyHYaYOCmK8LgynQPv+TntjLfujCqlGGu0v+m4mM0y2NrDQRTMskqiMIhYH
+	 D8UhKV+KW0EnHGi2uLGCSPIgQYHHbn0VFg/7JXJi0fe575GtrtNO+i721Yom8Offae
+	 5SR+eLm++GjdwBnedkejdssmDrme7ea1CD/F+qkjut5400Eo3Wz79k0WfPaVk+Bvh7
+	 vEUIHyE6F+PHPQ5KTBCmDK+WPHbQPINNP9DWzOY9Bz5wAkcm4HctzN3VAth78vAEqp
+	 futWnsPVCc5p8r0g8avVc++AinInL1YW0FTYKJ1ZL+IJ46a/sKv7vbl6nybLmAs391
+	 cYH9aS8gxr8Yw==
+Date: Mon, 25 Nov 2024 23:29:09 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
 	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/10] objtool: Handle unreachable entry of rodata
-Message-ID: <20241126072557.b6qt7jaiikvkcswn@jpoimboe>
+Subject: Re: [PATCH v4 00/10] Add jump table support for objtool on LoongArch
+Message-ID: <20241126072909.nyvqagvmtnivh36w@jpoimboe>
 References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
- <20241122045005.14617-6-yangtiezhu@loongson.cn>
+ <CAAhV-H6B_-y6ebR=GJmazzukW8Ad-=VRJPvT=ZF+41+rTX7D1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,37 +44,14 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241122045005.14617-6-yangtiezhu@loongson.cn>
+In-Reply-To: <CAAhV-H6B_-y6ebR=GJmazzukW8Ad-=VRJPvT=ZF+41+rTX7D1w@mail.gmail.com>
 
-On Fri, Nov 22, 2024 at 12:50:00PM +0800, Tiezhu Yang wrote:
-> When compling with Clang on LoongArch, there exists unreachable entry of
-> rodata which points to a position after the function return instruction,
-> this is generated by compiler to fill the non-existent switch case, just
-> skip the entry when parsing the relocation section of rodata.
+On Sun, Nov 24, 2024 at 01:33:43PM +0800, Huacai Chen wrote:
+> Series applied, thanks.
 > 
-> This is preparation for later patch on LoongArch, there is no effect for
-> the other archs with this patch.
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/objtool/check.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 8733ca620cca..b21e47d8d3d1 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2144,6 +2144,13 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
->  		if (!dest_insn)
->  			break;
->  
-> +		/* Handle the special cases compiled with Clang on LoongArch */
-> +		if (file->elf->ehdr.e_machine == EM_LOONGARCH && reloc->sym->type == STT_SECTION &&
-> +		    (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)) {
-> +			prev_offset = reloc_offset(reloc);
-> +			continue;
+> Huacai
 
-Are you sure this is specific to loongarch?
+Please don't merge any objtool code without maintainer acks.
 
 -- 
 Josh
