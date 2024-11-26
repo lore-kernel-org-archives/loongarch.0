@@ -1,123 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E39715EFA1
-	for <loongarch@lists.linux.dev>; Sun, 24 Nov 2024 05:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE916653;
+	Tue, 26 Nov 2024 06:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732426469; cv=none; b=ihGDQQqSAwo1eVmQuSX9sD/2ElnGqFflSj6q+81yUoXKHZwhpXJOa/Zx+VhmxdG0EUcgCeggJCQ44oicbqrx2nxtoBwnN44+p+HS38UgYm0HvnhkVc3mDZ/a3D3rFUqZ+1YqbtVWnkjV8Wu+2GRz8thToTWKiHMp8k6Og8EFnCE=
+	t=1732603500; cv=none; b=LCZXJzxlwQ0mS4YOUWpTFhrJoVZdU+WqNtf+cHwQvLCl/RrL23eJ2iTycITM3iTCnBw8mcLKwjDcsiVbwLrSoHfDEHBH5RqAULTiwz9zHpED5e3e+Pv7zG2WPXF8kWXuv+451tUNLig2wP082lxxsMPEuhBzGWlaVa8YTL3cBE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732426469; c=relaxed/simple;
-	bh=AxO+Pg1ZL7zuTvuRbry0ud0Rw5kP/Li2sbaEC93Ilh4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i6hYy7GW+gDplDVkfFNcCiR4x7N0vV7K7Mftp4seM2lnEhU0Fufhhm7y5E/Z5UXA7ZAp4C+/FsMsMYQ4DY293AuyzLFQxWkdrPDIcceIs0O970mx8OFrbCkk1IZsgTgXXzptp1XAWhpauPotiyxYUZZbjdB5sGwi6qlKEqgkOvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ed/yWe9f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732603500; c=relaxed/simple;
+	bh=2DisQXb4NDMxUR1QYsipn2a3FuJxfxdcJ40z1OKpeBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sZbfCmptv/4KhHzNSR3b5ULiSQBh1qUP9ZV7d/CehzrmBsBwh6K+D3OgmYMMRrrLnTjo558SNM6hETE8a0KPTd4CGMKH/zDBq/fwyo6gx3eKqTMAhWZlVtXl0Ap+iYd2iruuZBkky8PfsfIgMQOENX7l3qM2QHYncRhQ3f6fUJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lx15ylj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ed/yWe9f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5709C4CED6
-	for <loongarch@lists.linux.dev>; Sun, 24 Nov 2024 05:34:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lx15ylj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23567C4CECF;
+	Tue, 26 Nov 2024 06:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732426468;
-	bh=AxO+Pg1ZL7zuTvuRbry0ud0Rw5kP/Li2sbaEC93Ilh4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ed/yWe9fIRfHfari8vf99EQYJnoRwUtKeyhVjbUbrsZbWPEik3flN6eTLdhYKRmAh
-	 GzmD7aAnr4pWM/T/WkrOpCTr+IFVsWV/lQ3PTsgc+Lrziv7EyGutyJ2j5wDO5+Of0d
-	 ncwk67ceI/lpC7TNhRnvmDO6knjJk/xqd8ltihEgERds+Fp0XwsxsEegJ3Lec4mz+F
-	 2CY3MFdp6zxdfQNouqj4Ut/93kQBB7PNOZ9Y5+KFhkq71faJf4UA2QEy9fhZdbjUNa
-	 K4jAfXLiMdC9hqeZ/hneixn09aYUr+082vuiOTTz40uXHEOZkgLaQcLnJXcE438eGE
-	 RpiLWMJf9vtig==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa51b8c5f4dso244713866b.2
-        for <loongarch@lists.linux.dev>; Sat, 23 Nov 2024 21:34:28 -0800 (PST)
-X-Gm-Message-State: AOJu0Yxb1tjCZHm4xJ82fss10sSmUlz1w6eYNK5PoZijkYAjYk4hrHtJ
-	ipHiKkpcuk4x14/lShb9ImpG+XVSMAC3Si7odOXf+8Q28mlGohJuMWGOohF4QF+V2VhvMf1r6V9
-	46V0mfH5Hl7cNfOvQsxsnFtjNuz0=
-X-Google-Smtp-Source: AGHT+IF/vGFmamNRZm0Qw20SbPQ2qIVLqFy2rDL4W5C3b7ksC6dQ4J6wwZS/fdzezW/oGI0+OYcnkwNhga3gLDsdaPg=
-X-Received: by 2002:a17:906:cc9:b0:aa5:45f3:cbda with SMTP id
- a640c23a62f3a-aa545f3d410mr101227166b.56.1732426467484; Sat, 23 Nov 2024
- 21:34:27 -0800 (PST)
+	s=k20201202; t=1732603500;
+	bh=2DisQXb4NDMxUR1QYsipn2a3FuJxfxdcJ40z1OKpeBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lx15ylj7Xu49oGQTr3JJCDR7bNIaWj4pgXDPvwZWmDsdKVgI554r6Df5wm48SqeWg
+	 tCHMpoAB7HHkCvzX/xbJ06QA42aYRDDXsHHWE04X4Hc0cz6DyICvotEhA5gSmDUSHS
+	 M5gVu6Zu8cH0sQMffeAvWI9saXvtociyZpP50tX2Qu3rhJzaq/n9q2Bi1tapTJaka2
+	 IoWkZ4rd4yd4j1tq9Z+ysOgG3IkEgKNhMa8AFx7j+7bA6ZbEz0cRxSnM1QY6y3s78Z
+	 RFhdRvo5v5Z3+ExyVhdXaGkZdqTSL+Um3ZAUlSd4az/mTY1jQ+YLtqBTsdiuKWZ3Z0
+	 Tn3IFeodrkubA==
+Date: Mon, 25 Nov 2024 22:44:58 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] objtool: Handle various symbol types of rodata
+Message-ID: <20241126064458.7ugwqfx5vhnwzvbi@jpoimboe>
+References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
+ <20241122045005.14617-2-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241119065051.18449-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20241119065051.18449-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 24 Nov 2024 13:34:15 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Kg0_-YD1BNw32n3sNcVYAcio=+1OtKFABy0Sk_vw-0A@mail.gmail.com>
-Message-ID: <CAAhV-H4Kg0_-YD1BNw32n3sNcVYAcio=+1OtKFABy0Sk_vw-0A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix build failure with GCC 15 (-std=gnu23)
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241122045005.14617-2-yangtiezhu@loongson.cn>
 
-Applied, thanks.
+On Fri, Nov 22, 2024 at 12:49:56PM +0800, Tiezhu Yang wrote:
+> @@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+>  		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
+>  			break;
+>  
+> +		if (reloc->sym->type == STT_SECTION) {
+> +			/* Addend field in the relocation entry associated with the symbol */
+> +			offset = reloc_addend(reloc);
+> +		} else {
+> +			/* The address of the symbol in the relocation entry */
+> +			offset = reloc->sym->offset;
 
-Huacai
+The comments don't seem helpful.
 
-On Tue, Nov 19, 2024 at 2:51=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> Whenever I try to build the kernel with upcoming GCC 15 which defaults
-> to -std=3Dgnu23 I get a build failure:
->
->   CC      arch/loongarch/vdso/vgetcpu.o
-> In file included from ./include/uapi/linux/posix_types.h:5,
->                  from ./include/uapi/linux/types.h:14,
->                  from ./include/linux/types.h:6,
->                  from ./include/linux/kasan-checks.h:5,
->                  from ./include/asm-generic/rwonce.h:26,
->                  from ./arch/loongarch/include/generated/asm/rwonce.h:1,
->                  from ./include/linux/compiler.h:317,
->                  from ./include/asm-generic/bug.h:5,
->                  from ./arch/loongarch/include/asm/bug.h:60,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/mm.h:6,
->                  from ./arch/loongarch/include/asm/vdso.h:10,
->                  from arch/loongarch/vdso/vgetcpu.c:6:
-> ./include/linux/stddef.h:11:9: error: expected identifier before 'false'
->    11 |         false   =3D 0,
->       |         ^~~~~
-> ./include/linux/types.h:35:33: error: two or more data types in declarati=
-on specifiers
->    35 | typedef _Bool                   bool;
->       |                                 ^~~~
-> ./include/linux/types.h:35:1: warning: useless type name in empty declara=
-tion
->    35 | typedef _Bool                   bool;
->       | ^~~~~~~
->
-> The kernel builds explicitly with -std=3Dgnu11 in top Makefile, but
-> arch/loongarch/vdso does not use KBUILD_CFLAGS from the rest of the
-> kernel, just add -std=3Dgnu11 flag to arch/loongarch/vdso/Makefile.
->
-> By the way, commit e8c07082a810 ("Kbuild: move to -std=3Dgnu11") did a
-> similar change for arch/arm64/kernel/vdso32/Makefile.
->
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/vdso/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-> index 40c1175823d6..fdde1bcd4e26 100644
-> --- a/arch/loongarch/vdso/Makefile
-> +++ b/arch/loongarch/vdso/Makefile
-> @@ -19,7 +19,7 @@ ccflags-vdso :=3D \
->  cflags-vdso :=3D $(ccflags-vdso) \
->         -isystem $(shell $(CC) -print-file-name=3Dinclude) \
->         $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
-> -       -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
-> +       -std=3Dgnu11 -O2 -g -fno-strict-aliasing -fno-common -fno-builtin=
- \
->         -fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING =
-\
->         $(call cc-option, -fno-asynchronous-unwind-tables) \
->         $(call cc-option, -fno-stack-protector)
-> --
-> 2.42.0
->
+In the case of STT_SECTION, sym->offset is always zero.  Therefore the
+if-else can be converted to a simple unconditional statement:
+
+	offset = reloc->sym->offset + reloc_addend(reloc);
+
+'prev_offset' needs to be updated as well.
+
+> @@ -2137,6 +2145,7 @@ static struct reloc *find_jump_table(struct objtool_file *file,
+>  {
+>  	struct reloc *table_reloc;
+>  	struct instruction *dest_insn, *orig_insn = insn;
+> +	unsigned long offset;
+>  
+>  	/*
+>  	 * Backward search using the @first_jump_src links, these help avoid
+> @@ -2160,7 +2169,16 @@ static struct reloc *find_jump_table(struct objtool_file *file,
+>  		table_reloc = arch_find_switch_table(file, insn);
+>  		if (!table_reloc)
+>  			continue;
+> -		dest_insn = find_insn(file, table_reloc->sym->sec, reloc_addend(table_reloc));
+> +
+> +		if (table_reloc->sym->type == STT_SECTION) {
+> +			/* Addend field in the relocation entry associated with the symbol */
+> +			offset = reloc_addend(table_reloc);
+> +		} else {
+> +			/* The address of the symbol in the relocation entry */
+> +			offset = table_reloc->sym->offset;
+> +		}
+
+Same comment here.
+
+-- 
+Josh
