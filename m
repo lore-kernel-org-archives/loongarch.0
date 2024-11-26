@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB31539A;
-	Tue, 26 Nov 2024 07:19:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29141898FC;
+	Tue, 26 Nov 2024 07:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732605578; cv=none; b=PtZ6yOVFA8iuS0Any+UpEBUOsDTxsP+d1aWQXqRGZQyrSCp444Eoy+fGU4Gct3RiW7+dh1beYFaLKKGmbcYMqVhzZt7JMmhYTAymZzryvqoml3E4Jsrl149NL8cPmxyMQuu9PgYclCcqxh+LyQHhIv/IySeCxdylM1rMpLaZjUo=
+	t=1732605959; cv=none; b=rL/cAPv0/Tt6liYCi/8+3tr1VtOtf41zLMov2oPOdI28QY4KJY11/PTaiNhNOpbMH4dEYI3YfXCoxnb7y8l5hPW55oUcOc2qfDVuqFJqKvQ7t2vqJObHrqGFLLzu8omv0C0gbXIORgx/nAXMhr6QbrTphVnPyPGdjGiOGZA3KJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732605578; c=relaxed/simple;
-	bh=HSomVyHl0gtcUf54AJ+XL9F74D3YV9PujHFyv/ZbvGQ=;
+	s=arc-20240116; t=1732605959; c=relaxed/simple;
+	bh=f5ehmnUa2vX7EetkK/2bvgY3rIIXXmDHK/Z2UJ7tvWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPPDvWLpmcjR2gil5xupjR7RMlftBvyOLKQqHOlpTd3m9C13At9TDp2kDJC2vVy56Sbt2Vp0IGdUe46CzORx/Eoh7IqkakzObty8zwDCwROJyRH3nlSRNvRya9M8GueoXszYwMxXskq+ImYUCE3UDS5q+63aHM5iaiZrJZ5b/sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJX82s/I; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhCx6vJnwdLIEo6glPIYRuPNAh3EjPc438N263MjmvnIy+EzclAUDKAnMl9oM/3l6cJvQyXZTCyQtYvebeX0mjS7l82jlNE88Rm+p8KEjBcX3hUr5eWh1//N+ABThk5MF3Xy58zyHMJ1cvTOshCHCg/Szzz5P+CePQVjosEKAf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uF5l3h4z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJX82s/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41931C4CECF;
-	Tue, 26 Nov 2024 07:19:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uF5l3h4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C2D3C4CECF;
+	Tue, 26 Nov 2024 07:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732605577;
-	bh=HSomVyHl0gtcUf54AJ+XL9F74D3YV9PujHFyv/ZbvGQ=;
+	s=k20201202; t=1732605959;
+	bh=f5ehmnUa2vX7EetkK/2bvgY3rIIXXmDHK/Z2UJ7tvWM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VJX82s/IWBG7H86Bj8DsrRXuTAeeAWOqExr3Wr55zI5snB4kKIONrKgb17d9fIqCG
-	 iO0tECJMaGeeVzGINz72YzHnlUiLmmRYkii4lT1HEklTQi2o5InZUoRq51qT8KrxUO
-	 Ma9Nj1fOsTVT6wDk8dMESsOpNs6xRWCT/X4/jTs1hS6jOIBTE3RjN6D3WdQyzBNIBD
-	 lGzpU9pl3ZpQYbn4+Q/M45feAs2dW9S/NNEDDI4fd12rt/qMBuQv1PAzuHG6CWtIyR
-	 5+tYjtJ3HuCortyAReG6KAT7Ia3MKDJVMrtOwfQ9SB+YGbHtk6SCYKKqhAgI7fX2EI
-	 J8VimtJLVyP2w==
-Date: Mon, 25 Nov 2024 23:19:35 -0800
+	b=uF5l3h4z6zGyewhXGZ47Zp5LXtl6tvik7GoxxV6uI6b81yA24LFV8VdUmRUstbrWG
+	 ZjnfWsYJewgbUwHNNqNyBO5WMQjj78fYDDZ7kZp5Dm1e0iJW3j6zcgJ/rP1nIdluWq
+	 gBOIPqhjmbSLkM1iDhDOIt6XYBwQT0guXrAjqtGiKCOycMkuHXqNgvH/dvC6a0Y0C1
+	 +XctH5uAtXuuQ3GDHeYsghIVnVnLNR75rYE2fTnmqboTLgHzwI0HIdg4lB+f8xjyQy
+	 iGnwhzqS8smQt5N0A8Ooi5oCkwTVNTvn4Sb8mZnrqeOX2rO3safUe6FWbLsZOhrYPe
+	 Maj7Kt1z3t6xg==
+Date: Mon, 25 Nov 2024 23:25:57 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/10] objtool: Handle PC relative relocation type
-Message-ID: <20241126071935.2vmsna54zsa5cdho@jpoimboe>
+Subject: Re: [PATCH v4 05/10] objtool: Handle unreachable entry of rodata
+Message-ID: <20241126072557.b6qt7jaiikvkcswn@jpoimboe>
 References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
- <20241122045005.14617-5-yangtiezhu@loongson.cn>
+ <20241122045005.14617-6-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,40 +44,37 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241122045005.14617-5-yangtiezhu@loongson.cn>
+In-Reply-To: <20241122045005.14617-6-yangtiezhu@loongson.cn>
 
-On Fri, Nov 22, 2024 at 12:49:59PM +0800, Tiezhu Yang wrote:
-> When compling with Clang on LoongArch, there exists 32 bit PC relative
-> relocation type, it needs to get the offset with "S + A - PC" according
-> to the spec of "ELF for the LoongArch Architecture".
+On Fri, Nov 22, 2024 at 12:50:00PM +0800, Tiezhu Yang wrote:
+> When compling with Clang on LoongArch, there exists unreachable entry of
+> rodata which points to a position after the function return instruction,
+> this is generated by compiler to fill the non-existent switch case, just
+> skip the entry when parsing the relocation section of rodata.
 > 
 > This is preparation for later patch on LoongArch, there is no effect for
 > the other archs with this patch.
 > 
-> Link: https://github.com/loongson/la-abi-specs/blob/release/laelf.adoc
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  tools/objtool/check.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  tools/objtool/check.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
 > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 19d1263e64e4..8733ca620cca 100644
+> index 8733ca620cca..b21e47d8d3d1 100644
 > --- a/tools/objtool/check.c
 > +++ b/tools/objtool/check.c
-> @@ -2126,6 +2126,11 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
->  		if (reloc->sym->type == STT_SECTION) {
->  			/* Addend field in the relocation entry associated with the symbol */
->  			offset = reloc_addend(reloc);
-> +			/* Handle the special cases compiled with Clang on LoongArch */
-> +			if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
-> +			    reloc_type(reloc) == R_LARCH_32_PCREL)
-> +				offset = reloc->sym->offset + reloc_addend(reloc) -
-> +					 (reloc_offset(reloc) - reloc_offset(table));
+> @@ -2144,6 +2144,13 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+>  		if (!dest_insn)
+>  			break;
+>  
+> +		/* Handle the special cases compiled with Clang on LoongArch */
+> +		if (file->elf->ehdr.e_machine == EM_LOONGARCH && reloc->sym->type == STT_SECTION &&
+> +		    (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)) {
+> +			prev_offset = reloc_offset(reloc);
+> +			continue;
 
-Please, no more "special cases".  It makes the common code unreadable.
-We should avoid checking 'elf->ehdr.e_machine' in check.c.
-
-Maybe there should be an arch-specific function arch_adjusted_addend().
+Are you sure this is specific to loongarch?
 
 -- 
 Josh
