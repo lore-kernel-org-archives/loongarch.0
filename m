@@ -1,36 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A2B13B5AF
-	for <loongarch@lists.linux.dev>; Wed, 27 Nov 2024 06:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A366146580
+	for <loongarch@lists.linux.dev>; Wed, 27 Nov 2024 06:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732689561; cv=none; b=GLU0NfnHxkOk5T/M+FqSak7WA5FoVE1wK0bggQ5p9xHttmjJ2iJPfawzqh57E7p4M/K3XzHqhNZ6Nhpcl1RHACz1kLr2KChl+UDjlFZE4TiZWOvQDgC1ldScJALwyHah3k8f95iQVVskc7Mx+F+6mSvhkMSAXQbo8hCJlpFx3wg=
+	t=1732690792; cv=none; b=DQ4WxsAFRDCjrpTiCqbzkmEHNgtl7jyqPvR+zYWqjyAZ6WqHBfwv3uqH2Z8BxqHRZ0TyESD+bA1lzsRmnSY6V3vTB+fzi0OJyvhqTHWWR2WGGSTKqi0jwrqBSizRJe2rDdI1p/zr9rhslV7o38Y2KOUJAHxetZiU5Pv0G6WJYJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732689561; c=relaxed/simple;
-	bh=QzXjNuaetxZpAnx67AbI2GUQH5dA91HczpHtXRg7S9A=;
+	s=arc-20240116; t=1732690792; c=relaxed/simple;
+	bh=JQvrt6sjdRP/+QXxKE+FZiMkcYoa6Y191y+8p1PuuIU=;
 	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GmlUpZ8E/rOpc0iU6gJa8XuTPceZZ1DvGbPvr9xcziqfCJEiAq427zMq4gxzHc/yXrFT7GDfAX2lACyb0gcmRx857B+FzN6/jNj1DnLUvP21LIZSHzAMBXSk8MV7E1kB6KAGcVnvcNxbgc01DmCDXBfW8MsnsddohGr3rg3lM9Y=
+	 In-Reply-To:Content-Type; b=UDVTT2A2pwfLcZa4biObrnw6qvj2UftRv+TkKLkuUHVkfG/p6jZ+NnFBEdCxTsek9fUXU727NqGeBf5pqOYAsOhb5Sh4tWjd3x3llgX89uU6g/bYcYAD1Omraqtx61lWj0fgiA0TZHHgqZNJehCjkVpSlBnKMunyqkOeIYc57Hg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxuuCTvkZnY6RJAA--.14004S3;
-	Wed, 27 Nov 2024 14:39:15 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxieBiw0ZngKdJAA--.12471S3;
+	Wed, 27 Nov 2024 14:59:46 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx_uCRvkZnNotpAA--.21910S3;
-	Wed, 27 Nov 2024 14:39:15 +0800 (CST)
-Subject: Re: [PATCH v4 01/10] objtool: Handle various symbol types of rodata
+	by front1 (Coremail) with SMTP id qMiowMCxyOJhw0ZnG5BpAA--.24506S3;
+	Wed, 27 Nov 2024 14:59:46 +0800 (CST)
+Subject: Re: [PATCH v4 03/10] objtool: Handle different entry size of rodata
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
- <20241122045005.14617-2-yangtiezhu@loongson.cn>
- <20241126064458.7ugwqfx5vhnwzvbi@jpoimboe>
- <75f6e90b-4d04-5627-395e-58982a84d7c1@loongson.cn>
- <20241127005208.luhtjy2qhk3bza7a@jpoimboe>
+ <20241122045005.14617-4-yangtiezhu@loongson.cn>
+ <20241126070214.26gj5fnsjx5b5vp3@jpoimboe>
+ <e56d48c6-172d-5b31-86de-98384fe58e98@loongson.cn>
+ <4993a8d0-d08b-d9c1-f13f-934af75c3103@loongson.cn>
+ <20241127005711.de2ml367dw32ncg3@jpoimboe>
 Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
  <peterz@infradead.org>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <f1bcff28-dc9c-2878-10c7-6e653516e66d@loongson.cn>
-Date: Wed, 27 Nov 2024 14:39:13 +0800
+Message-ID: <450eb29d-f1ad-d9b3-4bb7-965ef5a45250@loongson.cn>
+Date: Wed, 27 Nov 2024 14:59:45 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -39,69 +40,76 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241127005208.luhtjy2qhk3bza7a@jpoimboe>
+In-Reply-To: <20241127005711.de2ml367dw32ncg3@jpoimboe>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBx_uCRvkZnNotpAA--.21910S3
+X-CM-TRANSID:qMiowMCxyOJhw0ZnG5BpAA--.24506S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrWxAw4ftFW3uw45uFy8WFX_yoW8Gr4UpF
-	ZxAa15Jrnayr17Wanavan7u3Z3J3s7GFn8Gr4kKryrJry2gw15ta95GF45Ca4kGr1SvF47
-	Zr4Fqw1fZw4DA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7KF4ruFW3KFyftF1fXw47Awc_yoW8Gr4UpF
+	4DCrWxKr4UZFW3AwnFy3W8Was8Gw47XryIvr9FvFW8WFnrXr98Jr4xur1j93Z5XrsxKa1S
+	kFWSgF15Aws0y3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
+	yCJUUUUU=
 
-On 11/27/2024 08:52 AM, Josh Poimboeuf wrote:
-> On Tue, Nov 26, 2024 at 06:41:29PM +0800, Tiezhu Yang wrote:
->> On 11/26/2024 02:44 PM, Josh Poimboeuf wrote:
->>> On Fri, Nov 22, 2024 at 12:49:56PM +0800, Tiezhu Yang wrote:
->>>> @@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
->>>
->>> 'prev_offset' needs to be updated as well.
+
+
+On 11/27/2024 08:57 AM, Josh Poimboeuf wrote:
+> On Tue, Nov 26, 2024 at 09:22:22PM +0800, Tiezhu Yang wrote:
+>>> OK, if I understand your comment correctly, this should be an
+>>> arch-specific function defined in
+>>> tools/objtool/arch/*/include/arch/elf.h, otherwise it also needs to
+>>> check ehdr.e_machine
+>>> in tools/objtool/include/objtool/elf.h.
 >>
->> I am not sure I understand your comment correctly, I can not see
->> what should to do about 'prev_offset'.
+>> There are only macro definitions in
+>> tools/objtool/arch/*/include/arch/elf.h,
+>> so I think it is better to add reloc_size() in
+>> tools/objtool/include/objtool/elf.h,
+>> like this:
+>>
+>> static inline unsigned int reloc_size(struct elf *elf, struct reloc *reloc)
+>> {
+>>         if (elf->ehdr.e_machine == EM_X86_64) {
+>>                 switch (reloc_type(reloc)) {
+>>                 case R_X86_64_32:
+>>                 case R_X86_64_PC32:
+>>                         return 4;
+>>                 case R_X86_64_64:
+>>                 case R_X86_64_PC64:
+>>                         return 8;
+>>                 default:
+>>                         ERROR("unknown X86_64 reloc type");
+>>                 }
+>>         } else if (elf->ehdr.e_machine == EM_LOONGARCH) {
+>>                 switch (reloc_type(reloc)) {
+>>                 case R_LARCH_32:
+>>                 case R_LARCH_32_PCREL:
+>>                         return 4;
+>>                 case R_LARCH_64:
+>>                 case R_LARCH_64_PCREL:
+>>                         return 8;
+>>                 default:
+>>                         ERROR("unknown LoongArch reloc type");
+>>                 }
+>>         } else {
+>>                 return 8;
+>>         }
+>> }
 >
-> Further down the function there is
->
->   prev_offset = reloc_offset(reloc);
->
-> which needs to be changed to
->
->   prev_offset = offset;
->
-> as part of the patch.
+> How about tools/objtool/arch/loongarch/decode.c?  Then we don't need to
+> check e_machine.
 
-If I understand correctly, reloc_offset(reloc) is different with
-reloc->sym->offset + reloc_addend(reloc), tested on x86 and readelf
-shows that their values are different, reloc_offset(reloc) is the
-first column of .rela.rodata, reloc->sym->offset is the second to
-last column of .rela.rodata, reloc_addend(reloc) is the last column
-of .rela.rodata.
-
-If do the above change as you suggested, there will be some objtool
-warnings on x86. I think it should be:
-
-   prev_offset = reloc_offset(reloc);
-
-rather than:
-
-   prev_offset = offset;
-
-That is to say, no need to change "prev_offset".
-Could you please check it again, please let me know if I am wrong.
-
-Thanks,
-Tiezhu
+OK, makes sense, will do it.
 
