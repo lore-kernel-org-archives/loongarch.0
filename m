@@ -1,112 +1,101 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D3919340C
-	for <loongarch@lists.linux.dev>; Wed, 27 Nov 2024 09:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85DD201105;
+	Wed, 27 Nov 2024 18:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732699133; cv=none; b=QB8NAlmLw8fgqX/SZ2/LOZ1lqESWlmBTvZs2LBtpoQWlHZtNc78BvXDDRuKyt6N7PuqllOQQHgYfsuJz6PGAkCg14Eq893iV63g85fP1ym8Egz2lRlLePgVyPoQ+gpVlMmpTQOEO/zfEUxumVWqI8wBebL5RddMPy33xnP+Xqss=
+	t=1732733585; cv=none; b=fjwlYy8dlmgocrZopxf1DIye0PI9V+sYvx3iQ0cDqKEZFZfklV0a7nfUB1KzzKrbqrd1vRA5A+4BExTbD0ZQoryrt8ClV7OpGro7thr9y/JaXjYFvDHKLfEpmDAYyckNEh5G5FYcQOA8zCKCXkABF9YavZX2q/jJlnOKlY+jtZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732699133; c=relaxed/simple;
-	bh=BCJKwh0Dl8stVFIQL8XhbC444aHp6aT5OjILeQYVfac=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XjtdKOIPddlexcbJ5JWGaQX4TU6BWe1acwW+J/o0ergBUgW4JVoKdd8xoD92bkVvaBhIcaEhkEEiIO0gjDlu96E3KSe7UKjax4pqZnjKWiUbTkRI8JY8BidcLoGKaFCXkELNgXlbfjKmLg8PLAkEkOL1sZxyVI9QMH23CLYrdHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8CxCeH040ZnMbxJAA--.13101S3;
-	Wed, 27 Nov 2024 17:18:44 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMDxnODp40ZnJLBpAA--.12382S2;
-	Wed, 27 Nov 2024 17:18:43 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.13
-Date: Wed, 27 Nov 2024 17:18:25 +0800
-Message-ID: <20241127091825.421126-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1732733585; c=relaxed/simple;
+	bh=BqL09I5bjX+5UXyYYNk30hCn58iZqzaW8RyreYtcjsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W013zIhx8cMn2YXkv+jHVZE6utib0lToktCElQH9CRd6s3lEX5Vg4a4w72O8H0jCAfRcWefWd3gkuqyzmVPFMspHHT0Pi9JrmWKpvAK/DeNhjDynM1J9P0wXPYpNrhRTxerCZk0VZ1P0iLFhJ6/Am90M5V53PBIyJF6fSTNpYjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Go5qPiJq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Go5qPiJq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881B3C4CECC;
+	Wed, 27 Nov 2024 18:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732733585;
+	bh=BqL09I5bjX+5UXyYYNk30hCn58iZqzaW8RyreYtcjsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Go5qPiJqHddWDw7Ijsoa7lzxQQOLBA7tckcOqAAByi36H83jtMoR6UAWLTmMaRMPz
+	 3YIC444K8bYlKTRmemXpNS7qC4GgU8Cpor9MBZ15aDmMI1mR3g5Hq5MF4f6uXasgQG
+	 fI906/LPG+2QCGf4L5kUlgHtf8sVEnA/mmZ2QNvEFkM9Rq8AQQ339IhB1TdnZmK26A
+	 Dt9fnSYLMcsPfxf4y/K2271/LiN20WmQAqIDtWYmT8LhR1TVOhT6xpBqp9BCk95OKx
+	 JHdO+rmnAMCLeQMNaQuNTUT9qbzOKss1CuOvTi/WciV7F/THGMDCL6Qdh5I8Pcbxar
+	 cjXVdZkOFbOcA==
+Date: Wed, 27 Nov 2024 10:53:03 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] objtool: Handle various symbol types of rodata
+Message-ID: <20241127185303.q6okbtrkfdrlmcrn@jpoimboe>
+References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
+ <20241122045005.14617-2-yangtiezhu@loongson.cn>
+ <20241126064458.7ugwqfx5vhnwzvbi@jpoimboe>
+ <75f6e90b-4d04-5627-395e-58982a84d7c1@loongson.cn>
+ <20241127005208.luhtjy2qhk3bza7a@jpoimboe>
+ <f1bcff28-dc9c-2878-10c7-6e653516e66d@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxnODp40ZnJLBpAA--.12382S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WryDJF13ur17Zr15KFy5KFX_yoW8Zw43pr
-	W3uFnxJr4UGr43Xrnxt343Wrn8JF4xK347Xa1ayry8Cr1DZr1UXw18Grn3XFy7J393J340
-	qryrG3WUKF18G3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU2MKZDUUUU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f1bcff28-dc9c-2878-10c7-6e653516e66d@loongson.cn>
 
-The following changes since commit adc218676eef25575469234709c2d87185ca223a:
+On Wed, Nov 27, 2024 at 02:39:13PM +0800, Tiezhu Yang wrote:
+> On 11/27/2024 08:52 AM, Josh Poimboeuf wrote:
+> > On Tue, Nov 26, 2024 at 06:41:29PM +0800, Tiezhu Yang wrote:
+> > > On 11/26/2024 02:44 PM, Josh Poimboeuf wrote:
+> > > > On Fri, Nov 22, 2024 at 12:49:56PM +0800, Tiezhu Yang wrote:
+> > > > > @@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+> > > > 
+> > > > 'prev_offset' needs to be updated as well.
+> > > 
+> > > I am not sure I understand your comment correctly, I can not see
+> > > what should to do about 'prev_offset'.
+> > 
+> > Further down the function there is
+> > 
+> >   prev_offset = reloc_offset(reloc);
+> > 
+> > which needs to be changed to
+> > 
+> >   prev_offset = offset;
+> > 
+> > as part of the patch.
+> 
+> If I understand correctly, reloc_offset(reloc) is different with
+> reloc->sym->offset + reloc_addend(reloc), tested on x86 and readelf
+> shows that their values are different, reloc_offset(reloc) is the
+> first column of .rela.rodata, reloc->sym->offset is the second to
+> last column of .rela.rodata, reloc_addend(reloc) is the last column
+> of .rela.rodata.
+> 
+> If do the above change as you suggested, there will be some objtool
+> warnings on x86. I think it should be:
+> 
+>   prev_offset = reloc_offset(reloc);
+> 
+> rather than:
+> 
+>   prev_offset = offset;
+> 
+> That is to say, no need to change "prev_offset".
+> Could you please check it again, please let me know if I am wrong.
 
-  Linux 6.12 (2024-11-17 14:15:08 -0800)
+Sorry, I was confused by the fact there are two different meanings for
+"offset": one for where the relocation is written, and one for the
+symbol it refers to.
 
-are available in the Git repository at:
+How about instead of 'offset', call it 'sym_offset'?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.13
-
-for you to fetch changes up to 3c272a7551af1c10f6dbba0e71add7dccc7733fa:
-
-  LoongArch: Update Loongson-3 default config file (2024-11-26 18:06:54 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.13
-
-1, Fix build failure with GCC 15 (-std=gnu23);
-2, Add PREEMPT_RT/PREEMPT_LAZY support;
-3, Add I2S in DTS for Loongson-2K1000/Loongson-2K2000;
-4, Some bug fixes and other small changes.
-
-----------------------------------------------------------------
-Binbin Zhou (2):
-      LoongArch: dts: Add I2S support to Loongson-2K1000
-      LoongArch: dts: Add I2S support to Loongson-2K2000
-
-Huacai Chen (8):
-      Merge tag 'sched-core-2024-11-18' into loongarch-next
-      LoongArch: Explicitly specify code model in Makefile
-      LoongArch: Reduce min_delta for the arch clockevent device
-      LoongArch: Fix sleeping in atomic context for PREEMPT_RT
-      LoongArch: Select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-      LoongArch: Allow to enable PREEMPT_RT
-      LoongArch: Allow to enable PREEMPT_LAZY
-      LoongArch: Update Loongson-3 default config file
-
-Tiezhu Yang (2):
-      LoongArch: Fix build failure with GCC 15 (-std=gnu23)
-      LoongArch: BPF: Sign-extend return values
-
- arch/loongarch/Kconfig                       |  3 +
- arch/loongarch/Makefile                      |  4 +-
- arch/loongarch/boot/dts/loongson-2k1000.dtsi | 17 +++++-
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 22 ++++++-
- arch/loongarch/configs/loongson3_defconfig   | 91 +++++++++++++++++++++++++---
- arch/loongarch/include/asm/thread_info.h     |  8 ++-
- arch/loongarch/kernel/time.c                 |  6 +-
- arch/loongarch/mm/tlb.c                      |  2 +-
- arch/loongarch/net/bpf_jit.c                 |  2 +-
- arch/loongarch/vdso/Makefile                 |  2 +-
- 10 files changed, 134 insertions(+), 23 deletions(-)
-
+-- 
+Josh
