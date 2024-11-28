@@ -1,103 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D4017BA3;
-	Thu, 28 Nov 2024 01:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2E742065
+	for <loongarch@lists.linux.dev>; Thu, 28 Nov 2024 02:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732755636; cv=none; b=EZyF1PqbMcODSKy9ENnVvmnX9vXlyI5BFMggXmpk/MWK7llg73omPOs8IGqha6vIQRcIeolYvbZHYZ87xUPKuYH4pFG4HyG7u58ef8fO1MlgMQu+m24AYljYiStNXurcEIv6L17+b4ZeZWWoa9yizeXkcr9LZg+c+ZSUyceeKC4=
+	t=1732760827; cv=none; b=e9iQV5jzDjTULfHUTUFWzypuBH2yhaXQl+kt7pWviDVxBiDZEVCCBs4kBajfDksOM7y/XwL0JITsFEBqPL+w3rX7TgCqXLPM3KOnzplOTsY2GhSJlxN/hYLZrFCr+BWTkFczIQR56FRi+0oCB07KfhcLnq3ymDc6MnDjBhEjvgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732755636; c=relaxed/simple;
-	bh=Z4UNfWg3zs+XouI51oSz59rP5PZwpgvoJs2Lh3iBN1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJkNunpBv4UxJaKQm2kF8JQ+sA5BZKBB3H30M5N9llWN8ikT2VK8neXKAuGXlWxcs87rNn4HeborL+RoODrExSmWhQ2ak53QyALy7017tBphDgarBNyB7T/bzvQea3xVgIO7OBws0xALL1qQ0DJZ7eAeZ2Kr911HqaGfd4hHVUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxBb9Fru; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxBb9Fru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E021EC4CECC;
-	Thu, 28 Nov 2024 01:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732755636;
-	bh=Z4UNfWg3zs+XouI51oSz59rP5PZwpgvoJs2Lh3iBN1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kxBb9Fruj+TXYYv7dQFepie0vWCe1bmjuK1SSI/shMe7eXwOLB5OHH6TNYC2syydg
-	 OFnfEhjSrMXMzos6U5shcZjDZ3o20xxMrLGbnM+j8ZSajH+hJA2W2gZJ9k8K7UxJOX
-	 fIqV1OJa1dWan6fRziCJnqxldYh0WFZVmHOfsEQ4onRuQN+TZpw/ZmVLD/0o9aD9M6
-	 tdllv1mB0/str7k5TqvDyHhYdBCC31MpGgL3HdJ8lZMlCy1OAU5dBjAEIQQU34axTb
-	 RrSCqdYsuY6VPT2mE4Jf7DwiRMqmtnDskFb/AnujurllqlCWxUx0p5osltfS3+mpnX
-	 4DcJO/08jg5DA==
-Date: Wed, 27 Nov 2024 17:00:34 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 06/10] objtool: Handle unsorted table offset of rodata
-Message-ID: <20241128010034.u3b7gkh4wqgb7d2s@jpoimboe>
+	s=arc-20240116; t=1732760827; c=relaxed/simple;
+	bh=Y08tlddFy/El3HGlv8l0p48q8NKIA2t8QwgIRTgs4ME=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dqBpb9kpvbyYn4eFIN0rsdQ6AuQe0VaN77zJGBogyC2S4Y0UwLh5GggqcoUaeLfnkbgklH1OGOwAX4bQBw91lCjcbwHAYVG2i0D4rjLCuvtO3UjRVm8L6w15Fj53Pe3ZZegeEvTz2fGU3gtV6IgUxNwFEMlpdB1WuBpTTX/ZIq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxSOHw1Edn11VKAA--.13801S3;
+	Thu, 28 Nov 2024 10:26:56 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAx7uDu1EdnntZqAA--.24565S3;
+	Thu, 28 Nov 2024 10:26:55 +0800 (CST)
+Subject: Re: [PATCH v4 01/10] objtool: Handle various symbol types of rodata
+To: Josh Poimboeuf <jpoimboe@kernel.org>
 References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
- <20241122045005.14617-7-yangtiezhu@loongson.cn>
- <8cb35ab7-56d0-8e8d-5e18-1bc2b94aeeeb@loongson.cn>
- <20241127012042.by4g34m4twlfmove@jpoimboe>
- <53677c5f-2ea5-a227-66f7-b27c27665f6b@loongson.cn>
- <20241128001011.sjedpn2zhrhy6y6i@jpoimboe>
- <20241128001627.5czdlst5rd76qwsd@jpoimboe>
+ <20241122045005.14617-2-yangtiezhu@loongson.cn>
+ <20241126064458.7ugwqfx5vhnwzvbi@jpoimboe>
+ <75f6e90b-4d04-5627-395e-58982a84d7c1@loongson.cn>
+ <20241127005208.luhtjy2qhk3bza7a@jpoimboe>
+ <f1bcff28-dc9c-2878-10c7-6e653516e66d@loongson.cn>
+ <20241127185303.q6okbtrkfdrlmcrn@jpoimboe>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <fd86460f-f595-e7c3-0962-aab3124b0375@loongson.cn>
+Date: Thu, 28 Nov 2024 10:26:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241128001627.5czdlst5rd76qwsd@jpoimboe>
+In-Reply-To: <20241127185303.q6okbtrkfdrlmcrn@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAx7uDu1EdnntZqAA--.24565S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ww47uFy5tFWkCryruryrXwc_yoW8Aw4Upr
+	W3Aa15Jr4vyr17Crs2vwnYgrnYy3s7GFn5XrykKryrJr9F9r1Yqa9Ygr45Cas7Gr1SvF42
+	vrWFqa4fZr4UAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-
+	UUUUU
 
-On Wed, Nov 27, 2024 at 04:16:29PM -0800, Josh Poimboeuf wrote:
-> On Wed, Nov 27, 2024 at 04:10:18PM -0800, Josh Poimboeuf wrote:
-> > On Wed, Nov 27, 2024 at 03:01:33PM +0800, Tiezhu Yang wrote:
-> > > 
-> > > 
-> > > On 11/27/2024 09:20 AM, Josh Poimboeuf wrote:
-> > > > On Tue, Nov 26, 2024 at 09:28:19PM +0800, Tiezhu Yang wrote:
-> > > > > > +		/* Handle the special cases compiled with Clang on LoongArch */
-> > > > > > +		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
-> > > > > > +		    reloc->sym->type == STT_SECTION && reloc != table &&
-> > > > > > +		    reloc_offset(reloc) == reloc_offset(table) + rodata_table_size)
-> > > > > > +			break;
-> > > > > 
-> > > > > I think it can be generic, like this:
-> > > > > 
-> > > > >                 /* Check for the end of the table: */
-> > > > >                 if (reloc != table && reloc == next_table)
-> > > > >                         break;
-> > > > > 
-> > > > >                 if (reloc != table &&
-> > > > >                     reloc_offset(reloc) == reloc_offset(table) +
-> > > > > rodata_table_size)
-> > > > >                         break;
-> > > > > 
-> > > > > What do you think?
-> > > > 
-> > > > I'm not sure, this patch is hard to review because it uses
-> > > > insn->table_size which doesn't get set until the next patch.
-> > > > 
-> > > > Maybe this patch should come after patches 7 & 8, or maybe they should
-> > > > be squashed?
-> > > 
-> > > OK, I will squash the changes into patch #7.
-> > 
-> > I remembered Ard already solved a similar problem when he prototyped x86
-> > jump table annotation.  Can you pull this patch into your series:
-> > 
-> > https://lore.kernel.org/20241011170847.334429-12-ardb+git@google.com
-> 
-> Actually, I think I'm going to merge patches 2-5 from Ard's series as
-> they're a nice cleanup.  Let me do that and then you can base your next
-> version off tip/objtool/core once it gets updated with Ard's and Peter's
-> patches.
+On 11/28/2024 02:53 AM, Josh Poimboeuf wrote:
+> On Wed, Nov 27, 2024 at 02:39:13PM +0800, Tiezhu Yang wrote:
+>> On 11/27/2024 08:52 AM, Josh Poimboeuf wrote:
+>>> On Tue, Nov 26, 2024 at 06:41:29PM +0800, Tiezhu Yang wrote:
+>>>> On 11/26/2024 02:44 PM, Josh Poimboeuf wrote:
+>>>>> On Fri, Nov 22, 2024 at 12:49:56PM +0800, Tiezhu Yang wrote:
+>>>>>> @@ -2094,12 +2095,19 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+>>>>>
+>>>>> 'prev_offset' needs to be updated as well.
+>>>>
+>>>> I am not sure I understand your comment correctly, I can not see
+>>>> what should to do about 'prev_offset'.
+>>>
+>>> Further down the function there is
+>>>
+>>>   prev_offset = reloc_offset(reloc);
+>>>
+>>> which needs to be changed to
+>>>
+>>>   prev_offset = offset;
+>>>
+>>> as part of the patch.
+>>
+>> If I understand correctly, reloc_offset(reloc) is different with
+>> reloc->sym->offset + reloc_addend(reloc), tested on x86 and readelf
+>> shows that their values are different, reloc_offset(reloc) is the
+>> first column of .rela.rodata, reloc->sym->offset is the second to
+>> last column of .rela.rodata, reloc_addend(reloc) is the last column
+>> of .rela.rodata.
+>>
+>> If do the above change as you suggested, there will be some objtool
+>> warnings on x86. I think it should be:
+>>
+>>   prev_offset = reloc_offset(reloc);
+>>
+>> rather than:
+>>
+>>   prev_offset = offset;
+>>
+>> That is to say, no need to change "prev_offset".
+>> Could you please check it again, please let me know if I am wrong.
+>
+> Sorry, I was confused by the fact there are two different meanings for
+> "offset": one for where the relocation is written, and one for the
+> symbol it refers to.
+>
+> How about instead of 'offset', call it 'sym_offset'?
 
-Still talking to myself here, I think we'll only merge the above patch,
-since we don't know what the generic annotations are going to look like
-yet.
+OK, looks better, will modify it in the next version.
 
--- 
-Josh
