@@ -1,63 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173E8201029;
-	Wed, 27 Nov 2024 19:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84966A48;
+	Thu, 28 Nov 2024 00:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732736223; cv=none; b=nIPlgEJDtcgXBbpC1XjGUuOT+uMq+4zQwJgZa5XV20nB32rbwdto9TJ9hpDXZ81lMQpu0FKoS0ONzfnAJWIAwiJcmxd6nLxXFobmxPXobVjVw/Uer+3n2j9r3mPl7OQ8L4m9KPmKp8IQOrLIl9w41ceOwR5lRhXI3WrVmL+MpPI=
+	t=1732752621; cv=none; b=fNto51KRzHHNZ7iTQNTHq+EHWbFGkgprnetAEqNIC/QpDfIXyrKz7Ap+WtuMAZwbxZ0OGe68FcNyFffjtaupkAUIxzcc7DeUDJcxGSWPbnsw3J0G1ksut/yRlGbmwp7wplIsW1qnO68GM7XntnAsk4Rz+glwrHH9Dopaf7xMA1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732736223; c=relaxed/simple;
-	bh=NSbbL+eFbaJtHNhA52M5bNNDnqJQckVkfLNcJVSpnIQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=W+tLQ8lDVFpL5ygTzE2XhxbcdtKUuyAR958JJDpyS3esfEbzizSTyfLkEcY/sO+JgYBQUc3vibZqQi5hK8zN/tN4iKwmHURGscB46bh8+8BzZoaXxAF1XTezg+WNbMQiIcz87fqYhsiQv2sjijp3vcPsQB+cbxKvcHeDLqOwpuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5yGKro3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732752621; c=relaxed/simple;
+	bh=3Qhtkti+V+rfSJ+3BQXWLXrVn7InnohSE6pTx1Fv45c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HO51I4ufDRugXNDurCDMANSfFaAjSkcZBVcCAc6VzUnHTx+8d3r3hYvspCUKjQ3mNFyecIGE5wJI4s5Ey+Y373MAe2rZ3kOgPaebT8xmkbmxsPtK4M7plU1YwuLfnkp8D1ljt7mA2qw88q1s5ZJYYptZd991GHLtk/lI/sRaIBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRcW1cak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5yGKro3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E05C4CED2;
-	Wed, 27 Nov 2024 19:37:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRcW1cak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAFCC4CECC;
+	Thu, 28 Nov 2024 00:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732736223;
-	bh=NSbbL+eFbaJtHNhA52M5bNNDnqJQckVkfLNcJVSpnIQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=c5yGKro3SaI75AlgdtTeLojAoSnNF7TyLGhNrObp01xi1chNv2IhT9F4MYK9rLhkA
-	 gcoXpvVQcaRjxPrj4YhlYSjAdf2BDlaglAIjBffzWZUGrBEGkN3ExGdMlQdX2klHhB
-	 oEO786o2e56AgXXaZyjz0c3Jjn/vOk0GnP9Hy/37dQqFMCzt/WC5DIgvq/WOCsYmtL
-	 NXGkWGenK/D1UPeXKlBbr+UnyxZQvqYQxZLtoZ9eqqaACJKaJY01TvkHEwXb0ZnLtT
-	 mB6e/LbQXQQ4EBVyAcw6mQnC5AYh8b+U+FVBuCDdCA0iGtt3MTNL/2zEz8DlxrG3FL
-	 vCZ/JEQaxyV0A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C4B380A944;
-	Wed, 27 Nov 2024 19:37:17 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.13
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20241127091825.421126-1-chenhuacai@loongson.cn>
-References: <20241127091825.421126-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20241127091825.421126-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.13
-X-PR-Tracked-Commit-Id: 3c272a7551af1c10f6dbba0e71add7dccc7733fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c94696977527f69cbb41aa6a9af9d1991895d002
-Message-Id: <173273623570.1191875.7861842418694019565.pr-tracker-bot@kernel.org>
-Date: Wed, 27 Nov 2024 19:37:15 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1732752618;
+	bh=3Qhtkti+V+rfSJ+3BQXWLXrVn7InnohSE6pTx1Fv45c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CRcW1cakyJF1MVqLtjXBoMipNqTt+hDXkPJzbO5uB2ZNFfQg0c3MzIHltLJjHh2zc
+	 6WgOGoUtqeFPtu3M/wX9CDvrrRAXhWMA0k/Bw9QWCrYetlmRtk+UNiAxmCXszcuR4y
+	 QexDW8JWZ0sohbQfY+oZYMa0M8/BBPdaW4+ENQlF7nZub9VyGnHt2Wiey4IHE4MgcU
+	 WZuac7+v4kqd06CdFpw4vbmghVnEyHbduHV8D21r3KQ6DIdKT+af5k+F8+pgcbueFA
+	 WTb89DNW35lEhGNjqLyzBkO4rMm+0LeYO2y87v/LRORCyNcIbFio1FFjTr9yvWo6aJ
+	 HVZz+5JtBi0LQ==
+Date: Wed, 27 Nov 2024 16:10:11 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/10] objtool: Handle unsorted table offset of rodata
+Message-ID: <20241128001011.sjedpn2zhrhy6y6i@jpoimboe>
+References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
+ <20241122045005.14617-7-yangtiezhu@loongson.cn>
+ <8cb35ab7-56d0-8e8d-5e18-1bc2b94aeeeb@loongson.cn>
+ <20241127012042.by4g34m4twlfmove@jpoimboe>
+ <53677c5f-2ea5-a227-66f7-b27c27665f6b@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <53677c5f-2ea5-a227-66f7-b27c27665f6b@loongson.cn>
 
-The pull request you sent on Wed, 27 Nov 2024 17:18:25 +0800:
+On Wed, Nov 27, 2024 at 03:01:33PM +0800, Tiezhu Yang wrote:
+> 
+> 
+> On 11/27/2024 09:20 AM, Josh Poimboeuf wrote:
+> > On Tue, Nov 26, 2024 at 09:28:19PM +0800, Tiezhu Yang wrote:
+> > > > +		/* Handle the special cases compiled with Clang on LoongArch */
+> > > > +		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
+> > > > +		    reloc->sym->type == STT_SECTION && reloc != table &&
+> > > > +		    reloc_offset(reloc) == reloc_offset(table) + rodata_table_size)
+> > > > +			break;
+> > > 
+> > > I think it can be generic, like this:
+> > > 
+> > >                 /* Check for the end of the table: */
+> > >                 if (reloc != table && reloc == next_table)
+> > >                         break;
+> > > 
+> > >                 if (reloc != table &&
+> > >                     reloc_offset(reloc) == reloc_offset(table) +
+> > > rodata_table_size)
+> > >                         break;
+> > > 
+> > > What do you think?
+> > 
+> > I'm not sure, this patch is hard to review because it uses
+> > insn->table_size which doesn't get set until the next patch.
+> > 
+> > Maybe this patch should come after patches 7 & 8, or maybe they should
+> > be squashed?
+> 
+> OK, I will squash the changes into patch #7.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.13
+I remembered Ard already solved a similar problem when he prototyped x86
+jump table annotation.  Can you pull this patch into your series:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c94696977527f69cbb41aa6a9af9d1991895d002
-
-Thank you!
+https://lore.kernel.org/20241011170847.334429-12-ardb+git@google.com
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Josh
