@@ -1,31 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2185A79B
-	for <loongarch@lists.linux.dev>; Thu, 28 Nov 2024 06:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF09C13D8B0
+	for <loongarch@lists.linux.dev>; Thu, 28 Nov 2024 08:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732774280; cv=none; b=vDGfiecLEUqOX/yd1mciFK8EpF/Q7CaFMmZ8ac+90o1IhR3YrfSfqL1SysuUlTsOI3cXWf8zSIWa6APUdpjGLUGt2KbO2tvAeqxuRVnnYENGHTGO9K4mGWLvZ/JWc5BNR62qJuGHup9tkgTV2jzvxOvfd8cFFi/6sunMN1trTo0=
+	t=1732782650; cv=none; b=hfZypk9BP7u0EKpQgmOysvJoeLW7/AvPU0rU8XHMVDkB+0IwSgX83wl4dCrOHBeztw4Epn6B/VO7JQHQduJL5kYrHD5h4OjKgaFqB5WYWrcu5fTTj5bw42+nNirbvX5CXGAHzBAvb2rGN7hrSU1fdvarGIgoZWqMJ05cVkUnuw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732774280; c=relaxed/simple;
-	bh=I2CXWTjsvZTyCr81KW+aP5rn44bPx8jzUM9/VIJgLUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dB8SOohdwSqLN0c1gWJIyvtHYwpUHEyI2Wuzqla+Q2rlNAPby5j0FhppFjaKuFx9tn3JpB6eqoABNpk6TVWu2l709YAv62nfbort/MOXPHIUK/crlorO9zI/j/FcYb1gdkmgvJtWspbxomGMfnzBKXeFJ1pB18+VUDjhmmHKy5U=
+	s=arc-20240116; t=1732782650; c=relaxed/simple;
+	bh=m3mCNj6JLx5tq3Dj5xSnk6FCGUKDNblb2HKn/3ljWFU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X8oi/I5apWNQOyJfi5aml5xNRTSQN9k2dTrw/b12iHCoS9DFELmC3ftcsCz38JO148Tpc1QzD5rcPGTeraXwMMLU6NLI1NH9HRShh9Sy0fh/dzsAae84oV6C80ZFEPaZOD/LrZMf3HGWLo03MQrU6k5hu1ChBiHc4UtCHZlz5F4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx++GBCUhnR3FKAA--.13838S3;
-	Thu, 28 Nov 2024 14:11:14 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxfcJ_CUhnJw9rAA--.8752S2;
-	Thu, 28 Nov 2024 14:11:11 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxbeI0KkhnDIFKAA--.13914S3;
+	Thu, 28 Nov 2024 16:30:44 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMCxrkczKkhnejJrAA--.45781S2;
+	Thu, 28 Nov 2024 16:30:44 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: BPF: Adjust the parameter of emit_jirl()
-Date: Thu, 28 Nov 2024 14:11:10 +0800
-Message-ID: <20241128061110.5204-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+Subject: [PATCH] LoongArch: Add architecture specific huge_pte_clear
+Date: Thu, 28 Nov 2024 16:30:43 +0800
+Message-Id: <20241128083043.1208664-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,119 +35,102 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxfcJ_CUhnJw9rAA--.8752S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw4rGr18tF4fKrWxKFWDJrc_yoW5tw43pr
-	ZFyrs5GrW0gryfGFyDJrW5ur13Jan3GrWagasrArZ7Cr1Yq34Fq3WkKrnxWFs8Xan5XFsY
-	9F1Fyw12vF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
-	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
-	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0
-	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2
-	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2
-	jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
-	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIccxYrV
-	CFb41lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07bzWlkUUUUU=
+X-CM-TRANSID:qMiowMCxrkczKkhnejJrAA--.45781S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-The branch instructions beq, bne, blt, bge, bltu, bgeu and jirl belong
-to the format reg2i16, but the sequence of oprand is different for the
-instruction jirl, adjust the parameter of emit_jirl() to make it more
-readable correspond with the Instruction Set Architecture manual.
+When executing mm selftests run_vmtests.sh, there is such error:
 
-Here are the instruction formats:
+ BUG: Bad page state in process uffd-unit-tests  pfn:00000
+ page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x0
+ flags: 0xffff0000002000(reserved|node=0|zone=0|lastcpupid=0xffff)
+ raw: 00ffff0000002000 ffffbf0000000008 ffffbf0000000008 0000000000000000
+ raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+ page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+ Modules linked in: snd_seq_dummy snd_seq snd_seq_device rfkill vfat fat
+    virtio_balloon efi_pstore virtio_net pstore net_failover failover fuse
+    nfnetlink virtio_scsi virtio_gpu virtio_dma_buf dm_multipath efivarfs
+ CPU: 2 UID: 0 PID: 1913 Comm: uffd-unit-tests Not tainted 6.12.0 #184
+ Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
+ Stack : 900000047c8ac000 0000000000000000 9000000000223a7c 900000047c8ac000
+         900000047c8af690 900000047c8af698 0000000000000000 900000047c8af7d8
+         900000047c8af7d0 900000047c8af7d0 900000047c8af5b0 0000000000000001
+         0000000000000001 900000047c8af698 10b3c7d53da40d26 0000010000000000
+         0000000000000022 0000000fffffffff fffffffffe000000 ffff800000000000
+         000000000000002f 0000800000000000 000000017a6d4000 90000000028f8940
+         0000000000000000 0000000000000000 90000000025aa5e0 9000000002905000
+         0000000000000000 90000000028f8940 ffff800000000000 0000000000000000
+         0000000000000000 0000000000000000 9000000000223a94 000000012001839c
+         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1d
+         ...
+ Call Trace:
+ [<9000000000223a94>] show_stack+0x5c/0x180
+ [<9000000001c3fd64>] dump_stack_lvl+0x6c/0xa0
+ [<900000000056aa08>] bad_page+0x1a0/0x1f0
+ [<9000000000574978>] free_unref_folios+0xbf0/0xd20
+ [<90000000004e65cc>] folios_put_refs+0x1a4/0x2b8
+ [<9000000000599a0c>] free_pages_and_swap_cache+0x164/0x260
+ [<9000000000547698>] tlb_batch_pages_flush+0xa8/0x1c0
+ [<9000000000547f30>] tlb_finish_mmu+0xa8/0x218
+ [<9000000000543cb8>] exit_mmap+0x1a0/0x360
+ [<9000000000247658>] __mmput+0x78/0x200
+ [<900000000025583c>] do_exit+0x43c/0xde8
+ [<9000000000256490>] do_group_exit+0x68/0x110
+ [<9000000000256554>] sys_exit_group+0x1c/0x20
+ [<9000000001c413b4>] do_syscall+0x94/0x130
+ [<90000000002216d8>] handle_syscall+0xb8/0x158
+ Disabling lock debugging due to kernel taint
+ BUG: non-zero pgtables_bytes on freeing mm: -16384
 
-  beq     rj, rd, offs16
-  bne     rj, rd, offs16
-  blt     rj, rd, offs16
-  bge     rj, rd, offs16
-  bltu    rj, rd, offs16
-  bgeu    rj, rd, offs16
-  jirl    rd, rj, offs16
+On LoongArch system, invalid huge pte entry should be invalid_pte_table
+or _PAGE_HUGE. And it need be the same with invalid pmd entry, since
+pmd_none() is called by function free_pgd_range(), pmd_none() return 0
+by huge_pte_clear(). So _PAGE_HUGE is treated as valid pte table and
+free_pte_range() will be called in free_pmd_range().
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
-Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+free_pmd_range()
+        pmd = pmd_offset(pud, addr);
+        do {
+                next = pmd_addr_end(addr, end);
+                if (pmd_none_or_clear_bad(pmd))
+                        continue;
+                free_pte_range(tlb, pmd, addr);
+        } while (pmd++, addr = next, addr != end);
+
+Here invalid_pte_table is used for both invalid huge pte entry and
+pmd entry.
+
+Fixes: 09cfefb7fa70 ("LoongArch: Add memory management")
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
+ arch/loongarch/include/asm/hugetlb.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-This patch is based on the following commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=73c359d1d356
-
- arch/loongarch/include/asm/inst.h | 12 +++++++++++-
- arch/loongarch/kernel/inst.c      |  2 +-
- arch/loongarch/net/bpf_jit.c      |  6 +++---
- 3 files changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 944482063f14..3089785ca97e 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -683,7 +683,17 @@ DEF_EMIT_REG2I16_FORMAT(blt, blt_op)
- DEF_EMIT_REG2I16_FORMAT(bge, bge_op)
- DEF_EMIT_REG2I16_FORMAT(bltu, bltu_op)
- DEF_EMIT_REG2I16_FORMAT(bgeu, bgeu_op)
--DEF_EMIT_REG2I16_FORMAT(jirl, jirl_op)
-+
-+static inline void emit_jirl(union loongarch_instruction *insn,
-+			     enum loongarch_gpr rd,
-+			     enum loongarch_gpr rj,
-+			     int offset)
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index b837c65a4894..c8e4057734d0 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -24,6 +24,16 @@ static inline int prepare_hugepage_range(struct file *file,
+ 	return 0;
+ }
+ 
++#define __HAVE_ARCH_HUGE_PTE_CLEAR
++static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
++				  pte_t *ptep, unsigned long sz)
 +{
-+	insn->reg2i16_format.opcode = jirl_op;
-+	insn->reg2i16_format.immediate = offset;
-+	insn->reg2i16_format.rd = rd;
-+	insn->reg2i16_format.rj = rj;
++	pte_t clear;
++
++	pte_val(clear) = (unsigned long)invalid_pte_table;
++	set_pte_at(mm, addr, ptep, clear);
 +}
- 
- #define DEF_EMIT_REG2BSTRD_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 3050329556d1..14d7d700bcb9 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -332,7 +332,7 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- 		return INSN_BREAK;
- 	}
- 
--	emit_jirl(&insn, rj, rd, imm >> 2);
-+	emit_jirl(&insn, rd, rj, imm >> 2);
- 
- 	return insn.word;
- }
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index dd350cba1252..ea357a3edc09 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -181,13 +181,13 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 		/* Set return value */
- 		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
- 		/* Return to the caller */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, LOONGARCH_GPR_ZERO, 0);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
- 	} else {
- 		/*
- 		 * Call the next bpf prog and skip the first instruction
- 		 * of TCC initialization.
- 		 */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, 1);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 1);
- 	}
- }
- 
-@@ -904,7 +904,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			return ret;
- 
- 		move_addr(ctx, t1, func_addr);
--		emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
- 		move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
- 		break;
- 
++
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep)
+
+base-commit: b86545e02e8c22fb89218f29d381fa8e8b91d815
 -- 
-2.42.0
+2.39.3
 
