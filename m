@@ -1,123 +1,151 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F77A18E25
-	for <loongarch@lists.linux.dev>; Thu, 28 Nov 2024 02:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2185A79B
+	for <loongarch@lists.linux.dev>; Thu, 28 Nov 2024 06:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732760888; cv=none; b=rYKiOi3HcTQFRm8CB/zE44CAQwdlzb4ZKHYMoruJqHPirzYB2fxg4g2YhsUvP7w5kRN/Ijrhc9xashP97M+CkKiIqTmKGrAoExBs9mR2krC2Pd4jbO0xxF5YpBt2FlO77NkZyOAm7+oznLfeKw+MO55d7LUxjdQSBURhzBeXomY=
+	t=1732774280; cv=none; b=vDGfiecLEUqOX/yd1mciFK8EpF/Q7CaFMmZ8ac+90o1IhR3YrfSfqL1SysuUlTsOI3cXWf8zSIWa6APUdpjGLUGt2KbO2tvAeqxuRVnnYENGHTGO9K4mGWLvZ/JWc5BNR62qJuGHup9tkgTV2jzvxOvfd8cFFi/6sunMN1trTo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732760888; c=relaxed/simple;
-	bh=XUvF8BOx52ZbomoxewOyXdDZ9MMTtE5Of6ogPgU08gk=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZzlcVHUOzDwT+t9fvRoO4zbCUT/QwAwWCzpyXGKyVcMgUg47TZ/RRCoilbRumDWZqTbB+si+1ohgpzOZiQM1EkF0hAn7jRCZFo/HGVydkClXYEC+6CI8lcL5V8EAcOcfx+TVxYsv12RaCMIyFc5sJKKFbk6lB/kJCn7Mhu6YG94=
+	s=arc-20240116; t=1732774280; c=relaxed/simple;
+	bh=I2CXWTjsvZTyCr81KW+aP5rn44bPx8jzUM9/VIJgLUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dB8SOohdwSqLN0c1gWJIyvtHYwpUHEyI2Wuzqla+Q2rlNAPby5j0FhppFjaKuFx9tn3JpB6eqoABNpk6TVWu2l709YAv62nfbort/MOXPHIUK/crlorO9zI/j/FcYb1gdkmgvJtWspbxomGMfnzBKXeFJ1pB18+VUDjhmmHKy5U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxDeMz1UdnCVZKAA--.13237S3;
-	Thu, 28 Nov 2024 10:28:04 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCx60Yx1Udn8tZqAA--.47370S3;
-	Thu, 28 Nov 2024 10:28:02 +0800 (CST)
-Subject: Re: [PATCH v4 06/10] objtool: Handle unsorted table offset of rodata
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20241122045005.14617-1-yangtiezhu@loongson.cn>
- <20241122045005.14617-7-yangtiezhu@loongson.cn>
- <8cb35ab7-56d0-8e8d-5e18-1bc2b94aeeeb@loongson.cn>
- <20241127012042.by4g34m4twlfmove@jpoimboe>
- <53677c5f-2ea5-a227-66f7-b27c27665f6b@loongson.cn>
- <20241128001011.sjedpn2zhrhy6y6i@jpoimboe>
- <20241128001627.5czdlst5rd76qwsd@jpoimboe>
- <20241128010034.u3b7gkh4wqgb7d2s@jpoimboe>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
+	by gateway (Coremail) with SMTP id _____8Bx++GBCUhnR3FKAA--.13838S3;
+	Thu, 28 Nov 2024 14:11:14 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxfcJ_CUhnJw9rAA--.8752S2;
+	Thu, 28 Nov 2024 14:11:11 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <19af5a40-9bf7-bab6-2a69-02fba652a7df@loongson.cn>
-Date: Thu, 28 Nov 2024 10:28:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: BPF: Adjust the parameter of emit_jirl()
+Date: Thu, 28 Nov 2024 14:11:10 +0800
+Message-ID: <20241128061110.5204-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241128010034.u3b7gkh4wqgb7d2s@jpoimboe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCx60Yx1Udn8tZqAA--.47370S3
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxfcJ_CUhnJw9rAA--.8752S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ar1DtF4xuw1rKry8XryfXwc_yoW8uF15pF
-	W5AFW8trs8tr1UtFnrtw1vkF13tw1UJF98X34DJr18t3sFvryfKFW8CrW5uF98Xrn8Kr4a
-	qr47tr93ArW8X3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYF
-	DUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw4rGr18tF4fKrWxKFWDJrc_yoW5tw43pr
+	ZFyrs5GrW0gryfGFyDJrW5ur13Jan3GrWagasrArZ7Cr1Yq34Fq3WkKrnxWFs8Xan5XFsY
+	9F1Fyw12vF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
+	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
+	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0
+	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2
+	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2
+	jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIccxYrV
+	CFb41lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07bzWlkUUUUU=
 
-On 11/28/2024 09:00 AM, Josh Poimboeuf wrote:
-> On Wed, Nov 27, 2024 at 04:16:29PM -0800, Josh Poimboeuf wrote:
->> On Wed, Nov 27, 2024 at 04:10:18PM -0800, Josh Poimboeuf wrote:
->>> On Wed, Nov 27, 2024 at 03:01:33PM +0800, Tiezhu Yang wrote:
->>>>
->>>>
->>>> On 11/27/2024 09:20 AM, Josh Poimboeuf wrote:
->>>>> On Tue, Nov 26, 2024 at 09:28:19PM +0800, Tiezhu Yang wrote:
->>>>>>> +		/* Handle the special cases compiled with Clang on LoongArch */
->>>>>>> +		if (file->elf->ehdr.e_machine == EM_LOONGARCH &&
->>>>>>> +		    reloc->sym->type == STT_SECTION && reloc != table &&
->>>>>>> +		    reloc_offset(reloc) == reloc_offset(table) + rodata_table_size)
->>>>>>> +			break;
->>>>>>
->>>>>> I think it can be generic, like this:
->>>>>>
->>>>>>                 /* Check for the end of the table: */
->>>>>>                 if (reloc != table && reloc == next_table)
->>>>>>                         break;
->>>>>>
->>>>>>                 if (reloc != table &&
->>>>>>                     reloc_offset(reloc) == reloc_offset(table) +
->>>>>> rodata_table_size)
->>>>>>                         break;
->>>>>>
->>>>>> What do you think?
->>>>>
->>>>> I'm not sure, this patch is hard to review because it uses
->>>>> insn->table_size which doesn't get set until the next patch.
->>>>>
->>>>> Maybe this patch should come after patches 7 & 8, or maybe they should
->>>>> be squashed?
->>>>
->>>> OK, I will squash the changes into patch #7.
->>>
->>> I remembered Ard already solved a similar problem when he prototyped x86
->>> jump table annotation.  Can you pull this patch into your series:
->>>
->>> https://lore.kernel.org/20241011170847.334429-12-ardb+git@google.com
->>
->> Actually, I think I'm going to merge patches 2-5 from Ard's series as
->> they're a nice cleanup.  Let me do that and then you can base your next
->> version off tip/objtool/core once it gets updated with Ard's and Peter's
->> patches.
->
-> Still talking to myself here, I think we'll only merge the above patch,
-> since we don't know what the generic annotations are going to look like
-> yet.
+The branch instructions beq, bne, blt, bge, bltu, bgeu and jirl belong
+to the format reg2i16, but the sequence of oprand is different for the
+instruction jirl, adjust the parameter of emit_jirl() to make it more
+readable correspond with the Instruction Set Architecture manual.
 
-OK, my next version will be based on tip/objtool/core after
-the merge window, by that time, hope the tree include Ard's
-and Peter's patches to avoid conflicts.
+Here are the instruction formats:
 
-Thanks,
-Tiezhu
+  beq     rj, rd, offs16
+  bne     rj, rd, offs16
+  blt     rj, rd, offs16
+  bge     rj, rd, offs16
+  bltu    rj, rd, offs16
+  bgeu    rj, rd, offs16
+  jirl    rd, rj, offs16
+
+Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
+Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+This patch is based on the following commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=73c359d1d356
+
+ arch/loongarch/include/asm/inst.h | 12 +++++++++++-
+ arch/loongarch/kernel/inst.c      |  2 +-
+ arch/loongarch/net/bpf_jit.c      |  6 +++---
+ 3 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 944482063f14..3089785ca97e 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -683,7 +683,17 @@ DEF_EMIT_REG2I16_FORMAT(blt, blt_op)
+ DEF_EMIT_REG2I16_FORMAT(bge, bge_op)
+ DEF_EMIT_REG2I16_FORMAT(bltu, bltu_op)
+ DEF_EMIT_REG2I16_FORMAT(bgeu, bgeu_op)
+-DEF_EMIT_REG2I16_FORMAT(jirl, jirl_op)
++
++static inline void emit_jirl(union loongarch_instruction *insn,
++			     enum loongarch_gpr rd,
++			     enum loongarch_gpr rj,
++			     int offset)
++{
++	insn->reg2i16_format.opcode = jirl_op;
++	insn->reg2i16_format.immediate = offset;
++	insn->reg2i16_format.rd = rd;
++	insn->reg2i16_format.rj = rj;
++}
+ 
+ #define DEF_EMIT_REG2BSTRD_FORMAT(NAME, OP)				\
+ static inline void emit_##NAME(union loongarch_instruction *insn,	\
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index 3050329556d1..14d7d700bcb9 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -332,7 +332,7 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
+ 		return INSN_BREAK;
+ 	}
+ 
+-	emit_jirl(&insn, rj, rd, imm >> 2);
++	emit_jirl(&insn, rd, rj, imm >> 2);
+ 
+ 	return insn.word;
+ }
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index dd350cba1252..ea357a3edc09 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -181,13 +181,13 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
+ 		/* Set return value */
+ 		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
+ 		/* Return to the caller */
+-		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, LOONGARCH_GPR_ZERO, 0);
++		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
+ 	} else {
+ 		/*
+ 		 * Call the next bpf prog and skip the first instruction
+ 		 * of TCC initialization.
+ 		 */
+-		emit_insn(ctx, jirl, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, 1);
++		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 1);
+ 	}
+ }
+ 
+@@ -904,7 +904,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			return ret;
+ 
+ 		move_addr(ctx, t1, func_addr);
+-		emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
++		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
+ 		move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
+ 		break;
+ 
+-- 
+2.42.0
 
