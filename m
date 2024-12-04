@@ -1,190 +1,288 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A7B10F9
-	for <loongarch@lists.linux.dev>; Wed,  4 Dec 2024 04:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A947C18BC19;
+	Wed,  4 Dec 2024 12:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733285292; cv=none; b=cWHX1CRXqF+hZYdrQEUmOtSKjYBMtWhfQ0q2VDl6/J38+gWrC3j9TC7ixR3ZIzIZXxUy8S0HbzwKu5WGPAMtpGEHUMXHxiJ0fJzxyOMbXaM2bv/PV7zyvsA4mh586If4xdQOiBtEIHEn1t992vXTX67Oo0WfBvBosmoCywaiTtI=
+	t=1733316366; cv=none; b=QlW33ti34KyGyFgxAy3AswwDjJkk9fdvOonaQzAvc77/Py3t/C1ejnORL5H9ZbiKj0SjGRcZeEKkPQjDNpmfYI27S6OIzYkCgfxeRyNBXxGKE/CrH+vkcwrrZwvwsNd79pA6NGqD6D7MqQQzemqQFPVm/Ag0Dy5pGqofkv3f+lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733285292; c=relaxed/simple;
-	bh=0Rpc7llVEiAcCOfdXSEaBpkfJ8u8QDAIAV9PHFagg88=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CkRU8XgqRqI9rjeqjHlyRM7UOv/zSjqraYC8kSaPjYWPJyderskxU9IdhUR2tKPN4LYjke1V+y8VurCxTx++OMdk7PGSlWdnSwzKcxPloGVFbvuZ5QSPRPlikTpsBBnF3yyeRYpy7qEfQBcWb4oKP8B8FRogxcURfN/81ZteDfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxyuGn1U9nVGVQAA--.27399S3;
-	Wed, 04 Dec 2024 12:08:07 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxjkek1U9n9AR1AA--.58910S3;
-	Wed, 04 Dec 2024 12:08:07 +0800 (CST)
-Subject: Re: [RFC 1/5] LoongArch: KVM: Add vmid support for stage2 MMU
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20241113031727.2815628-1-maobibo@loongson.cn>
- <20241113031727.2815628-2-maobibo@loongson.cn>
- <CAAhV-H5PoitK=a_snYA=PjDoZxWT5QcbrJfnMe3DJGXN=J0tZA@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <6fa4fc4c-22f7-7e9c-4571-14dce6b36f4d@loongson.cn>
-Date: Wed, 4 Dec 2024 12:07:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1733316366; c=relaxed/simple;
+	bh=SWvLGrD5bHK6LkQqH6wSJ0wPWFyKPMKVEBv+X+6czU8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=e3llA0Ec/7iKyLNufYppp7ywH4NgghWFHiIJFlLgp4IYP/zJ1i3rJSqzxqukQViEZh5N3U+isWjfTB287Ori8UXiqpfzPkq4jjN43TPvsFwLGkKKLE2oLYKvSeJOC+zrt1hp1JulBoSwYYT8UyAXV7OiKU1khPz2sExDEY6n8FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pgksu6L1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pgksu6L1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C02C4CED2;
+	Wed,  4 Dec 2024 12:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733316366;
+	bh=SWvLGrD5bHK6LkQqH6wSJ0wPWFyKPMKVEBv+X+6czU8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Pgksu6L1x9lwvYyaR3de4qE6JqwFDBovjtoTrN72K/hv52SRySq6bgOz66gXZLGNz
+	 H2EBNr2q9g5m4CWtw9cseezfj2nVE+Iry+yaV9zSR8GNv4brlz+JLl6UTuG2H81bVv
+	 2FN3KyehEeefVz6SXsPjW6TPGStkwp5ym8FrRqrfDNT3tHvaV072SLW6CfEE4BQIpF
+	 1xunjw5GxcrqrdOe9U3Qmst0MPdobQtxSTMjfDXkQ/F4+IIZxAZq0CHKa63n0AzFpN
+	 PgnLfWoiTX3zLNJcJkMRtOGh+Uz8yHIzFXGsv89qxKkuikpmQUAlXQByHh8pNRcD6d
+	 l55O49e2iQl0w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tIolY-000RHy-3p;
+	Wed, 04 Dec 2024 12:46:04 +0000
+From: Marc Zyngier <maz@kernel.org>
+To: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-pci@vger.kernel.org
+Cc: Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Toan Le <toan@os.amperecomputing.com>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Subject: [PATCH 01/11] irqchip: Make irq-msi-lib.h globally available
+Date: Wed,  4 Dec 2024 12:45:39 +0000
+Message-Id: <20241204124549.607054-2-maz@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20241204124549.607054-1-maz@kernel.org>
+References: <20241204124549.607054-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5PoitK=a_snYA=PjDoZxWT5QcbrJfnMe3DJGXN=J0tZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxjkek1U9n9AR1AA--.58910S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWw18WFWfKF15JFy3Ww4kuFX_yoW7Jr1DpF
-	yDAF4kWr48Kr1kAa4qq3s5Wr4UX3yDKw1aga1xAFyFyr12qr1UJrykCryDuFy5Jw4rAF4I
-	vF9Yya9FvF4Ut3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1Li
-	SJUUUUU==
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org, joro@8bytes.org, suravee.suthikulpanit@amd.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, tglx@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, anup@brainfault.org, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, toan@os.amperecomputing.com, alyssa@rosenzweig.io
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+Move irq-msi-lib.h into include/linux/irqchip, making it available
+to compilation units outside of drivers/irqchip. This requires some
+churn in drivers to fetch it from the new location.
 
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v2m.c                    | 2 +-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c      | 2 +-
+ drivers/irqchip/irq-gic-v3-its.c                 | 2 +-
+ drivers/irqchip/irq-gic-v3-mbi.c                 | 2 +-
+ drivers/irqchip/irq-imx-mu-msi.c                 | 2 +-
+ drivers/irqchip/irq-loongarch-avec.c             | 2 +-
+ drivers/irqchip/irq-loongson-pch-msi.c           | 2 +-
+ drivers/irqchip/irq-msi-lib.c                    | 2 +-
+ drivers/irqchip/irq-mvebu-gicp.c                 | 2 +-
+ drivers/irqchip/irq-mvebu-icu.c                  | 2 +-
+ drivers/irqchip/irq-mvebu-odmi.c                 | 2 +-
+ drivers/irqchip/irq-mvebu-sei.c                  | 2 +-
+ {drivers => include/linux}/irqchip/irq-msi-lib.h | 6 +++---
+ 13 files changed, 15 insertions(+), 15 deletions(-)
+ rename {drivers => include/linux}/irqchip/irq-msi-lib.h (84%)
 
-On 2024/12/3 上午10:46, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Wed, Nov 13, 2024 at 11:17 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> LoongArch KVM hypervisor supports two-level MMU, vpid index is used
->> for stage1 MMU and vmid index is used for stage2 MMU.
->>
->> On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
->> may separate from vpid. If vcpu migrate to different physical CPUs,
->> vpid need change however vmid can keep the same with old value. Also
->> vmid index of the while VM machine on physical CPU the same, all vCPUs
->> on the VM can share the same vmid index on one physical CPU.
->>
->> Here vmid index is added and it keeps the same with vpid still.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_host.h | 3 +++
->>   arch/loongarch/kernel/asm-offsets.c   | 1 +
->>   arch/loongarch/kvm/main.c             | 1 +
->>   arch/loongarch/kvm/switch.S           | 5 ++---
->>   arch/loongarch/kvm/tlb.c              | 5 ++++-
->>   5 files changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->> index d6bb72424027..6151c7c470d5 100644
->> --- a/arch/loongarch/include/asm/kvm_host.h
->> +++ b/arch/loongarch/include/asm/kvm_host.h
->> @@ -166,6 +166,9 @@ struct kvm_vcpu_arch {
->>          unsigned long host_tp;
->>          unsigned long host_pgd;
->>
->> +       /* vmid info for guest VM */
->> +       unsigned long vmid;
-> vmid is a member of kvm_vcpu_arch, no of kvm_arch?
-As patch 3, there is such line
-+       vcpu->arch.vmid = vcpu->kvm->arch.vmid[cpu] & vpid_mask;
-
-It is the same. Adding a member in kvm_vcpu_arch is easy to
-access kvm_vcpu_arch data structure in kvm context switch assemble
-code. When switching to VM, vmid should be set. And vmid should be zero 
-when resume to host.
- >> -       csrrd           t1, LOONGARCH_CSR_GSTAT
- >> -       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, 
-CSR_GSTAT_GID_SHIFT
- >> +       /* Set VMID for gpa --> hpa mapping */
- >> +       ld.d            t1, a2, KVM_ARCH_VMID
- >>          csrrd           t0, LOONGARCH_CSR_GTLBC
- >>          bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END, 
-CSR_GTLBC_TGID_SHIFT
-
-> 
->> +
->>          /* Host CSRs are used when handling exits from guest */
->>          unsigned long badi;
->>          unsigned long badv;
->> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
->> index bee9f7a3108f..4e9a9311afd3 100644
->> --- a/arch/loongarch/kernel/asm-offsets.c
->> +++ b/arch/loongarch/kernel/asm-offsets.c
->> @@ -307,6 +307,7 @@ static void __used output_kvm_defines(void)
->>          OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
->>          OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
->>          OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
->> +       OFFSET(KVM_ARCH_VMID, kvm_vcpu_arch, vmid);
->>          OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
->>          OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
->>          OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
->> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->> index 27e9b94c0a0b..8c16bff80053 100644
->> --- a/arch/loongarch/kvm/main.c
->> +++ b/arch/loongarch/kvm/main.c
->> @@ -212,6 +212,7 @@ static void kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
->>
->>          context->vpid_cache = vpid;
->>          vcpu->arch.vpid = vpid;
-> I think vpid should also be:
->             vcpu->arch.vpid = vpid & vpid_mask;
-yes, vpid should be similar with vmid. Will modify it in next round.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->> +       vcpu->arch.vmid = vcpu->arch.vpid & vpid_mask;
->>   }
->>
->>   void kvm_check_vpid(struct kvm_vcpu *vcpu)
->> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->> index 0c292f818492..2774343f64d3 100644
->> --- a/arch/loongarch/kvm/switch.S
->> +++ b/arch/loongarch/kvm/switch.S
->> @@ -72,9 +72,8 @@
->>          ldx.d   t0, t1, t0
->>          csrwr   t0, LOONGARCH_CSR_PGDL
->>
->> -       /* Mix GID and RID */
->> -       csrrd           t1, LOONGARCH_CSR_GSTAT
->> -       bstrpick.w      t1, t1, CSR_GSTAT_GID_SHIFT_END, CSR_GSTAT_GID_SHIFT
->> +       /* Set VMID for gpa --> hpa mapping */
->> +       ld.d            t1, a2, KVM_ARCH_VMID
->>          csrrd           t0, LOONGARCH_CSR_GTLBC
->>          bstrins.w       t0, t1, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
->>          csrwr           t0, LOONGARCH_CSR_GTLBC
->> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
->> index ebdbe9264e9c..38daf936021d 100644
->> --- a/arch/loongarch/kvm/tlb.c
->> +++ b/arch/loongarch/kvm/tlb.c
->> @@ -23,7 +23,10 @@ void kvm_flush_tlb_all(void)
->>
->>   void kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
->>   {
->> +       unsigned int vmid;
->> +
->>          lockdep_assert_irqs_disabled();
->>          gpa &= (PAGE_MASK << 1);
->> -       invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
->> +       vmid = (vcpu->arch.vmid << CSR_GSTAT_GID_SHIFT) & CSR_GSTAT_GID;
->> +       invtlb(INVTLB_GID_ADDR, vmid, gpa);
->>   }
->> --
->> 2.39.3
->>
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index be35c5349986a..db79ae622f3c4 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -26,7 +26,7 @@
+ #include <linux/irqchip/arm-gic.h>
+ #include <linux/irqchip/arm-gic-common.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /*
+ * MSI_TYPER:
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index e150365fbe892..b4adee2a1aaae 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -8,7 +8,7 @@
+ #include <linux/pci.h>
+ 
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+ 				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 92244cfa04647..334fd15be1de1 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -41,7 +41,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+ #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
+index 3fe870f8ee174..63c658375fd55 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -18,7 +18,7 @@
+ 
+ #include <linux/irqchip/arm-gic-v3.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ struct mbi_range {
+ 	u32			spi_start;
+diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-msi.c
+index 4342a21de1eb0..b3f656c6e7708 100644
+--- a/drivers/irqchip/irq-imx-mu-msi.c
++++ b/drivers/irqchip/irq-imx-mu-msi.c
+@@ -24,7 +24,7 @@
+ #include <linux/pm_domain.h>
+ #include <linux/spinlock.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define IMX_MU_CHANS            4
+ 
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+index 0f6e465dd3095..c95704707219d 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -18,7 +18,7 @@
+ #include <asm/loongarch.h>
+ #include <asm/setup.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+ 
+ #define VECTORS_PER_REG		64
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index bd337ecddb409..3f6f4e9887c53 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -15,7 +15,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ #include "irq-loongson.h"
+ 
+ static int nr_pics;
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index d8e29fc0d4068..514b2616d9559 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/export.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /**
+  * msi_lib_init_dev_msi_info - Domain info setup for MSI domains
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index 2b6183919ea48..b206b7fe03f17 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -17,7 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index b337f6c05f184..30d51a26ea05f 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -20,7 +20,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/mvebu-icu.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index ff19bfd258dce..0ba39fbdb451f 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -18,7 +18,7 @@
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+index 065166ab5dbc0..c12e650ae7c92 100644
+--- a/drivers/irqchip/irq-mvebu-sei.c
++++ b/drivers/irqchip/irq-mvebu-sei.c
+@@ -14,7 +14,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ 
+-#include "irq-msi-lib.h"
++#include <linux/irqchip/irq-msi-lib.h>
+ 
+ /* Cause register */
+ #define GICP_SECR(idx)		(0x0  + ((idx) * 0x4))
+diff --git a/drivers/irqchip/irq-msi-lib.h b/include/linux/irqchip/irq-msi-lib.h
+similarity index 84%
+rename from drivers/irqchip/irq-msi-lib.h
+rename to include/linux/irqchip/irq-msi-lib.h
+index 681ceabb7bc74..dd8d1d1385449 100644
+--- a/drivers/irqchip/irq-msi-lib.h
++++ b/include/linux/irqchip/irq-msi-lib.h
+@@ -2,8 +2,8 @@
+ // Copyright (C) 2022 Linutronix GmbH
+ // Copyright (C) 2022 Intel
+ 
+-#ifndef _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
+-#define _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H
++#ifndef _IRQCHIP_IRQ_MSI_LIB_H
++#define _IRQCHIP_IRQ_MSI_LIB_H
+ 
+ #include <linux/bits.h>
+ #include <linux/irqdomain.h>
+@@ -24,4 +24,4 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 			       struct irq_domain *real_parent,
+ 			       struct msi_domain_info *info);
+ 
+-#endif /* _DRIVERS_IRQCHIP_IRQ_MSI_LIB_H */
++#endif /* _IRQCHIP_IRQ_MSI_LIB_H */
+-- 
+2.39.2
 
