@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F174C1798C
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C422117BD5
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733536766; cv=none; b=Nk6OjKVNGWe6syp6tW3oMJTiGzc58tBg80+LsDIOpLbpn6ACKhcbyFWGAXClPQhvQSYkMxLMANLybUGcv2YiychTbp34C0E5Q8R6sG3prItgOfiCH6chbdv/FRGlzw8XXC07bnOqR/aOS2JGFKOAKypwvufushXIQLy9hr3Mv5Y=
+	t=1733536766; cv=none; b=JiJNdrqiDtKfAeE+u7Niygno/6Ah77unHINb/k7nCLhs+N6BOBtZqGfoLmSMs85qBt91q6nTywjr2ZN9u5oqXKq+LCNwnfbZJamu9Q6srGHXoRmhTvxc1aBQqMuqXMLkfFQe3QQTI87H/I8IkT7iGipm9YISLFyNMU7iiGs0GpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733536766; c=relaxed/simple;
-	bh=0CbpOPI4Xa7ty6GYDZyXKqQGKZIAwaVBL6eU1ORjlx8=;
+	bh=eeYgVDaOUpgFXQ4u/yte0mm/eHnqyND2grkL94d+lvw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MdgCj6XtHXOiqhGesTkFeft+vvxTbji7sU++MZmL8hX5TbiZRiudn9kNd8cVhH1MR9sx5oAvL3sxrQTwMqOlFjthqLDnT6mS31n6owuBe8zgDf2UCat1BFO5wzEn7BdJdFkarrV/jztbCjegaCMvFM7+R3xoizhwfhca2ZtYvdY=
+	 MIME-Version; b=WoWbrGPsRiiO04t48CN+RAuJ7TiI25fPPRG+cYzxUftAD84/YTnh6FVK8ypSd+sRmCYJQqLv4yV7f/9pw9GzvOkwDWfU3nq8iyJWV9TGCZmYsbsN7k43yyGUH7rLMkrtj7DOgAZPwPGOP2Q1Oepp1RjGvq3EMw/mLOBn6tSF020=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxMK_5q1NnFa1SAA--.5661S3;
-	Sat, 07 Dec 2024 09:59:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxuuH7q1NnHa1SAA--.32673S3;
+	Sat, 07 Dec 2024 09:59:23 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S4;
-	Sat, 07 Dec 2024 09:59:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S6;
+	Sat, 07 Dec 2024 09:59:23 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/10] objtool: Handle different entry size of rodata
-Date: Sat,  7 Dec 2024 09:59:07 +0800
-Message-ID: <20241207015915.1159-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v5 04/10] objtool: Handle unreachable entry of rodata
+Date: Sat,  7 Dec 2024 09:59:09 +0800
+Message-ID: <20241207015915.1159-5-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241207015915.1159-1-yangtiezhu@loongson.cn>
 References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
@@ -37,107 +37,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S4
+X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S6
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw4fuF4DtryruF45CF13WrX_yoW5AF45pF
-	srC3yrGr4Fgry3Gwnrta1kurZ8Gws2gryIqF9rJry8ArZrXr15JFWSyryUtF18XwsYgFWf
-	XFZYgr15AF4qy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JFWfCFW8ZF15GF48Kw4DAwc_yoWDtwc_Aa
+	40grn7Jrs8XF4Iy3W0krs5WFy0ka1rWr4UXw17GF1Yg3W5J3yDuFZ2kFn0yFyF9rWSyFZx
+	u3s3Ar1fCwnF9osvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5l1kUUUUU=
 
-In the most cases, the entry size of rodata is 8 bytes because the
-relocation type is 64 bit, but when compiling with Clang on LoongArch,
-there exists 32 bit relocation type, the entry size of rodata should
-be 4 bytes in this case.
-
-Add an arch-specific function arch_reloc_size() to assign the entry
-size of rodata, the default value is 8 in the weak definition, it can
-be overridden by archs that have different requirements.
+When compiling with Clang on LoongArch, there exists unreachable entry of
+rodata which points to a position after the function return instruction,
+this is generated by compiler to fill the non-existent switch case, just
+skip the entry when parsing the relocation section of rodata.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/objtool/arch/loongarch/decode.c | 11 +++++++++++
- tools/objtool/check.c                 | 10 +++++++++-
- tools/objtool/include/objtool/arch.h  |  2 ++
- 3 files changed, 22 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index 69b66994f2a1..b64205b89f6b 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -363,3 +363,14 @@ void arch_initial_func_cfi_state(struct cfi_init_state *state)
- 	state->cfa.base = CFI_SP;
- 	state->cfa.offset = 0;
- }
-+
-+unsigned int arch_reloc_size(struct reloc *reloc)
-+{
-+	switch (reloc_type(reloc)) {
-+	case R_LARCH_32:
-+	case R_LARCH_32_PCREL:
-+		return 4;
-+	default:
-+		return 8;
-+	}
-+}
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f64435ad3514..7271e959520e 100644
+index 4a23aae40c03..b85fc33fdd67 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -1943,6 +1943,11 @@ static int add_special_section_alts(struct objtool_file *file)
- 	return ret;
- }
- 
-+__weak unsigned int arch_reloc_size(struct reloc *reloc)
-+{
-+	return 8;
-+}
-+
- static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 			  struct reloc *next_table)
- {
-@@ -1954,6 +1959,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 	struct reloc *reloc = table;
- 	struct alternative *alt;
- 	unsigned long sym_offset;
-+	unsigned int entry_size;
- 
- 	/*
- 	 * Each @reloc is a switch table relocation which points to the target
-@@ -1967,8 +1973,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 		if (reloc != table && reloc == next_table)
+@@ -1994,9 +1994,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 		if (!dest_insn)
  			break;
  
-+		entry_size = arch_reloc_size(reloc);
-+
- 		/* Make sure the table entries are consecutive: */
--		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
-+		if (prev_offset && reloc_offset(reloc) != prev_offset + entry_size)
- 			break;
+-		/* Make sure the destination is in the same function: */
+-		if (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc)
+-			break;
++		if (!insn_func(dest_insn) || insn_func(dest_insn)->pfunc != pfunc) {
++			prev_offset = reloc_offset(reloc);
++			continue;
++		}
  
- 		sym_offset = reloc->sym->offset + reloc_addend(reloc);
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index d63b46a19f39..396f7c6c81c0 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -97,4 +97,6 @@ int arch_rewrite_retpolines(struct objtool_file *file);
- 
- bool arch_pc_relative_reloc(struct reloc *reloc);
- 
-+unsigned int arch_reloc_size(struct reloc *reloc);
-+
- #endif /* _ARCH_H */
+ 		alt = malloc(sizeof(*alt));
+ 		if (!alt) {
 -- 
 2.42.0
 
