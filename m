@@ -1,35 +1,34 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2F013BC18
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4214B611E
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 03:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733536774; cv=none; b=kn/PWjdcZsi8yCv795kEHSSA4UCdfCh3k7eC4tGiGEeJBOusAg/4Beqv7iUYdWs8H+0cJJOMlMP2gvZ3Omjz4AsH/VaUrflzb2t+0z8KhDm5M8RemUoVEueL/S4DWaL6W3WbmT2Rh1/Zss0j0712ZRbZNsraLrri2fixCiGZqyE=
+	t=1733542315; cv=none; b=jWvMOgMhpMG+weH9EPeE2MhlM6oSyWSjBQ/vW/19+hB6Kwxut2cFg486Xepjinv/nM02bwaRcIoO+XrLkjMminfFlM+s0sUQrWXKdZjsOuQhJbKgP+SDs6FVeEuxKocHjIJ0F2y82FdSLlzHvelyQmwv2esrZ+khDBGAyKFTPlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733536774; c=relaxed/simple;
-	bh=MhDtD1hnbhebvcmqXJ5exN8uWQg9/37rRWH+w7S3d+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rhRaivRm0ngnM7CK/SumpWSB+7gltoT7jwsOYtN47EJ4GaEKKIi1N0Pbhj+RBslUkuZFyLkmB+mbTMoiFbD4EeWYpNM5/3m7AcKu91fm5wVe3bOvFygsOp694dEoQF3F1O87vc4y7LKjuKUh/3eVAbD3aietwIjrZNxIJv1e+Ms=
+	s=arc-20240116; t=1733542315; c=relaxed/simple;
+	bh=c/zfDTlJjLWyLEAaKXkccdygHFnfSqWAximJP+kKsf8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BT+U5JT4ADyiXGv/SmVqHB9jFU4o17KRHPwZ9HN7MWRo0CC6DnnTfj/Sr3JkPZA+lvFOSmhBp2dkmGywMqt/uGzhgXUAWZRczQM4p/diAj3zbOoUY2X1vY5Q4EgLIQQwQ4m+0llMZ50FxlNpchM9LzYx2Qt1Hjl4q6AJLv8iYE8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxLOIBrFNnRq1SAA--.28820S3;
-	Sat, 07 Dec 2024 09:59:29 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S12;
-	Sat, 07 Dec 2024 09:59:28 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8CxSOGmwVNnCrRSAA--.29246S3;
+	Sat, 07 Dec 2024 11:31:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMDxPEelwVNnjYJ5AA--.65188S2;
+	Sat, 07 Dec 2024 11:31:49 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tglx@linutronix.de
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/10] drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-Date: Sat,  7 Dec 2024 09:59:15 +0800
-Message-ID: <20241207015915.1159-11-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20241207015915.1159-1-yangtiezhu@loongson.cn>
-References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH] irqchip/loongarch-avec:Add multi-nodes topology support
+Date: Sat,  7 Dec 2024 11:31:46 +0800
+Message-Id: <20241207033146.20938-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,53 +36,94 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S12
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF17KFWruF4DAw1DtrWDGFX_yoW8Gr1DpF
-	43JFy5Wa1kJF1xKa98Ja43uFW3Ca95XrW8Wr1UArs5Aa4UZ3WvgFZxKw1DGFWakF4Yyr4S
-	vFWDKay7KFn2yrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowMDxPEelwVNnjYJ5AA--.65188S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr4kCFy5tF1fuFy7uw4rWFX_yoW8Kr1rpa
+	y5Za45Jr4Ut3Z7WF9xK34DXry3Jr4xKrW7ta43C3W3WrZ8G34q9ry0qFy5ZF18C397Z3WF
+	vr48JFWUu3W5ZFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsZqXUUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUUU
 
-When compiling with Clang on LoongArch, there exists the following objtool
-warning in drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.o:
+This patch enables the advanced interrupt controller function under
+multiple-node of 3C600. The topology of the advanced interrupt controller
+is consistent with NUMA node. We check the enable status of the node where
+each CPU is located once when it goes online, which may cause some
+additional operations, but it can ensure that the advanced interrupt
+controller can still be used in situations where some CPUs cannot start
 
-  dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
-
-This is because dc_fixpt_from_fraction() is inlined in dc_fixpt_recip()
-by Clang, given dc_fixpt_from_fraction() is not a simple function, just
-mark it noinline to avoid the above issue.
-
-Cc: amd-gfx@lists.freedesktop.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-loongarch-avec.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-index 88d3f9d7dd55..b40c6a21460d 100644
---- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-@@ -68,7 +68,7 @@ static inline unsigned long long complete_integer_division_u64(
- #define GET_FRACTIONAL_PART(x) \
- 	(FRACTIONAL_PART_MASK & (x))
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+index 0f6e465dd309..9e30198fa7e4 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -56,6 +56,18 @@ struct avecintc_data {
+ 	unsigned int		moving;
+ };
  
--struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
-+noinline struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
++static inline void avecintc_enable(void)
++{
++	u64 value;
++
++	if (!loongarch_avec.domain)
++		return;
++
++	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
++	value |= IOCSR_MISC_FUNC_AVEC_EN;
++	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
++}
++
+ static inline void avecintc_ack_irq(struct irq_data *d)
  {
- 	struct fixed31_32 res;
+ }
+@@ -127,6 +139,8 @@ static int avecintc_cpu_online(unsigned int cpu)
  
+ 	guard(raw_spinlock)(&loongarch_avec.lock);
+ 
++	avecintc_enable();
++
+ 	irq_matrix_online(loongarch_avec.vector_matrix);
+ 
+ 	pending_list_init(cpu);
+@@ -339,7 +353,6 @@ static int __init irq_matrix_init(void)
+ static int __init avecintc_init(struct irq_domain *parent)
+ {
+ 	int ret, parent_irq;
+-	unsigned long value;
+ 
+ 	raw_spin_lock_init(&loongarch_avec.lock);
+ 
+@@ -378,14 +391,13 @@ static int __init avecintc_init(struct irq_domain *parent)
+ 				  "irqchip/loongarch/avecintc:starting",
+ 				  avecintc_cpu_online, avecintc_cpu_offline);
+ #endif
+-	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+-	value |= IOCSR_MISC_FUNC_AVEC_EN;
+-	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
++	avecintc_enable();
+ 
+ 	return ret;
+ 
+ out_remove_domain:
+ 	irq_domain_remove(loongarch_avec.domain);
++	loongarch_avec.domain = NULL;
+ out_free_handle:
+ 	irq_domain_free_fwnode(loongarch_avec.fwnode);
+ out:
 -- 
-2.42.0
+2.20.1
 
