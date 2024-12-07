@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA5D17993
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE84470807
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733536767; cv=none; b=XUcOoEKTimFY8DGEf4q7xdzIPj12wUZBt7F6rduj6h7Eegfk3Aqw0wrpbNaZeL7rIWk8cL1bDFoEnhSSkIAiyR37MOWTVt14LvzMe0KJEnVrwnEbDUU00mLr6+bcnowysLzQ/62TyGJJpmwEt1rlp54YObIHrvExmd4efO0zaa4=
+	t=1733536770; cv=none; b=ZHoGlvRU4RtZX4mYXKOqOYylpsmky7wONMkA2lpsXmrjlFgCUNpw81AO2zS7StGZBeLbJnVWMiNBMBJoMTiAVEuEwf0oOWmpaAd4zH5+D/Mp67LTSNAf4QRhmT77+q3J6ltXP2QO1hbfueDhCpRuQ7lAeInfKIAkKpy5b9900VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733536767; c=relaxed/simple;
-	bh=N/F2zjofPysRYI7xOdfPGnfrL6z85FVliafcbYErn30=;
+	s=arc-20240116; t=1733536770; c=relaxed/simple;
+	bh=eqaduniEyXH5k1KEnULm9YE0PxuykGi4EFID1nVVyOI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KN92VXmN753Zb4jEKloOiIDXRQIkkID+J6O4wakWII1+U7RjrxVynS2bb5lmZdznBLl+NQyR7j6KoIYy712HPZPg3D7qoqLn8IXcPyZQfIawBSQB/+OM/co2hFsnYL74omN/Ef7fI8S05f8VSBlAaGydw37lPwxpi9YIg8RZdA4=
+	 MIME-Version; b=o7Ie0xBhdZKaYLVrttmUVfQm7zttfyegNvBchKzO8xQvlag8qxNPaT5bpzcR6tcZgRpGshrdTD00yXtE5bepox995iX/zMb+s1zTSByrqm5UtnU3km3YU6K2o7NPNUG+Ne4Ob2SCOo564j4cET+2ptDWAeNg20ME3i40OEV9XZE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxG+L6q1NnGa1SAA--.29224S3;
-	Sat, 07 Dec 2024 09:59:22 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxmeH_q1NnKa1SAA--.32837S3;
+	Sat, 07 Dec 2024 09:59:27 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S5;
-	Sat, 07 Dec 2024 09:59:22 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S9;
+	Sat, 07 Dec 2024 09:59:26 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/10] objtool: Handle PC relative relocation type
-Date: Sat,  7 Dec 2024 09:59:08 +0800
-Message-ID: <20241207015915.1159-4-yangtiezhu@loongson.cn>
+Subject: [PATCH v5 07/10] objtool/LoongArch: Add support for goto table
+Date: Sat,  7 Dec 2024 09:59:12 +0800
+Message-ID: <20241207015915.1159-8-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241207015915.1159-1-yangtiezhu@loongson.cn>
 References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
@@ -37,131 +37,119 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S5
+X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S9
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw1UCF13WF4xKrW3Aw1fAFc_yoWrGw4fpF
-	srC398Gr4Fgr1fW347t3WkWFZ8Gws7Wry2qFyDAryrZrZFqw15tr4xAFn8Wa1UXwsYgayx
-	ZFZYgw17AF4qvwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw4rWw18Wr1fWr43Zw43Jwc_yoWrXFy5pF
+	W3C345Kr45Zr4Igr47tay09ryaya1IgFy7JrW7t34fAw43Xr1FyF1SvF9IyFWrCrZ5tr4I
+	qr18Kr48CF4DAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
 	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
 	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
 	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
 	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	x0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
 	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
 
-When compiling on LoongArch, there exists PC relative relocation type,
-it needs to get the symbol offset with "S + A - PC" according to the
-spec of "ELF for the LoongArch Architecture".
+The objtool program need to analysis the control flow of each object file
+generated by compiler toolchain, it needs to know all the locations that
+a branch instruction may jump into, if a jump table is used, objtool has
+to correlate the jump instruction with the table.
 
-Add an arch-specific function arch_adjust_offset() to assign the symbol
-offset, the default value is "reloc->sym->offset + reloc_addend(reloc)"
-in the weak definition, it can be overridden by archs that have different
-requirements.
+On x86 (which is the only port supported by objtool before LoongArch),
+there is a relocation type on the jump instruction and directly points
+to the table. But on LoongArch, the relocation is on another kind of
+instruction prior to the jump instruction, and also with scheduling it
+is not very easy to tell the offset of that instruction from the jump
+instruction. Furthermore, because LoongArch has -fsection-anchors (often
+enabled at -O1 or above) the relocation may actually points to a section
+anchor instead of the table itself.
+
+For the jump table of switch cases, a GCC patch "LoongArch: Add support
+to annotate tablejump" and a Clang patch "[LoongArch] Add options for
+annotate tablejump" have been merged into the upstream mainline, it can
+parse the additional section ".discard.tablejump_annotate" which stores
+the jump info as pairs of addresses, each pair contains the address of
+jump instruction and the address of jump table.
+
+For the jump table of computed gotos, it is indeed not easy to implement
+in the compiler, especially if there is more than one computed goto in a
+function such as ___bpf_prog_run(). objdump kernel/bpf/core.o shows that
+there are many table jump instructions in ___bpf_prog_run(), but there are
+no relocations on the table jump instructions and to the table directly on
+LoongArch.
+
+Without the help of compiler, in order to figure out the address of goto
+table for the special case of ___bpf_prog_run(), since the instruction
+sequence is relatively single and stable, it makes sense to add a helper
+find_reloc_of_rodata_c_jump_table() to find the relocation which points
+to the section ".rodata..c_jump_table".
+
+If find_reloc_by_table_annotate() failed, it means there is no relocation
+info of switch table address in ".rela.discard.tablejump_annotate", then
+objtool may find the relocation info of goto table ".rodata..c_jump_table"
+with find_reloc_of_rodata_c_jump_table().
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/objtool/arch/loongarch/decode.c         | 20 +++++++++++++++----
- .../objtool/arch/loongarch/include/arch/elf.h |  7 +++++++
- tools/objtool/check.c                         |  7 ++++++-
- tools/objtool/include/objtool/arch.h          |  1 +
- 4 files changed, 30 insertions(+), 5 deletions(-)
+ tools/objtool/arch/loongarch/special.c | 32 ++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
-index b64205b89f6b..431eb4757458 100644
---- a/tools/objtool/arch/loongarch/decode.c
-+++ b/tools/objtool/arch/loongarch/decode.c
-@@ -5,10 +5,7 @@
- #include <asm/inst.h>
- #include <asm/orc_types.h>
- #include <linux/objtool_types.h>
--
--#ifndef EM_LOONGARCH
--#define EM_LOONGARCH	258
--#endif
-+#include <arch/elf.h>
- 
- int arch_ftrace_match(char *name)
- {
-@@ -374,3 +371,18 @@ unsigned int arch_reloc_size(struct reloc *reloc)
- 		return 8;
- 	}
+diff --git a/tools/objtool/arch/loongarch/special.c b/tools/objtool/arch/loongarch/special.c
+index c1db0c59f9a1..7dbdf3d388a6 100644
+--- a/tools/objtool/arch/loongarch/special.c
++++ b/tools/objtool/arch/loongarch/special.c
+@@ -121,6 +121,30 @@ static struct reloc *find_reloc_by_table_annotate(struct objtool_file *file,
+ 	return NULL;
  }
-+
-+unsigned long arch_adjust_offset(struct reloc *reloc, struct reloc *table)
+ 
++static struct reloc *find_reloc_of_rodata_c_jump_table(struct section *sec,
++						       unsigned long offset,
++						       unsigned long *table_size)
 +{
-+	switch (reloc_type(reloc)) {
-+	case R_LARCH_32_PCREL:
-+	case R_LARCH_64_PCREL:
-+		if (reloc->sym->type == STT_SECTION)
-+			return reloc->sym->offset + reloc_addend(reloc) -
-+			       (reloc_offset(reloc) - reloc_offset(table));
-+		else
-+			return reloc->sym->offset;
-+	default:
-+		return reloc->sym->offset + reloc_addend(reloc);
++	struct section *rsec;
++	struct reloc *reloc;
++
++	rsec = sec->rsec;
++	if (!rsec)
++		return NULL;
++
++	for_each_reloc(rsec, reloc) {
++		if (reloc_offset(reloc) > offset)
++			break;
++
++		if (!strncmp(reloc->sym->sec->name, ".rodata..c_jump_table", 21)) {
++			*table_size = 0;
++			return reloc;
++		}
 +	}
-+}
-diff --git a/tools/objtool/arch/loongarch/include/arch/elf.h b/tools/objtool/arch/loongarch/include/arch/elf.h
-index 9623d663220e..ec79062c9554 100644
---- a/tools/objtool/arch/loongarch/include/arch/elf.h
-+++ b/tools/objtool/arch/loongarch/include/arch/elf.h
-@@ -18,6 +18,13 @@
- #ifndef R_LARCH_32_PCREL
- #define R_LARCH_32_PCREL	99
- #endif
-+#ifndef R_LARCH_64_PCREL
-+#define R_LARCH_64_PCREL	109
-+#endif
 +
-+#ifndef EM_LOONGARCH
-+#define EM_LOONGARCH		258
-+#endif
- 
- #define R_NONE			R_LARCH_NONE
- #define R_ABS32			R_LARCH_32
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 7271e959520e..4a23aae40c03 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1948,6 +1948,11 @@ __weak unsigned int arch_reloc_size(struct reloc *reloc)
- 	return 8;
- }
- 
-+__weak unsigned long arch_adjust_offset(struct reloc *reloc, struct reloc *table)
-+{
-+	return reloc->sym->offset + reloc_addend(reloc);
++	return NULL;
 +}
 +
- static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 			  struct reloc *next_table)
- {
-@@ -1979,7 +1984,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 		if (prev_offset && reloc_offset(reloc) != prev_offset + entry_size)
- 			break;
+ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 				     struct instruction *insn,
+ 				     unsigned long *table_size)
+@@ -131,8 +155,12 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 	unsigned long table_offset;
  
--		sym_offset = reloc->sym->offset + reloc_addend(reloc);
-+		sym_offset = arch_adjust_offset(reloc, table);
+ 	annotate_reloc = find_reloc_by_table_annotate(file, insn, table_size);
+-	if (!annotate_reloc)
+-		return NULL;
++	if (!annotate_reloc) {
++		annotate_reloc = find_reloc_of_rodata_c_jump_table(
++				 insn->sec, insn->offset, table_size);
++		if (!annotate_reloc)
++			return NULL;
++	}
  
- 		/* Detect function pointers from contiguous objects: */
- 		if (reloc->sym->sec == pfunc->sec && sym_offset == pfunc->offset)
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index 396f7c6c81c0..34f41ba6d910 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -98,5 +98,6 @@ int arch_rewrite_retpolines(struct objtool_file *file);
- bool arch_pc_relative_reloc(struct reloc *reloc);
- 
- unsigned int arch_reloc_size(struct reloc *reloc);
-+unsigned long arch_adjust_offset(struct reloc *reloc, struct reloc *table);
- 
- #endif /* _ARCH_H */
+ 	table_sec = annotate_reloc->sym->sec;
+ 	table_offset = annotate_reloc->sym->offset + reloc_addend(annotate_reloc);
 -- 
 2.42.0
 
