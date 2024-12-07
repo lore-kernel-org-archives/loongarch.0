@@ -1,151 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B9685626
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB062D047
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733562724; cv=none; b=m35gTeFkNVG4jA93B8ea3QHYKUqzMfF/ACmsl5vq18u2rh1KG6iAvaM0RbWEVu4l83lu6sinEOptF8kas2X/vjVPR3k8VzC+25xzxg2FCvsiEC8dXlWzDWsn4ofQoUrSHoNzFEYZ44VT8YhlQRo2Fq/cefq4XiPlQ63tUlAJr6I=
+	t=1733563274; cv=none; b=Pf1i9oXNGcMw57uPwlWJqdxT7efceqKAtimEs/cOm1Q/87IWKULcu2pUTv3GbL1UN4vwVniS5r+NnJScTwbXUKwGuydrs/zPDLc240JvJl9B+nEQNfFU2UyD5LDQM/PoC7eAX8QuaeIVb9RGfQXV4f7NK9+tqQ8H1nZ6SrM5aWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733562724; c=relaxed/simple;
-	bh=QM3dO3IgDSl6o5lIGQCB9dg197jlldvwDAyQrKZYv3I=;
+	s=arc-20240116; t=1733563274; c=relaxed/simple;
+	bh=oXaKWhVppoF+2yB9dqGTHDuejqvmtpaXwKyVrGLxOGU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cAUMNRbtDLEXkdxpK4XhllycevFP11RWjEHKGIUbVsi2QE7+NPuCY1jQ4/SIPT8eh553PiLfC1mpnGZ3+ntQ2mG6xKsXtebNDIMVmct2G7jwZbXC+yzFQjw7Fs3P0ioCUkKmCcEts6FU1/J+VPTYJrz+wL+CnYOPo1CiZO46oEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTp28EWp; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=spub82XM9bHSzb0JoNUu0KfcSqUDx/OkbQcJ6U413WeGT3gUOBEcfZ0f8xa+qezUNlxsOFHtgEB0bQ/vm0pVKGpLmT1ycWhjt61F1Q3aHf8WwiSIZNoB3IjBq/FSb7oQWhggawowb5IacPzmmdvGLsah5FBaRfSiDwJvqdmwQ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tfg1pyve; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTp28EWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6D3C4CED2
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:12:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tfg1pyve"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76505C4AF09
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733562724;
-	bh=QM3dO3IgDSl6o5lIGQCB9dg197jlldvwDAyQrKZYv3I=;
+	s=k20201202; t=1733563274;
+	bh=oXaKWhVppoF+2yB9dqGTHDuejqvmtpaXwKyVrGLxOGU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bTp28EWpE3ExZK+5Xs2L1Q8q0swUp2wWFRjCQtBdrBj94IYxtRDULH5ph85ujsVPV
-	 7YIPdR8xkHJG2kpedB0hF1nqWIhOzZaWWf6iYAuSFdWig8ELvuhp/6605tkYlN+7Gf
-	 VhpkKJPhmDjL8JsBxUm9+zpVQPKdz+7eTcJqY1ye390h33yprz/alOYyzGR7jGZEDm
-	 ueIzXJe+1P/5RxzBjMOZVbsB3X5hMNyrD97vy/kZDaaiqtnUkMHIkKjhuyw/xR1t0/
-	 ScmsYOLyFNCzKmGblfJ8bKnG4YiQqTw2FleBqhrHDZS8jFKJFQHroAGdWlhsJ3F9zH
-	 vPp6/k/dlg1cA==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9ec267b879so542745966b.2
-        for <loongarch@lists.linux.dev>; Sat, 07 Dec 2024 01:12:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDdnQuOSNcJ3g1DSnbSmHjjo9TKVYdhTqpWpALdThFrmBXe00ADJiYTEtOEkRxA2u3oJmH5rYvFOY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwoGrCDEuFTlHWmla0CXxzd1Ha5SWGva1L7EhfWw4gGX+fwFRDP
-	tipIrDiHL5zdkenN1rah95mRjVoo+tDV2lp+jDaPsSsM9zJjybfYsC41JZn8377BY8CQ/fKRUR9
-	lwaZzt3LMiDeJ0y94Wyuk04SCwBk=
-X-Google-Smtp-Source: AGHT+IEJGrBvG/ShGpCySY5o73rk2XwpV1WNmzYZCleJxbsf6ctE3q/pdaSVAnpSfuCOYx8WSVD6NwrST7GnTWOsFP0=
-X-Received: by 2002:a17:907:2817:b0:aa4:e18e:1ca1 with SMTP id
- a640c23a62f3a-aa63a266bbbmr514126266b.60.1733562723240; Sat, 07 Dec 2024
- 01:12:03 -0800 (PST)
+	b=Tfg1pyvevvjWCf2RDSvl/KgipCykR46pje2aXZeCN+oZ7ysevjPYeEKjV7hmf13Vm
+	 UDbtcUEOgTqbDU+992HUXsR5dOLvN2Y8T7KHRdUWRQ20aL+L8etmZroSgSu3IMPoxE
+	 YqyOolei5ii66Y0dqdaR1ALVX9OGtZ5db9NqrAlk47HFDkhCIZmio4/D+Bx1VumDrV
+	 XprrVvIBz93s/d8onLivtfz8sf+xyAZETn9+3R08FMV2a6+wA4gk5MQrzLh6xGFkQO
+	 tsYUjLy+9v3zJ/P56THOayFw1BsosrrNC3YMiDijy7EWRGhJ54kNM0eVMzeRL9fHcD
+	 RtEo8UlGyAaXg==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa643eb7f24so174755266b.0
+        for <loongarch@lists.linux.dev>; Sat, 07 Dec 2024 01:21:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVMbGy576yk3KvIWUfBf0hToWqrGrUgXBBkGbzhjFxiB0vd0EfgJ5B0+qWjo6EF0bpk/vd6oXTKo7k=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJLsyEvVWhMwDsPSkqpXwb+ZGDJust4KPwLvSbiPrhJZsRrcVn
+	maGPg8QFur7+lsacK6YJV1VVJW6ZtUbaOKOecc453nkmNjzImlAeukAhM/xdZ1L/7yhTDEWChMH
+	KBI7OdRqoM4tLs2x+blWKRqO1HAY=
+X-Google-Smtp-Source: AGHT+IHlVF7tZYrIaLh2jBCm3RKIXfyNIznJWxjjRoEUentLdi1XjsoDPhpixqV8IOPgf2bn437pTpO7hsyeoAen46Q=
+X-Received: by 2002:a17:907:90d5:b0:aa6:4671:ddf5 with SMTP id
+ a640c23a62f3a-aa646721797mr291560666b.35.1733563272964; Sat, 07 Dec 2024
+ 01:21:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241207033146.20938-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20241207033146.20938-1-zhangtianyang@loongson.cn>
+References: <20241206085810.112341-1-chenhuacai@loongson.cn> <2024120635-wham-campsite-b62b@gregkh>
+In-Reply-To: <2024120635-wham-campsite-b62b@gregkh>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 7 Dec 2024 17:11:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4VAyD+=Btt9S6HrN6-sVQJqe1_jeLPS13UR1kxXJ8S5w@mail.gmail.com>
-Message-ID: <CAAhV-H4VAyD+=Btt9S6HrN6-sVQJqe1_jeLPS13UR1kxXJ8S5w@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/loongarch-avec:Add multi-nodes topology support
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, tglx@linutronix.de, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 7 Dec 2024 17:21:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Db0tVrqcfXHceJeODgnK0ggHpx9_6vwXAAV0LohCD-w@mail.gmail.com>
+Message-ID: <CAAhV-H4Db0tVrqcfXHceJeODgnK0ggHpx9_6vwXAAV0LohCD-w@mail.gmail.com>
+Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where possible
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Nicolas Schier <nicolas@fjasle.eu>, stable@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Ard Biesheuvel <ardb@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tianyang,
+Hi, Greg,
 
-On Sat, Dec 7, 2024 at 11:31=E2=80=AFAM Tianyang Zhang
-<zhangtianyang@loongson.cn> wrote:
+On Fri, Dec 6, 2024 at 9:04=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> This patch enables the advanced interrupt controller function under
-> multiple-node of 3C600. The topology of the advanced interrupt controller
-> is consistent with NUMA node. We check the enable status of the node wher=
-e
-> each CPU is located once when it goes online, which may cause some
-> additional operations, but it can ensure that the advanced interrupt
-> controller can still be used in situations where some CPUs cannot start
-The whole can be reworded:
+> On Fri, Dec 06, 2024 at 04:58:07PM +0800, Huacai Chen wrote:
+> > Backport this series to 6.1&6.6 because LoongArch gets build errors wit=
+h
+> > latest binutils which has commit 599df6e2db17d1c4 ("ld, LoongArch: prin=
+t
+> > error about linking without -fPIC or -fPIE flag in more detail").
+> >
+> >   CC      .vmlinux.export.o
+> >   UPD     include/generated/utsversion.h
+> >   CC      init/version-timestamp.o
+> >   LD      .tmp_vmlinux.kallsyms1
+> > loongarch64-unknown-linux-gnu-ld: kernel/kallsyms.o:(.text+0): relocati=
+on R_LARCH_PCALA_HI20 against `kallsyms_markers` can not be used when makin=
+g a PIE object; recompile with -fPIE
+> > loongarch64-unknown-linux-gnu-ld: kernel/crash_core.o:(.init.text+0x984=
+): relocation R_LARCH_PCALA_HI20 against `kallsyms_names` can not be used w=
+hen making a PIE object; recompile with -fPIE
+> > loongarch64-unknown-linux-gnu-ld: kernel/bpf/btf.o:(.text+0xcc7c): relo=
+cation R_LARCH_PCALA_HI20 against `__start_BTF` can not be used when making=
+ a PIE object; recompile with -fPIE
+> > loongarch64-unknown-linux-gnu-ld: BFD (GNU Binutils) 2.43.50.20241126 a=
+ssertion fail ../../bfd/elfnn-loongarch.c:2673
+> >
+> > In theory 5.10&5.15 also need this, but since LoongArch get upstream at
+> > 5.19, so I just ignore them because there is no error report about othe=
+r
+> > archs now.
+>
+> Odd, why doesn't this affect other arches as well using new binutils?  I
+> hate to have to backport all of this just for one arch, as that feels
+> odd.
+The related binutils commit is only for LoongArch, so build errors
+only occured on LoongArch. I don't know why other archs have no
+problem exactly, but may be related to their CFLAGS (for example, if
+we disable CONFIG_RELOCATABLE, LoongArch also has no build errors
+because CFLAGS changes).
 
-Currently we only enable one chip's advanced interrupt controller
-(AVEC) in hardware, so multi-chip machines with Loongson-3C6000 don't
-work. This patch enables it for every chip (In theory every chip needs
-to be enabled only once, but for simplicity we enable it on every core
-in the CPU online hooks).
-
->
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongarch-avec.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-l=
-oongarch-avec.c
-> index 0f6e465dd309..9e30198fa7e4 100644
-> --- a/drivers/irqchip/irq-loongarch-avec.c
-> +++ b/drivers/irqchip/irq-loongarch-avec.c
-> @@ -56,6 +56,18 @@ struct avecintc_data {
->         unsigned int            moving;
->  };
->
-> +static inline void avecintc_enable(void)
-> +{
-> +       u64 value;
-> +
-> +       if (!loongarch_avec.domain)
-> +               return;
-Is there any reason to check this? If domain is NULL, avecintc_init()
-fails, there is no chance to execute this function.
+On the other hand, Ard's original patches are not for LoongArch only,
+so I think backport to stable branches is also not for LoongArch only.
 
 Huacai
 
-> +
-> +       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> +       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> +       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> +}
-> +
->  static inline void avecintc_ack_irq(struct irq_data *d)
->  {
->  }
-> @@ -127,6 +139,8 @@ static int avecintc_cpu_online(unsigned int cpu)
 >
->         guard(raw_spinlock)(&loongarch_avec.lock);
+> thanks,
 >
-> +       avecintc_enable();
-> +
->         irq_matrix_online(loongarch_avec.vector_matrix);
->
->         pending_list_init(cpu);
-> @@ -339,7 +353,6 @@ static int __init irq_matrix_init(void)
->  static int __init avecintc_init(struct irq_domain *parent)
->  {
->         int ret, parent_irq;
-> -       unsigned long value;
->
->         raw_spin_lock_init(&loongarch_avec.lock);
->
-> @@ -378,14 +391,13 @@ static int __init avecintc_init(struct irq_domain *=
-parent)
->                                   "irqchip/loongarch/avecintc:starting",
->                                   avecintc_cpu_online, avecintc_cpu_offli=
-ne);
->  #endif
-> -       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> -       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> -       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> +       avecintc_enable();
->
->         return ret;
->
->  out_remove_domain:
->         irq_domain_remove(loongarch_avec.domain);
-> +       loongarch_avec.domain =3D NULL;
->  out_free_handle:
->         irq_domain_free_fwnode(loongarch_avec.fwnode);
->  out:
-> --
-> 2.20.1
->
+> greg k-h
