@@ -1,75 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEAA1EE02E;
-	Fri,  6 Dec 2024 13:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51BE617597
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 01:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733490256; cv=none; b=jojktOnkvcZHG95e5eCpcDQMYwC6e6tfT6nbx3FSMjwQ/4eIxweeqmmlXrlEh3RPmLF7GK56agzyHvntGn9hTB1JyMF6OdHoMGCgz4nPO5B/V5O8a5B/ItFihMNZS0sWvliKpW+iiYMNsHUqEooWxCnzLXd4ij5uHpEAS2EdNVM=
+	t=1733536765; cv=none; b=HoW4OrvWrXUndfZTjOEITLqduW1npPcO6Pj8OuE1X39jjzmqXEDiPIIxIiNrqm5RMpX6u/AKjCex06Ya3D0avhQZPk6FVLevHDo9y180IKst2Y5y2xoAxc8XtrWcYDITpgVOl4KIC2HB5DLhI1hdAZiQhnVkmcE9iLJD5aVErMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733490256; c=relaxed/simple;
-	bh=gJMFTn5WLa0s3prw0ucaZuCAbEut3+7nW6zrckqI3mo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EeU+hkjzqQY3GFqMRPd4gZ8X6n4BHwqkpE5NkQWhnnzWu2y2Hu+QhIe0R1XVMGE/U9GqJyTIbnC5rMNyvI/V2QWNdI7n/4QiBSb3nssMYgjg7GjPm60AGiFNopy4MqfHkzYTSedbV/tOQHWpK5g1y8TZXgHTufZeYNGxqZH4vHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kN7DvgOB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kN7DvgOB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 345C6C4CED2;
-	Fri,  6 Dec 2024 13:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733490255;
-	bh=gJMFTn5WLa0s3prw0ucaZuCAbEut3+7nW6zrckqI3mo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kN7DvgOBF7iAIshX2Mur8CcB9pM1LxCvpQOwaJ33XEova4anUsCe/5JIgO+mSUBoa
-	 G/rlR4yu08RtztNHpsuLXytpVpPTNcRJ+tXU0v0YKtGij+ZWcx1xETKj2PoNK20/uu
-	 KvvwKPyEOcAWUO16+spNk63bxU7JZUSAi5Nb3I3g=
-Date: Fri, 6 Dec 2024 14:04:12 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, stable@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where
- possible
-Message-ID: <2024120635-wham-campsite-b62b@gregkh>
-References: <20241206085810.112341-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1733536765; c=relaxed/simple;
+	bh=+Yo60HJbO1w1xRhZcdknx9CjoWsBzS+fiO+D0jDFnjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c24hJn/LSFwD2PHFkVDB7g1Kn8kdy/DYoNt9bYEblrAKvkwxthpx26eMPEOV5bKrxbDlSjOPCM0ZfdquEhnbk40KGrlFZJoDCcEnCLZnwJEvmoWUQrKi29pPLq3tm6Sj5IGOE/211kSV4DhoG8/27Yk0AZ0nW7I7OPPbLlFb7no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxGeD4q1NnDK1SAA--.29195S3;
+	Sat, 07 Dec 2024 09:59:21 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBx_uD1q1Nn3Wd5AA--.42544S2;
+	Sat, 07 Dec 2024 09:59:18 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/10] Add jump table support for objtool on LoongArch
+Date: Sat,  7 Dec 2024 09:59:05 +0800
+Message-ID: <20241207015915.1159-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206085810.112341-1-chenhuacai@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx_uD1q1Nn3Wd5AA--.42544S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur48Cry7Gr17tw4xGF48GrX_yoW8Jw4kpF
+	43CrZFgr18Xr97A3srJ34YgFW3Ga1xWr1Iq3W3Jry5AFWUXr1UJr4fZayDtFyjgw4YgFWI
+	qF1rW3WUGF4qy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxU7fMaUUUUU
 
-On Fri, Dec 06, 2024 at 04:58:07PM +0800, Huacai Chen wrote:
-> Backport this series to 6.1&6.6 because LoongArch gets build errors with
-> latest binutils which has commit 599df6e2db17d1c4 ("ld, LoongArch: print
-> error about linking without -fPIC or -fPIE flag in more detail").
-> 
->   CC      .vmlinux.export.o
->   UPD     include/generated/utsversion.h
->   CC      init/version-timestamp.o
->   LD      .tmp_vmlinux.kallsyms1
-> loongarch64-unknown-linux-gnu-ld: kernel/kallsyms.o:(.text+0): relocation R_LARCH_PCALA_HI20 against `kallsyms_markers` can not be used when making a PIE object; recompile with -fPIE
-> loongarch64-unknown-linux-gnu-ld: kernel/crash_core.o:(.init.text+0x984): relocation R_LARCH_PCALA_HI20 against `kallsyms_names` can not be used when making a PIE object; recompile with -fPIE
-> loongarch64-unknown-linux-gnu-ld: kernel/bpf/btf.o:(.text+0xcc7c): relocation R_LARCH_PCALA_HI20 against `__start_BTF` can not be used when making a PIE object; recompile with -fPIE
-> loongarch64-unknown-linux-gnu-ld: BFD (GNU Binutils) 2.43.50.20241126 assertion fail ../../bfd/elfnn-loongarch.c:2673
-> 
-> In theory 5.10&5.15 also need this, but since LoongArch get upstream at
-> 5.19, so I just ignore them because there is no error report about other
-> archs now.
+This version is based on tip/tip.git objtool/core branch [1], add some weak
+and arch-specific functions to make the generic code more readable, tested
+with the latest upstream mainline Binutils, GCC and Clang.
 
-Odd, why doesn't this affect other arches as well using new binutils?  I
-hate to have to backport all of this just for one arch, as that feels
-odd.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
 
-thanks,
+Tiezhu Yang (10):
+  objtool: Handle various symbol types of rodata
+  objtool: Handle different entry size of rodata
+  objtool: Handle PC relative relocation type
+  objtool: Handle unreachable entry of rodata
+  objtool/LoongArch: Add support for switch table
+  objtool/LoongArch: Get each table size of rodata
+  objtool/LoongArch: Add support for goto table
+  LoongArch: Enable jump table for objtool
+  LoongArch: Convert unreachable() to BUG()
+  drm/amd/display: Mark dc_fixpt_from_fraction() noinline
 
-greg k-h
+ arch/loongarch/Kconfig                        |   3 +
+ arch/loongarch/Makefile                       |   6 +-
+ arch/loongarch/kernel/machine_kexec.c         |   4 +-
+ .../drm/amd/display/dc/basics/fixpt31_32.c    |   2 +-
+ tools/objtool/arch/loongarch/decode.c         |  31 +++-
+ .../objtool/arch/loongarch/include/arch/elf.h |   7 +
+ tools/objtool/arch/loongarch/special.c        | 164 +++++++++++++++++-
+ tools/objtool/check.c                         |  36 +++-
+ tools/objtool/include/objtool/arch.h          |   3 +
+ 9 files changed, 239 insertions(+), 17 deletions(-)
+
+-- 
+2.42.0
+
