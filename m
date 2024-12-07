@@ -1,134 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076F04A24
-	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 06:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B9685626
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733551446; cv=none; b=ADikqwn6sw1Rh0hiHsGTml3hd/vfe0rBBFfUBKSgwLTohJqcGyl4hnITHdoPAby+MiQaIx6iTPoNsGOpMxw/c/rDyz0LvlM4XjI1Ab6S9uiFTRJdVf3sh6rv3C4dNcWYVCnPXqqUTgbZobKBjDbC8l9vdjJ7qYr6e8XsCkuxO/o=
+	t=1733562724; cv=none; b=m35gTeFkNVG4jA93B8ea3QHYKUqzMfF/ACmsl5vq18u2rh1KG6iAvaM0RbWEVu4l83lu6sinEOptF8kas2X/vjVPR3k8VzC+25xzxg2FCvsiEC8dXlWzDWsn4ofQoUrSHoNzFEYZ44VT8YhlQRo2Fq/cefq4XiPlQ63tUlAJr6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733551446; c=relaxed/simple;
-	bh=YseTBCdknFeKunaNhZVzKTtsFPafjj38mjutfiqsZfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sj8alB8pCN+6uvN5B1rXOn0Lw2a0SvLUIKUapas8UQM7ZChpBgqrDcZ6fTW6liXgHBEIKyZdiBbIpBuNaPHmlHc4yLI4YkAi7PhW1zoKr7iE2tZ7MBTRkOkl4IM4osbpb1RSoAvIuMFGm7mYrGbnJVscEcO+llfW2/uh3cO//l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8DxDeNP5VNnK8VSAA--.28768S3;
-	Sat, 07 Dec 2024 14:03:59 +0800 (CST)
-Received: from [10.180.13.127] (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowMDxSMFO5VNncah5AA--.10777S2;
-	Sat, 07 Dec 2024 14:03:59 +0800 (CST)
-Message-ID: <455c5236-c5de-4138-bb23-04abb57a9a89@loongson.cn>
-Date: Sat, 7 Dec 2024 14:03:58 +0800
+	s=arc-20240116; t=1733562724; c=relaxed/simple;
+	bh=QM3dO3IgDSl6o5lIGQCB9dg197jlldvwDAyQrKZYv3I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cAUMNRbtDLEXkdxpK4XhllycevFP11RWjEHKGIUbVsi2QE7+NPuCY1jQ4/SIPT8eh553PiLfC1mpnGZ3+ntQ2mG6xKsXtebNDIMVmct2G7jwZbXC+yzFQjw7Fs3P0ioCUkKmCcEts6FU1/J+VPTYJrz+wL+CnYOPo1CiZO46oEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTp28EWp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTp28EWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6D3C4CED2
+	for <loongarch@lists.linux.dev>; Sat,  7 Dec 2024 09:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733562724;
+	bh=QM3dO3IgDSl6o5lIGQCB9dg197jlldvwDAyQrKZYv3I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bTp28EWpE3ExZK+5Xs2L1Q8q0swUp2wWFRjCQtBdrBj94IYxtRDULH5ph85ujsVPV
+	 7YIPdR8xkHJG2kpedB0hF1nqWIhOzZaWWf6iYAuSFdWig8ELvuhp/6605tkYlN+7Gf
+	 VhpkKJPhmDjL8JsBxUm9+zpVQPKdz+7eTcJqY1ye390h33yprz/alOYyzGR7jGZEDm
+	 ueIzXJe+1P/5RxzBjMOZVbsB3X5hMNyrD97vy/kZDaaiqtnUkMHIkKjhuyw/xR1t0/
+	 ScmsYOLyFNCzKmGblfJ8bKnG4YiQqTw2FleBqhrHDZS8jFKJFQHroAGdWlhsJ3F9zH
+	 vPp6/k/dlg1cA==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9ec267b879so542745966b.2
+        for <loongarch@lists.linux.dev>; Sat, 07 Dec 2024 01:12:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVDdnQuOSNcJ3g1DSnbSmHjjo9TKVYdhTqpWpALdThFrmBXe00ADJiYTEtOEkRxA2u3oJmH5rYvFOY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwoGrCDEuFTlHWmla0CXxzd1Ha5SWGva1L7EhfWw4gGX+fwFRDP
+	tipIrDiHL5zdkenN1rah95mRjVoo+tDV2lp+jDaPsSsM9zJjybfYsC41JZn8377BY8CQ/fKRUR9
+	lwaZzt3LMiDeJ0y94Wyuk04SCwBk=
+X-Google-Smtp-Source: AGHT+IEJGrBvG/ShGpCySY5o73rk2XwpV1WNmzYZCleJxbsf6ctE3q/pdaSVAnpSfuCOYx8WSVD6NwrST7GnTWOsFP0=
+X-Received: by 2002:a17:907:2817:b0:aa4:e18e:1ca1 with SMTP id
+ a640c23a62f3a-aa63a266bbbmr514126266b.60.1733562723240; Sat, 07 Dec 2024
+ 01:12:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] irqchip/loongarch-avec:Add multi-nodes topology support
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, tglx@linutronix.de
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
 References: <20241207033146.20938-1-zhangtianyang@loongson.cn>
-Content-Language: en-US
-From: Ming Wang <wangming01@loongson.cn>
 In-Reply-To: <20241207033146.20938-1-zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxSMFO5VNncah5AA--.10777S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEEEmdTfkADlwACsK
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ww1UAry7GrW8Gw17Xw15ZFc_yoW5JF1rpa
-	y5Za45Jr4Ut3Z7Wr9xK34DZFy3Xr4fK39rta43C3W7WrZ8GryDWFy0qF98ZF18C397Z3WF
-	vr4xJF4Uu3W5ZFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc804V
-	CY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
-	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2g18DUUU
-	U
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 7 Dec 2024 17:11:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4VAyD+=Btt9S6HrN6-sVQJqe1_jeLPS13UR1kxXJ8S5w@mail.gmail.com>
+Message-ID: <CAAhV-H4VAyD+=Btt9S6HrN6-sVQJqe1_jeLPS13UR1kxXJ8S5w@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongarch-avec:Add multi-nodes topology support
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, tglx@linutronix.de, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Tianyang,
 
-
-On 2024/12/7 11:31, Tianyang Zhang wrote:
+On Sat, Dec 7, 2024 at 11:31=E2=80=AFAM Tianyang Zhang
+<zhangtianyang@loongson.cn> wrote:
+>
 > This patch enables the advanced interrupt controller function under
 > multiple-node of 3C600. The topology of the advanced interrupt controller
-I think '3c600' is a typo. Shouldn't it be '3c6000'?
-> is consistent with NUMA node. We check the enable status of the node where
+> is consistent with NUMA node. We check the enable status of the node wher=
+e
 > each CPU is located once when it goes online, which may cause some
 > additional operations, but it can ensure that the advanced interrupt
 > controller can still be used in situations where some CPUs cannot start
-> 
+The whole can be reworded:
+
+Currently we only enable one chip's advanced interrupt controller
+(AVEC) in hardware, so multi-chip machines with Loongson-3C6000 don't
+work. This patch enables it for every chip (In theory every chip needs
+to be enabled only once, but for simplicity we enable it on every core
+in the CPU online hooks).
+
+>
 > Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 > ---
->   drivers/irqchip/irq-loongarch-avec.c | 20 ++++++++++++++++----
->   1 file changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+>  drivers/irqchip/irq-loongarch-avec.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-l=
+oongarch-avec.c
 > index 0f6e465dd309..9e30198fa7e4 100644
 > --- a/drivers/irqchip/irq-loongarch-avec.c
 > +++ b/drivers/irqchip/irq-loongarch-avec.c
 > @@ -56,6 +56,18 @@ struct avecintc_data {
->   	unsigned int		moving;
->   };
->   
+>         unsigned int            moving;
+>  };
+>
 > +static inline void avecintc_enable(void)
 > +{
-> +	u64 value;
+> +       u64 value;
 > +
-> +	if (!loongarch_avec.domain)
-> +		return;
+> +       if (!loongarch_avec.domain)
+> +               return;
+Is there any reason to check this? If domain is NULL, avecintc_init()
+fails, there is no chance to execute this function.
+
+Huacai
+
 > +
-> +	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> +	value |= IOCSR_MISC_FUNC_AVEC_EN;
-> +	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> +       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> +       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
 > +}
 > +
->   static inline void avecintc_ack_irq(struct irq_data *d)
->   {
->   }
+>  static inline void avecintc_ack_irq(struct irq_data *d)
+>  {
+>  }
 > @@ -127,6 +139,8 @@ static int avecintc_cpu_online(unsigned int cpu)
->   
->   	guard(raw_spinlock)(&loongarch_avec.lock);
->   
-> +	avecintc_enable();
+>
+>         guard(raw_spinlock)(&loongarch_avec.lock);
+>
+> +       avecintc_enable();
 > +
->   	irq_matrix_online(loongarch_avec.vector_matrix);
->   
->   	pending_list_init(cpu);
+>         irq_matrix_online(loongarch_avec.vector_matrix);
+>
+>         pending_list_init(cpu);
 > @@ -339,7 +353,6 @@ static int __init irq_matrix_init(void)
->   static int __init avecintc_init(struct irq_domain *parent)
->   {
->   	int ret, parent_irq;
-> -	unsigned long value;
->   
->   	raw_spin_lock_init(&loongarch_avec.lock);
->   
-> @@ -378,14 +391,13 @@ static int __init avecintc_init(struct irq_domain *parent)
->   				  "irqchip/loongarch/avecintc:starting",
->   				  avecintc_cpu_online, avecintc_cpu_offline);
->   #endif
-> -	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> -	value |= IOCSR_MISC_FUNC_AVEC_EN;
-> -	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> +	avecintc_enable();
->   
->   	return ret;
->   
->   out_remove_domain:
->   	irq_domain_remove(loongarch_avec.domain);
-> +	loongarch_avec.domain = NULL;
->   out_free_handle:
->   	irq_domain_free_fwnode(loongarch_avec.fwnode);
->   out:
-
+>  static int __init avecintc_init(struct irq_domain *parent)
+>  {
+>         int ret, parent_irq;
+> -       unsigned long value;
+>
+>         raw_spin_lock_init(&loongarch_avec.lock);
+>
+> @@ -378,14 +391,13 @@ static int __init avecintc_init(struct irq_domain *=
+parent)
+>                                   "irqchip/loongarch/avecintc:starting",
+>                                   avecintc_cpu_online, avecintc_cpu_offli=
+ne);
+>  #endif
+> -       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> -       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> -       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +       avecintc_enable();
+>
+>         return ret;
+>
+>  out_remove_domain:
+>         irq_domain_remove(loongarch_avec.domain);
+> +       loongarch_avec.domain =3D NULL;
+>  out_free_handle:
+>         irq_domain_free_fwnode(loongarch_avec.fwnode);
+>  out:
+> --
+> 2.20.1
+>
