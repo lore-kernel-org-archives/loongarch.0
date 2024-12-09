@@ -1,90 +1,78 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CA0213E86
-	for <loongarch@lists.linux.dev>; Mon,  9 Dec 2024 10:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E01552E4;
+	Mon,  9 Dec 2024 19:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733738531; cv=none; b=rMaNDvoC76T8vf8ple9ugHzgYHgh1ANcqehXLJhUgBjSCllyTzslU4kaNf2KmfjqEKTAbjBZCunQB4Rr52qUyXMlY3QsTZ1LAtlrIyI4JkolkwECZVgDUU5kgx/NOVqDecKXa0bX6xhXZHdSBP4D10v5wcOuWPQ18UoZYUbVzp0=
+	t=1733774056; cv=none; b=W/16Ldp541pVJ9fYVWdkzIKp8qBe9WFwqMikDVTfg1kPW2sF6Qup/s2W+l3ZGC7OjSUeHL/16Vi11crQkC7xxP/9n25+4vWg+ClecQaTwPYuU2/izIwwb1C9A9PZ+zjMeD72KmQDdh14mnM5wj230cCPNX9o763z9G1L7esiXj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733738531; c=relaxed/simple;
-	bh=nCw09gUb6A0TBEAcl+53+XyKQr0NNYN7MMLtG6B4iH4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fg7IlIcM1AtVygc3Sf57nX9R6dUxkDkt5i61n6ESXqo/QlE2nAC1QqjXA5f8duo3Ak/6VrTi5fHcMZA+sJUaGjNYTOZ27vmJSyZ7Q1LUVlzXnn/7J5mm9Dch+tjStfC09mtunSPyVHIa3VouVt80ub5kBNWvVtU8N5GaoAz79ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=k7mnslmj; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1733774056; c=relaxed/simple;
+	bh=fgbbqawM4EJR/XyO57RHF4Fi4tx+D0F5MotyUS6QYCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U344uJZ/Uc5EmjRDUR9irUDJuka6o4T5YGW8yWKhrHxaDVlNeIUTQkwXXV2WXJB+LlSyBBrrvrF3033Is+YEnWoIVySYg2duzi+j96T56Wa+HLMxSsc6OwIxv36l9LV98NtVAz/XsLwIYZhcOZRVfWFt9HDm59wUbMiUrx/Tfts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkTtXchX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="k7mnslmj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1733738521;
-	bh=1WbLyzuvdIwJ3vdPjX4KAu3bQ20/S08GDISFmM/a/hY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=k7mnslmjF0UpiUirKVsAu6sAz//avIw5LaFizm5xP1zNOgMWIsNHEwmijsuR4Pmoe
-	 9qi4R8V1r0uGn9gocDmpgEgUg0hX4FclBN0KYhfGq1Z1akKB6XqrzP3ShndhlT2W71
-	 0KHdqHfaZUmTSb2ffSizMXPxvL+7spvGuZwH/lJM=
-Received: from [192.168.124.9] (unknown [113.200.174.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id AAA8C1A3F68;
-	Mon,  9 Dec 2024 05:01:58 -0500 (EST)
-Message-ID: <c9a43e5da01ee2215393c0f3c50956171fe660ab.camel@xry111.site>
-Subject: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where
- possible
-From: Xi Ruoyao <xry111@xry111.site>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Huacai Chen	
- <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin	
- <sashal@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Masahiro Yamada	
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers	 <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>,
- 	stable@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Date: Mon, 09 Dec 2024 18:01:56 +0800
-In-Reply-To: <CAMj1kXEV+HC+2HMLhDaLfAufQLrXRs2J7akMNr1mjejDYc7kdw@mail.gmail.com>
-References: <20241206085810.112341-1-chenhuacai@loongson.cn>
-	 <2024120635-wham-campsite-b62b@gregkh>
-	 <CAAhV-H4Db0tVrqcfXHceJeODgnK0ggHpx9_6vwXAAV0LohCD-w@mail.gmail.com>
-	 <2024120748-preaching-reshape-06e9@gregkh>
-	 <ccb1fa9034b177042db8fcbe7a95a2a5b466dc30.camel@xry111.site>
-	 <CAMj1kXEV+HC+2HMLhDaLfAufQLrXRs2J7akMNr1mjejDYc7kdw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkTtXchX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69848C4CED1;
+	Mon,  9 Dec 2024 19:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733774055;
+	bh=fgbbqawM4EJR/XyO57RHF4Fi4tx+D0F5MotyUS6QYCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fkTtXchXuCttCn6LljeeVCrx0+yihBD8/VPm1HaZYsrGFtT1VrXdKwbSQK9c88I/E
+	 aKTCk46s/qIKfjiX1/Sura6sxJPLAYlJrmzVWs8ZdzwDGL5fHUw8kFVLe/A6yFHK4B
+	 3ZVmndtzOHAY5PDMrzyp27anL7PbuTjOMZ9O3+3bkpPM6oGrMqziRdjtwXvhz5KV/z
+	 DnYDG/07Ph+BUPntHd6i25+FgQ9lSB8V17RukS2YL8xgGzOrFNq1KZKNI+eKXP0liF
+	 jeureKlfU4osZ6AdFXtaNEmDzbLWK6RQ0QbdnH3VU9/vFNgm+plVRRk3WtFOdCGLE/
+	 JX4my71aElXfw==
+Date: Mon, 9 Dec 2024 11:54:13 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/10] objtool: Handle different entry size of rodata
+Message-ID: <20241209195413.gpq7t3nacsnx3xo3@jpoimboe>
+References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
+ <20241207015915.1159-3-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241207015915.1159-3-yangtiezhu@loongson.cn>
 
-On Mon, 2024-12-09 at 09:31 +0100, Ard Biesheuvel wrote:
-> Given that this is relatively new toolchain behavior, I'd suggest
-> fixing the compiler to emit weak external references via GOT entries
-> even when=C2=A0 -mdirect-extern-access is in effect.
+On Sat, Dec 07, 2024 at 09:59:07AM +0800, Tiezhu Yang wrote:
+> +__weak unsigned int arch_reloc_size(struct reloc *reloc)
+> +{
+> +	return 8;
+> +}
 
-I'm working on an approach in the linker instead.  A PC-relative address
-in +/- 2GiB range is
+Instead of making a weak function, each arch should have an explicit
+definition of this function, as it's not always 8:
 
-pcalau12i.d $a0, %pc_hi20(sym + addend)
-addi.d $a0, $a0, %pc_lo12(sym + addend)
+- x86 has R_X86_64_PC32 and R_X86_64_PLT32 which are 4 bytes.
 
-If doing a static linking, when sym is weak undefined, we should just
-load addend.  The compiler already guarantees addend is in [-2**31,
-2**31) range, so we just need to rewrite the pair to
+- 32-bit powerpc
 
-lu12i.w $a0, ((addend + 0x800) & ~0x7ff)
-addi.d $a0, $a0, (addend & 0x7ff)
+- 64-bit powerpc has R_PPC64_REL32
 
-OTOH if not doing a static linking, the user shouldn't use -mdirect-
-extern-access at all [this rule is the thing related to copy relocation:
-if copy relocation was available it would be possibly valid to use -
-mdirect-extern-access w/o static linking] and the linker is correct to
-report an error (but the error message is unclear and I need to fix it
-anyway).
+> @@ -1967,8 +1973,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+>  		if (reloc != table && reloc == next_table)
+>  			break;
+>  
+> +		entry_size = arch_reloc_size(reloc);
+> +
+>  		/* Make sure the table entries are consecutive: */
+> -		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
+> +		if (prev_offset && reloc_offset(reloc) != prev_offset + entry_size)
+>  			break;
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+No need to use a variable here, just call arch_reloc_size() directly.
+
+-- 
+Josh
