@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E01552E4;
-	Mon,  9 Dec 2024 19:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503A023315A;
+	Mon,  9 Dec 2024 20:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733774056; cv=none; b=W/16Ldp541pVJ9fYVWdkzIKp8qBe9WFwqMikDVTfg1kPW2sF6Qup/s2W+l3ZGC7OjSUeHL/16Vi11crQkC7xxP/9n25+4vWg+ClecQaTwPYuU2/izIwwb1C9A9PZ+zjMeD72KmQDdh14mnM5wj230cCPNX9o763z9G1L7esiXj4=
+	t=1733776546; cv=none; b=sl5wBI+SopaizeRw0FK1SBhtjnJF/pu6ey6g4rgaH6D2qPsHi1AIoQwfqmvvJH57s5shUD5GrFebq8WOElmfvCd5hXyC8RG4k6bDBT4vsfqGDbw1YKV+K0N9UoKkQuJ+P7K/ESnTrEvDsZq54tbBn+RN94pIEbLgfqZ02e7iSmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733774056; c=relaxed/simple;
-	bh=fgbbqawM4EJR/XyO57RHF4Fi4tx+D0F5MotyUS6QYCE=;
+	s=arc-20240116; t=1733776546; c=relaxed/simple;
+	bh=R+kdjcvmUIPoFjoDb4mLaEXNjYnz7/GMThAiOLaPkDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U344uJZ/Uc5EmjRDUR9irUDJuka6o4T5YGW8yWKhrHxaDVlNeIUTQkwXXV2WXJB+LlSyBBrrvrF3033Is+YEnWoIVySYg2duzi+j96T56Wa+HLMxSsc6OwIxv36l9LV98NtVAz/XsLwIYZhcOZRVfWFt9HDm59wUbMiUrx/Tfts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkTtXchX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQwjPJUut/PyfGX7DuLnE7If1lO6aepwfZTbkjpV3BmVfiGKZ+NlnoccMiIPKiYgZZmM4ILNU8FjbqURa1vx3J6AQ3nnm6V9+/Yx+iyZg2tzdLJiFiPrcHTFkWDeYwAj9v/c+tdyCRCHJ+vLR5NFsR1Pqsr6Xe00bfHykQRxMf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOFwHQDa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkTtXchX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69848C4CED1;
-	Mon,  9 Dec 2024 19:54:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOFwHQDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CE8EC4CED1;
+	Mon,  9 Dec 2024 20:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733774055;
-	bh=fgbbqawM4EJR/XyO57RHF4Fi4tx+D0F5MotyUS6QYCE=;
+	s=k20201202; t=1733776545;
+	bh=R+kdjcvmUIPoFjoDb4mLaEXNjYnz7/GMThAiOLaPkDE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fkTtXchXuCttCn6LljeeVCrx0+yihBD8/VPm1HaZYsrGFtT1VrXdKwbSQK9c88I/E
-	 aKTCk46s/qIKfjiX1/Sura6sxJPLAYlJrmzVWs8ZdzwDGL5fHUw8kFVLe/A6yFHK4B
-	 3ZVmndtzOHAY5PDMrzyp27anL7PbuTjOMZ9O3+3bkpPM6oGrMqziRdjtwXvhz5KV/z
-	 DnYDG/07Ph+BUPntHd6i25+FgQ9lSB8V17RukS2YL8xgGzOrFNq1KZKNI+eKXP0liF
-	 jeureKlfU4osZ6AdFXtaNEmDzbLWK6RQ0QbdnH3VU9/vFNgm+plVRRk3WtFOdCGLE/
-	 JX4my71aElXfw==
-Date: Mon, 9 Dec 2024 11:54:13 -0800
+	b=KOFwHQDav0VlZwgxxqBOKxIXIB2as0Tn99mJ797QfvvHVbp3sd+TPtwfJVNF2Sou3
+	 d873IwirefxyXEFWoR6B6EYO9NtL9QtAaX5IgaXcqqcwbTkXyEJQzqUzguNGZIcq7+
+	 dL/dDHcG1cYkARxHggKYyIa5BitKKA8iVr7/stgbCkdZkUOLSe9xci+YFy6DPTsaW0
+	 Ezfe/6PKjwgOb38Mi0tBRwTcBYSoRvdNpgasjy6N4pC2z7OCTZrJrpFW0YOXTG8yu9
+	 Y3QzSvDu6Vt8xLKyQmvv7YbYgFMbFyr0ND5+BDamaR6H6zID7sAbbSesLrRHeVqVSI
+	 sf9h3T29QYKqw==
+Date: Mon, 9 Dec 2024 12:35:44 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/10] objtool: Handle different entry size of rodata
-Message-ID: <20241209195413.gpq7t3nacsnx3xo3@jpoimboe>
+Subject: Re: [PATCH v5 03/10] objtool: Handle PC relative relocation type
+Message-ID: <20241209203544.axetpzva7vg3hsc5@jpoimboe>
 References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
- <20241207015915.1159-3-yangtiezhu@loongson.cn>
+ <20241207015915.1159-4-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,35 +44,27 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241207015915.1159-3-yangtiezhu@loongson.cn>
+In-Reply-To: <20241207015915.1159-4-yangtiezhu@loongson.cn>
 
-On Sat, Dec 07, 2024 at 09:59:07AM +0800, Tiezhu Yang wrote:
-> +__weak unsigned int arch_reloc_size(struct reloc *reloc)
+On Sat, Dec 07, 2024 at 09:59:08AM +0800, Tiezhu Yang wrote:
+> +unsigned long arch_adjust_offset(struct reloc *reloc, struct reloc *table)
 > +{
-> +	return 8;
-> +}
+> +	switch (reloc_type(reloc)) {
+> +	case R_LARCH_32_PCREL:
+> +	case R_LARCH_64_PCREL:
+> +		if (reloc->sym->type == STT_SECTION)
+> +			return reloc->sym->offset + reloc_addend(reloc) -
+> +			       (reloc_offset(reloc) - reloc_offset(table));
 
-Instead of making a weak function, each arch should have an explicit
-definition of this function, as it's not always 8:
+How does this even work?  i.e., why does the reloc offset (basically the
+jump table index) have anything to do with calculating the location of
+the instruction it's referencing?
 
-- x86 has R_X86_64_PC32 and R_X86_64_PLT32 which are 4 bytes.
+> +		else
+> +			return reloc->sym->offset;
 
-- 32-bit powerpc
-
-- 64-bit powerpc has R_PPC64_REL32
-
-> @@ -1967,8 +1973,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
->  		if (reloc != table && reloc == next_table)
->  			break;
->  
-> +		entry_size = arch_reloc_size(reloc);
-> +
->  		/* Make sure the table entries are consecutive: */
-> -		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
-> +		if (prev_offset && reloc_offset(reloc) != prev_offset + entry_size)
->  			break;
-
-No need to use a variable here, just call arch_reloc_size() directly.
+This also seems odd.  Why is the addend being ignored?  Shouldn't it
+point to the instruction's offset?
 
 -- 
 Josh
