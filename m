@@ -1,183 +1,134 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EEA1C5CBA
-	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 03:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EB5230D25
+	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 09:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733801862; cv=none; b=odzdPf3j+ighiZk96hLweV9Ugj/RHJpC9wLSNPcWb+dPna6FbrBjzk/nZl0t1r0bvwfzK5Rx+JVcLE1XcNzCQ+t2udYaGDVvBP4H2j8+UiF3AWdPuMawJBmPb28HDsA6OfbB9ckgCgCVcKXI2LBZa58KYoYgQNlMpLzAjo4yROk=
+	t=1733821522; cv=none; b=iFQjLCJY6GOId4QcUi3abPzZD7sa7A1SriJwk2NPgjm3cxazJqnfmcUOcLXinDeAdocpA4pLoTKU0i8cAixpQgLU9FQIlg+AyQA9BDPU6TDu0UVabUB9U1slC8M26/uYZQcpJDI/oMK+sZbSlHFOOueJE9QGIgcrC5qKqV/GlyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733801862; c=relaxed/simple;
-	bh=yXLwrYkUhhm7e8Jczp/Rq6SgG8Y2ONP7nE+CaYrO6cg=;
+	s=arc-20240116; t=1733821522; c=relaxed/simple;
+	bh=3NtIMl1DjCiUo8OeDU2MLnM1AfkfRHex0Tmo2GMo9SI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4Yp7R6KAKZDdwEOOHqXLNauXwc9R5WG6S6q9KrLcDgq5jhWHQVKnTnUBYT62mOchHP5kqRoFbnkf6iCy1J0hiVhvtwrpMbJ68gE/x/QBbYTBaesx13f7KbtkadYJmu6cdncrD6kOYmC7dmfzAv1FdT48b70AEDGAr+2ePma7/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2RDSOG4; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Iblestn6ojBU1rxsUgYO4DDzluzcp0SnulwLtixp9aKv82y/7gbTI2Actkhb3xauxO2az6n3FEFvhBl+8hpPYWNNcDrVzheidmhtqp/ZWlX7cQ26z9kEvDwgyF61fB+pxhHoiF2/tNzpMMeI0QMhoWcn35s7TMTEjJ73sBjK3KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Zn3FTys; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2RDSOG4"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso4763797a12.1
-        for <loongarch@lists.linux.dev>; Mon, 09 Dec 2024 19:37:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Zn3FTys"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-385e3621518so3551258f8f.1
+        for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 01:05:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733801859; x=1734406659; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1733821519; x=1734426319; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pEGiPdcE8U0HMqCc8hcN09nWg4b+RmE8pUeIXB0J+Us=;
-        b=a2RDSOG4ehtkHSS0+DW+pLzQW3MmZgdUEQetbjZK7Uw0MtNFvFB4ZpaDMpAlYK32fd
-         jlwTEAB0ZgaPtNSPacFuc9vVceMSObDm+yy2DwJdeY9Es7r155O+4tYvOKuStssJv85Y
-         FAYppTAb7j/JehI0YDDFwPOh838TTL2QooayKnkH9Z9fiGBLrknu8LE/YPh142cMz4vu
-         SkRwWCACU/raStp5DVN8RQaAVGaZObzMoDgRPVAtA190qNmjkKspZsCsfm1qQ9Hdupja
-         nmvHNtDHLQ7LxAjcA0MWCx9VxFXQnzx5WlXxK/ZzDPep6oSdOoBuedMZqGfoxwRkPFBS
-         ah1w==
+        bh=Ep5OKFJpfszekExX4/IRcefemdiT8s+lNUZhAL6lYhw=;
+        b=3Zn3FTysgQcNKGIgg4rHsl3s96GbGShyDSamLdM17YFa01TPTouO624jk3zDXfvB1c
+         kS3SHQOYA3H8UEud1YRU5lRn6uvJ0dWNUfYGjqAZahxF2ozA3ypfpBzrxDDFiIWTxR2I
+         V8zY29u2T00p+8kfwCNPFi4hlcTXpVkh3mehpZELRm0XOAT5Rj2obWgyOnUD3HcYj8v1
+         1mYPaKpPda2R1J95mOiLn0+kCbVlDEyg/tTiMaYWGAomx1rsJJGIybbW59ZC++95uVtS
+         QuRkKM3CUWtoMiPKv5/jfwmTzf0HFOfIzbRGTA9/JSx5kISp0NrahdbocR8YoNIU6WzU
+         lNXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733801859; x=1734406659;
+        d=1e100.net; s=20230601; t=1733821519; x=1734426319;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pEGiPdcE8U0HMqCc8hcN09nWg4b+RmE8pUeIXB0J+Us=;
-        b=vQqeF+pwerSIJj6IWvtnAoO/yAn19AzkGBU0imYSdGx7UY4bIKUBYbk+j/67kD6bxP
-         INvDpXMziLG2loh5pxvwRDVhoZkZOFkrdIgpqDbRBL0uXgilmuGFLOA146fXYr+ty2vM
-         RboAUlzq04ywsGPVQvPULdfmtwq7NjTCcQMw/RsRbOtR2gIAwqoz9tMp5WA2ahQx2WFs
-         Nw/HttQ2nB6d8KlzQ1PEb9HzXaEhaYpb9Wm8t+92apf4BBbLEkujfQaYsagmsmqIPOGX
-         h1dthLm1IN1jkNff0n17OsxhQcKmfKiM4/zinll/mB3H19vGhthKhnXTDzBUoOl651uG
-         iecw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWC2e82sl0k5xHUkt85Is3GK3pLaZYrH8dyAA2wmsrr48BGU9l4SL/4t//2cK3o2G2jn3+VhOtSLg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwakuXpP2VfASAkN5380lmRay9n7qCb92akZtjGvSfOqTVuUjDB
-	f4ikYelr6OJYJLvcWPH5xx6vg5HnCl3yLEDV3L7GJn8Q/BxzXZv9Q9hUWHlaJF11wRkxwHhUy8j
-	/tT4HADC70LeoQdJxf4jvTJ8SNFg=
-X-Gm-Gg: ASbGncsNsoKDPrqoERv6b4bbADTdfxam5v5yB3BxKM6akPNcX77crT551mAS8V7jqVu
-	P5CzNO4y2cX6jVwgJ24vYjrXl47xItHJiKrDuGw==
-X-Google-Smtp-Source: AGHT+IElXjz+7x/lQGuFmHk7BJtRPsIF5Xkbrc+PaOE9soOWoyJSq8aIO8IH6O/j+TzaKqiG91uZtuFho2g8MHXawAQ=
-X-Received: by 2002:a05:6402:3229:b0:5d0:f6ed:4cd1 with SMTP id
- 4fb4d7f45d1cf-5d41e2b4c34mr1849541a12.10.1733801858975; Mon, 09 Dec 2024
- 19:37:38 -0800 (PST)
+        bh=Ep5OKFJpfszekExX4/IRcefemdiT8s+lNUZhAL6lYhw=;
+        b=gnpr2Ip+Q+orP2dWEbZsuvp55H7dr24XSl73t+QnzaaaSUG0/WsFcsAvdTxnVkwlJJ
+         ln9hYDzGpmFhyR5pQQ4DWfTx1Ack8mdPlIOE1EaRyrcjqSHKH4S7D5vDa3AnGVo1jmry
+         H7ZdRgmCrpw6Yq8YY0Wj6dtWwz38qvHqRDlDEGz0B71lX1RQQ8w1kjRXvHTLuV6o03F5
+         DBYArNwGW5poKtNrcJBb1JJ8eCnst9GTBkSPmiXccT179GT1UCzKz4n3qzQf9R7/4OgM
+         zLWsvSGgwsohFE3ADxsxPV8zlY9VI05/rey8L8ycQ/9EnFOsIzriDnqywg8tcucZAJ0o
+         XHwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnuFRbpZ/iIHDuctO71moSBIq3ejwuaOkx49PU8GkdomGlE5+GACA1FwOsxzkbxjeC999bsQbubFA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwsHqxBgW4l4Or8wJAYXgb/lBuLy+4VSaEgmPyJgEnYb7HYa81Q
+	2LyyXhXdfaXpXz3H0AWK9wkGuVVHPaB8M52h6jiqZuJzRcR1TJbtACcd/Q8nclkKNerrg/Z+wCH
+	azWQ5TUHNz2fvPISGB9fEZn8+26o4mooPFnLw
+X-Gm-Gg: ASbGnctMdq+DM2dBBcm/tuSH8/bwSDuankiTk+oIZV0U3+ZLWBifkgWVegIiyZ0mcdX
+	Jk7BIo5+rkPTRitleygpjp+VZ9Tqa4/Nj4TMMpv3Z456O7vwjxR5R63n9qgbqJn9Scw==
+X-Google-Smtp-Source: AGHT+IGIVjgo6xFN35HYB1TgvILbI9Al6TSHNEWYp3ypNeyi+o9RjYaXrxzLsc97Z2zDVdAJ5OXIaoQOhG2vsZwboeY=
+X-Received: by 2002:a05:6000:156f:b0:374:c4e2:3ca7 with SMTP id
+ ffacd0b85a97d-3862b33e3cemr11655971f8f.5.1733821519043; Tue, 10 Dec 2024
+ 01:05:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241210024119.2488608-1-kaleshsingh@google.com> <20241210024119.2488608-18-kaleshsingh@google.com>
-In-Reply-To: <20241210024119.2488608-18-kaleshsingh@google.com>
-From: Yang Shi <shy828301@gmail.com>
-Date: Mon, 9 Dec 2024 19:37:27 -0800
-Message-ID: <CAHbLzkq2SNaqzx4d981H2QfQvtObS3X0pPL8=oqFsFbMditWPA@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable 17/17] mm: Respect mmap hint before THP
- alignment if allocation is possible
-To: Kalesh Singh <kaleshsingh@google.com>
-Cc: akpm@linux-foundation.org, vbabka@suse.cz, yang@os.amperecomputing.com, 
-	riel@surriel.com, david@redhat.com, linux@armlinux.org.uk, 
-	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
-	davem@davemloft.net, andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net, 
-	jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com, 
-	leitao@debian.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
-	kernel-team@android.com, android-mm@google.com
+References: <20241210001802.228725-1-fujita.tomonori@gmail.com> <20241210001802.228725-6-fujita.tomonori@gmail.com>
+In-Reply-To: <20241210001802.228725-6-fujita.tomonori@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 10 Dec 2024 10:05:07 +0100
+Message-ID: <CAH5fLgiShKMGo6AYWM-4S8JK+iDA+tUfz9uxkns82g0nLW--NQ@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] rust: Add warn_on and warn_on_once
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 6:45=E2=80=AFPM Kalesh Singh <kaleshsingh@google.com=
-> wrote:
+On Tue, Dec 10, 2024 at 1:19=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
 >
-> Commit 249608ee4713 ("mm: respect mmap hint address when aligning for THP=
-")
-> fallsback to PAGE_SIZE alignment instead of THP alignment
-> for anonymous mapping as long as a hint address is provided by the user
-> -- even if we weren't able to allocate the unmapped area at the hint
-> address in the end.
+> Add warn_on and warn_on_once macros. Wrapping the C's WARN_* and BUG_*
+> macros doesn't work so this uses the assembly code exported by the C
+> side via ARCH_WARN_ASM macro. Like the static branch code, this
+> generates the assembly code for rust dynamically by using the C
+> preprocessor.
 >
-> This was done to address the immediate regression in anonymous mappings
-> where the hint address were being ignored in some cases; due to commit
-> efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries").
+> file()! macro doesn't work for the Rust inline assembly in the same
+> way as __FILE__ for the C inline assembly. So the code to handle a
+> file name is different from the C assembly code (similar to the
+> arm64/loongarch assembly).
 >
-> It was later pointed out that this issue also existed for file-backed
-> mappings from file systems that use thp_get_unmapped_area() for their
-> .get_unmapped_area() file operation.
+> ASM_REACHABLE definition works in the same way to get objtool's
+> reachable asm code. The architectures which use objtool (x86 and
+> loongarch) needs it.
 >
-> The same fix was not applied for file-backed mappings since it would
-> mean any mmap requests that provide a hint address would be only
-> PAGE_SIZE-aligned regardless of whether allocation was successful at
-> the hint address or not.
->
-> Instead, use arch_mmap_hint() to first attempt allocation at the hint
-> address and fallback to THP alignment if that fails.
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Thanks for taking time to try to fix this.
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+> +#[cfg(any(target_arch =3D "x86_64", target_arch =3D "riscv64"))]
 
->
-> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
-> ---
->  mm/huge_memory.c | 15 ++++++++-------
->  mm/mmap.c        |  1 -
->  2 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 137abeda8602..f070c89dafc9 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1097,6 +1097,14 @@ static unsigned long __thp_get_unmapped_area(struc=
-t file *filp,
->         loff_t off_align =3D round_up(off, size);
->         unsigned long len_pad, ret, off_sub;
->
-> +       /*
-> +        * If allocation at the address hint succeeds; respect the hint a=
-nd
-> +        * don't try to align to THP boundary.
-> +        */
-> +       addr =3D arch_mmap_hint(filp, addr, len, off, flags);
-> +       if (addr)
-> +               return addr;
-> +
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+> +#[cfg(any(target_arch =3D "aarch64", target_arch =3D "loongarch64"))]
 
-IIUC, arch_mmap_hint() will be called in arch_get_unmapped_area() and
-arch_get_unmapped_area_topdown() again. So we will actually look up
-maple tree twice. It sounds like the second hint address search is
-pointless. You should be able to set addr to 0 before calling
-mm_get_unmapped_area_vmflags() in order to skip the second hint
-address search.
+What's the reason for this arch-specific code? The file!()/line!()
+invocations? Could they be passed as an argument to the asm instead so
+that we don't need target_arch cfgs? I understand that they don't work
+exactly the same way, but maybe it could still work?
 
->         if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
->                 return 0;
->
-> @@ -1117,13 +1125,6 @@ static unsigned long __thp_get_unmapped_area(struc=
-t file *filp,
->         if (IS_ERR_VALUE(ret))
->                 return 0;
->
-> -       /*
-> -        * Do not try to align to THP boundary if allocation at the addre=
-ss
-> -        * hint succeeds.
-> -        */
-> -       if (ret =3D=3D addr)
-> -               return addr;
-> -
->         off_sub =3D (off - ret) & (size - 1);
->
->         if (test_bit(MMF_TOPDOWN, &current->mm->flags) && !off_sub)
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 59bf7d127aa1..6bfeec80152a 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -807,7 +807,6 @@ __get_unmapped_area(struct file *file, unsigned long =
-addr, unsigned long len,
->         if (get_area) {
->                 addr =3D get_area(file, addr, len, pgoff, flags);
->         } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && !file
-> -                  && !addr /* no hint */
->                    && IS_ALIGNED(len, PMD_SIZE)) {
->                 /* Ensures that larger anonymous mappings are THP aligned=
-. */
->                 addr =3D thp_get_unmapped_area_vmflags(file, addr, len,
-> --
-> 2.47.0.338.g60cca15819-goog
->
->
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, CONFIG_UML))]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) =3D> {
+> +        // SAFETY: Just an FFI call.
+> +        unsafe {
+> +            $crate::bindings::warn_slowpath_fmt(
+> +                $crate::c_str!(::core::file!()).as_ptr() as *const ::cor=
+e::ffi::c_char,
+> +                line!() as i32,
+> +                $flags as u32,
+> +                ::core::ptr::null() as *const ::core::ffi::c_char,
+
+I wonder if this could be written to utilize Location::caller()
+instead so that `#[track_caller]` works?
+
+Alice
