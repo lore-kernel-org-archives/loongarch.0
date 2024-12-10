@@ -1,134 +1,160 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EB5230D25
-	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 09:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D03C30;
+	Tue, 10 Dec 2024 11:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733821522; cv=none; b=iFQjLCJY6GOId4QcUi3abPzZD7sa7A1SriJwk2NPgjm3cxazJqnfmcUOcLXinDeAdocpA4pLoTKU0i8cAixpQgLU9FQIlg+AyQA9BDPU6TDu0UVabUB9U1slC8M26/uYZQcpJDI/oMK+sZbSlHFOOueJE9QGIgcrC5qKqV/GlyM=
+	t=1733830541; cv=none; b=RAF0YSppK5YHWJrVipKG0h3p2ZYmctSb4KYknlXV0pzKEovTwgQ0SQlydvQZ1qIyIFCeqNiB3JDrb6djw8ydBqftgWP5imVM6rT/xAKDEQbvcLGeotp1jgq4tuSroytUcvBH0Hpy6iJWqoiH6bV3SgkSAY9LC3gOUiW3whG/qI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733821522; c=relaxed/simple;
-	bh=3NtIMl1DjCiUo8OeDU2MLnM1AfkfRHex0Tmo2GMo9SI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Iblestn6ojBU1rxsUgYO4DDzluzcp0SnulwLtixp9aKv82y/7gbTI2Actkhb3xauxO2az6n3FEFvhBl+8hpPYWNNcDrVzheidmhtqp/ZWlX7cQ26z9kEvDwgyF61fB+pxhHoiF2/tNzpMMeI0QMhoWcn35s7TMTEjJ73sBjK3KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Zn3FTys; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1733830541; c=relaxed/simple;
+	bh=WHDSe6EUA5S0A1igiIW2WwLpfRxVDyrjbYLfxWAG7Ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+MTuH6UwvLhlTB6Sy1nDYtKU8LLoe1yvA/FeWEEzCs8gOiy1lyVFY9l0TZ4bDMp2ZJhRGCrC2AB2kXYygaQVPHpxW4bN4snMgCNhqeZwQZ7OLrSyyMUVi8HwwER4CEoJQfCnQYZjyoINlc6F/V4UmKCZy7cimzpCkvvvB2LCTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSuMrLGi; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Zn3FTys"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-385e3621518so3551258f8f.1
-        for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 01:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733821519; x=1734426319; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ep5OKFJpfszekExX4/IRcefemdiT8s+lNUZhAL6lYhw=;
-        b=3Zn3FTysgQcNKGIgg4rHsl3s96GbGShyDSamLdM17YFa01TPTouO624jk3zDXfvB1c
-         kS3SHQOYA3H8UEud1YRU5lRn6uvJ0dWNUfYGjqAZahxF2ozA3ypfpBzrxDDFiIWTxR2I
-         V8zY29u2T00p+8kfwCNPFi4hlcTXpVkh3mehpZELRm0XOAT5Rj2obWgyOnUD3HcYj8v1
-         1mYPaKpPda2R1J95mOiLn0+kCbVlDEyg/tTiMaYWGAomx1rsJJGIybbW59ZC++95uVtS
-         QuRkKM3CUWtoMiPKv5/jfwmTzf0HFOfIzbRGTA9/JSx5kISp0NrahdbocR8YoNIU6WzU
-         lNXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733821519; x=1734426319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ep5OKFJpfszekExX4/IRcefemdiT8s+lNUZhAL6lYhw=;
-        b=gnpr2Ip+Q+orP2dWEbZsuvp55H7dr24XSl73t+QnzaaaSUG0/WsFcsAvdTxnVkwlJJ
-         ln9hYDzGpmFhyR5pQQ4DWfTx1Ack8mdPlIOE1EaRyrcjqSHKH4S7D5vDa3AnGVo1jmry
-         H7ZdRgmCrpw6Yq8YY0Wj6dtWwz38qvHqRDlDEGz0B71lX1RQQ8w1kjRXvHTLuV6o03F5
-         DBYArNwGW5poKtNrcJBb1JJ8eCnst9GTBkSPmiXccT179GT1UCzKz4n3qzQf9R7/4OgM
-         zLWsvSGgwsohFE3ADxsxPV8zlY9VI05/rey8L8ycQ/9EnFOsIzriDnqywg8tcucZAJ0o
-         XHwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnuFRbpZ/iIHDuctO71moSBIq3ejwuaOkx49PU8GkdomGlE5+GACA1FwOsxzkbxjeC999bsQbubFA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwsHqxBgW4l4Or8wJAYXgb/lBuLy+4VSaEgmPyJgEnYb7HYa81Q
-	2LyyXhXdfaXpXz3H0AWK9wkGuVVHPaB8M52h6jiqZuJzRcR1TJbtACcd/Q8nclkKNerrg/Z+wCH
-	azWQ5TUHNz2fvPISGB9fEZn8+26o4mooPFnLw
-X-Gm-Gg: ASbGnctMdq+DM2dBBcm/tuSH8/bwSDuankiTk+oIZV0U3+ZLWBifkgWVegIiyZ0mcdX
-	Jk7BIo5+rkPTRitleygpjp+VZ9Tqa4/Nj4TMMpv3Z456O7vwjxR5R63n9qgbqJn9Scw==
-X-Google-Smtp-Source: AGHT+IGIVjgo6xFN35HYB1TgvILbI9Al6TSHNEWYp3ypNeyi+o9RjYaXrxzLsc97Z2zDVdAJ5OXIaoQOhG2vsZwboeY=
-X-Received: by 2002:a05:6000:156f:b0:374:c4e2:3ca7 with SMTP id
- ffacd0b85a97d-3862b33e3cemr11655971f8f.5.1733821519043; Tue, 10 Dec 2024
- 01:05:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSuMrLGi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733830540; x=1765366540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WHDSe6EUA5S0A1igiIW2WwLpfRxVDyrjbYLfxWAG7Ls=;
+  b=cSuMrLGiD7EZvkooBsFeYDJsbgvIHc/0tkPCUrXS++bjQj/XdSfle+WA
+   oUrcCmGo9dQoE9j/xXN0r2/8NsmWejLgOUuxJ4WniyyWYx2lfCYgw1nAm
+   ZgvU/X3nDRK1v6UCR8KaWQi0KzN4qCCuSQqoZBt+etkfm1G+vORGsUUvM
+   EeWKR33bamAZ7TMcgIHUpi3Ru+T8+Wv2PJ6js9SJsZUHwMf7edjVjlNMT
+   srn/xROAC3+Uq6zoS1BIuIiCz/sxXqV/9xxKHn5VZQq8a/BADlCjEJzna
+   kXvGCE4583csm9jBRiSbMt2UMhhMw6kVTkOvnYm/6srtni85Dr3f/CzUt
+   Q==;
+X-CSE-ConnectionGUID: UbndUyUaTA2hhfY3GS4mrQ==
+X-CSE-MsgGUID: u/GaGH3sR+eo+vL7kTRDBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11281"; a="37953216"
+X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
+   d="scan'208";a="37953216"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 03:35:39 -0800
+X-CSE-ConnectionGUID: KnbZnJbTTp+ogeuAnZR5Lw==
+X-CSE-MsgGUID: YdwH9kWVRUewkGlVt+S9DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
+   d="scan'208";a="95206413"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 10 Dec 2024 03:35:32 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tKyWX-0005TR-0J;
+	Tue, 10 Dec 2024 11:35:29 +0000
+Date: Tue, 10 Dec 2024 19:35:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
+	vbabka@suse.cz, yang@os.amperecomputing.com, riel@surriel.com,
+	david@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, linux@armlinux.org.uk,
+	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, davem@davemloft.net,
+	andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net,
+	jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com,
+	leitao@debian.org, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH mm-unstable 04/17] mm: alpha: Introduce arch_mmap_hint()
+Message-ID: <202412102123.Db7EAmhx-lkp@intel.com>
+References: <20241210024119.2488608-5-kaleshsingh@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241210001802.228725-1-fujita.tomonori@gmail.com> <20241210001802.228725-6-fujita.tomonori@gmail.com>
-In-Reply-To: <20241210001802.228725-6-fujita.tomonori@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 10 Dec 2024 10:05:07 +0100
-Message-ID: <CAH5fLgiShKMGo6AYWM-4S8JK+iDA+tUfz9uxkns82g0nLW--NQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] rust: Add warn_on and warn_on_once
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	x86@kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
-	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210024119.2488608-5-kaleshsingh@google.com>
 
-On Tue, Dec 10, 2024 at 1:19=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
->
-> Add warn_on and warn_on_once macros. Wrapping the C's WARN_* and BUG_*
-> macros doesn't work so this uses the assembly code exported by the C
-> side via ARCH_WARN_ASM macro. Like the static branch code, this
-> generates the assembly code for rust dynamically by using the C
-> preprocessor.
->
-> file()! macro doesn't work for the Rust inline assembly in the same
-> way as __FILE__ for the C inline assembly. So the code to handle a
-> file name is different from the C assembly code (similar to the
-> arm64/loongarch assembly).
->
-> ASM_REACHABLE definition works in the same way to get objtool's
-> reachable asm code. The architectures which use objtool (x86 and
-> loongarch) needs it.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Hi Kalesh,
 
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
-> +#[cfg(any(target_arch =3D "x86_64", target_arch =3D "riscv64"))]
+kernel test robot noticed the following build errors:
 
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
-> +#[cfg(any(target_arch =3D "aarch64", target_arch =3D "loongarch64"))]
+[auto build test ERROR on akpm-mm/mm-everything]
 
-What's the reason for this arch-specific code? The file!()/line!()
-invocations? Could they be passed as an argument to the asm instead so
-that we don't need target_arch cfgs? I understand that they don't work
-exactly the same way, but maybe it could still work?
+url:    https://github.com/intel-lab-lkp/linux/commits/Kalesh-Singh/mm-Introduce-generic_mmap_hint/20241210-104424
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20241210024119.2488608-5-kaleshsingh%40google.com
+patch subject: [PATCH mm-unstable 04/17] mm: alpha: Introduce arch_mmap_hint()
+config: alpha-allmodconfig (https://download.01.org/0day-ci/archive/20241210/202412102123.Db7EAmhx-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241210/202412102123.Db7EAmhx-lkp@intel.com/reproduce)
 
-> +#[macro_export]
-> +#[doc(hidden)]
-> +#[cfg(all(CONFIG_BUG, CONFIG_UML))]
-> +macro_rules! warn_flags {
-> +    ($flags:expr) =3D> {
-> +        // SAFETY: Just an FFI call.
-> +        unsafe {
-> +            $crate::bindings::warn_slowpath_fmt(
-> +                $crate::c_str!(::core::file!()).as_ptr() as *const ::cor=
-e::ffi::c_char,
-> +                line!() as i32,
-> +                $flags as u32,
-> +                ::core::ptr::null() as *const ::core::ffi::c_char,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412102123.Db7EAmhx-lkp@intel.com/
 
-I wonder if this could be written to utilize Location::caller()
-instead so that `#[track_caller]` works?
+All errors (new ones prefixed by >>):
 
-Alice
+   arch/alpha/kernel/osf_sys.c: In function 'arch_get_unmapped_area':
+>> arch/alpha/kernel/osf_sys.c:1280:24: error: 'hint' undeclared (first use in this function); did you mean 'uint'?
+    1280 |                 return hint;
+         |                        ^~~~
+         |                        uint
+   arch/alpha/kernel/osf_sys.c:1280:24: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +1280 arch/alpha/kernel/osf_sys.c
+
+  1248	
+  1249	unsigned long
+  1250	arch_get_unmapped_area(struct file *filp, unsigned long addr,
+  1251			       unsigned long len, unsigned long pgoff,
+  1252			       unsigned long flags, vm_flags_t vm_flags)
+  1253	{
+  1254		unsigned long limit;
+  1255	
+  1256		/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+  1257		if (current->personality & ADDR_LIMIT_32BIT)
+  1258			limit = 0x80000000;
+  1259		else
+  1260			limit = TASK_SIZE;
+  1261	
+  1262		if (len > limit)
+  1263			return -ENOMEM;
+  1264	
+  1265		if (flags & MAP_FIXED)
+  1266			return addr;
+  1267	
+  1268		/* First, see if the given suggestion fits.
+  1269	
+  1270		   The OSF/1 loader (/sbin/loader) relies on us returning an
+  1271		   address larger than the requested if one exists, which is
+  1272		   a terribly broken way to program.
+  1273	
+  1274		   That said, I can see the use in being able to suggest not
+  1275		   merely specific addresses, but regions of memory -- perhaps
+  1276		   this feature should be incorporated into all ports?  */
+  1277	
+  1278		addr = arch_mmap_hint(filp, addr, len, pgoff, flags);
+  1279		if (addr)
+> 1280			return hint;
+  1281	
+  1282		/* Next, try allocating at TASK_UNMAPPED_BASE.  */
+  1283		addr = arch_get_unmapped_area_1 (PAGE_ALIGN(TASK_UNMAPPED_BASE),
+  1284						 len, limit);
+  1285		if (addr != (unsigned long) -ENOMEM)
+  1286			return addr;
+  1287	
+  1288		/* Finally, try allocating in low memory.  */
+  1289		addr = arch_get_unmapped_area_1 (PAGE_SIZE, len, limit);
+  1290	
+  1291		return addr;
+  1292	}
+  1293	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
