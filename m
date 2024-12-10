@@ -1,434 +1,158 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E488D1A265E
-	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 12:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B3F1A76AC;
+	Tue, 10 Dec 2024 12:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733834260; cv=none; b=mWyQjyJLdac07IDTfYPHSlpLfvtSJYB99CDJpPb1MAYak1xitGujDKz6Gs6wSvxxTBGH0pngofvH6idjdKyIvkelFnBOGh0F9y3BnaniLUmlh+ONH94a+BUjqnqbiUACAQXC7u0sb7EMWwa/mpXNVY6h8LwxGBBjF4jIM1Ny7fA=
+	t=1733834566; cv=none; b=MKhp4Fnf7zsJI8A0TB2n8OpO6doCcuVpQbPjtrS0crBJweY7E2CUvZqt0MnBIxPzexT8jj9zrCJuDTA6rWS6O7clGNMhlBUGO/T5j7ShDro9peYoFCDgvU3/JRk1FEVuVz2hIaWWzGmeYdGKC/L/BOkcHz/W1hs/I2Iy742oGZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733834260; c=relaxed/simple;
-	bh=jBbzONCRbxb5ElO39JOZejDCesdn7j7w82UaxqegLVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p8F58AJSv83sTyjcgXamzutI+n61xr3KIUweah2L7jkngL2ay3V2YfaYJgx9XccVyStyIM+CgSGwravbD46LSuHk3x29UVNWYXwweMbWtijIpAI0kTK7XEcan7EGuDzXWkGnlaoduZV+PpfNkuqu7q6/9+rjLoH6divZLHcSb7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8BxeeEPNlhn3eVUAA--.36240S3;
-	Tue, 10 Dec 2024 20:37:35 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMAxXcIENlhn9Sx+AA--.34092S4;
-	Tue, 10 Dec 2024 20:37:33 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
-Date: Tue, 10 Dec 2024 20:37:06 +0800
-Message-ID: <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <cover.1733823417.git.zhoubinbin@loongson.cn>
-References: <cover.1733823417.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1733834566; c=relaxed/simple;
+	bh=2XWkD/yfjEhuZbsTfBejcrrLVZU1NcZkJQDTuM2rIMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2G/l0iUuwLaP+7w0p5Iag/0bS6LREHG9qyenTaWaEe/3KZ5jYV2ULA8ygrjvZX8f/hmrYTW8cUreeqkuFZN7r7EwONDhaNJE2U8S4AOeVCQfvCuhMqyaquoOjWGsTFBnzOQ6ZjvlV0sm3v7w2OMXl3Gt9eK11o6OMO3+9uMHP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMx6wIN+; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMx6wIN+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733834565; x=1765370565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2XWkD/yfjEhuZbsTfBejcrrLVZU1NcZkJQDTuM2rIMc=;
+  b=ZMx6wIN+sxa1Lq3C6PsY5z2RkJ1IgBwmho2FI22FNV64gv58TREz4Xx+
+   zUNmVMeMw3DK1OBl4rp8Td/HDFQaGSSUpvksEQri3d6/YRP7fdci9UoUH
+   Gn5Mn/iy9xxTI9OGIszOHuDAsb7lzLUjmMz/51ed1SRjGxl7VK898XD0Y
+   n3KVE489txRcI8lI5dsM1B4B955eIojDdtk31CGrq4OQLHLeXXQorHnKU
+   WdVMuG9gq1x0gDhUps0rcVoxV2VCblZI07DcUu/aQZuA8zUkHPgFp9U/y
+   4zFSJNX0iAeBqn+YlOwfCgdM3LLEgfyIMuUD9CHzOjNKbsnRQ+JSzQml9
+   Q==;
+X-CSE-ConnectionGUID: bllNn1ljSzGIzasuWtkaLw==
+X-CSE-MsgGUID: 2HTS9LI1SjOZpPZrmVhG/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11278"; a="45557332"
+X-IronPort-AV: E=Sophos;i="6.12,214,1728975600"; 
+   d="scan'208";a="45557332"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 04:42:45 -0800
+X-CSE-ConnectionGUID: PNJK2U7TRI6GrhJMzjBjFw==
+X-CSE-MsgGUID: 1gEgitiCTumWExA1EmlaFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
+   d="scan'208";a="95741297"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 10 Dec 2024 04:42:38 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tKzZT-0005Xl-2l;
+	Tue, 10 Dec 2024 12:42:35 +0000
+Date: Tue, 10 Dec 2024 20:41:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
+	vbabka@suse.cz, yang@os.amperecomputing.com, riel@surriel.com,
+	david@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, linux@armlinux.org.uk,
+	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	glaubitz@physik.fu-berlin.de, davem@davemloft.net,
+	andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net,
+	jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com,
+	leitao@debian.org, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH mm-unstable 11/17] mm: sh: Introduce arch_mmap_hint()
+Message-ID: <202412102044.uIAN0clk-lkp@intel.com>
+References: <20241210024119.2488608-12-kaleshsingh@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxXcIENlhn9Sx+AA--.34092S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3ZF4Uur4xCw1rJryfKFWkXwc_yoWktF17pF
-	95A34YgryayrWjkws8ZFZ5urn8Z34fZasrJFWfCw1Uur9rtw18Zw1kKFn7Gw42yr1kGr1I
-	vFWrCrWFkF4DGFbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
-	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
-	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0
-	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2
-	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2
-	jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
-	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIccxYrV
-	CFb41lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07b4HqcUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210024119.2488608-12-kaleshsingh@google.com>
 
-This commit adds a generic PWM framework driver for the PWM controller
-found on Loongson family chips.
+Hi Kalesh,
 
-Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
----
- MAINTAINERS                |   1 +
- drivers/pwm/Kconfig        |  12 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-loongson.c | 296 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 310 insertions(+)
- create mode 100644 drivers/pwm/pwm-loongson.c
+kernel test robot noticed the following build warnings:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b876db33126e..ed7a4304da2f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13499,6 +13499,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-pwm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-+F:	drivers/pwm/pwm-loongson.c
- 
- LOONGSON-2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0915c1e7df16..ef02a44d83a7 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -351,6 +351,18 @@ config PWM_KEEMBAY
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-keembay.
- 
-+config PWM_LOONGSON
-+	tristate "Loongson PWM support"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on COMMON_CLK
-+	help
-+	  Generic PWM framework driver for Loongson family.
-+	  It can be found on Loongson-2K series cpus and Loongson LS7A
-+	  bridge chips.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-loongson.
-+
- config PWM_LP3943
- 	tristate "TI/National Semiconductor LP3943 PWM support"
- 	depends on MFD_LP3943
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9081e0c0e9e0..7c18c9be419f 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
-+obj-$(CONFIG_PWM_LOONGSON)	+= pwm-loongson.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
- obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
- obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
-diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-new file mode 100644
-index 000000000000..2f90eccba0bd
---- /dev/null
-+++ b/drivers/pwm/pwm-loongson.c
-@@ -0,0 +1,296 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-+ *
-+ * Loongson PWM driver
-+ *
-+ * For Loongson's PWM IP block documentation please refer Chapter 11 of
-+ * Reference Manual: https://loongson.github.io/LoongArch-Documentation/Loongson-7A1000-usermanual-EN.pdf
-+ *
-+ * Author: Juxin Gao <gaojuxin@loongson.cn>
-+ * Further cleanup and restructuring by:
-+ *         Binbin Zhou <zhoubinbin@loongson.cn>
-+ *
-+ * Limitations:
-+ * - If both DUTY and PERIOD are set to 0, the output is a constant low signal.
-+ * - When disabled the output is driven to 0 independent of the configured
-+ *   polarity.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/units.h>
-+
-+/* Loongson PWM registers */
-+#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
-+#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
-+#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
-+
-+/* Control register bits */
-+#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
-+#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
-+#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
-+#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
-+#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
-+#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
-+#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
-+#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
-+#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
-+
-+/* default input clk frequency for the ACPI case */
-+#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
-+
-+struct pwm_loongson_suspend_store {
-+	u32 ctrl;
-+	u32 duty;
-+	u32 period;
-+};
-+
-+struct pwm_loongson_ddata {
-+	struct clk *clk;
-+	void __iomem *base;
-+	u64 clk_rate;
-+	struct pwm_loongson_suspend_store lss;
-+};
-+
-+static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata, u32 offset)
-+{
-+	return readl(ddata->base + offset);
-+}
-+
-+static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddata,
-+				       u32 val, u32 offset)
-+{
-+	writel(val, ddata->base + offset);
-+}
-+
-+static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-+				     enum pwm_polarity polarity)
-+{
-+	u16 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+
-+	if (polarity == PWM_POLARITY_INVERSED)
-+		/* Duty cycle defines LOW period of PWM */
-+		val |= LOONGSON_PWM_CTRL_INVERT;
-+	else
-+		/* Duty cycle defines HIGH period of PWM */
-+		val &= ~LOONGSON_PWM_CTRL_INVERT;
-+
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val &= ~LOONGSON_PWM_CTRL_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+}
-+
-+static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	u32 val;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	val = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	val |= LOONGSON_PWM_CTRL_EN;
-+	pwm_loongson_writel(ddata, val, LOONGSON_PWM_REG_CTRL);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       u64 duty_ns, u64 period_ns)
-+{
-+	u32 duty, period;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	/* duty = duty_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	duty = mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
-+
-+	/* period = period_ns * ddata->clk_rate / NSEC_PER_SEC */
-+	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
-+	pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	int ret;
-+	u64 period, duty_cycle;
-+	bool enabled = pwm->state.enabled;
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			pwm_loongson_disable(chip, pwm);
-+		return 0;
-+	}
-+
-+	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
-+	if (ret)
-+		return ret;
-+
-+	period = min(state->period, NSEC_PER_SEC);
-+	duty_cycle = min(state->duty_cycle, NSEC_PER_SEC);
-+
-+	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
-+	if (ret)
-+		return ret;
-+
-+	if (!enabled && state->enabled)
-+		ret = pwm_loongson_enable(chip, pwm);
-+
-+	return ret;
-+}
-+
-+static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	u32 duty, period, ctrl;
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-+	period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-+	ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+
-+	/* duty & period have a max of 2^32, so we can't overflow */
-+	state->duty_cycle = DIV64_U64_ROUND_UP((u64)duty * NSEC_PER_SEC, ddata->clk_rate);
-+	state->period = DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC, ddata->clk_rate);
-+	state->polarity = (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POLARITY_INVERSED :
-+			  PWM_POLARITY_NORMAL;
-+	state->enabled = (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_loongson_ops = {
-+	.apply = pwm_loongson_apply,
-+	.get_state = pwm_loongson_get_state,
-+};
-+
-+static int pwm_loongson_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct pwm_chip *chip;
-+	struct pwm_loongson_ddata *ddata;
-+	struct device *dev = &pdev->dev;
-+
-+	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	ddata = to_pwm_loongson_ddata(chip);
-+
-+	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ddata->base))
-+		return PTR_ERR(ddata->base);
-+
-+	ddata->clk = devm_clk_get_optional_enabled(dev, NULL);
-+	if (IS_ERR(ddata->clk))
-+		return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+				     "failed to get pwm clock\n");
-+	if (ddata->clk) {
-+		ret = devm_clk_rate_exclusive_get(dev, ddata->clk);
-+		if (ret)
-+			return ret;
-+
-+		ddata->clk_rate = clk_get_rate(ddata->clk);
-+	} else {
-+		ddata->clk_rate = LOONGSON_PWM_FREQ_DEFAULT;
-+	}
-+
-+	/* Explicitly initialize the CTRL register */
-+	pwm_loongson_writel(ddata, 0, LOONGSON_PWM_REG_CTRL);
-+
-+	chip->ops = &pwm_loongson_ops;
-+	chip->atomic = true;
-+	dev_set_drvdata(dev, chip);
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_suspend(struct device *dev)
-+{
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	ddata->lss.ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-+	ddata->lss.duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-+	ddata->lss.period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-+
-+	clk_disable_unprepare(ddata->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_loongson_resume(struct device *dev)
-+{
-+	int ret;
-+	struct pwm_chip *chip = dev_get_drvdata(dev);
-+	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
-+
-+	ret = clk_prepare_enable(ddata->clk);
-+	if (ret)
-+		return ret;
-+
-+	pwm_loongson_writel(ddata, ddata->lss.ctrl, LOONGSON_PWM_REG_CTRL);
-+	pwm_loongson_writel(ddata, ddata->lss.duty, LOONGSON_PWM_REG_DUTY);
-+	pwm_loongson_writel(ddata, ddata->lss.period, LOONGSON_PWM_REG_PERIOD);
-+
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(pwm_loongson_pm_ops, pwm_loongson_suspend,
-+				pwm_loongson_resume);
-+
-+static const struct of_device_id pwm_loongson_of_ids[] = {
-+	{ .compatible = "loongson,ls7a-pwm" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, pwm_loongson_of_ids);
-+
-+static const struct acpi_device_id pwm_loongson_acpi_ids[] = {
-+	{ "LOON0006" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, pwm_loongson_acpi_ids);
-+
-+static struct platform_driver pwm_loongson_driver = {
-+	.probe = pwm_loongson_probe,
-+	.driver = {
-+		.name = "loongson-pwm",
-+		.pm = pm_ptr(&pwm_loongson_pm_ops),
-+		.of_match_table = pwm_loongson_of_ids,
-+		.acpi_match_table = pwm_loongson_acpi_ids,
-+	},
-+};
-+module_platform_driver(pwm_loongson_driver);
-+
-+MODULE_DESCRIPTION("Loongson PWM driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited.");
-+MODULE_LICENSE("GPL");
+[auto build test WARNING on akpm-mm/mm-everything]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kalesh-Singh/mm-Introduce-generic_mmap_hint/20241210-104424
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20241210024119.2488608-12-kaleshsingh%40google.com
+patch subject: [PATCH mm-unstable 11/17] mm: sh: Introduce arch_mmap_hint()
+config: sh-randconfig-001-20241210 (https://download.01.org/0day-ci/archive/20241210/202412102044.uIAN0clk-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241210/202412102044.uIAN0clk-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412102044.uIAN0clk-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   arch/sh/mm/mmap.c: In function 'arch_get_unmapped_area':
+>> arch/sh/mm/mmap.c:79:32: warning: unused variable 'vma' [-Wunused-variable]
+      79 |         struct vm_area_struct *vma;
+         |                                ^~~
+>> arch/sh/mm/mmap.c:78:27: warning: unused variable 'mm' [-Wunused-variable]
+      78 |         struct mm_struct *mm = current->mm;
+         |                           ^~
+   arch/sh/mm/mmap.c: In function 'arch_get_unmapped_area_topdown':
+   arch/sh/mm/mmap.c:117:32: warning: unused variable 'vma' [-Wunused-variable]
+     117 |         struct vm_area_struct *vma;
+         |                                ^~~
+
+
+vim +/vma +79 arch/sh/mm/mmap.c
+
+2261b9c7c2357a0 Kalesh Singh      2024-12-09   73  
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   74  unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr,
+25d4054cc97484f Mark Brown        2024-09-04   75  	unsigned long len, unsigned long pgoff, unsigned long flags,
+25d4054cc97484f Mark Brown        2024-09-04   76  	vm_flags_t vm_flags)
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   77  {
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12  @78  	struct mm_struct *mm = current->mm;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12  @79  	struct vm_area_struct *vma;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   80  	int do_colour_align;
+b80fa3cbb78c0fb Rick Edgecombe    2024-03-25   81  	struct vm_unmapped_area_info info = {};
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   82  
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   83  	if (flags & MAP_FIXED) {
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   84  		/* We do not accept a shared mapping if it would violate
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   85  		 * cache aliasing constraints.
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   86  		 */
+e77414e0aad6a1b Al Viro           2009-12-05   87  		if ((flags & MAP_SHARED) &&
+e77414e0aad6a1b Al Viro           2009-12-05   88  		    ((addr - (pgoff << PAGE_SHIFT)) & shm_align_mask))
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   89  			return -EINVAL;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   90  		return addr;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   91  	}
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   92  
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   93  	if (unlikely(len > TASK_SIZE))
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   94  		return -ENOMEM;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   95  
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   96  	do_colour_align = 0;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   97  	if (filp || (flags & MAP_SHARED))
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   98  		do_colour_align = 1;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12   99  
+2261b9c7c2357a0 Kalesh Singh      2024-12-09  100  	addr = arch_mmap_hint(filp, addr, len, pgoff, flags);
+2261b9c7c2357a0 Kalesh Singh      2024-12-09  101  	if (addr)
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12  102  		return addr;
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12  103  
+b4265f12340f809 Michel Lespinasse 2012-12-11  104  	info.length = len;
+b4265f12340f809 Michel Lespinasse 2012-12-11  105  	info.low_limit = TASK_UNMAPPED_BASE;
+b4265f12340f809 Michel Lespinasse 2012-12-11  106  	info.high_limit = TASK_SIZE;
+b4265f12340f809 Michel Lespinasse 2012-12-11  107  	info.align_mask = do_colour_align ? (PAGE_MASK & shm_align_mask) : 0;
+b4265f12340f809 Michel Lespinasse 2012-12-11  108  	info.align_offset = pgoff << PAGE_SHIFT;
+b4265f12340f809 Michel Lespinasse 2012-12-11  109  	return vm_unmapped_area(&info);
+4a4a9be3ebdbf17 Paul Mundt        2008-11-12  110  }
+ee1acbfabd5270b Paul Mundt        2009-05-07  111  
+
 -- 
-2.43.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
