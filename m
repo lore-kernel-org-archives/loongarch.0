@@ -1,160 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D03C30;
-	Tue, 10 Dec 2024 11:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB8CA1A265E
+	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 12:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733830541; cv=none; b=RAF0YSppK5YHWJrVipKG0h3p2ZYmctSb4KYknlXV0pzKEovTwgQ0SQlydvQZ1qIyIFCeqNiB3JDrb6djw8ydBqftgWP5imVM6rT/xAKDEQbvcLGeotp1jgq4tuSroytUcvBH0Hpy6iJWqoiH6bV3SgkSAY9LC3gOUiW3whG/qI4=
+	t=1733834254; cv=none; b=Z/S5eDTnQm7vZrqf60RDFajq2Qk1ZJc1cacJG5oYFfIf7jX/clG9nwkMMuer31GbhZX42TducKwH1F95EP/+1ZmlCcC00uQMuQNg24dMYF4iXPRPV870WYoXXv/jGMsENPiU8YVQ373sTsUfvwn5ChrMtLx64SjRewMrlhLvpCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733830541; c=relaxed/simple;
-	bh=WHDSe6EUA5S0A1igiIW2WwLpfRxVDyrjbYLfxWAG7Ls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+MTuH6UwvLhlTB6Sy1nDYtKU8LLoe1yvA/FeWEEzCs8gOiy1lyVFY9l0TZ4bDMp2ZJhRGCrC2AB2kXYygaQVPHpxW4bN4snMgCNhqeZwQZ7OLrSyyMUVi8HwwER4CEoJQfCnQYZjyoINlc6F/V4UmKCZy7cimzpCkvvvB2LCTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSuMrLGi; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSuMrLGi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733830540; x=1765366540;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WHDSe6EUA5S0A1igiIW2WwLpfRxVDyrjbYLfxWAG7Ls=;
-  b=cSuMrLGiD7EZvkooBsFeYDJsbgvIHc/0tkPCUrXS++bjQj/XdSfle+WA
-   oUrcCmGo9dQoE9j/xXN0r2/8NsmWejLgOUuxJ4WniyyWYx2lfCYgw1nAm
-   ZgvU/X3nDRK1v6UCR8KaWQi0KzN4qCCuSQqoZBt+etkfm1G+vORGsUUvM
-   EeWKR33bamAZ7TMcgIHUpi3Ru+T8+Wv2PJ6js9SJsZUHwMf7edjVjlNMT
-   srn/xROAC3+Uq6zoS1BIuIiCz/sxXqV/9xxKHn5VZQq8a/BADlCjEJzna
-   kXvGCE4583csm9jBRiSbMt2UMhhMw6kVTkOvnYm/6srtni85Dr3f/CzUt
-   Q==;
-X-CSE-ConnectionGUID: UbndUyUaTA2hhfY3GS4mrQ==
-X-CSE-MsgGUID: u/GaGH3sR+eo+vL7kTRDBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11281"; a="37953216"
-X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="37953216"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 03:35:39 -0800
-X-CSE-ConnectionGUID: KnbZnJbTTp+ogeuAnZR5Lw==
-X-CSE-MsgGUID: YdwH9kWVRUewkGlVt+S9DQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,222,1728975600"; 
-   d="scan'208";a="95206413"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 10 Dec 2024 03:35:32 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tKyWX-0005TR-0J;
-	Tue, 10 Dec 2024 11:35:29 +0000
-Date: Tue, 10 Dec 2024 19:35:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kalesh Singh <kaleshsingh@google.com>, akpm@linux-foundation.org,
-	vbabka@suse.cz, yang@os.amperecomputing.com, riel@surriel.com,
-	david@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, linux@armlinux.org.uk,
-	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
-	ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, davem@davemloft.net,
-	andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net,
-	jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com,
-	leitao@debian.org, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org
-Subject: Re: [PATCH mm-unstable 04/17] mm: alpha: Introduce arch_mmap_hint()
-Message-ID: <202412102123.Db7EAmhx-lkp@intel.com>
-References: <20241210024119.2488608-5-kaleshsingh@google.com>
+	s=arc-20240116; t=1733834254; c=relaxed/simple;
+	bh=r35ib2yZcI898iLxRlmgcgRipcJBXLk0bYxFgs8oIP4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lKdCW/rFZhTUvWiO9VkZAB8VyRpdWqS3rpdCHhEssTwYyZSiUMcB0nz9mDY/w2wG6XZlbomnDZzrwc1vF1KlNOEdE16OURELGkb2hfLmVc4mMrlT3vNcsC1IPM2w/OKGJCKqqlCujSQoOsgIBkqsgrLLTBFGjHJJ4HjHFksMnPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8CxCeEHNlhnzOVUAA--.33837S3;
+	Tue, 10 Dec 2024 20:37:27 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMAxXcIENlhn9Sx+AA--.34092S2;
+	Tue, 10 Dec 2024 20:37:26 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v8 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Tue, 10 Dec 2024 20:37:04 +0800
+Message-ID: <cover.1733823417.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241210024119.2488608-5-kaleshsingh@google.com>
+Content-Type: text/plain; charset=a
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxXcIENlhn9Sx+AA--.34092S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUU9mb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21le4C262xC7I0v67AEwI8IwI
+	1l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv2
+	0xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7
+	xvr2IYc2Ij64vIr41lw4CEx2IqxVAFz4v204v26I0v724l42xK82IYc2Ij64vIr41l4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	WUJVWUGwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+	wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j
+	6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-Hi Kalesh,
+Hi all:
 
-kernel test robot noticed the following build errors:
+This patchset introduce a generic PWM framework driver for Loongson family.
+Each PWM has one pulse width output signal and one pulse input signal to be measured.
 
-[auto build test ERROR on akpm-mm/mm-everything]
+It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kalesh-Singh/mm-Introduce-generic_mmap_hint/20241210-104424
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20241210024119.2488608-5-kaleshsingh%40google.com
-patch subject: [PATCH mm-unstable 04/17] mm: alpha: Introduce arch_mmap_hint()
-config: alpha-allmodconfig (https://download.01.org/0day-ci/archive/20241210/202412102123.Db7EAmhx-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241210/202412102123.Db7EAmhx-lkp@intel.com/reproduce)
+Thanks.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412102123.Db7EAmhx-lkp@intel.com/
+-------
+V8:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Drop inappropriate comments in “Limitations”;
+ - Drop HZ_PER_KHZ for readability;
+ - NANOHZ_PER_HZ -> NSEC_PER_SEC;
+ - Rewrite the clk fetch section to look more flexible and not have to
+   care about ACPI or DT;
+ - Add explicit initialization of the CTRL register in probe().
 
-All errors (new ones prefixed by >>):
+Link to V7:
+https://lore.kernel.org/all/cover.1729583747.git.zhoubinbin@loongson.cn/
 
-   arch/alpha/kernel/osf_sys.c: In function 'arch_get_unmapped_area':
->> arch/alpha/kernel/osf_sys.c:1280:24: error: 'hint' undeclared (first use in this function); did you mean 'uint'?
-    1280 |                 return hint;
-         |                        ^~~~
-         |                        uint
-   arch/alpha/kernel/osf_sys.c:1280:24: note: each undeclared identifier is reported only once for each function it appears in
+V7:
+Thanks for Sean's advice.
+patch (2/2):
+ - Set chip->atomic to keep pwm_apply_atomic() can be used with the pwm.
+ - Test with CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP enabled.
+
+Link to V6:
+https://lore.kernel.org/all/cover.1728463622.git.zhoubinbin@loongson.cn/
+
+V6:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Add Reference Manual;
+ - Shortcut if !pwm->state.enabled;
+ - When state->enabled is true, unconditionally execute
+   pwm_loongson_set_polarity() to avoid that the polarity register is
+   not set correctly.
+
+Link to V5:
+https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
+
+V5:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Test with PWM_DEBUG enabled.
+ - In pwm_loongson_apply(), the pwm state is determined before the pwm
+   polarity, avoid test failures when PWM_DEBUG is enabled;
+ - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
+   precision loss and to avoid test failures when PWM_DEBUG is enabled.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
+
+V4:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Addressed Uwe's review comments:
+   - Make use of devm_pwmchip_alloc() function;
+   - Add Limitations description;
+   - Add LOONGSON_ prefix for Loongson pwm register defines;
+   - Keep regs written only once;
+   - Rewrite duty/period calculation;
+   - Add dev_err_probe() in .probe();
+   - Fix some code style.
+
+Link to V3:
+https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongson.cn/
+
+V3:
+patch (1/2):
+ - Add Reviewed-by tag from Krzysztof, thanks.
+patch (2/2):
+ - Several code stlye adjustments, such as line breaks.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
+
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 296 ++++++++++++++++++
+ 5 files changed, 382 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
 
 
-vim +1280 arch/alpha/kernel/osf_sys.c
-
-  1248	
-  1249	unsigned long
-  1250	arch_get_unmapped_area(struct file *filp, unsigned long addr,
-  1251			       unsigned long len, unsigned long pgoff,
-  1252			       unsigned long flags, vm_flags_t vm_flags)
-  1253	{
-  1254		unsigned long limit;
-  1255	
-  1256		/* "32 bit" actually means 31 bit, since pointers sign extend.  */
-  1257		if (current->personality & ADDR_LIMIT_32BIT)
-  1258			limit = 0x80000000;
-  1259		else
-  1260			limit = TASK_SIZE;
-  1261	
-  1262		if (len > limit)
-  1263			return -ENOMEM;
-  1264	
-  1265		if (flags & MAP_FIXED)
-  1266			return addr;
-  1267	
-  1268		/* First, see if the given suggestion fits.
-  1269	
-  1270		   The OSF/1 loader (/sbin/loader) relies on us returning an
-  1271		   address larger than the requested if one exists, which is
-  1272		   a terribly broken way to program.
-  1273	
-  1274		   That said, I can see the use in being able to suggest not
-  1275		   merely specific addresses, but regions of memory -- perhaps
-  1276		   this feature should be incorporated into all ports?  */
-  1277	
-  1278		addr = arch_mmap_hint(filp, addr, len, pgoff, flags);
-  1279		if (addr)
-> 1280			return hint;
-  1281	
-  1282		/* Next, try allocating at TASK_UNMAPPED_BASE.  */
-  1283		addr = arch_get_unmapped_area_1 (PAGE_ALIGN(TASK_UNMAPPED_BASE),
-  1284						 len, limit);
-  1285		if (addr != (unsigned long) -ENOMEM)
-  1286			return addr;
-  1287	
-  1288		/* Finally, try allocating in low memory.  */
-  1289		addr = arch_get_unmapped_area_1 (PAGE_SIZE, len, limit);
-  1290	
-  1291		return addr;
-  1292	}
-  1293	
-
+base-commit: 483082d78a092a3c1f343a76a2edb196069b4092
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
