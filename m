@@ -1,69 +1,70 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DB019D070
-	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 03:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EEA1C5CBA
+	for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 03:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733801240; cv=none; b=jcpZJohH5FlAqjakFiUTKL7cVHMGOEv7TF3ooDMw6msrnNpc5QD2zNTTwrQkSApcZnuIGUmRAaoMIfam4BwFAh9FUhffO+RLxDnO7yRs37aFsBGw2Njj4gq5KtMa8qEXeaH+YKSJLHJ+KZ3Y++d105Tx0H+oXSQd6o5GbBIVXD0=
+	t=1733801862; cv=none; b=odzdPf3j+ighiZk96hLweV9Ugj/RHJpC9wLSNPcWb+dPna6FbrBjzk/nZl0t1r0bvwfzK5Rx+JVcLE1XcNzCQ+t2udYaGDVvBP4H2j8+UiF3AWdPuMawJBmPb28HDsA6OfbB9ckgCgCVcKXI2LBZa58KYoYgQNlMpLzAjo4yROk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733801240; c=relaxed/simple;
-	bh=LlXvsVxs1ZBGsstwIB3bDPbexaTDwqyvZf6awYEUQxI=;
+	s=arc-20240116; t=1733801862; c=relaxed/simple;
+	bh=yXLwrYkUhhm7e8Jczp/Rq6SgG8Y2ONP7nE+CaYrO6cg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g5xdrS1cpyW55qoY60XSRU7nWagzAJTH19BR4FhpFILx7Hs4YPZ0/ZcyxG3siBcYcTHFrxR9/833Ul07YEIPMdeGQvogvH1ZcNjCwq/JX7gcV22bbAKTDrcrMhHNW1MchRb4QAC8LwpxJbgdJo3OWaUZuNYr0dMDR/9I36j6SHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5mYxDrW; arc=none smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=b4Yp7R6KAKZDdwEOOHqXLNauXwc9R5WG6S6q9KrLcDgq5jhWHQVKnTnUBYT62mOchHP5kqRoFbnkf6iCy1J0hiVhvtwrpMbJ68gE/x/QBbYTBaesx13f7KbtkadYJmu6cdncrD6kOYmC7dmfzAv1FdT48b70AEDGAr+2ePma7/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2RDSOG4; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5mYxDrW"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d3d74363cbso4918684a12.2
-        for <loongarch@lists.linux.dev>; Mon, 09 Dec 2024 19:27:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2RDSOG4"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso4763797a12.1
+        for <loongarch@lists.linux.dev>; Mon, 09 Dec 2024 19:37:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733801236; x=1734406036; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1733801859; x=1734406659; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Zw8KjUeVLCoeUttHvlAE11LYFS9kka7RYPFB87xdCOo=;
-        b=V5mYxDrWh3EwJ1tJJMbWFbIRBHz9AXjNcJ+XwWgCOJYzv7DYnS01+jxXbWr3NvPlqq
-         f4JeIMnwflgF+7hHEAZqsorTQIvjI5CgfQ6+65s5zZb9B++bAlpJLFOo07TeSYoewTk3
-         +5MV1lqblMtVQFJ/jsITapzaueveLvKAfAzusV2Jkf2yqch40txilMQi1cjPh+OuI5f4
-         LTuNtFBtNkRYT8DpHr7hAme1XvpvXM64yTL6/CzOk+aRSO+PDDCE7kmLYyrSDsRkDrj2
-         bjXwEPQ4N0zozJ0guWoCCBEdakhKlh9V2yP58SMSYsiSqRx0iKRudkuxxlsjcYERkyfk
-         Q3tA==
+        bh=pEGiPdcE8U0HMqCc8hcN09nWg4b+RmE8pUeIXB0J+Us=;
+        b=a2RDSOG4ehtkHSS0+DW+pLzQW3MmZgdUEQetbjZK7Uw0MtNFvFB4ZpaDMpAlYK32fd
+         jlwTEAB0ZgaPtNSPacFuc9vVceMSObDm+yy2DwJdeY9Es7r155O+4tYvOKuStssJv85Y
+         FAYppTAb7j/JehI0YDDFwPOh838TTL2QooayKnkH9Z9fiGBLrknu8LE/YPh142cMz4vu
+         SkRwWCACU/raStp5DVN8RQaAVGaZObzMoDgRPVAtA190qNmjkKspZsCsfm1qQ9Hdupja
+         nmvHNtDHLQ7LxAjcA0MWCx9VxFXQnzx5WlXxK/ZzDPep6oSdOoBuedMZqGfoxwRkPFBS
+         ah1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733801236; x=1734406036;
+        d=1e100.net; s=20230601; t=1733801859; x=1734406659;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zw8KjUeVLCoeUttHvlAE11LYFS9kka7RYPFB87xdCOo=;
-        b=dE4RzsNkfkZoL6JVCVn/wiBG0hIwdy66bIGcngXB29pz9F6whapV8OkAjwr8RvED++
-         y/6G37NbcupzAFCnl1NuxF7sN5Q6XIDD9E7hUdP1dNjrMTXxiqIiYAr+WgPdNEaCETw5
-         2kXWakA7ODl5IxxHPET4/t9MeXQsVR8SJw8069vL5MDLWY9WKE0bO4AgpTm99Lv2XF00
-         kp6dIwWhsBrRYOgN2csEtLhXHogkpesA5NAS7+F/LIxQ1EjpQTl8rUfalY/R3U9/OUHX
-         m432NLfeUuFw+BDBcP5CafyHmuqiXpnGeg3VsT52Lahgq8YDzFlRDo38XSAJmnf1Kxyl
-         DnpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjPEpLONJvY+/IOB8rr5rSivBTBC/+IzZpdFyRWmOZ9bLo1g7jSkaX+Mi38b+1QT3dunIW29aEpF4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxerEykbue9z/3ZEGlKm4AMjdFoeP4TydemnSApaAXQ4A7u9yyv
-	DXaLatfK7c47hyWP5qOWItJqECnjgMHfvGPZKOa/mbMT2WoQ7QEI5TRue7oUtFZF6Y4ZM30SVOh
-	g+a/fCJlxXsqlGz+rEBNrpOE4gEU=
-X-Gm-Gg: ASbGncssySqCkcw+Y2MvTlR7s0MfRi1Rz62bZFaTaIIKcyOmWMmElArT5KYGCpUIG4m
-	PTobEjecllZQN1pgovA40oyIApXl+Uk5TQwczJw==
-X-Google-Smtp-Source: AGHT+IHf2Fi/42HQsEiQo6WzNdGmDcvEV4I1TbpQP4oAJiq1u3pQn+R3NnSbM/I4gmKvXuY9eOlF5eGp3h/ZPgrcEvo=
-X-Received: by 2002:a05:6402:278f:b0:5d0:fc80:c4d1 with SMTP id
- 4fb4d7f45d1cf-5d41852f140mr3377986a12.14.1733801235781; Mon, 09 Dec 2024
- 19:27:15 -0800 (PST)
+        bh=pEGiPdcE8U0HMqCc8hcN09nWg4b+RmE8pUeIXB0J+Us=;
+        b=vQqeF+pwerSIJj6IWvtnAoO/yAn19AzkGBU0imYSdGx7UY4bIKUBYbk+j/67kD6bxP
+         INvDpXMziLG2loh5pxvwRDVhoZkZOFkrdIgpqDbRBL0uXgilmuGFLOA146fXYr+ty2vM
+         RboAUlzq04ywsGPVQvPULdfmtwq7NjTCcQMw/RsRbOtR2gIAwqoz9tMp5WA2ahQx2WFs
+         Nw/HttQ2nB6d8KlzQ1PEb9HzXaEhaYpb9Wm8t+92apf4BBbLEkujfQaYsagmsmqIPOGX
+         h1dthLm1IN1jkNff0n17OsxhQcKmfKiM4/zinll/mB3H19vGhthKhnXTDzBUoOl651uG
+         iecw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWC2e82sl0k5xHUkt85Is3GK3pLaZYrH8dyAA2wmsrr48BGU9l4SL/4t//2cK3o2G2jn3+VhOtSLg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwakuXpP2VfASAkN5380lmRay9n7qCb92akZtjGvSfOqTVuUjDB
+	f4ikYelr6OJYJLvcWPH5xx6vg5HnCl3yLEDV3L7GJn8Q/BxzXZv9Q9hUWHlaJF11wRkxwHhUy8j
+	/tT4HADC70LeoQdJxf4jvTJ8SNFg=
+X-Gm-Gg: ASbGncsNsoKDPrqoERv6b4bbADTdfxam5v5yB3BxKM6akPNcX77crT551mAS8V7jqVu
+	P5CzNO4y2cX6jVwgJ24vYjrXl47xItHJiKrDuGw==
+X-Google-Smtp-Source: AGHT+IElXjz+7x/lQGuFmHk7BJtRPsIF5Xkbrc+PaOE9soOWoyJSq8aIO8IH6O/j+TzaKqiG91uZtuFho2g8MHXawAQ=
+X-Received: by 2002:a05:6402:3229:b0:5d0:f6ed:4cd1 with SMTP id
+ 4fb4d7f45d1cf-5d41e2b4c34mr1849541a12.10.1733801858975; Mon, 09 Dec 2024
+ 19:37:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241210024119.2488608-1-kaleshsingh@google.com> <20241210024119.2488608-2-kaleshsingh@google.com>
-In-Reply-To: <20241210024119.2488608-2-kaleshsingh@google.com>
+References: <20241210024119.2488608-1-kaleshsingh@google.com> <20241210024119.2488608-18-kaleshsingh@google.com>
+In-Reply-To: <20241210024119.2488608-18-kaleshsingh@google.com>
 From: Yang Shi <shy828301@gmail.com>
-Date: Mon, 9 Dec 2024 19:27:04 -0800
-Message-ID: <CAHbLzkpCRGF+-WXkHVEutkEGHSWydmpb1CwkvHZRTH-f773J-w@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable 01/17] mm: Introduce generic_mmap_hint()
+Date: Mon, 9 Dec 2024 19:37:27 -0800
+Message-ID: <CAHbLzkq2SNaqzx4d981H2QfQvtObS3X0pPL8=oqFsFbMditWPA@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable 17/17] mm: Respect mmap hint before THP
+ alignment if allocation is possible
 To: Kalesh Singh <kaleshsingh@google.com>
 Cc: akpm@linux-foundation.org, vbabka@suse.cz, yang@os.amperecomputing.com, 
 	riel@surriel.com, david@redhat.com, linux@armlinux.org.uk, 
@@ -82,136 +83,100 @@ Cc: akpm@linux-foundation.org, vbabka@suse.cz, yang@os.amperecomputing.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 6:41=E2=80=AFPM Kalesh Singh <kaleshsingh@google.com=
+On Mon, Dec 9, 2024 at 6:45=E2=80=AFPM Kalesh Singh <kaleshsingh@google.com=
 > wrote:
 >
-> Consolidate the hint searches from both direcitons (topdown and
-> bottomup) into generic_mmap_hint().
+> Commit 249608ee4713 ("mm: respect mmap hint address when aligning for THP=
+")
+> fallsback to PAGE_SIZE alignment instead of THP alignment
+> for anonymous mapping as long as a hint address is provided by the user
+> -- even if we weren't able to allocate the unmapped area at the hint
+> address in the end.
 >
-> No functional change is introduced.
+> This was done to address the immediate regression in anonymous mappings
+> where the hint address were being ignored in some cases; due to commit
+> efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries").
+>
+> It was later pointed out that this issue also existed for file-backed
+> mappings from file systems that use thp_get_unmapped_area() for their
+> .get_unmapped_area() file operation.
+>
+> The same fix was not applied for file-backed mappings since it would
+> mean any mmap requests that provide a hint address would be only
+> PAGE_SIZE-aligned regardless of whether allocation was successful at
+> the hint address or not.
+>
+> Instead, use arch_mmap_hint() to first attempt allocation at the hint
+> address and fallback to THP alignment if that fails.
+
+Thanks for taking time to try to fix this.
+
 >
 > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
 > ---
->  include/linux/sched/mm.h |  4 ++++
->  mm/mmap.c                | 45 ++++++++++++++++++++++++----------------
->  2 files changed, 31 insertions(+), 18 deletions(-)
+>  mm/huge_memory.c | 15 ++++++++-------
+>  mm/mmap.c        |  1 -
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 >
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index 928a626725e6..edeec19d1708 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -201,6 +201,10 @@ unsigned long mm_get_unmapped_area_vmflags(struct mm=
-_struct *mm,
->                                            unsigned long flags,
->                                            vm_flags_t vm_flags);
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 137abeda8602..f070c89dafc9 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1097,6 +1097,14 @@ static unsigned long __thp_get_unmapped_area(struc=
+t file *filp,
+>         loff_t off_align =3D round_up(off, size);
+>         unsigned long len_pad, ret, off_sub;
 >
-> +unsigned long generic_mmap_hint(struct file *filp, unsigned long addr,
-> +                               unsigned long len, unsigned long pgoff,
-> +                               unsigned long flags);
+> +       /*
+> +        * If allocation at the address hint succeeds; respect the hint a=
+nd
+> +        * don't try to align to THP boundary.
+> +        */
+> +       addr =3D arch_mmap_hint(filp, addr, len, off, flags);
+> +       if (addr)
+> +               return addr;
 > +
->  unsigned long
->  generic_get_unmapped_area(struct file *filp, unsigned long addr,
->                           unsigned long len, unsigned long pgoff,
+
+IIUC, arch_mmap_hint() will be called in arch_get_unmapped_area() and
+arch_get_unmapped_area_topdown() again. So we will actually look up
+maple tree twice. It sounds like the second hint address search is
+pointless. You should be able to set addr to 0 before calling
+mm_get_unmapped_area_vmflags() in order to skip the second hint
+address search.
+
+>         if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+>                 return 0;
+>
+> @@ -1117,13 +1125,6 @@ static unsigned long __thp_get_unmapped_area(struc=
+t file *filp,
+>         if (IS_ERR_VALUE(ret))
+>                 return 0;
+>
+> -       /*
+> -        * Do not try to align to THP boundary if allocation at the addre=
+ss
+> -        * hint succeeds.
+> -        */
+> -       if (ret =3D=3D addr)
+> -               return addr;
+> -
+>         off_sub =3D (off - ret) & (size - 1);
+>
+>         if (test_bit(MMF_TOPDOWN, &current->mm->flags) && !off_sub)
 > diff --git a/mm/mmap.c b/mm/mmap.c
-> index df9154b15ef9..e97eb8bf4889 100644
+> index 59bf7d127aa1..6bfeec80152a 100644
 > --- a/mm/mmap.c
 > +++ b/mm/mmap.c
-> @@ -620,6 +620,27 @@ unsigned long vm_unmapped_area(struct vm_unmapped_ar=
-ea_info *info)
->         return addr;
->  }
->
-> +unsigned long generic_mmap_hint(struct file *filp, unsigned long addr,
-> +                               unsigned long len, unsigned long pgoff,
-> +                               unsigned long flags)
-> +{
-> +       struct mm_struct *mm =3D current->mm;
-> +       struct vm_area_struct *vma, *prev;
-> +       const unsigned long mmap_end =3D arch_get_mmap_end(addr, len, fla=
-gs);
-> +
-> +       if (!addr)
-> +               return 0;
-> +
-> +       addr =3D PAGE_ALIGN(addr);
-> +       vma =3D find_vma_prev(mm, addr, &prev);
-> +       if (mmap_end - len >=3D addr && addr >=3D mmap_min_addr &&
-> +           (!vma || addr + len <=3D vm_start_gap(vma)) &&
-> +           (!prev || addr >=3D vm_end_gap(prev)))
-> +               return addr;
-> +
-> +       return 0;
-> +}
-> +
->  /* Get an address range which is currently unmapped.
->   * For shmat() with addr=3D0.
->   *
-> @@ -637,7 +658,6 @@ generic_get_unmapped_area(struct file *filp, unsigned=
- long addr,
->                           unsigned long flags, vm_flags_t vm_flags)
->  {
->         struct mm_struct *mm =3D current->mm;
-> -       struct vm_area_struct *vma, *prev;
->         struct vm_unmapped_area_info info =3D {};
->         const unsigned long mmap_end =3D arch_get_mmap_end(addr, len, fla=
-gs);
->
-> @@ -647,14 +667,9 @@ generic_get_unmapped_area(struct file *filp, unsigne=
-d long addr,
->         if (flags & MAP_FIXED)
->                 return addr;
-
-It seems you also can move the MAP_FIXED case into generic_mmap_hint(), rig=
-ht?
-
->
-> -       if (addr) {
-> -               addr =3D PAGE_ALIGN(addr);
-> -               vma =3D find_vma_prev(mm, addr, &prev);
-> -               if (mmap_end - len >=3D addr && addr >=3D mmap_min_addr &=
-&
-> -                   (!vma || addr + len <=3D vm_start_gap(vma)) &&
-> -                   (!prev || addr >=3D vm_end_gap(prev)))
-> -                       return addr;
-> -       }
-> +       addr =3D generic_mmap_hint(filp, addr, len, pgoff, flags);
-> +       if (addr)
-> +               return addr;
->
->         info.length =3D len;
->         info.low_limit =3D mm->mmap_base;
-> @@ -685,7 +700,6 @@ generic_get_unmapped_area_topdown(struct file *filp, =
-unsigned long addr,
->                                   unsigned long len, unsigned long pgoff,
->                                   unsigned long flags, vm_flags_t vm_flag=
-s)
->  {
-> -       struct vm_area_struct *vma, *prev;
->         struct mm_struct *mm =3D current->mm;
->         struct vm_unmapped_area_info info =3D {};
->         const unsigned long mmap_end =3D arch_get_mmap_end(addr, len, fla=
-gs);
-> @@ -698,14 +712,9 @@ generic_get_unmapped_area_topdown(struct file *filp,=
- unsigned long addr,
->                 return addr;
->
->         /* requesting a specific address */
-> -       if (addr) {
-> -               addr =3D PAGE_ALIGN(addr);
-> -               vma =3D find_vma_prev(mm, addr, &prev);
-> -               if (mmap_end - len >=3D addr && addr >=3D mmap_min_addr &=
-&
-> -                               (!vma || addr + len <=3D vm_start_gap(vma=
-)) &&
-> -                               (!prev || addr >=3D vm_end_gap(prev)))
-> -                       return addr;
-> -       }
-> +       addr =3D generic_mmap_hint(filp, addr, len, pgoff, flags);
-> +       if (addr)
-> +               return addr;
->
->         info.flags =3D VM_UNMAPPED_AREA_TOPDOWN;
->         info.length =3D len;
+> @@ -807,7 +807,6 @@ __get_unmapped_area(struct file *file, unsigned long =
+addr, unsigned long len,
+>         if (get_area) {
+>                 addr =3D get_area(file, addr, len, pgoff, flags);
+>         } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && !file
+> -                  && !addr /* no hint */
+>                    && IS_ALIGNED(len, PMD_SIZE)) {
+>                 /* Ensures that larger anonymous mappings are THP aligned=
+. */
+>                 addr =3D thp_get_unmapped_area_vmflags(file, addr, len,
 > --
 > 2.47.0.338.g60cca15819-goog
 >
