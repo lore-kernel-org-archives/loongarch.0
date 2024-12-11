@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35EA1FD796;
-	Wed, 11 Dec 2024 22:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534F5206294;
+	Wed, 11 Dec 2024 22:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733956352; cv=none; b=Hz32tOc8GwBopyogb7OQ/RYh0GUU73JXFCCtlHCydJkTvZ4PakR2XdmFTo8cBhW5PEADsXoovoNNJkVVd3r4t4yVL5LlT6wUWNcWW54sYcLZJ9FmrLdHOh75U0+taNircwv8p6no520KVLnoKlh60I5jJU0WhgGH+dapsVHwFUQ=
+	t=1733956373; cv=none; b=kE+2n4gWzSKcRw5BaljCtg85wKO7DXr9mB05SeEzjL7RnO/4pDaPG7Yil2OyrJlBa1zgFBVWKbezxahVzsm7MMUsBH66Pm6SeFynQC7G0gPNB4UfwXQSQtvuNU9R69tPle9nqo2GlSBpzEQC9qrS2dBMZQy/THtrtcJ/+hpQirk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733956352; c=relaxed/simple;
-	bh=k0MtyxDbbtsm27qvkqsKV+jrSIBDfJRGa0WHRKH9KWs=;
+	s=arc-20240116; t=1733956373; c=relaxed/simple;
+	bh=cVsBRq85rissDz94gS1APPLak1L31WJ3t5TGTSYE/as=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UedqFT0o9CbqXJFusAfmMgrYbvTfH4ltrIQTP1boj8QDvEZs1BIfEkZnQErKZQmLTx256mrlK7W4NxUrpZb2bHj96uROuMEGTx7RZFhHzmp6JpPtZF2VrIV8ImM9s0PWm2/nv4iNG0stqiPOh6RdOoCIbIZJWEfpNTSYyTS7o+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPOtlX5T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QZ1OYrjIuDJ7KNQRVYBVbyLFHeTZBG7pktYMmaVO1gVDjbt5EqKy4lui2wPIMExmcPFm+sCDqrfAV8CKdfD0LxYz/QIWff3zUhAfb33Z5sS4ARtieTSq9cAF+lBhJR+uEQj87IQ/M30U5bpwbe2ehX6tQTCFppOAvqIOUxCbzUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cqZ00nyo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPOtlX5T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A31DDC4CED3;
-	Wed, 11 Dec 2024 22:32:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cqZ00nyo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AB1C4CED3;
+	Wed, 11 Dec 2024 22:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733956351;
-	bh=k0MtyxDbbtsm27qvkqsKV+jrSIBDfJRGa0WHRKH9KWs=;
+	s=k20201202; t=1733956373;
+	bh=cVsBRq85rissDz94gS1APPLak1L31WJ3t5TGTSYE/as=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nPOtlX5TKBph2olV5g0D84w7BiGXyaTzX/kmSl/KB3xl8BPQoIcxG64kiVppaKWV6
-	 UuVYIQk2nmWnJhIowxxs3i7Ezo4bFvlmC27nFpPkM/jb80vyzHBEMsDiWlhHJUBmrV
-	 E4nuPLnavEZNBvgxCnxSG/erFAKypXE58/ddSXOGTSgdiPaf+RxWJKbmenqt6qmjdG
-	 RpQEsDlCvg4cySX8p8aQt/+bGgUkkoqZuHIfhgpxn+qXexNXcqJewICJNI3vp9PVla
-	 22tDI2SHe01OOAbfoiss8OadArWzPpX9wRC6bdennXUaIn34M8kF/jHgNGbizmzpuY
-	 lZsn8ISnWGPaw==
+	b=cqZ00nyo1Apj+jfDOCjAb0Dxj/1hdrSgL4z0d1BQUgbsnfyS1cxj2Bs3BmSupO9YI
+	 ZrIs7UmW8cKEp43GKNoiniGEMwWKwmjdnER3WeCSCGcRBKWotkXLcx8jndR1TkSpRP
+	 uiVGhMx/F4anBNn2cXEIgvbbMNAcLgjaLi7WcLTW60LB7hq+FQhuXx3i6Ic5UlnfEU
+	 vzGsMum9i7o+4Bz2yDi5hvchzvThH3EecYX333iWDVqDeJrI5DcrWWqj0yc7VIBVVl
+	 GPNr0CGIC5KgEmOa8jzIJQb3v4R6rhXRyTCF1prrQpAlkKDu/E5iMLuOrlL7ULHRg3
+	 dPb253YfD0mvw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEED380A965;
-	Wed, 11 Dec 2024 22:32:48 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CC8380A965;
+	Wed, 11 Dec 2024 22:33:10 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,46 +37,56 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] of/fdt: add dt_phys arg to early_init_dt_scan and
- early_init_dt_verify
+Subject: Re: [PATCH] soc: Switch back to struct platform_driver::remove()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <173395636750.1729195.6853192666319119853.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Dec 2024 22:32:47 +0000
-References: <20241023171426.452688-1-usamaarif642@gmail.com>
-In-Reply-To: <20241023171426.452688-1-usamaarif642@gmail.com>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-riscv@lists.infradead.org, robh@kernel.org, mark.rutland@arm.com,
- will@kernel.org, leitao@debian.org, catalin.marinas@arm.com,
- tglx@linutronix.de, chris@zankel.net, saravanak@google.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-openrisc@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-csky@vger.kernel.org
+ <173395638899.1729195.5401091299734997866.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Dec 2024 22:33:08 +0000
+References: <20241029074859.509587-2-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20241029074859.509587-2-u.kleine-koenig@baylibre.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40baylibre=2Ecom=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, arnd@arndb.de, olof@lixom.net,
+ joel@jms.id.au, andrew@codeconstruct.com.au, christophe.leroy@csgroup.eu,
+ herve.codina@bootlin.com, qiang.zhao@nxp.com, hasegawa-hitomi@fujitsu.com,
+ lihuisong@huawei.com, linusw@kernel.org, kaloz@openwrt.org,
+ kgugala@antmicro.com, mholenko@antmicro.com, gsomlo@gmail.com,
+ zhuyinbo@loongson.cn, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, conor.dooley@microchip.com,
+ daire.mcnamara@microchip.com, krzysztof.kozlowski@linaro.org,
+ andersson@kernel.org, konradybcio@kernel.org, heiko@sntech.de,
+ alim.akhtar@samsung.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
+ nm@ti.com, ssantosh@kernel.org, michal.simek@amd.com,
+ andriy.shevchenko@linux.intel.com, duje.mihanovic@skole.hr,
+ broonie@kernel.org, david.wu@rock-chips.com, jay.xu@rock-chips.com,
+ jay.buddhabhatti@amd.com, radhey.shyam.pandey@amd.com,
+ izhar.ameer.shaikh@amd.com, naman.trivedimanojbhai@amd.com,
+ linux-arm-kernel@lists.infradead.org, soc@lists.linux.dev,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
-by Rob Herring (Arm) <robh@kernel.org>:
+by Arnd Bergmann <arnd@arndb.de>:
 
-On Wed, 23 Oct 2024 18:14:26 +0100 you wrote:
-> __pa() is only intended to be used for linear map addresses and using
-> it for initial_boot_params which is in fixmap for arm64 will give an
-> incorrect value. Hence save the physical address when it is known at
-> boot time when calling early_init_dt_scan for arm64 and use it at kexec
-> time instead of converting the virtual address using __pa().
+On Tue, 29 Oct 2024 08:48:58 +0100 you wrote:
+> After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
+> return void") .remove() is (again) the right callback to implement for
+> platform drivers.
 > 
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> Fixes: ac10be5cdbfa ("arm64: Use common of_kexec_alloc_and_setup_fdt()")
+> Convert all platform drivers below drivers/soc to use .remove(), with
+> the eventual goal to drop struct platform_driver::remove_new(). As
+> .remove() and .remove_new() have the same prototypes, conversion is done
+> by just changing the structure member name in the driver initializer.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] of/fdt: add dt_phys arg to early_init_dt_scan and early_init_dt_verify
-    https://git.kernel.org/riscv/c/b2473a359763
+  - soc: Switch back to struct platform_driver::remove()
+    https://git.kernel.org/riscv/c/511c06e39035
 
 You are awesome, thank you!
 -- 
