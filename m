@@ -1,51 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2F24953E;
-	Wed, 11 Dec 2024 18:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BEF251AE6;
+	Wed, 11 Dec 2024 18:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943162; cv=none; b=DuJSwMpD32/79D59pZxSEju+m/vNHY0a0oIJqjmDpYTdER1kPPEUUo5KPf4T03r3iocNqzV7jJtHgtXnhD8Zmf4zgIONUhx6qVZ1wAwUKlLlVB7q14pd01CXqZ+I8Ip1U9MWsyIxmZDS62eJQOsAkYsBKsToICVaJj3L/3dYLz4=
+	t=1733943212; cv=none; b=AtLV9DSbGQ2jMRYk2f1DjlxPIo+K8L3vYyvOvQN+UGiiOVBuT2oOEgLwPVHxIlCoOwcOBRMUmOg02wjaVkousjQcnLXEOTutD4Zge0upKei30W7d5/83OkLhAyv3zWbghYSkHrrfEUhzDk3v3arWWoZW0DUsq3W1Q5a8N7ukMHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943162; c=relaxed/simple;
-	bh=DhQWIhCHT7+bo6xMT/3tBuVZmITlX74nTga6wJ1INBM=;
+	s=arc-20240116; t=1733943212; c=relaxed/simple;
+	bh=X3wiaJxIS4lxBQlb7qMsw8iFHOWvQiEHsMe0A6POmJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KV4gxtWKrlg1HedrOYxd2zy5eDRRmhMW6dO9+6gZntgVL4J2/jYE2xY6p0DZoDbeDw466UmpCpsIDNX/wtET1nNqR3eYH/vboBUH7ki3kAA3VBIJBOHOaPbtyFuD5KCsi3xPPZfzMvnpFD9OcspjyqciKBsrypxlCCwH2jdztrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sz7hVOrs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nKqKGd1gaD87XIsO7Z5RpvNbKZHoe3Xgh2PokaASwyKas7B/HxOu2mtkruUV4OEUL46NgZSixFcvmNT8eM+HccF9QR2vD0KhN+Ku8era4DNSDj+UZRhDSFfxJKLUrrykNFRabLAsXC76b2K06eDjx1DB9IJHRybHpKSTmaZUouk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxnVUstg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sz7hVOrs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FDCCC4CED2;
-	Wed, 11 Dec 2024 18:52:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxnVUstg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BAEC4CEDE;
+	Wed, 11 Dec 2024 18:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943162;
-	bh=DhQWIhCHT7+bo6xMT/3tBuVZmITlX74nTga6wJ1INBM=;
+	s=k20201202; t=1733943211;
+	bh=X3wiaJxIS4lxBQlb7qMsw8iFHOWvQiEHsMe0A6POmJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Sz7hVOrsKdRzs5MNghUHT8XC2H2Xka6Z9bays3fl3XaX4IgOomcj7sYRb/ug9bUui
-	 gh47sUyNzMlAxiqnD/WYLPxG0bJX+KKtbMb5a1jCC9vNM6ZBakfdSn6ZOdjreg0Y99
-	 5Tf6bQFvinZP6o+pQXZkqvb7yi5CJxehDDfRYexAxYhwk56JLmvkwXGBpGCPQYY6Uc
-	 ie+NGTJ8OWCo7UorQD/AhMNqqI2PJcO5Ru3Y+bPp7UUzCDadUVmwQ97m13kpmvmUZD
-	 Qd+cZBdidOpCCOrZorlkDYFcyXaY7fkGEE6mWYFl08Ysj9IjFiOqfAxE8z8J6X6e3U
-	 41pe7G2BxlRdA==
+	b=HxnVUstgkTeRZRJcOZBhXEHH7dfxHJPOH81ybdMWNc7WcAc/FHXQMAoIZ+ItBqAw3
+	 pAoUQI7LgpOjpOqk8Xx7Dsq8f/C0ZTAsV0Pa1eUvNlT1HZtqnGjrCte4zDVlwie4b/
+	 iuqvIQU1tiP5SYmc+WLCG6+WXrKRxP0NIWQZ/5IZfeorPp0nmKm+gPNbsRUq6eKda/
+	 H/3O+6SvnsveRsV6p/cXpL8UL4dj7hEay8OwV3rwkw/iD25hy8SDNf3wMVbggqL09O
+	 tD/Ui7eChz/muWj0dhnRe9KjzEgRD3lytcO3gYJit790/UCL+xVnbxHjNM8+3a91Ko
+	 dZMa318FQFHqg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+Cc: David Wang <00107082@163.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	Sasha Levin <sashal@kernel.org>,
 	chenhuacai@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
+	tglx@linutronix.de,
 	maobibo@loongson.cn,
-	oleg@redhat.com,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 12/23] LoongArch: BPF: Adjust the parameter of emit_jirl()
-Date: Wed, 11 Dec 2024 13:51:49 -0500
-Message-ID: <20241211185214.3841978-12-sashal@kernel.org>
+	lvjianmin@loongson.cn,
+	zhangtianyang@loongson.cn,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.1 07/15] LoongArch/irq: Use seq_put_decimal_ull_width() for decimal values
+Date: Wed, 11 Dec 2024 13:52:59 -0500
+Message-ID: <20241211185316.3842543-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185214.3841978-1-sashal@kernel.org>
-References: <20241211185214.3841978-1-sashal@kernel.org>
+In-Reply-To: <20241211185316.3842543-1-sashal@kernel.org>
+References: <20241211185316.3842543-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,104 +52,40 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.65
+X-stable-base: Linux 6.1.119
 Content-Transfer-Encoding: 8bit
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: David Wang <00107082@163.com>
 
-[ Upstream commit c1474bb0b7cff4e8481095bd0618b8f6c2f0aeb4 ]
+[ Upstream commit ad2a05a6d287aef7e069c06e329f1355756415c2 ]
 
-The branch instructions beq, bne, blt, bge, bltu, bgeu and jirl belong
-to the format reg2i16, but the sequence of oprand is different for the
-instruction jirl. So adjust the parameter order of emit_jirl() to make
-it more readable correspond with the Instruction Set Architecture manual.
+Performance improvement for reading /proc/interrupts on LoongArch.
 
-Here are the instruction formats:
+On a system with n CPUs and m interrupts, there will be n*m decimal
+values yielded via seq_printf(.."%10u "..) which is less efficient than
+seq_put_decimal_ull_width(), stress reading /proc/interrupts indicates
+~30% performance improvement with this patch (and its friends).
 
-  beq     rj, rd, offs16
-  bne     rj, rd, offs16
-  blt     rj, rd, offs16
-  bge     rj, rd, offs16
-  bltu    rj, rd, offs16
-  bgeu    rj, rd, offs16
-  jirl    rd, rj, offs16
-
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
-Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: David Wang <00107082@163.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/loongarch/include/asm/inst.h | 12 +++++++++++-
- arch/loongarch/kernel/inst.c      |  2 +-
- arch/loongarch/net/bpf_jit.c      |  6 +++---
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ arch/loongarch/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 71e1ed4165c80..4fa53ad82efb3 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -655,7 +655,17 @@ DEF_EMIT_REG2I16_FORMAT(blt, blt_op)
- DEF_EMIT_REG2I16_FORMAT(bge, bge_op)
- DEF_EMIT_REG2I16_FORMAT(bltu, bltu_op)
- DEF_EMIT_REG2I16_FORMAT(bgeu, bgeu_op)
--DEF_EMIT_REG2I16_FORMAT(jirl, jirl_op)
-+
-+static inline void emit_jirl(union loongarch_instruction *insn,
-+			     enum loongarch_gpr rd,
-+			     enum loongarch_gpr rj,
-+			     int offset)
-+{
-+	insn->reg2i16_format.opcode = jirl_op;
-+	insn->reg2i16_format.immediate = offset;
-+	insn->reg2i16_format.rd = rd;
-+	insn->reg2i16_format.rj = rj;
-+}
- 
- #define DEF_EMIT_REG2BSTRD_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 3050329556d11..14d7d700bcb98 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -332,7 +332,7 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
- 		return INSN_BREAK;
- 	}
- 
--	emit_jirl(&insn, rj, rd, imm >> 2);
-+	emit_jirl(&insn, rd, rj, imm >> 2);
- 
- 	return insn.word;
- }
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 497f8b0a5f1ef..6595e992fda85 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -181,13 +181,13 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 		/* Set return value */
- 		emit_insn(ctx, addiw, LOONGARCH_GPR_A0, regmap[BPF_REG_0], 0);
- 		/* Return to the caller */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, LOONGARCH_GPR_ZERO, 0);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
- 	} else {
- 		/*
- 		 * Call the next bpf prog and skip the first instruction
- 		 * of TCC initialization.
- 		 */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_T3, LOONGARCH_GPR_ZERO, 1);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 1);
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 18a2b37f4aea3..6e361de705e48 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -84,7 +84,7 @@ void show_ipi_list(struct seq_file *p, int prec)
+ 	for (i = 0; i < NR_IPI; i++) {
+ 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i, prec >= 4 ? " " : "");
+ 		for_each_online_cpu(cpu)
+-			seq_printf(p, "%10u ", per_cpu(irq_stat, cpu).ipi_irqs[i]);
++			seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, cpu).ipi_irqs[i], 10);
+ 		seq_printf(p, " LoongArch  %d  %s\n", i + 1, ipi_types[i]);
  	}
  }
- 
-@@ -841,7 +841,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			return ret;
- 
- 		move_addr(ctx, t1, func_addr);
--		emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
- 		move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
- 		break;
- 
 -- 
 2.43.0
 
