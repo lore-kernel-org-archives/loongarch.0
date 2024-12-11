@@ -1,88 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E041FF1CD;
-	Wed, 11 Dec 2024 18:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECAB23A1B1;
+	Wed, 11 Dec 2024 18:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733942242; cv=none; b=K/gmht2sgtq4bXKZuA8YSVYlPzBqDO0r2eKeCARoJcNxpDSwTbxM3HJHneHuTXIz8k+0qwXZIzKL0z5ZX9+QFjszleidg40u8BuOAepSsHlKz9f/t7GU0ySkpc9jds+MLR71pRD5Ss6pMhUz38bb0RLCsjf2koGL1caj8NqGZCY=
+	t=1733943064; cv=none; b=iwV3ZAYiR8sZga0HSvTE4gpot37m/llg34WAf0yvkcbPu4qd3vtHWXZxlr6LSdhr9EDdv3hQ0BW4JzTyIIhLPeibnb5YekE2hoS8nbQaG2D/9OpNPXtMDSXv9K4Q+sNSvgOds7IYs/iiWODJT1mtG2FjJkV4KJCx98/MW+iDreY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733942242; c=relaxed/simple;
-	bh=yW8NEIXdt8OgTLq+qNcqrg8UeS/00IHJeoZcZH4OVrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJr7W4qG8vvZEJUwYXr3pBlFSiHidGeJRFMU13BOXI5csRG3g+MydFOYboM5kwZqAZ2N3bG5RZXaXurLOHXtsKA/KoCNkht0qTUiGXYKGShko3QkgDwqyDRjQzRNz3GbHxX7DHRdkGjwQUADFyNXY/nNVLMndnhaqQNrjM7LKUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aH+/ToxE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733943064; c=relaxed/simple;
+	bh=XpjM7a+7izOGlFclTN59w0Ey+CkM7rqzLdE0f8idMNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nt7vJs82osF+rdlCaFJoy5sEeA4lYyU6C/AuK6EYdqfbQAnGqwFW/W3h03xRKJ1lf9gM9n4UHkfrb7mqGmeClKEQsZyQ05n/6y9uyPb0aSV2emHK2t8fSzbPm1XQVJD9HoyJpP4fTFsgSR9wWgpcEgrLOoxPaTnTyb+DnO4qxXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abKh4clN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aH+/ToxE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 655ACC4CED2;
-	Wed, 11 Dec 2024 18:37:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abKh4clN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95DE8C4CED4;
+	Wed, 11 Dec 2024 18:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733942241;
-	bh=yW8NEIXdt8OgTLq+qNcqrg8UeS/00IHJeoZcZH4OVrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aH+/ToxERJ5G0TrDJiyW6v3nPQxSWBCX1BoK092ZPKWLPpQ+lB6O5gKlVro0pOXev
-	 KrTFYiVpt4XtPUeJk/5zby/K5AyFKKxj6xUqd57Sjb2gMBU6zNYoCuXMM84a9NIWXc
-	 LzDtIRYAKyFSmGcJfwuGELNTFbrsE5qG/L36CXVhtH5sWntYTqd4nan8SIwfjuZktO
-	 i/+qdv/K+GFBZIn+ndOWWS5X1Us/5Nts/K7Vqg+N1op+LTaWiS6Afq16lft+1DHgji
-	 MB90Dz18wrUsoeeW6aow4jX1yXu7O0bem3C+xZsPCz7GlNhAGumqxvQ4RhbmMXoHYq
-	 3GYg3xGL3G+8A==
-Date: Wed, 11 Dec 2024 10:37:19 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/10] objtool: Handle different entry size of rodata
-Message-ID: <20241211183719.fz4av7mfht3ec74a@jpoimboe>
-References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
- <20241207015915.1159-3-yangtiezhu@loongson.cn>
- <20241209195413.gpq7t3nacsnx3xo3@jpoimboe>
- <832fe56f-1688-d128-50dd-3f668815a248@loongson.cn>
+	s=k20201202; t=1733943063;
+	bh=XpjM7a+7izOGlFclTN59w0Ey+CkM7rqzLdE0f8idMNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=abKh4clNNnlpW4MsBsHero2ZTK/YqZLZqlZAGKEkqgWZrRMF4pn2fODlK7n813/WE
+	 /dtLsj3sqv07KIpwcVtW9KEiS6MIwkKlyISkMaep39tfYn/xoAeiGOSydAAfjn3Nos
+	 M+mHE9mrj9tAK3lHtEz+yBOc8oQViLTIElqlb6bzGQ0/etYoMS7yENg25IcgIbS6l+
+	 bno61RayjTIRUN5D+5u5IbkfLGWglpfvV4IUqiZ8FurtXLtMw8C7e0etoUztyx0UD0
+	 peH0wcxdJOrotERLVbRUXXzaldJahbwtomB7JkxZ9Fy1CdOvy8nQ2O8y5ykjK59ceq
+	 POJqj1Uv7IcnA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Xuefeng Zhao <zhaoxuefeng@loongson.cn>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Tianyang Zhang <zhangtianyang@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	ardb@kernel.org,
+	chenhuacai@kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 17/36] LoongArch: Fix reserving screen info memory for above-4G firmware
+Date: Wed, 11 Dec 2024 13:49:33 -0500
+Message-ID: <20241211185028.3841047-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241211185028.3841047-1-sashal@kernel.org>
+References: <20241211185028.3841047-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <832fe56f-1688-d128-50dd-3f668815a248@loongson.cn>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.4
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 11, 2024 at 11:11:28AM +0800, Tiezhu Yang wrote:
-> unsigned int arch_reloc_size(struct reloc *reloc)
-> {
->         switch (reloc_type(reloc)) {
->         case R_X86_64_32:
->         case R_X86_64_PC32:
->         case R_X86_64_PLT32:
->                 return 4;
->         default:
->                 return 8;
->         }
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-Looks good to me, you can add R_X86_64_32S as well.
+[ Upstream commit 55dc2f8f263448f1e6c7ef135d08e640d5a4826e ]
 
-> For ppc, like this:
-> 
-> unsigned int arch_reloc_size(struct reloc *reloc)
-> {
->         switch (reloc_type(reloc)) {
->         case R_PPC_REL32:
->         case R_PPC64_REL32:
->                 return 4;
->         default:
->                 return 8;
->         }
+Since screen_info.lfb_base is a __u32 type, an above-4G address need an
+ext_lfb_base to present its higher 32bits. In init_screen_info() we can
+use __screen_info_lfb_base() to handle this case for reserving screen
+info memory.
 
-Also:
+Signed-off-by: Xuefeng Zhao <zhaoxuefeng@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/kernel/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-R_PPC_ADDR32
-R_PPC_UADDR32	
-R_PPC_PLT32
-R_PPC_PLTREL32
-
-And the ppc64 counterparts have the same values, so not necessary to add
-them.
-
+diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+index 2bf86aeda874c..de21e72759eeb 100644
+--- a/arch/loongarch/kernel/efi.c
++++ b/arch/loongarch/kernel/efi.c
+@@ -95,7 +95,7 @@ static void __init init_screen_info(void)
+ 	memset(si, 0, sizeof(*si));
+ 	early_memunmap(si, sizeof(*si));
+ 
+-	memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
++	memblock_reserve(__screen_info_lfb_base(&screen_info), screen_info.lfb_size);
+ }
+ 
+ void __init efi_init(void)
 -- 
-Josh
+2.43.0
+
