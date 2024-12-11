@@ -1,91 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BEF251AE6;
-	Wed, 11 Dec 2024 18:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289A225948D
+	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 19:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733943212; cv=none; b=AtLV9DSbGQ2jMRYk2f1DjlxPIo+K8L3vYyvOvQN+UGiiOVBuT2oOEgLwPVHxIlCoOwcOBRMUmOg02wjaVkousjQcnLXEOTutD4Zge0upKei30W7d5/83OkLhAyv3zWbghYSkHrrfEUhzDk3v3arWWoZW0DUsq3W1Q5a8N7ukMHM=
+	t=1733944461; cv=none; b=gSGOqm8mtIXqzICuv8QBqGRXbBSXiQj8h/EszAJcwnwCd3BsvK8OtnlIBwfo0N1hD1zzP7A5dJRHqzo3M3GYwABQqmaR0zpqhk9PHahlY/PJigW8Otd7sl7aCs6wRkl9RBJAErL8l4lDpejjtefCy2+NG8UT3L9YLzjZhxIdUpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733943212; c=relaxed/simple;
-	bh=X3wiaJxIS4lxBQlb7qMsw8iFHOWvQiEHsMe0A6POmJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nKqKGd1gaD87XIsO7Z5RpvNbKZHoe3Xgh2PokaASwyKas7B/HxOu2mtkruUV4OEUL46NgZSixFcvmNT8eM+HccF9QR2vD0KhN+Ku8era4DNSDj+UZRhDSFfxJKLUrrykNFRabLAsXC76b2K06eDjx1DB9IJHRybHpKSTmaZUouk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxnVUstg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733944461; c=relaxed/simple;
+	bh=cyVq8j7h/3A1zexB73GVxbSrsjwHkY39WMXImBQjX2s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HsBbcEJEI5hVkn2k0uNaB9douaQwvf02tzEAE/VBgg6mMoN30oEqonyEoZOSBhWHn1WJvweHY/EPHz2DiE/1xfZZSQhuaBxCyFZMpTWOzuxXgiUdAveaNE7OH8ATQdHAGRgD5w5yFaEen6dYH1wcnERz5/GwgRP5hQ0OqlyUchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BGSsnD+m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oprURwF9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxnVUstg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BAEC4CEDE;
-	Wed, 11 Dec 2024 18:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733943211;
-	bh=X3wiaJxIS4lxBQlb7qMsw8iFHOWvQiEHsMe0A6POmJA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HxnVUstgkTeRZRJcOZBhXEHH7dfxHJPOH81ybdMWNc7WcAc/FHXQMAoIZ+ItBqAw3
-	 pAoUQI7LgpOjpOqk8Xx7Dsq8f/C0ZTAsV0Pa1eUvNlT1HZtqnGjrCte4zDVlwie4b/
-	 iuqvIQU1tiP5SYmc+WLCG6+WXrKRxP0NIWQZ/5IZfeorPp0nmKm+gPNbsRUq6eKda/
-	 H/3O+6SvnsveRsV6p/cXpL8UL4dj7hEay8OwV3rwkw/iD25hy8SDNf3wMVbggqL09O
-	 tD/Ui7eChz/muWj0dhnRe9KjzEgRD3lytcO3gYJit790/UCL+xVnbxHjNM8+3a91Ko
-	 dZMa318FQFHqg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: David Wang <00107082@163.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	tglx@linutronix.de,
-	maobibo@loongson.cn,
-	lvjianmin@loongson.cn,
-	zhangtianyang@loongson.cn,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 07/15] LoongArch/irq: Use seq_put_decimal_ull_width() for decimal values
-Date: Wed, 11 Dec 2024 13:52:59 -0500
-Message-ID: <20241211185316.3842543-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211185316.3842543-1-sashal@kernel.org>
-References: <20241211185316.3842543-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BGSsnD+m";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oprURwF9"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1733944458;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mOVBcCbLQsYa1QXqE1cZk/HrSWrycdtTJ6dVrRK+9jE=;
+	b=BGSsnD+mdsbd1dlbCif6vi/QHDOe0b+Cout4iF0e+fm8qGjgpBeHfjP5OMCpKsYS9berOp
+	sUIiOG7ZBPOzNHycI/m0jq1DlEoopg0x80GPLVaNNX4JSa2jtgd+5tHY6m1Ti9SwW6fEN/
+	4CJUJlvi61yIhcGy7Vt4sercH48ztM7n2KJKwGnxZYrpoWvCW2Bbk0YrpAw46z+Onx8sVD
+	Zv5Aa5yWMaGC682qtaxm3IHlOULsqAbfSxTegc3S9iSFf6DJKSHy1fSGp+fAVZKwUiQg96
+	5TAbkxz+DFMUPfflZpLDtCByWikiAA2xk6DrqGz7inQVCeESr9lgLT9J8lJzvw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1733944458;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mOVBcCbLQsYa1QXqE1cZk/HrSWrycdtTJ6dVrRK+9jE=;
+	b=oprURwF9A/R6MJhmrsbgaOj6AWUtGm8wdLShH8uZRpMZ8bwnV+4aSFADrH3xPuvQKP04mN
+	VHwfEw4BGgaMYYCg==
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: David Wang <00107082@163.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Sasha Levin <sashal@kernel.org>, chenhuacai@kernel.org,
+ maobibo@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ zhangtianyang@loongson.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH AUTOSEL 6.12 18/36] LoongArch/irq: Use
+ seq_put_decimal_ull_width() for decimal values
+In-Reply-To: <20241211185028.3841047-18-sashal@kernel.org>
+References: <20241211185028.3841047-1-sashal@kernel.org>
+ <20241211185028.3841047-18-sashal@kernel.org>
+Date: Wed, 11 Dec 2024 20:14:18 +0100
+Message-ID: <87zfl29gmt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.119
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: David Wang <00107082@163.com>
+On Wed, Dec 11 2024 at 13:49, Sasha Levin wrote:
+> From: David Wang <00107082@163.com>
+>
+> [ Upstream commit ad2a05a6d287aef7e069c06e329f1355756415c2 ]
+>
+> Performance improvement for reading /proc/interrupts on LoongArch.
+>
+> On a system with n CPUs and m interrupts, there will be n*m decimal
+> values yielded via seq_printf(.."%10u "..) which is less efficient than
+> seq_put_decimal_ull_width(), stress reading /proc/interrupts indicates
+> ~30% performance improvement with this patch (and its friends).
 
-[ Upstream commit ad2a05a6d287aef7e069c06e329f1355756415c2 ]
+Why is this stable material?
 
-Performance improvement for reading /proc/interrupts on LoongArch.
+Thanks,
 
-On a system with n CPUs and m interrupts, there will be n*m decimal
-values yielded via seq_printf(.."%10u "..) which is less efficient than
-seq_put_decimal_ull_width(), stress reading /proc/interrupts indicates
-~30% performance improvement with this patch (and its friends).
-
-Signed-off-by: David Wang <00107082@163.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 18a2b37f4aea3..6e361de705e48 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -84,7 +84,7 @@ void show_ipi_list(struct seq_file *p, int prec)
- 	for (i = 0; i < NR_IPI; i++) {
- 		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i, prec >= 4 ? " " : "");
- 		for_each_online_cpu(cpu)
--			seq_printf(p, "%10u ", per_cpu(irq_stat, cpu).ipi_irqs[i]);
-+			seq_put_decimal_ull_width(p, " ", per_cpu(irq_stat, cpu).ipi_irqs[i], 10);
- 		seq_printf(p, " LoongArch  %d  %s\n", i + 1, ipi_types[i]);
- 	}
- }
--- 
-2.43.0
-
+        tglx
