@@ -1,82 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C396AF9E6
-	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 03:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E192451EB
+	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 08:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733887099; cv=none; b=et2oNl8d/6vlhJDRbGOYZmmk2l3seMBSNFod3TTfYmptIbGOnG9S/Py2NmLLvrWiPQjXbe1v0Y5XBKKUBf8reMXRFfXxoByan+MsJuDkXbLHALxp7IlEiNqitTURZ5Uph6iMZbV5N3149JFpZF3EwVFhzgtc5h7UXD5WIJr7Gcs=
+	t=1733906516; cv=none; b=b4jqviexZpSifzOa6wO8ZWHndF8XbdDk2hv03sej+AayjD+csb9H5y1FvFFqHYQAbfwB5FvPLUph/12sRKSxyHkskBTkk/bXIetGPdMd/YwU2nZHQC6xXBJkRlj+H1yOOoRXwlm4Um26trc8Ns5K20/40idaGh36J8ijPVKkPDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733887099; c=relaxed/simple;
-	bh=QkSTW9F3qFcRzjMa6X68P/M1552IlmY/hA/8rDBZq/g=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XMb4f4+Xpet6O/9BQGliNED5QZ3C4OYXFjWvLlcyuFFH3BtfF07G8TLecsFLNjyLU6e1knT+th95Jf7rAaAhLCgVEtdlxZPiVGoP7u+9agVALSVqxzD4mIeDc4j2Zg+BbRMVByK5pnMDtJew4fbQsZV63pyAIgvKBjBcpcCHp4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxieB1BFlngVVVAA--.34286S3;
-	Wed, 11 Dec 2024 11:18:13 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCx60ZzBFlnsSV_AA--.9359S3;
-	Wed, 11 Dec 2024 11:18:11 +0800 (CST)
-Subject: Re: [PATCH v5 05/10] objtool/LoongArch: Add support for switch table
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
- <20241207015915.1159-6-yangtiezhu@loongson.cn>
- <20241209203932.a55zmvjehc27hqjy@jpoimboe>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8747e7fb-f2e5-f3d1-c3c4-1fdd05120bda@loongson.cn>
-Date: Wed, 11 Dec 2024 11:18:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1733906516; c=relaxed/simple;
+	bh=11k4EF5OtV96AkBGLTd+hH0qKo61NlPe3GiJ6SKgOkU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XyGMluO+xu4uB2eIZWwgBTvOIgWn6PBcYDf4LsbPLmH3QwHXFNdMOB0XEf5URR/qiUHoVKDoQffEAcMdtHJjUzhWJqlYeyi8k/W/Tbq5s0ikx+8eNtYx84+Lzr4gzZ9b3YSimURK/uwfL1ScD2faVN+jRY6sxblRc0yfD8Rn17E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pm8GQBRy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pm8GQBRy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C691C4CED2
+	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 08:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733906516;
+	bh=11k4EF5OtV96AkBGLTd+hH0qKo61NlPe3GiJ6SKgOkU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pm8GQBRyxvJBdkrJvB5xqnkaQDK3pQH87o2d08mKRohKRhHeZREIXkL0k4nqUt2cm
+	 hPk5xQc3DdC83EUlt0uuVyRLixOlSM/eq/88PsXvN7dVJqm/xljHvKMIBC1C/gFBHQ
+	 P8aJVl5g1ko3s6+ndoUJmGaN+L+ce0g8sKQS3+1C6YhCPXYds31oE4aUehqq1aqt3U
+	 rq15OYEnt6oohrzKUah8SL1L/YUO6y2qYlI1J5WAyK9LQzlpbzO/tP8WJBI/FgEn3F
+	 ndJ1ytAS7pYHzrUy+wcnCubZp+bJEiXgPYiWJqv5+94lJqn7J9A9Qwoszdch4dNaPq
+	 LIrJbvVowJqtg==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa6b4cc7270so58792366b.0
+        for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 00:41:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUnoktdEopBp3BVa7mv54FaBjsCBJrKA5ufgSULHRAMdI5NVPzS7gVT28fL0Or1uVENKjxR2QuzPW8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqW3Iokr1JQfDY90y2mZtfy6dho/CrBOpRdOykXK3zxj+lNU73
+	kCgsOAV8B0heVc0BKaTdvb0Rjmk6/atRQ6FOohkb7zcA5cfVWc1L0xcY3eDukc4/pr9seYSaj/V
+	dFKYeUjC6xMkiaulq2ljSY2IVzDQ=
+X-Google-Smtp-Source: AGHT+IGBqIIVL8M8gd1swf2r/NXYFCJNyY0lS3KZFrZ3efUdXDZaZlzPpq5HkoxLe8d8jwzVBsIy563EXgXKfOfsJeo=
+X-Received: by 2002:a05:6402:2105:b0:5d0:cfad:f71 with SMTP id
+ 4fb4d7f45d1cf-5d43316510amr4128041a12.32.1733906514580; Wed, 11 Dec 2024
+ 00:41:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241209203932.a55zmvjehc27hqjy@jpoimboe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCx60ZzBFlnsSV_AA--.9359S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW5KFWDArWUAw4fKw13Cr45Arc_yoWxGFc_W3
-	4qgrWDCayqqwnYyayUCw1YgF9rKrWjvw15XryFqw1Dtw1kJ395AFZ2gr93A34kXayfGFWk
-	Wa1kZ3yfWry2gosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUq
-	UUUUU
+References: <20241210001802.228725-1-fujita.tomonori@gmail.com> <20241210001802.228725-5-fujita.tomonori@gmail.com>
+In-Reply-To: <20241210001802.228725-5-fujita.tomonori@gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 11 Dec 2024 16:41:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7BxE7xeA982Pr4PFxgfNpgXs6H4OZ2LydmYAtYjvYNaw@mail.gmail.com>
+Message-ID: <CAAhV-H7BxE7xeA982Pr4PFxgfNpgXs6H4OZ2LydmYAtYjvYNaw@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] loongarch/bug: Add ARCH_WARN_ASM macro for
+ BUG/WARN asm code sharing with Rust
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, kernel@xen0n.name, 
+	tangyouling@loongson.cn, hejinyang@loongson.cn, yangtiezhu@loongson.cn, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/10/2024 04:39 AM, Josh Poimboeuf wrote:
-> On Sat, Dec 07, 2024 at 09:59:10AM +0800, Tiezhu Yang wrote:
->>  struct reloc *arch_find_switch_table(struct objtool_file *file,
->>  				     struct instruction *insn,
->>  				     unsigned long *table_size)
->>  {
+Hi, FUJITA,
+
+On Tue, Dec 10, 2024 at 8:19=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
 >
-> This seems to be a partial implementation as it doesn't set
-> 'table_size', resulting in undefined behavior when the size gets used by
-> objtool later.   I suppose this patch should be squashed with the next
-> one?
+> Add new ARCH_WARN_ASM macro for BUG/WARN assembly code sharing with
+> Rust to avoid the duplication.
+>
+> No functional changes.
+>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> ---
+>  arch/loongarch/include/asm/bug.h | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/as=
+m/bug.h
+> index 08388876ade4..2343c4226595 100644
+> --- a/arch/loongarch/include/asm/bug.h
+> +++ b/arch/loongarch/include/asm/bug.h
+> @@ -21,14 +21,21 @@
+>  #ifndef CONFIG_GENERIC_BUG
+>  #define __BUG_ENTRY(flags)
+>  #else
+> -#define __BUG_ENTRY(flags)                                     \
+> +
+> +#define __BUG_ENTRY_START                                      \
+>                 .pushsection __bug_table, "aw";                 \
+>                 .align 2;                                       \
+>         10000:  .long 10001f - .;                               \
+> -               _BUGVERBOSE_LOCATION(__FILE__, __LINE__)        \
+> -               .short flags;                                   \
+> +
+> +#define __BUG_ENTRY_END                                                \
+>                 .popsection;                                    \
+>         10001:
+> +
+> +#define __BUG_ENTRY(flags)                                     \
+> +               __BUG_ENTRY_START                       \
+> +               _BUGVERBOSE_LOCATION(__FILE__, __LINE__)        \
+> +               .short flags;                                   \
+> +               __BUG_ENTRY_END
+>  #endif
+>
+>  #define ASM_BUG_FLAGS(flags)                                   \
+> @@ -55,6 +62,24 @@ do {                                                  =
+       \
+>         unreachable();                                          \
+>  } while (0)
+>
+> +#ifdef CONFIG_DEBUG_BUGVERBOSE
+> +#define __BUG_LOCATION_STRING(file, line)              \
+> +               ".long " file "- .;"                    \
+> +               ".short " line ";"
+> +#else
+> +#define __BUG_LOCATION_STRING(_file, _line)
+> +#endif
+Can we use file and line instead of _file and _line, which is the same
+as the CONFIG_DEBUG_BUGVERBOSE case?
 
-OK, makes sense, I will squash them into one single patch.
+> +
+> +#define __BUG_ENTRY_STRING(file, line, flags)          \
+> +               __stringify(__BUG_ENTRY_START)          \
+> +               __BUG_LOCATION_STRING(file, line)       \
+> +               ".short " flags ";"                     \
+> +               __stringify(__BUG_ENTRY_END)
+> +
+> +#define ARCH_WARN_ASM(file, line, flags, size)         \
+> +       __BUG_ENTRY_STRING(file, line, flags)           \
+> +       __stringify(break BRK_BUG) ";"
+> +
+Can we use the same indentation in this file?
 
-Let me wait for some days, if no more comments, I will send v6
-in the next week.
+Huacai
 
-Thanks,
-Tiezhu
-
+>  #define HAVE_ARCH_BUG
+>
+>  #include <asm-generic/bug.h>
+> --
+> 2.43.0
+>
