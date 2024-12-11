@@ -1,77 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289A225948D
-	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 19:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70D1F0E4B;
+	Wed, 11 Dec 2024 22:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733944461; cv=none; b=gSGOqm8mtIXqzICuv8QBqGRXbBSXiQj8h/EszAJcwnwCd3BsvK8OtnlIBwfo0N1hD1zzP7A5dJRHqzo3M3GYwABQqmaR0zpqhk9PHahlY/PJigW8Otd7sl7aCs6wRkl9RBJAErL8l4lDpejjtefCy2+NG8UT3L9YLzjZhxIdUpg=
+	t=1733956333; cv=none; b=o8mSu+BqJPxJD9NVYXcP15AKTpz5f5G4iG+d35yaCpsz9zNJGqU1+nhpMIuS/BykDL2uGrbh46dVjk4Al7tiFavpnCbnRz7eowgp7crw0H4neAnA1G/9yd6gQw8UqbJ6CLewIQdrYvpXVIqZWfAqi7LFZY0XthS1pBsyxRIZRSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733944461; c=relaxed/simple;
-	bh=cyVq8j7h/3A1zexB73GVxbSrsjwHkY39WMXImBQjX2s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HsBbcEJEI5hVkn2k0uNaB9douaQwvf02tzEAE/VBgg6mMoN30oEqonyEoZOSBhWHn1WJvweHY/EPHz2DiE/1xfZZSQhuaBxCyFZMpTWOzuxXgiUdAveaNE7OH8ATQdHAGRgD5w5yFaEen6dYH1wcnERz5/GwgRP5hQ0OqlyUchU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BGSsnD+m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oprURwF9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1733956333; c=relaxed/simple;
+	bh=SEo/hZdGOI1Q/CSoVxc2NHBSSqNSaH3b4tjYopKGg5Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=orDytnAGeb/8fM9FyJKi/DGo+pVosASWts2g5UXuDykr0MPL37bs56LG8b7OsZcuJQ91xLfto/AyO1CW6F6Mb0b1XwA1hXOqLpTYG952i7+0YQ1PyR/v0GuiRimJvKF5JlJs8cw3dU7kM7wPZ8K7sygSAlEDwdcU1b177R+5HKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taXi5zli; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BGSsnD+m";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oprURwF9"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1733944458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mOVBcCbLQsYa1QXqE1cZk/HrSWrycdtTJ6dVrRK+9jE=;
-	b=BGSsnD+mdsbd1dlbCif6vi/QHDOe0b+Cout4iF0e+fm8qGjgpBeHfjP5OMCpKsYS9berOp
-	sUIiOG7ZBPOzNHycI/m0jq1DlEoopg0x80GPLVaNNX4JSa2jtgd+5tHY6m1Ti9SwW6fEN/
-	4CJUJlvi61yIhcGy7Vt4sercH48ztM7n2KJKwGnxZYrpoWvCW2Bbk0YrpAw46z+Onx8sVD
-	Zv5Aa5yWMaGC682qtaxm3IHlOULsqAbfSxTegc3S9iSFf6DJKSHy1fSGp+fAVZKwUiQg96
-	5TAbkxz+DFMUPfflZpLDtCByWikiAA2xk6DrqGz7inQVCeESr9lgLT9J8lJzvw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1733944458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mOVBcCbLQsYa1QXqE1cZk/HrSWrycdtTJ6dVrRK+9jE=;
-	b=oprURwF9A/R6MJhmrsbgaOj6AWUtGm8wdLShH8uZRpMZ8bwnV+4aSFADrH3xPuvQKP04mN
-	VHwfEw4BGgaMYYCg==
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: David Wang <00107082@163.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Sasha Levin <sashal@kernel.org>, chenhuacai@kernel.org,
- maobibo@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
- zhangtianyang@loongson.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH AUTOSEL 6.12 18/36] LoongArch/irq: Use
- seq_put_decimal_ull_width() for decimal values
-In-Reply-To: <20241211185028.3841047-18-sashal@kernel.org>
-References: <20241211185028.3841047-1-sashal@kernel.org>
- <20241211185028.3841047-18-sashal@kernel.org>
-Date: Wed, 11 Dec 2024 20:14:18 +0100
-Message-ID: <87zfl29gmt.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taXi5zli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38846C4CEDD;
+	Wed, 11 Dec 2024 22:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733956333;
+	bh=SEo/hZdGOI1Q/CSoVxc2NHBSSqNSaH3b4tjYopKGg5Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=taXi5zliiFN3KW6tUo9STN8RrcaQwTguLWUw7vOA+mWtVIl/lOqyfp7tYIS/4F3zV
+	 SrlDbBAQw0pq/i+m3XA8S2V5RKELeBAQDrM9ZlzmC5W2t3P2/1WtHs4/RSCdUgq8dQ
+	 mlxsg6YPQmJkBgFPWopn0EvLsIRByEfTZmh5jsblEZTrZHF1YBr1gHB4u8SC/ZnwYc
+	 JJmrOPumN6Bq+UlMa1Yy/gqSPnI2DNXR7U5+yK9MuW0ITZJZ/qhOwGYGwKr3anAyP3
+	 KUBLzQdsNExdAOK6/2U41j0zEPH/NAHyaJyJUiYyz7Ml3I0TkGmyIhQT3WGrG4Z/r4
+	 v9nQIb5qf2Bkg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D1D380A965;
+	Wed, 11 Dec 2024 22:32:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v12 0/5] Tracepoints and static branch in Rust
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <173395634899.1729195.7492083712432982213.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Dec 2024 22:32:28 +0000
+References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+In-Reply-To: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: linux-riscv@lists.infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, peterz@infradead.org, jpoimboe@kernel.org,
+ jbaron@akamai.com, ardb@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+ wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ seanjc@google.com, ubizjak@gmail.com, catalin.marinas@arm.com,
+ will@kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ mark.rutland@arm.com, ryan.roberts@arm.com, tabba@google.com,
+ linux-arm-kernel@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, apatel@ventanamicro.com,
+ ajones@ventanamicro.com, alexghiti@rivosinc.com, conor.dooley@microchip.com,
+ samuel.holland@sifive.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ maobibo@loongson.cn, yangtiezhu@loongson.cn, akpm@linux-foundation.org,
+ zhaotianrui@loongson.cn, loongarch@lists.linux.dev, cmllamas@google.com,
+ palmer@rivosinc.com
 
-On Wed, Dec 11 2024 at 13:49, Sasha Levin wrote:
-> From: David Wang <00107082@163.com>
->
-> [ Upstream commit ad2a05a6d287aef7e069c06e329f1355756415c2 ]
->
-> Performance improvement for reading /proc/interrupts on LoongArch.
->
-> On a system with n CPUs and m interrupts, there will be n*m decimal
-> values yielded via seq_printf(.."%10u "..) which is less efficient than
-> seq_put_decimal_ull_width(), stress reading /proc/interrupts indicates
-> ~30% performance improvement with this patch (and its friends).
+Hello:
 
-Why is this stable material?
+This series was applied to riscv/linux.git (fixes)
+by Steven Rostedt (Google) <rostedt@goodmis.org>:
 
-Thanks,
+On Wed, 30 Oct 2024 16:04:23 +0000 you wrote:
+> An important part of a production ready Linux kernel driver is
+> tracepoints. So to write production ready Linux kernel drivers in Rust,
+> we must be able to call tracepoints from Rust code. This patch series
+> adds support for calling tracepoints declared in C from Rust.
+> 
+> This series includes a patch that adds a user of tracepoints to the
+> rust_print sample. Please see that sample for details on what is needed
+> to use this feature in Rust code.
+> 
+> [...]
 
-        tglx
+Here is the summary with links:
+  - [v12,1/5] rust: add static_branch_unlikely for static_key_false
+    https://git.kernel.org/riscv/c/6e59bcc9c8ad
+  - [v12,2/5] rust: add tracepoint support
+    https://git.kernel.org/riscv/c/ad37bcd965fd
+  - [v12,3/5] rust: samples: add tracepoint to Rust sample
+    https://git.kernel.org/riscv/c/91d39024e1b0
+  - [v12,4/5] jump_label: adjust inline asm to be consistent
+    https://git.kernel.org/riscv/c/aecaf181651c
+  - [v12,5/5] rust: add arch_static_branch
+    https://git.kernel.org/riscv/c/169484ab6677
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
