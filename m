@@ -1,146 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD87F259C
-	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 00:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC79F209F3F
+	for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 03:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733877674; cv=none; b=l2kTeSN75ltOrrXJNTl1QUyjXNmEnlwBtRwOuRG3xxv99dJg/sy4XY1d/zIJPJI5+YZAmaJtiR+coZV6kcMblwXIRSRHCsSGLfVQ2AF6mup8au1FotWYuccvhcDQJ5r0TkEq1aQUX1qEiOWNG5cX7mEM/jSqElOd2yw6EZ3fmtE=
+	t=1733886702; cv=none; b=eAU+WxGNts71MRD2h84TgxCQPzh8G5h09sUsEbTL5H3evV0Xzo0F3lyjkg03ICOIWjhaaxxYV4aiBqUnFpDwDHMNEV6Z1xFdhaIkVDpQ5eSp59mEC9UR4LtBmbt3lToTyvTApHttffEg9UfOq/4hcLrYg3uHL3OghJwwaG/BQKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733877674; c=relaxed/simple;
-	bh=5UPtfw8VuK8f7upUsP0qiiGtjlJDQAQYuFm8VMuMXK4=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=atQO9NMyiVeIElYY0Xg5r5Exz8ujt99KVFOFax/rYh7Ta+Rjf16R1JWEeXl78repS8OaGcF648qPIpiTMbDB3MaCGmbzwrcqQy5FxhxoDZPdXSWmMQfsPa2q5d2VA9noulFHTsvryHABPxmR6BV7NjY1H/lBlG2xk/t3rFYjDxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ml6D8q2W; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ml6D8q2W"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21619108a6bso35438225ad.3
-        for <loongarch@lists.linux.dev>; Tue, 10 Dec 2024 16:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733877672; x=1734482472; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5UPtfw8VuK8f7upUsP0qiiGtjlJDQAQYuFm8VMuMXK4=;
-        b=ml6D8q2WqGnGxWFd5lqGP0C9nW0ewme23SAqsZmLe/NkTkacaHm9Bz0vNaVon1aAev
-         2tnUIoZrxx42hk7ABGW7lhuoUCjJ2+7ap1ydtg5ZhPFQMJeIZXaycOluVY+KZcPZhdn7
-         a1/xYp7Idzr25+4hfmOXT5rp9R5IAIr8o17bwVXN/fzPYNqP7Sx7S8BAA52IF3HWrIy0
-         Advg4xhomgRCDqUeoTy1VLdagwTZhhNoN9Z/4A5WlsxjJK1kMp6UzNbudTCe1zag+QLE
-         taQVNdQbVuU75h7/wVqwYg/lWjrvqZslW1IOOMz/2HqXFQSz/53EQcdxpfqDoXrpGOW/
-         cATw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733877672; x=1734482472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5UPtfw8VuK8f7upUsP0qiiGtjlJDQAQYuFm8VMuMXK4=;
-        b=mvqDX7Yz/eEOqxcsY0OMMP5zrqrhQWgwUkskOFA9mowXRd3xT0Uv885v7suDkm4Aij
-         KrmkrOeY0vbSbX1lh0cZegyAcKRbF2ili5KB4oB7jZWxGU/hE4VrsoPVePHbqOX1dHct
-         atbAkHh45d8VyxeOdjSCXzjqvAIWcPMgM9vFvgenYcUHrvE0A1H/avUsw1ElfeVg7g6H
-         iZJADFYu/UNTcR0aK4LfexgJdVYZ9qsE/iOSpONhNqG+CBO4oWxw4Yq7PdJm7rIbULeM
-         Xf84Bnvnzws0gDSKV5fgt4kkMXjPJByR3iPBqPde4OEQgvDo8gUXA44AZNP+1p7Z4b4U
-         qzHw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5CmxRKOmlI2GzGJXH5A9bR7c+kIl9oJ8MyOC1pD8OsYC8m/qc2fA1x1FEWDMFxK37SuDnYeu9rZM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxci6bSLjgA0bM4+SZVwHu5pRxSmBFBmCkrPut916lZP9bJ7WrS
-	X2l6V9JIRYKVk9YkLel0Uo4Sq5tRZWJY0YAVAs5uZKKQ1U5wV+eh
-X-Gm-Gg: ASbGncuPeMGAL1M4pCOLVOVMcKWfHdsgaFFVSeLLS21V89dormDRC+41WHZczXLe+qQ
-	Ya/Ywc6YIEHtEUybxC0KuIXkXdyltiVxR/KF3ZRLa9NOlQtewE6dnpQEo0xR4Mj4CsPFgHiCN3m
-	E8DjWuGCqUWaPks/5TonmbpW2gmsFYKg4ORONvL6yGGSMy1iLOA/zp41tUOA4xAmNSpDlithva2
-	5lCT37sOgppxbcADw7f7XmHQhH5aCjw3mhUN9xfFkbxXB6/wtouoHr8RIlPpJpqrPuzFgVS1PAT
-	SnC0GkInLYcpGweuAPFQld8/Pnxant9GRA==
-X-Google-Smtp-Source: AGHT+IHqHfCvZvGKLuMXz8AiDsWXknJ34bQnBz2kNatpxzICbZyL3M7rCR45PKN88PXAaH1LNr0svg==
-X-Received: by 2002:a17:902:8b83:b0:216:7cbf:9500 with SMTP id d9443c01a7336-21778397522mr17055945ad.6.1733877672078;
-        Tue, 10 Dec 2024 16:41:12 -0800 (PST)
-Received: from localhost (p4007189-ipxg22601hodogaya.kanagawa.ocn.ne.jp. [180.53.81.189])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-216353ab708sm56076995ad.182.2024.12.10.16.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 16:41:11 -0800 (PST)
-Date: Wed, 11 Dec 2024 09:40:54 +0900 (JST)
-Message-Id: <20241211.094054.1429837669366274024.fujita.tomonori@gmail.com>
-To: aliceryhl@google.com
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, x86@kernel.org,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
- hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
- hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
- tmgross@umich.edu
-Subject: Re: [PATCH v1 5/5] rust: Add warn_on and warn_on_once
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CAH5fLgiShKMGo6AYWM-4S8JK+iDA+tUfz9uxkns82g0nLW--NQ@mail.gmail.com>
-References: <20241210001802.228725-1-fujita.tomonori@gmail.com>
-	<20241210001802.228725-6-fujita.tomonori@gmail.com>
-	<CAH5fLgiShKMGo6AYWM-4S8JK+iDA+tUfz9uxkns82g0nLW--NQ@mail.gmail.com>
+	s=arc-20240116; t=1733886702; c=relaxed/simple;
+	bh=6W5RauuKLBrSjrnL5ZB2tDgtaDo7iuFyuWsIW6M9Z44=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pYZJi8ACZQhkCJy0wkhxYLrpQZTWx/yTUAEBkaDBL/tuWWGfk6JRouV0hmLReAPKiktk6W379yh1WyJLeXyJLPLBPAzpz2EKUfgw8M0cejVSP9ipYaxqNg4BO+Nlm7Z3LsZnd/Zr/a/5+gSdE2y98zSW1dvrMct9vpuI8z5S8lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxaeDiAllnjlRVAA--.14087S3;
+	Wed, 11 Dec 2024 11:11:30 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxreDgAllnRCR_AA--.52312S3;
+	Wed, 11 Dec 2024 11:11:30 +0800 (CST)
+Subject: Re: [PATCH v5 02/10] objtool: Handle different entry size of rodata
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
+ <20241207015915.1159-3-yangtiezhu@loongson.cn>
+ <20241209195413.gpq7t3nacsnx3xo3@jpoimboe>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <832fe56f-1688-d128-50dd-3f668815a248@loongson.cn>
+Date: Wed, 11 Dec 2024 11:11:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+In-Reply-To: <20241209195413.gpq7t3nacsnx3xo3@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAxreDgAllnRCR_AA--.52312S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4xWryUXFWrZr48GF17urX_yoW8Xry3pF
+	srC3yrGrn5tr42g3sFva1ku3Z3Gw4kXF17ZFZrK3s7Ar1Dtr1ftFy8AF4xKa45Gryv9r4f
+	AayqqFn8uFW5A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25Ef
+	UUUUU
 
-T24gVHVlLCAxMCBEZWMgMjAyNCAxMDowNTowNyArMDEwMA0KQWxpY2UgUnlobCA8YWxpY2VyeWhs
-QGdvb2dsZS5jb20+IHdyb3RlOg0KDQo+IE9uIFR1ZSwgRGVjIDEwLCAyMDI0IGF0IDE6MTnigK9B
-TSBGVUpJVEEgVG9tb25vcmkNCj4gPGZ1aml0YS50b21vbm9yaUBnbWFpbC5jb20+IHdyb3RlOg0K
-Pj4NCj4+IEFkZCB3YXJuX29uIGFuZCB3YXJuX29uX29uY2UgbWFjcm9zLiBXcmFwcGluZyB0aGUg
-QydzIFdBUk5fKiBhbmQgQlVHXyoNCj4+IG1hY3JvcyBkb2Vzbid0IHdvcmsgc28gdGhpcyB1c2Vz
-IHRoZSBhc3NlbWJseSBjb2RlIGV4cG9ydGVkIGJ5IHRoZSBDDQo+PiBzaWRlIHZpYSBBUkNIX1dB
-Uk5fQVNNIG1hY3JvLiBMaWtlIHRoZSBzdGF0aWMgYnJhbmNoIGNvZGUsIHRoaXMNCj4+IGdlbmVy
-YXRlcyB0aGUgYXNzZW1ibHkgY29kZSBmb3IgcnVzdCBkeW5hbWljYWxseSBieSB1c2luZyB0aGUg
-Qw0KPj4gcHJlcHJvY2Vzc29yLg0KPj4NCj4+IGZpbGUoKSEgbWFjcm8gZG9lc24ndCB3b3JrIGZv
-ciB0aGUgUnVzdCBpbmxpbmUgYXNzZW1ibHkgaW4gdGhlIHNhbWUNCj4+IHdheSBhcyBfX0ZJTEVf
-XyBmb3IgdGhlIEMgaW5saW5lIGFzc2VtYmx5LiBTbyB0aGUgY29kZSB0byBoYW5kbGUgYQ0KPj4g
-ZmlsZSBuYW1lIGlzIGRpZmZlcmVudCBmcm9tIHRoZSBDIGFzc2VtYmx5IGNvZGUgKHNpbWlsYXIg
-dG8gdGhlDQo+PiBhcm02NC9sb29uZ2FyY2ggYXNzZW1ibHkpLg0KPj4NCj4+IEFTTV9SRUFDSEFC
-TEUgZGVmaW5pdGlvbiB3b3JrcyBpbiB0aGUgc2FtZSB3YXkgdG8gZ2V0IG9ianRvb2wncw0KPj4g
-cmVhY2hhYmxlIGFzbSBjb2RlLiBUaGUgYXJjaGl0ZWN0dXJlcyB3aGljaCB1c2Ugb2JqdG9vbCAo
-eDg2IGFuZA0KPj4gbG9vbmdhcmNoKSBuZWVkcyBpdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBG
-VUpJVEEgVG9tb25vcmkgPGZ1aml0YS50b21vbm9yaUBnbWFpbC5jb20+DQo+IA0KPj4gKyNbbWFj
-cm9fZXhwb3J0XQ0KPj4gKyNbZG9jKGhpZGRlbildDQo+PiArI1tjZmcoYWxsKENPTkZJR19CVUcs
-IG5vdChDT05GSUdfVU1MKSkpXQ0KPj4gKyNbY2ZnKGFueSh0YXJnZXRfYXJjaCA9ICJ4ODZfNjQi
-LCB0YXJnZXRfYXJjaCA9ICJyaXNjdjY0IikpXQ0KPiANCj4+ICsjW21hY3JvX2V4cG9ydF0NCj4+
-ICsjW2RvYyhoaWRkZW4pXQ0KPj4gKyNbY2ZnKGFsbChDT05GSUdfQlVHLCBub3QoQ09ORklHX1VN
-TCkpKV0NCj4+ICsjW2NmZyhhbnkodGFyZ2V0X2FyY2ggPSAiYWFyY2g2NCIsIHRhcmdldF9hcmNo
-ID0gImxvb25nYXJjaDY0IikpXQ0KPiANCj4gV2hhdCdzIHRoZSByZWFzb24gZm9yIHRoaXMgYXJj
-aC1zcGVjaWZpYyBjb2RlPyBUaGUgZmlsZSEoKS9saW5lISgpDQo+IGludm9jYXRpb25zPyBDb3Vs
-ZCB0aGV5IGJlIHBhc3NlZCBhcyBhbiBhcmd1bWVudCB0byB0aGUgYXNtIGluc3RlYWQgc28NCj4g
-dGhhdCB3ZSBkb24ndCBuZWVkIHRhcmdldF9hcmNoIGNmZ3M/IEkgdW5kZXJzdGFuZCB0aGF0IHRo
-ZXkgZG9uJ3Qgd29yaw0KPiBleGFjdGx5IHRoZSBzYW1lIHdheSwgYnV0IG1heWJlIGl0IGNvdWxk
-IHN0aWxsIHdvcms/DQoNCkJlY2F1c2Ugb2YgImVycm9yOiBuYW1lZCBhcmd1bWVudCBuZXZlciB1
-c2VkIiBpbiBSdXN0IGlubGluZSBhc3NlbWJseToNCg0KQWxsIHRoZSBhcmNocyBkZWZpbmUgQVJD
-SF9XQVJOX0FTTSBtYWNybyBpbiB0aGUgc2FtZSB3YXk6DQoNCiNkZWZpbmUgQVJDSF9XQVJOX0FT
-TShmaWxlLCBsaW5lLCBmbGFncywgc2l6ZSkNCg0KSG93ZXZlciwgb25seSB4ODYgYW5kIHJpc2Mt
-diBhc20gY29kZSB1c2UgdGhlIHNpemUgYXJndW1lbnQuIFdpdGhvdXQNCnRoZSBjZmdzLCBJJ2xs
-IGdldCB0aGUgZm9sbG93aW5nIG9uIGFybTY0L2xvb25nYXJjaDoNCg0KZXJyb3I6IG5hbWVkIGFy
-Z3VtZW50IG5ldmVyIHVzZWQNCiAgLS0+IC9ob21lL2Z1aml0YS9naXQvbGludXgtcnVzdC9kcml2
-ZXJzL2Jsb2NrL3JudWxsLnJzOjU0OjkNCiAgIHwNCjU0IHwgICAgICAgICB3YXJuX29uISh0cnVl
-KTsNCiAgIHwgICAgICAgICBeXl5eXl5eXl5eXl5eXiBuYW1lZCBhcmd1bWVudCBuZXZlciB1c2Vk
-DQogICB8DQogICA9IGhlbHA6IGlmIHRoaXMgYXJndW1lbnQgaXMgaW50ZW50aW9uYWxseSB1bnVz
-ZWQsIGNvbnNpZGVyIHVzaW5nIGl0IGluIGFuIGFzbSBjb21tZW50OiBgIi8qIHtzaXplfSAqLyJg
-DQogICA9IG5vdGU6IHRoaXMgZXJyb3Igb3JpZ2luYXRlcyBpbiB0aGUgbWFjcm8gYCRjcmF0ZTo6
-d2Fybl9mbGFnc2Agd2hpY2ggY29tZXMgZnJvbSB0aGUgZXhwYW5zaW9uIG9mIHRoZSBtYWNybyBg
-d2Fybl9vbmAgKGluIE5pZ2h0bHkgYnVpbGRzLCBydW4gd2l0aCAtWiBtYWNyby1iYWNrdHJhY2Ug
-Zm9yIG1vcmUgaW5mbykNCg0KDQpBbnkgd2F5IHRvIG1ha2UgdGhlIGNvbXBpbGVyIHRvIGlnbm9y
-ZSB0aGlzPw0KDQoNCj4+ICsjW21hY3JvX2V4cG9ydF0NCj4+ICsjW2RvYyhoaWRkZW4pXQ0KPj4g
-KyNbY2ZnKGFsbChDT05GSUdfQlVHLCBDT05GSUdfVU1MKSldDQo+PiArbWFjcm9fcnVsZXMhIHdh
-cm5fZmxhZ3Mgew0KPj4gKyAgICAoJGZsYWdzOmV4cHIpID0+IHsNCj4+ICsgICAgICAgIC8vIFNB
-RkVUWTogSnVzdCBhbiBGRkkgY2FsbC4NCj4+ICsgICAgICAgIHVuc2FmZSB7DQo+PiArICAgICAg
-ICAgICAgJGNyYXRlOjpiaW5kaW5nczo6d2Fybl9zbG93cGF0aF9mbXQoDQo+PiArICAgICAgICAg
-ICAgICAgICRjcmF0ZTo6Y19zdHIhKDo6Y29yZTo6ZmlsZSEoKSkuYXNfcHRyKCkgYXMgKmNvbnN0
-IDo6Y29yZTo6ZmZpOjpjX2NoYXIsDQo+PiArICAgICAgICAgICAgICAgIGxpbmUhKCkgYXMgaTMy
-LA0KPj4gKyAgICAgICAgICAgICAgICAkZmxhZ3MgYXMgdTMyLA0KPj4gKyAgICAgICAgICAgICAg
-ICA6OmNvcmU6OnB0cjo6bnVsbCgpIGFzICpjb25zdCA6OmNvcmU6OmZmaTo6Y19jaGFyLA0KPiAN
-Cj4gSSB3b25kZXIgaWYgdGhpcyBjb3VsZCBiZSB3cml0dGVuIHRvIHV0aWxpemUgTG9jYXRpb246
-OmNhbGxlcigpDQo+IGluc3RlYWQgc28gdGhhdCBgI1t0cmFja19jYWxsZXJdYCB3b3Jrcz8NCg0K
-WW91IG1lYW50IHRoYXQgd2UgY291bGQgbWFrZSB3YXJuX2ZsYWdzKCkgZnVuY3Rpb24gaW5zdGVh
-ZCBvZiBtYWNybw0Kd2l0aCBMb2NhdGlvbjo6Y2FsbGVyKCk/DQoNCklmIHNvLCB3ZSBuZWVkIHRv
-IGFkZCBjZmdzIHRvIHdhcm5fb24gYW5kIHdhcm5fb25fb25jZSBiZWNhdXNlIGJvdGggbWFjcm8N
-CmFuZCBmdW5jdGlvbiBvZiB3YXJuX2ZsYWdzIGFyZSBuZWNlc3Nhcnk/DQo=
+On 12/10/2024 03:54 AM, Josh Poimboeuf wrote:
+> On Sat, Dec 07, 2024 at 09:59:07AM +0800, Tiezhu Yang wrote:
+>> +__weak unsigned int arch_reloc_size(struct reloc *reloc)
+>> +{
+>> +	return 8;
+>> +}
+>
+> Instead of making a weak function, each arch should have an explicit
+> definition of this function, as it's not always 8:
+>
+> - x86 has R_X86_64_PC32 and R_X86_64_PLT32 which are 4 bytes.
+>
+> - 32-bit powerpc
+>
+> - 64-bit powerpc has R_PPC64_REL32
+
+For x86, like this, I am not sure "case R_X86_64_32" is necessary,
+leave it as is if no objections, please let me know if it should be
+removed.
+
+unsigned int arch_reloc_size(struct reloc *reloc)
+{
+         switch (reloc_type(reloc)) {
+         case R_X86_64_32:
+         case R_X86_64_PC32:
+         case R_X86_64_PLT32:
+                 return 4;
+         default:
+                 return 8;
+         }
+}
+
+For ppc, like this:
+
+unsigned int arch_reloc_size(struct reloc *reloc)
+{
+         switch (reloc_type(reloc)) {
+         case R_PPC_REL32:
+         case R_PPC64_REL32:
+                 return 4;
+         default:
+                 return 8;
+         }
+}
+
+>
+>> @@ -1967,8 +1973,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+>>  		if (reloc != table && reloc == next_table)
+>>  			break;
+>>
+>> +		entry_size = arch_reloc_size(reloc);
+>> +
+>>  		/* Make sure the table entries are consecutive: */
+>> -		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
+>> +		if (prev_offset && reloc_offset(reloc) != prev_offset + entry_size)
+>>  			break;
+>
+> No need to use a variable here, just call arch_reloc_size() directly.
+
+OK, will do it.
+
+Thanks,
+Tiezhu
+
