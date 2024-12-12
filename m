@@ -1,92 +1,173 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567E7126C03
-	for <loongarch@lists.linux.dev>; Thu, 12 Dec 2024 01:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B1C2A1CA
+	for <loongarch@lists.linux.dev>; Thu, 12 Dec 2024 02:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733967304; cv=none; b=Ll9Wk/s2WSML38zngC1Y6sRvO8p47yhju1aC359fESw6gcagqoLqQRslC/eG3x9AlIFFyAJO61VNeiQcPqRoHW6JIqNbXIrbC3dqzHrcBxoJP2lN45F6JhsJXJ9cud/C+twMpt7tB25XzjYXeJkGcYxupuTXWDifsCmES0+KvcM=
+	t=1733969923; cv=none; b=k/3Br8g43u+b+FeAaY9bNLvvd5zjbN44wes+eRPz1duPKf9I8CW2KA0m/oUUKk34Uc7rFgydW7DBhOe/ddsi2LNFPkUoppsEnevfjmDhMTcq9Z5H+cKcvRURudr1KHly1f3J13hjCKD7usHeVG/8JsSki7nrtQPfzb0nBenNWH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733967304; c=relaxed/simple;
-	bh=Dxz/vEydMyAurUmt046xw8DfWq8+XQ39ARsEvBNBuqo=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FSewykWO6nH2vfSBeNopAXMLVEr/CvAu45tzeJQWoQCEBSCwd6LJdOH7v79DPjhC1p4+VI7EyGNee5M17Gorn+O0Et+LfUri6yl9rUMA+QtXnxnF2pDRHqNNCWVbpK8Isz+jZ/+ZWnhX2qpYk7wurt4RyRerSx7p0YGIpw3QZPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxC+LEPVpnzuhVAA--.35788S3;
-	Thu, 12 Dec 2024 09:35:00 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxXUfCPVpn_x2AAA--.8630S3;
-	Thu, 12 Dec 2024 09:34:58 +0800 (CST)
-Subject: Re: [PATCH v5 03/10] objtool: Handle PC relative relocation type
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20241207015915.1159-1-yangtiezhu@loongson.cn>
- <20241207015915.1159-4-yangtiezhu@loongson.cn>
- <20241209203544.axetpzva7vg3hsc5@jpoimboe>
- <9d14c8fa-d61d-bd12-efd7-5a17f4f8cb35@loongson.cn>
- <20241212003526.2kutif7m2svtbp6l@jpoimboe>
- <20241212003917.vqnqmkrjgfl2cqd6@jpoimboe>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <85da9f4a-206b-d458-4b79-943a72a78209@loongson.cn>
-Date: Thu, 12 Dec 2024 09:34:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1733969923; c=relaxed/simple;
+	bh=1cTM3LwGI+0flNcl0+4rI+EB1o9GyLuExi3gE7uPYYw=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bOyyJFFGYCd5HvsSlgwYsOk5b+MINKdJxuIZDFurOevztzYdouqF+MlkeYx37kAqfgqhA5YWkNQQ58+wAPHrGD9AnNQJKunQvhHhkh/+JuLfrItMwn24rnWdZA1FvTvk/ZHAV3iefanfSn6ZMw/o1bjqTUe2BqbNNxZhNXp/Yn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jPC4YDsv; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPC4YDsv"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-725f2f79ed9so79918b3a.2
+        for <loongarch@lists.linux.dev>; Wed, 11 Dec 2024 18:18:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733969922; x=1734574722; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oQvLLQO2Dcgk3hcePdj0knsnbyn081D+yRxJJ0jbm94=;
+        b=jPC4YDsvR6xC8kKvuTZPUQ9qwJ92/MymWzkWn1zZOwsEjp3S7Te+YYxp0KOjzWr9N8
+         FKod3S2F3Wd+D3pCAtW7doWatuOpTMVeHNub8tbTmjvxHX8C6qolXbgQfPt20XZi36Cx
+         cpbz1bqoqtdFx7JJFWilmS6hpvON3xDhLYvlD+z1+aez1qNRZIv6ukt7kRP/IROcsTTA
+         Ox4AWPSvGbTjGf3sha3WFTOkl13Sf8D0XYFnmANjJY816wQuBOZzLlUzU3qcWJQLBoj5
+         4859GyFZpQ7+yZ7nuCrsuSsTAvcyXrTGatB6nfu0OTDaliGXfLI6ffkbBvuU1zTuhTRe
+         EImg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733969922; x=1734574722;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oQvLLQO2Dcgk3hcePdj0knsnbyn081D+yRxJJ0jbm94=;
+        b=MKH3jEruPH3VSPYVdanqsRCb2aJPedqyCNng5WiCRfdH4bKmc2wGCxSUv8c4YJxD/3
+         5oUGHd+ASpsSeyFy2EmZCcvg7F1uEPHgyZ3jUKZ+sWTPY0+djb6V5fuBBf/wKGb+Oj9H
+         JSJpCVmHPXZaSrU5XvMTjML9mu7ElH3xBZHT7SNUg9jya85os4ZTP7ia5rcMLlTeFhvL
+         7EjDIrVPw9WzF3BlNCNa5UQzuhtb8aIAT7JmzLbq6kaenvyVlt9hcwuwRbSGvIQzYOkG
+         3aPvueVwU6nBI4b9bzUY99oKL2+eXAKj8OOXcFITRivbpmtW8YM+RTu2EKkYfbDx5D/w
+         lmkw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8lCZ5zoasbX95Qk3O+7eKDHh9+PqNotqto63t5PYjgEpZF+ImOOvIgRAQ+8H18Q9e19+aOQqUwRY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzBMeVVxGemjOnx/8Xy7oiu6L5hSYyWu6p9fHiakYNez9e7jv3W
+	C5mb2JddNL3Nk5LITZd1pYnhmOEr4nfjh0X//l7OfH5HIy+yBcJy
+X-Gm-Gg: ASbGncu+gFsawBR+CHOkYIJrBVGJlrpt5Wssa9hpzwUmMRy/Gn6ofPJ66f48cJ9Ekvv
+	8COsQKbbkIZSqxS20if2H8Wze0v4JrfbQrw0q/Mb6VJ06sThypq8C4FFHzTnWuVbdW+W+s1Gaec
+	W5vNa/xNaCbMOfvRM3239/dnwSsDW0gyGvcWUvYIFUIw28ICNSnd0V12VmdQyHLvAc2trAD101W
+	i2NqTX4BfrgCZ8nBiGzzxsxTzYLNluahTeZSw5PcWIBafoMXSvvpjgJacDHAp3jtO+y9ohIB1LL
+	yhpnd2t0u3+Knwz6FZUCPpHX01wMNKveBt9J
+X-Google-Smtp-Source: AGHT+IGZbwuLBjXASZPibFhGLGJG7cajkpWLsR5RDRJ+xwbynfB6B9HK8IIuBtNdFreyTAaUTycqxQ==
+X-Received: by 2002:a05:6a20:1594:b0:1e1:a434:295e with SMTP id adf61e73a8af0-1e1cec4579fmr2405581637.43.1733969920834;
+        Wed, 11 Dec 2024 18:18:40 -0800 (PST)
+Received: from localhost (p4007189-ipxg22601hodogaya.kanagawa.ocn.ne.jp. [180.53.81.189])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725d16e7132sm8390441b3a.152.2024.12.11.18.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 18:18:40 -0800 (PST)
+Date: Thu, 12 Dec 2024 11:18:22 +0900 (JST)
+Message-Id: <20241212.111822.2107715832201318415.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
+ hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
+ hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ tmgross@umich.edu
+Subject: Re: [PATCH v1 5/5] rust: Add warn_on and warn_on_once
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CAH5fLgj9rBOrcQa193RpuA708CFK1ojMqhmiNWF7dbyNFPJcJA@mail.gmail.com>
+References: <CAH5fLgiShKMGo6AYWM-4S8JK+iDA+tUfz9uxkns82g0nLW--NQ@mail.gmail.com>
+	<20241211.094054.1429837669366274024.fujita.tomonori@gmail.com>
+	<CAH5fLgj9rBOrcQa193RpuA708CFK1ojMqhmiNWF7dbyNFPJcJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <20241212003917.vqnqmkrjgfl2cqd6@jpoimboe>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxXUfCPVpn_x2AAA--.8630S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrZry5Gr18AF18XF1xtr45XFc_yoW8Jr43pF
-	Wj9a9rtFs5ta97JwsIgw4vqFyF93ykXas8Wr90kr10kwnxZw1Fgay8K3yY9FyDJr10yry2
-	va1I93WDXa18G3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8wNVDUUUUU==
 
-On 12/12/2024 08:39 AM, Josh Poimboeuf wrote:
-> On Wed, Dec 11, 2024 at 04:35:27PM -0800, Josh Poimboeuf wrote:
->> On Wed, Dec 11, 2024 at 11:16:33AM +0800, Tiezhu Yang wrote:
->>> When compiling on LoongArch, there are some PC relative relocation types
->>> for rodata, it needs to calculate the symbol offset with "S + A - PC" in
->>> this case according to the spec of "ELF for the LoongArch Architecture",
->>> the "PC" is the index of each jump table which is equal with the value
->>> of reloc_offset(reloc) - reloc_offset(table).
->>>
->>> I will add the above description to the commit message to make it clear.
->>
->> I understand how PC-relative addressing works.
->>
->> The oddity here is that "PC" is the jump table's base address rather
->> than the entry address.  That has nothing to do with the ELF spec or
->> even how R_LARCH_32_PCREL is implemented.  Rather it seems to be a quirk
->> related to how loongarch jump table code expects the entries to be.
->>
->> So the arch_adjust_offset() name seems wrong, as this is specific to
->> the jump table implementation, rather than relocs in general.
->>
->> Instead call it arch_jump_table_sym_offset()?
->
-> BTW, do both GCC and Clang have this same behavior for loongarch?
+On Wed, 11 Dec 2024 10:48:27 +0100
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-Yes.
+>> >> +#[macro_export]
+>> >> +#[doc(hidden)]
+>> >> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+>> >> +#[cfg(any(target_arch = "x86_64", target_arch = "riscv64"))]
+>> >
+>> >> +#[macro_export]
+>> >> +#[doc(hidden)]
+>> >> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+>> >> +#[cfg(any(target_arch = "aarch64", target_arch = "loongarch64"))]
+>> >
+>> > What's the reason for this arch-specific code? The file!()/line!()
+>> > invocations? Could they be passed as an argument to the asm instead so
+>> > that we don't need target_arch cfgs? I understand that they don't work
+>> > exactly the same way, but maybe it could still work?
+>>
+>> Because of "error: named argument never used" in Rust inline assembly:
+>>
+>> All the archs define ARCH_WARN_ASM macro in the same way:
+>>
+>> #define ARCH_WARN_ASM(file, line, flags, size)
+>>
+>> However, only x86 and risc-v asm code use the size argument. Without
+>> the cfgs, I'll get the following on arm64/loongarch:
+>>
+>> error: named argument never used
+>>   --> /home/fujita/git/linux-rust/drivers/block/rnull.rs:54:9
+>>    |
+>> 54 |         warn_on!(true);
+>>    |         ^^^^^^^^^^^^^^ named argument never used
+>>    |
+>>    = help: if this argument is intentionally unused, consider using it in an asm comment: `"/* {size} */"`
+>>    = note: this error originates in the macro `$crate::warn_flags` which comes from the expansion of the macro `warn_on` (in Nightly builds, run with -Z macro-backtrace for more info)
+>>
+>>
+>> Any way to make the compiler to ignore this?
+> 
+> The error message suggests adding an asm comment. Does that not work?
 
+Ah, works! I didn't understand what "an asm comment" is..
+
+> You could even add the comment unconditionally on the Rust side. It's
+> not like the comment hurts on the platforms that *do* use the size
+> parameter.
+
+Yeah, I confirmed that this also works for the architectures that
+do use the size.
+
+I'll remove the target_arch cfg in v2. Thanks!
+
+>> >> +#[macro_export]
+>> >> +#[doc(hidden)]
+>> >> +#[cfg(all(CONFIG_BUG, CONFIG_UML))]
+>> >> +macro_rules! warn_flags {
+>> >> +    ($flags:expr) => {
+>> >> +        // SAFETY: Just an FFI call.
+>> >> +        unsafe {
+>> >> +            $crate::bindings::warn_slowpath_fmt(
+>> >> +                $crate::c_str!(::core::file!()).as_ptr() as *const ::core::ffi::c_char,
+>> >> +                line!() as i32,
+>> >> +                $flags as u32,
+>> >> +                ::core::ptr::null() as *const ::core::ffi::c_char,
+>> >
+>> > I wonder if this could be written to utilize Location::caller()
+>> > instead so that `#[track_caller]` works?
+>>
+>> You meant that we could make warn_flags() function instead of macro
+>> with Location::caller()?
+>>
+>> If so, we need to add cfgs to warn_on and warn_on_once because both macro
+>> and function of warn_flags are necessary?
+> 
+> Well, I'm not sure! I don't know if it's feasible at all, since using
+> Location::caller() would mean that the file/line is not a compile-time
+> constant. But if we can, then I think #[track_caller] support would be
+> nice.
+
+I think that using Location::caller() makes the code complicated
+(needs more cfgs for UML). All the callers (warn_* and bug_*) of
+warn_flags and warn_flags itself must be macro for all the archs
+execpt for UML. We don't want to have the UML version of all the
+callers.
