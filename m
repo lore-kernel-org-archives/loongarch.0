@@ -1,94 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA1844C6C;
-	Fri, 13 Dec 2024 01:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F8E915B10D
+	for <loongarch@lists.linux.dev>; Fri, 13 Dec 2024 03:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734053976; cv=none; b=gipHYLeu8gRnRDWvJlvqXDhUjpN7qo7OiX5z7wS79A32dPnR6YBprZxDuYTefBu6EICz1n4to91yMwCsXqhvIvDkEqSsOyNOraJbdH+KZU3dBmX0dM1YeSyqz7CQ/blEFoJimRYCfi9pEg/O0hlU2nDVUPwwk06jck3Vl/iSafA=
+	t=1734061838; cv=none; b=rv4JLXvOveal9ykfzcrpP/GVHit34fAQJJZQJaTI9jeSIT/whDBEL0pNxPQ1GZHoIvfearzpsppxJEqhBgEM9pUMyOORXpt/zAk8Uc1PRDHU7pgpjaoxAYozmr6mySiSVKkHT6lvjLzva4jKB21JWfMEOuZvX0lpNTJR52QaZ0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734053976; c=relaxed/simple;
-	bh=z6KasiqXW9OocT/gPdXD8wxFCgxz3hJU5rxa3NS7ujM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=B7AtFy2Ac2um3oTsdQ+86tTvq9Avs4e8I5sC6wAb1R4rH3G+LzdiBOe86DGtEayXjsO9X1cSHGXSPPt6jzX4HVERMM1F3f3xFGtM7ZkSDi0QoRpyhTq3Fy8+9GGKit8YwTAsKBp3iR1eDUNhx+V/1E42sjsrp66zZHx04eFhkeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NOajGzF7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NOajGzF7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA84DC4CECE;
-	Fri, 13 Dec 2024 01:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1734053976;
-	bh=z6KasiqXW9OocT/gPdXD8wxFCgxz3hJU5rxa3NS7ujM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NOajGzF7Oghi2j823OVBOAGjMfDE2y8sqhBtABteyi+xNwCVBGrHLGBc4kP8k/ZzS
-	 nGpVqOiOxYmCXtpYVq8CDh3d/Emvq9T/1xFLC/6g4wNbedpjpYuIv/cuTxF0CeV0MY
-	 ibJbSfQIh1u6+D2zMIFRD+W8TWrIVtCfqGegBRio=
-Date: Thu, 12 Dec 2024 17:39:34 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Kalesh Singh <kaleshsingh@google.com>, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, yang@os.amperecomputing.com, riel@surriel.com,
- david@redhat.com, minchan@kernel.org, jyescas@google.com,
- linux@armlinux.org.uk, tsbogend@alpha.franken.de,
- James.Bottomley@hansenpartnership.com, ysato@users.sourceforge.jp,
- dalias@libc.org, glaubitz@physik.fu-berlin.de, davem@davemloft.net,
- andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net,
- jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com,
- leitao@debian.org, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-mm@kvack.org, kernel-team@android.com,
- android-mm@google.com
-Subject: Re: [PATCH mm-unstable v2 06/16] mm: csky: Introduce
- arch_mmap_hint()
-Message-Id: <20241212173934.4dc429716acd4c71a76e15c2@linux-foundation.org>
-In-Reply-To: <vc2uhcysgosapznbuookcj5677w43a4kzxbotwqub237ccawww@i3pbqiacdwsx>
-References: <20241211232754.1583023-1-kaleshsingh@google.com>
-	<20241211232754.1583023-7-kaleshsingh@google.com>
-	<vc2uhcysgosapznbuookcj5677w43a4kzxbotwqub237ccawww@i3pbqiacdwsx>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734061838; c=relaxed/simple;
+	bh=qeSNlzuFws12oa96lgz4ryk6rbHpKms18H/isHjoMrg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hOpVFHqknonQ7OMFWFnRA1SBzIQ3XQRCUTIqCxH4VdQotrm3JxG5awiBAzNrXY19dkZ00Fyh92NZGPSY0P6XpzR4ErgVTBgRKRHGWEjQRXfAblsmbLJb9ZzbRQKZLgBdrTqpwa1AaKmO3+ZnBq12zlMxF/ngvmfCnhRHXZjLl8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dx_64Gr1tnO3BWAA--.63985S3;
+	Fri, 13 Dec 2024 11:50:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxP+EDr1tnV3WBAA--.53391S4;
+	Fri, 13 Dec 2024 11:50:29 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: [PATCH v3 2/2] irqchip/loongson-eiointc: Add multiple interrupt pin routing support
+Date: Fri, 13 Dec 2024 11:50:26 +0800
+Message-Id: <20241213035026.1643517-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20241213035026.1643517-1-maobibo@loongson.cn>
+References: <20241213035026.1643517-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxP+EDr1tnV3WBAA--.53391S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Thu, 12 Dec 2024 16:40:10 -0500 "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
+Eiointc interrupt controller support 256 interrupt vectors at most,
+and irq handler gets interrupt status from base register group
+EIOINTC_REG_ISR plus specific offset. It needs to read register group
+EIOINTC_REG_ISR four times to get all 256 interrupt vectors status.
 
-> * Kalesh Singh <kaleshsingh@google.com> [241211 18:28]:
-> > Introduce csky arch_mmap_hint() and define HAVE_ARCH_MMAP_HINT.
-> > This is a preparatory patch, no functional change is introduced.
-> 
-> This also looks like it has changed the validation order and potentially
-> introduced functional changes?
-> 
-> All these stem from the same cloned code (sparc32 iirc), but were not
-> updated when the cloned code was updated.  This is why I am against
-> arch_* code.  We should find a better way to unify the code so that
-> there is nothing different.  You seem to have gotten some of the shared
-> code together, but some still exists.
-> 
-> In the addresses, there are upper and lower limits, and sometimes
-> "colours".  Could we not just define the upper/lower limits in each arch
-> and if colour is used?  Maybe this is complicated with 32/64 handled
-> both in the 64 bit code.
-> 
-> Is there any plan to unite this code further?
-> 
-> We have had errors for many years in cloned but not updated code.  I
-> really wish there was more information in the cover letter on what is
-> going on here.  I'd like to try and reduce the arch_ code to, basically
-> nothing.
-> 
-> I was also disappointed that I wasn't Cc'ed because I've spent a lot of
-> time in this code and this area.  I am probably the last one to crawl
-> through and change any of this.
+Eiointc registers including EIOINTC_REG_ISR is software emulated for
+VMs, there will be VM-exits when accessing eiointc registers. Here one
+method is introduced so that eiointc interrupt controller can route
+to different cpu interrupt pins for every 64 interrupt vectors. So
+irq handler knows interrupt pin information and reads specific
+EIOINTC_REG_ISR register. And there is only once EIOINTC_REG_ISR register
+access rather than four loop times, it  reduces VM-exit times.
 
-Thanks, I removed this version of this series from mm-unstable.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-eiointc.c | 81 +++++++++++++++++++++++---
+ 1 file changed, 74 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 72979f9f0e05..e504a5d3f0b1 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -46,6 +46,7 @@
+ #define EIOINTC_ALL_ENABLE_VEC_MASK(vector)	(EIOINTC_ALL_ENABLE & ~BIT(vector & 0x1f))
+ #define EIOINTC_REG_ENABLE_VEC(vector)		(EIOINTC_REG_ENABLE + ((vector >> 5) << 2))
+ #define EIOINTC_USE_CPU_ENCODE			BIT(0)
++#define EIOINTC_ROUTE_MULT_IP			BIT(1)
+ 
+ #define MAX_EIO_NODES		(NR_CPUS / CORES_PER_EIO_NODE)
+ 
+@@ -59,6 +60,13 @@
+ #define EIOINTC_REG_ROUTE_VEC_MASK(vector)	(0xff << EIOINTC_REG_ROUTE_VEC_SHIFT(vector))
+ 
+ static int nr_pics;
++struct eiointc_priv;
++typedef struct eiointc_ip_route {
++	struct eiointc_priv	*priv;
++	/* Offset Routed destination IP */
++	int			start;
++	int			end;
++} eiointc_ip_route;
+ 
+ struct eiointc_priv {
+ 	u32			node;
+@@ -69,6 +77,7 @@ struct eiointc_priv {
+ 	struct irq_domain	*eiointc_domain;
+ 	int			flags;
+ 	irq_hw_number_t		parent_hwirq;
++	eiointc_ip_route	route_info[VEC_REG_COUNT];
+ };
+ 
+ static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
+@@ -189,6 +198,7 @@ static int eiointc_router_init(unsigned int cpu)
+ {
+ 	int i, bit, cores, index, node;
+ 	unsigned int data;
++	int hwirq, mask;
+ 
+ 	node = cpu_to_eio_node(cpu);
+ 	index = eiointc_index(node);
+@@ -198,6 +208,13 @@ static int eiointc_router_init(unsigned int cpu)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Enable cpu interrupt pin from eiointc */
++	hwirq = eiointc_priv[index]->parent_hwirq;
++	mask = BIT(hwirq);
++	if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULT_IP)
++		mask |= BIT(hwirq + 1) | BIT(hwirq + 2) | BIT(hwirq + 3);
++	set_csr_ecfg(mask);
++
+ 	if (!(eiointc_priv[index]->flags & EIOINTC_USE_CPU_ENCODE))
+ 		cores = CORES_PER_EIO_NODE;
+ 	else
+@@ -215,10 +232,28 @@ static int eiointc_router_init(unsigned int cpu)
+ 			/*
+ 			 * Route to interrupt pin, relative offset used here
+ 			 * Offset 0 means routing to IP0 and so on
+-			 * Every 32 vector routing to one interrupt pin
++			 *
++			 * If flags is set with EIOINTC_ROUTE_MULT_IP,
++			 * every 64 vector routes to different consecutive
++			 * IPs, otherwise all vector routes to the same IP
+ 			 */
+-			bit = BIT(eiointc_priv[index]->parent_hwirq - INT_HWI0);
+-			data = bit | (bit << 8) | (bit << 16) | (bit << 24);
++			if (eiointc_priv[index]->flags & EIOINTC_ROUTE_MULT_IP) {
++				/* The first 64 vectors route to hwirq */
++				bit = BIT(hwirq++ - INT_HWI0);
++				data = bit | (bit << 8);
++
++				/* The second 64 vectors route to hwirq + 1 */
++				bit = BIT(hwirq++ - INT_HWI0);
++				data |= (bit << 16) | (bit << 24);
++
++				/*
++				 * Route to hwirq + 2/hwirq + 3 separately
++				 * in next loop
++				 */
++			} else  {
++				bit = BIT(hwirq - INT_HWI0);
++				data = bit | (bit << 8) | (bit << 16) | (bit << 24);
++			}
+ 			iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
+ 		}
+ 
+@@ -251,11 +286,18 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ 	u64 pending;
+ 	bool handled = false;
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	struct eiointc_priv *priv = irq_desc_get_handler_data(desc);
++	eiointc_ip_route *info = irq_desc_get_handler_data(desc);
+ 
+ 	chained_irq_enter(chip, desc);
+ 
+-	for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
++	/*
++	 * If EIOINTC_ROUTE_MULT_IP is set, every 64 interrupt vectors in
++	 * eiointc interrupt controller routes to different cpu interrupt pins
++	 *
++	 * Every cpu interrupt pin has its own irq handler, it is ok to
++	 * read ISR for these 64 interrupt vectors rather than all vectors
++	 */
++	for (i = info->start; i < info->end; i++) {
+ 		pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
+ 
+ 		/* Skip handling if pending bitmap is zero */
+@@ -268,7 +310,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ 			int bit = __ffs(pending);
+ 			int irq = bit + VEC_COUNT_PER_REG * i;
+ 
+-			generic_handle_domain_irq(priv->eiointc_domain, irq);
++			generic_handle_domain_irq(info->priv->eiointc_domain, irq);
+ 			pending &= ~BIT(bit);
+ 			handled = true;
+ 		}
+@@ -468,8 +510,33 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+ 	}
+ 
+ 	eiointc_priv[nr_pics++] = priv;
++	/*
++	 * Only the first eiointc device on VM supports routing to
++	 * different Interrupt Pins. The later eiointc devices use
++	 * generic method if there are multiple eiointc devices in future
++	 */
++	if (cpu_has_hypervisor && (nr_pics == 1)) {
++		priv->flags |= EIOINTC_ROUTE_MULT_IP;
++		priv->parent_hwirq = INT_HWI0;
++	}
++
++	if (priv->flags & EIOINTC_ROUTE_MULT_IP) {
++		for (i = 0; i < priv->vec_count / VEC_COUNT_PER_REG; i++) {
++			priv->route_info[i].start  = priv->parent_hwirq - INT_HWI0 + i;
++			priv->route_info[i].end    = priv->route_info[i].start + 1;
++			priv->route_info[i].priv   = priv;
++			parent_irq = get_percpu_irq(priv->parent_hwirq + i);
++			irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
++					&priv->route_info[i]);
++		}
++	} else {
++		priv->route_info[0].start  = 0;
++		priv->route_info[0].end    = priv->vec_count / VEC_COUNT_PER_REG;
++		priv->route_info[0].priv   = priv;
++		irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch,
++				&priv->route_info[0]);
++	}
+ 	eiointc_router_init(0);
+-	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
+ 
+ 	if (nr_pics == 1) {
+ 		register_syscore_ops(&eiointc_syscore_ops);
+-- 
+2.39.3
+
