@@ -1,127 +1,217 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D180E15F41F
-	for <loongarch@lists.linux.dev>; Fri, 13 Dec 2024 03:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734061840; cv=none; b=gz/l7ZK/uDydfnhryYq+t+VdiSkb0mX6z75oDFfe0j3C0OL0pqYVc4OafqIolzHSTeqTXNdM15/U/G6bWXYACJKOjePGgJ0LEWD/zLOkRWC7Eq+S8rnUKxOvDFSdYTmfPBZpnuCGj5FPKYHJNk+sDMGaJYasQfPXymBjbGUrwtQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734061840; c=relaxed/simple;
-	bh=e8Vjb9jS5Fr6B5xBe93FB8ZBrvA5lsk+WslJjxoMPn4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IMwoVvhi9UtRs+JKVsrXTJ8CBDxwgSuFlbmmc9k2AJsR2w0WkOx7ZqSuKB2o+kktEleeIIOiTOVRg8Zn4qAtWnof7vIFiFA33JhVDuBHf8NlpZuzGu+J2mbzolI4VAzSgrzNPipWiFY58gsc0UDC8VRUo/GUc1qWHbUs5/DrawI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxG+IFr1tnNXBWAA--.36938S3;
-	Fri, 13 Dec 2024 11:50:29 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxP+EDr1tnV3WBAA--.53391S3;
-	Fri, 13 Dec 2024 11:50:28 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: [PATCH v3 1/2] irqchip/loongson-eiointc: Route interrupt parsed from bios table
-Date: Fri, 13 Dec 2024 11:50:25 +0800
-Message-Id: <20241213035026.1643517-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20241213035026.1643517-1-maobibo@loongson.cn>
-References: <20241213035026.1643517-1-maobibo@loongson.cn>
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F35619AA58
+	for <loongarch@lists.linux.dev>; Fri, 13 Dec 2024 09:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734080473; cv=fail; b=RAdVZIhPNR4Fsh2uBSFVbMfkgIZKbvln6zMTIe/sGEXhz65q1QXBm8Xu+/R366yueHT2bayws6O+4t2a7h/5fkG2xbb12XBhHtzbm4FwX42w0dv9jr5Sq3YqicgpjLyf659l1KCTgLXPurb5UZ9wrqTBNVEUOgssi1+a6GyUUKE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734080473; c=relaxed/simple;
+	bh=3kN4M6HlFBRgfiN/uF4ObwfmfQmiDkkDVf8pS/MyLxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=g/XbMJQshdREKlw1hcyQi4IdzyzoDeZzQsbgSPqRZWDIO8M/W7iR2IA2lUT4so7FcT1wWJ2yC9xq+wrPDhbwFSEBGk5h4oUDBn/ku9kHs2IZ6OFOVEF5eIGNtGyGHnVLklLrOtaj3u5j368PwrTWyD2tVG7rjwJDaMfJwLtmY3o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SZbpE1pJ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eCMxQ/ht; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SZbpE1pJ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eCMxQ/ht"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BD1fp7q025939;
+	Fri, 13 Dec 2024 09:00:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=NMmWjr7UBg4pQA5c8U
+	k82OwgnFISVWuyqQJH3/esbh4=; b=SZbpE1pJbSTPGfPJHr34Ogzf9SZUK28YIW
+	CL3qxnPI5j11dS8K/eDFi9t4S6xbWngNwsjB7YlLVnJpboC+8lBPDRmy/gHxMUsX
+	s4GF6AsY6g69+B6EGD2/EYg63ezL38HSHS5qtj3J0Q3pojTTUwcan/BJJESbHPPH
+	jSS/h+o+Gq3l+wjqB3eBWljCndx+EX7BWwzflWqvppsvxdHY1Dvuhu16wxN3g1Of
+	3hDj7/k2OtHZtFzdXKG33Mv8S68Eg9hjVExSabBKi4RCQM7ABoCBQsq6KPUNIHuF
+	tdYROL+5Af5vNwKgyWWfQFqF0VytKnYg/D9cylffu2HxFifhKMug==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43ce89ctw0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Dec 2024 09:00:10 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BD6dA4K019284;
+	Fri, 13 Dec 2024 09:00:10 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43cctcftvm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Dec 2024 09:00:10 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fDtz8ZMihpawcShNkHiveVd9a+F438SUUUNOh/kngQbn4Agcwl/EyjzVp9GGanLlZ4YmwJnfi1BUOdnw/O82kpjyxfP7rFIaNwTJ4WBHM+9sG4Pu4C5WnZbb5gnNXSsj+fpJ2vjQ29Df4DXZnJi5QmOMMv2k8YiF7y8WJ7DRyvgEtJM0HQIIIdJa/Chhz2VUp073uLLe+OwEm2pHavBpec/mh+jHhl5DngioXxE6J/730qPxoLqnW+s+xg7QnhMyP6WosnREERGw+mpzqvz0JkjwkU7mzY2UejN5g5I+nkr2iReKQrXjJhwQr8vief7XGv80iF2rolPZydfhmF4lag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NMmWjr7UBg4pQA5c8Uk82OwgnFISVWuyqQJH3/esbh4=;
+ b=hKQx4JGwWMeczGUrw+jORUk/bbz2n9krNtugS2GSEO0xMOhQudAxrV0i8F38rhVBzQz/up3XUDxHWBquPyswwCMtiqdl3zRTQnJHGC3LwdVYG8e9Bn2K/viXLSmiqQcN0SEA5a/7Xww7uyguVsM6XgMTfiI7uhk4gP4f92pVhwLclnxObqm1wUJRXUvaGtuVAr5pESXa/+a3vMtthOZYNZFnSldeKi+xGR4PUCJqVlGSasiiGBEzTvwGC2rCUq0r+cbM++Kypj/nB+7AYg9Xub8w1lxB6RV6iySNPo28U3W4TheS57wsDtKzdB9owoFa5cA/4wy4ix1/iAF0CU4fCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NMmWjr7UBg4pQA5c8Uk82OwgnFISVWuyqQJH3/esbh4=;
+ b=eCMxQ/htOyjMmG7D83qCx8JPgFvHT/+QB0IamZpa5Nu8622ZACs5Ike3rPKgnXkJ8KzFDDbMwd+XkKH1fTgsYPRWuLFBtsgU2ninUuEmAf9u1cwFxAqjIyJ+3XBvNonmpahmLiPFE54lSFNTpE8UsvDcFvfm/B6r9jpierYAp2o=
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
+ by MW4PR10MB6559.namprd10.prod.outlook.com (2603:10b6:303:228::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.20; Fri, 13 Dec
+ 2024 09:00:01 +0000
+Received: from BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
+ ([fe80::baf2:dff1:d471:1c9%7]) with mapi id 15.20.8251.015; Fri, 13 Dec 2024
+ 09:00:01 +0000
+Date: Fri, 13 Dec 2024 08:59:53 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Kalesh Singh <kaleshsingh@google.com>, vbabka@suse.cz,
+        yang@os.amperecomputing.com, riel@surriel.com, david@redhat.com,
+        minchan@kernel.org, jyescas@google.com, linux@armlinux.org.uk,
+        tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+        ysato@users.sourceforge.jp, dalias@libc.org,
+        glaubitz@physik.fu-berlin.de, davem@davemloft.net, andreas@gaisler.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, chris@zankel.net, jcmvbkbc@gmail.com,
+        bhelgaas@google.com, jason.andryuk@amd.com, leitao@debian.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        kernel-team@android.com, android-mm@google.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH mm-unstable v2 00/16] mm: Introduce arch_mmap_hint()
+Message-ID: <695eabb8-ba28-4031-bc4d-66dc4f1d096f@lucifer.local>
+References: <20241211232754.1583023-1-kaleshsingh@google.com>
+ <hmuzfspqjzb36xlj2x44keihacrrhzj5madqrfbcnhqouzredv@wo75achgkuh5>
+ <1818e2ea-f170-4a9c-8d93-2a24f2755a41@lucifer.local>
+ <20241212173609.afd41d1dffbefe0d731ed4ed@linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241212173609.afd41d1dffbefe0d731ed4ed@linux-foundation.org>
+X-ClientProxiedBy: LO4P265CA0156.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c7::18) To BYAPR10MB3366.namprd10.prod.outlook.com
+ (2603:10b6:a03:14f::25)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxP+EDr1tnV3WBAA--.53391S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|MW4PR10MB6559:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e224750-0921-4799-7b0d-08dd1b5486c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GAo00ggUoH68zGe1aXtgKBE5HpwmH9El8YtOGNOqQPpwe4dPDXWRVhtg1l9+?=
+ =?us-ascii?Q?AyiG53b80R0BJu+7pTelqRZqg6+bBCf2QOafMPRPRiCtT1Ro9QosalvbD8Ri?=
+ =?us-ascii?Q?vxbzZ7HODq+gn+j1TfY3BD5sIuZid4vj1+7UNQ3zeixL9sEiXFqjRpUqHLm7?=
+ =?us-ascii?Q?WP3WkqpQZyj7HsjVXZQKeFWlq+1vnjFWDCRKjW+qWBaBKI1LbJ32TIOcZBtm?=
+ =?us-ascii?Q?+je//1xtJTuFYWjfRoU+XCibSGanWepUP3AGspSA922aYaJVFelWej+QlUW7?=
+ =?us-ascii?Q?YE+4Iri3jhQas9J8RHf+gLk533HVt+3Ebb78xYk+lZoqlRWUaSYLPuCcQ/uW?=
+ =?us-ascii?Q?1SfG5BEu3oglmn/l0wVY9W/zZkefy8dRe6Tj/+hlKUU/auEolFc9mxOVpi4g?=
+ =?us-ascii?Q?qhDYF3OAh9nEOZQ9UTdYCeotIRTFjlFhjwNk9VgGUWXrx/QIWHp5ljfCEckt?=
+ =?us-ascii?Q?Wuj/rQXPan7qTavr57ctIylpCD4eIWTW3c4OCnDNvEr/H823kF21xKLM7vut?=
+ =?us-ascii?Q?GeXAwSqXTmlX83uFr/+YS1XuYxWajWbw4YCfSnISAsFxmNOXMNkKD771QnGC?=
+ =?us-ascii?Q?0qethwTAcLX8m/LrNCdBh36lvPq9bwobEnWWQSwWWFcEUFslQBTr3dTEA1tK?=
+ =?us-ascii?Q?LI6VpKZUqLBkGJz9y05U+Vh6Nzf1dUujdN799aZ1hecDLDyuqhxmSpswNABp?=
+ =?us-ascii?Q?Pv7gqBVF1EQF+JPCH4xK0qjk+s/kFLTd1dY0L++aOfQu7EgIV4HFNhQiYNpH?=
+ =?us-ascii?Q?f9bN/zWgsSNJ2ZH5f07BYyPQjErNXXqF+TN6tk48vj042PM1AkK/SFcPjNmY?=
+ =?us-ascii?Q?IxFMFpYVIkQj89mGXeyEkG7rwaPB5OykNQriqS2w2qRzVSD2ONwYlGyhq/6C?=
+ =?us-ascii?Q?hk332UZA+ZH8cgNvEu5blxgEelmerFNQHEe0lErNZbWPewHMr2KsXIRwcy1o?=
+ =?us-ascii?Q?anjGSyEgGeIW2Tm1dMvV7t/yk8DdxTAOa7bOUOOXiHSSCEYIv6aIs+cHJCJN?=
+ =?us-ascii?Q?F3nNHUjH6xdjniGc7DXrawgi0VKEbLr1tZtWi7PSDtr91Z6qreshmrwMlkah?=
+ =?us-ascii?Q?WkNP9oUOi263Hxu0ROVXWfzV144PEgLXrlbM5r/mTZUm0XXtWlbXryWpz78Y?=
+ =?us-ascii?Q?kqSpsYZVo843iiP2y0WsVpJDD5FulU2Kiu6aiaay8mmV/QJXge9JBcJD5eGw?=
+ =?us-ascii?Q?hFM5cebj5nfdgxseGxrXKWXOkzZk28d3RZ5Qj/dggZc7HKc0+A/krGCwaWq4?=
+ =?us-ascii?Q?UArXn/Z1zRAM/R/NQlWYJ8HdEr5BDjvrHwBWpVi0/fpQz3Vzl0mOC2Io1H83?=
+ =?us-ascii?Q?osUr+iNy3q8ZfOGFnvp8RJGfNIZOwkjy971AlYC+V6wP+g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7dYh9cMLE9TAe8UuOXWzGMSy8ZyWJ6kPsYtkGo11DKGA6igHVy9ea2ud1Oef?=
+ =?us-ascii?Q?llUdu+XeHMhHHshbrB3PMFHMaSTvvT4udIAiGRkNxEra5enuSBxpavVQ31zf?=
+ =?us-ascii?Q?M78XRxlr3RPZyupbIHrRg9m0uiTSdaZYOxg4aXVvOYebeZJzONSOq0XmG46j?=
+ =?us-ascii?Q?QG66cBIzHC54TG3Tewmol3m0InFEIOxG4qVFa8EU9Z5b6t5+tHKxK4fbPtpp?=
+ =?us-ascii?Q?bDEFvQoQodLHhXf+4wjtBry2e7RBXxYqTAlyj1cezbMnapumzaJXjyi1TS0s?=
+ =?us-ascii?Q?/QkxU13qUGY0dnrSF4mFhPyXPNJ88cbGrlJ/pQ4Yi2h8xHznGm4uHphhHFwt?=
+ =?us-ascii?Q?EKXQqClEQ4qE30D5DEBGYeZ794eiVRIeyrnxYVkWKAfrrZxYIn4t5T7B3vP6?=
+ =?us-ascii?Q?jMEiNjWTDcnM87iizY8vVTbTHc0WcTKGC+e1Ek9nsMpVSmu6IA99JtPi53lb?=
+ =?us-ascii?Q?3H+QYcz3Sxluozjjty5bG9A51O+0JPHLAlHi+sdPcGUUHOzuA8fA6mCE2aPO?=
+ =?us-ascii?Q?hJjjcq2I5ZhfJe0wCQr18gYqHXrEBriB1knJU1QUa22t9U/THF2V4VcvnwN0?=
+ =?us-ascii?Q?sgMTFDA0mLotG2JPj8iv/2vpr+DlQoFyDEx+Bju2MDitFjTlIUlgK4ewVpJZ?=
+ =?us-ascii?Q?6qwP0TWbIn1kj5ij0vYjR0gONWoysQsih6bNaHgwPWUuh8tnV7efbG9RRmF/?=
+ =?us-ascii?Q?4rXYVWAXmf8I2Rrzc76YR0doPMHH1+Uu3eyxmxLXUGxZ/lRERNS5Q1yESB5o?=
+ =?us-ascii?Q?NhdEPxM36LpqCWHrKapA6YLvMUFeO805scNbvgYArv9718LpaUWodpGz5ke7?=
+ =?us-ascii?Q?SXKlv2peY8/WEpNqXP35n/3NvrmmccJ3fxnAW9S9VNxF3PVNYdjD5TdbezqZ?=
+ =?us-ascii?Q?xkg79IIQ8kisVErRGf12I1KHU0vT4OFBkjhmEwa0RjAG+4C51FNzKJOfJ+dh?=
+ =?us-ascii?Q?kQTa1R5nLJMGo9dIEj9PQtvRkitoOWZeBuXRO+MO56U2lYCOjQu4wn93bI/4?=
+ =?us-ascii?Q?NKIyDyd8VaJP2MZaucqXDqKcxq/3PlLfU6zu5Kw0jseVI1pDCDHm22jJZmY2?=
+ =?us-ascii?Q?ylcKeLhJHuXjnaoGy3035XVrX3tgBmMez54lnGS1MHru0tT4YaOFW7N5yOXe?=
+ =?us-ascii?Q?tjbleSy8JHHV2yDIC43pHgSOQTn/s4hUNtVVFENmKA+wX3gaG664QxIASDvM?=
+ =?us-ascii?Q?jI26lMbDEvdGI9Ui8F1hUG5r2vWiHkEgsW4bpnD6UmDLFpmoFFntHuIqZnm6?=
+ =?us-ascii?Q?Zoqq0ikt38onH2Hgk7OI3TNuQcfp/zUS1uJraDSXkxl1GK5Fw9vChA+K1iOH?=
+ =?us-ascii?Q?afErV767C6fVBOYJwqTh+tDVLbArf4339cD++TLNeqdnhtMSW7a1Y569pHIF?=
+ =?us-ascii?Q?qz5iNok0o7Z44ygQ7XaWsC+bNKGWh7CM+Cics00mxmJJQZtLR5YgRWZJc1b2?=
+ =?us-ascii?Q?O9r/2o8TyCo5yQAOjulh8+bIZ4sDAEazyk2v7FR9TSz9NYrsS/46a+hFS2px?=
+ =?us-ascii?Q?w8JDCAadQmBB23h7VS7TSvcVWP4idGpDIVCh/Ez517y0lg6Rc0OEQCZnyPCQ?=
+ =?us-ascii?Q?f6Dtriti4N0eeh9KIwcONS0HUR6p/O1O2pJYkQyvlMCqVHyfNLIbJ37gU2qj?=
+ =?us-ascii?Q?Cg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	MZuYPRS7qOuJ4H8xxVPsZVfJdculA4RY908QLDhoKJWORjHZTICv2u/r4cLLq06T3BN1T8FU/O7AsldCWiLSB54LUYASXAlint3U1s9yy6SpB4pvh3xH3sdjxrMbRiWJ+3fgUZnFkMkBgmTbsQqI53b9RSCO/YKbk2Q8hUzqkzZvXedj6dR2mE7dMwmvT8vQmbm6vZPozJggqro+cNGOvMinyrSO+7pHnjTIZEn5hxg4HOGkQdppoYfDa6hNfN0ozd4+AK1Y383JEFAYbRFvOmE3flz/RwsJjyxOb7kpfEQdD2rWuPw37ayqQHfH3Rp7Ns9C795n4a9dtgGoguHGVRFmN0ng/YVLHleRzwLgA+WbtOB8Q0akdHbbOQXw+F+0ha4lQyP7kRnxG3QslINNKOW1d112q4pXHANGoUXautwFuRyM/PIO1PP6hWgSJsaNi8ZadZ7t8bC1BpEj9cwyECOFVmN+MCrzt9zw8MvPkfqjGvRQKVzs1iZc3bDp7AJ+z0AgfAD6nbmwtmHBmRxfRuQ89XHtC/1neRPS30Uk7td+QaR3C6bEd9Y3Ofroc6EGXwWmjV2KTFKZCIFHy3y4qlpAvd0QrRdKDaNh3OBUj6w=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e224750-0921-4799-7b0d-08dd1b5486c3
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2024 09:00:01.1056
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uszMKqVbgv6DsRdltl1BjI+K70mr/iXFpHj4WIwyan6bs4bR9ZRM+/DE0w0qN71+czaZLIM/yBgyFoHQEjcKHgl05GEV5jdHrepOXBGco4Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6559
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-13_03,2024-12-12_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2412130061
+X-Proofpoint-GUID: -iyWgZSl288tpoKPOvJ26Tno9KRxujzM
+X-Proofpoint-ORIG-GUID: -iyWgZSl288tpoKPOvJ26Tno9KRxujzM
 
-Interrupt controller eiointc routes irq to cpu interface IP0 - IP7,
-now it is hard-coded that eiointc routes irq to CPU started from IP1,
-however with function irq_create_mapping() parameter parent hwirq
-uses irq parsed from ACPI or DTS table.
+On Thu, Dec 12, 2024 at 05:36:09PM -0800, Andrew Morton wrote:
+> On Thu, 12 Dec 2024 22:51:34 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+>
+> > You've fundamentally violated kernel process and etiquette. I'd be more
+> > forgiving, but this is at v2 and you've not cc'd KEY people. Twice. This is
+> > totally unacceptable. See [0] if you are unsure of how to do so.
+>
+> This feels excessive to me.  linux-mm averages a mere 140 mesages/day
+> and it seems reasonable to assume that key people are spending their 5
+> minutes to scroll through the email subjects.
 
-Routed interrupt pin need be the consistent with parent hwirq.
+In practice we did all miss it, and I don't think it's unreasonable to ask
+people to run get_maintainers.pl to avoid this.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- drivers/irqchip/irq-loongson-eiointc.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+In any case, I truly do think this series works better as RFC, I mean Liam
+has already voiced the kind of disagreements I share with it, and we need
+to rethink how to approach it in general.
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index bb79e19dfb59..72979f9f0e05 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -68,6 +68,7 @@ struct eiointc_priv {
- 	struct fwnode_handle	*domain_handle;
- 	struct irq_domain	*eiointc_domain;
- 	int			flags;
-+	irq_hw_number_t		parent_hwirq;
- };
- 
- static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-@@ -211,7 +212,12 @@ static int eiointc_router_init(unsigned int cpu)
- 		}
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
--			bit = BIT(1 + index); /* Route to IP[1 + index] */
-+			/*
-+			 * Route to interrupt pin, relative offset used here
-+			 * Offset 0 means routing to IP0 and so on
-+			 * Every 32 vector routing to one interrupt pin
-+			 */
-+			bit = BIT(eiointc_priv[index]->parent_hwirq - INT_HWI0);
- 			data = bit | (bit << 8) | (bit << 16) | (bit << 24);
- 			iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
- 		}
-@@ -495,7 +501,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 
- 	priv->vec_count = VEC_COUNT;
- 	priv->node = acpi_eiointc->node;
--
-+	priv->parent_hwirq = acpi_eiointc->cascade;
- 	parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
- 
- 	ret = eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
-@@ -529,6 +535,7 @@ static int __init eiointc_of_init(struct device_node *of_node,
- {
- 	int parent_irq, ret;
- 	struct eiointc_priv *priv;
-+	struct irq_data *irq_data;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -544,6 +551,12 @@ static int __init eiointc_of_init(struct device_node *of_node,
- 	if (ret < 0)
- 		goto out_free_priv;
- 
-+	irq_data = irq_get_irq_data(parent_irq);
-+	if (!irq_data) {
-+		ret = -ENODEV;
-+		goto out_free_priv;
-+	}
-+
- 	/*
- 	 * In particular, the number of devices supported by the LS2K0500
- 	 * extended I/O interrupt vector is 128.
-@@ -555,7 +568,7 @@ static int __init eiointc_of_init(struct device_node *of_node,
- 
- 	priv->node = 0;
- 	priv->domain_handle = of_node_to_fwnode(of_node);
--
-+	priv->parent_hwirq = irqd_to_hwirq(irq_data);
- 	ret = eiointc_init(priv, parent_irq, 0);
- 	if (ret < 0)
- 		goto out_free_priv;
--- 
-2.39.3
+So if this is simply sent as RFC with the correct cc's (and ideally with
+some review feedback applied - a better cover letter, etc.) then it makes
+everything easier.
 
+As mentioned the timing is unfortunate here, this is a series we really
+want to make sure is properly reviewed before any chance of merge so again
+this points to RFC being the way forward.
