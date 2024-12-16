@@ -1,167 +1,342 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22309364D6
-	for <loongarch@lists.linux.dev>; Fri, 13 Dec 2024 17:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E638BE8
+	for <loongarch@lists.linux.dev>; Mon, 16 Dec 2024 01:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734110212; cv=none; b=n2KgJEwRsGUzecWNgHpltz8T4sddqQrLnQLGrxHpntNEbBNdXmoJs5NvIZd1Gk1s5ipxeebbzLokJGnWEJDVUUKVxqTVqG0gXb10whbFg1XQiWBMO13TsGq16xveL3Io/zoRRnnW5G1GDA7XSlzjlmp//iRd6XZu9/a2kdwTGX4=
+	t=1734312894; cv=none; b=JyV05teh1uq0xXkEbd8dJriiG4l0drT91KqKrPRD74KfoU85BlL3OYPFgSisrloGuDxk9atMNtCQyl5/dTrHEN4OYjeDdTJm+3sNsQjYidKfaW58N7CozeBH+zScwITO8ZqgBhNt8l/uKMbrkCho7TG0ZbBoo4i5D7heTzWbnL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734110212; c=relaxed/simple;
-	bh=wE+q7QeqF7YQbDHKzcLUrEGn0D/xKRMVNiL8FZYTzQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=CAehlc2m8uVCfbQmKk6e1GHW47XR2Kv+hlevVbBspoNpLMf9Mn4WHK4L1xzoU56J+H8fvRkRqfbYeVKNcDM6fQoJMoqU/l3yQ5WprENMyvc8Gd3de+muQtBX/oxdRfwmdQFSQOtpqtbQf5bs8tgI6FOnuBuaI5Rsl4C1wW1yzZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HHyBVh0I; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HHyBVh0I"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5401af8544bso6782e87.1
-        for <loongarch@lists.linux.dev>; Fri, 13 Dec 2024 09:16:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734110209; x=1734715009; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7A4zwHQX+g8AxxOfbgXufhzVAB4FWsc6ZChZM+91J+Q=;
-        b=HHyBVh0Ib5I5geZQwK2HGzeEgEs2WnSBE1WN3oWm5riTY5MpgCFV14l1ULikT+Jwgx
-         W7g4haGB7uhHpD3ekzWdfPuX9NmpSzHuQdEQTS3lPy3wtklaoSjmET4gEzbxj3ruKo4c
-         BoeSDDyUSnfU5tyPrZzC1A3+Pf0iyh0euRP4F12FZpVlEJ3XiyNwkqKB75PCvnv+RNp5
-         O7UTQoi5jWa9N8osV0JodKK/GN6QCj7StcOCCWre9Xs9b0ijFWEgdL9WMiwFT9eyVFje
-         I08tRgP+fln4oAA+EZK299Cv++6/NKFBlZ4CRO76DYQd6EWJ6zNlhop+qaKw/yr/s3dc
-         iCbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734110209; x=1734715009;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7A4zwHQX+g8AxxOfbgXufhzVAB4FWsc6ZChZM+91J+Q=;
-        b=s+Tzsix+f8NXlWYsPEMHxiC4opkasqeyHi+vchtVTUcFTp0EZyupfxn9w3Tg0yt9rY
-         1TOPTooRVo4SukksUo7QDOhP3No4B4HEsFHLC+2m3meJLequO6TtDo6AXxyQ9TYQVa3k
-         z3VyBzTZOloHODEgdboJVPFKxwgd70LaBoWWilXTBNcOt+edvLbfgDAz0b/89dejC79k
-         sL+oIH0C2vJU94ujfQDdqRnvTzo6BUf5DZzwUJD7Yft7szO9HQX2QW355ye4dydXAq0E
-         Qe6SRRyRlLQNXHKkS4F/RKKIjSK6qfjuTMAPXwRX5vVfVgXfG0xU6V16d+MmmzUG3vsa
-         DBLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDF6KAWgQPc9gaByu0wPyU4ih6KEVdVGugaQchoMj5TgP1kkmfjHUbiLV1g9SUwUqVs29jntcHpA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxRnQS4aoiDiku+xbg2DdYjX9Tzv+YRVNsdB2zYossgc43hJOVQ
-	cTtBImdiWptDHXS/DaNPAxNjud2vKE3jxowUOYatfJbSAk/7b+yhKuLx8+YAyHj8Xudp9FycH3f
-	9mfN5dqz/YO/3geh2BQxCEL718Mz2Mj3Ca5jOg9J0MT/rvi90kJdcHoBLFQ==
-X-Gm-Gg: ASbGncusoOjC2dwU8OY2zIFMCYSqPD2js3Xu1IxdJbp9amByUnbavo2CmnBQMY46EOv
-	RKe8ibz3yVKyi5YUTPIyJ/8NY+x5XznSWAJoLWw==
-X-Google-Smtp-Source: AGHT+IE0pzRAvhpWcDoHVTc25a7VJDPqOoxFfUFUvV3kZNJPG0d3Y6hVFQO+pd+M5jbFDlDiTJn/R0kKY+NzL+UHXcQ=
-X-Received: by 2002:a05:6402:1517:b0:5d0:b20c:2063 with SMTP id
- 4fb4d7f45d1cf-5d63c09e36emr92135a12.7.1734109713373; Fri, 13 Dec 2024
- 09:08:33 -0800 (PST)
+	s=arc-20240116; t=1734312894; c=relaxed/simple;
+	bh=lDtFdOXNM/NZ3Kxa6t14/+rLoQUwD2qReoeiFG17RqE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fBTgFET8c4OfmVgA5EczdD/W867f/wRbQylwQpWgXUEghbLjQxbrgg+e4PxsPpEg8Ax7DfuHN8rdmPIZS/59AO0uPcr+EKSg/CtnVeru2sOpQ77oQ0Ukqm6AcnuMv3dAbcrbZmPXyIo3t98ARYm7aOGPotJwE8YOZtFv5hULJ4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8DxGeCzg19nwD5XAA--.38711S3;
+	Mon, 16 Dec 2024 09:34:43 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMAxTUewg19n9suEAA--.14867S2;
+	Mon, 16 Dec 2024 09:34:41 +0800 (CST)
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+To: bp@alien8.de
+Cc: chenhuacai@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@xen0n.name,
+	tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org,
+	loongarch@lists.linux.dev,
+	xry111@xry111.site,
+	Markus.Elfring@web.de,
+	Jonathan.Cameron@Huawei.com,
+	Zhao Qunqin <zhaoqunqin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory controller
+Date: Mon, 16 Dec 2024 09:33:51 +0800
+Message-Id: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241211232754.1583023-1-kaleshsingh@google.com>
- <hmuzfspqjzb36xlj2x44keihacrrhzj5madqrfbcnhqouzredv@wo75achgkuh5>
- <1818e2ea-f170-4a9c-8d93-2a24f2755a41@lucifer.local> <20241212173609.afd41d1dffbefe0d731ed4ed@linux-foundation.org>
- <695eabb8-ba28-4031-bc4d-66dc4f1d096f@lucifer.local> <CAC_TJvcdz854DmBoVRkb_B5j+u-t=4zHkLtHVeB5RJ=bXcBJag@mail.gmail.com>
- <9675c409-b495-46a5-a90c-c952892b4121@lucifer.local> <x2y7rewvmri25wj72qaeuunqqsqj7pqcliahoxkprcbfxg5owv@icvnojkhrdch>
-In-Reply-To: <x2y7rewvmri25wj72qaeuunqqsqj7pqcliahoxkprcbfxg5owv@icvnojkhrdch>
-From: Kalesh Singh <kaleshsingh@google.com>
-Date: Fri, 13 Dec 2024 12:08:18 -0500
-Message-ID: <CAC_TJvdZxQ0-O3Y1bzH0-XdjQYuJPkkpn-umVan--Z6As-tSow@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v2 00/16] mm: Introduce arch_mmap_hint()
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, Andrew Morton <akpm@linux-foundation.org>, vbabka@suse.cz, 
-	yang@os.amperecomputing.com, riel@surriel.com, david@redhat.com, 
-	minchan@kernel.org, jyescas@google.com, linux@armlinux.org.uk, 
-	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
-	davem@davemloft.net, andreas@gaisler.com, tglx@linutronix.de, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net, 
-	jcmvbkbc@gmail.com, bhelgaas@google.com, jason.andryuk@amd.com, 
-	leitao@debian.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-mm@kvack.org, 
-	kernel-team@android.com, android-mm@google.com, Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxTUewg19n9suEAA--.14867S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr1kGFyDGr1kGFWkKFW3urX_yoW3WF1kpF
+	45Cw1fGr48Kr43Cws3ArWUuF15uwsa9a42v3y7A3yY93srA34UXryktFW2yF9rCrWDJrW3
+	Xa4rKa1DCF4DCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxUc0eHDUUUU
 
-On Fri, Dec 13, 2024 at 11:45=E2=80=AFAM 'Liam R. Howlett' via kernel-team
-<kernel-team@android.com> wrote:
->
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [241213 10:16]:
-> > On Fri, Dec 13, 2024 at 10:06:55AM -0500, Kalesh Singh wrote:
-> > > On Fri, Dec 13, 2024 at 4:00=E2=80=AFAM Lorenzo Stoakes
-> > > <lorenzo.stoakes@oracle.com> wrote:
->
-> ...
->
-> > >
-> > > On the technical side, Liam is right that the copy-pasted arch code
-> > > has inconsistencies (missing checks, order of checks, ...). I agree
-> > > there=E2=80=99s room for further consolidation. I=E2=80=99ll take ano=
-ther stab at it
-> > > and resend it as an RFC with an updated cover letter, as Lorenzo and
-> > > others suggested.
->
-> Thanks.  Can you please include what platforms you have tested in your
-> cover letter (and level of testing - booting, running something, etc).
->
-> If you have not tested them, then it might be worth it to have it as an
-> RFC to point this out - at least initially.  Some of these are very
-> difficult to set up for testing, but it is also possible that you did
-> that and the maintainers/people who usually test these things will
-> assume it's fine if you don't spell out what's going on.
->
+Add ECC support for Loongson SoC DDR controller. This
+driver reports single bit errors (CE) only.
 
-I build-tested most of these except (csky and loongarch) and ran
-android runtime (ART) tests on arm64 and x86. I can try to spin up a
-few of the others and will add it to the description.
+Only ACPI firmware is supported.
 
-> >
-> > The most useful thing here as well to help us understand would be to wr=
-ite
-> > more in the cover letter to expand on what it is you ultimately what to
-> > achieve here - it seems like an extension on the existing THP work on a
-> > per-arch basis (I may be wrong)? So adding more detail would be super
-> > useful here! :)
-> >
-> > We do hope to avoid arch hooks if at all possible explicitly for the re=
-ason
-> > that they can be applied at unfortunate times in terms of locking/wheth=
-er
-> > the objects in question are fully/partially instantiated, VMA visibilit=
-y
-> > etc. etc. based on having had issues in these areas before.
-> >
-> > Also if a hook means 'anything' can happen at a certain point, it means=
- we
-> > can't make any assumptions about what has/hasn't and have to account fo=
-r
-> > anything which seriously complicates things.
-> >
-> > Ideally we'd find a means to achieve the same thing while also exposing=
- us
-> > as little as possible to what may be mutated.
->
->
-> Yes, I'm not sure of what your plans are, but I would like to see all of
-> these custom functions removed, if at all possible.
+Signed-off-by: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+Changes in v10:
+	- Changed acpi_device_id to "LOON0010"
 
-Initially I think we can remove the mmap hint portion of the logic;
-and follow up with removing arch_get_unmapped_area[_topdown](). Some
-of those may not make sense to consolidate e.g. powerpc's
-slice_get_unmapped_area() which doesn't share much in common with the
-rest.
+Changes in v9:
+	- Still using readq() and included "linux/io-64-nonatomic-lo-hi.h"
+	  to avoid the compiler's waring.
+	- Used alpha-betical order when selecting symbol and including
+	  header file.
 
-Thanks,
-Kalesh
+Changes in v8:
+	- Used readl() instead of readq()
+	- Used acpi_device_id instead of of_device_id, then removed
+	  dt-bindings
 
->
-> Thanks,
-> Liam
->
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kernel-team+unsubscribe@android.com.
->
+Changes in v7:
+	- Fixed sparse's "incorrect type in assignment"
+	- Cleaned up coding style
+
+Changes in v6:
+	- Changed the Kconfig name to CONFIG_EDAC_LOONGSON
+
+Changes in v5:
+	- Dropepd the loongson_ prefix from all static functions.
+	- Aligned function arguments on the opening brace.
+	- Dropepd useless comments and useless wrapper. Dropped side
+	  comments.
+	- Reordered variable declarations.
+
+Changes in v4:
+	- None
+
+Changes in v3:
+	- Addressed review comments raised by Krzysztof and Huacai
+
+Changes in v2:
+	- Addressed review comments raised by Krzysztof
+
+ MAINTAINERS                  |   6 ++
+ arch/loongarch/Kconfig       |   1 +
+ drivers/edac/Kconfig         |   8 ++
+ drivers/edac/Makefile        |   1 +
+ drivers/edac/loongson_edac.c | 156 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 172 insertions(+)
+ create mode 100644 drivers/edac/loongson_edac.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e9659a5a7..b36a45051 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13397,6 +13397,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+ F:	drivers/thermal/loongson2_thermal.c
+ 
++LOONGSON EDAC DRIVER
++M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
++L:	linux-edac@vger.kernel.org
++S:	Maintained
++F:	drivers/edac/loongson_edac.c
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index bb35c34f8..33052526b 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -79,6 +79,7 @@ config LOONGARCH
+ 	select BUILDTIME_TABLE_SORT
+ 	select COMMON_CLK
+ 	select CPU_PM
++	select EDAC_SUPPORT
+ 	select EFI
+ 	select GENERIC_CLOCKEVENTS
+ 	select GENERIC_CMOS_UPDATE
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 81af6c344..433c33785 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -564,5 +564,13 @@ config EDAC_VERSAL
+ 	  Support injecting both correctable and uncorrectable errors
+ 	  for debugging purposes.
+ 
++config EDAC_LOONGSON
++	tristate "Loongson Memory Controller"
++	depends on (LOONGARCH && ACPI) || COMPILE_TEST
++	help
++	  Support for error detection and correction on the Loongson
++	  family memory controller. This driver reports single bit
++	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
++	  are compatible.
+ 
+ endif # EDAC
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index faf310eec..f8bdbc895 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
+ obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+ obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
++obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
+diff --git a/drivers/edac/loongson_edac.c b/drivers/edac/loongson_edac.c
+new file mode 100644
+index 000000000..29607972f
+--- /dev/null
++++ b/drivers/edac/loongson_edac.c
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Loongson Technology Corporation Limited.
++ */
++
++#include <linux/acpi.h>
++#include <linux/edac.h>
++#include <linux/init.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include "edac_module.h"
++
++#define ECC_CS_COUNT_REG	0x18
++
++struct loongson_edac_pvt {
++	void __iomem *ecc_base;
++	int last_ce_count;
++};
++
++static int read_ecc(struct mem_ctl_info *mci)
++{
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++	u64 ecc;
++	int cs;
++
++	if (!pvt->ecc_base)
++		return pvt->last_ce_count;
++
++	ecc = readq(pvt->ecc_base + ECC_CS_COUNT_REG);
++	/* cs0 -- cs3 */
++	cs = ecc & 0xff;
++	cs += (ecc >> 8) & 0xff;
++	cs += (ecc >> 16) & 0xff;
++	cs += (ecc >> 24) & 0xff;
++
++	return cs;
++}
++
++static void edac_check(struct mem_ctl_info *mci)
++{
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++	int new, add;
++
++	new = read_ecc(mci);
++	add = new - pvt->last_ce_count;
++	pvt->last_ce_count = new;
++	if (add <= 0)
++		return;
++
++	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
++			     0, 0, 0, 0, 0, -1, "error", "");
++	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
++}
++
++static void dimm_config_init(struct mem_ctl_info *mci)
++{
++	struct dimm_info *dimm;
++	u32 size, npages;
++
++	/* size not used */
++	size = -1;
++	npages = MiB_TO_PAGES(size);
++
++	dimm = edac_get_dimm(mci, 0, 0, 0);
++	dimm->nr_pages = npages;
++	snprintf(dimm->label, sizeof(dimm->label),
++		 "MC#%uChannel#%u_DIMM#%u", mci->mc_idx, 0, 0);
++	dimm->grain = 8;
++}
++
++static void pvt_init(struct mem_ctl_info *mci, void __iomem *vbase)
++{
++	struct loongson_edac_pvt *pvt = mci->pvt_info;
++
++	pvt->ecc_base = vbase;
++	pvt->last_ce_count = read_ecc(mci);
++}
++
++static int edac_probe(struct platform_device *pdev)
++{
++	struct edac_mc_layer layers[2];
++	struct mem_ctl_info *mci;
++	void __iomem *vbase;
++	int ret;
++
++	vbase = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(vbase))
++		return PTR_ERR(vbase);
++
++	/* allocate a new MC control structure */
++	layers[0].type = EDAC_MC_LAYER_CHANNEL;
++	layers[0].size = 1;
++	layers[0].is_virt_csrow = false;
++	layers[1].type = EDAC_MC_LAYER_SLOT;
++	layers[1].size = 1;
++	layers[1].is_virt_csrow = true;
++	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
++			    sizeof(struct loongson_edac_pvt));
++	if (mci == NULL)
++		return -ENOMEM;
++
++	mci->mc_idx = edac_device_alloc_index();
++	mci->mtype_cap = MEM_FLAG_RDDR4;
++	mci->edac_ctl_cap = EDAC_FLAG_NONE;
++	mci->edac_cap = EDAC_FLAG_NONE;
++	mci->mod_name = "loongson_edac.c";
++	mci->ctl_name = "loongson_edac_ctl";
++	mci->dev_name = "loongson_edac_dev";
++	mci->ctl_page_to_phys = NULL;
++	mci->pdev = &pdev->dev;
++	mci->error_desc.grain = 8;
++	/* Set the function pointer to an actual operation function */
++	mci->edac_check = edac_check;
++
++	pvt_init(mci, vbase);
++	dimm_config_init(mci);
++
++	ret = edac_mc_add_mc(mci);
++	if (ret) {
++		edac_dbg(0, "MC: failed edac_mc_add_mc()\n");
++		edac_mc_free(mci);
++		return ret;
++	}
++	edac_op_state = EDAC_OPSTATE_POLL;
++
++	return 0;
++}
++
++static void edac_remove(struct platform_device *pdev)
++{
++	struct mem_ctl_info *mci = edac_mc_del_mc(&pdev->dev);
++
++	if (mci)
++		edac_mc_free(mci);
++}
++
++static const struct acpi_device_id loongson_edac_acpi_match[] = {
++	{"LOON0010", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, loongson_edac_acpi_match);
++
++static struct platform_driver loongson_edac_driver = {
++	.probe		= edac_probe,
++	.remove		= edac_remove,
++	.driver		= {
++		.name	= "loongson-mc-edac",
++		.acpi_match_table = loongson_edac_acpi_match,
++	},
++};
++module_platform_driver(loongson_edac_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Zhao Qunqin <zhaoqunqin@loongson.cn>");
++MODULE_DESCRIPTION("EDAC driver for loongson memory controller");
+
+base-commit: 584e09743d2f44905290b0dbf3215064d2a1888c
+-- 
+2.43.0
+
