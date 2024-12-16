@@ -1,182 +1,223 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C5B20457C
-	for <loongarch@lists.linux.dev>; Mon, 16 Dec 2024 11:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12CD205E16
+	for <loongarch@lists.linux.dev>; Mon, 16 Dec 2024 14:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734350180; cv=none; b=gbxBB4cteYX9TA7X1uPVVDQ5fKvggZW5TQydJSe4+1NkNYnGNNz+SrtIf4UVAW8ISe+VRphBmw21sVuJ6gpPCSjicFLxF6GWeWOKSFNeJZx/m6T9ROBT9VjObXqdYuTaK4/37UCtSFwpKRvi36S6Z4BBzqrOY1JYFFoxmobYAeg=
+	t=1734358254; cv=none; b=e3ZkWFP76Xn/ft7iz9wskfpbH6MyMb8jpiIFKsZFyAqhsj82on7I2xrS6c1J7dvKUYB4FerPywl+dmUxC7WUxZ2N9csiAkjBGZbVL92AIWgHqppErQUyCetTr2c3fPhSAFtI4+d5cI/LC1uiJCFRVl9fyOG5P9S3+GChxqFNxME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734350180; c=relaxed/simple;
-	bh=OKPLTQHxIuUahfuatylu+8JAUqFjImAX8tPtEshEgDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejMuQMcJY91b/tGsZpRunHKh8EOl06AJ4M3ugFSVWIWhsr6Sidp/fN8xzbkumYAATLNBN3ev+yVt/5FRc62Nfc/jFsyU95FcGN+JsDzpYyjImHoszKeuE0E23azKGFCxSG63Mt6b/xNymmC93rH23C1my/yHO9bXHmz2F791gEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=R7A4dX9P; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1734358254; c=relaxed/simple;
+	bh=djYBYaWoItcXUsVYqkOg6DhKy9XnOUI8nNrRC+z9rAU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hjoSesfoksHnFiC0qcOznQy8FQRHZmfLP6VM+7eEF9gHvaTGgNRoWLcxg7gcS0NRtYnPxfz8LXyDQP7ZqmfwSlDdVRnLt79NIJaBSpeJSHMu+/aB3adyaTi9SDsqMqWzkfO98P24vptFbOdowHcQCWLdW5ad9pbA/aTrbOrM63k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KdufFQ9y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/u+tT8fS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="R7A4dX9P"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 400BD40E0266;
-	Mon, 16 Dec 2024 11:56:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jl2PoPUHnDkL; Mon, 16 Dec 2024 11:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1734350170; bh=rYh3Vo4Y6Cn3XYiD3KvUWwt/WV0Vv7KQwFCZjgxQ7rY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R7A4dX9P1IScVfb33XC4RQNy0URmuHQkdq5GjLGiEI0TQ5itVj5qopQ5swmf+3e4a
-	 M9TGovU8mxakF3MnUrobGPUBnxnUm2WA5LdkrEMgyVOBEBcCyQQ5xucOFImQ+n3sza
-	 7eZf2PH9fYnmAN6UIm7FDq1r912QcTsHLgb6nhi9wNwGgLX9Q1iWFHoitGyufh+FaI
-	 OoQoyydcFJy/YF4+zLf08N0U7pTr6yktBnDLtkkyJc+svJs0stz1NSGkJjRqqhk8DR
-	 N2tkkY6TrWISHOFiJEwpCP0eU/sotQNqzexbnzsXVtwIKoM0DvhPZXXfERBHcYsLSs
-	 O++ZX6CvOocqtWuI1F8JvC00xUtrtko417tHLKNs0OJ1sz/lkLj8obn0ZdB7BZMsss
-	 A7q3VpTxfHIt7HHEdvYjCSFPM/6Q5uZQ88q5dN3OYRbDm8ciIbHOiUiD27OIFa201y
-	 o//CBl5yMwrAYwkV23IitIYNNy6zoj+hDNxJ3pGqaNuzOmYbFM09fDOWxUU0zIu7Vm
-	 HDBLc8uHZxCdbl/OB3P6kIdauCniA23i2cJd32Mi7UPIneLChJwxGyo6T5sqa3WaQh
-	 3i50lhOHT492p2Z2HrPTdIC9uuRP+sGXjZPu1ZloHYHVz4SOzmh9qXjv0YcNICvRa2
-	 5Sd5VXOY6JV9YqOS+EfqgqAU=
-Received: from zn.tnic (p200300ea971f937d329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:937d:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1497140E0269;
-	Mon, 16 Dec 2024 11:55:56 +0000 (UTC)
-Date: Mon, 16 Dec 2024 12:55:46 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@xen0n.name,
-	tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
-	rric@kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
-	Markus.Elfring@web.de, Jonathan.Cameron@huawei.com,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
- controller
-Message-ID: <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
-References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KdufFQ9y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/u+tT8fS"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1734358250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HKVp/Caa3kBEDzmNrfvKYA3RNNrY0C92zVprRqMI1SE=;
+	b=KdufFQ9yzC5Ccn77ghWA8wMSofMP42Zkq2YdPaJ2A10YNms20X7NC8Hxi+abz4ROYmqVYh
+	CKh8+qO4oFDm3McLx4thCKwPp4d9pZkbPn7YuRT6GdMzrOCCJ9LAd+SLXp9FxXhrYc1Njf
+	EASL4b3P4RxQ/VMcgorUj16d32fvKJI5JcWLHGxqYuOOu7tXzsGjHIKxOeEWngv8j8V1xD
+	VqLUtnbtI3PL9fNVv0DclRhDYLLKxW9sneh1Gx5Q8jZ+EULkpYDXOXsb4FJG7BTQMCkBGb
+	E5E9fCgAEOXWs0vcarn0iqbq9v3goh4LSx3xpzWX3C+fuKDi/c1tOtRR/bod3w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1734358250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HKVp/Caa3kBEDzmNrfvKYA3RNNrY0C92zVprRqMI1SE=;
+	b=/u+tT8fSj1h0nM3WDlaNJH3x66iqvvap+8AtYcWufIcKOYjQK6XUnl7D/FVY+IzgCPpSQr
+	1E+y5++vPqqWOdDQ==
+Subject: [PATCH 00/17] vDSO: Introduce generic data storage
+Date: Mon, 16 Dec 2024 15:09:56 +0100
+Message-Id: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALU0YGcC/x3MywqEMAyF4VeRrCeQekVfZXAhNmo2rSQiM0jf3
+ eryg3P+C4xV2GAoLlA+xSSGDPcpYN6msDKKz4aSypp65/D0FtGOqIwaVmypmyo/90wNQT7tyov
+ 83uB3zN7k2f6ffkrpBvZg+p5vAAAA
+X-Change-ID: 20240911-vdso-store-rng-607a3dc9e050
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+ loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1734358247; l=7632;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=djYBYaWoItcXUsVYqkOg6DhKy9XnOUI8nNrRC+z9rAU=;
+ b=nB6k75T44i3XiBispikp3W7OCCiI+BnnKEjikbsYEp+QxVBLBTagyb2PXd9wSlsp2iNvC4Dr8
+ 7Dg6HPvjJg+AI7LSiIsW01eZlsVkYR2FxwK80tr8AI4F5QdZPyk/VoF
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
-> +LOONGSON EDAC DRIVER
-> +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
-> +L:	linux-edac@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/edac/loongson_edac.c
+Currently each architecture defines the setup of the vDSO data page on
+its own, mostly through copy-and-paste from some other architecture.
+Extend the existing generic vDSO implementation to also provide generic
+data storage.
+This removes duplicated code and paves the way for further changes to
+the generic vDSO implementation without having to go through a lot of
+per-architecture changes.
 
-If you add yourself as a maintainer, I'd expect you to review and/or ack
-patches for your driver so that I can pick them up.
+Based on v6.13-rc1 and intended to be merged through the tip tree.
 
-> +config EDAC_LOONGSON
-> +	tristate "Loongson Memory Controller"
-> +	depends on (LOONGARCH && ACPI) || COMPILE_TEST
+This also provides the basis for some generic vDSO reworks.
+The commits from this series and the upcoming reworks can be seen at:
+https://git.kernel.org/pub/scm/linux/kernel/git/thomas.weissschuh/linux.git/log/?h=vdso/store
 
-The COMPILE_TEST thing would mean that you'll make sure this driver always
-builds on other arches and it doesn't break randconfig builds of people. If it
-happens too often and no one is fixing it, I'll remove the COMPILE_TEST.
+---
+Thomas Weißschuh (17):
+      parisc: Remove unused symbol vdso_data
+      vdso: Introduce vdso/align.h
+      vdso: Add generic time data storage
+      vdso: Add generic random data storage
+      vdso: Add generic architecture-specific data storage
+      arm64: vdso: Switch to generic storage implementation
+      riscv: vdso: Switch to generic storage implementation
+      LoongArch: vDSO: Switch to generic storage implementation
+      arm: vdso: Switch to generic storage implementation
+      s390/vdso: Switch to generic storage implementation
+      MIPS: vdso: Switch to generic storage implementation
+      powerpc/vdso: Switch to generic storage implementation
+      x86/vdso: Switch to generic storage implementation
+      x86/vdso/vdso2c: Remove page handling
+      vdso: Remove remnants of architecture-specific random state storage
+      vdso: Remove remnants of architecture-specific time storage
+      vdso: Remove kconfig symbol GENERIC_VDSO_DATA_STORE
 
-> +	help
-> +	  Support for error detection and correction on the Loongson
-> +	  family memory controller. This driver reports single bit
-> +	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
-> +	  are compatible.
->  
->  endif # EDAC
+ MAINTAINERS                                        |   1 +
+ arch/Kconfig                                       |   4 +
+ arch/arm/include/asm/vdso.h                        |   2 +
+ arch/arm/include/asm/vdso/gettimeofday.h           |   7 +-
+ arch/arm/include/asm/vdso/vsyscall.h               |  12 +-
+ arch/arm/kernel/asm-offsets.c                      |   4 -
+ arch/arm/kernel/vdso.c                             |  34 ++----
+ arch/arm/vdso/vdso.lds.S                           |   4 +-
+ arch/arm64/include/asm/vdso.h                      |   2 +-
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h  |  32 +++---
+ arch/arm64/include/asm/vdso/getrandom.h            |  12 --
+ arch/arm64/include/asm/vdso/gettimeofday.h         |  16 +--
+ arch/arm64/include/asm/vdso/vsyscall.h             |  25 +----
+ arch/arm64/kernel/vdso.c                           |  90 +--------------
+ arch/arm64/kernel/vdso/vdso.lds.S                  |   7 +-
+ arch/arm64/kernel/vdso32/vdso.lds.S                |   7 +-
+ arch/loongarch/Kconfig                             |   1 +
+ arch/loongarch/include/asm/vdso.h                  |   1 -
+ arch/loongarch/include/asm/vdso/arch_data.h        |  25 +++++
+ arch/loongarch/include/asm/vdso/getrandom.h        |   5 -
+ arch/loongarch/include/asm/vdso/gettimeofday.h     |  14 +--
+ arch/loongarch/include/asm/vdso/vdso.h             |  38 +------
+ arch/loongarch/include/asm/vdso/vsyscall.h         |  17 ---
+ arch/loongarch/kernel/asm-offsets.c                |   2 +-
+ arch/loongarch/kernel/vdso.c                       |  92 +--------------
+ arch/loongarch/vdso/vdso.lds.S                     |   8 +-
+ arch/loongarch/vdso/vgetcpu.c                      |   7 +-
+ arch/mips/include/asm/vdso/gettimeofday.h          |   9 +-
+ arch/mips/include/asm/vdso/vdso.h                  |  19 ++--
+ arch/mips/include/asm/vdso/vsyscall.h              |  14 +--
+ arch/mips/kernel/vdso.c                            |  47 +++-----
+ arch/mips/vdso/vdso.lds.S                          |   5 +-
+ arch/parisc/include/asm/vdso.h                     |   2 -
+ arch/powerpc/Kconfig                               |   1 +
+ arch/powerpc/include/asm/vdso.h                    |   1 +
+ arch/powerpc/include/asm/vdso/arch_data.h          |  37 ++++++
+ arch/powerpc/include/asm/vdso/getrandom.h          |  11 +-
+ arch/powerpc/include/asm/vdso/gettimeofday.h       |  36 +++---
+ arch/powerpc/include/asm/vdso/vsyscall.h           |  13 ---
+ arch/powerpc/include/asm/vdso_datapage.h           |  44 +-------
+ arch/powerpc/kernel/asm-offsets.c                  |   1 -
+ arch/powerpc/kernel/time.c                         |   2 +-
+ arch/powerpc/kernel/vdso.c                         | 115 ++-----------------
+ arch/powerpc/kernel/vdso/cacheflush.S              |   2 +-
+ arch/powerpc/kernel/vdso/datapage.S                |   4 +-
+ arch/powerpc/kernel/vdso/gettimeofday.S            |   4 +-
+ arch/powerpc/kernel/vdso/vdso32.lds.S              |   4 +-
+ arch/powerpc/kernel/vdso/vdso64.lds.S              |   4 +-
+ arch/powerpc/kernel/vdso/vgettimeofday.c           |  14 +--
+ arch/riscv/Kconfig                                 |   2 +-
+ arch/riscv/include/asm/vdso.h                      |   2 +-
+ .../include/asm/vdso/{time_data.h => arch_data.h}  |   8 +-
+ arch/riscv/include/asm/vdso/gettimeofday.h         |  14 +--
+ arch/riscv/include/asm/vdso/vsyscall.h             |   9 --
+ arch/riscv/kernel/sys_hwprobe.c                    |   3 +-
+ arch/riscv/kernel/vdso.c                           |  90 +--------------
+ arch/riscv/kernel/vdso/hwprobe.c                   |   6 +-
+ arch/riscv/kernel/vdso/vdso.lds.S                  |   7 +-
+ arch/s390/include/asm/vdso.h                       |   4 +-
+ arch/s390/include/asm/vdso/getrandom.h             |  12 --
+ arch/s390/include/asm/vdso/gettimeofday.h          |  15 +--
+ arch/s390/include/asm/vdso/vsyscall.h              |  20 ----
+ arch/s390/kernel/time.c                            |   6 +-
+ arch/s390/kernel/vdso.c                            |  97 +---------------
+ arch/s390/kernel/vdso32/vdso32.lds.S               |   7 +-
+ arch/s390/kernel/vdso64/vdso64.lds.S               |   8 +-
+ arch/x86/entry/vdso/vdso-layout.lds.S              |  10 +-
+ arch/x86/entry/vdso/vdso2c.c                       |  21 ----
+ arch/x86/entry/vdso/vdso2c.h                       |  20 ----
+ arch/x86/entry/vdso/vma.c                          | 125 ++-------------------
+ arch/x86/include/asm/vdso.h                        |   6 -
+ arch/x86/include/asm/vdso/getrandom.h              |  10 --
+ arch/x86/include/asm/vdso/gettimeofday.h           |  25 +----
+ arch/x86/include/asm/vdso/vsyscall.h               |  22 +---
+ drivers/char/random.c                              |   6 +-
+ include/asm-generic/vdso/vsyscall.h                |  15 +--
+ include/linux/align.h                              |  10 +-
+ include/linux/time_namespace.h                     |   2 -
+ include/linux/vdso_datastore.h                     |  10 ++
+ include/vdso/align.h                               |  15 +++
+ include/vdso/datapage.h                            | 105 ++++++++++++++---
+ include/vdso/helpers.h                             |   8 +-
+ kernel/time/namespace.c                            |  12 +-
+ kernel/time/vsyscall.c                             |  19 ++--
+ lib/Makefile                                       |   2 +
+ lib/vdso/getrandom.c                               |   4 +-
+ lib/vdso/gettimeofday.c                            |  62 +++++-----
+ lib/vdso_kernel/Makefile                           |   3 +
+ lib/vdso_kernel/datastore.c                        | 125 +++++++++++++++++++++
+ 89 files changed, 574 insertions(+), 1231 deletions(-)
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20240911-vdso-store-rng-607a3dc9e050
 
-> +static int read_ecc(struct mem_ctl_info *mci)
-> +{
-> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
-> +	u64 ecc;
-> +	int cs;
-> +
-> +	if (!pvt->ecc_base)
-
-When can that even happen? You're initializing it properly in pvt_init().
-
-> +		return pvt->last_ce_count;
-> +
-> +	ecc = readq(pvt->ecc_base + ECC_CS_COUNT_REG);
-> +	/* cs0 -- cs3 */
-> +	cs = ecc & 0xff;
-> +	cs += (ecc >> 8) & 0xff;
-> +	cs += (ecc >> 16) & 0xff;
-> +	cs += (ecc >> 24) & 0xff;
-> +
-> +	return cs;
-> +}
-> +
-> +static void edac_check(struct mem_ctl_info *mci)
-> +{
-> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
-> +	int new, add;
-> +
-> +	new = read_ecc(mci);
-> +	add = new - pvt->last_ce_count;
-> +	pvt->last_ce_count = new;
-
-That last_ce_count is just silly. Kill it.
-
-> +	if (add <= 0)
-> +		return;
-> +
-> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
-> +			     0, 0, 0, 0, 0, -1, "error", "");
-> +	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
-
-"add"? What are you adding? Error count?
-
-No need.
-
-> +static int edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_mc_layer layers[2];
-> +	struct mem_ctl_info *mci;
-> +	void __iomem *vbase;
-> +	int ret;
-> +
-> +	vbase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(vbase))
-> +		return PTR_ERR(vbase);
-> +
-> +	/* allocate a new MC control structure */
-> +	layers[0].type = EDAC_MC_LAYER_CHANNEL;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = false;
-> +	layers[1].type = EDAC_MC_LAYER_SLOT;
-> +	layers[1].size = 1;
-> +	layers[1].is_virt_csrow = true;
-> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct loongson_edac_pvt));
-> +	if (mci == NULL)
-> +		return -ENOMEM;
-> +
-> +	mci->mc_idx = edac_device_alloc_index();
-> +	mci->mtype_cap = MEM_FLAG_RDDR4;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE;
-> +	mci->edac_cap = EDAC_FLAG_NONE;
-> +	mci->mod_name = "loongson_edac.c";
-> +	mci->ctl_name = "loongson_edac_ctl";
-> +	mci->dev_name = "loongson_edac_dev";
-> +	mci->ctl_page_to_phys = NULL;
-> +	mci->pdev = &pdev->dev;
-> +	mci->error_desc.grain = 8;
-> +	/* Set the function pointer to an actual operation function */
-
-Remove that obvious comment.
-
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-https://people.kernel.org/tglx/notes-about-netiquette
