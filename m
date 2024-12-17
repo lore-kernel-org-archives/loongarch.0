@@ -1,90 +1,183 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C62A113D8B4
-	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 01:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE2E38DF9
+	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 02:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734400223; cv=none; b=r9hgJ9AegfNjgB9pDeOSp0WnSW2D7EGIu+LkfqGzPbI45MKwBVrsNbsfOTf3vARQMza965I6y9BRme5HXeERu7GygKfShxRQ7z39Y9apKIwha/oAVmTsyHeLrAP6cxgl+/MlFmdyF3k1Vz3UD2260bBmoDAa2vGtnH4R0sbNkfc=
+	t=1734402372; cv=none; b=bVlPGlenrt0fGhNf4uPiFfVKglyEgm0D/9cvMi6/+cm0n9jfL0rGEfrl6NqIMBkzp9WhXIDT3J2KJ2+Z92fXGk8vybVeOzkKJVHC2rQAsU7V/WrVym7gNakPi5vFaoP3hqMueRdDKiTJQnRkDqrbAEzMeucBkTOzRy9I3zWEntY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734400223; c=relaxed/simple;
-	bh=6zwDsHOUh1VbxgGD9EGwxbLyhq8N4xqmUgzklPxvcCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=COvBJ3zIfG4QvnswVesfB8iKBOV1ECgVwKonFHGNhRjlnQJA7BrOK0MMTqInTrPb7hYlT84n8MVgA/N7z9Sj80qNFDKajRn5xgHJfXjZ7FU6vXPxm0PkiECha2fAt6Eym+X1T2RrYHFTuJ5mgoDHEsMhub4t7vA8vdZfayYxJSo=
+	s=arc-20240116; t=1734402372; c=relaxed/simple;
+	bh=kdDaiTNEfIt7Rl9g4y1oqqYwy61EJNOPtOr3m3Q2zPU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hXXWQNg8LG9lldwC1pEzITiCk0BkjsoVNiG0cdbH/YdDrcqy0Gq4whM4djWnbqzyhZP1nBJtAgtapbxtCR/l7JgrAW4Ra631ypwPWrvPyveVVoqzY535VmBTNXa5HO/tWZfL3dOXKGXPkAnYa9R3U+LrTsYgnk7ps9HRN8iz7eg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxquHQ2GBnrZxXAA--.43603S3;
-	Tue, 17 Dec 2024 09:50:08 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxbUfO2GBn8+KFAA--.16146S2;
-	Tue, 17 Dec 2024 09:50:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: loongarch@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 9/9] drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-Date: Tue, 17 Dec 2024 09:50:06 +0800
-Message-ID: <20241217015006.30305-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20241217010905.13054-1-yangtiezhu@loongson.cn>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8CxC+I_4WBn5p5XAA--.39876S3;
+	Tue, 17 Dec 2024 10:26:07 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxL+E74WBnCeyFAA--.16426S2;
+	Tue, 17 Dec 2024 10:26:05 +0800 (CST)
+Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
+ controller
+To: Borislav Petkov <bp@alien8.de>
+Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@xen0n.name, tony.luck@intel.com,
+ james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+ loongarch@lists.linux.dev, xry111@xry111.site, Markus.Elfring@web.de,
+ Jonathan.Cameron@huawei.com, Huacai Chen <chenhuacai@loongson.cn>
+References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+ <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
+Date: Tue, 17 Dec 2024 10:25:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxbUfO2GBn8+KFAA--.16146S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF17KFWruF4DAw1DtrWDGFX_yoW8JFW3pF
-	43JFy5Wa1kJF1xKFZxJa45uFW3Ca95XrW0gr1UAws5Aa47A3WvgFZxt3WDGFW2kF4Yyr4I
-	vF4DKay7KFn2yrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxL+E74WBnCeyFAA--.16426S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCFW8Wry8uw43Kw4UJw4rtFc_yoW5Kw1kpr
+	98CanFkr4jqr17Gw40qryqvF15Zrs2yr9Iy39xJa4YkwnIyr1xW395ta12krnakrn8tr1f
+	Za45Grn7u3WDKFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
 	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8rsqJUUUUU==
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUU
+	U==
 
-When compiling with Clang on LoongArch, there exists the following objtool
-warning in drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.o:
 
-  dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
+在 2024/12/16 下午7:55, Borislav Petkov 写道:
+> On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
+>> +LOONGSON EDAC DRIVER
+>> +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>> +L:	linux-edac@vger.kernel.org
+>> +S:	Maintained
+>> +F:	drivers/edac/loongson_edac.c
+> If you add yourself as a maintainer, I'd expect you to review and/or ack
+> patches for your driver so that I can pick them up.
+OK. I can review the patches for this driver.
+>
+>> +config EDAC_LOONGSON
+>> +	tristate "Loongson Memory Controller"
+>> +	depends on (LOONGARCH && ACPI) || COMPILE_TEST
+> The COMPILE_TEST thing would mean that you'll make sure this driver always
+> builds on other arches and it doesn't break randconfig builds of people. If it
+> happens too often and no one is fixing it, I'll remove the COMPILE_TEST.
+There have indeed been build errors on other arches. So i will remove it.
+>> +	help
+>> +	  Support for error detection and correction on the Loongson
+>> +	  family memory controller. This driver reports single bit
+>> +	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
+>> +	  are compatible.
+>>   
+>>   endif # EDAC
+>> +static int read_ecc(struct mem_ctl_info *mci)
+>> +{
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +	u64 ecc;
+>> +	int cs;
+>> +
+>> +	if (!pvt->ecc_base)
+> When can that even happen? You're initializing it properly in pvt_init().
+Will remove this check.
+>> +		return pvt->last_ce_count;
+>> +
+>> +	ecc = readq(pvt->ecc_base + ECC_CS_COUNT_REG);
+>> +	/* cs0 -- cs3 */
+>> +	cs = ecc & 0xff;
+>> +	cs += (ecc >> 8) & 0xff;
+>> +	cs += (ecc >> 16) & 0xff;
+>> +	cs += (ecc >> 24) & 0xff;
+>> +
+>> +	return cs;
+>> +}
+>> +
+>> +static void edac_check(struct mem_ctl_info *mci)
+>> +{
+>> +	struct loongson_edac_pvt *pvt = mci->pvt_info;
+>> +	int new, add;
+>> +
+>> +	new = read_ecc(mci);
+>> +	add = new - pvt->last_ce_count;
+>> +	pvt->last_ce_count = new;
+> That last_ce_count is just silly. Kill it.
 
-This is because dc_fixpt_from_fraction() is inlined in dc_fixpt_recip()
-by Clang, given dc_fixpt_from_fraction() is not a simple function, just
-mark it noinline to avoid the above issue.
+Then  I  can't calculate the error count added since the last check,  cause
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+what record in Loongson's ECC register is  the error count  from reset of
 
-diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-index 88d3f9d7dd55..b40c6a21460d 100644
---- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-@@ -68,7 +68,7 @@ static inline unsigned long long complete_integer_division_u64(
- #define GET_FRACTIONAL_PART(x) \
- 	(FRACTIONAL_PART_MASK & (x))
- 
--struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
-+noinline struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
- {
- 	struct fixed31_32 res;
- 
--- 
-2.42.0
+the memory controller.
+
+>> +	if (add <= 0)
+>> +		return;
+>> +
+>> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, add,
+>> +			     0, 0, 0, 0, 0, -1, "error", "");
+>> +	edac_mc_printk(mci, KERN_INFO, "add: %d", add);
+> "add"? What are you adding? Error count?
+>
+> No need.
+Will remove this printk.
+>> +static int edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_mc_layer layers[2];
+>> +	struct mem_ctl_info *mci;
+>> +	void __iomem *vbase;
+>> +	int ret;
+>> +
+>> +	vbase = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(vbase))
+>> +		return PTR_ERR(vbase);
+>> +
+>> +	/* allocate a new MC control structure */
+>> +	layers[0].type = EDAC_MC_LAYER_CHANNEL;
+>> +	layers[0].size = 1;
+>> +	layers[0].is_virt_csrow = false;
+>> +	layers[1].type = EDAC_MC_LAYER_SLOT;
+>> +	layers[1].size = 1;
+>> +	layers[1].is_virt_csrow = true;
+>> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+>> +			    sizeof(struct loongson_edac_pvt));
+>> +	if (mci == NULL)
+>> +		return -ENOMEM;
+>> +
+>> +	mci->mc_idx = edac_device_alloc_index();
+>> +	mci->mtype_cap = MEM_FLAG_RDDR4;
+>> +	mci->edac_ctl_cap = EDAC_FLAG_NONE;
+>> +	mci->edac_cap = EDAC_FLAG_NONE;
+>> +	mci->mod_name = "loongson_edac.c";
+>> +	mci->ctl_name = "loongson_edac_ctl";
+>> +	mci->dev_name = "loongson_edac_dev";
+>> +	mci->ctl_page_to_phys = NULL;
+>> +	mci->pdev = &pdev->dev;
+>> +	mci->error_desc.grain = 8;
+>> +	/* Set the function pointer to an actual operation function */
+> Remove that obvious comment.
+
+OK
+
+Thanks for taking the time to review.
+
+Best regards
+
+>
 
