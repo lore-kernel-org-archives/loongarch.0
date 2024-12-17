@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477F51714B2
-	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 07:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B04A1D9592
+	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 07:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734421149; cv=none; b=pA8vYdnZBX5bUkKstG8ZCq+iO4VaNjXu3GDNj4qcPL4x6/CmJEnsQOzThztQhS+i8bpYTBi8kT7uiubt7q9Jy6oMUzD9Lc14oE6KK50kZorpWTS58O0Mapk1y/U6F2huaQQWjVthNKaWLYZ/3jvTS4j2WgNtEqgYisTAl1GBip8=
+	t=1734421167; cv=none; b=XAe1tIGXQZHqJPnYSUbKMtb7+YqkEeDULsTf6QqEq66pY6IM8NRS+Qphz1gubd2+eR8LuKFRJiiKa22LIaV+9OxWIPFZHezD+swa6C4oTVYfqKddhnIL0or9l91oovRNeotB1kLPLub6shm/YpkOAJHjkta/02Gk0SJezZUYfw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734421149; c=relaxed/simple;
-	bh=lZaSCDinLNbXyNw5XItSecUxZgUaVwU+bIj/T/SAgRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q8bnNUEmdEBkz9OPiZEjNEA48sjATIjclOcPXvRn92n/sRxP3W+Y682PLkrb8703XfmRzbb+y9MzdXmXY6Yc989PqMqNnN6ujLe/Ulo7ghKec3rfUqGTieg8vsRxNSyYroElK6/G/0Jg/Pgkb8hbecDob9Lxj28YQiBpLruNRlU=
+	s=arc-20240116; t=1734421167; c=relaxed/simple;
+	bh=FF0k0pW14USJyXZVa625InLmts54SM6uhXD/5HffYxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gTR5xZ66yFU/287Y/LsV99nzFnN50FMZqnNHoL/ViNfnzr/btFfVtQ7jjcMv/udwWlpv8qY7biOz1MnLYo3tkcoC7lot6cOmtNbYbT9Km2j2GD83QyTlOVYHKsfi8h9mFyJPh9n35rIVzMyjvRNK743upMKXk0FkHAqZ4Nel/9I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.7])
-	by gateway (Coremail) with SMTP id _____8AxbeKZKmFn1bFXAA--.39474S3;
-	Tue, 17 Dec 2024 15:39:05 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxieCrKmFn47FXAA--.39742S3;
+	Tue, 17 Dec 2024 15:39:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.68.7])
-	by front1 (Coremail) with SMTP id qMiowMBxnseTKmFnxQUAAA--.26S2;
-	Tue, 17 Dec 2024 15:39:03 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxz8eoKmFn0gUAAA--.24S2;
+	Tue, 17 Dec 2024 15:39:22 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
@@ -26,12 +26,10 @@ Cc: loongarch@lists.linux.dev,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Chao Li <lichao@loongson.cn>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Subject: [PATCH] LoongArch: Correct the cacheinfo sharing information
-Date: Tue, 17 Dec 2024 15:38:54 +0800
-Message-ID: <20241217073854.3346051-1-chenhuacai@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Add pgprot_nx() implementation
+Date: Tue, 17 Dec 2024 15:39:08 +0800
+Message-ID: <20241217073908.3347287-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -40,70 +38,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxnseTKmFnxQUAAA--.26S2
+X-CM-TRANSID:qMiowMAxz8eoKmFn0gUAAA--.24S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4xCr1fZF1rGrW7Zr4DZFc_yoW8Xw17pr
-	W2yrZ8KrWrurn3G3yYqa1xWryxG3ykGFsFq3WakFyrA3ZIvrykXrs5ta9xAF9rZ395GFWI
-	qF45JF4SgF4UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtFy3trWxuFy7ZFW5tF1xtFc_yoWDAFX_A3
+	W7Xaykuw48Ja9rAw1ayF93Jr13Gw48C3ZYqF1ktw47tw1qqws8GFy7W3y3Zr4a9FZ7Zrs0
+	9rs5tw4rCF13tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-SMT cores and their sibling cores share the same L1 and L2 private
-caches (of course last level cache is also shared), so correct the
-cacheinfo sharing information to let shared_cpu_map correctly reflect
-this relationship.
+Commit cca98e9f8b5ebcd964 ("mm: enforce that vmap can't map pages
+executable") enforces the W^X protection by not allowing remapping
+existing pages as executable. Add LoongArch bits so that LoongArch
+can benefit the same protection.
 
-Below is the output of "lscpu" on Loongson-3A6000 (4 cores, 8 threads).
-
-1. Before patch:
-
-  L1d:                    512 KiB (8 instances)
-  L1i:                    512 KiB (8 instances)
-  L2:                     2 MiB (8 instances)
-  L3:                     16 MiB (1 instance)
-
-2. After patch:
-
-  L1d:                    256 KiB (4 instances)
-  L1i:                    256 KiB (4 instances)
-  L2:                     1 MiB (4 instances)
-  L3:                     16 MiB (1 instance)
-
-Reported-by: Chao Li <lichao@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/cacheinfo.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/loongarch/include/asm/pgtable-bits.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/loongarch/kernel/cacheinfo.c b/arch/loongarch/kernel/cacheinfo.c
-index c7988f757281..0d28228d0a8a 100644
---- a/arch/loongarch/kernel/cacheinfo.c
-+++ b/arch/loongarch/kernel/cacheinfo.c
-@@ -51,6 +51,12 @@ static void cache_cpumap_setup(unsigned int cpu)
- 				continue;
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index 82cd3a9f094b..45bfc65a0c9f 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -96,6 +96,13 @@
  
- 			sib_leaf = sib_cpu_ci->info_list + index;
-+			/* SMT cores share all caches */
-+			if (cpus_are_siblings(i, cpu)) {
-+				cpumask_set_cpu(cpu, &sib_leaf->shared_cpu_map);
-+				cpumask_set_cpu(i, &this_leaf->shared_cpu_map);
-+			}
-+			/* Node's cores share shared caches */
- 			if (cache_leaves_are_shared(this_leaf, sib_leaf)) {
- 				cpumask_set_cpu(cpu, &sib_leaf->shared_cpu_map);
- 				cpumask_set_cpu(i, &this_leaf->shared_cpu_map);
+ #define _PAGE_IOREMAP		pgprot_val(PAGE_KERNEL_SUC)
+ 
++#define pgprot_nx pgprot_nx
++
++static inline pgprot_t pgprot_nx(pgprot_t _prot)
++{
++	return __pgprot(pgprot_val(_prot) | _PAGE_NO_EXEC);
++}
++
+ #define pgprot_noncached pgprot_noncached
+ 
+ static inline pgprot_t pgprot_noncached(pgprot_t _prot)
 -- 
 2.43.5
 
