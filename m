@@ -1,90 +1,86 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B04A1D9592
-	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 07:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1D814A0B9;
+	Tue, 17 Dec 2024 18:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734421167; cv=none; b=XAe1tIGXQZHqJPnYSUbKMtb7+YqkEeDULsTf6QqEq66pY6IM8NRS+Qphz1gubd2+eR8LuKFRJiiKa22LIaV+9OxWIPFZHezD+swa6C4oTVYfqKddhnIL0or9l91oovRNeotB1kLPLub6shm/YpkOAJHjkta/02Gk0SJezZUYfw8=
+	t=1734459530; cv=none; b=UM1hIGaBPqAtqWITCCnuvOEAh3emkGa+A/l6tPG8SljRej7dwVcIRj6C0cTCCO5zmlkzlQnbb6GjdKZ5D1MZBXuxJMJy/4Q6pyBS7LM/LSX321O1cU09HXq50jgdk1gstHpMtTTs+PifownRDcFhrr+DZptJ6L4FUFmb5vlKGVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734421167; c=relaxed/simple;
-	bh=FF0k0pW14USJyXZVa625InLmts54SM6uhXD/5HffYxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gTR5xZ66yFU/287Y/LsV99nzFnN50FMZqnNHoL/ViNfnzr/btFfVtQ7jjcMv/udwWlpv8qY7biOz1MnLYo3tkcoC7lot6cOmtNbYbT9Km2j2GD83QyTlOVYHKsfi8h9mFyJPh9n35rIVzMyjvRNK743upMKXk0FkHAqZ4Nel/9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.7])
-	by gateway (Coremail) with SMTP id _____8CxieCrKmFn47FXAA--.39742S3;
-	Tue, 17 Dec 2024 15:39:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.7])
-	by front1 (Coremail) with SMTP id qMiowMAxz8eoKmFn0gUAAA--.24S2;
-	Tue, 17 Dec 2024 15:39:22 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add pgprot_nx() implementation
-Date: Tue, 17 Dec 2024 15:39:08 +0800
-Message-ID: <20241217073908.3347287-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1734459530; c=relaxed/simple;
+	bh=L5mezHAUrKBlxKAGp5q6HBmp0mEqA8j99u5PMd5XXKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=giGpkHg4vHMssrYXw7vB5NuiCi4iAr6wRYOoe9jcWL2w/0vrZnBm75gY5SZ5Q13Itvjyo3Vb90XL5Wibd6OliEInFr5KX6y10uJ6OKsJ7NbuCw36bbRGzZOwVw03cabb06QhbXUO2p9v3nJfdfv9I5HEv88V1isBMR4fDKiDyfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5P+JkdE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5P+JkdE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C279C4CED3;
+	Tue, 17 Dec 2024 18:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734459530;
+	bh=L5mezHAUrKBlxKAGp5q6HBmp0mEqA8j99u5PMd5XXKM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X5P+JkdEXd8cqTvLjef7wEoeONheGW+JUV1JzXDsxtdIvvVuqhBzPQa7L9LNjeaoF
+	 O4TTORyRScMlqptsR9otaIvC9wwzQUHggHrzZ3/f8kPZ99grOJEFD1C2g4EGORXQsn
+	 yiwEKCNmUvz+arZGgqHc/kohvMXoshbUIhapzmIFV4ERuhu6s9bMUWVS6z2SLIo7Gc
+	 /Jk3fSzTGhdzkhCfyPbBihEmXer6hzfycUQUx+thlhU5RJ94M4aFmNOgk+PGc5oqZq
+	 l5izNmlS88H0oWIXTNIFtLeY6s/gUEIfITh3FNOKbBcRsn84c+IQKACbMsrXnayIK8
+	 fNAjEGxOUZZzQ==
+Message-ID: <c27875eb-0989-401b-98c3-f6e0a3ab88c2@kernel.org>
+Date: Tue, 17 Dec 2024 11:18:32 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+To: Sui Jingfeng <sui.jingfeng@linux.dev>, Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>, Icenowy Zheng <uwu@icenowy.me>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Baoquan He <bhe@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Zhihong Dong <donmor3000@hotmail.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ shuah <shuah@kernel.org>, "conduct@kernel.org" <conduct@kernel.org>
+References: <20231009042841.635366-1-uwu@icenowy.me>
+ <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+ <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+ <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+ <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+ <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+Content-Language: en-US
+From: Shuah <shuah@kernel.org>
+In-Reply-To: <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxz8eoKmFn0gUAAA--.24S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrtFy3trWxuFy7ZFW5tF1xtFc_yoWDAFX_A3
-	W7Xaykuw48Ja9rAw1ayF93Jr13Gw48C3ZYqF1ktw47tw1qqws8GFy7W3y3Zr4a9FZ7Zrs0
-	9rs5tw4rCF13tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Commit cca98e9f8b5ebcd964 ("mm: enforce that vmap can't map pages
-executable") enforces the W^X protection by not allowing remapping
-existing pages as executable. Add LoongArch bits so that LoongArch
-can benefit the same protection.
+On 12/2/24 09:23, Sui Jingfeng wrote:
+> Hi,
+> 
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/pgtable-bits.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+>> IIUC this is a hardware bug of 7A1000 and 7A2000, so the proper location
+>> of the workaround is in the bridge chip driver.  Or am I
+>> misunderstanding something?
+>>
+> 
+> You are misunderstanding everything and ranting like a dog.
+> 
 
-diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-index 82cd3a9f094b..45bfc65a0c9f 100644
---- a/arch/loongarch/include/asm/pgtable-bits.h
-+++ b/arch/loongarch/include/asm/pgtable-bits.h
-@@ -96,6 +96,13 @@
- 
- #define _PAGE_IOREMAP		pgprot_val(PAGE_KERNEL_SUC)
- 
-+#define pgprot_nx pgprot_nx
-+
-+static inline pgprot_t pgprot_nx(pgprot_t _prot)
-+{
-+	return __pgprot(pgprot_val(_prot) | _PAGE_NO_EXEC);
-+}
-+
- #define pgprot_noncached pgprot_noncached
- 
- static inline pgprot_t pgprot_noncached(pgprot_t _prot)
--- 
-2.43.5
+Sui Jingfeng,
+
+This is not the way to work with your fellow developers in the
+community to express disagreements. I would recommend following
+up with an apology.
+
+thanks,
+-- Shuah
+
+  
+
+
 
