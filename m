@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69E6514658F
-	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 01:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C62A113D8B4
+	for <loongarch@lists.linux.dev>; Tue, 17 Dec 2024 01:50:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734397762; cv=none; b=aDlRsKosiMU5hZW2CU+QoFV+UgYumwCSLDHKXrUG7RiPTSC87MdobGzlGXTKu7NHQbhaSJlmad3MNxHqFOEsCvaww4unb+nH0ZnaxCxq53YBbkuQ8T5uIKdVX9QOvop4M3EzBjP+Oa0j9UhI1dOicuCDRWmeUk6uhw2q4cN1Ms0=
+	t=1734400223; cv=none; b=r9hgJ9AegfNjgB9pDeOSp0WnSW2D7EGIu+LkfqGzPbI45MKwBVrsNbsfOTf3vARQMza965I6y9BRme5HXeERu7GygKfShxRQ7z39Y9apKIwha/oAVmTsyHeLrAP6cxgl+/MlFmdyF3k1Vz3UD2260bBmoDAa2vGtnH4R0sbNkfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734397762; c=relaxed/simple;
-	bh=ZtOhJE1cTY/xHXj1EAXPWLuV43L7x8hjDPN8Z46WR28=;
+	s=arc-20240116; t=1734400223; c=relaxed/simple;
+	bh=6zwDsHOUh1VbxgGD9EGwxbLyhq8N4xqmUgzklPxvcCg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NBmI+VGJ1bPk3QmdJ5fr5l+9C/8Ls+0Ve0npIRAgqhvmUgUlNID5mlVLJNKqtSCU/1SWZMvwfng4Rci3nSy7zBUrHfkL/c9imXZEM1dPyDzh8ZDUz0cw7RbkObotFlE6NZtADpqzTfnnlqsVeGatfMS18m097eY9mGiRY6qWtoM=
+	 MIME-Version; b=COvBJ3zIfG4QvnswVesfB8iKBOV1ECgVwKonFHGNhRjlnQJA7BrOK0MMTqInTrPb7hYlT84n8MVgA/N7z9Sj80qNFDKajRn5xgHJfXjZ7FU6vXPxm0PkiECha2fAt6Eym+X1T2RrYHFTuJ5mgoDHEsMhub4t7vA8vdZfayYxJSo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxyuE_z2BnSpdXAA--.42620S3;
-	Tue, 17 Dec 2024 09:09:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxquHQ2GBnrZxXAA--.43603S3;
+	Tue, 17 Dec 2024 09:50:08 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxPEcyz2BnXNeFAA--.16436S10;
-	Tue, 17 Dec 2024 09:09:18 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMCxbUfO2GBn8+KFAA--.16146S2;
+	Tue, 17 Dec 2024 09:50:07 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -25,9 +25,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 8/9] LoongArch: Convert unreachable() to BUG()
-Date: Tue, 17 Dec 2024 09:09:04 +0800
-Message-ID: <20241217010905.13054-9-yangtiezhu@loongson.cn>
+Subject: [PATCH v6 9/9] drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+Date: Tue, 17 Dec 2024 09:50:06 +0800
+Message-ID: <20241217015006.30305-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20241217010905.13054-1-yangtiezhu@loongson.cn>
 References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
@@ -38,60 +38,52 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPEcyz2BnXNeFAA--.16436S10
+X-CM-TRANSID:qMiowMCxbUfO2GBn8+KFAA--.16146S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZr4rZFW3JF13tryfWryrKrX_yoWkCwcEyr
-	yxJw1UGrWrZFZrAw1Utr4rWryFq3WrKFWY9wn7Zay5A3W5t348t3y5tas8Ar1ktFWkGrZ5
-	t39YvFZYkw1xKosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
-	ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWU
-	XVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxUVCD7UUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZF17KFWruF4DAw1DtrWDGFX_yoW8JFW3pF
+	43JFy5Wa1kJF1xKFZxJa45uFW3Ca95XrW0gr1UAws5Aa47A3WvgFZxt3WDGFW2kF4Yyr4I
+	vF4DKay7KFn2yrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8rsqJUUUUU==
 
-When compiling on LoongArch, there exists the following objtool
-warning in arch/loongarch/kernel/machine_kexec.o:
+When compiling with Clang on LoongArch, there exists the following objtool
+warning in drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.o:
 
-  kexec_reboot() falls through to next function crash_shutdown_secondary()
+  dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
 
-Avoid unreachable() as it can (and will in the absence of UBSAN)
-generate fallthrough code. Use BUG() so we get a "break	BRK_BUG"
-trap (with unreachable annotation).
+This is because dc_fixpt_from_fraction() is inlined in dc_fixpt_recip()
+by Clang, given dc_fixpt_from_fraction() is not a simple function, just
+mark it noinline to avoid the above issue.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/kernel/machine_kexec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 8ae641dc53bb..f9381800e291 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -126,14 +126,14 @@ void kexec_reboot(void)
- 	/* All secondary cpus go to kexec_smp_wait */
- 	if (smp_processor_id() > 0) {
- 		relocated_kexec_smp_wait(NULL);
--		unreachable();
-+		BUG();
- 	}
- #endif
+diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
+index 88d3f9d7dd55..b40c6a21460d 100644
+--- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
++++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
+@@ -68,7 +68,7 @@ static inline unsigned long long complete_integer_division_u64(
+ #define GET_FRACTIONAL_PART(x) \
+ 	(FRACTIONAL_PART_MASK & (x))
  
- 	do_kexec = (void *)reboot_code_buffer;
- 	do_kexec(efi_boot, cmdline_ptr, systable_ptr, start_addr, first_ind_entry);
- 
--	unreachable();
-+	BUG();
- }
- 
+-struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
++noinline struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denominator)
+ {
+ 	struct fixed31_32 res;
  
 -- 
 2.42.0
