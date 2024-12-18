@@ -1,139 +1,123 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7917198E6F
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 10:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCB319C578
+	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 10:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734517550; cv=none; b=XHkQpq+uuNEOX4FcSJeuXkosyaVYQoCHMphzM6SRJIxVtcQRt3eJCuu/1AEEoLDJFYbM6GqI9hToA3fzt+kJwWKhS3J4sNraE0LpFBbDgi6i2TZRVRFjVBkyHUnzu1zFpeNXOgKbfM2SNQUA95UTVfLlDCGYUyeQfRcE+/HNnwk=
+	t=1734517806; cv=none; b=Jz2oRGzmyVkZCW9b8iOTmOmQ8CkrLQcptJuVoEgMdBzLX9cFrSJdEibs2zonuadxVq1/aYYLPNDf3DCQhAGrMx/VaygB6RIFaZnYTqlHFRz/oQ3gceXdu2sjFVcsxmYsNPr99VQEmU/q7iVO0JlgrcbkUrj9vyRfguUsow7pvDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734517550; c=relaxed/simple;
-	bh=/VgkqBQeVlIOAs2uYQLNDJXkep5HLD235lAaSkgEzsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jIeoSEBVpfNoExS3cmvmVXgM5TPIEY6TMBOERk8fAMmtCaOkYwL0QRp6kbidR2C4pf5x5htpxN9MkS/G4UYDchstKtt4QdORLnQ4t3R+QHwXKbEo/0+UJUkaytFflCF+1hEgwjH76eokb540mFa+o28IqleaTUvPzm0N5DKz2NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2SSWoTmi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AoKeNEyu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1734517806; c=relaxed/simple;
+	bh=ywHdvGVxaz9JX7Ni+arNsMLJnO+IOZvHxCRcTz1VmBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0caMhEjNGA3w4Gq0LZ3+DNdj6VHfjyg+JCeOtgX7D6CdS+9POjafqCKaiQC3uK+T4V4i/3ZL2nMPK3Fa9umi3ClXjPfFUfwmv7sW+sCDLx4cGnv27uL6S6v2odA8CiBjq8ULnBt5kBfNkkOLAD9c+9/sg0EsHooJNcHlSdesTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=co6R1jKa; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2SSWoTmi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AoKeNEyu"
-Date: Wed, 18 Dec 2024 11:25:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1734517545;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="co6R1jKa"
+Message-ID: <1090f735-8252-453f-b6c8-0ec35881ff32@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1734517802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wc3y2MMAV4l4fXGHcieZbsIyWfTg/ozhFPhFb4lifrk=;
-	b=2SSWoTmikqml+QyzziVj/m4Yg45xAoP4dNtwTBlJig2p14toOtHozKw5Bxfjy4L/DvACGV
-	OMNT4R2Rekm2Ck8CCOW0XGD1j8FoyZrt3Z7jazkfGB6Zv+KWrHTMOhmUum+sr+mgUm1e61
-	TM1KWhbGQXbTlvxJf51hlLY47fK7pZY7y05qey8SsXBH0Nkg9uMgzFSWUJ30b/nxZp2S3N
-	Hy4DtDnFlOUNAID7T8cQaJtlrwqn059Y+FAOYDMu2CWWxXTn5NsAeABAkO/WY90H+pP48R
-	uMCgaoU5KLrPl82I7qw8SvgoxROfvTSXg9ibM/gPkLEPvpm/oD+JPk198PVRXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1734517545;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wc3y2MMAV4l4fXGHcieZbsIyWfTg/ozhFPhFb4lifrk=;
-	b=AoKeNEyuPrW2z0f+0sR+kxNpoFiiPy1/gq9ak22q5IqO1FLos7EO/vgThimKc+44ktm5ZR
-	tRGCj/jF+KFa4yBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 03/17] vdso: Add generic time data storage
-Message-ID: <20241218111724-41f5e3c6-f41d-41ec-beed-bd05cca05016@linutronix.de>
-References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
- <20241216-vdso-store-rng-v1-3-f7aed1bdb3b2@linutronix.de>
- <3b44defd-cd2a-4a3c-b72d-bcc0530336da@csgroup.eu>
+	bh=eXTJ4vJJqmGRwUNZB5rReGLDyJycKIgyx6I2UbxVhJY=;
+	b=co6R1jKafuzxhtlmhoYQhX7wj6pbxXV8AKbJ56Gz/FPacJ02MGeFQjiFXozZMvB13XHozy
+	tEkvgkVqj0JnwEhGIHfkiKZpdPwPDdtwk1EOr1B5IBcqftUK2E1lqYky49tLWkjv9S8/ot
+	R8Q7nm0GvvyOuUe9zTEGR4zXKGrP1Ck=
+Date: Wed, 18 Dec 2024 18:29:53 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+To: Icenowy Zheng <uwu@icenowy.me>, Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Baoquan He <bhe@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Zhihong Dong <donmor3000@hotmail.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231009042841.635366-1-uwu@icenowy.me>
+ <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+ <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+ <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+ <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+ <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+ <1e0f2174a72011cb1c78eeecbbf82a4ff108bf8a.camel@icenowy.me>
+ <e9fef25e-3f83-46e9-a17c-d9f83e178311@linux.dev>
+ <feb3545e650c04c8cc21c40dad36dbf4076b3ebc.camel@icenowy.me>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <feb3545e650c04c8cc21c40dad36dbf4076b3ebc.camel@icenowy.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3b44defd-cd2a-4a3c-b72d-bcc0530336da@csgroup.eu>
-
-Hi Christophe,
-
-On Wed, Dec 18, 2024 at 08:32:14AM +0100, Christophe Leroy wrote:
-> Le 16/12/2024 � 15:09, Thomas Wei�schuh a �crit�:
-> > Historically each architecture defined their own way to store the vDSO
-> > data page. Add a generic mechanism to provide storage for that page.
-> > 
-> > Furthermore this generic storage will be extended to also provide
-> > uniform storage for *non*-time-related data, like the random state or
-> > architecture-specific data. These will have their own pages and data
-> > structures, so rename 'vdso_data' into 'vdso_time_data' to make that
-> > split clear from the name.
-> > 
-> > Also introduce a new consistent naming scheme for the symbols related to
-> > the vDSO, which makes it clear if the symbol is accessible from
-> > userspace or kernel space and the type of data behind the symbol.
-> > 
-> > The generic fault handler contains an optimization to prefault the vvar
-> > page when the timens page is accessed. This was lifted from s390 and x86.
-> > 
-> > Co-developed-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Thomas Wei�schuh <thomas.weissschuh@linutronix.de>
-> > ---
-> >   MAINTAINERS                    |  1 +
-> >   include/linux/time_namespace.h |  1 +
-> >   include/linux/vdso_datastore.h | 10 +++++
-> >   include/vdso/datapage.h        | 69 +++++++++++++++++++++++++----
-> >   lib/Kconfig                    |  1 +
-> >   lib/Makefile                   |  2 +
-> >   lib/vdso_kernel/Kconfig        |  7 +++
-> >   lib/vdso_kernel/Makefile       |  3 ++
-> >   lib/vdso_kernel/datastore.c    | 99 ++++++++++++++++++++++++++++++++++++++++++
-> 
-> There is only one single file, namely datastore.c. You don't need a new
-> directory for that, I should go in lib/vdso/
-
-lib/vdso/ currently only contains userspace code.
-I don't have a strong opinion on that.
-The lib/vdso_kernel location was suggested by tglx, maybe he has some
-feedback. (Originally I put it into kernel/vdso_storage.c)
-
-[..]
-
-> > +enum vdso_pages {
-> > +	VDSO_TIME_PAGE_OFFSET,
-> > +	VDSO_TIMENS_PAGE_OFFSET,
-> > +	VDSO_NR_PAGES
-> > +};
-> 
-> Naming that VDSO_ is confusing. Most macros called VDSO_ are related to the
-> VDSO Code. VDSO data related macros should be prefixed with VVAR_
-
-Also a request from tglx.
-
-[..]
+X-Migadu-Flow: FLOW_OUT
 
 
-Thanks!
-Thomas
+On 2024/12/18 13:47, Icenowy Zheng wrote:
+> 在 2024-12-18星期三的 11:05 +0800，Sui Jingfeng写道：
+>> Hi,
+>>
+>>
+>> On 2024/12/18 07:44, Icenowy Zheng wrote:
+>>> 在 2024-12-03星期二的 00:23 +0800，Sui Jingfeng写道：
+>>>> Hi,
+>>>>
+>>>> On 10/10/23 20:26, Xi Ruoyao wrote:
+>>>>> On Tue, 2023-10-10 at 11:02 +0800, Sui Jingfeng wrote:
+>>>>>
+>>>>>> On LoongArch, cached mapping and uncached mappings are DMA-
+>>>>>> coherent and guaranteed by
+>>>>>> the hardware. While WC mappings is *NOT* DMA-coherent when 3D
+>>>>>> GPU
+>>>>>> is involved. Therefore,
+>>>>>> On downstream kernel, We disable write combine(WC) mappings
+>>>>>> at
+>>>>>> the drm drivers side.
+>>>>> Why it's only an issue when 3D GPU is involved?
+>>>> No one saying that only 3D GPU is suffer from this kind of issue,
+>>>> I just meant that the issue is there at least for GPU
+>>>>
+>>>>> What's the difference between 3D GPUs and other devices?  Is it
+>>>>> possible that the other
+>>>>> devices (say neural accelerators) start to perform DMA accesses
+>>>>> in
+>>>>> a
+>>>>> similar way and then suddenly broken?
+>>>> You, the patch contributor or the maintainer or whatever stuff
+>>>> should carry on the test, right?
+>>> Well doing some test on PCIe peripherals need some professional
+>>> tool,
+>>> then I assume who raises the idea should do it, because not
+>>> everyone
+>>> can do.
+>>
+>> You are posting the patch, and then you are acclaiming that you are
+>> not even able to do sufficient test? right?
+> What I can test is that w/o this patch things break and w/ this patch
+> things work.
+
+
+> If you are against this patch, you need to provide more effective
+> evidence / a better solution than my approach.
+
+
+I have told you several times, we are asking for hardware details.
+Why the Loongarch suffer from the WC bug, like the Loongson Mips?
+Why the performance of drm/ast's drop dramatically when your patch
+is applied?
+
+
+>>
+-- 
+Best regards,
+Sui
+
