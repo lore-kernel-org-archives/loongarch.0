@@ -1,105 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5206D1B0417
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 14:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C081C5CDD;
+	Wed, 18 Dec 2024 15:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734532573; cv=none; b=qQObC9BL3GXlY2mxyRVG/tDfPG1XgSGiheIYK3UV8Qp0e0xxjzReZP8R7yQEnaV7EY6IkmJsk05aG/ByYNtvng7EvEmT74611zv5ctTZZ1O5MZ5Aw2SNgrzjKn1TvpfzOKaO6ptQytkYBUw2jtU6vGmiZKJc+ol0R/estE0PA/A=
+	t=1734534519; cv=none; b=c/IZBRJ8G7DIGADopQACfcu5RS4vj3Id0JE0jOp2ih4Yn+JGUQx9AWzhbebC9MPipQ4Fod8FGJqplGMlCu7UEJ6xW6S86u9bKpDIZqDALJwsuOLuN3kmHx3UAj2hPFZep4Qr7x3wUxSdtGYj5KsQW5FXyj1DGdOggVBsKAF3dLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734532573; c=relaxed/simple;
-	bh=9n0ZAjSAIhk9F622B8IToa4qtHVMNl9mwzIDA2TI+7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FsqKrVo7AYVyo0MHRQqo91AZYoW7swgktXzjDeqAwq8OweDoI3EpWjup/Tn5BZeJtrFLUP9tVamhmK9pe8IlAFZXfdf2CaTcXhD6kV2aSV/rYqtRzfB/XByPTbZQdT4gPubhnbd4nUzKqSRQwXEigpbsSaVdilX8P5UQlE9bN/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJCGs4Yz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734534519; c=relaxed/simple;
+	bh=dsz8257D+6as1uUtKCRNXMXuyupbAqskFTKy5dqOl5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyrHnn6YoSXStwWMOmxiDNu27gM+vN3QGW1Q7BHK/9J/shrppdlQLNHVIDRl1wmtdU9bfhy+optFXy07E/XrVfkltvb3T/YOelQPpLtuRnjw1lSJYEkQ0DDWSOVGI4ko0NxS8EJ1nu0emyuwgQBJFjb2eL/pvU/+DLpZXO17aPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOFYmV/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJCGs4Yz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C4AC4CECD
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 14:36:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOFYmV/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A23C4CECE;
+	Wed, 18 Dec 2024 15:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734532572;
-	bh=9n0ZAjSAIhk9F622B8IToa4qtHVMNl9mwzIDA2TI+7k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oJCGs4YzbcTcFVKmU3XFHzvQVR68fBsTxpeAJV9lZb7eTdjNIVA6BQcWBrY1t673i
-	 dvHWg0AgSjOdYqxDZ3ktuaitcxSMduGGs+cSMYqZJqCn8vzFsznDrRgZamTD/eJ8Zj
-	 VQr6q5j9cu6BpmdP99+KuOSFqIRVp/aRFZlkrgT96XzX9olRwpwOK4qxvGfIIAS80g
-	 LlnKOBrI3qOjCDj/2KyyFBkajJHez/w8zbB8x2aIzxMfwHowwpKSSxHV9U1pObZYRM
-	 DE3rNPOLNMFOjQ6Fb01zRwrL7vfgMLVtfipcS7OqXc8N4BFfXb/yyXdcJ4x1/W0TFN
-	 tJTYxwUl0JFJw==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a9e44654ae3so1015597366b.1
-        for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 06:36:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXhHwUXBtkAMNGRmSzkJ2VgOExSh8VCOaeAyIlpKmFvJ80Eulc16ExWcoeav69Q7g/MAXsNEcnvHYI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywdh1jWlOPkDlxhYjSjrkj3EovidIjSE21prT4GLe5CatJEkMKL
-	0A4a+XufE4huKQffVZJnSK0IJrOAsQhjlNdFSFYi/G1Kyo+Bhtr/l+mrPgaWzeFVLe1djaZkS+R
-	juJirSXLLYrknDV8onRuL6e2caN4=
-X-Google-Smtp-Source: AGHT+IGH+ozXywB34VYVSAamVS+ZjQCypQ05xEGjN0SqCkq8/WyDDyS7rVXnhhMxnJivZ7v/JZDxOROVB65JAzdxhVI=
-X-Received: by 2002:a17:906:328d:b0:aa6:1e9a:e45a with SMTP id
- a640c23a62f3a-aabf48c67c5mr231921266b.46.1734532571420; Wed, 18 Dec 2024
- 06:36:11 -0800 (PST)
+	s=k20201202; t=1734534519;
+	bh=dsz8257D+6as1uUtKCRNXMXuyupbAqskFTKy5dqOl5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DOFYmV/OC+pxzzSN2F3KRoWuPa3RBYPTcC/zoOH2NCKjp1MeXanV999doe0z17HZ9
+	 kZeRFu9n52HpxIYfDvjY68cwj2dFjby7xXYHkkhE6r1WCfyp9XvKDBOdii0weYJCm+
+	 9xKCOdfjiu4YgHKWSLJx0oNXIh9y/gozVqQ4FgrGJap66A/Q1lO5Vt/tWoIGECJlWH
+	 Rp7OGHr4sDQ+63bPykzZvg4/ERY2JHbLdJSx7PfB1jdfh7ai0OGgoE0GCVZHUb6g+l
+	 lHS+ibQI7IPTVeyzL3d/9mjIO74XkR3qFvTP3HJ4GhKXpeqZidOrYIhtpJAdAEabhd
+	 m0OkMY0OfPMpw==
+Date: Wed, 18 Dec 2024 15:08:28 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+	Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 07/17] riscv: vdso: Switch to generic storage
+ implementation
+Message-ID: <20241218-action-matchbook-571b597b7f55@spud>
+References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
+ <20241216-vdso-store-rng-v1-7-f7aed1bdb3b2@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn> <20241217015006.30305-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20241217015006.30305-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 18 Dec 2024 22:36:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4WpcWjrQdkm3Sx4DVbp=2oW9nNGAbNqR4BEmiryrptNQ@mail.gmail.com>
-Message-ID: <CAAhV-H4WpcWjrQdkm3Sx4DVbp=2oW9nNGAbNqR4BEmiryrptNQ@mail.gmail.com>
-Subject: Re: [PATCH v6 9/9] drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fu8z2+BbmIxUgToy"
+Content-Disposition: inline
+In-Reply-To: <20241216-vdso-store-rng-v1-7-f7aed1bdb3b2@linutronix.de>
+
+
+--fu8z2+BbmIxUgToy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tiezhu,
-
-On Tue, Dec 17, 2024 at 9:50=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> When compiling with Clang on LoongArch, there exists the following objtoo=
-l
-> warning in drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.o:
->
->   dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
->
-> This is because dc_fixpt_from_fraction() is inlined in dc_fixpt_recip()
-> by Clang, given dc_fixpt_from_fraction() is not a simple function, just
-> mark it noinline to avoid the above issue.
-I don't know whether drm maintainers can accept this, because it looks
-like a workaround. Yes, uninline this function "solve" a problem and
-seems reasonable in this case because the function is "not simple",
-but from another point of view, you may hide a type of bug.
-
-
-Huacai
-
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Mon, Dec 16, 2024 at 03:10:03PM +0100, Thomas Wei=DFschuh wrote:
+> The generic storage implementation provides the same features as the
+> custom one. However it can be shared between architectures, making
+> maintenance easier.
+>=20
+> Co-developed-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Thomas Wei=DFschuh <thomas.weissschuh@linutronix.de>
 > ---
->  drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers=
-/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> index 88d3f9d7dd55..b40c6a21460d 100644
-> --- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> +++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> @@ -68,7 +68,7 @@ static inline unsigned long long complete_integer_divis=
-ion_u64(
->  #define GET_FRACTIONAL_PART(x) \
->         (FRACTIONAL_PART_MASK & (x))
->
-> -struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long =
-denominator)
-> +noinline struct fixed31_32 dc_fixpt_from_fraction(long long numerator, l=
-ong long denominator)
->  {
->         struct fixed31_32 res;
->
-> --
-> 2.42.0
->
+>  arch/riscv/Kconfig                                 |  3 +-
+>  arch/riscv/include/asm/vdso.h                      |  2 +-
+>  .../include/asm/vdso/{time_data.h =3D> arch_data.h}  |  8 +-
+>  arch/riscv/include/asm/vdso/gettimeofday.h         | 14 +---
+>  arch/riscv/include/asm/vdso/vsyscall.h             |  9 ---
+>  arch/riscv/kernel/sys_hwprobe.c                    |  3 +-
+>  arch/riscv/kernel/vdso.c                           | 90 +---------------=
+------
+>  arch/riscv/kernel/vdso/hwprobe.c                   |  6 +-
+>  arch/riscv/kernel/vdso/vdso.lds.S                  |  7 +-
+>  9 files changed, 18 insertions(+), 124 deletions(-)
+
+Fails to build:
+Patch 7/17: Test 1/12: .github/scripts/patches/tests/build_rv32_defconfig.sh
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:11:33: warning: de=
+claration of 'struct riscv_hwprobe' will not be visible outside of this fun=
+ction [-Wvisibility]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:15:41: warning: de=
+claration of 'struct riscv_hwprobe' will not be visible outside of this fun=
+ction [-Wvisibility]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:19:37: error: call=
+ to undeclared function '__arch_get_vdso_u_arch_data'; ISO C99 and later do=
+ not support implicit function declarations [-Wimplicit-function-declaratio=
+n]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:19:31: error: inco=
+mpatible integer to pointer conversion initializing 'const struct vdso_arch=
+_data *' with an expression of type 'int' [-Wint-conversion]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:22:36: error: arit=
+hmetic on a pointer to an incomplete type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:30:40: error: inco=
+mplete definition of type 'const struct vdso_arch_data'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:31:24: error: inco=
+mpatible pointer types passing 'struct riscv_hwprobe *' to parameter of typ=
+e 'struct riscv_hwprobe *' [-Werror,-Wincompatible-pointer-types]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:35:7: error: call =
+to undeclared function 'riscv_hwprobe_key_is_valid'; ISO C99 and later do n=
+ot support implicit function declarations [-Wimplicit-function-declaration]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:35:35: error: inco=
+mplete definition of type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:36:5: error: incom=
+plete definition of type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:36:18: error: inco=
+mplete definition of type 'const struct vdso_arch_data'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:36:44: error: inco=
+mplete definition of type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:39:5: error: incom=
+plete definition of type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:40:5: error: incom=
+plete definition of type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:43:4: error: arith=
+metic on a pointer to an incomplete type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:49:39: warning: de=
+claration of 'struct riscv_hwprobe' will not be visible outside of this fun=
+ction [-Wvisibility]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:53:37: error: call=
+ to undeclared function '__arch_get_vdso_u_arch_data'; ISO C99 and later do=
+ not support implicit function declarations [-Wimplicit-function-declaratio=
+n]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:53:31: error: inco=
+mpatible integer to pointer conversion initializing 'const struct vdso_arch=
+_data *' with an expression of type 'int' [-Wint-conversion]
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:55:36: error: arit=
+hmetic on a pointer to an incomplete type 'struct riscv_hwprobe'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:71:61: error: inco=
+mplete definition of type 'const struct vdso_arch_data'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:71:29: error: use =
+of undeclared identifier 'RISCV_HWPROBE_WHICH_CPUS'
+  /build/tmp.cAQOaMfDA3/arch/riscv/kernel/vdso/hwprobe.c:72:24: error: inco=
+mpatible pointer types passing 'struct riscv_hwprobe *' to parameter of typ=
+e 'struct riscv_hwprobe *' [-Werror,-Wincompatible-pointer-types]
+  fatal error: too many errors emitted, stopping now [-ferror-limit=3D]
+
+Might be a clang thing, allmodconfig with clang doesn't build either.
+
+--fu8z2+BbmIxUgToy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ2LlbAAKCRB4tDGHoIJi
+0n2PAQDyBQBbIhWl4PuPh0Arh+dY5o5V02LpT/vyZTOInKNMcgEAqZD+a5hkxJEH
+lFXI4u2esepSVEUEOeQQYFauBervVQc=
+=gqd2
+-----END PGP SIGNATURE-----
+
+--fu8z2+BbmIxUgToy--
