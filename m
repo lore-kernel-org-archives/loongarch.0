@@ -1,123 +1,149 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C84F155345
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 10:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA5192598
+	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 10:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734516375; cv=none; b=io8o6rAcTNCpbZOHF+tVP3cEuibcipA3HoyCyr7c5hj5ujwkJMbD3mUA9ugsdEE5Mkd3WlhnTLQbSzMK30NrPxQGGMJ3juIb4xebadP7RWyeJ/KJqdPltwroJIZcm+8DUc/VgFZWSad34PKzJ1/d6pEIv1HV9VQAmm+KogXH0+I=
+	t=1734517018; cv=none; b=B4EQQMS2/GWT9tcr/Cy87EaUUjOXEGxgFPbR+628Fsuq4z3/ewZHwIVB3sCpuqDSCOa5rxrl+qFCo9TGg1YHV9lj/dIxX0Y0o5liKO+JxmVy3YENlUhzDdyqIIDrTQBdBuHobg6YHpXLN/FFC6ePtpg93P5jxRVH9S+xGXTB/4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734516375; c=relaxed/simple;
-	bh=sytyIIuEx0b27l7Rte0Qfm42ueq1m/i8UuJbUAH0BLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=taM+2FxFQG21V/pfE1faSRGo6zhtuuxxkkA2aCAF9xwCTTSDOfa8841icd78qpDEdHtFg1lKZk1fz2Y+MJf0NHFQ8Kfs9AwzU5ZS5+zzYQEuWcIQoPco1m73mVRW+0uCR5Qv+i6LItlmt52KKFnF3AwPR+DTWzWsZaeUzRWPE/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SzSVL+Cg; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1734517018; c=relaxed/simple;
+	bh=ihn+cwpLFuIp9Uq0WGxgiKU3A/Qe52yNfvRUBWE46M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+hZ/9Jm6XDBtL/VwMgHpkQlA3CUwnloDI/TLPKxDsNe64+kALo6IW67PkbLUGhTeozgyhdyNloWxMZDuTtTCayB5n2yoQJ/o8wRkbkaFUNH1FJY+iTBULUv5sNUqlAKk39NJg/8hbcyYHvGErXJnXgjw1SwrzkJd2SJxbL/XSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k+9+2dt8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yXhQ4Rje; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SzSVL+Cg"
-Message-ID: <0ca63dfb-ece7-4ea5-a61c-a80fa0567c4d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1734516369;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k+9+2dt8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yXhQ4Rje"
+Date: Wed, 18 Dec 2024 11:16:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1734517014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=p7F6NW7cU1abftqimlTrJMx6JXD3uMircyO40tKeKXg=;
-	b=SzSVL+CgKKJQYpV1lYBEjwGA7aPiBhUM3FJOJk1wxvigw4lo6ifi0MFH9pvapH6e54aH2U
-	nwyasoRWYMNRPkMY/YxzzN6ooshVzwQq9xjI33v+EL32cCvS2Pk8L6G3jVdWhLmHj7BbJ3
-	Qd5/1wJ7P3jxbq5YY608CvMGSszzAKY=
-Date: Wed, 18 Dec 2024 18:05:59 +0800
+	bh=asQwivYoQ6OyVNJBd3EdgJw1JjuKg7fNklboQjqanF4=;
+	b=k+9+2dt84P2yu2JQjHriNsnfLK1U2zwMe3zETXzWpHvMFbzWIWRl0216I0Fp7Fs0GxVlyo
+	yc6i4Q3Hu1q2hD8wlkaWxUa2/LSRxg2COBfpJYgxfKOVjFaVDrdSLxoJSE3b4rni7eSePg
+	zI/dWD74oT5nZPEZZO7hwDCfBtI4dfQFjxRIFS9AkAU85OAfFsoE1hleSOYGu1n4z2yAZY
+	Y1RK/InyIx+aLJuE6QRRzC4LUqndo/HAvuKeT1pLXt7sSb5Bh3nglAiSTENEvex8fG+geW
+	f0ENU722o2Q/62/Nus5sE3hNF3ZF1A45agg8WoxbV4hKlyXpoR26vp6T9Jw1dg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1734517014;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=asQwivYoQ6OyVNJBd3EdgJw1JjuKg7fNklboQjqanF4=;
+	b=yXhQ4RjeaS/+ewnR286ORrRNsrdJ4qpmR9IkiLgWDlKmPEPu6UZYxm4SDqI/YyJISRXAyJ
+	qqASr10vg3j1/pBg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 12/17] powerpc/vdso: Switch to generic storage
+ implementation
+Message-ID: <20241218105556-6d6d0bcb-f2d7-418e-a4e6-1222c506d2cb@linutronix.de>
+References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
+ <20241216-vdso-store-rng-v1-12-f7aed1bdb3b2@linutronix.de>
+ <12120bbe-1d79-425b-982d-46af1fa5d70d@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
- same as ioremap_wc
-To: Icenowy Zheng <uwu@icenowy.me>, Shuah <shuah@kernel.org>,
- Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>, Baoquan He <bhe@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Zhihong Dong <donmor3000@hotmail.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "conduct@kernel.org" <conduct@kernel.org>
-References: <20231009042841.635366-1-uwu@icenowy.me>
- <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
- <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
- <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
- <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
- <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
- <c27875eb-0989-401b-98c3-f6e0a3ab88c2@kernel.org>
- <655c2b73-4ecf-4201-83b8-bbddfd68027e@linux.dev>
- <0f3989e46dd24a0c972482ea570907e5d8cae87e.camel@icenowy.me>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <0f3989e46dd24a0c972482ea570907e5d8cae87e.camel@icenowy.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <12120bbe-1d79-425b-982d-46af1fa5d70d@csgroup.eu>
 
-Hi,
+Hi Christophe,
+
+On Wed, Dec 18, 2024 at 08:20:51AM +0100, Christophe Leroy wrote:
+> Le 16/12/2024 � 15:10, Thomas Wei�schuh a �crit�:
+
+[..]
+
+> >   #ifdef CONFIG_TIME_NS
+> > -static __always_inline
+> > -const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *vd)
+> > +static __always_inline const struct vdso_time_data *__ppc_get_vdso_u_timens_data(void)
+> >   {
+> > -	return (void *)vd + (1U << CONFIG_PAGE_SHIFT);
+> > +	struct vdso_time_data *time_data;
+> > +
+> > +	asm(
+> > +		"	bcl	20, 31, .+4\n"
+> > +		"0:	mflr	%0\n"
+> > +		"	addis	%0, %0, (vdso_u_timens_data - 0b)@ha\n"
+> > +		"	addi	%0, %0, (vdso_u_timens_data - 0b)@l\n"
+> > +	: "=r" (time_data) :: "lr");
+> > +
+> > +	return time_data;
+> 
+> Please don't do that, it kills optimisation efforts done when implementing
+> VDSO time. Commit ce7d8056e38b ("powerpc/vdso: Prepare for switching VDSO to
+> generic C implementation.") explains why.
+> 
+> For time data, the bcl/mflr dance is done by get_datapage macro called by
+> cvdso_call macro in gettimeofday.S, and given to
+> __cvdso_clock_gettime_data() by __c_kernel_clock_gettime() in
+> vgettimeofday.c . Use that information and don't redo the bcl/mflr sequence.
+
+So instead keeping the logic of this:
+
+static __always_inline
+const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *vd)
+{
+	return (void *)vd + (1U << CONFIG_PAGE_SHIFT);
+}
+
+Makes sense.
+
+Adding a constant value should be cheaper or just as cheap as a
+PC-relative addressing for all architectures, so it can go into the
+generic code, too.
+
+[..]
+
+> >   }
+> > +#define __arch_get_vdso_u_timens_data __ppc_get_vdso_u_timens_data
+> 
+> There is not #ifdef __arch_get_vdso_u_timens_data anywhere, this #define is
+> not needed, the function should be called __arch_get_vdso_u_timens_data()
+> directly as before, unnecessary indirections reduce readability.
+
+I'll see how this works out with the include order and conflicts with
+symbols in include/vdso/datapage.h.
+
+> >   #endif
+> > -static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
+> > +static inline bool vdso_clocksource_ok(const struct vdso_time_data *vd)
+> >   {
+> >   	return true;
+> >   }
 
 
-On 2024/12/18 14:23, Icenowy Zheng wrote:
-> 在 2024-12-18星期三的 11:24 +0800，Sui Jingfeng写道：
->> Hi,
->>
->>
->> On 2024/12/18 02:18, Shuah wrote:
->>> On 12/2/24 09:23, Sui Jingfeng wrote:
->>>> Hi,
->>>>
->>>>> IIUC this is a hardware bug of 7A1000 and 7A2000, so the proper
->>>>> location
->>>>> of the workaround is in the bridge chip driver.  Or am I
->>>>> misunderstanding something?
->>>>>
->>>> You are misunderstanding everything and ranting like a dog.
->>>>
->>> Sui Jingfeng,
->>>
->>> This is not the way to work with your fellow developers in the
->>> community to express disagreements.
->>
->> I'm not expressing disagreements, but argue that the contributor
->> and/or talker should provide *sufficient* hardware details and
->> tests. Instead of pointless *ranting* in order to get harmful
->> patch merged.
-> I don't think the original patch is harmful.
->
-
-I have told you countless times, that is, disabling Write-Combine
-made the performance of BMC graphics(drm/ast) decrease dramatically.
-
-And downstream Loongson developer really dislike related patch,
-and asking for solutions to me.
-
-
->> The discussion completely not make scene at all.
->>
->>
->>> I would recommend following up with an apology.
->>>
->> I will not apology to indecent contributors and/or maintainers
->> like this, never.
->>
->>
->>> thanks,
->>> -- Shuah
->>>
->>>
->>>
->>>
->>>
--- 
-Best regards,
-Sui
-
+Thanks!
+Thomas
