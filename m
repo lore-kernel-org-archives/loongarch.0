@@ -1,113 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B3A1F63EA
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 19:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7DB2BAEC
+	for <loongarch@lists.linux.dev>; Thu, 19 Dec 2024 02:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734550061; cv=none; b=ZHoni5wrNY1lIz60eSR6w0J1sE2LMSFiRHbxfxCcsdusktgN03ybIDaxJvNR7bzQEJXNWtL61/2IgunbBnlDxg/2NhAzhdL48avKI/x5bZP3pS2vmxLD4GNXSWT7WmF+FguP454V45++ze9FKEnPpD5VG/Y1gTw0FZtx9fQllUc=
+	t=1734576858; cv=none; b=RjQ28KDLdJ5gE5ZjQbZpbAkBTLzQiZfqt286/4WzJO5VmpL5rQT8j++pHG1bTZGanhMAYfhIH9xgbW7TRpmQMd8azbJVB/+A3ZDRrB4CiENnox6OspVprtQY0APp9DHqs4h7hYS8V2enIHWPotAsPpNlEHVYcejScG10JWtKdlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734550061; c=relaxed/simple;
-	bh=x7R49/wWLH++ipJOjAslBQWt2vKhJ0yXOsUhQNXdghA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ast6X5G8GKVkHflPgX+tCbHHBB93OuUQYmIjilpF4rIRZrEM0sg0bz68k/sw0U0fJKobBrM2DezpFOOhKQkD09gGV26HQVzVJU05tej0AZGSdB1soQLrAcL9QLr+sZqb0YdGyZeIIxrGuDot34kWWDA9jQsxqE+fjIUiE3tUl1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXQrr+pa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734576858; c=relaxed/simple;
+	bh=32JzfL8i2BcC8LmoH+P86BoEOMG5CHbdX1Um+cYz3gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hOkf1WX+IPEkAl2roL7xnbBGo7hQTpku+fEJYoV4zi612rovT/j1b5uM/Os+7WxqA50ByxOgsGCgohpq/4ruE6bRmAQtH5e5lNsgxZ/QdCHVo3TZTYBSPrJ1CIcZoHB6rC740NpqQsDaHvriCTSGMIu4m2mP8fyrdiYkoRTq1bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LYufAOki; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXQrr+pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED36C4AF09
-	for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 19:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734550061;
-	bh=x7R49/wWLH++ipJOjAslBQWt2vKhJ0yXOsUhQNXdghA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AXQrr+paD3GWexYLTQGXG5kEDtQjQ1ie/Rh1B39tHvwszdBkWAmNyZYhfpq1y2XiX
-	 AmoHW1BrNAB+Ph7Zi4eOADgGjBgZ9t+Lt4Wy49RTP01pJVNMytTUNFx76eXDYGDBpn
-	 YUV67xZ58Ne8lv2TuUadpvuLOwweFo0vCBri4DSTNde7sltYJClpSzkyfiwFaamT3b
-	 rIELcTDS5DGO7fgX0ikJVsEOdkvBOO0gnmfpPPiJNbANeK8PStrks0IoKfBNfn9/id
-	 8acdHKxCbiEsbASd3fJYy4XEvqEOQuaQ0fMnN+T3xUFvqhI97ri+76WqDvtA/xFwA+
-	 KHmu9oHLnL/RQ==
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3eb790888c6so2092477b6e.2
-        for <loongarch@lists.linux.dev>; Wed, 18 Dec 2024 11:27:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUct/iMvT18UXlyVSuZcEMCSzFjv7GO5hhFd/PEF9WIgWNOGP0R7RaHfHJLBNgghlGVNbddbGNB3L8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8cXEstLztuCf3I0Dzl7JqNRCPVDNMTpH36jW0eJlH7MNbjY5C
-	7Xk/wYOVMecn5amxIod9LzjSJWcMtrwhVnM3qAyKk5qBkjHLso5ZOV1C8RfDw6eHAl7PH1NrtuJ
-	RWaRDMpasPf9UpRHz8xqVA8k3zag=
-X-Google-Smtp-Source: AGHT+IF2IX2FB76Rwm9FkyoAjv+M/SkNYoduVau18eDVVr+EFxe/HPfg8zd1cyugSnBv8OaKwZdJvrv0MQrlpOZqbnc=
-X-Received: by 2002:a05:6808:1902:b0:3e7:c7c1:e6cf with SMTP id
- 5614622812f47-3ecdcdddbd9mr540554b6e.43.1734550060671; Wed, 18 Dec 2024
- 11:27:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LYufAOki"
+Message-ID: <80e0813a-0651-41cf-a82d-776acbf1a5bc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1734576854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6lMvgcFdm6shecAfOp0/enr6sSGFabr8h+/cV806V2E=;
+	b=LYufAOkiwude4trcf1KDzqZZuiwUZoqSndD7ugee1yJ/MfnkxOpfXUab07IVVcf9D2Jq1J
+	lifBCezACrgwXWQz4SVl86MpZBVVl0nCG+geh6UYJ/qC4vu5fPfTS9DQjHOkeQBVh8fZMI
+	Lb79fBVyhAS7Zw6I9obo8GJwVo7Nplc=
+Date: Thu, 19 Dec 2024 10:54:01 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241217073704.3339587-1-chenhuacai@loongson.cn>
-In-Reply-To: <20241217073704.3339587-1-chenhuacai@loongson.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 18 Dec 2024 20:27:29 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jZY5o7h-=+UqvVcUPL7DRTSFTuqY8CKazXR+3r6K8JOQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jZY5o7h-=+UqvVcUPL7DRTSFTuqY8CKazXR+3r6K8JOQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: EC: Enable EC support on LoongArch by default
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
-	Len Brown <lenb@kernel.org>, loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+To: Icenowy Zheng <uwu@icenowy.me>, Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Baoquan He <bhe@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Zhihong Dong <donmor3000@hotmail.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231009042841.635366-1-uwu@icenowy.me>
+ <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+ <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+ <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+ <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+ <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+ <1e0f2174a72011cb1c78eeecbbf82a4ff108bf8a.camel@icenowy.me>
+ <e9fef25e-3f83-46e9-a17c-d9f83e178311@linux.dev>
+ <feb3545e650c04c8cc21c40dad36dbf4076b3ebc.camel@icenowy.me>
+ <1090f735-8252-453f-b6c8-0ec35881ff32@linux.dev>
+ <932a9a93c00082645df465862231f6d8c91f3bf6.camel@icenowy.me>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <932a9a93c00082645df465862231f6d8c91f3bf6.camel@icenowy.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Dec 17, 2024 at 8:37=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> Commit a6021aa24f6417416d933 ("ACPI: EC: make EC support compile-time
-> conditional") only enable ACPI_EC on X86 by default, but the embedded
-> controller is also widely used on LoongArch laptops so we also enable
-> ACPI_EC for LoongArch.
->
-> The laptop driver cannot work without EC, so also update the dependency
-> of LOONGSON_LAPTOP to let it depend on APCI_EC.
->
-> Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-> Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/acpi/Kconfig               | 4 ++--
->  drivers/platform/loongarch/Kconfig | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index d65cd08ba8e1..d81b55f5068c 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -135,10 +135,10 @@ config ACPI_REV_OVERRIDE_POSSIBLE
->  config ACPI_EC
->         bool "Embedded Controller"
->         depends on HAS_IOPORT
-> -       default X86
-> +       default X86 || LOONGARCH
->         help
->           This driver handles communication with the microcontroller
-> -         on many x86 laptops and other machines.
-> +         on many x86/LoongArch laptops and other machines.
->
->  config ACPI_EC_DEBUGFS
->         tristate "EC read/write access through /sys/kernel/debug/ec"
-> diff --git a/drivers/platform/loongarch/Kconfig b/drivers/platform/loonga=
-rch/Kconfig
-> index 5633e4d73991..447528797d07 100644
-> --- a/drivers/platform/loongarch/Kconfig
-> +++ b/drivers/platform/loongarch/Kconfig
-> @@ -18,7 +18,7 @@ if LOONGARCH_PLATFORM_DEVICES
->
->  config LOONGSON_LAPTOP
->         tristate "Generic Loongson-3 Laptop Driver"
-> -       depends on ACPI
-> +       depends on ACPI_EC
->         depends on BACKLIGHT_CLASS_DEVICE
->         depends on INPUT
->         depends on MACH_LOONGSON64
-> --
 
-Applied as 6.13-rc material, thanks!
+On 2024/12/18 20:43, Icenowy Zheng wrote:
+> For the fact of drm/ast's dramatical drop, it's because write to the
+> framebuffer can no longer be reordered.
+
+
+No, your understanding is wrong, very very wrong and a big wrong.
+
+It's not because it can't reorder the write. Rather, it's because
+that the CPU can't do write gathering and can't do burst write any
+more.
+
+So do you still think your patch is harmless?
+
+
+-- 
+Best regards,
+Sui
+
