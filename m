@@ -1,132 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C91E217652
-	for <loongarch@lists.linux.dev>; Thu, 19 Dec 2024 06:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734589831; cv=none; b=D8LLjF+nYrcIXLLgG4R/Yxqyj5LozZy+Af7ymJ/7bWPiCuKMoSkGrGdBrvEzjywoUHKh7LVgiiUiHIsa4TpF+0fDOF40SFiQ4ngLxyWiP6Eo+n9gp+qZfMO+FyjmFD8w5j+8C0UXr3P+qEslpiG5QRze8v4/c/52rZ3fEgGLUo0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734589831; c=relaxed/simple;
-	bh=gx8EWvXEhDpBIT2WxmsZgF1bYeZS2CW4WJ1TCZh8HNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZSUywYZjzcx1cMkm8XHdH2L0N6i6wqG1KjsCzvS+/fituTCEASbCloCtGrHqKTnDvZ4Ru8o1M9AW76hkcl3mTo0hKnrWUDUt5n0UWNCq4+aW1oN2/WLgOrCrI4wGrdywih8Q25Ff/N5ic4b244bhsGQ5aCuQMjmfkxJB/aa+pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XMcC+wO5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lizvNDYm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD85013BAF1
+	for <loongarch@lists.linux.dev>; Thu, 19 Dec 2024 06:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734590096; cv=pass; b=dSYYjCXR4LDAMntWNUKSPgjK6YLuz+GyN8ZGBpQdAHWSDF2jLOfn7fONZbM2TIXgv0tDaJDPW7jQ0ZGk7FBxj7oMASsFKHH3ow7DEkzWwZGKf7noL8KhomZn+bXi0GuFEIzY/FsJhv8sJyTCrWrjWbrtF/jQiQ3ebD4yNkdXenE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734590096; c=relaxed/simple;
+	bh=X5fx8CjVkQyQD6A25nE8ANwLSyDJ6nBLQUYdNE0EB5M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rVN1Trx6dvXEfnVeZZOwlNUc8Ssx3UZuMSlOlu+Nhdhn5nV+8Wz3JOWUBkIc0rezueopMH0+Y1C4fIKD2isPhv3iSkbLRzCRLAhUrbDG3UorM3WhxAYsHKIHjwysh5ESLpZ3CKhQHOO3Y690wTenj216J6ySX4Iu0WkhpSS1Fmo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=jSM6HUqN; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XMcC+wO5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lizvNDYm"
-Date: Thu, 19 Dec 2024 07:30:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1734589827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=brEM+ootPH6y2/YCviVjC+RLeQ0QzlEBqocyy/WfD3U=;
-	b=XMcC+wO5/gyjwqszz2FEVmDMXZQx3pF5bzw/D/U+DhwYKJv9REWbX40X23G5YodGhMzxLG
-	1UAr8nKjyY0Kf1RGg/8CcSlJteWhtoj0+amS1nzNd19YUishyFWMegPVlkma7haH/l0bQx
-	UPXdUdr/bOcUjZEv7/IyAq5X8UvpyOl8Eoo1LOwkra69ZA9udzJSpGYhAqPejllDppzmui
-	/1w9LTvVZWo0hHFiKy1wqjTm8CZxIqay1gQlNDOetKKVwrQU522w45o4hbBkEqiMJm3FRu
-	2KrYtc6E7LcXV7UbkCQjg7cmZZOV9vw1zDDr9jgfGCnIhmX4pZsWlB8a3x2avw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1734589827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=brEM+ootPH6y2/YCviVjC+RLeQ0QzlEBqocyy/WfD3U=;
-	b=lizvNDYmwqC1Sdr28wyZPYco75yXNbVdywOf7fbIN5mEEvywWt8AvsOHhKYx2j3f09NW7x
-	awEMWr7EktvpdPBA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Conor Dooley <conor@kernel.org>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Anna-Maria Gleixner <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A . Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 07/17] riscv: vdso: Switch to generic storage
- implementation
-Message-ID: <20241219072552-7cd4512c-4f61-408a-9422-167a6f2810db@linutronix.de>
-References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
- <20241216-vdso-store-rng-v1-7-f7aed1bdb3b2@linutronix.de>
- <20241218-action-matchbook-571b597b7f55@spud>
- <20241218162031-ee920684-db10-4f17-b1cb-50373d7ea954@linutronix.de>
- <137c0594-e178-4c91-bc8b-5f99b3ddb2f0@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="jSM6HUqN"
+ARC-Seal: i=1; a=rsa-sha256; t=1734590085; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IErqo3xYd62R6fXb2KR1IRqsCklgr0lgS7EiNrN6zDplxAM0Oh0/x8RCZHD7hC1umjYzw4fRgANKo1Tk6etf/NPuwF3eiS2x/8x2BMsXQFLoEtnJ4/oc2EJ9Xzehkltw+Ij/xEL8dpanVNPl36aEqvpiqMqDvThoqsxg+PamUOM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1734590085; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=X5fx8CjVkQyQD6A25nE8ANwLSyDJ6nBLQUYdNE0EB5M=; 
+	b=MHedB3P7FFqnBvZN7WzEwGb4Bjygv5XpppS5FTPz8gSE5HjOE4sc9KHPpsUI74v5/TDph2CtA6GQ2zwmmi0pjrqrBmjbv8LESGUCv7kOyJKdjwle6ONSWesySCRLI4poG4LTXslk5aSqGaJXyXn5a8Hmwj/dMqPmgBjYw1I8ZDI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734590085;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=X5fx8CjVkQyQD6A25nE8ANwLSyDJ6nBLQUYdNE0EB5M=;
+	b=jSM6HUqNG9RlAf2xmhxB9bmmfDm49EkA9Sdwo1upBIHzUevoUQv9DxMOyjk1AZAt
+	YPRqQDUHiSknQlhAr3GYj03WXF887nkuIfF0WRb1aKatfMiMpPdMI7n08FcZ4FbSVff
+	RWvSiNwxyu/7L8xMpiM0Fj7V7h1J8YTIL7DaUhBAfaNpG3wePY7+pxpntlzbPQVUsLl
+	Xo5RZgJSs0cWDx2KDoCmGeXNRh1JCuLWOINGacGGl+6xIthX1eHUm5tRA4144GYDL0r
+	vZ5QqzA+ED0LAoabik7edBFydMRKCc/pSUgXLcFhMgCr/VDXq4ccIeChpj5LLNaXImi
+	bAFXyvFXfw==
+Received: by mx.zohomail.com with SMTPS id 1734590083382821.4701941908438;
+	Wed, 18 Dec 2024 22:34:43 -0800 (PST)
+Message-ID: <8348a0abe70ce9ddd584cf7170946bd8646578cd.camel@icenowy.me>
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Sui Jingfeng <sui.jingfeng@linux.dev>, Xi Ruoyao <xry111@xry111.site>, 
+	WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, David Hildenbrand <david@redhat.com>, Zhen Lei
+ <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Zhihong
+ Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Date: Thu, 19 Dec 2024 14:34:34 +0800
+In-Reply-To: <c9fd9cdc-4116-4181-a1b5-2b5dd1e37f56@linux.dev>
+References: <20231009042841.635366-1-uwu@icenowy.me>
+	 <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+	 <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+	 <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+	 <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+	 <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+	 <1e0f2174a72011cb1c78eeecbbf82a4ff108bf8a.camel@icenowy.me>
+	 <e9fef25e-3f83-46e9-a17c-d9f83e178311@linux.dev>
+	 <feb3545e650c04c8cc21c40dad36dbf4076b3ebc.camel@icenowy.me>
+	 <1090f735-8252-453f-b6c8-0ec35881ff32@linux.dev>
+	 <932a9a93c00082645df465862231f6d8c91f3bf6.camel@icenowy.me>
+	 <80e0813a-0651-41cf-a82d-776acbf1a5bc@linux.dev>
+	 <ffd9ab359d2234e7ed680f161152d95c449e96bd.camel@icenowy.me>
+	 <c9fd9cdc-4116-4181-a1b5-2b5dd1e37f56@linux.dev>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <137c0594-e178-4c91-bc8b-5f99b3ddb2f0@app.fastmail.com>
+X-ZohoMailClient: External
 
-On Wed, Dec 18, 2024 at 05:35:31PM +0100, Arnd Bergmann wrote:
-> On Wed, Dec 18, 2024, at 16:46, Thomas Weißschuh wrote:
-> > On Wed, Dec 18, 2024 at 03:08:28PM +0000, Conor Dooley wrote:
-> >> On Mon, Dec 16, 2024 at 03:10:03PM +0100, Thomas Weißschuh wrote:
-> 
-> >> Might be a clang thing, allmodconfig with clang doesn't build either.
-> >
-> > The proposed generic storage infrastructure currently expects that all
-> > its users also use HAVE_GENERIC_VDSO.
-> > I missed rv32 when checking this assumption.
-> >
-> > I can add a bunch of ifdefs into the storage code to handle this.
-> >
-> > Or we re-add the time vDSO functions which were removed in commit
-> > d4c08b9776b3 ("riscv: Use latest system call ABI").
-> > Today there are upstream ports of musl and glibc which can use them.
-> > (currently musl even tries to use __vdso_clock_gettime() as 64-bit only
-> > on rv32 due to a copy-and-paste error from its rv64 code)
-> 
-> Adding back __vdso_clock_gettime() wouldn't work on rv32 because there
-> is no fallback syscall for it, and it wouldn't really help since
-> there is no existing userspace that uses time32 structures.
+=E5=9C=A8 2024-12-19=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 13:49 +0800=EF=BC=
+=8CSui Jingfeng=E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On 2024/12/19 12:49, Icenowy Zheng wrote:
+> > =E5=9C=A8 2024-12-19=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:54 +0800=EF=
+=BC=8CSui Jingfeng=E5=86=99=E9=81=93=EF=BC=9A
+> > > On 2024/12/18 20:43, Icenowy Zheng wrote:
+> > > > For the fact of drm/ast's dramatical drop, it's because write
+> > > > to
+> > > > the
+> > > > framebuffer can no longer be reordered.
+> > >=20
+> > > No, your understanding is wrong, very very wrong and a big wrong.
+> > >=20
+> > > It's not because it can't reorder the write. Rather, it's because
+> > > that the CPU can't do write gathering and can't do burst write
+> > > any
+> > > more.
+> > Write gathering is a kind of write reordering,
+>=20
+>=20
+> No, your understanding is broken.
+>=20
+> Write gathering *isn't* a kind of write reordering.
+> Its doesn't have to reorder, it just cache the write operation with
+> the CPU's write buffer.
+>=20
+>=20
+> > comparing to strongly
+> > ordered writing (which is literally one byte per write).
+> >=20
+> > > So do you still think your patch is harmless?
+> > Well, I said that performance w/o correctness is meaningless.
+>=20
+>=20
+> The point is that Write-Combine on drm/ast will get both correctness
+> and performance.
 
-My original paragraph was worded confusingly.
-It was about re-adding time-related vDSO function *in general*, not the
-specific 32-bit ones.
-The new ones should be 64-bit only, indeed.
+But in general writecombining is broken (if it's broken in one place,
+it's broken and not totally right, and needs to be handled).
 
-> > There is precedence in providing 64bit only vDSO functions, for example
-> > __vdso_clock_gettime64() in arm.
-> > I do have a small, so far untested, proof-of-concept patch for it.
-> > This would even be less code than the ifdefs.
-> >
-> > What do you think about it?
-> 
-> Yes, simply exposing the normal time64 syscalls through vdso
-> should be fine. I think this currently works on everything except
-> rv32 and sparc32, probably because neither of them have actual
-> users that are able to test.
+I said in another mail that if you want to keep this performance, you
+should add another pgprot_ type instead of using pgprot_writecombine
+(which breaks other drivers).
 
-Should it use the specific _vdso_clock_gettime64() naming or leave out
-the 64 suffix?
+>=20
+>=20
+> > >=20
 
-
-General Note: I'll continue working on this next year.
-
-
-Thanks,
-Thomas
