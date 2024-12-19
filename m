@@ -1,159 +1,135 @@
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BD821639B
-	for <loongarch@lists.linux.dev>; Thu, 19 Dec 2024 07:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C67157A72
+	for <loongarch@lists.linux.dev>; Thu, 19 Dec 2024 07:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734591833; cv=none; b=pWldaWrFM0ODPIhkHvkDukvKbocyLYrKjh/XwzaR32qJNacnsf2jjvgc1a92xNNf4I6w053pmJ+KVrlhyLOKgE5gGToAO4nlGgeH1HEnsmSeyKR8g8wFsUHKcq3Jv3pTxf+esAQzwdMR1ZYGOCNhzJEzW7J8wZDYdP3GKriroFQ=
+	t=1734594379; cv=none; b=UhE49cr8MaNMDvxpFpuwxSrlKyajMqikjhFx4V+msv11+O/kYjmgZZrPg20WKj6BTkFC4ODNEwDY3QaGGmEOT0Wv5DnchsHbR9Wk/Zg5zG09wvjwVVxFy53TAfUB3eMoj/T8IDbabc5NQWIdxXPz567Z0Uo4YwpbzvTxDkmseVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734591833; c=relaxed/simple;
-	bh=tCgktG21QZ4s1CtyshhufSdMnug4i6S4kgKHktkjsf0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JLPGZmM2+d72H+zox/kYrOuebvQWrnstdy4F38zJbFTH+quOxEdnoEVvH+KphAgn75EYSolz2IoSvjavFG45QdbFqwoQNOPKbjHjnGlurOJUKsp7AmIMySmgMPJE9KUbr6J75xiLSWCZf4yrddrQb7M0ReQO2jphoelpXVH4vCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oY/eWZPR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xmVIewcr; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1734594379; c=relaxed/simple;
+	bh=uQnZlHccwGDnUZsuwOYqgHP+rFto04XnwoI9EkzakO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZfkYxKbtpGKZUfxD+w9bVU+44bYLj+HJKI98xvKX2PkGyhLRDnKK87zR1LAvKnNyan1kdccGOCR7k4SsRCTWgj+UaHLRqfV5OV7NA3FHrkAxNCr8Fre2HSwssN/wq7UXQXlVNOpzpJSRgxIyWdzv5T8dfp5gfv5/+CYDwdKHhBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f/Ay9j5r; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oY/eWZPR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xmVIewcr"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailflow.phl.internal (Postfix) with ESMTP id A81192003B4;
-	Thu, 19 Dec 2024 02:03:49 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Thu, 19 Dec 2024 02:03:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1734591829;
-	 x=1734599029; bh=k43J5anAB96Ch7IfLVC26goHMZDYKuV3hVA5bdHwPjc=; b=
-	oY/eWZPR2hoZOZEID//SUz40plFO0YmL/cDeTW7TVToY9wBGdc79QSqYm/3ZddWP
-	+Th5hMXNmlvbAUs4xZsNDVpDtdM7JfAg3wPu/DpEK8xbSRjPm7xvrGYBe+D/RPr5
-	uhBvghppkGDojAe9Sc7VdMaJzJvwWDn2yP1SzDpqjgeylzcD5rHha+sBf10Z8MUY
-	zjfm122PgsBOKR0kHiwP5TRV3NXqtXgI94ycCBwNvW6SMx4sNtkjl2NCTDuO3GEu
-	iKfUTsB4AbJSooNGUEabOjQIahs4jCKEhxVyNGATifNR+f3n3w+MTX/xutBM/8gb
-	UBxrEYQCQfco5c4mIW21CQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1734591829; x=
-	1734599029; bh=k43J5anAB96Ch7IfLVC26goHMZDYKuV3hVA5bdHwPjc=; b=x
-	mVIewcrb+S5H9Li9t0EtG4J0oD/8yiqFu1YmmnOqwRgrgp9J5yPMWL8Rvxl1fuoZ
-	NpoDGZDH8YCBHIu2prkjS8vgZ1vqCIabCOCUlGvuAIufD4Ous8eQIININ4VO9lVw
-	5oZ77qqHBP1sYs1oduV+I8oTsihoTp8mJ8JBNCfft4os1YlVvfssjYddbR05S5qa
-	jp9Onrs43lK4MxJGpdF3toNCpEh2AI1l/M1u8wIZnvPb613KhWovocwi+UBYD+wH
-	5hhbjShUCWAzYPLG092kKaKD6vRVVA1SH4DmfNX2Qj6+vDBJR3iQl+bz4MrGsA3l
-	xjUjyx4Pe4xatF866CFrQ==
-X-ME-Sender: <xms:UcVjZ08o9oSr4vC-yWs_0rkX3tF_de-kiIiySpphPyx8XsVfKRVEXg>
-    <xme:UcVjZ8s_0LfBT76dpGaKaKC5xNr7F44n3_6mhljodlJWfmRa80fVfIJed_f2dC3Ra
-    cfcwMot3wYtb8tzXWI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrleelgddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdeg
-    jedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgeei
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprh
-    gtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghp
-    thhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhope
-    hvihhntggvnhiiohdrfhhrrghstghinhhosegrrhhmrdgtohhmpdhrtghpthhtoheplhhi
-    nhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegthhhrihhsthhoph
-    hhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdhrtghpthhtohepphgrlhhmvghrsegu
-    rggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhi
-    drvgguuhdprhgtphhtthhopehmphgvsegvlhhlvghrmhgrnhdrihgurdgruh
-X-ME-Proxy: <xmx:UcVjZ6Djfy0CqQN4vTzFpZUghuE4c8_GRSujiFZOpqKobULrY7d6Fw>
-    <xmx:UcVjZ0cXWSJU04bKlE7dy4vLBmwTvHF0ozAlW27OV-4AamEkxEZKtw>
-    <xmx:UcVjZ5N3kO7cMmjcmc96BjTIos7f-PzF-xBfcJV5KR5s8w423K77xQ>
-    <xmx:UcVjZ-mXW5UA98QDpStGWiYswp6ZnLl6BM4yXYMLy5PwKkxQmfIdZw>
-    <xmx:VcVjZyNnjyvt_EgMYqaOa0zhC1TPcMH5UJqxxwhazRVa7nzB-KExPgbA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 84E632220072; Thu, 19 Dec 2024 02:03:45 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f/Ay9j5r"
+Message-ID: <9d3df174-5e86-4b04-bdcb-eb1bbfd41ef6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1734594375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xRY9KwIHoCyLeX4HozxmCpxaeVhpmmUQfNdwn8wSy5g=;
+	b=f/Ay9j5rVj1AU+fkVuBVD0r5YWmrmB4326VdChoaZxRG0SwQXsnFtRnSGZ/CJNWxV0AKAU
+	wUJMAGfPs48c7znapkP4nKAW8UG62yTYgEamDEH9NTPd1ktuoKEZDgVFJzMyAnm7EYAqXi
+	T2vftIQ12/Bkjyev5eaviHXYU8Y44JA=
+Date: Thu, 19 Dec 2024 15:46:08 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 19 Dec 2024 08:03:24 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: "Conor Dooley" <conor@kernel.org>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Helge Deller" <deller@gmx.de>, "Andy Lutomirski" <luto@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
- "Anna-Maria Gleixner" <anna-maria@linutronix.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- "Russell King" <linux@armlinux.org.uk>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Naveen N Rao" <naveen@kernel.org>,
- "Madhavan Srinivasan" <maddy@linux.ibm.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-parisc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
- linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Linux-Arch <linux-arch@vger.kernel.org>,
- "Nam Cao" <namcao@linutronix.de>
-Message-Id: <0bdeda72-73e6-4749-8d54-66c7614a6f83@app.fastmail.com>
-In-Reply-To: 
- <20241219072552-7cd4512c-4f61-408a-9422-167a6f2810db@linutronix.de>
-References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
- <20241216-vdso-store-rng-v1-7-f7aed1bdb3b2@linutronix.de>
- <20241218-action-matchbook-571b597b7f55@spud>
- <20241218162031-ee920684-db10-4f17-b1cb-50373d7ea954@linutronix.de>
- <137c0594-e178-4c91-bc8b-5f99b3ddb2f0@app.fastmail.com>
- <20241219072552-7cd4512c-4f61-408a-9422-167a6f2810db@linutronix.de>
-Subject: Re: [PATCH 07/17] riscv: vdso: Switch to generic storage implementation
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
+ same as ioremap_wc
+To: Icenowy Zheng <uwu@icenowy.me>, Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, Baoquan He <bhe@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Zhihong Dong <donmor3000@hotmail.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231009042841.635366-1-uwu@icenowy.me>
+ <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
+ <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
+ <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
+ <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
+ <dfc53da9-a1ab-4ab3-aba2-d100f7f28b9b@linux.dev>
+ <1e0f2174a72011cb1c78eeecbbf82a4ff108bf8a.camel@icenowy.me>
+ <e9fef25e-3f83-46e9-a17c-d9f83e178311@linux.dev>
+ <feb3545e650c04c8cc21c40dad36dbf4076b3ebc.camel@icenowy.me>
+ <1090f735-8252-453f-b6c8-0ec35881ff32@linux.dev>
+ <932a9a93c00082645df465862231f6d8c91f3bf6.camel@icenowy.me>
+ <80e0813a-0651-41cf-a82d-776acbf1a5bc@linux.dev>
+ <ffd9ab359d2234e7ed680f161152d95c449e96bd.camel@icenowy.me>
+ <c9fd9cdc-4116-4181-a1b5-2b5dd1e37f56@linux.dev>
+ <8348a0abe70ce9ddd584cf7170946bd8646578cd.camel@icenowy.me>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <8348a0abe70ce9ddd584cf7170946bd8646578cd.camel@icenowy.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Dec 19, 2024, at 07:30, Thomas Wei=C3=9Fschuh wrote:
-> On Wed, Dec 18, 2024 at 05:35:31PM +0100, Arnd Bergmann wrote:
+
+On 2024/12/19 14:34, Icenowy Zheng wrote:
+> 在 2024-12-19星期四的 13:49 +0800，Sui Jingfeng写道：
+>> On 2024/12/19 12:49, Icenowy Zheng wrote:
+>>> 在 2024-12-19星期四的 10:54 +0800，Sui Jingfeng写道：
+>>>> On 2024/12/18 20:43, Icenowy Zheng wrote:
+>>>>> For the fact of drm/ast's dramatical drop, it's because write
+>>>>> to
+>>>>> the
+>>>>> framebuffer can no longer be reordered.
+>>>> No, your understanding is wrong, very very wrong and a big wrong.
+>>>>
+>>>> It's not because it can't reorder the write. Rather, it's because
+>>>> that the CPU can't do write gathering and can't do burst write
+>>>> any
+>>>> more.
+>>> Write gathering is a kind of write reordering,
 >>
->> > There is precedence in providing 64bit only vDSO functions, for exa=
-mple
->> > __vdso_clock_gettime64() in arm.
->> > I do have a small, so far untested, proof-of-concept patch for it.
->> > This would even be less code than the ifdefs.
->> >
->> > What do you think about it?
->>=20
->> Yes, simply exposing the normal time64 syscalls through vdso
->> should be fine. I think this currently works on everything except
->> rv32 and sparc32, probably because neither of them have actual
->> users that are able to test.
+>> No, your understanding is broken.
+>>
+>> Write gathering *isn't* a kind of write reordering.
+>> Its doesn't have to reorder, it just cache the write operation with
+>> the CPU's write buffer.
+>>
+>>
+>>> comparing to strongly
+>>> ordered writing (which is literally one byte per write).
+>>>
+>>>> So do you still think your patch is harmless?
+>>> Well, I said that performance w/o correctness is meaningless.
+>>
+>> The point is that Write-Combine on drm/ast will get both correctness
+>> and performance.
+> But in general writecombining is broken
+
+
+Cached coherent ARM64 SoC has similar issue, but they didn't disable
+WC in that arch-specific code.
+
+Again, your understanding is broken.
+
+
+> (if it's broken in one place,
+> it's broken and not totally right, and needs to be handled).
+
+
+No, your logic is completely wrong here.
+
+1) We needs the *hardware* details (not bug phenomenon description) before make
+    further judgement.
+
+2) Its very likely that the specific device driver that suffer from the problems
+    is broken.
+
+3) Loongson downstream kernel has the write-combine enabled, and all drm drivers
+    works very well.
+
+Its just that you guys chase to radeon/andgpu driver, doing the abuse at arch
+specific code.
+
+
 >
-> Should it use the specific _vdso_clock_gettime64() naming or leave out
-> the 64 suffix?
+-- 
+Best regards,
+Sui
 
-The VDSO function name should match the syscall name, with the '64'
-suffix. Any syscall ending in _time64 uses the __kernel_time64_t
-derived types, while the corresponding syscall names that don't end
-in _time64 take a __kernel_old_time_t, which is defined as
-__kernel_long_t and only 32 bits wide.
-
-      Arnd
