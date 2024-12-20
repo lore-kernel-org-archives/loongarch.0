@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B767022687C
-	for <loongarch@lists.linux.dev>; Fri, 20 Dec 2024 17:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6A222758F
+	for <loongarch@lists.linux.dev>; Fri, 20 Dec 2024 17:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734716866; cv=none; b=adUwdsxUeN28Nv3SF+V81Nt7qdZdbJviZx1mFcGoLujo1ck/h7DrvVod2TTAeONFOCLGYZmJe+5Qbm5gAtJvuXDqw2b6/teQ6a5j5nAg9OWvE/HuQJwnEBagHp28AV3hguZTyVB76DWnNqwLMRF7ULkDoMKkhPX9sfHAIGw0EFc=
+	t=1734716868; cv=none; b=peH7w+YRwWZZc/3qQ5kEJ2l5BD4xz+goxre2/YM1MozhiRhKzzZnuZbF3dyMlfkgpwBRLfRnwtlnmkAhC0Nj0qSw4GYGH6nEU0RV7GKmzx+0bUdjH8UtPztiTLNTBwUJ6s1CPKTwQI150RqjpvutWR1jZNAmANfkZpVIL8yLcqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734716866; c=relaxed/simple;
-	bh=8GhjdGyZlhSd+u5XuDcl+fATkvBHdZQ8G05mszSHBn0=;
+	s=arc-20240116; t=1734716868; c=relaxed/simple;
+	bh=ttlHFu3gMwY1VQt+XZunT0z7GD671/sbqto0CfwXAa0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RDwnBpNCl2dqh19aayl6iKguAgv90QK7OQQMtBtvSCNh3ugRFXQMfJLX30RDOkn0Um5DikJFtGj35w/NsNCVD62OUOC9R0/xUCOJNaafSYS3XHiBmAgNC1yQ6cPcpr4K6aa6zRh/UL084fRFq0x8ON0kMOgljdjUa4eZrogw7SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cpVzP0oh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MdH6HyVg; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=jwHAJ+oWRNuwEhr04MbJIMTFFzKZLN/RUg4hfHCSgT4x5QpzpLTBIJ/oHQXFPXgrWnTfp3Y/I6yBvguFYvCf2Umm9IPGNga6NDqUWonZhy7m1F+DHEwt+NB0CE85GJGx656ct+F4fhMgMBYkOf/16rXLNmKqoHziuixdMlEPSq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u1Gg5xD+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C5zOkrNo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cpVzP0oh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MdH6HyVg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u1Gg5xD+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C5zOkrNo"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1734716862;
+	s=2020; t=1734716863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ljs2jZrg2BL9VEhLxJX9ekollT4zmDGIk7v5ipaXh/Y=;
-	b=cpVzP0ohHAm5pZrQASOuHlpsjdo/i7DReDawcu+bn52+UjOf4l9PoAZUK/61GQDpWt0CZT
-	Yh0QCx39Lnsd7vdBy3r/k+TY+SErCWkdDX7p7Ao25TyMXf0LqXciBWJ1qywiESj4qfFXUo
-	Dsde0rfiS3MagZwRZxULEnmkhSQtr+wSEfm9Mso3E+tnADf32S5yJb5kYUqABDZyS2LKx0
-	yVVwKGHYaKlpyC2GrmuBd7BVg1uoY0wMIGx1OOqWfAe0o68vbRvG/tpqYXjI3pwqnZmWOM
-	huZxMVqPiSckp9LuWI7uVBVM3XiZHJ2aLpGKXoF2PxMQ2ruBvEerLOwVYNi2LQ==
+	bh=aq+7SEGJUTKa/Bn1/z1CJTxjtvmAy27khjcI6tCzE7c=;
+	b=u1Gg5xD+dhrMVIMDZUPbt92FBu6s0DSjzHyIfRQsJL6kMqK5HQ/fRk095USwc8UVYtZaK0
+	DmvD4X5fkMeVM3CXhaLUejVoF6634jqwUCYcdJynLrVdDaTn/urwHrHVcJ35iiK/HtlEaD
+	mjIbPzj3AIFPDax5MxgFHsqSp7jB0FF1daE8er4OZwkEGMWM+Rf8hreXUiyhoBH9yMmWCG
+	sH7o/UJj7JjE1H0wbKMGZsDHqnhLlJ0LJVl9YLGksgYC8xkaXxMABDF2z41QNg7MQ0rL9D
+	SlmDwyW0Chd7KaJL44jdstaVNsAwDXOHgQqS5g+PlCYcDzvNOqjbfy2suOVUVg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1734716862;
+	s=2020e; t=1734716863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ljs2jZrg2BL9VEhLxJX9ekollT4zmDGIk7v5ipaXh/Y=;
-	b=MdH6HyVg39qtamm+1xIfFxU5cTC7T3KWszaXdykLG8E8Ga/1WONP84nlrNeJ3YGGT9TA1r
-	b2ATouRkr6VpNFAA==
+	bh=aq+7SEGJUTKa/Bn1/z1CJTxjtvmAy27khjcI6tCzE7c=;
+	b=C5zOkrNo8i3Cb9FVlv34sBRm+FnOtE6B2tBlfe1LezVq+IYoO+Ue7rq1dFFysL+fAv9LP5
+	D6vM0gELbS9VD2AA==
 To: linux-modules@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Daniel Gomez <da.gomez@samsung.com>,
@@ -50,11 +50,15 @@ Cc: Daniel Gomez <da.gomez@samsung.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Huacai Chen <chenhuacai@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	WANG Xuerui <kernel@xen0n.name>,
+	linux-trace-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH v2 18/28] LoongArch/orc: Use RCU in all users of __module_address().
-Date: Fri, 20 Dec 2024 18:41:32 +0100
-Message-ID: <20241220174731.514432-19-bigeasy@linutronix.de>
+Subject: [PATCH v2 19/28] LoongArch: ftrace: Use RCU in all users of __module_text_address().
+Date: Fri, 20 Dec 2024 18:41:33 +0100
+Message-ID: <20241220174731.514432-20-bigeasy@linutronix.de>
 In-Reply-To: <20241220174731.514432-1-bigeasy@linutronix.de>
 References: <20241220174731.514432-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -65,49 +69,48 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-__module_address() can be invoked within a RCU section, there is no
+__module_text_address() can be invoked within a RCU section, there is no
 requirement to have preemption disabled.
 
-Replace the preempt_disable() section around __module_address() with
-RCU.
+Replace the preempt_disable() section around __module_text_address()
+with RCU.
 
 Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: linux-trace-kernel@vger.kernel.org
 Cc: loongarch@lists.linux.dev
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/loongarch/kernel/unwind_orc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/loongarch/kernel/ftrace_dyn.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unw=
-ind_orc.c
-index b257228763317..d623935a75471 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -399,7 +399,7 @@ bool unwind_next_frame(struct unwind_state *state)
- 		return false;
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftr=
+ace_dyn.c
+index 18056229e22e4..5e0d870935542 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -85,14 +85,13 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace=
+ *rec, struct module *mod
+ 	 * dealing with an out-of-range condition, we can assume it
+ 	 * is due to a module being loaded far away from the kernel.
+ 	 *
+-	 * NOTE: __module_text_address() must be called with preemption
+-	 * disabled, but we can rely on ftrace_lock to ensure that 'mod'
++	 * NOTE: __module_text_address() must be called within a RCU read
++	 * section, but we can rely on ftrace_lock to ensure that 'mod'
+ 	 * retains its validity throughout the remainder of this code.
+ 	 */
+ 	if (!mod) {
+-		preempt_disable();
++		guard(rcu)();
+ 		mod =3D __module_text_address(pc);
+-		preempt_enable();
+ 	}
 =20
- 	/* Don't let modules unload while we're reading their ORC data. */
--	preempt_disable();
-+	guard(rcu)();
-=20
- 	if (is_entry_func(state->pc))
- 		goto end;
-@@ -514,14 +514,12 @@ bool unwind_next_frame(struct unwind_state *state)
- 	if (!__kernel_text_address(state->pc))
- 		goto err;
-=20
--	preempt_enable();
- 	return true;
-=20
- err:
- 	state->error =3D true;
-=20
- end:
--	preempt_enable();
- 	state->stack_info.type =3D STACK_TYPE_UNKNOWN;
- 	return false;
- }
+ 	if (WARN_ON(!mod))
 --=20
 2.45.2
 
