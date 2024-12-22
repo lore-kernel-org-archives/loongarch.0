@@ -1,145 +1,113 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FB467DA8C;
-	Sun, 22 Dec 2024 04:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1922AF1D
+	for <loongarch@lists.linux.dev>; Sun, 22 Dec 2024 05:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734841771; cv=none; b=Go2MXCCupKr7LBFeJysG4nxWkCcaNcpR77zVQTKmB+lzC0RJM5dAOPs33pVlazmmXh/WJlJc2JsytWJW+lEseyjWmy2za5Jg1F/wRJtoRRwMWvuRPfiAHFbCZjbmY3fIb4xoIiKxGvh/bxZqfzQw5b4rpYnwT5AnQcG4f6FgPvs=
+	t=1734843841; cv=none; b=klg007zO8G7NfR9i1w3W/FYpnnYMvOz3DUUDPe25qxT3QksF1/Uag4kvGSlAv3YfG2LeOwdrLsbthav7PFhX4wvnlT6O5aIyUeJUHz2OJRhyHYRftKZYoG/EEpjm3zqpIwyhVNVTPyFdawMl78Ru84odDulBieCBXIc22oR/rNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734841771; c=relaxed/simple;
-	bh=ofCf1akM1Rj4Et01SCsrVmJ0xx3ask4YGXdXZdKtMI8=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=EPu/qnW4W1SPL9S+/89HfO3Cz5ij9BM8PS+/zVaCWh45xE9YHPhH5payhbObNg2fGtcgAKUwTA0ZuaKshalmRV+E6ja4lp9C5m3FTa3wp3ixmLhrQl/9/3UBxj3Ijt0ibk6HB0NFULk7AoAiJwQrd6E31ADYKPr+eah3s0qW5Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxyuBGlWdnlF5ZAA--.43504S3;
-	Sun, 22 Dec 2024 12:27:50 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxReRDlWdnEC0FAA--.29113S3;
-	Sun, 22 Dec 2024 12:27:47 +0800 (CST)
-Subject: Re: [PATCH v6 9/9] drm/amd/display: Mark dc_fixpt_from_fraction()
- noinline
-To: Xi Ruoyao <xry111@xry111.site>, Nathan Chancellor <nathan@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <20241217015006.30305-1-yangtiezhu@loongson.cn>
- <CAAhV-H4WpcWjrQdkm3Sx4DVbp=2oW9nNGAbNqR4BEmiryrptNQ@mail.gmail.com>
- <20241218190558.g2hykmjgbny4n5i3@jpoimboe>
- <CADnq5_PFcHzob4poLa86_K4yP5gUT7Ei4Rz5vSUofvZTmB48-g@mail.gmail.com>
- <4bace457-cc26-13a3-bc90-ad6ad12bc2ed@loongson.cn>
- <20241220103100.GB17537@noisy.programming.kicks-ass.net>
- <20241220223403.GA2605890@ax162>
- <05cdb3b4c9bddf25f7b839229b635d2dec5140a4.camel@xry111.site>
-Cc: Alex Deucher <alexdeucher@gmail.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
- llvm@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <bc35fddc-498a-cc58-b6a1-f5234a4f6d0d@loongson.cn>
-Date: Sun, 22 Dec 2024 12:27:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1734843841; c=relaxed/simple;
+	bh=5t7THXeYLUSycCBIfcIjI9AFeum3p8DXxikqHy9ZaHM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qkSdhFXNqD3ZnL0f21Poc5BbUL9XPKTcz3ZZmf4Q1Hn9W5qebz+gK97QB3wMJatgqVdAxeZqU6clNM/Nm3+f1LtwXsrjhwJWtqo/i7x+MChGaignW62CrofPBGanQFaff0OJ+LRKgv+5Q41k/jKpX+BQKoiirMzkjAVKgeb/EMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=S0bPjQRR; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="S0bPjQRR"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso2235061a91.3
+        for <loongarch@lists.linux.dev>; Sat, 21 Dec 2024 21:04:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1734843840; x=1735448640; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aRqCUQOlRgtZiRc2AC0vsaNCGW6lWCvjfZ2K0ekwaBA=;
+        b=S0bPjQRR4UyMOAoJ6GBAPnXwx8DmLrv48b0QAb0KC2DcdX8dPb+RUkEcWEioVhQMgm
+         U0DDbRJ7gRx1Fids0U+/ztNsLlRwXICDRlkoK9pAGz05iMigzEnf0L+pabml3R/FyKlQ
+         RB0uwOvFZQvq11gzsihFHmpx6RZM2qAQKo6retOGlzVCdZ59ZFvyfUHFdgKC8HS/N4FK
+         L2QDXGwAD8mxuG0ixKAMt1p/Q573TK47Vr0H533ZcuxbpsAaq3eo/TT+Mxnbu6Cz3bkS
+         9eBS/Bf4Xtc10D99VHMHPms9EaBgzN7bsS3ao6qwGWh/rJfHSjGTh8/KXi2JzQkBPjAX
+         KbGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734843840; x=1735448640;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRqCUQOlRgtZiRc2AC0vsaNCGW6lWCvjfZ2K0ekwaBA=;
+        b=RkX1w6sellbel359vTJ+0I8RUjBkNf6dq/VhR0YJNtDA/B1hcRUfIP18BC0zp6KGSq
+         LRJbX9ipByRbu1evi167/mFlcs4IPfm4aMk6HCxJJIUKiFhXwUnx4YJ7pCXkqUn2vtlQ
+         5ICvXfYnBJFhIEOR+/Hzrtq6QxAgYUUWYJRaTXAK5RcQykFmHQNbg1V9JMFopVEgCyU1
+         BHMwDFImVdPSkuktRuFDbzUOujeDDomsUG730HjhsQcAinAs7m2L2pOgapauOYkaR19i
+         QT4nY+zWCClAGW1z2GCCCMABCj1HPC6nMqNWBh2ZynTBxvZalAfWDrPAXkw/JmYEXeSK
+         wHvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhmQqjjzQGQ32Zjd8YlKHcAk3QWuKotXvAtJHcEEiqXhylr3kBlzBaVSHwekfMZrIkl8kLAsKavsI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyfSm4yJt7PsDiTaG5IA/OgE0Vm+gi/+sYQH7MEzpaplp6j4vJe
+	4sgw/xJyZ6P3uXi944QpvE2cW7ceJ8zRqYSmHg0P9Rv5EFxqktnRXKSBqhX9TDI=
+X-Gm-Gg: ASbGncsh5e216SvPVVb1KLllcIhn73mtnXnrZ4KjaP5pfofkh+5XxxBnSZ+EsH3xvSy
+	RFypRJejTCEYtCk2n19BO783jzxsfNQmwruCNIflGFAkd3Iy2qBmKLyDkWyigNEZ7++VIts/mTH
+	42JFa+ZYyNzPyk8rWutPWQNa3Wq4Kf3EI1eXxkaY2mT6Hm13+zKdPxk40i/OorOHKb4kna3lWFN
+	wHrC1TZG7I2CKe2md7hr8VmxPR6ZMleHzAtGYr4+7TLFmmoODNg12e5/yjkx6dLiEGbeTlp+ZPP
+	3PHdOZ4=
+X-Google-Smtp-Source: AGHT+IEz6nqPahLXccgfO9cSrt88CcjDjg2Jbhh4D2ThWhv0YE8dqXggljaBjhQgpLKbihe32IQpgQ==
+X-Received: by 2002:a17:90b:2e06:b0:2ee:ba0c:1718 with SMTP id 98e67ed59e1d1-2f452ee8cd4mr13567612a91.37.1734843839761;
+        Sat, 21 Dec 2024 21:03:59 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F ([75.167.163.61])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f2ed52dfffsm7819678a91.5.2024.12.21.21.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2024 21:03:59 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+X-Google-Original-From: Gregory Price <gourry@gourry-fedora-pf4vcd3f>
+Date: Sun, 22 Dec 2024 00:03:56 -0500
+To: David Hildenbrand <david@redhat.com>
+Cc: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, kernel-team@meta.com, corbet@lwn.net,
+	osalvador@suse.de, akpm@linux-foundation.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, gregkh@linuxfoundation.org, rafael@kernel.org
+Subject: Re: [PATCH v3] mm: add build-time option for hotplug memory default
+ online type
+Message-ID: <Z2edvO0X6H_IoMRz@gourry-fedora-PF4VCD3F>
+References: <20241220210709.300066-1-gourry@gourry.net>
+ <5e958aaa-b1ac-4512-a592-0e1612032861@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <05cdb3b4c9bddf25f7b839229b635d2dec5140a4.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxReRDlWdnEC0FAA--.29113S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFWfJryDGr13JF18Wr1kXrc_yoW5Jr1kpF
-	4rJFyUGrWDXFySvFZFkw15Xa93A3yfJr4kGFyrur1rAa47AanY9rs3t3WkJayakr42yr40
-	va98KFyqyF4qyFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e958aaa-b1ac-4512-a592-0e1612032861@redhat.com>
 
-On 12/21/2024 03:40 PM, Xi Ruoyao wrote:
-> On Fri, 2024-12-20 at 15:34 -0700, Nathan Chancellor wrote:
->>> Now, the thing is, these ASSERT()s are checking for divide-by-zero, I
->>> suspect clang figured that out and invokes UB on us and just stops
->>> code-gen.
->>
->> Yeah, I think your analysis is spot on, as this was introduced by a
->> change in clang from a few months ago according to my bisect:
->>
->> https://github.com/llvm/llvm-project/commit/37932643abab699e8bb1def08b7eb4eae7ff1448
->>
->> Since the ASSERT does not do anything to prevent the divide by zero (it
->> just flags it with WARN_ON) and the rest of the code doesn't either, I
->> assume that the codegen stops as soon as it encounters the unreachable
->> that change created from the path where divide by zero would occur via
->>
->>   dc_fixpt_recip() ->
->>     dc_fixpt_from_fraction() ->
->>       complete_integer_division_u64() ->
->>         div64_u64_rem()
->>
->> Shouldn't callers of division functions harden them against dividing by
->> zero?
+On Sat, Dec 21, 2024 at 04:30:21PM +0100, David Hildenbrand wrote:
+> 
+> > -config MEMORY_HOTPLUG_DEFAULT_ONLINE
+> > -	bool "Online the newly added memory blocks by default"
+> > -	depends on MEMORY_HOTPLUG
+> > +choice
+> > +	prompt "Memory Hotplug Default Online Type"
+> > +	default MHP_DEFAULT_ONLINE_TYPE_OFFLINE
+> >   	help
+> > +	  Default memory type for driver managed hotplug memory.
+> 
+> We should call it "hotplugged memory" consistently, which it is from a pure
+> core-mm perspective ("add memory").
+> 
+> "Driver managed" reminds too much about add_memory_driver_managed(), which
+> is only one case. Maybe just drop the "e.g., page tables" from the examples
+> below.
 >
-> Yes I think it'd be the correct solution.
 
-Thank you all. Do you mean like this?
+I suppose it's accurate that this also affects VM-hotplugged memory,
+which may not necessarily be "driver managed" in that regard. So it's
+more accurate to just say "hotplugged memory" - although even that's not
+quite completely accurate according to the definition in the docs.
 
---- >8 ---
+Either way, will change it to "hotplugged memory".
 
-diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c 
-b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-index 88d3f9d7dd55..848d8e67304a 100644
---- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-@@ -79,11 +79,13 @@ struct fixed31_32 dc_fixpt_from_fraction(long long 
-numerator, long long denomina
-         unsigned long long arg2_value = arg2_negative ? -denominator : 
-denominator;
+Probably at the point where you have multiple sources affected by this
+change, you need a udev/systemd setup anyway.  We may have to revisit
+this later, but I doubt it.
 
-         unsigned long long remainder;
-+       unsigned long long res_value;
-
-         /* determine integer part */
-
--       unsigned long long res_value = complete_integer_division_u64(
--               arg1_value, arg2_value, &remainder);
-+       ASSERT(arg2_value);
-+
-+       res_value = complete_integer_division_u64(arg1_value, 
-arg2_value, &remainder);
-
-         ASSERT(res_value <= LONG_MAX);
-
-@@ -214,8 +216,6 @@ struct fixed31_32 dc_fixpt_recip(struct fixed31_32 arg)
-          * Good idea to use Newton's method
-          */
-
--       ASSERT(arg.value);
--
-         return dc_fixpt_from_fraction(
-                 dc_fixpt_one.value,
-                 arg.value);
-
-With the above changes, there is no "falls through" objtool warning
-compiled with both clang 19 and the latest mainline clang 20.
-
-If you are OK with it, I will send a separate formal patch to handle
-this issue after doing some more testing.
-
-Thanks,
-Tiezhu
-
+~Gregory
