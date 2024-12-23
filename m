@@ -1,161 +1,153 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FA37DA9C
-	for <loongarch@lists.linux.dev>; Mon, 23 Dec 2024 08:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32271262BE
+	for <loongarch@lists.linux.dev>; Mon, 23 Dec 2024 08:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734941163; cv=none; b=qN6RfHA8K/PSWaxMFptJiV2ikEisMlo2ShCzP6zowwhLrJXPgTvMecKvkqv5ck+77z7PA1vN7aP88DUWCG2pJPsOXY4oazN0iWxowOpzqfLCqAzu5g+N5/7rbDQnBTfuiaMPzkT6UD5gOHPPbPrwNq56d0m4DV7uWO+psSLaxRc=
+	t=1734943341; cv=none; b=knJleAmf/RxAJljmE9NJeH1/JhU/GJOFj8fe6a9CUW3oA3CV8ZYURz6MiMm3M0sQdzoMrmCuYtB3EhQkOhnAVr/ixTR+RD8M3Ol+kRjN+oUVlrdiSpNOdxTWZq/GJWa0X5X54qWiVdSv5zuqtdz2hHXjJ5PmjFi7N3F6yOQ9dZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734941163; c=relaxed/simple;
-	bh=oLAFDpVTm28rpp13OPocO6rqDyE1uCgUFmuvPbVrLjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j7XhrutxkwThO2+UJhxIgzSXY5GjLjThZMNE16+NZSrhEbJnt992Tm+LvR0FE6DZjHodE9w5VR5+yub8M4Lghw1kQfsbHg8QXZwZsk12T4HiJHnv7m0AfuM3oTZt4S8mGPnDSsdhvGu1FOAgCbRc02QtXf+c8/g/LJdPFWw6c4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NwAS/XG2 reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NwAS/XG2"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D012140E0288;
-	Mon, 23 Dec 2024 07:59:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id IM0pXPZd7px8; Mon, 23 Dec 2024 07:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1734940795; bh=oLmiO6e1v7+WwnKur2gbXxPFrWqAvAvJYXOalhGYmh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NwAS/XG2uaILqi2tnPoMceO1SFvcdwgB2eUP+lF0E3qtxPsrkKvNIAdwvcYOwYLbg
-	 VvqRX9HbNopYUz0E8WqlR4+hwS4evjJxGuAOGasHGtlugkVJp9ywpiKC8EbDZ422zm
-	 muU9ukFK3vu7hlaK35oICq0nKKtYMvBJQy2OPsR+mvKsFD61IL8Mw2MAlMJkEryItZ
-	 Tzude+wGqe0Sw9wWIR9qCEh9iQ+cGYRJHeuycqd23zgYmnzkMpT5N1DW0p6NrAgCYf
-	 olFh8rx2BkdY5or8KF6raR/v2Ni/IFGcDQKB5uSqrYJiXVWNpgp+jX4ZxJgjDbURJ4
-	 cSrvSAzFi4ZxrvHZ1a2k5YfgSAP6AQYRPi9NLJBbrvSRcSIni8b7sSzt4BURfuxCE2
-	 r4sJGrTU/6kz8jXjqNQu+e5JVOpZaEHuyoW5vdTmIKsc1KmSM8jxmKbimkXbQrlsIH
-	 90+POUXhp51ZscIRGQuA125qI7jngipHuMx2xQIaDiLgkkm892NzJLWoWCASuUcIjP
-	 t7xw06sq/JRCWhb65oG60xkW3rPq6o8p+BSEtePeDRS1FBXX3NANrTP8cZLWwcZ34D
-	 4b4E4Fx232+BRVdx65v4LFgXYODS/oGKPtkkdO7V+2SrY5pMunLK7ADoymYz7xZnXg
-	 ml+quzLMltF9PXnz4EArbLUs=
-Received: from nazgul.tnic (2-228-221-6.ip193.fastwebnet.it [2.228.221.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C580D40E0286;
-	Mon, 23 Dec 2024 07:58:32 +0000 (UTC)
-Date: Mon, 23 Dec 2024 08:58:11 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Weikang Guo <guoweikang.kernel@gmail.com>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Sam Creasey <sammy@sammy.net>, Huacai Chen <chenhuacai@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oreoluwa Babatunde <quic_obabatun@quicinc.com>,
-	rafael.j.wysocki@intel.com, Palmer Dabbelt <palmer@rivosinc.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
-	Christian Brauner <brauner@kernel.org>,
-	KP Singh <kpsingh@kernel.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>, Helge Deller <deller@gmx.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Geoff Levand <geoff@infradead.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-omap@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, linux-pm@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH v7] mm/memblock: Add memblock_alloc_or_panic interface
-Message-ID: <20241223075811.GAZ2kYEwZ93CYkatrD@fat_crate.local>
-References: <20241222111537.2720303-1-guoweikang.kernel@gmail.com>
- <Z2kNTjO8hXzN66bX@kernel.org>
- <CAOm6qnkRUMnVGj7tnem822nRpJ8R6kFVf6B4W9MhMSBQY8X7Kg@mail.gmail.com>
+	s=arc-20240116; t=1734943341; c=relaxed/simple;
+	bh=5N+HOrsylq8j4X3NNIGdFjIhSuwouiXPXbk4Zgf2mJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i9tniRrzGvNeM98pIUV8Tq2CFI2KK/uiUyYLuA/wTadtQiDU6b/w7a4oTyCeVslQLZABxPZ/UK2m7IAoSLAIDEcqAInX3DJJ7wmlgl17Lyl+Vp0gEG3Euiwum9GjdJwxl1OQ3QEu/xCFPANG7RrJFmhorbOWAlkdOV8CHdVgALA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxieFnImlnk69ZAA--.48473S3;
+	Mon, 23 Dec 2024 16:42:15 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMDx7sVkImlnn5kGAA--.27414S2;
+	Mon, 23 Dec 2024 16:42:12 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Add hypercall service support for usermode VMM
+Date: Mon, 23 Dec 2024 16:42:12 +0800
+Message-Id: <20241223084212.34822-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOm6qnkRUMnVGj7tnem822nRpJ8R6kFVf6B4W9MhMSBQY8X7Kg@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx7sVkImlnn5kGAA--.27414S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Mon, Dec 23, 2024 at 03:32:01PM +0800, Weikang Guo wrote:
-> First of all, thank you for your reminder and patience. In fact, this
-> is the first time I received a patch discussion when submitting a
-> patch.
-> About Reviewed-by or Acked-by tags, I will not add it myself in the
-> future. Regarding this patch, do I need to provide a new patch to
-> update it? Or will you modify it?  Looking forward to your reply
+Some VMMs provides special hypercall service in usermode, KVM need
+not handle the usermode hypercall service and pass it to VMM and
+let VMM handle it.
 
-It is all explained here:
+Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
+service, KVM loads all six registers to VMM.
 
-https://kernel.org/doc/html/latest/process/development-process.html
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_host.h      |  1 +
+ arch/loongarch/include/asm/kvm_para.h      |  2 ++
+ arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+ arch/loongarch/kvm/exit.c                  | 22 ++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c                  |  3 +++
+ 5 files changed, 29 insertions(+)
 
-Go read it while waiting instead of spamming everyone.
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 7b8367c39da8..590982cd986e 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -162,6 +162,7 @@ enum emulation_result {
+ #define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
+ #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
+ 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
++					 BIT(KVM_FEATURE_USER_HCALL) |	\
+ 					 BIT(KVM_FEATURE_VIRT_EXTIOI))
+ 
+ struct kvm_vcpu_arch {
+diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+index c4e84227280d..d3c00de484f6 100644
+--- a/arch/loongarch/include/asm/kvm_para.h
++++ b/arch/loongarch/include/asm/kvm_para.h
+@@ -13,12 +13,14 @@
+ 
+ #define KVM_HCALL_CODE_SERVICE		0
+ #define KVM_HCALL_CODE_SWDBG		1
++#define KVM_HCALL_CODE_USER		2
+ 
+ #define KVM_HCALL_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+ #define  KVM_HCALL_FUNC_IPI		1
+ #define  KVM_HCALL_FUNC_NOTIFY		2
+ 
+ #define KVM_HCALL_SWDBG			HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
++#define KVM_HCALL_USER_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
+ 
+ /*
+  * LoongArch hypercall return code
+diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+index b0604aa9b4bb..76d802ef01ce 100644
+--- a/arch/loongarch/include/uapi/asm/kvm_para.h
++++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+@@ -17,5 +17,6 @@
+ #define  KVM_FEATURE_STEAL_TIME		2
+ /* BIT 24 - 31 are features configurable by user space vmm */
+ #define  KVM_FEATURE_VIRT_EXTIOI	24
++#define  KVM_FEATURE_USER_HCALL		25
+ 
+ #endif /* _UAPI_ASM_KVM_PARA_H */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index a7893bd01e73..1a85cd4fb6a5 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+ 		vcpu->stat.hypercall_exits++;
+ 		kvm_handle_service(vcpu);
+ 		break;
++	case KVM_HCALL_USER_SERVICE:
++		if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
++			kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
++			break;
++		}
++
++		vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
++		vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
++		vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
++		vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
++		vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
++		vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
++		vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
++		vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
++		vcpu->run->hypercall.flags = 0;
++		/*
++		 * Set invalid return value by default
++		 * Need user-mode VMM modify it
++		 */
++		vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
++		ret = RESUME_HOST;
++		break;
+ 	case KVM_HCALL_SWDBG:
+ 		/* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
+ 		if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index d18a4a270415..8c46ad1872ee 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
+ 		if (!run->iocsr_io.is_write)
+ 			kvm_complete_iocsr_read(vcpu, run);
++	} else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
++		kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
++		update_pc(&vcpu->arch);
+ 	}
+ 
+ 	if (!vcpu->wants_to_run)
 
-Lemme get your started on that reading:
+base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
+-- 
+2.39.3
 
-"Don=E2=80=99t get discouraged - or impatient
-
-After you have submitted your change, be patient and wait. Reviewers are
-busy people and may not get to your patch right away.
-
-Once upon a time, patches used to disappear into the void without
-comment, but the development process works more smoothly than that now.
-You should receive comments within a few weeks (typically 2-3); if that
-does not happen, make sure that you have sent your patches to the right
-place. Wait for a minimum of one week before resubmitting or pinging
-reviewers - possibly longer during busy times like merge windows."
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
