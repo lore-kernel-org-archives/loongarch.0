@@ -1,225 +1,233 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DE7191F6F
-	for <loongarch@lists.linux.dev>; Mon, 23 Dec 2024 09:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D203B192B6D
+	for <loongarch@lists.linux.dev>; Mon, 23 Dec 2024 09:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734946639; cv=none; b=nEsPRjEeIgN1QSAORO2WGy70wYuWVZjs9M4uzzSX7YVpcBjQwcu+7Ub/tsZgWJaBQF6N6ehRSNwXZLtcbQWUX6ToLx4oolRS+f7/3RuDTdZSSwu+E955LYWPeXMgyPi/vtWdJTUKVDGxUMJKlZdpLJdge/8bAmpSsKOVkEfIvzc=
+	t=1734946985; cv=none; b=p7XlT9qEYCmC63J2MP6iRWkxVcZGQK1GKkNPtyZVrydedRK0YwTTRHA09t4am7B8sxdJrc13M8py6GlSnkxVacAbMViHir4VpDhXAVXyRg+kUwl/M2BtTgrlT7lf+35VYCRG9BqODQkTAsFsIlYgVCwwaRVtq2XJPX0kq1HC1qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734946639; c=relaxed/simple;
-	bh=GlZwnMnJIhET0Viu1CLEuU5FN+q6iIGTSeXaUX63rso=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=R2PA+yAXM+bAIKLLg3UHjPo1JVH2OWvTPeBP0ZARzCihLcAgWHwUaMyziGVG1+gK4Ib/LhF8JBM+8OOxeyqI3ih8cXLdopb/OPExl7zTXD9dGXSP5OcoCz8LmBu0muzZo/Pf1RV45kTlYi7TH+xxQuhmdwPjzJmLw0rCJeZHvQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxYa9JL2lnP7JZAA--.46019S3;
-	Mon, 23 Dec 2024 17:37:13 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCx78dFL2ln1aUGAA--.36524S3;
-	Mon, 23 Dec 2024 17:37:11 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add hypercall service support for
- usermode VMM
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20241223084212.34822-1-maobibo@loongson.cn>
- <CAAhV-H73CaNYFtgDfM+SOXYmwUhzr1w7JC4D+t2aASyUBxxTrA@mail.gmail.com>
- <d186408c-f083-2404-de60-2ec3c8b528cf@loongson.cn>
- <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <8f0aae2f-f8ba-818b-8faf-08b24d448080@loongson.cn>
-Date: Mon, 23 Dec 2024 17:36:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1734946985; c=relaxed/simple;
+	bh=5DVWBpP0g56PPJYmylzu2Hks40MXN3PGLVlL7LXCmXc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f6OF7piBMxIlkA1E6OfHop1M3nDaj15wWlU2yKnp1FNjoI9JcLgjriXrnH3OY7DsiRgUPRLZ698aYz5vZnMvrh/X2zVSvRgXCc5i//tmhfF71Rg9+O/Gr4aPpGhEgbLY5mvuOiq8W3oI8QnsJFKTQ/8Ei+YqTCOICdJ0SRbux3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HmFKrIMT; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HmFKrIMT"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-725d9f57d90so2878584b3a.1
+        for <loongarch@lists.linux.dev>; Mon, 23 Dec 2024 01:43:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1734946983; x=1735551783; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hW6jy85GFxw1rlbhA2IQSgcMmC6SEwxIAu1eEJQsQ+g=;
+        b=HmFKrIMTa0UdTzAoCBlgC989V9aC2KSyv3OGykNewPM+bQs0lXlOpcMsZNKHA4LBba
+         1iW2XPnSry9w4OXB890biTDb4Ajrd3bq61J+cngA5PMtJiTx8BoufYwomThcDilUbNfW
+         xYpgHV8RI6GTRh6XUr1M8dG3OndLm4+9WjbUMpK/4SFTniQh6xbrjpk60x5xTjK4pWhb
+         1wf1a4dyVy7jKHHLns6wTar8FUUYBRKwJ1v0Qldvb8oFJnWk5dEyi6tksHliucEOYatJ
+         emvlvacEuEvMBsvEGQQfJTpiU9UaJTaI/XrHyEffRqZK3+PgKW7TFZYz6ZGGE/ii/5x4
+         qI2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734946983; x=1735551783;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hW6jy85GFxw1rlbhA2IQSgcMmC6SEwxIAu1eEJQsQ+g=;
+        b=W/5QQcnr9JcIyL7C5tCM5cxj7fOCwya/EOoWqk/b+dP+z0sJyBjNuEc/qbuGpkSbH4
+         VNvOQNwllzjWbm66+wGXSUPdec8auugLMKJkSprDtdRFF3kkRIXicqhFCai1rk1tkZov
+         3SWCuWYuPKf1gWIP5eYoQPzKkdAwOzJlH6e0y30zWN2acP6//pE6I6oimYfrNFmSDUn+
+         Ny0PYON30iCuEd4yxHd6K2oioRgHWQi6JiUEPMUKAn4F5GZB/omV4JBE86YS9n1MRBi0
+         8+8WvSsHY8fjC1yXj2OxdwJX3AQN3UIs7kE4TV/JZ2e8HI0Y+U5UCv2MnluXGwfGc4fE
+         5Jng==
+X-Forwarded-Encrypted: i=1; AJvYcCVPIEDcyi6vga2yp4hxCFDKfmp/ybNnIfFWwOmAEGfgQYePJ3TA6Wd9TlLm7hilTKbOTyFygnRaiFA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMYn+1xIIQBwKaj8csszaMSx2i38quM4UVSdco08VdoUQX5q4m
+	eS3rOuhfpPdidKcjmKLEqEYx/O/+OmcXKeIQQSlFoetTT4oCgOLVbO+gxVT4+0E=
+X-Gm-Gg: ASbGncuKqzuP7bC+yntRQR96YYvVrAFvB9KptwE/g3I3CFHgg9A4SzI7CDwrsZYIL2g
+	zpQ/px6BYBeOOnfnK9+Q7uyT63hrG7nCCAqSqelDIysLo4aqQfGdCxabVqCZv9rQ6nQWD/r+WTl
+	RRtxsXcr0SY8wUdvYp/tVy2B4VSEqxjZJIRWVV8MhOdBU6PahwZ4nCNbvHeIpbjJwc1tMoxPJx8
+	RIU8NmdlQWZhMzMd6AB1xXEYzee5g4K0u1oir5tBhgG2FZ1GNgtQWys1Qv7NYX/RMn1eoLGx6PP
+	AHLeTAGWQUtb+r4e1CiXjA==
+X-Google-Smtp-Source: AGHT+IFRta8/SfQvcBY4OAtIB9mripqs4z6X28qqGG6H0nQGOiKq9bgrNZS2epuvDdaQMCTGZ3ooIw==
+X-Received: by 2002:a05:6a21:4986:b0:1e1:b1bb:87a0 with SMTP id adf61e73a8af0-1e606dfe60fmr3973055637.34.1734946982984;
+        Mon, 23 Dec 2024 01:43:02 -0800 (PST)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8486c6sm7468309b3a.85.2024.12.23.01.42.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2024 01:43:02 -0800 (PST)
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+To: peterz@infradead.org,
+	agordeev@linux.ibm.com,
+	kevin.brodsky@arm.com,
+	tglx@linutronix.de,
+	david@redhat.com,
+	jannh@google.com,
+	hughd@google.com,
+	yuzhao@google.com,
+	willy@infradead.org,
+	muchun.song@linux.dev,
+	vbabka@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	akpm@linux-foundation.org,
+	rientjes@google.com,
+	vishal.moola@gmail.com,
+	arnd@arndb.de,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	dave.hansen@linux.intel.com,
+	rppt@kernel.org,
+	ryan.roberts@arm.com
+Cc: linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 00/17] move pagetable_*_dtor() to __tlb_remove_table()
+Date: Mon, 23 Dec 2024 17:40:46 +0800
+Message-Id: <cover.1734945104.git.zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx78dFL2ln1aUGAA--.36524S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKryUWw4kKF1xAr4fGr18tFc_yoWxWFy8pr
-	yUAF1kCrW5Kr4fC3s2vwn09r92gr4kKr1Ig3WUKFWakrnIv3Z3Jr48Kr98CF98Xw1kXF10
-	vF9Ygw13uF15t3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
+Changes in v3:
+ - take patch #5 and #6 from Kevin Brodsky's patch series below.
+   Link: https://lore.kernel.org/lkml/20241219164425.2277022-1-kevin.brodsky@arm.com/
+ - separate the statistics part from [PATCH v2 02/15] as [PATCH v3 04/17], and
+   replace the rest part with Kevin Brodsky's patch #6
+   (Alexander Gordeev and Kevin Brodsky)
+ - change the commit message of [PATCH v2 10/15] and [PATCH v2 11/15]
+   (Alexander Gordeev)
+ - fix the bug introduced by [PATCH v2 11/15]
+   (Peter Zijlstra)
+ - rebase onto the next-20241220
 
+Changes in v2:
+ - add [PATCH v2 13|14|15/15] (suggested by Peter Zijlstra)
+ - add Originally-bys and Suggested-bys
+ - rebase onto the next-20241218
 
-On 2024/12/23 下午5:05, Huacai Chen wrote:
-> I also tried to port an untested version, but I think your version is
-> a tested one.
-> https://github.com/chenhuacai/linux/commit/e6596b0e45c80756794aba74ac086c5c0e0306eb
-> 
-> And I have some questions:
-> 1, "user service" is not only for syscall, so you rename it?
-yes, it is not only for private vmm, it can be used for qemu also if 
-there is requirement in future.
+Hi all,
 
-> 2, Why 4.19 doesn't need something like "vcpu->run->hypercall.args[0]
-> = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);"
-The private vmm and private kernel uses stack to pass to parameter, 
-which are private interface.
+As proposed [1] by Peter Zijlstra below, this patch series aims to move
+pagetable_*_dtor() into __tlb_remove_table(). This will cleanup pagetable_*_dtor()
+a bit and more gracefully fix the UAF issue [2] reported by syzbot.
 
-For KVM hypercall specification, at most six registers can be used for 
-input parameter and one register A0 used for output parameter.
+```
+Notably:
 
-> 3, I think my version about "vcpu->run->exit_reason =
-> KVM_EXIT_HYPERCALL;" and "update_pc()" is a little better than yours,
-> so you can improve them.
-yes, will do in this way.
+ - s390 pud isn't calling the existing pagetable_pud_[cd]tor()
+ - none of the p4d things have pagetable_p4d_[cd]tor() (x86,arm64,s390,riscv)
+   and they have inconsistent accounting
+ - while much of the _ctor calls are in generic code, many of the _dtor
+   calls are in arch code for hysterial raisins, this could easily be
+   fixed
+ - if we fix ptlock_free() to handle NULL, then all the _dtor()
+   functions can use it, and we can observe they're all identical
+   and can be folded
 
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
-> On Mon, Dec 23, 2024 at 4:54 PM bibo mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2024/12/23 下午4:50, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> Is this patch trying to do the same thing as "LoongArch: add hypcall
->>> to emulate syscall in kvm" in 4.19?
->> yes, it is to do so -:)
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>> On Mon, Dec 23, 2024 at 4:42 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> Some VMMs provides special hypercall service in usermode, KVM need
->>>> not handle the usermode hypercall service and pass it to VMM and
->>>> let VMM handle it.
->>>>
->>>> Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
->>>> service, KVM loads all six registers to VMM.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/include/asm/kvm_host.h      |  1 +
->>>>    arch/loongarch/include/asm/kvm_para.h      |  2 ++
->>>>    arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
->>>>    arch/loongarch/kvm/exit.c                  | 22 ++++++++++++++++++++++
->>>>    arch/loongarch/kvm/vcpu.c                  |  3 +++
->>>>    5 files changed, 29 insertions(+)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->>>> index 7b8367c39da8..590982cd986e 100644
->>>> --- a/arch/loongarch/include/asm/kvm_host.h
->>>> +++ b/arch/loongarch/include/asm/kvm_host.h
->>>> @@ -162,6 +162,7 @@ enum emulation_result {
->>>>    #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
->>>>    #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
->>>>                                            BIT(KVM_FEATURE_STEAL_TIME) |  \
->>>> +                                        BIT(KVM_FEATURE_USER_HCALL) |  \
->>>>                                            BIT(KVM_FEATURE_VIRT_EXTIOI))
->>>>
->>>>    struct kvm_vcpu_arch {
->>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
->>>> index c4e84227280d..d3c00de484f6 100644
->>>> --- a/arch/loongarch/include/asm/kvm_para.h
->>>> +++ b/arch/loongarch/include/asm/kvm_para.h
->>>> @@ -13,12 +13,14 @@
->>>>
->>>>    #define KVM_HCALL_CODE_SERVICE         0
->>>>    #define KVM_HCALL_CODE_SWDBG           1
->>>> +#define KVM_HCALL_CODE_USER            2
->>>>
->>>>    #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
->>>>    #define  KVM_HCALL_FUNC_IPI            1
->>>>    #define  KVM_HCALL_FUNC_NOTIFY         2
->>>>
->>>>    #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
->>>> +#define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
->>>>
->>>>    /*
->>>>     * LoongArch hypercall return code
->>>> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
->>>> index b0604aa9b4bb..76d802ef01ce 100644
->>>> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
->>>> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
->>>> @@ -17,5 +17,6 @@
->>>>    #define  KVM_FEATURE_STEAL_TIME                2
->>>>    /* BIT 24 - 31 are features configurable by user space vmm */
->>>>    #define  KVM_FEATURE_VIRT_EXTIOI       24
->>>> +#define  KVM_FEATURE_USER_HCALL                25
->>>>
->>>>    #endif /* _UAPI_ASM_KVM_PARA_H */
->>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
->>>> index a7893bd01e73..1a85cd4fb6a5 100644
->>>> --- a/arch/loongarch/kvm/exit.c
->>>> +++ b/arch/loongarch/kvm/exit.c
->>>> @@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
->>>>                   vcpu->stat.hypercall_exits++;
->>>>                   kvm_handle_service(vcpu);
->>>>                   break;
->>>> +       case KVM_HCALL_USER_SERVICE:
->>>> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
->>>> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
->>>> +                       break;
->>>> +               }
->>>> +
->>>> +               vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
->>>> +               vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
->>>> +               vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
->>>> +               vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
->>>> +               vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
->>>> +               vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
->>>> +               vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
->>>> +               vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
->>>> +               vcpu->run->hypercall.flags = 0;
->>>> +               /*
->>>> +                * Set invalid return value by default
->>>> +                * Need user-mode VMM modify it
->>>> +                */
->>>> +               vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
->>>> +               ret = RESUME_HOST;
->>>> +               break;
->>>>           case KVM_HCALL_SWDBG:
->>>>                   /* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
->>>>                   if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
->>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>> index d18a4a270415..8c46ad1872ee 100644
->>>> --- a/arch/loongarch/kvm/vcpu.c
->>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>> @@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>>>           if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
->>>>                   if (!run->iocsr_io.is_write)
->>>>                           kvm_complete_iocsr_read(vcpu, run);
->>>> +       } else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
->>>> +               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
->>>> +               update_pc(&vcpu->arch);
->>>>           }
->>>>
->>>>           if (!vcpu->wants_to_run)
->>>>
->>>> base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
->>>> --
->>>> 2.39.3
->>>>
->>
->>
+after all that cleanup, you can move the _dtor from *_free_tlb() into
+tlb_remove_table() -- which for the above case, would then have it
+called from __tlb_remove_table_free().
+```
+
+And hi Andrew, I developed the code based on the latest linux-next, so I reverted
+the "mm: pgtable: make ptlock be freed by RCU" first. Once the review of this
+patch series is completed, the "mm: pgtable: make ptlock be freed by RCU" can be
+dropped directly from mm tree, and this revert patch will not be needed.
+
+This series is based on next-20241220. And I tested this patch series on x86 and
+only cross-compiled it on arm, arm64, powerpc, riscv, s390 and sparc.
+
+Comments and suggestions are welcome!
+
+Thanks,
+Qi
+
+[1]. https://lore.kernel.org/all/20241211133433.GC12500@noisy.programming.kicks-ass.net/
+[2]. https://lore.kernel.org/all/67548279.050a0220.a30f1.015b.GAE@google.com/
+
+Kevin Brodsky (2):
+  riscv: mm: Skip pgtable level check in {pud,p4d}_alloc_one
+  asm-generic: pgalloc: Provide generic p4d_{alloc_one,free}
+
+Qi Zheng (15):
+  Revert "mm: pgtable: make ptlock be freed by RCU"
+  mm: pgtable: add statistics for P4D level page table
+  arm64: pgtable: use mmu gather to free p4d level page table
+  s390: pgtable: add statistics for PUD and P4D level page table
+  mm: pgtable: introduce pagetable_dtor()
+  arm: pgtable: move pagetable_dtor() to __tlb_remove_table()
+  arm64: pgtable: move pagetable_dtor() to __tlb_remove_table()
+  riscv: pgtable: move pagetable_dtor() to __tlb_remove_table()
+  x86: pgtable: move pagetable_dtor() to __tlb_remove_table()
+  s390: pgtable: also move pagetable_dtor() of PxD to
+    __tlb_remove_table()
+  mm: pgtable: introduce generic __tlb_remove_table()
+  mm: pgtable: move __tlb_remove_table_one() in x86 to generic file
+  mm: pgtable: remove tlb_remove_page_ptdesc()
+  mm: pgtable: remove tlb_remove_ptdesc()
+  mm: pgtable: introduce generic pagetable_dtor_free()
+
+ Documentation/mm/split_page_table_lock.rst |  4 +-
+ arch/arm/include/asm/tlb.h                 | 18 +-----
+ arch/arm64/include/asm/pgalloc.h           | 18 ------
+ arch/arm64/include/asm/tlb.h               | 31 ++++-----
+ arch/csky/include/asm/pgalloc.h            |  4 +-
+ arch/hexagon/include/asm/pgalloc.h         |  4 +-
+ arch/loongarch/include/asm/pgalloc.h       |  4 +-
+ arch/m68k/include/asm/mcf_pgalloc.h        |  4 +-
+ arch/m68k/include/asm/sun3_pgalloc.h       |  4 +-
+ arch/m68k/mm/motorola.c                    |  2 +-
+ arch/mips/include/asm/pgalloc.h            |  4 +-
+ arch/nios2/include/asm/pgalloc.h           |  4 +-
+ arch/openrisc/include/asm/pgalloc.h        |  4 +-
+ arch/powerpc/include/asm/tlb.h             |  1 +
+ arch/powerpc/mm/book3s64/mmu_context.c     |  2 +-
+ arch/powerpc/mm/book3s64/pgtable.c         |  2 +-
+ arch/powerpc/mm/pgtable-frag.c             |  4 +-
+ arch/riscv/include/asm/pgalloc.h           | 75 ++++++----------------
+ arch/riscv/include/asm/tlb.h               | 18 ------
+ arch/riscv/mm/init.c                       |  4 +-
+ arch/s390/include/asm/pgalloc.h            | 31 ++++++---
+ arch/s390/include/asm/tlb.h                | 43 ++++++-------
+ arch/s390/mm/pgalloc.c                     | 31 ++-------
+ arch/sh/include/asm/pgalloc.h              |  4 +-
+ arch/sparc/include/asm/tlb_32.h            |  1 +
+ arch/sparc/include/asm/tlb_64.h            |  1 +
+ arch/sparc/mm/init_64.c                    |  2 +-
+ arch/sparc/mm/srmmu.c                      |  2 +-
+ arch/um/include/asm/pgalloc.h              | 12 ++--
+ arch/x86/include/asm/pgalloc.h             | 18 ------
+ arch/x86/include/asm/tlb.h                 | 33 ----------
+ arch/x86/kernel/paravirt.c                 |  1 +
+ arch/x86/mm/pgtable.c                      | 13 ++--
+ include/asm-generic/pgalloc.h              | 60 +++++++++++++----
+ include/asm-generic/tlb.h                  | 23 +++----
+ include/linux/mm.h                         | 52 ++++++---------
+ include/linux/mm_types.h                   |  9 +--
+ mm/memory.c                                | 23 ++-----
+ mm/mmu_gather.c                            | 19 +++++-
+ 39 files changed, 228 insertions(+), 361 deletions(-)
+
+-- 
+2.20.1
 
