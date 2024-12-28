@@ -1,271 +1,293 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F8435958;
-	Sat, 28 Dec 2024 09:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7571C78F46;
+	Sat, 28 Dec 2024 11:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735378005; cv=none; b=UmLuDjrd7nK4T0/HxDYqvFZM4zitam8CQ4r/GQOYakiS/LEv8+oEnPCrJsvNXI/a5MCNDxQmvhMNuWrXHG6ZYi7r/bRpvThIqTiKVk2g8lp+Xo091bO/oD+VXLgIAejFrHYJ5V8/iWHEcF9wn6KbT7kIn/Rp/jin+4ZmTKKQN6w=
+	t=1735383769; cv=none; b=Bysvgtwpn9d6Xcu/y6QgB0Zs3BlvEdldLecmxCLoqh4NM0QqiIRjCuP4XbktnIWfLpflK4x0VtBNLjrb59jJc/dH97PoZkGeOdYTAHycSoHeHtEVGmQw3Ki3jptj5bLX/bEMeqcyjSIJQLIbf1VffejWzXY3JCUd+ZOZf8MzM4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735378005; c=relaxed/simple;
-	bh=NdwGWxzQ61Bdlc2yCI55C25+yHdt7Yebulv/gpuFIvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6UyAheC+m9wWBB/BOtFHyfquK4fS0wQPOPIOtSnQLYEv9diWlMzNUWXNKVpSrPUwGzW3RbtX0xpYRv9dPuCdEF/ycijngmiRSUrshOGTt32sWlyhhZ/305LMLC1VTxx627bYm5FTXy68y9ApWdduvR2JK2+hHSDC4FaYqdfDbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGvbYYbX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735383769; c=relaxed/simple;
+	bh=fbKroEQRip7xzhzwPmBv0l9MdXKz80Eq6dSvtLfPp2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1r5McV27Xnarq76IrT4MhrNn9VcfA8k5rZzdQzIgXLsCNaqBw6CZ+B3nLlYpUNVHbhztsXpwYM9IpaGvHYiq+OpQW9YPEGPRVRhFu9XZn0V5Rl7nxeUSZJUDDQ/otW288GpZ8XLUAZCWyNNPvER77y3eVJccwiwf7pUvjbywR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3ftWVjy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGvbYYbX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB08C4CECD;
-	Sat, 28 Dec 2024 09:26:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3ftWVjy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56529C4CECD;
+	Sat, 28 Dec 2024 11:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735378004;
-	bh=NdwGWxzQ61Bdlc2yCI55C25+yHdt7Yebulv/gpuFIvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eGvbYYbXUkvEKK0od8pJgtkaFObAeB0+9Pm8rAB7Sa4zFKTc1py1H/zjuAAR99wb0
-	 K2Gw4UfTuwgCfiJ43rGkjewBuPg2hWVlt8XFZiRX9g9/A1kgAj+TlRMWmCbsHDIDXM
-	 k/LOdIIcUnaNI2hZ2bByD4wmHFb5M+WaPqL9kcpiFrmnQ7KVbzpyl7hRLwOugzqchJ
-	 IqoKyVRRs3BYeTS4GX9BC3Agltc61xGFBJbqqpZ48YhMwv+4cuA7xkdOK8D/YoEOh4
-	 82496kSUIGrDQcgNOe4nEvKMCkaq8IcToemFiXbVbl6NSFSNYLOi0XW+B5pq+H8WZH
-	 ELopyF5Rw4YZA==
-Date: Sat, 28 Dec 2024 11:26:22 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: peterz@infradead.org, agordeev@linux.ibm.com, kevin.brodsky@arm.com,
-	tglx@linutronix.de, david@redhat.com, jannh@google.com,
-	hughd@google.com, yuzhao@google.com, willy@infradead.org,
-	muchun.song@linux.dev, vbabka@kernel.org,
-	lorenzo.stoakes@oracle.com, akpm@linux-foundation.org,
-	rientjes@google.com, vishal.moola@gmail.com, arnd@arndb.de,
-	will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
-	dave.hansen@linux.intel.com, ryan.roberts@arm.com,
-	linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH v3 15/17] mm: pgtable: remove tlb_remove_page_ptdesc()
-Message-ID: <Z2_EPmOTUHhcBegW@kernel.org>
-References: <cover.1734945104.git.zhengqi.arch@bytedance.com>
- <b37435768345e0fcf7ea358f69b4a71767f0f530.1734945104.git.zhengqi.arch@bytedance.com>
+	s=k20201202; t=1735383769;
+	bh=fbKroEQRip7xzhzwPmBv0l9MdXKz80Eq6dSvtLfPp2A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t3ftWVjy61eEoROm8ldC5SCxIDOXPLAMt4johAKlCHGO5rM9b+5INKwL9a3lt9l0Q
+	 1t65o7YT3YX8OGDPy1GNGSxo1Q9yTfldJCqooY57sZ/rqtYG1F8U1vS6RnY9s+IwNd
+	 IeNsTLW6VgsdskHhsgGAloW5uucF7b7SbDHdYupsFX7av62LjxDAbRhvaUz5HFj4aY
+	 38iUxVxvIc+SqWnnrzkpmRTi24k/vPfkVUANY3XyfwfRMd8vu5XiDmd7hFYtv5+l0a
+	 Rl88eCFVKQo9ISUIgtQHaf3Bot09u7ogfDRR2Zq8cC7LoBltDmVhpw4DlpZuJO+uZP
+	 DpQ6l0xEUTgrw==
+Message-ID: <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
+Date: Sat, 28 Dec 2024 12:02:43 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b37435768345e0fcf7ea358f69b4a71767f0f530.1734945104.git.zhengqi.arch@bytedance.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 RESEND] soc: loongson: add Loongson Security Module
+ driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>, arnd@arndb.de, olof@lixom.net,
+ soc@kernel.org
+Cc: soc@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, xry111@xry111.site, christophe.jaillet@wanadoo.fr
+References: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 23, 2024 at 05:41:01PM +0800, Qi Zheng wrote:
-> Here we are explicitly dealing with struct page, and the following logic
-> semms strange:
+On 24/12/2024 08:25, Qunqin Zhao wrote:
+> This driver supports Loongson Security Module, which
+> provides the control for it's hardware encryption
+> acceleration child devices.
+
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+
 > 
-> tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));
+> Only ACPI firmware is supported.
 > 
-> tlb_remove_page_ptdesc
-> --> tlb_remove_page(tlb, ptdesc_page(pt));
-> 
-> So remove tlb_remove_page_ptdesc() and make callers call tlb_remove_page()
-> directly.
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
 
-Please don't. The ptdesc wrappers are there as a part of reducing the size
-of struct page project [1]. 
+I don't get why you are sending this to soc. This is loongson specific
+and is supposed to go via Loongson maintainers.
 
-For now struct ptdesc overlaps struct page, but the goal is to have them
-separate and always operate on struct ptdesc when working with page tables.
+And why is this a resend?
 
-[1] https://kernelnewbies.org/MatthewWilcox/Memdescs
- 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Originally-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  arch/csky/include/asm/pgalloc.h      | 2 +-
->  arch/hexagon/include/asm/pgalloc.h   | 2 +-
->  arch/loongarch/include/asm/pgalloc.h | 2 +-
->  arch/m68k/include/asm/sun3_pgalloc.h | 2 +-
->  arch/mips/include/asm/pgalloc.h      | 2 +-
->  arch/nios2/include/asm/pgalloc.h     | 2 +-
->  arch/openrisc/include/asm/pgalloc.h  | 2 +-
->  arch/riscv/include/asm/pgalloc.h     | 2 +-
->  arch/sh/include/asm/pgalloc.h        | 2 +-
->  arch/um/include/asm/pgalloc.h        | 8 ++++----
->  include/asm-generic/tlb.h            | 6 ------
->  11 files changed, 13 insertions(+), 19 deletions(-)
+> Changes in v2:
+> 	- Removed useless memset() in probe.
+> 	- Cleaned up coding style.
+> 	- Corrected the spelling.
 > 
-> diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgalloc.h
-> index f1ce5b7b28f22..936a43a49e704 100644
-> --- a/arch/csky/include/asm/pgalloc.h
-> +++ b/arch/csky/include/asm/pgalloc.h
-> @@ -64,7 +64,7 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
->  #define __pte_free_tlb(tlb, pte, address)		\
->  do {							\
->  	pagetable_dtor(page_ptdesc(pte));		\
-> -	tlb_remove_page_ptdesc(tlb, page_ptdesc(pte));	\
-> +	tlb_remove_page(tlb, (pte));			\
->  } while (0)
->  
->  extern void pagetable_init(void);
-> diff --git a/arch/hexagon/include/asm/pgalloc.h b/arch/hexagon/include/asm/pgalloc.h
-> index 40e42a0e71673..8b1550498f1bf 100644
-> --- a/arch/hexagon/include/asm/pgalloc.h
-> +++ b/arch/hexagon/include/asm/pgalloc.h
-> @@ -90,7 +90,7 @@ static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
->  #define __pte_free_tlb(tlb, pte, addr)				\
->  do {								\
->  	pagetable_dtor((page_ptdesc(pte)));			\
-> -	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #endif
-> diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/include/asm/pgalloc.h
-> index 7211dff8c969e..5a4f22aeb6189 100644
-> --- a/arch/loongarch/include/asm/pgalloc.h
-> +++ b/arch/loongarch/include/asm/pgalloc.h
-> @@ -58,7 +58,7 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
->  #define __pte_free_tlb(tlb, pte, address)			\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), page_ptdesc(pte));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #ifndef __PAGETABLE_PMD_FOLDED
-> diff --git a/arch/m68k/include/asm/sun3_pgalloc.h b/arch/m68k/include/asm/sun3_pgalloc.h
-> index 2b626cb3ad0ae..63d9f95f5e3dd 100644
-> --- a/arch/m68k/include/asm/sun3_pgalloc.h
-> +++ b/arch/m68k/include/asm/sun3_pgalloc.h
-> @@ -20,7 +20,7 @@ extern const char bad_pmd_string[];
->  #define __pte_free_tlb(tlb, pte, addr)				\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), page_ptdesc(pte));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd, pte_t *pte)
-> diff --git a/arch/mips/include/asm/pgalloc.h b/arch/mips/include/asm/pgalloc.h
-> index 36d9805033c4b..bbee21345154b 100644
-> --- a/arch/mips/include/asm/pgalloc.h
-> +++ b/arch/mips/include/asm/pgalloc.h
-> @@ -57,7 +57,7 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
->  #define __pte_free_tlb(tlb, pte, address)			\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), page_ptdesc(pte));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #ifndef __PAGETABLE_PMD_FOLDED
-> diff --git a/arch/nios2/include/asm/pgalloc.h b/arch/nios2/include/asm/pgalloc.h
-> index 12a536b7bfbd4..641cec8fb2a22 100644
-> --- a/arch/nios2/include/asm/pgalloc.h
-> +++ b/arch/nios2/include/asm/pgalloc.h
-> @@ -31,7 +31,7 @@ extern pgd_t *pgd_alloc(struct mm_struct *mm);
->  #define __pte_free_tlb(tlb, pte, addr)					\
->  	do {								\
->  		pagetable_dtor(page_ptdesc(pte));			\
-> -		tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
-> +		tlb_remove_page((tlb), (pte));				\
->  	} while (0)
->  
->  #endif /* _ASM_NIOS2_PGALLOC_H */
-> diff --git a/arch/openrisc/include/asm/pgalloc.h b/arch/openrisc/include/asm/pgalloc.h
-> index 596e2355824e3..e9b9bc53ece0b 100644
-> --- a/arch/openrisc/include/asm/pgalloc.h
-> +++ b/arch/openrisc/include/asm/pgalloc.h
-> @@ -69,7 +69,7 @@ extern pte_t *pte_alloc_one_kernel(struct mm_struct *mm);
->  #define __pte_free_tlb(tlb, pte, addr)				\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #endif
-> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-> index c8907b8317115..ab4f9b2cf9e11 100644
-> --- a/arch/riscv/include/asm/pgalloc.h
-> +++ b/arch/riscv/include/asm/pgalloc.h
-> @@ -29,7 +29,7 @@ static inline void riscv_tlb_remove_ptdesc(struct mmu_gather *tlb, void *pt)
->  		tlb_remove_ptdesc(tlb, pt);
->  	} else {
->  		pagetable_dtor(pt);
-> -		tlb_remove_page_ptdesc(tlb, pt);
-> +		tlb_remove_page(tlb, ptdesc_page((struct ptdesc *)pt));
->  	}
->  }
->  
-> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
-> index 96d938fdf2244..43812b2363efd 100644
-> --- a/arch/sh/include/asm/pgalloc.h
-> +++ b/arch/sh/include/asm/pgalloc.h
-> @@ -35,7 +35,7 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
->  #define __pte_free_tlb(tlb, pte, addr)				\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #endif /* __ASM_SH_PGALLOC_H */
-> diff --git a/arch/um/include/asm/pgalloc.h b/arch/um/include/asm/pgalloc.h
-> index f0af23c3aeb2b..98190c318a8e9 100644
-> --- a/arch/um/include/asm/pgalloc.h
-> +++ b/arch/um/include/asm/pgalloc.h
-> @@ -28,7 +28,7 @@ extern pgd_t *pgd_alloc(struct mm_struct *);
->  #define __pte_free_tlb(tlb, pte, address)			\
->  do {								\
->  	pagetable_dtor(page_ptdesc(pte));			\
-> -	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
-> +	tlb_remove_page((tlb), (pte));				\
->  } while (0)
->  
->  #if CONFIG_PGTABLE_LEVELS > 2
-> @@ -36,15 +36,15 @@ do {								\
->  #define __pmd_free_tlb(tlb, pmd, address)			\
->  do {								\
->  	pagetable_dtor(virt_to_ptdesc(pmd));			\
-> -	tlb_remove_page_ptdesc((tlb), virt_to_ptdesc(pmd));	\
-> +	tlb_remove_page((tlb), virt_to_page(pmd));		\
->  } while (0)
->  
->  #if CONFIG_PGTABLE_LEVELS > 3
->  
->  #define __pud_free_tlb(tlb, pud, address)			\
->  do {								\
-> -	pagetable_dtor(virt_to_ptdesc(pud));		\
-> -	tlb_remove_page_ptdesc((tlb), virt_to_ptdesc(pud));	\
-> +	pagetable_dtor(virt_to_ptdesc(pud));			\
-> +	tlb_remove_page((tlb), virt_to_page(pud));		\
->  } while (0)
->  
->  #endif
-> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-> index 69de47c7ef3c5..8d6cfe5058543 100644
-> --- a/include/asm-generic/tlb.h
-> +++ b/include/asm-generic/tlb.h
-> @@ -504,12 +504,6 @@ static inline void tlb_remove_ptdesc(struct mmu_gather *tlb, void *pt)
->  	tlb_remove_table(tlb, pt);
->  }
->  
-> -/* Like tlb_remove_ptdesc, but for page-like page directories. */
-> -static inline void tlb_remove_page_ptdesc(struct mmu_gather *tlb, struct ptdesc *pt)
-> -{
-> -	tlb_remove_page(tlb, ptdesc_page(pt));
-> -}
-> -
->  static inline void tlb_change_page_size(struct mmu_gather *tlb,
->  						     unsigned int page_size)
->  {
-> -- 
-> 2.20.1
+>  MAINTAINERS                        |   7 +
+>  drivers/soc/loongson/Kconfig       |   9 +
+>  drivers/soc/loongson/Makefile      |   1 +
+>  drivers/soc/loongson/loongson_se.c | 523 +++++++++++++++++++++++++++++
+>  include/soc/loongson/se.h          | 135 ++++++++
+
+
+include/linux/soc/... or just keep it private to the driver. Why this
+has to be exposed to other users?
+
+>  5 files changed, 675 insertions(+)
+>  create mode 100644 drivers/soc/loongson/loongson_se.c
+>  create mode 100644 include/soc/loongson/se.h
 > 
 
--- 
-Sincerely yours,
-Mike.
+...
+
+> +
+> +/*
+> + * Called by SE's child device driver.
+> + */
+> +int se_send_ch_requeset(struct lsse_ch *ch)
+> +{
+> +	struct loongson_se *se;
+> +	u32 status, int_bit;
+> +
+> +	se = ch->se;
+> +	int_bit = ch->int_bit;
+> +	if ((se_readl(se, SE_L2SINT_STAT) & int_bit) ||
+> +	    !(se_readl(se, SE_L2SINT_EN) & int_bit))
+> +		return -EBUSY;
+> +
+> +	se_enable_int(se, int_bit);
+> +	se_writel(se, int_bit, SE_L2SINT_SET);
+> +
+> +	return readl_relaxed_poll_timeout_atomic(se->base + SE_L2SINT_STAT, status,
+> +						 !(status & int_bit), 10, 10000);
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(se_send_ch_requeset);
+
+No, no users. You cannot export unused symbols.
+
+> +
+> +/*
+> + * se_init_ch() - Init the channel used by child device.
+> + *
+> + * Allocate the shared memory agreed upon with SE on SE probe,
+> + * and register the callback function when the data processing
+> + * in this channel is completed.
+> + */
+> +struct lsse_ch *se_init_ch(struct device *dev, int id, int data_size, int msg_size,
+> +			   void *priv, void (*complete)(struct lsse_ch *se_ch))
+> +{
+> +	struct loongson_se *se = dev_get_drvdata(dev);
+> +	struct lsse_ch *ch;
+> +	unsigned long flag;
+> +	int data_first, data_nr;
+> +	int msg_first, msg_nr;
+> +
+> +	if (!se) {
+> +		pr_err("SE has bot been initialized\n");
+> +		return NULL;
+> +	}
+> +
+> +	if (id > SE_CH_MAX) {
+> +		dev_err(se->dev, "Channel number %d is invalid\n", id);
+> +		return NULL;
+> +	}
+> +
+> +	if (se_ch_status(se, BIT(id))) {
+> +		dev_err(se->dev, "Channel number %d has been initialized\n", id);
+> +		return NULL;
+> +	}
+> +
+> +	spin_lock_irqsave(&se->dev_lock, flag);
+> +
+> +	ch = &se->chs[id];
+> +	ch->se = se;
+> +	ch->id = id;
+> +	ch->int_bit = BIT(id);
+> +	se->ch_status |= BIT(id);
+> +
+> +	data_nr = round_up(data_size, PAGE_SIZE) / PAGE_SIZE;
+> +	data_first = bitmap_find_next_zero_area(se->mem_map, se->mem_map_pages,
+> +						0, data_nr, 0);
+> +	if (data_first >= se->mem_map_pages) {
+> +		dev_err(se->dev, "Insufficient memory space\n");
+> +		spin_unlock_irqrestore(&se->dev_lock, flag);
+> +		return NULL;
+> +	}
+> +
+> +	bitmap_set(se->mem_map, data_first, data_nr);
+> +	ch->data_buffer = se->mem_base + data_first * PAGE_SIZE;
+> +	ch->data_addr = se->mem_addr + data_first * PAGE_SIZE;
+> +	ch->data_size = data_size;
+> +
+> +	msg_nr = round_up(msg_size, PAGE_SIZE) / PAGE_SIZE;
+> +	msg_first = bitmap_find_next_zero_area(se->mem_map, se->mem_map_pages,
+> +					       0, msg_nr, 0);
+> +	if (msg_first >= se->mem_map_pages) {
+> +		dev_err(se->dev, "Insufficient memory space\n");
+> +		bitmap_clear(se->mem_map, data_first, data_nr);
+> +		spin_unlock_irqrestore(&se->dev_lock, flag);
+> +		return NULL;
+> +	}
+> +
+> +	bitmap_set(se->mem_map, msg_first, msg_nr);
+> +	ch->smsg = se->mem_base + msg_first * PAGE_SIZE;
+> +	ch->rmsg = ch->smsg + msg_size / 2;
+> +	ch->msg_size = msg_size;
+> +	ch->complete = complete;
+> +	ch->priv = priv;
+> +	spin_lock_init(&ch->ch_lock);
+> +
+> +	spin_unlock_irqrestore(&se->dev_lock, flag);
+> +
+> +	if (loongson_se_set_msg(ch)) {
+> +		dev_err(se->dev, "Channel %d setup message address failed\n", id);
+> +		return NULL;
+> +	}
+> +
+> +	se_enable_int(se, ch->int_bit);
+> +
+> +	return ch;
+> +}
+> +EXPORT_SYMBOL_GPL(se_init_ch);
+
+No, no users. You cannot export unused symbols.
+
+> +
+> +void se_deinit_ch(struct lsse_ch *ch)
+> +{
+> +	struct loongson_se *se = ch->se;
+> +	unsigned long flag;
+> +	int first, nr;
+> +	int id = ch->id;
+> +
+> +	if (!se) {
+> +		pr_err("SE has bot been initialized\n");
+> +		return;
+> +	}
+> +
+> +	if (id > SE_CH_MAX) {
+> +		dev_err(se->dev, "Channel number %d is invalid\n", id);
+> +		return;
+> +	}
+> +
+> +	if (!se_ch_status(se, BIT(id))) {
+> +		dev_err(se->dev, "Channel number %d has not been initialized\n", id);
+> +		return;
+> +	}
+> +
+> +	spin_lock_irqsave(&se->dev_lock, flag);
+> +	se->ch_status &= ~BIT(ch->id);
+> +
+> +	first = (ch->data_buffer - se->mem_base) / PAGE_SIZE;
+> +	nr = round_up(ch->data_size, PAGE_SIZE) / PAGE_SIZE;
+> +	bitmap_clear(se->mem_map, first, nr);
+> +
+> +	first = (ch->smsg - se->mem_base) / PAGE_SIZE;
+> +	nr = round_up(ch->msg_size, PAGE_SIZE) / PAGE_SIZE;
+> +	bitmap_clear(se->mem_map, first, nr);
+> +
+> +	se_disable_int(se, ch->int_bit);
+> +	spin_unlock_irqrestore(&se->dev_lock, flag);
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(se_deinit_ch);
+
+No, no users. You cannot export unused symbols.
+
+Best regards,
+Krzysztof
+
