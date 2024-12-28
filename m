@@ -1,108 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2E01F7557;
-	Fri, 27 Dec 2024 17:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F92F1F956
+	for <loongarch@lists.linux.dev>; Sat, 28 Dec 2024 06:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735319928; cv=none; b=WF/gvtMQIzvQp4Ov6H1FrOA9J3DXaa7wdslg9c+KxnBedtRU2+rLu+3C56YSXyr2TxaXsmVsGUZqaq77ppblVZxXR0RIAzgQHCvsvynkrXtqy6prVobjFC9XCIbxONutLyEgMC5KG5cosQ+cerUlRHM/6u3otRuJZu0Pz/ugLqQ=
+	t=1735367794; cv=none; b=pyTVWaML77s8tNH6GRy0GLeyZF0Fr2Az6O+GWLqYEXkdcv6sQsCYNzqoLGUMpJkbjjF6IrvfwmybR/Oi2t0WFjCWWbKRME5g0ELxmaVmtMwA9PTfyVokqVxtNcqV8LN1pbFAacEWiDcoSPXModnE408/SAOzfVazMRTtOhUr/Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735319928; c=relaxed/simple;
-	bh=cyPvuQG7rkgpWUrFujtHBOQ2InrAHxiLlkoqpRdbE34=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQ902vtB8hl1OXLOgwJF4UDUW0ScJaIMHWCz29+dxudQW1kjpT02E8k5hgrRaOHjoC1wvsmAkVSkI1zG5M2X6/ebnVQK7S100I0WwcREfQtJoPaXeDSkFNGzjq4xxKqiakxGB4s/dXVCDR/bd5IVNOFNCpxtUTW/Ym+d2y4mFLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E66C4CED0;
-	Fri, 27 Dec 2024 17:18:45 +0000 (UTC)
-Date: Fri, 27 Dec 2024 12:19:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel
- Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, "Paul E
- . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
- Thomas Gleixner <tglx@linutronix.de>, Huacai Chen <chenhuacai@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 19/28] LoongArch: ftrace: Use RCU in all users of
- __module_text_address().
-Message-ID: <20241227121946.1643decf@gandalf.local.home>
-In-Reply-To: <20241220174731.514432-20-bigeasy@linutronix.de>
-References: <20241220174731.514432-1-bigeasy@linutronix.de>
-	<20241220174731.514432-20-bigeasy@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1735367794; c=relaxed/simple;
+	bh=AnI+fDx8ege81551sFiwVqsAGZfaOg5IleFmbT3lTrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SKp1eCyjEYL64AvMZZOGa/krY5s16RajZU4vVNLADeF+ivcjGDDkdvHLB7WYnUDqhBTz7Jjs2JsNM2JJePnvynXP/4sM2nuebwyI87S0YIe2RpujxdcwfVkZ/1CUdtt8AkuVn1PjpMkPt8jQ01V3cmJkZ6lLE3ZOde1YQaQufbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Zv/X5/5f; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Zv/X5/5f"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2166651f752so109569965ad.3
+        for <loongarch@lists.linux.dev>; Fri, 27 Dec 2024 22:36:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1735367791; x=1735972591; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xz9+aZKFL34BZ+QKJapn5mhTQ8zZC8UnFG8XP+zHLMo=;
+        b=Zv/X5/5f/ZgynkZVHf+RhZ/2iJiImrEuNQjcPt32CX75Wu4FrgoUjnrJmapNteXSvM
+         XCABr8zxKwxgmxRedN5n6kPDp9CrZ6iYi2E196CrGfEk6DJxjKz/y2aEyVGF2FiSVEqg
+         tCj6pr6BEtb1RV6ocPvx+7AnbLYVxlahOs3BDt8b6xA+ex7gFRF+9aWpIyscKnR6yxKp
+         PQr1vxDEyDCEXpt36z5NgQg9Rm4xI8zHDjPec8n2QeBUNsycs+EFvpflD9qwp9Y+GI3u
+         rJFee+OfSgq3EiPgt41INxj8iZPdsm0NjqdhuLagenRGUkEhoZvQ88Uv8/H0OP9dv8y0
+         z8Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735367791; x=1735972591;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xz9+aZKFL34BZ+QKJapn5mhTQ8zZC8UnFG8XP+zHLMo=;
+        b=H2Spf+b4cWZO6oqAsfA+dlK/r0DPa5+bRKnWTMV1geasywz1qi0lVpWqHqDU5vhUES
+         sTy/NFxBAWCXRJ873tCybJuSovGveLq9n6q7mjnY64WqObUsUPYfJ0Xm09iYFWnybWMZ
+         SWYokC1z92XW/gdePh3rFuOTd9JJvIaGbfG1nB18VVllqArX1SGi7jQg3CE1T4YdQ/j5
+         LmjMW073yJLMdFSdFvkk/a08o4jdiiLmQsxkUuPnEZ7KpqQPlBS1A0xUDx3Ma0vdFArv
+         XTodcpQ6xe9vWp69NXH2Ss11JgO+xAaAHWUkh6aBRsfijJpd3N0y7s+rLxEEbn2Pbn9s
+         2Dog==
+X-Forwarded-Encrypted: i=1; AJvYcCU5niYHIt5+DrGnw/VvJDrZF8d4YNT3gu5oVYrk8ZwCh+kfukgZ12P6yfGaz4Vu9202f11k5ZbMlvg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzeTpKhwum2ORmm5f6WF322H6g/zgTrC56MiRdKwzKomJhPZWVb
+	HTYPLNE0iuBTqgk2fQEra0+EN6a5PTmh7R9Eb5dbURc04OEs1J+TcN0BIC05ABs=
+X-Gm-Gg: ASbGncs46aboP9xy5KPqT1de7Fk886btR9zeRDhw1XsFBT1sjzUI2aeL5akiv2jyjRG
+	VQ3iwTz4Tj7oP7wLHK/vU9pjRPigvElhju6ddz6gZhs1bTYNvYyxxy4KdYhM41zmjgYduNvgQnC
+	KEuTrYmEq5iC1zqx3oEw+8w496c5AZFroziph3caitqmIom7RN2rGtGoXHqGmpfTr2ttSUgOBsy
+	2rgp4EIta810k1MXMEU9qajf8fUTJKRgE+wpH4gVDaez2izfgU+H6HQrJUn0yVI5x7XWo6PMXIl
+	o6Kzfj71KHJspT29P/A3fJX+tIK3jgeuPCtrLfgvBSJXActIKZjqnSM=
+X-Google-Smtp-Source: AGHT+IHJr5/cBm7VE4sKmfeyqyU+nR3KXMBrwpgTBQUiz/94ds3IGaVh/bhouU9p0WQ7mj1Jxu9Qtg==
+X-Received: by 2002:a17:902:f682:b0:215:f1c2:fcc4 with SMTP id d9443c01a7336-219e6f1480cmr399252455ad.41.1735367791634;
+        Fri, 27 Dec 2024 22:36:31 -0800 (PST)
+Received: from ?IPV6:2409:8a28:f44:d7c4:e49d:ee0a:5f86:d7bd? ([2409:8a28:f44:d7c4:e49d:ee0a:5f86:d7bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97182dsm144536075ad.82.2024.12.27.22.36.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2024 22:36:31 -0800 (PST)
+Message-ID: <2434dfdf-d4a0-4f81-9b65-51be86487fd2@bytedance.com>
+Date: Sat, 28 Dec 2024 14:36:06 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/17] riscv: mm: Skip pgtable level check in
+ {pud,p4d}_alloc_one
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: peterz@infradead.org, agordeev@linux.ibm.com, kevin.brodsky@arm.com,
+ tglx@linutronix.de, david@redhat.com, jannh@google.com, hughd@google.com,
+ yuzhao@google.com, willy@infradead.org, muchun.song@linux.dev,
+ vbabka@kernel.org, lorenzo.stoakes@oracle.com, akpm@linux-foundation.org,
+ rientjes@google.com, vishal.moola@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+ Will Deacon <will@kernel.org>, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, rppt@kernel.org, ryan.roberts@arm.com,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org
+References: <mhng-3d6d3e65-b264-4033-b985-fa7763cacf9e@palmer-ri-x1c9a>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+Content-Language: en-US
+In-Reply-To: <mhng-3d6d3e65-b264-4033-b985-fa7763cacf9e@palmer-ri-x1c9a>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Dec 2024 18:41:33 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+Hi Palmer,
 
-> --- a/arch/loongarch/kernel/ftrace_dyn.c
-> +++ b/arch/loongarch/kernel/ftrace_dyn.c
-> @@ -85,14 +85,13 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod
->  	 * dealing with an out-of-range condition, we can assume it
->  	 * is due to a module being loaded far away from the kernel.
->  	 *
-> -	 * NOTE: __module_text_address() must be called with preemption
-> -	 * disabled, but we can rely on ftrace_lock to ensure that 'mod'
-> +	 * NOTE: __module_text_address() must be called within a RCU read
-> +	 * section, but we can rely on ftrace_lock to ensure that 'mod'
->  	 * retains its validity throughout the remainder of this code.
->  	 */
->  	if (!mod) {
-> -		preempt_disable();
-> +		guard(rcu)();
->  		mod = __module_text_address(pc);
-> -		preempt_enable();
->  	}
->  
->  	if (WARN_ON(!mod))
-> -- 
+On 2024/12/28 00:40, Palmer Dabbelt wrote:
+> On Mon, 23 Dec 2024 01:40:48 PST (-0800), zhengqi.arch@bytedance.com wrote:
+>> From: Kevin Brodsky <kevin.brodsky@arm.com>
+>>
+>> {pmd,pud,p4d}_alloc_one() is never called if the corresponding page
+>> table level is folded, as {pmd,pud,p4d}_alloc() already does the
+>> required check. We can therefore remove the runtime page table level
+>> checks in {pud,p4d}_alloc_one. The PUD helper becomes equivalent to
+>> the generic version, so we remove it altogether.
+>>
+>> This is consistent with the way arm64 and x86 handle this situation
+>> (runtime check in p4d_free() only).
+>>
+>> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+>> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>> ---
+>>  arch/riscv/include/asm/pgalloc.h | 22 ++++------------------
+>>  1 file changed, 4 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/pgalloc.h 
+>> b/arch/riscv/include/asm/pgalloc.h
+>> index f52264304f772..8ad0bbe838a24 100644
+>> --- a/arch/riscv/include/asm/pgalloc.h
+>> +++ b/arch/riscv/include/asm/pgalloc.h
+>> @@ -12,7 +12,6 @@
+>>  #include <asm/tlb.h>
+>>
+>>  #ifdef CONFIG_MMU
+>> -#define __HAVE_ARCH_PUD_ALLOC_ONE
+>>  #define __HAVE_ARCH_PUD_FREE
+>>  #include <asm-generic/pgalloc.h>
+>>
+>> @@ -88,15 +87,6 @@ static inline void pgd_populate_safe(struct 
+>> mm_struct *mm, pgd_t *pgd,
+>>      }
+>>  }
+>>
+>> -#define pud_alloc_one pud_alloc_one
+>> -static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned 
+>> long addr)
+>> -{
+>> -    if (pgtable_l4_enabled)
+>> -        return __pud_alloc_one(mm, addr);
+>> -
+>> -    return NULL;
+>> -}
+>> -
+>>  #define pud_free pud_free
+>>  static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+>>  {
+>> @@ -118,15 +108,11 @@ static inline void __pud_free_tlb(struct 
+>> mmu_gather *tlb, pud_t *pud,
+>>  #define p4d_alloc_one p4d_alloc_one
+>>  static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned 
+>> long addr)
+>>  {
+>> -    if (pgtable_l5_enabled) {
+>> -        gfp_t gfp = GFP_PGTABLE_USER;
+>> -
+>> -        if (mm == &init_mm)
+>> -            gfp = GFP_PGTABLE_KERNEL;
+>> -        return (p4d_t *)get_zeroed_page(gfp);
+>> -    }
+>> +    gfp_t gfp = GFP_PGTABLE_USER;
+>>
+>> -    return NULL;
+>> +    if (mm == &init_mm)
+>> +        gfp = GFP_PGTABLE_KERNEL;
+>> +    return (p4d_t *)get_zeroed_page(gfp);
+>>  }
+>>
+>>  static inline void __p4d_free(struct mm_struct *mm, p4d_t *p4d)
+> 
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-I personally dislike swapping one line of protection for the guard() code.
+Thank you for reviewing the patch!
 
-Although, I do think scoped_guard() can work.
+> 
+> Are you trying to keep these together, or do you want me to try and pick 
+> up the RISC-V bits on their own?
 
-That is:
+I prefer to keep them together because later patches depend on this one.
+And this patch series has been merged into mm-unstable branch.
 
-	if (!mod) {
-		read_rcu_lock();
-		mod = __module_text_address(pc);
-		read_rcu_unlock();
-	}
-
-Is easier to understand than:
-
-	if (!mod) {
-		guard(rcu)();
-		mod = __module_text_address(pc);
-	}
-
-Because it makes me wonder, why use a guard() for a one liner?
-
-But, when I saw your other patch, if we had:
-
-	if (!mod) {
-		scoped_guard(rcu)()
-			mod = __module_text_address(pc);
-	}
-
-To me, hat looks much better than the guard() as it is obvious to what the
-code is protecting. Even though, I still prefer the explicit, lock/unlock.
-Maybe, just because I'm more used to it.
-
-IMHO, guard() is for complex functions that are error prone. A single line
-is not something that is error prone (unless you don't match the lock and
-unlock properly, but that's pretty obvious when that happens).
-
-But this is just my own opinion.
-
--- Steve
+Thanks!
 
