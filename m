@@ -1,110 +1,47 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2631A4F1F
-	for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 09:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0BB51A238C
+	for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 09:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735549909; cv=none; b=DbUxJlSHpxMZ3A/Hd8PXZHjANk0Fw0yHyfu2TyrpEzFAM3y2Y5VUsRPIO1z2+KrTtmZDExVXgkTFSwb0FbuVQ3UUKe9aEwzVZeZWN4wwOOAaTayHQJ0n5i1qEqb+X0tWJ3T93ESAOysPkzWgUf/PB4qRuJbKuCj7c5gG5UdvY9M=
+	t=1735551085; cv=none; b=FvRGOvU+LgDVsOkOaO/3U8DR50rk9WfQqRI40BIBryohr+/7lT1O2WcTOSOvDjbO9C312tCOZIK2iJr+uD5MX2u2mjY8oEGqcamApLDQhPxKNyw9upxyuJY/eDHU97zegZBNB2Ume/3QKYsxL1kFQbc+uXVEMFQixwsNg6hWo64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735549909; c=relaxed/simple;
-	bh=q1hWJFvFfNeFAOErQnfZb6jq/jCJy3LyoYOS1Q4McDs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n5KQRljMKNAUr9XEg7owzET3W8fvK2y0A9Ajyb+//4WF5L9/xNza2zU2r1GC50S8NTVBAQOdV8sE2I6AJziPPjRV/ZqR24aVWB4F+OOJThEUYmU9H81Mf0NOVM/GdxkqTLx9cwZTQG/mM+fEyNR6q86xlNkz5AQXTrUX6YByn+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JmmFB6ph; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JmmFB6ph"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21644aca3a0so17758815ad.3
-        for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 01:11:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1735549907; x=1736154707; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uxx1VFA8X6F1Vml9+szJuo78n9B3sJITH2LTRfnVDm8=;
-        b=JmmFB6phwNJVxAp6OCyHAsPI2PZSrKImglvWYFf1VyMzMPY+hspIhZTC51BkjVk0Hu
-         vZe3+nKfRW4InwXlSHqCfWfEq7txGhA62LhME6VeStHO9u0xLRInEswNLCowmeqnNFeD
-         iF0RB2slPjABPs+9sr4WC4IXpQAvvksfgKBt2YnepWZIdlhzFOhpNJ2zt3Ij28PTUtAU
-         VSFwBe+rD5X9yyvTfMK+tnDIVJvbx56fwga4ISdYvPnWNAEMtk1XlgQLMNNZqQEpmeNI
-         zdSVZv7NjcPyVGUhWUaAgGIwprtNMy+rlF75RqEwxy9LZVpMP1qM/XokRiSLkLATlkzt
-         k1/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735549907; x=1736154707;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uxx1VFA8X6F1Vml9+szJuo78n9B3sJITH2LTRfnVDm8=;
-        b=PF44wo7IqBEJIZzEIvFTSFUw/X7XztcRcG8Msh5GdScjxvNL99Z/LdFVSp8EnKU2Z+
-         37KXVGt2BrGD2WZG3P+08tEPtsjD3aK1Nak6ySNTsBm0odDq3x2GMGIuAo3zFGTCL1sC
-         Yb/6nC7p2JJMmVDNijsgjvYRMYvciOMrwAFWzLZzSauhAAaCc1gHmyPmiLgeWFCTbi0L
-         FtxPQMefAmEDs6z52Iv3JMctJPcHAxmJvNYfPcJwoij8lWTI/9SndaVBKa83w2U0FJQQ
-         5Xc0XtCbsjSXxuRsnQGpAcFPjGl3FEYa02q9yFfVdmx+tiZklPF42VLM+N0MV4kSIRwt
-         fl2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWiUwBGpHgftLO8ggwipjwnOjojBoDSeh840g94zGFkJfMINDCD+mr9aABe9eeUgxeO1zcdFd0CryA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8gpPEyiFgt255igD/odcgbH6MEh8T/+8ienqd7R+or7qxKOn8
-	Xi6MpK+T5SHasP/f9gQIXKjK3CYwTNp5Tdj1VMmVIuk9KZo7oXWKX5iOZqvNNyE=
-X-Gm-Gg: ASbGnctIPvEY+ks/5Gfj0sH48PHuXiOR1yYYvF8hr93q20N9XmyyC3SMKILYb5KOlgt
-	eaZYNeOi1jJrnt/7drQ/x+JIR4QgZvhW9XEjmeSqtx381x11Ee9lCUNIwfw0eeyD2+qKIZNlPD3
-	B27xe+zbzRsbW+HWrlyO52xP9izEzTYsvJBNAp5Np8ONwqF14/Buc9VpMpkQzPqmKvZ+mOQRd7C
-	RfhVVfMhVhwWAVicRJ61BqPXR9LayXVLu4cHBtDHNJQ95uwia+7bX4HRUtXWpEtbb0XKa1ikM3z
-	AmP0s92vpoiEEgmO9ouvBA==
-X-Google-Smtp-Source: AGHT+IH6enLQBRxhPiyC+b4rbFoH6ZPXIb+9j2XLkfNoZdfNkkGtY/WgMqtF7HfldrPWQopcc9iyNw==
-X-Received: by 2002:a05:6a20:4308:b0:1e0:c8d9:3382 with SMTP id adf61e73a8af0-1e5e0847084mr55644198637.45.1735549906952;
-        Mon, 30 Dec 2024 01:11:46 -0800 (PST)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.150])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842aba72f7csm17057841a12.4.2024.12.30.01.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 01:11:46 -0800 (PST)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: peterz@infradead.org,
-	agordeev@linux.ibm.com,
-	kevin.brodsky@arm.com,
-	palmer@dabbelt.com,
-	tglx@linutronix.de,
-	david@redhat.com,
-	jannh@google.com,
-	hughd@google.com,
-	yuzhao@google.com,
-	willy@infradead.org,
-	muchun.song@linux.dev,
-	vbabka@kernel.org,
-	lorenzo.stoakes@oracle.com,
-	akpm@linux-foundation.org,
-	rientjes@google.com,
-	vishal.moola@gmail.com,
-	arnd@arndb.de,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	dave.hansen@linux.intel.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com
-Cc: linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
+	s=arc-20240116; t=1735551085; c=relaxed/simple;
+	bh=Q7LzPmcoeSwIbMinzQKXPqJsaFsmJP9+QsXs8KW/x4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O78VJjg8/PT4J16mjlgVG6N5swwiYlrMInHa04QttXSy43HUJ8ecwLewEXIEiMfRsRQaRuJSDz4cxE4WAIgqzlX3hMVc6oBB4k813QJoKTHAEgvue9JO24h5i8YFYXPq89Po8XdU86Ni9BC/6RnaQ94qMieWYABhOetF6ur2tHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.63])
+	by gateway (Coremail) with SMTP id _____8AxQK1oaHJnDc9bAA--.10185S3;
+	Mon, 30 Dec 2024 17:31:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.63])
+	by front1 (Coremail) with SMTP id qMiowMCxncVkaHJnp74NAA--.4295S3;
+	Mon, 30 Dec 2024 17:31:18 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	dri-devel@lists.freedesktop.org,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v4 15/15] mm: pgtable: introduce generic pagetable_dtor_free()
-Date: Mon, 30 Dec 2024 17:07:50 +0800
-Message-Id: <cb5700c21d0eed9eb50bac385be1fb6cdef7e530.1735549103.git.zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <cover.1735549103.git.zhengqi.arch@bytedance.com>
-References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH v1 1/4] mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core driver
+Date: Mon, 30 Dec 2024 17:31:08 +0800
+Message-ID: <074e91224f0e48861e11954dc80c92de322906a2.1735550269.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <cover.1735550269.git.zhoubinbin@loongson.cn>
+References: <cover.1735550269.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -112,115 +49,228 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxncVkaHJnp74NAA--.4295S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XrykWrWDAw1kJr4xKFWDJrc_yoW7uw43pF
+	n3Jay5CF4kXF47GrsxWr1UCFsxua9Yya4jqrsrJ34avayay34UZ348tF9xZryDGryq9ry7
+	tFWYyw1jkFs8JabCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Gii3UUUUU==
 
-The pte_free(), pmd_free(), __pud_free() and __p4d_free() in
-asm-generic/pgalloc.h and the generic __tlb_remove_table() are basically
-the same, so let's introduce pagetable_dtor_free() to deduplicate them.
+The Loongson-2K Board Management Controller provides an PCIe
+interface to the host to access the feature implemented in the BMC.
 
-In addition, the pagetable_dtor_free() in s390 does the same thing, so
-let's s390 also calls generic pagetable_dtor_free().
+The BMC is assembled on a server similar to the server machine with
+Loongson-3C6000 CPUs. It supports multiple sub-devices like DRM.
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/s390/mm/pgalloc.c        |  6 ------
- include/asm-generic/pgalloc.h | 12 ++++--------
- include/asm-generic/tlb.h     |  3 +--
- include/linux/mm.h            |  6 ++++++
- 4 files changed, 11 insertions(+), 16 deletions(-)
+ drivers/mfd/Kconfig       |  15 ++++
+ drivers/mfd/Makefile      |   2 +
+ drivers/mfd/ls2kbmc-mfd.c | 145 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
+ create mode 100644 drivers/mfd/ls2kbmc-mfd.c
 
-diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-index 3e002dea6278f..a4e7619020931 100644
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -180,12 +180,6 @@ unsigned long *page_table_alloc(struct mm_struct *mm)
- 	return table;
- }
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index ae23b317a64e..97d9d52b7e8a 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2414,5 +2414,20 @@ config MFD_RSMU_SPI
+ 	  Additional drivers must be enabled in order to use the functionality
+ 	  of the device.
  
--static void pagetable_dtor_free(struct ptdesc *ptdesc)
--{
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
--}
--
- void page_table_free(struct mm_struct *mm, unsigned long *table)
- {
- 	struct ptdesc *ptdesc = virt_to_ptdesc(table);
-diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-index 4afb346eae255..e3977ddca15e4 100644
---- a/include/asm-generic/pgalloc.h
-+++ b/include/asm-generic/pgalloc.h
-@@ -109,8 +109,7 @@ static inline void pte_free(struct mm_struct *mm, struct page *pte_page)
- {
- 	struct ptdesc *ptdesc = page_ptdesc(pte_page);
++config MFD_LS2K_BMC
++	tristate "Loongson-2K Board Management Controller Support"
++	depends on LOONGARCH
++	select MFD_CORE
++	help
++	  Say yes here to add support for the Loongson-2K BMC
++	  which is a Board Management Controller connected to the PCIe bus.
++	  The device supports multiple sub-devices like DRM.
++	  This driver provides common support for accessing the devices;
++	  additional drivers must be enabled in order to use the
++	  functionality of the BMC device.
++
++	  This driver can also be built as a module. If so the module
++	  will be called ls2kbmc-mfd.
++
+ endmenu
+ endif
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index e057d6d6faef..3faec9638303 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
  
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- 
- 
-@@ -153,8 +152,7 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
- 	struct ptdesc *ptdesc = virt_to_ptdesc(pmd);
- 
- 	BUG_ON((unsigned long)pmd & (PAGE_SIZE-1));
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- #endif
- 
-@@ -202,8 +200,7 @@ static inline void __pud_free(struct mm_struct *mm, pud_t *pud)
- 	struct ptdesc *ptdesc = virt_to_ptdesc(pud);
- 
- 	BUG_ON((unsigned long)pud & (PAGE_SIZE-1));
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- 
- #ifndef __HAVE_ARCH_PUD_FREE
-@@ -248,8 +245,7 @@ static inline void __p4d_free(struct mm_struct *mm, p4d_t *p4d)
- 	struct ptdesc *ptdesc = virt_to_ptdesc(p4d);
- 
- 	BUG_ON((unsigned long)p4d & (PAGE_SIZE-1));
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- 
- #ifndef __HAVE_ARCH_P4D_FREE
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 69de47c7ef3c5..a96d4b440f3da 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -213,8 +213,7 @@ static inline void __tlb_remove_table(void *table)
- {
- 	struct ptdesc *ptdesc = (struct ptdesc *)table;
- 
--	pagetable_dtor(ptdesc);
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- #endif
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cad11fa10c192..94078c488e904 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3001,6 +3001,12 @@ static inline void pagetable_dtor(struct ptdesc *ptdesc)
- 	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
- }
- 
-+static inline void pagetable_dtor_free(struct ptdesc *ptdesc)
+ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
+ obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
++
++obj-$(CONFIG_MFD_LS2K_BMC)	+= ls2kbmc-mfd.o
+diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
+new file mode 100644
+index 000000000000..2912112c41c8
+--- /dev/null
++++ b/drivers/mfd/ls2kbmc-mfd.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Loongson-2K Board Management Controller (BMC) MFD Core Driver.
++ *
++ * Copyright (C) 2024 Loongson Technology Corporation Limited.
++ *
++ * Originally written by Chong Qiao <qiaochong@loongson.cn>
++ * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
++ */
++
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci_ids.h>
++#include <linux/platform_device.h>
++
++static struct resource ls2k_display_resources[] = {
++	{
++		.name	= "ls2kbmc-simplebuf-res",
++		.start	= SZ_16M + SZ_2M,
++		.end	= SZ_16M + SZ_2M + SZ_4M - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct resource ls2k_ipmi0_resources[] = {
++	{
++		.name	= "ipmi-res0",
++		.start	= SZ_16M + 0x00f00000,
++		.end	= SZ_16M + 0x00f00000 + 0x1c - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct resource ls2k_ipmi1_resources[] = {
++	{
++		.name	= "ipmi-res1",
++		.start	= SZ_16M + 0x00f00000 + 0x1c,
++		.end	= SZ_16M + 0x00f00000 + 0x1c * 2 - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct resource ls2k_ipmi2_resources[] = {
++	{
++		.name	= "ipmi-res2",
++		.start	= SZ_16M + 0x00f00000 + 0x1c * 2,
++		.end	= SZ_16M + 0x00f00000 + 0x1c * 3 - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct resource ls2k_ipmi3_resources[] = {
++	{
++		.name	= "ipmi-res3",
++		.start	= SZ_16M + 0x00f00000 + 0x1c * 3,
++		.end	= SZ_16M + 0x00f00000 + 0x1c * 4 - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct resource ls2k_ipmi4_resources[] = {
++	{
++		.name	= "ipmi-res4",
++		.start	= SZ_16M + 0x00f00000 + 0x1c * 4,
++		.end	= SZ_16M + 0x00f00000 + 0x1c * 5 - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct mfd_cell ls2k_bmc_cells[] = {
++	{
++		.name = "ls2kbmc-framebuffer",
++		.num_resources = ARRAY_SIZE(ls2k_display_resources),
++		.resources = ls2k_display_resources,
++	},
++	{
++		.name = "ls2k-ipmi-si",
++		.num_resources = ARRAY_SIZE(ls2k_ipmi0_resources),
++		.resources = ls2k_ipmi0_resources,
++	},
++	{
++		.name = "ls2k-ipmi-si",
++		.num_resources = ARRAY_SIZE(ls2k_ipmi1_resources),
++		.resources = ls2k_ipmi1_resources,
++	},
++	{
++		.name = "ls2k-ipmi-si",
++		.num_resources = ARRAY_SIZE(ls2k_ipmi2_resources),
++		.resources = ls2k_ipmi2_resources,
++	},
++	{
++		.name = "ls2k-ipmi-si",
++		.num_resources = ARRAY_SIZE(ls2k_ipmi3_resources),
++		.resources = ls2k_ipmi3_resources,
++	},
++	{
++		.name = "ls2k-ipmi-si",
++		.num_resources = ARRAY_SIZE(ls2k_ipmi4_resources),
++		.resources = ls2k_ipmi4_resources,
++	},
++};
++
++static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
 +{
-+	pagetable_dtor(ptdesc);
-+	pagetable_free(ptdesc);
++	int ret = 0;
++
++	ret = pci_enable_device(dev);
++	if (ret)
++		return ret;
++
++	ls2k_bmc_cells[0].platform_data = &dev;
++	ls2k_bmc_cells[0].pdata_size = sizeof(dev);
++
++	return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
++				    ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_cells),
++				    &dev->resource[0], 0, NULL);
 +}
 +
- static inline bool pagetable_pte_ctor(struct ptdesc *ptdesc)
- {
- 	struct folio *folio = ptdesc_folio(ptdesc);
++static void ls2k_bmc_remove(struct pci_dev *dev)
++{
++	pci_disable_device(dev);
++}
++
++static struct pci_device_id ls2k_bmc_devices[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
++	{ }
++};
++MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
++
++static struct pci_driver ls2k_bmc_driver = {
++	.name = "ls2k-bmc",
++	.id_table = ls2k_bmc_devices,
++	.probe = ls2k_bmc_probe,
++	.remove = ls2k_bmc_remove,
++};
++
++module_pci_driver(ls2k_bmc_driver);
++
++MODULE_DESCRIPTION("Loongson-2K BMC driver");
++MODULE_AUTHOR("Loongson Technology Corporation Limited");
++MODULE_LICENSE("GPL");
 -- 
-2.20.1
+2.43.5
 
