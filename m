@@ -1,107 +1,240 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B2612DD8A
-	for <loongarch@lists.linux.dev>; Sun, 29 Dec 2024 10:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5938613632B
+	for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 02:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735467005; cv=none; b=lmItMl6UTk5I0rqiy29Z5kUJSjOJJjzuEbya9mrff1x8gCAiY91X+xKwUyvW3NX/EatvgTFXBtDy0Nx+8/9oQW4Gf7Zq5ThN1NmXV2C6p0SanEkTkjpt6B4fOB8sqrGbOIwIoxT6/xyl4nqFus2Kcmj1gVWVExS7//hA2qIkDYQ=
+	t=1735524789; cv=none; b=CkHGJSzBK25b8+EX04UjVFpBwo6yJOQbiMxkhqJp75wvfQqJzEKltxSyHJIi28wxKpmi1s2Iv5XCIq30BOzGoINfUjZ5wHalw3zsl0Ki5UMS1Z7bS9bzL6Q88fIXjB+K9X/Kt9YL/H5G4DSr3YDBB1k092Sdob103CE7GctttcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735467005; c=relaxed/simple;
-	bh=MXdX52JXPaPeRjNreD2b8PAGxtJmsLoO66i8UJWgPE4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=MMddL75+Ywz179sFTV/v6j5QXE+6R+Q2qYnZZrhks8Bt1809BQRNwKx8F5d5dswKTX5ula04CDomIMn0k8xtwzNoh3LgNv1k/IJvc8yl8qto9bLVIPXqQgkHrTrYa1ry1bNwY0zWaG4lINtIwNVEfIwnxlfkP9vCmNDvD87JvI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hYVijDAB; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hYVijDAB"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-436203f1203so12032625e9.2
-        for <loongarch@lists.linux.dev>; Sun, 29 Dec 2024 02:10:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735467001; x=1736071801; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=khsQQuQ61UqfLoQjYcyUre/fUsjYTl1Aj9lrnLjhkeI=;
-        b=hYVijDAB0SVO4bnHXOkfOBejm7ELfMDhQf+5frVwimb8BEmKTDO2krgEScB71O2iQg
-         TNuemv1Jf8LvkWqw1Tw4mOlNxBOHom5cPjr9YxiXXXNNn6iKcnxLJ6sDpp1FPRVW3bj5
-         B6zEF5jjWabTgg+aRN5rNyDP6ptwya9muGnVkaE800fk2/U/oY2/vGPU8Fyi7vbMpuyW
-         FmDBD0jN1qcJf/t4dXDrmdSIXw29Ti3nJaGSSN8d403HT24sdG+T0ZeA2OZHElPGcQlE
-         kJeR7gdzCeb9MsYDdNxXHjfHeSA2Bot/w7I1NvS6BVOUJPU360pMvfrh+XzpNihEVDAD
-         Di9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735467001; x=1736071801;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=khsQQuQ61UqfLoQjYcyUre/fUsjYTl1Aj9lrnLjhkeI=;
-        b=gIoxuXRa9wd+hIN4oBUP5Z9/sQcKwzQB9aepORrHBxhwWHSD06UlUmqpOeZD1MZHjV
-         2AXIkCtmkud5YeRbnfSGRgkHJK09RYTABQzpuTnN6aVRF3D2F2qZrgJ8Bm+kdH2Ww0aq
-         Fq1RdoyMhUzJsumRH/mCEm0TpxqsSclv7W/PxmaJmd6YFiA8PDSQlOzuYUKDFvJdFtnt
-         1GXy0Xf8CS3PwmliNoWFO2tWbHGtcrOvxN0MdQIoNYwCIx3MIYZQ/HVGwh39A8SA0S91
-         zD/VhuLWQp2Rxl8LVKH3IlyxAarhQfBidLmhb8ODevhPKNtX6jL0qC0VEaJwRykEm90g
-         1W4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWtcLZs/T4lMEWd0wL7niAD24eWx+8tUhWE8zQZCX7d0vGrF+QCtnTpeDyULllklvNlMkY7CkQ497k=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDhlr5blUB7QAwaUgIewtqkVfmbPZBCfV5+rgobBufx+fkKQG9
-	M1NIXYamHLfp29JDc+Ue9VuDaFsPanTvUjbFuKQBuXdhd3M8KlfJVdA5Pu7GKR8=
-X-Gm-Gg: ASbGncu/MV6WVd+bRCOEpCaqPdfYQA06ICIBMsBxrGkxFKDbHK9thAMBFyXoHTQI7xC
-	srTwqOd9zLEi2xHjsTqRW8y8Hf2/ECcl1e/g2EFahU1kpKpqxwdc6wqXh8c8hyWAXTjkLrUMAi9
-	EjwhFdos8PSpxxjy3GagdzmDMlE3LNJVlsw1XMsJitRq9FyMqkuh3CyO8yGaOBEzLdTBxAB1vR5
-	ya+yafWq1n3DMK7Io/BpiCTa1Qr3aWkxZUOT69B5Joxors3qlGc0EOAZddgt6Z/MYCtjzet
-X-Google-Smtp-Source: AGHT+IHe3HeMgdBYJg120JuyBz3xv5V39AfkqdmPSMsMsnaeeM2fsQk5UW2Kgj9EB8ub9FEeeqqGaw==
-X-Received: by 2002:a05:600c:4ec7:b0:436:6460:e688 with SMTP id 5b1f17b1804b1-43668bab39amr110519775e9.9.1735467001515;
-        Sun, 29 Dec 2024 02:10:01 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.223.165])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436611ea423sm325608385e9.2.2024.12.29.02.09.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2024 02:10:00 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, 
- Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- imx@lists.linux.dev, loongarch@lists.linux.dev
-In-Reply-To: <20240717-partake-antivirus-3347e415fb7d@spud>
-References: <20240717-anvil-ashy-544e80a1317c@spud>
- <20240717-partake-antivirus-3347e415fb7d@spud>
-Subject: Re: (subset) [PATCH v1 4/4] ARM: dts: socfpga: remove non-existent
- DAC from CycloneV devkit
-Message-Id: <173546699896.10551.718059378827423411.b4-ty@linaro.org>
-Date: Sun, 29 Dec 2024 11:09:58 +0100
+	s=arc-20240116; t=1735524789; c=relaxed/simple;
+	bh=DvHZL78QKW56ozJMObsH+DUnaP5GgpKGZeMe8Wi9WU0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JN5quMHbd9+CFMXGYOHSPSNMbItmBCHRP2ogOm47+m+8Zh4XpHRTp/kXmTobA+LGXV28/s8HIzuhv9S6U0MzNBRZku7EGMFGlnh0q4J9tsQLBJlLryLQSys04pGr4W9e8rqux1ZHnNSkUOk4DEntCClrLUZciL6PVPnIenc6gsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxGeCuAXJnT6VbAA--.48639S3;
+	Mon, 30 Dec 2024 10:13:02 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDxfceqAXJn3k8NAA--.2756S3;
+	Mon, 30 Dec 2024 10:13:01 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Add hypercall service support for
+ usermode VMM
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20241223084212.34822-1-maobibo@loongson.cn>
+ <CAAhV-H73CaNYFtgDfM+SOXYmwUhzr1w7JC4D+t2aASyUBxxTrA@mail.gmail.com>
+ <d186408c-f083-2404-de60-2ec3c8b528cf@loongson.cn>
+ <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <521ca7c6-64a2-53fa-5cff-b366ae73f600@loongson.cn>
+Date: Mon, 30 Dec 2024 10:12:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+In-Reply-To: <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxfceqAXJn3k8NAA--.2756S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3AF4fZw4fJF13Kw4DXr1kJFc_yoWxtw13pr
+	yUAF4kCrWrKr4fC3sIqwn09r9FgrWkKr1Ig3WUKFWayrnIv3Z3Jr48tr98CF98Xwn5XF1I
+	vF9Ygw13uF15t3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
+Hi Huacai,
 
-On Wed, 17 Jul 2024 10:37:56 +0100, Conor Dooley wrote:
-> There is no Rohm DAC on the CycloneV devkit according to the online
-> documentation for it that I could find, and it definitely does not have
-> a dh2228fv as this device does not actually exist! Remove the DAC node
-> from the devicetree as it is not acceptable to pretend to have a device
-> on a board in order to bind the spidev driver in Linux.
+On 2024/12/23 下午5:05, Huacai Chen wrote:
+> I also tried to port an untested version, but I think your version is
+> a tested one.
+> https://github.com/chenhuacai/linux/commit/e6596b0e45c80756794aba74ac086c5c0e0306eb
 > 
+> And I have some questions:
+> 1, "user service" is not only for syscall, so you rename it?
+> 2, Why 4.19 doesn't need something like "vcpu->run->hypercall.args[0]
+> = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);"
+> 3, I think my version about "vcpu->run->exit_reason =
+> KVM_EXIT_HYPERCALL;" and "update_pc()" is a little better than yours,
+> so you can improve them.
+After a second thought, update_pc() before return to user may be not 
+strictly right, since user VMM can dump registers including pc which is 
+advanced already.
+
+How about adding function kvm_complete_hypercall() like 
+kvm_complete_mmio_read(), such as:
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
++int kvm_complete_hypercall(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++       update_pc(&vcpu->arch);
++       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
++}
++
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1736,8 +1736,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+                 if (!run->iocsr_io.is_write)
+                         kvm_complete_iocsr_read(vcpu, run);
+         } else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
+-               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+-               update_pc(&vcpu->arch);
++               kvm_complete_hypercall(vcpu, run);
++               run->exit_reason = KVM_EXIT_UNKNOWN;
+         }
+
+Regards
+Bibo Mao
 > 
-> [...]
-
-Applied, thanks!
-
-[4/4] ARM: dts: socfpga: remove non-existent DAC from CycloneV devkit
-      https://git.kernel.org/krzk/linux-dt/c/ba9dfa76ebb030df6b605e16239a8052c3c02171
-
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Huacai
+> 
+> On Mon, Dec 23, 2024 at 4:54 PM bibo mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2024/12/23 下午4:50, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> Is this patch trying to do the same thing as "LoongArch: add hypcall
+>>> to emulate syscall in kvm" in 4.19?
+>> yes, it is to do so -:)
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>> On Mon, Dec 23, 2024 at 4:42 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> Some VMMs provides special hypercall service in usermode, KVM need
+>>>> not handle the usermode hypercall service and pass it to VMM and
+>>>> let VMM handle it.
+>>>>
+>>>> Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
+>>>> service, KVM loads all six registers to VMM.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_host.h      |  1 +
+>>>>    arch/loongarch/include/asm/kvm_para.h      |  2 ++
+>>>>    arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+>>>>    arch/loongarch/kvm/exit.c                  | 22 ++++++++++++++++++++++
+>>>>    arch/loongarch/kvm/vcpu.c                  |  3 +++
+>>>>    5 files changed, 29 insertions(+)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>> index 7b8367c39da8..590982cd986e 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>> @@ -162,6 +162,7 @@ enum emulation_result {
+>>>>    #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
+>>>>    #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
+>>>>                                            BIT(KVM_FEATURE_STEAL_TIME) |  \
+>>>> +                                        BIT(KVM_FEATURE_USER_HCALL) |  \
+>>>>                                            BIT(KVM_FEATURE_VIRT_EXTIOI))
+>>>>
+>>>>    struct kvm_vcpu_arch {
+>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>> index c4e84227280d..d3c00de484f6 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>> @@ -13,12 +13,14 @@
+>>>>
+>>>>    #define KVM_HCALL_CODE_SERVICE         0
+>>>>    #define KVM_HCALL_CODE_SWDBG           1
+>>>> +#define KVM_HCALL_CODE_USER            2
+>>>>
+>>>>    #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+>>>>    #define  KVM_HCALL_FUNC_IPI            1
+>>>>    #define  KVM_HCALL_FUNC_NOTIFY         2
+>>>>
+>>>>    #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+>>>> +#define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
+>>>>
+>>>>    /*
+>>>>     * LoongArch hypercall return code
+>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>> index b0604aa9b4bb..76d802ef01ce 100644
+>>>> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>> @@ -17,5 +17,6 @@
+>>>>    #define  KVM_FEATURE_STEAL_TIME                2
+>>>>    /* BIT 24 - 31 are features configurable by user space vmm */
+>>>>    #define  KVM_FEATURE_VIRT_EXTIOI       24
+>>>> +#define  KVM_FEATURE_USER_HCALL                25
+>>>>
+>>>>    #endif /* _UAPI_ASM_KVM_PARA_H */
+>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+>>>> index a7893bd01e73..1a85cd4fb6a5 100644
+>>>> --- a/arch/loongarch/kvm/exit.c
+>>>> +++ b/arch/loongarch/kvm/exit.c
+>>>> @@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+>>>>                   vcpu->stat.hypercall_exits++;
+>>>>                   kvm_handle_service(vcpu);
+>>>>                   break;
+>>>> +       case KVM_HCALL_USER_SERVICE:
+>>>> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
+>>>> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
+>>>> +                       break;
+>>>> +               }
+>>>> +
+>>>> +               vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
+>>>> +               vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
+>>>> +               vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
+>>>> +               vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
+>>>> +               vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
+>>>> +               vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
+>>>> +               vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
+>>>> +               vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
+>>>> +               vcpu->run->hypercall.flags = 0;
+>>>> +               /*
+>>>> +                * Set invalid return value by default
+>>>> +                * Need user-mode VMM modify it
+>>>> +                */
+>>>> +               vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
+>>>> +               ret = RESUME_HOST;
+>>>> +               break;
+>>>>           case KVM_HCALL_SWDBG:
+>>>>                   /* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
+>>>>                   if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>> index d18a4a270415..8c46ad1872ee 100644
+>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>> @@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>>>>           if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
+>>>>                   if (!run->iocsr_io.is_write)
+>>>>                           kvm_complete_iocsr_read(vcpu, run);
+>>>> +       } else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
+>>>> +               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+>>>> +               update_pc(&vcpu->arch);
+>>>>           }
+>>>>
+>>>>           if (!vcpu->wants_to_run)
+>>>>
+>>>> base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
+>>
 
