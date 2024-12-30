@@ -1,62 +1,62 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053B31A239D
-	for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 09:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF501A23A6
+	for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 09:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735549735; cv=none; b=ItDWgLHFt3Glv89fyHimolSgcuu3pqsdZ5eBNkGLSbKZySCZNzhdFuhA7/BMT9+RF8p2bI9CfBnvNPZkBKSw46rj4o2Idajoj40u7as8dtu3n2qqjwqHhkFAjk1K0Wi7g2BEedZWwITLf6hMBWcrJjvzB9rREd3I9rsSHA6V+Wk=
+	t=1735549748; cv=none; b=bRlru96fpX+iPIxaMUOjWNJxeOTlICtutAFKrojgOXeG+XFLHEnlBxqGWsgupB8114yh6odlcpi9LpfFzx8xHScXKaT9xxRF+2zflmXsjz6vwSt1LC9DCBilEuoubvtNt3PWMG4ElodbT8q2h4zsjnLfO2eHu9VhrkFVGFGCZG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735549735; c=relaxed/simple;
-	bh=eSQ1cqjI0k4SQFzb/dlIm3hCd3v5CZjZJpupq9IDdtI=;
+	s=arc-20240116; t=1735549748; c=relaxed/simple;
+	bh=PKxGSwR+56aVOtqiYfVzo+PhXISkTKu7YVtS9mMtvvo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BirTv9mo3jEo/8EaQ7Wkvj7bpb90Pq5VsvoKov+9SVZ03t75YpvJflkJ4CPoawt/lJJgnpXeGxGAuiEmVFhhOKwpCgnInSqRnwr0WqRM0IbNfXpbwmskkG6hoK5bWjd2P0F1k2qk6joEyt1mcGg7Gk0OPlP7EuiQgNgTkFWaiRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NEOkdOgk; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=fvqMWtf6hUAk7AS5+YbRaG1kAGIvcwekZTW7/w0LjeRDKAj2z9KwG0/YM1wZlFHyeVCO3/wsoB7hg5qYrwa+g176Uw7YeDAvylGAoeb8FI0yBiIQ2fZbgYxMBe2JJS91oVlir3PJrgBPtDxv+uP9tqQqQL+efp9PIAHj1UPmnc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ct94GA+M; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NEOkdOgk"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21631789fcdso87865125ad.1
-        for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 01:08:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ct94GA+M"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21683192bf9so116587705ad.3
+        for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 01:09:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1735549732; x=1736154532; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1735549745; x=1736154545; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SyzxI6H4ZAISLyWZ1lhQ49SW3wSD1SDR6GIh5AHA3wQ=;
-        b=NEOkdOgkqQYOqxADPfiOIfoKkNFubHSNXgpopXDm/dIvolT0FDs/7XpgLbqhOyWIgV
-         C/0b0XMaxhsc5O38hu7kQhdf4dgvFxTRgITxdktagfXBDZ6ZMPTqcR0JFuIsqcJOzccI
-         3FAO6AtGClnbHb5e2wciwajVRVY54oRZ19ApFyWPxnwCQGa3ZxOjAfQutjwumdcYloCt
-         P14iAmWu2aGaPNKoB9fvXcuqAT1IwcDg05/cVkFfvKmt0UlAEWZQ1gDYiTKgWimE55VI
-         XFtS5lvxuObZp4NXlwjbdtBmqcZ5pBIPW0Twb7Mx4sPM6yWiwHNLJGNLwcrnjQKB2Etr
-         LNmQ==
+        bh=mHzGZQny5JmimEm0kycepUlCOKttN6NXbKtm7VNKgbw=;
+        b=ct94GA+MOTi0TKuuSClrMJHcHJfjSgRBBKEum6EStBCOmZCqnC83rtk/xyyAQlwxpP
+         uuIzWJ7jAKYGEYK9gEC2mvYY1MRTSbGty9Pkg8cqmMM7Mv7+OBWX0Egy8gBK1IlrNUFh
+         xSlIj6O9Q7izpTmHJauS+5jLn8aOUFR26Drrz9qNSww/fuahU/xqDzKGHhLzSHBhiAlT
+         TrXp88irM//17wqVdsJ7kkSli67vt02HD2EXhngKGWe54fUBqHobGVe0tWN1tQppGE2K
+         VFgJn0YG6VTyIMfrKWJ5R3JuMvqOunM178LOn2bDxlYyVCTP08Q2fWVlYgVlnwkGOB0U
+         2FcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735549732; x=1736154532;
+        d=1e100.net; s=20230601; t=1735549745; x=1736154545;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SyzxI6H4ZAISLyWZ1lhQ49SW3wSD1SDR6GIh5AHA3wQ=;
-        b=KSnCFT6fzrRYGaPtYqigHJPEShzV5Jk2IOmFPa8hcl0fnT5PoI29w8hpKzg6oyzwdG
-         ka+SNtULLye6HY4NKdH/5ZhdwyeHNi5zVOQxlRdxUFFJU+m0CkyyzgzM2YjxfQ7fWmUv
-         KuzGXvOvQdB2YHz80pnpxVSbT9YrMfbmnNDHXu8Yt7GnEmNOeSJeAmgqcHhrfxoHe/Bv
-         8fHTfvl4qP9aOjONC0hXGdH9Agm4kZwvfETziFbwFlUvSj7Xw/dpdrZrMMpAhKYMzHO8
-         u3E4Wd1HsGa/4IsBzNrCE4O8/rRKRwuZjPeaTKG6idWNktpCat57wywkGL6/tWDRPUGy
-         uA3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqeDJCYYCoihCjtNGaoEDlvJT4LMUbHLHUScaHr58T3tbtocVSu+OIf4DGApO1/EzuhP2OgQ6bPIw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywy+4kh5rmruauWv9l+nzkctgK1zZ15qLRLmHCouuVwPF37jM6T
-	GG4Jgj9o/Ivz2dB8XV04iz+bwm7pMxSwoPWuvoN20bdk5ATV7qKPqa5pBYWr8Zs=
-X-Gm-Gg: ASbGnct+TEHgisWZE8SzMtlB1D5xbqd85v4bMN8ceZXKJiMDmX819w6hwQgwM30VNVE
-	cm3MzjNAoIl95tXHNxjEBd3HYwCLmcHZFg7UdiI06Cj35pXoFUdcjvusiVb1MhvBqZMxk+awy57
-	NpVJFB1h+zAp+dQWk6/rfHHsWkoSaDYNBUynPl//WQoM1O/u7wFWa+T4UH9GhWuKexkQEnsdFKV
-	7WLWBrnNhx9k59yc1vsC4UWQz3HRY24vlB7Ko+QllU5ubHETvDjP0fKTgdX1mNZABlv684xyrKQ
-	qSz2397w9epkhMucMV44Kg==
-X-Google-Smtp-Source: AGHT+IEXAwBIqSClrkb4EYoc2OhmhpgilmCz/IsEh6Chc/FsWIzsRB3p/FpLbUSGkXAy0ZMKjVVExg==
-X-Received: by 2002:a05:6a20:4320:b0:1e6:50a0:f982 with SMTP id adf61e73a8af0-1e650a0fa30mr7283235637.20.1735549732420;
-        Mon, 30 Dec 2024 01:08:52 -0800 (PST)
+        bh=mHzGZQny5JmimEm0kycepUlCOKttN6NXbKtm7VNKgbw=;
+        b=ZKp2S5Il5OTZutE5DhAhxyQLyh5b516KdyX+23IojkHxzTmncyxR9Pi0FEZt9LaKfy
+         WbWwztKfXegT+zB3y2co8ks27kj1RUHjM5WFKO+1LeT2d4CvTxCBz2d2PqVS3MvyrbAq
+         irjRxqFjL5b/uV52NqrUv/lYBZWkypR5l4yIPfYdgPBtySWosRiRyxAC4fCugMPBugyz
+         mOmAjeUHh9pnbbV/sUDysgmGrVJnTzMCJiZ8x4fqBZPZXKVEKC4GAmPuC/i0/MILGvth
+         /i80C7qSaNk9Qfk7ENa+qUGeuvPrJWmxiXmpT0xUNy6QX7UR2wSij26vVdJUyGlDmSaV
+         b74Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVGdyjivPPtFgmgtfa9m5NFDejYAIyv4U+qJTEavENN2n4qqthjojs+Cx/v6BqXrnw69fQxueCBGt8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw8fC8BNeHqUEqz12olN6cX3ikph3eg6yXLU8mWdfK6Oo/gWl7N
+	A7n/JmP+p7vLWC4bpz3AEb+HMahp4Bqjdv3CYDYyvmvPgXIvy7jLnLTFBV9T9Sc=
+X-Gm-Gg: ASbGncvPKYOu2bVCcCHL1+DggiMOAdbJeo0mle7nWejMnQTxhXdjMu12WBtL5JA88wo
+	UUfQeFI03QTtLkwTCjCo12zeDCMKVR0Dqz1QLUWzF3rdQD5ud0RrNrketwHdPHj2GgWdwqiPIWT
+	PXKPBIHSAQNju7l3BdQLuSbYpdWrH6o8192DJ63fuyZ0QcDp6R2wc9v35FeYIZOegp9/bAL7Kx3
+	M1WB5UTnw0KETyqzG9TM7zLDy8X5UE/Px5v4tmBX0UIoG4lsKsZ8Xcw2rxSkk0u2C925dbpU7r5
+	ySgOlYmvDMu1tVr86pIpDA==
+X-Google-Smtp-Source: AGHT+IEdmvGR6U/qwRYH5ruA02a+sFRctKWchidIfEBAoumo12DzBepIE5K3QuQVJJ60xG/AvigJ4Q==
+X-Received: by 2002:a05:6a20:a127:b0:1db:ddba:8795 with SMTP id adf61e73a8af0-1e5e08028cfmr53967973637.36.1735549745320;
+        Mon, 30 Dec 2024 01:09:05 -0800 (PST)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.150])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842aba72f7csm17057841a12.4.2024.12.30.01.08.40
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842aba72f7csm17057841a12.4.2024.12.30.01.08.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 01:08:51 -0800 (PST)
+        Mon, 30 Dec 2024 01:09:04 -0800 (PST)
 From: Qi Zheng <zhengqi.arch@bytedance.com>
 To: peterz@infradead.org,
 	agordeev@linux.ibm.com,
@@ -98,10 +98,11 @@ Cc: linux-mm@kvack.org,
 	linux-openrisc@vger.kernel.org,
 	linux-sh@vger.kernel.org,
 	linux-um@lists.infradead.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v4 01/15] Revert "mm: pgtable: make ptlock be freed by RCU"
-Date: Mon, 30 Dec 2024 17:07:36 +0800
-Message-Id: <b59adb960b2075822a6e57efc7a52e7eb7780068.1735549103.git.zhengqi.arch@bytedance.com>
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: [PATCH v4 02/15] riscv: mm: Skip pgtable level check in {pud,p4d}_alloc_one
+Date: Mon, 30 Dec 2024 17:07:37 +0800
+Message-Id: <84ddf857508b98a195a790bc6ff6ab8849b44633.1735549103.git.zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <cover.1735549103.git.zhengqi.arch@bytedance.com>
 References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
@@ -113,100 +114,73 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 2f3443770437e49abc39af26962d293851cbab6d.
+From: Kevin Brodsky <kevin.brodsky@arm.com>
 
+{pmd,pud,p4d}_alloc_one() is never called if the corresponding page
+table level is folded, as {pmd,pud,p4d}_alloc() already does the
+required check. We can therefore remove the runtime page table level
+checks in {pud,p4d}_alloc_one. The PUD helper becomes equivalent to
+the generic version, so we remove it altogether.
+
+This is consistent with the way arm64 and x86 handle this situation
+(runtime check in p4d_free() only).
+
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 ---
- include/linux/mm.h       |  2 +-
- include/linux/mm_types.h |  9 +--------
- mm/memory.c              | 22 ++++++----------------
- 3 files changed, 8 insertions(+), 25 deletions(-)
+ arch/riscv/include/asm/pgalloc.h | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index d61b9c7a3a7b0..c49bc7b764535 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2925,7 +2925,7 @@ void ptlock_free(struct ptdesc *ptdesc);
+diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+index f52264304f772..8ad0bbe838a24 100644
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -12,7 +12,6 @@
+ #include <asm/tlb.h>
  
- static inline spinlock_t *ptlock_ptr(struct ptdesc *ptdesc)
- {
--	return &(ptdesc->ptl->ptl);
-+	return ptdesc->ptl;
- }
- #else /* ALLOC_SPLIT_PTLOCKS */
- static inline void ptlock_cache_init(void)
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 90ab8293d714a..6b27db7f94963 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -434,13 +434,6 @@ FOLIO_MATCH(flags, _flags_2a);
- FOLIO_MATCH(compound_head, _head_2a);
- #undef FOLIO_MATCH
+ #ifdef CONFIG_MMU
+-#define __HAVE_ARCH_PUD_ALLOC_ONE
+ #define __HAVE_ARCH_PUD_FREE
+ #include <asm-generic/pgalloc.h>
  
--#if ALLOC_SPLIT_PTLOCKS
--struct pt_lock {
--	spinlock_t ptl;
--	struct rcu_head rcu;
--};
--#endif
--
- /**
-  * struct ptdesc -    Memory descriptor for page tables.
-  * @__page_flags:     Same as page flags. Powerpc only.
-@@ -489,7 +482,7 @@ struct ptdesc {
- 	union {
- 		unsigned long _pt_pad_2;
- #if ALLOC_SPLIT_PTLOCKS
--		struct pt_lock *ptl;
-+		spinlock_t *ptl;
- #else
- 		spinlock_t ptl;
- #endif
-diff --git a/mm/memory.c b/mm/memory.c
-index b9b05c3f93f11..9423967b24180 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -7034,34 +7034,24 @@ static struct kmem_cache *page_ptl_cachep;
- 
- void __init ptlock_cache_init(void)
- {
--	page_ptl_cachep = kmem_cache_create("page->ptl", sizeof(struct pt_lock), 0,
-+	page_ptl_cachep = kmem_cache_create("page->ptl", sizeof(spinlock_t), 0,
- 			SLAB_PANIC, NULL);
+@@ -88,15 +87,6 @@ static inline void pgd_populate_safe(struct mm_struct *mm, pgd_t *pgd,
+ 	}
  }
  
- bool ptlock_alloc(struct ptdesc *ptdesc)
- {
--	struct pt_lock *pt_lock;
-+	spinlock_t *ptl;
- 
--	pt_lock = kmem_cache_alloc(page_ptl_cachep, GFP_KERNEL);
--	if (!pt_lock)
-+	ptl = kmem_cache_alloc(page_ptl_cachep, GFP_KERNEL);
-+	if (!ptl)
- 		return false;
--	ptdesc->ptl = pt_lock;
-+	ptdesc->ptl = ptl;
- 	return true;
- }
- 
--static void ptlock_free_rcu(struct rcu_head *head)
+-#define pud_alloc_one pud_alloc_one
+-static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
 -{
--	struct pt_lock *pt_lock;
+-	if (pgtable_l4_enabled)
+-		return __pud_alloc_one(mm, addr);
 -
--	pt_lock = container_of(head, struct pt_lock, rcu);
--	kmem_cache_free(page_ptl_cachep, pt_lock);
+-	return NULL;
 -}
 -
- void ptlock_free(struct ptdesc *ptdesc)
+ #define pud_free pud_free
+ static inline void pud_free(struct mm_struct *mm, pud_t *pud)
  {
--	struct pt_lock *pt_lock = ptdesc->ptl;
+@@ -118,15 +108,11 @@ static inline void __pud_free_tlb(struct mmu_gather *tlb, pud_t *pud,
+ #define p4d_alloc_one p4d_alloc_one
+ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long addr)
+ {
+-	if (pgtable_l5_enabled) {
+-		gfp_t gfp = GFP_PGTABLE_USER;
 -
--	call_rcu(&pt_lock->rcu, ptlock_free_rcu);
-+	kmem_cache_free(page_ptl_cachep, ptdesc->ptl);
- }
- #endif
+-		if (mm == &init_mm)
+-			gfp = GFP_PGTABLE_KERNEL;
+-		return (p4d_t *)get_zeroed_page(gfp);
+-	}
++	gfp_t gfp = GFP_PGTABLE_USER;
  
+-	return NULL;
++	if (mm == &init_mm)
++		gfp = GFP_PGTABLE_KERNEL;
++	return (p4d_t *)get_zeroed_page(gfp);
+ }
+ 
+ static inline void __p4d_free(struct mm_struct *mm, p4d_t *p4d)
 -- 
 2.20.1
 
