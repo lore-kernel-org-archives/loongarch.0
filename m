@@ -1,140 +1,276 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43711188704
-	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 07:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A392F18E056
+	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 08:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735631795; cv=none; b=i/MdcR5guuTIAVWPYO1a0X1c9dWGPEft6oJeJh2uKiqUnwg17d2DjjfzzQBGlpn5Y0vxf0hall3oJ3pv5EYOk6HkZU7GxqsTs8jQfSez/cBqQjYOwtErdwwxmdES5nhXAAn2QaJpKSMNDW+CwGVwWA9fCPkzmGyvtjInTziuzNk=
+	t=1735634504; cv=none; b=hQYOG3GigpV4oRdzlvIf8VtMLLaA/pPjgLPIkinMWcs6JBssms9aque5PJvSI+Ny+wQlMP9iAPeComdyHAxsP4j82hdG1yPLioPcQW0uDSOlKCn5y7ouWvGPtTqDDqqgcYfQWTH2KKReRXTPKwvNywUQ2kWIoNGhllGbyETEedg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735631795; c=relaxed/simple;
-	bh=ndUUuADRZQz4vc3PlHVVgIMHvNH2fkoeXFXOrUR7kB8=;
+	s=arc-20240116; t=1735634504; c=relaxed/simple;
+	bh=S0pZB/8+bUrTH2ZqE0EYDyre8eepmgbbfxKsDiu+VrA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kx6YdddsTW/ocvhq1iALshciv7HJCta45dDqnSHLpOyZgY492uHYJUCcaLTDS+sY9zlqunLLGpMEDh1H+HeZBRKTomIMT1ExcJABiZheTNE7zVfm4Xc7ChD8lIhFDufwJFcoC6j76BfOiCuNrX6OpSAFzGNg45KSP2+tCN1sj1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCy8MsP3; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=TQ+BcUAI8IxQHACjIxMAcXUTOxfIeuL4+hVpK1vaZHgfYFKuO2uXApwLrFBRfiP1SLaLXvK/grbM868dDxKY/iZYPbc99F+p2DfmHeOsGDjjeraf4CDKdl/USpLN8A903+TOxZ3Dx4qlgWlo5YgKmTDQihRqhq3B4olfm62HsEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrBZXTHc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCy8MsP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC047C4AF0B
-	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 07:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrBZXTHc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41358C4CED6
+	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 08:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735631794;
-	bh=ndUUuADRZQz4vc3PlHVVgIMHvNH2fkoeXFXOrUR7kB8=;
+	s=k20201202; t=1735634504;
+	bh=S0pZB/8+bUrTH2ZqE0EYDyre8eepmgbbfxKsDiu+VrA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rCy8MsP34cl10Tjz/rqu94F3xEmYMAALWhwHrmYdd2SzmnCCc0MhKyOll665JcP7E
-	 qoheN+u5urTY+z5LjodvSXkdlLzXBlgXPmyI6b4SejgHe/Np4FktdsO4LnW90vbdpi
-	 Hwdka37ekHxk0HIx6STtn6eyw6p0PjO3GRHc1/m8jvnkHsyMSQqqQVzwGrLkmJLi5j
-	 d6eHkMR/zAgLn/GAaskhkcqGIz+g9WDLLjl53RxrkErZ8QmzZjnnR8ZjZCsorejWLO
-	 pcWvUnC76gf2QbSe7XT7rQrvpo1YZqJrLo+4sT5J/THOJJaEtrIKln31Eh9UFqakRT
-	 Wto6CKrFSnR4A==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa6a618981eso1625616266b.3
-        for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 23:56:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXpE+ITn5nROC15yJi3y5mS8cq3BUn+kyttZc03FDacoRLNsv/julLwaNJ9GlC/ymMX4stWA94/SRU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzDU7baOjwpQ7UUXvC31C11FYMnK00SZMaIPpx/N+K9qKzcrMDx
-	XliWOVTFpNGulpArXbKLzfFPfHRKU3XJ1SADStvf6AiM6mOQH1PTElv6TCOAz0OXTi22h1dRbv6
-	ypWoo9Fu5jOZLfjtfWyeZTIlaPPE=
-X-Google-Smtp-Source: AGHT+IGDt2q3oaihd4nxTSrdiOqM2wthTkMTfJCpd3xfPOKk3o6ujAvaRNNHYx7yPwSLmtgVwkMKTQXD1PKcKhcUkQ4=
-X-Received: by 2002:a17:907:7fa9:b0:aab:d8de:217e with SMTP id
- a640c23a62f3a-aac2c005b7amr3182406266b.26.1735631793454; Mon, 30 Dec 2024
- 23:56:33 -0800 (PST)
+	b=LrBZXTHc6Bi/SZHFlMIrtxkc13Bg/2piNGm+9dwHE8/pPdEiZv40pAyZf1kbchdZD
+	 7p5OoGmIBWu78KnotqqIY+Yx4OR7z4P1LtLqlJ8l9iTbWUVknsMMt2cI44+kUk0eXo
+	 bRvU2z74nAgumFEBCFWj1goBB7S/zG/bQfs43sgeNzxRk1lbB5V3iAqB2h0B4xIFEU
+	 w+x0heRyV+lNtabUvYbhXzJn/UuQcxidQWFHwvr2uq8JyQzoRAjntibvW5BECllmZr
+	 E+whnF9oXqXANXVHmD+G8d5aVHMq4xda5085pANhv/k7NU12EI1plahQ3HNq0e8P0S
+	 a8G8uF4B4mUbA==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf6b1a5f2bso188625266b.1
+        for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 00:41:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXHsiePuY4d3U/CvNuVZQRUCqGceAWA0OB8XOD4z8J2C/qX2ZR3N2wo8zx+YStVu7QKMnB9XxbQUpQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyIBQHhwWDXE+LpFh3NzN8l1sFC9QJu97OkEecBdtALyDGSt6A2
+	b+AVX7psrd8h9gAF/VNesDC05WOTDUC7wXWLreA6boDAE5Zl7fXIX86TRiUT7aRcef6TooiVfKZ
+	ZuocsysSlo6esbVXLDIX8AxC0PGs=
+X-Google-Smtp-Source: AGHT+IGn6DKTkVSNuM8NChZ2lX6kl/NYz5C7Zxt/IShJNy1LmXTWOSXX3+bu6j82mB9yxcCox69lem/for4w9uA5QNc=
+X-Received: by 2002:a17:907:7fa1:b0:aab:8311:951f with SMTP id
+ a640c23a62f3a-aac3349a9aamr3389940266b.6.1735634502780; Tue, 31 Dec 2024
+ 00:41:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241230021503.14012-1-zhangtianyang@loongson.cn>
-In-Reply-To: <20241230021503.14012-1-zhangtianyang@loongson.cn>
+References: <20241223084212.34822-1-maobibo@loongson.cn> <CAAhV-H73CaNYFtgDfM+SOXYmwUhzr1w7JC4D+t2aASyUBxxTrA@mail.gmail.com>
+ <d186408c-f083-2404-de60-2ec3c8b528cf@loongson.cn> <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
+ <521ca7c6-64a2-53fa-5cff-b366ae73f600@loongson.cn>
+In-Reply-To: <521ca7c6-64a2-53fa-5cff-b366ae73f600@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 31 Dec 2024 15:56:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H56tOfi1oqnwh1O94Z3sAS7sAbeKQ_U_O6AD98YVq6F=w@mail.gmail.com>
-Message-ID: <CAAhV-H56tOfi1oqnwh1O94Z3sAS7sAbeKQ_U_O6AD98YVq6F=w@mail.gmail.com>
-Subject: Re: [PATCH V2] irqchip/loongarch-avec:Add multi-nodes topology support
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: kernel@xen0n.name, tglx@linutronix.de, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 31 Dec 2024 16:41:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5TVwX2T=ccT4o0btJEbL+gwBESBD6Y_Z2BEqNuhom3iw@mail.gmail.com>
+Message-ID: <CAAhV-H5TVwX2T=ccT4o0btJEbL+gwBESBD6Y_Z2BEqNuhom3iw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Add hypercall service support for
+ usermode VMM
+To: bibo mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tianyang,
+On Mon, Dec 30, 2024 at 10:13=E2=80=AFAM bibo mao <maobibo@loongson.cn> wro=
+te:
+>
+> Hi Huacai,
+>
+> On 2024/12/23 =E4=B8=8B=E5=8D=885:05, Huacai Chen wrote:
+> > I also tried to port an untested version, but I think your version is
+> > a tested one.
+> > https://github.com/chenhuacai/linux/commit/e6596b0e45c80756794aba74ac08=
+6c5c0e0306eb
+> >
+> > And I have some questions:
+> > 1, "user service" is not only for syscall, so you rename it?
+> > 2, Why 4.19 doesn't need something like "vcpu->run->hypercall.args[0]
+> > =3D kvm_read_reg(vcpu, LOONGARCH_GPR_A0);"
+> > 3, I think my version about "vcpu->run->exit_reason =3D
+> > KVM_EXIT_HYPERCALL;" and "update_pc()" is a little better than yours,
+> > so you can improve them.
+> After a second thought, update_pc() before return to user may be not
+> strictly right, since user VMM can dump registers including pc which is
+> advanced already.
+Agree, and we can see how others do.
 
-On Mon, Dec 30, 2024 at 10:15=E2=80=AFAM Tianyang Zhang
-<zhangtianyang@loongson.cn> wrote:
 >
-> avecintc_init() enables the Advanced Interrupt Controller (AVEC) of
-> the boot CPU node, but nothing enables the AVEC on secondary nodes.
->
-> Move the enablement to the CPU hotplug callback so that secondary
-> nodes get the AVEC enabled too. In theory enabling it once per node
-> would be sufficient, but redundant enabling does no hard, so keep the
-> code simple and do it unconditionally.
->
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongarch-avec.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-l=
-oongarch-avec.c
-> index 0f6e465dd309..988d3e02ac54 100644
-> --- a/drivers/irqchip/irq-loongarch-avec.c
-> +++ b/drivers/irqchip/irq-loongarch-avec.c
-> @@ -56,6 +56,15 @@ struct avecintc_data {
->         unsigned int            moving;
->  };
->
-> +static inline void avecintc_enable(void)
-> +{
-> +       u64 value;
-> +
-> +       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> +       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> +       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> +}
-> +
->  static inline void avecintc_ack_irq(struct irq_data *d)
->  {
->  }
-> @@ -127,6 +136,8 @@ static int avecintc_cpu_online(unsigned int cpu)
->
->         guard(raw_spinlock)(&loongarch_avec.lock);
->
-> +       avecintc_enable();
-> +
->         irq_matrix_online(loongarch_avec.vector_matrix);
->
->         pending_list_init(cpu);
-> @@ -339,7 +350,6 @@ static int __init irq_matrix_init(void)
->  static int __init avecintc_init(struct irq_domain *parent)
->  {
->         int ret, parent_irq;
-> -       unsigned long value;
->
->         raw_spin_lock_init(&loongarch_avec.lock);
->
-> @@ -378,14 +388,13 @@ static int __init avecintc_init(struct irq_domain *=
-parent)
->                                   "irqchip/loongarch/avecintc:starting",
->                                   avecintc_cpu_online, avecintc_cpu_offli=
-ne);
->  #endif
-> -       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-> -       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
-> -       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-> +       avecintc_enable();
->
->         return ret;
->
->  out_remove_domain:
->         irq_domain_remove(loongarch_avec.domain);
-> +       loongarch_avec.domain =3D NULL;
-This is unnecessary, since no one checks it, and there is no memory
-leak even if without it.
+> How about adding function kvm_complete_hypercall() like
+> kvm_complete_mmio_read(), such as:
+ kvm_complete_user_service() maybe better? Since the "classic
+hypercall" doesn't come here.
+
+And we may also need to set vcpu->run->exit_reason for all cases,
+which is done in my version.
 
 Huacai
 
->  out_free_handle:
->         irq_domain_free_fwnode(loongarch_avec.fwnode);
->  out:
-> --
-> 2.20.1
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> +int kvm_complete_hypercall(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +{
+> +       update_pc(&vcpu->arch);
+> +       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+> +}
+> +
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1736,8 +1736,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>                  if (!run->iocsr_io.is_write)
+>                          kvm_complete_iocsr_read(vcpu, run);
+>          } else if (run->exit_reason =3D=3D KVM_EXIT_HYPERCALL) {
+> -               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret)=
+;
+> -               update_pc(&vcpu->arch);
+> +               kvm_complete_hypercall(vcpu, run);
+> +               run->exit_reason =3D KVM_EXIT_UNKNOWN;
+>          }
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> > On Mon, Dec 23, 2024 at 4:54=E2=80=AFPM bibo mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >>
+> >>
+> >> On 2024/12/23 =E4=B8=8B=E5=8D=884:50, Huacai Chen wrote:
+> >>> Hi, Bibo,
+> >>>
+> >>> Is this patch trying to do the same thing as "LoongArch: add hypcall
+> >>> to emulate syscall in kvm" in 4.19?
+> >> yes, it is to do so -:)
+> >>
+> >> Regards
+> >> Bibo Mao
+> >>>
+> >>> Huacai
+> >>>
+> >>> On Mon, Dec 23, 2024 at 4:42=E2=80=AFPM Bibo Mao <maobibo@loongson.cn=
+> wrote:
+> >>>>
+> >>>> Some VMMs provides special hypercall service in usermode, KVM need
+> >>>> not handle the usermode hypercall service and pass it to VMM and
+> >>>> let VMM handle it.
+> >>>>
+> >>>> Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
+> >>>> service, KVM loads all six registers to VMM.
+> >>>>
+> >>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>> ---
+> >>>>    arch/loongarch/include/asm/kvm_host.h      |  1 +
+> >>>>    arch/loongarch/include/asm/kvm_para.h      |  2 ++
+> >>>>    arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+> >>>>    arch/loongarch/kvm/exit.c                  | 22 +++++++++++++++++=
++++++
+> >>>>    arch/loongarch/kvm/vcpu.c                  |  3 +++
+> >>>>    5 files changed, 29 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/=
+include/asm/kvm_host.h
+> >>>> index 7b8367c39da8..590982cd986e 100644
+> >>>> --- a/arch/loongarch/include/asm/kvm_host.h
+> >>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+> >>>> @@ -162,6 +162,7 @@ enum emulation_result {
+> >>>>    #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
+> >>>>    #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |   =
+      \
+> >>>>                                            BIT(KVM_FEATURE_STEAL_TIM=
+E) |  \
+> >>>> +                                        BIT(KVM_FEATURE_USER_HCALL)=
+ |  \
+> >>>>                                            BIT(KVM_FEATURE_VIRT_EXTI=
+OI))
+> >>>>
+> >>>>    struct kvm_vcpu_arch {
+> >>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/=
+include/asm/kvm_para.h
+> >>>> index c4e84227280d..d3c00de484f6 100644
+> >>>> --- a/arch/loongarch/include/asm/kvm_para.h
+> >>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+> >>>> @@ -13,12 +13,14 @@
+> >>>>
+> >>>>    #define KVM_HCALL_CODE_SERVICE         0
+> >>>>    #define KVM_HCALL_CODE_SWDBG           1
+> >>>> +#define KVM_HCALL_CODE_USER            2
+> >>>>
+> >>>>    #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISO=
+R_KVM, KVM_HCALL_CODE_SERVICE)
+> >>>>    #define  KVM_HCALL_FUNC_IPI            1
+> >>>>    #define  KVM_HCALL_FUNC_NOTIFY         2
+> >>>>
+> >>>>    #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(H=
+YPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+> >>>> +#define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_=
+KVM, KVM_HCALL_CODE_USER)
+> >>>>
+> >>>>    /*
+> >>>>     * LoongArch hypercall return code
+> >>>> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loong=
+arch/include/uapi/asm/kvm_para.h
+> >>>> index b0604aa9b4bb..76d802ef01ce 100644
+> >>>> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+> >>>> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+> >>>> @@ -17,5 +17,6 @@
+> >>>>    #define  KVM_FEATURE_STEAL_TIME                2
+> >>>>    /* BIT 24 - 31 are features configurable by user space vmm */
+> >>>>    #define  KVM_FEATURE_VIRT_EXTIOI       24
+> >>>> +#define  KVM_FEATURE_USER_HCALL                25
+> >>>>
+> >>>>    #endif /* _UAPI_ASM_KVM_PARA_H */
+> >>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> >>>> index a7893bd01e73..1a85cd4fb6a5 100644
+> >>>> --- a/arch/loongarch/kvm/exit.c
+> >>>> +++ b/arch/loongarch/kvm/exit.c
+> >>>> @@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vcpu=
+ *vcpu)
+> >>>>                   vcpu->stat.hypercall_exits++;
+> >>>>                   kvm_handle_service(vcpu);
+> >>>>                   break;
+> >>>> +       case KVM_HCALL_USER_SERVICE:
+> >>>> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER=
+_HCALL)) {
+> >>>> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HC=
+ALL_INVALID_CODE);
+> >>>> +                       break;
+> >>>> +               }
+> >>>> +
+> >>>> +               vcpu->run->exit_reason =3D KVM_EXIT_HYPERCALL;
+> >>>> +               vcpu->run->hypercall.nr =3D KVM_HCALL_USER_SERVICE;
+> >>>> +               vcpu->run->hypercall.args[0] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A0);
+> >>>> +               vcpu->run->hypercall.args[1] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A1);
+> >>>> +               vcpu->run->hypercall.args[2] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A2);
+> >>>> +               vcpu->run->hypercall.args[3] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A3);
+> >>>> +               vcpu->run->hypercall.args[4] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A4);
+> >>>> +               vcpu->run->hypercall.args[5] =3D kvm_read_reg(vcpu, =
+LOONGARCH_GPR_A5);
+> >>>> +               vcpu->run->hypercall.flags =3D 0;
+> >>>> +               /*
+> >>>> +                * Set invalid return value by default
+> >>>> +                * Need user-mode VMM modify it
+> >>>> +                */
+> >>>> +               vcpu->run->hypercall.ret =3D KVM_HCALL_INVALID_CODE;
+> >>>> +               ret =3D RESUME_HOST;
+> >>>> +               break;
+> >>>>           case KVM_HCALL_SWDBG:
+> >>>>                   /* KVM_HCALL_SWDBG only in effective when SW_BP is=
+ enabled */
+> >>>>                   if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+> >>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> >>>> index d18a4a270415..8c46ad1872ee 100644
+> >>>> --- a/arch/loongarch/kvm/vcpu.c
+> >>>> +++ b/arch/loongarch/kvm/vcpu.c
+> >>>> @@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *v=
+cpu)
+> >>>>           if (run->exit_reason =3D=3D KVM_EXIT_LOONGARCH_IOCSR) {
+> >>>>                   if (!run->iocsr_io.is_write)
+> >>>>                           kvm_complete_iocsr_read(vcpu, run);
+> >>>> +       } else if (run->exit_reason =3D=3D KVM_EXIT_HYPERCALL) {
+> >>>> +               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall=
+.ret);
+> >>>> +               update_pc(&vcpu->arch);
+> >>>>           }
+> >>>>
+> >>>>           if (!vcpu->wants_to_run)
+> >>>>
+> >>>> base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
+> >>>> --
+> >>>> 2.39.3
+> >>>>
+> >>
+> >>
 >
