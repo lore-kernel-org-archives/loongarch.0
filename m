@@ -1,103 +1,140 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8622A1D7
-	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 07:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43711188704
+	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735631649; cv=none; b=gUrZsBcjlniQkg2SNjVCfqA/em4KJxXJFzVa9lz8iUVoyclDx6znoUwKEt2a/6coPqtnz/rSGtYmQPpUP7hcCj1yC4hj7NzEanEZ2tT5i5AZcCPII9BOh0fBPc6iWPOTSS2/U72qQiN0GGeRL9AaNDgvm0CJ4MVl+dZJkh9YUwM=
+	t=1735631795; cv=none; b=i/MdcR5guuTIAVWPYO1a0X1c9dWGPEft6oJeJh2uKiqUnwg17d2DjjfzzQBGlpn5Y0vxf0hall3oJ3pv5EYOk6HkZU7GxqsTs8jQfSez/cBqQjYOwtErdwwxmdES5nhXAAn2QaJpKSMNDW+CwGVwWA9fCPkzmGyvtjInTziuzNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735631649; c=relaxed/simple;
-	bh=b/pFC+Vx168E8dTmVUIHcsYU88BX3EgWB+w74JWFF14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QAJoXOn5nrhtEK1H9gBwcIj6FlwqwjsMXoZMDtg67dF7C79qvKq4y6gm6NO6ePZHj3XoG5EKh9ss0E7XxJ6srdcSxLttCaPBtYXECj3+oodFTFAwGOqKyBRvIBuANvpQEeKoU+Nz0KQ/1+GjLIAdJDSDGUwNVO9dgHp/4MVMTbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.63])
-	by gateway (Coremail) with SMTP id _____8Dx2uEco3NnT1JcAA--.53484S3;
-	Tue, 31 Dec 2024 15:54:04 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.63])
-	by front1 (Coremail) with SMTP id qMiowMAxvsUYo3Nnth8PAA--.8118S2;
-	Tue, 31 Dec 2024 15:54:04 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Refactor bug_handler() implementation
-Date: Tue, 31 Dec 2024 15:53:53 +0800
-Message-ID: <20241231075353.1458674-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1735631795; c=relaxed/simple;
+	bh=ndUUuADRZQz4vc3PlHVVgIMHvNH2fkoeXFXOrUR7kB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kx6YdddsTW/ocvhq1iALshciv7HJCta45dDqnSHLpOyZgY492uHYJUCcaLTDS+sY9zlqunLLGpMEDh1H+HeZBRKTomIMT1ExcJABiZheTNE7zVfm4Xc7ChD8lIhFDufwJFcoC6j76BfOiCuNrX6OpSAFzGNg45KSP2+tCN1sj1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCy8MsP3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCy8MsP3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC047C4AF0B
+	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 07:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735631794;
+	bh=ndUUuADRZQz4vc3PlHVVgIMHvNH2fkoeXFXOrUR7kB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rCy8MsP34cl10Tjz/rqu94F3xEmYMAALWhwHrmYdd2SzmnCCc0MhKyOll665JcP7E
+	 qoheN+u5urTY+z5LjodvSXkdlLzXBlgXPmyI6b4SejgHe/Np4FktdsO4LnW90vbdpi
+	 Hwdka37ekHxk0HIx6STtn6eyw6p0PjO3GRHc1/m8jvnkHsyMSQqqQVzwGrLkmJLi5j
+	 d6eHkMR/zAgLn/GAaskhkcqGIz+g9WDLLjl53RxrkErZ8QmzZjnnR8ZjZCsorejWLO
+	 pcWvUnC76gf2QbSe7XT7rQrvpo1YZqJrLo+4sT5J/THOJJaEtrIKln31Eh9UFqakRT
+	 Wto6CKrFSnR4A==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa6a618981eso1625616266b.3
+        for <loongarch@lists.linux.dev>; Mon, 30 Dec 2024 23:56:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXpE+ITn5nROC15yJi3y5mS8cq3BUn+kyttZc03FDacoRLNsv/julLwaNJ9GlC/ymMX4stWA94/SRU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzDU7baOjwpQ7UUXvC31C11FYMnK00SZMaIPpx/N+K9qKzcrMDx
+	XliWOVTFpNGulpArXbKLzfFPfHRKU3XJ1SADStvf6AiM6mOQH1PTElv6TCOAz0OXTi22h1dRbv6
+	ypWoo9Fu5jOZLfjtfWyeZTIlaPPE=
+X-Google-Smtp-Source: AGHT+IGDt2q3oaihd4nxTSrdiOqM2wthTkMTfJCpd3xfPOKk3o6ujAvaRNNHYx7yPwSLmtgVwkMKTQXD1PKcKhcUkQ4=
+X-Received: by 2002:a17:907:7fa9:b0:aab:d8de:217e with SMTP id
+ a640c23a62f3a-aac2c005b7amr3182406266b.26.1735631793454; Mon, 30 Dec 2024
+ 23:56:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxvsUYo3Nnth8PAA--.8118S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZFy8WFy7Aw13XryrGry5KFX_yoWkXrX_Wr
-	13Cw18WrW8AayF93WqqFs7XryDuay8tFnak3Z2qrZxtF93Wr1rGr4jvwn0yrnYqFW5Gr45
-	XrWkX3Zaka4aqosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <20241230021503.14012-1-zhangtianyang@loongson.cn>
+In-Reply-To: <20241230021503.14012-1-zhangtianyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 31 Dec 2024 15:56:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H56tOfi1oqnwh1O94Z3sAS7sAbeKQ_U_O6AD98YVq6F=w@mail.gmail.com>
+Message-ID: <CAAhV-H56tOfi1oqnwh1O94Z3sAS7sAbeKQ_U_O6AD98YVq6F=w@mail.gmail.com>
+Subject: Re: [PATCH V2] irqchip/loongarch-avec:Add multi-nodes topology support
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, tglx@linutronix.de, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-1. Early return for user mode triggered exception with all types.
-2. Give a chance to call fixup_exception() for default types (like
-   S390).
+Hi, Tianyang,
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/traps.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+On Mon, Dec 30, 2024 at 10:15=E2=80=AFAM Tianyang Zhang
+<zhangtianyang@loongson.cn> wrote:
+>
+> avecintc_init() enables the Advanced Interrupt Controller (AVEC) of
+> the boot CPU node, but nothing enables the AVEC on secondary nodes.
+>
+> Move the enablement to the CPU hotplug callback so that secondary
+> nodes get the AVEC enabled too. In theory enabling it once per node
+> would be sufficient, but redundant enabling does no hard, so keep the
+> code simple and do it unconditionally.
+>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongarch-avec.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-l=
+oongarch-avec.c
+> index 0f6e465dd309..988d3e02ac54 100644
+> --- a/drivers/irqchip/irq-loongarch-avec.c
+> +++ b/drivers/irqchip/irq-loongarch-avec.c
+> @@ -56,6 +56,15 @@ struct avecintc_data {
+>         unsigned int            moving;
+>  };
+>
+> +static inline void avecintc_enable(void)
+> +{
+> +       u64 value;
+> +
+> +       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> +       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> +       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +}
+> +
+>  static inline void avecintc_ack_irq(struct irq_data *d)
+>  {
+>  }
+> @@ -127,6 +136,8 @@ static int avecintc_cpu_online(unsigned int cpu)
+>
+>         guard(raw_spinlock)(&loongarch_avec.lock);
+>
+> +       avecintc_enable();
+> +
+>         irq_matrix_online(loongarch_avec.vector_matrix);
+>
+>         pending_list_init(cpu);
+> @@ -339,7 +350,6 @@ static int __init irq_matrix_init(void)
+>  static int __init avecintc_init(struct irq_domain *parent)
+>  {
+>         int ret, parent_irq;
+> -       unsigned long value;
+>
+>         raw_spin_lock_init(&loongarch_avec.lock);
+>
+> @@ -378,14 +388,13 @@ static int __init avecintc_init(struct irq_domain *=
+parent)
+>                                   "irqchip/loongarch/avecintc:starting",
+>                                   avecintc_cpu_online, avecintc_cpu_offli=
+ne);
+>  #endif
+> -       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> -       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> -       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +       avecintc_enable();
+>
+>         return ret;
+>
+>  out_remove_domain:
+>         irq_domain_remove(loongarch_avec.domain);
+> +       loongarch_avec.domain =3D NULL;
+This is unnecessary, since no one checks it, and there is no memory
+leak even if without it.
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index c57b4134f3e8..2ec3106c0da3 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -597,17 +597,24 @@ int is_valid_bugaddr(unsigned long addr)
- 
- static void bug_handler(struct pt_regs *regs)
- {
-+	if (user_mode(regs)) {
-+		force_sig(SIGTRAP);
-+		return;
-+	}
-+
- 	switch (report_bug(regs->csr_era, regs)) {
- 	case BUG_TRAP_TYPE_BUG:
--	case BUG_TRAP_TYPE_NONE:
--		die_if_kernel("Oops - BUG", regs);
--		force_sig(SIGTRAP);
-+		die("Oops - BUG", regs);
- 		break;
- 
- 	case BUG_TRAP_TYPE_WARN:
- 		/* Skip the BUG instruction and continue */
- 		regs->csr_era += LOONGARCH_INSN_SIZE;
- 		break;
-+
-+	default:
-+		if (!fixup_exception(regs))
-+			die("Oops - BUG", regs);
- 	}
- }
- 
--- 
-2.43.5
+Huacai
 
+>  out_free_handle:
+>         irq_domain_free_fwnode(loongarch_avec.fwnode);
+>  out:
+> --
+> 2.20.1
+>
