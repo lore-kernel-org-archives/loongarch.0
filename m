@@ -1,305 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A18618C00B
-	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 09:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D082AEE9;
+	Tue, 31 Dec 2024 12:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735637842; cv=none; b=DNNSD26IEJ5TiH6gyhENcAJC0oosonPCmwSPuFzurvXccU9XgPVbLFudvB8kNCDMFC2zKVKuItveeRwtAfjhFCoOunHQwcPGqwZCfxlWbIhwklaC+XzmcH49DWEwX3X2DzwERidHGC7hD5h6xy9MSLg6xVIvun39Sv5oD1dZlsc=
+	t=1735648684; cv=none; b=hd6jqYTjaQE+7M/riuS1BVXcmqGSNfbGu1FEzVNJH5qJB2/vlQWLj7NV0kiRJmJat2nGDwmYRRV9w5CDGhc139hoi9DvA5nDPVlkOGY+ycYU9F4LUoILEa863GRsOuLUtqPemqbej+JDZEIHMCRjIBfrSlqFBQwTHDBO/DMZXvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735637842; c=relaxed/simple;
-	bh=a1SyA27xhAQfSi/dI5hJ0oGNNPE6XukEm3NoyuqEsSg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VL9xaVw+cWCCOwlJYueOsF9yIEUi7DtoYZqRK8P3B1qanAayCX/wsBLgtOz/27gBjOA2VZRDXCajdxfs5V5d34ll1bgOvQtiIy9EdJ8cBuMQuotndk3Zy/ZreILe74ysEO+O2ZTDoeozc0RDZVHbsspQrEzIbHmAIIDfrEg3a00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SE2ic69m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735648684; c=relaxed/simple;
+	bh=eO4FJRCM46xV+UKrRsbLkkdoDyXhlS27Mj0ITYumRtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Up8QPJTmYjrZW6Dr4NGlRHeG3X9DwsU+5tLXoJbGr3/sLn1J1Q4yd4KVKCg/kAUBPwPQbGH04q0d5BAZVToGqp/yP0ru6PTlbU7y4lRPS8qft5rgYk7jInpnekwV2A17Nh8f+3RNI2irhKyIAXblsmoeHcVNLXzKy42emJW4uVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aaroh0/Q; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SE2ic69m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D093C4CED6
-	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 09:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735637842;
-	bh=a1SyA27xhAQfSi/dI5hJ0oGNNPE6XukEm3NoyuqEsSg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SE2ic69mgxL2OwJHtL0A7zld3KNy4u/zpq4B7dZyt1+crOrUAdvbon7psdAqbIlSs
-	 pMQJ3ngQdAOsfQwcbLGEiYS+VBETPiR3K0bcfbR6p/hBv5mmpXKz0/BMUCODe9EgMm
-	 4kf/Y4tWf327GzqAwiXzNqZP41edeIeR1K+kZzzC2QYMG2p4mExxl3UC1RbFAbPxqx
-	 4+6640TkideE1DsGaOleaaBDZBtY2JXg4JvB3PchemvH3mnTMExlyYouy+rilxCQh2
-	 vj+jfINHKFoiDLFTMUGzkP5JiKhzTiTLHBweODYrWX382TbAhK6Vyqqg8EgVS0gso9
-	 1xwJcBQgHmPqw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa684b6d9c7so1642143266b.2
-        for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 01:37:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXwZK1D0WLzCSXyktoZvzYnYCY1bfsWhFVxtVJelaak1jF85wswv66umiN5w511DRab/6yxcoWo+bE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwkRRTU6KjrkhP7R5HCr0P03l6tf5PZQ2d095WScAUDdYL4hP+/
-	Iyq//bLI1YCChdugUai2yLZKCku3WB//M2LRsBI7T0XOYZuPc7ehpGwfGcnPHYgGajZ7PR49BAw
-	YqJ7TBIjp99dA2sQ4/7DWPnW0wdE=
-X-Google-Smtp-Source: AGHT+IF9tMIl5QLw+RSv4dBYExrDOeGNOB8hUTyHSsLBhqDmVHrKvqwGQlEF7aMH0AuqhessL0+vWvXfJIQ73hdDdB0=
-X-Received: by 2002:a17:907:3f10:b0:aa6:9624:78f7 with SMTP id
- a640c23a62f3a-aac2ada1f5fmr3101487466b.17.1735637840552; Tue, 31 Dec 2024
- 01:37:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aaroh0/Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735648682; x=1767184682;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eO4FJRCM46xV+UKrRsbLkkdoDyXhlS27Mj0ITYumRtE=;
+  b=aaroh0/QE21OGMXBW69O6S+FU/NpY2wIeoeCR+IrTOnJqhOZhoe/7TEz
+   JFKbd7QEEV0fHmnQ5V9e3lIaHj7tNKvRN5tqiSuIXKPTfjFe78gfsQLLj
+   V+wKUIeSowL+Ef8DzTKN03Ioa6EMxz3Y3xjXu93OTH6iSw1+6PhqoYFav
+   6k0uxK51JJgo4KxPXV9lRDn2r2I8uprMlSwyuB5IJSUhzk9zKC8qWZjpO
+   /QIIGgPUTNJGKSAHNNdkW9wusadXhc//iANDSHtT5bDMuX3k4UN3R33gG
+   lDACWp5e0Fq2UZbmE8nWq+NME9s1eC6V1mqtE7rbVngTPOyzHG19LD6q1
+   Q==;
+X-CSE-ConnectionGUID: tB3o6GElTf2XItMkMzHnjA==
+X-CSE-MsgGUID: jLD4lqGqTuKMzlA02VMACA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11302"; a="35813594"
+X-IronPort-AV: E=Sophos;i="6.12,279,1728975600"; 
+   d="scan'208";a="35813594"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2024 04:38:01 -0800
+X-CSE-ConnectionGUID: sMd/QGpVSAa/dpWzn+5Llw==
+X-CSE-MsgGUID: /wIZTnzGSxiLz8HU51MmMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="131982658"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 31 Dec 2024 04:37:56 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tSbVS-00076l-10;
+	Tue, 31 Dec 2024 12:37:54 +0000
+Date: Tue, 31 Dec 2024 20:37:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v1 2/4] ipmi: Add Loongson-2K BMC support
+Message-ID: <202412311950.Ij7v1vKv-lkp@intel.com>
+References: <a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241223084212.34822-1-maobibo@loongson.cn> <CAAhV-H73CaNYFtgDfM+SOXYmwUhzr1w7JC4D+t2aASyUBxxTrA@mail.gmail.com>
- <d186408c-f083-2404-de60-2ec3c8b528cf@loongson.cn> <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
- <521ca7c6-64a2-53fa-5cff-b366ae73f600@loongson.cn> <CAAhV-H5TVwX2T=ccT4o0btJEbL+gwBESBD6Y_Z2BEqNuhom3iw@mail.gmail.com>
- <8814cf39-0842-ec48-c578-e5e6eeda2295@loongson.cn>
-In-Reply-To: <8814cf39-0842-ec48-c578-e5e6eeda2295@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 31 Dec 2024 17:37:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5UufM7RdsoOxqdzGt=KrRyLM_FV7vwL3u4BC0ugwt+TA@mail.gmail.com>
-Message-ID: <CAAhV-H5UufM7RdsoOxqdzGt=KrRyLM_FV7vwL3u4BC0ugwt+TA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Add hypercall service support for
- usermode VMM
-To: bibo mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin@loongson.cn>
 
-On Tue, Dec 31, 2024 at 5:27=E2=80=AFPM bibo mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2024/12/31 =E4=B8=8B=E5=8D=884:41, Huacai Chen wrote:
-> > On Mon, Dec 30, 2024 at 10:13=E2=80=AFAM bibo mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >> Hi Huacai,
-> >>
-> >> On 2024/12/23 =E4=B8=8B=E5=8D=885:05, Huacai Chen wrote:
-> >>> I also tried to port an untested version, but I think your version is
-> >>> a tested one.
-> >>> https://github.com/chenhuacai/linux/commit/e6596b0e45c80756794aba74ac=
-086c5c0e0306eb
-> >>>
-> >>> And I have some questions:
-> >>> 1, "user service" is not only for syscall, so you rename it?
-> >>> 2, Why 4.19 doesn't need something like "vcpu->run->hypercall.args[0]
-> >>> =3D kvm_read_reg(vcpu, LOONGARCH_GPR_A0);"
-> >>> 3, I think my version about "vcpu->run->exit_reason =3D
-> >>> KVM_EXIT_HYPERCALL;" and "update_pc()" is a little better than yours,
-> >>> so you can improve them.
-> >> After a second thought, update_pc() before return to user may be not
-> >> strictly right, since user VMM can dump registers including pc which i=
-s
-> >> advanced already.
-> > Agree, and we can see how others do.
-> >
-> >>
-> >> How about adding function kvm_complete_hypercall() like
-> >> kvm_complete_mmio_read(), such as:
-> >   kvm_complete_user_service() maybe better? Since the "classic
-> > hypercall" doesn't come here.
-> sure, will do rename it with kvm_complete_user_service.
->
-> >
-> > And we may also need to set vcpu->run->exit_reason for all cases,
-> > which is done in my version.
-> By my understanding, exit_reason need be set only for RESUME_HOST.
-> it is unnecessary for RESUME_GUEST.
-Unset means KVM_EXIT_UNKNOWN. Though we only check exit_reason for
-RESUME_HOST now, let a classic hypercall with KVM_EXIT_UNKNOWN may be
-error-prone.
+Hi Binbin,
 
-Huacai
+kernel test robot noticed the following build warnings:
 
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >> --- a/arch/loongarch/kvm/exit.c
-> >> +++ b/arch/loongarch/kvm/exit.c
-> >> +int kvm_complete_hypercall(struct kvm_vcpu *vcpu, struct kvm_run *run=
-)
-> >> +{
-> >> +       update_pc(&vcpu->arch);
-> >> +       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
-> >> +}
-> >> +
-> >> --- a/arch/loongarch/kvm/vcpu.c
-> >> +++ b/arch/loongarch/kvm/vcpu.c
-> >> @@ -1736,8 +1736,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcp=
-u)
-> >>                   if (!run->iocsr_io.is_write)
-> >>                           kvm_complete_iocsr_read(vcpu, run);
-> >>           } else if (run->exit_reason =3D=3D KVM_EXIT_HYPERCALL) {
-> >> -               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.r=
-et);
-> >> -               update_pc(&vcpu->arch);
-> >> +               kvm_complete_hypercall(vcpu, run);
-> >> +               run->exit_reason =3D KVM_EXIT_UNKNOWN;
-> >>           }
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>> Huacai
-> >>>
-> >>> On Mon, Dec 23, 2024 at 4:54=E2=80=AFPM bibo mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2024/12/23 =E4=B8=8B=E5=8D=884:50, Huacai Chen wrote:
-> >>>>> Hi, Bibo,
-> >>>>>
-> >>>>> Is this patch trying to do the same thing as "LoongArch: add hypcal=
-l
-> >>>>> to emulate syscall in kvm" in 4.19?
-> >>>> yes, it is to do so -:)
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>> On Mon, Dec 23, 2024 at 4:42=E2=80=AFPM Bibo Mao <maobibo@loongson.=
-cn> wrote:
-> >>>>>>
-> >>>>>> Some VMMs provides special hypercall service in usermode, KVM need
-> >>>>>> not handle the usermode hypercall service and pass it to VMM and
-> >>>>>> let VMM handle it.
-> >>>>>>
-> >>>>>> Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
-> >>>>>> service, KVM loads all six registers to VMM.
-> >>>>>>
-> >>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>> ---
-> >>>>>>     arch/loongarch/include/asm/kvm_host.h      |  1 +
-> >>>>>>     arch/loongarch/include/asm/kvm_para.h      |  2 ++
-> >>>>>>     arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
-> >>>>>>     arch/loongarch/kvm/exit.c                  | 22 ++++++++++++++=
-++++++++
-> >>>>>>     arch/loongarch/kvm/vcpu.c                  |  3 +++
-> >>>>>>     5 files changed, 29 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarc=
-h/include/asm/kvm_host.h
-> >>>>>> index 7b8367c39da8..590982cd986e 100644
-> >>>>>> --- a/arch/loongarch/include/asm/kvm_host.h
-> >>>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
-> >>>>>> @@ -162,6 +162,7 @@ enum emulation_result {
-> >>>>>>     #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
-> >>>>>>     #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |=
-         \
-> >>>>>>                                             BIT(KVM_FEATURE_STEAL_=
-TIME) |  \
-> >>>>>> +                                        BIT(KVM_FEATURE_USER_HCAL=
-L) |  \
-> >>>>>>                                             BIT(KVM_FEATURE_VIRT_E=
-XTIOI))
-> >>>>>>
-> >>>>>>     struct kvm_vcpu_arch {
-> >>>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarc=
-h/include/asm/kvm_para.h
-> >>>>>> index c4e84227280d..d3c00de484f6 100644
-> >>>>>> --- a/arch/loongarch/include/asm/kvm_para.h
-> >>>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
-> >>>>>> @@ -13,12 +13,14 @@
-> >>>>>>
-> >>>>>>     #define KVM_HCALL_CODE_SERVICE         0
-> >>>>>>     #define KVM_HCALL_CODE_SWDBG           1
-> >>>>>> +#define KVM_HCALL_CODE_USER            2
-> >>>>>>
-> >>>>>>     #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERV=
-ISOR_KVM, KVM_HCALL_CODE_SERVICE)
-> >>>>>>     #define  KVM_HCALL_FUNC_IPI            1
-> >>>>>>     #define  KVM_HCALL_FUNC_NOTIFY         2
-> >>>>>>
-> >>>>>>     #define KVM_HCALL_SWDBG                        HYPERCALL_ENCOD=
-E(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
-> >>>>>> +#define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISO=
-R_KVM, KVM_HCALL_CODE_USER)
-> >>>>>>
-> >>>>>>     /*
-> >>>>>>      * LoongArch hypercall return code
-> >>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loo=
-ngarch/include/uapi/asm/kvm_para.h
-> >>>>>> index b0604aa9b4bb..76d802ef01ce 100644
-> >>>>>> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
-> >>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-> >>>>>> @@ -17,5 +17,6 @@
-> >>>>>>     #define  KVM_FEATURE_STEAL_TIME                2
-> >>>>>>     /* BIT 24 - 31 are features configurable by user space vmm */
-> >>>>>>     #define  KVM_FEATURE_VIRT_EXTIOI       24
-> >>>>>> +#define  KVM_FEATURE_USER_HCALL                25
-> >>>>>>
-> >>>>>>     #endif /* _UAPI_ASM_KVM_PARA_H */
-> >>>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> >>>>>> index a7893bd01e73..1a85cd4fb6a5 100644
-> >>>>>> --- a/arch/loongarch/kvm/exit.c
-> >>>>>> +++ b/arch/loongarch/kvm/exit.c
-> >>>>>> @@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vc=
-pu *vcpu)
-> >>>>>>                    vcpu->stat.hypercall_exits++;
-> >>>>>>                    kvm_handle_service(vcpu);
-> >>>>>>                    break;
-> >>>>>> +       case KVM_HCALL_USER_SERVICE:
-> >>>>>> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_US=
-ER_HCALL)) {
-> >>>>>> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_=
-HCALL_INVALID_CODE);
-> >>>>>> +                       break;
-> >>>>>> +               }
-> >>>>>> +
-> >>>>>> +               vcpu->run->exit_reason =3D KVM_EXIT_HYPERCALL;
-> >>>>>> +               vcpu->run->hypercall.nr =3D KVM_HCALL_USER_SERVICE=
-;
-> >>>>>> +               vcpu->run->hypercall.args[0] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A0);
-> >>>>>> +               vcpu->run->hypercall.args[1] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A1);
-> >>>>>> +               vcpu->run->hypercall.args[2] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A2);
-> >>>>>> +               vcpu->run->hypercall.args[3] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A3);
-> >>>>>> +               vcpu->run->hypercall.args[4] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A4);
-> >>>>>> +               vcpu->run->hypercall.args[5] =3D kvm_read_reg(vcpu=
-, LOONGARCH_GPR_A5);
-> >>>>>> +               vcpu->run->hypercall.flags =3D 0;
-> >>>>>> +               /*
-> >>>>>> +                * Set invalid return value by default
-> >>>>>> +                * Need user-mode VMM modify it
-> >>>>>> +                */
-> >>>>>> +               vcpu->run->hypercall.ret =3D KVM_HCALL_INVALID_COD=
-E;
-> >>>>>> +               ret =3D RESUME_HOST;
-> >>>>>> +               break;
-> >>>>>>            case KVM_HCALL_SWDBG:
-> >>>>>>                    /* KVM_HCALL_SWDBG only in effective when SW_BP=
- is enabled */
-> >>>>>>                    if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK=
-) {
-> >>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> >>>>>> index d18a4a270415..8c46ad1872ee 100644
-> >>>>>> --- a/arch/loongarch/kvm/vcpu.c
-> >>>>>> +++ b/arch/loongarch/kvm/vcpu.c
-> >>>>>> @@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu =
-*vcpu)
-> >>>>>>            if (run->exit_reason =3D=3D KVM_EXIT_LOONGARCH_IOCSR) {
-> >>>>>>                    if (!run->iocsr_io.is_write)
-> >>>>>>                            kvm_complete_iocsr_read(vcpu, run);
-> >>>>>> +       } else if (run->exit_reason =3D=3D KVM_EXIT_HYPERCALL) {
-> >>>>>> +               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hyperca=
-ll.ret);
-> >>>>>> +               update_pc(&vcpu->arch);
-> >>>>>>            }
-> >>>>>>
-> >>>>>>            if (!vcpu->wants_to_run)
-> >>>>>>
-> >>>>>> base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
-> >>>>>> --
-> >>>>>> 2.39.3
-> >>>>>>
-> >>>>
-> >>>>
-> >>
->
->
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.13-rc5]
+[cannot apply to cminyard-ipmi/for-next lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes next-20241220]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-MFD-Core-driver/20241230-174205
+base:   linus/master
+patch link:    https://lore.kernel.org/r/a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v1 2/4] ipmi: Add Loongson-2K BMC support
+config: loongarch-randconfig-r123-20241231 (https://download.01.org/0day-ci/archive/20241231/202412311950.Ij7v1vKv-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20241231/202412311950.Ij7v1vKv-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412311950.Ij7v1vKv-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ls2k_kcs_data *ik @@     got void [noderef] __iomem *const addr @@
+   drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse:     expected struct ls2k_kcs_data *ik
+   drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse:     got void [noderef] __iomem *const addr
+   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ls2k_kcs_data *ik @@     got void [noderef] __iomem *const addr @@
+   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse:     expected struct ls2k_kcs_data *ik
+   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse:     got void [noderef] __iomem *const addr
+>> drivers/char/ipmi/ipmi_si_ls2k.c:226:24: sparse: sparse: symbol 'ipmi_ls2k_platform_driver' was not declared. Should it be static?
+
+vim +110 drivers/char/ipmi/ipmi_si_ls2k.c
+
+   106	
+   107	static unsigned char ls2k_mem_inb(const struct si_sm_io *io,
+   108					  unsigned int offset)
+   109	{
+ > 110		struct ls2k_kcs_data *ik = io->addr;
+   111		int inb = 0;
+   112	
+   113		if (ik->version == 0)
+   114			inb = intf_sim_inb_v0(ik, offset);
+   115		else if (ik->version == 1)
+   116			inb = intf_sim_inb_v1(ik, offset);
+   117	
+   118		return inb;
+   119	}
+   120	
+   121	static void intf_sim_outb_v0(struct ls2k_kcs_data *ik, unsigned int offset,
+   122				     unsigned char val)
+   123	{
+   124		if (ls2k_get_ibf(ik))
+   125			return;
+   126	
+   127		switch (offset & BIT(0)) {
+   128		case 0:
+   129			ik->reg.data_in = val;
+   130			ik->reg.status &= ~LS2K_KCS_STS_CMD;
+   131			break;
+   132	
+   133		case 1:
+   134			ik->reg.cmd = val;
+   135			ik->reg.status |= LS2K_KCS_STS_CMD;
+   136			break;
+   137		}
+   138	
+   139		ls2k_set_ibf(ik, 1);
+   140		ik->write_req++;
+   141	}
+   142	
+   143	static void intf_sim_outb_v1(struct ls2k_kcs_data *ik, unsigned int offset,
+   144				     unsigned char val)
+   145	{
+   146		if (ik->fifo.ibfh != ik->fifo.ibft)
+   147			return;
+   148	
+   149		switch (offset & BIT(0)) {
+   150		case 0:
+   151			ik->reg.data_in = val;
+   152			ik->cmd_data = 0;
+   153			break;
+   154	
+   155		case 1:
+   156			ik->reg.cmd = val;
+   157			ik->cmd_data = 1;
+   158			break;
+   159		}
+   160	
+   161		ik->fifo.ibfh = !ik->fifo.ibft;
+   162		ik->write_req++;
+   163	}
+   164	
+   165	static void ls2k_mem_outb(const struct si_sm_io *io, unsigned int offset,
+   166				  unsigned char val)
+   167	{
+   168		struct ls2k_kcs_data *ik = io->addr;
+   169	
+   170		if (ik->version == 0)
+   171			intf_sim_outb_v0(ik, offset, val);
+   172		else if (ik->version == 1)
+   173			intf_sim_outb_v1(ik, offset, val);
+   174	}
+   175	
+   176	static void ls2k_mem_cleanup(struct si_sm_io *io)
+   177	{
+   178		if (io->addr)
+   179			iounmap(io->addr);
+   180	}
+   181	
+   182	static int ipmi_ls2k_sim_setup(struct si_sm_io *io)
+   183	{
+   184		io->addr = ioremap(io->addr_data, io->regspacing);
+   185		if (!io->addr)
+   186			return -EIO;
+   187	
+   188		io->inputb = ls2k_mem_inb;
+   189		io->outputb = ls2k_mem_outb;
+   190		io->io_cleanup = ls2k_mem_cleanup;
+   191	
+   192		return 0;
+   193	}
+   194	
+   195	static int ipmi_ls2k_probe(struct platform_device *pdev)
+   196	{
+   197		struct si_sm_io io;
+   198	
+   199		dev_info(&pdev->dev, "probing via ls2k platform");
+   200		memset(&io, 0, sizeof(io));
+   201	
+   202		io.addr_source	= SI_PLATFORM;
+   203		io.si_type	= SI_KCS;
+   204		io.addr_space	= IPMI_MEM_ADDR_SPACE;
+   205		io.io_setup	= ipmi_ls2k_sim_setup;
+   206		io.addr_data	= pdev->resource[0].start;
+   207		io.regspacing	= pdev->resource[0].end - pdev->resource[0].start + 1;
+   208		io.regsize	= DEFAULT_REGSIZE;
+   209		io.regshift	= 0;
+   210		io.dev		= &pdev->dev;
+   211		io.irq		= 0;
+   212		if (io.irq)
+   213			io.irq_setup = ipmi_std_irq_setup;
+   214	
+   215		dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
+   216			 &pdev->resource[0], io.regsize, io.regspacing, io.irq);
+   217	
+   218		return ipmi_si_add_smi(&io);
+   219	}
+   220	
+   221	static void ipmi_ls2k_remove(struct platform_device *pdev)
+   222	{
+   223		ipmi_si_remove_by_dev(&pdev->dev);
+   224	}
+   225	
+ > 226	struct platform_driver ipmi_ls2k_platform_driver = {
+   227		.driver = {
+   228			.name = "ls2k-ipmi-si",
+   229		},
+   230		.probe	= ipmi_ls2k_probe,
+   231		.remove	= ipmi_ls2k_remove,
+   232	};
+   233	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
