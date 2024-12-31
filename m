@@ -1,144 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CFC10F1;
-	Tue, 31 Dec 2024 08:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CCC018A95A
+	for <loongarch@lists.linux.dev>; Tue, 31 Dec 2024 09:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735634751; cv=none; b=kaQ/n06O7erNvxr9PvPHa+EHEl5a7nBt6LtmeJOEwlrDtAWW8Omh5KUOKvt9wmP+E9yx+ovak1csTDHzjXAUZdMdiqddSqOiaC/FH8rrkcWMs6JKG/lJ15vTA5byRnAIMLQf2KMdVbqnvlCkuJGhrLyKwcuk6MhbFtdxzFkS/GA=
+	t=1735637255; cv=none; b=qdey9z2aQOeM7pKs6z8xAaSkyCRxvL3JuaEMgJ5LpyqGDIYMUp38Fu0WpidKPWCEUzpUBo/E6HAhWnzHud6GS4Xvp3bBjoGNv7tnSkg2ky039cv/yQb0JX/cLSYzB9/KXXSx12rAMqF+EyNOhLSAjUGPSjQXrNRtuoSqZThNR3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735634751; c=relaxed/simple;
-	bh=C+UQz/nc6bBAYUdBdips7Iqq3f5dlWZNk33voQGhfVU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CE77ZqiFZAQdSv8ErNyJBDJTNJV4wyf2uVw3Z7Eo+kRYTkobCy3Qtlc1JYGt15N/abUjr0pGBBuZQNIEXZJRYqPp4StS4T0y7tNnnYa1UdsmQMUOXmXdHQ6MFvZptFjT05rIhHKSJhZOcDei50scFPNscovwf1xOXcyB+iqouvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fp05W0HM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fp05W0HM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA167C4CEDE;
-	Tue, 31 Dec 2024 08:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735634750;
-	bh=C+UQz/nc6bBAYUdBdips7Iqq3f5dlWZNk33voQGhfVU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fp05W0HMGGyveouJg3wGMHMI9Wsq734JOjrx0/GykjO/97ctetpRKzruE2CI9Gmxb
-	 yVflswyCuQmhVgm+HRISNRIZ/vjdnfEs431tcr1TBB3OK361A5WlCNAO4GDwxbKD/V
-	 JFNjuIxtAkxpv0H6FyQyQUGK41nt61YX0ybtGiGAsgm+C6e3o6+hVd0v8J6SIumaKR
-	 tVpyA2GarG3J7EJzsZzE02DymaTA4aHwPN+IIx9+nqdFpoep/toyNuIQT0/yfKe7Mh
-	 W9fcawsR638ejjkmExcNgnL52VVNHyvFx8gY6dhSjmAZ1+GC8ewhmVhb1K4cn9La8C
-	 XLPkMW0HYGWVA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d84179ef26so13502473a12.3;
-        Tue, 31 Dec 2024 00:45:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUz0qx13oJSvlBBtH1kVEIC9+lWFOAjRBbIgZz/8V9qK7mIvv8j3bvArodp18T5rbI/Oc9P5FZZshzH@lists.linux.dev, AJvYcCWMt2uGhbxWnu94FtbjCXLQccxfCJNpfhcV/V7nGABCJkRCMLdBkUbbKUBEtYnL3zsKEzJd@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNsM/31kWbhjPQjrnuPvVsNYnCaXVxNmjjvfkcO+4MGjfvTnfz
-	2G5rIAZCV0uAEbtdV31oiZPG3xUUOtpi8tD8Dr0Ha/dxQ0z8kgoP92wfuG5b5ydyXyIvU7GfJmF
-	nuZzOrHBWvcR84cxR9PNOL52dWx8=
-X-Google-Smtp-Source: AGHT+IG84TtjHESOMq9FoZL4Pm5fRrf90fimurFofMW2Rx/qHlRyMup3BnauOQooZDKmpdYvvoXRRGP3rPsuokeyEtU=
-X-Received: by 2002:a17:907:7284:b0:aa6:8430:cb02 with SMTP id
- a640c23a62f3a-aac3397d1ccmr3489379866b.61.1735634749256; Tue, 31 Dec 2024
- 00:45:49 -0800 (PST)
+	s=arc-20240116; t=1735637255; c=relaxed/simple;
+	bh=i+k0L0ERlbesviZh4TGK//WLuRSAFR5Uk+lko+wyJf4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=U5+KpyNRtJjMysX95y4FJ+gCIN5J4Ukd655VC8/ezq2e8KniVLqHPtk+zkLE+kLa+Rx1k7Li6+cABdyGJjr3JbDN7uG42m77C0kdRqxPuM285Y/UnIJuCy8d3FD0lgT4j4Cm9LZD5Iwm9NuMr9CjvIwMK71absT7RS7q4tx/rJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxquH7uHNnoltcAA--.54485S3;
+	Tue, 31 Dec 2024 17:27:23 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxzsX6uHNnkTgPAA--.65144S3;
+	Tue, 31 Dec 2024 17:27:22 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Add hypercall service support for
+ usermode VMM
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20241223084212.34822-1-maobibo@loongson.cn>
+ <CAAhV-H73CaNYFtgDfM+SOXYmwUhzr1w7JC4D+t2aASyUBxxTrA@mail.gmail.com>
+ <d186408c-f083-2404-de60-2ec3c8b528cf@loongson.cn>
+ <CAAhV-H42D4Rybzkc9YVsjo+GEQwiq4LTdjtmWyOzaqmuW6x8CQ@mail.gmail.com>
+ <521ca7c6-64a2-53fa-5cff-b366ae73f600@loongson.cn>
+ <CAAhV-H5TVwX2T=ccT4o0btJEbL+gwBESBD6Y_Z2BEqNuhom3iw@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <8814cf39-0842-ec48-c578-e5e6eeda2295@loongson.cn>
+Date: Tue, 31 Dec 2024 17:26:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241231072806.4936-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20241231072806.4936-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 31 Dec 2024 16:45:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7WyFqw4FDnMHN=AFOBvzSXDC+OWhjwrej1SFVat9E_xw@mail.gmail.com>
-Message-ID: <CAAhV-H7WyFqw4FDnMHN=AFOBvzSXDC+OWhjwrej1SFVat9E_xw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Harden callers of division functions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	amd-gfx@lists.freedesktop.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H5TVwX2T=ccT4o0btJEbL+gwBESBD6Y_Z2BEqNuhom3iw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxzsX6uHNnkTgPAA--.65144S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFyDuw4rZF1fuF4ruFWfZwc_yoW3Zw4fpr
+	yUAF4kGrWUKr4SkwnFqwn0gr9Fgr4kKr1IgF1UGFWayrnIv3Z3Jr48tr98CF98Jw1rJF18
+	ZF95tw13uF15J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
 
-Hi, Tiezhu,
 
-On Tue, Dec 31, 2024 at 3:28=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> There are objtool warnings compiled with the latest mainline LLVM:
->
->   dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
->   spl_fixpt_recip() falls through to next function spl_fixpt_sinc()
->
-> Here are the call paths:
->
->   dc_fixpt_recip()
->     dc_fixpt_from_fraction()
->       complete_integer_division_u64()
->         div64_u64_rem()
->
->   spl_fixpt_recip()
->     spl_fixpt_from_fraction()
->       spl_complete_integer_division_u64()
->         spl_div64_u64_rem()
->
-> This was introduced by a change in Clang from a few months:
->
->   [SimplifyCFG] Deduce paths unreachable if they cause div/rem UB)
->   https://github.com/llvm/llvm-project/commit/37932643abab
->
-> Since the ASSERT does not do anything to prevent the divide by zero
-> (just flags it with WARN_ON) and the rest of the code doesn't either,
-> the callers of division functions should harden them against dividing
-> by zero to avoid undefined behavior.
->
-> Keep the current ASSERT for the aim of debugging, just add BUG() to
-> stop control flow if the divisior is zero.
->
-> Suggested-by: Nathan Chancellor <nathan@kernel.org>
-> Suggested-by: Xi Ruoyao <xry111@xry111.site>
-> Suggested-by: Rui Wang <wangrui@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Link: https://lore.kernel.org/lkml/20241220223403.GA2605890@ax162/
-> ---
->  drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  | 1 +
->  drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers=
-/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> index 88d3f9d7dd55..e15391e36b40 100644
-> --- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> +++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-> @@ -52,6 +52,7 @@ static inline unsigned long long complete_integer_divis=
-ion_u64(
->         unsigned long long result;
->
->         ASSERT(divisor);
-> +       BUG_ON(!divisor);
-ASSERT() calls WARN(), so the warning message will print twice, but I
-don't have a better suggestion. :)
 
-Huacai
+On 2024/12/31 下午4:41, Huacai Chen wrote:
+> On Mon, Dec 30, 2024 at 10:13 AM bibo mao <maobibo@loongson.cn> wrote:
+>>
+>> Hi Huacai,
+>>
+>> On 2024/12/23 下午5:05, Huacai Chen wrote:
+>>> I also tried to port an untested version, but I think your version is
+>>> a tested one.
+>>> https://github.com/chenhuacai/linux/commit/e6596b0e45c80756794aba74ac086c5c0e0306eb
+>>>
+>>> And I have some questions:
+>>> 1, "user service" is not only for syscall, so you rename it?
+>>> 2, Why 4.19 doesn't need something like "vcpu->run->hypercall.args[0]
+>>> = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);"
+>>> 3, I think my version about "vcpu->run->exit_reason =
+>>> KVM_EXIT_HYPERCALL;" and "update_pc()" is a little better than yours,
+>>> so you can improve them.
+>> After a second thought, update_pc() before return to user may be not
+>> strictly right, since user VMM can dump registers including pc which is
+>> advanced already.
+> Agree, and we can see how others do.
+> 
+>>
+>> How about adding function kvm_complete_hypercall() like
+>> kvm_complete_mmio_read(), such as:
+>   kvm_complete_user_service() maybe better? Since the "classic
+> hypercall" doesn't come here.
+sure, will do rename it with kvm_complete_user_service.
 
->
->         result =3D div64_u64_rem(dividend, divisor, remainder);
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c b/driver=
-s/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-> index 131f1e3949d3..ce2036950808 100644
-> --- a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-> +++ b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-> @@ -30,6 +30,7 @@ static inline unsigned long long spl_complete_integer_d=
-ivision_u64(
->         unsigned long long result;
->
->         SPL_ASSERT(divisor);
-> +       BUG_ON(!divisor);
->
->         result =3D spl_div64_u64_rem(dividend, divisor, remainder);
->
-> --
-> 2.42.0
->
->
+> 
+> And we may also need to set vcpu->run->exit_reason for all cases,
+> which is done in my version.
+By my understanding, exit_reason need be set only for RESUME_HOST.
+it is unnecessary for RESUME_GUEST.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>> --- a/arch/loongarch/kvm/exit.c
+>> +++ b/arch/loongarch/kvm/exit.c
+>> +int kvm_complete_hypercall(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>> +{
+>> +       update_pc(&vcpu->arch);
+>> +       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+>> +}
+>> +
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -1736,8 +1736,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>>                   if (!run->iocsr_io.is_write)
+>>                           kvm_complete_iocsr_read(vcpu, run);
+>>           } else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
+>> -               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+>> -               update_pc(&vcpu->arch);
+>> +               kvm_complete_hypercall(vcpu, run);
+>> +               run->exit_reason = KVM_EXIT_UNKNOWN;
+>>           }
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>> On Mon, Dec 23, 2024 at 4:54 PM bibo mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024/12/23 下午4:50, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> Is this patch trying to do the same thing as "LoongArch: add hypcall
+>>>>> to emulate syscall in kvm" in 4.19?
+>>>> yes, it is to do so -:)
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>> On Mon, Dec 23, 2024 at 4:42 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Some VMMs provides special hypercall service in usermode, KVM need
+>>>>>> not handle the usermode hypercall service and pass it to VMM and
+>>>>>> let VMM handle it.
+>>>>>>
+>>>>>> Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
+>>>>>> service, KVM loads all six registers to VMM.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/kvm_host.h      |  1 +
+>>>>>>     arch/loongarch/include/asm/kvm_para.h      |  2 ++
+>>>>>>     arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+>>>>>>     arch/loongarch/kvm/exit.c                  | 22 ++++++++++++++++++++++
+>>>>>>     arch/loongarch/kvm/vcpu.c                  |  3 +++
+>>>>>>     5 files changed, 29 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> index 7b8367c39da8..590982cd986e 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_host.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>>>>>> @@ -162,6 +162,7 @@ enum emulation_result {
+>>>>>>     #define LOONGARCH_PV_FEAT_UPDATED      BIT_ULL(63)
+>>>>>>     #define LOONGARCH_PV_FEAT_MASK         (BIT(KVM_FEATURE_IPI) |         \
+>>>>>>                                             BIT(KVM_FEATURE_STEAL_TIME) |  \
+>>>>>> +                                        BIT(KVM_FEATURE_USER_HCALL) |  \
+>>>>>>                                             BIT(KVM_FEATURE_VIRT_EXTIOI))
+>>>>>>
+>>>>>>     struct kvm_vcpu_arch {
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> index c4e84227280d..d3c00de484f6 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_para.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_para.h
+>>>>>> @@ -13,12 +13,14 @@
+>>>>>>
+>>>>>>     #define KVM_HCALL_CODE_SERVICE         0
+>>>>>>     #define KVM_HCALL_CODE_SWDBG           1
+>>>>>> +#define KVM_HCALL_CODE_USER            2
+>>>>>>
+>>>>>>     #define KVM_HCALL_SERVICE              HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+>>>>>>     #define  KVM_HCALL_FUNC_IPI            1
+>>>>>>     #define  KVM_HCALL_FUNC_NOTIFY         2
+>>>>>>
+>>>>>>     #define KVM_HCALL_SWDBG                        HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
+>>>>>> +#define KVM_HCALL_USER_SERVICE         HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
+>>>>>>
+>>>>>>     /*
+>>>>>>      * LoongArch hypercall return code
+>>>>>> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>>>> index b0604aa9b4bb..76d802ef01ce 100644
+>>>>>> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>>>> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+>>>>>> @@ -17,5 +17,6 @@
+>>>>>>     #define  KVM_FEATURE_STEAL_TIME                2
+>>>>>>     /* BIT 24 - 31 are features configurable by user space vmm */
+>>>>>>     #define  KVM_FEATURE_VIRT_EXTIOI       24
+>>>>>> +#define  KVM_FEATURE_USER_HCALL                25
+>>>>>>
+>>>>>>     #endif /* _UAPI_ASM_KVM_PARA_H */
+>>>>>> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+>>>>>> index a7893bd01e73..1a85cd4fb6a5 100644
+>>>>>> --- a/arch/loongarch/kvm/exit.c
+>>>>>> +++ b/arch/loongarch/kvm/exit.c
+>>>>>> @@ -873,6 +873,28 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+>>>>>>                    vcpu->stat.hypercall_exits++;
+>>>>>>                    kvm_handle_service(vcpu);
+>>>>>>                    break;
+>>>>>> +       case KVM_HCALL_USER_SERVICE:
+>>>>>> +               if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
+>>>>>> +                       kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
+>>>>>> +                       break;
+>>>>>> +               }
+>>>>>> +
+>>>>>> +               vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
+>>>>>> +               vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
+>>>>>> +               vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
+>>>>>> +               vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
+>>>>>> +               vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
+>>>>>> +               vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
+>>>>>> +               vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
+>>>>>> +               vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
+>>>>>> +               vcpu->run->hypercall.flags = 0;
+>>>>>> +               /*
+>>>>>> +                * Set invalid return value by default
+>>>>>> +                * Need user-mode VMM modify it
+>>>>>> +                */
+>>>>>> +               vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
+>>>>>> +               ret = RESUME_HOST;
+>>>>>> +               break;
+>>>>>>            case KVM_HCALL_SWDBG:
+>>>>>>                    /* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
+>>>>>>                    if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>>>> index d18a4a270415..8c46ad1872ee 100644
+>>>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>>>> @@ -1735,6 +1735,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>>>>>>            if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
+>>>>>>                    if (!run->iocsr_io.is_write)
+>>>>>>                            kvm_complete_iocsr_read(vcpu, run);
+>>>>>> +       } else if (run->exit_reason == KVM_EXIT_HYPERCALL) {
+>>>>>> +               kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
+>>>>>> +               update_pc(&vcpu->arch);
+>>>>>>            }
+>>>>>>
+>>>>>>            if (!vcpu->wants_to_run)
+>>>>>>
+>>>>>> base-commit: 48f506ad0b683d3e7e794efa60c5785c4fdc86fa
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>>>
+>>
+
