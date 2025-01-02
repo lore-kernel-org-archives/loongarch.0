@@ -1,142 +1,240 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAC83FE4
-	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 12:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4BA7462
+	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 13:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735822532; cv=none; b=jN5SbHZaBtzsGHAYkDuVXipFFnhzbtLnxkC2RTQsnbISU4epIXj3TdZTAcdXVxyIn5hsHQHVKt1u7Df+71bShzhZsoQrYERxmVxzOCUaGhT9hI9sh+86KoY7Rtw8wkJYCC3KOrmzKVb5MUKVhxEbO5yu/YywNqhrxgYLGaDdEVg=
+	t=1735824751; cv=none; b=SixnUEVWK9osHQRBg3fL0j2F1/7weiEn/tsPLxdr0NTEF3qRkNQKHHSC3/AKO9J0/CRUl7wyliVbwrmQJs8uHUAr3lc90omaY7Lsu8pNWNKNHZsrkyzuWDn5MLHlEGGaQ3n0+kf8wSShhErbb2hbMbb1kukyw1Did3AsXt40FNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735822532; c=relaxed/simple;
-	bh=16IOg+Kt2uA9fbFtqaxahX3JcEpMj8AJQAJbcclIrXI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=but5Gz/d7ZzypAuOv+p6ZO3IDoMrO/vc7stKnbYW4p9uWYOb62jgGrqtIdtVec2fHpIj6zXtIyMwi42tM2h/FCpVjgsscZ98IDI2CaZCYVc9uixEo+8PR/iQrFqQ6FaRWjnIjtiudsil9BLCTgFEvUIEkeBoRze5UDw+l1LQHhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICSQilHx; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735824751; c=relaxed/simple;
+	bh=GpqzVIxPuDg6MYeKR9tzLh9/cvDEEZMR93WmL0nhbBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYl5yLMn5LWEVanHzFFhn7gxndg0Jjmz3hWyQ5p7yfjHh7mXzZGGc3zMol59N9G8bx5J/PArl/KB/BCf//aGQVfJvvIEQvIKLKE/5cyvJpzpInlJ0CaD73SNdaGKJ8gI1f+uwRapOBfr8apXZk78V0+eJJ2r/hxgjPgXlrLpeog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1QxeSUBx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WgaNnnId; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1QxeSUBx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WgaNnnId; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICSQilHx"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso16270517a12.0
-        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 04:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735822529; x=1736427329; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jXS24HNk/PcPkWyO7/S1209SrdCqek8Xs180xOiisVo=;
-        b=ICSQilHx6LrzoO+eQaHc3VpdLB+3koNEmpsB+cNR3ZvMwwyYDYWiHVAjePeRbJgVNy
-         h6sdBVt7xwrkw7hp3HtAfDFmaBK/1oKLWk56W73xlE0ftZ65Soso1bdl5S2jOGFqlad0
-         kGMcSib7oxdvzWx8duNPeAXtjXyki+19sLxoHY98Aql4nhjf0749lvMWOrducSHmmK4a
-         Quhhpv0bDKuLo+hjJdSSODbgdbE2XukISdACm9f8YQ21NXoq6y3WyEV8TUS9MFLO7MH0
-         4TCliYM4E/pzEMXiUQZfnbpq5naWaHcGRkgmD+Yil8Qa9e1LRsGhxDEqPGdC/UkoS0T7
-         kTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735822529; x=1736427329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jXS24HNk/PcPkWyO7/S1209SrdCqek8Xs180xOiisVo=;
-        b=eKlRd6p699PI4bpA5tYsrbTwB2UHcKTGfB9S7n0GsiCRA0bkDwn7xeBs8p/E/ay40t
-         C5WG/ad9eK7eICo/ASS1iH+QuiRi6Igk2WNFxE4Fg4BUAj8u9mhpBGlGNwtUK8bm4dPD
-         +ZkYVRKkT3cDQpCs+eQblNYCURnWvrZXkY+dhh4fwqvIScLuBp5dVJTyXIUwHc9YkdCQ
-         KhLI4jD8eA2J+YMKe5ObtIADvGnrFVYm8jsAaAQ4GysckX59oOXn3amEABRYOpU+c+jC
-         C7K/kI5ypp8w2bTklQVYnn2fJqGsawcq6Q41b8gK1lMPDoa8CXojd0MxEKbtgAdfIUsr
-         m4sA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+WTv1VkV5Ti214a/scYcwXEGnpABZDe6kW+OEKskL17nuzAMGmRiF7p7IbZqA1SuOKKMJa/RFVUk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxaZN0tIIAywqYP81fH8hKdXPkLMSlAhuYWn3OIq8mJ+WhAUs5T
-	y2dbq1fJSOtWMMoHUlz3gVwL5NdDUwQxnaXq0edzfceJwqkaOJgQqNADoIora+tltk0J/2brZ+j
-	SUSb9ZQVzue5x6USPHTl1cxcvk7I=
-X-Gm-Gg: ASbGncv22AYeveLrTEJMnMvPpH8r5b+mR2Q72JmpUTa3VYmqXfYWTsgSM/0PqcOaF+c
-	dHk83UeB1infu7eW51MjyNECKpDqJb7UQRoAu9A==
-X-Google-Smtp-Source: AGHT+IGLvuXj+dIrqlUzp0aOb3Z7mz1qVwkY++yurih/6Pd33sBtFEvkwwttWiJ3Nh2EseGJDAQCU7eALZPBZTPzrLo=
-X-Received: by 2002:a05:6402:2802:b0:5d3:cff5:635e with SMTP id
- 4fb4d7f45d1cf-5d81de065b8mr107382476a12.26.1735822529291; Thu, 02 Jan 2025
- 04:55:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1QxeSUBx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WgaNnnId";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1QxeSUBx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WgaNnnId"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6471C2115F;
+	Thu,  2 Jan 2025 13:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735824748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RlpeBegLDMWjIlaozf6zr/23rBU7oNvZVb1IrqZ6KHo=;
+	b=1QxeSUBxYrahEdYTWGgcoWxi5ScO4QnBe34R6T79AznUPmjZInp/BLjNEHitk6NC+RHfC+
+	FwLGo8I8zVYmmiEDZXnLNgzRs2cSevvgzpx6bw3zfPTbBJ6e5omy7H6oPJngO/hq5Yf/jr
+	V8AJn+X36Yl8lhv8LdKrbdFbOr6CJVY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735824748;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RlpeBegLDMWjIlaozf6zr/23rBU7oNvZVb1IrqZ6KHo=;
+	b=WgaNnnIdsJ6Ijw9kBOzR+YcXefqL7kghxoU3Dq6wbkx7d+Hght8ux30TnPT6U4Mf2szNpF
+	JVdQVMIybr+pDiDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735824748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RlpeBegLDMWjIlaozf6zr/23rBU7oNvZVb1IrqZ6KHo=;
+	b=1QxeSUBxYrahEdYTWGgcoWxi5ScO4QnBe34R6T79AznUPmjZInp/BLjNEHitk6NC+RHfC+
+	FwLGo8I8zVYmmiEDZXnLNgzRs2cSevvgzpx6bw3zfPTbBJ6e5omy7H6oPJngO/hq5Yf/jr
+	V8AJn+X36Yl8lhv8LdKrbdFbOr6CJVY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735824748;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RlpeBegLDMWjIlaozf6zr/23rBU7oNvZVb1IrqZ6KHo=;
+	b=WgaNnnIdsJ6Ijw9kBOzR+YcXefqL7kghxoU3Dq6wbkx7d+Hght8ux30TnPT6U4Mf2szNpF
+	JVdQVMIybr+pDiDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01D6D132EA;
+	Thu,  2 Jan 2025 13:32:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id E66rOmuVdmdQBwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 02 Jan 2025 13:32:27 +0000
+Message-ID: <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
+Date: Thu, 2 Jan 2025 14:32:27 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC
+ display
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+ Corey Minyard <minyard@acm.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>,
+ linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+References: <cover.1735550269.git.zhoubinbin@loongson.cn>
+ <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
  <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de>
-In-Reply-To: <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 2 Jan 2025 20:55:17 +0800
-Message-ID: <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[loongson.cn,kernel.org,acm.org,linux.intel.com,gmail.com,ffwll.ch,vger.kernel.org,lists.sourceforge.net,lists.freedesktop.org,xen0n.name,lists.linux.dev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-Hi Thomas:
+Hi
 
-Thanks for your reply.
 
-On Thu, Jan 2, 2025 at 5:07=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
-de> wrote:
+Am 02.01.25 um 13:55 schrieb Binbin Zhou:
+> Hi Thomas:
 >
-> Hi
+> Thanks for your reply.
 >
+> On Thu, Jan 2, 2025 at 5:07 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Hi
+>>
+>>
+>> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+>> [...]
+>>> +
+>>> +static struct platform_driver ls2kbmc_platform_driver = {
+>>> +     .driver = {
+>>> +             .name = "ls2kbmc-framebuffer",
+>> The driver is mostly a copy of simpledrm. Why don't you use
+>> "simple-framebuffer" for your device name? You could use simpledrm
+>> directly then.
+> Ah, indeed, the driver is based on simpledrm.
 >
-> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
-> [...]
-> > +
-> > +static struct platform_driver ls2kbmc_platform_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "ls2kbmc-framebuffer",
->
-> The driver is mostly a copy of simpledrm. Why don't you use
-> "simple-framebuffer" for your device name? You could use simpledrm
-> directly then.
+> Initially, I also tried to use simpledrm directly, but it will fail in
+> drm memory acquire.
 
-Ah, indeed, the driver is based on simpledrm.
+Could you point to the exact call that fails within simpledrm?
 
-Initially, I also tried to use simpledrm directly, but it will fail in
-drm memory acquire.
-Because although we register the driver in platform form, its memory
-belongs to pci space and we can see the corresponding pci probe and
-resource allocation in Patch-1.
-Therefore, we need to use aperture_remove_conflicting_pci_devices().
+> Because although we register the driver in platform form, its memory
+> belongs to pci space and we can see the corresponding pci probe and
+> resource allocation in Patch-1.
 
-Also, since we are using BMC display, the display will be disconnected
-when BMC reset, at this time we need to push the display data (crtc,
-connector, etc.) manually as shown in Patch-4.
+I don't understand. Graphics memory is often located on the PCI bus. 
+What is so special about this one?
 
-Probably it's not the most suitable way to implement it.
+> Therefore, we need to use aperture_remove_conflicting_pci_devices().
+
+So there is already a device that represents the graphics card? That's 
+what you'd remove here? If you only add that MFD device, who owns the 
+framebuffer? If it's the PCI device from patch 1 ("ls2k-bmc"), why does 
+aperture_remove_conflicting_pci_devices() not remove that device? I'm 
+somewhat confused, because the logic in your driver mostly looks like it 
+binds to a pre-configured framebuffer, but some of the code doesn't. 
+Best regards Thomas
 
 >
-> Best regards
-> Thomas
+> Also, since we are using BMC display, the display will be disconnected
+> when BMC reset, at this time we need to push the display data (crtc,
+> connector, etc.) manually as shown in Patch-4.
 >
-> > +     },
-> > +     .probe =3D ls2kbmc_probe,
-> > +     .remove =3D ls2kbmc_remove,
-> > +};
-> > +
-> > +module_platform_driver(ls2kbmc_platform_driver);
-> > +
-> > +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
-> > +MODULE_LICENSE("GPL");
+> Probably it's not the most suitable way to implement it.
 >
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
+>> Best regards
+>> Thomas
+>>
+>>> +     },
+>>> +     .probe = ls2kbmc_probe,
+>>> +     .remove = ls2kbmc_remove,
+>>> +};
+>>> +
+>>> +module_platform_driver(ls2kbmc_platform_driver);
+>>> +
+>>> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
+>>> +MODULE_LICENSE("GPL");
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+>>
 >
 
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
---=20
-Thanks.
-Binbin
