@@ -1,54 +1,54 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EFD1AF0DC
-	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 14:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFD01AC44D
+	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 14:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735826721; cv=none; b=TGCtwUSiIgNic1x9rYM6c+dK/I/qYMJrk8G7zLDoINhpBdZuIxozRGSavlFQLyclrVJIzNameKyGIOCMYIHBy4qZYlCtlJpefudUxhic3haj9baQZfYyUKbTFT21lSSNl91R03RoMUA3nK4WGloM4J+MJuh4jDtDQR3PPSZJMMY=
+	t=1735828498; cv=none; b=UJoXst6a1k5Q+Amf64bcdpGERL8sRzGruMT56YVjFeR6UQ1AAk96e9AT8dmW09jz2hlG4k7EcuA+D68kSVdm0t/lzxkBPV1pDWiw2TyL6piHopqbvVT5pmvrsnCG1coG5LLN6hHyj3FvLPK+DBFdHxj44zZfCaDsd9PB+Wj1bfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735826721; c=relaxed/simple;
-	bh=+5CGF9O/RU57EIjL3m6Q442i1J5aD7OVorgwgr+zyFE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Hz4G5jWCCNrib5fxiNPteG+sVGy6j7Tfexe4vtly3gesp6R1Bm9uF0r+d77gIeBCd39aO3eBi9yj0cZI8hc2inY/FkDiyVVq272VKv7gAikAnHhuTUCa0EqNkCld05ahwkH/35u6niCovDRW9vSZShNqlEY5rhoAtO5fhHkbCXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=GXqDqKgW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EY80q0qm; arc=none smtp.client-ip=103.168.172.159
+	s=arc-20240116; t=1735828498; c=relaxed/simple;
+	bh=yjo3lgCnAIIw41wgdwShrdXPc06nJja3GCo/aQKQUY0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X43P1Bbd4OTOMtACgm5aMyMtG1gJViOaoyocw/YAw19mXSGGdCV5v3In8UhNbbJkSJj5AFaUkVaUHMEQcaMNoTiKQ7TSsNGtXtqdePcPQDDXw/A7PBWDNGW6e9FKRaYKbMxIqIxXmxyZ6NYgvvDI0LywX58qxFj9GMClFm46Bag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=oqxbWmqT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IycOK80m; arc=none smtp.client-ip=103.168.172.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="GXqDqKgW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EY80q0qm"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D7A011140189;
-	Thu,  2 Jan 2025 09:05:18 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Thu, 02 Jan 2025 09:05:18 -0500
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="oqxbWmqT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IycOK80m"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5756913801BA;
+	Thu,  2 Jan 2025 09:34:56 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 02 Jan 2025 09:34:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1735826718; x=1735913118; bh=+x
-	d28Lfk1MGflNyBfVXynR3ChFgz2BoiZDllww0GjcA=; b=GXqDqKgWa1klJhShPj
-	k4siqPVWo0T5/iW79OjSBNnA92xqi98lHKoxAPJ7Mfh/X/5BCIMe/uW7yxUIWu+z
-	DkGHHhhVfU6M2CwNLBmxbtvn1jLRjnPDDfHeH8SxS7iunDxlIL4bildtCLDdcgAu
-	mIjNvRYGFZo8JbhsGpPyF83lWFc0dRHEurJyvTVQ/XWa4PShRAJXsDQZp8mzDUuM
-	uL6vXxNTVXIU/ZJyG86QbBCbfrCOfFuQUWWUcW1L0CiMZW8qXC3X5vz8cOg/+0MK
-	hfu0m5o8A6EQ/G6tao5XYsuI07DQnm211LRAlV7Chs6ovc4GaszBpwRNVGlsA5R5
-	H3+Q==
+	:subject:subject:to:to; s=fm3; t=1735828496; x=1735914896; bh=Jm
+	ZApDfc6PQP2PIajB+iFWAxA7IssZSdgAeB0E+r8mw=; b=oqxbWmqT3J0b33W6XO
+	0MzdtecOeJpPLS9LPQh9JoThSm5GD8a4BXatc1TnmcxyLRiZtL8NU6ia9WczX8PM
+	8lnpy7ijCUTuEBIfCpRhz05Yup0Hx3Ftm25OArRSA+sg8ZSUinz3+/j0USxzeCHm
+	MELZTqLqJ4Km7VfRrjVlzIHiiFjpxetq87dxybnFDwpBRAMBbWuPImIY0OG3K648
+	V8o467RUHHRkvyWl4uAbVohDZZnuGjH4pQViW0Ofv3F8KmNFQxpsi3LQtpQmi1Es
+	/eFUdQHhZbtQEZXTFOPLVOjPNi+XFxCYqB9l3EhD1Hvgl3HKMqIzq+SjBFkM7Apt
+	RQ9Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
 	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1735826718; x=1735913118; bh=+xd28Lfk1MGflNyBfVXynR3ChFgz
-	2BoiZDllww0GjcA=; b=EY80q0qmvJr+rZiYrzqRfyWIC6L4Kg+l7HIacKpHSpZb
-	o8aZ5x/Ng/oehh8qUWj7vG2m6GwNhCROLHS9Agqbi24oftvwE6Rs3ErglDV556HC
-	/+vkOSFucPF/PjbihgHbCLI/uji6nKknQeCHgvoKV/iQR06IXNbJzT2bpEw7APlg
-	xrJMHYks7SJ3HNRCZ0rb2ELPZeOi69X0IZWLzI0IEVYwn+Rb1oHXvueIPwy/jArh
-	xC6rt8UrTFFAw3wFb8NzEzxb73pYnMNgqsC/79A51Y87uP8rxcEmpbqW+bO0DfIM
-	26RJxIsqxfPVdA0EjN5jcD0CMgf5UjGCzyIawSOn9A==
-X-ME-Sender: <xms:Hp12Z-0Pvk3GpGurPHS6wOXCEdI9u7UtIiIqmPlaPVUlt0ni5n3tEA>
-    <xme:Hp12ZxHSrVgpVPmRasIkZJxbnf_QFkHSC5U78pH1bYiiY0KlzcmSDQDRuYogDW0a1
-    AiY5q9hIHOw2xOXYxQ>
-X-ME-Received: <xmr:Hp12Z24PykmqJdoNtI6hlzBcOe7V-4t9S84eggIakCQ3xnSJxPKlGko>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefvddgieduucetufdoteggodetrfdotf
+	fm2; t=1735828496; x=1735914896; bh=JmZApDfc6PQP2PIajB+iFWAxA7Is
+	sZSdgAeB0E+r8mw=; b=IycOK80mDTYJIRN8u6aNDK1vnyU/vgJvtq9MXC5bAmNy
+	QvvHs5DBUJjLpJXHta1h+Z6SypexfnniECrOQNMnUvmsWCB2GvuGVoEetMOvg74I
+	pB7zYKlLKzd7JIXDv1vfCxnvA0E8+1wR3G0h12PRn3xaWO1BIQjG4jJh8HBxg2wY
+	njwa7P3YHL9RFWKjr3RoCt9U+bYMRHTqDsWoszWCN/1OrYd1C8Uq3giXWZ6dsErX
+	URLjRGDQWL5M8sQLjPAlnmqcqZSNRwIKPPVN8tbGxoQOS4WVgh1DaqCP9hRodPdV
+	ZfHy0Z3/nb8fra2iieXky9+ZKjP6fwrQpxoxjhkWJg==
+X-ME-Sender: <xms:D6R2Z4mP843sFGiiaxN7bRI0v7ICOGQpjIXLhlWBembZQQAwrhLOPQ>
+    <xme:D6R2Z31P66vtKxMPL0StDDLzM_mB6-2rkwbSboCcOAWLeFvLiboDyiV-XGTaf9PPy
+    Lql4RwDtmu_qGUDWTs>
+X-ME-Received: <xmr:D6R2Z2p-N0F9K77YC88dHOpcIOLYkAQjvWsdowvtMHixLCGBdlr2SvE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefvddgieeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
     htshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecu
@@ -56,23 +56,24 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefvddgieduucetufdoteggod
     grthdrtghomheqnecuggftrfgrthhtvghrnhepffetueegkedtgfejveeuvdfghfegtddv
     gfehudeghfegheetueduheduveejtefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
     hrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtgho
-    mhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptg
-    hhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhonhhgrghr
-    tghhsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrh
-    hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlseig
-    vghntdhnrdhnrghmvgdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorg
-    htrdgtohhm
-X-ME-Proxy: <xmx:Hp12Z_3RMNfPzXojn6thLP85gwyj1QvJHrwfd-2rnSPOHOkZZcsKcw>
-    <xmx:Hp12ZxF78rOr1TUT228SWJ060JXjIwxnBdZTN6yWICV8syIJCYpR0w>
-    <xmx:Hp12Z49IYisfy20hUYq9A2RBPEftMOEeHEpXbbkseJxZrfoRAHr-cA>
-    <xmx:Hp12Z2nweh5gPRkL1om8ayXX4fzbOiUUNPyU17-nQf0FP3mOwb2Ovg>
-    <xmx:Hp12Z6My5RtiUO2ttHIKqpYwkFqI5mHg9DoHSxAOYzVGbKGMX6l2hO_3>
+    mhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    khgvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopehjihgrgihunhdrhigrnh
+    hgsehflhihghhorghtrdgtohhmpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishht
+    shdrlhhinhhugidruggvvhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvg
+    hlrdhorhhg
+X-ME-Proxy: <xmx:D6R2Z0l7z1oSRl2uFcdQsfwc9IVSc-7cOPhVYmtczlb7FqyHBV_0Vg>
+    <xmx:D6R2Z23YqkQiDPkC0fprh4hcTDADW1ojROVj2QtjkOk_yA19GrVtjQ>
+    <xmx:D6R2Z7uwkkZJY7NhKj4ZEWvavuRFktWFjFJv8P0hQZFm9Rx3yfw7jA>
+    <xmx:D6R2ZyXTPmCxBmo4bYNzfYNAG2fIV-GKD9GB2FnNdfvQLAWyHCnl9w>
+    <xmx:EKR2Zy9acd8WyLYiOVl6Fxr1oG6UYHsJ4o2tWBtqaAT4BSfcZ8N_mb6a>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 2 Jan 2025 09:05:16 -0500 (EST)
+ 2 Jan 2025 09:34:54 -0500 (EST)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Thu, 02 Jan 2025 14:05:17 +0000
-Subject: [PATCH] loongarch: time: Derive max_delta from prcfg1 tmrbits
+Date: Thu, 02 Jan 2025 14:34:40 +0000
+Subject: [PATCH] loongarch: Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is
+ enabled
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -81,85 +82,69 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250102-la-misc-v1-1-8dc7db525e54@flygoat.com>
-X-B4-Tracking: v=1; b=H4sIAByddmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDIyNj3ZxE3dzM4mTdFDNDgxRDkzRLE/NUJaDqgqLUtMwKsEnRsbW1AEa
- unptZAAAA
-X-Change-ID: 20241223-la-misc-d610d14f947e
+Message-Id: <20250102-la-earlycon-fixed-map-v1-1-23fe3a6681c4@flygoat.com>
+X-B4-Tracking: v=1; b=H4sIAP+jdmcC/xWMQQqAIBAAvxJ7bkEtI/pKdNhyq4WyUIgi/Ht2H
+ IaZFyIH4Qhd8ULgS6IcPoMuC5hW8gujuMxglLFKK4MbIVPYnunwOMvNDnc60TVUt6OzY1tpyO0
+ Z+Jf/tx9S+gABIH4cZwAAAA==
+X-Change-ID: 20250102-la-earlycon-fixed-map-d6a48bd5b831
 To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2205;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1499;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=+5CGF9O/RU57EIjL3m6Q442i1J5aD7OVorgwgr+zyFE=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhvSyuXInH/o5Ggc8Lr5h0pP+uLhtnatRV9yOKS/XJdc3P
- Visy2TWUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABMxPcfwV3Dz3V+VXCk3N9W/
- PudQVv587eWUuLuvAiZfYZQpTdtQy8fw3+nhBFPJrzIvdjnav71i+fTX8bcTV5hwVmdM7uS9/PJ
- /FycA
+ bh=yjo3lgCnAIIw41wgdwShrdXPc06nJja3GCo/aQKQUY0=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhvSyJfxfT2+7927yT52sWcenhXMyrXqtwaFu2vaetY1Ta
+ Y3x1VXnO0pZGMS4GGTFFFlCBJT6NjReXHD9QdYfmDmsTCBDGLg4BWAiNssY/ge7i+3P31rGtdA1
+ rqNSo11x1zL1dtfvPM9eWXWqbBfLzGb4ZxMqwVGmIt57ik3hSGmLnyZDWC8La8TTBZzr1Zbbhhk
+ yAAA=
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-As per arch spec, maximum timer bits is configurable and
-should not be hardcoded in any way.
+When ARCH_IOREMAP is enabled, we are using always accessible DMW
+for ioremap. It makes no sense to create a dedicated mapping for
+earlycon given that we can access the region via DMW.
 
-Use prcfg1 tmrbits to determine clockevent's max_delta
-to be conformance.
+Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is selected. This can
+ease debugging for early mapping issues.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-LA32R doesn't have prcfg, maybe we should handle this
-during cpu-probe and save it in cpuinfo_loongarch,
+ arch/loongarch/Kconfig              | 2 +-
+ arch/loongarch/include/asm/fixmap.h | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-What's your opinion, Huacai?
----
- arch/loongarch/include/asm/loongarch.h | 1 -
- arch/loongarch/kernel/time.c           | 7 ++++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 64ad277e096edd7d77af6f37e234d68e571764a4..a3cc4f8d4c4a0b0521ef2b76c87fa57eca417d75 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -466,7 +466,6 @@
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 1c4d13aa677e2e04b9791882fba7523f93d6a69d..ad8a8cf75343799ea626be52f521fa75e7cbe07b 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -246,7 +246,7 @@ config MACH_LOONGSON64
+ 	def_bool 64BIT
  
- #define LOONGARCH_CSR_TCFG		0x41	/* Timer config */
- #define  CSR_TCFG_VAL_SHIFT		2
--#define	 CSR_TCFG_VAL_WIDTH		48
- #define  CSR_TCFG_VAL			(_ULCAST_(0x3fffffffffff) << CSR_TCFG_VAL_SHIFT)
- #define  CSR_TCFG_PERIOD_SHIFT		1
- #define  CSR_TCFG_PERIOD		(_ULCAST_(0x1) << CSR_TCFG_PERIOD_SHIFT)
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index a07d7eff4dc5fb0f41f5fad02698ff7a84c7bc8a..bde2297f139c2d5e26894a2ebc1748cc6fef3146 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -126,16 +126,21 @@ void sync_counter(void)
+ config FIX_EARLYCON_MEM
+-	def_bool y
++	def_bool !ARCH_IOREMAP
  
- int constant_clockevent_init(void)
- {
-+	uint32_t tmrbits;
- 	unsigned int cpu = smp_processor_id();
- #ifdef CONFIG_PREEMPT_RT
- 	unsigned long min_delta = 100;
- #else
- 	unsigned long min_delta = 1000;
- #endif
--	unsigned long max_delta = (1UL << 48) - 1;
-+	unsigned long max_delta;
- 	struct clock_event_device *cd;
- 	static int irq = 0, timer_irq_installed = 0;
+ config PGTABLE_2LEVEL
+ 	bool
+diff --git a/arch/loongarch/include/asm/fixmap.h b/arch/loongarch/include/asm/fixmap.h
+index d2e55ae55bb9c499b9a685509bc26d663054b58e..905dc7a5f9fa52ac924fe832749f39283c28a9f8 100644
+--- a/arch/loongarch/include/asm/fixmap.h
++++ b/arch/loongarch/include/asm/fixmap.h
+@@ -12,7 +12,9 @@
  
-+	tmrbits = read_csr_prcfg1() & CSR_CONF1_TMRBITS;
-+	tmrbits = tmrbits >> CSR_CONF1_TMRBITS_SHIFT;
-+	max_delta = CLOCKSOURCE_MASK(tmrbits + 1);
-+
- 	if (!timer_irq_installed) {
- 		irq = get_percpu_irq(INT_TI);
- 		if (irq < 0)
+ enum fixed_addresses {
+ 	FIX_HOLE,
++#ifdef CONFIG_FIX_EARLYCON_MEM
+ 	FIX_EARLYCON_MEM_BASE,
++#endif
+ 	__end_of_fixed_addresses
+ };
+ 
 
 ---
 base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
-change-id: 20241223-la-misc-d610d14f947e
+change-id: 20250102-la-earlycon-fixed-map-d6a48bd5b831
 
 Best regards,
 -- 
