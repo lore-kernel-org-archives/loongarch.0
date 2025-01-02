@@ -1,179 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DDF19993D
-	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 11:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAC83FE4
+	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 12:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735817757; cv=none; b=fEWzfb6I94OcPAlF+Y5j5LMAdoz+kS8DHwUJ5WdSd7NSp3AyyUNuYYcq5hWde61jl6Oxm/ZPDyl7+s9VTqWAEQ/4X0XNCiCj3ELAveSSVxCLhtML1KSu7i4ODeb0lMUZ75qZoUBj7qpc29qNTsPegaaEBoeYMS1kg5ggc33P2JA=
+	t=1735822532; cv=none; b=jN5SbHZaBtzsGHAYkDuVXipFFnhzbtLnxkC2RTQsnbISU4epIXj3TdZTAcdXVxyIn5hsHQHVKt1u7Df+71bShzhZsoQrYERxmVxzOCUaGhT9hI9sh+86KoY7Rtw8wkJYCC3KOrmzKVb5MUKVhxEbO5yu/YywNqhrxgYLGaDdEVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735817757; c=relaxed/simple;
-	bh=jPwzxu6JMhSPoRS2vMKIcwfSVYT3dafZi4QNVHv3NCg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfPsHBs12eSrvn8/Xt2htila944rT/pUE6Bu6E3qSoWkoa1SZxHpLvP9T9KA1/UNkEqUbs4dWLqHZQyEshpFY9cUM++EYve3VAHsE3s2qy7VfnKFwQuHhuT06RF+ksTGtHtoRBtEKQ/yc6JY74u8RXZkvZ4vyjTn2QZN142QkG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BYYVySp6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1735822532; c=relaxed/simple;
+	bh=16IOg+Kt2uA9fbFtqaxahX3JcEpMj8AJQAJbcclIrXI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=but5Gz/d7ZzypAuOv+p6ZO3IDoMrO/vc7stKnbYW4p9uWYOb62jgGrqtIdtVec2fHpIj6zXtIyMwi42tM2h/FCpVjgsscZ98IDI2CaZCYVc9uixEo+8PR/iQrFqQ6FaRWjnIjtiudsil9BLCTgFEvUIEkeBoRze5UDw+l1LQHhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICSQilHx; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BYYVySp6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735817754;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5ukftuiSSdjRUGWNl+Q9bxAz+SDSXpgm9QL3acZknL8=;
-	b=BYYVySp6njuXLX7gtoXJAAx5CVZ8YbZ+MGW9Ks+jmtrjymXaesAgkTy75mOH1raB7PRD+B
-	OJLMylEx75HVb+HO1ohV1avrOYGeJSkpBpQuqkZw2uisFJXzJtx7zFLeLLj3OX+pZkjZRD
-	s8Zr8eIS6NTBG6Gq6hn8O2fJzGiCw7s=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-232-2grvK5cCPoOqKV64c067sw-1; Thu, 02 Jan 2025 06:35:53 -0500
-X-MC-Unique: 2grvK5cCPoOqKV64c067sw-1
-X-Mimecast-MFC-AGG-ID: 2grvK5cCPoOqKV64c067sw
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4361ac8b25fso62638505e9.2
-        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 03:35:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICSQilHx"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso16270517a12.0
+        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 04:55:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735822529; x=1736427329; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jXS24HNk/PcPkWyO7/S1209SrdCqek8Xs180xOiisVo=;
+        b=ICSQilHx6LrzoO+eQaHc3VpdLB+3koNEmpsB+cNR3ZvMwwyYDYWiHVAjePeRbJgVNy
+         h6sdBVt7xwrkw7hp3HtAfDFmaBK/1oKLWk56W73xlE0ftZ65Soso1bdl5S2jOGFqlad0
+         kGMcSib7oxdvzWx8duNPeAXtjXyki+19sLxoHY98Aql4nhjf0749lvMWOrducSHmmK4a
+         Quhhpv0bDKuLo+hjJdSSODbgdbE2XukISdACm9f8YQ21NXoq6y3WyEV8TUS9MFLO7MH0
+         4TCliYM4E/pzEMXiUQZfnbpq5naWaHcGRkgmD+Yil8Qa9e1LRsGhxDEqPGdC/UkoS0T7
+         kTPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735817752; x=1736422552;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5ukftuiSSdjRUGWNl+Q9bxAz+SDSXpgm9QL3acZknL8=;
-        b=SafSX/eMi59U3TKrz8ZSo8/+fYgtiTzRuUjeJ0Ymvk0p1UCFgW6aRMvAz/umWc1oo3
-         YmUn3sTv/QO//fVZlLecc4rKoDPZkDm3VZzuqu0unYvmeLSJ3pGcMwu0AELBvUEsmYb7
-         ciFDhAx0Cw/DSIE9C15ocIPc0ayq7yB7TygLIAIIEywOghyEripghvmNYSLjcHxnXxAK
-         n/d6mMqH3CbIEtrPEJtM+EPPpQH86WSTFd32DgAbjYRTBa2mmDpVORu6N/DSBa2wzbrq
-         EwucwMIVU7bv4k6iDIrOgcPLgOXycFbXd4+Vox884ds3Ba0RLq6IIkFH9SMEVyta25BZ
-         2zrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFLuhpA6jKJwJVb/SwxAWq/XJlI2u1OtCY6XDZw8D615CrYcwn0OjxpAlqgT1qyve3DNHCBynynNM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxLN+fzEdolVkFdNMt4Yj3UYwzI1iu9ZyC9jp714gUFe49K98xH
-	wclO3QPrvbQXMwmClmbZdDumWPJ29N7SXHr6QwMqvvmHuK38rhJX4iKlee35a1dAVBGYGAtjjoJ
-	Xt6Nq/jUXxbmWyDM4o7Z24csYgHxK5sSwdzJQzlZgL4wcj3RKxAAYZ26Ykg==
-X-Gm-Gg: ASbGncuJFPJcrqiEIn/HxMyajFqKBTkzPS68xYFZTiEbZrr5vWLw+BOMH2qK/pRJDKJ
-	KrLpL/OVT+7PQkYo90ZYCBIR5LzfS78qBR+DbDxj13uJKa4L6Gu00FcTDyz8a5GQddtLJQJ3C5j
-	mB4ruM3y8TZuqUyJS69GjvapxEICUtb67IjZh1iLCyog2o521PrQhNFB5gx7xnmvTHK2GOKePle
-	uyGvGm2AWflet9MDiP9joRQ/YttGm6SoDHedAcODCFMevSEZUgXih6oYn4u9Uv8MexqA4z8OvG/
-	9WCNnL+8msZEPsR9p6Q1EDpQmrNiuafm1+cyWVlxIpCRcR4v9fmaYmYre1Gh6InNhFRr61k6Q91
-	Npoh2a66/
-X-Received: by 2002:a05:6000:480a:b0:386:1cd3:89fa with SMTP id ffacd0b85a97d-38a221fa8c6mr43353738f8f.33.1735817751891;
-        Thu, 02 Jan 2025 03:35:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHTvXfH9Yjkw7Lq8XjHNQdAJWD6JFUT9lIiaonrhZq0Se6kwgjVAxEZ6BjDbqnSc4iGe+BANQ==
-X-Received: by 2002:a05:6000:480a:b0:386:1cd3:89fa with SMTP id ffacd0b85a97d-38a221fa8c6mr43353722f8f.33.1735817751577;
-        Thu, 02 Jan 2025 03:35:51 -0800 (PST)
-Received: from ?IPV6:2003:cb:c735:9400:f91f:1f24:e403:81fe? (p200300cbc7359400f91f1f24e40381fe.dip0.t-ipconnect.de. [2003:cb:c735:9400:f91f:1f24:e403:81fe])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c84705esm38104596f8f.44.2025.01.02.03.35.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2025 03:35:50 -0800 (PST)
-Message-ID: <3a2d03dd-ee70-43b4-8b05-1be948bd0997@redhat.com>
-Date: Thu, 2 Jan 2025 12:35:48 +0100
+        d=1e100.net; s=20230601; t=1735822529; x=1736427329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jXS24HNk/PcPkWyO7/S1209SrdCqek8Xs180xOiisVo=;
+        b=eKlRd6p699PI4bpA5tYsrbTwB2UHcKTGfB9S7n0GsiCRA0bkDwn7xeBs8p/E/ay40t
+         C5WG/ad9eK7eICo/ASS1iH+QuiRi6Igk2WNFxE4Fg4BUAj8u9mhpBGlGNwtUK8bm4dPD
+         +ZkYVRKkT3cDQpCs+eQblNYCURnWvrZXkY+dhh4fwqvIScLuBp5dVJTyXIUwHc9YkdCQ
+         KhLI4jD8eA2J+YMKe5ObtIADvGnrFVYm8jsAaAQ4GysckX59oOXn3amEABRYOpU+c+jC
+         C7K/kI5ypp8w2bTklQVYnn2fJqGsawcq6Q41b8gK1lMPDoa8CXojd0MxEKbtgAdfIUsr
+         m4sA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+WTv1VkV5Ti214a/scYcwXEGnpABZDe6kW+OEKskL17nuzAMGmRiF7p7IbZqA1SuOKKMJa/RFVUk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxaZN0tIIAywqYP81fH8hKdXPkLMSlAhuYWn3OIq8mJ+WhAUs5T
+	y2dbq1fJSOtWMMoHUlz3gVwL5NdDUwQxnaXq0edzfceJwqkaOJgQqNADoIora+tltk0J/2brZ+j
+	SUSb9ZQVzue5x6USPHTl1cxcvk7I=
+X-Gm-Gg: ASbGncv22AYeveLrTEJMnMvPpH8r5b+mR2Q72JmpUTa3VYmqXfYWTsgSM/0PqcOaF+c
+	dHk83UeB1infu7eW51MjyNECKpDqJb7UQRoAu9A==
+X-Google-Smtp-Source: AGHT+IGLvuXj+dIrqlUzp0aOb3Z7mz1qVwkY++yurih/6Pd33sBtFEvkwwttWiJ3Nh2EseGJDAQCU7eALZPBZTPzrLo=
+X-Received: by 2002:a05:6402:2802:b0:5d3:cff5:635e with SMTP id
+ 4fb4d7f45d1cf-5d81de065b8mr107382476a12.26.1735822529291; Thu, 02 Jan 2025
+ 04:55:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: add build-time option for hotplug memory default
- online type
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- kernel-team@meta.com, corbet@lwn.net, osalvador@suse.de,
- akpm@linux-foundation.org, chenhuacai@kernel.org, kernel@xen0n.name,
- gregkh@linuxfoundation.org, rafael@kernel.org
-References: <20241220210709.300066-1-gourry@gourry.net>
- <5e958aaa-b1ac-4512-a592-0e1612032861@redhat.com>
- <Z2edvO0X6H_IoMRz@gourry-fedora-PF4VCD3F>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z2edvO0X6H_IoMRz@gourry-fedora-PF4VCD3F>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vlVIFSldmsCZfTje5gXNecAmysENDmVL8Xv4GIV6Wtk_1735817752
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+ <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de>
+In-Reply-To: <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 2 Jan 2025 20:55:17 +0800
+Message-ID: <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
+	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22.12.24 06:03, Gregory Price wrote:
-> On Sat, Dec 21, 2024 at 04:30:21PM +0100, David Hildenbrand wrote:
->>
->>> -config MEMORY_HOTPLUG_DEFAULT_ONLINE
->>> -	bool "Online the newly added memory blocks by default"
->>> -	depends on MEMORY_HOTPLUG
->>> +choice
->>> +	prompt "Memory Hotplug Default Online Type"
->>> +	default MHP_DEFAULT_ONLINE_TYPE_OFFLINE
->>>    	help
->>> +	  Default memory type for driver managed hotplug memory.
->>
->> We should call it "hotplugged memory" consistently, which it is from a pure
->> core-mm perspective ("add memory").
->>
->> "Driver managed" reminds too much about add_memory_driver_managed(), which
->> is only one case. Maybe just drop the "e.g., page tables" from the examples
->> below.
->>
-> 
-> I suppose it's accurate that this also affects VM-hotplugged memory,
-> which may not necessarily be "driver managed" in that regard. So it's
-> more accurate to just say "hotplugged memory" - although even that's not
-> quite completely accurate according to the definition in the docs.
-> 
-> Either way, will change it to "hotplugged memory".
+Hi Thomas:
 
-The "really correct" thing might be "hot-added memory blocks", because 
-that's what it is from a Linux MM POV.
+Thanks for your reply.
 
-Not sure though, if that will be particularly easier to grasp for end users.
+On Thu, Jan 2, 2025 at 5:07=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
+de> wrote:
+>
+> Hi
+>
+>
+> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+> [...]
+> > +
+> > +static struct platform_driver ls2kbmc_platform_driver =3D {
+> > +     .driver =3D {
+> > +             .name =3D "ls2kbmc-framebuffer",
+>
+> The driver is mostly a copy of simpledrm. Why don't you use
+> "simple-framebuffer" for your device name? You could use simpledrm
+> directly then.
 
--- 
-Cheers,
+Ah, indeed, the driver is based on simpledrm.
 
-David / dhildenb
+Initially, I also tried to use simpledrm directly, but it will fail in
+drm memory acquire.
+Because although we register the driver in platform form, its memory
+belongs to pci space and we can see the corresponding pci probe and
+resource allocation in Patch-1.
+Therefore, we need to use aperture_remove_conflicting_pci_devices().
 
+Also, since we are using BMC display, the display will be disconnected
+when BMC reset, at this time we need to push the display data (crtc,
+connector, etc.) manually as shown in Patch-4.
+
+Probably it's not the most suitable way to implement it.
+
+>
+> Best regards
+> Thomas
+>
+> > +     },
+> > +     .probe =3D ls2kbmc_probe,
+> > +     .remove =3D ls2kbmc_remove,
+> > +};
+> > +
+> > +module_platform_driver(ls2kbmc_platform_driver);
+> > +
+> > +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
+> > +MODULE_LICENSE("GPL");
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
+
+
+--=20
+Thanks.
+Binbin
