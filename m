@@ -1,103 +1,189 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9074FA95E
-	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 08:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3646718A6A3
+	for <loongarch@lists.linux.dev>; Thu,  2 Jan 2025 09:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735806995; cv=none; b=dqFR4xxCjJONrflGR/h+hJ4r2qOuB9m5F/sfLD1tubFdDBD41XFdauLFTxI+jkEXSo5r08z4uOYtmRgvEBiZH6l5CpDRzdJLAM/EhwS2czkNmmC7FV/Rq0eD6ieCf4Wmclsbt35T3hEiY5ZlfpdoIk/nR+2BELhehuXKuO74ZgU=
+	t=1735808848; cv=none; b=DvlrNqs5CuvkfruUc6put89LIgifH6lBQ4tCzTHJIPg7zbhdqpJtRi2Kjinlwmvrps9f3tWnIVo8bfuVrYoPN2osx+wcX9dIErC9QflmISwdUI5xl+YmU/9dmVPWg5r8PEjwL5esnIz3Pkp++u4Al8MvaUaTlkTDt72LiUsZUzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735806995; c=relaxed/simple;
-	bh=Pkpd7eOAunjh+Elg26FVESWDLKs9H48QA/g2bjfo42Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bOWBe9fJ6elHR17NJUl0KA3sZtL9R/ufe3Wp2lPn82syQdWB4Z7HulzUfbRv84biHdl8IZak58lr0NWwX+9kcdN8HR+JhfUTjfjZYMo7AcCCGE9wGiSpkn9I/fu6svyoRj0QOZAQicI5wwOFKwHWY14EG6Hlz0dxKrMHppyNoDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxWOEKUHZnjjBdAA--.51934S3;
-	Thu, 02 Jan 2025 16:36:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDx_8cKUHZn3DURAA--.16175S2;
-	Thu, 02 Jan 2025 16:36:26 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Clear LLBCTL if secondary mmu mapping is changed
-Date: Thu,  2 Jan 2025 16:36:25 +0800
-Message-Id: <20250102083625.2577378-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1735808848; c=relaxed/simple;
+	bh=C4sqo3C/hBz903mq9j8cMPbwiadM1+u2/8e/nflAjK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GoherYeC3uRLA9Rqu+yUeVqqd9ea+lVsRel86CJZfP9x2hkYSKf5OQ+W6CJmmpkocN+YhJjohNGGEkpLEz6E0E3g4rn2GMD6xRp55R+BB4swOziiCleV3gmxON2Q4BeAG280s6+F0dJGattqh7rhm9qoLctRrKS3fQDFx+gYAUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bmPUOuvw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sWBNBChp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bmPUOuvw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sWBNBChp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bmPUOuvw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sWBNBChp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bmPUOuvw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sWBNBChp"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6809321158;
+	Thu,  2 Jan 2025 09:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735808845; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LKbgwpkxZPOC3WkO32crUAAfY7X2Zwc2VVsLSm53+Io=;
+	b=bmPUOuvwnQx6eIsduXCea7E/XwHnR7VEBfxpRYSeb4oe2EuUPAxQmZJcH6BTzxbLA12gEf
+	73qneiL3n8mZ3rjfpSIHIhk3gCTzBhh7SXPG2TLM5WBCIRcZbtMNo9PGzfa3b+3BsBnz44
+	mXkF5Uzwlzj11DpQy9SMI/9u9TSgtj4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735808845;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LKbgwpkxZPOC3WkO32crUAAfY7X2Zwc2VVsLSm53+Io=;
+	b=sWBNBChpYck8A09fD1lzE93BeauGzTs1xBDYd5UvxzXAphmEE8wWYXiQdbV+rktYPQorHA
+	zkyemU+7QNnvzKBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1735808845; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LKbgwpkxZPOC3WkO32crUAAfY7X2Zwc2VVsLSm53+Io=;
+	b=bmPUOuvwnQx6eIsduXCea7E/XwHnR7VEBfxpRYSeb4oe2EuUPAxQmZJcH6BTzxbLA12gEf
+	73qneiL3n8mZ3rjfpSIHIhk3gCTzBhh7SXPG2TLM5WBCIRcZbtMNo9PGzfa3b+3BsBnz44
+	mXkF5Uzwlzj11DpQy9SMI/9u9TSgtj4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1735808845;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LKbgwpkxZPOC3WkO32crUAAfY7X2Zwc2VVsLSm53+Io=;
+	b=sWBNBChpYck8A09fD1lzE93BeauGzTs1xBDYd5UvxzXAphmEE8wWYXiQdbV+rktYPQorHA
+	zkyemU+7QNnvzKBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 51A2F13418;
+	Thu,  2 Jan 2025 09:07:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YqGLEkxXdmejRQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 02 Jan 2025 09:07:24 +0000
+Message-ID: <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de>
+Date: Thu, 2 Jan 2025 10:07:23 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_8cKUHZn3DURAA--.16175S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC
+ display
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-kernel@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, dri-devel@lists.freedesktop.org,
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ Chong Qiao <qiaochong@loongson.cn>
+References: <cover.1735550269.git.zhoubinbin@loongson.cn>
+ <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[loongson.cn,gmail.com,kernel.org,acm.org,linux.intel.com,ffwll.ch];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Register LLBCTL is separated CSR register from host, host exception
-eret instruction will clear host LLBCTL CSR register, guest
-exception will clear guest LLBCTL CSR register.
+Hi
 
-VCPU0 atomic64_fetch_add_unless     VCPU1 atomic64_fetch_add_unless
-     ll.d    %[p],  %[c]
-     beq     %[p],  %[u], 1f
-Here secondary mmu mapping is changed, host hpa page is replaced
-with new page. And VCPU1 executed atomic instruction on new
-page.
-                                       ll.d    %[p],  %[c]
-                                       beq     %[p],  %[u], 1f
-                                       add.d   %[rc], %[p], %[a]
-                                       sc.d    %[rc], %[c]
-     add.d   %[rc], %[p], %[a]
-     sc.d    %[rc], %[c]
-LLBCTL is set on VCPU0 and it represents the memory is not modified
-bt other VCPUs, sc.d will modify the memory directly.
 
-Here clear guest LLBCTL_WCLLB register when mapping is the changed.
+Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+[...]
+> +
+> +static struct platform_driver ls2kbmc_platform_driver = {
+> +	.driver = {
+> +		.name = "ls2kbmc-framebuffer",
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/main.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+The driver is mostly a copy of simpledrm. Why don't you use 
+"simple-framebuffer" for your device name? You could use simpledrm 
+directly then.
 
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index 396fed2665a5..7566fa85f8e7 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -245,6 +245,24 @@ void kvm_check_vpid(struct kvm_vcpu *vcpu)
- 		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
- 		vcpu->cpu = cpu;
- 		kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
-+
-+		/*
-+		 * LLBCTL is separated CSR register from host, general exception
-+		 * eret instruction in host mode clears host LLBCTL register,
-+		 * and clears guest register in guest mode. eret in refill
-+		 * exception does not clear LLBCTL register.
-+		 *
-+		 * When second mmu mapping is changed, guest OS does not know
-+		 * even if the content is changed after mapping is changed
-+		 *
-+		 * Here clear guest LLBCTL register when mapping is changed,
-+		 * else if mapping is changed when guest is executing
-+		 * LL/SC pair, LL loads with old address and set LLBCTL flag,
-+		 * SC checks LLBCTL flag and store new address successfully
-+		 * since LLBCTL_WCLLB is on, even if memory with new address is
-+		 * changed on other VCPUs.
-+		 */
-+		set_gcsr_llbctl(CSR_LLBCTL_WCLLB);
- 	}
- 
- 	/* Restore GSTAT(0x50).vpid */
+Best regards
+Thomas
 
-base-commit: fc033cf25e612e840e545f8d5ad2edd6ba613ed5
+> +	},
+> +	.probe = ls2kbmc_probe,
+> +	.remove = ls2kbmc_remove,
+> +};
+> +
+> +module_platform_driver(ls2kbmc_platform_driver);
+> +
+> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
+> +MODULE_LICENSE("GPL");
+
 -- 
-2.39.3
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
