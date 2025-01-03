@@ -1,198 +1,127 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3471D3576
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FBE1C4A29
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 10:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735897329; cv=none; b=E1dNq504ptHJkJs2M227ujdjXXMa76VM384i1A5Q3cPuIyM86rMNoS3vlCDcOOHngdff0KMp1zCszeyU3eF5eyELomt8DgxC9aohyM4kBgChIAFWKOXok7fR4iHuvdCymXrmo6G/VGUWOtaTQHZe+G5kdRHAk/ooHg8PGg7aAkk=
+	t=1735900293; cv=none; b=GVII65vGz++7VoLaeKZwJifXrDSNaP7r9JVJfXTU1KIN6idFMqZWJZ7Yn5ZJGm/XPA5oDeYBzmHGdnZDqk5Z0CmJbE6WlzGAdDzhKSvE+jGgKQkbA+RbyR9KWB5B7Ntx9MhtgMIPsusi2Hs26AleK9YudSwaG9Dc7rP1uWe0Aaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735897329; c=relaxed/simple;
-	bh=CGLMG7TWbT18wPalcBlEAr7kX3RzDHHN+5a5kcr18Ws=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qz7MvmqsODxH27rF2ScfLmYF7VGuNkgwiVI/62KEiMOAB7O+XN51lK1Lyklj3cVSnwCf2pxkystxQ+Ag6/eGE+Or87IfNF/6LLi23KAoFl6rv1kJfAsTJpolZWZRdTksN7gIA7WLblR4BVwLywXCflanLA3DbQVt34xgUSJvXio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=bSF8Di6w; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RmUKf6ol; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bSF8Di6w";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RmUKf6ol"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 345491380775;
-	Fri,  3 Jan 2025 04:42:07 -0500 (EST)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-09.internal (MEProxy); Fri, 03 Jan 2025 04:42:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1735897327;
-	 x=1735983727; bh=C6dK7zO9Zin8vFgMtRgcOQ+IvhDxaO98RU1GGNOThdI=; b=
-	bSF8Di6wT+WCfW4L37LpBLW1Ew/Z+U7ggjrVXYOmYZN3KZJkzCgqADUDIpFLvM1X
-	lGb1VZNENe9IBgFLlcpmEk5uXGMZFZA/rMOsJ5bgapjhJRUf53DkMtStaX9VHYa+
-	+s1LOR8JIV5nx8Z/KKxTA2Lg9OPIsG8N6+jEyWeWtpuFytX80k1Re+gVudLbrGtZ
-	bwCDMmzeHy7gyfxMcPuSYJrwRkXpPBoUuedx1ZPZSIPfOCOlsj/KMtxS2Llye91Y
-	hNw7WXx+Zajr//88Xzvt0gMIPuhRpiCdXFPLWujlVttVFWi+oyQOgm3fm2XgZmnh
-	SNsUyCoDUVWid+L+26dGkw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1735897327; x=
-	1735983727; bh=C6dK7zO9Zin8vFgMtRgcOQ+IvhDxaO98RU1GGNOThdI=; b=R
-	mUKf6olfL1ejskOfnTeiT1GxDwAazw2DlBGQdMHRdzmmHkHLd4OdQk+QTA7Aav7n
-	xwj/mQL/N0yX1+ZVFYkWJGMgG+qnZNQcHSo+CquNF5jlnsYckpp65RY160MM4+Pk
-	MKMqKPurTwEAVtSA89BURtXsJwEkq7B3KjUDMRoaq17k+0TdNQn+TcxykMU4L1cQ
-	tVOfjLOO5eqZbclGu4BP93TsS4VSwjoQrfH7/Knxoptu5Om+XFVdhBKZWvhKRftr
-	6BwgET0mED+3yln954TtlOeiV2l2sB+WNbYB9qDX9Qbi/66LFClGVDxIUoNgnVhT
-	hfcHHjPEhinHtbpI8XkHw==
-X-ME-Sender: <xms:7rB3Z5DQAySW9ZRQ2R1ba_7BT6gdL-TzjgVGp-ut15GZb86XUgR74Q>
-    <xme:7rB3Z3hJty89cSXRH1ifK9OeFebNBc7Fmy2U-coHM7uWzpTRWxrowc08SC4w5sX60
-    42dKzyx3h4VNtMDGhs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefgedgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdffkeet
-    hefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgr
-    thdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohho
-    nhhgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugi
-    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhn
-    vghlseigvghntdhnrdhnrghmvg
-X-ME-Proxy: <xmx:7rB3Z0lwDL8yQbM5JJQ4M1Opddq6PTVBMzMWCnSpMSloG3HNhYyXgg>
-    <xmx:7rB3ZzzRXJt-H-UrRjxo_nHZzaOvSV5R4gh_cJELpooZDkA4Wi6o2w>
-    <xmx:7rB3Z-TCFLL4hdZTmrnOVLnWL93SA-C3Bh9QD4l6_eiF4cRIDioHug>
-    <xmx:7rB3Z2ZvBl0ILJE7PbcQ5lEIAkONhVwjtcGCJgQLbtAsYR8MaeaYJw>
-    <xmx:77B3Z8cba1Zsv5YydJi7FdAxkpEdNseVb8dni0cXr41BeAYnKrQ0jiwS>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6C9201C20066; Fri,  3 Jan 2025 04:42:06 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1735900293; c=relaxed/simple;
+	bh=ISf2N1uOhGVvhDmYf90dbjdofd65v61h99oDmDLOQo8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M7/uCBsJe95IiwBi/MeQsR0bdvRoDIglSljx1Qpjw7VgiiKLg9D+KIg/S+OLftWXRfhNTgO9vW8T0FzLmv4K7L0a8A40HHc/3B1HE6cdCAQwjxdr/uNpcsarCp/FJkMcpL6l7cMdHXe9a04UQ1NTf1HhWBL1kJhDZ+uv0eqJeiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A9C3C0007;
+	Fri,  3 Jan 2025 10:31:20 +0000 (UTC)
+Message-ID: <2aed338a-97a4-40e3-8a95-99458756ca28@ghiti.fr>
+Date: Fri, 3 Jan 2025 11:31:19 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 03 Jan 2025 09:41:44 +0000
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Xuerui Wang" <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Message-Id: <6160921c-7761-46d1-9d13-f26af5873b2e@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H6Bji1FKcuhxLntfWe4iJGpr-tmWLt7q3L55sVPHrH7AA@mail.gmail.com>
-References: <20250102-la-earlycon-fixed-map-v1-1-23fe3a6681c4@flygoat.com>
- <CAAhV-H44VvyxHqmyQ3K8qC+HERH0FjheqAJpDCiYkQ2oK2woAg@mail.gmail.com>
- <05ac2a87-7f60-4336-a323-443967a77a76@app.fastmail.com>
- <CAAhV-H6Bji1FKcuhxLntfWe4iJGpr-tmWLt7q3L55sVPHrH7AA@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is enabled
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/10] riscv: mm: Skip pgtable level check in
+ {pud,p4d}_alloc_one
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-um@lists.infradead.org, loongarch@lists.linux.dev, x86@kernel.org
+References: <20241219164425.2277022-1-kevin.brodsky@arm.com>
+ <20241219164425.2277022-6-kevin.brodsky@arm.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20241219164425.2277022-6-kevin.brodsky@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
+Hi Kevin,
 
-
-=E5=9C=A82025=E5=B9=B41=E6=9C=883=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=E5=
-=8D=889:35=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Fri, Jan 3, 2025 at 5:02=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoa=
-t.com> wrote:
->>
->>
->>
->> =E5=9C=A82025=E5=B9=B41=E6=9C=883=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=
-=E5=8D=882:38=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> > Hi, Jiaxun,
->> >
->> > On Thu, Jan 2, 2025 at 10:34=E2=80=AFPM Jiaxun Yang <jiaxun.yang@fl=
-ygoat.com> wrote:
->> >>
->> >> When ARCH_IOREMAP is enabled, we are using always accessible DMW
->> >> for ioremap. It makes no sense to create a dedicated mapping for
->> >> earlycon given that we can access the region via DMW.
->> >>
->> >> Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is selected. This can
->> >> ease debugging for early mapping issues.
->> > Fixmap has nothing to do with IOREMAP, whether you use ARCH_IOREMAP=
- or
->> > GENERIC_IOREMAP, earlycon is mapped by fixmap rather than ioremap().
->>
->> When you have ARCH_IOREMAP it=E2=80=99s not necessary to create fixed=
- map for earlycon.
->>
->> As ioremap along is sufficient to access MMIO.
-> It's sufficient but ioremap() doesn't need to control everything about
-> MMIO, and I don't like the #ifdef in fixmap.h.
-
-It=E2=80=99s fine do drop that ifdef and keep Kconfig change.
-
-I can do it in v2.
-
-Thanks
--Jiaxun
-
+On 19/12/2024 17:44, Kevin Brodsky wrote:
+> {pmd,pud,p4d}_alloc_one() is never called if the corresponding page
+> table level is folded, as {pmd,pud,p4d}_alloc() already does the
+> required check. We can therefore remove the runtime page table level
+> checks in {pud,p4d}_alloc_one. The PUD helper becomes equivalent to
+> the generic version, so we remove it altogether.
 >
-> Huacai
->>
->> I=E2=80=99m doing this as it can help with debugging early mapping is=
-sues.
->>
->> Thanks
->>
->> >
->> > Huacai
->> >
->> >>
->> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> >> ---
->> >>  arch/loongarch/Kconfig              | 2 +-
->> >>  arch/loongarch/include/asm/fixmap.h | 2 ++
->> >>  2 files changed, 3 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> >> index 1c4d13aa677e2e04b9791882fba7523f93d6a69d..ad8a8cf75343799ea6=
-26be52f521fa75e7cbe07b 100644
->> >> --- a/arch/loongarch/Kconfig
->> >> +++ b/arch/loongarch/Kconfig
->> >> @@ -246,7 +246,7 @@ config MACH_LOONGSON64
->> >>         def_bool 64BIT
->> >>
->> >>  config FIX_EARLYCON_MEM
->> >> -       def_bool y
->> >> +       def_bool !ARCH_IOREMAP
->> >>
->> >>  config PGTABLE_2LEVEL
->> >>         bool
->> >> diff --git a/arch/loongarch/include/asm/fixmap.h b/arch/loongarch/=
-include/asm/fixmap.h
->> >> index d2e55ae55bb9c499b9a685509bc26d663054b58e..905dc7a5f9fa52ac92=
-4fe832749f39283c28a9f8 100644
->> >> --- a/arch/loongarch/include/asm/fixmap.h
->> >> +++ b/arch/loongarch/include/asm/fixmap.h
->> >> @@ -12,7 +12,9 @@
->> >>
->> >>  enum fixed_addresses {
->> >>         FIX_HOLE,
->> >> +#ifdef CONFIG_FIX_EARLYCON_MEM
->> >>         FIX_EARLYCON_MEM_BASE,
->> >> +#endif
->> >>         __end_of_fixed_addresses
->> >>  };
->> >>
->> >>
->> >> ---
->> >> base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
->> >> change-id: 20250102-la-earlycon-fixed-map-d6a48bd5b831
->> >>
->> >> Best regards,
->> >> --
->> >> Jiaxun Yang <jiaxun.yang@flygoat.com>
->> >>
->>
->> --
->> - Jiaxun
+> This is consistent with the way arm64 and x86 handle this situation
+> (runtime check in p4d_free() only).
+>
+> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> ---
+>   arch/riscv/include/asm/pgalloc.h | 22 ++++------------------
+>   1 file changed, 4 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+> index f52264304f77..8ad0bbe838a2 100644
+> --- a/arch/riscv/include/asm/pgalloc.h
+> +++ b/arch/riscv/include/asm/pgalloc.h
+> @@ -12,7 +12,6 @@
+>   #include <asm/tlb.h>
+>   
+>   #ifdef CONFIG_MMU
+> -#define __HAVE_ARCH_PUD_ALLOC_ONE
+>   #define __HAVE_ARCH_PUD_FREE
+>   #include <asm-generic/pgalloc.h>
+>   
+> @@ -88,15 +87,6 @@ static inline void pgd_populate_safe(struct mm_struct *mm, pgd_t *pgd,
+>   	}
+>   }
+>   
+> -#define pud_alloc_one pud_alloc_one
+> -static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+> -{
+> -	if (pgtable_l4_enabled)
+> -		return __pud_alloc_one(mm, addr);
+> -
+> -	return NULL;
+> -}
+> -
+>   #define pud_free pud_free
+>   static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+>   {
+> @@ -118,15 +108,11 @@ static inline void __pud_free_tlb(struct mmu_gather *tlb, pud_t *pud,
+>   #define p4d_alloc_one p4d_alloc_one
+>   static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long addr)
+>   {
+> -	if (pgtable_l5_enabled) {
+> -		gfp_t gfp = GFP_PGTABLE_USER;
+> -
+> -		if (mm == &init_mm)
+> -			gfp = GFP_PGTABLE_KERNEL;
+> -		return (p4d_t *)get_zeroed_page(gfp);
+> -	}
+> +	gfp_t gfp = GFP_PGTABLE_USER;
+>   
+> -	return NULL;
+> +	if (mm == &init_mm)
+> +		gfp = GFP_PGTABLE_KERNEL;
+> +	return (p4d_t *)get_zeroed_page(gfp);
+>   }
+>   
+>   static inline void __p4d_free(struct mm_struct *mm, p4d_t *p4d)
 
---=20
-- Jiaxun
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
