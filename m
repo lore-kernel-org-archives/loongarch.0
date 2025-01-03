@@ -1,54 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9791817FE
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:36:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF59317FE
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735871815; cv=none; b=bbtr04l3/1jriLOqGXwN/LzJRfPCoy7uSuQSXa5krOfZKS3rTlchWlDFz21SjacNVVtV7MEV2Kx7MqGILfatiX4C/mt4C/pqwsMiK2UKO1EEJUrq3WCIen/17BLvTfv82FJkrWbSFY7QL6Ju+sPJFG7txKplZfVNccEosPSRLvQ=
+	t=1735871939; cv=none; b=C9oyzRCsgzJS4b497y8xw1rz9K2Raqxx25KhVU926kcS6CLNAAILP+O4r8RfhSNH1q2g6Xaz3CFKUNFBe8nV2+/lzoWN/V/nW3EdMe9IGkXiz5oUuzxQwOHSDp84CMvQ1QSbdXPD/tiOToIAOwaAI8ImKu+IsSztEuVMf+8/b0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735871815; c=relaxed/simple;
-	bh=gwBQoUZfkFpqWmF1OT5Dm56gT0MNEOI3OvCtbUI1Qao=;
+	s=arc-20240116; t=1735871939; c=relaxed/simple;
+	bh=ueHxTudJ0tAFuuvzaQkseMUqINhLCGPEHUkMpaVIUE8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EFnJtVZo/X2f0RpkYVnoX9+XouSlbibvRicCh89O8vMOKaU3+z6m/COrhkofLpUAlR/PxmIWavhI7vt42WJIHm81K7NjF6fzSlHNBwxw+JelmcmIqnMM5tyJv15WBx6JM1dYH06qkfFEmYzyl8Zgih24JQYzPYSUA8B4MgnGnFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJIcWWDX; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=UpZY9ulGFj6PPILjjL5rcpkfIKYVi4wlXO1JNXR27VIT+Q9cIz6/0dMBt9+LEN8VcW3ilK2NpeRyonmw3UWXPAPRzW/yQ6YQBK9/X6mTt4TDktTGkmrOOmwH+0vTzzruBW/65ifZLjJShxkU9Lkbi17K6nD19xCnTrOgyxCEYCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=je3+Tjan; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJIcWWDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485CFC4CEDD
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:36:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="je3+Tjan"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729E0C4CEDC
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735871815;
-	bh=gwBQoUZfkFpqWmF1OT5Dm56gT0MNEOI3OvCtbUI1Qao=;
+	s=k20201202; t=1735871938;
+	bh=ueHxTudJ0tAFuuvzaQkseMUqINhLCGPEHUkMpaVIUE8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bJIcWWDX0+KFBWIV1ufn0F9qmExAFz3nohqJAZHxz2VS8G6ATcNyGRmsqYrP+wc6l
-	 F5YA6xcuVvzPDrM4nPfCtIGJZYxqYn3JctiS3IFBFUwOGZt/iEbl/7Gi3Zopa2XbLK
-	 WookzrSoXey1fO1VT9iETMd+TZeJzTCzMm+oz+BSsp0R4jRPv0J4zUZU2a8LD+W8AU
-	 q/ah3IxkYS+1qGLsgEekCp440cO3vpM9oSV1i7iYN7HWyoVkc3UMqmA3n0TLUu/FPt
-	 70BUKQ+Z+cANT2c0RvC2l24XwIoQMpSYaJ+PG2dTl2FQpVBlccQQwJ6q4y7KZIYZkT
-	 9zghoABU1D+aw==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d3e829ff44so23749132a12.0
-        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 18:36:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVE3WUaEH43/yKpYsh37ZPCC6JcQjChz05yU8Utoh+kPklITqlOxE0SZlADnjbLddHBmpGLoaEs4vo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+1TiUkhnGiocC8N3YDP1m4+iVHXlpUJirwFtr6UIDJ2Gl8SRN
-	Ke9qYUU6d5ZX9EZHk++NZZe/nPlNGj02bAtH0zVIBMmmhc3Vr91VAcoolBQbMRl876Ye+Qjzrr4
-	iViPnvnDMvNqzQfl4+Jkt/LSwkCI=
-X-Google-Smtp-Source: AGHT+IFgpJv87t7bWJaEBP6+eD6K/j3XDBfSi3vjB9j+b1SwpY5l2na2yKRdZutYyMUrk5dZN7MT433EJmjczUtzbc0=
-X-Received: by 2002:a17:907:1c98:b0:aaf:afb9:887d with SMTP id
- a640c23a62f3a-aafafb9a436mr89183566b.1.1735871813816; Thu, 02 Jan 2025
- 18:36:53 -0800 (PST)
+	b=je3+TjangH5vyDj7N8riqszmn/4H+gIYJsFkaNSZfeSLuocgCUElOeQqk6VITPV4N
+	 P6Fzmc3AeohgAtjvKH4Mb4I/fwSJs/t1wu8Rk493ddmWQj8r99i85Wlgk8Jzhdyx3S
+	 +zOGok0y7eXGzZzBXyPUKedN9ii7yfmL/3QrRWpBxKpiLwLLIz2wquWtTIxFPVQ3sX
+	 9QJ2oLaQIR0Ns5Y46AnC5+dQzG6VMIEnyhTR5mJcgW/eXBMa0ssx6fqzJN6987dgjM
+	 89pzhD7ogg9mZqzzPKE+CwJM5vpQMII2cuL55XJJiX2i8w+Y18MefBfJT5PbATmIj3
+	 haUM8ZtN8E2SQ==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec111762bso1765184566b.2
+        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 18:38:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVrFIybGZ+djisQfTJ9LvGEijXNN+qdfCe4g7Hc4ki2YiXX3CQe/9IZcnuXzYOWdUK506SZHbg58Ug=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMKTz4OatHe+fXX8aWEqprLrgP4HGu6y8TrLrDV21yv3S5y4wJ
+	c10Chj608nOUy/XO9olr+E8kHOqgQsCR+yBT2Qh8b6pNsQDOF6U8a2xnXexKXqHQkihEAapaR38
+	JYqySPbFUAWYPs82jMnc8MBcBSKw=
+X-Google-Smtp-Source: AGHT+IHa0EKFGnfVqtPK4J6t1Hbul6dN3H/qq7EXzQAzb/ZHVJjZfbcO5pe9NOP2WQaJLPIqzIdCWapK508K4gWm4i8=
+X-Received: by 2002:a17:907:97d2:b0:aa6:af4b:7c95 with SMTP id
+ a640c23a62f3a-aac33690754mr4916168066b.56.1735871937020; Thu, 02 Jan 2025
+ 18:38:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250102-la-misc-v1-1-8dc7db525e54@flygoat.com>
-In-Reply-To: <20250102-la-misc-v1-1-8dc7db525e54@flygoat.com>
+References: <20250102-la-earlycon-fixed-map-v1-1-23fe3a6681c4@flygoat.com>
+In-Reply-To: <20250102-la-earlycon-fixed-map-v1-1-23fe3a6681c4@flygoat.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 3 Jan 2025 10:36:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6_08dk6-Q1MiQTjD4pdyxyeXx3Gd6rzVkSzaq0yLEGYA@mail.gmail.com>
-Message-ID: <CAAhV-H6_08dk6-Q1MiQTjD4pdyxyeXx3Gd6rzVkSzaq0yLEGYA@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: time: Derive max_delta from prcfg1 tmrbits
+Date: Fri, 3 Jan 2025 10:38:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H44VvyxHqmyQ3K8qC+HERH0FjheqAJpDCiYkQ2oK2woAg@mail.gmail.com>
+Message-ID: <CAAhV-H44VvyxHqmyQ3K8qC+HERH0FjheqAJpDCiYkQ2oK2woAg@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is enabled
 To: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
@@ -57,80 +57,61 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi, Jiaxun,
 
-On Thu, Jan 2, 2025 at 10:05=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+On Thu, Jan 2, 2025 at 10:34=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
 m> wrote:
 >
-> As per arch spec, maximum timer bits is configurable and
-> should not be hardcoded in any way.
+> When ARCH_IOREMAP is enabled, we are using always accessible DMW
+> for ioremap. It makes no sense to create a dedicated mapping for
+> earlycon given that we can access the region via DMW.
 >
-> Use prcfg1 tmrbits to determine clockevent's max_delta
-> to be conformance.
+> Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is selected. This can
+> ease debugging for early mapping issues.
+Fixmap has nothing to do with IOREMAP, whether you use ARCH_IOREMAP or
+GENERIC_IOREMAP, earlycon is mapped by fixmap rather than ioremap().
+
+Huacai
+
 >
 > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-> LA32R doesn't have prcfg, maybe we should handle this
-> during cpu-probe and save it in cpuinfo_loongarch,
+>  arch/loongarch/Kconfig              | 2 +-
+>  arch/loongarch/include/asm/fixmap.h | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 >
-> What's your opinion, Huacai?
-> ---
->  arch/loongarch/include/asm/loongarch.h | 1 -
->  arch/loongarch/kernel/time.c           | 7 ++++++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 1c4d13aa677e2e04b9791882fba7523f93d6a69d..ad8a8cf75343799ea626be52f=
+521fa75e7cbe07b 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -246,7 +246,7 @@ config MACH_LOONGSON64
+>         def_bool 64BIT
 >
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
-ude/asm/loongarch.h
-> index 64ad277e096edd7d77af6f37e234d68e571764a4..a3cc4f8d4c4a0b0521ef2b76c=
-87fa57eca417d75 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -466,7 +466,6 @@
+>  config FIX_EARLYCON_MEM
+> -       def_bool y
+> +       def_bool !ARCH_IOREMAP
 >
->  #define LOONGARCH_CSR_TCFG             0x41    /* Timer config */
->  #define  CSR_TCFG_VAL_SHIFT            2
-> -#define         CSR_TCFG_VAL_WIDTH             48
->  #define  CSR_TCFG_VAL                  (_ULCAST_(0x3fffffffffff) << CSR_=
-TCFG_VAL_SHIFT)
->  #define  CSR_TCFG_PERIOD_SHIFT         1
->  #define  CSR_TCFG_PERIOD               (_ULCAST_(0x1) << CSR_TCFG_PERIOD=
-_SHIFT)
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index a07d7eff4dc5fb0f41f5fad02698ff7a84c7bc8a..bde2297f139c2d5e26894a2eb=
-c1748cc6fef3146 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -126,16 +126,21 @@ void sync_counter(void)
+>  config PGTABLE_2LEVEL
+>         bool
+> diff --git a/arch/loongarch/include/asm/fixmap.h b/arch/loongarch/include=
+/asm/fixmap.h
+> index d2e55ae55bb9c499b9a685509bc26d663054b58e..905dc7a5f9fa52ac924fe8327=
+49f39283c28a9f8 100644
+> --- a/arch/loongarch/include/asm/fixmap.h
+> +++ b/arch/loongarch/include/asm/fixmap.h
+> @@ -12,7 +12,9 @@
 >
->  int constant_clockevent_init(void)
->  {
-> +       uint32_t tmrbits;
-tmr is a strange short name, you can use timer_bits or tbits for short.
-
->         unsigned int cpu =3D smp_processor_id();
->  #ifdef CONFIG_PREEMPT_RT
->         unsigned long min_delta =3D 100;
->  #else
->         unsigned long min_delta =3D 1000;
->  #endif
-> -       unsigned long max_delta =3D (1UL << 48) - 1;
-> +       unsigned long max_delta;
->         struct clock_event_device *cd;
->         static int irq =3D 0, timer_irq_installed =3D 0;
+>  enum fixed_addresses {
+>         FIX_HOLE,
+> +#ifdef CONFIG_FIX_EARLYCON_MEM
+>         FIX_EARLYCON_MEM_BASE,
+> +#endif
+>         __end_of_fixed_addresses
+>  };
 >
-> +       tmrbits =3D read_csr_prcfg1() & CSR_CONF1_TMRBITS;
-> +       tmrbits =3D tmrbits >> CSR_CONF1_TMRBITS_SHIFT;
-> +       max_delta =3D CLOCKSOURCE_MASK(tmrbits + 1);
-I prefer to evaluate the tbits and max_delta directly when declaring them.
-
-
-Huacai
-> +
->         if (!timer_irq_installed) {
->                 irq =3D get_percpu_irq(INT_TI);
->                 if (irq < 0)
 >
 > ---
 > base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
-> change-id: 20241223-la-misc-d610d14f947e
+> change-id: 20250102-la-earlycon-fixed-map-d6a48bd5b831
 >
 > Best regards,
 > --
