@@ -1,243 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73731B218F;
-	Fri,  3 Jan 2025 04:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902982563;
+	Fri,  3 Jan 2025 07:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735878613; cv=none; b=MFIVlO4RkbcgHPqNBSXa9W80w8y/f7RZkPkd6HY5B92MeJlpeGtNrN6ZWqv6broRLShveJAqYMVG7hVyrCGBQ1L5ikzV1Nip5ADKVHlKIbT+gP/r3wb3GFn92Kces4tWO+rSy0YYLqWwLVGyI/0uZm4lcLMnJqDqNpCluCDhPpU=
+	t=1735889175; cv=none; b=LQZEU4hXexdyVq/8R65yLFwmhaHAmLAV2kkvfICjF/QrcPd44aqsdzeUVty5V66A+cr7Ua9VYOHBYSncHd9TQ5NXztdPuS4vmpzb8uFfzjCiexAt+eDzzgcwHoHHOCzrBXrNEs1m7HRl9vPykfYTMcItZ0JA9ugk5hCfS5mKjwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735878613; c=relaxed/simple;
-	bh=BLBgIr+YQ8Ibsk9KHPiZG6yNnG4b3R5nEab97uXLP9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYzcKsGPR1FiJ4ryINA1Wne03rVHHPYhfQWSOtQzFvh4S/1ecUjzpbUK6sDrU2ZWeqjHl+G5rwDFxfEMIkpHOtWXzdjfBzogcT+vpG80HEuc4jGku/ChDNoRQCOSOSMd7n+vWasQArnoQNrVmOAesq+QY99WB6gP5DHW/47eb7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+vkwsix; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1735889175; c=relaxed/simple;
+	bh=tXCXbV9W8BnfoaSGUk44FzzzU/4A5uG0Yr4sKlH094M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JTlyMLQI27Ka3+h8h/eshjU5f3r91XKKswIaU83Q5uiRKGoEmisrJ+a8MbVfRHWTZXNH8kqCg3WnclogQ24NUk97sF081kslZMWJ10RU1qTAhGjoJFLJgkgNySXb43TKbfcrsuo7eOa2CztZBvAkv1bxLs7bnWdLk+QVAFwX7vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhpi1QRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+vkwsix"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735878611; x=1767414611;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BLBgIr+YQ8Ibsk9KHPiZG6yNnG4b3R5nEab97uXLP9k=;
-  b=L+vkwsixYKD5OpYHO8ylUuKAd1VM3Zi7sbuJfUCDIAo7XmiHS1pi7uV3
-   AoKpmGMvqk1DS9tDPUf2AR8xG/wRlzneSuqQa8y1R2aG7D3VIggNxHFM0
-   EeTflN88QpDSeUjJ1ig+RbRA9hCo1j3s4yeGXK8VcNcn1y65822ICC7iD
-   rOc7ayB8Lkn5efkPWsAXTFp29gVRNSNe7qyPjeDURLQIh1Ykn4EMvCmw/
-   FhjWVOc7FsYhCOucH+/lVmKd3or0yHY3FhWLUWuE2NznYcj8wVdMohASb
-   XKcehiPnJ8LKQLZX4sqF+K51U9c5jCRLBuiMW6VpVxVPtJUQKjEXj42vM
-   Q==;
-X-CSE-ConnectionGUID: /Mdyy6CkQd+CPUM7B3eprA==
-X-CSE-MsgGUID: y7SIuK7+SsqCKnKgmxwxfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11303"; a="35368520"
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="35368520"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2025 20:30:10 -0800
-X-CSE-ConnectionGUID: S5U5uUSLR9S43ttLaiE61w==
-X-CSE-MsgGUID: OAei6xYXSuOlpOJsyITW9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,286,1728975600"; 
-   d="scan'208";a="106668447"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 02 Jan 2025 20:30:05 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tTZJz-0009Cx-0k;
-	Fri, 03 Jan 2025 04:30:03 +0000
-Date: Fri, 3 Jan 2025 12:29:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v1 2/4] ipmi: Add Loongson-2K BMC support
-Message-ID: <202501031235.JEXCZscQ-lkp@intel.com>
-References: <a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhpi1QRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1399DC4CECE;
+	Fri,  3 Jan 2025 07:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735889175;
+	bh=tXCXbV9W8BnfoaSGUk44FzzzU/4A5uG0Yr4sKlH094M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Vhpi1QRPRiVIpQ5FPBFxUVEiEsK1UDwF7pWZcrKz3TceJEWqF2kqW3DAMS4dGFjQx
+	 LSuI1CInJMACJ8oRjHxmkPB9CEctQgE3XOWBPnfTdXo9j+XO9g7t1EvXeb6Oq5eeBs
+	 SSeTL5hzlCWQbm5GQxuDeWA4T6mUaqa2uAwW0n7xO+u+IGh87m0oTiNGmMynssKU9U
+	 N5S+V+QnYCHWc8uxxgyntExdp3GVSlmOiblCSeHIVRSxwFNhFcAr2cwQtCIBh3MOan
+	 l4yu9alCPSDN6oMFuc5ukpjaUNG6J6CKFMA9IrQIaS9Vo1Mx7e5xINGITAFXH1F8eu
+	 kdRL9l1ltckIw==
+Message-ID: <c80efae8-7f5c-4f2e-92c0-510511004ad1@kernel.org>
+Date: Fri, 3 Jan 2025 08:26:09 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 RESEND] soc: loongson: add Loongson Security Module
+ driver
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Cc: arnd@arndb.de, olof@lixom.net, soc@kernel.org, soc@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
+ christophe.jaillet@wanadoo.fr
+References: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
+ <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
+ <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Binbin,
+On 03/01/2025 03:25, Zhao Qunqin wrote:
+> 
+> 在 2024/12/28 下午7:02, Krzysztof Kozlowski 写道:
+>> On 24/12/2024 08:25, Qunqin Zhao wrote:
+>>> This driver supports Loongson Security Module, which
+>>> provides the control for it's hardware encryption
+>>> acceleration child devices.
+>> Please wrap commit message according to Linux coding style / submission
+>> process (neither too early nor over the limit):
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+> OK
+>>> Only ACPI firmware is supported.
+>>>
+>>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>> I don't get why you are sending this to soc. This is loongson specific
+>> and is supposed to go via Loongson maintainers.
+>>
+>> And why is this a resend?
+> 
+> There are no platform-specific maintainers, So I initially sent the 
+> patch to Arnd,
 
-kernel test robot noticed the following build warnings:
+What do you mean by "no platform-specific maintainers"? This
+architecture and this platform is abandoned?
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.13-rc5]
-[cannot apply to cminyard-ipmi/for-next lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes next-20241220]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Then we should either drop it from the kernel or make it orphaned.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-MFD-Core-driver/20241230-174205
-base:   linus/master
-patch link:    https://lore.kernel.org/r/a4cfdeed1a91a7a12c7ebe56bed2ba94991c4065.1735550269.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v1 2/4] ipmi: Add Loongson-2K BMC support
-config: loongarch-randconfig-r123-20241231 (https://download.01.org/0day-ci/archive/20250103/202501031235.JEXCZscQ-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250103/202501031235.JEXCZscQ-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501031235.JEXCZscQ-lkp@intel.com/
+> 
+> but didn't receive a response from Arnold, so I resent the patch and added
+> 
+> soc@kernel.org to the mailing list.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ls2k_kcs_data *ik @@     got void [noderef] __iomem *const addr @@
-   drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse:     expected struct ls2k_kcs_data *ik
-   drivers/char/ipmi/ipmi_si_ls2k.c:110:38: sparse:     got void [noderef] __iomem *const addr
-   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ls2k_kcs_data *ik @@     got void [noderef] __iomem *const addr @@
-   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse:     expected struct ls2k_kcs_data *ik
-   drivers/char/ipmi/ipmi_si_ls2k.c:168:38: sparse:     got void [noderef] __iomem *const addr
->> drivers/char/ipmi/ipmi_si_ls2k.c:226:24: sparse: sparse: symbol 'ipmi_ls2k_platform_driver' was not declared. Should it be static?
+You shouldn't. This is patch for your maintainers to take. If you do not
+have them: either fix that or abandon/orphan the platform.
 
-vim +110 drivers/char/ipmi/ipmi_si_ls2k.c
 
-   106	
-   107	static unsigned char ls2k_mem_inb(const struct si_sm_io *io,
-   108					  unsigned int offset)
-   109	{
- > 110		struct ls2k_kcs_data *ik = io->addr;
-   111		int inb = 0;
-   112	
-   113		if (ik->version == 0)
-   114			inb = intf_sim_inb_v0(ik, offset);
-   115		else if (ik->version == 1)
-   116			inb = intf_sim_inb_v1(ik, offset);
-   117	
-   118		return inb;
-   119	}
-   120	
-   121	static void intf_sim_outb_v0(struct ls2k_kcs_data *ik, unsigned int offset,
-   122				     unsigned char val)
-   123	{
-   124		if (ls2k_get_ibf(ik))
-   125			return;
-   126	
-   127		switch (offset & BIT(0)) {
-   128		case 0:
-   129			ik->reg.data_in = val;
-   130			ik->reg.status &= ~LS2K_KCS_STS_CMD;
-   131			break;
-   132	
-   133		case 1:
-   134			ik->reg.cmd = val;
-   135			ik->reg.status |= LS2K_KCS_STS_CMD;
-   136			break;
-   137		}
-   138	
-   139		ls2k_set_ibf(ik, 1);
-   140		ik->write_req++;
-   141	}
-   142	
-   143	static void intf_sim_outb_v1(struct ls2k_kcs_data *ik, unsigned int offset,
-   144				     unsigned char val)
-   145	{
-   146		if (ik->fifo.ibfh != ik->fifo.ibft)
-   147			return;
-   148	
-   149		switch (offset & BIT(0)) {
-   150		case 0:
-   151			ik->reg.data_in = val;
-   152			ik->cmd_data = 0;
-   153			break;
-   154	
-   155		case 1:
-   156			ik->reg.cmd = val;
-   157			ik->cmd_data = 1;
-   158			break;
-   159		}
-   160	
-   161		ik->fifo.ibfh = !ik->fifo.ibft;
-   162		ik->write_req++;
-   163	}
-   164	
-   165	static void ls2k_mem_outb(const struct si_sm_io *io, unsigned int offset,
-   166				  unsigned char val)
-   167	{
-   168		struct ls2k_kcs_data *ik = io->addr;
-   169	
-   170		if (ik->version == 0)
-   171			intf_sim_outb_v0(ik, offset, val);
-   172		else if (ik->version == 1)
-   173			intf_sim_outb_v1(ik, offset, val);
-   174	}
-   175	
-   176	static void ls2k_mem_cleanup(struct si_sm_io *io)
-   177	{
-   178		if (io->addr)
-   179			iounmap(io->addr);
-   180	}
-   181	
-   182	static int ipmi_ls2k_sim_setup(struct si_sm_io *io)
-   183	{
-   184		io->addr = ioremap(io->addr_data, io->regspacing);
-   185		if (!io->addr)
-   186			return -EIO;
-   187	
-   188		io->inputb = ls2k_mem_inb;
-   189		io->outputb = ls2k_mem_outb;
-   190		io->io_cleanup = ls2k_mem_cleanup;
-   191	
-   192		return 0;
-   193	}
-   194	
-   195	static int ipmi_ls2k_probe(struct platform_device *pdev)
-   196	{
-   197		struct si_sm_io io;
-   198	
-   199		dev_info(&pdev->dev, "probing via ls2k platform");
-   200		memset(&io, 0, sizeof(io));
-   201	
-   202		io.addr_source	= SI_PLATFORM;
-   203		io.si_type	= SI_KCS;
-   204		io.addr_space	= IPMI_MEM_ADDR_SPACE;
-   205		io.io_setup	= ipmi_ls2k_sim_setup;
-   206		io.addr_data	= pdev->resource[0].start;
-   207		io.regspacing	= pdev->resource[0].end - pdev->resource[0].start + 1;
-   208		io.regsize	= DEFAULT_REGSIZE;
-   209		io.regshift	= 0;
-   210		io.dev		= &pdev->dev;
-   211		io.irq		= 0;
-   212		if (io.irq)
-   213			io.irq_setup = ipmi_std_irq_setup;
-   214	
-   215		dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
-   216			 &pdev->resource[0], io.regsize, io.regspacing, io.irq);
-   217	
-   218		return ipmi_si_add_smi(&io);
-   219	}
-   220	
-   221	static void ipmi_ls2k_remove(struct platform_device *pdev)
-   222	{
-   223		ipmi_si_remove_by_dev(&pdev->dev);
-   224	}
-   225	
- > 226	struct platform_driver ipmi_ls2k_platform_driver = {
-   227		.driver = {
-   228			.name = "ls2k-ipmi-si",
-   229		},
-   230		.probe	= ipmi_ls2k_probe,
-   231		.remove	= ipmi_ls2k_remove,
-   232	};
-   233	
+> 
+>>> ---
+>>> Changes in v2:
+>>> 	- Removed useless memset() in probe.
+>>> 	- Cleaned up coding style.
+>>> 	- Corrected the spelling.
+>>>
+>>>   MAINTAINERS                        |   7 +
+>>>   drivers/soc/loongson/Kconfig       |   9 +
+>>>   drivers/soc/loongson/Makefile      |   1 +
+>>>   drivers/soc/loongson/loongson_se.c | 523 +++++++++++++++++++++++++++++
+>>>   include/soc/loongson/se.h          | 135 ++++++++
+>>
+>> include/linux/soc/... or just keep it private to the driver. Why this
+>> has to be exposed to other users?
+> 
+> Looks like  include/linux/soc... is more suitable than include/soc/...
+> 
+> This driver is the base of other users,  one user will be added in next 
+> revision.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+No. Keep it private to the driver.
+
+Soc driver is usually not a "base for other users".
+
+> 
+> And may I ask which one do you think is more suitable to place this 
+> basic driver under SOC or MFD ?
+
+I was talking about the header.
+
+Best regards,
+Krzysztof
