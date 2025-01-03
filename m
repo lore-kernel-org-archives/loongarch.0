@@ -1,179 +1,151 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D2D1B87F3
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 12:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014EB1E4AD
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 13:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735906220; cv=none; b=MbXsaemVQfeDPpkifLVrFPNfMOWK2XMo2sYKeLcDXH766O5eBqeCM0BCduBQAvemusta6B4/1TF9bVECexf6l8ty2hBcXpTy6Qoja996MTu5JRk8XvHhywK9BRFb+PQaddsFPJ0h/ZBJARh5QocjIjV1oXQbxqfa0l5TzrSS+1s=
+	t=1735910835; cv=none; b=oL/lGoh2ruLuwVpZptocCsZgMuONA2u6pjUb+TeT0rOryGnCqXEDguEc4fLsXwKE44vKGCLiM3ykI8bAVepMgaaYSjQgNxncsAqF33W4rf/tLRi2yWBI3JlvbT78HzWutkjSKESPB+X+C1cL/PJ8A5McAx19AkGluwlsbiUqNK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735906220; c=relaxed/simple;
-	bh=AIL6/mJOjkxtMXHcYk+Pv6QMoKn2l92fjjhdKwyu00s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=luQBeIfCxCvSvyJ/mYfs8Dgko05EWenCyER6oXYK0l6+voAktaEpNrovnygweMM48HrdvLDysMsBlv39qKH131yeZl11Jh+j446UomJpNOGEWZkpcXRnC4wxTqoUEjOH9viMIhU2Vt9pLKg5ZqC0eolOpuakq1wcB3eT6W3mkao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=vWP70sPt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SvvcCkhD; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="vWP70sPt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SvvcCkhD"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id D73BF138078E;
-	Fri,  3 Jan 2025 07:10:17 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Fri, 03 Jan 2025 07:10:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1735906217; x=1735992617; bh=8S
-	HJbwgPYFlgbtymUhYh1Okwlcj4HGXnNAL6XspAmWo=; b=vWP70sPtolqEIyT/25
-	VvkLWUqmfawAXr2G28PIzRz1A4kRGVBBbmve6zx5IFLhbCXmGyuSsJDz/Ej7poFK
-	qMTdTNJTrYZQ6rxc3EquWwp0X/xgLN5NJg+FDe/F+DbDIob9jZ8Kn6Q3LdFwLrsF
-	K/HPkxfb1sLzCJr41qOpe90G3jdYU0m7EQfkSo3IuhmFnrdtMZ5fUX4Qqo0Xe9GU
-	Il2VLUzrC/6iVIqlyFz5SpMkMlEO5AtLRBbLnFi2SQGSKIjzBB1DZX62nTYhEOf4
-	balSekPuhhn3v///wgXL0OgoOhTxR7qH5oVm+Z6Mp8+kJaoqZ17TadZV4JlGwUdE
-	CPMg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1735906217; x=1735992617; bh=8SHJbwgPYFlgbtymUhYh1Okwlcj4
-	HGXnNAL6XspAmWo=; b=SvvcCkhDElA9XSVqEJIK6zmQoVPQMLEV8K4uQlIkRThz
-	xRoSAoTp0Mcw8JkYN4O6TEYVJa0rF1OfKDQGfTT6Ihe7wDJhAzLBln7uyypdncbv
-	ZHP7hc+Q5d1c0LvxEF+lo3X9VV7J4Tga88iZ25ImcfZSsZGtNA0pGl7QbYz7xNX3
-	JJbxBc/tqFY1d4uPyftERYbka5A4WTcuI2q+I7lJzwHyeBUQ2c/37D6HOa+faFGo
-	fDf8GL5o2bqXR/CT8c83B+FYNsXdJdVKGo05zhPYGT7r2aJor9I1VjKabDq3hITO
-	rh+0nM+pTF3cQ1zQH38g5TodQPfjfxC81KypRPA7KA==
-X-ME-Sender: <xms:qdN3Z1l0bNqeam1Gzjq0cnu_aZssP3QliLGnldoiimoSvaYpw_K7uQ>
-    <xme:qdN3Zw2ctyiCm4bGNxo26YPxnUAX-20BNASVFTtdmoFNYAKYGmy8dVl9JTlJ85tsq
-    FI8TRDSFjw_wBQb8lA>
-X-ME-Received: <xmr:qdN3Z7p3vWUEkTfWSqY7Ovx8DxoiG-rzVLR7MRxYav2hanaxSfBVHhr5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefgedgfeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecu
-    hfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgoh
-    grthdrtghomheqnecuggftrfgrthhtvghrnhephfffgeejgfejieeugffgudegvdekffev
-    geeuteetgeejveeiteeivedvffehlefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgr
-    gihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhopeehpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhsthhsrdhl
-    ihhnuhigrdguvghvpdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrth
-    drtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepkhgvrhhnvghlseigvghntdhnrdhnrghmvg
-X-ME-Proxy: <xmx:qdN3Z1mCmHvGtD0BwpkjYRZ72AW756iIkbe8T73vyHLHHrtjidliIg>
-    <xmx:qdN3Zz06WzlcmTLvrkCADgmI4DFn39ma_qK1iCin50EoZoX4Go-l0A>
-    <xmx:qdN3Z0s2TXny6hMA9hZQiDIHxatvSJVyjPBrGW_EERB_mXR8HEbhcA>
-    <xmx:qdN3Z3URaY6oJBTF_C8zJEV_YTmK51luw1ROdQsliVDH40lUChe11A>
-    <xmx:qdN3Zz-0KIf2QZ9EX2gmBbkh1foYVvteICGc_dOJoDlkC8hSWmAnLBSZ>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 3 Jan 2025 07:10:16 -0500 (EST)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Fri, 03 Jan 2025 12:07:43 +0000
-Subject: [PATCH v2] loongarch: time: Derive max_delta from prcfg1 tmrbits
+	s=arc-20240116; t=1735910835; c=relaxed/simple;
+	bh=+8G2mn5XjC+6BvOgDwIaLzTXtQekFe6X8F8stkKVxBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LG7CGOIXbrUqsTszv/QcpZXN9OTjXmXBOHS7d+GJKPIZ+E0ge2vUR/IBlizey18lsG4/Vr/OH7YCGKOUjlfmmafDjIAoHfRmRYv6CtD6JWKgOxzf0qSK6Op0Nwbel3HJS2y2Z/eEsa7H4nCd98NHOgYl+4C5oii9YttFLyrqgdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 330911480;
+	Fri,  3 Jan 2025 05:27:39 -0800 (PST)
+Received: from [10.44.160.93] (e126510-lin.lund.arm.com [10.44.160.93])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB2C23F673;
+	Fri,  3 Jan 2025 05:27:02 -0800 (PST)
+Message-ID: <d9a14211-4bbd-4fb6-ba87-a555a40bb67a@arm.com>
+Date: Fri, 3 Jan 2025 14:27:00 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250103-la-misc-v2-1-fcc7c399e5e5@flygoat.com>
-X-B4-Tracking: v=1; b=H4sIAA7Td2cC/z3MQQ6CMBCF4auQWVvTGVtRV97DsMB2gEmAmpYQC
- eHuFhYu/5eXb4XEUTjBo1gh8ixJwpiDTgW4rh5bVuJzA2kySHRRfa0GSU75K2qPprmbkiG/P5E
- b+R7Sq8rdSZpCXA54xn3dDatR09+YUaG6eVf6tyXL1jybfmlDPZ1dGKDatu0HLFBf8aAAAAA=
-X-Change-ID: 20241223-la-misc-d610d14f947e
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3382;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=AIL6/mJOjkxtMXHcYk+Pv6QMoKn2l92fjjhdKwyu00s=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhvTyyyue+rGcTZSq7piwuPbbxd8KJ7Lr30cUn2Py3a5ux
- BHG7F/XUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABOpqWJk6DvdprLHeYP0YcPZ
- VzjLJfQsD3+2uCM//+u0xoDLD702VjIyzD++mPGVXVG4SF98fO2lm9xOLKxXT9d8ubP1mvYEia1
- 7eAA=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/15] riscv: pgtable: move pagetable_dtor() to
+ __tlb_remove_table()
+To: Qi Zheng <zhengqi.arch@bytedance.com>, peterz@infradead.org
+Cc: agordeev@linux.ibm.com, palmer@dabbelt.com, tglx@linutronix.de,
+ david@redhat.com, jannh@google.com, hughd@google.com, yuzhao@google.com,
+ willy@infradead.org, muchun.song@linux.dev, vbabka@kernel.org,
+ lorenzo.stoakes@oracle.com, akpm@linux-foundation.org, rientjes@google.com,
+ vishal.moola@gmail.com, arnd@arndb.de, will@kernel.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ rppt@kernel.org, ryan.roberts@arm.com, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-um@lists.infradead.org
+References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
+ <0e8f0b3835c15e99145e0006ac1020ae45a2b166.1735549103.git.zhengqi.arch@bytedance.com>
+ <1b09335c-f0b6-4ccb-9800-5fb22f7e8083@arm.com>
+ <ebce5e05-5e46-4c6e-94a0-bcf3655a862b@bytedance.com>
+ <7e2c26c8-f5df-4833-a93f-3409b00b58fd@arm.com>
+ <e9fe97d4-99d5-443e-b722-43903655a76e@bytedance.com>
+ <31e1a033-00a7-4953-81e7-0caedd0227a9@bytedance.com>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <31e1a033-00a7-4953-81e7-0caedd0227a9@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-As per arch spec, maximum timer bits is configurable and
-should not be hardcoded in any way.
+On 03/01/2025 10:35, Qi Zheng wrote:
+> On 2025/1/3 17:13, Qi Zheng wrote:
+>> On 2025/1/3 16:02, Kevin Brodsky wrote:
+>>> On 03/01/2025 04:48, Qi Zheng wrote:
+>>>> [...]
+>>>>
+>>>> In __tlb_batch_free_encoded_pages(), we can indeed detect PageTable()
+>>>> and call pagetable_dtor() to dtor the page table pages.
+>>>> But __tlb_batch_free_encoded_pages() is also used to free normal pages
+>>>> (not page table pages), so I don't want to add overhead there.
+>>>
+>>> Interesting, can a tlb batch refer to pages than are not PTPs then?
+>>
+>> Yes, you can see the caller of __tlb_remove_folio_pages() or
+>> tlb_remove_page_size().
 
-Probe timer bits from prcfg1 and use that to determine
-clockevent's max_delta to be conformance.
+I had a brief look but clearly not a good enough one! I hadn't realised
+that "table" in tlb_remove_table() means PTP, while "page" in
+tlb_remove_page() can mean any page, and it's making more sense now.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-Changes in v2:
-- Move probing to cpu-probe
-- Link to v1: https://lore.kernel.org/r/20250102-la-misc-v1-1-8dc7db525e54@flygoat.com
----
- arch/loongarch/include/asm/cpu-info.h  | 1 +
- arch/loongarch/include/asm/loongarch.h | 1 -
- arch/loongarch/kernel/cpu-probe.c      | 2 ++
- arch/loongarch/kernel/time.c           | 2 +-
- 4 files changed, 4 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 900589cb159de4e5997358443c5b5e3e50f92239..fb28ba9e3011c9256da4a9748de97236ae7f001f 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -57,6 +57,7 @@ struct cpuinfo_loongarch {
- 	int			global_id; /* physical global thread number */
- 	int			vabits; /* Virtual Address size in bits */
- 	int			pabits; /* Physical Address size in bits */
-+	int			timerbits; /* Width of timer in bits */
- 	unsigned int		ksave_mask; /* Usable KSave mask. */
- 	unsigned int		watch_dreg_count;   /* Number data breakpoints */
- 	unsigned int		watch_ireg_count;   /* Number instruction breakpoints */
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 64ad277e096edd7d77af6f37e234d68e571764a4..a3cc4f8d4c4a0b0521ef2b76c87fa57eca417d75 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -466,7 +466,6 @@
- 
- #define LOONGARCH_CSR_TCFG		0x41	/* Timer config */
- #define  CSR_TCFG_VAL_SHIFT		2
--#define	 CSR_TCFG_VAL_WIDTH		48
- #define  CSR_TCFG_VAL			(_ULCAST_(0x3fffffffffff) << CSR_TCFG_VAL_SHIFT)
- #define  CSR_TCFG_PERIOD_SHIFT		1
- #define  CSR_TCFG_PERIOD		(_ULCAST_(0x1) << CSR_TCFG_PERIOD_SHIFT)
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index cbce099037b2728b82ecb9c5aa58e05b07695c5a..06c98ddf29490571e8b927b4ca721c27ff7f0ea8 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -192,6 +192,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 	config = read_csr_prcfg1();
- 	c->ksave_mask = GENMASK((config & CSR_CONF1_KSNUM) - 1, 0);
- 	c->ksave_mask &= ~(EXC_KSAVE_MASK | PERCPU_KSAVE_MASK | KVM_KSAVE_MASK);
-+	c->timerbits = (config & CSR_CONF1_TMRBITS) >> CSR_CONF1_TMRBITS_SHIFT;
-+	c->timerbits += 1;
- 
- 	config = read_csr_prcfg3();
- 	switch (config & CSR_CONF3_TLBTYPE) {
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index a07d7eff4dc5fb0f41f5fad02698ff7a84c7bc8a..ebfdab6b155585dbab08b7cc49cba627a59854ec 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -132,7 +132,7 @@ int constant_clockevent_init(void)
- #else
- 	unsigned long min_delta = 1000;
- #endif
--	unsigned long max_delta = (1UL << 48) - 1;
-+	unsigned long max_delta = CLOCKSOURCE_MASK(current_cpu_data.timerbits);
- 	struct clock_event_device *cd;
- 	static int irq = 0, timer_irq_installed = 0;
- 
+>>
+>> For arm, the call to pagetable_dtor() is indeed missed in the
+>> non-MMU_GATHER_RCU_TABLE_FREE case. This needs to be fixed. But we
+>> can't fix this by adding pagetable_dtor() to tlb_remove_table(),
+>> because some architectures call tlb_remove_table() but don't support
+>> page table statistics, like sparc.
 
----
-base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
-change-id: 20241223-la-misc-d610d14f947e
+When I investigated this for my own series, I found that the only case
+where ctor/dtor are not called for page-sized page tables is 32-bit
+sparc (see table at the end of [1]). However only 64-bit sparc makes use
+of tlb_remove_table() (at PTE level, where ctor/dtor are already called).
 
-Best regards,
--- 
-Jiaxun Yang <jiaxun.yang@flygoat.com>
+So really calling pagetable_dtor() from tlb_remove_table() in the
+non-MMU_GATHER_TABLE_FREE case seems to be the obvious thing to do.
 
+Once this is done, we should be able to replace all those confusing
+calls to tlb_remove_page() on PTPs with tlb_remove_table() and remove
+the explicit call to pagetable_dtor(). AIUI this is essentially what
+Peter suggested on v3 [2].
+
+[1]
+https://lore.kernel.org/linux-mm/20241219164425.2277022-1-kevin.brodsky@arm.com/
+[2]
+https://lore.kernel.org/linux-mm/20250103111457.GC22934@noisy.programming.kicks-ass.net/
+
+[...]
+
+> Or can we just not let tlb_remove_table() fall back to
+> tlb_remove_page()? Like the following:
+>
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index a59205863f431..354ffaa4bd120 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -195,8 +195,6 @@
+>   *  various ptep_get_and_clear() functions.
+>   */
+>
+> -#ifdef CONFIG_MMU_GATHER_TABLE_FREE
+> -
+>  struct mmu_table_batch {
+>  #ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+>         struct rcu_head         rcu;
+> @@ -219,16 +217,6 @@ static inline void __tlb_remove_table(void *table)
+>
+>  extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
+>
+> -#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+> -
+> -/*
+> - * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have
+> page based
+> - * page directories and we can use the normal page batching to free
+> them.
+> - */
+> -#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
+
+We still need a different implementation of tlb_remove_table() in this
+case. We could define it inline here:
+
+static inline void tlb_remove_table(struct mmu_gather *tlb, void *table)
+{
+    struct page *page = table;
+
+    pagetable_dtor(page_ptdesc(page));
+    tlb_remove_page(page);
+}
+
+- Kevin
