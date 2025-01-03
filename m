@@ -1,117 +1,165 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984711B4236
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 16:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC831F9F7D
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 18:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735921211; cv=none; b=aTjim+QDyJJK+bldfuvgLUOqCfqMb18deFFT2cxbFKtjAGAbJBM0CIMRFU+GZDxh5DJNSIVRXfANc1LRB0mQNmX07+KNcw5NohUsflV3LWJuk9f9k73FTumTSx54lMKur/aKd4GGQSnG6J/r5wfxbk/eQ01NopqUDNzPa8DIoiE=
+	t=1735929872; cv=none; b=aqrU1REqtTkZ5oY8i5izm8Vhx6uy5dEiVMz7GaUnX73Ka9wjeEDpYQuXKNbo0PMF+Tx6B/bCRGvf2aWW06Koey5YjNyThEwNfZq72cTS5NWGFkT9gX7vTS34ELb2a9ulZD3SZXxmf6N/GCIu4a9abXXVEDQSJPaQ86FMtpDp3/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735921211; c=relaxed/simple;
-	bh=aSP3EXxUVGG7FyIIBw6UEVeCGd0NyMb4xdDATEarYYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HbQupSjdopi16l4lS6ipTZ32/v32wumB80tZyJDRX+n7lsLok3qE0RhTKEOnfeu5WN69cfsSGNZJl4gn8FphBgoAoKES9JtX1tnvRdin21oSjVLii7TPJU+eJRDpFODQV+097by7a9l+6sKXfsewNjijjDRhb8gCNGalzYeElxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aDKUfeM5 reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aDKUfeM5"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 891AB40E021D;
-	Fri,  3 Jan 2025 16:20:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zbDNpsGyUdiB; Fri,  3 Jan 2025 16:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1735921202; bh=pjfKNMdDp47GtpCrMArhq4IL4m/Dz9krRtWCSeb3hQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aDKUfeM5Ikw9wYvbZkJaj5x9HD2HucjgNVn22mypHoIVX8bz9eNZwB18Y7Byhtmza
-	 eIlV+/hTR/YU3otD03sNmNR/juEpQjYbPId9GtP8xW7OIim0WE/bo05aRq8ZIxCbn1
-	 0ynVy1j4NhbQU0srjuMeEYB2ZewtGzQlyUM+4Nw7DkoYf37Zhs0/TskyLZuqslUFVT
-	 4XGt2n3GlIwLi7rYOxdTWiJdPql48Cb4OBqZKV7ZGVowoyjnlwbKF74tuvVXrIJKdZ
-	 FXE7zBtOfmH7JaAtHgmgrpCUYTp7WQdiw5PBfp7jSgSehn0mLWkH3ImjXa3MNznVe3
-	 AJ4MukaPK/QkmJGrSfglphsHR+HRzoPt8ulgT9RRnrYWDc1Rqp+z8AEGQhs0PtWIBM
-	 vgH8VADq+s4p8oaXPt9DKjn9SKq53kvOT/6tYLBvWDIE6rwzhjAgeQC7v2iOprEVGb
-	 Lp8KCN76idiVRtWPNr7mBkh1LqS4qCgN0feO5E6dUcCuWTIjmT7wOdAuY44OYqFCGH
-	 87GFFqgU00K9o7N8aFPRBWyR+I7eax7DLajYq6s4oQz0C0avrzbLtKOmm+S/rBUPFt
-	 OC8DseaG2UgVizda34QSSt5ExczrgdhUueYph0x47yb9pYmOCiotWFsq8yhlKoGqul
-	 AuPTTOCszmb9W064fNXHnNzc=
-Received: from zn.tnic (p200300Ea971F93Ba329C23fffEA6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93ba:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AC40640E021C;
-	Fri,  3 Jan 2025 16:19:48 +0000 (UTC)
-Date: Fri, 3 Jan 2025 17:19:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@xen0n.name,
-	tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
-	rric@kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
-	Markus.Elfring@web.de, Jonathan.Cameron@huawei.com,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
- controller
-Message-ID: <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
-References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
- <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
- <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
+	s=arc-20240116; t=1735929872; c=relaxed/simple;
+	bh=LfBLl9xHKsxmTEzMaL6DzsDWOdNj/upe0IaJWPpE4IU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XieW9XzaOOoRbNqyO3ozUaPDCFQC5fEgRka+XgomaL/aNfg5rAhAuVZNfK3OgD3hg2SGZjJn7Mk5rDfuhe1lcF6jeMNb2qDA4FjO1nEpQr60ECRMNHRtLP+tLqRwUPLj4DC0zYPDFWL00e85yKoh1xnLepRGuqNeqIJGLTNdcmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 561C61480;
+	Fri,  3 Jan 2025 10:44:57 -0800 (PST)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D3DB3F673;
+	Fri,  3 Jan 2025 10:44:24 -0800 (PST)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-mm@kvack.org
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-um@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	x86@kernel.org
+Subject: [PATCH v2 0/6] Account page tables at all levels
+Date: Fri,  3 Jan 2025 18:44:09 +0000
+Message-ID: <20250103184415.2744423-1-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 17, 2024 at 10:25:25AM +0800, Zhao Qunqin wrote:
->=20
-> =E5=9C=A8 2024/12/16 =E4=B8=8B=E5=8D=887:55, Borislav Petkov =E5=86=99=E9=
-=81=93:
-> > On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
-> > > +LOONGSON EDAC DRIVER
-> > > +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
-> > > +L:	linux-edac@vger.kernel.org
-> > > +S:	Maintained
-> > > +F:	drivers/edac/loongson_edac.c
-> > If you add yourself as a maintainer, I'd expect you to review and/or =
-ack
-> > patches for your driver so that I can pick them up.
-> OK. I can review the patches for this driver.
+v1: https://lore.kernel.org/linux-mm/20241219164425.2277022-1-kevin.brodsky@arm.com/
 
-Not "can" - I would need you to. I don't have the hardware to test and do=
-n't
-have the time to review them.
+This series should be considered in conjunction with Qi's series [1].
+Together, they ensure that page table ctor/dtor are called at all levels
+(PTE to PGD) and all architectures, where page tables are regular pages.
+Besides the improvement in accounting and general cleanup, this also
+create a single place where construction/destruction hooks can be called
+for all page tables, namely the now-generic pagetable_dtor() introduced
+by Qi, and __pagetable_ctor() introduced in this series.
 
-> > > +	new =3D read_ecc(mci);
-> > > +	add =3D new - pvt->last_ce_count;
-> > > +	pvt->last_ce_count =3D new;
-> > That last_ce_count is just silly. Kill it.
->=20
-> Then=C2=A0 I=C2=A0 can't calculate the error count added since the last=
- check,=C2=A0 cause
-> what record in Loongson's ECC register is=C2=A0 the error count=C2=A0 f=
-rom reset of
-> the memory controller.
+v2 is essentially v1 rebased on top of mm-unstable, which includes Qi's
+v4 series. A number of patches from v1 were dropped:
 
-Can that ECC register be zeroed on each check function run?
+* v1 patch 4 is superseded by patch 6 in Qi's series.
+* v1 patch 5 and 6 moved to Qi's series from v3 onwards.
+* v1 patch 7 is superseded by patch 4 in Qi's series.
 
-Because this should work this way: every time you have to issue an error
-message about how many errors were logged, you simply issue the error cou=
-nt
-you've logged this time.
+Changes from v1 in the remaining patches:
 
-Userspace tools like rasdaemon etc can then aggregate the counts.
+* Patch 1 only introduces __pagetable_ctor() as there is now a single
+  generic pagetable_dtor(). 
 
---=20
-Regards/Gruss,
-    Boris.
+* Patch 3 and 6: in arch/m68k/mm/motorola.c, free_pointer_table() can
+  now unconditionally call pagetable_dtor() since it is the same for all
+  levels.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+* Patch 6 just uses pagetable_dtor() instead of introducing
+  pagetable_pgd_dtor().
+
+* Added Dave Hansen's Acked-by to all patches.
+
+- Kevin
+
+[1] https://lore.kernel.org/linux-mm/cover.1735549103.git.zhengqi.arch@bytedance.com/
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-openrisc@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-um@lists.infradead.org
+Cc: loongarch@lists.linux.dev
+Cc: x86@kernel.org
+---
+Kevin Brodsky (6):
+  mm: Move common part of pagetable_*_ctor to helper
+  parisc: mm: Ensure pagetable_pmd_[cd]tor are called
+  m68k: mm: Add calls to pagetable_pmd_[cd]tor
+  ARM: mm: Rename PGD helpers
+  asm-generic: pgalloc: Provide generic __pgd_{alloc,free}
+  mm: Introduce ctor/dtor at PGD level
+
+ arch/alpha/mm/init.c                     |  2 +-
+ arch/arc/include/asm/pgalloc.h           |  9 ++----
+ arch/arm/mm/pgd.c                        | 16 +++++-----
+ arch/arm64/mm/pgd.c                      |  4 +--
+ arch/csky/include/asm/pgalloc.h          |  2 +-
+ arch/hexagon/include/asm/pgalloc.h       |  2 +-
+ arch/loongarch/mm/pgtable.c              |  7 ++---
+ arch/m68k/include/asm/mcf_pgalloc.h      |  3 +-
+ arch/m68k/include/asm/motorola_pgalloc.h |  6 ++--
+ arch/m68k/include/asm/sun3_pgalloc.h     |  2 +-
+ arch/m68k/mm/motorola.c                  | 21 +++++++++----
+ arch/microblaze/include/asm/pgalloc.h    |  7 +----
+ arch/mips/include/asm/pgalloc.h          |  6 ----
+ arch/mips/mm/pgtable.c                   |  8 ++---
+ arch/nios2/mm/pgtable.c                  |  3 +-
+ arch/openrisc/include/asm/pgalloc.h      |  6 ++--
+ arch/parisc/include/asm/pgalloc.h        | 39 ++++++++----------------
+ arch/riscv/include/asm/pgalloc.h         |  3 +-
+ arch/s390/include/asm/pgalloc.h          |  9 +++++-
+ arch/um/kernel/mem.c                     |  7 ++---
+ arch/x86/mm/pgtable.c                    | 24 +++++++--------
+ arch/xtensa/include/asm/pgalloc.h        |  2 +-
+ include/asm-generic/pgalloc.h            | 28 ++++++++++++++++-
+ include/linux/mm.h                       | 31 ++++++++++---------
+ 24 files changed, 126 insertions(+), 121 deletions(-)
+
+
+base-commit: e2ce19225db5818f5dc22864cd225f8c425c3775
+-- 
+2.47.0
+
