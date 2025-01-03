@@ -1,128 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741D070814
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 08:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DFB1946B9;
+	Fri,  3 Jan 2025 08:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735891392; cv=none; b=BYeTkN+NlmrOcwJ5jI2sPwX4RfHuBLqUYbo0aZZ5bbp5Oa3se9zV81JJkz8sMfPhb6q/tipQa2lhs7JYxONJi0RCfB/TVrI8obCDvUzAMFV+hhuIE1X24IQtEr0qaYkFvIgnNXDmoxtfNCxi+hO9UXyegyb1H/oNyPK2U6Uztog=
+	t=1735893411; cv=none; b=fXPppVJvsXtisl6HrQiPdNFLLmA+Z1iMFh12DE8XpOHMBNr/MAAaAqIohtjxNMAuTKKwDMwn+e712tsR8XLPd3XxMICaJvI3yX/nh2uabGIBBFJyvC51AJ4NCYU7Fo6s+zojMz0oJ1MGGJKagZju9P61E1fME5vc9lVML+G21pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735891392; c=relaxed/simple;
-	bh=/OeHPFYsSusQTMTpEoomDP6spK4mL3gkKfUc71lXwpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=USgIYIsUb0eGzT5XOCkH+DSa+PfQSpJyHTFPjJuhQt34wvnZrkIllQ1SMFTLEJlFZ+YU9RIXHGKOldUacyS52GeLyqOG6OUyhSzIXJEY+cw22f3x+spXvl67wK0VtOORjocEUAtWy7IZ+y1NZ01hjpfBv98s0AmbVcyLLpigJJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D277D150C;
-	Fri,  3 Jan 2025 00:03:37 -0800 (PST)
-Received: from [10.57.92.237] (unknown [10.57.92.237])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CED73F673;
-	Fri,  3 Jan 2025 00:03:01 -0800 (PST)
-Message-ID: <7e2c26c8-f5df-4833-a93f-3409b00b58fd@arm.com>
-Date: Fri, 3 Jan 2025 09:02:59 +0100
+	s=arc-20240116; t=1735893411; c=relaxed/simple;
+	bh=QwIsgMxn/U7WHEbneDjA8/ACMna/57h2AO14RVvcWC0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ku7m2buEBe8lA3iF7h8sYAC4mpvE2PrBH5kjM+CeWD1RL8ckgWaqQwaTL0tBQM/+LbkjeiitnA4YDCQjhzVEnF8+c3KAseaCFP+v3KUnAzSA02PKwKKMJa4ztTmRYM97XeyaTEkPDwrdZAQSmLlYRSDoRNu7JOERUPaSlZsZ0zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8DxQK+eoXdnCo9dAA--.28749S3;
+	Fri, 03 Jan 2025 16:36:46 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxK8WboXdnkUkSAA--.1086S2;
+	Fri, 03 Jan 2025 16:36:45 +0800 (CST)
+Subject: Re: [PATCH V2 RESEND] soc: loongson: add Loongson Security Module
+ driver
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: arnd@arndb.de, olof@lixom.net, soc@kernel.org, soc@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
+ christophe.jaillet@wanadoo.fr
+References: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
+ <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
+ <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
+ <c80efae8-7f5c-4f2e-92c0-510511004ad1@kernel.org>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <ad63f9ab-90cb-abe7-8099-2666e9a65a56@loongson.cn>
+Date: Fri, 3 Jan 2025 16:35:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/15] riscv: pgtable: move pagetable_dtor() to
- __tlb_remove_table()
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: peterz@infradead.org, agordeev@linux.ibm.com, palmer@dabbelt.com,
- tglx@linutronix.de, david@redhat.com, jannh@google.com, hughd@google.com,
- yuzhao@google.com, willy@infradead.org, muchun.song@linux.dev,
- vbabka@kernel.org, lorenzo.stoakes@oracle.com, akpm@linux-foundation.org,
- rientjes@google.com, vishal.moola@gmail.com, arnd@arndb.de, will@kernel.org,
- aneesh.kumar@kernel.org, npiggin@gmail.com, dave.hansen@linux.intel.com,
- rppt@kernel.org, ryan.roberts@arm.com, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org
-References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
- <0e8f0b3835c15e99145e0006ac1020ae45a2b166.1735549103.git.zhengqi.arch@bytedance.com>
- <1b09335c-f0b6-4ccb-9800-5fb22f7e8083@arm.com>
- <ebce5e05-5e46-4c6e-94a0-bcf3655a862b@bytedance.com>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <ebce5e05-5e46-4c6e-94a0-bcf3655a862b@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <c80efae8-7f5c-4f2e-92c0-510511004ad1@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxK8WboXdnkUkSAA--.1086S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7GF1kArW3KFyfCFy5KF15Awc_yoW8JrWUpr
+	4xJ3Z2kF4DCr1Skw4DKw4jyF4Yy3s3KFZrXrZ8W34UZF98ta45JF1xXa1jvr9xZr18Jr4I
+	yw43GrZxGa98ZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jU
+	sqXUUUUU=
 
-On 03/01/2025 04:48, Qi Zheng wrote:
-> Hi Kevin,
+
+在 2025/1/3 下午3:26, Krzysztof Kozlowski 写道:
+> On 03/01/2025 03:25, Zhao Qunqin wrote:
+>> 在 2024/12/28 下午7:02, Krzysztof Kozlowski 写道:
+>>>> Only ACPI firmware is supported.
+>>>>
+>>>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>>> I don't get why you are sending this to soc. This is loongson specific
+>>> and is supposed to go via Loongson maintainers.
+>>>
+>>> And why is this a resend?
+>> There are no platform-specific maintainers, So I initially sent the
+>> patch to Arnd,
+> What do you mean by "no platform-specific maintainers"? This
+> architecture and this platform is abandoned?
+
+Sorry for my poor english. This architecture and this  platform is not 
+ababdoned.
+
+What I mean is that there are no Loongson staff to maintain 
+drivers/soc/loongson.
+
+The current maintainer  for drivers/soc/loongson is Arnd.
+
+
+Thanks for your response.
+
+> Then we should either drop it from the kernel or make it orphaned.
 >
-> On 2025/1/3 00:53, Kevin Brodsky wrote:
->> On 30/12/2024 10:07, Qi Zheng wrote:
->>>   static inline void riscv_tlb_remove_ptdesc(struct mmu_gather *tlb,
->>> void *pt)
->>>   {
->>> -    if (riscv_use_sbi_for_rfence())
->>> +    if (riscv_use_sbi_for_rfence()) {
->>>           tlb_remove_ptdesc(tlb, pt);
->>> -    else
->>> +    } else {
->>> +        pagetable_dtor(pt);
->>>           tlb_remove_page_ptdesc(tlb, pt);
+>
+>> but didn't receive a response from Arnold, so I resent the patch and added
 >>
->> I find the imbalance pretty confusing: pagetable_dtor() is called
->> explicitly before using tlb_remove_page() but not tlb_remove_ptdesc().
->> Doesn't that assume that CONFIG_MMU_GATHER_HAVE_TABLE_FREE is selected?
->> Could we not call pagetable_dtor() from __tlb_batch_free_encoded_pages()
->> to ensure that the dtor is always called just before freeing, and remove
+>> soc@kernel.org to the mailing list.
+> You shouldn't. This is patch for your maintainers to take. If you do not
+> have them: either fix that or abandon/orphan the platform.
 >
-> In __tlb_batch_free_encoded_pages(), we can indeed detect PageTable()
-> and call pagetable_dtor() to dtor the page table pages.
-> But __tlb_batch_free_encoded_pages() is also used to free normal pages
-> (not page table pages), so I don't want to add overhead there.
+>
+> Best regards,
+> Krzysztof
 
-Interesting, can a tlb batch refer to pages than are not PTPs then?
-
->
-> But now I think maybe we can do this in tlb_remove_page_ptdesc(), like
-> this:
->
-> diff --git a/arch/csky/include/asm/pgalloc.h
-> b/arch/csky/include/asm/pgalloc.h
-> index f1ce5b7b28f22..e45c7e91dcbf9 100644
-> --- a/arch/csky/include/asm/pgalloc.h
-> +++ b/arch/csky/include/asm/pgalloc.h
-> @@ -63,7 +63,6 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
->
->  #define __pte_free_tlb(tlb, pte, address)              \
->  do {                                                   \
-> -       pagetable_dtor(page_ptdesc(pte));               \
->         tlb_remove_page_ptdesc(tlb, page_ptdesc(pte));  \
->  } while (0)
->
-> [...]
->
-> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-> index a96d4b440f3da..a59205863f431 100644
-> --- a/include/asm-generic/tlb.h
-> +++ b/include/asm-generic/tlb.h
-> @@ -506,6 +506,7 @@ static inline void tlb_remove_ptdesc(struct
-> mmu_gather *tlb, void *pt)
->  /* Like tlb_remove_ptdesc, but for page-like page directories. */
->  static inline void tlb_remove_page_ptdesc(struct mmu_gather *tlb,
-> struct ptdesc *pt)
->  {
-> +       pagetable_dtor(pt);
->         tlb_remove_page(tlb, ptdesc_page(pt));
->  }
-
-I think this is an interesting idea, it does make arch code easier to
-follow. OTOH it would have been more natural to me to call
-pagetable_dtor() from tlb_remove_page(). I can however see that this
-doesn't work, because tlb_remove_table() is defined as tlb_remove_page()
-if CONFIG_MMU_GATHER_HAVE_TABLE_FREE isn't selected. Which brings me
-back to my earlier question: in that case, aren't we missing a call to
-pagetable_dtor() when using tlb_remove_table() (or tlb_remove_ptdesc())?
-
-- Kevin
