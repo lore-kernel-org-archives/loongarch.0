@@ -1,117 +1,186 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 864DA2E401;
-	Fri,  3 Jan 2025 02:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F27192B96
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735871213; cv=none; b=cleNNJ4t+60NLguRmOsQxo7K1IYEGi4Gf7KmS7LNMPVNU7A4KoxzHCmUQ+sDRqIFfF4giDwen3X3hWjArj50vCwYo4FiJTLJpGF1dMAvl3LuodTBI+JtF/0veCs8OJRIbSPnvrJqkkq/EYeSpzXwze80Vp/jTAXUqpROtW0jWT8=
+	t=1735871462; cv=none; b=H09bMKQdeLEwtM88bRig3k/sv/yxQo+93SSfNDEW1a+qjHqa8vHAHNw4HIfUcaVtIFy3I3yYAfD8qnx4Laar70hGpJxa5TAihm3EDb42jytU0keyPIUyTVQx/jQ38BW6hBiKmam74OBabwjvXg5vsXE5m4LaBHYbSdgzA16OX58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735871213; c=relaxed/simple;
-	bh=YBbTTdEA3PpkpouTjoNS6ru/EpuCY6k40UOdzdPEnzc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YPfCVo//ZgHaMYoa9dagPIXItufeGsZ9OtJ+4BRAd+v5hb2ELMcYxVXwj+jwrrSHGXXrXlods53RnvFWyHHQUDfN7W0bCu8pRIhPgRQ4KxgX9w0ZnVvY68G6gyJT57/ESG0gYBe2ZeJmcUkRVJ794UDJD9vNWqxuPn8fQNAqqHA=
+	s=arc-20240116; t=1735871462; c=relaxed/simple;
+	bh=HCz1+DL0S31A6w3e9vlA6QPUfW8R3oHvcVzw+RH2Vbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=owDjdtIw24I4BeBEF5kLaBKrswJqg4fWZUgNjzdb9isgzc5XZz7sM8RfYJcj/6DBqXVBj1AyJBOPTM+lG7Ka4H17o6iGSJWNY3m05jvoGToVsWvk/GvgffrGl/Kd52kdYDvACf+G/SS+HV1rDpjjr0fSK3WY4Ma1XxqvdpD3KLc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8CxC+LnSndndXFdAA--.52390S3;
-	Fri, 03 Jan 2025 10:26:47 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMBxnsfiSndnNQQSAA--.9934S2;
-	Fri, 03 Jan 2025 10:26:44 +0800 (CST)
-Subject: Re: [PATCH V2 RESEND] soc: loongson: add Loongson Security Module
- driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: arnd@arndb.de, olof@lixom.net, soc@kernel.org, soc@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
- christophe.jaillet@wanadoo.fr
-References: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
- <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
-From: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Message-ID: <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
-Date: Fri, 3 Jan 2025 10:25:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxSOHfS3dnvHFdAA--.52271S3;
+	Fri, 03 Jan 2025 10:30:55 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMAxQMbdS3dnBgUSAA--.17426S2;
+	Fri, 03 Jan 2025 10:30:54 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: Add hypercall service support for usermode VMM
+Date: Fri,  3 Jan 2025 10:30:53 +0800
+Message-Id: <20250103023053.2625226-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBxnsfiSndnNQQSAA--.9934S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kw1rAr47Zr17CFWxCry5WrX_yoW8Ar1rpF
-	4DtasayFZ8Gr1Skws3tw1IyFyrAayFkr47WFWagr1DZr98Za47XF1fCF45AFsrZryrGFyI
-	vFW3G3yqkFs8ZrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUU
-	UUU==
+X-CM-TRANSID:qMiowMAxQMbdS3dnBgUSAA--.17426S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+Some VMMs provides special hypercall service in usermode, KVM need
+not handle the usermode hypercall service and pass it to VMM and
+let VMM handle it.
 
-在 2024/12/28 下午7:02, Krzysztof Kozlowski 写道:
-> On 24/12/2024 08:25, Qunqin Zhao wrote:
->> This driver supports Loongson Security Module, which
->> provides the control for it's hardware encryption
->> acceleration child devices.
-> Please wrap commit message according to Linux coding style / submission
-> process (neither too early nor over the limit):
-> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-OK
->> Only ACPI firmware is supported.
->>
->> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> I don't get why you are sending this to soc. This is loongson specific
-> and is supposed to go via Loongson maintainers.
->
-> And why is this a resend?
+Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
+service, KVM lets all six registers visiable to VMM.
 
-There are no platform-specific maintainers, So I initially sent the 
-patch to Arnd,
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+  v1 ... v2:
+  1. Add function kvm_complete_user_service() when finish hypercall
+     in user-mode VMM and continue to run.
+  2. Add hypercall_exits stat information.
+---
+ arch/loongarch/include/asm/kvm_host.h      |  1 +
+ arch/loongarch/include/asm/kvm_para.h      |  2 ++
+ arch/loongarch/include/asm/kvm_vcpu.h      |  1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+ arch/loongarch/kvm/exit.c                  | 30 ++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c                  |  3 ++-
+ 6 files changed, 37 insertions(+), 1 deletion(-)
 
-but didn't receive a response from Arnold, so I resent the patch and added
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 7b8367c39da8..590982cd986e 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -162,6 +162,7 @@ enum emulation_result {
+ #define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
+ #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
+ 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
++					 BIT(KVM_FEATURE_USER_HCALL) |	\
+ 					 BIT(KVM_FEATURE_VIRT_EXTIOI))
+ 
+ struct kvm_vcpu_arch {
+diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+index c4e84227280d..d3c00de484f6 100644
+--- a/arch/loongarch/include/asm/kvm_para.h
++++ b/arch/loongarch/include/asm/kvm_para.h
+@@ -13,12 +13,14 @@
+ 
+ #define KVM_HCALL_CODE_SERVICE		0
+ #define KVM_HCALL_CODE_SWDBG		1
++#define KVM_HCALL_CODE_USER		2
+ 
+ #define KVM_HCALL_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
+ #define  KVM_HCALL_FUNC_IPI		1
+ #define  KVM_HCALL_FUNC_NOTIFY		2
+ 
+ #define KVM_HCALL_SWDBG			HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
++#define KVM_HCALL_USER_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
+ 
+ /*
+  * LoongArch hypercall return code
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index d7e8f7d50ee0..2c349f961bfb 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -43,6 +43,7 @@ int  kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst);
+ int  kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst);
+ int  kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ int  kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run);
++int  kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ int  kvm_emu_idle(struct kvm_vcpu *vcpu);
+ int  kvm_pending_timer(struct kvm_vcpu *vcpu);
+ int  kvm_handle_fault(struct kvm_vcpu *vcpu, int fault);
+diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+index b0604aa9b4bb..76d802ef01ce 100644
+--- a/arch/loongarch/include/uapi/asm/kvm_para.h
++++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+@@ -17,5 +17,6 @@
+ #define  KVM_FEATURE_STEAL_TIME		2
+ /* BIT 24 - 31 are features configurable by user space vmm */
+ #define  KVM_FEATURE_VIRT_EXTIOI	24
++#define  KVM_FEATURE_USER_HCALL		25
+ 
+ #endif /* _UAPI_ASM_KVM_PARA_H */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index a7893bd01e73..70b5ed1241c4 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -538,6 +538,13 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 	return er;
+ }
+ 
++int kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++	update_pc(&vcpu->arch);
++	kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
++	return 0;
++}
++
+ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+ {
+ 	int idx, ret;
+@@ -873,6 +880,29 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
+ 		vcpu->stat.hypercall_exits++;
+ 		kvm_handle_service(vcpu);
+ 		break;
++	case KVM_HCALL_USER_SERVICE:
++		if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
++			kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
++			break;
++		}
++
++		vcpu->stat.hypercall_exits++;
++		vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
++		vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
++		vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
++		vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
++		vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
++		vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
++		vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
++		vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
++		vcpu->run->hypercall.flags = 0;
++		/*
++		 * Set invalid return value by default
++		 * Need user-mode VMM modify it
++		 */
++		vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
++		ret = RESUME_HOST;
++		break;
+ 	case KVM_HCALL_SWDBG:
+ 		/* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
+ 		if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index d18a4a270415..888480a5bc25 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1735,7 +1735,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
+ 		if (!run->iocsr_io.is_write)
+ 			kvm_complete_iocsr_read(vcpu, run);
+-	}
++	} else if (run->exit_reason == KVM_EXIT_HYPERCALL)
++		kvm_complete_user_service(vcpu, run);
+ 
+ 	if (!vcpu->wants_to_run)
+ 		return r;
 
-soc@kernel.org to the mailing list.
-
->> ---
->> Changes in v2:
->> 	- Removed useless memset() in probe.
->> 	- Cleaned up coding style.
->> 	- Corrected the spelling.
->>
->>   MAINTAINERS                        |   7 +
->>   drivers/soc/loongson/Kconfig       |   9 +
->>   drivers/soc/loongson/Makefile      |   1 +
->>   drivers/soc/loongson/loongson_se.c | 523 +++++++++++++++++++++++++++++
->>   include/soc/loongson/se.h          | 135 ++++++++
->
-> include/linux/soc/... or just keep it private to the driver. Why this
-> has to be exposed to other users?
-
-Looks like  include/linux/soc... is more suitable than include/soc/...
-
-This driver is the base of other users,  one user will be added in next 
-revision.
-
-And may I ask which one do you think is more suitable to place this 
-basic driver under SOC or MFD ?
-
-
-Thanks.
-
-> Best regards,
-> Krzysztof
+base-commit: fc033cf25e612e840e545f8d5ad2edd6ba613ed5
+-- 
+2.39.3
 
