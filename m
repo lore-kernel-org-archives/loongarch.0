@@ -1,186 +1,138 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F27192B96
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9791817FE
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735871462; cv=none; b=H09bMKQdeLEwtM88bRig3k/sv/yxQo+93SSfNDEW1a+qjHqa8vHAHNw4HIfUcaVtIFy3I3yYAfD8qnx4Laar70hGpJxa5TAihm3EDb42jytU0keyPIUyTVQx/jQ38BW6hBiKmam74OBabwjvXg5vsXE5m4LaBHYbSdgzA16OX58=
+	t=1735871815; cv=none; b=bbtr04l3/1jriLOqGXwN/LzJRfPCoy7uSuQSXa5krOfZKS3rTlchWlDFz21SjacNVVtV7MEV2Kx7MqGILfatiX4C/mt4C/pqwsMiK2UKO1EEJUrq3WCIen/17BLvTfv82FJkrWbSFY7QL6Ju+sPJFG7txKplZfVNccEosPSRLvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735871462; c=relaxed/simple;
-	bh=HCz1+DL0S31A6w3e9vlA6QPUfW8R3oHvcVzw+RH2Vbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=owDjdtIw24I4BeBEF5kLaBKrswJqg4fWZUgNjzdb9isgzc5XZz7sM8RfYJcj/6DBqXVBj1AyJBOPTM+lG7Ka4H17o6iGSJWNY3m05jvoGToVsWvk/GvgffrGl/Kd52kdYDvACf+G/SS+HV1rDpjjr0fSK3WY4Ma1XxqvdpD3KLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxSOHfS3dnvHFdAA--.52271S3;
-	Fri, 03 Jan 2025 10:30:55 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxQMbdS3dnBgUSAA--.17426S2;
-	Fri, 03 Jan 2025 10:30:54 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: KVM: Add hypercall service support for usermode VMM
-Date: Fri,  3 Jan 2025 10:30:53 +0800
-Message-Id: <20250103023053.2625226-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1735871815; c=relaxed/simple;
+	bh=gwBQoUZfkFpqWmF1OT5Dm56gT0MNEOI3OvCtbUI1Qao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EFnJtVZo/X2f0RpkYVnoX9+XouSlbibvRicCh89O8vMOKaU3+z6m/COrhkofLpUAlR/PxmIWavhI7vt42WJIHm81K7NjF6fzSlHNBwxw+JelmcmIqnMM5tyJv15WBx6JM1dYH06qkfFEmYzyl8Zgih24JQYzPYSUA8B4MgnGnFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJIcWWDX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJIcWWDX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485CFC4CEDD
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 02:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735871815;
+	bh=gwBQoUZfkFpqWmF1OT5Dm56gT0MNEOI3OvCtbUI1Qao=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bJIcWWDX0+KFBWIV1ufn0F9qmExAFz3nohqJAZHxz2VS8G6ATcNyGRmsqYrP+wc6l
+	 F5YA6xcuVvzPDrM4nPfCtIGJZYxqYn3JctiS3IFBFUwOGZt/iEbl/7Gi3Zopa2XbLK
+	 WookzrSoXey1fO1VT9iETMd+TZeJzTCzMm+oz+BSsp0R4jRPv0J4zUZU2a8LD+W8AU
+	 q/ah3IxkYS+1qGLsgEekCp440cO3vpM9oSV1i7iYN7HWyoVkc3UMqmA3n0TLUu/FPt
+	 70BUKQ+Z+cANT2c0RvC2l24XwIoQMpSYaJ+PG2dTl2FQpVBlccQQwJ6q4y7KZIYZkT
+	 9zghoABU1D+aw==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d3e829ff44so23749132a12.0
+        for <loongarch@lists.linux.dev>; Thu, 02 Jan 2025 18:36:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVE3WUaEH43/yKpYsh37ZPCC6JcQjChz05yU8Utoh+kPklITqlOxE0SZlADnjbLddHBmpGLoaEs4vo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+1TiUkhnGiocC8N3YDP1m4+iVHXlpUJirwFtr6UIDJ2Gl8SRN
+	Ke9qYUU6d5ZX9EZHk++NZZe/nPlNGj02bAtH0zVIBMmmhc3Vr91VAcoolBQbMRl876Ye+Qjzrr4
+	iViPnvnDMvNqzQfl4+Jkt/LSwkCI=
+X-Google-Smtp-Source: AGHT+IFgpJv87t7bWJaEBP6+eD6K/j3XDBfSi3vjB9j+b1SwpY5l2na2yKRdZutYyMUrk5dZN7MT433EJmjczUtzbc0=
+X-Received: by 2002:a17:907:1c98:b0:aaf:afb9:887d with SMTP id
+ a640c23a62f3a-aafafb9a436mr89183566b.1.1735871813816; Thu, 02 Jan 2025
+ 18:36:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxQMbdS3dnBgUSAA--.17426S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250102-la-misc-v1-1-8dc7db525e54@flygoat.com>
+In-Reply-To: <20250102-la-misc-v1-1-8dc7db525e54@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 3 Jan 2025 10:36:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6_08dk6-Q1MiQTjD4pdyxyeXx3Gd6rzVkSzaq0yLEGYA@mail.gmail.com>
+Message-ID: <CAAhV-H6_08dk6-Q1MiQTjD4pdyxyeXx3Gd6rzVkSzaq0yLEGYA@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: time: Derive max_delta from prcfg1 tmrbits
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some VMMs provides special hypercall service in usermode, KVM need
-not handle the usermode hypercall service and pass it to VMM and
-let VMM handle it.
+Hi, Jiaxun,
 
-Here new code KVM_HCALL_CODE_USER is added for user-mode hypercall
-service, KVM lets all six registers visiable to VMM.
+On Thu, Jan 2, 2025 at 10:05=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+> As per arch spec, maximum timer bits is configurable and
+> should not be hardcoded in any way.
+>
+> Use prcfg1 tmrbits to determine clockevent's max_delta
+> to be conformance.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> LA32R doesn't have prcfg, maybe we should handle this
+> during cpu-probe and save it in cpuinfo_loongarch,
+>
+> What's your opinion, Huacai?
+> ---
+>  arch/loongarch/include/asm/loongarch.h | 1 -
+>  arch/loongarch/kernel/time.c           | 7 ++++++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 64ad277e096edd7d77af6f37e234d68e571764a4..a3cc4f8d4c4a0b0521ef2b76c=
+87fa57eca417d75 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -466,7 +466,6 @@
+>
+>  #define LOONGARCH_CSR_TCFG             0x41    /* Timer config */
+>  #define  CSR_TCFG_VAL_SHIFT            2
+> -#define         CSR_TCFG_VAL_WIDTH             48
+>  #define  CSR_TCFG_VAL                  (_ULCAST_(0x3fffffffffff) << CSR_=
+TCFG_VAL_SHIFT)
+>  #define  CSR_TCFG_PERIOD_SHIFT         1
+>  #define  CSR_TCFG_PERIOD               (_ULCAST_(0x1) << CSR_TCFG_PERIOD=
+_SHIFT)
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index a07d7eff4dc5fb0f41f5fad02698ff7a84c7bc8a..bde2297f139c2d5e26894a2eb=
+c1748cc6fef3146 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -126,16 +126,21 @@ void sync_counter(void)
+>
+>  int constant_clockevent_init(void)
+>  {
+> +       uint32_t tmrbits;
+tmr is a strange short name, you can use timer_bits or tbits for short.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-  v1 ... v2:
-  1. Add function kvm_complete_user_service() when finish hypercall
-     in user-mode VMM and continue to run.
-  2. Add hypercall_exits stat information.
----
- arch/loongarch/include/asm/kvm_host.h      |  1 +
- arch/loongarch/include/asm/kvm_para.h      |  2 ++
- arch/loongarch/include/asm/kvm_vcpu.h      |  1 +
- arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
- arch/loongarch/kvm/exit.c                  | 30 ++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c                  |  3 ++-
- 6 files changed, 37 insertions(+), 1 deletion(-)
+>         unsigned int cpu =3D smp_processor_id();
+>  #ifdef CONFIG_PREEMPT_RT
+>         unsigned long min_delta =3D 100;
+>  #else
+>         unsigned long min_delta =3D 1000;
+>  #endif
+> -       unsigned long max_delta =3D (1UL << 48) - 1;
+> +       unsigned long max_delta;
+>         struct clock_event_device *cd;
+>         static int irq =3D 0, timer_irq_installed =3D 0;
+>
+> +       tmrbits =3D read_csr_prcfg1() & CSR_CONF1_TMRBITS;
+> +       tmrbits =3D tmrbits >> CSR_CONF1_TMRBITS_SHIFT;
+> +       max_delta =3D CLOCKSOURCE_MASK(tmrbits + 1);
+I prefer to evaluate the tbits and max_delta directly when declaring them.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 7b8367c39da8..590982cd986e 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -162,6 +162,7 @@ enum emulation_result {
- #define LOONGARCH_PV_FEAT_UPDATED	BIT_ULL(63)
- #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
- 					 BIT(KVM_FEATURE_STEAL_TIME) |	\
-+					 BIT(KVM_FEATURE_USER_HCALL) |	\
- 					 BIT(KVM_FEATURE_VIRT_EXTIOI))
- 
- struct kvm_vcpu_arch {
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index c4e84227280d..d3c00de484f6 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -13,12 +13,14 @@
- 
- #define KVM_HCALL_CODE_SERVICE		0
- #define KVM_HCALL_CODE_SWDBG		1
-+#define KVM_HCALL_CODE_USER		2
- 
- #define KVM_HCALL_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SERVICE)
- #define  KVM_HCALL_FUNC_IPI		1
- #define  KVM_HCALL_FUNC_NOTIFY		2
- 
- #define KVM_HCALL_SWDBG			HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_SWDBG)
-+#define KVM_HCALL_USER_SERVICE		HYPERCALL_ENCODE(HYPERVISOR_KVM, KVM_HCALL_CODE_USER)
- 
- /*
-  * LoongArch hypercall return code
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index d7e8f7d50ee0..2c349f961bfb 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -43,6 +43,7 @@ int  kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst);
- int  kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst);
- int  kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run);
- int  kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run);
-+int  kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run);
- int  kvm_emu_idle(struct kvm_vcpu *vcpu);
- int  kvm_pending_timer(struct kvm_vcpu *vcpu);
- int  kvm_handle_fault(struct kvm_vcpu *vcpu, int fault);
-diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
-index b0604aa9b4bb..76d802ef01ce 100644
---- a/arch/loongarch/include/uapi/asm/kvm_para.h
-+++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-@@ -17,5 +17,6 @@
- #define  KVM_FEATURE_STEAL_TIME		2
- /* BIT 24 - 31 are features configurable by user space vmm */
- #define  KVM_FEATURE_VIRT_EXTIOI	24
-+#define  KVM_FEATURE_USER_HCALL		25
- 
- #endif /* _UAPI_ASM_KVM_PARA_H */
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index a7893bd01e73..70b5ed1241c4 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -538,6 +538,13 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 	return er;
- }
- 
-+int kvm_complete_user_service(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	update_pc(&vcpu->arch);
-+	kvm_write_reg(vcpu, LOONGARCH_GPR_A0, run->hypercall.ret);
-+	return 0;
-+}
-+
- int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
- {
- 	int idx, ret;
-@@ -873,6 +880,29 @@ static int kvm_handle_hypercall(struct kvm_vcpu *vcpu)
- 		vcpu->stat.hypercall_exits++;
- 		kvm_handle_service(vcpu);
- 		break;
-+	case KVM_HCALL_USER_SERVICE:
-+		if (!kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_USER_HCALL)) {
-+			kvm_write_reg(vcpu, LOONGARCH_GPR_A0, KVM_HCALL_INVALID_CODE);
-+			break;
-+		}
-+
-+		vcpu->stat.hypercall_exits++;
-+		vcpu->run->exit_reason = KVM_EXIT_HYPERCALL;
-+		vcpu->run->hypercall.nr = KVM_HCALL_USER_SERVICE;
-+		vcpu->run->hypercall.args[0] = kvm_read_reg(vcpu, LOONGARCH_GPR_A0);
-+		vcpu->run->hypercall.args[1] = kvm_read_reg(vcpu, LOONGARCH_GPR_A1);
-+		vcpu->run->hypercall.args[2] = kvm_read_reg(vcpu, LOONGARCH_GPR_A2);
-+		vcpu->run->hypercall.args[3] = kvm_read_reg(vcpu, LOONGARCH_GPR_A3);
-+		vcpu->run->hypercall.args[4] = kvm_read_reg(vcpu, LOONGARCH_GPR_A4);
-+		vcpu->run->hypercall.args[5] = kvm_read_reg(vcpu, LOONGARCH_GPR_A5);
-+		vcpu->run->hypercall.flags = 0;
-+		/*
-+		 * Set invalid return value by default
-+		 * Need user-mode VMM modify it
-+		 */
-+		vcpu->run->hypercall.ret = KVM_HCALL_INVALID_CODE;
-+		ret = RESUME_HOST;
-+		break;
- 	case KVM_HCALL_SWDBG:
- 		/* KVM_HCALL_SWDBG only in effective when SW_BP is enabled */
- 		if (vcpu->guest_debug & KVM_GUESTDBG_SW_BP_MASK) {
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index d18a4a270415..888480a5bc25 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1735,7 +1735,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
- 		if (!run->iocsr_io.is_write)
- 			kvm_complete_iocsr_read(vcpu, run);
--	}
-+	} else if (run->exit_reason == KVM_EXIT_HYPERCALL)
-+		kvm_complete_user_service(vcpu, run);
- 
- 	if (!vcpu->wants_to_run)
- 		return r;
 
-base-commit: fc033cf25e612e840e545f8d5ad2edd6ba613ed5
--- 
-2.39.3
-
+Huacai
+> +
+>         if (!timer_irq_installed) {
+>                 irq =3D get_percpu_irq(INT_TI);
+>                 if (irq < 0)
+>
+> ---
+> base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+> change-id: 20241223-la-misc-d610d14f947e
+>
+> Best regards,
+> --
+> Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
