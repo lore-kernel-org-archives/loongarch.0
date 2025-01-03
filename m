@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902982563;
-	Fri,  3 Jan 2025 07:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B478A1CC89D
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 07:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735889175; cv=none; b=LQZEU4hXexdyVq/8R65yLFwmhaHAmLAV2kkvfICjF/QrcPd44aqsdzeUVty5V66A+cr7Ua9VYOHBYSncHd9TQ5NXztdPuS4vmpzb8uFfzjCiexAt+eDzzgcwHoHHOCzrBXrNEs1m7HRl9vPykfYTMcItZ0JA9ugk5hCfS5mKjwY=
+	t=1735890400; cv=none; b=B0i7VHqFjEMvbtusSYqWfSWLkuQca00gHqqRtPEQNgzcV7cyE5hwKiGtPYbGY74hIy5xcM7sLvbJ0km/i62C6uRQpkeiNlryl3/zcpEs5Q4C9+aD9IcZ9S/4RrZ8mne+EqzVTCfg29ZxfvbW+io/cFwe/U4g2Nl8iTw5GhpiiS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735889175; c=relaxed/simple;
-	bh=tXCXbV9W8BnfoaSGUk44FzzzU/4A5uG0Yr4sKlH094M=;
+	s=arc-20240116; t=1735890400; c=relaxed/simple;
+	bh=mzXoocIGNPwPKsYdLFaXMb11ojm1vKIwEO1w66c7Yo8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JTlyMLQI27Ka3+h8h/eshjU5f3r91XKKswIaU83Q5uiRKGoEmisrJ+a8MbVfRHWTZXNH8kqCg3WnclogQ24NUk97sF081kslZMWJ10RU1qTAhGjoJFLJgkgNySXb43TKbfcrsuo7eOa2CztZBvAkv1bxLs7bnWdLk+QVAFwX7vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhpi1QRP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhpi1QRP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1399DC4CECE;
-	Fri,  3 Jan 2025 07:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735889175;
-	bh=tXCXbV9W8BnfoaSGUk44FzzzU/4A5uG0Yr4sKlH094M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vhpi1QRPRiVIpQ5FPBFxUVEiEsK1UDwF7pWZcrKz3TceJEWqF2kqW3DAMS4dGFjQx
-	 LSuI1CInJMACJ8oRjHxmkPB9CEctQgE3XOWBPnfTdXo9j+XO9g7t1EvXeb6Oq5eeBs
-	 SSeTL5hzlCWQbm5GQxuDeWA4T6mUaqa2uAwW0n7xO+u+IGh87m0oTiNGmMynssKU9U
-	 N5S+V+QnYCHWc8uxxgyntExdp3GVSlmOiblCSeHIVRSxwFNhFcAr2cwQtCIBh3MOan
-	 l4yu9alCPSDN6oMFuc5ukpjaUNG6J6CKFMA9IrQIaS9Vo1Mx7e5xINGITAFXH1F8eu
-	 kdRL9l1ltckIw==
-Message-ID: <c80efae8-7f5c-4f2e-92c0-510511004ad1@kernel.org>
-Date: Fri, 3 Jan 2025 08:26:09 +0100
+	 In-Reply-To:Content-Type; b=ffgE1yGggg6/X1CY/EVsV8CWRQawPYb7dCMFVv9GGtyyy0VPzydm6Trk3lMqiidN9YYNdmaeG1G91tHzkEPZ8WvnSmF254n2IXvFyOAE76+Uls6ZNnqWfYK4Grlhk8y792vqpatYfAnjQ9wbkCX6A6dR6EKq1Frey4/YLAtWZ54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21C9D1516;
+	Thu,  2 Jan 2025 23:47:05 -0800 (PST)
+Received: from [10.57.92.237] (unknown [10.57.92.237])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E1313F6A8;
+	Thu,  2 Jan 2025 23:46:28 -0800 (PST)
+Message-ID: <d7f079ea-6530-4f92-9cab-bee90b84e2c3@arm.com>
+Date: Fri, 3 Jan 2025 08:46:25 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,131 +27,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 RESEND] soc: loongson: add Loongson Security Module
- driver
-To: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Cc: arnd@arndb.de, olof@lixom.net, soc@kernel.org, soc@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
- christophe.jaillet@wanadoo.fr
-References: <20241224072500.15669-1-zhaoqunqin@loongson.cn>
- <f9138082-1d17-4247-b365-7cb4eef88879@kernel.org>
- <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <22cb222a-a34d-b2ff-88cf-2e9433aed310@loongson.cn>
+Subject: Re: [PATCH v4 04/15] mm: pgtable: add statistics for P4D level page
+ table
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: peterz@infradead.org, agordeev@linux.ibm.com, palmer@dabbelt.com,
+ tglx@linutronix.de, david@redhat.com, jannh@google.com, hughd@google.com,
+ yuzhao@google.com, willy@infradead.org, muchun.song@linux.dev,
+ vbabka@kernel.org, lorenzo.stoakes@oracle.com, akpm@linux-foundation.org,
+ rientjes@google.com, vishal.moola@gmail.com, arnd@arndb.de, will@kernel.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ rppt@kernel.org, ryan.roberts@arm.com, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-um@lists.infradead.org
+References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
+ <2fa644e37ab917292f5c342e40fa805aa91afbbd.1735549103.git.zhengqi.arch@bytedance.com>
+ <237a3bf6-c24f-4feb-8d3d-bb3beb2fd18e@arm.com>
+ <77c202bf-e0a3-45e7-bf8d-eef7903e3c64@bytedance.com>
+Content-Language: en-GB
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+In-Reply-To: <77c202bf-e0a3-45e7-bf8d-eef7903e3c64@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 03/01/2025 03:25, Zhao Qunqin wrote:
-> 
-> 在 2024/12/28 下午7:02, Krzysztof Kozlowski 写道:
->> On 24/12/2024 08:25, Qunqin Zhao wrote:
->>> This driver supports Loongson Security Module, which
->>> provides the control for it's hardware encryption
->>> acceleration child devices.
->> Please wrap commit message according to Linux coding style / submission
->> process (neither too early nor over the limit):
->> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-> OK
->>> Only ACPI firmware is supported.
->>>
->>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->> I don't get why you are sending this to soc. This is loongson specific
->> and is supposed to go via Loongson maintainers.
+On 03/01/2025 04:53, Qi Zheng wrote:
+> On 2025/1/3 00:53, Kevin Brodsky wrote:
+>> On 30/12/2024 10:07, Qi Zheng wrote:
+>>> diff --git a/arch/riscv/include/asm/pgalloc.h
+>>> b/arch/riscv/include/asm/pgalloc.h
+>>> index 551d614d3369c..3466fbe2e508d 100644
+>>> --- a/arch/riscv/include/asm/pgalloc.h
+>>> +++ b/arch/riscv/include/asm/pgalloc.h
+>>> @@ -108,8 +108,12 @@ static inline void __pud_free_tlb(struct
+>>> mmu_gather *tlb, pud_t *pud,
+>>>   static inline void __p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d,
+>>>                     unsigned long addr)
+>>>   {
+>>> -    if (pgtable_l5_enabled)
+>>> +    if (pgtable_l5_enabled) {
+>>> +        struct ptdesc *ptdesc = virt_to_ptdesc(p4d);
+>>> +
+>>> +        pagetable_p4d_dtor(ptdesc);
+>>>           riscv_tlb_remove_ptdesc(tlb, virt_to_ptdesc(p4d));
 >>
->> And why is this a resend?
-> 
-> There are no platform-specific maintainers, So I initially sent the 
-> patch to Arnd,
+>> Nit: could use the new ptdesc variable here instead of calling
+>> virt_to_ptdesc().
+>
+> Right, but we will remove pagetable_p4d_dtor() in patch #10, so this
+> may not matter.
 
-What do you mean by "no platform-specific maintainers"? This
-architecture and this platform is abandoned?
+You're right, I missed that. Makes sense not to create a diff that's
+reverted later then :)
 
-Then we should either drop it from the kernel or make it orphaned.
-
-
-> 
-> but didn't receive a response from Arnold, so I resent the patch and added
-> 
-> soc@kernel.org to the mailing list.
-
-You shouldn't. This is patch for your maintainers to take. If you do not
-have them: either fix that or abandon/orphan the platform.
-
-
-> 
->>> ---
->>> Changes in v2:
->>> 	- Removed useless memset() in probe.
->>> 	- Cleaned up coding style.
->>> 	- Corrected the spelling.
->>>
->>>   MAINTAINERS                        |   7 +
->>>   drivers/soc/loongson/Kconfig       |   9 +
->>>   drivers/soc/loongson/Makefile      |   1 +
->>>   drivers/soc/loongson/loongson_se.c | 523 +++++++++++++++++++++++++++++
->>>   include/soc/loongson/se.h          | 135 ++++++++
->>
->> include/linux/soc/... or just keep it private to the driver. Why this
->> has to be exposed to other users?
-> 
-> Looks like  include/linux/soc... is more suitable than include/soc/...
-> 
-> This driver is the base of other users,  one user will be added in next 
-> revision.
-
-No. Keep it private to the driver.
-
-Soc driver is usually not a "base for other users".
-
-> 
-> And may I ask which one do you think is more suitable to place this 
-> basic driver under SOC or MFD ?
-
-I was talking about the header.
-
-Best regards,
-Krzysztof
+- Kevin
