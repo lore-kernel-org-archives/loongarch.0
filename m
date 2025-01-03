@@ -1,151 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014EB1E4AD
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 13:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984711B4236
+	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 16:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735910835; cv=none; b=oL/lGoh2ruLuwVpZptocCsZgMuONA2u6pjUb+TeT0rOryGnCqXEDguEc4fLsXwKE44vKGCLiM3ykI8bAVepMgaaYSjQgNxncsAqF33W4rf/tLRi2yWBI3JlvbT78HzWutkjSKESPB+X+C1cL/PJ8A5McAx19AkGluwlsbiUqNK8=
+	t=1735921211; cv=none; b=aTjim+QDyJJK+bldfuvgLUOqCfqMb18deFFT2cxbFKtjAGAbJBM0CIMRFU+GZDxh5DJNSIVRXfANc1LRB0mQNmX07+KNcw5NohUsflV3LWJuk9f9k73FTumTSx54lMKur/aKd4GGQSnG6J/r5wfxbk/eQ01NopqUDNzPa8DIoiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735910835; c=relaxed/simple;
-	bh=+8G2mn5XjC+6BvOgDwIaLzTXtQekFe6X8F8stkKVxBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LG7CGOIXbrUqsTszv/QcpZXN9OTjXmXBOHS7d+GJKPIZ+E0ge2vUR/IBlizey18lsG4/Vr/OH7YCGKOUjlfmmafDjIAoHfRmRYv6CtD6JWKgOxzf0qSK6Op0Nwbel3HJS2y2Z/eEsa7H4nCd98NHOgYl+4C5oii9YttFLyrqgdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 330911480;
-	Fri,  3 Jan 2025 05:27:39 -0800 (PST)
-Received: from [10.44.160.93] (e126510-lin.lund.arm.com [10.44.160.93])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB2C23F673;
-	Fri,  3 Jan 2025 05:27:02 -0800 (PST)
-Message-ID: <d9a14211-4bbd-4fb6-ba87-a555a40bb67a@arm.com>
-Date: Fri, 3 Jan 2025 14:27:00 +0100
+	s=arc-20240116; t=1735921211; c=relaxed/simple;
+	bh=aSP3EXxUVGG7FyIIBw6UEVeCGd0NyMb4xdDATEarYYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbQupSjdopi16l4lS6ipTZ32/v32wumB80tZyJDRX+n7lsLok3qE0RhTKEOnfeu5WN69cfsSGNZJl4gn8FphBgoAoKES9JtX1tnvRdin21oSjVLii7TPJU+eJRDpFODQV+097by7a9l+6sKXfsewNjijjDRhb8gCNGalzYeElxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aDKUfeM5 reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aDKUfeM5"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 891AB40E021D;
+	Fri,  3 Jan 2025 16:20:07 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id zbDNpsGyUdiB; Fri,  3 Jan 2025 16:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1735921202; bh=pjfKNMdDp47GtpCrMArhq4IL4m/Dz9krRtWCSeb3hQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aDKUfeM5Ikw9wYvbZkJaj5x9HD2HucjgNVn22mypHoIVX8bz9eNZwB18Y7Byhtmza
+	 eIlV+/hTR/YU3otD03sNmNR/juEpQjYbPId9GtP8xW7OIim0WE/bo05aRq8ZIxCbn1
+	 0ynVy1j4NhbQU0srjuMeEYB2ZewtGzQlyUM+4Nw7DkoYf37Zhs0/TskyLZuqslUFVT
+	 4XGt2n3GlIwLi7rYOxdTWiJdPql48Cb4OBqZKV7ZGVowoyjnlwbKF74tuvVXrIJKdZ
+	 FXE7zBtOfmH7JaAtHgmgrpCUYTp7WQdiw5PBfp7jSgSehn0mLWkH3ImjXa3MNznVe3
+	 AJ4MukaPK/QkmJGrSfglphsHR+HRzoPt8ulgT9RRnrYWDc1Rqp+z8AEGQhs0PtWIBM
+	 vgH8VADq+s4p8oaXPt9DKjn9SKq53kvOT/6tYLBvWDIE6rwzhjAgeQC7v2iOprEVGb
+	 Lp8KCN76idiVRtWPNr7mBkh1LqS4qCgN0feO5E6dUcCuWTIjmT7wOdAuY44OYqFCGH
+	 87GFFqgU00K9o7N8aFPRBWyR+I7eax7DLajYq6s4oQz0C0avrzbLtKOmm+S/rBUPFt
+	 OC8DseaG2UgVizda34QSSt5ExczrgdhUueYph0x47yb9pYmOCiotWFsq8yhlKoGqul
+	 AuPTTOCszmb9W064fNXHnNzc=
+Received: from zn.tnic (p200300Ea971F93Ba329C23fffEA6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93ba:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AC40640E021C;
+	Fri,  3 Jan 2025 16:19:48 +0000 (UTC)
+Date: Fri, 3 Jan 2025 17:19:42 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel@xen0n.name,
+	tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+	rric@kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
+	Markus.Elfring@web.de, Jonathan.Cameron@huawei.com,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
+ controller
+Message-ID: <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
+References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+ <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
+ <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/15] riscv: pgtable: move pagetable_dtor() to
- __tlb_remove_table()
-To: Qi Zheng <zhengqi.arch@bytedance.com>, peterz@infradead.org
-Cc: agordeev@linux.ibm.com, palmer@dabbelt.com, tglx@linutronix.de,
- david@redhat.com, jannh@google.com, hughd@google.com, yuzhao@google.com,
- willy@infradead.org, muchun.song@linux.dev, vbabka@kernel.org,
- lorenzo.stoakes@oracle.com, akpm@linux-foundation.org, rientjes@google.com,
- vishal.moola@gmail.com, arnd@arndb.de, will@kernel.org,
- aneesh.kumar@kernel.org, npiggin@gmail.com, dave.hansen@linux.intel.com,
- rppt@kernel.org, ryan.roberts@arm.com, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org
-References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
- <0e8f0b3835c15e99145e0006ac1020ae45a2b166.1735549103.git.zhengqi.arch@bytedance.com>
- <1b09335c-f0b6-4ccb-9800-5fb22f7e8083@arm.com>
- <ebce5e05-5e46-4c6e-94a0-bcf3655a862b@bytedance.com>
- <7e2c26c8-f5df-4833-a93f-3409b00b58fd@arm.com>
- <e9fe97d4-99d5-443e-b722-43903655a76e@bytedance.com>
- <31e1a033-00a7-4953-81e7-0caedd0227a9@bytedance.com>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <31e1a033-00a7-4953-81e7-0caedd0227a9@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
+Content-Transfer-Encoding: quoted-printable
 
-On 03/01/2025 10:35, Qi Zheng wrote:
-> On 2025/1/3 17:13, Qi Zheng wrote:
->> On 2025/1/3 16:02, Kevin Brodsky wrote:
->>> On 03/01/2025 04:48, Qi Zheng wrote:
->>>> [...]
->>>>
->>>> In __tlb_batch_free_encoded_pages(), we can indeed detect PageTable()
->>>> and call pagetable_dtor() to dtor the page table pages.
->>>> But __tlb_batch_free_encoded_pages() is also used to free normal pages
->>>> (not page table pages), so I don't want to add overhead there.
->>>
->>> Interesting, can a tlb batch refer to pages than are not PTPs then?
->>
->> Yes, you can see the caller of __tlb_remove_folio_pages() or
->> tlb_remove_page_size().
+On Tue, Dec 17, 2024 at 10:25:25AM +0800, Zhao Qunqin wrote:
+>=20
+> =E5=9C=A8 2024/12/16 =E4=B8=8B=E5=8D=887:55, Borislav Petkov =E5=86=99=E9=
+=81=93:
+> > On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
+> > > +LOONGSON EDAC DRIVER
+> > > +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+> > > +L:	linux-edac@vger.kernel.org
+> > > +S:	Maintained
+> > > +F:	drivers/edac/loongson_edac.c
+> > If you add yourself as a maintainer, I'd expect you to review and/or =
+ack
+> > patches for your driver so that I can pick them up.
+> OK. I can review the patches for this driver.
 
-I had a brief look but clearly not a good enough one! I hadn't realised
-that "table" in tlb_remove_table() means PTP, while "page" in
-tlb_remove_page() can mean any page, and it's making more sense now.
+Not "can" - I would need you to. I don't have the hardware to test and do=
+n't
+have the time to review them.
 
-[...]
+> > > +	new =3D read_ecc(mci);
+> > > +	add =3D new - pvt->last_ce_count;
+> > > +	pvt->last_ce_count =3D new;
+> > That last_ce_count is just silly. Kill it.
+>=20
+> Then=C2=A0 I=C2=A0 can't calculate the error count added since the last=
+ check,=C2=A0 cause
+> what record in Loongson's ECC register is=C2=A0 the error count=C2=A0 f=
+rom reset of
+> the memory controller.
 
->>
->> For arm, the call to pagetable_dtor() is indeed missed in the
->> non-MMU_GATHER_RCU_TABLE_FREE case. This needs to be fixed. But we
->> can't fix this by adding pagetable_dtor() to tlb_remove_table(),
->> because some architectures call tlb_remove_table() but don't support
->> page table statistics, like sparc.
+Can that ECC register be zeroed on each check function run?
 
-When I investigated this for my own series, I found that the only case
-where ctor/dtor are not called for page-sized page tables is 32-bit
-sparc (see table at the end of [1]). However only 64-bit sparc makes use
-of tlb_remove_table() (at PTE level, where ctor/dtor are already called).
+Because this should work this way: every time you have to issue an error
+message about how many errors were logged, you simply issue the error cou=
+nt
+you've logged this time.
 
-So really calling pagetable_dtor() from tlb_remove_table() in the
-non-MMU_GATHER_TABLE_FREE case seems to be the obvious thing to do.
+Userspace tools like rasdaemon etc can then aggregate the counts.
 
-Once this is done, we should be able to replace all those confusing
-calls to tlb_remove_page() on PTPs with tlb_remove_table() and remove
-the explicit call to pagetable_dtor(). AIUI this is essentially what
-Peter suggested on v3 [2].
+--=20
+Regards/Gruss,
+    Boris.
 
-[1]
-https://lore.kernel.org/linux-mm/20241219164425.2277022-1-kevin.brodsky@arm.com/
-[2]
-https://lore.kernel.org/linux-mm/20250103111457.GC22934@noisy.programming.kicks-ass.net/
-
-[...]
-
-> Or can we just not let tlb_remove_table() fall back to
-> tlb_remove_page()? Like the following:
->
-> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-> index a59205863f431..354ffaa4bd120 100644
-> --- a/include/asm-generic/tlb.h
-> +++ b/include/asm-generic/tlb.h
-> @@ -195,8 +195,6 @@
->   *  various ptep_get_and_clear() functions.
->   */
->
-> -#ifdef CONFIG_MMU_GATHER_TABLE_FREE
-> -
->  struct mmu_table_batch {
->  #ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
->         struct rcu_head         rcu;
-> @@ -219,16 +217,6 @@ static inline void __tlb_remove_table(void *table)
->
->  extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
->
-> -#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
-> -
-> -/*
-> - * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have
-> page based
-> - * page directories and we can use the normal page batching to free
-> them.
-> - */
-> -#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
-
-We still need a different implementation of tlb_remove_table() in this
-case. We could define it inline here:
-
-static inline void tlb_remove_table(struct mmu_gather *tlb, void *table)
-{
-    struct page *page = table;
-
-    pagetable_dtor(page_ptdesc(page));
-    tlb_remove_page(page);
-}
-
-- Kevin
+https://people.kernel.org/tglx/notes-about-netiquette
