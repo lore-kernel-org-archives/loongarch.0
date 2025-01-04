@@ -1,120 +1,89 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C0D14E2E2
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 09:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D79D191F7F
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 10:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735983713; cv=none; b=s8B2A/YiNTiq61yxkMsu4XNilQlu4C6RKSVupXylhdKYtFgfAxivjWZ1t0EKat9yjlDkRlVJxrnh2uTV0AR5OaseRLiq6rCO3EHCYsBSM6NF/mGHRzXFRG6UwidS+GkVW8Yyp4IoI2PByIPEhCLO+0GrVC7eNYWyT4GDti5OBrc=
+	t=1735986684; cv=none; b=i1a+ju3DcSgtks2d8yk/eyVEH71LGtSWJGq8xsoYZvOpuR+Bm4cbkKPpTf0NXX16qljM2hImFLx75ycbtJamFw0yrfnts9ga7ioWJnnXb0Y3ZQUpAFCyDPyus7LOxHr2tMcTAcUdNZUT0nwzYWZexLApMmUq6jpUOIGybTsNCIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735983713; c=relaxed/simple;
-	bh=A5b7UzYjSzEg+lubXOZ3LgEjbBkpRapYDrBmFUZOv2E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kq2n8CmSv/WBs8CMY2w6Z4bpuPRKwU1TzNHPQzzcIWOCAMgSXDMPlYJhJBdvWTEd4K8avIIvOuIseBVU9Jw8ik+3FSSfbxZOba0fLme7roSd3TGUara/yf4p6AcgoUWWfes43amMbs+yfc7s2ds6EyL0rUSxBd8wzhGvBUVxmVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=iCLX6xS8; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1735986684; c=relaxed/simple;
+	bh=RzTnsDOHi2iFWje3g8bJNXEKMPQ0+iW/+ANuzFE7bBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDPVAeY9TEqR3qftOJjQxUZtKbQ8vipKeUYfrdCsaozpXlFgrk+qsmDF6JUGmAE+0zeKlCxDReNwKJZ7nVKKJcUPT8J7O+6cLvSMJGvUW50yZBYoktPEY1z990cooxA8H/nyOQNNcJoRHSkWtqQ2BtG3LLfGhPSQO8MLqFk4NQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BKUWhmBy; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="iCLX6xS8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1735983112;
-	bh=9/6HpxIAu3h6hDa3wEevWjSh+p8KNvlojj0zXGI2T28=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iCLX6xS8XvkQJ0lpgqLD9wwkgsMD1k7iIlODwiIDbBwGzY6GFpI3pgAUVKEfGEdhI
-	 VkZps/XOzItQb/haquWwOyXYL05r0fHfwvxj8MAuajPqdV2XXN3MBAqBTi6CgpNLIq
-	 wqiC1SQlZKtETfHLrfbF9MFR7ooUzRqzJWh2zheQ=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BKUWhmBy"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E841D40E01F9;
+	Sat,  4 Jan 2025 10:31:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id D00mqYbipsOk; Sat,  4 Jan 2025 10:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1735986676; bh=MkI8oZQtdyShRyq/t7nRExvwEIHoVBW3vNVxPUWVDoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BKUWhmByXcSS3i4uI1p4il/BYwBaPqGQ62tpDDTyH1cSLRkKI09PuV+07HR4ErP1J
+	 cyjXkJ87/4hwOnChQUnGVX+ULOHPAqzPaYMwLudiPKciqqKgXSRW+PvLF0boqrnP93
+	 VV9aRgzlkJ+5hD8vnQ/LiaGrnFhe4NEqOj6VKKLCif44FXtFcei69cXzn1BmSyIFwR
+	 3cDfjnT+mO1cEDf9hfV5MX2TAUpjpwT0eW3uFllJ04SFWi8q1d28DmUhjoAIFOdU0Z
+	 CB8fyLKMeeJ1QdRUQ5XTfRCSupRbCV1hf6go4lKq7/dX8QigQzg4xuNIfqMXENYJJ0
+	 7qXmtNkMw9iKyNIPESALfMJi8q30dg/LBg0qvHDW7BBEJzdzhVrI9+YCa3N/FCMeZ+
+	 NE/w4Sdan/UIh3vVCu9ap20Ye5+Pe/kBHv/+rouFPRE0ZCc8n9jzJbLMtLxXqE7J8h
+	 zRd563PxSDDICV6kRkALah/lENp4xpk4vnjur6dIdyIlrTaVE/yQOT1kuZEBx99gtq
+	 NOg1Pu8S7ocn4kVd6rBL/YqjdH9uigacqgM7+zxmim6Z6/XovKZltDyCC3gxsFHq0I
+	 oJTISen5vMOJGY1lDW+XV1q4Z1GBFsKd6zD8pRCG2kYbYwAdh458YV50Qtt1sNDtgV
+	 aEKeQCIEAQw4y7dPboqO6sks=
+Received: from zn.tnic (p200300eA971f93Ba329C23FfFea6A903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93ba:329c:23ff:fea6:a903])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 4F61D6596C;
-	Sat,  4 Jan 2025 04:31:50 -0500 (EST)
-Message-ID: <3409b0608ba127c356e2a6d760c3ac2d446c9da7.camel@xry111.site>
-Subject: Re: [PATCH 2/3] loongarch: Introduce sys_loongarch_flush_icache
- syscall
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
-Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Date: Sat, 04 Jan 2025 17:31:48 +0800
-In-Reply-To: <20250102-la32-uapi-v1-2-db32aa769b88@flygoat.com>
-References: <20250102-la32-uapi-v1-0-db32aa769b88@flygoat.com>
-	 <20250102-la32-uapi-v1-2-db32aa769b88@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BF2B540E0169;
+	Sat,  4 Jan 2025 10:31:01 +0000 (UTC)
+Date: Sat, 4 Jan 2025 11:31:00 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel@xen0n.name,
+	tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+	rric@kernel.org, loongarch@lists.linux.dev, xry111@xry111.site,
+	Markus.Elfring@web.de, Jonathan.Cameron@huawei.com,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
+ controller
+Message-ID: <20250104103100.GBZ3kN5GP_EqgD_Urq@fat_crate.local>
+References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+ <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
+ <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
+ <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
+ <3194f91f-f20d-714a-20e0-3731df7029c1@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3194f91f-f20d-714a-20e0-3731df7029c1@loongson.cn>
 
-On Thu, 2025-01-02 at 18:34 +0000, Jiaxun Yang wrote:
+On Sat, Jan 04, 2025 at 09:55:14AM +0800, Zhao Qunqin wrote:
+> Let me review the patches for this driver.
 
-/* snip */
+Thanks.
 
-> Sadly many user space applications are assuming ICACHET support, we can't
-> recall those binaries. So we'd better get UAPI for cacheflush ready sooni=
-sh
-> and encourage application to start using it.
+> That ECC register can not be zeroed.
 
-To encourage the developers changing ibar to loongarch_flush_icache, we
-should minimize the extra overhead on mainstream systems.  We can add an
-vDSO layer so if the CPU has ICACHET:
+Pfff, that's some weird hardware you have there. Oh well. Lemme take a look at
+your patch.
 
-int vdso_loongarch_flush_icache(...)
-{
-  asm ("ibar 0");
-  return 0;
-}
+-- 
+Regards/Gruss,
+    Boris.
 
-And otherwise the vDSO wrapper invokes the real syscall.  I've
-implemented the boot-time alternative runtime patching for vDSO at
-https://lore.kernel.org/loongarch/20240816110717.10249-3-xry111@xry111.site=
-/.
-
-> The syscall resolves to a ibar for now, it should be revised when we have
-> actual non-ICACHET support in kernel.
-
-/* snip */
-
-> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/inc=
-lude/asm/cacheflush.h
-> index f8754d08a31ab07490717c31b9253871668b9a76..94f4a47f00860977db0b36096=
-5a22ff0a461c098 100644
-> --- a/arch/loongarch/include/asm/cacheflush.h
-> +++ b/arch/loongarch/include/asm/cacheflush.h
-> @@ -80,6 +80,12 @@ static inline void flush_cache_line(int leaf, unsigned=
- long addr)
->  	}
->  }
-> =20
-> +/*
-> + * Bits in sys_loongarch_flush_icache()'s flags argument.
-> + */
-> +#define SYS_LOONGARCH_FLUSH_ICACHE_LOCAL 1UL
-> +#define SYS_LOONGARCH_FLUSH_ICACHE_ALL   (SYS_LOONGARCH_FLUSH_ICACHE_LOC=
-AL)
-
-Not a UAPI header so not usable by the user?  How would they specify
-flags then?
-
-If you meant to add them for UAPI, it would be very problematic.  When a
-new cache type emerges in the hardware implementations, we need to grow
-SYS_LOONGARCH_FLUSH_ICACHE_ALL in the UAPI header, but we cannot change
-the already compiled JIT applications.  Thus all JIT applications have
-to be recompiled with the latest UAPI header.  This just seems an
-unnecessary severe burden to the packagers.
-
-Instead IMO it's better not to expose so much details to the userspace.
-Just remove the flags argument and flush all the icaches the kernel
-knows, so with a new cache type the user (and distro) just need to
-update or patch their kernel, w/o recompiling all JIT apps.
-
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+https://people.kernel.org/tglx/notes-about-netiquette
