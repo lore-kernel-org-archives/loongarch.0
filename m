@@ -1,101 +1,151 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7699436C
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 01:56:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA45A14D6F6
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 08:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735955786; cv=none; b=T5YpHP1rV2qQ1E56G1MDkJfagCqCFNkR39r9AL03Cv8Ui4Ej5kOXbaMazm0U9tO2gYDv1hDNfutlpPyS0zhBrq/lVznKdpqrU8WIHGOJLo41gI5yTXR3jPuwb/WxvwSQWdA6ZF6JX3nAQMsOCKApkC5nBu6g97ka1Q1YfQGyhCQ=
+	t=1735979274; cv=none; b=nosCJXlVIWMCVAvACVJj96O383xsBEqeo5ykAJkiCAnsZWv2d/XI6FXXsfONCkD9vnxXNEgCI8Pqd6dMPTYPHB2mPevjSHCDKxOp2nKiCquto+Xv802pT3JhcQZa4YPH4hW4/L4j4XxQaLeEjpTHHKfCcrtby1FhjIqW3fHCGik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735955786; c=relaxed/simple;
-	bh=fQO4yvx7yvOKnZzz9wTgSRQzq1FxJ5oF2hh6vZ5DQMk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=HVP6bcxKKbtIWY7SG/dq5284u9IdkrHkqRQ+nmqe+gZ5DyDu/sdxh3dEDKJ7wB0yxtVZ+ZW92nExiiTn4/zm2jfXY7cOEyAvWgFR5FS5iSDBgBAPvpdihE3IW/yIqyBGikpmwpa2a35gWhOsxBfBl647G0XAEjQoLMPlFf3HP6E=
+	s=arc-20240116; t=1735979274; c=relaxed/simple;
+	bh=wMoy6apQo5bZZiSMcB0HeLwxkmRBasscYmByAMRQg9I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cYlQjj9mgM2EBFoRlxwpCptx3cDNAJTGLO5cUjDTknvVCoPRqmFAQNwAEKXc2Lj+KZkA8M11iWIfDtxS/yU4t+iUEuzXsgExPUt3nVHJbqbHZis7VTHYc7GLqJnehSl57vD1HPHS7Br0K6F7CTQoQoDPkKjy9WGrwCoiuEmssDc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8DxmeBFlXhnXNddAA--.54153S3;
-	Sat, 04 Jan 2025 09:56:21 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMAx_8VClXhn4RsTAA--.10066S2;
-	Sat, 04 Jan 2025 09:56:20 +0800 (CST)
-Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
- controller
-To: Borislav Petkov <bp@alien8.de>
-Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@xen0n.name, tony.luck@intel.com,
- james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
- loongarch@lists.linux.dev, xry111@xry111.site, Markus.Elfring@web.de,
- Jonathan.Cameron@huawei.com, Huacai Chen <chenhuacai@loongson.cn>
-References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
- <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
- <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
- <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
-From: Zhao Qunqin <zhaoqunqin@loongson.cn>
-Message-ID: <3194f91f-f20d-714a-20e0-3731df7029c1@loongson.cn>
-Date: Sat, 4 Jan 2025 09:55:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.80.44.60])
+	by gateway (Coremail) with SMTP id _____8DxWOEF8Xhn4uddAA--.53460S3;
+	Sat, 04 Jan 2025 16:27:49 +0800 (CST)
+Received: from [10.80.44.60] (unknown [10.80.44.60])
+	by front1 (Coremail) with SMTP id qMiowMAxz8cB8Xhn94wTAA--.11083S2;
+	Sat, 04 Jan 2025 16:27:45 +0800 (CST)
+Message-ID: <23c2a5b5-397e-4d90-b05a-143493063f00@loongson.cn>
+Date: Sat, 4 Jan 2025 16:27:45 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Jinyang Shen <shenjinyang@loongson.cn>
+Subject: Re: [PATCH 0/3] LoongArch: initial 32-bit UAPI
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20250102-la32-uapi-v1-0-db32aa769b88@flygoat.com>
 Content-Language: en-US
-X-CM-TRANSID:qMiowMAx_8VClXhn4RsTAA--.10066S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tr1xZw45KrWDJF45tFWUGFX_yoW8Gw1rpr
-	4UZasrtr4vqr4xtw42ga47CF9YywnrJa1agryDJa4UZrnFq34a93y7GFZF93Z2vFn3Xa47
-	XayxW39Y9FWYkFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+In-Reply-To: <20250102-la32-uapi-v1-0-db32aa769b88@flygoat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAxz8cB8Xhn94wTAA--.11083S2
+X-CM-SenderInfo: hvkh0yplq1t03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAw4rCw43Cr1ruFykGFWrCrX_yoWrWr4kpa
+	1kur93Gr4xGryxAr43tw4Fgrn8Jw4fG3W2qa1SkryUCFsrZFyUur4xKFWkXF17uw4furW0
+	qF18u34UW3W8AabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUvGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
 	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
 	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
+	yTuYvjxUc0eHDUUUU
 
 
-在 2025/1/4 上午12:19, Borislav Petkov 写道:
-> On Tue, Dec 17, 2024 at 10:25:25AM +0800, Zhao Qunqin wrote:
->> 在 2024/12/16 下午7:55, Borislav Petkov 写道:
->>> On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
->>>> +LOONGSON EDAC DRIVER
->>>> +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
->>>> +L:	linux-edac@vger.kernel.org
->>>> +S:	Maintained
->>>> +F:	drivers/edac/loongson_edac.c
->>> If you add yourself as a maintainer, I'd expect you to review and/or ack
->>> patches for your driver so that I can pick them up.
->> OK. I can review the patches for this driver.
-> Not "can" - I would need you to. I don't have the hardware to test and don't
-> have the time to review them.
-Let me review the patches for this driver.
->
->>>> +	new = read_ecc(mci);
->>>> +	add = new - pvt->last_ce_count;
->>>> +	pvt->last_ce_count = new;
->>> That last_ce_count is just silly. Kill it.
->> Then  I  can't calculate the error count added since the last check,  cause
->> what record in Loongson's ECC register is  the error count  from reset of
->> the memory controller.
-> Can that ECC register be zeroed on each check function run?
-That ECC register can not be zeroed.
->
-> Because this should work this way: every time you have to issue an error
-> message about how many errors were logged, you simply issue the error count
-> you've logged this time.
->
-> Userspace tools like rasdaemon etc can then aggregate the counts.
->
+
+On 2025/1/3 02:34, Jiaxun Yang wrote:
+> This series defines the UAPI for LoongArch32, marking my initial step
+> towards upstreaming support for the architecture. Once the UAPI is
+> ratified, we can proceed to scrutinise various kernel components to
+> enable 32-bit support while simultaneously addressing user-space porting.
+> 
+> Why am I upstreaming LoongArch32?
+> ================================
+> Although 32-bit systems are experiencing declining adoption in general
+> computing, LoongArch32 remains highly relevant within specific niches.
+> Beyond embedded applications, several vendors are actively developing
+> application-level LoongArch32 processors. Loongson, for example, has
+> released two open-source reference hardware implementations: openLA500
+> and openLA1000 [6].
+> 
+> The architecture also holds considerable educational value, having been
+> integrated into China's national computer architecture curricula and
+> embedded systems courses. Additionally, the National Student Computer
+> System Capability Challenge (NSCSCC) [1] features LoongArch32 CPUs, where
+> hundreds of students design Linux-capable hardware implementations and
+> compete on performance. This initiative has resulted in several exciting
+> high-performance LoongArch32 cores, including LainCore[2], Wired[3],
+> NOP-Core[4], NagiCore[5]....
+> 
+>>From an upstream perspective, we will largely reuse the infrastructure
+> already established for LoongArch64, ensuring that the maintenance burden
+> remains minimal.
+> 
+> Porting Status
+> ==============
+> The LoongArch32 port has been available downstream for some time, with
+> various system components hosted on Loongson's Gitee[6]. However, these
+> components utilise an older downstream ABI and fall short of upstream
+> quality.
+> 
+> On the upstream front, LLVM-19 now includes experimental support for
+> LoongArch32 (ILP32 ABI) under the loongarch32* triple, and efforts are
+> underway to enable GNU toolchain support. My upstream-ready kernel port
+> and musl libc port can successfully boot into a minimal Buildroot
+> environment and execute test cases on QEMU virt machine with clang
+> toolchain.
+> 
+> Thank you for reading. I look forward to your comments and feedback.
+> 
+> [1]: https://www.tsinghua.edu.cn/en/info/1245/13802.htm
+> [2]: https://github.com/LainChip/LainCore
+> [3]: https://github.com/gmlayer0/wired
+> [4]: https://github.com/NOP-Processor/NOP-Core
+> [5]: https://github.com/MrAMS/NagiCore
+> [6]: https://gitee.com/loongson-edu
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> Jiaxun Yang (3):
+>        loongarch: Wire up 32 bit syscalls
+>        loongarch: Introduce sys_loongarch_flush_icache syscall
+>        loongarch: vdso: Introduce __vdso_flush_icache function
+> 
+>   arch/loongarch/include/asm/Kbuild          |  1 +
+>   arch/loongarch/include/asm/cacheflush.h    |  6 ++++
+>   arch/loongarch/include/asm/syscall.h       |  2 ++
+>   arch/loongarch/include/asm/vdso/vdso.h     | 10 ++++++
+>   arch/loongarch/include/asm/vdso/vsyscall.h |  1 +
+>   arch/loongarch/include/uapi/asm/Kbuild     |  1 +
+>   arch/loongarch/include/uapi/asm/unistd.h   |  6 ++++
+>   arch/loongarch/kernel/Makefile.syscalls    |  3 +-
+>   arch/loongarch/kernel/syscall.c            | 49 +++++++++++++++++++++++++++++
+>   arch/loongarch/kernel/vdso.c               |  2 ++
+>   arch/loongarch/mm/cache.c                  |  3 ++
+>   arch/loongarch/vdso/Makefile               |  2 +-
+>   arch/loongarch/vdso/flush_icache.c         | 50 ++++++++++++++++++++++++++++++
+>   arch/loongarch/vdso/vdso.lds.S             |  5 +++
+>   scripts/syscall.tbl                        |  2 ++
+>   15 files changed, 140 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+> change-id: 20250102-la32-uapi-8395e83a4e88
+> 
+> Best regards,
+
+Hi, Jiaxun,
+
+Thank you for your hard work, I'm also working on LoongArch32 kernel 
+side [1], I hope we can make it upstream together.
+
+[1]: https://github.com/shenjinyang/la32r-Linux
+
+Jinyang
 
