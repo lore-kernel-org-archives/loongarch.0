@@ -1,126 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E883842C0B
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863AE3E49D
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 14:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735999141; cv=none; b=R84JmHm2OCU+KUZiUEiwnfQk0jn5bJZO+QSS217I6rXIrppC9rTk7zguQSa28YHqUh5anW3Fraw7SferMstKVdEAY41q/5Ao/FuJ5YcLeWj1iJYUcUEUdI6ZgDZs+jdOzVHQ/iilYba9U2QpmT9XWGjpuwnIoKRR0fMDoL/1/N4=
+	t=1735999493; cv=none; b=lj15c4p665Juvn/XYGJlUZkIjErcOrPeK8CsQGZjLNA7njIKshz8pwG43IQwDHC0GVV+RVxzLvBEpoIhDown/CcJ5L/bsZAMNy1Ynaui2xcW+Q0yNfJMfLLwYx61Hhd0YifDpUOt6B3ZxfThlvP7cqYCysNS9HxJzdIpplrUe1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735999141; c=relaxed/simple;
-	bh=7pbIvjaKefW11WvMvVmM/XkN38mQUuzJ9Qf2ynzdy9Q=;
+	s=arc-20240116; t=1735999493; c=relaxed/simple;
+	bh=KYmyLdM4eK3NJuL/D9J9sGWeFSSBEfPKQ86wmsTb92s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CO9QRyodjt0w96fQyaH2Xqqh68kk1xqDm2ZXbX26X2V47azSkUw6XW0vrUpEEke4qQ101x2znnpNK6nIeKN0IxoHCMFn8jijwR+7ETM7nnS7UITDNMBV5gU1YdJXe0S7/jVvATC78Ao6yiYcdio+qWMnJ8FIkJom4TDsMtL+LFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LykBfxpl; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=SywTe0ZIn+fgO5qSb7rTFwgIr5J6s8A3fWioQyAIeQ8ucTESQVXPeoBfmXFCbRjqbFXDB4Yy7H6vf6SuNNxRbYZFnlPGgisac4plh0mag+0YrMi3Xzeb16oVwFfu8d8Jml2QgcZO538OO4Xcw5WWjiakAJxJA+8u4qm1MYXvCh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBxpycDE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LykBfxpl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827C6C4AF09
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:59:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBxpycDE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A36C4CEDF
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 14:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735999140;
-	bh=7pbIvjaKefW11WvMvVmM/XkN38mQUuzJ9Qf2ynzdy9Q=;
+	s=k20201202; t=1735999493;
+	bh=KYmyLdM4eK3NJuL/D9J9sGWeFSSBEfPKQ86wmsTb92s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LykBfxpl020F/6SEDnAP1a5zpMkVWTKnBmkdheoDW6HzDxSFAdf3ERKZlTni4UrLH
-	 Y84mkKMFQnaTtyP+YlPvo83ZF6Ojw42PLRxJhdCm6f3K88aq1e4qBw8zsmqmNviBfh
-	 BRKlg0lLtC2URAvN901PixJp/dFfmBuuhHqTE+/b5FziZNfSO+DdfWx19hjkLNlePk
-	 qGPr/1tu51wSZ6IEiDp6zkF90F2vjIZdpvUNtaL1+P9X7MxhcjMlNzDozMxylKiFZC
-	 W5mKExw4BMUcyMeOW+DCkze8ECllVjuxxDL3ArO4ETfQNHFO+XV0Edf2cjdrAjXrir
-	 KldyDeiF9I5oA==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso39227266b.1
-        for <loongarch@lists.linux.dev>; Sat, 04 Jan 2025 05:59:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWk+F7MNKRvY312bTdDS1U8UJKfe8zy3NhgraAwYH6mZ0h/P1wP28nmkBZ3O76uKr5nxIedYVnBkw8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywus3F7JCIKWlx502R/pUXiggP6qB0S5NfGANF+5dY7R/5z452+
-	kI/eYyApZdPgl6OgnxTstH18ndk/VtsABxGyfbxDGdI7YEk4wmw8em6ULQ/CtpCaWumT4UPNm4H
-	ls0Nc+TWVebhII/Z/2IFIqDrJg/8=
-X-Google-Smtp-Source: AGHT+IHwNO6uo9TkouEchAuDkmSuLkPF1C5kh7VfTJyV8LhTKmWeMsvKRD4Nkcx/JtvpnIm0kp6N6qXUTWfMSEOGuIw=
-X-Received: by 2002:a17:907:948b:b0:aac:1e96:e7d2 with SMTP id
- a640c23a62f3a-aac33667eb4mr4776050366b.54.1735999139004; Sat, 04 Jan 2025
- 05:58:59 -0800 (PST)
+	b=uBxpycDEIG79sXSfNEcQEyBreshROi3jEkpt3SJLYlOruXjN9/HZ3HmK1ucS/Kqrv
+	 KhWXREMqWwH/qMHSsNqai++xCTVQ0/tQBbiZnLeMaCs+XOOItlebApwZh2dlZJAooi
+	 6OcPlLXcLzXfVLI9O06Wa6r3nO9gF/RlGhX1epmXpmRral4BFgURk0Cz/esFJnd5Kp
+	 3fiLek5U1YsyVzwTsjUGe4s5w1St0J4k3htQKw8C7ZQXE0dMDY43VH0T/Yq8ZYMFI7
+	 47V5WYx0I/4uIe8H/IfZRNNKy3G4bgiNPxmEi8LZhSS0FaCN02d7rNZ2mW65/Z1/h5
+	 UvPOpuU9PG5KQ==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaeef97ff02so1518157266b.1
+        for <loongarch@lists.linux.dev>; Sat, 04 Jan 2025 06:04:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXCGanp7a5AZrlVoIFErYFZr5dA2myZSAruiepNg8YBaJ+j98x6JoIPr3g5hqWkfLbgme/mJUFL+l4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yym4CL/w2M/VtNWy7QOhdIex730+3Cw/huuBjMUDVeQySoI5NBq
+	pBbP2duRwbCLanBp3nDaCHp4aNbnv1DPsYQK7WBPT1Vip9nbyGDkTYwPLL7LYjER+7eyPZ1VQ4W
+	mkWUsOud6m/muJNa++CNzl7f2BZ0=
+X-Google-Smtp-Source: AGHT+IE7eaiNLP8/CVkaV15LbcX2f8QDKfQ+WeBBb0Gd4pKtD9SZTUULOuHHfGeCOVy2gLiZWePDtz6XgNayapI3PeI=
+X-Received: by 2002:a17:907:9805:b0:aaf:117f:1918 with SMTP id
+ a640c23a62f3a-aaf117f1d51mr3134184466b.5.1735999491616; Sat, 04 Jan 2025
+ 06:04:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+References: <20250102083625.2577378-1-maobibo@loongson.cn>
+In-Reply-To: <20250102083625.2577378-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 4 Jan 2025 21:58:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5ve3Do7U+8UaR=-CwY-x6hv2r3WLZm9e8wCGtwgGzc8A@mail.gmail.com>
-X-Gm-Features: AbW1kvbo-ch0NLtu-ndq6VACTO4Rq2CVQkdCFWFdSmDMeju91faYFPP2v-BbMYA
-Message-ID: <CAAhV-H5ve3Do7U+8UaR=-CwY-x6hv2r3WLZm9e8wCGtwgGzc8A@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date: Sat, 4 Jan 2025 22:04:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H705XKtA0CrvWU5pneHcOST7WFWS=JTSc3oESDwvjxG-w@mail.gmail.com>
+X-Gm-Features: AbW1kvYuv0xuOTS1EoqQW6oulAkjt_am5x2Mn1kJKws-8T1S3xFKhRWfRg40M7Q
+Message-ID: <CAAhV-H705XKtA0CrvWU5pneHcOST7WFWS=JTSc3oESDwvjxG-w@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Clear LLBCTL if secondary mmu mapping is changed
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Josh and Peter,
-
-I think this series (except the last patch, but that one can be a
-separate one) is good enough now, right? If so, I think there is some
-ways to get it upstream:
-
-1) I merge objtool/core from tip.git to the loongarch tree, then apply
-this whole series with your acked-by;
-2) You apply the first 4 patches to tip.git, and then I apply others
-to the loongarch tree (still need to merge objtool/core before apply
-to avoid build issues).
-
-I prefer the first method, but I can also accept other ways.
+Queued, thanks.
 
 Huacai
 
-On Tue, Dec 17, 2024 at 9:09=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Thu, Jan 2, 2025 at 4:36=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> This version is based on tip/tip.git objtool/core branch [1], add some we=
-ak
-> and arch-specific functions to make the generic code more readable, teste=
+> Register LLBCTL is separated CSR register from host, host exception
+> eret instruction will clear host LLBCTL CSR register, guest
+> exception will clear guest LLBCTL CSR register.
+>
+> VCPU0 atomic64_fetch_add_unless     VCPU1 atomic64_fetch_add_unless
+>      ll.d    %[p],  %[c]
+>      beq     %[p],  %[u], 1f
+> Here secondary mmu mapping is changed, host hpa page is replaced
+> with new page. And VCPU1 executed atomic instruction on new
+> page.
+>                                        ll.d    %[p],  %[c]
+>                                        beq     %[p],  %[u], 1f
+>                                        add.d   %[rc], %[p], %[a]
+>                                        sc.d    %[rc], %[c]
+>      add.d   %[rc], %[p], %[a]
+>      sc.d    %[rc], %[c]
+> LLBCTL is set on VCPU0 and it represents the memory is not modified
+> bt other VCPUs, sc.d will modify the memory directly.
+>
+> Here clear guest LLBCTL_WCLLB register when mapping is the changed.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/kvm/main.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 396fed2665a5..7566fa85f8e7 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -245,6 +245,24 @@ void kvm_check_vpid(struct kvm_vcpu *vcpu)
+>                 trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+>                 vcpu->cpu =3D cpu;
+>                 kvm_clear_request(KVM_REQ_TLB_FLUSH_GPA, vcpu);
+> +
+> +               /*
+> +                * LLBCTL is separated CSR register from host, general ex=
+ception
+> +                * eret instruction in host mode clears host LLBCTL regis=
+ter,
+> +                * and clears guest register in guest mode. eret in refil=
+l
+> +                * exception does not clear LLBCTL register.
+> +                *
+> +                * When second mmu mapping is changed, guest OS does not =
+know
+> +                * even if the content is changed after mapping is change=
 d
-> with the latest upstream mainline Binutils, GCC and Clang.
+> +                *
+> +                * Here clear guest LLBCTL register when mapping is chang=
+ed,
+> +                * else if mapping is changed when guest is executing
+> +                * LL/SC pair, LL loads with old address and set LLBCTL f=
+lag,
+> +                * SC checks LLBCTL flag and store new address successful=
+ly
+> +                * since LLBCTL_WCLLB is on, even if memory with new addr=
+ess is
+> +                * changed on other VCPUs.
+> +                */
+> +               set_gcsr_llbctl(CSR_LLBCTL_WCLLB);
+>         }
 >
-> The first 6 patches are preparation for patch #7 to enable jump table for
-> objtool on LoongArch, the last 2 patches are small enough to fix objtool
-> warnings "funcA() falls through to next function funcB()", one is under
-> arch/loongarch and the other is under drm/amd/display.
+>         /* Restore GSTAT(0x50).vpid */
 >
-> v6:
->   -- Add arch_reloc_size() for x86 and ppc.
->   -- Call arch_reloc_size() directly in add_jump_table().
->   -- Refine arch_adjust_offset() for LoongArch.
->   -- Rename arch_adjust_offset() to arch_jump_table_sym_offset().
->   -- Get each table size of rodata in time for switch table.
->   -- Update the commit message to make it more clear.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3D=
-objtool/core
->
-> Tiezhu Yang (9):
->   objtool: Handle various symbol types of rodata
->   objtool: Handle different entry size of rodata
->   objtool: Handle PC relative relocation type
->   objtool: Handle unreachable entry of rodata
->   objtool/LoongArch: Add support for switch table
->   objtool/LoongArch: Add support for goto table
->   LoongArch: Enable jump table for objtool
->   LoongArch: Convert unreachable() to BUG()
->   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
->
->  arch/loongarch/Kconfig                        |   3 +
->  arch/loongarch/Makefile                       |   6 +-
->  arch/loongarch/kernel/machine_kexec.c         |   4 +-
->  .../drm/amd/display/dc/basics/fixpt31_32.c    |   2 +-
->  tools/objtool/arch/loongarch/decode.c         |  28 ++-
->  .../objtool/arch/loongarch/include/arch/elf.h |   7 +
->  tools/objtool/arch/loongarch/special.c        | 159 +++++++++++++++++-
->  tools/objtool/arch/powerpc/decode.c           |  15 ++
->  tools/objtool/arch/x86/decode.c               |  13 ++
->  tools/objtool/check.c                         |  28 ++-
->  tools/objtool/include/objtool/arch.h          |   3 +
->  11 files changed, 251 insertions(+), 17 deletions(-)
->
+> base-commit: fc033cf25e612e840e545f8d5ad2edd6ba613ed5
 > --
-> 2.42.0
+> 2.39.3
+>
 >
