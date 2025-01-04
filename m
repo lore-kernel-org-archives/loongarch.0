@@ -1,197 +1,106 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1884139E
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 11:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCD22914
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735990472; cv=none; b=OAyC0OmgKlWZNUKfCHxw4TLq6eLBGlOH2C5N1YO5hLNKG40s4SUheBejk7h1oQNzyPszWdIMqroEtlbuPmo0od0XYvlqQa+rL+TcHX6rXQCsR4CLG/uQTnUqC4R+Mum7fiP7ZdvzixI+towRgqoVkyFkHlPA2qEoT2pGtssY/tI=
+	t=1735997783; cv=none; b=UMtMm4B7toYgurcKSl5vXs8Of9MW7hSek2MjM1DXnkiULxR+OnxWql+Vdyk0x+LYVvBrXMIEUDjJYnO9T3XBj9uSjeHGSmYGil4WR5MX8e6173RWx9r+HxJtFtj4kmy0C5C6hwsWy5rj2F9ds+rDLgU2On2/pGHYcWEtAPEWRN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735990472; c=relaxed/simple;
-	bh=FSte7ZUNLuTsz53PhzzJ3/rn5SXSalqeMv2ZrkIi2v0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pTE1pUlLci2JOeRshxQlvJkfJN1ibJLP0R7ECZ6yXlEYRkzFu8lUBNtJRbNRx7YLtvk/VOa81cvzqp+Q7om30HU534ANbml64zzWlwb+pjgH0jP3uhlrSjvc+I1FgdJhvS29QtvlwdyJW46pGDMwAkHyZn+n4+eNKRIZm+m9k1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=lPsM/DsP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Da8cBEDK; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1735997783; c=relaxed/simple;
+	bh=Aa988IaKLLG/zHzXrD4O7Agp+jWtMSt00/wImtOxjDY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XJG8uK5S5i8pr6ka0IzuyptdmAicqoqX950CjT3grrbL0BuQ1SEefdE1yQpNcF4jAdSipkjucQnznVM42jyqnOX5Qw4JZ99hQnyzGzPl0ERcBpEnRRSfPDH6+BEj0uyqLyx1dJS/rb4MnZX7rD+B5YFoG0xPOud1siAvnXZcB84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoOvv/h8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lPsM/DsP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Da8cBEDK"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id E848D1380214;
-	Sat,  4 Jan 2025 06:34:29 -0500 (EST)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-09.internal (MEProxy); Sat, 04 Jan 2025 06:34:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1735990469;
-	 x=1736076869; bh=ebp8PyepCOEv3mZfvOwTAhscinI8vJ9KWmtuYcZ8rNA=; b=
-	lPsM/DsP1jkt5LC8DG9NF2xdMRngmQeypIBMdZplixXZ12F1T/xGGziUBkTPn7YG
-	6DQoScnCyJgIcwvgEXoL9Z+sAWyvVTCyEh4HTr14TrJ1pnk0fVHMfvpjaflQm/5g
-	bAEki8HjURlWOwZuds1H+Od/De+9XKfDv4afD+0BR+/36Ol2mHTsNSprSs7NRdww
-	m+AV3ryzPtZKxdRBiWtjbH4VJ2EnwRX4P3D0X+aw3tw6OwwdUeJwiQ+KDusWqCuw
-	A8HFKcmwT8/iA1G7UYpbmp/d18gxUAoNb/lUjUH8VmQa6+SwMjtJeqbZND9t/Xvv
-	Muau4qXRPQGZrgvFhgxHpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1735990469; x=
-	1736076869; bh=ebp8PyepCOEv3mZfvOwTAhscinI8vJ9KWmtuYcZ8rNA=; b=D
-	a8cBEDKF5KHk6gcUHMHVyl+pfRk/3NLTxpJB/jto13kQ/eEyBP1bntcdXP0RN3Ue
-	9+WKZJp1Ax9zADrtNgit6kNSgA/ajUSAS10wYNiNSCi8mXKCnyrg1jxydibMVaaU
-	vBG8dzL0tbeIQwGLyfTyNUG3bmf2zpYY2Pl1Z2HCZ26LWif5c/V7wDHAzK08ZRBX
-	BSl/n4i4xax7Ag11Ms0c+KIuVqktpKXI3PsrqqA98TNVx3BF8E8dgmFjFPkwmKtn
-	JlvaDBhVCem2IR9q8qozF/iwZHNCfhgKHf/dZteUZ6CfhLarQmmBy762mwtrSGbN
-	/MqiF+StQW2F2ctugXfJA==
-X-ME-Sender: <xms:xRx5ZylIzVfWGZ27vOC8RKi4Ac6NYM8r3r4dXxu44k1AKc3e3oS35Q>
-    <xme:xRx5Z52r_iwYZn5i2kIPwOkw15niogJGBBRbuunbD4XlxZmd-5TTWc_reMOW0ydcy
-    EjjCi5HnY1YNAxN3tQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefiedgfedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepffekveettdeuveefhfekhfdu
-    gfegteejffejudeuheeujefgleduveekuddtueehnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhope
-    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggv
-    pdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehlohhonhhgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohep
-    lhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    khgvrhhnvghlseigvghntdhnrdhnrghmvgdprhgtphhtthhopeigrhihudduudesgihrhi
-    duuddurdhsihhtvg
-X-ME-Proxy: <xmx:xRx5Zwp4ukgcg-sBunrokksiGLdDe7uaCFXUlu-Nludib4lFlUVSww>
-    <xmx:xRx5Z2mEWRkU4pBXfscsF7ZcM1xXoNrVahVmWmJTVIIU9Fy1eMwF4w>
-    <xmx:xRx5Zw17I5O7fuJsRrCYCE5t94PSV6oh1p9Yq32Ulc32VRshVoA_yQ>
-    <xmx:xRx5Z9uui73kLzPp8hJu-ZXm0iHDeFdqCl8GMIX6wUh4weKrkcRfgA>
-    <xmx:xRx5Z6oJsaNsznBPQrXz6pwf1RDTqpXKLPFliwPLt7a_DVZCWSvKNOsV>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 47CB71C20066; Sat,  4 Jan 2025 06:34:29 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoOvv/h8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D620AC4CED1
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735997782;
+	bh=Aa988IaKLLG/zHzXrD4O7Agp+jWtMSt00/wImtOxjDY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eoOvv/h8OEut7ona0/MbXxHnztopemqLltNAgLsNMzHWUzJNEXhObYeLneKwXmJJK
+	 aAemIg09lBfNH2u6CZfgTlfuBEXgyarwPI6ox0lURK1Unu01/pAM9VYOT3mtYSY1Us
+	 Y7iQLBBgCVXlzqiEYvdJshMWCtTTWroHnMAfPzeVtJALiJLUi5wBqRSZBDOPqP2qK8
+	 eXrTBZzxwbS8Ok1uoWGxqAqC7kCRH6be45x5QC34/6IXm8San92n4ad8AcQimj5wg+
+	 y4n/uy/FHa7scsmJzoWRderomNtptrnQQQgn5vYzSdMjI5jKfByRi30qO1SsNEgGp0
+	 0tCn1dPu1oIog==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aae81f4fdc4so2098113466b.0
+        for <loongarch@lists.linux.dev>; Sat, 04 Jan 2025 05:36:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVZ7PaYxPzutmT1yGFQT+N0huwuUL+ANR31HCt6YV56G81G4FzZHw9/XhjWRCdBj61wCNwcyV5/jS0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxKvwoK+LNZcsXJioTNce6RPCpptGnsxa419ciXCOmEo6pdqgBU
+	Mx83AS/0e18qfJ1oKKhYQIzmLGCfmhob3RZBqhIow6DMMRaarrwxYVInVYMRG5eA0HKEJ6OLK4S
+	LNhSlkzjnXWUc4Bqx0Ggp472B1sk=
+X-Google-Smtp-Source: AGHT+IF4mAPJRZdYYJd0SyM0fjIVswQWP1UwYplLNiwwCFFy5/nwXb/2QrNI+tFQUZo/c8cAjMS1Ejk2CKRysxLxB2U=
+X-Received: by 2002:a17:907:1c10:b0:aa6:ac9b:681f with SMTP id
+ a640c23a62f3a-aac3355d85bmr4817960366b.43.1735997781432; Sat, 04 Jan 2025
+ 05:36:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 04 Jan 2025 11:33:52 +0000
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Xi Ruoyao" <xry111@xry111.site>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Xuerui Wang" <kernel@xen0n.name>
-Cc: "Arnd Bergmann" <arnd@arndb.de>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Message-Id: <ca4c18b1-da35-4b9a-9eef-bbdab19c9592@app.fastmail.com>
-In-Reply-To: <3409b0608ba127c356e2a6d760c3ac2d446c9da7.camel@xry111.site>
-References: <20250102-la32-uapi-v1-0-db32aa769b88@flygoat.com>
- <20250102-la32-uapi-v1-2-db32aa769b88@flygoat.com>
- <3409b0608ba127c356e2a6d760c3ac2d446c9da7.camel@xry111.site>
-Subject: Re: [PATCH 2/3] loongarch: Introduce sys_loongarch_flush_icache syscall
-Content-Type: text/plain; charset=utf-8
+References: <20250103-la-earlycon-fixed-map-v2-1-b328ec2564f7@flygoat.com>
+In-Reply-To: <20250103-la-earlycon-fixed-map-v2-1-b328ec2564f7@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 4 Jan 2025 21:36:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H40uX8xAnU2OsA_FQ6iA7aDmaOqWKH_hZYw6GAYZiEpAw@mail.gmail.com>
+X-Gm-Features: AbW1kvaV4tpGf_cAUI5Q7sf8vJIulNdwTvhJEXf4JaS4xk04A9B5SMOy3raxvjU
+Message-ID: <CAAhV-H40uX8xAnU2OsA_FQ6iA7aDmaOqWKH_hZYw6GAYZiEpAw@mail.gmail.com>
+Subject: Re: [PATCH v2] loongarch: Disable FIX_EARLYCON_MEM when ARCH_IOREMAP
+ is enabled
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Applied, thanks.
 
+Huacai
 
-=E5=9C=A82025=E5=B9=B41=E6=9C=884=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=E5=
-=8D=889:31=EF=BC=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, 2025-01-02 at 18:34 +0000, Jiaxun Yang wrote:
+On Fri, Jan 3, 2025 at 7:36=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
+> wrote:
 >
-> /* snip */
+> When ARCH_IOREMAP is enabled, we are using always accessible DMW
+> for ioremap. It makes no sense to create a dedicated mapping for
+> earlycon given that we can access the region via DMW.
 >
->> Sadly many user space applications are assuming ICACHET support, we c=
-an't
->> recall those binaries. So we'd better get UAPI for cacheflush ready s=
-oonish
->> and encourage application to start using it.
+> Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is selected. This can
+> ease debugging for early mapping issues.
 >
-> To encourage the developers changing ibar to loongarch_flush_icache, we
-> should minimize the extra overhead on mainstream systems.  We can add =
-an
-> vDSO layer so if the CPU has ICACHET:
-
-I'm a little bit confused as that's exactly what I'm doing in PATCH 3.
-
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> Changes in v2:
+> - Drop changes to fixedmap.h
+> - Link to v1: https://lore.kernel.org/r/20250102-la-earlycon-fixed-map-v1=
+-1-23fe3a6681c4@flygoat.com
+> ---
+>  arch/loongarch/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> int vdso_loongarch_flush_icache(...)
-> {
->   asm ("ibar 0");
->   return 0;
-> }
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 1c4d13aa677e2e04b9791882fba7523f93d6a69d..ad8a8cf75343799ea626be52f=
+521fa75e7cbe07b 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -246,7 +246,7 @@ config MACH_LOONGSON64
+>         def_bool 64BIT
 >
-> And otherwise the vDSO wrapper invokes the real syscall.  I've
-> implemented the boot-time alternative runtime patching for vDSO at
-> https://lore.kernel.org/loongarch/20240816110717.10249-3-xry111@xry111=
-.site/.
-
-Thanks! Noted.
-
+>  config FIX_EARLYCON_MEM
+> -       def_bool y
+> +       def_bool !ARCH_IOREMAP
 >
->> The syscall resolves to a ibar for now, it should be revised when we =
-have
->> actual non-ICACHET support in kernel.
+>  config PGTABLE_2LEVEL
+>         bool
 >
-> /* snip */
+> ---
+> base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+> change-id: 20250102-la-earlycon-fixed-map-d6a48bd5b831
 >
->> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch=
-/include/asm/cacheflush.h
->> index f8754d08a31ab07490717c31b9253871668b9a76..94f4a47f00860977db0b3=
-60965a22ff0a461c098 100644
->> --- a/arch/loongarch/include/asm/cacheflush.h
->> +++ b/arch/loongarch/include/asm/cacheflush.h
->> @@ -80,6 +80,12 @@ static inline void flush_cache_line(int leaf, unsi=
-gned long addr)
->>  	}
->>  }
->> =20
->> +/*
->> + * Bits in sys_loongarch_flush_icache()'s flags argument.
->> + */
->> +#define SYS_LOONGARCH_FLUSH_ICACHE_LOCAL 1UL
->> +#define SYS_LOONGARCH_FLUSH_ICACHE_ALL   (SYS_LOONGARCH_FLUSH_ICACHE=
-_LOCAL)
+> Best regards,
+> --
+> Jiaxun Yang <jiaxun.yang@flygoat.com>
 >
-> Not a UAPI header so not usable by the user?  How would they specify
-> flags then?
-
-We are following the RISC-V's convention on not exposing flags in UAPI
-header for now as it's not really ready.
-
->
-> If you meant to add them for UAPI, it would be very problematic.  When=
- a
-> new cache type emerges in the hardware implementations, we need to grow
-> SYS_LOONGARCH_FLUSH_ICACHE_ALL in the UAPI header, but we cannot change
-> the already compiled JIT applications.  Thus all JIT applications have
-> to be recompiled with the latest UAPI header.  This just seems an
-> unnecessary severe burden to the packagers.
-
-The _LOCAL flag not meant to be hardware cache level but the scope.
-(i.e. all threads or just the caller). Vast majority of applications
-shouldn't need this level of granularity, so just setting flags to zero.
-
-However, for application want fine-grained optimisations they should
-probe availability of flags before using it. Thus kernel should reject
-all unknown flags to assist application probing.
-
->
-> Instead IMO it's better not to expose so much details to the userspace.
-> Just remove the flags argument and flush all the icaches the kernel
-> knows, so with a new cache type the user (and distro) just need to
-> update or patch their kernel, w/o recompiling all JIT apps.
-
-There is no need to change anything in user space usage when a new cache
-type emerge. See explanations above.
-
-Thanks
->
-> --=20
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
-
---=20
-- Jiaxun
