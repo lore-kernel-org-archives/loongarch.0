@@ -1,194 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7D41FDE35
-	for <loongarch@lists.linux.dev>; Fri,  3 Jan 2025 18:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7699436C
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 01:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735929898; cv=none; b=SRzodrhBAfS4OPyt0X9b6RFkNPoMbanD6zhzAqq3GKajwHV9ua6RNB8Uq7ag8gQKVxylllLNaohaLu+97mu+KCL7zInCm6Ac0J8sQr4GWKXk0VpGyq6/udYASz+gFJrZwSLp5ZqSYtpvB4whAXc7do6TtvyLrdHKDmlJF+MBnjQ=
+	t=1735955786; cv=none; b=T5YpHP1rV2qQ1E56G1MDkJfagCqCFNkR39r9AL03Cv8Ui4Ej5kOXbaMazm0U9tO2gYDv1hDNfutlpPyS0zhBrq/lVznKdpqrU8WIHGOJLo41gI5yTXR3jPuwb/WxvwSQWdA6ZF6JX3nAQMsOCKApkC5nBu6g97ka1Q1YfQGyhCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735929898; c=relaxed/simple;
-	bh=Ew7hsMLrfUdjKrXDhAKFhRJ7b4ft/IVhPbLobtBTgDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GH6xuFri8EffxTXigCL0sb/4XvlXwXoARhD9bU+0cyji1hKSHI8hgP+XM/AHKEXUNuktrwOH/2Ml1wSBDBrjVWGz8pw+YbzcdRSMTgA64IEsjIuZLB/jnMRMVNGDDrkmNx7Nvb3N2xnaZ2cI2M8RgsalnXz2rOIbPJ6MDAx4I78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 575781C14;
-	Fri,  3 Jan 2025 10:45:23 -0800 (PST)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2191A3F673;
-	Fri,  3 Jan 2025 10:44:51 -0800 (PST)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-mm@kvack.org
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	x86@kernel.org
-Subject: [PATCH v2 6/6] mm: Introduce ctor/dtor at PGD level
-Date: Fri,  3 Jan 2025 18:44:15 +0000
-Message-ID: <20250103184415.2744423-7-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250103184415.2744423-1-kevin.brodsky@arm.com>
-References: <20250103184415.2744423-1-kevin.brodsky@arm.com>
+	s=arc-20240116; t=1735955786; c=relaxed/simple;
+	bh=fQO4yvx7yvOKnZzz9wTgSRQzq1FxJ5oF2hh6vZ5DQMk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HVP6bcxKKbtIWY7SG/dq5284u9IdkrHkqRQ+nmqe+gZ5DyDu/sdxh3dEDKJ7wB0yxtVZ+ZW92nExiiTn4/zm2jfXY7cOEyAvWgFR5FS5iSDBgBAPvpdihE3IW/yIqyBGikpmwpa2a35gWhOsxBfBl647G0XAEjQoLMPlFf3HP6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8DxmeBFlXhnXNddAA--.54153S3;
+	Sat, 04 Jan 2025 09:56:21 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAx_8VClXhn4RsTAA--.10066S2;
+	Sat, 04 Jan 2025 09:56:20 +0800 (CST)
+Subject: Re: [PATCH V10 RESEND] EDAC: Add EDAC driver for loongson memory
+ controller
+To: Borislav Petkov <bp@alien8.de>
+Cc: chenhuacai@kernel.org, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@xen0n.name, tony.luck@intel.com,
+ james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
+ loongarch@lists.linux.dev, xry111@xry111.site, Markus.Elfring@web.de,
+ Jonathan.Cameron@huawei.com, Huacai Chen <chenhuacai@loongson.cn>
+References: <20241216013351.15432-1-zhaoqunqin@loongson.cn>
+ <20241216115546.GHZ2AVQi9u5lABWboE@fat_crate.local>
+ <2d4e5bd0-34dc-d781-3bd6-9eb7be2c1b17@loongson.cn>
+ <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
+From: Zhao Qunqin <zhaoqunqin@loongson.cn>
+Message-ID: <3194f91f-f20d-714a-20e0-3731df7029c1@loongson.cn>
+Date: Sat, 4 Jan 2025 09:55:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20250103161942.GGZ3gOHmenp37jlyyd@fat_crate.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAx_8VClXhn4RsTAA--.10066S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr1xZw45KrWDJF45tFWUGFX_yoW8Gw1rpr
+	4UZasrtr4vqr4xtw42ga47CF9YywnrJa1agryDJa4UZrnFq34a93y7GFZF93Z2vFn3Xa47
+	XayxW39Y9FWYkFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-Following on from the introduction of P4D-level ctor/dtor, let's
-finish the job and introduce ctor/dtor at PGD level. The incurred
-improvement in page accounting is minimal - the main motivation is
-to create a single, generic place where construction/destruction
-hooks can be added for all page table pages.
 
-This patch should cover all architectures and all configurations
-where PGDs are one or more regular pages. This excludes any
-configuration where PGDs are allocated from a kmem_cache object.
-
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- arch/m68k/include/asm/mcf_pgalloc.h | 3 ++-
- arch/m68k/mm/motorola.c             | 6 ++++--
- arch/s390/include/asm/pgalloc.h     | 9 ++++++++-
- include/asm-generic/pgalloc.h       | 3 ++-
- include/linux/mm.h                  | 5 +++++
- 5 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/arch/m68k/include/asm/mcf_pgalloc.h b/arch/m68k/include/asm/mcf_pgalloc.h
-index 22d6c1fcabfb..4c648b51e7fd 100644
---- a/arch/m68k/include/asm/mcf_pgalloc.h
-+++ b/arch/m68k/include/asm/mcf_pgalloc.h
-@@ -73,7 +73,7 @@ static inline void pte_free(struct mm_struct *mm, pgtable_t pgtable)
- 
- static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
- {
--	pagetable_free(virt_to_ptdesc(pgd));
-+	pagetable_dtor_free(virt_to_ptdesc(pgd));
- }
- 
- static inline pgd_t *pgd_alloc(struct mm_struct *mm)
-@@ -84,6 +84,7 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
- 
- 	if (!ptdesc)
- 		return NULL;
-+	pagetable_pgd_ctor(ptdesc);
- 	new_pgd = ptdesc_address(ptdesc);
- 
- 	memcpy(new_pgd, swapper_pg_dir, PTRS_PER_PGD * sizeof(pgd_t));
-diff --git a/arch/m68k/mm/motorola.c b/arch/m68k/mm/motorola.c
-index 6c09ccb72e8b..73651e093c4d 100644
---- a/arch/m68k/mm/motorola.c
-+++ b/arch/m68k/mm/motorola.c
-@@ -169,6 +169,9 @@ void *get_pointer_table(int type)
- 		case TABLE_PMD:
- 			pagetable_pmd_ctor(virt_to_ptdesc(page));
- 			break;
-+		case TABLE_PGD:
-+			pagetable_pgd_ctor(virt_to_ptdesc(page));
-+			break;
- 		}
- 
- 		mmu_page_ctor(page);
-@@ -207,8 +210,7 @@ int free_pointer_table(void *table, int type)
- 		/* all tables in page are free, free page */
- 		list_del(dp);
- 		mmu_page_dtor((void *)page);
--		if (type == TABLE_PTE || type == TABLE_PMD)
--			pagetable_dtor(virt_to_ptdesc((void *)page));
-+		pagetable_dtor(virt_to_ptdesc((void *)page));
- 		free_page (page);
- 		return 1;
- 	} else if (ptable_list[type].next != dp) {
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index 5fced6d3c36b..b19b6ed2ab53 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -130,11 +130,18 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
- 
- static inline pgd_t *pgd_alloc(struct mm_struct *mm)
- {
--	return (pgd_t *) crst_table_alloc(mm);
-+	unsigned long *table = crst_table_alloc(mm);
-+
-+	if (!table)
-+		return NULL;
-+	pagetable_pgd_ctor(virt_to_ptdesc(table));
-+
-+	return (pgd_t *) table;
- }
- 
- static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
- {
-+	pagetable_dtor(virt_to_ptdesc(pgd));
- 	crst_table_free(mm, (unsigned long *) pgd);
- }
- 
-diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-index de4df14158e6..892ece4558a2 100644
---- a/include/asm-generic/pgalloc.h
-+++ b/include/asm-generic/pgalloc.h
-@@ -271,6 +271,7 @@ static inline pgd_t *__pgd_alloc_noprof(struct mm_struct *mm, unsigned int order
- 	if (!ptdesc)
- 		return NULL;
- 
-+	pagetable_pgd_ctor(ptdesc);
- 	return ptdesc_address(ptdesc);
- }
- #define __pgd_alloc(...)	alloc_hooks(__pgd_alloc_noprof(__VA_ARGS__))
-@@ -280,7 +281,7 @@ static inline void __pgd_free(struct mm_struct *mm, pgd_t *pgd)
- 	struct ptdesc *ptdesc = virt_to_ptdesc(pgd);
- 
- 	BUG_ON((unsigned long)pgd & (PAGE_SIZE-1));
--	pagetable_free(ptdesc);
-+	pagetable_dtor_free(ptdesc);
- }
- 
- #ifndef __HAVE_ARCH_PGD_FREE
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 065fa9449d03..486638d22fc6 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3243,6 +3243,11 @@ static inline void pagetable_p4d_ctor(struct ptdesc *ptdesc)
- 	__pagetable_ctor(ptdesc);
- }
- 
-+static inline void pagetable_pgd_ctor(struct ptdesc *ptdesc)
-+{
-+	__pagetable_ctor(ptdesc);
-+}
-+
- extern void __init pagecache_init(void);
- extern void free_initmem(void);
- 
--- 
-2.47.0
+在 2025/1/4 上午12:19, Borislav Petkov 写道:
+> On Tue, Dec 17, 2024 at 10:25:25AM +0800, Zhao Qunqin wrote:
+>> 在 2024/12/16 下午7:55, Borislav Petkov 写道:
+>>> On Mon, Dec 16, 2024 at 09:33:51AM +0800, Zhao Qunqin wrote:
+>>>> +LOONGSON EDAC DRIVER
+>>>> +M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
+>>>> +L:	linux-edac@vger.kernel.org
+>>>> +S:	Maintained
+>>>> +F:	drivers/edac/loongson_edac.c
+>>> If you add yourself as a maintainer, I'd expect you to review and/or ack
+>>> patches for your driver so that I can pick them up.
+>> OK. I can review the patches for this driver.
+> Not "can" - I would need you to. I don't have the hardware to test and don't
+> have the time to review them.
+Let me review the patches for this driver.
+>
+>>>> +	new = read_ecc(mci);
+>>>> +	add = new - pvt->last_ce_count;
+>>>> +	pvt->last_ce_count = new;
+>>> That last_ce_count is just silly. Kill it.
+>> Then  I  can't calculate the error count added since the last check,  cause
+>> what record in Loongson's ECC register is  the error count  from reset of
+>> the memory controller.
+> Can that ECC register be zeroed on each check function run?
+That ECC register can not be zeroed.
+>
+> Because this should work this way: every time you have to issue an error
+> message about how many errors were logged, you simply issue the error count
+> you've logged this time.
+>
+> Userspace tools like rasdaemon etc can then aggregate the counts.
+>
 
