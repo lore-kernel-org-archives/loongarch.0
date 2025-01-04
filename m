@@ -1,161 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F212629C
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E883842C0B
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735997805; cv=none; b=eEeKYAtoRIB779c9Fq6Mj4m8JrhQR5FKrq+vEOWYF4p6uSI7FrarfN4DTMi2+BD0grzZVJgFhQesZFlQ2CxJ3WIPube2+f3oNIJ8DcWMmRMabVY10j+w9CECMbGOppltfOZDOtvshKY4So59sPj4Ut/LmnIQ4nAYv99e74hWhf0=
+	t=1735999141; cv=none; b=R84JmHm2OCU+KUZiUEiwnfQk0jn5bJZO+QSS217I6rXIrppC9rTk7zguQSa28YHqUh5anW3Fraw7SferMstKVdEAY41q/5Ao/FuJ5YcLeWj1iJYUcUEUdI6ZgDZs+jdOzVHQ/iilYba9U2QpmT9XWGjpuwnIoKRR0fMDoL/1/N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735997805; c=relaxed/simple;
-	bh=bJ6SvXYmPuuwI+ZbISwQhKZMISg2CpoTYVSomlHbLO0=;
+	s=arc-20240116; t=1735999141; c=relaxed/simple;
+	bh=7pbIvjaKefW11WvMvVmM/XkN38mQUuzJ9Qf2ynzdy9Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RMc0/QOnhQUmjCKourjl1PfVexM7nafvWbqBagi1kSwSFIndJTZIuqj3bbOjhwJfzBf7SiogROFI0nk0NxRgVIu4Nz7lqbGxtYfIiobRKgNxOQSzBgLuEfk71SuRLWWUJzQ18mgyO/UGSLLN2M/hgpipE4WRb7wzlvSPQESDz1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q80JNRKM; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=CO9QRyodjt0w96fQyaH2Xqqh68kk1xqDm2ZXbX26X2V47azSkUw6XW0vrUpEEke4qQ101x2znnpNK6nIeKN0IxoHCMFn8jijwR+7ETM7nnS7UITDNMBV5gU1YdJXe0S7/jVvATC78Ao6yiYcdio+qWMnJ8FIkJom4TDsMtL+LFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LykBfxpl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q80JNRKM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 362D9C4CEE0
-	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:36:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LykBfxpl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827C6C4AF09
+	for <loongarch@lists.linux.dev>; Sat,  4 Jan 2025 13:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735997805;
-	bh=bJ6SvXYmPuuwI+ZbISwQhKZMISg2CpoTYVSomlHbLO0=;
+	s=k20201202; t=1735999140;
+	bh=7pbIvjaKefW11WvMvVmM/XkN38mQUuzJ9Qf2ynzdy9Q=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q80JNRKM6yLZeTIyjME1PZK74slLRP6ejhNpm3uWhOiSN1tscs/BqMNIWIwkxw0jW
-	 +bryeJAKXdX/K03hPGTTSX95BEJqtbH+21JKGFwua19u2AFTXMQ4gQaSkRqITuivJf
-	 MZOJmaCKzcRmF+2C5/Dn+/pTbNOyIfQPDFjSRGoHv9RJmurq4jZXWrD9EnScee6+Wl
-	 NykGaE+UT9nH9fRDTRePbuIgAZsn+VNQWGBpki9p0Sqf8oCnCGDWK5bvz6qnroQEX/
-	 gkB9sEoaKwGy+EYGNgL7aicBbNlX7ZewQM3T5cb+KyWq8LlD/7nu3W5gR8FlByS4s2
-	 eZBA+PZRQk0PA==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aab6fa3e20eso2141914166b.2
-        for <loongarch@lists.linux.dev>; Sat, 04 Jan 2025 05:36:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXZXeLq+BRBpR6qLKIoJH0YnXlzj3+qwKfPI9h+6wFg7D4L14IVIcYLXg0t8eC28vKXoWM4q+hRL10=@lists.linux.dev
-X-Gm-Message-State: AOJu0YycxL1+3ltgvHjwIchYarP0YVi7qx+XjYphiMr61SkEq5j4wwxu
-	0d3cgJnFpEhaN5GxIs5gDMgtAuyyzPgnqI5guAAi1ihnHPKK7BjGsMI9Y3f1Y+Kgkcv2uPtPugD
-	QUtygGflNLvVpHIOMuaFs1hhM0po=
-X-Google-Smtp-Source: AGHT+IF0Xys93p6buCqB17ROsc/Y0yh+FGl0hJIONL/ifMRHLTa4XUc0c299M0vf3fIYvIuOLHNNlkkmgA7dI38nBeg=
-X-Received: by 2002:a17:907:da6:b0:aa6:824c:4ae5 with SMTP id
- a640c23a62f3a-aac345f5cfbmr5326096166b.56.1735997803766; Sat, 04 Jan 2025
- 05:36:43 -0800 (PST)
+	b=LykBfxpl020F/6SEDnAP1a5zpMkVWTKnBmkdheoDW6HzDxSFAdf3ERKZlTni4UrLH
+	 Y84mkKMFQnaTtyP+YlPvo83ZF6Ojw42PLRxJhdCm6f3K88aq1e4qBw8zsmqmNviBfh
+	 BRKlg0lLtC2URAvN901PixJp/dFfmBuuhHqTE+/b5FziZNfSO+DdfWx19hjkLNlePk
+	 qGPr/1tu51wSZ6IEiDp6zkF90F2vjIZdpvUNtaL1+P9X7MxhcjMlNzDozMxylKiFZC
+	 W5mKExw4BMUcyMeOW+DCkze8ECllVjuxxDL3ArO4ETfQNHFO+XV0Edf2cjdrAjXrir
+	 KldyDeiF9I5oA==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso39227266b.1
+        for <loongarch@lists.linux.dev>; Sat, 04 Jan 2025 05:59:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWk+F7MNKRvY312bTdDS1U8UJKfe8zy3NhgraAwYH6mZ0h/P1wP28nmkBZ3O76uKr5nxIedYVnBkw8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywus3F7JCIKWlx502R/pUXiggP6qB0S5NfGANF+5dY7R/5z452+
+	kI/eYyApZdPgl6OgnxTstH18ndk/VtsABxGyfbxDGdI7YEk4wmw8em6ULQ/CtpCaWumT4UPNm4H
+	ls0Nc+TWVebhII/Z/2IFIqDrJg/8=
+X-Google-Smtp-Source: AGHT+IHwNO6uo9TkouEchAuDkmSuLkPF1C5kh7VfTJyV8LhTKmWeMsvKRD4Nkcx/JtvpnIm0kp6N6qXUTWfMSEOGuIw=
+X-Received: by 2002:a17:907:948b:b0:aac:1e96:e7d2 with SMTP id
+ a640c23a62f3a-aac33667eb4mr4776050366b.54.1735999139004; Sat, 04 Jan 2025
+ 05:58:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250103-la-misc-v2-1-fcc7c399e5e5@flygoat.com>
-In-Reply-To: <20250103-la-misc-v2-1-fcc7c399e5e5@flygoat.com>
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20241217010905.13054-1-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 4 Jan 2025 21:36:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7qvq9_D=nYrRUVWH_PAHYo8Z5OzVEAiT8Q12hyy2rZ6A@mail.gmail.com>
-X-Gm-Features: AbW1kvaNG7ww7uMsPefU4wYv2pEb3x5PFFVyI5fmSwOAO7BGpzDmdHxg--rrEYI
-Message-ID: <CAAhV-H7qvq9_D=nYrRUVWH_PAHYo8Z5OzVEAiT8Q12hyy2rZ6A@mail.gmail.com>
-Subject: Re: [PATCH v2] loongarch: time: Derive max_delta from prcfg1 tmrbits
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 4 Jan 2025 21:58:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ve3Do7U+8UaR=-CwY-x6hv2r3WLZm9e8wCGtwgGzc8A@mail.gmail.com>
+X-Gm-Features: AbW1kvbo-ch0NLtu-ndq6VACTO4Rq2CVQkdCFWFdSmDMeju91faYFPP2v-BbMYA
+Message-ID: <CAAhV-H5ve3Do7U+8UaR=-CwY-x6hv2r3WLZm9e8wCGtwgGzc8A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi, Josh and Peter,
+
+I think this series (except the last patch, but that one can be a
+separate one) is good enough now, right? If so, I think there is some
+ways to get it upstream:
+
+1) I merge objtool/core from tip.git to the loongarch tree, then apply
+this whole series with your acked-by;
+2) You apply the first 4 patches to tip.git, and then I apply others
+to the loongarch tree (still need to merge objtool/core before apply
+to avoid build issues).
+
+I prefer the first method, but I can also accept other ways.
 
 Huacai
 
-On Fri, Jan 3, 2025 at 8:10=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
+On Tue, Dec 17, 2024 at 9:09=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
 > wrote:
 >
-> As per arch spec, maximum timer bits is configurable and
-> should not be hardcoded in any way.
+> This version is based on tip/tip.git objtool/core branch [1], add some we=
+ak
+> and arch-specific functions to make the generic code more readable, teste=
+d
+> with the latest upstream mainline Binutils, GCC and Clang.
 >
-> Probe timer bits from prcfg1 and use that to determine
-> clockevent's max_delta to be conformance.
+> The first 6 patches are preparation for patch #7 to enable jump table for
+> objtool on LoongArch, the last 2 patches are small enough to fix objtool
+> warnings "funcA() falls through to next function funcB()", one is under
+> arch/loongarch and the other is under drm/amd/display.
 >
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> Changes in v2:
-> - Move probing to cpu-probe
-> - Link to v1: https://lore.kernel.org/r/20250102-la-misc-v1-1-8dc7db525e5=
-4@flygoat.com
-> ---
->  arch/loongarch/include/asm/cpu-info.h  | 1 +
->  arch/loongarch/include/asm/loongarch.h | 1 -
->  arch/loongarch/kernel/cpu-probe.c      | 2 ++
->  arch/loongarch/kernel/time.c           | 2 +-
->  4 files changed, 4 insertions(+), 2 deletions(-)
+> v6:
+>   -- Add arch_reloc_size() for x86 and ppc.
+>   -- Call arch_reloc_size() directly in add_jump_table().
+>   -- Refine arch_adjust_offset() for LoongArch.
+>   -- Rename arch_adjust_offset() to arch_jump_table_sym_offset().
+>   -- Get each table size of rodata in time for switch table.
+>   -- Update the commit message to make it more clear.
 >
-> diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/inclu=
-de/asm/cpu-info.h
-> index 900589cb159de4e5997358443c5b5e3e50f92239..fb28ba9e3011c9256da4a9748=
-de97236ae7f001f 100644
-> --- a/arch/loongarch/include/asm/cpu-info.h
-> +++ b/arch/loongarch/include/asm/cpu-info.h
-> @@ -57,6 +57,7 @@ struct cpuinfo_loongarch {
->         int                     global_id; /* physical global thread numb=
-er */
->         int                     vabits; /* Virtual Address size in bits *=
-/
->         int                     pabits; /* Physical Address size in bits =
-*/
-> +       int                     timerbits; /* Width of timer in bits */
->         unsigned int            ksave_mask; /* Usable KSave mask. */
->         unsigned int            watch_dreg_count;   /* Number data breakp=
-oints */
->         unsigned int            watch_ireg_count;   /* Number instruction=
- breakpoints */
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
-ude/asm/loongarch.h
-> index 64ad277e096edd7d77af6f37e234d68e571764a4..a3cc4f8d4c4a0b0521ef2b76c=
-87fa57eca417d75 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -466,7 +466,6 @@
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3D=
+objtool/core
 >
->  #define LOONGARCH_CSR_TCFG             0x41    /* Timer config */
->  #define  CSR_TCFG_VAL_SHIFT            2
-> -#define         CSR_TCFG_VAL_WIDTH             48
->  #define  CSR_TCFG_VAL                  (_ULCAST_(0x3fffffffffff) << CSR_=
-TCFG_VAL_SHIFT)
->  #define  CSR_TCFG_PERIOD_SHIFT         1
->  #define  CSR_TCFG_PERIOD               (_ULCAST_(0x1) << CSR_TCFG_PERIOD=
-_SHIFT)
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
-u-probe.c
-> index cbce099037b2728b82ecb9c5aa58e05b07695c5a..06c98ddf29490571e8b927b4c=
-a721c27ff7f0ea8 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -192,6 +192,8 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
- *c)
->         config =3D read_csr_prcfg1();
->         c->ksave_mask =3D GENMASK((config & CSR_CONF1_KSNUM) - 1, 0);
->         c->ksave_mask &=3D ~(EXC_KSAVE_MASK | PERCPU_KSAVE_MASK | KVM_KSA=
-VE_MASK);
-> +       c->timerbits =3D (config & CSR_CONF1_TMRBITS) >> CSR_CONF1_TMRBIT=
-S_SHIFT;
-> +       c->timerbits +=3D 1;
+> Tiezhu Yang (9):
+>   objtool: Handle various symbol types of rodata
+>   objtool: Handle different entry size of rodata
+>   objtool: Handle PC relative relocation type
+>   objtool: Handle unreachable entry of rodata
+>   objtool/LoongArch: Add support for switch table
+>   objtool/LoongArch: Add support for goto table
+>   LoongArch: Enable jump table for objtool
+>   LoongArch: Convert unreachable() to BUG()
+>   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
 >
->         config =3D read_csr_prcfg3();
->         switch (config & CSR_CONF3_TLBTYPE) {
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index a07d7eff4dc5fb0f41f5fad02698ff7a84c7bc8a..ebfdab6b155585dbab08b7cc4=
-9cba627a59854ec 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -132,7 +132,7 @@ int constant_clockevent_init(void)
->  #else
->         unsigned long min_delta =3D 1000;
->  #endif
-> -       unsigned long max_delta =3D (1UL << 48) - 1;
-> +       unsigned long max_delta =3D CLOCKSOURCE_MASK(current_cpu_data.tim=
-erbits);
->         struct clock_event_device *cd;
->         static int irq =3D 0, timer_irq_installed =3D 0;
+>  arch/loongarch/Kconfig                        |   3 +
+>  arch/loongarch/Makefile                       |   6 +-
+>  arch/loongarch/kernel/machine_kexec.c         |   4 +-
+>  .../drm/amd/display/dc/basics/fixpt31_32.c    |   2 +-
+>  tools/objtool/arch/loongarch/decode.c         |  28 ++-
+>  .../objtool/arch/loongarch/include/arch/elf.h |   7 +
+>  tools/objtool/arch/loongarch/special.c        | 159 +++++++++++++++++-
+>  tools/objtool/arch/powerpc/decode.c           |  15 ++
+>  tools/objtool/arch/x86/decode.c               |  13 ++
+>  tools/objtool/check.c                         |  28 ++-
+>  tools/objtool/include/objtool/arch.h          |   3 +
+>  11 files changed, 251 insertions(+), 17 deletions(-)
 >
->
-> ---
-> base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
-> change-id: 20241223-la-misc-d610d14f947e
->
-> Best regards,
 > --
-> Jiaxun Yang <jiaxun.yang@flygoat.com>
+> 2.42.0
 >
