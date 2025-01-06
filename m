@@ -1,134 +1,173 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 208002B9CD;
-	Mon,  6 Jan 2025 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A82BAEC;
+	Mon,  6 Jan 2025 10:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736154317; cv=none; b=TBvBkGAwoxoNZUeMnrcqSu6XP44ykRu1/zVhiv9V1mV9DG7RMHo3Fl92JwbkoUwhbMcLXpQtcdKI666s26gHEpw8D9KwYlxsncvUMDAtvqKZ8aE39RLVIboB4wRukka6Q6odZ3VTzhaj8zTeXTxq09ANpvYi5F8JrCUXbVI2GtA=
+	t=1736159632; cv=none; b=LHHxvdNht62Zw2f0acr8+zRRv2jsexZuYQJ1DoQh/W/0U1N1oIpgs8qpDzlOnLdVXueBFXSRPB6tFxrHFADGj/SMvv2JCljJq8L4qEQj3Z48lLMyKVKHYQrIjRKxh+UVNSsl8cedXqOZQCNQQJSNOzlklTWtF2lMeDq56jf6O+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736154317; c=relaxed/simple;
-	bh=CN/bCuJBGdtdZ7qw7A4X8HU40Uxp0brMNBWzqYuTsMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uzeliBFaC9hOP+4DLOSoL1y92P+cJiUzrpfnjFVDOFpBCneLW4kdtSbB0bYFBbz6OBnK/Dcp8XLjHDR4cq8yYjtIHAdMtIQdwVCD/3Dh7JXv8dMLecKqp8lnPypfNE8RR5MHtHDPtbjSDVDov9Znn2VjAxPyFM8ubp/WkWcAES4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxeeDJnHtndo9eAA--.54621S3;
-	Mon, 06 Jan 2025 17:05:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxYMbDnHtnT0oWAA--.31780S2;
-	Mon, 06 Jan 2025 17:05:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	loongarch@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] drm/amd/display: Harden callers of division functions
-Date: Mon,  6 Jan 2025 17:05:06 +0800
-Message-ID: <20250106090506.6334-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250106085755.3268-1-yangtiezhu@loongson.cn>
-References: <20250106085755.3268-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1736159632; c=relaxed/simple;
+	bh=nzcOPOfstjKJI6V8ldWdOiXMruNTjZucXWDM21V/f7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JJ84voBF06rJVvaK3VKpiMgnmUtR2fNHHtxR1S0hmTg3buaSshT2Yf4arzAUrHdol0eAMS+gq65IB5pBnGssMYBvqCSgRq6kWzyTMRkwGbZQWH9HN2U0CSZyzdJyMA8uaOdmp7RwZIhi1HMCZ6IrPQnD728c6IMzxR5wuEmz2bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UNSjWw3i; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UNSjWw3i"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 505NaE33006668;
+	Mon, 6 Jan 2025 10:33:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=T/dIATF0B0cb2CjV4kpJjZfFPga/hC
+	k4zk30iJIHW7w=; b=UNSjWw3irJn0V+Dm8j5t3FNW5/wXx/WChR9S+1E2fwnee6
+	3YnxLlHQxOWH5zrs+0j3Lht+s4UrTI6g7Yg1KPB8FMCugDt75nNJJWZKMmbDbPht
+	aD4e1ztejD6AY9RigrcvvmP08x+kE9ZPTuYPeo60tFTmnQ8k4Cpe4cZrulHW0baX
+	bOFNUKH9z8P8+JW+mRFxmH7ld8nXAdzH+SB/wWVmxjkHXf+l7Q0PcRAwggyYoIXJ
+	RPu2iCOjOnvWnlY1gzTc7zEiBMqw+MBx8ifutL9cQhg4trkc8IU7fa53qIVbDErN
+	zLxsI17bxYOGqDtgLVqTsRSbTQbHdK5UUjCL9AUQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4403waj0t2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 Jan 2025 10:33:02 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 506AX1FB005709;
+	Mon, 6 Jan 2025 10:33:01 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4403waj0sx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 Jan 2025 10:33:01 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 506A0LB9008869;
+	Mon, 6 Jan 2025 10:33:00 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43yfpyndxu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 Jan 2025 10:33:00 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 506AWwE135127994
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 6 Jan 2025 10:32:58 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8AC1920049;
+	Mon,  6 Jan 2025 10:32:58 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 535C720040;
+	Mon,  6 Jan 2025 10:32:56 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.15.34])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  6 Jan 2025 10:32:56 +0000 (GMT)
+Date: Mon, 6 Jan 2025 11:32:54 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: peterz@infradead.org, kevin.brodsky@arm.com, palmer@dabbelt.com,
+        tglx@linutronix.de, david@redhat.com, jannh@google.com,
+        hughd@google.com, yuzhao@google.com, willy@infradead.org,
+        muchun.song@linux.dev, vbabka@kernel.org, lorenzo.stoakes@oracle.com,
+        akpm@linux-foundation.org, rientjes@google.com, vishal.moola@gmail.com,
+        arnd@arndb.de, will@kernel.org, aneesh.kumar@kernel.org,
+        npiggin@gmail.com, dave.hansen@linux.intel.com, rppt@kernel.org,
+        ryan.roberts@arm.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-um@lists.infradead.org
+Subject: Re: [PATCH v4 06/15] s390: pgtable: add statistics for PUD and P4D
+ level page table
+Message-ID: <Z3uxVkg3i7zXI92e@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
+ <35be22a2b1666df729a9fc108c2da5cce266e4be.1735549103.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxYMbDnHtnT0oWAA--.31780S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWry8uF1ktw1UJFWUCFWUJrc_yoW5GF43pF
-	43GFyUXryDZFZ7ta97C3W7WFZxAa93JFW09a13Cws5u347Zan8urZ3Jas5Gr429rZ2yF4a
-	vFs8GrW2qF1vyrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVuyxDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35be22a2b1666df729a9fc108c2da5cce266e4be.1735549103.git.zhengqi.arch@bytedance.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3z7EZUf66yDmnmtJgcHtcRdfzcBMN59A
+X-Proofpoint-ORIG-GUID: jOq3BOzX-nfrjMJZAlUBmLDYevP81AVQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=650
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ clxscore=1011 adultscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501060093
 
-There are objtool warnings compiled with the latest mainline LLVM:
+On Mon, Dec 30, 2024 at 05:07:41PM +0800, Qi Zheng wrote:
+> Like PMD and PTE level page table, also add statistics for PUD and P4D
+> page table.
+...
+> diff --git a/arch/s390/include/asm/tlb.h b/arch/s390/include/asm/tlb.h
+> index e95b2c8081eb8..b946964afce8e 100644
+> --- a/arch/s390/include/asm/tlb.h
+> +++ b/arch/s390/include/asm/tlb.h
+> @@ -110,24 +110,6 @@ static inline void pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd,
+>  	tlb_remove_ptdesc(tlb, pmd);
+>  }
+>  
+> -/*
+> - * p4d_free_tlb frees a pud table and clears the CRSTE for the
+> - * region second table entry from the tlb.
+> - * If the mm uses a four level page table the single p4d is freed
+> - * as the pgd. p4d_free_tlb checks the asce_limit against 8PB
+> - * to avoid the double free of the p4d in this case.
+> - */
+> -static inline void p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d,
+> -				unsigned long address)
+> -{
+> -	if (mm_p4d_folded(tlb->mm))
+> -		return;
+> -	__tlb_adjust_range(tlb, address, PAGE_SIZE);
+> -	tlb->mm->context.flush_mm = 1;
+> -	tlb->freed_tables = 1;
+> -	tlb_remove_ptdesc(tlb, p4d);
+> -}
+> -
+>  /*
+>   * pud_free_tlb frees a pud table and clears the CRSTE for the
+>   * region third table entry from the tlb.
+> @@ -140,11 +122,30 @@ static inline void pud_free_tlb(struct mmu_gather *tlb, pud_t *pud,
+>  {
+>  	if (mm_pud_folded(tlb->mm))
+>  		return;
+> +	pagetable_pud_dtor(virt_to_ptdesc(pud));
+>  	tlb->mm->context.flush_mm = 1;
+>  	tlb->freed_tables = 1;
+>  	tlb->cleared_p4ds = 1;
+>  	tlb_remove_ptdesc(tlb, pud);
+>  }
+>  
+> +/*
+> + * p4d_free_tlb frees a p4d table and clears the CRSTE for the
+> + * region second table entry from the tlb.
+> + * If the mm uses a four level page table the single p4d is freed
+> + * as the pgd. p4d_free_tlb checks the asce_limit against 8PB
+> + * to avoid the double free of the p4d in this case.
+> + */
+> +static inline void p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d,
+> +				unsigned long address)
+> +{
+> +	if (mm_p4d_folded(tlb->mm))
+> +		return;
+> +	pagetable_p4d_dtor(virt_to_ptdesc(p4d));
+> +	__tlb_adjust_range(tlb, address, PAGE_SIZE);
+> +	tlb->mm->context.flush_mm = 1;
+> +	tlb->freed_tables = 1;
+> +	tlb_remove_ptdesc(tlb, p4d);
+> +}
 
-  dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
-  spl_fixpt_recip() falls through to next function spl_fixpt_sinc()
+I understand that you want to sort p.._free_tlb() routines, but please
+do not move the code around or make a separate follow-up patch.
 
-Here are the call paths:
-
-  dc_fixpt_recip()
-    dc_fixpt_from_fraction()
-      complete_integer_division_u64()
-        div64_u64_rem()
-
-  spl_fixpt_recip()
-    spl_fixpt_from_fraction()
-      spl_complete_integer_division_u64()
-        spl_div64_u64_rem()
-
-This was introduced by a change in Clang from a few months:
-
-  [SimplifyCFG] Deduce paths unreachable if they cause div/rem UB)
-  https://github.com/llvm/llvm-project/commit/37932643abab
-
-Since the ASSERT_WARN() and SPL_ASSERT_WARN() do not do anything to
-prevent the divide by zero and the rest of the code does not either,
-the callers of division functions should be hardened against dividing
-by zero to avoid undefined behavior, so use the new added ASSERT_BUG()
-and SPL_ASSERT_BUG() to stop the control flow if the divisior is zero.
-
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Suggested-by: Xi Ruoyao <xry111@xry111.site>
-Suggested-by: Rui Wang <wangrui@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Link: https://lore.kernel.org/lkml/20241220223403.GA2605890@ax162/
----
- drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  | 2 +-
- drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-index 1e32a9ca7f49..de86eb049302 100644
---- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-@@ -51,7 +51,7 @@ static inline unsigned long long complete_integer_division_u64(
- {
- 	unsigned long long result;
- 
--	ASSERT_WARN(divisor);
-+	ASSERT_BUG(divisor);
- 
- 	result = div64_u64_rem(dividend, divisor, remainder);
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-index 07a5c09b250e..d04a220fd2fe 100644
---- a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-@@ -29,7 +29,7 @@ static inline unsigned long long spl_complete_integer_division_u64(
- {
- 	unsigned long long result;
- 
--	SPL_ASSERT_WARN(divisor);
-+	SPL_ASSERT_BUG(divisor);
- 
- 	result = spl_div64_u64_rem(dividend, divisor, remainder);
- 
--- 
-2.42.0
-
+Thanks!
