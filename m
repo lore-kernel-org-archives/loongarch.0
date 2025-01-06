@@ -1,182 +1,217 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173861CA9C
-	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 01:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BFA70816
+	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 03:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736128633; cv=none; b=Rk9GHt2n7bkv+MfnHXeZJeZ61vRLJ7J/5hjbQM/KQiC2WuQf/wlIxAK9ozZjQjludaernmd9jF6g0WpagoN5jL4dUdRpUCvXoaeGWPBgxB9ZNYb4GMLqQRfxcTZdAg4bJYdP026uio6VMT9HCXzqUawnWS2kDCqGx4yHa6s4TVs=
+	t=1736135402; cv=none; b=ixyKlE3Zsvyf4XNoMdpkNHgrvkt9//wChYEW+OLmJ0lDfc1k0iwX7witban5fqWU5J7yjdqaMQP1jUQUurabh5t1zmH5ZlWuII1wTZ7LBcVQXSkJ1IHiIt44q8TXy2AI2jeR3mEAVYQ4fkPaIXVyQtmgIRGsGlcM4dLlIyLHa8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736128633; c=relaxed/simple;
-	bh=790vBMuGvVpS5KDVFQkWkyG2+QFbMOW1/pt4KQyWFP8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cxDtiRZT602JGvMh8pagXOApsnXn9Ac92Ty2RbN9E1gGou9oWXlm/Xl3AJpbWcEO8go3I4qX0aLszZ5fMOBVTdjoYTi6hxurFo4xFTx1SIbuk5vTaeHbklRw/jQNkzE4sIDRR38Lo2Vn2vNV3jTSNw4hpHjBRH+eBiFy4ryqyHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTJoLoqA; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736135402; c=relaxed/simple;
+	bh=4dk7AAJmezfFi3ZfUWBsyuZRMbx4LQ4Y67CoiCMSr1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2qWtB7LLQ8khbmYbeqvcVBy9Q3IeN2CEw1/m9bA87q9NIUSGNX8ycLVDiKox8dtHOhvWmKj/L8MqatjYJsBcDEQ290KK4SZsYFMWcrCH6Gc60zJVXMt8+PSaslGJxcv4XV2EDJ5S0O3M466EArKXkplzCFJnZ5KXgquJWw47RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Ow7U6vl3; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTJoLoqA"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d8c1950da7so12586583a12.3
-        for <loongarch@lists.linux.dev>; Sun, 05 Jan 2025 17:57:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ow7U6vl3"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso15658631a91.3
+        for <loongarch@lists.linux.dev>; Sun, 05 Jan 2025 19:49:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736128630; x=1736733430; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlWS4YvO53NnHzw6pvNdcFFPAPIg3E65lSWjybM2Ieg=;
-        b=XTJoLoqAtuh5/ZSwpwGe62Wo05z+lclQUPvTt5ikbuNN45YZAhUBgbvV8LJNYCMiBW
-         0Eqyfv891Vb1f35tLddZ5zD+33JKeCf39PXzYBSOdekcX9RL5bnbKPdGYcivlFYVzT5s
-         K6xwxr4uQq6NK2D5Lud66XOpIbz+NKpR8Pavfs4q+UXEI1fzPPhRWWkp4C3ashD9+CyV
-         ElPgwqPxm26TxDJLHGBCWHKg4bxgYSz0HuKNEDwIBLcBHlCWwfDg67vstx+hZ+h8bev/
-         5Syfm53h9i/LfoGZJ1DxSWOSQzAC5AKsPtj8sFKB7XkAhY7wvgJTvgAkN1v2xDj8NZ9F
-         XQiA==
+        d=bytedance.com; s=google; t=1736135398; x=1736740198; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M/CQCfwbCGmNbncAnjTVlLDBhrllfolDtdV4jFWfmgY=;
+        b=Ow7U6vl34VBHFuVLq/NXZ6e1JyWDPk+uTeMujHh5ysYKUgKmKjyffJBqxkbspQPaid
+         d0od8w1Cu7TAj9nzLVUB140BApURLdpCbU44mpbKevGKp/R9jAr+e59j6vpyo7m3y/bs
+         Ciqb6Pcl9uOMJ76VR6KBJGnlcz4NjIjkCPVbfI0Dq37xdpN1AWYzo/JAnZlVgh+wgsDe
+         dynQYLqvZaX+CXm+ZbNuRQ+JfXvD5x93zbhkaV4prrNhUlD2pLhIZl2FAGMX/9u2CT6b
+         asWohCqACx96fVJi91KFrTYGP6tVahUddwSmcjofjPGMQz+XSyQOrdbZhnOVsXdhrauX
+         padg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736128630; x=1736733430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OlWS4YvO53NnHzw6pvNdcFFPAPIg3E65lSWjybM2Ieg=;
-        b=hvqq9GVKIdhE3NxEE3klARScIOqH9hrL14nWO1hdn6kOh///zRAtwLfJQaATpcknXe
-         ERx7VTN+gaSS428q102EJem1RfDuXPl+Nhgt2JkIDC2GES9+uwVmgeSyv/96U2EsWCv4
-         T5JAk0vNWbpgOh9GePUbrdHQb9Uvg8kehtEXQtMqhD2aiLbjCfQgtKIl5blZ1wZklhDp
-         UbzdUK2rL98BBDT6LgNKZHQCbpbwqnqZ2IaZCGefrPYs0Goc0XkHbVa7oNTH7MZP9NlE
-         GnQewbElG0P4eHXycyd89HUUADpxTKvj+Y+Z+EV5P61cJWxeJD3MVBiOmj52rVbvAuES
-         hyzw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4qmW6f+l26mdh2cvcFhAN3cIHY/nEPb1/bghtpKwb5WpBV8xJyIc7lADj1BdDgrjzAI2FBi59FDI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxAk7LU+L15vX6SK+kyuiWYRPKqDVCKJuKAcGua0iTLf8owgJm2
-	pETfQ06PP1cVm8qmhyKEkt71W7OX0LlytAbl3ntxeIFzjvQSze6qFA41II/Hjn+2b9ZulbMglFi
-	UoXAWmBSYzMx1MePaUY1sVgN6oeg=
-X-Gm-Gg: ASbGncuZbqA0C75Axh9lyDu4w3A08EgXDx6tE6qNwapPcrQwgOB+apYe/yStsEaEMkg
-	jPy6McBv6euXBXdBs0vCecyQqiw9Gb6Wm+B6rbP1J
-X-Google-Smtp-Source: AGHT+IHp3npAFMqevwFn4zq6KYPbZvnYmmZPzwsSEsLp2V2eixfHQyRdfe0VM6iSm48wm7zTxXNLli6e9amHYTcX/ow=
-X-Received: by 2002:a05:6402:1e90:b0:5d3:ff30:b4cc with SMTP id
- 4fb4d7f45d1cf-5d81de39866mr52543342a12.33.1736128630093; Sun, 05 Jan 2025
- 17:57:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736135398; x=1736740198;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M/CQCfwbCGmNbncAnjTVlLDBhrllfolDtdV4jFWfmgY=;
+        b=LYNLUAVvPq3HxaF6u5mqA5WLP6I+pHiGIWab5TEW1oDLoca55/asD8mTW5VIRfo9L2
+         M3mYEm4RJ/nRVUlS+NO8DCNVCj1ypUzqXf9t2V63Udpir9C+CeLwePFMcBjJfe/V6Uvc
+         H84sO2lhZuzm5beZguQAWYw/Do0inFPZL4tlNgfPA1nMBw74WbnW4+5d/UKK2ncChk/+
+         r2N4eJK039eTsZguFCTkhChnYrUpO8CFKZI/VoJUmEtDZaHQE5MvOuCzCgGmxDxdKmvu
+         t3sd5cIr+hTakp8aTd5qypx8lqK82Ao91Fx2lleD4q1UNP3U4ao1FEZA2HwJAWTmI3R9
+         Os7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUPn/6P9r79q7UtNTju1qQaz6Sat24VsDYm2KCdBcl87TQK3Znf6w9+R1PuzNtIMLfM8JISbYCwZ9Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxWFHNiDhOhJ8qTAAWAfDpue5u6mhnTrj4Gjl30sQUDMLxrRvnc
+	mCPtzQP0GD4asTJwBSV8R1pa9zOzli2or5Gf2jwjLlhk1RYeKLCaKhFrrdK5Oi8=
+X-Gm-Gg: ASbGncuJXyStZ6QL4GsFN4SW83ZdGhuCywasQp8xgs95R/jN3PWukwx6b6D6sNOm3YO
+	wtWaLGcZ/s8Gq7FrUBj2z7PdB1/Oo8RMoQh89O/CRn19nJhKF62H8kF2x/LpvtgNecfViwKvB6w
+	/QXLL7bCj8BBHEsqiZpFIk5pGscgTsjst9FowRVcZeC6dBWkupMAeNrTMcgVBZT/hytidxDqXKJ
+	WlYRze/LXbumLMzyxKiUTT2HC4HkryC0nel48qLIEubKyBj6Esc8pkCcsqEQskWxdt1gVlTQyYo
+	H9sNow==
+X-Google-Smtp-Source: AGHT+IHpHJsHb9mpdlPf1WMyDHeUmOQ71xKKXnSQB+gdiLoxCAO6i7uhLAJzOXuDIN6Nxvn4zgv7zA==
+X-Received: by 2002:a17:90b:53c8:b0:2ee:c2df:5d30 with SMTP id 98e67ed59e1d1-2f452eb11e2mr54849162a91.26.1736135398510;
+        Sun, 05 Jan 2025 19:49:58 -0800 (PST)
+Received: from [10.84.148.23] ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f447799048sm32821110a91.10.2025.01.05.19.49.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2025 19:49:58 -0800 (PST)
+Message-ID: <de8756aa-dbf7-4f6f-91f0-934270397192@bytedance.com>
+Date: Mon, 6 Jan 2025 11:49:41 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
- <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de> <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
- <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
-In-Reply-To: <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 6 Jan 2025 09:56:57 +0800
-X-Gm-Features: AbW1kvYlBMzJH0hwIKgBJ-3gkJK4OQkqvI5bw9nzSAa4-sFHT3qKE49iY62ABvI
-Message-ID: <CAMpQs4+0Pn8c=C6bEk=_M4f8WvXv7K6Rbcw2_ghOZmxgE88e3Q@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/15] riscv: pgtable: move pagetable_dtor() to
+ __tlb_remove_table()
+Content-Language: en-US
+To: Kevin Brodsky <kevin.brodsky@arm.com>, peterz@infradead.org,
+ akpm@linux-foundation.org
+Cc: agordeev@linux.ibm.com, palmer@dabbelt.com, tglx@linutronix.de,
+ david@redhat.com, jannh@google.com, hughd@google.com, yuzhao@google.com,
+ willy@infradead.org, muchun.song@linux.dev, vbabka@kernel.org,
+ lorenzo.stoakes@oracle.com, rientjes@google.com, vishal.moola@gmail.com,
+ arnd@arndb.de, will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, rppt@kernel.org, ryan.roberts@arm.com,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org
+References: <cover.1735549103.git.zhengqi.arch@bytedance.com>
+ <0e8f0b3835c15e99145e0006ac1020ae45a2b166.1735549103.git.zhengqi.arch@bytedance.com>
+ <1b09335c-f0b6-4ccb-9800-5fb22f7e8083@arm.com>
+ <ebce5e05-5e46-4c6e-94a0-bcf3655a862b@bytedance.com>
+ <7e2c26c8-f5df-4833-a93f-3409b00b58fd@arm.com>
+ <e9fe97d4-99d5-443e-b722-43903655a76e@bytedance.com>
+ <31e1a033-00a7-4953-81e7-0caedd0227a9@bytedance.com>
+ <d9a14211-4bbd-4fb6-ba87-a555a40bb67a@arm.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <d9a14211-4bbd-4fb6-ba87-a555a40bb67a@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas:
+Hi Kevin,
 
+On 2025/1/3 21:27, Kevin Brodsky wrote:
+> On 03/01/2025 10:35, Qi Zheng wrote:
+>> On 2025/1/3 17:13, Qi Zheng wrote:
+>>> On 2025/1/3 16:02, Kevin Brodsky wrote:
+>>>> On 03/01/2025 04:48, Qi Zheng wrote:
+>>>>> [...]
+>>>>>
+>>>>> In __tlb_batch_free_encoded_pages(), we can indeed detect PageTable()
+>>>>> and call pagetable_dtor() to dtor the page table pages.
+>>>>> But __tlb_batch_free_encoded_pages() is also used to free normal pages
+>>>>> (not page table pages), so I don't want to add overhead there.
+>>>>
+>>>> Interesting, can a tlb batch refer to pages than are not PTPs then?
+>>>
+>>> Yes, you can see the caller of __tlb_remove_folio_pages() or
+>>> tlb_remove_page_size().
+> 
+> I had a brief look but clearly not a good enough one! I hadn't realised
+> that "table" in tlb_remove_table() means PTP, while "page" in
+> tlb_remove_page() can mean any page, and it's making more sense now.
+> 
+> [...]
+> 
+>>>
+>>> For arm, the call to pagetable_dtor() is indeed missed in the
+>>> non-MMU_GATHER_RCU_TABLE_FREE case. This needs to be fixed. But we
+>>> can't fix this by adding pagetable_dtor() to tlb_remove_table(),
+>>> because some architectures call tlb_remove_table() but don't support
+>>> page table statistics, like sparc.
+> 
+> When I investigated this for my own series, I found that the only case
+> where ctor/dtor are not called for page-sized page tables is 32-bit
+> sparc (see table at the end of [1]). However only 64-bit sparc makes use
+> of tlb_remove_table() (at PTE level, where ctor/dtor are already called).
 
-On Thu, Jan 2, 2025 at 9:32=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
-de> wrote:
->
-> Hi
->
->
-> Am 02.01.25 um 13:55 schrieb Binbin Zhou:
-> > Hi Thomas:
-> >
-> > Thanks for your reply.
-> >
-> > On Thu, Jan 2, 2025 at 5:07=E2=80=AFPM Thomas Zimmermann <tzimmermann@s=
-use.de> wrote:
-> >> Hi
-> >>
-> >>
-> >> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
-> >> [...]
-> >>> +
-> >>> +static struct platform_driver ls2kbmc_platform_driver =3D {
-> >>> +     .driver =3D {
-> >>> +             .name =3D "ls2kbmc-framebuffer",
-> >> The driver is mostly a copy of simpledrm. Why don't you use
-> >> "simple-framebuffer" for your device name? You could use simpledrm
-> >> directly then.
-> > Ah, indeed, the driver is based on simpledrm.
-> >
-> > Initially, I also tried to use simpledrm directly, but it will fail in
-> > drm memory acquire.
->
-> Could you point to the exact call that fails within simpledrm?
+Thanks for providing this information.
 
-[    8.289823] simple-framebuffer simple-framebuffer.0: [drm] *ERROR*
-could not acquire memory range [mem 0xe0031200000-0xe00315fffff flags
-0x200]: -16
-[    8.312681] simple-framebuffer simple-framebuffer.0: probe with
-driver simple-framebuffer failed with error -16
->
-> > Because although we register the driver in platform form, its memory
-> > belongs to pci space and we can see the corresponding pci probe and
-> > resource allocation in Patch-1.
->
-> I don't understand. Graphics memory is often located on the PCI bus.
-> What is so special about this one?
->
-> > Therefore, we need to use aperture_remove_conflicting_pci_devices().
->
-> So there is already a device that represents the graphics card? That's
-> what you'd remove here? If you only add that MFD device, who owns the
-> framebuffer? If it's the PCI device from patch 1 ("ls2k-bmc"), why does
-> aperture_remove_conflicting_pci_devices() not remove that device? I'm
-> somewhat confused, because the logic in your driver mostly looks like it
-> binds to a pre-configured framebuffer, but some of the code doesn't.
-> Best regards Thomas
->
-> >
-> > Also, since we are using BMC display, the display will be disconnected
-> > when BMC reset, at this time we need to push the display data (crtc,
-> > connector, etc.) manually as shown in Patch-4.
-> >
-> > Probably it's not the most suitable way to implement it.
-> >
-> >> Best regards
-> >> Thomas
-> >>
-> >>> +     },
-> >>> +     .probe =3D ls2kbmc_probe,
-> >>> +     .remove =3D ls2kbmc_remove,
-> >>> +};
-> >>> +
-> >>> +module_platform_driver(ls2kbmc_platform_driver);
-> >>> +
-> >>> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
-> >>> +MODULE_LICENSE("GPL");
-> >> --
-> >> --
-> >> Thomas Zimmermann
-> >> Graphics Driver Developer
-> >> SUSE Software Solutions Germany GmbH
-> >> Frankenstrasse 146, 90461 Nuernberg, Germany
-> >> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> >> HRB 36809 (AG Nuernberg)
-> >>
-> >
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
+> 
+> So really calling pagetable_dtor() from tlb_remove_table() in the
+> non-MMU_GATHER_TABLE_FREE case seems to be the obvious thing to do.
 
+Right. Currently, only powerpc, sparc and x86 will directly call
+tlb_remove_table(), and all of them are in the MMU_GATHER_TABLE_FREE
+case. Therefore, I think the modification you mentioned below is
+feasible.
 
---=20
-Thanks.
-Binbin
+In summary, currently only arm calls tlb_remove_table() in the
+non-MMU_GATHER_RCU_TABLE_FREE case. So I think we can add this fix
+directly to patch #8. If I haven't missed anything, I'll send an
+updated patch #8.
+
+> 
+> Once this is done, we should be able to replace all those confusing
+> calls to tlb_remove_page() on PTPs with tlb_remove_table() and remove
+> the explicit call to pagetable_dtor(). AIUI this is essentially what
+> Peter suggested on v3 [2].
+
+Since this patch series is mainly for bug fix, I think that these things
+can be done in separate patch series later.
+
+> 
+> [1]
+> https://lore.kernel.org/linux-mm/20241219164425.2277022-1-kevin.brodsky@arm.com/
+> [2]
+> https://lore.kernel.org/linux-mm/20250103111457.GC22934@noisy.programming.kicks-ass.net/
+> 
+> [...]
+> 
+>> Or can we just not let tlb_remove_table() fall back to
+>> tlb_remove_page()? Like the following:
+>>
+>> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+>> index a59205863f431..354ffaa4bd120 100644
+>> --- a/include/asm-generic/tlb.h
+>> +++ b/include/asm-generic/tlb.h
+>> @@ -195,8 +195,6 @@
+>>    *  various ptep_get_and_clear() functions.
+>>    */
+>>
+>> -#ifdef CONFIG_MMU_GATHER_TABLE_FREE
+>> -
+>>   struct mmu_table_batch {
+>>   #ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+>>          struct rcu_head         rcu;
+>> @@ -219,16 +217,6 @@ static inline void __tlb_remove_table(void *table)
+>>
+>>   extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
+>>
+>> -#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+>> -
+>> -/*
+>> - * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have
+>> page based
+>> - * page directories and we can use the normal page batching to free
+>> them.
+>> - */
+>> -#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
+> 
+> We still need a different implementation of tlb_remove_table() in this
+> case. We could define it inline here:
+> 
+> static inline void tlb_remove_table(struct mmu_gather *tlb, void *table)
+> {
+>      struct page *page = table;
+> 
+>      pagetable_dtor(page_ptdesc(page));
+>      tlb_remove_page(page);
+> }
+
+Right. As I said above, will add this to the updated patch #8.
+
+Thanks!
+
+> 
+> - Kevin
