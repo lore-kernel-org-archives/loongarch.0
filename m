@@ -1,120 +1,182 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B6C9474
-	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 01:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173861CA9C
+	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 01:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736126024; cv=none; b=NqT/+UNeu9W0yzsdW1UxhBbcZ7TBgcMAVayYxasfysT+Us6idsysGjstbNHx444fk5f46Fb5gI2wW/2sdscnnGjvP3Jv9x3EIs08Afhg9WT3gBNCeeolD2B9dtoPlDGKT5tTXMShUrVarATSuVoslhcYT+hXXv/OCCUNmxkmpXw=
+	t=1736128633; cv=none; b=Rk9GHt2n7bkv+MfnHXeZJeZ61vRLJ7J/5hjbQM/KQiC2WuQf/wlIxAK9ozZjQjludaernmd9jF6g0WpagoN5jL4dUdRpUCvXoaeGWPBgxB9ZNYb4GMLqQRfxcTZdAg4bJYdP026uio6VMT9HCXzqUawnWS2kDCqGx4yHa6s4TVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736126024; c=relaxed/simple;
-	bh=XxeqAeEo5wpYu4CkQPF8l6eADs8tZ2fdC5Oc++KTmtM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=T8N9Qg4VR6R1n5pUZIYB6DpKuiLHBaYtUL18vud39t41F0Ct1aAshTIR7U09EnveNFlm9TTFNAFAuyJNBLgEgcKZlvAmiWp0hSARnK/Mmmm2QvaMxA9JSyDLEJf0YxMIBPaxTKLTYbT9+vL8dqlQBsQAMgEPF1Cpcnk3VDEH7f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxK6xALntnvHReAA--.364S3;
-	Mon, 06 Jan 2025 09:13:37 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxncU9Lntnt9QVAA--.30125S3;
-	Mon, 06 Jan 2025 09:13:34 +0800 (CST)
-Subject: Re: [RFC 0/5] LoongArch: KVM: Add separate vmid support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20241113031727.2815628-1-maobibo@loongson.cn>
- <CAAhV-H5VH0k6byAX4U0e4rv4tdjtzTSrokXt3tjqpSFRzpU7gg@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <ac42e531-26b1-0d4f-60e5-2fbb6ac92c17@loongson.cn>
-Date: Mon, 6 Jan 2025 09:12:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1736128633; c=relaxed/simple;
+	bh=790vBMuGvVpS5KDVFQkWkyG2+QFbMOW1/pt4KQyWFP8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cxDtiRZT602JGvMh8pagXOApsnXn9Ac92Ty2RbN9E1gGou9oWXlm/Xl3AJpbWcEO8go3I4qX0aLszZ5fMOBVTdjoYTi6hxurFo4xFTx1SIbuk5vTaeHbklRw/jQNkzE4sIDRR38Lo2Vn2vNV3jTSNw4hpHjBRH+eBiFy4ryqyHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTJoLoqA; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTJoLoqA"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d8c1950da7so12586583a12.3
+        for <loongarch@lists.linux.dev>; Sun, 05 Jan 2025 17:57:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736128630; x=1736733430; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OlWS4YvO53NnHzw6pvNdcFFPAPIg3E65lSWjybM2Ieg=;
+        b=XTJoLoqAtuh5/ZSwpwGe62Wo05z+lclQUPvTt5ikbuNN45YZAhUBgbvV8LJNYCMiBW
+         0Eqyfv891Vb1f35tLddZ5zD+33JKeCf39PXzYBSOdekcX9RL5bnbKPdGYcivlFYVzT5s
+         K6xwxr4uQq6NK2D5Lud66XOpIbz+NKpR8Pavfs4q+UXEI1fzPPhRWWkp4C3ashD9+CyV
+         ElPgwqPxm26TxDJLHGBCWHKg4bxgYSz0HuKNEDwIBLcBHlCWwfDg67vstx+hZ+h8bev/
+         5Syfm53h9i/LfoGZJ1DxSWOSQzAC5AKsPtj8sFKB7XkAhY7wvgJTvgAkN1v2xDj8NZ9F
+         XQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736128630; x=1736733430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OlWS4YvO53NnHzw6pvNdcFFPAPIg3E65lSWjybM2Ieg=;
+        b=hvqq9GVKIdhE3NxEE3klARScIOqH9hrL14nWO1hdn6kOh///zRAtwLfJQaATpcknXe
+         ERx7VTN+gaSS428q102EJem1RfDuXPl+Nhgt2JkIDC2GES9+uwVmgeSyv/96U2EsWCv4
+         T5JAk0vNWbpgOh9GePUbrdHQb9Uvg8kehtEXQtMqhD2aiLbjCfQgtKIl5blZ1wZklhDp
+         UbzdUK2rL98BBDT6LgNKZHQCbpbwqnqZ2IaZCGefrPYs0Goc0XkHbVa7oNTH7MZP9NlE
+         GnQewbElG0P4eHXycyd89HUUADpxTKvj+Y+Z+EV5P61cJWxeJD3MVBiOmj52rVbvAuES
+         hyzw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4qmW6f+l26mdh2cvcFhAN3cIHY/nEPb1/bghtpKwb5WpBV8xJyIc7lADj1BdDgrjzAI2FBi59FDI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxAk7LU+L15vX6SK+kyuiWYRPKqDVCKJuKAcGua0iTLf8owgJm2
+	pETfQ06PP1cVm8qmhyKEkt71W7OX0LlytAbl3ntxeIFzjvQSze6qFA41II/Hjn+2b9ZulbMglFi
+	UoXAWmBSYzMx1MePaUY1sVgN6oeg=
+X-Gm-Gg: ASbGncuZbqA0C75Axh9lyDu4w3A08EgXDx6tE6qNwapPcrQwgOB+apYe/yStsEaEMkg
+	jPy6McBv6euXBXdBs0vCecyQqiw9Gb6Wm+B6rbP1J
+X-Google-Smtp-Source: AGHT+IHp3npAFMqevwFn4zq6KYPbZvnYmmZPzwsSEsLp2V2eixfHQyRdfe0VM6iSm48wm7zTxXNLli6e9amHYTcX/ow=
+X-Received: by 2002:a05:6402:1e90:b0:5d3:ff30:b4cc with SMTP id
+ 4fb4d7f45d1cf-5d81de39866mr52543342a12.33.1736128630093; Sun, 05 Jan 2025
+ 17:57:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5VH0k6byAX4U0e4rv4tdjtzTSrokXt3tjqpSFRzpU7gg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxncU9Lntnt9QVAA--.30125S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tw1UJF4UXw1kZryDJw17XFc_yoW8ZF1fpa
-	y7uFn5Gr4kGrsFy3sIqwnrXrn5tw18GFWSqa4ayryFkF1qqw1UJrWkXrWkuF98X3yfJFyI
-	qF1rKF9F9a1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
+References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+ <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de> <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
+ <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
+In-Reply-To: <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 6 Jan 2025 09:56:57 +0800
+X-Gm-Features: AbW1kvYlBMzJH0hwIKgBJ-3gkJK4OQkqvI5bw9nzSAa4-sFHT3qKE49iY62ABvI
+Message-ID: <CAMpQs4+0Pn8c=C6bEk=_M4f8WvXv7K6Rbcw2_ghOZmxgE88e3Q@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
+	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Huacai,
+Hi Thomas:
 
-On 2025/1/4 下午10:09, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> Any update on this?
-Sorry for not update it in time.
 
-This patch is basic memory relative, it is only test on 3A6000 with 4 
-cores. I hope it is fully tested on 3C6000 servers with numa support. 
-When new machines arrive and the test is done, I will refresh the patch.
+On Thu, Jan 2, 2025 at 9:32=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
+de> wrote:
+>
+> Hi
+>
+>
+> Am 02.01.25 um 13:55 schrieb Binbin Zhou:
+> > Hi Thomas:
+> >
+> > Thanks for your reply.
+> >
+> > On Thu, Jan 2, 2025 at 5:07=E2=80=AFPM Thomas Zimmermann <tzimmermann@s=
+use.de> wrote:
+> >> Hi
+> >>
+> >>
+> >> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+> >> [...]
+> >>> +
+> >>> +static struct platform_driver ls2kbmc_platform_driver =3D {
+> >>> +     .driver =3D {
+> >>> +             .name =3D "ls2kbmc-framebuffer",
+> >> The driver is mostly a copy of simpledrm. Why don't you use
+> >> "simple-framebuffer" for your device name? You could use simpledrm
+> >> directly then.
+> > Ah, indeed, the driver is based on simpledrm.
+> >
+> > Initially, I also tried to use simpledrm directly, but it will fail in
+> > drm memory acquire.
+>
+> Could you point to the exact call that fails within simpledrm?
 
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
-> On Wed, Nov 13, 2024 at 11:17 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> LoongArch KVM hypervisor supports two-level MMU, vpid index is used
->> for stage1 MMU and vmid index is used for stage2 MMU.
->>
->> On 3A5000, vmid must be the same with vpid. On 3A6000 platform vmid
->> may separate from vpid. There are such advantages if separate vpid
->> is supported.
->>    1. One VM uses one vmid, vCPUs on the same VM can share the same vmid.
->>    2. If one vCPU switch between different physical CPU, old vmid can be
->>       still usefil if old vmid is not expired
->>    3. For remote tlb flush, only vmid need update and vpid need not
->> update.
->>
->> Here add separate vmid feature support, vmid feature detecting method
->> is not implemented since it depends on HW implementation, detecting
->> method will be added when HW is ready.
->>
->> ---
->> Bibo Mao (5):
->>    LoongArch: KVM: Add vmid support for stage2 MMU
->>    LoongArch: KVM: Add separate vmid feature support
->>    LoongArch: KVM: implement vmid updating logic
->>    LoongArch: KVM: Add remote tlb flushing support
->>    LoongArch: KVM: Enable separate vmid feature
->>
->>   arch/loongarch/include/asm/kvm_host.h  | 10 ++++
->>   arch/loongarch/include/asm/loongarch.h |  2 +
->>   arch/loongarch/kernel/asm-offsets.c    |  1 +
->>   arch/loongarch/kvm/main.c              | 76 ++++++++++++++++++++++++--
->>   arch/loongarch/kvm/mmu.c               | 17 ++++++
->>   arch/loongarch/kvm/switch.S            |  5 +-
->>   arch/loongarch/kvm/tlb.c               | 19 ++++++-
->>   arch/loongarch/kvm/vcpu.c              |  7 ++-
->>   8 files changed, 128 insertions(+), 9 deletions(-)
->>
->>
->> base-commit: 2d5404caa8c7bb5c4e0435f94b28834ae5456623
->> --
->> 2.39.3
->>
+[    8.289823] simple-framebuffer simple-framebuffer.0: [drm] *ERROR*
+could not acquire memory range [mem 0xe0031200000-0xe00315fffff flags
+0x200]: -16
+[    8.312681] simple-framebuffer simple-framebuffer.0: probe with
+driver simple-framebuffer failed with error -16
+>
+> > Because although we register the driver in platform form, its memory
+> > belongs to pci space and we can see the corresponding pci probe and
+> > resource allocation in Patch-1.
+>
+> I don't understand. Graphics memory is often located on the PCI bus.
+> What is so special about this one?
+>
+> > Therefore, we need to use aperture_remove_conflicting_pci_devices().
+>
+> So there is already a device that represents the graphics card? That's
+> what you'd remove here? If you only add that MFD device, who owns the
+> framebuffer? If it's the PCI device from patch 1 ("ls2k-bmc"), why does
+> aperture_remove_conflicting_pci_devices() not remove that device? I'm
+> somewhat confused, because the logic in your driver mostly looks like it
+> binds to a pre-configured framebuffer, but some of the code doesn't.
+> Best regards Thomas
+>
+> >
+> > Also, since we are using BMC display, the display will be disconnected
+> > when BMC reset, at this time we need to push the display data (crtc,
+> > connector, etc.) manually as shown in Patch-4.
+> >
+> > Probably it's not the most suitable way to implement it.
+> >
+> >> Best regards
+> >> Thomas
+> >>
+> >>> +     },
+> >>> +     .probe =3D ls2kbmc_probe,
+> >>> +     .remove =3D ls2kbmc_remove,
+> >>> +};
+> >>> +
+> >>> +module_platform_driver(ls2kbmc_platform_driver);
+> >>> +
+> >>> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
+> >>> +MODULE_LICENSE("GPL");
+> >> --
+> >> --
+> >> Thomas Zimmermann
+> >> Graphics Driver Developer
+> >> SUSE Software Solutions Germany GmbH
+> >> Frankenstrasse 146, 90461 Nuernberg, Germany
+> >> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> >> HRB 36809 (AG Nuernberg)
+> >>
+> >
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
 
+
+--=20
+Thanks.
+Binbin
