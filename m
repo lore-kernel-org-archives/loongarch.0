@@ -1,138 +1,219 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195B870816
-	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 03:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544762D638
+	for <loongarch@lists.linux.dev>; Mon,  6 Jan 2025 07:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736135632; cv=none; b=Z7R4mMJhxrWDwx4wrm3JOHFETKxR9m73BwvA5IHUl7YqfpBFiWJiav23N11DGEnSEy5uWoV/jmvwdbO4DPGVxYzNcVJbjiMOw6FCdM3FrR38EL87/ocLd8cRX1c0ABvVPj5O1K1OGlQSZuxQYmqGXKv5Z+2v8NQHCpHLxC/CiyI=
+	t=1736147020; cv=none; b=DcKHnRVh/OCUB32H6JIxJFfUF7+tHsJFdz1708Z3/1QWK03KSTL0WGtrGq2FO+4EfSfKMhDvOHNc31Wtlekz9ALtyQKiKojfRheAecxO0dZXPAGfcx6OfSXrfUjWVU0fakfe8NdnhxAuO/x+cCNrXZfFGclnvi2TBtt8jzXE0tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736135632; c=relaxed/simple;
-	bh=W5R5SVhoruE2dQ0Ov21TCrDEEfRfDgUrkE/35gJj4fs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bvX82mu09iGR/ImOeHwMfvaeTjZacNODngDmEAgUNpkwT0hpsyfPu/5gAW22XtUrBQvrVI0EZw0hhU+DOdkEVWxROzmLD5CNoWKPlwPz5Q6OPvW1IgPHOSyb+R/y4pWgIFWJ5fD1T+WzuCR6NzW/KcVh7U8xcdmXfh7aa6fzbBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jqYgB0Z8; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1736147020; c=relaxed/simple;
+	bh=8iI4VAQ+T4XdhwAZFR8eu8Z4T8xHAebi6kgUuvuaDRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t9Nk03p9/s8ZXiHWNBgEv/WJPjphgaM/TzYtFbe1/vg78RkI84i6WckZhrnozHav1kBQ2GwqPewE0qRbZNpEcABDf4iPlppzrIJC1qZCfW9Cd1JvN2Ul3rTIdKdG5g0i2MB6yTLWG8FyljrkSK5Kg2L4iFm6sHmImoVRbtTqDcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDqVNjGJ; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jqYgB0Z8"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so20360656a91.2
-        for <loongarch@lists.linux.dev>; Sun, 05 Jan 2025 19:53:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDqVNjGJ"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso24983483a12.1
+        for <loongarch@lists.linux.dev>; Sun, 05 Jan 2025 23:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1736135630; x=1736740430; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/q466ctbH84kLf48L1cXJtHFTRzDl7be/n0cI3LGmOM=;
-        b=jqYgB0Z8gckRFV+Zhe2lXFiytW7prdqcISc5YnB4LGlyYk7b0P6eoH2WR7XunnhcGE
-         02Oxl1NLX05HvGseCQXGQbIJIHGyuzkFvpn4nqOPf+QAPwIRAac6hHkd0QBYaVx6wAUM
-         GFY+Rfp1lJ2Id76cKWXUxV2VakfR5J5hoQ4130NeY9bTVGJcD0EdV6rY3zdA0xKNbmsV
-         C9tsyILxhNe1PATIb+gdDVKHvdtzdKn/7JgAjWAM32MkOg1YVc4XE+eZb8uCfeqXZ9EB
-         fMg5tS/Ol3gKOzjf140fbPBgWu5XKXp4oYzZmddIQYbsC7orcmARd6VKbXlbwGtsZ35i
-         GuAQ==
+        d=gmail.com; s=20230601; t=1736147016; x=1736751816; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WN0eHlvRZLqUth7fdNmiixC7R1slFhIulRWIs6eGyhw=;
+        b=NDqVNjGJnsdOkunLdb8KIPgFkSr7Gqw+IQoY0sMvI5DHTw71OWUT6kFrmgS+7Mxg/J
+         eC+wj08D8nbS/v8aqZncbu06qFueMNc2R5plUiUugRflifJTQwbwz/UioxoesyD1FjlC
+         qq4drx1gGftmtjsSZSRuXOfoey+JRAzW7Y5R0EzMVpRbtRYdiQW1jsfJvG5Mo/2MQU13
+         EzuEE7tlnMFRLX4cQ78JCOTCcnkAhFvenMXB28EAbPNOFUVU8nAdr47/DfOMEvh6w9BE
+         En/xmBZ7aKx7bMp8tawVEBfuoZZBv+wxwYPL0e0W2ZXj/qoI+0aRzs1iFYkl1/im/FZK
+         tcow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736135630; x=1736740430;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/q466ctbH84kLf48L1cXJtHFTRzDl7be/n0cI3LGmOM=;
-        b=TVb9ix9RjVK6W9ncRNrjQsGpiKA94L4KWlvE9bkGj7vwg/MNXdlFtwisOnoHf2/vde
-         ye/TOM/fnrmDB2b2ONpxBzrxjwp7lVqlRRlGgJ4HrSckz1z+Bdv6LAdkipwwpe7BQLXC
-         4gbOihnclCf2hUaBojUYdlmOXgZADK8h9GnDR9rbfAhKIIRSK4f6Zh5h+CEXBzYQjAOh
-         9rG0suQX9PohbqllD13gA2/oBjlPCO8De1NRVR1SsnvKK3QNGV+kF5jFgfSrnJ78VLaq
-         nk16Vmbf4ee2OyGfutN3ZD+N+NZizWHy7oJFroOGZ6Pj6EUQJSM0dS6EH5b9GGIipDuK
-         I3gw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK3xFrfnbzQHm2sdYQVYqUVi0Ay1gSkl3cK3pr63WjNk/tmG/ftwLakOs4CSMOaB/biWm5/iMwLmg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy9NTUfwJs98ARpUki9xuGsbaldw4RS5LSx2ShqbnZz06HTi6oj
-	E7zyeX+Fi6CxYbJMm104Xxzc15QTkKIKU0fFXlgZEvoKQiojpmYsB7CmmSHaMj4=
-X-Gm-Gg: ASbGncu3KvTsMHHFs2mKS/pcwbrEzwaV2EeancCIdQePlM81vePSGYCsgWDcE3jl4Xu
-	lV7ovFqAV/NeqBYZsW5YbZ+37mrS8J1T4xdCfVX9F+Kqa7EsmAuKkCvxx+Fj1yOnsSRoTrk5ZC0
-	fzGh6nTBao0nWnpP/RL3ZUsx9ponQPEfwdy0dBT0fFCIoO/vIiF5cMerzxqd/wQqntzwTyMiPX+
-	VvHXn06kT1CzB26o8c1qEllos3z75EaBM6shDdR9TlTuy57OBKvK5DAE3xzeamkzTNXySSm+ZW1
-	xZRIYw==
-X-Google-Smtp-Source: AGHT+IE2eKUVGb+J7TSGZASTVnkByt6mt8YLIy++PUNY+VFfsnF7zlybMe8WL3Umwm8kwi4ry/BkkA==
-X-Received: by 2002:a17:90b:54c3:b0:2ee:a127:ba8b with SMTP id 98e67ed59e1d1-2f452ee83d9mr71788615a91.36.1736135630440;
-        Sun, 05 Jan 2025 19:53:50 -0800 (PST)
-Received: from [10.84.148.23] ([203.208.167.150])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dca02f72sm283551435ad.249.2025.01.05.19.53.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2025 19:53:49 -0800 (PST)
-Message-ID: <a84a7b0f-dad5-4100-9d0c-3b515e7fb71f@bytedance.com>
-Date: Mon, 6 Jan 2025 11:53:36 +0800
+        d=1e100.net; s=20230601; t=1736147016; x=1736751816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WN0eHlvRZLqUth7fdNmiixC7R1slFhIulRWIs6eGyhw=;
+        b=Ivcc2SIsisESM52ADPwHO70m/ypCOg1UX4CSQ5G++puSdu3+4kJLrxWoHB5lCyVulW
+         ec9EQGbXOwRRCNhXC4qGqpQGpwjvyEHA8fXxNQuMyiP+Ulwgke+n128vhJ9QhWwrnmoE
+         sPdvkLn9MYPjuRuWNyWLWFz1e0dtPGoxbvqn13Rg0RwaPQXelbFCozVxaSg7XtsJbEK8
+         TLTtb7wSGdKaXdpSfp4s+rRVrdD0G4MjIjr5oup4xeavcAdfWdx/7laju+etQGSpP8br
+         8XgBnde8CMbh82vK2WA2fkafP9w1dlvttV/8YTukOx35a/T3/WCXIHRbbXoYsj7fRe57
+         xmpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQdPlcaanubTeVOZK9TRXc74dvzQomySxkX+/D9yvUVrVMt/n1cX2DQyEbiemVNIBNpjCii5NHS1o=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz4i6aCMw+onGuxllUGhlCtSmFpMRvmWiDYcsmgcqjBXJEp2e74
+	MfL2es8oPij0GcGR6/BM38fXRp0f1PYzoDBNfUA+Uolb9D4fj99G0GhgBhAceijWPDbDSMFC4ZF
+	hZA4qPw2kE3jyWLaNfxSNi629qIphevMWPO+M4g==
+X-Gm-Gg: ASbGnctoXox5mj5/pKSj19fwWZNjBf7aR3VrxyPN17kO3wpm5cSveEmxl8zt4VR8duG
+	7dqNa2GHjr1UhXYCO6i13GXoOf9goJCZaP1SS7ALj
+X-Google-Smtp-Source: AGHT+IGMkHPDNbs/bcxbVow/ye0IVS3X1UdnCWKNwdCTlSfAO5AKScoqQ8hW426T+yLCtzoA1OcxbNuBrD9bCPI5FGY=
+X-Received: by 2002:a05:6402:390b:b0:5d0:e461:68e6 with SMTP id
+ 4fb4d7f45d1cf-5d8024822a5mr53462948a12.17.1736147016283; Sun, 05 Jan 2025
+ 23:03:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/17] mm: pgtable: remove tlb_remove_page_ptdesc()
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>
-Cc: agordeev@linux.ibm.com, kevin.brodsky@arm.com, tglx@linutronix.de,
- david@redhat.com, jannh@google.com, hughd@google.com, yuzhao@google.com,
- willy@infradead.org, muchun.song@linux.dev, vbabka@kernel.org,
- lorenzo.stoakes@oracle.com, akpm@linux-foundation.org, rientjes@google.com,
- vishal.moola@gmail.com, arnd@arndb.de, will@kernel.org,
- aneesh.kumar@kernel.org, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ryan.roberts@arm.com, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org
-References: <cover.1734945104.git.zhengqi.arch@bytedance.com>
- <b37435768345e0fcf7ea358f69b4a71767f0f530.1734945104.git.zhengqi.arch@bytedance.com>
- <Z2_EPmOTUHhcBegW@kernel.org>
- <20250103111457.GC22934@noisy.programming.kicks-ass.net>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20250103111457.GC22934@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
+ <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de> <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
+ <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
+In-Reply-To: <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 6 Jan 2025 15:03:23 +0800
+X-Gm-Features: AbW1kvaA-CPbm5BMeJ4LfWbuB6jOL4jyphKqrcXwDCyIAy9vEeDfIzAZz8-C9Mw
+Message-ID: <CAMpQs4L38rDEDYM64jJ6pO+g=M4+etKN9v9+ygzkLY6RQgu94A@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
+	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Thomas:
+
+The last reply email was incomplete, sorry for the incomplete reply
+due to my mistake.
+
+On Thu, Jan 2, 2025 at 9:32=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
+de> wrote:
+>
+> Hi
+>
+>
+> Am 02.01.25 um 13:55 schrieb Binbin Zhou:
+> > Hi Thomas:
+> >
+> > Thanks for your reply.
+> >
+> > On Thu, Jan 2, 2025 at 5:07=E2=80=AFPM Thomas Zimmermann <tzimmermann@s=
+use.de> wrote:
+> >> Hi
+> >>
+> >>
+> >> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+> >> [...]
+> >>> +
+> >>> +static struct platform_driver ls2kbmc_platform_driver =3D {
+> >>> +     .driver =3D {
+> >>> +             .name =3D "ls2kbmc-framebuffer",
+> >> The driver is mostly a copy of simpledrm. Why don't you use
+> >> "simple-framebuffer" for your device name? You could use simpledrm
+> >> directly then.
+> > Ah, indeed, the driver is based on simpledrm.
+> >
+> > Initially, I also tried to use simpledrm directly, but it will fail in
+> > drm memory acquire.
+>
+> Could you point to the exact call that fails within simpledrm?
+
+If we use simpledrm directly, the following error occurs:
+
+[    8.289823] simple-framebuffer simple-framebuffer.0: [drm] *ERROR*
+could not acquire memory range [mem 0xe0031200000-0xe00315fffff flags
+0x200]: -16
+[    8.312681] simple-framebuffer simple-framebuffer.0: probe with
+driver simple-framebuffer failed with error -16
+
+The reason for the failure: overlapping resources.
+
+https://elixir.bootlin.com/linux/v6.12.6/source/drivers/video/aperture.c#L1=
+75
+>
+> > Because although we register the driver in platform form, its memory
+> > belongs to pci space and we can see the corresponding pci probe and
+> > resource allocation in Patch-1.
+>
+> I don't understand. Graphics memory is often located on the PCI bus.
+> What is so special about this one?
+>
+> > Therefore, we need to use aperture_remove_conflicting_pci_devices().
+>
+> So there is already a device that represents the graphics card? That's
+> what you'd remove here? If you only add that MFD device, who owns the
+> framebuffer? If it's the PCI device from patch 1 ("ls2k-bmc"), why does
+> aperture_remove_conflicting_pci_devices() not remove that device? I'm
+> somewhat confused, because the logic in your driver mostly looks like it
+> binds to a pre-configured framebuffer, but some of the code doesn't.
+
+Perhaps the use of aperture_remove_conflicting_pci_devices() is wrong,
+as there is only one display device for the LS2K BMC and there will be
+no phase conflict.
+
+When I tried to use that API before, it was partly due to the error
+above, and partly because I referenced that other display drivers via
+pci_driver.probe() would have it, just in case I used it, which was
+probably the wrong choice.
+
+The resources for pci bar0 are as follows:
+BAR0: e0030000000/SZ_32M
+
+0x0              0x600000  0xf00001c    16M            32M
++----+--------------+--------+-----------+---+-----------------+
+| 2M | simpldrm |           | IPMI      |     | video env     |
++-----------------------------------------------------------------+
+
+The mfd driver registers the ls2kbmc-framebuffer and ls2k-ipmi-si
+devices according to the resource allocation shown above. At the same
+time, the ls2kbmc drm is bound to the pre-configured =E2=80=9Csimpldrm=E2=
+=80=9D
+resource in the above figure, which is passed through the
+ls2kbmc-framebuffer driver. In addition, the resolution is read from
+=E2=80=9Cvideo env=E2=80=9D for the time being, and the resolution adaption=
+ is planned
+to be added later.
+
+> Best regards Thomas
+>
+> >
+> > Also, since we are using BMC display, the display will be disconnected
+> > when BMC reset, at this time we need to push the display data (crtc,
+> > connector, etc.) manually as shown in Patch-4.
+> >
+> > Probably it's not the most suitable way to implement it.
+> >
+> >> Best regards
+> >> Thomas
+> >>
+> >>> +     },
+> >>> +     .probe =3D ls2kbmc_probe,
+> >>> +     .remove =3D ls2kbmc_remove,
+> >>> +};
+> >>> +
+> >>> +module_platform_driver(ls2kbmc_platform_driver);
+> >>> +
+> >>> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
+> >>> +MODULE_LICENSE("GPL");
+> >> --
+> >> --
+> >> Thomas Zimmermann
+> >> Graphics Driver Developer
+> >> SUSE Software Solutions Germany GmbH
+> >> Frankenstrasse 146, 90461 Nuernberg, Germany
+> >> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> >> HRB 36809 (AG Nuernberg)
+> >>
+> >
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
 
 
-
-On 2025/1/3 19:14, Peter Zijlstra wrote:
-> On Sat, Dec 28, 2024 at 11:26:22AM +0200, Mike Rapoport wrote:
->> On Mon, Dec 23, 2024 at 05:41:01PM +0800, Qi Zheng wrote:
->>> Here we are explicitly dealing with struct page, and the following logic
->>> semms strange:
->>>
->>> tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));
->>>
->>> tlb_remove_page_ptdesc
->>> --> tlb_remove_page(tlb, ptdesc_page(pt));
->>>
->>> So remove tlb_remove_page_ptdesc() and make callers call tlb_remove_page()
->>> directly.
->>
->> Please don't. The ptdesc wrappers are there as a part of reducing the size
->> of struct page project [1].
->>
->> For now struct ptdesc overlaps struct page, but the goal is to have them
->> separate and always operate on struct ptdesc when working with page tables.
-> 
-> I don't see how the current idiotic code helps with that at all.
-> 
-> Fundamentally tlb_remove_page() is about removing *pages* as from a PTE,
-> there should not be a page-table anywhere near here *ever*.
-> 
-> Yes, some architectures use tlb_remove_page() for page-tables too, but
-> that is more or less an implementation detail that can be fixed.
-> 
-> So no, please keep these patches and kill this utterly idiotic code.
-> 
-> The only thing that should eventually care about page-tables is
-> tlb_remove_table(), and that takes a 'void *' and is expected to match
-> whatever __tlb_remove_table() does.
-> 
-> Flipping those to pgdesc, once its actually a thing, should be fairly
-> straight forward.
-
-Well, since I've already sent v4, and that patch series is mainly for
-bug fix, I'll send a separate patch series to do this.
-
-Thanks!
+--
+Thanks.
+Binbin
