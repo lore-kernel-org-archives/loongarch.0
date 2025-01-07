@@ -1,118 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229BC1F3D47
-	for <loongarch@lists.linux.dev>; Tue,  7 Jan 2025 17:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA881F7550;
+	Tue,  7 Jan 2025 21:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736269972; cv=none; b=Z8M7jQOzejpiqPghU0QkRCfONxIX7uDqoMSdILWD82GRjypCl2b3VoLwEY9fko9Qj7phbA9NgQ68vceqV1PLpkd1Xw4rL3+6GRGK6Gr2FjZ3HZuXtE9296edkjcICYXYumsfV/ra1vwCLOxz2l0XR/E4Qo99VS4ko5RGuXWgKMk=
+	t=1736285151; cv=none; b=dtBGMn3Lo+H+ztgAvcDK5SnSvxXOLhwRtZVtXrwaBStR5Jo8NRBSY5fy3ZPi2FX9C/9gFErSMFEDr4I6sXh1ExB5ssEyxh6UmIe0pQULuJuyDQeYk0SEX6LwBcTh4xt9wbB6zsVFmxB4J/rMJgs3Sf8bZOfUef86FiDGGxoBb/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736269972; c=relaxed/simple;
-	bh=XT3uWSyIyKjlrTiSLLqRYxSd8tnvnMF2POEYJodfnP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FOlpnMicKirSc9n4Y/qhpVd5A2IyUL0I2ssAo4pbUdHvT5eBQSiXuHptk87RqJJU2Ztmu9O4ekLJx1wXmAYMY0hq3Bh22H9QvtUOZsgrCeg2d7fAcUAQm9sR+R6CpNVRWYPM323h6Q0J0r+2rMIeC4B4qVBErY1REcVbV7zjEeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cVwsuPzv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iCw7LlWz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1736285151; c=relaxed/simple;
+	bh=e81pooNpNJTl+Sg0K/oySV/OHUC8eHQd0dPPJ6IdfR0=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=m6HEVJ0gvos4Jes5M4xrb1RwTIoWDT7ILGz2soC62OjQ5Qzrlc/HSGPCW7ngz5Pc3Zh1NlO3GKBBF9620DiEONDh0ZqTVJJ8A/y7hMQgmr1U+fh3r2NCdMbGVbCONwW9hMAqNa5YgLCFkgA6ssM7yHvsIGdkRZJJhiUIlBhdOpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asDT4T4z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cVwsuPzv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iCw7LlWz"
-Date: Tue, 7 Jan 2025 18:12:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1736269969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xsNnuziyNpOSTD/Cp5DOy3MZvA294grDpf4nsHeVMI8=;
-	b=cVwsuPzvQdzTTAe1TW+BTAPiBZBoJMFjGOGfIiWa03zhooCI8x24/wt1uMkD0QgB9ukpTG
-	+2e0rf3abqxIEQ99upY3h/tKbltUJUI0bXC9nYkNJCF/CvT9PcPhoFRlBAOLHkt1tES55a
-	2Q8ceuvzqrsmHDAPNg8yDyP5Ql3P2UldS+favGeozrm9DIzQjuu9Kq9DOXooZyty3rN1Ok
-	ssXhOE0c4EWMFr7ivQwjfFywAChHMJN+veryrT9i4Wm4fMQYIZb7dK2XJCAdG3SU1EmydP
-	yYj+P3srQNhI0MT8QF5taD+uG71M/TE3IF0pWW0P8HTpK9ttJNi5HRXMu1BhuQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1736269969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xsNnuziyNpOSTD/Cp5DOy3MZvA294grDpf4nsHeVMI8=;
-	b=iCw7LlWzWbcnA2qYMjWzFfhpgv8rVYQHF67jKKd3znR4ykiP9hkcG0sOr02Wv55uQR2HFA
-	E5zfxsCrV3EF//CQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-trace-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 19/28] LoongArch: ftrace: Use RCU in all users of
- __module_text_address().
-Message-ID: <20250107171247.gzibqLkQ@linutronix.de>
-References: <20241220174731.514432-1-bigeasy@linutronix.de>
- <20241220174731.514432-20-bigeasy@linutronix.de>
- <20241227121946.1643decf@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asDT4T4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B37C4CED6;
+	Tue,  7 Jan 2025 21:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736285150;
+	bh=e81pooNpNJTl+Sg0K/oySV/OHUC8eHQd0dPPJ6IdfR0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=asDT4T4zzglUJJu/i24gbAfWoF2a+fjkqpB6jn38Wf3NE7EK1IYHJg4nXP/TshM/O
+	 DdRPaYPrLIt4mMLOYC1LM0o/8i2YQ/IVlB/cIkURoWNRPsgGjzXNd0BA89LJjal9to
+	 mr5wQfVAAnn+w36CJFbxpusNKTfCPe+gDTTstVV+ACYfSbOGjW2RCgO0mWHPAe3ytm
+	 +ExY26o9OBNesFCSFpIdq3vxBRoBT3gN2gUdwJTrOrl3srp7SjszJsoueQpkkQQ9l/
+	 uRaZ3JUvPYeu2JMQu7QEn+yC5JvX5GACypxPaIfS9xEUgtU8kPvxG0NK4N3M+uuZ+p
+	 QMwAcFM5moIyQ==
+Message-ID: <526d7ad1f0b299145ab676900f81ba1a.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241227121946.1643decf@gandalf.local.home>
+In-Reply-To: <20241225060600.3094154-1-zhoubinbin@loongson.cn>
+References: <20241225060600.3094154-1-zhoubinbin@loongson.cn>
+Subject: Re: [PATCH] clk: clk-loongson2: Fix the number count of clk provider
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>, stable@vger.kernel.org
+To: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Tue, 07 Jan 2025 13:25:48 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-On 2024-12-27 12:19:46 [-0500], Steven Rostedt wrote:
-=E2=80=A6
-> Is easier to understand than:
+Quoting Binbin Zhou (2024-12-24 22:05:59)
+> Since commit 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer
+> overflow in flexible-array member access"), the clk provider register is
+> failed.
 >=20
-> 	if (!mod) {
-> 		guard(rcu)();
-> 		mod =3D __module_text_address(pc);
-> 	}
+> The count of `clks_num` is shown below:
 >=20
-> Because it makes me wonder, why use a guard() for a one liner?
-
-Why not? The context ends immediately after.
-
-> But, when I saw your other patch, if we had:
+>         for (p =3D data; p->name; p++)
+>                 clks_num++;
 >=20
-> 	if (!mod) {
-> 		scoped_guard(rcu)()
-> 			mod =3D __module_text_address(pc);
-> 	}
-
-Okay, if this looks better, let me update it. It just you already have a
-scope (the {} after the if) and then we start yet another block. But if
-this looks better so be it.
-
-> To me, hat looks much better than the guard() as it is obvious to what the
-> code is protecting. Even though, I still prefer the explicit, lock/unlock.
-> Maybe, just because I'm more used to it.
-
-I'm probably also used to the explicit part but numerous people said to
-use this from now on. And it results in less lines and you don't have to
-worry about each return statement. So it somehow looks/ feels line an
-upgrade.
-
-> IMHO, guard() is for complex functions that are error prone. A single line
-> is not something that is error prone (unless you don't match the lock and
-> unlock properly, but that's pretty obvious when that happens).
-
-True but this is now a one liner which might be extended later on. Also
-the context is one line.
-
-> But this is just my own opinion.
+> In fact, `clks_num` represents the number of SoC clocks and should be
+> expressed as the maximum value of the clock binding id in use (p->id + 1).
 >=20
-> -- Steve
+> Now we fix it to avoid the following error when trying to register a clk
+> provider:
+>=20
+> [ 13.409595] of_clk_hw_onecell_get: invalid index 17
+>=20
+> Fixes: 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer overflow i=
+n flexible-array member access")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
 
-Sebastian
+It's common practice to Cc the author of a patch in Fixes. Please do it
+next time.
+
+>  drivers/clk/clk-loongson2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+> index 6bf51d5a49a1..b1b2038acd0b 100644
+> --- a/drivers/clk/clk-loongson2.c
+> +++ b/drivers/clk/clk-loongson2.c
+> @@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_device=
+ *pdev)
+>                 return -EINVAL;
+> =20
+>         for (p =3D data; p->name; p++)
+> -               clks_num++;
+> +               clks_num =3D max(clks_num, p->id + 1);
+
+NULL is a valid clk. Either fill the onecell data with -ENOENT error
+pointers, or stop using it and implement a custom version of
+of_clk_hw_onecell_get() that doesn't allow invalid clks to be requested
+from this provider.
+
+> =20
+>         clp =3D devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_num=
+),
+>                            GFP_KERNEL);
