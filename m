@@ -1,97 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA881F7550;
-	Tue,  7 Jan 2025 21:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DFD71E3775
+	for <loongarch@lists.linux.dev>; Tue,  7 Jan 2025 23:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736285151; cv=none; b=dtBGMn3Lo+H+ztgAvcDK5SnSvxXOLhwRtZVtXrwaBStR5Jo8NRBSY5fy3ZPi2FX9C/9gFErSMFEDr4I6sXh1ExB5ssEyxh6UmIe0pQULuJuyDQeYk0SEX6LwBcTh4xt9wbB6zsVFmxB4J/rMJgs3Sf8bZOfUef86FiDGGxoBb/E=
+	t=1736290923; cv=none; b=NEHDnL+11KYczsg1HfqLIewrx7QwshmGGmBxMCOrKnl0gtR4evN/Rz5ZbjOxVr8ANKj9rEzB/FiQjNXRaECcMCySvYUtU7lxOIPD53Q4PZSoby6wONcUEuHtZ/POVtR5ITDKzvdlojaKp1VpYQzQSQE+2ZZYFHrxlfwg3djoKe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736285151; c=relaxed/simple;
-	bh=e81pooNpNJTl+Sg0K/oySV/OHUC8eHQd0dPPJ6IdfR0=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=m6HEVJ0gvos4Jes5M4xrb1RwTIoWDT7ILGz2soC62OjQ5Qzrlc/HSGPCW7ngz5Pc3Zh1NlO3GKBBF9620DiEONDh0ZqTVJJ8A/y7hMQgmr1U+fh3r2NCdMbGVbCONwW9hMAqNa5YgLCFkgA6ssM7yHvsIGdkRZJJhiUIlBhdOpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asDT4T4z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asDT4T4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B37C4CED6;
-	Tue,  7 Jan 2025 21:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736285150;
-	bh=e81pooNpNJTl+Sg0K/oySV/OHUC8eHQd0dPPJ6IdfR0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=asDT4T4zzglUJJu/i24gbAfWoF2a+fjkqpB6jn38Wf3NE7EK1IYHJg4nXP/TshM/O
-	 DdRPaYPrLIt4mMLOYC1LM0o/8i2YQ/IVlB/cIkURoWNRPsgGjzXNd0BA89LJjal9to
-	 mr5wQfVAAnn+w36CJFbxpusNKTfCPe+gDTTstVV+ACYfSbOGjW2RCgO0mWHPAe3ytm
-	 +ExY26o9OBNesFCSFpIdq3vxBRoBT3gN2gUdwJTrOrl3srp7SjszJsoueQpkkQQ9l/
-	 uRaZ3JUvPYeu2JMQu7QEn+yC5JvX5GACypxPaIfS9xEUgtU8kPvxG0NK4N3M+uuZ+p
-	 QMwAcFM5moIyQ==
-Message-ID: <526d7ad1f0b299145ab676900f81ba1a.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1736290923; c=relaxed/simple;
+	bh=eewKFwXwVyNsBh0nwKFE4AtEZK8ybowe7wgEkOHOryU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XUWtm56J/dThRbOofjn+swrhbvuG8bkYpadThUuEMJZNB5DA7Qmf8fIT0fr/BMXQ5Zaxn1UpjBxai6756UYc8rw4A0Lx3ntlLiJySyhJb40fXaJY2mSiSpuoJCccEDan7iiVaWo5KdDF6o7HE9DxgsXla+wkDZncXLWhg7Kwoqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 3EEAD72C8CC;
+	Wed,  8 Jan 2025 02:01:53 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 2CA007CCB3A; Wed,  8 Jan 2025 01:01:53 +0200 (IST)
+Date: Wed, 8 Jan 2025 01:01:53 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	strace-devel@lists.strace.io, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+Message-ID: <20250107230153.GA30560@strace.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241225060600.3094154-1-zhoubinbin@loongson.cn>
-References: <20241225060600.3094154-1-zhoubinbin@loongson.cn>
-Subject: Re: [PATCH] clk: clk-loongson2: Fix the number count of clk provider
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>, stable@vger.kernel.org
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Tue, 07 Jan 2025 13:25:48 -0800
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Quoting Binbin Zhou (2024-12-24 22:05:59)
-> Since commit 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer
-> overflow in flexible-array member access"), the clk provider register is
-> failed.
->=20
-> The count of `clks_num` is shown below:
->=20
->         for (p =3D data; p->name; p++)
->                 clks_num++;
->=20
-> In fact, `clks_num` represents the number of SoC clocks and should be
-> expressed as the maximum value of the clock binding id in use (p->id + 1).
->=20
-> Now we fix it to avoid the following error when trying to register a clk
-> provider:
->=20
-> [ 13.409595] of_clk_hw_onecell_get: invalid index 17
->=20
-> Fixes: 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer overflow i=
-n flexible-array member access")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
+PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+system calls the tracee is blocked in.
 
-It's common practice to Cc the author of a patch in Fixes. Please do it
-next time.
+This API allows ptracers to obtain and modify system call details
+in a straightforward and architecture-agnostic way.
 
->  drivers/clk/clk-loongson2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-> index 6bf51d5a49a1..b1b2038acd0b 100644
-> --- a/drivers/clk/clk-loongson2.c
-> +++ b/drivers/clk/clk-loongson2.c
-> @@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_device=
- *pdev)
->                 return -EINVAL;
-> =20
->         for (p =3D data; p->name; p++)
-> -               clks_num++;
-> +               clks_num =3D max(clks_num, p->id + 1);
+Current implementation supports changing only those bits of system call
+information that are used by strace, namely, syscall number, syscall
+arguments, and syscall return value.
 
-NULL is a valid clk. Either fill the onecell data with -ENOENT error
-pointers, or stop using it and implement a custom version of
-of_clk_hw_onecell_get() that doesn't allow invalid clks to be requested
-from this provider.
+Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
+such as instruction pointer and stack pointer, could be added later
+if needed, by re-using struct ptrace_syscall_info.reserved to specify
+the additional details that should be set.  Currently, the reserved
+field of struct ptrace_syscall_info must be initialized with zeroes;
+arch, instruction_pointer, and stack_pointer fields are ignored.
 
-> =20
->         clp =3D devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_num=
-),
->                            GFP_KERNEL);
+PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
+PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
+Other operations could be added later if needed.
+
+Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
+PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
+convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
+to provide an API of changing the first system call argument on riscv
+architecture [1].
+
+ptrace(2) man page:
+
+long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+...
+PTRACE_SET_SYSCALL_INFO
+       Modify information about the system call that caused the stop.
+       The "data" argument is a pointer to struct ptrace_syscall_info
+       that specifies the system call information to be set.
+       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
+
+[1] https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
+
+Dmitry V. Levin (6):
+  Revert "arch: remove unused function syscall_set_arguments()"
+  syscall.h: add syscall_set_arguments() on remaining
+    HAVE_ARCH_TRACEHOOK arches
+  syscall.h: introduce syscall_set_nr()
+  ptrace_get_syscall_info: factor out ptrace_get_syscall_info_op
+  ptrace: introduce PTRACE_SET_SYSCALL_INFO request
+  selftests/ptrace: add a test case for PTRACE_SET_SYSCALL_INFO
+
+ arch/arc/include/asm/syscall.h                |  20 +
+ arch/arm/include/asm/syscall.h                |  25 +
+ arch/arm64/include/asm/syscall.h              |  20 +
+ arch/csky/include/asm/syscall.h               |  13 +
+ arch/hexagon/include/asm/syscall.h            |  14 +
+ arch/loongarch/include/asm/syscall.h          |  15 +
+ arch/m68k/include/asm/syscall.h               |   7 +
+ arch/microblaze/include/asm/syscall.h         |   7 +
+ arch/mips/include/asm/syscall.h               |  53 +++
+ arch/nios2/include/asm/syscall.h              |  16 +
+ arch/openrisc/include/asm/syscall.h           |  13 +
+ arch/parisc/include/asm/syscall.h             |  19 +
+ arch/powerpc/include/asm/syscall.h            |  15 +
+ arch/riscv/include/asm/syscall.h              |  16 +
+ arch/s390/include/asm/syscall.h               |  19 +
+ arch/sh/include/asm/syscall_32.h              |  19 +
+ arch/sparc/include/asm/syscall.h              |  17 +
+ arch/um/include/asm/syscall-generic.h         |  19 +
+ arch/x86/include/asm/syscall.h                |  43 ++
+ arch/xtensa/include/asm/syscall.h             |  18 +
+ include/asm-generic/syscall.h                 |  30 ++
+ include/linux/ptrace.h                        |   3 +
+ include/uapi/linux/ptrace.h                   |   3 +-
+ kernel/ptrace.c                               | 154 ++++++-
+ tools/testing/selftests/ptrace/Makefile       |   2 +-
+ .../selftests/ptrace/set_syscall_info.c       | 436 ++++++++++++++++++
+ 26 files changed, 994 insertions(+), 22 deletions(-)
+ create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
+
+-- 
+ldv
