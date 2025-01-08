@@ -1,114 +1,152 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60191F8668
-	for <loongarch@lists.linux.dev>; Wed,  8 Jan 2025 09:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6DD1F03CA
+	for <loongarch@lists.linux.dev>; Wed,  8 Jan 2025 11:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736327127; cv=none; b=VhX2ACzYUWbxyh4BqQcKdmhQcWoIWtQG9jWgnxIKyCsFPzhYilFMM9Dmv+8oATL7jfWZisq+c607VIHMw9E/kkHvXlmRjzJv3t6NwXPk3GHTWmragItHKxENdqY+8q3xrFX5AdWYmwXJwXhUn7wl94I/AYd3Vg5XjB5w2LaW2Ls=
+	t=1736334118; cv=none; b=MK9iT77XgMG/fcGXF9K6MKUpRflSNFHQp6QFYKpD+mDcAJatkdT5okERT7fBzC0zMazEt7ykM0YBOPjUWg4+lNrLbaADftMd56exCTQMySSMY2+WHiQHSspWCtpNGVyYmeVVpt9z32wYZmNAoJhx68TU2ZoAsB2q5GRHJbNH5OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736327127; c=relaxed/simple;
-	bh=G5X0+l7fLr+Gr8mHaQ0KTZ50NSlxoDTZjLHVdH7IbPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GYzn/XoSDpI4mjA3J0QJ1P8LYiwSRuN3pMte9/y2Z50xMPExYJxvhCrx7leF1rHnZICHX0BtHI/hHUW41yS497X7HJBoNoWSamSFUW0jZgAc47bGHlZA1KrYuAIbyP0yHUoG6aXm+9VKegRHRls28zulRefjE73rxIs/+CyD+DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YLIfDCbl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OyFhdP9V; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1736334118; c=relaxed/simple;
+	bh=DGrWIQkRqJa7hR4QRq6PBJRqLuAJ4GspDnLAHEtpQyI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=rwT/uRQM0NfkBKYwdWtptRBc/t97NHnT0Y/L8EuEgOKQZoWvbfVorbDGPbP7I98vWjWeTZZWYTfsK2+uwhVi6Memr1dDjOIlo3m0odzRTtpwegaXQuZoVtRr/74u4XLkBUqgS6KySUWfCbXtDFFVlWPP9sl75N7yt0ebdJ2ELwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Cy+D97Sp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MSIdJfQw; arc=none smtp.client-ip=103.168.172.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YLIfDCbl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OyFhdP9V"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1736327121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7OHg3jZyf02ebMcCYNUEnflayAq9sYcMtyqzXVGGUlQ=;
-	b=YLIfDCbletV3pU0iX98tJQKNzlx+X4ose1G+gNKVvj24SEtro3XGjJyTFaRselJaoZA/fO
-	VtmraRUjNG8cgxJo4K71Ck4A0aoI0oeMR7XGJqr4Y5bnMph4HDjH3JLYxkWFmO7AyRvuOS
-	qZZownHU37PMX+Xu5ffXuB2nIle8LTTt45sDubSBnJpi2T2pIt4tWkqzHh/SxPRFKeVvYy
-	O+jsLLCuHBB7aQXTCO6BGjCf5FX4BEOvC3ByYebdgfIENxl+CM6x7ZVcin1NIi2BcZmVjA
-	9JCA9nCUB1xDSXz1FWJVSqXUtq2z61jmeIYZvWTE5+3RDQzZAhPkkBhO37AxGg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1736327121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7OHg3jZyf02ebMcCYNUEnflayAq9sYcMtyqzXVGGUlQ=;
-	b=OyFhdP9VaOnPKru4VN6IQKpFbHpWH58pMLlhK1zp71dWnqHZrF9vLu365AZOsLjpXBrMGZ
-	6EkUlkgrqqIcxXCw==
-To: linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Gomez <da.gomez@samsung.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3 18/28] LoongArch/orc: Use RCU in all users of __module_address().
-Date: Wed,  8 Jan 2025 10:04:47 +0100
-Message-ID: <20250108090457.512198-19-bigeasy@linutronix.de>
-In-Reply-To: <20250108090457.512198-1-bigeasy@linutronix.de>
-References: <20250108090457.512198-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Cy+D97Sp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MSIdJfQw"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailflow.phl.internal (Postfix) with ESMTP id 01AD8200CCC;
+	Wed,  8 Jan 2025 06:01:54 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Wed, 08 Jan 2025 06:01:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1736334113;
+	 x=1736341313; bh=20U5sO/u0uYru3hxNMHsooCdHBrAIIWG/43UdZigSIo=; b=
+	Cy+D97SpayPKf50CJRucU/OjuqxmZo1HPxdDHfFjtk4V4dzkHIGqqI4ZeTBGBIwQ
+	CU43a3abN/lpxbZArBxq7/TC680Cne845B7Mt9ZmA7It+HSwgjARBYDZNaSmXNM2
+	krcib2kkSpUfF5s2H8og+FziqnBYnNGV+oIkJokZXGPBRm2uRnZPUxupBCIsLyF3
+	L95dQfXdiAUWRhy4AoFiIf7vssy39N0gIf97bLCYb6UE+9UATBG8UEmpoSxSvb3y
+	VSe4QWYZNxY7/CiTOh3EVoghZyEg8uCRUsZwXWBw32ptH23GUNZihG2RL0COZuPY
+	JUo0rYJf6FqI9B/v7Pe1QA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736334113; x=
+	1736341313; bh=20U5sO/u0uYru3hxNMHsooCdHBrAIIWG/43UdZigSIo=; b=M
+	SIdJfQwmksvBJ00U9HcUOaODS1attuTNvWMQryD5z90DVgF6hJ7NU+/6na9R1zMX
+	N4e5muAPBw/KbD4IiqcgMdfPyL5oytjmreBUaObCMGSlSguiImcZFV+PHOogQ0C8
+	sfMV/tSn2hosWoXw0QfBP8yg8ww3eBodDuz6q/i7vkKifow1ceZYP7CRJ/mj2xVC
+	a+qiTqelX8Gs/hSLYFr9PAhNoCapvXPNYTkqh4KLORdzvEktytEn7MA+4vx6ltiH
+	wkTkgfP+WzoCXr6QB8GCjvYhe0eFs2cVoTQLmYEZANUV5rBtinqFmbMvZKxf3ghZ
+	EQACF6/J+VIomkI/RscUA==
+X-ME-Sender: <xms:IFt-Z6UmaWSjYb7Gh0zcpksWzDDdEPgfiSYLh-0i-y9aLcE3r6zD_A>
+    <xme:IFt-Z2nOjzdfh823ysQc1S2oDX-1-nZXTq_53rcym6EIbKwXeGB0UjDLQAu3SVTJl
+    FqMSA1gCW8wUUAwYWw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeggedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgedv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkvghvihhnrdgsrhhoughskhihse
+    grrhhmrdgtohhmpdhrtghpthhtoheprhihrghnrdhrohgsvghrthhssegrrhhmrdgtohhm
+    pdhrtghpthhtohepiihhvghnghhqihdrrghrtghhsegshihtvggurghntggvrdgtohhmpd
+    hrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghn
+    ughrvggrshesghgrihhslhgvrhdrtghomhdprhgtphhtthhopegrlhgvgiesghhhihhtih
+    drfhhrpdhrtghpthhtohepnhhpihhgghhinhesghhmrghilhdrtghomhdprhgtphhtthho
+    pehvihhshhgrlhdrmhhoohhlrgesghhmrghilhdrtghomhdprhgtphhtthhopehhuhhghh
+    gusehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:IFt-Z-aQ2SmgS3nXZ8HOHScIMD5VPYsyBFMZLc-J-VgcUAnAe2HzCw>
+    <xmx:IFt-ZxXCvJZ1AcFo5fB-biVPFqTsSFdNnldK9XWf-i56cAUN39KLdQ>
+    <xmx:IFt-Z0lFXSJuGe63NytzX7QBWDpUz5bkZTKgpNbVjZZcysvLCNf6UA>
+    <xmx:IFt-Z2eyKBxnx9FUnENXCTF11sxAJ8UI5uJaB8BKG5BUdEYntabkhQ>
+    <xmx:IVt-Z-tKPBuX6yCR5FGPupQm8IjlY8CNUkvhyqGI8S0AmCpHcXU81GMM>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1006D2220072; Wed,  8 Jan 2025 06:01:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jan 2025 12:01:31 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Qi Zheng" <zhengqi.arch@bytedance.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Kevin Brodsky" <kevin.brodsky@arm.com>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "David Hildenbrand" <david@redhat.com>, "Jann Horn" <jannh@google.com>,
+ "Hugh Dickins" <hughd@google.com>, "Yu Zhao" <yuzhao@google.com>,
+ "Matthew Wilcox" <willy@infradead.org>,
+ "Muchun Song" <muchun.song@linux.dev>, vbabka@kernel.org,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "David Rientjes" <rientjes@google.com>, vishal.moola@gmail.com,
+ "Will Deacon" <will@kernel.org>, aneesh.kumar@kernel.org,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Mike Rapoport" <rppt@kernel.org>, "Ryan Roberts" <ryan.roberts@arm.com>
+Cc: linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org
+Message-Id: <fd6e7ad9-9d57-40b6-a8f6-455ea3ab3d27@app.fastmail.com>
+In-Reply-To: 
+ <26d69c74a29183ecc335b9b407040d8e4cd70c6a.1736317725.git.zhengqi.arch@bytedance.com>
+References: <cover.1736317725.git.zhengqi.arch@bytedance.com>
+ <26d69c74a29183ecc335b9b407040d8e4cd70c6a.1736317725.git.zhengqi.arch@bytedance.com>
+Subject: Re: [PATCH v5 03/17] asm-generic: pgalloc: Provide generic
+ p4d_{alloc_one,free}
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-__module_address() can be invoked within a RCU section, there is no
-requirement to have preemption disabled.
+On Wed, Jan 8, 2025, at 07:57, Qi Zheng wrote:
+> From: Kevin Brodsky <kevin.brodsky@arm.com>
+>
+> Four architectures currently implement 5-level pgtables: arm64,
+> riscv, x86 and s390. The first three have essentially the same
+> implementation for p4d_alloc_one() and p4d_free(), so we've got an
+> opportunity to reduce duplication like at the lower levels.
+>
+> Provide a generic version of p4d_alloc_one() and p4d_free(), and
+> make use of it on those architectures.
+>
+> Their implementation is the same as at PUD level, except that
+> p4d_free() performs a runtime check by calling mm_p4d_folded().
+> 5-level pgtables depend on a runtime-detected hardware feature on
+> all supported architectures, so we might as well include this check
+> in the generic implementation. No runtime check is required in
+> p4d_alloc_one() as the top-level p4d_alloc() already does the
+> required check.
+>
+> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+> ---
+>  arch/arm64/include/asm/pgalloc.h | 17 ------------
+>  arch/riscv/include/asm/pgalloc.h | 23 ----------------
+>  arch/x86/include/asm/pgalloc.h   | 18 -------------
+>  include/asm-generic/pgalloc.h    | 45 ++++++++++++++++++++++++++++++++
+>  4 files changed, 45 insertions(+), 58 deletions(-)
 
-Replace the preempt_disable() section around __module_address() with
-RCU.
-
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- arch/loongarch/kernel/unwind_orc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unw=
-ind_orc.c
-index b257228763317..d623935a75471 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -399,7 +399,7 @@ bool unwind_next_frame(struct unwind_state *state)
- 		return false;
-=20
- 	/* Don't let modules unload while we're reading their ORC data. */
--	preempt_disable();
-+	guard(rcu)();
-=20
- 	if (is_entry_func(state->pc))
- 		goto end;
-@@ -514,14 +514,12 @@ bool unwind_next_frame(struct unwind_state *state)
- 	if (!__kernel_text_address(state->pc))
- 		goto err;
-=20
--	preempt_enable();
- 	return true;
-=20
- err:
- 	state->error =3D true;
-=20
- end:
--	preempt_enable();
- 	state->stack_info.type =3D STACK_TYPE_UNKNOWN;
- 	return false;
- }
---=20
-2.47.1
-
+Acked-by: Arnd Bergmann <arnd@arndb.de> # asm-generic
