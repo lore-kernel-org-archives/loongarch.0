@@ -1,62 +1,62 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46491AA781
-	for <loongarch@lists.linux.dev>; Wed,  8 Jan 2025 07:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE301AA1D2
+	for <loongarch@lists.linux.dev>; Wed,  8 Jan 2025 07:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736319638; cv=none; b=Tss0Frzb0S24GCDYKMFQ42AB21OhBuFbVCeACI3jN5uZ7qDXKXowI2xQLIXJTQNxlOHmCn0tbv3RClHsDYcy9C6DH36damZzPg+nj6dPnfh2XqJ1Y1f5MJ2NYuQGu6qpg4CoKfgMC+bfjz3i/7EUyWl7RSMJQ0hIun5UxwCs3l0=
+	t=1736319653; cv=none; b=QB5NW/9YhcWWyL0nCamoq+TsiEiNf5wpNtwcKWTl3cPEJaQ/OkmcJBrNtbX5vCxcY0KKkh/qdm9yVV53gUqxsIvBGc2Tl4jMTSpV2Hos2EZ7t43caIh+5MrLcuNHm7COMp4dAWtaAHgPV3efsxrbYendditp6TB4QlawZK7H6Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736319638; c=relaxed/simple;
-	bh=8PYWh2+orWwYf6986S1qPEzSyDMn0jEmjPeP/Gs1msM=;
+	s=arc-20240116; t=1736319653; c=relaxed/simple;
+	bh=aGqvHL2vBr0F32b5nn3s88qKn1CLr8WeccygZVRBAEw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FfWOM1nJQSk5fGPymjdhb2AHGUK50R/hRXUyZjfADWYtwaIJD7RowH63VvkBkB44DaCGCz84rZLXQMvxCOwlRlMYnpazob8ZGmq7CHQudkHVK1qy36SWvOxwxNzvhjXSXGiTdX5zTxDKOAaFoHpLTnOAjo4mkKH2qSTcMCsrGY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dRngHIH8; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=IYfzzTLHqlL36+76HNpsQcPmNbXWrYF90710wL7rlj6ID39N9XM3rbN9Gq6Xm6jOG8pU+yaaaKw+qYotphO5rjll8g/fw89VigTNefi/KFbYewVwGjfNyy4sW+o+4F2JNG9UGEI3Iyp/xqzV3d9zriIjRxzD0Upayx81EWzI1Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kgN6UCjv; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dRngHIH8"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21669fd5c7cso246560965ad.3
-        for <loongarch@lists.linux.dev>; Tue, 07 Jan 2025 23:00:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kgN6UCjv"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2165cb60719so246885365ad.0
+        for <loongarch@lists.linux.dev>; Tue, 07 Jan 2025 23:00:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1736319635; x=1736924435; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1736319650; x=1736924450; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s3ajwCEJzuBWHLhfIS3uOIg9mbtSga1CIaOnP3nLDr0=;
-        b=dRngHIH8Bl/gRF1ojOEbR+wt0hlayCB7WWGenLNH543F9tMUsiboKtVH+esChhzQ8l
-         izthpQ8VeiL08Tzs2joxVogHDwZMYXTRT37oBi+zFDdUkgMVJprXvvahDNoB0/zt3i2b
-         cAahma+gsrSAyVpC2zB0VT2Aw+ST6ii4+wAYg2gcTbFHUlx5hDvdNFsxGM2xAcRRU3da
-         rLFZgZUDYyRBKNaRZo2DGp5WTId/icvYQMME3Z5FHtx5Rs5ewbarkH6+m0Rd3GJPRX8U
-         OBVdsj/2Upg2Bh+pAik+VXKpEMlgTTDD/7VXpgGLiZCb/gUzL3pNInT7Cvom304t8w0G
-         koCg==
+        bh=evJHXxUH8wpRsLAfhvt7S2AIimf3Ggw2vmlVHfN1TNM=;
+        b=kgN6UCjvws/hEbr4OL59PmVpOiomM3KTwcP2eFMciI2d+RbzouPaYpqk7XvPnkzfvt
+         jPG1C0wRVSDPNvCX9KhGyEpm+AuStqsVAjv3SeGM7k31XqsPpsRazBG4Y0WStvyVLjzY
+         W3uvB0Do2uc2dBUggizbrqbrwJyR0p2GG7Y9jzzttdhz9S7N0Seape9lfxISyHGZ3n9S
+         b5UIchJ9m9WTs9MHqNRIdwEiOZ+FG6xx8Uf1OefcTAqdXD4BiAhtwCiIQu1YXTl0fF4r
+         sfSq35zlRAudvUayxcGgh9tjLmuKEMhWhWTFf4jmC7L8aEB5HUkoURMzKrd6s7A4kDIZ
+         lcgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736319635; x=1736924435;
+        d=1e100.net; s=20230601; t=1736319650; x=1736924450;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s3ajwCEJzuBWHLhfIS3uOIg9mbtSga1CIaOnP3nLDr0=;
-        b=G4BcGlomEEJb44TBMvgQzi57RnswADuFOYXNNOl9BWW/fVTIF3yrr5VoEV/9gBvtt6
-         Q44z+TnEiUmQSK/4N/s4Keh33YKgXG6MNnOFav+5mGSd/YCx3OYT0ZiCjOHS5Q+JPbhi
-         IhWIkHXsOWWaNZENd6heuzxLC5Q9ldsRCqMzHO2C7I8RACBqAl1LrCI6gB5EPksSpkSC
-         DRfS508oSRP7reWOfmwAVHliS+fLBItcX8yKHDwRQ5veqoJ7Vt1WmOxxPPmSS/6o8Xpn
-         R4xcL2DMtfjMmoX4DHhTwXUFxaF9bS4XCHqUTaKKJx0L6zBtXFLU6lVEB53eVhW9oaav
-         4Otg==
-X-Forwarded-Encrypted: i=1; AJvYcCWs625WLZdusq0G7kkOG6iU5G2zKpodjLXun2W4GZDP9dlu5hjbntZrVOQehS8YvRyQWWiNehdV0YM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxN3M0SlGrIgRb572j/crpz6yB3H+3+yw6zBFiLpQlsgpELHm7F
-	9VT1dXDNHCy8vqdLC8dbRK5RzBaNFCvgMH5PkxGc/Or47o/jlltn1A/xQxGCquA=
-X-Gm-Gg: ASbGncv8wjf9VKqQgTPNMDQ5Py7XJ9XYzZ7pa1X5Z66r5vbi4y7PJIGR4dvMuxU2P2B
-	L1hjOgxnW/vpV4GtbsnG+1ic1ENeitz6zcwIP62OcyQ5Fuxz6Ow2PqM5b/nceghUvNWD02CXW03
-	pAva3rfpWnlm7iIdnnkNP9SwShndJ5JX9yzcIF/t3GTkW3iIDLoajfuNCKnrOTWhlZI1s7GiHiQ
-	JXnf2msgwRbfh7ozQe04EpOHvaA6mGP1WRzqWVEeAG6M/Cqhk6cmKmgtzHnVjVES3E8IJFWXoGR
-	oaSY/LytGwi+Kur6riIj9WFSw8A=
-X-Google-Smtp-Source: AGHT+IFQatZJEh1vMaYN2M2lTtxd4TB3DgwS5fDlIHVUeP0cQjVCzCSP2sGAFE7qJT7hKS5hKn1bKA==
-X-Received: by 2002:a17:902:d4d2:b0:215:9642:4d6d with SMTP id d9443c01a7336-21a83f55157mr23731385ad.17.1736319635015;
-        Tue, 07 Jan 2025 23:00:35 -0800 (PST)
+        bh=evJHXxUH8wpRsLAfhvt7S2AIimf3Ggw2vmlVHfN1TNM=;
+        b=RCjhBOonds7oFkr27BLlNNUMaffyfEiGkHmJii/386/by4jEmWtfAcXNP6uPLku+Nz
+         EuQa2K7KwWX+yiz8Qr23H7/OLX9x3/HDAlupF44v4yTWCojzyWVLXxa74zo1Ki0+8zCL
+         NL3P16ZW4Qhq3cRYH11+GvlK8MsCww1Z+yTZuh7TCrblBHYxbCGoihQ1LQORFbj51iHg
+         GsXsUty88Ztv0C6n8fBP8B02DfvcFSDq6+pc2mnpBKF0ipyEgBLhaA9yiMP+BD2dB3zx
+         txOLSrSsetbPYzN0J9zueAgWIOZJYaO/pFS2acoyI4R5TaZqFE/EgyoQP9Z1uuzDdudZ
+         6rzg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+A4fvj0i0u74JayfHUXuZIzxdO9E4qK6DI02GdFTAJHlMOo3ysuSaxCOMp9dpc0SvVdCeuOjRRYE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZFNxDjCPPK5eNq1bjuA75TLnIdBkcORCuNNHYDsKoKDTdRE7n
+	LMTahpxhCexuRpEBZ9cjYIRywzaQJVPMxv9EuRmHBSCkRNlP0IKbUXqAzZPCpVM=
+X-Gm-Gg: ASbGncur6uFswzyaMTnhtq4Yh81aPxLikyOClJDcKDrHHadzx1+0dv1eDI0tiH7brCk
+	oH6tHJuRBdMs4s3x4PiH8rFtU47/IlVjhRnuBKLNmE4nBMnQHY2ghe1ayBo6cl10YklsmbA8W/m
+	6SsMcXatSTCRB7yrQYArIdsl4/fnVtIrR57nxjMtXUk+oV4Mo7ZH3jLMW0ZXa9VA7TLqLL4YvZM
+	R/lusc8OY+dYm/e594jleSYukcIYwYEY9rs3NwnHgC76o6GAH09I9yEy4GFlhOu1PmW/91jaqf9
+	Li56Me8/v0Xq71PqmsAH3v7Y4L8=
+X-Google-Smtp-Source: AGHT+IF9X6lXCsguwyHO5KdCHubvdTIDd4Y888fAuDMWr6lGszjnzuDzetJYvdD8sXl2Z0Y5NvXbNg==
+X-Received: by 2002:a17:902:cec3:b0:216:7ee9:220b with SMTP id d9443c01a7336-21a83f4f43amr30110425ad.22.1736319649715;
+        Tue, 07 Jan 2025 23:00:49 -0800 (PST)
 Received: from C02DW0BEMD6R.bytedance.net ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dca023a3sm320067275ad.250.2025.01.07.23.00.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dca023a3sm320067275ad.250.2025.01.07.23.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 23:00:34 -0800 (PST)
+        Tue, 07 Jan 2025 23:00:49 -0800 (PST)
 From: Qi Zheng <zhengqi.arch@bytedance.com>
 To: peterz@infradead.org,
 	agordeev@linux.ibm.com,
@@ -101,9 +101,9 @@ Cc: linux-mm@kvack.org,
 	linux-sh@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v5 05/17] arm64: pgtable: use mmu gather to free p4d level page table
-Date: Wed,  8 Jan 2025 14:57:21 +0800
-Message-Id: <3fd48525397b34a64f7c0eb76746da30814dc941.1736317725.git.zhengqi.arch@bytedance.com>
+Subject: [PATCH v5 06/17] s390: pgtable: add statistics for PUD and P4D level page table
+Date: Wed,  8 Jan 2025 14:57:22 +0800
+Message-Id: <4707dffce228ccec5c6662810566dd12b5741c4b.1736317725.git.zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <cover.1736317725.git.zhengqi.arch@bytedance.com>
 References: <cover.1736317725.git.zhengqi.arch@bytedance.com>
@@ -115,53 +115,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Like other levels of page tables, also use mmu gather mechanism to free
-p4d level page table.
+Like PMD and PTE level page table, also add statistics for PUD and P4D
+page table.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Originally-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
 ---
- arch/arm64/include/asm/pgalloc.h |  1 -
- arch/arm64/include/asm/tlb.h     | 14 ++++++++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/pgalloc.h | 29 +++++++++++++++++++++--------
+ arch/s390/include/asm/tlb.h     |  2 ++
+ 2 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
-index 2965f5a7e39e3..1b4509d3382c6 100644
---- a/arch/arm64/include/asm/pgalloc.h
-+++ b/arch/arm64/include/asm/pgalloc.h
-@@ -85,7 +85,6 @@ static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
- 	__pgd_populate(pgdp, __pa(p4dp), pgdval);
- }
- 
--#define __p4d_free_tlb(tlb, p4d, addr)  p4d_free((tlb)->mm, p4d)
- #else
- static inline void __pgd_populate(pgd_t *pgdp, phys_addr_t p4dp, pgdval_t prot)
+diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
+index 7b84ef6dc4b6d..a0c1ca5d8423c 100644
+--- a/arch/s390/include/asm/pgalloc.h
++++ b/arch/s390/include/asm/pgalloc.h
+@@ -53,29 +53,42 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
  {
-diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-index a947c6e784ed2..445282cde9afb 100644
---- a/arch/arm64/include/asm/tlb.h
-+++ b/arch/arm64/include/asm/tlb.h
-@@ -111,4 +111,18 @@ static inline void __pud_free_tlb(struct mmu_gather *tlb, pud_t *pudp,
- }
- #endif
+ 	unsigned long *table = crst_table_alloc(mm);
  
-+#if CONFIG_PGTABLE_LEVELS > 4
-+static inline void __p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4dp,
-+				  unsigned long addr)
-+{
-+	struct ptdesc *ptdesc = virt_to_ptdesc(p4dp);
+-	if (table)
+-		crst_table_init(table, _REGION2_ENTRY_EMPTY);
++	if (!table)
++		return NULL;
++	crst_table_init(table, _REGION2_ENTRY_EMPTY);
++	pagetable_p4d_ctor(virt_to_ptdesc(table));
 +
-+	if (!pgtable_l5_enabled())
+ 	return (p4d_t *) table;
+ }
+ 
+ static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
+ {
+-	if (!mm_p4d_folded(mm))
+-		crst_table_free(mm, (unsigned long *) p4d);
++	if (mm_p4d_folded(mm))
 +		return;
 +
-+	pagetable_p4d_dtor(ptdesc);
-+	tlb_remove_ptdesc(tlb, ptdesc);
-+}
-+#endif
++	pagetable_p4d_dtor(virt_to_ptdesc(p4d));
++	crst_table_free(mm, (unsigned long *) p4d);
+ }
+ 
+ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+ {
+ 	unsigned long *table = crst_table_alloc(mm);
+-	if (table)
+-		crst_table_init(table, _REGION3_ENTRY_EMPTY);
 +
- #endif
++	if (!table)
++		return NULL;
++	crst_table_init(table, _REGION3_ENTRY_EMPTY);
++	pagetable_pud_ctor(virt_to_ptdesc(table));
++
+ 	return (pud_t *) table;
+ }
+ 
+ static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+ {
+-	if (!mm_pud_folded(mm))
+-		crst_table_free(mm, (unsigned long *) pud);
++	if (mm_pud_folded(mm))
++		return;
++
++	pagetable_pud_dtor(virt_to_ptdesc(pud));
++	crst_table_free(mm, (unsigned long *) pud);
+ }
+ 
+ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
+diff --git a/arch/s390/include/asm/tlb.h b/arch/s390/include/asm/tlb.h
+index e95b2c8081eb8..907d57a68145c 100644
+--- a/arch/s390/include/asm/tlb.h
++++ b/arch/s390/include/asm/tlb.h
+@@ -122,6 +122,7 @@ static inline void p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d,
+ {
+ 	if (mm_p4d_folded(tlb->mm))
+ 		return;
++	pagetable_p4d_dtor(virt_to_ptdesc(p4d));
+ 	__tlb_adjust_range(tlb, address, PAGE_SIZE);
+ 	tlb->mm->context.flush_mm = 1;
+ 	tlb->freed_tables = 1;
+@@ -140,6 +141,7 @@ static inline void pud_free_tlb(struct mmu_gather *tlb, pud_t *pud,
+ {
+ 	if (mm_pud_folded(tlb->mm))
+ 		return;
++	pagetable_pud_dtor(virt_to_ptdesc(pud));
+ 	tlb->mm->context.flush_mm = 1;
+ 	tlb->freed_tables = 1;
+ 	tlb->cleared_p4ds = 1;
 -- 
 2.20.1
 
