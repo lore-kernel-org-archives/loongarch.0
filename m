@@ -1,238 +1,195 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F395218591
-	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 12:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88BC175D39
+	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 16:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736427378; cv=none; b=VMJh3p+KGWCAY9TmSJtfGvaMOZpG/acA6eyLxrOkYH6YEnQlHLGgZLk67SIImwqAzycpYnPEc/00CTWFrMLUfuqNSX0XDzKhwb5YwRhd97I/i/92psceSihoYsC/K1qM3KCQ+pUJepao5RflIiolJjEWbHa+bEH8zjlTfZkyk+c=
+	t=1736441564; cv=none; b=J+ECB8EqlWmYdKGQM7NS8FT5fX+9BYR6UTXJZtG7qsagCA3NvIpLIgtf0DwzhaGLqnZK7V/vdGGXFe/GEuvLfP+Amlwul7nfYxp31hlYflxfLodYZHljr6zCpQeeJlfSw9iiF+GIRGFdQckPXxuiIu5O0o4ZiEsTof5PtK0klao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736427378; c=relaxed/simple;
-	bh=QA+w33pmEF1L5mGPFZCUVVEKLfucT1KxzwXEzoz12/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f70kDgQX3r2oAEX1xOLdjKfO1UogybjLGBI26kagK2Rb16YStzqzuj/0dUK/FFxLOa9kEb6ToLSlcjZ15NCqbqfJY43BN3W0IQnZhxWyFh2dyM1XVa+CU+7r8CsSM4IslsYf2rPNtJ1Y15Rn1h//gFJ0d2MCNHuIZNwsssaFRqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+GN/KFk; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736441564; c=relaxed/simple;
+	bh=luB/Q7Pr54h8XDanrm9In8nLROzm5SSp1mJmyiSn6SI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=nAqK2WFUCs+m2qy4SiOgDc557xSdL1+uwf4jv1DD3jEKCXFEWV9cM4rk5VySIucO97yWqIEvqf5RGdsKWPavYvN/Jdnwh2grmTUvoYyWs0q2xGpWA2gEZnzbHZwrq1oH7Cc6WG1L22A1YEYYEY/14oMkWmWEJOOfvC4rDpeyV0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gOTKsWAv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DLvVmNVm; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+GN/KFk"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3f28a4fccso1066477a12.2
-        for <loongarch@lists.linux.dev>; Thu, 09 Jan 2025 04:56:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736427374; x=1737032174; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NEz38DtTOWq2njzGUgwlj9ewqqxd3JoGkoly/wJ2398=;
-        b=h+GN/KFkV8MdcThtHgC8XcvnCD/70YTmsy0KcEHUHuZEwAm4MJGKylVPrw4/LbCjK1
-         seLtN8kFAkFMNqkGBZ/d4YMt70BFrBzMcZKkdYyD7IFQphb8rRrycW23cjtvWH7hjjxk
-         /D/aQ8kvx1GhPp9YUW1SzOMJaYzb7dyvWjU/wdHPF3w2sA1ZFeWaVaIsxOV/Pm9VajVf
-         QK3i14XQNNByI2F+NB7OFWHkFM7BJ9n3gEB7pB9gNXu/2TLzLChvLauJlBkM7dJ0LgxL
-         aVOO6IdECUsb7kBwFjY2Ckg6dxy5xh4hRWWZpsv/p1CSERhWxDhWII4yu12FFjgtQS4R
-         N4DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736427374; x=1737032174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NEz38DtTOWq2njzGUgwlj9ewqqxd3JoGkoly/wJ2398=;
-        b=ZR8oLyIZr419ERh1uyeRR0H5+/8lfQ1Uhl5DsSwQObb945n2kYNfdq3zQny1MrCzxH
-         j+eqjp3u/tx0BR8lGO9zc9M6+8NxK4uKxR/mx6AChcSG/xRLB+U98IXkhsysf4U43Fuz
-         IVMNBNo/5AUR8M0WQJojdQoa507rBY1Oq+1ipefyPzF8vYzpiY+NJ6Jrxz7udGVXNvLM
-         Pyk6peYdIvbygWJ5z3mOPwW1gEFViQHSVQ5eHyjoANhRCWuroICHjskd8eF67Ge6WKWv
-         RzVZycdE7PKRpYtTk4zs4SqXzpRQGMwbTDAi/YhG4uyZjtMHukmTHLvJsCxKTm9nUxL1
-         KW/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWCWLTVaBMA/bzC7CLPLkFhy17LxWsQQbrDu8816abnyTfzl8x4JSygRPyv1SyZ/GRNa8TTsPVJizQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxOkNxaqY/uASyI5vU4Y1abI8iteS0ktJSTWWHbwANoCfcUkrSF
-	K9c5TYqQorLmN9zQjUytWiL+RuEV1igG8rerOJXsXeFRLmAo/CS4hEK0nI5sT7N0/m4BDGLfpP8
-	msNKhBRcd+AUZRgwT5EDn8Rn/Zpo=
-X-Gm-Gg: ASbGnctmS8epKWfvZozdmVZeLj3eDQbiehx7VhwS05y16AlpqEw6Qriv6bcO/A7qG+Q
-	i4rCpeuiIBgmE1EQz/wPZYNVynSt+H8GoYT9ORuaQ
-X-Google-Smtp-Source: AGHT+IFVbyh6UP8WoK4yZ81Vp8WbecdQUVFZqRCepllXETdu2aj5PHKb14SluGR7PQhfJwfA5AYrx5mYDmAL84OvN+o=
-X-Received: by 2002:a05:6402:278f:b0:5d0:e63e:21c3 with SMTP id
- 4fb4d7f45d1cf-5d972e085d7mr5917553a12.14.1736427374081; Thu, 09 Jan 2025
- 04:56:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gOTKsWAv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DLvVmNVm"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.stl.internal (Postfix) with ESMTP id 72DED1140137;
+	Thu,  9 Jan 2025 11:52:41 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Thu, 09 Jan 2025 11:52:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1736441561;
+	 x=1736527961; bh=/rcKcUgOCZt40Un+pkihZ5X0Uu+7S4RKKMTZS1cf54U=; b=
+	gOTKsWAvZ1JEALHrwD/oajJGGxAcx2U/RSOyBlM8m+cHfL5IEyEqXSDdRHm10huj
+	vqyfZHkgoOpSMt1LVLFKEG3O/l+wzre9xJxQSRFff6cD2QdmCcWoBCkmmIVzlZV7
+	9JMH37sR7cFSdrcczqkiSA+/eZHkbt1dDLsBGimqn/NkbNjGbjUNkmOUSgYg7O1c
+	BmzcI/5NSzuCAwmDA8x46RXBKrwSGFxsFcoQ1gvw5RmLvz39Ws5TqLmZHAfBH1df
+	kXs1058mtncX1v8ksZ//WTMeAvXmc+KU3nWFBsjBOyjpZsq6sI6T+u+GgGaYMwPc
+	Li8OlGseAVR0KZK6hn9fdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736441561; x=
+	1736527961; bh=/rcKcUgOCZt40Un+pkihZ5X0Uu+7S4RKKMTZS1cf54U=; b=D
+	LvVmNVmSLnLjGstioKiE6GNIH7n48D8d7QeqviiRaTqI8dmZKwHpm84ExKPwnZ+q
+	7JZl5d5RC4nvK+jEwPD0cafJcqisdN/aD+fXkbXHddkvpIGW56Crc9RfV3RPB4Kr
+	hZ7KR8q7Nuo51zN/tft2F39Lzu6LesJ+fHSR4VvUGvH4Gs90I/hN5HD7g25VjHVc
+	KhaaJRC4uhSNzBoZuNHuUwEPTauRJj2YwvynYhJGCl3oExZq8VU5faLFfrjajKWN
+	s/Xe/9AuqSbQcTqLKimhnkv1pLP3btobq0mCbWBDJeooN06/aC7Ep41Bv3Wchncp
+	d3CWy9RwO/ytOXmrSP26A==
+X-ME-Sender: <xms:1_5_Z6YmniTm5qBTb57UMp88kRBJ6-R6sh054AcN7yR6tCwzgZ-PiA>
+    <xme:1_5_Z9a0DYvnw7UbAdf1aMjj21RjnmHyuxzzWx3-xoVNBOYNgfUpGU9VESbhrWIw4
+    TQPfr4iRQPBJXnrmUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegiedgleduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudek
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeiivghhrgesuggvsghirghnrdhorh
+    hgpdhrtghpthhtohepshgrmhesghgvnhhtohhordhorhhgpdhrtghpthhtohepmhgrthht
+    shhtkeeksehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehprghulhhmtghksehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehrihgthhgrrhgurd
+    hhvghnuggvrhhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehgvggvrhhtsehl
+    ihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhsth
+    hsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:1_5_Z0-b9sXywAWK6nVe4mNlyXUIR65b62h0JtSprMMaWhSeqmnrBg>
+    <xmx:1_5_Z8qGQM3FHB4zqKGinuIPOTEks_QFKJBr6t_RY3FPoOcZ3swRpA>
+    <xmx:1_5_Z1qkDgjnyFfScoIhoayyrreVnDCRVePDSzeiCGIrtYQheeCuGw>
+    <xmx:1_5_Z6Ryw6X7xWMAOnC7qSRcQkY5xdtH9n2QzGU2u_tPqQ4xly14UQ>
+    <xmx:2f5_Z08eeA-zBPAw9NGwkPs0AKkpYY4i2SVGT55o8VtwTdxLoccgkpnY>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 33BF12220072; Thu,  9 Jan 2025 11:52:39 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1735550269.git.zhoubinbin@loongson.cn> <4d62076ee560b35c653a9fbced8d03ef3bdb3005.1735550269.git.zhoubinbin@loongson.cn>
- <3daaaff8-062a-4985-a5bc-8d228314b02e@suse.de> <CAMpQs4JcuRhpOyXHxy0ab+D-Wd0itKdb0GiZdTE59_qEpUfyLA@mail.gmail.com>
- <390c14a5-44fe-4328-bcc4-2aa1384e3ad1@suse.de> <CAMpQs4L38rDEDYM64jJ6pO+g=M4+etKN9v9+ygzkLY6RQgu94A@mail.gmail.com>
- <392f855c-4474-4e12-8bdc-3baf43d34e13@suse.de>
-In-Reply-To: <392f855c-4474-4e12-8bdc-3baf43d34e13@suse.de>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 9 Jan 2025 20:56:01 +0800
-X-Gm-Features: AbW1kvb83mK1OYk5q5Dc7_3GC4pnKl8oLMmBZm6vTEKRq7fQQd39kBPeQAPHqu8
-Message-ID: <CAMpQs4+_5v23z3bkT4ykPE_PkgZYUTGKM82xcGnyj4US4O4TCw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] drm/ls2kbmc: Add support for Loongson-2K BMC display
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jan 2025 17:52:18 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Eric W. Biederman" <ebiederm@xmission.com>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>
+Cc: "Richard Henderson" <richard.henderson@linaro.org>,
+ "Matt Turner" <mattst88@gmail.com>, "Kees Cook" <kees@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, linux-alpha@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ "Michael Cree" <mcree@orcon.net.nz>, "Sam James" <sam@gentoo.org>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
+ "Chris Hofstaedtler" <zeha@debian.org>, util-linux@vger.kernel.org,
+ linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Message-Id: <9b1749f0-e936-4bf5-90d6-8cf15e4f0ed9@app.fastmail.com>
+In-Reply-To: <87ed1cufj1.fsf@email.froward.int.ebiederm.org>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+ <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+ <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+ <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+ <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+ <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+ <87ed1cufj1.fsf@email.froward.int.ebiederm.org>
+Subject: Re: [PATCH] alpha: Fix personality flag propagation across an exec
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas:
-
-Sorry for the late reply.
-
-On Mon, Jan 6, 2025 at 10:10=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
-.de> wrote:
+On Thu, Jan 9, 2025, at 17:18, Eric W. Biederman wrote:
+> John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de> writes:
+>> On Thu, 2025-01-09 at 09:56 +0100, Arnd Bergmann wrote:
+>>> On Thu, Jan 9, 2025, at 09:46, John Paul Adrian Glaubitz wrote:
+>>> > On Thu, 2025-01-09 at 09:43 +0100, Arnd Bergmann wrote:
+>>> > > On Thu, Jan 9, 2025, at 09:01, Arnd Bergmann wrote:
+>>> > > > This looks wrong to me: since ADDR_LIMIT_32BIT is not part of
+>>> > > > PER_MASK, executing a regular binary from a taso binary no longer
+>>> > > > reverts back to the entire 64-bit address space.
+>>> > > > 
+>>> > > > It seems that the behavior on most other architectures changed in 2012
+>>> > > > commit 16f3e95b3209 ("cross-arch: don't corrupt personality flags upon
+>>> > > > exec()").
+>>> > > > 
+>>> > 
+>>> > So, if I understand this correctly, we should just use PER_MASK on alpha
+>>> > for 64-bit executables and allow the bits to be cleared for 32-bit binaries?
+>>> 
+>>> I think ideally the EF_ALPHA_32BIT handling should use TIF_32BIT
+>>> as we do on other architectures, at that point the custom SET_PERSONALITY()
+>>> can be removed in favor of the asm-generic version.
+>>
+>> I have thought about that as well but I wasn't sure whether the extra
+>> mangling on alpha was necessary.
+>>
+>>> Alternatively this could do something like the arm32 version (note
+>>> that on arm, PER_LINUX_32BIT/ADDR_LIMIT_32BIT means "allow using
+>>> the entire 32-bit address space rather than limiting to 26 bits for
+>>> compatibility", while on alpha it means "use only 31 instead of
+>>> 42 bits for addressing", but the logic can be the same):
+>>> 
+>>>         unsigned int personality = current->personality & ~PER_MASK;
+>>>         /*
+>>>          * APCS-26 is only valid for OABI executables
+>>>          */
+>>>         if ((eflags & EF_ARM_EABI_MASK) == EF_ARM_EABI_UNKNOWN &&
+>>>             (eflags & EF_ARM_APCS_26))
+>>>                 personality &= ~ADDR_LIMIT_32BIT;
+>>>         else
+>>>                 personality |= ADDR_LIMIT_32BIT;
+>>>         set_personality(personality);
+>>
+>> So, this would be the 100% correct for alpha then which would not loose
+>> any functionality even for 32-bit binaries?
 >
-> Hi,
+> I don't think it is correct to think about 32-bit binaries on alpha.
 >
-> Thanks for the info.
->
->
-> Am 06.01.25 um 08:03 schrieb Binbin Zhou:
-> [...]
-> >> Could you point to the exact call that fails within simpledrm?
-> > If we use simpledrm directly, the following error occurs:
-> >
-> > [    8.289823] simple-framebuffer simple-framebuffer.0: [drm] *ERROR*
-> > could not acquire memory range [mem 0xe0031200000-0xe00315fffff flags
-> > 0x200]: -16
-> > [    8.312681] simple-framebuffer simple-framebuffer.0: probe with
-> > driver simple-framebuffer failed with error -16
-> >
-> > The reason for the failure: overlapping resources.
-> >
-> > https://elixir.bootlin.com/linux/v6.12.6/source/drivers/video/aperture.=
-c#L175
->
-> This error means that there's already an instance of simpledrm bound to
-> the BMC framebuffer. So you already have a working display and some
-> graphics under Linux without the new driver, right?
+> Alpha never had a 32bit instruction set.  But at some point it looks
+> like binaries that could not handle more than 31 bits of address
+> space got ported and someone implemented a work-around.  I guess this
+> is the --taso option that Arnd mentioned.
 
-Yes, I checked again and found that the **efifb** binds to the BMC framebuf=
-fer.
+There was a well-documented use case for taso with emulation for
+OSF/1 a.out binaries, in particular Netscape used 32-bit pointers.
+However, the a.out support got removed a while back, and I have
+not figured out why it was ever added for ELF. Maybe it was just
+easy to duplicate this from the a.out loader?
 
+Obviously some 30 years ago it was common that software was
+broken on 64-bit because of invalid integer-pointer casting,
+but these days, it's much more common to be broken on 32-bit
+instead.
+
+> I think the alpha version would look like:
 >
-> If so, why do you need a new driver that does exactly the same as simpled=
-rm?
+> #define SET_PERSONALITY(ex) 							\
+> 	do {									\
+> 		unsigned long personality = current->personality & ~PER_MASK;	\
+>                 if ((EX).e_flags & EF_ALPHA_32BIT)				\
+>                 	personality |= ADDR_LIMIT_32BIT;			\
+> 		else								\
+>                 	personality &= ~ADDR_LIMIT_32BIT			\
+> 		set_personality(personality);					\
+> 	while (0)
 
-Regarding the new driver, we implemented the BMC display based on
-simpledrm. But first we need to fix the initialization failure above,
-and more importantly, we need to implement the BMC reset function [1].
+Yes, that was what I was suggesting.
 
-Specifically, when the BMC reset, it will cause the pcie controller to
-disconnect and the display will be disconnected with it. After that,
-we need to restore the pcie bar data, as well as re-push the display
-information (ls2kbmc_push_drm_mode()).
+> I do see code under arch/alpha/ testing ADDR_LIMIT_32BIT when
+> setting STACK_TOP, TASK_UNMAPPED_BASE, and arch_get_unmapped_area.
+> So I think the code still works.
 
-Based on this, I would like to rewrite a new display driver.
+MIPS introduced the SET_PERSONALITY2() macro specifically to
+allow the TIF flags to be set early enough to apply to the
+stack allocation, so I suspect it only works partially.
 
-[1]: patch(4/4)
-https://lore.kernel.org/all/b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.173555=
-0269.git.zhoubinbin@loongson.cn/
->
-> Best regards
-> Thomas
->
-> >>> Because although we register the driver in platform form, its memory
-> >>> belongs to pci space and we can see the corresponding pci probe and
-> >>> resource allocation in Patch-1.
-> >> I don't understand. Graphics memory is often located on the PCI bus.
-> >> What is so special about this one?
-> >>
-> >>> Therefore, we need to use aperture_remove_conflicting_pci_devices().
-> >> So there is already a device that represents the graphics card? That's
-> >> what you'd remove here? If you only add that MFD device, who owns the
-> >> framebuffer? If it's the PCI device from patch 1 ("ls2k-bmc"), why doe=
-s
-> >> aperture_remove_conflicting_pci_devices() not remove that device? I'm
-> >> somewhat confused, because the logic in your driver mostly looks like =
-it
-> >> binds to a pre-configured framebuffer, but some of the code doesn't.
-> > Perhaps the use of aperture_remove_conflicting_pci_devices() is wrong,
-> > as there is only one display device for the LS2K BMC and there will be
-> > no phase conflict.
-> >
-> > When I tried to use that API before, it was partly due to the error
-> > above, and partly because I referenced that other display drivers via
-> > pci_driver.probe() would have it, just in case I used it, which was
-> > probably the wrong choice.
-> >
-> > The resources for pci bar0 are as follows:
-> > BAR0: e0030000000/SZ_32M
-> >
-> > 0x0              0x600000  0xf00001c    16M            32M
-> > +----+--------------+--------+-----------+---+-----------------+
-> > | 2M | simpldrm |           | IPMI      |     | video env     |
-> > +-----------------------------------------------------------------+
-> >
-> > The mfd driver registers the ls2kbmc-framebuffer and ls2k-ipmi-si
-> > devices according to the resource allocation shown above. At the same
-> > time, the ls2kbmc drm is bound to the pre-configured =E2=80=9Csimpldrm=
-=E2=80=9D
-> > resource in the above figure, which is passed through the
-> > ls2kbmc-framebuffer driver. In addition, the resolution is read from
-> > =E2=80=9Cvideo env=E2=80=9D for the time being, and the resolution adap=
-tion is planned
-> > to be added later.
-> >
-> >> Best regards Thomas
-> >>
-> >>> Also, since we are using BMC display, the display will be disconnecte=
-d
-> >>> when BMC reset, at this time we need to push the display data (crtc,
-> >>> connector, etc.) manually as shown in Patch-4.
-> >>>
-> >>> Probably it's not the most suitable way to implement it.
-> >>>
-> >>>> Best regards
-> >>>> Thomas
-> >>>>
-> >>>>> +     },
-> >>>>> +     .probe =3D ls2kbmc_probe,
-> >>>>> +     .remove =3D ls2kbmc_remove,
-> >>>>> +};
-> >>>>> +
-> >>>>> +module_platform_driver(ls2kbmc_platform_driver);
-> >>>>> +
-> >>>>> +MODULE_DESCRIPTION("DRM driver for Loongson-2K BMC");
-> >>>>> +MODULE_LICENSE("GPL");
-> >>>> --
-> >>>> --
-> >>>> Thomas Zimmermann
-> >>>> Graphics Driver Developer
-> >>>> SUSE Software Solutions Germany GmbH
-> >>>> Frankenstrasse 146, 90461 Nuernberg, Germany
-> >>>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> >>>> HRB 36809 (AG Nuernberg)
-> >>>>
-> >> --
-> >> --
-> >> Thomas Zimmermann
-> >> Graphics Driver Developer
-> >> SUSE Software Solutions Germany GmbH
-> >> Frankenstrasse 146, 90461 Nuernberg, Germany
-> >> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> >> HRB 36809 (AG Nuernberg)
-> >>
-> >
-> > --
-> > Thanks.
-> > Binbin
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
-
-
---=20
-Thanks.
-Binbin
+         Arnd
