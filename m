@@ -1,121 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B936812EBEA
-	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 11:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62E11A23B0
+	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 11:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736422221; cv=none; b=RIasZFs+JkO1d9hq7meOXOk2++19cD3wVMb5nOMGInqadzLgVe+34qix8vBbgDwDmcVyV7J9lj3eekiT1nYZTOmwHo8ZHk+wzHuB7idZZaaqVFcCgOOxAAAP4TOQRFjmPTi/W2bj5lVPkgi4a1EPQI4UitahqCmC+guyA0Ypa+M=
+	t=1736423785; cv=none; b=f0j1L8TRI8wzKAh5F0PKrL27jEGbeIxTS/PJ/2eebu02CxFVYNqcbtIukMtmGzvcxd3HWaGF355D44nIma0juuVq7+JiNsBCotfMKZyDKdkx+d0YzREwby2dV+UDgcWqDrHc6m+J5GUBF8faSg8pp6MsSYiZeFvharKDnuywJEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736422221; c=relaxed/simple;
-	bh=lb95zDcFf4pHNYtU0mfMsr//Td60UKrcikJ1/j9k9LU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gFb7H0jN2nPNXTmiJnwCdQ08x5xfBDGX/g92zvKGeykhU25NwOK1SKKPNEkCMbitXhJD2/u3HuZS5f+2OHbQbVg2s+f3dJ9rVtw7oj7tshBHaQtN5zSblPEYAqvF/2bvD8Cb7UkgN3tNY5fde7fwisG7LnPa9IqqQWyGrmuZYRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.63])
-	by gateway (Coremail) with SMTP id _____8BxIK9Gs39nl5dgAA--.34245S3;
-	Thu, 09 Jan 2025 19:30:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.63])
-	by front1 (Coremail) with SMTP id qMiowMBxjcU_s39npy0bAA--.47595S2;
-	Thu, 09 Jan 2025 19:30:11 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	linux-clk@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	stable@vger.kernel.org,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2] clk: clk-loongson2: Fix the number count of clk provider
-Date: Thu,  9 Jan 2025 19:30:04 +0800
-Message-ID: <20250109113004.2473331-1-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1736423785; c=relaxed/simple;
+	bh=D3sA98W32+zngVbnalNpt0EtP/yVNDM4WQtJkKd3srk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L+dd7A8c0enVSFVpfYuodL+EK4yGXU3/eyO8n5WWwpe1Wre9+0cLD5aFxm/1Y2EBovYIi0XTZQlVzphZPQtvdWEVpRvZJXQgQUNLquDjljyl0MS6O3jybEE54PMC7xfWmOEQRePwxOKajr+KtV7AYbfuE0Hofyu4Q4KPtwCawcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HU3Eulhe; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HU3Eulhe"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 508NwEl2016724;
+	Thu, 9 Jan 2025 11:55:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TEFEUs
+	DUypMb0E06F+mIr6mms6VLi/ADn+g21sLTM6M=; b=HU3Eulheor5aaMA38MgqND
+	w5D0VsYZ9Y4ZQYJZvyu4WLwzk/lzISPX279vOi1rwp0OvImCElaqBmZ7yGv4GXtm
+	vKwEzqRIH6fu9psGCV1MCIKHOFAwC/4SQQ1AC5BtxaNM8wdtW+DAIciNpYPO6Ll6
+	rLdpqprshTa3IetrfZ8gd5phbjzubOZ9ML1FsMTvRNrN2rZkXWtL51/wIfyNRwsc
+	zmVXIeHDTR4Dx4SMQ7DiZQb0y62yBcOaIrAEugKNmaBRj2/WpqHifUmZzBe2/kuP
+	CAm9wsvyCG2SQnvkSXl/G1rirz7QoOVkinRwkhD5FGKGs504YPdGvBwjkZgyGuxw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4423ghtph4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jan 2025 11:55:26 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 509BlQgB005767;
+	Thu, 9 Jan 2025 11:55:25 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4423ghtph1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jan 2025 11:55:25 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5099fC1i027929;
+	Thu, 9 Jan 2025 11:55:24 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43yhhkcq4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jan 2025 11:55:24 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 509BtLGd26739390
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Jan 2025 11:55:21 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2F272004B;
+	Thu,  9 Jan 2025 11:55:20 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 379C620043;
+	Thu,  9 Jan 2025 11:55:20 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  9 Jan 2025 11:55:20 +0000 (GMT)
+Date: Thu, 9 Jan 2025 12:55:18 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Russell King <linux@armlinux.org.uk>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+        loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 10/17] s390/vdso: Switch to generic storage implementation
+Message-ID: <20250109115518.9731-A-hca@linux.ibm.com>
+References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
+ <20241216-vdso-store-rng-v1-10-f7aed1bdb3b2@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxjcU_s39npy0bAA--.47595S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AF13ZF43XryUZry5JryfXwc_yoW8Cw45pF
-	W3A34jkr48ta1rZF1DJw4I9FyYk34FvFyrCFW7C3WkZrn8W34jgF1rAFW0qay3GF48uF1F
-	qryqkrW8CFWvkFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
+In-Reply-To: <20241216-vdso-store-rng-v1-10-f7aed1bdb3b2@linutronix.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7R5Vx0DTIiffSevdjEEF0ZCUrhmWvYEy
+X-Proofpoint-ORIG-GUID: A1txILdScefs6fUz5lPDNoUjZ1geeRhz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxscore=0 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ clxscore=1011 mlxlogscore=405 spamscore=0 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501090091
 
-Since commit 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer
-overflow in flexible-array member access"), the clk provider register is
-failed.
+On Mon, Dec 16, 2024 at 03:10:06PM +0100, Thomas Weiﬂschuh wrote:
+> The generic storage implementation provides the same features as the
+> custom one. However it can be shared between architectures, making
+> maintenance easier.
+> 
+> Co-developed-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  arch/s390/Kconfig                         |  1 +
+>  arch/s390/include/asm/vdso.h              |  4 +-
+>  arch/s390/include/asm/vdso/getrandom.h    | 12 ----
+>  arch/s390/include/asm/vdso/gettimeofday.h | 15 +----
+>  arch/s390/include/asm/vdso/vsyscall.h     | 20 -------
+>  arch/s390/kernel/time.c                   |  6 +-
+>  arch/s390/kernel/vdso.c                   | 97 ++-----------------------------
+>  arch/s390/kernel/vdso32/vdso32.lds.S      |  7 +--
+>  arch/s390/kernel/vdso64/vdso64.lds.S      |  8 +--
+>  9 files changed, 17 insertions(+), 153 deletions(-)
 
-The count of `clks_num` is shown below:
+Looks good to me and works.
 
-	for (p = data; p->name; p++)
-		clks_num++;
-
-In fact, `clks_num` represents the number of SoC clocks and should be
-expressed as the maximum value of the clock binding id in use (p->id + 1).
-
-Now we fix it to avoid the following error when trying to register a clk
-provider:
-
-[ 13.409595] of_clk_hw_onecell_get: invalid index 17
-
-Cc: stable@vger.kernel.org
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Fixes: 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer overflow in flexible-array member access")
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
-V2:
-- Add Gustavo A. R. Silva to cc list;
-- Populate the onecell data with -ENOENT error pointers to avoid
-  returning NULL, for it is a valid clock.
-
-Link to V1:
-https://lore.kernel.org/all/20241225060600.3094154-1-zhoubinbin@loongson.cn/
-
- drivers/clk/clk-loongson2.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index 6bf51d5a49a1..9c240a2308f5 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 
- 	for (p = data; p->name; p++)
--		clks_num++;
-+		clks_num = max(clks_num, p->id + 1);
- 
- 	clp = devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_num),
- 			   GFP_KERNEL);
-@@ -309,6 +309,9 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- 	clp->clk_data.num = clks_num;
- 	clp->dev = dev;
- 
-+	/* Avoid returning NULL for unused id */
-+	memset_p((void **)&clp->clk_data.hws, ERR_PTR(-ENOENT), clks_num);
-+
- 	for (i = 0; i < clks_num; i++) {
- 		p = &data[i];
- 		switch (p->type) {
--- 
-2.43.5
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
