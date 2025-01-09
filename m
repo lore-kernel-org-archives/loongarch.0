@@ -1,149 +1,121 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE5B2010EB;
-	Thu,  9 Jan 2025 09:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B936812EBEA
+	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 11:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736413930; cv=none; b=nvQkC54EGhB03gUUA3/ORZzKz7LkkfgqwjxbJGz6SN33m3oDlCltGbqlaKR8Mc77EZu9Bx38Hed3/9aC2MEFg0PchiLRpJyiKzBArk+Vbw0MmF6z0oqlgz5jXbJWdQFxbE4RdtJHw1ybot/XnOK4XJq61Po/3ggZa79RZ6AnKDQ=
+	t=1736422221; cv=none; b=RIasZFs+JkO1d9hq7meOXOk2++19cD3wVMb5nOMGInqadzLgVe+34qix8vBbgDwDmcVyV7J9lj3eekiT1nYZTOmwHo8ZHk+wzHuB7idZZaaqVFcCgOOxAAAP4TOQRFjmPTi/W2bj5lVPkgi4a1EPQI4UitahqCmC+guyA0Ypa+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736413930; c=relaxed/simple;
-	bh=uWstjnaDMBC/DC8rErmB9L3ULfT+RS/dR4tnmM3JbfU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bTFS7QmojLA2vrFJ2Dckw/yNO3HPHL3FwKSiNlasnq+fsFiYcxFMr+mBcKnc1jTGxQeaujoJC6y2zmRjlz19bqYyWB8BAU3upSnh/dcr6xGRFUqPydDFkIAEff4YTkj+BX7Kz8wgo0xHGj4aC5vFI0v/8JslNOqeiolVN2sE5vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=FGcfiPTs; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="FGcfiPTs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kczkN1t1mZsZMoxXbPcY2HTX2BfCPejPhaev8OStMg4=; t=1736413928; x=1737018728; 
-	b=FGcfiPTsjSZxMZj1dw+DXq2f4hHzvUesrSf8yF3oTrgjGObrUp8DrC78khgaNBP9awERLF6g0cW
-	BhBXOgKC0NFmgGW7y1SbUzVmSNqrtUL2Jzz4PJTsYJfWVB/6mjX62w05JBUk6MmSm/mQbvNh18Jp6
-	2MxWu7BIkNJ35Or5401bo0vfqJG5NMEWPGIAGsVOgIWW2yzj/u/96BoUSVVSx2cia9Y5BaDUyIXst
-	Hb7DRX5cgIYRMJ7aVLS5vjS4aQ9oBu9s//i2IrMXxipV4oFo8YYYnHHLW8FzcGj468iu8170rsdC1
-	Lebu7mki6cjhQmnrWu8iseR7tfYUYVkNOHNw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tVoaC-00000003tfA-1TV5; Thu, 09 Jan 2025 10:12:04 +0100
-Received: from p57bd9274.dip0.t-ipconnect.de ([87.189.146.116] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tVoaC-000000037Ep-0LtI; Thu, 09 Jan 2025 10:12:04 +0100
-Message-ID: <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] alpha: Fix personality flag propagation across an exec
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Arnd Bergmann <arnd@arndb.de>, Richard Henderson	
- <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, "Eric W.
- Biederman" <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, "Paul E.
- McKenney" <paulmck@kernel.org>, 	linux-alpha@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: Michael Cree <mcree@orcon.net.nz>, Sam James <sam@gentoo.org>, "Maciej
- W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Michael Karcher	 <kernel@mkarcher.dialup.fu-berlin.de>, Chris Hofstaedtler
- <zeha@debian.org>, 	util-linux@vger.kernel.org, linux-mips@vger.kernel.org,
- 	loongarch@lists.linux.dev
-Date: Thu, 09 Jan 2025 10:12:03 +0100
-In-Reply-To: <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
-References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
-	 <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
-	 <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
-	 <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
-	 <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	s=arc-20240116; t=1736422221; c=relaxed/simple;
+	bh=lb95zDcFf4pHNYtU0mfMsr//Td60UKrcikJ1/j9k9LU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gFb7H0jN2nPNXTmiJnwCdQ08x5xfBDGX/g92zvKGeykhU25NwOK1SKKPNEkCMbitXhJD2/u3HuZS5f+2OHbQbVg2s+f3dJ9rVtw7oj7tshBHaQtN5zSblPEYAqvF/2bvD8Cb7UkgN3tNY5fde7fwisG7LnPa9IqqQWyGrmuZYRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.63])
+	by gateway (Coremail) with SMTP id _____8BxIK9Gs39nl5dgAA--.34245S3;
+	Thu, 09 Jan 2025 19:30:14 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.63])
+	by front1 (Coremail) with SMTP id qMiowMBxjcU_s39npy0bAA--.47595S2;
+	Thu, 09 Jan 2025 19:30:11 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-clk@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	stable@vger.kernel.org,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Subject: [PATCH v2] clk: clk-loongson2: Fix the number count of clk provider
+Date: Thu,  9 Jan 2025 19:30:04 +0800
+Message-ID: <20250109113004.2473331-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxjcU_s39npy0bAA--.47595S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF13ZF43XryUZry5JryfXwc_yoW8Cw45pF
+	W3A34jkr48ta1rZF1DJw4I9FyYk34FvFyrCFW7C3WkZrn8W34jgF1rAFW0qay3GF48uF1F
+	qryqkrW8CFWvkFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-Hi Arnd,
+Since commit 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer
+overflow in flexible-array member access"), the clk provider register is
+failed.
 
-On Thu, 2025-01-09 at 09:56 +0100, Arnd Bergmann wrote:
-> On Thu, Jan 9, 2025, at 09:46, John Paul Adrian Glaubitz wrote:
-> > On Thu, 2025-01-09 at 09:43 +0100, Arnd Bergmann wrote:
-> > > On Thu, Jan 9, 2025, at 09:01, Arnd Bergmann wrote:
-> > > > On Fri, Jan 3, 2025, at 15:01, John Paul Adrian Glaubitz wrote:
-> > > >=20
-> > > > >=20
-> > > > >  #define SET_PERSONALITY(EX)					\
-> > > > > -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
-> > > > > -	   ? PER_LINUX_32BIT : PER_LINUX)
-> > > > > +	set_personality((((EX).e_flags & EF_ALPHA_32BIT)	\
-> > > > > +	   ? PER_LINUX_32BIT : PER_LINUX) | (current->personality & (~P=
-ER_MASK)))
-> > > >=20
-> > > > This looks wrong to me: since ADDR_LIMIT_32BIT is not part of
-> > > > PER_MASK, executing a regular binary from a taso binary no longer
-> > > > reverts back to the entire 64-bit address space.
-> > > >=20
-> > > > It seems that the behavior on most other architectures changed in 2=
-012
-> > > > commit 16f3e95b3209 ("cross-arch: don't corrupt personality flags u=
-pon
-> > > > exec()").
-> > > >=20
-> >=20
-> > So, if I understand this correctly, we should just use PER_MASK on alph=
-a
-> > for 64-bit executables and allow the bits to be cleared for 32-bit bina=
-ries?
->=20
-> I think ideally the EF_ALPHA_32BIT handling should use TIF_32BIT
-> as we do on other architectures, at that point the custom SET_PERSONALITY=
-()
-> can be removed in favor of the asm-generic version.
+The count of `clks_num` is shown below:
 
-I have thought about that as well but I wasn't sure whether the extra
-mangling on alpha was necessary.
+	for (p = data; p->name; p++)
+		clks_num++;
 
-> Alternatively this could do something like the arm32 version (note
-> that on arm, PER_LINUX_32BIT/ADDR_LIMIT_32BIT means "allow using
-> the entire 32-bit address space rather than limiting to 26 bits for
-> compatibility", while on alpha it means "use only 31 instead of
-> 42 bits for addressing", but the logic can be the same):
->=20
->         unsigned int personality =3D current->personality & ~PER_MASK;
->         /*
->          * APCS-26 is only valid for OABI executables
->          */
->         if ((eflags & EF_ARM_EABI_MASK) =3D=3D EF_ARM_EABI_UNKNOWN &&
->             (eflags & EF_ARM_APCS_26))
->                 personality &=3D ~ADDR_LIMIT_32BIT;
->         else
->                 personality |=3D ADDR_LIMIT_32BIT;
->         set_personality(personality);
+In fact, `clks_num` represents the number of SoC clocks and should be
+expressed as the maximum value of the clock binding id in use (p->id + 1).
 
-So, this would be the 100% correct for alpha then which would not loose
-any functionality even for 32-bit binaries?
+Now we fix it to avoid the following error when trying to register a clk
+provider:
 
-> In any case, I think we should fix alpha, mips and loongarch at
-> the same time, to make sure it doesn't take another decade to
-> fix the rest.
+[ 13.409595] of_clk_hw_onecell_get: invalid index 17
 
-If you're willing to fix all three at once, I would be happy to help
-with the testing on all three architectures as I have machines for all
-of these.
+Cc: stable@vger.kernel.org
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Fixes: 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer overflow in flexible-array member access")
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+V2:
+- Add Gustavo A. R. Silva to cc list;
+- Populate the onecell data with -ENOENT error pointers to avoid
+  returning NULL, for it is a valid clock.
 
-Adrian
+Link to V1:
+https://lore.kernel.org/all/20241225060600.3094154-1-zhoubinbin@loongson.cn/
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+ drivers/clk/clk-loongson2.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+index 6bf51d5a49a1..9c240a2308f5 100644
+--- a/drivers/clk/clk-loongson2.c
++++ b/drivers/clk/clk-loongson2.c
+@@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 
+ 	for (p = data; p->name; p++)
+-		clks_num++;
++		clks_num = max(clks_num, p->id + 1);
+ 
+ 	clp = devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_num),
+ 			   GFP_KERNEL);
+@@ -309,6 +309,9 @@ static int loongson2_clk_probe(struct platform_device *pdev)
+ 	clp->clk_data.num = clks_num;
+ 	clp->dev = dev;
+ 
++	/* Avoid returning NULL for unused id */
++	memset_p((void **)&clp->clk_data.hws, ERR_PTR(-ENOENT), clks_num);
++
+ 	for (i = 0; i < clks_num; i++) {
+ 		p = &data[i];
+ 		switch (p->type) {
+-- 
+2.43.5
+
