@@ -1,336 +1,144 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DF817548
-	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 06:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BB0206F3E
+	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 08:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736404291; cv=none; b=lEkotkejQXYQU9ODO3SswnGJI5vpCffSUHkxkWm2vv6bV9HRbyL8MVMYcUrv5JuS2FHAmTCLPwLeNgnoCdqJsh/AXZ7nDqsI2u9F9bKQkrsCqwAS4jLEC5kIbBZINfwrUWgvA7svnoUfqM6UNBSW9KVnuqDhEsee/3fFYy+JUFg=
+	t=1736412243; cv=none; b=tm9A7AjhSPbQig1YM3SSlVQln0JKZKdSw00fbNs2SWT+8GavEFxemXjm7tfyMAuTuIIjKu4AbHaohhlYaoCnKPXLp1vBieZIotW/3WBHNEm5Rv0yr8frUPrIei3/MIDj8ur6N7OgYjibKRjPnZ0OrWMMMxVX3ipJ7Z3D0OIQRJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736404291; c=relaxed/simple;
-	bh=aLFq2nxZ2sdNdfLZxJIlCc2BseCDyw44v/JTQPGTSQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l2uwnQWSZSts82Qtj660ABTWXt17iwGe5ZezemB0MkbZetjhFpMuChS/xnVWCGadU6SPNPDiHqODfIlLIYkminZhDQ8ctK2sYEoyUcThAiQtXJY4kgA+h0Rw2iCuVPjMgr4NKUaQ/qEA4z9QQgZk0LWt2E0NKiDRbBPoceNNRmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.63])
-	by gateway (Coremail) with SMTP id _____8DxmeAybX9nOW5gAA--.58759S3;
-	Thu, 09 Jan 2025 14:31:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.63])
-	by front1 (Coremail) with SMTP id qMiowMBxUMYtbX9np88aAA--.16097S2;
-	Thu, 09 Jan 2025 14:31:13 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add debugfs entries to switch SFB/TSO state
-Date: Thu,  9 Jan 2025 14:30:56 +0800
-Message-ID: <20250109063056.2438304-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1736412243; c=relaxed/simple;
+	bh=8H6BygMIu1Z3lOz7VJer5HBaeLon7BbM/2AemECWP4M=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=TtRCOAb94qp+nr72YBtuJ8J3LnG7nFeDL/TkJ5boBJnvGPfZPjq+T6P4Jg9hfyp7eiQwX5pceSfUkW4WuOZiZlR/yl8W0BSocPEAYiA0Wf78fluj6LXN3ddI7/SInxX/uL/Cf7HhV6Ld/VYj60PJ/KtQoYp8QJwXZUeqIfRy2+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fe9N0bg7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WMs4FOZr; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fe9N0bg7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WMs4FOZr"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 827DD11401AD;
+	Thu,  9 Jan 2025 03:44:00 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Thu, 09 Jan 2025 03:44:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1736412240;
+	 x=1736498640; bh=tigQXaY52+f4nEMAt97v+LIiKFSTsAzA1NT4bvf0HiY=; b=
+	fe9N0bg73wO77VQ4hqkdowFETgmawdiJkIJ7feHkc1xwiGI6bjrneI9VRNPt8R/Y
+	AfM+d3TjPmW3YAzAkVa51dyDZNBccqlYSDinIu2qUyQdWg2D7rIsJIRpiXIWaYKa
+	qGPo7HW/c4ykNqxs6niZ/0rGLxDGo/ph25fBKW0WqiTA/TwfzvVqg6RPhaRChmAP
+	eXQ1AcyxNeCw/SetMXBSvxku1nuGuoc3GQ+Tk83BNUhQaFa/tlI5qhPySefRGfOi
+	HmgQqxI7fwe0obN3W4ULH9Be8nlo7VDQ/sEQJvU0i2K/MVRm92GDvIq2vzZoxcEG
+	WF/0OFdNCds2zGrkyAJY2Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736412240; x=
+	1736498640; bh=tigQXaY52+f4nEMAt97v+LIiKFSTsAzA1NT4bvf0HiY=; b=W
+	Ms4FOZrnkuG0wcIfRkrKCxcQVXFUegr6R+YARwAfJIuWjUXAhthkbJJonWrSmNQV
+	nTj+BzuhqgC2X7FC9pp9yOicsTiw6HZnJo+uMz9UTagKGRKeLkp6aJg20zFeQ4EH
+	ylFpyD1Q2J5n0cHRI5h+XWpp5MFLfI/3ogEwwY9TwYtr66LH8Q3rkf2o3zkavXrp
+	/fJKf7FhuMBcu0NXBhMoaE83BaWOb9kXFWV4ajoyDexUAQNpDS8zL02SK+NMO3Qk
+	UiLSTrKvBc6Q+rSmaoyRzrFlswW/P8Ol3IeQ/V3/GpEEUsI1F+wJbtC4KCoAft0F
+	nxnxistGx8pA+H1/NHH4A==
+X-ME-Sender: <xms:Tox_Z7saN7uAizgebebXFs4arIf4Fbvasl3tKa-d28EvnC8IV1vZdg>
+    <xme:Tox_Z8d_1E7BGD7NztUjAAlmcQOXskaeejLfpx-qXPCnkYlNQCuHgjSN5gB4FIhjL
+    vlsFg9Ty7chZdAIzHs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeghedguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepiigvhhgrseguvggsihgrnhdroh
+    hrghdprhgtphhtthhopehsrghmsehgvghnthhoohdrohhrghdprhgtphhtthhopehmrght
+    thhsthekkeesghhmrghilhdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqmhhmsehkvhgrtghkrdhorhhgpdhrtghpthhtoheprhhitghhrghrug
+    drhhgvnhguvghrshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghgvvghrthes
+    lhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhish
+    htshdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:Tox_Z-yJG9BDEken2s0M3eerfXdoiYzTQuz_W6_cs78rrA5f7p1eAQ>
+    <xmx:Tox_Z6MtF2yRnJBHrhp6lXiIWi4Xem7EtuSbx_4krv84BDYGnJz0UA>
+    <xmx:Tox_Z7-kZoGjhfeHoPFFMTdht9yvKI3oVci-mB4v5bIklRS71FpB2g>
+    <xmx:Tox_Z6VbslOI5gJ0HBaX3YihZjBTqrydLvJWJmUucTay1E8H8eLlaQ>
+    <xmx:UIx_Z4iX2WwoRqQTPJ2GNboLPBjbISPSUatlpTe2Jx2hAK8pSMNp1XHw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9B5FE2220072; Thu,  9 Jan 2025 03:43:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxUMYtbX9np88aAA--.16097S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKF43Kw4ktr1ktryruFyDJwc_yoWfWw4fp3
-	4DC3y5Gr48urn3Jr9xtr98ur93W3srGw4aqFZxZ34rCF4IqF1Svrn29r9IvFWkW3s8WryI
-	gF9Yy34YqFWDtwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
+Date: Thu, 09 Jan 2025 09:43:38 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Matt Turner" <mattst88@gmail.com>,
+ "Eric W. Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, linux-alpha@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: "Michael Cree" <mcree@orcon.net.nz>, "Sam James" <sam@gentoo.org>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
+ "Chris Hofstaedtler" <zeha@debian.org>, util-linux@vger.kernel.org,
+ linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Message-Id: <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+In-Reply-To: <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+ <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+Subject: Re: [PATCH] alpha: Fix personality flag propagation across an exec
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-We need to switch SFB (Store Fill Buffer) and TSO (Total Store Order)
-state at runtime to debug memory management and KVM virtualization, so
-add two debugfs entries "sfb_state" and "tso_state" under the directory
-/sys/kernel/debug/loongarch.
+On Thu, Jan 9, 2025, at 09:01, Arnd Bergmann wrote:
+> On Fri, Jan 3, 2025, at 15:01, John Paul Adrian Glaubitz wrote:
+>
+>> 
+>>  #define SET_PERSONALITY(EX)					\
+>> -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
+>> -	   ? PER_LINUX_32BIT : PER_LINUX)
+>> +	set_personality((((EX).e_flags & EF_ALPHA_32BIT)	\
+>> +	   ? PER_LINUX_32BIT : PER_LINUX) | (current->personality & (~PER_MASK)))
+>
+> This looks wrong to me: since ADDR_LIMIT_32BIT is not part of
+> PER_MASK, executing a regular binary from a taso binary no longer
+> reverts back to the entire 64-bit address space.
+>
+> It seems that the behavior on most other architectures changed in 2012
+> commit 16f3e95b3209 ("cross-arch: don't corrupt personality flags upon
+> exec()").
+>
+> At the time, the same bug existed on mips, parisc and tile, but those
+> got fixed quickly.
 
-Query SFB:
-cat /sys/kernel/debug/loongarch/sfb_state
+Correction: from what I can tell, mips still has the bug (and now
+also loongarch), it's just in SET_PERSONALITY2() now instead of
+SET_PERSONALITY():
 
-Enable SFB:
-echo 1 > /sys/kernel/debug/loongarch/sfb_state
+        current->personality &= ~READ_IMPLIES_EXEC;
+        ...
+        p = personality(current->personality);                          \
+        if (p != PER_LINUX32 && p != PER_LINUX)                         \
+                set_personality(PER_LINUX);                             \
 
-Disable SFB:
-echo 0 > /sys/kernel/debug/loongarch/sfb_state
+personality() only returns the lower 8 bits (execution domain),
+so if any of them are set (BSD/HPUX/IRIX32/IRIX64/...), both
+the upper and the lower bits are cleared, otherwise neither
+of them are.
 
-Query TSO:
-cat /sys/kernel/debug/loongarch/tso_state
+The behavior on the other architectures is that we clear the
+lower bits but keep the upper ones.
 
-Switch TSO:
-echo [TSO] > /sys/kernel/debug/loongarch/tso_state
-
-Available [TSO] states:
-0 (No Load No Store)    1 (All Load No Store)   3 (Same Load No Store)
-4 (No Load All Store)   5 (All Load All Store)  7 (Same Load All Store)
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/loongarch.h |  15 +++
- arch/loongarch/kernel/Makefile         |   2 +-
- arch/loongarch/kernel/kdebugfs.c       | 168 +++++++++++++++++++++++++
- arch/loongarch/kernel/unaligned.c      |   8 +-
- 4 files changed, 186 insertions(+), 7 deletions(-)
- create mode 100644 arch/loongarch/kernel/kdebugfs.c
-
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index a3cc4f8d4c4a..15c245636176 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -108,6 +108,12 @@
- #define  CPUCFG3_SPW_HG_HF		BIT(11)
- #define  CPUCFG3_RVA			BIT(12)
- #define  CPUCFG3_RVAMAX			GENMASK(16, 13)
-+#define  CPUCFG3_ALDORDER_CAP		BIT(18) /* All address load ordered, capability */
-+#define  CPUCFG3_ASTORDER_CAP		BIT(19) /* All address store ordered, capability */
-+#define  CPUCFG3_ALDORDER_STA		BIT(20) /* All address load ordered, status */
-+#define  CPUCFG3_ASTORDER_STA		BIT(21) /* All address store ordered, status */
-+#define  CPUCFG3_SLDORDER_CAP		BIT(22) /* Same address load ordered, capability */
-+#define  CPUCFG3_SLDORDER_STA		BIT(23) /* Same address load ordered, status */
- 
- #define LOONGARCH_CPUCFG4		0x4
- #define  CPUCFG4_CCFREQ			GENMASK(31, 0)
-@@ -565,6 +571,15 @@
- 
- /* Implement dependent */
- #define LOONGARCH_CSR_IMPCTL1		0x80	/* Loongson config1 */
-+#define  CSR_LDSTORDER_SHIFT		28
-+#define  CSR_LDSTORDER_WIDTH		3
-+#define  CSR_LDSTORDER_MASK		(_ULCAST_(0x7) << CSR_LDSTORDER_SHIFT)
-+#define  CSR_LDSTORDER_NLD_NST		(_ULCAST_(0x0) << CSR_LDSTORDER_SHIFT) /* 000 = No Load No Store */
-+#define  CSR_LDSTORDER_ALD_NST		(_ULCAST_(0x1) << CSR_LDSTORDER_SHIFT) /* 001 = All Load No Store */
-+#define  CSR_LDSTORDER_SLD_NST		(_ULCAST_(0x3) << CSR_LDSTORDER_SHIFT) /* 011 = Same Load No Store */
-+#define  CSR_LDSTORDER_NLD_AST		(_ULCAST_(0x4) << CSR_LDSTORDER_SHIFT) /* 100 = No Load All Store */
-+#define  CSR_LDSTORDER_ALD_AST		(_ULCAST_(0x5) << CSR_LDSTORDER_SHIFT) /* 101 = All Load All Store */
-+#define  CSR_LDSTORDER_SLD_AST		(_ULCAST_(0x7) << CSR_LDSTORDER_SHIFT) /* 111 = Same Load All Store */
- #define  CSR_MISPEC_SHIFT		20
- #define  CSR_MISPEC_WIDTH		8
- #define  CSR_MISPEC			(_ULCAST_(0xff) << CSR_MISPEC_SHIFT)
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 9497968ee158..4853e8b04c6f 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -10,7 +10,7 @@ extra-y		:= vmlinux.lds
- obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
- 		   traps.o irq.o idle.o process.o dma.o mem.o reset.o switch.o \
- 		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
--		   alternative.o unwind.o
-+		   alternative.o kdebugfs.o unwind.o
- 
- obj-$(CONFIG_ACPI)		+= acpi.o
- obj-$(CONFIG_EFI) 		+= efi.o
-diff --git a/arch/loongarch/kernel/kdebugfs.c b/arch/loongarch/kernel/kdebugfs.c
-new file mode 100644
-index 000000000000..cf1d89888e32
---- /dev/null
-+++ b/arch/loongarch/kernel/kdebugfs.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/init.h>
-+#include <linux/export.h>
-+#include <linux/debugfs.h>
-+#include <linux/kstrtox.h>
-+#include <asm/loongarch.h>
-+
-+struct dentry *arch_debugfs_dir;
-+EXPORT_SYMBOL(arch_debugfs_dir);
-+
-+static int sfb_state, tso_state;
-+
-+static void set_sfb_state(void *info)
-+{
-+	int val = *(int *)info << CSR_STFILL_SHIFT;
-+
-+	csr_xchg32(val, CSR_STFILL, LOONGARCH_CSR_IMPCTL1);
-+}
-+
-+static ssize_t sfb_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-+{
-+	int s, state;
-+	char str[32];
-+
-+	state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_STFILL) >> CSR_STFILL_SHIFT;
-+
-+	s = snprintf(str, sizeof(str), "Boot State: %x\nCurrent State: %x\n", sfb_state, state);
-+
-+	if (*ppos >= s)
-+		return 0;
-+
-+	s -= *ppos;
-+	s = min_t(u32, s, count);
-+
-+	if (copy_to_user(buf, &str[*ppos], s))
-+		return -EFAULT;
-+
-+	*ppos += s;
-+
-+	return s;
-+}
-+
-+static ssize_t sfb_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	int state;
-+
-+	if (kstrtoint_from_user(buf, count, 10, &state))
-+		return -EFAULT;
-+
-+	switch (state) {
-+	case 0: case 1:
-+		on_each_cpu(set_sfb_state, &state, 1);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static const struct file_operations sfb_fops = {
-+	.read = sfb_read,
-+	.write = sfb_write,
-+	.open = simple_open,
-+	.llseek = default_llseek
-+};
-+
-+#define LDSTORDER_NLD_NST        0x0 /* 000 = No Load No Store */
-+#define LDSTORDER_ALD_NST        0x1 /* 001 = All Load No Store */
-+#define LDSTORDER_SLD_NST        0x3 /* 011 = Same Load No Store */
-+#define LDSTORDER_NLD_AST        0x4 /* 100 = No Load All Store */
-+#define LDSTORDER_ALD_AST        0x5 /* 101 = All Load All Store */
-+#define LDSTORDER_SLD_AST        0x7 /* 111 = Same Load All Store */
-+
-+static char *tso_hints[] = {
-+	"No Load No Store",
-+	"All Load No Store",
-+	"Invalid Config",
-+	"Same Load No Store",
-+	"No Load All Store",
-+	"All Load All Store",
-+	"Invalid Config",
-+	"Same Load All Store"
-+};
-+
-+static void set_tso_state(void *info)
-+{
-+	int val = *(int *)info << CSR_LDSTORDER_SHIFT;
-+
-+	csr_xchg32(val, CSR_LDSTORDER_MASK, LOONGARCH_CSR_IMPCTL1);
-+}
-+
-+static ssize_t tso_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-+{
-+	int s, state;
-+	char str[240];
-+
-+	state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_LDSTORDER_MASK) >> CSR_LDSTORDER_SHIFT;
-+
-+	s = snprintf(str, sizeof(str), "Boot State: %d (%s)\n"
-+			               "Current State: %d (%s)\n\n"
-+				       "Available States:\n"
-+				       "0 (%s)\t" "1 (%s)\t" "3 (%s)\n"
-+				       "4 (%s)\t" "5 (%s)\t" "7 (%s)\n",
-+				       tso_state, tso_hints[tso_state], state, tso_hints[state],
-+				       tso_hints[0], tso_hints[1], tso_hints[3], tso_hints[4], tso_hints[5], tso_hints[7]);
-+
-+	if (*ppos >= s)
-+		return 0;
-+
-+	s -= *ppos;
-+	s = min_t(u32, s, count);
-+
-+	if (copy_to_user(buf, &str[*ppos], s))
-+		return -EFAULT;
-+
-+	*ppos += s;
-+
-+	return s;
-+}
-+
-+static ssize_t tso_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	int state;
-+
-+	if (kstrtoint_from_user(buf, count, 10, &state))
-+		return -EFAULT;
-+
-+	switch (state) {
-+	case 0: case 1: case 3:
-+	case 4: case 5: case 7:
-+		on_each_cpu(set_tso_state, &state, 1);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static const struct file_operations tso_fops = {
-+	.read = tso_read,
-+	.write = tso_write,
-+	.open = simple_open,
-+	.llseek = default_llseek
-+};
-+
-+static int __init arch_kdebugfs_init(void)
-+{
-+	unsigned int config = read_cpucfg(LOONGARCH_CPUCFG3);
-+
-+	arch_debugfs_dir = debugfs_create_dir("loongarch", NULL);
-+
-+	if (config & CPUCFG3_SFB) {
-+		debugfs_create_file("sfb_state", S_IRUGO | S_IWUGO,
-+			    arch_debugfs_dir, &sfb_state, &sfb_fops);
-+		sfb_state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_STFILL) >> CSR_STFILL_SHIFT;
-+	}
-+
-+	if (config & (CPUCFG3_ALDORDER_CAP | CPUCFG3_ASTORDER_CAP)) {
-+		debugfs_create_file("tso_state", S_IRUGO | S_IWUGO,
-+			    arch_debugfs_dir, &tso_state, &tso_fops);
-+		tso_state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_LDSTORDER_MASK) >> CSR_LDSTORDER_SHIFT;
-+	}
-+
-+	return 0;
-+}
-+postcore_initcall(arch_kdebugfs_init);
-diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
-index 3abf163dda05..487be604b96a 100644
---- a/arch/loongarch/kernel/unaligned.c
-+++ b/arch/loongarch/kernel/unaligned.c
-@@ -482,14 +482,10 @@ void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned i
- #ifdef CONFIG_DEBUG_FS
- static int __init debugfs_unaligned(void)
- {
--	struct dentry *d;
--
--	d = debugfs_create_dir("loongarch", NULL);
--
- 	debugfs_create_u32("unaligned_instructions_user",
--				S_IRUGO, d, &unaligned_instructions_user);
-+				S_IRUGO, arch_debugfs_dir, &unaligned_instructions_user);
- 	debugfs_create_u32("unaligned_instructions_kernel",
--				S_IRUGO, d, &unaligned_instructions_kernel);
-+				S_IRUGO, arch_debugfs_dir, &unaligned_instructions_kernel);
- 
- 	return 0;
- }
--- 
-2.43.5
-
+      Arnd
