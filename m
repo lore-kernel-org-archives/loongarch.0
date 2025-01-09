@@ -1,126 +1,336 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC22AF07
-	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 03:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DF817548
+	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 06:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736392019; cv=none; b=oUbfR7jNLCPLd9Ye/1d4AuiNSAhzxFNlaMADhIC+WR4UK0EvQPgx9NYdAlq/2gYObWGE2wNbS0aCmaXpifExBgObeaajqQgh1ixURak48k1+/KxnL0gWSQc618tNjTIrgwhL3C3/kxWQ4oUB0QVXVb3ZYQyKkahawS294hq9Y5M=
+	t=1736404291; cv=none; b=lEkotkejQXYQU9ODO3SswnGJI5vpCffSUHkxkWm2vv6bV9HRbyL8MVMYcUrv5JuS2FHAmTCLPwLeNgnoCdqJsh/AXZ7nDqsI2u9F9bKQkrsCqwAS4jLEC5kIbBZINfwrUWgvA7svnoUfqM6UNBSW9KVnuqDhEsee/3fFYy+JUFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736392019; c=relaxed/simple;
-	bh=j0oUpGZRketH66aLGlOqEratqE7lE81u3b79GqES3KA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NOTZRI/VVEHQVrr6PYWnx5ZAJrx3Moy3GGQfqauYuAmxguLRGvGBkiLzURZEG+pA/qScy0wfJ6Yhs77eiKbE5zoJUoDU4kBNb4/TJ/SvkVfStZleiJi1O7uE72hS2bqPwQVBGu4N00tfgQYItXflmkjfHip5vYZ6tcUZUHvm8AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXvMIScd; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXvMIScd"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso591321a12.0
-        for <loongarch@lists.linux.dev>; Wed, 08 Jan 2025 19:06:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736392016; x=1736996816; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xcvguVZbOYQiUlHNff8pHH80HFCIQo3zkHLK6WxRevg=;
-        b=dXvMIScdXzVSuhZ5eVzYHn83Cs8gAmqS+gISN/YFoCKtBRSg+K14iS8Xp4thFzwFrC
-         5seZeBD8fQjS9wk8OXVOzfkn3lH3UXsEiUijb2ljaNDOlJElRywFedT8j+7qkiYcZsDo
-         DTOvIP2WjTV6b2yNxwSPsIhlBE3fE7K/B2ZcZMlIZMM0ojmBQvCz9HDZ99vyd5YT4Vfn
-         QukDatXonS3dXqyI668FK+sCYbZjkswplr5a4A6H2nZPogGl3lKFZw2WDeScJrlp6/7d
-         1vhLUTtL0xlPkJ9+buCDT/0kb72W4gGHAdx6xMwZ2b2en+Q0XRiyIlpLZ+FRMFjzw44F
-         UU5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736392016; x=1736996816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xcvguVZbOYQiUlHNff8pHH80HFCIQo3zkHLK6WxRevg=;
-        b=KzMgBBpA1+HbNrJKx8tC+zCUDENMP8NevDxujgnjCJLrcjP+B+P7DmnydQnH2Q9xxj
-         GxbLq89tEx+zlqKMnID49raGVQYNxDsJMGWYi4ceyir9hoLBS5I8SkC3jeaZleq+2muV
-         uqx8D5Cc/Jmh0XnoaZq6yaQpKzV9RPu7W0MtRPGCiJoq/lD8mJu/8NT3sYu2HnR1a86R
-         D7i12/Jr3Voh6czv0PfCUI2RkcWkgyBzZCYDyTIAhp+Zlv5eo6hgXKH1LM+ounGpO43Z
-         nSJ1NsV8Yj0l5tfyIZWvXg21HS+5+XBzSXQsAU/OVTGXHuMvaqMV5dgAKlomi9zX8vxR
-         nzCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYpBKGfeee95GhyF2q7TDJ5bsKyrUvnV+UczZ2PzKHdXLTFeTmpU72wwl2OKLC7cceiC5MEkhOwh4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyhZgyPouH+1GheQc2m3sYqVcY9U0nKCF5nZxzazcDb/feCKYwV
-	jEebvx/TKdbUsDcjUKeTmoKqumgJqwCQJqGelMUMmNWZ/rBI/RkffnpaD/b9wrc+Mbo8ArbMeA0
-	zHda28W/scaTETfe7VGHC3Zf3+tUK2ZOwA8n4eQ==
-X-Gm-Gg: ASbGncsT/lWWOHjDFl77b//o1GkBJ38lUpVoe7bv20BfNGj/YyYaXeqe31Nr7e6TCr1
-	gqP9qu9k6OWuFaBh6rXRtAn1R1hmI9fRJ3Jw=
-X-Google-Smtp-Source: AGHT+IGfqqtzl5vrGSo7HJcvcyDWUl65drgIH6Vv3pEl7FUmKO18JawV8JUiNayrLTBBFixjVFqVA3LHLEdBoEk5SxU=
-X-Received: by 2002:a05:6402:13c6:b0:5d2:7270:6124 with SMTP id
- 4fb4d7f45d1cf-5d972e484a3mr4167328a12.23.1736392016040; Wed, 08 Jan 2025
- 19:06:56 -0800 (PST)
+	s=arc-20240116; t=1736404291; c=relaxed/simple;
+	bh=aLFq2nxZ2sdNdfLZxJIlCc2BseCDyw44v/JTQPGTSQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l2uwnQWSZSts82Qtj660ABTWXt17iwGe5ZezemB0MkbZetjhFpMuChS/xnVWCGadU6SPNPDiHqODfIlLIYkminZhDQ8ctK2sYEoyUcThAiQtXJY4kgA+h0Rw2iCuVPjMgr4NKUaQ/qEA4z9QQgZk0LWt2E0NKiDRbBPoceNNRmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.63])
+	by gateway (Coremail) with SMTP id _____8DxmeAybX9nOW5gAA--.58759S3;
+	Thu, 09 Jan 2025 14:31:14 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.63])
+	by front1 (Coremail) with SMTP id qMiowMBxUMYtbX9np88aAA--.16097S2;
+	Thu, 09 Jan 2025 14:31:13 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Add debugfs entries to switch SFB/TSO state
+Date: Thu,  9 Jan 2025 14:30:56 +0800
+Message-ID: <20250109063056.2438304-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241225060600.3094154-1-zhoubinbin@loongson.cn>
- <526d7ad1f0b299145ab676900f81ba1a.sboyd@kernel.org> <CAMpQs4+i11DVGhdinMrE41HkC8hhD11P0BLeOaK5yW8QXUMX-Q@mail.gmail.com>
- <0757e78b02165aca65465d4e96eb6e92.sboyd@kernel.org>
-In-Reply-To: <0757e78b02165aca65465d4e96eb6e92.sboyd@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 9 Jan 2025 11:06:43 +0800
-X-Gm-Features: AbW1kvb-fi80aY0XoQiHcrnDQm4aLOeDclKMtkIp68GA6Jq64FhC6QCWI27RyFE
-Message-ID: <CAMpQs4+pcqCUxXyg64_bzdi=3K-kb4mvKG7vM-yqcaoWO=TiLA@mail.gmail.com>
-Subject: Re: [PATCH] clk: clk-loongson2: Fix the number count of clk provider
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Michael Turquette <mturquette@baylibre.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxUMYtbX9np88aAA--.16097S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKF43Kw4ktr1ktryruFyDJwc_yoWfWw4fp3
+	4DC3y5Gr48urn3Jr9xtr98ur93W3srGw4aqFZxZ34rCF4IqF1Svrn29r9IvFWkW3s8WryI
+	gF9Yy34YqFWDtwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 
-Hi Stephen:
+We need to switch SFB (Store Fill Buffer) and TSO (Total Store Order)
+state at runtime to debug memory management and KVM virtualization, so
+add two debugfs entries "sfb_state" and "tso_state" under the directory
+/sys/kernel/debug/loongarch.
 
-Thanks for your comments.
+Query SFB:
+cat /sys/kernel/debug/loongarch/sfb_state
 
-On Thu, Jan 9, 2025 at 3:20=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wrot=
-e:
->
-> Quoting Binbin Zhou (2025-01-07 17:41:43)
-> > On Wed, Jan 8, 2025 at 5:25=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> =
-wrote:
-> > > Quoting Binbin Zhou (2024-12-24 22:05:59)
-> > > > diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson=
-2.c
-> > > > index 6bf51d5a49a1..b1b2038acd0b 100644
-> > > > --- a/drivers/clk/clk-loongson2.c
-> > > > +++ b/drivers/clk/clk-loongson2.c
-> > > > @@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_=
-device *pdev)
-> > > >                 return -EINVAL;
-> > > >
-> > > >         for (p =3D data; p->name; p++)
-> > > > -               clks_num++;
-> > > > +               clks_num =3D max(clks_num, p->id + 1);
-> > >
-> > > NULL is a valid clk. Either fill the onecell data with -ENOENT error
-> > > pointers, or stop using it and implement a custom version of
-> > > of_clk_hw_onecell_get() that doesn't allow invalid clks to be request=
-ed
-> > > from this provider.
-> >
-> > Emm...
-> > Just in case, how about setting all items to ERR_PTR(-ENOENT) before
-> > assigning them.
-> > This is shown below:
-> >
-> >                while (--clk_num >=3D 0)
-> >                          clp->clk_data.hws[clk_num] =3D ERR_PTR(-ENOENT=
-);
->
-> Or something like:
->
->         memset_p(&clk->clk_data.hws, ERR_PTR(-ENOENT), clk_num);
+Enable SFB:
+echo 1 > /sys/kernel/debug/loongarch/sfb_state
 
-Indeed, it looks better and cleaner.
-I'll update in V2 soon.
+Disable SFB:
+echo 0 > /sys/kernel/debug/loongarch/sfb_state
 
---
-Thanks.
-Binbin
+Query TSO:
+cat /sys/kernel/debug/loongarch/tso_state
+
+Switch TSO:
+echo [TSO] > /sys/kernel/debug/loongarch/tso_state
+
+Available [TSO] states:
+0 (No Load No Store)    1 (All Load No Store)   3 (Same Load No Store)
+4 (No Load All Store)   5 (All Load All Store)  7 (Same Load All Store)
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/loongarch.h |  15 +++
+ arch/loongarch/kernel/Makefile         |   2 +-
+ arch/loongarch/kernel/kdebugfs.c       | 168 +++++++++++++++++++++++++
+ arch/loongarch/kernel/unaligned.c      |   8 +-
+ 4 files changed, 186 insertions(+), 7 deletions(-)
+ create mode 100644 arch/loongarch/kernel/kdebugfs.c
+
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index a3cc4f8d4c4a..15c245636176 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -108,6 +108,12 @@
+ #define  CPUCFG3_SPW_HG_HF		BIT(11)
+ #define  CPUCFG3_RVA			BIT(12)
+ #define  CPUCFG3_RVAMAX			GENMASK(16, 13)
++#define  CPUCFG3_ALDORDER_CAP		BIT(18) /* All address load ordered, capability */
++#define  CPUCFG3_ASTORDER_CAP		BIT(19) /* All address store ordered, capability */
++#define  CPUCFG3_ALDORDER_STA		BIT(20) /* All address load ordered, status */
++#define  CPUCFG3_ASTORDER_STA		BIT(21) /* All address store ordered, status */
++#define  CPUCFG3_SLDORDER_CAP		BIT(22) /* Same address load ordered, capability */
++#define  CPUCFG3_SLDORDER_STA		BIT(23) /* Same address load ordered, status */
+ 
+ #define LOONGARCH_CPUCFG4		0x4
+ #define  CPUCFG4_CCFREQ			GENMASK(31, 0)
+@@ -565,6 +571,15 @@
+ 
+ /* Implement dependent */
+ #define LOONGARCH_CSR_IMPCTL1		0x80	/* Loongson config1 */
++#define  CSR_LDSTORDER_SHIFT		28
++#define  CSR_LDSTORDER_WIDTH		3
++#define  CSR_LDSTORDER_MASK		(_ULCAST_(0x7) << CSR_LDSTORDER_SHIFT)
++#define  CSR_LDSTORDER_NLD_NST		(_ULCAST_(0x0) << CSR_LDSTORDER_SHIFT) /* 000 = No Load No Store */
++#define  CSR_LDSTORDER_ALD_NST		(_ULCAST_(0x1) << CSR_LDSTORDER_SHIFT) /* 001 = All Load No Store */
++#define  CSR_LDSTORDER_SLD_NST		(_ULCAST_(0x3) << CSR_LDSTORDER_SHIFT) /* 011 = Same Load No Store */
++#define  CSR_LDSTORDER_NLD_AST		(_ULCAST_(0x4) << CSR_LDSTORDER_SHIFT) /* 100 = No Load All Store */
++#define  CSR_LDSTORDER_ALD_AST		(_ULCAST_(0x5) << CSR_LDSTORDER_SHIFT) /* 101 = All Load All Store */
++#define  CSR_LDSTORDER_SLD_AST		(_ULCAST_(0x7) << CSR_LDSTORDER_SHIFT) /* 111 = Same Load All Store */
+ #define  CSR_MISPEC_SHIFT		20
+ #define  CSR_MISPEC_WIDTH		8
+ #define  CSR_MISPEC			(_ULCAST_(0xff) << CSR_MISPEC_SHIFT)
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 9497968ee158..4853e8b04c6f 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -10,7 +10,7 @@ extra-y		:= vmlinux.lds
+ obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+ 		   traps.o irq.o idle.o process.o dma.o mem.o reset.o switch.o \
+ 		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
+-		   alternative.o unwind.o
++		   alternative.o kdebugfs.o unwind.o
+ 
+ obj-$(CONFIG_ACPI)		+= acpi.o
+ obj-$(CONFIG_EFI) 		+= efi.o
+diff --git a/arch/loongarch/kernel/kdebugfs.c b/arch/loongarch/kernel/kdebugfs.c
+new file mode 100644
+index 000000000000..cf1d89888e32
+--- /dev/null
++++ b/arch/loongarch/kernel/kdebugfs.c
+@@ -0,0 +1,168 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/init.h>
++#include <linux/export.h>
++#include <linux/debugfs.h>
++#include <linux/kstrtox.h>
++#include <asm/loongarch.h>
++
++struct dentry *arch_debugfs_dir;
++EXPORT_SYMBOL(arch_debugfs_dir);
++
++static int sfb_state, tso_state;
++
++static void set_sfb_state(void *info)
++{
++	int val = *(int *)info << CSR_STFILL_SHIFT;
++
++	csr_xchg32(val, CSR_STFILL, LOONGARCH_CSR_IMPCTL1);
++}
++
++static ssize_t sfb_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
++{
++	int s, state;
++	char str[32];
++
++	state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_STFILL) >> CSR_STFILL_SHIFT;
++
++	s = snprintf(str, sizeof(str), "Boot State: %x\nCurrent State: %x\n", sfb_state, state);
++
++	if (*ppos >= s)
++		return 0;
++
++	s -= *ppos;
++	s = min_t(u32, s, count);
++
++	if (copy_to_user(buf, &str[*ppos], s))
++		return -EFAULT;
++
++	*ppos += s;
++
++	return s;
++}
++
++static ssize_t sfb_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
++{
++	int state;
++
++	if (kstrtoint_from_user(buf, count, 10, &state))
++		return -EFAULT;
++
++	switch (state) {
++	case 0: case 1:
++		on_each_cpu(set_sfb_state, &state, 1);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return count;
++}
++
++static const struct file_operations sfb_fops = {
++	.read = sfb_read,
++	.write = sfb_write,
++	.open = simple_open,
++	.llseek = default_llseek
++};
++
++#define LDSTORDER_NLD_NST        0x0 /* 000 = No Load No Store */
++#define LDSTORDER_ALD_NST        0x1 /* 001 = All Load No Store */
++#define LDSTORDER_SLD_NST        0x3 /* 011 = Same Load No Store */
++#define LDSTORDER_NLD_AST        0x4 /* 100 = No Load All Store */
++#define LDSTORDER_ALD_AST        0x5 /* 101 = All Load All Store */
++#define LDSTORDER_SLD_AST        0x7 /* 111 = Same Load All Store */
++
++static char *tso_hints[] = {
++	"No Load No Store",
++	"All Load No Store",
++	"Invalid Config",
++	"Same Load No Store",
++	"No Load All Store",
++	"All Load All Store",
++	"Invalid Config",
++	"Same Load All Store"
++};
++
++static void set_tso_state(void *info)
++{
++	int val = *(int *)info << CSR_LDSTORDER_SHIFT;
++
++	csr_xchg32(val, CSR_LDSTORDER_MASK, LOONGARCH_CSR_IMPCTL1);
++}
++
++static ssize_t tso_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
++{
++	int s, state;
++	char str[240];
++
++	state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_LDSTORDER_MASK) >> CSR_LDSTORDER_SHIFT;
++
++	s = snprintf(str, sizeof(str), "Boot State: %d (%s)\n"
++			               "Current State: %d (%s)\n\n"
++				       "Available States:\n"
++				       "0 (%s)\t" "1 (%s)\t" "3 (%s)\n"
++				       "4 (%s)\t" "5 (%s)\t" "7 (%s)\n",
++				       tso_state, tso_hints[tso_state], state, tso_hints[state],
++				       tso_hints[0], tso_hints[1], tso_hints[3], tso_hints[4], tso_hints[5], tso_hints[7]);
++
++	if (*ppos >= s)
++		return 0;
++
++	s -= *ppos;
++	s = min_t(u32, s, count);
++
++	if (copy_to_user(buf, &str[*ppos], s))
++		return -EFAULT;
++
++	*ppos += s;
++
++	return s;
++}
++
++static ssize_t tso_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
++{
++	int state;
++
++	if (kstrtoint_from_user(buf, count, 10, &state))
++		return -EFAULT;
++
++	switch (state) {
++	case 0: case 1: case 3:
++	case 4: case 5: case 7:
++		on_each_cpu(set_tso_state, &state, 1);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return count;
++}
++
++static const struct file_operations tso_fops = {
++	.read = tso_read,
++	.write = tso_write,
++	.open = simple_open,
++	.llseek = default_llseek
++};
++
++static int __init arch_kdebugfs_init(void)
++{
++	unsigned int config = read_cpucfg(LOONGARCH_CPUCFG3);
++
++	arch_debugfs_dir = debugfs_create_dir("loongarch", NULL);
++
++	if (config & CPUCFG3_SFB) {
++		debugfs_create_file("sfb_state", S_IRUGO | S_IWUGO,
++			    arch_debugfs_dir, &sfb_state, &sfb_fops);
++		sfb_state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_STFILL) >> CSR_STFILL_SHIFT;
++	}
++
++	if (config & (CPUCFG3_ALDORDER_CAP | CPUCFG3_ASTORDER_CAP)) {
++		debugfs_create_file("tso_state", S_IRUGO | S_IWUGO,
++			    arch_debugfs_dir, &tso_state, &tso_fops);
++		tso_state = (csr_read32(LOONGARCH_CSR_IMPCTL1) & CSR_LDSTORDER_MASK) >> CSR_LDSTORDER_SHIFT;
++	}
++
++	return 0;
++}
++postcore_initcall(arch_kdebugfs_init);
+diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
+index 3abf163dda05..487be604b96a 100644
+--- a/arch/loongarch/kernel/unaligned.c
++++ b/arch/loongarch/kernel/unaligned.c
+@@ -482,14 +482,10 @@ void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned i
+ #ifdef CONFIG_DEBUG_FS
+ static int __init debugfs_unaligned(void)
+ {
+-	struct dentry *d;
+-
+-	d = debugfs_create_dir("loongarch", NULL);
+-
+ 	debugfs_create_u32("unaligned_instructions_user",
+-				S_IRUGO, d, &unaligned_instructions_user);
++				S_IRUGO, arch_debugfs_dir, &unaligned_instructions_user);
+ 	debugfs_create_u32("unaligned_instructions_kernel",
+-				S_IRUGO, d, &unaligned_instructions_kernel);
++				S_IRUGO, arch_debugfs_dir, &unaligned_instructions_kernel);
+ 
+ 	return 0;
+ }
+-- 
+2.43.5
+
