@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0E3214A82
-	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A55121A95D
+	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534475; cv=none; b=EhLYS9820d2KY+FOnlkbw+FW5cIEq/m3q8Q9r2dHT+5m/WVaTCICDGBYGE8b8Fsq4JeDKqZXXyvZeKTVHgYt5seVFJ8rhulBUtnK1TF+4OAr12YnLDAZHFy6qMFmL+3ttLsw5kscYJxCkx4Owj03dRPkrRWz+2PNRmfwCLvbJ2I=
+	t=1736534481; cv=none; b=fdheAGGYOJZbfqQEEFkbaKAe2zWXDdN/3YAQ5ATObb/nFcDSAD+97dT8dN/n5hk2HPXRoypFyfPmiaakl9IjlEsoE7Cb/WEI96TDLQHx/27FF2GaYCAaEGk2Cy/rZK2ziyMxKk4GZI2OgByWas+2BF0C8aXilglLDd+BqMk1kkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534475; c=relaxed/simple;
-	bh=oS6NVhF+DSa3bfb0jLd+nVgq34roa9GfyJSa086VnQc=;
+	s=arc-20240116; t=1736534481; c=relaxed/simple;
+	bh=/pPC1ygi9PuAIQr3pnrOT1/KCXhFsF8V8SBrs6XZuug=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kx+sSzuWiSt0GN0rbbviZs2nBBBDD9C0rWgnUP5DeRWqyGhYOIq/2DCJlORVlKJxPN+GzXCH3PQ4W7MmDl7cqRmvCgcIetiOKtyliwQRihtsGqeOTUczEMm8f+tcV1KfV6oM0VgF95Ul+v5ptfpfJnb/PKifxrTXtrUqrfMcJzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q4Zk7lFh; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=L1092ZIJznoyXo10270f+06rji4wkvYKtg5qniezuJVXxc/YCV1Uz7seQBMDFGsWbmu0TA05ZSGRyYxp4fVyt+tRPiAg/pgzRiAJ4hc9R23hFpm4i1A7+nQoi6vsxqGtiukIbuDL02PWkg7lORRiD+RhIlYf2zEiwpJTAeDSic0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oywtkCvJ; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4Zk7lFh"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43631d8d9c7so11981255e9.1
-        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oywtkCvJ"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-38a9118c486so1465375f8f.1
+        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534457; x=1737139257; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1736534462; x=1737139262; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=06++54m2jQMoQajJn4JgiUDifyLkkN/hJfJdF7FjHRg=;
-        b=q4Zk7lFhGpXkSV8vFprtF9CUCibYmH517wwdrbvcIeQJTnyhv5C/Dw+AHO0fTA3I3Z
-         ePgrnoQ0xm2Vy1afvwwV3a+1MsQ8unfp2ZUlTqRkt/xCRTXSdsUwivZrhSqUA/+8gaN9
-         ozLa/vJrXmdQA5xeK0vUjWE7Ensa1iAOUt5ihNrzkj9yH4j4SzmVRcukXhcsvJBV5Hqe
-         prlDsevXgSarUKJzSrZVs8CjPUvKflMKYUSgsk3ViT+eOdxFJCmT8urCbOsoQ/duUs0A
-         itOwjNjJhEu5SUQ4TRi0XK4dJ5VC4nRgGOBb+Eg4AwSWXyaNx0vg+yZiNlTJ/1PMQ/ow
-         RHUA==
+        bh=/j+RB8/lAgzqGTtPca+XTmsHyqC3ld9qGwXYbAsCbQ0=;
+        b=oywtkCvJNy4K9defOwVb1GeB+LgkYgy5LWrsvLiWQTbk7Jc0T5zSK7dbuXNxD3Vo/m
+         YU3B9gEkGrf0wvubMrsTlmaHm6OZWGmN11kqwy+VF2a/hSSm4VD4HxiT1HIFGz7MzpyQ
+         EqLRONKEvoYWNAPodAyBpt4zX0W6mF/jZPY89iIbop6oKJ+IvQYzFTcZ9nLsQPFoSp8J
+         4NrdkWJrkpxtdcTtcm58Y7t5JKiWEOpfwnWeAkcxhnxolEZDXfcqOzW+Fau6ZM6QQKrI
+         CiItPZWLepQn+/BKfZDD4CT4nUgSQgzgqrIeSeTfexyIfjQjXgqnn2rgsLCQqQZ63SGj
+         rn7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534457; x=1737139257;
+        d=1e100.net; s=20230601; t=1736534462; x=1737139262;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=06++54m2jQMoQajJn4JgiUDifyLkkN/hJfJdF7FjHRg=;
-        b=B2Q1JLzIOeoT7mZmqu+BU3y2Sx4H3eTC4lpIDeMDnL73J4AgVZw9ZpGH2AfUYfOt4h
-         2vBIlQKS8p+wNl6TEi0Nyv5K5xhWQ6REhMlQ3ABQs8IpiNACkSW15PEdDmMFovge8m8G
-         1eOKxDrC/oiD9UTMxOVWcbabgI4pf0p14Mpn4FLeFX999aTYSaNrekc9CGnzhY2g9ONC
-         Ab1t6lKZ5gliZ2MbcAvCx9nddn8ZKrYQdopp8LSlhWOMkSMyNPXqiyKWZn0CbGlwHfoW
-         lQPUpiajOjcEkCuKFcuH/V6B5xiqUn2/0nKmxA9Yg+nlDy86ugLPolPut+ZNaQTlUuQl
-         idzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDa0g/dMh6jfvjM8BLImxmOihlgHdi1y9zA8vO8yT+3hHT+FkUedS11nGUhDIIsID8ls1aiXzGTrs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJ+ynq0ZylrGCRbW1iCfUZdoE2p9XAPspINvUUGCwnDPo49e3C
-	HBAsFKSW3zY/V8EK6FMKTc4WHDRMuE0HaVwEh5UPbEyFB6FvNW2loeGrRsI7H1qjSjnD1v3vrJy
-	mc7bofVpqsQ==
-X-Google-Smtp-Source: AGHT+IGnlkbZgvto5V3RLsC0pJW1qd+uu81ptaoP4aB2W/3FKEzvBJWjRMlcB/euDId6QKmAnD2UbMWUf073rw==
-X-Received: from wmqd22.prod.google.com ([2002:a05:600c:34d6:b0:436:185e:c91d])
+        bh=/j+RB8/lAgzqGTtPca+XTmsHyqC3ld9qGwXYbAsCbQ0=;
+        b=h/2V67cKGDLS1/cC0j1hf3eLHjV13YlU1NLRePQP9X2r3pY3cICgmT/u21VcWf/vGw
+         nU7aA6Z+Wv89Xdz2nN4/tDdT52KM7yeo6Te6/xbU9xM9vzV3ssxCkFUmTDwkLYTIfMc5
+         T7aE4RFqtw69lpI0GsDcHpeyf/7G9YwhbDwt58fNj4Y8AFXx3zU4q9kL7u/yaraUSsfX
+         IrQIlgll8Ii6ow4e1VRKRgS9kDkCvj4M6n1y5vkJM3WFq0aiIRsrxnhtDO+HnWeAkEVO
+         f0S68wuBCfW+xI/+YmJSMBhZVZ9LgHc64SFBcCG02Xf/wgEYuTAp9ZVPjJVjqd/mNK64
+         RKCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCbFFMj5ozluSE0Dq+xHgzcxYrXpEzQ//vPGuMwCw5Ly7qU+sycqrkmMtuudCVdzeUEGnIdj358oI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+BcXbgA9XLowvsMGfgFcaBL1HDkMY2GEYhVagKQfj0VDwUbRe
+	WvNMs5VCNdYu19fAGXuMW2g4VxgYyxOEmZM2O0vzVx/xhZLMqorGNBkxYA5LgK7YGhIAZrrlijW
+	6vV6bATnAfg==
+X-Google-Smtp-Source: AGHT+IEaBJ4kVsH9fdlEpqyA1vEXALZVlXyRkre6Nr4itvNL2JHwYHaMyiaIiF1xr8efeWfazalHNzAFq1Ad7A==
+X-Received: from wrbfi1.prod.google.com ([2002:a05:6000:4401:b0:386:333e:ad16])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:444a:b0:434:fe3c:c662 with SMTP id 5b1f17b1804b1-436e9d7b99cmr59996085e9.12.1736534456699;
- Fri, 10 Jan 2025 10:40:56 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:31 +0000
+ 2002:a05:6000:470d:b0:385:dedb:a156 with SMTP id ffacd0b85a97d-38a872cfdffmr10312148f8f.6.1736534461506;
+ Fri, 10 Jan 2025 10:41:01 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:33 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-5-8419288bc805@google.com>
-Subject: [PATCH RFC v2 05/29] mm: asi: ASI support in interrupts/exceptions
+Message-ID: <20250110-asi-rfc-v2-v2-7-8419288bc805@google.com>
+Subject: [PATCH RFC v2 07/29] mm: asi: Make __get_current_cr3_fast() ASI-aware
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -114,426 +114,90 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	Brendan Jackman <jackmanb@google.com>, Junaid Shahid <junaids@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Add support for potentially switching address spaces from within
-interrupts/exceptions/NMIs etc. An interrupt does not automatically
-switch to the unrestricted address space. It can switch if needed to
-access some memory not available in the restricted address space, using
-the normal asi_exit call.
+From: Junaid Shahid <junaids@google.com>
 
-On return from the outermost interrupt, if the target address space was
-the restricted address space (e.g. we were in the critical code path
-between ASI Enter and VM Enter), the restricted address space will be
-automatically restored. Otherwise, execution will continue in the
-unrestricted address space until the next explicit ASI Enter.
+When ASI is active, __get_current_cr3_fast() adjusts the returned CR3
+value accordingly to reflect the actual ASI CR3.
 
-In order to keep track of when to restore the restricted address space,
-an interrupt/exception nesting depth counter is maintained per-task.
-An alternative implementation without needing this counter is also
-possible, but the counter unlocks an additional nice-to-have benefit by
-allowing detection of whether or not we are currently executing inside
-an exception context, which would be useful in a later patch.
-
-Note that for KVM on SVM, this is not actually necessary as NMIs are in
-fact maskable via CLGI. It's not clear to me if VMX has something
-equivalent but we will need this infrastructure in place for userspace
-support anyway.
-
-RFC: Once userspace ASI is implemented, this idtentry integration
-looks a bit heavy-handed. For example, we don't need this logic
-for INT 80 emulation, so having it in DEFINE_IDTENTRY_RAW is
-confusing. It could lead to a bug if the order of interrupter counter
-modifications and ASI transition logic gets flipped around somehow.
-
-checkpatch.pl SPACING is false positive. AVOID_BUG ignored for RFC.
-
-Checkpatch-args: --ignore=SPACING,AVOID_BUG
 Signed-off-by: Junaid Shahid <junaids@google.com>
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/x86/include/asm/asi.h       | 68 ++++++++++++++++++++++++++++++++++++++--
- arch/x86/include/asm/idtentry.h  | 50 ++++++++++++++++++++++++-----
- arch/x86/include/asm/processor.h |  5 +++
- arch/x86/kernel/process.c        |  2 ++
- arch/x86/kernel/traps.c          | 22 +++++++++++++
- arch/x86/mm/asi.c                |  7 ++++-
- include/asm-generic/asi.h        | 10 ++++++
- 7 files changed, 153 insertions(+), 11 deletions(-)
+ arch/x86/mm/tlb.c | 37 +++++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-index b9671ef2dd3278adceed18507fd260e21954d574..9a9a139518289fc65f26a4d1cd311aa52cc5357f 100644
---- a/arch/x86/include/asm/asi.h
-+++ b/arch/x86/include/asm/asi.h
-@@ -157,6 +157,11 @@ void asi_relax(void);
- /* Immediately exit the restricted address space if in it */
- void asi_exit(void);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 2601beed83aef182d88800c09d70e4c5e95e7ed0..b2a13fdab0c6454c1d9d4e3338801f3402da4191 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -20,6 +20,7 @@
+ #include <asm/cache.h>
+ #include <asm/cacheflush.h>
+ #include <asm/apic.h>
++#include <asm/asi.h>
+ #include <asm/perf_event.h>
  
-+static inline void asi_init_thread_state(struct thread_struct *thread)
-+{
-+	thread->asi_state.intr_nest_depth = 0;
-+}
-+
- /* The target is the domain we'll enter when returning to process context. */
- static __always_inline struct asi *asi_get_target(struct task_struct *p)
- {
-@@ -197,9 +202,10 @@ static __always_inline bool asi_is_relaxed(void)
- /*
-  * Is the current task in the critical section?
-  *
-- * This is just the inverse of !asi_is_relaxed(). We have both functions in order to
-- * help write intuitive client code. In particular, asi_is_tense returns false
-- * when ASI is disabled, which is judged to make user code more obvious.
-+ * This is just the inverse of !asi_is_relaxed(). We have both functions in
-+ * order to help write intuitive client code. In particular, asi_is_tense
-+ * returns false when ASI is disabled, which is judged to make user code more
-+ * obvious.
-  */
- static __always_inline bool asi_is_tense(void)
- {
-@@ -211,6 +217,62 @@ static __always_inline pgd_t *asi_pgd(struct asi *asi)
- 	return asi ? asi->pgd : NULL;
+ #include "mm_internal.h"
+@@ -197,8 +198,8 @@ static inline unsigned long build_cr3_noflush(pgd_t *pgd, u16 asid,
+ 	return build_cr3(pgd, asid, lam) | CR3_NOFLUSH;
  }
  
-+static __always_inline void asi_intr_enter(void)
+-noinstr unsigned long build_cr3_pcid_noinstr(pgd_t *pgd, u16 pcid,
+-					     unsigned long lam, bool noflush)
++static __always_inline unsigned long build_cr3_pcid(pgd_t *pgd, u16 pcid,
++						    unsigned long lam, bool noflush)
+ {
+ 	u64 noflush_bit = 0;
+ 
+@@ -210,6 +211,12 @@ noinstr unsigned long build_cr3_pcid_noinstr(pgd_t *pgd, u16 pcid,
+ 	return __build_cr3(pgd, pcid, lam) | noflush_bit;
+ }
+ 
++noinstr unsigned long build_cr3_pcid_noinstr(pgd_t *pgd, u16 pcid,
++					     unsigned long lam, bool noflush)
 +{
-+	if (static_asi_enabled() && asi_is_tense()) {
-+		current->thread.asi_state.intr_nest_depth++;
-+		barrier();
-+	}
++	return build_cr3_pcid(pgd, pcid, lam, noflush);
 +}
 +
-+void __asi_enter(void);
-+
-+static __always_inline void asi_intr_exit(void)
-+{
-+	if (static_asi_enabled() && asi_is_tense()) {
-+		/*
-+		 * If an access to sensitive memory got reordered after the
-+		 * decrement, the #PF handler for that access would see a value
-+		 * of 0 for the counter and re-__asi_enter before returning to
-+		 * the faulting access, triggering an infinite PF loop.
-+		 */
-+		barrier();
-+
-+		if (--current->thread.asi_state.intr_nest_depth == 0) {
-+			/*
-+			 * If the decrement got reordered after __asi_enter, an
-+			 * interrupt that came between __asi_enter and the
-+			 * decrement would always see a nonzero value for the
-+			 * counter so it wouldn't call __asi_enter again and we
-+			 * would return to process context in the wrong address
-+			 * space.
-+			 */
-+			barrier();
-+			__asi_enter();
-+		}
-+	}
-+}
-+
-+/*
-+ * Returns the nesting depth of interrupts/exceptions that have interrupted the
-+ * ongoing critical section. If the current task is not in a critical section
-+ * this is 0.
-+ */
-+static __always_inline int asi_intr_nest_depth(void)
-+{
-+	return current->thread.asi_state.intr_nest_depth;
-+}
-+
-+/*
-+ * Remember that interrupts/exception don't count as the critical section. If
-+ * you want to know if the current task is in the critical section use
-+ * asi_is_tense().
-+ */
-+static __always_inline bool asi_in_critical_section(void)
-+{
-+	return asi_is_tense() && !asi_intr_nest_depth();
-+}
-+
- #define INIT_MM_ASI(init_mm) \
- 	.asi_init_lock = __MUTEX_INITIALIZER(init_mm.asi_init_lock),
- 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index ad5c68f0509d4dfd0834303c0f9dabc93ef73aa4..9e00da0a3b08f83ca5e603dc2abbfd5fa3059811 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -12,6 +12,7 @@
- #include <linux/hardirq.h>
- 
- #include <asm/irq_stack.h>
-+#include <asm/asi.h>
- 
- typedef void (*idtentry_t)(struct pt_regs *regs);
- 
-@@ -55,12 +56,15 @@ static __always_inline void __##func(struct pt_regs *regs);		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	irqentry_state_t state = irqentry_enter(regs);			\
-+	irqentry_state_t state;						\
- 									\
-+	asi_intr_enter();						\
-+	state = irqentry_enter(regs);					\
- 	instrumentation_begin();					\
- 	__##func (regs);						\
- 	instrumentation_end();						\
- 	irqentry_exit(regs, state);					\
-+	asi_intr_exit();						\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs)
-@@ -102,12 +106,15 @@ static __always_inline void __##func(struct pt_regs *regs,		\
- __visible noinstr void func(struct pt_regs *regs,			\
- 			    unsigned long error_code)			\
- {									\
--	irqentry_state_t state = irqentry_enter(regs);			\
-+	irqentry_state_t state;						\
- 									\
-+	asi_intr_enter();						\
-+	state = irqentry_enter(regs);					\
- 	instrumentation_begin();					\
- 	__##func (regs, error_code);					\
- 	instrumentation_end();						\
- 	irqentry_exit(regs, state);					\
-+	asi_intr_exit();						\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs,		\
-@@ -139,7 +146,16 @@ static __always_inline void __##func(struct pt_regs *regs,		\
-  * is required before the enter/exit() helpers are invoked.
+ /*
+  * We get here when we do something requiring a TLB invalidation
+  * but could not go invalidate all of the contexts.  We do the
+@@ -1133,14 +1140,32 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
   */
- #define DEFINE_IDTENTRY_RAW(func)					\
--__visible noinstr void func(struct pt_regs *regs)
-+static __always_inline void __##func(struct pt_regs *regs);		\
-+									\
-+__visible noinstr void func(struct pt_regs *regs)			\
-+{									\
-+	asi_intr_enter();						\
-+	__##func (regs);						\
-+	asi_intr_exit();						\
-+}									\
-+									\
-+static __always_inline void __##func(struct pt_regs *regs)
- 
- /**
-  * DEFINE_FREDENTRY_RAW - Emit code for raw FRED entry points
-@@ -178,7 +194,18 @@ noinstr void fred_##func(struct pt_regs *regs)
-  * is required before the enter/exit() helpers are invoked.
-  */
- #define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
--__visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
-+static __always_inline void __##func(struct pt_regs *regs,		\
-+				     unsigned long error_code);		\
-+									\
-+__visible noinstr void func(struct pt_regs *regs, unsigned long error_code)\
-+{									\
-+	asi_intr_enter();						\
-+	__##func (regs, error_code);					\
-+	asi_intr_exit();						\
-+}									\
-+									\
-+static __always_inline void __##func(struct pt_regs *regs,		\
-+				     unsigned long error_code)
- 
- /**
-  * DECLARE_IDTENTRY_IRQ - Declare functions for device interrupt IDT entry
-@@ -209,14 +236,17 @@ static void __##func(struct pt_regs *regs, u32 vector);			\
- __visible noinstr void func(struct pt_regs *regs,			\
- 			    unsigned long error_code)			\
- {									\
--	irqentry_state_t state = irqentry_enter(regs);			\
-+	irqentry_state_t state;						\
- 	u32 vector = (u32)(u8)error_code;				\
- 									\
-+	asi_intr_enter();						\
-+	state = irqentry_enter(regs);					\
- 	kvm_set_cpu_l1tf_flush_l1d();                                   \
- 	instrumentation_begin();					\
- 	run_irq_on_irqstack_cond(__##func, regs, vector);		\
- 	instrumentation_end();						\
- 	irqentry_exit(regs, state);					\
-+	asi_intr_exit();						\
- }									\
- 									\
- static noinline void __##func(struct pt_regs *regs, u32 vector)
-@@ -255,13 +285,16 @@ static __always_inline void instr_##func(struct pt_regs *regs)		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	irqentry_state_t state = irqentry_enter(regs);			\
-+	irqentry_state_t state;						\
- 									\
-+	asi_intr_enter();						\
-+	state = irqentry_enter(regs);					\
- 	kvm_set_cpu_l1tf_flush_l1d();                                   \
- 	instrumentation_begin();					\
- 	instr_##func (regs);						\
- 	instrumentation_end();						\
- 	irqentry_exit(regs, state);					\
-+	asi_intr_exit();						\
- }									\
- 									\
- void fred_##func(struct pt_regs *regs)					\
-@@ -294,13 +327,16 @@ static __always_inline void instr_##func(struct pt_regs *regs)		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	irqentry_state_t state = irqentry_enter(regs);			\
-+	irqentry_state_t state;						\
- 									\
-+	asi_intr_enter();						\
-+	state = irqentry_enter(regs);					\
- 	kvm_set_cpu_l1tf_flush_l1d();                                   \
- 	instrumentation_begin();					\
- 	instr_##func (regs);						\
- 	instrumentation_end();						\
- 	irqentry_exit(regs, state);					\
-+	asi_intr_exit();						\
- }									\
- 									\
- void fred_##func(struct pt_regs *regs)					\
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index f02220e6b4df911d87e2fee4b497eade61a27161..a32a53405f45e4c0473fe081e216029cf5bd0cdd 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -508,6 +508,11 @@ struct thread_struct {
- 	struct {
- 		/* Domain to enter when returning to process context. */
- 		struct asi	*target;
-+		/*
-+		 * The depth of interrupt/exceptions interrupting an ASI
-+		 * critical section
-+		 */
-+		int		intr_nest_depth;
- 	} asi_state;
- #endif
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index f63f8fd00a91f3d1171f307b92179556ba2d716d..44abc161820153b7f68664b97267658b8e011101 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -96,6 +96,8 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- #ifdef CONFIG_VM86
- 	dst->thread.vm86 = NULL;
- #endif
-+	asi_init_thread_state(&dst->thread);
+ noinstr unsigned long __get_current_cr3_fast(void)
+ {
+-	unsigned long cr3 =
+-		build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
+-			  this_cpu_read(cpu_tlbstate.loaded_mm_asid),
+-			  tlbstate_lam_cr3_mask());
++	unsigned long cr3;
++	pgd_t *pgd;
++	u16 asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
++	struct asi *asi = asi_get_current();
++	u16 pcid;
 +
- 	/* Drop the copied pointer to current's fpstate */
- 	dst->thread.fpu.fpstate = NULL;
++	if (asi) {
++		pgd = asi_pgd(asi);
++		pcid = asi_pcid(asi, asid);
++	} else {
++		pgd = this_cpu_read(cpu_tlbstate.loaded_mm)->pgd;
++		pcid = kern_pcid(asid);
++	}
++
++	cr3 = build_cr3_pcid(pgd, pcid, tlbstate_lam_cr3_mask(), false);
  
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 2dbadf347b5f4f66625c4f49b76c41b412270d57..beea861da8d3e9a4e2afb3a92ed5f66f11d67bd6 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -65,6 +65,7 @@
- #include <asm/umip.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
-+#include <asm/asi.h>
- #include <asm/vdso.h>
- #include <asm/tdx.h>
- #include <asm/cfi.h>
-@@ -463,6 +464,27 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
- 	}
- #endif
+ 	/* For now, be very restrictive about when this can be called. */
+ 	VM_WARN_ON(in_nmi() || preemptible());
  
 +	/*
-+	 * Do an asi_exit() only here because a #DF usually indicates
-+	 * the system is in a really bad state, and we don't want to
-+	 * cause any additional issue that would prevent us from
-+	 * printing a correct stack trace.
-+	 *
-+	 * The additional issues are not related to a possible triple
-+	 * fault, which can only occurs if a fault is encountered while
-+	 * invoking this handler, but here we are already executing it.
-+	 * Instead, an ASI-induced #PF here could potentially end up
-+	 * getting another #DF. For example, if there was some issue in
-+	 * invoking the #PF handler. The handler for the second #DF
-+	 * could then again cause an ASI-induced #PF leading back to the
-+	 * same recursion.
-+	 *
-+	 * This is not needed in the espfix64 case above, since that
-+	 * code is about turning a #DF into a #GP which is okay to
-+	 * handle in the restricted domain. That's also why we don't
-+	 * asi_exit() in the #GP handler.
++	 * Outside of the ASI critical section, an ASI-restricted CR3 is
++	 * unstable because an interrupt (including an inner interrupt, if we're
++	 * already in one) could cause a persistent asi_exit.
 +	 */
-+	asi_exit();
- 	irqentry_nmi_enter(regs);
- 	instrumentation_begin();
- 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
-diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index 5baf563a078f5b3a6cd4b9f5e92baaf81b0774c4..054315d566c082c0925a00ce3a0877624c8b9957 100644
---- a/arch/x86/mm/asi.c
-+++ b/arch/x86/mm/asi.c
-@@ -235,7 +235,7 @@ static __always_inline void maybe_flush_data(struct asi *next_asi)
- 	this_cpu_and(asi_taints, ~ASI_TAINTS_DATA_MASK);
++	VM_WARN_ON_ONCE(asi && asi_in_critical_section());
++
+ 	VM_BUG_ON(cr3 != __read_cr3());
+ 	return cr3;
  }
- 
--static noinstr void __asi_enter(void)
-+noinstr void __asi_enter(void)
- {
- 	u64 asi_cr3;
- 	struct asi *target = asi_get_target(current);
-@@ -250,6 +250,7 @@ static noinstr void __asi_enter(void)
- 	 * disabling preemption should be fine.
- 	 */
- 	VM_BUG_ON(preemptible());
-+	VM_BUG_ON(current->thread.asi_state.intr_nest_depth != 0);
- 
- 	if (!target || target == this_cpu_read(curr_asi))
- 		return;
-@@ -290,6 +291,7 @@ noinstr void asi_enter(struct asi *asi)
- 	if (!static_asi_enabled())
- 		return;
- 
-+	VM_WARN_ON_ONCE(asi_intr_nest_depth());
- 	VM_WARN_ON_ONCE(!asi);
- 
- 	/* Should not have an asi_enter() without a prior asi_relax(). */
-@@ -305,6 +307,7 @@ EXPORT_SYMBOL_GPL(asi_enter);
- noinstr void asi_relax(void)
- {
- 	if (static_asi_enabled()) {
-+		VM_WARN_ON_ONCE(asi_intr_nest_depth());
- 		barrier();
- 		asi_set_target(current, NULL);
- 	}
-@@ -326,6 +329,8 @@ noinstr void asi_exit(void)
- 
- 	asi = this_cpu_read(curr_asi);
- 	if (asi) {
-+		WARN_ON_ONCE(asi_in_critical_section());
-+
- 		maybe_flush_control(NULL);
- 
- 		unrestricted_cr3 =
-diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-index eedc961ee916a9e1da631ca489ea4a7bc9e6089f..7f542c59c2b8a2b74432e4edb7199f9171db8a84 100644
---- a/include/asm-generic/asi.h
-+++ b/include/asm-generic/asi.h
-@@ -52,6 +52,8 @@ static inline bool asi_is_relaxed(void) { return true; }
- 
- static inline bool asi_is_tense(void) { return false; }
- 
-+static inline bool asi_in_critical_section(void) { return false; }
-+
- static inline void asi_exit(void) { }
- 
- static inline bool asi_is_restricted(void) { return false; }
-@@ -65,6 +67,14 @@ static inline pgd_t *asi_pgd(struct asi *asi) { return NULL; }
- 
- static inline void asi_handle_switch_mm(void) { }
- 
-+static inline void asi_init_thread_state(struct thread_struct *thread) { }
-+
-+static inline void asi_intr_enter(void) { }
-+
-+static inline int asi_intr_nest_depth(void) { return 0; }
-+
-+static inline void asi_intr_exit(void) { }
-+
- #define static_asi_enabled() false
- 
- static inline void asi_check_boottime_disable(void) { }
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
