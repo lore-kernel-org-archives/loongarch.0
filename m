@@ -1,141 +1,190 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6F2054F1
-	for <loongarch@lists.linux.dev>; Thu,  9 Jan 2025 20:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9F18BEC
+	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 03:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736456056; cv=none; b=G9u1/+EJ0/NRxSJqg4A/CATWWQogYxKoaLvWGDX8F6NtYeedkb2dbzidXr3hnNo3VuJTYwmZMUA4fkKq3rV/TLgemTlNE4CaE0mqgOpz41C1rG1bn2EacmKhN6QQIRtydllrtZk/VjDFA1EI4+Ud6rTh9jTj3FA5cI7OwlJtrV0=
+	t=1736479032; cv=none; b=Y4p4BOf9JZGHzrEr1tSmSrgh45Z8FsgZqRxh6SlnFcjcwJwZCbN4gwedmcnu64j6Xz+sTcqMZH0PI4WpGHgtuD6lt0Vrhn/4jVWCnUuyfzcQeKM9QxiK9/p5NhXR70vuFo2j48KG4F0YFl8OJ4isbd/RxriN83ORVKdANzdaQ+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736456056; c=relaxed/simple;
-	bh=5/C7Qk/iqHGdIjlwh5HEHVsPXP190aXPuUkUTyQD9aE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tnfxlPEJtnq6b/OrfOzlfwbgrsa+Y60/ZpEHY9bANcyOkmILRse/o7uVg3sWJEDczSQgr+IfmHp6/6AQUTJOr7ijUBSgvRhk43+rimo7hE/0baFai7eIRrBEiDC8JSqKlVMQHA2ysu7f0JGc9CIon7DqSbNJtDeuZV0mZZjM+xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=MY8X4Hqe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ozPEQ20c; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1736479032; c=relaxed/simple;
+	bh=aIXN1fFDfC84V416aPhCKGkGdMkFr9cf9umweXfeUA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uxSnKNT1Fu0q6MdJ6EyGypjHc/1FRKnzG0BquckJnmSZFODEB3AknW1BSSg3WSLRVTNZc0EABjHB4QSR+kEubqqI/wBUhVKsot6HO4x7NE4PIGS1bJ8oScDqNIR22u1jfMaoLwC+5hgcrJug2EVHsxA7X3+mrHu/j2I84bLDriY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=UI2PWbpd; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MY8X4Hqe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ozPEQ20c"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id F0BC313801A0;
-	Thu,  9 Jan 2025 15:54:13 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Thu, 09 Jan 2025 15:54:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1736456053;
-	 x=1736542453; bh=LV6jQYO6s0OpqVr09VODFifJLCcP1dDB4WHODaY6vAU=; b=
-	MY8X4HqeV7scGXk3qO8Yo6Q/GHyskxaU7hmTXvLVIXsMLl+dm3AB9S4dI+h5kHOP
-	Bi/75K+4CiP/MVByS+h4oKimNOjfA9kiFQzTrhqg51CCSR9o23xbkr+RkH/2zEfq
-	lF2IfaMGdirOTUL/aLNqFHtCXq3CbzrEMe+IoA2/zCvLcGGZW9lAiNQTm+ZkAOF9
-	3bK1oOdB+o6jhGiuE77ykDhWuRU9Bsa234t9fqBRFSwZvXvbQaZ25Or/Lt7rQiGa
-	4Ue/Fglrmx53ZsRg/2OitF8FjyHMjmEOtmbL7p48i32NrIV5hzTjxYRrROJ2f4IT
-	hUBy0VLP5meYXkK9WmyGFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736456053; x=
-	1736542453; bh=LV6jQYO6s0OpqVr09VODFifJLCcP1dDB4WHODaY6vAU=; b=o
-	zPEQ20cJaEtO6r/thYRekT7MtdmFULtPsWNlXU1m+r9tKuBmhHD9jnlQGMnfjCUd
-	pEa9DAyqHeM2cxuXZxMX35qpPW3H7lxfk/yqkWI+MXuSUHjECxY301i+lSZSZnow
-	woIuIYU0GE647Uh6t3EoGVSrvdRhyHVV8+5ZXX097BvmigbJBaVK6YVg8t9QD8Lf
-	/LLI35vxXpSQbiU7SRTVmHstYIUVeitcKaDBYavJ7fjPTF+m/b1cS/VtYiiw+Vg1
-	dlUQAFQ3ZQNXOaBEHlc93/ohwndtQi9AAWXgV6IKISScDOwa5yS/CpYjr9d0CaYg
-	n5MTe7Oy2zmxk8A2QYqTQ==
-X-ME-Sender: <xms:czeAZ-gsPK8ZMADacYPNsfr1GINwZPKG5xzPhI5dWs7r5sPtghCiYg>
-    <xme:czeAZ_CqzYpjcaatlp4brem-c4aizxGAyPNmcVhiA8Un9zNs0o4udmU-Z7LQ3sXcc
-    B4zoqcWOk1YG_1iAfo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegiedgudeflecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepiigvhhgrseguvggsihgrnhdroh
-    hrghdprhgtphhtthhopehsrghmsehgvghnthhoohdrohhrghdprhgtphhtthhopehmrght
-    thhsthekkeesghhmrghilhdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheplhhinhhugidqmhhmsehkvhgrtghkrdhorhhgpdhrtghpthhtoheprhhitghhrghrug
-    drhhgvnhguvghrshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghgvvghrthes
-    lhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhish
-    htshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:czeAZ2HAxY2Z9dwqbKEczu6HdQ0Xb05bDuKR0Z9AwM5LUrpX0u0E8A>
-    <xmx:czeAZ3R7WcSKplNyC-jAFLDQ4ktyj1SZYTEiW3zm4pjfpOAZsS7NVQ>
-    <xmx:czeAZ7yMN6I34dojSie-x3eeTfx3J7Sudz8D-0vux6v5_jHwYgTAkQ>
-    <xmx:czeAZ15wTkCQKRU29OPw-xqaFW1U6m1_uOe5vUXhqMBFI8KFiQD-tA>
-    <xmx:dTeAZ7kMR0CFbnJAS9hzGTJyKp12YyashwZxdj08sKfsDYYsL1I1cIru>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A68C92220072; Thu,  9 Jan 2025 15:54:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UI2PWbpd"
+Received: from [IPV6:2601:646:8080:c1f1:e386:c572:17d3:6ddc] ([IPv6:2601:646:8080:c1f1:e386:c572:17d3:6ddc])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50A3FGON981507
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 9 Jan 2025 19:15:22 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50A3FGON981507
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024121701; t=1736478939;
+	bh=2Gsk7+JP3PoZg8VhoEWFUmet8fDEOviqEDX2siCLmXA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UI2PWbpd/173uf8ET7OhKCSxHMq3wIV9uPwlDabKLopTn4XQlVOW2UhdDhLNKQ2ou
+	 8eY5IkJPjKd/ufxYXpC3T7ngILIHHww7s3f/TxHKadq33uowsRPtdqvlulWYDcl4s8
+	 98gF9cD/iHRBhl+LkNR2Vz4dcuRwuyCMkzCPxTONo9GrePkGJYLa5vUD7mYV9L5Uos
+	 ee2fTgpV4TmVkm3/EnjzCs2Wh3is/8drjYQa4kdxx6i4NZ58BWsIW3fEOCUEzu/US4
+	 z0xQ+UHFUiZOJoDRJIqr/23SWWVPTNXl6Nb/6Jv9OAyLaNK9jKDb4DWbnzq60xty/Q
+	 X0SCgYzOXKJQw==
+Message-ID: <4536aca6-c430-4cf9-a98f-8282c7378955@zytor.com>
+Date: Thu, 9 Jan 2025 19:15:09 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 09 Jan 2025 21:53:51 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>,
- "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Matt Turner" <mattst88@gmail.com>, "Kees Cook" <kees@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, linux-alpha@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- "Michael Cree" <mcree@orcon.net.nz>, "Sam James" <sam@gentoo.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
- "Chris Hofstaedtler" <zeha@debian.org>, util-linux@vger.kernel.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Message-Id: <bff9bd35-4d47-45fc-90c5-28b79425fc8b@app.fastmail.com>
-In-Reply-To: <alpine.DEB.2.21.2501091953050.18889@angie.orcam.me.uk>
-References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
- <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
- <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
- <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
- <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
- <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
- <87ed1cufj1.fsf@email.froward.int.ebiederm.org>
- <alpine.DEB.2.21.2501091953050.18889@angie.orcam.me.uk>
-Subject: Re: [PATCH] alpha: Fix personality flag propagation across an exec
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+To: "Dmitry V. Levin" <ldv@strace.io>, Oleg Nesterov <oleg@redhat.com>
+Cc: Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Mike Frysinger <vapier@gentoo.org>, Renzo Davoli <renzo@cs.unibo.it>,
+        Davide Berardi <berardi.dav@gmail.com>, strace-devel@lists.strace.io,
+        Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt
+ <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.osdn.me>, Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250107230153.GA30560@strace.io>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20250107230153.GA30560@strace.io>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 9, 2025, at 21:10, Maciej W. Rozycki wrote:
-> On Thu, 9 Jan 2025, Eric W. Biederman wrote:
->
->> > So, this would be the 100% correct for alpha then which would not loose
->> > any functionality even for 32-bit binaries?
->> 
->> I don't think it is correct to think about 32-bit binaries on alpha.
->> 
->> Alpha never had a 32bit instruction set.  But at some point it looks
->> like binaries that could not handle more than 31 bits of address
->> space got ported and someone implemented a work-around.  I guess this
->> is the --taso option that Arnd mentioned.
->
->  This also saves some code space in non-PIE and plain static executables 
-> as it takes fewer machine instructions to load a 64-bit address that is 
-> known beforehand to be a sign-extended 32-bit value.
->
->  This is similar to the MIPS n32 ABI, which also implies a 32-bit address 
-> space while still using 64-bit registers for everything, starting from 
-> stack slots (it's also ILP32 with the `long long' C data type only making 
-> proper use of the full width of the CPU registers, while Alpha's --taso 
-> ABI is I believe IP32 (?) with the plain `long' C data type still 64-bit, 
-> just as with the regular LP64 ABI).
+This would seem like a very good idea. However, it is perhaps important 
+to realize that it doesn't fully eliminate the problems with 64-bit 
+arguments on 32-bit ABIs being handled differently (never mind 
+inconsistencies in system call ABIs etc.) There isn't all that much that 
+can be done about that directly, though.
 
-I'm pretty sure it's still LP64 on Alpha Linux with gcc. There is an
--mpointer-size=32 option in gcc for VMS, but I don't see anything like
-that in Linux. The only thing that is implemented here is the option
-for the linker that sets the EF_ALPHA_32BIT bit, but none of the
-code generation takes advantage of the upper bits being zero.
+	-hpa
 
-       Arnd
+
+On 1/7/25 15:01, Dmitry V. Levin wrote:
+> PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+> PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+> system calls the tracee is blocked in.
+> 
+> This API allows ptracers to obtain and modify system call details
+> in a straightforward and architecture-agnostic way.
+> 
+> Current implementation supports changing only those bits of system call
+> information that are used by strace, namely, syscall number, syscall
+> arguments, and syscall return value.
+> 
+> Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
+> such as instruction pointer and stack pointer, could be added later
+> if needed, by re-using struct ptrace_syscall_info.reserved to specify
+> the additional details that should be set.  Currently, the reserved
+> field of struct ptrace_syscall_info must be initialized with zeroes;
+> arch, instruction_pointer, and stack_pointer fields are ignored.
+> 
+> PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
+> PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
+> Other operations could be added later if needed.
+> 
+> Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
+> PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
+> convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
+> to provide an API of changing the first system call argument on riscv
+> architecture [1].
+> 
+> ptrace(2) man page:
+> 
+> long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+> ...
+> PTRACE_SET_SYSCALL_INFO
+>         Modify information about the system call that caused the stop.
+>         The "data" argument is a pointer to struct ptrace_syscall_info
+>         that specifies the system call information to be set.
+>         The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
+> 
+> [1] https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
+> 
+> Dmitry V. Levin (6):
+>    Revert "arch: remove unused function syscall_set_arguments()"
+>    syscall.h: add syscall_set_arguments() on remaining
+>      HAVE_ARCH_TRACEHOOK arches
+>    syscall.h: introduce syscall_set_nr()
+>    ptrace_get_syscall_info: factor out ptrace_get_syscall_info_op
+>    ptrace: introduce PTRACE_SET_SYSCALL_INFO request
+>    selftests/ptrace: add a test case for PTRACE_SET_SYSCALL_INFO
+> 
+>   arch/arc/include/asm/syscall.h                |  20 +
+>   arch/arm/include/asm/syscall.h                |  25 +
+>   arch/arm64/include/asm/syscall.h              |  20 +
+>   arch/csky/include/asm/syscall.h               |  13 +
+>   arch/hexagon/include/asm/syscall.h            |  14 +
+>   arch/loongarch/include/asm/syscall.h          |  15 +
+>   arch/m68k/include/asm/syscall.h               |   7 +
+>   arch/microblaze/include/asm/syscall.h         |   7 +
+>   arch/mips/include/asm/syscall.h               |  53 +++
+>   arch/nios2/include/asm/syscall.h              |  16 +
+>   arch/openrisc/include/asm/syscall.h           |  13 +
+>   arch/parisc/include/asm/syscall.h             |  19 +
+>   arch/powerpc/include/asm/syscall.h            |  15 +
+>   arch/riscv/include/asm/syscall.h              |  16 +
+>   arch/s390/include/asm/syscall.h               |  19 +
+>   arch/sh/include/asm/syscall_32.h              |  19 +
+>   arch/sparc/include/asm/syscall.h              |  17 +
+>   arch/um/include/asm/syscall-generic.h         |  19 +
+>   arch/x86/include/asm/syscall.h                |  43 ++
+>   arch/xtensa/include/asm/syscall.h             |  18 +
+>   include/asm-generic/syscall.h                 |  30 ++
+>   include/linux/ptrace.h                        |   3 +
+>   include/uapi/linux/ptrace.h                   |   3 +-
+>   kernel/ptrace.c                               | 154 ++++++-
+>   tools/testing/selftests/ptrace/Makefile       |   2 +-
+>   .../selftests/ptrace/set_syscall_info.c       | 436 ++++++++++++++++++
+>   26 files changed, 994 insertions(+), 22 deletions(-)
+>   create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
+> 
+
