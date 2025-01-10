@@ -1,55 +1,55 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBFE21E091
-	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87F8224B05
+	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534497; cv=none; b=Kph0/dB9u9XQ1BtyOhHO7FaGUC+c9AFf2cvTWxBJlcoTZmpawy5JYqpz1DMPiSok8BykF5CJEZikMDTdmJ3tJ3F63HTZmGeIDcrJKGiM5w9CsXzbTDU8Y8UmE9YhizZQJiqQltxuCdHlEidG5w+YWs7xloEqo6vAWE6QAuGBtNY=
+	t=1736534510; cv=none; b=COSlMSTBH+v8HaNMuEEGlmBR+fFfzd9sB6agoLd2aSPaL4CtYq97d7hj+omKNq1nLFnPtSRBz3cUCpyGWw4Wl/d4b21ydCOPMwNeuOB1HuX3jL3eTqq+AGp9BFQ7Ul8fWNTEhomQJ4WXSCF9uktydWbpq7jJuoKF7jwWVajomtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534497; c=relaxed/simple;
-	bh=ZTZcWQBF8tUo+J/JUKmX7ofVEYD/oEfP//Lw5p3vMVE=;
+	s=arc-20240116; t=1736534510; c=relaxed/simple;
+	bh=qC2aC8eAp33KA8O+Z6LlsHyIL/uhbg4PRbpKGbN5hWc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vp/38MzkTAtvm9g4U3bAZ3CThfrvrxa7gr8iDrr8zL+7Au9unbOgRhgmRB/YHcp9NPRcBPtFNZ9Y55YjanN/a0NSIztp+SIQTEcXNg2ZTV2SiTLcGsBCcPrI2LGW/DHR++391Z6OE2mJ0/MzlLjTfOoVs38ukg+VYD5L45RhwmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2z1Y7C9H; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=fv4mGp9s4SXZxwO1db8mitW7WNd9YYLsPftr0JEgJ9YjtDnYPo2MX73gy295DVFZBZoq4r5TPvj54iHu9qgVcky/25StMqXRwMC0ZdefCPYjgrV8ymfc26dnT0Z1z/Sq/3UciV/K4YUky0pvwRmmVKiAueNZqCUmrcXQA5mEi9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BusR8mw/; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2z1Y7C9H"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43651b1ba8aso16457275e9.1
-        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BusR8mw/"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-436289a570eso19448025e9.0
+        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534475; x=1737139275; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1736534484; x=1737139284; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqQy0/uo7rp5xt5hxwNN280PfwFL6RX7EFGPCdWY0es=;
-        b=2z1Y7C9H1kCWrPOZ2vXOfNbi0UtsiAcjCnyZ5JTOyCrnCg9P+hGHX2CEAY10Fot8Fc
-         7SylPu4k/BymFB71boRFZDc1hb4atNOxRNgGjagjdlEAtfv2awKHIqvLf5m4k+nA1Bti
-         f57lbjuJrc/vpCUntroo04GCP64Maunn8K7WV7ddF4XohXOGGKwdIgc0fiaNjBwOZCKk
-         uM82eEFvfG+ofXVTcTae1wShGYWgxfQvDfGDHYoxVdZIxPPCNsajMG1mCCXt8uypMMB2
-         gnZM37oKJ83TC1ayP6+yFPMZw+q+73gkp0Qm7tH9enpTqBgNLOpNEHfNAozu38JF/Z6I
-         OIvg==
+        bh=HFKS9He99X0lK3xnnbI99ZyULyVP6qmX2/a79HHV3Mw=;
+        b=BusR8mw/k92z2cfieCC2iRriV/Adr2ks7wCmmwrHUltO4Hqq5HtAab0NbEO8sGRGEU
+         YcufDu/hm0ufM1/PfdbLgzxrZYfKGI147huEpdwxl9D1Rf+kGYwAI/zCnhnkhX2sibh/
+         Qxsct+XtcKlD/w1GwpWrSR2LdjdKgyNnJuDbogu6LTu7kkSLwy9aggXsB2AmGyx2P1FF
+         xX/5OUQnq+X7sn2/5WdW3dABvgQ/bJGrUGd0EFu3t3ZUgdBM+t5PBtQv79q4GrqKqO4e
+         TmjS1b0dLL6RmdbYbKH6TG/C78fxPv1XDQL+r2nhczP+EP2b9Ak3eFSdqQpy2wOjhC4F
+         c/iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534475; x=1737139275;
+        d=1e100.net; s=20230601; t=1736534484; x=1737139284;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqQy0/uo7rp5xt5hxwNN280PfwFL6RX7EFGPCdWY0es=;
-        b=F2SD0IQjE6rEzFVHh27rzp1L724xpoNrrYiBSRiUfN40vpEkxacIzFUbKBmOCjzywg
-         f2vOA73cqkMhZnNnZdF8xs44wShwqt0P5wJ8VjzJy66YCs7nWfY1hhRGK35odWME66AB
-         Uqk5e6JAOoO8XdfyilB5uE51fz6lNc0tLZF865Cu9hDNWMmz3K9OMORkPOW05CjNpqxC
-         my8r+/Au2nfjKi9ehLiSNsBaeufbA0b3ZysUVp3A16m2iKm/ZOMSrYW3z/IKcLkdkdAV
-         t/umZommN+KW6Tj+5d4IgvRaNYDza+xID5LWxQQAvhh9lgnOjvIvMuPA7ck0ogRzZAAG
-         J+HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBYUmiFeo3PwxliCYOviY8ybIqDxDJjNt3gDBq7A7Ua+lRZ44wos51k6jC5xUFcGCU42eP85KQuDI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCmu81dycpy6cC8Av721zeXkWnpWqJoRqGZwjotrjwQabSLHQm
-	8zKiOTDlVvqR2rp0+PaLt7aTRFMOMCggJFaLhkAcKRsKgttHwXi1u48xOogSl8Is00toeafOO4s
-	Bzebr4gjMfw==
-X-Google-Smtp-Source: AGHT+IEHMyjAf4Ii6uANDaoYyo5ZkF+D1/fwKOgm4kaaSXfegc+L5vVxTYn6WIEloGlJDmt93RFbSdb2jTZqKA==
-X-Received: from wmbjt19.prod.google.com ([2002:a05:600c:5693:b0:435:4bd2:1dcd])
+        bh=HFKS9He99X0lK3xnnbI99ZyULyVP6qmX2/a79HHV3Mw=;
+        b=VTgC8jsNi5JrQhCfxrtroBjk6xsgkN3WusDXCLkVZBxZFtcq5YX7uTpnO0KgYl2Svi
+         Ize/0qZBp8+z6uVwgWYcLBLeGyapfR6/n2ngxdWo6Urvji+UwgC+ynNGTtI3WrqtUJ8U
+         yBeOflewb/2UaMS3YaS7xz120Mo7cSTl2aziwiQ3QnxNOTcvF2TReycftqanp138NnU3
+         /kHZoVtzhDqIlJ50eC0W1cJgvWq79aSzjkxEAdUWqDM5+Ia/IeunLScfR8Qw0gTn7D9H
+         kq2dA5BIjI1Iak4ehE0XzWnGVoWO2O89w8RG/HGjYI2qOrNfmJoLG85uU/OZ5cTnd8rc
+         d+Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOO20VJV2vVJKrUCP1iwvp0ll3CnwMQSSATtzjHJpemoNFzAAo5/2XQY7YGFbj6wFrDx/BYhR4ggE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6MSp6nJLZ9ldb6dFBVweTmnV4HXkxA8nenZTA0LUWRaada1Uo
+	XRv/6bPcYc87b9ZWma2Tuz9ogdALeMQGZXH9XTORVP6iQioieug4Oe+4fqR7yF0EgJaPrwVpJ8y
+	qQ6Bx+nAqyw==
+X-Google-Smtp-Source: AGHT+IHb2tLJeEj/nhEIcvCueP11HP0tzz903p60s9RvGJF27LFwQlQKr5YD0ey6aPDR1IvAD0AJ740K8RZlJQ==
+X-Received: from wmbbh20.prod.google.com ([2002:a05:600c:3d14:b0:434:fd4d:ffad])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4e44:b0:434:e9ee:c3d with SMTP id 5b1f17b1804b1-436e27070b1mr106983675e9.20.1736534474969;
- Fri, 10 Jan 2025 10:41:14 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:39 +0000
+ 2002:a05:600c:3c85:b0:436:18d0:aa6e with SMTP id 5b1f17b1804b1-436e2679a7cmr125832515e9.5.1736534484149;
+ Fri, 10 Jan 2025 10:41:24 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:43 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-13-8419288bc805@google.com>
-Subject: [PATCH RFC v2 13/29] mm: Add __PAGEFLAG_FALSE
+Message-ID: <20250110-asi-rfc-v2-v2-17-8419288bc805@google.com>
+Subject: [PATCH RFC v2 17/29] mm: asi: Map vmalloc/vmap data as nonsensitive
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -114,39 +114,113 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-__PAGEFLAG_FALSE is a non-atomic equivalent of PAGEFLAG_FALSE.
+We add new VM flags for sensitive and global-nonsensitive, parallel to
+the corresponding GFP flags.
 
-Checkpatch-args: --ignore=COMPLEX_MACRO
+__get_vm_area_node and friends will default to creating
+global-nonsensitive VM areas, and vmap then calls asi_map as necessary.
+
+__vmalloc_node_range has additional logic to check and set defaults for
+the sensitivity of the underlying page allocation. It does this via an
+initial __set_asi_flags call - note that it then calls
+__get_vm_area_node which also calls __set_asi_flags. This second call
+is a NOP.
+
+By default, we mark the underlying page allocation as sensitive, even
+if the VM area is global-nonsensitive. This is just an optimization to
+avoid unnecessary asi_map etc, since presumably most code has no reason
+to access vmalloc'd data through the direct map.
+
+There are some details of the GFP-flag/VM-flag interaction that are not
+really obvious, for example: what should happen when callers of
+__vmalloc explicitly set GFP sensitivity flags? (That function has no VM
+flags argument). For the moment let's just not block on that and focus
+on adding the infrastructure, though.
+
+At the moment, the high-level vmalloc APIs doesn't actually provide a
+way to configure sensitivity, this commit just adds the infrastructure.
+We'll have to decide how to expose this to allocation sites as we
+implement more denylist logic. vmap does already allow configuring vm
+flags.
+
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- include/linux/page-flags.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ mm/vmalloc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index cc839e4365c18223e68c35efd0f67e7650708e8b..7ee9a0edc6d21708fc93dfa8913dc1ae9478dee3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -484,6 +484,10 @@ static inline int Page##uname(const struct page *page) { return 0; }
- FOLIO_SET_FLAG_NOOP(lname)						\
- static inline void SetPage##uname(struct page *page) {  }
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 8d260f2174fe664b54dcda054cb9759ae282bf03..00745edf0b2c5f4c769a46bdcf0872223de5299d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3210,6 +3210,7 @@ struct vm_struct *remove_vm_area(const void *addr)
+ {
+ 	struct vmap_area *va;
+ 	struct vm_struct *vm;
++	unsigned long vm_addr;
  
-+#define __SETPAGEFLAG_NOOP(uname, lname)					\
-+static inline void __folio_set_##lname(struct folio *folio) { }		\
-+static inline void __SetPage##uname(struct page *page) {  }
-+
- #define CLEARPAGEFLAG_NOOP(uname, lname)				\
- FOLIO_CLEAR_FLAG_NOOP(lname)						\
- static inline void ClearPage##uname(struct page *page) {  }
-@@ -506,6 +510,9 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
- #define TESTSCFLAG_FALSE(uname, lname)					\
- 	TESTSETFLAG_FALSE(uname, lname) TESTCLEARFLAG_FALSE(uname, lname)
+ 	might_sleep();
  
-+#define __PAGEFLAG_FALSE(uname, lname) TESTPAGEFLAG_FALSE(uname, lname)		\
-+	__SETPAGEFLAG_NOOP(uname, lname) __CLEARPAGEFLAG_NOOP(uname, lname)
+@@ -3221,6 +3222,7 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 	if (!va || !va->vm)
+ 		return NULL;
+ 	vm = va->vm;
++	vm_addr = (unsigned long) READ_ONCE(vm->addr);
+ 
+ 	debug_check_no_locks_freed(vm->addr, get_vm_area_size(vm));
+ 	debug_check_no_obj_freed(vm->addr, get_vm_area_size(vm));
+@@ -3352,6 +3354,7 @@ void vfree(const void *addr)
+ 				addr);
+ 		return;
+ 	}
++	asi_unmap(ASI_GLOBAL_NONSENSITIVE, vm->addr, get_vm_area_size(vm));
+ 
+ 	if (unlikely(vm->flags & VM_FLUSH_RESET_PERMS))
+ 		vm_reset_perms(vm);
+@@ -3397,6 +3400,7 @@ void vunmap(const void *addr)
+ 				addr);
+ 		return;
+ 	}
++	asi_unmap(ASI_GLOBAL_NONSENSITIVE, vm->addr, get_vm_area_size(vm));
+ 	kfree(vm);
+ }
+ EXPORT_SYMBOL(vunmap);
+@@ -3445,16 +3449,21 @@ void *vmap(struct page **pages, unsigned int count,
+ 
+ 	addr = (unsigned long)area->addr;
+ 	if (vmap_pages_range(addr, addr + size, pgprot_nx(prot),
+-				pages, PAGE_SHIFT) < 0) {
+-		vunmap(area->addr);
+-		return NULL;
+-	}
++				pages, PAGE_SHIFT) < 0)
++		goto err;
 +
- __PAGEFLAG(Locked, locked, PF_NO_TAIL)
- FOLIO_FLAG(waiters, FOLIO_HEAD_PAGE)
- FOLIO_FLAG(referenced, FOLIO_HEAD_PAGE)
++	if (asi_map(ASI_GLOBAL_NONSENSITIVE, area->addr,
++		    get_vm_area_size(area)))
++		goto err; /* The necessary asi_unmap() is in vunmap. */
+ 
+ 	if (flags & VM_MAP_PUT_PAGES) {
+ 		area->pages = pages;
+ 		area->nr_pages = count;
+ 	}
+ 	return area->addr;
++err:
++	vunmap(area->addr);
++	return NULL;
+ }
+ EXPORT_SYMBOL(vmap);
+ 
+@@ -3711,6 +3720,10 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+ 		goto fail;
+ 	}
+ 
++	if (asi_map(ASI_GLOBAL_NONSENSITIVE, area->addr,
++		    get_vm_area_size(area)))
++		goto fail; /* The necessary asi_unmap() is in vfree. */
++
+ 	return area->addr;
+ 
+ fail:
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
