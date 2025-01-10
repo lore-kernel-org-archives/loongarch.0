@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD34218ACA
-	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BABA215F7C
+	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534481; cv=none; b=CLWMRpQhTQint1/HU4TpQ4JglSjeSgSa4xJ64yKdowH1O6GoOPZkuVulEg1fbEFc9pOYP1FK/zPFext5JiJ+W6ydVQ552DusStCOXIb7EmUqzxADOIxbCnI75x6wsKvZm+ENHY8XMaAl1wezIhZT6lvRAdS86kytdPH9BXC17yw=
+	t=1736534487; cv=none; b=fz7d7suEFpHYrcJhfJMoRcVAifDxBCxPmR+Qr3UTL95iiuzwxGSuiwrdEr22QbhQkTekMXEIEohfz0vccpmCeCzM+QYez/3MkyeW9F4WVthPuDX+6AdQr/wg+GthN+9mA0EgKNaNsDMIBj9CUBmzPTLQQKXMY4y7LULrVdHYZ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534481; c=relaxed/simple;
-	bh=7B5/myGehuz/40qZtIhxDkAaMjV6lpikJmkMMEkOi+o=;
+	s=arc-20240116; t=1736534487; c=relaxed/simple;
+	bh=x2YRvd2PJrOVmRl1EDQ1QR7VsXzIRAuxYJ+jR+SOTII=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cKKngA3rjYi/+ANeGEdfFWQjgbpLt4OGjFEP8lY74U4A2WJGHn6Jy8JieTLxWNfJz1ed8PL3oQJb9juLlchbF8bVsW9oCr5XzOidJz2OQhVCf/1EgarOiaD06SuQYXFpPPHdcHzmWzC90mVdPs2NKX+RPnvtph8d+0pF5chFUpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3zfnDNAY; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=HA8HMB9mFRGlRt9ZOM0qjgpxTiSNEHHrT2eqYrXS/Kq/1SGUvPV6O31m+fD0M5TGSDJzzbblkz/or3DEFeYdV18oZn197VT1inKQUpaPVPIBvkeOQXZ/j3niah/0dwLJwODNMkq/1MIJINxNZTNToqVmkaRs6hcd0z8u7AF3iK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RW2/XEY3; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3zfnDNAY"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-436328fcfeeso20435565e9.1
-        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RW2/XEY3"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4359eb032c9so19040605e9.2
+        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534471; x=1737139271; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1736534468; x=1737139268; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9R39fCT8BkGaT3ojJEFUEFWnag6aLMpEmNSF+NNhCcA=;
-        b=3zfnDNAYF18bOUvWOLuinSgdbKeiGq+GMHdgLgMb6q2AdyRyGLVWWQSZeyzKZLkW05
-         Q61rbRQkksAgPFeSiKgO4KYAhpLXbDV9vnBsDvn9MjB3N3MgXlJt0nMNlx34RwAhYkZk
-         h5N/DiBPYnMzPKX/CRM5YhPhXW6+h//ALcCOxRi4BAKi/5cuPFsAzD5BmhmJg3wv1zjv
-         QYy1h+JgwEXlBXEVxlAYGz/Dd+88p4w+w4pUTn/ZfxYLUnUNISUWj7fBh8I924o22u0i
-         CYXAGOXaVIobMOHnRBGbBsKM/qflmvn+65OR/w8jSCCIIs1K4dDBPxue7o3Ndl8kSIg0
-         USOQ==
+        bh=ffc/jeUEwcE9NsWtGdDMnxjVfG4g8pYiskW7P1F5M34=;
+        b=RW2/XEY3GxZzd6EKagftptJw/ShFIQIx7CnZUZA9kKfuhT1MygKo2Oelm3hLiqXHWb
+         VM8nn0Ggp4/9eQ3j68eC044JqvFPCaOwodkvYKfiEOJmfxd4xEv3vlBykNTZRW5rRXDk
+         VZ1mLiF1p3K9m7Fxzf4mHwAR/giXE6ASfL7+zZ7LXe/UgKNU0f0YKeNBbYBjfIgjiaUo
+         hN+VC4xWOunh5NTneOsKuRa7MvSXn4XpWfmn+hRymH85wts7Mq/MfUTn8Pc5ZE9web1p
+         7BTG5R74PDJyn9nt1nZR0CBcuQs1ckGyb4vJj1TJlBScBc8/8KLsib/dZjrv3jGads5A
+         MdRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534471; x=1737139271;
+        d=1e100.net; s=20230601; t=1736534468; x=1737139268;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9R39fCT8BkGaT3ojJEFUEFWnag6aLMpEmNSF+NNhCcA=;
-        b=UGr8M39vOB6zt7ir0jD8IynhkwQQs6Is9vwTQQ0tomv1XjugPrOscj5blhY35Gc+vA
-         X3TPpbwltZekXH7OgzDdSy44boVlQCsR7dydqfCmRvwZ/Igc55xLnmgL04vvYiBsTwcT
-         Rj+qCV4B6cw7j4VrMe3cCGm/7NEVntfcSP15Y7AoybMw2FyssuJp3UjDDY3EkQpIpALv
-         c+RDgYtAOTfOKEAW//uohL7dMJAzlbn8AXTmcKPUVxLtPquUY6ZHo68MelJc6UmOHCck
-         96mEf04EC9ZRLuwr6tSQnuqUK2DaqtmSq+hXuEdi/PxgEMxdCbKDcBwIEzZHaaghXkDQ
-         maJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdoCjbVwUmXDi4HgAGhSkzEkynK41eYjyjN/LkqSjgSsc1qFjIE6omcK8g/rRQEzVxtT1WYLruR3w=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/yymwTohqxfiutvPXW20/+zxqiyPqI1pIlm0WZTCsaYTxmeuf
-	cJlxLERQ40hSq/KbLniy2SpwyXJ2yDqFJ1uFrewykt7mPlDsGqcfE7Q8B7E9wZ71hNgqTye1Q2C
-	2tmlGwAr6gA==
-X-Google-Smtp-Source: AGHT+IFAF35eNkOAcz1ZyY8tB2zfXGnUuByWneOp6LmVFLX6PovKFbMifWci/fMsVQav8K8GF97UZk3GG6JG8w==
-X-Received: from wmbfl22.prod.google.com ([2002:a05:600c:b96:b0:436:6fa7:621])
+        bh=ffc/jeUEwcE9NsWtGdDMnxjVfG4g8pYiskW7P1F5M34=;
+        b=PIRIOZF0gs2er8u6nHfsPYtf2cbW+m4iTYixov8FpMFz5K0qCwBdmMP0IhX7OfxPKo
+         vPWwHAgapLQ6NHcgFK/xp0DUofvWBzv8/t1WpJeR6U7cJiBEPm5mbBZAJovv26+0oFFF
+         ttjjSjR4fhtMVLEovP27Izq6d9s+jfvuAV2NA4d9mmfBpfIxyWtTU+DIvOFcvXSoEi94
+         dcExEPkALfcglDFlJiHWt5rdUD2yeMUTZlQoH/UabtSgNPStdAXaIeQbTlFvmwNKcBcA
+         8j/FEPQVWUQYMYnp7qemy0JwKVZ9zYV2ghPh40ehjyRQ70MNRWfMwUMaqMD/fxvMlWZg
+         hxmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1YHAIuUEIkIr6ofiI3bGed2jY1fE+1nlNdJK5BzE2sirgpHndLy7gI5o4JvDT6UVDfl8opgdVX9o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRkfJLeh/hYzE0sODP6ZF9uafUq3Te2BNDDif6XFMJK0Gh8p5l
+	Hutaf3kRr1MumPdRy3AGmsCe9+3YBGpvNHPomSWtD8sy0UmYgwFJKX5cgrTfVu7wA+UXCCJh0Wl
+	IHmSgweIC4Q==
+X-Google-Smtp-Source: AGHT+IF/q1QCp5xw/vI+ho6WzVZa4JA3GTBWKWx8cvSyaKNRoxJopmgrWWLxru20teHN6JHe+1fTI5ygNpFhkw==
+X-Received: from wmso37.prod.google.com ([2002:a05:600c:5125:b0:434:a98d:6a1c])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:310c:b0:436:840b:2593 with SMTP id 5b1f17b1804b1-436e26ad50emr117815595e9.15.1736534470650;
- Fri, 10 Jan 2025 10:41:10 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:37 +0000
+ 2002:a05:600c:524f:b0:435:d22:9c9e with SMTP id 5b1f17b1804b1-436e26d0cf9mr103592725e9.19.1736534468098;
+ Fri, 10 Jan 2025 10:41:08 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:36 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-11-8419288bc805@google.com>
-Subject: [PATCH RFC v2 11/29] mm: asi: Functions to map/unmap a memory range
- into ASI page tables
+Message-ID: <20250110-asi-rfc-v2-v2-10-8419288bc805@google.com>
+Subject: [PATCH RFC v2 10/29] mm: asi: asi_exit() on PF, skip handling if
+ address is accessible
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -112,430 +112,234 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
 	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	Brendan Jackman <jackmanb@google.com>, Junaid Shahid <junaids@google.com>, 
-	Kevin Cheng <chengkev@google.com>
+	Brendan Jackman <jackmanb@google.com>, Ofir Weisse <oweisse@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-From: Junaid Shahid <junaids@google.com>
+From: Ofir Weisse <oweisse@google.com>
 
-Two functions, asi_map() and asi_map_gfp(), are added to allow mapping
-memory into ASI page tables. The mapping will be identical to the one
-for the same virtual address in the unrestricted page tables. This is
-necessary to allow switching between the page tables at any arbitrary
-point in the kernel.
+On a page-fault - do asi_exit(). Then check if now after the exit the
+address is accessible. We do this by refactoring spurious_kernel_fault()
+into two parts:
 
-Another function, asi_unmap() is added to allow unmapping memory mapped
-via asi_map*
+1. Verify that the error code value is something that could arise from a
+lazy TLB update.
+2. Walk the page table and verify permissions, which is now called
+is_address_accessible(). We also define PTE_PRESENT() and PMD_PRESENT()
+which are suitable for checking userspace pages. For the sake of
+spurious faults,  pte_present() and pmd_present() are only good for
+kernelspace pages. This is because these macros might return true even
+if the present bit is 0 (only relevant for userspace).
 
-RFC Notes: Don't read too much into the implementation of this, lots of
-it should probably be rewritten. It also needs to gain support for
-partial unmappings.
+checkpatch.pl VSPRINTF_SPECIFIER_PX - it's in a WARN that only fires in
+a debug build of the kernel when we hit a disastrous bug, seems OK to
+leak addresses.
 
-Checkpatch-args: --ignore=MACRO_ARG_UNUSED
-Signed-off-by: Junaid Shahid <junaids@google.com>
+RFC note: A separate refactoring/prep commit should be split out of this
+patch.
+
+Checkpatch-args: --ignore=VSPRINTF_SPECIFIER_PX
+Signed-off-by: Ofir Weisse <oweisse@google.com>
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
-Signed-off-by: Kevin Cheng <chengkev@google.com>
 ---
- arch/x86/include/asm/asi.h |   5 +
- arch/x86/mm/asi.c          | 236 ++++++++++++++++++++++++++++++++++++++++++++-
- arch/x86/mm/tlb.c          |   5 +
- include/asm-generic/asi.h  |  11 +++
- include/linux/pgtable.h    |   3 +
- mm/internal.h              |   2 +
- mm/vmalloc.c               |  32 +++---
- 7 files changed, 280 insertions(+), 14 deletions(-)
+ arch/x86/mm/fault.c | 118 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 103 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-index a55e73f1b2bc84c41b9ab25f642a4d5f1aa6ba90..33f18be0e268b3a6725196619cbb8d847c21e197 100644
---- a/arch/x86/include/asm/asi.h
-+++ b/arch/x86/include/asm/asi.h
-@@ -157,6 +157,11 @@ void asi_relax(void);
- /* Immediately exit the restricted address space if in it */
- void asi_exit(void);
- 
-+int  asi_map_gfp(struct asi *asi, void *addr, size_t len, gfp_t gfp_flags);
-+int  asi_map(struct asi *asi, void *addr, size_t len);
-+void asi_unmap(struct asi *asi, void *addr, size_t len);
-+void asi_flush_tlb_range(struct asi *asi, void *addr, size_t len);
-+
- static inline void asi_init_thread_state(struct thread_struct *thread)
- {
- 	thread->asi_state.intr_nest_depth = 0;
-diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index b15d043acedc9f459f17e86564a15061650afc3a..f2d8fbc0366c289891903e1c2ac6c59b9476d95f 100644
---- a/arch/x86/mm/asi.c
-+++ b/arch/x86/mm/asi.c
-@@ -11,6 +11,9 @@
- #include <asm/page.h>
- #include <asm/pgalloc.h>
- #include <asm/mmu_context.h>
-+#include <asm/traps.h>
-+
-+#include "../../../mm/internal.h"
- 
- static struct asi_taint_policy *taint_policies[ASI_MAX_NUM_CLASSES];
- 
-@@ -100,7 +103,6 @@ const char *asi_class_name(enum asi_class_id class_id)
-  */
- static_assert(!IS_ENABLED(CONFIG_PARAVIRT));
- #define DEFINE_ASI_PGTBL_ALLOC(base, level)				\
--__maybe_unused								\
- static level##_t * asi_##level##_alloc(struct asi *asi,			\
- 				       base##_t *base, ulong addr,	\
- 				       gfp_t flags)			\
-@@ -455,3 +457,235 @@ void asi_handle_switch_mm(void)
- 	this_cpu_or(asi_taints, new_taints);
- 	this_cpu_and(asi_taints, ~(ASI_TAINTS_GUEST_MASK | ASI_TAINTS_USER_MASK));
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index e6c469b323ccb748de22adc7d9f0a16dd195edad..ee8f5417174e2956391d538f41e2475553ca4972 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -948,7 +948,7 @@ do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
+ 	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
  }
+ 
+-static int spurious_kernel_fault_check(unsigned long error_code, pte_t *pte)
++static __always_inline int kernel_protection_ok(unsigned long error_code, pte_t *pte)
+ {
+ 	if ((error_code & X86_PF_WRITE) && !pte_write(*pte))
+ 		return 0;
+@@ -959,6 +959,8 @@ static int spurious_kernel_fault_check(unsigned long error_code, pte_t *pte)
+ 	return 1;
+ }
+ 
++static int kernel_access_ok(unsigned long error_code, unsigned long address, pgd_t *pgd);
 +
-+static bool is_page_within_range(unsigned long addr, unsigned long page_size,
-+				 unsigned long range_start, unsigned long range_end)
-+{
-+	unsigned long page_start = ALIGN_DOWN(addr, page_size);
-+	unsigned long page_end = page_start + page_size;
-+
-+	return page_start >= range_start && page_end <= range_end;
+ /*
+  * Handle a spurious fault caused by a stale TLB entry.
+  *
+@@ -984,11 +986,6 @@ static noinline int
+ spurious_kernel_fault(unsigned long error_code, unsigned long address)
+ {
+ 	pgd_t *pgd;
+-	p4d_t *p4d;
+-	pud_t *pud;
+-	pmd_t *pmd;
+-	pte_t *pte;
+-	int ret;
+ 
+ 	/*
+ 	 * Only writes to RO or instruction fetches from NX may cause
+@@ -1004,6 +1001,50 @@ spurious_kernel_fault(unsigned long error_code, unsigned long address)
+ 		return 0;
+ 
+ 	pgd = init_mm.pgd + pgd_index(address);
++	return kernel_access_ok(error_code, address, pgd);
 +}
++NOKPROBE_SYMBOL(spurious_kernel_fault);
 +
-+static bool follow_physaddr(
-+	pgd_t *pgd_table, unsigned long virt,
-+	phys_addr_t *phys, unsigned long *page_size, ulong *flags)
++/*
++ * For kernel addresses, pte_present and pmd_present are sufficient for
++ * is_address_accessible. For user addresses these functions will return true
++ * even though the pte is not actually accessible by hardware (i.e _PAGE_PRESENT
++ * is not set). This happens in cases where the pages are physically present in
++ * memory, but they are not made accessible to hardware as they need software
++ * handling first:
++ *
++ * - ptes/pmds with _PAGE_PROTNONE need autonuma balancing (see pte_protnone(),
++ *   change_prot_numa(), and do_numa_page()).
++ *
++ * - pmds with _PAGE_PSE & !_PAGE_PRESENT are undergoing splitting (see
++ *   split_huge_page()).
++ *
++ * Here, we care about whether the hardware can actually access the page right
++ * now.
++ *
++ * These issues aren't currently present for PUD but we also have a custom
++ * PUD_PRESENT for a layer of future-proofing.
++ */
++#define PUD_PRESENT(pud) (pud_flags(pud) & _PAGE_PRESENT)
++#define PMD_PRESENT(pmd) (pmd_flags(pmd) & _PAGE_PRESENT)
++#define PTE_PRESENT(pte) (pte_flags(pte) & _PAGE_PRESENT)
++
++/*
++ * Check if an access by the kernel would cause a page fault. The access is
++ * described by a page fault error code (whether it was a write/instruction
++ * fetch) and address. This doesn't check for types of faults that are not
++ * expected to affect the kernel, e.g. PKU. The address can be user or kernel
++ * space, if user then we assume the access would happen via the uaccess API.
++ */
++static noinstr int
++kernel_access_ok(unsigned long error_code, unsigned long address, pgd_t *pgd)
 +{
-+	pgd_t *pgd;
 +	p4d_t *p4d;
 +	pud_t *pud;
 +	pmd_t *pmd;
 +	pte_t *pte;
++	int ret;
 +
-+	/* RFC: This should be rewritten with lookup_address_in_*. */
-+
-+	*page_size = PGDIR_SIZE;
-+	pgd = pgd_offset_pgd(pgd_table, virt);
-+	if (!pgd_present(*pgd))
-+		return false;
-+	if (pgd_leaf(*pgd)) {
-+		*phys = PFN_PHYS(pgd_pfn(*pgd)) | (virt & ~PGDIR_MASK);
-+		*flags = pgd_flags(*pgd);
-+		return true;
-+	}
-+
-+	*page_size = P4D_SIZE;
-+	p4d = p4d_offset(pgd, virt);
-+	if (!p4d_present(*p4d))
-+		return false;
-+	if (p4d_leaf(*p4d)) {
-+		*phys = PFN_PHYS(p4d_pfn(*p4d)) | (virt & ~P4D_MASK);
-+		*flags = p4d_flags(*p4d);
-+		return true;
-+	}
-+
-+	*page_size = PUD_SIZE;
-+	pud = pud_offset(p4d, virt);
-+	if (!pud_present(*pud))
-+		return false;
-+	if (pud_leaf(*pud)) {
-+		*phys = PFN_PHYS(pud_pfn(*pud)) | (virt & ~PUD_MASK);
-+		*flags = pud_flags(*pud);
-+		return true;
-+	}
-+
-+	*page_size = PMD_SIZE;
-+	pmd = pmd_offset(pud, virt);
-+	if (!pmd_present(*pmd))
-+		return false;
-+	if (pmd_leaf(*pmd)) {
-+		*phys = PFN_PHYS(pmd_pfn(*pmd)) | (virt & ~PMD_MASK);
-+		*flags = pmd_flags(*pmd);
-+		return true;
-+	}
-+
-+	*page_size = PAGE_SIZE;
-+	pte = pte_offset_map(pmd, virt);
-+	if (!pte)
-+		return false;
-+
-+	if (!pte_present(*pte)) {
-+		pte_unmap(pte);
-+		return false;
-+	}
-+
-+	*phys = PFN_PHYS(pte_pfn(*pte)) | (virt & ~PAGE_MASK);
-+	*flags = pte_flags(*pte);
-+
-+	pte_unmap(pte);
-+	return true;
-+}
-+
-+/*
-+ * Map the given range into the ASI page tables. The source of the mapping is
-+ * the regular unrestricted page tables. Can be used to map any kernel memory.
-+ *
-+ * The caller MUST ensure that the source mapping will not change during this
-+ * function. For dynamic kernel memory, this is generally ensured by mapping the
-+ * memory within the allocator.
-+ *
-+ * If this fails, it may leave partial mappings behind. You must asi_unmap them,
-+ * bearing in mind asi_unmap's requirements on the calling context. Part of the
-+ * reason for this is that we don't want to unexpectedly undo mappings that
-+ * weren't created by the present caller.
-+ *
-+ * If the source mapping is a large page and the range being mapped spans the
-+ * entire large page, then it will be mapped as a large page in the ASI page
-+ * tables too. If the range does not span the entire huge page, then it will be
-+ * mapped as smaller pages. In that case, the implementation is slightly
-+ * inefficient, as it will walk the source page tables again for each small
-+ * destination page, but that should be ok for now, as usually in such cases,
-+ * the range would consist of a small-ish number of pages.
-+ *
-+ * RFC: * vmap_p4d_range supports huge mappings, we can probably use that now.
-+ */
-+int __must_check asi_map_gfp(struct asi *asi, void *addr, unsigned long len, gfp_t gfp_flags)
-+{
-+	unsigned long virt;
-+	unsigned long start = (size_t)addr;
-+	unsigned long end = start + len;
-+	unsigned long page_size;
-+
-+	if (!static_asi_enabled())
-+		return 0;
-+
-+	VM_BUG_ON(!IS_ALIGNED(start, PAGE_SIZE));
-+	VM_BUG_ON(!IS_ALIGNED(len, PAGE_SIZE));
-+	/* RFC: fault_in_kernel_space should be renamed. */
-+	VM_BUG_ON(!fault_in_kernel_space(start));
-+
-+	gfp_flags &= GFP_RECLAIM_MASK;
-+
-+	if (asi->mm != &init_mm)
-+		gfp_flags |= __GFP_ACCOUNT;
-+
-+	for (virt = start; virt < end; virt = ALIGN(virt + 1, page_size)) {
-+		pgd_t *pgd;
-+		p4d_t *p4d;
-+		pud_t *pud;
-+		pmd_t *pmd;
-+		pte_t *pte;
-+		phys_addr_t phys;
-+		ulong flags;
-+
-+		if (!follow_physaddr(asi->mm->pgd, virt, &phys, &page_size, &flags))
-+			continue;
-+
-+#define MAP_AT_LEVEL(base, BASE, level, LEVEL) {				\
-+			if (base##_leaf(*base)) {				\
-+				if (WARN_ON_ONCE(PHYS_PFN(phys & BASE##_MASK) !=\
-+						 base##_pfn(*base)))		\
-+					return -EBUSY;				\
-+				continue;					\
-+			}							\
-+										\
-+			level = asi_##level##_alloc(asi, base, virt, gfp_flags);\
-+			if (!level)						\
-+				return -ENOMEM;					\
-+										\
-+			if (page_size >= LEVEL##_SIZE &&			\
-+			    (level##_none(*level) || level##_leaf(*level)) &&	\
-+			    is_page_within_range(virt, LEVEL##_SIZE,		\
-+						 start, end)) {			\
-+				page_size = LEVEL##_SIZE;			\
-+				phys &= LEVEL##_MASK;				\
-+										\
-+				if (!level##_none(*level)) {			\
-+					if (WARN_ON_ONCE(level##_pfn(*level) != \
-+							 PHYS_PFN(phys))) {	\
-+						return -EBUSY;			\
-+					}					\
-+				} else {					\
-+					set_##level(level,			\
-+						    __##level(phys | flags));	\
-+				}						\
-+				continue;					\
-+			}							\
-+		}
-+
-+		pgd = pgd_offset_pgd(asi->pgd, virt);
-+
-+		MAP_AT_LEVEL(pgd, PGDIR, p4d, P4D);
-+		MAP_AT_LEVEL(p4d, P4D, pud, PUD);
-+		MAP_AT_LEVEL(pud, PUD, pmd, PMD);
-+		/*
-+		 * If a large page is going to be partially mapped
-+		 * in 4k pages, convert the PSE/PAT bits.
-+		 */
-+		if (page_size >= PMD_SIZE)
-+			flags = protval_large_2_4k(flags);
-+		MAP_AT_LEVEL(pmd, PMD, pte, PAGE);
-+
-+		VM_BUG_ON(true); /* Should never reach here. */
-+	}
-+
-+	return 0;
-+#undef MAP_AT_LEVEL
-+}
-+
-+int __must_check asi_map(struct asi *asi, void *addr, unsigned long len)
-+{
-+	return asi_map_gfp(asi, addr, len, GFP_KERNEL);
-+}
-+
-+/*
-+ * Unmap a kernel address range previously mapped into the ASI page tables.
-+ *
-+ * The area being unmapped must be a whole previously mapped region (or regions)
-+ * Unmapping a partial subset of a previously mapped region is not supported.
-+ * That will work, but may end up unmapping more than what was asked for, if
-+ * the mapping contained huge pages. A later patch will remove this limitation
-+ * by splitting the huge mapping in the ASI page table in such a case. For now,
-+ * vunmap_pgd_range() will just emit a warning if this situation is detected.
-+ *
-+ * This might sleep, and cannot be called with interrupts disabled.
-+ */
-+void asi_unmap(struct asi *asi, void *addr, size_t len)
-+{
-+	size_t start = (size_t)addr;
-+	size_t end = start + len;
-+	pgtbl_mod_mask mask = 0;
-+
-+	if (!static_asi_enabled() || !len)
-+		return;
-+
-+	VM_BUG_ON(start & ~PAGE_MASK);
-+	VM_BUG_ON(len & ~PAGE_MASK);
-+	VM_BUG_ON(!fault_in_kernel_space(start)); /* Misnamed, ignore "fault_" */
-+
-+	vunmap_pgd_range(asi->pgd, start, end, &mask);
-+
-+	/* We don't support partial unmappings. */
-+	if (mask & PGTBL_P4D_MODIFIED) {
-+		VM_WARN_ON(!IS_ALIGNED((ulong)addr, P4D_SIZE));
-+		VM_WARN_ON(!IS_ALIGNED((ulong)len, P4D_SIZE));
-+	} else if (mask & PGTBL_PUD_MODIFIED) {
-+		VM_WARN_ON(!IS_ALIGNED((ulong)addr, PUD_SIZE));
-+		VM_WARN_ON(!IS_ALIGNED((ulong)len, PUD_SIZE));
-+	} else if (mask & PGTBL_PMD_MODIFIED) {
-+		VM_WARN_ON(!IS_ALIGNED((ulong)addr, PMD_SIZE));
-+		VM_WARN_ON(!IS_ALIGNED((ulong)len, PMD_SIZE));
-+	}
-+
-+	asi_flush_tlb_range(asi, addr, len);
-+}
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index c41e083c5b5281684be79ad0391c1a5fc7b0c493..c55733e144c7538ce7f97b74ea2b1b9c22497c32 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1040,6 +1040,11 @@ noinstr u16 asi_pcid(struct asi *asi, u16 asid)
- 	// return kern_pcid(asid) | ((asi->index + 1) << X86_CR3_ASI_PCID_BITS_SHIFT);
+ 	if (!pgd_present(*pgd))
+ 		return 0;
+ 
+@@ -1012,27 +1053,27 @@ spurious_kernel_fault(unsigned long error_code, unsigned long address)
+ 		return 0;
+ 
+ 	if (p4d_leaf(*p4d))
+-		return spurious_kernel_fault_check(error_code, (pte_t *) p4d);
++		return kernel_protection_ok(error_code, (pte_t *) p4d);
+ 
+ 	pud = pud_offset(p4d, address);
+-	if (!pud_present(*pud))
++	if (!PUD_PRESENT(*pud))
+ 		return 0;
+ 
+ 	if (pud_leaf(*pud))
+-		return spurious_kernel_fault_check(error_code, (pte_t *) pud);
++		return kernel_protection_ok(error_code, (pte_t *) pud);
+ 
+ 	pmd = pmd_offset(pud, address);
+-	if (!pmd_present(*pmd))
++	if (!PMD_PRESENT(*pmd))
+ 		return 0;
+ 
+ 	if (pmd_leaf(*pmd))
+-		return spurious_kernel_fault_check(error_code, (pte_t *) pmd);
++		return kernel_protection_ok(error_code, (pte_t *) pmd);
+ 
+ 	pte = pte_offset_kernel(pmd, address);
+-	if (!pte_present(*pte))
++	if (!PTE_PRESENT(*pte))
+ 		return 0;
+ 
+-	ret = spurious_kernel_fault_check(error_code, pte);
++	ret = kernel_protection_ok(error_code, pte);
+ 	if (!ret)
+ 		return 0;
+ 
+@@ -1040,12 +1081,11 @@ spurious_kernel_fault(unsigned long error_code, unsigned long address)
+ 	 * Make sure we have permissions in PMD.
+ 	 * If not, then there's a bug in the page tables:
+ 	 */
+-	ret = spurious_kernel_fault_check(error_code, (pte_t *) pmd);
++	ret = kernel_protection_ok(error_code, (pte_t *) pmd);
+ 	WARN_ONCE(!ret, "PMD has incorrect permission bits\n");
+ 
+ 	return ret;
+ }
+-NOKPROBE_SYMBOL(spurious_kernel_fault);
+ 
+ int show_unhandled_signals = 1;
+ 
+@@ -1490,6 +1530,29 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 	}
  }
  
-+void asi_flush_tlb_range(struct asi *asi, void *addr, size_t len)
++static __always_inline void warn_if_bad_asi_pf(
++	unsigned long error_code, unsigned long address)
 +{
-+	flush_tlb_kernel_range((ulong)addr, (ulong)addr + len);
-+}
++#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
++	struct asi *target;
 +
- #else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
- 
- u16 asi_pcid(struct asi *asi, u16 asid) { return kern_pcid(asid); }
-diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-index f777a6cf604b0656fb39087f6eba08f980b2cb6f..5be8f7d657ba0bc2196e333f62b084d0c9eef7b6 100644
---- a/include/asm-generic/asi.h
-+++ b/include/asm-generic/asi.h
-@@ -77,6 +77,17 @@ static inline int asi_intr_nest_depth(void) { return 0; }
- 
- static inline void asi_intr_exit(void) { }
- 
-+static inline int asi_map(struct asi *asi, void *addr, size_t len)
-+{
-+	return 0;
-+}
-+
-+static inline
-+void asi_unmap(struct asi *asi, void *addr, size_t len) { }
-+
-+static inline
-+void asi_flush_tlb_range(struct asi *asi, void *addr, size_t len) { }
-+
- #define static_asi_enabled() false
- 
- static inline void asi_check_boottime_disable(void) { }
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index e8b2ac6bd2ae3b0a768734c8411f45a7d162e12d..492a9cdee7ff3d4e562c4bf508dc14fd7fa67e36 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1900,6 +1900,9 @@ typedef unsigned int pgtbl_mod_mask;
- #ifndef pmd_leaf
- #define pmd_leaf(x)	false
- #endif
-+#ifndef pte_leaf
-+#define pte_leaf(x)	1
++	/*
++	 * It's a bug to access sensitive data from the "critical section", i.e.
++	 * on the path between asi_enter and asi_relax, where untrusted code
++	 * gets run. #PF in this state sees asi_intr_nest_depth() as 1 because
++	 * #PF increments it. We can't think of a better way to determine if
++	 * this has happened than to check the ASI pagetables, hence we can't
++	 * really have this check in non-debug builds unfortunately.
++	 */
++	VM_WARN_ONCE(
++		(target = asi_get_target(current)) != NULL &&
++		asi_intr_nest_depth() == 1 &&
++		!kernel_access_ok(error_code, address, asi_pgd(target)),
++		"ASI-sensitive data access from critical section, addr=%px error_code=%lx class=%s",
++		(void *) address, error_code, asi_class_name(target->class_id));
 +#endif
- 
- #ifndef pgd_leaf_size
- #define pgd_leaf_size(x) (1ULL << PGDIR_SHIFT)
-diff --git a/mm/internal.h b/mm/internal.h
-index 64c2eb0b160e169ab9134e3ab618d8a1d552d92c..c0454fe019b9078a963b1ab3685bf31ccfd768b7 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -395,6 +395,8 @@ void unmap_page_range(struct mmu_gather *tlb,
- void page_cache_ra_order(struct readahead_control *, struct file_ra_state *,
- 		unsigned int order);
- void force_page_cache_ra(struct readahead_control *, unsigned long nr);
-+void vunmap_pgd_range(pgd_t *pgd_table, unsigned long addr, unsigned long end,
-+		      pgtbl_mod_mask *mask);
- static inline void force_page_cache_readahead(struct address_space *mapping,
- 		struct file *file, pgoff_t index, unsigned long nr_to_read)
- {
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 634162271c0045965eabd9bfe8b64f4a1135576c..8d260f2174fe664b54dcda054cb9759ae282bf03 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -427,6 +427,24 @@ static void vunmap_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
- 	} while (p4d++, addr = next, addr != end);
- }
- 
-+void vunmap_pgd_range(pgd_t *pgd_table, unsigned long addr, unsigned long end,
-+		      pgtbl_mod_mask *mask)
-+{
-+	unsigned long next;
-+	pgd_t *pgd = pgd_offset_pgd(pgd_table, addr);
-+
-+	BUG_ON(addr >= end);
-+
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_bad(*pgd))
-+			*mask |= PGTBL_PGD_MODIFIED;
-+		if (pgd_none_or_clear_bad(pgd))
-+			continue;
-+		vunmap_p4d_range(pgd, addr, next, mask);
-+	} while (pgd++, addr = next, addr != end);
 +}
 +
- /*
-  * vunmap_range_noflush is similar to vunmap_range, but does not
-  * flush caches or TLBs.
-@@ -441,21 +459,9 @@ static void vunmap_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
-  */
- void __vunmap_range_noflush(unsigned long start, unsigned long end)
+ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
  {
--	unsigned long next;
--	pgd_t *pgd;
--	unsigned long addr = start;
- 	pgtbl_mod_mask mask = 0;
+ 	irqentry_state_t state;
+@@ -1497,6 +1560,31 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
  
--	BUG_ON(addr >= end);
--	pgd = pgd_offset_k(addr);
--	do {
--		next = pgd_addr_end(addr, end);
--		if (pgd_bad(*pgd))
--			mask |= PGTBL_PGD_MODIFIED;
--		if (pgd_none_or_clear_bad(pgd))
--			continue;
--		vunmap_p4d_range(pgd, addr, next, &mask);
--	} while (pgd++, addr = next, addr != end);
-+	vunmap_pgd_range(init_mm.pgd, start, end, &mask);
+ 	address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
  
- 	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
- 		arch_sync_kernel_mappings(start, end);
++	if (static_asi_enabled() && !user_mode(regs)) {
++		pgd_t *pgd;
++
++		/* Can be a NOP even for ASI faults, because of NMIs */
++		asi_exit();
++
++		/*
++		 * handle_page_fault() might oops if we run it for a kernel
++		 * address in kernel mode. This might be the case if we got here
++		 * due to an ASI fault. We avoid this case by checking whether
++		 * the address is now, after asi_exit(), accessible by hardware.
++		 * If it is - there's nothing to do. Note that this is a bit of
++		 * a shotgun; we can also bail early from user-address faults
++		 * here that weren't actually caused by ASI. So we might wanna
++		 * move this logic later in the handler. In particular, we might
++		 * be losing some stats here. However for now this keeps ASI
++		 * page faults nice and fast.
++		 */
++		pgd = (pgd_t *)__va(read_cr3_pa()) + pgd_index(address);
++		if (!user_mode(regs) && kernel_access_ok(error_code, address, pgd)) {
++			warn_if_bad_asi_pf(error_code, address);
++			return;
++		}
++	}
++
+ 	prefetchw(&current->mm->mmap_lock);
+ 
+ 	/*
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
