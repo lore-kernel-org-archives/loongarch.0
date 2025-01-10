@@ -1,55 +1,55 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB3721C182
-	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611102144AD
+	for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 18:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534488; cv=none; b=pIpwIDHV1LteHqUA3srO3g9ivMcdgzxuOYG8f30YyXcKCj6eYNTu16yeUY7GBZTcvOTlFu4oQs8ovEUSTDWyCAN4J8KrZqNvvW3kt18jfJJvgmUj1aVtyvb7uyMHMJzwwo5DQH8PHbaaSFYM3TmQUJoSvtPM0asEcUcil5p82CM=
+	t=1736534493; cv=none; b=WnwojKnwVkLOFvO0TSYJHmyMmGRndD3VvX3VRkJDHqruflGBtki5I0f/aDjvVT4G7BUh0v2Sd/qVZ+WJvupUafW7UojlQ7o8QEbSh7DhYw/sx1PEJXTt/lgcA9yfaKhwPSyUoF/PdV7hixLF03p21eJNckDszZPvr/EjJxNM6BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534488; c=relaxed/simple;
-	bh=XnAw5nMnRVqakR2t02DFaQRnPs8banykJ7ILMz9ZBlM=;
+	s=arc-20240116; t=1736534493; c=relaxed/simple;
+	bh=zf+Yj7gONw2oJr0tFFRjRLuZn51LvVJn5xoc6PzGvqM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lbE9Cy7zQgzGE0RFVHpBBXGCEc0R336ALKlKq1L+I3wmc2vSjDvzned0AfkDuvnnif61aptXSoY7oEyGDtgQtSTtcHzCpG0NBaoo50n7l0cxrIpATKK+Nof+Xz+48bBl5XiZ3xLVKkLDnd24SEdJxsTApi76FWfaE52TxZ8CAjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=znDA9Zci; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=j+OWbtypaPEDIe5Kv4btMxcnTvs6KR9wXl800qWHMm0hiaL14TtkKch9mu1mc++Z7ytnp3O8pIkLFpf6VczLPCJxnVtOkOuUeAC2BQ5K1PEUkWxYlhSXTjOnKTNiQ7Xs9K8VgCpfER5RSSnZNyV/8hVMISSgp+huGr3yqqsCSy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KFG053Cn; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="znDA9Zci"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43621907030so19339215e9.1
-        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KFG053Cn"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43624b08181so12084645e9.0
+        for <loongarch@lists.linux.dev>; Fri, 10 Jan 2025 10:41:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534466; x=1737139266; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1736534473; x=1737139273; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WaFp0TOYaWSuGPhKgfBnenMecO/UsWYRxmgXZ26ETaU=;
-        b=znDA9ZciCn1YOFK6o8ljPmWq5UYdgrqQ9cXjV66kqLP9cbOtx/13QfkdzmhopYqKrI
-         Pazmc3r1lLFunQC5fFH5kIQ67fdCPQsc4nc57B1Gqx06hQJYO5F+jKOKO1vZ9gOaYGx8
-         /EKHa2ZfNSZg4ie4p6V0N6zl7VSm3MRi67mtLmHMe7fZhMh6k7k5vV3A1tGIP3K/YLj5
-         OcD76k2araRJIqlgcIM+GY1VNwtUVwP/Ig9cxkKSamAMdUUxgawGV6RABIB6QL1NI/gI
-         kixqIdw5TuSMzYkjk64wC4QXGGTQltCbsp28s31fo1dmWV0l+RmtCKkjalj5klKOPFY0
-         dKPA==
+        bh=UzXM9zi9X6couWShNCb4EkjJb05AI+Oo7qUi6Mvjsww=;
+        b=KFG053CnsMu1YtLUa5h7zRHX9j77mOZAnu+Dmcft6FAxG5WlQA/rTQ437Nm8hUR8wV
+         8vxwiobKZhc+hMra5ARm1oHgPWy8PTrW07fIqrp5TvSmSBDIr2UmDH76+I/uCXoJZo6A
+         T90Uu2HiIyVOAWSxljkdOL9eAvZar5PS0JJMXRGqqrmdOrWUxyuoVvfZxl1N/rkBZ8Ei
+         ymgULtsoaeerqiyggT5Tb5n6HXnyZWhXGDLGdqRihLoUrJcv8nS7aEjiUTGcPfiUeVVL
+         qpdmUdhvU7ChNWC7by3O5JC/nS1KNbTQhav4H+b79Y/iDx4mtKo5m52QDsFCOpFN/5zg
+         hgVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534466; x=1737139266;
+        d=1e100.net; s=20230601; t=1736534473; x=1737139273;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WaFp0TOYaWSuGPhKgfBnenMecO/UsWYRxmgXZ26ETaU=;
-        b=FQarFzGoW2z/GxT/6LqKnEdGLqCJJa9Zgw8hf7mQtDulde33RgGtap8B2Xumjxb2I5
-         oTpJsBEkC9KIovmYBEjrvYC9IphFqXZnCDUlp1BN6qiAsssjLtRCLydN7EB5Wv9nMaCb
-         keflXBZsaFp4jiACvbnCFh6QJwfouZW5RXbSaqhX0DmihDsed4fb6xQpYRAfcDwMjgsH
-         M9kcYgDQ+BbyqkmSBQifuL0v7TujF4PwZDIwEzUYoMyF/DdrDU3wZqsJmqM/LJHC0wXW
-         bVabxJVC2Sz39yjleBXpjEnWYTIuSfW/moP1TRUoc5ZB0JP1XXsXLF5ea4qGUweHPB0u
-         80AA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUDBcNED+dgl1A4nELWiLJ59Up9/msohTUFRMhGFH4L0AsopAKsCitHokdr0EY7qdPHLFcdZrk53k=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzr5HhGLK8vZQNHD1y374BdXg5nqeAdh817MvYHbh/idSDR18vN
-	9xWofahSTweipA4Vsk4g5HJzq6hXlyHgVa15X5l72IBD1sZ8bg1toi6liHxj2cX2xVGMafsKVT4
-	lGu4JIhMr9g==
-X-Google-Smtp-Source: AGHT+IEE4az+Oz6XpM1h3immNPii0BZQy1AjHZ6Oe5B/in2qx8QsaCvn5PLTDmCUbo/W1PshFIv+Soo2Sqz9XA==
-X-Received: from wmrn35.prod.google.com ([2002:a05:600c:5023:b0:434:f2eb:aa72])
+        bh=UzXM9zi9X6couWShNCb4EkjJb05AI+Oo7qUi6Mvjsww=;
+        b=ocyKOANUkyy/keMRfd/jAzih68zo9qsxQsspv8AsxASCls1nB/Rpck7SyklEckfRhr
+         v4CUH5/jBbZByGV8wLXl3e0M5Ae6Lrgipwy4B+lZ/DDShpXVsFE9qj/HAd5BXhmw+3rE
+         akg4Fdv0VCPtuATxpW0tpbhurDO9/oS0UtIrQD6T40l8UIg0+/KoEmrMyrABvG/QX5PX
+         eEz6d5ChP+q8ABwi18+SCPTYuIZrwebUO5h6g0AUsgG3ZALHT5jlzwdYrFZvjtUZSfC2
+         0GqRot7DUmqrz5aRuyzApiadwl5NbliQoqJOX65mihVj1fS+sE00gzAfOByAk85UNrwK
+         O/mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcapjMqJ5O9czTSiIdvKrp0IO/LOMydofkGMSSWG7P8VQq8yZjpZG/z/3RRxUxewFBxzIbchpSl8Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxoKtUO/C8cSs8SyDFsuhzi8FbkPeEG0ahzT4bigNEfgKu85oS4
+	kDxLLgzC0kXl1AHU6SKtZnpXhxkU4qTJ/WCiRx1KYOyZQ7dZZzoOgIGzDGnzbez82/PSNdaWcmJ
+	XlLhH8LjIiQ==
+X-Google-Smtp-Source: AGHT+IFDRv4zNENk63KYcLxYmQdIUcLs7zTtS/Sd8xMbR3tJqcykEbsngD0F8tGcq40UK8q2XIPTmnyPYnp+hA==
+X-Received: from wmqe5.prod.google.com ([2002:a05:600c:4e45:b0:435:21e:7bec])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3ca4:b0:434:a26c:8291 with SMTP id 5b1f17b1804b1-436e26e203emr101768035e9.24.1736534465947;
- Fri, 10 Jan 2025 10:41:05 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:35 +0000
+ 2002:a05:600c:1d2a:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-436e8827fbcmr75837805e9.9.1736534472863;
+ Fri, 10 Jan 2025 10:41:12 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:38 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-9-8419288bc805@google.com>
-Subject: [PATCH RFC v2 09/29] mm: asi: ASI page table allocation functions
+Message-ID: <20250110-asi-rfc-v2-v2-12-8419288bc805@google.com>
+Subject: [PATCH RFC v2 12/29] mm: asi: Add basic infrastructure for global
+ non-sensitive mappings
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -116,94 +117,192 @@ Content-Type: text/plain; charset="utf-8"
 
 From: Junaid Shahid <junaids@google.com>
 
-This adds custom allocation and free functions for ASI page tables.
+A pseudo-PGD is added to store global non-sensitive ASI mappings.
+Actual ASI PGDs copy entries from this pseudo-PGD during asi_init().
 
-The alloc functions support allocating memory using different GFP
-reclaim flags, in order to be able to support non-sensitive allocations
-from both standard and atomic contexts. They also install the page
-tables locklessly, which makes it slightly simpler to handle
-non-sensitive allocations from interrupts/exceptions.
+Memory can be mapped as globally non-sensitive by calling asi_map()
+with ASI_GLOBAL_NONSENSITIVE.
 
-checkpatch.pl MACRO_ARG_UNUSED,SPACING is false positive. COMPLEX_MACRO - I
-dunno, suggestions welcome.
+Page tables allocated for global non-sensitive mappings are never
+freed.
 
-Checkpatch-args: --ignore=MACRO_ARG_UNUSED,SPACING,COMPLEX_MACRO
+These page tables are shared between all domains and init_mm, so they
+don't need special synchronization.
+
+RFC note: A refactoring/prep commit should be split out of this patch.
+
 Signed-off-by: Junaid Shahid <junaids@google.com>
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/x86/mm/asi.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ arch/x86/include/asm/asi.h |  3 +++
+ arch/x86/mm/asi.c          | 37 +++++++++++++++++++++++++++++++++++++
+ arch/x86/mm/init_64.c      | 25 ++++++++++++++++---------
+ arch/x86/mm/mm_internal.h  |  3 +++
+ include/asm-generic/asi.h  |  2 ++
+ 5 files changed, 61 insertions(+), 9 deletions(-)
 
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index 33f18be0e268b3a6725196619cbb8d847c21e197..555edb5f292e4d6baba782f51d014aa48dc850b6 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -120,6 +120,9 @@ struct asi_taint_policy {
+ 	asi_taints_t set;
+ };
+ 
++extern struct asi __asi_global_nonsensitive;
++#define ASI_GLOBAL_NONSENSITIVE	(&__asi_global_nonsensitive)
++
+ /*
+  * An ASI domain (struct asi) represents a restricted address space. The
+  * unrestricted address space (and user address space under PTI) are not
 diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index 8d060c633be68b508847e2c1c111761df1da92af..b15d043acedc9f459f17e86564a15061650afc3a 100644
+index f2d8fbc0366c289891903e1c2ac6c59b9476d95f..17391ec8b22e3c0903cd5ca29cbb03fcc4cbacce 100644
 --- a/arch/x86/mm/asi.c
 +++ b/arch/x86/mm/asi.c
-@@ -73,6 +73,65 @@ const char *asi_class_name(enum asi_class_id class_id)
- 	return asi_class_names[class_id];
+@@ -13,6 +13,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/traps.h>
+ 
++#include "mm_internal.h"
+ #include "../../../mm/internal.h"
+ 
+ static struct asi_taint_policy *taint_policies[ASI_MAX_NUM_CLASSES];
+@@ -26,6 +27,13 @@ const char *asi_class_names[] = {
+ DEFINE_PER_CPU_ALIGNED(struct asi *, curr_asi);
+ EXPORT_SYMBOL(curr_asi);
+ 
++static __aligned(PAGE_SIZE) pgd_t asi_global_nonsensitive_pgd[PTRS_PER_PGD];
++
++struct asi __asi_global_nonsensitive = {
++	.pgd = asi_global_nonsensitive_pgd,
++	.mm = &init_mm,
++};
++
+ static inline bool asi_class_id_valid(enum asi_class_id class_id)
+ {
+ 	return class_id >= 0 && class_id < ASI_MAX_NUM_CLASSES;
+@@ -156,6 +164,31 @@ void __init asi_check_boottime_disable(void)
+ 		pr_info("ASI enablement ignored due to incomplete implementation.\n");
  }
  
-+#ifndef mm_inc_nr_p4ds
-+#define mm_inc_nr_p4ds(mm)	do {} while (false)
-+#endif
++static int __init asi_global_init(void)
++{
++	if (!boot_cpu_has(X86_FEATURE_ASI))
++		return 0;
 +
-+#ifndef mm_dec_nr_p4ds
-+#define mm_dec_nr_p4ds(mm)	do {} while (false)
-+#endif
++	/*
++	 * Lower-level pagetables for global nonsensitive mappings are shared,
++	 * but the PGD has to be copied into each domain during asi_init. To
++	 * avoid needing to synchronize new mappings into pre-existing domains
++	 * we just pre-allocate all of the relevant level N-1 entries so that
++	 * the global nonsensitive PGD already has pointers that can be copied
++	 * when new domains get asi_init()ed.
++	 */
++	preallocate_sub_pgd_pages(asi_global_nonsensitive_pgd,
++				  PAGE_OFFSET,
++				  PAGE_OFFSET + PFN_PHYS(max_pfn) - 1,
++				  "ASI Global Non-sensitive direct map");
++	preallocate_sub_pgd_pages(asi_global_nonsensitive_pgd,
++				  VMALLOC_START, VMALLOC_END,
++				  "ASI Global Non-sensitive vmalloc");
 +
-+#define pte_offset		pte_offset_kernel
++	return 0;
++}
++subsys_initcall(asi_global_init)
 +
-+/*
-+ * asi_p4d_alloc, asi_pud_alloc, asi_pmd_alloc, asi_pte_alloc.
-+ *
-+ * These are like the normal xxx_alloc functions, but:
-+ *
-+ *  - They use atomic operations instead of taking a spinlock; this allows them
-+ *    to be used from interrupts. This is necessary because we use the page
-+ *    allocator from interrupts and the page allocator ultimately calls this
-+ *    code.
-+ *  - They support customizing the allocation flags.
-+ *
-+ * On the other hand, they do not use the normal page allocation infrastructure,
-+ * that means that PTE pages do not have the PageTable type nor the PagePgtable
-+ * flag and we don't increment the meminfo stat (NR_PAGETABLE) as they do.
-+ */
-+static_assert(!IS_ENABLED(CONFIG_PARAVIRT));
-+#define DEFINE_ASI_PGTBL_ALLOC(base, level)				\
-+__maybe_unused								\
-+static level##_t * asi_##level##_alloc(struct asi *asi,			\
-+				       base##_t *base, ulong addr,	\
-+				       gfp_t flags)			\
-+{									\
-+	if (unlikely(base##_none(*base))) {				\
-+		ulong pgtbl = get_zeroed_page(flags);			\
-+		phys_addr_t pgtbl_pa;					\
-+									\
-+		if (!pgtbl)						\
-+			return NULL;					\
-+									\
-+		pgtbl_pa = __pa(pgtbl);					\
-+									\
-+		if (cmpxchg((ulong *)base, 0,				\
-+			    pgtbl_pa | _PAGE_TABLE) != 0) {		\
-+			free_page(pgtbl);				\
-+			goto out;					\
-+		}							\
-+									\
-+		mm_inc_nr_##level##s(asi->mm);				\
-+	}								\
-+out:									\
-+	VM_BUG_ON(base##_leaf(*base));					\
-+	return level##_offset(base, addr);				\
+ static void __asi_destroy(struct asi *asi)
+ {
+ 	WARN_ON_ONCE(asi->ref_count <= 0);
+@@ -170,6 +203,7 @@ int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_
+ {
+ 	struct asi *asi;
+ 	int err = 0;
++	uint i;
+ 
+ 	*out_asi = NULL;
+ 
+@@ -203,6 +237,9 @@ int asi_init(struct mm_struct *mm, enum asi_class_id class_id, struct asi **out_
+ 	asi->mm = mm;
+ 	asi->class_id = class_id;
+ 
++	for (i = KERNEL_PGD_BOUNDARY; i < PTRS_PER_PGD; i++)
++		set_pgd(asi->pgd + i, asi_global_nonsensitive_pgd[i]);
++
+ exit_unlock:
+ 	if (err)
+ 		__asi_destroy(asi);
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index ff253648706fa9cd49169a54882014a72ad540cf..9d358a05c4e18ac6d5e115de111758ea6cdd37f2 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1288,18 +1288,15 @@ static void __init register_page_bootmem_info(void)
+ #endif
+ }
+ 
+-/*
+- * Pre-allocates page-table pages for the vmalloc area in the kernel page-table.
+- * Only the level which needs to be synchronized between all page-tables is
+- * allocated because the synchronization can be expensive.
+- */
+-static void __init preallocate_vmalloc_pages(void)
++/* Initialize empty pagetables at the level below PGD.  */
++void __init preallocate_sub_pgd_pages(pgd_t *pgd_table, ulong start,
++				      ulong end, const char *name)
+ {
+ 	unsigned long addr;
+ 	const char *lvl;
+ 
+-	for (addr = VMALLOC_START; addr <= VMEMORY_END; addr = ALIGN(addr + 1, PGDIR_SIZE)) {
+-		pgd_t *pgd = pgd_offset_k(addr);
++	for (addr = start; addr <= end; addr = ALIGN(addr + 1, PGDIR_SIZE)) {
++		pgd_t *pgd = pgd_offset_pgd(pgd_table, addr);
+ 		p4d_t *p4d;
+ 		pud_t *pud;
+ 
+@@ -1335,7 +1332,17 @@ static void __init preallocate_vmalloc_pages(void)
+ 	 * The pages have to be there now or they will be missing in
+ 	 * process page-tables later.
+ 	 */
+-	panic("Failed to pre-allocate %s pages for vmalloc area\n", lvl);
++	panic("Failed to pre-allocate %s pages for %s area\n", lvl, name);
 +}
 +
-+DEFINE_ASI_PGTBL_ALLOC(pgd, p4d)
-+DEFINE_ASI_PGTBL_ALLOC(p4d, pud)
-+DEFINE_ASI_PGTBL_ALLOC(pud, pmd)
-+DEFINE_ASI_PGTBL_ALLOC(pmd, pte)
++/*
++ * Pre-allocates page-table pages for the vmalloc area in the kernel page-table.
++ * Only the level which needs to be synchronized between all page-tables is
++ * allocated because the synchronization can be expensive.
++ */
++static void __init preallocate_vmalloc_pages(void)
++{
++	preallocate_sub_pgd_pages(init_mm.pgd, VMALLOC_START, VMEMORY_END, "vmalloc");
+ }
+ 
+ void __init mem_init(void)
+diff --git a/arch/x86/mm/mm_internal.h b/arch/x86/mm/mm_internal.h
+index 3f37b5c80bb32ff34656a20789449da92e853eb6..1203a977edcd523589ad88a37aab01398a10a129 100644
+--- a/arch/x86/mm/mm_internal.h
++++ b/arch/x86/mm/mm_internal.h
+@@ -25,4 +25,7 @@ void update_cache_mode_entry(unsigned entry, enum page_cache_mode cache);
+ 
+ extern unsigned long tlb_single_page_flush_ceiling;
+ 
++extern void preallocate_sub_pgd_pages(pgd_t *pgd_table, ulong start,
++				      ulong end, const char *name);
 +
- void __init asi_check_boottime_disable(void)
- {
- 	bool enabled = IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION_DEFAULT_ON);
+ #endif	/* __X86_MM_INTERNAL_H */
+diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
+index 5be8f7d657ba0bc2196e333f62b084d0c9eef7b6..7867b8c23449058a1dd06308ab5351e0d210a489 100644
+--- a/include/asm-generic/asi.h
++++ b/include/asm-generic/asi.h
+@@ -23,6 +23,8 @@ typedef u8 asi_taints_t;
+ 
+ #ifndef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
+ 
++#define ASI_GLOBAL_NONSENSITIVE		NULL
++
+ struct asi_hooks {};
+ struct asi {};
+ 
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
