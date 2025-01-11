@@ -1,90 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1537B24B240;
-	Sat, 11 Jan 2025 01:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521C823AD
+	for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 02:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736559050; cv=none; b=GmWvCyx+16ML/g4ARzbRQNZ/qmWe4wgJfV26VnyGjSe3PV2ZF0Dn2nsZA1+Xt1rLPXeK75Fh0tkmq89Uhn90GWwWOLqWEpJ0eEfyAt05vZrIQEjjzC8KkFVoQU5piBbfh5upI9L9OthVtevbDmETAMImE/0AZOUQhVexNAOQMVo=
+	t=1736563037; cv=none; b=JtXJQ+ctII5MLYy0pnKRb18BY61Z8VNOzGEYLG2rqQBkhdACDUA3/4oGlYiw/soLvpb45EMSZcCG2d3/2ZMq1TlIzXxLiOkMNZG3Mx8ssIG3LmnezD3vJFA64bUv71XL6rUHJIo4BsbNErcodgEEoaw70a19k3a/D7I3MDlM3As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736559050; c=relaxed/simple;
-	bh=7I1OBfWbo908Mx7qvQkrDHGouLRf+dWAo5fEwim6p1w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=N+OdPa5g/1NrhMK6t4w0PV8rMguk4pGpVgTnDU3pxtJSgFnQNdQV/q8Yhzqk8QUXA25nhfLlQuJrl2n42IFIY0YDyH7BT82q1Gfqx5ZSOcjbp2YD1/bLyWfxhOiug04y2IUHDt46sqp/ICJBNJmxIeQm4rowWWt8AgKPQTt4rDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wCdNg1TF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wCdNg1TF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC51C4CED6;
-	Sat, 11 Jan 2025 01:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1736559049;
-	bh=7I1OBfWbo908Mx7qvQkrDHGouLRf+dWAo5fEwim6p1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=wCdNg1TFG2mQ2V7JLabBLagQ3iPh1FJkujMfPxuiGPq8mHSUiRbicfuDz2i9VqjFf
-	 EAUFhX6Dmh7OxXqZl8IYRBtst8NCQct6t/dFbEismIfwpRA3Qoo2LI1c6LPpWu8fRG
-	 2Kmoai3+QNA8Ga1fKjMEVJkS7d/Z4QkUiwdQ67Rg=
-Date: Fri, 10 Jan 2025 17:30:48 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, <linux-mm@kvack.org>,
- <alison.schofield@intel.com>, <lina@asahilina.net>, <zhang.lyra@gmail.com>,
- <gerald.schaefer@linux.ibm.com>, <vishal.l.verma@intel.com>,
- <dave.jiang@intel.com>, <logang@deltatee.com>, <bhelgaas@google.com>,
- <jack@suse.cz>, <jgg@ziepe.ca>, <catalin.marinas@arm.com>,
- <will@kernel.org>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
- <dave.hansen@linux.intel.com>, <ira.weiny@intel.com>,
- <willy@infradead.org>, <djwong@kernel.org>, <tytso@mit.edu>,
- <linmiaohe@huawei.com>, <david@redhat.com>, <peterx@redhat.com>,
- <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linuxppc-dev@lists.ozlabs.org>,
- <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
- <linux-xfs@vger.kernel.org>, <jhubbard@nvidia.com>, <hch@lst.de>,
- <david@fromorbit.com>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
- <loongarch@lists.linux.dev>
-Subject: Re: [PATCH v6 00/26] fs/dax: Fix ZONE_DEVICE page reference counts
-Message-Id: <20250110173048.5565901e0fec24556325bd18@linux-foundation.org>
-In-Reply-To: <6780c6d43d73e_2aff42943b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
-	<6780c6d43d73e_2aff42943b@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736563037; c=relaxed/simple;
+	bh=dVC+wsndEO777N/Fod5SBHu72GjUOrn5ggSIXAd/e1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Goj7Q+OC96VZyKw5ZUYCFy0yp1jUyLJ7tUDj2twgse2nu3CblG+a3kRFqt8cigs854MOpTuuRGEIUP/vfGnE3mLBwkeMQcfuMyXnewSHT89MUWMUsLyc9SU6MfprNDqnUDwjyFqh1rHXotI8hgavfcf5294F/yJFDwjXK7f93rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8AxQK1S2YFnBnFhAA--.20751S3;
+	Sat, 11 Jan 2025 10:37:06 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBxXcdR2YFnPCQdAA--.54434S2;
+	Sat, 11 Jan 2025 10:37:05 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tglx@linutronix.de
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH V3] irqchip/loongarch-avec:Add multi-nodes topology support
+Date: Sat, 11 Jan 2025 10:37:04 +0800
+Message-Id: <20250111023704.17285-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxXcdR2YFnPCQdAA--.54434S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFy3CF17Jr1xJw48ZFy3KFX_yoW8ZFyDpF
+	W5Xa4Dtr4UKa4xWr9xK34DXry3ZF4xKrW7ta4xGa1fXFWDCryUury0qr98ZFy8u3ykZ3WF
+	9r48JFyUu3W5Z3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-On Thu, 9 Jan 2025 23:05:56 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+avecintc_init() enables the Advanced Interrupt Controller (AVEC) of
+the boot CPU node, but nothing enables the AVEC on secondary nodes.
 
-> >  - Remove PTE_DEVMAP definitions from Loongarch which were added since
-> >    this series was initially written.
-> [..]
-> > 
-> > base-commit: e25c8d66f6786300b680866c0e0139981273feba
-> 
-> If this is going to go through nvdimm.git I will need it against a
-> mainline tag baseline. Linus will want to see the merge conflicts.
-> 
-> Otherwise if that merge commit is too messy, or you would rather not
-> rebase, then it either needs to go one of two options:
-> 
-> - Andrew's tree which is the only tree I know of that can carry
->   patches relative to linux-next.
+Move the enablement to the CPU hotplug callback so that secondary
+nodes get the AVEC enabled too. In theory enabling it once per node
+would be sufficient, but redundant enabling does no hard, so keep the
+code simple and do it unconditionally.
 
-I used to be able to do that but haven't got around to setting up such
-a thing with mm.git.  This is the first time the need has arisen,
-really.
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ drivers/irqchip/irq-loongarch-avec.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-> - Wait for v6.14-rc1 
-
-I'm thinking so.  Darrick's review comments indicate that we'll be seeing a v7.
-
-> and get this into nvdimm.git early in the cycle
->   when the conflict storm will be low.
-
-erk.  This patchset hits mm/ a lot, and nvdimm hardly at all.  Is it
-not practical to carry this in mm.git?
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+index 0f6e465dd309..80e55955a29f 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -56,6 +56,15 @@ struct avecintc_data {
+ 	unsigned int		moving;
+ };
+ 
++static inline void avecintc_enable(void)
++{
++	u64 value;
++
++	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
++	value |= IOCSR_MISC_FUNC_AVEC_EN;
++	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
++}
++
+ static inline void avecintc_ack_irq(struct irq_data *d)
+ {
+ }
+@@ -127,6 +136,8 @@ static int avecintc_cpu_online(unsigned int cpu)
+ 
+ 	guard(raw_spinlock)(&loongarch_avec.lock);
+ 
++	avecintc_enable();
++
+ 	irq_matrix_online(loongarch_avec.vector_matrix);
+ 
+ 	pending_list_init(cpu);
+@@ -339,7 +350,6 @@ static int __init irq_matrix_init(void)
+ static int __init avecintc_init(struct irq_domain *parent)
+ {
+ 	int ret, parent_irq;
+-	unsigned long value;
+ 
+ 	raw_spin_lock_init(&loongarch_avec.lock);
+ 
+@@ -378,9 +388,7 @@ static int __init avecintc_init(struct irq_domain *parent)
+ 				  "irqchip/loongarch/avecintc:starting",
+ 				  avecintc_cpu_online, avecintc_cpu_offline);
+ #endif
+-	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+-	value |= IOCSR_MISC_FUNC_AVEC_EN;
+-	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
++	avecintc_enable();
+ 
+ 	return ret;
+ 
+-- 
+2.20.1
 
