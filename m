@@ -1,32 +1,39 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5BE8BEC
-	for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 06:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77E4C1547E7;
+	Sat, 11 Jan 2025 07:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736578669; cv=none; b=Pem2wDb81JTfxPDX3AZRNDkFnQ367Po149WVUtbmq0obJBC2llFYkMo2zDD3ntC2/eUUYxKR5iDmhR1u+1fU+eeC14DO5rrNszEX/8B8BZ6TjVK30NeNL9tvnOaK4NLr0oUQO7pYDTuir1qOkGpAW10mAb2TbeGlP9q1n/NUweA=
+	t=1736578995; cv=none; b=GCfJoAto52XGDHQq1rXPnDsEVcImh9EXJxVKB+fQGzz0l5xBg9Kxn5bhOTnjX3STRMS+7s9fFt+TG83Hd8fDiO6WFG2zMc+gnk1Oaife71eUF1mB6xM73vHRj2nC2NULoqafEHBG4xiYLV+OuKDcEfO5bdh4BKktPFecjCUGK4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736578669; c=relaxed/simple;
-	bh=Oa/UwWtg/8TDlxikxK58I88H3cImMq5V2Nihlg5UK1w=;
+	s=arc-20240116; t=1736578995; c=relaxed/simple;
+	bh=hV2yFN4j4wz5beL9mSZcI4+H9nU+ZIOW/LElqPRues0=;
 	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ojhmDJKXTxOGSqUcvAj5nJpDi3rifg5Zi2F/GODQP1+b1s6XlczfkJT5iDF13NCNBqmIBgq+3QylTjlcYrzy0mgfdiJdMspg/7vGVd+USVINopF2CIJW0Gm/UQYk403XVK5qUHvi/ZGgfAAdYvEfP7igJuIKrRCohkzYnyxr/ao=
+	 In-Reply-To:Content-Type; b=UYZMJ5wEwiOATqBSV6XivDHSZpvnXbP9vDD3WcG+RJez04svWKEuIxmqXtIxssPw0i/KheiJf/khc5KnwmNuMOqTv14C3Utnv5LkDK0GxcWlfGw6KgASvD+0dIrJ7jXZc5lSJHAgw6XW9Jd7txrw8HDOPHG2h23xVh4XCvjkedY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxbKxpFoJndoFhAA--.6245S3;
-	Sat, 11 Jan 2025 14:57:45 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dxfa+uF4JnrYFhAA--.36573S3;
+	Sat, 11 Jan 2025 15:03:10 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBx38dmFoJnWWIdAA--.54495S3;
-	Sat, 11 Jan 2025 14:57:43 +0800 (CST)
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Huacai Chen <chenhuacai@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
+	by front1 (Coremail) with SMTP id qMiowMBxXcetF4Jn5GMdAA--.55243S3;
+	Sat, 11 Jan 2025 15:03:10 +0800 (CST)
+Subject: Re: [PATCH v2 0/5] drm/amd/display: Stop control flow if the divisior
+ is zero
+To: Harry Wentland <harry.wentland@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+References: <20250106085755.3268-1-yangtiezhu@loongson.cn>
+ <21f4f72a-b27f-4389-b345-e1d9cf4c2f06@amd.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
+ llvm@lists.linux.dev, linux-kernel@vger.kernel.org
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
-Date: Sat, 11 Jan 2025 14:57:42 +0800
+Message-ID: <97d1f078-981d-ed10-7e6f-a9e177298b2e@loongson.cn>
+Date: Sat, 11 Jan 2025 15:03:09 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -35,53 +42,91 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241217010905.13054-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <21f4f72a-b27f-4389-b345-e1d9cf4c2f06@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBx38dmFoJnWWIdAA--.54495S3
+X-CM-TRANSID:qMiowMBxXcetF4Jn5GMdAA--.55243S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw48AF48Zw1ftFy5Kr4xZrc_yoWftwbE9F
-	y8WFn5AF45Ww4Yvr42qFn5uFyrKFs8JFW5Kry8Xry2kwn8tr1DGFWakrWDurn5G3s5ZFsF
-	kF4vvrn7Cw17uosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU
-	=
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFWfXry5Zr1UKr1rGw13KFX_yoW5JrW3pa
+	1fGFy7Ar1kJas2y3Z7Z3WruFW3X3yrJF4jgw13uw4ku3W7uFsxWrW3Ja4rGryUCasxC3ya
+	vFZ0g3yDXF4vyrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz-eOUUUUU=
 
-Hi Josh and Peter,
-
-On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
-> This version is based on tip/tip.git objtool/core branch [1], add some weak
-> and arch-specific functions to make the generic code more readable, tested
-> with the latest upstream mainline Binutils, GCC and Clang.
-
-...
-
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
+On 01/11/2025 05:45 AM, Harry Wentland wrote:
+> On 2025-01-06 03:57, Tiezhu Yang wrote:
+>> As far as I can tell, with the current existing macro definitions, there
+>> is no better way to do the minimal and proper changes to stop the control
+>> flow if the divisior is zero.
+>>
+>> In order to keep the current ability for the aim of debugging and avoid
+>> printing the warning message twice, it is better to only use ASSERT_BUG()
+>> and SPL_ASSERT_BUG() directly after doing the following four steps:
+>>
+>> (1) Replace ASSERT() with ASSERT_WARN()
+>> (2) Replace SPL_ASSERT() with SPL_ASSERT_WARN()
+>> (3) Add ASSERT_BUG() macro definition
+>> (4) Add SPL_ASSERT_BUG() macro definition
+>>
 >
-> Tiezhu Yang (9):
->   objtool: Handle various symbol types of rodata
->   objtool: Handle different entry size of rodata
->   objtool: Handle PC relative relocation type
->   objtool: Handle unreachable entry of rodata
->   objtool/LoongArch: Add support for switch table
->   objtool/LoongArch: Add support for goto table
->   LoongArch: Enable jump table for objtool
->   LoongArch: Convert unreachable() to BUG()
->   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+> Patches 1-4 create lots of churn across the whole driver for little
+> immediate benefit. We should be able to do patch 5 without requiring
+> all that churn.
 
-Are you OK with the first 8 patches?
-What's the merge plan for this series?
+Do you mean to drop the first 4 patches and only do the following
+simple changes to replace the current ASSERT() and SPL_ASSERT() with
+BUG_ON() directly without considering the aim of debugging? Something
+like this:
+
+--- >8 ---
+
+diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c 
+b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
+index 88d3f9d7dd55..ec6b194fb093 100644
+--- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
++++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
+@@ -51,7 +51,7 @@ static inline unsigned long long 
+complete_integer_division_u64(
+  {
+         unsigned long long result;
+
+-       ASSERT(divisor);
++       BUG_ON(divisor);
+
+         result = div64_u64_rem(dividend, divisor, remainder);
+
+diff --git a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c 
+b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
+index 131f1e3949d3..a91dbd076d13 100644
+--- a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
++++ b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
+@@ -29,7 +29,7 @@ static inline unsigned long long 
+spl_complete_integer_division_u64(
+  {
+         unsigned long long result;
+
+-       SPL_ASSERT(divisor);
++       BUG_ON(divisor);
+
+         result = spl_div64_u64_rem(dividend, divisor, remainder);
+
+or keep the ASSERT() and SPL_ASSERT() definitions as is, just add
+ASSERT_BUG() and SPL_ASSERT_BUG() definitions, then replace the
+current ASSERT() and SPL_ASSERT() for the two places, that is to
+say, drop the first 2 patches and squash the last 3 patches to one
+single patch?
 
 Thanks,
 Tiezhu
