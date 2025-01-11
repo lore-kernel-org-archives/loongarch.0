@@ -1,858 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B8156F54;
-	Sat, 11 Jan 2025 10:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B485D190665;
+	Sat, 11 Jan 2025 10:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736590111; cv=none; b=tRntpy2NmPOAFCMosyPO/e+w9ROXeBeZpqnycw/KLHfs5wz9kwYvAEMjWgDWfOwW7U6nFL7xm0A8/dcVO5bcUJ3yLkDpf8i43/e2JYAFyk2QlLaUeJ+4gk475R+Mao5cQancm4qv+Qgsa2giPvmwT6A+Ilc0sju6TlUrhLJHw+c=
+	t=1736591848; cv=none; b=WKp9Rqy5hovBFpP4PiOEInTGpDyJ43IoQoCtXyISrZN5kXSXmAqFt4+ggk2gL5cncpUHp1/vnb8lu7kdOHpiktNfteRY5KR4cceFbRr0WfPK0rAlsTugaCi5fqFBa7PX3HgaT6WZsZq0ZJ1nFsyzgEfy2q0BaqDApFrzPKKrdQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736590111; c=relaxed/simple;
-	bh=7CvLlMr5FTpbKruiiil2nPbXu43aMHXswT+J9fIsgjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fyPfAMGyVegcrRgN/6T/hrtpQ2gnHg1B4ygg0Dv7ZtHyVco55NKLQNJyktDm16ugd097I62K5jlTsURt7IDrA1bfaoXGPFmbZqcKP92+Zi9UbT51Et0rwuD3RNgOZWFDRfI4JRpoPXG3xlrAXBmxempgjh5NJSq/r/HfoTbqjUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSwrjeWW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736591848; c=relaxed/simple;
+	bh=J9qfsHnXvzG51XmIMehDBrHTZVBnIEv6EQBMFJ4Eidc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lKe+btBN+SzVSyPMSSN1eRVplpXXZ44goCXaCgXwOoJBxU1ZEPSqjdObW23vndkkDl0HqVxoCYMgbSZWilzocyLhkJVFDNW4rNFLVsR42agW1N2h6VohPeGAEY5WOwyJWBgr4xvSEZULIv4lDIxzEJeC+Gp09tbqrsdl7WonSMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=ASehAqLW; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSwrjeWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10ECBC4CEF7;
-	Sat, 11 Jan 2025 10:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736590111;
-	bh=7CvLlMr5FTpbKruiiil2nPbXu43aMHXswT+J9fIsgjw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qSwrjeWWFibVt+Hw58PQEuRO0zHH+6XMQFSWwQqHiagOzL26CsB0CRzDAFgoIxr1Q
-	 3s3kRXMvooIP8Mi/pvon1Vb69zSynyUvszzzBOLSUcAlDncc3CD0JB47XqgTS2EYAh
-	 4m7yGG59rF3EltaPADgi+llCses7rmSr2MvKPX5go++mKwiOS9JytY1NmqSH+KjNBB
-	 hFcvv1fJZAdGze+vAc4HJwM/e5eGgdR0f3ZfHOZbTS0Y6ZcZhwb7TC9vdtKvGL2BUh
-	 mindBO8E0Hr7M/mk73GsGDCL92SPLwwGQkC9oGvvfVRfHWLp2o6n1GGTtuZuNglVeP
-	 zLl4ozHQAXS1w==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so3751446a12.2;
-        Sat, 11 Jan 2025 02:08:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUpvPb/6p5nDgcAuUi32lSAPh7YtjYytNB6Fc0wwohSurY8qS0u+y3Trq3Q25wqSkA6xul+2wTk0kk=@lists.linux.dev, AJvYcCVPEi9qGB5rf6xsC03PbusbeEJp3nGxjy4RjWQ1Wh6Ygmu1G+bbCnoSvrNkOgS0emmx4PeGuPjX@lists.linux.dev
-X-Gm-Message-State: AOJu0YzXdmE1wz2NFbZ3UORx0zG393v8et9NRDiXMa4ZORv9iTkkDnDl
-	WAQAnypUsx8qXsiG4by5n/4eJoAVIBxc9/k75nLuwePB4wqAS9xE/BZf6+1SSLAlgrlL7iLGDYe
-	H4svvmrhMJAmcRUqgkrZPtWjh4ms=
-X-Google-Smtp-Source: AGHT+IH2DjthUgWblQXL49IJLOyIvFX0+ZRE+aMvDUmh2fZAI9l7QiaNXfzBiI4cZJ8UGOc61EGtT5RQ1owneATw+7g=
-X-Received: by 2002:a05:6402:2814:b0:5d0:ced8:d22d with SMTP id
- 4fb4d7f45d1cf-5d972e63dc9mr31289790a12.22.1736590108931; Sat, 11 Jan 2025
- 02:08:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="ASehAqLW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=s+65UPhjiNYX126VZsqD9OJK1GZ2ijFtoFRRiqh52Rg=; t=1736591844; x=1737196644; 
+	b=ASehAqLW1K643oQutwRP6dQWsTfsKLDGmFHcyGpnGiwh7pGhgQfkGStrath0hpQ5PVFBwvqyJWB
+	Wmew03FtaKMsT2NDl67dKPholK6EUHfQd6/G90/gAc9s5rh37F1684ZHw6RI/2AsFRYO1TxjrE20W
+	Lidbbif026NyxDQ9o1hmAcDADjXqg4TcYAxXWwIPfB5diwQa/embPiUfOA0HOElw2/DzHJtERhGWe
+	i/zT1VGXSx+/DluUr+6SguNDMYq0WvhwckJni4UrSwiQSD+sWW/BzzKjZkX+a3NLcrueUsY7P3dIl
+	AzWaFj38dho54djXfZchZFyZF0mAIR8omOQA==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tWYrh-00000000tpC-1n5X; Sat, 11 Jan 2025 11:37:13 +0100
+Received: from p57bd9274.dip0.t-ipconnect.de ([87.189.146.116] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tWYrh-00000002S89-0gIa; Sat, 11 Jan 2025 11:37:13 +0100
+Message-ID: <2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] alpha/elf: Fix misc/setarch test of util-linux by
+ removing 32bit support
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Richard Henderson	
+ <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Kees Cook
+	 <kees@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	linux-alpha@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org,  Michael Cree <mcree@orcon.net.nz>, Sam James
+ <sam@gentoo.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>,  Geert
+ Uytterhoeven <geert@linux-m68k.org>, Michael Karcher
+ <kernel@mkarcher.dialup.fu-berlin.de>, Chris Hofstaedtler	
+ <zeha@debian.org>, util-linux@vger.kernel.org, linux-mips@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Date: Sat, 11 Jan 2025 11:37:12 +0100
+In-Reply-To: <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+		<24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+		<678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+		<bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+		<82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+		<cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+	 <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <42a318bcbb65931958e52ce4b1334f3d012cbd6f.1736488799.git-series.apopple@nvidia.com>
-In-Reply-To: <42a318bcbb65931958e52ce4b1334f3d012cbd6f.1736488799.git-series.apopple@nvidia.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 11 Jan 2025 18:08:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6j-V1xbDH7nCZkgp8uRa3+5Ate2Mw+EbjRa=TBGAYEDg@mail.gmail.com>
-X-Gm-Features: AbW1kvaO0l9wl3TWuYnrtqx17PqgRbqFI5p6Hrih4ChYWaKFbhqGuS9sAlUt3_0
-Message-ID: <CAAhV-H6j-V1xbDH7nCZkgp8uRa3+5Ate2Mw+EbjRa=TBGAYEDg@mail.gmail.com>
-Subject: Re: [PATCH v6 24/26] mm: Remove devmap related functions and page
- table bits
-To: Alistair Popple <apopple@nvidia.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org, 
-	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
-	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
-	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
-	david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com, 
-	hch@lst.de, david@fromorbit.com, kernel@xen0n.name, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Hi, Alistair,
+Hi Eric,
 
-I think the last two patches can be squashed into this one.
+On Fri, 2025-01-10 at 18:16 -0600, Eric W. Biederman wrote:
+> Richard Henderson <richard.henderson@linaro.org> writes[1]:
+>=20
+> > There was a Spec benchmark (I forget which) which was memory bound and =
+ran
+> > twice as fast with 32-bit pointers.
+> >=20
+> > I copied the idea from DEC to the ELF abi, but never did all the other =
+work
+> > to allow the toolchain to take advantage.
+> >=20
+> > Amusingly, a later Spec changed the benchmark data sets to not fit into=
+ a
+> > 32-bit address space, specifically because of this.
+> >=20
+> > I expect one could delete the ELF bit and personality and no one would
+> > notice. Not even the 10 remaining Alpha users.
+>=20
+> In [2] it was pointed out that parts of setarch weren't working
+> properly on alpha because it has it's own SET_PERSONALITY
+> implementation.  In the discussion that followed Richard Henderson
+> pointed out that the 32bit pointer support for alpha was never
+> completed.
+>=20
+> Fix this by removing alpha's 32bit pointer support.
+>=20
+> As a bit of paranoia refuse to execute any alpha binaries that hafe
+                                                                 ^^^^ hafe-=
+>have
 
+> the EF_ALPHA_32BIT flag set.  Just to fail explicitly in case someone
+> somewhere has binaries that trying to use alpha's 32bit pointer
+                            ^^^ are
 
-Huacai
-
-On Fri, Jan 10, 2025 at 2:03=E2=80=AFPM Alistair Popple <apopple@nvidia.com=
-> wrote:
->
-> Now that DAX and all other reference counts to ZONE_DEVICE pages are
-> managed normally there is no need for the special devmap PTE/PMD/PUD
-> page table bits. So drop all references to these, freeing up a
-> software defined page table bit on architectures supporting it.
->
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Acked-by: Will Deacon <will@kernel.org> # arm64
+> support.
+>=20
+> [1] https://lkml.kernel.org/r/CAFXwXrkgu=3D4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq=
+4ttm52pJOQ@mail.gmail.com
+> [2] https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-=
+berlin.de
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > ---
->  Documentation/mm/arch_pgtable_helpers.rst     |  6 +--
->  arch/arm64/Kconfig                            |  1 +-
->  arch/arm64/include/asm/pgtable-prot.h         |  1 +-
->  arch/arm64/include/asm/pgtable.h              | 24 +--------
->  arch/powerpc/Kconfig                          |  1 +-
->  arch/powerpc/include/asm/book3s/64/hash-4k.h  |  6 +--
->  arch/powerpc/include/asm/book3s/64/hash-64k.h |  7 +--
->  arch/powerpc/include/asm/book3s/64/pgtable.h  | 53 +------------------
->  arch/powerpc/include/asm/book3s/64/radix.h    | 14 +-----
->  arch/x86/Kconfig                              |  1 +-
->  arch/x86/include/asm/pgtable.h                | 51 +-----------------
->  arch/x86/include/asm/pgtable_types.h          |  5 +--
->  include/linux/mm.h                            |  7 +--
->  include/linux/pfn_t.h                         | 20 +-------
->  include/linux/pgtable.h                       | 19 +------
->  mm/Kconfig                                    |  4 +-
->  mm/debug_vm_pgtable.c                         | 59 +--------------------
->  mm/hmm.c                                      |  3 +-
->  18 files changed, 11 insertions(+), 271 deletions(-)
->
-> diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm=
-/arch_pgtable_helpers.rst
-> index af24516..c88c7fa 100644
-> --- a/Documentation/mm/arch_pgtable_helpers.rst
-> +++ b/Documentation/mm/arch_pgtable_helpers.rst
-> @@ -30,8 +30,6 @@ PTE Page Table Helpers
->  +---------------------------+-------------------------------------------=
--------+
->  | pte_protnone              | Tests a PROT_NONE PTE                     =
-       |
->  +---------------------------+-------------------------------------------=
--------+
-> -| pte_devmap                | Tests a ZONE_DEVICE mapped PTE            =
-       |
-> -+---------------------------+-------------------------------------------=
--------+
->  | pte_soft_dirty            | Tests a soft dirty PTE                    =
-       |
->  +---------------------------+-------------------------------------------=
--------+
->  | pte_swp_soft_dirty        | Tests a soft dirty swapped PTE            =
-       |
-> @@ -104,8 +102,6 @@ PMD Page Table Helpers
->  +---------------------------+-------------------------------------------=
--------+
->  | pmd_protnone              | Tests a PROT_NONE PMD                     =
-       |
->  +---------------------------+-------------------------------------------=
--------+
-> -| pmd_devmap                | Tests a ZONE_DEVICE mapped PMD            =
-       |
-> -+---------------------------+-------------------------------------------=
--------+
->  | pmd_soft_dirty            | Tests a soft dirty PMD                    =
-       |
->  +---------------------------+-------------------------------------------=
--------+
->  | pmd_swp_soft_dirty        | Tests a soft dirty swapped PMD            =
-       |
-> @@ -177,8 +173,6 @@ PUD Page Table Helpers
->  +---------------------------+-------------------------------------------=
--------+
->  | pud_write                 | Tests a writable PUD                      =
-       |
->  +---------------------------+-------------------------------------------=
--------+
-> -| pud_devmap                | Tests a ZONE_DEVICE mapped PUD            =
-       |
-> -+---------------------------+-------------------------------------------=
--------+
->  | pud_mkyoung               | Creates a young PUD                       =
-       |
->  +---------------------------+-------------------------------------------=
--------+
->  | pud_mkold                 | Creates an old PUD                        =
-       |
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 39310a4..81855d1 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -41,7 +41,6 @@ config ARM64
->         select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
->         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_NONLEAF_PMD_YOUNG if ARM64_HAFT
-> -       select ARCH_HAS_PTE_DEVMAP
->         select ARCH_HAS_PTE_SPECIAL
->         select ARCH_HAS_HW_PTE_YOUNG
->         select ARCH_HAS_SETUP_DMA_OPS
-> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/a=
-sm/pgtable-prot.h
-> index 9f9cf13..49b51df 100644
-> --- a/arch/arm64/include/asm/pgtable-prot.h
-> +++ b/arch/arm64/include/asm/pgtable-prot.h
-> @@ -17,7 +17,6 @@
->  #define PTE_SWP_EXCLUSIVE      (_AT(pteval_t, 1) << 2)  /* only for swp =
-ptes */
->  #define PTE_DIRTY              (_AT(pteval_t, 1) << 55)
->  #define PTE_SPECIAL            (_AT(pteval_t, 1) << 56)
-> -#define PTE_DEVMAP             (_AT(pteval_t, 1) << 57)
->
+>  arch/alpha/include/asm/elf.h       |  6 +-----
+>  arch/alpha/include/asm/pgtable.h   |  2 +-
+>  arch/alpha/include/asm/processor.h |  8 ++------
+>  arch/alpha/kernel/osf_sys.c        | 11 ++---------
+>  4 files changed, 6 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/arch/alpha/include/asm/elf.h b/arch/alpha/include/asm/elf.h
+> index 4d7c46f50382..50c82187e60e 100644
+> --- a/arch/alpha/include/asm/elf.h
+> +++ b/arch/alpha/include/asm/elf.h
+> @@ -74,7 +74,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 >  /*
->   * PTE_PRESENT_INVALID=3D1 & PTE_VALID=3D0 indicates that the pte's fiel=
-ds should be
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
+>   * This is used to ensure we don't load something for the wrong architec=
+ture.
+>   */
+> -#define elf_check_arch(x) ((x)->e_machine =3D=3D EM_ALPHA)
+> +#define elf_check_arch(x) (((x)->e_machine =3D=3D EM_ALPHA) && !((x)->e_=
+flags & EF_ALPHA_32BIT))
+> =20
+>  /*
+>   * These are used to set parameters in the core dumps.
+> @@ -137,10 +137,6 @@ extern int dump_elf_task(elf_greg_t *dest, struct ta=
+sk_struct *task);
+>  	: amask (AMASK_CIX) ? "ev6" : "ev67");	\
+>  })
+> =20
+> -#define SET_PERSONALITY(EX)					\
+> -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
+> -	   ? PER_LINUX_32BIT : PER_LINUX)
+> -
+>  extern int alpha_l1i_cacheshape;
+>  extern int alpha_l1d_cacheshape;
+>  extern int alpha_l2_cacheshape;
+> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
 table.h
-> index f8dac66..ea34e51 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -108,7 +108,6 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t =
-phys)
->  #define pte_user(pte)          (!!(pte_val(pte) & PTE_USER))
->  #define pte_user_exec(pte)     (!(pte_val(pte) & PTE_UXN))
->  #define pte_cont(pte)          (!!(pte_val(pte) & PTE_CONT))
-> -#define pte_devmap(pte)                (!!(pte_val(pte) & PTE_DEVMAP))
->  #define pte_tagged(pte)                ((pte_val(pte) & PTE_ATTRINDX_MAS=
-K) =3D=3D \
->                                  PTE_ATTRINDX(MT_NORMAL_TAGGED))
->
-> @@ -290,11 +289,6 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
->         return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
->  }
->
-> -static inline pte_t pte_mkdevmap(pte_t pte)
-> -{
-> -       return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
-> -}
-> -
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
->  static inline int pte_uffd_wp(pte_t pte)
->  {
-> @@ -587,14 +581,6 @@ static inline int pmd_trans_huge(pmd_t pmd)
->
->  #define pmd_mkhuge(pmd)                (__pmd(pmd_val(pmd) & ~PMD_TABLE_=
-BIT))
->
-> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -#define pmd_devmap(pmd)                pte_devmap(pmd_pte(pmd))
-> -#endif
-> -static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       return pte_pmd(set_pte_bit(pmd_pte(pmd), __pgprot(PTE_DEVMAP)));
-> -}
-> -
->  #ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
->  #define pmd_special(pte)       (!!((pmd_val(pte) & PTE_SPECIAL)))
->  static inline pmd_t pmd_mkspecial(pmd_t pmd)
-> @@ -1195,16 +1181,6 @@ static inline int pmdp_set_access_flags(struct vm_=
-area_struct *vma,
->         return __ptep_set_access_flags(vma, address, (pte_t *)pmdp,
->                                                         pmd_pte(entry), d=
-irty);
->  }
-> -
-> -static inline int pud_devmap(pud_t pud)
-> -{
-> -       return 0;
-> -}
-> -
-> -static inline int pgd_devmap(pgd_t pgd)
-> -{
-> -       return 0;
-> -}
->  #endif
->
->  #ifdef CONFIG_PAGE_TABLE_CHECK
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index da0ac66..3e85f89 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -147,7 +147,6 @@ config PPC
->         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_PHYS_TO_DMA
->         select ARCH_HAS_PMEM_API
-> -       select ARCH_HAS_PTE_DEVMAP              if PPC_BOOK3S_64
->         select ARCH_HAS_PTE_SPECIAL
->         select ARCH_HAS_SCALED_CPUTIME          if VIRT_CPU_ACCOUNTING_NA=
-TIVE && PPC_BOOK3S_64
->         select ARCH_HAS_SET_MEMORY
-> diff --git a/arch/powerpc/include/asm/book3s/64/hash-4k.h b/arch/powerpc/=
-include/asm/book3s/64/hash-4k.h
-> index c3efaca..b0546d3 100644
-> --- a/arch/powerpc/include/asm/book3s/64/hash-4k.h
-> +++ b/arch/powerpc/include/asm/book3s/64/hash-4k.h
-> @@ -160,12 +160,6 @@ extern pmd_t hash__pmdp_huge_get_and_clear(struct mm=
-_struct *mm,
->  extern int hash__has_transparent_hugepage(void);
->  #endif
->
-> -static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       BUG();
-> -       return pmd;
-> -}
-> -
->  #endif /* !__ASSEMBLY__ */
->
->  #endif /* _ASM_POWERPC_BOOK3S_64_HASH_4K_H */
-> diff --git a/arch/powerpc/include/asm/book3s/64/hash-64k.h b/arch/powerpc=
-/include/asm/book3s/64/hash-64k.h
-> index 0bf6fd0..0fb5b7d 100644
-> --- a/arch/powerpc/include/asm/book3s/64/hash-64k.h
-> +++ b/arch/powerpc/include/asm/book3s/64/hash-64k.h
-> @@ -259,7 +259,7 @@ static inline void mark_hpte_slot_valid(unsigned char=
- *hpte_slot_array,
->   */
->  static inline int hash__pmd_trans_huge(pmd_t pmd)
->  {
-> -       return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DE=
-VMAP)) =3D=3D
-> +       return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE)) =3D=3D
->                   (_PAGE_PTE | H_PAGE_THP_HUGE));
->  }
->
-> @@ -281,11 +281,6 @@ extern pmd_t hash__pmdp_huge_get_and_clear(struct mm=
-_struct *mm,
->  extern int hash__has_transparent_hugepage(void);
->  #endif /*  CONFIG_TRANSPARENT_HUGEPAGE */
->
-> -static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       return __pmd(pmd_val(pmd) | (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_=
-DEVMAP));
-> -}
-> -
->  #endif /* __ASSEMBLY__ */
->
->  #endif /* _ASM_POWERPC_BOOK3S_64_HASH_64K_H */
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/=
-include/asm/book3s/64/pgtable.h
-> index 6d98e6f..1d98d0a 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -88,7 +88,6 @@
->
->  #define _PAGE_SOFT_DIRTY       _RPAGE_SW3 /* software: software dirty tr=
-acking */
->  #define _PAGE_SPECIAL          _RPAGE_SW2 /* software: special page */
-> -#define _PAGE_DEVMAP           _RPAGE_SW1 /* software: ZONE_DEVICE page =
-*/
->
->  /*
->   * Drivers request for cache inhibited pte mapping using _PAGE_NO_CACHE
-> @@ -109,7 +108,7 @@
->   */
->  #define _HPAGE_CHG_MASK (PTE_RPN_MASK | _PAGE_HPTEFLAGS | _PAGE_DIRTY | =
-\
->                          _PAGE_ACCESSED | H_PAGE_THP_HUGE | _PAGE_PTE | \
-> -                        _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-> +                        _PAGE_SOFT_DIRTY)
->  /*
->   * user access blocked by key
->   */
-> @@ -123,7 +122,7 @@
->   */
->  #define _PAGE_CHG_MASK (PTE_RPN_MASK | _PAGE_HPTEFLAGS | _PAGE_DIRTY | \
->                          _PAGE_ACCESSED | _PAGE_SPECIAL | _PAGE_PTE |   \
-> -                        _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-> +                        _PAGE_SOFT_DIRTY)
->
->  /*
->   * We define 2 sets of base prot bits, one for basic pages (ie,
-> @@ -609,24 +608,6 @@ static inline pte_t pte_mkhuge(pte_t pte)
->         return pte;
->  }
->
-> -static inline pte_t pte_mkdevmap(pte_t pte)
-> -{
-> -       return __pte_raw(pte_raw(pte) | cpu_to_be64(_PAGE_SPECIAL | _PAGE=
-_DEVMAP));
-> -}
-> -
-> -/*
-> - * This is potentially called with a pmd as the argument, in which case =
-it's not
-> - * safe to check _PAGE_DEVMAP unless we also confirm that _PAGE_PTE is s=
-et.
-> - * That's because the bit we use for _PAGE_DEVMAP is not reserved for so=
-ftware
-> - * use in page directory entries (ie. non-ptes).
-> - */
-> -static inline int pte_devmap(pte_t pte)
-> -{
-> -       __be64 mask =3D cpu_to_be64(_PAGE_DEVMAP | _PAGE_PTE);
-> -
-> -       return (pte_raw(pte) & mask) =3D=3D mask;
-> -}
-> -
->  static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
->  {
->         /* FIXME!! check whether this need to be a conditional */
-> @@ -1380,36 +1361,6 @@ static inline bool arch_needs_pgtable_deposit(void=
+> index 635f0a5f5bbd..02e8817a8921 100644
+> --- a/arch/alpha/include/asm/pgtable.h
+> +++ b/arch/alpha/include/asm/pgtable.h
+> @@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte=
 )
->  }
->  extern void serialize_against_pte_lookup(struct mm_struct *mm);
->
+> =20
+>  extern void paging_init(void);
+> =20
+> -/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
+> +/* We have our own get_unmapped_area */
+>  #define HAVE_ARCH_UNMAPPED_AREA
+> =20
+>  #endif /* _ALPHA_PGTABLE_H */
+> diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/=
+processor.h
+> index 55bb1c09fd39..5dce5518a211 100644
+> --- a/arch/alpha/include/asm/processor.h
+> +++ b/arch/alpha/include/asm/processor.h
+> @@ -8,23 +8,19 @@
+>  #ifndef __ASM_ALPHA_PROCESSOR_H
+>  #define __ASM_ALPHA_PROCESSOR_H
+> =20
+> -#include <linux/personality.h>	/* for ADDR_LIMIT_32BIT */
 > -
-> -static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       if (radix_enabled())
-> -               return radix__pmd_mkdevmap(pmd);
-> -       return hash__pmd_mkdevmap(pmd);
-> -}
-> -
-> -static inline pud_t pud_mkdevmap(pud_t pud)
-> -{
-> -       if (radix_enabled())
-> -               return radix__pud_mkdevmap(pud);
-> -       BUG();
-> -       return pud;
-> -}
-> -
-> -static inline int pmd_devmap(pmd_t pmd)
-> -{
-> -       return pte_devmap(pmd_pte(pmd));
-> -}
-> -
-> -static inline int pud_devmap(pud_t pud)
-> -{
-> -       return pte_devmap(pud_pte(pud));
-> -}
-> -
-> -static inline int pgd_devmap(pgd_t pgd)
-> -{
-> -       return 0;
-> -}
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->
->  #define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION
-> diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/in=
-clude/asm/book3s/64/radix.h
-> index 8f55ff7..df23a82 100644
-> --- a/arch/powerpc/include/asm/book3s/64/radix.h
-> +++ b/arch/powerpc/include/asm/book3s/64/radix.h
-> @@ -264,7 +264,7 @@ static inline int radix__p4d_bad(p4d_t p4d)
->
->  static inline int radix__pmd_trans_huge(pmd_t pmd)
->  {
-> -       return (pmd_val(pmd) & (_PAGE_PTE | _PAGE_DEVMAP)) =3D=3D _PAGE_P=
-TE;
-> +       return (pmd_val(pmd) & _PAGE_PTE) =3D=3D _PAGE_PTE;
->  }
->
->  static inline pmd_t radix__pmd_mkhuge(pmd_t pmd)
-> @@ -274,7 +274,7 @@ static inline pmd_t radix__pmd_mkhuge(pmd_t pmd)
->
->  static inline int radix__pud_trans_huge(pud_t pud)
->  {
-> -       return (pud_val(pud) & (_PAGE_PTE | _PAGE_DEVMAP)) =3D=3D _PAGE_P=
-TE;
-> +       return (pud_val(pud) & _PAGE_PTE) =3D=3D _PAGE_PTE;
->  }
->
->  static inline pud_t radix__pud_mkhuge(pud_t pud)
-> @@ -315,16 +315,6 @@ static inline int radix__has_transparent_pud_hugepag=
-e(void)
->  }
->  #endif
->
-> -static inline pmd_t radix__pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
-> -}
-> -
-> -static inline pud_t radix__pud_mkdevmap(pud_t pud)
-> -{
-> -       return __pud(pud_val(pud) | (_PAGE_PTE | _PAGE_DEVMAP));
-> -}
-> -
->  struct vmem_altmap;
->  struct dev_pagemap;
->  extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 77f001c..acac373 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -97,7 +97,6 @@ config X86
->         select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->         select ARCH_HAS_PMEM_API                if X86_64
->         select ARCH_HAS_PREEMPT_LAZY
-> -       select ARCH_HAS_PTE_DEVMAP              if X86_64
->         select ARCH_HAS_PTE_SPECIAL
->         select ARCH_HAS_HW_PTE_YOUNG
->         select ARCH_HAS_NONLEAF_PMD_YOUNG       if PGTABLE_LEVELS > 2
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtabl=
-e.h
-> index 593f10a..77705be 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -308,16 +308,15 @@ static inline bool pmd_leaf(pmd_t pte)
->  }
->
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_=
-leaf */
->  static inline int pmd_trans_huge(pmd_t pmd)
->  {
-> -       return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) =3D=3D _PAGE_PSE=
-;
-> +       return (pmd_val(pmd) & _PAGE_PSE) =3D=3D _PAGE_PSE;
->  }
->
->  #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
->  static inline int pud_trans_huge(pud_t pud)
->  {
-> -       return (pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) =3D=3D _PAGE_PSE=
-;
-> +       return (pud_val(pud) & _PAGE_PSE) =3D=3D _PAGE_PSE;
->  }
->  #endif
->
-> @@ -327,24 +326,6 @@ static inline int has_transparent_hugepage(void)
->         return boot_cpu_has(X86_FEATURE_PSE);
->  }
->
-> -#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-> -static inline int pmd_devmap(pmd_t pmd)
-> -{
-> -       return !!(pmd_val(pmd) & _PAGE_DEVMAP);
-> -}
-> -
-> -#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> -static inline int pud_devmap(pud_t pud)
-> -{
-> -       return !!(pud_val(pud) & _PAGE_DEVMAP);
-> -}
-> -#else
-> -static inline int pud_devmap(pud_t pud)
-> -{
-> -       return 0;
-> -}
-> -#endif
-> -
->  #ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
->  static inline bool pmd_special(pmd_t pmd)
->  {
-> @@ -368,12 +349,6 @@ static inline pud_t pud_mkspecial(pud_t pud)
->         return pud_set_flags(pud, _PAGE_SPECIAL);
->  }
->  #endif /* CONFIG_ARCH_SUPPORTS_PUD_PFNMAP */
-> -
-> -static inline int pgd_devmap(pgd_t pgd)
-> -{
-> -       return 0;
-> -}
-> -#endif
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->
->  static inline pte_t pte_set_flags(pte_t pte, pteval_t set)
-> @@ -534,11 +509,6 @@ static inline pte_t pte_mkspecial(pte_t pte)
->         return pte_set_flags(pte, _PAGE_SPECIAL);
->  }
->
-> -static inline pte_t pte_mkdevmap(pte_t pte)
-> -{
-> -       return pte_set_flags(pte, _PAGE_SPECIAL|_PAGE_DEVMAP);
-> -}
-> -
->  /* See comments above mksaveddirty_shift() */
->  static inline pmd_t pmd_mksaveddirty(pmd_t pmd)
->  {
-> @@ -610,11 +580,6 @@ static inline pmd_t pmd_mkwrite_shstk(pmd_t pmd)
->         return pmd_set_flags(pmd, _PAGE_DIRTY);
->  }
->
-> -static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-> -{
-> -       return pmd_set_flags(pmd, _PAGE_DEVMAP);
-> -}
-> -
->  static inline pmd_t pmd_mkhuge(pmd_t pmd)
->  {
->         return pmd_set_flags(pmd, _PAGE_PSE);
-> @@ -680,11 +645,6 @@ static inline pud_t pud_mkdirty(pud_t pud)
->         return pud_mksaveddirty(pud);
->  }
->
-> -static inline pud_t pud_mkdevmap(pud_t pud)
-> -{
-> -       return pud_set_flags(pud, _PAGE_DEVMAP);
-> -}
-> -
->  static inline pud_t pud_mkhuge(pud_t pud)
->  {
->         return pud_set_flags(pud, _PAGE_PSE);
-> @@ -1012,13 +972,6 @@ static inline int pte_present(pte_t a)
->         return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
->  }
->
-> -#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-> -static inline int pte_devmap(pte_t a)
-> -{
-> -       return (pte_flags(a) & _PAGE_DEVMAP) =3D=3D _PAGE_DEVMAP;
-> -}
-> -#endif
-> -
->  #define pte_accessible pte_accessible
->  static inline bool pte_accessible(struct mm_struct *mm, pte_t a)
->  {
-> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/=
-pgtable_types.h
-> index 4b80453..e4c7b51 100644
-> --- a/arch/x86/include/asm/pgtable_types.h
-> +++ b/arch/x86/include/asm/pgtable_types.h
-> @@ -33,7 +33,6 @@
->  #define _PAGE_BIT_CPA_TEST     _PAGE_BIT_SOFTW1
->  #define _PAGE_BIT_UFFD_WP      _PAGE_BIT_SOFTW2 /* userfaultfd wrprotect=
-ed */
->  #define _PAGE_BIT_SOFT_DIRTY   _PAGE_BIT_SOFTW3 /* software dirty tracki=
-ng */
-> -#define _PAGE_BIT_DEVMAP       _PAGE_BIT_SOFTW4
->
->  #ifdef CONFIG_X86_64
->  #define _PAGE_BIT_SAVED_DIRTY  _PAGE_BIT_SOFTW5 /* Saved Dirty bit (leaf=
-) */
-> @@ -119,11 +118,9 @@
->
->  #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
->  #define _PAGE_NX       (_AT(pteval_t, 1) << _PAGE_BIT_NX)
-> -#define _PAGE_DEVMAP   (_AT(u64, 1) << _PAGE_BIT_DEVMAP)
->  #define _PAGE_SOFTW4   (_AT(pteval_t, 1) << _PAGE_BIT_SOFTW4)
->  #else
->  #define _PAGE_NX       (_AT(pteval_t, 0))
-> -#define _PAGE_DEVMAP   (_AT(pteval_t, 0))
->  #define _PAGE_SOFTW4   (_AT(pteval_t, 0))
->  #endif
->
-> @@ -152,7 +149,7 @@
->  #define _COMMON_PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT | \
->                                  _PAGE_SPECIAL | _PAGE_ACCESSED |       \
->                                  _PAGE_DIRTY_BITS | _PAGE_SOFT_DIRTY |  \
-> -                                _PAGE_DEVMAP | _PAGE_CC | _PAGE_UFFD_WP)
-> +                                _PAGE_CC | _PAGE_UFFD_WP)
->  #define _PAGE_CHG_MASK (_COMMON_PAGE_CHG_MASK | _PAGE_PAT)
->  #define _HPAGE_CHG_MASK (_COMMON_PAGE_CHG_MASK | _PAGE_PSE | _PAGE_PAT_L=
-ARGE)
->
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index a734278..23c4e9b 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2769,13 +2769,6 @@ static inline pud_t pud_mkspecial(pud_t pud)
->  }
->  #endif /* CONFIG_ARCH_SUPPORTS_PUD_PFNMAP */
->
-> -#ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
-> -static inline int pte_devmap(pte_t pte)
-> -{
-> -       return 0;
-> -}
-> -#endif
-> -
->  extern pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
->                                spinlock_t **ptl);
->  static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long =
-addr,
-> diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-> index 2d91482..0100ad8 100644
-> --- a/include/linux/pfn_t.h
-> +++ b/include/linux/pfn_t.h
-> @@ -97,26 +97,6 @@ static inline pud_t pfn_t_pud(pfn_t pfn, pgprot_t pgpr=
-ot)
->  #endif
->  #endif
->
-> -#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-> -static inline bool pfn_t_devmap(pfn_t pfn)
-> -{
-> -       const u64 flags =3D PFN_DEV|PFN_MAP;
-> -
-> -       return (pfn.val & flags) =3D=3D flags;
-> -}
-> -#else
-> -static inline bool pfn_t_devmap(pfn_t pfn)
-> -{
-> -       return false;
-> -}
-> -pte_t pte_mkdevmap(pte_t pte);
-> -pmd_t pmd_mkdevmap(pmd_t pmd);
-> -#if defined(CONFIG_TRANSPARENT_HUGEPAGE) && \
-> -       defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
-> -pud_t pud_mkdevmap(pud_t pud);
-> -#endif
-> -#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
-> -
->  #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
->  static inline bool pfn_t_special(pfn_t pfn)
->  {
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 00e4a06..1c377de 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -1606,21 +1606,6 @@ static inline int pud_write(pud_t pud)
->  }
->  #endif /* pud_write */
->
-> -#if !defined(CONFIG_ARCH_HAS_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_=
-HUGEPAGE)
-> -static inline int pmd_devmap(pmd_t pmd)
-> -{
-> -       return 0;
-> -}
-> -static inline int pud_devmap(pud_t pud)
-> -{
-> -       return 0;
-> -}
-> -static inline int pgd_devmap(pgd_t pgd)
-> -{
-> -       return 0;
-> -}
-> -#endif
-> -
->  #if !defined(CONFIG_TRANSPARENT_HUGEPAGE) || \
->         !defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
->  static inline int pud_trans_huge(pud_t pud)
-> @@ -1875,8 +1860,8 @@ typedef unsigned int pgtbl_mod_mask;
->   * - It should contain a huge PFN, which points to a huge page larger th=
-an
->   *   PAGE_SIZE of the platform.  The PFN format isn't important here.
->   *
-> - * - It should cover all kinds of huge mappings (e.g., pXd_trans_huge(),
-> - *   pXd_devmap(), or hugetlb mappings).
-> + * - It should cover all kinds of huge mappings (i.e. pXd_trans_huge()
-> + *   or hugetlb mappings).
+>  /*
+>   * We have a 42-bit user address space: 4TB user VM...
 >   */
->  #ifndef pgd_leaf
->  #define pgd_leaf(x)    false
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 7949ab1..e1d0981 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1044,9 +1044,6 @@ config ARCH_HAS_CURRENT_STACK_POINTER
->           register alias named "current_stack_pointer", this config can b=
-e
->           selected.
->
-> -config ARCH_HAS_PTE_DEVMAP
-> -       bool
-> -
->  config ARCH_HAS_ZONE_DMA_SET
->         bool
->
-> @@ -1064,7 +1061,6 @@ config ZONE_DEVICE
->         depends on MEMORY_HOTPLUG
->         depends on MEMORY_HOTREMOVE
->         depends on SPARSEMEM_VMEMMAP
-> -       depends on ARCH_HAS_PTE_DEVMAP
->         select XARRAY_MULTI
->
->         help
-> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-> index bc748f7..cf5ff92 100644
-> --- a/mm/debug_vm_pgtable.c
-> +++ b/mm/debug_vm_pgtable.c
-> @@ -348,12 +348,6 @@ static void __init pud_advanced_tests(struct pgtable=
-_debug_args *args)
->         vaddr &=3D HPAGE_PUD_MASK;
->
->         pud =3D pfn_pud(args->pud_pfn, args->page_prot);
-> -       /*
-> -        * Some architectures have debug checks to make sure
-> -        * huge pud mapping are only found with devmap entries
-> -        * For now test with only devmap entries.
-> -        */
-> -       pud =3D pud_mkdevmap(pud);
->         set_pud_at(args->mm, vaddr, args->pudp, pud);
->         flush_dcache_page(page);
->         pudp_set_wrprotect(args->mm, vaddr, args->pudp);
-> @@ -366,7 +360,6 @@ static void __init pud_advanced_tests(struct pgtable_=
-debug_args *args)
->         WARN_ON(!pud_none(pud));
->  #endif /* __PAGETABLE_PMD_FOLDED */
->         pud =3D pfn_pud(args->pud_pfn, args->page_prot);
-> -       pud =3D pud_mkdevmap(pud);
->         pud =3D pud_wrprotect(pud);
->         pud =3D pud_mkclean(pud);
->         set_pud_at(args->mm, vaddr, args->pudp, pud);
-> @@ -384,7 +377,6 @@ static void __init pud_advanced_tests(struct pgtable_=
-debug_args *args)
->  #endif /* __PAGETABLE_PMD_FOLDED */
->
->         pud =3D pfn_pud(args->pud_pfn, args->page_prot);
-> -       pud =3D pud_mkdevmap(pud);
->         pud =3D pud_mkyoung(pud);
->         set_pud_at(args->mm, vaddr, args->pudp, pud);
->         flush_dcache_page(page);
-> @@ -693,53 +685,6 @@ static void __init pmd_protnone_tests(struct pgtable=
-_debug_args *args)
->  static void __init pmd_protnone_tests(struct pgtable_debug_args *args) {=
- }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->
-> -#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-> -static void __init pte_devmap_tests(struct pgtable_debug_args *args)
-> -{
-> -       pte_t pte =3D pfn_pte(args->fixed_pte_pfn, args->page_prot);
-> -
-> -       pr_debug("Validating PTE devmap\n");
-> -       WARN_ON(!pte_devmap(pte_mkdevmap(pte)));
-> -}
-> -
-> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -static void __init pmd_devmap_tests(struct pgtable_debug_args *args)
-> -{
-> -       pmd_t pmd;
-> -
-> -       if (!has_transparent_hugepage())
-> -               return;
-> -
-> -       pr_debug("Validating PMD devmap\n");
-> -       pmd =3D pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
-> -       WARN_ON(!pmd_devmap(pmd_mkdevmap(pmd)));
-> -}
-> -
-> -#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> -static void __init pud_devmap_tests(struct pgtable_debug_args *args)
-> -{
-> -       pud_t pud;
-> -
-> -       if (!has_transparent_pud_hugepage())
-> -               return;
-> -
-> -       pr_debug("Validating PUD devmap\n");
-> -       pud =3D pfn_pud(args->fixed_pud_pfn, args->page_prot);
-> -       WARN_ON(!pud_devmap(pud_mkdevmap(pud)));
-> -}
-> -#else  /* !CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
-> -static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
-> -#endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
-> -#else  /* CONFIG_TRANSPARENT_HUGEPAGE */
-> -static void __init pmd_devmap_tests(struct pgtable_debug_args *args) { }
-> -static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
-> -#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> -#else
-> -static void __init pte_devmap_tests(struct pgtable_debug_args *args) { }
-> -static void __init pmd_devmap_tests(struct pgtable_debug_args *args) { }
-> -static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
-> -#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
-> -
->  static void __init pte_soft_dirty_tests(struct pgtable_debug_args *args)
->  {
->         pte_t pte =3D pfn_pte(args->fixed_pte_pfn, args->page_prot);
-> @@ -1341,10 +1286,6 @@ static int __init debug_vm_pgtable(void)
->         pte_protnone_tests(&args);
->         pmd_protnone_tests(&args);
->
-> -       pte_devmap_tests(&args);
-> -       pmd_devmap_tests(&args);
-> -       pud_devmap_tests(&args);
-> -
->         pte_soft_dirty_tests(&args);
->         pmd_soft_dirty_tests(&args);
->         pte_swap_soft_dirty_tests(&args);
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 285578e..2a12879 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -395,8 +395,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
->         return 0;
+>  #define TASK_SIZE (0x40000000000UL)
+> =20
+> -#define STACK_TOP \
+> -  (current->personality & ADDR_LIMIT_32BIT ? 0x80000000 : 0x00120000000U=
+L)
+> +#define STACK_TOP (0x00120000000UL)
+> =20
+>  #define STACK_TOP_MAX	0x00120000000UL
+> =20
+>  /* This decides where the kernel will search for a free chunk of vm
+>   * space during mmap's.
+>   */
+> -#define TASK_UNMAPPED_BASE \
+> -  ((current->personality & ADDR_LIMIT_32BIT) ? 0x40000000 : TASK_SIZE / =
+2)
+> +#define TASK_UNMAPPED_BASE (TASK_SIZE / 2)
+> =20
+>  /* This is dead.  Everything has been moved to thread_info.  */
+>  struct thread_struct { };
+> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+> index 86185021f75a..a08e8edef1a4 100644
+> --- a/arch/alpha/kernel/osf_sys.c
+> +++ b/arch/alpha/kernel/osf_sys.c
+> @@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user=
+ *, txc_p)
+>  	return ret;
 >  }
->
-> -#if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && \
-> -    defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
-> +#if defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
->  static inline unsigned long pud_to_hmm_pfn_flags(struct hmm_range *range=
-,
->                                                  pud_t pud)
+> =20
+> -/* Get an address range which is currently unmapped.  Similar to the
+> -   generic version except that we know how to honor ADDR_LIMIT_32BIT.  *=
+/
+> +/* Get an address range which is currently unmapped. */
+> =20
+>  static unsigned long
+>  arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
+> @@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned=
+ long addr,
+>  		       unsigned long len, unsigned long pgoff,
+>  		       unsigned long flags, vm_flags_t vm_flags)
 >  {
-> --
-> git-series 0.9.1
+> -	unsigned long limit;
+> -
+> -	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+> -	if (current->personality & ADDR_LIMIT_32BIT)
+> -		limit =3D 0x80000000;
+> -	else
+> -		limit =3D TASK_SIZE;
+> +	unsigned long limit =3D TASK_SIZE;
+> =20
+>  	if (len > limit)
+>  		return -ENOMEM;
+
+Looks good to me besides the two spelling mistakes above in the comment.
+
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Will also test and report back shortly.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
