@@ -1,145 +1,131 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA36824B25D
-	for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 11:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF8A29A2
+	for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 12:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736594803; cv=none; b=YITuR154GwOWEh7ShDibu/FKZq7f3n3VAPdlKUxkURP2eBgV655J6oOLcQCqiyrcPy9d26cRH7R7c0CVSk91bRcVqJ8E9QbdmNIh7zAyon6igKU8/tcIW7pTJGwErRGhDBQty0VNcuVvG9vYhGe5YmfP3oOqxD1hHGVsA6qGv3E=
+	t=1736596864; cv=none; b=BQorge2sk601PyNnu4I5H3Kgx5h3Q23ND0uxMVsX3A76mn3o13e11EoLsQ2VzMHBWylXm9RhiQap+iPD/ApNMPrW7bD9S3RFZ4BJn/oD8U5CNw6CP5ikEY72QKZ3FPkbGlk0OLqDNJqi2CYv86vmQs4ohP3wlpEQHapmJfXJ3XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736594803; c=relaxed/simple;
-	bh=D2AAOLYfAZyuBV7sazdyya4q+dujMbJczcTRFQmHPsI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=kfJtKMWTMp6wyqKaIc7eeoc2IoalLfI96lOEmt/pFr0/Jd9e/sE0yw4KKX7irCFNUv791dSnY3/SkmwI9wQvjGWr0h65hKJQLggVP6EObcv9sRpPn59m9PdGHRn9I2c6FrMlTTUspHgcI/qBScwQqUdt0dc3NSomRNwyU3qVuG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ghlZMLDe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lOvnQ3SA; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1736596864; c=relaxed/simple;
+	bh=N3H/Qf6U9DBkXOVHm4m2N8ncVlf7iF2/RCv3i3uiEH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OjO/KgTfW1HHgFt7B7QfGAgrNo9qGkykLLzfVQVlU2bnRHkONP0PnhX+MzEZkHlAmTNQSWBI/wVMSWDv7kpBO1OupZ5Hp1VKcVXc7BhUHYMDHQd4zEpvkdoyU9fBrvNtQpPyliw7mrjv6pvhemK2iLonQBWr9pCz0L/saW9vt1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiSjWm7z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ghlZMLDe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lOvnQ3SA"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id BBC7413801D9;
-	Sat, 11 Jan 2025 06:26:39 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Sat, 11 Jan 2025 06:26:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1736594799;
-	 x=1736681199; bh=306DKy1iW1JzjoeCQKfH4cZUMdXrxc6521qKQil5/zQ=; b=
-	ghlZMLDeXknyJQN4sbOdEwf1wQ6c68VsdnA5+xgGkeSgkoqVTHWJ/yYZWCvFgIqF
-	jQCnIWi6hDudul1avjuCwVVg7hknVGs+bPgF231fGu19in0Mt7Uil/lN/fDUSSiP
-	Aj5ZD1ZmgxpqzsBlByiYzZJCuFJPDU9SghhVDbxMIpmchdxgSNsbmxgZ4WJhxZOf
-	z3nRXeqbyPaXpqqCJEdeoEyNTejYC3OnnaoeWHPs5rgeMJ/bUzx2FEdRYisVIHCp
-	IalY27nh8IiBjXlf8RjUq7grkW0UW0SEzs4KBzGPVuP6LYcSutyMsv2im9iIVVsK
-	rtPqZp9eUaVU47XtQqvMnQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736594799; x=
-	1736681199; bh=306DKy1iW1JzjoeCQKfH4cZUMdXrxc6521qKQil5/zQ=; b=l
-	OvnQ3SAVg5D0usL6wfD5jhG0pZzeu9dvJu8qgIzqjSmqc37pXG+P491hthbPz7wF
-	Tu/UQrozxSOzYLS6wBoDbHWNJt6hP5mCV9rvlAjUN7s6LCpcXSRsOahZLpZge0yd
-	2NLryAO5vA0d7pEe4kZhFgHTn+AesF252t8IZd0oK9I3SGKGo80s/NQ3UZSbwkaL
-	U3cjJ1HN9zlSi+qcmX5oHx34rgsl2T/9rWyzGo2WN5hi0uMMvFVqqzhAnmPmpNMx
-	AGjn9Om5mFDzvuRHRw45W4J95PcFaLXHky5hmHMXkgoMes13118b1C0f0UDy7itm
-	ByArRUFBOG0dYLDZ38xwQ==
-X-ME-Sender: <xms:blWCZ0i8VPq1j5Dr4YS2vcwnNw0gIz3XJuv1zZGPNMwx5ZBrlpjC1Q>
-    <xme:blWCZ9D2kgHe6L0xmYh6cGioAweemkrN2P6AxffuvfQPnt_qtIU8ISE0gmkkC2Pkb
-    K4VKv98mMtp9ULNii0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehtddgvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeek
-    keelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
-    nhgusgdruggvpdhnsggprhgtphhtthhopedukedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepiigvhhgrseguvggsihgrnhdrohhrghdprhgtphhtthhopehsrghmsehgvghn
-    thhoohdrohhrghdprhgtphhtthhopehmrghtthhsthekkeesghhmrghilhdrtghomhdprh
-    gtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlmhgt
-    kheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhmsehkvhgrtghkrd
-    horhhgpdhrtghpthhtoheprhhitghhrghrugdrhhgvnhguvghrshhonheslhhinhgrrhho
-    rdhorhhgpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtg
-    hpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:blWCZ8FOcpTXR9XwxoRhp4w6S64F9rQxtGa2QOtxf96xgMNMoRucVA>
-    <xmx:blWCZ1RaPCRSjrJ6jONCpVfg2C0ZsNw6qJFaC8uWdOorw9Rire2tgA>
-    <xmx:blWCZxyyjQCEU5liQw9ntqVLF8rUdeHtMMJudbBkyXFXTyFrtc9s1A>
-    <xmx:blWCZz6aEIWvulzsdiaUKRLwhk6yioPbZeYEcfXbT0Sq9sIHiz1qNQ>
-    <xmx:b1WCZ5lff-OS-i9W6CDejLJdJUxIsPdsHnrvbUIvxXyXXbjAbqY1ViMw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 625092220073; Sat, 11 Jan 2025 06:26:38 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiSjWm7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6548FC4CED2
+	for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 12:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736596864;
+	bh=N3H/Qf6U9DBkXOVHm4m2N8ncVlf7iF2/RCv3i3uiEH0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qiSjWm7zgiNdsoBJxBUYpYQPQbGv+KrhhGjMSdZTmR+HWGiiUpKuGccc12bTvq0YC
+	 Wvpvp9UStJKIBptIaDuGTWESGdDCXF60AjGDYuQbKDttW+aTLZDNAdWAYD0eE757yO
+	 YvXofXDhN0CdsqEW4wLek6/nXJ6Awf07GswD67p4/fbhlH/7no43xlRTLjeGMuj2y1
+	 8UFL75yf3svXKyQjie47DyBmNaSPGCBa2nYsXjfW9iEyeSxuHC+DFFTWPcQ0hXmyz+
+	 XT/iOn+BMe67IaJd7xMUqEbZRv+lfbhoroi7L0j+60cAsrwXLYMyBHNx5inf97vBah
+	 vocqI2LWBJ9dg==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aab6fa3e20eso512099766b.2
+        for <loongarch@lists.linux.dev>; Sat, 11 Jan 2025 04:01:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV0KYk2AsEgWT8QFjIQx5L86Xf7zBMCgVsjlhWp0DaiCu+aG7bMcnVnpA2d2MQvFmXij2d4o6i8uRA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyxkTUZqtfMbxXjz05iGizVOH9tHpKCHV2RihF5BR6s2bzRnQVz
+	I2qP68M8dD6bGkuiuUaGGTYX0rWDH1i4Sak8ldkuELxCDVEAbH6vS7Qir8YNptXCNNlPOt6Qyzh
+	hly6aROE+wq8RySHcFqMpZBeiTCM=
+X-Google-Smtp-Source: AGHT+IH3QEjHLof2K5IiCoCbPqMatm697pPTpsqHwCsI3mHL0SIe+TkhucKXAzew0b/GjYRpiXrNmh2K9Bt5f7/D6L8=
+X-Received: by 2002:a17:907:2d24:b0:aa6:90f1:a9bb with SMTP id
+ a640c23a62f3a-ab2ab6c6738mr1377598466b.24.1736596863005; Sat, 11 Jan 2025
+ 04:01:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 11 Jan 2025 12:26:18 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Eric W. Biederman" <ebiederm@xmission.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>
-Cc: "Richard Henderson" <richard.henderson@linaro.org>,
- "Matt Turner" <mattst88@gmail.com>, "Kees Cook" <kees@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, linux-alpha@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- "Michael Cree" <mcree@orcon.net.nz>, "Sam James" <sam@gentoo.org>,
- "Maciej W. Rozycki" <macro@orcam.me.uk>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
- "Chris Hofstaedtler" <zeha@debian.org>, util-linux@vger.kernel.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Message-Id: <6c1f31be-cd3b-4090-abbd-fd3968858e1b@app.fastmail.com>
-In-Reply-To: <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
-References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
- <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
- <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
- <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
- <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
- <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
- <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
-Subject: Re: [PATCH] alpha/elf: Fix misc/setarch test of util-linux by removing 32bit
- support
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250111023704.17285-1-zhangtianyang@loongson.cn>
+In-Reply-To: <20250111023704.17285-1-zhangtianyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 11 Jan 2025 20:00:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7o0Pwnyex-6+PSp9dGM=BgqEZc1jPDMvR272y9VqoH8Q@mail.gmail.com>
+X-Gm-Features: AbW1kvaW1yy2cQVAp-cJnqCQtUX9xaBz65v_ZhIZ3sT6b4zDo8l285JKWSt7Z4o
+Message-ID: <CAAhV-H7o0Pwnyex-6+PSp9dGM=BgqEZc1jPDMvR272y9VqoH8Q@mail.gmail.com>
+Subject: Re: [PATCH V3] irqchip/loongarch-avec:Add multi-nodes topology support
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, tglx@linutronix.de, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 11, 2025, at 01:16, Eric W. Biederman wrote:
-> Richard Henderson <richard.henderson@linaro.org> writes[1]:
->
->> There was a Spec benchmark (I forget which) which was memory bound and ran
->> twice as fast with 32-bit pointers.
->>
->> I copied the idea from DEC to the ELF abi, but never did all the other work
->> to allow the toolchain to take advantage.
->>
->> Amusingly, a later Spec changed the benchmark data sets to not fit into a
->> 32-bit address space, specifically because of this.
->>
->> I expect one could delete the ELF bit and personality and no one would
->> notice. Not even the 10 remaining Alpha users.
->
-> In [2] it was pointed out that parts of setarch weren't working
-> properly on alpha because it has it's own SET_PERSONALITY
-> implementation.  In the discussion that followed Richard Henderson
-> pointed out that the 32bit pointer support for alpha was never
-> completed.
->
-> Fix this by removing alpha's 32bit pointer support.
->
-> As a bit of paranoia refuse to execute any alpha binaries that hafe
-> the EF_ALPHA_32BIT flag set.  Just to fail explicitly in case someone
-> somewhere has binaries that trying to use alpha's 32bit pointer
-> support.
->
-> [1] 
-> https://lkml.kernel.org/r/CAFXwXrkgu=4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq4ttm52pJOQ@mail.gmail.com
-> [2] 
-> https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-berlin.de
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+On Sat, Jan 11, 2025 at 10:37=E2=80=AFAM Tianyang Zhang
+<zhangtianyang@loongson.cn> wrote:
+>
+> avecintc_init() enables the Advanced Interrupt Controller (AVEC) of
+> the boot CPU node, but nothing enables the AVEC on secondary nodes.
+>
+> Move the enablement to the CPU hotplug callback so that secondary
+> nodes get the AVEC enabled too. In theory enabling it once per node
+> would be sufficient, but redundant enabling does no hard, so keep the
+> code simple and do it unconditionally.
+>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongarch-avec.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-l=
+oongarch-avec.c
+> index 0f6e465dd309..80e55955a29f 100644
+> --- a/drivers/irqchip/irq-loongarch-avec.c
+> +++ b/drivers/irqchip/irq-loongarch-avec.c
+> @@ -56,6 +56,15 @@ struct avecintc_data {
+>         unsigned int            moving;
+>  };
+>
+> +static inline void avecintc_enable(void)
+> +{
+> +       u64 value;
+> +
+> +       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> +       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> +       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +}
+> +
+>  static inline void avecintc_ack_irq(struct irq_data *d)
+>  {
+>  }
+> @@ -127,6 +136,8 @@ static int avecintc_cpu_online(unsigned int cpu)
+>
+>         guard(raw_spinlock)(&loongarch_avec.lock);
+>
+> +       avecintc_enable();
+> +
+>         irq_matrix_online(loongarch_avec.vector_matrix);
+>
+>         pending_list_init(cpu);
+> @@ -339,7 +350,6 @@ static int __init irq_matrix_init(void)
+>  static int __init avecintc_init(struct irq_domain *parent)
+>  {
+>         int ret, parent_irq;
+> -       unsigned long value;
+>
+>         raw_spin_lock_init(&loongarch_avec.lock);
+>
+> @@ -378,9 +388,7 @@ static int __init avecintc_init(struct irq_domain *pa=
+rent)
+>                                   "irqchip/loongarch/avecintc:starting",
+>                                   avecintc_cpu_online, avecintc_cpu_offli=
+ne);
+>  #endif
+> -       value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> -       value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> -       iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +       avecintc_enable();
+>
+>         return ret;
+>
+> --
+> 2.20.1
+>
+>
