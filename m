@@ -1,399 +1,228 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B974214A61;
-	Fri, 10 Jan 2025 21:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736545513; cv=fail; b=bw2JzkVeg98zwwmx/gHneRZXRTXUnR68KNnu6y63iCPUuG1vbjd1PQnPQnpOpowy5K6g8LqPjtka6FTODhVSp4OewGs8Ay8tRJZFvSuwJqnl6j/RgBk9ya5Yw2anRnSQTHdPHCtfTzi60u+HkxNuG3k6oioSbQJ8U/ocZUXpLb4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736545513; c=relaxed/simple;
-	bh=DYEqIlWQLe3TYd2zBH0VyWuXNFR8bqUl5CrMpANsb2k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HrDRLd9TkSoOtONg6rD4c2DjUahtwuCwsKxlu7wb4c6JuVJW2OZyDKwxNEfAHae9l+rpINw3ERqa1DDlyAwREZoLwWdtq+NMLpHJSFGKlbBqb6mo0yxdMPXdHYwmwc0UkYdXJB5R5awgv8BOQUUCXn9gyzi/DfQI33/S35dSvOc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=K2ArFgSu; arc=fail smtp.client-ip=40.107.236.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="K2ArFgSu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b5O6HmriRF/snADLaSi4jzQrk3VVu+P29NVuUCg3LF8dsklMwfw78X4uHGrd5Lqhcp8FerIEJSRF7c3wlzo+sRM7HXTv97Kl4frqVKlQ7xjFXHyEyRqRhtTjfeaGn8f+jdTwp4y1U0untLPrJzwrVWxAOBI0COmGIwXcU/m1/VqpZxWoCw9/8olP+wYNDp7AqFkpE+2AfPwMTshhTJFSRdj32/ZjceZrtlO8jx9+sNoJuzQ1sdYK/PkqCjYZ9LWOCiVNENk3rpPuMYPB7Lekdbh+d7yOAX8w+/t4IeIRGHkEIEg9xFBRjM6kB0cuZmd5c3LrEw/OvkULubLfkSH7qA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2AjQWM1n9gYpLvvCKceW/sgPUUpWzFyKuOgj5ytvWAc=;
- b=kWTzvp+lsL0BRhSGrJ7b8qYNu1Egxk9q4ThnAy/5wjaWHV6g+LXPcrAWT16oHBUnEsfaD79FYKiod9xOEvTiO/S7uoePcg1tVmD2Q+OliKYLsV8B5130Ew/wNvq/4PYIN3Qdfgv3cTLQUSk9xa7GZPeHxH1QQ1+GVrA9fewp02uwjr/J6Fs0EhL8td1LRMj1687EJM2o/n05/U+x26HxdctviuSfSk8sX2veUMXo0yK0Umnojje9BQrmGkCi6pmo42Tf8M7SxQdeRQ4xjUOIq+0M6uOtM5bP+q2uC5dZS7+lPJRq3UYtIKUo1BJSZmsc1/xZ8fIbuPNtzrastg2BYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2AjQWM1n9gYpLvvCKceW/sgPUUpWzFyKuOgj5ytvWAc=;
- b=K2ArFgSumpQ7mcZPIvyk5fe6SoqTimy0W7L3aspMTCQzoTAwcjKzqOnDTciQdSiPj/cjbcTHdLBwHDzfq6MliaP0bBH2OgGO3iF8XnIekXfbdMMk6DR1FVU9q4a1nYze/44x5I8B5Yv31xdvGZ+MIf5wzsDYOJMhLpKSH6kZkLw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13)
- by DM4PR12MB7574.namprd12.prod.outlook.com (2603:10b6:8:10e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.11; Fri, 10 Jan
- 2025 21:45:08 +0000
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062]) by CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062%4]) with mapi id 15.20.8335.011; Fri, 10 Jan 2025
- 21:45:08 +0000
-Message-ID: <21f4f72a-b27f-4389-b345-e1d9cf4c2f06@amd.com>
-Date: Fri, 10 Jan 2025 16:45:04 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] drm/amd/display: Stop control flow if the divisior
- is zero
-To: Tiezhu Yang <yangtiezhu@loongson.cn>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250106085755.3268-1-yangtiezhu@loongson.cn>
-Content-Language: en-US
-From: Harry Wentland <harry.wentland@amd.com>
-In-Reply-To: <20250106085755.3268-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0147.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ac::22) To CO6PR12MB5427.namprd12.prod.outlook.com
- (2603:10b6:5:358::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED1179A3;
+	Sat, 11 Jan 2025 00:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736556069; cv=none; b=PF4OgWndXo6nXmf2HLzAnZ/pM5lGosnlHmNdUnYg0cOOnAxiXTIJQh1Dm+Ph3gzp3uGlnxdfkmrjkdqHa9jobEpuNptwdJ+F7YFPtumgppCyyA93uqgJHUbsHDtzr9QNxDd6WpbJO7uN6QOiaoPhBkpbVDPUpuwNclAw68dEv88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736556069; c=relaxed/simple;
+	bh=aUAiZMQHz04oOhO75f12tRErgfPPkpLVq8SbCELVEhI=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=MD46VVRCHgKS/T7tJuPGpv9Q9qa2q+VaAnVVO72VnRgFaoihFVWpHk8sf2vrpIfdtbv+ABG8Pm6nnWjEb8hsnl1JYNQcA+MUmr1px0D/gDdkusdExoyeMbWnVsvz6hbybd92FRVFG9yQ6A2E4W8qSdQXwTE7z9lcNJ1Pd0VY2KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:52578)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tWPBj-00F6GA-2j; Fri, 10 Jan 2025 17:17:15 -0700
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:42048 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tWPBh-00CzIE-Tg; Fri, 10 Jan 2025 17:17:14 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Arnd Bergmann <arnd@arndb.de>,  Richard Henderson
+ <richard.henderson@linaro.org>,  Matt Turner <mattst88@gmail.com>,  Kees
+ Cook <kees@kernel.org>,  "Paul E. McKenney" <paulmck@kernel.org>,
+  linux-alpha@vger.kernel.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Michael Cree <mcree@orcon.net.nz>,  Sam
+ James <sam@gentoo.org>,  "Maciej W. Rozycki" <macro@orcam.me.uk>,  Geert
+ Uytterhoeven <geert@linux-m68k.org>,  Michael Karcher
+ <kernel@mkarcher.dialup.fu-berlin.de>,  Chris Hofstaedtler
+ <zeha@debian.org>,  util-linux@vger.kernel.org,
+  linux-mips@vger.kernel.org,  loongarch@lists.linux.dev
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+	<24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+	<678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+	<bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+	<82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+	<cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+Date: Fri, 10 Jan 2025 18:16:28 -0600
+In-Reply-To: <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+	(John Paul Adrian Glaubitz's message of "Thu, 09 Jan 2025 10:12:03
+	+0100")
+Message-ID: <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5427:EE_|DM4PR12MB7574:EE_
-X-MS-Office365-Filtering-Correlation-Id: c271d6b4-f197-43f3-d182-08dd31c00d21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emw0M0VYRzAzM0tYYUhaVnpPUHFCUXNhUUtlNmRnbHVsUFlGZmYxbitTd3M1?=
- =?utf-8?B?N3ZZZUdqSEZxV2RlQ0ZsZ0FBd1U1bE5lRFNVbWJCV3VyVjliclc0cXJqZHdF?=
- =?utf-8?B?eW9RYjc5OFZoYk4rNnVBQlJkYnVna1FrV2J4R2JkNzZSNEEvNzc2NjJSRFdQ?=
- =?utf-8?B?SkRrT3psRXJmR0k1Zm5rVG9EZ3QxeU11MUpiMVdpT2wrK0VPbEhHVEJVZkha?=
- =?utf-8?B?VU0zci9hSzFHVW9UVmQ3bnc3b28yWmdoY0tlcloxQW1YekF0NUlVa2grQmUz?=
- =?utf-8?B?bFUyNVRuVVhvSnpHa2J5aUQ4NzlFZXNxR0VPVllhSEhPZFJURlE4eXJrdTMw?=
- =?utf-8?B?RGkvUDcvdXBxaVN4dVpqYUxja0ZIbVNaWnNiQWlLTHlYTlJDWFdIUjZtNk1Z?=
- =?utf-8?B?THQzNnJyaGZlSGNxak1KRFU1c3Y0azc1T0Zibmtmak55Rng0NDg3MlJlUXpU?=
- =?utf-8?B?eHgvbVcxS3Y1ZUVHZGV4Z2dYUHdZOVlVQXA0Q0RvOUd5SnVwSWF0TEMvejc2?=
- =?utf-8?B?ZFBWNWJHNC9PR1BiUzNXMml6Y2hDWU12dFdqNU5QeUNqdGJIY0kwZXdxalZ6?=
- =?utf-8?B?N1pVbzNFQ0tSZkNNelE2Ni9wUjcvTDRlQStZb0Z0STA0SDZiNXh4OVVhcjZ4?=
- =?utf-8?B?UWVUTjRHbFFLMXZwZkNVV0FnTy9IK1BCcHN6bHpHckdUYTd3MGdaeG4vdVlW?=
- =?utf-8?B?c1RzdkdhU0JqNllDUnhIZW55RnIvZ1hnVVRCdFBaRUkwQVMwaGdlSi9hRkx2?=
- =?utf-8?B?TDFuaVdVbWF0YnpRRW52YldjRGdFaUkya0NSTUhremd1NWd6cVlrYkdqQ2p0?=
- =?utf-8?B?bFRMN1ppSTZ4SG9IYjYvVGFFQ3IydHNiL09KcmZrMUl6NVNJMHJscWhTcVZS?=
- =?utf-8?B?NkJodlM1a2VuT3pIK0d0QjVYcERGQXRFdDRPa0VsVlN0Y2NMY0VlR3l5Nm5Z?=
- =?utf-8?B?NVdQZWhNanN1SDJGcjVGMFFmN1JMNm11TUx1dW1zZHFEUndsNXRYb3Z2RjNT?=
- =?utf-8?B?NGhDdWMyd3MyOVdqTnlPMnNBYVRWSEhpdWlZa01IM1FVNjFuckoycWdGS0dx?=
- =?utf-8?B?alZnUlNiU2MxYVFzczRmZ3Z3WjFkSFA4Y3JzNlVSZStYQmo0TlZRQkRZTHkx?=
- =?utf-8?B?S29JV2dZTE9mR2pqN1RJMGxiKytmV2UwTGVKMWw3R3J2ei9ZbnB2ZnVYSC9D?=
- =?utf-8?B?VFZvNDJFR2NLd1dvZG05QW5VdVRFT0NVVkRMR2tqcGZ3VEtBKys3aFJ3OHB0?=
- =?utf-8?B?NGhmUVdGd3M2V2owZzEyaVNWZkFlc1NMWXR1MVFaa3RlcFUydEg3VHVDSkM4?=
- =?utf-8?B?SDU2RTBCMHV0SEM4ZHZwQUswWG5iM2hTVDMzdjNGL2JxVGxyM2VHeEZXSEY2?=
- =?utf-8?B?ZHVlU09YZXVxRWdoeWtNK1BTZjBOaUV1czZBOVZXNjRHczlTdUtpMXVoS0Q3?=
- =?utf-8?B?bTVDcGFYVCtXWlhRZkVIMmZNTFRZT0Q0ZEFOWDlDTEo4WDB0NllQVEVkaDd3?=
- =?utf-8?B?MlpaWDQ1b29ybC9KNjc2cnJwVUZ1eGdTU0NIWlVEanlOb1dYNmkyZ1JPU0JJ?=
- =?utf-8?B?VWg2WlNQa2xXTXlYaHRsQ0M0cHpES1Z1b3FSNEhHMno0eE1pclNTZnVDdnpo?=
- =?utf-8?B?M1d0UGtSOGhqV0lwWXFYZXE0czZEcUNxNGQ5WG56S0FxcXRNRDFKK3dSNzEx?=
- =?utf-8?B?TlBCelVQSiszVmxkeFhGdmROTU80eFVXTStVcG4ydlk0ZHhMajZDWkZ0R1g0?=
- =?utf-8?B?Y1d2ZjhqTWUxVjlnTzNBVXU3RVZlajg3VFZjUWg4UWtDUHhwV3Y3TTVabnpI?=
- =?utf-8?B?VTgraTJlNnZxUVA0N0pDWGx0T3FzWlh5MzZSZm9ZMkY1TjBBTTY5TWV5T280?=
- =?utf-8?Q?wjot9GCIGCUAp?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5427.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TEhrc2liMkRBQzNTYzBOY2piNXBkVjl1UEpLREVKNTdTa3N4aVZ1SG54QVVK?=
- =?utf-8?B?dHVBby9uTk1RVXFJWWpZZkZCVUlTcW1Uc2dMKzdTN1RPV2loSzczRzBFdWdF?=
- =?utf-8?B?aTdORVFYMXdUd1JyRE91N1kzRTBFam9Qcm5sQ2VNdlk2Z2xLeHZOblVsSVJt?=
- =?utf-8?B?YitFaTZmZVNEZ0pWTE9lMVZrNGlYR1BmNittRlUrVVh1WHVxQWpwbmNlRndy?=
- =?utf-8?B?aUt3d3JvTlhMeWZ3c0ZrUG9KUWxKTU5CZjBWeXd0WUE4ZC9Ja1ppNVpSNVAy?=
- =?utf-8?B?U1RJeThubEw5Y01LaHdpdjNpRThaTVdRVkplV0xxMnF1Si9yTS95VlRsMFdQ?=
- =?utf-8?B?aVBNWk1xQzNWcDlYR3ZRWE1wek51WnMxWnVUaDl1TWliRVRRR2c4QkNKMGlJ?=
- =?utf-8?B?blhlbEl1djRPQU8wRmpIcFJRR2hpZTlPUFpoMzNGK2ZRQ0RvaFZhbERKa1kx?=
- =?utf-8?B?b1hhVGtKYyszN0FHY0p2cmZqUXlEZWNxd09NdXR2T3ZKU3ZXTlBFdkZIOWQ0?=
- =?utf-8?B?TXI5NldOL2EvaTkxaHQ3bGxqQ1BBYkFzVkJhN3FGTkUzTkJyM2dPWGd0SFpU?=
- =?utf-8?B?b3RGSTUyODJDOGdjb2NOV09wYVdkK1E3UjhIcEVjOS8vS2Mvbmd2MStwYVNM?=
- =?utf-8?B?eE1kODc4VEs4ci91RlBkZVNNZm1SRUMxSUhmMml1VFdXdTgyQk9SUzZrYzNo?=
- =?utf-8?B?K29odjVpcE1jaHF4cGpINUxTcjlRZUtuN3MrdGNGVmhnK0dlZVl4b3pRNlJS?=
- =?utf-8?B?czY0WDNKeFVpUVIyREdsbWprNEQ5cTU3emNBaXFtblIrZUN6WFU3SjNBWWhW?=
- =?utf-8?B?TGhla3drbEQwdURQSW1JSHJyRFE5Qk1xS1J6OEV2T01xNFVCeitMcnIvUm1G?=
- =?utf-8?B?S0R5ZzZHblcvUGZtWUJpMVpBc2hPNFF3L1VFQStzbUFpSEZMek9FL3NhSUhr?=
- =?utf-8?B?SXk1NklOSWVKUjJFeVFLQnZiMGQvbGQ1d0NkV2ZBekFLODJJT3Z2aFZUZ0Mv?=
- =?utf-8?B?NTdJTUVtNTlrSjJ1dnFiTEZ0bjNPeFozcHp6ZUg4ZmNBVE5yZ1dEMWNtSWJv?=
- =?utf-8?B?emJEeXUwSkpXd3hKZGNyakdmQWYyeXFFdWlwQVVIbWgzaEJ5V1V6anFyN2FK?=
- =?utf-8?B?dHJoNklGUlM0Y2tOYkFHZld1VERrOTNsakRtZEhjQkVmbGpHMjNRLzkzU2xS?=
- =?utf-8?B?dm1NZTRMUEh0VjZJVnNNMllnZUhDcXQvLzlSckx2SVZwaHpPSnRIZkswNitw?=
- =?utf-8?B?WjhnL043UEcyakhlNmY0UHBnL29DaWY1blJkOTR0MGdQbTBsdFVTdEd3d3FX?=
- =?utf-8?B?ZTZOOHk4c1g4dXl2QXlkMWJPcTB4TDhEK3lWMXJIclR3NXJLRzk5VENkR3pI?=
- =?utf-8?B?U2NDeWJwSGJENzZxRmxTZk9DZzRucnFFRjVHNTF4aEJJdkN4L0crcWNndDZq?=
- =?utf-8?B?bGl5ano2T0dML1JrTUdnc1FzZ0lNV3V0dDI3Q3U5dHhLendJbVAzR2xCYzBp?=
- =?utf-8?B?OVJRZk1yWFlPNFJMeFh5TmM3Qnk3STIvN2hWRG03UTF1cVB2cjlzazdLL0RR?=
- =?utf-8?B?Wm9MZjFPVUVhMk0vaUo4eXF1RXlBRDFGSDBDc3JNUVlYNXl2RXI3QmZIZXg5?=
- =?utf-8?B?RGdyazdXVTlveUxKcmVOeGNBaUNuSVlua0prL1FnSXo2VHdFNDFZUGF5MW91?=
- =?utf-8?B?SjI5ZVBCYXV6VkE3SzZzZDZTbG5qSkN0VHZxa0N4UlBMYjFOc0RrR3JWYkM0?=
- =?utf-8?B?OHBaRWF2RnpsaStxY01PblhLc2kyRDg5SHhPaXBmSEJhNGNlZlJkS1NWd1lV?=
- =?utf-8?B?TEFFbHhaYk81OUFkVVIzem1OQkFiV1dlUUhnSkpwNWt2VGljL0ZFRnE3L1RV?=
- =?utf-8?B?dE5UbExuRWRMaU1CWXNtaGtRVFlwRFczZ1hkaWc1RTlPY0ZlYzZ3S2V4S2lx?=
- =?utf-8?B?SmNVUW9lbVBoOE80RWtpNTUyV0hYNDdsY1lTTlhSUVE1Yk9GbVM4UGdwVndt?=
- =?utf-8?B?cnlxY0FaUzZlNlRxTnRxbGdMaWhJS1NvU0NsZVB1dmVyVDNtTllpc21GWld5?=
- =?utf-8?B?bytDYlZZREhXMnM3RVZxbSs4YWFpdlNOREtlcFhoSmlIS1V6aFdvcnFTNmRq?=
- =?utf-8?Q?4mWqM8UDZ9q6vRTl3JhO8ipyP?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c271d6b4-f197-43f3-d182-08dd31c00d21
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5427.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2025 21:45:08.2880
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TEJxpZXgyWewvGzP5WJIy3kTsSCx68JLh6PZz8y6iVrUWlW6vxcFAeAF2iMVdXZHXKWjZJ7vxtopGssdnRXpCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7574
+Content-Type: text/plain
+X-XM-SPF: eid=1tWPBh-00CzIE-Tg;;;mid=<87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX19QbIllH2f8XF6Psw43DyF7Jy4S+gf143M=
+X-Spam-Level: *
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  0.7 XMSubLong Long Subject
+	*  1.0 _Welcome_To_PayPal02 BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.4 FVGT_m_MULTI_ODD Contains multiple odd letter combinations
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: *;John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 590 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 10 (1.7%), b_tie_ro: 9 (1.5%), parse: 1.09 (0.2%),
+	 extract_message_metadata: 16 (2.7%), get_uri_detail_list: 3.2 (0.5%),
+	tests_pri_-2000: 22 (3.7%), tests_pri_-1000: 3.2 (0.5%),
+	tests_pri_-950: 1.23 (0.2%), tests_pri_-900: 0.99 (0.2%),
+	tests_pri_-90: 84 (14.3%), check_bayes: 78 (13.2%), b_tokenize: 13
+	(2.2%), b_tok_get_all: 22 (3.7%), b_comp_prob: 3.1 (0.5%),
+	b_tok_touch_all: 37 (6.2%), b_finish: 0.88 (0.1%), tests_pri_0: 438
+	(74.3%), check_dkim_signature: 0.59 (0.1%), check_dkim_adsp: 2.9
+	(0.5%), poll_dns_idle: 1.02 (0.2%), tests_pri_10: 2.2 (0.4%),
+	tests_pri_500: 8 (1.3%), rewrite_mail: 0.00 (0.0%)
+Subject: [PATCH] alpha/elf: Fix misc/setarch test of util-linux by removing
+ 32bit support
+X-SA-Exim-Connect-IP: 166.70.13.51
+X-SA-Exim-Rcpt-To: loongarch@lists.linux.dev, linux-mips@vger.kernel.org, util-linux@vger.kernel.org, zeha@debian.org, kernel@mkarcher.dialup.fu-berlin.de, geert@linux-m68k.org, macro@orcam.me.uk, sam@gentoo.org, mcree@orcon.net.nz, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-alpha@vger.kernel.org, paulmck@kernel.org, kees@kernel.org, mattst88@gmail.com, richard.henderson@linaro.org, arnd@arndb.de, glaubitz@physik.fu-berlin.de
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
 
-On 2025-01-06 03:57, Tiezhu Yang wrote:
-> As far as I can tell, with the current existing macro definitions, there
-> is no better way to do the minimal and proper changes to stop the control
-> flow if the divisior is zero.
-> 
-> In order to keep the current ability for the aim of debugging and avoid
-> printing the warning message twice, it is better to only use ASSERT_BUG()
-> and SPL_ASSERT_BUG() directly after doing the following four steps:
-> 
-> (1) Replace ASSERT() with ASSERT_WARN()
-> (2) Replace SPL_ASSERT() with SPL_ASSERT_WARN()
-> (3) Add ASSERT_BUG() macro definition
-> (4) Add SPL_ASSERT_BUG() macro definition
-> 
 
-Patches 1-4 create lots of churn across the whole driver for little
-immediate benefit. We should be able to do patch 5 without requiring
-all that churn.
+Richard Henderson <richard.henderson@linaro.org> writes[1]:
 
-Harry
+> There was a Spec benchmark (I forget which) which was memory bound and ran
+> twice as fast with 32-bit pointers.
+>
+> I copied the idea from DEC to the ELF abi, but never did all the other work
+> to allow the toolchain to take advantage.
+>
+> Amusingly, a later Spec changed the benchmark data sets to not fit into a
+> 32-bit address space, specifically because of this.
+>
+> I expect one could delete the ELF bit and personality and no one would
+> notice. Not even the 10 remaining Alpha users.
 
-> This version is based on 6.13-rc6, tested on x86 and LoongArch.
-> 
-> Tiezhu Yang (5):
->   drm/amd/display: Replace ASSERT() with ASSERT_WARN()
->   drm/amd/display: Replace SPL_ASSERT() with SPL_ASSERT_WARN()
->   drm/amd/display: Add ASSERT_BUG() macro definition
->   drm/amd/display: Add SPL_ASSERT_BUG() macro definition
->   drm/amd/display: Harden callers of division functions
-> 
->  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  4 +-
->  .../amd/display/amdgpu_dm/amdgpu_dm_color.c   |  8 +-
->  .../amd/display/amdgpu_dm/amdgpu_dm_helpers.c |  2 +-
->  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
->  .../amd/display/amdgpu_dm/amdgpu_dm_plane.c   |  2 +-
->  .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    |  2 +-
->  .../gpu/drm/amd/display/dc/basics/bw_fixed.c  | 18 ++---
->  .../gpu/drm/amd/display/dc/basics/dce_calcs.c |  2 +-
->  .../drm/amd/display/dc/basics/fixpt31_32.c    | 28 +++----
->  .../drm/amd/display/dc/bios/bios_parser2.c    |  6 +-
->  .../amd/display/dc/bios/bios_parser_common.c  |  2 +-
->  .../gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c  |  2 +-
->  .../display/dc/clk_mgr/dce100/dce_clk_mgr.c   |  4 +-
->  .../dc/clk_mgr/dce110/dce110_clk_mgr.c        |  4 +-
->  .../display/dc/clk_mgr/dcn10/rv1_clk_mgr.c    |  2 +-
->  .../dc/clk_mgr/dcn10/rv1_clk_mgr_vbios_smu.c  |  2 +-
->  .../amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c |  8 +-
->  .../dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c   |  6 +-
->  .../display/dc/clk_mgr/dcn30/dcn30_clk_mgr.c  |  2 +-
->  .../display/dc/clk_mgr/dcn301/dcn301_smu.c    |  2 +-
->  .../display/dc/clk_mgr/dcn301/vg_clk_mgr.c    | 10 +--
->  .../display/dc/clk_mgr/dcn31/dcn31_clk_mgr.c  | 12 +--
->  .../amd/display/dc/clk_mgr/dcn31/dcn31_smu.c  |  4 +-
->  .../dc/clk_mgr/dcn314/dcn314_clk_mgr.c        | 14 ++--
->  .../display/dc/clk_mgr/dcn314/dcn314_smu.c    |  4 +-
->  .../dc/clk_mgr/dcn315/dcn315_clk_mgr.c        | 14 ++--
->  .../display/dc/clk_mgr/dcn315/dcn315_smu.c    |  2 +-
->  .../dc/clk_mgr/dcn316/dcn316_clk_mgr.c        | 12 +--
->  .../display/dc/clk_mgr/dcn316/dcn316_smu.c    |  2 +-
->  .../display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c  |  2 +-
->  .../display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c  | 18 ++---
->  .../amd/display/dc/clk_mgr/dcn35/dcn35_smu.c  |  6 +-
->  .../dc/clk_mgr/dcn401/dcn401_clk_mgr.c        | 10 +--
->  drivers/gpu/drm/amd/display/dc/core/dc.c      | 24 +++---
->  .../drm/amd/display/dc/core/dc_hw_sequencer.c |  4 +-
->  .../drm/amd/display/dc/core/dc_link_enc_cfg.c | 12 +--
->  .../gpu/drm/amd/display/dc/core/dc_resource.c | 62 ++++++++--------
->  drivers/gpu/drm/amd/display/dc/core/dc_stat.c |  4 +-
->  .../gpu/drm/amd/display/dc/core/dc_stream.c   |  2 +-
->  .../gpu/drm/amd/display/dc/core/dc_surface.c  |  2 +-
->  drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c  |  6 +-
->  drivers/gpu/drm/amd/display/dc/dc_helper.c    |  8 +-
->  .../amd/display/dc/dccg/dcn20/dcn20_dccg.c    |  2 +-
->  .../amd/display/dc/dccg/dcn31/dcn31_dccg.c    |  2 +-
->  .../amd/display/dc/dccg/dcn35/dcn35_dccg.c    |  4 +-
->  .../amd/display/dc/dccg/dcn401/dcn401_dccg.c  |  2 +-
->  .../gpu/drm/amd/display/dc/dce/dce_audio.c    |  6 +-
->  .../gpu/drm/amd/display/dc/dce/dce_clk_mgr.c  |  8 +-
->  .../drm/amd/display/dc/dce/dce_clock_source.c |  2 +-
->  drivers/gpu/drm/amd/display/dc/dce/dce_dmcu.c |  2 +-
->  .../gpu/drm/amd/display/dc/dce/dce_i2c_sw.c   |  2 +-
->  drivers/gpu/drm/amd/display/dc/dce/dce_ipp.c  |  4 +-
->  .../drm/amd/display/dc/dce/dce_link_encoder.c |  8 +-
->  .../drm/amd/display/dc/dce/dce_mem_input.c    |  6 +-
->  .../amd/display/dc/dce/dce_stream_encoder.c   | 10 +--
->  .../drm/amd/display/dc/dce/dce_transform.c    |  8 +-
->  drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c |  4 +-
->  .../gpu/drm/amd/display/dc/dce/dmub_replay.c  |  4 +-
->  .../dc/dce110/dce110_timing_generator.c       |  2 +-
->  .../amd/display/dc/dce60/dce60_hw_sequencer.c |  2 +-
->  .../drm/amd/display/dc/dce60/dce60_resource.c |  2 +-
->  .../gpu/drm/amd/display/dc/dcn20/dcn20_vmid.c |  2 +-
->  .../amd/display/dc/dcn21/dcn21_link_encoder.c |  4 +-
->  .../gpu/drm/amd/display/dc/dcn30/dcn30_afmt.c |  2 +-
->  .../gpu/drm/amd/display/dc/dcn30/dcn30_vpg.c  |  2 +-
->  .../gpu/drm/amd/display/dc/dcn31/dcn31_apg.c  |  2 +-
->  .../amd/display/dc/dcn31/dcn31_panel_cntl.c   |  2 +-
->  .../display/dc/dio/dcn10/dcn10_link_encoder.c |  4 +-
->  .../dc/dio/dcn10/dcn10_stream_encoder.c       |  8 +-
->  .../dc/dio/dcn20/dcn20_stream_encoder.c       |  4 +-
->  .../dc/dio/dcn30/dcn30_dio_stream_encoder.c   | 16 ++--
->  .../dc/dio/dcn314/dcn314_dio_stream_encoder.c |  6 +-
->  .../dc/dio/dcn32/dcn32_dio_stream_encoder.c   |  6 +-
->  .../dc/dio/dcn35/dcn35_dio_stream_encoder.c   |  8 +-
->  .../dc/dio/dcn401/dcn401_dio_stream_encoder.c |  8 +-
->  drivers/gpu/drm/amd/display/dc/dm_services.h  |  2 +-
->  .../amd/display/dc/dml/calcs/dcn_calc_math.c  |  6 +-
->  .../drm/amd/display/dc/dml/calcs/dcn_calcs.c  | 18 ++---
->  .../drm/amd/display/dc/dml/dcn10/dcn10_fpu.c  |  2 +-
->  .../drm/amd/display/dc/dml/dcn20/dcn20_fpu.c  | 14 ++--
->  .../dc/dml/dcn20/display_mode_vba_20.c        |  2 +-
->  .../dc/dml/dcn20/display_mode_vba_20v2.c      |  2 +-
->  .../dc/dml/dcn20/display_rq_dlg_calc_20.c     | 54 +++++++-------
->  .../dc/dml/dcn20/display_rq_dlg_calc_20v2.c   | 54 +++++++-------
->  .../dc/dml/dcn21/display_mode_vba_21.c        |  2 +-
->  .../dc/dml/dcn21/display_rq_dlg_calc_21.c     | 54 +++++++-------
->  .../drm/amd/display/dc/dml/dcn30/dcn30_fpu.c  |  4 +-
->  .../dc/dml/dcn30/display_mode_vba_30.c        |  4 +-
->  .../dc/dml/dcn30/display_rq_dlg_calc_30.c     | 56 +++++++-------
->  .../amd/display/dc/dml/dcn301/dcn301_fpu.c    |  6 +-
->  .../amd/display/dc/dml/dcn302/dcn302_fpu.c    |  2 +-
->  .../amd/display/dc/dml/dcn303/dcn303_fpu.c    |  2 +-
->  .../drm/amd/display/dc/dml/dcn31/dcn31_fpu.c  |  6 +-
->  .../dc/dml/dcn31/display_mode_vba_31.c        |  4 +-
->  .../dc/dml/dcn31/display_rq_dlg_calc_31.c     | 50 ++++++-------
->  .../amd/display/dc/dml/dcn314/dcn314_fpu.c    |  6 +-
->  .../dc/dml/dcn314/display_mode_vba_314.c      |  4 +-
->  .../dc/dml/dcn314/display_rq_dlg_calc_314.c   | 50 ++++++-------
->  .../drm/amd/display/dc/dml/dcn32/dcn32_fpu.c  | 32 ++++----
->  .../dc/dml/dcn32/display_rq_dlg_calc_32.c     | 58 +++++++--------
->  .../amd/display/dc/dml/dcn321/dcn321_fpu.c    |  2 +-
->  .../drm/amd/display/dc/dml/dcn35/dcn35_fpu.c  |  4 +-
->  .../amd/display/dc/dml/dcn351/dcn351_fpu.c    |  4 +-
->  .../drm/amd/display/dc/dml/display_mode_vba.c | 12 +--
->  .../display/dc/dml/dml1_display_rq_dlg_calc.c | 74 +++++++++----------
->  .../amd/display/dc/dml2/display_mode_core.c   | 14 ++--
->  .../amd/display/dc/dml2/display_mode_util.c   | 12 +--
->  .../dc/dml2/dml21/dml21_translation_helper.c  | 10 +--
->  .../amd/display/dc/dml2/dml21/dml21_utils.c   |  8 +-
->  .../amd/display/dc/dml2/dml21/dml21_wrapper.c |  8 +-
->  .../lib_float_math.c                          |  4 +-
->  .../dc/dml2/dml21/src/inc/dml2_debug.c        |  2 +-
->  .../display/dc/dml2/dml2_dc_resource_mgmt.c   | 50 ++++++-------
->  .../gpu/drm/amd/display/dc/dml2/dml2_policy.c |  2 +-
->  .../display/dc/dml2/dml2_translation_helper.c | 10 +--
->  .../gpu/drm/amd/display/dc/dml2/dml2_utils.c  |  6 +-
->  .../drm/amd/display/dc/dml2/dml2_wrapper.c    | 10 +--
->  .../display/dc/dml2/dml_display_rq_dlg_calc.c | 62 ++++++++--------
->  .../amd/display/dc/dpp/dcn10/dcn10_dpp_dscl.c |  4 +-
->  .../drm/amd/display/dc/dpp/dcn30/dcn30_dpp.c  |  8 +-
->  .../display/dc/dpp/dcn401/dcn401_dpp_dscl.c   |  4 +-
->  drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c   |  4 +-
->  .../drm/amd/display/dc/dsc/dcn20/dcn20_dsc.c  | 24 +++---
->  .../drm/amd/display/dc/dsc/dcn35/dcn35_dsc.c  |  2 +-
->  .../amd/display/dc/dsc/dcn401/dcn401_dsc.c    |  4 +-
->  drivers/gpu/drm/amd/display/dc/gpio/hw_gpio.c |  2 +-
->  .../dc/hpo/dcn31/dcn31_hpo_dp_link_encoder.c  |  6 +-
->  .../hpo/dcn31/dcn31_hpo_dp_stream_encoder.c   |  4 +-
->  .../dc/hpo/dcn32/dcn32_hpo_dp_link_encoder.c  |  2 +-
->  .../display/dc/hubbub/dcn10/dcn10_hubbub.c    |  4 +-
->  .../display/dc/hubbub/dcn20/dcn20_hubbub.c    |  6 +-
->  .../display/dc/hubbub/dcn31/dcn31_hubbub.c    |  8 +-
->  .../display/dc/hubbub/dcn32/dcn32_hubbub.c    |  8 +-
->  .../display/dc/hubbub/dcn35/dcn35_hubbub.c    |  8 +-
->  .../display/dc/hubbub/dcn401/dcn401_hubbub.c  | 10 +--
->  .../amd/display/dc/hubp/dcn10/dcn10_hubp.c    |  4 +-
->  .../amd/display/dc/hubp/dcn20/dcn20_hubp.c    |  4 +-
->  .../amd/display/dc/hubp/dcn401/dcn401_hubp.c  |  8 +-
->  .../amd/display/dc/hwss/dce110/dce110_hwseq.c |  8 +-
->  .../amd/display/dc/hwss/dcn10/dcn10_hwseq.c   |  8 +-
->  .../amd/display/dc/hwss/dcn20/dcn20_hwseq.c   | 22 +++---
->  .../amd/display/dc/hwss/dcn201/dcn201_hwseq.c |  4 +-
->  .../amd/display/dc/hwss/dcn30/dcn30_hwseq.c   | 24 +++---
->  .../amd/display/dc/hwss/dcn31/dcn31_hwseq.c   |  4 +-
->  .../amd/display/dc/hwss/dcn314/dcn314_hwseq.c | 10 +--
->  .../amd/display/dc/hwss/dcn32/dcn32_hwseq.c   | 18 ++---
->  .../amd/display/dc/hwss/dcn35/dcn35_hwseq.c   | 10 +--
->  .../amd/display/dc/hwss/dcn401/dcn401_hwseq.c |  6 +-
->  .../gpu/drm/amd/display/dc/irq/irq_service.c  |  4 +-
->  .../display/dc/link/accessories/link_dp_cts.c |  4 +-
->  .../amd/display/dc/link/hwss/link_hwss_dio.c  |  2 +-
->  .../amd/display/dc/link/hwss/link_hwss_dpia.c |  2 +-
->  .../drm/amd/display/dc/link/link_detection.c  |  4 +-
->  .../gpu/drm/amd/display/dc/link/link_dpms.c   | 26 +++----
->  .../dc/link/protocols/link_dp_capability.c    | 12 +--
->  .../display/dc/link/protocols/link_dp_phy.c   |  4 +-
->  .../dc/link/protocols/link_dp_training.c      | 14 ++--
->  .../link/protocols/link_dp_training_8b_10b.c  |  2 +-
->  .../dc/link/protocols/link_dp_training_dpia.c |  4 +-
->  .../link_dp_training_fixed_vs_pe_retimer.c    |  4 +-
->  .../amd/display/dc/link/protocols/link_dpcd.c |  2 +-
->  .../link/protocols/link_edp_panel_control.c   |  6 +-
->  .../amd/display/dc/link/protocols/link_hpd.c  |  2 +-
->  .../drm/amd/display/dc/mpc/dcn10/dcn10_mpc.c  | 16 ++--
->  .../drm/amd/display/dc/mpc/dcn20/dcn20_mpc.c  | 14 ++--
->  .../drm/amd/display/dc/opp/dcn20/dcn20_opp.c  |  2 +-
->  .../amd/display/dc/optc/dcn10/dcn10_optc.c    |  2 +-
->  .../amd/display/dc/optc/dcn20/dcn20_optc.c    |  2 +-
->  .../amd/display/dc/optc/dcn201/dcn201_optc.c  |  2 +-
->  .../amd/display/dc/optc/dcn30/dcn30_optc.c    |  2 +-
->  .../amd/display/dc/optc/dcn31/dcn31_optc.c    |  2 +-
->  .../amd/display/dc/optc/dcn35/dcn35_optc.c    |  2 +-
->  .../amd/display/dc/optc/dcn401/dcn401_optc.c  |  4 +-
->  drivers/gpu/drm/amd/display/dc/os_types.h     |  7 +-
->  .../dc/resource/dce100/dce100_resource.c      |  2 +-
->  .../dc/resource/dce110/dce110_resource.c      |  2 +-
->  .../dc/resource/dce112/dce112_resource.c      |  2 +-
->  .../dc/resource/dce120/dce120_resource.c      |  2 +-
->  .../dc/resource/dce80/dce80_resource.c        |  2 +-
->  .../dc/resource/dcn10/dcn10_resource.c        |  4 +-
->  .../dc/resource/dcn20/dcn20_resource.c        | 30 ++++----
->  .../dc/resource/dcn201/dcn201_resource.c      |  2 +-
->  .../dc/resource/dcn21/dcn21_resource.c        | 12 +--
->  .../dc/resource/dcn30/dcn30_resource.c        | 26 +++----
->  .../dc/resource/dcn31/dcn31_resource.c        |  4 +-
->  .../dc/resource/dcn314/dcn314_resource.c      |  2 +-
->  .../dc/resource/dcn315/dcn315_resource.c      |  4 +-
->  .../dc/resource/dcn316/dcn316_resource.c      |  6 +-
->  .../dc/resource/dcn32/dcn32_resource.c        | 20 ++---
->  .../dc/resource/dcn321/dcn321_resource.c      |  6 +-
->  .../dc/resource/dcn35/dcn35_resource.c        |  2 +-
->  .../dc/resource/dcn351/dcn351_resource.c      |  2 +-
->  .../dc/resource/dcn401/dcn401_resource.c      |  6 +-
->  drivers/gpu/drm/amd/display/dc/spl/dc_spl.c   | 12 +--
->  .../gpu/drm/amd/display/dc/spl/spl_debug.h    | 15 +++-
->  .../drm/amd/display/dc/spl/spl_fixpt31_32.c   | 32 ++++----
->  .../drm/amd/display/dc/spl/spl_fixpt31_32.h   | 12 +--
->  .../gpu/drm/amd/display/dmub/src/dmub_srv.c   |  4 +-
->  .../gpu/drm/amd/display/include/fixed31_32.h  | 12 +--
->  .../amd/display/modules/color/color_gamma.c   |  2 +-
->  .../amd/display/modules/freesync/freesync.c   |  4 +-
->  .../amd/display/modules/power/power_helpers.c |  8 +-
->  .../gpu/drm/amd/display/modules/vmid/vmid.c   |  2 +-
->  203 files changed, 961 insertions(+), 947 deletions(-)
-> 
+In [2] it was pointed out that parts of setarch weren't working
+properly on alpha because it has it's own SET_PERSONALITY
+implementation.  In the discussion that followed Richard Henderson
+pointed out that the 32bit pointer support for alpha was never
+completed.
+
+Fix this by removing alpha's 32bit pointer support.
+
+As a bit of paranoia refuse to execute any alpha binaries that hafe
+the EF_ALPHA_32BIT flag set.  Just to fail explicitly in case someone
+somewhere has binaries that trying to use alpha's 32bit pointer
+support.
+
+[1] https://lkml.kernel.org/r/CAFXwXrkgu=4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq4ttm52pJOQ@mail.gmail.com
+[2] https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-berlin.de
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ arch/alpha/include/asm/elf.h       |  6 +-----
+ arch/alpha/include/asm/pgtable.h   |  2 +-
+ arch/alpha/include/asm/processor.h |  8 ++------
+ arch/alpha/kernel/osf_sys.c        | 11 ++---------
+ 4 files changed, 6 insertions(+), 21 deletions(-)
+
+diff --git a/arch/alpha/include/asm/elf.h b/arch/alpha/include/asm/elf.h
+index 4d7c46f50382..50c82187e60e 100644
+--- a/arch/alpha/include/asm/elf.h
++++ b/arch/alpha/include/asm/elf.h
+@@ -74,7 +74,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
+ /*
+  * This is used to ensure we don't load something for the wrong architecture.
+  */
+-#define elf_check_arch(x) ((x)->e_machine == EM_ALPHA)
++#define elf_check_arch(x) (((x)->e_machine == EM_ALPHA) && !((x)->e_flags & EF_ALPHA_32BIT))
+ 
+ /*
+  * These are used to set parameters in the core dumps.
+@@ -137,10 +137,6 @@ extern int dump_elf_task(elf_greg_t *dest, struct task_struct *task);
+ 	: amask (AMASK_CIX) ? "ev6" : "ev67");	\
+ })
+ 
+-#define SET_PERSONALITY(EX)					\
+-	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
+-	   ? PER_LINUX_32BIT : PER_LINUX)
+-
+ extern int alpha_l1i_cacheshape;
+ extern int alpha_l1d_cacheshape;
+ extern int alpha_l2_cacheshape;
+diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
+index 635f0a5f5bbd..02e8817a8921 100644
+--- a/arch/alpha/include/asm/pgtable.h
++++ b/arch/alpha/include/asm/pgtable.h
+@@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+ 
+ extern void paging_init(void);
+ 
+-/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
++/* We have our own get_unmapped_area */
+ #define HAVE_ARCH_UNMAPPED_AREA
+ 
+ #endif /* _ALPHA_PGTABLE_H */
+diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/processor.h
+index 55bb1c09fd39..5dce5518a211 100644
+--- a/arch/alpha/include/asm/processor.h
++++ b/arch/alpha/include/asm/processor.h
+@@ -8,23 +8,19 @@
+ #ifndef __ASM_ALPHA_PROCESSOR_H
+ #define __ASM_ALPHA_PROCESSOR_H
+ 
+-#include <linux/personality.h>	/* for ADDR_LIMIT_32BIT */
+-
+ /*
+  * We have a 42-bit user address space: 4TB user VM...
+  */
+ #define TASK_SIZE (0x40000000000UL)
+ 
+-#define STACK_TOP \
+-  (current->personality & ADDR_LIMIT_32BIT ? 0x80000000 : 0x00120000000UL)
++#define STACK_TOP (0x00120000000UL)
+ 
+ #define STACK_TOP_MAX	0x00120000000UL
+ 
+ /* This decides where the kernel will search for a free chunk of vm
+  * space during mmap's.
+  */
+-#define TASK_UNMAPPED_BASE \
+-  ((current->personality & ADDR_LIMIT_32BIT) ? 0x40000000 : TASK_SIZE / 2)
++#define TASK_UNMAPPED_BASE (TASK_SIZE / 2)
+ 
+ /* This is dead.  Everything has been moved to thread_info.  */
+ struct thread_struct { };
+diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+index 86185021f75a..a08e8edef1a4 100644
+--- a/arch/alpha/kernel/osf_sys.c
++++ b/arch/alpha/kernel/osf_sys.c
+@@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user *, txc_p)
+ 	return ret;
+ }
+ 
+-/* Get an address range which is currently unmapped.  Similar to the
+-   generic version except that we know how to honor ADDR_LIMIT_32BIT.  */
++/* Get an address range which is currently unmapped. */
+ 
+ static unsigned long
+ arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
+@@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
+ 		       unsigned long len, unsigned long pgoff,
+ 		       unsigned long flags, vm_flags_t vm_flags)
+ {
+-	unsigned long limit;
+-
+-	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+-	if (current->personality & ADDR_LIMIT_32BIT)
+-		limit = 0x80000000;
+-	else
+-		limit = TASK_SIZE;
++	unsigned long limit = TASK_SIZE;
+ 
+ 	if (len > limit)
+ 		return -ENOMEM;
+-- 
+2.41.0
 
