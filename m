@@ -1,88 +1,110 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E5E2040AF
-	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 10:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E49234D1C;
+	Tue, 14 Jan 2025 11:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736851812; cv=none; b=E07vecwzAfhRLvN95MYBMWict+7ro+6Z0L8Qqk4aTymnjtBNgJRKzLc2LspdTQqL9LFaDz6+BtrxQpXsLJ5fJhP3rt/G1cRmpXyvTFB9a/c8j9mBh98Cf+26e8zl+QZ8+gcdoiuEbQ9QKEd0xVKSLm7fR6SffoUsVqlSXkYFcrY=
+	t=1736855547; cv=none; b=fZg8lO85DX31nbk4x+mVI/OGRCQEVAaiIMSpDKCc1fwn+ubOn9GhPGu0I84qV47187NtiwzQxOJEub5Yk4FM7WD2xgx0SD+vb7Vp5svZ1KQZ/2Gfc9duf3Js7D9x7nLRGbQ22uzBbJROXjlRyvzsgciVYS79jzuS7/5e/pn7DBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736851812; c=relaxed/simple;
-	bh=n8a7vFvmqe2OHwhpuwdm5skzSSNwSqxHvZCoPNKRZwk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jLLHVc6IZ7QwUVo8ugmO8PvHf/lLW+wXwjujutxI61Pk57rMtgXOyWKbIeysLwz9IWuGty5otce8nCp0AiPnrvsywA0g5zau+msD9ylTyactNWRjyB1eK/qo/kBJPEAvMIC4gHdIt8Sk07K46dVuWl06UCnyrWs4DuZZn18tC9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EJb0g6W1; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EJb0g6W1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1736851409;
-	bh=Qer/50LAk/T5x76cwpUBQp7jojD6zPs6cu0a9cYAKHU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EJb0g6W1RVLLnp4AfGKdVUcAlRN79ZcUiB7E0UBJfn3vWRWruId2Jjli8O/q77c1I
-	 UeWmzcAJhgtcK+5AKC1ArRjEgXhYVGZx9+/GshkoRR4XMqLD9LiLOX4w91JlH8huXq
-	 EeeFrbx7I/UAZwAq8iYZ7p1uoGl4D3vCYPeCSxdw=
-Received: from [192.168.124.9] (unknown [113.200.174.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 469E266B25;
-	Tue, 14 Jan 2025 05:43:27 -0500 (EST)
-Message-ID: <97000576d4ba6d94cea70363e321665476697052.camel@xry111.site>
-Subject: Re: [PATCH v1 3/3] misc: ls6000se-sdf: Add driver for Loongson
- 6000SE SDF
-From: Xi Ruoyao <xry111@xry111.site>
-To: Arnd Bergmann <arnd@arndb.de>, Qunqin Zhao <zhaoqunqin@loongson.cn>, Lee
- Jones <lee@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Greg
- Kroah-Hartman	 <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, "David S .
- Miller"	 <davem@davemloft.net>, linux-crypto@vger.kernel.org,
- "derek.kiernan@amd.com"	 <derek.kiernan@amd.com>, "dragan.cvetic@amd.com"
- <dragan.cvetic@amd.com>,  Yinggang Gu <guyinggang@loongson.cn>
-Date: Tue, 14 Jan 2025 18:43:24 +0800
-In-Reply-To: <ee65851c-4149-4927-a2e7-356cdce2ba25@app.fastmail.com>
-References: <20250114095527.23722-1-zhaoqunqin@loongson.cn>
-	 <20250114095527.23722-4-zhaoqunqin@loongson.cn>
-	 <ee65851c-4149-4927-a2e7-356cdce2ba25@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	s=arc-20240116; t=1736855547; c=relaxed/simple;
+	bh=YOX/xU89auD/UKcd+tCqe6W35N4P31nROAtyQUh9/Is=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gCLZ3/ki2in0zFIcyc3MEc+kQEpbQUjbK34aAkF68Z0fdngdpjcwxxUk8XOINESzIRt1whjqfqCpBXu8pEcL1144jiu6t5j5pRi2UDPLHR9k4/KUHXYd0wv7qdv/J/Mfcr5OE7n0EdIAjsKAsQIURVBFpklmr7YtFIoQeJUdC20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxrnP2T4ZneiljAA--.8859S3;
+	Tue, 14 Jan 2025 19:52:22 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBxReT0T4Zn2gUiAA--.2756S3;
+	Tue, 14 Jan 2025 19:52:21 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] drm/amd/display: Add ASSERT_BUG() macro definition
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20250114061507.30765-1-yangtiezhu@loongson.cn>
+ <20250114061557.31120-1-yangtiezhu@loongson.cn>
+ <CAAhV-H56-xQm5XnS7M4weHj29Z_bB8ZBiF_H4fd+eGe6g+naow@mail.gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Nathan Chancellor <nathan@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, llvm@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <1d34d05c-d408-4ee3-c385-f9367b7c3be5@loongson.cn>
+Date: Tue, 14 Jan 2025 19:52:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H56-xQm5XnS7M4weHj29Z_bB8ZBiF_H4fd+eGe6g+naow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxReT0T4Zn2gUiAA--.2756S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7GF4UZw4xKw47WFyrGF15GFX_yoW8JrWfpw
+	48GFyqka1DJa17KwnxKa15Xry3G3ykGFW8G34rW3s0yFyDZ39xGFn8CF4UGFW8uFW2k3WS
+	qasaq39xWF4qyrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7189UUUUU=
 
-On Tue, 2025-01-14 at 11:17 +0100, Arnd Bergmann wrote:
-> On Tue, Jan 14, 2025, at 10:55, Qunqin Zhao wrote:
-> > Loongson Secure Device Function device supports the functions specified
-> > in "GB/T 36322-2018". This driver is only responsible for sending user
-> > data to SDF devices or returning SDF device data to users.
->=20
-> I haven't been able to find a public version of the standard
+On 01/14/2025 04:29 PM, Huacai Chen wrote:
+> Hi, Tiezhu,
+>
+> On Tue, Jan 14, 2025 at 2:16 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> In order to keep the current ability for the aim of debugging and avoid
+>> printing the warning message twice, add ASSERT_BUG() macro definition to
+>> harden the callers of division functions.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  drivers/gpu/drm/amd/display/dc/os_types.h | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/dc/os_types.h b/drivers/gpu/drm/amd/display/dc/os_types.h
+>> index f2ba76c1e0c0..932bbe05ee0a 100644
+>> --- a/drivers/gpu/drm/amd/display/dc/os_types.h
+>> +++ b/drivers/gpu/drm/amd/display/dc/os_types.h
+>> @@ -79,6 +79,11 @@
+>>                         dc_breakpoint();        \
+>>         } while (0)
+>>
+>> +#define ASSERT_BUG(expr) do {                  \
+>> +               dc_breakpoint();                \
+>> +               BUG_ON(!(expr));                \
+>> +       } while (0)
+> I don't think this is correct, if KGDB is enabled, then whether expr
+> is true or false, ASSERT_BUG() will break to KGDB.
 
-A public copy is available at
-https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=3D69E793FE1769D120C82F78=
-447802E14F,
-pressing the blue "online preview" button, enter a captcha and you can
-see it.  But the copy is in Chinese, and there's an explicit notice
-saying translating this copy is forbidden, so I cannot translate it for
-you either.
+It should check expr first, something like this:
 
-> but
-> from the table of contents it sounds like this is a standard for
-> cryptographic functions that would otherwise be implemented by a
-> driver in drivers/crypto/ so it can use the normal abstractions
-> for both userspace and in-kernel users.
->=20
-> Is there some reason this doesn't work?
+#define ASSERT_BUG(expr) do {                   \
+                 if (!(expr)) {                  \
+                         dc_breakpoint();        \
+                         BUG();                  \
+                 }                               \
+         } while (0)
 
-I'm not an lawyer but I guess contributing code for that may have some
-"cryptography code export rule compliance" issue.
+I will send v4 later.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thanks,
+Tiezhu
+
