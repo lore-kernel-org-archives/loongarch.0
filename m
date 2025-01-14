@@ -1,136 +1,164 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBD5223244B;
-	Tue, 14 Jan 2025 13:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FD914B955
+	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 14:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736861454; cv=none; b=q0vD9sKTIaXrOBPdrFu8xBAgSapbUIH+6QUy4Rt+DDt9SbQfmiokdQ/2SkPkhZviPuNm5pBMrVpY7hzeWKynXFL8YhtZa749OaGNzoYTUSKYzLAhZOVT5Aql0Mww9UUhuhu5ZTwGFHMbk3xMPWK7v46MHakS3ocdSYAqKFOI4AU=
+	t=1736866075; cv=none; b=tg+JS4duXFCpz1Ig84jwiNPqhpVZ57oQJHs9ee+pWQBhb4806wR0fHZN3vARgjvxY0Q4q+IAR5fSfQ8b26qbdzWXdfQ2XrKwiVl5LyyYPPEgSm8UCj/VAB8NqXRtcc2HTbYpRGKdMETTfwICTiJySQwcBtJwgVPRXYOhuIDZZkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736861454; c=relaxed/simple;
-	bh=7hnfsE41/2Gp2qzS6i+3qD6GwwaLceZuAZXi6PsflqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a/BC/7r518rP0JK4hHsKjJ0ZizjeQv+URv3hG+TuhplN7WrXQedyQl5HAoayoYTTabiGDMSa6n9EzXldcHwv7BGFOfrdfPnYbDMmDOKmIKa1hMpIYLz7D6vTGw0KhZde9hNjeteDZ6Zp17qM+m4lQoAekX2slW4PvlOhJUjydfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxaeAJZ4ZnAT1jAA--.42768S3;
-	Tue, 14 Jan 2025 21:30:49 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxfccGZ4ZnEiYiAA--.3726S2;
-	Tue, 14 Jan 2025 21:30:46 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	loongarch@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] drm/amd/display: Harden callers of division functions
-Date: Tue, 14 Jan 2025 21:30:35 +0800
-Message-ID: <20250114133035.20178-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250114132856.19463-1-yangtiezhu@loongson.cn>
-References: <20250114132856.19463-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1736866075; c=relaxed/simple;
+	bh=n0gFWavEdTvtzvVwm6qJrQDd/tgnPw11Y8Zbx+7YwaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nLAoATvbUOlv5x/J8uj3Qz57funbH8eDVp00LzmRCUHRflgglEGzQL+49rkiIPwi3MMzmQ5TUsmE9nrjbc3dnSqAysFQyzhnwTZxllZhdd0NN0CuuRhnS2rO6EjV1yAvF88bEfVVkgxxZ0u9+Cr7mvO0h4TIn/RWrhMQ4iZeoII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FJrsdTlx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJrsdTlx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736866072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
+	b=FJrsdTlx0m09HglrQCvCjXY/2HJq8wVIskfR0aKimZxSZIezfCucF9IotSYlV2kpHuTCWg
+	T6hehJaKrH8mv4fPdslj9tLlfjYatM8L6aVvlvtWqg1aQf9JOFq5qYYH0XjMuVpKfu+pK4
+	G40/36Db1C1P6SgE0PSUFcdBU87KogU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-46-Vfe5iCbFM5iB8ligA6B7uA-1; Tue, 14 Jan 2025 09:47:51 -0500
+X-MC-Unique: Vfe5iCbFM5iB8ligA6B7uA-1
+X-Mimecast-MFC-AGG-ID: Vfe5iCbFM5iB8ligA6B7uA
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4362f893bfaso30509835e9.1
+        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 06:47:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736866070; x=1737470870;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
+        b=MMlDGqJRnuEEK2YNl4dZWtvuxi7URXw0jSQl6sclBcBVxzQkyA9N4WeMlrbEBJQWZr
+         ksRBc5JleDVYuxE0RnxDrE2NwhYAutuuy+7Sk9x52CsAXvnqGxTpHBym8pwlDN5Wm8GB
+         FEEbalPwTFTUGlq7gdRntrIizVv9vYmcbLsH7+W/yce/gRrtaFSHsVkX4dWm/bMq/5Oy
+         SpoUk3gF5FzJB+3wBSUXoNCngH6C5ZVupGctEzvrXrrzpktscx6+hhZE30nYr/tZZ1J9
+         4Ir7dD7MugFP8r+5NwHfGiZZKWjwnoAiONmILHy0gOJ4C0mJOyezHxnZQBSZKiBVPuvc
+         faFw==
+X-Forwarded-Encrypted: i=1; AJvYcCV22EBs+aYpN8SCq6M2RNQ7tKPVMBv47xfLyCeHa3MYGE0B/yTZj1ly/TthD+Zl3MtH5ltAigEDeKg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzxNAd7FSzpLNAaRYF8sBQcW5w49e1jCzqjrKD2iTmcIXa5Lwgn
+	IRjQy/N6+gPXzoeeiJ4/ORYH1OMNC3I1OXxTzkJpOY6EFJHFRJAyIndELi6WouKJ24lRauJARRA
+	IIXX0hJfgKo7wA8guMsLmRLo4qLH1/qxMgl8+Geg7OCBJda6jVbIUYhF4TA==
+X-Gm-Gg: ASbGncscVisUyIR2FXWu4FLwD64J0ByMaIYz5yRg9RSRpU7rCtG1dYVbdiXs723rr4B
+	szFgaoznaI81w7wjg10bdOFRYg9Ie0oK7WaEBp6QIIPXc/nch35/IDSRtfb6PU2d/Q8RCt6hqJA
+	JjtuoFJwScFx5RGtjaY4KiX2da0WraWYgaB6u6w1xpBkDxNAP1z28qmfvDHlKECgfmxAYYwy4Iz
+	j4bufMhR5rZo2/o62EgHYPCrg60s0LribFa19NS6OlcYAh9mdZ1bgy4hj3uLLWQPeEsGtNcKTlv
+	UTeYG6kmDEy2EZQnnqxfV0C/fY6GE4Z/xDlPMrFbGa6RMg7DBFzFh2yEYhpegBWj6+fJ2xZtbLC
+	90Qtxhawj
+X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219460485e9.3.1736866068914;
+        Tue, 14 Jan 2025 06:47:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEENnT/QV/z/XX4uFBevKHkPxg7NffS9Usi3CNGFfMDEfqLcKcxnlPQgZ2KD/ykp7GZk9Grug==
+X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219459495e9.3.1736866067102;
+        Tue, 14 Jan 2025 06:47:47 -0800 (PST)
+Received: from ?IPV6:2003:cb:c738:3100:8133:26cf:7877:94aa? (p200300cbc7383100813326cf787794aa.dip0.t-ipconnect.de. [2003:cb:c738:3100:8133:26cf:7877:94aa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1967sm14681312f8f.86.2025.01.14.06.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2025 06:47:45 -0800 (PST)
+Message-ID: <f696d28c-c3a8-4500-98da-4ddcaa0db41f@redhat.com>
+Date: Tue, 14 Jan 2025 15:47:44 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxfccGZ4ZnEiYiAA--.3726S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWry8uF1ktw1UJFWUCFWUJrc_yoW5GF4fpa
-	13GFyUXryDZFZ2yFZ7C3W7WFZxAa93JF4v9F43Cws5u347Zan8urZ3J3Z5Gr429rWIyF4a
-	vFs8GrWjqF1vyrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8qXdUUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/26] fs/dax: Remove PAGE_MAPPING_DAX_SHARED mapping
+ flag
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
+ gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+ jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
+ mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+ linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
+ hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: K-Y-Gmr8jOy3m-1PBpXZdtS7kfx5hRnms4lTAUv7O1Y_1736866070
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There are objtool warnings compiled with the latest mainline LLVM:
+On 10.01.25 07:00, Alistair Popple wrote:
+> PAGE_MAPPING_DAX_SHARED is the same as PAGE_MAPPING_ANON. This isn't
+> currently a problem because FS DAX pages are treated
+> specially. However a future change will make FS DAX pages more like
+> normal pages, so folio_test_anon() must not return true for a FS DAX
+> page.
 
-  dc_fixpt_recip() falls through to next function dc_fixpt_sinc()
-  spl_fixpt_recip() falls through to next function spl_fixpt_sinc()
+Yes, very nice to see PAGE_MAPPING_DAX_SHARED go!
 
-Here are the call paths:
-
-  dc_fixpt_recip()
-    dc_fixpt_from_fraction()
-      complete_integer_division_u64()
-        div64_u64_rem()
-
-  spl_fixpt_recip()
-    spl_fixpt_from_fraction()
-      spl_complete_integer_division_u64()
-        spl_div64_u64_rem()
-
-This was introduced by a change in Clang from a few months:
-
-  [SimplifyCFG] Deduce paths unreachable if they cause div/rem UB)
-  https://github.com/llvm/llvm-project/commit/37932643abab
-
-The current ASSERT() and SPL_ASSERT() do not do anything to prevent
-the divide by zero and the rest of the code does not either, this
-is the root cause.
-
-The callers of division functions should be hardened against dividing
-by zero to avoid undefined behavior, so use the new added ASSERT_BUG()
-and SPL_ASSERT_BUG() to stop the control flow if the divisior is zero.
-
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Suggested-by: Xi Ruoyao <xry111@xry111.site>
-Suggested-by: Rui Wang <wangrui@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Link: https://lore.kernel.org/lkml/20241220223403.GA2605890@ax162/
----
- drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  | 2 +-
- drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-index 88d3f9d7dd55..f78c6702bc42 100644
---- a/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c
-@@ -51,7 +51,7 @@ static inline unsigned long long complete_integer_division_u64(
- {
- 	unsigned long long result;
- 
--	ASSERT(divisor);
-+	ASSERT_BUG(divisor);
- 
- 	result = div64_u64_rem(dividend, divisor, remainder);
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-index 131f1e3949d3..b3e6840e4715 100644
---- a/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-+++ b/drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c
-@@ -29,7 +29,7 @@ static inline unsigned long long spl_complete_integer_division_u64(
- {
- 	unsigned long long result;
- 
--	SPL_ASSERT(divisor);
-+	SPL_ASSERT_BUG(divisor);
- 
- 	result = spl_div64_u64_rem(dividend, divisor, remainder);
- 
 -- 
-2.42.0
+Cheers,
+
+David / dhildenb
 
