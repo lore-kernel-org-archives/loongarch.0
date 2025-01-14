@@ -1,110 +1,119 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E49234D1C;
-	Tue, 14 Jan 2025 11:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B2D236A85
+	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 12:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736855547; cv=none; b=fZg8lO85DX31nbk4x+mVI/OGRCQEVAaiIMSpDKCc1fwn+ubOn9GhPGu0I84qV47187NtiwzQxOJEub5Yk4FM7WD2xgx0SD+vb7Vp5svZ1KQZ/2Gfc9duf3Js7D9x7nLRGbQ22uzBbJROXjlRyvzsgciVYS79jzuS7/5e/pn7DBc=
+	t=1736859201; cv=none; b=TadaZj3leSmUqUZWSgsFCc/IXpzEhKZbmw6UzfdJLRLiO4AAAXeqoE3qVIYjuEh4eBAA3HvqMPGSvJQtRkl3+9HmIawiTMMSDJpMry6HR+XE6LD7LGLWq4VKPM4oY2neNWUHSrUUWSxEcbGYWpPhYnv3a5ysDUW5Z33accH6+lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736855547; c=relaxed/simple;
-	bh=YOX/xU89auD/UKcd+tCqe6W35N4P31nROAtyQUh9/Is=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gCLZ3/ki2in0zFIcyc3MEc+kQEpbQUjbK34aAkF68Z0fdngdpjcwxxUk8XOINESzIRt1whjqfqCpBXu8pEcL1144jiu6t5j5pRi2UDPLHR9k4/KUHXYd0wv7qdv/J/Mfcr5OE7n0EdIAjsKAsQIURVBFpklmr7YtFIoQeJUdC20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxrnP2T4ZneiljAA--.8859S3;
-	Tue, 14 Jan 2025 19:52:22 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxReT0T4Zn2gUiAA--.2756S3;
-	Tue, 14 Jan 2025 19:52:21 +0800 (CST)
-Subject: Re: [PATCH v3 1/3] drm/amd/display: Add ASSERT_BUG() macro definition
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <20250114061507.30765-1-yangtiezhu@loongson.cn>
- <20250114061557.31120-1-yangtiezhu@loongson.cn>
- <CAAhV-H56-xQm5XnS7M4weHj29Z_bB8ZBiF_H4fd+eGe6g+naow@mail.gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>,
- Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Nathan Chancellor <nathan@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, llvm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1d34d05c-d408-4ee3-c385-f9367b7c3be5@loongson.cn>
-Date: Tue, 14 Jan 2025 19:52:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1736859201; c=relaxed/simple;
+	bh=c4/hILBrFjjcIwY2WJ+4Y19FRIoTpjKzIsfIQB+t6GA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C6iMSQPSkZb7OrTih4CYtV++jhVJi5tQ6oVx8VDR4ZtuRuvhnZc1p+38dK9o8Q+Ls16bQx88JV83gaICzHqWpMfMTJ4yE0/xm9yWBUSgskwvqS7+d+Cv1rqw4BIdpKCVkfDnBsLqtXSNeQEqjaLjX9nW0ILLb3zNtgPrULho4QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1gTaFrD; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1gTaFrD"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so7691180a12.2
+        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 04:53:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736859195; x=1737463995; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=58YRhhAWOxecN/NnS0PaSbopKQHlTjf7bl863HnP150=;
+        b=b1gTaFrDBN5JcoG9S9+brWr1iZ2BoFGUVEWQShQcp4LnRVJiOq2MWrPSoGN9cfGPXD
+         A/0NQVoKOJzScfQq7QbsItA0QieLP40rKf0K8lV+xTdQDGcIQuh/MyuUTyvy5aTgxtL7
+         BYUeTAtL4B8CHb0Cfa/RTFmPtTJZHP3/ZCoMgR1oqEiTqVwBVzpXPNqlre889vXQ2O5l
+         nyEA8GdHBU6lYziSJg2cNH64+3fuh3L0E93KsKPn9EK2+Fy7MXfIuKN2arKjh0RceAdG
+         I2FJ9jchwmIUePJ3g9qNkA3t3ePnJNXxsCH50pbrm4bhL3IBD0DhngQvevhnzvF5jHYt
+         M+Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736859195; x=1737463995;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=58YRhhAWOxecN/NnS0PaSbopKQHlTjf7bl863HnP150=;
+        b=M/Vyn3+7463q3etBQufcDWu758/ZYUIJwrId7Vn9PDLEAbOqCFBobzEGzFG6sV4pE7
+         /JdzWS/lYr9dtg6j0QVIBpUlSlpZ8Dv9yx8BTQgjv6Hm1Bhv/DdExvR9PHFzBvSP1lkk
+         iBBdteUsOHS50zGEcuKjglKyzW7jM9q1OF7BZszZdI7nZroQUyDiO2byixeZZUSHp7rV
+         zbC5/424WAGYeYTsCy9SFRS2kOpxOmecUlb3/zK6T1QX2/PhJT+UKvIsVngCTlBmZmqN
+         R7XMXHejeBpKX5D3znDUh/nPiJVHi6Jdd1RsfUYRK17Fc6BCXR7Wn6NZQpXNz9Oz2+Wl
+         76HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXs3cvm5QloCcyLanK5un+uCHMbZafEQ52I+/6eiPduOyW5UP48/ejQeRQPqx2DzHqQAUmef9rAzc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNBRdMfTWMJuYatizvVTArYORKetBx0D2E4R/u0o/kYadVCpWz
+	KWEvw++F6qPniikdGJCXSo6OqQMo5x5cgbdr+8gpTr/YvYIg41VAkranRHA/pRriGV8GBI2D4A3
+	VUl5Sm6KItTf15C9w87KYJwU1SDs=
+X-Gm-Gg: ASbGncuBI1Ehg718Vcx25xVgzts39FnWIXt1T2wTLKZm4AqOiEh96GBXRNPkX2cTBNq
+	ww81RktLWQSiG239i39MOEA2GAbeP04PaG6PJ
+X-Google-Smtp-Source: AGHT+IFAeT9rGs81+ma7oWrKwp7nETfmX0fYNUxmNBFROFMZRbXo6MVJ9ClUknjW12+94gVEobaY+33Njkg+dB2ZDoE=
+X-Received: by 2002:a05:6402:530f:b0:5d1:2377:5af3 with SMTP id
+ 4fb4d7f45d1cf-5d972e00027mr56882740a12.5.1736859194633; Tue, 14 Jan 2025
+ 04:53:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H56-xQm5XnS7M4weHj29Z_bB8ZBiF_H4fd+eGe6g+naow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxReT0T4Zn2gUiAA--.2756S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7GF4UZw4xKw47WFyrGF15GFX_yoW8JrWfpw
-	48GFyqka1DJa17KwnxKa15Xry3G3ykGFW8G34rW3s0yFyDZ39xGFn8CF4UGFW8uFW2k3WS
-	qasaq39xWF4qyrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7189UUUUU=
+References: <20250109113004.2473331-1-zhoubinbin@loongson.cn> <ba25dfc40e9ae91205d61c838e368490.sboyd@kernel.org>
+In-Reply-To: <ba25dfc40e9ae91205d61c838e368490.sboyd@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 14 Jan 2025 20:53:02 +0800
+X-Gm-Features: AbW1kva3LJGk4s8ei_nQCIk6VVREFoQwacKX90JhAswxvfIX_CoApACaTyLPiaE
+Message-ID: <CAMpQs4JixuJOQyK1wXBX+Y_j27Cng0wBiX3NBpHmD_7byUtzmA@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: clk-loongson2: Fix the number count of clk provider
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Michael Turquette <mturquette@baylibre.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, stable@vger.kernel.org, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/14/2025 04:29 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
+On Tue, Jan 14, 2025 at 2:50=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
+te:
 >
-> On Tue, Jan 14, 2025 at 2:16 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> In order to keep the current ability for the aim of debugging and avoid
->> printing the warning message twice, add ASSERT_BUG() macro definition to
->> harden the callers of division functions.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  drivers/gpu/drm/amd/display/dc/os_types.h | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/amd/display/dc/os_types.h b/drivers/gpu/drm/amd/display/dc/os_types.h
->> index f2ba76c1e0c0..932bbe05ee0a 100644
->> --- a/drivers/gpu/drm/amd/display/dc/os_types.h
->> +++ b/drivers/gpu/drm/amd/display/dc/os_types.h
->> @@ -79,6 +79,11 @@
->>                         dc_breakpoint();        \
->>         } while (0)
->>
->> +#define ASSERT_BUG(expr) do {                  \
->> +               dc_breakpoint();                \
->> +               BUG_ON(!(expr));                \
->> +       } while (0)
-> I don't think this is correct, if KGDB is enabled, then whether expr
-> is true or false, ASSERT_BUG() will break to KGDB.
+> Quoting Binbin Zhou (2025-01-09 03:30:04)
+> > diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+> > index 6bf51d5a49a1..9c240a2308f5 100644
+> > --- a/drivers/clk/clk-loongson2.c
+> > +++ b/drivers/clk/clk-loongson2.c
+> > @@ -294,7 +294,7 @@ static int loongson2_clk_probe(struct platform_devi=
+ce *pdev)
+> >                 return -EINVAL;
+> >
+> >         for (p =3D data; p->name; p++)
+> > -               clks_num++;
+> > +               clks_num =3D max(clks_num, p->id + 1);
+> >
+> >         clp =3D devm_kzalloc(dev, struct_size(clp, clk_data.hws, clks_n=
+um),
+> >                            GFP_KERNEL);
+> > @@ -309,6 +309,9 @@ static int loongson2_clk_probe(struct platform_devi=
+ce *pdev)
+> >         clp->clk_data.num =3D clks_num;
+> >         clp->dev =3D dev;
+> >
+> > +       /* Avoid returning NULL for unused id */
+> > +       memset_p((void **)&clp->clk_data.hws, ERR_PTR(-ENOENT), clks_nu=
+m);
+>
+> This looks wrong. It's already an array of pointers, i.e. the type is
+> 'struct clk_hw *[]' or 'struct clk_hw **' so we shouldn't need to take
+> the address of it. Should it be
+>
+>         memset_p((void **)clkp->clk_data.hws, ERR_PTR(-ENOENT), clks_num)=
+;
 
-It should check expr first, something like this:
+I'm very sorry, it was a cheap clerical error and I'll fix it right away.
+>
+> ? It's unfortunate that we have to cast here, but I guess this is the
+> best way we can indicate that the type should be an array of pointers.
 
-#define ASSERT_BUG(expr) do {                   \
-                 if (!(expr)) {                  \
-                         dc_breakpoint();        \
-                         BUG();                  \
-                 }                               \
-         } while (0)
-
-I will send v4 later.
-
-Thanks,
-Tiezhu
-
+--=20
+Thanks.
+Binbin
