@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FD914B955
-	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 14:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7081411C8
+	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 14:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736866075; cv=none; b=tg+JS4duXFCpz1Ig84jwiNPqhpVZ57oQJHs9ee+pWQBhb4806wR0fHZN3vARgjvxY0Q4q+IAR5fSfQ8b26qbdzWXdfQ2XrKwiVl5LyyYPPEgSm8UCj/VAB8NqXRtcc2HTbYpRGKdMETTfwICTiJySQwcBtJwgVPRXYOhuIDZZkw=
+	t=1736866278; cv=none; b=uXVwNYHBVfnzdfjswVOcTzddhhArIKYQRsFgkP5DJ4W6LwB+kgfcL68YHTAshfqU9g+yS+Kfqfxu3mqYUdRmiPVzv3fLR8lsHaz2cYkTmvC5QWNHes+eRG/MrhA8NOjysFfQ5946LH3pGyCnTbrFaDkAJEn9lBWS3hXGVdJa7xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736866075; c=relaxed/simple;
-	bh=n0gFWavEdTvtzvVwm6qJrQDd/tgnPw11Y8Zbx+7YwaM=;
+	s=arc-20240116; t=1736866278; c=relaxed/simple;
+	bh=JbOAtelmJcbWUE7Ixh33K3ATanb//ICHOjpdXdNz9mM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nLAoATvbUOlv5x/J8uj3Qz57funbH8eDVp00LzmRCUHRflgglEGzQL+49rkiIPwi3MMzmQ5TUsmE9nrjbc3dnSqAysFQyzhnwTZxllZhdd0NN0CuuRhnS2rO6EjV1yAvF88bEfVVkgxxZ0u9+Cr7mvO0h4TIn/RWrhMQ4iZeoII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FJrsdTlx; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=AbvxLFqIuv2SI7oRhc7/AqYXuvUbu5eJJ/+bx8RMWqZk8y01sMTPSSgzriaDmeXroSGrYVVn0oOYKHgHD9L6GUzVfEqCnRA/x2tXESlA+uOjrbGgaYbsAhoxDR5fLIH40bZ3bSgzmLjrDYt0sLBi6ccgk7LaBTJiGkpl9OCyitc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dWZoBIcx; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJrsdTlx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dWZoBIcx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736866072;
+	s=mimecast20190719; t=1736866274;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
-	b=FJrsdTlx0m09HglrQCvCjXY/2HJq8wVIskfR0aKimZxSZIezfCucF9IotSYlV2kpHuTCWg
-	T6hehJaKrH8mv4fPdslj9tLlfjYatM8L6aVvlvtWqg1aQf9JOFq5qYYH0XjMuVpKfu+pK4
-	G40/36Db1C1P6SgE0PSUFcdBU87KogU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=frCMXuewTKaMxoSv5HkrB79R79VgidnpZu3s0YCdJnw=;
+	b=dWZoBIcx0zJ92OM3plebfMSeLJq9TcAaFdKcaabvH0IIguIB5l9bG8jnU9/ue3Upza+tvp
+	tugMdrIAqB+c1ZrNcgHzNfbffxG0pXIgZ3SQfQPTsjmhFMqV5lgRLVuq7bqRF3wNWx4JDr
+	9nciOhTfrWQJUDpuPx12DSQtyHUGtA4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-46-Vfe5iCbFM5iB8ligA6B7uA-1; Tue, 14 Jan 2025 09:47:51 -0500
-X-MC-Unique: Vfe5iCbFM5iB8ligA6B7uA-1
-X-Mimecast-MFC-AGG-ID: Vfe5iCbFM5iB8ligA6B7uA
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4362f893bfaso30509835e9.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 06:47:51 -0800 (PST)
+ us-mta-191-qP9XMsEsPvilIkR9pCHcgA-1; Tue, 14 Jan 2025 09:51:13 -0500
+X-MC-Unique: qP9XMsEsPvilIkR9pCHcgA-1
+X-Mimecast-MFC-AGG-ID: qP9XMsEsPvilIkR9pCHcgA
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-385e00ebb16so2117517f8f.3
+        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 06:51:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736866070; x=1737470870;
+        d=1e100.net; s=20230601; t=1736866272; x=1737471072;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
-        b=MMlDGqJRnuEEK2YNl4dZWtvuxi7URXw0jSQl6sclBcBVxzQkyA9N4WeMlrbEBJQWZr
-         ksRBc5JleDVYuxE0RnxDrE2NwhYAutuuy+7Sk9x52CsAXvnqGxTpHBym8pwlDN5Wm8GB
-         FEEbalPwTFTUGlq7gdRntrIizVv9vYmcbLsH7+W/yce/gRrtaFSHsVkX4dWm/bMq/5Oy
-         SpoUk3gF5FzJB+3wBSUXoNCngH6C5ZVupGctEzvrXrrzpktscx6+hhZE30nYr/tZZ1J9
-         4Ir7dD7MugFP8r+5NwHfGiZZKWjwnoAiONmILHy0gOJ4C0mJOyezHxnZQBSZKiBVPuvc
-         faFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV22EBs+aYpN8SCq6M2RNQ7tKPVMBv47xfLyCeHa3MYGE0B/yTZj1ly/TthD+Zl3MtH5ltAigEDeKg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzxNAd7FSzpLNAaRYF8sBQcW5w49e1jCzqjrKD2iTmcIXa5Lwgn
-	IRjQy/N6+gPXzoeeiJ4/ORYH1OMNC3I1OXxTzkJpOY6EFJHFRJAyIndELi6WouKJ24lRauJARRA
-	IIXX0hJfgKo7wA8guMsLmRLo4qLH1/qxMgl8+Geg7OCBJda6jVbIUYhF4TA==
-X-Gm-Gg: ASbGncscVisUyIR2FXWu4FLwD64J0ByMaIYz5yRg9RSRpU7rCtG1dYVbdiXs723rr4B
-	szFgaoznaI81w7wjg10bdOFRYg9Ie0oK7WaEBp6QIIPXc/nch35/IDSRtfb6PU2d/Q8RCt6hqJA
-	JjtuoFJwScFx5RGtjaY4KiX2da0WraWYgaB6u6w1xpBkDxNAP1z28qmfvDHlKECgfmxAYYwy4Iz
-	j4bufMhR5rZo2/o62EgHYPCrg60s0LribFa19NS6OlcYAh9mdZ1bgy4hj3uLLWQPeEsGtNcKTlv
-	UTeYG6kmDEy2EZQnnqxfV0C/fY6GE4Z/xDlPMrFbGa6RMg7DBFzFh2yEYhpegBWj6+fJ2xZtbLC
-	90Qtxhawj
-X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219460485e9.3.1736866068914;
-        Tue, 14 Jan 2025 06:47:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEENnT/QV/z/XX4uFBevKHkPxg7NffS9Usi3CNGFfMDEfqLcKcxnlPQgZ2KD/ykp7GZk9Grug==
-X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219459495e9.3.1736866067102;
-        Tue, 14 Jan 2025 06:47:47 -0800 (PST)
+        bh=frCMXuewTKaMxoSv5HkrB79R79VgidnpZu3s0YCdJnw=;
+        b=U/i+7uSuni6R1XSsPsQsmXy9m6RbNBz8bjEKSuH7eu7djRfCDnG7relb3eaPqWyzOa
+         rz0hv6Ttoob1Ufk0CUtWXDLfcqvJ0gavLphoi6LwB/GF7383+hEEbDIERSBcWvxwSgOc
+         fX+waNP+1p3d7xfaNzFwLFi+0X3S2tmjlPEELxbQdM1hWY3O2KNGrOpmD2XKz0rWEJDv
+         OiTPYCAlQ7CKw4KtHdY8Favutsu4KT3oGEj4OXf63fxf5wGjShGuOYHu5OvOY4Sw67w3
+         waSSwOdhvydMy5cP8TKdtuPcPRC6H/eKQy1P/0Rw/D+zPvh+aJZ48aGRpa6c7UOAzy+z
+         DXhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWURFJrYVcU5S9ousf25t7VzDuakGYEypQb5MKtzaUO3JR2NA/KWOu5J/DUKTfqtP0XqcRJwWMnbd8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTPB9Wghrt1QIgKRFGb3mmaggxoLA3fXCsS/58LnMzR/VtSC5j
+	PLBj6F3zgRU+tpYRVgo3lWEgxQHjdGbtX4ChbeDhIH/S0u7OCcFBA2NLmYlydjc6fvkVDLzsYNB
+	X02yJeefss72M3NZFWF/2NRK9tEaMgCHaNV9Y56Ly1SxYWuD/3was3wZBgQ==
+X-Gm-Gg: ASbGncvFyQ1JSVOeFr2Ln+8cRvOr8PnqbGfOTvBwCLylWOgg1tgd0rYHzO08781dByk
+	X/33Bw/JIaGI5OBKuOhbxbRQIMvalIWU1bLxCgs+cEYwS6Npas+Zx1Gdul0GcHv5Nz1dRFgxyJj
+	Ja1kZgqP8AcwI5ROL8OhINqI4Fd0zTlQpqnEg3dkGsuofKcKWk/m+F14oII4Zie8UBDUbBzcIhb
+	BBeWWXna+M/SNwGa522Lrn4+wRIVXWZJtp4kbe63EKCz6w8my0udEIy2oeXtxC1fvgIoDxtcpFC
+	ZNtBG+1IoT6qVAa5iRhhzGjC9CNlOt8wmEWb5TjgafPNJIujUCOcGvA/hyGqWLKZfo1PrXN0QgR
+	iiIcSZPj5
+X-Received: by 2002:a05:6000:18a2:b0:382:49f9:74bb with SMTP id ffacd0b85a97d-38a872f3202mr24489627f8f.35.1736866272077;
+        Tue, 14 Jan 2025 06:51:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE7GJ1+W/uNTlLNM/+qMUx1r19EPlEDmBQ7z7UMM/B1+0DtBI15xOV7jFVV7enwVcHppl6EyQ==
+X-Received: by 2002:a05:6000:18a2:b0:382:49f9:74bb with SMTP id ffacd0b85a97d-38a872f3202mr24489568f8f.35.1736866271639;
+        Tue, 14 Jan 2025 06:51:11 -0800 (PST)
 Received: from ?IPV6:2003:cb:c738:3100:8133:26cf:7877:94aa? (p200300cbc7383100813326cf787794aa.dip0.t-ipconnect.de. [2003:cb:c738:3100:8133:26cf:7877:94aa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1967sm14681312f8f.86.2025.01.14.06.47.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c6dbsm15361588f8f.55.2025.01.14.06.51.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2025 06:47:45 -0800 (PST)
-Message-ID: <f696d28c-c3a8-4500-98da-4ddcaa0db41f@redhat.com>
-Date: Tue, 14 Jan 2025 15:47:44 +0100
+        Tue, 14 Jan 2025 06:51:11 -0800 (PST)
+Message-ID: <9be14739-82cc-42fb-bb38-a868231cdda6@redhat.com>
+Date: Tue, 14 Jan 2025 15:51:09 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 08/26] fs/dax: Remove PAGE_MAPPING_DAX_SHARED mapping
- flag
+Subject: Re: [PATCH v6 10/26] mm/mm_init: Move p2pdma page refcount
+ initialisation to p2pdma
 To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
  dan.j.williams@intel.com, linux-mm@kvack.org
 Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
@@ -93,7 +93,7 @@ Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
  hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
  loongarch@lists.linux.dev
 References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+ <4f3fa1bb9cf4402d6131d0902472d8e9bae52f88.1736488799.git-series.apopple@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -140,22 +140,49 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+In-Reply-To: <4f3fa1bb9cf4402d6131d0902472d8e9bae52f88.1736488799.git-series.apopple@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: K-Y-Gmr8jOy3m-1PBpXZdtS7kfx5hRnms4lTAUv7O1Y_1736866070
+X-Mimecast-MFC-PROC-ID: kSWWV3dxgpDla-LtyaIMSXVU3IrL_uYbcOpJiifDRBc_1736866272
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 10.01.25 07:00, Alistair Popple wrote:
-> PAGE_MAPPING_DAX_SHARED is the same as PAGE_MAPPING_ANON. This isn't
-> currently a problem because FS DAX pages are treated
-> specially. However a future change will make FS DAX pages more like
-> normal pages, so folio_test_anon() must not return true for a FS DAX
-> page.
+> Currently ZONE_DEVICE page reference counts are initialised by core
+> memory management code in __init_zone_device_page() as part of the
+> memremap() call which driver modules make to obtain ZONE_DEVICE
+> pages. This initialises page refcounts to 1 before returning them to
+> the driver.
+> 
+> This was presumably done because it drivers had a reference of sorts
+> on the page. It also ensured the page could always be mapped with
+> vm_insert_page() for example and would never get freed (ie. have a
+> zero refcount), freeing drivers of manipulating page reference counts.
+> 
+> However it complicates figuring out whether or not a page is free from
+> the mm perspective because it is no longer possible to just look at
+> the refcount. Instead the page type must be known and if GUP is used a
+> secondary pgmap reference is also sometimes needed.
+> 
+> To simplify this it is desirable to remove the page reference count
+> for the driver, so core mm can just use the refcount without having to
+> account for page type or do other types of tracking. This is possible
+> because drivers can always assume the page is valid as core kernel
+> will never offline or remove the struct page.
+> 
+> This means it is now up to drivers to initialise the page refcount as
+> required. P2PDMA uses vm_insert_page() to map the page, and that
+> requires a non-zero reference count when initialising the page so set
+> that when the page is first mapped.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
 
-Yes, very nice to see PAGE_MAPPING_DAX_SHARED go!
+LGTM
+
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
