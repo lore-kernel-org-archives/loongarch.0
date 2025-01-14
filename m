@@ -1,134 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14DF2500B4
-	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 08:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 762863DABE8
+	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 09:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736844024; cv=none; b=e0uT9i1XavFApE42CB8cafPws+0Msi1XUOgLFsoORwc3B/XB9HteH/q9xshwFG7E99snqeLmFvq4QLbax6dv8i0tGxeZaS2oUA/srsnPb3YOYoVgbsfmoMsbzzlG/oESAjQeAFVf/1wzfuDv1RPvKYXsnAQoP6+R64tVvS8PZjU=
+	t=1736848558; cv=none; b=uKFygJPviTMvjjJgT7nwE2kb6wa0H34Zw45JzyDMMtHSaKoG0RrSmoRSGmDJYFcCe9fE4Gt8FYh7QB4YPu7uqziMJd6bJYmY3m8D9A9zxDhYEsIHu415aJOfDg5sEjjA/IHlgeH6ROH64u94ekVZ1qeu88EuWcfoJslpo7+tYf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736844024; c=relaxed/simple;
-	bh=DZ9oOi5bm2IZgGdx0vZw9OiIJJcnUomT4Qpz04iKtgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPGvyeft2nfW5oS7X04vocPBxe6na/LHmN0gto88SeK/a2JPm9hmzgoHetZqirr4NiHSZdmfxXYxne5jVAkeXDIbXyOmbbIyKzzXuAc3GH3tQEbsaRXph1RXST1H9r9/Tg7pBs9YdH274QbsyPjIFxrZ+MfvqAarpblnu29xOLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hpYgILLP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mNLDwfdu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hpYgILLP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mNLDwfdu"
-Date: Tue, 14 Jan 2025 09:40:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1736844014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xO/nQTULVjGFS4TV539Ayp3ZWEmdmkrMeax/kxGzbA4=;
-	b=hpYgILLPXQ7SmDpUn60QinBCupBkKGG01dSa+3FTRxgCNWqRO6deM+5ajnF8F0Od2hJi0z
-	cpxkUWPEgYxlKuFJaMAU5lKMBOMsqCHOy8bQU1BqkIFPZmu3C6m9guZo5f5gQe7CgWfAgj
-	wXlrJ+vaLY79yRCYtXdOy7ekdepzM2+FdVeCX/9qEmHH9Disy0/cKsvFF+W1CBIVrlQCea
-	CdXCh/v5ERdvmGs43kWOXeLO4kjwv39L0SRYilloKSbhCM9dQG/0V+AKwY49Zz5COQvlml
-	dgkfNHCH4XX6YPAxAxjBf1Hw2izDtl+kF8Vz8wbVdA0kf1Oan0fsv7K9pzMvpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1736844014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xO/nQTULVjGFS4TV539Ayp3ZWEmdmkrMeax/kxGzbA4=;
-	b=mNLDwfduAqnNjlxAvy66A4s1VI9taFFzoR0Bjcd3QoK3m68hFryx0HiKPwHcCzZrImHOWD
-	IoGhvQiZnGydi4Aw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Conor Dooley <conor@kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>, linux-parisc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org, 
-	Nam Cao <namcao@linutronix.de>, linux-csky@vger.kernel.org
-Subject: Re: [PATCH v2 09/18] riscv: vdso: Switch to generic storage
- implementation
-Message-ID: <20250114093609-6cb25835-f912-4f64-9ba7-54c67d4e2904@linutronix.de>
-References: <20250110-vdso-store-rng-v2-0-350c9179bbf1@linutronix.de>
- <20250110-vdso-store-rng-v2-9-350c9179bbf1@linutronix.de>
- <20250113-kissable-monstrous-aace0cf7182e@spud>
+	s=arc-20240116; t=1736848558; c=relaxed/simple;
+	bh=vYZ+b7z3Rh+NAIqqyO0p1CDWWXienaA+n4UpToFEOhM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j/WinJPwvrWal5UgsRTSAzsht1qz7mccl+vQ6jTv/j4eFm7a32Z+uhAIYD9VbPiGmXgfiqoOmTbDeYryTmHzcr0EOHbBAjeWwrNQhPDehiSjU086M3Q8HNr19xtan/Rjly1Wi5h8Fk8IxdZBUG7hKFT686vMz2cQLzrRc9oBO/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8AxEK+oNIZn2R9jAA--.2861S3;
+	Tue, 14 Jan 2025 17:55:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMBxReSoNIZnct0hAA--.2343S2;
+	Tue, 14 Jan 2025 17:55:52 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org,
+	arnd@arndb.de,
+	derek.kiernan@amd.com,
+	dragan.cvetic@amd.com,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v1 0/3] Drivers for Loongson security engine
+Date: Tue, 14 Jan 2025 17:55:24 +0800
+Message-Id: <20250114095527.23722-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250113-kissable-monstrous-aace0cf7182e@spud>
+X-CM-TRANSID:qMiowMBxReSoNIZnct0hAA--.2343S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFWDGF17Cry3Zr43ur1fZrc_yoW8GFykpF
+	4FyryrCF4UJFZrGryfJry8GFyfXa4fXrW3KrW2qw1kX3sxAFykJrW3CFyUJFn7AFy7Jry2
+	gF95G3yUGF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On Mon, Jan 13, 2025 at 07:48:15PM +0000, Conor Dooley wrote:
-> On Fri, Jan 10, 2025 at 04:23:48PM +0100, Thomas Weiﬂschuh wrote:
-> > The generic storage implementation provides the same features as the
-> > custom one. However it can be shared between architectures, making
-> > maintenance easier.
-> > 
-> > Co-developed-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> 
-> For rv64, nommu:
->   LD      vmlinux
-> ld.lld: error: undefined symbol: vmf_insert_pfn
-> >>> referenced by datastore.c
-> >>>               lib/vdso/datastore.o:(vvar_fault) in archive vmlinux.a
-> 
-> ld.lld: error: undefined symbol: _install_special_mapping
-> >>> referenced by datastore.c
-> >>>               lib/vdso/datastore.o:(vdso_install_vvar_mapping) in archive vmlinux.a
-> 
-> Later patches in the series don't make it build again.
-> rv32 builds now though, so thanks for fixing that.
+Loongson SE supports random number generation, hash, symmetric encryption
+and asymmetric encryption. Based on these encryption functions, TPM2.0
+and SDF have been implemented in SE. SDF is the functions specified in
+"GB/T 36322-2018".
 
-Thanks for the report.
-Can you try to diff below?
+mfd is the baser driver, crypto and misc are users.
 
-I'm adding rv64 and arm nommu configs to my test matrix and
-doublechecking all kconfig dependencies.
+Qunqin Zhao (3):
+  mfd: Add support for Loongson Security Module
+  crypto: loongson - add Loongson RNG driver support
+  misc: ls6000se-sdf: Add driver for Loongson 6000SE SDF
+
+ MAINTAINERS                            |  14 +
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |   9 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/ls6000se.c                 | 373 +++++++++++++++++++++++++
+ drivers/misc/Kconfig                   |   9 +
+ drivers/misc/Makefile                  |   1 +
+ drivers/misc/ls6000se-sdf.c            | 123 ++++++++
+ include/linux/mfd/ls6000se.h           |  75 +++++
+ 13 files changed, 806 insertions(+)
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+ create mode 100644 drivers/mfd/ls6000se.c
+ create mode 100644 drivers/misc/ls6000se-sdf.c
+ create mode 100644 include/linux/mfd/ls6000se.h
 
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 335cbbd4dddb..583c55910612 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -52,7 +52,7 @@ config RISCV
-        select ARCH_HAS_SYSCALL_WRAPPER
-        select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-        select ARCH_HAS_UBSAN
--       select ARCH_HAS_VDSO_ARCH_DATA
-+       select ARCH_HAS_VDSO_ARCH_DATA if GENERIC_VDSO_DATA_STORE
-        select ARCH_KEEP_MEMBLOCK if ACPI
-        select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE if 64BIT && MMU
-        select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
-@@ -115,7 +115,7 @@ config RISCV
-        select GENERIC_SCHED_CLOCK
-        select GENERIC_SMP_IDLE_THREAD
-        select GENERIC_TIME_VSYSCALL if MMU && 64BIT
--       select GENERIC_VDSO_DATA_STORE
-+       select GENERIC_VDSO_DATA_STORE if MMU
-        select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
-        select HARDIRQS_SW_RESEND
-        select HAS_IOPORT if MMU
+base-commit: c2b148f3bc94b61e885dc8529d6b6136576bd865
+-- 
+2.43.0
+
