@@ -1,115 +1,133 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8193B1ADC9C
-	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 10:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D47A1D47B4;
+	Tue, 14 Jan 2025 10:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736849890; cv=none; b=ZXFl/wjS6OZUDlN9DzQ2+KDm2UhHXUIia+NHAJlxYAmWXZCRMFTpx/44xt3AEiZiZG7qawK4vX2PqQh0TWsEHvyDHv6R0aPDeCFdepa9JyelnDhsSsn4dy3lut03nhnxoBVjpJDMt7mWs3SJo5stM4pGqfV0mdCRl39ULFlzTCY=
+	t=1736850845; cv=none; b=TUOb1GXeafX3qljifWGD73m/wdUokJ188rHbMWdcVF8NWW2qWRwOk+XhiyQ30dCSQoadX3Wjhww6Uo58QouZCpsibHUMfp/0IvxdqB+wtwnFhgxrZ6T8SUx0PEe8A1lfC9pGqgh5IOaigXobLR47gkhfXz+ZWkz05ObimLeqULo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736849890; c=relaxed/simple;
-	bh=e/YZ7TSBPpc2KI8mUPLyvdnoN/SsoLZoUY3MifIJxlI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pWqYpHrcPLsNCyJr9jDmmPuUZgUv15ov3cjFhaH9H7x6XRRodceE6vcydufWvDMFCQqT98bzxjUe0Xpey1eeD73p6e16YZ8GLa9svCGJjDg/JvkSjdgDT1KuDeA7MnR6cFV130PKujsP0Km7SMkqAP2E3krn++KgI9ftvsCToq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=1rTAHHFo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P1OJXwFH; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1736850845; c=relaxed/simple;
+	bh=PPBTXcmZ9FTKLOavDTSaaCxS+I83L8XKDLxpo1k4qF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDITmQRZk0j1ZoL1te8W1k1LUUa/sekHDnbfFE9NDXA8rySc8WaPBlrqOHJ9gO5KH9hs4dUx8MjhdOTZ2LWKMfqrzRwW0A+djVVuHuwo6rzje9QHu354eYH0yKfrAbrKSWfRtkY2DKUo3rdfRnSUUUmOPeoYFMUIHzBHE/Zoyyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxTH1TVO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="1rTAHHFo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P1OJXwFH"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 6AC5725401D2;
-	Tue, 14 Jan 2025 05:18:07 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 14 Jan 2025 05:18:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1736849887;
-	 x=1736936287; bh=RrPOcy24DWtUriH9/ruiRC8wuZz2cuney9hk5PPUmE8=; b=
-	1rTAHHFo2fZsb+zXDv+W6f+tKcbsm7LbfC0PU6a5nHi5/hxurp9q32uM43xCReN8
-	II/CSrfeacYZQDh446Gwg72fHGt9Nit8mmQSMFXfGjHZJ8bVBwylbuawxHzxohOQ
-	SQGcjzlZQqQ8cawL1Xiv6y6y28xoZdAwY2p4Sl5sgannoYD5ghzIMaX0KzlRCKcK
-	Ziz/eUw3Rilx6H5ByRjqVdlBbqnZ4b7xZioUJCy6IfJEUXwsD8W69xcW71juMvQM
-	1B/pmGL9R/HbFFVvBeg9WbKG0jm6d5oFulirw5ZYqBlXARq0uRmt7+zFriug2onK
-	hb5zd9uVZUE2iAsQAy42Pg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736849887; x=
-	1736936287; bh=RrPOcy24DWtUriH9/ruiRC8wuZz2cuney9hk5PPUmE8=; b=P
-	1OJXwFHZXZ8jHqIVxv2YGOxt1ACfPCqwpEVoByC8KQQ95MiXbcplA4WAZNcRgbcS
-	jtSh/GZegGjCP6+WMOsfuGauB1o9Rt7HbTGCaV3nSHifM8bzUJk5KJBzYATEgUE3
-	V0WpLndCf5uZ1ZHinWG+v+hzrQdM7qBbNNwOtEitemLHboA4LXWev3v32ScIuV+4
-	iwq8HXRiCmJB/EAU8hcpjWRN7kzjayveVb9WPHhsuYiF6QiTCZiD6sBdu0eRfA45
-	SSlfy41NAx3+s0fkszTqfgsOAJLnr6UGAuREQvEU8S2fsW5VDOHgGv6SIjcu4JsB
-	51Q8hBZF7zT01ADmpruHQ==
-X-ME-Sender: <xms:3TmGZ6Dw3DPEzKo10PMlFFkfG6iUb6IvO_hLA2A4iypi5RC-Mx_8WA>
-    <xme:3TmGZ0hQuHDdwFM9braoWxBVIywRMILwtN5yJjLngUnvwhZgBPH8A1V1EVW_RQT1b
-    fJvTyenA_0V_Wv86bI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehiedgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddu
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrghnse
-    grmhgurdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtgho
-    mhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoh
-    ephhgvrhgsvghrthesghhonhguohhrrdgrphgrnhgrrdhorhhgrdgruhdprhgtphhtthho
-    pehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugi
-    hfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlohhonhhgrghrtghhsehlihhs
-    thhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepghhuhihinhhgghgrnhhgsehlohhonh
-    hgshhonhdrtghnpdhrtghpthhtohepiihhrghoqhhunhhqihhnsehlohhonhhgshhonhdr
-    tghn
-X-ME-Proxy: <xmx:3TmGZ9k2WwBeZOtTgnkZhRiH38jquJl8591Pt9bAbR945r7r46ta5A>
-    <xmx:3TmGZ4y8DB2cafmwuQnOM_VZn1N0_ly7eRaexDHt8aZbFSiiSfsn7A>
-    <xmx:3TmGZ_TTJUV7ckr9Q2ZeKtQsMALDZiMU-hQn8Bp-KwGyoikpxmU96g>
-    <xmx:3TmGZzYTX-vJEINKceHCnOp7gQnX0UKxpbbrhYr4j3ZyeZZDDfsbsw>
-    <xmx:3zmGZ0JLOfUxtnyHRBp7MKJv49vyrNIb96pN1h6GKRnIfvghMg1CAmQD>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DBF702220074; Tue, 14 Jan 2025 05:18:05 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxTH1TVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 310DFC4CEE0;
+	Tue, 14 Jan 2025 10:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736850844;
+	bh=PPBTXcmZ9FTKLOavDTSaaCxS+I83L8XKDLxpo1k4qF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AxTH1TVOByRyemy5vzP15NHxHuJlYlyl1hQLGDalk4R7LH2WyA/2gx/XtNbKHP6IE
+	 BdijOVzI31N04UC33BwkWxuWMPpjOqJk4YPBcZWpHmsEzVSlAn6n8H3SvPSKjRt4Km
+	 MmpAYcYGmR2n+9td9dyxGX+GBgzUR73o9ZemtBsDbfqnix+wupk/YAt26zv5Z/Nt2Q
+	 YW8X2WGphjiIh5L1lDgafPSMz5AIFm6Q1aPh8ln+BKEZNUtlb11WMWugcnXi6M0GO3
+	 AVtW7Uph3adO04TefpnPeJyGrUuc2ovvVgVBTVrDhbVONzJzNVIc1qvOPiQR3KVK67
+	 Hr4Mh5R5VIq3w==
+Date: Tue, 14 Jan 2025 10:33:53 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Guo Ren <guoren@kernel.org>, linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+	Nam Cao <namcao@linutronix.de>, linux-csky@vger.kernel.org
+Subject: Re: [PATCH v2 09/18] riscv: vdso: Switch to generic storage
+ implementation
+Message-ID: <20250114-lustily-nuttiness-3bb7646515d5@spud>
+References: <20250110-vdso-store-rng-v2-0-350c9179bbf1@linutronix.de>
+ <20250110-vdso-store-rng-v2-9-350c9179bbf1@linutronix.de>
+ <20250113-kissable-monstrous-aace0cf7182e@spud>
+ <20250114093609-6cb25835-f912-4f64-9ba7-54c67d4e2904@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 14 Jan 2025 11:17:45 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Qunqin Zhao" <zhaoqunqin@loongson.cn>, "Lee Jones" <lee@kernel.org>,
- "Herbert Xu" <herbert@gondor.apana.org.au>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- "David S . Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Yinggang Gu" <guyinggang@loongson.cn>
-Message-Id: <ee65851c-4149-4927-a2e7-356cdce2ba25@app.fastmail.com>
-In-Reply-To: <20250114095527.23722-4-zhaoqunqin@loongson.cn>
-References: <20250114095527.23722-1-zhaoqunqin@loongson.cn>
- <20250114095527.23722-4-zhaoqunqin@loongson.cn>
-Subject: Re: [PATCH v1 3/3] misc: ls6000se-sdf: Add driver for Loongson 6000SE SDF
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jwGvJ1ZaVXfjr5LT"
+Content-Disposition: inline
+In-Reply-To: <20250114093609-6cb25835-f912-4f64-9ba7-54c67d4e2904@linutronix.de>
 
-On Tue, Jan 14, 2025, at 10:55, Qunqin Zhao wrote:
-> Loongson Secure Device Function device supports the functions specified
-> in "GB/T 36322-2018". This driver is only responsible for sending user
-> data to SDF devices or returning SDF device data to users.
 
-I haven't been able to find a public version of the standard, but
-from the table of contents it sounds like this is a standard for
-cryptographic functions that would otherwise be implemented by a
-driver in drivers/crypto/ so it can use the normal abstractions
-for both userspace and in-kernel users.
+--jwGvJ1ZaVXfjr5LT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is there some reason this doesn't work?
+On Tue, Jan 14, 2025 at 09:40:11AM +0100, Thomas Wei=DFschuh wrote:
+> On Mon, Jan 13, 2025 at 07:48:15PM +0000, Conor Dooley wrote:
+> > On Fri, Jan 10, 2025 at 04:23:48PM +0100, Thomas Wei=DFschuh wrote:
+> > > The generic storage implementation provides the same features as the
+> > > custom one. However it can be shared between architectures, making
+> > > maintenance easier.
+> > >=20
+> > > Co-developed-by: Nam Cao <namcao@linutronix.de>
+> > > Signed-off-by: Nam Cao <namcao@linutronix.de>
+> > > Signed-off-by: Thomas Wei=DFschuh <thomas.weissschuh@linutronix.de>
+> >=20
+> > For rv64, nommu:
+> >   LD      vmlinux
+> > ld.lld: error: undefined symbol: vmf_insert_pfn
+> > >>> referenced by datastore.c
+> > >>>               lib/vdso/datastore.o:(vvar_fault) in archive vmlinux.a
+> >=20
+> > ld.lld: error: undefined symbol: _install_special_mapping
+> > >>> referenced by datastore.c
+> > >>>               lib/vdso/datastore.o:(vdso_install_vvar_mapping) in a=
+rchive vmlinux.a
+> >=20
+> > Later patches in the series don't make it build again.
+> > rv32 builds now though, so thanks for fixing that.
+>=20
+> Thanks for the report.
+> Can you try to diff below?
 
-     Arnd
+Ye, that resolved it. Thanks!
+
+--jwGvJ1ZaVXfjr5LT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ4Y9kQAKCRB4tDGHoIJi
+0oHDAP9Da+NrCNJE56DtkPFciL+LH3SKSSwOWQ6oFB2bu8GWRQEA9RJt/Is3QV+w
++n+t05VKvIADKDk9hc4FHnNawF8GUgg=
+=tDst
+-----END PGP SIGNATURE-----
+
+--jwGvJ1ZaVXfjr5LT--
