@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B846C1F8933;
-	Tue, 14 Jan 2025 19:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB51C1AAA;
+	Tue, 14 Jan 2025 19:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736882065; cv=none; b=VNAsHeOQw60/9ZNJPnOz/yplP/mNBHFEInKtEMK6LQM6ZUkB/PNuAqKVCxEdnsEG0TewKU8IcwLuSpvQlh56xZIWRWnSOPc3IapTSk01mwDbwDXpQvF1YllQR5BAj10K+RInKuPEhThYZ7HYh4X3Ug25eYhl9kZpojqr0ucpXZg=
+	t=1736882081; cv=none; b=pR1ZeQ3jXE1PK/0ZT7GW0iPXjD/9Auq2c6HXH/5nT6iZ4OYccEEBdSc7FhOFYf+7Ufini0bJ8gYaGgEBBSYCnUSPkYSy5AZ6Q7owPTOd7x7PrJMV2O7LPOTtwpodTiWZ8rVC44GceNPg0iYnlwtWEFzYCBZbWBm3nFmBNFs7btE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736882065; c=relaxed/simple;
-	bh=45vAiy+WoDiWDG1r/iJ2SDci4hnscjPltHSpdxct2Ls=;
+	s=arc-20240116; t=1736882081; c=relaxed/simple;
+	bh=fP/itInBSG8PSfcdMEyH6RRRAh64VeNM6nFr2iArTJQ=;
 	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=qxKdKGP8jLDezr5USWcNqlgUOm0wKgnBws3iBkcX530lFwhLZpDfkEA3roJNXXOLHIUwGtnLVw4wUi4qMwSYjfOcIk/VQfB5+TjOwxX/AJyZz1Lxi1HACY0GRCisMCzMixn7r0zpHRuC7UTkZ74zOlg0oIdF3GW3K5BSCa5thsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/hPiDQ9; arc=none smtp.client-ip=10.30.226.201
+	 Subject:From:Cc:To:Date; b=hqg78Nm7oC6tcbXHSe/BdeDDNGa8CUjIHxPmFD2cD4d4RXrt2SsvBK43Dm1QU/ZDr0AKdVjVwhmiEirq63YsPElzL+ujdyinT2Gfd/0/1QN1RY4J3UmD7WYBHItj/GGOJUvYn6T2Bk++B6/SWHY9PaRfiYkdEukfb/TYhEiAYss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKFvN694; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/hPiDQ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D7ADC4CEDD;
-	Tue, 14 Jan 2025 19:14:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKFvN694"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F5AC4CEDD;
+	Tue, 14 Jan 2025 19:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736882065;
-	bh=45vAiy+WoDiWDG1r/iJ2SDci4hnscjPltHSpdxct2Ls=;
+	s=k20201202; t=1736882081;
+	bh=fP/itInBSG8PSfcdMEyH6RRRAh64VeNM6nFr2iArTJQ=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=o/hPiDQ9cBG0TFxQn7gx0H9KJyK9UfepzaJ2Vg0tczrTTZcN/MdVQ7bFtCNv877a/
-	 BThyNzsEYBf96vvt7ZMDN4GAK/18iyqpCKgTGTRBiiKpwI0mCo/GXQmWOrcDdfAROu
-	 QJVFhEnyhotv8zkAhWbxReQcQU+u+0E2z2OlHCzmZwy3JP8ogisjGc8weIKT0G2Wmu
-	 SydEFg4zhDvc5gDXCl4zBYaaseSGPKa9LvnMJeieBKvSqmJJvvp3vOYWrcwlDS7JEy
-	 w8+W+4tWNtVZb0k3ovd9O9ui0IZzfzpOmaxGeWLrkiQhtHdMqMIGcub8CZqyx+2Vq9
-	 gDFePmEBfbcjQ==
-Message-ID: <faec889d5d2f91d1477b2f2ba1457fb3.sboyd@kernel.org>
+	b=gKFvN6947mTMc7BQGVtT2n7JLSQl8x/liZ+rLXlS/wxlXjvtxIuA3MDupIi2oHDMu
+	 /nrmx8hJt2QO1DlsJPCxePLg8tIqBJYhF2B2WCJYgAvgEXufyIpJk0Z9phhzL7EiEi
+	 L6nggQrTSRl4gp21VArcMbgPEkmaLYIOB/I1LS0HljtbaCUZawhHMjlYitAQXN7TMU
+	 6RVfpJRyQg+95vSzSHq09rgt3I4Q/kk9sijyFxNhDvIHB/1Wug8SVWEKNqlOpT+0vg
+	 Mi664/1SNXsSiT5Ip83+vcP2q5zHiJ4j2rpN2cAYFXnNtgYAD27efJIzGMgW5TuHmh
+	 LhlfKkbbgEWrg==
+Message-ID: <3043dcc07181dea905f97db93a9eb2eb.sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -35,25 +35,38 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8733a7485619bdb791de25201a3d7984d1849c9f.1736856470.git.zhoubinbin@loongson.cn>
-References: <cover.1736856470.git.zhoubinbin@loongson.cn> <8733a7485619bdb791de25201a3d7984d1849c9f.1736856470.git.zhoubinbin@loongson.cn>
-Subject: Re: [PATCH v3 1/2] clk: clk-loongson2: Switch to use devm_clk_hw_register_fixed_rate_parent_data()
+In-Reply-To: <82e43d89a9a6791129cf8ea14f4eeb666cd87be4.1736856470.git.zhoubinbin@loongson.cn>
+References: <cover.1736856470.git.zhoubinbin@loongson.cn> <82e43d89a9a6791129cf8ea14f4eeb666cd87be4.1736856470.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH v3 2/2] clk: clk-loongson2: Fix the number count of clk provider
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-clk@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, Binbin Zhou <zhoubinbin@loongson.cn>, stable@vger.kernel.org, Gustavo A . R . Silva <gustavoars@kernel.org>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, Michael Turquette <mturquette@baylibre.com>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Date: Tue, 14 Jan 2025 11:14:22 -0800
+Date: Tue, 14 Jan 2025 11:14:37 -0800
 User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-Quoting Binbin Zhou (2025-01-14 05:00:28)
-> Since commit 706ae6446494 ("clk: fixed-rate: add
-> devm_clk_hw_register_fixed_rate_parent_data()"), we can use the
-> devm_clk_hw_register_fixed_rate_parent_data() helper and from then on
-> there is no need to manually unregister the fixed rate hw.
+Quoting Binbin Zhou (2025-01-14 05:00:29)
+> Since commit 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer
+> overflow in flexible-array member access"), the clk provider register is
+> failed.
 >=20
-> Since clk_hw_unregister_fixed_rate() was not called before, we also fix
-> the memory leak that was present.
+> The count of `clks_num` is shown below:
 >=20
+>         for (p =3D data; p->name; p++)
+>                 clks_num++;
+>=20
+> In fact, `clks_num` represents the number of SoC clocks and should be
+> expressed as the maximum value of the clock binding id in use (p->id + 1).
+>=20
+> Now we fix it to avoid the following error when trying to register a clk
+> provider:
+>=20
+> [ 13.409595] of_clk_hw_onecell_get: invalid index 17
+>=20
+> Cc: stable@vger.kernel.org
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Fixes: 02fb4f008433 ("clk: clk-loongson2: Fix potential buffer overflow i=
+n flexible-array member access")
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
 
-Applied to clk-next
+Applied to clk-fixes
