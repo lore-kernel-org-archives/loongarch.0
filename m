@@ -1,65 +1,65 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B2420CCD8
-	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 21:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C1E20C019
+	for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 21:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736889866; cv=none; b=WY3R2bB8NDUGeCNgQOoTLnu/H5WtDx5dk1gpULNNPBgd2uJ8GYaSdv3ywYWWfOeDbaCSHG3VRl3lv6RWNb/Nq6bo6N3q2hwbFWDDALBMcnhqWVQlygXJMt9GIAtzsi2fiNFOMqazmqNLLQa7yq617hJ01c4WNawR/hIfq6lrHHc=
+	t=1736890017; cv=none; b=US5c6xtHR5DUiZg/xf8d3lav5H9cb1+db5OOAO/SbXvvl/iflPsOlwNHht54eHWzb5CZOj4tcrnAnEJQz5IwwgNZjHzdj/p1MzhpQexZait0cXr7F+wwKa1uRwP961Ve586sumlqcu0YtL/px67Q1wtjaQg49zNLlWWlYfheoho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736889866; c=relaxed/simple;
-	bh=UhsLziMJuir9EcfHw8J9VL7USXU5IkN4Qt5js8SLo28=;
+	s=arc-20240116; t=1736890017; c=relaxed/simple;
+	bh=oPosukRuS5Ny6CBCBgfqsCfB0dNx94vYjIEcmowMxlo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VWD21DQUsdtzDHnKP3U7xkDA+lfD4/c7sanExsqK+b+YizXrujb5IknYxfhmZxIU9Jm7dj4UNOLhPL34pADvvKnlNUBDNVivhEgfAljk116Vc9TaH875dUn84YcU+Ru/huYnv60lJsNLV04QW3i+ZUWZrM7fkQcpa3fwQM5N+Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KnRaMYqk; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=e1BSUs70goCLqNCsEEnG2Ptn8lxDpb1yXokwjlZgqqSrEwWs48c6DK4ZSjatQs6xJNRSFhHKLUsZ32yjpcmVTCl6R/VYOzho+vzFQrKB+PXGhJTVKJZCS8D/Q9dHbBI3x2ZSQmnRsrtF6bYW11lwqBbUPKhFCtof8WwRj4kr8Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P7bGLanc; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnRaMYqk"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2efa0eb9dacso10826852a91.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 13:24:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P7bGLanc"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ee46799961so15462461a91.2
+        for <loongarch@lists.linux.dev>; Tue, 14 Jan 2025 13:26:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736889862; x=1737494662; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1736890015; x=1737494815; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8cSsXdzV+ZwQOEMikMUZ9KmnzJy+D1+up+g+W/Xr/ho=;
-        b=KnRaMYqk+rBWhO+fixW6ZIXBLvqPn375bH8KzKgJDt4+34Ir0mHjrKjaj1wvHlx5z3
-         IJjJbovZAwL2cqdyj7/W+m80+y6PK5eoKYGdF/WfPXuSRV7uwqITx5MHE1AB3rEYPh1M
-         3MnGmBnsuptsOLq1JpRMAlGJ30pGOZFn1Qm9iabtX/L5M7OUF4UoJQwGViGJQ9+A9t1P
-         n/xmklLcij/uJ7TFjAOn7+Vrx+YwMfxEoeFvTYEL0yR4RtYCc3YK6vpEobIhikFdWmXH
-         kQsRqRF44gCNVJQAbpTWo3f3qRs70FGGiLFQ53MAO1pof26Zo3iGPhkXKBLZaPmNp0v3
-         XcTg==
+        bh=V8zpuNawVjToL3i20ZYrbUddkmOaJHAfbCZJnZQ478w=;
+        b=P7bGLanctuzOtveWS1UrYK2R3tV/+b7E5j7MJleEu2+l3DjGP4iYWtVYL6AilHF7U4
+         fd6OHv+SdPFcSOaISnn9QBZTTUYYeEIeCeJn6zEeESbScveXlGOSmUjSqHPKPGZIUFpg
+         s9avpDwXoSmYqukoCDu3Dpwa3IX5nryUMASGZDfhFwSb/t7NJSfhpR9fm6Myq+V+IJrL
+         hUJU8HCPHzj9JRd9Q4XQPZJkHtpF5oeF/1vzyPzqDLGKpyicPjsy7rExgXww3FXii0+P
+         9UP2bU8Y/fOSfrXdd1+9hrPSI5xtstRI9cCmpdvCAiTv3e0WFg/MvmRWrpAdiOajcoTH
+         +2ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736889862; x=1737494662;
+        d=1e100.net; s=20230601; t=1736890015; x=1737494815;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8cSsXdzV+ZwQOEMikMUZ9KmnzJy+D1+up+g+W/Xr/ho=;
-        b=WM7FWI6Bvr01nOk7Zb3cm4JU1ppVqL4IhLnqal2Nf8RlsLb3U8zMqt0yRcAcqPPZZI
-         LjKGrfKh/JJ/TERxYHYNOxYMNZTI9Xt2E5pF9LDVeeHFukOT+qr4yhBO+rJ3SXVzyXxj
-         n//6KluXN7OUY24+aW+KMFy09Trwi9MS4E2KY5dWJrjol7fq7vVTw9wP87JMDuWxPKLw
-         26k4uR1Ze/0x+gagtzRHCl4bGrv8Zj8xYr2RwgYKtTQR3DS4RbssvodbC982GoO2ImSE
-         hGhTGCFS+K+MNLHnbeki5voh7p4q7DVrH1Fy7YgfKjbXW5KxgQSMSkoaUqZU3rGfUeTF
-         Rnpw==
-X-Forwarded-Encrypted: i=1; AJvYcCULfvm8MgLMcH2szZhEJkVvoR/nmKD5YKgQi0qssyyuHPGsQrK2WZEcUaHYH/4w5t3SFFrudNqNHoc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7KIQ7d9zdAwYQk2rseo5lrWTdC0LgwWZ+wllRGpR5csGnot4N
-	sbcTwxxm2tSPXXBmDLbQVPH7OlaNJlXx2zw9Nb0rGlUvjb6ISSQktl6kUmQeuYbC1z2GueNipfB
-	uNQ==
-X-Google-Smtp-Source: AGHT+IGaqEwoic7xvDyznY8cDg+F7K5+qe11MRhfXOt+1PBXtCG3HV5nSK8yv8Q3/q/HTXMyOsqLmKxvwkg=
-X-Received: from pjbtc8.prod.google.com ([2002:a17:90b:5408:b0:2ef:abba:8bfd])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2b87:b0:2ee:8031:cdbc
- with SMTP id 98e67ed59e1d1-2f548f1ec3fmr32208440a91.23.1736889862547; Tue, 14
- Jan 2025 13:24:22 -0800 (PST)
-Date: Tue, 14 Jan 2025 13:24:21 -0800
-In-Reply-To: <20250114175143.81438-28-vschneid@redhat.com>
+        bh=V8zpuNawVjToL3i20ZYrbUddkmOaJHAfbCZJnZQ478w=;
+        b=wWDmy/JnWCSZ7ETscq8mFYm5W5syxcbtgm+0xCyyWR9HDDQ+KrEY885CSSb0UB6T//
+         E7DWAezqwiqcb16tJk//MI7BvK23BfC1j+Oo/ubTJxYmw4eU1JAawV0jYIgsgjlLEhki
+         WwSyESDE9Rkg6roz3QW53T/mKGzFlTI6uGACqY7+mcs/w633FTyHk6vqKoiQmNsUOMuT
+         NZQeJivULQ8YA6tgrwalDY44AlBet4AePowyOstJH0ItqWsjpxGuVcC71qWinoW1ikxp
+         ZMK+dlnPQhG6ZFCjn5n0F/5oKG3AqqSm90A65JIq7fmBQRkFsmzokbwZyUuN7YsmqavA
+         /cRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxwmJGNdPw0rRYAt/saB2WMgghxUbg4cGMQsvQDbXxn6AjBi95kQX8cTX2qP9tcdR/6N1aC6J+8SE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzJf7oa+MErcD23jpMqnNxhzhMxvOzo5sOtrNpcjebucip1DvZP
+	PgO7GEkw9u0M86GJISFyWpqxzmThpwgv76+zHfecuifqamLFf+PDJupnz+SX5kczgO9bpzn3LpT
+	VyA==
+X-Google-Smtp-Source: AGHT+IGDv4Ej+tMoSohr/AoTazwT/WbetgA7Nr8qE8BLNxmtc1cUUDk0TRGuDLxFKlrZpHzOjZy+L7iCKdA=
+X-Received: from pjbsx15.prod.google.com ([2002:a17:90b:2ccf:b0:2ef:8ef8:2701])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:544b:b0:2ee:9902:18b4
+ with SMTP id 98e67ed59e1d1-2f548f61fe6mr37131771a91.27.1736890015061; Tue, 14
+ Jan 2025 13:26:55 -0800 (PST)
+Date: Tue, 14 Jan 2025 13:26:53 -0800
+In-Reply-To: <20250114175143.81438-26-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-28-vschneid@redhat.com>
-Message-ID: <Z4bWBUGUH34qLUt0@google.com>
-Subject: Re: [PATCH v4 27/30] x86/tlb: Make __flush_tlb_local() noinstr-compliant
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-26-vschneid@redhat.com>
+Message-ID: <Z4bWnWYqu1LaD-JG@google.com>
+Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text patching IPIs
 From: Sean Christopherson <seanjc@google.com>
 To: Valentin Schneider <vschneid@redhat.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
@@ -69,7 +69,8 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
 	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Juergen Gross <jgross@suse.com>, 
 	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
 	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
 	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
@@ -77,8 +78,8 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Kan Liang <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
@@ -99,8 +100,7 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
 	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
 	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, 
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
 	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
 	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
@@ -108,26 +108,16 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 Content-Type: text/plain; charset="us-ascii"
 
 On Tue, Jan 14, 2025, Valentin Schneider wrote:
-> Later patches will require issuing a __flush_tlb_all() from noinstr code.
-> This requires making both __flush_tlb_local() and __flush_tlb_global()
-> noinstr-compliant.
-> 
-> For __flush_tlb_local(), xen_flush_tlb() has already been made noinstr, so
-> it's just native_flush_tlb_global(), and simply __always_inline'ing
-> invalidate_user_asid() gets us there
-> 
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
+>  static __always_inline void arch_context_tracking_work(enum ct_work work)
+>  {
+>  	switch (work) {
+> -	case CT_WORK_n:
+> -		// Do work...
+> +	case CT_WORK_SYNC:
+> +		sync_core();
 
-...
+Not your bug, but serialize() needs to be __always_inline.  Not sure what exactly
+caused it to be uninlined, but this is the obvious new usage.
 
-> @@ -1206,7 +1206,7 @@ STATIC_NOPV noinstr void native_flush_tlb_global(void)
->  /*
->   * Flush the entire current user mapping
->   */
-> -STATIC_NOPV void native_flush_tlb_local(void)
-> +STATIC_NOPV noinstr void native_flush_tlb_local(void)
-
-native_write_cr3() and __native_read_cr3() need to be __always_inline.
-
-vmlinux.o: warning: objtool: native_flush_tlb_local+0x8: call to __native_read_cr3() leaves .noinstr.text section
+vmlinux.o: warning: objtool: __static_call_update_early+0x4e: call to serialize() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_work_flush+0x69: call to serialize() leaves .noinstr.text section
