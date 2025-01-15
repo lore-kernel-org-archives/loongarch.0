@@ -1,95 +1,118 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A9DF22F148
-	for <loongarch@lists.linux.dev>; Wed, 15 Jan 2025 02:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5116A156879
+	for <loongarch@lists.linux.dev>; Wed, 15 Jan 2025 03:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736908868; cv=none; b=K0dPWNbZ+rmOUGZ6f/wIjiFJtWyCC1zI1Au4/Niy4PCAEmiPzHDkQo2r2eWyXe0H6saHCCEn4NukG9OXKPEf9oVf63DhP/VImQUfnI8bjSjfEwrV+NI0xQHFTvqB4Yh5wch8m5feE9jGC2sX6mo3qZXjdbXkqvGGUfWf6G7dMSM=
+	t=1736910023; cv=none; b=AuDPACjSBmySZjkNQ/a8jCsOck60wkcm5YBLE5n3eIQDDelTxLThEJ7p24e64mjYVCuza7dfmgo0Ym7EuguNEtlHUd4QT5bsvTUw/spANCzhcTGPWEyJJicPg0SM/JvcTDVrsotW4ITiBDF3RJHvwvT8QQs+a3Ebhs2d+BjdoOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736908868; c=relaxed/simple;
-	bh=mXezzYPrWVP6C/CeuVPlU6hV5c8VGCFZ/3yUTN2Qm+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJHpc08wkxAVD4LhIxagnef6naGLWbvZ7THeK1Q6gp5p/kO8aPy2ZJEN2d2x4ukWVTxStgMAVIX4GCnLfEDqYeNudaLgqookqQxsngAUegykfnLzF50db2GxxpbRSPlErNctxTBqALXQELoSkpQ3nxYPSgh7N1btraNMEhoOxFI=
+	s=arc-20240116; t=1736910023; c=relaxed/simple;
+	bh=0inU6x9OEOlhOKqEGeSMD92WMNoNKj52lO6z/J3YNOo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=j92qo5EljGSIonrBqgjWCpZBtZ16k+DA0gVI7XUhdVXkQr2B8rV4zzZOqJh8LV7kzwJmoH6o5oiEQjYBcZyrP5bDqEM9B7ysbsLIjgKaPLn4iJJ2BGFQZVQee81Xagse6+qfvWQRWoJJas/+37H13v0/e+qB7fTSEht1rcnP1Po=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.63])
-	by gateway (Coremail) with SMTP id _____8AxQK0+IIdnrKhjAA--.24672S3;
-	Wed, 15 Jan 2025 10:41:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.63])
-	by front1 (Coremail) with SMTP id qMiowMAxPMU5IIdnpwgjAA--.9762S2;
-	Wed, 15 Jan 2025 10:41:01 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.14
-Date: Wed, 15 Jan 2025 10:40:54 +0800
-Message-ID: <20250115024054.147630-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.5
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxaeDCJIdnGapjAA--.43662S3;
+	Wed, 15 Jan 2025 11:00:18 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxz8e9JIdnxQwjAA--.18926S2;
+	Wed, 15 Jan 2025 11:00:15 +0800 (CST)
+Subject: Re: [PATCH v1 3/3] misc: ls6000se-sdf: Add driver for Loongson 6000SE
+ SDF
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Xi Ruoyao <xry111@xry111.site>, Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ "David S . Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+ "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+ "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+ Yinggang Gu <guyinggang@loongson.cn>
+References: <20250114095527.23722-1-zhaoqunqin@loongson.cn>
+ <20250114095527.23722-4-zhaoqunqin@loongson.cn>
+ <ee65851c-4149-4927-a2e7-356cdce2ba25@app.fastmail.com>
+ <97000576d4ba6d94cea70363e321665476697052.camel@xry111.site>
+ <2025011407-muppet-hurricane-196f@gregkh>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <122aab11-f657-a48e-6b83-0e01ddd20ed3@loongson.cn>
+Date: Wed, 15 Jan 2025 10:58:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <2025011407-muppet-hurricane-196f@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxPMU5IIdnpwgjAA--.9762S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw45GF1rJF4kZw47JF4UWrX_yoW8Gw4UpF
-	13urnxGrs5GryfArnaqryUuryrJr18Gr1Sqa17Gr1rAF47Ar1UJr18Wrn5WFyUJ348Jr10
-	qF1rJwn0gF1UJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxz8e9JIdnxQwjAA--.18926S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ww1fury7GF4DWr1UKF13KFX_yoW8CFy7pa
+	13GF1IkFyUtr43Cr4vvw4rAr1Ikws3tF9xt34rAwsrZ39Iyrn5KFWIkryYva17Zr10kwnF
+	vay0va47u3WDZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-The following changes since commit 5bc55a333a2f7316b58edc7573e8e893f7acb532:
 
-  Linux 6.13-rc7 (2025-01-12 14:37:56 -0800)
+在 2025/1/14 下午9:21, Greg Kroah-Hartman 写道:
+> On Tue, Jan 14, 2025 at 06:43:24PM +0800, Xi Ruoyao wrote:
+>> On Tue, 2025-01-14 at 11:17 +0100, Arnd Bergmann wrote:
+>>> On Tue, Jan 14, 2025, at 10:55, Qunqin Zhao wrote:
+>>>> Loongson Secure Device Function device supports the functions specified
+>>>> in "GB/T 36322-2018". This driver is only responsible for sending user
+>>>> data to SDF devices or returning SDF device data to users.
+>>> I haven't been able to find a public version of the standard
+>> A public copy is available at
+>> https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=69E793FE1769D120C82F78447802E14F,
+>> pressing the blue "online preview" button, enter a captcha and you can
+>> see it.  But the copy is in Chinese, and there's an explicit notice
+>> saying translating this copy is forbidden, so I cannot translate it for
+>> you either.
+>>
+>>> but
+>>> from the table of contents it sounds like this is a standard for
+>>> cryptographic functions that would otherwise be implemented by a
+>>> driver in drivers/crypto/ so it can use the normal abstractions
+>>> for both userspace and in-kernel users.
+>>>
+>>> Is there some reason this doesn't work?
+>> I'm not an lawyer but I guess contributing code for that may have some
+>> "cryptography code export rule compliance" issue.
+> Issue with what?  And why?  It's enabling the functionality of the
+> hardware either way, so the same rules should apply no matter where the
+> driver ends up in or what apis it is written against, right?
 
-are available in the Git repository at:
+SDF and tpm2.0 are both  "library specifications",  which means that
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.14
+it supports a wide variety of functions not only cryptographic functions,
 
-for you to fetch changes up to 2737dee1067c2fc02256b2b15dab158c5e840568:
+but unlike tpm2.0, SDF is only used in China.
 
-  LoongArch: KVM: Add hypercall service support for usermode VMM (2025-01-13 21:37:17 +0800)
+You can refer to the tpm2.0 specification: 
+https://trustedcomputinggroup.org/resource/tpm-library-specification/
 
-----------------------------------------------------------------
-LoongArch KVM changes for v6.14
 
-1. Clear LLBCTL if secondary mmu mapping changed.
-2. Add hypercall service support for usermode VMM.
+Best regards,
 
-This is a really small changeset, because the Chinese New Year
-(Spring Festival) is coming. Happy New Year!
+Qunqin.
 
-----------------------------------------------------------------
-Bibo Mao (2):
-      LoongArch: KVM: Clear LLBCTL if secondary mmu mapping is changed
-      LoongArch: KVM: Add hypercall service support for usermode VMM
-
- arch/loongarch/include/asm/kvm_host.h      |  1 +
- arch/loongarch/include/asm/kvm_para.h      |  3 +++
- arch/loongarch/include/asm/kvm_vcpu.h      |  1 +
- arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
- arch/loongarch/kvm/exit.c                  | 30 ++++++++++++++++++++++++++++++
- arch/loongarch/kvm/main.c                  | 18 ++++++++++++++++++
- arch/loongarch/kvm/vcpu.c                  |  7 ++++++-
- 7 files changed, 60 insertions(+), 1 deletion(-)
+>
+> thanks,
+>
+> greg k-h
 
