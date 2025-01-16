@@ -1,316 +1,270 @@
-Received: from mx0b-00154904.pphosted.com (mx0b-00154904.pphosted.com [148.163.137.20])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE58D14B959;
-	Wed, 15 Jan 2025 15:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.137.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954661; cv=fail; b=uqeiRiq7ATXRyVPYWsUY4FNbsaiu5ADGrdbSxsrmWMgiji3v5koAsTF6DF4+VDgcgSY9iCutGGDPqSiyzr5Z7XTQ5+15qjKLr8MIf/hdd10kCmbPrjo61c5N6ryWCvnWIlcNDeEYrqDf+a4djYOVfsOmpOze26Un2JbjW7fCeaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954661; c=relaxed/simple;
-	bh=sYVBlCao54nQF5NqyoyMRocF7DD/5aHDKHx215/BJfk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aUd7YePHzu2qlcIqyAUWGiwpUnAXkNSpFVaeci50JPJ0bu9kan8eRlZ2QtXO2KMLrNc93fJe7jvQN9Ew9qQnyULGzOIrDHwZwfdGDpwzKk/MkGhfqdeeP2UoZd2Tjf63iZDbyP5oTXUoyq3ajCMzFFKNKmnmYEPUOLzbCBL5yfU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=Q8c9zT3R; arc=fail smtp.client-ip=148.163.137.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C354017578
+	for <loongarch@lists.linux.dev>; Thu, 16 Jan 2025 00:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736986918; cv=none; b=eX94l3yaVeNk6hI+KbxmbJM0TcqHzEQSVZncL7CUTGS7fyF+ir+Mg1Q8KjI97/skJuzWZPEb+lSBrfXmmi+r+ha9oaEskVl3afsSprpK7WhANkSB8SF0U306XZQ/v13O/H+uf+9fM8vRpCoqB2U3jNLVRD9nvb6Awa8r86mYdRc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736986918; c=relaxed/simple;
+	bh=CnVEtvm6r0FK1c66L6L7ntFsmh6oSuFSfI8+wFyyIis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=og/iiOTZmfQRvncJEDafE6drCBB9PlLG6Tr5fHi55vwpszlqP3mdXYsVujcDNLc4fv5w73mVWIzg6262dxTm8snjjwzl0z/9SqzEcLH3XNkGAJGdMQHN2g1r0xJRIL1h/3DpgxS0TaOp7UJQcTqH/faiFCtmgdUSlxjPY14dts8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=J4tKA2z9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Q8c9zT3R"
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-	by mx0b-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F9iBbe015667;
-	Wed, 15 Jan 2025 05:39:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=smtpout1; bh=3
-	NoaUl57V56AFAb1cghgkzBF55fUPNkiLdbfom4+1Vo=; b=Q8c9zT3R8likq4JHW
-	Vfj2YLsjKMrrJkm5p19y8PyQvoyRhoLGNRa2zsrxwmARIhv5867mCjSTw5IuNvwj
-	0jzXXbrgq93rJKTJVJSqu5B04i7qFVqv6LDXByW0YTv3dz6YIlN2xqK+WoG8BaB+
-	46AeN2IUbrqA4R1E8KdKkCo30Gx445S73MXvmhjLPBCzXkU7rFWIUJ20LPpOtT0c
-	/PsGlbd+Jl0DM47kLyl8ogyKi8nZDmYTRBlAPWqlURWw6O1vvI6OLeGlmWZz0AUY
-	EXokgWz6WHYG9V2taFkox2oCJRu29ohNQViIxb7qRVhJIsHWQb/Y8W3cGTaCaWrL
-	veEhQ==
-Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-	by mx0b-00154904.pphosted.com (PPS) with ESMTPS id 445y6mjnbd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jan 2025 05:39:56 -0500 (EST)
-Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
-	by mx0b-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F9q99V020656;
-	Wed, 15 Jan 2025 05:39:55 -0500
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
-	by mx0b-00154901.pphosted.com (PPS) with ESMTPS id 446arhrk6a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Jan 2025 05:39:54 -0500 (EST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=toRMVUTcEN3dJFtdWsRu962K5DAb6ptxNpI+mXWn177eww3JOdpRkd7QgPSvzWIS0qiXPz3Vwaye+gt+FxCsGSSymmY9HKr5Lpx3P2enVcileWAnN4OblSyYkr7ZrUIDzBDFg3scw/ayKPnkltnmjRDRH4uSiMBJaNutFtS8xlI0S45tPylMRzMvtmHOBb70rsJdvv6Gs4mN9eWXGX6P02zyavZVqRGDbu1JW7u4YvSrFlJjD+C2m8z5gvX+xdHU/kKpTmlAZrObUDwbYYMmQbEIYJiiEQs9wrZeZJUccrKE6TtOKIW1tfcPPWF9vmoE11VF6ikVSCQUvTzeZ9uehg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3NoaUl57V56AFAb1cghgkzBF55fUPNkiLdbfom4+1Vo=;
- b=miuEJUDVc3elnxS6if083XbvsmbdKj2a/KvGvAK1C0Pu82eqHvw/l0wx2jq4vwheNz9qKxehmnZbwAUE89AY2Fg14i1JUO+q5JKa7s86InSVGLYJOkjKOrKfUe1lzfOdHK4Z6IXWcwTok5Esw5cTEElbyVlIAIl2IhUeWbiFLrKmj7DIDx2MD8pmemnSFFnZXZjV0R+Q32xOv0VHWet8Zg8Fjt7JICoaIctLQIU5wkicHGr57COvbfKLbHxcDJ14K76I0sU/rtgENNzo06DYNtHpSuYE3r4u5sCzMwlLMr1QWc97GJv3Xa6Xuz1dCJbN1X/jq4omauq70VfCniPDpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SA3PR19MB7399.namprd19.prod.outlook.com (2603:10b6:806:31b::6)
- by DM4PR19MB5788.namprd19.prod.outlook.com (2603:10b6:8:65::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8335.18; Wed, 15 Jan 2025 10:39:51 +0000
-Received: from SA3PR19MB7399.namprd19.prod.outlook.com
- ([fe80::76fa:571e:44e4:4855]) by SA3PR19MB7399.namprd19.prod.outlook.com
- ([fe80::76fa:571e:44e4:4855%7]) with mapi id 15.20.8335.017; Wed, 15 Jan 2025
- 10:39:51 +0000
-From: "Zheng, Yaofei" <Yaofei.Zheng@dell.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Qunqin Zhao
-	<zhaoqunqin@loongson.cn>
-CC: Xi Ruoyao <xry111@xry111.site>, Arnd Bergmann <arnd@arndb.de>,
-        Lee Jones
-	<lee@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org"
-	<linux-crypto@vger.kernel.org>,
-        "derek.kiernan@amd.com"
-	<derek.kiernan@amd.com>,
-        "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
-        Yinggang Gu <guyinggang@loongson.cn>,
-        "Zheng, Yaofei" <Yaofei.Zheng@dell.com>
-Subject: RE: [PATCH v1 3/3] misc: ls6000se-sdf: Add driver for Loongson 6000SE
- SDF
-Thread-Topic: [PATCH v1 3/3] misc: ls6000se-sdf: Add driver for Loongson
- 6000SE SDF
-Thread-Index:
- AQHbZmqu8tAi0zKGP0afKxhL+p3HzrMWDkWAgAAHKwCAACxMgIAA5D8AgABTwwCAABWA8A==
-Date: Wed, 15 Jan 2025 10:39:51 +0000
-Message-ID:
- <SA3PR19MB73993DCBDE9117AA1E77C127F9192@SA3PR19MB7399.namprd19.prod.outlook.com>
-References: <20250114095527.23722-1-zhaoqunqin@loongson.cn>
- <20250114095527.23722-4-zhaoqunqin@loongson.cn>
- <ee65851c-4149-4927-a2e7-356cdce2ba25@app.fastmail.com>
- <97000576d4ba6d94cea70363e321665476697052.camel@xry111.site>
- <2025011407-muppet-hurricane-196f@gregkh>
- <122aab11-f657-a48e-6b83-0e01ddd20ed3@loongson.cn>
- <2025011527-antacid-spilt-cbef@gregkh>
-In-Reply-To: <2025011527-antacid-spilt-cbef@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ActionId=e105abfd-9b04-4f1d-82b6-aa1b59871c41;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ContentBits=0;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Enabled=true;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Method=Standard;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Name=No
- Protection (Label Only) - Internal
- Use;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SetDate=2025-01-15T09:15:37Z;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR19MB7399:EE_|DM4PR19MB5788:EE_
-x-ms-office365-filtering-correlation-id: 7930ccb4-e4e5-4dc5-b84b-08dd3550f146
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-7?B?Y0lmWHFxWnA5cXZlaGpjTW5hd1RKOVM4TXN1RWNpemtGMjlRcFpJL1JtZHhj?=
- =?utf-7?B?V0VJT1FEZUZidkowbkhCR1VVUjUwRkRSUkw4eXJWYnZjOEx0ZDhNUGIrLVpm?=
- =?utf-7?B?QU5YdEU0YXY3d3NrdDV0TUNTcW9NdEZ2cXhUSU9HUHRHQTExNXN4SDY3eE1Z?=
- =?utf-7?B?eXFRSjRJbXVkUXZNOU5aaXZaYjd5RS9uUWhiOVJSZWJFelJsMURUSEQ2Z3Y1?=
- =?utf-7?B?c05uWXlKVmtibUM1ZWVONHMzN1ByWWhqMy9GMFVHc0VpOGJJNTlmNVFJdkhV?=
- =?utf-7?B?c1o4SHJ2QUROY0c3bnBDMjJBWXZyREd4VjFhSk1IcVl4dGZ0NU5mWC90bVJm?=
- =?utf-7?B?TGsweXZFTGpoS0xkWDRlVTdLQjAwWWVXQ3d5YTFiM1BGalpHMjBuazlhMkll?=
- =?utf-7?B?dDdnN1NlYjBMWE9WMnJvTGxRdXhqcUp5S0RIM3cxZ3JVa0s1bTZFOXh6czBF?=
- =?utf-7?B?enlmWE5lcTVrYXdMdVZkaUM1QmxOUW8rLUdzcUI4a3hrNGlXOFB6QnFPb25P?=
- =?utf-7?B?Q2x2NndqcTc5MzcwYUUwTTJ4aU5FV0ZqZ1JHclZ3N2paZnhTZ2ZZckdRL2pU?=
- =?utf-7?B?UXlnOVVJMVJQaHdpblhrVndSalZzcGFMVGwwRXBGbVhyek1Tc0dBS3RKVDZR?=
- =?utf-7?B?T2pVNEVwckNNbzB3R0xnV2JZYVB5cVlWKy0yNVcveFFCY2JhZnRaQTVlV2JX?=
- =?utf-7?B?M3dSaFErLXZ1dWhjZGVMQk5ZVldQeXZMRkhKNjNWYm1TaUh0NGF6R21OdWRR?=
- =?utf-7?B?dE8vWjY1bjkwNXUrLVZKYzJ5djZUZGtWMElVU3Qwb0orLUV2bTczeFZWQ2x1?=
- =?utf-7?B?aFRVZXA5eXlpSkRQZVBaT041VThkQ2V4ZDM0anpFN3hZbm5SNU5uSUFPZzNu?=
- =?utf-7?B?SEp4Z0lkSXBIelNyT3B3aWtES1pacFh2QjU1M0dSaW1YbnEwOEt4ZjE5Ung1?=
- =?utf-7?B?TnhEaDRMdDU4Ky11blQ0Y1NHRSstUkJhWGFScUQrLUlzalVXZ3ZEVEJvVi82?=
- =?utf-7?B?ZkExMHN3SmlRRFRCbWR4MWNXMzRkSEJ1VWozRjlYMDR4WkFWZnVjKy01Unl5?=
- =?utf-7?B?RUQ2Ky1ZdmhTQlk1Z1RkeU45OFh5STlEQUlTQUh4aGJmejc3ZzZUVWlUMWlB?=
- =?utf-7?B?R0srLTN3M01iOGFOL2NuS0tocmZvRk95SW01amlPS2ozbzZkZksxckx4M2w=?=
- =?utf-7?B?RCstOXYzYW9pMjQ0bEJ1ZGQ0Sjd1a2pxVDNNV2RzZ3hCeXZCaEVWR3dNVjY=?=
- =?utf-7?B?bSstcGRPUTVoeDRoejRYUVQ4bDRXYmNjcklxbHU4VmVvbXVMMExtZnpYaEc3?=
- =?utf-7?B?S0FGQ2oyQncrLTJYMExuRistRmtKS0VrNlZwKy1maFVWYistY3pXSTVWWGF5?=
- =?utf-7?B?WjF3Y2JDT0FrNkI2NystQ0NUR1ppZjRzKy1MUzllLzh3ZTNtWTM5cnNNYmto?=
- =?utf-7?B?ZGh5YW9Kc0ovMlk0Zk9mdzl5bGtvYUFaMmZ2dDNQKy1OaGV5cnhsUEJZaTd2?=
- =?utf-7?B?ODZ0Mm9aNDhWakcvQW1tTU1ZUVBWRVl5QXV3VjJUNGpBOUdvTkxncmd3SThj?=
- =?utf-7?B?SkQyT3RDVEpkOFNGQzZkTXVMNWxxdmpMbDZaNC9pVHlXOGxOSm43cmIvN2s0?=
- =?utf-7?B?RGRsQng2NHVUUnd2NnZhdTQzQUZlaUtLUDVuaDNadkgwSXk5ajMwN3RyRXpt?=
- =?utf-7?B?THoyS3ZGaG1qbnUwYUM2eHdnUystdVc3dGlVNWdVYnZXbTFXZ3hyWUVyZGsy?=
- =?utf-7?B?d3ZQNzlNbFhyQnkwaHBXN1I0emFtYVhVRHFRZ1RzZDJsMlM1azR3U08vbTNT?=
- =?utf-7?B?TmJaUEpDWnFKOC9RMEVqa3k0TkpSWUhIanNQVGptekRCT0xmZ1laWDQrLTFh?=
- =?utf-7?B?UmpvZDRRbnV0bWVMa1MycHQ5Q0ljd3dvZkZEYmhXYUVMWnEzSkw=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR19MB7399.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-7?B?MzZGYkIwQ1VFYUF6Z1c5eUcrLXAvWm1OVXpGRmh3S25jejA1ZnJpMzF1S2p0?=
- =?utf-7?B?RXpZSWtEY1p2d1l4dEhUeENvMzFZUGVYSHpzcmpkcVd5ZUp1ZFpUbmdNYXc2?=
- =?utf-7?B?cUxKMUhzTGR5aSstenFtVmFwekZtZVR2UDZqcnZUTVBWVndYdE1QajgrLXlM?=
- =?utf-7?B?TFp2d1lWckNuYUpsNG43YWJaaTJwaWVDMW9yMnRUeHdTaVZsOWpKRmVQOXo3?=
- =?utf-7?B?dmFibVhsYXFpdHZXSmRoYktvd3BRbE55RVdkU0dsVkw5ckpTRUNJWFZIaWFh?=
- =?utf-7?B?clovV3FNbk9HRzRId01LeDcyRTF0RFcvVkQySmROSVk3V2lzSXZzSzI3Z0c2?=
- =?utf-7?B?RXJxVVVNZHF0YXhUOG80YTRMQ1NDVExQOGRnRGNVR1VpVkQ3N3p2aDVkSmlk?=
- =?utf-7?B?TmQrLXV2dFM5M1ZPbHVJOVFYdTA5ZXBHcVlUVUhidTZ6TkllMGtRN1pTQ3lo?=
- =?utf-7?B?TSstS3FzSk9DR1gwQU5DSFJlUWdRQkpIM3JqMkVJVEhPQ01vN2ZNL3l3dncw?=
- =?utf-7?B?L0RxQU9uRGNDd09rNjhSMUdQS0hHdmdkUXhhazJHSERyTDN6MGYyaGhSVTNx?=
- =?utf-7?B?YSstQWUyaFdYZUNvdFhRWHQyZzBOQUNUNk9idnowL2w2VXJtd2wyNS9WMWRI?=
- =?utf-7?B?SzNSMUx0SFc3cCstanYrLWo5Yk1Zb3NqODhVWk5FdWZSdkh4Y1Q3Q1AzdnNh?=
- =?utf-7?B?M0c5TEdsVndlcG1UUXJwcHRaY2xXcnA0NzBvSmh4OHFETDNnNkhBVWpUakxO?=
- =?utf-7?B?M2VGNnVHd21uRUg4YWVYV2JMN2xrVXVZR3FlZ1RHQ1RIMnVxL0VhTnFhZG1E?=
- =?utf-7?B?ZXhtejNKVzZ3cXBZaDNPaHlSenQ1V21TZGxNTVVONjJkYWU2Z3NLdkdGZGwx?=
- =?utf-7?B?WXZOM0ZjRG9HR1FjNy85WlRocnU0M2E3WS93U1ExeistYUpsTTJMYmNodW15?=
- =?utf-7?B?dVVpbTB2VUZ0alpadXpnKy1nZEFYWnN6S0xteEdaWUI2ck5uMkNiSWdleSst?=
- =?utf-7?B?emdYOTZuZnBZdkYrLWNSWlF4aGxScGVSVUZ1bWxhdExHZlRGUm9GS2hucGRL?=
- =?utf-7?B?WTBibzdFOHV5TnZEYXRrSDMxWSstaldSL0lSTXBaUDRwZW5NbFZyNEtjZGFq?=
- =?utf-7?B?dy9tSnI5c3hVWUUzYWF6R1ZrNDZXMTVTaC9vb3dpWDF4bHFGUVZvMXlra0Fy?=
- =?utf-7?B?N3ZTSVZqeHhMRG9Wc0h4NmtpdkZvRistc1pMZndUak5JWSstbWJ5elk3bXBN?=
- =?utf-7?B?MmJmM0lFWFRINjFkRlN2OGdUWFFoZWpCSG1ZWWlyQldMaVIwN2lkL0tEaHE1?=
- =?utf-7?B?RzhIV1V2L0dvWG1UWVZST09uZjdoM1NEMnpmaTQ0OXllcms3Z2ZNdjlHTTA2?=
- =?utf-7?B?TFBvSllHRGswSExwNUZGOVpCbk10Z0NUZG9Pc29keURWZ25jNistcjR6MUcw?=
- =?utf-7?B?VzY0YkNyMk92enFLa2hmVW5ieGlyNzhQd2JTS0FqWVlOTlVBeG5XNTV6T1ZQ?=
- =?utf-7?B?eWlmTWxUNG9TbVdWNVpIOFBUZXExQWoyWkVESEQ4M2FLSUFQcUtScXRzb3hl?=
- =?utf-7?B?Q3hJSWZPL1R1YnNncWhzQW5jQXFPMnVidjVmN3Vob1prL1B5ZHhaWnZCWWMx?=
- =?utf-7?B?cFhBTkNQNU53cjN4T0FrTGR3bEp2ZTAwMUhQRDM1TWYxMjJ6M281Z3hmTTFD?=
- =?utf-7?B?VFg4UnAwb0VzZGRuYXA1V0hYRlRQekxGMnhoZG1yKy0rLUJBNk9hSjBlUVBY?=
- =?utf-7?B?SGFCemoxTWtic2UrLS9sdGR2V3FJWGtBTU1teTFUb243SGpIQ2N2TTUvcGZG?=
- =?utf-7?B?Tlk4REJUVEdyL3lJZlZJVlBla21WOWtYS2ZyZ1FLUW9Ia3FuUEVKQW1VVTlN?=
- =?utf-7?B?a09mNktnanprM0ZNWXFsODVRYzl6bVVVWGo3MHNVV0VLdWtYOGR6NzhRczZl?=
- =?utf-7?B?Q3pGSjYzaystb3hyVldmUHZQTkd6N0xLcDdpMmgrLTNKMG9VYk93Ky1TWkto?=
- =?utf-7?B?Rk9ZYWttS3A3VEpETi9LM3JySHpiM0orLVF0M2dnSFpFbistMGpCdXNtS2wv?=
- =?utf-7?B?VWZza1lTL0ZRODJwWjJjT2xCNWNnekdiR2hPemNiZ3oyQXJJRW4vOWtwTUtV?=
- =?utf-7?B?ZHlVM08wSDY4ODl0OC9iajNwaSstSEJrZGlId3ZqVU9rM2svcnpWaWxhNkpq?=
- =?utf-7?B?VGF3SCst?=
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="J4tKA2z9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0C56940E016C;
+	Thu, 16 Jan 2025 00:21:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VbKRelzzy0f1; Thu, 16 Jan 2025 00:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1736986908; bh=sf+0ox9qps9OCdNOEgrNakgxyzYQCzMyDXp9Teo1SPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J4tKA2z9c1dX6/H2/3UFIDVILO8xBwPl1TEyUVQC4DlsQu0QI4LpBFQsTv6iHdtZ2
+	 p9YzSu1IhOTiU08BN0L2M0PecKjs22CleittrM2qBO2cPFFy2HJaYp5I0uY6OZRukR
+	 zozlAlfCzmYK6zA6a7rnwMrIQ0b9nW+RolLTUFHyU+pjU2cgIrmrHLhc5fWiU93M7s
+	 2LkZr/YbbEmZFQD4jIKQDyVrDvGkXqUQxr/6r6ASqtjZeCHNBw03OzcKbqcsL4Zf7y
+	 r1sNh+hwC4E+Sr34rsrK2zYDvzgRcnP4r3tkiHo/VN5TYvqIp98CXQqbLfpwJEbhX6
+	 LaT6JfdqWRw5QyxhDfkiFjx/XLr9NsYyJlC7ZF0t4iyxrgh9cNrQSodGzZq46p9SyW
+	 +WsaNZgJgyJuKoQeomDMVOTWzfADMeQN5FYTZwJH0fqluCcbXDu1gyb+MVca8Gq90k
+	 llpN+og3N+QW/Z2lzB9EkrkOeRj43toNWqIzt56gvuiATFuUMDYR70QV3oeogpE80D
+	 afkT8idhQsUhKtFR8pKG/nJdJsboyyBxDAYqoVUea/m1agSvHxOA/qykF1MomKo6Rn
+	 83v/tkyRaK2qlfWRqxNzTUP0WyMRLSCK9+KBi9ZUGMvUEoc5K77pSKK9g5j/jP4qjT
+	 q2Tju1YxL09ppY+Av5Rr7RuI=
+Received: from zn.tnic (p200300eA971f93c3329C23fFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93c3:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7299840E0277;
+	Thu, 16 Jan 2025 00:19:07 +0000 (UTC)
+Date: Thu, 16 Jan 2025 01:18:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions
+ noinstr compatible
+Message-ID: <20250116001858.GDZ4hQctZe_PFvJ0AJ@fat_crate.local>
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR19MB7399.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7930ccb4-e4e5-4dc5-b84b-08dd3550f146
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2025 10:39:51.7606
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uWh0gPH3j4SNqRMvDVt/3lLbqi3SoOqGixyQ5IyTM+jExqJRv+ntQ5+9eeg733h78c3VhHnG745O79njLf8ixg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR19MB5788
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-15_04,2025-01-15_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
- lowpriorityscore=0 adultscore=0 mlxlogscore=846 mlxscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501150080
-X-Proofpoint-GUID: blJxzriEerB_JRbymEeNvCtK44yarIIM
-X-Proofpoint-ORIG-GUID: blJxzriEerB_JRbymEeNvCtK44yarIIM
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 adultscore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 spamscore=0
- suspectscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=804
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501150080
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250110-asi-rfc-v2-v2-1-8419288bc805@google.com>
 
+On Fri, Jan 10, 2025 at 06:40:27PM +0000, Brendan Jackman wrote:
+> Subject: Re: [PATCH RFC v2 01/29] mm: asi: Make some utility functions noinstr compatible
 
-Internal Use - Confidential
-+AD4- On Wed, Jan 15, 2025 at 10:58:52AM +-0800, Qunqin Zhao wrote:
-+AD4- +AD4-
-+AD4- +AD4- +Vyg- 2025/1/14 +TgtTSA-9:21, Greg Kroah-Hartman +UZmQUw-:
-+AD4- +AD4- +AD4- On Tue, Jan 14, 2025 at 06:43:24PM +-0800, Xi Ruoyao wrot=
-e:
-+AD4- +AD4- +AD4- +AD4- On Tue, 2025-01-14 at 11:17 +-0100, Arnd Bergmann w=
-rote:
-+AD4- +AD4- +AD4- +AD4- +AD4- On Tue, Jan 14, 2025, at 10:55, Qunqin Zhao w=
-rote:
-+AD4- +AD4- +AD4- +AD4- +AD4- +AD4- Loongson Secure Device Function device =
-supports the functions
-+AD4- +AD4- +AD4- +AD4- +AD4- +AD4- specified in +ACI-GB/T 36322-2018+ACI-.=
- This driver is only
-+AD4- +AD4- +AD4- +AD4- +AD4- +AD4- responsible for sending user data to SD=
-F devices or returning SDF device data to users.
-+AD4- +AD4- +AD4- +AD4- +AD4- I haven't been able to find a public version =
-of the standard
-+AD4- +AD4- +AD4- +AD4- A public copy is available at
-+AD4- +AD4- +AD4- +AD4- https://openstd.samr.gov.cn/bzgk/gb/ne
-+AD4- +AD4- +AD4- +AD4- wGbInfo?hcno+AD0-69E793FE1769D120C82F78447802E14F+A=
-F8AXwA7ACEAIQ-LpKI+ACE-g7kUt84vOxl
-+AD4- +AD4- +AD4- +AD4- 65EbgAJzXoupsM5Bx3FjUDPnKHaEw5RUoyUouS6IwCerRSZ7MIW=
-i0Bw5WHaM2YP7pZ
-+AD4- +AD4- +AD4- +AD4- IcYiDQOLf3F+ACQ- +AFs-openstd+AFs-.+AF0-samr+AFs-.+=
-AF0-gov+AFs-.+AF0-cn+AF0-, pressing the blue
-+AD4- +AD4- +AD4- +AD4- +ACI-online preview+ACI- button, enter a captcha an=
-d you can see it.  But the copy is in Chinese, and there's an explicit noti=
-ce saying translating this copy is forbidden, so I cannot translate it for =
-you either.
-+AD4- +AD4- +AD4- +AD4-
-+AD4- +AD4- +AD4- +AD4- +AD4- but
-+AD4- +AD4- +AD4- +AD4- +AD4- from the table of contents it sounds like thi=
-s is a standard for
-+AD4- +AD4- +AD4- +AD4- +AD4- cryptographic functions that would otherwise =
-be implemented by a
-+AD4- +AD4- +AD4- +AD4- +AD4- driver in drivers/crypto/ so it can use the n=
-ormal abstractions
-+AD4- +AD4- +AD4- +AD4- +AD4- for both userspace and in-kernel users.
-+AD4- +AD4- +AD4- +AD4- +AD4-
-+AD4- +AD4- +AD4- +AD4- +AD4- Is there some reason this doesn't work?
-+AD4- +AD4- +AD4- +AD4- I'm not an lawyer but I guess contributing code for=
- that may have
-+AD4- +AD4- +AD4- +AD4- some +ACI-cryptography code export rule compliance+=
-ACI- issue.
-+AD4- +AD4- +AD4- Issue with what?  And why?  It's enabling the functionali=
-ty of the
-+AD4- +AD4- +AD4- hardware either way, so the same rules should apply no ma=
-tter where
-+AD4- +AD4- +AD4- the driver ends up in or what apis it is written against,=
- right?
-+AD4- +AD4-
-+AD4- +AD4- SDF and tpm2.0 are both  +ACI-library specifications+ACI-,  whi=
-ch means that
-+AD4- +AD4-
-+AD4- +AD4- it supports a wide variety of functions not only cryptographic
-+AD4- +AD4- functions,
-+AD4- +AD4-
-+AD4- +AD4- but unlike tpm2.0, SDF is only used in China.
-+AD4- +AD4-
-+AD4- +AD4- You can refer to the tpm2.0 specification:
-+AD4- +AD4- https://trustedcomputinggroup.org/resource
-+AD4- +AD4- /tpm-library-specification/+AF8AXwA7ACEAIQ-LpKI+ACE-g7kUt84vOxl=
-65EbgAJzXoupsM5Bx3FjUD
-+AD4- +AD4- PnKHaEw5RUoyUouS6IwCerRSZ7MIWi0Bw5WHaM2YP7pZIcYiCFoP-hu+ACQ-
-+AD4- +AD4- +AFs-trustedcomputinggroup+AFs-.+AF0-org+AF0-
-+AD4-
-+AD4- So this is an accelerator device somehow?  If it provides crypto func=
-tions, it must follow the crypto api, you can't just provide a +ACI-raw+ACI=
--
-+AD4- char device node for it as that's not going to be portable at all.
-+AD4- Please fit it into the proper kernel subsystem for the proper user/ke=
-rnel api needed to drive this hardware.
-+AD4-
-+AD4- thanks,
-+AD4-
-+AD4- greg k-h
-+AD4-
+The tip tree preferred format for patch subject prefixes is
+'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
+'genirq/core:'. Please do not use file names or complete file paths as
+prefix. 'git log path/to/file' should give you a reasonable hint in most
+cases.
 
-Hi Qunqin and Ruoyao,
+So I guess "x86/asm:" or so.
 
-+ACI-GB/T 36322-2018+ACI- is just a chinese national standard, not ISO stan=
-dard, not an
-enforced one, +ACI-T+ACI- repensts +ACJjqINQACI- which means +ACI-recommend=
-+ACI-. From what I understand
- it defined series of C API for cryptography devices after reading the stan=
-dard.
-Linux kernel have user space socket interface using type AF+AF8-ALG, and ou=
-t of tree
- driver +ACI-Cryptodev+ACI-. From my view: +ACI-GB/T 36322-2018+ACI- can be=
- user space library
-using socket interface, just like openssl, if must do it char dev way, do i=
-t out
- of tree, and reuse kernel space crypto API.
+> Some existing utility functions would need to be called from a noinstr
+> context in the later patches. So mark these as either noinstr or
+> __always_inline.
+> 
+> An earlier version of this by Junaid had a macro that was intended to
+> tell the compiler "either inline this function, or call it in the
+> noinstr section", which basically boiled down to:
+> 
+>  #define inline_or_noinstr noinline __section(".noinstr.text")
+> 
+> Unfortunately Thomas pointed out this will prevent the function from
+> being inlined at call sites in .text.
+> 
+> So far I haven't been able[1] to find a formulation that lets us :
+> 1. avoid calls from .noinstr.text -> .text,
+> 2. while also letting the compiler freely decide what to inline.
+> 
+> 1 is a functional requirement so here I'm just giving up on 2. Existing
+> callsites of this code are just forced inline. For the incoming code
+> that needs to call it from noinstr, they will be out-of-line calls.
 
-Best Regards.
+I'm not sure some of that belongs in the commit message - if you want to have
+it in the submission, you should put it under the --- line below, right above
+the diffstat.
+
+> [1] https://lore.kernel.org/lkml/CA+i-1C1z35M8wA_4AwMq7--c1OgjNoLGTkn4+Td5gKg7QQAzWw@mail.gmail.com/
+> 
+> Checkpatch-args: --ignore=COMMIT_LOG_LONG_LINE
+
+Yeah, you can drop those. People should not turn off brain, use checkpatch and
+point at all the silly errors it spits anyway.
+
+> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> ---
+>  arch/x86/include/asm/processor.h     |  2 +-
+>  arch/x86/include/asm/special_insns.h |  8 ++++----
+>  arch/x86/include/asm/tlbflush.h      |  3 +++
+>  arch/x86/mm/tlb.c                    | 13 +++++++++----
+>  4 files changed, 17 insertions(+), 9 deletions(-)
+
+So I was just about to look at the below diff but then booting the patch in my
+guest causes it to stop at:
+
+[    1.110988] sr 2:0:0:0: Attached scsi generic sg1 type 5
+[    1.114210] PM: Image not found (code -22)
+[    1.114903] clk: Disabling unused clocks
+[    1.119397] EXT4-fs (sda2): mounted filesystem 90868bc4-a017-4fa2-ac81-931ba260346f ro with ordered data mode. Quota mode: disabled.
+[    1.121069] VFS: Mounted root (ext4 filesystem) readonly on device 8:2.
+<--- EOF
+
+with the below call stack.
+
+Booting it on Linus' master branch is ok but this is tip/master with all that
+we've accumulated for the next merge window along with other stuff I'm poking
+at...
+
+Long story short, lemme try to poke around tomorrow to try to figure out what
+actually happens. It could be caused by the part of Rik's patches and this one
+inlining things. We'll see...
+
+native_flush_tlb_one_user (addr=2507219558400) at arch/x86/mm/tlb.c:1177
+1177            if (!static_cpu_has(X86_FEATURE_PTI))
+(gdb) bt
+#0  native_flush_tlb_one_user (addr=2507219558400) at arch/x86/mm/tlb.c:1177
+#1  0xffffffff8128206e in flush_tlb_one_user (addr=addr@entry=2507219558400) at arch/x86/mm/tlb.c:1196
+#2  flush_tlb_one_kernel (addr=addr@entry=2507219558400) at arch/x86/mm/tlb.c:1151
+#3  0xffffffff812820b7 in do_kernel_range_flush (info=0xffff88807dc311c0) at arch/x86/mm/tlb.c:1092
+#4  0xffffffff8137beb6 in csd_do_func (csd=0x0 <fixed_percpu_data>, info=0xffff88807dc311c0, 
+    func=0xffffffff81282090 <do_kernel_range_flush>) at kernel/smp.c:134
+#5  smp_call_function_many_cond (mask=<optimized out>, func=func@entry=0xffffffff81282090 <do_kernel_range_flush>, 
+    info=0xffff88807dc311c0, scf_flags=scf_flags@entry=3, cond_func=cond_func@entry=0x0 <fixed_percpu_data>)
+    at kernel/smp.c:876
+#6  0xffffffff8137c254 in on_each_cpu_cond_mask (cond_func=cond_func@entry=0x0 <fixed_percpu_data>, 
+    func=func@entry=0xffffffff81282090 <do_kernel_range_flush>, info=<optimized out>, wait=wait@entry=true, 
+    mask=<optimized out>) at kernel/smp.c:1052
+#7  0xffffffff81282020 in on_each_cpu (wait=1, info=<optimized out>, func=0xffffffff81282090 <do_kernel_range_flush>)
+    at ./include/linux/smp.h:71
+#8  flush_tlb_kernel_range (start=start@entry=18446683600570097664, end=<optimized out>, end@entry=18446683600579907584)
+    at arch/x86/mm/tlb.c:1106
+#9  0xffffffff81481c3f in __purge_vmap_area_lazy (start=18446683600570097664, start@entry=18446744073709551615, 
+    end=18446683600579907584, end@entry=0, full_pool_decay=full_pool_decay@entry=false) at mm/vmalloc.c:2284
+#10 0xffffffff81481fde in _vm_unmap_aliases (start=start@entry=18446744073709551615, end=end@entry=0, 
+    flush=<optimized out>, flush@entry=0) at mm/vmalloc.c:2899
+#11 0xffffffff81482049 in vm_unmap_aliases () at mm/vmalloc.c:2922
+#12 0xffffffff81284d9f in change_page_attr_set_clr (addr=0xffffc9000001fef0, numpages=<optimized out>, mask_set=..., 
+    mask_clr=..., force_split=<optimized out>, in_flag=0, pages=0x0 <fixed_percpu_data>)
+    at arch/x86/mm/pat/set_memory.c:1881
+#13 0xffffffff81285c52 in change_page_attr_set (array=0, mask=..., numpages=511, addr=0xffffc9000001fef0)
+    at arch/x86/mm/pat/set_memory.c:1922
+#14 set_memory_nx (addr=<optimized out>, addr@entry=18446744071759204352, numpages=numpages@entry=511)
+    at arch/x86/mm/pat/set_memory.c:2110
+#15 0xffffffff8127b729 in free_init_pages (what=what@entry=0xffffffff8226bac0 "unused decrypted", 
+    begin=18446744071759204352, end=18446744071761297408) at arch/x86/mm/init.c:929
+#16 0xffffffff898f25aa in mem_encrypt_free_decrypted_mem () at arch/x86/mm/mem_encrypt_amd.c:574
+#17 0xffffffff81ca06c3 in free_initmem () at arch/x86/mm/init.c:973
+#18 0xffffffff81c9fa48 in kernel_init (unused=<optimized out>) at init/main.c:1475
+#19 0xffffffff812398a0 in ret_from_fork (prev=<optimized out>, regs=0xffffc9000001ff58, 
+    fn=0xffffffff81c9fa10 <kernel_init>, fn_arg=0x0 <fixed_percpu_data>) at arch/x86/kernel/process.c:148
+#20 0xffffffff81206f7a in ret_from_fork_asm () at arch/x86/entry/entry_64.S:244
+#21 0x1f0f2e6600000000 in ?? ()
+#22 0x2e66000000000084 in ?? ()
+#23 0x0000000000841f0f in ?? ()
+#24 0x000000841f0f2e66 in ?? ()
+#25 0x00841f0f2e660000 in ?? ()
+#26 0x1f0f2e6600000000 in ?? ()
+#27 0x2e66000000000084 in ?? ()
+#28 0x0000000000841f0f in ?? ()
+#29 0x000000841f0f2e66 in ?? ()
+#30 0x00841f0f2e660000 in ?? ()
+#31 0x0000000000000000 in ?? ()
+(gdb)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
