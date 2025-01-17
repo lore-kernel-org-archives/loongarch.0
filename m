@@ -1,176 +1,227 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2058.outbound.protection.outlook.com [40.107.236.58])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429461E0B74;
-	Fri, 17 Jan 2025 01:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737078891; cv=fail; b=hL6OqSzfsHCu/LEu8D+OkP9bXS/o1JWS8jskXJsQ1KJa0M5XUKQEltvDUHo1dgr29VriP1CH+MkEx0hvxqmOftQ9ZhJXHormHNJV7CmrX8bQcc7LV2//8fzb8ABBwG9mX9+TxMO1vTusj/W0OokMsxVqAPLN9+fNfoFZh7NMjVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737078891; c=relaxed/simple;
-	bh=zJmcQNMH/4ZdSuAxeLQHhPZc5paiSCsbOrkcx2T46R4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cNPaLB4QM6Owh/B8gTcWNEuR05GjiDD1jZaBq/xqIzebpBC0PkJIeOjQ9RR/TztXaeEXsBnLs7mFvz1bZ8C2KDYzrXSw8D+hlELssZZrJ6ssIFE3XQ2PTvtPoEoeI0DpSqG8RC+qgtntQWA8eltv0eZuk7X9PP9TTKwK+FyawBE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kcReJsJh; arc=fail smtp.client-ip=40.107.236.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E481FBC8C
+	for <loongarch@lists.linux.dev>; Fri, 17 Jan 2025 09:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737107279; cv=none; b=J9whgN1dkM7PgtTIiWE+TX2UlEh+xLkTAY8gXCslR4McaErLUq2flgGJhzOXl6INhCOB+xZ6e3b7GSF+hIdw6zo/ub3XL7ozvLQCPIuy8/mRE+NCDIbiXTAn/6GHCpIFrkYF6CkwRGWGkE0fqK965Bf6MoH0haVSsuMmfexTp6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737107279; c=relaxed/simple;
+	bh=F2gqeuB0aLhR/bzKUvYunwZ5S0liP9KO05qoNp3Tqo0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=t+H44NJ/TVNRptXVMS8TqZec2Y9tj4UvGWgmxn5HmeTlzeXOHilJdHERydJBL9jwm34dz+CxQOgmxp60OvR43INVYTYEpKvLZa1OR8s6dpWV5OwZx/aHJMmbZgmF9jWiTHDHJVgWWy8uFa0o5MxQT2VT83ColBucBwtqnTfUv0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6tK/8Kh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kcReJsJh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p0Ndik2jUJLLqNfyDZDeLNl0yWLbsxxOHUlriBEB06QDE/IY/XeEYPywChj79cZiPLeeR739wTHdhuXQ5Gw1pjs/X+rqbMW/0QZc9+uplc+Mc5+tvANDto7jlrNoYJW818Rt16/IPpSnvKPArDJ4uB6JPrPJA9dLiKZBmnyo7cGZ55rW0m/Cl9YHC/vWQNzfTSRx0ikGLmbyrQYqjKDzHxfFE0lcWS5cxp3vjSKnp1FHsv0KPZy3We+OfLKpsY8mkB9Of+gUDMe2+nJ4LJLrkFKs+v+4B4vrLMGN0hZibwcFzgmD5UM2fFhKUMTo+QY5MrWGEinlw1NPNHpYv+NJBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hpQhF1Eu3o5/dVcEBvFi4uqy64IBZ4EGdR7QRq2M8j0=;
- b=IVSCvIVGZLKTUl3fFU4IN83os37u9e4oqQ+5wsZGJ6In+mLN7hOdNiPcIFmvYzBdLywWf12kNP/sEkBTTyrocd82yS3kYucLN8B6gBV9zo3KhUo8XbWflLXgngUTyFEQzoUHIjpvkQsjfGUKdtXYrq37UhyP5a2mkfhPO9pzYdBIFoKrs2TtisAZheLCeUJxaerV8aB4cyLauKNEhkTrvzYTpnUblRyCCn04mCd0t+YOu8F5fiVIu41oh8lvaiXaSYlpB4QfYgiPQW5ie9L/ko5BUaHkxfF02+RpUj8s9wIDzLxXrbmqRUXZjMgmZUM49RL08X1gZ13yO/FWPn1pMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hpQhF1Eu3o5/dVcEBvFi4uqy64IBZ4EGdR7QRq2M8j0=;
- b=kcReJsJhU7OvOX+s02NrSJrEIy8pDI8zLOE3MnXnlPKiGn2ldR/cS69jj9AiVXJZc/pEVfEUuYAzvTEqQ7ReDo9yGFTCshtTddiWCm5eakx1+K+j+xCgR+zpT+kjdO/J3bTVvcuE5cAARiW5xtlBU1HcIdAeTfv48RffJyUcUXhut4r/kaDujDgwCWnCHpmsDEbjXT4xeKIqIDaXfp80iSZz6Mha/eBA6tzco7fyCEvEyqSdbQWGTzKzIfZJpruxZXoG1QniHubLHx0WKUf0gox6c8C2oNihuBk7RQ/F7V4XRwMQOmPdckNCvEl2SIayMC6fPGyTm7xsXnOcr6sJzg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- DS0PR12MB8272.namprd12.prod.outlook.com (2603:10b6:8:fc::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8356.13; Fri, 17 Jan 2025 01:54:46 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
- 01:54:46 +0000
-Date: Fri, 17 Jan 2025 12:54:42 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>, a@nvdebian.thelocal
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
-	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
-	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com, 
-	dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, 
-	tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, 
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 20/26] mm/mlock: Skip ZONE_DEVICE PMDs during mlock
-Message-ID: <2oqithhbrzugwdyucy44ehcl3oumly65oml2ozi5x5cbuj3pxp@empgh6q3buzy>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <e08dfe5ec6a654e8cb48f9203d7406326368f5a6.1736488799.git-series.apopple@nvidia.com>
- <6785cf266ea89_20fa29487@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6785cf266ea89_20fa29487@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: SY2PR01CA0020.ausprd01.prod.outlook.com
- (2603:10c6:1:14::32) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6tK/8Kh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737107276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+	b=A6tK/8KhRQ9XMbSHXn7b5FCof71m9Nz66+F3lTZOpjmBhLvLfDkuafP9csPHxi6ibgXlmA
+	odXr377rBr7gxIYAXJCILlv4Qo6Fgqt8l31LZtzZy5NQMwudsySR0rPzqoyDucmtwib/t3
+	QSY23AtGRzyG9yN5iLngePVHHe8gxJY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-DpSXXU96OVOExcFIepAz7A-1; Fri, 17 Jan 2025 04:47:55 -0500
+X-MC-Unique: DpSXXU96OVOExcFIepAz7A-1
+X-Mimecast-MFC-AGG-ID: DpSXXU96OVOExcFIepAz7A
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43623bf2a83so13472575e9.0
+        for <loongarch@lists.linux.dev>; Fri, 17 Jan 2025 01:47:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737107274; x=1737712074;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvR9KfuLK5jT/0k1YGBwcApH+9cF5PsvBxGMV+DYi4c=;
+        b=tHtIdy5w/bxepjCZz9tBopZnnnmHKGWa0xqqp8bmmLHA/sP8dkyAclIO6fgxx38c2j
+         ABCDhOvkRct0fzPOGSC58zaM6PawTs/ISIfys5JgcL/S2S3aZXSemq5yk5ObTt/LKISI
+         F9vWZvN0zUEgO/xbsa00Tu42Ycr1PssMMCcj6SCfm9PNWwZ14tFhhlY/B7w6Hwv1Fm3p
+         sk+lWAe9cML2lQJwin1k8Z+uO2ZBMX6blMMrYQbv5cd5GpB19iBoCNB1E1foGU2Qtagk
+         J9DV3/UQbNTQEBuFqQ9Q4OOg7437bx+fdkatB9xYmSku83wBMUZh8taNlhsoMFy7klqT
+         uLQg==
+X-Forwarded-Encrypted: i=1; AJvYcCX46m8nzX5MzhTkKbYaPzelki4rjdqV27Zc8dCkrdnoOg91w5J10UZ+h30Xxmff9a7EgnS5fLWnS5o=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxv7//03HTQuOSH4av7wISDxs8ZBwa27DQbvoAozPWzticJXMAA
+	44itgkfoBwJ9qIs0JQX1/8fOTF/cg14PiYXglcVZ/scPzX8sHnAqaCh+wizSr8I5xBNgW/pRIxM
+	Tt8K97LJGmt7Ba9Mv30vBZOr60OYkBk+QlVYWaKhj5suDliWYVgVHvM3E5Q==
+X-Gm-Gg: ASbGncvlhOzA8qZKznfhKmhj2wnRxCkucveSjHAIwiN9wMz2ia4BzSkDTwZkSkSS6pJ
+	8aZFn/5WUiOndLnoUAJ6cmFpOJaDyBTIpwdhXDi2jyDu0t4hulgrbNOUr4lFx5lIHIeQWWtnChU
+	dw67W7Ova1tE6/zdNyhtrMItKHN1MP5F+iO72GGHs4RjMVd4QndqLAtxJcnt5WRO90jydXRQZqt
+	XEyYb3aiXW/ir7ludbxH7uFAFon/1rCWZbu/kfC0viCpKwjNRjKlNmID3RUDrU6cH6zljK0nyZo
+	BYwV1MFMzM3xXouQf+pLlKSimBmN2QW2OQlZqmSmEg==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16314375e9.13.1737107273786;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHToHDxXT5KMOIEW1byUZUSn/LchRidR5pJg2ZFHbUxu07B2Q/njknWrWkjTXhDYHkp8NfwWQ==
+X-Received: by 2002:a05:600c:9a3:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4389191b819mr16313255e9.13.1737107273291;
+        Fri, 17 Jan 2025 01:47:53 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438904131f5sm27135155e9.11.2025.01.17.01.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 01:47:52 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
+ <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Kees Cook <kees@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, Shuah
+ Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
+ patching IPIs
+In-Reply-To: <Z4bTlZkqihaAyGb4@google.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-26-vschneid@redhat.com>
+ <Z4bTlZkqihaAyGb4@google.com>
+Date: Fri, 17 Jan 2025 10:47:49 +0100
+Message-ID: <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DS0PR12MB8272:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10aebc8a-4fc3-4fd5-4fc5-08dd3699eb60
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MWXGs+NOUhX/MZLeCteINhkZxXMkzzQnns/R0OOpV9ii0xc4W/kMuOPdsLQU?=
- =?us-ascii?Q?ZkwAFpc9PaRKZWlelNDKpVvSOyE/2qvw0Inc8O6sXvIKYJ2jyMBFdZ0MX83v?=
- =?us-ascii?Q?5aPmFNheu/C3l2IRpc2U1z4ekxdbXdGJlQha8Gy/uHTpTEX1tO8ynSiihRwv?=
- =?us-ascii?Q?gr3FsEHACSFqTd2Fy3vTgO3tnfqS1M80+vkdWXuRa97vPv+flacKNkP5QHPo?=
- =?us-ascii?Q?rDFZAywmFVbb8eiUOVvM3rOC4+hbQWQk8bxrbGwM0Gn37pcv1/8Ua6QOBGro?=
- =?us-ascii?Q?ANGi8gUuPNZscHQsqqjULvvdjb273COGhOTbWAMaxRE5Pmym6Wc2nEObNKMr?=
- =?us-ascii?Q?j3MjFNdf5T9gctwpY6ZRjXH225oiWwLB3ta0hbkE+fTA2mtroTf/DQDMh0hs?=
- =?us-ascii?Q?yvGu73TYjuMOSa4uVKKZFe3xPLTb/aDhTvRnpUr9JtuJQC65Z3DeBFpjhrJ7?=
- =?us-ascii?Q?3QYTGT4TI4PrtCXXXE2pWb5Ar21xyOoIm8jOv3GRykNVBgPSQ5mx0sl5JjKC?=
- =?us-ascii?Q?DmVMOGbWkpI6N8oBWt592eSEJY1eKM63v8JZwnE9je0IMttKsn93Y97lYfXZ?=
- =?us-ascii?Q?tBoFXSZ2YV1vSWClxU0yGEENzOCiwBTqOLG/LHfTD10jR3atKXUanR3UcVIG?=
- =?us-ascii?Q?+JkjBzxf7I2AryeVw0qvYTJ3tKGGEw4Passf2oItn/84cFOGJYyp/BlXvByc?=
- =?us-ascii?Q?/tfdrUfbeX4w5w++8B0TmBOcjKOMRnYy9U/mEV1DxtGz7fqvz74r5bcrwjNa?=
- =?us-ascii?Q?/z3vBtvO71W2ZbtnUwqXOMKip51mdnwCuzAh3bQgvzg4iQnKKDy5f4t6W579?=
- =?us-ascii?Q?/oVdt1AVKLIAGQfTHDcFugDbDM9+KoNagMq5YqP4hNlcx9Kporr5jdJOp3gT?=
- =?us-ascii?Q?0o+5oGl1fdOtxRVNXKJW0srHxvSlgaHTIyFA7DuCivgnLGdyYIrhRgGwNCZi?=
- =?us-ascii?Q?lSiqKQXbdIrutN1sS4bQ5hwGneOCEa4gsUabr4RI37ISjZHqkt/sv+L1sO77?=
- =?us-ascii?Q?E2NbOp0qFje1RcpDzPWSkkp6InPxHfdwTyRYj2vPBLUUm+bOjnXXTuf91SZi?=
- =?us-ascii?Q?mdGf0LQzQaHBqLBhafnsmBZL5pQOJpDX+IXsM/yU3X6jkAvR8L/o01D1THoH?=
- =?us-ascii?Q?094ooYW7NZAL7dMgwVURv8EA40gWsvQkDckjARmHR5y+9XorS9N816ebi2b8?=
- =?us-ascii?Q?D79Ej1wqCfDFb8QO471k1Yemfdk25K3ULOV2kH42o+m7bWigHEx9s3uehGLk?=
- =?us-ascii?Q?ODbC8qGmY3v7RtOD8RQdLqhfzluKKAQ2uLYmebk7nfCruF9YX4V3OnkNpw/k?=
- =?us-ascii?Q?OB3dQs/2fJACpJtDsWB3hTRxLm7yxLonBt9EXArde44ErT4TS6dqKfUJvDRx?=
- =?us-ascii?Q?fj5/GkrQx8NswsPwbSTpgepLvZ9N?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7bsvSXwgl/uWpGvhqsCMERpnYm39nGUpRpNvQgR5DvP9vze5FM9N8lk7YHwd?=
- =?us-ascii?Q?1mtVrQQJd3UKGZwscXnE5oo53WeHRhtA5YHCxRFDuFqVeSg4wqgEsFwg57fF?=
- =?us-ascii?Q?D64R5n09sr0WyR10Rod7+hSuHKHQ7zdoqnL9377Be7Eu31OgKYzLcwe4xpTy?=
- =?us-ascii?Q?nz6nFMgUdq6XCIRV48dcB1wxY2yRvf6DIK18evmKivq10eXNFWFb0IE88B+5?=
- =?us-ascii?Q?7gUYU03ooK2AyL4sqCmFYTxp8XTe445GGO6lahSY+O3i9Q6zRbu1eIlkVYdV?=
- =?us-ascii?Q?WjijLKm4XJWBUZLmNgE0f3D9VaLkUtulUTZdv+w+vtXeZfecn1+zsVABwp/Y?=
- =?us-ascii?Q?v3msX7dnBzUHyh9hS81wPSQhxgRbzdobh4KVyh4s5rSVh8h8hPn8KnTWm4vQ?=
- =?us-ascii?Q?aZJtfr+OE40HdxBTjXR+HyKOw16rt3HxmLDzV6fv+lCbe12JNGm/1X2qYSfQ?=
- =?us-ascii?Q?8LXFG1F89uAddG85AQkxnAFDTCu9k6a1EQlDa4rehQ5D6tGfRw0/HmNpvMVs?=
- =?us-ascii?Q?V47e3JYPXqPBz9sX2wyzQn4+frYAryj3MCe9bOnPhdKt44UYchy3gDXYgeUo?=
- =?us-ascii?Q?3EHtBTTQyvn2GzYgZWTvrojpJHSh3cWgFJZDUYAIaPmrbDd2BMIlikYOuDpd?=
- =?us-ascii?Q?Qar1s08RnHzMB7+STU58VM/7RaaS4MFAVX/xVBohaBtnpodsq1iTUF6Vqol/?=
- =?us-ascii?Q?RpzUVSleIAdDxC+dmcRCMaMOCkyiBNgi5/UflPh+n4t8E+rN2uHylf4HngGu?=
- =?us-ascii?Q?/xos9CTAKRBA+t0AGtmPz5Vg8Um7kZc8/ILVCpuIbF08ICUGrPOH3lbWte66?=
- =?us-ascii?Q?OMUVQEzkUpohVMEd/yoFDxGBpm0T2ehD4WFpMLzZg1JqirGEdQOAx6ufMF8t?=
- =?us-ascii?Q?luM3kiwMTSc6949WIy9LKjJyty+EHJ0wNnoxXVVCbexTfkWhxhLVHICQW5xI?=
- =?us-ascii?Q?Pd1qK2Jf5Cl/besoB/tLO3PGLd/jirn/LjGVyUFrI15pb0XbU29YBGmn3Qqy?=
- =?us-ascii?Q?wZbfhYE9soVRmXnAJY/ACEnAtzH1GOC+QfzB4G+FXvtFFaWjG9eRPz1gDAhr?=
- =?us-ascii?Q?D6vyfkJGE2KytuU3oN3llp83yn2HSoGYtybcEGxbvj0q1MqBnsDXogpoBXOz?=
- =?us-ascii?Q?tBTlXBe+ifWyxByb2XJuduIFrrVjvaZP+Zqz2Uot7tTWnDGX250nIPlCJUUC?=
- =?us-ascii?Q?N7EIk7N+hYk+KBygpI9z5v+0TIPij1WiIzDMsWgWE8IEsyY8BwHRIxdhjkfM?=
- =?us-ascii?Q?YgWCMhHPKwuvTMVdX2rH6Cb74QJNhQhJHaLXajWPmGxXJEDDcGgN22gGNb5B?=
- =?us-ascii?Q?MXsnkxOM7DmJQpiCfwGBZUn4A/b/oDt4kW5ZOPZ6WaNn6FBBBDctrQfBF6R9?=
- =?us-ascii?Q?BE/DQoz//AGrhJJARXsdudK1q5SCALRKvzgK2vbj+qbnxOuA3KqYJkaFW+GZ?=
- =?us-ascii?Q?MyMMwiky9dgOnur4u1D8hWFgDP97pQbDU3PJqled32EYw6gVnqxEHW2uGBXn?=
- =?us-ascii?Q?ixZZg8NWJWRh2TnDTOn5kmc3Till+Ngu6HVq5w3meIKH9tZKsfKzL4oRRWPr?=
- =?us-ascii?Q?z19xTE8wEyR+enOliTUYqPB6ddWnld7hdv0VeSjo?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10aebc8a-4fc3-4fd5-4fc5-08dd3699eb60
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 01:54:46.4350
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QdZzbjUSCPneQxQX95jdT2oBpKGz2zQRBy1cLVLGwzHqwn5Wg8cbRkBm6Of1DZSOe3pG/bI3z1XzV1f7ERvuDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8272
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4IxTyIwiHF4ccSLonkDuqxDXHxhZFT3BNPbxSLRDq8M_1737107274
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Mon, Jan 13, 2025 at 06:42:46PM -0800, Dan Williams wrote:
-> Alistair Popple wrote:
-> > At present mlock skips ptes mapping ZONE_DEVICE pages. A future change
-> > to remove pmd_devmap will allow pmd_trans_huge_lock() to return
-> > ZONE_DEVICE folios so make sure we continue to skip those.
-> > 
-> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> 
-> This looks like a fix in that mlock_pte_range() *does* call mlock_folio() 
-> when pmd_trans_huge_lock() returns a non-NULL @ptl.
-> 
-> So it is not in preparation for a future change it is making the pte and
-> pmd cases behave the same to drop mlock requests.
-> 
-> The code change looks good, but do add a Fixes tag and reword the
-> changelog a bit before adding:
+On 14/01/25 13:13, Sean Christopherson wrote:
+> On Tue, Jan 14, 2025, Valentin Schneider wrote:
+>> text_poke_bp_batch() sends IPIs to all online CPUs to synchronize
+>> them vs the newly patched instruction. CPUs that are executing in userspace
+>> do not need this synchronization to happen immediately, and this is
+>> actually harmful interference for NOHZ_FULL CPUs.
+>
+> ...
+>
+>> This leaves us with static keys and static calls.
+>
+> ...
+>
+>> @@ -2317,11 +2334,20 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+>>       * First step: add a int3 trap to the address that will be patched.
+>>       */
+>>      for (i = 0; i < nr_entries; i++) {
+>> -		tp[i].old = *(u8 *)text_poke_addr(&tp[i]);
+>> -		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
+>> +		void *addr = text_poke_addr(&tp[i]);
+>> +
+>> +		/*
+>> +		 * There's no safe way to defer IPIs for patching text in
+>> +		 * .noinstr, record whether there is at least one such poke.
+>> +		 */
+>> +		if (is_kernel_noinstr_text((unsigned long)addr))
+>> +			cond = NULL;
+>
+> Maybe pre-check "cond", especially if multiple ranges need to be checked?  I.e.
+>
+>               if (cond && is_kernel_noinstr_text(...))
+>> +
+>> +		tp[i].old = *((u8 *)addr);
+>> +		text_poke(addr, &int3, INT3_INSN_SIZE);
+>>      }
+>>
+>> -	text_poke_sync();
+>> +	__text_poke_sync(cond);
+>>
+>>      /*
+>>       * Second step: update all but the first byte of the patched range.
+>
+> ...
+>
+>> +/**
+>> + * is_kernel_noinstr_text - checks if the pointer address is located in the
+>> + *                    .noinstr section
+>> + *
+>> + * @addr: address to check
+>> + *
+>> + * Returns: true if the address is located in .noinstr, false otherwise.
+>> + */
+>> +static inline bool is_kernel_noinstr_text(unsigned long addr)
+>> +{
+>> +	return addr >= (unsigned long)__noinstr_text_start &&
+>> +	       addr < (unsigned long)__noinstr_text_end;
+>> +}
+>
+> This doesn't do the right thing for modules, which matters because KVM can be
+> built as a module on x86, and because context tracking understands transitions
+> to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
+> being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
+> or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
+> patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
+> use the wrong static path.
+>
 
-Yeah, that changelog is a bit whacked. In fact it's not a fix - because
-mlock_fixup() (the only caller) already filters dax VMAs. So this is really
-about fixing a possible future bug when we start having PMDs for other types of
-ZONE_DEVICE pages (ie. private, coherent, etc).
+AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
+and thus such a static key usage should at the very least be caught and
+warned about by objtool - when this isn't built as a module.
 
-So probably I should just roll this into "mm: Allow compound zone device pages".
+I never really thought about noinstr sections for modules; I can get
+objtool to warn about a non-noinstr allowed key being used in
+e.g. vmx_vcpu_enter_exit() just by feeding it the vmx.o:
 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit.isra.0+0x0: dummykey: non-RO static key usage in noinstr
+
+...but that requires removing a lot of code first because objtool stops
+earlier in its noinstr checks as it hits functions it doesn't have full
+information on, e.g.
+
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_vcpu_enter_exit+0x21c: call to __ct_user_enter() leaves .noinstr.text section
+
+__ct_user_enter() *is* noinstr, but you don't get that from just the header prototype.
+
+> I don't expect this to ever cause problems in practice, because patching code in
+> KVM's VM-Enter/VM-Exit path that has *functional* implications, while CPUs are
+> actively running guest code, would be all kinds of crazy.  But I do think we
+> should plug the hole.
+>
+> If this issue is unique to KVM, i.e. is not a generic problem for all modules (I
+> assume module code generally isn't allowed in the entry path, even via NMI?), one
+> idea would be to let KVM register its noinstr section for text poking.
+
