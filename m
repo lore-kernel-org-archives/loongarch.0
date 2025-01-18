@@ -1,142 +1,127 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92631A239F
-	for <loongarch@lists.linux.dev>; Fri, 17 Jan 2025 17:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDE835968
+	for <loongarch@lists.linux.dev>; Sat, 18 Jan 2025 04:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737134132; cv=none; b=pjpt1hwh6icL3PvRPlclIpa2N534C5rZiSfc+hXpMJUPmjmHd25vIblwtnfysEeJDLt4WhpZdP1lzjhZDWJr4zOk9HqmDUqtabtVWR1rGGkamMPgnD5/hJhMHP7eT0Q3AtqbjeXdMt7x1ccD8kg7GwRP/3bjrAZPzuNzWT1qj70=
+	t=1737175116; cv=none; b=Hy5Fxt/fNxmTvh6U6k/7fdon4pRWuokhtvQEB69OTqeAcuNU0GQJKnA23EdkeEZNSpH0c1gkkh/D8bR8CfGDpHn+ieMPfd8DcQg78wQ+2zYNwTigoA11EqnqliR7ES7Io+a/ZamAVvhCfc+H/KNaOqYDLh9aUWRMmfZ9k24wsr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737134132; c=relaxed/simple;
-	bh=0MFya64nSwrKA4zsNtkUtWH4IKaadp8mDbPpC2PlrFo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SJDvZwx7ZgASolCejPkjfkr6xaMIIE+9lqXocvihumnzj2mIURFtEgSEyzqyZRxOndIFIej4/+tRTUrakNRvYz/x3/sp17Mx6UituooXbpaVVrzYYT3dedbCGiRsRNKlvwWirBt6J8Iw7yC83NcC3EtzAipAfmz2BdUcBQ0JfAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=18Z4f+W9; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1737175116; c=relaxed/simple;
+	bh=tFLBkahsiihIpZSximl2JBqPEwqeQPi3tzP7hERo3Ig=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=V9hM+EyRpuJ/H2yQPvfmT8J8lubLZkxweiHq/ZOgwVTmYVjVfRdn05uipOJdFzaGhYTiRpqZeUcPHcZ6BrL950UliBRdYSiSsF2LL6GuHZ+V+EkD6whhSH6RzDeUNEGQYt/bosPlknbyiEFl/KE1iYr1LGQY49olKUhP9oBF5Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hdj5mGq9; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="18Z4f+W9"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21a7cbe3b56so33252735ad.0
-        for <loongarch@lists.linux.dev>; Fri, 17 Jan 2025 09:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737134129; x=1737738929; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/pcx17eniD+ASjh3teIfjrJN/d55a+1SMCIjE05N6Y0=;
-        b=18Z4f+W92hjQtxbo71KFtykOgNC/nSIyiBuOg6pSBGeK+fiP+YhW1A+bcaS70mKsUI
-         oPySjg30DB7ZJHfzznXKfTZIRsJrL/izZB2JqI2YFdd6w+dNwZlfVsiS39MYZn+ibAjJ
-         8/yQITZubxofplNLXHmBgg/i5w5aK86iI+0d9OMcBuXUscwKdB/NltlDjGEmfuxGUsV0
-         +i3GkIvF9LJRHYV/2hotkd4b6nY7wLnEh6OYZRp3Yv7CcWXUcdmAWI3bqd3YqzuepUXu
-         WHQd7Ia/0lcDfUxd9Dfkk6t+23VF4PSZ0VorTNuVlsoaF8nQMqNzyRRibXdCa2HHq4Zs
-         ue7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737134129; x=1737738929;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/pcx17eniD+ASjh3teIfjrJN/d55a+1SMCIjE05N6Y0=;
-        b=k4DTb5EUYjqxtVZGuogVu380Bn8w7cF+Y3Fr4gU+2QbCBnfNY/AKUEuZqDqCDhrOGP
-         hIvtGvjt9t5/TkK1DmX5RTcsyDtNn0EK8Ev+bfqzou8HjdPKid5/eOlMcFaBy3Tnu9XA
-         lfXTR6PfIV/Q+D4cPSZ2Rtjj9gp2MNC4G9vkvBHmqJIQeHjph9YrLPAPDPJ1zF8QF/9s
-         EYqyWdsdQqYgXInzro5i9kd0j7mlLTmTBeQHK9WfRBA8H5AB8JGlwqi/BS8R3XQnyaol
-         hVxe51QJyrGo3B/ottogWh5uVqiDn7zKQ3QqGnkbrL+B697/RxUxwYHAoTHQacqANrG3
-         fCvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7GJ6FBXDxd4JnHd7c6nf5IWR9/1Rbcib2zADHdV1UOqN6TfZgy496/n0PAmqdzVqDvN8ICV2XUTY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzrf/4EhhImJF1yoZ/on9WjJr1i1b/QPDX316Y0Tjk/oH8Y05bO
-	dZKg8mR4mvBEitJET2+ZDIHRyQKU46mJvs4xhDJGRrdJ3lgkw6s3Q0jglvYymcBGtBXQR/MhUk8
-	2Qw==
-X-Google-Smtp-Source: AGHT+IFBt8EUJmCBrYJSR6SbgIXxnZj6fm10TNGjaAj4XRK+x0dRIzGirCE9VGAaKkDPtl0zEYTqCFRnILs=
-X-Received: from pfbcv2.prod.google.com ([2002:a05:6a00:44c2:b0:725:a760:4c72])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:148d:b0:725:eb85:f802
- with SMTP id d2e1a72fcca58-72daf930e3cmr5815077b3a.2.1737134128872; Fri, 17
- Jan 2025 09:15:28 -0800 (PST)
-Date: Fri, 17 Jan 2025 09:15:27 -0800
-In-Reply-To: <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hdj5mGq9"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 50I4YkBo262261
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 17 Jan 2025 20:34:46 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 50I4YkBo262261
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024121701; t=1737174897;
+	bh=w1vtBdwCDfUdjXlAPq/H8CEoUqmusT1ScqFMMfS7dZ8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hdj5mGq9LhBqQz1DGkEXyOAPg5UumXs4rYaXrAxe/XdXtsj44W9H6+brjFlKruZEu
+	 KZw5piA42OHN/XcSeaUskoitHUnJNqT+XsxtkAneGSnIvuXW+n6ZC7eW8FnCimYSsG
+	 Lq1HAj2fYTDCYOqRHD+qLXvSb6ZxhtiXDCdoJyIe1GRxYKC8axRGOudEZFGw1AbPA8
+	 XfSMDwvu4q4o4HAn0vaClp5lq+a2D6iGDyVD9URdyKl9xLKY6kTXhchRX+IiLJk6MT
+	 lQqfZZED15R6MYW2CL2TKc8zQ0Rfpn6iPT2QNmGS8gBb8X3N0roFy9uw8TLOeP93LY
+	 mjPwqKCNYdQPg==
+Date: Fri, 17 Jan 2025 20:34:45 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Eugene Syromyatnikov <evgsyr@gmail.com>
+CC: Charlie Jenkins <charlie@rivosinc.com>, "Dmitry V. Levin" <ldv@strace.io>,
+        Oleg Nesterov <oleg@redhat.com>, Mike Frysinger <vapier@gentoo.org>,
+        Renzo Davoli <renzo@cs.unibo.it>,
+        Davide Berardi <berardi.dav@gmail.com>, strace-devel@lists.strace.io,
+        Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.osdn.me>, Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_3/7=5D_syscall=2Eh=3A_add_syscall=5Fse?=
+ =?US-ASCII?Q?t=5Farguments=28=29_and_syscall=5Fset=5Freturn=5Fvalue=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CACGkJdtAmtxsPiKYUzLLmfNGf6oJ9YS-25ZY9VvEEWhz37Qx6Q@mail.gmail.com>
+References: <20250113170925.GA392@strace.io> <20250113171140.GC589@strace.io> <Z4hs0X8RhGTuevnn@ghost> <eecada37-9d0e-4e3c-9b70-fefb990835b2@zytor.com> <CACGkJdtAmtxsPiKYUzLLmfNGf6oJ9YS-25ZY9VvEEWhz37Qx6Q@mail.gmail.com>
+Message-ID: <B5D44A2A-BF4F-4EEA-992D-0A06F2AE08CA@zytor.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-26-vschneid@redhat.com>
- <Z4bTlZkqihaAyGb4@google.com> <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Message-ID: <Z4qQL89GZ_gk0vpu@google.com>
-Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text patching IPIs
-From: Sean Christopherson <seanjc@google.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Juergen Gross <jgross@suse.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
-	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 17, 2025, Valentin Schneider wrote:
-> On 14/01/25 13:13, Sean Christopherson wrote:
-> > On Tue, Jan 14, 2025, Valentin Schneider wrote:
-> >> +/**
-> >> + * is_kernel_noinstr_text - checks if the pointer address is located in the
-> >> + *                    .noinstr section
-> >> + *
-> >> + * @addr: address to check
-> >> + *
-> >> + * Returns: true if the address is located in .noinstr, false otherwise.
-> >> + */
-> >> +static inline bool is_kernel_noinstr_text(unsigned long addr)
-> >> +{
-> >> +	return addr >= (unsigned long)__noinstr_text_start &&
-> >> +	       addr < (unsigned long)__noinstr_text_end;
-> >> +}
-> >
-> > This doesn't do the right thing for modules, which matters because KVM can be
-> > built as a module on x86, and because context tracking understands transitions
-> > to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
-> > being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
-> > or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
-> > patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
-> > use the wrong static path.
-> 
-> AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
-> and thus such a static key usage should at the very least be caught and
-> warned about by objtool - when this isn't built as a module.
+On January 17, 2025 7:45:02 AM PST, Eugene Syromyatnikov <evgsyr@gmail=2Eco=
+m> wrote:
+>On Fri, Jan 17, 2025 at 2:03=E2=80=AFAM H=2E Peter Anvin <hpa@zytor=2Ecom=
+> wrote:
+>>
+>> I link the concept of this patchset, but *please* make it clear in the
+>> comments that this does not solve the issue of 64-bit kernel arguments
+>> on 32-bit systems being ABI specific=2E
+>
+>Sorry, but I don't see how this is relevant; each architecture has its
+>own ABI with its own set of peculiarities, and there's a lot of
+>(completely unrelated) work needed in order to make an ABI that is
+>architecture-agnostic=2E  All this patch set does is provides a
+>consistent way to manipulate scno and args across architectures;  it
+>doesn't address the fact that some architectures have mmap2/mmap_pgoff
+>syscall, or that some have fadvise64_64 in addition to fadvise64, or
+>the existence of clone2, or socketcall, or ipc; or that some
+>architectures don't have open or stat;  or that scnos on different
+>architectures or even different bit-widths within the "same"
+>architecture are different=2E
+>
+>> This isn't unique to this patch in any way; the only way to handle it i=
+s
+>> by keeping track of each ABI=2E
+>
+>That's true, but this patch doesn't even try to address that=2E
+>
 
-That doesn't magically do the right thing though.  If KVM is built as a module,
-is_kernel_noinstr_text() will get false negatives even for static keys/branches
-that are annotaed as NOINSTR.
+I just want it noted in the comment, that's all=2E
