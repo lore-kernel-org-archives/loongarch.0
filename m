@@ -1,101 +1,104 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40011FB4
-	for <loongarch@lists.linux.dev>; Mon, 20 Jan 2025 13:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7301E570A
+	for <loongarch@lists.linux.dev>; Mon, 20 Jan 2025 16:09:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737381212; cv=none; b=aHRFCHOg+/2haUe7RwzhOFzfneWIKsHN49jaGQhvSiuX2MakRCNHg0yZa9mWlJO70rSJVzwH1rXE5TupGLkPzDx7eEPmkZtEwqXJ5cu0j2mttkfQQXKtJ5HQHDwxqcYuuV3a/CfTjIruwyGzhTwKgxdzCfxmISbsc/7wY26xiZc=
+	t=1737389385; cv=none; b=PWlPkfqCah+mD49D27F5yNEGVeJuxWGaXNE/1MtoHr22yDoU+GrOoh9QfaRivsHJY13xo4wXKTl9E2NRn68RqiI5xjljXdUN+tyStc2urgiueKKm7vr2sBub0IqkkUqfaQxvssdKcQXwB0VThuT9sETEbS4NpbCJ2gDa5NFmEfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737381212; c=relaxed/simple;
-	bh=uxNVkuB1kfPiPhaAvJDAYwdoCzbbN5ig+MfWtinYkGs=;
+	s=arc-20240116; t=1737389385; c=relaxed/simple;
+	bh=SNeDTVMDd6LFz2Ibm+JZz5IT863oQDJPOaC5/U8lcJk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AKGqfsI2iJWwudt/wp+TpHgIMTxPhtVXAPfCwj6ez46Zm5Xapcg4Qf8Qd5bXM64g7JwkJ8njM0263ytYM4qr98wrKpC9ZJZQ4xSrvxjOX0tjmuy50u2wP5c6+CMyqY7cgznSCh4p5MfkT3p20epgBnG7rcviQH7c/BCCxR9Ikh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HbMtC92I; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=tjMNBMpCOcvFE1sIAQ6fftmF+4HQyxXZk5vMPn8xv9AGnPCFGvhzGmZy16NMAgbfA8RN20Mij75nUQfntbcKP8UVf43cKl/06zv3XS3qXAIrO01DIoaRWSkldFp9sqz3g7JL48eWIbE/KtqcsOXT+lm+xC96gYsoSa0rep60Dos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cjXFN9NY; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HbMtC92I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cjXFN9NY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737381209;
+	s=mimecast20190719; t=1737389383;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6OUKdt6VXAQzpOTUFB26LmXUDO8O/oST+Zn2uKcAtKs=;
-	b=HbMtC92IGEx8a976wcxW0kDoKugHnljw5CJ/V3bldO3EleSl4f8dkr/UxaQd0pGkdw7Vvs
-	FLaOvwZFsd3RnEuOP3KbFH5VZ/Mo3jfZrt9VEpg7hpZnAL1LxkF1kfKPvTMoqshvadb4YN
-	4Ooo0u4GxuufcBnly1qGnkquaO6lzww=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=SNeDTVMDd6LFz2Ibm+JZz5IT863oQDJPOaC5/U8lcJk=;
+	b=cjXFN9NYk6MbDdMCmpP3xJfh7HaXqPBMa+q7iC6rnL44k9ia/e3lEkEFnYfU2eN24BCzyx
+	vxHhqd8yCf/KPC0rJjV+IzloABVu+Bhrd8Mh20RTW5kv+cCWXG2DyrNifaZZR5Z+GybDe1
+	Ad3Gb811fq0KprLmHH+3fe5FljE7ZuI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-157-THeZCbo5MIKHeuEnZDfm5g-1; Mon, 20 Jan 2025 08:53:27 -0500
-X-MC-Unique: THeZCbo5MIKHeuEnZDfm5g-1
-X-Mimecast-MFC-AGG-ID: THeZCbo5MIKHeuEnZDfm5g
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-467b645935fso81662551cf.3
-        for <loongarch@lists.linux.dev>; Mon, 20 Jan 2025 05:53:27 -0800 (PST)
+ us-mta-75-F5-4dj4qNCqfAs0vtxeWvQ-1; Mon, 20 Jan 2025 11:09:39 -0500
+X-MC-Unique: F5-4dj4qNCqfAs0vtxeWvQ-1
+X-Mimecast-MFC-AGG-ID: F5-4dj4qNCqfAs0vtxeWvQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3862e986d17so1960718f8f.3
+        for <loongarch@lists.linux.dev>; Mon, 20 Jan 2025 08:09:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737381207; x=1737986007;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6OUKdt6VXAQzpOTUFB26LmXUDO8O/oST+Zn2uKcAtKs=;
-        b=lqDhyddu+kWMelxK7e2WSq2J5hpMrsxsInHxzVqlXZ7Nsn/XxUQ48r0x3CJCFoZ1Ab
-         rJsLEeJ95DRiJpLfILJsgZRP12ml7EU0UpPzlSxDsJ7twNZQ+gBh3aqPL/VIMhd07In6
-         aAVvjd9R+3H6thmpycwPcaDxxXhKCP44mfzShcHdzfkBN13MdP0F0m72onytT+Xr3Gpd
-         VvvSr9sFATgInmlh9ITSwvtvObLRVSWsIHtzPng75go0wEL8l061lQc5qTVYjBtSrEZd
-         SBv0+cqXxpY0BEK07E8IstrDga1oNPR2DIfC+gFY5m9ERKKO8sRsmeD/CkKebMrUHL3O
-         FHHg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1tg2OarJvVKxiNbt7Nt3n2JezojsiVqvtjov6s/JokyMZA2guRM3zti3NpJw8M4E0SO1bxiPwoyQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7+EmjOEymaUDcBLhQSE5VeQnwElhXxU3/Xt8httaZoREuKfpc
-	VNn05Q1gcboV5ZoEpc763zWHaHhSU4E17Y9nSmM75q4W7HOXZ0ollSzeipJnAAt5LLjzNuGLl4N
-	RIMrhRKO+Ksij26OfvXvk4oItnRN8VL+GU7EmZQL3iFu5Yoz7KbBiJ2aPxA==
-X-Gm-Gg: ASbGncuon7kp/SejIWoo9Dz2qIIOng7iJrvecVx20eH8913Ar8FMvLY2MUw7RfnxbZG
-	gGYipUjSz1SKcvRSL9fZYWKx7Z3MOpvuUPz/H3ZndM0U4o5RFiunHOTOFC9N79iQjqaNo2qKMSO
-	nHz8b2b23b36upJS9lOKui6Sd5u0l/EVbx8HB5V1Hi5SaZj7Js+4HaALG98J3bDrw1rh4mTw+3m
-	Q+2o8KF0MXcTYQx4yiJBtqfhx9AjEtDjc6IB61m35Y7TSa6ndm9mQezFnGhDheDu7lEnJf8HfIn
-	QJXqfnklchn5u7vklFKBbAnp2IUWtExkTEqWvDpL0lYsLHaGRnMh1hg=
-X-Received: by 2002:ac8:7d82:0:b0:467:5e61:c116 with SMTP id d75a77b69052e-46e12a1e36cmr160728701cf.7.1737381207202;
-        Mon, 20 Jan 2025 05:53:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGCbxGDy6CHUSfOLqTxGL3gA1S6wKRHlUvydXAdXodFBspL8+Pdog+OKdfN6k1jzDkgqmOx+A==
-X-Received: by 2002:ac8:7d82:0:b0:467:5e61:c116 with SMTP id d75a77b69052e-46e12a1e36cmr160728291cf.7.1737381206799;
-        Mon, 20 Jan 2025 05:53:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737389378; x=1737994178;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uPYF3/ytKmNcBW6xY8UN6OXUapKiaxgyBXzq3dB0L9c=;
+        b=vCO24HjGXfgJE9waAi0tf8QayWhmlPRVSPrQz5wnZnfKJDyTmuh6Qgi3k8ihPEphx1
+         69PmOdkFYjlBhKBznhWDObP3dG7yV5AWwCSp6YCtolrjyXosXTfGC8s2dRrTGFFS28YJ
+         ilWwO2PpsiE8ErCQwLbbo2qbPYhOq+s8vtywh0o2XkrbiW/x9iBK4DLLpLsMNT47PFu3
+         BfLLTIndUcCVb+ONN46bzSTYhBCX+4SNmx5/9RXJQ6zxQrBKMYru4HcLLIsPFZL/J5PU
+         qUZaRhfuNpsCrLzFvghNjxhc/vbZcoJdrVeZdeOJP03gEhDdJ6KQFFKgoAIKthOhQPKL
+         reyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCwwnJH3hKhGX5NsSLBPOx4vdKZD88GLwbpEZuGZfxOUwAW4zEr8MeGKG23FF5ewaJV4kuFzlTas=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzH82CeI9stQgPAtd5YK5QC0cbQ2wl6UGSSZZenqVB0iPNG/+Lz
+	S5F2u/RJuQ4lKmqWlRZcUgUyHPpIO/e1sp0ZCOCVrCRbJiGuF1h84T04sKiqkS6uyrOHxRgozje
+	BF1xp5iMDLVWm8S9qPOe7QZGjzF0p5mHwSMnFobZJfO9poH1rd6j5Wv1WJA==
+X-Gm-Gg: ASbGncsT4pN3cZjBXDFp/Epw6zktcou02RcVjtptFc8a2O+TDtO3DOdtgrlCTWNcdqe
+	lCCUOnyTplJeMqJG13y74qOSYVijrVUiLM8BTZptwsPkhBZqn2WFyinDzFOm5XaLR9UT8F9sTGl
+	XtQRgtq3caUAU74XWAqxqfxccRLIXhYxke8aKP1K3bf3aYLQJ7Kv7tliiMM+5QkyvRYTF9JWGb6
+	mVStPlEUBmbGc9iEJ4UaycDMfk5JeBq76BAGGrdNGJIFPyyxxwCDfD2LYRx2YwiCgVwtWo2HT68
+	WlOhpvhRL5ChEnc4HjCIVPj+b7Q66LpFJn9lnZGBUEQBvL25sv/sHU8=
+X-Received: by 2002:adf:f682:0:b0:38b:e26d:ea0b with SMTP id ffacd0b85a97d-38bf566c314mr10592127f8f.25.1737389378226;
+        Mon, 20 Jan 2025 08:09:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE7jMmKmijGDhYJpj3v2AzDeWwh7lxfHaye7x+JEw9SklvyOVZq+Wb4Niy5wxwqRIeZEeA2rg==
+X-Received: by 2002:adf:f682:0:b0:38b:e26d:ea0b with SMTP id ffacd0b85a97d-38bf566c314mr10592030f8f.25.1737389377661;
+        Mon, 20 Jan 2025 08:09:37 -0800 (PST)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e1030da00sm42651971cf.33.2025.01.20.05.53.14
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3221b70sm10695813f8f.26.2025.01.20.08.09.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 05:53:25 -0800 (PST)
+        Mon, 20 Jan 2025 08:09:37 -0800 (PST)
 From: Valentin Schneider <vschneid@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
  virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
  linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
  kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
  linux-hardening@vger.kernel.org, linux-mm@kvack.org,
  linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra
- <peterz@infradead.org>, Nicolas Saenz Julienne <nsaenzju@redhat.com>,
- Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Boris
- Ostrovsky <boris.ostrovsky@oracle.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
- <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
- Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
  <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli
  <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
  Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>, Vincent
@@ -106,22 +109,25 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
  Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Miguel
  Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Mike
  Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland
- <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, Nicolas Saenz
+ Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yosry Ahmed <yosryahmed@google.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
  <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
  Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
  Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 25/30] context_tracking,x86: Defer kernel text
- patching IPIs
-In-Reply-To: <Z4qQL89GZ_gk0vpu@google.com>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <Z44wSJTXknQVKWb0@pc636>
 References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-26-vschneid@redhat.com>
- <Z4bTlZkqihaAyGb4@google.com>
- <xhsmhed11hiuy.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z4qQL89GZ_gk0vpu@google.com>
-Date: Mon, 20 Jan 2025 14:53:13 +0100
-Message-ID: <xhsmhtt9tfv7a.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z4qBMqcMg16p57av@pc636>
+ <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z44wSJTXknQVKWb0@pc636>
+Date: Mon, 20 Jan 2025 17:09:34 +0100
+Message-ID: <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -129,50 +135,104 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zZUyJJCGUkGNoXZghVI-OqFEkH4MawRl_1XZYPSUK6Y_1737381207
+X-Mimecast-MFC-PROC-ID: DnKPNFrGZowktskKM8B8E8xlkw0gYAcH0qsOx-HrJUM_1737389378
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 17/01/25 09:15, Sean Christopherson wrote:
-> On Fri, Jan 17, 2025, Valentin Schneider wrote:
->> On 14/01/25 13:13, Sean Christopherson wrote:
->> > On Tue, Jan 14, 2025, Valentin Schneider wrote:
->> >> +/**
->> >> + * is_kernel_noinstr_text - checks if the pointer address is located in the
->> >> + *                    .noinstr section
->> >> + *
->> >> + * @addr: address to check
->> >> + *
->> >> + * Returns: true if the address is located in .noinstr, false otherwise.
->> >> + */
->> >> +static inline bool is_kernel_noinstr_text(unsigned long addr)
->> >> +{
->> >> +	return addr >= (unsigned long)__noinstr_text_start &&
->> >> +	       addr < (unsigned long)__noinstr_text_end;
->> >> +}
+On 20/01/25 12:15, Uladzislau Rezki wrote:
+> On Fri, Jan 17, 2025 at 06:00:30PM +0100, Valentin Schneider wrote:
+>> On 17/01/25 17:11, Uladzislau Rezki wrote:
+>> > On Fri, Jan 17, 2025 at 04:25:45PM +0100, Valentin Schneider wrote:
+>> >> On 14/01/25 19:16, Jann Horn wrote:
+>> >> > On Tue, Jan 14, 2025 at 6:51=E2=80=AFPM Valentin Schneider <vschnei=
+d@redhat.com> wrote:
+>> >> >> vunmap()'s issued from housekeeping CPUs are a relatively common s=
+ource of
+>> >> >> interference for isolated NOHZ_FULL CPUs, as they are hit by the
+>> >> >> flush_tlb_kernel_range() IPIs.
+>> >> >>
+>> >> >> Given that CPUs executing in userspace do not access data in the v=
+malloc
+>> >> >> range, these IPIs could be deferred until their next kernel entry.
+>> >> >>
+>> >> >> Deferral vs early entry danger zone
+>> >> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >> >>
+>> >> >> This requires a guarantee that nothing in the vmalloc range can be=
+ vunmap'd
+>> >> >> and then accessed in early entry code.
+>> >> >
+>> >> > In other words, it needs a guarantee that no vmalloc allocations th=
+at
+>> >> > have been created in the vmalloc region while the CPU was idle can
+>> >> > then be accessed during early entry, right?
+>> >>
+>> >> I'm not sure if that would be a problem (not an mm expert, please do
+>> >> correct me) - looking at vmap_pages_range(), flush_cache_vmap() isn't
+>> >> deferred anyway.
+>> >>
+>> >> So after vmapping something, I wouldn't expect isolated CPUs to have
+>> >> invalid TLB entries for the newly vmapped page.
+>> >>
+>> >> However, upon vunmap'ing something, the TLB flush is deferred, and th=
+us
+>> >> stale TLB entries can and will remain on isolated CPUs, up until they
+>> >> execute the deferred flush themselves (IOW for the entire duration of=
+ the
+>> >> "danger zone").
+>> >>
+>> >> Does that make sense?
+>> >>
+>> > Probably i am missing something and need to have a look at your patche=
+s,
+>> > but how do you guarantee that no-one map same are that you defer for T=
+LB
+>> > flushing?
 >> >
->> > This doesn't do the right thing for modules, which matters because KVM can be
->> > built as a module on x86, and because context tracking understands transitions
->> > to GUEST mode, i.e. CPUs that are running in a KVM guest will be treated as not
->> > being in the kernel, and thus will have IPIs deferred.  If KVM uses a static key
->> > or branch between guest_state_enter_irqoff() and guest_state_exit_irqoff(), the
->> > patching code won't wait for CPUs to exit guest mode, i.e. KVM could theoretically
->> > use the wrong static path.
->>>
->> AFAICT guest_state_{enter,exit}_irqoff() are only used in noinstr functions
->> and thus such a static key usage should at the very least be caught and
->> warned about by objtool - when this isn't built as a module.
+>>
+>> That's the cool part: I don't :')
+>>
+> Indeed, sounds unsafe :) Then we just do not need to free areas.
 >
-> That doesn't magically do the right thing though.  If KVM is built as a module,
-> is_kernel_noinstr_text() will get false negatives even for static keys/branches
-> that are annotaed as NOINSTR.
+>> For deferring instruction patching IPIs, I (well Josh really) managed to
+>> get instrumentation to back me up and catch any problematic area.
+>>
+>> I looked into getting something similar for vmalloc region access in
+>> .noinstr code, but I didn't get anywhere. I even tried using emulated
+>> watchpoints on QEMU to watch the whole vmalloc range, but that went abou=
+t
+>> as well as you could expect.
+>>
+>> That left me with staring at code. AFAICT the only vmap'd thing that is
+>> accessed during early entry is the task stack (CONFIG_VMAP_STACK), which
+>> itself cannot be freed until the task exits - thus can't be subject to
+>> invalidation when a task is entering kernelspace.
+>>
+>> If you have any tracing/instrumentation suggestions, I'm all ears (eyes?=
+).
+>>
+> As noted before, we defer flushing for vmalloc. We have a lazy-threshold
+> which can be exposed(if you need it) over sysfs for tuning. So, we can ad=
+d it.
+>
 
-Quite so.
+In a CPU isolation / NOHZ_FULL context, isolated CPUs will be running a
+single userspace application that will never enter the kernel, unless
+forced to by some interference (e.g. IPI sent from a housekeeping CPU).
 
-I've been looking at mod_mem_type & friends, I'm thinking adding a
-MOD_NOINSTR_TEXT type might be overkill considering modules really
-shouldn't be involved with early entry, KVM being the one exception.
+Increasing the lazy threshold would unfortunately only delay the
+interference - housekeeping CPUs are free to run whatever, and so they will
+eventually cause the lazy threshold to be hit and IPI all the CPUs,
+including the isolated/NOHZ_FULL ones.
 
-Your suggestion to have a KVM-module-specific noinstr section sounds good
-to me, I'll have a look at that.
+I was thinking maybe we could subdivide the vmap space into two regions
+with their own thresholds, but a task may allocate/vmap stuff while on a HK
+CPU and be moved to an isolated CPU afterwards, and also I still don't have
+any strong guarantee about what accesses an isolated CPU can do in its
+early entry code :(
+
+> --
+> Uladzislau Rezki
 
