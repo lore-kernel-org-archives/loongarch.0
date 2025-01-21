@@ -1,179 +1,95 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B503E1AB53A
-	for <loongarch@lists.linux.dev>; Tue, 21 Jan 2025 09:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C20841C07CF
+	for <loongarch@lists.linux.dev>; Tue, 21 Jan 2025 09:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737451223; cv=none; b=rFFcRGyELxEKJ9Isw94j+C3PJI8RiRu5N0uL/22/NflRFwGYyK4Xk3Gy3vlhDHS0Sl87x3erNbUVDobNQKoHaoLP6fIKuOBdvtuig1LoVZY54ja0HugUtDEajhEvrOtSLH20jqvD2zLqa9Di4sVeQe/OegRHxtN/WCuFeibgkhU=
+	t=1737452248; cv=none; b=ruliQ9oJHRHNB7GH+w58crqP/BDqcbGkoM/gB0c2rs/mvOdy50qw7XHt0HTKGCA55U1RH8dFY2JUURKfGHxfJYU+E08qZPv+pfMN6s7ahxfmh2KrJy2kGgtS873FWvX3eMs57XDarsxBBo8kiMYWEfXQhWp2hYLAmqAu7YlJ/II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737451223; c=relaxed/simple;
-	bh=k9Jsuhp577BbmaCGQFhRTg4q2s7l0fsHhlftxj2VmYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fg0H45MuSkvflffWGYsvLM/mFE33W2ysI+Yh/Lfo09Kdn53xEPowzM2PzqMikZu9SM9FSscsU3fEltXjjQSGBpcTI8OgAYHthRnKiHAW2GvHDefgaaXgRAZBvVkGHpOVRvA6HLh/e8MBfZT2kV0Kn32FHU2feR3WxIQ4aNC/GA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bTAIm5tk; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bTAIm5tk"
-Message-ID: <35a07230-08f9-472c-bb30-bd1c1ca912d6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1737451203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1foXokueCyiRWhPEbqH1L0+2RD6uPyhTbnZUJ2h/js4=;
-	b=bTAIm5tkPlO3izsHEiiStkYUkxOnj8INfL5aQLJD0cfOsG1jRamq3INLgbF7BfR1xwrKPL
-	7iLSmhzT4UXk4opEDw3pd20k1D53GXK377ERAlWJobqJrk8/SFy3vl1rnyS4+OnFqSltUw
-	KKl9/Lo3AjExjB2zQ76jONE8Vt5YxZA=
-Date: Tue, 21 Jan 2025 17:19:53 +0800
+	s=arc-20240116; t=1737452248; c=relaxed/simple;
+	bh=mArYv62I2thEnmMUnL9Bh+biQc+10qSbAX4piUIO/pM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CJoOPSuBbYsK5SOQ7ehZ+mVV5BWcQq/kCCzkMLjR8nuyh0rpRbD8qPa8Q1p7DDs4qP751+MCVX/M0xKjCnZfrs/D8jcgjgC8ESRTx4RwpPgBbqhp/7iPzYNHOtmFsAeAQ/mQeFm75fnZc2ahDA9f6GkiT9679f95jMYQzBR/AvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.63])
+	by gateway (Coremail) with SMTP id _____8CxieHRao9nDLVmAA--.8301S3;
+	Tue, 21 Jan 2025 17:37:21 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.63])
+	by front1 (Coremail) with SMTP id qMiowMAx_8XLao9nQLwpAA--.20753S2;
+	Tue, 21 Jan 2025 17:37:20 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
+Date: Tue, 21 Jan 2025 17:37:03 +0800
+Message-ID: <20250121093703.2660482-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] loongarch/mm: disable WUC for pgprot_writecombine as
- same as ioremap_wc
-To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
- Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Weihao Li <liweihao@loongson.cn>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Jun Yi <yijun@loongson.cn>, Baoquan He <bhe@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Binbin Zhou <zhoubinbin@loongson.cn>, Zhen Lei <thunder.leizhen@huawei.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Zhihong Dong <donmor3000@hotmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Shuah <shuah@kernel.org>,
- "conduct@kernel.org" <conduct@kernel.org>
-References: <20231009042841.635366-1-uwu@icenowy.me>
- <4f1af31b-15be-cb47-6b34-45de1b5696be@loongson.cn>
- <42b0e6f6-c2b5-49c6-b1f2-0200bef913da@xen0n.name>
- <3641d3fe-c2e7-868f-ab0d-3951c9a78b6d@loongson.cn>
- <8373ccfd93b0402caf9f5c06a2d9b93b3c0d0b49.camel@xry111.site>
- <73ddfc81-3f94-4403-8bb2-d537742a7042@loongson.cn>
- <049fbd3906b60f75be3900f20f6974967da374f3.camel@xry111.site>
- <00d5150cadcb8b60004284ad43810adef52aab37.camel@xry111.site>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <00d5150cadcb8b60004284ad43810adef52aab37.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowMAx_8XLao9nQLwpAA--.20753S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFWkCF1rJFWfKr18tr4fWFX_yoW8Gryrpr
+	W3Ca4ag34avr43C3Z8Z3yUCry5uayUWrZrWFWIk34fCFZ5A34qqryY9ayYgrZrAFZ5WFy2
+	vr1DCr4fGF1DGwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-Hi,
+Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
+zero. This means dwmac-loongson doesn't support changing MTU, so set the
+correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by channel
+counts).
 
-On 2023/10/13 21:53, Xi Ruoyao wrote:
-> On Fri, 2023-10-13 at 21:15 +0800, Xi Ruoyao wrote:
->> Again, why this is only an issue with AMD or ATI GPUs?
->>
->> Can you provide some detailed documentations about this hardware issue
->> so the community can help to figure out a solution?
+Note: the Fixes tag is not exactly right, but it is a key commit of the
+dwmac-loongson series.
 
+Cc: stable@vger.kernel.org
+Fixes: ad72f783de06827a1f ("net: stmmac: Add multi-channel support")
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I don't ever owns you anything, so I think I don't have any obligation
-to have to provide you something, right?
-
-
-> 3 years ago we had https://lkml.org/lkml/2020/8/10/255:
-
-Its not "we". Just him or "you" if you want to pretend to be included.
-
-
->     In this case the patch is a clear NAK since youhaven't root caused the issue
-
-
-Excuse me, its not me posting that patch to upstream anyway. So who don't have the
-root cause? Can you figure out different person at the first place? Please?
-
-
->   are just working around it in a very questionable manner.
-
-The patch[1] that this patch fixes are circumvent the root issue in a very questionable manner.
-
-So, who don't know the root cause? or just cheating the community, pretend it solve the problem?
-
-[1] https://lore.kernel.org/loongarch/20230315085314.1083141-1-chenhuacai@loongson.cn/
-
-> and
->
->     But when the hardware doesn't correctly implement WC for PCIe BARs, then
->     this is a violation of the PCIe spec and a bit more serious issue for
->     the whole platform.
->
-> So do we know the root cause now?
-
-Its not "we" here, we are not on the same side.
-
-So the proper expression is "Do you *really* know the root cause now"?
-
->   <rant>Or in all the 3 years we
-
-Not including you here.
-
-
-> just keep carrying a problematic workaround downstream,
-
-
-Who told you that its problematic?
-
-Again, its works *super* well for *both* discrete GPU and Loongson integrated graphics.
-
-With the patch applied, Loongson has been sell tons of machine and making million dollars,
-if not billion.
-
-So *who* exactly told you that its problematic? Did him ever use Loongson machine?
-Did him responsible for Loongson downstream *product* and commercial deals?
-
-If you can't effectively answer those questions, please stop your nonsense.
-
-> burying the head into the sand like an ostrich,
-
-
-I neverbury my head into the sand and I'm not like an ostrich.
-
-In the past, Loongson downstream developers are rather diligent and busy .
-
-I don't think I deserve this insult, so please stop it and apology.
-
-
-CCing conduct@kernel.org and CCing shuah.
-
-
-> and self comforting with "oh they don't understand our hardware"?!</rant>
-
-
-This is exactly what I'm helping to resolve, just help the community to
-figure out the root issue. Seek better solution so that we can avoid
-endless the low-end repeation.
-
-We certainly don't hope Loongson continue to produce such an ill CPU
-and/or bridge chips all the time.
-
-
-> Even if the problem is really "they don't understand our hardware" you
-> need to provide some materials to help people understanding the hardware
-> better.
-
-
-Again, Its not me posting the patch anyway. So please stop the blaming and
-the spams.
-
-
-> If we cannot figure out the root cause or a proper fix is too difficult,
-> we should *at least* have a cmdline option and/or a configuration option
-> to allow the user to decide, like how we treat these spectre-like bugs.
-> "Should the option be enabled or disabled by default" can be debated
-> later.
->
-> And please try to fix the hardware, to me it will be a compelling reason
-> to pay some money for an upgrade :).
->
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index bfe6e2d631bd..79acdf38c525 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -574,6 +574,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 	if (ret)
+ 		goto err_disable_device;
+ 
++	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
++	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
++
+ 	if (dev_of_node(&pdev->dev))
+ 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
+ 	else
 -- 
-Best regards,
-Sui
+2.47.1
 
