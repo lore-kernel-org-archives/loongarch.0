@@ -1,115 +1,149 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A061F12E9
-	for <loongarch@lists.linux.dev>; Tue, 21 Jan 2025 11:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A631F2C3C
+	for <loongarch@lists.linux.dev>; Tue, 21 Jan 2025 13:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737459847; cv=none; b=gb/On4nG9q5F7gRERxLPTvCEkzOWNMmYg/gExi4cf2VobM77eN2cmi5isyWBy0e+KIlyTeHiNmZe6XhIgt5FvvksoCflzReXklEQRvfUPu/gahLSeQj/EihJqwoWZOXFnoELTlUSd0h9C+SNfuJCjCbmRjfLczG6eUqkCnZ2mgU=
+	t=1737466990; cv=none; b=XWkI6qn0wSkCC7MlVsbRDGNGgdOY5j9/ChL9DiKGsjD4YAS+0kNpaYdZZlNx3jx+3fYnG5WHYT07D0xq2Ji6u5/9Q+y7cAgZo+s6BlmXT0nQC9tBM/dKU3y+n2orS357+q89sozyLPH2StNZdmgLkfrDZeK3V399wJLFVTcFttM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737459847; c=relaxed/simple;
-	bh=dTxayoMWjAIvJimszc1Z1b3z1DCPMwSHuc1jIXbtPrs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=COI26Mqg23suFIi++TEDmEzTXew0MVseGnIPp7pjzyr9Djxyg//9G+FSXC6t7J8/F758d/WFHlivfrt9mjalBauOczJjkkc4FI1nLKpQo8VCqkZ/cS8N8inmZIommUkIyHmSJCLvOi7YDDqAJJy/LZMhGyo8r45rjEeyqtmAoLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.63])
-	by gateway (Coremail) with SMTP id _____8AxbeKDiI9n_MBmAA--.9397S3;
-	Tue, 21 Jan 2025 19:44:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.63])
-	by front1 (Coremail) with SMTP id qMiowMCxFOSBiI9nT8wpAA--.21516S2;
-	Tue, 21 Jan 2025 19:44:03 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Adjust SETUP_SLEEP and SETUP_WAKEUP
-Date: Tue, 21 Jan 2025 19:43:54 +0800
-Message-ID: <20250121114354.2727748-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1737466990; c=relaxed/simple;
+	bh=RDihTSs5Sg4XvYheb+lm/xoPAgfffymOtYshCqpwa20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FAHvunhhguMeCUwkzHHmdvfYyj+jUx1IETmlR1jbnzp0XNlMaoiNzrfT1UOyq0n2AMNJc4YDi3Gbnk767dJAG7HZGtpmGQ9aCS6MebKfyE9r3hxCfD1fgYT5Xrg9Jfg+h2CIiIOH3LDKG1JFHsvacsqZc5qdwi7HT4c6bZNCYWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=o7TIqQd0; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="o7TIqQd0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1737466507; bh=RDihTSs5Sg4XvYheb+lm/xoPAgfffymOtYshCqpwa20=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o7TIqQd051N2r9KiYe0X9bvwVzNmkMmhcHVyF4RJ5qtmAZ4Pu4DKypS59rpPKwjHL
+	 64FAa5+AqAlgx01QTxOzml1nyvoudoriihznN6iAvUPlVPXHtmCEght7HkR/R0jUhu
+	 YaUqg5vbUt2N7jTRqafXqop5XUkloXUfS9OzSVwo=
+Received: from [IPV6:240e:30f:334:af01:18aa:f52:2bb9:3] (unknown [IPv6:240e:30f:334:af01:18aa:f52:2bb9:3])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id DDE26600FE;
+	Tue, 21 Jan 2025 21:35:06 +0800 (CST)
+Message-ID: <75b6fec7-f168-4bc3-9479-8a089bb4e033@xen0n.name>
+Date: Tue, 21 Jan 2025 21:35:06 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxFOSBiI9nT8wpAA--.21516S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CFy3uw1xJrWDCFyDtFyDtwc_yoW8Gry3p3
-	9Fkr1qqa109rn7Zrn5t34rXrs8trZ5WF1fuanrK348CwsrXF10gr1kGFnrGF17JayfGayI
-	vr4rA3W0vFy7C3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] LoongArch: Extend the maximum number of watchpoints
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250121070617.3214-1-yangtiezhu@loongson.cn>
+ <20250121070617.3214-3-yangtiezhu@loongson.cn>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20250121070617.3214-3-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SETUP_SLEEP should only save the GPR context, which is symmetric to
-SETUP_WAKEUP, so move the acpi_saved_sp handling out of SETUP_SLEEP.
+Hi,
 
-Move "addi.d  sp, sp, PT_SIZE" into SETUP_WAKEUP for the same reason.
+On 1/21/25 15:06, Tiezhu Yang wrote:
+> The maximum number of load/store watchpoints and fetch instruction
+> watchpoints is 14 each according to LoongArch Reference Manual, so
+> extend the maximum number of watchpoints from 8 to 14 for ptrace.
+> 
+> By the way, just simply change 8 to 14 for the definition in struct
+> user_watch_state at the beginning, but it may corrupt uapi, then add
+> a new struct user_watch_state_v2 directly.
+> 
+> As far as I can tell, the only users for this struct in the userspace
+> are GDB and LLDB, there are no any problems of software compatibility
+> between the application and kernel according to the analysis.
 
-No functional changes.
+But it seems something is indeed corrupted by this patch...
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/power/suspend_asm.S | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+For example, it's entirely appropriate to mix-match debuggers and 
+kernels of different UAPI revision. In this case, some kind of version 
+marker must be present in the UAPI structure to prevent out-of-bounds 
+accesses by the kernel. But according to the changes...
 
-diff --git a/arch/loongarch/power/suspend_asm.S b/arch/loongarch/power/suspend_asm.S
-index 9fe28d5a0270..df0865df26fa 100644
---- a/arch/loongarch/power/suspend_asm.S
-+++ b/arch/loongarch/power/suspend_asm.S
-@@ -30,9 +30,6 @@
- 	st.d		$r29, sp, PT_R29
- 	st.d		$r30, sp, PT_R30
- 	st.d		$r31, sp, PT_R31
--
--	la.pcrel	t0, acpi_saved_sp
--	st.d		sp, t0, 0
- .endm
- 
- .macro SETUP_WAKEUP
-@@ -51,6 +48,7 @@
- 	ld.d		$r29, sp, PT_R29
- 	ld.d		$r30, sp, PT_R30
- 	ld.d		$r31, sp, PT_R31
-+	addi.d		sp, sp, PT_SIZE
- .endm
- 
- 	.text
-@@ -59,6 +57,10 @@
- /* Sleep/wakeup code for Loongson-3 */
- SYM_FUNC_START(loongarch_suspend_enter)
- 	SETUP_SLEEP
-+
-+	la.pcrel	t0, acpi_saved_sp
-+	st.d		sp, t0, 0
-+
- 	bl		__flush_cache_all
- 
- 	/* Pass RA and SP to BIOS */
-@@ -82,7 +84,7 @@ SYM_INNER_LABEL(loongarch_wakeup_start, SYM_L_GLOBAL)
- 
- 	la.pcrel	t0, acpi_saved_sp
- 	ld.d		sp, t0, 0
-+
- 	SETUP_WAKEUP
--	addi.d		sp, sp, PT_SIZE
- 	jr		ra
- SYM_FUNC_END(loongarch_suspend_enter)
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
+> Fixes: 1a69f7a161a7 ("LoongArch: ptrace: Expose hardware breakpoints to debuggers")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/include/uapi/asm/ptrace.h | 10 ++++++++++
+>   arch/loongarch/kernel/ptrace.c           |  6 +++---
+>   2 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/include/uapi/asm/ptrace.h
+> index ac915f841650..aafb3cd9e943 100644
+> --- a/arch/loongarch/include/uapi/asm/ptrace.h
+> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
+> @@ -72,6 +72,16 @@ struct user_watch_state {
+>   	} dbg_regs[8];
+>   };
+>   
+> +struct user_watch_state_v2 {
+> +	uint64_t dbg_info;
+> +	struct {
+> +		uint64_t    addr;
+> +		uint64_t    mask;
+> +		uint32_t    ctrl;
+> +		uint32_t    pad;
+> +	} dbg_regs[14];
+> +};
+
+there seems no indication of any "version marker" field ("revision" or 
+"sizeof(input)" or something like that), so...
+
+> +
+>   #define PTRACE_SYSEMU			0x1f
+>   #define PTRACE_SYSEMU_SINGLESTEP	0x20
+>   
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> index 19dc6eff45cc..5e2402cfcab0 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -720,7 +720,7 @@ static int hw_break_set(struct task_struct *target,
+>   	unsigned int note_type = regset->core_note_type;
+>   
+>   	/* Resource info */
+> -	offset = offsetof(struct user_watch_state, dbg_regs);
+> +	offset = offsetof(struct user_watch_state_v2, dbg_regs);
+>   	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, offset);
+>   
+>   	/* (address, mask, ctrl) registers */
+> @@ -920,7 +920,7 @@ static const struct user_regset loongarch64_regsets[] = {
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+>   	[REGSET_HW_BREAK] = {
+>   		.core_note_type = NT_LOONGARCH_HW_BREAK,
+> -		.n = sizeof(struct user_watch_state) / sizeof(u32),
+> +		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+
+one cannot account for older (in fact, *every existing*) clients 
+expecting the old UAPI, hence providing a smaller buffer than struct 
+user_watch_state_v2. In which case the kernel will happily write 
+out-of-bounds if the client asks for the current watchpoint state. This 
+is not acceptable I'm afraid.
+
+>   		.size = sizeof(u32),
+>   		.align = sizeof(u32),
+>   		.regset_get = hw_break_get,
+> @@ -928,7 +928,7 @@ static const struct user_regset loongarch64_regsets[] = {
+>   	},
+>   	[REGSET_HW_WATCH] = {
+>   		.core_note_type = NT_LOONGARCH_HW_WATCH,
+> -		.n = sizeof(struct user_watch_state) / sizeof(u32),
+> +		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+>   		.size = sizeof(u32),
+>   		.align = sizeof(u32),
+>   		.regset_get = hw_break_get,
+
+
 -- 
-2.47.1
+WANG "xen0n" Xuerui
 
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
