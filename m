@@ -1,69 +1,136 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D08139B
-	for <loongarch@lists.linux.dev>; Tue, 21 Jan 2025 13:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4481F2380;
+	Tue, 21 Jan 2025 13:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737467189; cv=none; b=Fj8wI/n9pfn+1F+rRGdUXxxGnVrHliiiyMiUDszjKO2Lk90/wtSlR1ZdaQplOp6M25G5+uqAvbLFwXbLmJvGrmOSftoUrnCr23zqnSNNIYQHYXjbsk4tEAJ6cWIQ258ca7GGZKwqcM3aB6JqDUxXGxgmnMm+Hh2szzyJJma/Pak=
+	t=1737467811; cv=none; b=L+0URZx6AWuvPyo8sjRimcXuNIKo6eG1Src4FZa+9Sxn3YmiprshgVACUUjwVi78bcNmSOu5txNN6dlfWk3WRJc2HSY9SmI62BQYDDKjeXD+Ix8bYaC91onrCyoO+Wyt/pscLImPT3c8th61Hgq206K2yVIbRGiIy2AQwri9/jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737467189; c=relaxed/simple;
-	bh=clgjWf6zNxo9jrujuOvySxyvFm8TZhPPlG3/S8Zb+d4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=esbPekKQXXzOi15RhMBIlGb8/QLwCA/K3QY9tXo9cCTUex4IDXovaZ5wEwvRDUAMfV0TQxEdGGfJxB59XPsqP++YzrowkobPJMMUdUBfQv0spgZmgPjfjo+eL93QojjZ991VRbVrySj7Wd5tz38M+4gUhEtL/fi+gNKb3vmjlNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=FFHBxSC5; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1737467811; c=relaxed/simple;
+	bh=MqI6lrWOZQoTFNws7n2UwUgsmLRqEZNZodv6GljplcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0RNozjaB5DNC6/HxZmZVm8JMA7guwHGdhwoqM3d1yeJXguuzs7EnomVIb/Q8IIvmMTQX1bs4IlQNc1RGky9pfrL9LSZaPmPOTBsP9C92VYHI+SLqN9Ba8wnes77+IZY62K0cNoHcE4qcAnJGDYkle8GP8aePN+r8YaDiPfhWoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isvlPBsQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="FFHBxSC5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1737467181;
-	bh=Ix0ZCBZRhbj9lA9iykLoCahGZpq5gBl6pPiqJVX/l6I=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FFHBxSC5QvN1lfzvs+o8SMGpDOq87cqj7NGDF8yjm7OOgZ6xftbbtwNfoNvhZg/EY
-	 rhg6D0yCTQet/L7s0naxI0Xy7xDWCmE7eB15EdzY7AteZe5cEpgbntzECtkwVGVPnz
-	 1T56S59jNDxSy5HPOhMm7z8W6ptrh7+36ZTF4nN4=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 616031A3F9D;
-	Tue, 21 Jan 2025 08:46:19 -0500 (EST)
-Message-ID: <42e64433f3255740292d428cf459959430fdc7e3.camel@xry111.site>
-Subject: Re: [PATCH 2/2] LoongArch: Extend the maximum number of watchpoints
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Tue, 21 Jan 2025 21:46:17 +0800
-In-Reply-To: <75b6fec7-f168-4bc3-9479-8a089bb4e033@xen0n.name>
-References: <20250121070617.3214-1-yangtiezhu@loongson.cn>
-	 <20250121070617.3214-3-yangtiezhu@loongson.cn>
-	 <75b6fec7-f168-4bc3-9479-8a089bb4e033@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isvlPBsQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13D92C4CEDF;
+	Tue, 21 Jan 2025 13:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737467810;
+	bh=MqI6lrWOZQoTFNws7n2UwUgsmLRqEZNZodv6GljplcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=isvlPBsQ7TrI9disQI4ep5AL0JttTMJYCjeOXU0i2Ch/ZJhKtfxYn7noZla1QkDqv
+	 en2cxtzrpb+ySn8gOB8ZoZV2S+K1n5H3W3i1NokW2jFX5MYZAQKEGHyjcd+04RPzL6
+	 fTPenbokZbubnqvnOZIUv59tCiByEKKxVUoJRCVR2ClnBGXpdDVbmRMbF5RR0kls7U
+	 7c4EikX8Q0rBg27nmXW8SWsbwke1FjZREhy6DgcwG1U+Sf6B+2s64Bk1dTdAxFB7Uo
+	 aEgg3mljv5NxhaLk6HLG7ru2QC2RXk1FcHRWMYbZ4w1F80Cti9sUorhTjzrFo4+wEW
+	 S4aA+5YxpaHVg==
+Date: Tue, 21 Jan 2025 14:56:47 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 03/30] rcu: Add a small-width RCU watching counter
+ debug option
+Message-ID: <Z4-nn8snXYyzocQW@localhost.localdomain>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-4-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250114175143.81438-4-vschneid@redhat.com>
 
-On Tue, 2025-01-21 at 21:35 +0800, WANG Xuerui wrote:
-> one cannot account for older (in fact, *every existing*) clients=20
-> expecting the old UAPI, hence providing a smaller buffer than struct=20
-> user_watch_state_v2. In which case the kernel will happily write=20
-> out-of-bounds if the client asks for the current watchpoint state. This=
-=20
-> is not acceptable I'm afraid.
+Le Tue, Jan 14, 2025 at 06:51:16PM +0100, Valentin Schneider a écrit :
+> A later commit will reduce the size of the RCU watching counter to free up
+> some bits for another purpose. Paul suggested adding a config option to
+> test the extreme case where the counter is reduced to its minimum usable
+> width for rcutorture to poke at, so do that.
+> 
+> Make it only configurable under RCU_EXPERT. While at it, add a comment to
+> explain the layout of context_tracking->state.
+> 
+> Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-Yes, many distros support running the latest kernel with an old
-userspace for hardware compatibility reason and the change will blow up
-gdb on all those distros.  We need to do something smarter to retain the
-backward compatibility.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
