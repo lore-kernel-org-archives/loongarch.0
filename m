@@ -1,200 +1,140 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4C9361FF2
-	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 03:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765BD28EC;
+	Wed, 22 Jan 2025 07:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737516198; cv=none; b=m9YTfhTAkNS0xSzhsM445Qc0xX+gmsMHDC+2mj0hyNUCcLlHNUo7ugRE4zL7uJUifd2GnuO9E+RWVfTwIuaOxc/1OB3Aq+osSzDqEDDyk1hgS27bDaCNb5Duk2A0T7CV9O7jGB16FzYf2E0VZmrDaF0fyXdy+pDuDX1t0vKBslU=
+	t=1737532240; cv=none; b=ZQx/9NafyJYtlK+MBl6X/ya6Du8vH/i33X0TFCpLXG+oRbgQuHxgSAyWEYp8RrwSk0iZ4pfZmJyHn0+QFuFdDdRbU40kzs8KZHMnFtyBXLqwK8VLMG8bpVj2coU7jR4BmZuuEDh2X4GS+92RtAPzah+zR8b6dYlOYoo/V3gGUuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737516198; c=relaxed/simple;
-	bh=SxMPAZ3+T0CfKfNEp9gx7u//ccbET2Fo5a3BWrR/gxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCzqiphw7H7yJ98IkFeDPaRmRNtjoZOY2yTcVVXwR5bZGz7L0Ng8+c6HA3meTQwm2ULBV5qf53AZklg7xfG7VCNttxhi99Cs0NftPQ6y5jwRosNBW+SQscMugaZNCYmNM/6OpwYuGIj2u702I90mZvgTLoAnHI3kwokzveMkz28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxfa+iZJBnUghnAA--.46496S3;
-	Wed, 22 Jan 2025 11:23:14 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAx+8SfZJBnfi8qAA--.30584S3;
-	Wed, 22 Jan 2025 11:23:12 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] LoongArch: Change 8 to 14 for LOONGARCH_MAX_{BRP,WRP}
-Date: Wed, 22 Jan 2025 11:23:09 +0800
-Message-ID: <20250122032310.26729-2-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250122032310.26729-1-yangtiezhu@loongson.cn>
-References: <20250122032310.26729-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1737532240; c=relaxed/simple;
+	bh=IEhcvheF4V81iZY+p0ALVQuZPTmOS4DOoc5c5f3Go8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Weh6X46oLsD8r7CM037wijSYWke/zVmZ3jBLT9dw6IlBUEh+0r+1cLXU0sfzWSByIFcjXUUF0pC2BEy8HZyaBNwUhWyfg/MFTm5IH57HTKsSIySMMQtTkZz6eG9eAJ40WOoNgSXqD4jDhRXVqIEucsNlC52UMdVzmOxMtmBtZ7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WKfRRI1l; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WKfRRI1l"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50M2A4Je009705;
+	Wed, 22 Jan 2025 07:49:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=YOmEKaCYp7BVYdSA921evwSGcBIDRQ
+	EOB9Qf7IL5hrk=; b=WKfRRI1lHye/PfeRq0CM+invZscqmJxiyfMJj6RqKDo+k0
+	oHw8bxFR10u4InxfkGzbtPQRnmjjRIxYD+e4Hdc6VNWvxRNBhElChMEKYTQww/ne
+	kooQLVgHcJbjlXo8YwFiHbBQ8lYIn1j20/tkdmwE9rGrifbH6of2GaRERifgPxvN
+	e6jGjgMPTSpOWNSK//eRAMpTyDt03PLcgP0/2Qj42QpNbLO975g3w4J/8kekr9qF
+	dPd8DDCPlAQUGXVLnf/2L8EUh+BlP8RuxoA5walvWUcYL4qLgoLMxpcBdMKwAzI/
+	K9cmGJQE5Hsas24CZr5x5+mJxBXMWUxPL2+9HvXg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44aee1bs75-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jan 2025 07:49:59 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50M4kx3X019330;
+	Wed, 22 Jan 2025 07:49:58 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 448pmsfk01-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jan 2025 07:49:58 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50M7nu1d48300472
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Jan 2025 07:49:56 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B223620040;
+	Wed, 22 Jan 2025 07:49:56 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B9362004B;
+	Wed, 22 Jan 2025 07:49:56 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 22 Jan 2025 07:49:56 +0000 (GMT)
+Date: Wed, 22 Jan 2025 08:49:54 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        Ryan Roberts <ryan.roberts@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-um@lists.infradead.org, loongarch@lists.linux.dev,
+        x86@kernel.org
+Subject: Re: [PATCH v2 6/6] mm: Introduce ctor/dtor at PGD level
+Message-ID: <20250122074954.8685-A-hca@linux.ibm.com>
+References: <20250103184415.2744423-1-kevin.brodsky@arm.com>
+ <20250103184415.2744423-7-kevin.brodsky@arm.com>
+ <Z4/NTRDBXEEimdvc@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx+8SfZJBnfi8qAA--.30584S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Gry5uFWxKFykury7WFyDArc_yoWxKF1xpr
-	1UCFWrGrWUtFyxKa1IqF1Y9r4UXFZ7ursIvw1FvwsFkF4DA3y8Xw1qgryfJFy5Aan5XFyS
-	kw1kA3ySva4UJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
-	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYr7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
-	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0
-	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2
-	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280
-	aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_Wryl
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkvb40E47
-	kJMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	W8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	kNtxDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4/NTRDBXEEimdvc@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qTola2ylJwUaTSt4IdPRfZSdT02Tio3Q
+X-Proofpoint-GUID: qTola2ylJwUaTSt4IdPRfZSdT02Tio3Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-22_03,2025-01-22_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=674 priorityscore=1501 bulkscore=0
+ spamscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501220053
 
-The maximum number of load/store watchpoints and fetch instruction
-watchpoints is 14 each according to LoongArch Reference Manual, so
-change 8 to 14 for the related code.
+On Tue, Jan 21, 2025 at 05:37:33PM +0100, Alexander Gordeev wrote:
+> On Fri, Jan 03, 2025 at 06:44:15PM +0000, Kevin Brodsky wrote:
+> 
+> Hi Kevin,
+> ...
+> > diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
+> > index 5fced6d3c36b..b19b6ed2ab53 100644
+> > --- a/arch/s390/include/asm/pgalloc.h
+> > +++ b/arch/s390/include/asm/pgalloc.h
+> > @@ -130,11 +130,18 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+> >  
+> >  static inline pgd_t *pgd_alloc(struct mm_struct *mm)
+> >  {
+> > -	return (pgd_t *) crst_table_alloc(mm);
+> > +	unsigned long *table = crst_table_alloc(mm);
+> > +
+> > +	if (!table)
+> > +		return NULL;
+> 
+> I do not know status of this series, but FWIW, this call is missed:
+> 
+> 	crst_table_init(table, _REGION1_ENTRY_EMPTY); 
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
-Fixes: edffa33c7bb5 ("LoongArch: Add hardware breakpoints/watchpoints support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/hw_breakpoint.h |  4 +-
- arch/loongarch/include/asm/loongarch.h     | 60 ++++++++++++++++++++++
- arch/loongarch/kernel/hw_breakpoint.c      | 16 +++++-
- 3 files changed, 76 insertions(+), 4 deletions(-)
+Why is that missing?
 
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/include/asm/hw_breakpoint.h
-index d78330916bd1..13b2462f3d8c 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -38,8 +38,8 @@ struct arch_hw_breakpoint {
-  * Limits.
-  * Changing these will require modifications to the register accessors.
-  */
--#define LOONGARCH_MAX_BRP		8
--#define LOONGARCH_MAX_WRP		8
-+#define LOONGARCH_MAX_BRP		14
-+#define LOONGARCH_MAX_WRP		14
- 
- /* Virtual debug register bases. */
- #define CSR_CFG_ADDR	0
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 64ad277e096e..aaa4ad6b8594 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -959,6 +959,36 @@
- #define LOONGARCH_CSR_DB7CTRL		0x34a	/* data breakpoint 7 control */
- #define LOONGARCH_CSR_DB7ASID		0x34b	/* data breakpoint 7 asid */
- 
-+#define LOONGARCH_CSR_DB8ADDR		0x350	/* data breakpoint 8 address */
-+#define LOONGARCH_CSR_DB8MASK		0x351	/* data breakpoint 8 mask */
-+#define LOONGARCH_CSR_DB8CTRL		0x352	/* data breakpoint 8 control */
-+#define LOONGARCH_CSR_DB8ASID		0x353	/* data breakpoint 8 asid */
-+
-+#define LOONGARCH_CSR_DB9ADDR		0x358	/* data breakpoint 9 address */
-+#define LOONGARCH_CSR_DB9MASK		0x359	/* data breakpoint 9 mask */
-+#define LOONGARCH_CSR_DB9CTRL		0x35a	/* data breakpoint 9 control */
-+#define LOONGARCH_CSR_DB9ASID		0x35b	/* data breakpoint 9 asid */
-+
-+#define LOONGARCH_CSR_DB10ADDR		0x360	/* data breakpoint 10 address */
-+#define LOONGARCH_CSR_DB10MASK		0x361	/* data breakpoint 10 mask */
-+#define LOONGARCH_CSR_DB10CTRL		0x362	/* data breakpoint 10 control */
-+#define LOONGARCH_CSR_DB10ASID		0x363	/* data breakpoint 10 asid */
-+
-+#define LOONGARCH_CSR_DB11ADDR		0x368	/* data breakpoint 11 address */
-+#define LOONGARCH_CSR_DB11MASK		0x369	/* data breakpoint 11 mask */
-+#define LOONGARCH_CSR_DB11CTRL		0x36a	/* data breakpoint 11 control */
-+#define LOONGARCH_CSR_DB11ASID		0x36b	/* data breakpoint 11 asid */
-+
-+#define LOONGARCH_CSR_DB12ADDR		0x370	/* data breakpoint 12 address */
-+#define LOONGARCH_CSR_DB12MASK		0x371	/* data breakpoint 12 mask */
-+#define LOONGARCH_CSR_DB12CTRL		0x372	/* data breakpoint 12 control */
-+#define LOONGARCH_CSR_DB12ASID		0x373	/* data breakpoint 12 asid */
-+
-+#define LOONGARCH_CSR_DB13ADDR		0x378	/* data breakpoint 13 address */
-+#define LOONGARCH_CSR_DB13MASK		0x379	/* data breakpoint 13 mask */
-+#define LOONGARCH_CSR_DB13CTRL		0x37a	/* data breakpoint 13 control */
-+#define LOONGARCH_CSR_DB13ASID		0x37b	/* data breakpoint 13 asid */
-+
- #define LOONGARCH_CSR_FWPC		0x380	/* instruction breakpoint config */
- #define LOONGARCH_CSR_FWPS		0x381	/* instruction breakpoint status */
- 
-@@ -1002,6 +1032,36 @@
- #define LOONGARCH_CSR_IB7CTRL		0x3ca	/* inst breakpoint 7 control */
- #define LOONGARCH_CSR_IB7ASID		0x3cb	/* inst breakpoint 7 asid */
- 
-+#define LOONGARCH_CSR_IB8ADDR		0x3d0	/* inst breakpoint 8 address */
-+#define LOONGARCH_CSR_IB8MASK		0x3d1	/* inst breakpoint 8 mask */
-+#define LOONGARCH_CSR_IB8CTRL		0x3d2	/* inst breakpoint 8 control */
-+#define LOONGARCH_CSR_IB8ASID		0x3d3	/* inst breakpoint 8 asid */
-+
-+#define LOONGARCH_CSR_IB9ADDR		0x3d8	/* inst breakpoint 9 address */
-+#define LOONGARCH_CSR_IB9MASK		0x3d9	/* inst breakpoint 9 mask */
-+#define LOONGARCH_CSR_IB9CTRL		0x3da	/* inst breakpoint 9 control */
-+#define LOONGARCH_CSR_IB9ASID		0x3db	/* inst breakpoint 9 asid */
-+
-+#define LOONGARCH_CSR_IB10ADDR		0x3e0	/* inst breakpoint 10 address */
-+#define LOONGARCH_CSR_IB10MASK		0x3e1	/* inst breakpoint 10 mask */
-+#define LOONGARCH_CSR_IB10CTRL		0x3e2	/* inst breakpoint 10 control */
-+#define LOONGARCH_CSR_IB10ASID		0x3e3	/* inst breakpoint 10 asid */
-+
-+#define LOONGARCH_CSR_IB11ADDR		0x3e8	/* inst breakpoint 11 address */
-+#define LOONGARCH_CSR_IB11MASK		0x3e9	/* inst breakpoint 11 mask */
-+#define LOONGARCH_CSR_IB11CTRL		0x3ea	/* inst breakpoint 11 control */
-+#define LOONGARCH_CSR_IB11ASID		0x3eb	/* inst breakpoint 11 asid */
-+
-+#define LOONGARCH_CSR_IB12ADDR		0x3f0	/* inst breakpoint 12 address */
-+#define LOONGARCH_CSR_IB12MASK		0x3f1	/* inst breakpoint 12 mask */
-+#define LOONGARCH_CSR_IB12CTRL		0x3f2	/* inst breakpoint 12 control */
-+#define LOONGARCH_CSR_IB12ASID		0x3f3	/* inst breakpoint 12 asid */
-+
-+#define LOONGARCH_CSR_IB13ADDR		0x3f8	/* inst breakpoint 13 address */
-+#define LOONGARCH_CSR_IB13MASK		0x3f9	/* inst breakpoint 13 mask */
-+#define LOONGARCH_CSR_IB13CTRL		0x3fa	/* inst breakpoint 13 control */
-+#define LOONGARCH_CSR_IB13ASID		0x3fb	/* inst breakpoint 13 asid */
-+
- #define LOONGARCH_CSR_DEBUG		0x500	/* debug config */
- #define LOONGARCH_CSR_DERA		0x501	/* debug era */
- #define LOONGARCH_CSR_DESAVE		0x502	/* debug save */
-diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
-index a6e4b605bfa8..c35f9bf38033 100644
---- a/arch/loongarch/kernel/hw_breakpoint.c
-+++ b/arch/loongarch/kernel/hw_breakpoint.c
-@@ -51,7 +51,13 @@ int hw_breakpoint_slots(int type)
- 	READ_WB_REG_CASE(OFF, 4, REG, T, VAL);		\
- 	READ_WB_REG_CASE(OFF, 5, REG, T, VAL);		\
- 	READ_WB_REG_CASE(OFF, 6, REG, T, VAL);		\
--	READ_WB_REG_CASE(OFF, 7, REG, T, VAL);
-+	READ_WB_REG_CASE(OFF, 7, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 8, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 9, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 10, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 11, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 12, REG, T, VAL);		\
-+	READ_WB_REG_CASE(OFF, 13, REG, T, VAL);
- 
- #define GEN_WRITE_WB_REG_CASES(OFF, REG, T, VAL)	\
- 	WRITE_WB_REG_CASE(OFF, 0, REG, T, VAL);		\
-@@ -61,7 +67,13 @@ int hw_breakpoint_slots(int type)
- 	WRITE_WB_REG_CASE(OFF, 4, REG, T, VAL);		\
- 	WRITE_WB_REG_CASE(OFF, 5, REG, T, VAL);		\
- 	WRITE_WB_REG_CASE(OFF, 6, REG, T, VAL);		\
--	WRITE_WB_REG_CASE(OFF, 7, REG, T, VAL);
-+	WRITE_WB_REG_CASE(OFF, 7, REG, T, VAL);		\
-+	WRITE_WB_REG_CASE(OFF, 8, REG, T, VAL);		\
-+	WRITE_WB_REG_CASE(OFF, 9, REG, T, VAL);		\
-+	WRITE_WB_REG_CASE(OFF, 10, REG, T, VAL);	\
-+	WRITE_WB_REG_CASE(OFF, 11, REG, T, VAL);	\
-+	WRITE_WB_REG_CASE(OFF, 12, REG, T, VAL);	\
-+	WRITE_WB_REG_CASE(OFF, 13, REG, T, VAL);
- 
- static u64 read_wb_reg(int reg, int n, int t)
- {
--- 
-2.42.0
+A pgd table can be a Region1, Region2, or Region3 table. The only caller of
+this function is mm_init() via mm_alloc_pgd(); and right after mm_alloc_pgd()
+there is a call to init_new_context() which will initialize the pgd correctly.
 
+I guess what really gets odd, and might be broken (haven't checked yet) is
+what happens on dynamic upgrade of page table levels (->crst_table_upgrade()).
+
+With that a pgd may become a pud, and with that we get an imbalance with
+the ctor/dtor calls for the various page table levels when they get freed
+again. Plus, at first glance, it looks also broken that we have open-coded
+crst_alloc() calls instead of using the "proper" page table allocation API
+within crst_table_upgrade(), which again would cause an imbalance.
