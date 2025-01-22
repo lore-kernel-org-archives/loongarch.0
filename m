@@ -1,67 +1,35 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7881F5438;
-	Tue, 21 Jan 2025 17:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DC912B71;
+	Wed, 22 Jan 2025 00:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737478818; cv=none; b=eqjGUFjB4MqVqnOWfyeKij8bm7yvEDq/H7PC5lwhS9OZ3iXcI2ENuQkwtY9gWMPdH/FdQ634SczUIvycRSdCKhCj2JfKkCHP2KS/8gHxlLBl/np4Ymex8HvtSD3pvfNHCj/0mM6vuNLRUeO3kfc/HV4Vcf8F6CZ9FeFJ202YXes=
+	t=1737505336; cv=none; b=mXRnw7MoJrKr0fVFK8Tk+gXkhybANZXgq/W1cRBBJEo4RNmDOBhcDw/eOa0LyCvM7tjGzX7lKpij/Mgzn7DBu+6owiyIVhnJyaIA1FNtIxWJltTTEyxxZSfp4Kak/LaTC5Bt7td98S5TKy9QhX5mAY1h1KZ+aj1EZ3wha6su2zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737478818; c=relaxed/simple;
-	bh=9OS+xRmfz4uuv2J1YGJZ++S2O40MMdmWQmSQIuypaCI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsdgaWBOr1RMTKBeeh3opUfhcv+3ANDvOOOOZwL7SiUEgj+lL6OagaZnsw8fxGz+vy7JlPDdVEKoSsJaUJy2WtsjrX+qffjT8PqNt3XT7aFFASc7g2BeZY9vzV4xXmmb+g5slUlMh3Er3f9ghusMMvksGJ3rVt0iiO9xtOLlt8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cmu8Pt60; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737505336; c=relaxed/simple;
+	bh=/jGFli4cvz5GuKwl53vdKodQbbfB6lqGAT1IVg71WEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6xb0AlHxCL5QW3ZfQOtlZgaCvjSx4j93KZhBGBEhAJHETBXKdAIcvJYop+jbHLxobySvAcSG3DCX1u0+lEgTBrNVMRDoWLikVqRaCAA3D4QrK6DoANtVd/dwnXLXFSZPGY122OlRpXy7FI3bdTKrcqSZCi2Ol6UDzGD1Fys1Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6yz2ru+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmu8Pt60"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5426fcb3c69so4719867e87.3;
-        Tue, 21 Jan 2025 09:00:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737478814; x=1738083614; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6O7kZyVX02YaNVvlK+AnjIGslDTljYFtI1mm3L3G+es=;
-        b=Cmu8Pt60s44Qleln3NTiLnwXiErIMyNJc8f2IrDzsk786zvr/uPspLfDSr5erEEMZH
-         u6TzsUhSNd/rFIaxvTpF5tqOptDy2odzQwq0pRv7jNvL/kFxa3L8VPaG200e//Tit3i3
-         Z1bFMLVZOjH/fof27ad9A1tCzqZmFmfGrcAeL8wXj6igvfkfIfEpBU++qhCsla6iH1WY
-         wW1GNAW6tzC5HGTgFxk5WY50QHJVnv8oAm9IkoXLJW/FOkT42ofkNt3bX7amVNPD9gw1
-         6/JryYCb8+bzfpGb8AihQ7xFshkdOGJzeWSNasaUlDqwtYxOMGDJ5GUDAnpVH+d1VajX
-         RsLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737478814; x=1738083614;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6O7kZyVX02YaNVvlK+AnjIGslDTljYFtI1mm3L3G+es=;
-        b=cF5AsKB6IJo3EjWcIN5pREOALFkB0FPPxIU9kUf2SYAvANZyBViludszLwWYY7SNXF
-         yTbgDH1iYSJVPME7VFrulkml2K4U3bw5DjfMVypUyBfanHLOUJ2SJv1DQu1ykZNNssmn
-         qJNgSSurvWzDHy07kiJneGi31WozSKgP8ma3eg94iNo3RvOpcqnYLBos+vzDHloxDyr2
-         o92e7oJxW3E8S6YeAO+GzO8X6d3PtasUBgq1t34znzgpxNwruNInxPaYOFQZt2QJippt
-         um9hBCfdKWihBzGN88f/pd4PUhMHNVHaS+goAge2q2zjyPaxRnURbwS3Hr0NrujkChgD
-         hOCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVa4o5GWjFoX9OyojcC4VpfoWKbQendAKJeyFlJQ8PnKKBlwOSyjg1zRfxVusPj6J4oxhsEt5zU+AE=@lists.linux.dev, AJvYcCX4ElV4/lBHKUdfVnxjBQZYfyuBL5nV6mApnGadnp3M/pro5RWUJo5cqnxzFgKIoLNh7g01iEwHGDxmUpgp4sU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyR+1E3lKqI9OkzNi7MbHn3l70WLaIRtXgN3ipSbvmFdFwtni61
-	sEEjA+dXW5hTxFWVrDawJczTiJdblzx16f8mtC8lq7idhbkiPTqC
-X-Gm-Gg: ASbGncv3XSnplVnCr0XshpPChkmscwLm2Uu3jELcUFpkMA/3xIxUUOhL7Zj7K/6GifC
-	nym3i+cglCBc2KNWeQo5RYl5H4oOP41xFLfBx8KbgeVKrXDDbEBpfNj6AG8ZCK3blWUGWyertQ/
-	FgrbAg1pq7eFg9ix/ZbbF6H4UALpCIWH1MtvI+AWyqTcVjcFCMqhgzrbZdJLjTWo7h96gFZrEmw
-	qOmM3OE/vO2h5Qb1DyHBa5BecEiRrfN9OM+9Dp9MiXMELNSJD2FjZiFIRZo9h2pSYRPPLX8XmWJ
-	W1hFJw1FkZAzuQX602kzfgmQ
-X-Google-Smtp-Source: AGHT+IGYPF71D1RmaKnbW82c+U5IMmpDPZJTk/HJCRRaq5z7S90tH0rTVzhA6Sl8Kwc0O/33Vf8jgg==
-X-Received: by 2002:a05:6512:104b:b0:543:9b0f:7d39 with SMTP id 2adb3069b0e04-5439c282920mr7151519e87.32.1737478813837;
-        Tue, 21 Jan 2025 09:00:13 -0800 (PST)
-Received: from pc636 (host-217-213-93-172.mobileonline.telia.com. [217.213.93.172])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5439af76fe9sm1916768e87.212.2025.01.21.09.00.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2025 09:00:12 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 21 Jan 2025 18:00:07 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6yz2ru+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0ECC4CEDF;
+	Wed, 22 Jan 2025 00:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737505335;
+	bh=/jGFli4cvz5GuKwl53vdKodQbbfB6lqGAT1IVg71WEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m6yz2ru+LXXh5xzgW1nRGofBLoFG1mOtZGKi5a///oNnHCh2ZlX7+dcv8uCWMxNTP
+	 NYc7Ip5HhxveoM1UG1zbALPWHqlghrr9FWkgxzL4ynzknjr2qzRJNXR0bvmmp0LFhV
+	 2OSMqyc+t3WixyaNjJpsZ4FqrFQOpqBUkDbXqnD8oIRzHSRo6BI6S0PtYY51ka7mXT
+	 F/aNHCRlDP27nrL0iFxyIILAmTVs3KAxdOxLI4Oy09Y/BLpA3KwnyrjprYZYiv2vA6
+	 /XRCO70HAGc/N4UdSrMWqxSo9SxN0390mZcC3+duriCj1eGd6MeQlfVWwQxOpCa2cX
+	 9AeBV3eiLnmoQ==
+Date: Wed, 22 Jan 2025 01:22:12 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
 To: Valentin Schneider <vschneid@redhat.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	virtualization@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
@@ -98,7 +66,6 @@ Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
 	Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Jason Baron <jbaron@akamai.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -107,6 +74,7 @@ Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
 	Joel Fernandes <joel@joelfernandes.org>,
 	Josh Triplett <josh@joshtriplett.org>,
 	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Zqiang <qiang.zhang1211@gmail.com>,
@@ -135,56 +103,42 @@ Cc: Uladzislau Rezki <urezki@gmail.com>, Jann Horn <jannh@google.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-Message-ID: <Z4_Sl-zu7GprkbaL@pc636>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+Message-ID: <Z5A6NPqVGoZ32YsN@pavilion.home>
 References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z4qBMqcMg16p57av@pc636>
- <xhsmhwmetfk9d.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z44wSJTXknQVKWb0@pc636>
- <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <20250114175143.81438-23-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <xhsmhr04xfow1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250114175143.81438-23-vschneid@redhat.com>
 
-> >
-> > As noted before, we defer flushing for vmalloc. We have a lazy-threshold
-> > which can be exposed(if you need it) over sysfs for tuning. So, we can add it.
-> >
+Le Tue, Jan 14, 2025 at 06:51:35PM +0100, Valentin Schneider a écrit :
+> ct_nmi_{enter, exit}() only touches the RCU watching counter and doesn't
+> modify the actual CT state part context_tracking.state. This means that
+> upon receiving an IRQ when idle, the CT_STATE_IDLE->CT_STATE_KERNEL
+> transition only happens in ct_idle_exit().
 > 
-> In a CPU isolation / NOHZ_FULL context, isolated CPUs will be running a
-> single userspace application that will never enter the kernel, unless
-> forced to by some interference (e.g. IPI sent from a housekeeping CPU).
-> 
-> Increasing the lazy threshold would unfortunately only delay the
-> interference - housekeeping CPUs are free to run whatever, and so they will
-> eventually cause the lazy threshold to be hit and IPI all the CPUs,
-> including the isolated/NOHZ_FULL ones.
-> 
-Do you have any testing results for your workload? I mean how much
-potentially we can allocate. Again, maybe it is just enough to back
-and once per-hour offload it.
+> One can note that ct_nmi_enter() can only ever be entered with the CT state
+> as either CT_STATE_KERNEL or CT_STATE_IDLE, as an IRQ/NMI happenning in the
+> CT_STATE_USER or CT_STATE_GUEST states will be routed down to ct_user_exit().
 
-Apart of that how critical IPIing CPUs affect your workloads?
+Are you sure? An NMI can fire between guest_state_enter_irqoff() and
+__svm_vcpu_run(). And NMIs interrupting userspace don't call
+enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
+like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
+implementing common entry code, I can't speak for the others.
 
-> I was thinking maybe we could subdivide the vmap space into two regions
-> with their own thresholds, but a task may allocate/vmap stuff while on a HK
-> CPU and be moved to an isolated CPU afterwards, and also I still don't have
-> any strong guarantee about what accesses an isolated CPU can do in its
-> early entry code :(
-> 
-I agree this is not worth to play with a vmap space in terms of splitting it.
+Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
+CT_STATE can be interesting but I fear this may not come for free. You would
+need to save the old state on IRQ/NMI entry and restore it on exit.
 
-Sorry for later answer and thank you!
+Do we really need it?
 
---
-Uladzislau Rezki
+Thanks.
