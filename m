@@ -1,30 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A72481B1
-	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 03:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC2E1531C2
+	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 03:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737516197; cv=none; b=hGfke9GhNR4H+5heORP9oj+L1pjxv0uXe5DaFImWjFowBITi/4BUWKH3W/QbtSZl1KUghcGQPDlKv8GxGdeV7Tgc07HO29nKqlw/KaiJAtV0B+YpN+E4CN5ONuYkDKzRSd3X2xB+Sjq+La3Lts0Q+sTIfL5weWBd0pL81HvSTdU=
+	t=1737516198; cv=none; b=gKef548erOfbC6GGZrVeXR2s4GgdndBi0KKMpcJu6uxHPTWzY2SGkVfjLFzoK6mJrnrOr6BSW4YHnR/kOchkjDaxOqSuVb4L+CM7kiPeszMJTSsISKum6v4YX+s2N2umG25oy5+k9s7u94dueqWTwhTUsVNG6B+caTOBEtOsP2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737516197; c=relaxed/simple;
-	bh=UXF22T5x2KlqLeL1KSKrLqZxfbi2B3D6KB7dy5gXPOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GafWia+QtS6kScQf0FwxNJr+iW2MABFtx6d4ZN93DPqe+YL6T62yjLwf0WOdqTasSqWE5Hg60YMpL7ljppfwFK3zQ6pWhvFUZWc6U8YW1MXY1l//t+36FmFBPxCb2NcEnNqMtCRSibw2QY7b+pFV4JSUTteF3+kuh99IqLvuEd0=
+	s=arc-20240116; t=1737516198; c=relaxed/simple;
+	bh=O/frk41svUFledbn0jSWDz7RpbTMkYKHxkdCLNhqaD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cOhXmOg49wAdPdWqAITjyoYVl4wa8of1VcC+75sL2ykZZ4VIMEPXZJhGTH5bL0f//TFQOaUNslViLjt2rcLT1G+QxyVQt4uq/gnUxHeVUf1OGJQ4bn4J7xSh2M+QRWAo/hP8J1p2bri8/GODE8vVlTiye5uN/NjkAhUe+XaPKB0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axjq+gZJBnTQhnAA--.46819S3;
-	Wed, 22 Jan 2025 11:23:12 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxTOKiZJBnVAhnAA--.9469S3;
+	Wed, 22 Jan 2025 11:23:14 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAx+8SfZJBnfi8qAA--.30584S2;
-	Wed, 22 Jan 2025 11:23:11 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAx+8SfZJBnfi8qAA--.30584S4;
+	Wed, 22 Jan 2025 11:23:14 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] LoongArch: Change the maximum number of watchpoints
-Date: Wed, 22 Jan 2025 11:23:08 +0800
-Message-ID: <20250122032310.26729-1-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 2/2] LoongArch: Extend the maximum number of watchpoints
+Date: Wed, 22 Jan 2025 11:23:10 +0800
+Message-ID: <20250122032310.26729-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250122032310.26729-1-yangtiezhu@loongson.cn>
+References: <20250122032310.26729-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,41 +35,123 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAx+8SfZJBnfi8qAA--.30584S2
+X-CM-TRANSID:qMiowMAx+8SfZJBnfi8qAA--.30584S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrWFWxCFykZrW8GFWUXr1fuFX_yoWxXFc_Z3
-	ZrJ34UGw40ga4UJasrtr4fX34UGa18JFn0vF1DXrs7Aas8Zw15Xr48Jw15Zr1Y9FWqqFs5
-	ArWFqr95ArnxKosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr4kZF1ktr4DAFW5XrW8AFc_yoWrWF4kpa
+	9Fk3s7Ka1UJF4kur12vw4rursrWwn7GryIgas7CrySyFnIg34F9Fy0kr9IvFW7G348Ka4f
+	X3WjqFyYqa1DAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ36c02F40EFcxC0VAKzVAqx4xG6I80ewCIccxYrVCFb4Uv73VFW2AGmfu7
+	bjvjm3AaLaJ3UjIYCTnIWjp_UUUYr7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4
+	CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0
+	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2
+	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280
+	aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_Wryl
+	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkvb40E47
+	kJMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	W8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+	kNtxDUUUU
 
-After some thinking, I think it is better to send this new version.
+The maximum number of load/store watchpoints and fetch instruction
+watchpoints is 14 each according to LoongArch Reference Manual, so
+extend the maximum number of watchpoints from 8 to 14 for ptrace.
 
-v2: Update the commit message of patch #2 to explain the compatibility
-    problem.
+By the way, just simply change 8 to 14 for the definition in struct
+user_watch_state at the beginning, but it may corrupt uapi, then add
+a new struct user_watch_state_v2 directly.
 
-Tiezhu Yang (2):
-  LoongArch: Change 8 to 14 for LOONGARCH_MAX_{BRP,WRP}
-  LoongArch: Extend the maximum number of watchpoints
+As far as I can tell, the only users for this struct in the userspace
+are GDB and LLDB, there are no any problems of software compatibility
+between the application and kernel according to the analysis.
 
- arch/loongarch/include/asm/hw_breakpoint.h |  4 +-
- arch/loongarch/include/asm/loongarch.h     | 60 ++++++++++++++++++++++
- arch/loongarch/include/uapi/asm/ptrace.h   | 10 ++++
- arch/loongarch/kernel/hw_breakpoint.c      | 16 +++++-
- arch/loongarch/kernel/ptrace.c             |  6 +--
- 5 files changed, 89 insertions(+), 7 deletions(-)
+The compatibility problem has been considered when developing and testing
+the patches, when the applications in the userspace get watchpoint state,
+the length will be specified which will not bigger than the sizeof struct
+user_watch_state or user_watch_state_v2, the actual length is assigned as
+the minimal value of the application and kernel in the generic ptrace:
 
+kernel/ptrace.c: ptrace_regset():
+
+	kiov->iov_len = min(kiov->iov_len,
+			    (__kernel_size_t) (regset->n * regset->size));
+
+	if (req == PTRACE_GETREGSET)
+		return copy_regset_to_user(task, view, regset_no, 0,
+					   kiov->iov_len, kiov->iov_base);
+	else
+		return copy_regset_from_user(task, view, regset_no, 0,
+					     kiov->iov_len, kiov->iov_base);
+
+For example, there are four kind of combinations, all of them work well.
+
+(1) "older kernel + older gdb", the actual length is 8+(8+8+4+4)*8=200;
+(2) "newer kernel + newer gdb", the actual length is 8+(8+8+4+4)*14=344;
+(3) "older kernel + newer gdb", the actual length is 8+(8+8+4+4)*8=200;
+(4) "newer kernel + older gdb", the actual length is 8+(8+8+4+4)*8=200.
+
+Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#control-and-status-registers-related-to-watchpoints
+Fixes: 1a69f7a161a7 ("LoongArch: ptrace: Expose hardware breakpoints to debuggers")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/uapi/asm/ptrace.h | 10 ++++++++++
+ arch/loongarch/kernel/ptrace.c           |  6 +++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/include/uapi/asm/ptrace.h
+index ac915f841650..aafb3cd9e943 100644
+--- a/arch/loongarch/include/uapi/asm/ptrace.h
++++ b/arch/loongarch/include/uapi/asm/ptrace.h
+@@ -72,6 +72,16 @@ struct user_watch_state {
+ 	} dbg_regs[8];
+ };
+ 
++struct user_watch_state_v2 {
++	uint64_t dbg_info;
++	struct {
++		uint64_t    addr;
++		uint64_t    mask;
++		uint32_t    ctrl;
++		uint32_t    pad;
++	} dbg_regs[14];
++};
++
+ #define PTRACE_SYSEMU			0x1f
+ #define PTRACE_SYSEMU_SINGLESTEP	0x20
+ 
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index 19dc6eff45cc..5e2402cfcab0 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -720,7 +720,7 @@ static int hw_break_set(struct task_struct *target,
+ 	unsigned int note_type = regset->core_note_type;
+ 
+ 	/* Resource info */
+-	offset = offsetof(struct user_watch_state, dbg_regs);
++	offset = offsetof(struct user_watch_state_v2, dbg_regs);
+ 	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, offset);
+ 
+ 	/* (address, mask, ctrl) registers */
+@@ -920,7 +920,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 	[REGSET_HW_BREAK] = {
+ 		.core_note_type = NT_LOONGARCH_HW_BREAK,
+-		.n = sizeof(struct user_watch_state) / sizeof(u32),
++		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+ 		.regset_get = hw_break_get,
+@@ -928,7 +928,7 @@ static const struct user_regset loongarch64_regsets[] = {
+ 	},
+ 	[REGSET_HW_WATCH] = {
+ 		.core_note_type = NT_LOONGARCH_HW_WATCH,
+-		.n = sizeof(struct user_watch_state) / sizeof(u32),
++		.n = sizeof(struct user_watch_state_v2) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+ 		.regset_get = hw_break_get,
 -- 
 2.42.0
 
