@@ -1,190 +1,129 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA761C232B;
-	Wed, 22 Jan 2025 21:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145651CAA66
+	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 22:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737580787; cv=none; b=nsUus/0LdjiA7Dw8HeBb+pm4UPdL58s4V9G10MjMnKBz5UblcAoxb+a84DapM347OVTw1Zbu2dr0KThFzEngD5D5/ZXR+l4x3wjCp6qtk0KYzgdj8kLYao95wuyBJIxpy3zgKAEkHSJlZmWxecNQu++oMzrD/gnQEUOx0SDzZgY=
+	t=1737586617; cv=none; b=jnTGiXWItYumGb2j0a/f0G3oHuU+DRb96lOzDMyY0n/Cl0SciI371Lp3L6vAcolYxKmpH58ejo34gTreMy/50cB0ANmeb07UFZk29HjjK4z3PcirTeL1Dlj7VIiNS63OHobWZVcucOsM6b/yyFk+LTiUnxWuOsrhR/ee4LoOpH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737580787; c=relaxed/simple;
-	bh=GqP6QXYud4OFUY8hX1TkxW/BI1wPl7mETljhzkHTP/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwBbDpk5VYBM4E6dYeLmRs8BuPrN1UEJyX9M0g6+Lz0rwuXy5ob/bQYfCxxj53Jo42Uhw3jTeCaa0MlYh9NbLcUei+2ZtJNqabiXD0DZ5UPYYK0o6jJXpiBwWlMfZj8bp9qUqKggxwFnszcyCNYwp2gwFAOap3nzwrHyidt822M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MD/1i4r7; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1737586617; c=relaxed/simple;
+	bh=mv7KUIbyKGHeuf7LA5c1+10gOtsNxeILI+8x5fj1ZI0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CQhHXabLDJvl5qJU1bNbDcZrFJcDDnijHtR3mVXFDyCAhwl8bi3ppxIWgwxSNRDj3aJfC3y6UeP3NAPm6uQnOcyCbYoSbUnWPUlcyq++z6IqL+YNFwSWUTM6/RJYcxlEbkAx7dG6IwYz2qLknUksYU4OxYHY8A+w8k9lmwyUkjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TfUS3ShR; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MD/1i4r7"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50MHQxkg012829;
-	Wed, 22 Jan 2025 21:17:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=esFAzaN6g7njZiCCkaClyDhZIQCDyB
-	L4ZttyeT6NCzw=; b=MD/1i4r7lMchVZDMxCd4+OmTL+gqvz4EsoCc3lhjzl61q/
-	dWCbk7Dc9E+/mkxibxIfcO+5M2miNjCQj+Zb6N7aFJSgK9pEAqx6PGNDi1udxJ2D
-	5GRkpG+GUOuS40Gu4kk1nLVzuQ6b0Ms8Wu06boltLFfDgJ845roakAZxLi7ece1K
-	21P0Y61Gf0j8zaE10R3dSPAxGJBBECX5J1pPuXnnL27yt6dWzGu7RpbRMXnWFft4
-	1i9lfntcbQEcz44pnsvGFWB7JR/kgZ5jistInR187FAC2imqV46/9k08iOuxZ7q0
-	9o0IVrdT0Bd2ZHNbMuzwATcn0fOtey6n4VrpyBow==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44avcp3s7s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 21:17:07 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50MKlol5019223;
-	Wed, 22 Jan 2025 21:17:06 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 448pmsjk01-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 21:17:06 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50MLH4Kc13697392
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jan 2025 21:17:04 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C62A2004D;
-	Wed, 22 Jan 2025 21:17:04 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A40CD20043;
-	Wed, 22 Jan 2025 21:17:00 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.77.114])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 22 Jan 2025 21:17:00 +0000 (GMT)
-Date: Wed, 22 Jan 2025 22:16:58 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Ryan Roberts <ryan.roberts@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, loongarch@lists.linux.dev,
-        x86@kernel.org
-Subject: Re: [PATCH v2 6/6] mm: Introduce ctor/dtor at PGD level
-Message-ID: <Z5FgSn0y/c9pItED@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250103184415.2744423-1-kevin.brodsky@arm.com>
- <20250103184415.2744423-7-kevin.brodsky@arm.com>
- <Z4/NTRDBXEEimdvc@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <20250122074954.8685-A-hca@linux.ibm.com>
- <Z5D7TSR3AttkC0Jf@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TfUS3ShR"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ee86a1a92dso505609a91.1
+        for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 14:56:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737586614; x=1738191414; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cnzMlYCzKVvpxw7yPav+PLPBZlq1nGQlt5nCryj5lKM=;
+        b=TfUS3ShRXvMtl+wY4+dsAOdEiHgEjH9WO1QJdkm1ootBLerqu8lNDmmQ4XqaLpTjKx
+         giE1G8O5GyuorL4XHDMObTZpfboM+k8tPkTD1w5ZblHgfjBpnD3rKAGOMhcDz0HI0AtQ
+         TqBCHmTeJ6EAM7l3JzePCDEiDyqu6dyuE6sF44ZLD55aHzKOpp6gmfbR2AE8PRHrEjK5
+         TxTdZZXTOSGAz3nqAf/MaSHrNVdJlY0OeEFBHbEKO8H4igJbD8jzC6gW1PHtyF8cLbXF
+         cqt/cAk94io+YSMrbRLiRcP8It90qIGqfQ70SDAcKr1Mlc5wieKIEj8YpP+OHwE6Vcl9
+         vx6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737586614; x=1738191414;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cnzMlYCzKVvpxw7yPav+PLPBZlq1nGQlt5nCryj5lKM=;
+        b=wAMHrkhf30ff0iWxnPU2Zoq1yvXmo8KOMgLiyeIQLU9Mc3sJBWj2l1Eo18UkGX8LC9
+         5am4qQAoooGGjrk7SJsuO6ib9qkJ2eFqY6HKQhYdUIFAAKdQeOfTqI5LYVbb4bCTU60K
+         UQENrfN0U0belOfL2jrUkzEzT2DdhxfDfgHFwUIaQ40n2yZ1MfsqxLe4Y6q79QEkDCM/
+         X9eIsCiR1vfph+wWXIp4z4fas/85N2ST7glEZci7AMFNFAPrq98/kxCWdt4y2nNBCsRq
+         6JgYCMalTrV7TOcQBn0GhSqFtLquzcR1EvAultwXyXJ55dylbwkwFW0pc5zvquaP5p0i
+         6SHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV35F7cVQBDBT85oPAOKFxAFVt2PZSsLwbRR7SvCku+KcvNgBvcaL4ltIAMtaSavgKrzSQlk6jdAtg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzHXbTutvZmQJc08Nr+Z6eUgPFy/i+0gBNO+ikAYBeY6qTqejpY
+	W6CHKkKHMNgRB5Uq1zYPUq0X/XZDnAW8LZ9pWrACXP9z0wO3qSrM5ivUfuzWm90=
+X-Gm-Gg: ASbGnctl1vEWHFwHuCJrH8E5ihmI3UPtPz26BP5VBKVLK0eEzKzQDQGV8wYj9m0mwTJ
+	LZAH6YpIbBZAaTQAHLFzUcubC9FAqpcoM+0ady8ycVTosu8UAGHGjWld5gIqnAWUqFYlFvIaBP7
+	sYtYPfmwbTUKHzZ1/0CuMfk55GBGGAu6vIQtZD9C9K9KuHTmO7JKKg1P2dtPbIKtfcZXb55FzBT
+	G1LQ+loPV2CkIsA2LHt09lppi94LHdP2wOyxVKG2npKf/cF3uJmVA1jDNe2K8W9L+fYZqRxbnKb
+	gjPRWwx22w==
+X-Google-Smtp-Source: AGHT+IHB0x+Ki93nVMyNmjUvHS1Hbs7yWzbtT7Kml6NUqhDpPqvjvCne2/W3tEXbP1kUcPb30M8ZEw==
+X-Received: by 2002:a17:90b:4b8d:b0:2ee:7a4f:9265 with SMTP id 98e67ed59e1d1-2f782c976f5mr35059946a91.15.1737586614341;
+        Wed, 22 Jan 2025 14:56:54 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7e6aaf3b4sm2301375a91.25.2025.01.22.14.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2025 14:56:53 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH 0/4] entry: Move ret_from_fork() to C and inline
+ syscall_exit_to_user_mode()
+Date: Wed, 22 Jan 2025 14:56:19 -0800
+Message-Id: <20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5D7TSR3AttkC0Jf@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: lJbHIFaitD84VbMmVKAwv1LP_Khu2fra
-X-Proofpoint-GUID: lJbHIFaitD84VbMmVKAwv1LP_Khu2fra
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-22_09,2025-01-22_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- bulkscore=0 mlxlogscore=925 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501220151
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJN3kWcC/x3MTQqAIBBA4avErBNsNJCuEhFhU80iizGiH7x70
+ vJbvPdCJGGK0BQvCJ0ceQsZVVmAX4Ywk+IxG1Cj1VajEo7+7Lf94JUf6ikccqvaGWeNRW2whpz
+ uQhNf/7btUvoAcMITyGYAAAA=
+X-Change-ID: 20240402-riscv_optimize_entry-583843420325
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1633; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=mv7KUIbyKGHeuf7LA5c1+10gOtsNxeILI+8x5fj1ZI0=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/rE8s0TrtXqsUUK2vXc8j4W/efQ3uZL75iF2SsOVnDeT
+ A4Sej+/o5SFQYyLQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgIlwXmT4n3/d44Sk1qzVd157
+ MQQsunbo4UqfpE+mU7Yu3dsV5ztzqw8jQ/snE52ShgWi7NKP1iVNc5gjHhlyo0W+/uIiZvVbP9j
+ e8gAA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-On Wed, Jan 22, 2025 at 03:06:05PM +0100, Alexander Gordeev wrote:
+Similar to commit 221a164035fd ("entry: Move
+syscall_enter_from_user_mode() to header file"), move
+syscall_exit_to_user_mode() to the header file as well.
 
-Hi Kevin,
+Testing was done with the byte-unixbench [1] syscall benchmark (which
+calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
+x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
+s390 a 11.1328% improvement.
 
-> On Wed, Jan 22, 2025 at 08:49:54AM +0100, Heiko Carstens wrote:
-> > > >  static inline pgd_t *pgd_alloc(struct mm_struct *mm)
-> > > >  {
-> > > > -	return (pgd_t *) crst_table_alloc(mm);
-> > > > +	unsigned long *table = crst_table_alloc(mm);
-> > > > +
-> > > > +	if (!table)
-> > > > +		return NULL;
-> > > 
-> > > I do not know status of this series, but FWIW, this call is missed:
-> > > 
-> > > 	crst_table_init(table, _REGION1_ENTRY_EMPTY); 
-> > 
-> > Why is that missing?
-> 
-> Because the follow-up pagetable_pgd_ctor() is called against uninitialized
-> page table, while other pagetable_pXd_ctor() variants are called against
-> initialized one. I could imagine complications as result of that.
-> 
-> Whether Region1 table is the right choice is a big question though, as you
-> noticed below.
+Since this is on QEMU, I know these numbers are not perfect, but they
+show a trend of general improvement across all architectures that use
+the generic entry code.
 
-As discussed with Heiko, we do not want to add the extra crst_table_init() call
-at least due to performance impact. So please ignore my comment.
+[1] https://github.com/kdlucas/byte-unixbench
 
-> > A pgd table can be a Region1, Region2, or Region3 table. The only caller of
-> > this function is mm_init() via mm_alloc_pgd(); and right after mm_alloc_pgd()
-> > there is a call to init_new_context() which will initialize the pgd correctly.
-> 
-> init_new_context() is in a way a constructor as well, so whole thing looks odd
-> to me. But I do not immedeately see a better way :(
-> 
-> > I guess what really gets odd, and might be broken (haven't checked yet) is
-> > what happens on dynamic upgrade of page table levels (->crst_table_upgrade()).
-> 
-> Hmm, that is a good point.
-> 
-> > With that a pgd may become a pud, and with that we get an imbalance with
-> > the ctor/dtor calls for the various page table levels when they get freed
-> 
-> The ctor/dtor mismatch should not be a problem, as pagetable_pgd|p4d|pud_ctor()
-> are the same and there is one pagetable_dtor() for all top levels as of now.
-> But if it ever comes to separate implementations, then we are in the world
-> of pain.
-> 
-> > again. Plus, at first glance, it looks also broken that we have open-coded
-> > crst_alloc() calls instead of using the "proper" page table allocation API
-> > within crst_table_upgrade(), which again would cause an imbalance.
-> 
-> This is a good point too.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Charlie Jenkins (4):
+      riscv: entry: Convert ret_from_fork() to C
+      riscv: entry: Split ret_from_fork() into user and kernel
+      loongarch: entry: Migrate ret_from_fork() to C
+      entry: Inline syscall_exit_to_user_mode()
 
-The below bits are seems to be missed. We will test it and send a patch.
+ arch/loongarch/include/asm/switch_to.h  |  8 ++++++
+ arch/loongarch/kernel/entry.S           | 22 +++++++--------
+ arch/loongarch/kernel/process.c         | 36 ++++++++++++++++++++----
+ arch/riscv/include/asm/asm-prototypes.h |  2 ++
+ arch/riscv/kernel/entry.S               | 20 ++++++++------
+ arch/riscv/kernel/process.c             | 21 ++++++++++++--
+ include/linux/entry-common.h            | 43 +++++++++++++++++++++++++++--
+ kernel/entry/common.c                   | 49 +--------------------------------
+ 8 files changed, 122 insertions(+), 79 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20240402-riscv_optimize_entry-583843420325
+-- 
+- Charlie
 
-diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
-index a4e761902093..d33f55b7ee98 100644
---- a/arch/s390/mm/pgalloc.c
-+++ b/arch/s390/mm/pgalloc.c
-@@ -88,12 +88,14 @@ int crst_table_upgrade(struct mm_struct *mm, unsigned long end)
- 		if (unlikely(!p4d))
- 			goto err_p4d;
- 		crst_table_init(p4d, _REGION2_ENTRY_EMPTY);
-+		pagetable_p4d_ctor(virt_to_ptdesc(p4d));
- 	}
- 	if (end > _REGION1_SIZE) {
- 		pgd = crst_table_alloc(mm);
- 		if (unlikely(!pgd))
- 			goto err_pgd;
- 		crst_table_init(pgd, _REGION1_ENTRY_EMPTY);
-+		pagetable_pgd_ctor(virt_to_ptdesc(pgd));
- 	}
- 
- 	spin_lock_bh(&mm->page_table_lock);
-@@ -130,6 +132,7 @@ int crst_table_upgrade(struct mm_struct *mm, unsigned long end)
- 	return 0;
- 
- err_pgd:
-+	pagetable_dtor(virt_to_ptdesc(p4d));
- 	crst_table_free(mm, p4d);
- err_p4d:
- 	return -ENOMEM;
-
-Thanks!
