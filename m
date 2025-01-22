@@ -1,65 +1,65 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145651CAA66
-	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 22:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E2B1CAA80
+	for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 22:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737586617; cv=none; b=jnTGiXWItYumGb2j0a/f0G3oHuU+DRb96lOzDMyY0n/Cl0SciI371Lp3L6vAcolYxKmpH58ejo34gTreMy/50cB0ANmeb07UFZk29HjjK4z3PcirTeL1Dlj7VIiNS63OHobWZVcucOsM6b/yyFk+LTiUnxWuOsrhR/ee4LoOpH4=
+	t=1737586618; cv=none; b=rmH4MwetaR1AHT8B5bXULB3GVYTqd+KjsWiVFRaqe0dbiVDUPl2pAztDoil+M0jKOCoTorAFFWxFmOl4lLNoL+KDjkBjpgYEhOeux7hWFFwZU1C8Sd9QW07ocYj6cnaQiMSjT//h9AVuWEjiQIXizvB0Acy6wOv3z9sqRMgGXGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737586617; c=relaxed/simple;
-	bh=mv7KUIbyKGHeuf7LA5c1+10gOtsNxeILI+8x5fj1ZI0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CQhHXabLDJvl5qJU1bNbDcZrFJcDDnijHtR3mVXFDyCAhwl8bi3ppxIWgwxSNRDj3aJfC3y6UeP3NAPm6uQnOcyCbYoSbUnWPUlcyq++z6IqL+YNFwSWUTM6/RJYcxlEbkAx7dG6IwYz2qLknUksYU4OxYHY8A+w8k9lmwyUkjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TfUS3ShR; arc=none smtp.client-ip=209.85.216.45
+	s=arc-20240116; t=1737586618; c=relaxed/simple;
+	bh=rV9JUhm8W3Bx7rnRIzGCq2bwJctlTEtmatZOhNjH0vc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=meX/EO6ytdWNrom1kVuYreMJeuaqvC0p6fPxLtlZwRvvWYtiC2POg1julbg0ISkBxiZy3oGMWia2IIyxDB0TJ7+9hEWuRIxUtE+xuZLYMmCxH1QYSk6RrFa6HeZhvGvSUSJu6jpl7IIMMpxuXIG6hrOiZfGygTlPM8K2fD+SE/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=UN3GhE+a; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TfUS3ShR"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ee86a1a92dso505609a91.1
-        for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 14:56:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="UN3GhE+a"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f42992f608so528503a91.0
+        for <loongarch@lists.linux.dev>; Wed, 22 Jan 2025 14:56:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737586614; x=1738191414; darn=lists.linux.dev;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cnzMlYCzKVvpxw7yPav+PLPBZlq1nGQlt5nCryj5lKM=;
-        b=TfUS3ShRXvMtl+wY4+dsAOdEiHgEjH9WO1QJdkm1ootBLerqu8lNDmmQ4XqaLpTjKx
-         giE1G8O5GyuorL4XHDMObTZpfboM+k8tPkTD1w5ZblHgfjBpnD3rKAGOMhcDz0HI0AtQ
-         TqBCHmTeJ6EAM7l3JzePCDEiDyqu6dyuE6sF44ZLD55aHzKOpp6gmfbR2AE8PRHrEjK5
-         TxTdZZXTOSGAz3nqAf/MaSHrNVdJlY0OeEFBHbEKO8H4igJbD8jzC6gW1PHtyF8cLbXF
-         cqt/cAk94io+YSMrbRLiRcP8It90qIGqfQ70SDAcKr1Mlc5wieKIEj8YpP+OHwE6Vcl9
-         vx6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737586614; x=1738191414;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737586616; x=1738191416; darn=lists.linux.dev;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cnzMlYCzKVvpxw7yPav+PLPBZlq1nGQlt5nCryj5lKM=;
-        b=wAMHrkhf30ff0iWxnPU2Zoq1yvXmo8KOMgLiyeIQLU9Mc3sJBWj2l1Eo18UkGX8LC9
-         5am4qQAoooGGjrk7SJsuO6ib9qkJ2eFqY6HKQhYdUIFAAKdQeOfTqI5LYVbb4bCTU60K
-         UQENrfN0U0belOfL2jrUkzEzT2DdhxfDfgHFwUIaQ40n2yZ1MfsqxLe4Y6q79QEkDCM/
-         X9eIsCiR1vfph+wWXIp4z4fas/85N2ST7glEZci7AMFNFAPrq98/kxCWdt4y2nNBCsRq
-         6JgYCMalTrV7TOcQBn0GhSqFtLquzcR1EvAultwXyXJ55dylbwkwFW0pc5zvquaP5p0i
-         6SHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV35F7cVQBDBT85oPAOKFxAFVt2PZSsLwbRR7SvCku+KcvNgBvcaL4ltIAMtaSavgKrzSQlk6jdAtg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHXbTutvZmQJc08Nr+Z6eUgPFy/i+0gBNO+ikAYBeY6qTqejpY
-	W6CHKkKHMNgRB5Uq1zYPUq0X/XZDnAW8LZ9pWrACXP9z0wO3qSrM5ivUfuzWm90=
-X-Gm-Gg: ASbGnctl1vEWHFwHuCJrH8E5ihmI3UPtPz26BP5VBKVLK0eEzKzQDQGV8wYj9m0mwTJ
-	LZAH6YpIbBZAaTQAHLFzUcubC9FAqpcoM+0ady8ycVTosu8UAGHGjWld5gIqnAWUqFYlFvIaBP7
-	sYtYPfmwbTUKHzZ1/0CuMfk55GBGGAu6vIQtZD9C9K9KuHTmO7JKKg1P2dtPbIKtfcZXb55FzBT
-	G1LQ+loPV2CkIsA2LHt09lppi94LHdP2wOyxVKG2npKf/cF3uJmVA1jDNe2K8W9L+fYZqRxbnKb
-	gjPRWwx22w==
-X-Google-Smtp-Source: AGHT+IHB0x+Ki93nVMyNmjUvHS1Hbs7yWzbtT7Kml6NUqhDpPqvjvCne2/W3tEXbP1kUcPb30M8ZEw==
-X-Received: by 2002:a17:90b:4b8d:b0:2ee:7a4f:9265 with SMTP id 98e67ed59e1d1-2f782c976f5mr35059946a91.15.1737586614341;
-        Wed, 22 Jan 2025 14:56:54 -0800 (PST)
+        bh=Fn/PejcoPFKdcNV/yWi5+0DAQFM+nDQKenDgBFYN3Mk=;
+        b=UN3GhE+a1joYxW0A3noYGKdNIIY4Je/9Lile/fTPrYno8jHB/NY3oygUpHYpGaVzc8
+         z2G0PNJdISmumneEo8nGelP4ms7SZ+51ySBBgnq4HW2L3z3w2Lja8RuUDdCgSpkuWezf
+         xR8olMat1K64+1jmNvPOWioKtB1clKU2iFpydbJPlwquXewvbzM1zv99t3FKPFCT9XFw
+         01bAICQQa835NhLTRB6tQ2xHzzI7FhM/WbOXJsn2gfS9V1w2NdsiN1H77J354KLZuFSU
+         4lyk6xY8JfU2jkPUfbHpAXDEs2O2D2p7BVRs0um9AOFlKQNwqmlPTEqE/qyR185LOIuO
+         OGXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737586616; x=1738191416;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fn/PejcoPFKdcNV/yWi5+0DAQFM+nDQKenDgBFYN3Mk=;
+        b=m9dBKIxNpFrHKGjhIOmFI8Lsh/qZ6sIt8PAeJURKnNUAekXrOHJoasDG/Kq2mDDFL0
+         Mxk1AXGFYe5DSY5/tsFH8q36s8J1k6feoTgpwE4/GTItzQUVVKzzXf2qtrm6Xog3/cPP
+         A+5cm7ldo2CFJlI1f+hx2gYnh53ixcZ0CJ8FKZa3rL/+AEjI5DehqkJ6cywiHWySr7bO
+         jc0QD03CQ6RfePiyiqjahdNclse3YkThAq9pzIGlVWvAq9bFoW72StOrrMSg0ZyTkKA2
+         RjbbeN0jY/4dxCKl5Af508i9m09JymW+sJdJC78x+qLUBI8L06OALsDFVtw0ycgCWs8t
+         r2mA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9oWWBeu5nT1I0DIqBGzENEiMJi2wB8sJaD2sLnOgC7VoH9h9ayj9re6+3VMESYxShczhxwFHM44k=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywpl9GKjA0fhmdt8MgkFg4izljo9Q1wZ+u4VBMck0Tk3fbmAKWi
+	fII/P1+x3zvIAlx/cKp9Cuix8rJZJnyDbPNgu86o5eVobUYTQ0WriXnyUgNIBp4=
+X-Gm-Gg: ASbGncu5hN+0Z0l+V9UpPX1NXrxkOQosSjQ3zrar/AKhQrixZNEE6BlzduRx59F2czj
+	5/dbounBErKeJPh7zx3/RI6wD62Lyt0Ojo/CeqG9LSJyQ+c0YqIwMyCf0UwH1wcqTPYzFuRwdik
+	cfFs7XJl6DRfI4SmpZwFv/Uh5YI3vAndBTiMs7ixuwRK+GJ5tqgaEs8RoTwn+1r/m3qMpqpCs2D
+	98h3cn+UO/+2VSbE7wG9ipA3mwHcvdYS8uLhnglSNZ2dpEJ/h+OMKPLJe0QnPukZdH2MIzbnxM0
+	z9OPy1l4Kg==
+X-Google-Smtp-Source: AGHT+IGkOWQer0g/4jCDpWuE1nqdG+SGuwiRfCbniIbIL1sny3WjBA7acx7xqTIHE+P8KLoFagnQAg==
+X-Received: by 2002:a17:90b:5249:b0:2ee:e518:c1cb with SMTP id 98e67ed59e1d1-2f782c4bdd2mr36926987a91.7.1737586615920;
+        Wed, 22 Jan 2025 14:56:55 -0800 (PST)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7e6aaf3b4sm2301375a91.25.2025.01.22.14.56.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7e6aaf3b4sm2301375a91.25.2025.01.22.14.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2025 14:56:53 -0800 (PST)
+        Wed, 22 Jan 2025 14:56:55 -0800 (PST)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Subject: [PATCH 0/4] entry: Move ret_from_fork() to C and inline
- syscall_exit_to_user_mode()
-Date: Wed, 22 Jan 2025 14:56:19 -0800
-Message-Id: <20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com>
+Date: Wed, 22 Jan 2025 14:56:20 -0800
+Subject: [PATCH 1/4] riscv: entry: Convert ret_from_fork() to C
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,10 +68,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJN3kWcC/x3MTQqAIBBA4avErBNsNJCuEhFhU80iizGiH7x70
- vJbvPdCJGGK0BQvCJ0ceQsZVVmAX4Ywk+IxG1Cj1VajEo7+7Lf94JUf6ikccqvaGWeNRW2whpz
- uQhNf/7btUvoAcMITyGYAAAA=
-X-Change-ID: 20240402-riscv_optimize_entry-583843420325
+Message-Id: <20250122-riscv_optimize_entry-v1-1-4ee95559cfd0@rivosinc.com>
+References: <20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com>
+In-Reply-To: <20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
  Palmer Dabbelt <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, 
  WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -80,50 +79,113 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1633; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=mv7KUIbyKGHeuf7LA5c1+10gOtsNxeILI+8x5fj1ZI0=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/rE8s0TrtXqsUUK2vXc8j4W/efQ3uZL75iF2SsOVnDeT
- A4Sej+/o5SFQYyLQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgIlwXmT4n3/d44Sk1qzVd157
- MQQsunbo4UqfpE+mU7Yu3dsV5ztzqw8jQ/snE52ShgWi7NKP1iVNc5gjHhlyo0W+/uIiZvVbP9j
- e8gAA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3438; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=rV9JUhm8W3Bx7rnRIzGCq2bwJctlTEtmatZOhNjH0vc=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/rE8s3MIQ08j0o/nwm++ubjMauZxccEN91XPGF74+yfn
+ ewBNxhfdpSyMIhxMciKKbLwXGtgbr2jX3ZUtGwCzBxWJpAhDFycAjCRU7YMf7izZz+fvbMn6Tjb
+ s5lz+eSSgzfZ1B4I++FZYx1kl/riy1xGhpMFnZuYvBcrfshj37l/8YZJ0kmhD5nP2Xm+tzAqnJ4
+ XwgsA
 X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
  fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Similar to commit 221a164035fd ("entry: Move
-syscall_enter_from_user_mode() to header file"), move
-syscall_exit_to_user_mode() to the header file as well.
-
-Testing was done with the byte-unixbench [1] syscall benchmark (which
-calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
-x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
-s390 a 11.1328% improvement.
-
-Since this is on QEMU, I know these numbers are not perfect, but they
-show a trend of general improvement across all architectures that use
-the generic entry code.
-
-[1] https://github.com/kdlucas/byte-unixbench
+Move the main section of ret_from_fork() to C to allow inlining of
+syscall_exit_to_user_mode().
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
-Charlie Jenkins (4):
-      riscv: entry: Convert ret_from_fork() to C
-      riscv: entry: Split ret_from_fork() into user and kernel
-      loongarch: entry: Migrate ret_from_fork() to C
-      entry: Inline syscall_exit_to_user_mode()
+ arch/riscv/include/asm/asm-prototypes.h |  1 +
+ arch/riscv/kernel/entry.S               | 15 ++++++---------
+ arch/riscv/kernel/process.c             | 14 ++++++++++++--
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
- arch/loongarch/include/asm/switch_to.h  |  8 ++++++
- arch/loongarch/kernel/entry.S           | 22 +++++++--------
- arch/loongarch/kernel/process.c         | 36 ++++++++++++++++++++----
- arch/riscv/include/asm/asm-prototypes.h |  2 ++
- arch/riscv/kernel/entry.S               | 20 ++++++++------
- arch/riscv/kernel/process.c             | 21 ++++++++++++--
- include/linux/entry-common.h            | 43 +++++++++++++++++++++++++++--
- kernel/entry/common.c                   | 49 +--------------------------------
- 8 files changed, 122 insertions(+), 79 deletions(-)
----
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-change-id: 20240402-riscv_optimize_entry-583843420325
+diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
+index cd627ec289f163a630b73dd03dd52a6b28692997..733ff609778797001006c33bba9e3cc5b1f15387 100644
+--- a/arch/riscv/include/asm/asm-prototypes.h
++++ b/arch/riscv/include/asm/asm-prototypes.h
+@@ -52,6 +52,7 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
+ DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
+ DECLARE_DO_ERROR_INFO(do_trap_break);
+ 
++asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
+ asmlinkage void handle_bad_stack(struct pt_regs *regs);
+ asmlinkage void do_page_fault(struct pt_regs *regs);
+ asmlinkage void do_irq(struct pt_regs *regs);
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 33a5a9f2a0d4e1eeccfb3621b9e518b88e1b0704..9225c322279aa90e737b1d7144db084319cf8103 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -319,17 +319,14 @@ SYM_CODE_END(handle_kernel_stack_overflow)
+ ASM_NOKPROBE(handle_kernel_stack_overflow)
+ #endif
+ 
+-SYM_CODE_START(ret_from_fork)
++SYM_CODE_START(ret_from_fork_asm)
+ 	call schedule_tail
+-	beqz s0, 1f	/* not from kernel thread */
+-	/* Call fn(arg) */
+-	move a0, s1
+-	jalr s0
+-1:
+-	move a0, sp /* pt_regs */
+-	call syscall_exit_to_user_mode
++	move a0, s1 /* fn */
++	move a1, s0 /* fn_arg */
++	move a2, sp /* pt_regs */
++	call ret_from_fork
+ 	j ret_from_exception
+-SYM_CODE_END(ret_from_fork)
++SYM_CODE_END(ret_from_fork_asm)
+ 
+ #ifdef CONFIG_IRQ_STACKS
+ /*
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 58b6482c2bf662bf5224ca50c8e21a68760a6b41..0d07e6d8f6b57beba438dbba5e8c74a014582bee 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -17,7 +17,9 @@
+ #include <linux/ptrace.h>
+ #include <linux/uaccess.h>
+ #include <linux/personality.h>
++#include <linux/entry-common.h>
+ 
++#include <asm/asm-prototypes.h>
+ #include <asm/unistd.h>
+ #include <asm/processor.h>
+ #include <asm/csr.h>
+@@ -36,7 +38,7 @@ unsigned long __stack_chk_guard __read_mostly;
+ EXPORT_SYMBOL(__stack_chk_guard);
+ #endif
+ 
+-extern asmlinkage void ret_from_fork(void);
++extern asmlinkage void ret_from_fork_asm(void);
+ 
+ void noinstr arch_cpu_idle(void)
+ {
+@@ -206,6 +208,14 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ 	return 0;
+ }
+ 
++asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
++{
++	if (unlikely(fn))
++		fn(fn_arg);
++
++	syscall_exit_to_user_mode(regs);
++}
++
+ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ {
+ 	unsigned long clone_flags = args->flags;
+@@ -242,7 +252,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	p->thread.riscv_v_flags = 0;
+ 	if (has_vector())
+ 		riscv_v_thread_alloc(p);
+-	p->thread.ra = (unsigned long)ret_from_fork;
++	p->thread.ra = (unsigned long)ret_from_fork_asm;
+ 	p->thread.sp = (unsigned long)childregs; /* kernel sp */
+ 	return 0;
+ }
+
 -- 
-- Charlie
+2.43.0
 
