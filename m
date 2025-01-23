@@ -1,79 +1,96 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694A02135A6
-	for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 11:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D61620F98A
+	for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 13:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632327; cv=none; b=bq35CxFpbtDHeUj7P0ra7sDais2S3fke6dfYfdCHtOuSrY3TwZTOZsQjQpfh0eXTrPmy0GNbmiPj5KGXTXf2IP3sE5/j/jUmIQ/ojIAcJ93fVlD0/9VxKmY4SI70Sw3Yw0tqjxAuNIBOknGvVPST0j2Qlt1cM4XcmqcYK++X4ck=
+	t=1737638901; cv=none; b=XenmpSc5g9xI37Prf61dC+GApXHXyWYY5z23N65bUP2vIltGeVOze0BJnnj8RmXv3gpstQbYdr4OeCh1m6oHXkUfUKRRU96GMt1QCujXXF6YbbCB4BU153f0VKUFfBQfX+kGvETB1J4l1c3VD7CUSN7J1r+YeHxarT942vyV1A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632327; c=relaxed/simple;
-	bh=WV84G/RB5+7f1rTZu4Rt6v1dVd1mWE1RlukKepVDMOg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ViPcygplG/5sdbvY8oApEPGSJ7xgFeVmQnfUvp2mGTtl62LNykYv4cNpE+HqWr943eYvLEwsTMFMvOtGQf8K2wRGi03fI33fSj0bJKntvi9ulLKzUQus/X2KzKIBfJYsmo26awAq4F2hAwJuOE6G+hWYQUk57Ub+O36s11oUQbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LNcj6cVH; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737638901; c=relaxed/simple;
+	bh=2QT8xw8Hnr0PZ0li5OKVWEtgoR+SI3nKyV65SN+WB9w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kBp6vtUem1+bABw4im0Av5bRvheVy+GRVyDVkPpxFIjNTcCuyFer5LDKLyfFEKV5PWmTwKvfrGlWbUJCr1YFylqgxgN3SZnXnIBCkIT2wJ89TBI2lsi4HxVvj02M+LeaREUkH6pA/GyLQTnF86JQk14JN8OKLnSEs7sICUt5Tq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=K1Ps9ywA; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNcj6cVH"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21669fd5c7cso12414195ad.3
-        for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 03:38:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="K1Ps9ywA"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21644aca3a0so18727655ad.3
+        for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 05:28:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737632325; x=1738237125; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dPQFhXLLMXODhvNoypMAGj1uR2YWHafKwP+IehwFe5U=;
-        b=LNcj6cVH/55ezT8xcjeAh0eKfJFHROFaKcmV5NMf/LRJfBfebGNh1+CKbhMWj4Wlrj
-         VqtJPc1YP7WPYAwTLMtEm1kaqZN2ovrMwH5NkA60HiyNuAwNw3ocPCP7IlJVCPoiTqTE
-         GRhYQgGx11TzAKGi2o2xzNje3np826JZHkKolEkwTT6ZGio761iDZYHLXdSnkdmZKIlY
-         HLGGWuMaVorq9Mg5rU+yv2yReOROgkWY6u/X5OZS5eBFUaadcn0ahZ3IK50Azui/PvlD
-         8kvxLUCh+bIHfc8Z4JHJG/FgFnbMWKBsCLi0MuPJ69pVzgpOj/ZLfPfMpTPnNOQUlz4H
-         OpXA==
+        d=bytedance.com; s=google; t=1737638899; x=1738243699; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fcMJmKKEtX+iYg+m7hTSfwAHD3Zpn1mRc3DXgtsxucU=;
+        b=K1Ps9ywA2YvZ40TOZfY0SmseasWT2NCNkWHL552pyTVjr5Xtlpr5k01cmgKwMWnVnL
+         WtgIuKosefY2SL2thhaGhE8vdfTAx+VVXQZn6fyzE7ok2+SEF2tT1UAjWbiwsd0LxUXw
+         sheBVrfNyMnEKt1vwz1fGxv/K4lmhijI5+kwzLVvVgoJRohrorSQq+7mnXmM72kBb1Vu
+         NpTRyxUmEJoB5APD7HzlfacK8hGIrN0pPXkrYxsTsJDcJmOeHOe3NPFdIYo7IykEUNqV
+         Lz8mRmO1uqtoGoxmQsHia9voV+zzxcgOxm9OdVG0fnXJpo2vF0jV7CcIUrSN6BkxcQX7
+         qTVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737632325; x=1738237125;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dPQFhXLLMXODhvNoypMAGj1uR2YWHafKwP+IehwFe5U=;
-        b=NbTdNKhbJOWZxBLyW0IGg4a9Znryz5oJZaPKn6nEbpdpoGaKcUvDjWmVancvqAEZpA
-         do/sG/UZsp4lR1DhidjymK/wq+Q/E7sq97uSlUMAuNWcFR3ECFxHjFSgMPRX6b37OzK2
-         9tW3Um5oEOJ6Zkzr3i3BsVbfSaDYhQODEnTXsuro8PJCg0I4XunTVjqDGn/nINgEk1v2
-         davYMr12bWMEUKCclmM968mBmwMCopj4CYIIzjinredIYgrgmzCadmN9q27fcVJkg2O2
-         vsJC/jJqW84QWBwhyBfgoJmyDBB5ScGFquEkQbncB+VbmQ/ew4ztOytsvkvCa0kypH46
-         uWlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2MCOmyBs6yL6Bcix8wiEyPG/Bu2N1WGMLP47ux/5P9LyI2vuIUzVRTeDxuV8w+h8cjQ/YEboWQw8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzojm6ncaIwIWe8U7EHRvPy9Gzp0U0aYjc4hiXpojX9L9KA/Qlt
-	6NDTlHbL4McGb/C2FlG57eH2sQ8RHe8+tNPI451ZzF9e/LX/d66UYi4jr3pQMoM=
-X-Gm-Gg: ASbGnctS1LdWjLfKME1pqLe0cXeRc6yav5H56Yhg9HgClVGxSEXG3OCRLWruTWsyWVo
-	mOLN7HFp2siJNWVTt5MMqbEJ3ExMF0cgBueWw5KhCwkjCq9III1btdfe/buszj12EJby+UPm8+F
-	/ihNWKUa/q4WS+e2a92lpcEhS+YChaueyUQEEcLXD+lfCm6r6VWeg0g4JJ0YPXbabq+Jswce7Kx
-	EgQjIuruYO/ZiL77KAd544CYmmDyKsC7ihgk9Htq5Ye/CZH7nyDlnWBngA0aDhyZ5Y5HAZ4mHP2
-	3ozRX4I=
-X-Google-Smtp-Source: AGHT+IGH1rgrIO+s+Y/sZ3xBZQHUbxqMwBuZRbD1wDrTeC9bj2qH2sxuniFd3GYQRJetgoOSm4ug5w==
-X-Received: by 2002:a05:6a00:bd7:b0:72d:b2ed:8788 with SMTP id d2e1a72fcca58-72db2ed89dbmr24987717b3a.10.1737632324738;
-        Thu, 23 Jan 2025 03:38:44 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72dabace1bdsm13291546b3a.171.2025.01.23.03.38.43
+        d=1e100.net; s=20230601; t=1737638899; x=1738243699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fcMJmKKEtX+iYg+m7hTSfwAHD3Zpn1mRc3DXgtsxucU=;
+        b=kM8s3fryfhyrsbbjGwgVvnPGvpkaxTM5AZrymWD4xdAzMUFggHlNcXmjShKlMNk8JL
+         7RkTNLwn4HCe0BnH0a6rcSkBkv9Q3c+pmEMb2XcqmT3+C/yugTp20YoJrq820u3mfuUp
+         3N7ozUMlP/ihOu+3Mp/B63o2B1o6PNR4xEA9pPobOsHclJmqAWA4zxi8WiXUTuUhyS6a
+         RPmnUaoCBlBPak7obpcSGjG3CeQxfr4rN9++CK5kjaCf4HQjVsU8DvAJv5HfaN4aZzBw
+         SSshL+vLmA8HoAMatX4iK4dThUF2VqGdQj3VORF7uURfSVLpZ9nB1fkl9Tag0PGE5iGK
+         Q5Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUjUUKLmlG1n/+umEBC3TI1lqk6AYn6DQpESIHr+yaKsMzaVk7Rxby2KtPrKESLrORT++35mizH5JM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1ixlPAwwghHxO0DnIm3LoAX9W0ulo/1AAqol5/wV/aHRfyWUG
+	hnLzH6TKFpH8O2i2RvAex/XlwM5BqKBgplyDRNPGYEbedZgPnH4wsc9usB51voU=
+X-Gm-Gg: ASbGnctdL6fl2I2w/uW4/eRWonMverdXFmJMCVAoLH/ts/9sQ4FftrFhc2Yq02/PTnl
+	SW7HxxD3xpbOgWhfQDlCB3HCK3I83tfXyCLnhyOujk7k5T4FxWRZVFYr72m9+EFfdyHYIsiM3w9
+	cOX6PfTE2tHQSkfP84bnct1E90h0zZqZyy4+877XbrAOxTUX3Pnb57tO9I9e9BpvVsvwb07YP6C
+	Xss8gb5I0dS+Iv34H7vhH4cMhacnhybQJYYBxhtJrwzdes1F1vVp0vtUFy4PHA/Mp1qCAbFjwXs
+	KDcixYwK/arjZrQg0IsyEZxDqA9hSvGgUkPZblD3m6JO
+X-Google-Smtp-Source: AGHT+IEganAe939WGDJlfH9nAWVZpA3TvM5SaYn7UYpmBsqsQlG5HSrZSGt5JfnUpmvzTx71ZR7Ekg==
+X-Received: by 2002:a17:902:f545:b0:215:6e01:ad19 with SMTP id d9443c01a7336-21c35587f37mr410676135ad.29.1737638898793;
+        Thu, 23 Jan 2025 05:28:18 -0800 (PST)
+Received: from C02DW0BEMD6R.bytedance.net ([63.216.146.178])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2d3ac3e2sm111583655ad.139.2025.01.23.05.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 03:38:44 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-mips@vger.kernel.org,
+        Thu, 23 Jan 2025 05:28:18 -0800 (PST)
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+To: peterz@infradead.org,
+	kevin.brodsky@arm.com,
+	riel@surriel.com,
+	vishal.moola@gmail.com,
+	david@redhat.com,
+	jannh@google.com,
+	hughd@google.com,
+	willy@infradead.org,
+	yuzhao@google.com,
+	muchun.song@linux.dev,
+	akpm@linux-foundation.org,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	arnd@arndb.de,
+	dave.hansen@linux.intel.com,
+	rppt@kernel.org,
+	alexghiti@rivosinc.com
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH 13/33] cpufreq: loongson: Stop setting cpufreq_driver->attr field
-Date: Thu, 23 Jan 2025 17:05:49 +0530
-Message-Id: <d7b219882feba7c7888a40e537b154e904508503.1737631669.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1737631669.git.viresh.kumar@linaro.org>
-References: <cover.1737631669.git.viresh.kumar@linaro.org>
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	x86@kernel.org,
+	linux-riscv@lists.infradead.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH 0/5] remove tlb_remove_page_ptdesc()
+Date: Thu, 23 Jan 2025 21:26:13 +0800
+Message-Id: <cover.1737637631.git.zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -82,39 +99,59 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cpufreq core handles this for basic attributes now, the drivers can
-skip setting them.
+Hi all,
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/loongson2_cpufreq.c | 1 -
- drivers/cpufreq/loongson3_cpufreq.c | 1 -
- 2 files changed, 2 deletions(-)
+As suggested by Peter Zijlstra below [1], this series aims to remove
+tlb_remove_page_ptdesc().
 
-diff --git a/drivers/cpufreq/loongson2_cpufreq.c b/drivers/cpufreq/loongson2_cpufreq.c
-index ed1a6dbad638..39a6c4315a60 100644
---- a/drivers/cpufreq/loongson2_cpufreq.c
-+++ b/drivers/cpufreq/loongson2_cpufreq.c
-@@ -91,7 +91,6 @@ static struct cpufreq_driver loongson2_cpufreq_driver = {
- 	.verify = cpufreq_generic_frequency_table_verify,
- 	.target_index = loongson2_cpufreq_target,
- 	.get = cpufreq_generic_get,
--	.attr = cpufreq_generic_attr,
- };
- 
- static const struct platform_device_id platform_device_ids[] = {
-diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
-index bd34bf0fafa5..ea516b939c44 100644
---- a/drivers/cpufreq/loongson3_cpufreq.c
-+++ b/drivers/cpufreq/loongson3_cpufreq.c
-@@ -337,7 +337,6 @@ static struct cpufreq_driver loongson3_cpufreq_driver = {
- 	.offline = loongson3_cpufreq_cpu_offline,
- 	.get = loongson3_cpufreq_get,
- 	.target_index = loongson3_cpufreq_target,
--	.attr = cpufreq_generic_attr,
- 	.verify = cpufreq_generic_frequency_table_verify,
- 	.suspend = cpufreq_generic_suspend,
- };
+: Fundamentally tlb_remove_page() is about removing *pages* as from a PTE,
+: there should not be a page-table anywhere near here *ever*.
+:
+: Yes, some architectures use tlb_remove_page() for page-tables too, but
+: that is more or less an implementation detail that can be fixed.
+
+After this series, all architectures use tlb_remove_table() or tlb_remove_ptdesc()
+to remove the page table pages. In the future, once all architectures using
+tlb_remove_table() have also converted to using struct ptdesc (eg. powerpc), it
+may be possible to use only tlb_remove_ptdesc().
+
+Note: there will be some overlap between my patch #4 and Rik van Riel's patch #1 [2],
+      once his patch is merged into the next branch, I can rebase onto his patch.
+      And patch #4 can actually make x86 use tlb_remove_ptdesc(), but due to the
+      above situation, I have not done so yet.
+
+This series is based on next-20250122.
+
+Comments and suggestions are welcome!
+
+Thanks,
+Qi
+
+[1]. https://lore.kernel.org/linux-mm/20250103111457.GC22934@noisy.programming.kicks-ass.net/
+[2]. https://lore.kernel.org/lkml/20250123042447.2259648-2-riel@surriel.com/
+
+Qi Zheng (5):
+  mm: pgtable: make generic tlb_remove_table() use struct ptdesc
+  mm: pgtable: convert some architectures to use tlb_remove_ptdesc()
+  riscv: pgtable: unconditionally use tlb_remove_ptdesc()
+  x86: pgtable: unconditionally use tlb_remove_table()
+  mm: pgtable: remove tlb_remove_page_ptdesc()
+
+ arch/csky/include/asm/pgalloc.h      |  3 +--
+ arch/hexagon/include/asm/pgalloc.h   |  3 +--
+ arch/loongarch/include/asm/pgalloc.h |  3 +--
+ arch/m68k/include/asm/sun3_pgalloc.h |  3 +--
+ arch/mips/include/asm/pgalloc.h      |  3 +--
+ arch/nios2/include/asm/pgalloc.h     |  9 ++++-----
+ arch/openrisc/include/asm/pgalloc.h  |  3 +--
+ arch/riscv/include/asm/pgalloc.h     | 26 ++++----------------------
+ arch/sh/include/asm/pgalloc.h        |  3 +--
+ arch/um/include/asm/pgalloc.h        |  9 +++------
+ arch/x86/kernel/paravirt.c           | 17 +----------------
+ arch/x86/mm/pgtable.c                | 11 -----------
+ include/asm-generic/tlb.h            | 12 +++---------
+ 13 files changed, 22 insertions(+), 83 deletions(-)
+
 -- 
-2.31.1.272.g89b43f80a514
+2.20.1
 
