@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A853211A24;
-	Thu, 23 Jan 2025 17:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AE514883C;
+	Thu, 23 Jan 2025 17:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737652372; cv=none; b=eMvdE3bKR2EUn9z/+dMCVCN4KFtBxwyqyH0xd0y8Iuaq3aHvz1wOkL1mnZLUTygSxbsVE7nXeb67e3HK0DvLWuJ+s3EWhUIyBr6Uyert6ALjMQ73cFShGDkBw3WURIEDrsMha4X4ZZ0c4axz+er/lz+KFQ8A+elTooUYVsmTtls=
+	t=1737653693; cv=none; b=oinIBy9ZAEMearJnUkePQOmwI+YE2cpufrtDyPLBgzV3FYQbo/Nrt7cos2vJWSqbLp5hxOxFdlSUgorIDbVljKdTfrCAg7B0PCMvaEQNuaSIeC7O37wbxc1RebgJkS0Iaw4QSUtivPZJ47zFo5sDhSKUR1i00dPQzpsM60qLQxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737652372; c=relaxed/simple;
-	bh=72EgORSnANnV38wbPsZBehRg9IUMQUAma7ZLXPqx6k4=;
+	s=arc-20240116; t=1737653693; c=relaxed/simple;
+	bh=Vi0yvCwo30fwVsqjLO0cONScA/8TLk0SHxBzQlbNSOA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SE+6jgD/cHlE0YHTNrJy6jhjPmikwPwF0YoxDr+xWt2OPwQbaNJDzgHCBNfWtWSrwg52I54xLCF4xUb0EJvCHR5DxIxwXcRYiBhDG4ygVx2CSbxYwa8y/5jrsbiBAmAmXxQNuGnl72/PpKlzYThgR1b7nLEBK7Sf4q6+uC2Y6nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/8sLZOj; arc=none smtp.client-ip=198.175.65.21
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvmCg4MIKwOCMTEpIDA9Cyo/KJCzCo9YYsm+Wgdy5JcUvchlDjtPLB0PZUTEdxKbJ8jBwgqmZn+jibftYEwXRIfK1Qr0FP19scB0dBn9uXYdoPsG4K6xaeURntXhkuQjQ1YwkgaFcraeQUMp0oserP9BEfK0ampByL3DHMoKIjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIVTlryw; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/8sLZOj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIVTlryw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737652371; x=1769188371;
+  t=1737653692; x=1769189692;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=72EgORSnANnV38wbPsZBehRg9IUMQUAma7ZLXPqx6k4=;
-  b=W/8sLZOjV5e73/DutxxPXIkF0NKLeT3ZiGiuS2F35+IKLpkV7CdxyS7n
-   Q2mniOXJyatf45r5b9EPCjOuGOrXnN78SEJ/tssp01caV/Dd6hoQZtEW8
-   fZd9XbRfDcZW0XZjrnQYhK9s4fOGgoOZgcAwrF0t5OTFWwoCVOv8co0Gp
-   bYS7yk0vBRZ/VjKFTpGuk6OlK2+e0Ra6dTnbUyQhaFT7sj8lv2VP+U6hr
-   0QMSOr5raOrTdI7F2QiO8rsLEpXlCnnPGp26Sq0NqbXpegmzHkBcUlIrr
-   g7tQvMhaOR/zlMEDR9azjjDJsi3JDPTQjlKxT932GnOrlaCMedEKB+O05
-   A==;
-X-CSE-ConnectionGUID: G8xvw/yNSYmNMrKyfNUj9A==
-X-CSE-MsgGUID: i1ZXmVmbQxmad6Og8exi+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="38053849"
+  bh=Vi0yvCwo30fwVsqjLO0cONScA/8TLk0SHxBzQlbNSOA=;
+  b=NIVTlryw+8tzOvlKaGlPelDh6OlMObfPFCjzbkS917BeGkV5Z05Uj275
+   wvme1THRLKZpojfrPdQlqsPVY25Ll+ZGGUWz1HqlvBXYbDBvtLq+7zQOm
+   LIr9EE9gRODqg8cRXKl5c/MhK2a9XG9r4cvylAE95FWaGhWpj7TtF5ZlT
+   a8tZuiVawlhMrUz/RjnZkL6toIkGE3ahWQJrdoHDgXL40Uq5wgGaqwIZn
+   U+ymY36zqSBrcL1+f5kFt9drK41QIOzH0ldfPN4rBkO39CmE3GVpi8Xl3
+   Z9by0bk4kNyj2JCtEAENkuzVmnQWDUOIF1BeSa4VUWbZ4IAQTWbkPic4s
+   w==;
+X-CSE-ConnectionGUID: wC6uVFZ+QyicsvmJ1kBI5w==
+X-CSE-MsgGUID: ftFyYc4uR6C47+3RcIxnxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55715297"
 X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="38053849"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 09:12:50 -0800
-X-CSE-ConnectionGUID: 6vxV2VRDR8mPAsL5dwom+Q==
-X-CSE-MsgGUID: tBoXpY+EQ2Kj/C0jM/xkzg==
+   d="scan'208";a="55715297"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 09:34:51 -0800
+X-CSE-ConnectionGUID: fCU09iDaQ72rUo9Zyl9MFA==
+X-CSE-MsgGUID: t4CAraI5QsqUroLarf1qXg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="144764755"
+   d="scan'208";a="108403010"
 Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 23 Jan 2025 09:12:46 -0800
+  by orviesa008.jf.intel.com with ESMTP; 23 Jan 2025 09:34:48 -0800
 Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tb0l0-000bQs-1A;
-	Thu, 23 Jan 2025 17:12:42 +0000
-Date: Fri, 24 Jan 2025 01:12:23 +0800
+	id 1tb16L-000bRf-1R;
+	Thu, 23 Jan 2025 17:34:45 +0000
+Date: Fri, 24 Jan 2025 01:34:04 +0800
 From: kernel test robot <lkp@intel.com>
 To: Charlie Jenkins <charlie@rivosinc.com>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
@@ -58,11 +58,11 @@ To: Charlie Jenkins <charlie@rivosinc.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Charlie Jenkins <charlie@rivosinc.com>
 Subject: Re: [PATCH 4/4] entry: Inline syscall_exit_to_user_mode()
-Message-ID: <202501240036.hxoscXJM-lkp@intel.com>
+Message-ID: <202501240101.mSdGpEoH-lkp@intel.com>
 References: <20250122-riscv_optimize_entry-v1-4-4ee95559cfd0@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -84,27 +84,44 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/riscv-ent
 base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
 patch link:    https://lore.kernel.org/r/20250122-riscv_optimize_entry-v1-4-4ee95559cfd0%40rivosinc.com
 patch subject: [PATCH 4/4] entry: Inline syscall_exit_to_user_mode()
-config: x86_64-randconfig-071-20250123 (https://download.01.org/0day-ci/archive/20250124/202501240036.hxoscXJM-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250124/202501240036.hxoscXJM-lkp@intel.com/reproduce)
+config: x86_64-randconfig-072-20250123 (https://download.01.org/0day-ci/archive/20250124/202501240101.mSdGpEoH-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250124/202501240101.mSdGpEoH-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501240036.hxoscXJM-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501240101.mSdGpEoH-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from arch/x86/kernel/ptrace.c:40:
-   In file included from arch/x86/include/asm/traps.h:9:
-   In file included from arch/x86/include/asm/idtentry.h:11:
->> include/linux/entry-common.h:397:27: error: use of undeclared identifier 'CONTEXT_KERNEL'
+   In file included from arch/x86/include/asm/bug.h:99,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:13,
+                    from include/linux/sched.h:14,
+                    from arch/x86/mm/fault.c:7:
+   include/linux/entry-common.h: In function 'syscall_exit_to_user_mode_work':
+>> include/linux/entry-common.h:397:34: error: 'CONTEXT_KERNEL' undeclared (first use in this function); did you mean 'PERF_CONTEXT_KERNEL'?
      397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-         |                                  ^
-   1 error generated.
+         |                                  ^~~~~~~~~~~~~~
+   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
+     123 |         int __ret_warn_on = !!(condition);                              \
+         |                                ^~~~~~~~~
+   include/linux/entry-common.h:397:9: note: in expansion of macro 'CT_WARN_ON'
+     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
+         |         ^~~~~~~~~~
+   include/linux/entry-common.h:397:34: note: each undeclared identifier is reported only once for each function it appears in
+     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
+         |                                  ^~~~~~~~~~~~~~
+   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
+     123 |         int __ret_warn_on = !!(condition);                              \
+         |                                ^~~~~~~~~
+   include/linux/entry-common.h:397:9: note: in expansion of macro 'CT_WARN_ON'
+     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
+         |         ^~~~~~~~~~
 
 
-vim +/CONTEXT_KERNEL +397 include/linux/entry-common.h
+vim +397 include/linux/entry-common.h
 
    378	
    379	/**
