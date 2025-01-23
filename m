@@ -1,168 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AE514883C;
-	Thu, 23 Jan 2025 17:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35914A4E1
+	for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 19:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737653693; cv=none; b=oinIBy9ZAEMearJnUkePQOmwI+YE2cpufrtDyPLBgzV3FYQbo/Nrt7cos2vJWSqbLp5hxOxFdlSUgorIDbVljKdTfrCAg7B0PCMvaEQNuaSIeC7O37wbxc1RebgJkS0Iaw4QSUtivPZJ47zFo5sDhSKUR1i00dPQzpsM60qLQxk=
+	t=1737659720; cv=none; b=VMJvto1coUbXjLPcjZUcBfzeBi/ljpJyT6JNNO4DJX5j6SYBpjqjeM9lb6YWyK4bKOW7MtW/tMK7pcCYdk24Q8PaKhrsgjEj5JJU2pURlfPyNeqCO1i+4v7/qPd3G6/4G++WmJryEWxgagJrkvRK4fHmSCuBA9riktp9wgFtEeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737653693; c=relaxed/simple;
-	bh=Vi0yvCwo30fwVsqjLO0cONScA/8TLk0SHxBzQlbNSOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvmCg4MIKwOCMTEpIDA9Cyo/KJCzCo9YYsm+Wgdy5JcUvchlDjtPLB0PZUTEdxKbJ8jBwgqmZn+jibftYEwXRIfK1Qr0FP19scB0dBn9uXYdoPsG4K6xaeURntXhkuQjQ1YwkgaFcraeQUMp0oserP9BEfK0ampByL3DHMoKIjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIVTlryw; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1737659720; c=relaxed/simple;
+	bh=07MvLhT2Wy7RrEKkDU/7g2rxiX30LJFHB9CllhdgXSA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jFyGPI3IDm8dVydLJmHQ0kM8QOpZbBM3Mply3cIEPpfCmCZdW0BlfIlGvwRSB8KHzdetf5PegVhSQbLdIbeWg6JWWo5EaOrTlijVXc+wuqHS31EBvAlMGfCSVtgH0L+kzKG5T0zjZH9wk0CfTqL/KH2DmbQUjRt7pNBhUSAz368=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qY7eiSJJ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIVTlryw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737653692; x=1769189692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vi0yvCwo30fwVsqjLO0cONScA/8TLk0SHxBzQlbNSOA=;
-  b=NIVTlryw+8tzOvlKaGlPelDh6OlMObfPFCjzbkS917BeGkV5Z05Uj275
-   wvme1THRLKZpojfrPdQlqsPVY25Ll+ZGGUWz1HqlvBXYbDBvtLq+7zQOm
-   LIr9EE9gRODqg8cRXKl5c/MhK2a9XG9r4cvylAE95FWaGhWpj7TtF5ZlT
-   a8tZuiVawlhMrUz/RjnZkL6toIkGE3ahWQJrdoHDgXL40Uq5wgGaqwIZn
-   U+ymY36zqSBrcL1+f5kFt9drK41QIOzH0ldfPN4rBkO39CmE3GVpi8Xl3
-   Z9by0bk4kNyj2JCtEAENkuzVmnQWDUOIF1BeSa4VUWbZ4IAQTWbkPic4s
-   w==;
-X-CSE-ConnectionGUID: wC6uVFZ+QyicsvmJ1kBI5w==
-X-CSE-MsgGUID: ftFyYc4uR6C47+3RcIxnxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="55715297"
-X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="55715297"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 09:34:51 -0800
-X-CSE-ConnectionGUID: fCU09iDaQ72rUo9Zyl9MFA==
-X-CSE-MsgGUID: t4CAraI5QsqUroLarf1qXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="108403010"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 23 Jan 2025 09:34:48 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tb16L-000bRf-1R;
-	Thu, 23 Jan 2025 17:34:45 +0000
-Date: Fri, 24 Jan 2025 01:34:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Charlie Jenkins <charlie@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Charlie Jenkins <charlie@rivosinc.com>
-Subject: Re: [PATCH 4/4] entry: Inline syscall_exit_to_user_mode()
-Message-ID: <202501240101.mSdGpEoH-lkp@intel.com>
-References: <20250122-riscv_optimize_entry-v1-4-4ee95559cfd0@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qY7eiSJJ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2161eb95317so23405445ad.1
+        for <loongarch@lists.linux.dev>; Thu, 23 Jan 2025 11:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1737659717; x=1738264517; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xbFhHhTinc/thmLT0MtA207eqVgoMSXCZVa6DhPymsA=;
+        b=qY7eiSJJZpbE6k1LtGFjXR6FhxxQKaljDY1Hzqloe1k5mr1CieVmCLAn+T7q6PcJ5W
+         vQlOPPHi08Vk4JkX0txG21rbbr5/3/DtCee82F1p9bJ22lBlJ2KxeN9Aj7AtuVbxe01u
+         r7zCPSTQHiuNt1xRAgp85b3u+2xBkPGDCTzF+GTphZPQyrWUZOP4lPzA02g0FoFcG3+X
+         o3Fmfewn6tToGgZSjJbA5snSCKHhvbmUkJijTBdNxdtgOF+Iyl+Lnj3aJqW319kh/3aW
+         VT9OIREEoImTuRcs8Ax8N1tkpk+TO0Caksnwoxo+frFA369p0BE/6PBeRjhwpIMFTclw
+         ThTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737659717; x=1738264517;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xbFhHhTinc/thmLT0MtA207eqVgoMSXCZVa6DhPymsA=;
+        b=qqpeHEws/chJ6hZdeGiez6MVMIU7+rOKxVEsIhjnyPym8uc8bA7MJv0YtEl2+eRh+H
+         JaPY6H03janRyJ82QUBOlSZeAq2OvYqglIeQuxI94i2am3T49tV4xm1Ka2eO4gicoTSc
+         eyKHC6l7hh76PCxXRV/NRsQnJI+m4NJly23KAnb+tDPcETHWEdJiwAhFvdRe/eJx3hOT
+         tt6XWM62N/io34vkJY8PLBKbPm8AyOSjI9HQei3jop4h0Q39skAZBQsZfb3iErw6nHIj
+         h6bxAVxR88ecoE6aQDm3Ef6DU+fNOcpQDlUfAsDDhUnkTKCiJc0DbJ2ZugDNk2ZzFt90
+         TvSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD3PIeNU6EFLwRYkirWhto51JQ9XzAaF+vN2B5EXyupDy3/D/zirJjKnhhSyDq0ohgYx6lHALZNLs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzWuybgHEZ4cK4bS29a1pm2XTDS4ODFQgftI9Ck3Fu3UKADG7B7
+	8l8jspVzeIdjbUQdICmshgneKQ8G7vSNBiGjeCeN66JpFg7SlGNlkQgzBP9sMgM=
+X-Gm-Gg: ASbGncsJCkGVXUVmLBLXOXaAwD17CHVhqxShXSHk0z9wq/Dh+AN1IUoQ80nKthUPxk6
+	gRchESftpt01pS68dwRa+VVE8fisS8taTQu6SI2ysJDwT4qDmdOICXNWbdVVwWRrcbUmraH8JFt
+	2jXfpBI03oXLPSdHQTdikIoVr3KEZiq7F4mJqGA5PjybUd4dEWP3hW1te4Mp+9DM14kkjZOTYnb
+	CoYUlOqRT551qnXG8ukCkFekN+ZTmCfhIL/ROOAyTKmlIepZ+C04dwlqeJ9ovx2uDjQVqZHW6RB
+	0vM6BNvyYWD0NUnUhudH
+X-Google-Smtp-Source: AGHT+IHpzV+15pT9rC0dv425JvS+EQ7ijp2j9zmm/V4a6N6t16e1ARxMwg63ScRMethPfVN56ayBDw==
+X-Received: by 2002:a17:902:eccf:b0:215:7cde:7fa3 with SMTP id d9443c01a7336-21c355301e2mr397914035ad.25.1737659716962;
+        Thu, 23 Jan 2025 11:15:16 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da3ea3cb2sm2504645ad.90.2025.01.23.11.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 11:15:15 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v2 0/4] entry: Move ret_from_fork() to C and inline
+ syscall_exit_to_user_mode()
+Date: Thu, 23 Jan 2025 11:14:28 -0800
+Message-Id: <20250123-riscv_optimize_entry-v2-0-7c259492d508@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250122-riscv_optimize_entry-v1-4-4ee95559cfd0@rivosinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABSVkmcC/3WNQQqDMBBFryJZN2UcE9Cueg8RKXGsszCRiYRa8
+ e6N7rt8D/77u4okTFE9il0JJY4cfAa8FcpNL/8mzUNmhYAGDKAWji71YVl55i/15FfZtK2r2lQ
+ GoUKr8nQRGvlzZdsu88RxDbJdL6k87Rm0UOKfYCo1aEPUWGsbNw7wFE4hsnd3F2bVHcfxA9Aq+
+ Ji7AAAA
+X-Change-ID: 20240402-riscv_optimize_entry-583843420325
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1931; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=07MvLhT2Wy7RrEKkDU/7g2rxiX30LJFHB9CllhdgXSA=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/qkqdaz2SP2T34j8rlu2aSJZyu8VfoWbWAwlOEKlThfb
+ pz69blFRykLgxgXg6yYIgvPtQbm1jv6ZUdFyybAzGFlAhnCwMUpABM5dZmRYQN7ftcXnRyDwp93
+ f5bZ/I1e1yW9ZokJ/yozL/eAozln7BkZHn/4bX1k54E6kchzPancQftU3ngJ7bUJ9XI7LVv6M1i
+ ODQA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Hi Charlie,
+Similar to commit 221a164035fd ("entry: Move
+syscall_enter_from_user_mode() to header file"), move
+syscall_exit_to_user_mode() to the header file as well.
 
-kernel test robot noticed the following build errors:
+Testing was done with the byte-unixbench [1] syscall benchmark (which
+calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
+x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
+s390 a 11.1328% improvement.
 
-[auto build test ERROR on ffd294d346d185b70e28b1a28abe367bbfe53c04]
+Since this is on QEMU, I know these numbers are not perfect, but they
+show a trend of general improvement across all architectures that use
+the generic entry code.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/riscv-entry-Convert-ret_from_fork-to-C/20250123-065957
-base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
-patch link:    https://lore.kernel.org/r/20250122-riscv_optimize_entry-v1-4-4ee95559cfd0%40rivosinc.com
-patch subject: [PATCH 4/4] entry: Inline syscall_exit_to_user_mode()
-config: x86_64-randconfig-072-20250123 (https://download.01.org/0day-ci/archive/20250124/202501240101.mSdGpEoH-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250124/202501240101.mSdGpEoH-lkp@intel.com/reproduce)
+[1] https://github.com/kdlucas/byte-unixbench
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501240101.mSdGpEoH-lkp@intel.com/
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v2:
+- Fixup compilation issues for loongarch
+- Fixup compilation issues with CONFIG_CONTEXT_TRACKING_USER
+- Link to v1: https://lore.kernel.org/r/20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com
 
-All errors (new ones prefixed by >>):
+---
+Charlie Jenkins (4):
+      riscv: entry: Convert ret_from_fork() to C
+      riscv: entry: Split ret_from_fork() into user and kernel
+      loongarch: entry: Migrate ret_from_fork() to C
+      entry: Inline syscall_exit_to_user_mode()
 
-   In file included from arch/x86/include/asm/bug.h:99,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/linux/sched.h:14,
-                    from arch/x86/mm/fault.c:7:
-   include/linux/entry-common.h: In function 'syscall_exit_to_user_mode_work':
->> include/linux/entry-common.h:397:34: error: 'CONTEXT_KERNEL' undeclared (first use in this function); did you mean 'PERF_CONTEXT_KERNEL'?
-     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-         |                                  ^~~~~~~~~~~~~~
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   include/linux/entry-common.h:397:9: note: in expansion of macro 'CT_WARN_ON'
-     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-         |         ^~~~~~~~~~
-   include/linux/entry-common.h:397:34: note: each undeclared identifier is reported only once for each function it appears in
-     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-         |                                  ^~~~~~~~~~~~~~
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   include/linux/entry-common.h:397:9: note: in expansion of macro 'CT_WARN_ON'
-     397 |         CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-         |         ^~~~~~~~~~
-
-
-vim +397 include/linux/entry-common.h
-
-   378	
-   379	/**
-   380	 * syscall_exit_to_user_mode_work - Handle work before returning to user mode
-   381	 * @regs:	Pointer to currents pt_regs
-   382	 *
-   383	 * Same as step 1 and 2 of syscall_exit_to_user_mode() but without calling
-   384	 * exit_to_user_mode() to perform the final transition to user mode.
-   385	 *
-   386	 * Calling convention is the same as for syscall_exit_to_user_mode() and it
-   387	 * returns with all work handled and interrupts disabled. The caller must
-   388	 * invoke exit_to_user_mode() before actually switching to user mode to
-   389	 * make the final state transitions. Interrupts must stay disabled between
-   390	 * return from this function and the invocation of exit_to_user_mode().
-   391	 */
-   392	static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-   393	{
-   394		unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-   395		unsigned long nr = syscall_get_nr(current, regs);
-   396	
- > 397		CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-   398	
-   399		if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-   400			if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-   401				local_irq_enable();
-   402		}
-   403	
-   404		rseq_syscall(regs);
-   405	
-   406		/*
-   407		 * Do one-time syscall specific work. If these work items are
-   408		 * enabled, we want to run them exactly once per syscall exit with
-   409		 * interrupts enabled.
-   410		 */
-   411		if (unlikely(work & SYSCALL_WORK_EXIT))
-   412			syscall_exit_work(regs, work);
-   413		local_irq_disable_exit_to_user();
-   414		exit_to_user_mode_prepare(regs);
-   415	}
-   416	
-
+ arch/loongarch/include/asm/asm-prototypes.h |  5 +++
+ arch/loongarch/include/asm/switch_to.h      |  8 +++++
+ arch/loongarch/kernel/entry.S               | 22 ++++++-------
+ arch/loongarch/kernel/process.c             | 34 ++++++++++++++++----
+ arch/riscv/include/asm/asm-prototypes.h     |  2 ++
+ arch/riscv/kernel/entry.S                   | 20 +++++++-----
+ arch/riscv/kernel/process.c                 | 21 +++++++++++--
+ include/linux/entry-common.h                | 43 +++++++++++++++++++++++--
+ kernel/entry/common.c                       | 49 +----------------------------
+ 9 files changed, 125 insertions(+), 79 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20240402-riscv_optimize_entry-583843420325
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Charlie
+
