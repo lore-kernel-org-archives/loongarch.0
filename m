@@ -1,135 +1,289 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5221C198
-	for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 08:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57532219EA5
+	for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 09:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737709145; cv=none; b=DcmmecZMo/tb1EZmd9dqgFgTnzjdW4p0LNGoeocPDYI3fz64+66J9R/Aycml/g+0LyJRPt1MADKQUEldURjA/IO+6M/JNkR7+mYvzsQTjPoowN9svO8nrcXNp+UiZaMZzQReESSkhuiHKSWH0/k7BsEZeZ4dlLW6YDHmPJCqLH8=
+	t=1737709532; cv=none; b=juZXgPBv2UpqXc+Fhliz1lfJpwG3OF81n9rW8C7jRO453hrrbUAPIO1nEBJfVcaYiq9CYynTznxxAvUwNqHAEqu47HupdshQWNNRmUDqX981JqUwFQOlLaSkhSnaqtvtdwWzBLCjm+E95uH4RWbzytprFJaJWMlfTOVgHxpcps0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737709145; c=relaxed/simple;
-	bh=DNyXYLNqnDGTpYMMmN2+u7aiSbjZBEJB+HjmmWjpP64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=er4EIrdpxXgk0J0GwmkQl9uOWMUc/XhQx8KHSk6oiYxQmo9b2wVzke0wmW2Eu1Ikn+jhAYKk5kjQ44+uxNF3moVFKHEc+ew+baNQaQwjT1mEHoCicu1zIGEa0MMfmL9E7hdbTYcNU0Wk1cOQBkmHZ9/7mN0Xj6QfUSTF74SFXk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gZwZhskG; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1737709532; c=relaxed/simple;
+	bh=Lqlp7MyQNz39W8P9ZqUKNLj/uTj0W2CY9rnVn7UkN6E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WRV5Q6WyI7BpxYc/vmckXbkK6fQmsZEg/QyZQ/bZmjY59Fpi/SYNbXiqvhSmqvbvwGCOTWF+6an3suW9rO4T8BwuytcQK5NJsyiOXFzSJpSYtZkZrZhBDgb9z+9x+x5UEhLlAOX3BiJqnGTMC9KjBzsCTiSDMprX4kOEC9SciXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8M2dPct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gZwZhskG"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2156e078563so25914095ad.2
-        for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 00:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737709143; x=1738313943; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vlxTGa2NoXf0U2Bhx3PIAC2y2IpE66IWBZ2zi6Nlb6w=;
-        b=gZwZhskGKSI0ONYPfHFt1umoYaA5OGm1FT8woVuiaqtnqmzy9FO17oBhRXqQiMAv6u
-         ZlxicTDvMuGVaAkUZU4ctSvGhQqSTzwRU/z54TmLOi48C4TzYs5vBZz/Y0Vvsbl7RamL
-         Mun5OuoKUlhxXls3XoT4WjzQcwWQi7tO37w8kmj1VeciM+NbkmqeI/aDN203KuSd9hcG
-         RFkW2Ov8phRQop6PEVnBL4RlW7bOK9frvZXFdi7J5drGiHL3DAJ5MQ7wAPd4ON4qVKP2
-         RR9DugdFfP7pHwJnV74zySZgvYFgciDtSWDZ3ucGVvn76Na9tneGlAAWfH1SXawxcWeS
-         N+lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737709143; x=1738313943;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vlxTGa2NoXf0U2Bhx3PIAC2y2IpE66IWBZ2zi6Nlb6w=;
-        b=jr7Kwk1gVzSuy1j4pGO1frSF9PaCR645SpomDwEeMOba/y+kAc1RY6UzhQszsIKc1e
-         GVh07am1onV6EZ3BGngRnNNJfHRnWLPIvTHI/IUXW3jU+qLlNAhVpThkFfzd//qgiqMX
-         kwmf4CqD88l/HDArDm2er0iY/oG1HZ+yb//+6SAutfVsoY8kl5eoSwzC+JLS84BwHPA1
-         Up2LzX4UAIVjugH5I9hUzbZe5SmwRHCHEcS0Wy9aU4vHgmesK2/6cojgUreIEwOyObRB
-         jsz2Nzrf5FWxqsq35Zc06DFU1kwkNDk5dLsYnaRAUi/cggXBJ8wYlli5per5SlLUq+RC
-         7jjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmQpWIbwJDLDr44Bc+8TpA0xuMyT6999HI/Y9MH/qOxbYMMaK9TAicyXjmqJKDC0h8aEcXfxOISoA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4c1NaSnAWgxOeoLmikBQfnKJk8o2sill76Qqhszl0/YnvWMQv
-	YOrZ7ly49bkz0C40QQKSZWr6u1XET97oq7/FKlRBMgDoY3D/+MrvOxCfktBwOCo=
-X-Gm-Gg: ASbGncv6PBJVYydEXQ+ckidGNJgSaBxi7GO6V7o1sMD0EWDA720wn9LQM/ksbK0FP7k
-	tIQrcYra1Cem951EzsUtNdbvx+tVNOu1XzPKWWeGLuieuzNwBR2LOf8eiE32rrLdAy3g2Yb6NIf
-	V1c7AFKT/ATub0g/0f66Uc9z9/V/8Yh1r5WQmyNwaGnlPJ2uMNlUYDmZMveQsyCyJiT/quopH4W
-	dtwzLZp+ZDkYFqIbXdGOmsIyvmjTc6d3D5fYyCU/Km5cJOJwaJKniOo1ZO+AHiUlZKDQ+Gzg69D
-	uJMqYII=
-X-Google-Smtp-Source: AGHT+IEIQFAd+nDcE1KZztHOLcwIZcsISxikWrtqikmaVDwNIDlSGV8IHx2h7CCPFEPGAtyydYzt+A==
-X-Received: by 2002:a05:6a00:4c0a:b0:725:e015:9082 with SMTP id d2e1a72fcca58-72daf92bee2mr36684993b3a.5.1737709141450;
-        Fri, 24 Jan 2025 00:59:01 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72f8a78e3cesm1322652b3a.168.2025.01.24.00.59.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 00:59:00 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Lifeng Zheng <zhenglifeng1@huawei.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/15] cpufreq: loongson: Set .set_boost directly
-Date: Fri, 24 Jan 2025 14:28:13 +0530
-Message-Id: <0cef4a792391f50463fb1e72a96645e34eafbc89.1737707712.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1737707712.git.viresh.kumar@linaro.org>
-References: <cover.1737707712.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8M2dPct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 319ACC4CEE4
+	for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 09:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737709532;
+	bh=Lqlp7MyQNz39W8P9ZqUKNLj/uTj0W2CY9rnVn7UkN6E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=k8M2dPctcUrkDwaW6JFaPB4remmUAl44Da+yQc2Z/jr4ebyvLBNPY0Eo6FYaL9+LM
+	 AInUQvIgtcbbWfol0t8hSVLUlRQQrrMzV/QiXiTy50QWIo4BZAbT3x9wGSZh1hQvW3
+	 tnNMf+zUnuP83Gb/edLPiLZ6+9dEh6D1sm/tX1aZHiP32I87f0SFSv36vAPFfh4Cw7
+	 V1elVpskHZuVDWsQV1rWWp0k1Ev5tCLgNS6eN97okaLrO6ez77vRx6ohScGcMuJE+s
+	 c7DsP9+yW0rTmXJ92CgPuPLMujYWOfCvy45pGQcv0JHnfEAEolDkPAorWn/xPcCCE7
+	 oGVrOas/2X0Kw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaecf50578eso432051266b.2
+        for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 01:05:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWH7y2oQ5WJcMhGx8gci6gIFC9P0bHAJKJzXYNpdxbYVkfsh/ltqm7HCrafGOuERxgeigPlU2Ry5JE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwWIepjq/i/z4dAelQenDpa3O98ojCxWFmdd3oLxzinNnwkqJQc
+	8SV1DKoJGU8HrRJslQGZ1xs9RDhVYBbbmwgAEmu8SsctG2SObccsLAv8/Jkiy9ppLe/2SRLDMQb
+	tjQmI3DHKDpf8P7LDn99fpR8QzXo=
+X-Google-Smtp-Source: AGHT+IHG0k2FyeWUT/medUJbo4t6MJmnpFSJ3HJ1L4LPVA5YC4vbKPPO3C/X37BPV/1UrON5UcNYFMH8y1ldCcFm3/M=
+X-Received: by 2002:a17:907:7ba9:b0:ab2:c0c8:383f with SMTP id
+ a640c23a62f3a-ab38b0b684fmr2975925866b.1.1737709530490; Fri, 24 Jan 2025
+ 01:05:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250123-riscv_optimize_entry-v2-0-7c259492d508@rivosinc.com> <20250123-riscv_optimize_entry-v2-3-7c259492d508@rivosinc.com>
+In-Reply-To: <20250123-riscv_optimize_entry-v2-3-7c259492d508@rivosinc.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 24 Jan 2025 17:05:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7RSn2ek5CeLnohTcrh=0unDNmaLDq+yDH2oqshoeRMNQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnmCgndjX3TxIbo0KY3PK02_EADQhJH2tzMemU92v6WAVFWS0P9mXQrh4Y
+Message-ID: <CAAhV-H7RSn2ek5CeLnohTcrh=0unDNmaLDq+yDH2oqshoeRMNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] loongarch: entry: Migrate ret_from_fork() to C
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The boost feature can be controlled at two levels currently, driver
-level (applies to all policies) and per-policy.
+Hi, Charlie,
 
-Currently the driver enables driver level boost support from the
-per-policy ->init() callback, which isn't really efficient as that gets
-called for each policy and then there is online/offline path too where
-this gets done unnecessarily.
+On Fri, Jan 24, 2025 at 3:15=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> Loongarch is the only architecture that calls
+We usually use "LoongArch" instead of "loongarch" or "Loongarch".
 
-Instead set the .set_boost field directly and always enable the boost
-support. If a policy doesn't support boost feature, the core will not
-enable it for that policy.
+> syscall_exit_to_user_mode() from asm. Move the call into C so that this
+> function can be inlined across all architectures.
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/loongarch/include/asm/asm-prototypes.h |  5 +++++
+>  arch/loongarch/include/asm/switch_to.h      |  8 +++++++
+>  arch/loongarch/kernel/entry.S               | 22 +++++++++----------
+>  arch/loongarch/kernel/process.c             | 34 +++++++++++++++++++++++=
++-----
+>  4 files changed, 51 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch=
+/include/asm/asm-prototypes.h
+> index 51f224bcfc654228ae423e9a066b25b35102a5b9..0195d4309fd29f94664d5f342=
+47198c769033b1b 100644
+> --- a/arch/loongarch/include/asm/asm-prototypes.h
+> +++ b/arch/loongarch/include/asm/asm-prototypes.h
+> @@ -12,3 +12,8 @@ __int128_t __ashlti3(__int128_t a, int b);
+>  __int128_t __ashrti3(__int128_t a, int b);
+>  __int128_t __lshrti3(__int128_t a, int b);
+>  #endif
+> +
+> +asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(stru=
+ct task_struct *prev,
+> +                                                                   struc=
+t pt_regs *regs,
+> +                                                                   int (=
+*fn)(void *),
+> +                                                                   void =
+*fn_arg);
+It is a little strange that we only need to declare
+ret_from_kernel_thread() but not ret_from_fork().
 
-Keep the initial state of driver level boost to disabled and let the
-user enable it if required as ideally the boost frequencies must be used
-only when really required.
+> diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/incl=
+ude/asm/switch_to.h
+> index 5b225aff3ba21aa06d0713bc8e73e1b941389630..a1c5576f1fd145670e13038be=
+c6dd390486099ab 100644
+> --- a/arch/loongarch/include/asm/switch_to.h
+> +++ b/arch/loongarch/include/asm/switch_to.h
+> @@ -26,6 +26,14 @@ extern asmlinkage struct task_struct *__switch_to(stru=
+ct task_struct *prev,
+>                         struct task_struct *next, struct thread_info *nex=
+t_ti,
+>                         void *sched_ra, void *sched_cfa);
+>
+> +void noinstr __no_stack_protector ret_from_kernel_thread(struct task_str=
+uct *prev,
+> +                                                        struct pt_regs *=
+regs,
+> +                                                        int (*fn)(void *=
+),
+> +                                                        void *fn_arg);
+> +
+> +void noinstr __no_stack_protector ret_from_fork(struct task_struct *prev=
+,
+> +                                               struct pt_regs *regs);
+> +
+I prefer alpha-betical order, which means put ret_from_fork() before
+ret_from_kernel_thread().
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/loongson3_cpufreq.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+>  /*
+>   * For newly created kernel threads switch_to() will return to
+>   * ret_from_kernel_thread, newly created user threads to ret_from_fork.
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.=
+S
+> index 48e7e34e355e83eae8165957ba2eac05a8bf17df..2abc29e573810e000f2fef464=
+6ddca0dbb80eabe 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -77,24 +77,22 @@ SYM_CODE_START(handle_syscall)
+>  SYM_CODE_END(handle_syscall)
+>  _ASM_NOKPROBE(handle_syscall)
+>
+> -SYM_CODE_START(ret_from_fork)
+> +SYM_CODE_START(ret_from_fork_asm)
+>         UNWIND_HINT_REGS
+> -       bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+> -       move            a0, sp
+> -       bl              syscall_exit_to_user_mode
+> +       move            a1, sp
+> +       bl              ret_from_fork
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> -SYM_CODE_END(ret_from_fork)
+> +SYM_CODE_END(ret_from_fork_asm)
+>
+> -SYM_CODE_START(ret_from_kernel_thread)
+> +SYM_CODE_START(ret_from_kernel_thread_asm)
+>         UNWIND_HINT_REGS
+> -       bl              schedule_tail           # a0 =3D struct task_stru=
+ct *prev
+> -       move            a0, s1
+> -       jirl            ra, s0, 0
+> -       move            a0, sp
+> -       bl              syscall_exit_to_user_mode
+> +       move            a1, sp
+> +       move            a2, s0
+> +       move            a3, s1
+> +       bl              ret_from_kernel_thread
+>         RESTORE_STATIC
+>         RESTORE_SOME
+>         RESTORE_SP_AND_RET
+> -SYM_CODE_END(ret_from_kernel_thread)
+> +SYM_CODE_END(ret_from_kernel_thread_asm)
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
+ess.c
+> index 6e58f65455c7ca3eae2e88ed852c8655a6701e5c..16cc949fe43443d70f1d865ce=
+04595c2d8c1615b 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+> +#include <linux/entry-common.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/task.h>
+> @@ -33,6 +34,7 @@
+>  #include <linux/prctl.h>
+>  #include <linux/nmi.h>
+>
+> +#include <asm/asm-prototypes.h>
+>  #include <asm/asm.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/cpu.h>
+> @@ -47,6 +49,7 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/processor.h>
+>  #include <asm/reg.h>
+> +#include <asm/switch_to.h>
+>  #include <asm/unwind.h>
+>  #include <asm/vdso.h>
+>
+> @@ -63,8 +66,9 @@ EXPORT_SYMBOL(__stack_chk_guard);
+>  unsigned long boot_option_idle_override =3D IDLE_NO_OVERRIDE;
+>  EXPORT_SYMBOL(boot_option_idle_override);
+>
+> -asmlinkage void ret_from_fork(void);
+> -asmlinkage void ret_from_kernel_thread(void);
+> +asmlinkage void restore_and_ret(void);
+> +asmlinkage void ret_from_fork_asm(void);
+> +asmlinkage void ret_from_kernel_thread_asm(void);
+>
+>  void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long =
+sp)
+>  {
+> @@ -138,6 +142,24 @@ int arch_dup_task_struct(struct task_struct *dst, st=
+ruct task_struct *src)
+>         return 0;
+>  }
+>
+> +asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(stru=
+ct task_struct *prev,
+> +                                                                   struc=
+t pt_regs *regs,
+> +                                                                   int (=
+*fn)(void *),
+> +                                                                   void =
+*fn_arg)
+> +{
+> +       schedule_tail(prev);
+> +
+> +       fn(fn_arg);
+> +
+The two blank lines can be removed, and again, I prefer alpha-betical
+order, which means put ret_from_fork() before
+ret_from_kernel_thread().
 
-diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
-index ea516b939c44..1e8715ea1b77 100644
---- a/drivers/cpufreq/loongson3_cpufreq.c
-+++ b/drivers/cpufreq/loongson3_cpufreq.c
-@@ -299,15 +299,6 @@ static int loongson3_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 			per_cpu(freq_data, i) = per_cpu(freq_data, cpu);
- 	}
- 
--	if (policy_has_boost_freq(policy)) {
--		ret = cpufreq_enable_boost_support();
--		if (ret < 0) {
--			pr_warn("cpufreq: Failed to enable boost: %d\n", ret);
--			return ret;
--		}
--		loongson3_cpufreq_driver.boost_enabled = true;
--	}
--
- 	return 0;
- }
- 
-@@ -338,6 +329,7 @@ static struct cpufreq_driver loongson3_cpufreq_driver = {
- 	.get = loongson3_cpufreq_get,
- 	.target_index = loongson3_cpufreq_target,
- 	.verify = cpufreq_generic_frequency_table_verify,
-+	.set_boost = cpufreq_boost_set_sw,
- 	.suspend = cpufreq_generic_suspend,
- };
- 
--- 
-2.31.1.272.g89b43f80a514
+Huacai
 
+> +       syscall_exit_to_user_mode(regs);
+> +}
+> +
+> +void noinstr __no_stack_protector ret_from_fork(struct task_struct *prev=
+, struct pt_regs *regs)
+> +{
+> +       schedule_tail(prev);
+> +       syscall_exit_to_user_mode(regs);
+> +}
+> +
+>  /*
+>   * Copy architecture-specific thread state
+>   */
+> @@ -165,8 +187,8 @@ int copy_thread(struct task_struct *p, const struct k=
+ernel_clone_args *args)
+>                 p->thread.reg03 =3D childksp;
+>                 p->thread.reg23 =3D (unsigned long)args->fn;
+>                 p->thread.reg24 =3D (unsigned long)args->fn_arg;
+> -               p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread=
+;
+> -               p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thr=
+ead;
+> +               p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread=
+_asm;
+> +               p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thr=
+ead_asm;
+>                 memset(childregs, 0, sizeof(struct pt_regs));
+>                 childregs->csr_euen =3D p->thread.csr_euen;
+>                 childregs->csr_crmd =3D p->thread.csr_crmd;
+> @@ -182,8 +204,8 @@ int copy_thread(struct task_struct *p, const struct k=
+ernel_clone_args *args)
+>                 childregs->regs[3] =3D usp;
+>
+>         p->thread.reg03 =3D (unsigned long) childregs;
+> -       p->thread.reg01 =3D (unsigned long) ret_from_fork;
+> -       p->thread.sched_ra =3D (unsigned long) ret_from_fork;
+> +       p->thread.reg01 =3D (unsigned long) ret_from_fork_asm;
+> +       p->thread.sched_ra =3D (unsigned long) ret_from_fork_asm;
+>
+>         /*
+>          * New tasks lose permission to use the fpu. This accelerates con=
+text
+>
+> --
+> 2.43.0
+>
