@@ -1,93 +1,78 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7CD219A73
-	for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 08:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5221C198
+	for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 08:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737709112; cv=none; b=uC34zYCceXFUuZn4lEwz/6bwpHKB0zFFMbDOtcu5pZPCvKeJLj20Cx3AS6sgkIZ03PVAMqbNba8zKTvOqN+8L+zBnovRYGuAIK86WF5mJIncnuUCkWBfUr20SJ5BP4P0oAJCci6lGya8ojPK3KzKwv51vlHjSlbd66KFOWOF2p0=
+	t=1737709145; cv=none; b=DcmmecZMo/tb1EZmd9dqgFgTnzjdW4p0LNGoeocPDYI3fz64+66J9R/Aycml/g+0LyJRPt1MADKQUEldURjA/IO+6M/JNkR7+mYvzsQTjPoowN9svO8nrcXNp+UiZaMZzQReESSkhuiHKSWH0/k7BsEZeZ4dlLW6YDHmPJCqLH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737709112; c=relaxed/simple;
-	bh=fNI4UdDtZI4AVcTD8TnjHEnynSXd6Y+lcwnBOlUgb0k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KBNTsyaVw3uE4q55GMbiosx1CfZDsfoO05WiYaPnQk7BNFgnahMtgRUZxwmPOAPVl+vWUX8TSQBX2prvEQnALYApqwNGVwe9Ko7PvN/7zeYb+1Kx3SeAbT3pTV125ucBfC4ecchMziTLHyULctb7662glkTL0G/oNNcwoi2AL4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fl8KJaLS; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1737709145; c=relaxed/simple;
+	bh=DNyXYLNqnDGTpYMMmN2+u7aiSbjZBEJB+HjmmWjpP64=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=er4EIrdpxXgk0J0GwmkQl9uOWMUc/XhQx8KHSk6oiYxQmo9b2wVzke0wmW2Eu1Ikn+jhAYKk5kjQ44+uxNF3moVFKHEc+ew+baNQaQwjT1mEHoCicu1zIGEa0MMfmL9E7hdbTYcNU0Wk1cOQBkmHZ9/7mN0Xj6QfUSTF74SFXk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gZwZhskG; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fl8KJaLS"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2164b1f05caso31538445ad.3
-        for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 00:58:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gZwZhskG"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2156e078563so25914095ad.2
+        for <loongarch@lists.linux.dev>; Fri, 24 Jan 2025 00:59:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737709110; x=1738313910; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a4AqRX4jgpQUQupuoQFqpmYTbRVzBhfX6O9GAy7aKKQ=;
-        b=fl8KJaLSkukCZWh8Lbwpcw9AhU+hg5HeRWFD+Oq+HKwFRjb03fkdJ75TJP5VBqyy0V
-         7f4uhxbmFmajSJiyaryDLlfb4yIWR08WE4zAGD/q3VhDz5Z1gVrw8LXPnC4nSeudtcc9
-         j9LYSXSxwBJ1g3fyF+/KS7aUfoDF0b5iBPJapnfRXBrJ+VbyehVIInH4Ke/c/s27DTgl
-         yaR9/EfjWu9AagB40/NlpkqsZh1tHbHRqylEdzx7Y5N36EAwYakj8lxwyiojdMhImTWt
-         01UF1weCSyzKRXJyPNoIzPk9vU5h/IbNcfTl1FQOUHJdIiqBONuzQZTsxwM99SzwfVto
-         MrkA==
+        d=linaro.org; s=google; t=1737709143; x=1738313943; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vlxTGa2NoXf0U2Bhx3PIAC2y2IpE66IWBZ2zi6Nlb6w=;
+        b=gZwZhskGKSI0ONYPfHFt1umoYaA5OGm1FT8woVuiaqtnqmzy9FO17oBhRXqQiMAv6u
+         ZlxicTDvMuGVaAkUZU4ctSvGhQqSTzwRU/z54TmLOi48C4TzYs5vBZz/Y0Vvsbl7RamL
+         Mun5OuoKUlhxXls3XoT4WjzQcwWQi7tO37w8kmj1VeciM+NbkmqeI/aDN203KuSd9hcG
+         RFkW2Ov8phRQop6PEVnBL4RlW7bOK9frvZXFdi7J5drGiHL3DAJ5MQ7wAPd4ON4qVKP2
+         RR9DugdFfP7pHwJnV74zySZgvYFgciDtSWDZ3ucGVvn76Na9tneGlAAWfH1SXawxcWeS
+         N+lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737709110; x=1738313910;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a4AqRX4jgpQUQupuoQFqpmYTbRVzBhfX6O9GAy7aKKQ=;
-        b=CxpkGE3WiLcu3BrkcIs2A+2LNBj+FDwEN0fsOaCOYZngPp51esqYIMGkR+WfAMJIjE
-         sH1ijxUja0fuVkjatA6tOSYhhyqOJx8ztkta0gvtA7WQzgaAI5akfNApwDq+oKeG5HXj
-         Wsh+0/LMVwErUfD01Hg8uI62ebPsOvJYum0hsM+Pu4YIoPJ6FlvpbZza39lfdOYbUg9T
-         SvqPXfocowqSkUyxLFbU/EdjL1ChmRIBP2R0b2MzQ/qh5TKTNcFeFaTYYnRLjXXZXRy4
-         Ip/PPuw7al1foLb6CDgvrzUDLq2yKeSDQcqOpiAC5+AM8ZxdjPhjo1ABQxflif6T18jw
-         PmvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZOHnBep85VNauzGOEX7yfxgqbxyaGLY8xa1+CTlb3r1XD+JKx658kGfeVpkCajKNryNkHzdQQZKs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/G6sc++7DgxgbWJmaZRWF/B9l8YKvp1e9XsSQ1TgNoMp9SzSY
-	P3OKB6vZhKj0dIY8md9apJWYgJOa+WfuYIcKP6Qp3qwzelnbjMvq7iO0yHBiEL8=
-X-Gm-Gg: ASbGncs/duOPHAltmIx3w7kok6Bg3qmfYvxDGn/S908xRHmgjoEOne82OHCbHLL7eKl
-	RlLquWk9/v+adLGnYd++ewJCGtUnl5PnF4JnsGX3StzKRSvh481OQIg+HNLfCcUy/duBDceGw0+
-	FO5VXruArT7haqnD3J76JEKwaO9JMcqKTn6SvwS/uuaT1z60kpgivjzT5ksXv6x9gqmZeQJ1VF8
-	mAUkzPo965KomCR3Q2CkfTsQ39xCV0yaMsZnEJpQCGeI9Ta7Myh+ZwXYWzILfrBQQFTT6KlXEeE
-	IxljZfY=
-X-Google-Smtp-Source: AGHT+IGaLv3P86dnfhfsz8clY+KvPxRH7m/1Pd0NzNkAaLxjGYIDOwn76y4qMRrSSuP3v13w1OIdqA==
-X-Received: by 2002:a17:903:320e:b0:217:9172:2ce1 with SMTP id d9443c01a7336-21c35544407mr480084755ad.22.1737709110054;
-        Fri, 24 Jan 2025 00:58:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737709143; x=1738313943;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vlxTGa2NoXf0U2Bhx3PIAC2y2IpE66IWBZ2zi6Nlb6w=;
+        b=jr7Kwk1gVzSuy1j4pGO1frSF9PaCR645SpomDwEeMOba/y+kAc1RY6UzhQszsIKc1e
+         GVh07am1onV6EZ3BGngRnNNJfHRnWLPIvTHI/IUXW3jU+qLlNAhVpThkFfzd//qgiqMX
+         kwmf4CqD88l/HDArDm2er0iY/oG1HZ+yb//+6SAutfVsoY8kl5eoSwzC+JLS84BwHPA1
+         Up2LzX4UAIVjugH5I9hUzbZe5SmwRHCHEcS0Wy9aU4vHgmesK2/6cojgUreIEwOyObRB
+         jsz2Nzrf5FWxqsq35Zc06DFU1kwkNDk5dLsYnaRAUi/cggXBJ8wYlli5per5SlLUq+RC
+         7jjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmQpWIbwJDLDr44Bc+8TpA0xuMyT6999HI/Y9MH/qOxbYMMaK9TAicyXjmqJKDC0h8aEcXfxOISoA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx4c1NaSnAWgxOeoLmikBQfnKJk8o2sill76Qqhszl0/YnvWMQv
+	YOrZ7ly49bkz0C40QQKSZWr6u1XET97oq7/FKlRBMgDoY3D/+MrvOxCfktBwOCo=
+X-Gm-Gg: ASbGncv6PBJVYydEXQ+ckidGNJgSaBxi7GO6V7o1sMD0EWDA720wn9LQM/ksbK0FP7k
+	tIQrcYra1Cem951EzsUtNdbvx+tVNOu1XzPKWWeGLuieuzNwBR2LOf8eiE32rrLdAy3g2Yb6NIf
+	V1c7AFKT/ATub0g/0f66Uc9z9/V/8Yh1r5WQmyNwaGnlPJ2uMNlUYDmZMveQsyCyJiT/quopH4W
+	dtwzLZp+ZDkYFqIbXdGOmsIyvmjTc6d3D5fYyCU/Km5cJOJwaJKniOo1ZO+AHiUlZKDQ+Gzg69D
+	uJMqYII=
+X-Google-Smtp-Source: AGHT+IEIQFAd+nDcE1KZztHOLcwIZcsISxikWrtqikmaVDwNIDlSGV8IHx2h7CCPFEPGAtyydYzt+A==
+X-Received: by 2002:a05:6a00:4c0a:b0:725:e015:9082 with SMTP id d2e1a72fcca58-72daf92bee2mr36684993b3a.5.1737709141450;
+        Fri, 24 Jan 2025 00:59:01 -0800 (PST)
 Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da3d9e1b2sm11621015ad.17.2025.01.24.00.58.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72f8a78e3cesm1322652b3a.168.2025.01.24.00.59.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 00:58:29 -0800 (PST)
+        Fri, 24 Jan 2025 00:59:00 -0800 (PST)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Hector Martin <marcan@marcan.st>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Huang Rui <ray.huang@amd.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>
+	WANG Xuerui <kernel@xen0n.name>,
+	Viresh Kumar <viresh.kumar@linaro.org>
 Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Lifeng Zheng <zhenglifeng1@huawei.com>,
-	arm-scmi@vger.kernel.org,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH 00/15] cpufreq: simplify boost handling
-Date: Fri, 24 Jan 2025 14:28:04 +0530
-Message-Id: <cover.1737707712.git.viresh.kumar@linaro.org>
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 09/15] cpufreq: loongson: Set .set_boost directly
+Date: Fri, 24 Jan 2025 14:28:13 +0530
+Message-Id: <0cef4a792391f50463fb1e72a96645e34eafbc89.1737707712.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1737707712.git.viresh.kumar@linaro.org>
+References: <cover.1737707712.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -96,60 +81,55 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
-
 The boost feature can be controlled at two levels currently, driver
 level (applies to all policies) and per-policy.
 
-Currently most of the drivers enables driver level boost support from the
-per-policy ->init() callback, which isn't really efficient as that gets called
-for each policy and then there is online/offline path too where this gets done
-unnecessarily.
+Currently the driver enables driver level boost support from the
+per-policy ->init() callback, which isn't really efficient as that gets
+called for each policy and then there is online/offline path too where
+this gets done unnecessarily.
 
-Also it is possible to have a scenario where not all cpufreq policies support
-boost frequencies. And letting sysfs (or other parts of the kernel) enable boost
-feature for that policy isn't correct.
+Instead set the .set_boost field directly and always enable the boost
+support. If a policy doesn't support boost feature, the core will not
+enable it for that policy.
 
-Simplify and cleanup handling of boost to solve these issues.
+Keep the initial state of driver level boost to disabled and let the
+user enable it if required as ideally the boost frequencies must be used
+only when really required.
 
-Pushed here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git cpufreq/boost
-
-Rebased over few dependencies from PM tree, will push to the arm-cpufreq tree
-after merge window is closed.
-
-Viresh Kumar (15):
-  cpufreq: staticize cpufreq_boost_trigger_state()
-  cpufreq: Export cpufreq_boost_set_sw()
-  cpufreq: Introduce policy->boost_supported flag
-  cpufreq: acpi: Set policy->boost_supported
-  cpufreq: amd: Set policy->boost_supported
-  cpufreq: cppc: Set policy->boost_supported
-  cpufreq: Restrict enabling boost on policies with no boost frequencies
-  cpufreq: apple: Set .set_boost directly
-  cpufreq: loongson: Set .set_boost directly
-  cpufreq: powernv: Set .set_boost directly
-  cpufreq: scmi: Set .set_boost directly
-  cpufreq: dt: Set .set_boost directly
-  cpufreq: qcom: Set .set_boost directly
-  cpufreq: staticize policy_has_boost_freq()
-  cpufreq: Remove cpufreq_enable_boost_support()
-
- drivers/cpufreq/acpi-cpufreq.c      |  3 +++
- drivers/cpufreq/amd-pstate.c        |  4 ++--
- drivers/cpufreq/apple-soc-cpufreq.c | 10 +---------
- drivers/cpufreq/cppc_cpufreq.c      |  9 +--------
- drivers/cpufreq/cpufreq-dt.c        | 14 +-------------
- drivers/cpufreq/cpufreq.c           | 30 ++++++++++++-----------------
- drivers/cpufreq/freq_table.c        |  7 +++++--
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
  drivers/cpufreq/loongson3_cpufreq.c | 10 +---------
- drivers/cpufreq/powernv-cpufreq.c   |  5 +----
- drivers/cpufreq/qcom-cpufreq-hw.c   |  7 +------
- drivers/cpufreq/scmi-cpufreq.c      | 11 +----------
- include/linux/cpufreq.h             | 20 ++++++-------------
- 12 files changed, 35 insertions(+), 95 deletions(-)
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
+diff --git a/drivers/cpufreq/loongson3_cpufreq.c b/drivers/cpufreq/loongson3_cpufreq.c
+index ea516b939c44..1e8715ea1b77 100644
+--- a/drivers/cpufreq/loongson3_cpufreq.c
++++ b/drivers/cpufreq/loongson3_cpufreq.c
+@@ -299,15 +299,6 @@ static int loongson3_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 			per_cpu(freq_data, i) = per_cpu(freq_data, cpu);
+ 	}
+ 
+-	if (policy_has_boost_freq(policy)) {
+-		ret = cpufreq_enable_boost_support();
+-		if (ret < 0) {
+-			pr_warn("cpufreq: Failed to enable boost: %d\n", ret);
+-			return ret;
+-		}
+-		loongson3_cpufreq_driver.boost_enabled = true;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -338,6 +329,7 @@ static struct cpufreq_driver loongson3_cpufreq_driver = {
+ 	.get = loongson3_cpufreq_get,
+ 	.target_index = loongson3_cpufreq_target,
+ 	.verify = cpufreq_generic_frequency_table_verify,
++	.set_boost = cpufreq_boost_set_sw,
+ 	.suspend = cpufreq_generic_suspend,
+ };
+ 
 -- 
 2.31.1.272.g89b43f80a514
 
