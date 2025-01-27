@@ -1,110 +1,83 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2060018E756
-	for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 20:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229AE194A6B;
+	Mon, 27 Jan 2025 22:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738011345; cv=none; b=jPpwfLk4iDTt6nLQ0i+5N7f8EEjG+ENk/MJJmyv5furfRXqQ7qfjYUyAn1UEgrNwHPI5hSuYdlyb8JKKoSEDor67elq2MAeISbJrb3bY8xLTanpib0owTI9RcbWizZaWkbPkgs55P/YbmYOU1iLwnbOORnvDZ+VZRubRUP3mbiU=
+	t=1738015569; cv=none; b=io2nDv01RfCCKT1l58A0D5Tp9UVYePMr2/kq8IQMG4jII/8Wl10mynp0aDbBhh94FHx6CnqKi9Qc5WA3VMagyhLfuUzfIRePzb0QMt0R3DBrO2KfF4Ky2XWcUKVXYT7ns5Ed8/S5OwSvxVT7tdPy5umkJwBW5PMCgeXnLtBbjtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738011345; c=relaxed/simple;
-	bh=jfTRFCA1KmS9TpTqFPy8CeZwxhz7yxFiLix/Mo9F++I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TeX4sxtE4S8HTG713Z7zH8nOWVew5xuC44Q1F1V+DnFE1yxB+biVpZrHhr1WgMbrZpMgXBb/1xy9cJaVbuyLeI3Pz8IPWIDthXozmSIDbpAzJimcvuiRRciCjdqijpDI3MRUYkzz+ixOS1nccVzxheFCGgFlgq+1dRUFSXMpVEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fHF+FWL7; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738015569; c=relaxed/simple;
+	bh=EohFWVUKO5Dc2lTWarTHfeVWR7kzQ2rpOyw/XUErVuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYnJ6UUNHklK5AaTbTDb7pYlZuotX76HM37/Tu8TiPxhqmLGkEldpseDrDWkrDF0gNol0vITIUpT9pfgp0Fip7UHuSpzGb58QWosVxrC47oodKF5X23aDc8ROjtdo6IUwifIFgdj6bIvMy4sXRwrs8yQyrxl7N+5zOJbLieVxKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXH5kMER; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fHF+FWL7"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21bc1512a63so94857065ad.1
-        for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 12:55:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738011343; x=1738616143; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pVHaUGwMILzwQkxTtmzPwlrQrsAV/yWdWfyIAOu7hxk=;
-        b=fHF+FWL7wPgRNZARP77JRQoLaay9nHvkahsByr8ThwlZFUQGbLPFvcQM+AwdX2roFZ
-         GBL2UXgXfEXU+lwo8zyx3MS/9TOsoH709/MahSzDL+coOlDS5QgXuJ6cpmRKj33GDac9
-         18VWQde7ky1cKCJVmvamASIOF8vcNIcfGEhLuNRmRy+hypYPXucGIGN4oeBvTdiOCBBq
-         D/IYZ8T9OEnYbgHdBaS+pRbcya/kbUW83F7qa9RfhF3ehdEJpGAWHzAamxMBEkesZgcX
-         5B5174VFgZOPsxrh6k/f/gEUVCJGjttxZvmCea0k/Ei6I9Zmq4J9racaGnaM8cr0RWUI
-         euRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738011343; x=1738616143;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pVHaUGwMILzwQkxTtmzPwlrQrsAV/yWdWfyIAOu7hxk=;
-        b=ALnOf7HfsUJHrN7Af/LyA036yOUcbhEm3cMxGqtshFkchX5635VBxE/OCH7B4BGr+B
-         N6YVpJVSsSyhPSCTF/ipbxwWZUdedmrDvwVhpcqlcLAwXr9qlW8zjxilcZETD0r+sJOT
-         YcrdEsgu8inMbAo1zuZaPVh8yQM6+9R6yjuQxmi2s6Xpu2mkM3qfZNl5nv2f95OzJ4DY
-         LIeDcC42QrLR8/1TZU+RMNj4AAUGaTu0PYx3LSiIKEfdSGFk+mGEa+kI7v7tWWUzVHao
-         FJ7af6XZ72n+x4aE39nnEGin+pi3SXZ7GAnQbUrZWLOGmRremqQtEo6P5avsz9mkVZeH
-         G6dA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwqc+O+1b3SsVMT3+7gGdgGF+GZfGQIVzoVRnsnCGlwoISLTyUrAUpns8/0l4rLALDL2Z09SJxLOQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwrLf3CfH0khRsUZo5CkXWgqqDP0o0bM5U5qJA2TF7DXrzXe+yA
-	VcB9zwAVcC03dLGgvmQCcGIYd1kqUzqGG8SHje+7/Nd7GziYI2mSAWWVCfvJa+k=
-X-Gm-Gg: ASbGncsQWA9xbtsv6y8ILEk3vai755bzDm/EzQye2aobGr5B5+g4h6/pv0U4n44lXLd
-	VpKTQw9k3A7iEqTK9yBxxlVKxjrhRt7mhGiFZPOYPneLFblHUh8CpnUpiXHV4goUCjeJW+44F3D
-	F+YAhTTwbLnomHoeT2cT8Ja6U3k1ZhsQQZk57TIjSdqgT+J44OkywWz0ngzAFTIGunlCvwSjudt
-	i8bpGEdosXKdKYp/+LaYhViY15CssxmXCIDR5VTOIeFlFm94vV0/1LqoU1JmR7nY93FVYU=
-X-Google-Smtp-Source: AGHT+IE1NMyz0iI/G4TK23r8ZOaRjDxxIJWPoHoMwhYOSqFyTwcsoQRJGo4yrKOrcu8plwruiOiHIQ==
-X-Received: by 2002:a17:902:ea11:b0:215:b5d6:5fa8 with SMTP id d9443c01a7336-21c355c84a9mr625758965ad.22.1738011343332;
-        Mon, 27 Jan 2025 12:55:43 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da424f39fsm67418145ad.249.2025.01.27.12.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 12:55:42 -0800 (PST)
-Date: Mon, 27 Jan 2025 12:55:40 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/4] riscv: entry: Convert ret_from_fork() to C
-Message-ID: <Z5fyzMjj_5gqOupB@ghost>
-References: <20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com>
- <20250122-riscv_optimize_entry-v1-1-4ee95559cfd0@rivosinc.com>
- <alpine.DEB.2.21.2501252313210.27203@angie.orcam.me.uk>
- <Z5aSMVZLMwmyCp9k@ghost>
- <alpine.DEB.2.21.2501272017140.56843@angie.orcam.me.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXH5kMER"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B44C4CED2;
+	Mon, 27 Jan 2025 22:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738015568;
+	bh=EohFWVUKO5Dc2lTWarTHfeVWR7kzQ2rpOyw/XUErVuI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eXH5kMERklQq+IeHDTQUx00FKdPKQ+RC9uzLl77ZzTEeHTuDWBgplCTJeIzPeHbCY
+	 xRQ8PoIpaRPATjvYqyw4BHCGnoW66wNbUfovQpPnWy+zC+J7h+hFxUTazPcfxR1z2b
+	 y8ZrPFXx0Vw74JU8nTD11wehWBwWU5S9+Lb0zuJ/iEINiqjlzuNNXajwuUayV1YHWb
+	 zS6C4KB90lHXZ7rpBs3b1Az3/MlhLtNnEOW475mqtIiTm/8M1YREdkVBajM9TnNg/9
+	 lsAwb4E2sQoGWsQwAiREI/tXKkJEPycCqcQhG1Zf2cRQNQzyFFVao7QiP416v4oTQX
+	 hhT7vghPBGhWw==
+Date: Mon, 27 Jan 2025 14:06:07 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, Chong Qiao
+ <qiaochong@loongson.cn>
+Subject: Re: [PATCH] net: stmmac: dwmac-loongson: Set correct
+ {tx,rx}_fifo_size
+Message-ID: <20250127140607.6b3617df@kernel.org>
+In-Reply-To: <20250121093703.2660482-1-chenhuacai@loongson.cn>
+References: <20250121093703.2660482-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2501272017140.56843@angie.orcam.me.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 27, 2025 at 08:20:56PM +0000, Maciej W. Rozycki wrote:
-> On Sun, 26 Jan 2025, Charlie Jenkins wrote:
-> 
-> > >  Wouldn't it make sense to save a jump here and make it a tail call, i.e.:
-> > > 
-> > > 	la ra, ret_from_exception
-> > > 	tail ret_from_fork
-> > > 
-> > 
-> > I don't believe so due to the return address stack. It was shown in this
-> > patch [1] that a 7% performance improvement can be seen on existing
-> > riscv hardware by performing the extra jump. Doing tail calls should be
-> > avoided on riscv since the hardware can be expected to predict the
-> > return address incorrectly every time if the return address is manually
-> > changed.
-> 
->  Fair enough, thanks.  Though no link to said patch given.
+On Tue, 21 Jan 2025 17:37:03 +0800 Huacai Chen wrote:
+> Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
+> zero. This means dwmac-loongson doesn't support changing MTU, 
 
-Oops! Here it is:
-https://lore.kernel.org/linux-riscv/20240607061335.2197383-1-cyrilbur@tenstorrent.com/.
+Please provide more details here than "doesn't support changing".
+Does it return an error every time, but the device is operating
+correctly?
 
+Do the flow control thresholds also get programmed incorrectly?
+
+> so set the
+> correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by channel
+> counts).
 > 
->   Maciej
+> Note: the Fixes tag is not exactly right, but it is a key commit of the
+> dwmac-loongson series.
+
+Please pick a better one, then. Oldest commit where issue can be
+observed by the user is usually a safe choice.
+
+Please use 12 chars of the hash in the tag.
+
+> +	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
+> +	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
+
+Is this really right? 16k times the number of queues seems like you're
+just trying to get the main driver to calculate 16k. 
+What if user decreases the queue count? Maybe you should add a way to
+communicate the fifo size regardless of the queue count to the main
+driver?
+-- 
+pw-bot: cr
