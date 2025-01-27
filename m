@@ -1,83 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229AE194A6B;
-	Mon, 27 Jan 2025 22:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8E51DF72D
+	for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 23:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738015569; cv=none; b=io2nDv01RfCCKT1l58A0D5Tp9UVYePMr2/kq8IQMG4jII/8Wl10mynp0aDbBhh94FHx6CnqKi9Qc5WA3VMagyhLfuUzfIRePzb0QMt0R3DBrO2KfF4Ky2XWcUKVXYT7ns5Ed8/S5OwSvxVT7tdPy5umkJwBW5PMCgeXnLtBbjtU=
+	t=1738022301; cv=none; b=ODR/gyRWExQXlq56yiy5xkNLvrQYQhyB+SppCwo0sziz/1ND0dAU+yz1UqZRfoFzWoxEAJTZOpNYQVyK4mWSBt7mtkRLFJEJONue5Ho6GXF29VjCk5qfMnQjHrg5M/IlLBHiZFa87PlZIzxvGABVUaowrYvizMiTR8mBIJsZJgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738015569; c=relaxed/simple;
-	bh=EohFWVUKO5Dc2lTWarTHfeVWR7kzQ2rpOyw/XUErVuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EYnJ6UUNHklK5AaTbTDb7pYlZuotX76HM37/Tu8TiPxhqmLGkEldpseDrDWkrDF0gNol0vITIUpT9pfgp0Fip7UHuSpzGb58QWosVxrC47oodKF5X23aDc8ROjtdo6IUwifIFgdj6bIvMy4sXRwrs8yQyrxl7N+5zOJbLieVxKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXH5kMER; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738022301; c=relaxed/simple;
+	bh=UKyBrHzuIfWiaRVs0//lIDtbpI80WUrNR7tZEChC66Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=apVma7+rEyTZipwDn80d+F18rPol8yqG7cUC/Sb8RZxMeR4ydp4yItcSO4uIcZs/H8MlEb1xU8eJBSWag+JqInHEMDmyA08D+KvXQaie2GjA/RNYB1ekAxDvGsfoAkgaG1VVV4+Jr9IpOkqrDwopFXaQVN0DJaKDlK61yFa/k3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z0RWBRk1; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXH5kMER"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B44C4CED2;
-	Mon, 27 Jan 2025 22:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738015568;
-	bh=EohFWVUKO5Dc2lTWarTHfeVWR7kzQ2rpOyw/XUErVuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eXH5kMERklQq+IeHDTQUx00FKdPKQ+RC9uzLl77ZzTEeHTuDWBgplCTJeIzPeHbCY
-	 xRQ8PoIpaRPATjvYqyw4BHCGnoW66wNbUfovQpPnWy+zC+J7h+hFxUTazPcfxR1z2b
-	 y8ZrPFXx0Vw74JU8nTD11wehWBwWU5S9+Lb0zuJ/iEINiqjlzuNNXajwuUayV1YHWb
-	 zS6C4KB90lHXZ7rpBs3b1Az3/MlhLtNnEOW475mqtIiTm/8M1YREdkVBajM9TnNg/9
-	 lsAwb4E2sQoGWsQwAiREI/tXKkJEPycCqcQhG1Zf2cRQNQzyFFVao7QiP416v4oTQX
-	 hhT7vghPBGhWw==
-Date: Mon, 27 Jan 2025 14:06:07 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, Chong Qiao
- <qiaochong@loongson.cn>
-Subject: Re: [PATCH] net: stmmac: dwmac-loongson: Set correct
- {tx,rx}_fifo_size
-Message-ID: <20250127140607.6b3617df@kernel.org>
-In-Reply-To: <20250121093703.2660482-1-chenhuacai@loongson.cn>
-References: <20250121093703.2660482-1-chenhuacai@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z0RWBRk1"
+Date: Mon, 27 Jan 2025 23:58:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738022297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=EdcGtkZze7tE+pVbcTlvwrlzFbSwx6R7VoVNVkfrHss=;
+	b=Z0RWBRk1qCHt/pyblBGpbatZZ5gpJ8JvlY/Ad7eSnhnjIv+ydvjvBFRe34x+eU+h9VRE9D
+	KIwY16UdTJ9O/d8MowNdXtOoF4ohR/Ybs78VJ68dweqrJIiYI5Kger2aa8DhMIQHerGhxJ
+	VTs0Lbin9AUfzHmA8RGK3OBOxTISIXw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: [PATCH 0/2] mm: zswap: deprecate zbud and remove z3fold
+Message-ID: <Z5gdlO5pOu9XeGce@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 21 Jan 2025 17:37:03 +0800 Huacai Chen wrote:
-> Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-> zero. This means dwmac-loongson doesn't support changing MTU, 
+After 2 cycles of deprecating z3fold, remove it and mark zbud as
+deprecated for removal next. It was initially thought that zbud cannot
+be removed because it has no dependency on CONFIG_MMU while zsmalloc
+does, but CONFIG_SWAP depends on CONFIG_MMU anyway.
 
-Please provide more details here than "doesn't support changing".
-Does it return an error every time, but the device is operating
-correctly?
+Yosry Ahmed (2):
+  mm: zbud: deprecate CONFIG_ZBUD
+  mm: z3fold: remove z3fold
 
-Do the flow control thresholds also get programmed incorrectly?
+ CREDITS                                       |    1 +
+ Documentation/mm/index.rst                    |    1 -
+ Documentation/mm/z3fold.rst                   |   28 -
+ Documentation/translations/zh_CN/mm/index.rst |    1 -
+ .../translations/zh_CN/mm/z3fold.rst          |   31 -
+ MAINTAINERS                                   |    7 -
+ arch/loongarch/configs/loongson3_defconfig    |    3 +-
+ mm/Kconfig                                    |   47 +-
+ mm/Makefile                                   |    1 -
+ mm/z3fold.c                                   | 1447 -----------------
+ 10 files changed, 17 insertions(+), 1550 deletions(-)
+ delete mode 100644 Documentation/mm/z3fold.rst
+ delete mode 100644 Documentation/translations/zh_CN/mm/z3fold.rst
+ delete mode 100644 mm/z3fold.c
 
-> so set the
-> correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by channel
-> counts).
-> 
-> Note: the Fixes tag is not exactly right, but it is a key commit of the
-> dwmac-loongson series.
-
-Please pick a better one, then. Oldest commit where issue can be
-observed by the user is usually a safe choice.
-
-Please use 12 chars of the hash in the tag.
-
-> +	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
-> +	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
-
-Is this really right? 16k times the number of queues seems like you're
-just trying to get the main driver to calculate 16k. 
-What if user decreases the queue count? Maybe you should add a way to
-communicate the fifo size regardless of the queue count to the main
-driver?
 -- 
-pw-bot: cr
+2.48.1.262.g85cc9f2d1e-goog
+
