@@ -1,203 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from minute.unseen.parts (minute.unseen.parts [139.162.151.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B75B1FDA85
-	for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 11:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12D41FC7C5;
+	Mon, 27 Jan 2025 13:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.162.151.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737976632; cv=none; b=c+7Myrbb+mZtkHCAEg/h/Wu2Rk2AdqY5rXN4p++JTL7np8sj80PHMOyxjFnp9m3E1I+4Ym1BUiXOCZHiuZ7D19H6dORYmlbbGRsqTLtfww8bLKqp/U2ukhA7x5QJ8uH/68RrKZ8/NnZfovzN1KFUYpKN0NCOx7msypQ6eSg03uQ=
+	t=1737984517; cv=none; b=qJ990C0VuPDDbcBMODmbNz+xk9G4TXQJANK3ySVEV0skaUT86kLhdd4hWt0aZtN9wz3zam8nP+lfy5w9WtMmCSB+KK5QQzQeK4VglkNDtyIaCGIF9N84Ahg0kFUM4/9wRr8OuqqCMZNqM3gKGxRvUveL5TJVj4iOn10krIggep4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737976632; c=relaxed/simple;
-	bh=4dbZjQGSiQ3Uvilz1uWGVxI7SQKdAeYkXY6x+87P1EE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Y6S5swD6DnHsjigdNo9GN0NZj7DhXa5VWHILxJiQQM8e57uvlEkbqGDp9zAmq6r7o27I7h/4m2Kb4ffpJa7H3X2SlG0BTQhtHh+8i+/y6XDryBn0KdJQ39b874bQgkk0T9MoWj1Y2jBukYg3Jj63mocTdITZaRswcH56LfHVF8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=COsELM3d; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737984517; c=relaxed/simple;
+	bh=wBwfKx9WEzL0Yj7iv2tHVfsT5U2zNVKgBcChzeYkTyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PyDdtjW6KSLkBxa3BACm8yEd8ZqLhUDAm1UOCzaQOCtk+5icY2Jy2tw+8EQSKsX8WJE9YbAz19rXlHnwyen7gyruTXjided0bd2KyIuxyG6Glolj1E1LKsDKroxgHEIzTJdIWbmZwEIqExJmEGOmyFCvYoG17UsOkLEpCBl+g6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts; spf=pass smtp.mailfrom=unseen.parts; dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b=vxMygNh9; arc=none smtp.client-ip=139.162.151.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unseen.parts
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unseen.parts
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="COsELM3d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737976629;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0llw80E8nAjg6kMfEOzoPei4nanpbue7YefsY9gW++w=;
-	b=COsELM3dgMzqvxES3yiE/1iCKTW6mckRJV7B8/AVvEmfEs3SAt58Asoo0IgFILoNYu5k29
-	fBFSTjEQXJS4MWwknSPRBkiv8c2Xy/Cc+zdBfzbAHLOzoyM7Z/f6FRWzeb8BFXztoPRlie
-	qe9GX2oHEkEnaCuf0iM8NV5Gi4TtJI8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-190-pKVYD8WDM-O2xEBES3ipkw-1; Mon, 27 Jan 2025 06:17:08 -0500
-X-MC-Unique: pKVYD8WDM-O2xEBES3ipkw-1
-X-Mimecast-MFC-AGG-ID: pKVYD8WDM-O2xEBES3ipkw
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4388eee7073so25119385e9.0
-        for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 03:17:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737976627; x=1738581427;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0llw80E8nAjg6kMfEOzoPei4nanpbue7YefsY9gW++w=;
-        b=aGFN/7gYaHr8HeC5dmCSDrLl060+YNiwdEGBbIgTL0NA7lJY5YM8cumnQ7O/r8JStC
-         KVWUg1EVq8u5eAB++AR5I3rCq/WbTqWwUG2xw7UDt+L+EEulNddBklC/WklI8vBwcb15
-         //bM+BQWUTgv+7jLiiBE92mwHbwdzE06A4DJ0uR64ftn9/uml9ZwZQ0SHrv2D9cWaS12
-         slRXYBe9su0ElBRk/oSOJr//0PskyqGYkE3/xHPDjHZh+Xmerg5Ha+iTAThbE4M0p5TE
-         TZ2XIp8omDCyE2DxG2UriFOl9/uVyIkHPrxUz5QD/S1Xuf8lZgg197k8BZ8G/LOuxxLs
-         rpDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjDg9r/4JIdmH39Bphbm/50uy8ukfH4ruLJFq7KB8EI5Rzq+Wa+nF2BlgjnrRiqnHGIXGPG7f4fNM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx84WF+2V4vLYW4X0z6NL8IZvQd5fxNefCMH0hMYZFm3sF583Mj
-	y1AFvjYr9hL2WLouFiUfneOE1WArrICi/ORsdvxAnaxe6Cdy8h3YWYYOiqHeYWmMMOQBcnl/o/y
-	l2pKNa2tbW0XtSOL5Cx2aQlQWSHFLbkoHhQrjQ8Y2ewscy25LVMt32VIIog==
-X-Gm-Gg: ASbGnctpSDE2ggwrTF2XdtzbIqVTaZnA9z/3jbPeh6l0jlNcx55UWznpBayE9DDp3du
-	csAvdIMjpx/+rPW2u74vZoNK0CQh02BQZRTjVFYuVnQcRK+YnGIMMjJOTYaD3FlIdFUxFKbT+iu
-	VYWQuxNc4qtifAL+E6TZJGLVl7X6b6NVG+bZVGkRnAet6XRvN+cJJYwAn742ipAmL7M4xUJX9VU
-	3gmRwJ4kPPpPPI1r1cX17oWFvR6d+9ksv+pZa5K9blHir0qC5GKB6/JRx7LXeVby1EUSd/xMcRp
-	rNHVnQQqPMMqkvvtpDDvMiUjDiPzD5f1UAkB8pHpQgWA8SVUeSRoYSYdwZ+sjCRQXg==
-X-Received: by 2002:a05:600c:6d46:b0:434:92f8:54a8 with SMTP id 5b1f17b1804b1-438bcfd440dmr101052805e9.0.1737976626864;
-        Mon, 27 Jan 2025 03:17:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE5ZBkhc7Mo57S55YqkWjUaKcE0DvJ7v1EsH72AA8CbL1E0vvN/eQHzrpNG4sI4i71C/vJTUQ==
-X-Received: by 2002:a05:600c:6d46:b0:434:92f8:54a8 with SMTP id 5b1f17b1804b1-438bcfd440dmr101052395e9.0.1737976626396;
-        Mon, 27 Jan 2025 03:17:06 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438bd48a145sm128093025e9.16.2025.01.27.03.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 03:17:05 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-In-Reply-To: <Z5A6NPqVGoZ32YsN@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
-Date: Mon, 27 Jan 2025 12:17:03 +0100
-Message-ID: <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=unseen.parts header.i=@unseen.parts header.b="vxMygNh9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=unseen.parts; s=sig; h=In-Reply-To:Content-Type:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lP0T7f795wt9O6cEneFd8O1nW/DjYKsbv0oA6g5csSw=; b=vxMygNh9DcqVgPttcu5rOL5rma
+	mKNKBGDokTrpImq9eHVt5tE+Y6DerEZvh1fQvwX/9MYb/hUzjVdOs6dZAUwUV2qHE8fMoOo5rXtpY
+	92uLIk3/0e8YWHLU85jiQt/vZ8uHInePKoQ20rol8dIzRcrms7HJnbXazvx4bFYo12PzDtTAmTWo3
+	5CWufywRDqlMjoXh+d6zheKKnV9npvIlRNKATCmoW5DspZpIF25YF7L46olFS1uYzkz+w54XeoAgt
+	aBb0qnMPzrKKRYXhRzIFKMwz4wgXG9dYhOhJEChsZkC2SJDZ0MGp3ayzaw1QGy2bSqCbKGq6OKB6A
+	amktslmQ==;
+Received: from minute.unseen.parts ([139.162.151.61]:40488 helo=minute)
+	by minute.unseen.parts with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <ink@unseen.parts>)
+	id 1tcP9g-0003AM-1p;
+	Mon, 27 Jan 2025 14:27:56 +0100
+Date: Mon, 27 Jan 2025 14:27:54 +0100
+From: Ivan Kokshaysky <ink@unseen.parts>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>, Kees Cook <kees@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-alpha@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Michael Cree <mcree@orcon.net.nz>,
+	Sam James <sam@gentoo.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+	Chris Hofstaedtler <zeha@debian.org>, util-linux@vger.kernel.org,
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by
+ removing 32bit support
+Message-ID: <Z5eJ2p5IeNzPDuVH@minute>
+References: <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+ <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+ <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+ <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+ <2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de>
+ <alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk>
+ <78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de>
+ <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+ <Z4uECl9wQ2sqdKym@minute>
+ <5cff63bf0fc9e62772fb24bc919c591acbd10d53.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Kyx7FKwWgf96oGl1pvRFje1_DShg-J1B4Uio0jXkPt4_1737976627
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cff63bf0fc9e62772fb24bc919c591acbd10d53.camel@physik.fu-berlin.de>
 
-On 22/01/25 01:22, Frederic Weisbecker wrote:
-> Le Tue, Jan 14, 2025 at 06:51:35PM +0100, Valentin Schneider a =C3=A9crit=
- :
->> ct_nmi_{enter, exit}() only touches the RCU watching counter and doesn't
->> modify the actual CT state part context_tracking.state. This means that
->> upon receiving an IRQ when idle, the CT_STATE_IDLE->CT_STATE_KERNEL
->> transition only happens in ct_idle_exit().
->>
->> One can note that ct_nmi_enter() can only ever be entered with the CT st=
-ate
->> as either CT_STATE_KERNEL or CT_STATE_IDLE, as an IRQ/NMI happenning in =
-the
->> CT_STATE_USER or CT_STATE_GUEST states will be routed down to ct_user_ex=
-it().
->
-> Are you sure? An NMI can fire between guest_state_enter_irqoff() and
-> __svm_vcpu_run().
+On Sun, Jan 26, 2025 at 06:15:43PM +0100, John Paul Adrian Glaubitz wrote:
+> Hi Eric,
+> 
+> On Sat, 2025-01-18 at 11:35 +0100, Ivan Kokshaysky wrote:
+> > On Sun, Jan 12, 2025 at 11:39:01PM -0600, Eric W. Biederman wrote:
+> > ...
+> > > --- a/arch/alpha/include/asm/pgtable.h
+> > > +++ b/arch/alpha/include/asm/pgtable.h
+> > > @@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+> > >  
+> > >  extern void paging_init(void);
+> > >  
+> > > -/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
+> > > +/* We have our own get_unmapped_area */
+> > >  #define HAVE_ARCH_UNMAPPED_AREA
+> > 
+> > Just remove the definition. As the comment suggests, the only reason
+> > it exists is ADDR_LIMIT_32BIT, which is gone.
+> > 
+> > > --- a/arch/alpha/kernel/osf_sys.c
+> > > +++ b/arch/alpha/kernel/osf_sys.c
+> > > @@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user *, txc_p)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > -/* Get an address range which is currently unmapped.  Similar to the
+> > > -   generic version except that we know how to honor ADDR_LIMIT_32BIT.  */
+> > > +/* Get an address range which is currently unmapped. */
+> > >  
+> > >  static unsigned long
+> > >  arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
+> > > @@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned long addr,
+> > >  		       unsigned long len, unsigned long pgoff,
+> > >  		       unsigned long flags, vm_flags_t vm_flags)
+> > >  {
+> > > -	unsigned long limit;
+> > > -
+> > > -	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+> > > -	if (current->personality & ADDR_LIMIT_32BIT)
+> > > -		limit = 0x80000000;
+> > > -	else
+> > > -		limit = TASK_SIZE;
+> > > +	unsigned long limit = TASK_SIZE;
+> > >  
+> > >  	if (len > limit)
+> > >  		return -ENOMEM;
+> > 
+> > Likewise, just remove these functions. The generic_get_unmapped_area()
+> > works fine, tested on up1500.
+> 
+> Can you send a follow-up integrating those changes? It would be good if
+> SET_PERSONALITY() could be fixed on alpha for v6.14.
 
-Urgh, you're quite right.
+Oh, the changes I proposed are mere cleanup suggestions.
+The original patch would do just fine.
 
-> And NMIs interrupting userspace don't call
-> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_=
-mode()
-> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
-> implementing common entry code, I can't speak for the others.
->
-
-That I didn't realize, so thank you for pointing it out. Having another
-look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
-when it really isn't :(
-
-> Unifying the behaviour between user and idle such that the IRQs/NMIs exit=
- the
-> CT_STATE can be interesting but I fear this may not come for free. You wo=
-uld
-> need to save the old state on IRQ/NMI entry and restore it on exit.
->
-
-That's what I tried to avoid, but it sounds like there's no nice way around=
- it.
-
-> Do we really need it?
->
-
-Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
-this leads the IPI deferral logic to observe a technically-out-of-sync sate
-for remote CPUs. Consider:
-
-  CPUx            CPUy
-                    state :=3D CT_STATE_IDLE
-                    ...
-                    ~>IRQ
-                    ...
-                    ct_nmi_enter()
-                    [in the kernel proper by now]
-
-  text_poke_bp_batch()
-    ct_set_cpu_work(CPUy, CT_WORK_SYNC)
-      READ CPUy ct->state
-      `-> CT_IDLE_STATE
-      `-> defer IPI
-
-
-I thought this meant I would need to throw out the "defer IPIs if CPU is
-idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
-which is a bummer :(
-
+Ivan.
