@@ -1,81 +1,51 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AD71D63CE
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 16:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F219546BF
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 16:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738081549; cv=none; b=qJTKc1wZ2cxCSksdHmFMutQ1m/89izvNI/I9u7HfO90NtIM0w53gGaLCEkskTU+NnVnWqAsc7VGaO8bHPms979Abz2Qd6SKeptKW+XMcF8T4Tkmnb+zKPArOZRjG9E0e9hed77rYxM2WBpd1eIMymCP6DaSivMlkoiKyfXqDSsY=
+	t=1738082736; cv=none; b=fNnu0d6VciYdsDjcufAPN866Hi+hgSL/y5eamzcHHvmWp5CosjbbI+C7I8fI60saAmzJBfpitR+q9/yFvHU1Tj0DsQxuaY/DsJY2o3x8cC5JLB5Mll7Xehp4aQHngUSg/A3ehTSghZ/IyQJxqncQ4FjnwETsycvRtdn9TgQDw7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738081549; c=relaxed/simple;
-	bh=jvB3dDUGhF3Hu8AIvKOd8DjrgajpM6JZ/iGC0VGHckA=;
+	s=arc-20240116; t=1738082736; c=relaxed/simple;
+	bh=cdU4GTM/bJvuqIR1zxMvjZ+i6L8USuTCMLnCGs7dnZE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMRVW3s5VajcPcncxEXU1tyZ1iDXSXe9N+fSUOMc5taRH3/+CwMcAzWWR4nyfvUH27GRNo6rMdvxDGfNVHQ56DYipdZeO6EyAmHLgE18TcNqjJKMTbDC4SRqMtANSbb0H6cVE5snTFLya+L+MMZX3g6gBQYXcJwllZSKZ9G4QI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 2308C72C8CC;
-	Tue, 28 Jan 2025 19:25:45 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 0E2917CCB3A; Tue, 28 Jan 2025 18:25:45 +0200 (IST)
-Date: Tue, 28 Jan 2025 18:25:44 +0200
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Oleg Nesterov <oleg@redhat.com>, linux-snps-arc@lists.infradead.org,
-	Rich Felker <dalias@libc.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-mips@vger.kernel.org,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Jonas Bonn <jonas@southpole.se>, linux-s390@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-riscv@lists.infradead.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	strace-devel@lists.strace.io, linux-arch@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	Renzo Davoli <renzo@cs.unibo.it>, linux-um@lists.infradead.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	linux-m68k@lists.linux-m68k.org, Borislav Petkov <bp@alien8.de>,
-	loongarch@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Brian Cain <bcain@quicinc.com>, Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-parisc@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Richard Weinberger <richard@nod.at>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Alexey Gladkov <legion@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 3/6] syscall.h: introduce syscall_set_nr()
-Message-ID: <20250128162544.GE11869@strace.io>
-References: <20250128091636.GC8601@strace.io>
- <e76df471-1346-459a-9f24-fa053d7dcbe8@csgroup.eu>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VD0Tapeh64Dbw2tMJ0swC6IIVKoYV9SW8AXP139ucc0uws/MX0N1dpwngIsD8KV1XfTmXZl0bcFgHMGKHQ5fRRg43UKaiKI4hb9MxVslT9vyUVDZEn5AbZSc26uxdGgKsWRsAHUQt2wcJONzhFMW6s9/nyYifoE7KkI/gdRxhm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dU4N4Rtd; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dU4N4Rtd"
+Date: Tue, 28 Jan 2025 16:45:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738082730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kFn2LRktG0Yh49QeDRr4sIglpLvhfNsWy0wwyTzZW7o=;
+	b=dU4N4RtdaNXQdjsYxVWbiur5qO45uVfOc1rAYBA/k2e7UilCJWv/EKZkThc4R+Fj+NlLXx
+	TxrCFFhqKRqApt47wQR3eRHw2rTDgDOFrFrVhdHPKOfjUCPT6E0OrzS5pc15SfK73+OHUN
+	W7nMZ90raGJsKMl11CBoCpIcfcrc3Bo=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Seth Jennings <sjenning@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vitaly Wool <vitaly.wool@konsulko.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Dan Streetman <ddstreet@ieee.org>, WANG Xuerui <kernel@xen0n.name>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH 1/2] mm: zbud: deprecate CONFIG_ZBUD
+Message-ID: <Z5kJpCtpfH3bJrbE@google.com>
+References: <Z5gdnSX5Lv-nfjQL@google.com>
+ <42b24914-719a-4ff1-9d77-f6517717344f@suse.cz>
+ <Z5j4HrzbT2sEOIqn@google.com>
+ <CAC8qmcDZ8DeXEX23N0Xscjg_wR6HKL=AVE_5Y+68gCeLzv4bEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -85,100 +55,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e76df471-1346-459a-9f24-fa053d7dcbe8@csgroup.eu>
+In-Reply-To: <CAC8qmcDZ8DeXEX23N0Xscjg_wR6HKL=AVE_5Y+68gCeLzv4bEQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jan 28, 2025 at 04:13:52PM +0100, Christophe Leroy wrote:
-> Le 28/01/2025 à 10:16, Dmitry V. Levin a écrit :
-> > Similar to syscall_set_arguments() that complements
-> > syscall_get_arguments(), introduce syscall_set_nr()
-> > that complements syscall_get_nr().
-> > 
-> > syscall_set_nr() is going to be needed along with
-> > syscall_set_arguments() on all HAVE_ARCH_TRACEHOOK
-> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
-> > 
-> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >   arch/arc/include/asm/syscall.h        | 11 +++++++++++
-> >   arch/arm/include/asm/syscall.h        | 24 ++++++++++++++++++++++++
-> >   arch/arm64/include/asm/syscall.h      | 16 ++++++++++++++++
-> >   arch/hexagon/include/asm/syscall.h    |  7 +++++++
-> >   arch/loongarch/include/asm/syscall.h  |  7 +++++++
-> >   arch/m68k/include/asm/syscall.h       |  7 +++++++
-> >   arch/microblaze/include/asm/syscall.h |  7 +++++++
-> >   arch/mips/include/asm/syscall.h       | 14 ++++++++++++++
-> >   arch/nios2/include/asm/syscall.h      |  5 +++++
-> >   arch/openrisc/include/asm/syscall.h   |  6 ++++++
-> >   arch/parisc/include/asm/syscall.h     |  7 +++++++
-> >   arch/powerpc/include/asm/syscall.h    | 10 ++++++++++
-> >   arch/riscv/include/asm/syscall.h      |  7 +++++++
-> >   arch/s390/include/asm/syscall.h       | 12 ++++++++++++
-> >   arch/sh/include/asm/syscall_32.h      | 12 ++++++++++++
-> >   arch/sparc/include/asm/syscall.h      | 12 ++++++++++++
-> >   arch/um/include/asm/syscall-generic.h |  5 +++++
-> >   arch/x86/include/asm/syscall.h        |  7 +++++++
-> >   arch/xtensa/include/asm/syscall.h     |  7 +++++++
-> >   include/asm-generic/syscall.h         | 14 ++++++++++++++
-> >   20 files changed, 197 insertions(+)
-> > 
+On Tue, Jan 28, 2025 at 10:04:27AM -0600, Seth Jennings wrote:
+> On Tue, Jan 28, 2025 at 9:37 AM Yosry Ahmed <yosry.ahmed@linux.dev> wrote:
+> >
+> > On Tue, Jan 28, 2025 at 11:21:10AM +0100, Vlastimil Babka wrote:
+> > > On 1/28/25 00:58, Yosry Ahmed wrote:
+> > > > The zbud compressed pages allocator is rarely used, most users use
+> > > > zsmalloc. zbud consumes much more memory (only stores 1 or 2 compressed
+> > > > pages per physical page). The only advantage of zbud is a marginal
+> > > > performance improvement that by no means justify the memory overhead.
+> > > >
+> > > > Historically, zsmalloc had significantly worse latency than zbud and
+> > > > z3fold but offered better memory savings.  This is no longer the case as
+> > > > shown by a simple recent analysis [1].  In a kernel build test on tmpfs
+> > > > in a limited cgroup, zbud 2-3% less time than zsmalloc, but at the cost
+> > > > of using ~32% more memory (1.5G vs 1.13G). The tradeoff does not make
+> > > > sense for zbud in any practical scenario.
+> > > >
+> > > > The only alleged advantage of zbud is not having the dependency on
+> > > > CONFIG_MMU, but CONFIG_SWAP already depends on CONFIG_MMU anyway, and
+> > > > zbud is only used by zswap.
+> > > >
+> > > > Following in the footsteps of [2], which deprecated z3fold, deprecated
+> > > > zbud as planned and remove it in a few cycles if no objections are
+> > > > raised from active users.
+> > > >
+> > > > Rename the user-visible config options so that users with CONFIG_ZBUD=y
+> > > > get a new prompt with explanation during make oldconfig. Also, remove
+> > > > CONFIG_ZBUD from defconfig.
+> > > >
+> > > > [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
+> > > > [2]https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/
+> > > >
+> > > > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > >
+> > > Seems weird not to Cc the folks listed in MAINTAINERS for ZBUD? Unless their
+> > > addresses are known to bounce?
+> >
+> > Ugh I had them in the CC list, but I played around with it and probably
+> > lost them :/
+> >
+> > Seth, Dan, apologies.
 > 
-> > diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-> > index 76020b66286b..712daa90e643 100644
-> > --- a/arch/arm64/include/asm/syscall.h
-> > +++ b/arch/arm64/include/asm/syscall.h
-> > @@ -61,6 +61,22 @@ static inline void syscall_set_return_value(struct task_struct *task,
-> >   	regs->regs[0] = val;
-> >   }
-> >   
-> > +static inline void syscall_set_nr(struct task_struct *task,
-> > +				  struct pt_regs *regs,
-> > +				  int nr)
-> > +{
-> > +	regs->syscallno = nr;
-> > +	if (nr == -1) {
-> > +		/*
-> > +		 * When the syscall number is set to -1, the syscall will be
-> > +		 * skipped.  In this case the syscall return value has to be
-> > +		 * set explicitly, otherwise the first syscall argument is
-> > +		 * returned as the syscall return value.
-> > +		 */
-> > +		syscall_set_return_value(task, regs, -ENOSYS, 0);
-> > +	}
-> > +}
-> > +
-> >   #define SYSCALL_MAX_ARGS 6
-> >   
-> >   static inline void syscall_get_arguments(struct task_struct *task,
+> I haven't contributed in this space for quite some time so I defer to
+> more active contributors on this.
 > 
-> > diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
-> > index 521f279e6b33..7505dcfed247 100644
-> > --- a/arch/powerpc/include/asm/syscall.h
-> > +++ b/arch/powerpc/include/asm/syscall.h
-> > @@ -39,6 +39,16 @@ static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
-> >   		return -1;
-> >   }
-> >   
-> > +static inline void syscall_set_nr(struct task_struct *task, struct pt_regs *regs, int nr)
-> > +{
-> > +	/*
-> > +	 * Unlike syscall_get_nr(), syscall_set_nr() can be called only when
-> > +	 * the target task is stopped for tracing on entering syscall, so
-> > +	 * there is no need to have the same check syscall_get_nr() has.
-> > +	 */
-> > +	regs->gpr[0] = nr;
+> If it is true that zsmalloc has no/negligible deficiencies compared to
+> zbud, it seems reasonable.
+
+Zsmalloc has been the default allocator and is widely used, I am unaware
+of any zbud users in prod settings.
+
+> > but at the cost of using ~32% more memory
 > 
-> Doesn't the same as for ARM64 apply here as well ?
+> I do push back here as this % could be highly variable depending on
+> the compressibility of the data.
 
-I carefully checked all affected architectures and added that
-syscall_set_return_value() call only where I think it's needed.
+100% agreed, this is just an example from this specific testing
+scenario.
 
-On powerpc it's not needed with the current implementation: their
-do_seccomp() sets -ENOSYS before __secure_computing() invocation, and
-their do_syscall_trace_enter() sets -ENOSYS in case of an invalid syscall
-number.
+> If the average compressibility is ~50%, zbud should be very memory efficient.
+> 
+> If the average compressibility is very high or very low, it is less
+> memory efficient.
 
-
--- 
-ldv
+That being said, the average compression ratio hovers around 30% for
+workloads I am familiar with. I think I have seen similar ratios from
+others as well but I will let others chime in.
