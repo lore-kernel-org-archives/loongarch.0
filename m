@@ -1,86 +1,137 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D980D51C
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 10:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8290C1552E3
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 10:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738059294; cv=none; b=lIBJ/E1h0jA9+difwr0NdvHGfledGxdv1HlmAilyZ2Xgc6nPuyM2J2TB7kfEY1H59rKcs5enhd8Ao9woyj05C8/rQ3P5dd5wmwqqHEBkwQZHN/36MNRNOoQjGEnSD2kR3OmcHv+R7DpQRwz2zfgLLAJ/Wc2aPFAb0vpPXo9ExPw=
+	t=1738059677; cv=none; b=Tx/OptqyHkyYwc45C9V9hl4owZY6kfbsxD2bXZS8bGSKB76RSSgS81eoWc7n2moHffE1ZkK6zXiRajAJoJpmld+yxODinD+z9uYCGHNvMAvsIQfXZcMxNWAdrQ7tmnQEV3HQgdup9z/kwkHKBbpM/LQ+ID2mcsWq8xwNuoJipNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738059294; c=relaxed/simple;
-	bh=5lvs8HiG7TGF6/vHKmJWpTOuUvsPsw8S5GITAUAn4MM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ba3Q++2fOfnFYc+fN9lh9VnuGhGM9qUEnpjid1KyBX1Rk2slDT7ZmDzRP0v9MA7wCNSW6fJ6n6xYDUPmgI3L49UiISfqgFxigzr+qPmUpMcMukWnk3Ano/6Dyp26QwtApaT/XvqdTQlrGKQg2Gq1PwGS89WA1a7K92XpIfLHvHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=U7oqzcEt; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1738059677; c=relaxed/simple;
+	bh=7xEHRJYaUsQvrBOYsPKXuqOIfVMZpJc7qzGeGCJiEMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XoG7nKISDzNEjH0+RDP7SaEjJ92/dCKs0MRQZvA+/6F0qzI7R6Bsi6dB79mdJf9lNpOsW8+lar3AW2Lv/IeYp+oBV8IojfvaDejyUEY5VSfgFF805XO293/dn/PK2G6AIAfc0LlOGOib9kWtii/dSfmQrXoS7Esmxl29WCMsV+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g36uavjX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yx9Jc0AR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g+Fgny1H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5S+hwuSr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="U7oqzcEt"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-467a17055e6so59337541cf.3
-        for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 02:14:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1738059289; x=1738664089; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+OJo5OrtdbsUfbDREZKvi2Xm/rwCKQG5dGU4viVWio=;
-        b=U7oqzcEtOU0NxVsoyHpG/iWX4ZVJ/toL+KxxzHLjKySxYJMYId6lvf8oH4qBG/u3eG
-         71eqZExE6SKfRvtQl67qf60yKcubvt5wP5w4R4zgrx2a5HJq7xAtGXu3kXxqC6eySux4
-         f6mdZQdskkjYSyQ28kAjBDNKT5AXtDOULSczbDFkVIYPtnyI+XZx9nIN4zuT1PLkV4Xr
-         jafNDeVVKHDRKROkIPnRm7vaXbqi3VP4QB3LnYrxxrfBDtZe8TXGlOZS4jXwEMRI/FIW
-         dLCFQno6WihV30w21FMswZ5tSgSKBsqVJXitwMz9mxMynV7ScjDOrXpkGDgNXIpgCwsO
-         3j7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738059289; x=1738664089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T+OJo5OrtdbsUfbDREZKvi2Xm/rwCKQG5dGU4viVWio=;
-        b=oCAbI+Y31yI03/lHfIzAM/pw1INCMv4Xc/lm3uBLLmURvymXYf+7RPyiwXJzhDzFFv
-         SZArebbvgSpe6m7IURGGMfIESL7SrMTnWscVphFHAcJWzW769xGB8u2SHQRsVVENGGIz
-         46X6DtUNrpQSeEdW5lwupgSRTCW5S8ByCDAe36z2u1v8gRd4RORhfrWeb/mwRQ9NCTtc
-         UIYumhRZ/taMZJMfEnwMe9kJOAb/gDv7QeIbq56En4BC7X2Ul1AkFt0I4PnMYpl+0NlD
-         e1gNN577bZp2XwOblT/0xYv1HKLgul37i60ETNYjDWfp22JsxU1QmiYCBsyrCpqEMW3h
-         yUCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEIpYlQXFjjaiKfbgiWqNLvsqpU44AGvpt+PSfEHDBzsTHgFbXhLTXkNEIB/0/SGNQaOEbLQLIDdg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YziV5CjGMKGBnS4AawHusjpbfycbfxbudcmtaIVhOr+RL0ABVdH
-	B4uiF+WR/RtTAWeY3lbqr6EOndVzTcwHBjkrxt3EjvhQ+vjoC4WL3yHctZNNc+SWiu6FP+BSvbx
-	V
-X-Gm-Gg: ASbGncucCRpMLhRTJSGyQ3AkR1iqVMQnUjou/9K7c8g3ao4olK8lvWil5qixVLjdm0L
-	06ojjp9skAC7bUTYmluuFgMETo6MFgPE7PCGTBfKB8m1+q8cQblcp15PBg6YYaYKjiuyUdcHTge
-	l3ROGgoEyPiYZixflceuYfVFy4eweJ3W6Nxrm4ytiEL1+7a5kMXywU4ZHyPDGAgvzdzF88pqWL0
-	BTU6y2AZYsLHgHbFCmF7EvcBe45q1CwyEu+QltJd442Lr6J9HpEhT3AjBR3cnEPVBQBxg1zgXLS
-	RDG/fNvkjiM7NA==
-X-Google-Smtp-Source: AGHT+IFALe6WVLHYMuH9iT72w4NXQewmaC4+fVCySImFG7ZmNiWWkYcz7G2f61JtCoHmT0Mt8hGVxQ==
-X-Received: by 2002:a05:622a:52:b0:467:6cce:44ba with SMTP id d75a77b69052e-46e12b96babmr592982961cf.43.1738059287990;
-        Tue, 28 Jan 2025 02:14:47 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-46e6689dab7sm50327711cf.44.2025.01.28.02.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2025 02:14:47 -0800 (PST)
-Date: Tue, 28 Jan 2025 05:14:42 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vitaly Wool <vitaly.wool@konsulko.com>,
-	Miaohe Lin <linmiaohe@huawei.com>, Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/2] mm: zbud: deprecate CONFIG_ZBUD
-Message-ID: <20250128101442.GB691108@cmpxchg.org>
-References: <Z5gdnSX5Lv-nfjQL@google.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g36uavjX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yx9Jc0AR";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g+Fgny1H";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5S+hwuSr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 33395210FE;
+	Tue, 28 Jan 2025 10:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738059672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
+	b=g36uavjXeMSLDP/wQ1HXXbBmwofmqc4NuILpzZ/cEJfjqepzlsgdZZ/RletOmfPNMc2nRG
+	UtssTLKRpWjUU+m1jT41JmtCQe7rlDg4OROZd0GoWX0APM2D0lmt+4dkJamGGE9a/GfAe8
+	tj8xKX8wcHlMsk3YfZdhsvIDuTtEwaM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738059672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
+	b=yx9Jc0ARX9Bx3AqfjaSLTx4wSNg9Uba/gustUdf1ReUXpZsyyeDaC7wd7e86uJIarhToKM
+	92eCJLK0GGSNbgDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=g+Fgny1H;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5S+hwuSr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738059671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
+	b=g+Fgny1Hr3qqaouwF1HbBTLA7jY1DvL3G4Bu5oJkzQOfsn127wx4bPIRMy+lSiKfmRU+lX
+	pOdAB/9MW+TXdi0VFCKELw60hFSrf8FN2RWurftmDo+LSlze72EHrQxGCusCXJIMzr6e3k
+	2albBV0vT7bK6ne6vXkQaB/QdmLLRJI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738059671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
+	b=5S+hwuSrQgYmhVb7vuI3N0z1g47DRpbJaEFqccOl1kfSxzMK9/a3wwM2OyiMSm5q6XuxMc
+	3xV/1dKQkx7LvgDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12EB013625;
+	Tue, 28 Jan 2025 10:21:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ybdDBJevmGfrbAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 28 Jan 2025 10:21:11 +0000
+Message-ID: <42b24914-719a-4ff1-9d77-f6517717344f@suse.cz>
+Date: Tue, 28 Jan 2025 11:21:10 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm: zbud: deprecate CONFIG_ZBUD
+Content-Language: en-US
+To: Yosry Ahmed <yosry.ahmed@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin
+ <linmiaohe@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+References: <Z5gdnSX5Lv-nfjQL@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 In-Reply-To: <Z5gdnSX5Lv-nfjQL@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 33395210FE
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[konsulko.com,huawei.com,cmpxchg.org,gmail.com,linux.dev,kernel.org,xen0n.name,kvack.org,vger.kernel.org,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.cz:mid,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Jan 27, 2025 at 11:58:21PM +0000, Yosry Ahmed wrote:
+On 1/28/25 00:58, Yosry Ahmed wrote:
 > The zbud compressed pages allocator is rarely used, most users use
 > zsmalloc. zbud consumes much more memory (only stores 1 or 2 compressed
 > pages per physical page). The only advantage of zbud is a marginal
@@ -110,12 +161,6 @@ On Mon, Jan 27, 2025 at 11:58:21PM +0000, Yosry Ahmed wrote:
 > 
 > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
-Can we just drop it right away?
-
-The two cycles for z3fold were basically in the "not worth bothering"
-category, since very few downstream production systems rebase that
-frequently.
-
-zsmalloc has been in use on everything from mobile devices to large
-servers for years. It's been the default since 6.6 (Oct '23) for
-zswap, and the only option for zram from the start.
+Seems weird not to Cc the folks listed in MAINTAINERS for ZBUD? Unless their
+addresses are known to bounce?
+And ZRAM maintainers should also be Ccd?
