@@ -1,65 +1,65 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD28A1D9324
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 05:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20C1DDC21
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 05:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738042407; cv=none; b=gztuXbq8GIIIiJda0FhfHyS0bfwXrxyQFyzIBUhmnvpUO7bO0cnm5PYOd9JUWGXFrMkyWjvfv9EwUIL0DavwNtIhaeQrvR8rRH6k+X3IdOzqMqN39DiYmABW0NfXlnw8j+W+Id1WISdvmJnkEnxRsoYyeNBN4ggaB7XT+dOABJw=
+	t=1738042409; cv=none; b=ZLNU+Q28rpGFPRo3WvJD/cZXy1qoscEqunnq7tzChmq0c/t/ywQdeMaWKiXGcT28t4D2Gr+3YmaClpLDfVuEJrv9RG1cHdfHvVLBIOyvsIzyjHYP7tVH9qhwNQa437XzNG7K8wuJnIsAAr0zO4+4Fbtl6QE/ZXVAs1/EXD7Yl+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738042407; c=relaxed/simple;
-	bh=ji6jPR39ZKDby+guv8CCAiBLyKbpGz9Kynms9BH9fJU=;
+	s=arc-20240116; t=1738042409; c=relaxed/simple;
+	bh=j7ZO4FXV1Hf14yiJt7JLsFHCp0FLrXbd7xunBuFQ9j8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NVauQHAz2plI2hXw0Q6I3yiznyWYvtnor6GmJBO1XtisOgpKqQRRgTARRATnz+eS3FaSVKjckZ/8WLKWaV1RnGIaBZkK2OrkmGD5qw3HfujKWGC66v+F8BZ6ARLl4Y/xNyuqGjwH3AFZSE9pQdGnt0rdrYxzSpOr0geqoZ3ncAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qMfkOl+J; arc=none smtp.client-ip=209.85.216.42
+	 In-Reply-To:To:Cc; b=muVSy99vQWW9yGdqdEooqFhIn7Tgzqh5SfcLnMuGI7CtwHo+dPXpE0IpPA+l3Tr/sWxHHIjrzOAkU7p4OcBpgjZCYfE4dMUDDHRLOJhhc9Sq5FUuk+yunnV9droX1m1IX9hDspt5Wstd0ScYpYcFaSqF0MRZwTQF4Pb1j9NvTt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PlMC/hCO; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qMfkOl+J"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2efe25558ddso6926388a91.2
-        for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 21:33:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PlMC/hCO"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2eeb4d643a5so9175342a91.3
+        for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 21:33:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738042405; x=1738647205; darn=lists.linux.dev;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738042407; x=1738647207; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a+zSCWqqyKc551VynXTcxotuXwo5gv9XFD/e4PnRFpw=;
-        b=qMfkOl+Jki6GF+8F3udXop3PfATeyLkwSO22/iN9NulK4SMs2/x+cFPPELR76V6udL
-         tzzdW4vYRgsnpXxspW0lSHkz86HcuPAf375n64PEN6YpstTT1o3tPBN61VlIOu1/xD/a
-         xpgp2dt02/WsrAkpWH680kOo/yNHWUjccoGzDcNmmPtaxM5HPtL1+1ekkWGyTDdcRXFt
-         ZcYJot2MJ0keTNyB0piQUObrvovu1BnEWUUSI9ovl1niJCU+QshBuPFy6Kexnpt8kw3+
-         Utu0X0ORIJ8r1pCn6waqZpR8rcfasmYbN3bDTlmoZ4UarMnOCuU2Uz5YhOEwKQ7lo8do
-         0GNg==
+        bh=p30t3bidsL8DH7wJ55Ht0+lyyt5ZTgdtBsNdg8zXD0s=;
+        b=PlMC/hCOX414V6iJGYmnp6XL/J/a6nLKTCXzAw8D0c19w3h6CydTKxIoumrPgtuE+R
+         JlyaveGql9djXL+69XN1Hde82mU1XposCr5oMMtpbdz1hzR7q2NjgsbwKkvnymNilj9d
+         Q+QYT9QOJ4qk0Alzly2EXt0B4pNWE4QPPTcDup6EiMwUfSxcoVOfdLIlAParWr5jGc8O
+         ek964o6tlj/QilgZKoZ/yQ0VW1fiO0CcKw0DC6ByD03p7dRccodB25HMVWNIvRpf1AfA
+         2//Lc2RuwS7HmyuAr60h3k2V1qJ3+RrpqHZ2xwFljhJV0ecz4/Jw6ISMnJfNR74y+8E+
+         MI3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738042405; x=1738647205;
+        d=1e100.net; s=20230601; t=1738042407; x=1738647207;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a+zSCWqqyKc551VynXTcxotuXwo5gv9XFD/e4PnRFpw=;
-        b=ZTlFq/tIF9v1/INcEOGu2Uv9CiD3j25XA9Ea9zrA3fYF3KYU3tufIJ3u7dimJxtl/O
-         kK9Xh9pa3Gxa59UNxPBz+FoAZpyOAntF/zD2U/eaedUOnbUtR7CyfFUY9QeDAkjXOl7c
-         Iq7A9RIEb1Nn8iVxL/aw/roipj5v4HlVnWThc8FBJZjybu6+Mu+KLJ1ZUdCe+Yt3DmVR
-         SSs1g2E5k0CkehytverOeGtyGgJAwQogt6n9FuYK7GCBOR1Gb9RQ1cJZN4HNSVixrDO7
-         cLmb0sX4kFSzePsRaBY8AC+P0Ik29Cr7g/0mNFwaWgn35eb4cPY4uUWpSRQx+h8LrxL3
-         CfTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGGhSk20brIYBnjOTTOkSFbGW98MXiYHPDazHcUPjqkud4qL7wQT3NTHf60VW8spzXLHBon2cK1zQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzmdefGJrmt2AFqYZ7jcHKWsleW3NnMzMd43lBESXizfPZ6uKsz
-	Xsnvsd2LdLqsRJXibu7zGWhwTSN+VaGL6tMm2gCJoXiS0FMrEjHQeMa/Si+fNfo=
-X-Gm-Gg: ASbGncu7MN1Bl5WcLbJ31CoKjzCEQjXYfpoLa+ZNYlJu8SeAcsPLIhSNUtz+BPCh+2J
-	qeL0xWbaAHHCVt/PU1ZdFpWq7uubYtzsrDWxtbxFoJ9fMEfl/Jf0OaPD48JaW/N/Pv6h2C9aRnE
-	fT3338rMAkNrXSDWrFeie7f0JxLNJSI7VNFD/mCTwfOKvW2bj98bj17ojehN/9MdttNjOxcz10g
-	pVToTmwFXNJ9Ul3/cJ80UiFTqg+x0Lzf9dO/jd7Ja9UnjirJHfDw/Hy/PnKM2s5aDyxbm1P/ZN0
-	XuUsGDp48PBjzkJq+3f3UjyyzE1FQMI=
-X-Google-Smtp-Source: AGHT+IGoqJuE7I9wjQnsr+4QEv87Cr0QHQMrSNjxO8sTq0Cpmvr1lWpaGmvrwMjyc6dFwhn5oHxpZQ==
-X-Received: by 2002:a17:90b:50c3:b0:2ee:8aa7:94a0 with SMTP id 98e67ed59e1d1-2f782d732e0mr54673387a91.32.1738042405112;
-        Mon, 27 Jan 2025 21:33:25 -0800 (PST)
+        bh=p30t3bidsL8DH7wJ55Ht0+lyyt5ZTgdtBsNdg8zXD0s=;
+        b=Y/onioW5WUru9HwIlZif6Ax0IL0zjpy3NvAGINKARwkERLEK3RuCQEK/+ZvZPzrOIB
+         sxVRBu3Pt30ggYQfwvI65E8m4CkvalVyMss3A5eNfZkWav6wb0jotcUtZNmLvAwaiX0f
+         XAHfdzmQJjNdyUIDWA/vVvShOz6UGaC5keME1tqrJzYgf40vUrHABS0q123OSB2QDKGb
+         eGwmHqfAiEgTFytbKfu50PFKnMFNlt4lecOVmChv3apQuXdOD2czWxtkh5ZneakTEwcq
+         hOcVs1HzmHAUcq/IVioRIm+O1y48jEL5hMrAT9tOxpOBOXvzRm1P0NEyjJnbwE1V7a2z
+         ddbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf4z69wHoEQDdYSzZU2hoKjsojYm/pEgcotAHck2eiW2DxTHZ/Kc5eU644pHysOxFcIjhhmG4avrM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZNZ7pqaFEBDGjS2UKrh1iUAparyeq0SJTPuefh/7uv304+b6u
+	MxEPLuBGtX7HyrtVwYPVE3vVTdbFgOb5Qh/GCX8ZEKVVSDKvH7ettGgwYtLOcPA=
+X-Gm-Gg: ASbGncsPEcDE1Y3LhHxsmJ+2ufipk8qtV8eCCjdyqGNWa7OmJSX0rEELEE/yd5kMOTa
+	TuVbMD6Njo9WSrJq4xbeZ08d5MOAJKiIhZs6meViWFVfYDZ63iK2jhL1cHFFqHdEumCkgL0VmxR
+	iHTzuHVFCPCDL9vNoXDgeXKUX3IOHiYppmxUeVqxPU6Dj7m4VfBKp8+jaBme+K136xKLzh10zXl
+	Mfuyv9tPMbAkYNf9n5IUeQxjksMiILaJ4dh7YgzRkTRgpLPTp1FHoi2JXlWLL1iIsbx4ZC32taA
+	3vInilrbj5j6JnSpo4kGzmjCc3fzR6k=
+X-Google-Smtp-Source: AGHT+IGkVxybbhmMu57xJQJzMyQwkOMbXHCtIM1pnr7yMYLR6mnolYIlXLb9ipU14x5Wd4npsIBS3g==
+X-Received: by 2002:a17:90b:2805:b0:2ee:9e06:7db0 with SMTP id 98e67ed59e1d1-2f782c9406bmr66373912a91.11.1738042406754;
+        Mon, 27 Jan 2025 21:33:26 -0800 (PST)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7ffaf9e98sm8266247a91.38.2025.01.27.21.33.23
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7ffaf9e98sm8266247a91.38.2025.01.27.21.33.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 21:33:24 -0800 (PST)
+        Mon, 27 Jan 2025 21:33:25 -0800 (PST)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 27 Jan 2025 21:33:11 -0800
-Subject: [PATCH v4 3/4] LoongArch: entry: Migrate ret_from_fork() to C
+Date: Mon, 27 Jan 2025 21:33:12 -0800
+Subject: [PATCH v4 4/4] entry: Inline syscall_exit_to_user_mode()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250127-riscv_optimize_entry-v4-3-868cf7702dc9@rivosinc.com>
+Message-Id: <20250127-riscv_optimize_entry-v4-4-868cf7702dc9@rivosinc.com>
 References: <20250127-riscv_optimize_entry-v4-0-868cf7702dc9@rivosinc.com>
 In-Reply-To: <20250127-riscv_optimize_entry-v4-0-868cf7702dc9@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -79,167 +79,166 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5547; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=ji6jPR39ZKDby+guv8CCAiBLyKbpGz9Kynms9BH9fJU=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/qMHLk0mVPLDh62etzgMyP6eZPcBVYdgy8HRFyNXzvN/
- eNbJmnSUcrCIMbFICumyMJzrYG59Y5+2VHRsgkwc1iZQIYwcHEKwET6zjP8U11iwybHYezvuzGn
- T9nzRGlRamX5klDTlf8kzhzdlHX5CyPD+ofiausvTM625m9Z0v6mWsJrzQeuV/un5Hid3aMUWy/
- JCAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5141; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=j7ZO4FXV1Hf14yiJt7JLsFHCp0FLrXbd7xunBuFQ9j8=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/qMHLmT/cfrmEzXr81fsZRrrt1xy46eFcmTJkyf8yV3J
+ +ONXa15HaUsDGJcDLJiiiw81xqYW+/olx0VLZsAM4eVCWQIAxenAExkhSYjQ0tK9rqTG+6t2NJe
+ OX3SYdNnU5/J+PQU124rOPzh9JWb76czMrxgbzSee55Z/3qgbdxOpv5PwVe4rM/rvZ2R9GX1ny3
+ 7ilgB
 X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
  fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-LoongArch is the only architecture that calls
-syscall_exit_to_user_mode() from asm. Move the call into C so that this
-function can be inlined across all architectures.
+Architectures using the generic entry code can be optimized by having
+syscall_exit_to_user_mode inlined.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/loongarch/include/asm/asm-prototypes.h |  8 +++++++
- arch/loongarch/kernel/entry.S               | 22 +++++++++----------
- arch/loongarch/kernel/process.c             | 33 +++++++++++++++++++++++------
- 3 files changed, 45 insertions(+), 18 deletions(-)
+ include/linux/entry-common.h | 43 ++++++++++++++++++++++++++++++++++++--
+ kernel/entry/common.c        | 49 +-------------------------------------------
+ 2 files changed, 42 insertions(+), 50 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
-index 51f224bcfc654228ae423e9a066b25b35102a5b9..704066b4f7368be15be960fadbcd6c2574bbf6c0 100644
---- a/arch/loongarch/include/asm/asm-prototypes.h
-+++ b/arch/loongarch/include/asm/asm-prototypes.h
-@@ -12,3 +12,11 @@ __int128_t __ashlti3(__int128_t a, int b);
- __int128_t __ashrti3(__int128_t a, int b);
- __int128_t __lshrti3(__int128_t a, int b);
- #endif
-+
-+asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_struct *prev,
-+							   struct pt_regs *regs);
-+
-+asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct task_struct *prev,
-+								    struct pt_regs *regs,
-+								    int (*fn)(void *),
-+								    void *fn_arg);
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index 48e7e34e355e83eae8165957ba2eac05a8bf17df..2abc29e573810e000f2fef4646ddca0dbb80eabe 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -77,24 +77,22 @@ SYM_CODE_START(handle_syscall)
- SYM_CODE_END(handle_syscall)
- _ASM_NOKPROBE(handle_syscall)
- 
--SYM_CODE_START(ret_from_fork)
-+SYM_CODE_START(ret_from_fork_asm)
- 	UNWIND_HINT_REGS
--	bl		schedule_tail		# a0 = struct task_struct *prev
--	move		a0, sp
--	bl 		syscall_exit_to_user_mode
-+	move		a1, sp
-+	bl 		ret_from_fork
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
--SYM_CODE_END(ret_from_fork)
-+SYM_CODE_END(ret_from_fork_asm)
- 
--SYM_CODE_START(ret_from_kernel_thread)
-+SYM_CODE_START(ret_from_kernel_thread_asm)
- 	UNWIND_HINT_REGS
--	bl		schedule_tail		# a0 = struct task_struct *prev
--	move		a0, s1
--	jirl		ra, s0, 0
--	move		a0, sp
--	bl		syscall_exit_to_user_mode
-+	move		a1, sp
-+	move		a2, s0
-+	move		a3, s1
-+	bl		ret_from_kernel_thread
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
--SYM_CODE_END(ret_from_kernel_thread)
-+SYM_CODE_END(ret_from_kernel_thread_asm)
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 6e58f65455c7ca3eae2e88ed852c8655a6701e5c..98bc60d7c550fcc0225e8452f81a7d6cd7888015 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index fc61d0205c97084acc89c8e45e088946f5e6d9b2..f94f3fdf15fc0091223cc9f7b823970302e67312 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
 @@ -14,6 +14,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-+#include <linux/entry-common.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/task.h>
-@@ -33,6 +34,7 @@
- #include <linux/prctl.h>
- #include <linux/nmi.h>
+ #include <linux/kmsan.h>
  
-+#include <asm/asm-prototypes.h>
- #include <asm/asm.h>
- #include <asm/bootinfo.h>
- #include <asm/cpu.h>
-@@ -47,6 +49,7 @@
- #include <asm/pgtable.h>
- #include <asm/processor.h>
- #include <asm/reg.h>
-+#include <asm/switch_to.h>
- #include <asm/unwind.h>
- #include <asm/vdso.h>
+ #include <asm/entry-common.h>
++#include <asm/syscall.h>
  
-@@ -63,8 +66,9 @@ EXPORT_SYMBOL(__stack_chk_guard);
- unsigned long boot_option_idle_override = IDLE_NO_OVERRIDE;
- EXPORT_SYMBOL(boot_option_idle_override);
- 
--asmlinkage void ret_from_fork(void);
--asmlinkage void ret_from_kernel_thread(void);
-+asmlinkage void restore_and_ret(void);
-+asmlinkage void ret_from_fork_asm(void);
-+asmlinkage void ret_from_kernel_thread_asm(void);
- 
- void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
- {
-@@ -138,6 +142,23 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- 	return 0;
+ /*
+  * Define dummy _TIF work flags if not defined by the architecture or for
+@@ -366,6 +367,15 @@ static __always_inline void exit_to_user_mode(void)
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
  }
  
-+asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_struct *prev,
-+							   struct pt_regs *regs)
-+{
-+	schedule_tail(prev);
-+	syscall_exit_to_user_mode(regs);
-+}
++/**
++ * syscall_exit_work - Handle work before returning to user mode
++ * @regs:	Pointer to current pt_regs
++ * @work:	Current thread syscall work
++ *
++ * Do one-time syscall specific work.
++ */
++void syscall_exit_work(struct pt_regs *regs, unsigned long work);
 +
-+asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct task_struct *prev,
-+								    struct pt_regs *regs,
-+								    int (*fn)(void *),
-+								    void *fn_arg)
-+{
-+	schedule_tail(prev);
-+	fn(fn_arg);
-+	syscall_exit_to_user_mode(regs);
-+}
-+
- /*
-  * Copy architecture-specific thread state
+ /**
+  * syscall_exit_to_user_mode_work - Handle work before returning to user mode
+  * @regs:	Pointer to currents pt_regs
+@@ -379,7 +389,30 @@ static __always_inline void exit_to_user_mode(void)
+  * make the final state transitions. Interrupts must stay disabled between
+  * return from this function and the invocation of exit_to_user_mode().
   */
-@@ -165,8 +186,8 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 		p->thread.reg03 = childksp;
- 		p->thread.reg23 = (unsigned long)args->fn;
- 		p->thread.reg24 = (unsigned long)args->fn_arg;
--		p->thread.reg01 = (unsigned long)ret_from_kernel_thread;
--		p->thread.sched_ra = (unsigned long)ret_from_kernel_thread;
-+		p->thread.reg01 = (unsigned long)ret_from_kernel_thread_asm;
-+		p->thread.sched_ra = (unsigned long)ret_from_kernel_thread_asm;
- 		memset(childregs, 0, sizeof(struct pt_regs));
- 		childregs->csr_euen = p->thread.csr_euen;
- 		childregs->csr_crmd = p->thread.csr_crmd;
-@@ -182,8 +203,8 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 		childregs->regs[3] = usp;
+-void syscall_exit_to_user_mode_work(struct pt_regs *regs);
++static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
++{
++	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
++	unsigned long nr = syscall_get_nr(current, regs);
++
++	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
++
++	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
++		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
++			local_irq_enable();
++	}
++
++	rseq_syscall(regs);
++
++	/*
++	 * Do one-time syscall specific work. If these work items are
++	 * enabled, we want to run them exactly once per syscall exit with
++	 * interrupts enabled.
++	 */
++	if (unlikely(work & SYSCALL_WORK_EXIT))
++		syscall_exit_work(regs, work);
++	local_irq_disable_exit_to_user();
++	exit_to_user_mode_prepare(regs);
++}
  
- 	p->thread.reg03 = (unsigned long) childregs;
--	p->thread.reg01 = (unsigned long) ret_from_fork;
--	p->thread.sched_ra = (unsigned long) ret_from_fork;
-+	p->thread.reg01 = (unsigned long) ret_from_fork_asm;
-+	p->thread.sched_ra = (unsigned long) ret_from_fork_asm;
+ /**
+  * syscall_exit_to_user_mode - Handle work before returning to user mode
+@@ -410,7 +443,13 @@ void syscall_exit_to_user_mode_work(struct pt_regs *regs);
+  * exit_to_user_mode(). This function is preferred unless there is a
+  * compelling architectural reason to use the separate functions.
+  */
+-void syscall_exit_to_user_mode(struct pt_regs *regs);
++static __always_inline void syscall_exit_to_user_mode(struct pt_regs *regs)
++{
++	instrumentation_begin();
++	syscall_exit_to_user_mode_work(regs);
++	instrumentation_end();
++	exit_to_user_mode();
++}
  
- 	/*
- 	 * New tasks lose permission to use the fpu. This accelerates context
+ /**
+  * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index e33691d5adf7aab4af54cf2bf8e5ef5bd6ad1424..f55e421fb196dd5f9d4e34dd85ae096c774cf879 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -146,7 +146,7 @@ static inline bool report_single_step(unsigned long work)
+ 	return work & SYSCALL_WORK_SYSCALL_EXIT_TRAP;
+ }
+ 
+-static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
++void syscall_exit_work(struct pt_regs *regs, unsigned long work)
+ {
+ 	bool step;
+ 
+@@ -173,53 +173,6 @@ static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
+ 		ptrace_report_syscall_exit(regs, step);
+ }
+ 
+-/*
+- * Syscall specific exit to user mode preparation. Runs with interrupts
+- * enabled.
+- */
+-static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
+-{
+-	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
+-	unsigned long nr = syscall_get_nr(current, regs);
+-
+-	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
+-
+-	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
+-		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
+-			local_irq_enable();
+-	}
+-
+-	rseq_syscall(regs);
+-
+-	/*
+-	 * Do one-time syscall specific work. If these work items are
+-	 * enabled, we want to run them exactly once per syscall exit with
+-	 * interrupts enabled.
+-	 */
+-	if (unlikely(work & SYSCALL_WORK_EXIT))
+-		syscall_exit_work(regs, work);
+-}
+-
+-static __always_inline void __syscall_exit_to_user_mode_work(struct pt_regs *regs)
+-{
+-	syscall_exit_to_user_mode_prepare(regs);
+-	local_irq_disable_exit_to_user();
+-	exit_to_user_mode_prepare(regs);
+-}
+-
+-void syscall_exit_to_user_mode_work(struct pt_regs *regs)
+-{
+-	__syscall_exit_to_user_mode_work(regs);
+-}
+-
+-__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
+-{
+-	instrumentation_begin();
+-	__syscall_exit_to_user_mode_work(regs);
+-	instrumentation_end();
+-	exit_to_user_mode();
+-}
+-
+ noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
+ {
+ 	enter_from_user_mode(regs);
 
 -- 
 2.43.0
