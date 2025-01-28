@@ -1,245 +1,203 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20C1DDC21
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 05:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDED31B0420
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 09:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738042409; cv=none; b=ZLNU+Q28rpGFPRo3WvJD/cZXy1qoscEqunnq7tzChmq0c/t/ywQdeMaWKiXGcT28t4D2Gr+3YmaClpLDfVuEJrv9RG1cHdfHvVLBIOyvsIzyjHYP7tVH9qhwNQa437XzNG7K8wuJnIsAAr0zO4+4Fbtl6QE/ZXVAs1/EXD7Yl+M=
+	t=1738055689; cv=none; b=ON7aBghC2DA10LudDOz05FQm3HI7Eq5jLtiWGE3AYjXMCHaGGphSqnSrbrUd39xy2GEj9/dgyfec4X0TMfALAzVeXESAOoK8uKopyihXZl7ZPgCcUwjphHIEycCinsl5mv8cjfh0WsUFqTKmGjAd1G/Y15wj8ILCrLrTWSXIJVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738042409; c=relaxed/simple;
-	bh=j7ZO4FXV1Hf14yiJt7JLsFHCp0FLrXbd7xunBuFQ9j8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=muVSy99vQWW9yGdqdEooqFhIn7Tgzqh5SfcLnMuGI7CtwHo+dPXpE0IpPA+l3Tr/sWxHHIjrzOAkU7p4OcBpgjZCYfE4dMUDDHRLOJhhc9Sq5FUuk+yunnV9droX1m1IX9hDspt5Wstd0ScYpYcFaSqF0MRZwTQF4Pb1j9NvTt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PlMC/hCO; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PlMC/hCO"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2eeb4d643a5so9175342a91.3
-        for <loongarch@lists.linux.dev>; Mon, 27 Jan 2025 21:33:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738042407; x=1738647207; darn=lists.linux.dev;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p30t3bidsL8DH7wJ55Ht0+lyyt5ZTgdtBsNdg8zXD0s=;
-        b=PlMC/hCOX414V6iJGYmnp6XL/J/a6nLKTCXzAw8D0c19w3h6CydTKxIoumrPgtuE+R
-         JlyaveGql9djXL+69XN1Hde82mU1XposCr5oMMtpbdz1hzR7q2NjgsbwKkvnymNilj9d
-         Q+QYT9QOJ4qk0Alzly2EXt0B4pNWE4QPPTcDup6EiMwUfSxcoVOfdLIlAParWr5jGc8O
-         ek964o6tlj/QilgZKoZ/yQ0VW1fiO0CcKw0DC6ByD03p7dRccodB25HMVWNIvRpf1AfA
-         2//Lc2RuwS7HmyuAr60h3k2V1qJ3+RrpqHZ2xwFljhJV0ecz4/Jw6ISMnJfNR74y+8E+
-         MI3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738042407; x=1738647207;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p30t3bidsL8DH7wJ55Ht0+lyyt5ZTgdtBsNdg8zXD0s=;
-        b=Y/onioW5WUru9HwIlZif6Ax0IL0zjpy3NvAGINKARwkERLEK3RuCQEK/+ZvZPzrOIB
-         sxVRBu3Pt30ggYQfwvI65E8m4CkvalVyMss3A5eNfZkWav6wb0jotcUtZNmLvAwaiX0f
-         XAHfdzmQJjNdyUIDWA/vVvShOz6UGaC5keME1tqrJzYgf40vUrHABS0q123OSB2QDKGb
-         eGwmHqfAiEgTFytbKfu50PFKnMFNlt4lecOVmChv3apQuXdOD2czWxtkh5ZneakTEwcq
-         hOcVs1HzmHAUcq/IVioRIm+O1y48jEL5hMrAT9tOxpOBOXvzRm1P0NEyjJnbwE1V7a2z
-         ddbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWf4z69wHoEQDdYSzZU2hoKjsojYm/pEgcotAHck2eiW2DxTHZ/Kc5eU644pHysOxFcIjhhmG4avrM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZNZ7pqaFEBDGjS2UKrh1iUAparyeq0SJTPuefh/7uv304+b6u
-	MxEPLuBGtX7HyrtVwYPVE3vVTdbFgOb5Qh/GCX8ZEKVVSDKvH7ettGgwYtLOcPA=
-X-Gm-Gg: ASbGncsPEcDE1Y3LhHxsmJ+2ufipk8qtV8eCCjdyqGNWa7OmJSX0rEELEE/yd5kMOTa
-	TuVbMD6Njo9WSrJq4xbeZ08d5MOAJKiIhZs6meViWFVfYDZ63iK2jhL1cHFFqHdEumCkgL0VmxR
-	iHTzuHVFCPCDL9vNoXDgeXKUX3IOHiYppmxUeVqxPU6Dj7m4VfBKp8+jaBme+K136xKLzh10zXl
-	Mfuyv9tPMbAkYNf9n5IUeQxjksMiILaJ4dh7YgzRkTRgpLPTp1FHoi2JXlWLL1iIsbx4ZC32taA
-	3vInilrbj5j6JnSpo4kGzmjCc3fzR6k=
-X-Google-Smtp-Source: AGHT+IGkVxybbhmMu57xJQJzMyQwkOMbXHCtIM1pnr7yMYLR6mnolYIlXLb9ipU14x5Wd4npsIBS3g==
-X-Received: by 2002:a17:90b:2805:b0:2ee:9e06:7db0 with SMTP id 98e67ed59e1d1-2f782c9406bmr66373912a91.11.1738042406754;
-        Mon, 27 Jan 2025 21:33:26 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7ffaf9e98sm8266247a91.38.2025.01.27.21.33.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 21:33:25 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 27 Jan 2025 21:33:12 -0800
-Subject: [PATCH v4 4/4] entry: Inline syscall_exit_to_user_mode()
+	s=arc-20240116; t=1738055689; c=relaxed/simple;
+	bh=xBv91Vhe4Gw6iZ3jXePjk1/UOht63NRyiLILSBPHqR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=m117E7Tw6DYxia9CTUuFmeiHzotyyb8l5hJ3/roCb0SokH9D0iV4BM6W2ceyTa4+5velongZP4QDwbsW5TJr3rWtdhrW6X+Dt/sERtBq57EOq9drJHeXM2TCU+WYPM7CRgAttAE5Bgo1kSrhNJQHPlwYV9RiyRuA9T/pk/uqx+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 52FC072C8F5;
+	Tue, 28 Jan 2025 12:14:45 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 43F947CCB3A; Tue, 28 Jan 2025 11:14:45 +0200 (IST)
+Date: Tue, 28 Jan 2025 11:14:45 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alexey Gladkov <legion@kernel.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	strace-devel@lists.strace.io, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH v3 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
+Message-ID: <20250128091445.GA8257@strace.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250127-riscv_optimize_entry-v4-4-868cf7702dc9@rivosinc.com>
-References: <20250127-riscv_optimize_entry-v4-0-868cf7702dc9@rivosinc.com>
-In-Reply-To: <20250127-riscv_optimize_entry-v4-0-868cf7702dc9@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5141; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=j7ZO4FXV1Hf14yiJt7JLsFHCp0FLrXbd7xunBuFQ9j8=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/qMHLmT/cfrmEzXr81fsZRrrt1xy46eFcmTJkyf8yV3J
- +ONXa15HaUsDGJcDLJiiiw81xqYW+/olx0VLZsAM4eVCWQIAxenAExkhSYjQ0tK9rqTG+6t2NJe
- OX3SYdNnU5/J+PQU124rOPzh9JWb76czMrxgbzSee55Z/3qgbdxOpv5PwVe4rM/rvZ2R9GX1ny3
- 7ilgB
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Architectures using the generic entry code can be optimized by having
-syscall_exit_to_user_mode inlined.
+PTRACE_SET_SYSCALL_INFO is a generic ptrace API that complements
+PTRACE_GET_SYSCALL_INFO by letting the ptracer modify details of
+system calls the tracee is blocked in.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- include/linux/entry-common.h | 43 ++++++++++++++++++++++++++++++++++++--
- kernel/entry/common.c        | 49 +-------------------------------------------
- 2 files changed, 42 insertions(+), 50 deletions(-)
+This API allows ptracers to obtain and modify system call details
+in a straightforward and architecture-agnostic way.
 
-diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-index fc61d0205c97084acc89c8e45e088946f5e6d9b2..f94f3fdf15fc0091223cc9f7b823970302e67312 100644
---- a/include/linux/entry-common.h
-+++ b/include/linux/entry-common.h
-@@ -14,6 +14,7 @@
- #include <linux/kmsan.h>
- 
- #include <asm/entry-common.h>
-+#include <asm/syscall.h>
- 
- /*
-  * Define dummy _TIF work flags if not defined by the architecture or for
-@@ -366,6 +367,15 @@ static __always_inline void exit_to_user_mode(void)
- 	lockdep_hardirqs_on(CALLER_ADDR0);
- }
- 
-+/**
-+ * syscall_exit_work - Handle work before returning to user mode
-+ * @regs:	Pointer to current pt_regs
-+ * @work:	Current thread syscall work
-+ *
-+ * Do one-time syscall specific work.
-+ */
-+void syscall_exit_work(struct pt_regs *regs, unsigned long work);
-+
- /**
-  * syscall_exit_to_user_mode_work - Handle work before returning to user mode
-  * @regs:	Pointer to currents pt_regs
-@@ -379,7 +389,30 @@ static __always_inline void exit_to_user_mode(void)
-  * make the final state transitions. Interrupts must stay disabled between
-  * return from this function and the invocation of exit_to_user_mode().
-  */
--void syscall_exit_to_user_mode_work(struct pt_regs *regs);
-+static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
-+{
-+	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
-+	unsigned long nr = syscall_get_nr(current, regs);
-+
-+	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
-+
-+	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-+		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-+			local_irq_enable();
-+	}
-+
-+	rseq_syscall(regs);
-+
-+	/*
-+	 * Do one-time syscall specific work. If these work items are
-+	 * enabled, we want to run them exactly once per syscall exit with
-+	 * interrupts enabled.
-+	 */
-+	if (unlikely(work & SYSCALL_WORK_EXIT))
-+		syscall_exit_work(regs, work);
-+	local_irq_disable_exit_to_user();
-+	exit_to_user_mode_prepare(regs);
-+}
- 
- /**
-  * syscall_exit_to_user_mode - Handle work before returning to user mode
-@@ -410,7 +443,13 @@ void syscall_exit_to_user_mode_work(struct pt_regs *regs);
-  * exit_to_user_mode(). This function is preferred unless there is a
-  * compelling architectural reason to use the separate functions.
-  */
--void syscall_exit_to_user_mode(struct pt_regs *regs);
-+static __always_inline void syscall_exit_to_user_mode(struct pt_regs *regs)
-+{
-+	instrumentation_begin();
-+	syscall_exit_to_user_mode_work(regs);
-+	instrumentation_end();
-+	exit_to_user_mode();
-+}
- 
- /**
-  * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index e33691d5adf7aab4af54cf2bf8e5ef5bd6ad1424..f55e421fb196dd5f9d4e34dd85ae096c774cf879 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -146,7 +146,7 @@ static inline bool report_single_step(unsigned long work)
- 	return work & SYSCALL_WORK_SYSCALL_EXIT_TRAP;
- }
- 
--static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
-+void syscall_exit_work(struct pt_regs *regs, unsigned long work)
- {
- 	bool step;
- 
-@@ -173,53 +173,6 @@ static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
- 		ptrace_report_syscall_exit(regs, step);
- }
- 
--/*
-- * Syscall specific exit to user mode preparation. Runs with interrupts
-- * enabled.
-- */
--static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
--{
--	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
--	unsigned long nr = syscall_get_nr(current, regs);
--
--	CT_WARN_ON(ct_state() != CT_STATE_KERNEL);
--
--	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
--		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
--			local_irq_enable();
--	}
--
--	rseq_syscall(regs);
--
--	/*
--	 * Do one-time syscall specific work. If these work items are
--	 * enabled, we want to run them exactly once per syscall exit with
--	 * interrupts enabled.
--	 */
--	if (unlikely(work & SYSCALL_WORK_EXIT))
--		syscall_exit_work(regs, work);
--}
--
--static __always_inline void __syscall_exit_to_user_mode_work(struct pt_regs *regs)
--{
--	syscall_exit_to_user_mode_prepare(regs);
--	local_irq_disable_exit_to_user();
--	exit_to_user_mode_prepare(regs);
--}
--
--void syscall_exit_to_user_mode_work(struct pt_regs *regs)
--{
--	__syscall_exit_to_user_mode_work(regs);
--}
--
--__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
--{
--	instrumentation_begin();
--	__syscall_exit_to_user_mode_work(regs);
--	instrumentation_end();
--	exit_to_user_mode();
--}
--
- noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
- {
- 	enter_from_user_mode(regs);
+Current implementation supports changing only those bits of system call
+information that are used by strace, namely, syscall number, syscall
+arguments, and syscall return value.
+
+Support of changing additional details returned by PTRACE_GET_SYSCALL_INFO,
+such as instruction pointer and stack pointer, could be added later if
+needed, by using struct ptrace_syscall_info.flags to specify the additional
+details that should be set.  Currently, "flags", "reserved", and
+"seccomp.reserved2" fields of struct ptrace_syscall_info must be
+initialized with zeroes; "arch", "instruction_pointer", and "stack_pointer"
+fields are ignored.
+
+PTRACE_SET_SYSCALL_INFO currently supports only PTRACE_SYSCALL_INFO_ENTRY,
+PTRACE_SYSCALL_INFO_EXIT, and PTRACE_SYSCALL_INFO_SECCOMP operations.
+Other operations could be added later if needed.
+
+Ideally, PTRACE_SET_SYSCALL_INFO should have been introduced along with
+PTRACE_GET_SYSCALL_INFO, but it didn't happen.  The last straw that
+convinced me to implement PTRACE_SET_SYSCALL_INFO was apparent failure
+to provide an API of changing the first system call argument on riscv
+architecture [1].
+
+ptrace(2) man page:
+
+long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+...
+PTRACE_SET_SYSCALL_INFO
+       Modify information about the system call that caused the stop.
+       The "data" argument is a pointer to struct ptrace_syscall_info
+       that specifies the system call information to be set.
+       The "addr" argument should be set to sizeof(struct ptrace_syscall_info)).
+
+[1] https://lore.kernel.org/all/59505464-c84a-403d-972f-d4b2055eeaac@gmail.com/
+
+Notes:
+    v3:
+    * powerpc: Submit syscall_set_return_value fix for "sc" case separately
+    * mips: Do not introduce erroneous argument truncation on mips n32,
+      add a detailed description to the commit message of the
+      mips_get_syscall_arg change
+    * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
+      simplify obtaining of user ptrace_syscall_info,
+      do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
+    * ptrace: Change the return type of ptrace_set_syscall_info_* functions
+      from "unsigned long" to "int"
+    * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit,
+      add comments to -ERANGE checks
+    * ptrace: Update comments about supported syscall stops
+    * selftests: Extend set_syscall_info test, fix for mips n32
+    * Add Tested-by and Reviewed-by
+
+    v2:
+    * Add patch to fix syscall_set_return_value() on powerpc
+    * Add patch to fix mips_get_syscall_arg() on mips
+    * Add syscall_set_return_value() implementation on hexagon
+    * Add syscall_set_return_value() invocation to syscall_set_nr()
+      on arm and arm64.
+    * Fix syscall_set_nr() and mips_set_syscall_arg() on mips
+    * Add a comment to syscall_set_nr() on arc, powerpc, s390, sh,
+      and sparc
+    * Remove redundant ptrace_syscall_info.op assignments in
+      ptrace_get_syscall_info_*
+    * Minor style tweaks in ptrace_get_syscall_info_op()
+    * Remove syscall_set_return_value() invocation from
+      ptrace_set_syscall_info_entry()
+    * Skip syscall_set_arguments() invocation in case of syscall number -1
+      in ptrace_set_syscall_info_entry() 
+    * Split ptrace_syscall_info.reserved into ptrace_syscall_info.reserved
+      and ptrace_syscall_info.flags
+    * Use __kernel_ulong_t instead of unsigned long in set_syscall_info test
+
+Dmitry V. Levin (6):
+  mips: fix mips_get_syscall_arg() for o32
+  syscall.h: add syscall_set_arguments() and syscall_set_return_value()
+  syscall.h: introduce syscall_set_nr()
+  ptrace_get_syscall_info: factor out ptrace_get_syscall_info_op
+  ptrace: introduce PTRACE_SET_SYSCALL_INFO request
+  selftests/ptrace: add a test case for PTRACE_SET_SYSCALL_INFO
+
+ arch/arc/include/asm/syscall.h                |  25 +
+ arch/arm/include/asm/syscall.h                |  37 ++
+ arch/arm64/include/asm/syscall.h              |  29 +
+ arch/csky/include/asm/syscall.h               |  13 +
+ arch/hexagon/include/asm/syscall.h            |  21 +
+ arch/loongarch/include/asm/syscall.h          |  15 +
+ arch/m68k/include/asm/syscall.h               |   7 +
+ arch/microblaze/include/asm/syscall.h         |   7 +
+ arch/mips/include/asm/syscall.h               |  70 ++-
+ arch/nios2/include/asm/syscall.h              |  16 +
+ arch/openrisc/include/asm/syscall.h           |  13 +
+ arch/parisc/include/asm/syscall.h             |  19 +
+ arch/powerpc/include/asm/syscall.h            |  20 +
+ arch/riscv/include/asm/syscall.h              |  16 +
+ arch/s390/include/asm/syscall.h               |  24 +
+ arch/sh/include/asm/syscall_32.h              |  24 +
+ arch/sparc/include/asm/syscall.h              |  22 +
+ arch/um/include/asm/syscall-generic.h         |  19 +
+ arch/x86/include/asm/syscall.h                |  43 ++
+ arch/xtensa/include/asm/syscall.h             |  18 +
+ include/asm-generic/syscall.h                 |  30 +
+ include/uapi/linux/ptrace.h                   |   7 +-
+ kernel/ptrace.c                               | 179 +++++-
+ tools/testing/selftests/ptrace/Makefile       |   2 +-
+ .../selftests/ptrace/set_syscall_info.c       | 514 ++++++++++++++++++
+ 25 files changed, 1143 insertions(+), 47 deletions(-)
+ create mode 100644 tools/testing/selftests/ptrace/set_syscall_info.c
 
 -- 
-2.43.0
-
+ldv
