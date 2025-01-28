@@ -1,166 +1,131 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8290C1552E3
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 10:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD4A11A4F1B
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 14:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738059677; cv=none; b=Tx/OptqyHkyYwc45C9V9hl4owZY6kfbsxD2bXZS8bGSKB76RSSgS81eoWc7n2moHffE1ZkK6zXiRajAJoJpmld+yxODinD+z9uYCGHNvMAvsIQfXZcMxNWAdrQ7tmnQEV3HQgdup9z/kwkHKBbpM/LQ+ID2mcsWq8xwNuoJipNg=
+	t=1738074445; cv=none; b=RPlEDOTdi9Vhdpqt+dAn+s9kvXKWyV0NOjjBMHbOBhM7xbavIu5ftFOWn/zh/6ciUP5hKYUFoeXm6HAVtfQxwRVd++rulq4oC5AYpvRTPAe3WcEQzySnKMSb1fkhL+wN7gewEG1Krsm3DJgpiR+094IVxnsraC2CwhsKkwVT67w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738059677; c=relaxed/simple;
-	bh=7xEHRJYaUsQvrBOYsPKXuqOIfVMZpJc7qzGeGCJiEMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XoG7nKISDzNEjH0+RDP7SaEjJ92/dCKs0MRQZvA+/6F0qzI7R6Bsi6dB79mdJf9lNpOsW8+lar3AW2Lv/IeYp+oBV8IojfvaDejyUEY5VSfgFF805XO293/dn/PK2G6AIAfc0LlOGOib9kWtii/dSfmQrXoS7Esmxl29WCMsV+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g36uavjX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yx9Jc0AR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g+Fgny1H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5S+hwuSr; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g36uavjX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yx9Jc0AR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g+Fgny1H";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5S+hwuSr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 33395210FE;
-	Tue, 28 Jan 2025 10:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738059672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
-	b=g36uavjXeMSLDP/wQ1HXXbBmwofmqc4NuILpzZ/cEJfjqepzlsgdZZ/RletOmfPNMc2nRG
-	UtssTLKRpWjUU+m1jT41JmtCQe7rlDg4OROZd0GoWX0APM2D0lmt+4dkJamGGE9a/GfAe8
-	tj8xKX8wcHlMsk3YfZdhsvIDuTtEwaM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738059672;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
-	b=yx9Jc0ARX9Bx3AqfjaSLTx4wSNg9Uba/gustUdf1ReUXpZsyyeDaC7wd7e86uJIarhToKM
-	92eCJLK0GGSNbgDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=g+Fgny1H;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5S+hwuSr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738059671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
-	b=g+Fgny1Hr3qqaouwF1HbBTLA7jY1DvL3G4Bu5oJkzQOfsn127wx4bPIRMy+lSiKfmRU+lX
-	pOdAB/9MW+TXdi0VFCKELw60hFSrf8FN2RWurftmDo+LSlze72EHrQxGCusCXJIMzr6e3k
-	2albBV0vT7bK6ne6vXkQaB/QdmLLRJI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738059671;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+tC+2cZEkBuB0y/+lTz0SnDws8RVSzWbW63TPef5d7E=;
-	b=5S+hwuSrQgYmhVb7vuI3N0z1g47DRpbJaEFqccOl1kfSxzMK9/a3wwM2OyiMSm5q6XuxMc
-	3xV/1dKQkx7LvgDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12EB013625;
-	Tue, 28 Jan 2025 10:21:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ybdDBJevmGfrbAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 28 Jan 2025 10:21:11 +0000
-Message-ID: <42b24914-719a-4ff1-9d77-f6517717344f@suse.cz>
-Date: Tue, 28 Jan 2025 11:21:10 +0100
+	s=arc-20240116; t=1738074445; c=relaxed/simple;
+	bh=kOjuqxYeqG0BDEllG8TB03Q3Phj32ouj8K+NtIxP+Rw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Au/KYsHgcv4TVnuTWkb5Hz2i8Je+81p/RjMh0C9JlKq5F2D01AX6TskSIJrezuUfCki/kj5SIsqdLbNe0MHOReeKegusoDZ+sv5kxrHxq9CEIHneg/7PPwNBegEZOxwNk+1Y5L1KiFcFP2o0DGrPQ+Vzy0CrV5lT/P/I+qxxGNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8BxeeBB6ZhnwOlpAA--.9666S3;
+	Tue, 28 Jan 2025 22:27:13 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMBxUMY96ZhnXQowAA--.23741S2;
+	Tue, 28 Jan 2025 22:27:12 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.14
+Date: Tue, 28 Jan 2025 22:26:54 +0800
+Message-ID: <20250128142654.301146-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: zbud: deprecate CONFIG_ZBUD
-Content-Language: en-US
-To: Yosry Ahmed <yosry.ahmed@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin
- <linmiaohe@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-References: <Z5gdnSX5Lv-nfjQL@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Z5gdnSX5Lv-nfjQL@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 33395210FE
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[konsulko.com,huawei.com,cmpxchg.org,gmail.com,linux.dev,kernel.org,xen0n.name,kvack.org,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.cz:mid,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxUMY96ZhnXQowAA--.23741S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGr45XFyDWw4Utw17tFW5urX_yoW5Ar4fpF
+	9IvrnxJF48Gr1fJFnxt343ur98Jr97Gr12qanIyry8Cr15Zr1UXr1kGrykXFyUt3y5JrW0
+	qr1rGw1YgFyUJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-On 1/28/25 00:58, Yosry Ahmed wrote:
-> The zbud compressed pages allocator is rarely used, most users use
-> zsmalloc. zbud consumes much more memory (only stores 1 or 2 compressed
-> pages per physical page). The only advantage of zbud is a marginal
-> performance improvement that by no means justify the memory overhead.
-> 
-> Historically, zsmalloc had significantly worse latency than zbud and
-> z3fold but offered better memory savings.  This is no longer the case as
-> shown by a simple recent analysis [1].  In a kernel build test on tmpfs
-> in a limited cgroup, zbud 2-3% less time than zsmalloc, but at the cost
-> of using ~32% more memory (1.5G vs 1.13G). The tradeoff does not make
-> sense for zbud in any practical scenario.
-> 
-> The only alleged advantage of zbud is not having the dependency on
-> CONFIG_MMU, but CONFIG_SWAP already depends on CONFIG_MMU anyway, and
-> zbud is only used by zswap.
-> 
-> Following in the footsteps of [2], which deprecated z3fold, deprecated
-> zbud as planned and remove it in a few cycles if no objections are
-> raised from active users.
-> 
-> Rename the user-visible config options so that users with CONFIG_ZBUD=y
-> get a new prompt with explanation during make oldconfig. Also, remove
-> CONFIG_ZBUD from defconfig.
-> 
-> [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
-> [2]https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/
-> 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+The following changes since commit ffd294d346d185b70e28b1a28abe367bbfe53c04:
 
-Seems weird not to Cc the folks listed in MAINTAINERS for ZBUD? Unless their
-addresses are known to bounce?
-And ZRAM maintainers should also be Ccd?
+  Linux 6.13 (2025-01-19 15:51:45 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.14
+
+for you to fetch changes up to 531936dee53e471a3ec668de3c94ca357f54b7e8:
+
+  LoongArch: Extend the maximum number of watchpoints (2025-01-26 21:49:59 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.14
+
+1, Migrate to the generic rule for built-in DTB;
+2, Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is enabled;
+3, Derive timer max_delta from PRCFG1's timer_bits;
+4, Correct the cacheinfo sharing information;
+5, Add pgprot_nx() implementation;
+6, Add debugfs entries to switch SFB/TSO state;
+7, Change the maximum number of watchpoints;
+8, Some bug fixes and other small changes.
+
+----------------------------------------------------------------
+Huacai Chen (8):
+      Merge tag 'irq-core-2025-01-21' into loongarch-next
+      LoongArch: Correct the cacheinfo sharing information
+      LoongArch: Correct the __switch_to() prototype in comments
+      LoongArch: Add pgprot_nx() implementation
+      LoongArch: Refactor bug_handler() implementation
+      LoongArch: Adjust SETUP_SLEEP and SETUP_WAKEUP
+      LoongArch: Fix warnings during S3 suspend
+      LoongArch: Add debugfs entries to switch SFB/TSO state
+
+Jiaxun Yang (2):
+      LoongArch: Disable FIX_EARLYCON_MEM when ARCH_IOREMAP is enabled
+      LoongArch: Derive timer max_delta from PRCFG1's timer_bits
+
+Masahiro Yamada (1):
+      LoongArch: Migrate to the generic rule for built-in DTB
+
+Tiezhu Yang (2):
+      LoongArch: Change 8 to 14 for LOONGARCH_MAX_{BRP,WRP}
+      LoongArch: Extend the maximum number of watchpoints
+
+ arch/loongarch/Kbuild                      |   1 -
+ arch/loongarch/Kconfig                     |   3 +-
+ arch/loongarch/boot/dts/Makefile           |   2 -
+ arch/loongarch/include/asm/acpi.h          |   2 +
+ arch/loongarch/include/asm/cpu-info.h      |   1 +
+ arch/loongarch/include/asm/hw_breakpoint.h |   4 +-
+ arch/loongarch/include/asm/loongarch.h     |  76 ++++++++++++-
+ arch/loongarch/include/asm/pgtable-bits.h  |   7 ++
+ arch/loongarch/include/uapi/asm/ptrace.h   |  10 ++
+ arch/loongarch/kernel/Makefile             |   2 +-
+ arch/loongarch/kernel/cacheinfo.c          |   6 ++
+ arch/loongarch/kernel/cpu-probe.c          |   1 +
+ arch/loongarch/kernel/hw_breakpoint.c      |  16 ++-
+ arch/loongarch/kernel/kdebugfs.c           | 168 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/ptrace.c             |   6 +-
+ arch/loongarch/kernel/switch.S             |   2 +-
+ arch/loongarch/kernel/time.c               |   2 +-
+ arch/loongarch/kernel/traps.c              |  13 ++-
+ arch/loongarch/kernel/unaligned.c          |   8 +-
+ arch/loongarch/power/platform.c            |   2 +-
+ arch/loongarch/power/suspend_asm.S         |  10 +-
+ 21 files changed, 313 insertions(+), 29 deletions(-)
+ create mode 100644 arch/loongarch/kernel/kdebugfs.c
+
