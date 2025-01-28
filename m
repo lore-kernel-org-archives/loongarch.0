@@ -1,164 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B0D1A0712
-	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 16:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AFF1991D2
+	for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 16:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738080287; cv=none; b=es8QS+y9GzufWh0bXu78bKjSZ9HqOkZmZlmzETkC8f1JabP3zPUjDTyHT4oXBUrV56k7HT95Un0FtjayonTqllBdbPvDuMvYkonxPquFF3ACwbNNoDm4RkP0l8baIDrX6xW8g4qEpz191xL4XLDHiPAanP4nQ9yofJMrN52FvAM=
+	t=1738081060; cv=none; b=N8e+6MzkZqFw4CPMDBOkH0se1UD3vtw6BeOTcD9M0bM0G3jvDGX+8MWv6605jBTDj+7dLrknwa7WWrCEl3Xnx8vCzT1PjAbONRDBE7Imjq3R/H6P3mrh6OW01NsKt1LD3X9XXjKIFs9uFRVM0FNB3SG/6j6QrKC8Fzu49DsXHUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738080287; c=relaxed/simple;
-	bh=RhniZbcJoRBwDM8m9CKksXafBIe24ETY3Yyt3VC9sG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tCtUXb/DRAW5tq2cQtaSbIf1Nlc1NL6kb/o1XwVd/Mzber9KN8k5F1dn533D4wyWjWrSXo4o97u04tuJobI59hrTWPaxU3WaiYkC6bfWKYgRoveakCDIVDMEixY9eS19BpG8f8bP5GjSSSs2JKbrJdm5vX45S+cx2xdhkrd4GxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJ5QVLP3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJ5QVLP3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738080284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oK3AMqO8H7ZclTe1BgMukCS1J0g89sEEML8wYhEGJSM=;
-	b=BJ5QVLP3wZQ06g3a7AuTnGlQymu38jLAoWwTTCfJ45EXvtpIi/C6JgJo9MK7UmEHp/4eRU
-	Yu1SnePxqNFU/zxdCwvj+EksJhfrQu1khVFtYKiNywUtCJihtCzZYInYRonakEhOn0Gm7e
-	9Ebg27TM3+Mt0L1oKrv7OKzzYZXWfJ8=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-562-j_72RDYFOva7gwzxJWoZcQ-1; Tue, 28 Jan 2025 11:04:42 -0500
-X-MC-Unique: j_72RDYFOva7gwzxJWoZcQ-1
-X-Mimecast-MFC-AGG-ID: j_72RDYFOva7gwzxJWoZcQ
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e549c458692so15042337276.2
-        for <loongarch@lists.linux.dev>; Tue, 28 Jan 2025 08:04:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738080279; x=1738685079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oK3AMqO8H7ZclTe1BgMukCS1J0g89sEEML8wYhEGJSM=;
-        b=dyPQslWCLO6jjopR9Fgtdb7Dfv1/rDEoifod3L8wR64NmWNMa3gOHu571/VvyqxMdW
-         ItmPLIg+gvvLOf5SRAK4Na0leMjphM3wf8Adsx+Yg1+WxW8tPRbpN/dJqXRgal35FRo7
-         GBb83fQJhlAVX5rOC2I54aziH6zPWiaCxdD79GG0kaZ8yUYdVi8cBGj5LrErm0TYhfrw
-         eXgN10a6ApK02QNiquWqF458xwTuybCelUvn6zI+jbKRTjyVlwlUQ0QQeI+5lQGbfi9F
-         5yT5yAFkiMAreEv5B5+xu2YYDYFgK3QbE5bS3CbRgYAMTseVp33Bdv8nyLkvqHvhnls/
-         0UBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVte0zA/RlV9zU3zMxyDk8Tqz0sQ0jUBkOLL89fwJpAV85vwQJA7E8lzKLTA7egLZx2URs2gzEyMgA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZYspT2DRGRsN78LufibMRgVz2G41Ci4F7rO8Cb9SlaEsHScVq
-	f4Mo8+dOAm0FRoAnp/3jjiUEXWUhlFCmnjzlWr/Q+Lch7rqIaaRGf/c3kypqjrexgP3esk4mKYl
-	/3MbT08wwvB5VdQWAV0Q5N7n+WZLSQ7oR2l+slYjXk4KOfBluJAqn8EbHGX6IZ2WGRxQ6jCMv7N
-	c60KXWMc7dMrdcqRtmiICjK0PtsO3AIQTC
-X-Gm-Gg: ASbGnctj9N7E+IetSWq2Gk6hQUnqRU4AH6SF0CzaSEjm8aFt0wEC4wifkFq9a/Jc19M
-	CBmLk40aHjYywHKs6KuNPHmC5XUMsGbUySUlVc69UmcqNQIGXmada4CO5pEymlqqZpx+VMfOKSJ
-	GD222ELuwKp8o+JZ6Y1Oc=
-X-Received: by 2002:a05:6902:1206:b0:e58:11f6:db7b with SMTP id 3f1490d57ef6-e5811f6ec07mr20583426276.30.1738080279024;
-        Tue, 28 Jan 2025 08:04:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGqpPnsJFhxc42G1oeTcfqfAOFZmnXdusw+cHU7YmKoq+g3Kpg3lgQxvv7/0FFeXlJcUOiULKp35Dm+RVVOMDY=
-X-Received: by 2002:a05:6902:1206:b0:e58:11f6:db7b with SMTP id
- 3f1490d57ef6-e5811f6ec07mr20583386276.30.1738080278672; Tue, 28 Jan 2025
- 08:04:38 -0800 (PST)
+	s=arc-20240116; t=1738081060; c=relaxed/simple;
+	bh=1rAnESrp98XX9zn6uey7DNA9KhLQZqbja+I9R0d1iyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DbXj+tzvwhIfJ/URP67Sf1lTFPRQLiFFaeie8S9NK5OZGzpr2lLZGjhGf4bOadRbJxWHK8AXWLoFmtTnkQWXirE40MGf9O0O/jjVfHU+nm1oNS3f1fTkdPdGDzGaRdJ0jS5mKwH+eMqJRCe3oRkZLIjynCqGCn6DAKeI+MAhVyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id CC0E572C90D;
+	Tue, 28 Jan 2025 19:17:37 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id B9EE97CCB3A; Tue, 28 Jan 2025 18:17:37 +0200 (IST)
+Date: Tue, 28 Jan 2025 18:17:37 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Oleg Nesterov <oleg@redhat.com>, linux-snps-arc@lists.infradead.org,
+	Rich Felker <dalias@libc.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Andreas Larsson <andreas@gaisler.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-mips@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Jonas Bonn <jonas@southpole.se>, linux-s390@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, linux-csky@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Vineet Gupta <vgupta@kernel.org>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	strace-devel@lists.strace.io, linux-arch@vger.kernel.org,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	Renzo Davoli <renzo@cs.unibo.it>, linux-um@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Borislav Petkov <bp@alien8.de>, loongarch@lists.linux.dev,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Stafford Horne <shorne@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Brian Cain <bcain@quicinc.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-parisc@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	Dinh Nguyen <dinguyen@kernel.org>, linux-riscv@lists.infradead.org,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Richard Weinberger <richard@nod.at>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Alexey Gladkov <legion@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 2/6] syscall.h: add syscall_set_arguments() and
+ syscall_set_return_value()
+Message-ID: <20250128161737.GD11869@strace.io>
+References: <20250128091626.GB8601@strace.io>
+ <df7441ae-e478-4a40-aaa7-461d9b589e06@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Z5gdnSX5Lv-nfjQL@google.com> <42b24914-719a-4ff1-9d77-f6517717344f@suse.cz>
- <Z5j4HrzbT2sEOIqn@google.com>
-In-Reply-To: <Z5j4HrzbT2sEOIqn@google.com>
-From: Seth Jennings <sjenning@redhat.com>
-Date: Tue, 28 Jan 2025 10:04:27 -0600
-X-Gm-Features: AWEUYZnK3ZHmW0BZFQQNIfrlt1GZ0ue7jpu1rb49U_i_mAa2mPxwtfiWv2J99-g
-Message-ID: <CAC8qmcDZ8DeXEX23N0Xscjg_wR6HKL=AVE_5Y+68gCeLzv4bEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: zbud: deprecate CONFIG_ZBUD
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Huacai Chen <chenhuacai@kernel.org>, 
-	Dan Streetman <ddstreet@ieee.org>, WANG Xuerui <kernel@xen0n.name>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Fxzmx-0E-7jvdWKf0XSnnpi8B4KHj5QAc7tHc_TkNvY_1738080279
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df7441ae-e478-4a40-aaa7-461d9b589e06@csgroup.eu>
 
-On Tue, Jan 28, 2025 at 9:37=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev>=
- wrote:
->
-> On Tue, Jan 28, 2025 at 11:21:10AM +0100, Vlastimil Babka wrote:
-> > On 1/28/25 00:58, Yosry Ahmed wrote:
-> > > The zbud compressed pages allocator is rarely used, most users use
-> > > zsmalloc. zbud consumes much more memory (only stores 1 or 2 compress=
-ed
-> > > pages per physical page). The only advantage of zbud is a marginal
-> > > performance improvement that by no means justify the memory overhead.
-> > >
-> > > Historically, zsmalloc had significantly worse latency than zbud and
-> > > z3fold but offered better memory savings.  This is no longer the case=
- as
-> > > shown by a simple recent analysis [1].  In a kernel build test on tmp=
-fs
-> > > in a limited cgroup, zbud 2-3% less time than zsmalloc, but at the co=
-st
-> > > of using ~32% more memory (1.5G vs 1.13G). The tradeoff does not make
-> > > sense for zbud in any practical scenario.
-> > >
-> > > The only alleged advantage of zbud is not having the dependency on
-> > > CONFIG_MMU, but CONFIG_SWAP already depends on CONFIG_MMU anyway, and
-> > > zbud is only used by zswap.
-> > >
-> > > Following in the footsteps of [2], which deprecated z3fold, deprecate=
-d
-> > > zbud as planned and remove it in a few cycles if no objections are
-> > > raised from active users.
-> > >
-> > > Rename the user-visible config options so that users with CONFIG_ZBUD=
-=3Dy
-> > > get a new prompt with explanation during make oldconfig. Also, remove
-> > > CONFIG_ZBUD from defconfig.
-> > >
-> > > [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=3D2Ww13sCj4=
-S3i4bNndqF+3+_Vg@mail.gmail.com/
-> > > [2]https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@go=
-ogle.com/
-> > >
-> > > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> >
-> > Seems weird not to Cc the folks listed in MAINTAINERS for ZBUD? Unless =
-their
-> > addresses are known to bounce?
->
-> Ugh I had them in the CC list, but I played around with it and probably
-> lost them :/
->
-> Seth, Dan, apologies.
+On Tue, Jan 28, 2025 at 04:04:34PM +0100, Christophe Leroy wrote:
+> Le 28/01/2025 à 10:16, Dmitry V. Levin a écrit :
+> > These functions are going to be needed on all HAVE_ARCH_TRACEHOOK
+> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
+> 
+> The subject is misleading. syscall_set_return_value() already exists on 
+> most architectures and was not addressed by commit 7962c2eddbfe.
+> 
+> Maybe it would be better to handle syscall_set_return_value() in a 
+> separate commit.
 
-I haven't contributed in this space for quite some time so I defer to
-more active contributors on this.
+syscall_set_return_value() is being added only on hexagon.
+I didn't think it worth a separate commit, but it's certainly possible
+to split this commit into two.
 
-If it is true that zsmalloc has no/negligible deficiencies compared to
-zbud, it seems reasonable.
 
-> but at the cost of using ~32% more memory
-
-I do push back here as this % could be highly variable depending on
-the compressibility of the data.
-
-If the average compressibility is ~50%, zbud should be very memory efficien=
-t.
-
-If the average compressibility is very high or very low, it is less
-memory efficient.
-
->
-> > And ZRAM maintainers should also be Ccd?
->
-> ZRAM does not use zbud, I can definitely CC them but I don't want to be
-> a source of noise :)
->
-
+-- 
+ldv
