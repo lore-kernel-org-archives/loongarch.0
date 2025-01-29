@@ -1,138 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EAD1E0E0D
-	for <loongarch@lists.linux.dev>; Wed, 29 Jan 2025 18:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F951922E7
+	for <loongarch@lists.linux.dev>; Wed, 29 Jan 2025 19:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176784; cv=none; b=KoUmrgv8UaWsZTRQ33R0OtV+C+gXlhlYRSvNgfT7u+zkZJQ/NLHFtZmku+VK+TxMFG7wrrwwv55xQi6nZc4vRh9Kfst2S9HECbdl8w1NK22Mi3s01fbFuwciLnPOzmHJszYsNodtFNRNNmoq78uAAUD79im78nICyrQ7uGrMuqQ=
+	t=1738178786; cv=none; b=ZqhDXUuPiLnT9EbFmdnIZzYKjK6NuAvscCga4b/YfRo/VAIX6fDig2ngVj9t9IcVEP6P0+Q055ok9o5UeSPkP2h7gZR8jn3GuyRkhsq9yd25/u36Eh3GAtcayh/N2OAuGUiLskSKV0PloAhcfMkAatOStGeOvpWYUiGzoql94sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176784; c=relaxed/simple;
-	bh=kXUWf4bzCULNMipXU787lKMp83ROSa9zL6s2oSKQfIo=;
+	s=arc-20240116; t=1738178786; c=relaxed/simple;
+	bh=JErhnK9vh1akt2Xp7ASXYg5rOnjWRbGoKUxybdHw44s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=tk5kdIcEv5sWhLPDmtTVePVw175oeHQ60xuYWjSztMBYIxtBYX2YeUKT8ewEKpsSv5uFPsQZtUiYrBmt7eTwumNmd1cpxyRbdfrwpo9TooN5Ccl7v67FJwZqkkobLb3DdIhxo1TS2n+rGWudKMS6eRfq42sxYFa1Hf/MgLBTZic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WRb+khmg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=d04txytM+y7ryNwlZkJpACPJDbwilnWVotB6V/0uvcNG+6zTAILAy5BzT29EUfdvC3HIMfklfdmHeabbkle2zWoeqASE166rjHGeUgB7CKvhcUFL/Fv29zKWIyprJDUQy8zcE2vP0ASBM2UATp+BKL2QTrn9HFTFrnn7/jvXgo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ue848SLQ; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRb+khmg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738176782;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ue848SLQ"
+Date: Wed, 29 Jan 2025 11:26:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738178776;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vlOChQEKTp5JX+pbfAOT77vMe8ez+6+Y0ab8kJl+7mw=;
-	b=WRb+khmgHLgCAl1ujK3GxAUAs6JFnnHfwClFvM/UcfI8UgankvZFXiJRxTTLHPUQfn3zNX
-	AaixfGeMWAsrccNl/sO2FFDtoi9kkCpbjcGe/yxGeHVsp0d/yNMKia6/18U8FvG2PwpMDe
-	90awVkH19OibJqO0Hbo7eDWyGs6QBwM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-9t9EmevBOu69KQmdLrigRQ-1; Wed,
- 29 Jan 2025 13:52:59 -0500
-X-MC-Unique: 9t9EmevBOu69KQmdLrigRQ-1
-X-Mimecast-MFC-AGG-ID: 9t9EmevBOu69KQmdLrigRQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 39AD7180034F;
-	Wed, 29 Jan 2025 18:52:48 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.29])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3326919560AA;
-	Wed, 29 Jan 2025 18:52:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 29 Jan 2025 19:52:21 +0100 (CET)
-Date: Wed, 29 Jan 2025 19:51:49 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Alexey Gladkov <legion@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>,
-	Mike Frysinger <vapier@gentoo.org>,
-	Renzo Davoli <renzo@cs.unibo.it>,
-	Davide Berardi <berardi.dav@gmail.com>,
-	strace-devel@lists.strace.io, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] ptrace: introduce PTRACE_SET_SYSCALL_INFO API
-Message-ID: <20250129185149.GA25901@redhat.com>
-References: <20250128091445.GA8257@strace.io>
+	bh=ESHb3thQtuXbodFmYjILE5mf+awO3LfeN6uNWFEO8zw=;
+	b=Ue848SLQp7AXW2KAD9bD74z2dJ6Q8MWVgLoMSyHTXvSi90lOcXAd5dCubuCawhV6imZ/yE
+	TFustaZgK70Izn6A/U2+3/f0Jn17TBGv1l/xghddJRBf9HsudRqFudSr1AF8PRJn+xSLPt
+	Ur5jHoAISh1WHbzp6dTb+w5Sw7SziCQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Vitaly Wool <vitaly.wool@konsulko.com>, Seth Jennings <sjenning@redhat.com>, 
+	Dan Streetman <ddstreet@ieee.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-s390@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm: zbud: remove zbud
+Message-ID: <63bf6cenq2sg55jorlvwtstyt6xrsi3yayidh3uvdtyib3flbh@ni2ezwfvpggl>
+References: <20250129180633.3501650-1-yosry.ahmed@linux.dev>
+ <20250129180633.3501650-3-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250128091445.GA8257@strace.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QEstNlWgBzifsTawANh_1VYKpPV5byWZ7hWQ-cG5TFc_1738176773
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250129180633.3501650-3-yosry.ahmed@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On 01/28, Dmitry V. Levin wrote:
->
->     * ptrace: Add explicit padding to the end of struct ptrace_syscall_info,
->       simplify obtaining of user ptrace_syscall_info,
->       do not introduce PTRACE_SYSCALL_INFO_SIZE_VER0
->     * ptrace: Change the return type of ptrace_set_syscall_info_* functions
->       from "unsigned long" to "int"
->     * ptrace: Add -ERANGE check to ptrace_set_syscall_info_exit,
->       add comments to -ERANGE checks
->     * ptrace: Update comments about supported syscall stops
->     * selftests: Extend set_syscall_info test, fix for mips n32
+On Wed, Jan 29, 2025 at 06:06:32PM +0000, Yosry Ahmed wrote:
+> The zbud compressed pages allocator is rarely used, most users use
+> zsmalloc. zbud consumes much more memory (only stores 1 or 2 compressed
+> pages per physical page). The only advantage of zbud is a marginal
+> performance improvement that by no means justify the memory overhead.
+> 
+> Historically, zsmalloc had significantly worse latency than zbud and
+> z3fold but offered better memory savings.  This is no longer the case as
+> shown by a simple recent analysis [1].  In a kernel build test on tmpfs
+> in a limited cgroup, zbud 2-3% less time than zsmalloc, but at the cost
+> of using ~32% more memory (1.5G vs 1.13G). The tradeoff does not make
+> sense for zbud in any practical scenario.
+> 
+> The only alleged advantage of zbud is not having the dependency on
+> CONFIG_MMU, but CONFIG_SWAP already depends on CONFIG_MMU anyway, and
+> zbud is only used by zswap.
+> 
+> Remove zbud after z3fold's removal, leaving zsmalloc as the one and only
+> zpool allocator. Leave the removal of the zpool API (and its associated
+> config options) to a followup cleanup after no more allocators show up.
+> 
+> Deprecating zbud for a few cycles before removing it was initially
+> proposed [2], like z3fold was marked as deprecated for 2 cycles [3].
+> However, Johannes rightfully pointed out that the 2 cycles is too short
+> for most downstream consumers, and z3fold was deprecated first only as a
+> courtesy anyway.
+> 
+> [1]https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=2Ww13sCj4S3i4bNndqF+3+_Vg@mail.gmail.com/
+> [2]https://lore.kernel.org/lkml/Z5gdnSX5Lv-nfjQL@google.com/
+> [3]https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/
+> 
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
-Again, I can't review 1-3, I know nothing about the non-x86 architectures.
-
-As for 4-6, feel free to add
-
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
