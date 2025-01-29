@@ -1,35 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7111D1802B;
-	Wed, 29 Jan 2025 00:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A70191F83
+	for <loongarch@lists.linux.dev>; Wed, 29 Jan 2025 18:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738112145; cv=none; b=poczDA42pqG3GtBoNzqKMRMSE2y20NfcExG505sRePQeC+Q5Y6oyNL2wpXykRQlHxiFXu7IYSpX+zt1Wt0ghUsWRCZijKYqx3zkdGXDf+Ox4YtHtqVbkvak9Qx7XJUaoqPkcRqvGF+Orc4cExBCSd8KM+Du/YWb38JVeGgBrImE=
+	t=1738174007; cv=none; b=PJSjraQVQo0Fbw5HeTvFBy9vfs5Y4CPY4q8gUpOfX2cOGglMP4v70t7lMZH9pxMAI2JOeYNUryln2wQGGI9LM/TXiUJiCQhBUOAxopW0QAz+9W9j5eNmDj9IkqUM3i3vjWe2HgoqlUswVfut8mwyomnRcJz+HWMkwz0KuYu3CIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738112145; c=relaxed/simple;
-	bh=7lLgfsbUvvXkuZ/CHyObEqTqK07OIPpnMi3L8CLFkWY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tcURMQ1kJUM89KLMAAj6OEf3EAPGPnoDjhpWS/TXL+Ss1qZswUn8jHlpP+ihclsGe18ra6scr5v9PQ+Ui1Eks8OmjrHU4A5zYqeP+YxTxGE/fNmIKyCkjW7cqgYNlEZXMta8d/aXcl0bKTk2uUkySa+2KCLG8IqpBxHhmSC7GDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0Tp33LE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738174007; c=relaxed/simple;
+	bh=lwWcsi+mo8/lnzN6sBNde2cxo7z3DizDq/RavQTv+nY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EbIz6YZfJoMNUCgnLpzE91jlx/qAIYtixwO9SgC4ogRnQg0UahOSDFR8xa3DOvImlVHyZcsVSFV3x/8LmYzwpvyGxyoGz0N+gDeOrgsL54y8MWuVBaajsbzqONBrL6N3sHzwQisWviUyNeXphZ8LnFiUTp0zjJHwTY+6tlvY06w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rNV3TKe9; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0Tp33LE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0E2C4CED3;
-	Wed, 29 Jan 2025 00:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738112144;
-	bh=7lLgfsbUvvXkuZ/CHyObEqTqK07OIPpnMi3L8CLFkWY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=a0Tp33LEr5mdpx4Jdes8W04nWqwEaLorvXlTwLQeltYmYb4klZ+1dz2ywlTC1b8vX
-	 3+k4ui1fUmLbcFjL5APZZHqXajEfDw8XK18yEtuoVQbYLE2/KJ3OWDxcoyJSsIsYNE
-	 DtQEthCyYqS56sQa1kB1Swn6qPUBhCaLAgWkwja3f55uChLvycrhuijZWm8POhmtni
-	 ykUeyJuvAvFNmoLZJQP4RIXBzVayDzL59pE6M7xHqHJCz+rWiTvl4EPHbNFmFx8Chm
-	 4j7efWWME8OF3uvIkfJk+9cFoNkYjHICLOSesiRjPTBgLZGNKhAvpDasPjs5mHTnv5
-	 F99y903Tt3oVw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE01380AA66;
-	Wed, 29 Jan 2025 00:56:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rNV3TKe9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738174003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+B61QA75bcpmapmJUSuhrmtpoD2G5tgQuCnVdv98XvQ=;
+	b=rNV3TKe9G4VdkviYiZM+vAM3CJEe4QdGERHNJuMSSIEG/o8o+/esXo7K5JctRdjtLTNKYB
+	kR3xltT7m3W9foag37FAzbIL1OsKBB/GQR2kUOcOnlRs7It+gcVLO24I6+k+4biAbLHx5R
+	KfAFT0rs7vHiQV/D4vXRNGNVKQGRelA=
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>,
+	Seth Jennings <sjenning@redhat.com>,
+	Dan Streetman <ddstreet@ieee.org>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2 0/2] mm: zswap: remove z3fold and zbud
+Date: Wed, 29 Jan 2025 18:06:30 +0000
+Message-ID: <20250129180633.3501650-1-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,85 +58,41 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v4 00/19] Wire up CRC32 library functions to
- arch-optimized code
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <173811217076.3973351.8137382917166262630.git-patchwork-notify@kernel.org>
-Date: Wed, 29 Jan 2025 00:56:10 +0000
-References: <20241202010844.144356-1-ebiggers@kernel.org>
-In-Reply-To: <20241202010844.144356-1-ebiggers@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, x86@kernel.org,
- linux-mips@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-ext4@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+After 2 cycles of deprecating z3fold, remove it as well as zbud
+(rationale in specific patches).
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Eric Biggers <ebiggers@google.com>:
+v1 -> v2:
+- Remove zbud directly instead of deprecating it first as suggested by
+  Johannes.
 
-On Sun,  1 Dec 2024 17:08:25 -0800 you wrote:
-> This patchset applies to v6.13-rc1 and is also available in git via:
-> 
->     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc32-lib-v4
-> 
-> CRC32 is a family of common non-cryptographic integrity check algorithms
-> that are fairly fast with a portable C implementation and become far
-> faster still with the CRC32 or carryless multiplication instructions
-> that most CPUs have.  9 architectures already have optimized code for at
-> least some CRC32 variants; however, except for arm64 this optimized code
-> was only accessible through the crypto API, not the library functions.
-> 
-> [...]
+Yosry Ahmed (2):
+  mm: z3fold: remove z3fold
+  mm: zbud: remove zbud
 
-Here is the summary with links:
-  - [f2fs-dev,v4,01/19] lib/crc32: drop leading underscores from __crc32c_le_base
-    https://git.kernel.org/jaegeuk/f2fs/c/0a499a7e9819
-  - [f2fs-dev,v4,02/19] lib/crc32: improve support for arch-specific overrides
-    https://git.kernel.org/jaegeuk/f2fs/c/d36cebe03c3a
-  - [f2fs-dev,v4,03/19] lib/crc32: expose whether the lib is really optimized at runtime
-    https://git.kernel.org/jaegeuk/f2fs/c/b5ae12e0ee09
-  - [f2fs-dev,v4,04/19] crypto: crc32 - don't unnecessarily register arch algorithms
-    https://git.kernel.org/jaegeuk/f2fs/c/780acb2543ea
-  - [f2fs-dev,v4,05/19] arm/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/1e1b6dbc3d9c
-  - [f2fs-dev,v4,06/19] loongarch/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/72f51a4f4b07
-  - [f2fs-dev,v4,07/19] mips/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/289c270eab5e
-  - [f2fs-dev,v4,08/19] powerpc/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/372ff60ac4dd
-  - [f2fs-dev,v4,09/19] s390/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/008071917dfc
-  - [f2fs-dev,v4,10/19] sparc/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/0f60a8ace577
-  - [f2fs-dev,v4,11/19] x86/crc32: update prototype for crc_pcl()
-    https://git.kernel.org/jaegeuk/f2fs/c/64e3586c0b61
-  - [f2fs-dev,v4,12/19] x86/crc32: update prototype for crc32_pclmul_le_16()
-    https://git.kernel.org/jaegeuk/f2fs/c/1e6b72e60a5a
-  - [f2fs-dev,v4,13/19] x86/crc32: expose CRC32 functions through lib
-    https://git.kernel.org/jaegeuk/f2fs/c/55d1ecceb8d6
-  - [f2fs-dev,v4,14/19] bcachefs: Explicitly select CRYPTO from BCACHEFS_FS
-    https://git.kernel.org/jaegeuk/f2fs/c/cc354fa7f016
-  - [f2fs-dev,v4,15/19] lib/crc32: make crc32c() go directly to lib
-    https://git.kernel.org/jaegeuk/f2fs/c/38a9a5121c3b
-  - [f2fs-dev,v4,16/19] ext4: switch to using the crc32c library
-    https://git.kernel.org/jaegeuk/f2fs/c/f2b4fa19647e
-  - [f2fs-dev,v4,17/19] jbd2: switch to using the crc32c library
-    https://git.kernel.org/jaegeuk/f2fs/c/dd348f054b24
-  - [f2fs-dev,v4,18/19] f2fs: switch to using the crc32 library
-    https://git.kernel.org/jaegeuk/f2fs/c/3ca4bec40ee2
-  - [f2fs-dev,v4,19/19] scsi: target: iscsi: switch to using the crc32c library
-    https://git.kernel.org/jaegeuk/f2fs/c/31e4cdde4d8b
+ CREDITS                                       |    3 +
+ Documentation/admin-guide/mm/zswap.rst        |   10 +-
+ Documentation/mm/index.rst                    |    1 -
+ Documentation/mm/z3fold.rst                   |   28 -
+ Documentation/translations/zh_CN/mm/index.rst |    1 -
+ .../translations/zh_CN/mm/z3fold.rst          |   31 -
+ MAINTAINERS                                   |   14 -
+ arch/loongarch/configs/loongson3_defconfig    |    3 +-
+ arch/s390/configs/debug_defconfig             |    2 +-
+ arch/s390/configs/defconfig                   |    2 +-
+ include/linux/zpool.h                         |    5 +-
+ mm/Kconfig                                    |   47 -
+ mm/Makefile                                   |    2 -
+ mm/z3fold.c                                   | 1447 -----------------
+ mm/zbud.c                                     |  455 ------
+ mm/zpool.c                                    |    4 +-
+ 16 files changed, 14 insertions(+), 2041 deletions(-)
+ delete mode 100644 Documentation/mm/z3fold.rst
+ delete mode 100644 Documentation/translations/zh_CN/mm/z3fold.rst
+ delete mode 100644 mm/z3fold.c
+ delete mode 100644 mm/zbud.c
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.48.1.262.g85cc9f2d1e-goog
 
