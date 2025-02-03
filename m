@@ -1,224 +1,253 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E81B202F68;
-	Mon,  3 Feb 2025 11:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738582151; cv=fail; b=t3ltA99hMUGkHwEFmB68GY9snWnDCZg4hy1o08F1ty/joZ0MrWahELlwjOgrlbYP5KTNImDWUfzYpHmXCuhwJQjB7P2raYB9yfuSIe0X4PBJRzHUgTb7+GQzvoHGnT+geh2d1LGkaT4/LQa8Q2RaLz/0GYIWK935G4Tq+Uh94CU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738582151; c=relaxed/simple;
-	bh=N+YzApbixCL/a3kU6kRDfv/5iDy5HYO8Fc7IFCLlNL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KP3uNC7LHnlUYSn5e5gfeTDYXSKmN7LkhnfmaCeO28EwT+czo9G2TxpU1TbiRE3NjkHkP1V2xZgpvbRWd8U87uONWuqTFpoGPs1dCPCedGjirUIDyCPAMnTgXZwKfcVlXPOKtIip6cYDhbKkYMhMa/LHCHOUSRJLFKvU7+hYyLQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=F98VoQFl; arc=fail smtp.client-ip=40.107.237.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C49204C0D;
+	Mon,  3 Feb 2025 11:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738583758; cv=none; b=HDx7sZGeTfsPHmU8taJ0hy3ZkNVuqLQ8F1ecyEbvk6997tReEZ2h4EWlonVw/6KqYmRaO5SE+T5i1Nl9MyrE/B0CS8fTSTv4LrGEqolrfzlFnzKj7i8Ha/LJAZP4MpKy1RIMT3UmT86xeBO+Sh9+EC02mdbKfbzSEKgAGs6u8l4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738583758; c=relaxed/simple;
+	bh=vUDUAA2Mwdbp1/Er12nWiPLs910s5YY8Kv4CQwNzd9o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AmtmZZHNYsbNqaU+V+SkQUBSUq56XC8Q46O9PARPmeDU7AypXjcKFTpICifpzXSbMbO2rfQJ+We9wfsa2X6t05CeQbsiQP6GQ+btelAGiFoe8yLdeCVKzjxYURNdKSEoGCk//NoHCD3zYwYQWrsBECJTQK/I8V42bzRIK8vRx5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=l4QysHYf; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="F98VoQFl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZTt+lmpi7pgmjk7qtG9brrKuXXjN3xe5t5c2eUR0y4sELbCJnWedsCDA3VbQB8oc6qXtxb44VOk0q7EvWZbSI5UF+FvS363cB1Xhi7oh8uhiN4/thMrtVOoB5vzV4KFzZd2rcXbiTMV1/g9koSlJDT3wcQhXwNZv/vuzh/5j7yobbvlWZI2zdPHMgb5+5PuxBWLQ0UK5k8o5oyy+yr0ZIZ3uqmt382eha36XqM4e9hWnSQEbUmdWrSXd1AHR6F7/hw6ynaoBhcrEeR/rmL0izpMgQhwTNwAXUYmM9zEr2hSszJbc4WvdFZjCh8WTMvm+AcBM3pwOFQGR/TiJG064FQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P7ywY9Ly9nqrrmjFHGQ2lU7pYUZOYLE6hIbzl0gx1L8=;
- b=punzTbsOIrOkeC5PJSou2MOE63qbrkB1Ms9J+yXIKQY2k0I9u9pux/dV81rk9CFHsCPO1p8W92O6c9kUiCs0O37+WA85vJiZic/iqpnf4GraVdzeG3JqhtY8euHLxa7TwgyVKp63c4hSh3m5ixFXmLsvleiii643HoUEU53V+3XDRWNC7P8AjWFLIFaCFmTmCUShx1MulfN9gAkXVOXj3O/rSTlSsMdfQxpntKcAT3Ud9hbgpYKXvFFeRx21raM/XMRVOYEk9g7gYOJldQab8pkzX5gkmujETMZh/gAP986OjCQnKQPmymSve3Tp2i2E5r01P4FpW5DygZ2SLY/ZPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P7ywY9Ly9nqrrmjFHGQ2lU7pYUZOYLE6hIbzl0gx1L8=;
- b=F98VoQFl60+CILH4tkqO0+f1oYzeftgq9hsHcojqfPcqmCgCm9kgmk+n30jU8wLf/opUzqUdFicVkKLYkfdG7yqwStBK/gdB5pV9YnQJn+A9Tz2rmNCZfZ+TTNCd7UQoZ5kkLxWiiPcZaFFekZxKtomFdb0HYrzW4TgR6aQBYu1+9sxLDZYYke2UVoOKzeWl/3Bv52b6uH7RCoYuFjxcr90RlBgVFW+4WBJadmt14tCiVkQ/EWXs+Jo/Y+kSwVIwmXdfy5oPyl23F9xbkpRXoExE9+5wbIbkebAqkHagrojY2kG9XaifYQKOhQLZzpTYQs8hTRJgwbRZyO0PCQpJlQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- MN0PR12MB6102.namprd12.prod.outlook.com (2603:10b6:208:3ca::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.25; Mon, 3 Feb 2025 11:29:06 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
- 11:29:06 +0000
-Date: Mon, 3 Feb 2025 22:29:00 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
-	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
-	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com, 
-	dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, 
-	tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, 
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 22/26] device/dax: Properly refcount device dax pages
- when mapping
-Message-ID: <7tmxffcwudefbm7bva4y54bnyp2le2fvtqkmm2ofdhyjvgjqly@4tkut3oxgjvh>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <7d5416ad49341207e5f3c48d5b9c4b7af5fd9ac6.1736488799.git-series.apopple@nvidia.com>
- <67860059b200b_20fa294b5@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67860059b200b_20fa294b5@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: SY0PR01CA0010.ausprd01.prod.outlook.com
- (2603:10c6:10:1bb::14) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="l4QysHYf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WuSovR9QdAIaryYdW+A1g1o31MDAJLE+4vMtcjJlDmY=; t=1738583755; x=1739188555; 
+	b=l4QysHYfInJ5lc4c+anDe87jmyOuknNbBpJ+IrCjAowpK7bVG653YlDCfwvWTEdqY3PibFqcFYc
+	gaMOodkJRJ0DtZrvCc1++zdbVNLqLbgUG5pNofE95VpIJxeSVzaIHm5F3zYO+nekU525HxYnyN3h8
+	cbqCuoa1pXa4zntJsgAjXdPV81fYgafExMKURzUT9zOEQ8ZgBSYQNrcxrxvXrZVw2VwqKRgRyQA4D
+	S3C8kAROTVAoVjBF9HuleS5ZBNi2BZLIHiLt6jVuXr/prlZ2EhjDI3QfPoD5DvGOtNoq/PfWb3lw0
+	Dt8IMoYewk9xgLcrXwSUPosLYLca0oL0f6zQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1tev3M-00000003S4r-39wC; Mon, 03 Feb 2025 12:55:48 +0100
+Received: from p5dc55198.dip0.t-ipconnect.de ([93.197.81.152] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1tev3M-00000003WUE-1xuf; Mon, 03 Feb 2025 12:55:48 +0100
+Message-ID: <950a85c8651b193f95fa839fceaec68d40356555.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by
+ removing 32bit support
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Arnd Bergmann <arnd@arndb.de>, 
+ Richard Henderson <richard.henderson@linaro.org>, Matt Turner
+ <mattst88@gmail.com>, Kees Cook <kees@kernel.org>,  "Paul E. McKenney"	
+ <paulmck@kernel.org>, linux-alpha@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Michael Cree <mcree@orcon.net.nz>, Sam James	
+ <sam@gentoo.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Michael
+ Karcher	 <kernel@mkarcher.dialup.fu-berlin.de>, Chris Hofstaedtler
+ <zeha@debian.org>, 	util-linux@vger.kernel.org, linux-mips@vger.kernel.org,
+ 	loongarch@lists.linux.dev
+Date: Mon, 03 Feb 2025 12:55:47 +0100
+In-Reply-To: <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de>
+		<24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com>
+		<678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com>
+		<bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de>
+		<82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com>
+		<cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de>
+		<87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org>
+		<2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de>
+		<alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk>
+		<78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de>
+	 <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MN0PR12MB6102:EE_
-X-MS-Office365-Filtering-Correlation-Id: db614fbc-9548-4540-b6a5-08dd4445f7b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gylG9C5g5TWrIygzRsoCq2uCoxPmTM8js5wAcnXYOSfJHcZdUV6htOKquNxk?=
- =?us-ascii?Q?z6dlWM/62xQqgL3zbR8JHUJ9p4MHKryYcxFg81s4UklMTjqMPm+eVz3pPNHg?=
- =?us-ascii?Q?LnME6v1fwcNN8CRtX3cXrMMCdEWZy/NkiOmXc0KGqqZXVpye5c1buLG99bjC?=
- =?us-ascii?Q?V3D5ZxtaoiQolYFKO9IpP4eek+FEO4JO/TP31/40WnVP2c4UiokSJOnX92HN?=
- =?us-ascii?Q?Zff9MJ1/eF316oE1hC0RYAVM+DSmJjmn5Ahd+qLsg9BafwWiBV73yccGIKm8?=
- =?us-ascii?Q?VL2cQP/sqWTQKwZ7TXO3QSyUFbTcKIyde1DjdizN4xLdwFZ6LoJFs5YhsWad?=
- =?us-ascii?Q?TmQwf9lXsAp+m4iEfITWlZ/c1U7QuiDFwsdntpxQ0z29ItdOUtr4l67+8RC5?=
- =?us-ascii?Q?GAuCOjktQkVWRZTavl/zsotsoIaI1wv4+6p+kFnTKp9QBNzEFIatQGYwDZm3?=
- =?us-ascii?Q?mbGz+iXyhhKA/l2+9L7zPmqiksbHFTu5fxdTLxJaqTXB5PxHVfaWoDOFM4fH?=
- =?us-ascii?Q?4vdVqJFylxRyJOlTMT/zNcE7NBxkvST9KSg3WOPeqixKMfOFtZXEAeJIOGjB?=
- =?us-ascii?Q?OjlrxjCrmTxDDr/tysVJqihkc+f3Keu6v1GCXv+iLpFMZqUu16AmWQIRIvGS?=
- =?us-ascii?Q?9GpURrugyTMtUFxdWTEgIF0ULzn3XQGYrNJIDOSc48CvbuEFdgWfXXEkGnoz?=
- =?us-ascii?Q?jvM6qSinRTtn0Be8eqcIs6K8F+gRy+VM5ifeSfhRjnbMvHy9kmWDACI/k9yv?=
- =?us-ascii?Q?L02sNbWAs8hVLxuCNBaSjRx77Jm4h5/QQ49zh8gO36TO+4BHuQcr9NmSf37t?=
- =?us-ascii?Q?te25cpOvbHg7XFs/02BvDM+9BcmjLelGvIXsIu9oyLoF3TchyRV9rTOgjq6w?=
- =?us-ascii?Q?8Vqs3Sb6yaexLO15+yDyEgnFTDYc/gW/EMHGyOIAihrd1S2N6lnfj+ql/Qa0?=
- =?us-ascii?Q?jsbXnopBg44i0P19bPC+aIroIE+d5K8Kvn3QxIIBxndSwnqF1y7JBeCFFLT7?=
- =?us-ascii?Q?4RGvuiiMI9gjzCQyfiyyCARXXHd1IEZLzOsyQnzsSaIWEtYIjPoxm/XMnXYK?=
- =?us-ascii?Q?fte9N8ysZddWyh/8F6H6UzvGI4EzSzRs2wQ76XZT/GIHCTN6j2yrcu4n27Yx?=
- =?us-ascii?Q?gY0akw2p6EtGKdHaeuem4NHv5E392S34czS8P4Ts8H3Y1dzHscckCqRA/26m?=
- =?us-ascii?Q?wCB5N8e59tHIZXi60SGN1QQCKjPC/hfNV7wGPL6+nXi+rnAvqqO9DVQsMc5R?=
- =?us-ascii?Q?GeAKKQv4oQ7XptIet4kfMSTEpJ9zNJDjGFjWezseK79Qqbn2jdZd2kXwA9sB?=
- =?us-ascii?Q?kF085nhcS23+wfDYwAurMjqKg0yrUdN/XWWjxfTs1ocEIx60d9w8fHEquAPE?=
- =?us-ascii?Q?tMywPfV+X6W5YwLf6oacHHc4ia6r?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ceSRbDglHWg3TpQMMTMkr6RffGSCiw5TkB5m/nXdC7wv67f0tj3w0fV08XiD?=
- =?us-ascii?Q?uggrMCX7QDb2k5NfgbPWljp3unkG4VGMYtZpm73vW2za3y71kU9ajAApptzR?=
- =?us-ascii?Q?kbbmHnCvudT0KKmLGLye9/W6DBtl5YeV3McLMCngGduGsLs6L1uaIig8W6do?=
- =?us-ascii?Q?4S5earTYpfBvLuvV5RFvvSFlhssrww84i0mjorIAz7mixk4ciSeBLLQWBue+?=
- =?us-ascii?Q?NnbciFWWMbYIKJaGOb29V9BLLXgWqbBO2hddDTC7OIn9aHY3ew4pwJA82DP3?=
- =?us-ascii?Q?N4CVyI1jmamQrxy2ULTTbhagyIaaO+shX3I2bQZublQWJA4hdQXRYjMf5ZMK?=
- =?us-ascii?Q?QEG1DbhRo/q6VrV3Ft0efj2ILv5+gdbzDguDDWzTqUooLbK8Ll6IbDqubABO?=
- =?us-ascii?Q?14DJU0dnto9HVjYrZUcwoF5DqglVT9YHF38jiFHB0GopaPdcdLWaHXJx+Tmu?=
- =?us-ascii?Q?+zc6BAK08JPPl4nbSCSeSguJYMw8i4FIS2fzcfl6kGO3H45osdyfvFtn6tDe?=
- =?us-ascii?Q?dtUTmpPQNj4faSpYiTT4Yw61T2k4y3T8gVig1atNZ6aq6cjWIbahw0xHfds9?=
- =?us-ascii?Q?HIgfbGUtK1A5Kv1GfOuk6fkMXnezJDlFCBJcl0zARKrdgKsKu5YqlBsBLjhl?=
- =?us-ascii?Q?JSsGTM8Jx7tnbxkwpC6c9KX0RXmdW0Uf+/vd4p/QDbNcKszVRJHgcEl4iUUS?=
- =?us-ascii?Q?dLaiTspnZe0hZ/NW30W/aZacewf0C+zycGXgWhTW4UU4xfkJQtkhkj0QU2yY?=
- =?us-ascii?Q?qlFeNLDZiABiUK2X+Y/FmXse2oPROPUHNBIaB/3eIIuMXCSTd7FzZAv3p+V3?=
- =?us-ascii?Q?9q6nlZ4AZ9OCDRwvBJf5RPOmj9syYXKh6lLXXaiuMgar3J05IL5N+WK6GTFJ?=
- =?us-ascii?Q?DbwDLCz+ALuv3uVTzKhbuwXiYfSQoFcAJcXiPqD4TV0Ki6uzoPmfJqWMj/wE?=
- =?us-ascii?Q?4EKQVBKpCh9+ro63dudREIvzt8gfxizos57xYgRP0HM+C4RlsUmdOF8pwfZ6?=
- =?us-ascii?Q?wDXBl9lJfMPYsjwHgkNsTydTicfjOO9yY4MAFZvMcD9W4sR3+rz3z63+Qjn8?=
- =?us-ascii?Q?bI979pCHtmd9AjtOk2YequRVjEXIWMZy79QyNCaY2vO06mpJR7Z+aHYSuWQQ?=
- =?us-ascii?Q?i7cwC7I1MsqJW5AZ24iXTEXzfCGm++V2b33AkgMV52dzhB9mhitzuxuoxOKO?=
- =?us-ascii?Q?lQNVFld9AdwAEDm81YcDVyk+9jITOArYFSrftg90WpEcymulT3uBO2V/90YZ?=
- =?us-ascii?Q?bd+t5pjOQ0aHyvuKjOZ6WJvHntusKu4+nTs7UG5rsievBUKFy/Jk1hKLFiFZ?=
- =?us-ascii?Q?BckqDc8snmq87ldIF1X/CziVI2VMuXaH15rNnRJoENVNsZT73ps0M4cPt4vu?=
- =?us-ascii?Q?77aoCav9+xcVg+DKqe+/h5C8c9YKz6uG551MJ6bHbzbglNbgArKhiFjNufEP?=
- =?us-ascii?Q?OZoPphRpmKyzcIw4NZrok04MmO4CB61m9QngqOwEG9XKYZg1EtKPTC7NYw6+?=
- =?us-ascii?Q?a2qDtbai3O0sb13Fj5uGcS4wWT421s13xOYZYVExxDODiwzCXjTEpBYKI6WV?=
- =?us-ascii?Q?DOqr7zlrRqnZwpWeDVR774iz6iEuXXPc8+KwzBXF?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db614fbc-9548-4540-b6a5-08dd4445f7b9
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 11:29:05.9459
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JnslPjLGsBTV4PnmflD0CxMFkDRBN3Tq7RLYP/7yGjW6JToT5tbD9TMwihJqjzJvaNiZUsHfre4oA/45ehZx0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6102
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Mon, Jan 13, 2025 at 10:12:41PM -0800, Dan Williams wrote:
-> Alistair Popple wrote:
-> > Device DAX pages are currently not reference counted when mapped,
-> > instead relying on the devmap PTE bit to ensure mapping code will not
-> > get/put references. This requires special handling in various page
-> > table walkers, particularly GUP, to manage references on the
-> > underlying pgmap to ensure the pages remain valid.
-> > 
-> > However there is no reason these pages can't be refcounted properly at
-> > map time. Doning so eliminates the need for the devmap PTE bit,
-> > freeing up a precious PTE bit. It also simplifies GUP as it no longer
-> > needs to manage the special pgmap references and can instead just
-> > treat the pages normally as defined by vm_normal_page().
-> > 
-> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> > ---
-> >  drivers/dax/device.c | 15 +++++++++------
-> >  mm/memremap.c        | 13 ++++++-------
-> >  2 files changed, 15 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> > index 6d74e62..fd22dbf 100644
-> > --- a/drivers/dax/device.c
-> > +++ b/drivers/dax/device.c
-> > @@ -126,11 +126,12 @@ static vm_fault_t __dev_dax_pte_fault(struct dev_dax *dev_dax,
-> >  		return VM_FAULT_SIGBUS;
-> >  	}
-> >  
-> > -	pfn = phys_to_pfn_t(phys, PFN_DEV|PFN_MAP);
-> > +	pfn = phys_to_pfn_t(phys, 0);
-> >  
-> >  	dax_set_mapping(vmf, pfn, fault_size);
-> >  
-> > -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
-> > +	return vmf_insert_page_mkwrite(vmf, pfn_t_to_page(pfn),
-> > +					vmf->flags & FAULT_FLAG_WRITE);
-> >  }
-> >  
-> >  static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
-> > @@ -169,11 +170,12 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
-> >  		return VM_FAULT_SIGBUS;
-> >  	}
-> >  
-> > -	pfn = phys_to_pfn_t(phys, PFN_DEV|PFN_MAP);
-> > +	pfn = phys_to_pfn_t(phys, 0);
-> >  
-> >  	dax_set_mapping(vmf, pfn, fault_size);
-> >  
-> > -	return vmf_insert_pfn_pmd(vmf, pfn, vmf->flags & FAULT_FLAG_WRITE);
-> > +	return vmf_insert_folio_pmd(vmf, page_folio(pfn_t_to_page(pfn)),
-> > +				vmf->flags & FAULT_FLAG_WRITE);
-> 
-> This looks suspect without initializing the compound page metadata.
+Hi,
 
-I initially wondered about this too, however I think the compound page metadata
-should be initialised by memmap_init_zone_device(). That said I kind of get lost
-in all the namespace/CXL/PMEM/DAX drivers in the stack so maybe I've overlooked
-something.
- 
-> This might be getting compound pages by default with
-> CONFIG_ARCH_WANT_OPTIMIZE_DAX_VMEMMAP. The device-dax unit tests are ok
-> so far, but that is not super comforting until I can think about this a
-> bit more... but not tonight.
+On Sun, 2025-01-12 at 23:39 -0600, Eric W. Biederman wrote:
+> Richard Henderson <richard.henderson@linaro.org> writes[1]:
+>=20
+> > There was a Spec benchmark (I forget which) which was memory bound and =
+ran
+> > twice as fast with 32-bit pointers.
+> >=20
+> > I copied the idea from DEC to the ELF abi, but never did all the other =
+work
+> > to allow the toolchain to take advantage.
+> >=20
+> > Amusingly, a later Spec changed the benchmark data sets to not fit into=
+ a
+> > 32-bit address space, specifically because of this.
+> >=20
+> > I expect one could delete the ELF bit and personality and no one would
+> > notice. Not even the 10 remaining Alpha users.
+>=20
+> In [2] it was pointed out that parts of setarch weren't working
+> properly on alpha because it has it's own SET_PERSONALITY
+> implementation.  In the discussion that followed Richard Henderson
+> pointed out that the 32bit pointer support for alpha was never
+> completed.
+>=20
+> Fix this by removing alpha's 32bit pointer support.
+>=20
+> As a bit of paranoia refuse to execute any alpha binaries that have
+> the EF_ALPHA_32BIT flag set.  Just in case someone somewhere has
+> binaries that try to use alpha's 32bit pointer support.
+>=20
+> [1] https://lkml.kernel.org/r/CAFXwXrkgu=3D4Qn-v1PjnOR4SG0oUb9LSa0g6QXpBq=
+4ttm52pJOQ@mail.gmail.com
+> [2] https://lkml.kernel.org/r/20250103140148.370368-1-glaubitz@physik.fu-=
+berlin.de
+> v1: https://lkml.kernel.org/r/87jzb2tdb7.fsf_-_@email.froward.int.ebieder=
+m.org
+> Reviewed-by: Richard Henderson <richard.henderson@linaro.org>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>=20
+> Kees can you pick this one up?
+>=20
+>  arch/alpha/include/asm/elf.h       |  6 +-----
+>  arch/alpha/include/asm/pgtable.h   |  2 +-
+>  arch/alpha/include/asm/processor.h |  8 ++------
+>  arch/alpha/kernel/osf_sys.c        | 11 ++---------
+>  4 files changed, 6 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/arch/alpha/include/asm/elf.h b/arch/alpha/include/asm/elf.h
+> index 4d7c46f50382..50c82187e60e 100644
+> --- a/arch/alpha/include/asm/elf.h
+> +++ b/arch/alpha/include/asm/elf.h
+> @@ -74,7 +74,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
+>  /*
+>   * This is used to ensure we don't load something for the wrong architec=
+ture.
+>   */
+> -#define elf_check_arch(x) ((x)->e_machine =3D=3D EM_ALPHA)
+> +#define elf_check_arch(x) (((x)->e_machine =3D=3D EM_ALPHA) && !((x)->e_=
+flags & EF_ALPHA_32BIT))
+> =20
+>  /*
+>   * These are used to set parameters in the core dumps.
+> @@ -137,10 +137,6 @@ extern int dump_elf_task(elf_greg_t *dest, struct ta=
+sk_struct *task);
+>  	: amask (AMASK_CIX) ? "ev6" : "ev67");	\
+>  })
+> =20
+> -#define SET_PERSONALITY(EX)					\
+> -	set_personality(((EX).e_flags & EF_ALPHA_32BIT)		\
+> -	   ? PER_LINUX_32BIT : PER_LINUX)
+> -
+>  extern int alpha_l1i_cacheshape;
+>  extern int alpha_l1d_cacheshape;
+>  extern int alpha_l2_cacheshape;
+> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
+table.h
+> index 635f0a5f5bbd..02e8817a8921 100644
+> --- a/arch/alpha/include/asm/pgtable.h
+> +++ b/arch/alpha/include/asm/pgtable.h
+> @@ -360,7 +360,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte=
+)
+> =20
+>  extern void paging_init(void);
+> =20
+> -/* We have our own get_unmapped_area to cope with ADDR_LIMIT_32BIT.  */
+> +/* We have our own get_unmapped_area */
+>  #define HAVE_ARCH_UNMAPPED_AREA
+> =20
+>  #endif /* _ALPHA_PGTABLE_H */
+> diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/=
+processor.h
+> index 55bb1c09fd39..5dce5518a211 100644
+> --- a/arch/alpha/include/asm/processor.h
+> +++ b/arch/alpha/include/asm/processor.h
+> @@ -8,23 +8,19 @@
+>  #ifndef __ASM_ALPHA_PROCESSOR_H
+>  #define __ASM_ALPHA_PROCESSOR_H
+> =20
+> -#include <linux/personality.h>	/* for ADDR_LIMIT_32BIT */
+> -
+>  /*
+>   * We have a 42-bit user address space: 4TB user VM...
+>   */
+>  #define TASK_SIZE (0x40000000000UL)
+> =20
+> -#define STACK_TOP \
+> -  (current->personality & ADDR_LIMIT_32BIT ? 0x80000000 : 0x00120000000U=
+L)
+> +#define STACK_TOP (0x00120000000UL)
+> =20
+>  #define STACK_TOP_MAX	0x00120000000UL
+> =20
+>  /* This decides where the kernel will search for a free chunk of vm
+>   * space during mmap's.
+>   */
+> -#define TASK_UNMAPPED_BASE \
+> -  ((current->personality & ADDR_LIMIT_32BIT) ? 0x40000000 : TASK_SIZE / =
+2)
+> +#define TASK_UNMAPPED_BASE (TASK_SIZE / 2)
+> =20
+>  /* This is dead.  Everything has been moved to thread_info.  */
+>  struct thread_struct { };
+> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+> index 86185021f75a..a08e8edef1a4 100644
+> --- a/arch/alpha/kernel/osf_sys.c
+> +++ b/arch/alpha/kernel/osf_sys.c
+> @@ -1210,8 +1210,7 @@ SYSCALL_DEFINE1(old_adjtimex, struct timex32 __user=
+ *, txc_p)
+>  	return ret;
+>  }
+> =20
+> -/* Get an address range which is currently unmapped.  Similar to the
+> -   generic version except that we know how to honor ADDR_LIMIT_32BIT.  *=
+/
+> +/* Get an address range which is currently unmapped. */
+> =20
+>  static unsigned long
+>  arch_get_unmapped_area_1(unsigned long addr, unsigned long len,
+> @@ -1230,13 +1229,7 @@ arch_get_unmapped_area(struct file *filp, unsigned=
+ long addr,
+>  		       unsigned long len, unsigned long pgoff,
+>  		       unsigned long flags, vm_flags_t vm_flags)
+>  {
+> -	unsigned long limit;
+> -
+> -	/* "32 bit" actually means 31 bit, since pointers sign extend.  */
+> -	if (current->personality & ADDR_LIMIT_32BIT)
+> -		limit =3D 0x80000000;
+> -	else
+> -		limit =3D TASK_SIZE;
+> +	unsigned long limit =3D TASK_SIZE;
+> =20
+>  	if (len > limit)
+>  		return -ENOMEM;
 
-From my reading of the code I don't _think_
-CONFIG_ARCH_WANT_OPTIMIZE_DAX_VMEMMAP would change whether or not we got
-compound pages by default, just that if we did some of the (tail?) pages may
-refer to the same physical struct page.
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-> Might as well fix up device-dax refcounts in this series too, but I
-> won't ask you to do that, will send you something to include.
+Can someone pick up this patch for v6.14?
 
-Eh. That should be relatively straight forward. But then I thought that about FS
-DAX too :-)
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
