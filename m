@@ -1,424 +1,729 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC2C2147E6;
-	Wed,  5 Feb 2025 08:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738743232; cv=fail; b=pGJQbmTebGByrMEayJkVExLd+tSRZtEf539PKJWtXM98UDL7F2fVGgXASlvTie8qkj5BC/O8+g1tTBIAF5fj5yIO2ulVd47Dw9s7+7YQCgnm5Qo07K3kBZN6qBQCDiULyHVA8AqfvVpnuTmGgMn9ZBkFfAxtNaA8maObMLP28pc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738743232; c=relaxed/simple;
-	bh=89ODV22OV/veQQ7lJvTZ/T/xBH4/+geDXWczzr6wA7A=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ms5p041yDZMTQJNlPe/sJ7nGIT1h7LLsIB09TwVUeaGHcs7krC+10swkG8mqG9RxoV43IlvVgRetkZ1p8uUYlvUQ6lKKd10cPNxgmTagG93VMzvAelIpbtmbWzVeaEfBStifU4DzZJd1aNPeF3go9Qlp7bzevwqroBSy+k1fcAc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3LJm6QB; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3LJm6QB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738743231; x=1770279231;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=89ODV22OV/veQQ7lJvTZ/T/xBH4/+geDXWczzr6wA7A=;
-  b=h3LJm6QB9qyhekonX2aZuCxL8/BSckBYb7nNHHtJ4TodbTus6jyHB+m9
-   UPtKpjXtoX1KW6QimYttao04fqnCygkTvq9WxtvlnZEZQQzAZogHVbaK0
-   j1s1aBjwvo7h5oPrjVJ8VHIaGMNxkJCacbmMxC8tkr3pTpPdyfyOA/eNW
-   2gxkndDnl3B6kTcpQIceprzCyxRS0JoIQCNINTqTchOu0x2dfdi6cEVxP
-   A9IPF8rxs1C5zTwGLSHtSehBncwunS43xmWw0NvEs/8WE7ab4NXtIBpFb
-   fw8JIvyKkkvc89otAoXB5HMruSjq7t6JoaNADPL/DKarrNrqjgTc/0ZDi
-   Q==;
-X-CSE-ConnectionGUID: A+OC/f9aQTSJTAIQA5/eSw==
-X-CSE-MsgGUID: 9LhK3mccRM2MzDNLoplyLg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="26901466"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="26901466"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:13:30 -0800
-X-CSE-ConnectionGUID: 7ZQRCep3SSmwNDOnTwTNIA==
-X-CSE-MsgGUID: hRibgeRkTIeKOK/Q/ntcNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110720446"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Feb 2025 00:13:29 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 5 Feb 2025 00:13:28 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Feb 2025 00:13:28 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Feb 2025 00:13:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DD1Bi9HZfI0O3HcOS9sIRw8F2/1M3BrNKguXiuzOpkarJ30YQizWfLTdI8Mffc2VKmj6hZ1XUsARKf83jo8yoOdBE6doDk9SMAys5ahWNuW61Bv6vuo+qzuC1akLB8BNoCe5TIPW5L8t/xZoADBmVE4P8/fFO1Wk6JucMUPjgIsIrRDhep4r1Pep92A0VQUeTSYjo2/nDiqINlHy9P4dIMPkXrZAipjvhAxMIm1X0Bm/J+fAbHy4F5E8G7AXjrpcJ6yAnW3pITZTnAuAn8y6E4rnUWYzUC2SPUMGg8lVyrDaoxvTGdXyKYliwV/5trwuNCee1BMOAG2BznRNrqic2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ttRoPpmqFFSqUbd1tCJ/nKG2khN9/YOG+AwrsuYDMFQ=;
- b=kkCyzKBWjBXRgv03UdYTj7frFFWt/JrcEbJy3saTVqnvPWaUarrUitsg508s2iUp046ZZvFKA/Z/A6GK2XChgE8Ov7mSvyGYYGaY92daFYA8r3ueenKuc9S4W5NyX2IxLPIFiQ/jqu1dhwdCzWza6CptV90+inOzsOMBHXI+opjw0/LoHFrjbK5oWqy5WH4eRwZ8TPyLic1gOAQCEAJtNTmkfOg3ErvUra3qfpbcViBMRXq2qPa870skW83sx24ltru7UgR+OCAEw5melqfW+HaHwlaw+y+RLc0H1AgbovruRLiONpl3910iaYnDXdXpWWJFlVDrCuIGJwuMXB7uYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SA3PR11MB7525.namprd11.prod.outlook.com (2603:10b6:806:31a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
- 2025 08:13:26 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 08:13:26 +0000
-Date: Wed, 5 Feb 2025 16:13:14 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, Alexandre Ghiti
-	<alexghiti@rivosinc.com>, <linux-riscv@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, Charlie Jenkins <charlie@rivosinc.com>,
-	<oliver.sang@intel.com>
-Subject: Re: [PATCH v4 4/4] entry: Inline syscall_exit_to_user_mode()
-Message-ID: <202502051555.85ae6844-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127-riscv_optimize_entry-v4-4-868cf7702dc9@rivosinc.com>
-X-ClientProxiedBy: KL1PR01CA0103.apcprd01.prod.exchangelabs.com
- (2603:1096:820:3::19) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F020A205E3C
+	for <loongarch@lists.linux.dev>; Wed,  5 Feb 2025 09:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738747207; cv=none; b=kxGTTXdoj/gh2cgnOCGYpQbiObnTcEo1kz17cCW6XCICGIjG8ihR4TiKIKUlWQJIkXkqKjALOpGqyzdlkjpXZnw/9+1pPcxCYRmRzKjjH1Q8vlvZd7GhqiVCa1Xn6QgnIUvR3QKICHhO6UgvRfSSYnA+8hh5VIBtL6B4R38KF6w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738747207; c=relaxed/simple;
+	bh=DTfrEUdDnPAie4SJZNttmMPeFhZNYUv3h2rpu70lh74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nrv3pZ3qrJhpdcW9f/bEfb4ZhUsy8uy7IxPc0kVg+Sz8Et/bT32xUCGiOaBLBqpK4pgxX61JgtLj4KxqHI+6IZT0BfPGLMSLdzsW98yKvIe5q4WfW5s6vJmAmYcYH5es9l0MEDk9Xv8a+om96eSAVUuA/FnkggfSptOC7ondIhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Ynv8K6sMWz9sSs;
+	Wed,  5 Feb 2025 09:50:41 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 9hJU2iHJc0Bk; Wed,  5 Feb 2025 09:50:41 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Ynv813NXdz9sSN;
+	Wed,  5 Feb 2025 09:50:25 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 55D338B765;
+	Wed,  5 Feb 2025 09:50:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id ZcD0HZPusVX1; Wed,  5 Feb 2025 09:50:25 +0100 (CET)
+Received: from [10.25.207.138] (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id B44D38B763;
+	Wed,  5 Feb 2025 09:50:24 +0100 (CET)
+Message-ID: <a5703632-66ed-4119-873c-6b6901a39a2b@csgroup.eu>
+Date: Wed, 5 Feb 2025 09:50:23 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SA3PR11MB7525:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a2bcbd5-a54c-46b1-d686-08dd45bcf71f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?rxiYwEfQGrQuzTiAIGeYU/2MpurRo1i4npd6OksKgjTJixXaEgURwzUmPT?=
- =?iso-8859-1?Q?Myg7CWmwXO7aMgzc7ASLolLPYKfwkoIyTLmTMuN8tDim4X9V8jTqS+eLz8?=
- =?iso-8859-1?Q?JBIWSrNm+qQrJGZdel1DRl5k971PD+H4DXkFw7aX4AcieYbqOi4ZUsbkcW?=
- =?iso-8859-1?Q?QgkhnjT93oH8JMr9/v7J3Mg2wPYuRIBQvjW695WS2Cwxh2PWM6vmskC1dQ?=
- =?iso-8859-1?Q?fxDTHzXilkYkFhfZzxbZPB4e8QJDv5strTZdeYQIFFQpheQeMZy15hf1dO?=
- =?iso-8859-1?Q?sSQW5A2WaPTXm38aGJGz/68aXk8gPmYMER5JqMQOdZtrY4B9hsMHDKOf3b?=
- =?iso-8859-1?Q?631e+lRsA8jZqMJ6hSV/GUUHyzl4sZVliyV4QJGOAnS8KtAC+BflZoX8lr?=
- =?iso-8859-1?Q?kc2Na2i3A6XGGNg7RoTj5yoOimAwgg+FxQONikjyoe0rcxUOrOVBwl5Tl/?=
- =?iso-8859-1?Q?qFx3uFVDo9hvBc85wNIn9ZNow+zKFv6IJmzbTfnq1AdG4Ks5juAfYkPu6l?=
- =?iso-8859-1?Q?LMjucolIHb05f0K9g1gZRMtN0d4uoli1SOShuljgZqA6vOUX8u205mVpbl?=
- =?iso-8859-1?Q?hG5QxhvGShEjyQ1+nbXI3m8ZKR734XXIBnCw6UFbOFn0tpdFqEtMfRbvHq?=
- =?iso-8859-1?Q?Xrs/ZElbrc7lH0VxqYPl1nT6kCTzlmzobzTfUCkSdEGut0o406RpL86tbl?=
- =?iso-8859-1?Q?yPmuQM6MHOrXDTiou/2oAeVcDgMHEa7lBeESQ/6x/tTkr5qsM1Aqs2TEG8?=
- =?iso-8859-1?Q?bpYYWau8Cg4d0X/ckl7M8J3zzzye8TExp0FzrPVZGWPfVHn56W6DKOY/Uz?=
- =?iso-8859-1?Q?HSiGXrHaP9U3CksFhGFfnEZsGqoGYCiliRbSR+N13uKlCM2OScX7ffeDs0?=
- =?iso-8859-1?Q?xcGpaGSeFV/4zfNDuvciqqyPUgHgFKjvrXuZ08UnbsBC/2OlFtf8+Exfil?=
- =?iso-8859-1?Q?JU+rQiKcZU0VaEYEtPr9Tw7Fhw7PHDorBjdUHGi/0vyxM3Wshcdg/A8yhm?=
- =?iso-8859-1?Q?q7h1curWamqcd7T/5Hw4y3kEQgfmQ49ugT7qjPO9+y4qDnnmzOAK31Bxww?=
- =?iso-8859-1?Q?U/6q0kPhgYNo6O6cHprpeEon8jQ8zm0o/Y5gnVyMUYu0tPuFtMRB9LOSJQ?=
- =?iso-8859-1?Q?lgDMliZyED68NBJJ9LjMqnSKA+5nBdomUalW5j07nRMQ0KG+7fpb5stAT/?=
- =?iso-8859-1?Q?wnw2+8tvCuxEFSciXiqfM25lRpQAXHnqjUID9p5Fmi9FSjW/2mki+LVvrZ?=
- =?iso-8859-1?Q?4FMG4YmJ4EZpGojOBPkilNaYm0rK1tbngwvSHisVYv7CFknSQbLlqrZPJH?=
- =?iso-8859-1?Q?wS3Qm7Rrihc6i4KyEGblG4RkrxKM4oH/vbzGTJ2MNqTr1uiHAB7Ea9ePwT?=
- =?iso-8859-1?Q?YJVyYpKgI3iQOfpK9R+zf16kAYYhJADA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?NChf5jj4h7U9eMOwjq0y3tcYELyKVIfXi4ZJrI3vx4fDdSBfJvS+TFbKXK?=
- =?iso-8859-1?Q?OVsz3rRLA45ogbtwAZg5GNkD0Lfr34MeB2QeCh3XITZJ+fjUKNlk4X8XIW?=
- =?iso-8859-1?Q?vE2DEHXEKo0xiLIYCC7MURYphBV02Xbxz5DoVLsozIUUjgArxZ2Na3OPes?=
- =?iso-8859-1?Q?GGuwr3nbiSF4t7JMNcDNQP2M+RYldbAfPVR1yZNSX9BJFvA4O64jkz/BHM?=
- =?iso-8859-1?Q?5EZ+PpZvNqiVOazJoJCkTf2nMARNsv7Iowf1lKRa6JGI58hp7eWEhwK1Wk?=
- =?iso-8859-1?Q?s7ADu17/rjUeYq6lC+IpGG8uwj3Kk0uadME29dShQ4pdGSZWr4y7o2Iam6?=
- =?iso-8859-1?Q?KGanoiLxkIgEcPn+yISILV3E7jCoaXgQU7fSFS/lnjrHKHDfIGxpCKbxUN?=
- =?iso-8859-1?Q?5Vpzjl1FpOuLtRIGuq0DOwqjCFJRRC93+Z5Y0gFmDa1Fl6tI3W8FW7wN+C?=
- =?iso-8859-1?Q?0hLXj3BkPrv/VcP+SPi+LvZo0Q+CpuyiP+PTwgs7H4olZQVTKMRD46GI0p?=
- =?iso-8859-1?Q?mH89Tirk9DDeqFpK5Z8iITPJw6sAydaymBTIoL9pSHZM/HlFgg1lucCIM4?=
- =?iso-8859-1?Q?aQ9hgBlV03yjb2h+QugySUxN6bLrtA0OpI5fjZluoTmTdTpLzBbPv1VSTR?=
- =?iso-8859-1?Q?dGG94us9F/hN0MNK71tzzed7UTiOfBQnimT37Ew3eOE15oVcKdU27Xy/ml?=
- =?iso-8859-1?Q?aic8FwjjGbpgRW4eepIr0Xa1yhLRi71SnKAXwBeHAysFEKirJAc4xsygaJ?=
- =?iso-8859-1?Q?djJ8a7nxQztpWWfe9/wLR8ir46hncRQuL8LynHnuRr0SOAAplDSQ6WB4eS?=
- =?iso-8859-1?Q?OU1ood0vvetJin/9ZjXbdABXRlhGC46fJ2CXhKkA8rfsxWiNyLt8/E908b?=
- =?iso-8859-1?Q?ZJDN4fgzYGefuBxx0Bw8Wq9sPA2R0pNlAnkFxSDSRVNtiaDS2ux0xUBs0G?=
- =?iso-8859-1?Q?6zib5dZLZBjxl4ZuNbv1J7BdE3Tdx3T2oc2Ce22mB5Qdt2yHpykfimcfl5?=
- =?iso-8859-1?Q?IjCuVIfN4o2xDQiZoK6P2kC7gmyY5PDPVEMCD9y7yku0a85OORtcMlOIUF?=
- =?iso-8859-1?Q?7ajK2nvb9uzVdu2PvSQGNKfrM1Yhyrrdgp3YjMJLLBVnn38mDdTu7yZnDL?=
- =?iso-8859-1?Q?sdd37lv98U3Q+XvU6BxecBgg3yCWx//yoMFAkkyVhbEPiGE/N5L1aSTKyq?=
- =?iso-8859-1?Q?EPvI5ZOJDuC4xeRiv7ottO5hT/SBgAQuyZf9UivQjTFQljmYsjKh2fMP0n?=
- =?iso-8859-1?Q?WuRzHQsZleB53E2DkigPSMrXlj+yOEFV8qJf3d3x4UaEX2Ph5d3psHU4eC?=
- =?iso-8859-1?Q?5wg3lM1DSFcnRemIChBs+ojp9gENcRCpHbgmwjjznHCiHfXCXCeBq2Oo90?=
- =?iso-8859-1?Q?PPNoLw8MzDMsof+SFRHx0RDWuZ+p19UceZsRKyyYjMZou+ZAezbnPMWjfx?=
- =?iso-8859-1?Q?U1ETWWDbCWjFl5+6FkJ66v37YkBDryMh3v8+FKTmoI/9HRyVenrXGfXLkd?=
- =?iso-8859-1?Q?2aRMMNB6fJ4sZ3bbOjhla4ebdmjF4Z+eOIlQRXtCZufCjMr7hRAjwKgjsi?=
- =?iso-8859-1?Q?iaB67HnIdpZQFJOzmIUG0rQx4rVFz3kTvR89ZGYF5YZhssoqPmkokpzqUZ?=
- =?iso-8859-1?Q?XqRFsK5xvT5FLVnxVInlY0gSD0iDIKVHvniFXgFIdlIakxRdS5/2llOA?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a2bcbd5-a54c-46b1-d686-08dd45bcf71f
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 08:13:26.0020
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1WKd14mMNjK+EH+ecd/cN0mZkv4INsPO7m4DoqzZZU3PLNWHbMl/83Myv+w5noTarSVEaC9wHheT94d6SS8AuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7525
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 14/18] powerpc/vdso: Switch to generic storage
+ implementation
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+ Guo Ren <guoren@kernel.org>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
+ linux-csky@vger.kernel.org
+References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
+ <20250204-vdso-store-rng-v3-14-13a4669dfc8c@linutronix.de>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250204-vdso-store-rng-v3-14-13a4669dfc8c@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-Hello,
+Le 04/02/2025 √† 13:05, Thomas Wei√üschuh a √©crit¬†:
+> The generic storage implementation provides the same features as the
+> custom one. However it can be shared between architectures, making
+> maintenance easier.
+> 
+> Co-developed-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Thomas Wei√üschuh <thomas.weissschuh@linutronix.de>
 
-kernel test robot noticed a 1.9% improvement of stress-ng.seek.ops_per_sec on:
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-
-commit: c1bc35dd5bf6c7fa86a936a4fbe3b8d92fbf8641 ("[PATCH v4 4/4] entry: Inline syscall_exit_to_user_mode()")
-url: https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/riscv-entry-Convert-ret_from_fork-to-C/20250128-133636
-patch link: https://lore.kernel.org/all/20250127-riscv_optimize_entry-v4-4-868cf7702dc9@rivosinc.com/
-patch subject: [PATCH v4 4/4] entry: Inline syscall_exit_to_user_mode()
-
-testcase: stress-ng
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-parameters:
-
-	nr_threads: 100%
-	testtime: 60s
-	test: seek
-	cpufreq_governor: performance
-
-
-In addition to that, the commit also has significant impact on the following tests:
-
-+------------------+--------------------------------------------------------------------------------+
-| testcase: change | stress-ng: stress-ng.context.swapcontext_calls_per_sec 1.9% improvement        |
-| test machine     | 384 threads 2 sockets Intel(R) Xeon(R) 6972P (Granite Rapids) with 128G memory |
-| test parameters  | cpufreq_governor=performance                                                   |
-|                  | nr_threads=100%                                                                |
-|                  | test=context                                                                   |
-|                  | testtime=60s                                                                   |
-+------------------+--------------------------------------------------------------------------------+
-
-
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250205/202502051555.85ae6844-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp8/seek/stress-ng/60s
-
-commit: 
-  37c1871b51 ("LoongArch: entry: Migrate ret_from_fork() to C")
-  c1bc35dd5b ("entry: Inline syscall_exit_to_user_mode()")
-
-37c1871b51766a66 c1bc35dd5bf6c7fa86a936a4fbe 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-    104886 ± 19%     +19.3%     125157 ± 17%  numa-meminfo.node1.Slab
-      2583 ± 39%     +75.4%       4531 ± 40%  proc-vmstat.numa_hint_faults_local
-    179842            +0.6%     180945        vmstat.system.in
-    177.18            -2.6%     172.49        stress-ng.seek.nanosecs_per_seek
- 1.223e+09            +1.9%  1.246e+09        stress-ng.seek.ops
-  20376380            +1.9%   20771261        stress-ng.seek.ops_per_sec
-      1.05 ± 20%    -100.0%       0.00        perf-sched.sch_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-     13.11 ± 28%    -100.0%       0.00        perf-sched.sch_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      3.12 ± 21%    -100.0%       0.00        perf-sched.wait_and_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      2785 ± 14%    -100.0%       0.00        perf-sched.wait_and_delay.count.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    836.20 ± 43%    -100.0%       0.00        perf-sched.wait_and_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      2.07 ± 27%    -100.0%       0.00        perf-sched.wait_time.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    834.79 ± 44%    -100.0%       0.00        perf-sched.wait_time.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      2.04            +3.4%       2.11        perf-stat.i.MPKI
- 3.682e+08            +2.0%  3.754e+08        perf-stat.i.cache-misses
- 4.637e+08            +1.8%  4.721e+08        perf-stat.i.cache-references
-      1.23            +1.5%       1.25        perf-stat.i.cpi
-    603.02            -1.9%     591.60        perf-stat.i.cycles-between-cache-misses
- 1.798e+11            -1.4%  1.772e+11        perf-stat.i.instructions
-      0.82            -1.4%       0.80        perf-stat.i.ipc
-      3902            +1.8%       3972 ±  2%  perf-stat.i.minor-faults
-      3902            +1.8%       3972 ±  2%  perf-stat.i.page-faults
-      2.05            +3.4%       2.12        perf-stat.overall.MPKI
-      1.23            +1.5%       1.25        perf-stat.overall.cpi
-    602.25            -1.9%     590.74        perf-stat.overall.cycles-between-cache-misses
-      0.81            -1.4%       0.80        perf-stat.overall.ipc
- 3.623e+08            +1.9%  3.693e+08        perf-stat.ps.cache-misses
- 4.562e+08            +1.8%  4.645e+08        perf-stat.ps.cache-references
- 1.769e+11            -1.4%  1.743e+11        perf-stat.ps.instructions
-      3826            +1.8%       3893 ±  2%  perf-stat.ps.minor-faults
-      3826            +1.8%       3893 ±  2%  perf-stat.ps.page-faults
- 1.085e+13            -2.0%  1.063e+13        perf-stat.total.instructions
-     10.62 ±  2%      -0.6       10.02 ±  3%  perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.llseek.stress_run
-      9.46 ±  2%      -0.5        8.94 ±  3%  perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.llseek.stress_run
-      0.63            +0.0        0.66 ±  3%  perf-profile.calltrace.cycles-pp.x64_sys_call.do_syscall_64.entry_SYSCALL_64_after_hwframe.llseek
-      1.61            +0.0        1.64        perf-profile.calltrace.cycles-pp.copy_page_from_iter_atomic.generic_perform_write.generic_file_write_iter.vfs_write.ksys_write
-      2.78            +0.1        2.85        perf-profile.calltrace.cycles-pp.__filemap_get_folio.simple_write_begin.generic_perform_write.generic_file_write_iter.vfs_write
-      2.94            +0.1        3.02        perf-profile.calltrace.cycles-pp.simple_write_begin.generic_perform_write.generic_file_write_iter.vfs_write.ksys_write
-      8.58            +0.2        8.77        perf-profile.calltrace.cycles-pp.copy_page_to_iter.filemap_read.vfs_read.ksys_read.do_syscall_64
-      8.37            +0.2        8.56        perf-profile.calltrace.cycles-pp._copy_to_iter.copy_page_to_iter.filemap_read.vfs_read.ksys_read
-      8.96            +0.2        9.17        perf-profile.calltrace.cycles-pp.folio_unlock.simple_write_end.generic_perform_write.generic_file_write_iter.vfs_write
-      9.53            +0.2        9.75        perf-profile.calltrace.cycles-pp.simple_write_end.generic_perform_write.generic_file_write_iter.vfs_write.ksys_write
-     12.86            +0.3       13.15        perf-profile.calltrace.cycles-pp.filemap_read.vfs_read.ksys_read.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     14.08            +0.3       14.42        perf-profile.calltrace.cycles-pp.vfs_read.ksys_read.do_syscall_64.entry_SYSCALL_64_after_hwframe.read
-     15.98            +0.3       16.32        perf-profile.calltrace.cycles-pp.generic_perform_write.generic_file_write_iter.vfs_write.ksys_write.do_syscall_64
-     19.18            +0.4       19.55        perf-profile.calltrace.cycles-pp.generic_file_write_iter.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe
-     20.30            +0.4       20.67        perf-profile.calltrace.cycles-pp.vfs_write.ksys_write.do_syscall_64.entry_SYSCALL_64_after_hwframe.write
-      7.39            -7.4        0.00        perf-profile.children.cycles-pp.syscall_exit_to_user_mode
-     54.31            -0.7       53.60        perf-profile.children.cycles-pp.llseek
-     56.77            -0.3       56.42        perf-profile.children.cycles-pp.do_syscall_64
-     59.25            -0.3       58.95        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
-      0.12 ±  3%      +0.0        0.15 ± 13%  perf-profile.children.cycles-pp.generic_file_read_iter
-      1.73            +0.0        1.77        perf-profile.children.cycles-pp.x64_sys_call
-      1.97            +0.1        2.02        perf-profile.children.cycles-pp.filemap_get_entry
-      2.84            +0.1        2.92        perf-profile.children.cycles-pp.__filemap_get_folio
-      2.97            +0.1        3.05        perf-profile.children.cycles-pp.simple_write_begin
-      6.98            +0.1        7.09        perf-profile.children.cycles-pp.entry_SYSRETQ_unsafe_stack
-      1.96            +0.1        2.08 ±  5%  perf-profile.children.cycles-pp.stress_shim_lseek
-      8.92            +0.1        9.06        perf-profile.children.cycles-pp.entry_SYSCALL_64
-      8.40            +0.2        8.58        perf-profile.children.cycles-pp._copy_to_iter
-      8.61            +0.2        8.80        perf-profile.children.cycles-pp.copy_page_to_iter
-      8.97            +0.2        9.19        perf-profile.children.cycles-pp.folio_unlock
-      9.57            +0.2        9.80        perf-profile.children.cycles-pp.simple_write_end
-     19.10            +0.3       19.38        perf-profile.children.cycles-pp.read
-     12.94            +0.3       13.24        perf-profile.children.cycles-pp.filemap_read
-     25.30            +0.3       25.62        perf-profile.children.cycles-pp.write
-     14.14            +0.3       14.48        perf-profile.children.cycles-pp.vfs_read
-     16.12            +0.3       16.47        perf-profile.children.cycles-pp.generic_perform_write
-     14.72            +0.4       15.08        perf-profile.children.cycles-pp.ksys_read
-     19.25            +0.4       19.62        perf-profile.children.cycles-pp.generic_file_write_iter
-     20.95            +0.4       21.33        perf-profile.children.cycles-pp.ksys_write
-     20.40            +0.4       20.78        perf-profile.children.cycles-pp.vfs_write
-      6.38            -6.4        0.00        perf-profile.self.cycles-pp.syscall_exit_to_user_mode
-      0.63            +0.0        0.65        perf-profile.self.cycles-pp.__filemap_get_folio
-      2.20            +0.0        2.23        perf-profile.self.cycles-pp.entry_SYSCALL_64
-      2.45            +0.0        2.48        perf-profile.self.cycles-pp.entry_SYSCALL_64_after_hwframe
-      0.97            +0.0        1.00        perf-profile.self.cycles-pp.filemap_read
-      1.51            +0.0        1.56        perf-profile.self.cycles-pp.x64_sys_call
-      1.54            +0.0        1.59        perf-profile.self.cycles-pp.filemap_get_read_batch
-      6.54            +0.1        6.64        perf-profile.self.cycles-pp.llseek
-      6.74            +0.1        6.85        perf-profile.self.cycles-pp.entry_SYSRETQ_unsafe_stack
-      8.35            +0.2        8.54        perf-profile.self.cycles-pp._copy_to_iter
-      8.93            +0.2        9.14        perf-profile.self.cycles-pp.folio_unlock
-      3.91            +6.1        9.96        perf-profile.self.cycles-pp.do_syscall_64
-
-
-***************************************************************************************************
-lkp-gnr-2ap2: 384 threads 2 sockets Intel(R) Xeon(R) 6972P (Granite Rapids) with 128G memory
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-gnr-2ap2/context/stress-ng/60s
-
-commit: 
-  37c1871b51 ("LoongArch: entry: Migrate ret_from_fork() to C")
-  c1bc35dd5b ("entry: Inline syscall_exit_to_user_mode()")
-
-37c1871b51766a66 c1bc35dd5bf6c7fa86a936a4fbe 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-    933000 ± 10%     +30.5%    1217543 ± 18%  proc-vmstat.pgfree
-     40.25 ± 37%     +70.8%      68.75 ± 37%  sched_debug.cpu.nr_uninterruptible.max
- 1.063e+08            +1.9%  1.083e+08        stress-ng.context.ops
-   1771139            +1.9%    1805148        stress-ng.context.ops_per_sec
-   4608060            +1.9%    4696809        stress-ng.context.swapcontext_calls_per_sec
-      0.06 ± 24%    -100.0%       0.00        perf-sched.sch_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      4.53 ± 59%    -100.0%       0.00        perf-sched.sch_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    217.64 ± 10%     -17.8%     178.86 ± 17%  perf-sched.wait_and_delay.avg.ms.pipe_read.vfs_read.ksys_read.do_syscall_64
-      0.67 ± 83%    -100.0%       0.00        perf-sched.wait_and_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      3262 ±  3%    -100.0%       0.00        perf-sched.wait_and_delay.count.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    505.60 ± 97%    -100.0%       0.00        perf-sched.wait_and_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    217.59 ± 10%     -18.1%     178.22 ± 17%  perf-sched.wait_time.avg.ms.pipe_read.vfs_read.ksys_read.do_syscall_64
-      0.61 ± 91%    -100.0%       0.00        perf-sched.wait_time.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    502.72 ± 98%    -100.0%       0.00        perf-sched.wait_time.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
- 1.197e+11            -4.4%  1.145e+11        perf-stat.i.branch-instructions
-      1.48            +0.1        1.57        perf-stat.i.branch-miss-rate%
- 1.761e+09            +1.5%  1.788e+09        perf-stat.i.branch-misses
-      2.06            +4.1%       2.15        perf-stat.i.cpi
- 6.404e+11            -4.3%  6.129e+11        perf-stat.i.instructions
-      0.49            -3.9%       0.47        perf-stat.i.ipc
-      1.47            +0.1        1.56        perf-stat.overall.branch-miss-rate%
-      2.06            +4.1%       2.15        perf-stat.overall.cpi
-      0.48            -3.9%       0.47        perf-stat.overall.ipc
- 1.178e+11            -4.4%  1.126e+11        perf-stat.ps.branch-instructions
- 1.732e+09            +1.5%  1.758e+09        perf-stat.ps.branch-misses
-   6.3e+11            -4.3%  6.029e+11        perf-stat.ps.instructions
- 3.849e+13            -3.5%  3.716e+13        perf-stat.total.instructions
-      6.12            -6.1        0.00        perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-     33.80            -0.7       33.14        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.swapcontext
-     31.62            -0.5       31.12        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-     90.78            -0.3       90.49        perf-profile.calltrace.cycles-pp.swapcontext
-      1.40            -0.1        1.30        perf-profile.calltrace.cycles-pp.syscall_return_via_sysret.swapcontext
-      1.44            -0.0        1.40        perf-profile.calltrace.cycles-pp.sigprocmask.__x64_sys_rt_sigprocmask.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-      0.57            +0.0        0.61        perf-profile.calltrace.cycles-pp.entry_SYSRETQ_unsafe_stack.swapcontext
-      0.72            +0.0        0.77        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_safe_stack.swapcontext
-      2.21            +0.1        2.28        perf-profile.calltrace.cycles-pp.stress_thread2
-      2.20            +0.1        2.28        perf-profile.calltrace.cycles-pp.stress_thread3
-      2.15            +0.1        2.24        perf-profile.calltrace.cycles-pp.stress_thread1
-      7.38            +0.1        7.48        perf-profile.calltrace.cycles-pp._copy_to_user.__x64_sys_rt_sigprocmask.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-      8.90            +0.1        9.00        perf-profile.calltrace.cycles-pp._copy_from_user.__x64_sys_rt_sigprocmask.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-      1.26            +0.1        1.37        perf-profile.calltrace.cycles-pp.x64_sys_call.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-     21.14            +0.3       21.49        perf-profile.calltrace.cycles-pp.__x64_sys_rt_sigprocmask.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-     22.96            +0.5       23.48        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64.swapcontext
-      6.45            -6.4        0.00        perf-profile.children.cycles-pp.syscall_exit_to_user_mode
-     32.36            -0.7       31.64        perf-profile.children.cycles-pp.do_syscall_64
-     34.18            -0.7       33.52        perf-profile.children.cycles-pp.entry_SYSCALL_64_after_hwframe
-     96.11            -0.1       96.00        perf-profile.children.cycles-pp.swapcontext
-      1.59            -0.1        1.50        perf-profile.children.cycles-pp.syscall_return_via_sysret
-      1.54            -0.0        1.51        perf-profile.children.cycles-pp.sigprocmask
-      0.74            +0.1        0.79        perf-profile.children.cycles-pp.entry_SYSCALL_64_safe_stack
-      1.72            +0.1        1.78        perf-profile.children.cycles-pp.stress_thread3
-      1.70            +0.1        1.75        perf-profile.children.cycles-pp.stress_thread1
-      1.72            +0.1        1.78        perf-profile.children.cycles-pp.stress_thread2
-      7.64            +0.1        7.76        perf-profile.children.cycles-pp._copy_to_user
-      1.44            +0.1        1.58        perf-profile.children.cycles-pp.x64_sys_call
-      9.59            +0.2        9.74        perf-profile.children.cycles-pp._copy_from_user
-      7.18            +0.2        7.35        perf-profile.children.cycles-pp.entry_SYSRETQ_unsafe_stack
-     12.65            +0.3       12.92        perf-profile.children.cycles-pp.entry_SYSCALL_64
-     21.19            +0.3       21.50        perf-profile.children.cycles-pp.__x64_sys_rt_sigprocmask
-      5.45            -5.5        0.00        perf-profile.self.cycles-pp.syscall_exit_to_user_mode
-      1.59            -0.1        1.50        perf-profile.self.cycles-pp.syscall_return_via_sysret
-      1.39            -0.0        1.36        perf-profile.self.cycles-pp.sigprocmask
-      2.32            +0.0        2.35        perf-profile.self.cycles-pp.entry_SYSCALL_64
-      1.17            +0.0        1.20        perf-profile.self.cycles-pp.stress_thread3
-      1.18            +0.0        1.21        perf-profile.self.cycles-pp.stress_thread2
-      1.17            +0.0        1.20        perf-profile.self.cycles-pp.stress_thread1
-      2.83            +0.0        2.87        perf-profile.self.cycles-pp.__x64_sys_rt_sigprocmask
-      2.00            +0.1        2.05        perf-profile.self.cycles-pp.entry_SYSCALL_64_after_hwframe
-      0.73            +0.1        0.79        perf-profile.self.cycles-pp.entry_SYSCALL_64_safe_stack
-      7.50            +0.1        7.62        perf-profile.self.cycles-pp._copy_to_user
-      9.20            +0.1        9.34        perf-profile.self.cycles-pp._copy_from_user
-      1.22            +0.1        1.37        perf-profile.self.cycles-pp.x64_sys_call
-      6.99            +0.2        7.15        perf-profile.self.cycles-pp.entry_SYSRETQ_unsafe_stack
-     49.94            +0.4       50.34        perf-profile.self.cycles-pp.swapcontext
-      3.36            +5.2        8.51        perf-profile.self.cycles-pp.do_syscall_64
-
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>   arch/powerpc/Kconfig                         |   2 +
+>   arch/powerpc/include/asm/vdso.h              |   1 +
+>   arch/powerpc/include/asm/vdso/arch_data.h    |  37 +++++++++
+>   arch/powerpc/include/asm/vdso/getrandom.h    |  11 +--
+>   arch/powerpc/include/asm/vdso/gettimeofday.h |  29 +++----
+>   arch/powerpc/include/asm/vdso/vsyscall.h     |  13 ---
+>   arch/powerpc/include/asm/vdso_datapage.h     |  44 +---------
+>   arch/powerpc/kernel/asm-offsets.c            |   1 -
+>   arch/powerpc/kernel/time.c                   |   2 +-
+>   arch/powerpc/kernel/vdso.c                   | 115 +++------------------------
+>   arch/powerpc/kernel/vdso/cacheflush.S        |   2 +-
+>   arch/powerpc/kernel/vdso/datapage.S          |   4 +-
+>   arch/powerpc/kernel/vdso/gettimeofday.S      |   4 +-
+>   arch/powerpc/kernel/vdso/vdso32.lds.S        |   4 +-
+>   arch/powerpc/kernel/vdso/vdso64.lds.S        |   4 +-
+>   arch/powerpc/kernel/vdso/vgettimeofday.c     |  14 ++--
+>   16 files changed, 89 insertions(+), 198 deletions(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 424f188e62d9886ee7f6d2531547f09a0606747d..8a2a6e403eb1e654254100cb7347477a3a82e3f7 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -159,6 +159,7 @@ config PPC
+>   	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+>   	select ARCH_HAS_UACCESS_FLUSHCACHE
+>   	select ARCH_HAS_UBSAN
+> +	select ARCH_HAS_VDSO_ARCH_DATA
+>   	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>   	select ARCH_HAVE_EXTRA_ELF_NOTES        if SPU_BASE
+>   	select ARCH_KEEP_MEMBLOCK
+> @@ -209,6 +210,7 @@ config PPC
+>   	select GENERIC_PTDUMP
+>   	select GENERIC_SMP_IDLE_THREAD
+>   	select GENERIC_TIME_VSYSCALL
+> +	select GENERIC_VDSO_DATA_STORE
+>   	select GENERIC_VDSO_TIME_NS
+>   	select HAS_IOPORT			if PCI
+>   	select HAVE_ARCH_AUDITSYSCALL
+> diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
+> index 8d972bc98b55fe916f23488ca9e2a5918046b9aa..1ca23fbfe087ae90b90c4286335f86d9f8121078 100644
+> --- a/arch/powerpc/include/asm/vdso.h
+> +++ b/arch/powerpc/include/asm/vdso.h
+> @@ -3,6 +3,7 @@
+>   #define _ASM_POWERPC_VDSO_H
+>   
+>   #define VDSO_VERSION_STRING	LINUX_2.6.15
+> +#define __VDSO_PAGES		4
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> diff --git a/arch/powerpc/include/asm/vdso/arch_data.h b/arch/powerpc/include/asm/vdso/arch_data.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c240a6b875181ac4159f2e80b11f9bf214e22808
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/vdso/arch_data.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2002 Peter Bergner <bergner@vnet.ibm.com>, IBM
+> + * Copyright (C) 2005 Benjamin Herrenschmidy <benh@kernel.crashing.org>,
+> + * 		      IBM Corp.
+> + */
+> +#ifndef _ASM_POWERPC_VDSO_ARCH_DATA_H
+> +#define _ASM_POWERPC_VDSO_ARCH_DATA_H
+> +
+> +#include <linux/unistd.h>
+> +#include <linux/types.h>
+> +
+> +#define SYSCALL_MAP_SIZE      ((NR_syscalls + 31) / 32)
+> +
+> +#ifdef CONFIG_PPC64
+> +
+> +struct vdso_arch_data {
+> +	__u64 tb_ticks_per_sec;			/* Timebase tics / sec */
+> +	__u32 dcache_block_size;		/* L1 d-cache block size     */
+> +	__u32 icache_block_size;		/* L1 i-cache block size     */
+> +	__u32 dcache_log_block_size;		/* L1 d-cache log block size */
+> +	__u32 icache_log_block_size;		/* L1 i-cache log block size */
+> +	__u32 syscall_map[SYSCALL_MAP_SIZE];	/* Map of syscalls  */
+> +	__u32 compat_syscall_map[SYSCALL_MAP_SIZE];	/* Map of compat syscalls */
+> +};
+> +
+> +#else /* CONFIG_PPC64 */
+> +
+> +struct vdso_arch_data {
+> +	__u64 tb_ticks_per_sec;		/* Timebase tics / sec */
+> +	__u32 syscall_map[SYSCALL_MAP_SIZE]; /* Map of syscalls */
+> +	__u32 compat_syscall_map[0];	/* No compat syscalls on PPC32 */
+> +};
+> +
+> +#endif /* CONFIG_PPC64 */
+> +
+> +#endif /* _ASM_POWERPC_VDSO_ARCH_DATA_H */
+> diff --git a/arch/powerpc/include/asm/vdso/getrandom.h b/arch/powerpc/include/asm/vdso/getrandom.h
+> index 80ce0709725eb89c1f3b69e0733038b458fbf24f..067a5396aac6e99c1a96f730459ec684bc7785d7 100644
+> --- a/arch/powerpc/include/asm/vdso/getrandom.h
+> +++ b/arch/powerpc/include/asm/vdso/getrandom.h
+> @@ -43,20 +43,21 @@ static __always_inline ssize_t getrandom_syscall(void *buffer, size_t len, unsig
+>   			    (unsigned long)len, (unsigned long)flags);
+>   }
+>   
+> -static __always_inline struct vdso_rng_data *__arch_get_vdso_rng_data(void)
+> +static __always_inline const struct vdso_rng_data *__arch_get_vdso_u_rng_data(void)
+>   {
+> -	struct vdso_arch_data *data;
+> +	struct vdso_rng_data *data;
+>   
+>   	asm (
+>   		"	bcl	20, 31, .+4 ;"
+>   		"0:	mflr	%0 ;"
+> -		"	addis	%0, %0, (_vdso_datapage - 0b)@ha ;"
+> -		"	addi	%0, %0, (_vdso_datapage - 0b)@l  ;"
+> +		"	addis	%0, %0, (vdso_u_rng_data - 0b)@ha ;"
+> +		"	addi	%0, %0, (vdso_u_rng_data - 0b)@l  ;"
+>   		: "=r" (data) : : "lr"
+>   	);
+>   
+> -	return &data->rng_data;
+> +	return data;
+>   }
+> +#define __arch_get_vdso_u_rng_data __arch_get_vdso_u_rng_data
+>   
+>   ssize_t __c_kernel_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state,
+>   			     size_t opaque_len);
+> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> index c6390890a60c2fdcb608bf321b2945c3fb372f54..dc955f2e0cc51f44d46f488a292aa0dbee3dc16c 100644
+> --- a/arch/powerpc/include/asm/vdso/gettimeofday.h
+> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> @@ -94,22 +94,12 @@ int clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
+>   #endif
+>   
+>   static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
+> -						 const struct vdso_data *vd)
+> +						 const struct vdso_time_data *vd)
+>   {
+>   	return get_tb();
+>   }
+>   
+> -const struct vdso_data *__arch_get_vdso_data(void);
+> -
+> -#ifdef CONFIG_TIME_NS
+> -static __always_inline
+> -const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *vd)
+> -{
+> -	return (void *)vd + (1U << CONFIG_PAGE_SHIFT);
+> -}
+> -#endif
+> -
+> -static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
+> +static inline bool vdso_clocksource_ok(const struct vdso_time_data *vd)
+>   {
+>   	return true;
+>   }
+> @@ -135,21 +125,22 @@ static __always_inline u64 vdso_shift_ns(u64 ns, unsigned long shift)
+>   
+>   #ifdef __powerpc64__
+>   int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts,
+> -			     const struct vdso_data *vd);
+> +			     const struct vdso_time_data *vd);
+>   int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res,
+> -			    const struct vdso_data *vd);
+> +			    const struct vdso_time_data *vd);
+>   #else
+>   int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
+> -			     const struct vdso_data *vd);
+> +			     const struct vdso_time_data *vd);
+>   int __c_kernel_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts,
+> -			       const struct vdso_data *vd);
+> +			       const struct vdso_time_data *vd);
+>   int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res,
+> -			    const struct vdso_data *vd);
+> +			    const struct vdso_time_data *vd);
+>   #endif
+>   int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
+> -			    const struct vdso_data *vd);
+> +			    const struct vdso_time_data *vd);
+>   __kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time,
+> -				    const struct vdso_data *vd);
+> +				    const struct vdso_time_data *vd);
+> +
+>   #endif /* __ASSEMBLY__ */
+>   
+>   #endif /* _ASM_POWERPC_VDSO_GETTIMEOFDAY_H */
+> diff --git a/arch/powerpc/include/asm/vdso/vsyscall.h b/arch/powerpc/include/asm/vdso/vsyscall.h
+> index 48560a11955956b8fbb59360334a81972723bd57..c2c9ae1b22e71a3f87e5a1a351699c7ab42b2f95 100644
+> --- a/arch/powerpc/include/asm/vdso/vsyscall.h
+> +++ b/arch/powerpc/include/asm/vdso/vsyscall.h
+> @@ -6,19 +6,6 @@
+>   
+>   #include <asm/vdso_datapage.h>
+>   
+> -static __always_inline
+> -struct vdso_data *__arch_get_k_vdso_data(void)
+> -{
+> -	return vdso_data->data;
+> -}
+> -#define __arch_get_k_vdso_data __arch_get_k_vdso_data
+> -
+> -static __always_inline
+> -struct vdso_rng_data *__arch_get_k_vdso_rng_data(void)
+> -{
+> -	return &vdso_data->rng_data;
+> -}
+> -
+>   /* The asm-generic header needs to be included after the definitions above */
+>   #include <asm-generic/vdso/vsyscall.h>
+>   
+> diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
+> index a202f5b63479533a7f45a74df015feb59f3d7c87..95d45a50355d269454dd3e175a5b3844181536b5 100644
+> --- a/arch/powerpc/include/asm/vdso_datapage.h
+> +++ b/arch/powerpc/include/asm/vdso_datapage.h
+> @@ -11,56 +11,18 @@
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> -#include <linux/unistd.h>
+> -#include <linux/time.h>
+>   #include <vdso/datapage.h>
+>   
+> -#define SYSCALL_MAP_SIZE      ((NR_syscalls + 31) / 32)
+> -
+> -#ifdef CONFIG_PPC64
+> -
+> -struct vdso_arch_data {
+> -	__u64 tb_ticks_per_sec;			/* Timebase tics / sec */
+> -	__u32 dcache_block_size;		/* L1 d-cache block size     */
+> -	__u32 icache_block_size;		/* L1 i-cache block size     */
+> -	__u32 dcache_log_block_size;		/* L1 d-cache log block size */
+> -	__u32 icache_log_block_size;		/* L1 i-cache log block size */
+> -	__u32 syscall_map[SYSCALL_MAP_SIZE];	/* Map of syscalls  */
+> -	__u32 compat_syscall_map[SYSCALL_MAP_SIZE];	/* Map of compat syscalls */
+> -
+> -	struct vdso_rng_data rng_data;
+> -
+> -	struct vdso_data data[CS_BASES] __aligned(1 << CONFIG_PAGE_SHIFT);
+> -};
+> -
+> -#else /* CONFIG_PPC64 */
+> -
+> -struct vdso_arch_data {
+> -	__u64 tb_ticks_per_sec;		/* Timebase tics / sec */
+> -	__u32 syscall_map[SYSCALL_MAP_SIZE]; /* Map of syscalls */
+> -	__u32 compat_syscall_map[0];	/* No compat syscalls on PPC32 */
+> -	struct vdso_rng_data rng_data;
+> -
+> -	struct vdso_data data[CS_BASES] __aligned(1 << CONFIG_PAGE_SHIFT);
+> -};
+> -
+> -#endif /* CONFIG_PPC64 */
+> -
+> -extern struct vdso_arch_data *vdso_data;
+> -
+>   #else /* __ASSEMBLY__ */
+>   
+> -.macro get_datapage ptr offset=0
+> +.macro get_datapage ptr symbol
+>   	bcl	20, 31, .+4
+>   999:
+>   	mflr	\ptr
+> -	addis	\ptr, \ptr, (_vdso_datapage - 999b + \offset)@ha
+> -	addi	\ptr, \ptr, (_vdso_datapage - 999b + \offset)@l
+> +	addis	\ptr, \ptr, (\symbol - 999b)@ha
+> +	addi	\ptr, \ptr, (\symbol - 999b)@l
+>   .endm
+>   
+> -#include <asm/asm-offsets.h>
+> -#include <asm/page.h>
+> -
+>   #endif /* __ASSEMBLY__ */
+>   
+>   #endif /* __KERNEL__ */
+> diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+> index 7a390bd4f4af3c7408b3e3c5ef6d43b95b3b6463..b3048f6d3822c0c457f4aa2ccb5dc870495ba79b 100644
+> --- a/arch/powerpc/kernel/asm-offsets.c
+> +++ b/arch/powerpc/kernel/asm-offsets.c
+> @@ -334,7 +334,6 @@ int main(void)
+>   #endif /* ! CONFIG_PPC64 */
+>   
+>   	/* datapage offsets for use by vdso */
+> -	OFFSET(VDSO_DATA_OFFSET, vdso_arch_data, data);
+>   	OFFSET(CFG_TB_TICKS_PER_SEC, vdso_arch_data, tb_ticks_per_sec);
+>   #ifdef CONFIG_PPC64
+>   	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_arch_data, icache_block_size);
+> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+> index 0727332ad86fbcfcf8ca18b344ba04381e827c79..15784c5c95c77f1eccfa948a36ba69386a2c175b 100644
+> --- a/arch/powerpc/kernel/time.c
+> +++ b/arch/powerpc/kernel/time.c
+> @@ -950,7 +950,7 @@ void __init time_init(void)
+>   		sys_tz.tz_dsttime = 0;
+>   	}
+>   
+> -	vdso_data->tb_ticks_per_sec = tb_ticks_per_sec;
+> +	vdso_k_arch_data->tb_ticks_per_sec = tb_ticks_per_sec;
+>   #ifdef CONFIG_PPC64_PROC_SYSTEMCFG
+>   	systemcfg->tb_ticks_per_sec = tb_ticks_per_sec;
+>   #endif
+> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+> index 43379365ce1b37cfba662ea58feca5e73dd5f700..219d67bcf747e79f48d09a50f5cb9624bcc0f7b1 100644
+> --- a/arch/powerpc/kernel/vdso.c
+> +++ b/arch/powerpc/kernel/vdso.c
+> @@ -17,7 +17,7 @@
+>   #include <linux/elf.h>
+>   #include <linux/security.h>
+>   #include <linux/syscalls.h>
+> -#include <linux/time_namespace.h>
+> +#include <linux/vdso_datastore.h>
+>   #include <vdso/datapage.h>
+>   
+>   #include <asm/syscall.h>
+> @@ -32,6 +32,8 @@
+>   #include <asm/vdso_datapage.h>
+>   #include <asm/setup.h>
+>   
+> +static_assert(__VDSO_PAGES == VDSO_NR_PAGES);
+> +
+>   /* The alignment of the vDSO */
+>   #define VDSO_ALIGNMENT	(1 << 16)
+>   
+> @@ -40,24 +42,6 @@ extern char vdso64_start, vdso64_end;
+>   
+>   long sys_ni_syscall(void);
+>   
+> -/*
+> - * The vdso data page (aka. systemcfg for old ppc64 fans) is here.
+> - * Once the early boot kernel code no longer needs to muck around
+> - * with it, it will become dynamically allocated
+> - */
+> -static union {
+> -	struct vdso_arch_data	data;
+> -	u8			page[2 * PAGE_SIZE];
+> -} vdso_data_store __page_aligned_data;
+> -struct vdso_arch_data *vdso_data = &vdso_data_store.data;
+> -
+> -enum vvar_pages {
+> -	VVAR_BASE_PAGE_OFFSET,
+> -	VVAR_TIME_PAGE_OFFSET,
+> -	VVAR_TIMENS_PAGE_OFFSET,
+> -	VVAR_NR_PAGES,
+> -};
+> -
+>   static int vdso_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma,
+>   		       unsigned long text_size)
+>   {
+> @@ -96,14 +80,6 @@ static void vdso_close(const struct vm_special_mapping *sm, struct vm_area_struc
+>   	mm->context.vdso = NULL;
+>   }
+>   
+> -static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+> -			     struct vm_area_struct *vma, struct vm_fault *vmf);
+> -
+> -static struct vm_special_mapping vvar_spec __ro_after_init = {
+> -	.name = "[vvar]",
+> -	.fault = vvar_fault,
+> -};
+> -
+>   static struct vm_special_mapping vdso32_spec __ro_after_init = {
+>   	.name = "[vdso]",
+>   	.mremap = vdso32_mremap,
+> @@ -116,73 +92,6 @@ static struct vm_special_mapping vdso64_spec __ro_after_init = {
+>   	.close = vdso_close,
+>   };
+>   
+> -#ifdef CONFIG_TIME_NS
+> -struct vdso_data *arch_get_vdso_data(void *vvar_page)
+> -{
+> -	return vvar_page;
+> -}
+> -
+> -/*
+> - * The vvar mapping contains data for a specific time namespace, so when a task
+> - * changes namespace we must unmap its vvar data for the old namespace.
+> - * Subsequent faults will map in data for the new namespace.
+> - *
+> - * For more details see timens_setup_vdso_data().
+> - */
+> -int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+> -{
+> -	struct mm_struct *mm = task->mm;
+> -	VMA_ITERATOR(vmi, mm, 0);
+> -	struct vm_area_struct *vma;
+> -
+> -	mmap_read_lock(mm);
+> -	for_each_vma(vmi, vma) {
+> -		if (vma_is_special_mapping(vma, &vvar_spec))
+> -			zap_vma_pages(vma);
+> -	}
+> -	mmap_read_unlock(mm);
+> -
+> -	return 0;
+> -}
+> -#endif
+> -
+> -static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+> -			     struct vm_area_struct *vma, struct vm_fault *vmf)
+> -{
+> -	struct page *timens_page = find_timens_vvar_page(vma);
+> -	unsigned long pfn;
+> -
+> -	switch (vmf->pgoff) {
+> -	case VVAR_BASE_PAGE_OFFSET:
+> -		pfn = virt_to_pfn(vdso_data);
+> -		break;
+> -	case VVAR_TIME_PAGE_OFFSET:
+> -		if (timens_page)
+> -			pfn = page_to_pfn(timens_page);
+> -		else
+> -			pfn = virt_to_pfn(vdso_data->data);
+> -		break;
+> -#ifdef CONFIG_TIME_NS
+> -	case VVAR_TIMENS_PAGE_OFFSET:
+> -		/*
+> -		 * If a task belongs to a time namespace then a namespace
+> -		 * specific VVAR is mapped with the VVAR_DATA_PAGE_OFFSET and
+> -		 * the real VVAR page is mapped with the VVAR_TIMENS_PAGE_OFFSET
+> -		 * offset.
+> -		 * See also the comment near timens_setup_vdso_data().
+> -		 */
+> -		if (!timens_page)
+> -			return VM_FAULT_SIGBUS;
+> -		pfn = virt_to_pfn(vdso_data->data);
+> -		break;
+> -#endif /* CONFIG_TIME_NS */
+> -	default:
+> -		return VM_FAULT_SIGBUS;
+> -	}
+> -
+> -	return vmf_insert_pfn(vma, vmf->address, pfn);
+> -}
+> -
+>   /*
+>    * This is called from binfmt_elf, we create the special vma for the
+>    * vDSO and insert it into the mm struct tree
+> @@ -191,7 +100,7 @@ static int __arch_setup_additional_pages(struct linux_binprm *bprm, int uses_int
+>   {
+>   	unsigned long vdso_size, vdso_base, mappings_size;
+>   	struct vm_special_mapping *vdso_spec;
+> -	unsigned long vvar_size = VVAR_NR_PAGES * PAGE_SIZE;
+> +	unsigned long vvar_size = VDSO_NR_PAGES * PAGE_SIZE;
+>   	struct mm_struct *mm = current->mm;
+>   	struct vm_area_struct *vma;
+>   
+> @@ -217,9 +126,7 @@ static int __arch_setup_additional_pages(struct linux_binprm *bprm, int uses_int
+>   	/* Add required alignment. */
+>   	vdso_base = ALIGN(vdso_base, VDSO_ALIGNMENT);
+>   
+> -	vma = _install_special_mapping(mm, vdso_base, vvar_size,
+> -				       VM_READ | VM_MAYREAD | VM_IO |
+> -				       VM_DONTDUMP | VM_PFNMAP, &vvar_spec);
+> +	vma = vdso_install_vvar_mapping(mm, vdso_base);
+>   	if (IS_ERR(vma))
+>   		return PTR_ERR(vma);
+>   
+> @@ -299,10 +206,10 @@ static void __init vdso_setup_syscall_map(void)
+>   
+>   	for (i = 0; i < NR_syscalls; i++) {
+>   		if (sys_call_table[i] != (void *)&sys_ni_syscall)
+> -			vdso_data->syscall_map[i >> 5] |= 0x80000000UL >> (i & 0x1f);
+> +			vdso_k_arch_data->syscall_map[i >> 5] |= 0x80000000UL >> (i & 0x1f);
+>   		if (IS_ENABLED(CONFIG_COMPAT) &&
+>   		    compat_sys_call_table[i] != (void *)&sys_ni_syscall)
+> -			vdso_data->compat_syscall_map[i >> 5] |= 0x80000000UL >> (i & 0x1f);
+> +			vdso_k_arch_data->compat_syscall_map[i >> 5] |= 0x80000000UL >> (i & 0x1f);
+>   	}
+>   }
+>   
+> @@ -352,10 +259,10 @@ static struct page ** __init vdso_setup_pages(void *start, void *end)
+>   static int __init vdso_init(void)
+>   {
+>   #ifdef CONFIG_PPC64
+> -	vdso_data->dcache_block_size = ppc64_caches.l1d.block_size;
+> -	vdso_data->icache_block_size = ppc64_caches.l1i.block_size;
+> -	vdso_data->dcache_log_block_size = ppc64_caches.l1d.log_block_size;
+> -	vdso_data->icache_log_block_size = ppc64_caches.l1i.log_block_size;
+> +	vdso_k_arch_data->dcache_block_size = ppc64_caches.l1d.block_size;
+> +	vdso_k_arch_data->icache_block_size = ppc64_caches.l1i.block_size;
+> +	vdso_k_arch_data->dcache_log_block_size = ppc64_caches.l1d.log_block_size;
+> +	vdso_k_arch_data->icache_log_block_size = ppc64_caches.l1i.log_block_size;
+>   #endif /* CONFIG_PPC64 */
+>   
+>   	vdso_setup_syscall_map();
+> diff --git a/arch/powerpc/kernel/vdso/cacheflush.S b/arch/powerpc/kernel/vdso/cacheflush.S
+> index 0085ae464dac9c32381625a6969a4e422ad34eb7..488d3ade11e64996b30f42777251df8499eda92c 100644
+> --- a/arch/powerpc/kernel/vdso/cacheflush.S
+> +++ b/arch/powerpc/kernel/vdso/cacheflush.S
+> @@ -30,7 +30,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_ICACHE)
+>   #ifdef CONFIG_PPC64
+>   	mflr	r12
+>     .cfi_register lr,r12
+> -	get_datapage	r10
+> +	get_datapage	r10 vdso_u_arch_data
+>   	mtlr	r12
+>     .cfi_restore	lr
+>   #endif
+> diff --git a/arch/powerpc/kernel/vdso/datapage.S b/arch/powerpc/kernel/vdso/datapage.S
+> index db8e167f01667eb95b3dc74f6771e610411bba90..d23b2e8e2a34ca9b142231eb3a492716a49b2248 100644
+> --- a/arch/powerpc/kernel/vdso/datapage.S
+> +++ b/arch/powerpc/kernel/vdso/datapage.S
+> @@ -28,7 +28,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
+>   	mflr	r12
+>     .cfi_register lr,r12
+>   	mr.	r4,r3
+> -	get_datapage	r3
+> +	get_datapage	r3 vdso_u_arch_data
+>   	mtlr	r12
+>   #ifdef __powerpc64__
+>   	addi	r3,r3,CFG_SYSCALL_MAP64
+> @@ -52,7 +52,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
+>     .cfi_startproc
+>   	mflr	r12
+>     .cfi_register lr,r12
+> -	get_datapage	r3
+> +	get_datapage	r3 vdso_u_arch_data
+>   #ifndef __powerpc64__
+>   	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
+>   #endif
+> diff --git a/arch/powerpc/kernel/vdso/gettimeofday.S b/arch/powerpc/kernel/vdso/gettimeofday.S
+> index 5333848322ca6105018d501952e3bf42475f49df..79c967212444732da50805fd086c6f2a3c75b0cc 100644
+> --- a/arch/powerpc/kernel/vdso/gettimeofday.S
+> +++ b/arch/powerpc/kernel/vdso/gettimeofday.S
+> @@ -33,9 +33,9 @@
+>     .cfi_rel_offset r2, PPC_MIN_STKFRM + STK_GOT
+>   #endif
+>   	.ifeq	\call_time
+> -		get_datapage	r5 VDSO_DATA_OFFSET
+> +		get_datapage	r5 vdso_u_time_data
+>   	.else
+> -		get_datapage	r4 VDSO_DATA_OFFSET
+> +		get_datapage	r4 vdso_u_time_data
+>   	.endif
+>   	bl		CFUNC(DOTSYM(\funct))
+>   	PPC_LL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
+> diff --git a/arch/powerpc/kernel/vdso/vdso32.lds.S b/arch/powerpc/kernel/vdso/vdso32.lds.S
+> index 1a1b0b6d681a9977e4ef8042e52d8d33da61887e..72a1012b8a205c6357cecb4b53d2d8e1ff59b051 100644
+> --- a/arch/powerpc/kernel/vdso/vdso32.lds.S
+> +++ b/arch/powerpc/kernel/vdso/vdso32.lds.S
+> @@ -6,6 +6,7 @@
+>   #include <asm/vdso.h>
+>   #include <asm/page.h>
+>   #include <asm-generic/vmlinux.lds.h>
+> +#include <vdso/datapage.h>
+>   
+>   #ifdef __LITTLE_ENDIAN__
+>   OUTPUT_FORMAT("elf32-powerpcle", "elf32-powerpcle", "elf32-powerpcle")
+> @@ -16,7 +17,8 @@ OUTPUT_ARCH(powerpc:common)
+>   
+>   SECTIONS
+>   {
+> -	PROVIDE(_vdso_datapage = . - 3 * PAGE_SIZE);
+> +	VDSO_VVAR_SYMS
+> +
+>   	. = SIZEOF_HEADERS;
+>   
+>   	.hash          	: { *(.hash) }			:text
+> diff --git a/arch/powerpc/kernel/vdso/vdso64.lds.S b/arch/powerpc/kernel/vdso/vdso64.lds.S
+> index e21b5506cad62b16e677be74fda7921ec917141a..32102a05eaa7e015e0f89e4a94a3c5e31da7d460 100644
+> --- a/arch/powerpc/kernel/vdso/vdso64.lds.S
+> +++ b/arch/powerpc/kernel/vdso/vdso64.lds.S
+> @@ -6,6 +6,7 @@
+>   #include <asm/vdso.h>
+>   #include <asm/page.h>
+>   #include <asm-generic/vmlinux.lds.h>
+> +#include <vdso/datapage.h>
+>   
+>   #ifdef __LITTLE_ENDIAN__
+>   OUTPUT_FORMAT("elf64-powerpcle", "elf64-powerpcle", "elf64-powerpcle")
+> @@ -16,7 +17,8 @@ OUTPUT_ARCH(powerpc:common64)
+>   
+>   SECTIONS
+>   {
+> -	PROVIDE(_vdso_datapage = . - 3 * PAGE_SIZE);
+> +	VDSO_VVAR_SYMS
+> +
+>   	. = SIZEOF_HEADERS;
+>   
+>   	.hash		: { *(.hash) }			:text
+> diff --git a/arch/powerpc/kernel/vdso/vgettimeofday.c b/arch/powerpc/kernel/vdso/vgettimeofday.c
+> index 55a287c9a7366aa59ab4af1e760a8995f588a4d5..6f5167d81af5f3e6e755dbda4307769e45a28421 100644
+> --- a/arch/powerpc/kernel/vdso/vgettimeofday.c
+> +++ b/arch/powerpc/kernel/vdso/vgettimeofday.c
+> @@ -7,43 +7,43 @@
+>   
+>   #ifdef __powerpc64__
+>   int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts,
+> -			     const struct vdso_data *vd)
+> +			     const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_clock_gettime_data(vd, clock, ts);
+>   }
+>   
+>   int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res,
+> -			    const struct vdso_data *vd)
+> +			    const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_clock_getres_data(vd, clock_id, res);
+>   }
+>   #else
+>   int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
+> -			     const struct vdso_data *vd)
+> +			     const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_clock_gettime32_data(vd, clock, ts);
+>   }
+>   
+>   int __c_kernel_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts,
+> -			       const struct vdso_data *vd)
+> +			       const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_clock_gettime_data(vd, clock, ts);
+>   }
+>   
+>   int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res,
+> -			    const struct vdso_data *vd)
+> +			    const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_clock_getres_time32_data(vd, clock_id, res);
+>   }
+>   #endif
+>   
+>   int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
+> -			    const struct vdso_data *vd)
+> +			    const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_gettimeofday_data(vd, tv, tz);
+>   }
+>   
+> -__kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time, const struct vdso_data *vd)
+> +__kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time, const struct vdso_time_data *vd)
+>   {
+>   	return __cvdso_time_data(vd, time);
+>   }
+> 
 
