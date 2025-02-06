@@ -1,78 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EC01E5B93;
-	Thu,  6 Feb 2025 14:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FAC1A5B83
+	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 14:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852122; cv=none; b=iFrCTwGE4l0XeIjnwZUUIa9G/Y5Ft89c3MM53hPGW2kGx81ex4qFmps7GsBbbn+mJYKfNomqj+KKuOvQwo1GcYKUQknngdFu415RFDBQclRnfJAWLVu9mmnbcQwx9XMUXBvifNMgej9z6cDeU7sO7ACmUwXWv8j25e6rdhJqI+s=
+	t=1738852250; cv=none; b=RzYKUAkUaW9V5GS2IoGmcRg/5ZkcVGbPCanl73Ohl2JtBfmtI50H2zJllfV0BWqMR5wU+1ouXBTwwi1/l2G0Td50DFw3bULmAvGNpi5Qzl0YR3gTJNvrKp0QkMpjMm19whwKtSdmb9KPhDTWAqWnyl3+C8kG9C59jzAni4563ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852122; c=relaxed/simple;
-	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
+	s=arc-20240116; t=1738852250; c=relaxed/simple;
+	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RuOdLxhRk6J8Q4POxDt1GzCbwl4Kk7JiD4ix+Rco1CQyefinyhqpFPeSTxKDW6bTTzJNk8lKbzEOGtm2GmdHkedmtk2QH7TobInO0AmPyMc7mXuQVnnh2bHdKtL8AOwDeQ67KwPZvkRZ+TzHl5+8Co8E7CfrlHrTfHyomGr+NyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hf7uM4Jr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OK994UcfiBOktxu+JRMcKK/MxNE4qtcIE9qJ3BFvMY2JScuUY4N74+mt3HkcZIdg7K9RiGhoyIzhHyKpbitn0ueQXWpg1TwuB9S7gImBCG2RzugX4EPFB9INIYFoMnfrznOp1WXLPbeSmcAvUESixwU/mm9u1eVRRZKAEKLgYYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eJ6Kgxwt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hf7uM4Jr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB8FC4CEDD;
-	Thu,  6 Feb 2025 14:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738852121;
-	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hf7uM4JrgK4bYWHFAvM3E8f8gZk0b/V6kmKZllWvjy3fFemWOJX+AvyIpfhRhSBiE
-	 Eyflp1MV1xb5xnbwSP+ihgCvDTom8R2XQ90IGcxSt5MbNWQLcQFJixdNVjupvkbb0x
-	 aTF044E0h+ibrKHG4Q2bPG6l9Zoa0LahMYqit0i8=
-Date: Thu, 6 Feb 2025 11:03:30 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: ardb@kernel.org, chenhuacai@kernel.org, chenhuacai@loongson.cn,
-	kernel@xen0n.name, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-	nicolas@fjasle.eu, sashal@kernel.org, stable@vger.kernel.org
-Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage
- where possible
-Message-ID: <2025020611-olive-gluten-fa45@gregkh>
-References: <2024120635-wham-campsite-b62b@gregkh>
- <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eJ6Kgxwt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738852247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
+	b=eJ6KgxwtBCOthGbvhz18Asrf/qzsV/pgaERHBPNhVzipaWEBtPPK6BNxzU7K7VnWwk4pbg
+	QYSJk3CO4KNc+BQihiTjWAtOJtYAS2REiCLHzZ6mjfw6EjJtrs2kN9NBGqFYf26L4yToOD
+	k5O/WU8goLxaZexDZ8boDtVI/tzHopo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-jpp1Wx5AN3GqEECzTVdKQg-1; Thu,
+ 06 Feb 2025 09:30:43 -0500
+X-MC-Unique: jpp1Wx5AN3GqEECzTVdKQg-1
+X-Mimecast-MFC-AGG-ID: jpp1Wx5AN3GqEECzTVdKQg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAACC1956086;
+	Thu,  6 Feb 2025 14:30:36 +0000 (UTC)
+Received: from localhost (unknown [10.2.16.145])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D97B1800878;
+	Thu,  6 Feb 2025 14:30:33 +0000 (UTC)
+Date: Thu, 6 Feb 2025 09:30:32 -0500
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
+	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
+	German Maglione <gmaglione@redhat.com>,
+	Albert Esteve <aesteve@redhat.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+Message-ID: <20250206143032.GA400591@fedora>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com>
+ <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dVdFjdbROmPA0Gp+"
+Content-Disposition: inline
+In-Reply-To: <Z6S7A-51SdPco_3Z@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+
+
+--dVdFjdbROmPA0Gp+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
 
-On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
-> Hi, Greg,
-> 
-> It's rather unfortunate that currently, almost all Linux distributions
-> supporting LoongArch are using LTS kernels version v6.6 or older, such as
-> openEuler and deepin. [1][2]
-> 
-> If this bugfix isn't merged into linux-stable, then every single distro
-> kernel team will have to waste time fixing the same darn bug over and
-> over, even though it's already fixed in later kernels.
-> 
-> This would really make LTS look like it's failing to serve its intended
-> purpose. And I'm sure all of us do not want to see something so terrible
-> happen.
+On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> And then there are challenges at QEMU level. virtiofsd needs additional
+> vhost-user commands to implement DAX and these never went upstream in
+> QEMU. I hope these challenges are sorted at some point of time.
 
-LTS is here to ensure that the original release of these branches, keeps
-working for that branch.  Adding support for newer toolchains sometimes
-happens, but is not a requirement or a normal thing to do as that really
-isn't a "regression", right?
+Albert Esteve has been working on QEMU support:
+https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat.com/
 
-Most of the time, fixing things up for newer compilers is simple.
-Sometimes it is not simple.  The "not simple" ones we usually just do
-not backport as that causes extra work for everyone over time.
+He has a viable solution. I think the remaining issue is how to best
+structure the memory regions. The reason for slow progress is not
+because it can't be done, it's probably just because this is a
+background task.
 
-As for the distros like openEuler, and deepin, they are free to add
-these patches there, on top of their other non-LTS patches, right?
+Please discuss with Albert if QEMU support is urgent.
 
-thanks,
+Stefan
 
-greg k-h
+--dVdFjdbROmPA0Gp+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmekx4gACgkQnKSrs4Gr
+c8jOKwf/ZukZTp1v1Bj1iqbpAm6HBWN90Y4JWmyzZGuKRqLAwN8AyiIJ6Ms1fx+v
+WJLR47NztCQ3sDtsTQT1814wwXSpJlPguLu6isoWbCGpUwAZZk3JTpHNBofs7IKj
+04NWFZ9B2tOVgirm8OMtsVVJwzQhvQc7YtMhdB9naCzqcdC7ynKp6mLH9bd7Q+Ze
+K9CwEFtKcTm9Ge+t3U0E3Q7MI2D55far3KPi84MpfI9oEu6l0MOzzmKjaOBq9+wy
+XXZCisxWbGLZtfbY2BAQxTUhKq9TTXgeQm/Ti/SzsVLf/Qd7nrEkG1v51xs5HCnR
+FMQhDw7oBmFsGs5S/Qywvta1pcaYwg==
+=JZcT
+-----END PGP SIGNATURE-----
+
+--dVdFjdbROmPA0Gp+--
+
