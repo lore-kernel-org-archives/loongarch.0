@@ -1,140 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488B81A317F
-	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 14:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5AF246339;
+	Thu,  6 Feb 2025 15:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738853961; cv=none; b=LVGGcP62h07N/nGaOLmpweRzpsbClesRT4rJURt4KFEMqIUeLy6azgsGgY12drNB2exQccyUJoMIZTiage4K6AfrNqkKZ51K6wf+0rpXXFzgkCkBs7mfypajRnmFxaoSm6Y9uULvdmAF60gK8SHI0p2CNdHtdFLHgNM1OTxVDfs=
+	t=1738856564; cv=none; b=QrPkZlmz9/UFbMHFwnRcljnz76HBb5IvgSwxhAf+pOV7slwtBIlLjn7CLGubKW3uftW4rDViPcsLSe2QTUHFJ9lkjp8NRWhqCZ2oR3fYjOa5bmB6xbFj445xDX7WaC/m6r8RtNQNrct3PQhq2eA3tOnm8BgFNhDyMHv+4V8hcCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738853961; c=relaxed/simple;
-	bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HaYnFemX4qkOaySAXiEF+F4uLq34TSDe2ygbf3DtHNbTnRhNLBNCBfxiUXF9m+Y2dQm/3MHI8uq0W2+oKVQAp7XZG26bGT7wh5DqtRNIzNe7eECh1JxYJ2kVmWSMazW4/dm1uCp9/BZ3Bj1ng/45E1tb/06ousEXAF07ODWEFZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IdukG7zH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738856564; c=relaxed/simple;
+	bh=5+FTDlmQWovIleUiA1q3Ejj7y/6w0GAkmYeDjxkywuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uN1Ixfv/+vAvQ5CkxlZGcGjiGQJM+ss9z573M/LohG84xRhi9sO5pImb5BprYfI24wrOwRCOUsx/ldhYI/vfW5gq5kozpPG3iS7lH27HgQvqkLLG3hJ5CldTKG+I61AddVvcPVAJbqqHblgTm0fPumFZTvmytCGwLpOVMi5DtAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWo1Xryo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IdukG7zH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738853959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
-	b=IdukG7zHcjbwzv/f3JojfJsBikQY78FJFCG9oIm/rVa9dF8+fkxjgtRotISd6u1LIRdL8A
-	t/4XmQSO0hLrrmwDBeQi/8NAyN6c19A4sIqvx56B5ace54oDMCN6UzSVzmefoyR5eujFNc
-	lh2GY/5bawpZJEn53cUr6CzlRKlSD+8=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-78-1Oj59PTFOLWXYcMkACBvAw-1; Thu, 06 Feb 2025 09:59:18 -0500
-X-MC-Unique: 1Oj59PTFOLWXYcMkACBvAw-1
-X-Mimecast-MFC-AGG-ID: 1Oj59PTFOLWXYcMkACBvAw
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so2106749a91.3
-        for <loongarch@lists.linux.dev>; Thu, 06 Feb 2025 06:59:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738853957; x=1739458757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
-        b=LiPVoImRXSANRRfiZuTVWsyAOawPMUY1dudwML96WeEcSCzeLzWigopNXO7TXN+rX7
-         VQDTg1ZXLixU/1g7vTY1H+6DHg8jAs00x+WJ31zuevFyD0nz1PW0b0zscfJoOpV2NoMi
-         VJBbQUcGEgpqexVe5ooKZs/rM6plFHNy2Di44FRA9m44KyldohZJqAWIJjxSwj8zVSov
-         0Gm8db1k5IGjyr52NBXmc1L94T8rj4GCtIlqfuTNGJQuUOJjP5rK42QeD/bpgKir7mga
-         5OcIp1KBj3CJkffVH4p9yHUCsW+gdiFsHxZqZvzEz2iAhv4ZOfonYBNOrLB0u1gkyTSW
-         bIoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXp+CSpx/Q2bznmsLoYN9Anq3OQlnRksYtwOjBpTfxoIMrYmA86gJxcTilfNeqlelryS2U/a0C0TDE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxY0g02z787BlyCMBpk0qZ6nLmhEr67rOR5RKyDlPpf8JO539vL
-	IQo/n7PrfSGNCwL6oqy8ul5Zn5uFUhcmsRuvi1CfFmQ9tmfOXnQ98R5/5Vz5fgZ1VS8iYP7VGYW
-	PQnp0ObDvEVfhftDUC6HztWg017HNA6ZKI43DvSiXM8oXpNxTPSGVG83So/io8gpAHpRWGcc+sh
-	0yj7XkOQfeyG1nFS4qrRohpOtxp87d/uV4
-X-Gm-Gg: ASbGnct5P9IBmclaxjnRpPYxWXSqvBqTzk12raezfTDUI7eB1DfMcH4AZd/n9ZmpQxz
-	BbsnTIzFplPAd7skKsQx6k5pmWdUaBUQltcmnr04p6bA1inGbDyUBVJjdww8I8DOE
-X-Received: by 2002:a17:90b:2786:b0:2ee:e518:c1d8 with SMTP id 98e67ed59e1d1-2f9e082f33emr11110476a91.30.1738853955571;
-        Thu, 06 Feb 2025 06:59:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFWpQlGfjL4+bcsd9CXoOi/pDbHuiuuwkJUWCLm8Y4KSWCpEnRWVj/utErs2ioiglleYEOHWPatBsG9+Rhw180=
-X-Received: by 2002:a17:90b:2786:b0:2ee:e518:c1d8 with SMTP id
- 98e67ed59e1d1-2f9e082f33emr11110445a91.30.1738853955312; Thu, 06 Feb 2025
- 06:59:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWo1Xryo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACEDC4CEDF;
+	Thu,  6 Feb 2025 15:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738856563;
+	bh=5+FTDlmQWovIleUiA1q3Ejj7y/6w0GAkmYeDjxkywuo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qWo1XryojRSFF9wT8B7l4iOecPgHYZ7k5Ae2GLEIa0/ihek84O+EkuT1S1pqAzVDv
+	 0k38KtKYCeoauKmS7ue4uwAi21xOrY58QoogK6BQQfQuSkiWQKtcsa8KPV5ShDbKYF
+	 yResPzeAXpbUr5HnAt9WHoVqnRO+BVuLfoXwGW+KtluQ2Ipgu2QZyQXezBdjyJfJ9Y
+	 mF4cODLjdNx0HB/1O9g0PNoCMJAOpUKxcJe7MyWpjVWT9xDXsFxeFylps/Lds9q3b8
+	 GBemcQoPVLHTlgD2kQjMeLjuTRM1oS+9Z65kphdSaIpwR5yNL6lCDBE8Ch6moXsH/I
+	 Tn2tm3drx5/eg==
+From: Kees Cook <kees@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-alpha@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Michael Cree <mcree@orcon.net.nz>,
+	Sam James <sam@gentoo.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+	Chris Hofstaedtler <zeha@debian.org>,
+	util-linux@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] alpha/elf: Fix misc/setarch test of util-linux by removing 32bit support
+Date: Thu,  6 Feb 2025 07:42:32 -0800
+Message-Id: <173885655037.1454207.17881331998395742818.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
+References: <20250103140148.370368-1-glaubitz@physik.fu-berlin.de> <24f03227-1b55-4e50-b6e9-7ac74fda2602@app.fastmail.com> <678ee681-12c3-4e79-a04b-495daf343846@app.fastmail.com> <bff3cfad8a87799101891b4f786c5104db9dab13.camel@physik.fu-berlin.de> <82d33a2d-dffe-4268-a175-4536b3f9c07f@app.fastmail.com> <cc420e1a843da3cf349607369851c338f4049c4e.camel@physik.fu-berlin.de> <87jzb2tdb7.fsf_-_@email.froward.int.ebiederm.org> <2758fa70d237ff972b0c8d7114777dc4a20c8f3b.camel@physik.fu-berlin.de> <alpine.DEB.2.21.2501120146480.18889@angie.orcam.me.uk> <78f3ae1f68842a9d1af62caaac3929834ce6ecfa.camel@physik.fu-berlin.de> <87y0zfs26i.fsf_-_@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
-In-Reply-To: <20250206143032.GA400591@fedora>
-From: Albert Esteve <aesteve@redhat.com>
-Date: Thu, 6 Feb 2025 15:59:03 +0100
-X-Gm-Features: AWEUYZm-M5VdAvcj3hSDqRtWWsY2KSl-UpKtCd6mALNvZQI6X9XPfCW9uUgmKYc
-Message-ID: <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-To: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
-	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
-	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
-	david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com, 
-	hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
-	German Maglione <gmaglione@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oSxO4XVs9t-HYX9DmyXz_yYEpFbT-urmt-zgyqcMS08_1738853957
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi!
+On Sun, 12 Jan 2025 23:39:01 -0600, Eric W. Biederman wrote:
+> Richard Henderson <richard.henderson@linaro.org> writes[1]:
+> 
+> > There was a Spec benchmark (I forget which) which was memory bound and ran
+> > twice as fast with 32-bit pointers.
+> >
+> > I copied the idea from DEC to the ELF abi, but never did all the other work
+> > to allow the toolchain to take advantage.
+> >
+> > Amusingly, a later Spec changed the benchmark data sets to not fit into a
+> > 32-bit address space, specifically because of this.
+> >
+> > I expect one could delete the ELF bit and personality and no one would
+> > notice. Not even the 10 remaining Alpha users.
+> 
+> [...]
 
-On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat.com=
-> wrote:
->
-> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
-> > And then there are challenges at QEMU level. virtiofsd needs additional
-> > vhost-user commands to implement DAX and these never went upstream in
-> > QEMU. I hope these challenges are sorted at some point of time.
->
-> Albert Esteve has been working on QEMU support:
-> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat=
-.com/
->
-> He has a viable solution. I think the remaining issue is how to best
-> structure the memory regions. The reason for slow progress is not
-> because it can't be done, it's probably just because this is a
-> background task.
+Applied to for-next/topic/execve/core, thanks!
 
-It is partially that, indeed. But what has me blocked for now on posting th=
-e
-next version is that I was reworking a bit the MMAP strategy.
-Following David comments, I am relying more on RAMBlocks and
-subregions for mmaps. But this turned out more difficult than anticipated.
+[1/1] alpha/elf: Fix misc/setarch test of util-linux by removing 32bit support
+      https://git.kernel.org/kees/c/b029628be267
 
-I hope I can make it work this month and then post the next version.
-If there are no major blockers/reworks, further iterations on the
-patch shall go smoother.
+Take care,
 
-I have a separate patch for the vhost-user spec which could
-iterate faster, if that'd help.
-
-BR,
-Albert.
-
->
-> Please discuss with Albert if QEMU support is urgent.
->
-> Stefan
+-- 
+Kees Cook
 
