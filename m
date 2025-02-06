@@ -1,75 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2A71EA7F4
-	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 13:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EC01E5B93;
+	Thu,  6 Feb 2025 14:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738849077; cv=none; b=Qm6pcRsFYaQOldNqxTdffr4bDjm705XeEsF7ivsqNwuXtc8mAfjgG4LjzeX6lTfUKAJZpUoxDw7fFcJ+fH5/NIyFL1xGy/oVM56kE5RcHCNtjLseSSN9b3PvNpdVHnBU5Vz4BEDPWP7C03GEpN59ndGjvrQxdRfoTauxslMO4Ck=
+	t=1738852122; cv=none; b=iFrCTwGE4l0XeIjnwZUUIa9G/Y5Ft89c3MM53hPGW2kGx81ex4qFmps7GsBbbn+mJYKfNomqj+KKuOvQwo1GcYKUQknngdFu415RFDBQclRnfJAWLVu9mmnbcQwx9XMUXBvifNMgej9z6cDeU7sO7ACmUwXWv8j25e6rdhJqI+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738849077; c=relaxed/simple;
-	bh=9Ytmps4fuBO/htaxCKDp7kdUCmpWXLYbMLnjp7sR0E8=;
+	s=arc-20240116; t=1738852122; c=relaxed/simple;
+	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdhiNfpg98iymlRIrOMDA9eifByFRzH6A5JhW3h7d/s9jjewzD+dakhQWg7OKT3h65Xx1Ca2lU4oh/ArLmqIEdbMZwt2TuacrowYuk/bsOvDaY+mVHSCReM/YNG87B72btn7WsE0kVBMYTsuRcEokrN+9uvj32ktuo+TD6LE03I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mgvo+vzs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RuOdLxhRk6J8Q4POxDt1GzCbwl4Kk7JiD4ix+Rco1CQyefinyhqpFPeSTxKDW6bTTzJNk8lKbzEOGtm2GmdHkedmtk2QH7TobInO0AmPyMc7mXuQVnnh2bHdKtL8AOwDeQ67KwPZvkRZ+TzHl5+8Co8E7CfrlHrTfHyomGr+NyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hf7uM4Jr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mgvo+vzs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738849074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5N+Al59YmEDtBoKSzwKPTh6WUXLbEAKXSUpJ7QukWWw=;
-	b=Mgvo+vzs3KjHSP/DDhot9MOS1Khk6BNrq7OM4Pt3BiAqHe0GKf0LPOvInLT+lFrj+UmkDE
-	BaSCD1u3U0Vid6Rj1rO9cgH/+xuv/L+WvtJRRA/xdZRZEmni/FFvPG61JdG9C0GX2BXCvJ
-	Fg6ZOIbYdnYESLEMQcRRPmMP8Fi2+G4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-Z1CCXbCkNJ6JlHV_rykxEg-1; Thu,
- 06 Feb 2025 08:37:51 -0500
-X-MC-Unique: Z1CCXbCkNJ6JlHV_rykxEg-1
-X-Mimecast-MFC-AGG-ID: Z1CCXbCkNJ6JlHV_rykxEg
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A21C18DFE39;
-	Thu,  6 Feb 2025 13:37:14 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.64.235])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FC6618004A7;
-	Thu,  6 Feb 2025 13:37:09 +0000 (UTC)
-Received: by fedora.redhat.com (Postfix, from userid 1000)
-	id 9E1E56AA45D; Thu,  6 Feb 2025 08:37:07 -0500 (EST)
-Date: Thu, 6 Feb 2025 08:37:07 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
-	German Maglione <gmaglione@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-Message-ID: <Z6S7A-51SdPco_3Z@redhat.com>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com>
- <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hf7uM4Jr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB8FC4CEDD;
+	Thu,  6 Feb 2025 14:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738852121;
+	bh=cP18bAFLC5z20fm5XJqsusQj5NcGcW0quC9Mv6doxZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hf7uM4JrgK4bYWHFAvM3E8f8gZk0b/V6kmKZllWvjy3fFemWOJX+AvyIpfhRhSBiE
+	 Eyflp1MV1xb5xnbwSP+ihgCvDTom8R2XQ90IGcxSt5MbNWQLcQFJixdNVjupvkbb0x
+	 aTF044E0h+ibrKHG4Q2bPG6l9Zoa0LahMYqit0i8=
+Date: Thu, 6 Feb 2025 11:03:30 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: ardb@kernel.org, chenhuacai@kernel.org, chenhuacai@loongson.cn,
+	kernel@xen0n.name, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+	nicolas@fjasle.eu, sashal@kernel.org, stable@vger.kernel.org
+Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage
+ where possible
+Message-ID: <2025020611-olive-gluten-fa45@gregkh>
+References: <2024120635-wham-campsite-b62b@gregkh>
+ <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -78,67 +44,35 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
 
-On Wed, Feb 05, 2025 at 04:10:15PM -0800, Dan Williams wrote:
-> Vivek Goyal wrote:
-> > On Fri, Jan 10, 2025 at 05:00:29PM +1100, Alistair Popple wrote:
-> > > FS DAX requires file systems to call into the DAX layout prior to unlinking
-> > > inodes to ensure there is no ongoing DMA or other remote access to the
-> > > direct mapped page. The fuse file system implements
-> > > fuse_dax_break_layouts() to do this which includes a comment indicating
-> > > that passing dmap_end == 0 leads to unmapping of the whole file.
-> > > 
-> > > However this is not true - passing dmap_end == 0 will not unmap anything
-> > > before dmap_start, and further more dax_layout_busy_page_range() will not
-> > > scan any of the range to see if there maybe ongoing DMA access to the
-> > > range. Fix this by passing -1 for dmap_end to fuse_dax_break_layouts()
-> > > which will invalidate the entire file range to
-> > > dax_layout_busy_page_range().
-> > 
-> > Hi Alistair,
-> > 
-> > Thanks for fixing DAX related issues for virtiofs. I am wondering how are
-> > you testing DAX with virtiofs. AFAIK, we don't have DAX support in Rust
-> > virtiofsd. C version of virtiofsd used to have out of the tree patches
-> > for DAX. But C version got deprecated long time ago.
-> > 
-> > Do you have another implementation of virtiofsd somewhere else which
-> > supports DAX and allows for testing DAX related changes?
+On Thu, Feb 06, 2025 at 04:37:02PM +0800, WangYuli wrote:
+> Hi, Greg,
 > 
-> I have personally never seen a virtiofs-dax test. It sounds like you are
-> saying we can deprecate that support if there are no longer any users.
-> Or, do you expect that C-virtiofsd is alive in the ecosystem?
+> It's rather unfortunate that currently, almost all Linux distributions
+> supporting LoongArch are using LTS kernels version v6.6 or older, such as
+> openEuler and deepin. [1][2]
+> 
+> If this bugfix isn't merged into linux-stable, then every single distro
+> kernel team will have to waste time fixing the same darn bug over and
+> over, even though it's already fixed in later kernels.
+> 
+> This would really make LTS look like it's failing to serve its intended
+> purpose. And I'm sure all of us do not want to see something so terrible
+> happen.
 
-Ashai Lina responded that they need and test DAX using libkrun.
+LTS is here to ensure that the original release of these branches, keeps
+working for that branch.  Adding support for newer toolchains sometimes
+happens, but is not a requirement or a normal thing to do as that really
+isn't a "regression", right?
 
-C version of virtiofsd is now gone. We are actively working and testing
-Rust version of virtiofsd. We have not been able to add DAX support to
-it yet for various reasons. 
+Most of the time, fixing things up for newer compilers is simple.
+Sometimes it is not simple.  The "not simple" ones we usually just do
+not backport as that causes extra work for everyone over time.
 
-Biggest unsolved problem with viritofsd DAX mode is guest process should
-get a SIGBUS if it tries to access a file beyond the file. This can happen
-if file has been truncated on the host (while it is still mapped inside
-the guest). 
+As for the distros like openEuler, and deepin, they are free to add
+these patches there, on top of their other non-LTS patches, right?
 
-I had tried to summarize the problem in this presentation in the section
-"KVM Page fault error handling".
+thanks,
 
-https://kvm-forum.qemu.org/2020/KVMForum2020_APF.pdf
-
-This is a tricky problem to handle. Once this gets handled, it becomes
-safer to use DAX with virtiofs. Otherwise you can't share the filesystem
-with other guests in DAX mode and use cases are limited.
-
-And then there are challenges at QEMU level. virtiofsd needs additional
-vhost-user commands to implement DAX and these never went upstream in
-QEMU. I hope these challenges are sorted at some point of time.
-
-I think virtiofs DAX is a very cool piece of technology. I would not like
-to deprecate it. It has its own problems and challenges and once we
-are able to solve these, it might see wider usage/adoption.
-
-Thanks
-Vivek
-
+greg k-h
