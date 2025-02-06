@@ -1,124 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A705D225A5C
-	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 07:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1215C2248AF
+	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 08:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828351; cv=none; b=ngwG1BEdyx+UOgvE+qySrLSsHTaOhiUmJnZ/gsYrCT4l6lIUQ02zWrC7FI515k5HBwuw8aDCoPUM603EKHpz8YfycJOISa/Oarfda6x1UlgKtYB41vABTfxV/TNbXuMNdcfEMrRvsDXUie35CwCF6z1nKZH7UoHay5XPkXN3g24=
+	t=1738832043; cv=none; b=BZPiSATrxE4MYyge+68AYtBSIkt6tAy7RMVqUC8+5WCyE4AVppV2qDwsH6o1Rb48pprJcQHRkiLtxy8mEw7b5ZBcqBXGq/PvsWNTtWph1JOggreYRQKOHHOcacMSVLs6myaBNS8D9L0FqOlSxL5jTu4ISJoHJaP/ziFUntHM2Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828351; c=relaxed/simple;
-	bh=JNGdLVOeh2u3LfPFwDeakrrHIl4B6WTrzvbCBTqoGeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ds4v4p3puQt/75hISuraQvw+EOapVHV+Jg/vFxcOaYvfi+Ld4p9uoCjSyYttsWwXn8fOaclAhXjFx4S/MvM2T3yMUY5wnUXhquNUYnX/5TzCLSV3Z8AIApvTgyn265Jzd7UG9Amtta8pGXul/KRDw5y3SY9V9O1lEUdJoboQvwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9fVOtFE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738832043; c=relaxed/simple;
+	bh=O4Y99wLIZt5HigjK77gneneZZSdsJM7zvVgoZ8+vvJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DgQWDPF/7sHrIu2WlmnhW1+fsp4B33TKSob0fsE7udW8ZNEug7rMDdvpARGXm9g+4wVr2E0XVgM+7xeJ5Lr/MORP83nJzg3zdYONsTC0fOClqnhR64J8X+OIFDY9xCyHIf8eigBwc+/CSq7wAXbhzAXLpdWzrk53rJXm5nNIo9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ljM+M+nH; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9fVOtFE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E037C4CEE5
-	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 07:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738828351;
-	bh=JNGdLVOeh2u3LfPFwDeakrrHIl4B6WTrzvbCBTqoGeY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m9fVOtFErGQpnJf5/iN5CB1c0VupczSJaRHZaDv2SOKgQV7lqNh8LA0QBEoXhlgg6
-	 YBQmHjIonQrlf/Z8zr/h9bbXNzln+SaFYPyqeD+nrNunWuP1aQF40o38u6SZz5QAxt
-	 ZKFRZ+MSugUteJtAXmnal48H0sX0XwE0aOodcb63EWtOuCR1hQdMCFH5xgwoiJF2Mq
-	 PCigyV1dDo2eoXbnmY9TYVqsMwQsPXisHncM5P4G7Q+XS9W0je3rOaEOdCApfFUb+9
-	 o/fmQxpPFQuPA4UrfjQ13VgtWmxZE615O41KGTAdkcSzZg9/hbYa+xsctSjLZAUV0Y
-	 JF7cGdGA84W5A==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dce3adbc31so1084931a12.2
-        for <loongarch@lists.linux.dev>; Wed, 05 Feb 2025 23:52:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWSLcY4SdRkZWdZHaGPaEMBZos5xrnkGVYXOC39QHp87GpgS+J/iaL3kmxwrDmo1VSgqiDWmQc1GCM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzl/npbaQBURFPVQV97QoA96XeO8MybxPxYlcC/jYRDsxvg8vX4
-	ULTSWzy2sTwHcASjNxo0EUjh9CcdaDdn9C0/xT5r2vYG9NfURgsdC4MSTNRKQ2VnpIGneOxPcM8
-	OyUE52/OMKFz33A+YAdvweFh1xxU=
-X-Google-Smtp-Source: AGHT+IH24vRXBYoqM/jKh3fYrGtREWzXUQuxr3aqDKc+0gt0XoP0E0jPFsfdnTA3uGJugs8u05hHKqeHbKBb9kMpP9U=
-X-Received: by 2002:a05:6402:4486:b0:5dc:74fd:abf1 with SMTP id
- 4fb4d7f45d1cf-5dcdb728ea9mr15097911a12.15.1738828349606; Wed, 05 Feb 2025
- 23:52:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ljM+M+nH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738831032;
+	bh=OQ7iIR5qM+sWvITBpGMCDcVBhEoGye+nzy0tYomJPkM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ljM+M+nHJuZwFhwFvdJnd37x3dmNYDV7vd/TC6wUs0eji46bYahxipOqdfGjR/z90
+	 ev/z+j6FS5nC1SCSJ4/BLyu7ahbiS0XM55TremvyW37sFTrjvRJGAiiaWv2zvOGfi0
+	 meQomYv6MLkLGW+loJm1qRDmb5Zq/Eg/fggW9J40=
+X-QQ-mid: bizesmtpip2t1738831027tx2q5lh
+X-QQ-Originating-IP: z49N5IvJbdUnc3tmQDxAkyLkZWVnWMWOUMvl/ipEl/Y=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 06 Feb 2025 16:37:05 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11712325770140657364
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org
+Cc: ardb@kernel.org,
+	chenhuacai@kernel.org,
+	chenhuacai@loongson.cn,
+	kernel@xen0n.name,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	nicolas@fjasle.eu,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Subject: Re: Re: [PATCH 6.1&6.6 0/3] kbuild: Avoid weak external linkage where possible
+Date: Thu,  6 Feb 2025 16:37:02 +0800
+Message-ID: <F6E14B0130692444+20250206083705.63378-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <2024120635-wham-campsite-b62b@gregkh>
+References: <2024120635-wham-campsite-b62b@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250121093703.2660482-1-chenhuacai@loongson.cn> <20250127140607.6b3617df@kernel.org>
-In-Reply-To: <20250127140607.6b3617df@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 6 Feb 2025 15:52:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6oGvixPkPJ+fr8edxAu8rgjPwgaDh508cSzdAFG8Hrqg@mail.gmail.com>
-X-Gm-Features: AWEUYZm2wkOOP8qw23WLa1Zx8_PUScQBUh61vYQPDWNLR3cFPdaLul3L2ZbvAK0
-Message-ID: <CAAhV-H6oGvixPkPJ+fr8edxAu8rgjPwgaDh508cSzdAFG8Hrqg@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, loongarch@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NKv2G1wnhDBnrKKlRfuXfWfW3B8oOk0X9ASdVeC3ej/f3pWRJxj56Ca4
+	azvsSEd/PsqmIg8luIQEFN9UE/pDvBvKuIu1Vkpr+e/v+GUd4nCcQ8X++3M8DNUjSHY0e8g
+	HRrhUYhuCwxBwapJ0t+htIYQG3fozZAsvGtPHKmDp7FvzSNX4ppx3rzlUkWLo9/OJHi8VoD
+	9bUzZiVrOxdXmt+dAHlu5ZRzj/DkTgYdJq1g7hXGHIk2dgfXS2kKAyUOC4z0/bPADjfbDdV
+	4H6GF5NkufSy3W1ITkanEd8xKzQlU93nGfqiPvUSDMuY/R7EcoClxCj6Z6wLBjYoR32mf2V
+	1QNCUKZvFAFKyI4Q1bYZp9Yl4u8LvHbmzt113+MQIxzdkqhzlFWjod0XC/jaKx3q/FvGqIh
+	Yfl0UNRYrgJUJULn344Ja2jX/HZ9s8llrzJh6Xa9P9428/PSChKgoVH7hIw44Qux68GEBCO
+	IpxXzDCUZbJfUiPiRGMRVocbTldHpEfIs+Gz4J+UxDR/mJdivpRQsH/IkYXqEk5MtQ3r6SB
+	dZVoxmVln15hw5sOBeRVsFfLWVhTA/rhqAvZRfqxRq1Zb5Vcl44kuH566U4BH3HqA5fQ7fR
+	c/eI/85vw+rHpP21d8lLYWdNVReWWkzRgkAuTMPahAo9Fdlwv5Fe8js+udOOvPINCCvWzTM
+	eQj2v+pX/GHMptnJZ/ER+fbr9YbOmUk3ixWePbwyK6vcGRSxzoLtVGUEzBINCGkpY94oCGK
+	pHzgB3Mbdg4XMnK4o6mT6+Ji//7TkJF/o4Fn4cO7UXRRlv98pMLFEpu8Kq2tALiC/bO2FlN
+	zUY4Jy9F1jVF3e/yaRdZI9axsXoMAK4B55rWFPuEcpIZfMBCwGfF4y1sjwB4g10CScPlcfX
+	wUIpPmq6YIPw+835rkLTpfoUS1peVlxO2TGdJ5/sn+dk7M8qd6zzYNA2jJEuds/1fUchsQ+
+	WR1FytxmeL9TWVC7Q0o2scZRJQvPhlXex6ECaBnyzAlK+EWzJlzo0luxSxlKvqta1cnSnYS
+	1YPg8LZQ==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-Hi, Jakub,
+Hi, Greg,
 
-Sorry for the late reply.
+It's rather unfortunate that currently, almost all Linux distributions
+supporting LoongArch are using LTS kernels version v6.6 or older, such as
+openEuler and deepin. [1][2]
 
-On Tue, Jan 28, 2025 at 6:06=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Tue, 21 Jan 2025 17:37:03 +0800 Huacai Chen wrote:
-> > Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-> > zero. This means dwmac-loongson doesn't support changing MTU,
->
-> Please provide more details here than "doesn't support changing".
-> Does it return an error every time, but the device is operating
-> correctly?
->
-> Do the flow control thresholds also get programmed incorrectly?
-OK, I will give more details, the root cause is stmmac_change_mtu()
-fails if txfifosz is zero.
+If this bugfix isn't merged into linux-stable, then every single distro
+kernel team will have to waste time fixing the same darn bug over and
+over, even though it's already fixed in later kernels.
 
->
-> > so set the
-> > correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by channe=
-l
-> > counts).
-> >
-> > Note: the Fixes tag is not exactly right, but it is a key commit of the
-> > dwmac-loongson series.
->
-> Please pick a better one, then. Oldest commit where issue can be
-> observed by the user is usually a safe choice.
-Emmm, the commit I picked is the oldest in the "stmmac: Add Loongson
-platform support".
+This would really make LTS look like it's failing to serve its intended
+purpose. And I'm sure all of us do not want to see something so terrible
+happen.
 
->
-> Please use 12 chars of the hash in the tag.
-OK, will do.
+On Fri, Dec 6, 2024 at 9:04 PM Greg Kroah-Hartman wrote:
+> Odd, why doesn't this affect other arches as well using new binutils?  I
+> hate to have to backport all of this just for one arch, as that feels
+> odd.
 
->
-> > +     plat->tx_fifo_size =3D SZ_16K * plat->tx_queues_to_use;
-> > +     plat->rx_fifo_size =3D SZ_16K * plat->rx_queues_to_use;
->
-> Is this really right? 16k times the number of queues seems like you're
-> just trying to get the main driver to calculate 16k.
-> What if user decreases the queue count? Maybe you should add a way to
-> communicate the fifo size regardless of the queue count to the main
- > driver?
-Here {tx,rx}_fifo_size is initialised before stmmac_dvr_probe(), so it
-uses the maximum {tx,rx}_queues_to_use to calculate.
+Could you help me understand why you expressed that you "hate" to have
+to backport something for only one arch?
+Given that we've historically done quite a bit of similar backporting for
+architectures such as arm, powerpc, and x86...It's not exactly unprecedented.
+I just want to grasp the rationale, as it all seems perfectly justified
+and necessary.
 
-If we use ethtool to decrease queue count, stmmac_change_mtu() will
-get txfifosz larger than 16K, but stmmac_change_mtu() can still work
-because there is a condition "if ((txfifosz < new_mtu) || (new_mtu >
-BUF_SIZE_16KiB))".
+Moreover, with all the active and strict code reviews by all developers,
+such occurrences are not frequent on LoongArch. You could be not exactly
+"always" backporting something like this just for LoongArch, so perhaps
+that might make you and your colleagues feel a little less "hate" :-)
 
-This is not perfect, but it seems a perfect solution needs to rework
-the main driver, and dwmac-intel also uses {tx,rx}_queues_to_use to
-calculate {tx,rx}_fifo_size now.
+As for your questions on the root cause of the issue and the effectiveness
+of this fix, I reckon Xi Ruoyao's explanation and Ard Biesheuvel's
+supplementary points have already provided ample details. [3][4][5]
 
+If, after your feedback, you still have any lingering doubts regarding the
+issue itself or the LoongArch architecture, I believe that Xi Ruoyao,
+Ard Biesheuvel, and Huacai Chen would all be more than willing to elaborate
+further.
 
-Huacai
+I'm bringing this up because we've encountered concrete issues in the
+process of maintaining distributions. Furthermore, as an upstream resource,
+linux-stable can help us more effectively drive forward community
+development efforts.
+Plus, we realize this benefits all Linux community developers just the same.
 
-> --
-> pw-bot: cr
+Hoping you could spare a moment from your busy schedule to take another look
+at this patch series and perhaps reconsider the LTS inclusion of this bugfix.
+
+[1]. https://gitee.com/openeuler/kernel/blob/openEuler-25.03/Makefile#L3
+[2]. https://github.com/deepin-community/kernel/blob/linux-6.6.y/Makefile#L3
+[3]. https://lore.kernel.org/all/ccb1fa9034b177042db8fcbe7a95a2a5b466dc30.camel@xry111.site/
+[4]. https://lore.kernel.org/all/CAMj1kXEV+HC+2HMLhDaLfAufQLrXRs2J7akMNr1mjejDYc7kdw@mail.gmail.com/#t
+[5]. https://lore.kernel.org/all/c9a43e5da01ee2215393c0f3c50956171fe660ab.camel@xry111.site/
+
+Best Regards,
+--
+WangYuli
