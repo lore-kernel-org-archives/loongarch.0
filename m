@@ -1,145 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81366227B87
-	for <loongarch@lists.linux.dev>; Thu,  6 Feb 2025 11:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FBA225A2F;
+	Thu,  6 Feb 2025 12:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839605; cv=none; b=QpxMT13luwscfuRBNXqs+61Z6pk4AbMiBx+FsYQyetuz0uu+HoQqMg6Wdjj6eUbkHeq78WVJGMlvIO4GznmJ1M7kVe31U3EzV0AkWIlEZ1P4QRt93Qkx1QI2y7DfTI7JH+wXcKAgjhHrh6wkmXJEl48oFnQCqPBSyI5fi1sMrbg=
+	t=1738845679; cv=none; b=lE6FHAwpE3ms3nCbqWR6sQg6yROkZeiEi23VylylRh8qfQ8nvUSoA4sd688POGD1FonesvWbWHwOjH4eQCh8N7wp+1OglC48TUb6I3Dy0ppybt/h5hSEBc/Yf1wwO3PGQIZzG0/oWh/PjeFha0Unvk4GszC02ez+w8cVQTDd2SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839605; c=relaxed/simple;
-	bh=xQ1t5p/G1PuTyMUQl7uec82DUkXuAxu+nr72fhZ0FqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L34PNd4Pms0OpTc29xkdbMK8Bhe5NuvGv/i4Hj0C7t/PkC/LSHDxAPwDlxWPfK2W+YYGa7Q1kOo5N8njwZUMipUcMNVloauY0W0CyWyj9khsSh6p5U8DeFeuMY0iu8MUitDzQSZeuOn0PW6RzTMuxuShbCDVAqvtiPocyGKr5os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGZTZnxX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gSo8yfFy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738845679; c=relaxed/simple;
+	bh=gGjxLpCbPBjW2Ych8XSy3B16+07LZI5NC9HXokxFssw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Di2MhzTnP26L98v86/2bMwfWJiIlaDuO0OElk4hIZ87LR+W48o3CM8ln7VSFGhd4pB5kkZRT6JBd8JD6OmKg/tuu07uplY7+DD9nSsroJkwOwSHHIDZ7PQM4MwZMTQG+1J4vGXDqROEz41hVIiDNld3DB30keRN0kuxGuJdjeXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=nwevoDBb; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGZTZnxX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gSo8yfFy"
-Date: Thu, 6 Feb 2025 11:59:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738839601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ru5WdIbpSL0IOKGQMyXAT/ZbwjxtTCZKvCRArp1oQDE=;
-	b=YGZTZnxXjpdI6oZKS05b+5XvnP+boGHN1C9QVygV7IAjLA8pAEovdmFAH8xFn7WI+w/Xhp
-	8K+GjBJMH0JXK40pNxioacxcseFzn+iXVx4WoYt+J0VaxAt6ID0MNK8tJHkPrEinPnHwJG
-	q7T7uflCus2GZC60/Vo9hxiLt7lbmMt3uhYS5TbYuilZ8s9n9kIooocVm9DSgR45+vozV8
-	mKs7HvnUnL+HLLe1fD2OiCIYZL6f6ix3Bee88IjX4iDMFE94To0mtXdotTD+DhoAabPdO5
-	+hTLhUwkR8YuE1I+6rX+payvbnygcsEtyByLEI0nCsLk7XsBFKKaA2MPCL7vew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738839601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ru5WdIbpSL0IOKGQMyXAT/ZbwjxtTCZKvCRArp1oQDE=;
-	b=gSo8yfFya9Ajm2CmxNsGxQ1eCLyB3wbR/PEUj366khtBpyQwoXLrVFgUwGilu8dL/eMyJd
-	VQWqN9SewyqCZ4BQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>, linux-parisc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org, 
-	Nam Cao <namcao@linutronix.de>, linux-csky@vger.kernel.org, 
-	"Ridoux, Julien" <ridouxj@amazon.com>, "Luu, Ryan" <rluu@amazon.com>, kvm <kvm@vger.kernel.org>
-Subject: Re: [PATCH v3 00/18] vDSO: Introduce generic data storage
-Message-ID: <20250206110648-ec4cf3d0-0aef-4feb-a859-c69e53ab110c@linutronix.de>
-References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
- <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="nwevoDBb"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: lina@asahilina.net)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 309B343A93;
+	Thu,  6 Feb 2025 12:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
+	s=default; t=1738845671;
+	bh=gGjxLpCbPBjW2Ych8XSy3B16+07LZI5NC9HXokxFssw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References;
+	b=nwevoDBbC0UeG2eDXtUawSqdQxRm+euSZHd3ngRpkByL0DD9kCFf49BH0SVwqgk2n
+	 VbPbgsXeuo5qKxEQitzDnNoYRnRhrDKUdwnfZEkFo1hN7pvdu935hNtstjc2/IZoPD
+	 wZ84XMWJKbaTiwQ/YcDC3VxbjMRTo+8kUIfTzRhKhmMvCUS0mMfOHTpNhAIUJH1Hco
+	 bUkn/83a2NXwoIF45+wABskiOXwaXu9MjBUmoX7JF/ca3nB3DXUGRGPVqXmKTz2oWw
+	 XQrIRRijvdh5im9KZQEg5MV7prp92svrz8nBInZM8ksGdBxRXC4dm5xe52/WWrZvPA
+	 ZkBWJ4Sif4Mvw==
+Date: Thu, 06 Feb 2025 13:41:11 +0100
+From: Asahi Lina <lina@asahilina.net>
+To: Dan Williams <dan.j.williams@intel.com>, Vivek Goyal <vgoyal@redhat.com>,
+ Alistair Popple <apopple@nvidia.com>
+CC: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
+ alison.schofield@intel.com, zhang.lyra@gmail.com,
+ gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz,
+ jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+ npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
+ willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com,
+ david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
+ hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
+ German Maglione <gmaglione@redhat.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+User-Agent: K-9 Mail for Android
+In-Reply-To: <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com> <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com> <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+Message-ID: <A1E3C5B2-CCD8-41BA-BBC8-E8338C18D485@asahilina.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 09:31:42AM +0000, David Woodhouse wrote:
-> On Tue, 2025-02-04 at 13:05 +0100, Thomas Weißschuh wrote:
-> > Currently each architecture defines the setup of the vDSO data page on
-> > its own, mostly through copy-and-paste from some other architecture.
-> > Extend the existing generic vDSO implementation to also provide generic
-> > data storage.
-> > This removes duplicated code and paves the way for further changes to
-> > the generic vDSO implementation without having to go through a lot of
-> > per-architecture changes.
-> > 
-> > Based on v6.14-rc1 and intended to be merged through the tip tree.
+Hi,
 
-Note: The real answer will need to come from the timekeeping
-maintainers, my personal two cents below.
+On February 6, 2025 1:10:15 AM GMT+01:00, Dan Williams <dan=2Ej=2Ewilliams=
+@intel=2Ecom> wrote:
+>Vivek Goyal wrote:
+>> On Fri, Jan 10, 2025 at 05:00:29PM +1100, Alistair Popple wrote:
+>> > FS DAX requires file systems to call into the DAX layout prior to unl=
+inking
+>> > inodes to ensure there is no ongoing DMA or other remote access to th=
+e
+>> > direct mapped page=2E The fuse file system implements
+>> > fuse_dax_break_layouts() to do this which includes a comment indicati=
+ng
+>> > that passing dmap_end =3D=3D 0 leads to unmapping of the whole file=
+=2E
+>> >=20
+>> > However this is not true - passing dmap_end =3D=3D 0 will not unmap a=
+nything
+>> > before dmap_start, and further more dax_layout_busy_page_range() will=
+ not
+>> > scan any of the range to see if there maybe ongoing DMA access to the
+>> > range=2E Fix this by passing -1 for dmap_end to fuse_dax_break_layout=
+s()
+>> > which will invalidate the entire file range to
+>> > dax_layout_busy_page_range()=2E
+>>=20
+>> Hi Alistair,
+>>=20
+>> Thanks for fixing DAX related issues for virtiofs=2E I am wondering how=
+ are
+>> you testing DAX with virtiofs=2E AFAIK, we don't have DAX support in Ru=
+st
+>> virtiofsd=2E C version of virtiofsd used to have out of the tree patche=
+s
+>> for DAX=2E But C version got deprecated long time ago=2E
+>>=20
+>> Do you have another implementation of virtiofsd somewhere else which
+>> supports DAX and allows for testing DAX related changes?
+>
+>I have personally never seen a virtiofs-dax test=2E It sounds like you ar=
+e
+>saying we can deprecate that support if there are no longer any users=2E
+>Or, do you expect that C-virtiofsd is alive in the ecosystem?
 
-> Thanks for working on this. Is there a plan to expose the time data
-> directly to userspace in a form which is usable *other* than by
-> function calls which get the value of the clock at a given moment?
+I accidentally replied offlist, but I wanted to mention that libkrun suppo=
+rts DAX and we use it in muvm=2E It's a critical part of x11bridge function=
+ality, since it uses DAX to share X11 shm fences between X11 clients in the=
+ VM and the XWayland server on the host, which only works if the mmaps are =
+coherent=2E
 
-There are no current plans that I am aware of.
+(Sorry for the unwrapped reply, I'm on mobile right now=2E)
 
-> For populating the vmclock device¹ we need to know the actual
-> relationship between the hardware counter (TSC, arch timer, etc.) and
-> real time in order to propagate that to the guest.
-> 
-> I see two options for doing this:
-> 
->  1. Via userspace, exposing the vdso time data (and a notification when
->     it changes?) and letting the userspace VMM populate the vmclock.
->     This is complex for x86 because of TSC scaling; in fact userspace
->     doesn't currently know the precise scaling from host to guest TSC
->     so we'd have to be able to extract that from KVM.
-
-Exposing the raw vdso time data is problematic as it precludes any
-evolution to its datastructures, like the one we are currently doing.
-
-An additional, trimmed down and stable data structure could be used.
-But I don't think it makes sense. The vDSO is all about a stable
-highlevel function interface on top of an unstable data interface.
-However the vmclock needs the lowlevel data to populate its own
-datastructure, wrapping raw data access in function calls is unnecessary.
-If no functions are involved then the vDSO is not needed. The data can
-be maintained separately in any other place in the kernel and accessed
-or mapped by userspace from there.
-Also the vDSO does not have an active notification mechanism, this would
-probably be implemented through a filedescriptor, but then the data
-can also be mapped through exactly that fd.
-
->  2. In kernel, asking KVM to populate the vmclock structure much like
->     it does other pvclocks shared with the guest. KVM/x86 already uses
->     pvclock_gtod_register_notifier() to hook changes; should we expand
->     on that? The problem with that notifier is that it seems to be
->     called far more frequently than I'd expect.
-
-This sounds better, especially as any custom ABI from the host kernel to
-the VMM would look a lot like the vmclock structure anyways.
-
-Timekeeper updates are indeed very frequent, but what are the concrete
-issues? That frequency is fine for regular vDSO data page updates,
-updating the vmclock data page should be very similar.
-The timekeeper core can pass context to the notifier callbacks, maybe
-this can be used to skip some expensive steps where possible.
-
-> ¹ https://gitlab.com/qemu-project/qemu/-/commit/3634039b93cc5
+~~ Lina
