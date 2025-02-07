@@ -1,153 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4726E10F1
-	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 16:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4EE192B75
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 17:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944987; cv=none; b=Vhtm/3m+oQ+RFdiC7CyB+tM9+ZWj1pk39J0dmsnM7lVM9tNn7rKaKQ23F1evJ694ZH7ah7npmchDM6Nq3mOYlkAezciyEjDU9Q9j/AnjYEG/sgN+nXBeIpux2mugWDrhshEyc9bp9KK57ksDMG7moMUJCJuoY4QFEHRpKIJu4WM=
+	t=1738948016; cv=none; b=aN4d62bAwAUSNhzXFxEGj1jlERtUBrkv1X5rMdUJwKerq8/agoQC/MYAn9vMLTvKP4zB/O4pKiUiSE17McunwJaB/A8PmPA1rkS8zCWAGVaRGe0Wrn9AJyFITFQ/QU0QWm3Ae5k29eDygJKu+2VfMit28389MtoZlq1jOtAcgaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944987; c=relaxed/simple;
-	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T55wesq/i6ZTO4zy27e0O5niu5K3uuH+X0SSHlI/0d1gpph7k0EsXBE4ZuLdlnU57AbHIKM8nNa6qjzpOh0JVtIhFpkB2Z0a37uFsi4o2VI0mXsCh2SzDtdV8dY/d5rf9xtfihVPvztfB+RtG3VxmxMEn9JLGHDyEe4ibnhw01c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YuORY2oB; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738948016; c=relaxed/simple;
+	bh=I2e5fwjdOHrC389H955xUrW7Yt08enQx3eznrVoldiA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S2uNv21u5T6+015ma2g4L0vJ3MsKINUoNLtYu3SMmfBLV2E/QQT5saND6dXjKGpNhF1skz2CkUEnOQvCKba3uZt0TdGSAF2ji72ChZlckL+CrKRvB/gTP2pO/ODpNqrNBgevYsA+hZ4I69UQJg2jJvsfF7ZKd9C57sASTkLadY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gy5PdcJb; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YuORY2oB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy5PdcJb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738944984;
+	s=mimecast20190719; t=1738948013;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
-	b=YuORY2oBfCPOdTPGwf5EzqLLdAf/zylsM7/yufw/rTqoXFkFhWVRIbKCod4DmlFTuC2B72
-	OOpRygSdG5jX9cfqsIAJB7CtLrMcJwXH1t38ti9M4U0zYrW4nORRrTAa1MOcmZ0tTJOO3L
-	RJMpv9w1IKtXewdXpAksumqvh4/rUTk=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
+	b=Gy5PdcJbnHjL7K0E4kK4hk3QCTNCqxEyPsiDCzCFlFUSBHIc2grmLHdmMAyVhBThY98kTo
+	Rn3nUgHYCdFM20G/rcpSBWwefwHz9jwJs8u6D1csMFh2MzOkHWti/C/jlaIelyw2LMpFUx
+	xd9R5MoGiQw5qzU+xqO34VUPB//H/a4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-ju9hqpgyM46IOV_v7HjneQ-1; Fri, 07 Feb 2025 11:16:23 -0500
-X-MC-Unique: ju9hqpgyM46IOV_v7HjneQ-1
-X-Mimecast-MFC-AGG-ID: ju9hqpgyM46IOV_v7HjneQ
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so4833018a91.3
-        for <loongarch@lists.linux.dev>; Fri, 07 Feb 2025 08:16:22 -0800 (PST)
+ us-mta-361-b6XQGsvlNnujX8iILRsXgQ-1; Fri, 07 Feb 2025 12:06:52 -0500
+X-MC-Unique: b6XQGsvlNnujX8iILRsXgQ-1
+X-Mimecast-MFC-AGG-ID: b6XQGsvlNnujX8iILRsXgQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dc56ef418so730689f8f.1
+        for <loongarch@lists.linux.dev>; Fri, 07 Feb 2025 09:06:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738944982; x=1739549782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
-        b=MhKSgtFxvRARAX0WSLPo08u+9TgNMSjIjB9BSTTP9vfTvPwCmgB/nYbXap1lTHakFx
-         QWlM5r0v9sOlDC7o4apFlS6C8k5ajmoUFeqP/maPyCDtTLCHccdwOoL6v6dvngPuM1sQ
-         Ju9ef47yitsArjOQsuaZ+jh1LWLh2nuitwTo7EIAXr/MJZWHDZu+ee31a0wXjXrPtkKX
-         2KXq2AvPtLswZvaH452ptsk7wuFrFJ7afnUT0e2MuyvQjYuTWtPYIvN6od4fCflsy6d2
-         aBNBARj3QZEs3aQoA/dvY11XRhcGoc/P9/ZjiXsRC1DLEDRTlSUtP3NzM8SPlrv68toS
-         O4cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGkoFm+5RHhBnkoFBgyWMO88iDS6GzNyMyyrN486GhoAPJ+wX7Amj46wFnZ55ckp7y8kbN7UkOwL4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5Kn1gxtRSIJhEN2T2lMGw/GG+Qp3sJ7x9bTbB20IRzplbgvfI
-	a6+poc00k34QhL84gUGVfJIj6RU9vIW1EPIgI9tdECsSdtkQGyJfxLcvBlWkqe2QgjLSb1ui3fD
-	6x2+vQslCR5lcReIR3C3JAVApQiPJfHVqfr7t+X0AkikzECLOfXzPiOG8Rn58TQkgKUJ6rJ9MvO
-	LZw146gXYhJ2575znnBOho/Z4o0EBFQ/Ub
-X-Gm-Gg: ASbGncteclui79ZaDKE1Z+meC7Zz+dWXoDUFs8+dfhMgZukjSly8pI1yHwOHWYiigeC
-	TAW+gXnzOmZVNV9vCIdR9uKIQP9SRSkAomF+iiQU0Zf7GN3otqh41D2cOtT5SH98j
-X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id 98e67ed59e1d1-2fa242e7602mr5367369a91.27.1738944981877;
-        Fri, 07 Feb 2025 08:16:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9qQ6Ac9CdjS0hM2Fp5CTCftFgkMjfVYiNIpp2aFlk5UPLOL/FOPn2I3gKNt5IDhZaRA3QY4m6BBB8aMlIkFs=
-X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id
- 98e67ed59e1d1-2fa242e7602mr5367287a91.27.1738944981087; Fri, 07 Feb 2025
- 08:16:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738948011; x=1739552811;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
+        b=v+78Njxx64ydTHvB2LNaIp7OIqoK8DB/d1XIdiyV6zg/38wReYapKZJZV3snnmO5+J
+         7rxpKi/lPR9eFoWPKiWMSlRO6eTkw5wT1blrb7X1eC65ZCtD0oPgQin9DsPlaiCKD6+i
+         a2Q9P7v3nIcrsBosDmosMgXTqwT7xTPdLWrP+RnDH9kxGmxMxF+QSww7u102XvU+/YL8
+         DyUXZdn0EmmA4kQQkdPL4U+filE4/rwKzp1Pp42CPuI0+OuMhBEFWzZQYvYiJZshJB6l
+         97ATu83SvH/NS797KMpLG1QdCRn9aBecKa1oLwuCmIzgwd3SOLgMQOvq0l1PpYVpXf31
+         aoGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNWRRT5zhirRY3IJb1TVNOHzkmsVn0PPTSdfexXMUJpYsNf98OJxtkcwcIslAjDj0QQ5eh5U2L/7s=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0LNO+/1dhp8H1OUUS1uzudkqcgdrPIC6/qG9RFVgNoqAI9CqR
+	mg7U+//1og5imcKOPrlJTeIXf7HgucEBmtLMd5Xq8cl0GZ+8fB+6kywWlhM4czJNmvv32aC9Ivo
+	OSgX8hORMpaUEX/NCLuVsYxzKk9YroGmBQYbEmQTK6kVCUftmhFuM5nfJGA==
+X-Gm-Gg: ASbGncvFbtFH8l4j9FgGL1WQ0cYmIIGEeancANW74h20aoNDlXChD1+vWgwRbwtNM8q
+	RLc4Jn1Le4tzvpLhDzFyF9KRkg+ii4aJ5smFpiWipUAJ7t+KhWB/MogfgXUdImaTnucFWY0qsQT
+	vXUddNHd/tqwbZ4ZX3rIJjXGqGm3RFAy4VCROsRy1PxHUSfBwg2Ek9Ga9wvq1dcP6iHM4+u2sHl
+	6q0bbff7GELBqLMu/yydddOHM7D0ZmvUjNwiSJdYHWoqcC6n7aaf/6bZYBZN8qKBP7DJwHWKTEl
+	SwtCCRzPKRQSOu373SRkwT5IaSd47mXhqsOx0bNXzLpKBqZpo3jIPGu6S5xcZoIbCw==
+X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923934f8f.53.1738948010983;
+        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOdkgTDMixdzesAbzZ6LQT5F1eKCI9U7dpB+ZFF0HwYFgHj2Fc571j17/M7jlf73QfQ/8NiQ==
+X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923876f8f.53.1738948010215;
+        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0041sm59887155e9.14.2025.02.07.09.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:06:49 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+In-Reply-To: <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-23-vschneid@redhat.com>
+ <Z5A6NPqVGoZ32YsN@pavilion.home>
+ <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Date: Fri, 07 Feb 2025 18:06:45 +0100
+Message-ID: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
- <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com> <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
-In-Reply-To: <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
-From: Albert Esteve <aesteve@redhat.com>
-Date: Fri, 7 Feb 2025 17:16:09 +0100
-X-Gm-Features: AWEUYZnF6uEewR9F7JdT3B1cLzxz-kUGRVOwAxRfyR8MegKqDpoCLJWu8Fphkbs
-Message-ID: <CADSE00KUeTp_C_kZPS1U2JcLiWuN1s6Se72gtFiN71kXCZx4UA@mail.gmail.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-To: David Hildenbrand <david@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
-	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
-	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, 
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
-	German Maglione <gmaglione@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2EbelLx6hdUbiEaj3o8R9MecFmcyWEXtS0g6JGBDRgo_1738944982
+X-Mimecast-MFC-PROC-ID: laWQVULPeCB9VCJtUTF7F207BWlmQikajg4-mPDU6_s_1738948011
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 6, 2025 at 7:22=E2=80=AFPM David Hildenbrand <david@redhat.com>=
- wrote:
+On 27/01/25 12:17, Valentin Schneider wrote:
+> On 22/01/25 01:22, Frederic Weisbecker wrote:
+>> And NMIs interrupting userspace don't call
+>> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
+>> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
+>> implementing common entry code, I can't speak for the others.
+>>
 >
-> On 06.02.25 15:59, Albert Esteve wrote:
-> > Hi!
-> >
-> > On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat=
-.com> wrote:
-> >>
-> >> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
-> >>> And then there are challenges at QEMU level. virtiofsd needs addition=
-al
-> >>> vhost-user commands to implement DAX and these never went upstream in
-> >>> QEMU. I hope these challenges are sorted at some point of time.
-> >>
-> >> Albert Esteve has been working on QEMU support:
-> >> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@red=
-hat.com/
-> >>
-> >> He has a viable solution. I think the remaining issue is how to best
-> >> structure the memory regions. The reason for slow progress is not
-> >> because it can't be done, it's probably just because this is a
-> >> background task.
-> >
-> > It is partially that, indeed. But what has me blocked for now on postin=
-g the
-> > next version is that I was reworking a bit the MMAP strategy.
-> > Following David comments, I am relying more on RAMBlocks and
-> > subregions for mmaps. But this turned out more difficult than anticipat=
-ed.
+> That I didn't realize, so thank you for pointing it out. Having another
+> look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
+> when it really isn't :(
 >
-> Yeah, if that turns out to be too painful, we could start with the
-> previous approach and work on that later. I also did not expect that to
-> become that complicated.
+>> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
+>> CT_STATE can be interesting but I fear this may not come for free. You would
+>> need to save the old state on IRQ/NMI entry and restore it on exit.
+>>
+>
+> That's what I tried to avoid, but it sounds like there's no nice way around it.
+>
+>> Do we really need it?
+>>
+>
+> Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
+> this leads the IPI deferral logic to observe a technically-out-of-sync sate
+> for remote CPUs. Consider:
+>
+>   CPUx            CPUy
+>                     state := CT_STATE_IDLE
+>                     ...
+>                     ~>IRQ
+>                     ...
+>                     ct_nmi_enter()
+>                     [in the kernel proper by now]
+>
+>   text_poke_bp_batch()
+>     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
+>       READ CPUy ct->state
+>       `-> CT_IDLE_STATE
+>       `-> defer IPI
+>
+>
+> I thought this meant I would need to throw out the "defer IPIs if CPU is
+> idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
+> which is a bummer :(
 
-Thanks. I'd like to do it properly, so I think will try a bit more to get i=
-t
-to work. Maybe another week. If I do not manage, I may do
-what you suggested (I'll align with you first) to move the patch forward.
+Soooo I've been thinking...
 
-That said, if I end up doing that, I will definitively revisit it later.
+Isn't
 
-BR,
-Albert.
+  (context_tracking.state & CT_RCU_WATCHING)
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+pretty much a proxy for knowing whether a CPU is executing in kernelspace,
+including NMIs?
+
+NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
+IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
+IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
+IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
+
+IOW, if I gate setting deferred work by checking for this instead of
+explicitely CT_STATE_KERNEL, "it should work" and prevent the
+aforementioned issue? Or should I be out drinking instead? :-)
 
