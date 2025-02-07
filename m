@@ -1,197 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4EE192B75
-	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 17:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3661A3151;
+	Fri,  7 Feb 2025 18:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738948016; cv=none; b=aN4d62bAwAUSNhzXFxEGj1jlERtUBrkv1X5rMdUJwKerq8/agoQC/MYAn9vMLTvKP4zB/O4pKiUiSE17McunwJaB/A8PmPA1rkS8zCWAGVaRGe0Wrn9AJyFITFQ/QU0QWm3Ae5k29eDygJKu+2VfMit28389MtoZlq1jOtAcgaM=
+	t=1738953481; cv=none; b=XZFp9K9j5bKoPMwtI4M2Wo+/+Ygtr5r76v4wXiemjgCbBeF+0Q7363lH35iRSzyjv/xhSDnYzP6JCNRAhgtInJ91iKh2zYpgF5KUTXHyzu+WRzYZwoXMsizddVb53ODckKn6n1JkOcWm1SECxQO539oO+P4Mb3X1Ur7CPy5BN6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738948016; c=relaxed/simple;
-	bh=I2e5fwjdOHrC389H955xUrW7Yt08enQx3eznrVoldiA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S2uNv21u5T6+015ma2g4L0vJ3MsKINUoNLtYu3SMmfBLV2E/QQT5saND6dXjKGpNhF1skz2CkUEnOQvCKba3uZt0TdGSAF2ji72ChZlckL+CrKRvB/gTP2pO/ODpNqrNBgevYsA+hZ4I69UQJg2jJvsfF7ZKd9C57sASTkLadY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gy5PdcJb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738953481; c=relaxed/simple;
+	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cNKK9BE6dJJ9kfoMlkKCYQ8z+S9zw5e1ZQcdq31v7aRWhz7Nlks5z2yoaVTAUeWZlqFzVzL3uCZIUzP69fhhtie0FMi+X1z/Y1Rx2qz3Qx+B214kspC7nP4U71oZ3qRFEBtttt5aj/CfLo8cqtmnUzBeAhQBHeR/fJi5ngS1m4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlQrJCsw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy5PdcJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738948013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
-	b=Gy5PdcJbnHjL7K0E4kK4hk3QCTNCqxEyPsiDCzCFlFUSBHIc2grmLHdmMAyVhBThY98kTo
-	Rn3nUgHYCdFM20G/rcpSBWwefwHz9jwJs8u6D1csMFh2MzOkHWti/C/jlaIelyw2LMpFUx
-	xd9R5MoGiQw5qzU+xqO34VUPB//H/a4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-b6XQGsvlNnujX8iILRsXgQ-1; Fri, 07 Feb 2025 12:06:52 -0500
-X-MC-Unique: b6XQGsvlNnujX8iILRsXgQ-1
-X-Mimecast-MFC-AGG-ID: b6XQGsvlNnujX8iILRsXgQ
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dc56ef418so730689f8f.1
-        for <loongarch@lists.linux.dev>; Fri, 07 Feb 2025 09:06:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738948011; x=1739552811;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YX0Ta551pNoazXrou1rxJx7Jk32CWnG6aaI06lzcMPk=;
-        b=v+78Njxx64ydTHvB2LNaIp7OIqoK8DB/d1XIdiyV6zg/38wReYapKZJZV3snnmO5+J
-         7rxpKi/lPR9eFoWPKiWMSlRO6eTkw5wT1blrb7X1eC65ZCtD0oPgQin9DsPlaiCKD6+i
-         a2Q9P7v3nIcrsBosDmosMgXTqwT7xTPdLWrP+RnDH9kxGmxMxF+QSww7u102XvU+/YL8
-         DyUXZdn0EmmA4kQQkdPL4U+filE4/rwKzp1Pp42CPuI0+OuMhBEFWzZQYvYiJZshJB6l
-         97ATu83SvH/NS797KMpLG1QdCRn9aBecKa1oLwuCmIzgwd3SOLgMQOvq0l1PpYVpXf31
-         aoGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNWRRT5zhirRY3IJb1TVNOHzkmsVn0PPTSdfexXMUJpYsNf98OJxtkcwcIslAjDj0QQ5eh5U2L/7s=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz0LNO+/1dhp8H1OUUS1uzudkqcgdrPIC6/qG9RFVgNoqAI9CqR
-	mg7U+//1og5imcKOPrlJTeIXf7HgucEBmtLMd5Xq8cl0GZ+8fB+6kywWlhM4czJNmvv32aC9Ivo
-	OSgX8hORMpaUEX/NCLuVsYxzKk9YroGmBQYbEmQTK6kVCUftmhFuM5nfJGA==
-X-Gm-Gg: ASbGncvFbtFH8l4j9FgGL1WQ0cYmIIGEeancANW74h20aoNDlXChD1+vWgwRbwtNM8q
-	RLc4Jn1Le4tzvpLhDzFyF9KRkg+ii4aJ5smFpiWipUAJ7t+KhWB/MogfgXUdImaTnucFWY0qsQT
-	vXUddNHd/tqwbZ4ZX3rIJjXGqGm3RFAy4VCROsRy1PxHUSfBwg2Ek9Ga9wvq1dcP6iHM4+u2sHl
-	6q0bbff7GELBqLMu/yydddOHM7D0ZmvUjNwiSJdYHWoqcC6n7aaf/6bZYBZN8qKBP7DJwHWKTEl
-	SwtCCRzPKRQSOu373SRkwT5IaSd47mXhqsOx0bNXzLpKBqZpo3jIPGu6S5xcZoIbCw==
-X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923934f8f.53.1738948010983;
-        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEOdkgTDMixdzesAbzZ6LQT5F1eKCI9U7dpB+ZFF0HwYFgHj2Fc571j17/M7jlf73QfQ/8NiQ==
-X-Received: by 2002:a5d:638d:0:b0:386:5b2:a9d9 with SMTP id ffacd0b85a97d-38dc9497d11mr1923876f8f.53.1738948010215;
-        Fri, 07 Feb 2025 09:06:50 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0041sm59887155e9.14.2025.02.07.09.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:06:49 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlQrJCsw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FB8C4CED1;
+	Fri,  7 Feb 2025 18:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738953480;
+	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NlQrJCswb2tfBHdOL//Nqi1duhWdmo0hhnvyFyfXR+kDIctwxBbNZGMh0uVXpdrpn
+	 VtrsS32dlVeABXURIIGFmPTMZ88JEy/aky3D6z70pfkEKIebKtTmA3OIqxmZ3iDcEH
+	 trWQP7mjMuGosKO+a09FIi/HB1+rytKm2YepWGLYPhGRvhc49fQbsTVEVzSz1vy8KY
+	 6YWoxRaVR88tPNIw47TXvof69pWZuIN0NCuUntVn/ixzcMSAUzD+pD+us46BW7ocRi
+	 X6a7pzBJZI/SEPEJ2Eua3jvdWjb6R21icBFzIt4mEif2XISSYrHb7WAcNTWLbqa0Er
+	 f0yIWw7KhrZxA==
+Date: Fri, 7 Feb 2025 19:37:57 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
 Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
  irq/nmi entry
-In-Reply-To: <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Message-ID: <Z6ZTBXUiEOLVcSKp@pavilion.home>
 References: <20250114175143.81438-1-vschneid@redhat.com>
  <20250114175143.81438-23-vschneid@redhat.com>
  <Z5A6NPqVGoZ32YsN@pavilion.home>
  <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Date: Fri, 07 Feb 2025 18:06:45 +0100
-Message-ID: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: laWQVULPeCB9VCJtUTF7F207BWlmQikajg4-mPDU6_s_1738948011
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On 27/01/25 12:17, Valentin Schneider wrote:
-> On 22/01/25 01:22, Frederic Weisbecker wrote:
->> And NMIs interrupting userspace don't call
->> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
->> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
->> implementing common entry code, I can't speak for the others.
->>
->
-> That I didn't realize, so thank you for pointing it out. Having another
-> look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
-> when it really isn't :(
->
->> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
->> CT_STATE can be interesting but I fear this may not come for free. You would
->> need to save the old state on IRQ/NMI entry and restore it on exit.
->>
->
-> That's what I tried to avoid, but it sounds like there's no nice way around it.
->
->> Do we really need it?
->>
->
-> Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
-> this leads the IPI deferral logic to observe a technically-out-of-sync sate
-> for remote CPUs. Consider:
->
->   CPUx            CPUy
->                     state := CT_STATE_IDLE
->                     ...
->                     ~>IRQ
->                     ...
->                     ct_nmi_enter()
->                     [in the kernel proper by now]
->
->   text_poke_bp_batch()
->     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
->       READ CPUy ct->state
->       `-> CT_IDLE_STATE
->       `-> defer IPI
->
->
-> I thought this meant I would need to throw out the "defer IPIs if CPU is
-> idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
-> which is a bummer :(
+Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a écrit :
+> On 27/01/25 12:17, Valentin Schneider wrote:
+> > On 22/01/25 01:22, Frederic Weisbecker wrote:
+> >> And NMIs interrupting userspace don't call
+> >> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
+> >> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
+> >> implementing common entry code, I can't speak for the others.
+> >>
+> >
+> > That I didn't realize, so thank you for pointing it out. Having another
+> > look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
+> > when it really isn't :(
+> >
+> >> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
+> >> CT_STATE can be interesting but I fear this may not come for free. You would
+> >> need to save the old state on IRQ/NMI entry and restore it on exit.
+> >>
+> >
+> > That's what I tried to avoid, but it sounds like there's no nice way around it.
+> >
+> >> Do we really need it?
+> >>
+> >
+> > Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
+> > this leads the IPI deferral logic to observe a technically-out-of-sync sate
+> > for remote CPUs. Consider:
+> >
+> >   CPUx            CPUy
+> >                     state := CT_STATE_IDLE
+> >                     ...
+> >                     ~>IRQ
+> >                     ...
+> >                     ct_nmi_enter()
+> >                     [in the kernel proper by now]
+> >
+> >   text_poke_bp_batch()
+> >     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
+> >       READ CPUy ct->state
+> >       `-> CT_IDLE_STATE
+> >       `-> defer IPI
+> >
+> >
+> > I thought this meant I would need to throw out the "defer IPIs if CPU is
+> > idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
+> > which is a bummer :(
+> 
+> Soooo I've been thinking...
+> 
+> Isn't
+> 
+>   (context_tracking.state & CT_RCU_WATCHING)
+> 
+> pretty much a proxy for knowing whether a CPU is executing in kernelspace,
+> including NMIs?
 
-Soooo I've been thinking...
+You got it!
 
-Isn't
+> 
+> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
+> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
+> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
+> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
+> 
+> IOW, if I gate setting deferred work by checking for this instead of
+> explicitely CT_STATE_KERNEL, "it should work" and prevent the
+> aforementioned issue? Or should I be out drinking instead? :-)
 
-  (context_tracking.state & CT_RCU_WATCHING)
+Exactly it should work! Now that doesn't mean you can't go out
+for a drink :-)
 
-pretty much a proxy for knowing whether a CPU is executing in kernelspace,
-including NMIs?
-
-NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
-IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
-IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
-IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
-
-IOW, if I gate setting deferred work by checking for this instead of
-explicitely CT_STATE_KERNEL, "it should work" and prevent the
-aforementioned issue? Or should I be out drinking instead? :-)
-
+Thanks.
