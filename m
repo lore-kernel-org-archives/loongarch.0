@@ -1,115 +1,172 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B676F15539D
-	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 06:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD2385270
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 07:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911181; cv=none; b=nzFjljcnw3xb6T/D41KxJre2H9jb7qdrpjIlAABoMhInn2Aijlsgow51is7zyvwuCaeGJBoB2uucqno1P5cRbpKeRjZkXhK0Zz+v6fY5+UhhCODTZX8RJyI0gkTn77YqrXh0tCwlozGdQROLOihq2pg5THhOJdeCnMnJ4GP6lhM=
+	t=1738914908; cv=none; b=rDNEccOZTWOgdJLnd66aeUYXUAaOntCquhrznYocTQXVLYV1MoAmygduExnu9jXNY7a85ntJmWZCE7NRdso6JxdgW2nRB4KO/ZxoTXdpODdYScV4QiDQjpkuu0MOsJ/t+xx75P5OmUfOv9zyOPlYCW2QJyYQfc9kTIjYqOm+cp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911181; c=relaxed/simple;
-	bh=fp3yNdV4dxXMRi80coUOwaKpOJz4Lwgnb74388pRDO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/4t3Zk/7pm/Jtaokk2tGOHWHVG/0sjMv2iVwmbnsyCqqwY4NuIuolBv68kG++Goueiqi9kQm8oRVHcR1M80I3dimr1okOHXcYmnNI94TOGSxDgb9DXXALNH+9EDtgo1hlWWsVWNpA3yomAoMVvDgmWcLWP4c/9/Rhd5nc6XB1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gfQ4/rhx; arc=none smtp.client-ip=54.204.34.130
+	s=arc-20240116; t=1738914908; c=relaxed/simple;
+	bh=wGbqvDznr4VTnrU3MKi8+15deAmB6L1S3KpIwW/VnnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iAGCm7bEUAzudN6mqtB0YTw4RH9e379Vt8Wtd8O1gMdW9MLGKenYZkYCEqB7/N+Rn+9CdZsxw919+iI7pQRXs3I7ApURPJd05F1oKcSfpspQ8Y27s2hry28YIRZz4HKpiMUkRAH78l2n2t/M+Lsp27yPiNc5EHYj/KfVVejdDp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=HSkqiEvW; arc=none smtp.client-ip=54.206.34.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gfQ4/rhx"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="HSkqiEvW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738911142;
-	bh=3TrnJ9Z/xHsuAJRQWEc2Y4wHAx1RLl4jmH7juixi/sY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gfQ4/rhxudhXSMxBFFlcFLRwUfteW9eXRKhuIV1bD4pJE1ObNTL0NV7K0nWSV4Y39
-	 PrVpbDmQ9z3FmqgTQld/BDA4+INs8loZwEkhTq0h93UbUsk85hDZqCkYuyFumFjaNC
-	 vFy/svFv/R9nJPAH6hZ1TW1bHz9knv8KN5U5Lbeo=
-X-QQ-mid: bizesmtpip2t1738911130twu7d2b
-X-QQ-Originating-IP: 2Ogc0sig6WvB+aX1FzWDHy5qpj/rqCpc0tfCtt62W14=
-Received: from localhost.localdomain ( [localhost])
+	s=onoh2408; t=1738914879;
+	bh=wGbqvDznr4VTnrU3MKi8+15deAmB6L1S3KpIwW/VnnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=HSkqiEvWWhkKKvftmNhlNKXQWQQvmcWbfhq+m2FJVjm/zXOfhqO5n8WyBfS3OmUSO
+	 OMnpLVHug5JOQ4JmK9r1/fM2ptkeatQcGLQaBhR8PvJ4EOlikM6PuiW8iBrRIi+xXm
+	 G5bEP6JxRL4dtRON18nXdKvCxdna1rkbYKuNpkmU=
+X-QQ-mid: bizesmtpip2t1738914845t9ygc3f
+X-QQ-Originating-IP: L74ayVCyRr8DgXobD8nmZ8Rh1t95u7MFqVBPRySYWWw=
+Received: from [IPV6:240e:668:120a::253:10f] ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 14:52:08 +0800 (CST)
+	id ; Fri, 07 Feb 2025 15:54:03 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 7797445353055566242
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	wangyuli@uniontech.com,
-	jiaxun.yang@flygoat.com,
-	guanwentao@uniontech.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
-Date: Fri,  7 Feb 2025 14:52:01 +0800
-Message-ID: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+X-BIZMAIL-ID: 1342129331751891599
+Message-ID: <DD62CDB3C1812AAF+6ce777e6-4a79-4d10-bfaa-65021ba64821@uniontech.com>
+Date: Fri, 7 Feb 2025 15:54:03 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
+To: chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+ guanwentao@uniontech.com
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ zhanjun@uniontech.com, chenlinxuan@uniontech.com
+References: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------0dEN4XOE1tK7MKSteKtOyIap"
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: M8Li3la+wnbNwAjFOV2edtc8e4abS0veJgDFYMVpnSVwMs2ZDmQDQGNb
-	MShBjLimIkad3XqPQwVOEOtcBmLnq6E7LvYaYHD/bx0Mxzq5xyqp9OyyB06SwQkjH2cq5EO
-	jQ0WZ3JOfx6x7lHwfJ+ECFfi2S5PdU9pX6skNjOdCokfUAm3kiMqNRVJs6+5V52apiMMYfE
-	ap6by6KZVouDLz31reFZMIIe+hzK7HzTUq37igZprzWSZhswHYHXGOxgeJu4ppXYwlCU0aF
-	PPv2qpzYmtbH92NSTzH21Zc2MV+yw9n89h3TSAOvWRrFRdG+6kbbHmCW/J+SE4fgiEGYS8r
-	5qjV4EAsvdqbQziqwyscHAIC2RsER2HYggQ9XfzRk3VNOLMfnRPdOK6eneFSkqVdazJxIQe
-	rW7YUjI3fe2FJujXjoGt8zytewJV9bQe4i8+/8tZaMtoSl3rE8+lBgcLO52t/WDFKI/Zzz/
-	+Ne3qBI+J7rdBbkY/0bBNqRue1EezHgWZprOFJowTt7aDm30HiQfM3pPOp31Cg0YzsF1XA7
-	/FPaI4O6S4HemthifGWvtczWHWeWU4bx2RBGZEh1vAxALiLyHcwcWihIFp9725MEMO9RJcg
-	UeJd3nNpDEqR3nGNvm6VOAcnAKexuFVxdW4pX/hkrZZPbqMcmb/XYTvZYB1s5WqpxtSQeAB
-	SOAGP4DWYH1eOixUgc4nP8MFCe3guOvPsrmnBkotfolzH45t73sOTFmhij0uGlz0HfeYWGj
-	Esghi7su5wl7plCvexK2cmKNqWM4XN0an8grgAq+YfIqvkIYGTLjcMU6JzsTIXQBiJHCNWp
-	h9+vbmzWkLBP9V7aN+RkHvNEmPxqRW/qONRXcrZeJFHApA6c7Gy8AIA08HfwomUQ3rPhhiz
-	uIUe3CY6qNOKq0QvOadRve1IchkQdPpT0CIITI/NHMqrjMrEshYgqSX34XS0lW6EIYGEtLx
-	WSczAjBpRKrbXAx41yZSD+nyAf2lupD9EwrSxl6dpfxAbqjC53Blv6srrLpJ+zVy0xLYOYd
-	NHUjjKYQ==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-XMAILINFO: OHRfOczwgzMVIqzhFmMhxk0YUTiZAAzqtwnEzxUwYq+LwsPQuFTg7X72
+	hhxgr9xgnCE2PKU1tHsY3adS7T8eG1dAmyMm7ZF5QgHT3n1cjCCaaEQsoZ5W3nFjd4sZpTf
+	CcDRm59Wz9ROcRD/sTRyn+ecp9BaK4WVLSr9oqb7G02xCy3OaMuyV/OnFpw4NFni2hTPj1x
+	GO/lIHiK9260aGkXTq6rQwDxlAFI4MUsYnHZjv31RV3x3vzk57YcvE4d8gJGDQ523A8NEeW
+	Jv+m/IkfQI/OqgUuNkLgunk4+vbsyVhZpL3u1heyHAs2qKpEVjCxeDLE5BRCtcjcl58kQeS
+	Q866srFfKT8MViB58bVLymYB6Rmtn0Q8NOW+Ab2+mOoBjI+++mb1D5QWeZDs4bhQZ9+KFmY
+	VwZCZvEOM8SW6TPeRz+TFj8xRFiStKIf4YHzTEt3n750J6ZA5ZUGGDvnbMWaW4TkQjfHOno
+	pSdxqVp/k40dcEDp6wWzKpQ/qZcCK6a66vxwuBDK5BVsrCODzhUFe4KcTHnYS0i4C1OSBMk
+	2L9/CUy8yfS+oVHAOuAffo5HqCfzjwkt/+At557Ml+uHRBddbiD+8Tff/c+gsEO4UVu0Pfh
+	2wjKw9UnhgilixRDQTanX6Je9D/oQmICeprmaM/EM2RPqnRpcuZSGP+lppoK9wUgcsZMSRK
+	DZf3KW6sDMsuGF/Jn1vP8mv3OZk8LiQIODMxwyy37u7mqW1S9CZesNTmSCZaxP6sByqvNJ0
+	Gnl/472xolXZNSjw5ajDt3M6Ixpt1pUEHSbFk0rKQCRkPVbiMasB5LY58NqNrfFweIJTvyh
+	/+8icBax/IcPyuwo9bhp6JnNEnCizoA6xOTE8mhLQLsoezRHAB5FiTtl1h3ZoJiPmVqvWsG
+	Xg2tfsHO1uvba0zIPe50GKBtM+er0F2YYNkQfd8cDFoNrTpOMvRMYoWndf+HGVehwdU525y
+	6/20Svq7+4eETOPyifJdil5PpgV5zGcTaiJsSGURHSG078+9C6QHg7RIk04M1JpYdBOHFV1
+	ZEBrwEYCIICCZ7see6JMWlKoeNXzID+TczH6Z1J2n0+tcqkjiywGSpwYtW5kA=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 X-QQ-RECHKSPAM: 0
 
-Remove hard-coded strings by using the str_yes_no() helper function.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------0dEN4XOE1tK7MKSteKtOyIap
+Content-Type: multipart/mixed; boundary="------------3df0ieXDWIFVC60HWoTY0xvS";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+ guanwentao@uniontech.com
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ zhanjun@uniontech.com, chenlinxuan@uniontech.com
+Message-ID: <6ce777e6-4a79-4d10-bfaa-65021ba64821@uniontech.com>
+Subject: Re: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
+References: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
+In-Reply-To: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
 
-Similar to commit c4a0a4a45a45 ("MIPS: kernel: proc: Use str_yes_no()
-helper function").
+--------------3df0ieXDWIFVC60HWoTY0xvS
+Content-Type: multipart/mixed; boundary="------------ET6VDXiHLZdpFkKVNbHCrZKp"
 
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/proc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+--------------ET6VDXiHLZdpFkKVNbHCrZKp
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 6ce46d92f1f1..56a230238c9c 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -91,10 +91,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	if (cpu_has_lbt_mips)	seq_printf(m, " lbt_mips");
- 	seq_printf(m, "\n");
- 
--	seq_printf(m, "Hardware Watchpoint\t: %s",
--		      cpu_has_watch ? "yes, " : "no\n");
-+	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
- 	if (cpu_has_watch) {
--		seq_printf(m, "iwatch count: %d, dwatch count: %d\n",
-+		seq_printf(m, ", iwatch count: %d, dwatch count: %d",
- 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
- 	}
- 
-@@ -104,7 +103,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
- 				&proc_cpuinfo_notifier_args);
- 
--	seq_printf(m, "\n");
-+	seq_printf(m, "\n\n");
- 
- 	return 0;
- }
--- 
-2.47.2
+RGVwcmVjYXRlZC4NCg0KT24gMjAyNS8yLzcgMTQ6NTIsIFdhbmdZdWxpIHdyb3RlOg0KPiBS
+ZW1vdmUgaGFyZC1jb2RlZCBzdHJpbmdzIGJ5IHVzaW5nIHRoZSBzdHJfeWVzX25vKCkgaGVs
+cGVyIGZ1bmN0aW9uLg0KPg0KPiBTaW1pbGFyIHRvIGNvbW1pdCBjNGEwYTRhNDVhNDUgKCJN
+SVBTOiBrZXJuZWw6IHByb2M6IFVzZSBzdHJfeWVzX25vKCkNCj4gaGVscGVyIGZ1bmN0aW9u
+IikuDQo+DQo+IENvLWRldmVsb3BlZC1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9AdW5p
+b250ZWNoLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9A
+dW5pb250ZWNoLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogWXVsaSBXYW5nIDx3YW5neXVsaUB1
+bmlvbnRlY2guY29tPg0KPiAtLS0NCj4gICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvcHJvYy5j
+IHwgNyArKystLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgNCBk
+ZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9w
+cm9jLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHJvYy5jDQo+IGluZGV4IDZjZTQ2ZDky
+ZjFmMS4uNTZhMjMwMjM4YzljIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJu
+ZWwvcHJvYy5jDQo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9wcm9jLmMNCj4gQEAg
+LTkxLDEwICs5MSw5IEBAIHN0YXRpYyBpbnQgc2hvd19jcHVpbmZvKHN0cnVjdCBzZXFfZmls
+ZSAqbSwgdm9pZCAqdikNCj4gICAJaWYgKGNwdV9oYXNfbGJ0X21pcHMpCXNlcV9wcmludGYo
+bSwgIiBsYnRfbWlwcyIpOw0KPiAgIAlzZXFfcHJpbnRmKG0sICJcbiIpOw0KPiAgIA0KPiAt
+CXNlcV9wcmludGYobSwgIkhhcmR3YXJlIFdhdGNocG9pbnRcdDogJXMiLA0KPiAtCQkgICAg
+ICBjcHVfaGFzX3dhdGNoID8gInllcywgIiA6ICJub1xuIik7DQo+ICsJc2VxX3ByaW50Ziht
+LCAiSGFyZHdhcmUgV2F0Y2hwb2ludFx0OiAlcyIsIHN0cl95ZXNfbm8oY3B1X2hhc193YXRj
+aCkpOw0KPiAgIAlpZiAoY3B1X2hhc193YXRjaCkgew0KPiAtCQlzZXFfcHJpbnRmKG0sICJp
+d2F0Y2ggY291bnQ6ICVkLCBkd2F0Y2ggY291bnQ6ICVkXG4iLA0KPiArCQlzZXFfcHJpbnRm
+KG0sICIsIGl3YXRjaCBjb3VudDogJWQsIGR3YXRjaCBjb3VudDogJWQiLA0KPiAgIAkJICAg
+ICAgY3B1X2RhdGFbbl0ud2F0Y2hfaXJlZ19jb3VudCwgY3B1X2RhdGFbbl0ud2F0Y2hfZHJl
+Z19jb3VudCk7DQo+ICAgCX0NCj4gICANCj4gQEAgLTEwNCw3ICsxMDMsNyBAQCBzdGF0aWMg
+aW50IHNob3dfY3B1aW5mbyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKnYpDQo+ICAgCXJh
+d19ub3RpZmllcl9jYWxsX2NoYWluKCZwcm9jX2NwdWluZm9fY2hhaW4sIDAsDQo+ICAgCQkJ
+CSZwcm9jX2NwdWluZm9fbm90aWZpZXJfYXJncyk7DQo+ICAgDQo+IC0Jc2VxX3ByaW50Ziht
+LCAiXG4iKTsNCj4gKwlzZXFfcHJpbnRmKG0sICJcblxuIik7DQo+ICAgDQo+ICAgCXJldHVy
+biAwOw0KPiAgIH0NCkJlc3Qgd2lzaGVzLA0KLS0gDQpXYW5nWXVsaQ0K
+--------------ET6VDXiHLZdpFkKVNbHCrZKp
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------ET6VDXiHLZdpFkKVNbHCrZKp--
+
+--------------3df0ieXDWIFVC60HWoTY0xvS--
+
+--------------0dEN4XOE1tK7MKSteKtOyIap
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ6W8GwUDAAAAAAAKCRDF2h8wRvQL7pgq
+AP4jUwZ9NkkXkUpQxAYjQapmUry1+Ckzr2nDa33XQ5vH+AEAxc0C7dFKXEanJNyHYbyK5x9cND+J
+9rrIr0ccnBWZ1Qo=
+=TWX8
+-----END PGP SIGNATURE-----
+
+--------------0dEN4XOE1tK7MKSteKtOyIap--
