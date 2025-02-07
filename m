@@ -1,217 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941663D;
-	Fri,  7 Feb 2025 11:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4726E10F1
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 16:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738927401; cv=none; b=M1qmkWGgh2GeZfDaZCvhGc/9+wkn1R+Aw0O4PgBbbpENwslGuhTdXYuyYFMBrS3C2SWotFOS6zGN951fK+bOZWDPCVv5ILv5kUMrdjnto8YJPrBCtSu3Zk8oX3dsfwNVl82NmcXN4gYpBxE3bLeVQNLuTC3y//zXZtjviegKJTU=
+	t=1738944987; cv=none; b=Vhtm/3m+oQ+RFdiC7CyB+tM9+ZWj1pk39J0dmsnM7lVM9tNn7rKaKQ23F1evJ694ZH7ah7npmchDM6Nq3mOYlkAezciyEjDU9Q9j/AnjYEG/sgN+nXBeIpux2mugWDrhshEyc9bp9KK57ksDMG7moMUJCJuoY4QFEHRpKIJu4WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738927401; c=relaxed/simple;
-	bh=rDgXon4XKyyTMnJg1H62oo5N0HIvd7uVkSQLqUIRFiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqfSVplQ42DhXiQxzyqTgXKfMM9Dnpid+RyYw9TQjQmyKrAaxwC8ASKeu+BdAjPqmPi8IXgoyz/tW2AHtjCyZjgiJWAgYgwHkTl2epC++lXNZZwtpUJOQ96B9oK49xTHcRyP9tgpaKulZ5PsHXtKu5vxGNhO0XKDWATcI6++Qhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kwCdosD+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738944987; c=relaxed/simple;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T55wesq/i6ZTO4zy27e0O5niu5K3uuH+X0SSHlI/0d1gpph7k0EsXBE4ZuLdlnU57AbHIKM8nNa6qjzpOh0JVtIhFpkB2Z0a37uFsi4o2VI0mXsCh2SzDtdV8dY/d5rf9xtfihVPvztfB+RtG3VxmxMEn9JLGHDyEe4ibnhw01c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YuORY2oB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kwCdosD+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PmphW+4DB1a61lgsB8ZJX+ZVNXH/wKdDVQsDZgHKw+8=; b=kwCdosD+cOi+lWLcG4/G/f7npw
-	o/MkPTtd35xzntrKkdy+RkjEVf2DfNWenKz5MPzuEtH9Wga/2Cwlkntb3qBVh/3AWzfHnMnoAnxgd
-	gi3/SUZ8QZ4Qwg924cL/XaEnKhJ+j06TeooTGECC6kEBaxGPLqeZEFkAC1df+0iGfqA92JmZnGDjT
-	UsFKdHKSpNNFFOodHHNFHS/NeQTvD6HbBBKGsskk9aJ9B2b1xMgQvn00T1WrhsYENouDFE/JLbamP
-	A/3kWM+OLQ3oOusAjWS00T9vgLJ8w5YewXWPgIVllJwd4PYE6Fb2WwD3ZrMzLwnlKjp2yKMSiKMs5
-	QMxv8n1Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgMS0-00000007hoU-1DCe;
-	Fri, 07 Feb 2025 11:23:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2DC3D300310; Fri,  7 Feb 2025 12:23:11 +0100 (CET)
-Date: Fri, 7 Feb 2025 12:23:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	bibo mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Youling Tang <tangyouling@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH] loongson: Fix idle VS timer enqueue
-Message-ID: <20250207112311.GE7145@noisy.programming.kicks-ass.net>
-References: <20250206162922.3028861-1-marco.crivellari@suse.com>
- <20250206162922.3028861-2-marco.crivellari@suse.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YuORY2oB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738944984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	b=YuORY2oBfCPOdTPGwf5EzqLLdAf/zylsM7/yufw/rTqoXFkFhWVRIbKCod4DmlFTuC2B72
+	OOpRygSdG5jX9cfqsIAJB7CtLrMcJwXH1t38ti9M4U0zYrW4nORRrTAa1MOcmZ0tTJOO3L
+	RJMpv9w1IKtXewdXpAksumqvh4/rUTk=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-ju9hqpgyM46IOV_v7HjneQ-1; Fri, 07 Feb 2025 11:16:23 -0500
+X-MC-Unique: ju9hqpgyM46IOV_v7HjneQ-1
+X-Mimecast-MFC-AGG-ID: ju9hqpgyM46IOV_v7HjneQ
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so4833018a91.3
+        for <loongarch@lists.linux.dev>; Fri, 07 Feb 2025 08:16:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738944982; x=1739549782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+        b=MhKSgtFxvRARAX0WSLPo08u+9TgNMSjIjB9BSTTP9vfTvPwCmgB/nYbXap1lTHakFx
+         QWlM5r0v9sOlDC7o4apFlS6C8k5ajmoUFeqP/maPyCDtTLCHccdwOoL6v6dvngPuM1sQ
+         Ju9ef47yitsArjOQsuaZ+jh1LWLh2nuitwTo7EIAXr/MJZWHDZu+ee31a0wXjXrPtkKX
+         2KXq2AvPtLswZvaH452ptsk7wuFrFJ7afnUT0e2MuyvQjYuTWtPYIvN6od4fCflsy6d2
+         aBNBARj3QZEs3aQoA/dvY11XRhcGoc/P9/ZjiXsRC1DLEDRTlSUtP3NzM8SPlrv68toS
+         O4cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGkoFm+5RHhBnkoFBgyWMO88iDS6GzNyMyyrN486GhoAPJ+wX7Amj46wFnZ55ckp7y8kbN7UkOwL4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw5Kn1gxtRSIJhEN2T2lMGw/GG+Qp3sJ7x9bTbB20IRzplbgvfI
+	a6+poc00k34QhL84gUGVfJIj6RU9vIW1EPIgI9tdECsSdtkQGyJfxLcvBlWkqe2QgjLSb1ui3fD
+	6x2+vQslCR5lcReIR3C3JAVApQiPJfHVqfr7t+X0AkikzECLOfXzPiOG8Rn58TQkgKUJ6rJ9MvO
+	LZw146gXYhJ2575znnBOho/Z4o0EBFQ/Ub
+X-Gm-Gg: ASbGncteclui79ZaDKE1Z+meC7Zz+dWXoDUFs8+dfhMgZukjSly8pI1yHwOHWYiigeC
+	TAW+gXnzOmZVNV9vCIdR9uKIQP9SRSkAomF+iiQU0Zf7GN3otqh41D2cOtT5SH98j
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id 98e67ed59e1d1-2fa242e7602mr5367369a91.27.1738944981877;
+        Fri, 07 Feb 2025 08:16:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG9qQ6Ac9CdjS0hM2Fp5CTCftFgkMjfVYiNIpp2aFlk5UPLOL/FOPn2I3gKNt5IDhZaRA3QY4m6BBB8aMlIkFs=
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id
+ 98e67ed59e1d1-2fa242e7602mr5367287a91.27.1738944981087; Fri, 07 Feb 2025
+ 08:16:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206162922.3028861-2-marco.crivellari@suse.com>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
+ <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com> <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+In-Reply-To: <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+From: Albert Esteve <aesteve@redhat.com>
+Date: Fri, 7 Feb 2025 17:16:09 +0100
+X-Gm-Features: AWEUYZnF6uEewR9F7JdT3B1cLzxz-kUGRVOwAxRfyR8MegKqDpoCLJWu8Fphkbs
+Message-ID: <CADSE00KUeTp_C_kZPS1U2JcLiWuN1s6Se72gtFiN71kXCZx4UA@mail.gmail.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+To: David Hildenbrand <david@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
+	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
+	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, 
+	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
+	German Maglione <gmaglione@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 2EbelLx6hdUbiEaj3o8R9MecFmcyWEXtS0g6JGBDRgo_1738944982
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 05:29:22PM +0100, Marco Crivellari wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Loongson re-enables interrupts on its idle routine and performs a
-> TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
-> 
-> The IRQs firing between the check and the idling instruction may set the
-> TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
-> interrupting __arch_cpu_idle() rollback their return address to the
-> beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
-> again before going back to sleep.
-> 
-> However idle IRQs can also queue timers that may require a tick
-> reprogramming through a new generic idle loop iteration but those timers
-> would go unnoticed here because __arch_cpu_idle() only checks
-> TIF_NEED_RESCHED. It doesn't check for pending timers.
-> 
-> Fix this with fast-forwarding idle IRQs return value to the end of the
-> idle routine instead of the beginning, so that the generic idle loop
-> handles both TIF_NEED_RESCHED and pending timers.
-> 
-> Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
-> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
+On Thu, Feb 6, 2025 at 7:22=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 06.02.25 15:59, Albert Esteve wrote:
+> > Hi!
+> >
+> > On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat=
+.com> wrote:
+> >>
+> >> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> >>> And then there are challenges at QEMU level. virtiofsd needs addition=
+al
+> >>> vhost-user commands to implement DAX and these never went upstream in
+> >>> QEMU. I hope these challenges are sorted at some point of time.
+> >>
+> >> Albert Esteve has been working on QEMU support:
+> >> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@red=
+hat.com/
+> >>
+> >> He has a viable solution. I think the remaining issue is how to best
+> >> structure the memory regions. The reason for slow progress is not
+> >> because it can't be done, it's probably just because this is a
+> >> background task.
+> >
+> > It is partially that, indeed. But what has me blocked for now on postin=
+g the
+> > next version is that I was reworking a bit the MMAP strategy.
+> > Following David comments, I am relying more on RAMBlocks and
+> > subregions for mmaps. But this turned out more difficult than anticipat=
+ed.
+>
+> Yeah, if that turns out to be too painful, we could start with the
+> previous approach and work on that later. I also did not expect that to
+> become that complicated.
 
-Feel free to make that:
+Thanks. I'd like to do it properly, so I think will try a bit more to get i=
+t
+to work. Maybe another week. If I do not manage, I may do
+what you suggested (I'll align with you first) to move the patch forward.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+That said, if I end up doing that, I will definitively revisit it later.
 
+BR,
+Albert.
 
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> ---
->  arch/loongarch/kernel/genex.S | 33 +++++++++++++++++++--------------
->  arch/loongarch/kernel/idle.c  |  3 +--
->  arch/loongarch/kernel/reset.c | 23 ++++++++++++++---------
->  3 files changed, 34 insertions(+), 25 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-> index 86d5d90ebefe..ab2e9a262ee2 100644
-> --- a/arch/loongarch/kernel/genex.S
-> +++ b/arch/loongarch/kernel/genex.S
-> @@ -18,28 +18,33 @@
->  
->  	.align	5
->  SYM_FUNC_START(__arch_cpu_idle)
-> -	/* start of rollback region */
-> -	LONG_L	t0, tp, TI_FLAGS
-> -	nop
-> -	andi	t0, t0, _TIF_NEED_RESCHED
-> -	bnez	t0, 1f
-> -	nop
-> -	nop
-> -	nop
-> +	/* start of idle interrupt region */
-> +	li.w	t0, CSR_CRMD_IE
-> +	/* idle instruction needs irq enabled */
-> +	csrxchg	t0, t0, LOONGARCH_CSR_CRMD
-> +	/*
-> +	 * If an interrupt lands here; between enabling interrupts above and
-> +	 * going idle on the next instruction, we must *NOT* go idle since the
-> +	 * interrupt could have set TIF_NEED_RESCHED or caused an timer to need
-> +	 * reprogramming. Fall through -- see handle_vint() below -- and have
-> +	 * the idle loop take care of things.
-> +	 */
->  	idle	0
-> -	/* end of rollback region */
-> -1:	jr	ra
-> +	nop
-> +	/* end of idle interrupt region */
-> +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
-> +	jr	ra
->  SYM_FUNC_END(__arch_cpu_idle)
->  
->  SYM_CODE_START(handle_vint)
->  	UNWIND_HINT_UNDEFINED
->  	BACKUP_T0T1
->  	SAVE_ALL
-> -	la_abs	t1, __arch_cpu_idle
-> +	la_abs	t1, __arch_cpu_idle_exit
->  	LONG_L	t0, sp, PT_ERA
-> -	/* 32 byte rollback region */
-> -	ori	t0, t0, 0x1f
-> -	xori	t0, t0, 0x1f
-> +	/* 16 byte idle interrupt region */
-> +	ori	t0, t0, 0x0f
-> +	addi.d	t0, t0, 1
->  	bne	t0, t1, 1f
->  	LONG_S	t0, sp, PT_ERA
->  1:	move	a0, sp
-> diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.c
-> index 0b5dd2faeb90..54b247d8cdb6 100644
-> --- a/arch/loongarch/kernel/idle.c
-> +++ b/arch/loongarch/kernel/idle.c
-> @@ -11,7 +11,6 @@
->  
->  void __cpuidle arch_cpu_idle(void)
->  {
-> -	raw_local_irq_enable();
-> -	__arch_cpu_idle(); /* idle instruction needs irq enabled */
-> +	__arch_cpu_idle();
->  	raw_local_irq_disable();
->  }
-> diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
-> index 1ef8c6383535..d78e8a1064a1 100644
-> --- a/arch/loongarch/kernel/reset.c
-> +++ b/arch/loongarch/kernel/reset.c
-> @@ -20,6 +20,11 @@
->  void (*pm_power_off)(void);
->  EXPORT_SYMBOL(pm_power_off);
->  
-> +static __always_inline void native_halt(void)
-> +{
-> +	asm volatile("idle 0" : : : "memory");
-> +}
-> +
->  void machine_halt(void)
->  {
->  #ifdef CONFIG_SMP
-> @@ -32,9 +37,9 @@ void machine_halt(void)
->  	pr_notice("\n\n** You can safely turn off the power now **\n\n");
->  	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
->  
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->  }
->  
->  void machine_power_off(void)
-> @@ -52,9 +57,9 @@ void machine_power_off(void)
->  	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
->  #endif
->  
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->  }
->  
->  void machine_restart(char *command)
-> @@ -73,7 +78,7 @@ void machine_restart(char *command)
->  	if (!acpi_disabled)
->  		acpi_reboot();
->  
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->  }
-> -- 
-> 2.48.1
-> 
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
+
