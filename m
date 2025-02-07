@@ -1,220 +1,115 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5602C18A6A8
-	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 06:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B676F15539D
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 06:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911079; cv=none; b=dfOgsM43V/DSZ+hRANe1I6l4SpM5hyCtbVyymClHMOMe15x82U2FQQc+bzlA2iVdWSg6aO5CGKeSDm+1LwwZDvnaHGyOhAbFW4GxSJPJyVDRiPVq6drRdqv9/MrRtfPfGT7sRtDd5Ttpp6PmpiiLQckhbA83ZR0cUg+HomKkCOE=
+	t=1738911181; cv=none; b=nzFjljcnw3xb6T/D41KxJre2H9jb7qdrpjIlAABoMhInn2Aijlsgow51is7zyvwuCaeGJBoB2uucqno1P5cRbpKeRjZkXhK0Zz+v6fY5+UhhCODTZX8RJyI0gkTn77YqrXh0tCwlozGdQROLOihq2pg5THhOJdeCnMnJ4GP6lhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911079; c=relaxed/simple;
-	bh=XOkEWq88HxMGa4q3w3xKhtQkrwRH5QJR3PKEJmTEirI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Xp9ylfEZ3qkfCknl427pzbs0479o9Xyw4LF2jYgzlbOZonp2Rs+BpJxQ2tcnCu6lIvaUrRoqhwdhtgxYJ8r/KWhZmNg4/JC5vwSsBVJ5nadws/iIHzI1/fSsltefHr0Xi0/5u/V6SxnikxCsr+T56t1Syo+zQpjlbTu+UGO+oME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxyuBhraVnkE9uAA--.17217S3;
-	Fri, 07 Feb 2025 14:51:13 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxH+VfraVnT+YDAA--.16729S3;
-	Fri, 07 Feb 2025 14:51:11 +0800 (CST)
-Subject: Re: [PATCH] loongson: Fix idle VS timer enqueue
-To: Marco Crivellari <marco.crivellari@suse.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Tiezhu Yang <yangtiezhu@loongson.cn>,
- Frederic Weisbecker <frederic@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20250206162922.3028861-1-marco.crivellari@suse.com>
- <20250206162922.3028861-2-marco.crivellari@suse.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <e820d02d-0359-c45d-11c5-eab3a4fa3569@loongson.cn>
-Date: Fri, 7 Feb 2025 14:50:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1738911181; c=relaxed/simple;
+	bh=fp3yNdV4dxXMRi80coUOwaKpOJz4Lwgnb74388pRDO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/4t3Zk/7pm/Jtaokk2tGOHWHVG/0sjMv2iVwmbnsyCqqwY4NuIuolBv68kG++Goueiqi9kQm8oRVHcR1M80I3dimr1okOHXcYmnNI94TOGSxDgb9DXXALNH+9EDtgo1hlWWsVWNpA3yomAoMVvDgmWcLWP4c/9/Rhd5nc6XB1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gfQ4/rhx; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gfQ4/rhx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738911142;
+	bh=3TrnJ9Z/xHsuAJRQWEc2Y4wHAx1RLl4jmH7juixi/sY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=gfQ4/rhxudhXSMxBFFlcFLRwUfteW9eXRKhuIV1bD4pJE1ObNTL0NV7K0nWSV4Y39
+	 PrVpbDmQ9z3FmqgTQld/BDA4+INs8loZwEkhTq0h93UbUsk85hDZqCkYuyFumFjaNC
+	 vFy/svFv/R9nJPAH6hZ1TW1bHz9knv8KN5U5Lbeo=
+X-QQ-mid: bizesmtpip2t1738911130twu7d2b
+X-QQ-Originating-IP: 2Ogc0sig6WvB+aX1FzWDHy5qpj/rqCpc0tfCtt62W14=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 07 Feb 2025 14:52:08 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7797445353055566242
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wangyuli@uniontech.com,
+	jiaxun.yang@flygoat.com,
+	guanwentao@uniontech.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
+Date: Fri,  7 Feb 2025 14:52:01 +0800
+Message-ID: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250206162922.3028861-2-marco.crivellari@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxH+VfraVnT+YDAA--.16729S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF47Xr47ur1DCrW8tFWkAFc_yoWrKw1fpr
-	yfuwn8KrsYgrn3X347tw18ur98u34DGa1a9anxArW8AF4jvr10qr1kt34kW3ZYg3y8Gw1F
-	vF1rXa42g3WUA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
-	U
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: M8Li3la+wnbNwAjFOV2edtc8e4abS0veJgDFYMVpnSVwMs2ZDmQDQGNb
+	MShBjLimIkad3XqPQwVOEOtcBmLnq6E7LvYaYHD/bx0Mxzq5xyqp9OyyB06SwQkjH2cq5EO
+	jQ0WZ3JOfx6x7lHwfJ+ECFfi2S5PdU9pX6skNjOdCokfUAm3kiMqNRVJs6+5V52apiMMYfE
+	ap6by6KZVouDLz31reFZMIIe+hzK7HzTUq37igZprzWSZhswHYHXGOxgeJu4ppXYwlCU0aF
+	PPv2qpzYmtbH92NSTzH21Zc2MV+yw9n89h3TSAOvWRrFRdG+6kbbHmCW/J+SE4fgiEGYS8r
+	5qjV4EAsvdqbQziqwyscHAIC2RsER2HYggQ9XfzRk3VNOLMfnRPdOK6eneFSkqVdazJxIQe
+	rW7YUjI3fe2FJujXjoGt8zytewJV9bQe4i8+/8tZaMtoSl3rE8+lBgcLO52t/WDFKI/Zzz/
+	+Ne3qBI+J7rdBbkY/0bBNqRue1EezHgWZprOFJowTt7aDm30HiQfM3pPOp31Cg0YzsF1XA7
+	/FPaI4O6S4HemthifGWvtczWHWeWU4bx2RBGZEh1vAxALiLyHcwcWihIFp9725MEMO9RJcg
+	UeJd3nNpDEqR3nGNvm6VOAcnAKexuFVxdW4pX/hkrZZPbqMcmb/XYTvZYB1s5WqpxtSQeAB
+	SOAGP4DWYH1eOixUgc4nP8MFCe3guOvPsrmnBkotfolzH45t73sOTFmhij0uGlz0HfeYWGj
+	Esghi7su5wl7plCvexK2cmKNqWM4XN0an8grgAq+YfIqvkIYGTLjcMU6JzsTIXQBiJHCNWp
+	h9+vbmzWkLBP9V7aN+RkHvNEmPxqRW/qONRXcrZeJFHApA6c7Gy8AIA08HfwomUQ3rPhhiz
+	uIUe3CY6qNOKq0QvOadRve1IchkQdPpT0CIITI/NHMqrjMrEshYgqSX34XS0lW6EIYGEtLx
+	WSczAjBpRKrbXAx41yZSD+nyAf2lupD9EwrSxl6dpfxAbqjC53Blv6srrLpJ+zVy0xLYOYd
+	NHUjjKYQ==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-yes, it had better skip out inner loop and let idle framework handle it.
+Remove hard-coded strings by using the str_yes_no() helper function.
 
-Tested-by: Bibo Mao <maobibo@loongson.cn>
+Similar to commit c4a0a4a45a45 ("MIPS: kernel: proc: Use str_yes_no()
+helper function").
 
-On 2025/2/7 上午12:29, Marco Crivellari wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Loongson re-enables interrupts on its idle routine and performs a
-> TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
-> 
-> The IRQs firing between the check and the idling instruction may set the
-> TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
-> interrupting __arch_cpu_idle() rollback their return address to the
-> beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
-> again before going back to sleep.
-> 
-> However idle IRQs can also queue timers that may require a tick
-> reprogramming through a new generic idle loop iteration but those timers
-> would go unnoticed here because __arch_cpu_idle() only checks
-> TIF_NEED_RESCHED. It doesn't check for pending timers.
-> 
-> Fix this with fast-forwarding idle IRQs return value to the end of the
-> idle routine instead of the beginning, so that the generic idle loop
-> handles both TIF_NEED_RESCHED and pending timers.
-> 
-> Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
-> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> ---
->   arch/loongarch/kernel/genex.S | 33 +++++++++++++++++++--------------
->   arch/loongarch/kernel/idle.c  |  3 +--
->   arch/loongarch/kernel/reset.c | 23 ++++++++++++++---------
->   3 files changed, 34 insertions(+), 25 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-> index 86d5d90ebefe..ab2e9a262ee2 100644
-> --- a/arch/loongarch/kernel/genex.S
-> +++ b/arch/loongarch/kernel/genex.S
-> @@ -18,28 +18,33 @@
->   
->   	.align	5
->   SYM_FUNC_START(__arch_cpu_idle)
-> -	/* start of rollback region */
-> -	LONG_L	t0, tp, TI_FLAGS
-> -	nop
-> -	andi	t0, t0, _TIF_NEED_RESCHED
-> -	bnez	t0, 1f
-> -	nop
-> -	nop
-> -	nop
-> +	/* start of idle interrupt region */
-> +	li.w	t0, CSR_CRMD_IE
-> +	/* idle instruction needs irq enabled */
-> +	csrxchg	t0, t0, LOONGARCH_CSR_CRMD
-> +	/*
-> +	 * If an interrupt lands here; between enabling interrupts above and
-> +	 * going idle on the next instruction, we must *NOT* go idle since the
-> +	 * interrupt could have set TIF_NEED_RESCHED or caused an timer to need
-> +	 * reprogramming. Fall through -- see handle_vint() below -- and have
-> +	 * the idle loop take care of things.
-> +	 */
->   	idle	0
-> -	/* end of rollback region */
-> -1:	jr	ra
-> +	nop
-> +	/* end of idle interrupt region */
-> +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
-> +	jr	ra
->   SYM_FUNC_END(__arch_cpu_idle)
->   
->   SYM_CODE_START(handle_vint)
->   	UNWIND_HINT_UNDEFINED
->   	BACKUP_T0T1
->   	SAVE_ALL
-> -	la_abs	t1, __arch_cpu_idle
-> +	la_abs	t1, __arch_cpu_idle_exit
->   	LONG_L	t0, sp, PT_ERA
-> -	/* 32 byte rollback region */
-> -	ori	t0, t0, 0x1f
-> -	xori	t0, t0, 0x1f
-> +	/* 16 byte idle interrupt region */
-> +	ori	t0, t0, 0x0f
-> +	addi.d	t0, t0, 1
->   	bne	t0, t1, 1f
->   	LONG_S	t0, sp, PT_ERA
->   1:	move	a0, sp
-> diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.c
-> index 0b5dd2faeb90..54b247d8cdb6 100644
-> --- a/arch/loongarch/kernel/idle.c
-> +++ b/arch/loongarch/kernel/idle.c
-> @@ -11,7 +11,6 @@
->   
->   void __cpuidle arch_cpu_idle(void)
->   {
-> -	raw_local_irq_enable();
-> -	__arch_cpu_idle(); /* idle instruction needs irq enabled */
-> +	__arch_cpu_idle();
->   	raw_local_irq_disable();
->   }
-> diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
-> index 1ef8c6383535..d78e8a1064a1 100644
-> --- a/arch/loongarch/kernel/reset.c
-> +++ b/arch/loongarch/kernel/reset.c
-> @@ -20,6 +20,11 @@
->   void (*pm_power_off)(void);
->   EXPORT_SYMBOL(pm_power_off);
->   
-> +static __always_inline void native_halt(void)
-> +{
-> +	asm volatile("idle 0" : : : "memory");
-> +}
-> +
->   void machine_halt(void)
->   {
->   #ifdef CONFIG_SMP
-> @@ -32,9 +37,9 @@ void machine_halt(void)
->   	pr_notice("\n\n** You can safely turn off the power now **\n\n");
->   	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
->   
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->   }
->   
->   void machine_power_off(void)
-> @@ -52,9 +57,9 @@ void machine_power_off(void)
->   	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
->   #endif
->   
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->   }
->   
->   void machine_restart(char *command)
-> @@ -73,7 +78,7 @@ void machine_restart(char *command)
->   	if (!acpi_disabled)
->   		acpi_reboot();
->   
-> -	while (true) {
-> -		__arch_cpu_idle();
-> -	}
-> +	while (1) {
-> +		native_halt();
-> +	};
->   }
-> 
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/kernel/proc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 6ce46d92f1f1..56a230238c9c 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -91,10 +91,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_lbt_mips)	seq_printf(m, " lbt_mips");
+ 	seq_printf(m, "\n");
+ 
+-	seq_printf(m, "Hardware Watchpoint\t: %s",
+-		      cpu_has_watch ? "yes, " : "no\n");
++	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+ 	if (cpu_has_watch) {
+-		seq_printf(m, "iwatch count: %d, dwatch count: %d\n",
++		seq_printf(m, ", iwatch count: %d, dwatch count: %d",
+ 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
+ 	}
+ 
+@@ -104,7 +103,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
+ 				&proc_cpuinfo_notifier_args);
+ 
+-	seq_printf(m, "\n");
++	seq_printf(m, "\n\n");
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
 
