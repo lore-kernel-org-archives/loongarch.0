@@ -1,172 +1,239 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD2385270
-	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 07:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A5F2417F5
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 08:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738914908; cv=none; b=rDNEccOZTWOgdJLnd66aeUYXUAaOntCquhrznYocTQXVLYV1MoAmygduExnu9jXNY7a85ntJmWZCE7NRdso6JxdgW2nRB4KO/ZxoTXdpODdYScV4QiDQjpkuu0MOsJ/t+xx75P5OmUfOv9zyOPlYCW2QJyYQfc9kTIjYqOm+cp4=
+	t=1738916327; cv=none; b=eek/XFVd30hNV5VCzWC5nD8tjY/57ocS4ssMuYrS/AbTbnsksQOhc2OQmKkB8joC6iM9UPsG+KkIgYUEBYCLXcGK8lLs+hW2dsB7DUcFS6ds0+HdZTGqZ5j/11sfOnWr6TrrmW1qHEPwajnPeheMuCVBuEXI/Lg20IfHLgMPkn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738914908; c=relaxed/simple;
-	bh=wGbqvDznr4VTnrU3MKi8+15deAmB6L1S3KpIwW/VnnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iAGCm7bEUAzudN6mqtB0YTw4RH9e379Vt8Wtd8O1gMdW9MLGKenYZkYCEqB7/N+Rn+9CdZsxw919+iI7pQRXs3I7ApURPJd05F1oKcSfpspQ8Y27s2hry28YIRZz4HKpiMUkRAH78l2n2t/M+Lsp27yPiNc5EHYj/KfVVejdDp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=HSkqiEvW; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1738916327; c=relaxed/simple;
+	bh=1zEyrC6uc++eul0LyZ8BQcoXyG/r3hdOGW3HQIwZHys=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DpCkCF8V5zjnjepCRAmwnfCsiq4mLmtZoR4ibOFgLEcyB8/zgLV0yyndzN+RrG1eHjdGU9SpnvqRgtFpHJczP3f7x+Bln9PzPYLA/jmXPnLN/IGAUv5ymkWj/tNPSYCrMlq6ILu/EY5yJ/rDHlhHn9jo8Si8MzMbGJ8ZFbDBdtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+jOoIgq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="HSkqiEvW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738914879;
-	bh=wGbqvDznr4VTnrU3MKi8+15deAmB6L1S3KpIwW/VnnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=HSkqiEvWWhkKKvftmNhlNKXQWQQvmcWbfhq+m2FJVjm/zXOfhqO5n8WyBfS3OmUSO
-	 OMnpLVHug5JOQ4JmK9r1/fM2ptkeatQcGLQaBhR8PvJ4EOlikM6PuiW8iBrRIi+xXm
-	 G5bEP6JxRL4dtRON18nXdKvCxdna1rkbYKuNpkmU=
-X-QQ-mid: bizesmtpip2t1738914845t9ygc3f
-X-QQ-Originating-IP: L74ayVCyRr8DgXobD8nmZ8Rh1t95u7MFqVBPRySYWWw=
-Received: from [IPV6:240e:668:120a::253:10f] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 15:54:03 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1342129331751891599
-Message-ID: <DD62CDB3C1812AAF+6ce777e6-4a79-4d10-bfaa-65021ba64821@uniontech.com>
-Date: Fri, 7 Feb 2025 15:54:03 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+jOoIgq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAC54C4CEEA
+	for <loongarch@lists.linux.dev>; Fri,  7 Feb 2025 08:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738916326;
+	bh=1zEyrC6uc++eul0LyZ8BQcoXyG/r3hdOGW3HQIwZHys=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X+jOoIgqdPRDs/wL2KCdjvFe9LK3FAn1qnO3BWNmwRrsl29giFLS/6oO1ilWnQul/
+	 SRz1mBK9r8jwh/r2xbx57nRRp8mjeDhfmlP+4n6enAfKB3nlt0vgr98p8VIETTq63z
+	 ntuTrTagkef222GG+v0LbtZrw0qhZBLwjpIHwvks3X0IXujVjQAOaDlcMz5hXpR4A2
+	 F8psgAYhy1kXquWPFuPkWZCGmVANAlen3nRkY4JOz5bhQjAhuTS40MVRbRDTs9CKY1
+	 4GqkztB8EB136fv3ZfLyr70Q8Wxt56s2Ms9kCGtZmhNZHE8ZJLP/uoor7gaEtiyHnd
+	 92FeLgOjGVY7w==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dcc38c7c6bso3619126a12.1
+        for <loongarch@lists.linux.dev>; Fri, 07 Feb 2025 00:18:46 -0800 (PST)
+X-Gm-Message-State: AOJu0YxVpQur3lXsVnl51mAObPsQCIXk8EOYPLAqzaDQOLUxOeDm8cNG
+	2K+BoZ5DzwTlmVveTHZjYZp4lRoHhKMHV3C5RYfXP+0bpdtfUrn904J7NNA+ScGqiXBpIgLXrz3
+	fTkYwS1+uTu/gbH2gt8DKWg0UEOA=
+X-Google-Smtp-Source: AGHT+IEH2zNdN2KbQi/RcTnUyrGvn045yWOgG4JVkuNIJX9bLi9t+eo6Ydxrg0KHbHP2EA3Xh0Kj61KD57UtwC0NCTQ=
+X-Received: by 2002:a05:6402:2746:b0:5dc:72e1:63f5 with SMTP id
+ 4fb4d7f45d1cf-5de450046acmr2925368a12.12.1738916325045; Fri, 07 Feb 2025
+ 00:18:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
-To: chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- guanwentao@uniontech.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, chenlinxuan@uniontech.com
-References: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0dEN4XOE1tK7MKSteKtOyIap"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OHRfOczwgzMVIqzhFmMhxk0YUTiZAAzqtwnEzxUwYq+LwsPQuFTg7X72
-	hhxgr9xgnCE2PKU1tHsY3adS7T8eG1dAmyMm7ZF5QgHT3n1cjCCaaEQsoZ5W3nFjd4sZpTf
-	CcDRm59Wz9ROcRD/sTRyn+ecp9BaK4WVLSr9oqb7G02xCy3OaMuyV/OnFpw4NFni2hTPj1x
-	GO/lIHiK9260aGkXTq6rQwDxlAFI4MUsYnHZjv31RV3x3vzk57YcvE4d8gJGDQ523A8NEeW
-	Jv+m/IkfQI/OqgUuNkLgunk4+vbsyVhZpL3u1heyHAs2qKpEVjCxeDLE5BRCtcjcl58kQeS
-	Q866srFfKT8MViB58bVLymYB6Rmtn0Q8NOW+Ab2+mOoBjI+++mb1D5QWeZDs4bhQZ9+KFmY
-	VwZCZvEOM8SW6TPeRz+TFj8xRFiStKIf4YHzTEt3n750J6ZA5ZUGGDvnbMWaW4TkQjfHOno
-	pSdxqVp/k40dcEDp6wWzKpQ/qZcCK6a66vxwuBDK5BVsrCODzhUFe4KcTHnYS0i4C1OSBMk
-	2L9/CUy8yfS+oVHAOuAffo5HqCfzjwkt/+At557Ml+uHRBddbiD+8Tff/c+gsEO4UVu0Pfh
-	2wjKw9UnhgilixRDQTanX6Je9D/oQmICeprmaM/EM2RPqnRpcuZSGP+lppoK9wUgcsZMSRK
-	DZf3KW6sDMsuGF/Jn1vP8mv3OZk8LiQIODMxwyy37u7mqW1S9CZesNTmSCZaxP6sByqvNJ0
-	Gnl/472xolXZNSjw5ajDt3M6Ixpt1pUEHSbFk0rKQCRkPVbiMasB5LY58NqNrfFweIJTvyh
-	/+8icBax/IcPyuwo9bhp6JnNEnCizoA6xOTE8mhLQLsoezRHAB5FiTtl1h3ZoJiPmVqvWsG
-	Xg2tfsHO1uvba0zIPe50GKBtM+er0F2YYNkQfd8cDFoNrTpOMvRMYoWndf+HGVehwdU525y
-	6/20Svq7+4eETOPyifJdil5PpgV5zGcTaiJsSGURHSG078+9C6QHg7RIk04M1JpYdBOHFV1
-	ZEBrwEYCIICCZ7see6JMWlKoeNXzID+TczH6Z1J2n0+tcqkjiywGSpwYtW5kA=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0dEN4XOE1tK7MKSteKtOyIap
-Content-Type: multipart/mixed; boundary="------------3df0ieXDWIFVC60HWoTY0xvS";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- guanwentao@uniontech.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, chenlinxuan@uniontech.com
-Message-ID: <6ce777e6-4a79-4d10-bfaa-65021ba64821@uniontech.com>
-Subject: Re: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
-References: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
-In-Reply-To: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
-
---------------3df0ieXDWIFVC60HWoTY0xvS
-Content-Type: multipart/mixed; boundary="------------ET6VDXiHLZdpFkKVNbHCrZKp"
-
---------------ET6VDXiHLZdpFkKVNbHCrZKp
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-RGVwcmVjYXRlZC4NCg0KT24gMjAyNS8yLzcgMTQ6NTIsIFdhbmdZdWxpIHdyb3RlOg0KPiBS
-ZW1vdmUgaGFyZC1jb2RlZCBzdHJpbmdzIGJ5IHVzaW5nIHRoZSBzdHJfeWVzX25vKCkgaGVs
-cGVyIGZ1bmN0aW9uLg0KPg0KPiBTaW1pbGFyIHRvIGNvbW1pdCBjNGEwYTRhNDVhNDUgKCJN
-SVBTOiBrZXJuZWw6IHByb2M6IFVzZSBzdHJfeWVzX25vKCkNCj4gaGVscGVyIGZ1bmN0aW9u
-IikuDQo+DQo+IENvLWRldmVsb3BlZC1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9AdW5p
-b250ZWNoLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogV2VudGFvIEd1YW4gPGd1YW53ZW50YW9A
-dW5pb250ZWNoLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogWXVsaSBXYW5nIDx3YW5neXVsaUB1
-bmlvbnRlY2guY29tPg0KPiAtLS0NCj4gICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvcHJvYy5j
-IHwgNyArKystLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgNCBk
-ZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9w
-cm9jLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHJvYy5jDQo+IGluZGV4IDZjZTQ2ZDky
-ZjFmMS4uNTZhMjMwMjM4YzljIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJu
-ZWwvcHJvYy5jDQo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9wcm9jLmMNCj4gQEAg
-LTkxLDEwICs5MSw5IEBAIHN0YXRpYyBpbnQgc2hvd19jcHVpbmZvKHN0cnVjdCBzZXFfZmls
-ZSAqbSwgdm9pZCAqdikNCj4gICAJaWYgKGNwdV9oYXNfbGJ0X21pcHMpCXNlcV9wcmludGYo
-bSwgIiBsYnRfbWlwcyIpOw0KPiAgIAlzZXFfcHJpbnRmKG0sICJcbiIpOw0KPiAgIA0KPiAt
-CXNlcV9wcmludGYobSwgIkhhcmR3YXJlIFdhdGNocG9pbnRcdDogJXMiLA0KPiAtCQkgICAg
-ICBjcHVfaGFzX3dhdGNoID8gInllcywgIiA6ICJub1xuIik7DQo+ICsJc2VxX3ByaW50Ziht
-LCAiSGFyZHdhcmUgV2F0Y2hwb2ludFx0OiAlcyIsIHN0cl95ZXNfbm8oY3B1X2hhc193YXRj
-aCkpOw0KPiAgIAlpZiAoY3B1X2hhc193YXRjaCkgew0KPiAtCQlzZXFfcHJpbnRmKG0sICJp
-d2F0Y2ggY291bnQ6ICVkLCBkd2F0Y2ggY291bnQ6ICVkXG4iLA0KPiArCQlzZXFfcHJpbnRm
-KG0sICIsIGl3YXRjaCBjb3VudDogJWQsIGR3YXRjaCBjb3VudDogJWQiLA0KPiAgIAkJICAg
-ICAgY3B1X2RhdGFbbl0ud2F0Y2hfaXJlZ19jb3VudCwgY3B1X2RhdGFbbl0ud2F0Y2hfZHJl
-Z19jb3VudCk7DQo+ICAgCX0NCj4gICANCj4gQEAgLTEwNCw3ICsxMDMsNyBAQCBzdGF0aWMg
-aW50IHNob3dfY3B1aW5mbyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKnYpDQo+ICAgCXJh
-d19ub3RpZmllcl9jYWxsX2NoYWluKCZwcm9jX2NwdWluZm9fY2hhaW4sIDAsDQo+ICAgCQkJ
-CSZwcm9jX2NwdWluZm9fbm90aWZpZXJfYXJncyk7DQo+ICAgDQo+IC0Jc2VxX3ByaW50Ziht
-LCAiXG4iKTsNCj4gKwlzZXFfcHJpbnRmKG0sICJcblxuIik7DQo+ICAgDQo+ICAgCXJldHVy
-biAwOw0KPiAgIH0NCkJlc3Qgd2lzaGVzLA0KLS0gDQpXYW5nWXVsaQ0K
---------------ET6VDXiHLZdpFkKVNbHCrZKp
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
+References: <20250206162922.3028861-1-marco.crivellari@suse.com> <20250206162922.3028861-2-marco.crivellari@suse.com>
+In-Reply-To: <20250206162922.3028861-2-marco.crivellari@suse.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 7 Feb 2025 16:18:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6OKwmxhF_iWJEc8OEZ==h8dTdorTwkE8oMUMWAbU6xeg@mail.gmail.com>
+X-Gm-Features: AWEUYZnx9cqGSYq-cbWIWg6dKbtiqdT9vFexoRLSXaOzXvKTpl4OkkxFegftus0
+Message-ID: <CAAhV-H6OKwmxhF_iWJEc8OEZ==h8dTdorTwkE8oMUMWAbU6xeg@mail.gmail.com>
+Subject: Re: [PATCH] loongson: Fix idle VS timer enqueue
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	bibo mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Frederic Weisbecker <frederic@kernel.org>, 
+	Youling Tang <tangyouling@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Hi, Marco,
 
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
+Thank you for your patch, the logic is correct but the code can be improved=
+.
 
---------------ET6VDXiHLZdpFkKVNbHCrZKp--
+On Fri, Feb 7, 2025 at 12:30=E2=80=AFAM Marco Crivellari
+<marco.crivellari@suse.com> wrote:
+>
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> Loongson re-enables interrupts on its idle routine and performs a
+> TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
+>
+> The IRQs firing between the check and the idling instruction may set the
+> TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
+> interrupting __arch_cpu_idle() rollback their return address to the
+> beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
+> again before going back to sleep.
+>
+> However idle IRQs can also queue timers that may require a tick
+> reprogramming through a new generic idle loop iteration but those timers
+> would go unnoticed here because __arch_cpu_idle() only checks
+> TIF_NEED_RESCHED. It doesn't check for pending timers.
+>
+> Fix this with fast-forwarding idle IRQs return value to the end of the
+> idle routine instead of the beginning, so that the generic idle loop
+> handles both TIF_NEED_RESCHED and pending timers.
+>
+> Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
+> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> ---
+>  arch/loongarch/kernel/genex.S | 33 +++++++++++++++++++--------------
+>  arch/loongarch/kernel/idle.c  |  3 +--
+>  arch/loongarch/kernel/reset.c | 23 ++++++++++++++---------
+>  3 files changed, 34 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.=
+S
+> index 86d5d90ebefe..ab2e9a262ee2 100644
+> --- a/arch/loongarch/kernel/genex.S
+> +++ b/arch/loongarch/kernel/genex.S
+> @@ -18,28 +18,33 @@
+>
+>         .align  5
+>  SYM_FUNC_START(__arch_cpu_idle)
+> -       /* start of rollback region */
+> -       LONG_L  t0, tp, TI_FLAGS
+> -       nop
+> -       andi    t0, t0, _TIF_NEED_RESCHED
+> -       bnez    t0, 1f
+> -       nop
+> -       nop
+> -       nop
+> +       /* start of idle interrupt region */
+> +       li.w    t0, CSR_CRMD_IE
+It is better to replace it with "ori t0, zero, CSR_CRMD_IE", ensuring
+single instruction.
 
---------------3df0ieXDWIFVC60HWoTY0xvS--
+> +       /* idle instruction needs irq enabled */
+> +       csrxchg t0, t0, LOONGARCH_CSR_CRMD
+> +       /*
+> +        * If an interrupt lands here; between enabling interrupts above =
+and
+> +        * going idle on the next instruction, we must *NOT* go idle sinc=
+e the
+> +        * interrupt could have set TIF_NEED_RESCHED or caused an timer t=
+o need
+> +        * reprogramming. Fall through -- see handle_vint() below -- and =
+have
+> +        * the idle loop take care of things.
+> +        */
+>         idle    0
+> -       /* end of rollback region */
+> -1:     jr      ra
+> +       nop
+Remove the "nop", of course it should be together with the later modificati=
+on.
 
---------------0dEN4XOE1tK7MKSteKtOyIap
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+> +       /* end of idle interrupt region */
+> +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
+> +       jr      ra
+>  SYM_FUNC_END(__arch_cpu_idle)
+>
+>  SYM_CODE_START(handle_vint)
+>         UNWIND_HINT_UNDEFINED
+>         BACKUP_T0T1
+>         SAVE_ALL
+> -       la_abs  t1, __arch_cpu_idle
+> +       la_abs  t1, __arch_cpu_idle_exit
+>         LONG_L  t0, sp, PT_ERA
+> -       /* 32 byte rollback region */
+> -       ori     t0, t0, 0x1f
+> -       xori    t0, t0, 0x1f
+> +       /* 16 byte idle interrupt region */
+> +       ori     t0, t0, 0x0f
+> +       addi.d  t0, t0, 1
+Replace these two instructions with "ori t0, t0, 0xc", and "16 bytes"
+can be replaced with "3 instructions".
 
------BEGIN PGP SIGNATURE-----
+>         bne     t0, t1, 1f
+>         LONG_S  t0, sp, PT_ERA
+>  1:     move    a0, sp
+> diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.c
+> index 0b5dd2faeb90..54b247d8cdb6 100644
+> --- a/arch/loongarch/kernel/idle.c
+> +++ b/arch/loongarch/kernel/idle.c
+> @@ -11,7 +11,6 @@
+>
+>  void __cpuidle arch_cpu_idle(void)
+>  {
+> -       raw_local_irq_enable();
+> -       __arch_cpu_idle(); /* idle instruction needs irq enabled */
+> +       __arch_cpu_idle();
+>         raw_local_irq_disable();
+>  }
+> diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.=
+c
+> index 1ef8c6383535..d78e8a1064a1 100644
+> --- a/arch/loongarch/kernel/reset.c
+> +++ b/arch/loongarch/kernel/reset.c
+> @@ -20,6 +20,11 @@
+>  void (*pm_power_off)(void);
+>  EXPORT_SYMBOL(pm_power_off);
+>
+> +static __always_inline void native_halt(void)
+> +{
+> +       asm volatile("idle 0" : : : "memory");
+> +}
+Just use the inline assembly at the call sites, please.
 
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ6W8GwUDAAAAAAAKCRDF2h8wRvQL7pgq
-AP4jUwZ9NkkXkUpQxAYjQapmUry1+Ckzr2nDa33XQ5vH+AEAxc0C7dFKXEanJNyHYbyK5x9cND+J
-9rrIr0ccnBWZ1Qo=
-=TWX8
------END PGP SIGNATURE-----
+Huacai
 
---------------0dEN4XOE1tK7MKSteKtOyIap--
+> +
+>  void machine_halt(void)
+>  {
+>  #ifdef CONFIG_SMP
+> @@ -32,9 +37,9 @@ void machine_halt(void)
+>         pr_notice("\n\n** You can safely turn off the power now **\n\n");
+>         console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               native_halt();
+> +       };
+>  }
+>
+>  void machine_power_off(void)
+> @@ -52,9 +57,9 @@ void machine_power_off(void)
+>         efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+>  #endif
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               native_halt();
+> +       };
+>  }
+>
+>  void machine_restart(char *command)
+> @@ -73,7 +78,7 @@ void machine_restart(char *command)
+>         if (!acpi_disabled)
+>                 acpi_reboot();
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               native_halt();
+> +       };
+>  }
+> --
+> 2.48.1
+>
