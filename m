@@ -1,36 +1,35 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187ED149C41
-	for <loongarch@lists.linux.dev>; Sat,  8 Feb 2025 08:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B692149C41
+	for <loongarch@lists.linux.dev>; Sat,  8 Feb 2025 08:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739001807; cv=none; b=ZpWRGxrCJ3GEyWp72xlGOmLJBObj0qg2Y9E17BnzDU75pe3N08DCcuuaAZaDw4KOp1FvA6MZuZoWgGUY16hiEG+hdCMAb+ryWAdexEP2nMp/qpQ/KsvZrH0kNBdeTyWH+E85Fh+9K9SYF/IExBOkngFFjWN2Z/S0ee0z940oJeU=
+	t=1739001813; cv=none; b=T3Ky6frWDnAJHuM5Q5uvGZXTM64boB+Ld9+//pJFHolMQBE+bDNcmMdhYrb5elonA3HkkNatlnaeD6NdrdQd3bQUIrZR+NE4fcmxSMDa9pLww0fQDnwIriqZjhRDrfAGb0DJLEtw9dk9pv4NCLPNTy9NrjOdD3pIXrvjc+O6g9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739001807; c=relaxed/simple;
-	bh=fp3yNdV4dxXMRi80coUOwaKpOJz4Lwgnb74388pRDO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cGvgJmtV6HJRCY7aSl78m11cwnlHVNq/1l0LOJ5S6FeQxTTzbu9O8P4Is9U8NDRxh9QsXvxUKPs0mAQb9vVXy5djUt164205zCVFzlF4RVHkfOi7McuVIc6LpDWhJT4PT8uRUDStdrEVvfdVUCyOo168kzZbyWf8k4HsamXWEYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=lnB8bVET; arc=none smtp.client-ip=54.204.34.130
+	s=arc-20240116; t=1739001813; c=relaxed/simple;
+	bh=PgBXquzMXsWz33obIrTjPNP9P9NVROXr0WVTFk+Dcyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EZM1xP8sjOXUE0N537W16vVh708IN2omTEs/+IFWuKIFfyQQv3rAHZfRZSxxw72ckjTdOW9v7Pu6JofxZZqaW7E5xdDKGGZW9QdAi2hR1TPIIkk+19Iz1jAAc0hblmdNa9m1FBrJHYXsXsQnM/CnqPYR4xMSFD3t7rrQaooLyuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=QsExfEq8; arc=none smtp.client-ip=54.254.200.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="lnB8bVET"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="QsExfEq8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739001782;
-	bh=3TrnJ9Z/xHsuAJRQWEc2Y4wHAx1RLl4jmH7juixi/sY=;
+	s=onoh2408; t=1739001778;
+	bh=mqNXdmfFmSts2fzJNetk66tefp2cUiUagyr97qls4QY=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=lnB8bVETThOiybRUyft+/lk5sQdxu+rKqq8GvK5q8eMk9ufNVEqPckRLto1SLkuL3
-	 4uwzPlvxdN+FIBpAJBMX/fb2/lgIOAI/WLb8Il1Ud0rbkItJd9UOskfJVFHAgLq/Xr
-	 Refvjsg7z7zBSfiLlUqjqL7lNCD0gufVOrgcXfaw=
-X-QQ-mid: bizesmtpip2t1739001751t3104pp
-X-QQ-Originating-IP: E4IyHBnUuc9fRvKJa/yzIGK9PefjtvXqre+Oyu9sS8I=
+	b=QsExfEq8nQwGMY6brwiMZCSWa/M8uDrnEbDMbOdir0VcBo6iJk0zqLnm9v5pVQmuG
+	 G4r6Rs3Rqr0oK4WLC+y+3om9pjR0pVKIOujZDQHxDrJKdrVi4VlN+AJRScJ0pnylu2
+	 QPuIOge6lusch1PzOvDSy5xwAHSb7gv1ev4PcM5M=
+X-QQ-mid: bizesmtpip2t1739001746twdky9c
+X-QQ-Originating-IP: S7iRy4XwFzNGRLwdx7fwf+8443jaoePP5iscOfUyiOQ=
 Received: from localhost.localdomain ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 08 Feb 2025 16:02:29 +0800 (CST)
+	id ; Sat, 08 Feb 2025 16:02:24 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2714771911060073859
+X-BIZMAIL-ID: 15013984985188102476
 From: WangYuli <wangyuli@uniontech.com>
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -41,12 +40,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	zhanjun@unionetch.com,
 	chenlinxuan@uniontech.com
-Subject: [PATCH 1/3] LoongArch: kernel: proc: Use str_yes_no() helper function
-Date: Sat,  8 Feb 2025 16:02:19 +0800
-Message-ID: <66FB3B84EE934511+20250208080221.1083810-2-wangyuli@uniontech.com>
+Subject: [PATCH 0/3] LoongArch: Remove the deprecated notifier hook mechanism
+Date: Sat,  8 Feb 2025 16:02:18 +0800
+Message-ID: <78D4077EFBEB1663+20250208080221.1083810-1-wangyuli@uniontech.com>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250208080221.1083810-1-wangyuli@uniontech.com>
-References: <20250208080221.1083810-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,63 +53,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N3SCbsWvOCfFEp4RliRaViCInTKp/l+D/0rtMPbhZ2/fNsRZcDLfymUs
-	Vh19A2P8EOfvLQi7A9O3g2aebZS3JqCFhvLJtqjGEIfijRv2gVdPD+7PMeTOmaXawDiYgo3
-	knEezFMgKBz0+OV2w5QuXC/G597uMi0YlQ11zItqxey9YK7yg9c8hW5KBKb05wu+lBeuiLi
-	nquxP9IxMN64mGRTZybSrAjCue4NwU+ZVfXY4SBTkbPkBRpQp7it9dmZEIVNiUWOJT2vNXz
-	qMR/UCKww+BYqBvZ8Ga7YHK/Bs4UQRj7skwYpa4/hBmyemquev43TRCCsjg6FUhHJOV3nPk
-	i/y4iIEHCt+z/Uao6xItYQbstk0JgkwU5XGu1A2v+IeCTJMwKL+sftv2K+BaHU4b+HM4l0G
-	q0d+WOwVQlJpogZ0mBq1OxSBOo8fCm+HgNwvc3goxvIEnOaMJZoYJiLWly7CXxCiu73pgnS
-	LDZqzqadV50M0yMHh4dUeCh0JU9iIKFVzLKG7/7SmwCmii7bHnG+P/kU6Ky6hF8dETdBwA2
-	iZ5xaGYXA4Cqap9gL1YXs4sfmLcNYCj3JiOQETJI5nzEUKpMPmkw70mPA3xjDdcqv5KXvNw
-	NVHYLy9KXHu06AcuQyMz03GvfwzvecJ+6KSEGuQqWMC3Y08dR5CS1mtvw/PdyrajzHE/9Wc
-	4oQ6ZG1LDusqyvAjeH7FttEBmKtFlYlSPYzRlAQUpycrCtty1xz/g43lZiAN2vqkC6AvYxZ
-	GhJ3m/LtFkoxRuAEZI2ZyDNblgciZClW7zBH0fYFqQ41QE/62+3M98XbuP0jLIdJoVysJNO
-	+yFEGq7gGJrsU8ytucS6GOFb2qVOTBTHXYKJY/rYbIxxMtDA9TjGCjXtu4q6OJ0ZDRkrULC
-	u+6xAZbSiitsA01771FlEXnk2/L1lk7t+cxiS6dyCXTz5U/paTYmb1qj6JQSHnG4yvYj5hn
-	FuRI8f6C/HR99HlFqqWlWqhP+gw6jgLjarczmKB+mzNfXQLF2bC1UU6Q9Qv0a5JOn+5vyvL
-	6YCEOds8XziGJbiLCPwyylfPULRQo=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-XMAILINFO: OST2d686M2k2zm5CVzItbAc8JUq809ro4nz7kIDTj9uy3TGxSozop46m
+	pVpOKj+ElmAUsOCHytWnaYgnQh5K4BM/3NauN607qtUMvN8WPb+j+SGzxT3BwmqAzMwXimy
+	aSbnBjYW7Oes+y//SiIvfVSDfKEnRVb2/YnMMqEmYN4oReECTqrUBVflhnHhnso/XssaMoO
+	XsIAKJCJWXeHLHDJzVD8afqrib4y6TYheQ99+Ic9q6OAgeeopiyc5lQ+wzi6iqBfOoSgpZg
+	Qfa6wZHYGmjh+JQve+tQSGyAC4Xz9yYZyR0DUoASQzpZ4qT8je4b/J3Zk2HzQ8vxfTUD1AB
+	+BDgkz7kWbH/+jbZtHD3ItZSo7ACIIpMOB3u7X5/HTYcZn/Fsl05NBu8yXod+Ppxun/Qhoz
+	9epp6pYXEZWgyC41ZBZlUSwRU7Hr66L5Y8CmDO7N0X5J+wOaCBJ9rgXn+Fts73sggWr35BA
+	OlYz1+7idzGB3Nam2ZFZHXwJlBKC5iYQoRlIAHC7pg8JG+hHwEb99NGi3NjRmcp9nd0pOU5
+	hmrt+DWazOxOEvAoirkZs4DPRdlojFwOmCoX0aXoABrD9FyqiS8rF87H8Rq5v/MtDmJJiB6
+	NKWQYjxV/G0zQZCIXy8dwvICUKCf8DPqpK3Dv2tAnSPHHim1fCR2iinJo78cCwepC7D1nuC
+	nr8OR2soYp2naxo2BlRm8GBYISvrANGo3O8R5H1kZ5HMozLEFtFZvqAQBaTWXLE//r060L+
+	d9SeFZALtmeWsK+ITZNuWPcbh6sxTpog5vMTmRP8B8bEX+YXpM9bZGW6KTBdFjDCTyth3xT
+	CU7uu2Z4vx3qAu8kSaiui/eEXTnL1XnloVN2v3u65BMXbL4X/9+DRVP3BiqXhrRVNTzSix4
+	Qn1fWZXH0/k8/alDSTGsiPS8uj8n+GK0V3oJeT/KQC4YZMNh91ybX0XumGEDKSHt+o+XtZ2
+	lQDllwlxUV+JKK9jIqAncxvIiApLNhsHsrg1OaRX1jLvolF7g9E5fhl16TU8fAHES+s/9Qn
+	64nhNfOH7j0Prhn1YL
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
 X-QQ-RECHKSPAM: 0
 
-Remove hard-coded strings by using the str_yes_no() helper function.
+The notifier hook mechanism in proc and cpuinfo is actually unnecessary
+for LoongArch because it's not used anywhere.
+    
+It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
+MT: proc: Add support for printing VPE and TC ids"), and LoongArch
+then inherited it.
+    
+But as the kernel code stands now, this notifier hook mechanism doesn't
+really make sense for either LoongArch or MIPS.
 
-Similar to commit c4a0a4a45a45 ("MIPS: kernel: proc: Use str_yes_no()
-helper function").
+In the process, we identified one instance where a hardcoded print message
+could be changed to utilize the str_yes_no() helper function.
 
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/proc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Furthermore, the declaration of seq_file in cpuinfo.h should also be
+removed along with the deprecated notifier hook mechanism.
 
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 6ce46d92f1f1..56a230238c9c 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -91,10 +91,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	if (cpu_has_lbt_mips)	seq_printf(m, " lbt_mips");
- 	seq_printf(m, "\n");
- 
--	seq_printf(m, "Hardware Watchpoint\t: %s",
--		      cpu_has_watch ? "yes, " : "no\n");
-+	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
- 	if (cpu_has_watch) {
--		seq_printf(m, "iwatch count: %d, dwatch count: %d\n",
-+		seq_printf(m, ", iwatch count: %d, dwatch count: %d",
- 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
- 	}
- 
-@@ -104,7 +103,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
- 				&proc_cpuinfo_notifier_args);
- 
--	seq_printf(m, "\n");
-+	seq_printf(m, "\n\n");
- 
- 	return 0;
- }
+However, it needs to be added back in a different location to ensure
+the code compiles and functions correctly.
+
+WangYuli (3):
+  LoongArch: kernel: proc: Use str_yes_no() helper function
+  LoongArch: Remove the deprecated notifier hook mechanism
+  LoongArch: Relocate the seq_file declaration to the correct place
+
+ arch/loongarch/include/asm/cpu-info.h | 21 -------------------
+ arch/loongarch/include/asm/smp.h      |  2 ++
+ arch/loongarch/kernel/proc.c          | 29 +++------------------------
+ 3 files changed, 5 insertions(+), 47 deletions(-)
+
 -- 
 2.47.2
 
