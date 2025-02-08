@@ -1,195 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3661A3151;
-	Fri,  7 Feb 2025 18:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6417125D6
+	for <loongarch@lists.linux.dev>; Sat,  8 Feb 2025 01:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953481; cv=none; b=XZFp9K9j5bKoPMwtI4M2Wo+/+Ygtr5r76v4wXiemjgCbBeF+0Q7363lH35iRSzyjv/xhSDnYzP6JCNRAhgtInJ91iKh2zYpgF5KUTXHyzu+WRzYZwoXMsizddVb53ODckKn6n1JkOcWm1SECxQO539oO+P4Mb3X1Ur7CPy5BN6w=
+	t=1738978623; cv=none; b=QAvwko4lsUsAY9K5tPkU2FLaglGXgK5dDmSTD+oaestIcA2i9eWvkBD2Yxd5Kn4Wyh4b5h0KzjNJ286yUDZ7xVh4Zpj3Odk95hl39nCvhNb/OJqZS1dugjjDm0pzeE5OUf9a7Ynt53dwRVMWKQ8WYBtPTA8/E/qUHb1JocIiZ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953481; c=relaxed/simple;
-	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cNKK9BE6dJJ9kfoMlkKCYQ8z+S9zw5e1ZQcdq31v7aRWhz7Nlks5z2yoaVTAUeWZlqFzVzL3uCZIUzP69fhhtie0FMi+X1z/Y1Rx2qz3Qx+B214kspC7nP4U71oZ3qRFEBtttt5aj/CfLo8cqtmnUzBeAhQBHeR/fJi5ngS1m4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlQrJCsw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738978623; c=relaxed/simple;
+	bh=FCnIGEA1W8Gdi6HLs/8CaOG461ny2CkaCwENpo878EY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fm0DFiDwCg52pSqUSI0IakInlqAdXR2Eakvql7QwPmQK4lbP7mm1Jb2+216bScm3nP7elAq1OxYwXwvAgdIya56IzilUIQ7SYLAksrKiziS3ZPUMbf5sM6nYCEc5a/rjuJHy+/FmMV7Ydh483HBiKZUfKv4TceBm4ZC1XJnPEg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Gw0/u4rC; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlQrJCsw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FB8C4CED1;
-	Fri,  7 Feb 2025 18:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738953480;
-	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NlQrJCswb2tfBHdOL//Nqi1duhWdmo0hhnvyFyfXR+kDIctwxBbNZGMh0uVXpdrpn
-	 VtrsS32dlVeABXURIIGFmPTMZ88JEy/aky3D6z70pfkEKIebKtTmA3OIqxmZ3iDcEH
-	 trWQP7mjMuGosKO+a09FIi/HB1+rytKm2YepWGLYPhGRvhc49fQbsTVEVzSz1vy8KY
-	 6YWoxRaVR88tPNIw47TXvof69pWZuIN0NCuUntVn/ixzcMSAUzD+pD+us46BW7ocRi
-	 X6a7pzBJZI/SEPEJ2Eua3jvdWjb6R21icBFzIt4mEif2XISSYrHb7WAcNTWLbqa0Er
-	 f0yIWw7KhrZxA==
-Date: Fri, 7 Feb 2025 19:37:57 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-Message-ID: <Z6ZTBXUiEOLVcSKp@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Gw0/u4rC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738978612;
+	bh=e/xqHLyJ/T5Q7z8TKyFjea3+EClW7YemhkJ0zAILeKg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Gw0/u4rClutDWzH1Dgk7TxGQqzha19AZytu7sc/B0KTe8XVGEYt5nTEW0Ut/LCF7r
+	 Lte85U97/Qyve8ZaE/KcDGrL3P/Wbw2UFWdGg1RTwyqacl+a/pXhhUJFrcxs8CXkMR
+	 7khae18IQ7Igs9f4HkK7e0NeDm8DMq1CBs3YPx5U=
+X-QQ-mid: bizesmtpip4t1738978440tudhzwp
+X-QQ-Originating-IP: NG0u61HUQbT6bj9uCV2n+irMw7n/LpjlyEUkegcep9U=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 08 Feb 2025 09:33:58 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 581403337225196444
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	guanwentao@uniontech.com,
+	jiaxun.yang@flygoat.com,
+	wangyuli@uniontech.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@unionetch.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] LoongArch: Remove the deprecated notifier hook mechanism
+Date: Sat,  8 Feb 2025 09:33:55 +0800
+Message-ID: <3CA1F6E1F2943EAA+20250208013355.401050-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MyhNtuNETreedm+xZJ4RSDU9y8ViRlonCd70vW8M+/HFTZzQCg3T9rl9
+	MmR50H5a/qdNsMHU1GAEz3pT/N/KClLttUr9YO/ZSLpGgIFAldjRhNGO0ZlPQsm7DRMhZZX
+	POOaamrsl8X5TrIhGlcjaeNRoA6pqL+CWFAL/mzOnXH0/q2otjJa+0XFSN/La61ukEWDefQ
+	DLRt7U1Jyj3Jiq0v3h3u50ClDJkmJRGLWPFhbSsUhfB7onNmNHxhLa2gDTpMi7QZvAsLI/s
+	/PW/4P20/jVxBhMkcNfHy3kOe5y7QU5xTsDAUvkxe+iSuETWD333mMUyTEPL1H/hWM6TkG1
+	PHqyybKfYtQg9j8FEwgk47xQdVVSRyCWlTD3z+TfemzQI8ENHIP+bAmN9p3/5QFHuCLGkEp
+	v08B2mKQ43l9vbxtyscW0x71V7tMnNdvy4jVJdbZOuWR0wDU5er7aB+eDC7LGqWvnvUbKCx
+	1kSnIeKlWgDQGPpEy+/m7TmXE8K71uI+xP1ehlg0T2pYJn5Obm/4M7NTqiwNWSwXgI011ke
+	2CXW4QMQYWBvFsG/Ey0+u4Hu/fscJnP+wApgCzk2g7fDP3thy0f+ug1v3Q59MYPEpkCukQF
+	15MVpxoJuwKmC3Ea4ZX7miuSZ0jwvHybOfoHHNWLn13fgw5qlMbLpH+FZwR3g3vZvYhlpVv
+	UFh9VpxufwQXGs4JHBsH8t/4Xy9dfPAOPFLGABGvjO7Cpn9cehcnOVHYkVIAnCZwn4zxiVk
+	0Oqvt53pKRmAdWbPXUeLuVyMmV1MEypEHrOsWWq4x4Y9+pFEK/BbyTtwwIQjPuckw2TnNPn
+	ZR0yIV9PEPZIFlsmWKwdcaEUk7rhF6OlWnpBh/3u4UL8Tr8PM1Bwgs26l2yHqd9ZAA7muZM
+	H6rwaWwS3j4MJQaFstJF5Nbx3BjbGVHAR5R/5C8g7N75kcWAtzp4XHC47O0RynQtuxGU/qV
+	1BzlleDqe9YjhgannOXkhz0o4jQLuvGPbCz2Vja9SeDLOJw==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a écrit :
-> On 27/01/25 12:17, Valentin Schneider wrote:
-> > On 22/01/25 01:22, Frederic Weisbecker wrote:
-> >> And NMIs interrupting userspace don't call
-> >> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
-> >> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
-> >> implementing common entry code, I can't speak for the others.
-> >>
-> >
-> > That I didn't realize, so thank you for pointing it out. Having another
-> > look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
-> > when it really isn't :(
-> >
-> >> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
-> >> CT_STATE can be interesting but I fear this may not come for free. You would
-> >> need to save the old state on IRQ/NMI entry and restore it on exit.
-> >>
-> >
-> > That's what I tried to avoid, but it sounds like there's no nice way around it.
-> >
-> >> Do we really need it?
-> >>
-> >
-> > Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
-> > this leads the IPI deferral logic to observe a technically-out-of-sync sate
-> > for remote CPUs. Consider:
-> >
-> >   CPUx            CPUy
-> >                     state := CT_STATE_IDLE
-> >                     ...
-> >                     ~>IRQ
-> >                     ...
-> >                     ct_nmi_enter()
-> >                     [in the kernel proper by now]
-> >
-> >   text_poke_bp_batch()
-> >     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
-> >       READ CPUy ct->state
-> >       `-> CT_IDLE_STATE
-> >       `-> defer IPI
-> >
-> >
-> > I thought this meant I would need to throw out the "defer IPIs if CPU is
-> > idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
-> > which is a bummer :(
-> 
-> Soooo I've been thinking...
-> 
-> Isn't
-> 
->   (context_tracking.state & CT_RCU_WATCHING)
-> 
-> pretty much a proxy for knowing whether a CPU is executing in kernelspace,
-> including NMIs?
+The notifier hook mechanism in proc and cpuinfo is actually unnecessary
+for LoongArch because it's not used anywhere.
 
-You got it!
+It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
+MT: proc: Add support for printing VPE and TC ids"), and LoongArch
+then inherited it.
 
-> 
-> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
-> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
-> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
-> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
-> 
-> IOW, if I gate setting deferred work by checking for this instead of
-> explicitely CT_STATE_KERNEL, "it should work" and prevent the
-> aforementioned issue? Or should I be out drinking instead? :-)
+But as the kernel code stands now, this notifier hook mechanism doesn't
+really make sense for either LoongArch or MIPS.
 
-Exactly it should work! Now that doesn't mean you can't go out
-for a drink :-)
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/include/asm/cpu-info.h | 19 -------------------
+ arch/loongarch/kernel/proc.c          | 22 ----------------------
+ 2 files changed, 41 deletions(-)
 
-Thanks.
+diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
+index 35e0a230a484..48217f07d37e 100644
+--- a/arch/loongarch/include/asm/cpu-info.h
++++ b/arch/loongarch/include/asm/cpu-info.h
+@@ -77,25 +77,6 @@ extern const char *__cpu_full_name[];
+ #define cpu_full_name_string()	__cpu_full_name[raw_smp_processor_id()]
+ 
+ struct seq_file;
+-struct notifier_block;
+-
+-extern int register_proc_cpuinfo_notifier(struct notifier_block *nb);
+-extern int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v);
+-
+-#define proc_cpuinfo_notifier(fn, pri)					\
+-({									\
+-	static struct notifier_block fn##_nb = {			\
+-		.notifier_call = fn,					\
+-		.priority = pri						\
+-	};								\
+-									\
+-	register_proc_cpuinfo_notifier(&fn##_nb);			\
+-})
+-
+-struct proc_cpuinfo_notifier_args {
+-	struct seq_file *m;
+-	unsigned long n;
+-};
+ 
+ static inline bool cpus_are_siblings(int cpua, int cpub)
+ {
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 6ce46d92f1f1..004f494bf43f 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -13,28 +13,12 @@
+ #include <asm/processor.h>
+ #include <asm/time.h>
+ 
+-/*
+- * No lock; only written during early bootup by CPU 0.
+- */
+-static RAW_NOTIFIER_HEAD(proc_cpuinfo_chain);
+-
+-int __ref register_proc_cpuinfo_notifier(struct notifier_block *nb)
+-{
+-	return raw_notifier_chain_register(&proc_cpuinfo_chain, nb);
+-}
+-
+-int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
+-{
+-	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
+-}
+-
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	unsigned long n = (unsigned long) v - 1;
+ 	unsigned int isa = cpu_data[n].isa_level;
+ 	unsigned int version = cpu_data[n].processor_id & 0xff;
+ 	unsigned int fp_version = cpu_data[n].fpu_vers;
+-	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
+ 
+ #ifdef CONFIG_SMP
+ 	if (!cpu_online(n))
+@@ -98,12 +82,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
+ 	}
+ 
+-	proc_cpuinfo_notifier_args.m = m;
+-	proc_cpuinfo_notifier_args.n = n;
+-
+-	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
+-				&proc_cpuinfo_notifier_args);
+-
+ 	seq_printf(m, "\n");
+ 
+ 	return 0;
+-- 
+2.47.2
+
