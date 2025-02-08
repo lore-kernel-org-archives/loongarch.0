@@ -1,71 +1,118 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D3A3BBE5;
-	Sat,  8 Feb 2025 07:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187ED149C41
+	for <loongarch@lists.linux.dev>; Sat,  8 Feb 2025 08:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738999398; cv=none; b=Rv5xVJX8fb3KfwduZh8Tayjpr7Y0lVU7tHfcIr5VspCK+BxNmV+9bU7PySAlW6rMThzLWyxRgM4fLKqq5DXbCAdw3D9fC3/BlHOJaDl/TfNx4bGyZK3xreB1ApyOv5dmJ4aJZhiKXuYnHQY4PK7AH3eKzK69J+5unGa7icPYmno=
+	t=1739001807; cv=none; b=ZpWRGxrCJ3GEyWp72xlGOmLJBObj0qg2Y9E17BnzDU75pe3N08DCcuuaAZaDw4KOp1FvA6MZuZoWgGUY16hiEG+hdCMAb+ryWAdexEP2nMp/qpQ/KsvZrH0kNBdeTyWH+E85Fh+9K9SYF/IExBOkngFFjWN2Z/S0ee0z940oJeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738999398; c=relaxed/simple;
-	bh=SQVJlEx2V/RSeXfcXkikh7h+w57xN8e7Hv78bAbfxJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mAsU82JLsGAXeXtM1dbdf6ixpS3mm0t5vzUuNKioJT5CjUVKmfkHodNjqbfnmrP90qeeJZ5Vsr1L5ynBrEBd0kNZ+Oe1fK5n/s8oswBkZFpHw8d8VLaYMdmyZC7HFV9tF6IPHDt+2g5TLHErnsMRRUR8xa3SJ2HtEbdhFdOVTJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Aq7ElquE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739001807; c=relaxed/simple;
+	bh=fp3yNdV4dxXMRi80coUOwaKpOJz4Lwgnb74388pRDO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cGvgJmtV6HJRCY7aSl78m11cwnlHVNq/1l0LOJ5S6FeQxTTzbu9O8P4Is9U8NDRxh9QsXvxUKPs0mAQb9vVXy5djUt164205zCVFzlF4RVHkfOi7McuVIc6LpDWhJT4PT8uRUDStdrEVvfdVUCyOo168kzZbyWf8k4HsamXWEYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=lnB8bVET; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aq7ElquE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dIUTnKlqptBhVh4FHbYoQplL5I5DQEoGc3UGevcbKYc=; b=Aq7ElquEb4PU458vaoh2BURefq
-	0XGupeL+Ea5a1zbTs9mHs4isuqu4YDjsFkA4psNsUKV2IVtFGihdFzB3J4BlS1lx6yz2RbyKBPzLQ
-	q5ug1G3UoBjgjdjZJ8pDtcbs+0u9J4m2W1Iyo6sUbB6qG+Wy0ywQUlWoMnSn8OmDM2h3cb8/NuufT
-	bw6tV0V3F/oz2+8ixkTFko2xzqDuL2B9JR1G1aO/JW0eMEN6zXuMA2HAuspE0AAPA0iEyLWFwxwXY
-	h9ZeDE/095r6pBz9fJ78gD+4ccGeRpRxZN3tn2b/eY9RppD2xLfz/F6OIiBJtZ6ZGQIYD7hJA/Ade
-	hnrUUgrg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgfAx-00000009uJj-3bg7;
-	Sat, 08 Feb 2025 07:22:51 +0000
-Date: Sat, 8 Feb 2025 07:22:51 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Qi Zheng <zhengqi.arch@bytedance.com>, kevin.brodsky@arm.com,
-	riel@surriel.com, vishal.moola@gmail.com, david@redhat.com,
-	jannh@google.com, hughd@google.com, yuzhao@google.com,
-	muchun.song@linux.dev, akpm@linux-foundation.org, will@kernel.org,
-	aneesh.kumar@kernel.org, npiggin@gmail.com, arnd@arndb.de,
-	dave.hansen@linux.intel.com, rppt@kernel.org,
-	alexghiti@rivosinc.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org, x86@kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 0/5] remove tlb_remove_page_ptdesc()
-Message-ID: <Z6cGS__8VRQdzAYA@casper.infradead.org>
-References: <cover.1737637631.git.zhengqi.arch@bytedance.com>
- <20250124114759.GB15996@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="lnB8bVET"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739001782;
+	bh=3TrnJ9Z/xHsuAJRQWEc2Y4wHAx1RLl4jmH7juixi/sY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lnB8bVETThOiybRUyft+/lk5sQdxu+rKqq8GvK5q8eMk9ufNVEqPckRLto1SLkuL3
+	 4uwzPlvxdN+FIBpAJBMX/fb2/lgIOAI/WLb8Il1Ud0rbkItJd9UOskfJVFHAgLq/Xr
+	 Refvjsg7z7zBSfiLlUqjqL7lNCD0gufVOrgcXfaw=
+X-QQ-mid: bizesmtpip2t1739001751t3104pp
+X-QQ-Originating-IP: E4IyHBnUuc9fRvKJa/yzIGK9PefjtvXqre+Oyu9sS8I=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 08 Feb 2025 16:02:29 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2714771911060073859
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	guanwentao@uniontech.com,
+	jiaxun.yang@flygoat.com,
+	wangyuli@uniontech.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@unionetch.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH 1/3] LoongArch: kernel: proc: Use str_yes_no() helper function
+Date: Sat,  8 Feb 2025 16:02:19 +0800
+Message-ID: <66FB3B84EE934511+20250208080221.1083810-2-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250208080221.1083810-1-wangyuli@uniontech.com>
+References: <20250208080221.1083810-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124114759.GB15996@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N3SCbsWvOCfFEp4RliRaViCInTKp/l+D/0rtMPbhZ2/fNsRZcDLfymUs
+	Vh19A2P8EOfvLQi7A9O3g2aebZS3JqCFhvLJtqjGEIfijRv2gVdPD+7PMeTOmaXawDiYgo3
+	knEezFMgKBz0+OV2w5QuXC/G597uMi0YlQ11zItqxey9YK7yg9c8hW5KBKb05wu+lBeuiLi
+	nquxP9IxMN64mGRTZybSrAjCue4NwU+ZVfXY4SBTkbPkBRpQp7it9dmZEIVNiUWOJT2vNXz
+	qMR/UCKww+BYqBvZ8Ga7YHK/Bs4UQRj7skwYpa4/hBmyemquev43TRCCsjg6FUhHJOV3nPk
+	i/y4iIEHCt+z/Uao6xItYQbstk0JgkwU5XGu1A2v+IeCTJMwKL+sftv2K+BaHU4b+HM4l0G
+	q0d+WOwVQlJpogZ0mBq1OxSBOo8fCm+HgNwvc3goxvIEnOaMJZoYJiLWly7CXxCiu73pgnS
+	LDZqzqadV50M0yMHh4dUeCh0JU9iIKFVzLKG7/7SmwCmii7bHnG+P/kU6Ky6hF8dETdBwA2
+	iZ5xaGYXA4Cqap9gL1YXs4sfmLcNYCj3JiOQETJI5nzEUKpMPmkw70mPA3xjDdcqv5KXvNw
+	NVHYLy9KXHu06AcuQyMz03GvfwzvecJ+6KSEGuQqWMC3Y08dR5CS1mtvw/PdyrajzHE/9Wc
+	4oQ6ZG1LDusqyvAjeH7FttEBmKtFlYlSPYzRlAQUpycrCtty1xz/g43lZiAN2vqkC6AvYxZ
+	GhJ3m/LtFkoxRuAEZI2ZyDNblgciZClW7zBH0fYFqQ41QE/62+3M98XbuP0jLIdJoVysJNO
+	+yFEGq7gGJrsU8ytucS6GOFb2qVOTBTHXYKJY/rYbIxxMtDA9TjGCjXtu4q6OJ0ZDRkrULC
+	u+6xAZbSiitsA01771FlEXnk2/L1lk7t+cxiS6dyCXTz5U/paTYmb1qj6JQSHnG4yvYj5hn
+	FuRI8f6C/HR99HlFqqWlWqhP+gw6jgLjarczmKB+mzNfXQLF2bC1UU6Q9Qv0a5JOn+5vyvL
+	6YCEOds8XziGJbiLCPwyylfPULRQo=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Jan 24, 2025 at 12:47:59PM +0100, Peter Zijlstra wrote:
-> Right, so I don't think Sparc and Power care to use ptdesc, they're
-> using non page page-tables.
+Remove hard-coded strings by using the str_yes_no() helper function.
 
-i think you mean s390, not sparc.  all architectures _use_ ptdescs,
-it's just that s390  and ppc use fractional ptdescs rather than an
-entire ptdesc for an individual page table.
+Similar to commit c4a0a4a45a45 ("MIPS: kernel: proc: Use str_yes_no()
+helper function").
 
-eventually we can change that, but we're looking out perhaps five years
-before we can allocate a ptdesc for a sub-PAGE_SIZE quantity.
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/kernel/proc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 6ce46d92f1f1..56a230238c9c 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -91,10 +91,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_lbt_mips)	seq_printf(m, " lbt_mips");
+ 	seq_printf(m, "\n");
+ 
+-	seq_printf(m, "Hardware Watchpoint\t: %s",
+-		      cpu_has_watch ? "yes, " : "no\n");
++	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+ 	if (cpu_has_watch) {
+-		seq_printf(m, "iwatch count: %d, dwatch count: %d\n",
++		seq_printf(m, ", iwatch count: %d, dwatch count: %d",
+ 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
+ 	}
+ 
+@@ -104,7 +103,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
+ 				&proc_cpuinfo_notifier_args);
+ 
+-	seq_printf(m, "\n");
++	seq_printf(m, "\n\n");
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
+
