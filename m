@@ -1,95 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC39A13B2BB
-	for <loongarch@lists.linux.dev>; Sun,  9 Feb 2025 09:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B561E04A9;
+	Sun,  9 Feb 2025 19:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739094476; cv=none; b=N3GGFPPmEbj4XX2eEpOFX/D8I9rNJbHDtobtOhB/SW+sxuXWTR5Q1XAKBEyELA9EEw9pGlsLs77Acv33DFNt5/XZ0FCvxCINd7Ox94OYEYMMrt1r2gwrxwuPVp3z5aNQRdGk+MFntvokQshh6qaO3R1dY/hac1K+W/2DdEfdy1g=
+	t=1739128170; cv=none; b=ZXkUhTTrDec3OYCVohZHWs/Uy6BGmVt9OMZSxLFUnsoAGSuJxNctxsGkfwk2JFSoBpy73Rm7gbG8e6JEbJIn+oAUdF+BFVlVyLefj4Cvp371T4NILAprBdLt0bL4Lta5UUvBm0DfQ6cj4T8Lari53VROitDkqU/kH4lPfH2tI4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739094476; c=relaxed/simple;
-	bh=6DNfODvssdyHcZrHzMy5Bx/XkdAD8dxNPadgLQ9LkS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cgHhHVokvhaV9/+VrCB5MDIF50vbYK83mDqJ+/Z1zrzqlvg/7S2prws3NnsJyaGuAefMwM0qLbMGcPeGQ/ySyswnb27Pe6wJxsoDDXiZ7+Si0MRhSiRLeGLI3wovUK0/SaiFvCrtYCKnOjX4/MoJy4GXfWtwmc4adzIBYMdZG7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qfj/WpNl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739128170; c=relaxed/simple;
+	bh=bNV9eSBmv1NATXayXW10Wo9JnQ9IhK9w8zfW+zKVdII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dSep6n+8qgVrcDSQZ5UiO6FeOcmHCSrgg4CGpO7NCoHo3jWBi/8PhUC0Er+yURG8Tq0+I7y0J+1lIlzWPgITzI0rK3IgNDvpL1vKNusX4bSul8Pu+OhaqIAB3xSDS4AEQVQrYu7c/sQn24cHKLd+NhCc7OBC236k2FFdnLbckqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY9VRYae; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qfj/WpNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8D0C4CEE6
-	for <loongarch@lists.linux.dev>; Sun,  9 Feb 2025 09:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739094476;
-	bh=6DNfODvssdyHcZrHzMy5Bx/XkdAD8dxNPadgLQ9LkS8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qfj/WpNl597razFYCQ0I5DE/mdr6ZVs/5zpjw/F7efdE1tFVmywvxBm5NTtM/DP8E
-	 nGgz6Snw8Jhxwy8unNVkgdwyjMPmtrOC7YwupZCQALqhJraSAQN+QLpzhdR28niOXD
-	 Grkr9DzcUTHe9iwvWBVpAyuNxXy1UT61UkCWoEM3B4YYliyEGo2EO/Qgyprf5wyOcz
-	 b2K+SqWelyNwgNRJwKb+razcFVCOGNknqhSME/zmdrYsgT30mF635BM23XVXzWu0V5
-	 voYkyvUKyoRHK1Rg1XZjNTKz7c6oaeTf7SSPKgSdkJpY02t09rS/8aDRF5cHI1DJw7
-	 AG0zO7o++MA8w==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso8718691a12.0
-        for <loongarch@lists.linux.dev>; Sun, 09 Feb 2025 01:47:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXW61FCxOrbNqlcdES47hukA6eO6mBE9uaNcp1D6rQ8OvEF4Wvz+WqPFrCrYW8waXDYdxguVelWVRI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4yN2GTkoj9SydsLz67DX8Rhf1nHJTsaba16bTZoZoIJCCPApt
-	UF3lMAv4l2eROi9tXlOKxdrQoL2L+AaYG3edhBKklsPOJX/n3WaDalyPvqcaS2X9xubHPOzgItC
-	cINsL9Th9z2OmqQkCtE287sFAUNI=
-X-Google-Smtp-Source: AGHT+IG9LFzAf1oenYrJnOJQmeB1eV5sB56zP5YZtXIaoNugLOCg3z8jy3MxS04sySHdN9xDe0gHKtPZvCGIHJQ6r28=
-X-Received: by 2002:a05:6402:194b:b0:5dc:8fc1:b3b5 with SMTP id
- 4fb4d7f45d1cf-5de46a4f1cfmr9953881a12.15.1739094474931; Sun, 09 Feb 2025
- 01:47:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY9VRYae"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739128169; x=1770664169;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bNV9eSBmv1NATXayXW10Wo9JnQ9IhK9w8zfW+zKVdII=;
+  b=hY9VRYaeG7Q6WGLAwC5rMXwloQvYrbm/3MvY/XaLNVSfUUseU7bPxD9F
+   gTmB3FXDmunbSrZdVrgPQvbIwKe+C18r/ovlUIHiJKEbhfRe+PyvH/NmZ
+   Sevwc41DtFC91b57eVbxdh1QeCzouCP2Y4axAHOMMy32wT9JUlaESymB1
+   vyJHYFElTbyxDaYd8asDzJ01MB2S30+sfNuvHdz6SuGWvLIpaOQLzIUtI
+   w6xlr4vOQX1TMBwllw3rwarmYEv1oG59owvFwlosXSFcVfWMZZNiJlyQi
+   rbhN6vfZs0j7Vij5v/XCfKSjxedR7GQbg/XQvjgFej2qDRj+Mp0moI+7j
+   A==;
+X-CSE-ConnectionGUID: Gqqh4raaREyiBiw+47szFA==
+X-CSE-MsgGUID: P/SyYRIYR5G83iIHAk44Vw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39618506"
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="39618506"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 11:09:28 -0800
+X-CSE-ConnectionGUID: nu/O7I36RmSiu3jXzKGSAw==
+X-CSE-MsgGUID: KPgzawIeSKK6hVy2MVv/yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="111928564"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 09 Feb 2025 11:09:25 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thCgF-0011oN-02;
+	Sun, 09 Feb 2025 19:09:23 +0000
+Date: Mon, 10 Feb 2025 03:08:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marco Crivellari <marco.crivellari@suse.com>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Bibo Mao <maobibo@loongson.cn>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
+Message-ID: <202502100258.jJThV6DP-lkp@intel.com>
+References: <20250208101924.20743-2-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250207032634.2333300-1-maobibo@loongson.cn> <20250207032634.2333300-4-maobibo@loongson.cn>
-In-Reply-To: <20250207032634.2333300-4-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Feb 2025 17:47:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4o7WS6J-eU=3VR16iVscrr5znpa67Do96cxmd6A0JS0g@mail.gmail.com>
-X-Gm-Features: AWEUYZn5Y04jyrm4Rwpw69Gq9kl-fqicb-nqqOLjPalkQsEh8JtKtfYJPdcQ0zw
-Message-ID: <CAAhV-H4o7WS6J-eU=3VR16iVscrr5znpa67Do96cxmd6A0JS0g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] LoongArch: KVM: Set host with kernel mode when switch
- to VM mode
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208101924.20743-2-marco.crivellari@suse.com>
 
-Hi, Bibo,
+Hi Marco,
 
-On Fri, Feb 7, 2025 at 11:26=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> PRMD and ERA register is only meaningful on the beginning stage
-> of exception entry, and it can be overwritten for nested irq or
-> exception.
-The code doesn't touch ERA, so ERA in the commit message is a typo?
+kernel test robot noticed the following build warnings:
 
-Huacai
->
-> When CPU runs in VM mode, interrupt need be enabled on host. And the
-> mode for host had better be kernel mode rather than random.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/switch.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 0c292f818492..1be185e94807 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -85,7 +85,7 @@
->          * Guest CRMD comes from separate GCSR_CRMD register
->          */
->         ori     t0, zero, CSR_PRMD_PIE
-> -       csrxchg t0, t0,   LOONGARCH_CSR_PRMD
-> +       csrwr   t0, LOONGARCH_CSR_PRMD
->
->         /* Set PVM bit to setup ertn to guest context */
->         ori     t0, zero, CSR_GSTAT_PVM
-> --
-> 2.39.3
->
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.14-rc1 next-20250207]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Crivellari/loongson-Fix-idle-VS-timer-enqueue/20250208-182213
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250208101924.20743-2-marco.crivellari%40suse.com
+patch subject: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
+config: loongarch-randconfig-r054-20250209 (https://download.01.org/0day-ci/archive/20250210/202502100258.jJThV6DP-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502100258.jJThV6DP-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> arch/loongarch/kernel/reset.c:37:2-3: Unneeded semicolon
+   arch/loongarch/kernel/reset.c:57:2-3: Unneeded semicolon
+   arch/loongarch/kernel/reset.c:78:2-3: Unneeded semicolon
+
+vim +37 arch/loongarch/kernel/reset.c
+
+    22	
+    23	void machine_halt(void)
+    24	{
+    25	#ifdef CONFIG_SMP
+    26		preempt_disable();
+    27		smp_send_stop();
+    28	#endif
+    29		local_irq_disable();
+    30		clear_csr_ecfg(ECFG0_IM);
+    31	
+    32		pr_notice("\n\n** You can safely turn off the power now **\n\n");
+    33		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+    34	
+    35		while (1) {
+    36			asm volatile("idle 0" : : : "memory");
+  > 37		};
+    38	}
+    39	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
