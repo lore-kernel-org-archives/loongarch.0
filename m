@@ -1,200 +1,207 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A061392
-	for <loongarch@lists.linux.dev>; Sun,  9 Feb 2025 05:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE9146D53
+	for <loongarch@lists.linux.dev>; Sun,  9 Feb 2025 09:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739077454; cv=none; b=Qm2RIC5SMN1XR1JdINw3NshZF+zOn7DhljfDtdxqzXPYxCqKcnGSqkMAdYulNWyhbQHHhxNNayT8Tz2xngnivNTPzyV1ju2jw6odsl1BUHVMBE7XO4uXn6aOJ6225qi7lJVTg9cIQtLmhbAIKeFXDJr6bvGbFFbIVKO02EVN71U=
+	t=1739093914; cv=none; b=PuP9F4gYV1l6agWmFfMKvyD4VtSJZv5s6+yIDluWoioFL2uin1J5Eex/rvQ9dloaYnSEoIFRXBSvd1saVtuQXBW5ifAfEe+9AkXlYHBfOUhBMXo9oIbTIICEMkjlbCEAwO9DtY7jhMyWVq3T3H1mq3o6d+7vMFeabNEL9l+J0fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739077454; c=relaxed/simple;
-	bh=8yXTe1OVYj5JbnkZl3XT42RRvKOsy4P0SYyjAUxDUnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nB7wUeikZxRkKnbT6IzKIwm9nmtL1KlD6pAluZREerkr0U4y7wBN0z/dkRHvL4rCj8PJzAplHyMY9FUJa0K4wLwGorlwtDTV5zEVcwnV0vo1uT4h1VijXrNyXDaEPnfsfj8FkPq6N9KfuOetPC3+sQ6WmY9VENeunfg1eHtzYLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JSsMXTFE; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739093914; c=relaxed/simple;
+	bh=keWDFt84Qk9PxNh98O77XqGOs0wHD5wAPaoGo2aheoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YhuKzKrf9LUqxK6rEzT4UTJdCKIOO75+FzBi4PsjNw8VSQlMi/VUIGnGt4kSnBZlFU6Up/E1bo6Zc5us7CuJvkPnjDfpsrAILPJ3kYOdMqMqrEyNnURjWCjTQF973w2caGwjt4f/niDC03rUYD68KT/rcUPXjmPIUV8kDLkfidU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUBQTmCd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JSsMXTFE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739077417;
-	bh=Z6ksVB32RXVttz8UCUtXbrkj4oFxmHS+sTWhuis6k8E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JSsMXTFEeXR0OssNbTzmqP5vy4kbzzhZOHWqOk65qjG/qoGVUWa7IbiPPG//0mwFe
-	 l4wlnXImm+V51F/7/+2mqmOJcwDoZCNXFZHN/HYvWLUo0EBhbUy3Ttck4uXTwFPSpD
-	 gT7FzxMit3CBKlNIdBgojX7h7ciRZkCKWjYpQ1do=
-X-QQ-mid: bizesmtpip2t1739077409txaffsj
-X-QQ-Originating-IP: Ix4VF44njFOVpDxDUDRswVWHR+c9YaMA2uaiDU6wwTc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 09 Feb 2025 13:03:28 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15359551948840619641
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	guanwentao@uniontech.com,
-	jiaxun.yang@flygoat.com,
-	wangyuli@uniontech.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	chenlinxuan@uniontech.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Subject: [PATCH v2 2/2] LoongArch: Remove the deprecated notifier hook mechanism
-Date: Sun,  9 Feb 2025 13:02:58 +0800
-Message-ID: <BE6A6E80196F688F+20250209050258.2090416-3-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250209050258.2090416-1-wangyuli@uniontech.com>
-References: <20250209050258.2090416-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUBQTmCd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D568C4CEDD
+	for <loongarch@lists.linux.dev>; Sun,  9 Feb 2025 09:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739093914;
+	bh=keWDFt84Qk9PxNh98O77XqGOs0wHD5wAPaoGo2aheoE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QUBQTmCdM6mkWBoi1jlWr9/ycH/f0vLiGnMJEzxPLGRWH/swsAUZ+lgfTFnH5zO7C
+	 xNOGVtegzgQOlrnwbbMR3h0AR8qPulmanp8Wj340NdbOvnXLK73WkCtSD1o3/1+KsY
+	 Zg9G1ve7Z0hvhF+9YoezefiT2vJCCfkEHJIqTk93JlcW9Dpm+xKGODitcYT8NaFiig
+	 m6XBeIOZWcn2tk+aFQBVBy9Z8TVrnALNV14xSUIkTs1gzs1AHoioHgmkwX81UM1M2q
+	 OFCYt0v3oCjKDl6zpNiscAtgXdMob5S/vw1U/H/2cZ4DSey3eCCW7ZEewC/W9jXKC9
+	 qtB1GlDqwlkPA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de75004cd9so242859a12.1
+        for <loongarch@lists.linux.dev>; Sun, 09 Feb 2025 01:38:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWPUAg+W/HVHMbizfoohB4jc4P4Y3Gd+oSho1su2/ISvpTWwbHdT7lPiPQMocSLQ07mct51z3Ornw8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyo0K2y4a/qheZxWsBTRXsypCxq4Lt0RRK1X/L0NZY+/ICoCapQ
+	pTPYvC4Dqr5XKO5e+51mLLt3zcnfYDYx/F2k+V6NzQegrZaXHW28t3hhBlzTZCsplZ0vjFMnRM8
+	gM2HvMSb6Jdcew+VB6jTxJZJTtTA=
+X-Google-Smtp-Source: AGHT+IHT9uUQ98YQu/y8BjhBTL/yULpuTzAAatVmfCc4Bj9x1TUc9cZz3jRCUiurw2GIyjm0NkKdrQU5jPMWlUXZLMw=
+X-Received: by 2002:a05:6402:321d:b0:5dc:cfc5:9324 with SMTP id
+ 4fb4d7f45d1cf-5de4508084amr30165622a12.30.1739093912637; Sun, 09 Feb 2025
+ 01:38:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MUAUrqfXubadP0KxQlkSUI0GFE1h0MJnPqvENMHiNlciUAysIlE/HUNZ
-	BMHnVAaZnTVgmQlfhXpz88k/LcMR+JIC4ZEd2q4KlXcPmiBq/iHD0QBm2JOzUSKZMP+HF7S
-	UVuKTZl5ztzbx4UGVZAcKGukGmjeaEfxjPk4uJ6DdA/1lvRwWObVBfrJpNjCMc4wwtCNBoS
-	F9abrljTngMr5/1+El7GD4D/pI/4F6ivAQYxhRNjZO2OflUdyVweqsY0kKr2qoBkqdtVWHM
-	fLW/ESusi6gAh4jIVr4c/tVywDHdxmyaLZ1SOS0QuShvFaPUNoNv4qsQuS8jmD9mOPU9G2j
-	Q4LkbY2P9f2DTPRMRypCzbTHBArLl6jPpfdYgO64SXKnrKM5SY92xYBB+ZcBzsIIV9ktSzE
-	8Z8SvUk3gtFQyAdybaeHFhpxc0C/mmPitXpEOWxZB7GM0pUqlGELltHq56D/RoSmZOxI18c
-	8aKspAXDhY13Rs3xSLez8hHeiGFTT83LdshdF22edFMKh+lAR8/MVrCl53CmOza0hkmcPJc
-	qYqkPvC8CrcLvmpQkyQ2qmXG7zK/yZHB4VkCjCXATBHB5/+QEnIZwbiGp8njO6uVvtRIadx
-	57OgCWF8G5Tu5IhKICP1L3I7gamT9aZ6Ijet1yYnoKS9XolN14t5gYM7he7zBnLMmdS3fMl
-	1ztXKRv+WwLGelVmIr/5+JZgnu8dnn2b3TdGeJ3Q9WoZGBzBlsCjdd8KYR8f/5PfqsZ3T2o
-	VVa/2VWcWo55naE3wQchZNTTKBzHwdI76IgCwd6TtME1ZWwyHii+VTxlB2GjlYy6rY3g+2L
-	Q/8BoR6RRbD/KbBxiYBfV91Ey2IdLVnIvGVr7RG8n4ab1ZnQy4f/J6fwKI0QvjDE5viKb1H
-	yaNhkCVCDHFSsjjq1o3CQHcE+zy1Yjp76xfn64Uq01rskKlm9Rwcoysgi/TZMD8isM1tf9h
-	XSI0w+EHcL/0yRIiKTItc/zpF+mJu+InU/Erv/u0dxhE+dpfhE2rhyRR1Sk44IN2nfDupX8
-	Rc+dM8tQPsx20+pHrhdcG+YNyRCHyDRt9ZfpXXxcmSj398xj3K6amT77Kk0HqaCO82RVy5J
-	MLrctWQRmsy1NYTv9AFID0=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+References: <20250207032634.2333300-1-maobibo@loongson.cn> <20250207032634.2333300-2-maobibo@loongson.cn>
+In-Reply-To: <20250207032634.2333300-2-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 9 Feb 2025 17:38:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlRdHv2bfY6zlWzB4lhsFqJqRV8CIJfvD701PfIrEvUhs9BHg9JVkMQT1M
+Message-ID: <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] LoongArch: KVM: Fix typo issue about GCFG feature detection
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The notifier hook mechanism in proc and cpuinfo is actually unnecessary
-for LoongArch because it's not used anywhere.
+Hi, Bibo,
 
-It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
-MT: proc: Add support for printing VPE and TC ids"), and LoongArch
-then inherited it.
+On Fri, Feb 7, 2025 at 11:26=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> This is typo issue about GCFG feature macro, comments is added for
+> these macro and typo issue is fixed here.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/loongarch.h | 26 ++++++++++++++++++++++++++
+>  arch/loongarch/kvm/main.c              |  4 ++--
+>  2 files changed, 28 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 52651aa0e583..1a65b5a7d54a 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -502,49 +502,75 @@
+>  #define LOONGARCH_CSR_GCFG             0x51    /* Guest config */
+>  #define  CSR_GCFG_GPERF_SHIFT          24
+>  #define  CSR_GCFG_GPERF_WIDTH          3
+> +/* Number PMU register started from PM0 passthrough to VM */
+>  #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR_GCF=
+G_GPERF_SHIFT)
+> +#define  CSR_GCFG_GPERFP_SHIFT         23
+> +/* Read-only bit: show PMU passthrough supported or not */
+> +#define  CSR_GCFG_GPERFP               (_ULCAST_(0x1) << CSR_GCFG_GPERFP=
+_SHIFT)
+>  #define  CSR_GCFG_GCI_SHIFT            20
+>  #define  CSR_GCFG_GCI_WIDTH            2
+>  #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GCI_SH=
+IFT)
+> +/* All cacheop instructions will trap to host */
+>  #define  CSR_GCFG_GCI_ALL              (_ULCAST_(0x0) << CSR_GCFG_GCI_SH=
+IFT)
+> +/* Cacheop instruction except hit invalidate will trap to host */
+>  #define  CSR_GCFG_GCI_HIT              (_ULCAST_(0x1) << CSR_GCFG_GCI_SH=
+IFT)
+> +/* Cacheop instruction except hit and index invalidate will trap to host=
+ */
+>  #define  CSR_GCFG_GCI_SECURE           (_ULCAST_(0x2) << CSR_GCFG_GCI_SH=
+IFT)
+>  #define  CSR_GCFG_GCIP_SHIFT           16
+>  #define  CSR_GCFG_GCIP                 (_ULCAST_(0xf) << CSR_GCFG_GCIP_S=
+HIFT)
+> +/* Read-only bit: show feature CSR_GCFG_GCI_ALL supported or not */
+>  #define  CSR_GCFG_GCIP_ALL             (_ULCAST_(0x1) << CSR_GCFG_GCIP_S=
+HIFT)
+> +/* Read-only bit: show feature CSR_GCFG_GCI_HIT supported or not */
+>  #define  CSR_GCFG_GCIP_HIT             (_ULCAST_(0x1) << (CSR_GCFG_GCIP_=
+SHIFT + 1))
+> +/* Read-only bit: show feature CSR_GCFG_GCI_SECURE supported or not */
+>  #define  CSR_GCFG_GCIP_SECURE          (_ULCAST_(0x1) << (CSR_GCFG_GCIP_=
+SHIFT + 2))
+>  #define  CSR_GCFG_TORU_SHIFT           15
+> +/* Operation with CSR register unimplemented will trap to host */
+>  #define  CSR_GCFG_TORU                 (_ULCAST_(0x1) << CSR_GCFG_TORU_S=
+HIFT)
+>  #define  CSR_GCFG_TORUP_SHIFT          14
+> +/* Read-only bit: show feature CSR_GCFG_TORU supported or not */
+>  #define  CSR_GCFG_TORUP                        (_ULCAST_(0x1) << CSR_GCF=
+G_TORUP_SHIFT)
+>  #define  CSR_GCFG_TOP_SHIFT            13
+> +/* Modificattion with CRMD.PLV will trap to host */
+>  #define  CSR_GCFG_TOP                  (_ULCAST_(0x1) << CSR_GCFG_TOP_SH=
+IFT)
+>  #define  CSR_GCFG_TOPP_SHIFT           12
+> +/* Read-only bit: show feature CSR_GCFG_TOP supported or not */
+>  #define  CSR_GCFG_TOPP                 (_ULCAST_(0x1) << CSR_GCFG_TOPP_S=
+HIFT)
+>  #define  CSR_GCFG_TOE_SHIFT            11
+> +/* ertn instruction will trap to host */
+>  #define  CSR_GCFG_TOE                  (_ULCAST_(0x1) << CSR_GCFG_TOE_SH=
+IFT)
+>  #define  CSR_GCFG_TOEP_SHIFT           10
+> +/* Read-only bit: show feature CSR_GCFG_TOE supported or not */
+>  #define  CSR_GCFG_TOEP                 (_ULCAST_(0x1) << CSR_GCFG_TOEP_S=
+HIFT)
+>  #define  CSR_GCFG_TIT_SHIFT            9
+> +/* Timer instruction such as rdtime/TCFG/TVAL will trap to host */
+>  #define  CSR_GCFG_TIT                  (_ULCAST_(0x1) << CSR_GCFG_TIT_SH=
+IFT)
+>  #define  CSR_GCFG_TITP_SHIFT           8
+> +/* Read-only bit: show feature CSR_GCFG_TIT supported or not */
+>  #define  CSR_GCFG_TITP                 (_ULCAST_(0x1) << CSR_GCFG_TITP_S=
+HIFT)
+>  #define  CSR_GCFG_SIT_SHIFT            7
+> +/* All privilege instruction will trap to host */
+>  #define  CSR_GCFG_SIT                  (_ULCAST_(0x1) << CSR_GCFG_SIT_SH=
+IFT)
+>  #define  CSR_GCFG_SITP_SHIFT           6
+> +/* Read-only bit: show feature CSR_GCFG_SIT supported or not */
+>  #define  CSR_GCFG_SITP                 (_ULCAST_(0x1) << CSR_GCFG_SITP_S=
+HIFT)
+>  #define  CSR_GCFG_MATC_SHITF           4
+>  #define  CSR_GCFG_MATC_WIDTH           2
+>  #define  CSR_GCFG_MATC_MASK            (_ULCAST_(0x3) << CSR_GCFG_MATC_S=
+HITF)
+> +/* Cache attribute comes from GVA->GPA mapping */
+>  #define  CSR_GCFG_MATC_GUEST           (_ULCAST_(0x0) << CSR_GCFG_MATC_S=
+HITF)
+> +/* Cache attribute comes from GPA->HPA mapping */
+>  #define  CSR_GCFG_MATC_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATC_S=
+HITF)
+> +/* Cache attribute comes from weaker one of GVA->GPA and GPA->HPA mappin=
+g */
+>  #define  CSR_GCFG_MATC_NEST            (_ULCAST_(0x2) << CSR_GCFG_MATC_S=
+HITF)
+>  #define  CSR_GCFG_MATP_NEST_SHIFT      2
+> +/* Read-only bit: show feature CSR_GCFG_MATC_NEST supported or not */
+>  #define  CSR_GCFG_MATP_NEST            (_ULCAST_(0x1) << CSR_GCFG_MATP_N=
+EST_SHIFT)
+>  #define  CSR_GCFG_MATP_ROOT_SHIFT      1
+> +/* Read-only bit: show feature CSR_GCFG_MATC_ROOT supported or not */
+>  #define  CSR_GCFG_MATP_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATP_R=
+OOT_SHIFT)
+>  #define  CSR_GCFG_MATP_GUEST_SHIFT     0
+> +/* Read-only bit: show feature CSR_GCFG_MATC_GUEST suppoorted or not */
+>  #define  CSR_GCFG_MATP_GUEST           (_ULCAST_(0x1) << CSR_GCFG_MATP_G=
+UEST_SHIFT)
+Bugfix is the majority here, so it is better to remove the comments,
+make this patch easier to be backported to stable branches.
 
-But as the kernel code stands now, this notifier hook mechanism doesn't
-really make sense for either LoongArch or MIPS.
+Huacai
 
-In addition, the seq_file declaration needs to be moved to its proper
-place, as only the show_ipi_list() function in smp.c requires it.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Liupu Wang <wangliupu@loongson.cn>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/include/asm/cpu-info.h | 21 ---------------------
- arch/loongarch/include/asm/smp.h      |  1 +
- arch/loongarch/kernel/proc.c          | 22 ----------------------
- 3 files changed, 1 insertion(+), 43 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 35e0a230a484..7f5bc0ad9d50 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -76,27 +76,6 @@ extern const char *__cpu_full_name[];
- #define cpu_family_string()	__cpu_family[raw_smp_processor_id()]
- #define cpu_full_name_string()	__cpu_full_name[raw_smp_processor_id()]
- 
--struct seq_file;
--struct notifier_block;
--
--extern int register_proc_cpuinfo_notifier(struct notifier_block *nb);
--extern int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v);
--
--#define proc_cpuinfo_notifier(fn, pri)					\
--({									\
--	static struct notifier_block fn##_nb = {			\
--		.notifier_call = fn,					\
--		.priority = pri						\
--	};								\
--									\
--	register_proc_cpuinfo_notifier(&fn##_nb);			\
--})
--
--struct proc_cpuinfo_notifier_args {
--	struct seq_file *m;
--	unsigned long n;
--};
--
- static inline bool cpus_are_siblings(int cpua, int cpub)
- {
- 	struct cpuinfo_loongarch *infoa = &cpu_data[cpua];
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 3383c9d24e94..34ba80c312d0 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -91,6 +91,7 @@ extern void calculate_cpu_foreign_map(void);
- /*
-  * Generate IPI list text
-  */
-+struct seq_file;
- extern void show_ipi_list(struct seq_file *p, int prec);
- 
- static inline void arch_send_call_function_single_ipi(int cpu)
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 56a230238c9c..cea30768ae92 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -13,28 +13,12 @@
- #include <asm/processor.h>
- #include <asm/time.h>
- 
--/*
-- * No lock; only written during early bootup by CPU 0.
-- */
--static RAW_NOTIFIER_HEAD(proc_cpuinfo_chain);
--
--int __ref register_proc_cpuinfo_notifier(struct notifier_block *nb)
--{
--	return raw_notifier_chain_register(&proc_cpuinfo_chain, nb);
--}
--
--int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
--{
--	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
--}
--
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
- 	unsigned int isa = cpu_data[n].isa_level;
- 	unsigned int version = cpu_data[n].processor_id & 0xff;
- 	unsigned int fp_version = cpu_data[n].fpu_vers;
--	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
- 
- #ifdef CONFIG_SMP
- 	if (!cpu_online(n))
-@@ -97,12 +81,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
- 	}
- 
--	proc_cpuinfo_notifier_args.m = m;
--	proc_cpuinfo_notifier_args.n = n;
--
--	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
--				&proc_cpuinfo_notifier_args);
--
- 	seq_printf(m, "\n\n");
- 
- 	return 0;
--- 
-2.47.2
-
+>
+>  #define LOONGARCH_CSR_GINTC            0x52    /* Guest interrupt contro=
+l */
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index bf9268bf26d5..f6d3242b9234 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
+>          * TOE=3D0:       Trap on Exception.
+>          * TIT=3D0:       Trap on Timer.
+>          */
+> -       if (env & CSR_GCFG_GCIP_ALL)
+> +       if (env & CSR_GCFG_GCIP_SECURE)
+>                 gcfg |=3D CSR_GCFG_GCI_SECURE;
+> -       if (env & CSR_GCFG_MATC_ROOT)
+> +       if (env & CSR_GCFG_MATP_ROOT)
+>                 gcfg |=3D CSR_GCFG_MATC_ROOT;
+>
+>         write_csr_gcfg(gcfg);
+> --
+> 2.39.3
+>
