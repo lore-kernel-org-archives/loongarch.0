@@ -1,105 +1,101 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3C1F8EEE
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 11:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5851A1C07E5
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188012; cv=none; b=thAhHN2aYVwwHQRoazrA3wsmrats74SLrqXj9svEgsjdvTfG90uKFXndjaR1VFueZetynRpX1Ev3ez5je7lrhm234GkuyEvXvD2JeKY+UXfzFJev0JwJYpRKOFdZ33Txurcj0s4t0aYRBHivPExQT2gnW9EPKNfnXWrz1GzxbgQ=
+	t=1739192722; cv=none; b=BvIczqdcN6Ep8w5n7y/0/uCOTqWxKAfSKzFjve0sb5C/F/0VkuCWbunovzeObFPC5l+0MoRJ8bYvOw1qs+ZFg+1PFXgZPLKDGWqpGs7/hAUswtEHIwPDjmjlbcOgfnl02ryl6dLVFO1vsW2IHpeFh9fG6z0Eze73JCIZfmUeoxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188012; c=relaxed/simple;
-	bh=GzG9/JewF2R9hgWMnABUvCORIphwvk2NHpyoL5fvoz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UJN5eEWJBHSAjdPClkdozNqx2Zan20DXNAe5W/knAdryq/hRLP0/4P2PEKuj06nFDLJaYSIaWD5q0b/XSEqeZrwNWSc1kqY+WSZ5CM2VYjw9xcQq3KictPfQjNz4sNlXhRqstlk6ottVE7W4BReWItJmyJJb8JgP8tZluUJsH4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=I0UPZrP8; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739192722; c=relaxed/simple;
+	bh=mOuLjG4HvOr7s2/eJN9eNQJDWNjOV+ufUPdVlMdB3LY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bZBYQoJKpKyuwHFNj70VnP0bbph730mrG/501jlKBEQdBBm41YLjL6tTeWdY2Dq2qop+7SFQpkXWfLF4PmHt8SmIfdsBn7vwFsNLP7zesHUfMaYtXHwoRU1nXcHvCxSoD3qkSNYhYlueVM7n8MVW+aFNqwYnPMRPLTy4wXnvJFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On2PjgH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="I0UPZrP8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739187987;
-	bh=m1grcYhOjtkQFfMg+6V4yipR+q7gHGrp5uZpxwpcixI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=I0UPZrP8mxiWc1HxUM1BRkCF2v1yXjzb6vS09JAtgh4+lxBS1a+MSHNDLxxREA+a2
-	 QNij34cZ7qbzkUGhe9Ja+ZZlCoc0UCcK7rnu5Kf6VY/WqXXxuyWLYbJd8Z8FFmYIte
-	 hloVlm8kweg+mYlAsUAdM5uAUBlhcwqsu4YPwl7w=
-X-QQ-mid: bizesmtpip2t1739187948tanchur
-X-QQ-Originating-IP: YjZyhasVfxTRnsGik3pptVUnM9gplCpsHZpfchVxcbY=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 10 Feb 2025 19:45:46 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10396166132984000817
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	wangyuli@uniontech.com,
-	guanwentao@uniontech.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	maobibo@loongson.cn,
-	zhanjun@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: csum: Fix OoB access in IP checksum code for negative lengths
-Date: Mon, 10 Feb 2025 19:45:43 +0800
-Message-ID: <D4E490BD8F1E672B+20250210114543.1090146-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On2PjgH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2159BC4CEE6
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739192722;
+	bh=mOuLjG4HvOr7s2/eJN9eNQJDWNjOV+ufUPdVlMdB3LY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=On2PjgH5huB/3tUtxfoCEwwkmDKR6BMfkU8zFauStUcTeNUDRa4ouxtj1fPusvlLV
+	 Qg1YNOSz6IWcBTDVlWe3Ty53B5K9vAjKsedI3P91WBMctv7bMjeFbu8QTP00fDaBC1
+	 tttRWXeCSXR2YP4afiwZ7zesR22/eNgzRJhufSrthdmjjt2255PJ103o5kyl3EN7vF
+	 N8HW2W/kpgPfbtMUt3GVBnS0N9quvjaUeYHJ2B21m6KnlNsCE3bLfwOguUe1S5q/cR
+	 lEwL17VU7qMJSTLxRiKVkhIL4yP92fhEshVS8b/Xbt4kjCIqn38YqlcyLA04Li2qoJ
+	 DttOdDd9eFI0g==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de594e2555so4208369a12.2
+        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 05:05:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVnz45AurJOYNhRVpBAJzIoxwxr6/Wck0aDqIGIqY1fgiBq59P9NkbbJB0koyyHh5YVY9VdQ3nTOfk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YycTMgcJyKVkRrvHa0ZuAnuDWa3JGM4X/YkGCQhAW5lwZDezceE
+	YQHHUZLeIcxJOBWgfjnDVAlD7GUmJkslMEo3r4728BO2jVPBvuqMHu7l8ReZ6bYDCxzk1ppU32v
+	bozPzPJwpT3dHEk8e8b70dKZGPdo=
+X-Google-Smtp-Source: AGHT+IEkfRt7YjPb0KMkBFoPeu30Y37MTdWx6pXWpmrd7dcLDVULaIoVKrW6CFBvxfzLJUlJ4KrCMqsrFtc2mU2K9ek=
+X-Received: by 2002:a05:6402:348c:b0:5d3:e45d:ba91 with SMTP id
+ 4fb4d7f45d1cf-5de4509996bmr15458378a12.32.1739192720709; Mon, 10 Feb 2025
+ 05:05:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NiFdmnmiW14nC9wbGKWXWlrdR2n6UrhxDQwi9XvCzhqvQw1ruDwRMa93
-	9uOXFYF6BIpF4Z+byJDx6gPJ5dT9RZjyzarcS1GUDPKRMaR4uERozEpxTfm4SLnu52rh1R7
-	pEaNMuTWBdnQo2gKaxHOeF+PaY8uFRvwEwym7EoWWD1WTF/ARDDgmxZpvxopWniACOFzEVI
-	q3hqnPxcfJ5lrLNYePWtQP8QTz8jmVhMwpiTAJKHgXjn2WX3bJmktt4FercfDtP6D++61xr
-	QBplUfaYFCOZZLTNF+inYTYCkSNS4NBV7AlL5JreHfen0gbXA7j3top5wQqt6KEzyHvEpxh
-	PQy2f57/sBqwJTR6cxBBYnWmyU1KLtdziK2eGNUzF2XP53QbzwZAvL1GFfsp0sq21pMwbjx
-	ABwyCnwdG6gK+C2iO+Jn55IfXI5rSTLxAW6U6U6LV1lbavbkN/ccrHYyEQmBd/hJ1D8pGxk
-	MjC8fwQkeaR6RQduZRk81LHH5h0hJChZL69/aIf/HjGePk68CLkDmdPYcuoQIYtUyH0/ibo
-	g9Pn1ObT3UKAqSH7A41gSlovd+PFEieBXYJ2N+Tb2565klX5OXl6giDQaWU8m9KrTBAtKxw
-	pAdFQr6qvxG3TC1AwaO5hnm0j34/bD3UJvRTbnjiolqWFtWcpFqQ1pGrUXTbLg34zOa075/
-	Wv8P9wGA7MS7F33FCjmc7O0I/UBD7YuHrUVwvwFdH5e4ol/k84oVyG2TbDRQCABx+ikh7nP
-	mfTtRKvm7SSiKJmKXmik8JpdggWGt4tF0jQQqNXtglLJ3eqWIIw8BSw6xC0dAKzRlPBQbnF
-	OGdCmpBcer63LANayBEBLD/usP3Pi7V4bTjiS+KFZeQLE+xBFpOtsZ6Ue/GfNF1AHMIGl0l
-	iH2C1dN5ly8CMBpkqWQ2hICp7ye9phCRNCWDp/bhUdkaR/cwuIdZamlBawuBT9WXsczILc6
-	GtPhMZtBzpQdD0vFKlcXdjgD8avJMi6H9dRbPQVcy+L/ryxsc16/ZT0aT6f7xpeT0hRZm++
-	RracZIp+AvtaLMV4e6
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+References: <9C6990139B46AE19+20250209050258.2090416-1-wangyuli@uniontech.com>
+In-Reply-To: <9C6990139B46AE19+20250209050258.2090416-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 10 Feb 2025 21:05:06 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4aap22B_jaRVxJQDGThg-6HQQ3oC4ZeaT=v_4+5R5zqw@mail.gmail.com>
+X-Gm-Features: AWEUYZkFIAYsZd1aQYEMoOqwA_MhJT8_fqFQ4Oj3A5WL4uSTnDaoQnsVfynOqdM
+Message-ID: <CAAhV-H4aap22B_jaRVxJQDGThg-6HQQ3oC4ZeaT=v_4+5R5zqw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] LoongArch: Remove the deprecated notifier hook mechanism
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, guanwentao@uniontech.com, jiaxun.yang@flygoat.com, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chenlinxuan@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 69e3a6aa6be2 ("LoongArch: Add checksum optimization for
-64-bit system") would cause an undefined shift and an out-of-bounds
-read.
+Series applied, thanks.
 
-Commit 8bd795fedb84 ("arm64: csum: Fix OoB access in IP checksum
-code for negative lengths") fixes the same issue on ARM64.
+Huacai
 
-Fixes: 69e3a6aa6be2 ("LoongArch: Add checksum optimization for 64-bit system")
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/lib/csum.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
-index a5e84b403c3b..df309ae4045d 100644
---- a/arch/loongarch/lib/csum.c
-+++ b/arch/loongarch/lib/csum.c
-@@ -25,7 +25,7 @@ unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
- 	const u64 *ptr;
- 	u64 data, sum64 = 0;
- 
--	if (unlikely(len == 0))
-+	if (unlikely(len <= 0))
- 		return 0;
- 
- 	offset = (unsigned long)buff & 7;
--- 
-2.47.2
-
+On Sun, Feb 9, 2025 at 1:03=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
+ote:
+>
+> The notifier hook mechanism in proc and cpuinfo is actually unnecessary
+> for LoongArch because it's not used anywhere.
+>
+> It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
+> MT: proc: Add support for printing VPE and TC ids"), and LoongArch
+> then inherited it.
+>
+> But as the kernel code stands now, this notifier hook mechanism doesn't
+> really make sense for either LoongArch or MIPS.
+>
+> In the process, we identified one instance where a hardcoded print messag=
+e
+> could be changed to utilize the str_yes_no() helper function.
+>
+> Furthermore, the declaration of seq_file in cpuinfo.h should also be
+> removed along with the deprecated notifier hook mechanism.
+>
+> However, it needs to be added back in a different location to ensure
+> the code compiles and functions correctly.
+>
+> WangYuli (2):
+>   LoongArch: kernel: proc: Use str_yes_no() helper function
+>   LoongArch: Remove the deprecated notifier hook mechanism
+>
+>  arch/loongarch/include/asm/cpu-info.h | 21 -------------------
+>  arch/loongarch/include/asm/smp.h      |  1 +
+>  arch/loongarch/kernel/proc.c          | 29 +++------------------------
+>  3 files changed, 4 insertions(+), 47 deletions(-)
+> ---
+> Changelog:
+>  *v1->v2: Combine the patch2 and patch3 from v1.
+>
+> --
+> 2.47.2
+>
