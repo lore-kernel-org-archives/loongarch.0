@@ -1,113 +1,176 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D29C22FE13
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAF24FC16
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 17:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739195034; cv=none; b=m1xS3e4XqOI5AhhnAd6X7//ta9JhZ4cknJNn2BIwd7WYyN8F3xwKKtuDcEwM4ierT5pNEH9RftnmMq33fYeDJrvj7rDtaZO+x1vlzgg6I9UGXH+XDr+aYv8p1BvKVHSkD4d2teaApnUTpzwsDcMcvQ7Fl+2vuiXayeA4WtXvYpk=
+	t=1739208991; cv=none; b=mX/e9CMMgc6pIzLbiVE4OO7oQ6y2bp9z6SOsQUeB9ahz4YwlwMh76QMt7Xh4vYqv3gdxAMNLuxiEBvrGCfOgeFlwyigHvy5xDWHeAIPHPTIOFBq2vQ6olgqHVp7y5f502t/4Wihr8DNRvJ4ASnCuPl81pF1IYoR6u3GJUQsrjbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739195034; c=relaxed/simple;
-	bh=Wlvzxj03zn35CGnYkYRl6zp3QBzmopWRqmURA9W2vHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1v0prBKmGZAofl+mplzmxc+NKQ5ILdz2+VLYoDqkXsGeW/uEUvYiNW+Qvxke7AkH4D0EximEOqNLeiJO8K2WHPPsksHah7dRo96DkLvT6Sqy+rSDFa28j3vWjxKdwv9hXM/DDLA245QGTWt/2us5LpphDQzxFafKm5yf5xoDaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8AxquCTAqpnDUlxAA--.23399S3;
-	Mon, 10 Feb 2025 21:43:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMCxasSNAqpnxVcKAA--.1453S2;
-	Mon, 10 Feb 2025 21:43:45 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chris.chenfeiyang@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
-Date: Mon, 10 Feb 2025 21:43:28 +0800
-Message-ID: <20250210134328.2755328-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1739208991; c=relaxed/simple;
+	bh=u+xBAfgGtWSjK+lShNplBj7ifal6E7BNbQMyEHGnBJo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=boQB6klf3HjtLQvndd3ALZ8IQsCP5SkIsd8RRMY+t/gNSnroApBmIbqzuVvnhCn6lyeH+j75Iq0vZpG9vDAJk/nmDnHxMVg5ElLfPADV8+Q/bBYmhlbbIXa8Ms0fuAT8UxaOnFGbB6UTK1YM8PP3nCZryZ1ndvU8QcuqiUjrpTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TNVef/C9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNVef/C9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739208988;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
+	b=TNVef/C9tVl7GrjDDWrrk4hKqiVtvBdY+TNx20ou+2MVywJjBiuRS+LAdusTTRCqabnRrS
+	2SiqpNifaNfl25SlyrgBFL3GpF+iEYwRuIyGr0R8M3DIJp2CSXAawX3L6JXmi/qYw5Lo2e
+	q6z9McKvrk7zmUsoFCctS6WLdDv4p8Y=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-210-2eRiLZsONwaOEbLEK8At_g-1; Mon, 10 Feb 2025 12:36:26 -0500
+X-MC-Unique: 2eRiLZsONwaOEbLEK8At_g-1
+X-Mimecast-MFC-AGG-ID: 2eRiLZsONwaOEbLEK8At_g
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dca55788eso1753081f8f.1
+        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 09:36:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739208985; x=1739813785;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
+        b=BwXNHS7vp6M9P+DyvowtixzSVce+WFF/FMKkb0++gPZppqfURsDHzsfAEc9mU2UbYr
+         Bv3tQtfluNU2asjpvxITJCWNX1hWjj9kPQUR6ajF4GhsUNdDVCBdPwLxXE3Ca/PvKwJv
+         V656plqu/5m+864YNH3GfLdSElosMf8dHremj97zz3gKxy1dExKSSFGkZwkhdu3PM0rq
+         IznLmQ9ibrZcXUMVP5KDLUxDHggwvl7xWdXr4Ln6DtWpPiU/GKtn8aWPeexJLVGUF6TN
+         ty6PqtFbvgsKRS+UBqolce2NPvPi7hu1zoyX7PaRLHNZ6Jx3sml+PphipcRgv0kV9Llw
+         wbZw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+h5wIOf039DvfApgOp4vIk1l0vqtn6AcYqi5DBRBRbFl5OjXoKCf9VqaGHYTxzHnj6a5hkarLx5g=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwAHfCYOh0/6LRJOF309PNTLoMPvV5teNlzySASutz9wzlIZeFu
+	vvQKxZZvs6iwHYe1pz0X5ej4QZC9how6L1ovEDMFsAaKYIg/u8ltTKMa4eC4J5maeXZOpSU9OYq
+	jvGfyRADbjOYCO+UpjGunrk8qbWoTxZJVzVNxR2+8UNFVNF6nivk+byZmRw==
+X-Gm-Gg: ASbGncsM9Guz/XVwHo//3Z+23lvtqZkwU3AdBJwwJ4BI+Rc5k/cZb1eW8jT4f7xmcAV
+	oWNnxXkqeHSkHP2TWo5NgAFsBygkjbJ8iRDbquX5zzypOxDVkl2s5GVL0NLWBS5xUo3MmAJ5oMq
+	D/PGTr4XEPRkZWpDyDER2yJd/+VHh+NIiER7C9mfnSL3JGHfA4AmSwmlKhI+fcOjoEctf1Kuo/V
+	sVk+IUFNZXReYo6XgHJWv7CETMEDT38NZPFKSFERjs73sHfQdRQSR2i7q5oOvaHNNU6X5qTbmj3
+	KK3AGeonrj929XHoCfWCEnnXbkjUjkuQdhEKkFhYC8EBZWA59ZKZQRCCH//+2SOReg==
+X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058685f8f.35.1739208985438;
+        Mon, 10 Feb 2025 09:36:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFxfTkrMg3Ut4KvVNhGVu91A0XAdGHvAD9T0QbpHzfP2OmSPgOw5f7LxHQ3fWHxL8NqTxJ5mQ==
+X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058583f8f.35.1739208984820;
+        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm12687106f8f.53.2025.02.10.09.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
+ irq/nmi entry
+In-Reply-To: <Z6ZTBXUiEOLVcSKp@pavilion.home>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-23-vschneid@redhat.com>
+ <Z5A6NPqVGoZ32YsN@pavilion.home>
+ <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z6ZTBXUiEOLVcSKp@pavilion.home>
+Date: Mon, 10 Feb 2025 18:36:20 +0100
+Message-ID: <xhsmh8qqdk8h7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxasSNAqpnxVcKAA--.1453S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFWkCrW7Zr4fJw4DCFy8JFc_yoW8ZryDpr
-	W3Aa4ag34jgr45Cw1DZ3yUCFyruay5trZFgFWIk34fuFWkA3sFqr1YvFWYgrsrArZ3Ga4a
-	qr1q9r1rGF1DCrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: JgJ5gU0KIc5GnoLPX1W33jYZEM1xda7xInxITg69MMo_1739208985
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-zero. This means dwmac-loongson doesn't support changing MTU because in
-stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
-set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
-queue counts).
+On 07/02/25 19:37, Frederic Weisbecker wrote:
+> Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a =C3=A9crit=
+ :
+>>
+>> Soooo I've been thinking...
+>>
+>> Isn't
+>>
+>>   (context_tracking.state & CT_RCU_WATCHING)
+>>
+>> pretty much a proxy for knowing whether a CPU is executing in kernelspac=
+e,
+>> including NMIs?
+>
+> You got it!
+>
 
-Here {tx,rx}_fifo_size is initialised with the initial value (also the
-maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
-don't change the queue count, and will be larger than 16KB if we change
-(decrease) the queue count. However stmmac_change_mtu() still work well
-with current logic (MTU cannot be larger than 16KB for stmmac).
+Yay!
 
-Note: the Fixes tag picked here is the oldest commit and key commit of
-the dwmac-loongson series "stmmac: Add Loongson platform support".
+>>
+>> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
+>> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
+>> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
+>> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
+>>
+>> IOW, if I gate setting deferred work by checking for this instead of
+>> explicitely CT_STATE_KERNEL, "it should work" and prevent the
+>> aforementioned issue? Or should I be out drinking instead? :-)
+>
+> Exactly it should work! Now that doesn't mean you can't go out
+> for a drink :-)
+>
 
-Cc: stable@vger.kernel.org
-Fixes: ad72f783de06 ("net: stmmac: Add multi-channel support")
-Acked-by: Yanteng Si <si.yanteng@linux.dev>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Update commit message and CC list.
+Well, drinks were had very shortly after sending this email :D
 
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index bfe6e2d631bd..79acdf38c525 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -574,6 +574,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 	if (ret)
- 		goto err_disable_device;
- 
-+	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
-+	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
-+
- 	if (dev_of_node(&pdev->dev))
- 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
- 	else
--- 
-2.47.1
+> Thanks.
 
