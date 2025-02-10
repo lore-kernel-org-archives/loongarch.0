@@ -1,107 +1,214 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF41E8BF8
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 01:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4556546447
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 02:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739151861; cv=none; b=n/VMA2zE74NlaLUpf5hANU9+mrAWVxAhaoy5b95+3Xbj8H99TKtlvMj17DUj4qaLw8bYErb6PxkppNFPROVttYwRbL8bVY4kMZWVk73bBnY5Ok/VmlaWWP0o9LsXOze65o86ac5qppxa/gY27iLO0tC6r8eQLw4+RjnJCaO57A4=
+	t=1739153979; cv=none; b=Gzgg1FWCTI5LbGOZsN2Ko+YZGn69yfacwi6jesUEVCUAzfloPgVWZY7rPABJoQnLynWupbLZt6O/voBhxJQ0MA35zYkC+XNrzb2BZVN1HK6gujioJHGX9uiDAACRWlhPn9sAdVfMqdvXipJXzpHiBHWRQI6pNTIwN7I/LwgpRG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739151861; c=relaxed/simple;
-	bh=oZ4i6G/vds3u2yDUC9W2NW8+SMos2V/3xYXBbeqGXYQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JoojE2AMVLhxbT/4v2cO9EOE/klemw+Z1ZnVJaOAtahRENYCl0PXqjBqN/4Ez68MsZLVU42V8MGp94Z+AgqY0SCZqRxB7h1XAa3qRufzni13mEVlzHkZ6d982UoM/yOi3PSPoZICCQBWrw4whEspYSryRJ7y2BCYEU1Tbms9TQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxLOLyWaln1dpwAA--.26231S3;
-	Mon, 10 Feb 2025 09:44:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBx3MTuWalnbHIJAA--.33964S3;
-	Mon, 10 Feb 2025 09:44:16 +0800 (CST)
-Subject: Re: [PATCH 3/3] LoongArch: KVM: Set host with kernel mode when switch
- to VM mode
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250207032634.2333300-1-maobibo@loongson.cn>
- <20250207032634.2333300-4-maobibo@loongson.cn>
- <CAAhV-H4o7WS6J-eU=3VR16iVscrr5znpa67Do96cxmd6A0JS0g@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <cc68705c-6900-f185-84b7-5473acb3ce96@loongson.cn>
-Date: Mon, 10 Feb 2025 09:43:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1739153979; c=relaxed/simple;
+	bh=4HTD3ooncMdhirJI5DPzOhSlghZ3vjd2FascDwSbWyQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ltXiORc4gIauwI5keda/bFcNSZoO0msE13WGSL5O9PT+9ZkMwiuHWULFky++yPLUY4OBlawYXnqFarl5513xzkuozNUUVFsW3IhQutgEzxfvXNDIHNJpgL4GNrGwng5xcjuwwqTx6hipJroiJ85hlxzhfKJnbtjpBa+i8tV4K3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5Vyy/rs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5Vyy/rs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C549CC4CEE8
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 02:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739153978;
+	bh=4HTD3ooncMdhirJI5DPzOhSlghZ3vjd2FascDwSbWyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h5Vyy/rsw/RgWPy6j/apw2DcNpXMpv6WLDCXBLGnSYjSdlKi4U0aOdMIGI1jqERMm
+	 AMQPSDX+VRbaK/XtyAdO/APjdbskT7ZuTjNqpHNLbXQDLkDcVK3CPWMnoVFL3oJ7LE
+	 RM0m8YmG1LsUQypXnXoBTNjoOGWS89LUEMZrI89KDxTVQKeX1tBFFY5OHb9ZQ13PBk
+	 ilo+mFtwlz6/Eh13TzDj5ezhPd0GkwBYCFHXqve8hg41wH7z7yRz5a8MNW0eOJDJIW
+	 Ou/kPGKKcg4YysP6P2FyeNzCXIb0/5PDOCxZDdpIITpap6Vgq9iuNleAnVDS6G3AqY
+	 B0jMGpRV1IR6A==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso65701366b.1
+        for <loongarch@lists.linux.dev>; Sun, 09 Feb 2025 18:19:38 -0800 (PST)
+X-Gm-Message-State: AOJu0YzeIF1t01Pk0ZmCVbs8fOt2kYOa8HHygddudUk+rHFsjy5/lW/p
+	GTamZ6cfzpb7cJ3KQEZsWTxXsn0y/9QKQkR6sYbrOt6AV9YrnuzQaO5/GHBM4fX1wk4AOZEYP4r
+	TvLuTzbmY9+hh9hQNbjjTAbrSrvM=
+X-Google-Smtp-Source: AGHT+IEztfayE9CcsBJj6sqPC4ZJUYNfPmFkGapzICbbUDZt6wQAQZHBUoyLSudEa/U8Arthi1tUm9fOLpHEAd7LvUg=
+X-Received: by 2002:a17:907:d50e:b0:ab7:c352:62b5 with SMTP id
+ a640c23a62f3a-ab7c3526536mr183441566b.26.1739153977315; Sun, 09 Feb 2025
+ 18:19:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4o7WS6J-eU=3VR16iVscrr5znpa67Do96cxmd6A0JS0g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MTuWalnbHIJAA--.33964S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWruw4UCF48tr4kArWfWw4fCrX_yoW8Jr4xpr
-	WayFs5KF4F9r1q9aykKw45tF98urZFgr4Sg3W3tFyFyrnxX3ZYqa4DWFZrXFyavw4rJF40
-	9r1rtr1Iva1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wN
-	VDUUUUU==
+References: <20250208101924.20743-1-marco.crivellari@suse.com> <20250208101924.20743-2-marco.crivellari@suse.com>
+In-Reply-To: <20250208101924.20743-2-marco.crivellari@suse.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 10 Feb 2025 10:19:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+X-Gm-Features: AWEUYZnXklp7aAxb5Ss_sH7kaM9XCYM12BZvPPPenNF9F8jA9AoEWiojw_8iHic
+Message-ID: <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, Frederic Weisbecker <frederic@kernel.org>, 
+	Jinyang He <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Marco,
 
+Don't care about the lkp robot, I have queued this patch with some
+small modifications.
+https://github.com/chenhuacai/linux/commit/a8aa673ea46c03b3f62992ffa4ffe810=
+ac84f6e3
 
-On 2025/2/9 下午5:47, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Fri, Feb 7, 2025 at 11:26 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> PRMD and ERA register is only meaningful on the beginning stage
->> of exception entry, and it can be overwritten for nested irq or
->> exception.
-> The code doesn't touch ERA, so ERA in the commit message is a typo?
-oh, ERA is redundant here.
-Will remove it in next version.
+Huacai
 
-Regards
-Bibo Mao
-> 
-> Huacai
->>
->> When CPU runs in VM mode, interrupt need be enabled on host. And the
->> mode for host had better be kernel mode rather than random.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/switch.S | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->> index 0c292f818492..1be185e94807 100644
->> --- a/arch/loongarch/kvm/switch.S
->> +++ b/arch/loongarch/kvm/switch.S
->> @@ -85,7 +85,7 @@
->>           * Guest CRMD comes from separate GCSR_CRMD register
->>           */
->>          ori     t0, zero, CSR_PRMD_PIE
->> -       csrxchg t0, t0,   LOONGARCH_CSR_PRMD
->> +       csrwr   t0, LOONGARCH_CSR_PRMD
->>
->>          /* Set PVM bit to setup ertn to guest context */
->>          ori     t0, zero, CSR_GSTAT_PVM
->> --
->> 2.39.3
->>
-
+On Sat, Feb 8, 2025 at 6:19=E2=80=AFPM Marco Crivellari
+<marco.crivellari@suse.com> wrote:
+>
+> Loongson re-enables interrupts on its idle routine and performs a
+> TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
+>
+> The IRQs firing between the check and the idling instruction may set the
+> TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
+> interrupting __arch_cpu_idle() rollback their return address to the
+> beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
+> again before going back to sleep.
+>
+> However idle IRQs can also queue timers that may require a tick
+> reprogramming through a new generic idle loop iteration but those timers
+> would go unnoticed here because __arch_cpu_idle() only checks
+> TIF_NEED_RESCHED. It doesn't check for pending timers.
+>
+> Fix this with fast-forwarding idle IRQs return value to the end of the
+> idle routine instead of the beginning, so that the generic idle loop
+> handles both TIF_NEED_RESCHED and pending timers.
+>
+> Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> ---
+>  arch/loongarch/kernel/genex.S | 31 +++++++++++++++++--------------
+>  arch/loongarch/kernel/idle.c  |  3 +--
+>  arch/loongarch/kernel/reset.c | 18 +++++++++---------
+>  3 files changed, 27 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.=
+S
+> index 86d5d90ebefe..9623298a5cf1 100644
+> --- a/arch/loongarch/kernel/genex.S
+> +++ b/arch/loongarch/kernel/genex.S
+> @@ -18,28 +18,31 @@
+>
+>         .align  5
+>  SYM_FUNC_START(__arch_cpu_idle)
+> -       /* start of rollback region */
+> -       LONG_L  t0, tp, TI_FLAGS
+> -       nop
+> -       andi    t0, t0, _TIF_NEED_RESCHED
+> -       bnez    t0, 1f
+> -       nop
+> -       nop
+> -       nop
+> +       /* start of idle interrupt region */
+> +       ori             t0, zero, CSR_CRMD_IE
+> +       /* idle instruction needs irq enabled */
+> +       csrxchg t0, t0, LOONGARCH_CSR_CRMD
+> +       /*
+> +        * If an interrupt lands here; between enabling interrupts above =
+and
+> +        * going idle on the next instruction, we must *NOT* go idle sinc=
+e the
+> +        * interrupt could have set TIF_NEED_RESCHED or caused an timer t=
+o need
+> +        * reprogramming. Fall through -- see handle_vint() below -- and =
+have
+> +        * the idle loop take care of things.
+> +        */
+>         idle    0
+> -       /* end of rollback region */
+> -1:     jr      ra
+> +       /* end of idle interrupt region */
+> +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
+> +       jr      ra
+>  SYM_FUNC_END(__arch_cpu_idle)
+>
+>  SYM_CODE_START(handle_vint)
+>         UNWIND_HINT_UNDEFINED
+>         BACKUP_T0T1
+>         SAVE_ALL
+> -       la_abs  t1, __arch_cpu_idle
+> +       la_abs  t1, __arch_cpu_idle_exit
+>         LONG_L  t0, sp, PT_ERA
+> -       /* 32 byte rollback region */
+> -       ori     t0, t0, 0x1f
+> -       xori    t0, t0, 0x1f
+> +       /* 3 instructions idle interrupt region */
+> +       ori     t0, t0, 0x0c
+>         bne     t0, t1, 1f
+>         LONG_S  t0, sp, PT_ERA
+>  1:     move    a0, sp
+> diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.c
+> index 0b5dd2faeb90..54b247d8cdb6 100644
+> --- a/arch/loongarch/kernel/idle.c
+> +++ b/arch/loongarch/kernel/idle.c
+> @@ -11,7 +11,6 @@
+>
+>  void __cpuidle arch_cpu_idle(void)
+>  {
+> -       raw_local_irq_enable();
+> -       __arch_cpu_idle(); /* idle instruction needs irq enabled */
+> +       __arch_cpu_idle();
+>         raw_local_irq_disable();
+>  }
+> diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.=
+c
+> index 1ef8c6383535..8fd8c44b02cb 100644
+> --- a/arch/loongarch/kernel/reset.c
+> +++ b/arch/loongarch/kernel/reset.c
+> @@ -32,9 +32,9 @@ void machine_halt(void)
+>         pr_notice("\n\n** You can safely turn off the power now **\n\n");
+>         console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               asm volatile("idle 0" : : : "memory");
+> +       };
+>  }
+>
+>  void machine_power_off(void)
+> @@ -52,9 +52,9 @@ void machine_power_off(void)
+>         efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+>  #endif
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               asm volatile("idle 0" : : : "memory");
+> +       };
+>  }
+>
+>  void machine_restart(char *command)
+> @@ -73,7 +73,7 @@ void machine_restart(char *command)
+>         if (!acpi_disabled)
+>                 acpi_reboot();
+>
+> -       while (true) {
+> -               __arch_cpu_idle();
+> -       }
+> +       while (1) {
+> +               asm volatile("idle 0" : : : "memory");
+> +       };
+>  }
+> --
+> 2.48.1
+>
