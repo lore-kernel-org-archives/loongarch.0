@@ -1,176 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAF24FC16
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 17:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611C424FC1E;
+	Mon, 10 Feb 2025 18:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208991; cv=none; b=mX/e9CMMgc6pIzLbiVE4OO7oQ6y2bp9z6SOsQUeB9ahz4YwlwMh76QMt7Xh4vYqv3gdxAMNLuxiEBvrGCfOgeFlwyigHvy5xDWHeAIPHPTIOFBq2vQ6olgqHVp7y5f502t/4Wihr8DNRvJ4ASnCuPl81pF1IYoR6u3GJUQsrjbQ=
+	t=1739211982; cv=none; b=d/3fNONHklfLOUP6hT0IcoebRW3dU64YaZmY97tWj3kUVo8LiP1qeOQodJbjY+tlmfd9GT8SqDmsY0bjCbmscJ0n072y6/J1BpJPMpBAm9eyz8z6DV6c3CUP5TQnwghhLQRLtCSWdtOOMZnkL5fF3edVwlSSWrTLp6dH8C09b2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208991; c=relaxed/simple;
-	bh=u+xBAfgGtWSjK+lShNplBj7ifal6E7BNbQMyEHGnBJo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=boQB6klf3HjtLQvndd3ALZ8IQsCP5SkIsd8RRMY+t/gNSnroApBmIbqzuVvnhCn6lyeH+j75Iq0vZpG9vDAJk/nmDnHxMVg5ElLfPADV8+Q/bBYmhlbbIXa8Ms0fuAT8UxaOnFGbB6UTK1YM8PP3nCZryZ1ndvU8QcuqiUjrpTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TNVef/C9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739211982; c=relaxed/simple;
+	bh=KYA157cXuPg/uZsD/Ib5SyS/u9UnH0ICnODpj1K3Gig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BDyO73XUu+/CKFYTY+DCXKo8vTvaTRKfQS31wAMbboVSBl0q0V8H55OlyLhvzoMjAY63hO6r9o+kZsj5ZiDum+aqYsEemaCeIgZt+8S/LT9YC4Sl2pUs/7vFipeyvlkA7r8J7dCiUa1tKSQvbrd8vvUkL8Diour1FaUDkQaMcuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyGdi/SU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNVef/C9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739208988;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-	b=TNVef/C9tVl7GrjDDWrrk4hKqiVtvBdY+TNx20ou+2MVywJjBiuRS+LAdusTTRCqabnRrS
-	2SiqpNifaNfl25SlyrgBFL3GpF+iEYwRuIyGr0R8M3DIJp2CSXAawX3L6JXmi/qYw5Lo2e
-	q6z9McKvrk7zmUsoFCctS6WLdDv4p8Y=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-2eRiLZsONwaOEbLEK8At_g-1; Mon, 10 Feb 2025 12:36:26 -0500
-X-MC-Unique: 2eRiLZsONwaOEbLEK8At_g-1
-X-Mimecast-MFC-AGG-ID: 2eRiLZsONwaOEbLEK8At_g
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dca55788eso1753081f8f.1
-        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 09:36:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739208985; x=1739813785;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-        b=BwXNHS7vp6M9P+DyvowtixzSVce+WFF/FMKkb0++gPZppqfURsDHzsfAEc9mU2UbYr
-         Bv3tQtfluNU2asjpvxITJCWNX1hWjj9kPQUR6ajF4GhsUNdDVCBdPwLxXE3Ca/PvKwJv
-         V656plqu/5m+864YNH3GfLdSElosMf8dHremj97zz3gKxy1dExKSSFGkZwkhdu3PM0rq
-         IznLmQ9ibrZcXUMVP5KDLUxDHggwvl7xWdXr4Ln6DtWpPiU/GKtn8aWPeexJLVGUF6TN
-         ty6PqtFbvgsKRS+UBqolce2NPvPi7hu1zoyX7PaRLHNZ6Jx3sml+PphipcRgv0kV9Llw
-         wbZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+h5wIOf039DvfApgOp4vIk1l0vqtn6AcYqi5DBRBRbFl5OjXoKCf9VqaGHYTxzHnj6a5hkarLx5g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwAHfCYOh0/6LRJOF309PNTLoMPvV5teNlzySASutz9wzlIZeFu
-	vvQKxZZvs6iwHYe1pz0X5ej4QZC9how6L1ovEDMFsAaKYIg/u8ltTKMa4eC4J5maeXZOpSU9OYq
-	jvGfyRADbjOYCO+UpjGunrk8qbWoTxZJVzVNxR2+8UNFVNF6nivk+byZmRw==
-X-Gm-Gg: ASbGncsM9Guz/XVwHo//3Z+23lvtqZkwU3AdBJwwJ4BI+Rc5k/cZb1eW8jT4f7xmcAV
-	oWNnxXkqeHSkHP2TWo5NgAFsBygkjbJ8iRDbquX5zzypOxDVkl2s5GVL0NLWBS5xUo3MmAJ5oMq
-	D/PGTr4XEPRkZWpDyDER2yJd/+VHh+NIiER7C9mfnSL3JGHfA4AmSwmlKhI+fcOjoEctf1Kuo/V
-	sVk+IUFNZXReYo6XgHJWv7CETMEDT38NZPFKSFERjs73sHfQdRQSR2i7q5oOvaHNNU6X5qTbmj3
-	KK3AGeonrj929XHoCfWCEnnXbkjUjkuQdhEKkFhYC8EBZWA59ZKZQRCCH//+2SOReg==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058685f8f.35.1739208985438;
-        Mon, 10 Feb 2025 09:36:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFxfTkrMg3Ut4KvVNhGVu91A0XAdGHvAD9T0QbpHzfP2OmSPgOw5f7LxHQ3fWHxL8NqTxJ5mQ==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058583f8f.35.1739208984820;
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm12687106f8f.53.2025.02.10.09.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-In-Reply-To: <Z6ZTBXUiEOLVcSKp@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z6ZTBXUiEOLVcSKp@pavilion.home>
-Date: Mon, 10 Feb 2025 18:36:20 +0100
-Message-ID: <xhsmh8qqdk8h7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyGdi/SU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76503C4CED1;
+	Mon, 10 Feb 2025 18:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739211981;
+	bh=KYA157cXuPg/uZsD/Ib5SyS/u9UnH0ICnODpj1K3Gig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fyGdi/SUdTXUEHLznoDzl2JFJWlQzVvFWLI6MgKYHNZsvIy3tQO4lV66WABpnzQ6q
+	 PAvFX0xzvmkEVL7uIuTUNJ6Y9VFIvrLdgR/wmaCHe7g9Yj/aCOIy8AJSxUuHlUgS8i
+	 LByB6vWVth1ee6J8OzBkUBQejnFVFukvoTOu/vGC46GUAzTMxJvRmt1LysGobg/ohC
+	 LVSTjhJZ5Cvcncmy+1flicb0OGt5RRSeIbNNvAc+97HmMQTN8NL1XBgiGFX5G6QD0L
+	 QnOSNs+y/5KifZdQ7yKyGErlqHzQZvHcmzDLWbDo+tW+DT5cUIsGklCacl0B8Pz9p7
+	 vVA4T2gxEgouQ==
+Date: Mon, 10 Feb 2025 19:26:19 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <obegtfup7f6w6erh4arubk2fkk2wrcum5frs5kbqa4uniexmr5@6uti3d3hv7np>
+References: <cover.1733823417.git.zhoubinbin@loongson.cn>
+ <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: JgJ5gU0KIc5GnoLPX1W33jYZEM1xda7xInxITg69MMo_1739208985
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="y3cmthzzyib5n4wh"
+Content-Disposition: inline
+In-Reply-To: <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
 
-On 07/02/25 19:37, Frederic Weisbecker wrote:
-> Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a =C3=A9crit=
- :
->>
->> Soooo I've been thinking...
->>
->> Isn't
->>
->>   (context_tracking.state & CT_RCU_WATCHING)
->>
->> pretty much a proxy for knowing whether a CPU is executing in kernelspac=
-e,
->> including NMIs?
->
-> You got it!
->
 
-Yay!
+--y3cmthzzyib5n4wh
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+MIME-Version: 1.0
 
->>
->> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
->> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
->> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
->> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
->>
->> IOW, if I gate setting deferred work by checking for this instead of
->> explicitely CT_STATE_KERNEL, "it should work" and prevent the
->> aforementioned issue? Or should I be out drinking instead? :-)
->
-> Exactly it should work! Now that doesn't mean you can't go out
-> for a drink :-)
->
+Hello Binbin,
 
-Well, drinks were had very shortly after sending this email :D
+On Tue, Dec 10, 2024 at 08:37:06PM +0800, Binbin Zhou wrote:
+> +static int pwm_loongson_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct pwm_chip *chip;
+> +	struct pwm_loongson_ddata *ddata;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	chip = devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	ddata = to_pwm_loongson_ddata(chip);
+> +
+> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->base))
+> +		return PTR_ERR(ddata->base);
+> +
+> +	ddata->clk = devm_clk_get_optional_enabled(dev, NULL);
+> +	if (IS_ERR(ddata->clk))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->clk),
+> +				     "failed to get pwm clock\n");
+> +	if (ddata->clk) {
+> +		ret = devm_clk_rate_exclusive_get(dev, ddata->clk);
+> +		if (ret)
+> +			return ret;
 
-> Thanks.
+Error message please. Also please make all errors start with a capital
+letter.
 
+> +		ddata->clk_rate = clk_get_rate(ddata->clk);
+> +	} else {
+> +		ddata->clk_rate = LOONGSON_PWM_FREQ_DEFAULT;
+> +	}
+> +
+> +	/* Explicitly initialize the CTRL register */
+> +	pwm_loongson_writel(ddata, 0, LOONGSON_PWM_REG_CTRL);
+
+This disables all outputs, right? Ideally the driver takes over running
+channels. Consider the bootloader initialized a display with a splash
+screen. Disabling the PWM might disable the backlight of the display
+which hurts the visual experience.
+
+> +	chip->ops = &pwm_loongson_ops;
+> +	chip->atomic = true;
+> +	dev_set_drvdata(dev, chip);
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int pwm_loongson_suspend(struct device *dev)
+> +{
+> +	struct pwm_chip *chip = dev_get_drvdata(dev);
+> +	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
+> +
+> +	ddata->lss.ctrl = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
+> +	ddata->lss.duty = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> +	ddata->lss.period = pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+> +
+> +	clk_disable_unprepare(ddata->clk);
+> +
+> +	return 0;
+
+Is this needed assuming that before suspend the consumer stopped the
+PWM?
+
+Best regards
+Uwe
+
+
+--y3cmthzzyib5n4wh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmeqRMgACgkQj4D7WH0S
+/k5x6wf+OuES4/l5RbIfHcNQ684TqDXxIdsHM+HZKcA4pf7ti4aRWHLgtm4fSo8s
+hfbiJO07oXAJ4ZzObO6NW99tK9ixfPTfGSTTsWNfm4eogI04gHSwvj9muvcKFFqH
+QlrM324KhBuXTY0WnTTEUBxfEtYY+uN1csy8kFb5OjLbfE8l70Ow/6B7BvemWphp
+HN0mn3tCD4PEIZtOAW8ic54WDk9x0CxQicZ8YdYFO/VlcxwEM+ohTMLWdoITjkZX
+Pf92e5Q+cNhKGJ8zUErMEgl78Ul+HKQWv/qqCiX7j2k8OGavMed0ww1ExHm87V5o
+qEr5uvKwqsDZ75UjpdRaCSbnE0OJQg==
+=7aZk
+-----END PGP SIGNATURE-----
+
+--y3cmthzzyib5n4wh--
