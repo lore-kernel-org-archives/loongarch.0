@@ -1,232 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FAE43179
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 03:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D337E2F2E
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 06:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739159914; cv=none; b=mA07/N92TraQdj2+LBIlpQEYHOuafgIu6QuLhASkYOGzyLPcQ5atwPGdHnvX1lD2zVRifcn7h8SHuoIW9PiulVD6z0pPD+b/x0EmGxGJiZeSPF8RjJAk/cBmIE0boihjy6Llwnd0FTJnBLloCHOXY6oRgO2+f1X+idFEgh5L/dM=
+	t=1739167671; cv=none; b=t657D0QxiyMy+u7ThOiKOXKGU7GKu+cXevLq1kJiI7ITFQUcg9ogBEYeMVSHAwbTMSRw2mbb1MKLCpdqMgbw4AxG5NlzajlX0xxTAFAVL4OGkVs2H93+gNApjSeia5ipGLpP5P05cz570wuQnt1S+RwSfzdR6BGRgzr6zaX0GR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739159914; c=relaxed/simple;
-	bh=eFEOFJW334jyZcovU+emYRencSopZhzN6Nl+8Tf89ro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d7gA1GQtU4MK3fDe/OdnBAxqBsdSw23o2rfzrc+uQweQMMSEY3+MnYlD7jsy/cvgIrIE+lVzMKV8U3KDUKXd+gnoAYFdVyibIWVAGrqMUkJ6175wfcTH1GY7jhKrse7uHY5Zn10tETvbNxtMSB03m3fAo9Legr2r/OsLy+8Kujw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3vdixJ9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3vdixJ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D63CC4CEE7
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 03:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739159913;
-	bh=eFEOFJW334jyZcovU+emYRencSopZhzN6Nl+8Tf89ro=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y3vdixJ9W0gCLIg6IdxkVfe+Inku1hv7CiKB4EAXwBNKtSFf7dzyqe3hrE+Iqcjsz
-	 ha+10+IjeSkm/qEiSbzwXQJZpKUeQCnacVNwUrxkGBfxa5Y3UOQTLsJqxMC8nCNgcy
-	 WeEM6fdaytUYAs4wCxfRR9OE8gUQFYFZd2IM9LXFdf/h8QmecT678cPAU7tchcUhHy
-	 yMki/b+En6orWGXv9CYuSKCoPzj8JCuGmRJeJrFIWeZOuINZxZXfdpoFaVK64wrr0l
-	 IGmJUmbBa1poS1IU0eR/LFKYjQ+w+/LSXkP6+oMXuTveEuLHVQqApRuVIow/y+sNQ0
-	 z+ncK7ViSpXdA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso662111966b.3
-        for <loongarch@lists.linux.dev>; Sun, 09 Feb 2025 19:58:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXqzcezx17IaBTzfMIbgSGkyJTl+nAKyloeV/zfgEhog1hMX9l7d7Szlx/R0h9UQ3nlNpDnXgN6XlQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzX1kWWA5bmdzXxnLjTf9k8AENOIMG5cr/8JzZVA55bE8QyxwDv
-	yKB58mHDCEyatFaudWasIQV6hDBzI50yR9YsqHWyWMHvjCFi8wfT3ZXpKeFMdYz3NQ+SL51dcOP
-	bAgn6o1B364ZdGG29CL6rf4ufN2U=
-X-Google-Smtp-Source: AGHT+IHsM2XDBBQpSKjFBxSpJSPgNNPJClqmpaAYB/PsC80+dF+8lDtI/MarpS97QsP6XrzNq75IXuraWPJfVtZLPu0=
-X-Received: by 2002:a17:907:9815:b0:aa6:6c46:7ca1 with SMTP id
- a640c23a62f3a-ab789a688c0mr1158542966b.10.1739159912059; Sun, 09 Feb 2025
- 19:58:32 -0800 (PST)
+	s=arc-20240116; t=1739167671; c=relaxed/simple;
+	bh=2ckOBtZ0SayfkUiAGTScq7nP6Ree1sZ/P3eqOOPh5i4=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pSY9vsT1EoEVE4gopsXkpkkvrUDillbJ002vUzgr6h9VLFzxhONpqoTH530DesmanmU8gDFmLLbXkM8DYIAXdFHnxd4GA0hUJaDHpA2clKUrhPREyaqBlwbWF6n/m25GsafguYkaQdFPpZYdHgjY/x+k1fhs/hfC4aZbhSu84aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bx7eKxl6ln3PlwAA--.26729S3;
+	Mon, 10 Feb 2025 14:07:45 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxPsevl6lnzsAJAA--.38660S3;
+	Mon, 10 Feb 2025 14:07:44 +0800 (CST)
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
+ <20250115013444.anzoct6gvs56m225@jpoimboe>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
+Date: Mon, 10 Feb 2025 14:07:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250207032634.2333300-1-maobibo@loongson.cn> <20250207032634.2333300-2-maobibo@loongson.cn>
- <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com> <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
-In-Reply-To: <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Feb 2025 11:58:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
-X-Gm-Features: AWEUYZkKen1ccP4U4UifU7lsJQI4UfvIramv-tzZg9dkEHhMx_3c6BGGJNyUOHA
-Message-ID: <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] LoongArch: KVM: Fix typo issue about GCFG feature detection
-To: bibo mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250115013444.anzoct6gvs56m225@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCxPsevl6lnzsAJAA--.38660S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur4Uur45Zw4ktrW5uF4rZwc_yoW8GrykpF
+	W5GFW29F4kJrWUX3WkKw1agFySqw4ftr1xXr45WrW5Aa1qq3W5tr4fZw4YgFWqgr4YvFyI
+	ya1fJa4q9F4DArXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
-On Mon, Feb 10, 2025 at 9:42=E2=80=AFAM bibo mao <maobibo@loongson.cn> wrot=
-e:
+On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
+> On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
+>> Hi Josh and Peter,
+>>
+>> On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
+>>> This version is based on tip/tip.git objtool/core branch [1], add some weak
+>>> and arch-specific functions to make the generic code more readable, tested
+>>> with the latest upstream mainline Binutils, GCC and Clang.
+>>
+>> ...
+>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
+>>>
+>>> Tiezhu Yang (9):
+>>>   objtool: Handle various symbol types of rodata
+>>>   objtool: Handle different entry size of rodata
+>>>   objtool: Handle PC relative relocation type
+>>>   objtool: Handle unreachable entry of rodata
+>>>   objtool/LoongArch: Add support for switch table
+>>>   objtool/LoongArch: Add support for goto table
+>>>   LoongArch: Enable jump table for objtool
+>>>   LoongArch: Convert unreachable() to BUG()
+>>>   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+>>
+>> Are you OK with the first 8 patches?
+>> What's the merge plan for this series?
 >
->
->
-> On 2025/2/9 =E4=B8=8B=E5=8D=885:38, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Fri, Feb 7, 2025 at 11:26=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> This is typo issue about GCFG feature macro, comments is added for
-> >> these macro and typo issue is fixed here.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/loongarch.h | 26 ++++++++++++++++++++++++=
-++
-> >>   arch/loongarch/kvm/main.c              |  4 ++--
-> >>   2 files changed, 28 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
-nclude/asm/loongarch.h
-> >> index 52651aa0e583..1a65b5a7d54a 100644
-> >> --- a/arch/loongarch/include/asm/loongarch.h
-> >> +++ b/arch/loongarch/include/asm/loongarch.h
-> >> @@ -502,49 +502,75 @@
-> >>   #define LOONGARCH_CSR_GCFG             0x51    /* Guest config */
-> >>   #define  CSR_GCFG_GPERF_SHIFT          24
-> >>   #define  CSR_GCFG_GPERF_WIDTH          3
-> >> +/* Number PMU register started from PM0 passthrough to VM */
-> >>   #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR=
-_GCFG_GPERF_SHIFT)
-> >> +#define  CSR_GCFG_GPERFP_SHIFT         23
-> >> +/* Read-only bit: show PMU passthrough supported or not */
-> >> +#define  CSR_GCFG_GPERFP               (_ULCAST_(0x1) << CSR_GCFG_GPE=
-RFP_SHIFT)
-> >>   #define  CSR_GCFG_GCI_SHIFT            20
-> >>   #define  CSR_GCFG_GCI_WIDTH            2
-> >>   #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GC=
-I_SHIFT)
-> >> +/* All cacheop instructions will trap to host */
-> >>   #define  CSR_GCFG_GCI_ALL              (_ULCAST_(0x0) << CSR_GCFG_GC=
-I_SHIFT)
-> >> +/* Cacheop instruction except hit invalidate will trap to host */
-> >>   #define  CSR_GCFG_GCI_HIT              (_ULCAST_(0x1) << CSR_GCFG_GC=
-I_SHIFT)
-> >> +/* Cacheop instruction except hit and index invalidate will trap to h=
-ost */
-> >>   #define  CSR_GCFG_GCI_SECURE           (_ULCAST_(0x2) << CSR_GCFG_GC=
-I_SHIFT)
-> >>   #define  CSR_GCFG_GCIP_SHIFT           16
-> >>   #define  CSR_GCFG_GCIP                 (_ULCAST_(0xf) << CSR_GCFG_GC=
-IP_SHIFT)
-> >> +/* Read-only bit: show feature CSR_GCFG_GCI_ALL supported or not */
-> >>   #define  CSR_GCFG_GCIP_ALL             (_ULCAST_(0x1) << CSR_GCFG_GC=
-IP_SHIFT)
-> >> +/* Read-only bit: show feature CSR_GCFG_GCI_HIT supported or not */
-> >>   #define  CSR_GCFG_GCIP_HIT             (_ULCAST_(0x1) << (CSR_GCFG_G=
-CIP_SHIFT + 1))
-> >> +/* Read-only bit: show feature CSR_GCFG_GCI_SECURE supported or not *=
-/
-> >>   #define  CSR_GCFG_GCIP_SECURE          (_ULCAST_(0x1) << (CSR_GCFG_G=
-CIP_SHIFT + 2))
-> >>   #define  CSR_GCFG_TORU_SHIFT           15
-> >> +/* Operation with CSR register unimplemented will trap to host */
-> >>   #define  CSR_GCFG_TORU                 (_ULCAST_(0x1) << CSR_GCFG_TO=
-RU_SHIFT)
-> >>   #define  CSR_GCFG_TORUP_SHIFT          14
-> >> +/* Read-only bit: show feature CSR_GCFG_TORU supported or not */
-> >>   #define  CSR_GCFG_TORUP                        (_ULCAST_(0x1) << CSR=
-_GCFG_TORUP_SHIFT)
-> >>   #define  CSR_GCFG_TOP_SHIFT            13
-> >> +/* Modificattion with CRMD.PLV will trap to host */
-> >>   #define  CSR_GCFG_TOP                  (_ULCAST_(0x1) << CSR_GCFG_TO=
-P_SHIFT)
-> >>   #define  CSR_GCFG_TOPP_SHIFT           12
-> >> +/* Read-only bit: show feature CSR_GCFG_TOP supported or not */
-> >>   #define  CSR_GCFG_TOPP                 (_ULCAST_(0x1) << CSR_GCFG_TO=
-PP_SHIFT)
-> >>   #define  CSR_GCFG_TOE_SHIFT            11
-> >> +/* ertn instruction will trap to host */
-> >>   #define  CSR_GCFG_TOE                  (_ULCAST_(0x1) << CSR_GCFG_TO=
-E_SHIFT)
-> >>   #define  CSR_GCFG_TOEP_SHIFT           10
-> >> +/* Read-only bit: show feature CSR_GCFG_TOE supported or not */
-> >>   #define  CSR_GCFG_TOEP                 (_ULCAST_(0x1) << CSR_GCFG_TO=
-EP_SHIFT)
-> >>   #define  CSR_GCFG_TIT_SHIFT            9
-> >> +/* Timer instruction such as rdtime/TCFG/TVAL will trap to host */
-> >>   #define  CSR_GCFG_TIT                  (_ULCAST_(0x1) << CSR_GCFG_TI=
-T_SHIFT)
-> >>   #define  CSR_GCFG_TITP_SHIFT           8
-> >> +/* Read-only bit: show feature CSR_GCFG_TIT supported or not */
-> >>   #define  CSR_GCFG_TITP                 (_ULCAST_(0x1) << CSR_GCFG_TI=
-TP_SHIFT)
-> >>   #define  CSR_GCFG_SIT_SHIFT            7
-> >> +/* All privilege instruction will trap to host */
-> >>   #define  CSR_GCFG_SIT                  (_ULCAST_(0x1) << CSR_GCFG_SI=
-T_SHIFT)
-> >>   #define  CSR_GCFG_SITP_SHIFT           6
-> >> +/* Read-only bit: show feature CSR_GCFG_SIT supported or not */
-> >>   #define  CSR_GCFG_SITP                 (_ULCAST_(0x1) << CSR_GCFG_SI=
-TP_SHIFT)
-> >>   #define  CSR_GCFG_MATC_SHITF           4
-> >>   #define  CSR_GCFG_MATC_WIDTH           2
-> >>   #define  CSR_GCFG_MATC_MASK            (_ULCAST_(0x3) << CSR_GCFG_MA=
-TC_SHITF)
-> >> +/* Cache attribute comes from GVA->GPA mapping */
-> >>   #define  CSR_GCFG_MATC_GUEST           (_ULCAST_(0x0) << CSR_GCFG_MA=
-TC_SHITF)
-> >> +/* Cache attribute comes from GPA->HPA mapping */
-> >>   #define  CSR_GCFG_MATC_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MA=
-TC_SHITF)
-> >> +/* Cache attribute comes from weaker one of GVA->GPA and GPA->HPA map=
-ping */
-> >>   #define  CSR_GCFG_MATC_NEST            (_ULCAST_(0x2) << CSR_GCFG_MA=
-TC_SHITF)
-> >>   #define  CSR_GCFG_MATP_NEST_SHIFT      2
-> >> +/* Read-only bit: show feature CSR_GCFG_MATC_NEST supported or not */
-> >>   #define  CSR_GCFG_MATP_NEST            (_ULCAST_(0x1) << CSR_GCFG_MA=
-TP_NEST_SHIFT)
-> >>   #define  CSR_GCFG_MATP_ROOT_SHIFT      1
-> >> +/* Read-only bit: show feature CSR_GCFG_MATC_ROOT supported or not */
-> >>   #define  CSR_GCFG_MATP_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MA=
-TP_ROOT_SHIFT)
-> >>   #define  CSR_GCFG_MATP_GUEST_SHIFT     0
-> >> +/* Read-only bit: show feature CSR_GCFG_MATC_GUEST suppoorted or not =
-*/
-> >>   #define  CSR_GCFG_MATP_GUEST           (_ULCAST_(0x1) << CSR_GCFG_MA=
-TP_GUEST_SHIFT)
-> > Bugfix is the majority here, so it is better to remove the comments,
-> > make this patch easier to be backported to stable branches.
-> How about split the patch into two for better backporting? With comments
-> it is convinient to people to understand and provide LoongArch KVM
-> patches in future, after all it cannot depends on the few guys inside.
-I don't suggest splitting, just removing it is better (developers
-still need to read the user manual even if there are such comments).
-But if you insist, then keep it as is (keep this version).
+> Sorry, my inbox is still reeling from the holidays.  I will review this
+> soon.
 
+What are the status of the first 8 patches?
+What is the next step? Is there anything else to be done here?
+I would really appreciate any advice on how to get this merged.
 
+Thanks,
+Tiezhu
 
-Huacai
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>
-> >>   #define LOONGARCH_CSR_GINTC            0x52    /* Guest interrupt co=
-ntrol */
-> >> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> >> index bf9268bf26d5..f6d3242b9234 100644
-> >> --- a/arch/loongarch/kvm/main.c
-> >> +++ b/arch/loongarch/kvm/main.c
-> >> @@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
-> >>           * TOE=3D0:       Trap on Exception.
-> >>           * TIT=3D0:       Trap on Timer.
-> >>           */
-> >> -       if (env & CSR_GCFG_GCIP_ALL)
-> >> +       if (env & CSR_GCFG_GCIP_SECURE)
-> >>                  gcfg |=3D CSR_GCFG_GCI_SECURE;
-> >> -       if (env & CSR_GCFG_MATC_ROOT)
-> >> +       if (env & CSR_GCFG_MATP_ROOT)
-> >>                  gcfg |=3D CSR_GCFG_MATC_ROOT;
-> >>
-> >>          write_csr_gcfg(gcfg);
-> >> --
-> >> 2.39.3
-> >>
->
->
