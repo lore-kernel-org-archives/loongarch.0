@@ -1,212 +1,254 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FED218E25
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 06:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFD01BC064
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 08:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739169217; cv=none; b=fUlYd1c52r+ob51b4cpeDVq8xxXXF2xYequdGkLDfMCtuAfW5mqJZPUUISW5wSua+20OmYPROCl+8E4stIwCPgQFpuOLhAp7mN7RWgAweeHKmj0JWmX9hC7CmQcKsfKTTcJQBQOI2QGt9HQAy+QMSc7Ue9bqf1dCRF3OIyVm6hA=
+	t=1739176068; cv=none; b=qnhHbJ0lUNCYYE/W1ZrjoqQlO9uJiRpUTlhPyzO39/qfQkyp0Rde471TRe9sU7haRjzxTzOsr8tDhAbXq5U1f0X4HTLWfi+QMoyP5WXh5ozZ3Hyna7/M+rtOq+K1b9Uv1ICP5FN/8yNXB6VOBraO5ur8iJYuJNib334Qvw7sOYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739169217; c=relaxed/simple;
-	bh=at0Q2hWKA0LY8IG5O59bOvOTzVv3ODdbsKuhDwctDa4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lW6eslJMgU6X7X+RwFSVokDw55xnrW9vAHhrUtOBw/AZXk4D9LCKMMcLazV1Ubd9eYTIUldelvbP/WKxRugzlvdd2R55jdZoOF+zP+9cXpBwGXzpQpX7pC3sm7CPIOUAZFtpmqv+oNrTxqmw5gL5ohqXxmN0QVoNm/oLVSTIWEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxuuC7nalnw_5wAA--.24466S3;
-	Mon, 10 Feb 2025 14:33:32 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxj8W4naln98gJAA--.38442S3;
-	Mon, 10 Feb 2025 14:33:30 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: KVM: Fix typo issue about GCFG feature
- detection
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250207032634.2333300-1-maobibo@loongson.cn>
- <20250207032634.2333300-2-maobibo@loongson.cn>
- <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com>
- <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
- <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <ded29573-45a7-3d27-fe38-a27da9576180@loongson.cn>
-Date: Mon, 10 Feb 2025 14:32:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1739176068; c=relaxed/simple;
+	bh=IaOr5bedYQgMNNlZUOXvoRUmYoPlluOQtv5G15Pp0wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oCT1YTK6J5SmPhfFygMjadgTINPt10FhpDQwc4nD1joyGFU1loDWyz8iplh4fCflHePj+JlCYfc0P2TxHm1jcSZHr/4ni+Zd1l1Fvskz1bXNFByyxu9JSTX32qb9JtTRPKjikOt/+5k7sHD0VJ0OtiHfO9WchYWWMJM+1ynJNf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MMikTKj3; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MMikTKj3"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5450cf0cb07so502567e87.0
+        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 00:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739176064; x=1739780864; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hb4BM+tSx2c+eJTEN+p0pQDTmd6yZJ90PbqP4rasAIM=;
+        b=MMikTKj3NCgw7oDhLDUx37ypoZxhJuxCjVRqqxjxr84fJDy4850+AeHMSMkG+47+03
+         trnKsel8FHmq8zfbd847RTzUFnZQjLHgl7pjBNAuP4CdzZrlrQdZ6ibXXCP75ieTDiV/
+         961T/TrIFo1SZdpvXDgzN591HSel8golhLsAXhqxSffJQnQqn1fOKSs1LMOKMuhXyQUr
+         GnYFET2v0XBlduSo2Ah5V0Zoj9IzC5FJmpuNRN2oz/ozhmAODvgd848D3oSZqVMhneRe
+         tXMgzAmt4WKWyb97aWoyTUV31wA1UGU1SfWJtii3fRzQYelrZOV0swmb88wJkc+S8uwT
+         4nNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739176064; x=1739780864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hb4BM+tSx2c+eJTEN+p0pQDTmd6yZJ90PbqP4rasAIM=;
+        b=tsfmbf26zrYxBp5NB+Nqu0AQv8tgSs7U/K/luE8LiYIEDlBRQF37fiIH5opPZSudaT
+         LLwlZ8In7isYPM2ayAjImpAWHRHAtaJVS4jUMkj31Iewzn8DUrVEam19uPPQYgjMa7ND
+         urXWWAgV7dE4gJAU6pgNHVpSRh2xn9YePNFqZ+eRWvxDpBID0fam/V4K2TJwgFfTlr1L
+         k5mgrh0xVV6PgkDV0Vt8ZwffNFolB2ZOIBBpaLDKjgai6Ciqo5cEsxxxD7DKyBSWiDAe
+         vbvdYHdk7zVsFUUv+hXc7pvrzyNUwv6a9uIn4tlYnu/aa8hwcn+dGLQVFoSGqT2mrRJB
+         E1FQ==
+X-Gm-Message-State: AOJu0Yw8m6vft4qf9NlY0vgweOH3tL1yxKvPG3dd1+TZdv4kHMUAd7TG
+	5Fu2wFel/775uKdczlkpVYHR5TbtvIPun5/dLBAWZ29UV9C0kZX5N0n18eWpZcUnW9ZqR94bOn7
+	f6H85/q2kPwLgrteB5I80yyMLBaXmaa1nLCLoqYxdUADmtyxU
+X-Gm-Gg: ASbGncs07qAYLRJbGw2CK3W4v8GZHEE/kynKTJsXpXL8UnTErdONERbkerqnrRiAAhE
+	bP89Fsdc+a18gKXwzhQlUI9iGw+okyYV+3vGyCnSz3cNRNIDco9kHNH6yl2sUStEgDaYuxenvIL
+	FIughXGxPGi5kNuoUampDBZkI6+a/X6g==
+X-Google-Smtp-Source: AGHT+IE8cYL2zF0A4KCFzug6oMHNBtPUSgAUflqnO5DT1coWJLi/G9/5eREaaEeI+Eg0IYHuX9b1F1IP76VMNyledfo=
+X-Received: by 2002:ac2:4ec9:0:b0:540:3561:969d with SMTP id
+ 2adb3069b0e04-54414b0bd9fmr3257716e87.49.1739176064443; Mon, 10 Feb 2025
+ 00:27:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxj8W4naln98gJAA--.38442S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Jw4xXF4DKFWrXrW7CrWDJrc_yoWxuw15pr
-	yYka43Jr40qr4fW3sFgwnYqw12qryxJ34q9F1UJryrtr1jga1IkFn0qa1FyrySq3Z3JF1U
-	trn29w13ZFZ8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jntxDUUUUU=
+References: <20250208101924.20743-1-marco.crivellari@suse.com>
+ <20250208101924.20743-2-marco.crivellari@suse.com> <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+In-Reply-To: <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Mon, 10 Feb 2025 09:27:33 +0100
+X-Gm-Features: AWEUYZkvEnCTRjjaYK4yhff_In76zvIldvAJe2W4qEQQ6TT8dRVnGaqe_bVe7j4
+Message-ID: <CAAofZF5J2H8Qn2Axky0dXVJe4oQtkZOGBm_j8Kgk5Cvz6jibHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, Frederic Weisbecker <frederic@kernel.org>, 
+	Jinyang He <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Huacai,
+
+Thanks a lot, I will keep that in mind!
+That's very kind of you, sorry for the trouble.
+
+Marco
 
 
-
-On 2025/2/10 上午11:58, Huacai Chen wrote:
-> On Mon, Feb 10, 2025 at 9:42 AM bibo mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/2/9 下午5:38, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> On Fri, Feb 7, 2025 at 11:26 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> This is typo issue about GCFG feature macro, comments is added for
->>>> these macro and typo issue is fixed here.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/include/asm/loongarch.h | 26 ++++++++++++++++++++++++++
->>>>    arch/loongarch/kvm/main.c              |  4 ++--
->>>>    2 files changed, 28 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
->>>> index 52651aa0e583..1a65b5a7d54a 100644
->>>> --- a/arch/loongarch/include/asm/loongarch.h
->>>> +++ b/arch/loongarch/include/asm/loongarch.h
->>>> @@ -502,49 +502,75 @@
->>>>    #define LOONGARCH_CSR_GCFG             0x51    /* Guest config */
->>>>    #define  CSR_GCFG_GPERF_SHIFT          24
->>>>    #define  CSR_GCFG_GPERF_WIDTH          3
->>>> +/* Number PMU register started from PM0 passthrough to VM */
->>>>    #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR_GCFG_GPERF_SHIFT)
->>>> +#define  CSR_GCFG_GPERFP_SHIFT         23
->>>> +/* Read-only bit: show PMU passthrough supported or not */
->>>> +#define  CSR_GCFG_GPERFP               (_ULCAST_(0x1) << CSR_GCFG_GPERFP_SHIFT)
->>>>    #define  CSR_GCFG_GCI_SHIFT            20
->>>>    #define  CSR_GCFG_GCI_WIDTH            2
->>>>    #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GCI_SHIFT)
->>>> +/* All cacheop instructions will trap to host */
->>>>    #define  CSR_GCFG_GCI_ALL              (_ULCAST_(0x0) << CSR_GCFG_GCI_SHIFT)
->>>> +/* Cacheop instruction except hit invalidate will trap to host */
->>>>    #define  CSR_GCFG_GCI_HIT              (_ULCAST_(0x1) << CSR_GCFG_GCI_SHIFT)
->>>> +/* Cacheop instruction except hit and index invalidate will trap to host */
->>>>    #define  CSR_GCFG_GCI_SECURE           (_ULCAST_(0x2) << CSR_GCFG_GCI_SHIFT)
->>>>    #define  CSR_GCFG_GCIP_SHIFT           16
->>>>    #define  CSR_GCFG_GCIP                 (_ULCAST_(0xf) << CSR_GCFG_GCIP_SHIFT)
->>>> +/* Read-only bit: show feature CSR_GCFG_GCI_ALL supported or not */
->>>>    #define  CSR_GCFG_GCIP_ALL             (_ULCAST_(0x1) << CSR_GCFG_GCIP_SHIFT)
->>>> +/* Read-only bit: show feature CSR_GCFG_GCI_HIT supported or not */
->>>>    #define  CSR_GCFG_GCIP_HIT             (_ULCAST_(0x1) << (CSR_GCFG_GCIP_SHIFT + 1))
->>>> +/* Read-only bit: show feature CSR_GCFG_GCI_SECURE supported or not */
->>>>    #define  CSR_GCFG_GCIP_SECURE          (_ULCAST_(0x1) << (CSR_GCFG_GCIP_SHIFT + 2))
->>>>    #define  CSR_GCFG_TORU_SHIFT           15
->>>> +/* Operation with CSR register unimplemented will trap to host */
->>>>    #define  CSR_GCFG_TORU                 (_ULCAST_(0x1) << CSR_GCFG_TORU_SHIFT)
->>>>    #define  CSR_GCFG_TORUP_SHIFT          14
->>>> +/* Read-only bit: show feature CSR_GCFG_TORU supported or not */
->>>>    #define  CSR_GCFG_TORUP                        (_ULCAST_(0x1) << CSR_GCFG_TORUP_SHIFT)
->>>>    #define  CSR_GCFG_TOP_SHIFT            13
->>>> +/* Modificattion with CRMD.PLV will trap to host */
->>>>    #define  CSR_GCFG_TOP                  (_ULCAST_(0x1) << CSR_GCFG_TOP_SHIFT)
->>>>    #define  CSR_GCFG_TOPP_SHIFT           12
->>>> +/* Read-only bit: show feature CSR_GCFG_TOP supported or not */
->>>>    #define  CSR_GCFG_TOPP                 (_ULCAST_(0x1) << CSR_GCFG_TOPP_SHIFT)
->>>>    #define  CSR_GCFG_TOE_SHIFT            11
->>>> +/* ertn instruction will trap to host */
->>>>    #define  CSR_GCFG_TOE                  (_ULCAST_(0x1) << CSR_GCFG_TOE_SHIFT)
->>>>    #define  CSR_GCFG_TOEP_SHIFT           10
->>>> +/* Read-only bit: show feature CSR_GCFG_TOE supported or not */
->>>>    #define  CSR_GCFG_TOEP                 (_ULCAST_(0x1) << CSR_GCFG_TOEP_SHIFT)
->>>>    #define  CSR_GCFG_TIT_SHIFT            9
->>>> +/* Timer instruction such as rdtime/TCFG/TVAL will trap to host */
->>>>    #define  CSR_GCFG_TIT                  (_ULCAST_(0x1) << CSR_GCFG_TIT_SHIFT)
->>>>    #define  CSR_GCFG_TITP_SHIFT           8
->>>> +/* Read-only bit: show feature CSR_GCFG_TIT supported or not */
->>>>    #define  CSR_GCFG_TITP                 (_ULCAST_(0x1) << CSR_GCFG_TITP_SHIFT)
->>>>    #define  CSR_GCFG_SIT_SHIFT            7
->>>> +/* All privilege instruction will trap to host */
->>>>    #define  CSR_GCFG_SIT                  (_ULCAST_(0x1) << CSR_GCFG_SIT_SHIFT)
->>>>    #define  CSR_GCFG_SITP_SHIFT           6
->>>> +/* Read-only bit: show feature CSR_GCFG_SIT supported or not */
->>>>    #define  CSR_GCFG_SITP                 (_ULCAST_(0x1) << CSR_GCFG_SITP_SHIFT)
->>>>    #define  CSR_GCFG_MATC_SHITF           4
->>>>    #define  CSR_GCFG_MATC_WIDTH           2
->>>>    #define  CSR_GCFG_MATC_MASK            (_ULCAST_(0x3) << CSR_GCFG_MATC_SHITF)
->>>> +/* Cache attribute comes from GVA->GPA mapping */
->>>>    #define  CSR_GCFG_MATC_GUEST           (_ULCAST_(0x0) << CSR_GCFG_MATC_SHITF)
->>>> +/* Cache attribute comes from GPA->HPA mapping */
->>>>    #define  CSR_GCFG_MATC_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATC_SHITF)
->>>> +/* Cache attribute comes from weaker one of GVA->GPA and GPA->HPA mapping */
->>>>    #define  CSR_GCFG_MATC_NEST            (_ULCAST_(0x2) << CSR_GCFG_MATC_SHITF)
->>>>    #define  CSR_GCFG_MATP_NEST_SHIFT      2
->>>> +/* Read-only bit: show feature CSR_GCFG_MATC_NEST supported or not */
->>>>    #define  CSR_GCFG_MATP_NEST            (_ULCAST_(0x1) << CSR_GCFG_MATP_NEST_SHIFT)
->>>>    #define  CSR_GCFG_MATP_ROOT_SHIFT      1
->>>> +/* Read-only bit: show feature CSR_GCFG_MATC_ROOT supported or not */
->>>>    #define  CSR_GCFG_MATP_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATP_ROOT_SHIFT)
->>>>    #define  CSR_GCFG_MATP_GUEST_SHIFT     0
->>>> +/* Read-only bit: show feature CSR_GCFG_MATC_GUEST suppoorted or not */
->>>>    #define  CSR_GCFG_MATP_GUEST           (_ULCAST_(0x1) << CSR_GCFG_MATP_GUEST_SHIFT)
->>> Bugfix is the majority here, so it is better to remove the comments,
->>> make this patch easier to be backported to stable branches.
->> How about split the patch into two for better backporting? With comments
->> it is convinient to people to understand and provide LoongArch KVM
->> patches in future, after all it cannot depends on the few guys inside.
-> I don't suggest splitting, just removing it is better (developers
-> still need to read the user manual even if there are such comments).
-> But if you insist, then keep it as is (keep this version).
-Ok, I will remove comments . Put it in header file seems a temporary 
-method :(
-
-Regards
-Bibo Mao
-
-> 
-> 
-> 
+On Mon, Feb 10, 2025 at 3:19=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Marco,
+>
+> Don't care about the lkp robot, I have queued this patch with some
+> small modifications.
+> https://github.com/chenhuacai/linux/commit/a8aa673ea46c03b3f62992ffa4ffe8=
+10ac84f6e3
+>
 > Huacai
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>>>
->>>>    #define LOONGARCH_CSR_GINTC            0x52    /* Guest interrupt control */
->>>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->>>> index bf9268bf26d5..f6d3242b9234 100644
->>>> --- a/arch/loongarch/kvm/main.c
->>>> +++ b/arch/loongarch/kvm/main.c
->>>> @@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
->>>>            * TOE=0:       Trap on Exception.
->>>>            * TIT=0:       Trap on Timer.
->>>>            */
->>>> -       if (env & CSR_GCFG_GCIP_ALL)
->>>> +       if (env & CSR_GCFG_GCIP_SECURE)
->>>>                   gcfg |= CSR_GCFG_GCI_SECURE;
->>>> -       if (env & CSR_GCFG_MATC_ROOT)
->>>> +       if (env & CSR_GCFG_MATP_ROOT)
->>>>                   gcfg |= CSR_GCFG_MATC_ROOT;
->>>>
->>>>           write_csr_gcfg(gcfg);
->>>> --
->>>> 2.39.3
->>>>
->>
->>
+>
+> On Sat, Feb 8, 2025 at 6:19=E2=80=AFPM Marco Crivellari
+> <marco.crivellari@suse.com> wrote:
+> >
+> > Loongson re-enables interrupts on its idle routine and performs a
+> > TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
+> >
+> > The IRQs firing between the check and the idling instruction may set th=
+e
+> > TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
+> > interrupting __arch_cpu_idle() rollback their return address to the
+> > beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
+> > again before going back to sleep.
+> >
+> > However idle IRQs can also queue timers that may require a tick
+> > reprogramming through a new generic idle loop iteration but those timer=
+s
+> > would go unnoticed here because __arch_cpu_idle() only checks
+> > TIF_NEED_RESCHED. It doesn't check for pending timers.
+> >
+> > Fix this with fast-forwarding idle IRQs return value to the end of the
+> > idle routine instead of the beginning, so that the generic idle loop
+> > handles both TIF_NEED_RESCHED and pending timers.
+> >
+> > Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
+> > Cc: WANG Xuerui <kernel@xen0n.name>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> > ---
+> >  arch/loongarch/kernel/genex.S | 31 +++++++++++++++++--------------
+> >  arch/loongarch/kernel/idle.c  |  3 +--
+> >  arch/loongarch/kernel/reset.c | 18 +++++++++---------
+> >  3 files changed, 27 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/gene=
+x.S
+> > index 86d5d90ebefe..9623298a5cf1 100644
+> > --- a/arch/loongarch/kernel/genex.S
+> > +++ b/arch/loongarch/kernel/genex.S
+> > @@ -18,28 +18,31 @@
+> >
+> >         .align  5
+> >  SYM_FUNC_START(__arch_cpu_idle)
+> > -       /* start of rollback region */
+> > -       LONG_L  t0, tp, TI_FLAGS
+> > -       nop
+> > -       andi    t0, t0, _TIF_NEED_RESCHED
+> > -       bnez    t0, 1f
+> > -       nop
+> > -       nop
+> > -       nop
+> > +       /* start of idle interrupt region */
+> > +       ori             t0, zero, CSR_CRMD_IE
+> > +       /* idle instruction needs irq enabled */
+> > +       csrxchg t0, t0, LOONGARCH_CSR_CRMD
+> > +       /*
+> > +        * If an interrupt lands here; between enabling interrupts abov=
+e and
+> > +        * going idle on the next instruction, we must *NOT* go idle si=
+nce the
+> > +        * interrupt could have set TIF_NEED_RESCHED or caused an timer=
+ to need
+> > +        * reprogramming. Fall through -- see handle_vint() below -- an=
+d have
+> > +        * the idle loop take care of things.
+> > +        */
+> >         idle    0
+> > -       /* end of rollback region */
+> > -1:     jr      ra
+> > +       /* end of idle interrupt region */
+> > +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
+> > +       jr      ra
+> >  SYM_FUNC_END(__arch_cpu_idle)
+> >
+> >  SYM_CODE_START(handle_vint)
+> >         UNWIND_HINT_UNDEFINED
+> >         BACKUP_T0T1
+> >         SAVE_ALL
+> > -       la_abs  t1, __arch_cpu_idle
+> > +       la_abs  t1, __arch_cpu_idle_exit
+> >         LONG_L  t0, sp, PT_ERA
+> > -       /* 32 byte rollback region */
+> > -       ori     t0, t0, 0x1f
+> > -       xori    t0, t0, 0x1f
+> > +       /* 3 instructions idle interrupt region */
+> > +       ori     t0, t0, 0x0c
+> >         bne     t0, t1, 1f
+> >         LONG_S  t0, sp, PT_ERA
+> >  1:     move    a0, sp
+> > diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.=
+c
+> > index 0b5dd2faeb90..54b247d8cdb6 100644
+> > --- a/arch/loongarch/kernel/idle.c
+> > +++ b/arch/loongarch/kernel/idle.c
+> > @@ -11,7 +11,6 @@
+> >
+> >  void __cpuidle arch_cpu_idle(void)
+> >  {
+> > -       raw_local_irq_enable();
+> > -       __arch_cpu_idle(); /* idle instruction needs irq enabled */
+> > +       __arch_cpu_idle();
+> >         raw_local_irq_disable();
+> >  }
+> > diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/rese=
+t.c
+> > index 1ef8c6383535..8fd8c44b02cb 100644
+> > --- a/arch/loongarch/kernel/reset.c
+> > +++ b/arch/loongarch/kernel/reset.c
+> > @@ -32,9 +32,9 @@ void machine_halt(void)
+> >         pr_notice("\n\n** You can safely turn off the power now **\n\n"=
+);
+> >         console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> >
+> >  void machine_power_off(void)
+> > @@ -52,9 +52,9 @@ void machine_power_off(void)
+> >         efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+> >  #endif
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> >
+> >  void machine_restart(char *command)
+> > @@ -73,7 +73,7 @@ void machine_restart(char *command)
+> >         if (!acpi_disabled)
+> >                 acpi_reboot();
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> > --
+> > 2.48.1
+> >
 
+
+
+--=20
+
+Marco Crivellari
+
+L3 Support Engineer
