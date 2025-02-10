@@ -1,90 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EE326462C;
-	Mon, 10 Feb 2025 21:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49224CEEB
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 22:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739222815; cv=none; b=F6l2DHmvJdhZS7ClxWlzfcpC7Sz/HSULSD6y0w8O+bDorazhwuBvKdSHK93dksulDQK/lLr+3wEZ3meV/NKj2Hd6+EjdhiS8RV/wrGFIdXywA3LKHx0+lXmpnQpyy/vloj40hBfZQBtJ2fmJxuQ/XQAcpNC1Q7eQhUdxJ3v892g=
+	t=1739225377; cv=none; b=SZLSONT1beavhor7N2JrvC/2KHDdvxpDcyeIvceJMh+UqL2dqRz9zpdvBrLp4hOm4OHBS2BhwjxAjhXgX3W3a2KQaZ0PvpKYKunF93CRf7DS0GTtF6lr5umnL4sYEM8eer/AdxqlHSDSJqz4lm4IuyWVNh5A7Yb1jl1ZmHWoACM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739222815; c=relaxed/simple;
-	bh=ofm1ktslAjBtWS0yfrjTo5bd77wR/QRUhpc5kK/lkEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NB6Yw+r4LL5nzNcAYkausCo9Y7jtRI/XRYq+ayVHS3aQTmI9bjVOO5reOaAPnRpTk+IqNIqIu1K7jQ+w+ETg/YE5cR4qp48v9xpmHanDAINjb5LpNhUBNRSf+xNAY93P4LvB5Rv2JzbPvCbAXiB46Rc/bXOH1jOoE5J9yDXaQTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vl2lsKYL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739225377; c=relaxed/simple;
+	bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L6Nfu8VSCAlVE4W7gyi2cIVys0tfzsAr9MsL9DQgIF4J6EbULm12F9oZYXJQTqqi/2VZis6AFUXEhbPfZPV0z8C/8x54UV2TBG2vIaA1rNka2xYajvW1synGqxiY9NdUJPUAC/vuQlGsfik/p7dFM4VHDizLxG4HemJz1QfRsDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ddpvrPTl; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vl2lsKYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE27C4CED1;
-	Mon, 10 Feb 2025 21:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739222815;
-	bh=ofm1ktslAjBtWS0yfrjTo5bd77wR/QRUhpc5kK/lkEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vl2lsKYLUtR0YlnfLqjy5wD3rTLZSCKRFzJQ2EOsbpDUzjv2fH1yNizTHcYIzjgNs
-	 SRjtKp4T3/KG7rLVCHt9xLvsAVL1ex00WyW9JpbdD73zKC9YXgLAtePfxswHRQ4jH1
-	 y0kGr9Xp/vDI9fdOrE301Wfnsq+gMv1inwa2a5dIW296epc9c5HehSC0yfYXpWOVfw
-	 JkvY8Q/06i4shaKcyb+MPsCnrQN4Cu8chRnugQ+WExUk1BiKwh6t8xuWODKJADUK1X
-	 4tIDwB/TukU2O9sLkFYrzXtkrfLX+hH2ItIWEyDfQaCvNAJsVhRDbyDa75RwCbNE5E
-	 N0cCZU/Hm+mMA==
-Date: Mon, 10 Feb 2025 13:26:53 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-Message-ID: <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
- <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ddpvrPTl"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de6d412ee9so923a12.1
+        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 14:09:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739225374; x=1739830174; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=ddpvrPTl6OIfebNhBCe54yIF3KRPhYi8hUMsBY9GVXB78k8mnMJfl7ZiDo7+/SXys3
+         aqGJhEZFEJgkpaTfBeMMxhPg19WJNXf2EBmxjvc6IgE3kQCOCQuv0fJPXkeHlIJjAjMC
+         rk4AN2AxWwB8yRsg1VfJxAs6yxFCQKoekbiNK2/z3yZnC+le75OZ4RvpFTnSoukTjq1L
+         VGleor+xw5Jx87bSwHw07zRFn9ykcPAuh/AdW5C4YLM8ZlYk33qrLIR8sgvhisNIfdHM
+         0hJzQCMwoN7Xe7rDQYh3uKGBIQi03dDvtQbRUAR8A1Fyt57n6+dvtQ2CnR+A9k/IdLVm
+         XqGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739225374; x=1739830174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=doVs3Rr3SW35B4GUV8MQ/d0EkN3Xe4cyKTlPf5scLy6mFUywLWU0U1aYXS/RE96Azd
+         DzAdSvp1r0PL6GC5vy65qDkgPoYDBdTWAccE0/mRxRmr8F6cwpi4cAEoWpsAas2mWqCL
+         2scL28xMqJK7DeYCkRUHvGDigIK5hoxe5DpHh7ZlDWZ/1QvIg3GUdQaDCRCCOb5JSzed
+         ggVdTZrxGb8tY7elxTE2+5WucSVJt/sQDIFXapqR9EvSHnsTSdV2LboVKozHwa72FLjK
+         7vh7fXiy109DhrL2k9p9Rmbbue5f9sVsozkyXFcVkkTGlgBB73PV4pi60OvIFRh/HP4V
+         5eNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHrsn9XAVrys6dobzW8lIYxoeTq01M0eTKr68JVKHwUDvBb+g1VZcUoIkQvwYywswcKlDy/K0xiXM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzFmy/dfvYta+c4iul53kLM/3DUmukVnGZrLh3Hrmhe/qYqeCF/
+	cHTRYJR5XEPFMwHrIK9SUx8Qgt4Wbq0PTCs327w7PNvaZE79brLX/ccHQyr2T3Q23WvviEAcY8K
+	RgAvAtp1HYLx72LnVq4yJRAED3TEbczL/7JYC
+X-Gm-Gg: ASbGncvCdeUC89PZ+Rop4txgBsx3qib0UCq8yKNsHr5e2uHGBGvw4J9c/yDDuO/RQEd
+	bPXaHO0+039lSqsIBN0CKU+SuxOwNQ5E1zy0dlmFrZ9efhXz6lT9YpE/r9wiCHvUmmQVqMD+abE
+	eaTfJIwb5oVoLfQQS4eZaqiXk=
+X-Google-Smtp-Source: AGHT+IG6JmQxBrqAHiHQy9r7fd0aAn9Heiw/iaJpJbhcsh707Pq8kG+sl2h6STthD8Ujnt3Wdn5OEmJdDMQ5PMlBL9s=
+X-Received: by 2002:a50:aa93:0:b0:5dc:d08e:e128 with SMTP id
+ 4fb4d7f45d1cf-5dea05e7838mr1520a12.5.1739225373121; Mon, 10 Feb 2025 14:09:33
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com> <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 10 Feb 2025 23:08:55 +0100
+X-Gm-Features: AWEUYZmtdNVDV_xq3vvo5TVQ7aaS79EFzdycTCfl72XGpztchND9QHjN9zcxWNo
+Message-ID: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
+ targeting NOHZ_FULL CPUs
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
+	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
+	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
-> On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
-> > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
-> > > Hi Josh and Peter,
-> > > 
-> > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
-> > > > This version is based on tip/tip.git objtool/core branch [1], add some weak
-> > > > and arch-specific functions to make the generic code more readable, tested
-> > > > with the latest upstream mainline Binutils, GCC and Clang.
-> > > 
-> > > ...
-> > > 
-> > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
-> > > > 
-> > > > Tiezhu Yang (9):
-> > > >   objtool: Handle various symbol types of rodata
-> > > >   objtool: Handle different entry size of rodata
-> > > >   objtool: Handle PC relative relocation type
-> > > >   objtool: Handle unreachable entry of rodata
-> > > >   objtool/LoongArch: Add support for switch table
-> > > >   objtool/LoongArch: Add support for goto table
-> > > >   LoongArch: Enable jump table for objtool
-> > > >   LoongArch: Convert unreachable() to BUG()
-> > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-> > > 
-> > > Are you OK with the first 8 patches?
-> > > What's the merge plan for this series?
-> > 
-> > Sorry, my inbox is still reeling from the holidays.  I will review this
-> > soon.
-> 
-> What are the status of the first 8 patches?
-> What is the next step? Is there anything else to be done here?
-> I would really appreciate any advice on how to get this merged.
+On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+> What if isolated CPUs unconditionally did a TLBi as late as possible in
+> the stack right before returning to userspace? This would mean that upon
+> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
+> range translation - with the exception of whatever lies between the
+> last-minute flush and the actual userspace entry, which should be feasibl=
+e
+> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
+> could be entirely silenced if it targets an isolated CPU.
 
-Please post a new revision rebased on tip/master, with patch 4 dropped,
-and I'll queue them up for -tip.  Thanks for your patience.
+Two issues with that:
 
--- 
-Josh
+1. I think the "Common not Private" feature Will Deacon referred to is
+incompatible with this idea:
+<https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-=
+not-Private>
+says "When the CnP bit is set, the software promises to use the ASIDs
+and VMIDs in the same way on all processors, which allows the TLB
+entries that are created by one processor to be used by another"
+
+2. It's wrong to assume that TLB entries are only populated for
+addresses you access - thanks to speculative execution, you have to
+assume that the CPU might be populating random TLB entries all over
+the place.
