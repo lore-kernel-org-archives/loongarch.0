@@ -1,100 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9275743151
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D29C22FE13
+	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192752; cv=none; b=LBhkeKogaqfuAtWnP1sMsI3LfLIx85zdN46h8QLNYSlXkvIDsUzoYQATUjnEIFcYCzJtlrhtaJMNRt+6BZOpJpcCizHjKBhKU2FRMpugE5ePIPcrrIwOYxAr8BLjDD/lJDDM6F3+jSqqkGzdehooW4AVs6Nq65JAU9DLENIOnBY=
+	t=1739195034; cv=none; b=m1xS3e4XqOI5AhhnAd6X7//ta9JhZ4cknJNn2BIwd7WYyN8F3xwKKtuDcEwM4ierT5pNEH9RftnmMq33fYeDJrvj7rDtaZO+x1vlzgg6I9UGXH+XDr+aYv8p1BvKVHSkD4d2teaApnUTpzwsDcMcvQ7Fl+2vuiXayeA4WtXvYpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192752; c=relaxed/simple;
-	bh=OqHOc6hReD4BXYukNP+VyXBAgp3C9i7h5pmEe/8uH7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qEDCberQFuSrHYIxMSh5XCkEqaHKrx72amx0+PHlDIwE6Isba+n3wjq3cvaNLUd8ngSiy/Ozn28xVGVQ+xvIRsxAI3LjZtX30JNQC8lSuJUQdif1sP7jFVl16URk/+izne8v6tYOwvVvkxOrJonLrCLEYQznW5ZMW4wj7Iau16E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkCVITRb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkCVITRb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2308DC4AF09
-	for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 13:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739192752;
-	bh=OqHOc6hReD4BXYukNP+VyXBAgp3C9i7h5pmEe/8uH7k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AkCVITRbgBmBbSydao+afvlJ729kXUBYMnVoaqazgVHjmhMr7k89+REF4VpvpADnU
-	 ycBHdOd8KUigNyIUCRzXlg2/H2SRdlb5koVwcIwZzbfWBXAoYdtP7bnE94gTwHzmKM
-	 Bd+jgOt3QrscrAwJOFch/jvK7jpHSBbdib8LBAnpNkuoBmGVOjaelKZBTPtMg8k2sG
-	 +HToeDpnJ/t2vBh/uYvq3uMTTet4Ro89XxtTrKXL3jQfzp/3uW7Qh4Ea3Lwu41BR52
-	 fwtEbYKgvCsU+QK12vOWeSg9FEiiSAKamWR2g8SAoCrLOataV2Qw/NhDWHi60NHQBH
-	 Q4xZ7QIlc1PUQ==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5de6c708315so2356582a12.0
-        for <loongarch@lists.linux.dev>; Mon, 10 Feb 2025 05:05:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXuBkTXuHgJsxAL/Jhom3My1sNcxXgd5pfom/+kUnEbQHuf7ZAgeAfk5imrm2B3bSn+hiCx+0irmo8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxvI6KDAve9xFdr/+oZ+V+YGLyq9g7EGktVUVjx0AuyK/MW9opC
-	+UenpyUVGgyAtiIkvBKaPLFIhyHhcLwRdxPztOWadDfF2Tipa9Z6THNEx6MlNEqUmaiNEDYS6oc
-	I8JEt/lKB/0aJZXuHckGYWwJFM48=
-X-Google-Smtp-Source: AGHT+IGd+Uu51J3U4qMofCK8gYEvrqlCr8AMK07q12xDBLQxHkNmnpU/YxNFwM6nMorQhD0DTkxEEBV3YdCii2N7W8A=
-X-Received: by 2002:a05:6402:550c:b0:5dc:a44d:36a9 with SMTP id
- 4fb4d7f45d1cf-5de45005001mr13843463a12.14.1739192750757; Mon, 10 Feb 2025
- 05:05:50 -0800 (PST)
+	s=arc-20240116; t=1739195034; c=relaxed/simple;
+	bh=Wlvzxj03zn35CGnYkYRl6zp3QBzmopWRqmURA9W2vHo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1v0prBKmGZAofl+mplzmxc+NKQ5ILdz2+VLYoDqkXsGeW/uEUvYiNW+Qvxke7AkH4D0EximEOqNLeiJO8K2WHPPsksHah7dRo96DkLvT6Sqy+rSDFa28j3vWjxKdwv9hXM/DDLA245QGTWt/2us5LpphDQzxFafKm5yf5xoDaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8AxquCTAqpnDUlxAA--.23399S3;
+	Mon, 10 Feb 2025 21:43:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMCxasSNAqpnxVcKAA--.1453S2;
+	Mon, 10 Feb 2025 21:43:45 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
+Date: Mon, 10 Feb 2025 21:43:28 +0800
+Message-ID: <20250210134328.2755328-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <D4E490BD8F1E672B+20250210114543.1090146-1-wangyuli@uniontech.com>
-In-Reply-To: <D4E490BD8F1E672B+20250210114543.1090146-1-wangyuli@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 10 Feb 2025 21:05:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7TxBz83un_93rZ-4PmYG=3w6dMsekc35d=FMkRyT+Z9A@mail.gmail.com>
-X-Gm-Features: AWEUYZk12FS1ChUi75eusrOTAVVQsfhQICHhr1nTsnJNNBncuidJ8XbhOuBZpwY
-Message-ID: <CAAhV-H7TxBz83un_93rZ-4PmYG=3w6dMsekc35d=FMkRyT+Z9A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: csum: Fix OoB access in IP checksum code for
- negative lengths
-To: WangYuli <wangyuli@uniontech.com>
-Cc: kernel@xen0n.name, guanwentao@uniontech.com, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, maobibo@loongson.cn, zhanjun@uniontech.com, 
-	chenlinxuan@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxasSNAqpnxVcKAA--.1453S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFWkCrW7Zr4fJw4DCFy8JFc_yoW8ZryDpr
+	W3Aa4ag34jgr45Cw1DZ3yUCFyruay5trZFgFWIk34fuFWkA3sFqr1YvFWYgrsrArZ3Ga4a
+	qr1q9r1rGF1DCrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-Applied, thanks.
+Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
+zero. This means dwmac-loongson doesn't support changing MTU because in
+stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
+set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
+queue counts).
 
-Huacai
+Here {tx,rx}_fifo_size is initialised with the initial value (also the
+maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
+don't change the queue count, and will be larger than 16KB if we change
+(decrease) the queue count. However stmmac_change_mtu() still work well
+with current logic (MTU cannot be larger than 16KB for stmmac).
 
-On Mon, Feb 10, 2025 at 7:46=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
-rote:
->
-> Commit 69e3a6aa6be2 ("LoongArch: Add checksum optimization for
-> 64-bit system") would cause an undefined shift and an out-of-bounds
-> read.
->
-> Commit 8bd795fedb84 ("arm64: csum: Fix OoB access in IP checksum
-> code for negative lengths") fixes the same issue on ARM64.
->
-> Fixes: 69e3a6aa6be2 ("LoongArch: Add checksum optimization for 64-bit sys=
-tem")
-> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-> ---
->  arch/loongarch/lib/csum.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
-> index a5e84b403c3b..df309ae4045d 100644
-> --- a/arch/loongarch/lib/csum.c
-> +++ b/arch/loongarch/lib/csum.c
-> @@ -25,7 +25,7 @@ unsigned int __no_sanitize_address do_csum(const unsign=
-ed char *buff, int len)
->         const u64 *ptr;
->         u64 data, sum64 =3D 0;
->
-> -       if (unlikely(len =3D=3D 0))
-> +       if (unlikely(len <=3D 0))
->                 return 0;
->
->         offset =3D (unsigned long)buff & 7;
-> --
-> 2.47.2
->
+Note: the Fixes tag picked here is the oldest commit and key commit of
+the dwmac-loongson series "stmmac: Add Loongson platform support".
+
+Cc: stable@vger.kernel.org
+Fixes: ad72f783de06 ("net: stmmac: Add multi-channel support")
+Acked-by: Yanteng Si <si.yanteng@linux.dev>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Update commit message and CC list.
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index bfe6e2d631bd..79acdf38c525 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -574,6 +574,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 	if (ret)
+ 		goto err_disable_device;
+ 
++	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
++	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
++
+ 	if (dev_of_node(&pdev->dev))
+ 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
+ 	else
+-- 
+2.47.1
+
