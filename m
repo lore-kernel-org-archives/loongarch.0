@@ -1,117 +1,89 @@
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689CC1EE013
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.74.80.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7194250BE4
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284070; cv=none; b=V4MgZ9POgQVE8JMyJWbb938KAUUQBav0kjAPryDB241ldiP7pGN9cSmDLTp4Y+4uj8XfyrWrCOpHoh2pPxgs9xvQk9j/0wFdqg3JR6ilntlzNBSG0rtGsG7b0OIWmCYOaMkUlONrwuOgaIZl2nxfyAJfbLePsXNZTZCA6JJuKFE=
+	t=1739284790; cv=none; b=jEGjAnOe3mE0VHxrtaXF8CXCpPWZZ4SA1Ckm00U4wLbLFDHQupC65nfxe+Rnm+jCDRllXLwKI1NG8vhTOsE75nNHd/POtOwlRiRNY2izJd0uI+7Q2741Ma0tfRQKIokGDDEZeLQAom0iUsBblgIPqhDiToBrRmhDEPVwqCxWSvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284070; c=relaxed/simple;
-	bh=ykaLlg8HghwqKHvMRIYVlPnOo3Hdw86rjso/x8RKXFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NMledtO3VtogbQBOiCKUi/h9UC83I5ZR6LIeGtJ9mH5hsPKhPo1QGuKzgN5FU3w7kK42ymHzppMDFe8nTgqU7XjTDqaCEgGOgpbRiHUicNg+GjSQ5UN0gsRAmFv1p/skY0o022547zmcHpvR4+5XQ6jztEN9X7iqyxBHcoBd8zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=e/gML5h+; arc=none smtp.client-ip=137.74.80.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1739284790; c=relaxed/simple;
+	bh=ulwfMWLqUipyPdhn0d5FcC7nI6gKuz6DeB1kG8AxMNs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IzoYK0s6IrMTbeGuW44Ceb+w4sLRKytDT9o3j7XejdaLFLpQAwmzJeVDN+ZjnCb77FUjAfe5YL8jBVg4q43y3+rsdBRMy5jLDWcKdNlaLCNAFd7D3tYAaqkPDLbc62w3Sca92AH1eCA8va4wlGBL9ZqoEMSXCFtieiboT/4tdr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LP0rlXMG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="e/gML5h+"
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 12A6E20319;
-	Tue, 11 Feb 2025 14:27:40 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id A3F544023E;
-	Tue, 11 Feb 2025 14:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1739284059; bh=ykaLlg8HghwqKHvMRIYVlPnOo3Hdw86rjso/x8RKXFM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e/gML5h+N4T5zFb+89aGoEeB/kIkhHUwClhA3fowiCFNwMwkWZpegyDva+y/A5YtS
-	 xsnvAzxxLoF+9PncyXNOsdEOxUdZVvbemNQKpiNT9T/tkbZMIZ1LklvXGqX4Is2ROr
-	 lANBFZsaWBqOIwuL5e1aR0edV2QwiWKWu8tf/TDo=
-Received: from localhost.localdomain (unknown [58.32.42.120])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id A4F99406D3;
-	Tue, 11 Feb 2025 14:27:36 +0000 (UTC)
-From: Kexy Biscuit <kexybiscuit@aosc.io>
-To: yangtiezhu@loongson.cn
-Cc: amd-gfx@lists.freedesktop.org,
-	chenhuacai@kernel.org,
-	jpoimboe@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	peterz@infradead.org,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH] objtool: remove duplicate case value R_PPC64_REL32
-Date: Tue, 11 Feb 2025 22:19:57 +0800
-Message-ID: <20250211141956.553850-2-kexybiscuit@aosc.io>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20241217010905.13054-3-yangtiezhu@loongson.cn>
-References: <20241217010905.13054-3-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LP0rlXMG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925D3C4AF09
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739284790;
+	bh=ulwfMWLqUipyPdhn0d5FcC7nI6gKuz6DeB1kG8AxMNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LP0rlXMGLRh/nqMxHiNqoW3AR21kS1Fp9qT49KQsF2pUrNVejxJH0ybGchsu4V9Yn
+	 VHe7MwTywpcPkaSPnBBMiQabSecYn8rmK9ifvMqax7UvfZIllX1k3G+DHMJZ2CORpw
+	 DSMSZaLMQXgYZXT0I5S1YWLagVEwuSmwGuwlBvwZM/LdOBldlKVD5IX43ldU6FkdYv
+	 uFraiWubH/fSBDqImIWpaSHo3a9NCs99icA7CU/rq8E/8nSj9xiOSCLR6nLyjeTWnX
+	 XO4u2XtdLAoA0150ckjC0QrgS7XMaRDqAWK9QzFPLqQriAe3twjX8lLY/dN6oLj6Ib
+	 hzlYq24RdQp5Q==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7e9254bb6so66158366b.1
+        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 06:39:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWuGPhGBYAD3MxQ889cjnerEGG3c3VgeW3oHQPAv8qx78wEzZBWxvBHrqvv11hRXnXaWbbAF8sK9cU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyvj4aTF3SVvPYMWWYNGV6spZ+bCh/IwYxsnyH6fX9g83YfnJVM
+	G2NQ+uqjIy1k+g3fzntwAZPlEFJVjdDcAZ8vPy+EdBpIriAyt/rZ8CF7jfs6rsoRG+jGIgvAecy
+	pUdn01GPk/oOnYkJ8B+/UxW1Bx9Y=
+X-Google-Smtp-Source: AGHT+IGLR5ULI7gGLte0l7vRhZ2ZWqb5CWOtTbE4sI1QcMB4fXVUok//FjZVBam+puAjUPcYnE1+qzleMg68ltPCw1E=
+X-Received: by 2002:a17:907:9719:b0:ab6:e10e:2f5 with SMTP id
+ a640c23a62f3a-ab789bf6ae5mr2003093166b.37.1739284789169; Tue, 11 Feb 2025
+ 06:39:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: A3F544023E
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.90 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[kexybiscuit.aosc.io:server fail];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	TO_DN_SOME(0.00)[]
+References: <20250211020118.3275874-1-maobibo@loongson.cn>
+In-Reply-To: <20250211020118.3275874-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 11 Feb 2025 22:39:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4w1sC93ag45Jx8B21Db4QRN3Jgtd1hqmLPEX3iCcHiWQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnKR2iBOFeYKrnSINo32nx0jZbTx4gSoq7LUFeCrgBTWcFZ7G7vKb2B6iI
+Message-ID: <CAAhV-H4w1sC93ag45Jx8B21Db4QRN3Jgtd1hqmLPEX3iCcHiWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] LoongArch: KVM: Some tiny code cleanup
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In arch/powerpc/include/uapi/asm/elf.h, R_PPC64_REL32 is defined as a
-macro to R_PPC_REL32, makes the case value here being duplicate and
-creates the following error...
+Series applied, thanks.
 
-arch/powerpc/decode.c: In function ‘arch_reloc_size’:
-arch/powerpc/decode.c:114:9: error: duplicate case value
-  114 |         case R_PPC64_REL32:
-      |         ^~~~
-arch/powerpc/decode.c:113:9: note: previously used here
-  113 |         case R_PPC_REL32:
-      |         ^~~~
+Huacai
 
-Remove the duplicate case value to fix the error.
-
-Fixes: "FROMLIST: objtool: Handle different entry size of rodata"
-Signed-off-by: Kexy Biscuit <kexybiscuit@aosc.io>
----
-This patch is required for this series to build on powerpc, however I'm
-not sure if it's the preferred way... Please advise.
-
- tools/objtool/arch/powerpc/decode.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
-index 3c95dd74fca0..7c0bf2429067 100644
---- a/tools/objtool/arch/powerpc/decode.c
-+++ b/tools/objtool/arch/powerpc/decode.c
-@@ -111,7 +111,6 @@ unsigned int arch_reloc_size(struct reloc *reloc)
- {
- 	switch (reloc_type(reloc)) {
- 	case R_PPC_REL32:
--	case R_PPC64_REL32:
- 	case R_PPC_ADDR32:
- 	case R_PPC_UADDR32:
- 	case R_PPC_PLT32:
--- 
-2.48.1
-
+On Tue, Feb 11, 2025 at 10:01=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
+>
+> There is some tiny code cleanup with VM context switch or vCPU context
+> switch path, and it fixes typo issue about macro usage GCFG register.
+>
+> ---
+>   v1 .. v2:
+>     1. Remove comments about LOONGARCH_CSR_GCFG definition in header file=
+.
+>     2. Add notes why PRMD need be kernel mode when switch to VM.
+> ---
+> Bibo Mao (3):
+>   LoongArch: KVM: Fix typo issue about GCFG feature detection
+>   LoongArch: KVM: Remove duplicated cache attribute setting
+>   LoongArch: KVM: Set host with kernel mode when switch to VM mode
+>
+>  arch/loongarch/kvm/main.c   | 4 ++--
+>  arch/loongarch/kvm/switch.S | 2 +-
+>  arch/loongarch/kvm/vcpu.c   | 3 ---
+>  3 files changed, 3 insertions(+), 6 deletions(-)
+>
+>
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> --
+> 2.39.3
+>
