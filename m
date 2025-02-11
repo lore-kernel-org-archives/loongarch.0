@@ -1,183 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B471254B19
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B95626156B;
+	Tue, 11 Feb 2025 17:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290246; cv=none; b=PCDAqs2Z2SSnAapkQDQ5WaWUOKsBDJPKwhyg+TkhRog4WNcIa/oPfW1zHoqY0AQnVXpThMpfWKFGVMGBv5n6NuuIB+/R1OPiMNu9AjnPoFNx6EPBTa3sxS8B34dGspKtsKwOVGjYt7ogZrUlVF2hguiYKBzgfxgHaRPHptQfhgY=
+	t=1739295397; cv=none; b=FmnMHOwiYvrrUR27OLo8G8kwk9mhTkhOBdynKgyFEhDsq1FI7ufHA4WB8Ez4NR4HGuApyc3fb26QAKvnoMTGLf5x105iYzUCss6WLmveFqedeJlTfkw89pEdMxoiUYY9Uo5Bwl55cHCh0QPJStKHSAIkVDpgx+fbo/C2zpbmNVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290246; c=relaxed/simple;
-	bh=nE7GJqZw+gIEdhcV99Kpd2q5ds+/vCptECGTizt6klE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pGtP1JqZa5z52bvlwVafWrSk3ZMBm1/i+a+fLjta7Gtv6Dbfosz1oAPWJmDVrleBJLBFbc+jA42WCymv5Y8DknWAl0lD6qCGALghx5Bk6h0sa8wE6BIGcPqbgMEFEXs9ZQ1cySMgRfQ2y4u1h9BD6EXUKe0UD9O/Ja3l9gW7fXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i1HUBeyt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739295397; c=relaxed/simple;
+	bh=Z8cAlzmQ1FTJmGopWB95RkiWwb0zduDpc5Os2YBQPZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExQOf91Vc2CYwkBPbSs+fdl5VrRaEcxj6FOBJEz0polK/UcHhwtOwy0L7recCUA0ItgFEF7dS+uoMKWDnEeLAoygYwm3x9sbs0SCDpXvuw/dsksa/Qyn3G20zGupol+U+QXbVk879pwhvDNaW1oVRLtOQy9kDZosllST2xjmpOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQlZOWgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1HUBeyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739290243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-	b=i1HUBeytVZQfuTjrexbgjP7YEuXhfQTbb6pRe91MQPsrHrNvdDzSOfyC/EERd6n8ZWPDjF
-	+lZ5tsIl54r4itAaxVJ7JLggTgV7punI/95D8cHSFkAUzbdWyJUgYCJxsfKBbdpQAXbDp7
-	n1YwDMda2zzuC6MFCw8XkhNYDMwIpOc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-j1jkZm7kO9uqbkS2Hc2jNw-1; Tue, 11 Feb 2025 11:10:42 -0500
-X-MC-Unique: j1jkZm7kO9uqbkS2Hc2jNw-1
-X-Mimecast-MFC-AGG-ID: j1jkZm7kO9uqbkS2Hc2jNw
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-438da39bb69so43407385e9.0
-        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 08:10:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290241; x=1739895041;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkXKKRZIZ3B6nMXAUQwqba2hAbiJWDhaRaBNOU6/fJw=;
-        b=IXmkdpkQfpBErXZ9lfOm1Td5oBuT+xjeBYgCObFrqgy5gCAtUqA+hX8AG0CugKa5iJ
-         Qtd6VUXHgHuRGjPCPPEuC/jdHtjQNFHOOHE6jssz7r+SCCtg0xxxLjHRbfqDmeO9gWjS
-         iu3NQHcj1nlNphurR+dU4hS9WznGAMf4FQCZyBjZPnNafRKI41zIP+WB0CoPCUf1/b4J
-         ek4AU6oXguert/HQd7QaVGkpjTNT1r9IlHTOCILwCqIDDzQFo3JczKbVsb6NptoLJQ3D
-         AI6FfsFkJoBEwThRnXl40nNurd+B9CBCOzUIDP1FeBCExMiCXk7seNTVlXNGn8wz7lL+
-         glRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXP3JWoPwJ4PDMCPEA6t9WVrEkjQNfhJQoh45BZBgP/GkmXBBeR4JjAu3fnKmvmkulAqnQ9c4rsFX0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMujjeWNahkTnf8bClUqfIEoS9PVeCjF82kqRPu79wny3boc0R
-	xrTDsGOO4kRYQ4ZKD4zG53bcy8/bCaKRVGBje7Tw/ZCIlIF0c910nPoLpVtD9vUoBw4w4ABquxB
-	znTsOfhfiV8xd+SrkXmstefpL3TjfQRdvyeuX6k1PnMHRuTiwTqtMtLoNDA==
-X-Gm-Gg: ASbGncuVc3bc0brHX30mPYSURPLY4y2YvTEK74PXJCQlrUTWEPLr3AF58BCzXmilIHI
-	jJ85CBMx/4ZErXJJFrwqVPAAcRVVJLiwRY72w+DYzgCIGx82iag0oW8TIiyXcoTRCPin2X+QPSp
-	EfkNOOM34myAkusgWNRaEk12RTKwSNrjgEgpZ+QjvY8dxDUS+ytgi1ramyr75+1aLZcSTL38HuW
-	L+gMPWsJG/ErdIXnTSnaOu03lOpVLKgT7twyPQLpdzu3GsK7sMN3Ye9bCgHEJWM20ixz4meCRfD
-	XwnpZsjo1kigZxJW93ci4NaO0VVyI2WgwPmW2bOHVdZ4gMgtGMqASExFFPZHadPl0A==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73108035e9.16.1739290240814;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxNXfn5PLr2I3O9shVB9BLvMIo6l6XNn4GHuv5+NRtXPlNDWEKqGeQnOp/tv15slnT46loqA==
-X-Received: by 2002:a05:600c:500b:b0:439:48d9:d8b0 with SMTP id 5b1f17b1804b1-43948d9dd41mr73107295e9.16.1739290240325;
-        Tue, 11 Feb 2025 08:10:40 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc9ef8ac6sm12561610f8f.27.2025.02.11.08.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 08:10:39 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-Date: Tue, 11 Feb 2025 17:10:36 +0100
-Message-ID: <xhsmhv7tgihs3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQlZOWgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62637C4CEE5;
+	Tue, 11 Feb 2025 17:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739295397;
+	bh=Z8cAlzmQ1FTJmGopWB95RkiWwb0zduDpc5Os2YBQPZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GQlZOWgktTHln7uPuJ6cl+fwkOsl5KKL5vv8GzrWKDRF9NvEF1rGpDVEBHtMUfJcl
+	 1Uo+CpaUnz5/VMRBUQcjcuvvbPx5WOf8EnrxfIJrvHx/HrwskJKLNs8mcy0w62IvLG
+	 mPVSYxAiwj4oAXIolUPR51qCcYTkiSeN2MM/Lxh7ydk2ADb1Pfnufu8MNnyrhfwLa3
+	 ZD4lv3ZBJ8P/pDdPn0udRD0UMzIQ90YP2/cqH/wNCeYlg44u4VUUVhnk9wuGTWwgex
+	 iErRELOSktWMgQJ1iJxw2wvRdl/wopG4PE9cYXtfKMb+D2jwqbrxUQO00/JbXYxIF2
+	 lo9qC9VQoKZyg==
+Date: Tue, 11 Feb 2025 18:36:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+References: <cover.1733823417.git.zhoubinbin@loongson.cn>
+ <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
+ <obegtfup7f6w6erh4arubk2fkk2wrcum5frs5kbqa4uniexmr5@6uti3d3hv7np>
+ <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: pxhjo6Uw-I2_ox4GFqr4eC8xvuXNoN0p1nMY2rz_1N8_1739290241
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qdnv7nwtvr5bumy6"
+Content-Disposition: inline
+In-Reply-To: <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com>
 
-On 11/02/25 06:22, Dave Hansen wrote:
-> On 2/11/25 05:33, Valentin Schneider wrote:
->>> 2. It's wrong to assume that TLB entries are only populated for
->>> addresses you access - thanks to speculative execution, you have to
->>> assume that the CPU might be populating random TLB entries all over
->>> the place.
->> Gotta love speculation. Now it is supposed to be limited to genuinely
->> accessible data & code, right? Say theoretically we have a full TLBi as
->> literally the last thing before doing the return-to-userspace, speculation
->> should be limited to executing maybe bits of the return-from-userspace
->> code?
->
-> In practice, it's mostly limited like that.
->
-> Architecturally, there are no promises from the CPU. It is within its
-> rights to cache anything from the page tables at any time. If it's in
-> the CR3 tree, it's fair game.
->
->> Furthermore, I would hope that once a CPU is executing in userspace, it's
->> not going to populate the TLB with kernel address translations - AIUI the
->> whole vulnerability mitigation debacle was about preventing this sort of
->> thing.
->
-> Nope, unfortunately. There's two big exception to this. First, "implicit
-> supervisor-mode accesses". There are structures for which the CPU gets a
-> virtual address and accesses it even while userspace is running. The LDT
-> and GDT are the most obvious examples, but there are some less
-> ubiquitous ones like the buffers for PEBS events.
->
-> Second, remember that user versus supervisor is determined *BY* the page
-> tables. Before Linear Address Space Separation (LASS), all virtual
-> memory accesses walk the page tables, even userspace accesses to kernel
-> addresses.  The User/Supervisor bit is *in* the page tables, of course.
->
-> A userspace access to a kernel address results in a page walk and the
-> CPU is completely free to cache all or part of that page walk. A
-> Meltdown-style _speculative_ userspace access to kernel memory won't
-> generate a fault either. It won't leak data like it used to, of course,
-> but it can still walk the page tables. That's one reason LASS is needed.
 
-Bummer, now I have at least two architectures proving me wrong :-) Thank
-you as well for the education, I really appreciate it.
+--qdnv7nwtvr5bumy6
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+MIME-Version: 1.0
 
+Hello,
+
+On Tue, Feb 11, 2025 at 02:02:03PM +0600, Binbin Zhou wrote:
+> On Tue, Feb 11, 2025 at 12:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@=
+kernel.org> wrote:
+> > On Tue, Dec 10, 2024 at 08:37:06PM +0800, Binbin Zhou wrote:
+> > > +static int pwm_loongson_suspend(struct device *dev)
+> > > +{
+> > > +     struct pwm_chip *chip =3D dev_get_drvdata(dev);
+> > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip=
+);
+> > > +
+> > > +     ddata->lss.ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_=
+CTRL);
+> > > +     ddata->lss.duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_=
+DUTY);
+> > > +     ddata->lss.period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_PERIOD);
+> > > +
+> > > +     clk_disable_unprepare(ddata->clk);
+> > > +
+> > > +     return 0;
+> >
+> > Is this needed assuming that before suspend the consumer stopped the
+> > PWM?
+>=20
+> Actually, I don't quite understand the problem you're pointing out. It
+> seems to me that the register and clk operations are required
+> regardless of the state of the pwm.
+> At least from the experimental results, the logic is now as expected.
+> Of course, I may be missing some critical information.
+
+When a PWM goes into suspend it's expected that its consumer already
+disabled it.
+
+Until I come around to do that properly in the core for all drivers, I
+think the right approach in a driver is:
+
+	for (i =3D 0; i < chip->npwm; ++i) {
+		if (chip->pwms[i].state.enabled)
+			return -EBUSY;
+	}
+
+and if you then know that all PWMs are disabled, maybe you don't need to
+store all the registers you did in pwm_loongson_suspend()?
+
+Best regards
+Uwe
+
+--qdnv7nwtvr5bumy6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmerip8ACgkQj4D7WH0S
+/k5c6wgAlB03Ww2DaE0f/GhgIEQK0amvkBzFmTSH1rolSm/RhX6cECAt1ysGO97P
+N8bzQvvODFcWNGcQ40B6bdwDfDE9WNKICyWjuJsKlszXQD+OvdhtlxHwVGeCAucr
+7IjcHzguUM4oyZTRemyA6+ocNV0nzf/+LCqX4pBbq11ogTdo2taWH2iZltFGCQ0B
+c/9CMmRtJ74goG4G8OMGdcoLdzZbZq792FKiNZgxPyapxoIiEtiPxHSIrKsT4wHh
+h6CVRy4B/gdSN3X9RBoMt89beGeXoLX8f8AouFeU63MwHJWFtkQffyZIwGlKkyyP
+DXsh9hp7m5V4Boamj/0v9lFXGwNi6g==
+=tLNJ
+-----END PGP SIGNATURE-----
+
+--qdnv7nwtvr5bumy6--
