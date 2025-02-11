@@ -1,115 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482BB1FDE08
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1211F0E2B
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 12:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275212; cv=none; b=TVNqLuAiONBa30cXghGQ6vNYBiD8dqg/Ix3xs1L30DCs4vOp6MmbyTRJz8wumPy9hH2GfhSbDEjGa9we4xtenepaHpSyCI8mbB9zubm7bhIwW+gdxNDJgdceZ0fMiqeTP9maAT7HdMX072+eoQtiNmJsBCY7eM6dO9it5t/mwtM=
+	t=1739276133; cv=none; b=Z5Jwpcp3O2uppJ06hIK9FuEGl2pMMeZye11N4ibjP6/lqvUgjOyOKfqO7eAzlZS7rqg/bKni59571xRVGdO5z5VvA9SpvzX1jxccSvSGNFM5DNh4oMYb1/uKTqDctxKcQ+5DvZ2ySSU7Hh3j+L3sH33jLhnUfoDHKplmqwYKuLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275212; c=relaxed/simple;
-	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pegbggzZ+I0zM/h9qBfodrh0oVxL12EmfkIJnIt0E8hBg7rLNnD9+cGvC5VQyjFgO5QNFvB/Bv/AcWu7I7YZZfp7uTyGV2zDt+U6wdwiVkO1nfK2lpo5KMv4cUimEt1HeulMIvLQu31AMS1E+GLORgEkrYv9vtJxTzg4S1kPWA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJy3YIZ9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJy3YIZ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF3FAC4AF09
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 12:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739275211;
-	bh=TA/0R93IHQ5a5+EgaK8V4VBeM1CqKJGCSR6MePdrRSI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UJy3YIZ9fCzPNCmneEjKfEMaIUNOq291JlFZ7Eaix6faH1/8mlqH+lsCbGLKUFFth
-	 5y+/Qf+64SNXGnUuBUdaj6deqjP3B17hVMFzfyfJzEX6UL3xp4qI/i0JdB21I9cibC
-	 93YzdS20pHugLhcA/F/F0g1yJoNSR4xP+pPKGmdEbyUYko4bbYYuFzw/EzXUAhrRTI
-	 cFbdSe3vlDSDHCRYbRUDvpeFEH3lCY2M5MW1sJzG9Odo+hx0+ICGP4FvXPisZI1vQW
-	 rw5uBQM6SDSyDueaNvCKvCX0C6Wq9cWgvKSWEEx02m8B+T5eSnaKXVBWg2tl/UnZem
-	 UwdT4DbJJ8JFg==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5685378a12.1
-        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 04:00:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXT6/gehezGuxdb31JZhNmD1mP80nt8/kQQB6fk1SrUbp4d98J7fjM2QM0bTZJNNcgXO5qFS/RloVw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz16nWdgowe5AjYdCcB6ZXpoFE+rdUnKNwE2R3SLr8q7Gxnje1X
-	F1upiAfZ4lin9S5rALBg1cz6ZHYhu7BrWSfmXOZYy89cm3HrpoVk5yNsnv61ppT5qCmoEJCJVfS
-	0thdNFshygG7bWSoXFGlS+WSAieU=
-X-Google-Smtp-Source: AGHT+IGHNVu0tpCqBhu4Mn6yiKyLBRk68octjzuRqFLITUadZkfqBm0qT5yqHWB/5lCGcOlApRkFsS/UArIYCQrmr1k=
-X-Received: by 2002:a05:6402:2381:b0:5dc:1273:63fd with SMTP id
- 4fb4d7f45d1cf-5de9a4646eamr2670591a12.20.1739275210215; Tue, 11 Feb 2025
- 04:00:10 -0800 (PST)
+	s=arc-20240116; t=1739276133; c=relaxed/simple;
+	bh=px1/3pDHkPTjELj1Y3FHc3HpPQ/OFBWfdG0ktviEZB8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jo5wEg3uyHC+zfxyJB+v4F58T2qB5s0/YbaLwVsoqfw9s6sCGSQUnn2ryOvOz8rZ1czvWA1VokG9FzqqFU6+b+gIE1CCmPVKMYJw5fgteW5Uk8c/o9Cl2gTBHs8CV1Hm9wzqg6Ykg0Q4daj0jBxwWviJIWFHsaKJJ1IoYZLjuL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxLGtdP6tnRSVyAA--.2034S3;
+	Tue, 11 Feb 2025 20:15:25 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxLsdaP6tn2fkLAA--.47359S3;
+	Tue, 11 Feb 2025 20:15:25 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: remove unnecessary header include path
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>
+References: <20250210102148.1516651-1-masahiroy@kernel.org>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <aa024fce-9882-3bbe-9a3c-08e461408241@loongson.cn>
+Date: Tue, 11 Feb 2025 20:14:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
-In-Reply-To: <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 11 Feb 2025 19:59:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
-X-Gm-Features: AWEUYZm-JyjLlJb0diDoeBFwWO6Ti4dJ5QC9IXpt6JgfAfQvWaJ4NXEm6A9WSfc
-Message-ID: <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250210102148.1516651-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLsdaP6tn2fkLAA--.47359S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrur13Wr1DJr48Zr4fGF4rJFc_yoWfXrbEva
+	y3Gw4rG3yrJw4kXws5K3yrG3W0gw1kJFs0vrnxXr1xJF9xGrZ5GFs3Ww45AFZ8KrWDWr45
+	tFWvyF98Cr15tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
+	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_
+	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
+	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU
+	=
 
-Hi, Josh,
+On 2025/2/10 下午6:21, Masahiro Yamada wrote:
+> arch/loongarch/kvm/ includes local headers with the double-quote form
+> (#include "..."). Also, TRACE_INCLUDE_PATH in arch/loongarch/kvm/trace.h
+> is relative to include/trace/.
+> 
+> Hence, the local header search path is unneeded.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>   arch/loongarch/kvm/Makefile | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index 3a01292f71cc..f4c8e35c216a 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -3,8 +3,6 @@
+>   # Makefile for LoongArch KVM support
+>   #
+>   
+> -ccflags-y += -I $(src)
+> -
+>   include $(srctree)/virt/kvm/Makefile.kvm
+>   
+>   obj-$(CONFIG_KVM) += kvm.o
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
-On Tue, Feb 11, 2025 at 5:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
-> > On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
-> > > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
-> > > > Hi Josh and Peter,
-> > > >
-> > > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
-> > > > > This version is based on tip/tip.git objtool/core branch [1], add=
- some weak
-> > > > > and arch-specific functions to make the generic code more readabl=
-e, tested
-> > > > > with the latest upstream mainline Binutils, GCC and Clang.
-> > > >
-> > > > ...
-> > > >
-> > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/l=
-og/?h=3Dobjtool/core
-> > > > >
-> > > > > Tiezhu Yang (9):
-> > > > >   objtool: Handle various symbol types of rodata
-> > > > >   objtool: Handle different entry size of rodata
-> > > > >   objtool: Handle PC relative relocation type
-> > > > >   objtool: Handle unreachable entry of rodata
-> > > > >   objtool/LoongArch: Add support for switch table
-> > > > >   objtool/LoongArch: Add support for goto table
-> > > > >   LoongArch: Enable jump table for objtool
-> > > > >   LoongArch: Convert unreachable() to BUG()
-> > > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-> > > >
-> > > > Are you OK with the first 8 patches?
-> > > > What's the merge plan for this series?
-> > >
-> > > Sorry, my inbox is still reeling from the holidays.  I will review th=
-is
-> > > soon.
-> >
-> > What are the status of the first 8 patches?
-> > What is the next step? Is there anything else to be done here?
-> > I would really appreciate any advice on how to get this merged.
->
-> Please post a new revision rebased on tip/master, with patch 4 dropped,
-> and I'll queue them up for -tip.  Thanks for your patience.
-You will queue the whole series, or the first 5 patches, or the first 3 pat=
-ches?
-
-Huacai
-
->
-> --
-> Josh
