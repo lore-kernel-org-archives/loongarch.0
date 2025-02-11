@@ -1,511 +1,136 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8981EB9E3
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 11:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29161FA14B
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 11:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273280; cv=none; b=kp0I+m/aIK/GVR7C4GFFZCQV4qPk9pMcvsQ//KlKZL1gMgNgusxpCUfTIJye8Gw+0v9+tA2aHEtQgBSk51VL+9JlnqDDAx4YzeJUxwHgpcznr0sPEZ3k1bfN9iB6vO/htbE/+y5in7pPRG++p8FPEbkE8mK3pnm1Gwj0909o8RY=
+	t=1739274627; cv=none; b=Kkm4ntLxNllnBn5Gq5AM6fYXJgXAdUJgTccw/RS4GppZL+kuSosgMfhncppdJozCSjyC3+X/DcazhPWV7/DVusxvvFsNhWf3rRJnh5Zg0b5Nu14sXUqOZ9VnksnJgfLjeeEb8f/+x2vBc1P88MBCLj3FLh550fOFUc9DvMVfbXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273280; c=relaxed/simple;
-	bh=423CukSvkQYX3IoVxPUXCJumcPwAPkrAIyjWXWnw8jU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSTWuHOyTGbhYMM3aoO/flbRByIPGyPM06cSFU87mTxlJlKUjU6dZA6tBmCfA/C2FAZy8jmHTdP9DdX1ZBnonIXk2oNlYipFn7zMo1NQgGoDLiJDdpwN6f7+HYDT8u4SLUT7xNz+Ol9Wq8A0Pf7NSTPzpXSK0Dv/MaSZALeHlnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e4NX01Ws; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4NX01Ws"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de5bf41652so5337557a12.1
-        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 03:27:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739273276; x=1739878076; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G0yMHczjz8M9kD6dwWyu3+PHY3YM20OwKcyo4SL8AFQ=;
-        b=e4NX01WssSWin/aBxtHGxbncKxraLKl7bYQlmFXiAtNXnCIMJgtLMcBP/b/W2BfYoy
-         1/z0zS7I/d1wSztMpSdJybykMgOv4DZ88LVPEeGTm9u1h7HL3yY4QmX9UBvmueggMj7O
-         2P0u8OLEC60/Cy7QdLfjQKikSqo3UPnFjVL/+h4Qe+I6QoquE0IDQxny4ZC7ThO4AEed
-         2K8W7xbuiduBlp8qchsUPKb7sURiOYwRZaJCId435Y4q+soS+cJOkofU7QV3KoHAPeaU
-         lFj1Xm6l/+OmN4RtxTpG0jfA+R7Pmfu2i7mDN+v+n+gj/heEWpisglHJlx5qi2+JGt7S
-         8YxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739273276; x=1739878076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G0yMHczjz8M9kD6dwWyu3+PHY3YM20OwKcyo4SL8AFQ=;
-        b=tmOcEc2m5XBVApsCSJICAjNKROMmL48R56j+Rs3VxyrvFW6s6AonRDBCwtYru1mCwQ
-         t6P6e2KbcQywgef29pj3l3f63Svha3eFoGiQoK9mOPA+CJkXbzH0cK7/KRvgRuI1YJd5
-         532cAex/U/W0jRAPDfKjVxlWawvZYMtls2wvWRHVh1SEhwlJX4Jsye7uidh7St2RK5S8
-         yRnauTt1pjX2L6tZ87NIKzOc8jDCKvJU3HQ1AxNI5ScKR7gKMzuWI5tQqQfFKXuax7Oj
-         opMF55hX8Wa4zGFcfe/bpee9eipnIdHkHi9xALiyxQMOykEPkxC45uRqONNyvISREmRn
-         feIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ2VaMBK9PGLWb6GgR4a8YMWeHGYDytDpfMFH4TgsgVmwuv3swe9YhFPhqzzANqPuQN+TwjuPjRi0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YygAYesMgiCmxTiVHlUiA5VTXoLJw6+9TioVhXPbx6L5P3y21SN
-	9ZShPLOkHPy3mKilT/0xDqtm20AqfLUynTMNpBMJGqB1N4SA1LyWvaaLLxJ9dNY3B8iaeCixERZ
-	Iac2A1yex7N5EDYX9zy4Xfkp39Wa5Fwk2JmQ=
-X-Gm-Gg: ASbGncvFSgMmLOa799BPCv1FsCms8JW0XlVI92niz0rFFDu09U2dzaNq54NHb2hS2KQ
-	bOtF/pzk70RONbTzfm3n8OnkAU4hKtZTbDW2dN4g1WoLv/acmx9nL7e85GpNQmpOS18pr5FRCEo
-	M=
-X-Google-Smtp-Source: AGHT+IF/SQVLZlgYt2+kB9r9R4LA1zqr/LChdnFtMSz0wxkL0L5rvVMAk3aiu3/dSl4kO9IZg3mx5jZig4rDe7Du2GU=
-X-Received: by 2002:a05:6402:26cf:b0:5dc:7f96:6244 with SMTP id
- 4fb4d7f45d1cf-5de45089cddmr17334738a12.23.1739273275913; Tue, 11 Feb 2025
- 03:27:55 -0800 (PST)
+	s=arc-20240116; t=1739274627; c=relaxed/simple;
+	bh=I2bh1IgVEJP0j2X0fdv/oouyQUoy4UFx6/Fh1pbIfzs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gOXn/f0k/WpbJs22YGmgsPFgyWzeREqHzrbODGl18dtrav0WHwwtY52zo38yXa7WmcMiGXWx18wCllgh8jTjgslrzot/Ey6kUodkGjRWbbCxtvkEebfFre8FdwJn5Epso1X5J1+r3h033F8tfIHH3WaQu+Jz1e/cu+ape9CM6SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bx3658OatnUSJyAA--.49934S3;
+	Tue, 11 Feb 2025 19:50:20 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBx3MR6OatnNPMLAA--.43600S3;
+	Tue, 11 Feb 2025 19:50:20 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 1/7] objtool: Handle various symbol types of rodata
+Date: Tue, 11 Feb 2025 19:50:10 +0800
+Message-ID: <20250211115016.26913-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20250211115016.26913-1-yangtiezhu@loongson.cn>
+References: <20250211115016.26913-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1735550269.git.zhoubinbin@loongson.cn> <b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.1735550269.git.zhoubinbin@loongson.cn>
- <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
-In-Reply-To: <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 11 Feb 2025 17:27:40 +0600
-X-Gm-Features: AWEUYZnb3dscGNJT9s6G1vg-Vy1f7oqZw8j1Zx2LxLMDaKaNlEv-csOyPVmBwJ8
-Message-ID: <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] drm/ls2kbmc: Add Loongson-2K BMC reset function support
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx3MR6OatnNPMLAA--.43600S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJFWDKF47Ww48JF18Gw1Dtwc_yoW5Zr17pF
+	sxG3y5Kr4Yqr1xWwnrtayvgFy3Jw4kWr47JrsrKryrZ3sFvr1rKFW2yw1ak3Z8Grnava17
+	XrWYvryxGF4DA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU88HUDUUUUU==
 
-Hi Thomas:
+In the relocation section ".rela.rodata" of each .o file compiled with
+LoongArch toolchain, there are various symbol types such as STT_NOTYPE,
+STT_OBJECT, STT_FUNC in addition to the usual STT_SECTION, it needs to
+use reloc symbol offset instead of reloc addend to find the destination
+instruction in find_jump_table() and add_jump_table().
 
-Sorry for my late reply and thanks for your advice.
+For the most part, an absolute relocation type is used for rodata. In the
+case of STT_SECTION, reloc->sym->offset is always zero, and for the other
+symbol types, reloc_addend(reloc) is always zero, thus it can use a simple
+statement "reloc->sym->offset + reloc_addend(reloc)" to obtain the symbol
+offset for various symbol types.
 
-On Wed, Jan 15, 2025 at 2:57=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
-.de> wrote:
->
-> Hi
->
->
-> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
-> > Since the display is a sub-function of the Loongson-2K BMC, when the
-> > BMC reset, the entire BMC PCIe is disconnected, including the display
-> > which is interrupted.
->
-> To me, that's a strong indicator to set up the entire thing from scratch.
->
-> >
-> > Not only do you need to save/restore the relevant PCIe registers
-> > throughout the reset process, but you also need to re-push the display
-> > to the monitor at the end.
-> >
-> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >   drivers/gpu/drm/tiny/ls2kbmc.c | 284 ++++++++++++++++++++++++++++++++=
--
-> >   1 file changed, 283 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/tiny/ls2kbmc.c b/drivers/gpu/drm/tiny/ls2k=
-bmc.c
-> > index 909d6c687193..4b440f20cb4d 100644
-> > --- a/drivers/gpu/drm/tiny/ls2kbmc.c
-> > +++ b/drivers/gpu/drm/tiny/ls2kbmc.c
->
-> Move all the reset detection into the BMC core driver. When you see a
-> reset, remove the display's platform device via
-> platform_device_unregister(). This will release the device  and the DRM
-> driver on top. We do this for simpledrm/efifb/etc. Hence user-space code
-> is able to deal with it. Then set up a new platform device when the new
-> framebuffer is available. Your DRM driver will bind to it and user-space
-> code will continue with the new DRM device.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/objtool/check.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-I tried to refactor the bmc restart part according to your scheme. I'm
-not quite sure if the experimental results are exactly right.
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 497cb8dfb3eb..a84e76e8eae4 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1953,6 +1953,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 	unsigned int prev_offset = 0;
+ 	struct reloc *reloc = table;
+ 	struct alternative *alt;
++	unsigned long sym_offset;
+ 
+ 	/*
+ 	 * Each @reloc is a switch table relocation which points to the target
+@@ -1970,9 +1971,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 		if (prev_offset && reloc_offset(reloc) != prev_offset + 8)
+ 			break;
+ 
++		sym_offset = reloc->sym->offset + reloc_addend(reloc);
++
+ 		/* Detect function pointers from contiguous objects: */
+-		if (reloc->sym->sec == pfunc->sec &&
+-		    reloc_addend(reloc) == pfunc->offset)
++		if (reloc->sym->sec == pfunc->sec && sym_offset == pfunc->offset)
+ 			break;
+ 
+ 		/*
+@@ -1980,10 +1982,10 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 		 * which point to the end of the function.  Ignore them.
+ 		 */
+ 		if (reloc->sym->sec == pfunc->sec &&
+-		    reloc_addend(reloc) == pfunc->offset + pfunc->len)
++		    sym_offset == pfunc->offset + pfunc->len)
+ 			goto next;
+ 
+-		dest_insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
++		dest_insn = find_insn(file, reloc->sym->sec, sym_offset);
+ 		if (!dest_insn)
+ 			break;
+ 
+@@ -2022,6 +2024,7 @@ static void find_jump_table(struct objtool_file *file, struct symbol *func,
+ 	struct reloc *table_reloc;
+ 	struct instruction *dest_insn, *orig_insn = insn;
+ 	unsigned long table_size;
++	unsigned long sym_offset;
+ 
+ 	/*
+ 	 * Backward search using the @first_jump_src links, these help avoid
+@@ -2045,7 +2048,10 @@ static void find_jump_table(struct objtool_file *file, struct symbol *func,
+ 		table_reloc = arch_find_switch_table(file, insn, &table_size);
+ 		if (!table_reloc)
+ 			continue;
+-		dest_insn = find_insn(file, table_reloc->sym->sec, reloc_addend(table_reloc));
++
++		sym_offset = table_reloc->sym->offset + reloc_addend(table_reloc);
++
++		dest_insn = find_insn(file, table_reloc->sym->sec, sym_offset);
+ 		if (!dest_insn || !insn_func(dest_insn) || insn_func(dest_insn)->pfunc != func)
+ 			continue;
+ 
+-- 
+2.42.0
 
-Key part:
-
-New solution:
-1. platform_device_unregister(simpledrm)
-2. wait and detect if the BMC reboot is complete;
-3. platform_device_register_resndata(simpledrm)
-
-Original solution:
-1. wait and detect if the BMC reboot is complete;
-2. ls2kbmc_push_drm_mode() pushes display data such as crtc.
-
-When the BMC reboot is completed, the display in the new solution will
-lose all the information of the previous desktop and redisplay the
-system login interface, while the original solution will keep the
-desktop information.
-
-Is this normal for our new solution, or is there something wrong with
-my implementation?
-
->
-> Best regards
-> Thomas
->
-> > @@ -8,10 +8,12 @@
-> >    */
-> >
-> >   #include <linux/aperture.h>
-> > +#include <linux/delay.h>
-> >   #include <linux/minmax.h>
-> >   #include <linux/pci.h>
-> >   #include <linux/platform_data/simplefb.h>
-> >   #include <linux/platform_device.h>
-> > +#include <linux/stop_machine.h>
-> >
-> >   #include <drm/drm_atomic.h>
-> >   #include <drm/drm_atomic_state_helper.h>
-> > @@ -32,9 +34,27 @@
-> >   #include <drm/drm_panic.h>
-> >   #include <drm/drm_probe_helper.h>
-> >
-> > +#define BMC_RESET_DELAY      (60 * HZ)
-> > +#define BMC_RESET_WAIT       10000
-> > +
-> > +static const u32 index[] =3D { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x24=
-,
-> > +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 };
-> > +static const u32 cindex[] =3D { 0x4, 0x10, 0x3c };
-> > +
-> > +struct ls2kbmc_pci_data {
-> > +     u32 d80c;
-> > +     u32 d71c;
-> > +     u32 data[14];
-> > +     u32 cdata[3];
-> > +};
-> > +
-> >   struct ls2kbmc_pdata {
-> >       struct pci_dev *pdev;
-> > +     struct drm_device *ddev;
-> > +     struct work_struct bmc_work;
-> > +     unsigned long reset_time;
-> >       struct simplefb_platform_data pd;
-> > +     struct ls2kbmc_pci_data pci_data;
-> >   };
-> >
-> >   /*
-> > @@ -583,6 +603,265 @@ static struct ls2kbmc_device *ls2kbmc_device_crea=
-te(struct drm_driver *drv,
-> >       return sdev;
-> >   }
-> >
-> > +static bool ls2kbmc_bar0_addr_is_set(struct pci_dev *ppdev)
-> > +{
-> > +     u32 addr;
-> > +
-> > +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
-> > +     addr &=3D PCI_BASE_ADDRESS_MEM_MASK;
-> > +
-> > +     return addr ? true : false;
-> > +}
-> > +
-> > +static void ls2kbmc_save_pci_data(struct ls2kbmc_pdata *priv)
-> > +{
-> > +     struct pci_dev *pdev =3D priv->pdev;
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     int i;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_read_config_dword(parent, index[i], &priv->pci_data.d=
-ata[i]);
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
-> > +     priv->pci_data.d80c =3D (priv->pci_data.d80c & ~(3 << 17)) | (1 <=
-< 17);
-> > +
-> > +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
-> > +     priv->pci_data.d71c |=3D 1 << 26;
-> > +}
-> > +
-> > +static bool ls2kbmc_check_pcie_connected(struct pci_dev *parent, struc=
-t drm_device *dev)
-> > +{
-> > +     void __iomem *mmio;
-> > +     int sts, timeout =3D 10000;
-> > +
-> > +     mmio =3D pci_iomap(parent, 0, 0x100);
-> > +     if (!mmio)
-> > +             return false;
-> > +
-> > +     writel(readl(mmio) | 0x8, mmio);
-> > +     while (timeout) {
-> > +             sts =3D readl(mmio + 0xc);
-> > +             if ((sts & 0x11) =3D=3D 0x11)
-> > +                     break;
-> > +             mdelay(1);
-> > +             timeout--;
-> > +     }
-> > +
-> > +     pci_iounmap(parent, mmio);
-> > +
-> > +     if (!timeout) {
-> > +             drm_err(dev, "pcie train failed status=3D0x%x\n", sts);
-> > +             return false;
-> > +     }
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +static int ls2kbmc_recove_pci_data(void *data)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D data;
-> > +     struct pci_dev *pdev =3D priv->pdev;
-> > +     struct drm_device *dev =3D priv->ddev;
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     u32 i, timeout, retry =3D 0;
-> > +     bool ready;
-> > +
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
-> > +
-> > +     timeout =3D 10000;
-> > +     while (timeout) {
-> > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
-> > +             if (!ready)
-> > +                     break;
-> > +             mdelay(1);
-> > +             timeout--;
-> > +     };
-> > +
-> > +     if (!timeout)
-> > +             drm_warn(dev, "bar not clear 0\n");
-> > +
-> > +retrain:
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_write_config_dword(parent, index[i], priv->pci_data.d=
-ata[i]);
-> > +
-> > +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
-> > +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
-> > +
-> > +     /* Check if the pcie is connected */
-> > +     ready =3D ls2kbmc_check_pcie_connected(parent, dev);
-> > +     if (!ready)
-> > +             return ready;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     drm_info(dev, "pcie recovered done\n");
-> > +
-> > +     if (!retry) {
-> > +             /*wait u-boot ddr config */
-> > +             mdelay(BMC_RESET_WAIT);
-> > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
-> > +             if (!ready) {
-> > +                     retry =3D 1;
-> > +                     goto retrain;
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ls2kbmc_push_drm_mode(struct drm_device *dev)
-> > +{
-> > +     struct ls2kbmc_device *sdev =3D ls2kbmc_device_of_dev(dev);
-> > +     struct drm_crtc *crtc =3D &sdev->crtc;
-> > +     struct drm_plane *plane =3D crtc->primary;
-> > +     struct drm_connector *connector =3D &sdev->connector;
-> > +     struct drm_framebuffer *fb =3D NULL;
-> > +     struct drm_mode_set set;
-> > +     struct drm_modeset_acquire_ctx ctx;
-> > +     int ret;
-> > +
-> > +     mutex_lock(&dev->mode_config.mutex);
-> > +     connector->funcs->fill_modes(connector, 4096, 4096);
-> > +     mutex_unlock(&dev->mode_config.mutex);
-> > +
-> > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
-> > +                                DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret=
-);
-> > +
-> > +     if (plane->state)
-> > +             fb =3D plane->state->fb;
-> > +     else
-> > +             fb =3D plane->fb;
-> > +
-> > +     if (!fb) {
-> > +             drm_dbg(dev, "CRTC doesn't have current FB\n");
-> > +             ret =3D -EINVAL;
-> > +             goto out;
-> > +     }
-> > +
-> > +     drm_framebuffer_get(fb);
-> > +
-> > +     set.crtc =3D crtc;
-> > +     set.x =3D 0;
-> > +     set.y =3D 0;
-> > +     set.mode =3D &sdev->mode;
-> > +     set.connectors =3D &connector;
-> > +     set.num_connectors =3D 1;
-> > +     set.fb =3D fb;
-> > +
-> > +     ret =3D crtc->funcs->set_config(&set, &ctx);
-> > +
-> > +out:
-> > +     DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void ls2kbmc_events_fn(struct work_struct *work)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D container_of(work, struct ls2kbmc_=
-pdata, bmc_work);
-> > +
-> > +     /*
-> > +      * The pcie is lost when the BMC resets,
-> > +      * at which point access to the pcie from other CPUs
-> > +      * is suspended to prevent a crash.
-> > +      */
-> > +     stop_machine(ls2kbmc_recove_pci_data, priv, NULL);
-> > +
-> > +     drm_info(priv->ddev, "redraw console\n");
-> > +
-> > +     /* We need to re-push the display due to previous pcie loss. */
-> > +     ls2kbmc_push_drm_mode(priv->ddev);
-> > +}
-> > +
-> > +static irqreturn_t ls2kbmc_interrupt(int irq, void *arg)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D arg;
-> > +
-> > +     if (system_state !=3D SYSTEM_RUNNING)
-> > +             return IRQ_HANDLED;
-> > +
-> > +     /* skip interrupt in BMC_RESET_DELAY */
-> > +     if (time_after(jiffies, priv->reset_time + BMC_RESET_DELAY))
-> > +             schedule_work(&priv->bmc_work);
-> > +
-> > +     priv->reset_time =3D jiffies;
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +#define BMC_RESET_GPIO                       14
-> > +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
-> > +#define LOONGSON_GPIO_REG_SIZE               0x18
-> > +#define LOONGSON_GPIO_OEN            0x0
-> > +#define LOONGSON_GPIO_FUNC           0x4
-> > +#define LOONGSON_GPIO_INTPOL         0x10
-> > +#define LOONGSON_GPIO_INTEN          0x14
-> > +
-> > +/* The gpio interrupt is a watchdog interrupt that is triggered when t=
-he BMC resets. */
-> > +static int ls2kbmc_gpio_reset_handler(struct ls2kbmc_pdata *priv)
-> > +{
-> > +     int irq, ret =3D 0;
-> > +     int gsi =3D 16 + (BMC_RESET_GPIO & 7);
-> > +     void __iomem *gpio_base;
-> > +
-> > +     /* Since Loongson-3A hardware does not support GPIO interrupt cas=
-cade,
-> > +      * chip->gpio_to_irq() cannot be implemented,
-> > +      * here acpi_register_gsi() is used to get gpio irq.
-> > +      */
-> > +     irq =3D acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_AC=
-TIVE_LOW);
-> > +     if (irq < 0)
-> > +             return irq;
-> > +
-> > +     gpio_base =3D ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_S=
-IZE);
-> > +     if (!gpio_base) {
-> > +             acpi_unregister_gsi(gsi);
-> > +             return PTR_ERR(gpio_base);
-> > +     }
-> > +
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPIO)=
-,
-> > +            gpio_base + LOONGSON_GPIO_OEN);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_FUNC);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET_G=
-PIO),
-> > +            gpio_base + LOONGSON_GPIO_INTPOL);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_INTEN);
-> > +
-> > +     ret =3D request_irq(irq, ls2kbmc_interrupt, IRQF_SHARED | IRQF_TR=
-IGGER_FALLING,
-> > +                       "ls2kbmc gpio", priv);
-> > +
-> > +     acpi_unregister_gsi(gsi);
-> > +     iounmap(gpio_base);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int ls2kbmc_pdata_initial(struct platform_device *pdev, struct =
-ls2kbmc_pdata *priv)
-> > +{
-> > +     int ret;
-> > +
-> > +     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev);
-> > +
-> > +     ls2kbmc_save_pci_data(priv);
-> > +
-> > +     INIT_WORK(&priv->bmc_work, ls2kbmc_events_fn);
-> > +
-> > +     ret =3D request_irq(priv->pdev->irq, ls2kbmc_interrupt,
-> > +                       IRQF_SHARED | IRQF_TRIGGER_RISING, "ls2kbmc pci=
-e", priv);
-> > +     if (ret) {
-> > +             pr_err("request_irq(%d) failed\n", priv->pdev->irq);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return ls2kbmc_gpio_reset_handler(priv);
-> > +}
-> > +
-> >   /*
-> >    * Platform driver
-> >    */
-> > @@ -598,12 +877,15 @@ static int ls2kbmc_probe(struct platform_device *=
-pdev)
-> >       if (IS_ERR(priv))
-> >               return -ENOMEM;
-> >
-> > -     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev);
-> > +     ret =3D ls2kbmc_pdata_initial(pdev, priv);
-> > +     if (ret)
-> > +             return ret;
-> >
-> >       sdev =3D ls2kbmc_device_create(&ls2kbmc_driver, pdev, priv);
-> >       if (IS_ERR(sdev))
-> >               return PTR_ERR(sdev);
-> >       dev =3D &sdev->dev;
-> > +     priv->ddev =3D &sdev->dev;
-> >
-> >       ret =3D drm_dev_register(dev, 0);
-> >       if (ret)
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
-
-
---
-Thanks.
-Binbin
