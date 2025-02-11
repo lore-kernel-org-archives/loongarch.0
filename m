@@ -1,89 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7194250BE4
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B98B2505DE
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284790; cv=none; b=jEGjAnOe3mE0VHxrtaXF8CXCpPWZZ4SA1Ckm00U4wLbLFDHQupC65nfxe+Rnm+jCDRllXLwKI1NG8vhTOsE75nNHd/POtOwlRiRNY2izJd0uI+7Q2741Ma0tfRQKIokGDDEZeLQAom0iUsBblgIPqhDiToBrRmhDEPVwqCxWSvw=
+	t=1739284863; cv=none; b=Dauxny1AfQFg5TsGOpSEdfx2CSPWv3lSWcVWRNn8VWj4kNuIQYaHW/9Hk4hC5Lg3WvyYFkbqDDudXrBfZIEfJegOIxOUAW8B2Y2maQjWEeh/mfz588U/aR7d/WIZtGgtgfwNu7KO0U/x6Xq3GNaVknX0d7yOY9dly5NubSErxPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284790; c=relaxed/simple;
-	bh=ulwfMWLqUipyPdhn0d5FcC7nI6gKuz6DeB1kG8AxMNs=;
+	s=arc-20240116; t=1739284863; c=relaxed/simple;
+	bh=w0lyzC9h5R8V3+kyWa+MnzNnFg+o9k0r+J84W+0jAl4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IzoYK0s6IrMTbeGuW44Ceb+w4sLRKytDT9o3j7XejdaLFLpQAwmzJeVDN+ZjnCb77FUjAfe5YL8jBVg4q43y3+rsdBRMy5jLDWcKdNlaLCNAFd7D3tYAaqkPDLbc62w3Sca92AH1eCA8va4wlGBL9ZqoEMSXCFtieiboT/4tdr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LP0rlXMG; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=h6c4P1lPYsyNzTjFf8hWPj+H7r/DZnySR1x5EBwhaOAAVhu8jC1oROq0+9NxbO7uEgAsuMPZi+RgUWK3j7KUtaRGdC+T9RuNKyQ/wWrDSPCHCn+50Wb9gh+/LV7DekPKyBLQyx4xbbmU4adajA7xW0pQXpaqk5eW43Q4Teg67Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqFrYVIe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LP0rlXMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925D3C4AF09
-	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqFrYVIe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84431C4CEE5
+	for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 14:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739284790;
-	bh=ulwfMWLqUipyPdhn0d5FcC7nI6gKuz6DeB1kG8AxMNs=;
+	s=k20201202; t=1739284862;
+	bh=w0lyzC9h5R8V3+kyWa+MnzNnFg+o9k0r+J84W+0jAl4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LP0rlXMGLRh/nqMxHiNqoW3AR21kS1Fp9qT49KQsF2pUrNVejxJH0ybGchsu4V9Yn
-	 VHe7MwTywpcPkaSPnBBMiQabSecYn8rmK9ifvMqax7UvfZIllX1k3G+DHMJZ2CORpw
-	 DSMSZaLMQXgYZXT0I5S1YWLagVEwuSmwGuwlBvwZM/LdOBldlKVD5IX43ldU6FkdYv
-	 uFraiWubH/fSBDqImIWpaSHo3a9NCs99icA7CU/rq8E/8nSj9xiOSCLR6nLyjeTWnX
-	 XO4u2XtdLAoA0150ckjC0QrgS7XMaRDqAWK9QzFPLqQriAe3twjX8lLY/dN6oLj6Ib
-	 hzlYq24RdQp5Q==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7e9254bb6so66158366b.1
-        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 06:39:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWuGPhGBYAD3MxQ889cjnerEGG3c3VgeW3oHQPAv8qx78wEzZBWxvBHrqvv11hRXnXaWbbAF8sK9cU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyvj4aTF3SVvPYMWWYNGV6spZ+bCh/IwYxsnyH6fX9g83YfnJVM
-	G2NQ+uqjIy1k+g3fzntwAZPlEFJVjdDcAZ8vPy+EdBpIriAyt/rZ8CF7jfs6rsoRG+jGIgvAecy
-	pUdn01GPk/oOnYkJ8B+/UxW1Bx9Y=
-X-Google-Smtp-Source: AGHT+IGLR5ULI7gGLte0l7vRhZ2ZWqb5CWOtTbE4sI1QcMB4fXVUok//FjZVBam+puAjUPcYnE1+qzleMg68ltPCw1E=
-X-Received: by 2002:a17:907:9719:b0:ab6:e10e:2f5 with SMTP id
- a640c23a62f3a-ab789bf6ae5mr2003093166b.37.1739284789169; Tue, 11 Feb 2025
- 06:39:49 -0800 (PST)
+	b=KqFrYVIeBJY888x30TbJOJOYydl0tZAjuja88DEx6wVIKo3ewv+RlEiK87fAigrfc
+	 RoKZ1jh+f7PTaOFv/TeTY71Vs1XFAEyYi3minjNz8e+AusU2c6R6nXT2KEk0LSTdVN
+	 G5EwS0omEEwefDUJTr/tz3x4x+BkJihtVgauhqDB2pKXH+7LtNmgSiYTqEnb99EBj9
+	 CUgT/xYdO/JLvx0faH2G2/DUEd6ez/2E0Hlf3+RzkGljKl5XWj9ujUdVj+PzlOo4k/
+	 m7PKXNUzv4x5xGo80ip/6TQQ9jdeGwwrZqTCGwxUDuuOSf6Lsf39EnDe6AAQWnUCOv
+	 OOz9yaM/INlfQ==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7e1286126so135843166b.0
+        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 06:41:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXpAKCl8tNbRKEnjatZW13TSVGyKABHU14MWp2MflON7dWk6W4LBIQPMPu2NjljRoURSgN1QnsyxLc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyJIOJKdQRvRKSnt5WsrZwYUq85LIDkJ7dfSqCZusxTEuo7UIoC
+	cEQOqCCs6LWFIVJsRTZZ8NNKRfKPeh4WvwUx+I2OwL5mmGgmFewP7c6tA+Lgw4TUrszRDFRtXBE
+	SweFIfCEvKInMjluF5G6hbA9t6Uw=
+X-Google-Smtp-Source: AGHT+IGyJFeDacMApSGBnHU+O8pN/JIZNAMewpemCieh7bU+sklp5zcAxELy+FoKwQaiqydCwRZ8K2vcvWn0PWZ01oA=
+X-Received: by 2002:a17:906:4fcf:b0:ab6:6018:df18 with SMTP id
+ a640c23a62f3a-ab789aed838mr1774678966b.6.1739284861137; Tue, 11 Feb 2025
+ 06:41:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250211020118.3275874-1-maobibo@loongson.cn>
-In-Reply-To: <20250211020118.3275874-1-maobibo@loongson.cn>
+References: <10CEA19AD9D3FA2A+20250206063820.30558-1-wangyuli@uniontech.com>
+In-Reply-To: <10CEA19AD9D3FA2A+20250206063820.30558-1-wangyuli@uniontech.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 11 Feb 2025 22:39:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4w1sC93ag45Jx8B21Db4QRN3Jgtd1hqmLPEX3iCcHiWQ@mail.gmail.com>
-X-Gm-Features: AWEUYZnKR2iBOFeYKrnSINo32nx0jZbTx4gSoq7LUFeCrgBTWcFZ7G7vKb2B6iI
-Message-ID: <CAAhV-H4w1sC93ag45Jx8B21Db4QRN3Jgtd1hqmLPEX3iCcHiWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] LoongArch: KVM: Some tiny code cleanup
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 11 Feb 2025 22:40:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4oqe-15jpHUe2yXchYogNyNdFHt=WfsoCF_AmX1e6v=Q@mail.gmail.com>
+X-Gm-Features: AWEUYZlCFbxcf6ewsvYQYHCtt1ipUlOln3vwERFG09K9xSZ6_3FEEVM58-Xm7C4
+Message-ID: <CAAhV-H4oqe-15jpHUe2yXchYogNyNdFHt=WfsoCF_AmX1e6v=Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Enable Undefined Behavior Sanitizer UBSAN
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	zhanjun@uniontech.com, guanwentao@uniontech.com, chenlinxuan@uniontech.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Series applied, thanks.
+Queued for 6.15, thanks.
 
 Huacai
 
-On Tue, Feb 11, 2025 at 10:01=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
+On Thu, Feb 6, 2025 at 2:39=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
+ote:
 >
-> There is some tiny code cleanup with VM context switch or vCPU context
-> switch path, and it fixes typo issue about macro usage GCFG register.
+> Select ARCH_HAS_UBSAN_SANITIZE_ALL in order to allow the user to
+> enable CONFIG_UBSAN_SANITIZE_ALL and instrument the entire kernel for
+> ubsan checks.
 >
+> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Tested-by: Yuli Wang <wangyuli@uniontech.com>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
 > ---
->   v1 .. v2:
->     1. Remove comments about LOONGARCH_CSR_GCFG definition in header file=
-.
->     2. Add notes why PRMD need be kernel mode when switch to VM.
-> ---
-> Bibo Mao (3):
->   LoongArch: KVM: Fix typo issue about GCFG feature detection
->   LoongArch: KVM: Remove duplicated cache attribute setting
->   LoongArch: KVM: Set host with kernel mode when switch to VM mode
+>  arch/loongarch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
->  arch/loongarch/kvm/main.c   | 4 ++--
->  arch/loongarch/kvm/switch.S | 2 +-
->  arch/loongarch/kvm/vcpu.c   | 3 ---
->  3 files changed, 3 insertions(+), 6 deletions(-)
->
->
-> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 2b8bd27a852f..9d20aac7bc14 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -30,6 +30,7 @@ config LOONGARCH
+>         select ARCH_HAS_SET_MEMORY
+>         select ARCH_HAS_SET_DIRECT_MAP
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> +       select ARCH_HAS_UBSAN
+>         select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>         select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+>         select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
 > --
-> 2.39.3
+> 2.47.2
 >
