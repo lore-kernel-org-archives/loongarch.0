@@ -1,146 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201662040B0
-	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 07:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAA6204584
+	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 07:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739344979; cv=none; b=CEs0v07D2KIjmnzsjaDYkfav62eTuEu1V0uoJ5J9mTnD9ABu0fhjiZiauxmfwQz+wrCP+9DkCagYnJEBtGhl5hW5tpePk10Pr8SNuNITEpaB/4Aj54Q+7/vtqXhTw3lCdgMYQSFBH3Uiid92aPm+H3AnWl8QSAjScaR9gB5zmu0=
+	t=1739346700; cv=none; b=kvsU+dt+JGGsx82pEdeI/iW6SdE9e1ES1iHH9phFOMNfvy7ob+5B93JHAWIl4ePuHFZX3TV6+JT11u6YHk5COlU0HzF7it6rYJ/2Pn6IMgdwW3doGv0n1Nx1e973y27nYSEmbMG2AOcxUgeoc5vXgeHEbCFrmEtHDDF316W6aII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739344979; c=relaxed/simple;
-	bh=5tF4DvzDsVt7KQ/mFgmWdWH6GKf+bgfdnRM0E/Qka0c=;
+	s=arc-20240116; t=1739346700; c=relaxed/simple;
+	bh=PT4rGShEWh3DzWcWOCHpI21yltkgPZv4xIGMiqRgdQ0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z+CdULlhqnnavTtHle6JKTOQ7NarUdCBqZvZJx2AzAdUdNow6jT5+yjRL7gDSEGutASspSMO1O1s8xpOGPvDLtPOAetFCvz73fnJ8G+fftmkcg8nC2y5tUSJd2k3lORIu2vqb/dtfZGYRmcRIA4q98dL9VP13FVd9KoD7Lc999M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcQhR5le; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=V3aPohMZDQgO7085R8z75TsfjEer4vgyGEi1+WlsJsQPcf3ecx6xhzwSH4YTUqspUfY5RfOLA+97pvbDGlVVqmdWzUbpLVtm0qJnmXd4fp0KEltIp4ajIcjfmiuFXHnzBW7ZB9RWqOgNsXT5lMkYPfjtjTZclGyUQLZlOQWqFXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcdM17vc; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcQhR5le"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9331DC4CEE9
-	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 07:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739344978;
-	bh=5tF4DvzDsVt7KQ/mFgmWdWH6GKf+bgfdnRM0E/Qka0c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dcQhR5lebHxfdK1vHdGgzMSiIWrxtwV10WzDMSDwKZJWyRUlX97wK7f3hxXu+thbJ
-	 QOmyMuOrodb3sNXvU+e0xCIDPInA+frr0zbnFou5EnQWr1EUo9nDMBKrZ46N5R83Vr
-	 sxXqQ1+s3CJZrBC8jxUpKjwdAw2mDszEbNfGIoN4YG/uXb9AE87xfAa1fR/D9rtO58
-	 W/Vl+TboOcpUDykNJ0b1DcAFz5k0h4wPdH6Io9MwhkeRwtonoo+5a9AL57Ed6Uolsh
-	 YlBXEqDeHtxmXPaRhTJhKAaDthABCUHBhRy9KsBWubqdQ3Y7abyi/IwBkCEW1BqN6Y
-	 io2IEYvrfiUAA==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de6e26d4e4so6905344a12.1
-        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 23:22:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWwttc7dzCxFvdm9/pk1Ex95ZxhOwdDtKwGwu+r3tdcHiRtD7Q+JZflbE0N6F3MNQomf4F4ZovP8W8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxtKo9OTf8i89j0F35adIoQGwPpp60ex4dev6umWWrZzcWFRT1H
-	qg9MdidsMPVXSl43kEvLN5H6689hxbh99TrpyJuEvGsFB81d28Ae08gPSdBQTaoyQQC9C0rFyGa
-	1SY+JMNKp6EUUxmzHOI5OGchtsZc=
-X-Google-Smtp-Source: AGHT+IH4oQXZ75PaiQ5q94lbM6UPkG1or1sTEbMNPus1+v5Ba6Wxh3nB65ZO7Zu13k5WPTyEWCcXXDkoaEPGpZrm2lM=
-X-Received: by 2002:a05:6402:13d2:b0:5dc:8845:6a0d with SMTP id
- 4fb4d7f45d1cf-5deadd9ccd0mr1570670a12.14.1739344977083; Tue, 11 Feb 2025
- 23:22:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcdM17vc"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5de51a735acso9159389a12.0
+        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 23:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739346697; x=1739951497; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I9m4RpcHMEGyjcSsbihXpefKBea9DX/lIwf1QjZ3ahQ=;
+        b=HcdM17vc70RyZTkwXktUkkhsNPzaVpk6+A64keIHncpzQiAZkl4bwkAOni+Ok124qX
+         iY68xXcYFNjITE8mYNPFKTv2NJ09NCiFaE12yx+4MqDSjbRkeAWiD2sROBSv3fhT7Q52
+         cDNNHnH+lZmyGgPzJcd0NLrcYwdv6+jhX3+KYyjmV9cahECEDmb/nIvAsTnJ+h/e20/X
+         wltxX+paeaWzhgKj/VCfTDB9Vlf/nbj+P7KNaALG2Nzn98A6JQCO+uA6NjmNBUPVu5Ei
+         xj8cfAbbuSXVspICPCii0yA0JDgl8ZmaeXIHp3rxSZbD9jvbObuA59raBjP2CqCLPj/a
+         FlFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739346697; x=1739951497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I9m4RpcHMEGyjcSsbihXpefKBea9DX/lIwf1QjZ3ahQ=;
+        b=ic7bS3DC6JW5qkz9xXIq5fFIjJtZvd8kRcgRRSVGD1s3UGIAJvQGFs89k9WNf9PMhR
+         PPaOuskedR0C9pPO7qWo5RHompwxQAh+qhDRmm2NcbqY8td18JLA2egYWhRyLUlHjRvb
+         9k4+vp5dVsy/9tjLyoZsEYRd/0ZUXy2GOqjcWvuip7PYfJBFrwR1R73sRI/QHChU+7fH
+         3j8Y39L9eKFPqP5fZDMCFRCDWi3nO8ijqZR8V6/Jh9FmzJuwQbHSmajExxyenqtHJP0x
+         44K6bdGnJ7AjsvbR+vi7j7t6jbt22CII1dW6x2z8VOyYGNYqHbsN0BORanhpLHvdjz+s
+         4G4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXq+TX9sOpiU78aSXQ2x4YXuJbEykGvutHWaAzHorvJiONA0xqOd2ghgQ/k4FSfm8gqHDXr2szUNVU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzj229KvLWnF94nduApMulJzH6tQ7lJ9NQE6gU1zSfcFwdvBqal
+	ELkCWfejA4VIJnlyjruxTE41FegLYZUhbL7f0B73hUQiExh/tHeDmJOpmyeN9dAifRxl2XSo3d+
+	nrWpb65XvVAEO6YPPXYnrGFr1Xy4=
+X-Gm-Gg: ASbGncvjUjMGDlZqDIAkMTwI5hdmlb3XfETCHwIpeYafo7raKeNLbqDoiRhf95BtBvl
+	1g+GT3euASz3OHQGHMDrsaPRCfckX5ecjnBSYDby5DzBpPn0ZU+wKZkLu7WJL+7s0M0mDK+4=
+X-Google-Smtp-Source: AGHT+IFTu3gb3HC/gTL7ZO2Hkvnwgt7SCIv2ukWCJdf5Hv2sq1C8t89CjBEo0ofNGytsdWZNMj3FBLTzqpa6ZVtjQZA=
+X-Received: by 2002:a05:6402:510f:b0:5dc:113c:46c3 with SMTP id
+ 4fb4d7f45d1cf-5deade0429dmr1666658a12.21.1739346696982; Tue, 11 Feb 2025
+ 23:51:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
- <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com> <20250211233056.q47mp5askk7qrxcp@jpoimboe>
-In-Reply-To: <20250211233056.q47mp5askk7qrxcp@jpoimboe>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 12 Feb 2025 15:22:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
-X-Gm-Features: AWEUYZkwP3dB1uiekSoXe4aycfg9SEbwDK21JX739EF38anakQ8LqK3tzyOMtg0
-Message-ID: <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
+References: <cover.1733823417.git.zhoubinbin@loongson.cn> <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
+ <obegtfup7f6w6erh4arubk2fkk2wrcum5frs5kbqa4uniexmr5@6uti3d3hv7np>
+ <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com> <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+In-Reply-To: <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 12 Feb 2025 13:51:24 +0600
+X-Gm-Features: AWEUYZndaGkxnP_eAs8RjoY9H_Ss2OZaz6eBH_mYhYyxveHw2EhylSheiy1pMgQ
+Message-ID: <CAMpQs4+r0zHsheF5qC1Jj-JMmV-J8DWicHVsx2aB91Eexfekfw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 7:30=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
+Hi Uwe:
+
+On Tue, Feb 11, 2025 at 11:36=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
+rnel.org> wrote:
 >
-> On Tue, Feb 11, 2025 at 07:59:57PM +0800, Huacai Chen wrote:
-> > Hi, Josh,
+> Hello,
+>
+> On Tue, Feb 11, 2025 at 02:02:03PM +0600, Binbin Zhou wrote:
+> > On Tue, Feb 11, 2025 at 12:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleine=
+k@kernel.org> wrote:
+> > > On Tue, Dec 10, 2024 at 08:37:06PM +0800, Binbin Zhou wrote:
+> > > > +static int pwm_loongson_suspend(struct device *dev)
+> > > > +{
+> > > > +     struct pwm_chip *chip =3D dev_get_drvdata(dev);
+> > > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(ch=
+ip);
+> > > > +
+> > > > +     ddata->lss.ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_CTRL);
+> > > > +     ddata->lss.duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_DUTY);
+> > > > +     ddata->lss.period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_=
+REG_PERIOD);
+> > > > +
+> > > > +     clk_disable_unprepare(ddata->clk);
+> > > > +
+> > > > +     return 0;
+> > >
+> > > Is this needed assuming that before suspend the consumer stopped the
+> > > PWM?
 > >
-> > On Tue, Feb 11, 2025 at 5:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel=
-.org> wrote:
-> > >
-> > > On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
-> > > > On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
-> > > > > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
-> > > > > > Hi Josh and Peter,
-> > > > > >
-> > > > > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
-> > > > > > > This version is based on tip/tip.git objtool/core branch [1],=
- add some weak
-> > > > > > > and arch-specific functions to make the generic code more rea=
-dable, tested
-> > > > > > > with the latest upstream mainline Binutils, GCC and Clang.
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.g=
-it/log/?h=3Dobjtool/core
-> > > > > > >
-> > > > > > > Tiezhu Yang (9):
-> > > > > > >   objtool: Handle various symbol types of rodata
-> > > > > > >   objtool: Handle different entry size of rodata
-> > > > > > >   objtool: Handle PC relative relocation type
-> > > > > > >   objtool: Handle unreachable entry of rodata
-> > > > > > >   objtool/LoongArch: Add support for switch table
-> > > > > > >   objtool/LoongArch: Add support for goto table
-> > > > > > >   LoongArch: Enable jump table for objtool
-> > > > > > >   LoongArch: Convert unreachable() to BUG()
-> > > > > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
-> > > > > >
-> > > > > > Are you OK with the first 8 patches?
-> > > > > > What's the merge plan for this series?
-> > > > >
-> > > > > Sorry, my inbox is still reeling from the holidays.  I will revie=
-w this
-> > > > > soon.
-> > > >
-> > > > What are the status of the first 8 patches?
-> > > > What is the next step? Is there anything else to be done here?
-> > > > I would really appreciate any advice on how to get this merged.
-> > >
-> > > Please post a new revision rebased on tip/master, with patch 4 droppe=
-d,
-> > > and I'll queue them up for -tip.  Thanks for your patience.
-> > You will queue the whole series, or the first 5 patches, or the first 3=
- patches?
+> > Actually, I don't quite understand the problem you're pointing out. It
+> > seems to me that the register and clk operations are required
+> > regardless of the state of the pwm.
+> > At least from the experimental results, the logic is now as expected.
+> > Of course, I may be missing some critical information.
 >
-> The new series now has 7 patches:
+> When a PWM goes into suspend it's expected that its consumer already
+> disabled it.
 >
-> Tiezhu Yang (7):
->   objtool: Handle various symbol types of rodata
->   objtool: Handle different entry size of rodata
->   objtool: Handle PC relative relocation type
->   objtool/LoongArch: Add support for switch table
->   objtool/LoongArch: Add support for goto table
->   LoongArch: Enable jump table for objtool
->   LoongArch: Convert unreachable() to BUG()
+> Until I come around to do that properly in the core for all drivers, I
+> think the right approach in a driver is:
 >
-> I was planning on queueing all 7.
->
-> In particular, patch 6 should stay with the objtool patches since
-> they're directly related.
->
-> But I was also just going to grab 7 as well.
->
-> Please let me know if you disagree.
-What about you merge the first 5 patches, and then I merge the last 2
-to the loongarch tree? (I prefer to merge the whole series to the
-loongarch tree with your acked-by, but that may be inconvenient to
-you).
+>         for (i =3D 0; i < chip->npwm; ++i) {
+>                 if (chip->pwms[i].state.enabled)
+>                         return -EBUSY;
+>         }
+
+OK, I will add the approach into pwm_loongson_suspend().
+Since our pwm is single channel, it can be changed to:
+
++       struct pwm_device *pwm =3D &chip->pwms[0];
++
++       if (pwm->state.enabled)
++               return -EBUSY;
 
 
-Huacai
-
 >
-> --
-> Josh
+> and if you then know that all PWMs are disabled, maybe you don't need to
+> store all the registers you did in pwm_loongson_suspend()?
+>
+> Best regards
+> Uwe
+
+
+
+--
+Thanks.
+Binbin
