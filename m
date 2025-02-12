@@ -1,108 +1,228 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3351C20011E
-	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 20:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A79201025;
+	Wed, 12 Feb 2025 21:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739393406; cv=none; b=m3nyN4vt4osAVFboDCe0Sox19j1o5DPOpk1KI7BNqXLuG0WEPSbjyedBZUaeTcXDASpo9fA4fji2IJzfiRLsU1VXL/sJneIApHPxKiIZAkN9etD+73K3esiGqkiMvUr++Oa+XL1D2KOd8BfhjWJe/8S9u1ErUJLnfXNEmqfvoMc=
+	t=1739395714; cv=none; b=Ok9Al4J9c9lFQEttcHjRUI88svhiD7/bi4RkrfzqEj/EUixl3ekIWzJ3WRX9CVLQciE6QZB0kYfzq6koivpIQgSdJ4qEqPdP9k4gMZ5AOvL/6AFZ7KGEaI1KydrxY9TiZNBL1onwsLdbzlaUmWReX8BqvIerlQB5rJ6WE6ki0p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739393406; c=relaxed/simple;
-	bh=7QUo8lq0zOXvMRM2Kkw4Zo86apOpRGfWnw798xZKkyE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gWhRO8An0V3Sv/dnizrDbPuwGW6kA2awQt6RiPujan/I4d7tpcvD23m5EeZ+e+hZGrPioHI6GwjYvp0Cqto4ILKIsJ7Pe49OZ3XPoKAWZ8/8kB6LTTyRqeJNWf8xFfZ2XAmaEflvTOJd4/TtCMe15qYGKmulHxgOFuI1XHCwdlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t3vrPcga; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739395714; c=relaxed/simple;
+	bh=3wVlpaRQ6HPfHX6my7rDrBIwcLZA9m/C84oqxjK6E+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1HF9y8GocMbRoGM30uQS5CNfG8eLl0fUw+qmzUCr8Dijg9roTLHbmBogIheBvPoEnhvYI9jeydmpbtM3VxdSo5klXh3FpH+AOEYaQgD2HEFqz3rx0dYqna9VuxsYqP736Upo0WKX/K//iXByTq0F0cdx1K2jmJVq3EBsbt6jmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjdQU5r0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t3vrPcga"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4395e234c02so195935e9.3
-        for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 12:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739393402; x=1739998202; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=05bFiLRqtjieBdQP28ZStS6jjJuxslhK7B+dgz1ufHY=;
-        b=t3vrPcga7Hq6M+Kd9RZXa+nh6naakLMlZeVP/lnNbuIanVzYAk1rquTf2s8NYO0NH9
-         1x7S7ROLqGefx9UqvTYs5NSt42Ndt3bgVn4KVEkYT8MLM/Vn+9A6iFkklyK0EJrRG7QW
-         q93L+NN7iLj1LjyidiQRLwl47T5tCoNAAols8+mSSjwi/zIAhOjb+RfhjzkwX98unJl5
-         /FQiaNhisckVZ1NAfVxyfa790infNX1ZSFrdR7u/uzIqia3ogUMVSGni0WarPK+XBPEp
-         5iYIhZPak3UQHLvZFNYsA9IgTLN0l2Vqry/NdPGdx7xpXS4D6VlIFH5gNlklFwiw6MkB
-         8ulQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739393402; x=1739998202;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=05bFiLRqtjieBdQP28ZStS6jjJuxslhK7B+dgz1ufHY=;
-        b=SWQPA0IU2I/0KSomV1WACnUUJRQmnpkeO3hcD2n3XnDd82o3/jzloYH5zB6g5HCGIh
-         zXwbx4UcpagMc9OU6D+Or0wsZBql35MYfGoAARpl2u+tR/jGnl+m76HkpZ97kzbM58uf
-         byjbUgTlWI8O26XT6WOOfVtReuSJaZUAIjwIlbBeMCRJf6iHao2n97X5QeHSeTZ2E2Xq
-         UtHj62Gsy5aNE/oqP12SvJ0h4F56N264k8KAla0QGhfMXe4WkKpiZcZRRdpSN2c/MQfr
-         nt31WLm2tFwVchGjwYJE26trPsdz7dxkY7L7X29Uh3cCly+9hGRICml/ZppSUbDo7s9h
-         q76A==
-X-Forwarded-Encrypted: i=1; AJvYcCWu0j3MjHqvsECA4az3kQ1HTfZRsToAg+diDT4GOR3hwJ97ixbpabbOxZyOMPAkeWAYFQ0ACd6xMq4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxuxAVhA64GhL5sxmnB80pmdbwnYSkFHWHLjKd0Xd1813O+C8fR
-	7Ggb4ZvKCN5c3t8SaKZKMV9KLUbYAJqFewCmldCFbbxPbGROlKB5ZggyXcUpaKM=
-X-Gm-Gg: ASbGncvliaC8J8WndDtHy5anpNAaZTV8UMzPMqkbj1MemkfnOCorqfPWuu5eFMIHKBT
-	0PBoxaOyeSmAjVdavoenuHGS7xOvMOIupTeyIUaBd3+B0VmKvn7dsY6w0uOksbSKNndToV7WNNt
-	iN7acPZYbvW74zbCMabYmTjsP5JMcRZNoWR42cUVbxnR3j+YVp+eFPsX9wgvv74qc4ZCe6A0lfv
-	HV1UC6YHkTmRR9G71uA3HcIWRNPdCirlpFL7VgZ3it/uOQWod0mEEJqFK3w4YMuN56fFMCRm+qy
-	y57IhY0uEFVVJDfw1kC9Up4rrf/unKk=
-X-Google-Smtp-Source: AGHT+IEBtbJJPvZYtnqI1EcUYSzvnE3bHzpiZAK+Kj6ubquz7Vmwq6Ph8AWnkEWgLrniziBTqXUdZw==
-X-Received: by 2002:a05:600c:5103:b0:439:560f:e7cc with SMTP id 5b1f17b1804b1-439581bfdd8mr18910825e9.6.1739393402471;
-        Wed, 12 Feb 2025 12:50:02 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a056151sm30461495e9.16.2025.02.12.12.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 12:50:01 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, 
- Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- imx@lists.linux.dev, loongarch@lists.linux.dev
-In-Reply-To: <20240717-anvil-ashy-544e80a1317c@spud>
-References: <20240717-anvil-ashy-544e80a1317c@spud>
-Subject: Re: (subset) [PATCH v1 0/4] Removal of non-existent DAC nodes
-Message-Id: <173939339997.59416.11108011581545463665.b4-ty@linaro.org>
-Date: Wed, 12 Feb 2025 21:49:59 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjdQU5r0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B5DC4CEDF;
+	Wed, 12 Feb 2025 21:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739395713;
+	bh=3wVlpaRQ6HPfHX6my7rDrBIwcLZA9m/C84oqxjK6E+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rjdQU5r0bsOd4U/htAFwpC/28QAXrNGZZHgrnbhlETG6GBxYyp+KYpp+IYKbVLSjR
+	 J79MRB0Kp6GHXjI6p2qRnipvuJ71KNJOvAZ8eOtTOKt3O1DE9YuBXjo2L2ObV8mR8F
+	 gzwy+kWHPchM7j/qCnhT9RNyF5Pxiwa91OMjTUiiuY3Sp1a4b/Xtl4WtmCH58bziDk
+	 wzX26DvIJY6BdqZxdi+0bS8fHlo6iM319RVPgET7QItZeAl5sFMoFyywXB2VZ7JusJ
+	 tfVcV9Wcn3Vyb+/9GU7UyC+TectuuqV1Kc1g/IwrsbV9fO6VSoOX6m7UMTFaBDnAgz
+	 PFhgGdXejgtnA==
+Date: Wed, 12 Feb 2025 23:28:28 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+	peterhuewe@gmx.de, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>
+Subject: Re: [PATCH v2 3/3] tpm: Add a driver for Loongson TPM device
+Message-ID: <Z60SfDaWnbgddUnA@kernel.org>
+References: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
+ <20250212033113.15137-4-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212033113.15137-4-zhaoqunqin@loongson.cn>
 
+On Wed, Feb 12, 2025 at 11:31:13AM +0800, Qunqin Zhao wrote:
+> TPM2.0 is implemented in Loongson security engine. This is the driver
 
-On Wed, 17 Jul 2024 10:37:52 +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+TPM 2.0 or just TPM2 (either is fine with me). Quick reminder what 
+Loongson security engine (I could not know that and it would be nice
+to have that in git log).
+
+> for it.
 > 
-> Recently I've been getting triggered by abuse of the Rohm dh2228fv
-> compatible to get the spidev driver probing in Linux on development
-> kits by employees of various silicon vendors (like NXP or my own
-> employer). I had a look around the kernel and all users other than the
-> original Clearfontz board added by Maxime appear to be similar abuse.
-> Drop the non-existent nodes from all of these devices :)
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> ---
+>  MAINTAINERS                 |   1 +
+>  drivers/char/tpm/Kconfig    |   9 ++++
+>  drivers/char/tpm/Makefile   |   1 +
+>  drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 115 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_lsse.c
 > 
-> [...]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6493d58436..6aad0f08ad 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13484,6 +13484,7 @@ LOONGSON CRYPTO DRIVER
+>  M:	Qunqin Zhao <zhaoqunqin@loongson.com>
+>  L:	linux-crypto@vger.kernel.org
+>  S:	Maintained
+> +F:	drivers/char/tpm/tpm_lsse.c
+>  F:	drivers/crypto/loongson/
+>  
+>  LOONGSON-2 APB DMA DRIVER
 
-Applied, thanks!
+Probably MAINTAINERS update should be a separate patch.
 
-[3/4] loongarch: dts: remove non-existent DAC from 2k1000-ref
-      https://git.kernel.org/krzk/linux-dt/c/854a080f0b73ff966a813ec2dc53891831daa28d
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 0fc9a510e0..56d0417065 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -225,5 +225,14 @@ config TCG_FTPM_TEE
+>  	help
+>  	  This driver proxies for firmware TPM running in TEE.
+>  
+> +config TCG_LSSE
+> +	tristate "Loongson TPM Interface"
+> +	depends on MFD_LS6000SE
+> +	help
+> +	  If you want to make Loongson TPM support available, say Yes and
+> +	  it will be accessible from within Linux. To compile this
+> +	  driver as a module, choose M here; the module will be called
+> +	  tpm_lsse.
+> +
+>  source "drivers/char/tpm/st33zp24/Kconfig"
+>  endif # TCG_TPM
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9bb142c752..bf2280352d 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+>  obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> +obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
+> diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
+> new file mode 100644
+> index 0000000000..3fd2d9bac8
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_lsse.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mfd/ls6000se.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/wait.h>
+> +
+> +#include "tpm.h"
+> +
+> +struct tpm_msg {
+> +	u32 cmd;
+> +	u32 data_off;
+> +	u32 data_len;
+> +	u32 info[5];
+> +};
+> +
+> +struct tpm_dev {
+> +	struct lsse_ch *se_ch;
+> +	struct completion tpm_completion;
+> +};
+> +
+> +static void tpm_complete(struct lsse_ch *ch)
+> +{
+> +	struct tpm_dev *td = ch->priv;
+> +
+> +	complete(&td->tpm_completion);
+> +}
+> +
+> +static int tpm_ls_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+> +	struct tpm_msg *rmsg;
+> +	int sig;
+> +
+> +	sig = wait_for_completion_interruptible(&td->tpm_completion);
+> +	if (sig)
+> +		return sig;
+> +
+> +	rmsg = td->se_ch->rmsg;
+> +	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
+> +
+> +	return rmsg->data_len;
+> +}
+> +
+> +static int tpm_ls_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+> +	struct tpm_msg *smsg = td->se_ch->smsg;
+> +
+> +	memcpy(td->se_ch->data_buffer, buf, count);
+> +	smsg->data_len = count;
+> +
+> +	return se_send_ch_requeset(td->se_ch);
+> +}
+> +
+> +static const struct tpm_class_ops lsse_tpm_ops = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+> +	.recv = tpm_ls_recv,
+> +	.send = tpm_ls_send,
+> +};
+> +
+> +static int lsse_tpm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct tpm_chip *chip;
+> +	struct tpm_msg *smsg;
+> +	struct tpm_dev *td;
+> +
+> +	td = devm_kzalloc(dev, sizeof(struct tpm_dev), GFP_KERNEL);
+> +	if (!td)
+> +		return -ENOMEM;
+> +
+> +	init_completion(&td->tpm_completion);
+> +	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
+> +			       2 * sizeof(struct tpm_msg), td, tpm_complete);
+> +	if (!td->se_ch)
+> +		return -ENODEV;
+> +	smsg = td->se_ch->smsg;
+> +	smsg->cmd = SE_CMD_TPM;
+> +	smsg->data_off = td->se_ch->off;
+> +
+> +	chip = tpmm_chip_alloc(dev, &lsse_tpm_ops);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> +	dev_set_drvdata(&chip->dev, td);
+> +
+> +	return tpm_chip_register(chip);
+> +}
+> +
+> +static struct platform_driver lsse_tpm_driver = {
+> +	.probe   = lsse_tpm_probe,
+> +	.driver  = {
+> +		.name  = "ls6000se-tpm",
+> +	},
+> +};
+> +module_platform_driver(lsse_tpm_driver);
+> +
+> +MODULE_ALIAS("platform:ls6000se-tpm");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+> +MODULE_DESCRIPTION("Loongson TPM driver");
+> -- 
+> 2.43.0
+> 
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+BR, Jarkko
