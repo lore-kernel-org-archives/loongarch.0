@@ -1,233 +1,146 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F641F1902
-	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 03:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201662040B0
+	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 07:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739331124; cv=none; b=TeEz6bq4F5KhCi5n/WPij1wpgNTYhyobXdohlajopjhCzqNrOU+brM5897wMS3DWqg9gDOoh/UYUjZ90KARUknPhJw9ZEbliWZrOtF+COZEXU6UfXmDiFxeFtAlzjOBEqiXdlG0h9e+3szswpRNRFldZiaaTczj0hHHYrwNMQYE=
+	t=1739344979; cv=none; b=CEs0v07D2KIjmnzsjaDYkfav62eTuEu1V0uoJ5J9mTnD9ABu0fhjiZiauxmfwQz+wrCP+9DkCagYnJEBtGhl5hW5tpePk10Pr8SNuNITEpaB/4Aj54Q+7/vtqXhTw3lCdgMYQSFBH3Uiid92aPm+H3AnWl8QSAjScaR9gB5zmu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739331124; c=relaxed/simple;
-	bh=EHw7z8g8mtLD0aY8DUDoR5M7dB45HIaBPKlgoUDASC4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cavxxxrhoOK48tcDMDRv6eG/NuUIcXqOJcHWgYpB4Zke2ddUcSFwkQudF7ngF1KkfkY3Yh4vcD+2q4h+h0KxuszbKEJ03BMs/yHxB/jM23kcfwtNJnO85g6yeljZFQ0X/tr2z7+TfwUjZyuspsfshQePkOwEZifKINPPE+8VbLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8AxWXErFqxngspyAA--.3143S3;
-	Wed, 12 Feb 2025 11:31:55 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMCx_cYUFqxnxxENAA--.51918S5;
-	Wed, 12 Feb 2025 11:31:46 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Yinggang Gu <guyinggang@loongson.cn>
-Subject: [PATCH v2 3/3] tpm: Add a driver for Loongson TPM device
-Date: Wed, 12 Feb 2025 11:31:13 +0800
-Message-Id: <20250212033113.15137-4-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
-References: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
+	s=arc-20240116; t=1739344979; c=relaxed/simple;
+	bh=5tF4DvzDsVt7KQ/mFgmWdWH6GKf+bgfdnRM0E/Qka0c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z+CdULlhqnnavTtHle6JKTOQ7NarUdCBqZvZJx2AzAdUdNow6jT5+yjRL7gDSEGutASspSMO1O1s8xpOGPvDLtPOAetFCvz73fnJ8G+fftmkcg8nC2y5tUSJd2k3lORIu2vqb/dtfZGYRmcRIA4q98dL9VP13FVd9KoD7Lc999M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcQhR5le; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcQhR5le"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9331DC4CEE9
+	for <loongarch@lists.linux.dev>; Wed, 12 Feb 2025 07:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739344978;
+	bh=5tF4DvzDsVt7KQ/mFgmWdWH6GKf+bgfdnRM0E/Qka0c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dcQhR5lebHxfdK1vHdGgzMSiIWrxtwV10WzDMSDwKZJWyRUlX97wK7f3hxXu+thbJ
+	 QOmyMuOrodb3sNXvU+e0xCIDPInA+frr0zbnFou5EnQWr1EUo9nDMBKrZ46N5R83Vr
+	 sxXqQ1+s3CJZrBC8jxUpKjwdAw2mDszEbNfGIoN4YG/uXb9AE87xfAa1fR/D9rtO58
+	 W/Vl+TboOcpUDykNJ0b1DcAFz5k0h4wPdH6Io9MwhkeRwtonoo+5a9AL57Ed6Uolsh
+	 YlBXEqDeHtxmXPaRhTJhKAaDthABCUHBhRy9KsBWubqdQ3Y7abyi/IwBkCEW1BqN6Y
+	 io2IEYvrfiUAA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de6e26d4e4so6905344a12.1
+        for <loongarch@lists.linux.dev>; Tue, 11 Feb 2025 23:22:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWwttc7dzCxFvdm9/pk1Ex95ZxhOwdDtKwGwu+r3tdcHiRtD7Q+JZflbE0N6F3MNQomf4F4ZovP8W8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxtKo9OTf8i89j0F35adIoQGwPpp60ex4dev6umWWrZzcWFRT1H
+	qg9MdidsMPVXSl43kEvLN5H6689hxbh99TrpyJuEvGsFB81d28Ae08gPSdBQTaoyQQC9C0rFyGa
+	1SY+JMNKp6EUUxmzHOI5OGchtsZc=
+X-Google-Smtp-Source: AGHT+IH4oQXZ75PaiQ5q94lbM6UPkG1or1sTEbMNPus1+v5Ba6Wxh3nB65ZO7Zu13k5WPTyEWCcXXDkoaEPGpZrm2lM=
+X-Received: by 2002:a05:6402:13d2:b0:5dc:8845:6a0d with SMTP id
+ 4fb4d7f45d1cf-5deadd9ccd0mr1570670a12.14.1739344977083; Tue, 11 Feb 2025
+ 23:22:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_cYUFqxnxxENAA--.51918S5
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr4fGF4kGryruw47tw43Arc_yoWrKFy8pF
-	4rCa43CrW5GF47t39xJr4DuFsxX3s2qFW7KrWxJasxZr90yas8uF4ktFy5JFsxXr97GFWa
-	qa9a9F4a9F4jywcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
+ <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
+ <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com> <20250211233056.q47mp5askk7qrxcp@jpoimboe>
+In-Reply-To: <20250211233056.q47mp5askk7qrxcp@jpoimboe>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 12 Feb 2025 15:22:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+X-Gm-Features: AWEUYZkwP3dB1uiekSoXe4aycfg9SEbwDK21JX739EF38anakQ8LqK3tzyOMtg0
+Message-ID: <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-TPM2.0 is implemented in Loongson security engine. This is the driver
-for it.
+On Wed, Feb 12, 2025 at 7:30=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+>
+> On Tue, Feb 11, 2025 at 07:59:57PM +0800, Huacai Chen wrote:
+> > Hi, Josh,
+> >
+> > On Tue, Feb 11, 2025 at 5:26=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel=
+.org> wrote:
+> > >
+> > > On Mon, Feb 10, 2025 at 02:07:43PM +0800, Tiezhu Yang wrote:
+> > > > On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
+> > > > > On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
+> > > > > > Hi Josh and Peter,
+> > > > > >
+> > > > > > On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
+> > > > > > > This version is based on tip/tip.git objtool/core branch [1],=
+ add some weak
+> > > > > > > and arch-specific functions to make the generic code more rea=
+dable, tested
+> > > > > > > with the latest upstream mainline Binutils, GCC and Clang.
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.g=
+it/log/?h=3Dobjtool/core
+> > > > > > >
+> > > > > > > Tiezhu Yang (9):
+> > > > > > >   objtool: Handle various symbol types of rodata
+> > > > > > >   objtool: Handle different entry size of rodata
+> > > > > > >   objtool: Handle PC relative relocation type
+> > > > > > >   objtool: Handle unreachable entry of rodata
+> > > > > > >   objtool/LoongArch: Add support for switch table
+> > > > > > >   objtool/LoongArch: Add support for goto table
+> > > > > > >   LoongArch: Enable jump table for objtool
+> > > > > > >   LoongArch: Convert unreachable() to BUG()
+> > > > > > >   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+> > > > > >
+> > > > > > Are you OK with the first 8 patches?
+> > > > > > What's the merge plan for this series?
+> > > > >
+> > > > > Sorry, my inbox is still reeling from the holidays.  I will revie=
+w this
+> > > > > soon.
+> > > >
+> > > > What are the status of the first 8 patches?
+> > > > What is the next step? Is there anything else to be done here?
+> > > > I would really appreciate any advice on how to get this merged.
+> > >
+> > > Please post a new revision rebased on tip/master, with patch 4 droppe=
+d,
+> > > and I'll queue them up for -tip.  Thanks for your patience.
+> > You will queue the whole series, or the first 5 patches, or the first 3=
+ patches?
+>
+> The new series now has 7 patches:
+>
+> Tiezhu Yang (7):
+>   objtool: Handle various symbol types of rodata
+>   objtool: Handle different entry size of rodata
+>   objtool: Handle PC relative relocation type
+>   objtool/LoongArch: Add support for switch table
+>   objtool/LoongArch: Add support for goto table
+>   LoongArch: Enable jump table for objtool
+>   LoongArch: Convert unreachable() to BUG()
+>
+> I was planning on queueing all 7.
+>
+> In particular, patch 6 should stay with the objtool patches since
+> they're directly related.
+>
+> But I was also just going to grab 7 as well.
+>
+> Please let me know if you disagree.
+What about you merge the first 5 patches, and then I merge the last 2
+to the loongarch tree? (I prefer to merge the whole series to the
+loongarch tree with your acked-by, but that may be inconvenient to
+you).
 
-Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
- MAINTAINERS                 |   1 +
- drivers/char/tpm/Kconfig    |   9 ++++
- drivers/char/tpm/Makefile   |   1 +
- drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 115 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_lsse.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6493d58436..6aad0f08ad 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13484,6 +13484,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_lsse.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 APB DMA DRIVER
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 0fc9a510e0..56d0417065 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -225,5 +225,14 @@ config TCG_FTPM_TEE
- 	help
- 	  This driver proxies for firmware TPM running in TEE.
- 
-+config TCG_LSSE
-+	tristate "Loongson TPM Interface"
-+	depends on MFD_LS6000SE
-+	help
-+	  If you want to make Loongson TPM support available, say Yes and
-+	  it will be accessible from within Linux. To compile this
-+	  driver as a module, choose M here; the module will be called
-+	  tpm_lsse.
-+
- source "drivers/char/tpm/st33zp24/Kconfig"
- endif # TCG_TPM
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9bb142c752..bf2280352d 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
- obj-$(CONFIG_TCG_CRB) += tpm_crb.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-+obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
-diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
-new file mode 100644
-index 0000000000..3fd2d9bac8
---- /dev/null
-+++ b/drivers/char/tpm/tpm_lsse.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-+
-+#include <linux/device.h>
-+#include <linux/mfd/ls6000se.h>
-+#include <linux/platform_device.h>
-+#include <linux/wait.h>
-+
-+#include "tpm.h"
-+
-+struct tpm_msg {
-+	u32 cmd;
-+	u32 data_off;
-+	u32 data_len;
-+	u32 info[5];
-+};
-+
-+struct tpm_dev {
-+	struct lsse_ch *se_ch;
-+	struct completion tpm_completion;
-+};
-+
-+static void tpm_complete(struct lsse_ch *ch)
-+{
-+	struct tpm_dev *td = ch->priv;
-+
-+	complete(&td->tpm_completion);
-+}
-+
-+static int tpm_ls_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
-+	struct tpm_msg *rmsg;
-+	int sig;
-+
-+	sig = wait_for_completion_interruptible(&td->tpm_completion);
-+	if (sig)
-+		return sig;
-+
-+	rmsg = td->se_ch->rmsg;
-+	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
-+
-+	return rmsg->data_len;
-+}
-+
-+static int tpm_ls_send(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
-+	struct tpm_msg *smsg = td->se_ch->smsg;
-+
-+	memcpy(td->se_ch->data_buffer, buf, count);
-+	smsg->data_len = count;
-+
-+	return se_send_ch_requeset(td->se_ch);
-+}
-+
-+static const struct tpm_class_ops lsse_tpm_ops = {
-+	.flags = TPM_OPS_AUTO_STARTUP,
-+	.recv = tpm_ls_recv,
-+	.send = tpm_ls_send,
-+};
-+
-+static int lsse_tpm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct tpm_chip *chip;
-+	struct tpm_msg *smsg;
-+	struct tpm_dev *td;
-+
-+	td = devm_kzalloc(dev, sizeof(struct tpm_dev), GFP_KERNEL);
-+	if (!td)
-+		return -ENOMEM;
-+
-+	init_completion(&td->tpm_completion);
-+	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
-+			       2 * sizeof(struct tpm_msg), td, tpm_complete);
-+	if (!td->se_ch)
-+		return -ENODEV;
-+	smsg = td->se_ch->smsg;
-+	smsg->cmd = SE_CMD_TPM;
-+	smsg->data_off = td->se_ch->off;
-+
-+	chip = tpmm_chip_alloc(dev, &lsse_tpm_ops);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-+	dev_set_drvdata(&chip->dev, td);
-+
-+	return tpm_chip_register(chip);
-+}
-+
-+static struct platform_driver lsse_tpm_driver = {
-+	.probe   = lsse_tpm_probe,
-+	.driver  = {
-+		.name  = "ls6000se-tpm",
-+	},
-+};
-+module_platform_driver(lsse_tpm_driver);
-+
-+MODULE_ALIAS("platform:ls6000se-tpm");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
-+MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
-+MODULE_DESCRIPTION("Loongson TPM driver");
--- 
-2.43.0
+Huacai
 
+>
+> --
+> Josh
