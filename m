@@ -1,64 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB7F205512;
-	Thu, 13 Feb 2025 04:06:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00BE20767E;
+	Thu, 13 Feb 2025 04:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739419568; cv=none; b=CNm4QUoZjoCXrqUHwWQ+rzdfOfsHZgwkljc1KiLtwu/k1KibHSAM4PTAPJLi1PdD40tVWXwaloiXr0R6MwsQrQrj03/2554yD4J0YmGgStI3RV/oJ7gApF72SA2xg6gZmkBHBk/BZYgalN+nweKG4Vk8vodAvo2QE+POYAj02yc=
+	t=1739419814; cv=none; b=HgQ5A1WgSzizztNEoBx2YkJr27xH8uTb5AY4dZX7zgBI0YbHyDpop8xtn6FgwwYH+6Me/3yN+w3kNsZ53z/JTEAnw3HpxkQyANHjRcRY6PY6PqCkG78Hd7apRNDo99VYuzSZsIOq9ln12EQABnCb8v4qG2Y5bkr0ZEPoLZP7TLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739419568; c=relaxed/simple;
-	bh=2qAEKldKxjDMlgop/J9s2nwKY2jZLURRUinqIzr3DpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UXAUO5+My53dt09KptUKDNgT0DiFXtbghSIjLzEeq2iBYNhi9RkTjKp9EpuuN5TS6q2cFY5LLCHmsPDOBxGcVpWdDRmKTsNhh76SP/4TyHF9+oJ1CvUM3/3ruLFbfspoo8vM6r2fLCTPOmK2DWATeJ5WnGChm8Q2PLJ7y5lj+aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqOaTuaR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739419814; c=relaxed/simple;
+	bh=MEyXal3MsfePRCxvAxdgFK11qwUtLBoJ0dkXaaBRE6c=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=cs3EqPKKHSfo80aCVbNE+wz7zLrHhK1+tV3vcmrLa0gC4DON8KOtLRHXl8MItqP2ukeh8sXBpAt2kLH9NhyHt4k1SWRDtOE7uDWp98zBcJccfUqQu7R7acmdY995puLvEogsrjuZg3IuaUBtBIYiLxqSzrFRZuZxw9V5tHexhqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqeUku5p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqOaTuaR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927F3C4CEE4;
-	Thu, 13 Feb 2025 04:06:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqeUku5p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D93DC4CED1;
+	Thu, 13 Feb 2025 04:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739419568;
-	bh=2qAEKldKxjDMlgop/J9s2nwKY2jZLURRUinqIzr3DpA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DqOaTuaRoaAli5GYGECbqmxAX+mm7CyoQpfW32UF7De6zOenUyp4j+WTkTCGxlHWe
-	 AqM3jWhIlANjHxS52UhWIAbp9X4na338CbOwMETnYZKB06APU5meC5u2F7hiFEtzV5
-	 iRAu4y36nwyAL26/pfeJKVMGxADMaNdkIVJrsFUL5yDhZloKHbOg3bAy685AFmW7f7
-	 YI0LGxT8q/HX3x1T4qFTDi8GQGXWpd/LUlXZIrkoijig9HlgxqBhXzD9Lu/takwR59
-	 Io8nUjvpwUqAaAbMvZbiZzXdgcbE2t5++kDBeyMHH2Rv+Qp1dkUHJeSOnuyIs38noO
-	 0Y6GZ8injrrjw==
-Date: Wed, 12 Feb 2025 20:06:06 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Yanteng Si
- <si.yanteng@linux.dev>, Feiyang Chen <chris.chenfeiyang@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
- <joabreu@synopsys.com>, Serge Semin <fancer.lancer@gmail.com>,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, Simon Horman
- <horms@kernel.org>, Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct
- {tx,rx}_fifo_size
-Message-ID: <20250212200606.0638ed60@kernel.org>
-In-Reply-To: <20250210134328.2755328-1-chenhuacai@loongson.cn>
-References: <20250210134328.2755328-1-chenhuacai@loongson.cn>
+	s=k20201202; t=1739419814;
+	bh=MEyXal3MsfePRCxvAxdgFK11qwUtLBoJ0dkXaaBRE6c=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PqeUku5pp9tSCj7sjA13n7SR887NnREqN7L+n9/vJsUsm9+7KthEB5xw3LynRRpv6
+	 0SDWvjl70nDyFeGLowggSMUtanPFKX6Mie+e4Sq/ThDSl4xRYeV7oW4zHkA6d6n35S
+	 w68RL1EZ2NRbkBfjlDtkIMpyZHYnXduUGQaAA9Plmx4mqdX2LIp3ekftKKp5SnMY2t
+	 vt7kKBZCECuiKb/re0EGJgvcOq5vn/8V6yZOyt1a4LoqL3ngF6qEPYK0I3Pq59K1sr
+	 JLOxkGHMxynDYfWXSTAfB5zc0n8g4lgdebdM7U69oMogooTNBOZZSLkiHGKJ3wyh+G
+	 AyQcrb7kRHzSw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE5E1380CEDC;
+	Thu, 13 Feb 2025 04:10:44 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct
+ {tx,rx}_fifo_size
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173941984332.756055.4356205354524855724.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Feb 2025 04:10:43 +0000
+References: <20250210134328.2755328-1-chenhuacai@loongson.cn>
+In-Reply-To: <20250210134328.2755328-1-chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: chenhuacai@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ si.yanteng@linux.dev, chris.chenfeiyang@gmail.com,
+ alexandre.torgue@foss.st.com, joabreu@synopsys.com, fancer.lancer@gmail.com,
+ loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, horms@kernel.org,
+ qiaochong@loongson.cn
 
-On Mon, 10 Feb 2025 21:43:28 +0800 Huacai Chen wrote:
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 10 Feb 2025 21:43:28 +0800 you wrote:
 > Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
 > zero. This means dwmac-loongson doesn't support changing MTU because in
 > stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
 > set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
 > queue counts).
+> 
+> Here {tx,rx}_fifo_size is initialised with the initial value (also the
+> maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
+> don't change the queue count, and will be larger than 16KB if we change
+> (decrease) the queue count. However stmmac_change_mtu() still work well
+> with current logic (MTU cannot be larger than 16KB for stmmac).
+> 
+> [...]
 
-Not all drivers support changing MTU. Supporting jumbo frames 
-is a feature, so this commit enables the use of a feature. 
-As such it is not a fix. I'm applying this to net-next.
+Here is the summary with links:
+  - [net,V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
+    https://git.kernel.org/netdev/net-next/c/8dbf0c755645
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
