@@ -1,63 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2696424292A;
-	Thu, 13 Feb 2025 18:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F64245AE5;
+	Thu, 13 Feb 2025 18:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470577; cv=none; b=rhaRBPevkF5fjO2lnv4WNvUPVK4LSR7G8d51WF0MwiLP21XdO1CyQY3F1Mqg/lmdgzeVeQDtcwppSGoliky9FjRVVtfhZgpFu8Q7kxWohSj5OOn+scXMFmjMP3Blko11DTbRm+VLorIw2h9Ql4GKUviQboziWI8hGWVbjoy1u64=
+	t=1739472851; cv=none; b=dPdfwpDPGwxw2Zcp6lFDLTE/jJqq1U/bjn34Bh7qEgWuFfJp/5vrLHpD1mI3qIq+qmC0rEWYaVYQB2n+mOOj35VW/C5M0SSfIumzjz63M4cXiD9qwTpnybda/AY59d/YbxwxGMETTiTiXaXfck815qKekI2GS2LeXSnbthgENQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470577; c=relaxed/simple;
-	bh=NgnYhzPLjHAblX4RWrXhkTc/2BOUz+B8L6B9K5pSNk8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kqSlLjIUvOq7KfgSLF0I7qQnWuD+fkehRQC7eLgqVQN8KoBPt9tfty7qmlMvMC+4wjCbhsy87fScghx+G+6qj/98vQ49F/DYJe2dbf+NOVjy9c/nWhiFe2+In+DtUtoSKQ0HbV8j2oMH67JDv7KVhX9IrVH0nazemP2kxiD1Ot4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABDFLJyr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739472851; c=relaxed/simple;
+	bh=sw1QM8YNVs4tKquw8ExNDS9lGNe7mqqrDLLegMYkS2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZuDrXaSv/7By/d/lPkTZKkJtwQ2A+O56B1FWGtMj9sbocAcVh79KiuFain10ibO/3tr7Q2A5JTm9YV7SDzEXCAR7xQnHEDgLor8x1FHFNUKMw1NprfKfnqg789CQiMN2h1vNwm97ghKvckJ00jpH87eIL+6LzRCR3lUnvZcw25U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xg+CZmr+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABDFLJyr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F6BC4CED1;
-	Thu, 13 Feb 2025 18:16:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xg+CZmr+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6A0C4CED1;
+	Thu, 13 Feb 2025 18:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739470577;
-	bh=NgnYhzPLjHAblX4RWrXhkTc/2BOUz+B8L6B9K5pSNk8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ABDFLJyrx2AeUEZb7vkelqtyb0GlDOFzREGKmzHRpsjFOEc+fPVqKiJxa8It7EDti
-	 muJ7gLrYnF7aFToUqsCwPowTCQdfp9jv4B4RTiwlSuqQpS4TGGznMfDPZOFiwMM8XP
-	 2OdLh7YqchQvoL/6tQglcJPfDGfWnp5YDeWjAsKaF4Say6qQM/2hNR6cvhvhWuUcBP
-	 AwfcALnIoIQbWWpz5az83tt/9+YjIY8ekwA60an9n/Q2bqrv1+ZqffDWu6BAipYTVq
-	 9Fis+ys0gkIBjpry7QbhJ/SkGrix1iSwqk2MhU4YRYTwcMxWrbLzhfBA5lFSy3XOQ1
-	 qaeCZVuSWFRyw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71769380CEEF;
-	Thu, 13 Feb 2025 18:16:47 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.14-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250213143148.1450556-1-chenhuacai@loongson.cn>
-References: <20250213143148.1450556-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250213143148.1450556-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.14-1
-X-PR-Tracked-Commit-Id: 3011b29ec5a33ec16502e687c4264d57416a8b1f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ab68d7eb7b1a64f3f4710da46cc5f93c6c154942
-Message-Id: <173947060611.1325136.10750928122042653593.pr-tracker-bot@kernel.org>
-Date: Thu, 13 Feb 2025 18:16:46 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1739472850;
+	bh=sw1QM8YNVs4tKquw8ExNDS9lGNe7mqqrDLLegMYkS2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xg+CZmr+kXKcUJnO2R5sjJI5xdtczkUza1MbIPMJHJ4CJqxpamFczCqjZHiyc3SKB
+	 P2k2i6SefDTEmk9in2O7Lv+9owltMrZ1iBWsGSopk+uBCCYlz80Ctdhv9tqiTMdJsZ
+	 lY70RAfCsC/nef0Lby33mb+z26G4KMhaipsobmHt0tMFgpBGgdxpkCTZUPTvLRR+FU
+	 3hUTxkXYa0NnmHt8AElAGmBgBdLWDbN4H+84+8WcNY6wHleHgPIUIUwW+68mrUxPVo
+	 C8Dj2Dz0VZvpR2sglVNtqxhwuCC6pFzTSAAMi8LG4dp3KubBwjXnOBisL/6JwwkO0S
+	 iY2e9ApNK8ZoA==
+Date: Thu, 13 Feb 2025 10:54:08 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] compiler.h: Specify correct attribute for
+ .rodata..c_jump_table
+Message-ID: <20250213185408.m5aogf2trvhvi2td@jpoimboe>
+References: <20240924062710.1243-1-yangtiezhu@loongson.cn>
+ <20250212175023.rsxsw7pno57gsxps@jpoimboe>
+ <b1e5e3ea-be4b-5dae-cc0d-34693429d060@loongson.cn>
+ <20250213023936.lzbpgou4eallaij3@jpoimboe>
+ <045d7e22-672c-b9da-38d6-8897e854f262@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <045d7e22-672c-b9da-38d6-8897e854f262@loongson.cn>
 
-The pull request you sent on Thu, 13 Feb 2025 22:31:48 +0800:
+On Thu, Feb 13, 2025 at 08:38:22PM +0800, Tiezhu Yang wrote:
+> Based on the above analysis, in order to avoid changing the behavior of
+> GNU assembler and silence the GNU assembler warning, is it possible to
+> rename ".rodata..c_jump_table" to ".c_jump_table"?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.14-1
+Yeah, though for the final vmlinux link we'd still need it to end up in
+.rodata so it remains read-only at runtime.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ab68d7eb7b1a64f3f4710da46cc5f93c6c154942
+So we'd basically just have to add it to the RO_DATA() macro in
+include/asm-generic/vmlinux.lds.h.
 
-Thank you!
+Does it still work if we call it ..rodata.c_jump_table or so?  Then we
+could just add "*(..rodata.*) to RO_DATA().  That would be somewhat less
+surprising, and would also create a standard way for other code to do
+the same thing by prefixing with "..rodata.".
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Josh
