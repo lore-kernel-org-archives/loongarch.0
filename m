@@ -1,93 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52E923BE;
-	Thu, 13 Feb 2025 02:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68FA9158524
+	for <loongarch@lists.linux.dev>; Thu, 13 Feb 2025 03:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739415070; cv=none; b=K8eb/vphAmt1q6+V1FofC32EBGUyMJ03dy3QfMeq0RE6+8zyyqRsi0mgkT6N8zeZ5mPUMfoMlDr3tIgG/m8fGxkprBMDfHKNJhH3PZfB977qFN29999hpjJhnNmV2vHYaenM0J1xofvJOvHNTfo0aZTY00h1uvpQpzFmnY3AycE=
+	t=1739418970; cv=none; b=UflsmoaA10m6/7cnvkriFpahyM6IugPyukZgIy6goVvk1MqFhSbRr8ncQ81u8JvHkXx9rocJUAlbFl5ckVO5AjG7mOOzDIqmZQQbHj4TBgNJzTAq3qszat9lIdBhUTotS/hBRbL6a9M+9fFX3DDkUSGX+Ab4/YJZ+IudKr6by9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739415070; c=relaxed/simple;
-	bh=D5FcE6li1n/xmFgPW5rMrv2CGWOnvJjA2ZyGHpiMP3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZk7Urh72JIOVevSA60pVaV4RhI3+JFDKSskAfePkG65IRrv4tyHquZzhl5TBH/iqSkQIVSb12GjPQwVVhz/N5sd/ZYmDHoOTyuPoQl0OjSQ6O6GGlTLQD8swvgx+TOz71tp16zZZM2kTpPAmlGaZHqn+8WwzK72kjW7lDMphbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7tJK2xe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7tJK2xe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C93C4CEDF;
-	Thu, 13 Feb 2025 02:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739415070;
-	bh=D5FcE6li1n/xmFgPW5rMrv2CGWOnvJjA2ZyGHpiMP3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7tJK2xe+nnWqa4qPU/UsuL/Q4BwMQEI2HZQLC+ATf7gUiSqwfjzBxd/B/7jWw3p8
-	 cma792rh/j3zQIfS1W0+irVN3oOrAPOtcDBkvM0I6zLATOj4VxZOD9kEsN9hQCVzBW
-	 XxWktZaiyb6Fed6z3whVITTd+srup/hjWndKH18MRohkBCPrJtdISkNFI+uarcudXT
-	 u0euR+v1BuiRMsyFIeBDoDqKMg4YG/oq9Hnz02DyYkJ15UfiXD1ARrDBB1pIzbU3FG
-	 Z8PlLf2Ah+GvvvAdvhqIqne7J6Ki/8GT9KoQsf0R1yx4+MF2wXnNJV97Do7ltHUaAZ
-	 TYvN0yT+auVDg==
-Date: Wed, 12 Feb 2025 18:51:08 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-Message-ID: <20250213025108.svqgj5nzseqs6qox@jpoimboe>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
- <20250115013444.anzoct6gvs56m225@jpoimboe>
- <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
- <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
- <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
- <20250211233056.q47mp5askk7qrxcp@jpoimboe>
- <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+	s=arc-20240116; t=1739418970; c=relaxed/simple;
+	bh=azYpgLA8z3kcFfFC5gdpaTzFk4QeSlBrWzku2tNrj7Y=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RAvXuOgek4Pyomjad2Vw6raeHSSzXioAQ0U+km8x1ZV7RUg9+bvE5ixmQT1ZjxXo/jVffvaNYydGbg3+mPdr+kfY3A5lR1aiNzuxy4QwQvRkueiirExPlBv2o2N/3vBlWQPZg9B8ULfWtx3dB4SV7UvTy2wxwnoGUUK8Vs2tYcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxaeBKba1nKMlzAA--.6428S3;
+	Thu, 13 Feb 2025 11:55:54 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxesQ+ba1nBzYPAA--.2422S2;
+	Thu, 13 Feb 2025 11:55:44 +0800 (CST)
+Subject: Re: [PATCH v2 3/3] tpm: Add a driver for Loongson TPM device
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ Yinggang Gu <guyinggang@loongson.cn>
+References: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
+ <20250212033113.15137-4-zhaoqunqin@loongson.cn> <Z60SfDaWnbgddUnA@kernel.org>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <c825cd7b-a255-d296-baa0-c1a746cb1bce@loongson.cn>
+Date: Thu, 13 Feb 2025 11:56:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+In-Reply-To: <Z60SfDaWnbgddUnA@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxesQ+ba1nBzYPAA--.2422S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr15urWfXw4furyDZF4DKFX_yoW7tF1xpF
+	4kCan8CF4UJrW7t39Iqr4DuF9xX34vqFy2krW7tasxZr90v3s5ur4DKFy5uFZ3Zr1kGF1I
+	vFWS9r43uF1Yk3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7BMNUUUUU=
 
-On Wed, Feb 12, 2025 at 03:22:45PM +0800, Huacai Chen wrote:
-> > The new series now has 7 patches:
-> >
-> > Tiezhu Yang (7):
-> >   objtool: Handle various symbol types of rodata
-> >   objtool: Handle different entry size of rodata
-> >   objtool: Handle PC relative relocation type
-> >   objtool/LoongArch: Add support for switch table
-> >   objtool/LoongArch: Add support for goto table
-> >   LoongArch: Enable jump table for objtool
-> >   LoongArch: Convert unreachable() to BUG()
-> >
-> > I was planning on queueing all 7.
-> >
-> > In particular, patch 6 should stay with the objtool patches since
-> > they're directly related.
-> >
-> > But I was also just going to grab 7 as well.
-> >
-> > Please let me know if you disagree.
-> What about you merge the first 5 patches, and then I merge the last 2
-> to the loongarch tree? (I prefer to merge the whole series to the
-> loongarch tree with your acked-by, but that may be inconvenient to
-> you).
 
-I want the first 5 patches to go through the -tip tree because we'll
-have other patches depending on them.
+在 2025/2/13 上午5:28, Jarkko Sakkinen 写道:
+> On Wed, Feb 12, 2025 at 11:31:13AM +0800, Qunqin Zhao wrote:
+>> TPM2.0 is implemented in Loongson security engine. This is the driver
+> TPM 2.0 or just TPM2 (either is fine with me). Quick reminder what
+> Loongson security engine (I could not know that and it would be nice
+> to have that in git log).
 
-I'll go ahead and take the first 5.
+Looks like just TPM2 is better.
 
-If you take in patches 6 & 7 separately, that might introduce a lot of
-warnings.  But it's up to you.
+Some explanations about Loongson security engine will be added to git log.
 
-For patches 6 & 7:
+>
+>> for it.
+>>
+>> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>> ---
+>>   MAINTAINERS                 |   1 +
+>>   drivers/char/tpm/Kconfig    |   9 ++++
+>>   drivers/char/tpm/Makefile   |   1 +
+>>   drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 115 insertions(+)
+>>   create mode 100644 drivers/char/tpm/tpm_lsse.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 6493d58436..6aad0f08ad 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13484,6 +13484,7 @@ LOONGSON CRYPTO DRIVER
+>>   M:	Qunqin Zhao <zhaoqunqin@loongson.com>
+>>   L:	linux-crypto@vger.kernel.org
+>>   S:	Maintained
+>> +F:	drivers/char/tpm/tpm_lsse.c
+>>   F:	drivers/crypto/loongson/
+>>   
+>>   LOONGSON-2 APB DMA DRIVER
+> Probably MAINTAINERS update should be a separate patch.
 
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Some  MAINTAINERS updates are not  separated form the driver patch.  
+Like the submit of "drivers/mfd/max7714*".
 
--- 
-Josh
+So it seems whether the updates to MAINTAINERS  are separated or not is OK.
+
+BR, Qunqin.
+
+>> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+>> index 0fc9a510e0..56d0417065 100644
+>> --- a/drivers/char/tpm/Kconfig
+>> +++ b/drivers/char/tpm/Kconfig
+>> @@ -225,5 +225,14 @@ config TCG_FTPM_TEE
+>>   	help
+>>   	  This driver proxies for firmware TPM running in TEE.
+>>   
+>> +config TCG_LSSE
+>> +	tristate "Loongson TPM Interface"
+>> +	depends on MFD_LS6000SE
+>> +	help
+>> +	  If you want to make Loongson TPM support available, say Yes and
+>> +	  it will be accessible from within Linux. To compile this
+>> +	  driver as a module, choose M here; the module will be called
+>> +	  tpm_lsse.
+>> +
+>>   source "drivers/char/tpm/st33zp24/Kconfig"
+>>   endif # TCG_TPM
+>> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+>> index 9bb142c752..bf2280352d 100644
+>> --- a/drivers/char/tpm/Makefile
+>> +++ b/drivers/char/tpm/Makefile
+>> @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+>>   obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+>>   obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>>   obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+>> +obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
+>> diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
+>> new file mode 100644
+>> index 0000000000..3fd2d9bac8
+>> --- /dev/null
+>> +++ b/drivers/char/tpm/tpm_lsse.c
+>> @@ -0,0 +1,104 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/mfd/ls6000se.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/wait.h>
+>> +
+>> +#include "tpm.h"
+>> +
+>> +struct tpm_msg {
+>> +	u32 cmd;
+>> +	u32 data_off;
+>> +	u32 data_len;
+>> +	u32 info[5];
+>> +};
+>> +
+>> +struct tpm_dev {
+>> +	struct lsse_ch *se_ch;
+>> +	struct completion tpm_completion;
+>> +};
+>> +
+>> +static void tpm_complete(struct lsse_ch *ch)
+>> +{
+>> +	struct tpm_dev *td = ch->priv;
+>> +
+>> +	complete(&td->tpm_completion);
+>> +}
+>> +
+>> +static int tpm_ls_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>> +{
+>> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+>> +	struct tpm_msg *rmsg;
+>> +	int sig;
+>> +
+>> +	sig = wait_for_completion_interruptible(&td->tpm_completion);
+>> +	if (sig)
+>> +		return sig;
+>> +
+>> +	rmsg = td->se_ch->rmsg;
+>> +	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
+>> +
+>> +	return rmsg->data_len;
+>> +}
+>> +
+>> +static int tpm_ls_send(struct tpm_chip *chip, u8 *buf, size_t count)
+>> +{
+>> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+>> +	struct tpm_msg *smsg = td->se_ch->smsg;
+>> +
+>> +	memcpy(td->se_ch->data_buffer, buf, count);
+>> +	smsg->data_len = count;
+>> +
+>> +	return se_send_ch_requeset(td->se_ch);
+>> +}
+>> +
+>> +static const struct tpm_class_ops lsse_tpm_ops = {
+>> +	.flags = TPM_OPS_AUTO_STARTUP,
+>> +	.recv = tpm_ls_recv,
+>> +	.send = tpm_ls_send,
+>> +};
+>> +
+>> +static int lsse_tpm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct tpm_chip *chip;
+>> +	struct tpm_msg *smsg;
+>> +	struct tpm_dev *td;
+>> +
+>> +	td = devm_kzalloc(dev, sizeof(struct tpm_dev), GFP_KERNEL);
+>> +	if (!td)
+>> +		return -ENOMEM;
+>> +
+>> +	init_completion(&td->tpm_completion);
+>> +	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
+>> +			       2 * sizeof(struct tpm_msg), td, tpm_complete);
+>> +	if (!td->se_ch)
+>> +		return -ENODEV;
+>> +	smsg = td->se_ch->smsg;
+>> +	smsg->cmd = SE_CMD_TPM;
+>> +	smsg->data_off = td->se_ch->off;
+>> +
+>> +	chip = tpmm_chip_alloc(dev, &lsse_tpm_ops);
+>> +	if (IS_ERR(chip))
+>> +		return PTR_ERR(chip);
+>> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>> +	dev_set_drvdata(&chip->dev, td);
+>> +
+>> +	return tpm_chip_register(chip);
+>> +}
+>> +
+>> +static struct platform_driver lsse_tpm_driver = {
+>> +	.probe   = lsse_tpm_probe,
+>> +	.driver  = {
+>> +		.name  = "ls6000se-tpm",
+>> +	},
+>> +};
+>> +module_platform_driver(lsse_tpm_driver);
+>> +
+>> +MODULE_ALIAS("platform:ls6000se-tpm");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+>> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+>> +MODULE_DESCRIPTION("Loongson TPM driver");
+>> -- 
+>> 2.43.0
+>>
+> BR, Jarkko
+
