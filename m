@@ -1,64 +1,67 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0F52222BB
-	for <loongarch@lists.linux.dev>; Thu, 13 Feb 2025 14:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE1F26EFF4
+	for <loongarch@lists.linux.dev>; Thu, 13 Feb 2025 14:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455243; cv=none; b=GfY5/WtYY6hWSFqvquMuGP1GXznm1lWCMNKBzH39O4hp6kRGhpWvXVGTwbakTc9oK3tTCK/O748n8xkwwGsQNFRs1Setb+wPSpd4q0VaBJ2cfdRgCGH+nXMZSK9psMaA8bZErYa2oAUAT6ASicKNEEz4rde3nf0gY5X6TDuEsL8=
+	t=1739455250; cv=none; b=mBMbUz3HVgf8clRMlxIh90oaD6z9UbMR81lOO+LCGFa7kCeynlDBKn1AdnOXCK92pLdbYYrvMF5huFC+m89hpV+j5DYkvg3ZQnT+HlYfxejuRgWLkNcNZEy72KLBwJ8YrJ/pstFsYM4eshxpGyDxoVKgOZREl8iwtETpcGU8pUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455243; c=relaxed/simple;
-	bh=YpdB58uyq8tH7ERH2NdQvCyZMv332LF5vwPEXd91SCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkUwrKhzOPvo79M0K/AQ9FpNYKf9t+1V2HGpZyFDLDVU6lRHWDlPo5+Osk/ynk+WRrhX9nvg6ZAyrQviR8WpbhjGMZNRlkxVSxxsoJqHg+cRtZJweTMrZ4SjD2fOX5gyZWjrcuVVY6vaTYwAFhoSVaiOYL29VCUM+DPADXu/8Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XUAO25j+; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1739455250; c=relaxed/simple;
+	bh=h/3P2KY8vDMPXX5OJwI4gjMRRH8LzIOf17+FXLQKEXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rBB1LNBbvZpSgQsOUeNERL7VMIlMJMHlRVXnslcqaRrb6KKS43aOpQtBlqpA/o70dvtohgjqaTeTHvJG+hJ4dDJI8LHjGG+0ouRDyk9Yq2GXPWpAOyJLBq/AHVkXqDDlJKIgtX/n1ItAq2NQ09hpUHk/j8paiFpQ5b7Mj+2C70o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXR41Vyx; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUAO25j+"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f7f03d856so15744585ad.1
-        for <loongarch@lists.linux.dev>; Thu, 13 Feb 2025 06:00:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXR41Vyx"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220bff984a0so15228965ad.3
+        for <loongarch@lists.linux.dev>; Thu, 13 Feb 2025 06:00:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739455241; x=1740060041; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3CnYIC1jW8Yb7MVQSsYlSkO9EcP0G/PW7oItTF3TCFk=;
-        b=XUAO25j+QBk/w/OZnmnWS5yzsWDaLqCrPkxJJpgjiw1OOb3ZLBfT7lXDT7vy146v3g
-         8jartP4yM/C2nZ0uwB4wlUnquL19GSjKmMWQJgygF7COChGAGtbm8kwp1gdnC4RNIHQv
-         TeJoh/m8UBcbE0QWTPUEsgvOJmoO442tc2xWMaRlV9IogrgLtQhmTvaT2clgyHRBMUqO
-         v25C3zijp8/uT+VKVWfyVioHBjKcrp95iQ7GAxiCd1D8VyR3xrd61WYcMSBm8b+UIHJK
-         cZgxvJDphTwGl+3e4SZ2hSIQFT08Dnt1EqOtCYeeINY+CUqNYKTjpSXvn4rNDfZM3Hu9
-         wqPg==
+        d=gmail.com; s=20230601; t=1739455248; x=1740060048; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gg/V+lwtqWQq5Y/Ly9J/s6hUNho4JthxgdaqasfoAcA=;
+        b=BXR41VyxhvWxaRj08jjNkHIxFc2MmJ11yfxfoHyFS3zToFbIxAjVhcAl3RH8v6ONVU
+         rxWeiKvNW2waNdd8+JUvkOVp/7msqjWQH6ulPMHxcyavImqzjcugRmpXwMdloaTXHOUV
+         iXE13TbHbH3LqiIBRVwswKgj/6yXyhnE6fNxrAiaTHqUrg7kY+eQ10iMkqIB0ubAl1Yw
+         KzAWt+KJR3Qw973MsWmIrsrj78Tr5nTroblKuE5lQ7hywvujsUQI1SE7+E3AXmxvS9oj
+         O8y8s6poz46XRi5FOsP/hR7K9x2Zf/WqqlLROq7pxRg4e6qStimRNazXeufX5mFto8Nc
+         B05A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739455241; x=1740060041;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3CnYIC1jW8Yb7MVQSsYlSkO9EcP0G/PW7oItTF3TCFk=;
-        b=vHOLJRpimhqS8Oi6AVnjQxZ+EpS+TDPr5Ct/H6yEENDKkd5Np+P3CA71Tlu3GgpqhC
-         Dda5lsF5T6I0Cw/tRZqafP6lMfwgKWL2vxBiTUTBjyFjDFvNnp1LJhS7dnL5p1sQHR2P
-         yImEYashdrDA9mfsZ6W6qgerXg7ClkY6Mm+tNtSeybwroZq9xR1tsMuuXI0Vo3b7j5VE
-         Wo6NHhwE9No9Wc4YAyzu0gKqKFE6U5VzdgAkLazBmu6kaqdk71CAVdabM7X/1K4qWl9y
-         wi6yF/LRLpbfrnEx7JGBbC2EstxoHES1jlqsmcmG6SjE3FBY0iDiGM4CNSsRZ9NYww6u
-         rYxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSGeF1zbY0Gj7HkKiDNgAtlQuTd/jFGUQ/DPMeoivHqr7bFI5JLQ2ownrnwO/SmRZbQR/Vkylieiw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywh3faCFo0I+KVa6SC9DmnVlRN86uSq3Dy4GMu99Qjanfm0cD31
-	j6BQZR1i5SYJ3y3A8T0dUSC15OI63IXaJQmCjWHCJ/sgJQImmmqJ
-X-Gm-Gg: ASbGncttfKfAGttWbdOu9NS4O5bP9ek250uafOcNyqIp7JGIzB0xpDFk8HqwZveza3a
-	msAfHoRFtkvutNsHBmbxb4RR5nQYx0ZEUcf0aRrrREhBrlCyH22dDCoS7oborNKgCI4HDfl5Vlo
-	Fm630tdU1v/AKrXornlDBzV9i5DsO7Z82OLRzkr83xZ/IfaE2T1vJhXq75iIrNOJrMku7G+xw8C
-	yr/pU3Dl0JdJ/AOfxq2Pz8G6Kr9TwRJcpFKMdOTg6Zh1LeEhj1pGBaI6NHyw0ZDjkqACxKowsvi
-	6dQ6PccDOD527MpBUg64OT0DvKTEWD9x4vBmmuigwOCMAlr5yHgBsrxfzuZP/bYY6/E=
-X-Google-Smtp-Source: AGHT+IFiybmklIR6sXPe5dOMXPko9nq/OxURSSt8JQfw095Ue+kPgwqj+3k15eW2uamc5z4ID2izMg==
-X-Received: by 2002:a17:902:e850:b0:21f:78f:c178 with SMTP id d9443c01a7336-220d1ec1f7bmr52326585ad.3.1739455240643;
-        Thu, 13 Feb 2025 06:00:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739455248; x=1740060048;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gg/V+lwtqWQq5Y/Ly9J/s6hUNho4JthxgdaqasfoAcA=;
+        b=w+3hzbqUkiFO+/E7vesiumUOsKxO3exTz71wFno49wYfEmMsF5LTSWm8cwBkae0sz+
+         MUF9bRXG6huBM2My4VpVUysaQWuNeM03XaYpp1QfayFfpHNadOvnhrOzGR4YgCOmKsA3
+         Cvu9sPKfQPb5cI4Vk4Y4xR58g1dz7L8cowJHeVoWcY5i6igSps9xtXdh6C3HyVOVftJ5
+         uCy+sPDgQIchgMZgtc1JBckVagaO12+/B5gm3APBf+67HNO+jTIMMnYeuU0bitmc1A+W
+         K4Xlwft95BNXUsquD+7N1RSfXVYE6N0NQ3eIFF1xV/afuoqQNIRJR5PFccBhGgxLqoF1
+         1jww==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ1X9quz03ndcGSu0LS7V2w0+RK4VMGk1gZ93iVB+VYz9rNbRTeyJPHB3e39HpF6rHYYscDDwms58=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzo6lcGCTuaIAeJRCkTy0bOXHyepUSEImNtAfLO7t5qd6D/X4Md
+	lG0hcu2UqBrAEsRVU+9WOWaHCmnoZxyEIpjwgiHcyRa3Yd3LNxca
+X-Gm-Gg: ASbGncusLIx17Rmx0i47jN0wjKAV2RZsbW2pdFIPK49jUXtI9X3N1BO94QQ1mva2Evt
+	u3W4PWrZVmqkq0asrOYT0GOqzkPMOxdgaKwbNABznJnzAEB6Xu4brLAvSGgPbyPNzIS9o3REnl+
+	GXX2vBA7xnDlvN1llMcj1vqe0WJRj/cngnrnduTw6JZvk7FplrFrIgXez5MI4PBLk6p72tQt3rv
+	/v7UZ2A+ZDP7ZUUawZuBgGZievDgZ+A9/+TAjKht/ANHs/etdqJTenux3PV1ChR4DftCisTQhLB
+	WJqWZhLbOXMePBFUYbhatsS7IJQetN9YsrrOM0akLimz5T3mSrTx1ui4VpHt2XN+YXA=
+X-Google-Smtp-Source: AGHT+IFTuUUy1Wq3iWeeuJp7RF8h8HqcmzEsROtZ3HzF4SlUho3mcp66MzG3aF4wwbARFTyZlT5eFg==
+X-Received: by 2002:a17:902:d58c:b0:20c:6399:d637 with SMTP id d9443c01a7336-220d2132be5mr57272645ad.40.1739455248450;
+        Thu, 13 Feb 2025 06:00:48 -0800 (PST)
 Received: from mew.. (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55858d6sm12565225ad.223.2025.02.13.06.00.33
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55858d6sm12565225ad.223.2025.02.13.06.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 06:00:40 -0800 (PST)
+        Thu, 13 Feb 2025 06:00:48 -0800 (PST)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Cc: x86@kernel.org,
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	x86@kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	loongarch@lists.linux.dev,
@@ -66,7 +69,6 @@ Cc: x86@kernel.org,
 	mingo@redhat.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
-	peterz@infradead.org,
 	hpa@zytor.com,
 	paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -87,10 +89,12 @@ Cc: x86@kernel.org,
 	a.hindborg@kernel.org,
 	aliceryhl@google.com,
 	tmgross@umich.edu
-Subject: [PATCH v3 0/5] rust: Add bug/warn abstractions
-Date: Thu, 13 Feb 2025 22:57:54 +0900
-Message-ID: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+Subject: [PATCH v3 1/5] x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with Rust
+Date: Thu, 13 Feb 2025 22:57:55 +0900
+Message-ID: <20250213135759.190006-2-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+References: <20250213135759.190006-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -99,70 +103,107 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset adds warn_on and warn_on_once macros with the bug/warn
-abstraction.
+Add new ARCH_WARN_ASM macro for BUG/WARN assembly code sharing with
+Rust to avoid the duplication.
 
-Wrapping C's BUG/WARN macros does not work well for x86, RISC-V,
-ARM64, and LoongArch. Rust code needs to directly execute the same
-assembly code used on the C side. To avoid duplicating the assembly
-code, this approach mirrors what the static branch code does: it
-generates the assembly code for Rust using the C preprocessor at
-compile time.
+No functional changes.
 
-The 1st to 4th patches export the BUG/WARN assembly code for Rust on
-each architecture, with no functional changes on the C side. The
-changes for x86 and RISC-V are straightforward. However, the ARM64 and
-LoongArch assembly code are designed differently; they are used by
-both C inline assembly and assembly code. As a result, sharing this
-code with Rust is complicated.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ arch/x86/include/asm/bug.h | 56 +++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-The last patch adds the bug abstraction with warn_on and warn_on_once
-implementations.
-
-This has been tested on x86, ARM64, and RISC-V (QEMU), with only a
-compile test performed for LoongArch.
-
-The assembly code can be used for both BUG and WARN, but currently
-only supports warn_on and warn_on_once. I will work on the remaining
-functionality after this abstraction is merged.
-
-v3:
-- rebased on rust-next
-- use ANNOTATE_REACHABLE macro (replaced ASM_REACHABLE)
-- added Acked-by tag to the x86 change
-v2: https://lore.kernel.org/linux-arm-kernel/20241218062009.2402650-1-fujita.tomonori@gmail.com/
-- remove target_arch cfg by using asm comment
-- clean up the changes to loongarch asm
-v1: https://lore.kernel.org/linux-arm-kernel/20241210001802.228725-1-fujita.tomonori@gmail.com/
-
-FUJITA Tomonori (5):
-  x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  riscv/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  arm64/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  loongarch/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing
-    with Rust
-  rust: Add warn_on and warn_on_once
-
- arch/arm64/include/asm/asm-bug.h              |  33 +++++-
- arch/loongarch/include/asm/bug.h              |  35 +++++-
- arch/riscv/include/asm/bug.h                  |  37 ++++---
- arch/x86/include/asm/bug.h                    |  56 +++++-----
- rust/Makefile                                 |   8 ++
- rust/kernel/.gitignore                        |   2 +
- rust/kernel/bug.rs                            | 100 ++++++++++++++++++
- rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
- rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
- rust/kernel/lib.rs                            |   1 +
- 10 files changed, 235 insertions(+), 51 deletions(-)
- create mode 100644 rust/kernel/bug.rs
- create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
- create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
-
-
-base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index e85ac0c7c039..61570ec9464c 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -28,45 +28,42 @@
+ #ifdef CONFIG_GENERIC_BUG
+ 
+ #ifdef CONFIG_X86_32
+-# define __BUG_REL(val)	".long " __stringify(val)
++# define __BUG_REL(val)	".long " val
+ #else
+-# define __BUG_REL(val)	".long " __stringify(val) " - ."
++# define __BUG_REL(val)	".long " val " - ."
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
++#define __BUG_ENTRY(file, line, flags)					\
++	"2:\t" __BUG_REL("1b") "\t# bug_entry::bug_addr\n"		\
++	"\t" __BUG_REL(file)   "\t# bug_entry::file\n"			\
++	"\t.word " line        "\t# bug_entry::line\n"			\
++	"\t.word " flags       "\t# bug_entry::flags\n"
++#else
++#define __BUG_ENTRY(file, ine, flags)					\
++	"2:\t" __BUG_REL("1b") "\t# bug_entry::bug_addr\n"		\
++	"\t.word " flags       "\t# bug_entry::flags\n"
++#endif
++
++#define _BUG_FLAGS_ASM(ins, file, line, flags, size, extra)		\
++	"1:\t" ins "\n"							\
++	".pushsection __bug_table,\"aw\"\n"				\
++	__BUG_ENTRY(file, line, flags)					\
++	"\t.org 2b + " size "\n"					\
++	".popsection\n"							\
++	extra
+ 
+ #define _BUG_FLAGS(ins, flags, extra)					\
+ do {									\
+-	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+-		     "\t.word %c1"        "\t# bug_entry::line\n"	\
+-		     "\t.word %c2"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c3\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
++	asm_inline volatile(_BUG_FLAGS_ASM(ins, "%c0",			\
++					   "%c1", "%c2", "%c3", extra)	\
+ 		     : : "i" (__FILE__), "i" (__LINE__),		\
+ 			 "i" (flags),					\
+ 			 "i" (sizeof(struct bug_entry)));		\
+ } while (0)
+ 
+-#else /* !CONFIG_DEBUG_BUGVERBOSE */
+-
+-#define _BUG_FLAGS(ins, flags, extra)					\
+-do {									\
+-	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c1\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
+-		     : : "i" (flags),					\
+-			 "i" (sizeof(struct bug_entry)));		\
+-} while (0)
+-
+-#endif /* CONFIG_DEBUG_BUGVERBOSE */
++#define ARCH_WARN_ASM(file, line, flags, size)				\
++	_BUG_FLAGS_ASM(ASM_UD2, file, line, flags, size, "")
+ 
+ #else
+ 
+@@ -88,11 +85,14 @@ do {								\
+  * were to trigger, we'd rather wreck the machine in an attempt to get the
+  * message out than not know about it.
+  */
++
++#define ARCH_WARN_REACHABLE	ANNOTATE_REACHABLE(1b)
++
+ #define __WARN_FLAGS(flags)					\
+ do {								\
+ 	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+ 	instrumentation_begin();				\
+-	_BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));	\
++	_BUG_FLAGS(ASM_UD2, __flags, ARCH_WARN_REACHABLE);	\
+ 	instrumentation_end();					\
+ } while (0)
+ 
 -- 
 2.43.0
 
