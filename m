@@ -1,86 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00BE20767E;
-	Thu, 13 Feb 2025 04:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EE921128A;
+	Thu, 13 Feb 2025 12:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739419814; cv=none; b=HgQ5A1WgSzizztNEoBx2YkJr27xH8uTb5AY4dZX7zgBI0YbHyDpop8xtn6FgwwYH+6Me/3yN+w3kNsZ53z/JTEAnw3HpxkQyANHjRcRY6PY6PqCkG78Hd7apRNDo99VYuzSZsIOq9ln12EQABnCb8v4qG2Y5bkr0ZEPoLZP7TLs=
+	t=1739450311; cv=none; b=bUoZBbC8MzdI+79INZMsdXhO/QKFkpC9OPwvfCaLvOSgmkJGh2oBJlm1UfcdxOLZ4XJO3rGC2ssRW0wpuiEZBzMj1wWjjdJtXmDPv5YfmR6ezj2be13m6OiD6GWFiAbSPUSCiOypViSllfYbbVcSIMx32e3OVIWQHHhAuqBo550=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739419814; c=relaxed/simple;
-	bh=MEyXal3MsfePRCxvAxdgFK11qwUtLBoJ0dkXaaBRE6c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cs3EqPKKHSfo80aCVbNE+wz7zLrHhK1+tV3vcmrLa0gC4DON8KOtLRHXl8MItqP2ukeh8sXBpAt2kLH9NhyHt4k1SWRDtOE7uDWp98zBcJccfUqQu7R7acmdY995puLvEogsrjuZg3IuaUBtBIYiLxqSzrFRZuZxw9V5tHexhqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqeUku5p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqeUku5p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D93DC4CED1;
-	Thu, 13 Feb 2025 04:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739419814;
-	bh=MEyXal3MsfePRCxvAxdgFK11qwUtLBoJ0dkXaaBRE6c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PqeUku5pp9tSCj7sjA13n7SR887NnREqN7L+n9/vJsUsm9+7KthEB5xw3LynRRpv6
-	 0SDWvjl70nDyFeGLowggSMUtanPFKX6Mie+e4Sq/ThDSl4xRYeV7oW4zHkA6d6n35S
-	 w68RL1EZ2NRbkBfjlDtkIMpyZHYnXduUGQaAA9Plmx4mqdX2LIp3ekftKKp5SnMY2t
-	 vt7kKBZCECuiKb/re0EGJgvcOq5vn/8V6yZOyt1a4LoqL3ngF6qEPYK0I3Pq59K1sr
-	 JLOxkGHMxynDYfWXSTAfB5zc0n8g4lgdebdM7U69oMogooTNBOZZSLkiHGKJ3wyh+G
-	 AyQcrb7kRHzSw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE5E1380CEDC;
-	Thu, 13 Feb 2025 04:10:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1739450311; c=relaxed/simple;
+	bh=o0LpgFDNpDUZNib8tQhCPESwGWjJy7YNbOMkCSYDmug=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FWEEtuDt+C2uQKW+aH9HnDQ1DECoOxL9xoMyc9kW8MQawbf5QmSxzdut+4nUeu6b6JZ999KWrIUrSrnGaMWUv6CtB4z/e/RQTWeFnJplgBhRyGzNdhU1j20YPpzojIPlSJbrvamFcTmElh/A+RHQyJpludUMSzDCdzzn7sbQ7z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxdXDA561nHSh0AA--.5673S3;
+	Thu, 13 Feb 2025 20:38:24 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCx_ca+561nef0PAA--.63106S3;
+	Thu, 13 Feb 2025 20:38:22 +0800 (CST)
+Subject: Re: [PATCH] compiler.h: Specify correct attribute for
+ .rodata..c_jump_table
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20240924062710.1243-1-yangtiezhu@loongson.cn>
+ <20250212175023.rsxsw7pno57gsxps@jpoimboe>
+ <b1e5e3ea-be4b-5dae-cc0d-34693429d060@loongson.cn>
+ <20250213023936.lzbpgou4eallaij3@jpoimboe>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+ llvm@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <045d7e22-672c-b9da-38d6-8897e854f262@loongson.cn>
+Date: Thu, 13 Feb 2025 20:38:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct
- {tx,rx}_fifo_size
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173941984332.756055.4356205354524855724.git-patchwork-notify@kernel.org>
-Date: Thu, 13 Feb 2025 04:10:43 +0000
-References: <20250210134328.2755328-1-chenhuacai@loongson.cn>
-In-Reply-To: <20250210134328.2755328-1-chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: chenhuacai@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- si.yanteng@linux.dev, chris.chenfeiyang@gmail.com,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com, fancer.lancer@gmail.com,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, horms@kernel.org,
- qiaochong@loongson.cn
+In-Reply-To: <20250213023936.lzbpgou4eallaij3@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCx_ca+561nef0PAA--.63106S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Aw1rJFykZr1kWr1kWFWfJFc_yoWxZF17pr
+	yUKFyUKrs5AF15Ca1xKr1Ygr1UtrsrAFy8XF1UJr4UAw15WF1ktF1xtrsrtryDGrn5Xr1Y
+	y39rtw17KFWDAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFE__UUUUU=
 
-Hello:
+On 02/13/2025 10:39 AM, Josh Poimboeuf wrote:
+> On Thu, Feb 13, 2025 at 10:20:40AM +0800, Tiezhu Yang wrote:
+>> On 02/13/2025 01:50 AM, Josh Poimboeuf wrote:
+>>>> @@ -133,7 +133,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>>>>  #define annotate_unreachable() __annotate_unreachable(__COUNTER__)
+>>>>
+>>>>  /* Annotate a C jump table to allow objtool to follow the code flow */
+>>>> -#define __annotate_jump_table __section(".rodata..c_jump_table")
+>>>> +#define __annotate_jump_table __section(".rodata..c_jump_table,\"a\",@progbits #")
+>>>
+>>> This caused a regression, this hack apparently doesn't work with Clang:
+>>>
+>>>   $ readelf -WS kernel/bpf/core.o | grep c_jump_table
+>>>     [43] .rodata..c_jump_table,"a",@progbits # PROGBITS        0000000000000000 00d610 000800 00   A  0   0 16
+>>>
+>>> Notice the section name is literally:
+>>>
+>>>   .rodata..c_jump_table,"a",@progbits #
+>>
+>> Yes, I noticed this section name which contains the original name
+>> ".rodata..c_jump_table" and the specified attribute compiled with
+>> Clang, it should not contain the specified attribute.
+>>
+>> That is strange but seems no effect due to only compare the first
+>> few letters of the section name in objtool.
+>
+> It actually does have an effect -- objtool doesn't recognize the BPF C
+> jump table (see the use of C_JUMP_TABLE_SECTION in
+> tools/objtool/arch/x86/special.c), resulting in a bogus warning and
+> missing ORC.
+>
+> I do have a workaround to use strstarts() instead of strcmp(), I'll be
+> posting that soon.
+>
+>> I will keep digging with the GNU and LLVM compiler developers.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Specify the attribute like ".rodata..c_jump_table,\"a\",@progbits #"
+explicitly works for GNU toolchains, but this hack apparently doesn't
+work with Clang, the generated section name is wrong, resulting in a
+bogus warning and missing ORC for x86. This is because there is only
+one arg for section name in LLVM, even if the so called attribute is
+specified, it will be recognized as a whole for section name, so it
+is not proper to specify the readonly attribute for the section.
 
-On Mon, 10 Feb 2025 21:43:28 +0800 you wrote:
-> Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-> zero. This means dwmac-loongson doesn't support changing MTU because in
-> stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
-> set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
-> queue counts).
-> 
-> Here {tx,rx}_fifo_size is initialised with the initial value (also the
-> maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
-> don't change the queue count, and will be larger than 16KB if we change
-> (decrease) the queue count. However stmmac_change_mtu() still work well
-> with current logic (MTU cannot be larger than 16KB for stmmac).
-> 
-> [...]
+In the top Makefile, there is "-fno-PIE" build flag. For x86, there
+is no "-fPIE" build flag in arch/x86/Makefile for 64 bit kernel. But
+for LoongArch, there is "-fPIE" build flag in arch/loongarch/Makefile
+to override "-fno-PIE" in top Makefile. After some test with GCC and
+Clang on x86 and LoongArch, it shows that the generated "W" (writable)
+section attribute of the section ".rodata..c_jump_table" is depent on
+the compiler option "-fPIE", and then lead to the assembler warning:
+"setting incorrect section attributes for .rodata..c_jump_table".
 
-Here is the summary with links:
-  - [net,V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
-    https://git.kernel.org/netdev/net-next/c/8dbf0c755645
+Note that when running the following steps, x86 and LoongArch have the
+same result. If compiled with GCC -fPIE, there is assembler warning for
+x86 and LoongArch; if compiled with Clang -fPIE, there is no assembler
+warning for x86 and LoongArch.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+If just drop the prefix ".rodata" of the section name, that is to say,
+rename ".rodata..c_jump_table" to ".c_jump_table", there is no assembler
+warning for x86 and LoongArch.
 
+Based on the above analysis, in order to avoid changing the behavior of
+GNU assembler and silence the GNU assembler warning, is it possible to
+rename ".rodata..c_jump_table" to ".c_jump_table"? Or should it do some
+changes for GNU assembler?
+
+https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=gas/config/obj-elf.c;hb=HEAD#l741
+               if (match_p->group_name == NULL)
+                 as_warn (_("setting incorrect section attributes for %s"),
+                          name);
+
+(1) Here is the simple test code with the original section name:
+
+$ cat test.c
+#define __annotate_jump_table 
+__attribute__((__section__(".rodata..c_jump_table")))
+
+int main()
+{
+	static const void * const jumptable[256] __annotate_jump_table = {
+		[0 ... 255] = &&default_label,
+	};
+
+default_label:
+	return 0;
+}
+
+(2) Here is the build script:
+
+$ cat build.sh
+#!/bin/bash
+
+uname -m
+echo ""
+
+rm -f *gcc* *clang*
+
+echo "test with gcc fpie"
+gcc -fPIE -E test.c -o test_with_gcc_fpie.i
+gcc -fPIE -S test_with_gcc_fpie.i -o test_with_gcc_fpie.s
+gcc -fPIE -c test_with_gcc_fpie.s -o test_with_gcc_fpie.o
+readelf -S test_with_gcc_fpie.o | grep -A 1 "c_j" | head -2
+echo ""
+
+echo "test with gcc fnopie"
+gcc -fno-PIE -E test.c -o test_with_gcc_fnopie.i
+gcc -fno-PIE -S test_with_gcc_fnopie.i -o test_with_gcc_fnopie.s
+gcc -fno-PIE -c test_with_gcc_fnopie.s -o test_with_gcc_fnopie.o
+readelf -S test_with_gcc_fnopie.o | grep -A 1 "c_j" | head -2
+echo ""
+
+echo "test with clang fpie"
+clang -fPIE -E test.c -o test_with_clang_fpie.i
+clang -fPIE -S test_with_clang_fpie.i -o test_with_clang_fpie.s
+clang -fPIE -c test_with_clang_fpie.s -o test_with_clang_fpie.o
+readelf -S test_with_clang_fpie.o | grep -A 1 "c_j" | head -2
+echo ""
+
+echo "test with clang fnopie"
+clang -fno-PIE -E test.c -o test_with_clang_fnopie.i
+clang -fno-PIE -S test_with_clang_fnopie.i -o test_with_clang_fnopie.s
+clang -fno-PIE -c test_with_clang_fnopie.s -o test_with_clang_fnopie.o
+readelf -S test_with_clang_fnopie.o | grep -A 1 "c_j" | head -2
+
+(3) Here is the test result with the original section name:
+
+$ ./build.sh
+x86_64
+
+test with gcc fpie
+test_with_gcc_fpie.s: Assembler messages:
+test_with_gcc_fpie.s:3: Warning: setting incorrect section attributes 
+for .rodata..c_jump_table
+   [ 4] .rodata..c_j[...] PROGBITS         0000000000000000  00000060
+        0000000000000800  0000000000000000  WA       0     0     32
+
+test with gcc fnopie
+   [ 4] .rodata..c_j[...] PROGBITS         0000000000000000  00000060
+        0000000000000800  0000000000000000   A       0     0     32
+
+test with clang fpie
+   [ 3] .rodata..c_j[...] PROGBITS         0000000000000000  00000050
+        0000000000000800  0000000000000000  WA       0     0     16
+
+test with clang fnopie
+   [ 3] .rodata..c_j[...] PROGBITS         0000000000000000  00000050
+        0000000000000800  0000000000000000   A       0     0     16
+
+(4) Here is the simple test code with the modified section name:
+
+$ cat test.c
+#define __annotate_jump_table  __attribute__((__section__(".c_jump_table")))
+
+int main()
+{
+	static const void * const jumptable[256] __annotate_jump_table = {
+		[0 ... 255] = &&default_label,
+	};
+
+default_label:
+	return 0;
+}
+
+(5) Here is the test result with the modified section name:
+     (note that build.sh is not changed)
+
+$ ./build.sh
+x86_64
+
+test with gcc fpie
+   [ 4] .c_jump_table     PROGBITS         0000000000000000  00000060
+        0000000000000800  0000000000000000  WA       0     0     32
+
+test with gcc fnopie
+   [ 4] .c_jump_table     PROGBITS         0000000000000000  00000060
+        0000000000000800  0000000000000000   A       0     0     32
+
+test with clang fpie
+   [ 3] .c_jump_table     PROGBITS         0000000000000000  00000050
+        0000000000000800  0000000000000000  WA       0     0     16
+
+test with clang fnopie
+   [ 3] .c_jump_table     PROGBITS         0000000000000000  00000050
+        0000000000000800  0000000000000000   A       0     0     16
+
+Thanks,
+Tiezhu
 
