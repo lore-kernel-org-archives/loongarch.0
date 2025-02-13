@@ -1,104 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BE828A2CB;
-	Thu, 13 Feb 2025 20:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A3D1714B7;
+	Thu, 13 Feb 2025 22:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739477159; cv=none; b=EvPMgFqxpfcu924/14AWhehCNF7lMU92WmP+HAj/b24INeMUT9foD8v2lhOEiI6vpY0cPc7r3ngVt28urmdyiiNLXEW7/BzviAZDHYnFSlO5mdcCyAlwLxO3nylOit6cRmhK1Ikh2Eams1evc7aQ3j1EvowzqgcCBlUMvqNnz3M=
+	t=1739484606; cv=none; b=HmFQnBiIiJnXuNmsFZlJZgvemuZ5LgLzhRK1fxky8F8oieRjCFa6eWkqj069IfFofrmMIZcLFAKJfQs/J/NBICkfbZeLHtnxkpMmFLHZztCionY5WafWLa2tW1xZDAhhBlEjU+2iae+5loxYPYKP86k3WpN4aNNlfUDbQEKHYkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739477159; c=relaxed/simple;
-	bh=NACchtxeonADU5GQJHVdhJAYs1NUCFnsjx8N1JQdRrU=;
+	s=arc-20240116; t=1739484606; c=relaxed/simple;
+	bh=tPJVDzkw9dZftCkEk7dg854tzrJWiG4yXXnjKTij19I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IYEiKiPTrvgB4Ru8yFRO3PFS10M1GCrSnHzEyOsIFyE7t4lWfbhSHBtQnrnadTehJZ+ELNEzku1ua1gY6mnORFDauTdi+zsd9JXPecl5u4BRT1/y87TgfHQ1Wk9iohJXiNtqjgqmDvYX4RjO2BM3rX8Al5/tn1hVYSKkWrlrpe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/JH8jfV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOzm+U2/rqVPo76OGg7pLIhZanI1F0gHxnPEfNr7/Zz2rrD/nPttrDDGy7pIpTqZAB7dr6NBg2gLfLUcUwqS0JL4KzxTXUCnSMUUMlxCfRTIgVdBSnZ7ORQlfJVbHuc6PZaw5u+il66ajjjV1ENG3PT+M7YdTjxLd84LesTJI+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd+3PEos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/JH8jfV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8B6C4CED1;
-	Thu, 13 Feb 2025 20:05:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd+3PEos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E24D4C4CED1;
+	Thu, 13 Feb 2025 22:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739477159;
-	bh=NACchtxeonADU5GQJHVdhJAYs1NUCFnsjx8N1JQdRrU=;
+	s=k20201202; t=1739484605;
+	bh=tPJVDzkw9dZftCkEk7dg854tzrJWiG4yXXnjKTij19I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O/JH8jfV1QVq1uasHTsNeuvpUp+d/jj3Sxg0GxQKCVk7MJyvAD+eV7i506He6qDkk
-	 CgczH1mXZqmixuHsk0D/2KtFkSCe/Wmi8P9wl7zCIUczWtl3sD9Vq+H2A5cpdDdnQF
-	 qNGJnP9y/5CtGu9vhXYx1B8p7h+0KKFG7NvnxjfzY6NPNfHSqEgpjg6KZXdcGWsLa9
-	 aw79CG0LR2+U1fZ2shFOmgWKUurnvnCGkvfOKwv3xXZMFivGXD6G8/TJk9OItg0FuJ
-	 zk2HZ3DJcceF9gUMbY0NZul7L33XU3Emvw5VLBcspBPrQFTtCjH/OY7sZFLz2zeqsk
-	 MyoYXycWED0Ew==
-Date: Thu, 13 Feb 2025 20:05:53 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev,
-	loongarch@lists.linux.dev
-Subject: Re: (subset) [PATCH v1 0/4] Removal of non-existent DAC nodes
-Message-ID: <20250213-calamity-smuggler-5d606993be32@spud>
-References: <20240717-anvil-ashy-544e80a1317c@spud>
- <173939339997.59416.11108011581545463665.b4-ty@linaro.org>
+	b=Nd+3PEoswO2bSOWtqU91NTcMcpUKScLnvzmglkXZGBL/lgGtdEyJncCYtzQkFC8y2
+	 ztBkkIWQsV6EOVNrYZWhBziAfWf9V2AVNhlhG0VAgJo5B+A3xmzC7W2KWzgTT2m5T3
+	 Lcb1H7+kkPNkkeKrEpwz6SyO1Pxd9oFfRa8ZhpqtIm2lIYsjZoBR/2unKLf5BaiMwF
+	 h3t3dwuiqVza4mAN4PuCyNYOqT81ibL/uKP5IMBh5UXOV5qcOBuSQ/pBc3DbcjYa3n
+	 C3A24+zB5drv7F1CS7O4vg9y/RCBv94jGUjJeWXio4on9p3Ap3ydkgJ8yNRQOVc0ae
+	 mumf/l3P9BLtA==
+Date: Fri, 14 Feb 2025 00:10:00 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+	peterhuewe@gmx.de, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>
+Subject: Re: [PATCH v2 3/3] tpm: Add a driver for Loongson TPM device
+Message-ID: <Z65tuC722nnuhWEO@kernel.org>
+References: <20250212033113.15137-1-zhaoqunqin@loongson.cn>
+ <20250212033113.15137-4-zhaoqunqin@loongson.cn>
+ <Z60SfDaWnbgddUnA@kernel.org>
+ <c825cd7b-a255-d296-baa0-c1a746cb1bce@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t2TI/qcM7Hcs5rgZ"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <173939339997.59416.11108011581545463665.b4-ty@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c825cd7b-a255-d296-baa0-c1a746cb1bce@loongson.cn>
 
+On Thu, Feb 13, 2025 at 11:56:25AM +0800, Qunqin Zhao wrote:
+> 
+> 在 2025/2/13 上午5:28, Jarkko Sakkinen 写道:
+> > On Wed, Feb 12, 2025 at 11:31:13AM +0800, Qunqin Zhao wrote:
+> > > TPM2.0 is implemented in Loongson security engine. This is the driver
+> > TPM 2.0 or just TPM2 (either is fine with me). Quick reminder what
+> > Loongson security engine (I could not know that and it would be nice
+> > to have that in git log).
+> 
+> Looks like just TPM2 is better.
 
---t2TI/qcM7Hcs5rgZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Either is fine :-)
 
-On Wed, Feb 12, 2025 at 09:49:59PM +0100, Krzysztof Kozlowski wrote:
->=20
-> On Wed, 17 Jul 2024 10:37:52 +0100, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
-> >=20
-> > Recently I've been getting triggered by abuse of the Rohm dh2228fv
-> > compatible to get the spidev driver probing in Linux on development
-> > kits by employees of various silicon vendors (like NXP or my own
-> > employer). I had a look around the kernel and all users other than the
-> > original Clearfontz board added by Maxime appear to be similar abuse.
-> > Drop the non-existent nodes from all of these devices :)
-> >=20
-> > [...]
->=20
-> Applied, thanks!
->=20
-> [3/4] loongarch: dts: remove non-existent DAC from 2k1000-ref
->       https://git.kernel.org/krzk/linux-dt/c/854a080f0b73ff966a813ec2dc53=
-891831daa28d
+> 
+> Some explanations about Loongson security engine will be added to git log.
+> 
+> > 
+> > > for it.
+> > > 
+> > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > > ---
+> > >   MAINTAINERS                 |   1 +
+> > >   drivers/char/tpm/Kconfig    |   9 ++++
+> > >   drivers/char/tpm/Makefile   |   1 +
+> > >   drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
+> > >   4 files changed, 115 insertions(+)
+> > >   create mode 100644 drivers/char/tpm/tpm_lsse.c
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 6493d58436..6aad0f08ad 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -13484,6 +13484,7 @@ LOONGSON CRYPTO DRIVER
+> > >   M:	Qunqin Zhao <zhaoqunqin@loongson.com>
+> > >   L:	linux-crypto@vger.kernel.org
+> > >   S:	Maintained
+> > > +F:	drivers/char/tpm/tpm_lsse.c
+> > >   F:	drivers/crypto/loongson/
+> > >   LOONGSON-2 APB DMA DRIVER
+> > Probably MAINTAINERS update should be a separate patch.
+> 
+> Some  MAINTAINERS updates are not  separated form the driver patch.  Like
+> the submit of "drivers/mfd/max7714*".
+> 
+> So it seems whether the updates to MAINTAINERS  are separated or not is OK.
 
-Heh, funny that you picked this up yesterday - I noticed that it was
-there while poking at spidev doing some debugging yesterday and was
-going to grab the patch myself. Thanks.
-Noticed also that there's a user of it in riscv that I hadn't included
-in my original patch. No clue why I didn't include that, but I've sent
-out a patch for it now.
+I'd prefer them separated from code changes. They are separate tasks
+per se.
 
---t2TI/qcM7Hcs5rgZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ65QoQAKCRB4tDGHoIJi
-0hJOAP9qWBg0rjsbzm7opAMArAFEycQu0lJBHYdR+tfeeXkkhAEArfJdGry0AYEf
-b8lHjUhG8iocKhPAo6JWSZBlm8Sn4w8=
-=cxBE
------END PGP SIGNATURE-----
-
---t2TI/qcM7Hcs5rgZ--
+BR, Jarkko
