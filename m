@@ -1,237 +1,154 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8990C221541;
-	Fri, 14 Feb 2025 12:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038F72753E0
+	for <loongarch@lists.linux.dev>; Fri, 14 Feb 2025 12:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739534724; cv=none; b=rLNwyeaR8V6WNM/so/p9wHNazNY1YyMZ9l9jn/J/k0c8Iz47hkThnQxjQiDtFmaytT85ziR1wdzJ1LO+nt4HB7ZrelR+j5z6J/yvFUYCmFw2PWkwlQNHAGRjbWV17zvBkJaP4+er2JGIvdQ8nQ5gjLLia6wXaQmiiLkCnnFixrg=
+	t=1739537504; cv=none; b=jitJALsZt++T6ZmtdGRk0e0R+lcXtA/VMM5MiTwM9jBJSoCjdN+ggzPQOuHpkhJJqwvxQMSxAF3PXTjM3heTkjg1ZYdnY8Q2JzGb+P5ykkWdTlamh9CgisnxcevfwbBTk5xPSTfMON+3ncaGMJm0AdfT238H2BvPNpMK5DPqb38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739534724; c=relaxed/simple;
-	bh=wE5TiYg6pDT5nXyAly61xy04iQzpjUgmnqQBiZ9YJ0E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y8evIUrE8KQhxMMK2f6Ik8fn5VwMajLOWLmqzWWcESgZUwI4yDHAOmmJF9ExgKpEcr33ASDYx2+3JZr1ahDNSiha5CCti+QtldZYvYnsfyBUGgZBsFaJG/4t5AiGU1Y7FQDLJ+7s4ftMI2/us6fdDYkfuNO1+Z9VeQS4BFmBOsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IzBC5oCP; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IzBC5oCP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wE5TiYg6pDT5nXyAly61xy04iQzpjUgmnqQBiZ9YJ0E=; b=IzBC5oCPiYp31CxwREfyoi0K/+
-	QPwvs+9TKUUaaBbfqXGHnFvys3XRI5IId+/e+YfO/AAKG8/AFG9hBx7JSWnms6619GRYOmnSSQDh9
-	4qJWYcJwR0XroypwdwVUxQ3fWiIA4GU9PgRnx/iEOjJaxBddO4VwInesIlPqXcOSbN291/IHUryr6
-	9RrIdAQqWiqbOxFTOotZPe8A+ckAjQXvDkRcwubiJzvM2Ei0G63DbDEScDrcL9iqZvPHq03ptO7Wq
-	mqSwnarzSSZC0gJLwiijqNSx5zB5s9uqG947oiZKhPuvrPOdEAPPiQfHYo5NKs/cmSyjby4nlXAV9
-	OU1O3OrA==;
-Received: from 54-240-197-232.amazon.com ([54.240.197.232] helo=freeip.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tiuQy-0000000BDXe-3QYX;
-	Fri, 14 Feb 2025 12:04:40 +0000
-Message-ID: <8e9fb0c37ae4a3f60b09b8da5d39dbf909ec038e.camel@infradead.org>
-Subject: Re: [PATCH v3 00/18] vDSO: Introduce generic data storage
-From: David Woodhouse <dwmw2@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Thomas
- =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller
- <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, "Jason A.
- Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,  Arnd Bergmann
- <arnd@arndb.de>, Guo Ren <guoren@kernel.org>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- linux-csky@vger.kernel.org, "Ridoux, Julien" <ridouxj@amazon.com>, "Luu,
- Ryan" <rluu@amazon.com>, kvm <kvm@vger.kernel.org>
-Date: Fri, 14 Feb 2025 12:04:38 +0000
-In-Reply-To: <87ed00kbe3.ffs@tglx>
-References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
-	 <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
-	 <87ed00kbe3.ffs@tglx>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-RATirXKBnQCcX6jHCLkl"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1739537504; c=relaxed/simple;
+	bh=aUU/pYofqO2pPpvSNHOgvPqy+8bSVxy8MyCpD4EEYFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gM6J87I2DUzEo65UUvE5DK8BAybxMjU2y3Nt/m6BTKGZGxATm48tlvfuXTQj5tuoDsutKggr8RhN82ZHddxQZgTgx2KVmuDrPmX294gY79KhAgUTHeDh4bdvkg30AHlMB7F3FB5hIhMfl/D0U2A8cUTQv7h1f46MDefVVXP0Hmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxLGtaPK9nf1J1AA--.7062S3;
+	Fri, 14 Feb 2025 20:51:39 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxPsdYPK9nOA0SAA--.5383S2;
+	Fri, 14 Feb 2025 20:51:37 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] objtool: Rename ".rodata..c_jump_table" to "..rodata.c_jump_table"
+Date: Fri, 14 Feb 2025 20:51:35 +0800
+Message-ID: <20250214125135.2172-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxPsdYPK9nOA0SAA--.5383S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGw1DJr48KF15tr4fZw4xuFX_yoWrZFW3pF
+	Wq9r92grs0gFyagw4xGr1Y9rW3Jw43Kr1UKrWDJ34jyw4avF1vqFs2ka12yFyvgws5WayI
+	qFs2grWUGFWkZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
+	UjIFyTuYvjxU2L05UUUUU
 
+Specify the attribute like ".rodata..c_jump_table,\"a\",@progbits #"
+explicitly works for GCC, but this hack apparently doesn't work with
+Clang, the generated section name is wrong, resulting in a warning
+and missing ORC for x86. This is because there is only one arg for
+section name in LLVM, even if the so called attribute is specified,
+it will be recognized as a whole for section name, so it is not a
+good way to specify the attribute for this section.
 
---=-RATirXKBnQCcX6jHCLkl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In the top Makefile, there is "-fno-PIE" build flag. For x86, there
+is no "-fPIE" build flag in arch/x86/Makefile for 64 bit kernel. But
+for LoongArch, there is "-fPIE" build flag in arch/loongarch/Makefile
+to override "-fno-PIE" in top Makefile. After some test with GCC and
+Clang on x86 and LoongArch, it shows that the generated "W" (writable)
+attribute of the section ".rodata..c_jump_table" is related with the
+compiler option "-fPIE", and then lead to the GNU assembler warning:
+"setting incorrect section attributes for .rodata..c_jump_table".
 
-On Fri, 2025-02-14 at 12:34 +0100, Thomas Gleixner wrote:
-> > =C2=A02. In kernel, asking KVM to populate the vmclock structure much l=
-ike
-> > =C2=A0=C2=A0=C2=A0 it does other pvclocks shared with the guest. KVM/x8=
-6 already uses
-> > =C2=A0=C2=A0=C2=A0 pvclock_gtod_register_notifier() to hook changes; sh=
-ould we expand
-> > =C2=A0=C2=A0=C2=A0 on that? The problem with that notifier is that it s=
-eems to be
-> > =C2=A0=C2=A0=C2=A0 called far more frequently than I'd expect.
->=20
-> It's called once per tick to expose the continous updates to the
-> conversion factors and related internal data.
+Based on the above analysis, in order to avoid changing the behavior
+of GNU assembler and silence the GNU assembler warning, it is better
+to rename ".rodata..c_jump_table" to "..rodata.c_jump_table" without
+section attribute, it works well with GCC and Clang, no GNU assembler
+warning for GCC and the section name is normal for Clang.
 
-My recollection (a vague one) is that it's called, and reports
-"changes", even when there *are* no changes to underlying conversion
-factors. Something along the lines of "N ticks at 333 counts per tick,
-then one tick at 334 counts per tick to catch up" because it can't
-express the division factor completely without that discontinuity?
+Fixes: c5b1184decc8 ("compiler.h: specify correct attribute for .rodata..c_jump_table")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-The actual 'error' caused by the apparent fluctuation in rate is
-probably entirely negligible, but I am slightly concerned about the
-steal time, if the hypervisor then spends stolen CPU time relaying all
-those "changes" to the guest, and then the guest has to spend time
-feeding the "changes" into its own timekeeping.
+This patch is based on tip/tip.git objtool/urgent branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/urgent
 
-I'd like to strive for a mode where we only adjust what we tell guests,
-when adjtimex actually changes the real timing factors.
+ include/asm-generic/vmlinux.lds.h       | 2 +-
+ include/linux/compiler.h                | 2 +-
+ tools/objtool/check.c                   | 5 +++--
+ tools/objtool/include/objtool/special.h | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-In fact if we have a userspace tool like chrony feeding adjtimex based
-on external NTP/PPS/whatever, that tool could probably calibrate a
-stable host TSC directly against the external real time. And in that
-mode maybe we don't even need to feed the guest from the kernel's
-CLOCK_REALTIME; that would be just another conversion step to introduce
-noise.
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 54504013c749..91a7e824ed8b 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -457,7 +457,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 	. = ALIGN((align));						\
+ 	.rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {		\
+ 		__start_rodata = .;					\
+-		*(.rodata) *(.rodata.*)					\
++		*(.rodata) *(.rodata.*) *(..rodata.*)			\
+ 		SCHED_DATA						\
+ 		RO_AFTER_INIT_DATA	/* Read only after init */	\
+ 		. = ALIGN(8);						\
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index b087de2f3e94..3d013f1412e0 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -110,7 +110,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ /* Unreachable code */
+ #ifdef CONFIG_OBJTOOL
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+-#define __annotate_jump_table __section(".rodata..c_jump_table,\"a\",@progbits #")
++#define __annotate_jump_table __section("..rodata.c_jump_table")
+ #else /* !CONFIG_OBJTOOL */
+ #define __annotate_jump_table
+ #endif /* CONFIG_OBJTOOL */
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 497cb8dfb3eb..1398ffc20b16 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2471,12 +2471,13 @@ static void mark_rodata(struct objtool_file *file)
+ 	 *
+ 	 * - .rodata: can contain GCC switch tables
+ 	 * - .rodata.<func>: same, if -fdata-sections is being used
+-	 * - .rodata..c_jump_table: contains C annotated jump tables
++	 * - ..rodata.c_jump_table: contains C annotated jump tables
+ 	 *
+ 	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
+ 	 */
+ 	for_each_sec(file, sec) {
+-		if (!strncmp(sec->name, ".rodata", 7) &&
++		if ((!strncmp(sec->name, ".rodata", 7) ||
++		    !strncmp(sec->name, "..rodata", 8)) &&
+ 		    !strstr(sec->name, ".str1.")) {
+ 			sec->rodata = true;
+ 			found = true;
+diff --git a/tools/objtool/include/objtool/special.h b/tools/objtool/include/objtool/special.h
+index e7ee7ffccefd..34acf4ae5fab 100644
+--- a/tools/objtool/include/objtool/special.h
++++ b/tools/objtool/include/objtool/special.h
+@@ -10,7 +10,7 @@
+ #include <objtool/check.h>
+ #include <objtool/elf.h>
+ 
+-#define C_JUMP_TABLE_SECTION ".rodata..c_jump_table"
++#define C_JUMP_TABLE_SECTION "..rodata.c_jump_table"
+ 
+ struct special_alt {
+ 	struct list_head list;
+-- 
+2.42.0
 
-We might end up with the direct setup for dedicated hosting
-environments, but I do also want to support the general-purpose QEMU-
-based setup where we expose the host's CLOCK_REALTIME as efficiently as
-possible.
-
-How about this: A KVM feature to provide/populate the VMCLOCK, since
-only KVM knows the precise TSC scaling (and can immediately flip the
-VMCLOCK to report invalid state if the TSC becomes unreliable).
-
-It can *either* be fed the precise TSC/realtime relationship from
-userspace (maybe in a vmclock structure that *userspace* populates, so
-all the kernel has to do is scale/offset to account for the guest TSC
-being different from the host TSC).
-
-Or it can be in 'automatic' mode, where it derives from the host's
-timekeeping. Which at the moment would have "too many" updates for my
-liking, but we can worry about that later if necessary.
-
-
---=-RATirXKBnQCcX6jHCLkl
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIxNDEyMDQz
-OFowLwYJKoZIhvcNAQkEMSIEIMT0waskDV5mmb9YEh+BUzUP5i3zThKZnZA5XRhb/r61MGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAGVPho9/G5dU/
-kfEVD9EAPOAIcQxfMm5RBnH4n+5rJvjLRpLxgvjyPtbr9jdpEvkyB46Ao1nfmF0LEXmnMliYqMwI
-a7zwys9iFbyOup2oEompnZnP0y+yTOhhk2PD2ey/uEp4/NwDXl7oGfhOKTGtIJ0MxkHKwltWEAMy
-SNAG+O+0Pdaf3ZoZVhg/dubtaHsW4CSKPbr27pwO403dp9CNjjUUAzFsRJckvzkMDtgvYs4LiCD4
-bCc5qJx3e0u8HDOB5Z68b9gPPXjcZu99b7GexMwYio79n4Ymm+7S8SQtPFP/FyorBahYLcuigsx3
-JL+goAIxr57jAc6hmwTV8oqGR9Ev7Jwdh494C9PCTSDPpvHxj8nh+DEhbhoujJp2O6xUxdPGQx2j
-saZLDIUetfv4bSbiNj4NnC5/Jx46PPzbj9Qr5VxMbvt0yVbrlOZDe5GqBTn+zLsG5lqWW5Jy6KvB
-fRk1Ucax4tM4k9mdBexQRpsA/eM4p5Y4VP6EPcsUjIQbwA40OEBDynPJCaKXnJL+4vSCwzh5EPj7
-WJAo3cVGWGgZEBCqkp1NfWx4RWyEawFArUAZd2u9qMTMAy5SduM5e7PERFoLdGN0MuBWzbnTGoA9
-Yzz2OSSrUSsxZG6bTU2ZaVYDb7+0uTFsqWb5zZonUC5LT0TFNuf02HapGuuxppUAAAAAAAA=
-
-
---=-RATirXKBnQCcX6jHCLkl--
