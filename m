@@ -1,83 +1,154 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF4418E743
-	for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 09:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5381C23027C
+	for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 10:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739872713; cv=none; b=XGPgTMZ6GRLJf/PqeQ7wO7HY31BLx5V4kCACKf75DLwmz6pJIgun0luBY3Z4SFA91a6gQ351b106/EoZTGgE9zB1huEZL6P5SHnFKWtUg080WOfPuDo7VnWAK9yWL/hcB2rL+5KLkoHf0Ugtn3QVx310AbXBDYlUWnQFgfPM03Y=
+	t=1739872847; cv=none; b=HKZbmXzhhlLEYCoI6humV6FL5Yo1EwBzRY7wdinH5eGdH2/D4/9OsAMeok5zm93hDyLkAj9Dbw7XI32VFlcCgnM4Xln1rdUzeNrmLQd5Jgo4uUVOoAc6ehmsuj96fINznm8wPuVFlA7aS8K+hY39vHJ1mp/tEPIm+5SZvehovfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739872713; c=relaxed/simple;
-	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=bh45bWtgaU1qb/mByFRf9SoGDfjzPXqbm8MaFC1+CYthfykts5hQF5q7pZbHzDGEyamjk07eOasmks9jiedclEdXsTqFIPyrMZyHFdVjpOhtuJWxFZsrkhst6pLFNvbKRpiLAc7khrfAjBz651gDcQPMgaiJjB9yUp0wyRRQ1Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Bt6naX0M; arc=none smtp.client-ip=54.204.34.129
+	s=arc-20240116; t=1739872847; c=relaxed/simple;
+	bh=NYX1wGo4tGNZhzV6p3SzRA+npL9/JL019CaJWMVPGes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhnrSXllzW+6PqV+gWRtD22X/uEn6NXP9cwLlWhufpE37ypX3ZSpj8YK8F/pcoiGop3a2JZJP6CyVgJ4IUHuj11k4I60WXFH/cp5Q3t38jSdArqdigNpL/Ot8Vrp1DPbi/rhBpTm0Wjkrth6jzzR9euaUVbuNb2reiH1+JPJ8UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OsQxTKVs; arc=none smtp.client-ip=54.92.39.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Bt6naX0M"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OsQxTKVs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739872695;
-	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=Bt6naX0M4i7q7GznIk18ekhWhKkiorMO9gzotdjRmirA8qvQNhGvmDxM2s8JWFNyP
-	 hcAyKaOh7QeNZ5B3mRticLBrBCxB2bhm7Pefmg+lh7+yizeoGkvSgzQndvGucjoD6O
-	 fZ5HuVYe/3B1BOoOfkO5IrDStqwfqPrVKVLsZb7M=
+	s=onoh2408; t=1739872828;
+	bh=NYX1wGo4tGNZhzV6p3SzRA+npL9/JL019CaJWMVPGes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=OsQxTKVsi2Obb4JibaPJsO0JcZi/8KFEovA5iBIb9S2Mz0uR+0uhczNr5Ta7XN9Cn
+	 FJApd+gfOBHxo3MDvlerPYDxW67GEDakYH0OhbpIHZukIxyeZ/QRtkYeO1P6Di4Rgf
+	 RXAgJx9gnCKgwZxmB9MeaZBEkJle39SvQvSeY89E=
+X-QQ-mid: bizesmtpip4t1739872784te9rvmv
+X-QQ-Originating-IP: LDqbWWh1czoAS9WkznA4kM+E8+DiPzSSBSPjztSXJyU=
+Received: from [IPV6:240e:668:120a::212:156] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 18 Feb 2025 17:59:43 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-QQ-SSF: 00420000000000F0
-X-QQ-FEAT: LmkY14RBebTc565ZtoBk0Us/CMUSuxshwwpAIO79bxs=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: gXDe23XLI9Uj5W8jpWSvhFtd7dLLcl8OOXB+/KUXF+s=
-X-QQ-STYLE: 
-X-QQ-mid: v3sz3a-6t1739872657t6316258
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>
-Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?eWFuZ3RpZXpodQ==?=" <yangtiezhu@loongson.cn>, "=?utf-8?B?bWFvYmlibw==?=" <maobibo@loongson.cn>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>, "=?utf-8?B?6IGC6K+a?=" <niecheng1@uniontech.com>, "=?utf-8?B?6ZmI6bqf6L2p?=" <chenlinxuan@uniontech.com>
-Subject: Re:[PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
+X-BIZMAIL-ID: 11010149265810943925
+Message-ID: <384039BA5C7B1C39+c85df660-ce0b-4c8e-bc34-e898775a951f@uniontech.com>
+Date: Tue, 18 Feb 2025 17:59:42 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Tue, 18 Feb 2025 17:57:36 +0800
-X-Priority: 3
-Message-ID: <tencent_46D6C2824357C42E11A3C9CD@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
+To: Wentao Guan <guanwentao@uniontech.com>, chenhuacai
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch <loongarch@lists.linux.dev>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ yangtiezhu <yangtiezhu@loongson.cn>, maobibo <maobibo@loongson.cn>,
+ =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
+ <niecheng1@uniontech.com>, =?UTF-8?B?6ZmI6bqf6L2p?=
+ <chenlinxuan@uniontech.com>
 References: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
-In-Reply-To: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
-X-QQ-ReplyHash: 3688260371
-X-BIZMAIL-ID: 17015835246629524927
+ <tencent_46D6C2824357C42E11A3C9CD@qq.com>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <tencent_46D6C2824357C42E11A3C9CD@qq.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------acInEYS23tGt8yIu3XWP7RJu"
 X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Tue, 18 Feb 2025 17:57:38 +0800 (CST)
-Feedback-ID: v:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NZiJZo0DdgPmxvZZTzlawGMhJn451se/jIMXPnEqCNIhtx6dp51YW8xB
-	cEFIhRLlD7oTutopgNi/8bSRNBsZeXxh3qGKI3L3mBOqnZwan6S6XiT6osrgUOMHOIsQahw
-	+f9UK7p3L/kLO5Y8BVdRUHQjxEu1xiwXuWFG2Vu3s79S7411gKc4KIzC/RVA9u29dBqry43
-	/UPwpO4xBCrmGmSLyTsi4N4Malgx2HFSNHf0sEj/q0TsVeaiYKBSvyy+0yOa0e6KqjvJTNS
-	StmvIV/qclG21VH3MGQNFek0xg+AfMXTKw0bythQ1Z/tpC503djyUHQmOS0aj/IC/ubx2zu
-	tgFah6ZNVZEkj14QQuj+z5UkE79ocp3uW1hXZHIXHnNiSAqpyhytGQNgF9A64KLT/0LXpTi
-	Y+P90qIh84d5ntT6IQ71mNRuxj+v5CPyHiyX0lMQz9UWxfXdp5kg6GrtFu2os9AAk62RKYm
-	gB7ka76aKPg3uWx8a+8PEzj3HaZeyjG4wGTxvSJ6YF7aq36Q4h/pX+c9DwJJxT6LDQCaQ1S
-	7QsS21JQExnmb75BZZ9W8PVs0TPFkwUSTlVzO8D+Er2qtPTxuAxyqXk39c0KN4asw5HG2C6
-	B1/5spbZJBZs9zsyunw3u7ugx0a2p1g4jIiQY8ZsnAlP9EVF/O/VSkurvCwURmxUvv6amqb
-	Me04HFju/sOpoefAf7y/IaZuaIonSOeexsHSvDW6Kv7fjLBv/pYTAUhKB5Da3/Y3X1W1Pwk
-	DH3P/uxad3hTeU/DEXG+0AxHLSRLCqemaVDiKrtCUu/OQPaIpOFPH2GU42p8AS9ta/wrSEv
-	+4xikqW1d1cNG2bLr3pwQbxVkgmXSCy4KQbnbKQDpIrNZG5I3Dx+GUYE1ZnVEzjIufOhAvB
-	kTrrfjQs13Fc4Y4JbjWhm1dpEeR9FObH8YktkspJ4bCfTRe5PPFfyjtIA2H7WMsqMD4lZfK
-	eoSRfey71MpAFMaST3kFYHP+yhf5HysMjQgdkQfzwA6r+xYZBFq0OWr6pNQX1uhAUYEdbHW
-	FcxiLDbv9mixrQx0TF4MIa86ugw9LsFvvst0El7pRasjJQuisY1nAmICP8w7PyVhjUeqJG9
-	w0PWAwBvz3H5KmQRmIZ1xUeySwcaAkmV/NBBLH+Tc5M
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OLsBWtCIHsg6uLoDuAvuQFED+yaXYbWFSoJnOFZdodZuCnPYRVHCOFME
+	LM2mWqo8ketLTZKLt1Jut4eQKo/RRbmhRLVSxXXUfzNm2qEOub+st+SxE+jRwhlM0Ba+s9K
+	HwpfhhacXyF6/ms3avIGHGKZwu6mcvscDKFZrNzhQvh6vd+F24rD562FOTXfBeXGGVGgUQO
+	V9TiMF3jhHy1F50NG2eLt32Z4gEl33Lo/Et52EmwXxggK44iaCQeawaukpMC/tKs5uZzvK9
+	s2+vs4gyuHLX32UlR7tjYj5LRjKFlJVaHZAzHGZ12jD50Sb9MTnSp4mCvRUhuypav27tzkO
+	0qFPQQ3OyQtiInlIGcun7UPIzsRHhJEHEHfAlLr1sjzZznAtKYsuu4BQLSI+afxafnIyC6i
+	NbxEFw7o1DHMHft0fLsWQJzSV9abZqrnpSHWQjK15Tq1PLIb4HfuV2nQQH3HK+zQA82j9AV
+	LJZyiK/ZRBYfRTOiiwsWP/4v8nzoRmu4KMmjaJ7Ud025srg6wQt9T9QgksOvsostM2ubp3B
+	FQh1XaySLQ8rAYkFySnYih9iWOTEGTyr3M1gqfxjnr2EbBWO4kZD1oR+M7JgPrMRLw7hoPA
+	aQ2LpnqUo2ngxWxlrrmxyAix5SNPaEu8cdsbB3/dmo9vFomFeuL99GISgOUHHF0RdGt+0ke
+	bVGwcCYcngbdW163RVD4r0TstVexk3fQQiCFSkALDow0hyFxF9i3UFzNO7B4PWX7IspM7N1
+	ncU+QPCCp8AatPLLLfPPxoUOOmAKbuo8iInlG91RhM3McXZW9ZNw6ckDL3ioUDf61CjXiEO
+	E9AVjAS21hnQyGXUyRMUTa3lAvJHVKYLU2QL5m4Kt9BGVg96miSMdN6ogxAhfbBkprWn+Qb
+	tLkDQMZe8ums5lkddg3hRvdx0QpPqb1p8lKOhAr80v7py/s2B9z9k1+WqMP+IYMG2DWjmwc
+	Kf5t1Ax0KCtZkOVWetHIoaAtIAeZfk1GFf98ad01TXr5R9her3jobUNRNvr8h4LI1AkMMQn
+	pVJ6I47c+n5uSg9O4yNzuWUlcyYA+oS49PpPooKgUdAhpuXrgMNZAFo/LyyFw=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 X-QQ-RECHKSPAM: 0
 
-TkFLLCBNVVNUIGFkZCAicmV0dXJuOyIgYWZ0ZXIgInByX3dhcm4oIkludmFsaWQgQklPUyBQ
-UFRUXG4iKTsiIHR3aWNlLg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------acInEYS23tGt8yIu3XWP7RJu
+Content-Type: multipart/mixed; boundary="------------odl10bMVBgOO7pTAtEoBstzM";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Wentao Guan <guanwentao@uniontech.com>, chenhuacai
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch <loongarch@lists.linux.dev>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ yangtiezhu <yangtiezhu@loongson.cn>, maobibo <maobibo@loongson.cn>,
+ =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
+ <niecheng1@uniontech.com>, =?UTF-8?B?6ZmI6bqf6L2p?=
+ <chenlinxuan@uniontech.com>
+Message-ID: <c85df660-ce0b-4c8e-bc34-e898775a951f@uniontech.com>
+Subject: Re: [PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
+References: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
+ <tencent_46D6C2824357C42E11A3C9CD@qq.com>
+In-Reply-To: <tencent_46D6C2824357C42E11A3C9CD@qq.com>
 
+--------------odl10bMVBgOO7pTAtEoBstzM
+Content-Type: multipart/mixed; boundary="------------ESD1ckMuonMqTCSGfFhE03Oy"
+
+--------------ESD1ckMuonMqTCSGfFhE03Oy
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+djINCg==
+--------------ESD1ckMuonMqTCSGfFhE03Oy
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------ESD1ckMuonMqTCSGfFhE03Oy--
+
+--------------odl10bMVBgOO7pTAtEoBstzM--
+
+--------------acInEYS23tGt8yIu3XWP7RJu
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ7RaDgUDAAAAAAAKCRDF2h8wRvQL7lt8
+AP9mgdczpw03elESqO9o29lOI2P70yRIHBTOPK0wZZfqbwEA3+lfRN/VBo1zKZB3z0GCkJ/VIrlA
+8CezrJW3fdmSkgk=
+=4+xs
+-----END PGP SIGNATURE-----
+
+--------------acInEYS23tGt8yIu3XWP7RJu--
