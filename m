@@ -1,170 +1,381 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2088.outbound.protection.outlook.com [40.107.236.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6111DA0E0
-	for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 22:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739918441; cv=none; b=SGjY6HJuatt/89sZijwGY7y9NtHjpd/4wL2YgtesDa+V8ISH+mcO2mMISAWLLRmXr4jEDwY6lpfaGVgUZ9+VD5wQxfA3TbhrEIQUNcjL4PfZ9v4Ad5+EQtlsmTQhTuYDJVmAlMtfII10d6KcFbuHiz3mFRQvt7WdTpQ1rcHxfeY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739918441; c=relaxed/simple;
-	bh=ivyLIcXrK8i6Sm3bd5ok9RWHX3VEX/cjKUj/8oDDJcE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Mp1X0B/R+MIjrU4mJkDHvT3CoJbFZa0PklT0dS1a1hfHfG6pBkRIx9YOemt0xN8MMuVlMryf6IksqjOXnRrfYQbIAwuNEJhpJttuUXdtGC9xtt/JdD+Nr0wZvQRd5y+edeiKkrtSabHxZeseY/f15EYvW6ICheGPM1y7n/8Ga0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NKbRBbO3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639871DDC22;
+	Tue, 18 Feb 2025 23:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739921442; cv=fail; b=nmO4IDia3esfk5DlV4S5woYmNwaFVQn5juhj7Eh73QtExpDqWzQIgfIfmHVDDhpNF2eWlRXdN3GLAJDxZGib3bM02iuYOE5yLcBca/dqfZzZAlPDcOfcP48v122VGYHdqHh80FHiYWRAYr/COu+cYMNQUfiXKzYjU7KSgudo2NM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739921442; c=relaxed/simple;
+	bh=EvAqQJBTFphhjM2px4l1VpbcjMSuEROtfIMPIlyEm1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TSrn7M4mx3MJLQ/neJrkXWo6am/Hjv0b+Zoopfj0oFpFj9Kysaeo2mNo4lHQlFOOPj0Aq2qUEa88+adogsuuYrYA1yuZ+t7RcfFQGWFu0zbm9rKbbfj0Kw8GBOwb9C6f1fK+HPxcojPAQwdTIBrH/05Gm6HY+6Wcr9gJw6o1bG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YxJNsa54; arc=fail smtp.client-ip=40.107.236.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NKbRBbO3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739918439;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ivyLIcXrK8i6Sm3bd5ok9RWHX3VEX/cjKUj/8oDDJcE=;
-	b=NKbRBbO35j7OWCwXVPcLg0nMRd5fCPMlsQLT0NE9D8mfzI/FI7kS5hLCRpR8EyCLgdENMr
-	0ds5oFXCuB7PVl1/pxdLh8MBsO8o+o3Cb+4xgvQYlVVOWczMBD9Y2IeNBl9TdNIPhcd73a
-	Kwe37HZS2Up02AeONwEZVN9enm+3W5w=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-DxNSoWfnOvKW92pphxq3IA-1; Tue, 18 Feb 2025 17:40:36 -0500
-X-MC-Unique: DxNSoWfnOvKW92pphxq3IA-1
-X-Mimecast-MFC-AGG-ID: DxNSoWfnOvKW92pphxq3IA_1739918435
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4388eee7073so962135e9.0
-        for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 14:40:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739918435; x=1740523235;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivyLIcXrK8i6Sm3bd5ok9RWHX3VEX/cjKUj/8oDDJcE=;
-        b=R+UA7NUXe00oTFRL856HmZD/08/aTx0jYFE8QZ9YT9eBg7qYudAakL2qtcyK9FcZB2
-         URK+ohyjrpbZBPup3vP+0j/fOgPLVo5kxLgkYBnNBeRsazRLWWy716jt6L6dg/+3JR9T
-         DkjZ8yu5ZeePltjDF3zPNMUMuHYziNJNZAtqqUW1UtjFp/H7bVQRTmwCljZldy4u28XP
-         q/qIcj+6M18H6SM1AHzWbx0NBI/HTjVxI6hfF18GhBv2LQNzdt1u4CCiUGDqb47bDt73
-         DIX2uGCE0NxQBrrUBoWOfmeNmkzgPPX3PlcyL84xuqMszrnig0i+0LTikmHLsYew/L65
-         t93A==
-X-Forwarded-Encrypted: i=1; AJvYcCUYEjlopU7vvl0P/NKe3TYqZH8SCZXqIEzKmcG6ueeor+uVTRf9Oowd5gqJGJDjywz0aut0fOtgjWw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwnXDWgoDaV2LEuJPkpL9FUqjKpMK9X5SskCExFAzCKQ+40+OO2
-	YoG/x9fQmkSSwLsbbCn9bnCkmLeeuGO1PYSVoTHAHnyfrFcCcTeIvQAeeTt5GsIrgysUJAIWk/z
-	cmxNGhDi0ONfSfKtLjR31GGyHd3lXLiYgLZS02g9A2i8fHX2joxwAZizBMg==
-X-Gm-Gg: ASbGncuvQap20yJydM5iLKTyHKUJdChGroN1cUz/8lLdyQrRBx9iMG7OQsRUE/yQFt+
-	i3G90bXBN5+0mMtPhVfjpdxwBFCVfftK4WSaMC/0Bu1M2nOOrkWaChIPK1frpHqwP9vdJii1COJ
-	fL2Lv6jFYOtTWnNd4OlWsjj3ZRninaU951utzlfMEzPJRjZWG0Mgoj+mG2edXmyKMQfbLedgrg5
-	xxmp1c7PAoSrFuDZQAYBayZmO/laOJxLdjP+cQkgSm9B5jGyZ2lyHVk8+/UZLHeKyrK7A5OotxP
-	uOfXQM8PR4+cOWJ6T1MsyyGeHkOM233SnSuiYeNX6JOVFswbcHfcezq7f9xrQuMYwg==
-X-Received: by 2002:a05:600c:314b:b0:439:86c4:a8d7 with SMTP id 5b1f17b1804b1-43999ae0dc8mr11797675e9.5.1739918435421;
-        Tue, 18 Feb 2025 14:40:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEI17xveq4qpUoXVn3jaf3vZekMu127UgmikmUhaFlSZ5tyuyrG+gdqtYt1+dNUau7VWeDZUA==
-X-Received: by 2002:a05:600c:314b:b0:439:86c4:a8d7 with SMTP id 5b1f17b1804b1-43999ae0dc8mr11797275e9.5.1739918434928;
-        Tue, 18 Feb 2025 14:40:34 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43993847f39sm32922065e9.14.2025.02.18.14.40.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 14:40:34 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
-Date: Tue, 18 Feb 2025 23:40:31 +0100
-Message-ID: <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YxJNsa54"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sdalyx0fOmu3Y7bqHq1me5Y9l4Gn8ZvxkPybia+7Gn80peSCktX8XyeGO90cGG7dkJ7IH5N/9onehhWqv/w0RexbERtj8VJZNRtMFsbOw0YEHfJ7faI9uiChVJwj2p0euG1qb/Hi1ei/fCO0Qt7UOfzb6VbTdY8eL2kuEosB7QNLYkI6bRr7eD9o2CHGS2WZLLFxDWTLmWqSKPmVzUFOW1+vvQFWqZ1LKrEWV6a4IkwW+Ms/ZJTHQW4TLclMwb7oFfSj2Qn4X8sz/b8C8DGgob0qnaKyhRONsUCzngNHmNpTeevDFSpVVfLG0HLjc2e7xk4ntt4dUUmqINHzSW5L7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2/XyJ/5W8cVygXYbZ0B/91iqdi7aL/7aKRbIbKxcsbM=;
+ b=P6XdkBAHFmMf2InrZ5MMovAnPniTpvmJWPvJihFXmcgPnGPAsKNzDiIHiHPmnzxQV3wjr+MtHE47J8n87BAnzYPRTzWCfc7T0ljhCcb8P0Ch6LOBKOV3eASApCjDdGphUeibYnKHDq/9fILOXF2cS6G6/+24rEX+RmTk+2J9aRhhCw8QofhplewuCzZdKJzdDnychNhLht9v5Iptfy5Mnb3F4PuXgazjI2Ret+Qw8vLuS0iit78jLSS89R0+pKcV2u96dnF5Xjj2wMFkkoD4xWH+Fs48jGqUt0C2RemUtUuBOtmrt5mrQt/AfaU8qXOzUbvRDLRtC/SefS4GeM47Mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2/XyJ/5W8cVygXYbZ0B/91iqdi7aL/7aKRbIbKxcsbM=;
+ b=YxJNsa54cUwCQuJiCsZxElCE59BV99j6elyXtO2ATFQwTBwWZ+r68+Epm/Aeca3a1yz4B9KGlxjIkzTzLeMaSVwrqEmO9LpkNUUDsYnV+yJ32PzETNJEi55l7hNBp1RDKTcEAOHB/ovN9Hls0NwX43zHbwScTQ8Zak7CvJmakZnoDL4YA2+ec4LGKZZ2+H5ok6bxEvd5jOeGm6GGLn0I9MD3986TsXbs4VZ6OHo11ahRWD1qRaHX4BfnKFJwzbtYVWaVjuPjEdKLuySnXy3vi7E7KrunpUEwzMglIFA4nOXRlVO6BuUqWtyHC9PR4HTS+XMb/JFMxC7Fog1GPnXJMg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ PH8PR12MB7232.namprd12.prod.outlook.com (2603:10b6:510:224::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.14; Tue, 18 Feb
+ 2025 23:30:36 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 23:30:36 +0000
+Date: Wed, 19 Feb 2025 10:30:29 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, 
+	linux-mm@kvack.org, Alison Schofield <alison.schofield@intel.com>, 
+	lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, 
+	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, 
+	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, 
+	mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com, 
+	ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu, 
+	linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, 
+	kernel@xen0n.name, loongarch@lists.linux.dev
+Subject: Re: [PATCH v8 19/20] fs/dax: Properly refcount fs dax pages
+Message-ID: <jf6hr2uzyz76axd62v6czy3wzcuu4eb7ydow5mznehfuiwhqq3@2q7easkxhdp4>
+References: <cover.a782e309b1328f961da88abddbbc48e5b4579021.1739850794.git-series.apopple@nvidia.com>
+ <b33a5b2e03ffb6dbcfade84788acdd91d10fbc51.1739850794.git-series.apopple@nvidia.com>
+ <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
+X-ClientProxiedBy: SY5PR01CA0067.ausprd01.prod.outlook.com
+ (2603:10c6:10:1f4::14) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QYhqx7W2yGaMLqMAlXkTBFb338iOtQNO1D3g4GaEHH8_1739918435
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH8PR12MB7232:EE_
+X-MS-Office365-Filtering-Correlation-Id: f144e0c2-c18e-42a0-a963-08dd50743ee5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?B8Bg1YJLTPRDgKHtsLsN1NEeXyhR0EsIArOhprAvM+b9ZKTkLgW10lmcysoj?=
+ =?us-ascii?Q?MPZCaFMAY6TXGzhQn0vWFYx4QNa/wMKYP9c4FzqnymiZOzKJKO0mpWDBe3X/?=
+ =?us-ascii?Q?LGFjDwCVKgiwpgTy3CsZIRmQGWdiSzwtORcwTyOmSrxgyBQdgTkEPBBWUhpt?=
+ =?us-ascii?Q?YHw1o3qBPiMKn89CMNz9EPUfgv31EG8CKQBw/7QyexnYzEz5rGGumFg+eaNo?=
+ =?us-ascii?Q?AnltLP8JfzMtC4BPyqQivZ+qGHj/NRsML+2env1B1+Vpz3CaePaeeRuE837a?=
+ =?us-ascii?Q?CarHI7xKHHFHq3hXd509yj9QebQkL5E3JfOXYQM2HoZgS/Vqm7FgF0sFyp5A?=
+ =?us-ascii?Q?yjdn0jm2GBFTPi0MMBtvL9FsCQnA91TCbP9yjXQ5Sf7DBYuZsMAyJpCV9+Ab?=
+ =?us-ascii?Q?uSKyr/wK6BVFK/fNYTm1LEDLD6Pus6gnff/418vq+VY1RSPRdos6CDs8d8KB?=
+ =?us-ascii?Q?Gg+6PlzmkS499Xo5bwCMRpzFFInKU/CFuFmTVWX+tE5U7/r9hYxXgpPpuHy4?=
+ =?us-ascii?Q?Ua/U6FQgzREoTqgdPmwJ0GLFTzBaxHERXg8DCgX3WRK/W/ZpaWLPpMSrLqLn?=
+ =?us-ascii?Q?b8kl6vu2A8ntejzHEHUe094cwJalEskcL5QYvaPpE91EyOUuGc3pWWXwEuxD?=
+ =?us-ascii?Q?6BxgZBpdB/tAoTkmjzgDh/+xoHyLpKIcx1Fz+5VdkJEPi7g9qrmtxmkHa8TV?=
+ =?us-ascii?Q?1i11/27p8T6J1pbzgsVd9jZJiJ7n7ZQYfmuE5blTbPn6eaR5Y5lcB+ZJB9R3?=
+ =?us-ascii?Q?//+Sad2L9+dgYEm2wjHXaGnQygwDlLu28tN8fMiXalUy06dWvKTveS/Thxwa?=
+ =?us-ascii?Q?2VdK/sTcs89aBiZuRv2VvLzl269ng/ZIr+HCxkIrmRpbjCxn8jKQF/PZkhpp?=
+ =?us-ascii?Q?VOtes5AC4dARSRoWtW6Aye/QUigsnnWzd4w7AztkrUmoFCkMO5eWQiZmLtzU?=
+ =?us-ascii?Q?bGTUgOKStWzjXsnYgolohzpCIw3Ed2pDlEovoQAnWWm864REZ0q5vyeBuEZX?=
+ =?us-ascii?Q?iNcEVW62stsZyL7s/k+KIW1QeBE75ddefnYERigL6biloUHYJ/w19W+YkjiL?=
+ =?us-ascii?Q?YgJjU7Jp5W5+FRBaVwpr/cvdk5RnQrbL1w8YvAKuE3idSVY/x6/8gnQ8dNdL?=
+ =?us-ascii?Q?Pa8o/UGaI2CMFbTg97f4BRiSa6vzlwxDWHuB75XyHOhkDA1bnA0ESCQuF5ie?=
+ =?us-ascii?Q?TBK+6m4wMc43y5iKHK2o1HUNuwZguTIuMRSgXtDJhy5iFkuzbsaWOgjqoGtL?=
+ =?us-ascii?Q?hDtwVs8zpYN64923KIHQGEgQuHewDZ5JE9VpDUDRKr3y9GNTnLLTv7oqDwJ7?=
+ =?us-ascii?Q?V0ucPe34vpNvKj/GINMm/w19Qxz71tbj6/Y+M/BgyQEuMdho1asttv291g4V?=
+ =?us-ascii?Q?2Dc9lgfc0D7/+3ICp5nppC+3xkRo?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AFZ1WnU71rH2mPJwtoKq7rs7IsJILwQ5zuEDAA9BESk6eJzy08JyrAFY2l3J?=
+ =?us-ascii?Q?dTUZ60x5biq1VUU53HbajjnanCevOB1HrGfzyNkJ4NCO4q59WF4c8X0ltrZt?=
+ =?us-ascii?Q?Lel78JG8eRK+4q9myh/GjvdVy31ws7euchMkLIqptqG2FGjT3OmGGfwhJGpu?=
+ =?us-ascii?Q?SRYK2BkBq2paK8Xe+/7eJpdWmKdnRP9dWdCTrDf1gGqbvtaXf6tWvAYS3BJ3?=
+ =?us-ascii?Q?mPNRV4yE46Lr2b1E8J3fRQ1Jhvqsr1gfRDMR4TMXqNPSuUgzA7mea0xy3lFK?=
+ =?us-ascii?Q?GRyPxYs24y5fnW7X/YRJkk0LiCNC3usd1dhnKzPSyTxx3PzZ6odU7YulOuMz?=
+ =?us-ascii?Q?kAkNplXOB7rhBKYat/vm9/T2UmZzmpTfucMe4zh8oaMxexRRQi/2VxZJjFwt?=
+ =?us-ascii?Q?4MENi8s3qhO8j31qeb3leSmFK2jQkbau18iuD//6Xq8368WQf40IUD8N+xPE?=
+ =?us-ascii?Q?SIETt7KfIM8IwABYVpVq+1JjHGt8WBGWyX+yhHJN4rhLtFjHJmHbPyWkE+ll?=
+ =?us-ascii?Q?h2YAv8vbs/IEjPagCItp0PCo9QRXeTnGsW1Dz6aY9dFr473+mKENJCyLmMms?=
+ =?us-ascii?Q?DsYWm1pYFjFbCz5ElH+Y6rgqwF/e4EppkfaxFjVYcDMqnf++sZMwlVnJRo7z?=
+ =?us-ascii?Q?K9361uGgZPdh7lVlbPB6d+61ELBm/yH2RPjF8X2T7DotKWcxmVAIFOmc7KME?=
+ =?us-ascii?Q?PxN2gWB5qqRj5Qxv6YX7ZdMsh3Oz7NZEeoDC6nXTCQiUly++AvSrtDKktJbf?=
+ =?us-ascii?Q?KItmja2RrIL7LrROy7v2PC2andQns6P4iDORQcgdxgACS63oMuyccmzQYa4E?=
+ =?us-ascii?Q?xfkgq+Ee8VjUjmaQt3MDbSeCUKjglMzANR4hybvtVCJJl5x+uBGQdBprrmO8?=
+ =?us-ascii?Q?OLeBPmMe7A9KAsTqTy7nFxYOLimcgWCcgSKzR9pF34PbaYSbK0LzeAHV8pXd?=
+ =?us-ascii?Q?UgZVitiFy0rpdAnnp/qX/jxehsh4PJ4k1XJyrfq0emmD2e4HTJ7tRYCfXFWD?=
+ =?us-ascii?Q?0xZF2fYqScVuWJcW3+gWYTt+np1d1jOHEN6FFiqwYol1HgVdZep9rV22wPxk?=
+ =?us-ascii?Q?OVl3+ebrHPcbPoeXGMETiUsMuV94QlQX86MF78VnB7ltNXV00EAVmGvvuF91?=
+ =?us-ascii?Q?W5tH111L9pWimpPrssS9yxOXsvaC8NEZjz65YAjqx38zwKGyU6AbnnHTHPTO?=
+ =?us-ascii?Q?aszRF94U4NHABfKtNGHJ6CrU/A3FxirSy8ox9qXHfnAaA1Y/IWwzFy7pyLu/?=
+ =?us-ascii?Q?aUOECZmjefYgrDtmjEVIIvaahbOShCG5ZkazHOMGwW35XeDGZ3hmRUssoetp?=
+ =?us-ascii?Q?LmQPx5ebK570yr0fhETc68omSjvJw6mUEwW4KAH/Q8B8zFx//d+0fmhX6e72?=
+ =?us-ascii?Q?NCTWmhkul+9t6IuQZ6nTS6eMEIEpQGaj59fPXK3+2Q5KW9dtd0lTVb8RX6Pn?=
+ =?us-ascii?Q?LJntTm7g4egElGaZgV2KMTkKVLkLh29QBDq49/jziYS5nGvbqSQijP7nTJoa?=
+ =?us-ascii?Q?CHfzU9lBhpnVb49dbH42LMVAUkKG+60cTXbNuNEWJ5aBGvZPWV2pGSRQAs0k?=
+ =?us-ascii?Q?ptPdoRhDpJDKGaFojvO9mNTIGb3byAdMX9KUZKyU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f144e0c2-c18e-42a0-a963-08dd50743ee5
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 23:30:36.1511
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SAopfzQAHOOceK1PA9oRQjU3aGEjspGPSTQSEvuns34urOdrhYOOxmOaHKnMl+UicCxF7QVcKSbvjxdYCyp8gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7232
 
-On 11/02/25 06:22, Dave Hansen wrote:
-> On 2/11/25 05:33, Valentin Schneider wrote:
->>> 2. It's wrong to assume that TLB entries are only populated for
->>> addresses you access - thanks to speculative execution, you have to
->>> assume that the CPU might be populating random TLB entries all over
->>> the place.
->> Gotta love speculation. Now it is supposed to be limited to genuinely
->> accessible data & code, right? Say theoretically we have a full TLBi as
->> literally the last thing before doing the return-to-userspace, speculation
->> should be limited to executing maybe bits of the return-from-userspace
->> code?
->
-> In practice, it's mostly limited like that.
->
-> Architecturally, there are no promises from the CPU. It is within its
-> rights to cache anything from the page tables at any time. If it's in
-> the CR3 tree, it's fair game.
->
+On Tue, Feb 18, 2025 at 12:37:28PM +0100, David Hildenbrand wrote:
+> On 18.02.25 04:55, Alistair Popple wrote:
+> > Currently fs dax pages are considered free when the refcount drops to
+> > one and their refcounts are not increased when mapped via PTEs or
+> > decreased when unmapped. This requires special logic in mm paths to
+> > detect that these pages should not be properly refcounted, and to
+> > detect when the refcount drops to one instead of zero.
+> > 
+> > On the other hand get_user_pages(), etc. will properly refcount fs dax
+> > pages by taking a reference and dropping it when the page is
+> > unpinned.
+> > 
+> > Tracking this special behaviour requires extra PTE bits
+> > (eg. pte_devmap) and introduces rules that are potentially confusing
+> > and specific to FS DAX pages. To fix this, and to possibly allow
+> > removal of the special PTE bits in future, convert the fs dax page
+> > refcounts to be zero based and instead take a reference on the page
+> > each time it is mapped as is currently the case for normal pages.
+> > 
+> > This may also allow a future clean-up to remove the pgmap refcounting
+> > that is currently done in mm/gup.c.
+> > 
+> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> A couple of nits (sorry that I didn't manage to review the whole thing the
+> last time, I am a slow reviewer ...).
 
-So what if the VMEMMAP range *isn't* in the CR3 tree when a CPU is
-executing in userspace?
+No problem. I appreciate your indepth review comments.
 
-AIUI that's the case with kPTI - the remaining kernel pages should mostly
-be .entry.text and cpu_entry_area, at least for x86.
+> Likely that can all be adjsuted on
+> top, no need for a full resend IMHO.
+> 
+> > index 6674540..cf96f3d 100644
+> > --- a/fs/dax.c
+> > +++ b/fs/dax.c
+> > @@ -71,6 +71,11 @@ static unsigned long dax_to_pfn(void *entry)
+> >   	return xa_to_value(entry) >> DAX_SHIFT;
+> >   }
+> > +static struct folio *dax_to_folio(void *entry)
+> > +{
+> > +	return page_folio(pfn_to_page(dax_to_pfn(entry)));
+> 
+> Nit: return pfn_folio(dax_to_pfn(entry));
+> 
+> > +}
+> > +
+> 
+> [...]
+> 
+> > -static inline unsigned long dax_folio_share_put(struct folio *folio)
+> > +static inline unsigned long dax_folio_put(struct folio *folio)
+> >   {
+> > -	return --folio->page.share;
+> > +	unsigned long ref;
+> > +	int order, i;
+> > +
+> > +	if (!dax_folio_is_shared(folio))
+> > +		ref = 0;
+> > +	else
+> > +		ref = --folio->share;
+> > +
+> 
+> out of interest, what synchronizes access to folio->share?
 
-It sounds like it wouldn't do much for arm64 though, if with CnP a CPU executing in
-userspace and with the user/trampoline page table installed can still use
-TLB entries of another CPU executing in kernelspace with the kernel page
-table installed.
+Actually that's an excellent question as I hadn't looked too closely at this
+given I wasn't changing the overall flow with regards to synchronization, merely
+representation of the "shared" state. So I don't have a good answer for you off
+the top of my head - Dan maybe you can shed some light here?
 
+> > +	if (ref)
+> > +		return ref;
+> > +
+> > +	folio->mapping = NULL;
+> > +	order = folio_order(folio);
+> > +	if (!order)
+> > +		return 0;
+> > +
+> > +	for (i = 0; i < (1UL << order); i++) {
+> > +		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
+> > +		struct page *page = folio_page(folio, i);
+> > +		struct folio *new_folio = (struct folio *)page;
+> > +
+> > +		ClearPageHead(page);
+> > +		clear_compound_head(page);
+> > +
+> > +		new_folio->mapping = NULL;
+> > +		/*
+> > +		 * Reset pgmap which was over-written by
+> > +		 * prep_compound_page().
+> > +		 */
+> > +		new_folio->pgmap = pgmap;
+> > +		new_folio->share = 0;
+> > +		WARN_ON_ONCE(folio_ref_count(new_folio));
+> > +	}
+> > +
+> > +	return ref;
+> > +}
+> > +
+> > +static void dax_folio_init(void *entry)
+> > +{
+> > +	struct folio *folio = dax_to_folio(entry);
+> > +	int order = dax_entry_order(entry);
+> > +
+> > +	/*
+> > +	 * Folio should have been split back to order-0 pages in
+> > +	 * dax_folio_put() when they were removed from their
+> > +	 * final mapping.
+> > +	 */
+> > +	WARN_ON_ONCE(folio_order(folio));
+> > +
+> > +	if (order > 0) {
+> > +		prep_compound_page(&folio->page, order);
+> > +		if (order > 1)
+> > +			INIT_LIST_HEAD(&folio->_deferred_list);
+> 
+> Nit: prep_compound_page() -> prep_compound_head() should be taking care of
+> initializing all folio fields already, so this very likely can be dropped.
+
+Thanks. That's only the case for >= v6.10, so I guess I started this patch
+series before then.
+
+> > +		WARN_ON_ONCE(folio_ref_count(folio));
+> > +	}
+> >   }
+> 
+> 
+> [...]
+> 
+> 
+> >   }
+> > @@ -1808,7 +1843,8 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+> >   	loff_t pos = (loff_t)xas->xa_index << PAGE_SHIFT;
+> >   	bool write = iter->flags & IOMAP_WRITE;
+> >   	unsigned long entry_flags = pmd ? DAX_PMD : 0;
+> > -	int err = 0;
+> > +	struct folio *folio;
+> > +	int ret, err = 0;
+> >   	pfn_t pfn;
+> >   	void *kaddr;
+> > @@ -1840,17 +1876,19 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+> >   			return dax_fault_return(err);
+> >   	}
+> > +	folio = dax_to_folio(*entry);
+> >   	if (dax_fault_is_synchronous(iter, vmf->vma))
+> >   		return dax_fault_synchronous_pfnp(pfnp, pfn);
+> > -	/* insert PMD pfn */
+> > +	folio_ref_inc(folio);
+> 
+> Why is that not a folio_get() ? Could the refcount be 0? Might deserve a
+> comment then.
+
+Right, refcount is most likely 0 as this is when the folio is allocated for uses
+other than by the owning driver of the page.
+
+> >   	if (pmd)
+> > -		return vmf_insert_pfn_pmd(vmf, pfn, write);
+> > +		ret = vmf_insert_folio_pmd(vmf, pfn_folio(pfn_t_to_pfn(pfn)),
+> > +					write);
+> > +	else
+> > +		ret = vmf_insert_page_mkwrite(vmf, pfn_t_to_page(pfn), write);
+> > +	folio_put(folio);
+> > -	/* insert PTE pfn */
+> > -	if (write)
+> > -		return vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+> > -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
+> > +	return ret;
+> >   }
+> >   static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
+> > @@ -2089,6 +2127,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+> >   {
+> >   	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+> >   	XA_STATE_ORDER(xas, &mapping->i_pages, vmf->pgoff, order);
+> > +	struct folio *folio;
+> >   	void *entry;
+> >   	vm_fault_t ret;
+> > @@ -2106,14 +2145,17 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+> >   	xas_set_mark(&xas, PAGECACHE_TAG_DIRTY);
+> >   	dax_lock_entry(&xas, entry);
+> >   	xas_unlock_irq(&xas);
+> > +	folio = pfn_folio(pfn_t_to_pfn(pfn));
+> > +	folio_ref_inc(folio);
+> 
+> Same thought.
+
+Yes, will add a comment, either as a respin or a fixup depending what Andrew prefers.
+
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index 2333c30..dcc9fcd 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> > @@ -209,7 +209,7 @@ int dax_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
+> 
+> [...]
+> 
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index d189826..1a0d6a8 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -2225,7 +2225,7 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >   						tlb->fullmm);
+> >   	arch_check_zapped_pmd(vma, orig_pmd);
+> >   	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
+> > -	if (vma_is_special_huge(vma)) {
+> > +	if (!vma_is_dax(vma) && vma_is_special_huge(vma)) {
+> 
+> I wonder if we actually want to remove the vma_is_dax() check from
+> vma_is_special_huge(), and instead add it to the remaining callers of
+> vma_is_special_huge() that still need it -- if any need it.
+> 
+> Did we sanity-check which callers of vma_is_special_huge() still need it? Is
+> there still reason to have that DAX check in vma_is_special_huge()?
+
+If by "we" you mean "me" then yes :) There are still a few callers of it, mainly
+for page splitting.
+
+> But vma_is_special_huge() is rather confusing from me ... the whole
+> vma_is_special_huge() thing should probably be removed. That's a cleanup for
+> another day, though.
+
+But after double checking I have come to the same conclusion as you - it should
+be removed. I will add that to my ever growing clean-up series that can go on
+top of this one.
+
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
