@@ -1,141 +1,83 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6372B1FF7C0
-	for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 09:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF4418E743
+	for <loongarch@lists.linux.dev>; Tue, 18 Feb 2025 09:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739871676; cv=none; b=FMUCEpOO3Yk5Tq+dOWsueLQf6QYQua71DxN0IV6bKReFReNrRe3P2vxr2iM8j41mpcwYq2BiNqrdaJTsFoAFcajUtbma257Yz9ebMSitUG2S/pY88LEqDFLr5EO3M/agEFinP3IBtxJYiYU+8aRaIUyEAoA1nXSRvxeshodbyPQ=
+	t=1739872713; cv=none; b=XGPgTMZ6GRLJf/PqeQ7wO7HY31BLx5V4kCACKf75DLwmz6pJIgun0luBY3Z4SFA91a6gQ351b106/EoZTGgE9zB1huEZL6P5SHnFKWtUg080WOfPuDo7VnWAK9yWL/hcB2rL+5KLkoHf0Ugtn3QVx310AbXBDYlUWnQFgfPM03Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739871676; c=relaxed/simple;
-	bh=TejqLV8/gQQd3iSRf5Ewdd9ea8a07L1bcG8RSJcAkh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tYUvi0hO7wPKbJOmFUYRyPYmMy+z9rXudg+6af7LKN0M2pfZnDF955ooGnDxcSjcDZOkhSm6Cfm2tU+HfaDQE0+8tUS+oYTA5xCi3q6cTzET6yPZkiYhvbaLbZErh9n0SOvTbYE3+ln3fOTMPrklaH4EintQ3FlI53jH32tMLo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=XCqMvkqn; arc=none smtp.client-ip=54.206.34.216
+	s=arc-20240116; t=1739872713; c=relaxed/simple;
+	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=bh45bWtgaU1qb/mByFRf9SoGDfjzPXqbm8MaFC1+CYthfykts5hQF5q7pZbHzDGEyamjk07eOasmks9jiedclEdXsTqFIPyrMZyHFdVjpOhtuJWxFZsrkhst6pLFNvbKRpiLAc7khrfAjBz651gDcQPMgaiJjB9yUp0wyRRQ1Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Bt6naX0M; arc=none smtp.client-ip=54.204.34.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="XCqMvkqn"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Bt6naX0M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739871646;
-	bh=pbNiPFnphCXaR8Xz0VxXvVAaKoyRBthGhG+fK+dOAyA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=XCqMvkqnRcLX3GhoPuUTkPG54k7FQqIYW55W+d7B7d2bN85tuIBok6cY015x1TFkg
-	 ALCBKuHaN9XMK2uuSsu3pYCR++zU3mAKW0DcqQJleEBI9+OhxuOkt7gwRhwCkIs2zH
-	 3GXQkLCn24rhRKRkaW6cMl7GvH03WMyIhtQPKQ/Q=
-X-QQ-mid: bizesmtpip4t1739871634tllm831
-X-QQ-Originating-IP: 4izNvgxeXalz9cGRpks6g/RcGnd9vLQrdnF24eieh7A=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 18 Feb 2025 17:40:32 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
+	s=onoh2408; t=1739872695;
+	bh=YILd5b+WgEImMcZvqFh77mCVPV+v4tIi2NThn8rfhcA=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=Bt6naX0M4i7q7GznIk18ekhWhKkiorMO9gzotdjRmirA8qvQNhGvmDxM2s8JWFNyP
+	 hcAyKaOh7QeNZ5B3mRticLBrBCxB2bhm7Pefmg+lh7+yizeoGkvSgzQndvGucjoD6O
+	 fZ5HuVYe/3B1BOoOfkO5IrDStqwfqPrVKVLsZb7M=
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1971567560806955168
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	guanwentao@uniontech.com,
-	yangtiezhu@loongson.cn,
-	maobibo@loongson.cn,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
-Date: Tue, 18 Feb 2025 17:40:27 +0800
-Message-ID: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+X-QQ-SSF: 00420000000000F0
+X-QQ-FEAT: LmkY14RBebTc565ZtoBk0Us/CMUSuxshwwpAIO79bxs=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: gXDe23XLI9Uj5W8jpWSvhFtd7dLLcl8OOXB+/KUXF+s=
+X-QQ-STYLE: 
+X-QQ-mid: v3sz3a-6t1739872657t6316258
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>
+Cc: "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?eWFuZ3RpZXpodQ==?=" <yangtiezhu@loongson.cn>, "=?utf-8?B?bWFvYmlibw==?=" <maobibo@loongson.cn>, "=?utf-8?B?5Y2g5L+K?=" <zhanjun@uniontech.com>, "=?utf-8?B?6IGC6K+a?=" <niecheng1@uniontech.com>, "=?utf-8?B?6ZmI6bqf6L2p?=" <chenlinxuan@uniontech.com>
+Subject: Re:[PATCH] LoongArch: acpi: Make parse_acpi_topology() return void
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Tue, 18 Feb 2025 17:57:36 +0800
+X-Priority: 3
+Message-ID: <tencent_46D6C2824357C42E11A3C9CD@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
+In-Reply-To: <C832CAEC20DE4FC4+20250218094027.482396-1-wangyuli@uniontech.com>
+X-QQ-ReplyHash: 3688260371
+X-BIZMAIL-ID: 17015835246629524927
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OPa5+/AT2oWtCjDBOWrZ7+T8NQB11AfrBsliGRpJZFcnGRxk1MLCpAnK
-	gSsSbqBEprI0m/+rAbHxvrzgPYRWrw3NVsnvziFqvtJ0XABQoeK2Vhruoo6lXwcASNTEM9U
-	AJv6YWFkHjbjFfhtJdOHRkg4rQ74ALX9YssZoH8h3RRDWSXLjCSdJbjwHnhSUHygnxnsU7s
-	HcEPhT/EOn1KN2QKUrFtSDia7KZq+UtR49PETBZ8KDcVg6d+6+YMuYTFufIdUKLa7Xnp0Tt
-	1XnajW1813Q9hrBLWEZPKC0l/3UmcdoxwLbV0Z9yq4LeLFMQRiUKirzZ9WIB/xwU5If4Scj
-	7JovYFrSM4fApZ36UZpm8LvqVWFsnLbNdAuOMVLD1KwTO+uEzNMYJHfYKVBwh79nUVfMz7s
-	GdhJtrNyMYefZAtPnx5c5NfPZQuacHdBCjGhFy0ueoYN8knIWInWeIlpvsdAb5AD3S5wGtC
-	XPYL1LHVlcCvvGHO0XUdT1d6lctbCmFyj8uV5H3DRgtR+egtDFlOpIaW9u60gaL7SdeoOG5
-	1CmnOFOBr4XRfs0X7iKIE+gMCVPBuVBhwmP+oF2bxrbsUDIZSfxW6uddtFq4Uq/P20d/sTK
-	qqxX+n7MNjW6p6z5MFq53MOnuaNeCTfuxqJ2yREmkyBNwckQkdVVzrv/rK9/4X1qvqxK+sy
-	IAy5bu5WBrlTPSNvWjO9pUqT7kFPo9+W9GJCBXcTCScDDAy0ZRM9mnVekIsM8KyZNgplMIt
-	Wm5Rw0pQYaIATMaUEb4XwSIb6GjiutSQ8nH0qan2PxPbkmLjYZvu3tBeuF3CAkBOpAyRtP+
-	58wClubp8jnhx7iy6evLBb4i538AI3BB9Q0abXPN3sJdYQr3sMa9t6c+JO6n3yESsVOGz63
-	gGL/OozMj057FRIJzG4vbSATYY5UQUp8nG/0dsHNEQRI3A9tRr9AuTzbeWfWy1/XiWxfR/e
-	1Ehh1L0CXmt1CzWx1iKRl7StmEDkXYDlqVIzWTs8GQzjnkqbFluqyCFfDxekX1V4iO9y5c5
-	RUU8xoTI9jdJKIPFZtroqbZ+EEYZEixywfVXknPgJaMZfVXqq+
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Tue, 18 Feb 2025 17:57:38 +0800 (CST)
+Feedback-ID: v:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NZiJZo0DdgPmxvZZTzlawGMhJn451se/jIMXPnEqCNIhtx6dp51YW8xB
+	cEFIhRLlD7oTutopgNi/8bSRNBsZeXxh3qGKI3L3mBOqnZwan6S6XiT6osrgUOMHOIsQahw
+	+f9UK7p3L/kLO5Y8BVdRUHQjxEu1xiwXuWFG2Vu3s79S7411gKc4KIzC/RVA9u29dBqry43
+	/UPwpO4xBCrmGmSLyTsi4N4Malgx2HFSNHf0sEj/q0TsVeaiYKBSvyy+0yOa0e6KqjvJTNS
+	StmvIV/qclG21VH3MGQNFek0xg+AfMXTKw0bythQ1Z/tpC503djyUHQmOS0aj/IC/ubx2zu
+	tgFah6ZNVZEkj14QQuj+z5UkE79ocp3uW1hXZHIXHnNiSAqpyhytGQNgF9A64KLT/0LXpTi
+	Y+P90qIh84d5ntT6IQ71mNRuxj+v5CPyHiyX0lMQz9UWxfXdp5kg6GrtFu2os9AAk62RKYm
+	gB7ka76aKPg3uWx8a+8PEzj3HaZeyjG4wGTxvSJ6YF7aq36Q4h/pX+c9DwJJxT6LDQCaQ1S
+	7QsS21JQExnmb75BZZ9W8PVs0TPFkwUSTlVzO8D+Er2qtPTxuAxyqXk39c0KN4asw5HG2C6
+	B1/5spbZJBZs9zsyunw3u7ugx0a2p1g4jIiQY8ZsnAlP9EVF/O/VSkurvCwURmxUvv6amqb
+	Me04HFju/sOpoefAf7y/IaZuaIonSOeexsHSvDW6Kv7fjLBv/pYTAUhKB5Da3/Y3X1W1Pwk
+	DH3P/uxad3hTeU/DEXG+0AxHLSRLCqemaVDiKrtCUu/OQPaIpOFPH2GU42p8AS9ta/wrSEv
+	+4xikqW1d1cNG2bLr3pwQbxVkgmXSCy4KQbnbKQDpIrNZG5I3Dx+GUYE1ZnVEzjIufOhAvB
+	kTrrfjQs13Fc4Y4JbjWhm1dpEeR9FObH8YktkspJ4bCfTRe5PPFfyjtIA2H7WMsqMD4lZfK
+	eoSRfey71MpAFMaST3kFYHP+yhf5HysMjQgdkQfzwA6r+xYZBFq0OWr6pNQX1uhAUYEdbHW
+	FcxiLDbv9mixrQx0TF4MIa86ugw9LsFvvst0El7pRasjJQuisY1nAmICP8w7PyVhjUeqJG9
+	w0PWAwBvz3H5KmQRmIZ1xUeySwcaAkmV/NBBLH+Tc5M
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 X-QQ-RECHKSPAM: 0
 
-The return value of parse_acpi_topology() is both unnecessary and
-unused.
-
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/include/asm/acpi.h | 2 +-
- arch/loongarch/kernel/acpi.c      | 7 ++-----
- 2 files changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 313f66f7913a..c1b90a90e28b 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -38,7 +38,7 @@ static inline bool acpi_has_cpu_in_madt(void)
- extern struct list_head acpi_wakeup_device_list;
- extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
- 
--extern int __init parse_acpi_topology(void);
-+extern void __init parse_acpi_topology(void);
- 
- static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- {
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 382a09a7152c..a95e8a7dd5a6 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -173,7 +173,7 @@ static void __init acpi_process_madt(void)
- 
- int pptt_enabled;
- 
--int __init parse_acpi_topology(void)
-+void __init parse_acpi_topology(void)
- {
- 	int cpu, topology_id;
- 
-@@ -181,7 +181,6 @@ int __init parse_acpi_topology(void)
- 		topology_id = find_acpi_cpu_topology(cpu, 0);
- 		if (topology_id < 0) {
- 			pr_warn("Invalid BIOS PPTT\n");
--			return -ENOENT;
- 		}
- 
- 		if (acpi_pptt_cpu_is_thread(cpu) <= 0)
-@@ -189,15 +188,13 @@ int __init parse_acpi_topology(void)
- 		else {
- 			topology_id = find_acpi_cpu_topology(cpu, 1);
- 			if (topology_id < 0)
--				return -ENOENT;
-+				pr_warn("Invalid BIOS PPTT\n");
- 
- 			cpu_data[cpu].core = topology_id;
- 		}
- 	}
- 
- 	pptt_enabled = 1;
--
--	return 0;
- }
- 
- #ifndef CONFIG_SUSPEND
--- 
-2.47.2
+TkFLLCBNVVNUIGFkZCAicmV0dXJuOyIgYWZ0ZXIgInByX3dhcm4oIkludmFsaWQgQklPUyBQ
+UFRUXG4iKTsiIHR3aWNlLg==
 
