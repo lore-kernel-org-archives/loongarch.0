@@ -1,121 +1,221 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA79B286291
-	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 11:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2025B1E7C25;
+	Wed, 19 Feb 2025 13:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739966123; cv=none; b=dP+BWfmNTWyD8Da5IfhiSkbb21SqGzVOAOTyy7OJxIxKD/0OVaCRV7FUkmvwWpjf4cUtsriQAMQZ2XG4l3rh7edlq8vtP7bQ8qI5r6wARr4KeXPyQlwGfz1QUoXqhq48sHWFwYxhLicj9m12LArroHuIgEfXFgCUqvZrdub1vkM=
+	t=1739972657; cv=none; b=Gc5hTCFnIsfKIdnHY3qygzZqejYdKee1Ut0QVJnsRWQAGk8iUTirioHVYi9RwXAypRF5QFjp+vdCjGIkkSXgsSzSVFvWgouqTEw3YYqMAKHXHtghM0vNsH5ex5N0+0Mu4E5HzGmqYVr3dCMedfmFg3tL2CsLVfete8rMlIRdhMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739966123; c=relaxed/simple;
-	bh=cmcwUjQoopYu+8HGY2X8Lh2p1aPjgwBlSxNxgvGqn20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IceL/eZfyGWUIJd0scgr9jTp6JeqfJVmMtk+WN80RRwRyPbW6c5ccMMsYrlS9kJUHDktnxBNIwL2/xKtEzq97pMAZX9GYdADUYEL0GapHdhVUKsz5UXGOwt+6eZtpq+Poq6yyA/+HcowaT7zXfVJfg9kBbSkbnLUQxSs462zeUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=LRBPD+9C; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739972657; c=relaxed/simple;
+	bh=N7+6L64rjXg9fF5fR618d6CJYqV7II10i29eiKI9P44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmxviMQSO/AtLZIyxaJw998otWt4Itg8KCessBlybleEVjwGVeDp27v8sFoEScxXV6hayuX6jDX9ZPVH0s1oaFpSdeYj/ua6HUqUFxqxamiV+wMrepDcd1A7b8hmNYNvCdQapOFxCUFg5GwB1LMI8HR/LE3t5QIdV+R8L4HRPQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2yZ+zij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="LRBPD+9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739966091;
-	bh=7WqapH9hkRwnBXqdTtOxByg0Cq2hNow9/HDGmqbIlgQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LRBPD+9Cti7CUZrezgucsc6t2zS9BTcK7IK+eoERjM05vbD5swV2yXFK7mSoYGj96
-	 sARCsjzNf66slTW509g59LqVOCm9e6E9kpoBwhUnh1zJLzr77BhlsYw/pmGwKtri/k
-	 qgpQg72HbjHOc+BQOERJH6FOB5F393Ch1Lxqj7MI=
-X-QQ-mid: bizesmtpip3t1739966045tgjfcps
-X-QQ-Originating-IP: O7SsgWhzKwnrxZounFROXcK2a+thI6ETPZgTVaPWgs4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 19 Feb 2025 19:54:03 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15418192173615449267
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: wangyuli@uniontech.com,
-	maobibo@loongson.cn,
-	guanwentao@uniontech.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: acpi: Conditional apic_id vs CONFIG_NR_CPUS comparison
-Date: Wed, 19 Feb 2025 19:53:07 +0800
-Message-ID: <C2885DC275589FDD+20250219115307.194770-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2yZ+zij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E41DC4CED1;
+	Wed, 19 Feb 2025 13:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739972657;
+	bh=N7+6L64rjXg9fF5fR618d6CJYqV7II10i29eiKI9P44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W2yZ+zijHcI2QmoLkybU+92OwkkHfakORiz+k8Xb1xX9jauDjuU6UkFDjczaZxBug
+	 qmEq5CwxZvDhBpNgn9FZpgPpoUv4PW0ZbYolJ1fGpA83s2RV16cViOngiEJJoxitvT
+	 hGGItpGR4TQS/dXPb1rXR9LfYzZu+2LeymZT34Y/jSXyRDnGTORVZzYUKOnBMZLiKZ
+	 nKbGbMyUTWTheU4uohc/DvmBguIZwIZAnfhnOseWOk/c2pdpVxxTDO85fJF5aWZ3uS
+	 5gLoFfykuXJ6A1afHm3VzvIKYxm8ziodb8zVq9EwDQweAOiW5dm/ndb4T/9lWJzaOc
+	 buAa72zDn/1GA==
+Date: Wed, 19 Feb 2025 15:44:12 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+	peterhuewe@gmx.de, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>
+Subject: Re: [PATCH V3 5/6] tpm: Add a driver for Loongson TPM device
+Message-ID: <Z7XgLNU1xXqgOBIL@kernel.org>
+References: <20250219073350.16915-1-zhaoqunqin@loongson.cn>
+ <20250219073350.16915-2-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MRw/zKT/0BpPPS3mn+aFxUhlbq4zQw3/pyxz5UKRwFGOtJ0HZicqf658
-	LJix2s5YER5IAMms3tjrRkw0SqYjX+4ENvtgNMX1BRCXhsI52XUsdvKvv1KZ+AsPpMv2k0o
-	GSN2GZqhJTRFg+XA/72/9wLxGXikE/gbeewZsCkjcz8f+JTmVGpz0w1dKW84EH5uaeQrqqp
-	SyzWi4lKbOiJGwjYZOtbKkOaEKSlQ+pF/WaCnCfulUZc+w48gDxOcJeux5QTDvKJrB1EIyn
-	BpS0gqKk+rxJyBC/6Ut9fUAx8p+1Dm3Ypk4sRFUNmbEVkPWlEnpa0KjQwldIvp/ho7Y2gxS
-	ZFX0tyB3ymeTQQuDGqdnfPg76Jhzn+eQs0WZMbWUaTu47TDES47oVPA+5wFN5JnPKRbInPH
-	H7w9dgx198wsoNE5/Y/HN5BeNYMN4NGjf8QeaM4+Li+s1e9BWCpnzHxDmuonsyVIhygM4oH
-	GTl2p1wGzrh7guCeyOVx5yz/KPyc6Pm/tTMc6Ek8CkncZB0is3oHfGGLcIk9CZPwRqVeXU/
-	bXacKVJ5g3oowDsnoTyrVvdzSYiRSHO5YZCT8oJU8e6HRdcntEkctUxF3Ncz+/L++vTi+oG
-	1E/EZsNtUYj3QjMkHWkSWHBW2EcQjEz3dUcuq/jOkZtBL5sJXaOPeY6/dY42/s3jItz15Wo
-	hmBypzCTtoUve526/EJm2hO23ZitSWj6szJt0B3EMXCZ7ftbjT/5P4yeVqcsBUQ3Fk5U/py
-	fG799frSgViJ1yrY66FRQamPb66ld9hRhswMOEBES8aIrVpsUz7jifqSQT57lGtCHeX6/dT
-	eY5p/Se89KZlnd0/DGgCnWGZqGwWtL9nWGuet6yFmfLfyAgJTTEFM4PyVFFhS4YfKS6A/TC
-	CiMHb1Yq1MujFKMlrmN1raD1jn4wPqb0418ngMbrk2FZxbV7QO6HC+0U7QaQC3MpO5E/HG3
-	e/LbrXuHgK2Udd75YNnQAjz8I5x8DYgjfh+BcLIo8U+g4c1XyHSQ7NzK0Si1NHOvSvI3mUV
-	/AkhMXU4Fc0rUg1qHDfMwuc/Tw6h8hMHBaEu06WuG2ZuX4QoEW4fzt3yjbHUQ=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219073350.16915-2-zhaoqunqin@loongson.cn>
 
-The apic_id here, as declared as a u8 (unsigned char) in struct
-acpi_srat_cpu_affinity of acpi/actbl3.h, has a range up to 255.
+On Wed, Feb 19, 2025 at 03:33:49PM +0800, Qunqin Zhao wrote:
+> Loongson security engine supports random number generation, hash,
+> symmetric encryption and asymmetric encryption. Based on these
+> encryption functions, TPM2 have been implemented in the Loongson
+> security engine firmware. This driver is responsible for copying data
+> into the memory visible to the firmware and receiving data from the
+> firmware.
+> 
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> ---
+> v3: Added reminder about Loongson security engine to git log.
+> 
+>  drivers/char/tpm/Kconfig    |   9 ++++
+>  drivers/char/tpm/Makefile   |   1 +
+>  drivers/char/tpm/tpm_lsse.c | 104 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_lsse.c
+> 
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 0fc9a510e0..56d0417065 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -225,5 +225,14 @@ config TCG_FTPM_TEE
+>  	help
+>  	  This driver proxies for firmware TPM running in TEE.
+>  
+> +config TCG_LSSE
+> +	tristate "Loongson TPM Interface"
+> +	depends on MFD_LS6000SE
+> +	help
+> +	  If you want to make Loongson TPM support available, say Yes and
+> +	  it will be accessible from within Linux. To compile this
+> +	  driver as a module, choose M here; the module will be called
+> +	  tpm_lsse.
+> +
+>  source "drivers/char/tpm/st33zp24/Kconfig"
+>  endif # TCG_TPM
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9bb142c752..bf2280352d 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+>  obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> +obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
+> diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
+> new file mode 100644
+> index 0000000000..3fd2d9bac8
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_lsse.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mfd/ls6000se.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/wait.h>
+> +
+> +#include "tpm.h"
+> +
+> +struct tpm_msg {
+> +	u32 cmd;
+> +	u32 data_off;
+> +	u32 data_len;
+> +	u32 info[5];
+> +};
+> +
+> +struct tpm_dev {
+> +	struct lsse_ch *se_ch;
+> +	struct completion tpm_completion;
+> +};
+> +
+> +static void tpm_complete(struct lsse_ch *ch)
+> +{
+> +	struct tpm_dev *td = ch->priv;
+> +
+> +	complete(&td->tpm_completion);
+> +}
+> +
+> +static int tpm_ls_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+> +	struct tpm_msg *rmsg;
+> +	int sig;
+> +
+> +	sig = wait_for_completion_interruptible(&td->tpm_completion);
+> +	if (sig)
+> +		return sig;
+> +
+> +	rmsg = td->se_ch->rmsg;
+> +	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
+> +
+> +	return rmsg->data_len;
+> +}
+> +
+> +static int tpm_ls_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_dev *td = dev_get_drvdata(&chip->dev);
+> +	struct tpm_msg *smsg = td->se_ch->smsg;
+> +
+> +	memcpy(td->se_ch->data_buffer, buf, count);
+> +	smsg->data_len = count;
+> +
+> +	return se_send_ch_requeset(td->se_ch);
+> +}
+> +
+> +static const struct tpm_class_ops lsse_tpm_ops = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+> +	.recv = tpm_ls_recv,
+> +	.send = tpm_ls_send,
+> +};
+> +
+> +static int lsse_tpm_probe(struct platform_device *pdev)
 
-Evidently, if CONFIG_NR_CPUS becomes 256 or more, the check
-"apic_id >= CONFIG_NR_CPUS" will always be false, which will produce
-a compiler warning.
+tpm_lsse_
 
-Only compile this code if CONFIG_NR_CPUS is at most 255 consequently.
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct tpm_chip *chip;
+> +	struct tpm_msg *smsg;
+> +	struct tpm_dev *td;
+> +
+> +	td = devm_kzalloc(dev, sizeof(struct tpm_dev), GFP_KERNEL);
+> +	if (!td)
+> +		return -ENOMEM;
+> +
+> +	init_completion(&td->tpm_completion);
+> +	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
+> +			       2 * sizeof(struct tpm_msg), td, tpm_complete);
+> +	if (!td->se_ch)
+> +		return -ENODEV;
+> +	smsg = td->se_ch->smsg;
+> +	smsg->cmd = SE_CMD_TPM;
+> +	smsg->data_off = td->se_ch->off;
+> +
+> +	chip = tpmm_chip_alloc(dev, &lsse_tpm_ops);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> +	dev_set_drvdata(&chip->dev, td);
+> +
+> +	return tpm_chip_register(chip);
+> +}
+> +
+> +static struct platform_driver lsse_tpm_driver = {
+> +	.probe   = lsse_tpm_probe,
+> +	.driver  = {
+> +		.name  = "ls6000se-tpm",
+> +	},
+> +};
+> +module_platform_driver(lsse_tpm_driver);
+> +
+> +MODULE_ALIAS("platform:ls6000se-tpm");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
 
-Fix follow error with clang-18 when W=1e:
+Remove MODULE_AUTHOR fields. Git encodes this already.
 
-arch/loongarch/kernel/acpi.c:302:18: error: result of comparison of constant 256 with expression of type 'u8' (aka 'unsigned char') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
-  302 |         if (pa->apic_id >= CONFIG_NR_CPUS) {
-      |             ~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-1 error generated.
+> +MODULE_DESCRIPTION("Loongson TPM driver");
+> -- 
+> 2.43.0
+> 
 
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Prefix all with tpm_lsse instead of tpm
 
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 2bb3bc42e6ed..ee471a80763e 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -299,11 +299,17 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
- 		return;
- 	}
- 
-+/*
-+ * apic_id's type is u8.
-+ * Conditionally skip this check to silence compiler warnings.
-+ */
-+#if CONFIG_NR_CPUS < 256
- 	if (pa->apic_id >= CONFIG_NR_CPUS) {
- 		pr_info("SRAT: PXM %u -> CPU 0x%02x -> Node %u skipped apicid that is too big\n",
- 				pxm, pa->apic_id, node);
- 		return;
- 	}
-+#endif /* CONFIG_NR_CPUS < 256 */
- 
- 	early_numa_add_cpu(pa->apic_id, node);
- 
--- 
-2.47.2
-
+BR, Jarkko
