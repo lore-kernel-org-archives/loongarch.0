@@ -1,80 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E40286291;
-	Wed, 19 Feb 2025 11:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA79B286291
+	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 11:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739965927; cv=none; b=ZEpYzLrgg+3VeoA4kv7aEPUmsmgRYdePi6GNkTuq0YU4G5y1Tpk2PXrBARgAATNfgkCUURh8WOMt8Ys6ya5Z1PeMCwQd2MXzEQ5V2C3145hOU8RVofuEfrtsGsHSHlQjFbBWbLeyntdhjLiL5pNbQVPB8rPXvCMZw6RPhjkf/w4=
+	t=1739966123; cv=none; b=dP+BWfmNTWyD8Da5IfhiSkbb21SqGzVOAOTyy7OJxIxKD/0OVaCRV7FUkmvwWpjf4cUtsriQAMQZ2XG4l3rh7edlq8vtP7bQ8qI5r6wARr4KeXPyQlwGfz1QUoXqhq48sHWFwYxhLicj9m12LArroHuIgEfXFgCUqvZrdub1vkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739965927; c=relaxed/simple;
-	bh=vrUYosQoceRE+Qxq6ZkfIGNIJkHF30yAY3d6CnC8kNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFrxlAIY0gBz1gM3cLA06NDeHGEydwuvVEQS0EW2OoxaJHnH/ElSi8wNTZ/86i8/c0YURgjm6brWGLROQs9FssohlQ8iNO4hWPT5ziHXqnlAAHfazeXdYdJa0+3wVObRaxpuk2kPA2CA621eemGSLOnF5Jt0s0S0RqMp8Kt7Nnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C01EC4CED1;
-	Wed, 19 Feb 2025 11:52:03 +0000 (UTC)
-Date: Wed, 19 Feb 2025 11:52:01 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/ioremap: Pass pgprot_t to ioremap_prot() instead of
- unsigned long
-Message-ID: <Z7XF4Y3FIbSrSP9u@arm.com>
-References: <20250218101954.415331-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1739966123; c=relaxed/simple;
+	bh=cmcwUjQoopYu+8HGY2X8Lh2p1aPjgwBlSxNxgvGqn20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IceL/eZfyGWUIJd0scgr9jTp6JeqfJVmMtk+WN80RRwRyPbW6c5ccMMsYrlS9kJUHDktnxBNIwL2/xKtEzq97pMAZX9GYdADUYEL0GapHdhVUKsz5UXGOwt+6eZtpq+Poq6yyA/+HcowaT7zXfVJfg9kBbSkbnLUQxSs462zeUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=LRBPD+9C; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="LRBPD+9C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739966091;
+	bh=7WqapH9hkRwnBXqdTtOxByg0Cq2hNow9/HDGmqbIlgQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=LRBPD+9Cti7CUZrezgucsc6t2zS9BTcK7IK+eoERjM05vbD5swV2yXFK7mSoYGj96
+	 sARCsjzNf66slTW509g59LqVOCm9e6E9kpoBwhUnh1zJLzr77BhlsYw/pmGwKtri/k
+	 qgpQg72HbjHOc+BQOERJH6FOB5F393Ch1Lxqj7MI=
+X-QQ-mid: bizesmtpip3t1739966045tgjfcps
+X-QQ-Originating-IP: O7SsgWhzKwnrxZounFROXcK2a+thI6ETPZgTVaPWgs4=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 19 Feb 2025 19:54:03 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 15418192173615449267
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: wangyuli@uniontech.com,
+	maobibo@loongson.cn,
+	guanwentao@uniontech.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] LoongArch: acpi: Conditional apic_id vs CONFIG_NR_CPUS comparison
+Date: Wed, 19 Feb 2025 19:53:07 +0800
+Message-ID: <C2885DC275589FDD+20250219115307.194770-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218101954.415331-1-anshuman.khandual@arm.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MRw/zKT/0BpPPS3mn+aFxUhlbq4zQw3/pyxz5UKRwFGOtJ0HZicqf658
+	LJix2s5YER5IAMms3tjrRkw0SqYjX+4ENvtgNMX1BRCXhsI52XUsdvKvv1KZ+AsPpMv2k0o
+	GSN2GZqhJTRFg+XA/72/9wLxGXikE/gbeewZsCkjcz8f+JTmVGpz0w1dKW84EH5uaeQrqqp
+	SyzWi4lKbOiJGwjYZOtbKkOaEKSlQ+pF/WaCnCfulUZc+w48gDxOcJeux5QTDvKJrB1EIyn
+	BpS0gqKk+rxJyBC/6Ut9fUAx8p+1Dm3Ypk4sRFUNmbEVkPWlEnpa0KjQwldIvp/ho7Y2gxS
+	ZFX0tyB3ymeTQQuDGqdnfPg76Jhzn+eQs0WZMbWUaTu47TDES47oVPA+5wFN5JnPKRbInPH
+	H7w9dgx198wsoNE5/Y/HN5BeNYMN4NGjf8QeaM4+Li+s1e9BWCpnzHxDmuonsyVIhygM4oH
+	GTl2p1wGzrh7guCeyOVx5yz/KPyc6Pm/tTMc6Ek8CkncZB0is3oHfGGLcIk9CZPwRqVeXU/
+	bXacKVJ5g3oowDsnoTyrVvdzSYiRSHO5YZCT8oJU8e6HRdcntEkctUxF3Ncz+/L++vTi+oG
+	1E/EZsNtUYj3QjMkHWkSWHBW2EcQjEz3dUcuq/jOkZtBL5sJXaOPeY6/dY42/s3jItz15Wo
+	hmBypzCTtoUve526/EJm2hO23ZitSWj6szJt0B3EMXCZ7ftbjT/5P4yeVqcsBUQ3Fk5U/py
+	fG799frSgViJ1yrY66FRQamPb66ld9hRhswMOEBES8aIrVpsUz7jifqSQT57lGtCHeX6/dT
+	eY5p/Se89KZlnd0/DGgCnWGZqGwWtL9nWGuet6yFmfLfyAgJTTEFM4PyVFFhS4YfKS6A/TC
+	CiMHb1Yq1MujFKMlrmN1raD1jn4wPqb0418ngMbrk2FZxbV7QO6HC+0U7QaQC3MpO5E/HG3
+	e/LbrXuHgK2Udd75YNnQAjz8I5x8DYgjfh+BcLIo8U+g4c1XyHSQ7NzK0Si1NHOvSvI3mUV
+	/AkhMXU4Fc0rUg1qHDfMwuc/Tw6h8hMHBaEu06WuG2ZuX4QoEW4fzt3yjbHUQ=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Feb 18, 2025 at 03:49:54PM +0530, Anshuman Khandual wrote:
-> From: Ryan Roberts <ryan.roberts@arm.com>
-> 
-> ioremap_prot() currently accepts pgprot_val parameter as an unsigned long,
-> thus implicitly assuming that pgprot_val and pgprot_t could never be bigger
-> than unsigned long. But this assumption soon will not be true on arm64 when
-> using D128 pgtables. In 128 bit page table configuration, unsigned long is
-> 64 bit, but pgprot_t is 128 bit.
-> 
-> Passing platform abstracted pgprot_t argument is better as compared to size
-> based data types. Let's change the parameter to directly pass pgprot_t like
-> another similar helper generic_ioremap_prot().
-> 
-> Without this change in place, D128 configuration does not work on arm64 as
-> the top 64 bits gets silently stripped when passing the protection value to
-> this function.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linux-csky@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-sh@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> Co-developed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+The apic_id here, as declared as a u8 (unsigned char) in struct
+acpi_srat_cpu_affinity of acpi/actbl3.h, has a range up to 255.
 
-For arm64:
+Evidently, if CONFIG_NR_CPUS becomes 256 or more, the check
+"apic_id >= CONFIG_NR_CPUS" will always be false, which will produce
+a compiler warning.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Only compile this code if CONFIG_NR_CPUS is at most 255 consequently.
+
+Fix follow error with clang-18 when W=1e:
+
+arch/loongarch/kernel/acpi.c:302:18: error: result of comparison of constant 256 with expression of type 'u8' (aka 'unsigned char') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
+  302 |         if (pa->apic_id >= CONFIG_NR_CPUS) {
+      |             ~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+1 error generated.
+
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/kernel/acpi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 2bb3bc42e6ed..ee471a80763e 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -299,11 +299,17 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa)
+ 		return;
+ 	}
+ 
++/*
++ * apic_id's type is u8.
++ * Conditionally skip this check to silence compiler warnings.
++ */
++#if CONFIG_NR_CPUS < 256
+ 	if (pa->apic_id >= CONFIG_NR_CPUS) {
+ 		pr_info("SRAT: PXM %u -> CPU 0x%02x -> Node %u skipped apicid that is too big\n",
+ 				pxm, pa->apic_id, node);
+ 		return;
+ 	}
++#endif /* CONFIG_NR_CPUS < 256 */
+ 
+ 	early_numa_add_cpu(pa->apic_id, node);
+ 
+-- 
+2.47.2
+
