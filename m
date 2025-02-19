@@ -1,112 +1,139 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BAC1CEAC3
-	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 09:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7A01B0F16
+	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 09:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739956327; cv=none; b=OBSk5F2tkGNxBYs0qhkbncWAttiAvpnsvjaCXK8cCuo6dsma7IgxBK5f3UYQhhYGKONEMRvbEzaruAiKlXa+XRB3TEwGoqD0EIRWQm3g3ArKUuI6qd+gLlq6uluIzFONrqsndtLWTwWcBWsUDu5nJJDh+leTQ6JmQd2CLhaqH8Q=
+	t=1739958551; cv=none; b=l0hkDvSuERS8p4hhV80iz4Wu05k4gR7dGbXuJgoY1kR4q0qPSXDbXrZXio6x5ZkbjAar+XiIszkKMlCCzkVq5J73oZpgEtwmuj2W2CSnihvNSfbgeKeGtS9fUbbdsNjvpwJi+CbwhyLslPTYwJcbeLXNgDxk6Z/0m2PrdcIUur8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739956327; c=relaxed/simple;
-	bh=1mDmGlQiTjrTM9JA4bPSMWae34JasEkJOVEndkM6ZvY=;
+	s=arc-20240116; t=1739958551; c=relaxed/simple;
+	bh=WiJtGyijnTolZiQAprxhjQpCNTmmPeAe/13v/bUoM0E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U6ZdOA9oKFUcGzhUMff7LHnEqGw7ggtjsQoi/t/cprjsDZb6paSHKySlJLRKI/gLqewmnfS797OMA5y95kej7yL6ClOAl8oI+C7+B8JfKaT5oBw0K8NsKMEfoG50HAbHpXGFv5IuaurssBdPlWNzo6y6pnAxUtSoLPfoyXX70lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GH3va7rf; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=jn2nHNBgZH1O4B51OnmLxLNCHfiNDbLv4eLQNA4bYCvbdsnB8fyzGAqrLlNS5Dns6Ljq8o2mRW1POJUg/L+omIJRbVtuapa988P/xXQ25hh7yyhXqU+1DVG4NInnH/Q3SGvoAZn7A0/5JMrekzk4aTtuWhwWUGv4nPT/HRAVqvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4QJu6OX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GH3va7rf"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abbda4349e9so49113066b.0
-        for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 01:12:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739956323; x=1740561123; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dBlQIQZTyl+c9YJhOesoDPaG6Lk+JATvxoUqF2ZkP5g=;
-        b=GH3va7rfpXb3S99ksa/GIcXHI7lg83QEg4dOHGjDZHSG8L/nLSZg6qsnaMvEFX9rSk
-         +XH91zdRakin8USLez25yKGWNN42QfkUivT24twY1UPkSiaOBO4CN63+6x8LKRZ090GL
-         TZEH7IxHdtMyt/04npow2a5Bd44ySMcm+QANux0kMWPrzEHVVou7OwnZSTicM16/YBqJ
-         BIYtDuQMC+74jCTLWIjNThs79YN0HJVaAmIFlpDOimr1DYd+yWIC3PhEO6WaislorhH0
-         5SD4iJ4m9jiCiem/WBP33IJCF/yApOBdrhxDxbkuz7sLp4VnxSgfICe2N/yg+zfe9t2n
-         kHJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739956323; x=1740561123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dBlQIQZTyl+c9YJhOesoDPaG6Lk+JATvxoUqF2ZkP5g=;
-        b=Hmjk39IanNOQu70ySjJs14LNJaTLcT3xu/k3waHyy/Z3YRx6u1z6F1Uj3Lgyw3EPMj
-         YgbzT9HsPwUuq7UJcB2V+XnMxHrtbgIgCgNZB5nc+QOhBsbGVAQt8N8bswpD6DXXtba8
-         GgZmh+Df8usUuRLmpLsDvJljaXxMoiKOuYo6kdcKeV8u1+iNddwxRmAYBlMz10xdic+k
-         AI0WZZkbbi9EnLAU23ymrwgiN11z9fzZ1u55Rm6tRGeeCBEa50LUA29SEuBCtVCEYUVh
-         b6q6k5dClmw4XBH7CrXjKLQwsR1Qxy/ahYZDElBNHpey/O1FqFpMwD0gAbXGG4TzUTC4
-         BzaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOyIofa3xNva8GPXX78PvlkNPJ/haRHfd0jOEoJG6JRmYy0cWcvtKOB7q2QXygJnukDQBQhln+jQM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/w8/v3o08pqULyKbMvmGmzX830PzVYIPQB9Psxp7ULe5NbxCW
-	yQZkKoaphwHoCYkF3Cr8K6hU3aucLywjw4R3cq23jPA5HvIBzsvKUN6jzES8BndEz2MYCV9K+hf
-	5bWwBCx52HpMiNVUgnc88nZQVdj4=
-X-Gm-Gg: ASbGnctQFuWgcYVUe0LeeDF9TC1cuMLkxxUHLM3ufesG3E6orIny0jMQcotofoGwF7m
-	NKJioCoqAlR3tOtw+S8oxmFSeXswou79TVCCN/ffE5o+MWJMRtpbjjYQK1QbdIDupjnLWgGAn
-X-Google-Smtp-Source: AGHT+IGuIK/CQy8bOdyilmjVVAnjbdAlGWgVtHcOdZyL7b2VSZoGr3Oqwi/oJeLhkyY9/0jyPhsCU2sPtKBUq41RyoM=
-X-Received: by 2002:a17:907:7fac:b0:ab7:cc00:4d4a with SMTP id
- a640c23a62f3a-abb70d95cb3mr1810038166b.35.1739956323370; Wed, 19 Feb 2025
- 01:12:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4QJu6OX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18524C4AF09
+	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 09:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739958551;
+	bh=WiJtGyijnTolZiQAprxhjQpCNTmmPeAe/13v/bUoM0E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=s4QJu6OXnngrW9SavgZHOErIX8TbgDtfYiIkY3BVY9a0/VsGFXNRJr3zTN4ziVgx0
+	 n2UKkyr1w18onYbQkaQvct/ZjJhYv9lXyWQzMLuuzlQXuCQWAFzA6bIcc6Elcs0AaH
+	 5YR8PpDroGOCSjtgF9QQfO+85O1mjrpitfAGYs9g08VxKRmhfDx3RQ0OUgL+1KLqDE
+	 zFuBPw93R/Tyfp8lYT7FzAE1OyeQkH7XZ6Q+3vybfKe1ZazV0hG1fVINvk4oL8ybTX
+	 1dP+DOXynjAP/31nAFFz+KifLQy/zuFXYO5Z1OqYr1ivU+TjmLMu/7T9GntjQ5uL1Z
+	 qPfbeyHp893Hw==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abbdc4a0b5aso57553066b.0
+        for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 01:49:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUwHYp/E3+q+SZICJK2MhEnXaljl1azV8k6LrFohm33omFKilIVUUfXasxBkWfNxCzeBR5UMi11/O0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxGYPtfrx+PNnmU/lecBJTi+F5B4/aS6RMueuuVCBAIJAtxk7u2
+	XKBk5GL4A1S13leoj2djTT8c/YhEa87RLvWb1KHJlX1MAMwkoRJN/nyDlJ7uQVPKCOd9ZkjGA/t
+	D4nKAC1ca41l7L2QF0WHVBpDp5D8=
+X-Google-Smtp-Source: AGHT+IHyn/QXaRB+dV33EFQe1SjGf1/yaS8648vX9OqMNYv+/PAWR6w/r4Lb7gWybn6Q0yovB9Qry8TtLZ74MONVR44=
+X-Received: by 2002:a17:907:d48f:b0:abb:dbc2:bfb6 with SMTP id
+ a640c23a62f3a-abbdbc2c5d4mr108949766b.10.1739958549626; Wed, 19 Feb 2025
+ 01:49:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250219020809.3568972-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20250219020809.3568972-1-zhoubinbin@loongson.cn>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 19 Feb 2025 11:11:26 +0200
-X-Gm-Features: AWEUYZndSh3zP-0TVudcjduNMhtOO5FnyJN-FotaI3FwFJihJXCAoNLkXbk2NmE
-Message-ID: <CAHp75VdSqFhEp_Xt=qtBNDDz984N97pZmS684oS137dFi0o_pw@mail.gmail.com>
-Subject: Re: [PATCH v2] i2c: ls2x: Fix frequency division register access
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org, Hongliang Wang <wanghongliang@loongson.cn>
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn> <20250115013444.anzoct6gvs56m225@jpoimboe>
+ <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn> <20250210212653.oidcl4aqyrcu3yzi@jpoimboe>
+ <CAAhV-H7MVDj0CbXfwveb7GDn+D=O4N6oUT6rpGrbGmYPLPpRPg@mail.gmail.com>
+ <20250211233056.q47mp5askk7qrxcp@jpoimboe> <CAAhV-H563HcK2bck2k+VLTvrf0C7=cEMr8BJpQhFdJNc+dFOUw@mail.gmail.com>
+ <20250213025108.svqgj5nzseqs6qox@jpoimboe> <CAAhV-H5mYGnxHPxAeXkHo2XBvi-RtPjDQRBnDiDyKVtFv-ZBBQ@mail.gmail.com>
+ <20250218174632.gwseuvgezj7eni2j@jpoimboe>
+In-Reply-To: <20250218174632.gwseuvgezj7eni2j@jpoimboe>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 19 Feb 2025 17:49:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Vwhsrp-y=pLa6xh=nVEOZy4wu2mPj00ES=OjsM7vruA@mail.gmail.com>
+X-Gm-Features: AWEUYZkJg7i0Hi0dLJ-jmeSaIFLF4cxfJR3uG1xj_DycnwEjbfACIhG8y_rl1dY
+Message-ID: <CAAhV-H4Vwhsrp-y=pLa6xh=nVEOZy4wu2mPj00ES=OjsM7vruA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 4:08=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+On Wed, Feb 19, 2025 at 1:46=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
 > wrote:
 >
-> According to the chip manual, the I2C register access type of
-> Loongson-2K2000/LS7A is "B", so we can only access registers in byte
-> form (readb/writeb).
+> On Mon, Feb 17, 2025 at 11:13:43AM +0800, Huacai Chen wrote:
+> > On Thu, Feb 13, 2025 at 10:51=E2=80=AFAM Josh Poimboeuf <jpoimboe@kerne=
+l.org> wrote:
+> > >
+> > > On Wed, Feb 12, 2025 at 03:22:45PM +0800, Huacai Chen wrote:
+> > > > > The new series now has 7 patches:
+> > > > >
+> > > > > Tiezhu Yang (7):
+> > > > >   objtool: Handle various symbol types of rodata
+> > > > >   objtool: Handle different entry size of rodata
+> > > > >   objtool: Handle PC relative relocation type
+> > > > >   objtool/LoongArch: Add support for switch table
+> > > > >   objtool/LoongArch: Add support for goto table
+> > > > >   LoongArch: Enable jump table for objtool
+> > > > >   LoongArch: Convert unreachable() to BUG()
+> > > > >
+> > > > > I was planning on queueing all 7.
+> > > > >
+> > > > > In particular, patch 6 should stay with the objtool patches since
+> > > > > they're directly related.
+> > > > >
+> > > > > But I was also just going to grab 7 as well.
+> > > > >
+> > > > > Please let me know if you disagree.
+> > > > What about you merge the first 5 patches, and then I merge the last=
+ 2
+> > > > to the loongarch tree? (I prefer to merge the whole series to the
+> > > > loongarch tree with your acked-by, but that may be inconvenient to
+> > > > you).
+> > >
+> > > I want the first 5 patches to go through the -tip tree because we'll
+> > > have other patches depending on them.
+> > >
+> > > I'll go ahead and take the first 5.
+> > >
+> > > If you take in patches 6 & 7 separately, that might introduce a lot o=
+f
+> > > warnings.  But it's up to you.
+> > >
+> > > For patches 6 & 7:
+> > >
+> > > Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> > OK, please take the first 5 patches, I will merge your objtool/core to
+> > the loongarch tree and then apply the last 2 to avoid build warnings.
+>
+> Looks like that's not going to work.  Without patch 7 I'm getting a
+> warning (upgraded to a build error with a pending change to upgrade
+> objtool warnings to errors):
+>
+> arch/loongarch/kernel/machine_kexec.o: error: objtool: kexec_reboot() fal=
+ls through to next function crash_shutdown_secondary()
+> arch/loongarch/kernel/machine_kexec.o: error: objtool:   kexec_reboot+0x1=
+c: (branch)
+> arch/loongarch/kernel/machine_kexec.o: error: objtool:   kexec_reboot+0x0=
+: <=3D=3D=3D (sym)
+> arch/loongarch/kernel/machine_kexec.o: error: objtool: 1 warning(s) upgra=
+ded to errors
+>
+> And that would break bisection anyway, so that really needs to come
+> before the others.
+OK, then please take the whole series of V7, but please exchange the
+order of Patch-6 and Patch-7 (I think the enablement should be the
+last for bisection).
+For V7: Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
-readb()/writeb()
+
+Huacai
 
 >
-> Although Loongson-2K0500/Loongson-2K1000 do not have similar
-> constraints, register accesses in byte form also behave correctly.
->
-> Also, in hardware, the frequency division registers are defined as two
-> separate registers (high 8-bit and low 8-bit), so we just access them
-> directly as bytes.
-
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
-...
-
-> +       /*
-> +        * According to the chip manual, we can only access the registers=
- as bytes,
-> +        * otherwise the high bits will be truncated.
-> +        * So set the I2C frequency with a sequential writeb instead of w=
-ritew.
-
-writeb()
-writew()
-
-> +        */
-
---=20
-With Best Regards,
-Andy Shevchenko
+> --
+> Josh
