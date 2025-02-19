@@ -1,193 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37188EEAA;
-	Wed, 19 Feb 2025 00:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98E943596A
+	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 02:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739925580; cv=none; b=RVNJg9CVyExFdAR5GbLqrpWQVt/BYkKexlZi3dcFE7/fbYfXg4kh8YyAQLd0/qoj4uuBn7xBw2JKe3yGE4UyjQG42vY1i5yT7twVylklAVSNOo9iNIooMoM9gUndSE3VdpFF6WY/lcudFb8yrgM9ZcAcRPf4JYbadzSe//zaiDI=
+	t=1739930908; cv=none; b=T5krVFVecXkVxZglzeSV6vcjmJLIyJCIrsA13D5nVREa3S+W3rlWdE2goMl9YJFvhZYEU7Ec2kergzyXaBuur5Od4zyuRmvtY6DCtPjbf3YI+nRW6qQEKsFDcYMUaR8Nj30lAQrHK0sL39KFCbIodl2qGEh53N+uylEEivAAlcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739925580; c=relaxed/simple;
-	bh=ny12EX+o4qM029fH3mY2iSlT+ERh8W7+sa79jE2Anl4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r0rfUu/1SCFlphcSx93lNQtKwCH+oP8f/MZhP0lts8OySYVP2gWaP2p7J0td0/cIX1z4MiCJiOkyK9wYa9tu8IgzsD0/1mk8MoyF/i1HCcHMxzU5rc/XZ6gNA5eXFlelSG8UWO255nesRBTeOh5NH9Hl7fWjvCMmq/2OyKdhD9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VxLUgZn+; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VxLUgZn+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739925578; x=1771461578;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ny12EX+o4qM029fH3mY2iSlT+ERh8W7+sa79jE2Anl4=;
-  b=VxLUgZn+z+7uPOEd/bqq64QM8Q5+TlvHy+DcIiY9YBYQngemZ1YXJceH
-   6AuQGPwnMops06oFzF3Lju53bHT5wq2gp1JVNV8aWMhfN6pfCh0vGSi71
-   p22wMlbYdrjd/cAQCbbkhA9jIB7ZfYYFiJsi5Je6Xf+yjg4CePbAXZY5K
-   m8xJNoEO4sWJ9bacKKOztt+OvHsdeRQ1NYVgf22dSzNdqkyQG/afn1nbp
-   DlSKhXRYw6lQKDOB3JWjAxpUX1BXAFCNJ0ENMqoCgrQluZTiktXip1sjr
-   l1uMhQMNfy4oGWezX9kH5OTaTa8eaUwlIWzMfsRMV3PuksbX9OaKitZUh
-   Q==;
-X-CSE-ConnectionGUID: PeAIjA/tTweH5cp6xR3K3w==
-X-CSE-MsgGUID: kM4voXEfQWCTK253f89Qag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="50859710"
-X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="50859710"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 16:39:37 -0800
-X-CSE-ConnectionGUID: StxpGDHDSbyAh5uQiajbzA==
-X-CSE-MsgGUID: FiydVNMLQ+SQcbnjn4HSPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="145453200"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.109.220]) ([10.125.109.220])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 16:39:30 -0800
-Message-ID: <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
-Date: Tue, 18 Feb 2025 16:39:34 -0800
+	s=arc-20240116; t=1739930908; c=relaxed/simple;
+	bh=/x7AmjUEqZXu9ZDIShLi0SRmNBOfLhwNxbb5VincLTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fxJOxHFL2jPViAw+xUymtqFyKWNrL+PEkj6aAIQsKqZIC81sdYGDl/gUGv4FprQl4k/G4umz8S15VBzcB5ZmdVMv9502W8mwUzHAKrv/qUWqUrabdRFAwgLHTGpHr+kJZdlXOatzrwYtCmla9wV1KFd03auVQYOZHdnjYGAR1z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.156])
+	by gateway (Coremail) with SMTP id _____8Ax3eIYPbVn0XR6AA--.41180S3;
+	Wed, 19 Feb 2025 10:08:24 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.156])
+	by front1 (Coremail) with SMTP id qMiowMAxj8UUPbVnhFUbAA--.38806S2;
+	Wed, 19 Feb 2025 10:08:22 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-i2c@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	stable@vger.kernel.org,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: [PATCH v2] i2c: ls2x: Fix frequency division register access
+Date: Wed, 19 Feb 2025 10:08:09 +0800
+Message-ID: <20250219020809.3568972-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-To: Valentin Schneider <vschneid@redhat.com>, Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>,
- Yair Podemsky <ypodemsk@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Christoph Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Yosry Ahmed <yosryahmed@google.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Jinghao Jia <jinghao7@illinois.edu>, Luis Chamberlain <mcgrof@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
- <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
- <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxj8UUPbVnhFUbAA--.38806S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr18Zw1kZw15ArW8JryxZwc_yoW5Cr43p3
+	W7Cr95Gr4qyF4Iqws8Aa43uFy3X393JFW09F4jvwsxu3Zxur1vvay3JFs0yr1vgFWkWay8
+	X3yDCrW5uFWYyrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
 
-On 2/18/25 14:40, Valentin Schneider wrote:
->> In practice, it's mostly limited like that.
->>
->> Architecturally, there are no promises from the CPU. It is within its
->> rights to cache anything from the page tables at any time. If it's in
->> the CR3 tree, it's fair game.
->>
-> So what if the VMEMMAP range *isn't* in the CR3 tree when a CPU is
-> executing in userspace?
-> 
-> AIUI that's the case with kPTI - the remaining kernel pages should mostly
-> be .entry.text and cpu_entry_area, at least for x86.
+According to the chip manual, the I2C register access type of
+Loongson-2K2000/LS7A is "B", so we can only access registers in byte
+form (readb/writeb).
 
-Having part of VMEMMAP not in the CR3 tree should be harmless while
-running userspace. VMEMMAP is a purely software structure; the hardware
-doesn't do implicit supervisor accesses to it. It's also not needed in
-super early entry.
+Although Loongson-2K0500/Loongson-2K1000 do not have similar
+constraints, register accesses in byte form also behave correctly.
 
-Maybe I missed part of the discussion though. Is VMEMMAP your only
-concern? I would have guessed that the more generic vmalloc()
-functionality would be harder to pin down.
+Also, in hardware, the frequency division registers are defined as two
+separate registers (high 8-bit and low 8-bit), so we just access them
+directly as bytes.
+
+Cc: stable@vger.kernel.org
+Fixes: 015e61f0bffd ("i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller")
+Co-developed-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+V2:
+- Add a comment to prevent from changing that back to 16-bit write.
+
+Link to V1:
+https://lore.kernel.org/all/20250218111133.3058590-1-zhoubinbin@loongson.cn/
+
+ drivers/i2c/busses/i2c-ls2x.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.c
+index 8821cac3897b..61377693a4d6 100644
+--- a/drivers/i2c/busses/i2c-ls2x.c
++++ b/drivers/i2c/busses/i2c-ls2x.c
+@@ -10,6 +10,7 @@
+  * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/bits.h>
+ #include <linux/completion.h>
+ #include <linux/device.h>
+@@ -26,7 +27,8 @@
+ #include <linux/units.h>
+ 
+ /* I2C Registers */
+-#define I2C_LS2X_PRER		0x0 /* Freq Division Register(16 bits) */
++#define I2C_LS2X_PRER_LO	0x0 /* Freq Division Low Byte Register */
++#define I2C_LS2X_PRER_HI	0x1 /* Freq Division High Byte Register */
+ #define I2C_LS2X_CTR		0x2 /* Control Register */
+ #define I2C_LS2X_TXR		0x3 /* Transport Data Register */
+ #define I2C_LS2X_RXR		0x3 /* Receive Data Register */
+@@ -93,6 +95,7 @@ static irqreturn_t ls2x_i2c_isr(int this_irq, void *dev_id)
+  */
+ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
+ {
++	u16 val;
+ 	struct i2c_timings *t = &priv->i2c_t;
+ 	struct device *dev = priv->adapter.dev.parent;
+ 	u32 acpi_speed = i2c_acpi_find_bus_speed(dev);
+@@ -104,9 +107,14 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
+ 	else
+ 		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
+ 
+-	/* Calculate and set i2c frequency. */
+-	writew(LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1,
+-	       priv->base + I2C_LS2X_PRER);
++	/*
++	 * According to the chip manual, we can only access the registers as bytes,
++	 * otherwise the high bits will be truncated.
++	 * So set the I2C frequency with a sequential writeb instead of writew.
++	 */
++	val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
++	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_LO);
++	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_HI);
+ }
+ 
+ static void ls2x_i2c_init(struct ls2x_i2c_priv *priv)
+
+base-commit: 7e45b505e699f4c80aa8bf79b4ea2a5f5a66bb51
+-- 
+2.47.1
+
