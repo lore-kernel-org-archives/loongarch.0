@@ -1,36 +1,38 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709B81A317F
-	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 03:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB89417A308
+	for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 07:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739936309; cv=none; b=ACy3j4bfikLt8iCB+m8Pet2K8oCES7rKqbHz1zhhhJHEU35UZQTfbdyJnLuuisKEvXonkHiU6hhMHGQINHGQMJsVoUNm8M/15tXd90R8b5O1yJLwjHIolN37DS8J16awvVLsUSWlT6b5QdKFtl3iIjYoJyle++s3dHlpot4hYZo=
+	t=1739950373; cv=none; b=JyjOhebZFeE84ZeHpMUnHW/nk8TqwRD8Yuz5R+SlMGj40htL7ZcCC9zTyKxp2hYnO48BjLLfykV6g6S9VZMntXtYKDkA6ZjeLt4rUvdfpKz7ZU9QerIXcSHotDYAKAEpOKIrEou5IQmRW0PYBhU8dt1sseieiwq8k99S3Gw7smM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739936309; c=relaxed/simple;
-	bh=B5D0QBR6hqfloL2g//LnwTjoR4Jenu08YmsMwiP98uc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=myb6c2qU3fRMgQ4UXLWSXO3GUV1GL8TIGiEq3qCXYiq8+GHOiF5rwETTUZs+OqSdO227Ra+jQrYD9/lnnFCvxR9Aur0YjdqRYQYuT8t9LboMDuz1flbGFhkcjLHycIrMby5RM/Yql175k7KkDmKZdoY6SEaWfBz3QqwpwlU/WwY=
+	s=arc-20240116; t=1739950373; c=relaxed/simple;
+	bh=WgiOFIEinVea8mtpI1tDJE0Ypcap5EdHprwgezfaCoA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D4DC87R+K2221UKboVNCbruuuItVBBlHENLkvW7Hj6k/E8kra8SK3wEs79lQpqRA8aroi1EnsZRoywth4O3Qsn6y0n4of4sJFlO27c+uI9p58kPeRRJUKx8CVmAuPKwX24CviaC407stnESKf7lokDHno+U4qqKD9WveTQF7Y1A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxG6wxUrVn64p6AA--.48242S3;
-	Wed, 19 Feb 2025 11:38:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxj8UwUrVnRnAbAA--.39192S3;
-	Wed, 19 Feb 2025 11:38:24 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8CxG6wcibVnbLl6AA--.48492S3;
+	Wed, 19 Feb 2025 15:32:44 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMCxPscUibVnO7IbAA--.40817S2;
+	Wed, 19 Feb 2025 15:32:36 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] LoongArch: KVM: Remove PGD saving during VM context switch
-Date: Wed, 19 Feb 2025 11:38:22 +0800
-Message-Id: <20250219033823.215630-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250219033823.215630-1-maobibo@loongson.cn>
-References: <20250219033823.215630-1-maobibo@loongson.cn>
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH V3 0/6] Drivers for Loongson security engine
+Date: Wed, 19 Feb 2025 15:32:08 +0800
+Message-Id: <20250219073214.16866-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,107 +40,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxj8UwUrVnRnAbAA--.39192S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowMCxPscUibVnO7IbAA--.40817S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar47Gw47tF4fKrWUXr15ZFc_yoW8WF4kpF
+	45Aa4rCr4UJrZrGrn3J348uFyfXa4fXrW3KrW2qwn8Wr9IyFy8J3yakFyUAFsrJF1UJryI
+	qFZ3Cr4UGF1UZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxYiiDUUUU
 
-PGD table for primary mmu keeps unchanged once VM is created, it
-is not necessary to save PGD table pointer during VM context switch.
-And it can be acquired when VM is created.
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in it.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  2 ++
- arch/loongarch/kernel/asm-offsets.c   |  4 +---
- arch/loongarch/kvm/switch.S           | 12 ++----------
- arch/loongarch/kvm/vcpu.c             |  8 ++++++++
- 4 files changed, 13 insertions(+), 13 deletions(-)
+mfd is the baser driver, crypto and tpm are users.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 590982cd986e..7a96c6300b0b 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -180,6 +180,8 @@ struct kvm_vcpu_arch {
- 	unsigned long host_sp;
- 	unsigned long host_tp;
- 	unsigned long host_pgd;
-+	/* physical address about pgd for secondary mmu */
-+	unsigned long kvm_pgd;
- 
- 	/* Host CSRs are used when handling exits from guest */
- 	unsigned long badi;
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 8be1c38ad8eb..13b158081145 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -289,13 +289,13 @@ static void __used output_kvm_defines(void)
- 	BLANK();
- 
- 	OFFSET(KVM_VCPU_ARCH, kvm_vcpu, arch);
--	OFFSET(KVM_VCPU_KVM, kvm_vcpu, kvm);
- 	OFFSET(KVM_VCPU_RUN, kvm_vcpu, run);
- 	BLANK();
- 
- 	OFFSET(KVM_ARCH_HSP, kvm_vcpu_arch, host_sp);
- 	OFFSET(KVM_ARCH_HTP, kvm_vcpu_arch, host_tp);
- 	OFFSET(KVM_ARCH_HPGD, kvm_vcpu_arch, host_pgd);
-+	OFFSET(KVM_ARCH_KVMPGD, kvm_vcpu_arch, kvm_pgd);
- 	OFFSET(KVM_ARCH_HANDLE_EXIT, kvm_vcpu_arch, handle_exit);
- 	OFFSET(KVM_ARCH_HEENTRY, kvm_vcpu_arch, host_eentry);
- 	OFFSET(KVM_ARCH_GEENTRY, kvm_vcpu_arch, guest_eentry);
-@@ -306,8 +306,6 @@ static void __used output_kvm_defines(void)
- 	OFFSET(KVM_ARCH_HECFG, kvm_vcpu_arch, host_ecfg);
- 	OFFSET(KVM_ARCH_HESTAT, kvm_vcpu_arch, host_estat);
- 	OFFSET(KVM_ARCH_HPERCPU, kvm_vcpu_arch, host_percpu);
--
--	OFFSET(KVM_GPGD, kvm, arch.pgd);
- 	BLANK();
- }
- 
-diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-index 1be185e94807..f1768b7a6194 100644
---- a/arch/loongarch/kvm/switch.S
-+++ b/arch/loongarch/kvm/switch.S
-@@ -60,16 +60,8 @@
- 	ld.d	t0, a2, KVM_ARCH_GPC
- 	csrwr	t0, LOONGARCH_CSR_ERA
- 
--	/* Save host PGDL */
--	csrrd	t0, LOONGARCH_CSR_PGDL
--	st.d	t0, a2, KVM_ARCH_HPGD
--
--	/* Switch to kvm */
--	ld.d	t1, a2, KVM_VCPU_KVM - KVM_VCPU_ARCH
--
--	/* Load guest PGDL */
--	li.w    t0, KVM_GPGD
--	ldx.d   t0, t1, t0
-+	/* Load PGD for KVM hypervisor */
-+	ld.d	t0, a2, KVM_ARCH_KVMPGD
- 	csrwr	t0, LOONGARCH_CSR_PGDL
- 
- 	/* Mix GID and RID */
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20f941af3e9e..1edce1192577 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1462,6 +1462,14 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
- 
-+	/* Get physical address about pgd for kvm hypervisor */
-+	vcpu->arch.kvm_pgd = __pa(vcpu->kvm->arch.pgd);
-+
-+	/*
-+	 * Get pgd for primary mmu, virtual address is used since there is
-+	 * memory access after loading from CSR_PGD in tlb exception fast path.
-+	 */
-+	vcpu->arch.host_pgd = (unsigned long)vcpu->kvm->mm->pgd;
- 	vcpu->arch.handle_exit = kvm_handle_exit;
- 	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->exc_entry;
- 	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
+v3: Put the updates to the MAINTAINERS in a separate patch.
+v2: Removed misc driver. Added tpm driver.
+
+Qunqin Zhao (6):
+  mfd: Add support for Loongson Security Module
+  MAINTAINERS: Add maintainer for Loongson Security Module driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add maintainer for Loongson RNG driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |  14 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_lsse.c            | 104 +++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |   9 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++++
+ include/linux/mfd/ls6000se.h           |  75 +++++
+ 13 files changed, 788 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_lsse.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+ create mode 100644 drivers/mfd/ls6000se.c
+ create mode 100644 include/linux/mfd/ls6000se.h
+
+
+base-commit: 2816b0c949af89640b8dc05de53e650cbf1d55fb
 -- 
-2.39.3
+2.43.0
 
