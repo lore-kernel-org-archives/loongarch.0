@@ -1,127 +1,85 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB71DEFF7
-	for <loongarch@lists.linux.dev>; Thu, 20 Feb 2025 06:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEB711A724C
+	for <loongarch@lists.linux.dev>; Thu, 20 Feb 2025 08:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740034358; cv=none; b=dFqkmGo1Oh1bL9ZhN9gWCLg81/72vcPjWsFZgwT6Es+DIXKk/MB+GxPwOFBdJSxYS57GvBlb7iPK4CT+6tp7NHbE6uLxkFdVRLRJaVNlq1VnueBc7VPiGX0LRosNxSudeSGs5TxVGqbEj6bXR2mfNEkfkmmfunSFOmaF/JvCVVg=
+	t=1740039468; cv=none; b=PFYE88Qy1FpFOuItmEhH87Z4UTiF1zqFc+Cm67PorBAN/+A02Vye6z4ZImEvnIO8Nt87VN7Avk12UUeYcsWhdzxjHzj+stOzJDqmndoqdkCIYPDHydW4utBeF4gFgAhVkRLXdZibjVMnTMmyu25O9d3J7dYesKbeH1LqkBK8ryw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740034358; c=relaxed/simple;
-	bh=CLw6zBsSsTnmlCQj0sWMWplnJ0ZrcCL2Ml/zvFulIgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMLTcu0HcSGEx0ZXzejXCwYncEZZA0mqDUni8iW7lrvKSfha1j1is4rP/XeG4YEf21GeqSKfPslFwvHLjwrhyuqME8q9DTBoZTpPCfM0i9or2EPsQjeGXL0bQFx77d8G4ctTGY01q092z2mMqKXpV5RCuLdt1l9rOhcfomKTarY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZyOrT2O; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740039468; c=relaxed/simple;
+	bh=oCazgK2J+JQNRdaJ2W40CLpySIyip95iAnugNazXwnE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HgQ8bLWbv6xaf+AqoLSXjrriDh+D4NYJwxCTlyDwCgT0VlGA/6oiE7BZ6hPKb31MZQ03QbFHvUc3Flf1PET4XenMLHxm5udLOO1sN85MCvMC85S3D2f3rPdSSU7B9uUegymdrPoHuxooWYuomYBJCnaXm7IB3WfSkiudjebyIws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S3MuI+AH; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZyOrT2O"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dedd4782c6so1069666a12.3
-        for <loongarch@lists.linux.dev>; Wed, 19 Feb 2025 22:52:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740034354; x=1740639154; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rZwJmuqge8q05o7ZYGvV/C+Qh4HzV3tp+xzKODDMrq4=;
-        b=FZyOrT2Ok80qRtD0EGuNJ+6D2greXcUvyqUXoIPvfbwKWVS0db/KPUSIPCOQHx5VXi
-         FRnU8lZ5xzBNrRDcYaQqpWYI0LAYnO+4cK7R5hHcPuLEgz4gSX7RgTeBZcclYBKUQ3Rb
-         AaqUQYgi7s8a6QiYQkGRTJWXv2AVWKUc3k4kwhCCdvM/DNCOinN8G5aYYMnBVgOiEJKU
-         ImJcU9dVBX3mHzQAjoI3ShzPs57fxsI9vGmVqA9MZoNbX8JgCsrwHqcG2ft0bqe3fQoX
-         QwuTYswxNHI0g2xQ1JKdyc4jm2SJzjB2rUVj3iM9X14bOjOAlIXMzAaU1cel4icMzmCr
-         hcYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740034354; x=1740639154;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rZwJmuqge8q05o7ZYGvV/C+Qh4HzV3tp+xzKODDMrq4=;
-        b=gCIMNuAsFqKMEKpHXjJZt+cksz+DuK1+RrQ2A5Gqc/JqpcTUmkzTHW+TVWoNj67Ud2
-         WDPWPsau9O6kxeDm5VpA1hWX3ZIvSpHMhNSq8oYg4r0p0Slyz9vT7eYxo32giioBRSMP
-         /MkVRajxt6G8z6dqBy8aeyS+ZaNnebU7J2p0nVvyUX5ZPq3FHntyAI4/1la3VMrNdwjq
-         u2IVCo4T4ZwJ8sCoepEqpFoOKwcJ9htxjvIceX0TeGOAFSJsEZLy24lZW3/H+qwpBmS1
-         1p0O522YFl6igp3KpkCSlE3zsGfFphmEhGptjCGB0bPyxuN5m5cMUKObgX/mugKEDTGh
-         /hkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzikIYaH6I7o6K2tXiedEXlmpbuziEjQNpmrIwev7Uzyfx9mxjTZZVtU66ROoSyCiCILJzW/YvpjU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywli64ZVBWOcApGBtLtqIuDbiWmBOEUU69XoRlUm4bThppbvQVX
-	1CSfLmrmQgySfQLTz04c0QsLBCjBQXE20rNiPYXbXQFcLtTTmFJByDvjQIFeEQRb6Zc693ZOvqy
-	AxP7gI/OhtXjZJTwV/JCXc+qfRag=
-X-Gm-Gg: ASbGncuHfDR5SvE+2xUnPaMnMG9m8Ion38YciRjJhL7nOM4FZb9t7AHj0D6HzrFlpT9
-	QHmk5JUgoT9zuOV5aRyKYY0uW2EU0cYHH6k0K9FbcLjz9GE0apwtXucQJ9eKbPJhnmrzTMY5/dg
-	==
-X-Google-Smtp-Source: AGHT+IE9NhBPo/KgScXg5dw2GxEMSOt/KhtyUuf5u5RRA747mzK+lscMf3gNz3OsIbmq9pavaAsFw7HsqmLj/dNMSyY=
-X-Received: by 2002:a17:907:9907:b0:abb:b0c0:5b6b with SMTP id
- a640c23a62f3a-abbb0c05e77mr1094505466b.7.1740034354063; Wed, 19 Feb 2025
- 22:52:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S3MuI+AH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=i7pov
+	A4zdsdkdu9JehhxCixgUWiQ2gMIpi3PyPSESfA=; b=S3MuI+AH5uSmisdho40my
+	VkE3DOD0f5E6FypOnjiCpzowpK9HyoAR/mGCc+yqJOTCFB3ItGQ9FG8sdZWJ6CkI
+	RJivdpcGs58jy/ziTVGhljMQCNG0SX+nhqE7EyaoaE6E0XEWJ6y4qbNsQJ+FgbN2
+	GEn0BvMXBoEl4lIL+Y8rX0=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBnjX8O5bZnl9BpMw--.6425S4;
+	Thu, 20 Feb 2025 16:17:19 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: zhuyinbo@loongson.cn,
+	arnd@arndb.de,
+	zhoubb.aaron@gmail.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	soc@kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] soc: loongson: loongson2_guts: Add check for devm_kstrdup()
+Date: Thu, 20 Feb 2025 16:17:14 +0800
+Message-Id: <20250220081714.2676828-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250219032251.2592699-1-haoxiang_li2024@163.com>
-In-Reply-To: <20250219032251.2592699-1-haoxiang_li2024@163.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 20 Feb 2025 14:52:21 +0800
-X-Gm-Features: AWEUYZnMB3F8S_mLX4zU1TuBvbYqy__x9km_wAN_Md86gzNwXF_7GfgipeOyrLg
-Message-ID: <CAMpQs4K5Xw4_M1TXTkc_zGaeuD2K_R6pO1PKyhOOJG_XvQuF9A@mail.gmail.com>
-Subject: Re: [PATCH] drivers: loongson: Add check for devm_kstrdup()
-To: Haoxiang Li <haoxiang_li2024@163.com>
-Cc: zhuyinbo@loongson.cn, arnd@arndb.de, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBnjX8O5bZnl9BpMw--.6425S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7XFykGF17tr1DXF4kAFWrKrg_yoW8JrWUpF
+	ZIy348WFWUXF1fZ3s8Ja48XFyYka45WasrXF4xXwnrWFykA3WUW343JFy0vw4fZry8Ga4j
+	qFykKrW3CFy5CrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE6pBsUUUUU=
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0gf5bme2z+Ai3QABsC
 
-Hi Haoxiang:
+Add check for the return value of devm_kstrdup() in
+loongson2_guts_probe() to catch potential exception.
 
-Please rewrite the patch title as "soc: loongson: loongson2_guts: Add
-check for devm_kstrdup()",  and cc soc@kernel.org, because that is the
-most appropriate list for this patch.
+Fixes: b82621ac8450 ("soc: loongson: add GUTS driver for loongson-2 platforms")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+Changes in v2:
+- modify the check position. Thanks, Binbin!
+- modify the title description.
+---
+ drivers/soc/loongson/loongson2_guts.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On Wed, Feb 19, 2025 at 11:23=E2=80=AFAM Haoxiang Li <haoxiang_li2024@163.c=
-om> wrote:
->
-> Add check for the return value of devm_kstrdup() in
-> loongson2_guts_probe() to catch potential exception.
->
-> Fixes: b82621ac8450 ("soc: loongson: add GUTS driver for loongson-2 platf=
-orms")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-> ---
->  drivers/soc/loongson/loongson2_guts.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson=
-/loongson2_guts.c
-> index ae42e3a9127f..26212cfcf6b0 100644
-> --- a/drivers/soc/loongson/loongson2_guts.c
-> +++ b/drivers/soc/loongson/loongson2_guts.c
-> @@ -117,6 +117,8 @@ static int loongson2_guts_probe(struct platform_devic=
-e *pdev)
->         if (machine)
->                 soc_dev_attr.machine =3D devm_kstrdup(dev, machine, GFP_K=
-ERNEL);
->
-> +       if (!soc_dev_attr.machine)
-> +               return -ENOMEM;
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+index ae42e3a9127f..16913c3ef65c 100644
+--- a/drivers/soc/loongson/loongson2_guts.c
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -114,8 +114,11 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 	if (of_property_read_string(root, "model", &machine))
+ 		of_property_read_string_index(root, "compatible", 0, &machine);
+ 	of_node_put(root);
+-	if (machine)
++	if (machine) {
+ 		soc_dev_attr.machine = devm_kstrdup(dev, machine, GFP_KERNEL);
++		if (!soc_dev_attr.machine)
++			return -ENOMEM;
++	}
+ 
+ 	svr = loongson2_guts_get_svr();
+ 	soc_die = loongson2_soc_die_match(svr, loongson2_soc_die);
+-- 
+2.25.1
 
-I think this exception check should follow directly after devm_kstrdup().
-Otherwise the whole driver exits here when the =E2=80=9Cmachine" is empty,
-which is not what we expect.
-
-You can refer to:
-https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/soc/fsl/guts.c#L2=
-24
-
->         svr =3D loongson2_guts_get_svr();
->         soc_die =3D loongson2_soc_die_match(svr, loongson2_soc_die);
->         if (soc_die) {
-> --
-> 2.25.1
->
->
---
-Thanks.
-Binbin
