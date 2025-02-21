@@ -1,104 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D520469D
-	for <loongarch@lists.linux.dev>; Fri, 21 Feb 2025 09:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6972040A9
+	for <loongarch@lists.linux.dev>; Fri, 21 Feb 2025 10:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740131246; cv=none; b=ge9P/AqJCzmQfRkPwRTvKBnAm4Nlx3x15Z9qhdMtwqMGcyn9tJZEKl44S0dElBuKw1AB0ae+t5JwnvSDSxr6DRXazcr4WYgbGuW7SuAQuoQjzqXIjY4JlsU22LBXgtmvBEzQ0fIORVtS4roTAmdWTFm9fuY1jEqYc78l/G1n3n0=
+	t=1740133396; cv=none; b=gWWpvUYQKfDW+Klrj0c4xZYN+kY5UgE5zGm5l3m3oYob3/oCD8pV8QAyF4UAGMuYxuILavi5KRul/LwUrFqRaJ9Q43JogTqvLB8UBj3vPFlQjQ3nBQtsf41eCWNONwdiyxsAu9QRDxDlO5iObP1L2xqt5JpFY+UqM2UbEGGUPsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740131246; c=relaxed/simple;
-	bh=rJNU3ob/aPwqNORKtLCnuHjcwh1c10jRgXG4TPfs2Cs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CrpITjZRJi0HXZvtQOmUqV05T2RDyUMxWe493tJfr0CXqjtiMo9P1gBPYdfPTZJfROtIcJIudEV+Z74goHwzs6OnNBCBJ2hFB/nFlKlqPXxIgsFz1eVcjjXHx44UQKHmt3FqYagx+sj0QXQFOqyhHchHld0kbVr0GFd3mMRCZd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEGfEXLR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740133396; c=relaxed/simple;
+	bh=FAyrGqPrf8Jf0k72WyiBqChIuho3jLqkjBUtjpkLbso=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=re1XtO9n3qU0LoMFKDQlKxXNE3b/caGmOcKNtMyeLax9SZ4oxTF/FsNM4nspOAyKG+EpPdS/2jeoDZlGUtUBYzKYkdcglFYC4KcIfNqIgkluz5ThSgoYI7VUpUOpas1u/trAiQNxzoDmyQsaAuG69FTpfSmVdVP2zurOFUtDPmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=WtMABoZr; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEGfEXLR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245D0C4CED6
-	for <loongarch@lists.linux.dev>; Fri, 21 Feb 2025 09:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740131246;
-	bh=rJNU3ob/aPwqNORKtLCnuHjcwh1c10jRgXG4TPfs2Cs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IEGfEXLRtsitu8Q4QtZnubD3ZMkWPuN5SRc/Vy3/VjJnD0MBiAYeRWSJLylELKH/L
-	 hWi49QG81PPOpEWMbAgChBrAR7h7yi4Iaj0BsiHGtn/TRAtK+SBri8i+8JGfmeuGN2
-	 ovsqYHbTxPc5ow0jCX7zFHVC7N1YigPBMXR7H2qgO7jLtYl1HBoIco66tla2/qj2s+
-	 bhsGk2yLEHj69zDBa1VjPU2MNCH9V/xXOFCzw0YrnkuIZgwDfEuGJEbhqQ15oh0X6a
-	 mS2NAg32ifdpjQwoikQmDt7eOOrd6SbmIu5TdWmBAQjDNCJnn7gSmGDGqMuh+wLwSr
-	 47M6Oai0pA3rA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso2910817a12.3
-        for <loongarch@lists.linux.dev>; Fri, 21 Feb 2025 01:47:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUtr5QqmidKAOsngNcUI2r+1pa064ILtCKWOH8XWO7mQvBDPYaX+96L1sv6g3XN7XBMGTYWisC9w9U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyVh714bpCkmbmu3qg0h51XG9j3hlAeTEzTR+I5tQpue/N/s/08
-	pGNMv1VOWSPFxkeHH3TT1I1OriTfT6XXfO3MSEFm1zcK5a/pSagUWKa5cB5Gf06eTNBjYzoGHi2
-	9mTMNz02FRaAKp4eO3WDo44anYBQ=
-X-Google-Smtp-Source: AGHT+IGSJjdvJ0toZhyDL2EWJHkijnJYax5gDezORY24ehEmV5n0uHFbAzYdLClvsRv6D4vW2HBgGRZmDk7UzKDGvHM=
-X-Received: by 2002:a17:907:97ce:b0:abb:b209:aba7 with SMTP id
- a640c23a62f3a-abc09abecf4mr231626766b.26.1740131244734; Fri, 21 Feb 2025
- 01:47:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="WtMABoZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1740133390;
+	bh=UNb8a2gN3+1bqIY2UlUBT79h0w78rJrfN5H29nStXmA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=WtMABoZrJ/YKP84/osWAcdY5B60fkN/JuxWW8xzNbjVy2h4F0XQ0zhJSSJ9Ku7A+K
+	 6uan4Fj0VBrfWJYj4K/a9k5ayZKfjgHB9cE8hXP+mwZsup3bGuoNAtm2jOZ5/Rsb8y
+	 6N+i35/XTLe1qKDunHFEB7/NIqsLRmY8V1h1WsYE=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 651B91A3F60;
+	Fri, 21 Feb 2025 05:23:08 -0500 (EST)
+Message-ID: <f0c15994e7a79f6cd0c82930c0dfebb50458c941.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: vDSO: Remove --hash-style=sysv
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Guo Ren <guoren@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Fangrui Song <i@maskray.me>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>,
+  Tiezhu Yang <yangtiezhu@loongson.cn>, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-arch@vger.kernel.org
+Date: Fri, 21 Feb 2025 18:23:07 +0800
+In-Reply-To: <CAAhV-H5_bKtO2mAFmfcZvD0pn9RhTA+UPjv7K574uPKxZbxX=g@mail.gmail.com>
+References: <20250221092523.85632-1-xry111@xry111.site>
+	 <CAAhV-H5_bKtO2mAFmfcZvD0pn9RhTA+UPjv7K574uPKxZbxX=g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250221092523.85632-1-xry111@xry111.site>
-In-Reply-To: <20250221092523.85632-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 21 Feb 2025 17:47:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5_bKtO2mAFmfcZvD0pn9RhTA+UPjv7K574uPKxZbxX=g@mail.gmail.com>
-X-Gm-Features: AWEUYZkA8NJ7SEds2EO_kG3_seA_MCw5AQY6HyivlKgtpLIyaHhDr8ouWVekGFc
-Message-ID: <CAAhV-H5_bKtO2mAFmfcZvD0pn9RhTA+UPjv7K574uPKxZbxX=g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: vDSO: Remove --hash-style=sysv
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, "Jason A. Donenfeld" <Jason@zx2c4.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Ruoyao,
+On Fri, 2025-02-21 at 17:47 +0800, Huacai Chen wrote:
+> Hi, Ruoyao,
+>=20
+> On Fri, Feb 21, 2025 at 5:25=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+ote:
+> >=20
+> > glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
+> > far before the first LoongArch CPU was taped.=C2=A0 Using
+> > --hash-style=3Dsysv might imply unaddressed issues and confuse readers.
+> >=20
+> > In the past we really had an unaddressed issue: the vdso selftests did
+> > not know how to process .gnu.hash.=C2=A0 But it has been addressed by c=
+ommit
+> > e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH") now.
+> >=20
+> > Just drop the option and rely on the linker default, which is likely
+> > "both" (AOSC) or "gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch
+> > distros.
+> What about changing to "--hash-style=3Dboth" as most architectures do?
 
-On Fri, Feb 21, 2025 at 5:25=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
-> far before the first LoongArch CPU was taped.  Using
-> --hash-style=3Dsysv might imply unaddressed issues and confuse readers.
->
-> In the past we really had an unaddressed issue: the vdso selftests did
-> not know how to process .gnu.hash.  But it has been addressed by commit
-> e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH") now.
->
-> Just drop the option and rely on the linker default, which is likely
-> "both" (AOSC) or "gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch
-> distros.
-What about changing to "--hash-style=3Dboth" as most architectures do?
+IMO we are more close to ARM64 for the aspect that there are no libc
+(glibc or musl) releases lacking GNU hash support, so I prefer the ARM64
+way.
 
-Huacai
+Maybe this should be changed for some of other architectures (RISC-V and
+C-SKY?) as well because I guess the only reason they used "both" was
+"hey, without this the self tests don't work on Debian" but this is
+resolved now.  Adding a few recipients and Cc for discussion.
 
->
-> Similar to commit 6b7e26547fad ("x86/vdso: Emit a GNU hash") and commit
-> 48f6430505c0 ("arm64/vdso: Remove --hash-style=3Dsysv").
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/vdso/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-> index fdde1bcd4e26..abaf87c58f9d 100644
-> --- a/arch/loongarch/vdso/Makefile
-> +++ b/arch/loongarch/vdso/Makefile
-> @@ -37,7 +37,7 @@ endif
->  # VDSO linker flags.
->  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
->         $(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
-> -       --hash-style=3Dsysv --build-id -T
-> +       --build-id -T
->
->  #
->  # Shared build commands.
-> --
-> 2.48.1
->
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
