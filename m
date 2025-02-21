@@ -1,110 +1,86 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A61191F6A
-	for <loongarch@lists.linux.dev>; Fri, 21 Feb 2025 11:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884F3C148;
+	Fri, 21 Feb 2025 12:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740137649; cv=none; b=NaXxw/XR4y0e/9Vsq2dSvjZXfUeiovNk2pLx6ptU3mMT3hWa5QdxRicHguDkiXoOvoZMdTHovQ558giglErAiZjYdBTVC3K2baxlOmViSZQIJYiiwJ2bCP0Vq4nIntHYNAdLVBDSeiSvOWsch0Y2aWO1VKRvQ6D4jUHXNyMr35c=
+	t=1740141931; cv=none; b=hdMt4Mnd/naptOFW/2Q85yCi9ULoPcxhg7tShJH7UcLNGiHx5zgXoJ/M54263S2Z7hCj1FTfMoCz7LdCaiSAKIFs10mX21UWY4AhsSFlJeusLDPcOxP4nFQmh6AFSp0ZTd3BQk9TE7BfmSOujANR7GG4GEPFrPX6tsZxfIKHcMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740137649; c=relaxed/simple;
-	bh=OS9hY96E/r8fylEp9fwxYpkQLLw5dBFt3WyoGpksN6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FeR3n8PDabA07aM/KGdp6OldDvj0gmsLEk6IyD5CDMIRw7azqj8IV3poTVkQGlJc8pWVeJ+jUfjLJnZ7wJO31u/qeuda46951LuI7+dibZY6H+8LB9zrBCf4qyieMsCuZ4mL+eUHL7sh8NeGRHw8J3Qejc7F6Jueqv8bzLNKVhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=amq0o053; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1740141931; c=relaxed/simple;
+	bh=RBXMEDSJ83N9frFVcMZIclEL2HZ8R+cTooDFwtl8fwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fymF63fsh/pBs2vMr7Tz9HHjGaLOvHS0djweYIELRlSDSQ+sZcs6n0N3ZTO28EvMyyXUGtgUaxU/LxSeTDcXROoo4rQLICw7JejGGwIIWjHZ9A/vVYbodFFXrPCaI7Rc0SksdiZVw+tGeDBgzFd+FemiHjlxc7SS3fdoy37f5iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1N2zuu8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="amq0o053"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1740137647;
-	bh=Cc8ye2VMQWy+pBTH7jzTDaj20fNnEg8wmnHIfxMAHh8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=amq0o05359nZly4KUjcES+dsDoBoRWd42N1782YEbjVd7UEBtI2L5JF0TbIJG8KzU
-	 pzQLPcngYjmPkOoVJNLLmQaVdeEJRAC17ywo0O+86sQI4TdamXmX9SCHhc+UlJX2Yp
-	 mNJE9vQDNHKQP9detTCqWxIRgZpk9CRrsDn2HJRU=
-Received: from stargazer.. (unknown [IPv6:240e:454:4311:1f25:535e:dcbe:c175:b1da])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id CCC45664E4;
-	Fri, 21 Feb 2025 06:34:01 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-crypto@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] LoongArch: vDSO: vgetrandom-chacha: Make use of the t8 register
-Date: Fri, 21 Feb 2025 19:32:43 +0800
-Message-ID: <20250221113341.108063-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1N2zuu8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA89C4CED6;
+	Fri, 21 Feb 2025 12:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740141931;
+	bh=RBXMEDSJ83N9frFVcMZIclEL2HZ8R+cTooDFwtl8fwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E1N2zuu8V2cjuqY5N63qf7bv1F6BWEXKod4y6N8JzipHtSedAQGqejMo+B/GKPOsH
+	 1wDp666pN01+RhsYZYUIV1K2Eme+YP0qCnq4J5pz0QPTouwIApni6KB6/BrafJQK/w
+	 2exS1/vm0W0xDfhzuJ484f1t6n4AjKkCaeqU8TEi6WTFik9Jt3uKVdE+uMjpNlX+3O
+	 THbq/fZEL9ebSfDCYnkcuxdPrn89Adpxu0ax7wyp7Dnjzet7R0MQBTy/DbwmnKRKJQ
+	 ouApp8cJwf0Oz861rEKrlxzBHlLmW+No+fsQIfg4+IczRaUO/FWiaWHDVLBjPBxddu
+	 eeGYDJLZ0CTaw==
+Date: Fri, 21 Feb 2025 14:45:17 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, rafael@kernel.org,
+	lenb@kernel.org, maobibo@loongson.cn, guanwentao@uniontech.com,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	dave.jiang@intel.com, haibo1.xu@intel.com,
+	linux-acpi@vger.kernel.org, zhanjun@uniontech.com,
+	niecheng1@uniontech.com, chenlinxuan@uniontech.com
+Subject: Re: [PATCH] ACPI: NUMA: Move get_numa_distances_cnt() helper to
+ needed location
+Message-ID: <Z7h1XWyjKIkyR2zJ@kernel.org>
+References: <D87315C93AF20D4E+20250220042037.942802-1-wangyuli@uniontech.com>
+ <Z7bHPVUH4lAezk0E@kernel.org>
+ <13526D98D27F6E36+705ff063-e7f6-49ff-a29a-0f5e5101c000@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <13526D98D27F6E36+705ff063-e7f6-49ff-a29a-0f5e5101c000@uniontech.com>
 
-So we don't need to reuse a register and rematerialize a constant.  I
-couldn't count :(.
+Hi,
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
+On Thu, Feb 20, 2025 at 02:25:33PM +0800, WangYuli wrote:
+> Hi Mike,
+> 
+> On 2025/2/20 14:10, Mike Rapoport wrote:
+> > There's no need for relocation, just drop the unused function.
+> 
+> Okay.
+> 
+> But  please take a look at line 295 of the original srat.c. Should the type
+> of variable 'd' there be changed to u64, as mentioned in the commit message?
 
-Tested with vdso_test_getrandom and vdso_test_chacha.
-
- arch/loongarch/vdso/vgetrandom-chacha.S | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/arch/loongarch/vdso/vgetrandom-chacha.S b/arch/loongarch/vdso/vgetrandom-chacha.S
-index c2733e6c3a8d..c4dd2bab8825 100644
---- a/arch/loongarch/vdso/vgetrandom-chacha.S
-+++ b/arch/loongarch/vdso/vgetrandom-chacha.S
-@@ -58,9 +58,7 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- #define copy0		t5
- #define copy1		t6
- #define copy2		t7
--
--/* Reuse i as copy3 */
--#define copy3		i
-+#define copy3		t8
+int is enough for more than 2 million nodes, I don't see a problem with it
  
- /* Packs to be used with OP_4REG */
- #define line0		state0, state1, state2, state3
-@@ -99,6 +97,7 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	li.w		copy0, 0x61707865
- 	li.w		copy1, 0x3320646e
- 	li.w		copy2, 0x79622d32
-+	li.w		copy3, 0x6b206574
- 
- 	ld.w		cnt_lo, counter, 0
- 	ld.w		cnt_hi, counter, 4
-@@ -108,7 +107,7 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	move		state0, copy0
- 	move		state1, copy1
- 	move		state2, copy2
--	li.w		state3, 0x6b206574
-+	move		state3, copy3
- 
- 	/* state[4,5,..,11] = key */
- 	ld.w		state4, key, 0
-@@ -167,12 +166,6 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	addi.w		i, i, -1
- 	bnez		i, .Lpermute
- 
--	/*
--	 * copy[3] = "expa", materialize it here because copy[3] shares the
--	 * same register with i which just became dead.
--	 */
--	li.w		copy3, 0x6b206574
--
- 	/* output[0,1,2,3] = copy[0,1,2,3] + state[0,1,2,3] */
- 	OP_4REG	add.w	line0, copy
- 	st.w		state0, output, 0
+> If yes, I can quickly put up another commit just to tweak this one place.
+> 
+> Thanks,
+> 
+> -- 
+> WangYuli
+
+
+
+
+
+
 -- 
-2.48.1
-
+Sincerely yours,
+Mike.
