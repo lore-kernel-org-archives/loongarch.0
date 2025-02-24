@@ -1,36 +1,51 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB07C24A059
-	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 09:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAE723BCE3
+	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 11:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740390986; cv=none; b=VSM953vv7T7NhVNDq755xQeL7On9eLWA1CcyJZYDhRxJgS5ZOoR20jdWrq18ygwCaaNH1uBVIZtXWzRzugTdP9TQoppZ2H0KjIDrcYjDkANG9yTeZsday7MXA8EDJtmKnTG3ixkENOpRNsafXYmSJDpgKSCANStLmdrowBb9isw=
+	t=1740396065; cv=none; b=H47X4353CiHyNF72tEEXXoiRyRZoFxZy6E6ZT5RYuoYU1q4di68zIClgbPmgxP2WGjlTPO8AlYihzy7jretSwJ1lqvDXBR+k0stw6jQTQtPwaagQRTWgyqmbSt7XToZ6orUqfen8+bco34NzlXVNilu82VJa11m3OYl0yYSgTb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740390986; c=relaxed/simple;
-	bh=ELUSK/HZUHvCwY6+pKfb6g9xX5U5riy1F+LdY6xt/HE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c4B4UlUF4Q9WCPDZ1eTF2UX4DuxyfptWnN91NB6pPuBAAnO7Mho+fOLw8Nw5ofQzpPT6oAy8Pa8sXUhmg++jwtI5xZZ12TKUGWfBn5kz2fBYzFbNDVYrSVLa9Y37IZ/7EUcfV2313ArUoFsNMh1lhHCnt/xc6+1DD0EaVVEMTuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxbKxEQrxnL6+AAA--.24411S3;
-	Mon, 24 Feb 2025 17:56:20 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxXsVCQrxnRBkmAA--.9703S5;
-	Mon, 24 Feb 2025 17:56:19 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
+	s=arc-20240116; t=1740396065; c=relaxed/simple;
+	bh=Jl/aGD6H8zlfW46eQ8hKfWnP+g4vlfzN/TfC502RuSs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QucdffBVE82JVFVg/Hax9Rxe7AmtnqzIV8aiSL0FmcwM4UVIMpG9p4ZCW4JG8mqomk6xguQWaVrWe8m8/2o0iQy33cypJMgT/gKD6MZXR4cXg6XoMqpd9xmz96oB2kGHOsPvX61tDq/xvu6LGRSXGVUTcs9QkBPlOBObqKkDpZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=enHf0tfA; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="enHf0tfA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1740396055;
+	bh=PEZ+XmHReJkvOO8ckw/Sp6e/Ys54sWdkMmIRDD4VEB0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=enHf0tfAHWymo5wtzHP9lT0kTKne9eaEveqFQg9viuU+wCQ8SziFN2JNJhmVneul8
+	 FGBw9M2ivI2HVxkGGdEjIyaGQnNNAWtIiqIFZ/waj4m5LSMo4Y77cwsuDCeS1jPWWr
+	 J09MQ0ACFxs5EAXS2XHkAtj6nGgiv4v3dyMIEai4=
+Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id EFCB21A40EF;
+	Mon, 24 Feb 2025 06:20:49 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Guo Ren <guoren@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Fangrui Song <i@maskray.me>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-csky@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] LoongArch: KVM: Register perf callback for guest
-Date: Mon, 24 Feb 2025 17:56:18 +0800
-Message-Id: <20250224095618.1436016-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250224095618.1436016-1-maobibo@loongson.cn>
-References: <20250224095618.1436016-1-maobibo@loongson.cn>
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH 0/3] Drop explicit --hash-style= setting for new
+Date: Mon, 24 Feb 2025 19:20:39 +0800
+Message-ID: <20250224112042.60282-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,53 +53,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxXsVCQrxnRBkmAA--.9703S5
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add selection for GUEST_PERF_EVENTS if KVM is enabled, also add perf
-callback register when KVM module is loading.
+For riscv, csky, and LoongArch, GNU hash had already become the de-facto
+standard when they borned, so there's no Glibc/Musl releases for them
+without GNU hash support, and the traditional SysV hash is just wasting
+space for them.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/Kconfig | 1 +
- arch/loongarch/kvm/main.c  | 2 ++
- 2 files changed, 3 insertions(+)
+Remove those settings and follow the distro toolchain default, which is
+likely --hash-style=gnu.  In the past it could break vDSO self tests,
+but now the issue has been addressed by commit
+e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
 
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-index 97a811077ac3..40eea6da7c25 100644
---- a/arch/loongarch/kvm/Kconfig
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -33,6 +33,7 @@ config KVM
- 	select KVM_MMIO
- 	select KVM_XFER_TO_GUEST_WORK
- 	select SCHED_INFO
-+	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	help
- 	  Support hosting virtualized guest machines using
- 	  hardware virtualization extensions. You will need
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index f6d3242b9234..4c5af4718182 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -387,6 +387,7 @@ static int kvm_loongarch_env_init(void)
- 	}
- 
- 	kvm_init_gcsr_flag();
-+	kvm_register_perf_callbacks(NULL);
- 
- 	/* Register LoongArch IPI interrupt controller interface. */
- 	ret = kvm_loongarch_register_ipi_device();
-@@ -408,6 +409,7 @@ static void kvm_loongarch_env_exit(void)
- {
- 	unsigned long addr;
- 
-+	kvm_unregister_perf_callbacks();
- 	if (vmcs)
- 		free_percpu(vmcs);
- 
+Xi Ruoyao (3):
+  riscv: vDSO: Remove --hash-style=both
+  csky: vDSO: Remove --hash-style=both
+  LoongArch: vDSO: Remove --hash-style=sysv
+
+ arch/csky/kernel/vdso/Makefile  | 2 +-
+ arch/loongarch/vdso/Makefile    | 2 +-
+ arch/riscv/kernel/vdso/Makefile | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
 -- 
-2.39.3
+2.48.1
 
