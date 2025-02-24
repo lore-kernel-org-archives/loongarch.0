@@ -1,107 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5995207DF6
-	for <loongarch@lists.linux.dev>; Sat, 22 Feb 2025 10:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAD9EACE
+	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 01:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740219269; cv=none; b=HLxKPDO0PKCwa4LpjbJCpQFjRuEgaOl6imvrzmy5jHWcdVFIuWi+qqFOiNPUAcyZbpLrPYzn6/BB+YMaTnuqk/4GCrYWd7H4yRF9KZ2ch3jSMbxvqwsJLhsaYDETZlEro+XlrXZVvh5Wlniuxm8CkOFRxy02ZE3aGdylYi9tUL8=
+	t=1740359894; cv=none; b=CuwymOqn4P5Lse4Qs2qwQlNnvxVd6tIa3Zu0AaDWm8vph3IdQ85hitajPQQ25OAS/vRGEaHCRMhf84D4XB+fr3Oddz466mdAQ2dgCniyBC0clbDia2DEbbDOZH+1E0u0jhBGwYRe9bPPyKzZ7vtY5jpcibS0sOt90wvxMQQi/LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740219269; c=relaxed/simple;
-	bh=ygaPhnEWXxg0PTIQSnFt/u2T3zJiHAt9hR7zOE9Myuo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SflJThYgdUAK1XP1AAmE2Tk2Ph+dTBnkhkvnTIcKNiTl0p9OI0+qxt4hfPyrfn4KfdPFgxpdtCmMEtOUC+uw4e19WrwERiccYJ2iDDq9+X9bbtPPG9L1FEgmqgy6Z5Q7aZQgjg/WZE9PeqnMmA5Yf3U8+Aid1woJV00jw/G837E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E0xbOLPR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z74TsqYt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E0xbOLPR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z74TsqYt"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740219265;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYt57ZYgbjy6ej8hXDty7Cfp9Tf5nA32oYEo7YLt3U4=;
-	b=E0xbOLPRJ+XD/M3Ao9By6szoKCsyLxcxtVTGsSbhAcE5NU1NK5C2+Dfl+zJ4+rpk8p2vce
-	IgpgL+eLpTnyqk83xyrJHvEqqHTXl3g07KURIn1lsZ0aq6OKRUYTD54okHfdjXqNbDsSjC
-	8vSMloBPM2AV4QgA0stwUEWMG6uZx3A9biypqi3p4tS6E2BLtlPpYMDvXniwVQOifJQaz1
-	6Qig6O/uBgxjjBbGrOo71YvA2kL4peLeza5WOnn/Kdf4/Lf3rBALBWYLzmAVI3S8o31rMK
-	Fy+Fe19AlwTl2IsoJXlYAVNRDdBMW1sP8B0maDlcTMTjaB57ZbWi7eIerkehlg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740219265;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYt57ZYgbjy6ej8hXDty7Cfp9Tf5nA32oYEo7YLt3U4=;
-	b=z74TsqYtERi/FO28k1WNxuOk/eCrttvKrCalx/NPgzVgRgvry4d1qCKiaSmbcNlhBsMonW
-	bE0L5AunrFXssYCw==
-To: Xi Ruoyao <xry111@xry111.site>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, Vincenzo
- Frascino <vincenzo.frascino@arm.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Theodore
- Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Russell King <linux@armlinux.org.uk>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>,
- Madhavan
- Srinivasan <maddy@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann
- <arnd@arndb.de>, Guo Ren <guoren@kernel.org>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
- linux-csky@vger.kernel.org
-Subject: Re: [PATCH v3 09/18] riscv: vdso: Switch to generic storage
- implementation
-In-Reply-To: <1adbf1603237b654a2948ae13692c6b6db0ab7eb.camel@xry111.site>
-References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
- <20250204-vdso-store-rng-v3-9-13a4669dfc8c@linutronix.de>
- <1adbf1603237b654a2948ae13692c6b6db0ab7eb.camel@xry111.site>
-Date: Sat, 22 Feb 2025 11:14:23 +0100
-Message-ID: <87a5aegubk.ffs@tglx>
+	s=arc-20240116; t=1740359894; c=relaxed/simple;
+	bh=+01fuoxMsFVszPyqwuMr7Map+WPjyYGMYFouhMVMR3s=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=avLi+mR1S2b8m8Yg0iPrQDH3y44c6UbNTD85K9k3zIkZZ1xpLq/7T14RfbHk4TaU4HUBZS7POXll7bKuZawrFfjsFSWJKGg1asUk64etLWlOH5fl1jjjItpq4pqioM+hcW+oYKBfcg9t3v7Ze/EfBrXufbLx3twVuqTERMnZ+Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxWXHLyLtnFESAAA--.24087S3;
+	Mon, 24 Feb 2025 09:18:03 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDx_MTJyLtnBXslAA--.5865S3;
+	Mon, 24 Feb 2025 09:18:03 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Remove unused option with
+ HAVE_VIRT_CPU_ACCOUNTING_GEN
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250221073249.481731-1-maobibo@loongson.cn>
+ <CAAhV-H6-cH1a-ghgGAp2aOp8MF09YMwj3bCXESLts==d8_4m3Q@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <2a5a2453-0686-efb2-29aa-065797fa1548@loongson.cn>
+Date: Mon, 24 Feb 2025 09:17:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H6-cH1a-ghgGAp2aOp8MF09YMwj3bCXESLts==d8_4m3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx_MTJyLtnBXslAA--.5865S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJrWDWrWxCr4UtF1rXrykXrc_yoW8Xw13pr
+	n2y3Wqgr48Gr4Fva9YyFyrWw47ZryvqrWxWF1fKFy8tryq9ryDZr1jgr1q9FyUJ395J3yI
+	gr1fG34avF45CwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
+	VUUUUUU==
 
-On Sat, Feb 22 2025 at 16:17, Xi Ruoyao wrote:
-> On Tue, 2025-02-04 at 13:05 +0100, Thomas Wei=C3=9Fschuh wrote:
->> The generic storage implementation provides the same features as the
->> custom one. However it can be shared between architectures, making
->> maintenance easier.
->>=20
->> Co-developed-by: Nam Cao <namcao@linutronix.de>
->> Signed-off-by: Nam Cao <namcao@linutronix.de>
->> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
-> I made a RISC-V vDSO getrandom implementation on top of this and it
-> works fine.  I'll submit it when this is merged.
 
-You can submit it right now. If it's reviewed and if Jason agrees, this
-can be merged through the timers/vdso branch on top of the pending
-changes.
 
-Thanks for testing it!
+On 2025/2/21 下午9:42, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Fri, Feb 21, 2025 at 3:32 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Option HAVE_VIRT_CPU_ACCOUNTING_GEN is selected by default in kconfig file
+>> arch/Kconfig. It is meaningless in file arch/loongarch/Kconfig, and on the
+>> contrast it may bring out misunderstanding. Here remove it on arch
+>> specified kconfig file.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index 2b8bd27a852f..7fd5708fe14a 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -175,7 +175,6 @@ config LOONGARCH
+>>          select HAVE_STACKPROTECTOR
+>>          select HAVE_SYSCALL_TRACEPOINTS
+>>          select HAVE_TIF_NOHZ
+>> -       select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
+> Please see 01f135506e2ed0403512 ("powerpc/32: select
+> HAVE_VIRT_CPU_ACCOUNTING_GEN"). Now HAVE_VIRT_CPU_ACCOUNTING_GEN is
+> available on both 32BIT and 64BIT, so I think a better solution is
+> unconditionally select HAVE_VIRT_CPU_ACCOUNTING_GEN which is
+> convenient for the upcoming LoongArch32.
+I have no idea about LoongArch32 which is talked about years, however 
+there is never actual code posted and no detailed plan. All about 
+LoongArch32 is talking on the paper.
 
-       tglx
+Regards
+Bibo Mao
+> 
+> 
+> 
+> 
+> 
+> Huacai
+> 
+>>          select IRQ_FORCED_THREADING
+>>          select IRQ_LOONGARCH_CPU
+>>          select LOCK_MM_AND_FIND_VMA
+>> --
+>> 2.39.3
+>>
+>>
+
