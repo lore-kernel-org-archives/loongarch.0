@@ -1,114 +1,97 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAD9EACE
-	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 01:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F22412B94;
+	Mon, 24 Feb 2025 04:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740359894; cv=none; b=CuwymOqn4P5Lse4Qs2qwQlNnvxVd6tIa3Zu0AaDWm8vph3IdQ85hitajPQQ25OAS/vRGEaHCRMhf84D4XB+fr3Oddz466mdAQ2dgCniyBC0clbDia2DEbbDOZH+1E0u0jhBGwYRe9bPPyKzZ7vtY5jpcibS0sOt90wvxMQQi/LQ=
+	t=1740372548; cv=none; b=dI/qZR2LB46QyjSNXwFiIOiH7z6KKq29py5yUP9X/akvwMca0Is1fVCMdI26+d8qM9/8h1iw+GXim0o6ih0+V3o9POzS6DQ9GzMM2391IVZ4QqQn18Mp1vwHl+Wan+jPt67Km+nCjyMTdHKeawedRWe2anRf6537xHCO90NuF4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740359894; c=relaxed/simple;
-	bh=+01fuoxMsFVszPyqwuMr7Map+WPjyYGMYFouhMVMR3s=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=avLi+mR1S2b8m8Yg0iPrQDH3y44c6UbNTD85K9k3zIkZZ1xpLq/7T14RfbHk4TaU4HUBZS7POXll7bKuZawrFfjsFSWJKGg1asUk64etLWlOH5fl1jjjItpq4pqioM+hcW+oYKBfcg9t3v7Ze/EfBrXufbLx3twVuqTERMnZ+Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxWXHLyLtnFESAAA--.24087S3;
-	Mon, 24 Feb 2025 09:18:03 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDx_MTJyLtnBXslAA--.5865S3;
-	Mon, 24 Feb 2025 09:18:03 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Remove unused option with
- HAVE_VIRT_CPU_ACCOUNTING_GEN
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250221073249.481731-1-maobibo@loongson.cn>
- <CAAhV-H6-cH1a-ghgGAp2aOp8MF09YMwj3bCXESLts==d8_4m3Q@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <2a5a2453-0686-efb2-29aa-065797fa1548@loongson.cn>
-Date: Mon, 24 Feb 2025 09:17:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1740372548; c=relaxed/simple;
+	bh=+tSJ/CV4ag5BPKgIT4cToWUp7lkZ5lgsFJpGIxZN57M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OVKvGDK1aiyBR8u6BxbwgdEptJCzlFyhZ0YKHulWRpVb0dcipUJNnSuUlqJ6Kry+VnWikYNKcuqi/FOuRaRBTecMgjqXWMbRzseic5RLrs7qbGjLBXM0v0CDlW8kF4kUMX0xv+SpHgnrK8mZCnvXq4TC9Sq+PLdlns6rC5RLw7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u43xayBR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u43xayBR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DCF8C4CEED;
+	Mon, 24 Feb 2025 04:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740372547;
+	bh=+tSJ/CV4ag5BPKgIT4cToWUp7lkZ5lgsFJpGIxZN57M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u43xayBRuDT1amaEhIlS+UCRwX8Mam6i+p5yVxHpcFuutIHvkMqeZ7lTbM6Z6Y5D7
+	 D2L5lSGNzHwiYGAP/i9yUyERel+AheT0lbqq6QgUZPC5G9/oUgLUCHqiw4Q9Y1iB/N
+	 bR+oWtDZGyCMFDb4xv49jx0RLLKQxUZUXhmJLR6QL5vtHNMJWKRduGVHU/ALeEK23l
+	 Bb3cofOCUx3ljHx0Qt2WyWY3E5QE2wBsnr/mf6Zwo+ShJCiRKTzcTWi1DLhc355I8O
+	 X/WQScK41usyfP+ai1Ch4TeKZ94aty2mp9rmk/ZqTL9D+ZN2EmGZ3VyUyhs7HCevdF
+	 Yn0ElJ4srIHIQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so778918866b.3;
+        Sun, 23 Feb 2025 20:49:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUrC+LIh6HjLyrnu/hn25yizLYszAkKU6nvxwXl0Y1LsubwcLpVu2+RPVq4kia13BLnYznI/y16+QQm@lists.linux.dev, AJvYcCWlnR0mdz0k0ZKHuQN5qSZZLdkcdaWcevgwl6+kzTLIyohwFjxQUaULxgjuQKdufSanCGds@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxv6wrCmFBAEI3utWlprqnokL+HfYyDLI6gsRA7Tj+WW1amaef+
+	Ziu+HsttuOtk6gJxMqDYSvUlDw7WCSE3cr2IfvwjNcrbR6HNQxcWt2P3JEi+aLF7m7EOC5HLyD4
+	+sv3wJEWpmCF02Geb3WHsRGHqzZk=
+X-Google-Smtp-Source: AGHT+IEKW5vIXjTzOHrompLOAPwklgOd0a+ZAbqn71KeUOAndWapGBnmaG5irOdKpG3m5J7DZWq2c8pb6BBiBzlLQ8U=
+X-Received: by 2002:a17:906:c0c:b0:abc:ad5:eee1 with SMTP id
+ a640c23a62f3a-abc0ad5f0a6mr1104615966b.3.1740372545953; Sun, 23 Feb 2025
+ 20:49:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6-cH1a-ghgGAp2aOp8MF09YMwj3bCXESLts==d8_4m3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_MTJyLtnBXslAA--.5865S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWDWrWxCr4UtF1rXrykXrc_yoW8Xw13pr
-	n2y3Wqgr48Gr4Fva9YyFyrWw47ZryvqrWxWF1fKFy8tryq9ryDZr1jgr1q9FyUJ395J3yI
-	gr1fG34avF45CwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+References: <20250114132856.19463-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250114132856.19463-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 24 Feb 2025 12:48:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4giTorYbo4uL_KNL1MmHWfWKX8EnhKdC_Yz0_sX17PvA@mail.gmail.com>
+X-Gm-Features: AWEUYZmN-OTr9hSy8TtD6Pr3OSYtzFaOXORrLZ6CEn7dpUO4IxI5WYWdY8z04ys
+Message-ID: <CAAhV-H4giTorYbo4uL_KNL1MmHWfWKX8EnhKdC_Yz0_sX17PvA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] drm/amd/display: Stop control flow if the divisior
+ is zero
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
+	amd-gfx@lists.freedesktop.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 14, 2025 at 9:29=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> As far as I can tell, with the current existing macro definitions, there
+> is no better way to do the minimal and proper changes to stop the control
+> flow if the divisior is zero.
+>
+> In order to keep the current ability for the aim of debugging and avoid
+> printing the warning message twice, it is better to only use ASSERT_BUG()
+> and SPL_ASSERT_BUG() directly after doing the following two steps:
+>
+> (1) Add ASSERT_BUG() macro definition
+> (2) Add SPL_ASSERT_BUG() macro definition
+>
+> This version is based on 6.13-rc7, tested on x86 and LoongArch.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-
-On 2025/2/21 下午9:42, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Fri, Feb 21, 2025 at 3:32 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> Option HAVE_VIRT_CPU_ACCOUNTING_GEN is selected by default in kconfig file
->> arch/Kconfig. It is meaningless in file arch/loongarch/Kconfig, and on the
->> contrast it may bring out misunderstanding. Here remove it on arch
->> specified kconfig file.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/Kconfig | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 2b8bd27a852f..7fd5708fe14a 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -175,7 +175,6 @@ config LOONGARCH
->>          select HAVE_STACKPROTECTOR
->>          select HAVE_SYSCALL_TRACEPOINTS
->>          select HAVE_TIF_NOHZ
->> -       select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
-> Please see 01f135506e2ed0403512 ("powerpc/32: select
-> HAVE_VIRT_CPU_ACCOUNTING_GEN"). Now HAVE_VIRT_CPU_ACCOUNTING_GEN is
-> available on both 32BIT and 64BIT, so I think a better solution is
-> unconditionally select HAVE_VIRT_CPU_ACCOUNTING_GEN which is
-> convenient for the upcoming LoongArch32.
-I have no idea about LoongArch32 which is talked about years, however 
-there is never actual code posted and no detailed plan. All about 
-LoongArch32 is talking on the paper.
-
-Regards
-Bibo Mao
-> 
-> 
-> 
-> 
-> 
-> Huacai
-> 
->>          select IRQ_FORCED_THREADING
->>          select IRQ_LOONGARCH_CPU
->>          select LOCK_MM_AND_FIND_VMA
->> --
->> 2.39.3
->>
->>
-
+>
+> Tiezhu Yang (3):
+>   drm/amd/display: Add ASSERT_BUG() macro definition
+>   drm/amd/display: Add SPL_ASSERT_BUG() macro definition
+>   drm/amd/display: Harden callers of division functions
+>
+>  drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  |  2 +-
+>  drivers/gpu/drm/amd/display/dc/os_types.h           |  7 +++++++
+>  drivers/gpu/drm/amd/display/dc/spl/spl_debug.h      | 11 +++++++++++
+>  drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c |  2 +-
+>  4 files changed, 20 insertions(+), 2 deletions(-)
+>
+> --
+> 2.42.0
+>
+>
