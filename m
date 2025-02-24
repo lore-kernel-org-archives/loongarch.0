@@ -1,34 +1,35 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAE723BCE3
-	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 11:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA6C26138D
+	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 11:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396065; cv=none; b=H47X4353CiHyNF72tEEXXoiRyRZoFxZy6E6ZT5RYuoYU1q4di68zIClgbPmgxP2WGjlTPO8AlYihzy7jretSwJ1lqvDXBR+k0stw6jQTQtPwaagQRTWgyqmbSt7XToZ6orUqfen8+bco34NzlXVNilu82VJa11m3OYl0yYSgTb0=
+	t=1740396070; cv=none; b=H9KJm2dLH9IbgxlpNt7WnFtFdCDC6+HUDT2kWZLyMjW7bDAOoZEE5O+rHvKRhh9HsfsJ+A8cqy1Td+CdTKe61RgdQn2UeADMqy5stVftWdEZJES4FPVhwyN8PLx3gi6hFmEsTjIskmCfPSdG0P2dVr6jgu41cSj3oPFrK8k1Jlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740396065; c=relaxed/simple;
-	bh=Jl/aGD6H8zlfW46eQ8hKfWnP+g4vlfzN/TfC502RuSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QucdffBVE82JVFVg/Hax9Rxe7AmtnqzIV8aiSL0FmcwM4UVIMpG9p4ZCW4JG8mqomk6xguQWaVrWe8m8/2o0iQy33cypJMgT/gKD6MZXR4cXg6XoMqpd9xmz96oB2kGHOsPvX61tDq/xvu6LGRSXGVUTcs9QkBPlOBObqKkDpZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=enHf0tfA; arc=none smtp.client-ip=89.208.246.23
+	s=arc-20240116; t=1740396070; c=relaxed/simple;
+	bh=17AhFnNHpt0G9klcgmVrv/F5ASOOetBZnSvC/7J2698=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Fx80IMXfeTHMCFcpQu5D4fLnZMSVr2nwD2Bg14YKdT26VfdOFtpg3NTy6Kzt2pEE+tUFK7y1KTIKTiCiKQf2cSaYaVSHGNXNBBBLM32Eem/P8dwU7C56BrtFvwtwPm9IgfDgFfAD43SzB/3V1uzUuWlo9cjiVtFZfWzWqay7m4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=D1xeJqD1; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="enHf0tfA"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="D1xeJqD1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1740396055;
-	bh=PEZ+XmHReJkvOO8ckw/Sp6e/Ys54sWdkMmIRDD4VEB0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=enHf0tfAHWymo5wtzHP9lT0kTKne9eaEveqFQg9viuU+wCQ8SziFN2JNJhmVneul8
-	 FGBw9M2ivI2HVxkGGdEjIyaGQnNNAWtIiqIFZ/waj4m5LSMo4Y77cwsuDCeS1jPWWr
-	 J09MQ0ACFxs5EAXS2XHkAtj6nGgiv4v3dyMIEai4=
+	s=default; t=1740396062;
+	bh=9N5UbYwwS3cj4ISBSwf0j1nK6obW0UxDyUzHGsn7IM0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D1xeJqD1EyhCPVOKwyq6EZS92UTpksyChGpHsp0/kMrNZ/qiBm9uYbSBNgFkV18W8
+	 I4Mn+BG1Nnbb0PDA+3SQryW3Q6ibwr1eEF4B4ZMDldpQleHkN7ADemC/803GF2n3e3
+	 yozfHj9ZvBFx81aO8ITspHS7YqkUn4w7PXg5zVe0=
 Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EFCB21A40EF;
-	Mon, 24 Feb 2025 06:20:49 -0500 (EST)
+	by xry111.site (Postfix) with ESMTPSA id D8D9F1A40F0;
+	Mon, 24 Feb 2025 06:20:55 -0500 (EST)
 From: Xi Ruoyao <xry111@xry111.site>
 To: Guo Ren <guoren@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
@@ -42,10 +43,12 @@ Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
 	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 0/3] Drop explicit --hash-style= setting for new
-Date: Mon, 24 Feb 2025 19:20:39 +0800
-Message-ID: <20250224112042.60282-1-xry111@xry111.site>
+Subject: [PATCH 1/3] riscv: vDSO: Remove --hash-style=both
+Date: Mon, 24 Feb 2025 19:20:40 +0800
+Message-ID: <20250224112042.60282-2-xry111@xry111.site>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
+References: <20250224112042.60282-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,26 +57,33 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For riscv, csky, and LoongArch, GNU hash had already become the de-facto
-standard when they borned, so there's no Glibc/Musl releases for them
-without GNU hash support, and the traditional SysV hash is just wasting
-space for them.
+When RISC-V borned, DT_GNU_HASH had already became the de-facto
+standard so DT_HASH is just wasting storage space.  Remove the explicit
+--hash-style=both setting and rely on the distro toolchain default,
+which is most likely "gnu" (i.e. generating only DT_GNU_HASH, no
+DT_HASH).
 
-Remove those settings and follow the distro toolchain default, which is
-likely --hash-style=gnu.  In the past it could break vDSO self tests,
-but now the issue has been addressed by commit
-e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+Following the logic of commit 48f6430505c0
+("arm64/vdso: Remove --hash-style=sysv").
 
-Xi Ruoyao (3):
-  riscv: vDSO: Remove --hash-style=both
-  csky: vDSO: Remove --hash-style=both
-  LoongArch: vDSO: Remove --hash-style=sysv
-
- arch/csky/kernel/vdso/Makefile  | 2 +-
- arch/loongarch/vdso/Makefile    | 2 +-
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
  arch/riscv/kernel/vdso/Makefile | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 9a1b555e8733..ecee348af9ce 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -47,7 +47,7 @@ $(obj)/vdso.o: $(obj)/vdso.so
+ $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
+ 	$(call if_changed,vdsold_and_check)
+ LDFLAGS_vdso.so.dbg = -shared -soname=linux-vdso.so.1 \
+-	--build-id=sha1 --hash-style=both --eh-frame-hdr
++	--build-id=sha1 --eh-frame-hdr
+ 
+ # strip rule for the .so file
+ $(obj)/%.so: OBJCOPYFLAGS := -S
 -- 
 2.48.1
 
