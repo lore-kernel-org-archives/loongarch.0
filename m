@@ -1,97 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F22412B94;
-	Mon, 24 Feb 2025 04:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFB924A054
+	for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 09:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740372548; cv=none; b=dI/qZR2LB46QyjSNXwFiIOiH7z6KKq29py5yUP9X/akvwMca0Is1fVCMdI26+d8qM9/8h1iw+GXim0o6ih0+V3o9POzS6DQ9GzMM2391IVZ4QqQn18Mp1vwHl+Wan+jPt67Km+nCjyMTdHKeawedRWe2anRf6537xHCO90NuF4U=
+	t=1740390984; cv=none; b=muVhu6GbX3d4KzdMb2iqoNwwQxelgSkAXpm/gAMeWh3wRytTmNseLUhmhzrZnF22R6sxtkdz7MzuPzJzha4pGkl4o0KGDtQdNbRBNXQwLHY2bLUNTT424/uUEP6ETOWEumKB1wDMRtwOfZikgeefkdqIyzdC3QoRU6Ag64cilnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740372548; c=relaxed/simple;
-	bh=+tSJ/CV4ag5BPKgIT4cToWUp7lkZ5lgsFJpGIxZN57M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OVKvGDK1aiyBR8u6BxbwgdEptJCzlFyhZ0YKHulWRpVb0dcipUJNnSuUlqJ6Kry+VnWikYNKcuqi/FOuRaRBTecMgjqXWMbRzseic5RLrs7qbGjLBXM0v0CDlW8kF4kUMX0xv+SpHgnrK8mZCnvXq4TC9Sq+PLdlns6rC5RLw7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u43xayBR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u43xayBR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DCF8C4CEED;
-	Mon, 24 Feb 2025 04:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740372547;
-	bh=+tSJ/CV4ag5BPKgIT4cToWUp7lkZ5lgsFJpGIxZN57M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u43xayBRuDT1amaEhIlS+UCRwX8Mam6i+p5yVxHpcFuutIHvkMqeZ7lTbM6Z6Y5D7
-	 D2L5lSGNzHwiYGAP/i9yUyERel+AheT0lbqq6QgUZPC5G9/oUgLUCHqiw4Q9Y1iB/N
-	 bR+oWtDZGyCMFDb4xv49jx0RLLKQxUZUXhmJLR6QL5vtHNMJWKRduGVHU/ALeEK23l
-	 Bb3cofOCUx3ljHx0Qt2WyWY3E5QE2wBsnr/mf6Zwo+ShJCiRKTzcTWi1DLhc355I8O
-	 X/WQScK41usyfP+ai1Ch4TeKZ94aty2mp9rmk/ZqTL9D+ZN2EmGZ3VyUyhs7HCevdF
-	 Yn0ElJ4srIHIQ==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so778918866b.3;
-        Sun, 23 Feb 2025 20:49:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUrC+LIh6HjLyrnu/hn25yizLYszAkKU6nvxwXl0Y1LsubwcLpVu2+RPVq4kia13BLnYznI/y16+QQm@lists.linux.dev, AJvYcCWlnR0mdz0k0ZKHuQN5qSZZLdkcdaWcevgwl6+kzTLIyohwFjxQUaULxgjuQKdufSanCGds@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxv6wrCmFBAEI3utWlprqnokL+HfYyDLI6gsRA7Tj+WW1amaef+
-	Ziu+HsttuOtk6gJxMqDYSvUlDw7WCSE3cr2IfvwjNcrbR6HNQxcWt2P3JEi+aLF7m7EOC5HLyD4
-	+sv3wJEWpmCF02Geb3WHsRGHqzZk=
-X-Google-Smtp-Source: AGHT+IEKW5vIXjTzOHrompLOAPwklgOd0a+ZAbqn71KeUOAndWapGBnmaG5irOdKpG3m5J7DZWq2c8pb6BBiBzlLQ8U=
-X-Received: by 2002:a17:906:c0c:b0:abc:ad5:eee1 with SMTP id
- a640c23a62f3a-abc0ad5f0a6mr1104615966b.3.1740372545953; Sun, 23 Feb 2025
- 20:49:05 -0800 (PST)
+	s=arc-20240116; t=1740390984; c=relaxed/simple;
+	bh=NUpup4TJeKNS+74UwtNoKP/hHdEekNejv7N+QbJBI2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lf11c7/m+9VfhaX76T9Bpuok07cZLbASteOSTHzn60z7fiOu5fBL5xd4Y9G4+Cn++hklg+2cuy3PtZeivH4BdEGb7VC6jVRlzFY7L7G9iDwL4JjS1LvA03NaS+iTcm6XH7abRwe2zJh0kChYnsi5iDI4ngH4jAO7zvkx1KLkQw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxLGtDQrxnIa+AAA--.24312S3;
+	Mon, 24 Feb 2025 17:56:19 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxXsVCQrxnRBkmAA--.9703S2;
+	Mon, 24 Feb 2025 17:56:18 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Add perf event support for guest VM
+Date: Mon, 24 Feb 2025 17:56:15 +0800
+Message-Id: <20250224095618.1436016-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250114132856.19463-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20250114132856.19463-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Feb 2025 12:48:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4giTorYbo4uL_KNL1MmHWfWKX8EnhKdC_Yz0_sX17PvA@mail.gmail.com>
-X-Gm-Features: AWEUYZmN-OTr9hSy8TtD6Pr3OSYtzFaOXORrLZ6CEn7dpUO4IxI5WYWdY8z04ys
-Message-ID: <CAAhV-H4giTorYbo4uL_KNL1MmHWfWKX8EnhKdC_Yz0_sX17PvA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] drm/amd/display: Stop control flow if the divisior
- is zero
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, loongarch@lists.linux.dev, 
-	amd-gfx@lists.freedesktop.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxXsVCQrxnRBkmAA--.9703S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Jan 14, 2025 at 9:29=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> As far as I can tell, with the current existing macro definitions, there
-> is no better way to do the minimal and proper changes to stop the control
-> flow if the divisior is zero.
->
-> In order to keep the current ability for the aim of debugging and avoid
-> printing the warning message twice, it is better to only use ASSERT_BUG()
-> and SPL_ASSERT_BUG() directly after doing the following two steps:
->
-> (1) Add ASSERT_BUG() macro definition
-> (2) Add SPL_ASSERT_BUG() macro definition
->
-> This version is based on 6.13-rc7, tested on x86 and LoongArch.
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+From perf pmu interrupt is normal IRQ rather than NMI, so code cannot be
+profiled if interrupt is disabled. However it is possible to profile
+guest kernel in this situation from host side, profile result is more
+accurate from host than that from guest.
 
->
-> Tiezhu Yang (3):
->   drm/amd/display: Add ASSERT_BUG() macro definition
->   drm/amd/display: Add SPL_ASSERT_BUG() macro definition
->   drm/amd/display: Harden callers of division functions
->
->  drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  |  2 +-
->  drivers/gpu/drm/amd/display/dc/os_types.h           |  7 +++++++
->  drivers/gpu/drm/amd/display/dc/spl/spl_debug.h      | 11 +++++++++++
->  drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c |  2 +-
->  4 files changed, 20 insertions(+), 2 deletions(-)
->
-> --
-> 2.42.0
->
->
+Perf event support for guest VM is added here, and the below is the
+example:
+perf kvm --host --guest --guestkallsyms=guest-kallsyms
+     --guestmodules=guest-modules  top
+
+Overhead  Shared Object               Symbol
+  20.02%  [guest.kernel]              [g] __arch_cpu_idle
+  16.74%  [guest.kernel]              [g] queued_spin_lock_slowpath
+  10.05%  [kernel]                    [k] __arch_cpu_idle
+   2.00%  [guest.kernel]              [g] clear_page
+   1.62%  [guest.kernel]              [g] copy_page
+   1.50%  [guest.kernel]              [g] next_uptodate_folio
+   1.41%  [guest.kernel]              [g] queued_write_lock_slowpath
+   1.41%  [guest.kernel]              [g] unmap_page_range
+   1.36%  [guest.kernel]              [g] mod_objcg_state
+   1.30%  [guest.kernel]              [g] osq_lock
+   1.28%  [guest.kernel]              [g] __slab_free
+   0.98%  [guest.kernel]              [g] copy_page_range
+
+Bibo Mao (3):
+  LoongArch: KVM: Add stub for kvm_arch_vcpu_preempted_in_kernel
+  LoongArch: KVM: Implement arch specified functions for guest perf
+  LoongArch: KVM: Register perf callback for guest
+
+ arch/loongarch/include/asm/kvm_host.h |  2 ++
+ arch/loongarch/kvm/Kconfig            |  1 +
+ arch/loongarch/kvm/main.c             |  2 ++
+ arch/loongarch/kvm/vcpu.c             | 31 +++++++++++++++++++++++++++
+ 4 files changed, 36 insertions(+)
+
+
+base-commit: 2408a807bfc3f738850ef5ad5e3fd59d66168996
+-- 
+2.39.3
+
