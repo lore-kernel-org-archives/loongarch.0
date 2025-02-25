@@ -1,62 +1,62 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EED41A2393
-	for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 03:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4915B18BC26
+	for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 03:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740455231; cv=none; b=uuT7/Mu7pTGFQjndVKXiq/poH0s6MUX960je7EoYK+t69ZH1mmZlomrYDqz5mMAepUrV4s8WhPwekzhdlSkWYvliubzzWuINCNrKWU830irGswrMIevglOBriXRYj3Hg6Q4Ogx4yhOnEkOZO1d/5yFl1TiCvRu+zn+YRJ2lbdFo=
+	t=1740455241; cv=none; b=tEpq/5TxsqjxI0XL9Ekoy4jeB/yHpSiGP6UcgDUlVPKFQNYiSZLsMD3VRWf5q+M50ky9laXqq1r3EVdVxHH5G8IGKBZ5zDbyxdVnAPGB2Qq25ZMGp9/Jxz8i2hd745r+aVN2HL05BqLRBtxtLQeJkzlzdUF424dNz+DJXqIYl3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740455231; c=relaxed/simple;
-	bh=uEIt0iOIE1wq+fFnae14pvBZV4BJtIqtLEBiBKsbnt4=;
+	s=arc-20240116; t=1740455241; c=relaxed/simple;
+	bh=007QVVVFe489JDQoxvXq6IPNtqGHUmY/RQmaczrx98Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=od/lOGjk0s/7DXI60hOb83AEQrESB/YvGhXCS+vbiXmLed7X3DfLvzmFgaHGr6aEmJ6ZGIFbcP1s1CLa+wsKMgAoKr8MCVRrkAzFYIndBBDL5DSLk6Zgdet9dL+TrWhIb8jmksQRM0Jo4hC+mtY+Xhkbn5lj2iUwTe6saYwuIhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HPlgDG5V; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=CSIvU5c0o7G55WxoK11yo+roUvhyg4h0BQoEX8R6oGCoucQzB47U1p+gS1dBJ8RdKsB7C75aL9pNgyUQhnlAzaCtM8Ef6XTAVp/gH4r3fq2XaxQV7+ReGRJMkENRcl8zjc8iS9yIitvqYgiokwszAi/MdNO4UCvlMx7uEDcfccQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XmB4/iNy; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HPlgDG5V"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fcff77ff9bso5571004a91.0
-        for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 19:47:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XmB4/iNy"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220dc3831e3so95477895ad.0
+        for <loongarch@lists.linux.dev>; Mon, 24 Feb 2025 19:47:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740455228; x=1741060028; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1740455238; x=1741060038; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=36KztU5HqI7wNxhzV6WNrh7mWCrhUr2tDKJnWGxYavY=;
-        b=HPlgDG5VLC8CfSlTIu0VWpTzpOgWQT8Fu65nDTx0JlMJZ1r2BJ3QODrbtH1NcltoEM
-         Bmh4uctXqpEk61hg6OnCz7aAgfo7t3ptPxHXQtgSv6v0GUOwOtWUJyrChL3gGpQ9EMxl
-         EfDYrX9H7Qj1hgSNjcJz59bMeeF7DKD/3ObzGkudceS6lMSk9lvpuMvuGUDzGHpv4GSx
-         CZWym3xXqLR58j8f+ezjXDfcYVj+Y8LpoYYY2IcqwHqyrgyvLH6udPkBMMmdJi4ZXUZP
-         Jr86EbpV1QV0SGwEsgRqQCXb5t90R/Dig//Qoj+gmDUa3r+MKAPmOhYENDuCDvdeJvPF
-         vrGg==
+        bh=Y+AOLMBHyoEBsAHQDRMLfrp+DU3rIi9C1hjH+u4umGY=;
+        b=XmB4/iNyrXq3g5OiNl4rD45qrM1632YrhtP5nfgqB5RjxgEm3QmDKGjecs6Q7HinNP
+         G4vNOHst2Y5JkKPg121wnZdtYPRRhhvMl4al5CNU03pTQOJ9QXWol+WhW2fS57iV5CKR
+         xGpM40KCfWPzOskDwDQlVsDWbuZ8xJWCGXHE56uYxCd77eJMkgULaBG071cmTCj2pIiP
+         g1iuaWGo35ZIBTLMeW9gZZwMNhVTlTU9ZIGE0Fi5AS30P1uGrlN/UoPa1J8zGCRbDZjf
+         cdvs265DpC88yWKyxbT5sZo3kbaee4YJtCuLWfRs/nrzouvbTVnOO3Oy/mAKg8W0Ubag
+         HqaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740455228; x=1741060028;
+        d=1e100.net; s=20230601; t=1740455238; x=1741060038;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=36KztU5HqI7wNxhzV6WNrh7mWCrhUr2tDKJnWGxYavY=;
-        b=c8FoYL2G2psGJ9UHu2tH94l+19SeYHykxmlxM5mi6aWUcVKMC+CTOSUZbFrQOqHz6S
-         F+EgGepEsJpzuaaTCZ0sOzDgCZwZtqR8866bPl/5WnYeSeCeWyE1NNR3TCoSJi5LtKn8
-         toR5HOgk3BnEOhX0EsAMBYDlkpvEXLGHTvkrtz3ubg0+XSINPppYyZI1eNeHCYMuZ1K0
-         Jc2WltX5b0c4yfyT2Dued3x6v1VBMVuaiKSLNz3ULY2rAIc0QfBe54IxxccpvwjaxwiV
-         FGLhijw83VuhBRiZ4eWMl4vfkH7P5WSPY3yMAiNrfbuGOS5xdeSkg4wklfTvUmhUCdIq
-         IScQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXz7Vu2uipKKgPLAP/oPLniXMRIrlsRid8kyEn6xSbPvkTFTApxRu+LrwUyhCHqdPfkCwtYsPYdBe8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1KcmmWEYTbwIEC101IsFPL3/gnSbfGFNljIPFnNTbMbExVOHC
-	Sc6eBYFprWkHukduVgiw9ePmX/Y/OYnkkm4iyQmbNT4Jj0eWqub/z7fNor3miww=
-X-Gm-Gg: ASbGncszYFNqM92KSGKk62DOVZufUtsFDhS1TbSebSC8yWlugbyaZqcc1xdS4lLH3GR
-	QK8jKsMBbLx/7B3VEF4pbLco6r1Rbq66qBTU4bjztFHZHwmsY1ndB0M15TVj05+JtSSncGTkUKU
-	Yn/ALk/dQZ4Kw4gQpKjjH66TunBQQwTfDmpO+2qgZAJ5oObjc/CHezrjgVbH7HCI/vwVywsrn08
-	9zGvz/KFKEOavLzE0SWSNDFxhORa/R3UfO7qGrDvVEOuBhspq6SYqUpSFPthTXtbiUM6z+zAIv7
-	oAmpOaHL3jNfqkUY2U4l36Yb9AXILTTMK8IAIfsD+eNJnpKxUbPLeQnw1A96abY/9g==
-X-Google-Smtp-Source: AGHT+IHErQlNtWAOdWTcDw4ZwAn3kttLeu4q3Mf0dru9ScBNUcUevexLBEyVDaZ2sKSBMgz3Y5FwbQ==
-X-Received: by 2002:a05:6a21:7a44:b0:1ee:cb9c:9dc9 with SMTP id adf61e73a8af0-1f0fc89a091mr2965600637.35.1740455228677;
-        Mon, 24 Feb 2025 19:47:08 -0800 (PST)
+        bh=Y+AOLMBHyoEBsAHQDRMLfrp+DU3rIi9C1hjH+u4umGY=;
+        b=HyRFAXgAb4xEEhWqbr+s91h5NCapn31IwSo1oBCoHmbxZu31SS+HPv5/Fx3/EQ25pm
+         WAbUI243zaF2Ai7Zx24iDZfTDyhtgMJ607ByfR4/82LkFiLXe+WcYq2+Q7SWKkzRaS/3
+         +p+LJOGhoFKoFARdw+FHFXVXgy1xkMUClp4Z4h4ry7FV6a+4cEHmlpMwVuMIvJasw8bw
+         KAGn+W8Vr35xiVhNy8cKbjqITSHeVsvzApFcISKtE7ZA2LSErWCcKJFb/Btf+U/YNh1s
+         Iu3shsSqrrqUXHYgUdmkdqZe3SQlcFbjG+PfjjCdSaJFC6FMjxCpLQ94tB4lPrzW250M
+         Fcug==
+X-Forwarded-Encrypted: i=1; AJvYcCX8olYJ+kZfl7PXJRM4Jx5Ot3Ca8ZQPdV4Be0uUj9GYJMbq12rUYNNCHoAJzxmQGPoswmeGrDd3pLE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzISVnBUbtnBNY6AMy+tI3wynR6YVmkeZWZdwoyGe7I1rwvCqRS
+	7IAs9bvjW9bQJwN/8CgmE+gTPNB8RRS7qb3dd/r6mOIBPsztP0bsajPhHyHHBW8=
+X-Gm-Gg: ASbGncsTJC31KhRdrEZZj+eINqUfH/cb7rsYiXopjIs5TVZQTeJjD9K0so+VA/cqlDV
+	Tvf3X5l8wxefpdBxM3iRTzW9xr8woO7h+Vrbb9CUmre/NeCAXmHdCAHvqRjRZLPncbG0bOkPhiJ
+	rh/dAf9tGW85KMYogzH+jihaSt9uPfFNZ9dhasU3FubfoOw29LrBtZgGcYLt3CFd8XBlhu1IjbR
+	si3EYpc2Pq37AOy8md0cBLexmPiY/ad2xrYty8bWfuJ4joCt0xElB+42ItxgLMjdshUDQeZ+aE5
+	I4KDhRRz3MxIzKC+jQidudfGiRtE7tqfe7D4EJfHhgJIQI0R/fwYiyV/FuE5vXClWQ==
+X-Google-Smtp-Source: AGHT+IHDwvQZzbKv24vEjKNvLJNI+R1iJ4OqsIlmXN9p1d6u9OWq0+ZfVfD6gOTuv6xGQ3OntwSRRg==
+X-Received: by 2002:a05:6a00:6f0e:b0:734:26c6:26d3 with SMTP id d2e1a72fcca58-73426c62969mr26062579b3a.5.1740455238550;
+        Mon, 24 Feb 2025 19:47:18 -0800 (PST)
 Received: from C02DW0BEMD6R.bytedance.net ([63.216.146.179])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a81f014sm409429b3a.156.2025.02.24.19.46.59
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a81f014sm409429b3a.156.2025.02.24.19.47.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 19:47:08 -0800 (PST)
+        Mon, 24 Feb 2025 19:47:18 -0800 (PST)
 From: Qi Zheng <zhengqi.arch@bytedance.com>
 To: peterz@infradead.org,
 	kevin.brodsky@arm.com,
@@ -89,9 +89,9 @@ Cc: linux-mm@kvack.org,
 	x86@kernel.org,
 	linux-riscv@lists.infradead.org,
 	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v2 5/6] x86: pgtable: convert to use tlb_remove_ptdesc()
-Date: Tue, 25 Feb 2025 11:45:55 +0800
-Message-Id: <36ad56b7e06fa4b17fb23c4fc650e8e0d72bb3cd.1740454179.git.zhengqi.arch@bytedance.com>
+Subject: [PATCH v2 6/6] mm: pgtable: remove tlb_remove_page_ptdesc()
+Date: Tue, 25 Feb 2025 11:45:56 +0800
+Message-Id: <3df04c8494339073b71be4acb2d92e108ecd1b60.1740454179.git.zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <cover.1740454179.git.zhengqi.arch@bytedance.com>
 References: <cover.1740454179.git.zhengqi.arch@bytedance.com>
@@ -103,52 +103,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The x86 has already been converted to use struct ptdesc, so convert it to
-use tlb_remove_ptdesc() instead of tlb_remove_table().
+The tlb_remove_ptdesc()/tlb_remove_table() is specially designed for page
+table pages, and now all architectures have been converted to use it to
+remove page table pages. So let's remove tlb_remove_page_ptdesc(), it
+currently has no users and should not be used for page table pages.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/mm/pgtable.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/asm-generic/tlb.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index b1c1f72c1fd1b..f28ddac0f734a 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -45,7 +45,7 @@ early_param("userpte", setup_userpte);
- void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte)
- {
- 	paravirt_release_pte(page_to_pfn(pte));
--	tlb_remove_table(tlb, page_ptdesc(pte));
-+	tlb_remove_ptdesc(tlb, page_ptdesc(pte));
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index 18bf499ef8801..dd292c6d3ce88 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -511,12 +511,6 @@ static inline void tlb_remove_ptdesc(struct mmu_gather *tlb, struct ptdesc *pt)
+ 	tlb_remove_table(tlb, pt);
  }
  
- #if CONFIG_PGTABLE_LEVELS > 2
-@@ -59,21 +59,21 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
- #ifdef CONFIG_X86_PAE
- 	tlb->need_flush_all = 1;
- #endif
--	tlb_remove_table(tlb, virt_to_ptdesc(pmd));
-+	tlb_remove_ptdesc(tlb, virt_to_ptdesc(pmd));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 3
- void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
+-/* Like tlb_remove_ptdesc, but for page-like page directories. */
+-static inline void tlb_remove_page_ptdesc(struct mmu_gather *tlb, struct ptdesc *pt)
+-{
+-	tlb_remove_page(tlb, ptdesc_page(pt));
+-}
+-
+ static inline void tlb_change_page_size(struct mmu_gather *tlb,
+ 						     unsigned int page_size)
  {
- 	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
--	tlb_remove_table(tlb, virt_to_ptdesc(pud));
-+	tlb_remove_ptdesc(tlb, virt_to_ptdesc(pud));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 4
- void ___p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d)
- {
- 	paravirt_release_p4d(__pa(p4d) >> PAGE_SHIFT);
--	tlb_remove_table(tlb, virt_to_ptdesc(p4d));
-+	tlb_remove_ptdesc(tlb, virt_to_ptdesc(p4d));
- }
- #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
- #endif	/* CONFIG_PGTABLE_LEVELS > 3 */
 -- 
 2.20.1
 
