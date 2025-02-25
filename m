@@ -1,258 +1,228 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F45A189BB0;
-	Tue, 25 Feb 2025 16:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F353D233731
+	for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 23:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500175; cv=none; b=aZxPjv8zsCSgsUc3UNJb2JhzmybyUUCkLsEwoYfIg+dKuJUP674tbI4dLcxOv9i5PRpF3Fqg0D0qL2qlrnjc5sIKtJee/PtdZ4kpptmmnEaQnqQ5yI+kEYgkm0z7LqghZjRhHU8IBlDiD4EcJw/HqteVsEr26xx1xANDmvowJ2M=
+	t=1740527264; cv=none; b=kGcM4vnKH4RUH7Z07A9vW+GnRoA6pectlfnYqWEdX11qzNqPLylOv6Z7zofhCVCFwwc+/vNQC9d1Q32XNsnx4tRo2QhXyW8/n52xNYmqxu8QU+S+3srIpHl04jnzmI7AMhA1MDnu0kj/e4yNARxwP/bZHFtEDzUezOczxZA0uVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500175; c=relaxed/simple;
-	bh=cErrfXom+s5pVkXQLiiVjTzZPrY+mFw7aipCxQfEmaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZDjjBWO38cHGoailhOHWQQnSTcK2gA1leUoyphtdMvaidF1q3v7OEt2krJS4HyKSlPvADzzc44d79Lf00L5FPUGD2EZ9LeehvaaexhmLeUL5G47oOwx49sk0eeP5xLAyX1SWPFHl7KtLe3POQ6KAB2gXJwwgGxJcxWVhAFXwQ5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PePPDQuD; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740527264; c=relaxed/simple;
+	bh=6gdTWoo4iKiGpYTU7tcySz9K2NdvD0doJkMV1DoKvZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ai0Qlmf63Oo+fk/M9VzWR2donjFbR01kWOyOIwwZU+etOLcWzgFRuQtk2fQYvUL/IXoujnzPfuj43g6w1+T1Fcx/Qn2V21Gste6txGajKdC2Gvr39zU9yZaWi52cOy+4NquaVnmL82tlh+PFXjmtXdI6u0cDiuJJsCA4aAgsSIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a76CfblV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PePPDQuD"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PDjY8u011012;
-	Tue, 25 Feb 2025 16:15:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=EB5xjS
-	HoX3r4ods50zGkpSGZkJJvGI3sQjehgnGJBSo=; b=PePPDQuDji4R5cS+e2V1L2
-	z0JCj0LuK/xrDfeO46zmjIF3tGJgtoBeM4FgD5lYzomRRMeymyFRQ1N+COj4+n3z
-	zhEh1DIkK25owLsjddnGuriJp+VNxa6TBp8Rqe92T59nFrOI7ZEJ/STGVfcZT+f4
-	w5Vkh8iT36VQgba/UrWh/IbdwEpnNF1cpE72Ep3nuf6eryElWG6187EYNn2YUBzB
-	/xjn4vT9fw//W5Q2vkK1bLOBHbvGSrYvCT45nvnMlQfN9pA0ot3+nAKgP2j7p90s
-	BhZNP6wxViFEBdCttUtxJVgzsm+4N0qgG/8wgEaR+9yaWQmjIPQfV92dQlq6+8Eg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4514q0brm5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 16:15:55 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51PG36en010783;
-	Tue, 25 Feb 2025 16:15:54 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4514q0brm3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 16:15:54 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51PF0EdW002578;
-	Tue, 25 Feb 2025 16:15:53 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yu4jnfxu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 16:15:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PGFoBR33358422
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 16:15:50 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E488120043;
-	Tue, 25 Feb 2025 16:15:49 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3319720040;
-	Tue, 25 Feb 2025 16:15:48 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.171.32.179])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Tue, 25 Feb 2025 16:15:48 +0000 (GMT)
-Date: Tue, 25 Feb 2025 17:15:44 +0100
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-        Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Madhavan Srinivasan
- <maddy@linux.ibm.com>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou
- <aou@eecs.berkeley.edu>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Aaron Lewis
- <aaronlewis@google.com>,
-        Jim Mattson <jmattson@google.com>, Yan Zhao
- <yan.y.zhao@intel.com>,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
-        Kai
- Huang <kai.huang@intel.com>,
-        Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: Re: [PATCH 7/7] KVM: Drop kvm_arch_sync_events() now that all
- implementations are nops
-Message-ID: <20250225171544.40477437@p-imbrenda>
-In-Reply-To: <20250224235542.2562848-8-seanjc@google.com>
-References: <20250224235542.2562848-1-seanjc@google.com>
-	<20250224235542.2562848-8-seanjc@google.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a76CfblV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740527261;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=I+5VgZvS5RLhaGwFZILFRfiBrL6y7Ik6GC5bOnzJSKo=;
+	b=a76CfblVNFPOHDrRAxJzja0S3ZS9PJI43qrAqoPpGvn9o7UfknbjNfr367JzkRioW8k66I
+	oY5+MBwfekrMOXD9GSm+NIGJJVz86gcv20uaGEf/VZz1sWMLEQVjazInB1JQmGIHAAIF++
+	zhdWZ5pkwd74xFYr7xl3ALBiUvibeHc=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-13-_MC3PrYZOHuOXFRYHDyfuA-1; Tue, 25 Feb 2025 18:47:39 -0500
+X-MC-Unique: _MC3PrYZOHuOXFRYHDyfuA-1
+X-Mimecast-MFC-AGG-ID: _MC3PrYZOHuOXFRYHDyfuA_1740527257
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5dedd3ee338so9349263a12.2
+        for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 15:47:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740527257; x=1741132057;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I+5VgZvS5RLhaGwFZILFRfiBrL6y7Ik6GC5bOnzJSKo=;
+        b=IQFZIQIVLk4OQovWo0yQOMvvggSiiJswtJH6AD8aB5DPK0VOizNm+7o3iyOZpk+fQ/
+         iTXCyX0nBjMJHTkmpkElD/BlyDm2T1Drb2tpltlqgw2FRU2UAAbwUaNqeBvU8AWbazCj
+         lwT4TRXM+MSyl1yWcgKnwYXWyHiacgBQYha81tEFJzvLNC5eMMNVfNyhnoDbEQLPcA8b
+         0RL0LqY6Kj1Cj+BxzXlhIzIscaMhxRqQ9HYhr2yNHL6pcvOGg77TIKmHSy949n9GG7JC
+         7HJN9PvpiAJaPKbC0dHqXOZ5ZwR+uW62Ga3opVtwfVpRLflxjfqMr+xL8jHmGjC/v/7H
+         vUJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwN3HM9as4YQ9n6gNuAIF1sUZG0qmF4X+q97enADy+6wewbiO5txJ0gwqWk2jkesoh6jWKq/NbJAE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyi7nmqmWrxkMWHTbx081ubnm1nc2dOFnq0xj0O7pBahK+P79BM
+	be38AbGUZ/ZMwyUbYWV4dkvwerQUXeyol9/izPJNZ+nEENtpUbOUocOUIobK8ZxvnafGMIx88BV
+	gL5IVtkZ3yJqNNO1BcYPyRqIMk6niyz/yAVvBkl40WR9IDLyJI1nVg/fH4g==
+X-Gm-Gg: ASbGncsEns8Z1k1uMiuAnGyxu7GL6q+SteVik2aVrhc8tYtFHr2RFQL4SoO4GmPAeco
+	O/GCSsW6/1HXLfpEEXPY8Zyvx+j1pmhYX2B6Z4eG/2nN3WiHRUePtht6hw5lv6cW2XmR/t+b3GD
+	a7/vUMFWHB/TLLWtbeU4Jn+tgMoq4uHhhgsxG1+ieV3TEvc9qItiq+VHJNYN7HYGuJeg1gRIzgd
+	BxMYGsW/geTTUiEW9Xl+ddIA76v8XPiPlwM+3/AAsXlDXcN2ZjFsx9DrTUnLtoKgdAOvXnDd4oB
+	kx+GmTZFp8Uo61fFOlxb
+X-Received: by 2002:a05:6402:35d1:b0:5e0:750a:5c30 with SMTP id 4fb4d7f45d1cf-5e4a0dfc708mr1644331a12.20.1740527256952;
+        Tue, 25 Feb 2025 15:47:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGIdTNjyooRvOwtF86c7hT5C/AWZUuE2nxzDPKhqPyR/bEqM/yRWSn2G4IdfhjgLnOUUDk8gQ==
+X-Received: by 2002:a05:6402:35d1:b0:5e0:750a:5c30 with SMTP id 4fb4d7f45d1cf-5e4a0dfc708mr1644299a12.20.1740527256453;
+        Tue, 25 Feb 2025 15:47:36 -0800 (PST)
+Received: from [192.168.10.81] ([176.206.102.52])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5e460ff8629sm1891405a12.59.2025.02.25.15.47.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 15:47:35 -0800 (PST)
+Message-ID: <6475f9c7-304a-4e0b-8000-3dc5c8e718e9@redhat.com>
+Date: Wed, 26 Feb 2025 00:47:33 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] KVM: x86: Free vCPUs before freeing VM state
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Aaron Lewis <aaronlewis@google.com>, Jim Mattson <jmattson@google.com>,
+ Yan Zhao <yan.y.zhao@intel.com>,
+ Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+ Kai Huang <kai.huang@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>
+References: <20250224235542.2562848-1-seanjc@google.com>
+ <20250224235542.2562848-2-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250224235542.2562848-2-seanjc@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tEsNg2Owwm3XNIDU7gWwS4WzfWOm5EX7z09gu_e-YM0_1740527257
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4oNEms2UIOy6dhSLXf3MQHQxp5QC-fsG
-X-Proofpoint-GUID: XwTFU_1fd0Y_Q4qJBAUmVROi_e0umdsT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_05,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 impostorscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
- priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502250103
 
-On Mon, 24 Feb 2025 15:55:42 -0800
-Sean Christopherson <seanjc@google.com> wrote:
+On 2/25/25 00:55, Sean Christopherson wrote:
+> Free vCPUs before freeing any VM state, as both SVM and VMX may access
+> VM state when "freeing" a vCPU that is currently "in" L2, i.e. that needs
+> to be kicked out of nested guest mode.
+> 
+> Commit 6fcee03df6a1 ("KVM: x86: avoid loading a vCPU after .vm_destroy was
+> called") partially fixed the issue, but for unknown reasons only moved the
+> MMU unloading before VM destruction.  Complete the change, and free all
+> vCPU state prior to destroying VM state, as nVMX accesses even more state
+> than nSVM.
 
-> Remove kvm_arch_sync_events() now that x86 no longer uses it (no other
-> arch has ever used it).
+I applied this to kvm-coco-queue, I will place it in kvm/master too 
+unless you shout.
+
+Paolo
+
+> In addition to the AVIC, KVM can hit a use-after-free on MSR filters:
 > 
-> No functional change intended.
+>    kvm_msr_allowed+0x4c/0xd0
+>    __kvm_set_msr+0x12d/0x1e0
+>    kvm_set_msr+0x19/0x40
+>    load_vmcs12_host_state+0x2d8/0x6e0 [kvm_intel]
+>    nested_vmx_vmexit+0x715/0xbd0 [kvm_intel]
+>    nested_vmx_free_vcpu+0x33/0x50 [kvm_intel]
+>    vmx_free_vcpu+0x54/0xc0 [kvm_intel]
+>    kvm_arch_vcpu_destroy+0x28/0xf0
+>    kvm_vcpu_destroy+0x12/0x50
+>    kvm_arch_destroy_vm+0x12c/0x1c0
+>    kvm_put_kvm+0x263/0x3c0
+>    kvm_vm_release+0x21/0x30
 > 
+> and an upcoming fix to process injectable interrupts on nested VM-Exit
+> will access the PIC:
+> 
+>    BUG: kernel NULL pointer dereference, address: 0000000000000090
+>    #PF: supervisor read access in kernel mode
+>    #PF: error_code(0x0000) - not-present page
+>    CPU: 23 UID: 1000 PID: 2658 Comm: kvm-nx-lpage-re
+>    RIP: 0010:kvm_cpu_has_extint+0x2f/0x60 [kvm]
+>    Call Trace:
+>     <TASK>
+>     kvm_cpu_has_injectable_intr+0xe/0x60 [kvm]
+>     nested_vmx_vmexit+0x2d7/0xdf0 [kvm_intel]
+>     nested_vmx_free_vcpu+0x40/0x50 [kvm_intel]
+>     vmx_vcpu_free+0x2d/0x80 [kvm_intel]
+>     kvm_arch_vcpu_destroy+0x2d/0x130 [kvm]
+>     kvm_destroy_vcpus+0x8a/0x100 [kvm]
+>     kvm_arch_destroy_vm+0xa7/0x1d0 [kvm]
+>     kvm_destroy_vm+0x172/0x300 [kvm]
+>     kvm_vcpu_release+0x31/0x50 [kvm]
+> 
+> Inarguably, both nSVM and nVMX need to be fixed, but punt on those
+> cleanups for the moment.  Conceptually, vCPUs should be freed before VM
+> state.  Assets like the I/O APIC and PIC _must_ be allocated before vCPUs
+> are created, so it stands to reason that they must be freed _after_ vCPUs
+> are destroyed.
+> 
+> Reported-by: Aaron Lewis <aaronlewis@google.com>
+> Closes: https://lore.kernel.org/all/20240703175618.2304869-2-aaronlewis@google.com
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+> Cc: Kai Huang <kai.huang@intel.com>
+> Cc: Isaku Yamahata <isaku.yamahata@intel.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
 > ---
->  arch/arm64/include/asm/kvm_host.h     | 2 --
->  arch/loongarch/include/asm/kvm_host.h | 1 -
->  arch/mips/include/asm/kvm_host.h      | 1 -
->  arch/powerpc/include/asm/kvm_host.h   | 1 -
->  arch/riscv/include/asm/kvm_host.h     | 2 --
->  arch/s390/include/asm/kvm_host.h      | 1 -
->  arch/x86/kvm/x86.c                    | 5 -----
->  include/linux/kvm_host.h              | 1 -
->  virt/kvm/kvm_main.c                   | 1 -
->  9 files changed, 15 deletions(-)
+>   arch/x86/kvm/x86.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 7cfa024de4e3..40897bd2b4a3 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -1346,8 +1346,6 @@ static inline bool kvm_system_needs_idmapped_vectors(void)
->  	return cpus_have_final_cap(ARM64_SPECTRE_V3A);
->  }
->  
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
-> -
->  void kvm_init_host_debug_data(void);
->  void kvm_vcpu_load_debug(struct kvm_vcpu *vcpu);
->  void kvm_vcpu_put_debug(struct kvm_vcpu *vcpu);
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 590982cd986e..ab5b7001e2ff 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -320,7 +320,6 @@ static inline bool kvm_is_ifetch_fault(struct kvm_vcpu_arch *arch)
->  
->  /* Misc */
->  static inline void kvm_arch_hardware_unsetup(void) {}
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
->  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
-> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-> index f7222eb594ea..c14b10821817 100644
-> --- a/arch/mips/include/asm/kvm_host.h
-> +++ b/arch/mips/include/asm/kvm_host.h
-> @@ -886,7 +886,6 @@ extern unsigned long kvm_mips_get_ramsize(struct kvm *kvm);
->  extern int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
->  			     struct kvm_mips_interrupt *irq);
->  
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_free_memslot(struct kvm *kvm,
->  					 struct kvm_memory_slot *slot) {}
->  static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
-> diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-> index 6e1108f8fce6..2d139c807577 100644
-> --- a/arch/powerpc/include/asm/kvm_host.h
-> +++ b/arch/powerpc/include/asm/kvm_host.h
-> @@ -902,7 +902,6 @@ struct kvm_vcpu_arch {
->  #define __KVM_HAVE_ARCH_WQP
->  #define __KVM_HAVE_CREATE_DEVICE
->  
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
->  static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
->  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index cc33e35cd628..0e9c2fab6378 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -301,8 +301,6 @@ static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
->  	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
->  }
->  
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
-> -
->  #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
->  
->  void kvm_riscv_local_hfence_gvma_vmid_gpa(unsigned long vmid,
-> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-> index 9a367866cab0..424f899d8163 100644
-> --- a/arch/s390/include/asm/kvm_host.h
-> +++ b/arch/s390/include/asm/kvm_host.h
-> @@ -1056,7 +1056,6 @@ bool kvm_s390_pv_cpu_is_protected(struct kvm_vcpu *vcpu);
->  extern int kvm_s390_gisc_register(struct kvm *kvm, u32 gisc);
->  extern int kvm_s390_gisc_unregister(struct kvm *kvm, u32 gisc);
->  
-> -static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_free_memslot(struct kvm *kvm,
->  					 struct kvm_memory_slot *slot) {}
->  static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
 > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ea445e6579f1..454fd6b8f3db 100644
+> index 58b82d6fd77c..045c61cc7e54 100644
 > --- a/arch/x86/kvm/x86.c
 > +++ b/arch/x86/kvm/x86.c
-> @@ -12770,11 +12770,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->  	return ret;
->  }
->  
-> -void kvm_arch_sync_events(struct kvm *kvm)
-> -{
-> -
-> -}
-> -
->  /**
->   * __x86_set_memory_region: Setup KVM internal memory slot
->   *
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index c28a6aa1f2ed..5438a1b446a6 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1747,7 +1747,6 @@ static inline void kvm_unregister_perf_callbacks(void) {}
->  
->  int kvm_arch_init_vm(struct kvm *kvm, unsigned long type);
->  void kvm_arch_destroy_vm(struct kvm *kvm);
-> -void kvm_arch_sync_events(struct kvm *kvm);
->  
->  int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
->  
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 991e8111e88b..55153494ac70 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1271,7 +1271,6 @@ static void kvm_destroy_vm(struct kvm *kvm)
->  	kvm_destroy_pm_notifier(kvm);
->  	kvm_uevent_notify_change(KVM_EVENT_DESTROY_VM, kvm);
->  	kvm_destroy_vm_debugfs(kvm);
-> -	kvm_arch_sync_events(kvm);
->  	mutex_lock(&kvm_lock);
->  	list_del(&kvm->vm_list);
->  	mutex_unlock(&kvm_lock);
+> @@ -12890,11 +12890,11 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
+>   		mutex_unlock(&kvm->slots_lock);
+>   	}
+>   	kvm_unload_vcpu_mmus(kvm);
+> +	kvm_destroy_vcpus(kvm);
+>   	kvm_x86_call(vm_destroy)(kvm);
+>   	kvm_free_msr_filter(srcu_dereference_check(kvm->arch.msr_filter, &kvm->srcu, 1));
+>   	kvm_pic_destroy(kvm);
+>   	kvm_ioapic_destroy(kvm);
+> -	kvm_destroy_vcpus(kvm);
+>   	kvfree(rcu_dereference_check(kvm->arch.apic_map, 1));
+>   	kfree(srcu_dereference_check(kvm->arch.pmu_event_filter, &kvm->srcu, 1));
+>   	kvm_mmu_uninit_vm(kvm);
 
