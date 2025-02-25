@@ -1,31 +1,33 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C235F4C80
-	for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 09:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3A81A2391;
+	Tue, 25 Feb 2025 11:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740475476; cv=none; b=A5qxO1Ny5aUfprDgIzIEa9LSvyeWEaDQdgdzKeSsOitLG2GBcdRZ+cI/tZoFHUQ9j3z7Bkx4eVdJRfZRuyekuChB2z01PRVOPGfxYxiToIRV9fskDEJPEI6tfO3Yiuw1VZE0TZiTyh6aD4vSDRhjAQGO1gVdYpc+Maw+rPvtuWg=
+	t=1740482307; cv=none; b=it45fDCXER2FXmAUWebtlaxKeOyvS4/p24XwjGQTRfF0uAGbhAhLqC9ha3BM0AVxRWm3aP8cG1m9hdqRsJKo1mC5EbU9c7aOUE0Ay9uukG/SoeCFZ1XC5LXeoBR/6lOs1mqsSATWphEeFL8jA7dELQtiDBgCTqzWgQwJw7cnwIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740475476; c=relaxed/simple;
-	bh=n2Qf5WYaFq5+lNRpuF5nb58Lk7LHfH+cqSlkKcUmzmw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uLxoOqBekJb6MonN/vaTmxajcIGbw4ykxYg9s1x4S6QLX2BHtCiBlcnNTBKbRznyfvN5KityNtpm/Nr/BNs2RtiA4lvP4i4Yem1IpNh7A023hdK1zMn3uuyClGW9FhTtGnXZ+IQCseAleSKrxRe3h/BKnb7HSOPolKUnvNeTxpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxeXFHjL1n9vmBAA--.26377S3;
-	Tue, 25 Feb 2025 17:24:23 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxPcVEjL1nTrEnAA--.14425S2;
-	Tue, 25 Feb 2025 17:24:21 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
+	s=arc-20240116; t=1740482307; c=relaxed/simple;
+	bh=JomRQni8mtKMJrVY4O7G/UiG3MTsVhu0cW37KZeUnKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iMvtulf/9FgkLU5BddHOUs99xP1sEdO+j9mky2VRgK8vfEGXb7SxElA0XQqiH1E1SIQygyTo0BDQmnMEfIHF5414Yy3Y5nt+hpDS1AC/2NdZSxO0YpSEAEnCskuebQhXao8Siq/X8Nxh15YbT1ZfV+RfhtNH/Oqwhst4+GNHxBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91719C4CEDD;
+	Tue, 25 Feb 2025 11:18:24 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Select HAVE_VIRT_CPU_ACCOUNTING_GEN always
-Date: Tue, 25 Feb 2025 17:24:20 +0800
-Message-Id: <20250225092420.1599954-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Use polling play_dead() when resuming from hibernation
+Date: Tue, 25 Feb 2025 19:18:12 +0800
+Message-ID: <20250225111812.3065545-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,41 +35,96 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcVEjL1nTrEnAA--.14425S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Option HAVE_VIRT_CPU_ACCOUNTING_GEN is selected by default for 64bit
-system in kconfig file arch/Kconfig. There is another selection in file
-arch/loongarch/Kconfig if SMP is not selected, it brings out some
-misunderstanding for non-SMP case. Here always select option
-HAVE_VIRT_CPU_ACCOUNTING_GEN for future possible 32bit system.
+When CONFIG_RANDOM_KMALLOC_CACHES or other randomization infrastructrue
+enabled, the idle_task's stack may different between the booting kernel
+and target kernel. So when resuming from hibernation, an ACTION_BOOT_CPU
+IPI wakeup the idle instruction in arch_cpu_idle_dead() and jump to the
+interrupt handler. But since the stack pointer is changed, the interrupt
+handler cannot restore correct context.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+So rename the current arch_cpu_idle_dead() to idle_play_dead(), make it
+as the default version of play_dead(), and the new arch_cpu_idle_dead()
+call play_dead() directly. For hibernation, implement an arch-specific
+hibernate_resume_nonboot_cpu_disable() to use the polling version (idle
+instruction is replace by nop, and irq is disabled) of play_dead(), i.e.
+poll_play_dead(), to avoid IPI handler corrupting the idle_task's stack
+when resuming from hibernation.
+
+This solution is a little similar to commit 406f992e4a372dafbe3c ("x86 /
+hibernate: Use hlt_play_dead() when resuming from hibernation").
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-v1 ... v2:
-  1. Select HAVE_VIRT_CPU_ACCOUNTING_GEN always for possible 32bit system.
----
- arch/loongarch/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kernel/smp.c | 40 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 2b8bd27a852f..8d0885b165a2 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -175,7 +175,7 @@ config LOONGARCH
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_TIF_NOHZ
--	select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
-+	select HAVE_VIRT_CPU_ACCOUNTING_GEN
- 	select IRQ_FORCED_THREADING
- 	select IRQ_LOONGARCH_CPU
- 	select LOCK_MM_AND_FIND_VMA
-
-base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index fbf747447f13..308478f29278 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -19,6 +19,7 @@
+ #include <linux/smp.h>
+ #include <linux/threads.h>
+ #include <linux/export.h>
++#include <linux/suspend.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/time.h>
+ #include <linux/tracepoint.h>
+@@ -423,7 +424,7 @@ void loongson_cpu_die(unsigned int cpu)
+ 	mb();
+ }
+ 
+-void __noreturn arch_cpu_idle_dead(void)
++static void __noreturn idle_play_dead(void)
+ {
+ 	register uint64_t addr;
+ 	register void (*init_fn)(void);
+@@ -447,6 +448,43 @@ void __noreturn arch_cpu_idle_dead(void)
+ 	BUG();
+ }
+ 
++static void __noreturn poll_play_dead(void)
++{
++	register uint64_t addr;
++	register void (*init_fn)(void);
++
++	idle_task_exit();
++	__this_cpu_write(cpu_state, CPU_DEAD);
++
++	__smp_mb();
++	do {
++		__asm__ __volatile__("nop\n\t");
++		addr = iocsr_read64(LOONGARCH_IOCSR_MBUF0);
++	} while (addr == 0);
++
++	init_fn = (void *)TO_CACHE(addr);
++	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_CLEAR);
++
++	init_fn();
++	BUG();
++}
++
++static void (*play_dead)(void) = idle_play_dead;
++
++void __noreturn arch_cpu_idle_dead(void)
++{
++	play_dead();
++	BUG(); /* play_dead() doesn't return */
++}
++
++#ifdef CONFIG_HIBERNATION
++int hibernate_resume_nonboot_cpu_disable(void)
++{
++	play_dead = poll_play_dead;
++	return suspend_disable_secondary_cpus();
++}
++#endif
++
+ #endif
+ 
+ /*
 -- 
-2.39.3
+2.47.1
 
