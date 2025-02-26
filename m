@@ -1,109 +1,108 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74AE1A83E2
-	for <loongarch@lists.linux.dev>; Wed, 26 Feb 2025 02:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91EE31A3BA1
+	for <loongarch@lists.linux.dev>; Wed, 26 Feb 2025 03:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740537656; cv=none; b=RoD6X6WBldRYKAAYMuz/RMreitwKmnF1onVCJOXNVdZrD7vzOSEG22J7DreyXdnJl0eCfN1AoqKrunWQPxrhh6MS0Hhumk13rQuwwU2PKlwxkDGVq7vboImGvS7BRuqkKjRFHMZQK+mCIxj6JUelB/lubLrfV6jhZF0nbVJbgSs=
+	t=1740539070; cv=none; b=N1dTX0u+8DogiMutgHNtQhI2g5zJdQOe2wy47WCLGJXyH4xBEnTZsKbsy9xFDScuW5x4sJx46H0NW/o1Bd0QkNhmLrxidAbcPV7aPtBVpurRF3AAYOuuGzRvLvgtsKlL1HEhcLv8qM9KSgjNdq1IWeNvTvVPAjDNsRihVzoxrBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740537656; c=relaxed/simple;
-	bh=wjq1hhNmQD/Y69/cVuHxDfp8iNsL790jhspOLVSqRqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C25lopUSgqYTRXlJgsozVvBOOcLsTdXOypb6UygnKTCeUjSdtRL+45AD2mMaOul03RtcxD1OYWhuYLkRu2qcT57XrIqDEzxs+Pl31Sga1XqhOm8P/kasvA1YKjQ9myxmKonJpJkT41YfniiqVmKXZnVdnYkUTlLOGQ5RwmkzNoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IogWwoI0; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IogWwoI0"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fe848040b1so310757a91.3
-        for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 18:40:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740537654; x=1741142454; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=faw8k4TIY5A7eHVQZOGgzqUSa20esi5XC3jgrNGM418=;
-        b=IogWwoI0IdRN5XLLzGvB0y+kuyti9l0G6BsEn6sv311s3UityEEGN5Df8yV/D1ZpLJ
-         cQ6VRWZWWkbKb3aFz1aOKSIcPznqmP4bY4YQNljlEren9LWDhn3V2DQl/39IcFhK4FKd
-         6iYip2J8/RQUkroVE9a9zF9VaaRj8OuOMMDl7Vto2eXuqZGUejuOyKovsKTlMbEFPARa
-         HWZkseMaLeBXmDm6kbnU+MW9wFxSDwVaVJ1IUwJRDb9Hp+1XZrNPjDgqmxv6RuX8jZgR
-         5IcSakAVbkqweOtVgzPz0KgYK+nbXlj4dPsAnLUAoXlILxw7YYCaDmMbzwtLblVL+9f9
-         Q1FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740537654; x=1741142454;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=faw8k4TIY5A7eHVQZOGgzqUSa20esi5XC3jgrNGM418=;
-        b=dKMU2nE/eEohB2UbIvCZwebdT9cpcW5sqhdS2jzkGCoQECrlarTIeY7mptj380j9RU
-         hVc/WrWUTNoQS/oNXvXoyNAhAprtCVvO8wJEWexynQGVXFyFuIuVXrVEaseMjod0AAgI
-         49XGzVfjgzRXAdwKpKop9Y1o+MTAb+5zcydIzCo81cdr0rcC1aytqmZKxscrL/ziiG3e
-         6SLVSSfavmPsmrwUxxnfAFWTn+jmW1f9CidHaolyFtiXG6T1Mxul/Nt+ekk5oVy1fgSf
-         j/NeDf9328GC63gaD6SjG2e7YnAdtT4bEswESpyu3STNjwUv7ZMNDf4q7RXZm5w3BaTg
-         PttA==
-X-Forwarded-Encrypted: i=1; AJvYcCWii8r2D5GeBBFjZOdTvfLuNJAiMPzQdfjdoG0LLAoY53bIbsw1sJuNQNKed7KPZRZv7rdKhu140ko=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzUyFwquGKT4waRyrBN8lSoLxnnrl+GF8AqQcuykBxLAWQ8J7RB
-	joKmvBmNrEFkYoi3irDTZtCmR7OreVBA62be7gZszkXAOHawmEdxWFY7exPFJl0=
-X-Gm-Gg: ASbGncsuopsN+XxCLnTkX7eyaEtjtM+7bhSt0QEydr/Mi0UGnLo+O1rmlnPgOnZUmf8
-	9h2Z0PgjpEJHRQ2FNcREyE7GKKo/si0ZvvJBrTVg5xM4cxtJ05oj55t8Uu+HUHQZaf61CDJ/NW+
-	A1NDqUxXCrZPWUE5DX4WHJ+FdN6CzH18Y3+hCyBRWZ68y3RDTEugR+qpBLvqrY2jLwg3JEZgsMC
-	5OBCGnuJKukgjmxg1SrHouIFJt1UWiDSzq1YUBL0766dmqYuCZbGs5dJhbChKchiQec27NbXic7
-	aWYTtBPfmj+KdprbZ3dSaK37SaYB7DNDA5hvXA+afuAnTJFLtw==
-X-Google-Smtp-Source: AGHT+IGBavOro6p44pm0knw7epDm1Ms4/cRCm5nI7A9v1bvB0aFlwIUaa3TK9A89BXdQQHklrRCMwg==
-X-Received: by 2002:a17:90b:2242:b0:2ee:ee77:2263 with SMTP id 98e67ed59e1d1-2fce868c4f9mr34212880a91.7.1740537654049;
-        Tue, 25 Feb 2025 18:40:54 -0800 (PST)
-Received: from [10.68.122.90] ([63.216.146.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a000a01sm21742845ad.40.2025.02.25.18.40.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 18:40:53 -0800 (PST)
-Message-ID: <3e3ab5b0-4669-4d7a-a7bd-6f5963662757@bytedance.com>
-Date: Wed, 26 Feb 2025 10:40:42 +0800
+	s=arc-20240116; t=1740539070; c=relaxed/simple;
+	bh=WVzS0lrko+iwd9TRGf+P9gh1kuQeNV5z7+Qwtc6kmec=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d9fGT0qMpTmjs7F38a+j6V+5VCx9Qie5YmsrGuzoZ7ypquaOhpiU30sGJXuMsXkMEi1nvqtw8ROptxdRAqaIU+KTcm5Srt3NZQ8pouGsqkpXLr7olmK9wfTOByi3SLaArK5qkGSEeojXS+8zQF4VuSg0BMkj4RztDxr3GMh1hoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8CxeXG2hL5nsuqCAA--.27970S3;
+	Wed, 26 Feb 2025 11:04:22 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMCxPseyhL5nLxIpAA--.23547S2;
+	Wed, 26 Feb 2025 11:04:19 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v4 0/6] Drivers for Loongson security engine
+Date: Wed, 26 Feb 2025 11:03:52 +0800
+Message-Id: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] x86: pgtable: convert to use tlb_remove_ptdesc()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com,
- vishal.moola@gmail.com, david@redhat.com, jannh@google.com,
- hughd@google.com, willy@infradead.org, yuzhao@google.com,
- muchun.song@linux.dev, will@kernel.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, arnd@arndb.de, dave.hansen@linux.intel.com,
- rppt@kernel.org, alexghiti@rivosinc.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org, x86@kernel.org, linux-riscv@lists.infradead.org
-References: <cover.1740454179.git.zhengqi.arch@bytedance.com>
- <36ad56b7e06fa4b17fb23c4fc650e8e0d72bb3cd.1740454179.git.zhengqi.arch@bytedance.com>
- <20250225183519.91a5b75b13c0df6954c68576@linux-foundation.org>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20250225183519.91a5b75b13c0df6954c68576@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxPseyhL5nLxIpAA--.23547S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr1xKry3Aw4DGw4UGry5Jrc_yoW8Ar4DpF
+	45AayFkr4UJrZrGrn3Jry8uFyfXa4fXrW3KFW2qwn8W3sxAa48J3yakFy7Aa9rJF17JryI
+	qF93Cr4UGF1UZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
+
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in it.
+
+mfd is the baser driver, crypto and tpm are users.
+
+v4: Please look at changelog in tpm and MAINTAINERS. No changes to tpm
+    and crypto. 
+v3: Put the updates to the MAINTAINERS in a separate patch.
+v2: Removed misc driver. Added tpm driver.
+
+Qunqin Zhao (6):
+  mfd: Add support for Loongson Security Module
+  MAINTAINERS: Add entry for Loongson Security Module driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson RNG driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |  14 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_lsse.c            | 103 +++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |  10 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++++
+ include/linux/mfd/ls6000se.h           |  75 +++++
+ 13 files changed, 788 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_lsse.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+ create mode 100644 drivers/mfd/ls6000se.c
+ create mode 100644 include/linux/mfd/ls6000se.h
 
 
-
-On 2/26/25 上午10:35, Andrew Morton wrote:
-> On Tue, 25 Feb 2025 11:45:55 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
-> 
->> The x86 has already been converted to use struct ptdesc, so convert it to
->> use tlb_remove_ptdesc() instead of tlb_remove_table().
->>
-> 
-> This is dependent upon Rik's a37259732a7dc ("x86/mm: Make
-> MMU_GATHER_RCU_TABLE_FREE unconditional") from the x86 tree.  I'll add
-
-Yes.
-
-> Rik's patch to mm-unstable also and shall figure it out during the
-> merge window.
-
-Thanks!
-
+base-commit: bd315242821784e9384abae911a70d5fda9a3298
+-- 
+2.43.0
 
