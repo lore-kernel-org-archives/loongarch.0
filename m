@@ -1,101 +1,65 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC24F33F7
-	for <loongarch@lists.linux.dev>; Wed, 26 Feb 2025 00:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20626183CA6;
+	Wed, 26 Feb 2025 02:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740529655; cv=none; b=YOxD1iHLfWAMFCuVzwgys3C4hgSVzqfm54S7K5Gmwvax72hiVv+zyJA5eJV4lFsdtlbB0AMs6IAFldSfsCcjjuhPDDvt9lT9qgBdx2C3PW1P3jRXEjqs0an0XJ3csAiOD/quxP43MlQxaazlD7QE4AUu0unLALh3+M5SoT/aCGQ=
+	t=1740537321; cv=none; b=QbJ68SUFvRU3HuF08Vr3VtJfdoIvKbLu43GRXNhLiXksQ8zNtqWgGJPEM2n23hjfKKJSNqHJng8dhlCP+CkUNQvMJ/XzCSZvQP3FEnhMbINCT4eHyj4r/bxJn8TNqDDkuagqxkQus4lWnJ8xPXB5vj4bdOpI6hbzAm9NST1CVoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740529655; c=relaxed/simple;
-	bh=YFdIcmETOAJxtDEb1Ht/Nh5ABrjaWCQRix/l3XIAYQ8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=syA6tc9vzxkRkfYzg/NqVWhsJvCjPiY4l47aZbaxBwR9QPbLYpvil1BUURB0FP1J//7z5iyVWYSweLCM5hR0ysrmmZn6Hi4ylQI7AiAr8YN74vr6yhBf6XGttME5i7DJch6+Uwry9PnoLkZae00vhIKEkKW6TB9K3ACaCGnUMUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hQosHFu2; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740537321; c=relaxed/simple;
+	bh=D1D8rS483Kvk10lvdoELGqdaSPPJ8+RwRwWrcJv/f3I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CRk5uTgH6enoh6mYTEU88DEVo905Qv0x+CN8V10gPs98ILvhAGilvBQLsU7igpXSAJgXWLPSgdOZ7pRSBtvq4Z3Cur497RfPFCUsB8SQ+qxES9kB5tgBcT8oNgorDM4XNX2zg2laFGVop8SKapKBINpdud1cGHy/FKShKN4C9lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=S1gwcxb1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hQosHFu2"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc2b258e82so13296463a91.0
-        for <loongarch@lists.linux.dev>; Tue, 25 Feb 2025 16:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740529653; x=1741134453; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HAdIv23vtdyhU1Wievr5YncZEjjI/nIoxYj3wcoEoAc=;
-        b=hQosHFu2jXpepGL5Iyu28sT2esaoBnqpa99h5CzXwWQJfXw5uc5nEzk/W2CnAvPSJ7
-         8O90ClYk9xQ/2Ut3DmroAJ8ntJ+m9YALbZNev2cCUhNxcGXcHAM+DdW8I9SR8AOQfif9
-         4+vf5wSoRHLElSboL8lSO7JyOamm9LhY9yQD/Gd8TkT65ItW3q2DbLbO8vOCOF0BsfC+
-         aCDrWIdRWuVJnQk6ySihAgD9vb3R2AXT2mJ3Qe3kGBcjTpXqht+WkRhDxNMRcZCOdbtr
-         BguD4ff3W8TiNzzfxpf71+rYZDzu2N6Q9fK/YimQFVc1SOI81T8867PjCZFDCRYPe8sv
-         t8lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740529653; x=1741134453;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HAdIv23vtdyhU1Wievr5YncZEjjI/nIoxYj3wcoEoAc=;
-        b=HiiEoOZN+/8wj/HfBY/wkIjhqnt6z0t41WLc1TuvpOhyvzUDKW8ODtJ64wnH/u30qD
-         Hz2QOYyS7h9+46I/pBYqxTUbQUnD+0X2vaimV3dbNPjTufPD5DEfei+10OU2KO+bCbYW
-         3IucA+TB21g5ZmO745k3WB46MSCpZzbk8aAOshFlvC9vakis8xFWjs3XE9w6ectw/uio
-         qv3+n2dvkxZm1TTLcDAyfOhlg1mnWlwu02guBkJg2SPllLkWd49USgUrdUMRzQc5xO9y
-         ot8Xrln4k0/X2HDLnvd6JU4zum9OOws1Q0V1J+wcsA11Kt15XSDS5bVYP3yL52Qk/vyH
-         wLzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWg9eK1HfN0zalBu1Os52h7BdxCPFxQneBlHD8PpurL+YHZI0kbGwsWfQ9pyn2X/LaPYxaq9UMsu0k=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxuAI2Hq5hnzNig4l1k3PTh8KNai+WwzTqq4Z+xkCiXoqrbaApc
-	Gq5B9l8kDRd6GTeUi59Zd/reb1Pgn0njW+mAJDZfSqXmG5WFg5j9ACichZr4f8oJVcTdgEuZ550
-	vQg==
-X-Google-Smtp-Source: AGHT+IHOUZMQJO44VDHKi6ofhJ07QZ2dZ6izn0Wyr9X1ZaSMCJ5d0/qSAVcldTsRp+dWt1bBYLTGrWWvHEg=
-X-Received: from pjbsb8.prod.google.com ([2002:a17:90b:50c8:b0:2d8:8340:8e46])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5483:b0:2ee:f076:20f1
- with SMTP id 98e67ed59e1d1-2fe7e218ab9mr2765842a91.0.1740529653271; Tue, 25
- Feb 2025 16:27:33 -0800 (PST)
-Date: Tue, 25 Feb 2025 16:27:32 -0800
-In-Reply-To: <6475f9c7-304a-4e0b-8000-3dc5c8e718e9@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="S1gwcxb1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1C5C4CEDD;
+	Wed, 26 Feb 2025 02:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1740537320;
+	bh=D1D8rS483Kvk10lvdoELGqdaSPPJ8+RwRwWrcJv/f3I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S1gwcxb1U5NetK3xMsHF5vM6u60LvjvD37R2V7WH6p4gYsrCTXOx/Tm8FgtAbjivR
+	 qz+7qiIisTFHmeHWl5R9WetoFdsZhGC4DSBkZuJtQrrOYkeMmMmZLGVAL4e/QXKk4q
+	 rWdAk6qG/KIo4K2Hgo8x/4gNeZ32aVYhEb8keWT8=
+Date: Tue, 25 Feb 2025 18:35:19 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com,
+ vishal.moola@gmail.com, david@redhat.com, jannh@google.com,
+ hughd@google.com, willy@infradead.org, yuzhao@google.com,
+ muchun.song@linux.dev, will@kernel.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, arnd@arndb.de, dave.hansen@linux.intel.com,
+ rppt@kernel.org, alexghiti@rivosinc.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-um@lists.infradead.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 5/6] x86: pgtable: convert to use tlb_remove_ptdesc()
+Message-Id: <20250225183519.91a5b75b13c0df6954c68576@linux-foundation.org>
+In-Reply-To: <36ad56b7e06fa4b17fb23c4fc650e8e0d72bb3cd.1740454179.git.zhengqi.arch@bytedance.com>
+References: <cover.1740454179.git.zhengqi.arch@bytedance.com>
+	<36ad56b7e06fa4b17fb23c4fc650e8e0d72bb3cd.1740454179.git.zhengqi.arch@bytedance.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20250224235542.2562848-1-seanjc@google.com> <20250224235542.2562848-2-seanjc@google.com>
- <6475f9c7-304a-4e0b-8000-3dc5c8e718e9@redhat.com>
-Message-ID: <Z75f9GuA9NfKo37c@google.com>
-Subject: Re: [PATCH 1/7] KVM: x86: Free vCPUs before freeing VM state
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Aaron Lewis <aaronlewis@google.com>, 
-	Jim Mattson <jmattson@google.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025, Paolo Bonzini wrote:
-> On 2/25/25 00:55, Sean Christopherson wrote:
-> > Free vCPUs before freeing any VM state, as both SVM and VMX may access
-> > VM state when "freeing" a vCPU that is currently "in" L2, i.e. that needs
-> > to be kicked out of nested guest mode.
-> > 
-> > Commit 6fcee03df6a1 ("KVM: x86: avoid loading a vCPU after .vm_destroy was
-> > called") partially fixed the issue, but for unknown reasons only moved the
-> > MMU unloading before VM destruction.  Complete the change, and free all
-> > vCPU state prior to destroying VM state, as nVMX accesses even more state
-> > than nSVM.
+On Tue, 25 Feb 2025 11:45:55 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+
+> The x86 has already been converted to use struct ptdesc, so convert it to
+> use tlb_remove_ptdesc() instead of tlb_remove_table().
 > 
-> I applied this to kvm-coco-queue, I will place it in kvm/master too unless
-> you shout.
 
-Depends on what "this" is :-)
-
-My plan/hope is to land patches 1 and 2 in 6.14, i.e. in kvm/master, but the
-rest are firmly 6.15 IMO.  And based on Yan's feedback, I'm planning on adding a
-few more cleanups (though I think they're fully additive, i.e. can go on top).
+This is dependent upon Rik's a37259732a7dc ("x86/mm: Make
+MMU_GATHER_RCU_TABLE_FREE unconditional") from the x86 tree.  I'll add
+Rik's patch to mm-unstable also and shall figure it out during the
+merge window.
