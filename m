@@ -1,127 +1,130 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E3122F17B
-	for <loongarch@lists.linux.dev>; Thu, 27 Feb 2025 13:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3DD26E648;
+	Thu, 27 Feb 2025 19:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662501; cv=none; b=AOlhQb+d56wAZDls8gCQnvy4/soiSZFwzQptP5o8dNkYW9ZQm7lDDFJYpYpTIgHuK6PH8K45nqbZvw4oq8BOsDSZYHYEbu6u1bqo398RmjzRdA4aqZKQcPxtZVT7AMBlDKGhf2wQ9IBWK0jDrRRlpDFdc7NFN72Iax8otZiyZV0=
+	t=1740684003; cv=none; b=F72t70xHNjcd9gV6Jyx5L57p8/0n1ChtVehOgnPlaO36IK7gWAl6O08651jnKCbrfZwVKI1auhwfl29r4/9jslUj7kJJIUHMLq6NgGH4aQ2YDvc0SZlq3d88vnXpzCp/DH9+8EaHCa6YNNPriHFR5ZvWUfa2GfAlFbA8xlcbBQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662501; c=relaxed/simple;
-	bh=KHJL4aBjL/xfUEQ3dzlxRvMvpwyqdBYuM/AU5jprt9o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MePiNkwflNfbl5Da6OfoZsHVIzcCEd9wUa9kjJ8yHrw/P1v5tARRXrdhw6jdVWZYQ/qWFo58Hlw0Pc7Sj5ilEutOV16TJff88VxaMZTLp3MgMhh9AzuBSlz/E1ourpNGWGYU+axrDw8PR9v4QGys5XY4EZZkqc1FrRGuimNjp0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5209dad13b5so310014e0c.2
-        for <loongarch@lists.linux.dev>; Thu, 27 Feb 2025 05:21:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740662497; x=1741267297;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VZScFKf+GfAOC+cGkef77m9WTcLt48410fHxRRqxMGc=;
-        b=AQ6oJvk2KEcJ7rPJf5Db7zZcu2NdxzXxZjySAdqlNj8WDJ3D1UFka900Fgrq9CG9zD
-         /e/r0MFK6x9N+dMVtJBs2siiaP5e/jqGcm3bjbKtCM2iKn7g/F4vbMtuDac9OQajlhuy
-         C5cgba63R0oul1/YzjKg7/K6FQ5IS25Gfa+SYECTjQlKoj9W/gunCMpSJmW8B0a9nr4G
-         +Q97MRaGsx4tXcRfSWvt+kUJblc088HYcXmOq8YW2esOleWi3gth1pcIVpymQydHQGHe
-         +jm6FisrSDV7ZfWKN7RvAPE7LzRYSoWuXg5eTVJ4LuADLUvl3vx0bT3XOY71PnVrjPuV
-         ZBSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVF0qqiVQ8P74r5gPwPe1h273co86r2hHpbzziVmqbdNU/BdYkD8EhRnQys0pa7L/05l9p6GTvUKNY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwN1MQ56ohHbqyC86syzbSDQ8xP4co2gkmE9Q6Hw9IECxDcLTys
-	qd8cyNbo40VcnyMwKAZWB9EVZW1YdU9szed3OxKWbZ9zCVLvpXWiOtv9ac0G
-X-Gm-Gg: ASbGncsU/F7S1crIeGV/OaMfR9jVbZQV3SGR7slYjrnUZyVZjd+3n2CONJz/UxqGmrC
-	ROiBwEsXbHP47wDn83YB5WacH/DTSlIDdgUQF97MioNRrvjW2U6sgusYjzH12D0DsqpDx1tgIek
-	8joXPdhxiOV2Ic/CvebdXogttwXkCKSvwJkCYCmWjvdoncaqsl9WRZU4p4Ktpm7tyXZfuF3jyww
-	NF9YBtDqdFGNedka4kO/irzA8QhkasKwz8/P02uQevcTP5sxxW3JqWPomEHYmzBgSLgGSNPyW+1
-	DEFtiMcMx+kvqgrqSjEZ2+WaGLfIs+EmBHHf+HScUK78tXJYfw/1pfpT01uOukc4Pzbx
-X-Google-Smtp-Source: AGHT+IEw8DuZTcOFhWjoFyzRD20ltGOOvO+hjwc6edzf9OQq7n8z6e+4g/MPBPMhT4r8Y7NIzSSCkA==
-X-Received: by 2002:a05:6122:f8f:b0:520:6416:56f8 with SMTP id 71dfb90a1353d-5224cbcb8b0mr4117881e0c.3.1740662496934;
-        Thu, 27 Feb 2025 05:21:36 -0800 (PST)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5234bf420desm205647e0c.25.2025.02.27.05.21.35
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 05:21:35 -0800 (PST)
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5209437e773so404179e0c.3
-        for <loongarch@lists.linux.dev>; Thu, 27 Feb 2025 05:21:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUkZQr8PYaJ2p0LqbyaCC0cITM5n6Z0OTCNi7/AmQEU2gWZIM1grptlfmmLiZDgRqem0O9KpR/8I3E=@lists.linux.dev
-X-Received: by 2002:a05:6122:1d53:b0:520:51a4:b81c with SMTP id
- 71dfb90a1353d-5224ccbbe10mr3808700e0c.6.1740662495074; Thu, 27 Feb 2025
- 05:21:35 -0800 (PST)
+	s=arc-20240116; t=1740684003; c=relaxed/simple;
+	bh=9/QRe7sLuF6mdR2aq8VzjCObcNBmWE07UKQPAvkDe2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvZs/72DTxpkfsGFn/92bb/xxjZuTrqGHHeQh3gD7F0ZScYlZUuF3qof9AQQz1/z3m4MzerpLSuw71yoqIH4kH7fGsPGBLpzV4p3aE1NwM4LIsUlDSr59A14zcS7t7lAR+FhLLoaUmNwJxYUPrpKiO2sy7mRV7zJd5EqS80vaCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1R4F8n5; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1R4F8n5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740684002; x=1772220002;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9/QRe7sLuF6mdR2aq8VzjCObcNBmWE07UKQPAvkDe2M=;
+  b=g1R4F8n5AqLGSz+stq4EmCZzBn/jAzwx0wzHd/ISw7z1YtS4AqTNxHPh
+   OH8w5Ab5am9uykxS1Wa2w9YNjHJB6MVsD8tLD6qwc7eGSVpkhMiDIXTbd
+   m0CQn3eGkNLDckb3KggpgZt/hMeAflWkYDqK2vhG2U+H0J1JYHxlHxnUn
+   o0qmUNOtQ9C0Bu+1w7G4rmOJ27Gu4fAAforZRY5Q9DE0wLDmGeragO/W+
+   0u8+LXbPZUrOy7ikNG+ZBHA501eYnPBB02XOUMz0aohThbCVp86c3CWcM
+   K9CnJAwOFKklMX4aqKwTzM/y0I3bkTJfVHf9omLUC2rohm4Jf5ZK5mQSE
+   Q==;
+X-CSE-ConnectionGUID: m4qQgSx+QxGtOzfvC9o50g==
+X-CSE-MsgGUID: eKgap8SmTceBwaEj5TPnCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40838289"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="40838289"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 11:20:01 -0800
+X-CSE-ConnectionGUID: /eF76LhzRh2zzXKUwSgkvw==
+X-CSE-MsgGUID: PjrYJu1DRu+YRi9VAMtUgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="117301546"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Feb 2025 11:19:58 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnjQK-000Dvi-2H;
+	Thu, 27 Feb 2025 19:19:56 +0000
+Date: Fri, 28 Feb 2025 03:19:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huacai Chen <chenhuacai@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Use polling play_dead() when resuming from
+ hibernation
+Message-ID: <202502280356.YjzMIJ8n-lkp@intel.com>
+References: <20250225111812.3065545-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1740454179.git.zhengqi.arch@bytedance.com> <19db3e8673b67bad2f1df1ab37f1c89d99eacfea.1740454179.git.zhengqi.arch@bytedance.com>
-In-Reply-To: <19db3e8673b67bad2f1df1ab37f1c89d99eacfea.1740454179.git.zhengqi.arch@bytedance.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 27 Feb 2025 14:21:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU8ttibKCiUPxSNBpJyrtBbrt1CqLa++jq6CpJFbFCwAg@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqe6so1GjZXdkUhIIAiYHT08E9WH9vQcbiUEIVlcQBmr8vV6ha0mxzJuRo
-Message-ID: <CAMuHMdU8ttibKCiUPxSNBpJyrtBbrt1CqLa++jq6CpJFbFCwAg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] mm: pgtable: convert some architectures to use tlb_remove_ptdesc()
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com, 
-	vishal.moola@gmail.com, david@redhat.com, jannh@google.com, hughd@google.com, 
-	willy@infradead.org, yuzhao@google.com, muchun.song@linux.dev, 
-	akpm@linux-foundation.org, will@kernel.org, aneesh.kumar@kernel.org, 
-	npiggin@gmail.com, arnd@arndb.de, dave.hansen@linux.intel.com, 
-	rppt@kernel.org, alexghiti@rivosinc.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-um@lists.infradead.org, x86@kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225111812.3065545-1-chenhuacai@loongson.cn>
 
-Hi Qi,
+Hi Huacai,
 
-On Tue, 25 Feb 2025 at 04:46, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
-> Now, the nine architectures of csky, hexagon, loongarch, m68k, mips,
-> nios2, openrisc, sh and um do not select CONFIG_MMU_GATHER_RCU_TABLE_FREE,
-> and just call pagetable_dtor() + tlb_remove_page_ptdesc() (the wrapper of
-> tlb_remove_page()). This is the same as the implementation of
-> tlb_remove_{ptdesc|table}() under !CONFIG_MMU_GATHER_TABLE_FREE, so
-> convert these architectures to use tlb_remove_ptdesc().
->
-> The ultimate goal is to make the architecture only use tlb_remove_ptdesc()
-> or tlb_remove_table() for page table pages.
->
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+kernel test robot noticed the following build warnings:
 
-Thanks for your patch!
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.14-rc4 next-20250227]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->  arch/m68k/include/asm/sun3_pgalloc.h | 3 +--
+url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Use-polling-play_dead-when-resuming-from-hibernation/20250225-192024
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250225111812.3065545-1-chenhuacai%40loongson.cn
+patch subject: [PATCH] LoongArch: Use polling play_dead() when resuming from hibernation
+config: loongarch-randconfig-001-20250227 (https://download.01.org/0day-ci/archive/20250228/202502280356.YjzMIJ8n-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280356.YjzMIJ8n-lkp@intel.com/reproduce)
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502280356.YjzMIJ8n-lkp@intel.com/
 
-> --- a/arch/m68k/include/asm/sun3_pgalloc.h
-> +++ b/arch/m68k/include/asm/sun3_pgalloc.h
-> @@ -19,8 +19,7 @@ extern const char bad_pmd_string[];
->
->  #define __pte_free_tlb(tlb, pte, addr)                         \
->  do {                                                           \
-> -       pagetable_dtor(page_ptdesc(pte));                       \
-> -       tlb_remove_page_ptdesc((tlb), page_ptdesc(pte));        \
-> +       tlb_remove_ptdesc((tlb), page_ptdesc(pte));             \
->  } while (0)
->
+All warnings (new ones prefixed by >>):
 
-With only a single statement remaining, you can remove the do { ... }
-while construct, too.
+>> arch/loongarch/kernel/smp.c:451:24: warning: 'poll_play_dead' defined but not used [-Wunused-function]
+     451 | static void __noreturn poll_play_dead(void)
+         |                        ^~~~~~~~~~~~~~
 
-Gr{oetje,eeting}s,
 
-                        Geert
+vim +/poll_play_dead +451 arch/loongarch/kernel/smp.c
+
+   450	
+ > 451	static void __noreturn poll_play_dead(void)
+   452	{
+   453		register uint64_t addr;
+   454		register void (*init_fn)(void);
+   455	
+   456		idle_task_exit();
+   457		__this_cpu_write(cpu_state, CPU_DEAD);
+   458	
+   459		__smp_mb();
+   460		do {
+   461			__asm__ __volatile__("nop\n\t");
+   462			addr = iocsr_read64(LOONGARCH_IOCSR_MBUF0);
+   463		} while (addr == 0);
+   464	
+   465		init_fn = (void *)TO_CACHE(addr);
+   466		iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_CLEAR);
+   467	
+   468		init_fn();
+   469		BUG();
+   470	}
+   471	
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
