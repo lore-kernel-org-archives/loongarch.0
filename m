@@ -1,143 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B91276D12;
-	Fri, 28 Feb 2025 07:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4334825E44C
+	for <loongarch@lists.linux.dev>; Fri, 28 Feb 2025 10:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740727155; cv=none; b=Tq2Bg0Fl7ArZD+XtA5rUPmnD2J6Ifns2HJBDeMyRZ88RXRBdTYb4bQOLVgO/3aI8ClhMUBxYwQHifG4DnVxp4RpGvw2Qw1QcazmavZJkzLRoTrVNk+FpJARrq3ezVljkl/zYWXob3dWQYzG8YtGXf3fsWn6GM+B6ixQ3pi0QdpI=
+	t=1740737626; cv=none; b=ZSb4MX4l5Fpi3ePGPINeir46PJLlRw9Oyn6bX7pNBmmSCvKVWrZ1H/F01nmEGsgwEzvU3HFwdkQoC+wRSCipVUIVgbHOoITQc+83onKSDOZx/8P+ZJeN+NatEydLGQI98SJPB4oPJMZDiZIqgN9r1jq/XCxwtffQysA7F9Rogig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740727155; c=relaxed/simple;
-	bh=6owDAMkr5e1jMDchDZzOuBuh5wYNshJ/TkcS+/opak4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B8YQ0ZCGDh3uG6JmJ8H3DsOjoyXzXdW7X00PGlJ52DSXeg/4FmdV5tbFcSOdtyn/bt+qkiD0syP/9vnpfcjt06S9q2BE4TLUd0NthkPqTwhXV1QgzxI0eg3XC4ikF1V9op7odg/HYm98gC8H2TAbDtCM78pY7dTjDKY68471Oq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62661C4CED6;
-	Fri, 28 Feb 2025 07:19:11 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Erpeng Xu <xuerpeng@uniontech.com>,
-	Yuli Wang <wangyuli@uniontech.com>
-Subject: [PATCH V2] LoongArch: Use polling play_dead() when resuming from hibernation
-Date: Fri, 28 Feb 2025 15:18:48 +0800
-Message-ID: <20250228071848.1763966-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1740737626; c=relaxed/simple;
+	bh=LX3SAwyCFVjK8BLSUJrXqGAcdTvg0eAP7yXzGFnL0jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J8Oy1bySMOtQehdbgM4OUobdY0ffBvKaFY5Dx+vfN4oqogOey9ys7/bnCtMx8ZQHcgILPew1HTJmTs2M4PILTkGVl6jMwc/bhJohRw0BbscRokvJpr6A1xD9DlBbC9RmuMMOJu7Qsz8TZcNvASHhuFycK+izQmnoa3usEZ6Y15g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9DDB144453;
+	Fri, 28 Feb 2025 10:13:33 +0000 (UTC)
+Message-ID: <608d690a-54ad-4c1e-bf4b-b21c81792cfd@ghiti.fr>
+Date: Fri, 28 Feb 2025 11:13:32 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] riscv/bug: Add ARCH_WARN_ASM macro for BUG/WARN
+ asm code sharing with Rust
+Content-Language: en-US
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Cc: x86@kernel.org, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn,
+ yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu
+References: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+ <20250213135759.190006-3-fujita.tomonori@gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250213135759.190006-3-fujita.tomonori@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemgegrvggsmeguieefugemvdgskeehmegvtgdtugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemgegrvggsmeguieefugemvdgskeehmegvtgdtugdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemgegrvggsmeguieefugemvdgskeehmegvtgdtuggnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepfedvpdhrtghpthhtohepfhhujhhithgrrdhtohhmohhnohhrihesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdqfhhorhdql
+ hhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvg
+X-GND-Sasl: alex@ghiti.fr
 
-When CONFIG_RANDOM_KMALLOC_CACHES or other randomization infrastructrue
-enabled, the idle_task's stack may different between the booting kernel
-and target kernel. So when resuming from hibernation, an ACTION_BOOT_CPU
-IPI wakeup the idle instruction in arch_cpu_idle_dead() and jump to the
-interrupt handler. But since the stack pointer is changed, the interrupt
-handler cannot restore correct context.
+Hi FUJITA,
 
-So rename the current arch_cpu_idle_dead() to idle_play_dead(), make it
-as the default version of play_dead(), and the new arch_cpu_idle_dead()
-call play_dead() directly. For hibernation, implement an arch-specific
-hibernate_resume_nonboot_cpu_disable() to use the polling version (idle
-instruction is replace by nop, and irq is disabled) of play_dead(), i.e.
-poll_play_dead(), to avoid IPI handler corrupting the idle_task's stack
-when resuming from hibernation.
+On 13/02/2025 14:57, FUJITA Tomonori wrote:
+> Add new ARCH_WARN_ASM macro for BUG/WARN assembly code sharing with
+> Rust to avoid the duplication.
+>
+> No functional changes.
+>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> ---
+>   arch/riscv/include/asm/bug.h | 37 +++++++++++++++++++++---------------
+>   1 file changed, 22 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+> index 1aaea81fb141..6ab13b56feb0 100644
+> --- a/arch/riscv/include/asm/bug.h
+> +++ b/arch/riscv/include/asm/bug.h
+> @@ -31,40 +31,45 @@ typedef u32 bug_insn_t;
+>   
+>   #ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
+>   #define __BUG_ENTRY_ADDR	RISCV_INT " 1b - ."
+> -#define __BUG_ENTRY_FILE	RISCV_INT " %0 - ."
+> +#define __BUG_ENTRY_FILE(file)	RISCV_INT " " file " - ."
+>   #else
+>   #define __BUG_ENTRY_ADDR	RISCV_PTR " 1b"
+> -#define __BUG_ENTRY_FILE	RISCV_PTR " %0"
+> +#define __BUG_ENTRY_FILE(file)	RISCV_PTR " " file
+>   #endif
+>   
+>   #ifdef CONFIG_DEBUG_BUGVERBOSE
+> -#define __BUG_ENTRY			\
+> +#define __BUG_ENTRY(file, line, flags)	\
+>   	__BUG_ENTRY_ADDR "\n\t"		\
+> -	__BUG_ENTRY_FILE "\n\t"		\
+> -	RISCV_SHORT " %1\n\t"		\
+> -	RISCV_SHORT " %2"
+> +	__BUG_ENTRY_FILE(file) "\n\t"	\
+> +	RISCV_SHORT " " line "\n\t"	\
+> +	RISCV_SHORT " " flags
+>   #else
+> -#define __BUG_ENTRY			\
+> -	__BUG_ENTRY_ADDR "\n\t"		\
+> -	RISCV_SHORT " %2"
+> +#define __BUG_ENTRY(file, line, flags)		\
+> +	__BUG_ENTRY_ADDR "\n\t"			\
+> +	RISCV_SHORT " " flags
+>   #endif
+>   
+>   #ifdef CONFIG_GENERIC_BUG
+> -#define __BUG_FLAGS(flags)					\
+> -do {								\
+> -	__asm__ __volatile__ (					\
+> +
+> +#define ARCH_WARN_ASM(file, line, flags, size)			\
+>   		"1:\n\t"					\
+>   			"ebreak\n"				\
+>   			".pushsection __bug_table,\"aw\"\n\t"	\
+>   		"2:\n\t"					\
+> -			__BUG_ENTRY "\n\t"			\
+> -			".org 2b + %3\n\t"                      \
+> -			".popsection"				\
+> +		__BUG_ENTRY(file, line, flags) "\n\t"		\
+> +			".org 2b + " size "\n\t"                \
+> +			".popsection\n"				\
+> +
+> +#define __BUG_FLAGS(flags)					\
+> +do {								\
+> +	__asm__ __volatile__ (					\
+> +		ARCH_WARN_ASM("%0", "%1", "%2", "%3")		\
+>   		:						\
+>   		: "i" (__FILE__), "i" (__LINE__),		\
+>   		  "i" (flags),					\
+>   		  "i" (sizeof(struct bug_entry)));              \
+>   } while (0)
+> +
+>   #else /* CONFIG_GENERIC_BUG */
+>   #define __BUG_FLAGS(flags) do {					\
+>   	__asm__ __volatile__ ("ebreak\n");			\
+> @@ -78,6 +83,8 @@ do {								\
+>   
+>   #define __WARN_FLAGS(flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
+>   
+> +#define ARCH_WARN_REACHABLE
+> +
+>   #define HAVE_ARCH_BUG
+>   
+>   #include <asm-generic/bug.h>
 
-This solution is a little similar to commit 406f992e4a372dafbe3c ("x86 /
-hibernate: Use hlt_play_dead() when resuming from hibernation").
 
-Cc: stable@vger.kernel.org
-Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Fix build for !HIBERNATION and restore to idle_play_dead() if fails.
+This looks good to me so:
 
- arch/loongarch/kernel/smp.c | 47 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+Acked-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index fbf747447f13..4b24589c0b56 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -19,6 +19,7 @@
- #include <linux/smp.h>
- #include <linux/threads.h>
- #include <linux/export.h>
-+#include <linux/suspend.h>
- #include <linux/syscore_ops.h>
- #include <linux/time.h>
- #include <linux/tracepoint.h>
-@@ -423,7 +424,7 @@ void loongson_cpu_die(unsigned int cpu)
- 	mb();
- }
- 
--void __noreturn arch_cpu_idle_dead(void)
-+static void __noreturn idle_play_dead(void)
- {
- 	register uint64_t addr;
- 	register void (*init_fn)(void);
-@@ -447,6 +448,50 @@ void __noreturn arch_cpu_idle_dead(void)
- 	BUG();
- }
- 
-+#ifdef CONFIG_HIBERNATION
-+static void __noreturn poll_play_dead(void)
-+{
-+	register uint64_t addr;
-+	register void (*init_fn)(void);
-+
-+	idle_task_exit();
-+	__this_cpu_write(cpu_state, CPU_DEAD);
-+
-+	__smp_mb();
-+	do {
-+		__asm__ __volatile__("nop\n\t");
-+		addr = iocsr_read64(LOONGARCH_IOCSR_MBUF0);
-+	} while (addr == 0);
-+
-+	init_fn = (void *)TO_CACHE(addr);
-+	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_CLEAR);
-+
-+	init_fn();
-+	BUG();
-+}
-+#endif
-+
-+static void (*play_dead)(void) = idle_play_dead;
-+
-+void __noreturn arch_cpu_idle_dead(void)
-+{
-+	play_dead();
-+	BUG(); /* play_dead() doesn't return */
-+}
-+
-+#ifdef CONFIG_HIBERNATION
-+int hibernate_resume_nonboot_cpu_disable(void)
-+{
-+	int ret;
-+
-+	play_dead = poll_play_dead;
-+	ret = suspend_disable_secondary_cpus();
-+	play_dead = idle_play_dead;
-+
-+	return ret;
-+}
-+#endif
-+
- #endif
- 
- /*
--- 
-2.47.1
+Thanks,
+
+Alex
 
