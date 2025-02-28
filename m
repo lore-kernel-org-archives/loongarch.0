@@ -1,203 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412421CC78;
-	Fri, 28 Feb 2025 13:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB38A224CC
+	for <loongarch@lists.linux.dev>; Fri, 28 Feb 2025 14:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740750969; cv=none; b=i3ZA7u5qGFXFqImrXcwZhgkRdygoahWewRCp3kmvRLRa0a/AfyrzBuXb0dYoWE1OoDe2z7jcglcGDs5BLtZnDlVxMJIyHya3eVQQKc4rugXPjCf6GhWorEIsUwqQxxHDJFBbcizIR3L+8DYTFM6iBbfFUSng/N00/faENalvPsc=
+	t=1740752005; cv=none; b=rO+2XwcXjm/ywlcTTOe9kPkPileoFxTf2b2Z33HG5c8q1tPgB72HfjBGnhHvbvJMlcBA4IXl66cXNZJHV3yhBQ4Z4xMOHnZDuZjcmUTKciOIBzJS00dRN1Qtgts8kShznzw8KQ8ZaVmXiLRZKOM0aSPGjDQHjXnMIE8a9uu4ls4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740750969; c=relaxed/simple;
-	bh=1IRowyiOxlD3aJXg1mzDgOLSKDvuTpO5rwTj3G6RUt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDUf7dgdsLvApRgi4adzflRd2ttTE6DtiDWHFNcAd0Ga7cM60nVOcQ6MDf0PTBNPgScIpK3dQXHHX1iwjbD405+PCgQEj7ajwRgDAV7iaSnRrAD9FF+659PXNIzCt+zL8aW7KG/9vIB9JS16QJHRw7Kd4CfAXTKe5KEXtLtzJow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnH7vM73; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740752005; c=relaxed/simple;
+	bh=VVIDcMnoH7hPbhberNOLlP1qoZPeOV5SLRdCSsFHrj4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TibHz3HpcIS/RDWPSV1ctBggf8Mw4W3mjMUhygmgcprrPiot5d6E0sTNGuT3WefqjI9nAdlhWpiht3EqhVMqrxqK7ekvcfGDbM8oLxB9LkWidfhg3gtT3KjwzxgHm5nPKLvCOxHJfy+YfLyDwhHlEaa0KkSp9VzCNjx/HpAvTGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPGtgMHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnH7vM73"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EA8C4CEE2;
-	Fri, 28 Feb 2025 13:55:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPGtgMHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D32AC4CEE8
+	for <loongarch@lists.linux.dev>; Fri, 28 Feb 2025 14:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740750968;
-	bh=1IRowyiOxlD3aJXg1mzDgOLSKDvuTpO5rwTj3G6RUt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NnH7vM73Zjpr8yZOH5QgfgQiSw0pmBWJwyV6oH4lnUx6KcNNLgBYYJulfb/SOKw4i
-	 Zkm3msW661FidfCoi/ar4s+MKouda8UuOKQJVozVEXvAvSibmI7k9WxUPFNYkImrpm
-	 nMJqrfmWsggXRbny/dSvcLd6O/w5mYI7U35gabE5OMAnP119A+B9Z9gcS1udwYaPDT
-	 haSivt5w98I2lC6hpiCjEl3HQRzpovHqj3M+6AQ/d9NOf1QW57gfgkHOWFS4Y8Iwt4
-	 dVExS2M99VzccMzDPnxcN2Fshmin/V/WHUi6c8awMapcLOMc4QlOWwdQMyM3HZ2OR4
-	 n0uklzJCb+JTQ==
-Date: Fri, 28 Feb 2025 15:55:38 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>, Dev Jain <dev.jain@arm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v7 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <Z8HAWu4zQFeg19KR@kernel.org>
-References: <20241023162711.2579610-1-rppt@kernel.org>
- <20241023162711.2579610-8-rppt@kernel.org>
- <16863478-2195-435e-a899-559df097bc59@arm.com>
+	s=k20201202; t=1740752005;
+	bh=VVIDcMnoH7hPbhberNOLlP1qoZPeOV5SLRdCSsFHrj4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YPGtgMHVnFo6x/h0FPQLBRnMNZB6FnypZxZR3uZI1gWQ6UNlGANox19PF8DYna/O0
+	 qobyT3f4YyyjwvTdh72X+kWeXt1sNVR7WVo6qakTEuRHLI1LGURjtO+plFbW5sZspv
+	 9MvVh7j9WxEjv9uHwN9HC0SCokPuu+m9KXhEecjsubF2d60EO28GzJKjWJjjlRc6Ps
+	 6/INyLqxvwpOjwY4YSWqd83+3m+JcJX5Bl5jDxC11DEpUeEfN30BqrpSIkRNf9cnLS
+	 uIvEUfzNSFwmrrq15l1TMcPZW6oCfUv7cITz01NGRBEQ+f173t+DRILYGiD+vEdx35
+	 bwJS3EPjuo33Q==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaecf50578eso413522166b.2
+        for <loongarch@lists.linux.dev>; Fri, 28 Feb 2025 06:13:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWuZIwK7AFsz2I3cn09jIWKBFHgWy9ENmY9mUYL7IF3uBGZlH1O8eSDV0cRH+XCOGzbwjxJ1AEnuMA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwNBT27JQcfcE8XUH4dMwSLbk3PUabDcuIlarysjbpvk8PRx72x
+	VLwTN+SdipKOWhdJOGczNTGKTWku1qM89tDJ/Zd8uCqaqvxYJ32iRbOKOOWVgF3XJA9nJWjO0RT
+	byvRngsPnL/K0K4nAy3UOw4kUo+s=
+X-Google-Smtp-Source: AGHT+IHQV0/AoJbVv8/kktbul8lIZMTIcX8dgu+kgyS+lgEw8A+QnIjYp0ZnMf504B6etDxi6Jc/pi7Nqua0hYQXf8c=
+X-Received: by 2002:a17:907:7f91:b0:abf:24c7:f81b with SMTP id
+ a640c23a62f3a-abf25f8db0amr324317566b.6.1740752003900; Fri, 28 Feb 2025
+ 06:13:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16863478-2195-435e-a899-559df097bc59@arm.com>
+References: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 28 Feb 2025 22:13:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xyRrF1_=E7rLM3dHeYAEBdMufYQvgoxAq6+d6s5U4Eg@mail.gmail.com>
+X-Gm-Features: AQ5f1JrCZ9bfAhFSbtUzVcSFF_xizdCX_Qw-twqvCYIPSVnkRJ_jehWs1iBzR1U
+Message-ID: <CAAhV-H5xyRrF1_=E7rLM3dHeYAEBdMufYQvgoxAq6+d6s5U4Eg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Drivers for Loongson security engine
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ryan,
+Hi, Qunqin,
 
-On Thu, Feb 27, 2025 at 11:13:29AM +0000, Ryan Roberts wrote:
-> Hi Mike,
-> 
-> Drive by review comments below...
-> 
-> 
-> On 23/10/2024 17:27, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > Using large pages to map text areas reduces iTLB pressure and improves
-> > performance.
-> > 
-> > Extend execmem_alloc() with an ability to use huge pages with ROX
-> > permissions as a cache for smaller allocations.
-> > 
-> > To populate the cache, a writable large page is allocated from vmalloc with
-> > VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
-> > ROX.
-> > 
-> > The direct map alias of that large page is exculded from the direct map.
-> > 
-> > Portions of that large page are handed out to execmem_alloc() callers
-> > without any changes to the permissions.
-> > 
-> > When the memory is freed with execmem_free() it is invalidated again so
-> > that it won't contain stale instructions.
-> > 
-> > An architecture has to implement execmem_fill_trapping_insns() callback
-> > and select ARCH_HAS_EXECMEM_ROX configuration option to be able to use
-> > the ROX cache.
-> > 
-> > The cache is enabled on per-range basis when an architecture sets
-> > EXECMEM_ROX_CACHE flag in definition of an execmem_range.
-> > 
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> > Tested-by: kdevops <kdevops@lists.linux.dev>
-> > ---
-> 
-> [...]
-> 
-> > +
-> > +static int execmem_cache_populate(struct execmem_range *range, size_t size)
-> > +{
-> > +	unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
-> > +	unsigned long start, end;
-> > +	struct vm_struct *vm;
-> > +	size_t alloc_size;
-> > +	int err = -ENOMEM;
-> > +	void *p;
-> > +
-> > +	alloc_size = round_up(size, PMD_SIZE);
-> > +	p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> 
-> Shouldn't this be passing PAGE_KERNEL_ROX? Otherwise I don't see how the
-> allocated memory is ROX? I don't see any call below where you change the permission.
+On Wed, Feb 26, 2025 at 11:04=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.c=
+n> wrote:
+>
+> Loongson security engine supports random number generation, hash,
+> symmetric encryption and asymmetric encryption. Based on these
+> encryption functions, TPM2 have been implemented in it.
+>
+> mfd is the baser driver, crypto and tpm are users.
+Loongson SE should not strongly bound to LS6000, so the naming can be impro=
+ved:
 
-The memory is allocated RW, filled with invalid instructions, unammped in
-vmalloc space, removed from the direct map and then mapped as ROX in
-vmalloc address space.
- 
-> Given the range has the pgprot in it, you could just drop passing the pgprot
-> explicitly here and have execmem_vmalloc() use range->pgprot directly?
+MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,  ls6000se-rng.c ->
+loongson-rng.c
+TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
 
-Here range->prprot and the prot passed to vmalloc are different.
- 
-> Thanks,
-> Ryan
-> 
-> > +	if (!p)
-> > +		return err;
-> > +
-> > +	vm = find_vm_area(p);
-> > +	if (!vm)
-> > +		goto err_free_mem;
-> > +
-> > +	/* fill memory with instructions that will trap */
-> > +	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
-> > +
-> > +	start = (unsigned long)p;
-> > +	end = start + alloc_size;
-> > +
-> > +	vunmap_range(start, end);
-> > +
-> > +	err = execmem_set_direct_map_valid(vm, false);
-> > +	if (err)
-> > +		goto err_free_mem;
-> > +
-> > +	err = vmap_pages_range_noflush(start, end, range->pgprot, vm->pages,
-> > +				       PMD_SHIFT);
-> > +	if (err)
-> > +		goto err_free_mem;
-> > +
-> > +	err = execmem_cache_add(p, alloc_size);
-> > +	if (err)
-> > +		goto err_free_mem;
-> > +
-> > +	return 0;
-> > +
-> > +err_free_mem:
-> > +	vfree(p);
-> > +	return err;
-> > +}
-> 
-> [...]
-> 
 
--- 
-Sincerely yours,
-Mike.
+Huacai
+
+>
+> v4: Please look at changelog in tpm and MAINTAINERS. No changes to tpm
+>     and crypto.
+> v3: Put the updates to the MAINTAINERS in a separate patch.
+> v2: Removed misc driver. Added tpm driver.
+>
+> Qunqin Zhao (6):
+>   mfd: Add support for Loongson Security Module
+>   MAINTAINERS: Add entry for Loongson Security Module driver
+>   crypto: loongson - add Loongson RNG driver support
+>   MAINTAINERS: Add entry for Loongson RNG driver
+>   tpm: Add a driver for Loongson TPM device
+>   MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
+>
+>  MAINTAINERS                            |  14 +
+>  drivers/char/tpm/Kconfig               |   9 +
+>  drivers/char/tpm/Makefile              |   1 +
+>  drivers/char/tpm/tpm_lsse.c            | 103 +++++++
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   6 +
+>  drivers/crypto/loongson/Makefile       |   2 +
+>  drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+>  drivers/mfd/Kconfig                    |  10 +
+>  drivers/mfd/Makefile                   |   2 +
+>  drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++++
+>  include/linux/mfd/ls6000se.h           |  75 +++++
+>  13 files changed, 788 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_lsse.c
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+>  create mode 100644 drivers/mfd/ls6000se.c
+>  create mode 100644 include/linux/mfd/ls6000se.h
+>
+>
+> base-commit: bd315242821784e9384abae911a70d5fda9a3298
+> --
+> 2.43.0
+>
+>
