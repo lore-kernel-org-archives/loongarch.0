@@ -1,894 +1,594 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CAB1F1906
-	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 10:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90B1158D8B
+	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 11:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740996947; cv=none; b=RhuIcygzjLb0eX8ve9EauKC05xRYvO1q5CvRRgqZRseGwpo41v1P2T4TA69ma8f5dfE2MMyAekebz1O+f1MNRGbjVVfw/aI7Nls+zziKdVN2xRTlyKvu4MswEWU+k8oVwy1Nmc2r5Y5MiWE/g+aqnGGJd5Bw2t3yuqFxCqmH/Mo=
+	t=1741000814; cv=none; b=Pz5YufRGmjJT5lie5oBUGQthZ6POqmXK3R89wQLobIBFoi1E9EVWWqtA2L9wnRoFZWuO+KIe3eH9sjiOdqxPqclfZPgJQITRVOWLUcFO3VTI3XfzuwMmk6K3kqVzTMSEKzUSNLYTUv8TZs5DQJ8/fyoTuc82xWCLbIHKZxIiL8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740996947; c=relaxed/simple;
-	bh=cYgyBvI7t2reOVFZV3bdIZoKFHwec9DizLKovWZuRQA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qFl6c5XpCgF83qNnkzZ9h+6NVAHm+OwDolYiznphZ2fLGVfVXjzG9ow/EbRW7ErFKLTim9X0YyTi5/Er4TH6fpneyJdH6ct4PyO+oHNHo+bH99EdF1LP69gV1zu1PsfRZJNurKD9OPtbSHFUAyDclRXtVceb3Rtlvjg5ZRV40TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8BxJHBOgcVnQROJAA--.37466S3;
-	Mon, 03 Mar 2025 18:15:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMCxLcVIgcVn0pYzAA--.57593S4;
-	Mon, 03 Mar 2025 18:15:41 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
-	peterz@infradead.org,
-	wangliupu@loongson.cn,
-	lvjianmin@loongson.cn,
-	maobibo@loongson.cn,
-	siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-Date: Mon,  3 Mar 2025 18:15:33 +0800
-Message-Id: <20250303101533.31462-3-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250303101533.31462-1-zhangtianyang@loongson.cn>
-References: <20250303101533.31462-1-zhangtianyang@loongson.cn>
+	s=arc-20240116; t=1741000814; c=relaxed/simple;
+	bh=QKOwJg6BolnauL8LATVVlEllg6JFT7aKk9SSrVmeErQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PMfko/9sGNFJSSvahe0dmc17QnMTJrN+aNV09/DEHrh+JO2L/1ryJVq30FDNvHp5SPHTNyvAKq/bCRDoNPDPCsYLZar2CMCZ1WU1/EJHtlm67/LTR79oB364Fw6HZ5M1vKsCJR2kbjaoJXwq75A5PK6UV4K79IN6RrNVrrYMX7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id C753972C90D;
+	Mon,  3 Mar 2025 14:20:09 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id AB4E07CCB3A; Mon,  3 Mar 2025 13:20:09 +0200 (IST)
+Date: Mon, 3 Mar 2025 13:20:09 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Helge Deller <deller@gmx.de>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Dinh Nguyen <dinguyen@kernel.org>,
+	Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	strace-devel@lists.strace.io, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
+Message-ID: <20250303112009.GC24170@strace.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcVIgcVn0pYzAA--.57593S4
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfWr17KF4DZFWrKFW7urW8Xwc_yoW5JrW7Ao
-	WfJFs3G34rWr18CrW5Ka17tFyxZ3yrGr4rAw1fuFZ7Z3ZFvr45KrW7G3yavFy2gF1vqFsx
-	Aay0gwn3GFWxtr93l-sFpf9Il3svdjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYW7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303111910.GA24170@strace.io>
 
-The main function of the Redirected interrupt controller is to manage the
-redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+This function is going to be needed on all HAVE_ARCH_TRACEHOOK
+architectures to implement PTRACE_SET_SYSCALL_INFO API.
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+This partially reverts commit 7962c2eddbfe ("arch: remove unused
+function syscall_set_arguments()") by reusing some of old
+syscall_set_arguments() implementations.
+
+Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Acked-by: Helge Deller <deller@gmx.de> # parisc
+Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
 ---
- arch/loongarch/include/asm/cpu-features.h |   1 +
- arch/loongarch/include/asm/cpu.h          |   2 +
- arch/loongarch/include/asm/loongarch.h    |   7 +
- arch/loongarch/kernel/cpu-probe.c         |   2 +
- drivers/irqchip/Makefile                  |   2 +-
- drivers/irqchip/irq-loongarch-avec.c      |  24 +-
- drivers/irqchip/irq-loongarch-ir.c        | 576 ++++++++++++++++++++++
- drivers/irqchip/irq-loongson.h            |  12 +
- include/linux/cpuhotplug.h                |   1 +
- 9 files changed, 612 insertions(+), 15 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+ arch/arc/include/asm/syscall.h        | 14 +++++++++++
+ arch/arm/include/asm/syscall.h        | 13 ++++++++++
+ arch/arm64/include/asm/syscall.h      | 13 ++++++++++
+ arch/csky/include/asm/syscall.h       | 13 ++++++++++
+ arch/hexagon/include/asm/syscall.h    |  7 ++++++
+ arch/loongarch/include/asm/syscall.h  |  8 ++++++
+ arch/mips/include/asm/syscall.h       | 28 +++++++++++++++++++++
+ arch/nios2/include/asm/syscall.h      | 11 ++++++++
+ arch/openrisc/include/asm/syscall.h   |  7 ++++++
+ arch/parisc/include/asm/syscall.h     | 12 +++++++++
+ arch/powerpc/include/asm/syscall.h    | 10 ++++++++
+ arch/riscv/include/asm/syscall.h      |  9 +++++++
+ arch/s390/include/asm/syscall.h       |  9 +++++++
+ arch/sh/include/asm/syscall_32.h      | 12 +++++++++
+ arch/sparc/include/asm/syscall.h      | 10 ++++++++
+ arch/um/include/asm/syscall-generic.h | 14 +++++++++++
+ arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
+ arch/xtensa/include/asm/syscall.h     | 11 ++++++++
+ include/asm-generic/syscall.h         | 16 ++++++++++++
+ 19 files changed, 253 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
-index fc83bb32f9f0..03f7e93e81e0 100644
---- a/arch/loongarch/include/asm/cpu-features.h
-+++ b/arch/loongarch/include/asm/cpu-features.h
-@@ -68,5 +68,6 @@
- #define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
- #define cpu_has_lspw		cpu_opt(LOONGARCH_CPU_LSPW)
- #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
-+#define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
- 
- #endif /* __ASM_CPU_FEATURES_H */
-diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
-index 98cf4d7b4b0a..33cd96e569d8 100644
---- a/arch/loongarch/include/asm/cpu.h
-+++ b/arch/loongarch/include/asm/cpu.h
-@@ -102,6 +102,7 @@ enum cpu_type_enum {
- #define CPU_FEATURE_PTW			27	/* CPU has hardware page table walker */
- #define CPU_FEATURE_LSPW		28	/* CPU has LSPW (lddir/ldpte instructions) */
- #define CPU_FEATURE_AVECINT		29	/* CPU has AVEC interrupt */
-+#define CPU_FEATURE_REDIRECTINT		30      /* CPU has interrupt remmap */
- 
- #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
- #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
-@@ -133,5 +134,6 @@ enum cpu_type_enum {
- #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
- #define LOONGARCH_CPU_LSPW		BIT_ULL(CPU_FEATURE_LSPW)
- #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
-+#define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
- 
- #endif /* _ASM_CPU_H */
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 52651aa0e583..3a27a5f6e460 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1130,6 +1130,7 @@
- #define  IOCSRF_FLATMODE		BIT_ULL(10)
- #define  IOCSRF_VM			BIT_ULL(11)
- #define  IOCSRF_AVEC			BIT_ULL(15)
-+#define  IOCSRF_REDIRECTINT		BIT_ULL(16)
- 
- #define LOONGARCH_IOCSR_VENDOR		0x10
- 
-@@ -1142,6 +1143,7 @@
- #define  IOCSR_MISC_FUNC_TIMER_RESET	BIT_ULL(21)
- #define  IOCSR_MISC_FUNC_EXT_IOI_EN	BIT_ULL(48)
- #define  IOCSR_MISC_FUNC_AVEC_EN	BIT_ULL(51)
-+#define  IOCSR_MISC_FUNC_REDIRECT_EN	IOCSR_MISC_FUNC_AVEC_EN
- 
- #define LOONGARCH_IOCSR_CPUTEMP		0x428
- 
-@@ -1189,6 +1191,11 @@
- 
- #define LOONGARCH_IOCSR_EXTIOI_NODEMAP_BASE	0x14a0
- #define LOONGARCH_IOCSR_EXTIOI_IPMAP_BASE	0x14c0
-+#define LOONGARCH_IOCSR_REDIRECT_CFG		0x15e0
-+#define LOONGARCH_IOCSR_REDIRECT_TBR		0x15e8  /* IRT BASE REG*/
-+#define LOONGARCH_IOCSR_REDIRECT_CQB		0x15f0  /* IRT CACHE QUEUE BASE */
-+#define LOONGARCH_IOCSR_REDIRECT_CQH		0x15f8  /* IRT_CACHE_QUEUE_HEAD 32bit */
-+#define LOONGARCH_IOCSR_REDIRECT_CQT		0x15fc  /* IRT_CACHE_QUEUE_TAIL 32bit */
- #define LOONGARCH_IOCSR_EXTIOI_EN_BASE		0x1600
- #define LOONGARCH_IOCSR_EXTIOI_BOUNCE_BASE	0x1680
- #define LOONGARCH_IOCSR_EXTIOI_ISR_BASE		0x1800
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index fedaa67cde41..543474fd1399 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -289,6 +289,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
- 		c->options |= LOONGARCH_CPU_EIODECODE;
- 	if (config & IOCSRF_AVEC)
- 		c->options |= LOONGARCH_CPU_AVECINT;
-+	if (config & IOCSRF_REDIRECTINT)
-+		c->options |= LOONGARCH_CPU_REDIRECTINT;
- 	if (config & IOCSRF_VM)
- 		c->options |= LOONGARCH_CPU_HYPERVISOR;
- }
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 25e9ad29b8c4..5dd7d6b151d9 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -113,7 +113,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index 80e55955a29f..101bae6f981c 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -24,7 +24,6 @@
- #define VECTORS_PER_REG		64
- #define IRR_VECTOR_MASK		0xffUL
- #define IRR_INVALID_MASK	0x80000000UL
--#define AVEC_MSG_OFFSET		0x100000
- 
- #ifdef CONFIG_SMP
- struct pending_list {
-@@ -47,15 +46,6 @@ struct avecintc_chip {
- 
- static struct avecintc_chip loongarch_avec;
- 
--struct avecintc_data {
--	struct list_head	entry;
--	unsigned int		cpu;
--	unsigned int		vec;
--	unsigned int		prev_cpu;
--	unsigned int		prev_vec;
--	unsigned int		moving;
--};
--
- static inline void avecintc_enable(void)
- {
- 	u64 value;
-@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
- 	INIT_LIST_HEAD(&plist->head);
- }
- 
--static void avecintc_sync(struct avecintc_data *adata)
-+void avecintc_sync(struct avecintc_data *adata)
- {
- 	struct pending_list *plist;
- 
-@@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 			return -EBUSY;
- 
- 		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
--			return 0;
-+			return IRQ_SET_MASK_OK_DONE;
- 
- 		cpumask_and(&intersect_mask, dest, cpu_online_mask);
- 
-@@ -121,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
+diff --git a/arch/arc/include/asm/syscall.h b/arch/arc/include/asm/syscall.h
+index 9709256e31c8..89c1e1736356 100644
+--- a/arch/arc/include/asm/syscall.h
++++ b/arch/arc/include/asm/syscall.h
+@@ -67,6 +67,20 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
  	}
- 
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -136,7 +127,8 @@ static int avecintc_cpu_online(unsigned int cpu)
- 
- 	guard(raw_spinlock)(&loongarch_avec.lock);
- 
--	avecintc_enable();
-+	if (!cpu_has_redirectint)
-+		avecintc_enable();
- 
- 	irq_matrix_online(loongarch_avec.vector_matrix);
- 
-@@ -242,6 +234,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
- 		d = this_cpu_read(irq_map[vector]);
- 		if (d) {
- 			generic_handle_irq_desc(d);
-+
- 		} else {
- 			spurious_interrupt();
- 			pr_warn("Unexpected IRQ occurs on CPU#%d [vector %ld]\n", smp_processor_id(), vector);
-@@ -412,6 +405,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 
- static inline int __init acpi_cascade_irqdomain_init(void)
- {
-+	if (cpu_has_redirectint)
-+		return loongarch_irq_redirect_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
  }
  
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..d3c664d6f98e
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,576 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Loongson Technologies, Inc.
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned long *args)
++{
++	unsigned long *inside_ptregs = &regs->r0;
++	unsigned int n = 6;
++	unsigned int i = 0;
++
++	while (n--) {
++		*inside_ptregs = args[i++];
++		inside_ptregs--;
++	}
++}
++
+ static inline int
+ syscall_get_arch(struct task_struct *task)
+ {
+diff --git a/arch/arm/include/asm/syscall.h b/arch/arm/include/asm/syscall.h
+index fe4326d938c1..21927fa0ae2b 100644
+--- a/arch/arm/include/asm/syscall.h
++++ b/arch/arm/include/asm/syscall.h
+@@ -80,6 +80,19 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->ARM_r0 + 1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->ARM_r0, args, 6 * sizeof(args[0]));
++	/*
++	 * Also copy the first argument into ARM_ORIG_r0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->ARM_ORIG_r0 = regs->ARM_r0;
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	/* ARM tasks don't change audit architectures on the fly. */
+diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
+index ab8e14b96f68..76020b66286b 100644
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -73,6 +73,19 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->regs[1], 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->regs[0], args, 6 * sizeof(args[0]));
++	/*
++	 * Also copy the first argument into orig_x0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->orig_x0 = regs->regs[0];
++}
++
+ /*
+  * We don't care about endianness (__AUDIT_ARCH_LE bit) here because
+  * AArch64 has the same system calls both on little- and big- endian.
+diff --git a/arch/csky/include/asm/syscall.h b/arch/csky/include/asm/syscall.h
+index 0de5734950bf..717f44b4d26f 100644
+--- a/arch/csky/include/asm/syscall.h
++++ b/arch/csky/include/asm/syscall.h
+@@ -59,6 +59,19 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
++{
++	memcpy(&regs->a0, args, 6 * sizeof(regs->a0));
++	/*
++	 * Also copy the first argument into orig_a0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->orig_a0 = regs->a0;
++}
++
+ static inline int
+ syscall_get_arch(struct task_struct *task)
+ {
+diff --git a/arch/hexagon/include/asm/syscall.h b/arch/hexagon/include/asm/syscall.h
+index 951ca0ed8376..1024a6548d78 100644
+--- a/arch/hexagon/include/asm/syscall.h
++++ b/arch/hexagon/include/asm/syscall.h
+@@ -33,6 +33,13 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &(&regs->r00)[0], 6 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	memcpy(&(&regs->r00)[0], args, 6 * sizeof(args[0]));
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
+index e286dc58476e..ff415b3c0a8e 100644
+--- a/arch/loongarch/include/asm/syscall.h
++++ b/arch/loongarch/include/asm/syscall.h
+@@ -61,6 +61,14 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	regs->orig_a0 = args[0];
++	memcpy(&regs->regs[5], &args[1], 5 * sizeof(long));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_LOONGARCH64;
+diff --git a/arch/mips/include/asm/syscall.h b/arch/mips/include/asm/syscall.h
+index 056aa1b713e2..f1926ce30d4b 100644
+--- a/arch/mips/include/asm/syscall.h
++++ b/arch/mips/include/asm/syscall.h
+@@ -74,6 +74,23 @@ static inline void mips_get_syscall_arg(unsigned long *arg,
+ #endif
+ }
+ 
++static inline void mips_set_syscall_arg(unsigned long *arg,
++	struct task_struct *task, struct pt_regs *regs, unsigned int n)
++{
++#ifdef CONFIG_32BIT
++	switch (n) {
++	case 0: case 1: case 2: case 3:
++		regs->regs[4 + n] = *arg;
++		return;
++	case 4: case 5: case 6: case 7:
++		*arg = regs->args[n] = *arg;
++		return;
++	}
++#else
++	regs->regs[4 + n] = *arg;
++#endif
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+@@ -120,6 +137,17 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 		mips_get_syscall_arg(args++, task, regs, i++);
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	unsigned int i = 0;
++	unsigned int n = 6;
++
++	while (n--)
++		mips_set_syscall_arg(args++, task, regs, i++);
++}
++
+ extern const unsigned long sys_call_table[];
+ extern const unsigned long sys32_call_table[];
+ extern const unsigned long sysn32_call_table[];
+diff --git a/arch/nios2/include/asm/syscall.h b/arch/nios2/include/asm/syscall.h
+index fff52205fb65..526449edd768 100644
+--- a/arch/nios2/include/asm/syscall.h
++++ b/arch/nios2/include/asm/syscall.h
+@@ -58,6 +58,17 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	*args   = regs->r9;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++	struct pt_regs *regs, const unsigned long *args)
++{
++	regs->r4 = *args++;
++	regs->r5 = *args++;
++	regs->r6 = *args++;
++	regs->r7 = *args++;
++	regs->r8 = *args++;
++	regs->r9 = *args;
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_NIOS2;
+diff --git a/arch/openrisc/include/asm/syscall.h b/arch/openrisc/include/asm/syscall.h
+index 903ed882bdec..e6383be2a195 100644
+--- a/arch/openrisc/include/asm/syscall.h
++++ b/arch/openrisc/include/asm/syscall.h
+@@ -57,6 +57,13 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 	memcpy(args, &regs->gpr[3], 6 * sizeof(args[0]));
+ }
+ 
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
++{
++	memcpy(&regs->gpr[3], args, 6 * sizeof(args[0]));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_OPENRISC;
+diff --git a/arch/parisc/include/asm/syscall.h b/arch/parisc/include/asm/syscall.h
+index 00b127a5e09b..b146d0ae4c77 100644
+--- a/arch/parisc/include/asm/syscall.h
++++ b/arch/parisc/include/asm/syscall.h
+@@ -29,6 +29,18 @@ static inline void syscall_get_arguments(struct task_struct *tsk,
+ 	args[0] = regs->gr[26];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *tsk,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	regs->gr[21] = args[5];
++	regs->gr[22] = args[4];
++	regs->gr[23] = args[3];
++	regs->gr[24] = args[2];
++	regs->gr[25] = args[1];
++	regs->gr[26] = args[0];
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
+index 422d7735ace6..521f279e6b33 100644
+--- a/arch/powerpc/include/asm/syscall.h
++++ b/arch/powerpc/include/asm/syscall.h
+@@ -114,6 +114,16 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->gpr[3], args, 6 * sizeof(args[0]));
++
++	/* Also copy the first argument into orig_gpr3 */
++	regs->orig_gpr3 = args[0];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	if (is_tsk_32bit_task(task))
+diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+index 121fff429dce..8d389ba995c8 100644
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->orig_a0 = args[0];
++	args++;
++	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #ifdef CONFIG_64BIT
+diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+index 27e3d804b311..0e3296a32e6a 100644
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -78,6 +78,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[0] = regs->orig_gpr2 & mask;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->orig_gpr2 = args[0];
++	for (int n = 1; n < 6; n++)
++		regs->gprs[2 + n] = args[n];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #ifdef CONFIG_COMPAT
+diff --git a/arch/sh/include/asm/syscall_32.h b/arch/sh/include/asm/syscall_32.h
+index d87738eebe30..cb51a7528384 100644
+--- a/arch/sh/include/asm/syscall_32.h
++++ b/arch/sh/include/asm/syscall_32.h
+@@ -57,6 +57,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[0] = regs->regs[4];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->regs[1] = args[5];
++	regs->regs[0] = args[4];
++	regs->regs[7] = args[3];
++	regs->regs[6] = args[2];
++	regs->regs[5] = args[1];
++	regs->regs[4] = args[0];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	int arch = AUDIT_ARCH_SH;
+diff --git a/arch/sparc/include/asm/syscall.h b/arch/sparc/include/asm/syscall.h
+index 20c109ac8cc9..62a5a78804c4 100644
+--- a/arch/sparc/include/asm/syscall.h
++++ b/arch/sparc/include/asm/syscall.h
+@@ -117,6 +117,16 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	unsigned int i;
++
++	for (i = 0; i < 6; i++)
++		regs->u_regs[UREG_I0 + i] = args[i];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #if defined(CONFIG_SPARC64) && defined(CONFIG_COMPAT)
+diff --git a/arch/um/include/asm/syscall-generic.h b/arch/um/include/asm/syscall-generic.h
+index 172b74143c4b..2984feb9d576 100644
+--- a/arch/um/include/asm/syscall-generic.h
++++ b/arch/um/include/asm/syscall-generic.h
+@@ -62,6 +62,20 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	*args   = UPT_SYSCALL_ARG6(r);
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	struct uml_pt_regs *r = &regs->regs;
++
++	UPT_SYSCALL_ARG1(r) = *args++;
++	UPT_SYSCALL_ARG2(r) = *args++;
++	UPT_SYSCALL_ARG3(r) = *args++;
++	UPT_SYSCALL_ARG4(r) = *args++;
++	UPT_SYSCALL_ARG5(r) = *args++;
++	UPT_SYSCALL_ARG6(r) = *args;
++}
++
+ /* See arch/x86/um/asm/syscall.h for syscall_get_arch() definition. */
+ 
+ #endif	/* __UM_SYSCALL_GENERIC_H */
+diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
+index 7c488ff0c764..b9c249dd9e3d 100644
+--- a/arch/x86/include/asm/syscall.h
++++ b/arch/x86/include/asm/syscall.h
+@@ -90,6 +90,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[5] = regs->bp;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->bx = args[0];
++	regs->cx = args[1];
++	regs->dx = args[2];
++	regs->si = args[3];
++	regs->di = args[4];
++	regs->bp = args[5];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_I386;
+@@ -121,6 +133,30 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++# ifdef CONFIG_IA32_EMULATION
++	if (task->thread_info.status & TS_COMPAT) {
++		regs->bx = *args++;
++		regs->cx = *args++;
++		regs->dx = *args++;
++		regs->si = *args++;
++		regs->di = *args++;
++		regs->bp = *args;
++	} else
++# endif
++	{
++		regs->di = *args++;
++		regs->si = *args++;
++		regs->dx = *args++;
++		regs->r10 = *args++;
++		regs->r8 = *args++;
++		regs->r9 = *args;
++	}
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
+diff --git a/arch/xtensa/include/asm/syscall.h b/arch/xtensa/include/asm/syscall.h
+index 5ee974bf8330..f9a671cbf933 100644
+--- a/arch/xtensa/include/asm/syscall.h
++++ b/arch/xtensa/include/asm/syscall.h
+@@ -68,6 +68,17 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 		args[i] = regs->areg[reg[i]];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	static const unsigned int reg[] = XTENSA_SYSCALL_ARGUMENT_REGS;
++	unsigned int i;
++
++	for (i = 0; i < 6; ++i)
++		regs->areg[reg[i]] = args[i];
++}
++
+ asmlinkage long xtensa_rt_sigreturn(void);
+ asmlinkage long xtensa_shmat(int, char __user *, int);
+ asmlinkage long xtensa_fadvise64_64(int, int,
+diff --git a/include/asm-generic/syscall.h b/include/asm-generic/syscall.h
+index 182b039ce5fa..292b412f4e9a 100644
+--- a/include/asm-generic/syscall.h
++++ b/include/asm-generic/syscall.h
+@@ -117,6 +117,22 @@ void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+ void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 			   unsigned long *args);
+ 
++/**
++ * syscall_set_arguments - change system call parameter value
++ * @task:	task of interest, must be in system call entry tracing
++ * @regs:	task_pt_regs() of @task
++ * @args:	array of argument values to store
++ *
++ * Changes 6 arguments to the system call.
++ * The first argument gets value @args[0], and so on.
++ *
++ * It's only valid to call this when @task is stopped for tracing on
++ * entry to a system call, due to %SYSCALL_WORK_SYSCALL_TRACE or
++ * %SYSCALL_WORK_SYSCALL_AUDIT.
 + */
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/spinlock.h>
-+#include <linux/msi.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+#include "irq-msi-lib.h"
-+
-+#define IRD_ENTRIES			65536
-+
-+/* redirect entry size 128bits */
-+#if (defined(CONFIG_PAGE_SIZE_4KB))
-+#define IRD_PAGE_ORDER			8
-+#elif (defined(CONFIG_PAGE_SIZE_16KB))
-+#define IRD_PAGE_ORDER			6
-+#endif
-+
-+/* irt cache invalid queue */
-+#define	INVALID_QUEUE_SIZE		4096
-+
-+#if (defined(CONFIG_PAGE_SIZE_4KB))
-+#define INVALID_QUEUE_PAGE_ORDER	4
-+#elif (defined(CONFIG_PAGE_SIZE_16KB))
-+#define INVALID_QUEUE_PAGE_ORDER	2
-+#endif
-+
-+#define GPID_ADDR_MASK			0x3ffffffffffULL
-+#define GPID_ADDR_SHIFT			6
-+
-+#define CQB_SIZE_SHIFT			0
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_SHIFT			12
-+#define CQB_ADDR_MASK			(0xfffffffffULL)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct irq_domain *redirect_domain;
-+struct redirect_entry {
-+	struct  {
-+		__u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	} lo;
-+	__u64 hi;
-+};
-+
-+struct redirect_gpid {
-+	u64	pir[4];      /* Pending interrupt requested */
-+	u8	en	: 1, /* doorbell */
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+} __aligned(64);
-+
-+struct irde_inv_cmd {
-+	union {
-+		__u64 cmd_info;
-+		struct {
-+			__u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		} index;
-+	};
-+	__u64 notice_addr;
-+};
-+
-+struct redirect_item {
-+	int index;
-+	struct redirect_entry *entry;
-+	struct redirect_gpid *gpid;
-+	struct redirect_table *table;
-+};
-+
-+struct redirect_table {
-+	int node;
-+	struct redirect_entry *table;
-+	unsigned long	*bitmap;
-+	unsigned int	nr_ird;
-+	struct page	*page;
-+	raw_spinlock_t	lock;
-+};
-+
-+struct redirect_queue {
-+	int node;
-+	u64 base;
-+	u32 max_size;
-+	int head;
-+	int tail;
-+	struct page *page;
-+	raw_spinlock_t	lock;
-+};
-+
-+struct la_irde_desc {
-+	struct redirect_table ird_table;
-+	struct redirect_queue inv_queue;
-+};
-+
-+struct smp_invalid_arg {
-+	struct redirect_queue *queue;
-+	struct irde_inv_cmd *cmd;
-+};
-+
-+static struct la_irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+
-+static inline void redirect_enable(int node)
-+{
-+	u64 value;
-+
-+	if (redirect_domain) {
-+		value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-+		value |= IOCSR_MISC_FUNC_REDIRECT_EN;
-+		iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-+	}
-+}
-+
-+static inline bool invalid_queue_is_full(int node_id, u32 *tail)
-+{
-+	u32 head;
-+
-+	head = iocsr_read32(LOONGARCH_IOCSR_REDIRECT_CQH);
-+	*tail = iocsr_read32(LOONGARCH_IOCSR_REDIRECT_CQT);
-+
-+	return !!(head == ((*tail + 1) % INVALID_QUEUE_SIZE));
-+}
-+
-+static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
-+{
-+	struct irde_inv_cmd *inv_addr;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&rqueue->lock);
-+
-+	while (invalid_queue_is_full(rqueue->node, &tail))
-+		cpu_relax();
-+
-+	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
-+	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
-+	tail = (tail + 1) % INVALID_QUEUE_SIZE;
-+
-+	wmb();
-+
-+	iocsr_write32(tail, LOONGARCH_IOCSR_REDIRECT_CQT);
-+}
-+
-+static void smp_call_invalid_enqueue(void *arg)
-+{
-+	struct smp_invalid_arg *s_arg = (struct smp_invalid_arg *)arg;
-+
-+	invalid_enqueue(s_arg->queue, s_arg->cmd);
-+}
-+
-+static void irde_invlid_entry_node(struct redirect_item *item)
-+{
-+	struct redirect_queue *rqueue;
-+	struct smp_invalid_arg arg;
-+	struct irde_inv_cmd cmd;
-+	volatile u64 raddr = 0;
-+	int node = item->table->node, cpu;
-+
-+	rqueue = &(irde_descs[node].inv_queue);
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	if (cpu_to_node(smp_processor_id()) == node)
-+		invalid_enqueue(rqueue, &cmd);
-+	else {
-+		for_each_cpu(cpu, cpumask_of_node(node)) {
-+			if (cpu_online(cpu))
-+				break;
-+		}
-+		arg.queue = rqueue;
-+		arg.cmd = &cmd;
-+		smp_call_function_single(cpu, smp_call_invalid_enqueue, &arg, 0);
-+	}
-+
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(struct redirect_item *item, struct redirect_table *ird_table)
-+{
-+	int index;
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
-+	if (index > IRD_ENTRIES) {
-+		pr_err("No redirect entry to use\n");
-+		return -ENOMEM;
-+	}
-+
-+	__set_bit(index, ird_table->bitmap);
-+
-+	item->index = index;
-+	item->entry = &ird_table->table[index];
-+	item->table = ird_table;
-+
-+	return 0;
-+}
-+
-+static int redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table;
-+	struct redirect_entry *entry;
-+	unsigned long flags;
-+
-+	ird_table = item->table;
-+
-+	entry = item->entry;
-+	memset(entry, 0, sizeof(struct redirect_entry));
-+
-+	raw_spin_lock_irqsave(&ird_table->lock, flags);
-+	bitmap_release_region(ird_table->bitmap, item->index, 0);
-+	raw_spin_unlock_irqrestore(&ird_table->lock, flags);
-+
-+	kfree(item->gpid);
-+
-+	irde_invlid_entry_node(item);
-+
-+	return 0;
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item, struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item->entry;
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((long)item->gpid >> GPID_ADDR_SHIFT) & (GPID_ADDR_MASK);
-+	entry->lo.vector = 0xff;
-+	wmb();
-+}
-+
-+static int loongarch_redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	struct avecintc_data *adata;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE)
-+		return IRQ_SET_MASK_OK;
-+	else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+
-+	adata = irq_data_get_avec_data(data);
-+
-+	redirect_domain_prepare_entry(item, adata);
-+
-+	irde_invlid_entry_node(item);
-+
-+	avecintc_sync(adata);
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void loongarch_redirect_compose_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item;
-+
-+	item = irq_data_get_irq_chip_data(d);
-+	msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 0xffff) << 4));
-+	msg->address_hi = 0x0;
-+	msg->data = 0x0;
-+}
-+
-+static inline void loongarch_redirect_ack_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void loongarch_redirect_unmask_irq(struct irq_data *d)
-+{
-+}
-+
-+static inline void loongarch_redirect_mask_irq(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name = "redirect",
-+	.irq_ack		= loongarch_redirect_ack_irq,
-+	.irq_mask		= loongarch_redirect_mask_irq,
-+	.irq_unmask		= loongarch_redirect_unmask_irq,
-+	.irq_set_affinity	= loongarch_redirect_set_affinity,
-+	.irq_compose_msi_msg	= loongarch_redirect_compose_msg,
-+};
-+
-+static void loongarch_irq_redirect_free_resources(struct irq_domain *domain,
-+						unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *irq_data;
-+	struct redirect_item *item;
-+
-+	for (int i = 0; i < nr_irqs; i++) {
-+		irq_data = irq_domain_get_irq_data(domain, virq  + i);
-+		if (irq_data && irq_data->chip_data) {
-+			item = irq_data->chip_data;
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int loongarch_irq_redirect_alloc(struct irq_domain *domain,
-+					unsigned int virq, unsigned int nr_irqs,
-+					 void *arg)
-+{
-+	struct redirect_table *ird_table;
-+	struct avecintc_data *avec_data;
-+	struct irq_data *irq_data;
-+	int ret, i, node;
-+
-+	node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
-+	ird_table = &irde_descs[node].ird_table;
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		avec_data = irq_data_get_avec_data(irq_data);
-+		ret = redirect_table_alloc(item, ird_table);
-+		if (ret) {
-+			pr_err("Alloc redirect table entry failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+		redirect_domain_prepare_entry(item, avec_data);
-+	}
-+	return 0;
-+
-+out_free_resources:
-+	loongarch_irq_redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -EINVAL;
-+}
-+
-+static void loongarch_irq_redirect_free(struct irq_domain *domain,
-+				     unsigned int virq, unsigned int nr_irqs)
-+{
-+	loongarch_irq_redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops loongarch_redirect_domain_ops = {
-+	.alloc = loongarch_irq_redirect_alloc,
-+	.free = loongarch_irq_redirect_free,
-+	.select	= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(int node)
-+{
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+	struct page *pages;
-+
-+	pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] Invalid Queue alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	rqueue->page = pages;
-+	rqueue->base = (u64)page_address(pages);
-+	rqueue->max_size = INVALID_QUEUE_SIZE;
-+	rqueue->head = 0;
-+	rqueue->tail = 0;
-+	rqueue->node = node;
-+	raw_spin_lock_init(&rqueue->lock);
-+
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
-+				(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
-+	return 0;
-+}
-+
-+static int redirect_table_init(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	struct page *pages;
-+	unsigned long *bitmap;
-+
-+	pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-+	if (!pages) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->page = pages;
-+	ird_table->table = page_address(pages);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+	ird_table->nr_ird = IRD_ENTRIES;
-+	ird_table->node = node;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
-+	if (redirect_queue_init(node))
-+		return -EINVAL;
-+
-+	iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+
-+	return 0;
-+}
-+
-+static void redirect_table_fini(int node)
-+{
-+	struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-+	struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-+
-+	if (ird_table->page) {
-+		__free_pages(ird_table->page, IRD_PAGE_ORDER);
-+		ird_table->table = NULL;
-+		ird_table->page = NULL;
-+	}
-+
-+	if (ird_table->page) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (rqueue->page) {
-+		__free_pages(rqueue->page, INVALID_QUEUE_PAGE_ORDER);
-+		rqueue->page = NULL;
-+		rqueue->base = 0;
-+	}
-+
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_CQB);
-+	iocsr_write64(0, LOONGARCH_IOCSR_REDIRECT_TBR);
-+}
-+
-+static int redirect_cpu_online(unsigned int cpu)
-+{
-+	int ret, node = cpu_to_node(cpu);
-+
-+	if (cpu != cpumask_first(cpumask_of_node(node)))
-+		return 0;
-+
-+	ret = redirect_table_init(node);
-+	if (ret) {
-+		redirect_table_fini(node);
-+		return -EINVAL;
-+	}
-+
-+	redirect_enable(node);
-+	return 0;
-+}
-+
-+#if defined(CONFIG_ACPI)
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-+		const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init loongarch_irq_redirect_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct irq_domain *domain;
-+	int ret;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+			&loongarch_redirect_domain_ops, irde_descs);
-+	if (!domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+	redirect_domain = domain;
-+
-+	ret = redirect_table_init(0);
-+	if (ret)
-+		goto out_free_table;
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_free_table;
-+	}
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_REDIRECT_STARTING,
-+				  "irqchip/loongarch/redirect:starting",
-+				  redirect_cpu_online, NULL);
-+
-+	pr_info("loongarch irq redirect modules init succeeded\n");
-+	redirect_enable(0);
-+	return 0;
-+
-+out_free_table:
-+	redirect_table_fini(0);
-+	irq_domain_remove(redirect_domain);
-+	redirect_domain = NULL;
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return -EINVAL;
-+}
-+#endif
-diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
-index 11fa138d1f44..f29ab8ec368e 100644
---- a/drivers/irqchip/irq-loongson.h
-+++ b/drivers/irqchip/irq-loongson.h
-@@ -5,6 +5,15 @@
- 
- #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
-+#define AVEC_MSG_OFFSET		0x100000
-+struct avecintc_data {
-+	struct list_head        entry;
-+	unsigned int            cpu;
-+	unsigned int            vec;
-+	unsigned int            prev_cpu;
-+	unsigned int            prev_vec;
-+	unsigned int            moving;
-+};
- 
- int find_pch_pic(u32 gsi);
- 
-@@ -24,4 +33,7 @@ int pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
- int pch_msi_acpi_init_avec(struct irq_domain *parent);
- 
-+int loongarch_irq_redirect_init(struct irq_domain *parent);
-+
-+void avecintc_sync(struct avecintc_data *adata);
- #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 6cc5e484547c..2fd5531fa378 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -146,6 +146,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_IRQ_EIOINTC_STARTING,
- 	CPUHP_AP_IRQ_AVECINTC_STARTING,
-+	CPUHP_AP_IRQ_REDIRECT_STARTING,
- 	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_IRQ_THEAD_ACLINT_SSWI_STARTING,
- 	CPUHP_AP_IRQ_RISCV_IMSIC_STARTING,
++void syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++			   const unsigned long *args);
++
+ /**
+  * syscall_get_arch - return the AUDIT_ARCH for the current system call
+  * @task:	task of interest, must be blocked
 -- 
-2.43.0
-
+ldv
