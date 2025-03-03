@@ -1,34 +1,45 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A0C1F03D9
-	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 09:11:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919851EB187
+	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 10:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740993083; cv=none; b=PXOFtH+jaeuHGP8ME9o0JdogU2lfEfazPTECxlbkVEB+Zdi5KvU9iXljGb02wzd5Yt9RDY0kOjvxBSZQJeBpkhsRHHYz6sGdIALkDQGlZT29xtbNfyRLIwgPvHMcQmPowLak+kwD6XEVmpNUB24VFv9tCnmPg5v75mUEj33ZTGw=
+	t=1740996942; cv=none; b=aUcPr7gqZOqqEBFAN40PlcMw7AvVEGyK4wkE0Rx2Eddz7D0E4lkzMCDeQYr8w/dJPEQwIRa049JzG21mdyFyLkFdvDc+0quWflBkqR1FNq54s/4XLamsc4huUNV0TH+a47RMGqjqPUYppq/s97Uc+AugoJSyqLUZUmcvidvJjdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740993083; c=relaxed/simple;
-	bh=3P7asazvVhA6Z+2Oqdc1BRq4108S/dF7oNeQJkxp/Z8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F0kpyChD0u59+zaMMTQDDAWvGQAlpmZd9p+ulGrII1pZr1tfT9MZF/8uI3WAaR+42OJW/nityPCJddB8IYIWYwuXqWncxvFJCcH5lPvNNIqESBewGQmeaTsoX1qkYlSye7JQfdSVIZcRHGKhJR5ZIA3eY2Dus1spbknDIAkfkBk=
+	s=arc-20240116; t=1740996942; c=relaxed/simple;
+	bh=NwNLeeftCAosTh1XBqMN2QGCBdQLzeL/+hRuhGMchm4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OfXEjjOuBPCEAeWgLvdFZz9fbIf8jqML0QB+xV3yA1TFQu7S6Pre8GBRKTwpmLuHF9BF5LCfTcyVlrxT4kE/dGJmQ1djVE7Yo8QyPS5Dop/CKXW0dmkjNgEPgMKcKxvbQdIF0rxpYJ5cKz+ysalsDK74bhxcx6s/ADNMtAVdBLA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axjms2csVn6wiJAA--.37236S3;
-	Mon, 03 Mar 2025 17:11:18 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxDcUycsVni4AzAA--.57137S2;
-	Mon, 03 Mar 2025 17:11:15 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8AxjmtJgcVnLROJAA--.37302S3;
+	Mon, 03 Mar 2025 18:15:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMCxLcVIgcVn0pYzAA--.57593S2;
+	Mon, 03 Mar 2025 18:15:36 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	corbet@lwn.net,
+	alexs@kernel.org,
+	si.yanteng@linux.dev,
+	tglx@linutronix.de,
+	jiaxun.yang@flygoat.com,
+	peterz@infradead.org,
+	wangliupu@loongson.cn,
+	lvjianmin@loongson.cn,
+	maobibo@loongson.cn,
+	siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn,
+	yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Xianglai Li <lixianglai@loongson.cn>
-Subject: [PATCH] LoongArch: KVM: Reload guest CSR registers after S4
-Date: Mon,  3 Mar 2025 17:11:14 +0800
-Message-Id: <20250303091114.1511496-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH 0/2] Loongarch irq-redirect supprot
+Date: Mon,  3 Mar 2025 18:15:31 +0800
+Message-Id: <20250303101533.31462-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,72 +47,48 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxDcUycsVni4AzAA--.57137S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowMCxLcVIgcVn0pYzAA--.57593S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jry8KrW5Aw1DGFW8KFykJFc_yoWDJrc_u3
+	WSq397GrWxWayxJayIvr1fXryjyF40gFnY9Fs0qF4fXa4Fyw15Jr47Z345Zr4jkFyqqFZ5
+	CrW0vr1rAw12yosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On host HW guest CSR registers are lost after suspend and resume
-operation. Since last_vcpu of boot CPU still records latest vCPU pointer
-so that guest CSR register skips to reload when boot CPU resumes and
-vCPU is scheduled.
+This series of patches introduces support for interrupt-redirect
+controllers, and this hardware feature will be supported on 3C6000
+for the first time
 
-Here last_vcpu is cleared so that guest CSR register will reload from
-scheduled vCPU context after suspend and resume.
+Tianyang Zhang (2):
+  Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
+  irq/irq-loongarch-ir:Add Redirect irqchip support
 
-Also there is another small fix for Loongson AVEC support, bit 14 is added
-in CSR ESTAT register. Macro CSR_ESTAT_IS is replaced with hardcoded value
-0x1fff and AVEC interrupt status bit 14 is supported with macro
-CSR_ESTAT_IS.
+ .../arch/loongarch/irq-chip-model.rst         |  38 ++
+ .../zh_CN/arch/loongarch/irq-chip-model.rst   |  37 ++
+ arch/loongarch/include/asm/cpu-features.h     |   1 +
+ arch/loongarch/include/asm/cpu.h              |   2 +
+ arch/loongarch/include/asm/loongarch.h        |   7 +
+ arch/loongarch/kernel/cpu-probe.c             |   2 +
+ drivers/irqchip/Makefile                      |   2 +-
+ drivers/irqchip/irq-loongarch-avec.c          |  24 +-
+ drivers/irqchip/irq-loongarch-ir.c            | 576 ++++++++++++++++++
+ drivers/irqchip/irq-loongson.h                |  12 +
+ include/linux/cpuhotplug.h                    |   1 +
+ 11 files changed, 687 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/irqchip/irq-loongarch-ir.c
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/main.c | 8 ++++++++
- arch/loongarch/kvm/vcpu.c | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-index f6d3242b9234..b177773f38f6 100644
---- a/arch/loongarch/kvm/main.c
-+++ b/arch/loongarch/kvm/main.c
-@@ -284,6 +284,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
- int kvm_arch_enable_virtualization_cpu(void)
- {
- 	unsigned long env, gcfg = 0;
-+	struct kvm_context *context;
- 
- 	env = read_csr_gcfg();
- 
-@@ -317,6 +318,13 @@ int kvm_arch_enable_virtualization_cpu(void)
- 	kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
- 		  read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
- 
-+	/*
-+	 * HW Guest CSR registers are lost after CPU suspend and resume
-+	 * Clear last_vcpu so that Guest CSR register forced to reload
-+	 * from vCPU SW state
-+	 */
-+	context = this_cpu_ptr(vmcs);
-+	context->last_vcpu = NULL;
- 	return 0;
- }
- 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 20f941af3e9e..9e1a9b4aa4c6 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -311,7 +311,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
- {
- 	int ret = RESUME_GUEST;
- 	unsigned long estat = vcpu->arch.host_estat;
--	u32 intr = estat & 0x1fff; /* Ignore NMI */
-+	u32 intr = estat & CSR_ESTAT_IS;
- 	u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
- 
- 	vcpu->mode = OUTSIDE_GUEST_MODE;
-
-base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
 -- 
-2.39.3
+2.43.0
 
