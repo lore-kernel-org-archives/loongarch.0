@@ -1,176 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFBF1EFFAE
-	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 08:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A0C1F03D9
+	for <loongarch@lists.linux.dev>; Mon,  3 Mar 2025 09:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740992304; cv=none; b=mm9wrvWSXwhAe0h+1miecEPHH9PitSh6Rr5EZWpeyhUxZVyVhFjrJhN4Q987G1c/vsMCxeJ9VwqhDkh2+1uorlHbDsvvGvuOY0PraRIY1HPF79UQtt4h0VV10BbUuh0Ud6RRB0qQAkAnJh6WPI1AJtGPREc9NtRM7PW1a08hvHM=
+	t=1740993083; cv=none; b=PXOFtH+jaeuHGP8ME9o0JdogU2lfEfazPTECxlbkVEB+Zdi5KvU9iXljGb02wzd5Yt9RDY0kOjvxBSZQJeBpkhsRHHYz6sGdIALkDQGlZT29xtbNfyRLIwgPvHMcQmPowLak+kwD6XEVmpNUB24VFv9tCnmPg5v75mUEj33ZTGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740992304; c=relaxed/simple;
-	bh=eXllzOnoRt5/aqD3OK5q+LXzVWXzKgBZPq0p3jULFrA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ws0H0oAX+TBEIQRKouV+zEIbeRHuWOfcHoswp2c7No6v4nGbG0HzY0Bxytq4JRM9n7XQqqPiK6R3yUTnEcwBUFf2GYunEviTF2yp8d6bTmxeKO0V7QdjwH+XBAGFX/w5OgNNXvEqYu1eF3VJJO38xmwq/hFQQYd59JhmxruuXZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlLTRNph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740992301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
-	b=FlLTRNphcbOuuY9Lk+b+bJ3bQi0912o4Xn3MpyCyRB2nHnJSy8lH/5o+MnVUXN4l8gEXN8
-	zG+HB87chsKAO4Rzy2BRyu//4Fo1oEVSfXmopwGYxnmWSUYpafB8U9Th3dlj1BgpcjgGED
-	Dt8lli1sskf9ONOHdFPu/eu+JD0DBu8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-P-atH2StPpSTnzRpsTMmGg-1; Mon, 03 Mar 2025 03:58:19 -0500
-X-MC-Unique: P-atH2StPpSTnzRpsTMmGg-1
-X-Mimecast-MFC-AGG-ID: P-atH2StPpSTnzRpsTMmGg_1740992299
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43943bd1409so30326265e9.3
-        for <loongarch@lists.linux.dev>; Mon, 03 Mar 2025 00:58:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740992298; x=1741597098;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
-        b=FtG0ErD5LDkBHp7ezzJwnY1bO9gfpR1bfYO1NVy9W+ZL6nqmz3eXqPcRZYMM1pXOhz
-         B/hDivygiQIQm7YYuIR4L8T8orO0lvrlAVsiTHRMM1vfov6BfnDyqWzj2Iy1jJ5Kc7OT
-         rupDumPuBVROtvuVQ6HBuDj/BF1TzbmDGqsrPg7x0rJTXnylA9nTVSlblIUsu/k9ZYNh
-         FWB76iZMeuwyEdToFyts5UCqrLcsDYzPGOblvqKW0bSjczrefztWeXhO6X1ZeFJj26s7
-         jSzqcLjI4dl2I1iFWADamYG/B3OFGjrvDZQxKWP9fGWCB/Af2zsN0vTQgwoQAmXhQNjJ
-         Xlkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgHX+lvfUJQZXXQFn3qYFDLA/eKek4hfUIkc5J5d9uFQDSGwGf0iSsTHsQGtAs0VDvGHCJDXEtmBw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+zJ0uuDJLMOHfnBw1jxoETs0lLX8JFE9nk1X4MCCG8KpM33D+
-	07PXDYxFRxp5c50entbRXcxMbhf0vmkl5xJRtXd7/YjHzv81e3IWz5wlLOsutjUB85cjR6KQqP7
-	wn4I5RBgLQZWaJ5jOPKFdVXR8PKd7G+w0ee5LjCJ6jrtHq59mkiNWkCG2qg==
-X-Gm-Gg: ASbGncszALtS5vOxFUu7IggRSWYX5kn4ZrM/Yd0zzKXhDzsW7KDIMi1tiONVVexqp4B
-	7YqsHvTIy9Td9D1HfhvuPdGL9CqdOxnNyCAph2D0g/O454Dm5KcHRpUTRxBT9lCLN0/XEyfR4FF
-	VbGXWNzm+SPWR6SmBUG3gWs1OZQwmKgN+JePG6elTRNEw8D+dJD3+QFSdLrxGRZU7YMyd9y40Sn
-	j2hAPOTBOkkDWWzBJl7OPjdhW4DbwCDy9SR2q4qAj8n4b0PUUxFxWAnyrv6yQGk3/fzu8iphrjE
-	Qokp18fnCjSdk6y/Iqd8PU0C/yth5/SiYXNS1qoOSiBr8/ftZ3aqmrNx1rR9Pyn30h5uGZvSAo2
-	WzdMbPzmTK8eygDTncSQYLn9fovW8hjpaQoXqQkgMiaI=
-X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082131f8f.35.1740992298637;
-        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHrOB8TUQnl8FpqKRAFyy2zHk+Etq0hy84HKx7V6iLK+hyXpCu8bZkk/epZdl6ibKYIEl0N0g==
-X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082091f8f.35.1740992298255;
-        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
-Received: from ?IPV6:2003:cb:c734:9600:af27:4326:a216:2bfb? (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485e61csm13948947f8f.98.2025.03.03.00.58.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 00:58:17 -0800 (PST)
-Message-ID: <964e8991-44c0-4ff7-91cc-033ed7c09835@redhat.com>
-Date: Mon, 3 Mar 2025 09:58:15 +0100
+	s=arc-20240116; t=1740993083; c=relaxed/simple;
+	bh=3P7asazvVhA6Z+2Oqdc1BRq4108S/dF7oNeQJkxp/Z8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F0kpyChD0u59+zaMMTQDDAWvGQAlpmZd9p+ulGrII1pZr1tfT9MZF/8uI3WAaR+42OJW/nityPCJddB8IYIWYwuXqWncxvFJCcH5lPvNNIqESBewGQmeaTsoX1qkYlSye7JQfdSVIZcRHGKhJR5ZIA3eY2Dus1spbknDIAkfkBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Axjms2csVn6wiJAA--.37236S3;
+	Mon, 03 Mar 2025 17:11:18 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMAxDcUycsVni4AzAA--.57137S2;
+	Mon, 03 Mar 2025 17:11:15 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xianglai Li <lixianglai@loongson.cn>
+Subject: [PATCH] LoongArch: KVM: Reload guest CSR registers after S4
+Date: Mon,  3 Mar 2025 17:11:14 +0800
+Message-Id: <20250303091114.1511496-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 19/20] fs/dax: Properly refcount fs dax pages
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com>
- <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: atNY1sNDrhsxEo82NkRa6S2l-JFNqKyAa1ihlz2upxc_1740992299
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxDcUycsVni4AzAA--.57137S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+On host HW guest CSR registers are lost after suspend and resume
+operation. Since last_vcpu of boot CPU still records latest vCPU pointer
+so that guest CSR register skips to reload when boot CPU resumes and
+vCPU is scheduled.
 
-> -static inline unsigned long dax_folio_share_put(struct folio *folio)
-> +static inline unsigned long dax_folio_put(struct folio *folio)
->   {
-> -	return --folio->page.share;
-> +	unsigned long ref;
-> +	int order, i;
-> +
-> +	if (!dax_folio_is_shared(folio))
-> +		ref = 0;
-> +	else
-> +		ref = --folio->share;
-> +
+Here last_vcpu is cleared so that guest CSR register will reload from
+scheduled vCPU context after suspend and resume.
 
-It would still be good to learn how this non-atomic update here is safe 
-(@Dan?), but that's independent of this series.
+Also there is another small fix for Loongson AVEC support, bit 14 is added
+in CSR ESTAT register. Macro CSR_ESTAT_IS is replaced with hardcoded value
+0x1fff and AVEC interrupt status bit 14 is supported with macro
+CSR_ESTAT_IS.
 
-Staring at it, I would have thought we have to us an atomic_t here.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/main.c | 8 ++++++++
+ arch/loongarch/kvm/vcpu.c | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-Acked-by: David Hildenbrand <david@redhat.com>
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index f6d3242b9234..b177773f38f6 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -284,6 +284,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ int kvm_arch_enable_virtualization_cpu(void)
+ {
+ 	unsigned long env, gcfg = 0;
++	struct kvm_context *context;
+ 
+ 	env = read_csr_gcfg();
+ 
+@@ -317,6 +318,13 @@ int kvm_arch_enable_virtualization_cpu(void)
+ 	kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
+ 		  read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
+ 
++	/*
++	 * HW Guest CSR registers are lost after CPU suspend and resume
++	 * Clear last_vcpu so that Guest CSR register forced to reload
++	 * from vCPU SW state
++	 */
++	context = this_cpu_ptr(vmcs);
++	context->last_vcpu = NULL;
+ 	return 0;
+ }
+ 
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 20f941af3e9e..9e1a9b4aa4c6 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -311,7 +311,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+ {
+ 	int ret = RESUME_GUEST;
+ 	unsigned long estat = vcpu->arch.host_estat;
+-	u32 intr = estat & 0x1fff; /* Ignore NMI */
++	u32 intr = estat & CSR_ESTAT_IS;
+ 	u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+ 
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
 
+base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
 -- 
-Cheers,
-
-David / dhildenb
+2.39.3
 
