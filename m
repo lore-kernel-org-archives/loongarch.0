@@ -1,80 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C614F1CAA7B
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 09:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078A01EB5FE
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 09:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741079507; cv=none; b=tDdVkmzUei7/QfSOfziswkEoH9IoyH4jpG8u6Yx5+U5kPyR7As9zpsPKzNO++CeTQmxfUF20dAtKwUs3bmRdLC1wbo8vTYbKEO6CYNf6IG6HHXLSv1yK8P4dCbSWK6K5qp8RnQqYhW40av2uIOO1iNyuRhctzmYCHkPXYF9zfs8=
+	t=1741079558; cv=none; b=jjsyjUgyZqRAKCXCIED8jfoeuHKI6d/ZxA7mDzCdlWV1Zm14kmUvqqf8uPCMV2NHoKcNuls/L0hOlMLXYJM6U/zePr5g+NWTerieJ8GgWgs5p0joEJmF93U5/P/nludJIRInCpFm6cXKcyet0JEslEdYRQO+KL8Eyves+radp0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741079507; c=relaxed/simple;
-	bh=d+d0C1+Evp1tTj8t+lX/Ji2f3+9xo5brEkgfzdJtkko=;
+	s=arc-20240116; t=1741079558; c=relaxed/simple;
+	bh=1Qpfy3Zvq8F9m3xCtMjd6gWMsu7LuwIbW6obX7fT2i8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HxSaRyV3QNbrYJtLn/qQYxW94AmEQeWPLicdwiKF982pLUOpFo6xHIBtIdX/ccC6WKxiTfgdSb5MOi7EmbA715fq2oLQs7oNPxc6nDeQbsbYKIGSlNbMphVw0qQmE5XPeC+k3gUBplOSCGNK6IAif8y6zyrw2jWBOQHRCFch1xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTDPe3Sz; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ryhhJOd3/eThWyNh1QEeDfKxBUxM2ala3+QCD3pLOYVLCySjAjuOsZAO5ww8lFBPDhCskUyDKbXio7oikdJfr5HeImJ3BP/2rLtCcMiitNGXFwflNd3sTZFP0N1zyaz6cNeohyFGZinlyqnSPtohXlsu4wgDgo6mvWi5UiFUvJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtNE5ZwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTDPe3Sz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F59AC4AF0B
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 09:11:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtNE5ZwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A53FC4CEE5
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 09:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741079507;
-	bh=d+d0C1+Evp1tTj8t+lX/Ji2f3+9xo5brEkgfzdJtkko=;
+	s=k20201202; t=1741079557;
+	bh=1Qpfy3Zvq8F9m3xCtMjd6gWMsu7LuwIbW6obX7fT2i8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pTDPe3SzqaoHNye7XnmJowfZmfekkTzUsqLXXhIxYTKCWmSDERSQ+g7rB62dclgro
-	 QdUNPjMX4wybjy3Cz64neKzA09bM/Er6Hc37IVh/qSU0WEWcgAZVBK/3fVakr24IIM
-	 fzfwcCtok6GKyjg/sGdAS0UcvFOagxVjqBqoHue3gv5dN6VEybpL8FnXotmWr0nkQC
-	 e+dFZa6Y8SP/5FDlKVDb6aOGSyfowe/2erP0Mz403Sv1rq6qw8v6HXU6ROOt1LkfGi
-	 nsyzhWxdoZ+u6tWKpz1Dk9gyz5Cdu9IDTFMhp4Rs8IyFTaaWEZ+xbv/cxfqlDt2j16
-	 yot9CdaNIG2Qw==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so2719743a12.0
-        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 01:11:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXaIa8IPmGk4FCb1gabgiDjAWZT5q9s2eBRtWUv2ArkZlH6MJwcZwACiOR4Bb14LvxqihX9CSFqrPk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyGI5h9mP2xzqNIo8hIHwPoVUheb2LzVKZ37N0OQqQnCQxfoZgp
-	DcNdNu3cGXtgSR0O/2YHH31d9mvO7mzG83IIYjQc2ybZPQuAH4E4N8r10dfkdOndtycjpJxb3Mq
-	22SCVeRBYEeB0BTXyLNejzyNVB/w=
-X-Google-Smtp-Source: AGHT+IGCVqrktFJMhN8KD803z1dPo0zhcB3zfSS36FFM1z1Y4PIom+eNY2L0x7T3Tklz7Kvg7ddvQ3AVjzH8oKAMDlc=
-X-Received: by 2002:a17:907:3e92:b0:abf:427f:7216 with SMTP id
- a640c23a62f3a-ac1f0e6e95cmr214652566b.1.1741079505964; Tue, 04 Mar 2025
- 01:11:45 -0800 (PST)
+	b=HtNE5ZwPFHTlDnWJhDpEwLdyYgR+ecgarCKB1ymj8pejvJFzx8mTHIy0WAQMfTsur
+	 tNO3tlupfO+hvQxJ2qbyWuk749dNRlrh+ha/vjUaYqVhmeu/J17ttutBZMonWoyqLw
+	 j64eWOKFpV+kby30+oF31LwYIvNpVCKoMTAECeFSikryIV359FprpaQIAMsF7ZQmgT
+	 BzilRk2ry4ybp9TEb4Mwrkp+wJ2ZVWmfIwd+PukFsMeTcl+kxWp0/sw3pkr7tEHjgd
+	 f8M/05KnA/MCgtweLP8UqxwmJy4Mo2yr9C/3LOlVmVIf65AaljDFumwmnZAW6eWw48
+	 CjtrXa2kczSoA==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abf518748cbso525679866b.2
+        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 01:12:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWmwHnLUOkqJzCc/xNJNJXGbDHOmjrgGI6NeSAGLQ3FpgVXhy8xOoayL7uAPYcCGfa+9S9FCgN2+h0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyAY9He7UZHdAtHLS7UrlBgdwNYruVNF48FjvHOUmwlpNWvcgPz
+	5M7+t28Zhz6+WWPEOSn+TaNRnyLaq2d1tR0OBpfc50OB3brnz8LC6r+2/xdbnzP0mvXuDQDC2q0
+	y2cY2kUUsTxT+0awPMsH/SyLKSRY=
+X-Google-Smtp-Source: AGHT+IH2SgX4aUGNkkw2aLENO08CdBohYV/2qS8B86jrVMJUU7M4mrsCUBPz7DNzEajQfmfUU1WqKQWdeCX9cPf6nuk=
+X-Received: by 2002:a17:907:d1b:b0:abf:7a26:c484 with SMTP id
+ a640c23a62f3a-abf7a26c6cemr587565566b.46.1741079556157; Tue, 04 Mar 2025
+ 01:12:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
- <20250303074552.3335186-2-zhoubinbin@loongson.cn> <CACRpkdage9PLDURkh5A3Zqi_BN6POva5yNdSRbf5u8p5q0qnHQ@mail.gmail.com>
-In-Reply-To: <CACRpkdage9PLDURkh5A3Zqi_BN6POva5yNdSRbf5u8p5q0qnHQ@mail.gmail.com>
+References: <20250304073554.20869-1-wangrui@loongson.cn> <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
+In-Reply-To: <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Mar 2025 17:11:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Z5yrRqnWD4XPAsuCuxEAux6-sMvMHSP=8TPBH5JvrQw@mail.gmail.com>
-X-Gm-Features: AQ5f1JohiKW0WSzqg2VU1xVfalcgCjeEjTgRQ0k1TxRF_9mQXmKgDwAauGexH0E
-Message-ID: <CAAhV-H6Z5yrRqnWD4XPAsuCuxEAux6-sMvMHSP=8TPBH5JvrQw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: loongson-64bit: Add more gpio chip support
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Bartosz Golaszewski <brgl@bgdev.pl>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+Date: Tue, 4 Mar 2025 17:12:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jrmu3QkofUkgSVv14_9s0-0IlCDV35VINfTj4fgFw6W6IhF1VQfXIJgbuI
+Message-ID: <CAAhV-H5ayw7NxbSbCeAFaxOz+TZ8QeghmhW6-j2B1vTcjYxsJQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: Fix enabling Rust and building with GCC for LoongArch
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025 at 4:36=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
+On Tue, Mar 4, 2025 at 3:49=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
+:
 >
-> On Mon, Mar 3, 2025 at 8:46=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
->
-> > The Loongson-7A2000 and Loongson-3A6000 share the same gpio chip model.
-> > Just add them through driver_data.
+> On Tue, 2025-03-04 at 15:35 +0800, WANG Rui wrote:
+> > This patch fixes a build issue on LoongArch when Rust is enabled and
+> > compiled with GCC by explicitly setting the bindgen target and skipping
+> > C flags that Clang doesn't support.
 > >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> > ---
+> >  rust/Makefile | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/rust/Makefile b/rust/Makefile
+> > index ea3849eb78f6..2c57c624fe7d 100644
+> > --- a/rust/Makefile
+> > +++ b/rust/Makefile
+> > @@ -232,7 +232,8 @@ bindgen_skip_c_flags :=3D -mno-fp-ret-in-387 -mpref=
+erred-stack-boundary=3D% \
+> >       -mfunction-return=3Dthunk-extern -mrecord-mcount -mabi=3Dlp64 \
+> >       -mindirect-branch-cs-prefix -mstack-protector-guard% -mtraceback=
+=3Dno \
+> >       -mno-pointers-to-nested-functions -mno-string \
+> > -     -mno-strict-align -mstrict-align \
+> > +     -mno-strict-align -mstrict-align -mdirect-extern-access \
+> > +     -mexplicit-relocs -mno-check-zero-division \
 >
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Hmm I'm wondering if we can just drop -mno-check-zero-division from
+> cflags-y: for all GCC releases it's the default at either -O2 or -Os,
+> and AFAIK we don't support other optimization levels.
+Don't rely on  default behavior, things may change in future.
 Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
 >
-> Yours,
-> Linus Walleij
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
