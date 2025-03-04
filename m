@@ -1,221 +1,145 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BD91FDE2D
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 11:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508FA1FF5F9
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 11:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089354; cv=none; b=UXoezOhp+ox1GRR5gfWigogbDOAD8mhFWugFg+I9UMhNwXfr0uPC7cJixGnSIV1h40OypA+CX6PZmNZNiagAF7JB4zAhQnSTg0VeBIYvwEtpWU9QqBWO2FX3pynh3T4BMEdMCK3yHUb5czzt64W6jQU1nkEGD7QOO+DD7SxRKJo=
+	t=1741089483; cv=none; b=tclJTbagBVzM3oqXYehdpRZZyMcWJiKRbiQe4YcmW5jjQ0T40IFNLDgCYW5rOIeBmI6Svj3AwU6z4Xc5rlq7z6WFu9psya+CRY6i6vuPgMdxgX/i3rKl1BJt+VMYH4CQF9wwCgfCxxVDxFKt2LmAe696ARacrmtq3CGeIUpycbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089354; c=relaxed/simple;
-	bh=k8AeePF8aGjADlzhnEd1krK8gPuB2mc/X/5gvUtOCEI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sbdwiVIzwHNgDhbISXwBd1BZ1YIPpZCoafadgYR5h3VmH5unv5S5+f2U/mxYcTdm82esqYYo6Q+D1MlpKNH2BkylQcBK0ZXwZmigK1+sLornBpgmII/tE9PZhza5cM2xozA58Yu19iJdSOMY+W9DCQH1BMvg7jB4BrJdOCKhCFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2bSmNPO; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2bSmNPO"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e53b3fa7daso3802356a12.2
-        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 03:55:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741089351; x=1741694151; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z9k5/kUhkHRqlZnA0OW1zTWkTBSUQGJS0XZ/fsldyH8=;
-        b=A2bSmNPOsndJKShekdzOQyFYdLFnt0ZKaN0vBis0NW4r2b7dIxrLcwcFFeGmmECRYS
-         +OyVWVSURSXW/PZ1I5/FDARkJD3WOvuivbVi6oLF7dMI2YHnVl/LNeJbxu8mkbvp8Ugg
-         OG8xNOBSxsNjDP8H3+VKCa+AxgcgwWBViLaMCSfl7S0eFyHeuvH9buz8dKU9b182zHhY
-         bRTKDHfATOAtPq8UpaUioMpnnR4g15M9QP82x/d93Tb9TsPG5CbkprUlgLOqmLNMoiRq
-         ZgHi0ruefc0WhTUQAZnvRF3Mrz8B+CVYd1YtqfbQ1vTHlGBt9YTMnEJWjI1+ENOtplaW
-         ZI6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741089351; x=1741694151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z9k5/kUhkHRqlZnA0OW1zTWkTBSUQGJS0XZ/fsldyH8=;
-        b=qSd2BR0sgXydv7XFOxzlU6dG21EDlntQ5GwthtXrB1o7iiQmdtO5V5FBupNk2+CyuC
-         1GiWtmShZPaSGLHj8PLqmkU3gTtwuSjlS/Ond73eXMCPI8yOgDa4dtQsAGOw/bVVa+/Y
-         n3Up2UnSqPN0ONzZqwrI3GxbCDT9HSRToc3fHmqb5T0obwsxXEspboOEw2deBiJdPTOD
-         nhk/bgWAzIMH2T3WbpZHvp2kjx6s3gXDQGno029NIRpCt1fgdv7rH7H+27J8UuRmVtBn
-         ytOlLdFAfR+W0LEBl1NGy7y0JzYve8cxFcXbj51jqk4iKO2K8Kcl8tOl+SVUFjMaf/Lh
-         He9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3wbd9SthdnxksoaWI4lWZ7mDGqFfvVGH9QNyZU6eVbScfd9IF3nzM8ITi8QbKY9KiKcSf7diFfkM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxw+tI5GAG2M0RCYXDWdC/29VS3qexSNQWSAaUcLVk2PsbInlB+
-	83O0h7Og5xRT42SsGvG7lR+WInnw0/xb+MnaXaU7oLDEEsX6b2c6qIqK0QJWoICvE4s/oCKF6kR
-	yXKXD1Us38rFRiBzRfVOpTyoslko=
-X-Gm-Gg: ASbGnctw13Yx7eSMhIJuCFkLsN+XmJcR3eUWZA1LzNqGh1HZk0wBM9jDt5U4STWtMTz
-	Np/5e4HBhJwRzUv0pAzULIoJw2KjnwcFpouvh4ljP0w9lFm+EC/T9CzOYzHsZqOmYylkWx2DmUB
-	QQYQ2XAX8w0ghd+OUPsCnC5u6nMQM=
-X-Google-Smtp-Source: AGHT+IFgGAsUVgJIA5JzmB+7xP1D6l7zaAdTgHmXNkaGuJ8wiLfcOqhl4lZQy2tzG1vv5Li5WHNpRCx5CMeLsPc/Dzw=
-X-Received: by 2002:a17:907:7f89:b0:abf:7776:7e29 with SMTP id
- a640c23a62f3a-abf77768955mr840626566b.53.1741089350626; Tue, 04 Mar 2025
- 03:55:50 -0800 (PST)
+	s=arc-20240116; t=1741089483; c=relaxed/simple;
+	bh=Nhu10BBEZYqhWwvbHcZpp6y3LPzTzrFgTqW0s1XBdmU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=u9spylQ8Y+eyVaNjBY2jsyVvpt8GOxsSDUQsK4udq0KsqixAyBf/arHXi+eW0vkBtbILPdaj3G6gFXztFXaOirAVI8U21RN9bsBJI+uHhwzA+kElkNrMGCe7Zqr/sJY7BnuPXsb2vlthul5r5vH0A29evm1HHE2dTZhCQqvo3Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxmnHG6sZnKw+KAA--.39229S3;
+	Tue, 04 Mar 2025 19:57:58 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMCxLcXD6sZnQ401AA--.65028S3;
+	Tue, 04 Mar 2025 19:57:57 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Reload guest CSR registers after S4
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
+References: <20250303091114.1511496-1-maobibo@loongson.cn>
+ <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <8f3ae3e5-6827-7c8d-2b80-726b56254ea1@loongson.cn>
+Date: Tue, 4 Mar 2025 19:57:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
- <20250303074552.3335186-2-zhoubinbin@loongson.cn> <CAMRc=Mfr5PCuad28dL19iZrpA-qkL7x0W-4Lt3SZyVfXPP-ipw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mfr5PCuad28dL19iZrpA-qkL7x0W-4Lt3SZyVfXPP-ipw@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 4 Mar 2025 19:55:38 +0800
-X-Gm-Features: AQ5f1JrQwQmbnnM8V2KqYQZFYKvFMDIRmYh0FNy89y2SOvhJHCUGR-jvA0SPok4
-Message-ID: <CAMpQs4+5165E35oO_p-pE8zDNo2rPT-gBqueA_ynW8FYJHV18A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: loongson-64bit: Add more gpio chip support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Bartosz:
-
-Thanks for your reply.
-
-On Tue, Mar 4, 2025 at 6:36=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> On Mon, Mar 3, 2025 at 8:46=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
-> >
-> > The Loongson-7A2000 and Loongson-3A6000 share the same gpio chip model.
-> > Just add them through driver_data.
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/gpio/gpio-loongson-64bit.c | 51 ++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loo=
-ngson-64bit.c
-> > index f000cc0356c7..a9a93036f08f 100644
-> > --- a/drivers/gpio/gpio-loongson-64bit.c
-> > +++ b/drivers/gpio/gpio-loongson-64bit.c
-> > @@ -254,6 +254,33 @@ static const struct loongson_gpio_chip_data loongs=
-on_gpio_ls7a_data =3D {
-> >         .out_offset =3D 0x900,
-> >  };
-> >
-> > +/* LS7A2000 chipset GPIO */
-> > +static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_dat=
-a0 =3D {
-> > +       .label =3D "ls7a2000_gpio",
-> > +       .mode =3D BYTE_CTRL_MODE,
-> > +       .conf_offset =3D 0x800,
-> > +       .in_offset =3D 0xa00,
-> > +       .out_offset =3D 0x900,
-> > +};
-> > +
-> > +/* LS7A2000 ACPI GPIO */
-> > +static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_dat=
-a1 =3D {
-> > +       .label =3D "ls7a2000_gpio",
-> > +       .mode =3D BYTE_CTRL_MODE,
-> > +       .conf_offset =3D 0x4,
-> > +       .in_offset =3D 0x8,
-> > +       .out_offset =3D 0x0,
-> > +};
->
-> The naming convention here is a bit confusing, can't we have the
-> naming of variables reflect the compatibles they refer to?
->
-Emm...
-
-I named them that way to be consistent with the previous naming.
-Of course, we could name them something like
-=E2=80=9Cls7a2000_acpi_gpio_data=E2=80=9D, which might be better understood=
-.
-Also, do we need to rename all instances of =E2=80=9Cloongson_gpio_chip_dat=
-a=E2=80=9D?
-
-For example:
-ls2k1000_cpu_gpio_data
-ls2k0500_cpu_gpio0_data
-ls2k0500_cpu_gpio1_data
-ls2k2000_cpu_gpio_data
-ls2k2000_bridge_gpio_data
-ls2k2000_acpi_gpio_data
-ls3a5000_cpu_gpio_data
-ls3a6000_cpu_gpio_data
-ls7a1000_bridge_gpio_data
-ls7a2000_bridge_gpio_data
-ls7a2000_gpio_gpio_data
-
-> Bart
->
-> > +
-> > +/* Loongson-3A6000 node GPIO */
-> > +static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_dat=
-a =3D {
-> > +       .label =3D "ls3a6000_gpio",
-> > +       .mode =3D BIT_CTRL_MODE,
-> > +       .conf_offset =3D 0x0,
-> > +       .in_offset =3D 0xc,
-> > +       .out_offset =3D 0x8,
-> > +};
-> > +
-> >  static const struct of_device_id loongson_gpio_of_match[] =3D {
-> >         {
-> >                 .compatible =3D "loongson,ls2k-gpio",
-> > @@ -287,6 +314,18 @@ static const struct of_device_id loongson_gpio_of_=
-match[] =3D {
-> >                 .compatible =3D "loongson,ls7a-gpio",
-> >                 .data =3D &loongson_gpio_ls7a_data,
-> >         },
-> > +       {
-> > +               .compatible =3D "loongson,ls7a2000-gpio1",
-> > +               .data =3D &loongson_gpio_ls7a2000_data0,
-> > +       },
-> > +       {
-> > +               .compatible =3D "loongson,ls7a2000-gpio2",
-> > +               .data =3D &loongson_gpio_ls7a2000_data1,
-> > +       },
-> > +       {
-> > +               .compatible =3D "loongson,ls3a6000-gpio",
-> > +               .data =3D &loongson_gpio_ls3a6000_data,
-> > +       },
-> >         {}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, loongson_gpio_of_match);
-> > @@ -312,6 +351,18 @@ static const struct acpi_device_id loongson_gpio_a=
-cpi_match[] =3D {
-> >                 .id =3D "LOON000C",
-> >                 .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls2k200=
-0_data2,
-> >         },
-> > +       {
-> > +               .id =3D "LOON000D",
-> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls7a200=
-0_data0,
-> > +       },
-> > +       {
-> > +               .id =3D "LOON000E",
-> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls7a200=
-0_data1,
-> > +       },
-> > +       {
-> > +               .id =3D "LOON000F",
-> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls3a600=
-0_data,
-> > +       },
-> >         {}
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
-> > --
-> > 2.47.1
-> >
+In-Reply-To: <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxLcXD6sZnQ401AA--.65028S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXw4kAF48Wr45JryDXryxJFc_yoW5XF48pr
+	WUC3Z8trWrKr1Ik34qv3Z0qr4DuryDKr1Iv3yqqFyay3saqF1FgrWrKayDZFyUu3yFkF4I
+	qryrK3WY9F45JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
 
 
---=20
-Thanks.
-Binbin
+On 2025/3/3 下午10:06, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Mon, Mar 3, 2025 at 5:11 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> On host HW guest CSR registers are lost after suspend and resume
+>> operation. Since last_vcpu of boot CPU still records latest vCPU pointer
+>> so that guest CSR register skips to reload when boot CPU resumes and
+>> vCPU is scheduled.
+>>
+>> Here last_vcpu is cleared so that guest CSR register will reload from
+>> scheduled vCPU context after suspend and resume.
+>>
+>> Also there is another small fix for Loongson AVEC support, bit 14 is added
+>> in CSR ESTAT register. Macro CSR_ESTAT_IS is replaced with hardcoded value
+>> 0x1fff and AVEC interrupt status bit 14 is supported with macro
+>> CSR_ESTAT_IS.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/main.c | 8 ++++++++
+>>   arch/loongarch/kvm/vcpu.c | 2 +-
+>>   2 files changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index f6d3242b9234..b177773f38f6 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -284,6 +284,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+>>   int kvm_arch_enable_virtualization_cpu(void)
+>>   {
+>>          unsigned long env, gcfg = 0;
+>> +       struct kvm_context *context;
+>>
+>>          env = read_csr_gcfg();
+>>
+>> @@ -317,6 +318,13 @@ int kvm_arch_enable_virtualization_cpu(void)
+>>          kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
+>>                    read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
+>>
+>> +       /*
+>> +        * HW Guest CSR registers are lost after CPU suspend and resume
+>> +        * Clear last_vcpu so that Guest CSR register forced to reload
+>> +        * from vCPU SW state
+>> +        */
+>> +       context = this_cpu_ptr(vmcs);
+>> +       context->last_vcpu = NULL;
+> This can be simplified as this_cpu_ptr(vmcs)->last_vcpu = NULL;
+Sure, will do.
+> 
+>>          return 0;
+>>   }
+>>
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 20f941af3e9e..9e1a9b4aa4c6 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -311,7 +311,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+>>   {
+>>          int ret = RESUME_GUEST;
+>>          unsigned long estat = vcpu->arch.host_estat;
+>> -       u32 intr = estat & 0x1fff; /* Ignore NMI */
+>> +       u32 intr = estat & CSR_ESTAT_IS;
+> This part has nothing to do with S4, please split to another patch.
+ok, will split into two patches.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>          u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+>>
+>>          vcpu->mode = OUTSIDE_GUEST_MODE;
+>>
+>> base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
+>> --
+>> 2.39.3
+>>
+>>
+
