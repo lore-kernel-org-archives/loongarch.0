@@ -1,103 +1,90 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 860BD1F7561
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 07:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB46132111
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 07:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741073776; cv=none; b=FROmnqDnC3Mv/u1RKbUXZTf5Ewkus/iFskDVgJIPiBNhBgT8LGrjxkNvajij4I+i7T6Qoe4/T9CaUp+UvkXZEgecT/AUizJKE/lK6hJJTgzc4JDYiu9/f/hyqMG1p3xubEgiJz0UZ66FmCiF9lEtAGrbS5QE65M/fX+AFscxBd0=
+	t=1741074576; cv=none; b=EW6R6sKSCFYMnnSMAgVNv3AvteNf/xvkXE35hH8Tqg8wLI4ps5OmOAlvNMbhNDya0c1wy6XXQayyGF1JBdSYnVVmX3re0HijNRkWzXCkTRPt7d0fDoga1525ZLkD4pVej5xZGd8Xhad8NvKY29MnphFjDhIKer8ub+RACMb9e0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741073776; c=relaxed/simple;
-	bh=+arvS/JkffmbPGhBrismVkgnXmugqIQR5d/MKbkIMJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jisZ0V9nzku5CUaqk8g2Nx4r9AJimJEGjLQOb/ChPpyvFwVzjuL9z+mvDR182lBo7u7EywQp4+AvntnmDGtR73zl1ZUDi19sOi6Hm8B4bS/WmS/uJE2nFc5UaoKx/ImLQYXTgqGmlp/g5M7xBMqGFZC3/R7YKOpUfoKGpBskuOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.120.242])
-	by gateway (Coremail) with SMTP id _____8DxbKxmrcZnS+WJAA--.39236S3;
-	Tue, 04 Mar 2025 15:36:06 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.120.242])
-	by front1 (Coremail) with SMTP id qMiowMBxn8VcrcZnyS01AA--.1378S2;
-	Tue, 04 Mar 2025 15:36:03 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn,
-	WANG Rui <wangrui@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] rust: Fix enabling Rust and building with GCC for LoongArch
-Date: Tue,  4 Mar 2025 15:35:54 +0800
-Message-ID: <20250304073554.20869-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1741074576; c=relaxed/simple;
+	bh=0c/JgpmJ1xTs7JmUkSsvLVns0tnoWAn8saEOOAw9J1U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=R+4Tu+VA66bCRpUKIO0y3KQcSNNFNPhq1sH4ZMRFqRxm7wi17wPPRpQtWQoYzytJ+HPA/KXlKe+mBHcpWYpgh+x2TWYuNE+fpSHbuRs39iwzkCtImnpRfHjc4yXa6sNxQE8ZrUrfFts4IRzn5Q3sm/kH7sSYpQtf5gBqKomR+TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hihqECuf; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hihqECuf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1741074568;
+	bh=zIfEwkuAD57F3pZZRAjdPIKbEPJpjqKvEDPzL5jBHrg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hihqECuf0P5oDT+4STeTsnZtLmnDYfVQXfuJMdd+ckCsztu+KGwHfcRyf/9XcGORe
+	 SNqLlCFwPSUefVuPIfN0ZwPCSW6pFMqsD2Abw3iflLyQwHW3FnwaYFNAiHdm1TmHj3
+	 j5UW0GlDTiQ77K56nW0HUTpL2arb0ibRKRqxzUCs=
+Received: from [192.168.124.9] (unknown [113.200.174.80])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 4316865901;
+	Tue,  4 Mar 2025 02:49:25 -0500 (EST)
+Message-ID: <aab657d72a3ee578e5c7a09c6c044e0d5c5add9a.camel@xry111.site>
+Subject: Re: [PATCH] rust: Fix enabling Rust and building with GCC for
+ LoongArch
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Rui <wangrui@loongson.cn>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron	 <bjorn3_gh@protonmail.com>, Benno
+ Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich	 <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	loongarch@lists.linux.dev,
+ loongson-kernel@lists.loongnix.cn, 	stable@vger.kernel.org
+Date: Tue, 04 Mar 2025 15:49:22 +0800
+In-Reply-To: <20250304073554.20869-1-wangrui@loongson.cn>
+References: <20250304073554.20869-1-wangrui@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxn8VcrcZnyS01AA--.1378S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr13Gw43CFyUCryDWr1rGrX_yoW8Wr15pa
-	na9wn7GrWUArWrKw1kAr45Xa129asYg3yDuFy7Jw17KrWFkry7XFZayFZxJrW5CF15Crya
-	gr18CF9FkF4UCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
 
-This patch fixes a build issue on LoongArch when Rust is enabled and
-compiled with GCC by explicitly setting the bindgen target and skipping
-C flags that Clang doesn't support.
+On Tue, 2025-03-04 at 15:35 +0800, WANG Rui wrote:
+> This patch fixes a build issue on LoongArch when Rust is enabled and
+> compiled with GCC by explicitly setting the bindgen target and skipping
+> C flags that Clang doesn't support.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> ---
+> =C2=A0rust/Makefile | 4 +++-
+> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/rust/Makefile b/rust/Makefile
+> index ea3849eb78f6..2c57c624fe7d 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -232,7 +232,8 @@ bindgen_skip_c_flags :=3D -mno-fp-ret-in-387 -mprefer=
+red-stack-boundary=3D% \
+> =C2=A0	-mfunction-return=3Dthunk-extern -mrecord-mcount -mabi=3Dlp64 \
+> =C2=A0	-mindirect-branch-cs-prefix -mstack-protector-guard% -mtraceback=
+=3Dno \
+> =C2=A0	-mno-pointers-to-nested-functions -mno-string \
+> -	-mno-strict-align -mstrict-align \
+> +	-mno-strict-align -mstrict-align -mdirect-extern-access \
+> +	-mexplicit-relocs -mno-check-zero-division \
 
-Cc: stable@vger.kernel.org
-Signed-off-by: WANG Rui <wangrui@loongson.cn>
----
- rust/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hmm I'm wondering if we can just drop -mno-check-zero-division from
+cflags-y: for all GCC releases it's the default at either -O2 or -Os,
+and AFAIK we don't support other optimization levels.
 
-diff --git a/rust/Makefile b/rust/Makefile
-index ea3849eb78f6..2c57c624fe7d 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -232,7 +232,8 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
- 	-mfunction-return=thunk-extern -mrecord-mcount -mabi=lp64 \
- 	-mindirect-branch-cs-prefix -mstack-protector-guard% -mtraceback=no \
- 	-mno-pointers-to-nested-functions -mno-string \
--	-mno-strict-align -mstrict-align \
-+	-mno-strict-align -mstrict-align -mdirect-extern-access \
-+	-mexplicit-relocs -mno-check-zero-division \
- 	-fconserve-stack -falign-jumps=% -falign-loops=% \
- 	-femit-struct-debug-baseonly -fno-ipa-cp-clone -fno-ipa-sra \
- 	-fno-partial-inlining -fplugin-arg-arm_ssp_per_task_plugin-% \
-@@ -246,6 +247,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
- # Derived from `scripts/Makefile.clang`.
- BINDGEN_TARGET_x86	:= x86_64-linux-gnu
- BINDGEN_TARGET_arm64	:= aarch64-linux-gnu
-+BINDGEN_TARGET_loongarch	:= loongarch64-linux-gnusf
- BINDGEN_TARGET		:= $(BINDGEN_TARGET_$(SRCARCH))
- 
- # All warnings are inhibited since GCC builds are very experimental,
--- 
-2.48.1
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
