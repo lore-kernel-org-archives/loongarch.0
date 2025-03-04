@@ -1,121 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBC420296C
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C2F20299D
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089638; cv=none; b=h8CTRz7GWbt6SYGJxFedYL7SyfeO35xsRsX7wWuwNqOpOyc1xT15NjKBEnWXUEq8EGpsXW9OEk5rYEIqKUtENHF1YktuCSSApTdh2toqg2HpDS+EeaE7QHXnCqDMZ/VFoHuwHax/ESr/VaO4pSUX0SvLtjrdNH4YXKbamgmFhEg=
+	t=1741090824; cv=none; b=WNbD0VQaYmLsXBd7ZZ4kp7IoHGfMyRC6ObIjOUFtnbcGOf+6Q1PH2k7z8oIVehr4kBqH2k9hUIDCxKzkrJ1daKYiAVpY3/HTRumyFZdEjkdn0eHUp2N+J1/yw+6SvkEVSqIbsdRIAxfMyZVooJAk4ACvNggrjniO+4fuI91L3hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089638; c=relaxed/simple;
-	bh=qB2mDI/ttVCvjrNafqYBohFXTw90rzENilQc1qH51yE=;
+	s=arc-20240116; t=1741090824; c=relaxed/simple;
+	bh=xw3wyvUOJS5mdgY1QWhsMI2KSuimzDRG6M/hdDd2hcs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fQN0JpOOO7BK8pwZK7O/mKRqsrqoO+S20TsA06xh97paiJJyajuC6k6GuGm8V7QXWUsNPaKuiRvKVBr1lt3iUWTAaJPuRPxgbyb2MrX6Ec7GPwtN1mdLgrk0ln5u0DVv+x0Pjw4UR7BWM6ygq1JBhUfR7SSMdIBT9hIo9B05W6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oq2k7AR6; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Ab90v7tjp+1YaLGRUbcXRXbTRWkvD0LcTOm4q3Z9WQG9MnstcNzF28uX3OF/8KQ8A1wNdmwOK7+sQwtcE/Q5K8m1Eu1TSumu0X6j1oUOsiT+xPx2UWBKMoT2PENcPBKpKnzlKIc2l94dGE5V86tjsibvxTsPqczhWwt7mihvfzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9OQWGoE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oq2k7AR6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE18C4CEEE
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:00:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9OQWGoE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8C5C4CEE7
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741089638;
-	bh=qB2mDI/ttVCvjrNafqYBohFXTw90rzENilQc1qH51yE=;
+	s=k20201202; t=1741090823;
+	bh=xw3wyvUOJS5mdgY1QWhsMI2KSuimzDRG6M/hdDd2hcs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oq2k7AR6scRfRcG/tCEux+mX+H4Zx9Q4iil6mqu1Tu0L67QkGsp5YwzFifJC9B/3o
-	 DNEhxyLuoGQacQoJrxZvT1m3rB/QeUy3sjxl2I0MJQ8USwADz5rvPmCpC5pPFrej33
-	 DpcG+2PQzpulUVtJscJiJwSKAXHl/wSx2UtOd895oCkjdfB+sa5ekuwkddSipGn4kv
-	 452F049x784PzthRDLYF3G5d2LAfdmavrnFCSAPJ6BPKqENhrh671AkI6HmpYnUI9h
-	 AD+d9GjXKV3K60sI37bvvK0SIE0Cgyy3pEcUubkRJRwf6T2X3+TR1aTclUWlr5SjCf
-	 kmDo/BHfCMbQg==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abec8b750ebso968303666b.0
-        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 04:00:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWeSckfM6sjOQ8f0pG3DbBAn5KMysEB7+eiCE29fj/v9a8zouCCJl9QgcPIKLAd8F3yn98aJNsPviU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNj+q+NTMcb9FyO8SL51OJE15gZpKngZnSMGEdFKLUe0jNLbay
-	KSi6d150mKEALRXO+mIRZR6o/sjdtUGDJkwDXOiwMbZJKeWYIKlAIsMldLjo0yvZ9seAVyHo5x2
-	ATJtg1RY/I+feHYOdp9yCEkW6Etk=
-X-Google-Smtp-Source: AGHT+IGEsJXgMBrhUYNFg3pBxcpuirK0pMyFJXy3VeseOoaDUiqqYOHiEONe6XjAWh0emUQ4lLovrI1SO1NRKZ/RaDo=
-X-Received: by 2002:a17:907:86a0:b0:ac1:e881:89a7 with SMTP id
- a640c23a62f3a-ac1e8818cecmr436379366b.6.1741089636759; Tue, 04 Mar 2025
- 04:00:36 -0800 (PST)
+	b=Y9OQWGoE17K2vnE6wOIojAGq5RgiGpj9jFYJKfIUTfSPQNkgQhiTlQvpcYk3YiXT8
+	 Dj8fVUX3C465S2VNhwnMLeWWE6abVw7PtojxY019eMnV31kR0/lL+jIrdLgTsEbFOn
+	 n6uRRhN0H8ZKrMmY9h9YnPxaac5pO6RWA/naZ25/eosSkKI96kJhrEzzj4xHb2qfFz
+	 LzEeRMF9m5auW2gTgAACArsq1/ieXKMZ0aXlqYekWMsoi5jbYuN8G2VBSQoh5PdES/
+	 1kyz3xM9m+IeH09Gu9NRXXu6EwMCct0wCeFja9oQ7KtMsmB4lNG/agqub0ibV6/i8Y
+	 EscZDzn6gVP1Q==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abf4cebb04dso590835066b.0
+        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 04:20:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWhLXKLILTtiaO0rpI+ez1eFjizBgqT7cRfI8vX/lpwq6hV9gOlWJuxtu7oz4I4d9NGEYBjvUNA+VI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJSb6iHHbLb2mRE++ZZajYK+uxe4xCZXEpgMMDTtVC2gMhPo+D
+	lSThxLaYMpZis+TIdKxXVqcYRnW9Lc//1KeqEHU/Unau2uNatooMefzvI/BjfQSokN1Bb9oiHt6
+	f4TU5/Kv6n/oVK5RAsmiDZQ1PX8U=
+X-Google-Smtp-Source: AGHT+IEHzftfHcwd+SZI6gGQKw6De60uYiQ5Iiz6OuxpN6JEhmQJJSk2v/X8q1I7Nznpxig9660faVXg8f34jrzTL3Y=
+X-Received: by 2002:a17:907:2da4:b0:abf:6ead:2e57 with SMTP id
+ a640c23a62f3a-ac1f1372261mr223774566b.24.1741090822350; Tue, 04 Mar 2025
+ 04:20:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
-In-Reply-To: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+References: <20250304112717.1810047-1-maobibo@loongson.cn>
+In-Reply-To: <20250304112717.1810047-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 4 Mar 2025 20:00:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JraBlaI6SvIcMjFpHRCisLRkrWnMRfclxUHHekZF7odgXnDlO-CdSUQic8
-Message-ID: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix use of logical '&&' with constant operand
-To: WangYuli <wangyuli@uniontech.com>
-Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, maobibo@loongson.cn, 
-	guoweikang.kernel@gmail.com, agordeev@linux.ibm.com, ast@kernel.org, 
-	usamaarif642@gmail.com, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, zhanjun@uniontech.com, niecheng1@uniontech.com, 
-	chenlinxuan@uniontech.com, donmor3000@hotmail.com, 
-	Wentao Guan <guanwentao@uniontech.com>
+Date: Tue, 4 Mar 2025 20:20:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4A74u9CmLcF3O6sFJbJXcxOyww1or1NJ-AntEOUgBMzQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrbbAn90PBn51LjqYMOSQNRkWPDRkyPmggx_ZqaCk8ntkQ-Qb0ts0IxiLg
+Message-ID: <CAAhV-H4A74u9CmLcF3O6sFJbJXcxOyww1or1NJ-AntEOUgBMzQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: mm: Set hugetlb mmap base address aligned with
+ pmd size
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025 at 6:53=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
-ote:
+Hi, Bibo,
+
+On Tue, Mar 4, 2025 at 7:27=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> Fix follow error with clang-19:
+> With ltp test case "testcases/bin/hugefork02", there is dmesg error
+> report message such as
+>  kernel BUG at mm/hugetlb.c:5550!
+>  Oops - BUG[#1]:
+>  CPU: 0 UID: 0 PID: 1517 Comm: hugefork02 Not tainted 6.14.0-rc2+ #241
+>  Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
+>  pc 90000000004eaf1c ra 9000000000485538 tp 900000010edbc000 sp 900000010=
+edbf940
+>  a0 900000010edbfb00 a1 9000000108d20280 a2 00007fffe9474000 a3 00007ffff=
+3474000
+>  a4 0000000000000000 a5 0000000000000003 a6 00000000003cadd3 a7 000000000=
+0000000
+>  t0 0000000001ffffff t1 0000000001474000 t2 900000010ecd7900 t3 00007fffe=
+9474000
+>  t4 00007fffe9474000 t5 0000000000000040 t6 900000010edbfb00 t7 000000000=
+0000001
+>  t8 0000000000000005 u0 90000000004849d0 s9 900000010edbfa00 s0 900000010=
+8d20280
+>  s1 00007fffe9474000 s2 0000000002000000 s3 9000000108d20280 s4 900000000=
+2b38b10
+>  s5 900000010edbfb00 s6 00007ffff3474000 s7 0000000000000406 s8 900000010=
+edbfa08
+>     ra: 9000000000485538 unmap_vmas+0x130/0x218
+>    ERA: 90000000004eaf1c __unmap_hugepage_range+0x6f4/0x7d0
+>   PRMD: 00000004 (PPLV0 +PIE -PWE)
+>   EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
+>   ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
+>  ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
+>  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+>  Modules linked in: snd_seq_dummy snd_seq snd_seq_device rfkill vfat fat =
+virtio_net net_failover failover efi_pstore virtio_balloon pstore fuse nfne=
+tlink virtio_scsi dm_multipath efivarfs
+>  Process hugefork02 (pid: 1517, threadinfo=3D00000000a670eaf4, task=3D000=
+000007a95fc64)
+>  Call Trace:
+>  [<90000000004eaf1c>] __unmap_hugepage_range+0x6f4/0x7d0
+>  [<9000000000485534>] unmap_vmas+0x12c/0x218
+>  [<9000000000494068>] exit_mmap+0xe0/0x308
+>  [<900000000025fdc4>] mmput+0x74/0x180
+>  [<900000000026a284>] do_exit+0x294/0x898
+>  [<900000000026aa30>] do_group_exit+0x30/0x98
+>  [<900000000027bed4>] get_signal+0x83c/0x868
+>  [<90000000002457b4>] arch_do_signal_or_restart+0x54/0xfa0
+>  [<90000000015795e8>] irqentry_exit_to_user_mode+0xb8/0x138
+>  [<90000000002572d0>] tlb_do_page_fault_1+0x114/0x1b4
 >
-> arch/loongarch/kernel/setup.c:335:40: error: use of logical '&&' with con=
-stant operand [-Werror,-Wconstant-logical-operand]
->   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
-]) {
->       |                                               ^  ~~~~~~~~~~~~~~~~=
-~
-> arch/loongarch/kernel/setup.c:335:40: note: use '&' for a bitwise operati=
-on
->   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
-]) {
->       |                                               ^~
->       |                                               &
-> arch/loongarch/kernel/setup.c:335:40: note: remove constant to silence th=
-is warning
->   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
-]) {
->       |                                               ^~~~~~~~~~~~~~~~~~~=
-~
-> 1 error generated.
-Are you kidding me? CONFIG_CMDLINE[0] is a constant for a specific
-config but the config is variable across buildings. So the "constant"
-for compilers is not as "constant" for people. Compiler warnings
-should be double-checked by people, right?
+> The problem is that base address allocated from hugetlbfs is not aligned
+> with pmd size. Here add checking for hugetlbfs and align base address
+> with pmd size. After this patch rest case "testcases/bin/hugefork02"
+> passes to run.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/mm/mmap.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
+> index 914e82ff3f65..1df9e99582cc 100644
+> --- a/arch/loongarch/mm/mmap.c
+> +++ b/arch/loongarch/mm/mmap.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+>   */
+>  #include <linux/export.h>
+> +#include <linux/hugetlb.h>
+>  #include <linux/io.h>
+>  #include <linux/kfence.h>
+>  #include <linux/memblock.h>
+> @@ -63,8 +64,11 @@ static unsigned long arch_get_unmapped_area_common(str=
+uct file *filp,
+>         }
+>
+>         info.length =3D len;
+> -       info.align_mask =3D do_color_align ? (PAGE_MASK & SHM_ALIGN_MASK)=
+ : 0;
+>         info.align_offset =3D pgoff << PAGE_SHIFT;
+> +       if (filp && is_file_hugepages(filp))
+> +               info.align_mask =3D huge_page_mask_align(filp);
+> +       else
+> +               info.align_mask =3D do_color_align ? (PAGE_MASK & SHM_ALI=
+GN_MASK) : 0;
+Thank you for your catch, I think this problem only exist after commit
+7f24cbc9c4d42db8a3c8484d120cf9c1 ("mm/mmap: teach
+generic_get_unmapped_area{_topdown} to handle hugetlb mappings"). But
+you don't need to resend, I will add this information when I apply.
 
 Huacai
 
 >
-> Fixes: 83da30d73b86 ("LoongArch: Fix CMDLINE_EXTEND and CMDLINE_BOOTLOADE=
-R handling")
-> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-> ---
->  arch/loongarch/kernel/setup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
-c
-> index edcfdfcad7d2..834bea7f42da 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -332,7 +332,7 @@ static void __init bootcmdline_init(char **cmdline_p)
->          * Append built-in command line to the bootloader command line if
->          * CONFIG_CMDLINE_EXTEND is enabled.
->          */
-> -       if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-> +       if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && !!CONFIG_CMDLINE[0]) {
->                 strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
->                 strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_S=
-IZE);
->         }
+>         if (dir =3D=3D DOWN) {
+>                 info.flags =3D VM_UNMAPPED_AREA_TOPDOWN;
 > --
-> 2.47.2
+> 2.39.3
 >
