@@ -1,114 +1,221 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF74E1F583F
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 11:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BD91FDE2D
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741087643; cv=none; b=O8TfhTkJJIhJeYFPHunUTC7CAgviWhE4W8Wej+Yp6eIZFwpyk1UavEUDt47LmR2DuAVYp93jNCKEd7sahoTagLulMKp8udNCur7iKXg1jPkhkAW1oep/lM6+b61etkFnySjPi3xLE+kLVMXsYtzS7lIOsQFFE5migTk0jVz0pYw=
+	t=1741089354; cv=none; b=UXoezOhp+ox1GRR5gfWigogbDOAD8mhFWugFg+I9UMhNwXfr0uPC7cJixGnSIV1h40OypA+CX6PZmNZNiagAF7JB4zAhQnSTg0VeBIYvwEtpWU9QqBWO2FX3pynh3T4BMEdMCK3yHUb5czzt64W6jQU1nkEGD7QOO+DD7SxRKJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741087643; c=relaxed/simple;
-	bh=6fliJUFEpXP72FbzoYszbCLB843kh8wcfw0Q7PucuuQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ze77lFadTs4ynx3XSV9QloYYIU3qrhm5yPkyot6KOwOQhAZ+PLK/EXEhMYcJx4RTavB0+5K5eY2/fSP8OXBu1Ld9orcr7wnucP7xr90kioW0XOqJH2Cijpe6JJE8OHYczBwCBktpUTomdAKfwZc1HiuDHKoM1ZRlnnMuqWOiQpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bx12mW48ZnFAuKAA--.39382S3;
-	Tue, 04 Mar 2025 19:27:18 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMAxDcWW48ZnkII1AA--.64929S2;
-	Tue, 04 Mar 2025 19:27:18 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: mm: Set hugetlb mmap base address aligned with pmd size
-Date: Tue,  4 Mar 2025 19:27:17 +0800
-Message-Id: <20250304112717.1810047-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1741089354; c=relaxed/simple;
+	bh=k8AeePF8aGjADlzhnEd1krK8gPuB2mc/X/5gvUtOCEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sbdwiVIzwHNgDhbISXwBd1BZ1YIPpZCoafadgYR5h3VmH5unv5S5+f2U/mxYcTdm82esqYYo6Q+D1MlpKNH2BkylQcBK0ZXwZmigK1+sLornBpgmII/tE9PZhza5cM2xozA58Yu19iJdSOMY+W9DCQH1BMvg7jB4BrJdOCKhCFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2bSmNPO; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2bSmNPO"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e53b3fa7daso3802356a12.2
+        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 03:55:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741089351; x=1741694151; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z9k5/kUhkHRqlZnA0OW1zTWkTBSUQGJS0XZ/fsldyH8=;
+        b=A2bSmNPOsndJKShekdzOQyFYdLFnt0ZKaN0vBis0NW4r2b7dIxrLcwcFFeGmmECRYS
+         +OyVWVSURSXW/PZ1I5/FDARkJD3WOvuivbVi6oLF7dMI2YHnVl/LNeJbxu8mkbvp8Ugg
+         OG8xNOBSxsNjDP8H3+VKCa+AxgcgwWBViLaMCSfl7S0eFyHeuvH9buz8dKU9b182zHhY
+         bRTKDHfATOAtPq8UpaUioMpnnR4g15M9QP82x/d93Tb9TsPG5CbkprUlgLOqmLNMoiRq
+         ZgHi0ruefc0WhTUQAZnvRF3Mrz8B+CVYd1YtqfbQ1vTHlGBt9YTMnEJWjI1+ENOtplaW
+         ZI6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741089351; x=1741694151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z9k5/kUhkHRqlZnA0OW1zTWkTBSUQGJS0XZ/fsldyH8=;
+        b=qSd2BR0sgXydv7XFOxzlU6dG21EDlntQ5GwthtXrB1o7iiQmdtO5V5FBupNk2+CyuC
+         1GiWtmShZPaSGLHj8PLqmkU3gTtwuSjlS/Ond73eXMCPI8yOgDa4dtQsAGOw/bVVa+/Y
+         n3Up2UnSqPN0ONzZqwrI3GxbCDT9HSRToc3fHmqb5T0obwsxXEspboOEw2deBiJdPTOD
+         nhk/bgWAzIMH2T3WbpZHvp2kjx6s3gXDQGno029NIRpCt1fgdv7rH7H+27J8UuRmVtBn
+         ytOlLdFAfR+W0LEBl1NGy7y0JzYve8cxFcXbj51jqk4iKO2K8Kcl8tOl+SVUFjMaf/Lh
+         He9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW3wbd9SthdnxksoaWI4lWZ7mDGqFfvVGH9QNyZU6eVbScfd9IF3nzM8ITi8QbKY9KiKcSf7diFfkM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxw+tI5GAG2M0RCYXDWdC/29VS3qexSNQWSAaUcLVk2PsbInlB+
+	83O0h7Og5xRT42SsGvG7lR+WInnw0/xb+MnaXaU7oLDEEsX6b2c6qIqK0QJWoICvE4s/oCKF6kR
+	yXKXD1Us38rFRiBzRfVOpTyoslko=
+X-Gm-Gg: ASbGnctw13Yx7eSMhIJuCFkLsN+XmJcR3eUWZA1LzNqGh1HZk0wBM9jDt5U4STWtMTz
+	Np/5e4HBhJwRzUv0pAzULIoJw2KjnwcFpouvh4ljP0w9lFm+EC/T9CzOYzHsZqOmYylkWx2DmUB
+	QQYQ2XAX8w0ghd+OUPsCnC5u6nMQM=
+X-Google-Smtp-Source: AGHT+IFgGAsUVgJIA5JzmB+7xP1D6l7zaAdTgHmXNkaGuJ8wiLfcOqhl4lZQy2tzG1vv5Li5WHNpRCx5CMeLsPc/Dzw=
+X-Received: by 2002:a17:907:7f89:b0:abf:7776:7e29 with SMTP id
+ a640c23a62f3a-abf77768955mr840626566b.53.1741089350626; Tue, 04 Mar 2025
+ 03:55:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxDcWW48ZnkII1AA--.64929S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
+ <20250303074552.3335186-2-zhoubinbin@loongson.cn> <CAMRc=Mfr5PCuad28dL19iZrpA-qkL7x0W-4Lt3SZyVfXPP-ipw@mail.gmail.com>
+In-Reply-To: <CAMRc=Mfr5PCuad28dL19iZrpA-qkL7x0W-4Lt3SZyVfXPP-ipw@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 4 Mar 2025 19:55:38 +0800
+X-Gm-Features: AQ5f1JrQwQmbnnM8V2KqYQZFYKvFMDIRmYh0FNy89y2SOvhJHCUGR-jvA0SPok4
+Message-ID: <CAMpQs4+5165E35oO_p-pE8zDNo2rPT-gBqueA_ynW8FYJHV18A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: loongson-64bit: Add more gpio chip support
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With ltp test case "testcases/bin/hugefork02", there is dmesg error
-report message such as
- kernel BUG at mm/hugetlb.c:5550!
- Oops - BUG[#1]:
- CPU: 0 UID: 0 PID: 1517 Comm: hugefork02 Not tainted 6.14.0-rc2+ #241
- Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
- pc 90000000004eaf1c ra 9000000000485538 tp 900000010edbc000 sp 900000010edbf940
- a0 900000010edbfb00 a1 9000000108d20280 a2 00007fffe9474000 a3 00007ffff3474000
- a4 0000000000000000 a5 0000000000000003 a6 00000000003cadd3 a7 0000000000000000
- t0 0000000001ffffff t1 0000000001474000 t2 900000010ecd7900 t3 00007fffe9474000
- t4 00007fffe9474000 t5 0000000000000040 t6 900000010edbfb00 t7 0000000000000001
- t8 0000000000000005 u0 90000000004849d0 s9 900000010edbfa00 s0 9000000108d20280
- s1 00007fffe9474000 s2 0000000002000000 s3 9000000108d20280 s4 9000000002b38b10
- s5 900000010edbfb00 s6 00007ffff3474000 s7 0000000000000406 s8 900000010edbfa08
-    ra: 9000000000485538 unmap_vmas+0x130/0x218
-   ERA: 90000000004eaf1c __unmap_hugepage_range+0x6f4/0x7d0
-  PRMD: 00000004 (PPLV0 +PIE -PWE)
-  EUEN: 00000007 (+FPE +SXE +ASXE -BTE)
-  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
- ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
- PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
- Modules linked in: snd_seq_dummy snd_seq snd_seq_device rfkill vfat fat virtio_net net_failover failover efi_pstore virtio_balloon pstore fuse nfnetlink virtio_scsi dm_multipath efivarfs
- Process hugefork02 (pid: 1517, threadinfo=00000000a670eaf4, task=000000007a95fc64)
- Call Trace:
- [<90000000004eaf1c>] __unmap_hugepage_range+0x6f4/0x7d0
- [<9000000000485534>] unmap_vmas+0x12c/0x218
- [<9000000000494068>] exit_mmap+0xe0/0x308
- [<900000000025fdc4>] mmput+0x74/0x180
- [<900000000026a284>] do_exit+0x294/0x898
- [<900000000026aa30>] do_group_exit+0x30/0x98
- [<900000000027bed4>] get_signal+0x83c/0x868
- [<90000000002457b4>] arch_do_signal_or_restart+0x54/0xfa0
- [<90000000015795e8>] irqentry_exit_to_user_mode+0xb8/0x138
- [<90000000002572d0>] tlb_do_page_fault_1+0x114/0x1b4
+Hi Bartosz:
 
-The problem is that base address allocated from hugetlbfs is not aligned
-with pmd size. Here add checking for hugetlbfs and align base address
-with pmd size. After this patch rest case "testcases/bin/hugefork02"
-passes to run.
+Thanks for your reply.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/mm/mmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On Tue, Mar 4, 2025 at 6:36=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Mon, Mar 3, 2025 at 8:46=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
+n> wrote:
+> >
+> > The Loongson-7A2000 and Loongson-3A6000 share the same gpio chip model.
+> > Just add them through driver_data.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  drivers/gpio/gpio-loongson-64bit.c | 51 ++++++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loo=
+ngson-64bit.c
+> > index f000cc0356c7..a9a93036f08f 100644
+> > --- a/drivers/gpio/gpio-loongson-64bit.c
+> > +++ b/drivers/gpio/gpio-loongson-64bit.c
+> > @@ -254,6 +254,33 @@ static const struct loongson_gpio_chip_data loongs=
+on_gpio_ls7a_data =3D {
+> >         .out_offset =3D 0x900,
+> >  };
+> >
+> > +/* LS7A2000 chipset GPIO */
+> > +static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_dat=
+a0 =3D {
+> > +       .label =3D "ls7a2000_gpio",
+> > +       .mode =3D BYTE_CTRL_MODE,
+> > +       .conf_offset =3D 0x800,
+> > +       .in_offset =3D 0xa00,
+> > +       .out_offset =3D 0x900,
+> > +};
+> > +
+> > +/* LS7A2000 ACPI GPIO */
+> > +static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_dat=
+a1 =3D {
+> > +       .label =3D "ls7a2000_gpio",
+> > +       .mode =3D BYTE_CTRL_MODE,
+> > +       .conf_offset =3D 0x4,
+> > +       .in_offset =3D 0x8,
+> > +       .out_offset =3D 0x0,
+> > +};
+>
+> The naming convention here is a bit confusing, can't we have the
+> naming of variables reflect the compatibles they refer to?
+>
+Emm...
 
-diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
-index 914e82ff3f65..1df9e99582cc 100644
---- a/arch/loongarch/mm/mmap.c
-+++ b/arch/loongarch/mm/mmap.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
- #include <linux/export.h>
-+#include <linux/hugetlb.h>
- #include <linux/io.h>
- #include <linux/kfence.h>
- #include <linux/memblock.h>
-@@ -63,8 +64,11 @@ static unsigned long arch_get_unmapped_area_common(struct file *filp,
- 	}
- 
- 	info.length = len;
--	info.align_mask = do_color_align ? (PAGE_MASK & SHM_ALIGN_MASK) : 0;
- 	info.align_offset = pgoff << PAGE_SHIFT;
-+	if (filp && is_file_hugepages(filp))
-+		info.align_mask = huge_page_mask_align(filp);
-+	else
-+		info.align_mask = do_color_align ? (PAGE_MASK & SHM_ALIGN_MASK) : 0;
- 
- 	if (dir == DOWN) {
- 		info.flags = VM_UNMAPPED_AREA_TOPDOWN;
--- 
-2.39.3
+I named them that way to be consistent with the previous naming.
+Of course, we could name them something like
+=E2=80=9Cls7a2000_acpi_gpio_data=E2=80=9D, which might be better understood=
+.
+Also, do we need to rename all instances of =E2=80=9Cloongson_gpio_chip_dat=
+a=E2=80=9D?
 
+For example:
+ls2k1000_cpu_gpio_data
+ls2k0500_cpu_gpio0_data
+ls2k0500_cpu_gpio1_data
+ls2k2000_cpu_gpio_data
+ls2k2000_bridge_gpio_data
+ls2k2000_acpi_gpio_data
+ls3a5000_cpu_gpio_data
+ls3a6000_cpu_gpio_data
+ls7a1000_bridge_gpio_data
+ls7a2000_bridge_gpio_data
+ls7a2000_gpio_gpio_data
+
+> Bart
+>
+> > +
+> > +/* Loongson-3A6000 node GPIO */
+> > +static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_dat=
+a =3D {
+> > +       .label =3D "ls3a6000_gpio",
+> > +       .mode =3D BIT_CTRL_MODE,
+> > +       .conf_offset =3D 0x0,
+> > +       .in_offset =3D 0xc,
+> > +       .out_offset =3D 0x8,
+> > +};
+> > +
+> >  static const struct of_device_id loongson_gpio_of_match[] =3D {
+> >         {
+> >                 .compatible =3D "loongson,ls2k-gpio",
+> > @@ -287,6 +314,18 @@ static const struct of_device_id loongson_gpio_of_=
+match[] =3D {
+> >                 .compatible =3D "loongson,ls7a-gpio",
+> >                 .data =3D &loongson_gpio_ls7a_data,
+> >         },
+> > +       {
+> > +               .compatible =3D "loongson,ls7a2000-gpio1",
+> > +               .data =3D &loongson_gpio_ls7a2000_data0,
+> > +       },
+> > +       {
+> > +               .compatible =3D "loongson,ls7a2000-gpio2",
+> > +               .data =3D &loongson_gpio_ls7a2000_data1,
+> > +       },
+> > +       {
+> > +               .compatible =3D "loongson,ls3a6000-gpio",
+> > +               .data =3D &loongson_gpio_ls3a6000_data,
+> > +       },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, loongson_gpio_of_match);
+> > @@ -312,6 +351,18 @@ static const struct acpi_device_id loongson_gpio_a=
+cpi_match[] =3D {
+> >                 .id =3D "LOON000C",
+> >                 .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls2k200=
+0_data2,
+> >         },
+> > +       {
+> > +               .id =3D "LOON000D",
+> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls7a200=
+0_data0,
+> > +       },
+> > +       {
+> > +               .id =3D "LOON000E",
+> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls7a200=
+0_data1,
+> > +       },
+> > +       {
+> > +               .id =3D "LOON000F",
+> > +               .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls3a600=
+0_data,
+> > +       },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
+> > --
+> > 2.47.1
+> >
+
+
+
+--=20
+Thanks.
+Binbin
