@@ -1,145 +1,121 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508FA1FF5F9
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 11:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBC420296C
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089483; cv=none; b=tclJTbagBVzM3oqXYehdpRZZyMcWJiKRbiQe4YcmW5jjQ0T40IFNLDgCYW5rOIeBmI6Svj3AwU6z4Xc5rlq7z6WFu9psya+CRY6i6vuPgMdxgX/i3rKl1BJt+VMYH4CQF9wwCgfCxxVDxFKt2LmAe696ARacrmtq3CGeIUpycbc=
+	t=1741089638; cv=none; b=h8CTRz7GWbt6SYGJxFedYL7SyfeO35xsRsX7wWuwNqOpOyc1xT15NjKBEnWXUEq8EGpsXW9OEk5rYEIqKUtENHF1YktuCSSApTdh2toqg2HpDS+EeaE7QHXnCqDMZ/VFoHuwHax/ESr/VaO4pSUX0SvLtjrdNH4YXKbamgmFhEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089483; c=relaxed/simple;
-	bh=Nhu10BBEZYqhWwvbHcZpp6y3LPzTzrFgTqW0s1XBdmU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=u9spylQ8Y+eyVaNjBY2jsyVvpt8GOxsSDUQsK4udq0KsqixAyBf/arHXi+eW0vkBtbILPdaj3G6gFXztFXaOirAVI8U21RN9bsBJI+uHhwzA+kElkNrMGCe7Zqr/sJY7BnuPXsb2vlthul5r5vH0A29evm1HHE2dTZhCQqvo3Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxmnHG6sZnKw+KAA--.39229S3;
-	Tue, 04 Mar 2025 19:57:58 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxLcXD6sZnQ401AA--.65028S3;
-	Tue, 04 Mar 2025 19:57:57 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Reload guest CSR registers after S4
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
-References: <20250303091114.1511496-1-maobibo@loongson.cn>
- <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <8f3ae3e5-6827-7c8d-2b80-726b56254ea1@loongson.cn>
-Date: Tue, 4 Mar 2025 19:57:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1741089638; c=relaxed/simple;
+	bh=qB2mDI/ttVCvjrNafqYBohFXTw90rzENilQc1qH51yE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fQN0JpOOO7BK8pwZK7O/mKRqsrqoO+S20TsA06xh97paiJJyajuC6k6GuGm8V7QXWUsNPaKuiRvKVBr1lt3iUWTAaJPuRPxgbyb2MrX6Ec7GPwtN1mdLgrk0ln5u0DVv+x0Pjw4UR7BWM6ygq1JBhUfR7SSMdIBT9hIo9B05W6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oq2k7AR6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oq2k7AR6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE18C4CEEE
+	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 12:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741089638;
+	bh=qB2mDI/ttVCvjrNafqYBohFXTw90rzENilQc1qH51yE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oq2k7AR6scRfRcG/tCEux+mX+H4Zx9Q4iil6mqu1Tu0L67QkGsp5YwzFifJC9B/3o
+	 DNEhxyLuoGQacQoJrxZvT1m3rB/QeUy3sjxl2I0MJQ8USwADz5rvPmCpC5pPFrej33
+	 DpcG+2PQzpulUVtJscJiJwSKAXHl/wSx2UtOd895oCkjdfB+sa5ekuwkddSipGn4kv
+	 452F049x784PzthRDLYF3G5d2LAfdmavrnFCSAPJ6BPKqENhrh671AkI6HmpYnUI9h
+	 AD+d9GjXKV3K60sI37bvvK0SIE0Cgyy3pEcUubkRJRwf6T2X3+TR1aTclUWlr5SjCf
+	 kmDo/BHfCMbQg==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abec8b750ebso968303666b.0
+        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 04:00:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWeSckfM6sjOQ8f0pG3DbBAn5KMysEB7+eiCE29fj/v9a8zouCCJl9QgcPIKLAd8F3yn98aJNsPviU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwNj+q+NTMcb9FyO8SL51OJE15gZpKngZnSMGEdFKLUe0jNLbay
+	KSi6d150mKEALRXO+mIRZR6o/sjdtUGDJkwDXOiwMbZJKeWYIKlAIsMldLjo0yvZ9seAVyHo5x2
+	ATJtg1RY/I+feHYOdp9yCEkW6Etk=
+X-Google-Smtp-Source: AGHT+IGEsJXgMBrhUYNFg3pBxcpuirK0pMyFJXy3VeseOoaDUiqqYOHiEONe6XjAWh0emUQ4lLovrI1SO1NRKZ/RaDo=
+X-Received: by 2002:a17:907:86a0:b0:ac1:e881:89a7 with SMTP id
+ a640c23a62f3a-ac1e8818cecmr436379366b.6.1741089636759; Tue, 04 Mar 2025
+ 04:00:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcXD6sZnQ401AA--.65028S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw4kAF48Wr45JryDXryxJFc_yoW5XF48pr
-	WUC3Z8trWrKr1Ik34qv3Z0qr4DuryDKr1Iv3yqqFyay3saqF1FgrWrKayDZFyUu3yFkF4I
-	qryrK3WY9F45JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
-	U
+References: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+In-Reply-To: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 4 Mar 2025 20:00:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JraBlaI6SvIcMjFpHRCisLRkrWnMRfclxUHHekZF7odgXnDlO-CdSUQic8
+Message-ID: <CAAhV-H6zkq1KoLQSQgimEgHhdD=S--kHa9hmhfbxUS_6OOfSJQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix use of logical '&&' with constant operand
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, yangtiezhu@loongson.cn, maobibo@loongson.cn, 
+	guoweikang.kernel@gmail.com, agordeev@linux.ibm.com, ast@kernel.org, 
+	usamaarif642@gmail.com, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	chenlinxuan@uniontech.com, donmor3000@hotmail.com, 
+	Wentao Guan <guanwentao@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 4, 2025 at 6:53=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
+ote:
+>
+> Fix follow error with clang-19:
+>
+> arch/loongarch/kernel/setup.c:335:40: error: use of logical '&&' with con=
+stant operand [-Werror,-Wconstant-logical-operand]
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
+]) {
+>       |                                               ^  ~~~~~~~~~~~~~~~~=
+~
+> arch/loongarch/kernel/setup.c:335:40: note: use '&' for a bitwise operati=
+on
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
+]) {
+>       |                                               ^~
+>       |                                               &
+> arch/loongarch/kernel/setup.c:335:40: note: remove constant to silence th=
+is warning
+>   335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0=
+]) {
+>       |                                               ^~~~~~~~~~~~~~~~~~~=
+~
+> 1 error generated.
+Are you kidding me? CONFIG_CMDLINE[0] is a constant for a specific
+config but the config is variable across buildings. So the "constant"
+for compilers is not as "constant" for people. Compiler warnings
+should be double-checked by people, right?
 
+Huacai
 
-On 2025/3/3 下午10:06, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Mon, Mar 3, 2025 at 5:11 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> On host HW guest CSR registers are lost after suspend and resume
->> operation. Since last_vcpu of boot CPU still records latest vCPU pointer
->> so that guest CSR register skips to reload when boot CPU resumes and
->> vCPU is scheduled.
->>
->> Here last_vcpu is cleared so that guest CSR register will reload from
->> scheduled vCPU context after suspend and resume.
->>
->> Also there is another small fix for Loongson AVEC support, bit 14 is added
->> in CSR ESTAT register. Macro CSR_ESTAT_IS is replaced with hardcoded value
->> 0x1fff and AVEC interrupt status bit 14 is supported with macro
->> CSR_ESTAT_IS.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/main.c | 8 ++++++++
->>   arch/loongarch/kvm/vcpu.c | 2 +-
->>   2 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->> index f6d3242b9234..b177773f38f6 100644
->> --- a/arch/loongarch/kvm/main.c
->> +++ b/arch/loongarch/kvm/main.c
->> @@ -284,6 +284,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
->>   int kvm_arch_enable_virtualization_cpu(void)
->>   {
->>          unsigned long env, gcfg = 0;
->> +       struct kvm_context *context;
->>
->>          env = read_csr_gcfg();
->>
->> @@ -317,6 +318,13 @@ int kvm_arch_enable_virtualization_cpu(void)
->>          kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
->>                    read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
->>
->> +       /*
->> +        * HW Guest CSR registers are lost after CPU suspend and resume
->> +        * Clear last_vcpu so that Guest CSR register forced to reload
->> +        * from vCPU SW state
->> +        */
->> +       context = this_cpu_ptr(vmcs);
->> +       context->last_vcpu = NULL;
-> This can be simplified as this_cpu_ptr(vmcs)->last_vcpu = NULL;
-Sure, will do.
-> 
->>          return 0;
->>   }
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 20f941af3e9e..9e1a9b4aa4c6 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -311,7 +311,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
->>   {
->>          int ret = RESUME_GUEST;
->>          unsigned long estat = vcpu->arch.host_estat;
->> -       u32 intr = estat & 0x1fff; /* Ignore NMI */
->> +       u32 intr = estat & CSR_ESTAT_IS;
-> This part has nothing to do with S4, please split to another patch.
-ok, will split into two patches.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>          u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
->>
->>          vcpu->mode = OUTSIDE_GUEST_MODE;
->>
->> base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
->> --
->> 2.39.3
->>
->>
-
+>
+> Fixes: 83da30d73b86 ("LoongArch: Fix CMDLINE_EXTEND and CMDLINE_BOOTLOADE=
+R handling")
+> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+> ---
+>  arch/loongarch/kernel/setup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index edcfdfcad7d2..834bea7f42da 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -332,7 +332,7 @@ static void __init bootcmdline_init(char **cmdline_p)
+>          * Append built-in command line to the bootloader command line if
+>          * CONFIG_CMDLINE_EXTEND is enabled.
+>          */
+> -       if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
+> +       if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && !!CONFIG_CMDLINE[0]) {
+>                 strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
+>                 strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_S=
+IZE);
+>         }
+> --
+> 2.47.2
+>
