@@ -1,120 +1,164 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6551FCCF7
-	for <loongarch@lists.linux.dev>; Tue,  4 Mar 2025 10:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142C31FF1D6;
+	Tue,  4 Mar 2025 11:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085645; cv=none; b=O1whXekRaKcgwbdgOQwc6SbOq6+lxZxTztdwJ9wqHdA0z91L0udJ/VOXsgEW1YLBDsMhZU7PP9Di8DrFzZrebGMmGjDuLFdD98NKHqUgCooca4e1AkbZ5QQtCsXikA8x+5Rw8v+JNWHUXXmDas5wlTNm0XDIuTg2ol/7rYrOP08=
+	t=1741087480; cv=none; b=nnRJ2xFVo67mTYBrwm+TyjO5QV1GPAuCEZcXHmuKN6f4xShcDqS7BRRANUFFNSQmu4pFiuZb9OqzV8PIHHBL1pGNChTjKU0onoAkumX8vsaTx/dX0KfnswzXPJ4bapUdqpkJBUVpL0kpeSVNNFQrcJzl/SJ3Kq60ySvYsZYLepE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085645; c=relaxed/simple;
-	bh=VCfucskRC2cvY6966shLxXr2SgNODQiP9tZAsdqtyxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WT2qQlE0cV2HSyOIet95OXZlS4i6NNkp1mVCXhiE1I3/vOgbxW0i3aVUf3Ms4mwuiYeSSU6+Is0KpH0teR2gCKcHCVwBlAZAXwi9OanTRf6Q93cFWWZEYMvSf57InCv4n+r4ob5hRVUJiFI3mhLh4zypPRPVzkaZ4tQk6M788+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OwwsFIKZ; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1741087480; c=relaxed/simple;
+	bh=e8xAFzSOyEmR1JJktVOqZSTe9qvmMkeaXJerupWRRU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RI/H4EL5tOCfCarSNpcyiUmo3j+BGE3pvLNt14bbPGEicyi1knpQX8Xkfk6KoHt57UPm1PEvnB5ka5tKT3IR4/BZNm4Z4QotaOAnA8vdjU++h7QwttqmocMnSIEuO/ZIgj5S3kOdv2Ir8CJSUT1PlVmUIOJRAavgO4tI5Ntb5U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iolnmcAy; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OwwsFIKZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1741085591;
-	bh=J+AbzbeKk1TMOXRqPTcIrGEKxdHexrILpO1xrigQbXw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=OwwsFIKZ1SjdZY2GizjvL9BjFcNJe4DO2mxwtpweZyZUdf2lgxkz6ev1GdYBRhw6w
-	 FBfvuX1XhDKnuEF27NSQjVpuu/hqnhseUBeSOyyusrkXOTWN4c/UO1Cs/UgMqqHGN6
-	 kkLSQJynFfzIGWVrD3UAgkswGOb/Vy9xJsNiuuK4=
-X-QQ-mid: bizesmtpip3t1741085573tvc43m9
-X-QQ-Originating-IP: jfMFLMqo6HvurF85wH0TBlAZWnlJjGgvU5j6z2Ly9Yw=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 04 Mar 2025 18:52:50 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6603146197274234106
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: yangtiezhu@loongson.cn,
-	maobibo@loongson.cn,
-	guoweikang.kernel@gmail.com,
-	agordeev@linux.ibm.com,
-	ast@kernel.org,
-	usamaarif642@gmail.com,
-	jiaxun.yang@flygoat.com,
-	wangyuli@uniontech.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	chenlinxuan@uniontech.com,
-	donmor3000@hotmail.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] LoongArch: Fix use of logical '&&' with constant operand
-Date: Tue,  4 Mar 2025 18:52:46 +0800
-Message-ID: <EEBE30D1ACFF646F+20250304105246.766404-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iolnmcAy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741087479; x=1772623479;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e8xAFzSOyEmR1JJktVOqZSTe9qvmMkeaXJerupWRRU8=;
+  b=iolnmcAygEZ6uLjyly1hmHvjEZdbFVoduHZFI3yYhEaScVDCwSqFXEIu
+   hAPmR2ec3doz5nEIu2preLTxxAq8iTFkGleGoMni93g8FKHuqqz/G/ZiM
+   XCeTW0daKiIjVs+iHTDfxUwaJdBcejvkGgTgDj5yw86LgVuozW6o3Q9OD
+   9y/YDz1IMxsQvYyCGSEy4XOOOleiIXXSHoARHoDpsRaA+tS+ZW651aL9R
+   lu+R0eUT22VyvluOalEf2Pgiqce60x5GUwrnSnY/IZzI0Fg5B2gQtuujd
+   uawur5oNmbDgHM4ynHB2QYt/KV2jO8rcfqfPkqBddd+v0glHr8ctpseFD
+   g==;
+X-CSE-ConnectionGUID: r7sJsuQFRtenq6Rs6iRk0w==
+X-CSE-MsgGUID: D4gLnUBgRL+D0Izhd8LSDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="45925576"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="45925576"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:24:38 -0800
+X-CSE-ConnectionGUID: lAkXDvqMSwmcIaS7Nwzq+A==
+X-CSE-MsgGUID: xCV705m/SdKj7H3VTZxEqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="122475846"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 04 Mar 2025 03:24:34 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpQO0-000JhS-08;
+	Tue, 04 Mar 2025 11:24:32 +0000
+Date: Tue, 4 Mar 2025 19:24:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
+	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+Message-ID: <202503041913.hIveXcmc-lkp@intel.com>
+References: <20250303101533.31462-3-zhangtianyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NmUbf62sSvqSp36iGJqg/vsXZS3AC+SxSYV4DSStO5VA+w05E4ueZdGe
-	ZPdY7dpyZX/oXiTdqrbbaJFWwG/VPQ548m8OQjOjfY6XYdKh31O0/N6StLWD/fj0TcAUzHU
-	r6xBaVLQtV3Dll8By9PxnOGMUiFKNgWWkK7OFpM5zpSIkyDlJ64T0/HTEhfvip/0OQ0H/1R
-	B/3k1goL3CUlG2C/1EnekylRyPgJMuZ3lFwnegDEvEskix53wtc3OV6/4bYe7sxilnTtJup
-	iAWNlIZ86dmipWQwUoq5S/vr+zKfa4ejZhEHPhz1akk4YKodJizm0fluBtOdQ8VNCXosDmd
-	JWhAILk13wWmPa/9jpEpSd9kdmEuFGZeri3x4hHrHyBes6R28teGIEji6HVWCHE0HmDiDVO
-	W4wyJ3/kPEVfdRmYGiFqhSarWyI3Gxya0/5iAiSlHcWwY+x2b3np9cO7M66jD6sKImOQYUJ
-	aNU2nBxGlkLLOfMon7O4Xgbu5JW+ds5J/dexhChgAYmxUkpTiYzXDR7mIi2pgWIJwR5mFHz
-	1/smT7K4gxXt42ngmC+wh7L6R0OZ6uUR+D6naZjUsL3b1YSQUzCRcqo3Tf2cnvJIIhyjELD
-	Tj24IiGK76GA2H05ns8LJ6vLejHNrSXYpWhBqWHnpJUKXci+xWISaMCokCsqVDJrZ+r9MD4
-	OyaVMq0tmxpkTA5Q8eg4O7zWs0Lyb0I2Ae4gBpK2tXepNrv98Y/d8aSczOiOMtEnZ7k8HZ5
-	n/YWY0+itGYfGbC6cgeMa8D2Aj/hTNjmPgKqcKxHX0Opk5EKuoHF7xxYVFYxXmfxKDCicf7
-	2rrO6ly/YJiMLS3/5jqzGHP6fxj9iwLK55HFmKiKZrwPCEXqLTLJ6gQd0jpfEJYvN6t0BXo
-	T7ThlFQA+zpCnuhv8rE2Bjz8ux+AIojTMLJG57CM8oQ2Cme6862A3F3oio60bhjCXA/X/Rc
-	dHMXqK2GgmMFcZli4Snowf2ZO9TmV1AW2NFUGYnADOcEYK2y/rAzE59DNyvE3uYz0wzqvkW
-	Ig38uHg5nJ4VslRDtdZTosWOLgCsA=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303101533.31462-3-zhangtianyang@loongson.cn>
 
-Fix follow error with clang-19:
+Hi Tianyang,
 
-arch/loongarch/kernel/setup.c:335:40: error: use of logical '&&' with constant operand [-Werror,-Wconstant-logical-operand]
-  335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-      |                                               ^  ~~~~~~~~~~~~~~~~~
-arch/loongarch/kernel/setup.c:335:40: note: use '&' for a bitwise operation
-  335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-      |                                               ^~
-      |                                               &
-arch/loongarch/kernel/setup.c:335:40: note: remove constant to silence this warning
-  335 |         if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-      |                                               ^~~~~~~~~~~~~~~~~~~~
-1 error generated.
+kernel test robot noticed the following build errors:
 
-Fixes: 83da30d73b86 ("LoongArch: Fix CMDLINE_EXTEND and CMDLINE_BOOTLOADER handling")
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
----
- arch/loongarch/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test ERROR on tip/irq/core]
+[also build test ERROR on lwn/docs-next linus/master v6.14-rc5 next-20250303]
+[cannot apply to tip/smp/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index edcfdfcad7d2..834bea7f42da 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -332,7 +332,7 @@ static void __init bootcmdline_init(char **cmdline_p)
- 	 * Append built-in command line to the bootloader command line if
- 	 * CONFIG_CMDLINE_EXTEND is enabled.
- 	 */
--	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && CONFIG_CMDLINE[0]) {
-+	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) && !!CONFIG_CMDLINE[0]) {
- 		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
- 		strlcat(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
- 	}
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Docs-LoongArch-Add-Advanced-Extended-Redirect-IRQ-model-description/20250303-181832
+base:   tip/irq/core
+patch link:    https://lore.kernel.org/r/20250303101533.31462-3-zhangtianyang%40loongson.cn
+patch subject: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+config: loongarch-randconfig-002-20250304 (https://download.01.org/0day-ci/archive/20250304/202503041913.hIveXcmc-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250304/202503041913.hIveXcmc-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503041913.hIveXcmc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/irqchip/irq-loongarch-ir.c: In function 'loongarch_irq_redirect_alloc':
+>> drivers/irqchip/irq-loongarch-ir.c:352:52: error: 'struct device' has no member named 'numa_node'
+     352 |         node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
+         |                                                    ^~
+
+
+vim +352 drivers/irqchip/irq-loongarch-ir.c
+
+   342	
+   343	static int loongarch_irq_redirect_alloc(struct irq_domain *domain,
+   344						unsigned int virq, unsigned int nr_irqs,
+   345						 void *arg)
+   346	{
+   347		struct redirect_table *ird_table;
+   348		struct avecintc_data *avec_data;
+   349		struct irq_data *irq_data;
+   350		int ret, i, node;
+   351	
+ > 352		node = ((msi_alloc_info_t *)arg)->desc->dev->numa_node;
+   353		ird_table = &irde_descs[node].ird_table;
+   354		ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
+   355		if (ret < 0)
+   356			return ret;
+   357	
+   358		for (i = 0; i < nr_irqs; i++) {
+   359			struct redirect_item *item;
+   360	
+   361			item = kzalloc(sizeof(struct redirect_item), GFP_KERNEL);
+   362			if (!item) {
+   363				pr_err("Alloc redirect descriptor failed\n");
+   364				goto out_free_resources;
+   365			}
+   366	
+   367			irq_data = irq_domain_get_irq_data(domain, virq + i);
+   368	
+   369			avec_data = irq_data_get_avec_data(irq_data);
+   370			ret = redirect_table_alloc(item, ird_table);
+   371			if (ret) {
+   372				pr_err("Alloc redirect table entry failed\n");
+   373				goto out_free_resources;
+   374			}
+   375	
+   376			item->gpid = kzalloc_node(sizeof(struct redirect_gpid), GFP_KERNEL, node);
+   377			if (!item->gpid) {
+   378				pr_err("Alloc redirect GPID failed\n");
+   379				goto out_free_resources;
+   380			}
+   381	
+   382			irq_data->chip_data = item;
+   383			irq_data->chip = &loongarch_redirect_chip;
+   384			redirect_domain_prepare_entry(item, avec_data);
+   385		}
+   386		return 0;
+   387	
+   388	out_free_resources:
+   389		loongarch_irq_redirect_free_resources(domain, virq, nr_irqs);
+   390		irq_domain_free_irqs_common(domain, virq, nr_irqs);
+   391	
+   392		return -EINVAL;
+   393	}
+   394	
+
 -- 
-2.47.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
