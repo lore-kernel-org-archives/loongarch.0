@@ -1,143 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B9B1428E7
-	for <loongarch@lists.linux.dev>; Wed,  5 Mar 2025 01:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01FA1C701C
+	for <loongarch@lists.linux.dev>; Wed,  5 Mar 2025 05:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741138435; cv=none; b=rLrO1Ug1gMUG89g5BOZRjyzH/0Beu9cAXBmQnVR+MVwYh+PaYchp+0f8P6iwdITi/GkXuJNyp96kl3cTpajmrV6B6bn0l5caLDS8hlQ2Ez6fkys+yS4n+cqTpN+A+ZjdVYZiJ9gh6/mnez+qGaL/g2NsQ+TOPKDtpEX0sLeSeEA=
+	t=1741151598; cv=none; b=cE2h61BsoiSIY7fXnuJ0Ne56rueezTSbopK8OhWbVhZOn0Bx6UdkwUlAPwaqG5ODhmIcZTRfcxINQZfl+mNlKPck3GVyDSZP7Y/erHh/q3T/8+pylIbBZRsYQReYpYBg/HJqc0e1/hM+fovSVJqZdExX+YUsSP4nPugFFJ6PB8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741138435; c=relaxed/simple;
-	bh=RJSsvUkwE1psIq7jswRIkOyjYBcD9wsUQCVHvA2sFwc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=NF7v2EC4tIhBwNDSh3U9E4s2Lg6MWbkwF3rMsilflP9fK3H3SWNBIZx5l08oQ/ce2zZONsqa7qssCvxLlJDcw2izvFMyNfwwWNSJ3bdrZ9QrCXdbHWl+MHK3QeQdFejl3cae21V6h32YOXD4ppj7IloeIp3PJmzVjxbfQTk2gu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxYa_8qcdnPbGKAA--.64529S3;
-	Wed, 05 Mar 2025 09:33:48 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDxPcX5qcdnIbg2AA--.4576S3;
-	Wed, 05 Mar 2025 09:33:47 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: mm: Set max_pfn with the PFN of the last page
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250304112708.1810033-1-maobibo@loongson.cn>
- <CAAhV-H7ZAK15ob3M=5eQrOhPvkSFhkrmVHd-mn6RXgQqQV_Ebg@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <3a04b960-e3ad-0656-d69d-6e85079d305a@loongson.cn>
-Date: Wed, 5 Mar 2025 09:33:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1741151598; c=relaxed/simple;
+	bh=q0BhGC6HUxOE4XplZuS/4jndjnSHZQ5oqFPeN6Mlcss=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HMyWY3sHgLdnGM4gWwdxshFUC5I1rAyuTKhJD8jjjO1x8Jc3nOYAZJtQIFhjtP5CYyuQj7IX149m0DU1gZOObIpsKd6wQMJvQ6M1a6/NAJ086t18RUCepwyYVqNGQqahpiPNYrWHhzHF3H8QKLurXrUfAlk7p0rJQfGGk7MOajw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aP0SVv1U; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aP0SVv1U"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f44353649aso10219460a91.0
+        for <loongarch@lists.linux.dev>; Tue, 04 Mar 2025 21:13:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741151595; x=1741756395; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iI2i5cV2QPSlpE280H3wgvcz67NO3pUTtRCcIr6Aq80=;
+        b=aP0SVv1Ub3fggQ5EimkSn20s7Ae+IN+3cPnfKNqqid1IVyeLotDI5qr0dgUyddP7vD
+         OienN3GuBa77rTnan9zqDsEUg01n2AzQO1U5em1EzDb4afY1Fy0LqNzURZ2LPPayTbPc
+         EXXEgKdpcHFVr4cwakMK2Wxl9ccIq6jYgk3GHgDi/vpv8RCkm/xOgGblQxDHltnHPYlA
+         z/DuL1fBLarY8Ko2wuo39/TY5UiaBL3JIpK7y230Xy/QKhqZLJchBY0QE/L5tYNL9a4H
+         KkvN/wZEJfgoSInDgs7pSIvsKsKr5k2NsqDwOjmoEnCg+kbRTazOoX748+qqFzIEv3Qz
+         DaCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741151595; x=1741756395;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iI2i5cV2QPSlpE280H3wgvcz67NO3pUTtRCcIr6Aq80=;
+        b=e3rIINZcrsBGOUKLg4tmiAlVhQFNoMDISu8YV+nEwe+HmkWfAR8lUw2zzvhCURw/Bz
+         ug8vu0Aoa0EdT8Z0S0ACOv0sM3SEo+nbP3e840cJXUA1L/HhFQ1aTgVPow83CioHnqjT
+         LEPyCSa50MXcRTrLoajgENUWsdefchFdCJjhi05gCqhIIQQJcB4IjXN9Qj+rM4oa+7a0
+         EJRTBE1HJh3kK1++oF1vmQARXRCSRlrZiXX7e1wv+nTnrH3IxvSbhJOyw2/+qtekwWT+
+         nJTVj0LdFs8agtql9YZXKnKymVGql5XM46Znmj5Mm2NntiiOKtRsloYbVtyz5atIWUxn
+         otwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJHCtHJgwcsp194hECYn+yI+iDKwcV8rn07D80scgaRTi2/avDLjpEoKcgOwzVpsvGfqy1oqdXH10=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyf4B/cqJo7FFxKAdJNDhHmdN81rvFazwx6HbAcr11LreYdF5NO
+	yFR7tUO8856gIL5Mwa5uxBcYUxypGEVL0oWEQMoXDMeNXNjHe4Sy
+X-Gm-Gg: ASbGnctWBvMteOp1PWwTvFFLr7ZjP6saPv+hx6EChmkocD4EeCFk3V26NzqpuGjgZf5
+	GPjGwIm/+qqiSK5AZMsLqbQXh0gaJf7jJ8irBFB13/u4YyqWI2w3Kcc6Mzk8KzvLP00PLXNQduj
+	Li4NRC0VQJPC78RW/CS8NeIjeLjtrgkZ9kkTch2iRKo9MD4DhKddarAosgybub+abl8F7GBNtvN
+	78Wuf43d4NIT1/GmLLxwJUFsOvyDrpKvfTWhj/CZI0l+MeSBtEStzTXpxDCeeNbULkPvBw7mp4D
+	T8Ba+qJPQvQwXmsNI6A1u963mPq47LG7SiRc3RVjKlevRj/f71cCvtvA//7Qp6sVu+EOyuQQmad
+	YaXdyebQ9Qa8XVVf36GMPXQzQ0hE=
+X-Google-Smtp-Source: AGHT+IFMSQhAQ13isO5dfJNAPGUjk16diS7qR+TcB+buuYoTv6JifWXgE+o5nAJ3u7mlLeqgq39i1g==
+X-Received: by 2002:a17:90b:5688:b0:2ee:bc7b:9237 with SMTP id 98e67ed59e1d1-2ff4979cee1mr3291553a91.27.1741151594826;
+        Tue, 04 Mar 2025 21:13:14 -0800 (PST)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e78a991sm380662a91.24.2025.03.04.21.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 21:13:14 -0800 (PST)
+Date: Wed, 05 Mar 2025 14:13:07 +0900 (JST)
+Message-Id: <20250305.141307.586794213367343251.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
+ hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
+ hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ tmgross@umich.edu
+Subject: Re: [PATCH v3 5/5] rust: Add warn_on and warn_on_once
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CAH5fLgjX9hh+QRrKggOKr+6p+UwqHSavzu4UXy9iGNL2wSJXtg@mail.gmail.com>
+References: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+	<20250213135759.190006-6-fujita.tomonori@gmail.com>
+	<CAH5fLgjX9hh+QRrKggOKr+6p+UwqHSavzu4UXy9iGNL2wSJXtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7ZAK15ob3M=5eQrOhPvkSFhkrmVHd-mn6RXgQqQV_Ebg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcX5qcdnIbg2AA--.4576S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur1UWr1xXr1xXr1fXr4xGrX_yoW5Zry5pr
-	W8AF1DWr4UGr1xC34Fqw1kuryfW3s0k3y3Wa1rKF1Syr15Xrn3Xw40qrnxuF1qqw4xJa1F
-	qrZ0gFyqvFWUtagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUU
-	U
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
+On Mon, 3 Mar 2025 14:33:39 +0100
+Alice Ryhl <aliceryhl@google.com> wrote:
 
+>> +#[macro_export]
+>> +#[doc(hidden)]
+>> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+>> +macro_rules! warn_flags {
+>> +    ($flags:expr) => {
+>> +        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
+>> +        // SAFETY: Just an FFI call.
+>> +        #[cfg(CONFIG_DEBUG_BUGVERBOSE)]
+>> +        unsafe {
+>> +            $crate::asm!(concat!(
+>> +                "/* {size} */",
+>> +                ".pushsection .rodata.str1.1, \"aMS\",@progbits, 1\n",
+>> +                "111:\t .string ", "\"", file!(), "\"\n",
+>> +                ".popsection\n",
+> 
+> It looks like you're doing this so that you can reference the filename
+> with "111b", but could you do this instead:
+> 
+> const _FILE: &[u8] = file!().as_bytes();
+> // Plus one for nul-terminator.
+> static FILE: [u8; 1 + _FILE.len()] = {
+>     let mut bytes = [0; 1 + _FILE.len()];
+>     let mut i = 0;
+>     while i < _FILE.len() {
+>         bytes[i] = _FILE[i];
+>         i += 1;
+>     }
+>     bytes
+> };
 
-On 2025/3/4 下午8:25, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Tue, Mar 4, 2025 at 7:27 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> The current max_pfn equals to zero. In this case, it caused users cannot
->> get some page information through /proc such as kpagecount. The following
->> message is displayed by stress-ng test suite with the command
->> "stress-ng --verbose --physpage 1 -t 1".
->>
->>   # stress-ng --verbose --physpage 1 -t 1
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x134ac000 in /proc/kpagecount, errno=22 (Invalid argument)
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x7ffff207c3a8 in /proc/kpagecount, errno=22 (Invalid argument)
->>   stress-ng: error: [1691] physpage: cannot read page count for address 0x134b0000 in /proc/kpagecount, errno=22 (Invalid argument)
->>   ...
->>
->> After applying this patch, the kernel can pass the test.
->>   # stress-ng --verbose --physpage 1 -t 1
->>   stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU 3)
->>   stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU 3)
->>   stress-ng: debug: [1700] physpage: [1701] terminated (success)
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> I think this patch are mainly fix commit
-> ff6c3d81f2e86b63a3a530683f89ef39 ("NUMA: optimize detection of memory
-> with no node id assigned by firmware"). So it is better to add a
-> Fixes: tag and Cc stable.
-> 
-> And the patch itself can be improved. there are three cases of
-> calculating max_low_pfn:
-> ACPI with NUMA, handled in numa.c
-> ACPI without NUMA, handled in mem.c
-> FDT, handled in setup.c
-> 
-> You have missed the 2nd case. The simplest way is add "max_pfn =
-> max_low_pfn" at the beginning of arch_mem_init() because all cases can
-> be handled here.
-yes, that is actually one problem:)  Will do this simply in 
-arch_mem_init() in next patch.
+Neat! I will use this in the next version.
 
-Regards
-Bibo Mao
+> and then use
 > 
-> Huacai
+> asm!(
+>     concat!(
+>         "/* {size} */",
+>         include!(concat!(env!("OBJTREE"),
+> "/rust/kernel/generated_arch_warn_asm.rs")),
+>         include!(concat!(env!("OBJTREE"),
+> "/rust/kernel/generated_arch_reachable_asm.rs")));
+>     file = sym FILE,
+>     line = const line!(),
+>     ...
+> );
 > 
->> ---
->>   arch/loongarch/kernel/numa.c  | 2 +-
->>   arch/loongarch/kernel/setup.c | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
->> index 84fe7f854820..002dbe62b329 100644
->> --- a/arch/loongarch/kernel/numa.c
->> +++ b/arch/loongarch/kernel/numa.c
->> @@ -356,7 +356,7 @@ int __init init_numa_memory(void)
->>                  node_mem_init(node);
->>                  node_set_online(node);
->>          }
->> -       max_low_pfn = PHYS_PFN(memblock_end_of_DRAM());
->> +       max_low_pfn = max_pfn = PHYS_PFN(memblock_end_of_DRAM());
->>
->>          setup_nr_node_ids();
->>          loongson_sysconf.nr_nodes = nr_node_ids;
->> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
->> index edcfdfcad7d2..ab8c9336d8f5 100644
->> --- a/arch/loongarch/kernel/setup.c
->> +++ b/arch/loongarch/kernel/setup.c
->> @@ -294,7 +294,7 @@ static void __init fdt_setup(void)
->>          early_init_dt_scan(fdt_pointer, __pa(fdt_pointer));
->>          early_init_fdt_reserve_self();
->>
->> -       max_low_pfn = PFN_PHYS(memblock_end_of_DRAM());
->> +       max_low_pfn = max_pfn = PFN_PHYS(memblock_end_of_DRAM());
->>   #endif
->>   }
->>
->> --
->> 2.39.3
->>
+> with
+> ::kernel::concat_literals!(ARCH_WARN_ASM("{file}", "{line}",
+> "{flags}", "{size}")),
+> 
+> That would be a lot simpler to understand than what you are doing.
 
+Indeed.
+
+Thanks a lot!
