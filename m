@@ -1,226 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3347E248890;
-	Wed,  5 Mar 2025 14:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B96D1FDA7A
+	for <loongarch@lists.linux.dev>; Wed,  5 Mar 2025 23:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186075; cv=none; b=ePFq2F53wP1kGqURMNqyKW4QaTh08feRlU4+wcUA9/UHT9vvzo72kETyTHDfU+o0+wDn79C2nhbyJk01ZyFI+NDBMG9r2D4tk8gRq/Vo65dqXmZ6l2eAfB0Xe6sUH6LL4uRf3Knm80l6alnhAh4qmLqpaIeVZhUCs1EX1um3dnE=
+	t=1741215643; cv=none; b=iw8ZFNuLeKi4nmj4qWjZUk1eQsV/r00MfbYQXiOsYTqxoQ93sKBXdlYwIrlU5P18oYgzLalc0qD/5ZsrN5mTf8GLaRstBZ/N8JV8zcj9/3LdNq+8eej6vqOjjOgAW3DDK8Nyu0TvPlormYFEH62a4AkLNpe4/XnUp4MySM/J6+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186075; c=relaxed/simple;
-	bh=joP68b7Dh0p2ZNLJiJaNW8ilprYFELiWiIzeuH6IOho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n78Y6Nr2Imrge95gWa21sa2Lc74K3BkUWo6osHXCxWJu2Lk4hFsUqaAZCmHU+o4PDPeBMC5R8Awhj1E3d/AIYvWRXPiYGYJgVAuiYgGqMLTJavAxyIFFLmyZwiU4tMtaSV30q40RzqpCU/wcoAnx20rFOdRBfcS/CHq47UzuMM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dvTfGNi6; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741215643; c=relaxed/simple;
+	bh=g0QrlFghj/wYi3pHrM1E4FGE1hrhwiJrmPHndROZfrM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n/5KbcHnjYDQmdfMKoVVsb4zx1s/VvbfhoWODwYH+OhoOh6eSnUxTGnK2+Wx8jpBO5zXDJ51sKPrD3R+ik6WtnWOI2RgtHgFZikCtO5GbimGWfseqettKvRW8pM5q2bhKbNGP35mbJ6Ll6XgdkXddrTb8rBsmOhDvEM0ZI25DGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gB9+CK+X; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dvTfGNi6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741186073; x=1772722073;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=joP68b7Dh0p2ZNLJiJaNW8ilprYFELiWiIzeuH6IOho=;
-  b=dvTfGNi6TWsjW/E1sBzNxbhGfofkRP05mOufz5GWMcYy/poalsO3B+IP
-   rzlZrdLjv6RM23fxfGzGDowbujwbGOwJ0tP7UG+adVWH+wMvN9wOIEISV
-   p4Qk3z8pOVMOMiUJJkg7lZ2z1BOMeeuIagV3Ofm0ohLqEbCEPL15lF9Pv
-   t5GMDEbq2JVkMJm7sYbx3bFEGioQlIEDvqPRYKFEMB5QvTR8/TxAHPszm
-   1n6L/paOHWWiBmJ1bHuUr495CavjU1wGD137g5p3Xv32NGACdZvcUW3Nd
-   tXx8BYYOI9h3DtROoavh7c1jKJ7iloeectDxoOXzU3hC3WKpbrF73HBHy
-   g==;
-X-CSE-ConnectionGUID: 5qCcc2TzSey0RtbRsTWW+w==
-X-CSE-MsgGUID: cPsiG5uWSrSXprymf9VG6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52788464"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="52788464"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 06:47:52 -0800
-X-CSE-ConnectionGUID: vI3ceUfnRrCGa1MWYBvuaA==
-X-CSE-MsgGUID: g0XkJtvfRtWxahAhx2Iiww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118421301"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 05 Mar 2025 06:47:48 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tpq2D-000L5W-2p;
-	Wed, 05 Mar 2025 14:47:45 +0000
-Date: Wed, 5 Mar 2025 22:47:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
-	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-Message-ID: <202503052234.SiXLJuat-lkp@intel.com>
-References: <20250303101533.31462-3-zhangtianyang@loongson.cn>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gB9+CK+X"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fef5c978ccso120457a91.1
+        for <loongarch@lists.linux.dev>; Wed, 05 Mar 2025 15:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741215641; x=1741820441; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AXOEYTInHDTSYq1AFClqzRbl+ZkEHDGXfjWhKaTrwBI=;
+        b=gB9+CK+XAVuDXi8rzs5hdUKTrFDaw8YD3HV3j/P9MU0QWBwVVe6jTLYgYfreFwbIfu
+         AWvJjOuyZg1ksLr+gmz3UF6ukKFqD9W/Zu6jZcBAT5tsz0OB6lJdSXDCzOLsbYOT2NcN
+         LGKCvwvib120c3Y5lZDM6WUhdBqpX06hSMI0vIVUkdqQEwJIxZZ3NZ1c7lZgaZsqbU5e
+         my1KYeL7WgKSNuwor+IOOqpw7T7fVG80SBdSQ/eY0/YaWUGLA7HT5zRPd109IRxK3AvX
+         fvmjjIDRSgKSOqkDh1DoCzcVr4d7g9wIP5zliotksA0RT3VQEg399OIXIKzJGrRIdM1O
+         taiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741215641; x=1741820441;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AXOEYTInHDTSYq1AFClqzRbl+ZkEHDGXfjWhKaTrwBI=;
+        b=gOufBO0bkdd32gq0FzPXLlqmBTqt8Wyz+opE/5KTtHq53Ym6TzEqq6Wv1Cu9t3MDEF
+         MrWaUnTJO8VKcAKziB90ocPSZ9jX+ZGR/JK+Vk5ralW11jiVLqX9Xn+S43Hfz9N6TCIY
+         B/QRJWyPKJH0SMGL1XsOHRiPWHyehP4pLRYcDwbgkc2fZwpFC9Pszp+SlXFTc7+lyLaD
+         WGCsbWrnLGGwHZW/4joTYmrKEipqkMxrNMWzkSzO/UbonfxItg9r6bbMOUITJqba/u1d
+         tv2D3+kB+ye4Ua6bH2g2xeSefXW0saG9LjE49Ld8FXTR48YG8Ou+83IG/qCUQ9tNkVU1
+         uP3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXH/UvIO8SPr5JCGDCulNG5RaFmOfINHdd1NJG1v4y6rCoivb08Xz6GIme0ip0FvN3rkstOkT9IBxw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyWfNZkfdhdFtni0FVMzjNdzczhsQvAVTBdtuC/OlynSQ9sQTDv
+	y0RN2ztxigSy8YfJYhVG10sU/IsQtGnPlgEx9GEBWRj040nUGm6tPqyxPrhPAVo=
+X-Gm-Gg: ASbGncuD2m8go7ePXBUmBlPYxDKWrytB95W+h3Td54JxzrC3uwOUXufC3ISIl5yIjti
+	l6rUJ6yltK7uPYyJCLpp8EO0qvIKqr/NaT8viTn5brE0ljKX8ETPlSRk9ZyXXmg2yzae8m8Oplz
+	UFOXb+I1dJlwViXlNzWmfbdF64sBwmdaILC6wsHqmMrnWcKyyXoQZI+tORtbM+TNJjXUB8MVtQD
+	lP+vXz+2PfvpjM31mZvTukae0nwUaRPEic52IkBOmVBQ6IGKTFQ3uDUticoj/gfTS92pH/wCtk0
+	ADAjhu5FxP1/aceZHGFmvVnsRFIaOlj3X1kfZVFRiavXo6Kn2bvXykLFozQP
+X-Google-Smtp-Source: AGHT+IGC2nc8khTnmGuhu0Gds3SKj5WRJ4Lw9OkM+lUlr5dLYMfrx7W+qe5bbMu3V+b1JB/wwlZfuw==
+X-Received: by 2002:a05:6a21:78a8:b0:1f3:48ef:8aa0 with SMTP id adf61e73a8af0-1f34944ed96mr9881349637.6.1741215641152;
+        Wed, 05 Mar 2025 15:00:41 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7dedd22esm10593413a12.63.2025.03.05.15.00.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 15:00:40 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH RESEND v4 0/4] entry: Move ret_from_fork() to C and inline
+ syscall_exit_to_user_mode()
+Date: Wed, 05 Mar 2025 15:00:24 -0800
+Message-Id: <20250305-riscv_optimize_entry-v4-0-0d81bb45203f@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303101533.31462-3-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, 
+ WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, 
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2306; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=g0QrlFghj/wYi3pHrM1E4FGE1hrhwiJrmPHndROZfrM=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/qJ69Mea/w8opI0a+Kna9vNuo8tW5fAtvxt4uYpv19N8
+ 504pyJgT0cpC4MYF4OsmCILz7UG5tY7+mVHRcsmwMxhZQIZwsDFKQATKQ9g+J81JzTmQg+vl6Dw
+ 6m9zz3m/LCjLuBUzMeizw23LdC2dBV2MDIsme6f4GU82P2Yu9ueXXMqj14vzqnwCntwxKK5c8Sp
+ yIRcA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Hi Tianyang,
+Similar to commit 221a164035fd ("entry: Move
+syscall_enter_from_user_mode() to header file"), move
+syscall_exit_to_user_mode() to the header file as well.
 
-kernel test robot noticed the following build errors:
+Testing was done with the byte-unixbench [1] syscall benchmark (which
+calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
+x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
+s390 a 11.1328% improvement.
 
-[auto build test ERROR on tip/irq/core]
-[also build test ERROR on lwn/docs-next linus/master v6.14-rc5 next-20250305]
-[cannot apply to tip/smp/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Since this is on QEMU, I know these numbers are not perfect, but they
+show a trend of general improvement across all architectures that use
+the generic entry code.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Docs-LoongArch-Add-Advanced-Extended-Redirect-IRQ-model-description/20250303-181832
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20250303101533.31462-3-zhangtianyang%40loongson.cn
-patch subject: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-config: loongarch-randconfig-002-20250305 (https://download.01.org/0day-ci/archive/20250305/202503052234.SiXLJuat-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250305/202503052234.SiXLJuat-lkp@intel.com/reproduce)
+[1] https://github.com/kdlucas/byte-unixbench
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503052234.SiXLJuat-lkp@intel.com/
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v4:
+- I had messed up warning for ct_state() on rebase, correct that issue
+- Link to v3: https://lore.kernel.org/r/20250124-riscv_optimize_entry-v3-0-869f36b9e43b@rivosinc.com
 
-All errors (new ones prefixed by >>):
+Changes in v3:
+- Fixup comment to properly reflect args (Alex)
+- Fix prototypes for loongarch (Huacai)
+- Link to v2: https://lore.kernel.org/r/20250123-riscv_optimize_entry-v2-0-7c259492d508@rivosinc.com
 
-   In file included from include/linux/percpu.h:5,
-                    from include/linux/context_tracking_state.h:5,
-                    from include/linux/hardirq.h:5,
-                    from include/linux/interrupt.h:11,
-                    from drivers/irqchip/irq-loongarch-ir.c:8:
-   drivers/irqchip/irq-loongarch-ir.c: In function 'redirect_queue_init':
->> drivers/irqchip/irq-loongarch-ir.c:413:62: error: 'INVALID_QUEUE_PAGE_ORDER' undeclared (first use in this function)
-     413 |         pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-         |                                                              ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:227:16: note: in definition of macro 'alloc_hooks_tag'
-     227 |         typeof(_do_alloc) _res;                                         \
-         |                ^~~~~~~~~
-   include/linux/gfp.h:295:49: note: in expansion of macro 'alloc_hooks'
-     295 | #define  alloc_pages_node(...)                  alloc_hooks(alloc_pages_node_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:413:17: note: in expansion of macro 'alloc_pages_node'
-     413 |         pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-         |                 ^~~~~~~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:413:62: note: each undeclared identifier is reported only once for each function it appears in
-     413 |         pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-         |                                                              ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:227:16: note: in definition of macro 'alloc_hooks_tag'
-     227 |         typeof(_do_alloc) _res;                                         \
-         |                ^~~~~~~~~
-   include/linux/gfp.h:295:49: note: in expansion of macro 'alloc_hooks'
-     295 | #define  alloc_pages_node(...)                  alloc_hooks(alloc_pages_node_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:413:17: note: in expansion of macro 'alloc_pages_node'
-     413 |         pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-         |                 ^~~~~~~~~~~~~~~~
->> drivers/irqchip/irq-loongarch-ir.c:413:15: error: assignment to 'struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     413 |         pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-         |               ^
-   drivers/irqchip/irq-loongarch-ir.c: In function 'redirect_table_init':
->> drivers/irqchip/irq-loongarch-ir.c:440:65: error: 'IRD_PAGE_ORDER' undeclared (first use in this function); did you mean 'NR_PAGE_ORDERS'?
-     440 |         pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-         |                                                                 ^~~~~~~~~~~~~~
-   include/linux/alloc_tag.h:227:16: note: in definition of macro 'alloc_hooks_tag'
-     227 |         typeof(_do_alloc) _res;                                         \
-         |                ^~~~~~~~~
-   include/linux/gfp.h:295:49: note: in expansion of macro 'alloc_hooks'
-     295 | #define  alloc_pages_node(...)                  alloc_hooks(alloc_pages_node_noprof(__VA_ARGS__))
-         |                                                 ^~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:440:17: note: in expansion of macro 'alloc_pages_node'
-     440 |         pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-         |                 ^~~~~~~~~~~~~~~~
-   drivers/irqchip/irq-loongarch-ir.c:440:15: error: assignment to 'struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     440 |         pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-         |               ^
-   drivers/irqchip/irq-loongarch-ir.c: In function 'redirect_table_fini':
-   drivers/irqchip/irq-loongarch-ir.c:475:47: error: 'IRD_PAGE_ORDER' undeclared (first use in this function); did you mean 'NR_PAGE_ORDERS'?
-     475 |                 __free_pages(ird_table->page, IRD_PAGE_ORDER);
-         |                                               ^~~~~~~~~~~~~~
-         |                                               NR_PAGE_ORDERS
-   drivers/irqchip/irq-loongarch-ir.c:486:44: error: 'INVALID_QUEUE_PAGE_ORDER' undeclared (first use in this function)
-     486 |                 __free_pages(rqueue->page, INVALID_QUEUE_PAGE_ORDER);
-         |                                            ^~~~~~~~~~~~~~~~~~~~~~~~
+Changes in v2:
+- Fixup compilation issues for loongarch
+- Fixup compilation issues with CONFIG_CONTEXT_TRACKING_USER
+- Link to v1: https://lore.kernel.org/r/20250122-riscv_optimize_entry-v1-0-4ee95559cfd0@rivosinc.com
 
+---
+Charlie Jenkins (4):
+      riscv: entry: Convert ret_from_fork() to C
+      riscv: entry: Split ret_from_fork() into user and kernel
+      LoongArch: entry: Migrate ret_from_fork() to C
+      entry: Inline syscall_exit_to_user_mode()
 
-vim +/INVALID_QUEUE_PAGE_ORDER +413 drivers/irqchip/irq-loongarch-ir.c
-
-   407	
-   408	static int redirect_queue_init(int node)
-   409	{
-   410		struct redirect_queue *rqueue = &(irde_descs[node].inv_queue);
-   411		struct page *pages;
-   412	
- > 413		pages = alloc_pages_node(0, GFP_KERNEL | __GFP_ZERO, INVALID_QUEUE_PAGE_ORDER);
-   414		if (!pages) {
-   415			pr_err("Node [%d] Invalid Queue alloc pages failed!\n", node);
-   416			return -ENOMEM;
-   417		}
-   418	
-   419		rqueue->page = pages;
-   420		rqueue->base = (u64)page_address(pages);
-   421		rqueue->max_size = INVALID_QUEUE_SIZE;
-   422		rqueue->head = 0;
-   423		rqueue->tail = 0;
-   424		rqueue->node = node;
-   425		raw_spin_lock_init(&rqueue->lock);
-   426	
-   427		iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQH);
-   428		iocsr_write32(0, LOONGARCH_IOCSR_REDIRECT_CQT);
-   429		iocsr_write64(((rqueue->base & (CQB_ADDR_MASK << CQB_ADDR_SHIFT)) |
-   430					(CQB_SIZE_MASK << CQB_SIZE_SHIFT)), LOONGARCH_IOCSR_REDIRECT_CQB);
-   431		return 0;
-   432	}
-   433	
-   434	static int redirect_table_init(int node)
-   435	{
-   436		struct redirect_table *ird_table = &(irde_descs[node].ird_table);
-   437		struct page *pages;
-   438		unsigned long *bitmap;
-   439	
- > 440		pages = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, IRD_PAGE_ORDER);
-   441		if (!pages) {
-   442			pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-   443			return -ENOMEM;
-   444		}
-   445		ird_table->page = pages;
-   446		ird_table->table = page_address(pages);
-   447	
-   448		bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-   449		if (!bitmap) {
-   450			pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-   451			return -ENOMEM;
-   452		}
-   453	
-   454		ird_table->bitmap = bitmap;
-   455		ird_table->nr_ird = IRD_ENTRIES;
-   456		ird_table->node = node;
-   457	
-   458		raw_spin_lock_init(&ird_table->lock);
-   459	
-   460		if (redirect_queue_init(node))
-   461			return -EINVAL;
-   462	
-   463		iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-   464		iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
-   465	
-   466		return 0;
-   467	}
-   468	
-
+ arch/loongarch/include/asm/asm-prototypes.h |  8 +++++
+ arch/loongarch/kernel/entry.S               | 22 ++++++-------
+ arch/loongarch/kernel/process.c             | 33 +++++++++++++++----
+ arch/riscv/include/asm/asm-prototypes.h     |  2 ++
+ arch/riscv/kernel/entry.S                   | 20 +++++++-----
+ arch/riscv/kernel/process.c                 | 21 +++++++++++--
+ include/linux/entry-common.h                | 43 +++++++++++++++++++++++--
+ kernel/entry/common.c                       | 49 +----------------------------
+ 8 files changed, 119 insertions(+), 79 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20240402-riscv_optimize_entry-583843420325
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Charlie Jenkins <charlie@rivosinc.com>
+
