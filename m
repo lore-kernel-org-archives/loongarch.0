@@ -1,108 +1,217 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565041FE46B
-	for <loongarch@lists.linux.dev>; Wed,  5 Mar 2025 08:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92FD205E2B
+	for <loongarch@lists.linux.dev>; Wed,  5 Mar 2025 10:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741165005; cv=none; b=TnGS+ldyqVpVNW/o1PFKmc0IEltwu5Q7zbvntlhbtLgtmlaBmM6aZfDbyOee1d4bsxhwfFsj+8F35b6Xk2Y3DjkLbL6VdMAszUk4l3ubDHDMX6/8apbLpMqfWSH8R4PFkQ6IRnfNhLtECKOafc/vdB6ePUFWb0KuDFTE/RSdbJc=
+	t=1741170253; cv=none; b=BSSFEk+lO2rd96aZOui+gE0J28kFb3kvINQgSfqGw6bH5KIELx8msgaPA02IquZOD/GWIiPttHHWZ4c0ogYIcAnQEEtjbcv/4eSN06++bIj9AGdnsJ/21SRL6s1L8w7ZpPwr4q5F+iFAJZGqXrv92bc51dXkTRwab2MUc463QzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741165005; c=relaxed/simple;
-	bh=MdB85ZcPm8v/V2YtsHgVtSYH4zfMxt4J5oHF0yYVGyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mvh0grBz0bkuLnCewoI5axkR8wFlFq7xT4SudD46QzzU9/wIanJCyM9MqgGA5/T4LhK7OezYpwuwgZgBGF0zGWbVRlFC+NHvTUfHhFYkv9OmbdllSIFn2Zp8GDmTzUvNa4lEMEmI2o7Ero84BCqHklW3C+10yr+uyDekjbgO1d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RrDR/o/k; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1741170253; c=relaxed/simple;
+	bh=rpJFe0wOfuGvVfafJ6fYA8p3MFl5W10FP6UIBHcWyxc=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MR981brjQlakpkBFABuNhDi+CwVpxZWXuvwOTMkIdeVxCJRLVVCb46ug+zTs7NGWp9MPitFrCfAhWoMZA2PoK9aTIlXmL8weWsSpLaWR+7k28JMo4cpuFlHlOrrb+14xpiTRSLf+XH49od8OhozCstheZXRi3HUGWVC4doB1Eo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BuU0GkHc; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RrDR/o/k"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43bc4b16135so18261715e9.1
-        for <loongarch@lists.linux.dev>; Wed, 05 Mar 2025 00:56:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuU0GkHc"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-223959039f4so76284285ad.3
+        for <loongarch@lists.linux.dev>; Wed, 05 Mar 2025 02:24:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741165001; x=1741769801; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Fuv0TDvt2J50qLsgdzrl3qC7n/blSVSUBhsKPFPU+Y=;
-        b=RrDR/o/ktQUbXwXaeNWdH2KHYrem+4/1g/sk/+NfgMAWGOfXW8MRyKmXnA7TxtLC9b
-         77blRtlB+5KyAwD+2V1hWgABbXmwSTU9wD/RdhOA9U7cW57j1U9+WKJxQs5xQvpVs7vu
-         Gyn3JwY4ndLinEh4tbq5Biickol/puUe+KFt0v3LYYFp1bYu4GEVtil6AhZFr/nnAhYD
-         +RWYK4GNxIVSZboFXfDT9me1RWeSirjfVuk4dTTKe44BJ1x3oCSI5Dny5efQsMOrTcVE
-         g0b0bZXZ9yBL7kFEW6X9VT+Z8geaupoa0/LCK+Hv/gY2ykzp8cBcijO6TslXBffBBCu7
-         ovqA==
+        d=gmail.com; s=20230601; t=1741170251; x=1741775051; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vlN/L4AefYvDeS0mxE9WdsKwZ74h8HubhxsXCuRQhvs=;
+        b=BuU0GkHce9rrBeRFopP8sKZ4iUelwwaPRJypel6WgQRW/BOJe+Z2TjGjkP7//8wRCr
+         nPcWrUOSo+UGXCscEocnBWASEUmZQ+Hz23a0XsggkH74SsjLkAxUE2GcfhlrU/b6S/i5
+         kWNYXz9QWN6q1qLeRZM3LORtN+q7rarLgSEW4ARSCad0RswCEezjexHA/f6byKQKub7e
+         G5LcwQ/U0xoONHiolqIrfRg1NiMqQOJEILmI98YNtCM8A2FeWbIIDl5yXXk8SsKARUGj
+         Q4DU083k94+ePtV+LT/vfNQQD3hoMMRdMyKDdHlD87QfjeUnrSaNvLqiGBvNnw9BLxhW
+         TiYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741165001; x=1741769801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1Fuv0TDvt2J50qLsgdzrl3qC7n/blSVSUBhsKPFPU+Y=;
-        b=NwLE/ks8I+ak/qm3wCbvmg8J+asxZGmQFFotqFSDHaiDZWjJOwrODVQ0Tuzi7MvHhA
-         EnDMQJxMOC2JGyqJ+FZxfqsH2ZnDvbfPsaRPe3smEeVt0gODCwv3O4ZNnTCK8D4N9Fo5
-         ahjHUcfSEHGa/O/V4KwBXjJvyxGJx57httXKAU+NdmzT5T6jt9OiWKvwZtmUy+qba9sP
-         TKZjhaD1cPm5mbfooGSD0OYUkecdvGtlTRYusP37A0Ox3vFJEL47rC3NJ+uDb1FufLbF
-         kCn7bW+LTgobQgUYTlsUTxvs2N+t9dFK9vcV6BaNj50LSIP56oGvM/j85/UuOoTwlPFq
-         REwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNRAaUS40aR6FeWFQuhE5MzbOiwyRKmCVBoDNi1qN10RyiPIdJZ2AFcVellO2JsIEex2XWXmoMiKY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzvlrj3hSCoa+WWIhZVkBN6xTUvVVJyUb8ALcoX1eoDkW4CmkMG
-	E9psUMk6ibeKiyD1cRJUegHv4npsyeybpPVe+QPb25OP7n0Xq6u0h2t7WvGmIk8=
-X-Gm-Gg: ASbGncsQF9NTbzg1Zww4OkNdYb00r+RaOkuQ9qbrD5g9G48jLcavJJ5Gz5aMZzF/a8k
-	CHBkOF7lm0HKVYmGzOzkdK9mkoPFwTqxtidcY/Jvqou/T57nuaGlnJmqNp0WrGl0axQ7gbobxLA
-	hrhntqe3/EfnoRqoOYw/kbMcbkbBRdajXz24p+xeXHssbP8/0ax87u5ZbwWDM1R+rtzZgkSQqyo
-	K3k24j30NvbezzwLqyiVxtf7ysowWfxlkTTtiPybsyAmC4Bmp3zkPou7olw75WQiB0LjzMDrugH
-	ZAH6WOvxzF7Du37E70W30ytpE0iXujqjtkLyGsw2yaA6
-X-Google-Smtp-Source: AGHT+IEjTeOshg/et4xsAiyT8rCEdbinKDlmt5E8tVs9hXKleiSIZhgrtg7jQiHngwX96hNKwI634A==
-X-Received: by 2002:a05:600c:1988:b0:439:9377:fa21 with SMTP id 5b1f17b1804b1-43bd2aed6c2mr12768215e9.19.1741165001227;
-        Wed, 05 Mar 2025 00:56:41 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e514:53b3:5af8:e408])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796084sm20652588f8f.19.2025.03.05.00.56.40
+        d=1e100.net; s=20230601; t=1741170251; x=1741775051;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vlN/L4AefYvDeS0mxE9WdsKwZ74h8HubhxsXCuRQhvs=;
+        b=WPOx33h4JSO1yqfDswoaHHa0nomaj1PVO2pdX84EftVz1/ajnd8TqgFFoNsj+o6YQC
+         GewM2Zjcffg6NHV/OXmQY2AvD4Tb1T5GT1amVgJi5r+Hig8Qt1xP8txon6nqI+ld67U5
+         7v9ltmN3WQn76XNV6bgjIhDBssmmAnQHJI2kKx+KYzZb6fIrGnQs0OpRqO8bu1kOEBTl
+         ZxPM4nxA1+mmpjdiUIEB2nGcIwAJTeswsdHm5z7S3vk73LXpJJsi9RfY/c5Ep4FF8HTz
+         uCwh2Rvfc73C60seyd3Vj11oQCkd/sUpHQCtgWdCDafFKJUc3eNkZHUf4k9Qqdia8JQJ
+         G2LA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0i0/Q9bRfDF6FtNdmJB5wmUUz6ycURC/qQ+wAWyCmnTRod6Eb3sZ9MfgAioqbs6ZZpKitPYW7yeY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YydkUUN4Qx8bNqouHRRcKBB95pZMzScqjYKiAJl5KVUbpadGtr/
+	eSRGPQ0lt39xnF169J4x4lzjuVBBZiqeXTSZiIf1u+g/Z/oU7RJS
+X-Gm-Gg: ASbGncvzr5MyUstYDJUm+9l7IFl+Gfw1fQ7PZA4HUD9QVg+KpEtyUpALYdQqwIPR1hG
+	oYnKoQAHnOe8HSrD1adl/K2agfYrAGCbQ7+ddXNH6cH5LSC0xEmqPyaPKmeozf5UMORjd0Zr6Tq
+	rkflri4ri+ch5xkZZDMy9k/jMnr/2UsMfQOdg+7c5aUSA3sqTrnZ/8JJjKE8KLKAlWjhV2wVEWv
+	OqjNHNmTJx3IpgMDdvP1DVgEHk2ETxuqBY8VmRUCikk14mDCfa1Gj17URemeeHPuoWvcFRKHoXT
+	KVJKn7hHgiedLtCtfRRD34VSuEQc9ZqOFQvlRTUG68TQHet/yVvYzE8pbk/IrrSqWIY19MHzUOO
+	27hDFosZtYihvte0Ww2X+cfsHX4g=
+X-Google-Smtp-Source: AGHT+IGsFQfHQjvkNE241Y4wnmDmNDBQSHQivxyIM52U3bSLm+KCunMmDVV2E0sVtyiSSMpJSKWLRA==
+X-Received: by 2002:a17:902:d2c1:b0:220:fb23:48df with SMTP id d9443c01a7336-223f1cf320amr40589935ad.36.1741170250886;
+        Wed, 05 Mar 2025 02:24:10 -0800 (PST)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501d4e9fsm110731105ad.28.2025.03.05.02.24.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 00:56:40 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: loongson: Add new loongson gpio chip compatible
-Date: Wed,  5 Mar 2025 09:56:39 +0100
-Message-ID: <174116499292.21788.16321684566048827154.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
-References: <20250303074552.3335186-1-zhoubinbin@loongson.cn>
+        Wed, 05 Mar 2025 02:24:10 -0800 (PST)
+Date: Wed, 05 Mar 2025 19:24:03 +0900 (JST)
+Message-Id: <20250305.192403.996225631653343672.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
+ hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
+ hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ tmgross@umich.edu
+Subject: Re: [PATCH v3 5/5] rust: Add warn_on and warn_on_once
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <Z8gOkeJ8o2pMCwGu@google.com>
+References: <20250213135759.190006-1-fujita.tomonori@gmail.com>
+	<20250213135759.190006-6-fujita.tomonori@gmail.com>
+	<Z8gOkeJ8o2pMCwGu@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, 5 Mar 2025 08:42:57 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-
-On Mon, 03 Mar 2025 15:45:51 +0800, Binbin Zhou wrote:
-> Add the devicetree compatibles for Loongson-7A2000 and Loongson-3A6000
-> gpio chip.
+> On Thu, Feb 13, 2025 at 10:57:59PM +0900, FUJITA Tomonori wrote:
+>> Add warn_on and warn_on_once macros. Wrapping the C's WARN_* and BUG_*
+>> macros doesn't work so this uses the assembly code exported by the C
+>> side via ARCH_WARN_ASM macro. Like the static branch code, this
+>> generates the assembly code for rust at compile time by using the C
+>> preprocessor.
+>> 
+>> file()! macro doesn't work for the Rust inline assembly in the same
+>> way as __FILE__ for the C inline assembly. So the code to handle a
+>> file name is different from the C assembly code (similar to the
+>> arm64/loongarch assembly).
 > 
+> Nit: Should be file!() not file()!.
+
+Ops, thanks.
+
+Actually, the above comment is obsolete. With your solution in the
+previous mail, I can remove the asm code for the file name. I'll
+remove the comment.
+
+
+>> diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
+>> index 6ba39a178f30..f1d7f4225332 100644
+>> --- a/rust/kernel/.gitignore
+>> +++ b/rust/kernel/.gitignore
+>> @@ -1,3 +1,5 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  
+>>  /generated_arch_static_branch_asm.rs
+>> +/generated_arch_warn_asm.rs
+>> +/generated_arch_reachable_asm.rs
+>> \ No newline at end of file
 > 
+> There should be a newline.
 
-Applied, thanks!
+Ah, I'll fix.
 
-[1/2] dt-bindings: gpio: loongson: Add new loongson gpio chip compatible
-      commit: e4a345c55e1b9b5ab5212a93b081f666f71b303b
-[2/2] gpio: loongson-64bit: Add more gpio chip support
-      commit: 44fe79020b91a1a8620e44d4f361b389e8fc552f
+>> +++ b/rust/kernel/bug.rs
+>> @@ -0,0 +1,100 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +// Copyright (C) 2024 FUJITA Tomonori
+> 
+> 2025?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I'll add.
+
+>> +#[macro_export]
+>> +#[doc(hidden)]
+>> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+>> +macro_rules! warn_flags {
+>> +    ($flags:expr) => {
+>> +        const FLAGS: u32 = $crate::bindings::BUGFLAG_WARNING | $flags;
+>> +        // SAFETY: Just an FFI call.
+>> +        #[cfg(CONFIG_DEBUG_BUGVERBOSE)]
+>> +        unsafe {
+>> +            $crate::asm!(concat!(
+>> +                "/* {size} */",
+>> +                ".pushsection .rodata.str1.1, \"aMS\",@progbits, 1\n",
+>> +                "111:\t .string ", "\"", file!(), "\"\n",
+>> +                ".popsection\n",
+>> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_warn_asm.rs")),
+>> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_reachable_asm.rs")));
+>> +            line = const line!(),
+>> +            flags = const FLAGS,
+>> +            size = const ::core::mem::size_of::<$crate::bindings::bug_entry>(),
+>> +            );
+>> +        }
+>> +        // SAFETY: Just an FFI call.
+>> +        #[cfg(not(CONFIG_DEBUG_BUGVERBOSE))]
+>> +        unsafe {
+>> +            $crate::asm!(
+>> +            concat!(
+>> +                "/* {size} */",
+>> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_warn_asm.rs")),
+>> +                include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_reachable_asm.rs")));
+>> +            flags = const FLAGS,
+>> +            size = const ::core::mem::size_of::<$crate::bindings::bug_entry>(),
+>> +            );
+>> +        }
+> 
+> I generally prefer to have the cfgs on the macro rather in its
+> expansion. That avoids emitting a lot of code that is not actually used.
+
+You prefer the following?
+
+#[cfg(all(CONFIG_BUG, CONFIG_DEBUG_BUGVERBOSE, not(CONFIG_UML)))]
+macro_rules! warn_flags {
+...
+}
+
+#[cfg(all(CONFIG_BUG, not(CONFIG_DEBUG_BUGVERBOSE), not(CONFIG_UML)))]
+macro_rules! warn_flags {
+...
+}
+
+>> +#[doc(hidden)]
+>> +#[macro_export]
+>> +macro_rules! bugflag_taint {
+>> +    ($taint:expr) => {
+>> +        $taint << 8
+>> +    };
+>> +}
+> 
+> This could just be a const fn.
+
+Yeah, would a const fn be preferable?
+
+>> +/// Report a warning only once.
+>> +#[macro_export]
+>> +macro_rules! warn_on_once {
+>> +    ($cond:expr) => {
+>> +        if $cond {
+>> +            $crate::warn_flags!(
+>> +                $crate::bindings::BUGFLAG_ONCE
+>> +                    | $crate::bugflag_taint!($crate::bindings::TAINT_WARN)
+> 
+> Or maybe a constant?
+> 
+> const WARN_ON_ONCE_FLAGS: u32 = bindings::BUGFLAG_ONCE | (bindings::TAINT_WARN << 8);
+
+Ok, but you prefer "<< 8" than using const fn bugflag_taint()?
+
+> $crate::warn_flags!($crate::bug::WARN_ON_ONCE_FLAGS);
