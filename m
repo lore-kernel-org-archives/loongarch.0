@@ -1,145 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5895819CC08
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 06:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598E5184E
+	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 07:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741242996; cv=none; b=mqUJ5+dUObOF1hy/BPd84zFPLcHWHd/Igyumi5v7pYmZanQqRRZi+wVT/hh/snygSW6nijfsTAPLYRORLnGhN/hAhfe0gkLrMY919GQFCNZUhGJKe5IVPzg/GiWextBjWzv0cPkpdVfLFZ7jUSBU5uYcx/54+cTgRoTXEYPKJ9o=
+	t=1741246493; cv=none; b=tBr0X02kRTjQOjfSxAYfWSOFCss9pHOkiEclraRTk1gHv03TnHLnOR2uv6jUa/90+ht1Hoxfu64KmsnCRMp3QJno0bT91oWM6WbIT2d/gzW0yVd99DYtZASQUkOSEdnnnuDfoztcTpZMU9B+uijR+dTIgHXHxgER7BZi8CfiUJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741242996; c=relaxed/simple;
-	bh=3gjOUzCOeobpo+bQrS61L5KTw/nl8QOpdeWmBF5tBl8=;
+	s=arc-20240116; t=1741246493; c=relaxed/simple;
+	bh=U7paQcgSNmg+8RyHk9bHCpsXbum+neRGBpvw4lvVW4c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SNjGmLPjv2yLUuQXv0pGWLQBg1QQMnbAnVMe97H3ZiB3yF0ruKpgfQfOm4SJuNKQ0RaEO///DhnrUssVf1BGiFYNKhODnFdR/nDFbSi7HX6weoh3VvrRf/JqmJa4Q7/9440OUzIelc3iURmkaYNMp2CJepKJjfHs8gAjA2sJ8Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj3cHtnK; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=aH/Y9pZ57DBXKGCeKRAeg7muU+EBocqsr0Sft/onN12lvJgi+nDwJaXVDWPlD6Ksw45xWshuY4V3oZeqNnK7Bi1s1X8CFZdX4Q0LKcMTO+wsaHgQ/F+gKR970lHI4P8YgqV1DAre7Eaknqn6itIwNFw9dz5Y7f4ubSz4VtVYU3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R9GzPrNu; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj3cHtnK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C98C4CEE5
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 06:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741242995;
-	bh=3gjOUzCOeobpo+bQrS61L5KTw/nl8QOpdeWmBF5tBl8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Rj3cHtnKrurG1GOwFFmkNxNIjzde1+iQTGEkHB40RNWwdKs00wbIr7589+UfOzo1r
-	 8A6hqP3mwunJdSXGQ4TGlZnK37/B31WgmNXszDXvCaD3wR40MoUBGT7pI9qzYJU4m/
-	 3FVm/NjN5crPPu+E2vX6s5zAk4Tq0QaugdCa5YYxFfsE6dEA2zdtjqtx8fl2r1TI1L
-	 4tqdmMwIuhUbsbOtjni7TjYC2wfixipdZscYCruUYl7izkE7JRd35eVpwPCOyTmipt
-	 eRZLBFUWubbnx2jMfQ+tkvgX5qPcCpBi44gcTP6JwbyuUdF/1Rd/17bbqs0haCsiPI
-	 ZnYc23h0Px48g==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abbb12bea54so62118966b.0
-        for <loongarch@lists.linux.dev>; Wed, 05 Mar 2025 22:36:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWB8l9VFP7QictpAgMECNFWGI4zXiKbi1CpTcfye/Bp1MBT4lNMdQ3FFiaKZ30h4a4Neaj2FXfQqTo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzM/MeccSe3+rpNrupylA8rUgaZKQ/QIgCi4BTlo1Xs7N89ZCbr
-	5qNxIrUTR6iUOBexCLGbnlT0GlNiQxb1umcsD00bil1rr5/ZOMx+NyXvjYcqqCX7oaEZ1E7+lGv
-	vtyyReV765tjp1yN0yBX69ruebaI=
-X-Google-Smtp-Source: AGHT+IGzRQmG6IWerhpKvupSsx10MS2/s0rwwZdeICWvvyWFMnHWE7lef7OcTQQRGEk7U3RkX/E4Iuxec3s/khFHBcc=
-X-Received: by 2002:a17:907:6d12:b0:ac2:acf:84c1 with SMTP id
- a640c23a62f3a-ac20da8944cmr565485666b.46.1741242994224; Wed, 05 Mar 2025
- 22:36:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9GzPrNu"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f3da35555eso249915b6e.1
+        for <loongarch@lists.linux.dev>; Wed, 05 Mar 2025 23:34:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741246491; x=1741851291; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nr06ATHc4iimVWFKb3Mu8eSLsVIObp0+xvvAWbDA3uk=;
+        b=R9GzPrNuhWlo2JGP82mCpv9S/s0HUU6DaFFWFXhjy0NkQMFYdJbzZ8ZWXEdd+Vw+Gr
+         i/g6uT8/8QJ/iWlXf32cEs4CqwGoIYV0dzXbkQeM8icsCZYBDpXyu0VzGDxC/qxnvgMB
+         VYmAPelSVVujyauYNjbd1raFgwJzR+u7Mac1JGW8Xa58CAKteQeQm42eAf5s8WbXl4/z
+         ZpbXYPb0uSv59IkAb7Ic4G8MnmGEWIXnjmeLi2I7KBFHSKtgLO7GZYjjfW3HhGqJmgjJ
+         M+ml5h063Sewo/ITWusqusYBH8jbajcRxL4Rofg7P0ME3XdcoRG8nQOX1t3V5eHPVfCw
+         uL0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741246491; x=1741851291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nr06ATHc4iimVWFKb3Mu8eSLsVIObp0+xvvAWbDA3uk=;
+        b=fvecTpgov5qSdTD2qmDzMflGdFcL1bsZbxibnGbG7HiavMMn225U9IVLPgaZZWbK0w
+         4iqi/n2IOx1xj4OuecN/49OyMGubolCw8/AqxQpPEE1ChYMLywwEnnaFZLYv8TzvmhD4
+         heOpTQhkuTHIZQK5K/8cVWVTJykmp8rX7a6EZk7eFHTk4YZmXNH2irM/2QHs909Gl79I
+         acFxYU7SrPCHr1Bi3AEaIigtr8UMpYkFCj3Uedh/iDKT2Ih9XtT7gBaWZz3kyXRkLHwa
+         8cK4VJFKhb2/VjsV07OZ8Hq8DRxQPIH2hFrhNNOYCVmdzEnxpcfg1cBmuo13ckC5t2Tn
+         OkOA==
+X-Gm-Message-State: AOJu0Yw8SHnky+g7WhsvkIH0inoxjs8LOoFkR7Wh2rHNjFKlSoWKD6hJ
+	d/MOBh6hPpZlntIIhSczmBvoYATD1wmgZT8aZhHjNEu9Ud0r1XveuXxQDq3kEPgmqA2XNpbkxK1
+	NmJQZN5zS/C+31FUV0q2uQSeeLzE=
+X-Gm-Gg: ASbGncssTBc7i84uoEFYfYcAgRQdr+6Z0B3egvjF80xfF0vrLozD+GIQMpzBxrW5+1t
+	EZ7U88BJ0fRfoJd7hfsOdsstkaICTJSIfjhYo1/r4/+mYQVpQxvjRIilVKfzjsCbfRsuFtWQT3Q
+	OuzPHOUXupoDuT2vbOqIJuvVx7WQ==
+X-Google-Smtp-Source: AGHT+IHlAuDrnnugLExSjGsG0HyL0TeYredydl278k8RmkKLsw2cWbNx5ox2bRAyNRPmo+JA7E3RXFk5OIN5YL4XPKE=
+X-Received: by 2002:a05:6808:2dc8:b0:3f6:78b2:9ce4 with SMTP id
+ 5614622812f47-3f6831d069emr3729402b6e.28.1741246491359; Wed, 05 Mar 2025
+ 23:34:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250306035314.2131976-1-maobibo@loongson.cn> <CAAhV-H45DobYbBFBatJtHPF22VAX=QWH8i=jzpWNvN-ELgWr4Q@mail.gmail.com>
- <b1fde3cf-f4ed-68cc-fd4d-8b8b089870f1@loongson.cn>
-In-Reply-To: <b1fde3cf-f4ed-68cc-fd4d-8b8b089870f1@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 6 Mar 2025 14:36:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H47shgAGtB59Yth0tPVwaLFjsq-4nix5BXTExaVAHxa0A@mail.gmail.com>
-X-Gm-Features: AQ5f1JqorG9glBtNWXwIgv-uVhK1qOmPSFS24TYERI6YqitAw7OpBKdqFhjY0Ok
-Message-ID: <CAAhV-H47shgAGtB59Yth0tPVwaLFjsq-4nix5BXTExaVAHxa0A@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: mm: Set max_pfn with the PFN of the last page
-To: bibo mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	stable@vger.kernel.org
+References: <CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com>
+In-Reply-To: <CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 6 Mar 2025 15:34:39 +0800
+X-Gm-Features: AQ5f1JpucGClUwDGxbvnxB3QHjHIs2VqySKetPvodXvQzJbUUGbOs0DFXFrqrnk
+Message-ID: <CAEyhmHRCXHbd9NL2QvOvY4yhKg2W7T0+d+0U9-PH5JCt8RqG1g@mail.gmail.com>
+Subject: Re: [BUG?] loxilb tc BPF program cause Loongarch kernel hard lockup
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 6, 2025 at 2:26=E2=80=AFPM bibo mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2025/3/6 =E4=B8=8B=E5=8D=8812:06, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Thu, Mar 6, 2025 at 11:53=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> The current max_pfn equals to zero. In this case, it caused users cann=
-ot
-> >> get some page information through /proc such as kpagecount. The follow=
-ing
-> >> message is displayed by stress-ng test suite with the command
-> >> "stress-ng --verbose --physpage 1 -t 1".
-> >>
-> >>   # stress-ng --verbose --physpage 1 -t 1
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x134ac000 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x7ffff207c3a8 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   stress-ng: error: [1691] physpage: cannot read page count for addres=
-s 0x134b0000 in /proc/kpagecount, errno=3D22 (Invalid argument)
-> >>   ...
-> >>
-> >> After applying this patch, the kernel can pass the test.
-> >>   # stress-ng --verbose --physpage 1 -t 1
-> >>   stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU=
- 3)
-> >>   stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU =
-3)
-> >>   stress-ng: debug: [1700] physpage: [1701] terminated (success)
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: ff6c3d81f2e8 ("NUMA: optimize detection of memory with no node =
-id assigned by firmware")
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/setup.c | 1 +
-> >>   1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/set=
-up.c
-> >> index edcfdfcad7d2..a9c1184ab893 100644
-> >> --- a/arch/loongarch/kernel/setup.c
-> >> +++ b/arch/loongarch/kernel/setup.c
-> >> @@ -390,6 +390,7 @@ static void __init arch_mem_init(char **cmdline_p)
-> >>          if (usermem)
-> >>                  pr_info("User-defined physical RAM map overwrite\n");
-> >>
-> >> +       max_low_pfn =3D max_pfn =3D PHYS_PFN(memblock_end_of_DRAM());
-> > max_low_pfn is already calculated for all three cases, so here just
-> > need "max_pfn =3D max_low_pfn".
-> In theory it should be.
->
-> However there are potential problems, it should be recalculated in
-> function early_parse_mem() also if commandline "mem=3D" is added.
->
-Yes, you are right, thanks.
+Hi Vincent,
 
-Huacai
+On Thu, Mar 6, 2025 at 8:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com>=
+ wrote:
+>
+> Hi,
+>
+> I have an issue recorded here [0] with kernel call trace  when I start
+> loxilb, the loxilb tc BPF program seems to be loaded and attached to
+> the network interface, but immediately it causes a loongarch kernel
+> hard lockup, no keyboard response. Sometimes the panic call trace
+> shows up in the monitor screen after I disabled kernel panic reboot
+> (echo 0 > /proc/sys/kernel/panic) and started loxilb.
+>
+> Background: I ported open source IPFire [1] to Loongarch CPU
+> architecture and enabled kernel BPF features, added loxilb as LFS
+> (Linux from scratch) addon software, loxilb 0.9.8.3 has libbpf 1.5.0
+> which has loongarch support [2]. The same loxilb addon runs fine on
+> x86 architecture. Any clue on this?
+>
+> [0]: https://github.com/vincentmli/BPFire/issues/76
+> [1]: https://github.com/ipfire/ipfire-2.x
+> [2]: https://github.com/loxilb-io/loxilb/issues/972
+>
+> Vincent
+>
 
-> The other thing is that calculation init_numa_memory() is unnecessary
-> since it is already calculated in memblock_init(). Memory block
-> information comes from UEFI table or FDT table, and ACPI srat
-> information only adds node information.
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>          check_kernel_sections_mem();
-> >>
-> >>          /*
-> >>
-> >> base-commit: 848e076317446f9c663771ddec142d7c2eb4cb43
-> >> --
-> >> 2.39.3
-> >>
->
->
+What's your kernel version ?
+Could you craft a minimal reproducible bpf prog or try with latest kernel ?
+
+Cheers,
+--
+Hengqi
