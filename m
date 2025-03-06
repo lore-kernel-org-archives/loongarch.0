@@ -1,132 +1,83 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CB025D8FA
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 20:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003022063EB;
+	Thu,  6 Mar 2025 21:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741293440; cv=none; b=g+tbMKpkK+2IX+O35VAJ4oTqrbjkfefX2FHWc15ghpF8A+c2HFHf1pUKVF4s8CmOfFbUrAKvKY3Y0Sh2+6dFBJ9LyAO8GRMjQTtWejjxzBgsUPpyIlw7kFs1ZbUbXpSWT7YWyEU9E5Dwy9/WEouf+XdxQeOGa2tYCQCy9y/tZxc=
+	t=1741296006; cv=none; b=EuxXbGLJ9FgpP3J0IRXVfcGo7Nnp++oqL2NIDA2Uh70rm9x4W5N4EteKgygGcSsag4p8UmgVKDepFPZu/JpM/lk4kZQrJ7uqtRTVpBPLthcDsx3VskZTb75jMkIR6b0HshB1uOpj5pl/DgNYlIBMNX+39/xvprf/z0zylDhfDu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741293440; c=relaxed/simple;
-	bh=R2aBQXqe76n44wlQboEU86eLZISUmm8xoc3v6vHTwTQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YFKrBJZ0qPxTA+Z7zNeU6eAjnbydbkbMZPQAT0W5ZaVJOqmpxSdI33e4qC2lD1B4UAgSRAbIsPzwamWuzItAb5ZtTzz8LytVsMeBI3sc1ZZ78IchBLLJeJhNb6soFQDDwFLUkhJtH9ynuSggaw0J8WIcxbSxi1ZeLq7ovnHMdq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlWJ5+Gz; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741296006; c=relaxed/simple;
+	bh=cZDw6Poc4BDrQ+UyFQkoa8sDIiciZub+M7TYHo89aq4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MokhWgxpVZ9lNICHfLGEAvGyP7SpKn7Dsc9kWXlFukm3zs766/ex/scBvNXAy0VkUP3e/L1O6sXwW6MYJ+Wb4SdDFJLTMPJfDxV7qh09bv93JdkpTgaTQviYZzOrSPjmCkhUlQcnT2TgFUZM6AHVJ6VexRPdHosYHI6gJ3AnOmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fCD2eitP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlWJ5+Gz"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-474e0bd966dso9145461cf.0
-        for <loongarch@lists.linux.dev>; Thu, 06 Mar 2025 12:37:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741293437; x=1741898237; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u3sGJ8o/dKJaiJh5keAs+as1aOJ+rHZACcRN9kFRumQ=;
-        b=MlWJ5+Gzje0qrMs1DjHRcPCmvz2heJ0xHHsegXXJT01SORVt1H7GjTj4t/yFwZS3qE
-         v8EMwTlVeDC1979nMq0QZw0KcvcQ65rq9S7JhnWKq6x9svGXe13eKVHjXAurRJ92RsBu
-         vO0J6xAkIaL4v4M042XwIZRNcQHthy7pM0Yoztn1RSBuEyOvjm2s2+ae5fJU5JSqJR6c
-         mmjL34UuCAuXcrzPwqTLsWJI1TpBj8ywKQtLyprS2EJoLWXlR7sXn7dEee7slYdYISUP
-         M2NnMklGybHfb6Eydze3ZB/ynjstgIBrOazNtRDz4BNb6/LgDt6X8ueubV/U7V9ikWm9
-         a+ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741293437; x=1741898237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u3sGJ8o/dKJaiJh5keAs+as1aOJ+rHZACcRN9kFRumQ=;
-        b=BBup9oDMKsG6S2eohGwgMY3vmd1BT7mTHSb7NEVPZgq3eZtHcJgXXUSoL0DPjvWzfW
-         QTGhz6gUai/CJk8cUfL1FY4cQcxhin2iLlPJQn+ikiFbwBu5eqwlRY5TZLdgk1h/Jv+V
-         N9QyZacYuQcnimxmVg5TsFOkH8pPOGGTiYe4tku52MpcXcQjupokujRI8OkDkoTWIHwX
-         9yMywQyczAdIxyG4+hPnArf32zj5mAgm0rLdRFjOIrlvER6T6as6V418EQsFHJ3Vs+sn
-         ylfNNdGthnaxrTZPQHyIYjvzJTSEbB6QhvffTWre1CcObrvXcbZHTmc0RQ8uy5X37Fry
-         KoSA==
-X-Gm-Message-State: AOJu0YzBwOxrgxfJf4Wg0Gy1WjUGVSLW0ReWdkdrBfPCw99j+lFaB8/j
-	JXS80vx5iq7eyYXeWXONplsRUPuTyx8s7FlW35kzrnPECiuPFsL4IqYWBCVeOdB2fRNrEQMFwHK
-	Ou14cEzDkhZC8CDwWUoIGXhC5zu4=
-X-Gm-Gg: ASbGncvG/5kSgrvNQa7Q8pnvD0LLOlpjBJD9DXmYv3ZohOeiLBM4JxkvlSnubnCO3J5
-	AQ+EliAPA5mmhucHz+YY64M1hwrvMkDnn7kZ7sES8dW7EYcWsARW962C4lwEgXGNw12YGtBid6n
-	0Qx3nlCv+azrLtHAZ7OLcdpeZ+PFqrNsOJggnAwW6WVa73WhmAKNZm6Yb3Vbs=
-X-Google-Smtp-Source: AGHT+IGaFrZrgFITow4KddN7WPBVxwXecWVQYu7YHINtHH5o3/ly8vnZzt9yeA+WutWeTz3/I6c8wXPxdIcX17DIG1g=
-X-Received: by 2002:ac8:7dd0:0:b0:474:fee1:7913 with SMTP id
- d75a77b69052e-476109c1698mr5848481cf.24.1741293437150; Thu, 06 Mar 2025
- 12:37:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fCD2eitP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9335C4CEE0;
+	Thu,  6 Mar 2025 21:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1741296005;
+	bh=cZDw6Poc4BDrQ+UyFQkoa8sDIiciZub+M7TYHo89aq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fCD2eitPTHFzv+QGanXjZD4bENnmRFCyuGnOvEmFo3oZUyxfGbz0e9/waUKJcay/B
+	 ulqAAqZ8fT7ST4z1YZd+B5XSm85iLoKo7BN7tD3KTLECZ4zAMHYgvB+TmrABW752ri
+	 sqVT0tKHdBGtciAetPrknw/7LiV2aVP98DL5X7zA=
+Date: Thu, 6 Mar 2025 13:20:03 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson
+ <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Brian Cain
+ <bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge
+ Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Johannes Berg
+ <johannes@sipsolutions.net>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
+ Stafford Horne <shorne@gmail.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily
+ Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] arch, mm: reduce code duplication in mem_init()
+Message-Id: <20250306132003.0066f109dae75f74711f9432@linux-foundation.org>
+In-Reply-To: <20250306185124.3147510-1-rppt@kernel.org>
+References: <20250306185124.3147510-1-rppt@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com>
- <CAEyhmHRCXHbd9NL2QvOvY4yhKg2W7T0+d+0U9-PH5JCt8RqG1g@mail.gmail.com> <CAK3+h2zWGJ3BKO6bErk=-m0+gE49iQ_JJG5FQZxXoiGsGY_CXQ@mail.gmail.com>
-In-Reply-To: <CAK3+h2zWGJ3BKO6bErk=-m0+gE49iQ_JJG5FQZxXoiGsGY_CXQ@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 6 Mar 2025 12:37:06 -0800
-X-Gm-Features: AQ5f1JqPpze9_j4Di7wOlhQWAVStIaUedqs9v3wAjEvN0Xz5quUOOwZoHWQw-9k
-Message-ID: <CAK3+h2wBF1_B3iBqk=8HFyxSYE4KioSnkxj6CvVmHDLx-RhbNQ@mail.gmail.com>
-Subject: Re: [BUG?] loxilb tc BPF program cause Loongarch kernel hard lockup
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 6, 2025 at 7:39=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.com>=
- wrote:
->
-> On Wed, Mar 5, 2025 at 11:34=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
-m> wrote:
-> >
-> > Hi Vincent,
-> >
-> > On Thu, Mar 6, 2025 at 8:53=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.=
-com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > I have an issue recorded here [0] with kernel call trace  when I star=
-t
-> > > loxilb, the loxilb tc BPF program seems to be loaded and attached to
-> > > the network interface, but immediately it causes a loongarch kernel
-> > > hard lockup, no keyboard response. Sometimes the panic call trace
-> > > shows up in the monitor screen after I disabled kernel panic reboot
-> > > (echo 0 > /proc/sys/kernel/panic) and started loxilb.
-> > >
-> > > Background: I ported open source IPFire [1] to Loongarch CPU
-> > > architecture and enabled kernel BPF features, added loxilb as LFS
-> > > (Linux from scratch) addon software, loxilb 0.9.8.3 has libbpf 1.5.0
-> > > which has loongarch support [2]. The same loxilb addon runs fine on
-> > > x86 architecture. Any clue on this?
-> > >
-> > > [0]: https://github.com/vincentmli/BPFire/issues/76
-> > > [1]: https://github.com/ipfire/ipfire-2.x
-> > > [2]: https://github.com/loxilb-io/loxilb/issues/972
-> > >
-> > > Vincent
-> > >
-> >
-> > What's your kernel version ?
-> > Could you craft a minimal reproducible bpf prog or try with latest kern=
-el ?
-> >
->
+On Thu,  6 Mar 2025 20:51:10 +0200 Mike Rapoport <rppt@kernel.org> wrote:
 
-I tried lastest kernel 6.14-rc5, same issue.
+> Every architecture has implementation of mem_init() function and some
+> even more than one. All these release free memory to the buddy
+> allocator, most of them set high_memory to the end of directly
+> addressable memory and many of them set max_mapnr for FLATMEM case.
+> 
+> These patches pull the commonalities into the generic code and refactor
+> some of the mem_init() implementations so that many of them can be just
+> dropped.
 
-> I am not familiar with the details of the loxilb tc BPF program, It
-> can be tricky for me to come up with a minimal reproducible bpf prog.
->
-> I  has another smaller XDP program
-> https://github.com/vincentmli/xdp-tools/blob/loongjit/xdp-dnsrrl/xdp_dnsr=
-rl.bpf.c
-> that could also lockup loongarch kernel and can be reproducilble on
-> Loongarch fedora community release,  but it may be a different issue.
-> The common thing between loxilb tc BPF program and this XDP program is
-> they both use bpf tail call, not sure if that is related.
->
-> I can upload the new loongfire flash image  which can be installed on
-> 3A6000 if that is helpful.
->
-> > Cheers,
-> > --
-> > Hengqi
+Thanks, I added this series to mm.git.
