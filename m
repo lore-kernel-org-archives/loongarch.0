@@ -1,114 +1,187 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99D321505F
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 16:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EE3B667;
+	Thu,  6 Mar 2025 18:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741279216; cv=none; b=i8xbNPHJ4poH9AZFmreDk9lM6uRFkvSAgTgCm2+DBeNZtGHkCKhoynuI4zjLmNFLVqmzCV71udFdXZ4GweG2Ex/lmhN2xqXYgRkPpEDMgTDwfkKA3EXgHLWqCE6d7Bc1y8rY/r9IIgusSlc47SkcmjSofYnBiqA71eJRykRHBEs=
+	t=1741287106; cv=none; b=dftyZyyPMzxbw5dldh0XC5tWRPkNPmM+4Vvy78h91J/BzfdcOo2BJHLinsAsooANfU2p2t1jJMfcDRrCin/QRNEtch/xSR5eh6HRKSC2L/Ec3rKuSZsnD8Ojnddm1hTl/a0S0EbVelBNLsFPYY7oB0zF4KMEhdU/nZU7TXLvic8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741279216; c=relaxed/simple;
-	bh=1VYXkR6M+VK4phNIsCJpZXb7BkWQamJ/dVm6cyB0/Qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UWrfXPDi6M/ykb58pmpziKerrTl0VWJPeTxtn89SoTIMOQlQog0EKSMoF50PoRoCDgzf8hj9rV2AiuBYZDxKfLUb7+PixOjJLkjkrcwsqKc+eIQHfN0h5CuUfD+wYNhtV5GOH3Q96aw8zHTuXz1X12Cq6gm02T/ttDpoViCaor0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGghUWcf; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741287106; c=relaxed/simple;
+	bh=/wpX+rodiPgNkc2E/+2EOJ8vtAUtpxXz9ICTWI7pMKs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KJUglPnL5NkRRBWfkmpaH7UW4q7JK9fkTbPPDCpQNDM0QYAGmluz7hRAKOUGJ4iBh/goODIK68Ifv3XGaRMZ25RJBpUEUvTS1dsXc4/02PwCftSPK7Jltxnx5AOMVsBTQBBLwknT90TPQpuD8j7IkOkFUKKrdpCiBDu03buNORo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P80r7Rsa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGghUWcf"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4750bc8d102so8185961cf.1
-        for <loongarch@lists.linux.dev>; Thu, 06 Mar 2025 08:40:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741279213; x=1741884013; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D4TlFKFABE6JuyxPMRwnusgLB0AVbZibXRg8T64tX9o=;
-        b=iGghUWcfK6Jpke1ynv0Gxy90e7c7ne6aMpc2DrslDN7WjRAwJvd606p4u0qX+IkHvQ
-         aMJYERXuknQRBtiZlr7hU7XxFIIGHi4X+rQwSV0hHhkq9cr6ZEj2pFRojkY+B6D7/8hn
-         UExBzz7mtVx+xnxBoNB6UXvbWzcEZC0ze8DhDvEsHqDOC7T+EGpbMm2Zw0K+3fwQoyp4
-         mYOFlVQx1a4Y8SI3O5sU1XPco2sUDWvcJfEnTe7Uks9Wtt29CISF/6MgTigkG8CI7yht
-         mryNclRq/HinihrfiVVC99tLYpoKClueRFgG84RUgDOradHHojBVvtrhTrCIoR1JSW/4
-         4L1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741279213; x=1741884013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D4TlFKFABE6JuyxPMRwnusgLB0AVbZibXRg8T64tX9o=;
-        b=b0SUj8oK//Nh1FmuPCYtXw9ribfiu8DQqraAOexLG6mQ4/zEbcjp/GLXPRGsLyTEsO
-         UondPqDhQXAwkyxJDqx11w/SL09KxOd9SZIXVdBBco3KlSIGN9aiwxtfZGpr6VEsg5l9
-         7EcTX/TQDWCOiIx++CXRBkNeIsOg0N57fqoAlra2puchwNa82kPlUOhEGK3EPbzFz6K6
-         3KTdMbC6qWkXQ3ax+xfcJ74JABcrsZSxSX2YxpeEglkduG5MmRqB1CbSvnBp1G3vMFFw
-         OEY2YVwEoANOfKT1eXICDudI3j0fJYnGFeIsLZqpuzEe0S1qrUbfYhh9iOclsiw+NdVg
-         YHWQ==
-X-Gm-Message-State: AOJu0YyemJ7sTHSTyzw3jW19CCxE6Y6uXQn+4PIv6fGv4eBbihgm/XLu
-	pxCz8RTW0m1m877PCmP5wNJQavHsueijb65vufEUXwZGBL9TD2JqgXUdas4xTkyi/iLI6kDq0td
-	+/6QQBYQ5bnxvDE5UVfDjR5Ct5SnkkZQv
-X-Gm-Gg: ASbGncsxWqn7iwncGo6pA26ZubePjtHvlYt37UfAmmml+5CW4tJjyghj7d0KbXTAL/5
-	EP35aJdAZVC5SUNYMcU2JHnZKttbvpyb4x8lhV6apCzxXTn6LcIdIP9BPKLw+DUmAvZQhZJCM+d
-	2y8/TaMwf91lB+yah9Xt6jIpKS+g==
-X-Google-Smtp-Source: AGHT+IFjINnac5n3KPzDytBLQf9mnfBZNHqNnctTdb6SPxqPI0sc5AfANONUKSj7Hf48oq9uxA+ou8cNgVCTZRSryTQ=
-X-Received: by 2002:a05:622a:450:b0:474:fee1:7913 with SMTP id
- d75a77b69052e-4750b45aed0mr86667601cf.24.1741279213420; Thu, 06 Mar 2025
- 08:40:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P80r7Rsa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E1BC4CEE0;
+	Thu,  6 Mar 2025 18:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741287105;
+	bh=/wpX+rodiPgNkc2E/+2EOJ8vtAUtpxXz9ICTWI7pMKs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P80r7Rsa2pkCu11363Fa/SyYTsTL5K11aoIfGVkUhXZXMZF9ghtejyVAEAn/9gYin
+	 1wjIQSDGLefP2aOn0lF4nfOFQWYeL481ld2xteJKdOm4N0DyD3FCaFsp8v0/3LF+Zj
+	 A1q//tTu1zIkAikd8Mvn+6NSXoOT1YkxG40QhglljaBoNvOzWHiF8i1U7IHFop/QuY
+	 5qG0votPJ3w9ptEMTqOjG9ejudqVaGGqjAr6pLD9gnSTU97J4z2wTm+bpnENlPeeCa
+	 JlGFrkz4pFB5qBl+yf6kzfEB+qI0NhdVqEy7aOxbZiiRw30qg1qYZpVJ1ch4THxRCE
+	 TD35zfcbQZ4wA==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH 00/13] arch, mm: reduce code duplication in mem_init()
+Date: Thu,  6 Mar 2025 20:51:10 +0200
+Message-ID: <20250306185124.3147510-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK3+h2w6WESdBN3UCr3WKHByD7D6Q_Ve1EDAjotVrnx6Or_c8g@mail.gmail.com>
- <1e6f33356ce63b19a730eda60719c3e5257e0dc0.camel@linuxfromscratch.org>
-In-Reply-To: <1e6f33356ce63b19a730eda60719c3e5257e0dc0.camel@linuxfromscratch.org>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 6 Mar 2025 08:40:01 -0800
-X-Gm-Features: AQ5f1Jodrm1ue4ZfyBD8q2rK8TqE2J9Y2lxi7zPNMl1s_qEJRTZQ1x6m-Z1XPO0
-Message-ID: <CAK3+h2zugg+UQJVVJx+n9zKq=YzmoDoRz45UEbEtsmGHNh043g@mail.gmail.com>
-Subject: Re: [BUG?] loxilb tc BPF program cause Loongarch kernel hard lockup
-To: Xi Ruoyao <xry111@linuxfromscratch.org>
-Cc: loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 6, 2025 at 4:55=E2=80=AFAM Xi Ruoyao <xry111@linuxfromscratch.o=
-rg> wrote:
->
-> On Wed, 2025-03-05 at 16:53 -0800, Vincent Li wrote:
-> > Hi,
-> >
-> > I have an issue recorded here [0] with kernel call trace  when I start
-> > loxilb, the loxilb tc BPF program seems to be loaded and attached to
-> > the network interface, but immediately it causes a loongarch kernel
-> > hard lockup, no keyboard response. Sometimes the panic call trace
-> > shows up in the monitor screen after I disabled kernel panic reboot
-> > (echo 0 > /proc/sys/kernel/panic) and started loxilb.
->
-> It's better to use a serial console to get the panic message.
->
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-I tested this on 3A6000 mini PC, it seems no serial port is available.
+Hi,
 
-> Or if you can see the message on the screen just photo it and attach it.
-> If the message is incomplete or broken, enabling DRM panic and using a
-> DRM driver supporting it (for example just SimpleDRM driver running on
-> the EFI framebuffer, or AMDGPU with the latest 6.14 release candidate)
-> would likely help.
->
+Every architecture has implementation of mem_init() function and some
+even more than one. All these release free memory to the buddy
+allocator, most of them set high_memory to the end of directly
+addressable memory and many of them set max_mapnr for FLATMEM case.
 
-I have the  call trace picture attached in the
-https://github.com/vincentmli/BPFire/issues/76#issuecomment-2699091059
+These patches pull the commonalities into the generic code and refactor
+some of the mem_init() implementations so that many of them can be just
+dropped.
 
-> > Background: I ported open source IPFire [1] to Loongarch CPU
-> > architecture and enabled kernel BPF features, added loxilb as LFS
-> > (Linux from scratch) addon software
->
-> Please don't refer a system forked from Linux From Scratch many years
-> ago (even before multiple major refactors we've done for LFS) and for a
-> completely different objective as LFS.  Yes Linux From Scratch is not a
-> registered trademark so we cannot really stop you, but referring such a
-> thing as LFS will just puzzle people.
+Mike Rapoport (Microsoft) (13):
+  arm: mem_init: use memblock_phys_free() to free DMA memory on SA1111
+  csky: move setup_initrd() to setup.c
+  hexagon: move initialization of init_mm.context init to paging_init()
+  MIPS: consolidate mem_init() for NUMA machines
+  MIPS: make setup_zero_pages() use memblock
+  nios2: move pr_debug() about memory start and end to setup_arch()
+  s390: make setup_zero_pages() use memblock
+  xtensa: split out printing of virtual memory layout to a function
+  arch, mm: set max_mapnr when allocating memory map for FLATMEM
+  arch, mm: set high_memory in free_area_init()
+  arch, mm: streamline HIGHMEM freeing
+  arch, mm: introduce arch_mm_preinit
+  arch, mm: make releasing of memory to page allocator more explicit
 
-Sorry for the confusion, I don't know much about LFS history other
-than knowing IPFire
-is based on LFS, I have no intention to mess with the term LFS :).
+ arch/alpha/mm/init.c               |  8 ----
+ arch/arc/mm/init.c                 | 25 +----------
+ arch/arm/mm/init.c                 | 43 +------------------
+ arch/arm/mm/mmu.c                  |  2 -
+ arch/arm/mm/nommu.c                |  1 -
+ arch/arm64/mm/init.c               | 12 +-----
+ arch/csky/kernel/setup.c           | 43 +++++++++++++++++++
+ arch/csky/mm/init.c                | 67 ------------------------------
+ arch/hexagon/mm/init.c             | 32 ++------------
+ arch/loongarch/kernel/numa.c       |  6 ---
+ arch/loongarch/mm/init.c           |  8 ----
+ arch/m68k/mm/init.c                |  4 --
+ arch/m68k/mm/mcfmmu.c              |  1 -
+ arch/m68k/mm/motorola.c            |  2 -
+ arch/m68k/sun3/config.c            |  1 -
+ arch/microblaze/mm/init.c          | 25 -----------
+ arch/mips/include/asm/mmzone.h     |  2 -
+ arch/mips/loongson64/numa.c        |  7 ----
+ arch/mips/mm/init.c                | 49 ++++------------------
+ arch/mips/sgi-ip27/ip27-memory.c   |  9 ----
+ arch/nios2/kernel/setup.c          |  3 +-
+ arch/nios2/mm/init.c               | 16 +------
+ arch/openrisc/mm/init.c            |  6 ---
+ arch/parisc/mm/init.c              |  4 --
+ arch/powerpc/kernel/setup-common.c |  3 --
+ arch/powerpc/mm/mem.c              | 18 +-------
+ arch/riscv/mm/init.c               |  5 +--
+ arch/s390/mm/init.c                | 18 +-------
+ arch/sh/mm/init.c                  | 10 -----
+ arch/sparc/mm/init_32.c            | 31 +-------------
+ arch/sparc/mm/init_64.c            |  4 --
+ arch/um/include/shared/mem_user.h  |  1 -
+ arch/um/kernel/mem.c               |  9 ++--
+ arch/um/kernel/physmem.c           | 12 ------
+ arch/um/kernel/um_arch.c           |  2 -
+ arch/x86/include/asm/highmem.h     |  3 --
+ arch/x86/include/asm/numa.h        |  4 --
+ arch/x86/include/asm/numa_32.h     | 13 ------
+ arch/x86/kernel/setup.c            |  2 -
+ arch/x86/mm/Makefile               |  2 -
+ arch/x86/mm/highmem_32.c           | 34 ---------------
+ arch/x86/mm/init_32.c              | 41 ++----------------
+ arch/x86/mm/init_64.c              |  7 ++--
+ arch/x86/mm/numa_32.c              |  3 --
+ arch/xtensa/mm/init.c              | 66 +++++++----------------------
+ include/asm-generic/memory_model.h |  5 ++-
+ include/linux/memblock.h           |  1 -
+ include/linux/mm.h                 | 13 +-----
+ mm/internal.h                      |  3 +-
+ mm/memblock.c                      |  3 +-
+ mm/memory.c                        | 16 -------
+ mm/mm_init.c                       | 58 ++++++++++++++++++++++----
+ mm/nommu.c                         |  6 ---
+ 53 files changed, 151 insertions(+), 618 deletions(-)
+ delete mode 100644 arch/x86/include/asm/numa_32.h
+ delete mode 100644 arch/x86/mm/highmem_32.c
+
+
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+-- 
+2.47.2
+
