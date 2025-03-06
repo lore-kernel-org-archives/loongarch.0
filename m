@@ -1,176 +1,146 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A429819E99E;
-	Thu,  6 Mar 2025 19:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE30DDA8
+	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 19:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741288794; cv=none; b=iL+1OnKr3t7zsFyzmKWC4YiKNLflVR5CEj0gI3W3VuGJFoKnlS7MsBtM6W5zD3qahgieJKN2LVNgq6ufDUUfcZVZMi1L+q9sxbHDaMlCtqQagsT2Fi04KOHqfAVGmy/WaJIYlXK6OsAaRiRFGiqwmileeaz9dsTCYZoS3ODsaJc=
+	t=1741289867; cv=none; b=QjBFV3ALiqsUUFUOLGWGUCvKzLAkcK06hu5PKDF6592TH9uiFUnG11XhVeocTSg0/jKiib9lxjAwjrtqQA1SMZ8+LRtnOpvwh6SNzQokO+fa6uyKQJhu5U9W95UYPZDPpBGQYmu04rH6Fjx7K1yNlPUZxzMv6oDFpvYY85adqIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741288794; c=relaxed/simple;
-	bh=VCSeFIkK2OWdz1dEx4pV+Rw9hAHhlwzqN1Th+gTyRaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZ7uI01oIo09hCyrMRnHbOZcZey/eMUFz6PWx++VGCTulPQpiFfx1j6Efofo4qVZ+KuEUFZrwjmwyqG/6a6bPujRtdklxSr+Altm7BTfVp1qZiCWkh061zCpcz4YLS5bEaNPnSMBXCnH1+4KDdTdIgrx4fDsagyz+jsqdftbMgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dTqmAXHJ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741289867; c=relaxed/simple;
+	bh=Koeuz5ZXlB1/U5aBCNcFQSm7CBaqDpCzuvHfyPrx7nY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IULoI0gvX2WYdSBnV37qfN4AicRs2Cc6mtXs7ji4fR3rT9sazboLmoIOLeMDAX30e4AtIo55uz4h4uZmxp896IqZ/mGAezeldTQcuhbdn6IgJw2H4cB3zUPiHaUHDDMQU06Bn4KTP5W0q7W98yaeHTf/KJwyiUoOJ18eTZte/Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtojnV/Z; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTqmAXHJ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bcc85ba13so8458415e9.0;
-        Thu, 06 Mar 2025 11:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741288791; x=1741893591; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/eOCz6p5uyWrnGjfkKjBisd5HzVXiT1RDyr/H3ZddfA=;
-        b=dTqmAXHJ1qu0AnCnzsEbP9VqluPpUxjYmGfitK+RrQPLAAQgtALEw2sny5EudbVRMg
-         TCD5HriangUr8ROPIaST9tO/TYuWieMp9kFvnsx14JfF7bzni8nQDGI268rRvCtL/WpJ
-         tW3zjsgDY+KVgwPaj+qlntgvlvt3eEhppb910D4/6ScTZaow7rHpAxH/TWL60SVMY4y4
-         6pagJ4mLITeyeB0I6cghFg3PolQQuYcoxm2w8scJ+/0L7ZLL87MzhfR44nW5LQEd2iGL
-         h1fUNLoGOtKRgyhcO12+Urhmj3rIO31lV4/Oz6785GGWP5IcDfGSeqJEWIs8j+X0ne34
-         GMdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741288791; x=1741893591;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/eOCz6p5uyWrnGjfkKjBisd5HzVXiT1RDyr/H3ZddfA=;
-        b=KdO7xizJPWYxKASbG/aoa4FuQpvrHK1pEKXc1yh3mxk8zI7CKcndkbJztGEM+EsvYQ
-         So6rTBPmC+b1EGf7BEGOKu38RttwTyFHsWr59Tr18wdLIjKIoXi+avey5MZYheDk1nf1
-         W6Q1KIdhf24iBD+pulv6n9CWzd6PGaau1/cTtbGHi6hSwggxIEwhW8ly7t2Hg9qSJuJV
-         Bl3VjNKl4O00fF1slBHIYj785Y/UyhSADAk6S4O+lnUd0ur1ZI3mUcFqSshuE/RcYLAF
-         nK4wD6bb4FYWGSWrEyEpldRAJePzzk6rWnmKHHYvNqtKXOQBA2eJXn0CHVeSINSYpICK
-         6GTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI0zVHcRpjWeZaob+MlsZGeyze/TFNVnNDGhdawNI7G+UoCQn0Hl/bnfEelNkfGJhlPLePK+1vvoo=@lists.linux.dev, AJvYcCWbYHljfOxBJGsGOt31euVFz57YS5+BLwlwWiETc4KLoerzmCN4dV5FF5WPW/OpM0Nc3KLb@lists.linux.dev
-X-Gm-Message-State: AOJu0YxW6jWlFDKzqlP/w+xBOEbi4XCRB9k1jwUSd8yAAiathSOy0YuL
-	CAHZLcGPnKpuXu+C/x1JwnkQkVfFnPKXgmfyyI1pu+qJcfAlbOqK
-X-Gm-Gg: ASbGncsHKo75keUQQB0dXtl7FVLI7hCh8FTXtTP/rnHkiqW5SUclzWmvI07NZGkMnHY
-	1Kgdtas0Qgp3Ahhxqigu5vWZEfC8Z4qTzTigGlGi86FB4lH60/iiNYdlYe7ZYcOTo9CVUEZ8a8h
-	TGWZZn9aREkb50BxlJHEu0lhQCrCLzpHkgeJnX63TT2VpIn2VEe4yxUSUpKfsWXmsjdDDQRmaX5
-	hfXiKAFD+BzaX761aPuPTAbVgRFAYlk1VXm6UV2zjzbHX6yMziSoRycbfABx+T0ImUQANrxzv8a
-	KQLdVZgewIROSG8RnUBsmlvs0jKqTkfQLWK/F8GWTKQ370kqMA5PvjsxD3FCiLRquRLDIlms/V1
-	dscNYDQVINNA5rOpWIkHu0Z2QsIKMUAQ=
-X-Google-Smtp-Source: AGHT+IGlEvntMF2i7X6Axx8OQDb9BYfoARMqUag9hgvpN2gkfNJBXg+ADawzvsmbM+xjKyCC9YlPOA==
-X-Received: by 2002:a05:600c:8a8:b0:43b:ca39:a9ca with SMTP id 5b1f17b1804b1-43c5a60e07amr7077505e9.16.1741288790433;
-        Thu, 06 Mar 2025 11:19:50 -0800 (PST)
-Received: from orome (p200300e41f3a9f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3a:9f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bdd8b0461sm30190845e9.4.2025.03.06.11.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 11:19:49 -0800 (PST)
-Date: Thu, 6 Mar 2025 20:19:46 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Celeste Liu <uwu@coelacanthus.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Russell King <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, Tony Lindgren <tony@atomide.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-	Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
-	Roger Quadros <rogerq@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	Stefan Wahren <wahrenst@gmx.net>, Thierry Reding <treding@nvidia.com>, soc@lists.linux.dev
-Subject: Re: [PATCH v4 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2835/tegra/omap2plus
-Message-ID: <t2dustbykx2qd24wazjeiw5hch5nwr6z2ewmaf4srg6r2grwrf@rdw47chzkef2>
-References: <20250115-fix-riscv-rt_group_sched-v4-0-607606fe73a5@coelacanthus.name>
- <20250115-fix-riscv-rt_group_sched-v4-4-607606fe73a5@coelacanthus.name>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtojnV/Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741289865; x=1772825865;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Koeuz5ZXlB1/U5aBCNcFQSm7CBaqDpCzuvHfyPrx7nY=;
+  b=YtojnV/ZPZ2ftGNVVwhOLa0sWdrnDUT5txvnAT2xbJnA3bz73w60Uui8
+   HKPtdHqlGnYXmN1MoFI/toBAqgozeDKFwuiy1mmJvK8/xqm5KSLSjHioL
+   qHHlcP1cRVQlXUskHm2BdMihZJE/xN2wPGHuESYHO7sHwNTrnGluH9yq5
+   5WPFHHTJNPq3UnUXkXVieWBdqkwAokDdl6gFPl1PFxfw/Scf5tyco7iU/
+   MzCMetmqKYrCT6CDAl4KaGAQF2Kl1cTywWB1K4lDvfxe9UDCZZujwIQrB
+   6Ak7X9eeMbMV80ZM1guBaoDnmHHsZVIOYvBvYxz4Duc6pASCJFeTO8R3H
+   g==;
+X-CSE-ConnectionGUID: wXsvy8cpRjClEMAciSQwpA==
+X-CSE-MsgGUID: o71mBvvJQeuYjS9L44rmPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="52967947"
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="52967947"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 11:37:44 -0800
+X-CSE-ConnectionGUID: jtUCN+0ERJKOiuT891wUKA==
+X-CSE-MsgGUID: BhyG0YZCS02zwlxq4/E1Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,227,1736841600"; 
+   d="scan'208";a="119128122"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.31]) ([10.125.110.31])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 11:37:42 -0800
+Message-ID: <b8922286-cfb9-4071-942c-b90d03d36b13@intel.com>
+Date: Thu, 6 Mar 2025 11:38:02 -0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zlzxkvnluqa6wgik"
-Content-Disposition: inline
-In-Reply-To: <20250115-fix-riscv-rt_group_sched-v4-4-607606fe73a5@coelacanthus.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/13] arch, mm: reduce code duplication in mem_init()
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+ Brian Cain <bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Guo Ren
+ <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Simek <monstr@monstr.eu>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Peter Zijlstra <peterz@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20250306185124.3147510-1-rppt@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250306185124.3147510-1-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/6/25 10:51, Mike Rapoport wrote:
+>  53 files changed, 151 insertions(+), 618 deletions(-)
+>  delete mode 100644 arch/x86/include/asm/numa_32.h
+>  delete mode 100644 arch/x86/mm/highmem_32.c
 
---zlzxkvnluqa6wgik
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 4/4] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2835/tegra/omap2plus
-MIME-Version: 1.0
+Holy cow, nice work. For the x86 bits:
 
-On Wed, Jan 15, 2025 at 04:41:23AM +0800, Celeste Liu wrote:
-> Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
-> with systemd") said it's because of recommendation from systemd. But
-> systemd changed their recommendation later.[1]
->=20
-> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarch=
-y it
-> needs an RT budget assigned, otherwise the processes in it will not be ab=
-le to
-> get RT at all. The problem with RT group scheduling is that it requires t=
-he
-> budget assigned but there's no way we could assign a default budget, sinc=
-e the
-> values to assign are both upper and lower time limits, are absolute, and =
-need to
-> be sum up to < 1 for each individal cgroup. That means we cannot really c=
-ome up
-> with values that would work by default in the general case.[2]
->=20
-> For cgroup v2, it's almost unusable as well. If it turned on, the cpu con=
-troller
-> can only be enabled when all RT processes are in the root cgroup. But it =
-will
-> lose the benefits of cgroup v2 if all RT process were placed in the same =
-cgroup.
->=20
-> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn=
-'t
-> support it.
->=20
-> [1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1be3=
-21c31d5299f69f
-> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=3D1229700
->=20
-> Tested-by: Stefan Wahren <wahrenst@gmx.net>
-> Acked-by: Kevin Hilman <khilman@baylibre.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Celeste Liu <uwu@coelacanthus.name>
-> ---
->  arch/arm/configs/bcm2835_defconfig   | 1 -
->  arch/arm/configs/omap2plus_defconfig | 1 -
->  arch/arm/configs/tegra_defconfig     | 1 -
->  3 files changed, 3 deletions(-)
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-Hi Arnd,
-
-is this something that you could pick up? I think so far only the RISC-V
-patch was picked up, but nobody seems to feel responsible for the ARM
-patch here.
-
-Thierry
-
---zlzxkvnluqa6wgik
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfJ9VIACgkQ3SOs138+
-s6EV1hAAmmOA9bt5ezD7ZL1JWnDlfosEhXQikLJbSz+gAvX+YGSrCEY9u9RhonZS
-bc+6iwnvUoA0HbqdTecbWzifzHz/JqnPCAdrdoQwSspJ3onSZAnRPj1u8NRDv/gy
-54LG7uX7qWZhH9OF/MHqQbjHo01dXl8OmaRrAUgUK3h2AgyzJldR0uOaQ+tQ3F4o
-iPzt2JxJUBabJUImAV7wivSnMt3pPaGBS6BN203I26wIeGAY8ZuMKJrnQS/4Mmis
-5lxuMl8dTaQaJ+WaJeKwRpZgI22JnMKabnDwaQ6nDuLOMY5/KOeAv2DXGZOZ8qRn
-8LDhTlnir1RsuEbgf7b/CYHMNnZA4RSY6puetzCaAQ0WSb1ENMSyGcGM0HzZ49ps
-6rrPpo+yWldcHVDQzbiiXIs6pWMeVvmNufpR8D/FweKG0gyqZSiDCZXJdEZjYgbu
-gYp+qfQ9LiVjK1t2Z/MY0RkvaZBNhNfK29wX+oT4bPbhkV/Sep7wL1w8VCegqV/g
-BzXxAu5HjRDRtfMdOzqBh3EGJfT5hmsJyH5nKD7uT5B7a8gYwUjB0pcX8cOJyCI+
-oAd9Y7gS3IUWMLLOk7mFGWiIcPcO9so87NoMSlmNnVc/dZPpojNAvu/kcMgnpLSq
-0Ss2JFGPVzSn+zgNVsP3A8TK/8JR41YyK/M+QEH18WZuNXQcH5o=
-=P21d
------END PGP SIGNATURE-----
-
---zlzxkvnluqa6wgik--
