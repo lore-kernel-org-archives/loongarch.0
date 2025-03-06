@@ -1,38 +1,38 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D29D41C69
-	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 02:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D33EEA9
+	for <loongarch@lists.linux.dev>; Thu,  6 Mar 2025 02:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741226867; cv=none; b=YTavwZWUuGjxcSoKnplFrJDO+rMPSYD9oVUg+SGFEnS2dxlrAwdYeJ9GN576MGaBliKWRN5EDGzPjv6iU/D6uhLirjNJXLj6yOP7cxyY/b0N5Go/w3KfiRSzZGrgyla7WbzaSsHiL0VQUlRKOflf//ZfKyvKoYZpSF42mAFZcWw=
+	t=1741226992; cv=none; b=Jh+/QNa9tTHA3NLMiEB/o6nHNnuJ27AOA7ZGDUAFebjoOrAAARqC8m4Kz/QQjWi1lLkz+f9bhvIyCzaR7i48L3lHQoxt5tORUjXlTb1wqEnf7u2f6ACaXAiZUgmrOWosDyH0vy5CNa2Od4Z49okiXPT9mz2IvmzhWmiI2NwHbqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741226867; c=relaxed/simple;
-	bh=r3XLeRQQg726V6Q+Oj5puIPT226n87+nzy5u+0Cn+MM=;
+	s=arc-20240116; t=1741226992; c=relaxed/simple;
+	bh=ZrS2fjqKDvivcPGXCgJZ99ad6eZDInBjzV7CgtGYgi4=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VnSd+7tH5cPe9c1YPlW34k5bkhJomBIw5gfx7CGN8F3y5qc9p64ax7kSAEcf3NN1I+T6WR1e0txNeje39Id+2mgc0RoIwPy8yuExlUFg0iuHKvTCnFoY++ByuDMPGT0tFLnQy+SFZxJ5Bz5h2tkpwDPoQf/cMOhn2A6bpA/2CBE=
+	 In-Reply-To:Content-Type; b=rqmEr1xKkB3lAA6LaZ1MaCn0yyBBRZIfCLMU6mclrPyjxmtpFmEji5QLNDo1rA6XUBOrF3SPTHppZ4vHsbwSIj1LAYHSLulN05FJMP9QHfOxOjIiNmdEPXj2qjdU7/7qylWXF7O5yBmKwfHhIqWM6oNV9MQlerVib/M9+HSQIhc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8CxLGtvA8lnw8eLAA--.42486S3;
-	Thu, 06 Mar 2025 10:07:43 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxbKzrA8lnl8iLAA--.42640S3;
+	Thu, 06 Mar 2025 10:09:47 +0800 (CST)
 Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMAxDcVrA8lnwZ04AA--.11318S3;
-	Thu, 06 Mar 2025 10:07:40 +0800 (CST)
-Subject: Re: [PATCH 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
-To: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen <chenhuacai@kernel.org>
+	by front1 (Coremail) with SMTP id qMiowMBx3MTmA8lnbZ44AA--.11747S3;
+	Thu, 06 Mar 2025 10:09:45 +0800 (CST)
+Subject: Re: [PATCH 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
+ model description
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
- si.yanteng@linux.dev, jiaxun.yang@flygoat.com, peterz@infradead.org,
- wangliupu@loongson.cn, lvjianmin@loongson.cn, maobibo@loongson.cn,
- siyanteng@cqsoftware.com.cn, gaosong@loongson.cn, yangtiezhu@loongson.cn,
- loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+ peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+ maobibo@loongson.cn, siyanteng@cqsoftware.com.cn, gaosong@loongson.cn,
+ yangtiezhu@loongson.cn, loongarch@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250303101533.31462-1-zhangtianyang@loongson.cn>
- <20250303101533.31462-3-zhangtianyang@loongson.cn>
- <CAAhV-H4G2qk69LF41VFoFgd7ZBAqAFB=hA7PMkaxXdNVEX-WyA@mail.gmail.com>
- <87plixby85.ffs@tglx>
+ <20250303101533.31462-2-zhangtianyang@loongson.cn>
+ <CAAhV-H5xx7UnM1PpwDEJoq8kw6=uyzuhCiNbokF8tYNx7F1Jeg@mail.gmail.com>
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <da36f472-df93-5e67-359d-b3e5bc1a81d3@loongson.cn>
-Date: Thu, 6 Mar 2025 10:07:20 +0800
+Message-ID: <4c3d48f9-aa96-4ee9-4718-d4b87fd441a5@loongson.cn>
+Date: Thu, 6 Mar 2025 10:09:23 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -41,53 +41,155 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87plixby85.ffs@tglx>
+In-Reply-To: <CAAhV-H5xx7UnM1PpwDEJoq8kw6=uyzuhCiNbokF8tYNx7F1Jeg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:qMiowMAxDcVrA8lnwZ04AA--.11318S3
+X-CM-TRANSID:qMiowMBx3MTmA8lnbZ44AA--.11747S3
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFykXFyfWF13trWxCrWDKFX_yoWfAwb_ur
-	43tFs5GFyxCrWfGa1rAw4avas5W395JF98trykt3W2q34Fg3WkJr45Awn3Ca43JryxAr1a
-	y3W5ZrW5Ar4jvosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_Wryl
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-	WxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
-	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxJw4UAr1xXF13XF45Zr18WFX_yoWruF4Dpr
+	Z3GF93ZF4UJ345WF17Jr4UXr13Jw1fKa1DKF1xKry8Xw1qyr1DJr1UJrykXFW7GryrAr12
+	qFW5Gw1DAr1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 
-Hi, Thomas
+Hi, Huacai
 
-在 2025/3/4 上午5:28, Thomas Gleixner 写道:
-> On Mon, Mar 03 2025 at 22:34, Huacai Chen wrote:
->> On Mon, Mar 3, 2025 at 6:15 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
->>> +static const struct irq_domain_ops loongarch_redirect_domain_ops = {
->>> +       .alloc = loongarch_irq_redirect_alloc,
->>> +       .free = loongarch_irq_redirect_free,
->>> +       .select = msi_lib_irq_domain_select,
->>> +};
->> For consistency, please use:
->> static const struct irq_domain_ops redirect_domain_ops = {
->>         .alloc          = redirect_domain_alloc,
->>         .free           = redirect_domain_free,
->>         .select         = msi_lib_irq_domain_select,
->> };
-> This formatting requirement applies to all structures in this patch. See
+在 2025/3/3 下午9:36, Huacai Chen 写道:
+> Hi, Tianyang,
 >
->   https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#coding-style-notes
+> On Mon, Mar 3, 2025 at 6:15 PM Tianyang Zhang <zhangtianyang@loongson.cn> wrote:
+>> Introduce the Redirect interrupt controllers.When the redirected interrupt
+>> controller is enabled, the routing target of MSI interrupts is no longer a
+>> specific CPU and vector number, but a specific redirected entry. The actual
+>> CPU and vector number used are described by the redirected entry.
+> You call it "redirect interrupt controller", then don't call
+> "redirected interrupt controller" in other place.
+OK, I got it
 >
-> for further information.
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> ---
+>>   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
+>>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
+>>   2 files changed, 75 insertions(+)
+>>
+>> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+>> index a7ecce11e445..45cba22ff181 100644
+>> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+>> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then go to CPUINTC directly::
+>>                | Devices |
+>>                +---------+
+>>
+>> +Advanced Extended-Redirect IRQ model
+> Call it as "Advanced Extended IRQ model (with redirection)" and
+> "高级扩展IRQ模型 (带重定向)"
 OK, I got it , thanks
-> Thanks,
 >
->          tglx
+> Huacai
+>
+>> +===============
+>> +
+>> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+>> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, PCH-MSI interrupts go
+>> +to REDIRECT for remapping it to AVEC, and then go to CPUINTC directly, while all
+>> +other devices interrupts go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then
+>> +go to CPUINTC directly::
+>> +
+>> + +-----+     +-----------------------+     +-------+
+>> + | IPI | --> |        CPUINTC        | <-- | Timer |
+>> + +-----+     +-----------------------+     +-------+
+>> +              ^          ^          ^
+>> +              |          |          |
+>> +       +---------+ +----------+ +---------+     +-------+
+>> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
+>> +       +---------+ +----------+ +---------+     +-------+
+>> +            ^            ^
+>> +            |            |
+>> +            |      +----------+
+>> +            |      | REDIRECT |
+>> +            |      +----------+
+>> +            |            ^
+>> +            |            |
+>> +       +---------+  +---------+
+>> +       | PCH-PIC |  | PCH-MSI |
+>> +       +---------+  +---------+
+>> +         ^     ^           ^
+>> +         |     |           |
+>> + +---------+ +---------+ +---------+
+>> + | Devices | | PCH-LPC | | Devices |
+>> + +---------+ +---------+ +---------+
+>> +                  ^
+>> +                  |
+>> +             +---------+
+>> +             | Devices |
+>> +             +---------+
+>> +
+>>   ACPI-related definitions
+>>   ========================
+>>
+>> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> index d4ff80de47b6..d935da47ce3b 100644
+>> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
+>> @@ -174,6 +174,43 @@ CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断发送到AVECINTC，
+>>                | Devices |
+>>                +---------+
+>>
+>> +高级扩展-重定向IRQ模型
+>> +===============
+>> +
+>> +在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
+>> +CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断首先发送到REDIRECT模块,完成重定向后发
+>> +送到AVECINTC，而后通过AVECINTC直接送达CPUINTC，而其他所有设备的中断则分别发送到所连
+>> +接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直接到达CPUINTC::
+>> +
+>> + +-----+     +----------------------Thomas-+     +-------+
+>> + | IPI | --> |        CPUINTC        | <-- | Timer |
+>> + +-----+     +-----------------------+     +-------+
+>> +              ^          ^          ^
+>> +              |          |          |
+>> +       +---------+ +----------+ +---------+     +-------+
+>> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
+>> +       +---------+ +----------+ +---------+     +-------+
+>> +            ^            ^
+>> +            |            |
+>> +            |      +----------+
+>> +            |      | REDIRECT |
+>> +            |      +----------+
+>> +            |            ^
+>> +            |            |
+>> +       +---------+  +---------+
+>> +       | PCH-PIC |  | PCH-MSI |
+>> +       +---------+  +---------+
+>> +         ^     ^           ^
+>> +         |     |           |
+>> + +---------+ +---------+ +---------+
+>> + | Devices | | PCH-LPC | | Devices |
+>> + +---------+ +---------+ +---------+
+>> +                  ^
+>> +                  |
+>> +             +---------+
+>> +             | Devices |
+>> +             +---------+
+>> +
+>>   ACPI相关的定义
+>>   ==============
+>>
+>> --
+>> 2.43.0
+>>
+>>
 
